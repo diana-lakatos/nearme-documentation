@@ -1,0 +1,9 @@
+<%= simple_form_for workplace do |f| %>
+  <%= f.input :name %>
+  <%= f.input :address %>
+  <%= f.input :maximum_desks %>
+  <%= f.input :description %>
+  <%= f.input :company_description %>
+  <%= f.input :confirm_bookings, :as => :radio %>
+  <%= f.button :submit %>
+<% end %>

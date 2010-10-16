@@ -3,13 +3,21 @@ Feature: A user can create a workplace
   As a user
   I want to create a workplace listing
 
-Scenario: A user can see the form
+Background:
   Given a user exists
     And I am logged in as the user
+
+Scenario: A user can see the form
    When I go to the new workplace page
+   Then show me the page
    Then I should see "Create a workplace"
+    And I should see "Name"
+    And I should see "Address"
+    And I should see "Maximum desks"
+    And I should see "Confirm bookings"
+@wip
+Scenario: A user can successfully create a workplace
+  Given I go to the new workplace page
+   When event
+   Then outcome
 
-
-
-
-  
