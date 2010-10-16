@@ -23,20 +23,38 @@
 </div>
 
 <script type="text/javascript">
+
   $(document).ready(function() {
     if (Modernizr.geolocation) {
+
       function updateLocation(position) {
        var geocoder = new google.maps.Geocoder();
+
        geocoder.geocode({ address: position.coords.latitude + "," + position.coords.longitude }, function(results, status) {
          if (status == google.maps.GeocoderStatus.OK) {
-           var location = results[0].formatted_address;
-           var link = $("<a></a>").attr("href", "/search?q=" + location).html("Search near: &quot;" + location + "&quot;");
-           $("#suggest_location").html(link).show();
+
+           var components = results[0].address_components;
+
+           // extract the city
+           var city = null;
+           for(var i = 0, l = components.length; i < l; i++) {
+             var types = components[i]['types'];
+             if(types.indexOf('locality') >= 0 && types.indexOf('political') >= 0)
+              city = components[i]['long_name'];
+           }
+
+           if(city) {
+             var link = $("<a></a>").attr("href", "/search?q=" + city).html("Search near: &quot;" + city + "&quot;");
+             $("#suggest_location").html(link).show();
+           }
+
          }
        });
       }
+
       navigator.geolocation.getCurrentPosition(updateLocation);
     }
   });
+
 </script>
 
