@@ -1,4 +1,4 @@
-@wip
+
 Feature: A user can book a desk
   In order to hang out with cool dudes and work
   As a user
@@ -17,8 +17,8 @@ Feature: A user can book a desk
       And I press "Book"
      Then I should be on the workplace's page
       And a booking should exist with date: "2010-10-18"
-      # And I should see "Booking successful"
-  
+
+  @wip
   Scenario: An anonymous user can log in to book a desk
     Given a user exists  
      When I go to the workplace's page
