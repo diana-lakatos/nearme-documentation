@@ -21,7 +21,7 @@ class Workplace < ActiveRecord::Base
 
   before_save :geocode_coordinates
 
-  def belongs_to?(user)
+  def created_by?(user)
     user && user == creator
   end
 
@@ -47,18 +47,14 @@ class Workplace < ActiveRecord::Base
     results
   end
 
+  def thumb
+    images.first.thumb
+  end
+
   private
 
     def geocode_coordinates
       fetch_coordinates if address_changed?
-    end
-
-    def created_by?(user)
-      user && user == creator
-    end
-
-    def thumb
-      images.first.thumb
     end
 
 end
