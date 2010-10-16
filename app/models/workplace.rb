@@ -22,6 +22,10 @@ class Workplace < ActiveRecord::Base
     images.first.thumb
   end
 
+  def to_param
+    "#{id}-#{name.parameterize}"
+  end
+
   private
 
     def find_location
