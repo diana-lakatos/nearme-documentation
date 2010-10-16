@@ -1,7 +1,7 @@
 Feature: A user can search for a workplace
   In order to make a booking on a workplace
   As a user
-  Can search for a workplace
+  I want to search for a workplace
 
   Scenario: A user searches for nothing
     Given I go to the home page
