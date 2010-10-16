@@ -43,6 +43,18 @@ header nav ul li a {
 	height: 40px;
 }
 
+header nav ul li.joined.alpha {
+	margin-right: 0;
+	border-radius: 20px 0 0 20px;
+	border-right: 1px solid rgba(0,0,0,0.2);
+}
+
+header nav ul li.joined.omega {
+	margin-left: 0;
+	border-radius: 0 20px 20px 0;
+	border-left: 1px solid rgba(255,255,255,0.1)
+}
+
 header nav ul li a:link, header nav ul li a:visited {
 	color: #FFF;
 	text-decoration: none;
@@ -58,6 +70,7 @@ section#content {
 	background: #FFF url(/images/section.jpg) repeat-x top center;
 	overflow: hidden;
 	padding: 40px 0;
+	min-height: 550px;
 }
 
 section h1 {
@@ -103,8 +116,23 @@ aside section {
 	overflow: hidden;
 }
 
-/* === GENERIC CLASSES === */
+/* === HYPER GLOBAL === */
 
+footer {
+	margin-bottom: 32px;
+	border-top: 3px solid #EEE;
+	padding-top: 12px;
+}
+
+footer div.copyright {
+	line-height: 46px;
+}
+
+footer div.copyright img {
+	float: left;
+	margin-right: 12px;
+	vertical-align: middle;
+}
 
 p.em {
 	font-size: 14px;
