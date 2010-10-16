@@ -6,6 +6,8 @@ gem 'omnisocial'
 gem 'geokit-rails3'
 gem 'capistrano'
 gem 'simple_form'
+gem 'mini_magick'
+gem 'carrierwave'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators

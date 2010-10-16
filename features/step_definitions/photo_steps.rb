@@ -9,8 +9,6 @@ end
 
 Then /^the workplace photos should be:$/ do |table|
   all("ul#photos li img").each do |image|
-    table.raw.flatten.any? do |expected|
-      expected.should =~ /#{image.attr("alt")}$/
-    end
+    table.raw.flatten.should include(image["alt"])
   end
 end

@@ -48,6 +48,8 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       selenium-webdriver (>= 0.0.3)
+    carrierwave (0.5.0)
+      activesupport (~> 3.0.0)
     childprocess (0.0.9)
       ffi (~> 0.6.3)
     columnize (0.3.1)
@@ -96,6 +98,8 @@ GEM
       mime-types
       treetop (>= 1.4.5)
     mime-types (1.16)
+    mini_magick (2.3)
+      subexec (~> 0.0.4)
     multi_json (0.0.4)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
@@ -176,6 +180,7 @@ GEM
       json_pure
       rubyzip
     simple_form (1.2.2)
+    subexec (0.0.4)
     term-ansicolor (1.0.5)
     thor (0.14.3)
     treetop (1.4.8)
@@ -190,6 +195,7 @@ DEPENDENCIES
   autotest
   capistrano
   capybara
+  carrierwave
   cucumber
   cucumber-rails
   database_cleaner
@@ -197,6 +203,7 @@ DEPENDENCIES
   ffaker
   geokit-rails3
   launchy
+  mini_magick
   omnisocial
   pg
   pickle

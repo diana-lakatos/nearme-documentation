@@ -1,0 +1,11 @@
+<ul id="photos">
+  <% @photos.each do |photo| %>
+    <% unless photo.new_record? %>
+      <li>
+        <%= image_tag photo.medium.url, :alt => photo.description %>
+      </li>
+    <% end %>
+  <% end %>
+</ul>
+
+<%= render :partial => "new" %>
