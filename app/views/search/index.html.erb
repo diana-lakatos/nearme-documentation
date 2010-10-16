@@ -1,7 +1,7 @@
 
 <%= render :partial => "public/search_bar", :locals => { :value => @query } %>
 
-<% if @results.nil? %>
+<% if @query.blank? %>
   <p>Please enter a country, city or address</p>
 <% else %>
 
@@ -9,25 +9,39 @@
     <div id="bounds_map" style="height: 250px; margin: 10px 0;"></div>
     <script type="text/javascript">
       $(document).ready(function() {
-          var latlng = new google.maps.LatLng(<%= @results.location.latitude %>, <%= @results.location.longitude %>);
-          var map = new google.maps.Map(document.getElementById("bounds_map"), {
-            zoom: 8,
-            center: latlng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapTypeControl: false
-          });
-          var bounds = new google.maps.LatLngBounds(
-            new google.maps.LatLng(<%= @results.bounds['southwest']['lat'] %>, <%= @results.bounds['southwest']['lng'] %>),
-            new google.maps.LatLng(<%= @results.bounds['northeast']['lat'] %>, <%= @results.bounds['northeast']['lng'] %>)
-          );
-          map.fitBounds(bounds);
+        var latlng = new google.maps.LatLng(<%= @results.location.latitude %>, <%= @results.location.longitude %>);
+        var map = window['map'] = new google.maps.Map(document.getElementById("bounds_map"), {
+          zoom: 8,
+          center: latlng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          mapTypeControl: false
+        });
+        var bounds = new google.maps.LatLngBounds(
+          new google.maps.LatLng(<%= @results.bounds['southwest']['lat'] %>, <%= @results.bounds['southwest']['lng'] %>),
+          new google.maps.LatLng(<%= @results.bounds['northeast']['lat'] %>, <%= @results.bounds['northeast']['lng'] %>)
+        );
+        map.fitBounds(bounds);
       });
     </script>
   <% end %>
 
   <% if @results.any? %>
-    <% if @results.geo_results.any? %>
-      <%= render @results.geo_results %>
+    <% if @results.results.any? %>
+
+      <% @results.results.each do |workplace| %>
+        <%= render workplace %>
+        <script type="text/javascript">
+          $(document).ready(function() {
+            var latlng = new google.maps.LatLng(<%= workplace.latitude %>, <%= workplace.longitude %>);
+            var beachMarker = new google.maps.Marker({
+              position: latlng,
+              map: window['map'],
+              icon: "<%= image_path("drawer-open.png") %>"
+            });
+          })
+        </script>
+      <% end %>
+
     <% end %>
   <% else %>
     <p>No results found</p>

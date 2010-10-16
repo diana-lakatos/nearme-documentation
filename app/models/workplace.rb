@@ -42,10 +42,9 @@ class Workplace < ActiveRecord::Base
 
     bounds = results.location.bounds
 
-    debugger
     if bounds
       results.bounds = bounds
-      results.results = where(:latitude => bounds['northeast']['lat']..bounds['southwest']['lat'],
+      results.results = where(:latitude => bounds['southwest']['lat']..bounds['northeast']['lat'],
                               :longitude => bounds['southwest']['lng']..bounds['northeast']['lng'])
     else
       # something else

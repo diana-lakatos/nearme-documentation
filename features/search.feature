@@ -10,7 +10,7 @@ Feature: A user can search for a workplace
 
   Scenario: A user searches for something silly
     Given I go to the home page
-     When I search for "something silly"
+     When I search for "this place wont exist"
      Then I should see "No results found"
 
   Scenario: A user searches for something which yields no results
@@ -25,9 +25,3 @@ Feature: A user can search for a workplace
       And I search for "adelaide"
      Then I should see "Rad Annex"
       And I should not see "Crap Annex"
-
-  Scenario: A user searches using a location that that yields no results
-    Given I go to the home page
-     When I search for "keith"
-     Then I should see "No results found"
-      And I should see "Keith SA 5267, Australia"
