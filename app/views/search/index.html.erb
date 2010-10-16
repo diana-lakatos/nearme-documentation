@@ -13,7 +13,7 @@
 
     <h4>Workplaces found near: "<%= @location[:name] %>"</h4>
 
-    <div id="workplaces_map" style="height: 350px; margin: 10px 0;"></div>
+    <div id="workplaces_map" style="height: 350px; margin: 10px 0;" class="google-map"></div>
 
     <% @workplaces.each do |workplace| %>
       <%= render workplace %>

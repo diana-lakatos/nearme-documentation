@@ -8,4 +8,5 @@ Scenario: A user can see a workplace
    When I go to the workplace's page
    Then I should see "Rad Annex"
     And I should see "Its a great place to work"
+    And I should see a Google Map
 

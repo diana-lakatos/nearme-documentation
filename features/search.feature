@@ -24,5 +24,6 @@ Feature: A user can search for a workplace
       And the Sphinx indexes are updated
      When I go to the home page
       And I search for "adelaide"
+      And I should see a Google Map
      Then I should see "Rad Annex"
       And I should not see "Crap Annex"

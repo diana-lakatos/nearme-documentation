@@ -17,6 +17,9 @@ module HtmlSelectorsHelpers
     when "the first photo box"
       "ul#photos li:first-of-type"
 
+    when /a google map/i
+      "div.google-map"
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

@@ -26,5 +26,7 @@ class PhotosController < ApplicationController
 
   def find_workplace
     @workplace = current_user.workplaces.find(params[:workplace_id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to :root, :alert => "Could not find workspace"
   end
 end

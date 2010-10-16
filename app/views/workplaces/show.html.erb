@@ -42,7 +42,7 @@
     </section>
     <section>
       <h2>Location</h2>
-      <div id="map" style="height: 200px"></div>
+      <div id="map" style="height: 200px" class="google-map"></div>
       <%= link_to "Open in Google Maps", "http://maps.google.com?q=#{@workplace.address}", :target => "_blank" %>
       <details>
         <%= simple_format @workplace.address %>

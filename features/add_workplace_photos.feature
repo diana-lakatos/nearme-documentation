@@ -36,3 +36,11 @@ Feature: A user can add photos to a workplace
     Then I should see 2 workplace photos
     When I press "Delete" within the first photo box
     Then I should see 1 workplace photo
+
+  Scenario: A hacker cant edit a workplace
+    Given a user: "hacker" exists
+      And I am logged in as the user: "hacker"
+     When I go to the workplace's edit page
+      And I should not see "New Photo"
+      And I should see "Could not find workspace"
+
