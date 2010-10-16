@@ -3,3 +3,12 @@ Feature: A user can login with facebook or twitter
   As a user
   I want to login
 
+Scenario: A user can login with Facebook
+   When I go to the home page
+    And I follow "Login"
+   Then I should see "Sign in with Facebook"
+
+Scenario: A user can login with Twitter
+   When I go to the home page
+    And I follow "Login"
+   Then I should see "Sign in with Twitter"
