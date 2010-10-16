@@ -14,6 +14,8 @@ class Workplace < ActiveRecord::Base
   geocoded_by :address
 
   belongs_to :creator, :class_name => "User", :foreign_key => "creator_id"
+  has_many :photos
+
   validates_presence_of :name, :address, :maximum_desks
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0
 
@@ -49,6 +51,14 @@ class Workplace < ActiveRecord::Base
 
     def geocode_coordinates
       fetch_coordinates if address_changed?
+    end
+
+    def created_by?(user)
+      user && user == creator
+    end
+
+    def thumb
+      images.first.thumb
     end
 
 end

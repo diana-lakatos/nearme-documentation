@@ -17,6 +17,11 @@ ActiveRecord::Schema.define(:version => 20101016100225) do
     t.datetime "updated_at"
   end
 
+  create_table "desks", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "login_accounts", :force => true do |t|
     t.string   "type"
     t.integer  "user_id"
@@ -30,6 +35,16 @@ ActiveRecord::Schema.define(:version => 20101016100225) do
 
   add_index "login_accounts", ["type"], :name => "index_login_accounts_on_type"
   add_index "login_accounts", ["user_id"], :name => "index_login_accounts_on_user_id"
+
+  create_table "photos", :force => true do |t|
+    t.integer  "workplace_id", :null => false
+    t.string   "description",  :null => false
+    t.string   "file",         :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "photos", ["workplace_id"], :name => "index_photos_on_workplace_id"
 
   create_table "users", :force => true do |t|
     t.string   "remember_token"

@@ -6,6 +6,8 @@ gem 'omnisocial'
 gem 'rails-geocoder', :require => 'geocoder'
 gem 'capistrano'
 gem 'simple_form'
+gem 'mini_magick'
+gem 'carrierwave'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators

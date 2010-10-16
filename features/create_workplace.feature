@@ -1,4 +1,4 @@
-Feature: A user can create a workplace
+Feature: A user can create and edit a workplace
   In order to let people work at my rad workplace
   As a user
   I want to create a workplace listing
@@ -24,3 +24,14 @@ Scenario: A user can successfully create a workplace
     And I press "Create Workplace"
    Then a workplace should exist with name: "Joe's Codin' Garage"
     And I should be on the workplace's page
+
+Scenario: A user can edit a workplace
+  Given a workplace exists with creator: the user
+   When I go to the workplace's page
+    And I follow "Edit Workplace"
+    And I fill in "Name" with "Joe's Codin' Garage"
+    And I press "Update Workplace"
+   Then a workplace should exist with name: "Joe's Codin' Garage"
+    And I should be on the workplace's page
+
+

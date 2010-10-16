@@ -1,14 +1,24 @@
-
 <% content_for :sidebar do %>
 
-  <% if @workplace.belongs_to?(current_user) %>
+  <% if @workplace.created_by?(current_user) %>
     <div id="controls">
       <%= link_to "Edit Workplace", edit_workplace_path(@workplace) %>
+      <%= link_to "Manage Workplace Photos", workplace_photos_path(@workplace) %>
     </div>
   <% end %>
 
   <div id="photos">
     <p>Photos</p>
+    <ul>
+      <% @workplace.photos.each do |photo| %>
+        <li>
+          <%= link_to photo.large.url do %>
+            <%= image_tag(photo.thumb.url, :alt => photo.description) %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+    <br clear="both" />
   </div>
 
   <div id="map">
