@@ -3,9 +3,14 @@
     <% unless photo.new_record? %>
       <li>
         <%= image_tag photo.medium.url, :alt => photo.description %>
+        <p><%= photo.description %></p>
+        <%= form_for([@workplace, photo], :html => {:method => :delete}) do |f| %>
+          <%= f.submit "Delete" %>
+        <% end %>
       </li>
     <% end %>
   <% end %>
 </ul>
+<br clear="both" />
 
 <%= render :partial => "new" %>

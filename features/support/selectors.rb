@@ -14,6 +14,9 @@ module HtmlSelectorsHelpers
     when "photos"
       "ul#photos li img"
 
+    when "the first photo box"
+      "ul#photos li:first-of-type"
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

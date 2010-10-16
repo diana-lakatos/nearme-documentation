@@ -12,3 +12,20 @@ Then /^the workplace photos should be:$/ do |table|
     table.raw.flatten.should include(image["alt"])
   end
 end
+
+When /^I add the following photos to the workplace:$/ do |table|
+  steps %{
+    When I go to the workplace's page
+    And I follow "Manage Workplace Photos"
+  }
+  
+  table.hashes.each_with_index do |row, count|
+    steps %{
+      When I attach the photo "#{row["File"]}" to "New Photo"
+      When I fill in "Description" with "#{row["Description"]}"
+       And I press "Upload"
+      Then I should see #{count + 1} workplace photo
+    }
+  end
+end
+
