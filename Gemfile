@@ -4,12 +4,12 @@ gem 'rails', '3.0.1'
 gem 'pg'
 gem 'omnisocial'
 gem 'rails-geocoder', :require => 'geocoder'
+gem 'thinking-sphinx', '2.0.0.rc2', :require => 'thinking_sphinx'
 gem 'capistrano'
 gem 'simple_form'
 gem 'mini_magick'
 gem 'carrierwave'
 gem 'state_machine'
-
 gem 'jquery-rails'
 
 # Bundle gems for the local environment. Make sure to
@@ -33,5 +33,4 @@ group :test do
   gem 'pickle'
   gem 'factory_girl_rails'
   gem 'launchy'
-  gem 'pickle'
 end

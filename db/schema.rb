@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101016105710) do
+ActiveRecord::Schema.define(:version => 20101016115959) do
 
   create_table "bookings", :force => true do |t|
     t.datetime "created_at"
@@ -21,6 +21,62 @@ ActiveRecord::Schema.define(:version => 20101016105710) do
     t.integer  "user_id"
     t.date     "date"
   end
+
+  create_table "locations", :force => true do |t|
+    t.float    "latitude"
+    t.float    "longitude"
+    t.string   "name"
+    t.string   "street_address"
+    t.string   "route"
+    t.string   "intersection"
+    t.string   "political"
+    t.string   "country"
+    t.string   "administrative_area_level_1"
+    t.string   "administrative_area_level_2"
+    t.string   "administrative_area_level_3"
+    t.string   "colloquial_area"
+    t.string   "locality"
+    t.string   "sublocality"
+    t.string   "neighborhood"
+    t.string   "premise"
+    t.string   "subpremise"
+    t.string   "postal_code"
+    t.string   "natural_feature"
+    t.string   "airport"
+    t.string   "park"
+    t.string   "point_of_interest"
+    t.string   "post_box"
+    t.string   "street_number"
+    t.string   "floor"
+    t.string   "room"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "locations", ["administrative_area_level_1"], :name => "index_locations_on_administrative_area_level_1"
+  add_index "locations", ["administrative_area_level_2"], :name => "index_locations_on_administrative_area_level_2"
+  add_index "locations", ["administrative_area_level_3"], :name => "index_locations_on_administrative_area_level_3"
+  add_index "locations", ["airport"], :name => "index_locations_on_airport"
+  add_index "locations", ["colloquial_area"], :name => "index_locations_on_colloquial_area"
+  add_index "locations", ["country"], :name => "index_locations_on_country"
+  add_index "locations", ["floor"], :name => "index_locations_on_floor"
+  add_index "locations", ["intersection"], :name => "index_locations_on_intersection"
+  add_index "locations", ["locality"], :name => "index_locations_on_locality"
+  add_index "locations", ["name"], :name => "index_locations_on_name"
+  add_index "locations", ["natural_feature"], :name => "index_locations_on_natural_feature"
+  add_index "locations", ["neighborhood"], :name => "index_locations_on_neighborhood"
+  add_index "locations", ["park"], :name => "index_locations_on_park"
+  add_index "locations", ["point_of_interest"], :name => "index_locations_on_point_of_interest"
+  add_index "locations", ["political"], :name => "index_locations_on_political"
+  add_index "locations", ["post_box"], :name => "index_locations_on_post_box"
+  add_index "locations", ["postal_code"], :name => "index_locations_on_postal_code"
+  add_index "locations", ["premise"], :name => "index_locations_on_premise"
+  add_index "locations", ["room"], :name => "index_locations_on_room"
+  add_index "locations", ["route"], :name => "index_locations_on_route"
+  add_index "locations", ["street_address"], :name => "index_locations_on_street_address"
+  add_index "locations", ["street_number"], :name => "index_locations_on_street_number"
+  add_index "locations", ["sublocality"], :name => "index_locations_on_sublocality"
+  add_index "locations", ["subpremise"], :name => "index_locations_on_subpremise"
 
   create_table "login_accounts", :force => true do |t|
     t.string   "type"
@@ -58,16 +114,11 @@ ActiveRecord::Schema.define(:version => 20101016105710) do
     t.text     "description"
     t.text     "company_description"
     t.text     "address"
-    t.float    "latitude"
-    t.float    "longitude"
     t.boolean  "confirm_bookings"
     t.integer  "creator_id"
+    t.integer  "location_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "workplaces", ["latitude"], :name => "index_workplaces_on_latitude"
-  add_index "workplaces", ["longitude"], :name => "index_workplaces_on_longitude"
-  add_index "workplaces", ["name"], :name => "index_workplaces_on_name"
 
 end

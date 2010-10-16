@@ -6,3 +6,5 @@ tmp/**/*
 capybara-*
 test/*
 public/uploads
+db/sphinx
+config/*.sphinx.conf

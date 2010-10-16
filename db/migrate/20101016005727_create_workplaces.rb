@@ -6,10 +6,9 @@ class CreateWorkplaces < ActiveRecord::Migration
       t.text    :description
       t.text    :company_description
       t.text    :address
-      t.float   :latitude
-      t.float   :longitude
       t.boolean :confirm_bookings
       t.integer :creator_id
+      t.integer :location_id
       t.timestamps
     end
   end

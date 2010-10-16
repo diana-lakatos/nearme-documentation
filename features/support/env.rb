@@ -17,6 +17,8 @@ require 'capybara/cucumber'
 require 'capybara/session'
 require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
 
+require 'cucumber/thinking_sphinx/external_world'
+
 require File.expand_path(File.dirname(__FILE__) + '/application_controller_mixin')
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
@@ -48,7 +50,8 @@ ActionController::Base.allow_rescue = false
 # after each scenario, which can lead to hard-to-debug failures in
 # subsequent scenarios. If you do this, we recommend you create a Before
 # block that will explicitly put your database in a known state.
-Cucumber::Rails::World.use_transactional_fixtures = true
+Cucumber::Rails::World.use_transactional_fixtures = false
+
 # How to clean your database when transactions are turned off. See
 # http://github.com/bmabey/database_cleaner for more info.
 if defined?(ActiveRecord::Base)
@@ -64,4 +67,6 @@ ApplicationController.send(:include, ApplicationControllerMixin)
 
 # Let's get rid of those shitty capybara-201010101010.html files
 Capybara.save_and_open_page_path = File.join(Rails.root, 'tmp', 'capybara')
+
+Cucumber::ThinkingSphinx::ExternalWorld.new
 

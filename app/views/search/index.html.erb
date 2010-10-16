@@ -3,25 +3,33 @@
   <%= render :partial => "public/search_bar", :locals => { :value => @query } %>
 <% end -%>
 
-<% if @workplaces.nil? %>
+<% if @results.nil? %>
   <p>Please enter a country, city or company</p>
 <% else %>
 
-  <% if @workplaces.any? %>
+  <% if @results.any? %>
 
-    <% if @workplaces.search_results.any? %>
+    <% if @results.search_results.any? %>
       <h2>Workplaces matching: "<%= @query %>"</h2>
-      <%= render @workplaces.search_results %>
+      <%= render @results.search_results %>
     <% end %>
 
-    <% if @workplaces.geo_results.any? %>
-      <h2>Workplaces near: "<%= @workplaces.formatted_location %>"</h2>
-      <%= render @workplaces.geo_results %>
+    <% if @results.geo_results.any? %>
+      <h2>Workplaces near: "<%= @results.location %>"</h2>
+      <%= render @results.geo_results %>
     <% end %>
 
   <% else %>
 
     <p>No results found</p>
+
+    <% if @results.location_alternatives.any? %>
+      <ul class="alternatives">
+        <% @results.location_alternatives.each do |alternative| %>
+          <li><%= link_to alternative.name, search_path(:q => alternative.name) %></li>
+        <% end %>
+      </ul>
+    <% end %>
 
   <% end %>
 
