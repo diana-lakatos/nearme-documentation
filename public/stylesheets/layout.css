@@ -59,3 +59,49 @@ section#content {
 	overflow: hidden;
 	padding: 40px 0;
 }
+
+
+/* === GENERIC CLASSES === */
+
+form.big_search .inner {
+	background: rgba(0,0,0,0.2);
+	border-top: 1px solid rgba(0,0,0,0.2);
+	border-bottom: 1px solid #FFF;
+	border-radius: 20px;
+	height: 40px;
+	overflow: hidden;
+}
+
+form.big_search .inner input[type='text'] {
+	background: transparent;
+	border: none;
+	outline: none;
+	height: 38px;
+	padding-left: 15px;
+	width: 90%;
+	font-weight: bold;
+	text-shadow: 0px 1px 0px rgba(255,255,255,0.3);
+	color: #333;
+}
+
+form.big_search .inner input[type='submit'] {
+	float: right;
+	width: 6n%;
+	border: none;
+	background: transparent url(/images/magnifier.png) no-repeat right center;
+	height: 40px;
+	margin-right: 10px;
+}
+
+form.big_search .inner input[type='submit']:hover {
+	background: transparent url(/images/magnifier_alt.png) no-repeat right center;
+}
+
+form.big_search .inner input[type='submit']:active {
+	background: transparent url(/images/magnifier_down.png) no-repeat right center;
+}
+
+form.big_search .inner input[type='text']::-webkit-input-placeholder {
+	color: #888;
+	font-style: italic;
+}
