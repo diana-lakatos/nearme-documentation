@@ -1,5 +1,4 @@
 development: &DEV
-  port: 3312
   sql_range_step: 999999
   min_prefix_len: 1
 

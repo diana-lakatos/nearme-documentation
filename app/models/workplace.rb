@@ -1,17 +1,24 @@
 class Workplace < ActiveRecord::Base
 
+  class Results
+    attr_accessor :results, :bounds, :location
+    delegate :any?, :to => :results
+  end
+
   belongs_to :creator, :class_name => "User", :foreign_key => "creator_id"
   has_many :photos
   has_many :bookings
   belongs_to :location
 
-  validates_presence_of :name, :address, :maximum_desks, :location_id
+  validates_presence_of :name, :address, :maximum_desks, :latitude, :longitude
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0
 
-  before_validation :find_location
+  before_validation :fetch_coordinates
 
   define_index do
     indexes :name
+    has "RADIANS(latitude)",  :as => :latitude,  :type => :float
+    has "RADIANS(longitude)", :as => :longitude, :type => :float
   end
 
   def created_by?(user)
@@ -26,13 +33,35 @@ class Workplace < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
+  def self.search_with_location(location)
+    results = Results.new
+    results.results = []
+
+    results.location = Geocode.search(location).try(:first)
+    return results if results.location.nil?
+
+    bounds = results.location.bounds
+
+    debugger
+    if bounds
+      results.bounds = bounds
+      results.results = where(:latitude => bounds['northeast']['lat']..bounds['southwest']['lat'],
+                              :longitude => bounds['southwest']['lng']..bounds['northeast']['lng'])
+    else
+      # something else
+    end
+
+    results
+  end
+
   private
 
-    def find_location
-      self.location = Location.find_or_create_by_geocode(address) if address
-    rescue Location::MissingLocation
-      errors.add(:location, :missing)
+    def fetch_coordinates
+      geocoded = Geocode.search(address).try(:first)
+      if geocoded
+        self.latitude = geocoded.latitude
+        self.longitude = geocoded.longitude
+      end
     end
 
 end
-

@@ -8,7 +8,8 @@ class CreateWorkplaces < ActiveRecord::Migration
       t.text    :address
       t.boolean :confirm_bookings
       t.integer :creator_id
-      t.integer :location_id
+      t.float   :latitude
+      t.float   :longitude
       t.timestamps
     end
   end

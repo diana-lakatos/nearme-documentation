@@ -3,25 +3,21 @@ module Geocode
 
   class Result
 
-    VALID_PARTS = %w(street_address route intersection political country administrative_area_level_1
-                  administrative_area_level_2 administrative_area_level_3 colloquial_area locality
-                  sublocality neighborhood premise subpremise postal_code natural_feature airport
-                  park point_of_interest post_box street_number floor room)
-
-    attr_reader :doc, :parts, :name, :latitude, :longitude
+    attr_reader :doc, :parts, :name, :latitude, :longitude, :bounds
 
     def initialize(doc)
       @doc = doc
       @name = doc['formatted_address']
       @latitude = doc['geometry']['location']['lat']
       @longitude = doc['geometry']['location']['lng']
+      @bounds = doc['geometry']['bounds']
 
       @parts = {}
       address_components = doc['address_components']
       if address_components
         address_components.each do |c|
           c['types'].each do |t| 
-            @parts[t] = c['long_name'] if VALID_PARTS.include?(t)
+            @parts[t] = c['long_name']
           end
         end
       end

@@ -2,33 +2,35 @@
 <%= render :partial => "public/search_bar", :locals => { :value => @query } %>
 
 <% if @results.nil? %>
-  <p>Please enter a country, city or company</p>
+  <p>Please enter a country, city or address</p>
 <% else %>
 
+  <% if @results.location && @results.bounds %>
+    <div id="bounds_map" style="height: 250px; margin: 10px 0;"></div>
+    <script type="text/javascript">
+      $(document).ready(function() {
+          var latlng = new google.maps.LatLng(<%= @results.location.latitude %>, <%= @results.location.longitude %>);
+          var map = new google.maps.Map(document.getElementById("bounds_map"), {
+            zoom: 8,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: false
+          });
+          var bounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng(<%= @results.bounds['southwest']['lat'] %>, <%= @results.bounds['southwest']['lng'] %>),
+            new google.maps.LatLng(<%= @results.bounds['northeast']['lat'] %>, <%= @results.bounds['northeast']['lng'] %>)
+          );
+          map.fitBounds(bounds);
+      });
+    </script>
+  <% end %>
+
   <% if @results.any? %>
-
-    <% if @results.search_results.any? %>
-      <h2>Workplaces matching: "<%= @query %>"</h2>
-      <%= render @results.search_results %>
-    <% end %>
-
     <% if @results.geo_results.any? %>
-      <h2>Workplaces near: "<%= @results.location %>"</h2>
       <%= render @results.geo_results %>
     <% end %>
-
   <% else %>
-
     <p>No results found</p>
-
-    <% if @results.location_alternatives.any? %>
-      <ul class="alternatives">
-        <% @results.location_alternatives.each do |alternative| %>
-          <li><%= link_to alternative.name, search_path(:q => alternative.name) %></li>
-        <% end %>
-      </ul>
-    <% end %>
-
   <% end %>
 
 <% end %>

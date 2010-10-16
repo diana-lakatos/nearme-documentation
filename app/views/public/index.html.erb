@@ -1,3 +1,4 @@
+
 <section id="headline">
   <div class="grid_5 image">
     <%= image_tag "desk_marker.png" %>
@@ -8,12 +9,34 @@
   </div>
   <div class="grid_12 search">
     <%= render :partial => "search_bar", :locals => { :value => "" } %>
+    <div id="suggest_location" style="display: none"></div>
   </div>
 </section>
+
 <div class="grid_8 alpha">
   <p><%= link_to "Create your Workspace, Today!", new_workplace_path %></p>
   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 </div>
+
 <div class="grid_4 omega">
   <%= render :partial => "layouts/sidebar" %>
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    if (Modernizr.geolocation) {
+      function updateLocation(position) {
+       var geocoder = new google.maps.Geocoder();
+       geocoder.geocode({ address: position.coords.latitude + "," + position.coords.longitude }, function(results, status) {
+         if (status == google.maps.GeocoderStatus.OK) {
+           var location = results[0].formatted_address;
+           var link = $("<a></a>").attr("href", "/search?q=" + location).html("Search near: &quot;" + location + "&quot;");
+           $("#suggest_location").html(link).show();
+         }
+       });
+      }
+      navigator.geolocation.getCurrentPosition(updateLocation);
+    }
+  });
+</script>
+
