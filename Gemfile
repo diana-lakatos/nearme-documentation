@@ -18,7 +18,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'mockweb'
+  gem 'webmock'
   gem 'autotest'
   gem 'capybara'
   gem 'database_cleaner'
