@@ -4,6 +4,7 @@ gem 'rails', '3.0.1'
 gem 'pg'
 gem 'omnisocial'
 gem 'geokit-rails3'
+gem 'capistrano'
 
 group :test, :cucumber do
   gem 'rspec-rails'
