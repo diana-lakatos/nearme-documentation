@@ -75,7 +75,7 @@
       <div id="map" style="height: 200px"></div>
       <%= link_to "Open in Google Maps", "http://maps.google.com?q=#{@workplace.address}", :target => "_blank" %>
       <details>
-        <%= simple_format @workplace.location.name %>
+        <%= simple_format @workplace.address %>
       </details>
     </section>
   </aside>
@@ -86,7 +86,7 @@
   $(document).ready(function() {
       var latlng = new google.maps.LatLng(<%= @workplace.latitude %>, <%= @workplace.longitude %>);
       var myOptions = {
-        zoom: 8,
+        zoom: 13,
         center: latlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         mapTypeControl: false
