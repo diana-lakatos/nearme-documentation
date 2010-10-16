@@ -1,4 +1,3 @@
-
 begin
   require 'thinking_sphinx/deploy/capistrano'
 rescue
@@ -6,6 +5,8 @@ rescue
   puts "gem install thinking-sphinx --pre"
   exit 1
 end
+
+require 'bundler/capistrano'
 
 $:.unshift(File.expand_path('./lib', ENV['rvm_path']))  # Add RVM's lib directory to the load path.
 require "rvm/capistrano"                                # Load RVM's capistrano plugin.
@@ -26,8 +27,7 @@ role :db,  "desksnear.me", :primary => true        # This is where Rails migrati
 role :db,  "desksnear.me"
 
 after "deploy:symlink" do
-  run "cd #{deploy_to}/current; bundle install --without=test"
-  run "cd #{deploy_to}/current; rake db:migrate RAILS_ENV=production --trace"
+  run "cd #{current_path}; rake db:migrate RAILS_ENV=production --trace"
 end
 
 after "deploy:symlink", "deploy:update_crontab"
