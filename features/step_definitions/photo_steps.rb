@@ -1,5 +1,5 @@
 Then /^I should see (\d+) workplace photos?$/ do |count|
-  all("ul#photos li img").should have(count.to_i).items
+  all(selector_for("photos")).should have(count.to_i).items
 end
 
 When /^I attach the photo "([^"]*)" to "([^"]*)"$/ do |photo, field|
@@ -8,7 +8,7 @@ When /^I attach the photo "([^"]*)" to "([^"]*)"$/ do |photo, field|
 end
 
 Then /^the workplace photos should be:$/ do |table|
-  all("ul#photos li img").each do |image|
+  all(selector_for("photos")).each do |image|
     table.raw.flatten.should include(image["alt"])
   end
 end
