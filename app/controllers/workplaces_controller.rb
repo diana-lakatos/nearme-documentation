@@ -1,5 +1,6 @@
 class WorkplacesController < ApplicationController
-  before_filter :require_user
+
+  before_filter :require_user, :except => [ :show ]
 
   def new
     @workplace = current_user.workplaces.build(:maximum_desks => 1, :confirm_bookings => false)
