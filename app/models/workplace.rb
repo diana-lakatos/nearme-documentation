@@ -1,9 +1,13 @@
 class Workplace < ActiveRecord::Base
 
   belongs_to :creator, :class_name => "User", :foreign_key => "creator_id"
-  has_many :photos
-  has_many :bookings
   belongs_to :location
+  has_many :bookings
+  has_many :photos do
+    def thumb
+      (first || build).thumb
+    end
+  end
 
   validates_presence_of :name, :address, :maximum_desks, :latitude, :longitude
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0
@@ -19,10 +23,6 @@ class Workplace < ActiveRecord::Base
 
   def created_by?(user)
     user && user == creator
-  end
-
-  def thumb
-    images.first.thumb
   end
 
   def to_param
