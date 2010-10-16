@@ -1,6 +1,6 @@
 class ComingSoonController < ApplicationController
 
-  skip_before_filter :coming_soon
+  skip_before_filter :show_coming_soon
 
   def start
     session[:disable_coming_soon] = false
