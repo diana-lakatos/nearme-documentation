@@ -6,14 +6,22 @@ gem 'omnisocial'
 gem 'geokit-rails3'
 gem 'capistrano'
 
+# Bundle gems for the local environment. Make sure to
+# put test-only gems in this group so their generators
+# and rake tasks are available in development mode:
+group :development, :test do
+  gem 'ffaker'
+  gem 'ruby-debug19'
+  gem 'rspec', '>= 2.0.0'
+  gem 'rspec-rails', '>= 2.0.0'
+end
+
 group :test, :cucumber do
-  gem 'rspec-rails'
-  gem 'redgreen'
+  gem 'factory_girl_rails'
   gem 'capybara'
-  gem 'cucumber'
-  gem 'cucumber-rails'
   gem 'database_cleaner'
-  gem 'pickle'
-  gem 'factory_girl'
+  gem 'cucumber-rails'
+  gem 'cucumber'
   gem 'launchy'
+  gem 'pickle'
 end
