@@ -3,15 +3,17 @@ common: &common
   encoding: unicode
   pool: 5
   username: postgres
-  password: 
+  password:
 
-  
+
 development:
   <<: *common
   database: desksnearme_development
 
 test: &test
   <<: *common
+  username: ci
+  password: e1e1730728d0db3d0
   database: desksnearme_test
 
 production: &test
