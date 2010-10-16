@@ -15,7 +15,6 @@ Scenario: A user can see the form
     And I should see "Maximum desks"
     And I should see "Confirm bookings"
 
-
 Scenario: A user can successfully create a workplace
   Given I am on the new workplace page
    When I fill in "Name" with "Joe's Codin' Garage"
