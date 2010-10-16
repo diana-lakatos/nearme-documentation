@@ -4,7 +4,7 @@ class Workplace < ActiveRecord::Base
   validates_presence_of :name, :address, :maximum_desks
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0
 
-  def belongs_to?(user)
+  def created_by?(user)
     user && user == creator
   end
 end

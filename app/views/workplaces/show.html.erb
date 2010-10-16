@@ -1,7 +1,7 @@
 
 <% content_for :sidebar do %>
 
-  <% if @workplace.belongs_to?(current_user) %>
+  <% if @workplace.created_by?(current_user) %>
     <div id="controls">
       <%= link_to "Edit Workplace", edit_workplace_path(@workplace) %>
     </div>
