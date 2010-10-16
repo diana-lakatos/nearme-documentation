@@ -1,1 +1,9 @@
+<% content_for :upper do -%>
+  <%= form_for :search, :html => { :class => "big_search" } do |f| %>
+    <div class="inner">
+      <%= f.text_field :query, :placeholder => "Country, city or company" %>
+      <%= f.submit :search, :value => "" %>
+    </div>    
+  <% end %>
+<% end -%>
 <p>Sup?</p>
