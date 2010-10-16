@@ -1,10 +1,5 @@
 class Workplace < ActiveRecord::Base
 
-  class Results
-    attr_accessor :results, :bounds, :location
-    delegate :any?, :to => :results
-  end
-
   belongs_to :creator, :class_name => "User", :foreign_key => "creator_id"
   has_many :photos
   has_many :bookings
@@ -19,6 +14,7 @@ class Workplace < ActiveRecord::Base
     indexes :name
     has "RADIANS(latitude)",  :as => :latitude,  :type => :float
     has "RADIANS(longitude)", :as => :longitude, :type => :float
+    group_by "latitude", "longitude"
   end
 
   def created_by?(user)
@@ -33,33 +29,25 @@ class Workplace < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
-  def self.search_with_location(location)
-    results = Results.new
-    results.results = []
+  def self.search_with_location(query)
+    geocoded = Geocoder.search(query).try(:[], 'results').try(:first)
+    return [ [], nil ] if geocoded.nil?
 
-    results.location = Geocode.search(location).try(:first)
-    return results if results.location.nil?
+    location = { :name => geocoded['formatted_address'], 
+                 :lat => geocoded['geometry']['location']['lat'],
+                 :lng => geocoded['geometry']['location']['lng'] }
 
-    bounds = results.location.bounds
-
-    if bounds
-      results.bounds = bounds
-      results.results = where(:latitude => bounds['southwest']['lat']..bounds['northeast']['lat'],
-                              :longitude => bounds['southwest']['lng']..bounds['northeast']['lng'])
-    else
-      # something else
-    end
-
-    results
+    [ search(:geo => [ Geocoder.to_radians(location[:lat]), Geocoder.to_radians(location[:lng]) ], 
+             :with => { "@geodist" => (0.0)..(30_000.0) }, :order => "@geodist ASC, @relevance DESC") , location ]
   end
 
   private
 
     def fetch_coordinates
-      geocoded = Geocode.search(address).try(:first)
+      geocoded = Geocoder.search(address).try(:[], 'results').try(:first)
       if geocoded
-        self.latitude = geocoded.latitude
-        self.longitude = geocoded.longitude
+        self.latitude = geocoded['geometry']['location']['lat']
+        self.longitude = geocoded['geometry']['location']['lng']
       end
     end
 

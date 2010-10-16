@@ -4,7 +4,6 @@ gem 'rails', '3.0.1'
 gem 'pg'
 gem 'omnisocial'
 gem 'rails-geocoder', :require => 'geocoder'
-gem 'thinking-sphinx', '2.0.0.rc2', :require => 'thinking_sphinx'
 gem 'capistrano'
 gem 'simple_form'
 gem 'mini_magick'
@@ -12,6 +11,10 @@ gem 'carrierwave'
 gem 'state_machine'
 gem 'jquery-rails'
 gem 'fog'
+gem 'rails-geocoder', :require => 'geocoder'
+gem 'thinking-sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx.git',
+                       :branch => 'rails3',
+                       :require => 'thinking_sphinx'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
@@ -24,7 +27,7 @@ group :development, :test do
 end
 
 group :test do
-  # gem 'webmock', :git => "git://github.com/bblimke/webmock"
+  # gem 'webmock', :git => 'git://github.com/bblimke/webmock'
   gem 'timecop'
   gem 'autotest'
   gem 'capybara'

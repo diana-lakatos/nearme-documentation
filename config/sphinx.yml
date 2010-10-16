@@ -1,11 +1,5 @@
-development: &DEV
-  sql_range_step: 999999
-  min_prefix_len: 1
-
 test:
-  <<: *DEV
   port: 3314
 
 production: &PROD
-  <<: *DEV
   searchd_file_path: "/var/apps/desksnearme/shared/db/sphinx/production"
