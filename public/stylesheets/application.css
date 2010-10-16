@@ -2,6 +2,14 @@
 		Site wide styles for widgets and elements
 */
 
+/* === Workplace Detail */
+
+article.workplace { }
+
+article.workplace h1 {
+	font-weight: 400;
+}
+
 /* === Booking table */
 
 table.bookings.extended {
@@ -54,4 +62,70 @@ table.bookings.extended tr td.day.last_bookings time {
 
 table.bookings.extended tr td.day.booked time {
 	background: #D2666B;
+}
+
+/* === Big form search */
+
+form.big_search .inner {
+	background: rgba(0,0,0,0.2);
+	border-top: 1px solid rgba(0,0,0,0.2);
+	border-bottom: 1px solid #FFF;
+	border-radius: 20px;
+	height: 40px;
+	overflow: hidden;
+}
+
+form.big_search .inner input[type='text'] {
+	background: transparent;
+	border: none;
+	outline: none;
+	height: 38px;
+	padding-left: 15px;
+	font-size: 16px;
+	width: 90%;
+	font-weight: bold;
+	text-shadow: 0px 1px 0px rgba(255,255,255,0.3);
+	color: #333;
+}
+
+form.big_search .inner input[type='submit'] {
+	float: right;
+	width: 6%;
+	border: none;
+	background: transparent url(/images/magnifier.png) no-repeat right center;
+	height: 40px;
+	margin-right: 10px;
+}
+
+form.big_search .inner input[type='submit']:hover {
+	background: transparent url(/images/magnifier_alt.png) no-repeat right center;
+}
+
+form.big_search .inner input[type='submit']:active {
+	background: transparent url(/images/magnifier_down.png) no-repeat right center;
+}
+
+form.big_search .inner input[type='text']::-webkit-input-placeholder {
+	color: #888;
+	font-style: italic;
+}
+
+/* === Headline */
+
+section#headline {
+	margin: 0 0 24px 0;
+	overflow: hidden;
+}
+
+section#headline h2 {
+	font-size: 48px;
+	line-height: 48px;
+	margin-top: 128px;
+	margin-bottom: 12px;
+	font-weight: 700;
+	text-shadow: 0px 2px 0px #FFF;
+}
+
+section#headline .search {
+	margin-top: 12px;
 }
