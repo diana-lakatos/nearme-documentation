@@ -29,7 +29,7 @@ class Workplace < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
-  def self.search_with_location(query)
+  def self.search_by_location(query)
     geocoded = Geocoder.search(query).try(:[], 'results').try(:first)
     return [ [], nil ] if geocoded.nil?
 
