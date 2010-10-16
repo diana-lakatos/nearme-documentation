@@ -18,7 +18,7 @@
 # end
 
 every 10.minutes do
-  rake "ts:index"
+  command "/home/deploy/.rvm/bin/rake ts:index"
 end
 
 # Learn more: http://github.com/javan/whenever
