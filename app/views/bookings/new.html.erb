@@ -1,4 +1,4 @@
-<h1>You are making a booking for <%= l(@booking.date, :format => :long) %>
+<h1>You are making a booking for <%= l(@booking.date, :format => :long) %></h1>
 <%= simple_form_for [@workplace, @booking] do |f| %>
   <%= f.input :date, :as => :hidden %>
   <%= f.input :comment %>
