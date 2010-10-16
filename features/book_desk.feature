@@ -19,5 +19,13 @@ Feature: A user can book a desk
       And a booking should exist with date: "2010-10-18"
       # And I should see "Booking successful"
   
+  Scenario: An anonymous user can log in to book a desk
+    Given a user exists  
+     When I go to the workplace's page
+      And I follow the booking link for "18th October 2010"
+  
+  
+  
+  
   
   
