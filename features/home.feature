@@ -5,4 +5,4 @@ Feature: A user can see the homepage
 
 Scenario: A user can see the homepage
   Given I go to the home page
-   Then I should see "What is Desks Near Me?"
+   Then I should see "Create your Workspace, Today!"
