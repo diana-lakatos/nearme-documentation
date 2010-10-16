@@ -9,3 +9,10 @@ Then /^I should be logged out$/ do
   Then %{I should see "Login"}
 end
 
+Given /^I search for "([^"]*)"$/ do |text|
+  steps %{
+    And I fill in "q" with "#{text}"
+    And I press "submit"
+  }
+end
+

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101016062609) do
+ActiveRecord::Schema.define(:version => 20101016100225) do
 
   create_table "bookings", :force => true do |t|
     t.datetime "created_at"
@@ -43,12 +43,16 @@ ActiveRecord::Schema.define(:version => 20101016062609) do
     t.text     "description"
     t.text     "company_description"
     t.text     "address"
-    t.float    "lat"
-    t.float    "lng"
+    t.float    "latitude"
+    t.float    "longitude"
     t.boolean  "confirm_bookings"
     t.integer  "creator_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "workplaces", ["latitude"], :name => "index_workplaces_on_latitude"
+  add_index "workplaces", ["longitude"], :name => "index_workplaces_on_longitude"
+  add_index "workplaces", ["name"], :name => "index_workplaces_on_name"
 
 end

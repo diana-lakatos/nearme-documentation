@@ -1,0 +1,30 @@
+
+<% content_for :upper do -%>
+  <%= render :partial => "public/search_bar", :locals => { :value => @query } %>
+<% end -%>
+
+<% if @workplaces.nil? %>
+  <p>Please enter a country, city or company</p>
+<% else %>
+
+  <% if @workplaces.any? %>
+
+    <% if @workplaces.search_results.any? %>
+      <h2>Workplaces matching: "<%= @query %>"</h2>
+      <%= render @workplaces.search_results %>
+    <% end %>
+
+    <% if @workplaces.geo_results.any? %>
+      <h2>Workplaces near: "<%= @workplaces.formatted_location %>"</h2>
+      <%= render @workplaces.geo_results %>
+    <% end %>
+
+  <% else %>
+
+    <p>No results found</p>
+
+  <% end %>
+
+<% end %>
+
+

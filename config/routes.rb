@@ -7,6 +7,8 @@ DesksnearMe::Application.routes.draw do
     match "start" => "coming_soon#start", :as => :stop
   end
 
+  match "/search", :to => "search#index", :as => :search
+
   root :to => "public#index"
 
 end

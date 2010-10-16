@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 gem 'rails', '3.0.1'
 gem 'pg'
 gem 'omnisocial'
-gem 'geokit-rails3'
+gem 'rails-geocoder', :require => 'geocoder'
 gem 'capistrano'
 gem 'simple_form'
 
