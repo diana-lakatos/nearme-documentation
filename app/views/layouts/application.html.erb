@@ -22,6 +22,7 @@
   </header>
   <section id="content">
     <div class="container_12">
+      <%= yield :upper %>
       <% content = yield %>
       <% sidebar = yield(:sidebar) %>
       <% unless sidebar.empty? %>
