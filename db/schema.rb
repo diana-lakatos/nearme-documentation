@@ -17,11 +17,6 @@ ActiveRecord::Schema.define(:version => 20101016100225) do
     t.datetime "updated_at"
   end
 
-  create_table "desks", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "login_accounts", :force => true do |t|
     t.string   "type"
     t.integer  "user_id"

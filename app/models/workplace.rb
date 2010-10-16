@@ -40,7 +40,13 @@ class Workplace < ActiveRecord::Base
       # Blindly use the first results (assume they are most accurate)
       place = geolocation['results'].first
       location = place['geometry']['location']
-      results.geo_results = near([ location['lat'], location['lng'] ]).where("id NOT IN (?)", results.search_results.map(&:id)).to_a
+
+      geo_results = near([ location['lat'], location['lng'] ], 20)
+
+      # Filter out those found in the name search
+      geo_results = geo_results.where("id NOT IN (?)", results.search_results.map(&:id)) if results.search_results.any?
+
+      results.geo_results = geo_results.to_a
       results.formatted_location = place['formatted_address']
     end
 
