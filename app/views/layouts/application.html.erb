@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>DesksnearMe</title>
+  <title>DesksNear.Me :: <%= show_title? ? yield(:title) : "Where do you want to work today?" %></title>
+  <meta name="description" content="Desks Near Me is a public bookign syetem for companies to offer desks to freelancers and sole-operators.">
+  <meta name="author" content="The Rad Warlike Annex">
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
+  <!-- <link rel="shortcut icon" href="/favicon.ico"> -->
+  <!-- <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
   <%= stylesheet_link_tag :all %>
   <%= javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
 </head>
 <body>
-
-<%= yield %>
-
+  <header>
+    <div class="container_12">
+      <% link_to root_url do %><h1 class="grid_3">DesksNear.Me</h1><% end %>
+      <%= render :partial => "layouts/navigation" %>
+    </div>
+  </header>
+  <section id="content">
+    <div class="container_12">
+      <%= yield :upper %>
+      <div class="grid_8 alpha">
+        <%= yield %>
+      </div>
+      <aside id="sidebar" class="grid_4 omega">
+        <%= render :partial => "layouts/sidebar" %>
+      </aside>
+    </div>
+  </section>
 </body>
 </html>
