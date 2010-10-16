@@ -1,7 +1,7 @@
 class CreateBookings < ActiveRecord::Migration
   def self.up
     create_table :bookings do |t|
-
+      
       t.timestamps
     end
   end

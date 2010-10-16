@@ -1,5 +1,4 @@
 class Workplace < ActiveRecord::Base
-
   class SearchResults
     attr_accessor :geo_results, :search_results, :formatted_location
     def initialize
@@ -15,6 +14,7 @@ class Workplace < ActiveRecord::Base
 
   belongs_to :creator, :class_name => "User", :foreign_key => "creator_id"
   has_many :photos
+  has_many :bookings
 
   validates_presence_of :name, :address, :maximum_desks
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0

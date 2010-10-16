@@ -1,6 +1,7 @@
 DesksnearMe::Application.routes.draw do
   resources :workplaces do
     resources :photos
+    resources :bookings
   end
 
   scope "/coming_soon", :as => :coming_soon do

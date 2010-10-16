@@ -8,6 +8,7 @@ gem 'capistrano'
 gem 'simple_form'
 gem 'mini_magick'
 gem 'carrierwave'
+gem 'state_machine'
 
 gem 'jquery-rails'
 
@@ -23,6 +24,7 @@ end
 
 group :test do
   # gem 'webmock', :git => "git://github.com/bblimke/webmock"
+  gem 'timecop'
   gem 'autotest'
   gem 'capybara'
   gem 'database_cleaner'

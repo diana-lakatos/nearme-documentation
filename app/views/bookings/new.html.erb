@@ -1,0 +1,6 @@
+<h1>You are making a booking for <%= l(@booking.date, :format => :long) %>
+<%= simple_form_for [@workplace, @booking] do |f| %>
+  <%= f.input :date, :as => :hidden %>
+  <%= f.input :comment %>
+  <%= f.submit :label => 'Book'%>
+<% end %>
