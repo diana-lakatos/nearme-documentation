@@ -15,8 +15,13 @@ Scenario: A user can see the form
     And I should see "Maximum desks"
     And I should see "Confirm bookings"
 
-@wip
+
 Scenario: A user can successfully create a workplace
-  Given I go to the new workplace page
-   When event
-   Then outcome
+  Given I am on the new workplace page
+   When I fill in "Name" with "Joe's Codin' Garage"
+    And I fill in "Address" with "1 St John St Launceston TAS 7250"
+    And I fill in "Maximum desks" with "1"
+    And I choose "Yes"
+    And I press "Create Workplace"
+   Then a workplace should exist with name: "Joe's Codin' Garage"
+    And I should be on the workplace's page
