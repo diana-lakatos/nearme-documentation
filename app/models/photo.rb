@@ -1,4 +1,5 @@
 class Photo < ActiveRecord::Base
+
   mount_uploader :file, ImageUploader
 
   belongs_to :workplace
@@ -12,4 +13,5 @@ class Photo < ActiveRecord::Base
   rescue NoMethodError
     file.send(method, *args, &block)
   end
+
 end
