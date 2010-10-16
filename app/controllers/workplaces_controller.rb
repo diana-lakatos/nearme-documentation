@@ -14,15 +14,15 @@ class WorkplacesController < ApplicationController
       render :new
     end
   end
-  
+
   def show
     @workplace = Workplace.find(params[:id])
   end
-  
+
   def edit
 
   end
-  
+
   def update
     if @workplace.update_attributes(params[:workplace])
       redirect_to @workplace
@@ -30,6 +30,8 @@ class WorkplacesController < ApplicationController
       render :edit
     end
   end
+
+  protected
 
   def find_workplace
     @workplace = current_user.workplaces.find(params[:id])
