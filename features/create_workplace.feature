@@ -9,7 +9,6 @@ Background:
 
 Scenario: A user can see the form
    When I go to the new workplace page
-   Then show me the page
    Then I should see "Create a workplace"
     And I should see "Name"
     And I should see "Address"

@@ -17,7 +17,7 @@ require 'capybara/cucumber'
 require 'capybara/session'
 require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
 
-# require 'webmock/rspec'
+require File.expand_path(File.dirname(__FILE__) + '/application_controller_mixin')
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
@@ -59,6 +59,6 @@ if defined?(ActiveRecord::Base)
   end
 end
 
-# World(WebMock::API, WebMock::Matchers)
+# Include the current user hack into the ApplicationController
+ApplicationController.send(:include, ApplicationControllerMixin)
 
-# WebMock.disable_net_connect!
