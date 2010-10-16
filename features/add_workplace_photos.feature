@@ -1,4 +1,3 @@
-@wip
 Feature: A user can add photos to a workplace
   In order to give coworkers a feel for the workplace
   As a workplace manager
