@@ -113,7 +113,11 @@ hr {
 }
 
 aside section {
-	overflow: hidden;
+	/* overflow: hidden; */
+  display: -moz-inline-stack;
+  display: inline-block;
+  width: 100%;
+  
 }
 
 /* === HYPER GLOBAL === */

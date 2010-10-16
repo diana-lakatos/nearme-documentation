@@ -71,11 +71,9 @@
       </ul>
     </section>
     <section>
-      <h2>Map</h2>
-      <p>Map goes here.</p>
-    </section>
-    <section id="address">
-      <h2>Address</h2>
+      <h2>Location</h2>
+      <div id="map" style="height: 200px"></div>
+      <%= link_to "Open in Google Maps", "http://maps.google.com?q=#{@workplace.location.name}", :target => "_blank" %>
       <details>
         <%= simple_format @workplace.address %>
       </details>
@@ -84,3 +82,22 @@
   
 </article>
 
+<script type="text/javascript">
+  $(document).ready(function() {
+      var latlng = new google.maps.LatLng(<%= @workplace.location.latitude %>, <%= @workplace.location.longitude %>);
+      var myOptions = {
+        zoom: 8,
+        center: latlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: false
+      };
+      var map = new google.maps.Map(document.getElementById("map"), myOptions);
+      var image = "<%= image_path("drawer-open.png") %>";
+      var beachMarker = new google.maps.Marker({
+        position: latlng,
+        map: map,
+        icon: image
+      });
+
+  });
+</script>
