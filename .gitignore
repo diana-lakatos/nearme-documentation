@@ -1,10 +1,10 @@
 .DS_Store
 .bundle
 db/*.sqlite3
-log/*.log
-tmp/**/*
 capybara-*
 test/*
 public/uploads
 db/sphinx
 config/*.sphinx.conf
+log
+tmp

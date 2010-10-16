@@ -1,7 +1,5 @@
 
-<% content_for :upper do -%>
-  <%= render :partial => "public/search_bar", :locals => { :value => @query } %>
-<% end -%>
+<%= render :partial => "public/search_bar", :locals => { :value => @query } %>
 
 <% if @results.nil? %>
   <p>Please enter a country, city or company</p>

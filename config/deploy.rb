@@ -29,7 +29,7 @@ after "deploy:symlink", "deploy:update_crontab"
 after "deploy:symlink", "thinking_sphinx:stop", "thinking_sphinx:configure", "thinking_sphinx:start"
 
 after "deploy:symlink" do
-  run "cd #{deploy_to}/current; bundle iuunstall --without=test"
+  run "cd #{deploy_to}/current; bundle install --without=test"
   run "cd #{deploy_to}/current; rake db:migrate RAILS_ENV=production --trace"
 end
 
