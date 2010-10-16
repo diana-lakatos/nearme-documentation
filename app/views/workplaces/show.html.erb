@@ -63,7 +63,7 @@
       <ul>
       <% @workplace.photos.each do |photo| %>
         <li>
-          <%= link_to photo.large.url do %>
+          <%= link_to photo.large.url, :title => photo.description, :rel => "photos" do %>
             <%= image_tag(photo.thumb.url, :alt => photo.description) %>
           <% end %>
         </li>
