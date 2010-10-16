@@ -4,12 +4,6 @@ class ApplicationController < ActionController::Base
 
   before_filter :show_coming_soon, :if => Proc.new { Rails.env.production? }
 
-  before_filter :something
-
-  def something
-    debugger
-  end
-
   private
 
     def show_coming_soon
