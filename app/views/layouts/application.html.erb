@@ -10,6 +10,8 @@
   <%= stylesheet_link_tag :all %>
   <%= javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
+  <script type="text/javascript" src="http://use.typekit.com/vlg4dft.js"></script>
+  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 </head>
 <body>
   <header>
@@ -22,21 +24,7 @@
   </header>
   <section id="content">
     <div class="container_12">
-      <%= yield :upper %>
-      <% content = yield %>
-      <% sidebar = yield(:sidebar) %>
-      <% unless sidebar.empty? %>
-        <div class="grid_8 alpha">
-          <%= content %>
-        </div>
-        <aside id="sidebar" class="grid_4 omega">
-          <%= sidebar %>
-        </aside>
-      <% else %>
-        <div class="grid_12">
-          <%= content %>
-        </div>
-      <% end %>
+      <%= yield %>
     </div>
   </section>
 </body>

@@ -1,15 +1,66 @@
-<% content_for :sidebar do %>
 
-  <% if @workplace.created_by?(current_user) %>
-    <div id="controls">
-      <%= link_to "Edit Workplace", edit_workplace_path(@workplace) %>
-      <%= link_to "Manage Workplace Photos", workplace_photos_path(@workplace) %>
-    </div>
-  <% end %>
+<article class="workplace">
+  
+  <div class="grid_8 alpha">
+    <h1 class="tk-adelle"><%= @workplace.name %></h1>
+  </div>
+  <div class="grid_4 omega">
+    <% if @workplace.created_by?(current_user) %>
+        <%= link_to "Edit Workplace", edit_workplace_path(@workplace) %>
+        <%= link_to "Manage Workplace Photos", workplace_photos_path(@workplace) %>
+    <% end %>
+  </div>
+  
+  <section class="details grid_8 alpha">
+    
+    <p class="em"><%= @workplace.company_description %></p>
+    
+    <hr />
+    
+    <h2>Bookings</h2>
+    <table class="bookings extended">
+      <tr>
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+      </tr>
+      <tr>
+        <td class="day available">
+          <time datetime="2010-10-16">16<sup>th</sup></time>
+          <details class="availability">4</details>
+        </td>
+        <td class="day booked">
+          <time datetime="2010-10-16">17<sup>th</sup></time>
+          <details class="availability">0</details>
+        </td>
+        <td class="day available">
+          <time datetime="2010-10-16">18<sup>th</sup></time>
+          <details class="availability">3</details>
+        </td>
+        <td class="day last_bookings">
+          <time datetime="2010-10-16">19<sup>th</sup></time>
+          <details class="availability">1</details>
+        </td>
+        <td class="day last_bookings">
+          <time datetime="2010-10-16">20<sup>th</sup></time>
+          <details class="availability">2</details>
+        </td>
+      </tr>
+    </table>
+    
+    <hr />
+        
+    <h2>Extra Info</h2>
+    <p><%= @workplace.description %></p>
 
-  <div id="photos">
-    <p>Photos</p>
-    <ul>
+  </section>
+  
+  <aside class="grid_4 omega">
+    <section id="photos">
+      <h2>Photos</h2>
+      <ul>
       <% @workplace.photos.each do |photo| %>
         <li>
           <%= link_to photo.large.url do %>
@@ -17,31 +68,19 @@
           <% end %>
         </li>
       <% end %>
-    </ul>
-    <br clear="both" />
-  </div>
-
-  <div id="map">
-    <p>Map goes here.</p>
-  </div>
-
-  <div id="address">
-    <%= simple_format @workplace.address %>
-  </div>
-
-<% end %>
-
-<div id="company">
-  <h1><%= @workplace.name %></h1>
-  <p><%= @workplace.company_description %></p>
-</div>
-
-<div id="bookings">
-  <p>Bookings here</p>
-</div>
-
-<div id="extra_info">
-  <h2>Extra Info</h2>
-  <p><%= @workplace.description %></p>
-</div>
+      </ul>
+    </section>
+    <section>
+      <h2>Map</h2>
+      <p>Map goes here.</p>
+    </section>
+    <section id="address">
+      <h2>Address</h2>
+      <details>
+        <%= simple_format @workplace.address %>
+      </details>
+    </section>
+  </aside>
+  
+</article>
 

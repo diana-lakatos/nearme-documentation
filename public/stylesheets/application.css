@@ -1,0 +1,57 @@
+/*
+		Site wide styles for widgets and elements
+*/
+
+/* === Booking table */
+
+table.bookings.extended {
+	width: 100%;
+	border: none;
+}
+
+table.bookings.extended tr th {
+	border-bottom: 2px solid #CCC;
+}
+
+table.bookings.extended tr td {
+	border-bottom: 1px solid #CCC;
+	text-align: center;
+	height: 32px;
+	line-height: 32px;
+	font-size: 16px;
+	width: 20%;
+}
+
+table.bookings.extended tr td details.availability {
+	display: none;
+	margin: 6px 3px;
+	border-radius: 3px;
+} 
+
+table.bookings.extended tr td.hover time, table.bookings.extended tr td:hover time {
+	display: none;
+}
+
+table.bookings.extended tr td time {
+	display: block;
+	margin: 6px 3px;
+	border-radius: 3px;
+}
+
+table.bookings.extended tr td.hover details.availability,
+table.bookings.extended tr td:hover details.availability {
+	display: block;
+
+}
+
+table.bookings.extended tr td.day.available time {
+	background: #87C97B;
+}
+
+table.bookings.extended tr td.day.last_bookings time {
+	background: #DCC060;
+}
+
+table.bookings.extended tr td.day.booked time {
+	background: #D2666B;
+}

@@ -12,8 +12,6 @@ development:
 
 test: &test
   <<: *common
-  username: ci
-  password: e1e1730728d0db3d0
   database: desksnearme_test
 
 production: &test
