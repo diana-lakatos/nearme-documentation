@@ -22,13 +22,20 @@
   </header>
   <section id="content">
     <div class="container_12">
-      <%= yield :upper %>
-      <div class="grid_8 alpha">
-        <%= yield %>
-      </div>
-      <aside id="sidebar" class="grid_4 omega">
-        <%= render :partial => "layouts/sidebar" %>
-      </aside>
+      <% content = yield %>
+      <% sidebar = yield(:sidebar) %>
+      <% unless sidebar.empty? %>
+        <div class="grid_8 alpha">
+          <%= content %>
+        </div>
+        <aside id="sidebar" class="grid_4 omega">
+          <%= sidebar %>
+        </aside>
+      <% else %>
+        <div class="grid_12">
+          <%= content %>
+        </div>
+      <% end %>
     </div>
   </section>
 </body>
