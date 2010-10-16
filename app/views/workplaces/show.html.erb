@@ -1,0 +1,33 @@
+
+<% content_for :sidebar do %>
+
+  <% if @workplace.belongs_to?(current_user) %>
+    <div id="controls">
+      <%= link_to "Edit Workplace", edit_workplace_path(@workplace) %>
+    </div>
+  <% end %>
+
+  <div id="photos">
+    <p>Photos</p>
+  </div>
+
+  <div id="map">
+    <p>Map goes here.</p>
+  </div>
+
+<% end %>
+
+<div id="company">
+  <h1><%= @workplace.name %></h1>
+  <p><%= @workplace.company_description %></p>
+</div>
+
+<div id="bookings">
+  <p>Bookings here</p>
+</div>
+
+<div id="extra_info">
+  <h2>Extra Info</h2>
+  <p><%= @workplace.description %></p>
+</div>
+
