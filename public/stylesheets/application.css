@@ -10,6 +10,22 @@ article.workplace h1 {
 	font-weight: 400;
 }
 
+div.workplace details {
+  float: left;
+  width: 35%;
+  padding-top: 20px;
+}
+
+div.workplace details img {
+  float: left;
+  margin-right: 10px;
+}
+
+div.workplace table.bookings {
+  float: left;
+  width: 65%;
+}
+
 /* === Booking table */
 
 table.bookings.extended {
@@ -34,7 +50,7 @@ table.bookings.extended tr td details.availability {
 	display: none;
 	margin: 6px 3px;
 	border-radius: 3px;
-} 
+}
 
 table.bookings.extended tr td.hover time, table.bookings.extended tr td:hover time {
 	display: none;
@@ -128,4 +144,14 @@ section#headline h2 {
 
 section#headline .search {
 	margin-top: 12px;
+}
+
+/* === Search results */
+
+section#content.search div.workplace {
+  border-bottom: 2px solid #CCC;
+}
+
+section#content.search div.workplace:last-of-type {
+  border: 0;
 }

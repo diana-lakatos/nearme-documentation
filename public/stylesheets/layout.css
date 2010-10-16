@@ -90,6 +90,10 @@ section p {
 	margin-bottom: 24px;
 }
 
+section p:last-of-type {
+	margin-bottom: 0px;
+}
+
 aside h1 {
 	font-size: 24px;
 }
@@ -117,7 +121,7 @@ aside section {
   display: -moz-inline-stack;
   display: inline-block;
   width: 100%;
-  
+
 }
 
 /* === HYPER GLOBAL === */

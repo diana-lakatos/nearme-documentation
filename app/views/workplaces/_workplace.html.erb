@@ -1,6 +1,11 @@
 
 <div class="workplace">
-  <%= image_tag workplace.photos.thumb.url, :alt => workplace.name %>
-  <h3><%= link_to workplace.name, workplace %></h3>
-  <p><%= truncate(workplace.company_description) %></p>
+  <details>
+    <%= image_tag workplace.photos.thumb.url, :alt => workplace.name %>
+    <h3><%= link_to workplace.name, workplace %></h3>
+    <p><%= truncate(workplace.company_description) %></p>
+  </details>
+
+  <%= render :partial => "workplaces/availability", :locals => {:workplace => workplace} %>
+  <br clear="both" />
 </div>
