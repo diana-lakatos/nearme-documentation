@@ -1,5 +1,7 @@
 DesksnearMe::Application.routes.draw do
 
+  resources :workplaces
+
   scope "/coming_soon", :as => :coming_soon do
     match "stop" => "coming_soon#stop", :as => :start
     match "start" => "coming_soon#start", :as => :stop

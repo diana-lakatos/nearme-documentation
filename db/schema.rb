@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101016002057) do
+ActiveRecord::Schema.define(:version => 20101016005727) do
 
   create_table "login_accounts", :force => true do |t|
     t.string   "type"
@@ -28,6 +28,20 @@ ActiveRecord::Schema.define(:version => 20101016002057) do
 
   create_table "users", :force => true do |t|
     t.string   "remember_token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "workplaces", :force => true do |t|
+    t.string   "name"
+    t.integer  "maximum_desks"
+    t.text     "description"
+    t.text     "company_description"
+    t.text     "address"
+    t.float    "lat"
+    t.float    "lng"
+    t.boolean  "confirm_bookings"
+    t.integer  "creator_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

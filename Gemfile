@@ -5,6 +5,7 @@ gem 'pg'
 gem 'omnisocial'
 gem 'geokit-rails3'
 gem 'capistrano'
+gem 'simple_form'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
@@ -17,11 +18,14 @@ group :development, :test do
 end
 
 group :test do
-  gem 'factory_girl_rails'
+  gem 'mockweb'
+  gem 'autotest'
   gem 'capybara'
   gem 'database_cleaner'
   gem 'cucumber-rails'
   gem 'cucumber'
+  gem 'pickle'
+  gem 'factory_girl_rails'
   gem 'launchy'
   gem 'pickle'
 end
