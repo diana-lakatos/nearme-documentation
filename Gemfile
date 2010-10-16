@@ -18,7 +18,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'webmock'
+  # gem 'webmock', :git => "git://github.com/bblimke/webmock"
   gem 'autotest'
   gem 'capybara'
   gem 'database_cleaner'
