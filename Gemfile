@@ -4,10 +4,11 @@ gem 'rails', '3.0.1'
 gem 'pg'
 gem 'omnisocial'
 gem 'geokit-rails3'
+gem 'simple_form'
 
 group :test, :cucumber do
+  gem 'autotest'
   gem 'rspec-rails'
-  gem 'redgreen'
   gem 'capybara'
   gem 'cucumber'
   gem 'cucumber-rails'

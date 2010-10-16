@@ -31,6 +31,7 @@ GEM
     addressable (2.2.2)
     arel (1.0.1)
       activesupport (~> 3.0.0)
+    autotest (4.4.1)
     bcrypt-ruby (2.1.2)
     builder (2.1.2)
     capybara (0.3.9)
@@ -124,7 +125,6 @@ GEM
       rake (>= 0.8.4)
       thor (~> 0.14.0)
     rake (0.8.7)
-    redgreen (1.2.2)
     rspec (2.0.0)
       rspec-core (= 2.0.0)
       rspec-expectations (= 2.0.0)
@@ -143,6 +143,7 @@ GEM
       ffi (~> 0.6.3)
       json_pure
       rubyzip
+    simple_form (1.2.2)
     term-ansicolor (1.0.5)
     thor (0.14.3)
     treetop (1.4.8)
@@ -154,6 +155,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  autotest
   capybara
   cucumber
   cucumber-rails
@@ -165,5 +167,5 @@ DEPENDENCIES
   pg
   pickle
   rails (= 3.0.1)
-  redgreen
   rspec-rails
+  simple_form
