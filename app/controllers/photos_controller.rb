@@ -17,6 +17,11 @@ class PhotosController < ApplicationController
     end
   end
 
+  def destroy
+    @workplace.photos.destroy(params[:id])
+    redirect_to :action => :index
+  end
+
   protected
 
   def find_workplace

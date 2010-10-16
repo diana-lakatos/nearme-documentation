@@ -25,3 +25,14 @@ Feature: A user can add photos to a workplace
       And the workplace photos should be:
         | The Boss' Desk                 |
         | This is where the intern works |
+
+  Scenario: Deleting photos
+    When I add the following photos to the workplace:
+      | File             | Description                    |
+      | boss's desk.jpg  | The Boss' Desk                 |
+      | intern chair.jpg | This is where the intern works |
+    And I go to the workplace's page
+    And I follow "Manage Workplace Photos"
+    Then I should see 2 workplace photos
+    When I press "Delete" within the first photo box
+    Then I should see 1 workplace photo
