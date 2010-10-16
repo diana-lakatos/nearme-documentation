@@ -17,8 +17,10 @@
 #   runner "AnotherModel.prune_old_records"
 # end
 
+job_type :rvm_rake, "cd :path && RAILS_ENV=:environment /home/deploy/.rvm/bin/rake :task"
+
 every 10.minutes do
-  command "/home/deploy/.rvm/bin/rake ts:index"
+  rvm_rake "ts:index"
 end
 
 # Learn more: http://github.com/javan/whenever
