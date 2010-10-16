@@ -16,6 +16,8 @@ test: &test
 
 production: &test
   <<: *common
+  username: desksnearme
+  password: desksnearme
   database: desksnearme_production
 
 cucumber:
