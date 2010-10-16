@@ -3,8 +3,8 @@
     <% if current_user? %>
       <li class="grid_2"><%= link_to "Logout", logout_path %></li>
     <% else %>
-      <li class="grid_3 joined alpha"><%= link_to "Login with Twitter", "/auth/twitter" %></li>
-      <li class="grid_3 joined omega"><%= link_to "Login with Facebook", "/auth/facebook" %></li>
+      <li class="grid_3 joined alpha"><%= link_to "Login with Twitter", login_path %></li>
+      <li class="grid_3 joined omega"><%= link_to "Login with Facebook", login_path %></li>
     <% end %>
   </ul>
 </nav>
