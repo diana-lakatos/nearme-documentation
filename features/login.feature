@@ -9,6 +9,7 @@ Feature: A user can login with facebook or twitter
       And I follow "Sign In"
      When I follow "Twitter"
       And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
+      And I fill in "Name" with "Brett"
       And I fill in "Email" with "fuckyoutwitter@yourmum.com"
       And I press "Continue"
      Then I should see "You have signed up successfully."

@@ -15,7 +15,7 @@ class Workplace < ActiveRecord::Base
                    :conditions => %{ (select count(*) from "photos" where workplace_id = "workplaces".id) > 0 }, :limit => 5
   scope :latest, order("workplaces.created_at DESC")
 
-  validates_presence_of :name, :address, :maximum_desks, :latitude, :longitude
+  validates_presence_of :name, :address, :maximum_desks, :latitude, :longitude, :creator_id
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0
   validates_format_of :url, :with => URI::regexp(%w(http https)), :allow_blank => true
 
