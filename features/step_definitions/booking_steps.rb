@@ -33,3 +33,13 @@ When(/^I cancel the booking for "([^"]*)"$/) do |date|
   date = Time.parse(date).to_date
   find(:xpath, "//time[@datetime='#{date}']/../../a").click
 end
+
+Then /^I should see availability for dates:$/ do |table|
+  dates = all("table.bookings td.day time").map {|t| t["datetime"]}
+  dates.should == table.raw.flatten
+end
+
+Then /^I should not see availability for dates:$/ do |table|
+  dates = all("table.bookings td.day time").map {|t| t["datetime"]}  
+  dates.should_not == table.raw.flatten
+end

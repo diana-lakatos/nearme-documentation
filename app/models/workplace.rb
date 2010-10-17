@@ -1,5 +1,4 @@
 class Workplace < ActiveRecord::Base
-
   belongs_to :creator, :class_name => "User", :foreign_key => "creator_id"
   belongs_to :location
   has_many :bookings
@@ -40,7 +39,9 @@ class Workplace < ActiveRecord::Base
   end
 
   def schedule(days = 5)
-    monday = Date.today.beginning_of_week
+    today = Date.today
+
+    monday = today.weekend? ? today.next_week : today.beginning_of_week
     week   = monday..(monday + days - 1)
     hash   = week.inject({}) {|m,d| m[d] = maximum_desks; m}
 
