@@ -599,6 +599,10 @@ a.huge_ass_button {
 	text-shadow: 0px 1px 0px rgba(0,0,0,0.3);
 }
 
+a.huge_ass_button img {
+	vertical-align: -4px;
+}
+
 a.huge_ass_button.workplace {
 	background: #2A6199 url(/images/button_blue_bg.jpg) repeat-x left top;
 	color: #FFF;
