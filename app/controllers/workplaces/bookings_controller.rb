@@ -10,6 +10,10 @@ module Workplaces
     def new
       session[:user_return_to] = current_user ? nil : request.fullpath
       @booking = @workplace.bookings.build(:date => params[:date])
+      if Date.parse(params[:date]) < Date.today
+        flash[:notice] = "Who do you think you are, Marty McFly? You can't book a desk in the past!"
+        redirect_to @workplace
+      end
     end
 
     def create

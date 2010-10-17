@@ -1,7 +1,14 @@
 When(/^I follow the booking link for "([^"]*)"$/) do |date|
-  date = Time.parse(date).to_date
+  date = Date.parse(date)
   find(:xpath, "//time[@datetime='#{date}']/../details/a").click
 end
+
+When(/^I try to book at #{capture_model} on "([^"]*)"$/) do |workplace_instance, date|
+  workplace = model!(workplace_instance)
+  date = Date.parse(date)
+  visit "/workplaces/#{workplace.to_param}/bookings/new?date=#{date}"
+end
+
 
 Given /^the workplace has the following bookings:$/ do |table|
   table.hashes.each do |row|
@@ -34,7 +41,7 @@ Then /^I should see the following bookings in order:$/ do |table|
 end
 
 When(/^I cancel the booking for "([^"]*)"$/) do |date|
-  date = Time.parse(date).to_date
+  date = Date.parse(date)
   find(:xpath, "//time[@datetime='#{date}']/../../a").click
 end
 
