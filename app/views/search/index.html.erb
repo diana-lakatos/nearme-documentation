@@ -19,6 +19,8 @@
         </div>
       </div>
 
+      <p><strong><%= pluralize(@workplaces.length, "workplace") %> found</strong>. Hover over a day to see how many desks are avaliable.</p>
+
       <% @workplaces.each do |workplace| %>
         <%= render :partial => '/workplaces/workplace', :locals => { :workplace => workplace } %>
       <% end %>
