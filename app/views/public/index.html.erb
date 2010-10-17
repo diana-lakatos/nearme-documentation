@@ -15,7 +15,9 @@
 
 <div class="grid_7 alpha fancy-photos">
   <h1 class="tk-chaparral-pro">Featured Workplaces</h1>
-  <%= render :partial => "workplaces/featured", :collection => @featured, :as => :workplace %>
+  <section class="featured">
+    <%= render :partial => "workplaces/featured", :collection => @featured, :as => :workplace %>
+  </section>
   <br />
   <h1 class="tk-chaparral-pro">What now?</h1>
   <p class="em">Rails Rumble is just the start for the DesksNearMe team. Our app is built for more than just a 48 hour competition.</p><p>We are committed to continuing with this service and adding in new features - making it easier and better for everyone. It's built for a need that many on the team have: the need to get out of the home office and hang out with cool people while we work.</p>

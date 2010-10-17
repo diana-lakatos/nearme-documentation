@@ -524,6 +524,25 @@ div.tabs > nav a {
 	margin-right: 12px;
 }
 
+div.tabs > nav a span.num {
+	font-weight: normal;
+	background: #FFA8AA;
+	color: #850400;
+	border-radius: 14px;
+	-moz-border-radius: 14px;
+	-o-border-radius: 14px;
+	float: right;
+	display: block;
+	padding: 0 7px;
+	font-size: 12px;
+	margin-left: 12px;
+}
+
+div.tabs > nav a.selected span.num {
+	background: #FFF;
+	color: #333;
+}
+
 div.tabs > nav a:link, div.tabs nav > a:visited {
 	text-decoration: none;
 }
@@ -821,4 +840,29 @@ ul.photos li form input.rm {
 	background: transparent url(/images/cross-small.png) no-repeat left center;
 	padding-left: 18px;
 	float: right;
+}
+
+/* === Section Featured */
+
+section.featured {
+	overflow: hidden;
+}
+
+section.featured article.workplace {
+	overflow: hidden;
+	margin-bottom: 12px;
+}
+
+section.featured article.workplace:last-child {
+	margin-bottom: 0;
+}
+
+section.featured article.workplace h2 {
+	line-height: 32px;
+}
+
+section.featured article.workplace img {
+	padding: 3px;
+	background: #FFF;
+	background: rgba(255,255,255,0.6);
 }
