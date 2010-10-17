@@ -1,6 +1,12 @@
 Dear <%= @user %>,
 
 <%= @booking.user %> has made a booking for <%= @workplace %> on <%= l(@booking.date, :format => :long) %>.
+<%- if @booking.comment -%>
+
+They said:
+
+"<%= @booking.comment %>"
+<%- end -%>
 
 They have been notified that booking confirmation is required.
 
