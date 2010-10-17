@@ -822,3 +822,28 @@ ul.photos li form input.rm {
 	padding-left: 18px;
 	float: right;
 }
+
+/* === Section Featured */
+
+section.featured {
+	overflow: hidden;
+}
+
+section.featured article.workplace {
+	overflow: hidden;
+	margin-bottom: 12px;
+}
+
+section.featured article.workplace:last-child {
+	margin-bottom: 0;
+}
+
+section.featured article.workplace h2 {
+	line-height: 32px;
+}
+
+section.featured article.workplace img {
+	padding: 3px;
+	background: #FFF;
+	background: rgba(255,255,255,0.6);
+}
