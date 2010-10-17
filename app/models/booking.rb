@@ -5,7 +5,7 @@ class Booking < ActiveRecord::Base
   scope :upcoming, lambda {
     where('date >= ?', Time.now.to_date).order('date ASC')
   }
-  
+
   scope :visible, lambda {
     without_state(:cancelled).upcoming
   }
