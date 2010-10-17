@@ -1,6 +1,7 @@
 <nav>
   <ul>
     <% if current_user? %>
+      <li class="grid_2"><%= link_to "Dashboard", dashboard_path %></li>
       <li class="grid_2"><%= link_to "Logout", logout_path %></li>
     <% else %>
       <li class="grid_3 joined alpha"><%= link_to "Login with Twitter", login_path %></li>

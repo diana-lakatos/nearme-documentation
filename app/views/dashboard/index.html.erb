@@ -1,0 +1,22 @@
+<h1>Workspaces</h1>
+
+<p><%= link_to "Create Workspace", new_workplace_path %></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Bookings</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @workspaces.each do |workspace| %>
+      <tr>
+        <td><%= link_to workspace.name, workspace %></td>
+        <td><%= workspace.confirm_bookings? ? "#{workspace.bookings.with_state(:unconfirmed).count} Unconfirmed" : "-" %></td>
+        <td><%= link_to "Edit Workspace", [ :edit, workspace ] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
