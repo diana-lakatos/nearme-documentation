@@ -19,11 +19,11 @@ Feature: Emails should be sent out informing parties about bookings
 
   Background:
     Given the date is "13th October 2010"
-    And a user: "Keith Contractor" exists
-    And a user: "Bo Jeanes" exists
+    And a user: "Keith Contractor" exists with name: "Keith Contractor"
+    And a user: "Bo Jeanes" exists with name: "Bo Jeanes"
 
   Scenario: booking confirmations required
-    Given a workplace: "Mocra" exists with creator: user "Bo Jeanes", confirm_bookings: true
+    Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
     And I am logged in as user "Keith Contractor"
     When I go to the workplace's page
     And I follow the booking link for "15th October 2010"
@@ -31,8 +31,13 @@ Feature: Emails should be sent out informing parties about bookings
     Then 2 emails should be delivered
     And the 1st email should be delivered to user "Bo Jeanes"
     And the 1st email should have subject: "[DesksNear.Me] A new booking requires your confirmation"
+    And the 1st email should contain "Bo Jeanes,"
+    And the 1st email should contain "Keith Contractor has made a booking for Mocra on October 15, 2010"
     And the 2nd email should be delivered to user "Keith Contractor"
     And the 2nd email should have subject: "[DesksNear.Me] Your booking is pending confirmation"
+    And the 2nd email should contain "Dear Keith Contractor,"
+    And the 2nd email should contain "You have made a booking for Mocra on October 15, 2010."
+    
 
   Scenario: booking confirmations not required
     Given a workplace: "Mocra" exists with creator: user "Bo Jeanes", confirm_bookings: false
