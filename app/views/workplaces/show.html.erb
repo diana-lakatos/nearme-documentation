@@ -29,7 +29,6 @@
     </div>
 
     <h2 class="tk-chaparral-pro">Availability</h2>
-    <p>Hover over a day to see how many desks are avaliable.</p>
     <%= render :partial => "availability", :locals => {:workplace => @workplace, :weeks => 3} %>
 
     <% if @workplace.description? %>
@@ -42,17 +41,16 @@
     <% end %>
 
     <h2 class="tk-chaparral-pro">Latest Activity</h2>
-    <dl>
-
-    </dl>
     <% if @feeds.any? %>
+      <dl class="activity_feed">
       <% @feeds.each do |feed| %>
-        <div class="feed_item grid_8 alpha">
-          <%= image_tag feed.user.gravatar_url, :style => "margin-right: 10px", :align => "left" %>
+        <dd class="feed_item">
+          <%= image_tag feed.user.gravatar_url, :class => "avatar" %>
           <%= render :partial => "feeds/#{feed.activity}", :locals => { :feed => feed } %><br/>
           <small><%= time_ago_in_words(feed.created_at) %> ago</small>
-        </div>
+        </dd>
       <% end %>
+      </dl>
     <% else %>
       <p>No activity has been generated yet.</p>
     <% end %>
@@ -60,14 +58,13 @@
 
   <aside class="grid_4 omega">
     <% if @workplace.created_by?(current_user) %>
-      <section>
-        <h2 class="tk-chaparral-pro">Admin</h2>
-        <%= link_to "Edit Workplace", edit_workplace_path(@workplace) %>
-        <%= link_to "Manage Workplace Photos", workplace_photos_path(@workplace) %>
+    <nav class="actions">
+        <%= link_to edit_workplace_path(@workplace)  do %><%= image_tag "pencil-small.png" %> Edit Workplace<% end %>
+        <%= link_to workplace_photos_path(@workplace) do %><%= image_tag "image-small.png" %> Add/Manage Photos<% end %>
         <% if current_user.admin? %>
           <br/><%= link_to "Destroy (Admin Only)", @workplace, :method => :delete, :confirm => "Are you sure? Its dangerous to go alone..." %>
         <% end %>
-      </section>
+    </nav>
     <% end %>
     <section id="photos" class="fancy-photos">
       <h2 class="tk-chaparral-pro">Photos</h2>
@@ -82,16 +79,41 @@
           <% end %>
           </ul>
       <% else %>
-        <p>Aww noo. There are no photos uploaded yet.</p>
+      <div class="grid_1 alpha">
+        <%= image_tag "desk_photos.png"%>
+      </div>
+      <div class="grid_3 omega">
+        <p><strong>Aww nuu.</strong><br />
+        There are no photos uploaded yet.</p>
+      </div>
       <% end %>
     </section>
     <section>
       <h2 class="tk-chaparral-pro">Location</h2>
       <div id="map" style="height: 200px" class="google-map"></div>
-      <%= link_to "Open in Google Maps", "http://maps.google.com?q=#{@workplace.address}", :target => "_blank" %>
-      <details class="address" data-lat="<%= @workplace.latitude %>" data-lng="<%= @workplace.longitude %>" data-marker="<%= image_path("marker.png") %>">
+      <address data-lat="<%= @workplace.latitude %>" data-lng="<%= @workplace.longitude %>" data-marker="<%= image_path("marker.png") %>">
         <%= simple_format(@workplace.formatted_address || @workplace.address) %>
+        <%= link_to "Open in Google Maps", "http://maps.google.com?q=#{@workplace.address}", :target => "_blank" %>
       </details>
     </section>
   </aside>
 </article>
+
+
+<% content_for :script do -%>
+<script type="text/javascript">
+  $(function(){
+    $("td.day details.availability a").click(function(e){
+      $(".overlay-container").overlay('close');
+      e.stopPropagation();
+      var overlay = $("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
+      $(".overlay-container a.cancel").live("click", function(e){
+        e.stopPropagation();
+        $(".overlay-container").overlay('close');
+        return false;
+      });
+      return false;
+    });
+  });
+</script>
+<% end %>

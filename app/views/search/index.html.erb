@@ -11,7 +11,15 @@
   <% else %>
 
     <% if @workplaces.empty? %>
-      <p>No results found</p>
+    <br />
+      <div class="grid_3 alpha prefix_2">
+        <%= image_tag "marker_missing.png" %>
+      </div>
+      <div class="grid_6 omega">
+        <br /><br />
+        <h1 class="tk-adelle fat">No results found</h1>
+        <p>Enter in a different location or company name. Make sure the location is properly formatted and include the city and state.</p>
+      </div>
     <% else %>
       <div class="google-map">
         <div id="workplaces_map" class="inner" style="height: 350px;">
@@ -19,7 +27,7 @@
         </div>
       </div>
 
-      <p><strong><%= pluralize(@workplaces.length, "workplace") %> found</strong>. Hover over a day to see how many desks are avaliable.</p>
+      <p><strong><%= pluralize(@workplaces.length, "workplace") %> found</strong>. Hover over a day to see how many desks are available.</p>
 
       <% @workplaces.each do |workplace| %>
         <%= render :partial => '/workplaces/workplace', :locals => { :workplace => workplace } %>
