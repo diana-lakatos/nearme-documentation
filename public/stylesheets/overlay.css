@@ -35,9 +35,9 @@ embed {
 }
 
 .overlay-container.context {
-	width: 280px;
-	background: transparent url(/images/editor/overlay_context_arrow.png) no-repeat center top;
-	padding-top: 12px;
+	width: 300px;
+	background: transparent url(/images/overlay_arrow_center.png) no-repeat center top;
+	padding-top: 9px;
 }
 
 .overlay-container.context.right {
@@ -46,17 +46,14 @@ embed {
 	background: transparent url(/images/editor/overlay_context_arrow_left.png) no-repeat left center;
 }
 
-.overlay-container.context.wide {
-	width: 530px;
-}
-
 .overlay-container.context .overlay-content {
 	background: #FFF;
-	border: 3px solid #333;
-	border-radius: 8px 8px;
-	-webkit-box-shadow: 0px 0px 8px rgba(0,0,0,0.6);
-	-moz-box-shadow: 0px 0px 8px rgba(0,0,0,0.6);
-	box-shadow: 0px 0px 8px rgba(0,0,0,0.6);
+	border: 1px solid #222;
+	border-top-width: 0px;
+	border-radius: 0 0 6px 6px;
+	-webkit-box-shadow: 0px 0px 16px rgba(0,0,0,0.6);
+	-moz-box-shadow: 0px 0px 16px rgba(0,0,0,0.6);
+	box-shadow: 0px 0px 16px rgba(0,0,0,0.6);
 	padding: 10px;
 	overflow: hidden;
 }
