@@ -79,12 +79,27 @@ class Workplace < ActiveRecord::Base
     return [ [], nil ] if geocoded.nil?
     return [ all, nil ] if query =~ /^earth$/i
 
+    # should we do a bounds search? places like australia and south
+    # australia are matched.
+    types = geocoded['types']
+    bounds_search = true if types == [ "country", "political" ] || types == [ "administrative_area_level_1", "political" ]
+    bounds = geocoded['geometry']['bounds']
+
     location = { :name => geocoded['formatted_address'],
                  :lat => geocoded['geometry']['location']['lat'],
                  :lng => geocoded['geometry']['location']['lng'] }
 
+    if bounds_search && bounds
+      distance = Geocoder.distance_between(bounds['southwest']['lat'], bounds['southwest']['lng'], 
+                                           bounds['northeast']['lat'], bounds['northeast']['lng'], :units => :km)
+      distance = (distance * 1000).to_f
+    else
+      distance = 30_000.0
+    end
+
     [ search(:geo => [ Geocoder.to_radians(location[:lat]), Geocoder.to_radians(location[:lng]) ],
-             :with => { "@geodist" => (0.0)..(30_000.0) }, :order => "@geodist ASC, @relevance DESC") , location ]
+             :with => { "@geodist" => (0.0)..(distance) }, :order => "@geodist ASC, @relevance DESC") , location ]
+
   end
 
   private
