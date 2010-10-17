@@ -22,7 +22,7 @@ Feature: Emails should be sent out informing parties about bookings
     And a user: "Keith Contractor" exists with name: "Keith Contractor"
     And a user: "Bo Jeanes" exists with name: "Bo Jeanes"
 
-  Scenario: booking confirmations required
+  Scenario: booking confirmations required (no comment)
     Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
     And I am logged in as user "Keith Contractor"
     When I go to the workplace's page
@@ -33,6 +33,25 @@ Feature: Emails should be sent out informing parties about bookings
     And the 1st email should have subject: "[DesksNear.Me] A new booking requires your confirmation"
     And the 1st email should contain "Bo Jeanes,"
     And the 1st email should contain "Keith Contractor has made a booking for Mocra on October 15, 2010"
+    And the 2nd email should be delivered to user "Keith Contractor"
+    And the 2nd email should have subject: "[DesksNear.Me] Your booking is pending confirmation"
+    And the 2nd email should contain "Dear Keith Contractor,"
+    And the 2nd email should contain "You have made a booking for Mocra on October 15, 2010."
+
+  Scenario: booking confirmations required (with comment)
+    Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
+    And I am logged in as user "Keith Contractor"
+    When I go to the workplace's page
+    And I follow the booking link for "15th October 2010"
+    And I fill in "Comment" with "Should be fun!"
+    And I press "Book"
+    Then 2 emails should be delivered
+    And the 1st email should be delivered to user "Bo Jeanes"
+    And the 1st email should have subject: "[DesksNear.Me] A new booking requires your confirmation"
+    And the 1st email should contain "Bo Jeanes,"
+    And the 1st email should contain "Keith Contractor has made a booking for Mocra on October 15, 2010"
+    And the 1st email should contain "They said:"
+    And the 1st email should contain "Should be fun!"
     And the 2nd email should be delivered to user "Keith Contractor"
     And the 2nd email should have subject: "[DesksNear.Me] Your booking is pending confirmation"
     And the 2nd email should contain "Dear Keith Contractor,"
@@ -61,7 +80,6 @@ Feature: Emails should be sent out informing parties about bookings
     And the email should be delivered to user "Keith Contractor"
     And the email should have subject: "[DesksNear.Me] Your booking has been confirmed"
 
-  @wip
   Scenario: confirmed then cancelled by user
     Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
@@ -73,7 +91,6 @@ Feature: Emails should be sent out informing parties about bookings
     And the email should be delivered to user "Bo Jeanes"
     And the email should have subject: "[DesksNear.Me] A booking has been cancelled"
 
-  @wip
   Scenario: confirmed then cancelled by owner
     Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
@@ -85,7 +102,6 @@ Feature: Emails should be sent out informing parties about bookings
     And the email should be delivered to user "Keith Contractor"
     And the email should have subject: "[DesksNear.Me] Your booking at Mocra has been cancelled by the owner"
 
-  @wip
   Scenario: unconfirmed booking gets cancelled by user
     Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "unconfirmed"
@@ -97,7 +113,6 @@ Feature: Emails should be sent out informing parties about bookings
     And the email should be delivered to user "Bo Jeanes"
     And the email should have subject: "[DesksNear.Me] A booking has been cancelled"
 
-  @wip
   Scenario: unconfirmed booking gets rejected
     Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "unconfirmed"

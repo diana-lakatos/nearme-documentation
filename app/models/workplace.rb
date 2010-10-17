@@ -9,10 +9,9 @@ class Workplace < ActiveRecord::Base
   end
   has_many :feeds, :dependent => :delete_all
 
-  # This is horrible. Feel free to fix.
-  scope :featured, :include => :photos, :order => %{ "workplaces".created_at desc },
-                   :conditions => %{ (select count(*) from "photos" where workplace_id = "workplaces".id) > 0 }, :limit => 5
-  scope :latest, order("workplaces.created_at DESC")
+  scope :featured, where(%{ (select count(*) from "photos" where workplace_id = "workplaces".id) > 0 }).
+                   where(:fake => false).includes(:photos).order(%{ "workplaces".created_at desc }).limit(4)
+  scope :latest,   order("workplaces.created_at DESC")
 
   validates_presence_of :name, :address, :maximum_desks, :latitude, :longitude, :creator_id
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0
