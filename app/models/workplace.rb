@@ -10,7 +10,7 @@ class Workplace < ActiveRecord::Base
   has_many :feeds, :dependent => :delete_all
 
   scope :featured, where(%{ (select count(*) from "photos" where workplace_id = "workplaces".id) > 0 }).
-                   where(:fake => false).includes(:photos).order(%{ "workplaces".created_at desc }).limit(5)
+                   where(:fake => false).includes(:photos).order(%{ random() }).limit(5)
   scope :latest,   order("workplaces.created_at DESC")
 
   validates_presence_of :name, :address, :maximum_desks, :latitude, :longitude, :creator_id
