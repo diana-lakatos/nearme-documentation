@@ -601,6 +601,7 @@ table.pretty {
 
 table.pretty tr th {
 	border-bottom: 1px solid #CCC;
+	text-align: left;
 }
 
 table.pretty tr td {

@@ -1,6 +1,10 @@
 class SessionsController < Devise::SessionsController
 
-  before_filter :disable_feature, :except => [ :destroy ]
+  def new
+    redirect_to authentications_path
+  end
+
+  before_filter :disable_feature, :except => [ :new, :destroy ]
 
   private
 

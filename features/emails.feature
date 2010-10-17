@@ -37,7 +37,6 @@ Feature: Emails should be sent out informing parties about bookings
     And the 2nd email should have subject: "[DesksNear.Me] Your booking is pending confirmation"
     And the 2nd email should contain "Dear Keith Contractor,"
     And the 2nd email should contain "You have made a booking for Mocra on October 15, 2010."
-    
 
   Scenario: booking confirmations not required
     Given a workplace: "Mocra" exists with creator: user "Bo Jeanes", confirm_bookings: false
@@ -50,3 +49,42 @@ Feature: Emails should be sent out informing parties about bookings
     And the 1st email should have subject: "[DesksNear.Me] Your booking has been confirmed"
     And the 2nd email should be delivered to user "Bo Jeanes"
     And the 2nd email should have subject: "[DesksNear.Me] You have a new booking"
+
+  Scenario: booking gets confirmed
+    Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
+    And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15"
+    And all emails have been delivered
+    And I am logged in as user "Bo Jeanes"
+    When I follow "Dashboard"
+    And I press "Confirm"
+    Then 1 email should be delivered
+    And the email should be delivered to user "Keith Contractor"
+    And the email should have subject: "[DesksNear.Me] Your booking has been confirmed"
+
+  @wip
+  Scenario: confirmed then cancelled by user
+    Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
+    And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
+    And all emails have been delivered
+    And I am logged in as user "Keith Contractor"
+
+  @wip
+  Scenario: confirmed then cancelled by owner
+    Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
+    And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
+    And all emails have been delivered
+    And I am logged in as user "Keith Contractor"
+
+  @wip
+  Scenario: unconfirmed booking gets cancelled by user
+    Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
+    And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "unconfirmed"
+    And all emails have been delivered
+    And I am logged in as user "Keith Contractor"
+
+  @wip
+  Scenario: unconfirmed booking gets rejected
+    Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
+    And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "unconfirmed"
+    And all emails have been delivered
+    And I am logged in as user "Keith Contractor"
