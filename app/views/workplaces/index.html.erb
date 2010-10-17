@@ -1,8 +1,9 @@
 <h1>Workplaces</h1>
 
 <p>Listing workplaces by most recently created...</p>
-
-<%= render @workplaces %>
+<section class="list">
+  <%= render @workplaces %>
+</section>
 <%= will_paginate @workplaces %>
 
 <% content_for :script do -%>
