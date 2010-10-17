@@ -32,4 +32,9 @@ class Booking < ActiveRecord::Base
       transition [:unconfirmed, :confirmed] => :cancelled
     end
   end
+
+  protected
+    def after_create
+      confirm! unless workplace.confirm_bookings?
+    end
 end
