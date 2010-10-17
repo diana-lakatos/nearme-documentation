@@ -7,7 +7,7 @@ Feature: A user can book a desk
     Given a workplace exists with maximum_desks: 10
       And a user exists
       And the date is "13th October 2010"
-
+@wip
   Scenario: A logged in user can book a desk
     Given I am logged in as the user
      When I go to the workplace's page

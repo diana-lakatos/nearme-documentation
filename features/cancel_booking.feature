@@ -1,4 +1,3 @@
-@wip
 Feature: A user can cancel a booking
   In order to not hang out with rad dudes
   As a user

@@ -1,7 +1,14 @@
 Given (/^I am logged in as #{capture_model}$/) do |user_instance|
+  Given %{the Twitter OAuth request is successful}
+  visit "/auth/twitter"
   user = model!(user_instance)
-  # FUUUUUUUUUUUUUUUUUUUUUUU
-  ENV['CURRENT_USER_ID'] = user.id.to_s
+  auth = Factory.create(:authentication, :user => user)
+  stub_twitter_successful_access_token
+  stub_twitter_verify_credentials_for(:twitter_username => auth.uid, :twitter_id => auth.id)
+  visit "/auth/twitter/callback?oauth_token=this_need_not_be_real&oauth_verifier=verifier"
+  
+  # # FUUUUUUUUUUUUUUUUUUUUUUU
+  # ENV['CURRENT_USER_ID'] = user.id.to_s
 end
 
 Then /^I should be logged out$/ do
