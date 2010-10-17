@@ -4,7 +4,9 @@
   <nav>
     <a href="#workplaces" class="selected">My Workplaces</a>
     <a href="#my_bookings">My Bookings</a>
-    <a href="#bookings">Workplace Bookings</a>
+    <% if @workplaces.any?  %>
+      <a href="#bookings">Workplace Bookings</a>
+    <% end %>
   </nav>
   <section id="workplaces" class="selected tab">
     <nav class="actions">
@@ -36,7 +38,7 @@
   </section>
   <section id="bookings" class="tab">
     <% if @workplace_bookings.any? %>
-    <%= render :partial => "booking_list", :locals => {:bookings => @workplace_bookings}%>
+      <%= render :partial => "booking_list", :locals => {:bookings => @workplace_bookings}%>
     <% end %>
   </section>
 </div>
@@ -46,12 +48,12 @@
   $(function(){
     $(".tabs nav a").click(function(ev){
       ev.stopPropagation();
-      
+
       $(".tabs nav a.selected, .tabs section.tab.selected").removeClass("selected");
       var tab_id = $(this).attr("href"),
           section = $(".tabs section" + tab_id)[0];
       $([this, section]).addClass("selected");
-      
+
       return false;
     });
   });
