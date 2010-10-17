@@ -1,7 +1,13 @@
 <ul class="bookings list">
   <% bookings.each do |booking|%>
     <li>
-      <p class="em"><strong><%= link_to(booking.workplace.name, booking.workplace) %></strong> on <time datetime="<%= booking.date %>"><%= l(booking.date, :format => :long) %></time></p>
-      <%= link_to "Cancel", booking, :method => :delete, :confirm => "Do you really want to cancel this booking?", :class => "action rm" %></li>
+      <p class="em">
+        <strong><%= link_to(booking.workplace.name, booking.workplace) %></strong> on
+        <time datetime="<%= booking.date %>"><%= l(booking.date, :format => :long) %></time>
+        (<%= booking.state_name %>)
+      </p>
+      <%= render :partial => "user_actions",  :locals => {:booking => booking} if current_user == booking.user %>
+      <%= render :partial => "owner_actions", :locals => {:booking => booking} if current_user == booking.workplace.creator %>
+    </li>
   <% end %>
 </ul>

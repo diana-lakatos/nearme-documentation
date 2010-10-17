@@ -3,7 +3,6 @@
     <%= image_tag workplace.photos.thumb.url, :alt => workplace.name %>
     <h3><%= link_to workplace.name, workplace %></h3>
     <address><%= workplace.formatted_address || workplace.address %></address>
-    <p><%= workplace_inline_description(workplace) %></p>
   </details>
 
   <%= render :partial => "workplaces/availability", :locals => {:workplace => workplace, :weeks => 1} %>
