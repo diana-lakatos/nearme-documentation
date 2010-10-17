@@ -216,8 +216,27 @@ div.google-map .inner {
 /* === Search results */
 
 section#content.search h1 {
-	font-size: 18px;
+	font-size: 19px;
 	font-weight: 600;
 	line-height: 42px;
 	margin-bottom: 12px;
 }
+
+/* === Footer */
+
+footer {
+	margin-bottom: 32px;
+	border-top: 3px solid #EEE;
+	padding-top: 12px;
+}
+
+footer div.copyright {
+	line-height: 46px;
+}
+
+footer div.copyright img {
+	float: left;
+	margin-right: 12px;
+	vertical-align: middle;
+}
+
