@@ -2,7 +2,10 @@ DesksnearMe::Application.routes.draw do
 
   resources :workplaces do
     resources :photos
-    resources :bookings, :controller => "workplaces/bookings"
+    resources :bookings, :controller => "workplaces/bookings" do
+      post :confirm
+      post :reject
+    end
   end
 
   match '/auth/:provider/callback' => 'authentications#create'

@@ -1,10 +1,10 @@
 Dear <%= @user %>,
 
-<%= @booking.user %> has made a booking for <%= @workplace %> on <%= @booking.date %>.
+<%= @booking.user %> has made a booking for <%= @workplace %> on <%= l(@booking.date, :format => :long) %>.
 
 They have been notified that booking confirmation is required.
 
-Please confirm or decline their booking by going logging into the site. Just click the link below:
+Please confirm or decline their booking by logging into the site. Just click the link below:
 
 <%= @url %>
 

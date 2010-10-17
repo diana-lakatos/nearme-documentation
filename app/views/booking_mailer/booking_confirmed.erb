@@ -1,5 +1,5 @@
 Dear <%= @user %>,
 
-Your booking at <%= @workplace %> on <%= @booking.date %> has been confirmed.
+Your booking at <%= @workplace %> on <%= l(@booking.date, :format => :long) %> has been confirmed.
 
 <%= render :partial => "footer" %>

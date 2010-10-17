@@ -1,6 +1,6 @@
 Dear <%= @user %>,
 
-You have made a booking for <%= @workplace %> on <%= @booking.date %>.
+You have made a booking for <%= @workplace %> on <%= l(@booking.date, :format => :long) %>.
 
 Bookings at this workplace requires confirmation from the owner/manager. You will receive another email if the user confirms or declines your booking request.
 
