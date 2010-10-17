@@ -19,6 +19,7 @@ class Workplace < ActiveRecord::Base
     has "RADIANS(latitude)",  :as => :latitude,  :type => :float
     has "RADIANS(longitude)", :as => :longitude, :type => :float
     group_by "latitude", "longitude"
+    set_property :delta => true
   end
 
   def created_by?(user)
