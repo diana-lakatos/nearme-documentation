@@ -19,8 +19,6 @@ gem 'thinking-sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx
                        :branch => 'rails3',
                        :require => 'thinking_sphinx'
 
-gem 'delayed_job'
-
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:

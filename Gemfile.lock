@@ -15,6 +15,12 @@ GIT
       activerecord (>= 3.0.0.rc)
       riddle (>= 1.0.12)
 
+GIT
+  remote: http://github.com/radar/sendgrid.git
+  revision: b1ff790d2e12b37bab7f5a0d4da9f2e1bbc63946
+  specs:
+    sendgrid (0.1.4)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -82,10 +88,7 @@ GEM
     cucumber-rails (0.3.2)
       cucumber (>= 0.8.0)
     culerity (0.2.12)
-    daemons (1.1.0)
     database_cleaner (0.5.2)
-    delayed_job (2.0.3)
-      daemons
     devise (1.1.3)
       bcrypt-ruby (~> 2.1.2)
       warden (~> 0.10.7)
@@ -269,7 +272,6 @@ DEPENDENCIES
   cucumber
   cucumber-rails
   database_cleaner
-  delayed_job
   devise
   factory_girl_rails
   ffaker
@@ -286,6 +288,7 @@ DEPENDENCIES
   rspec (>= 2.0.0)
   rspec-rails (>= 2.0.0)
   ruby-debug19
+  sendgrid!
   simple_form
   state_machine
   thinking-sphinx!
