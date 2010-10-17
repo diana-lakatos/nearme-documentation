@@ -12,7 +12,7 @@ article.workplace h1 {
 
 div.workplace details {
   float: left;
-  width: 35%;
+  width: 50%;
   padding-top: 20px;
 }
 
@@ -29,7 +29,7 @@ div.workplace details img {
 
 div.workplace table.bookings {
   float: left;
-  width: 65%;
+  width: 50%;
 }
 
 /* === Booking table */
