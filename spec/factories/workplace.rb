@@ -5,4 +5,5 @@ Factory.define :workplace do |w|
   w.company_description { Faker::Lorem.paragraphs(1) }
   w.confirm_bookings true
   w.maximum_desks 3
+  w.association :creator, :factory => :user
 end
