@@ -1,6 +1,11 @@
-<h1>You are making a booking for <%= l(@booking.date, :format => :long) %></h1>
-<%= simple_form_for [@workplace, @booking] do |f| %>
-  <%= f.input :date, :as => :hidden %>
-  <%= f.input :comment %>
-  <%= f.submit :label => 'Book'%>
+<% unless current_user %>
+  <h1>Do we know you?</h1>
+  <p>Please <%= link_to 'Sign In/Up', login_path %> to book a desk.</p>
+<% else %>
+  <h1>You are making a booking for <%= l(@booking.date, :format => :long) %></h1>
+  <%= simple_form_for [@workplace, @booking] do |f| %>
+    <%= f.input :date, :as => :hidden %>
+    <%= f.input :comment %>
+    <%= f.submit :label => 'Book'%>
+  <% end %>
 <% end %>
