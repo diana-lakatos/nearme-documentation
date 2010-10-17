@@ -19,10 +19,7 @@
             <%= date.strftime("%b %d") %><sup><%= date.day.ordinal %></sup>
           </time>
           <details class="availability">
-            <%= link_to new_workplace_booking_url(workplace, :date => date) do %>
-              <%#= pluralize(num, "spots") %>
-              <%= num %>
-            <% end if num > 0 %>
+            <%= link_to_if(num>0, num, new_workplace_booking_url(workplace, :date => date)) %>
           </details>
         </td>
     <% end %>
