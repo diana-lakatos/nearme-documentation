@@ -2,8 +2,20 @@
 <article class="workplace">
 
   <div class="grid_8 alpha">
-    <h1 class="tk-adelle"><%= @workplace.name %></h1>
-    <%= content_tag(:p, link_to(@workplace.url, @workplace.url)) if @workplace.url %>
+
+    <div class="grid_5 alpha">
+      <h1 class="tk-adelle"><%= @workplace.name %></h1>
+      <%= content_tag(:p, link_to(@workplace.url, @workplace.url)) if @workplace.url %>
+    </div>
+
+    <% if @workplace.creator %>
+      <div id="creator" style="text-align: right;" class="grid_3 omega">
+        <%= image_tag @workplace.creator.gravatar_url, :style => "margin-left: 10px", :align => "right", :title => @workplace.creator.name, :alt => @workplace.creator.name %>
+        <small>Created By</small><br/>
+        <%= @workplace.creator.name %>
+      </div>
+    <% end %>
+
   </div>
 
   <% if @workplace.created_by?(current_user) %>
@@ -62,6 +74,7 @@
         </ul>
       </section>
     <% end %>
+
     <section>
       <h2>Location</h2>
       <div id="map" style="height: 200px" class="google-map"></div>
@@ -70,6 +83,7 @@
         <%= simple_format @workplace.address %>
       </details>
     </section>
+
   </aside>
 
 </article>

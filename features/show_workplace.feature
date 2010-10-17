@@ -20,3 +20,11 @@ Feature: A user can see a workplace
     Given a workplace exists with confirm_bookings: false
      When I go to the workplace's page
      Then I should see "Booking Confirmation Required: No"
+
+  Scenario: A can see who created the workplace
+    Given a user exists with name: "Keith Pitt"
+      And I am logged in as the user
+      And a workplace exists with creator: the user
+     When I go to the workplace's page
+     Then I should see "Keith Pitt"
+      And I should see the creators gravatar
