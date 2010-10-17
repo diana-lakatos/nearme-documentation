@@ -27,9 +27,10 @@ role :db,  "desksnear.me", :primary => true        # This is where Rails migrati
 role :db,  "desksnear.me"
 
 after "deploy:symlink" do
+  run "ln -s #{release_path}/config/database.ci.yml #{release_path}/config/database.yml"
   run "cd #{current_path}; rake db:migrate RAILS_ENV=production --trace"
 end
-
+ 
 after "deploy:symlink", "deploy:update_crontab"
 after "deploy:symlink", "thinking_sphinx:stop", "thinking_sphinx:configure", "thinking_sphinx:start"
 
