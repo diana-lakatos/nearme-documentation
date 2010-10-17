@@ -6,6 +6,6 @@
     <p><%= workplace_inline_description(workplace) %></p>
   </details>
 
-  <%= render :partial => "workplaces/availability", :locals => {:workplace => workplace} %>
+  <%= render :partial => "workplaces/availability", :locals => {:workplace => workplace, :weeks => 1} %>
   <br clear="both" />
 </div>
