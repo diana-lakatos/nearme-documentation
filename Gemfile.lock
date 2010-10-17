@@ -15,12 +15,6 @@ GIT
       activerecord (>= 3.0.0.rc)
       riddle (>= 1.0.12)
 
-GIT
-  remote: http://github.com/radar/sendgrid.git
-  revision: b1ff790d2e12b37bab7f5a0d4da9f2e1bbc63946
-  specs:
-    sendgrid (0.1.4)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -288,7 +282,6 @@ DEPENDENCIES
   rspec (>= 2.0.0)
   rspec-rails (>= 2.0.0)
   ruby-debug19
-  sendgrid!
   simple_form
   state_machine
   thinking-sphinx!
