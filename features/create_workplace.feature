@@ -42,6 +42,17 @@ Feature: A user can create and edit a workplace
       And I should be on the workplace's page
       And I should see "http://newurl.com"
 
+  @wip
+  Scenario: A user can mark a workplace as fake
+    Given a user exists
+      And I am logged in as the user
+      And a workplace exists with creator: the user
+     When I go to the workplace's page
+      And I follow "Edit Workplace"  
+      And I check "Test workplace"
+      And I press "Update Workplace"
+     Then a workplace should exist with fake: true
+
   Scenario: A hacker cant edit a workplace
     Given a user: "wally" exists
       And a workplace exists with creator: the user "wally"
