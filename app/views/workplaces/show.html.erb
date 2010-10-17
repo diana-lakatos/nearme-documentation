@@ -72,7 +72,7 @@
           <ul>
           <% @workplace.photos.each do |photo| %>
             <li>
-              <%= link_to photo.large.url, :title => photo.description, :rel => "photos" do %>
+              <%= link_to photo.large.url, :title => photo.description, :rel => "photos", :style => "margin-right: 5px" do %>
                 <%= image_tag(photo.thumb.url, :alt => photo.description) %>
               <% end %>
             </li>
@@ -85,6 +85,7 @@
       <div class="grid_3 omega">
         <p><strong>Aww nuu.</strong><br />
         There are no photos uploaded yet.</p>
+        <p>Upload a photo to become a featured workplace on the homepage!</p>
       </div>
       <% end %>
     </section>
