@@ -35,6 +35,18 @@ Feature: A user can cancel a booking
       | Joe's Codin Garage on October 21, 2010 |
      And I should not see "WoughThorks on October 19, 2010"
   
+  Scenario: A user can book a desk for a day on which they made a booking but it was cancelled
+    Given I am on the dashboard page
+     When I cancel the booking for "19th October 2010"
+     When I go to workplace: "Joe's Codin Garage"'s page
+      And I follow the booking link for "19th October 2010"
+      And I press "Create Booking"
+     Then I should be on workplace "Joe's Codin Garage"'s page
+      And I should see "Booking Successful."
+     
+  
+  
+  
   
   
   
