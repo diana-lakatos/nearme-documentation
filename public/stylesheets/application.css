@@ -12,7 +12,7 @@ article.workplace h1 {
 
 div.workplace details {
   float: left;
-  width: 35%;
+  width: 50%;
   padding-top: 20px;
 }
 
@@ -29,7 +29,7 @@ div.workplace details img {
 
 div.workplace table.bookings {
   float: left;
-  width: 65%;
+  width: 50%;
 }
 
 /* === Booking table */
@@ -84,6 +84,21 @@ table.bookings.extended tr td.day.last_bookings time {
 
 table.bookings.extended tr td.day.booked time {
 	background: #D2666B;
+}
+
+table.bookings.extended tr td.day.unavailable time {
+	background: #CCC;
+	color: #666;
+}
+
+table.bookings.extended tr td.unavailable.hover details.availability,
+table.bookings.extended tr td.unavailable:hover details.availability {
+	display: none;
+}
+
+table.bookings.extended tr td.unavailable.hover time,
+table.bookings.extended tr td.unavailable:hover time {
+	display: block;
 }
 
 /* === Big form search */
@@ -256,7 +271,8 @@ div.flash {
 	border-radius: 6px;
 	font-size: 14px;
 	font-weight: bold;
-	margin-bottom: 6px;
+	margin-bottom: 12px;
+	margin-top: -24px;
 }
 
 div.flash.notice, div.flash.alert {
@@ -272,4 +288,80 @@ div.flash.error {
 div.flash.message {
 	background: #BBF6FF;
 	color: #206C99;
+}
+
+/* === Booking overlay form */
+
+div.overlay-container form.booking {
+	margin: 0 -12px -12px -12px;
+	padding: 0 12px 12px 12px;
+	background: #EEE;
+}
+
+div.overlay-container h1.booking {
+	font-size: 16px;
+	font-weight: normal;
+	margin: 6px 0 12px;
+	padding-left: 48px;
+	background: transparent url(/images/calendar-blue.png) no-repeat 4px center;
+}
+
+div.overlay-container h1.booking time {
+	font-weight: bold;
+	display: block;
+	color: #900;
+}
+
+div.overlay-container form.booking div.input.text {
+	background: #DDD;
+	border-top: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+	margin: 0 -12px 12px -12px;
+	padding: 12px;
+}
+
+div.overlay-container form.booking div.input.text label {
+	font-size: 12px;
+	line-height: 24px;
+	float: left;
+	width: 60px;
+}
+
+div.overlay-container form.booking div.input.text textarea {
+	width: 190px;
+	height: 48px;
+	float: left;
+}
+
+div.overlay-container form.booking input[type='submit'] {
+	float: right;
+	padding: 6px 12px;
+	font-size: 14px;
+	margin-left: 12px;
+}
+
+div.overlay-container form.booking a.cancel {
+	line-height: 32px;
+	color: #333;
+	float: right;
+}
+
+div.overlay-container form.booking a.cancel:link,
+div.overlay-container form.booking a.cancel:visited {
+	text-decoration: none;
+}
+
+div.overlay-container form.booking a.cancel:hover {
+	text-decoration: underline;
+}
+
+/* === Please Signin for Overlay */
+
+div.overlay-container div.please_signin {
+	padding-left: 48px;
+	background: transparent url(/images/public.png) no-repeat 4px center;
+}
+
+div.overlay-container div.please_signin h1 {
+	font-size: 16px;
 }

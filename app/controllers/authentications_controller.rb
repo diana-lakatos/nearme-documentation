@@ -1,4 +1,7 @@
 class AuthenticationsController < ApplicationController
+
+  before_filter :redirect_if_login
+
   def index
     @authentications = current_user.authentications if current_user
   end
@@ -32,4 +35,11 @@ class AuthenticationsController < ApplicationController
     flash[:notice] = "Successfully destroyed authentication."
     redirect_to authentications_url
   end
+
+  private
+
+    def redirect_if_login
+      redirect_to :root if user_signed_in?
+    end
+
 end

@@ -1,7 +1,12 @@
 class RegistrationsController < Devise::RegistrationsController
 
   def new
-    raise ActionController::RoutingError, "Feature disabled"
+    # Are we coming a provider?
+    if session['omniauth'] || session['user_info']
+      super
+    else
+      raise ActionController::RoutingError, "Feature disabled"
+    end
   end
 
   def create
@@ -28,7 +33,6 @@ class RegistrationsController < Devise::RegistrationsController
       super
       if session[:omniauth]
         @user.apply_omniauth(session[:omniauth])
-        @user.valid?
       end
     end
 

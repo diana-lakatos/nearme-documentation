@@ -9,7 +9,7 @@ class Booking < ActiveRecord::Base
   scope :upcoming, lambda {
     where('date >= ?', Date.today).order('date ASC')
   }
-  
+
   scope :visible, lambda {
     without_state(:cancelled).upcoming
   }
@@ -36,4 +36,9 @@ class Booking < ActiveRecord::Base
       transition [:unconfirmed, :confirmed] => :cancelled
     end
   end
+
+  protected
+    def after_create
+      confirm! unless workplace.confirm_bookings?
+    end
 end

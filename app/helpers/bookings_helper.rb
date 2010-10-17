@@ -12,6 +12,8 @@ module BookingsHelper
           else
             "available"
         end
+        
+        availability = "unavailable" if date.past?
 
         yield(date, num_of_desks, availability, new_row)
         new_row = false

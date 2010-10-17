@@ -4,6 +4,7 @@
   <%= f.input :maximum_desks, :input_html => { :size => 4, :min => 1 } %>
   <%= f.input :description, :input_html => {:rows => 8} %>
   <%= f.input :company_description, :input_html => {:rows => 8} %>
+  <%= f.input :url, :as => :string, :label => "Company URL" %>
   <%= f.input :confirm_bookings, :as => :radio %>
   <%= f.button :submit %>
 <% end %>

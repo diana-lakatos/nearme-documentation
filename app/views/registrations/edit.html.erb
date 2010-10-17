@@ -1,8 +1,3 @@
 <h2>Account</h2>
 <p>Here you can edit your details.</p>
-
-<%= simple_form_for resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put } do |f| %>
-  <%= f.input :name %>
-  <%= f.input :email %>
-  <%= f.button :submit, :value => "Save Account" %>
-<% end %>
+<%= render :partial => "registrations/form", :locals => { :url => registration_path(resource_name), :submit => "Save Account", :html => { :method => :put } } %>

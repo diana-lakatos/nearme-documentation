@@ -12,7 +12,7 @@ Feature: A user can book a desk
     Given I am logged in as the user
      When I go to the workplace's page
       And I follow the booking link for "15th October 2010"
-     Then I should see "You are making a booking for October 15, 2010"
+     Then I should see "You are making a booking for: October 15, 2010"
       And I press "Book"
      Then I should be on the workplace's page
       And a booking should exist with date: "2010-10-15"
@@ -43,7 +43,7 @@ Feature: A user can book a desk
       And I am logged in as the user
      When I go to the workplace: "Rad Annex"'s page
       And I follow the booking link for "15th October 2010"
-     Then I should see "You are making a booking for October 15, 2010"
+     Then I should see "You are making a booking for: October 15, 2010"
       And I press "Book"
      Then I should be on the workplace's page
       And a booking should exist with date: "2010-10-15"
@@ -54,7 +54,7 @@ Feature: A user can book a desk
       And I am logged in as the user
      When I go to the workplace: "Rad Annex"'s page
       And I follow the booking link for "15th October 2010"
-     Then I should see "You are making a booking for October 15, 2010"
+     Then I should see "You are making a booking for: October 15, 2010"
       And I press "Create Booking"
      Then I should be on the workplace's page
       And a booking should exist with date: "2010-10-15"
@@ -69,9 +69,9 @@ Feature: A user can book a desk
       And I follow "Twitter"
       And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
       And I fill in "Email" with "myemail@example.com"
-      And I press "Sign up"
+      And I press "Continue"
      Then I should be on the workplace's new booking page
-      And I should see "You are making a booking for October 15, 2010"
+      And I should see "You are making a booking for: October 15, 2010"
       And I press "Book"
      Then I should be on the workplace's page
       And a booking should exist with date: "2010-10-15"

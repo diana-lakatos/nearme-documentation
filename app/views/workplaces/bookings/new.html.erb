@@ -1,11 +1,13 @@
 <% unless current_user %>
+<div class="please_signin">
   <h1>Do we know you?</h1>
   <p>Please <%= link_to 'Sign In/Up', authentications_path %> to book a desk.</p>
+</div>
 <% else %>
-  <h1>You are making a booking for <%= l(@booking.date, :format => :long) %></h1>
+  <h1 class="booking">You are making a booking for: <time datetime="<%=@booking.date%>"><%= l(@booking.date, :format => :long) %></time></h1>
   <%= simple_form_for [@workplace, @booking] do |f| %>
     <%= f.input :date, :as => :hidden %>
-    <%= f.input :comment %>
-    <%= f.submit :label => 'Book'%>
+    <%= f.input :comment, :input_html => { :rows => 3 } %>
+    <%= f.submit :label => 'Book' %><%= link_to "No, maybe not.", @workplace, :class => "cancel" %>
   <% end %>
 <% end %>
