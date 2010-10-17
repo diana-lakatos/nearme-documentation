@@ -8,13 +8,17 @@ module Workplaces
     end
 
     def new
-      session[:user_return_to] = new_workplace_booking_url(params)
+      session[:user_return_to] = current_user ? nil : request.fullpath
       @booking = @workplace.bookings.build(:date => params[:date])
+      if Date.parse(params[:date]) < Date.today
+        flash[:notice] = "Who do you think you are, Marty McFly? You can't book a desk in the past!"
+        redirect_to @workplace
+      end
     end
 
     def create
+      session[:user_return_to] = nil
       @booking = @workplace.bookings.build(params[:booking].merge(:user_id => current_user.id))
-
       if @booking.save
         flash[:notice] = "Booking Successful."
         redirect_to @workplace
