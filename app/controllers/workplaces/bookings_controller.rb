@@ -8,6 +8,7 @@ module Workplaces
     end
 
     def new
+      session[:user_return_to] = new_workplace_booking_url(params)
       @booking = @workplace.bookings.build(:date => params[:date])
     end
 

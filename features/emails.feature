@@ -9,7 +9,7 @@ Feature: Emails should be sent out informing parties about bookings
     And a user: "Bo Jeanes" exists
 
   Scenario: booking confirmations required
-    Given a workplace: "Mocra" with creator: "Bo Jeanes" exists and confirm bookings: true
+    Given a workplace: "Mocra" exists with creator: user "Bo Jeanes", confirm_bookings: true
 
   Scenario: booking confirmations not required
-    Given a workplace: "Mocra" with creator: "Bo Jeanes" exists and confirm bookings: false
+    Given a workplace: "Mocra" exists with creator: user "Bo Jeanes", confirm_bookings: false

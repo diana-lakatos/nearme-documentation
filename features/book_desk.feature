@@ -7,7 +7,7 @@ Feature: A user can book a desk
     Given a workplace exists with maximum_desks: 10
       And a user exists
       And the date is "13th October 2010"
-@wip
+      
   Scenario: A logged in user can book a desk
     Given I am logged in as the user
      When I go to the workplace's page
@@ -39,18 +39,21 @@ Feature: A user can book a desk
       And a booking should exist with date: "2010-10-15"
       And I should not see "booked a desk for the 15 October, 2010"
 
-  # @wip
-  # Scenario: An anonymous user can log in to book a desk
-  #   When I go to the workplace's page
-  #   And I follow the booking link for "15th October 2010"
-  #   Then I should see "Do we know you?"
-  #   When I log in as the user with Twitter
-  #   # Then I should be logged in as the user
-  #   And I should be on the workplace's new booking page
-  #   And I should see "You are making a booking for October 15, 2010"
-  #   And I press "Book"
-  #   Then I should be on the workplace's page
-  #   And a booking should exist with date: "2010-10-15"
+  Scenario: An anonymous user can log in to book a desk
+    Given the Twitter OAuth request is successful
+     When I go to the workplace's page
+      And I follow the booking link for "15th October 2010"
+     Then I should see "Do we know you?"
+     When I follow "Sign In/Up"
+      And I follow "Twitter"
+      And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
+      And I fill in "Email" with "myemail@example.com"
+      And I press "Sign up"
+     Then I should be on the workplace's new booking page
+      And I should see "You are making a booking for October 15, 2010"
+      And I press "Book"
+     Then I should be on the workplace's page
+      And a booking should exist with date: "2010-10-15"
 
   Scenario: Availability for the week is shown is shown
     Given the workplace has the following bookings:
