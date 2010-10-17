@@ -2,7 +2,7 @@
   <h1 class="tk-adelle">Workplaces found near:</h1>
 </div>
 <div class="grid_9 omega">
-  <%= render :partial => "search/bar", :locals => { :value => @query } %>
+  <%= render :partial => "search/bar", :locals => { :value => @location.try(:[], :name) || @query } %>
 </div>
 
 <section class="grid_12 alpha omega list">
