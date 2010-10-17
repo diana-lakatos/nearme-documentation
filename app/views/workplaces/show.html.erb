@@ -4,12 +4,13 @@
   <div class="grid_8 alpha">
     <h1 class="tk-adelle"><%= @workplace.name %></h1>
   </div>
-  <div class="grid_4 omega">
-    <% if @workplace.created_by?(current_user) %>
+
+  <% if @workplace.created_by?(current_user) %>
+    <div class="grid_4 omega">
       <%= link_to "Edit Workplace", edit_workplace_path(@workplace) %>
       <%= link_to "Manage Workplace Photos", workplace_photos_path(@workplace) %>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 
   <section class="details grid_8 alpha">
 
@@ -22,9 +23,14 @@
 
     <hr />
 
-    <h2>Extra Info</h2>
-    <p><strong>Booking Confirmation Required:</strong> <%= @workplace.confirm_bookings? ? "Yes" : "No" %></p>
-    <p><%=raw @workplace.description_html %></p>
+    <% if @workplace.description? %>
+      <h2>Extra Info</h2>
+      <p>
+        <strong>Booking Confirmation Required:</strong>
+        <%= @workplace.confirm_bookings? ? "Yes" : "No" %>
+      </p>
+      <p><%=raw @workplace.description_html %></p>
+    <% end %>
 
     <h2>Latest Activity</h2>
     <% if @feeds.any? %>
@@ -38,22 +44,23 @@
     <% else %>
       <p>No activity has been generated yet.</p>
     <% end %>
-
   </section>
 
   <aside class="grid_4 omega">
-    <section id="photos" class="fancy-photos">
-      <h2>Photos</h2>
-      <ul>
-      <% @workplace.photos.each do |photo| %>
-        <li>
-          <%= link_to photo.large.url, :title => photo.description, :rel => "photos" do %>
-            <%= image_tag(photo.thumb.url, :alt => photo.description) %>
-          <% end %>
-        </li>
-      <% end %>
-      </ul>
-    </section>
+    <% if @workplace.photos.any? %>
+      <section id="photos" class="fancy-photos">
+        <h2>Photos</h2>
+        <ul>
+        <% @workplace.photos.each do |photo| %>
+          <li>
+            <%= link_to photo.large.url, :title => photo.description, :rel => "photos" do %>
+              <%= image_tag(photo.thumb.url, :alt => photo.description) %>
+            <% end %>
+          </li>
+        <% end %>
+        </ul>
+      </section>
+    <% end %>
     <section>
       <h2>Location</h2>
       <div id="map" style="height: 200px" class="google-map"></div>

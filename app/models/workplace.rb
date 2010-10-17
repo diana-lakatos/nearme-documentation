@@ -20,6 +20,8 @@ class Workplace < ActiveRecord::Base
   before_validation :fetch_coordinates
   before_save :apply_filter
 
+  delegate :to_s, :to => :name
+
   define_index do
     indexes :name
     has "RADIANS(latitude)",  :as => :latitude,  :type => :float

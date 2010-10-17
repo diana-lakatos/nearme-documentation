@@ -1,3 +1,5 @@
+<h1>Managing photos for <%= link_to @workplace, @workplace %></h1>
+
 <ul id="photos">
   <% @photos.each do |photo| %>
     <% unless photo.new_record? %>
