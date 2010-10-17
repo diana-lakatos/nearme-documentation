@@ -39,15 +39,15 @@ Then /^I should see the following availability:$/ do |table|
 end
 
 Then /^I should see the following bookings in order:$/ do |table|
-  found = all("ul.bookings li p")
-  table.raw.flatten.each_with_index do |booking, index|
-    found[index].text.should == booking
-  end
+  found    = all("ul.bookings li > p").map { |b| b.text.gsub(/\n\s+/,' ').strip }
+  expected = table.raw.flatten
+  
+  found.should == expected
 end
 
 When(/^I cancel the booking for "([^"]*)"$/) do |date|
   date = Date.parse(date)
-  find(:xpath, "//time[@datetime='#{date}']/../../a").click
+  find(:xpath, "//time[@datetime='#{date}']/../../form/input[@value='Cancel']").click
 end
 
 Then /^I should see availability for dates:$/ do |table|
