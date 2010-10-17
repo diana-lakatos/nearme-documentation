@@ -2,8 +2,12 @@ class Booking < ActiveRecord::Base
   belongs_to :workplace
   belongs_to :user
 
+  scope :on, lambda { |date|
+    where(:date => date).where(:state => [:confirmed, :unconfirmed])
+  }
+
   scope :upcoming, lambda {
-    where('date >= ?', Time.now.to_date).order('date ASC')
+    where('date >= ?', Date.today).order('date ASC')
   }
   
   scope :visible, lambda {

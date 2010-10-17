@@ -3,6 +3,11 @@ When(/^I follow the booking link for "([^"]*)"$/) do |date|
   find(:xpath, "//time[@datetime='#{date}']/../details/a").click
 end
 
+Then (/^I should not see the booking link for "([^"]*)"$/) do |date|
+  date = Date.parse(date)
+  page.should_not have_xpath("//time[@datetime='#{date}']/../details/a")
+end
+
 When(/^I try to book at #{capture_model} on "([^"]*)"$/) do |workplace_instance, date|
   workplace = model!(workplace_instance)
   date = Date.parse(date)

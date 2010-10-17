@@ -31,6 +31,10 @@ class Workplace < ActiveRecord::Base
     set_property :delta => true
   end
 
+  def desks_available?(date)
+    self.maximum_desks > bookings.on(date).count
+  end
+
   def created_by?(user)
     user && user == creator
   end

@@ -2,6 +2,8 @@ module Workplaces
   class BookingsController < ::BookingsController
     before_filter :find_workplace
     before_filter :require_creator, :only => [:index, :destroy]
+    before_filter :ensure_desk_available, :only => [:new, :create]
+    
     
     def index
       @bookings = @workplace.bookings
@@ -34,6 +36,13 @@ module Workplaces
     end
 
     protected
+    
+    def ensure_desk_available
+      unless @workplace.desks_available?(Date.parse(params[:date]))
+        flash[:notice] = "There are no more desks left for that date. Sorry."
+        redirect_to @workplace
+      end
+    end
     
     def require_creator
       unless @workplace.created_by?(current_user)

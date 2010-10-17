@@ -22,7 +22,22 @@ Feature: A user can book a desk
      When I try to book at the workplace on "12th October 2010"
      Then I should be on the workplace's page
       And I should see "Who do you think you are, Marty McFly? You can't book a desk in the past!"
-      
+  
+  Scenario: A user cannot see the link to book a desk at a venue which is full
+    Given the workplace has the following bookings:
+      | Date       | Number of Bookings |
+      | 2010-10-15 | 10                 |
+     When I go to the workplace's page
+     Then I should not see the booking link for "15th October 2010"
+     
+  Scenario: A user cannot book a desk at a venue which is full
+   Given the workplace has the following bookings:
+       | Date       | Number of Bookings |
+       | 2010-10-15 | 10                 |
+    When I try to book at the workplace on "15th October 2010"
+    Then I should be on the workplace's page
+     And I should see "There are no more desks left for that date. Sorry."
+  
   Scenario: A booking is automatically confirmed if the workplace doesnt require confirmation booking
     Given a workplace: "Rad Annex" exists with confirm_bookings: false
       And I am logged in as the user

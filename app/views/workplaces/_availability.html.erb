@@ -22,7 +22,7 @@
             <%= link_to new_workplace_booking_url(workplace, :date => date) do %>
               <%#= pluralize(num, "spots") %>
               <%= num %>
-            <% end %>
+            <% end if num > 0 %>
           </details>
         </td>
     <% end %>
