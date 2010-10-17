@@ -5,7 +5,7 @@
   <%= render :partial => "search/bar", :locals => { :value => @query } %>
 </div>
 
-<div class="grid_12 alpha omega">
+<section class="grid_12 alpha omega search">
   <% if @query.blank? %>
     <p>Please enter a city or address</p>
   <% else %>
@@ -20,9 +20,7 @@
       </div>
 
       <% @workplaces.each do |workplace| %>
-        <article class="search_result">
-          <%= render :partial => '/workplaces/workplace', :locals => { :workplace => workplace } %>
-        </article>
+        <%= render :partial => '/workplaces/workplace', :locals => { :workplace => workplace } %>
       <% end %>
 
       <%= will_paginate @workplaces %>
@@ -63,4 +61,4 @@
       <% end %>
 
   <% end %>
-</div>
+</section>

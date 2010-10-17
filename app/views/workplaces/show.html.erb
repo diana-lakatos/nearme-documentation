@@ -7,10 +7,10 @@
       <h1 class="tk-adelle"><%= @workplace.name %></h1>
       <%= content_tag(:p, link_to(@workplace.url, @workplace.url)) if @workplace.url %>
     </div>
-
+    
     <% if @workplace.creator %>
-      <div id="creator" style="text-align: right;" class="grid_3 omega">
-        <%= image_tag @workplace.creator.gravatar_url, :style => "margin-left: 10px", :align => "right", :title => @workplace.creator.name, :alt => @workplace.creator.name %>
+      <div class="creator" class="grid_3 omega">
+        <%= image_tag @workplace.creator.gravatar_url, :class => 'avatar', :title => @workplace.creator.name, :alt => @workplace.creator.name %>
         <small>Created By</small><br/>
         <%= @workplace.creator.name %>
       </div>
@@ -26,18 +26,16 @@
   <% end %>
 
   <section class="details grid_8 alpha">
+    
+    <div class="business_description">
+      <%= raw @workplace.company_description_html %>
+    </div>
 
-    <p class="em"><%=raw @workplace.company_description_html %></p>
-
-    <hr />
-
-    <h2>Availability</h2>
+    <h2 class="tk-chaparral-pro">Availability</h2>
     <%= render :partial => "availability", :locals => {:workplace => @workplace, :weeks => 3} %>
 
-    <hr />
-
     <% if @workplace.description? %>
-      <h2>Extra Info</h2>
+      <h2 class="tk-chaparral-pro">Extra Info</h2>
       <p>
         <strong>Booking Confirmation Required:</strong>
         <%= @workplace.confirm_bookings? ? "Yes" : "No" %>
@@ -45,7 +43,10 @@
       <p><%=raw @workplace.description_html %></p>
     <% end %>
 
-    <h2>Latest Activity</h2>
+    <h2 class="tk-chaparral-pro">Latest Activity</h2>
+    <dl>
+      
+    </dl>
     <% if @feeds.any? %>
       <% @feeds.each do |feed| %>
         <div class="feed_item">
@@ -60,23 +61,24 @@
   </section>
 
   <aside class="grid_4 omega">
-    <% if @workplace.photos.any? %>
-      <section id="photos" class="fancy-photos">
-        <h2>Photos</h2>
-        <ul>
-        <% @workplace.photos.each do |photo| %>
-          <li>
-            <%= link_to photo.large.url, :title => photo.description, :rel => "photos" do %>
-              <%= image_tag(photo.thumb.url, :alt => photo.description) %>
-            <% end %>
-          </li>
-        <% end %>
-        </ul>
-      </section>
-    <% end %>
-
+    <section id="photos" class="fancy-photos">
+      <h2 class="tk-chaparral-pro">Photos</h2>
+      <% if @workplace.photos.any? %>
+          <ul>
+          <% @workplace.photos.each do |photo| %>
+            <li>
+              <%= link_to photo.large.url, :title => photo.description, :rel => "photos" do %>
+                <%= image_tag(photo.thumb.url, :alt => photo.description) %>
+              <% end %>
+            </li>
+          <% end %>
+          </ul>
+      <% else %>
+        <p>Aww noo. There are no photos uploaded yet.</p>
+      <% end %>
+    </section>
     <section>
-      <h2>Location</h2>
+      <h2 class="tk-chaparral-pro">Location</h2>
       <div id="map" style="height: 200px" class="google-map"></div>
       <%= link_to "Open in Google Maps", "http://maps.google.com?q=#{@workplace.address}", :target => "_blank" %>
       <details>

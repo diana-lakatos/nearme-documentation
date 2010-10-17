@@ -1,5 +1,5 @@
 body {
-	font: 12px/24px Helvetica, Arial, Tahoma, sans-serif;
+	font: 12px/22px Helvetica, Arial, Tahoma, sans-serif;
 	color: #333;
 }
 
@@ -74,10 +74,13 @@ section#content {
 }
 
 section h1 {
-	font-size: 32px;
+	font-size: 36px;
 	line-height: 48px;
 	font-weight: 100;
-	font-style: oblique;
+}
+
+section h1.tk-chaparral-pro {
+	font-weight: 800;
 }
 
 section h2 {
@@ -87,7 +90,7 @@ section h2 {
 }
 
 section p {
-	margin-bottom: 24px;
+	margin-bottom: 12px;
 }
 
 section p:last-of-type {
@@ -99,13 +102,14 @@ aside h1 {
 }
 
 aside h2 {
-	font-size: 18px;
+	font-size: 22px;
 }
 
 aside section {
-	background: #E2E2E2;
-	padding: 12px;
-	border-radius: 12px;
+	background: #F1F1F1;
+	background: rgba(255,255,255,0.5);
+	padding: 0 12px 12px 12px;
+	border-radius: 8px;
 	margin-bottom: 24px;
 }
 
@@ -185,7 +189,8 @@ div.overlay-container form.simple_form input {
 }
 
 p.em {
-	font-size: 14px;
+	font-size: 16px;
+	line-height: 28px;
 } /* Give a paragraph some emphasis, not the oblique kind */
 
 ul#photos, #photos ul {
