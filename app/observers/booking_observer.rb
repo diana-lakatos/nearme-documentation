@@ -14,4 +14,16 @@ class BookingObserver < ActiveRecord::Observer
     BookingMailer.booking_confirmed(booking).deliver
   end
 
+  def after_reject(booking, transaction)
+    BookingMailer.booking_rejected(booking).deliver
+  end
+
+  def after_user_cancel(booking, transaction)
+    BookingMailer.booking_cancelled_by_user(booking).deliver
+  end
+
+  def after_owner_cancel(booking, transaction)
+    BookingMailer.booking_cancelled_by_owner(booking).deliver
+  end
+
 end

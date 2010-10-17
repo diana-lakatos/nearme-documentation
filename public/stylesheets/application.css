@@ -665,7 +665,30 @@ ul.list li a.action.rm {
 	font-weight: bold;
 }
 
-<<<<<<< HEAD
+ul.list li div.actions {
+	float: right;
+}
+
+ul.list li div.actions form {
+	float: left;
+	margin-left: 12px;
+	padding: 3px 0;
+}
+
+ul.list li div.actions form input.rm {
+	border: none;
+	background: transparent url(/images/cross-small.png) no-repeat left center;
+	padding-left: 18px;
+	float: right;
+}
+
+ul.list li div.actions form input.tick {
+	border: none;
+	background: transparent url(/images/tick-small.png) no-repeat left center;
+	padding-left: 18px;
+	float: right;
+}
+
 /* === Simple Form */
 
 form.simple_form {

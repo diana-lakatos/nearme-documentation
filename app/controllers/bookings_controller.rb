@@ -6,8 +6,7 @@ class BookingsController < ApplicationController
 
   def update
     @booking.fire_events(current_event)
-    actioned = "#{current_event}ed".gsub(/^\w+_/,'') # canceled, confirmed, rejected
-    flash[:notice] = "You have #{actioned} the booking"
+    flash[:notice] = "You have #{@booking.state_name} the booking"
     redirect_to dashboard_path
   end
 

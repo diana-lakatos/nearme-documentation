@@ -67,13 +67,23 @@ Feature: Emails should be sent out informing parties about bookings
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
     And all emails have been delivered
     And I am logged in as user "Keith Contractor"
+    When I follow "Dashboard"
+    And I press "Cancel"
+    Then 1 email should be delivered
+    And the email should be delivered to user "Bo Jeanes"
+    And the email should have subject: "[DesksNear.Me] A booking has been cancelled"
 
   @wip
   Scenario: confirmed then cancelled by owner
     Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
     And all emails have been delivered
-    And I am logged in as user "Keith Contractor"
+    And I am logged in as user "Bo Jeanes"
+    When I follow "Dashboard"
+    And I press "Cancel"
+    Then 1 email should be delivered
+    And the email should be delivered to user "Keith Contractor"
+    And the email should have subject: "[DesksNear.Me] Your booking at Mocra has been cancelled by the owner"
 
   @wip
   Scenario: unconfirmed booking gets cancelled by user
@@ -81,10 +91,20 @@ Feature: Emails should be sent out informing parties about bookings
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "unconfirmed"
     And all emails have been delivered
     And I am logged in as user "Keith Contractor"
+    When I follow "Dashboard"
+    And I press "Cancel"
+    Then 1 email should be delivered
+    And the email should be delivered to user "Bo Jeanes"
+    And the email should have subject: "[DesksNear.Me] A booking has been cancelled"
 
   @wip
   Scenario: unconfirmed booking gets rejected
     Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "unconfirmed"
     And all emails have been delivered
-    And I am logged in as user "Keith Contractor"
+    And I am logged in as user "Bo Jeanes"
+    When I follow "Dashboard"
+    And I press "Reject"
+    Then 1 email should be delivered
+    And the email should be delivered to user "Keith Contractor"
+    And the email should have subject: "[DesksNear.Me] Sorry, your booking at Mocra has been rejected"
