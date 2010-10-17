@@ -596,11 +596,16 @@ a.huge_ass_button {
 	-o-border-radius: 12px;
 	font-weight: bold;
 	margin: 12px 0;
+	text-shadow: 0px 1px 0px rgba(0,0,0,0.3);
 }
 
 a.huge_ass_button.workplace {
-	background: #2A6199;
+	background: #2A6199 url(/images/button_blue_bg.jpg) repeat-x left top;
 	color: #FFF;
+}
+
+a.huge_ass_button.workplace:active {
+	background: #2A6199 url(/images/button_blue_alt.jpg) repeat-x left top;
 }
 
 a.huge_ass_button:link, a.huge_ass_button:visited {
@@ -865,4 +870,28 @@ section.featured article.workplace img {
 	padding: 3px;
 	background: #FFF;
 	background: rgba(255,255,255,0.6);
+}
+
+#rr10sash {
+	width: 100px !important;
+	height: 100px !important;
+	background: transparent url(/images/rrsash.png) no-repeat right top !important;
+}
+
+a.tweet_it {
+	background: #4CA2D0 url(/images/twitter.png) no-repeat 3px center;
+	border-radius: 6px;
+	padding: 6px 6px 6px 28px;
+	border-bottom: 1px solid #457499;
+	color: #FFF;
+	font-weight: bold;
+}
+
+a.tweet_it:link, a.tweet_it:visited {
+	color: #FFF;
+	text-decoration: none;
+}
+
+a.tweet_it:hover {
+	text-decoration: underline;
 }
