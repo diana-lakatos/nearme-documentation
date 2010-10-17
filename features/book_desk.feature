@@ -6,40 +6,39 @@ Feature: A user can book a desk
   Background:
     Given a workplace exists with maximum_desks: 10
       And a user exists
-      And the date is "16th October 2010"
+      And the date is "13th October 2010"
 
   Scenario: A logged in user can book a desk
       And I am logged in as the user
      When I go to the workplace's page
-      And I follow the booking link for "18th October 2010"
-     Then I should see "You are making a booking for October 18, 2010"
+      And I follow the booking link for "15th October 2010"
+     Then I should see "You are making a booking for October 15, 2010"
       And I press "Book"
      Then I should be on the workplace's page
-      And a booking should exist with date: "2010-10-18"
+      And a booking should exist with date: "2010-10-15"
 
   @wip
   Scenario: An anonymous user can log in to book a desk
     When I go to the workplace's page
-    And I follow the booking link for "18th October 2010"
+    And I follow the booking link for "15th October 2010"
     Then I should see "Do we know you?"
     When I log in as the user with Twitter
     # Then I should be logged in as the user
     And I should be on the workplace's new booking page
-    And I should see "You are making a booking for October 18, 2010"
+    And I should see "You are making a booking for October 15, 2010"
     And I press "Book"
     Then I should be on the workplace's page
-    And a booking should exist with date: "2010-10-18"
-       
-  @wip
+    And a booking should exist with date: "2010-10-15"
+
   Scenario: Availability for the week is shown is shown
     Given the workplace has the following bookings:
       | Date       | Number of Bookings |
-      | 2010-10-18 | 4                  |
-      | 2010-10-19 | 10                 |
-      | 2010-10-20 | 0                  |
-      | 2010-10-21 | 3                  |
-      | 2010-10-22 | 7                  |
+      | 2010-10-11 | 4                  |
+      | 2010-10-12 | 10                 |
+      | 2010-10-13 | 0                  |
+      | 2010-10-14 | 3                  |
+      | 2010-10-15 | 7                  |
     When I go to the workplace's page
     Then I should see the following availability:
-      | 2010-10-18 | 2010-10-10 | 2010-10-20 | 2010-10-21 | 2010-10-22 |
+      | 2010-10-11 | 2010-10-12 | 2010-10-13 | 2010-10-14 | 2010-10-15 |
       | 6          | 0          | 10         | 7          | 3          |
