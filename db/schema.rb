@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101017001531) do
+ActiveRecord::Schema.define(:version => 20101017023618) do
 
   create_table "bookings", :force => true do |t|
     t.datetime "created_at"
@@ -64,7 +64,9 @@ ActiveRecord::Schema.define(:version => 20101017001531) do
     t.float    "longitude"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "delta",               :default => true, :null => false
+    t.boolean  "delta",                    :default => true, :null => false
+    t.text     "description_html"
+    t.text     "company_description_html"
   end
 
 end

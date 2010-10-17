@@ -17,6 +17,7 @@ class Workplace < ActiveRecord::Base
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0
 
   before_validation :fetch_coordinates
+  before_save :apply_filter
 
   define_index do
     indexes :name
@@ -72,9 +73,18 @@ class Workplace < ActiveRecord::Base
     def fetch_coordinates
       geocoded = Geocoder.search(address).try(:[], 'results').try(:first)
       if geocoded
-        self.latitude = geocoded['geometry']['location']['lat']
+        self.latitude  = geocoded['geometry']['location']['lat']
         self.longitude = geocoded['geometry']['location']['lng']
       end
     end
 
+    def apply_filter
+      self.description_html         = redcloth(description)
+      self.company_description_html = redcloth(company_description)
+    end
+
+    def redcloth(text)
+      restrictions = [:sanitize_html, :no_span_caps, :filter_styles, :filter_classes, :filter_ids]
+      RedCloth.new(text.to_s, restrictions).to_html
+    end
 end
