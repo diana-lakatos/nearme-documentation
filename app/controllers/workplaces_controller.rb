@@ -1,6 +1,10 @@
 class WorkplacesController < ApplicationController
-  before_filter :require_user, :except => [:show]
+  before_filter :require_user, :except => [:show, :index]
   before_filter :find_workplace, :only => [:edit, :update]
+
+  def index
+    @workplaces = Workplace.latest
+  end
 
   def new
     @workplace = current_user.workplaces.build(:maximum_desks => 1, :confirm_bookings => false)

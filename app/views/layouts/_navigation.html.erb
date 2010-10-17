@@ -1,5 +1,6 @@
 <nav>
   <ul>
+    <li class="grid_2"><%= link_to "Workplaces", workplaces_path %></li>
     <% if current_user? %>
       <li class="grid_2"><%= link_to "Dashboard", dashboard_path %></li>
       <li class="grid_2"><%= link_to "Logout", logout_path %></li>
