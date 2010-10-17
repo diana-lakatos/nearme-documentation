@@ -19,10 +19,11 @@ Feature: A user can search for a workplace
      Then I should see "No results found"
 
   Scenario: A user searches using a location that that yields results
-    Given a workplace exists with name: "Rad Annex", address: "Adelaide, South Australia"
-      And a workplace exists with name: "Crap Annex", address: "Melbourne, Victoria"
+    Given a workplace exists with name: "Rad Annex", latitude: -34.92577, longitude: 138.599732
+      And a workplace exists with name: "Crap Annex", latitude: -34.92577, longitude: 198.599732
      When I go to the home page
       And I search for "adelaide"
       And I should see a Google Map
      Then I should see "Rad Annex"
+      And show me the page
       And I should not see "Crap Annex"
