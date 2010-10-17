@@ -41,9 +41,5 @@ Feature: A user can book a desk
       | 2010-10-22 | 7                  |
     When I go to the workplace's page
     Then I should see the following availability:
-      | Date       | Available Desks |
-      | 2010-10-18 | 6               |
-      | 2010-10-19 | 0               |
-      | 2010-10-20 | 10              |
-      | 2010-10-21 | 7               |
-      | 2010-10-22 | 3               |
+      | 2010-10-18 | 2010-10-10 | 2010-10-20 | 2010-10-21 | 2010-10-22 |
+      | 6          | 0          | 10         | 7          | 3          |
