@@ -62,7 +62,7 @@ article.workplace aside address {
 }
 
 article.workplace aside address a {
-	font-size: 12px;
+	font-size: 12pxf;
 }
 
 /* === Booking table */
@@ -317,6 +317,10 @@ footer div.copyright img {
 	float: left;
 	margin-right: 12px;
 	vertical-align: middle;
+}
+
+footer div.copyright small {
+	padding-left: 44px;
 }
 
 /* === Flashes */
@@ -692,4 +696,34 @@ dl.activity_feed dd img.avatar {
 	width: 32px;
 	float: left;
 	margin-right: 12px;
+}
+
+/* === Photo list */
+
+ul.photos {
+	overflow: hidden;
+}
+
+ul.photos li {
+	overflow: hidden;
+	background: #F8F8F8;
+	background: rgba(255,255,255,0.5);
+	display: block;
+	list-style: none;
+	padding: 6px;
+}
+
+ul.photos li img {
+	width: 100%;
+}
+
+ul.photos li p {
+	margin: 0;
+}
+
+ul.photos li form input.rm {
+	border: none;
+	background: transparent url(/images/cross-small.png) no-repeat left center;
+	padding-left: 18px;
+	float: right;
 }

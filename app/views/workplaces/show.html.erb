@@ -25,7 +25,6 @@
     </div>
 
     <h2 class="tk-chaparral-pro">Availability</h2>
-    <p>Hover over a day to see how many desks are avaliable.</p>
     <%= render :partial => "availability", :locals => {:workplace => @workplace, :weeks => 3} %>
 
     <% if @workplace.description? %>
@@ -76,7 +75,13 @@
           <% end %>
           </ul>
       <% else %>
-        <p>Aww noo. There are no photos uploaded yet.</p>
+      <div class="grid_1 alpha">
+        <%= image_tag "desk_photos.png"%>
+      </div>
+      <div class="grid_3 omega">
+        <p><strong>Aww nuu.</strong><br />
+        There are no photos uploaded yet.</p>
+      </div>
       <% end %>
     </section>
     <section>
