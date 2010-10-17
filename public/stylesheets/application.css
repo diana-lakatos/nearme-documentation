@@ -418,6 +418,7 @@ div.overlay-container form.booking input[type='submit'] {
 	padding: 6px 12px;
 	font-size: 14px;
 	margin-left: 12px;
+	margin-top: 0;
 }
 
 div.overlay-container form.booking a.cancel {
@@ -670,6 +671,20 @@ form.simple_form div.input {
 	margin: 6px 0;
 }
 
+form.simple_form div.input span.hint {
+	font-style: italic;
+	padding-left: 174px;
+	margin-bottom: 12px;
+	vertical-align: middle;
+	display: block;
+}
+
+form.simple_form div.input.boolean span.hint {
+	display: inline;
+	font-style: normal;
+	padding: 0;
+}
+
 form.simple_form div.field_with_errors {
 	background: #FFE1E4;
 	background: rgba(255,0,0,0.1);
@@ -696,6 +711,7 @@ form.simple_form input[type='submit'] {
 	-o-border-radius: 6px;
 	padding: 10px 24px;
 	margin-left: 174px;
+	margin-top: 24px;
 	color: #FFF;
 	font-weight: bold;
 	font-size: 16px;
