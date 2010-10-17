@@ -9,6 +9,7 @@ module Workplaces
 
     def new
       @booking = @workplace.bookings.build(:date => params[:date])
+      render :layout => !request.xhr?
     end
 
     def create

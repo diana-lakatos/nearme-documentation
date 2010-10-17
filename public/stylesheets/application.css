@@ -86,6 +86,21 @@ table.bookings.extended tr td.day.booked time {
 	background: #D2666B;
 }
 
+table.bookings.extended tr td.day.unavailable time {
+	background: #CCC;
+	color: #666;
+}
+
+table.bookings.extended tr td.unavailable.hover details.availability,
+table.bookings.extended tr td.unavailable:hover details.availability {
+	display: none;
+}
+
+table.bookings.extended tr td.unavailable.hover time,
+table.bookings.extended tr td.unavailable:hover time {
+	display: block;
+}
+
 /* === Big form search */
 
 form.big_search .inner {

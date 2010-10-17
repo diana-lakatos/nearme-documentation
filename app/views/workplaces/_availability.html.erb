@@ -29,3 +29,14 @@
     </tr>
   </tbody>
 </table>
+<% content_for :script do -%>
+<script type="text/javascript">
+  $(function(){
+    $("td.day details.availability a").click(function(e){
+      // e.stopPropagation();
+      var overlay = $("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: "Working&hellp;", 'class': "context" });
+      return false;
+    })
+  });
+</script>
+<% end %>
