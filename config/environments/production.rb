@@ -36,6 +36,15 @@ DesksnearMe::Application.configure do
 
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
+  ActionMailer::Base.smtp_settings = {
+    :address              => "smtp.gmail.com",
+    :port                 => 587,
+    :domain               => 'desksnear.me',
+    :user_name            => 'support@desksnear.me',
+    :password             => 'c0ff33pl0x',
+    :authentication       => 'plain',
+    :enable_starttls_auto => true  
+  }
 
   # Enable threaded mode
   # config.threadsafe!

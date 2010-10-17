@@ -76,6 +76,7 @@ Feature: A user can book a desk
      When I follow "Sign In/Up"
       And I follow "Twitter"
       And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
+      And I fill in "Name" with "Jermaine"
       And I fill in "Email" with "myemail@example.com"
       And I press "Continue"
      Then I should be on the workplace's new booking page
