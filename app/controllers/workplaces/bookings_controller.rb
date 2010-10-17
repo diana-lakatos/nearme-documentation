@@ -13,7 +13,7 @@ module Workplaces
       
       if Date.parse(params[:date]) < Date.today
         flash[:notice] = "Who do you think you are, Marty McFly? You can't book a desk in the past!"
-        redirect_to @workplace
+        redirect_to @workplace and return
       end
       
       render :layout => !request.xhr?
