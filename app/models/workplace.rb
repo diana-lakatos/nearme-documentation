@@ -38,19 +38,25 @@ class Workplace < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
-  def schedule(days = 5)
-    today = Date.today
+  def schedule(weeks = 1)
+    {}.tap do |hash|
+      # Build a hash of all week days and their default availabilities
+      weeks.times do |offset|
+        today  = Date.today + offset.weeks
+        monday = today.weekend? ? today.next_week : today.beginning_of_week
+        friday = monday + 4
+        week   = monday..friday
+        week.inject(hash) {|m,d| m[d] = maximum_desks; m}
+      end
 
-    monday = today.weekend? ? today.next_week : today.beginning_of_week
-    week   = monday..(monday + days - 1)
-    hash   = week.inject({}) {|m,d| m[d] = maximum_desks; m}
+      # Fetch count of all bookings for each of those dates
+      schedule = bookings.select("COUNT(*) as count, date").
+        where(:date  => hash.keys).
+        where(:state => [:confirmed, :unconfirmed]).
+        group(:date)
 
-    schedule = bookings.select("COUNT(*) as count, date").
-      where(:date  => week).
-      where(:state => [:confirmed, :unconfirmed]).
-      group(:date)
-
-    hash.tap do |hash|
+      # Subtract the number of bookings from those days to leave
+      # how many places are remaining, then return the hash
       schedule.each do |booking|
         if hash[booking.date] >= booking.count.to_i
           hash[booking.date] -= booking.count.to_i
