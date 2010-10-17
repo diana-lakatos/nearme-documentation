@@ -6,6 +6,7 @@
   <%= f.input :company_description, :input_html => {:rows => 8} %>
   <%= f.input :url, :as => :string, :label => "Company URL" %>
   <%= f.input :confirm_bookings, :as => :radio %>
+  <%= f.input :fake, :label => "Test workplace", :hint => "If you are testing this site for Rails Rumble, check this, OTHERWISE PEOPLE WILL COME TO YOUR OFFICE AND EXPECT YOU TO HAVE A DESK FOR THEM" %>
   <% if current_user.admin? %>
     <%= f.association :creator, :select => "Select a creator..." %>
   <% end %>

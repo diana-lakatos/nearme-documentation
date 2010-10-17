@@ -1,8 +1,12 @@
 
 <article class="workplace">
-
+  
   <div class="grid_12 alpha omega">
-
+    <% if @workplace.fake? %>
+    <div class="grid_12 alpha omega flash notice">
+      THIS IS A RAILS RUMBLE TEST VENUE
+    </div>
+    <% end %>
     <div class="grid_5 alpha">
       <h1 class="tk-adelle"><%= @workplace.name %></h1>
       <%= content_tag(:p, link_to(@workplace.url, @workplace.url)) if @workplace.url %>
