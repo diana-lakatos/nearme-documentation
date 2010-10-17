@@ -65,6 +65,11 @@ if defined?(ActiveRecord::Base)
   end
 end
 
+# Always clean up old indexes after tests
+After do
+  ThinkingSphinx::Test.index
+end
+
 # Let's get rid of those shitty capybara-201010101010.html files
 Capybara.save_and_open_page_path = File.join(Rails.root, 'tmp', 'capybara')
 

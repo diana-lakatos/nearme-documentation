@@ -25,5 +25,4 @@ Feature: A user can search for a workplace
       And I search for "adelaide"
       And I should see a Google Map
      Then I should see "Rad Annex"
-      And show me the page
       And I should not see "Crap Annex"
