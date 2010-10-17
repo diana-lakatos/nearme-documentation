@@ -1,4 +1,3 @@
-@wip
 Feature: Emails should be sent out informing parties about bookings
   In order to know or change the status of a booking
   As a user or workplace owner

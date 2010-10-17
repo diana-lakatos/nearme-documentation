@@ -18,7 +18,7 @@ end
 Given /^the workplace has the following bookings:$/ do |table|
   table.hashes.each do |row|
     num = row["Number of Bookings"].to_i
-    Given %'#{num} bookings exist with workplace: the workplace, user: the user, date: "#{row["Date"]}"'
+    Given %'#{num} bookings exist with workplace: the workplace, date: "#{row["Date"]}"'
   end
 end
 
