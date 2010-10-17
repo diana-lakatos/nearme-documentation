@@ -10,6 +10,7 @@ Feature: A user can add photos to a workplace
       And I am on the workplace's page
 
   Scenario: Adding photos to a work place
+    And show me the page
      When I follow "Manage Workplace Photos"
      Then I should see 0 workplace photos
      When I attach the photo "boss's desk.jpg" to "New Photo"

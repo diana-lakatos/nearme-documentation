@@ -1,5 +1,5 @@
 class DashboardController < ApplicationController
-  before_filter :require_user
+  before_filter :authenticate_user!
 
   def index
     @workplaces = current_user.workplaces.all

@@ -1,5 +1,5 @@
 class WorkplacesController < ApplicationController
-  before_filter :require_user, :except => [:show, :index]
+  before_filter :authenticate_user!, :except => [:show, :index]
   before_filter :find_workplace, :only => [:edit, :update]
 
   def index
