@@ -1,6 +1,7 @@
-<ul class="bookings">
+<ul class="bookings list">
   <% bookings.each do |booking|%>
-    <li><div><%= booking.workplace.name%> on <time datetime="<%= booking.date %>"><%= l(booking.date, :format => :long) %></time></div>
-      (<%= link_to "Cancel", booking, :method => :delete, :confirm => "Do you really want to cancel this booking?"%>)</li>
+    <li>
+      <p class="em"><%= booking.workplace.name%> on <time datetime="<%= booking.date %>"><%= l(booking.date, :format => :long) %></time></p>
+      <%= link_to "Cancel", booking, :method => :delete, :confirm => "Do you really want to cancel this booking?", :class => "action rm" %></li>
   <% end %>
 </ul>

@@ -10,9 +10,11 @@
   </nav>
   <section id="workplaces" class="selected tab">
     <nav class="actions">
-      <%= link_to "Create Workplace", new_workplace_path %>
+      <%= link_to new_workplace_path do %>
+        <%= image_tag "building--plus.png" %> Create Workplace
+      <% end %>
     </nav>
-    <table>
+    <table class="pretty">
       <thead>
         <tr>
           <th>Name</th>
@@ -25,7 +27,7 @@
           <tr>
             <td><%= link_to workplace.name, workplace %></td>
             <td><%= workplace.confirm_bookings? ? "#{workplace.bookings.with_state(:unconfirmed).count} Unconfirmed" : "-" %></td>
-            <td><%= link_to "Edit Workplace", [ :edit, workplace ] %></td>
+            <td class="actions"><%= link_to [ :edit, workplace ] do %>Edit Workplace <%= image_tag "navigation.png" %><% end %></td>
           </tr>
         <% end %>
       </tbody>
@@ -33,7 +35,7 @@
   </section>
   <section id="my_bookings" class="tab">
     <% if @your_bookings.any? %>
-    <%= render :partial => "booking_list", :locals => {:bookings => @your_bookings}%>
+      <%= render :partial => "booking_list", :locals => {:bookings => @your_bookings}%>
     <% end %>
   </section>
   <section id="bookings" class="tab">

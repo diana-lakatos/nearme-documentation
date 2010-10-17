@@ -481,6 +481,19 @@ nav.actions {
 nav.actions a {
 	float: left;
 	margin-left: 12px;
+	font-weight: bold;
+}
+
+nav.actions a:link, nav.actions a:visited {
+	text-decoration: none;
+}
+
+nav.actions a:hover {
+	text-decoration: underline;
+}
+
+nav.actions a img {
+	vertical-align: middle;
 }
 
 /* === Huge Ass Button for workplace */
@@ -506,4 +519,75 @@ a.huge_ass_button:link, a.huge_ass_button:visited {
 
 a.huge_ass_button:hover {
 	text-decoration: underline;
+}
+
+/* === Pretty Tables */
+
+table.pretty {
+	width: 100%;
+	border: none;
+}
+
+table.pretty tr th {
+	border-bottom: 1px solid #CCC;
+}
+
+table.pretty tr td {
+	border-bottom: 1px solid #CCC;
+	text-align: center;
+	height: 32px;
+	line-height: 32px;
+	font-size: 14px;
+	width: 20%;
+}
+
+table.pretty tr td.actions {
+	text-align: right;
+}
+
+table.pretty tr td.actions a {
+	font-weight: bold;
+}
+
+table.pretty tr td.actions a img {
+	vertical-align: -3px;
+}
+
+table.pretty tr td.actions a:link, table.pretty tr td.actions a:visited {
+	text-decoration: none;
+}
+
+table.pretty tr td.actions a:hover {
+	text-decoration: underline;
+}
+
+/* === UL Lists */
+
+ul.list {
+	overflow: hidden;
+	-webkit-padding-start: 0px;
+	margin: 0;
+	padding: 0;
+}
+
+ul.list li {
+	border-bottom: 1px solid #CCC;
+	line-height: 32px;
+	overflow: hidden;
+	list-style: none;
+	padding: 6px;
+}
+
+ul.list li a.action {
+	float: right;
+	margin-left: 12px;
+}
+
+ul.list li p {
+	float: left;
+}
+
+ul.list li a.action.rm {
+	color: #990001;
+	font-weight: bold;
 }
