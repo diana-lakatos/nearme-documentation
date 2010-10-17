@@ -1,4 +1,3 @@
-
 Feature: A user can create and edit a workplace
   In order to let people work at my rad workplace
   As a user
@@ -26,6 +25,7 @@ Feature: A user can create and edit a workplace
       And I press "Create Workplace"
      Then a workplace should exist with name: "Joe's Codin' Garage"
       And I should be on the workplace's page
+      And I should see "Joe's Codin' Garage"
       And I should see "http://site.com"
 
   Scenario: A user can edit a workplace

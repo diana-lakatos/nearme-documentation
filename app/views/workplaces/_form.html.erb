@@ -6,5 +6,8 @@
   <%= f.input :company_description, :input_html => {:rows => 8} %>
   <%= f.input :url, :as => :string, :label => "Company URL" %>
   <%= f.input :confirm_bookings, :as => :radio %>
+  <% if current_user.admin? %>
+    <%= f.association :creator, :select => "Select a creator..." %>
+  <% end %>
   <%= f.button :submit %>
 <% end %>

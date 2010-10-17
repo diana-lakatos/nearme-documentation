@@ -11,3 +11,7 @@ Factory.define :user do |u|
   u.password_confirmation 'password'
 end
 
+Factory.define :admin, :parent => :user, :class => User do |u|
+  u.admin true
+end
+

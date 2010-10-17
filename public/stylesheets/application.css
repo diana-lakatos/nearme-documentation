@@ -53,6 +53,18 @@ section.list article.workplace table.bookings {
   width: 50%;
 }
 
+article.workplace aside address {
+	padding-left: 42px;
+	background: transparent url(/images/home.png) no-repeat 6px 6px;
+	margin: 6px 0;
+	font-style: normal;
+	font-size: 14px;
+}
+
+article.workplace aside address a {
+	font-size: 12px;
+}
+
 /* === Booking table */
 
 table.bookings.extended {
@@ -497,7 +509,7 @@ nav.actions a:hover {
 }
 
 nav.actions a img {
-	vertical-align: middle;
+	vertical-align: -3px;
 }
 
 /* === Huge Ass Button for workplace */
@@ -543,6 +555,7 @@ table.pretty tr td {
 	line-height: 32px;
 	font-size: 14px;
 	width: 20%;
+	text-align: left;
 }
 
 table.pretty tr td.actions {
