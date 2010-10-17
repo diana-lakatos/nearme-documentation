@@ -77,6 +77,7 @@ class Workplace < ActiveRecord::Base
   def self.search_by_location(query)
     geocoded = Geocoder.search(query).try(:[], 'results').try(:first)
     return [ [], nil ] if geocoded.nil?
+    return [ all, nil ] if query =~ /^earth$/i
 
     location = { :name => geocoded['formatted_address'],
                  :lat => geocoded['geometry']['location']['lat'],

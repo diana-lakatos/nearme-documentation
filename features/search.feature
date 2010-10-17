@@ -26,3 +26,12 @@ Feature: A user can search for a workplace
       And I should see a Google Map
      Then I should see "Rad Annex"
       And I should not see "Crap Annex"
+
+  Scenario: A user searches for "earth" and see's everything
+    Given a workplace exists with name: "Rad Annex"
+      And a workplace exists with name: "Crap Annex"
+     When I go to the home page
+      And I search for "earth"
+      And I should see a Google Map
+     Then I should see "Rad Annex"
+      And I should see "Crap Annex"
