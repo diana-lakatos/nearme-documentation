@@ -1,6 +1,6 @@
 <article class="workplace">
   <details>
-    <%= image_tag workplace.photos.thumb.url, :alt => workplace.name %>
+    <%= image_tag workplace.photos.thumb.url, :alt => workplace.name, :width => 50, :height => 50 %>
     <h3><%= link_to workplace.name, workplace %></h3>
     <address><%= workplace.formatted_address || workplace.address %></address>
   </details>

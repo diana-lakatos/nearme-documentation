@@ -61,7 +61,6 @@ Feature: Emails should be sent out informing parties about bookings
     And the email should be delivered to user "Keith Contractor"
     And the email should have subject: "[DesksNear.Me] Your booking has been confirmed"
 
-  @wip
   Scenario: confirmed then cancelled by user
     Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
@@ -73,7 +72,6 @@ Feature: Emails should be sent out informing parties about bookings
     And the email should be delivered to user "Bo Jeanes"
     And the email should have subject: "[DesksNear.Me] A booking has been cancelled"
 
-  @wip
   Scenario: confirmed then cancelled by owner
     Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
@@ -85,7 +83,6 @@ Feature: Emails should be sent out informing parties about bookings
     And the email should be delivered to user "Keith Contractor"
     And the email should have subject: "[DesksNear.Me] Your booking at Mocra has been cancelled by the owner"
 
-  @wip
   Scenario: unconfirmed booking gets cancelled by user
     Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "unconfirmed"
@@ -97,7 +94,6 @@ Feature: Emails should be sent out informing parties about bookings
     And the email should be delivered to user "Bo Jeanes"
     And the email should have subject: "[DesksNear.Me] A booking has been cancelled"
 
-  @wip
   Scenario: unconfirmed booking gets rejected
     Given a workplace: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_bookings: true
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "unconfirmed"

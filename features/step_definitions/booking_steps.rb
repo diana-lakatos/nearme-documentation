@@ -47,7 +47,9 @@ end
 
 When(/^I cancel the booking for "([^"]*)"$/) do |date|
   date = Date.parse(date)
-  find(:xpath, "//time[@datetime='#{date}']/../../form/input[@value='Cancel']").click
+  within(:xpath, "//time[@datetime='#{date}']/../..") do
+    find(:xpath, "//input[@value='Cancel']").click 
+  end
 end
 
 Then /^I should see availability for dates:$/ do |table|
