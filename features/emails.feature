@@ -57,7 +57,6 @@ Feature: Emails should be sent out informing parties about bookings
     And I am logged in as user "Bo Jeanes"
     When I follow "Dashboard"
     And I press "Confirm"
-    Then show me the page
     Then 1 email should be delivered
     And the email should be delivered to user "Keith Contractor"
     And the email should have subject: "[DesksNear.Me] Your booking has been confirmed"
@@ -68,7 +67,6 @@ Feature: Emails should be sent out informing parties about bookings
     And a booking exists with workplace: workplace "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
     And all emails have been delivered
     And I am logged in as user "Keith Contractor"
-    # When
 
   @wip
   Scenario: confirmed then cancelled by owner
