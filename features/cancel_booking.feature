@@ -28,7 +28,7 @@ Feature: A user can cancel a booking
   Scenario: A user can cancel a booking
     Given I am on the dashboard page
     When I cancel the booking for "19th October 2010"
-    Then I should see "You have canceled the booking"
+    Then I should see "You have cancelled the booking"
      And I should see the following bookings in order:
       | Joe's Codin Garage on October 18, 2010 (unconfirmed) |
       | WoughThorks on October 20, 2010 (unconfirmed)        |

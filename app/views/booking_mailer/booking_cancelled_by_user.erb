@@ -1,0 +1,6 @@
+Dear <%= @user %>,
+
+<%= @booking.user %> has cancelled their booking at <%= @workplace %>
+on <%= l(@booking.date, :format => :long) %> that they made earlier.
+
+<%= render :partial => "footer" %>
