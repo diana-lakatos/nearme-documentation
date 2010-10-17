@@ -9,13 +9,35 @@ Feature: A user can book a desk
       And the date is "13th October 2010"
 
   Scenario: A logged in user can book a desk
-      And I am logged in as the user
+    Given I am logged in as the user
      When I go to the workplace's page
       And I follow the booking link for "15th October 2010"
      Then I should see "You are making a booking for October 15, 2010"
       And I press "Book"
      Then I should be on the workplace's page
       And a booking should exist with date: "2010-10-15"
+
+  Scenario: A booking is automatically confirmed if the workplace doesnt require confirmation booking
+    Given a workplace: "Rad Annex" exists with confirm_bookings: false
+      And I am logged in as the user
+     When I go to the workplace: "Rad Annex"'s page
+      And I follow the booking link for "15th October 2010"
+     Then I should see "You are making a booking for October 15, 2010"
+      And I press "Book"
+     Then I should be on the workplace's page
+      And a booking should exist with date: "2010-10-15"
+      And I should see "booked a desk for the 15 October, 2010"
+
+  Scenario: A booking is not automatically confirmed if the workplace requires confirmation booking
+    Given a workplace: "Rad Annex" exists with confirm_bookings: true
+      And I am logged in as the user
+     When I go to the workplace: "Rad Annex"'s page
+      And I follow the booking link for "15th October 2010"
+     Then I should see "You are making a booking for October 15, 2010"
+      And I press "Create Booking"
+     Then I should be on the workplace's page
+      And a booking should exist with date: "2010-10-15"
+      And I should not see "booked a desk for the 15 October, 2010"
 
   @wip
   Scenario: An anonymous user can log in to book a desk

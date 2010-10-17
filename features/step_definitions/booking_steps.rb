@@ -16,7 +16,7 @@ Then /^I should see the following availability:$/ do |table|
     hash.tap do |hash|
       within(:xpath, cell.path) do
         date       = find("time")["datetime"]
-        available  = find("details").text
+        available  = find("details").text.strip
         hash[date] = available
       end
     end

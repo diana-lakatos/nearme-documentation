@@ -23,7 +23,20 @@
     <hr />
 
     <h2>Extra Info</h2>
+    <p><strong>Booking Confirmation Required:</strong> <%= @workplace.confirm_bookings? ? "Yes" : "No" %></p>
     <p><%=raw @workplace.description_html %></p>
+
+    <h2>Latest Activity</h2>
+    <% if @feeds.any? %>
+      <% @feeds.each do |feed| %>
+        <div class="feed_item">
+          <%= image_tag feed.user.picture_url if feed.try(:user).try(:picture_url) %>
+          <%= render :partial => "feeds/#{feed.activity}", :locals => { :feed => feed } %>
+        </div>
+      <% end %>
+    <% else %>
+      <p>No activity has been generated yet.</p>
+    <% end %>
 
   </section>
 
