@@ -26,7 +26,7 @@ article.workplace section.details h2 {
 	margin: 24px 0 12px;
 }
 
-section.search article.workplace details {
+section.list article.workplace details {
   float: left;
   width: 50%;
   padding-top: 20px;
@@ -37,18 +37,18 @@ article.workplace div.business_description p {
 	line-height: 26px;
 }
 
-section.search article.workplace table td details {
+section.list article.workplace table td details {
   float: none;
   width: auto;
   padding-top: inherit;
 }
 
-section.search article.workplace details img {
+section.list article.workplace details img {
   float: left;
   margin-right: 10px;
 }
 
-section.search article.workplace table.bookings {
+section.list article.workplace table.bookings {
   float: left;
   width: 50%;
 }
@@ -432,4 +432,78 @@ section.authentications a.auth_provider:hover {
 
 section.authentications a.auth_provider.openid:hover {
 	background: #F4D9A9;
+}
+
+/* === Tabs */
+
+div.tabs > nav {
+	background: #F8F8F8;
+	background: rgba(255,255,255,0.8);
+	border-radius: 6px;
+	padding: 6px 6px 0px;
+	overflow: hidden;
+	margin-bottom: 12px;
+}
+
+div.tabs > nav a.selected {
+	background: #EEE;
+}
+
+div.tabs > nav a {
+	color: #333;
+	font-size: 14px;
+	font-weight: bold;
+	float: left;
+	padding: 8px 12px;
+	border-radius: 6px 6px 0px 0px;
+	margin-right: 12px;
+}
+
+div.tabs > nav a:link, div.tabs nav > a:visited {
+	text-decoration: none;
+}
+
+div.tabs section.tab {
+	display: none;
+}
+
+div.tabs section.tab.selected {
+	display: block;
+}
+
+/* == Actions Nav */
+
+nav.actions {
+	overflow: hidden;
+	float: right;
+}
+
+nav.actions a {
+	float: left;
+	margin-left: 12px;
+}
+
+/* === Huge Ass Button for workplace */
+
+a.huge_ass_button {
+	display: block;
+	padding: 24px 12px;
+	text-align: center;
+	font-size: 18px;
+	border-radius: 12px;
+	font-weight: bold;
+	margin: 12px 0;
+}
+
+a.huge_ass_button.workplace {
+	background: #2A6199;
+	color: #FFF;
+}
+
+a.huge_ass_button:link, a.huge_ass_button:visited {
+	text-decoration: none;
+}
+
+a.huge_ass_button:hover {
+	text-decoration: underline;
 }
