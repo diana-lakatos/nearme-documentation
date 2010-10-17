@@ -1,9 +1,9 @@
 When(/^I follow the booking link for "([^"]*)"$/) do |date|
   # selector = selector_for("time[datetime=#{date}]")
   date = Time.parse(date).to_date
-  When %{I follow "#{date.day}" within "time[datetime='#{date}']"}
+  link = find(%{a[href*="#{date.year}-#{date.month}-#{date.day}"]})
+  visit link[:href]
 end
-
 
 Given /^the workplace has the following bookings:$/ do |table|
   table.hashes.each do |row|
