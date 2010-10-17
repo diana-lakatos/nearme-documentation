@@ -1,11 +1,18 @@
 <% title "Sign In Options" %>
 
-<a href="/auth/twitter" class="auth_provider">
-  <%= image_tag "twitter_64.png", :size => "64x64", :alt => "Twitter" %>
-  Twitter
-</a>
-<a href="/auth/open_id" class="auth_provider">
-  <%= image_tag "open_id_64.png", :size => "64x64", :alt => "OpenID" %>
-  OpenID
-</a>
+<div class="grid_4 alpha">
+  <h1 class="tk-chaparral-pro">Sign In with your favourite service</h1><br />
+  <p>Do you hate having to sign up with a username and password for every single website you use? We do too!</p>
+  <p>Thats why we use your other services to authenticate for you. So you can use your existing Twitter or OpenID account and login without setting up another account.</p>
+  <p>It just takes seconds and its uber-awesome!</p>
+</div>
 
+<div class="grid_8 omega">
+  <a href="/auth/twitter" class="auth_provider grid_4 alpha">
+    <%= image_tag "twitter_service.png", :alt => "Twitter" %>
+  </a>
+  <a href="/auth/open_id" class="auth_provider grid_4 omega openid">
+    <%= image_tag "openid_service.png", :alt => "OpenID" %>
+  </a>
+  
+</div>

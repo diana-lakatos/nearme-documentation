@@ -8,26 +8,47 @@ article.workplace { }
 
 article.workplace h1 {
 	font-weight: 400;
+	margin-bottom: 12px;
 }
 
-div.workplace details {
+article.workplace div.creator img.avatar {
+	width: 48px;
+	float: right;
+	margin-left: 12px;
+}
+
+article.workplace div.creator {
+	text-align: right;
+}
+
+article.workplace section.details h2 {
+	border-bottom: 2px solid #CCC;
+	margin: 24px 0 12px;
+}
+
+section.search article.workplace details {
   float: left;
   width: 50%;
   padding-top: 20px;
 }
 
-div.workplace table td details {
+article.workplace div.business_description p {
+	font-size: 14px;
+	line-height: 26px;
+}
+
+section.search article.workplace table td details {
   float: none;
   width: auto;
   padding-top: inherit;
 }
 
-div.workplace details img {
+section.search article.workplace details img {
   float: left;
   margin-right: 10px;
 }
 
-div.workplace table.bookings {
+section.search article.workplace table.bookings {
   float: left;
   width: 50%;
 }
@@ -40,7 +61,7 @@ table.bookings.extended {
 }
 
 table.bookings.extended tr th {
-	border-bottom: 2px solid #CCC;
+	border-bottom: 1px solid #CCC;
 }
 
 table.bookings.extended tr td {
@@ -52,37 +73,55 @@ table.bookings.extended tr td {
 	width: 20%;
 }
 
-table.bookings.extended tr td details.availability {
-	display: none;
+table.bookings.extended tr td details.availability,
+table.bookings.extended tr td time {
 	margin: 6px 3px;
 	border-radius: 3px;
+	height: 38px;
+	display: block;
+}
+
+table.bookings.extended tr td details.availability {
+	display: none;
+	line-height: 38px;
+}
+
+table.bookings.extended tr td details.availability a:link,
+table.bookings.extended tr td details.availability a:visited {
+	background: #FFF !important;
+	background: rgba(255,255,255,0.6) !important;
+	padding: 3px 8px;
+	border-radius: 16px;
+	text-decoration: none;
 }
 
 table.bookings.extended tr td.hover time, table.bookings.extended tr td:hover time {
 	display: none;
 }
 
-table.bookings.extended tr td time {
-	display: block;
-	margin: 6px 3px;
-	border-radius: 3px;
-}
-
 table.bookings.extended tr td.hover details.availability,
 table.bookings.extended tr td:hover details.availability {
 	display: block;
-
 }
 
-table.bookings.extended tr td.day.available time {
+table.bookings.extended tr td.day.available time,
+table.bookings.extended tr td.day.available details.availability,
+table.bookings.extended tr td.day.available details.availability a {
+	color: #176A11;
 	background: #87C97B;
 }
 
-table.bookings.extended tr td.day.last_bookings time {
+table.bookings.extended tr td.day.last_bookings time,
+table.bookings.extended tr td.day.last_bookings details.availability,
+table.bookings.extended tr td.day.last_bookings details.availability a {
+	color: #C35E11;
 	background: #DCC060;
 }
 
-table.bookings.extended tr td.day.booked time {
+table.bookings.extended tr td.day.booked time,
+table.bookings.extended tr td.day.booked details.availability,
+table.bookings.extended tr td.day.booked details.availability a {
+	color: #820004;
 	background: #D2666B;
 }
 
@@ -201,12 +240,17 @@ section#headline h2 {
 	line-height: 48px;
 	margin-top: 65px;
 	margin-bottom: 12px;
+	font-style: oblique;
 	font-weight: 700;
 	text-shadow: 0px 2px 0px #FFF;
 }
 
+section#headline p {
+	font-size: 14px;
+}
+
 section#headline .search {
-	margin-top: 12px;
+	margin-top: 24px;
 }
 
 /* === Search results */
@@ -246,13 +290,15 @@ section#content.search h1 {
 /* === Footer */
 
 footer {
-	margin-bottom: 32px;
+	margin-bottom: 24px;
 	border-top: 3px solid #EEE;
-	padding-top: 12px;
+	padding: 12px 0;
+	overflow: hidden;
 }
 
 footer div.copyright {
 	line-height: 46px;
+	overflow: hidden;
 }
 
 footer div.copyright img {
@@ -364,4 +410,26 @@ div.overlay-container div.please_signin {
 
 div.overlay-container div.please_signin h1 {
 	font-size: 16px;
+}
+
+/* === Authentication */
+
+section.authentications a.auth_provider {
+	background: #FFF;
+	background: rgba(255,255,255,0.3);
+	-webkit-box-shadow: 0px 1px 0px rgba(255,255,255,0.8);
+	text-align: center;
+	vertical-align: middle;
+	line-height: 180px;
+	height: 250px;
+	margin-top: 24px;
+	border-radius: 12px;
+}
+
+section.authentications a.auth_provider:hover {
+	background: #D2E6F4;
+}
+
+section.authentications a.auth_provider.openid:hover {
+	background: #F4D9A9;
 }
