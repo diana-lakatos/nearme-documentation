@@ -13,11 +13,11 @@
       <% booking_schedule_for(workplace) do |date, num, availability| %>
         <td class="day <%= availability %>">
           <time datetime="<%= date %>">
-            <%= link_to new_workplace_booking_url(workplace, :date => date) do %>
-              <%= date.day %><sup><%= date.day.ordinal %></sup>
-            <% end %>
+            <%= date.day %><sup><%= date.day.ordinal %></sup>
           </time>
-          <details class="availability"><%= num %></details>
+          <%= link_to new_workplace_booking_url(workplace, :date => date) do %>
+            <details class="availability"><%= num %></details>
+          <% end %>
         </td>
       <% end %>
     </tr>
