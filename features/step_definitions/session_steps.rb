@@ -24,4 +24,3 @@ Then(/^I should be logged in as #{capture_model}$/) do |user_instance|
   user = model!(user_instance)
   ENV['CURRENT_USER_ID'].should == user.id.to_s
 end
-

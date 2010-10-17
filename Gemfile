@@ -29,7 +29,7 @@ group :development, :test do
 end
 
 group :test do
-  # gem 'webmock', :git => 'git://github.com/bblimke/webmock'
+  gem 'webmock', :git => 'git://github.com/bblimke/webmock'
   gem 'timecop'
   gem 'autotest'
   gem 'capybara'

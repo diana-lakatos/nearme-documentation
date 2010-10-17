@@ -19,7 +19,11 @@ require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links wi
 
 require 'cucumber/thinking_sphinx/external_world'
 
+require 'webmock/rspec'
+World(WebMock::API, WebMock::Matchers)
+
 require File.expand_path(File.dirname(__FILE__) + '/application_controller_mixin')
+require File.expand_path(File.dirname(__FILE__) + '/twitter_fake')
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd

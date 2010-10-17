@@ -9,6 +9,8 @@ Feature: A user can login with facebook or twitter
      Then I should see "Facebook"
 
   Scenario: A user can login with Twitter
-     When I go to the home page
+    Given the Twitter OAuth request is successful
+      And I go to the home page
       And I follow "Sign In"
-     Then I should see "Twitter"
+     When I follow "Twitter"
+      And show me the page
