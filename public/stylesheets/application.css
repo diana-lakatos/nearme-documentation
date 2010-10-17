@@ -591,3 +591,7 @@ ul.list li a.action.rm {
 	color: #990001;
 	font-weight: bold;
 }
+
+div.feed_item {
+  margin-bottom: 10px;
+}
