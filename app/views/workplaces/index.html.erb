@@ -1,6 +1,14 @@
-<h1>Workplaces</h1>
+<div class="grid_4 alpha">
+  <h1 class="tk-adelle">Workplaces</h1>
+</div>
 
-<p>Listing workplaces by most recently created. Hover over a day to see how many desks are avaliable.</p>
+<div class="grid_8 omega">
+  <%= render :partial => "search/bar", :locals => { :value => "" } %>
+</div>
+<div class="clearfix"></div>
+<br />
+<p>Listing workplaces by most recently created. Hover over a day to see how many desks are available.</p>
+<br />
 <section class="list">
   <%= render @workplaces %>
 </section>

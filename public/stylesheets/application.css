@@ -37,6 +37,31 @@ article.workplace div.business_description p {
 	line-height: 26px;
 }
 
+section.list article.workplace {
+	border-bottom: 1px solid #DDD;
+	padding-bottom: 6px;
+}
+
+section.list article.workplace h3 {
+	font-size: 16px;
+}
+
+section.list article.workplace h3 a:link, section.list article.workplace h3 a:visited {
+	text-decoration: none;
+}
+
+section.list article.workplace h3 a:hover {
+	text-decoration: underline;
+}
+
+section.list article.workplace table tr td, section.list article.workplace table tr th {
+	border: none;
+}
+
+section.list article.workplace table tr td time, section.list article.workplace table tr td details.availability {
+	margin-top: 0px;
+}
+
 section.list article.workplace table td details {
   float: none;
   width: auto;
@@ -376,6 +401,7 @@ div.overlay-container form.booking {
 	margin: 0 -12px -12px -12px;
 	padding: 0 12px 12px 12px;
 	background: #EEE;
+	overflow: hidden;
 }
 
 div.overlay-container h1.booking {
