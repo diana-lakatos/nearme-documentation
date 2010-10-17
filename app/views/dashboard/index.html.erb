@@ -35,12 +35,12 @@
   </section>
   <section id="my_bookings" class="tab">
     <% if @your_bookings.any? %>
-      <%= render :partial => "booking_list", :locals => {:bookings => @your_bookings}%>
+      <%= render :partial => "user_booking_list", :locals => {:bookings => @your_bookings}%>
     <% end %>
   </section>
   <section id="bookings" class="tab">
     <% if @workplace_bookings.any? %>
-      <%= render :partial => "booking_list", :locals => {:bookings => @workplace_bookings}%>
+      <%= render :partial => "workplace_booking_list", :locals => {:bookings => @workplace_bookings}%>
     <% end %>
   </section>
 </div>
