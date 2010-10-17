@@ -73,21 +73,34 @@
 
 </article>
 
+<% content_for :script do -%>
 <script type="text/javascript">
-  $(document).ready(function() {
-      var latlng = new google.maps.LatLng(<%= @workplace.latitude %>, <%= @workplace.longitude %>);
-      var myOptions = {
-        zoom: 13,
-        center: latlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        mapTypeControl: false
-      };
-      var map = new google.maps.Map(document.getElementById("map"), myOptions);
-      var image = "<%= image_path("marker.png") %>";
-      var beachMarker = new google.maps.Marker({
-        position: latlng,
-        map: map,
-        icon: image
+  $(function(){
+    $("td.day details.availability a").click(function(e){
+      e.stopPropagation();
+      var overlay = $("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
+      $(".overlay-container a.cancel").live("click", function(e){
+        e.stopPropagation();
+        $(".overlay-container").overlay('close');
+        return false;
       });
+      return false;
+    });
+    
+    var latlng = new google.maps.LatLng(<%= @workplace.latitude %>, <%= @workplace.longitude %>);
+    var myOptions = {
+      zoom: 13,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false
+    };
+    var map = new google.maps.Map(document.getElementById("map"), myOptions);
+    var image = "<%= image_path("marker.png") %>";
+    var beachMarker = new google.maps.Marker({
+      position: latlng,
+      map: map,
+      icon: image
+    });
   });
 </script>
+<% end %>

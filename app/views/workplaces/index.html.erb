@@ -4,3 +4,20 @@
 
 <%= render @workplaces %>
 <%= will_paginate @workplaces %>
+
+<% content_for :script do -%>
+<script type="text/javascript">
+  $(function(){
+    $("td.day details.availability a").click(function(e){
+      e.stopPropagation();
+      var overlay = $("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
+      $(".overlay-container a.cancel").live("click", function(e){
+        e.stopPropagation();
+        $(".overlay-container").overlay('close');
+        return false;
+      });
+      return false;
+    });
+  });
+</script>
+<% end %>
