@@ -17,6 +17,7 @@ class Workplace < ActiveRecord::Base
 
   validates_presence_of :name, :address, :maximum_desks, :latitude, :longitude
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0
+  validates_format_of :url, :with => URI::regexp(%w(http https)), :allow_blank => true
 
   before_validation :fetch_coordinates
   before_save :apply_filter
