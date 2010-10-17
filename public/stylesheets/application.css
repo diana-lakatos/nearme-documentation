@@ -89,6 +89,7 @@ form.big_search .inner {
 	border-radius: 20px;
 	height: 40px;
 	overflow: hidden;
+	position: relative;
 }
 
 form.big_search .inner input[type='text'] {
@@ -96,19 +97,19 @@ form.big_search .inner input[type='text'] {
 	border: none;
 	outline: none;
 	height: 38px;
-	padding-left: 15px;
+	padding-left: 38px;
 	font-size: 16px;
-  width: 88%;
+  width: 85%;
 	font-weight: bold;
 	text-shadow: 0px 1px 0px rgba(255,255,255,0.3);
-	color: #ad0005;
+	color: #2B69B2;
 }
 
 form.big_search .inner input[type='submit'] {
 	float: right;
-	width: 6%;
+	width: 26px;
 	border: none;
-	background: transparent url(/images/magnifier.png) no-repeat right center;
+	background: transparent url(/images/magnifier.png) no-repeat center center;
 	height: 40px;
 	margin-right: 10px;
 }
@@ -124,6 +125,47 @@ form.big_search .inner input[type='submit']:active {
 form.big_search .inner input[type='text']::-webkit-input-placeholder {
 	color: #888;
 	font-style: italic;
+}
+
+form.big_search .inner input.geolocation {
+	position: absolute;
+	left: 10px;
+	top: 8px;
+	border: 0px solid #004ea1;
+	background: #008ccb;
+	width: 22px;
+	height: 22px;
+	border-radius: 11px;
+	background: transparent url(/images/geolocation_inactive.png) no-repeat center center;
+}
+
+form.big_search .inner input.geolocation.active {
+	-webkit-animation-name: geopulse;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-direction: alternate;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: ease-in-out;
+	background: transparent url(/images/geolocation.png) no-repeat center center;
+}
+
+div.search input.geolocation.active.hover, div.search input.geolocation.active:hover {
+	background: transparent url(/images/geolocation_alt.png) no-repeat center center;
+}
+
+div.search input.geolocation.active:active {
+	background: transparent url(/images/geolocation_down.png) no-repeat center center;
+}
+
+@-webkit-keyframes geopulse {
+ 0% {
+   -webkit-box-shadow: 0px 0px 6px rgba(0,174,239,0);
+ }
+ 50% {
+   -webkit-box-shadow: 0px 0px 6px rgba(0,174,239,1);
+ }
+ 100% {
+   -webkit-box-shadow: 0px 0px 6px rgba(0,174,239,0);
+ }
 }
 
 /* === Headline */
