@@ -1,59 +1,64 @@
+<div class="grid_3 alpha">
+  <h1 class="tk-adelle">Workplaces found near:</h1>
+</div>
+<div class="grid_9 omega">
+  <%= render :partial => "search/bar", :locals => { :value => @query } %>
+</div>
 
-<%= render :partial => "search/bar", :locals => { :value => @query } %>
-
-<% if @query.blank? %>
-  <p>Please enter a city or address</p>
-<% else %>
-
-  <% if @workplaces.empty? %>
-
-    <p>No results found</p>
-
+<div class="grid_12 alpha omega">
+  <% if @query.blank? %>
+    <p>Please enter a city or address</p>
   <% else %>
 
-    <h4>Workplaces found near: "<%= @location[:name] %>"</h4>
+    <% if @workplaces.empty? %>
+      <p>No results found</p>
+    <% else %>
+      <div class="google-map">
+        <div id="workplaces_map" class="inner" style="height: 350px;">
 
-    <div id="workplaces_map" style="height: 350px; margin: 10px 0;" class="google-map"></div>
+        </div>
+      </div>
 
-    <% @workplaces.each do |workplace| %>
-      <%= render workplace %>
-    <% end %>
+      <% @workplaces.each do |workplace| %>
+        <article class="search_result">
+          <%= render workplace %>
+        </article>
+      <% end %>
 
-    <script type="text/javascript">
+      <script type="text/javascript">
 
-      $(document).ready(function() {
+        $(document).ready(function() {
 
-        var map = new google.maps.Map(document.getElementById("workplaces_map"), {
-          zoom: 8,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          mapTypeControl: false
+          var map = new google.maps.Map(document.getElementById("workplaces_map"), {
+            zoom: 8,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: false
+          });
+
+          var bounds = new google.maps.LatLngBounds();
+          var markers = {}, infos = {};
+          <% @workplaces.each do |w| %>
+            ll = new google.maps.LatLng(<%= w.latitude %>, <%= w.longitude %>);
+            bounds.extend(ll);
+            markers[<%= w.id %>] = new google.maps.Marker({
+              position: ll,
+              map: map,
+              icon: "<%= image_path("marker.png") %>",
+              title: "<%= w.name %>"
+            });
+            infos[<%= w.id %>] = new google.maps.InfoWindow({
+              content: "<%= escape_javascript(render(:partial => 'workplaces/gmap', :locals => { :workplace => w })) %>"
+            });
+            google.maps.event.addListener(markers[<%= w.id %>], 'click', function() {
+              infos[<%= w.id %>].open(map, markers[<%= w.id %>]);
+            });
+          <% end %>
+          map.fitBounds(bounds);
+
         });
 
-        var bounds = new google.maps.LatLngBounds();
-        var markers = {}, infos = {};
-        <% @workplaces.each do |w| %>
-          ll = new google.maps.LatLng(<%= w.latitude %>, <%= w.longitude %>);
-          bounds.extend(ll);
-          markers[<%= w.id %>] = new google.maps.Marker({
-            position: ll,
-            map: map,
-            icon: "<%= image_path("drawer-open.png") %>",
-            title: "<%= w.name %>"
-          });
-          infos[<%= w.id %>] = new google.maps.InfoWindow({
-            content: "<%= escape_javascript(render(:partial => 'workplaces/gmap', :locals => { :workplace => w })) %>"
-          });
-          google.maps.event.addListener(markers[<%= w.id %>], 'click', function() {
-            infos[<%= w.id %>].open(map, markers[<%= w.id %>]);
-          });
-        <% end %>
-        map.fitBounds(bounds);
-
-      });
-
-    </script>
+      </script>
+      <% end %>
 
   <% end %>
-
-<% end %>
-
+</div>

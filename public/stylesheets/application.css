@@ -197,3 +197,27 @@ section#content.search div.workplace {
 section#content.search div.workplace:last-of-type {
   border: 0;
 }
+
+/* === Google Map */
+
+div.google-map {
+	background: #FFF;
+	background: rgba(255,255,255,0.7);
+	padding: 12px;
+	border-radius: 6px;
+	margin: 12px 0;
+}
+
+div.google-map .inner {
+	border: 1px solid #CCC;
+	border-radius: 6px;
+}
+
+/* === Search results */
+
+section#content.search h1 {
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 42px;
+	margin-bottom: 12px;
+}

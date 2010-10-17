@@ -10,26 +10,16 @@
   </thead>
   <tbody>
     <tr>
-      <td class="day available">
-        <time datetime="2010-10-16">16<sup>th</sup></time>
-        <details class="availability">4</details>
-      </td>
-      <td class="day booked">
-        <time datetime="2010-10-17">17<sup>th</sup></time>
-        <details class="availability">0</details>
-      </td>
-      <td class="day available">
-        <time datetime="2010-10-18"><%= link_to '18',new_workplace_booking_url(workplace,:date => '2010-10-18') %><sup>th</sup></time>
-        <details class="availability"><%= link_to '3',new_workplace_booking_url(workplace,:date => '2010-10-18') %></details>
-      </td>
-      <td class="day last_bookings">
-        <time datetime="2010-10-19">19<sup>th</sup></time>
-        <details class="availability">1</details>
-      </td>
-      <td class="day last_bookings">
-        <time datetime="2010-10-20">20<sup>th</sup></time>
-        <details class="availability">2</details>
-      </td>
+      <% booking_schedule_for(workplace) do |date, num, availability| %>
+        <td class="day <%= availability %>">
+          <time datetime="<%= date %>">
+            <%= link_to new_workplace_booking_url(workplace, :date => date) do %>
+              <%= date.day %><sup><%= date.day.ordinal %></sup>
+            <% end %>
+          </time>
+          <details class="availability"><%= num %></details>
+        </td>
+      <% end %>
     </tr>
   </tbody>
 </table>

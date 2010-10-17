@@ -21,7 +21,7 @@ gem 'thinking-sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx
 # and rake tasks are available in development mode:
 group :development, :test do
   gem 'ffaker'
-  gem 'ruby-debug19'
+  gem 'ruby-debug19', :require => "ruby-debug"
   gem 'rspec', '>= 2.0.0'
   gem 'rspec-rails', '>= 2.0.0'
 end
