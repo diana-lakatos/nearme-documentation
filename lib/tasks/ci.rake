@@ -1,3 +1,4 @@
+require 'fileutils'
 desc "Run all the steps necessary for the CI"
 file 'config/database.yml' do
     # set up database.yml
