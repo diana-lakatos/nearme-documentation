@@ -29,6 +29,7 @@
     </div>
 
     <h2 class="tk-chaparral-pro">Availability</h2>
+    <p>Hover over a day to see how many desks are available.</p>
     <%= render :partial => "availability", :locals => {:workplace => @workplace, :weeks => 3} %>
 
     <% if @workplace.description? %>
