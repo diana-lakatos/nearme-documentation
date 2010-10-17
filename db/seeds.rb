@@ -5,3 +5,14 @@
 #
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
+
+locations = {
+  'Icelab' => 'Unit 3, The Metropolitan, 1 Gordon St, Canberra City, ACT 2601 Australia',
+  'Thoughtworks Chicago' => '200 E Randolph St, 25th Floor, Chicago, IL 60601-6501, USA',
+  'Thoughtworks San Francisco' => '315 Montgomery Street, 16th Floor, San Francisco, CA 94104, USA'
+}
+
+locations.each do |name, location|
+  Workplace.create!(:name => name, :maximum_desks => rand(20), :address => location, :company_description => "We're #{name}, and we rock the party!", :description => "Dont muck around at #{name}, we'll beat you up!")
+end
+

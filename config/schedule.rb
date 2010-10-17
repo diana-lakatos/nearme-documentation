@@ -19,8 +19,9 @@ set :output, "/var/apps/desksnearme/shared/log/cron.log"
 
 job_type :rvm_rake, "cd :path && RAILS_ENV=:environment /home/deploy/.rvm/bin/rake :task"
 
-every 10.minutes do
-  rvm_rake "ts:index"
-end
+# Using delta indexes now
+# every 10.minutes do
+#   rvm_rake "ts:index"
+# end
 
 # Learn more: http://github.com/javan/whenever
