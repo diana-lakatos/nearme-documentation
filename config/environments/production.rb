@@ -41,7 +41,7 @@ DesksnearMe::Application.configure do
     :port                 => 587,
     :domain               => 'desksnear.me',
     :user_name            => 'support',
-    :password             => '28hall377',
+    :password             => 'c0ff33pl0x',
     :authentication       => 'plain',
     :enable_starttls_auto => true  
   }
