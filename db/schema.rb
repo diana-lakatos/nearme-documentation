@@ -10,7 +10,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101017033119) do
+ActiveRecord::Schema.define(:version => 20101017075549) do
+
+  create_table "authentications", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "provider"
+    t.string   "uid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "bookings", :force => true do |t|
     t.datetime "created_at"
@@ -33,20 +41,6 @@ ActiveRecord::Schema.define(:version => 20101017033119) do
 
   add_index "feeds", ["workplace_id"], :name => "index_feeds_on_workplace_id"
 
-  create_table "login_accounts", :force => true do |t|
-    t.string   "type"
-    t.integer  "user_id"
-    t.string   "remote_account_id"
-    t.string   "name"
-    t.string   "login"
-    t.string   "picture_url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "login_accounts", ["type"], :name => "index_login_accounts_on_type"
-  add_index "login_accounts", ["user_id"], :name => "index_login_accounts_on_user_id"
-
   create_table "photos", :force => true do |t|
     t.integer  "workplace_id", :null => false
     t.string   "description",  :null => false
@@ -58,10 +52,24 @@ ActiveRecord::Schema.define(:version => 20101017033119) do
   add_index "photos", ["workplace_id"], :name => "index_photos_on_workplace_id"
 
   create_table "users", :force => true do |t|
+    t.string   "email",                               :default => "", :null => false
+    t.string   "encrypted_password",   :limit => 128, :default => "", :null => false
+    t.string   "password_salt",                       :default => "", :null => false
+    t.string   "reset_password_token"
     t.string   "remember_token"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",                       :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
   end
+
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
   create_table "workplaces", :force => true do |t|
     t.string   "name"

@@ -1,12 +1,11 @@
 <nav>
   <ul>
     <li class="grid_2"><%= link_to "Workplaces", workplaces_path %></li>
-    <% if current_user? %>
+    <% if user_signed_in? %>
       <li class="grid_2"><%= link_to "Dashboard", dashboard_path %></li>
-      <li class="grid_2"><%= link_to "Logout", logout_path %></li>
+      <li class="grid_2"><%= link_to "Logout", destroy_user_session_path %></li>
     <% else %>
-      <li class="grid_3 joined alpha"><%= link_to "Login with Twitter", login_path %></li>
-      <li class="grid_3 joined omega"><%= link_to "Login with Facebook", login_path %></li>
+      <li class="grid_3 joined alpha"><%= link_to "Sign In", authentications_path %></li>
     <% end %>
   </ul>
 </nav>

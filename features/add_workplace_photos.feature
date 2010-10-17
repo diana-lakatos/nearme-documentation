@@ -5,11 +5,11 @@ Feature: A user can add photos to a workplace
 
   Background:
     Given a user exists
-      And I am logged in as the user
       And a workplace exists with creator: the user
-      And I am on the workplace's page
 
   Scenario: Adding photos to a work place
+    Given I am logged in as the user
+      And I am on the workplace's page
      When I follow "Manage Workplace Photos"
      Then I should see 0 workplace photos
      When I attach the photo "boss's desk.jpg" to "New Photo"
@@ -27,6 +27,8 @@ Feature: A user can add photos to a workplace
         | This is where the intern works |
 
   Scenario: Deleting photos
+   Given I am logged in as the user
+     And I am on the workplace's page
     When I add the following photos to the workplace:
       | File             | Description                    |
       | boss's desk.jpg  | The Boss' Desk                 |

@@ -21,10 +21,10 @@
 
       <% @workplaces.each do |workplace| %>
         <article class="search_result">
-          <%= render workplace %>
+          <%= render :partial => '/workplaces/workplace', :locals => { :workplace => workplace } %>
         </article>
-
       <% end %>
+
       <%= will_paginate @workplaces %>
 
       <script type="text/javascript">

@@ -1,0 +1,49 @@
+{
+  "status": "OK",
+  "results": [ {
+    "types": [ "street_address" ],
+    "formatted_address": "1 York St, Launceston TAS 7250, Australia",
+    "address_components": [ {
+      "long_name": "1",
+      "short_name": "1",
+      "types": [ "street_number" ]
+    }, {
+      "long_name": "York St",
+      "short_name": "York St",
+      "types": [ "route" ]
+    }, {
+      "long_name": "Launceston",
+      "short_name": "Launceston",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Tasmania",
+      "short_name": "TAS",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "Australia",
+      "short_name": "AU",
+      "types": [ "country", "political" ]
+    }, {
+      "long_name": "7250",
+      "short_name": "7250",
+      "types": [ "postal_code" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": -41.4359910,
+        "lng": 147.1436950
+      },
+      "location_type": "ROOFTOP",
+      "viewport": {
+        "southwest": {
+          "lat": -41.4391386,
+          "lng": 147.1405474
+        },
+        "northeast": {
+          "lat": -41.4328434,
+          "lng": 147.1468426
+        }
+      }
+    }
+  } ]
+}

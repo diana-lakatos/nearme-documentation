@@ -2,7 +2,8 @@ source 'http://rubygems.org'
 
 gem 'rails', '3.0.1'
 gem 'pg'
-gem 'omnisocial'
+gem 'devise'
+gem 'omniauth'
 gem 'rails-geocoder', :require => 'geocoder'
 gem 'capistrano'
 gem 'simple_form'
@@ -12,6 +13,7 @@ gem 'state_machine'
 gem 'jquery-rails'
 gem 'RedCloth', :require => "redcloth"
 gem 'fog'
+gem 'gravtastic'
 gem 'will_paginate'
 gem 'rails-geocoder', :require => 'geocoder'
 gem 'thinking-sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx.git',
@@ -29,7 +31,7 @@ group :development, :test do
 end
 
 group :test do
-  # gem 'webmock', :git => 'git://github.com/bblimke/webmock'
+  gem 'webmock', :git => 'git://github.com/bblimke/webmock'
   gem 'timecop'
   gem 'autotest'
   gem 'capybara'

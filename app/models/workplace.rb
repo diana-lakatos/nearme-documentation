@@ -1,4 +1,5 @@
 class Workplace < ActiveRecord::Base
+
   belongs_to :creator, :class_name => "User", :foreign_key => "creator_id"
   belongs_to :location
   has_many :bookings
@@ -84,8 +85,8 @@ class Workplace < ActiveRecord::Base
     def fetch_coordinates
       geocoded = Geocoder.search(address).try(:[], 'results').try(:first)
       if geocoded
-        self.latitude  = geocoded['geometry']['location']['lat']
-        self.longitude = geocoded['geometry']['location']['lng']
+        self.latitude  = geocoded['geometry']['location']['lat'] unless latitude
+        self.longitude = geocoded['geometry']['location']['lng'] unless longitude
       end
     end
 
@@ -98,4 +99,5 @@ class Workplace < ActiveRecord::Base
       restrictions = [:sanitize_html, :no_span_caps, :filter_styles, :filter_classes, :filter_ids]
       RedCloth.new(text.to_s, restrictions).to_html
     end
+
 end

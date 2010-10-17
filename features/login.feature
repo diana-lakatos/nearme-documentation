@@ -3,12 +3,12 @@ Feature: A user can login with facebook or twitter
   As a user
   I want to login
 
-Scenario: A user can login with Facebook
-   When I go to the home page
-    And I follow "Login"
-   Then I should see "Sign in with Facebook"
-
-Scenario: A user can login with Twitter
-   When I go to the home page
-    And I follow "Login"
-   Then I should see "Sign in with Twitter"
+  Scenario: A user can login with Twitter
+    Given the Twitter OAuth request is successful
+      And I go to the home page
+      And I follow "Sign In"
+     When I follow "Twitter"
+      And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
+      And I fill in "Email" with "fuckyoutwitter@yourmum.com"
+      And I press "Sign up"
+     Then I should see "You have signed up successfully. If enabled, a confirmation was sent to your e-mail."
