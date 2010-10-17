@@ -2,10 +2,12 @@
   <% bookings.each do |booking|%>
     <li>
       <p class="em">
-        <strong><%= booking.user %></strong> on
+        <strong><%= booking.user %></strong> (<%= mail_to booking.user.email, 'Email' %>) on
         <time datetime="<%= booking.date %>"><%= l(booking.date, :format => :long) %></time>
-        (<%= booking.state_name %>)
+        (<%= booking.state_name %>)<br/>
+        <%= booking.comment %>
       </p>
+      
       <div class="actions">
         <%= render :partial => "owner_actions", :locals => {:booking => booking} if current_user == booking.workplace.creator %>
       </div>
