@@ -70,3 +70,4 @@ Capybara.save_and_open_page_path = File.join(Rails.root, 'tmp', 'capybara')
 
 Cucumber::ThinkingSphinx::ExternalWorld.new
 
+$VERBOSE = nil
