@@ -53,6 +53,18 @@ section.list article.workplace table.bookings {
   width: 50%;
 }
 
+article.workplace aside address {
+	padding-left: 42px;
+	background: transparent url(/images/home.png) no-repeat 6px 6px;
+	margin: 6px 0;
+	font-style: normal;
+	font-size: 14px;
+}
+
+article.workplace aside address a {
+	font-size: 12pxf;
+}
+
 /* === Booking table */
 
 table.bookings.extended {
@@ -77,6 +89,8 @@ table.bookings.extended tr td details.availability,
 table.bookings.extended tr td time {
 	margin: 6px 3px;
 	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
 	height: 38px;
 	display: block;
 }
@@ -92,6 +106,8 @@ table.bookings.extended tr td details.availability a:visited {
 	background: rgba(255,255,255,0.6) !important;
 	padding: 3px 8px;
 	border-radius: 16px;
+	-moz-border-radius: 16px;
+	-o-border-radius: 16px;
 	text-decoration: none;
 }
 
@@ -147,6 +163,8 @@ form.big_search .inner {
 	border-top: 1px solid rgba(0,0,0,0.2);
 	border-bottom: 1px solid #FFF;
 	border-radius: 20px;
+	-moz-border-radius: 20px;
+	-o-border-radius: 20px;
 	height: 40px;
 	overflow: hidden;
 	position: relative;
@@ -196,6 +214,8 @@ form.big_search .inner input.geolocation {
 	width: 22px;
 	height: 22px;
 	border-radius: 11px;
+	-moz-border-radius: 11px;
+	-o-border-radius: 11px;
 	background: transparent url(/images/geolocation_inactive.png) no-repeat center center;
 }
 
@@ -270,12 +290,16 @@ div.google-map {
 	background: rgba(255,255,255,0.7);
 	padding: 12px;
 	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
 	margin: 12px 0;
 }
 
 div.google-map .inner {
 	border: 1px solid #CCC;
 	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
 }
 
 /* === Search results */
@@ -285,6 +309,10 @@ section#content.search h1 {
 	font-weight: 600;
 	line-height: 42px;
 	margin-bottom: 12px;
+}
+
+section#content.search h1.fat {
+	font-size: 32px;
 }
 
 /* === Footer */
@@ -307,6 +335,10 @@ footer div.copyright img {
 	vertical-align: middle;
 }
 
+footer div.copyright small {
+	padding-left: 44px;
+}
+
 /* === Flashes */
 
 div.flash {
@@ -315,6 +347,8 @@ div.flash {
 	background: #EEE;
 	padding: 6px 12px;
 	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
 	font-size: 14px;
 	font-weight: bold;
 	margin-bottom: 12px;
@@ -440,6 +474,8 @@ div.tabs > nav {
 	background: #F8F8F8;
 	background: rgba(255,255,255,0.8);
 	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
 	padding: 6px 6px 0px;
 	overflow: hidden;
 	margin-bottom: 12px;
@@ -456,6 +492,8 @@ div.tabs > nav a {
 	float: left;
 	padding: 8px 12px;
 	border-radius: 6px 6px 0px 0px;
+	-moz-border-radius: 6px 6px 0px 0px;
+	-o-border-radius: 6px 6px 0px 0px;
 	margin-right: 12px;
 }
 
@@ -478,6 +516,10 @@ nav.actions {
 	float: right;
 }
 
+aside nav.actions {
+	margin-bottom: 12px;
+}
+
 nav.actions a {
 	float: left;
 	margin-left: 12px;
@@ -493,7 +535,7 @@ nav.actions a:hover {
 }
 
 nav.actions a img {
-	vertical-align: middle;
+	vertical-align: -3px;
 }
 
 /* === Huge Ass Button for workplace */
@@ -504,6 +546,8 @@ a.huge_ass_button {
 	text-align: center;
 	font-size: 18px;
 	border-radius: 12px;
+	-moz-border-radius: 12px;
+	-o-border-radius: 12px;
 	font-weight: bold;
 	margin: 12px 0;
 }
@@ -539,6 +583,7 @@ table.pretty tr td {
 	line-height: 32px;
 	font-size: 14px;
 	width: 20%;
+	text-align: left;
 }
 
 table.pretty tr td.actions {
@@ -592,6 +637,122 @@ ul.list li a.action.rm {
 	font-weight: bold;
 }
 
-div.feed_item {
-  margin-bottom: 10px;
+<<<<<<< HEAD
+/* === Simple Form */
+
+form.simple_form {
+	overflow: hidden;
+}
+
+form.simple_form label {
+	float: left;
+	width: 160px;
+	margin-right: 12px;
+	font-size: 14px;
+	text-align: right;
+	font-weight: bold;
+	line-height: 34px;
+}
+
+form.simple_form label.collection_radio {
+	width: auto;
+	float: none;
+}
+
+form.simple_form label abbr {
+	color: #990001;
+	border: none;
+	font-weight: bold;
+}
+
+form.simple_form div.input {
+	overflow: hidden;
+	margin: 6px 0;
+}
+
+form.simple_form div.field_with_errors {
+	background: #FFE1E4;
+	background: rgba(255,0,0,0.1);
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
+	padding: 6px 0;
+}
+
+form.simple_form div.input input, form.simple_form div.input textarea {
+	font-size: 16px;
+	background: #FFF;
+	border: 1px solid #CCC;
+	padding: 6px;
+	outline: none;
+}
+
+form.simple_form input[type='submit'] {
+	border: none;
+	border-bottom: 1px solid #3D5D1A;
+	background: #639927;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
+	padding: 10px 24px;
+	margin-left: 174px;
+	color: #FFF;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+form.simple_form span.error {
+	display: block;
+	padding-left: 176px;
+	color: #990600;
+	font-weight: bold;
+}
+
+/* === Activity Feeds */
+
+dl.activity_feed {
+	overflow: hidden;
+}
+
+dl.activity_feed dd {
+	overflow: hidden;
+	border-bottom: 1px solid #DDD;
+	padding: 6px 0;
+	
+}
+
+dl.activity_feed dd img.avatar {
+	width: 32px;
+	float: left;
+	margin-right: 12px;
+}
+
+/* === Photo list */
+
+ul.photos {
+	overflow: hidden;
+}
+
+ul.photos li {
+	overflow: hidden;
+	background: #F8F8F8;
+	background: rgba(255,255,255,0.5);
+	display: block;
+	list-style: none;
+	padding: 6px;
+}
+
+ul.photos li img {
+	width: 100%;
+}
+
+ul.photos li p {
+	margin: 0;
+}
+
+ul.photos li form input.rm {
+	border: none;
+	background: transparent url(/images/cross-small.png) no-repeat left center;
+	padding-left: 18px;
+	float: right;
 }

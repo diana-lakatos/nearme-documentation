@@ -10,7 +10,7 @@ Feature: A user can add photos to a workplace
   Scenario: Adding photos to a work place
     Given I am logged in as the user
       And I am on the workplace's page
-     When I follow "Manage Workplace Photos"
+     When I follow "Add/Manage Photos"
      Then I should see 0 workplace photos
      When I attach the photo "boss's desk.jpg" to "New Photo"
      When I fill in "Description" with "The Boss' Desk"
@@ -34,7 +34,7 @@ Feature: A user can add photos to a workplace
       | boss's desk.jpg  | The Boss' Desk                 |
       | intern chair.jpg | This is where the intern works |
     And I go to the workplace's page
-    And I follow "Manage Workplace Photos"
+    And I follow "Add/Manage Photos"
     Then I should see 2 workplace photos
     When I press "Delete" within the first photo box
     Then I should see 1 workplace photo
