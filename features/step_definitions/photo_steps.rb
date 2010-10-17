@@ -16,7 +16,7 @@ end
 When /^I add the following photos to the workplace:$/ do |table|
   steps %{
     When I go to the workplace's page
-    And I follow "Manage Workplace Photos"
+    And I follow "Add/Manage Photos"
   }
   
   table.hashes.each_with_index do |row, count|

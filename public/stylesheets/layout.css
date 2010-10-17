@@ -46,12 +46,16 @@ header nav ul li a {
 header nav ul li.joined.alpha {
 	margin-right: 0;
 	border-radius: 20px 0 0 20px;
+	-moz-border-radius: 20px 0 0 20px;
+	-o-border-radius: 20px 0 0 20px;
 	border-right: 1px solid rgba(0,0,0,0.2);
 }
 
 header nav ul li.joined.omega {
 	margin-left: 0;
 	border-radius: 0 20px 20px 0;
+	-moz-border-radius: 0 20px 20px 0;
+	-o-border-radius: 0 20px 20px 0;
 	border-left: 1px solid rgba(255,255,255,0.1)
 }
 
@@ -77,6 +81,10 @@ section h1 {
 	font-size: 34px;
 	line-height: 48px;
 	font-weight: 100;
+}
+
+section h1.fat {
+	font-weight: 800;
 }
 
 section h1.tk-chaparral-pro {
@@ -110,6 +118,8 @@ aside section {
 	background: rgba(255,255,255,0.5);
 	padding: 0 12px 12px 12px;
 	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-o-border-radius: 8px;
 	margin-bottom: 24px;
 }
 

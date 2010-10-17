@@ -89,6 +89,8 @@ table.bookings.extended tr td details.availability,
 table.bookings.extended tr td time {
 	margin: 6px 3px;
 	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
 	height: 38px;
 	display: block;
 }
@@ -104,6 +106,8 @@ table.bookings.extended tr td details.availability a:visited {
 	background: rgba(255,255,255,0.6) !important;
 	padding: 3px 8px;
 	border-radius: 16px;
+	-moz-border-radius: 16px;
+	-o-border-radius: 16px;
 	text-decoration: none;
 }
 
@@ -159,6 +163,8 @@ form.big_search .inner {
 	border-top: 1px solid rgba(0,0,0,0.2);
 	border-bottom: 1px solid #FFF;
 	border-radius: 20px;
+	-moz-border-radius: 20px;
+	-o-border-radius: 20px;
 	height: 40px;
 	overflow: hidden;
 	position: relative;
@@ -208,6 +214,8 @@ form.big_search .inner input.geolocation {
 	width: 22px;
 	height: 22px;
 	border-radius: 11px;
+	-moz-border-radius: 11px;
+	-o-border-radius: 11px;
 	background: transparent url(/images/geolocation_inactive.png) no-repeat center center;
 }
 
@@ -282,12 +290,16 @@ div.google-map {
 	background: rgba(255,255,255,0.7);
 	padding: 12px;
 	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
 	margin: 12px 0;
 }
 
 div.google-map .inner {
 	border: 1px solid #CCC;
 	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
 }
 
 /* === Search results */
@@ -297,6 +309,10 @@ section#content.search h1 {
 	font-weight: 600;
 	line-height: 42px;
 	margin-bottom: 12px;
+}
+
+section#content.search h1.fat {
+	font-size: 32px;
 }
 
 /* === Footer */
@@ -331,6 +347,8 @@ div.flash {
 	background: #EEE;
 	padding: 6px 12px;
 	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
 	font-size: 14px;
 	font-weight: bold;
 	margin-bottom: 12px;
@@ -456,6 +474,8 @@ div.tabs > nav {
 	background: #F8F8F8;
 	background: rgba(255,255,255,0.8);
 	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
 	padding: 6px 6px 0px;
 	overflow: hidden;
 	margin-bottom: 12px;
@@ -472,6 +492,8 @@ div.tabs > nav a {
 	float: left;
 	padding: 8px 12px;
 	border-radius: 6px 6px 0px 0px;
+	-moz-border-radius: 6px 6px 0px 0px;
+	-o-border-radius: 6px 6px 0px 0px;
 	margin-right: 12px;
 }
 
@@ -524,6 +546,8 @@ a.huge_ass_button {
 	text-align: center;
 	font-size: 18px;
 	border-radius: 12px;
+	-moz-border-radius: 12px;
+	-o-border-radius: 12px;
 	font-weight: bold;
 	margin: 12px 0;
 }
@@ -649,6 +673,8 @@ form.simple_form div.field_with_errors {
 	background: #FFE1E4;
 	background: rgba(255,0,0,0.1);
 	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
 	padding: 6px 0;
 }
 
@@ -665,6 +691,8 @@ form.simple_form input[type='submit'] {
 	border-bottom: 1px solid #3D5D1A;
 	background: #639927;
 	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
 	padding: 10px 24px;
 	margin-left: 174px;
 	color: #FFF;
