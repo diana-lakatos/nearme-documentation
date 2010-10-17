@@ -18,6 +18,10 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :name, :email
   
+  def to_s
+    name
+  end
+  
   def apply_omniauth(omniauth)
     self.name = omniauth['user_info']['name'] if email.blank?
     self.email = omniauth['user_info']['email'] if email.blank?

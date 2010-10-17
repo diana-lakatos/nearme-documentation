@@ -2,6 +2,10 @@ module Workplaces
   class BookingsController < ::BookingsController
     before_filter :find_workplace
     before_filter :require_creator, :only => [:index, :destroy]
+    before_filter :find_date, :only => [:new, :create]
+    before_filter :ensure_date_valid, :only => [:new, :create]
+    before_filter :ensure_desk_available, :only => [:new, :create]
+    
     
     def index
       @bookings = @workplace.bookings
@@ -10,12 +14,6 @@ module Workplaces
     def new
       session[:user_return_to] = current_user ? nil : request.fullpath
       @booking = @workplace.bookings.build(:date => params[:date])
-      
-      if Date.parse(params[:date]) < Date.today
-        flash[:notice] = "Who do you think you are, Marty McFly? You can't book a desk in the past!"
-        redirect_to @workplace and return
-      end
-      
       render :layout => !request.xhr?
     end
 
@@ -38,11 +36,31 @@ module Workplaces
 
     protected
     
+    def ensure_date_valid
+      if @date < Date.today
+        flash[:notice] = "Who do you think you are, Marty McFly? You can't book a desk in the past!"
+        redirect_to @workplace and return
+      end
+    end
+    
+    def ensure_desk_available
+      unless @workplace.desks_available?(@date)
+        flash[:notice] = "There are no more desks left for that date. Sorry."
+        redirect_to @workplace and return
+      end
+    end
+    
     def require_creator
       unless @workplace.created_by?(current_user)
         flash[:error] = "You didn't create this workplace, so you can't do stuff to it."
         redirect_to @workplace
       end
+    end
+
+    def find_date
+      @date = Date.parse(params[:date] || params[:booking][:date])
+    rescue
+      @date = Date.today
     end
 
     def find_workplace

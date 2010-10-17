@@ -4,10 +4,13 @@
   <p>Please <%= link_to 'Sign In/Up', authentications_path %> to book a desk.</p>
 </div>
 <% else %>
-  <h1 class="booking">You are making a booking for: <time datetime="<%=@booking.date%>"><%= l(@booking.date, :format => :long) %></time></h1>
-  <%= simple_form_for [@workplace, @booking] do |f| %>
-    <%= f.input :date, :as => :hidden %>
-    <%= f.input :comment, :input_html => { :rows => 3 } %>
-    <%= f.submit :label => 'Book' %><%= link_to "No, maybe not.", @workplace, :class => "cancel" %>
+  <% unless current_user.bookings.on(@date).any? %>
+    <%= render :partial => "form", :locals => {:workplace => @workplace, :booking => @booking}%>
+  <% else %>
+    <div class="already_booked">
+      <h1>Awww Nuuu!</h1> 
+      <p>You have already booked a desk for that date!</p>
+      <p><%= link_to "Close", @workplace, :class => "cancel" %></p>
+    </div>
   <% end %>
 <% end %>

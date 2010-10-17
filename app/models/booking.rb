@@ -2,8 +2,12 @@ class Booking < ActiveRecord::Base
   belongs_to :workplace
   belongs_to :user
 
+  scope :on, lambda { |date|
+    where(:date => date).where(:state => [:confirmed, :unconfirmed])
+  }
+
   scope :upcoming, lambda {
-    where('date >= ?', Time.now.to_date).order('date ASC')
+    where('date >= ?', Date.today).order('date ASC')
   }
 
   scope :visible, lambda {
@@ -11,6 +15,7 @@ class Booking < ActiveRecord::Base
   }
 
   validates_presence_of :date
+  validates_uniqueness_of :date, :on => :create, :scope => :user_id, :message => "you have already booked a desk for that date."
   validate :date_not_past?
   
   def date_not_past?
