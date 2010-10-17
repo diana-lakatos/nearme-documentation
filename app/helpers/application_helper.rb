@@ -14,7 +14,7 @@ module ApplicationHelper
     # suppsed to use alter and notice.
     buffer = ""
     [ :alert, :notice, :message, :error ].each do |f|
-      buffer << content_tag(:div, flash[f], :id => f, :class => "flash") if flash.key?(f)
+      buffer << content_tag(:div, flash[f], :class => "flash #{f}") if flash.key?(f)
     end
     buffer.html_safe
   end

@@ -1,7 +1,7 @@
 <%= simple_form_for workplace do |f| %>
   <%= f.input :name %>
   <%= f.input :address, :input_html => {:rows => 4} %>
-  <%= f.input :maximum_desks, :input_html => { :size => 4 } %>
+  <%= f.input :maximum_desks, :input_html => { :size => 4, :min => 1 } %>
   <%= f.input :description, :input_html => {:rows => 8} %>
   <%= f.input :company_description, :input_html => {:rows => 8} %>
   <%= f.input :confirm_bookings, :as => :radio %>
