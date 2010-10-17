@@ -39,7 +39,7 @@ Then /^I should see the following availability:$/ do |table|
 end
 
 Then /^I should see the following bookings in order:$/ do |table|
-  found = all("ul.bookings li div")
+  found = all("ul.bookings li p")
   table.raw.flatten.each_with_index do |booking, index|
     found[index].text.should == booking
   end
