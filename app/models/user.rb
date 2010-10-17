@@ -9,19 +9,26 @@ class User < ActiveRecord::Base
   
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, :lockable and :timeoutable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+  # devise :database_authenticatable, :registerable,
+  #        :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :password, :password_confirmation, :remember_me
+  attr_accessible :name, :email
   
   def apply_omniauth(omniauth)
+    self.name = omniauth['user_info']['name'] if name.blank?
     self.email = omniauth['user_info']['email'] if email.blank?
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
   end
-  
+
   def password_required?
-    (authentications.empty? || !password.blank?) && super
+    false
   end
 
+  # No password auth
+  def update_with_password(attrs)
+    update_attributes(attrs)
+  end
+  
 end
