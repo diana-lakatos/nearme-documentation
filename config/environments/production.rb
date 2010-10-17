@@ -40,10 +40,10 @@ DesksnearMe::Application.configure do
     :address              => "smtp.gmail.com",
     :port                 => 587,
     :domain               => 'desksnear.me',
-    :user_name            => 'support@desksnear.me',
+    :user_name            => 'noreply@desksnear.me',
     :password             => 'c0ff33pl0x',
     :authentication       => 'plain',
-    :enable_starttls_auto => true  
+    :enable_starttls_auto => true
   }
 
   # Enable threaded mode
