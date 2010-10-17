@@ -9,6 +9,10 @@ class Workplace < ActiveRecord::Base
     end
   end
 
+  # This is horrible. Feel free to fix.
+  scope :featured, :include => :photos, :order => %{ "workplaces".created_at desc },
+                   :conditions => %{ (select count(*) from "photos" where workplace_id = "workplaces".id) > 0 }, :limit => 5
+
   validates_presence_of :name, :address, :maximum_desks, :latitude, :longitude
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0
 
@@ -30,15 +34,36 @@ class Workplace < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
+  def schedule(days = 5)
+    monday = Date.today.beginning_of_week
+    week   = monday..(monday + days - 1)
+    hash   = week.inject({}) {|m,d| m[d] = maximum_desks; m}
+
+    schedule = bookings.select("COUNT(*) as count, date").
+      where(:date  => week).
+      where(:state => [:confirmed, :unconfirmed]).
+      group(:date)
+
+    hash.tap do |hash|
+      schedule.each do |booking|
+        if hash[booking.date] >= booking.count.to_i
+          hash[booking.date] -= booking.count.to_i
+        else
+          hash[booking.date] = 0
+        end
+      end
+    end
+  end
+
   def self.search_by_location(query)
     geocoded = Geocoder.search(query).try(:[], 'results').try(:first)
     return [ [], nil ] if geocoded.nil?
 
-    location = { :name => geocoded['formatted_address'], 
+    location = { :name => geocoded['formatted_address'],
                  :lat => geocoded['geometry']['location']['lat'],
                  :lng => geocoded['geometry']['location']['lng'] }
 
-    [ search(:geo => [ Geocoder.to_radians(location[:lat]), Geocoder.to_radians(location[:lng]) ], 
+    [ search(:geo => [ Geocoder.to_radians(location[:lat]), Geocoder.to_radians(location[:lng]) ],
              :with => { "@geodist" => (0.0)..(30_000.0) }, :order => "@geodist ASC, @relevance DESC") , location ]
   end
 

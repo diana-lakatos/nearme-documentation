@@ -22,7 +22,7 @@
           if(city) {
             $("input.geolocation", form).addClass("active").attr("geo-val", city).click(function(){  
               var form = $(this).parents('form').first();
-              $("input:text", form).val($(this).attr("geo-val"));
+              $("input:text", form).val($(this).attr("geo-val")).focus();
             });
           }
         });
