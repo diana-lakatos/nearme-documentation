@@ -21,7 +21,11 @@ module Workplaces
       @booking = @workplace.bookings.build(params[:booking].merge(:user_id => current_user.id))
       if @booking.save
         flash[:notice] = "Booking Successful."
-        redirect_to :back
+        begin
+          redirect_to request.xhr? ? :back : @workplace
+        rescue
+          redirect_to @workplace
+        end
       else
         render :new
       end
