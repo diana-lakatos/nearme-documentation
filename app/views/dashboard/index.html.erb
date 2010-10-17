@@ -2,10 +2,10 @@
 
 <div class="tabs">
   <nav>
-    <a href="#workplaces" class="selected">My Workplaces</a>
-    <a href="#my_bookings">My Bookings</a>
+    <a href="#workplaces" class="selected">My Workplaces<span class="num"><%=@workplaces.count%></span></a>
+    <a href="#my_bookings">My Bookings<span class="num"><%=@your_bookings.count%></span></a>
     <% if @workplaces.any?  %>
-      <a href="#bookings">Workplace Bookings</a>
+      <a href="#bookings">Workplace Bookings<span class="num"><%=@workplace_bookings.count%></span></a>
     <% end %>
   </nav>
   <section id="workplaces" class="selected tab">
