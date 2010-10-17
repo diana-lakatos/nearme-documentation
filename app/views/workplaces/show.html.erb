@@ -1,7 +1,7 @@
 
 <article class="workplace">
 
-  <div class="grid_12">
+  <div class="grid_12 alpha omega">
 
     <div class="grid_5 alpha">
       <h1 class="tk-adelle"><%= @workplace.name %></h1>
@@ -59,6 +59,9 @@
         <h2 class="tk-chaparral-pro">Admin</h2>
         <%= link_to "Edit Workplace", edit_workplace_path(@workplace) %>
         <%= link_to "Manage Workplace Photos", workplace_photos_path(@workplace) %>
+        <% if current_user.admin? %>
+          <br/><%= link_to "Destroy (Admin Only)", @workplace, :method => :delete, :confirm => "Are you sure? Its dangerous to go alone..." %>
+        <% end %>
       </section>
     <% end %>
     <section id="photos" class="fancy-photos">

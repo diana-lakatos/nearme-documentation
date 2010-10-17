@@ -1,14 +1,13 @@
 class Workplace < ActiveRecord::Base
 
   belongs_to :creator, :class_name => "User", :foreign_key => "creator_id"
-  belongs_to :location
-  has_many :bookings
-  has_many :photos do
+  has_many :bookings, :dependent => :delete_all
+  has_many :photos, :dependent => :delete_all do
     def thumb
       (first || build).thumb
     end
   end
-  has_many :feeds
+  has_many :feeds, :dependent => :delete_all
 
   # This is horrible. Feel free to fix.
   scope :featured, :include => :photos, :order => %{ "workplaces".created_at desc },
@@ -24,6 +23,8 @@ class Workplace < ActiveRecord::Base
 
   delegate :to_s, :to => :name
 
+  attr_protected :description_html, :company_description_html, :formatted_address, :creator_id
+
   define_index do
     indexes :name
     has "RADIANS(latitude)",  :as => :latitude,  :type => :float
@@ -37,7 +38,7 @@ class Workplace < ActiveRecord::Base
   end
 
   def created_by?(user)
-    user && user == creator
+    user && user.admin? || user == creator
   end
 
   def to_param
