@@ -15,11 +15,10 @@ gem 'RedCloth', :require => "redcloth"
 gem 'fog'
 gem 'gravtastic'
 gem 'will_paginate'
+gem 'tweet-button'
 gem 'thinking-sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx.git',
                        :branch => 'rails3',
                        :require => 'thinking_sphinx'
-
-gem 'delayed_job'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
