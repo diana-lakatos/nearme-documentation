@@ -210,6 +210,7 @@ GEM
     treetop (1.4.8)
       polyglot (>= 0.3.1)
     tzinfo (0.3.23)
+    will_paginate (2.3.15)
     yard (0.6.1)
 
 PLATFORMS
@@ -242,3 +243,4 @@ DEPENDENCIES
   state_machine
   thinking-sphinx!
   timecop
+  will_paginate

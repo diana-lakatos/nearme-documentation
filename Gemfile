@@ -12,6 +12,7 @@ gem 'state_machine'
 gem 'jquery-rails'
 gem 'RedCloth', :require => "redcloth"
 gem 'fog'
+gem 'will_paginate'
 gem 'rails-geocoder', :require => 'geocoder'
 gem 'thinking-sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx.git',
                        :branch => 'rails3',
