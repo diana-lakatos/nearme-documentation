@@ -176,6 +176,14 @@ form.simple_form input[type='submit'] {
 	font-size: 16px;
 }
 
+div.overlay-container form.simple_form label {
+	width: auto;
+}
+
+div.overlay-container form.simple_form input {
+	margin-left: 0;
+}
+
 p.em {
 	font-size: 14px;
 } /* Give a paragraph some emphasis, not the oblique kind */
