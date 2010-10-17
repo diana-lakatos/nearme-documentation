@@ -6,7 +6,6 @@ module Workplaces
     before_filter :ensure_date_valid, :only => [:new, :create]
     before_filter :ensure_desk_available, :only => [:new, :create]
     
-    
     def index
       @bookings = @workplace.bookings
     end
@@ -32,6 +31,24 @@ module Workplaces
       @booking = @workplace.bookings.find(params[:id])
       @booking.cancel
       flash[:notice] = "Booking Cancelled."
+    end
+
+    def reject
+      @booking = @workplace.bookings.find(params[:booking_id])
+      if @booking.reject
+        redirect_to dashboard_path, :notice => "Booking rejected"
+      else
+        redirect_to dashboard_path, :notice => "There wan an error rejecting the booking"
+      end
+    end
+
+    def confirm
+      @booking = @workplace.bookings.find(params[:booking_id])
+      if @booking.confirm
+        redirect_to dashboard_path, :notice => "Booking confirmed"
+      else
+        redirect_to dashboard_path, :notice => "There wan an error confirming the booking"
+      end
     end
 
     protected
