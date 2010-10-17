@@ -3,7 +3,7 @@ class DashboardController < ApplicationController
 
   def index
     @workplaces = current_user.workplaces.all
-    @your_bookings = current_user.bookings.upcoming
+    @your_bookings = current_user.bookings.visible
     @workplace_bookings = current_user.workplace_bookings.upcoming
   end
 end

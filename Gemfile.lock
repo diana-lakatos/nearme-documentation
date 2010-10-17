@@ -249,8 +249,12 @@ GEM
     treetop (1.4.8)
       polyglot (>= 0.3.1)
     tzinfo (0.3.23)
+<<<<<<< HEAD
     warden (0.10.7)
       rack (>= 1.0.0)
+=======
+    will_paginate (2.3.15)
+>>>>>>> master
     yard (0.6.1)
 
 PLATFORMS
@@ -285,4 +289,8 @@ DEPENDENCIES
   state_machine
   thinking-sphinx!
   timecop
+<<<<<<< HEAD
   webmock!
+=======
+  will_paginate
+>>>>>>> master

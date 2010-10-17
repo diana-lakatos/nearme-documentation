@@ -3,7 +3,7 @@ class WorkplacesController < ApplicationController
   before_filter :find_workplace, :only => [:edit, :update]
 
   def index
-    @workplaces = Workplace.latest
+    @workplaces = Workplace.latest.paginate :page => params[:page]
   end
 
   def new

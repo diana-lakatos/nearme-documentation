@@ -8,7 +8,7 @@ DesksnearMe::Application.routes.draw do
   match '/auth/:provider/callback' => 'authentications#create'
   devise_for :users, :controllers => { :registrations => 'registrations' }
   
-  resources :bookings, :only => [:index]
+  resources :bookings, :only => [:index, :destroy]
 
   match "/dashboard", :to => "dashboard#index", :as => :dashboard
 

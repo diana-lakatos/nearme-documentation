@@ -64,3 +64,28 @@ Feature: A user can book a desk
     Then I should see the following availability:
       | 2010-10-11 | 2010-10-12 | 2010-10-13 | 2010-10-14 | 2010-10-15 |
       | 6          | 0          | 10         | 7          | 3          |
+
+  # http://www.pivotaltracker.com/story/show/5724372
+  Scenario: Show 3 weeks of dates on the show page, but 1 week on index pages
+    When I go to the workplace's page
+    Then I should see availability for dates:
+      | 2010-10-11 | 2010-10-12 | 2010-10-13 | 2010-10-14 | 2010-10-15 |
+      | 2010-10-18 | 2010-10-19 | 2010-10-20 | 2010-10-21 | 2010-10-22 |
+      | 2010-10-25 | 2010-10-26 | 2010-10-27 | 2010-10-28 | 2010-10-29 |
+    When I follow "Workplaces"
+    Then I should see availability for dates:
+      | 2010-10-11 | 2010-10-12 | 2010-10-13 | 2010-10-14 | 2010-10-15 |
+    But I should not see availability for dates:
+      | 2010-10-18 | 2010-10-19 | 2010-10-20 | 2010-10-21 | 2010-10-22 |
+      | 2010-10-25 | 2010-10-26 | 2010-10-27 | 2010-10-28 | 2010-10-29 |
+
+  # http://www.pivotaltracker.com/story/show/5724379
+  Scenario: If viewing on a weekend, show the next week's schedule not the current week's
+    Given the date is "16th October 2010"
+    When I go to the workplace's page
+    Then I should see availability for dates:
+      | 2010-10-18 | 2010-10-19 | 2010-10-20 | 2010-10-21 | 2010-10-22 |
+      | 2010-10-25 | 2010-10-26 | 2010-10-27 | 2010-10-28 | 2010-10-29 |
+      | 2010-11-01 | 2010-11-02 | 2010-11-03 | 2010-11-04 | 2010-11-05 |
+    But I should not see availability for dates:
+      | 2010-10-11 | 2010-10-12 | 2010-10-13 | 2010-10-14 | 2010-10-15 |

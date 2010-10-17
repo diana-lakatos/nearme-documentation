@@ -16,6 +16,12 @@ div.workplace details {
   padding-top: 20px;
 }
 
+div.workplace table td details {
+  float: none;
+  width: auto;
+  padding-top: inherit;
+}
+
 div.workplace details img {
   float: left;
   margin-right: 10px;

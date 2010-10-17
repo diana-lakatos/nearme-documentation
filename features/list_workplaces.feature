@@ -2,7 +2,7 @@ Feature: List workplaces
   In order to browse the workplaces
   As a user
   I want to see a listing of newly-created workplaces
-
+  
   Scenario: view workplaces
     Given a workplace exists with name: "Mocra"
     And I am on the home page

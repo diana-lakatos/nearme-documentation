@@ -10,16 +10,12 @@ Feature: A user can cancel a booking
         | workplace          | name               |
         | Joe's Codin Garage | Joe's Codin Garage |
         | WoughThorks        | WoughThorks        |
-
-
       And the following bookings exist:
        | workplace                      | date       | user     |
        | workplace "Joe's Codin Garage" | 2010-10-18 | the user |
        | workplace "WoughThorks"        | 2010-10-19 | the user |
        | workplace "WoughThorks"        | 2010-10-20 | the user |
        | workplace "Joe's Codin Garage" | 2010-10-21 | the user |
-
-  
   
   Scenario: A user can see a list of their bookings
     When I go to the dashboard page
@@ -28,6 +24,18 @@ Feature: A user can cancel a booking
       | WoughThorks on October 19, 2010        |
       | WoughThorks on October 20, 2010        |
       | Joe's Codin Garage on October 21, 2010 |
+
+  Scenario: A user can cancel a booking
+    Given I am on the dashboard page
+    When I cancel the booking for "19th October 2010"
+    Then I should see "Your booking has been cancelled"
+     And I should see the following bookings in order:
+      | Joe's Codin Garage on October 18, 2010 |
+      | WoughThorks on October 20, 2010        |
+      | Joe's Codin Garage on October 21, 2010 |
+     And I should not see "WoughThorks on October 19, 2010"
+  
+  
   
   
   

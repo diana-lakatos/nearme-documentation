@@ -10,18 +10,22 @@
   </thead>
   <tbody>
     <tr>
-      <% booking_schedule_for(workplace) do |date, num, availability| %>
+      <% booking_schedule_for(workplace, weeks) do |date, num, availability, new_row| %>
+        <% if new_row %>
+          </tr><tr>
+        <% end %>
         <td class="day <%= availability %>">
           <time datetime="<%= date %>">
-            <%= date.day %><sup><%= date.day.ordinal %></sup>
+            <%= date.strftime("%b %d") %><sup><%= date.day.ordinal %></sup>
           </time>
           <details class="availability">
             <%= link_to new_workplace_booking_url(workplace, :date => date) do %>
+              <%#= pluralize(num, "spots") %>
               <%= num %>
             <% end %>
           </details>
         </td>
-      <% end %>
+    <% end %>
     </tr>
   </tbody>
 </table>
