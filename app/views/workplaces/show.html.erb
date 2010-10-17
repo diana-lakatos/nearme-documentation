@@ -1,14 +1,13 @@
 
 <article class="workplace">
 
-  <div class="grid_8 alpha">
+  <div class="grid_12">
 
     <div class="grid_5 alpha">
       <h1 class="tk-adelle"><%= @workplace.name %></h1>
       <%= content_tag(:p, link_to(@workplace.url, @workplace.url)) if @workplace.url %>
-      <address><%= @workplace.formatted_address || @workplace.address %></address>
     </div>
-    
+
     <% if @workplace.creator %>
       <div class="creator" class="grid_3 omega">
         <%= image_tag @workplace.creator.gravatar_url, :class => 'avatar', :title => @workplace.creator.name, :alt => @workplace.creator.name %>
@@ -19,15 +18,8 @@
 
   </div>
 
-  <% if @workplace.created_by?(current_user) %>
-    <div class="grid_4 omega">
-      <%= link_to "Edit Workplace", edit_workplace_path(@workplace) %>
-      <%= link_to "Manage Workplace Photos", workplace_photos_path(@workplace) %>
-    </div>
-  <% end %>
-
   <section class="details grid_8 alpha">
-    
+
     <div class="business_description">
       <%= raw @workplace.company_description_html %>
     </div>
@@ -46,7 +38,7 @@
 
     <h2 class="tk-chaparral-pro">Latest Activity</h2>
     <dl>
-      
+
     </dl>
     <% if @feeds.any? %>
       <% @feeds.each do |feed| %>
@@ -62,6 +54,13 @@
   </section>
 
   <aside class="grid_4 omega">
+    <% if @workplace.created_by?(current_user) %>
+      <section>
+        <h2 class="tk-chaparral-pro">Admin</h2>
+        <%= link_to "Edit Workplace", edit_workplace_path(@workplace) %>
+        <%= link_to "Manage Workplace Photos", workplace_photos_path(@workplace) %>
+      </section>
+    <% end %>
     <section id="photos" class="fancy-photos">
       <h2 class="tk-chaparral-pro">Photos</h2>
       <% if @workplace.photos.any? %>
@@ -82,43 +81,9 @@
       <h2 class="tk-chaparral-pro">Location</h2>
       <div id="map" style="height: 200px" class="google-map"></div>
       <%= link_to "Open in Google Maps", "http://maps.google.com?q=#{@workplace.address}", :target => "_blank" %>
-      <details>
-        <%= simple_format @workplace.address %>
+      <details class="address" data-lat="<%= @workplace.latitude %>" data-lng="<%= @workplace.longitude %>" data-marker="<%= image_path("marker.png") %>">
+        <%= simple_format(@workplace.formatted_address || @workplace.address) %>
       </details>
     </section>
-
   </aside>
-
 </article>
-
-<% content_for :script do -%>
-<script type="text/javascript">
-  $(function(){
-    $("td.day details.availability a").click(function(e){
-      e.stopPropagation();
-      var overlay = $("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
-      $(".overlay-container a.cancel").live("click", function(e){
-        e.stopPropagation();
-        $(".overlay-container").overlay('close');
-        return false;
-      });
-      return false;
-    });
-    
-    var latlng = new google.maps.LatLng(<%= @workplace.latitude %>, <%= @workplace.longitude %>);
-    var myOptions = {
-      zoom: 13,
-      center: latlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapTypeControl: false
-    };
-    var map = new google.maps.Map(document.getElementById("map"), myOptions);
-    var image = "<%= image_path("marker.png") %>";
-    var beachMarker = new google.maps.Marker({
-      position: latlng,
-      map: map,
-      icon: image
-    });
-  });
-</script>
-<% end %>

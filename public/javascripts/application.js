@@ -1,27 +1,5 @@
-function setSearchFormToLocation(form, location) {
-  var input  = $("input:text", form),
-      button = $("input.geolocation", form);
-  
-  button.addClass("active").attr("data-geo-val", location).click(function(){
-    input.val($(this).attr("data-geo-val")).focus();
-  });
-  
-  if(input.val() == "")
-    button.click();
-}
-
-$(function(){
-  $(".fancy-photos a:has(img), .fancy-photos [href$=.jpg], .fancy-photos a[href$=.png], .fancy-photos a[href$=.gif]")
-    .attr("rel", "photos").fancybox({
-      transitionIn: "elastic",
-      transitionOut: "elastic",
-      titlePosition: "over",
-      padding: 0
-    });
-
-
+function getUserLocationForSearch() {
   var searchForm      = $("form.big_search");
-  
   if(searchForm.length >= 1) {
     var currentLocation = $.cookie("currentLocation");
     
@@ -50,4 +28,73 @@ $(function(){
       }
     }
   }
+}
+
+function setSearchFormToLocation(form, location) {
+  var input  = $("input:text", form),
+      button = $("input.geolocation", form);
+  
+  button.addClass("active").attr("data-geo-val", location).click(function(){
+    input.val($(this).attr("data-geo-val")).focus();
+  });
+  
+  if(input.val() == "")
+    button.click();
+}
+
+function doWorkplaceGoogleMaps() {
+  var locations = $("aside address, aside details.address"),
+      map       = null;
+      
+  
+  $.each(locations, function(index, location) {
+    location        = $(location);
+    var latlng      = new google.maps.LatLng(location.attr("data-lat"), location.attr("data-lng"));
+    
+    if(!map) {
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 13,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: false,
+        center: latlng
+      });
+    }
+    
+    var image       = location.attr("data-marker");
+    var beachMarker = new google.maps.Marker({
+      position: latlng,
+      map: map,
+      icon: image
+    });
+  });
+}
+
+function doInlineBooking() {
+  $("td.day details.availability a").click(function(e){
+    e.stopPropagation();
+    var overlay = $("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
+    $(".overlay-container a.cancel").live("click", function(e){
+      e.stopPropagation();
+      $(".overlay-container").overlay('close');
+      return false;
+    });
+    return false;
+  });
+}
+
+function doPhotoFancyBox() {
+  $(".fancy-photos a:has(img), .fancy-photos [href$=.jpg], .fancy-photos a[href$=.png], .fancy-photos a[href$=.gif]")
+    .attr("rel", "photos").fancybox({
+      transitionIn: "elastic",
+      transitionOut: "elastic",
+      titlePosition: "over",
+      padding: 0
+    });
+}
+
+$(function(){
+  doPhotoFancyBox();
+  doInlineBooking();
+  doWorkplaceGoogleMaps();
+  getUserLocationForSearch();
 });
