@@ -66,7 +66,7 @@ if defined?(ActiveRecord::Base)
 end
 
 # Always clean up old indexes after tests
-After do
+Before do
   ThinkingSphinx::Test.index
 end
 
