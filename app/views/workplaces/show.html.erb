@@ -37,17 +37,16 @@
     <% end %>
 
     <h2 class="tk-chaparral-pro">Latest Activity</h2>
-    <dl>
-
-    </dl>
     <% if @feeds.any? %>
+      <dl class="activity_feed">
       <% @feeds.each do |feed| %>
-        <div class="feed_item">
-          <%= image_tag feed.user.gravatar_url, :style => "margin-right: 10px", :align => "left" %>
+        <dd class="feed_item">
+          <%= image_tag feed.user.gravatar_url, :class => "avatar" %>
           <%= render :partial => "feeds/#{feed.activity}", :locals => { :feed => feed } %><br/>
           <small><%= time_ago_in_words(feed.created_at) %> ago</small>
-        </div>
+        </dd>
       <% end %>
+      </dl>
     <% else %>
       <p>No activity has been generated yet.</p>
     <% end %>
@@ -55,11 +54,10 @@
 
   <aside class="grid_4 omega">
     <% if @workplace.created_by?(current_user) %>
-      <section>
-        <h2 class="tk-chaparral-pro">Admin</h2>
+    <nav class="actions">
         <%= link_to "Edit Workplace", edit_workplace_path(@workplace) %>
         <%= link_to "Manage Workplace Photos", workplace_photos_path(@workplace) %>
-      </section>
+    </nav>
     <% end %>
     <section id="photos" class="fancy-photos">
       <h2 class="tk-chaparral-pro">Photos</h2>

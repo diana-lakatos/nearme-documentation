@@ -478,6 +478,10 @@ nav.actions {
 	float: right;
 }
 
+aside nav.actions {
+	margin-bottom: 12px;
+}
+
 nav.actions a {
 	float: left;
 	margin-left: 12px;
@@ -656,4 +660,23 @@ form.simple_form span.error {
 	padding-left: 176px;
 	color: #990600;
 	font-weight: bold;
+}
+
+/* === Activity Feeds */
+
+dl.activity_feed {
+	overflow: hidden;
+}
+
+dl.activity_feed dd {
+	overflow: hidden;
+	border-bottom: 1px solid #DDD;
+	padding: 6px 0;
+	
+}
+
+dl.activity_feed dd img.avatar {
+	width: 32px;
+	float: left;
+	margin-right: 12px;
 }
