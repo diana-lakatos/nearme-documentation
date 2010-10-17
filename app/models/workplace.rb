@@ -92,6 +92,7 @@ class Workplace < ActiveRecord::Base
       if geocoded
         self.latitude  = geocoded['geometry']['location']['lat'] unless latitude
         self.longitude = geocoded['geometry']['location']['lng'] unless longitude
+        self.formatted_address = geocoded['formatted_address'] unless formatted_address
       end
     end
 

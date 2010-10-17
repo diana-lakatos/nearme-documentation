@@ -6,6 +6,7 @@
     <div class="grid_5 alpha">
       <h1 class="tk-adelle"><%= @workplace.name %></h1>
       <%= content_tag(:p, link_to(@workplace.url, @workplace.url)) if @workplace.url %>
+      <address><%= @workplace.formatted_address || @workplace.address %></address>
     </div>
     
     <% if @workplace.creator %>

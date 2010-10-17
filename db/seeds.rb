@@ -11,8 +11,8 @@ locations = {
   'Thoughtworks Chicago' => '200 E Randolph St, 25th Floor, Chicago, IL 60601-6501, USA',
   'Thoughtworks San Francisco' => '315 Montgomery Street, 16th Floor, San Francisco, CA 94104, USA'
 }
-
+user = User.create!(:name => "Desks Near Me", :email => "desksnearme@gmail.com")
 locations.each do |name, location|
-  Workplace.create!(:name => name, :maximum_desks => rand(20), :address => location, :company_description => "We're #{name}, and we rock the party!", :description => "Dont muck around at #{name}, we'll beat you up!")
+  Workplace.create!(:name => name, :creator => user, :maximum_desks => rand(20), :address => location, :company_description => "We're #{name}, and we rock the party!", :description => "Dont muck around at #{name}, we'll beat you up!")
 end
 
