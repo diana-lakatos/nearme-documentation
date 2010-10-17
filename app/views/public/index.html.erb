@@ -18,17 +18,37 @@
   <section class="featured">
     <%= render :partial => "workplaces/featured", :collection => @featured, :as => :workplace %>
   </section>
-  <br />
-  <h1 class="tk-chaparral-pro">What now?</h1>
-  <p class="em">Rails Rumble is just the start for the DesksNearMe team. Our app is built for more than just a 48 hour competition.</p><p>We are committed to continuing with this service and adding in new features - making it easier and better for everyone. It's built for a need that many on the team have: the need to get out of the home office and hang out with cool people while we work.</p>
-  <h1 class="tk-chaparral-pro">But our desks aren't free...</h1>
-  <p>We know that many workplaces have extra goodies available for their desks (like food, drinks or equipment access) and they like to charge a small daily rate for visiting freelancers to pay. There are also dedicated co-working spaces out there which charge for access. For now, we think the best way to handle this is for you to mention this clearly in your workplace description.</p>
-  <p><strong>After the Rumble is over, we will be working with our first users to discover the best way to manage listing of paid spaces.</strong></p>
-  <p>But thats not all, we have other goodies up our sleeve! (You should see our backlog...) From everyone on the team, thanks for visiting and we hope you have fun with this service.</p>
-  <em>&mdash; The Rad Warlike Annex</em>
 </div>
 
 <div class="grid_5 omega">
   <%= render :partial => "layouts/sidebar" %>
+  <%= link_to new_workplace_path, :class => "huge_ass_button workplace" do %>
+    <%= image_tag "marker-big.png" %> Add my workplace
+  <% end %>
 </div>
+<br clear="both" />
+<div class="grid_12">
+  <div class="grid_5 alpha">
+    <h1 class="tk-chaparral-pro">What now?</h1>
+    <p class="em">
+      RailsRumble is just the beginning. We have a thousand ideas and just chose a handful to implement in the first 48 hours of our existence.
+    </p>
+    <p>
+      We really believe that this has the potential to become an indispensable service for people like us, who need to get out of the home office and hang out with cool people while we work.
+    </p>
+    <p>
+     We have big plans for the future. We are committed to continuing with this service and adding in new features - making it easier and better for everyone.
+    </p>
+  </div>
 
+  <div class="grid_7 omega">
+    <h1 class="tk-chaparral-pro">But our desks aren't free...</h1>
+    <p>
+      We know that many workplaces have extra goodies available for their desks (like food, drinks or equipment access) and they like to charge a small daily rate for visiting freelancers to pay. There are also dedicated co-working spaces out there which charge for access.
+    </p>
+    <p>For now, listing non-free places is fine as long as you mention this clearly in your workplace description. In the future there will likely be a small listing fee for paid workspaces.</p>
+    <p><strong>After the Rumble is over, we will be working with our first users to discover the best way to manage listing of paid spaces.</strong></p>
+    <p>But thats not all, we have other goodies up our sleeve! (You should see our backlog...) From everyone on the team, thanks for visiting and we hope you have fun with this service.</p>
+    <em>&mdash; The Rad Warlike Annex</em>
+  </div>
+</div>
