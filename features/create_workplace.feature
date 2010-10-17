@@ -21,10 +21,12 @@ Feature: A user can create and edit a workplace
      When I fill in "Name" with "Joe's Codin' Garage"
       And I fill in "Address" with "1 St John St Launceston TAS 7250"
       And I fill in "Maximum desks" with "2"
+      And I fill in "Company URL" with "http://site.com"
       And I choose "Yes"
       And I press "Create Workplace"
      Then a workplace should exist with name: "Joe's Codin' Garage"
       And I should be on the workplace's page
+      And I should see "http://site.com"
 
   Scenario: A user can edit a workplace
     Given a user exists
@@ -34,9 +36,11 @@ Feature: A user can create and edit a workplace
       And I follow "Edit Workplace"
       And I should see "Edit a workplace"
       And I fill in "Name" with "Joe's Codin' Garage"
+      And I fill in "Company URL" with "http://newurl.com"
       And I press "Update Workplace"
      Then a workplace should exist with name: "Joe's Codin' Garage"
       And I should be on the workplace's page
+      And I should see "http://newurl.com"
 
   Scenario: A hacker cant edit a workplace
     Given a user: "wally" exists
