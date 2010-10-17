@@ -1,8 +1,7 @@
 When(/^I follow the booking link for "([^"]*)"$/) do |date|
   # selector = selector_for("time[datetime=#{date}]")
   date = Time.parse(date).to_date
-  link = find(%{a[href*="#{date.year}-#{date.month}-#{date.day}"]})
-  visit link[:href]
+  find(:xpath, "//time[@datetime='#{date}']/../details/a").click
 end
 
 Given /^the workplace has the following bookings:$/ do |table|

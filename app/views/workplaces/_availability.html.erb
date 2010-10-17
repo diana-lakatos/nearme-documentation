@@ -15,9 +15,11 @@
           <time datetime="<%= date %>">
             <%= date.day %><sup><%= date.day.ordinal %></sup>
           </time>
-          <%= link_to new_workplace_booking_url(workplace, :date => date) do %>
-            <details class="availability"><%= num %></details>
-          <% end %>
+          <details class="availability">
+            <%= link_to new_workplace_booking_url(workplace, :date => date) do %>
+              <%= num %>
+            <% end %>
+          </details>
         </td>
       <% end %>
     </tr>

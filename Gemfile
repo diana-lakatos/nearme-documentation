@@ -10,6 +10,7 @@ gem 'mini_magick'
 gem 'carrierwave'
 gem 'state_machine'
 gem 'jquery-rails'
+gem 'RedCloth', :require => "redcloth"
 gem 'fog'
 gem 'rails-geocoder', :require => 'geocoder'
 gem 'thinking-sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx.git',

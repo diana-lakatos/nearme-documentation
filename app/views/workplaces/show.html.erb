@@ -13,7 +13,7 @@
 
   <section class="details grid_8 alpha">
 
-    <p class="em"><%= @workplace.company_description %></p>
+    <p class="em"><%=raw @workplace.company_description_html %></p>
 
     <hr />
 
@@ -23,7 +23,7 @@
     <hr />
 
     <h2>Extra Info</h2>
-    <p><%= @workplace.description %></p>
+    <p><%=raw @workplace.description_html %></p>
 
   </section>
 
