@@ -41,6 +41,6 @@ class WorkplacesController < ApplicationController
   def find_workplace
     @workplace = current_user.workplaces.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to :root, :alert => "Could not find workspace"
+    redirect_to :root, :alert => "Could not find workplace"
   end
 end

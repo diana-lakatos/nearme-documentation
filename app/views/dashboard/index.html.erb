@@ -1,6 +1,6 @@
-<h1>Workspaces</h1>
+<h1>Workplaces</h1>
 
-<p><%= link_to "Create Workspace", new_workplace_path %></p>
+<p><%= link_to "Create Workplace", new_workplace_path %></p>
 
 <table>
   <thead>
@@ -11,11 +11,11 @@
     </tr>
   </thead>
   <tbody>
-    <% @workspaces.each do |workspace| %>
+    <% @workplaces.each do |workplace| %>
       <tr>
-        <td><%= link_to workspace.name, workspace %></td>
-        <td><%= workspace.confirm_bookings? ? "#{workspace.bookings.with_state(:unconfirmed).count} Unconfirmed" : "-" %></td>
-        <td><%= link_to "Edit Workspace", [ :edit, workspace ] %></td>
+        <td><%= link_to workplace.name, workplace %></td>
+        <td><%= workplace.confirm_bookings? ? "#{workplace.bookings.with_state(:unconfirmed).count} Unconfirmed" : "-" %></td>
+        <td><%= link_to "Edit Workplace", [ :edit, workplace ] %></td>
       </tr>
     <% end %>
   </tbody>

@@ -42,5 +42,5 @@ Feature: A user can add photos to a workplace
       And I am logged in as the user: "hacker"
      When I go to the workplace's edit page
       And I should not see "New Photo"
-      And I should see "Could not find workspace"
+      And I should see "Could not find workplace"
 

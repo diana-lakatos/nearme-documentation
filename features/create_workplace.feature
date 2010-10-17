@@ -44,5 +44,5 @@ Feature: A user can create and edit a workplace
       And I am logged in as the user: "hacker"
      When I go to the workplace's edit page
       And I should not see "Edit a workplace"
-      And I should see "Could not find workspace"
+      And I should see "Could not find workplace"
 

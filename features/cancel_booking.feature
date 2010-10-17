@@ -24,7 +24,11 @@ Feature: A user can cancel a booking
   
   Scenario: A user can see a list of their bookings
     When I go to the dashboard page
-    Then I should see "Joe's Codin Garage on October 18, 2010"
+    Then I should see the following bookings in order:
+      | Joe's Codin Garage on October 18, 2010 |
+      | WoughThorks on October 19, 2010        |
+      | WoughThorks on October 20, 2010        |
+      | Joe's Codin Garage on October 21, 2010 |
   
   
   
