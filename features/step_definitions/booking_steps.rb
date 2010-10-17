@@ -4,7 +4,6 @@ When(/^I follow the booking link for "([^"]*)"$/) do |date|
   find(:xpath, "//time[@datetime='#{date}']/../details/a").click
 end
 
-
 Given /^the workplace has the following bookings:$/ do |table|
   table.hashes.each do |row|
     num = row["Number of Bookings"].to_i
@@ -17,7 +16,7 @@ Then /^I should see the following availability:$/ do |table|
     hash.tap do |hash|
       within(:xpath, cell.path) do
         date       = find("time")["datetime"]
-        available  = find("details").text
+        available  = find("details").text.strip
         hash[date] = available
       end
     end

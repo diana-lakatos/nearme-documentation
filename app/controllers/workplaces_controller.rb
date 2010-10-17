@@ -17,6 +17,7 @@ class WorkplacesController < ApplicationController
 
   def show
     @workplace = Workplace.find(params[:id])
+    @feeds = @workplace.feeds.limit(5)
   end
 
   def edit

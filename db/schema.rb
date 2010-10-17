@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101017023618) do
+ActiveRecord::Schema.define(:version => 20101017033119) do
 
   create_table "bookings", :force => true do |t|
     t.datetime "created_at"
@@ -21,6 +21,17 @@ ActiveRecord::Schema.define(:version => 20101017023618) do
     t.integer  "user_id"
     t.date     "date"
   end
+
+  create_table "feeds", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "workplace_id"
+    t.string   "activity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "booking_id"
+  end
+
+  add_index "feeds", ["workplace_id"], :name => "index_feeds_on_workplace_id"
 
   create_table "login_accounts", :force => true do |t|
     t.string   "type"

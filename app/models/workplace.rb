@@ -8,6 +8,7 @@ class Workplace < ActiveRecord::Base
       (first || build).thumb
     end
   end
+  has_many :feeds
 
   # This is horrible. Feel free to fix.
   scope :featured, :include => :photos, :order => %{ "workplaces".created_at desc },
@@ -18,6 +19,8 @@ class Workplace < ActiveRecord::Base
 
   before_validation :fetch_coordinates
   before_save :apply_filter
+
+  delegate :to_s, :to => :name
 
   define_index do
     indexes :name
