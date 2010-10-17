@@ -14,6 +14,9 @@ module NavigationHelpers
     when /the twitter auth page/
       'auth/twitter'
 
+    when /the dashboard/
+      dashboard_path
+
     when /^#{capture_model}(?:'s)? page$/                           # eg. the forum's page
       path_to_pickle $1
 
