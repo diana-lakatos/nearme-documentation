@@ -14,6 +14,9 @@ module NavigationHelpers
     when /the twitter auth page/
       'auth/twitter'
 
+    when /the account settings page/
+      edit_user_registration_path
+
     when /the dashboard/
       dashboard_path
 

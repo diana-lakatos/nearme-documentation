@@ -6,7 +6,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   match '/auth/:provider/callback' => 'authentications#create'
-  devise_for :users, :controllers => { :registrations => 'registrations' }
+  devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions' }
   
   resources :bookings, :only => [:index, :destroy]
 
