@@ -5,7 +5,7 @@ DesksnearMe::Application.routes.draw do
     resources :bookings, :controller => "workplaces/bookings"
   end
 
-  resources :bookings, :only => [:index]
+  resources :bookings, :only => [:index, :destroy]
 
   match "/dashboard", :to => "dashboard#index", :as => :dashboard
 

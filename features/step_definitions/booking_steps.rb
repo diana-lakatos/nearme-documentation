@@ -1,5 +1,4 @@
 When(/^I follow the booking link for "([^"]*)"$/) do |date|
-  # selector = selector_for("time[datetime=#{date}]")
   date = Time.parse(date).to_date
   find(:xpath, "//time[@datetime='#{date}']/../details/a").click
 end
@@ -24,8 +23,13 @@ Then /^I should see the following availability:$/ do |table|
 end
 
 Then /^I should see the following bookings in order:$/ do |table|
-  found = all("ul.bookings li")
+  found = all("ul.bookings li div")
   table.raw.flatten.each_with_index do |booking, index|
     found[index].text.should == booking
   end
+end
+
+When(/^I cancel the booking for "([^"]*)"$/) do |date|
+  date = Time.parse(date).to_date
+  find(:xpath, "//time[@datetime='#{date}']/../../a").click
 end
