@@ -10,6 +10,19 @@ module ApplicationHelper
   def show_title?
     @show_title
   end
+  
+  def our_twitter_accounts
+    buffer = []
+    {
+      "Keith Pitt" => "keithpitt",
+      "Warren Seen" => "warren_s",
+      "Bo Jeanes" => "bjeanes",
+      "Alex Eckermann" => "alexeckermann"
+    }.each do |k,v|
+      buffer << link_to(k, "http://twitter.com/#{v}")
+    end
+    buffer.join(', ').html_safe
+  end
 
   def flashes
     # :notice, :error and :message are used by omnisocia, but your only
