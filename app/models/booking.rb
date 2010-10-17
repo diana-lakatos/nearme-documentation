@@ -2,6 +2,10 @@ class Booking < ActiveRecord::Base
   belongs_to :workplace
   belongs_to :user
 
+  scope :upcoming, lambda {
+    where('date >= ?', Time.now.to_date).order('date ASC')
+  }
+
   validates_presence_of :date
 
   state_machine :state, :initial => :unconfirmed do

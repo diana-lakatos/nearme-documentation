@@ -4,4 +4,8 @@ class BookingsController < ApplicationController
   def index
     @bookings = current_user.bookings
   end
+  
+  def destroy
+    @booking = current_user.bookings.find(params[:id])
+  end
 end

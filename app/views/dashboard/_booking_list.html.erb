@@ -1,0 +1,5 @@
+<ul>
+  <% bookings.each do |booking|%>
+    <li><%= booking.workplace.name%> on <%= l(booking.date, :format => :long) %></li>
+  <% end %>
+</ul>

@@ -20,3 +20,13 @@
     <% end %>
   </tbody>
 </table>
+
+<% if @your_bookings.any? %>
+<h1>Your Bookings</h1>
+<%= render :partial => "booking_list", :locals => {:bookings => @your_bookings}%>
+<% end %>
+
+<% if @workplace_bookings.any? %>
+<h1>Workplace Bookings</h1>
+<%= render :partial => "booking_list", :locals => {:bookings => @workplace_bookings}%>
+<% end %>
