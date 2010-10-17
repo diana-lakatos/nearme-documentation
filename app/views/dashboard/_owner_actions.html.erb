@@ -1,0 +1,8 @@
+<%= form_for([booking.workplace, booking]) do |f| %>
+  <% if booking.can_owner_cancel?  %>
+    <%= hidden_field_tag :event, "owner_cancel" %>
+    <%= f.submit "Cancel", :confirm => "Do you really want to cancel this booking?" %>
+  <% end %>
+  <%= f.submit "Confirm", :name => "event", :confirm => "Do you want to confirm this booking?"       if booking.can_confirm? %>
+  <%= f.submit "Reject",  :name => "event", :confirm => "Do you really want to reject this booking?" if booking.can_reject? %>
+<% end %>

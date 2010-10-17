@@ -17,7 +17,7 @@ class Booking < ActiveRecord::Base
   validates_presence_of :date
   validates_uniqueness_of :date, :on => :create, :scope => :user_id, :message => "you have already booked a desk for that date."
   validate :date_not_past?
-  
+
   def date_not_past?
     if self.date.past?
       errors.add(:date, "Who do you think you are, Marty McFly? You can't book a desk in the past!")
@@ -33,7 +33,11 @@ class Booking < ActiveRecord::Base
       transition :unconfirmed => :rejected
     end
 
-    event :cancel do
+    event :owner_cancel do
+      transition :confirmed => :cancelled
+    end
+
+    event :user_cancel do
       transition [:unconfirmed, :confirmed] => :cancelled
     end
   end
