@@ -866,3 +866,27 @@ section.featured article.workplace img {
 	background: #FFF;
 	background: rgba(255,255,255,0.6);
 }
+
+#rr10sash {
+	width: 100px !important;
+	height: 100px !important;
+	background: transparent url(/images/rrsash.png) no-repeat right top !important;
+}
+
+a.tweet_it {
+	background: #4CA2D0 url(/images/twitter.png) no-repeat 3px center;
+	border-radius: 6px;
+	padding: 6px 6px 6px 28px;
+	border-bottom: 1px solid #457499;
+	color: #FFF;
+	font-weight: bold;
+}
+
+a.tweet_it:link, a.tweet_it:visited {
+	color: #FFF;
+	text-decoration: none;
+}
+
+a.tweet_it:hover {
+	text-decoration: underline;
+}
