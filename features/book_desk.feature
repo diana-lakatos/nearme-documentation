@@ -16,7 +16,13 @@ Feature: A user can book a desk
       And I press "Book"
      Then I should be on the workplace's page
       And a booking should exist with date: "2010-10-15"
-
+  
+  Scenario: A user cannot book a desk in the past
+    Given I am logged in as the user
+     When I try to book at the workplace on "12th October 2010"
+     Then I should be on the workplace's page
+      And I should see "Who do you think you are, Marty McFly? You can't book a desk in the past!"
+      
   Scenario: A booking is automatically confirmed if the workplace doesnt require confirmation booking
     Given a workplace: "Rad Annex" exists with confirm_bookings: false
       And I am logged in as the user
@@ -48,7 +54,7 @@ Feature: A user can book a desk
       And I follow "Twitter"
       And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
       And I fill in "Email" with "myemail@example.com"
-      And I press "Sign up"
+      And I press "Continue"
      Then I should be on the workplace's new booking page
       And I should see "You are making a booking for October 15, 2010"
       And I press "Book"
@@ -56,6 +62,7 @@ Feature: A user can book a desk
       And a booking should exist with date: "2010-10-15"
 
   Scenario: Availability for the week is shown is shown
+    Given the date is "11th October 2010"
     Given the workplace has the following bookings:
       | Date       | Number of Bookings |
       | 2010-10-11 | 4                  |
