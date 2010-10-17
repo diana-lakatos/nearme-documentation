@@ -1,6 +1,11 @@
 <h1>Workplaces</h1>
 
-<p>Listing workplaces by most recently created. Hover over a day to see how many desks are avaliable.</p>
+<p>Listing workplaces by most recently created. Hover over a day to see how many desks are avaliable.
+
+<p><%= link_to new_workplace_path do %>
+  <%= image_tag "building--plus.png" %> Create Workplace
+<% end %></p>
+
 <section class="list">
   <%= render @workplaces %>
 </section>
