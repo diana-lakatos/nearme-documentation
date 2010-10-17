@@ -1,0 +1,8 @@
+Dear <%= @user %>,
+
+Unfortunately, your booking at <%= @workplace %> on <%= l(@booking.date, :format => :long) %>
+has been rejected.
+
+I'm sure it's not personal -- they were probably just too busy that day :)
+
+<%= render :partial => "footer" %>

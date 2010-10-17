@@ -12,7 +12,6 @@ Feature: A user can see a workplace
       And I should see "http://google.com"
       And I should see "1 Somewhere St"
   
-  @wip
   Scenario: A user can see if a workplace is a fake
     Given a workplace exists with fake: true
      When I go to the workplace's page

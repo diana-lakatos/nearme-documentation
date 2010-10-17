@@ -28,14 +28,19 @@ Feature: A user can cancel a booking
   Scenario: A user can cancel a booking
     Given I am on the dashboard page
     When I cancel the booking for "19th October 2010"
-    Then I should see "You have canceled the booking"
+    Then I should see "You have cancelled the booking"
      And I should see the following bookings in order:
       | Joe's Codin Garage on October 18, 2010 (unconfirmed) |
       | WoughThorks on October 20, 2010 (unconfirmed)        |
       | Joe's Codin Garage on October 21, 2010 (unconfirmed) |
      And I should not see "WoughThorks on October 19, 2010"
 
-
-
-
+  Scenario: A user can book a desk for a day on which they made a booking but it was cancelled
+    Given I am on the dashboard page
+     When I cancel the booking for "19th October 2010"
+     When I go to workplace: "Joe's Codin Garage"'s page
+      And I follow the booking link for "19th October 2010"
+      And I press "Create Booking"
+     Then I should be on workplace "Joe's Codin Garage"'s page
+      And I should see "Booking Successful."
 

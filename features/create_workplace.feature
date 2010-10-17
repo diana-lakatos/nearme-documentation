@@ -42,7 +42,6 @@ Feature: A user can create and edit a workplace
       And I should be on the workplace's page
       And I should see "http://newurl.com"
 
-  @wip
   Scenario: A user can mark a workplace as fake
     Given a user exists
       And I am logged in as the user
