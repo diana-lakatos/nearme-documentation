@@ -1,5 +1,9 @@
 class RegistrationsController < Devise::RegistrationsController
 
+  def new
+    raise ActionController::RoutingError, "Feature disabled"
+  end
+
   def create
     super
     session[:omniauth] = nil unless @user.new_record?
