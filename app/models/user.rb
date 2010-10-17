@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
 
+  is_gravtastic!
+
   has_many :authentications
   has_many :workplaces, :foreign_key => "creator_id"
   has_many :bookings

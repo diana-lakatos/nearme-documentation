@@ -4,6 +4,7 @@ Factory.sequence :email do |n|
 end
 
 Factory.define :user do |u|
+  u.name "Homer Simpson"
   u.email { Factory.next(:email) }
   u.remember_token "dummy_token"
   u.password 'password'

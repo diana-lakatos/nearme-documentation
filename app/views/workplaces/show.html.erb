@@ -36,7 +36,7 @@
     <% if @feeds.any? %>
       <% @feeds.each do |feed| %>
         <div class="feed_item">
-          <%= image_tag feed.user.picture_url, :style => "margin-right: 10px", :align => "left" if feed.try(:user).try(:picture_url) %>
+          <%= image_tag feed.user.gravatar_url, :style => "margin-right: 10px", :align => "left" %>
           <%= render :partial => "feeds/#{feed.activity}", :locals => { :feed => feed } %><br/>
           <small><%= time_ago_in_words(feed.created_at) %> ago</small>
         </div>
