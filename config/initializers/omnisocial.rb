@@ -1,3 +1,4 @@
+=begin
 Omnisocial.setup do |config|
   
   # ==> Twitter
@@ -17,3 +18,4 @@ Omnisocial.setup do |config|
   end
   
 end
+=end
