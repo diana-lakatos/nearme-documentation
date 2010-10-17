@@ -9,6 +9,10 @@ class Workplace < ActiveRecord::Base
     end
   end
 
+  # This is horrible. Feel free to fix.
+  scope :featured, :include => :photos, :order => %{ "workplaces".created_at desc },
+                   :conditions => %{ (select count(*) from "photos" where workplace_id = "workplaces".id) > 0 }, :limit => 5
+
   validates_presence_of :name, :address, :maximum_desks, :latitude, :longitude
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0
 

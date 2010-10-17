@@ -13,9 +13,9 @@
   </div>
 </section>
 
-<div class="grid_7 alpha">
-  <p><%= link_to "Create your Workspace, Today!", new_workplace_path %></p>
-  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<div class="grid_7 alpha fancy-photos">
+  <h2 class="tk-chaparral-pro">Featured Workplaces</h2>
+  <%= render :partial => "workplaces/featured", :collection => @featured, :as => :workplace %>
 </div>
 
 <div class="grid_5 omega">
