@@ -38,8 +38,7 @@ end
 When 'I grant access to the Twitter application for Twitter user "$twitter_username" with ID $twitter_id' do |twitter_username, twitter_id|
   stub_twitter_successful_access_token
   stub_twitter_verify_credentials_for(:twitter_username => twitter_username, :twitter_id => twitter_id)
-
-  visit oauth_callback_twitter_users_url(:oauth_token => 'this_need_not_be_real', :oauth_verifier => 'verifier')
+  visit "/auth/twitter/callback?oauth_token=this_need_not_be_real&oauth_verifier=verifier"
 end
 
 When 'I deny access to the Twitter application' do

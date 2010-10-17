@@ -13,4 +13,7 @@ Feature: A user can login with facebook or twitter
       And I go to the home page
       And I follow "Sign In"
      When I follow "Twitter"
-      And show me the page
+      And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
+      And I fill in "Email" with "fuckyoutwitter@yourmum.com"
+      And I press "Sign up"
+     Then I should see "You have signed up successfully. If enabled, a confirmation was sent to your e-mail."

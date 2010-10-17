@@ -25,7 +25,7 @@ module TwitterFake
       }
     JSON
 
-    verify_credentials_url = BASE_URL + '/account/verify_credentials.json'
+    verify_credentials_url = BASE_URL + '/1/account/verify_credentials.json'
     stub_http_request_for_fake_twitter(:get, verify_credentials_url, {
       :status => 200,
       :body => response_json
