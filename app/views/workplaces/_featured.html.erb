@@ -1,13 +1,12 @@
-<div class="featured-workplace">
+<article class="workplace featured">
   <details>
     <% photo = workplace.photos.first %>
-    <div class="grid_2 alpha">
-      <%= link_to image_tag(photo.medium.url, :title => workplace.description, :alt => workplace.name, :width => 135, :height => 135), photo.large.url %>
+    <div class="grid_1 alpha">
+      <%= link_to image_tag(photo.medium.url, :title => workplace.description, :alt => workplace.name, :width => "100%"), photo.large.url %>
     </div>
-    <div class="grid_5 omega">
-      <h3><%= link_to workplace.name, workplace %></h3>
-      <p><%= truncate(workplace.company_description) %></p>
+    <div class="grid_6 omega">
+      <h2 class="tk-adelle"><%= link_to workplace.name, workplace %></h2>
+      <p><%= workplace_inline_description(workplace)%></p>
     </div>
   </details>
-  <br clear="both" />
-</div>
+</article>
