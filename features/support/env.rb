@@ -22,9 +22,7 @@ require 'cucumber/thinking_sphinx/external_world'
 require 'webmock/rspec'
 World(WebMock::API, WebMock::Matchers)
 
-require File.expand_path(File.dirname(__FILE__) + '/application_controller_mixin')
 require File.expand_path(File.dirname(__FILE__) + '/twitter_fake')
-
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
@@ -66,9 +64,6 @@ if defined?(ActiveRecord::Base)
   rescue LoadError => ignore_if_database_cleaner_not_present
   end
 end
-
-# Include the current user hack into the ApplicationController
-ApplicationController.send(:include, ApplicationControllerMixin)
 
 # Let's get rid of those shitty capybara-201010101010.html files
 Capybara.save_and_open_page_path = File.join(Rails.root, 'tmp', 'capybara')

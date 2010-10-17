@@ -20,6 +20,7 @@ module TwitterFake
     response_json = <<-JSON
       {
         "screen_name":"#{twitter_username}",
+        "user_id":"hello",
         "id":"#{twitter_id}",
         "profile_image_url":"http://a3.twimg.com/profile_images/518003899/username_normal.png"
       }
@@ -39,10 +40,10 @@ module TwitterFake
     })
   end
 
-  def stub_twitter_successful_access_token
+  def stub_twitter_successful_access_token(user_id = nil)
     stub_http_request_for_fake_twitter(:any, "#{BASE_URL}/oauth/access_token", {
       :status => 200,
-      :body => "oauth_token=this_need_not_be_real&oauth_token_secret=same_for_this"
+      :body => "oauth_token=this_need_not_be_real&oauth_token_secret=same_for_this&user_id=#{user_id}"
     })
   end
 
