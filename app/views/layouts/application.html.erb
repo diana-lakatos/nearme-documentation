@@ -40,10 +40,6 @@
     </div>
   </footer>
   <%= yield :script %>
-  <script type="text/javascript">
-    var rumbleUrl = 'http://railsrumble.com/teams/the-rad-warlike-annex';
-  </script>
-  <script type="text/javascript" src="http://blog.railsrumble.com/javascripts/rumble-r10-sash.js"></script>
   <%= render :partial => "layouts/analytics" if Rails.env.production? %>
   <script type="text/javascript" charset="utf-8">
     (function(){
