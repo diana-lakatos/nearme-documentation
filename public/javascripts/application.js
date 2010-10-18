@@ -96,7 +96,8 @@ $(function(){
   doPhotoFancyBox();
   doInlineBooking();
   doWorkplaceGoogleMaps();
-  getUserLocationForSearch();
+  if(window.location.pathname == "/")
+    getUserLocationForSearch();
   $("#workplace_search").submit(function() {
     Search.search($("#search").val());
     return false;

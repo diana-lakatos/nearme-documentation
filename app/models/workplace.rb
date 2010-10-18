@@ -76,19 +76,11 @@ class Workplace < ActiveRecord::Base
 
   def self.search_by_location(search, options = {})
 
-    return [ all, nil ] if search[:query] =~ /^earth$/i
-    return [ [], nil ] if search[:lat].nil?
-    return [ [], nil ] if search[:lng].nil?
+    return [] if search[:lat].nil? || search[:lng].nil?
 
-    # should we do a bounds search? places like australia and south
-    # australia are matched.
-    types = search[:types]
-    bounds_search = true if types == [ "country", "political" ] || types == [ "administrative_area_level_1", "political" ]
-    bounds = search[:bounds]
-
-    if bounds_search && bounds
-      distance = Geocoder.distance_between(bounds[:southwest][:lat].to_f, bounds[:southwest][:lng].to_f, 
-                                           bounds[:northeast][:lat].to_f, bounds[:northeast][:lng].to_f, :units => :km)
+    if (search[:southwest] && search[:southwest][:lat] && search[:southwest][:lng]) && (search[:northeast] && search[:northeast][:lat] && search[:northeast][:lng])
+      distance = Geocoder.distance_between(search[:southwest][:lat].to_f, search[:southwest][:lng].to_f, 
+                                           search[:northeast][:lat].to_f, search[:northeast][:lng].to_f, :units => :km)
       distance = (distance * 1000).to_f
     else
       distance = 30_000.0
