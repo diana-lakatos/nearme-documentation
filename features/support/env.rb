@@ -30,7 +30,7 @@ require File.expand_path(File.dirname(__FILE__) + '/twitter_fake')
 # steps to use the XPath syntax.
 Capybara.default_selector = :css
 
-Capybara.javascript_driver = :envjs
+Capybara.javascript_driver = :selenium
 Capybara.default_wait_time = 2
 
 # If you set this to false, any error raised from within your app will bubble

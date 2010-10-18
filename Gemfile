@@ -31,7 +31,6 @@ group :development, :test do
 end
 
 group :test do
-  gem 'capybara-envjs'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
   gem 'timecop'
   gem 'autotest'

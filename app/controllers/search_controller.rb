@@ -5,9 +5,9 @@ class SearchController < ApplicationController
   end
 
   def query
-    @search = params[:search]
-    @workplaces = Workplace.search_by_location(@search)
-    @workplaces = @workplaces.paginate :page => params[:page]
+    page = params.delete(:page)
+    @search = params
+    @workplaces = Workplace.search_by_location(@search, :include => :photos, :page => page, :per_page => 20)
     render :template => "search/results.html", :layout => false
   end
 

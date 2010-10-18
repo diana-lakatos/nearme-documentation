@@ -1,5 +1,7 @@
 class Workplace < ActiveRecord::Base
 
+  geocoded_by :address
+
   belongs_to :creator, :class_name => "User", :foreign_key => "creator_id"
   has_many :bookings, :dependent => :delete_all
   has_many :photos, :dependent => :delete_all do
@@ -72,17 +74,17 @@ class Workplace < ActiveRecord::Base
     end
   end
 
-  def self.search_by_location(options)
+  def self.search_by_location(search, options = {})
 
-    return [ all, nil ] if options[:query] =~ /^earth$/i
-    return [ [], nil ] if options[:lat].nil?
-    return [ [], nil ] if options[:lng].nil?
+    return [ all, nil ] if search[:query] =~ /^earth$/i
+    return [ [], nil ] if search[:lat].nil?
+    return [ [], nil ] if search[:lng].nil?
 
     # should we do a bounds search? places like australia and south
     # australia are matched.
-    types = options[:types]
+    types = search[:types]
     bounds_search = true if types == [ "country", "political" ] || types == [ "administrative_area_level_1", "political" ]
-    bounds = options[:bounds]
+    bounds = search[:bounds]
 
     if bounds_search && bounds
       distance = Geocoder.distance_between(bounds[:southwest][:lat].to_f, bounds[:southwest][:lng].to_f, 
@@ -92,8 +94,8 @@ class Workplace < ActiveRecord::Base
       distance = 30_000.0
     end
 
-    search(:geo => [ Geocoder.to_radians(options[:lat].to_f), Geocoder.to_radians(options[:lng].to_f) ],
-           :with => { "@geodist" => (0.0)..(distance) }, :order => "@geodist ASC, @relevance DESC")
+    search({ :geo => [ Geocoder.to_radians(search[:lat].to_f), Geocoder.to_radians(search[:lng].to_f) ],
+             :with => { "@geodist" => (0.0)..(distance) }, :order => "@geodist ASC, @relevance DESC" }.merge(options))
 
   end
 

@@ -6,13 +6,11 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 
-locations = {
-  'Icelab' => 'Unit 3, The Metropolitan, 1 Gordon St, Canberra City, ACT 2601 Australia',
-  'Thoughtworks Chicago' => '200 E Randolph St, 25th Floor, Chicago, IL 60601-6501, USA',
-  'Thoughtworks San Francisco' => '315 Montgomery Street, 16th Floor, San Francisco, CA 94104, USA'
-}
-user = User.create!(:name => "Desks Near Me", :email => "desksnearme@gmail.com")
-locations.each do |name, location|
-  Workplace.create!(:name => name, :creator => user, :maximum_desks => rand(20), :address => location, :company_description => "We're #{name}, and we rock the party!", :description => "Dont muck around at #{name}, we'll beat you up!")
+if User.all.empty?
+  puts "No users"
+  exit
 end
 
+200.times do
+  Workplace.create!( { :name => "Workplace #{i}", :maximum_desks => 10, :latitude => -34.705022, :longitude => 138.710672, :address => "34 olinda st craigmore", :creator => User.first } )
+end

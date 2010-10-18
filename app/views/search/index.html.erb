@@ -2,6 +2,7 @@
 <div class="grid_3 alpha">
   <h1 class="tk-adelle">Workplaces found near:</h1>
 </div>
+
 <div class="grid_9 omega">
   <%= render :partial => "search/bar", :locals => { :value => @location.try(:[], :name) || @query } %>
 </div>
@@ -10,71 +11,5 @@
   Loading...
 </div>
 
-<script type="text/javascript">
-
-  function search(query) {
-
-    var container = $("#results");
-    var loading = container.data("loader");
-    if(loading) {
-      container.html(loading);
-    } else {
-      container.data("loader", container.html());
-    }
-
-    var geocoder = new google.maps.Geocoder();
-    var input = $(this);
-    var val = $("#search").val();
-
-    geocoder.geocode({ address: val}, function(results, status) {
-
-      var result = results[0];
-
-      if(!result) {
-        alert("nothing found");
-      } else {
-
-        var geometry = result['geometry'];
-
-        var query = {
-          query: val,
-          lat: geometry['location'].lat(),
-          lng: geometry['location'].lng(),
-          types: result['types']
-        };
-
-        var bounds = geometry['bounds'];
-        if(bounds) {
-          var northeast = bounds.getNorthEast();
-          var southwest = bounds.getSouthWest();
-          query['bounds'] = {
-            northeast: { lat: northeast.lat(), lng: northeast.lng() },
-            southwest: { lat: southwest.lat(), lng: southwest.lng() }
-          }
-        }
-
-        $.ajax({
-          url: "/search/results",
-          method: "POST",
-          data: { search: query },
-          success: function(html) {
-            container.html(html);
-          }
-        })
-
-      }
-
-    });
-
-  };
-
-  $(document).ready(function() {
-    $("form.big_search").submit(function() {
-      search();
-      return false;
-    });
-    search();
-  });
-
-</script>
+<script type="text/javascript">Search.init("<%= search_results_path %>");</script>
 

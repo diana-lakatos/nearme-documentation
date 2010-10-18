@@ -97,4 +97,8 @@ $(function(){
   doInlineBooking();
   doWorkplaceGoogleMaps();
   getUserLocationForSearch();
+  $("#workplace_search").submit(function() {
+    Search.search($("#search").val());
+    return false;
+  });
 });
