@@ -7,7 +7,7 @@ module TwitterFake
   BASE_URL = "https://api.twitter.com"
 
   def disable_remote_http
-    WebMock.disable_net_connect!
+    WebMock.disable_net_connect!(:allow_localhost => true)
   end
 
   def stub_http_request_for_fake_twitter(method, url, response_options)

@@ -17,7 +17,6 @@ class Workplace < ActiveRecord::Base
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0
   validates_format_of :url, :with => URI::regexp(%w(http https)), :allow_blank => true
 
-  before_validation :fetch_coordinates
   before_save :apply_filter
 
   delegate :to_s, :to => :name
@@ -73,44 +72,32 @@ class Workplace < ActiveRecord::Base
     end
   end
 
-  def self.search_by_location(query)
-    geocoded = Geocoder.search(query).try(:[], 'results').try(:first)
-    return [ [], nil ] if geocoded.nil?
-    return [ all, nil ] if query =~ /^earth$/i
+  def self.search_by_location(options)
+
+    return [ all, nil ] if options[:query] =~ /^earth$/i
+    return [ [], nil ] if options[:lat].nil?
+    return [ [], nil ] if options[:lng].nil?
 
     # should we do a bounds search? places like australia and south
     # australia are matched.
-    types = geocoded['types']
+    types = options[:types]
     bounds_search = true if types == [ "country", "political" ] || types == [ "administrative_area_level_1", "political" ]
-    bounds = geocoded['geometry']['bounds']
-
-    location = { :name => geocoded['formatted_address'],
-                 :lat => geocoded['geometry']['location']['lat'],
-                 :lng => geocoded['geometry']['location']['lng'] }
+    bounds = options[:bounds]
 
     if bounds_search && bounds
-      distance = Geocoder.distance_between(bounds['southwest']['lat'], bounds['southwest']['lng'], 
-                                           bounds['northeast']['lat'], bounds['northeast']['lng'], :units => :km)
+      distance = Geocoder.distance_between(bounds[:southwest][:lat].to_f, bounds[:southwest][:lng].to_f, 
+                                           bounds[:northeast][:lat].to_f, bounds[:northeast][:lng].to_f, :units => :km)
       distance = (distance * 1000).to_f
     else
       distance = 30_000.0
     end
 
-    [ search(:geo => [ Geocoder.to_radians(location[:lat]), Geocoder.to_radians(location[:lng]) ],
-             :with => { "@geodist" => (0.0)..(distance) }, :order => "@geodist ASC, @relevance DESC") , location ]
+    search(:geo => [ Geocoder.to_radians(options[:lat].to_f), Geocoder.to_radians(options[:lng].to_f) ],
+           :with => { "@geodist" => (0.0)..(distance) }, :order => "@geodist ASC, @relevance DESC")
 
   end
 
   private
-
-    def fetch_coordinates
-      geocoded = Geocoder.search(address).try(:[], 'results').try(:first)
-      if geocoded
-        self.latitude  = geocoded['geometry']['location']['lat'] unless latitude
-        self.longitude = geocoded['geometry']['location']['lng'] unless longitude
-        self.formatted_address = geocoded['formatted_address'] unless formatted_address
-      end
-    end
 
     def apply_filter
       self.description_html         = redcloth(description)

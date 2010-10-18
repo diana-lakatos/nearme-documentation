@@ -16,6 +16,7 @@ DesksnearMe::Application.routes.draw do
   match "/dashboard", :to => "dashboard#index", :as => :dashboard
 
   match "/search", :to => "search#index", :as => :search
+  match "/search/results", :to => "search#query", :as => :search_results
 
   resources :authentications
 

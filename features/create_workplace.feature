@@ -13,12 +13,14 @@ Feature: A user can create and edit a workplace
       And I should see "Maximum desks"
       And I should see "Confirm bookings"
 
+  @javascript
   Scenario: A user can successfully create a workplace
     Given a user exists
       And I am logged in as the user
       And I am on the new workplace page
      When I fill in "Name" with "Joe's Codin' Garage"
-      And I fill in "Address" with "1 St John St Launceston TAS 7250"
+      And I fill in "Address" with "34 Olinda St Craigmore"
+      And I follow "34 Olinda St, Craigmore SA 5114, Australia"
       And I fill in "Maximum desks" with "2"
       And I fill in "Company URL" with "http://site.com"
       And I choose "Yes"

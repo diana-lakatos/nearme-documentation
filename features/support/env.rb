@@ -30,6 +30,9 @@ require File.expand_path(File.dirname(__FILE__) + '/twitter_fake')
 # steps to use the XPath syntax.
 Capybara.default_selector = :css
 
+Capybara.javascript_driver = :envjs
+Capybara.default_wait_time = 2
+
 # If you set this to false, any error raised from within your app will bubble
 # up to your step definition and out to cucumber unless you catch it somewhere
 # on the way. You can make Rails rescue errors and render error pages on a
@@ -65,16 +68,16 @@ if defined?(ActiveRecord::Base)
   end
 end
 
-# Always clean up old indexes after tests
+# Always clean up old indexes before tests
 Before do
-  WebMock.disable_net_connect!
   ThinkingSphinx::Test.index
-  GmapsFake.stub_requests
 end
 
 # Let's get rid of those shitty capybara-201010101010.html files
 Capybara.save_and_open_page_path = File.join(Rails.root, 'tmp', 'capybara')
 
 Cucumber::ThinkingSphinx::ExternalWorld.new
+
+WebMock.disable_net_connect!(:allow_localhost => true)
 
 $VERBOSE = nil

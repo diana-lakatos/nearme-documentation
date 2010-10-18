@@ -20,12 +20,6 @@ gem 'thinking-sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx
                        :branch => 'rails3',
                        :require => 'thinking_sphinx'
 
-gem 'exception_notification', :git => "git://github.com/rails/exception_notification", :require => 'exception_notifier'
-
-group :production do
-
-end
-
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
@@ -37,6 +31,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'capybara-envjs'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
   gem 'timecop'
   gem 'autotest'
@@ -47,4 +42,8 @@ group :test do
   gem 'pickle'
   gem 'factory_girl_rails'
   gem 'launchy'
+end
+
+group :production do
+  gem 'exception_notification', :git => "git://github.com/rails/exception_notification", :require => 'exception_notifier'
 end
