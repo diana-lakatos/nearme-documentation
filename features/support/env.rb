@@ -70,7 +70,9 @@ end
 
 # Always clean up old indexes before tests
 Before do
+  WebMock.disable_net_connect!
   ThinkingSphinx::Test.index
+  GmapsFake.stub_requests
 end
 
 # Let's get rid of those shitty capybara-201010101010.html files

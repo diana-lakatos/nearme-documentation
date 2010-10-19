@@ -7,7 +7,7 @@ Feature: A user can search for a workplace
     Given Google is working correctly accepting mapping API calls
       And I go to the home page
      When I search for ""
-     Then I should see "Please enter a city or address"
+     Then I should see "No results found"
 
   Scenario: A user searches for something silly
     Given Google is working correctly accepting mapping API calls
@@ -21,7 +21,6 @@ Feature: A user can search for a workplace
      When I search for "darwin"
      Then I should see "No results found"
 
-  @javascript
   Scenario: A user searches using a location that that yields results
     Given Google is working correctly accepting mapping API calls
       And a workplace exists with name: "Rad Annex", latitude: -34.92577, longitude: 138.599732
@@ -32,18 +31,6 @@ Feature: A user can search for a workplace
      Then I should see "Rad Annex"
       And I should not see "Crap Annex"
 
-  @javascript
-  Scenario: A user searches for "earth" and see's everything
-    Given Google is working correctly accepting mapping API calls
-      And a workplace exists with name: "Rad Annex"
-      And a workplace exists with name: "Crap Annex"
-     When I go to the home page
-      And I search for "earth"
-      And I should see a Google Map
-     Then I should see "Rad Annex"
-      And I should see "Crap Annex"
-
-  @javascript
   Scenario: A user searches for "australia" and see only stuff in that country
     Given Google is working correctly accepting mapping API calls
       And a workplace exists with name: "Rad Annex", address: "Chicago, IL 60601, USA"

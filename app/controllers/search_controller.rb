@@ -30,7 +30,7 @@ class SearchController < ApplicationController
     def extract_search_from_geocoding(query)
       search = { :query => query }
       geocoded = Geocoder.search(query)
-      return nil if geocoded.nil?
+      return search if geocoded.nil?
       
       loc = geocoded['results'].first
       geometry = loc['geometry']

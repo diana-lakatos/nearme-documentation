@@ -2,6 +2,7 @@
 
   <% textile_hint = "(Parsed using #{link_to("Textile", "http://en.wikipedia.org/wiki/Textile_%28markup_language%29", :target => "_blank")}).".html_safe %>
 
+  <%= f.input :local_geocoding, :as => :hidden %>
   <%= f.input :latitude, :as => :hidden %>
   <%= f.input :longitude, :as => :hidden %>
   <%= f.input :formatted_address, :as => :hidden %>
@@ -59,8 +60,6 @@
 
   $("#address-suggestions li a").live("click", function() {
     var selection = $(this);
-    console.log(selection);
-    console.log(selection.attr("data-lat"));
     $("#workplace_latitude").val(selection.attr("data-lat"));
     $("#workplace_longitude").val(selection.attr("data-lng"));
     $("#workplace_formatted_address").val(selection.html());
@@ -68,6 +67,10 @@
     $("#address-suggestions").remove();
     $("#workplace_address").focus();
     return false;
+  });
+
+  $(function() {
+    $("#workplace_local_geocoding").val(true);
   });
 
 </script>

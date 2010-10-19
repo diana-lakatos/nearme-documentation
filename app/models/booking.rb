@@ -18,6 +18,8 @@ class Booking < ActiveRecord::Base
   validates_uniqueness_of :date, :on => :create, :scope => [:user_id, :workplace_id], :message => "you have already booked a desk for that date."
   validate :date_not_past?
 
+  after_create :auto_confirm_booking
+
   def date_not_past?
     if self.date.past?
       errors.add(:date, "Who do you think you are, Marty McFly? You can't book a desk in the past!")
@@ -43,7 +45,7 @@ class Booking < ActiveRecord::Base
   end
 
   protected
-    def after_create
+    def auto_confirm_booking
       confirm! unless workplace.confirm_bookings?
     end
 end
