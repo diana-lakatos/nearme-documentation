@@ -1,12 +1,14 @@
 var Search = {
 
-  init: function(path) {
+  init: function(path, serverResults) {
+
+    if(serverResults) return false;
 
     this.hasInit = true;
 
     $(".pagination a").live("click", function(e) {
 
-      var url = $(this).attr("href").replace(/^(.+)?\/search\/results/, "");
+      var url = $(this).attr("href").replace(/^(.+)?\/search/, "");
       $.address.value(url);
 
       // scroll to top

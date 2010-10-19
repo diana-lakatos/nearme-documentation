@@ -1,15 +1,14 @@
-
 <div class="grid_3 alpha">
   <h1 class="tk-adelle">Workplaces found near:</h1>
 </div>
-
 <div class="grid_9 omega">
-  <%= render :partial => "search/bar", :locals => { :value => @location.try(:[], :name) || @query } %>
+  <%= render :partial => "search/bar", :locals => { :value => @query } %>
 </div>
-
 <div id="results">
-  Loading...
+  <% if @workplaces %>
+    <%= render :partial => "search/workplaces" %>
+  <% else %>
+    Loading...
+  <% end %>
 </div>
-
-<script type="text/javascript">Search.init("<%= search_results_path %>");</script>
-
+<script type="text/javascript">Search.init("<%= search_path %>", <%= @workplaces ? "true" : "false" %>);</script>
