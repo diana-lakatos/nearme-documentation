@@ -24,7 +24,7 @@ Feature: An admin can edit shit
       And I select "Stevey" from "Creator"
       And I choose "Yes"
       And I press "Create Workplace"
-     Then a workplace should exist with name: "Joe's Codin' Garage"
+     Then 1 workplaces should exist with name: "Joe's Codin' Garage"
       And I should be on the workplace's page
       And I should see "Joe's Codin' Garage"
       And I should see "http://site.com"

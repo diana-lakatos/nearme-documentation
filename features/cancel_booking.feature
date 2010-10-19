@@ -5,6 +5,7 @@ Feature: A user can cancel a booking
 
   Background:
     Given a user exists
+      And the date is "17th October 2010"
       And I am logged in as the user
       And the following workplaces exist:
         | workplace          | name               |

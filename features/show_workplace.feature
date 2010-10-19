@@ -4,13 +4,12 @@ Feature: A user can see a workplace
   Can wee a workplace
 
   Scenario: A user can see a workplace
-    Given a workplace exists with name: "Rad Annex", description: "Its a great place to work", url: "http://google.com", formatted_address: "1 Somewhere St"
+    Given a workplace exists with name: "Rad Annex", description: "Its a great place to work", url: "http://google.com"
      When I go to the workplace's page
      Then I should see "Rad Annex"
       And I should see "Its a great place to work"
       And I should see a Google Map
       And I should see "http://google.com"
-      And I should see "1 Somewhere St"
   
   Scenario: A user can see if a workplace is a fake
     Given a workplace exists with fake: true

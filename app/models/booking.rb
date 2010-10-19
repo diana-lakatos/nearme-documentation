@@ -1,7 +1,7 @@
 class Booking < ActiveRecord::Base
   belongs_to :workplace
   belongs_to :user
-
+  
   scope :on, lambda { |date|
     where(:date => date).where(:state => [:confirmed, :unconfirmed])
   }

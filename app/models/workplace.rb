@@ -98,7 +98,7 @@ class Workplace < ActiveRecord::Base
 
   def fetch_coordinates
     # If we aren't locally geocoding (cukes and people with JS off)
-    if !local_geocoding && address_changed?
+    if local_geocoding.blank? && address_changed?
       geocoded = Geocoder.search(address).try(:[], 'results').try(:first)
       if geocoded
         self.latitude = geocoded['geometry']['location']['lat']
