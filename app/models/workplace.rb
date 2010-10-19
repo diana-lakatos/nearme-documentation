@@ -100,7 +100,7 @@ class Workplace < ActiveRecord::Base
     # If we aren't locally geocoding (cukes and people with JS off)
     if !local_geocoding && address_changed?
       geocoded = Geocoder.search(address).try(:[], 'results').try(:first)
-      if geocoded && (!latitude || !longitude && new_record?)
+      if geocoded
         self.latitude = geocoded['geometry']['location']['lat']
         self.longitude = geocoded['geometry']['location']['lng']
         self.formatted_address = geocoded['formatted_address']

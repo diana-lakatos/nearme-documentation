@@ -1,0 +1,474 @@
+{
+  "status": "OK",
+  "results": [ {
+    "types": [ "locality", "political" ],
+    "formatted_address": "Darwin, NV 89408, USA",
+    "address_components": [ {
+      "long_name": "Darwin",
+      "short_name": "Darwin",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Fernley",
+      "short_name": "Fernley",
+      "types": [ "administrative_area_level_3", "political" ]
+    }, {
+      "long_name": "Lyon",
+      "short_name": "Lyon",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Nevada",
+      "short_name": "NV",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    }, {
+      "long_name": "89408",
+      "short_name": "89408",
+      "types": [ "postal_code" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 39.5893577,
+        "lng": -119.1021082
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 39.5721582,
+          "lng": -119.1341230
+        },
+        "northeast": {
+          "lat": 39.6065530,
+          "lng": -119.0700934
+        }
+      }
+    }
+  }, {
+    "types": [ "locality", "political" ],
+    "formatted_address": "Darwin, TN 38109, USA",
+    "address_components": [ {
+      "long_name": "Darwin",
+      "short_name": "Darwin",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Memphis",
+      "short_name": "Memphis",
+      "types": [ "administrative_area_level_3", "political" ]
+    }, {
+      "long_name": "Shelby",
+      "short_name": "Shelby",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Tennessee",
+      "short_name": "TN",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    }, {
+      "long_name": "38109",
+      "short_name": "38109",
+      "types": [ "postal_code" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 35.0204320,
+        "lng": -90.1190030
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 35.0172844,
+          "lng": -90.1221506
+        },
+        "northeast": {
+          "lat": 35.0235796,
+          "lng": -90.1158554
+        }
+      }
+    }
+  }, {
+    "types": [ "locality", "political" ],
+    "formatted_address": "Darwin, CA, USA",
+    "address_components": [ {
+      "long_name": "Darwin",
+      "short_name": "Darwin",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Lone Pine",
+      "short_name": "Lone Pine",
+      "types": [ "administrative_area_level_3", "political" ]
+    }, {
+      "long_name": "Inyo",
+      "short_name": "Inyo",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "California",
+      "short_name": "CA",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 36.2679969,
+        "lng": -117.5917348
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 36.2574390,
+          "lng": -117.6127770
+        },
+        "northeast": {
+          "lat": 36.2857870,
+          "lng": -117.5727220
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 36.2574390,
+          "lng": -117.6127770
+        },
+        "northeast": {
+          "lat": 36.2857870,
+          "lng": -117.5727220
+        }
+      }
+    }
+  }, {
+    "types": [ "locality", "political" ],
+    "formatted_address": "Darwin, OH 45769, USA",
+    "address_components": [ {
+      "long_name": "Darwin",
+      "short_name": "Darwin",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Bedford",
+      "short_name": "Bedford",
+      "types": [ "administrative_area_level_3", "political" ]
+    }, {
+      "long_name": "Meigs",
+      "short_name": "Meigs",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Ohio",
+      "short_name": "OH",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    }, {
+      "long_name": "45769",
+      "short_name": "45769",
+      "types": [ "postal_code" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 39.1455120,
+        "lng": -82.0227810
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 39.1423644,
+          "lng": -82.0259286
+        },
+        "northeast": {
+          "lat": 39.1486596,
+          "lng": -82.0196334
+        }
+      }
+    }
+  }, {
+    "types": [ "locality", "political" ],
+    "formatted_address": "Darwin, OK 74525, USA",
+    "address_components": [ {
+      "long_name": "Darwin",
+      "short_name": "Darwin",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Central Atoka",
+      "short_name": "Central Atoka",
+      "types": [ "administrative_area_level_3", "political" ]
+    }, {
+      "long_name": "Atoka",
+      "short_name": "Atoka",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Oklahoma",
+      "short_name": "OK",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    }, {
+      "long_name": "74525",
+      "short_name": "74525",
+      "types": [ "postal_code" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 34.2456930,
+        "lng": -95.7776870
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 34.2425454,
+          "lng": -95.7808346
+        },
+        "northeast": {
+          "lat": 34.2488406,
+          "lng": -95.7745394
+        }
+      }
+    }
+  }, {
+    "types": [ "locality", "political" ],
+    "formatted_address": "Darwin, IL 62477, USA",
+    "address_components": [ {
+      "long_name": "Darwin",
+      "short_name": "Darwin",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Clark",
+      "short_name": "Clark",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Illinois",
+      "short_name": "IL",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    }, {
+      "long_name": "62477",
+      "short_name": "62477",
+      "types": [ "postal_code" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 39.2833716,
+        "lng": -87.6119696
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 39.2802240,
+          "lng": -87.6151172
+        },
+        "northeast": {
+          "lat": 39.2865192,
+          "lng": -87.6088220
+        }
+      }
+    }
+  }, {
+    "types": [ "locality", "political" ],
+    "formatted_address": "Darwin, VA 24230, USA",
+    "address_components": [ {
+      "long_name": "Darwin",
+      "short_name": "Darwin",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Kenady",
+      "short_name": "Kenady",
+      "types": [ "administrative_area_level_3", "political" ]
+    }, {
+      "long_name": "Dickenson",
+      "short_name": "Dickenson",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Virginia",
+      "short_name": "VA",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    }, {
+      "long_name": "24230",
+      "short_name": "24230",
+      "types": [ "postal_code" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 37.1019400,
+        "lng": -82.4895940
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 37.0987924,
+          "lng": -82.4927416
+        },
+        "northeast": {
+          "lat": 37.1050876,
+          "lng": -82.4864464
+        }
+      }
+    }
+  }, {
+    "types": [ "locality", "political" ],
+    "formatted_address": "Darwin, MN, USA",
+    "address_components": [ {
+      "long_name": "Darwin",
+      "short_name": "Darwin",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Meeker",
+      "short_name": "Meeker",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Minnesota",
+      "short_name": "MN",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 45.0970120,
+        "lng": -94.4040570
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 45.0904279,
+          "lng": -94.4156230
+        },
+        "northeast": {
+          "lat": 45.1021239,
+          "lng": -94.3936780
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 45.0904279,
+          "lng": -94.4156230
+        },
+        "northeast": {
+          "lat": 45.1021239,
+          "lng": -94.3936780
+        }
+      }
+    }
+  }, {
+    "types": [ "locality", "political" ],
+    "formatted_address": "Darwin NT 0822, Australia",
+    "address_components": [ {
+      "long_name": "Darwin",
+      "short_name": "Darwin",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Northern Territory",
+      "short_name": "NT",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "Australia",
+      "short_name": "AU",
+      "types": [ "country", "political" ]
+    }, {
+      "long_name": "0822",
+      "short_name": "0822",
+      "types": [ "postal_code" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": -12.4613340,
+        "lng": 130.8419040
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": -12.4717900,
+          "lng": 130.8332790
+        },
+        "northeast": {
+          "lat": -12.4522910,
+          "lng": 130.8513510
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": -12.4717900,
+          "lng": 130.8332790
+        },
+        "northeast": {
+          "lat": -12.4522910,
+          "lng": 130.8513510
+        }
+      }
+    }
+  }, {
+    "types": [ "neighborhood", "political" ],
+    "formatted_address": "Darwin-Kennard, Bryan, TX 77803, USA",
+    "address_components": [ {
+      "long_name": "Darwin-Kennard",
+      "short_name": "Darwin-Kennard",
+      "types": [ "neighborhood", "political" ]
+    }, {
+      "long_name": "Bryan",
+      "short_name": "Bryan",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Bryan-College Station",
+      "short_name": "Bryan-College Station",
+      "types": [ "administrative_area_level_3", "political" ]
+    }, {
+      "long_name": "Brazos",
+      "short_name": "Brazos",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Texas",
+      "short_name": "TX",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    }, {
+      "long_name": "77803",
+      "short_name": "77803",
+      "types": [ "postal_code" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 30.6660871,
+        "lng": -96.3901020
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 30.6631284,
+          "lng": -96.3931166
+        },
+        "northeast": {
+          "lat": 30.6694236,
+          "lng": -96.3868214
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 30.6644390,
+          "lng": -96.3922730
+        },
+        "northeast": {
+          "lat": 30.6681130,
+          "lng": -96.3876650
+        }
+      }
+    }
+  } ]
+}
