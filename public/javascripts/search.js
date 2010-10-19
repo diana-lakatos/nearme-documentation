@@ -2,6 +2,7 @@ var Search = {
 
   init: function(path, serverResults) {
 
+    // If the server has return results, dont do any ajax love.
     if(serverResults) return false;
 
     this.hasInit = true;
