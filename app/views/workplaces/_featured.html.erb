@@ -1,11 +1,11 @@
-<article class="workplace featured">
+<article class="workplace">
   <details>
     <% photo = workplace.photos.first %>
     <div class="grid_1 alpha">
-      <%= link_to image_tag(photo.medium.url, :title => workplace.description, :alt => workplace.name, :width => "100%"), photo.large.url %>
+      <%= link_to image_tag(photo.medium.url, :title => workplace.description, :alt => workplace.name), workplace %>
     </div>
     <div class="grid_6 omega">
-      <h2 class="tk-adelle"><%= link_to workplace.name, workplace %></h2>
+      <h2 class="tk-ratio-display"><%= link_to workplace.name, workplace %></h2>
       <p><%= workplace_inline_description(workplace, 70)%></p>
     </div>
   </details>

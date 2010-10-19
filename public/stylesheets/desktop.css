@@ -1,6 +1,196 @@
 /*
-		Site wide styles for widgets and elements
+  desktop.css
+	===========
+	Styles specifically for screens >720 or not mobile.
 */
+
+header {
+	background: #9f7d5d url(/images/header.jpg) repeat-x top center;
+	height: 100px;
+	margin-bottom: 1px;
+}
+
+header a h1 {
+	width: 250px;
+	height: 50px;
+	float: left;
+	margin-top: 25px;
+	margin-right: 50px;
+	text-indent: -9001px; /* Its over 9000! */
+	overflow: hidden;
+	background-color: #58412e;
+	background-color: rgba(0,0,0,0.2);
+	background-image: url(/images/logo.png);
+	background-repeat: no-repeat;
+	background-position: center top;
+	border-radius: 25px 25px;
+	-webkit-border-radius: 25px 25px;
+	-moz-border-radius: 25px 25px;
+	-o-border-radius: 25px 25px;
+	border-top: 1px solid #5D4430;
+	border-bottom: 1px solid #957962;
+}
+
+header a:hover h1 {
+	background-position: center bottom;
+}
+
+header nav ul li {
+	float: left;
+	list-style: none;
+	height: 40px;
+	margin-top: 30px;
+	text-align: center;
+	background: rgba(0,0,0,0.2);
+	border-top: 1px solid rgba(0,0,0,0.2);
+	border-bottom: 1px solid rgba(255,255,255,0.4);
+	border-radius: 20px;
+	-moz-border-radius: 20px;
+}
+
+header nav ul li a {
+	line-height: 40px;
+	color: #FFF;
+	text-shadow: 0px 1px 0px rgba(0,0,0,0.3);
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 12px;
+	display: block;
+	height: 40px;
+}
+
+header nav ul li.joined.alpha {
+	margin-right: 0;
+	border-radius: 20px 0 0 20px;
+	-moz-border-radius: 20px 0 0 20px;
+	-o-border-radius: 20px 0 0 20px;
+	border-right: 1px solid rgba(0,0,0,0.2);
+}
+
+header nav ul li.joined.omega {
+	margin-left: 0;
+	border-radius: 0 20px 20px 0;
+	-moz-border-radius: 0 20px 20px 0;
+	-o-border-radius: 0 20px 20px 0;
+	border-left: 1px solid rgba(255,255,255,0.1)
+}
+
+header nav ul li a:link, header nav ul li a:visited {
+	color: #FFF;
+	text-decoration: none;
+}
+
+header nav ul li:hover {
+	background: rgba(255,255,255,0.2);
+	border-bottom-color: rgba(0,0,0,0.3);
+	border-top-color: transparent;
+}
+
+section#content {
+	background: #FFF url(/images/section.jpg) repeat-x top center;
+	overflow: hidden;
+	padding: 40px 0;
+	min-height: 550px;
+}
+
+/* FIX BELOW 
+	->>>>>>>>>>>>> */
+
+section h1 {
+	font-size: 34px;
+	line-height: 48px;
+	font-weight: 100;
+	margin-bottom: 12px;
+}
+
+section h1.fat {
+	font-weight: 800;
+}
+
+section h1.tk-chaparral-pro {
+	font-weight: 800;
+	color: red; /* THIS IS HERE ON PURPOSE: Need to deprecate this font */
+}
+
+section h1.tk-ratio-display {
+	font-weight: 800;
+	border-bottom: 1px solid #AAA;
+}
+
+
+section h2 {
+	font-size: 22px;
+	line-height: 48px;
+	font-weight: normal;
+}
+
+section p {
+	margin-bottom: 12px;
+}
+
+section p:last-of-type {
+	margin-bottom: 0px;
+}
+
+aside h1 {
+	font-size: 24px;
+}
+
+aside h2 {
+	font-size: 22px;
+}
+
+aside section {
+	background: #F1F1F1;
+	background: rgba(255,255,255,0.5);
+	padding: 0 12px 12px 12px;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-o-border-radius: 8px;
+	margin-bottom: 24px;
+}
+
+hr {
+	margin: 12px 0;
+	border: none;
+	background: #DDD;
+	height: 2px;
+}
+
+aside section {
+	/* overflow: hidden; */
+  display: -moz-inline-stack;
+  display: inline-block;
+  width: 100%;
+
+}
+
+/* <<<<<< */
+
+/* === HYPER GLOBAL === */
+
+div.overlay-container form.simple_form label {
+	width: auto;
+}
+
+div.overlay-container form.simple_form input {
+	margin-left: 0;
+}
+
+p.em {
+	font-size: 16px;
+	line-height: 28px;
+} /* Give a paragraph some emphasis, not the oblique kind */
+
+ul#photos, #photos ul {
+  margin: 0;
+}
+
+#photos li {
+  list-style: none;
+  float: left;
+}
+
 
 /* === Workplace Detail */
 
@@ -28,7 +218,7 @@ article.workplace section.details h2 {
 
 section.list article.workplace details {
   float: left;
-  width: 50%;
+/*  width: 50%;*/
   padding-top: 20px;
 }
 
@@ -40,17 +230,18 @@ article.workplace div.business_description p {
 section.list article.workplace {
 	border-bottom: 1px solid #DDD;
 	padding-bottom: 6px;
+	overflow: hidden;
 }
 
-section.list article.workplace h3 {
-	font-size: 16px;
+section.list article.workplace h2 {
+	font-weight: 500;
 }
 
-section.list article.workplace h3 a:link, section.list article.workplace h3 a:visited {
+section.list article.workplace h2 a:link, section.list article.workplace h2 a:visited {
 	text-decoration: none;
 }
 
-section.list article.workplace h3 a:hover {
+section.list article.workplace h2 a:hover {
 	text-decoration: underline;
 }
 
@@ -68,14 +259,16 @@ section.list article.workplace table td details {
   padding-top: inherit;
 }
 
-section.list article.workplace details img {
-  float: left;
-  margin-right: 10px;
+section.list article.workplace img {
+	width: 54px;
+	padding: 2px;
+	background: #FFF;
+	background: rgba(255,255,255,0.6);
 }
 
 section.list article.workplace table.bookings {
   float: left;
-  width: 50%;
+/*  width: 50%;*/
 }
 
 article.workplace aside address {
@@ -89,6 +282,25 @@ article.workplace aside address {
 article.workplace aside address a {
 	font-size: 12pxf;
 }
+
+/* === Section Featured */
+
+/*section.featured {
+	overflow: hidden;
+}
+
+section.featured article.workplace {
+	overflow: hidden;
+	margin-bottom: 12px;
+}
+
+section.featured article.workplace:last-child {
+	margin-bottom: 0;
+}
+
+section.featured article.workplace h2 {
+	line-height: 32px;
+}*/
 
 /* === Booking table */
 
@@ -277,6 +489,7 @@ div.search input.geolocation.active:active {
 
 section#headline {
 	margin: 0 0 24px 0;
+	padding: 0 0 24px;
 	overflow: hidden;
 }
 
@@ -296,6 +509,14 @@ section#headline p {
 
 section#headline .search {
 	margin-top: 24px;
+}
+
+/* === Section Block */
+
+section.block {
+	margin: 24px 0;
+	overflow: hidden;
+	clear: both;
 }
 
 /* === Search results */
@@ -851,31 +1072,6 @@ ul.photos li form input.rm {
 	float: right;
 }
 
-/* === Section Featured */
-
-section.featured {
-	overflow: hidden;
-}
-
-section.featured article.workplace {
-	overflow: hidden;
-	margin-bottom: 12px;
-}
-
-section.featured article.workplace:last-child {
-	margin-bottom: 0;
-}
-
-section.featured article.workplace h2 {
-	line-height: 32px;
-}
-
-section.featured article.workplace img {
-	padding: 3px;
-	background: #FFF;
-	background: rgba(255,255,255,0.6);
-}
-
 /* == Rails Rumble Sash*/
 
 #rr10sash {
@@ -918,4 +1114,19 @@ section.search div#results div.loading {
 	margin-top: 12px;
 	margin-left: 320px;
 	padding: 12px;
+}
+
+/* == Tell them when notification */
+
+#TTWNotify {
+	padding: 3px 12px;
+	background: #333;
+	color: #EEE;
+	text-align: center;
+	font-weight: bold;
+	border-bottom: 1px solid #000;
+}
+
+#TTWNotify a:link, #TTWNotify a:visited {
+	color: #FFF;
 }

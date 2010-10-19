@@ -1,9 +1,8 @@
-
 <section id="headline">
-  <div class="grid_5 image">
+  <div class="grid_5 image alpha">
     <%= image_tag "desk_marker.png" %>
   </div>
-  <div class="grid_7 aside_text">
+  <div class="grid_7 aside_text omega">
     <h2 class="tk-chaparral-pro">Where do you want to work today?</h2>
     <p>We are an awesome Rails Rumble app. Helping freelancers get out of the house!</p>
     <div class="search">
@@ -13,21 +12,25 @@
   </div>
 </section>
 
-<div class="grid_7 alpha fancy-photos">
-  <h1 class="tk-chaparral-pro">Featured Workplaces</h1>
-  <section class="featured">
-    <%= render :partial => "workplaces/featured", :collection => @featured, :as => :workplace %>
-  </section>
-</div>
+<section id="featured" class="block">
+  <div class="grid_5 alpha">
+    <p class="em">Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to see great places where they can work.</p>
+    <p>There are plenty of fantastic companies worldwide, such as Inspire9, The Frontier Group, eLabs, and Obtiva, who offer up their fantastic working environment to individuals who need a change of scenery or companions. This is fantastic! Unfortunately, until now, it hasn't been easy for individuals to find places like this or to even know that they existed.</p>
+    <p>This is why we built Desks Near Me. So, start searching for a place to work above, or <%= link_to "add a place", new_workplace_path %> now!</p>
+    
+    <%= link_to new_workplace_path, :class => "huge_ass_button workplace" do %>
+      <%= image_tag "marker-big.png" %> Add my workplace
+    <% end %>
+  </div>
+  <div class="grid_7 omega">
+    <h1 class="tk-ratio-display">Featured Workplaces</h1>
+    <section class="list featured">
+      <%= render :partial => "workplaces/featured", :collection => @featured, :as => :workplace %>
+    </section>
+  </div>
+</section>
 
-<div class="grid_5 omega">
-  <%= render :partial => "layouts/sidebar" %>
-  <%= link_to new_workplace_path, :class => "huge_ass_button workplace" do %>
-    <%= image_tag "marker-big.png" %> Add my workplace
-  <% end %>
-</div>
-<br clear="both" />
-<div class="grid_12">
+<section id="about" class="block">
   <div class="grid_5 alpha">
     <h1 class="tk-chaparral-pro">What now?</h1>
     <p class="em">
@@ -51,4 +54,4 @@
     <p>But thats not all, we have other goodies up our sleeve! (You should see our backlog...) From everyone on the team, thanks for visiting and we hope you have fun with this service.</p>
     <em>&mdash; The Rad Warlike Annex</em>
   </div>
-</div>
+</section>
