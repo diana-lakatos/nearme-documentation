@@ -1,7 +1,6 @@
 class Booking < ActiveRecord::Base
   belongs_to :workplace
   belongs_to :user
-  after_create :confirm_booking
   
   scope :on, lambda { |date|
     where(:date => date).where(:state => [:confirmed, :unconfirmed])
@@ -18,6 +17,8 @@ class Booking < ActiveRecord::Base
   validates_presence_of :date
   validates_uniqueness_of :date, :on => :create, :scope => [:user_id, :workplace_id], :message => "you have already booked a desk for that date."
   validate :date_not_past?
+
+  after_create :auto_confirm_booking
 
   def date_not_past?
     if self.date.past?
@@ -44,7 +45,7 @@ class Booking < ActiveRecord::Base
   end
 
   protected
-    def confirm_booking
+    def auto_confirm_booking
       confirm! unless workplace.confirm_bookings?
     end
 end

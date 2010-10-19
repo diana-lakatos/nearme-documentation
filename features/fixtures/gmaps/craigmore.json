@@ -1,0 +1,49 @@
+{
+  "status": "OK",
+  "results": [ {
+    "types": [ "street_address" ],
+    "formatted_address": "34 Olinda St, Craigmore SA 5114, Australia",
+    "address_components": [ {
+      "long_name": "34",
+      "short_name": "34",
+      "types": [ "street_number" ]
+    }, {
+      "long_name": "Olinda St",
+      "short_name": "Olinda St",
+      "types": [ "route" ]
+    }, {
+      "long_name": "Craigmore",
+      "short_name": "Craigmore",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "South Australia",
+      "short_name": "SA",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "Australia",
+      "short_name": "AU",
+      "types": [ "country", "political" ]
+    }, {
+      "long_name": "5114",
+      "short_name": "5114",
+      "types": [ "postal_code" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": -34.7050220,
+        "lng": 138.7106720
+      },
+      "location_type": "ROOFTOP",
+      "viewport": {
+        "southwest": {
+          "lat": -34.7081696,
+          "lng": 138.7075244
+        },
+        "northeast": {
+          "lat": -34.7018744,
+          "lng": 138.7138196
+        }
+      }
+    }
+  } ]
+}

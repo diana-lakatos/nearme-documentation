@@ -1,0 +1,39 @@
+{
+  "status": "OK",
+  "results": [ {
+    "types": [ "country", "political" ],
+    "formatted_address": "Australia",
+    "address_components": [ {
+      "long_name": "Australia",
+      "short_name": "AU",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": -25.2743980,
+        "lng": 133.7751360
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": -43.9215535,
+          "lng": 100.9919321
+        },
+        "northeast": {
+          "lat": -3.2829969,
+          "lng": 166.5583399
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": -43.9572000,
+          "lng": 112.5000000
+        },
+        "northeast": {
+          "lat": -9.2065000,
+          "lng": 159.3320000
+        }
+      }
+    }
+  } ]
+}

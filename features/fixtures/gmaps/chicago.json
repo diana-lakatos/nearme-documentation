@@ -1,0 +1,55 @@
+{
+  "status": "OK",
+  "results": [ {
+    "types": [ "postal_code" ],
+    "formatted_address": "Chicago, IL 60601, USA",
+    "address_components": [ {
+      "long_name": "60601",
+      "short_name": "60601",
+      "types": [ "postal_code" ]
+    }, {
+      "long_name": "Chicago",
+      "short_name": "Chicago",
+      "types": [ "locality", "political" ]
+    }, {
+      "long_name": "Cook",
+      "short_name": "Cook",
+      "types": [ "administrative_area_level_2", "political" ]
+    }, {
+      "long_name": "Illinois",
+      "short_name": "IL",
+      "types": [ "administrative_area_level_1", "political" ]
+    }, {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": [ "country", "political" ]
+    } ],
+    "geometry": {
+      "location": {
+        "lat": 41.8839532,
+        "lng": -87.6223402
+      },
+      "location_type": "APPROXIMATE",
+      "viewport": {
+        "southwest": {
+          "lat": 41.8783320,
+          "lng": -87.6339710
+        },
+        "northeast": {
+          "lat": 41.8890449,
+          "lng": -87.6132830
+        }
+      },
+      "bounds": {
+        "southwest": {
+          "lat": 41.8783320,
+          "lng": -87.6339710
+        },
+        "northeast": {
+          "lat": 41.8890449,
+          "lng": -87.6132830
+        }
+      }
+    }
+  } ]
+}

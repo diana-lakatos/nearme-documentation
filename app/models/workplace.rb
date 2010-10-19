@@ -1,5 +1,7 @@
 class Workplace < ActiveRecord::Base
 
+  attr_accessor :local_geocoding # set this to true in js
+
   geocoded_by :address
 
   belongs_to :creator, :class_name => "User", :foreign_key => "creator_id"
@@ -19,6 +21,7 @@ class Workplace < ActiveRecord::Base
   validates_numericality_of :maximum_desks, :only_integer => true, :greater_than => 0
   validates_format_of :url, :with => URI::regexp(%w(http https)), :allow_blank => true
 
+  before_validation :fetch_coordinates
   before_save :apply_filter
 
   delegate :to_s, :to => :name
@@ -93,14 +96,26 @@ class Workplace < ActiveRecord::Base
 
   private
 
-    def apply_filter
-      self.description_html         = redcloth(description)
-      self.company_description_html = redcloth(company_description)
+  def fetch_coordinates
+    # If we aren't locally geocoding (cukes and people with JS off)
+    if !local_geocoding && address_changed?
+      geocoded = Geocoder.search(address).try(:[], 'results').try(:first)
+      if geocoded
+        self.latitude = geocoded['geometry']['location']['lat']
+        self.longitude = geocoded['geometry']['location']['lng']
+        self.formatted_address = geocoded['formatted_address']
+      end
     end
+  end
 
-    def redcloth(text)
-      restrictions = [:sanitize_html, :no_span_caps, :filter_styles, :filter_classes, :filter_ids]
-      RedCloth.new(text.to_s, restrictions).to_html
-    end
+  def apply_filter
+    self.description_html         = redcloth(description)
+    self.company_description_html = redcloth(company_description)
+  end
+
+  def redcloth(text)
+    restrictions = [:sanitize_html, :no_span_caps, :filter_styles, :filter_classes, :filter_ids]
+    RedCloth.new(text.to_s, restrictions).to_html
+  end
 
 end
