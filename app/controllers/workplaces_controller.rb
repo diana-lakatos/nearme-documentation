@@ -13,7 +13,6 @@ class WorkplacesController < ApplicationController
   def create
     @workplace = current_user.workplaces.build(params[:workplace])
     @workplace.creator_id = params[:workplace][:creator_id] if current_user.admin?
-    debugger
     if @workplace.save
       redirect_to @workplace
     else
