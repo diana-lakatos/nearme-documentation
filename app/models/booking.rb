@@ -1,7 +1,8 @@
 class Booking < ActiveRecord::Base
   belongs_to :workplace
   belongs_to :user
-
+  after_create :confirm_booking
+  
   scope :on, lambda { |date|
     where(:date => date).where(:state => [:confirmed, :unconfirmed])
   }
@@ -43,7 +44,7 @@ class Booking < ActiveRecord::Base
   end
 
   protected
-    def after_create
+    def confirm_booking
       confirm! unless workplace.confirm_bookings?
     end
 end

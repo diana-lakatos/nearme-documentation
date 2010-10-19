@@ -11,6 +11,6 @@ if User.all.empty?
   exit
 end
 
-200.times do
+200.times do |i|
   Workplace.create!( { :name => "Workplace #{i}", :maximum_desks => 10, :latitude => -34.705022, :longitude => 138.710672, :address => "34 olinda st craigmore", :creator => User.first } )
 end
