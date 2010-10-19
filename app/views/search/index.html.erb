@@ -7,9 +7,11 @@
   <%= render :partial => "search/bar", :locals => { :value => @location.try(:[], :name) || @query } %>
 </div>
 
-<div id="results">
-  Loading...
+<div id="results" class="container_12">
+  <div class="loading grid_4">
+    <%= image_tag "spinner-red.gif" %>
+  </div>
 </div>
 
-<script type="text/javascript">Search.init("<%= search_results_path %>");</script>
+<script type="text/javascript">//Search.init("<%= search_results_path %>");</script>
 
