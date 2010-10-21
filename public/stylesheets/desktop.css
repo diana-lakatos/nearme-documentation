@@ -109,7 +109,6 @@ section h1.fat {
 
 section h1.tk-chaparral-pro {
 	font-weight: 800;
-	color: red; /* THIS IS HERE ON PURPOSE: Need to deprecate this font */
 }
 
 section h1.tk-ratio-display {
@@ -235,6 +234,7 @@ section.list article.workplace {
 
 section.list article.workplace h2 {
 	font-weight: 500;
+	line-height: 32px;
 }
 
 section.list article.workplace h2 a:link, section.list article.workplace h2 a:visited {

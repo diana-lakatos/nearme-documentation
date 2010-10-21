@@ -1,6 +1,6 @@
 
 Then /^I should see the following workplaces in order:$/ do |table|
-  found = all("article.workplace h3")
+  found = all("article.workplace h2")
   table.raw.flatten.each_with_index do |workplace, index|
     found[index].text.should == workplace
   end
