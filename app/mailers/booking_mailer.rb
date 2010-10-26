@@ -30,12 +30,12 @@ class BookingMailer < ActionMailer::Base
 
   def booking_rejected(booking)
     setup_defaults(booking)
-    generate_mail("Sorry, your booking at Mocra has been rejected")
+    generate_mail("Sorry, your booking at #{@workplace} has been rejected")
   end
 
   def booking_cancelled_by_owner(booking)
     setup_defaults(booking)
-    generate_mail("Your booking at Mocra has been cancelled by the owner")
+    generate_mail("Your booking at #{@workplace} has been cancelled by the owner")
   end
 
   def booking_cancelled_by_user(booking)
