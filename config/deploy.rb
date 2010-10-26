@@ -1,11 +1,6 @@
-begin
-  require 'thinking_sphinx/deploy/capistrano'
-rescue
-  puts "You have to install thinking-sphinx locally."
-  puts "gem install thinking-sphinx --pre"
-  exit 1
-end
-
+require 'rubygems'
+require 'bundler/setup'
+require 'thinking_sphinx/deploy/capistrano'
 require 'bundler/capistrano'
 
 $:.unshift(File.expand_path('./lib', ENV['rvm_path']))  # Add RVM's lib directory to the load path.
@@ -15,16 +10,27 @@ set :rvm_type, :user
 
 set :user, "deploy"
 set :application, "desksnearme"
-set :repository,  "git@github.com:railsrumble/rr10-team-154.git"
+set :repository,  "git@github.com:keithpitt/desksnearme.git"
 set :deploy_to, "/var/apps/#{application}"
 set :use_sudo, false
 
 set :scm, :git
 
-role :web, "desksnear.me"                          # Your HTTP server, Apache/etc
-role :app, "desksnear.me"                          # This may be the same as your `Web` server
-role :db,  "desksnear.me", :primary => true        # This is where Rails migrations will run
-role :db,  "desksnear.me"
+task :staging do
+  set :rvm_bin_path, "/usr/local/bin/"
+  role :web, "173.255.213.129"
+  role :app, "173.255.213.129"
+  role :db,  "173.255.213.129", :primary => true
+  role :db,  "173.255.213.129"
+end
+
+task :production do
+  role :web, "desksnear.me"                          # Your HTTP server, Apache/etc
+  role :app, "desksnear.me"                          # This may be the same as your `Web` server
+  role :db,  "desksnear.me", :primary => true        # This is where Rails migrations will run
+  role :db,  "desksnear.me"
+  set :branch, "production"
+end
 
 after "deploy:symlink" do
   run "ln -s #{release_path}/config/database.ci.yml #{release_path}/config/database.yml"
@@ -45,7 +51,7 @@ namespace :deploy do
 
   desc "Update the crontab file"
   task :update_crontab, :roles => :db do
-    run "cd #{release_path} && whenever --update-crontab #{application}"
+    run "cd #{release_path} && bundle exec whenever --update-crontab #{application}"
   end
 
 end
