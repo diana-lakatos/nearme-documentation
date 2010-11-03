@@ -25,7 +25,6 @@ GEM
   remote: http://rubygems.org/
   specs:
     RedCloth (4.2.3)
-    aaronh-chronic (0.3.9)
     abstract (1.0.0)
     actionmailer (3.0.1)
       actionpack (= 3.0.1)
@@ -259,9 +258,6 @@ GEM
     tzinfo (0.3.23)
     warden (0.10.7)
       rack (>= 1.0.0)
-    whenever (0.5.3)
-      aaronh-chronic (>= 0.3.9)
-      activesupport (>= 2.3.4)
     will_paginate (2.3.15)
     yard (0.6.1)
 
@@ -300,5 +296,4 @@ DEPENDENCIES
   timecop
   tweet-button
   webmock!
-  whenever
   will_paginate

@@ -37,7 +37,6 @@ after "deploy:symlink" do
   run "cd #{current_path}; rake db:migrate RAILS_ENV=production --trace"
 end
 
-after "deploy:symlink", "deploy:update_crontab"
 after "deploy:symlink", "thinking_sphinx:stop", "thinking_sphinx:configure", "thinking_sphinx:start"
 
 namespace :deploy do
