@@ -26,7 +26,7 @@ class Workplace < ActiveRecord::Base
 
   delegate :to_s, :to => :name
 
-  attr_protected :description_html, :company_description_html, :formatted_address, :creator_id
+  attr_protected :description_html, :company_description_html, :creator_id
 
   define_index do
     indexes :name

@@ -31,16 +31,18 @@ Feature: A user can create and edit a workplace
   Scenario: A user can edit a workplace
     Given a user exists
       And I am logged in as the user
-      And a workplace exists with creator: the user
+      And a workplace exists with creator: the user, address: "craigmore"
      When I go to the workplace's page
       And I follow "Edit Workplace"
       And I should see "Edit a workplace"
       And I fill in "Name" with "Joe's Codin' Garage"
       And I fill in "Company URL" with "http://newurl.com"
+      And I fill in "Address" with "launceston"
       And I press "Update Workplace"
      Then a workplace should exist with name: "Joe's Codin' Garage"
       And I should be on the workplace's page
       And I should see "http://newurl.com"
+      And I should see "1 York St, Launceston TAS 7250, Australia"
 
   Scenario: A user can mark a workplace as fake
     Given a user exists
