@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
 
+  include Gravtastic
+
   is_gravtastic!
 
   has_many :authentications
@@ -8,7 +10,7 @@ class User < ActiveRecord::Base
   has_many :workplace_bookings, :through => :workplaces, :source => :bookings
 
   validates_presence_of :name
-  
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, :lockable and :timeoutable
   # devise :database_authenticatable, :registerable,
@@ -17,9 +19,9 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :name, :email
-  
+
   delegate :to_s, :to => :name
-  
+
   def apply_omniauth(omniauth)
     self.name = omniauth['user_info']['name'] if email.blank?
     self.email = omniauth['user_info']['email'] if email.blank?
@@ -34,5 +36,5 @@ class User < ActiveRecord::Base
   def update_with_password(attrs)
     update_attributes(attrs)
   end
-  
+
 end

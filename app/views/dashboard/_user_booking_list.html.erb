@@ -1,6 +1,6 @@
 <ul class="bookings list">
   <% bookings.each do |booking|%>
-    <li>
+    <li data-date="<%= booking.date %>">
       <p class="em">
         <strong><%= link_to(booking.workplace.name, booking.workplace) %></strong> on
         <time datetime="<%= booking.date %>"><%= l(booking.date, :format => :long) %></time>
@@ -12,4 +12,4 @@
       </div>
     </li>
   <% end %>
-</ul>      
+</ul>
