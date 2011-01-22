@@ -52,18 +52,21 @@ namespace :deploy do
   end
 
   namespace :nginx do
+    before :reload, :configtest
+    before :restart, :configtest
+
     init = "/etc/init.d/nginx"
 
     task :configtest do
-      run "#{init} configtest"
+      sudo "#{init} configtest"
     end
 
-    task :reload => :configtest do
-      run "#{init} reload"
+    task :reload do
+      sudo "#{init} reload"
     end
 
-    task :restart => :configtest do
-      run "#{init} restart"
+    task :restart do
+      sudo "#{init} restart"
     end
   end
 
