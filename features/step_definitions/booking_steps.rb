@@ -47,8 +47,8 @@ end
 
 When(/^I cancel the booking for "([^"]*)"$/) do |date|
   date = Date.parse(date)
-  within(:xpath, "//time[@datetime='#{date}']/../..") do
-    find(:xpath, "//input[@value='Cancel']").click 
+  within(:css, "li[data-date='#{date}']") do
+    find(:css, "input[value='Cancel']").click
   end
 end
 

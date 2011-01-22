@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.1'
+gem 'rails', '3.0.3'
 gem 'pg'
 gem 'devise'
 gem 'omniauth'
@@ -36,7 +36,7 @@ group :test do
   gem 'autotest'
   gem 'capybara'
   gem 'database_cleaner'
-  gem 'cucumber-rails'
+  gem 'cucumber-rails', :git => "git://github.com/keithpitt/cucumber-rails", :branch => "latest_capybara_support"
   gem 'cucumber'
   gem 'pickle'
   gem 'factory_girl_rails'
