@@ -35,6 +35,7 @@ end
 after "deploy:symlink" do
   run "ln -s #{release_path}/config/database.ci.yml #{release_path}/config/database.yml"
   run "cd #{current_path}; rake db:migrate RAILS_ENV=production --trace"
+  sudo "ln -sf #{current_path}/config/logrotate.conf /etc/logrotate.d/desksnearme.conf"
 end
 
 after "deploy:symlink", "thinking_sphinx:stop", "thinking_sphinx:configure", "thinking_sphinx:start"
