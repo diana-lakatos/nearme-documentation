@@ -36,9 +36,11 @@ after "deploy:symlink" do
   run "ln -s #{release_path}/config/database.ci.yml #{release_path}/config/database.yml"
   run "cd #{current_path}; rake db:migrate RAILS_ENV=production --trace"
   sudo "ln -sf #{current_path}/config/logrotate.conf /etc/logrotate.d/desksnearme.conf"
+  sudo "ln -sf #{current_path}/config/nginx.conf /opt/nginx/conf/vhosts/desksnearme.conf"
 end
 
-after "deploy:symlink", "thinking_sphinx:stop", "thinking_sphinx:configure", "thinking_sphinx:start"
+after "deploy:symlink", "deploy:nginx:reload", "thinking_sphinx:stop", "thinking_sphinx:configure", "thinking_sphinx:start"
+
 
 namespace :deploy do
 
@@ -48,6 +50,23 @@ namespace :deploy do
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
+
+  namespace :nginx do
+    init = "/etc/init.d/nginx"
+
+    task :configtest do
+      run "#{init} configtest"
+    end
+
+    task :reload => :configtest do
+      run "#{init} reload"
+    end
+
+    task :restart => :configtest do
+      run "#{init} restart"
+    end
+  end
+
 
 end
 
