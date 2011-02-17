@@ -5,8 +5,7 @@ require 'bundler/capistrano'
 
 $:.unshift(File.expand_path('./lib', ENV['rvm_path']))  # Add RVM's lib directory to the load path.
 require "rvm/capistrano"                                # Load RVM's capistrano plugin.
-set :rvm_ruby_string, '1.9.2'                           # Or whatever env you want it to run in.
-set :rvm_type, :user
+set :rvm_ruby_string, '1.9.2-p0'                        # Or whatever env you want it to run in.
 
 set :user, "deploy"
 set :application, "desksnearme"
@@ -22,6 +21,7 @@ task :staging do
   role :app, "173.255.213.129"
   role :db,  "173.255.213.129", :primary => true
   role :db,  "173.255.213.129"
+  set :rvm_type, :system
 end
 
 task :production do
@@ -30,6 +30,7 @@ task :production do
   role :db,  "desksnear.me", :primary => true        # This is where Rails migrations will run
   role :db,  "desksnear.me"
   set :branch, "production"
+  set :rvm_type, :user
 end
 
 after "deploy:symlink" do
