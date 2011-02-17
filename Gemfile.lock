@@ -134,6 +134,7 @@ GEM
       json (~> 1.4.6)
       term-ansicolor (~> 1.0.5)
     gravtastic (3.1.0)
+    haml (3.0.22)
     highline (1.6.1)
     i18n (0.4.2)
     jquery-rails (0.2.5)
@@ -298,6 +299,7 @@ DEPENDENCIES
   ffaker
   fog
   gravtastic
+  haml
   jquery-rails
   launchy
   mini_magick

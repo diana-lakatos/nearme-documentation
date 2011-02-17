@@ -1,0 +1,4 @@
+= simple_form_for([@workplace, @photo], :html => {:multipart => true}) do |f|
+  = f.input :file, :as => :file, :label => "New Photo"
+  = f.input :description
+  = f.button :submit, "Upload"

@@ -1,0 +1,12 @@
+%ul.bookings.list
+  - bookings.each do |booking|
+    %li
+      %p.em
+        %strong= booking.user
+        (#{mail_to booking.user.email, 'Email'}) on
+        %time{:datetime => booking.date}= l(booking.date, :format => :long)
+        (#{booking.state_name})
+        %br/
+        = booking.comment
+      .actions
+        = render :partial => "owner_actions", :locals => {:booking => booking} if current_user == booking.workplace.creator

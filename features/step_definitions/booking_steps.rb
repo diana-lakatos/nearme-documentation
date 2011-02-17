@@ -32,16 +32,16 @@ Then /^I should see the following availability:$/ do |table|
       end
     end
   end
-  
+
   table.hashes.each do |date, available|
     actual_availability[date].should == available
   end
 end
 
 Then /^I should see the following bookings in order:$/ do |table|
-  found    = all("ul.bookings li > p").map { |b| b.text.gsub(/\n\s+/,' ').strip }
+  found    = all("ul.bookings li > p").map { |b| b.text.gsub(/\n\s*/,' ').strip }
   expected = table.raw.flatten
-  
+
   found.should == expected
 end
 
@@ -58,7 +58,7 @@ Then /^I should see availability for dates:$/ do |table|
 end
 
 Then /^I should not see availability for dates:$/ do |table|
-  dates = all("table.bookings td.day time").map {|t| t["datetime"]}  
+  dates = all("table.bookings td.day time").map {|t| t["datetime"]}
   table.raw.flatten.each do |date|
     dates.should_not include(date)
   end

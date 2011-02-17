@@ -1,0 +1,40 @@
+%section#headline
+  .grid_5.image.alpha
+    = image_tag "desk_marker.png"
+  .grid_7.aside_text.omega
+    %h2.tk-chaparral-pro Where do you want to work today?
+    %p We are an awesome Rails Rumble app. Helping freelancers get out of the house!
+    .search
+      = render :partial => "search/bar", :locals => { :value => "" }
+      #suggest_location{:style => "display: none"}
+%section#featured.block
+  .grid_5.alpha
+    %p.em Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to see great places where they can work.
+    %p There are plenty of fantastic companies worldwide, such as Inspire9, The Frontier Group, eLabs, and Obtiva, who offer up their fantastic working environment to individuals who need a change of scenery or companions. This is fantastic! Unfortunately, until now, it hasn't been easy for individuals to find places like this or to even know that they existed.
+    %p
+      This is why we built Desks Near Me. So, start searching for a place to work above, or #{link_to "add a place", new_workplace_path} now!
+    = link_to new_workplace_path, :class => "huge_ass_button workplace" do
+      = image_tag "marker-big.png"
+      Add my workplace
+  .grid_7.omega
+    %h1.tk-ratio-display Featured Workplaces
+    %section.list.featured
+      = render :partial => "workplaces/featured", :collection => @featured, :as => :workplace
+%section#about.block
+  .grid_5.alpha
+    %h1.tk-chaparral-pro What now?
+    %p.em
+      RailsRumble is just the beginning. We have a thousand ideas and just chose a handful to implement in the first 48 hours of our existence.
+    %p
+      We really believe that this has the potential to become an indispensable service for people like us, who need to get out of the home office and hang out with cool people while we work.
+    %p
+      We have big plans for the future. We are committed to continuing with this service and adding in new features - making it easier and better for everyone.
+  .grid_7.omega
+    %h1.tk-chaparral-pro But our desks aren't free...
+    %p
+      We know that many workplaces have extra goodies available for their desks (like food, drinks or equipment access) and they like to charge a small daily rate for visiting freelancers to pay. There are also dedicated co-working spaces out there which charge for access.
+    %p For now, listing non-free places is fine as long as you mention this clearly in your workplace description. In the future there will likely be a small listing fee for paid workspaces.
+    %p
+      %strong After the Rumble is over, we will be working with our first users to discover the best way to manage listing of paid spaces.
+    %p But thats not all, we have other goodies up our sleeve! (You should see our backlog...) From everyone on the team, thanks for visiting and we hope you have fun with this service.
+    %em &mdash; The Rad Warlike Annex

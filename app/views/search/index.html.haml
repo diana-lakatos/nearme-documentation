@@ -1,0 +1,12 @@
+.grid_3.alpha
+  %h1.tk-adelle Workplaces found near:
+.grid_9.omega
+  = render :partial => "search/bar", :locals => { :value => @query }
+#results.container_12
+  - if @workplaces
+    = render :partial => "search/workplaces"
+  - else
+    .loading.grid_4
+      = image_tag "spinner-red.gif"
+:javascript
+  Search.init(" search_path ", resultsFromServer =  @workplaces ? "true" : "false" );

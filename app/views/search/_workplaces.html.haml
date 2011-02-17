@@ -1,0 +1,58 @@
+%section.search-results.grid_12.alpha.omega.list
+  - if @search.blank?
+    %p Please enter a city or address
+  - else
+    - if @workplaces.empty?
+      %br/
+      .grid_3.alpha.prefix_2
+        = image_tag "marker_missing.png"
+      .grid_6.omega
+        %br/
+        %br/
+        %h1.tk-adelle.fat No results found
+        %p Try a different location or a post code. Make sure the location is properly formatted and include the city and state.
+        %p
+          Still cant find what your looking for? Why not #{link_to "create your own workplace", new_workplace_path}!
+    - else
+      .google-map
+        #workplaces_map.inner{:style => "height: 350px;"}
+      %p
+        %strong>
+          = pluralize(@workplaces.length, "workplace")
+          found
+        \. Hover over a day to see how many desks are available.
+      = will_paginate @workplaces
+      - @workplaces.each do |workplace|
+        = render :partial => '/workplaces/workplace.html', :locals => { :workplace => workplace }
+      = will_paginate @workplaces
+      :javascript
+        $(document).ready(function() {
+
+          var map = new google.maps.Map(document.getElementById("workplaces_map"), {
+            zoom: 8,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: false
+          });
+
+          var bounds = new google.maps.LatLngBounds();
+          var markers = {}, infos = {};
+           @workplaces.each do |w| 
+            ll = new google.maps.LatLng( w.latitude ,  w.longitude );
+            bounds.extend(ll);
+            markers[ w.id ] = new google.maps.Marker({
+              position: ll,
+              map: map,
+              icon: " image_path("marker.png") ",
+              title: " w.name "
+            });
+            infos[ w.id ] = new google.maps.InfoWindow({
+              content: " escape_javascript(render(:partial => 'workplaces/gmap', :locals => { :workplace => w })) "
+            });
+            google.maps.event.addListener(markers[ w.id ], 'click', function() {
+              infos[ w.id ].open(map, markers[ w.id ]);
+            });
+          map.fitBounds(bounds);
+
+        });
+
+      

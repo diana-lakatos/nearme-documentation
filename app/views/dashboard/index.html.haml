@@ -1,0 +1,52 @@
+%h1.tk-adelle Dashboard
+.tabs
+  %nav
+    %a.selected{:href => "#workplaces"}
+      My Workplaces
+      %span.num= @workplaces.count
+    %a{:href => "#my_bookings"}
+      My Bookings
+      %span.num= @your_bookings.count
+    - if @workplaces.any?
+      %a{:href => "#bookings"}
+        Workplace Bookings
+        %span.num= @workplace_bookings.count
+  %section#workplaces.selected.tab
+    %nav.actions
+      = link_to new_workplace_path do
+        = image_tag "building--plus.png"
+        Create Workplace
+    %table.pretty
+      %thead
+        %tr
+          %th Name
+          %th Bookings
+          %th
+      %tbody
+        - @workplaces.each do |workplace|
+          %tr
+            %td= link_to workplace.name, workplace
+            %td= workplace.confirm_bookings? ? "#{workplace.bookings.with_state(:unconfirmed).count} Unconfirmed" : "-"
+            %td.actions
+              = link_to [ :edit, workplace ] do
+                Edit Workplace #{image_tag "navigation.png"}
+  %section#my_bookings.tab
+    - if @your_bookings.any?
+      = render :partial => "user_booking_list", :locals => {:bookings => @your_bookings}
+  %section#bookings.tab
+    - if @workplace_bookings.any?
+      = render :partial => "workplace_booking_list", :locals => {:bookings => @workplace_bookings}
+- content_for :script do
+  :javascript
+    $(function(){
+      $(".tabs nav a").click(function(ev){
+        ev.stopPropagation();
+
+        $(".tabs nav a.selected, .tabs section.tab.selected").removeClass("selected");
+        var tab_id = $(this).attr("href"),
+            section = $(".tabs section" + tab_id)[0];
+        $([this, section]).addClass("selected");
+
+        return false;
+      });
+    });

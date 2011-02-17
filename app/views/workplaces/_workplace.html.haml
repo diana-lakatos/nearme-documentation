@@ -1,0 +1,9 @@
+%article.workplace
+  %details
+    .grid_1.alpha
+      = link_to image_tag(workplace.photos.thumb.url, :title => workplace.name, :alt => workplace.name), workplace
+    .grid_4
+      %h2.tk-ratio-display= link_to workplace.name, workplace
+      %address= workplace.formatted_address || workplace.address
+    .grid_7.omega
+      = render :partial => "workplaces/availability", :locals => {:workplace => workplace, :weeks => 1}

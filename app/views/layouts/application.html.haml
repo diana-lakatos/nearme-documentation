@@ -1,0 +1,52 @@
+!!!
+%html
+  %head
+    %title
+      DesksNear.Me :: #{show_title? ? yield(:title) : "Where do you want to work today?"}
+    %meta{:content => "Desks Near Me is a public booking system for companies to offer desks to freelancers and sole-operators.", :name => "description"}/
+    %meta{:content => "The Rad Warlike Annex", :name => "author"}/
+    %meta{:content => "tellthemwhen_verif_1af11d7040aa81a9ab2e07d4efee180d2e93d030", :name => "TellThemWhen"}/
+    %meta{:content => "IE=edge,chrome=1", "http-equiv" => "X-UA-Compatible"}/
+    = csrf_meta_tag
+    %link{:href => "/favicon.ico?9002", :rel => "shortcut icon"}/
+    %link{:href => "/stylesheets/global.css?r=1", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "/stylesheets/desktop.css?r=1", :media => "screen, projection", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "/stylesheets/overlay.css?r=1", :media => "screen, projection", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "/stylesheets/grid.css?r=1", :media => "screen, projection", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "/stylesheets/mobile.css?r=1", :media => "handheld", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "/fancybox/jquery.fancybox-1.3.1.css", :media => "screen, projection", :rel => "stylesheet", :type => "text/css"}/
+    = javascript_include_tag :defaults, "modernizr", "jquery.cookie.js", "/fancybox/jquery.fancybox-1.3.1.pack.js", "jquery.overlay.js", "jqueryui", "jquery.address-1.3.min", "search"
+    %script{:src => "http://use.typekit.com/vlg4dft.js", :type => "text/javascript"}
+    :javascript
+      try{Typekit.load();}catch(e){}    %script{:src => "http://maps.google.com/maps/api/js?sensor=true", :type => "text/javascript"}
+  %body
+    #TTWNotify{:style => "display:none;"}
+    %header
+      .container_12
+        = link_to root_url do
+          %h1 DesksNear.Me
+        = render :partial => "layouts/navigation"
+    %section#content{:class => controller_name}
+      .container_12
+        = flashes
+        = yield
+    %footer.container_12
+      .copyright
+        = image_tag "team_logo_small.png"
+        %p
+          %strong Copyright &copy; 2010, The Rad Warlike Annex
+          \&mdash; #{our_twitter_accounts}
+        %small
+          Icons by
+          = succeed "," do
+            %a{:href => "http://p.yusukekamiyamane.com/"} Yusuke Kamiyamane
+          Fugue icon set.
+    = yield :script
+    = render :partial => "layouts/analytics" if Rails.env.production?
+    %script{:charset => "utf-8", :type => "text/javascript"}
+      (function(){
+      t = document.createElement('script');t.async=true;t.type ='text/javascript';
+      t.src = ('https:' == document.location.protocol ? 'https://secure.' : 'http://api.') + 'tellthemwhen.com/api/v2/notices/620b94a22ed.js';
+      var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(t,s);
+      })();
+    = render :partial => "layouts/feedback"
