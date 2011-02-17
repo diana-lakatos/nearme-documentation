@@ -1,12 +1,2 @@
 rvm use --create --install ruby-1.9.2@desksnearme >/dev/null 2>&1
 
-if [[ -s "./desksnearme.gems" ]]; then
-  if ! rvm gemset import desksnearme.gems >/dev/null 2>&1; then
-    echo "ERROR: Unable to bootstrap the gems" >&2
-  fi
-fi
-
-# Bundle is available, non-custom config.
-if command -v bundle >/dev/null && ! grep -q BUNDLE_FROZEN .bundle/config 2>/dev/null ; then
-  bundle install >/dev/null 2>&1
-fi
