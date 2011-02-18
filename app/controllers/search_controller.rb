@@ -31,13 +31,13 @@ class SearchController < ApplicationController
       search = { :query => query }
       geocoded = Geocoder.search(query)
       return search if geocoded.nil?
-      
+
       loc = geocoded['results'].first
       geometry = loc['geometry']
 
       search[:pretty] = loc['formatted_address']
-      search[:lat] = geometry['location']['lat'] 
-      search[:lng] = geometry['location']['lng'] 
+      search[:lat] = geometry['location']['lat']
+      search[:lng] = geometry['location']['lng']
 
       bounds = geometry['bounds']
       if bounds && (loc['types'] == ["country","political"]) || (loc['types'] == ["administrative_area_level_1","political"])

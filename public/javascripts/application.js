@@ -7,7 +7,7 @@ function getUserLocationForSearch() {
   var searchForm      = $("form.big_search");
   if(searchForm.length >= 1) {
     var currentLocation = $.cookie("currentLocation");
-    
+
     if(currentLocation)
       setSearchFormToLocation(searchForm, currentLocation);
     else {
@@ -38,7 +38,7 @@ function getUserLocationForSearch() {
 function setSearchFormToLocation(form, location) {
   var input  = $("input:text", form),
       button = $("input.geolocation", form);
-  
+
   button.addClass("active").attr("data-geo-val", location).click(function(){
     input.val($(this).attr("data-geo-val")).focus();
   });
@@ -50,12 +50,12 @@ function setSearchFormToLocation(form, location) {
 function doWorkplaceGoogleMaps() {
   var locations = $("aside address, aside details.address"),
       map       = null;
-      
-  
+
+
   $.each(locations, function(index, location) {
     location        = $(location);
     var latlng      = new google.maps.LatLng(location.attr("data-lat"), location.attr("data-lng"));
-    
+
     if(!map) {
       map = new google.maps.Map(document.getElementById("map"), {
         zoom: 13,
@@ -64,7 +64,7 @@ function doWorkplaceGoogleMaps() {
         center: latlng
       });
     }
-    
+
     var image       = location.attr("data-marker");
     var beachMarker = new google.maps.Marker({
       position: latlng,

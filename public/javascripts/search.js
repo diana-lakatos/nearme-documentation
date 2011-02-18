@@ -21,7 +21,7 @@ var Search = {
       return false;
     });
 
-    $.address.change(function(e) {  
+    $.address.change(function(e) {
 
       var container = $("#results");
       var loading = container.data("loader");
@@ -110,5 +110,5 @@ var Search = {
     });
 
   }
- 
+
 }
