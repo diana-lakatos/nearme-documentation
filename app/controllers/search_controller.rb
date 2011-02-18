@@ -7,10 +7,10 @@ class SearchController < ApplicationController
       @query = @search[:pretty]
     end
     respond_to do |wants|
+      wants.html
       wants.js do
         render :partial => "search/workplaces.html", :layout => false
       end
-      wants.html
     end
   end
 

@@ -1,3 +1,8 @@
+jQuery.ajaxSetup({
+  'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
+})
+
+
 function getUserLocationForSearch() {
   var searchForm      = $("form.big_search");
   if(searchForm.length >= 1) {
