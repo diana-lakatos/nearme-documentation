@@ -11,7 +11,6 @@
   = f.input :company_description, :input_html => {:rows => 8}, :hint => ["What does your company do, why are you the best at it, etc?", textile_hint].join(' ').html_safe
   = f.input :url, :as => :string, :label => "Company URL", :hint => "Got a web page?"
   = f.input :confirm_bookings, :as => :radio, :hint => "Do you want to be able to approve bookings on a case-by-case basis? We'll notify you by email whenever there's a booking that needs your attention."
-  = f.input :fake, :label => "Test workplace", :hint => "If you are testing this site for Rails Rumble, check this, <strong>OTHERWISE PEOPLE WILL COME TO YOUR OFFICE AND EXPECT YOU TO HAVE A DESK FOR THEM</strong>".html_safe
   - if current_user.admin?
     = f.association :creator, :select => "Select a creator..."
   = f.button :submit

@@ -2,7 +2,7 @@ Feature: A user can create and edit a workplace
   In order to let people work at my rad workplace
   As a user
   I want to create a workplace listing
-  
+
   Scenario: A user can see the form
     Given a user exists
       And I am logged in as the user
@@ -43,16 +43,6 @@ Feature: A user can create and edit a workplace
       And I should be on the workplace's page
       And I should see "http://newurl.com"
       And I should see "1 York St, Launceston TAS 7250, Australia"
-
-  Scenario: A user can mark a workplace as fake
-    Given a user exists
-      And I am logged in as the user
-      And a workplace exists with creator: the user
-     When I go to the workplace's page
-      And I follow "Edit Workplace"  
-      And I check "Test workplace"
-      And I press "Update Workplace"
-     Then a workplace should exist with fake: true
 
   Scenario: A hacker cant edit a workplace
     Given a user: "wally" exists
