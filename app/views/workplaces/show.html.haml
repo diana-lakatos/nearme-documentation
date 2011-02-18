@@ -1,6 +1,6 @@
 %article.workplace
   .grid_12.alpha.omega
-    - if @workplace.fake?
+    - if @workplace.fake? && current_user && current_user.admin?
       .grid_12.alpha.omega.flash.notice
         THIS IS A RAILS RUMBLE TEST VENUE
     .grid_5.alpha
