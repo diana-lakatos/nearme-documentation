@@ -11,3 +11,4 @@ tmp
 *.swo
 *.swp
 database.yml
+public/stylesheets/*.css
