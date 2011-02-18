@@ -21,10 +21,12 @@
           = pluralize(@workplaces.length, "workplace")
           found
         \. Hover over a day to see how many desks are available.
+
       = will_paginate @workplaces
       - @workplaces.each do |workplace|
         = render :partial => '/workplaces/workplace.html', :locals => { :workplace => workplace }
       = will_paginate @workplaces
+
       :javascript
         $(document).ready(function() {
 
@@ -36,17 +38,17 @@
 
           var bounds = new google.maps.LatLngBounds();
           var markers = {}, infos = {};
-           @workplaces.each do |w| 
+           @workplaces.each do |w|
             ll = new google.maps.LatLng( w.latitude ,  w.longitude );
             bounds.extend(ll);
             markers[ w.id ] = new google.maps.Marker({
               position: ll,
               map: map,
-              icon: " image_path("marker.png") ",
-              title: " w.name "
+              icon: "#{image_path("marker.png")}",
+              title: "#{w.name}"
             });
             infos[ w.id ] = new google.maps.InfoWindow({
-              content: " escape_javascript(render(:partial => 'workplaces/gmap', :locals => { :workplace => w })) "
+              content: "#{escape_javascript(render(:partial => 'workplaces/gmap', :locals => { :workplace => w }))}"
             });
             google.maps.event.addListener(markers[ w.id ], 'click', function() {
               infos[ w.id ].open(map, markers[ w.id ]);
@@ -55,4 +57,4 @@
 
         });
 
-      
+

@@ -8,5 +8,6 @@
   - else
     .loading.grid_4
       = image_tag "spinner-red.gif"
+
 :javascript
-  Search.init(" search_path ", resultsFromServer =  @workplaces ? "true" : "false" );
+  Search.init("#{search_path}", resultsFromServer = #{@workplaces ? "true" : "false"});
