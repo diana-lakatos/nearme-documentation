@@ -47,3 +47,7 @@ end
 group :production do
   gem 'exception_notification', :git => "git://github.com/rails/exception_notification", :require => 'exception_notifier'
 end
+
+group :development, :production do
+  gem 'newrelic_rpm'
+end
