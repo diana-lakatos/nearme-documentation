@@ -98,7 +98,7 @@ section {
     &:last-of-type {
       margin-bottom: 0px; } } }
 
-/* FIX BELOW 
+/* FIX BELOW
 	->>>>>>>>>>>>> */
 
 aside {
@@ -221,6 +221,17 @@ article.workplace aside address {
 
 /* === Section Featured */
 
+section#featured {
+  .blurb {
+    padding-top: 55px;
+    p {
+      font-size: 120%;
+      &.em {
+        font-size: 150%;
+      }
+    }
+  }
+}
 /*section.featured {
 	overflow: hidden;
 }
