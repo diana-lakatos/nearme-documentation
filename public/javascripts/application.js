@@ -37,8 +37,8 @@ function setSearchFormToLocation(form, location) {
   button.addClass("active").attr("data-geo-val", location).click(function(){
     input.val($(this).attr("data-geo-val")).focus();
   });
-  
-  if(input.val() == "")
+
+  if(input.val() == "" && !Search.hasInit)
     button.click();
 }
 
@@ -96,8 +96,7 @@ $(function(){
   doPhotoFancyBox();
   doInlineBooking();
   doWorkplaceGoogleMaps();
-  if(window.location.pathname == "/")
-    getUserLocationForSearch();
+  getUserLocationForSearch();
   $("#workplace_search").submit(function() {
     Search.search($("#search").val());
     return false;
