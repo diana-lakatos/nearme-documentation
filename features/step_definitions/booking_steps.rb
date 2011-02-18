@@ -63,3 +63,34 @@ Then /^I should not see availability for dates:$/ do |table|
     dates.should_not include(date)
   end
 end
+
+Given /^the following bookings are made for the workplace:$/ do |table|
+  users = {}
+
+  table.hashes.each do |row|
+    user = users[row['User']] ||= Factory.create(:user, :name => row['User'])
+    Timecop.freeze(Time.parse row['At'])
+    Booking.create(
+      :user      => user,
+      :workplace => model!('the workplace'),
+      :date      => Date.parse(row['For'])
+    )
+    Timecop.return
+  end
+end
+
+Then /^I should see the following booking events in the feed in order:$/ do |table|
+  regex = /">\s*(.*?)\s+booked a desk for the (\d\d [A-Za-z]+, \d\d\d\d).*datetime="(.*?)"/m
+  feeds = all("dl.activity_feed dd.feed_item.booked").map do |booked_item|
+    user, date, at = *booked_item.node.inner_html.scan(regex).first
+    [user, Date.parse(date), Time.parse(at)]
+  end
+
+  table = table.hashes.map do |row|
+    user, date, at = *row.values_at('User', 'For', 'At')
+    [user, Date.parse(date), Time.parse(at)]
+  end
+
+  feeds.should == table
+end
+

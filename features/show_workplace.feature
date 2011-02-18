@@ -10,7 +10,7 @@ Feature: A user can see a workplace
       And I should see "Its a great place to work"
       And I should see a Google Map
       And I should see "http://google.com"
-  
+
   Scenario: A user can see if a workplace is a fake
     Given a workplace exists with fake: true
      When I go to the workplace's page
@@ -33,3 +33,20 @@ Feature: A user can see a workplace
      When I go to the workplace's page
      Then I should see "Keith Pitt"
       And I should see the creators gravatar
+
+  Scenario: View recent bookings in order of when they were made
+    Given a workplace exists with confirm_bookings: false
+    And the following bookings are made for the workplace:
+      | User            | For        | At                    |
+      | Keith Pitt      | 2011-10-10 | 2011-09-09 12:23:01pm |
+      | Bodaniel Jeanes | 2012-01-01 | 2011-09-09 12:23:01pm |
+      | Alex Eckermann  | 2011-08-08 | 2011-08-07 7:00:00am  |
+      | Warren Seen     | 2011-10-10 | 2011-09-09 12:00:00pm |
+    When I go to the workplace's page
+    Then I should see the following booking events in the feed in order:
+      | User            | For        | At                    |
+      | Bodaniel Jeanes | 2012-01-01 | 2011-09-09 12:23:01pm |
+      | Keith Pitt      | 2011-10-10 | 2011-09-09 12:23:01pm |
+      | Warren Seen     | 2011-10-10 | 2011-09-09 12:00:00pm |
+      | Alex Eckermann  | 2011-08-08 | 2011-08-07 7:00:00am  |
+

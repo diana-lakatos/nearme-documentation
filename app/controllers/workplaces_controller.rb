@@ -22,7 +22,7 @@ class WorkplacesController < ApplicationController
 
   def show
     @workplace = Workplace.find(params[:id])
-    @feeds = @workplace.feeds.limit(5)
+    @feeds = @workplace.feeds.latest.limit(5)
   end
 
   def edit
@@ -37,7 +37,7 @@ class WorkplacesController < ApplicationController
       render :edit
     end
   end
-  
+
   def destroy
     redirect_to @workplace, :notice => "Permission Denied" unless current_user.admin?
     @workplace.destroy

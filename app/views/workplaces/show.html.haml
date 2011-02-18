@@ -29,13 +29,14 @@
     - if @feeds.any?
       %dl.activity_feed
         - @feeds.each do |feed|
-          %dd.feed_item
+          %dd.feed_item{class: feed.activity}
             = image_tag feed.user.gravatar_url, :class => "avatar"
             = render :partial => "feeds/#{feed.activity}", :locals => { :feed => feed }
             %br/
             %small
-              = time_ago_in_words(feed.created_at)
-              ago
+              %date{datetime: feed.created_at.xmlschema}
+                = time_ago_in_words(feed.created_at)
+                ago
     - else
       %p No activity has been generated yet.
 
