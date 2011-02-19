@@ -11,11 +11,6 @@ Feature: A user can see a workplace
       And I should see a Google Map
       And I should see "http://google.com"
 
-  Scenario: A user can see if a workplace is a fake
-    Given a workplace exists with fake: true
-     When I go to the workplace's page
-     Then I should see "THIS IS A RAILS RUMBLE TEST VENUE"
-
   Scenario: A user can see whether or not the workplace booking requires confirmation (yes)
     Given a workplace exists with confirm_bookings: true
      When I go to the workplace's page
