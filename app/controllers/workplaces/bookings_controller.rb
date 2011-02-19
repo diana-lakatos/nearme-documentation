@@ -12,7 +12,10 @@ module Workplaces
     def new
       session[:user_return_to] = current_user ? nil : request.fullpath
       @booking = @bookings.build(:date => params[:date])
-      render :layout => !request.xhr?
+      respond_to do |wants|
+        wants.js { render :layout => false }
+        wants.html { render }
+      end
     end
 
     def create
