@@ -17,22 +17,22 @@
 :javascript
   function showLocationSuggestions(results) {
     if(results.length > 0) {
-      var div = $("").attr("id", "address-suggestions");
-      var ul = $("")
-      var message = $("Please select which location best matches where the workplace is");
+      var div = $("<div></div>").attr("id", "address-suggestions");
+      var ul = $("<ul></ul>")
+      var message = $("<p>Please select which location best matches where the workplace is</p>");
       for(var i = 0, l = results.length; i < l; i++) {
         var result = results[i];
         var loc = result['geometry']['location'];
-        var link = $("")
+        var link = $("<a href='#'></a>")
             .html(result['formatted_address'])
             .attr("data-lat", loc.lat())
             .attr("data-lng", loc.lng());
-        var li = $("").append(link);
+        var li = $("<li></li>").append(link);
         ul.append(li);
       }
       var el = div.append(message).append(ul);
     } else {
-      var el = $("").attr("id", "address-suggestions").html("No matches found. Please try another location.");
+      var el = $("<div></div>").attr("id", "address-suggestions").html("No matches found. Please try another location.");
     }
     $("#workplace_address").after(el);
   }

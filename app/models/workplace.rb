@@ -56,6 +56,7 @@ class Workplace < ActiveRecord::Base
         monday = today.weekend? ? today.next_week : today.beginning_of_week
         friday = monday + 4
         week   = monday..friday
+
         week.inject(hash) {|m,d| m[d] = maximum_desks; m}
       end
 
@@ -82,7 +83,7 @@ class Workplace < ActiveRecord::Base
     return [] if search[:lat].nil? || search[:lng].nil?
 
     if (search[:southwest] && search[:southwest][:lat] && search[:southwest][:lng]) && (search[:northeast] && search[:northeast][:lat] && search[:northeast][:lng])
-      distance = Geocoder.distance_between(search[:southwest][:lat].to_f, search[:southwest][:lng].to_f, 
+      distance = Geocoder.distance_between(search[:southwest][:lat].to_f, search[:southwest][:lng].to_f,
                                            search[:northeast][:lat].to_f, search[:northeast][:lng].to_f, :units => :km)
       distance = (distance * 1000).to_f
     else
