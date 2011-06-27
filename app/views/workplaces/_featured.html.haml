@@ -1,5 +1,5 @@
 %article.workplace
-  %details
+  .details
     - photo = workplace.photos.first
     .grid_1.alpha
       = link_to image_tag(photo.medium.url, :title => workplace.description, :alt => workplace.name), workplace
