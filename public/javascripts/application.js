@@ -75,7 +75,7 @@ function doWorkplaceGoogleMaps() {
 }
 
 function doInlineBooking() {
-  $("td.day details.availability a").click(function(e){
+  $("td.day .details.availability a").click(function(e){
     e.stopPropagation();
     var overlay = $("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
     $(".overlay-container a.cancel").live("click", function(e){

@@ -18,7 +18,7 @@
           <time datetime="<%= date %>">
             <%= date.strftime("%b %d") %><sup><%= date.day.ordinal %></sup>
           </time>
-          <details class="availability">
+          <div class="details availability">
             <%= link_to_if(num>0, num, new_workplace_booking_url(workplace, :date => date)) %>
           </details>
         </td>

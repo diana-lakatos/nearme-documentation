@@ -169,7 +169,7 @@ article.workplace {
     border-bottom: 2px solid #CCC;
     margin: 24px 0 12px; } }
 
-section.list article.workplace details {
+section.list article.workplace .details {
   float: left;
   /*  width: 50%;*/
   padding-top: 20px; }
@@ -195,9 +195,9 @@ section.list article.workplace {
       td, th {
         border: none; }
       td {
-        time, details.availability {
+        time, .details.availability {
           margin-top: 0px; } } }
-    td details {
+    td .details {
       float: none;
       width: auto;
       padding-top: inherit; } }
@@ -264,14 +264,14 @@ table.bookings.extended {
       line-height: 32px;
       font-size: 16px;
       width: 20%;
-      details.availability, time {
+      .details.availability, time {
         margin: 6px 3px;
         border-radius: 3px;
         -moz-border-radius: 3px;
         -o-border-radius: 3px;
         height: 38px;
         display: block; }
-      details.availability {
+      .details.availability {
         display: none;
         line-height: 38px;
         a {
@@ -285,14 +285,14 @@ table.bookings.extended {
             text-decoration: none; } } }
       &.hover time, &:hover time {
         display: none; }
-      &.hover details.availability, &:hover details.availability {
+      &.hover .details.availability, &:hover .details.availability {
         display: block; }
       &.day {
         &.available {
           time {
             color: #176A11;
             background: #87C97B; }
-          details.availability {
+          .details.availability {
             color: #176A11;
             background: #87C97B;
             a {
@@ -302,7 +302,7 @@ table.bookings.extended {
           time {
             color: #C35E11;
             background: #DCC060; }
-          details.availability {
+          .details.availability {
             color: #C35E11;
             background: #DCC060;
             a {
@@ -312,7 +312,7 @@ table.bookings.extended {
           time {
             color: #820004;
             background: #D2666B; }
-          details.availability {
+          .details.availability {
             color: #820004;
             background: #D2666B;
             a {
@@ -322,7 +322,7 @@ table.bookings.extended {
           background: #CCC;
           color: #666; } }
       &.unavailable {
-        &.hover details.availability, &:hover details.availability {
+        &.hover .details.availability, &:hover .details.availability {
           display: none; }
         &.hover time, &:hover time {
           display: block; } } } } }
@@ -522,6 +522,7 @@ div {
         border-bottom: 1px solid #CCC;
         margin: 0 -12px 12px -12px;
         padding: 12px;
+        overflow: hidden;
         label {
           font-size: 12px;
           line-height: 24px;
