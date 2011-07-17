@@ -56,10 +56,10 @@ before "deploy:setup" do
   sudo "mkdir -p /var/apps"
   sudo "chmod 777 /var/apps"
 
+  babushka 'benhoskings:set.locale'
   babushka 'benhoskings:admins can sudo'
   babushka 'benhoskings:user exists', {:username => old_user}
   babushka 'benhoskings:passwordless ssh logins'
-  babushka 'benhoskings:rvm'
 
   set :user, old_user
 end
