@@ -21,9 +21,10 @@ gem 'thinking-sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx
                        :branch => 'rails3',
                        :require => 'thinking_sphinx'
 
-# Bundle gems for the local environment. Make sure to
-# put test-only gems in this group so their generators
-# and rake tasks are available in development mode:
+group :development do
+  gem 'capushka'
+end
+
 group :development, :test do
   gem 'ffaker'
   gem 'ruby-debug19', :require => "ruby-debug"

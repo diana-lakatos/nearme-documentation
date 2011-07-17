@@ -77,6 +77,8 @@ GEM
       net-sftp (>= 2.0.0)
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.0.0)
+    capushka (0.0.2)
+      capistrano (~> 2.5.1)
     capybara (0.4.0)
       celerity (>= 0.7.9)
       culerity (>= 0.2.4)
@@ -289,6 +291,7 @@ DEPENDENCIES
   RedCloth
   autotest
   capistrano
+  capushka
   capybara
   carrierwave
   cucumber
