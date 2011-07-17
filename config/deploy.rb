@@ -49,19 +49,16 @@ task :ec2 do
 end
 
 before "deploy:setup" do
-  old_user = user
-  set :user, "ubuntu"
+  with_user "ubuntu" do
+    sudo %Q{bash -c "`wget -O- babushka.me/up/hard`"}
+    sudo "mkdir -p /var/apps"
+    sudo "chmod 777 /var/apps"
 
-  sudo %Q{bash -c "`wget -O- babushka.me/up/hard`"}
-  sudo "mkdir -p /var/apps"
-  sudo "chmod 777 /var/apps"
-
-  babushka 'benhoskings:set.locale'
-  babushka 'benhoskings:admins can sudo'
-  babushka 'benhoskings:user exists', {:username => old_user}
-  babushka 'benhoskings:passwordless ssh logins'
-
-  set :user, old_user
+    babushka 'benhoskings:set.locale'
+    babushka 'benhoskings:admins can sudo'
+    babushka 'benhoskings:user exists', {:username => old_user}
+    babushka 'benhoskings:passwordless ssh logins'
+  end
 end
 
 after "deploy:symlink" do
@@ -74,7 +71,9 @@ end
 after "deploy:symlink", "deploy:nginx:reload", "thinking_sphinx:stop", "thinking_sphinx:configure", "thinking_sphinx:start"
 after "deploy:setup", "thinking_sphinx:shared_sphinx_folder"
 after "deploy:update_code" do
-  babushka 'deploy'
+  with_user "ubuntu" do
+    babushka 'deploy'
+  end
 end
 
 namespace :deploy do
@@ -103,4 +102,11 @@ namespace :deploy do
       sudo "#{init} restart"
     end
   end
+end
+
+def with_user(new_user)
+  old_user = user
+  set :user, new_user
+  yield
+  set :user, old_user
 end
