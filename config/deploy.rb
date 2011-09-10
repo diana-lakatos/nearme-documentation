@@ -46,18 +46,24 @@ task :ec2 do
   role :app, "desks"
   set :user, application
   set :rvm_type, :none
-end
 
-before "deploy:setup" do
-  with_user "ubuntu" do
-    sudo %Q{bash -c "`wget -O- babushka.me/up/hard`"}
-    sudo "mkdir -p /var/apps"
-    sudo "chmod 777 /var/apps"
+  before "deploy:setup" do
+    with_user "ubuntu" do
+      sudo %Q{bash -c "`wget -O- babushka.me/up/hard`"}
+      sudo "mkdir -p /var/apps"
+      sudo "chmod 777 /var/apps"
 
-    babushka 'benhoskings:set.locale'
-    babushka 'benhoskings:admins can sudo'
-    babushka 'benhoskings:user exists', {:username => old_user}
-    babushka 'benhoskings:passwordless ssh logins'
+      babushka 'benhoskings:set.locale'
+      babushka 'benhoskings:admins can sudo'
+      babushka 'benhoskings:user exists', {:username => old_user}
+      babushka 'benhoskings:passwordless ssh logins'
+    end
+  end
+
+  after "deploy:update_code" do
+    with_user "ubuntu" do
+      babushka 'deploy'
+    end
   end
 end
 
@@ -70,11 +76,6 @@ end
 
 after "deploy:symlink", "deploy:nginx:reload", "thinking_sphinx:stop", "thinking_sphinx:configure", "thinking_sphinx:start"
 after "deploy:setup", "thinking_sphinx:shared_sphinx_folder"
-after "deploy:update_code" do
-  with_user "ubuntu" do
-    babushka 'deploy'
-  end
-end
 
 namespace :deploy do
   task :start do ; end
