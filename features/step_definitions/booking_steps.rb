@@ -1,6 +1,6 @@
 When(/^I follow the booking link for "([^"]*)"$/) do |date|
   date = Date.parse(date)
-  find(:xpath, "//time[@datetime='#{date}']/../details/a").click
+  find(:xpath, "//time[@datetime='#{date}']/../div/a").click
 end
 
 Then (/^I should not see the booking link for "([^"]*)"$/) do |date|
@@ -27,7 +27,7 @@ Then /^I should see the following availability:$/ do |table|
     hash.tap do |hash|
       within(:xpath, cell.path) do
         date       = find("time")["datetime"]
-        available  = find("details").text.strip
+        available  = find(".details").text.strip
         hash[date] = available
       end
     end

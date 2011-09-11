@@ -22,7 +22,7 @@ gem 'thinking-sphinx', :git => 'git://github.com/freelancing-god/thinking-sphinx
                        :require => 'thinking_sphinx'
 
 group :development do
-  gem 'capushka'
+  gem 'capushka', :require => false
 end
 
 group :development, :test do

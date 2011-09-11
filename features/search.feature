@@ -23,8 +23,9 @@ Feature: A user can search for a workplace
     Given a workplace exists with name: "Crap Annex", address: "Chicago, IL 60601, USA"
      When I go to the home page
       And I search for "adelaide"
-      And I should see a Google Map
-     Then I should see "Rad Annex"
+      Then show me the page
+     Then I should see a Google Map
+      And I should see "Rad Annex"
       And I should not see "Crap Annex"
 
   Scenario: A user searches for "australia" and see only stuff in that country
