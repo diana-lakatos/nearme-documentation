@@ -19,6 +19,7 @@ gem 'tweet-button'
 gem 'haml'
 gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'foreman'
+gem 'hoptoad_notifier'
 
 group :development do
   gem 'heroku'
@@ -44,6 +45,5 @@ group :test do
 end
 
 group :development, :production do
-  gem 'hoptoad_notifier'
   gem 'newrelic_rpm'
 end
