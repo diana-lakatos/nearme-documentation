@@ -111,3 +111,6 @@ def with_user(new_user)
   yield
   set :user, old_user
 end
+
+        require './config/boot'
+        require 'hoptoad_notifier/capistrano'

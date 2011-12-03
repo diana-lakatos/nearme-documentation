@@ -20,6 +20,10 @@ gem 'haml'
 gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'foreman'
 
+group :development do
+  gem 'heroku'
+end
+
 group :development, :test do
   gem 'ffaker'
   gem 'ruby-debug19', :require => "ruby-debug"
@@ -40,9 +44,6 @@ group :test do
 end
 
 group :production do
-  gem 'exception_notification', :git => "git://github.com/rails/exception_notification", :require => 'exception_notifier'
-end
-
-group :development, :production do
+  gem 'hoptoad_notifier'
   gem 'newrelic_rpm'
 end
