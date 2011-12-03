@@ -43,7 +43,7 @@ group :test do
   gem 'launchy'
 end
 
-group :production do
+group :development, :production do
   gem 'hoptoad_notifier'
   gem 'newrelic_rpm'
 end
