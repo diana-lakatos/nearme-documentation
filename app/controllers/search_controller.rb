@@ -3,7 +3,7 @@ class SearchController < ApplicationController
   def index
     @search = find_search_query
     if @search
-      @workplaces = Workplace.search_by_location(@search, :include => :photos, :page => params[:page], :per_page => 20)
+      @workplaces = Workplace.search_by_location(@search).includes(:photos).paginate(:page => params[:page], :per_page => 20)
       @query = @search[:pretty]
     end
     respond_to do |wants|
@@ -29,10 +29,10 @@ class SearchController < ApplicationController
 
     def extract_search_from_geocoding(query)
       search = { :query => query }
-      geocoded = Geocoder.search(query)
+      geocoded = Geocoder.search(query).try(:first)
       return search if geocoded.nil?
 
-      loc = geocoded['results'].first
+      loc = geocoded.data
       geometry = loc['geometry']
 
       search[:pretty] = loc['formatted_address']

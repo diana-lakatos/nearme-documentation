@@ -3,7 +3,7 @@ module GmapsFake
   extend self
 
   def stub_requests
-    WebMock.stub_request(:get, %r|.*maps\.google\.com.*| ).to_return { |request| match_query(request) } 
+    WebMock.stub_request(:get, %r|.*maps\.googleapis\.com.*| ).to_return { |request| match_query(request) } 
   end
   
   private
@@ -11,6 +11,7 @@ module GmapsFake
     def match_query(request)
       address = request.uri.query_values['address']
       file = case request.uri.query_values['address']
+        when /adelaide/i then "adelaide"
         when /chicago/i then "chicago"
         when /craigmore/i then "craigmore"
         when /darwin/i then "darwin"

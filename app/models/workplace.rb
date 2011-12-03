@@ -28,14 +28,6 @@ class Workplace < ActiveRecord::Base
 
   attr_protected :description_html, :company_description_html, :creator_id
 
-  define_index do
-    indexes :name
-    has "RADIANS(latitude)",  :as => :latitude,  :type => :float
-    has "RADIANS(longitude)", :as => :longitude, :type => :float
-    group_by "latitude", "longitude"
-    set_property :delta => true
-  end
-
   def desks_available?(date)
     self.maximum_desks > bookings.on(date).count
   end
@@ -78,45 +70,42 @@ class Workplace < ActiveRecord::Base
     end
   end
 
-  def self.search_by_location(search, options = {})
+  def self.search_by_location(search)
+    return self if search[:lat].nil? || search[:lng].nil?
 
-    return [] if search[:lat].nil? || search[:lng].nil?
-
-    if (search[:southwest] && search[:southwest][:lat] && search[:southwest][:lng]) && (search[:northeast] && search[:northeast][:lat] && search[:northeast][:lng])
-      distance = Geocoder.distance_between(search[:southwest][:lat].to_f, search[:southwest][:lng].to_f,
-                                           search[:northeast][:lat].to_f, search[:northeast][:lng].to_f, :units => :km)
-      distance = (distance * 1000).to_f
+    distance = if (search[:southwest] && search[:southwest][:lat] && search[:southwest][:lng]) &&
+                  (search[:northeast] && search[:northeast][:lat] && search[:northeast][:lng])
+      Geocoder::Calculations.distance_between([ search[:southwest][:lat].to_f, search[:southwest][:lng].to_f ],
+                                              [ search[:northeast][:lat].to_f, search[:northeast][:lng].to_f ], :units => :km)
     else
-      distance = 30_000.0
+      30
     end
 
-    search({ :geo => [ Geocoder.to_radians(search[:lat].to_f), Geocoder.to_radians(search[:lng].to_f) ],
-             :with => { "@geodist" => (0.0)..(distance) }, :order => "@geodist ASC, @relevance DESC" }.merge(options))
-
+    near([ search[:lat].to_f, search[:lng].to_f ], distance, :order => "distance", :units => :km)
   end
 
   private
 
-  def fetch_coordinates
-    # If we aren't locally geocoding (cukes and people with JS off)
-    if address_changed? && !(latitude_changed? || longitude_changed?)
-      geocoded = Geocoder.search(address).try(:[], 'results').try(:first)
-      if geocoded
-        self.latitude = geocoded['geometry']['location']['lat']
-        self.longitude = geocoded['geometry']['location']['lng']
-        self.formatted_address = geocoded['formatted_address']
+    def fetch_coordinates
+      # If we aren't locally geocoding (cukes and people with JS off)
+      if address_changed? && !(latitude_changed? || longitude_changed?)
+        geocoded = Geocoder.search(address).try(:first)
+        if geocoded
+          self.latitude = geocoded.coordinates[0]
+          self.longitude = geocoded.coordinates[1]
+          self.formatted_address = geocoded.formatted_address
+        end
       end
     end
-  end
 
-  def apply_filter
-    self.description_html         = redcloth(description)
-    self.company_description_html = redcloth(company_description)
-  end
+    def apply_filter
+      self.description_html         = redcloth(description)
+      self.company_description_html = redcloth(company_description)
+    end
 
-  def redcloth(text)
-    restrictions = [:sanitize_html, :no_span_caps, :filter_styles, :filter_classes, :filter_ids]
-    RedCloth.new(text.to_s, restrictions).to_html
-  end
+    def redcloth(text)
+      restrictions = [:sanitize_html, :no_span_caps, :filter_styles, :filter_classes, :filter_ids]
+      RedCloth.new(text.to_s, restrictions).to_html
+    end
 
 end

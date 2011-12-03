@@ -1,5 +1,0 @@
-test:
-  port: 3314
-
-production: &PROD
-  searchd_file_path: "/var/apps/desksnearme/shared/db/sphinx/production"

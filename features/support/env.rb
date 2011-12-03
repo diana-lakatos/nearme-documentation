@@ -15,9 +15,7 @@ require 'cucumber/web/tableish'
 require 'capybara/rails'
 require 'capybara/cucumber'
 require 'capybara/session'
-require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
-
-require 'cucumber/thinking_sphinx/external_world'
+# require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
 
 require 'webmock/rspec'
 World(WebMock::API, WebMock::Matchers)
@@ -71,14 +69,11 @@ end
 # Always clean up old indexes before tests
 Before do
   WebMock.disable_net_connect!
-  ThinkingSphinx::Test.index
   GmapsFake.stub_requests
 end
 
 # Let's get rid of those shitty capybara-201010101010.html files
 Capybara.save_and_open_page_path = File.join(Rails.root, 'tmp', 'capybara')
-
-Cucumber::ThinkingSphinx::ExternalWorld.new
 
 WebMock.disable_net_connect!(:allow_localhost => true)
 
