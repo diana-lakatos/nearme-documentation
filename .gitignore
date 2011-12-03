@@ -10,5 +10,4 @@ log
 tmp
 *.swo
 *.swp
-database.yml
 public/stylesheets/*.css
