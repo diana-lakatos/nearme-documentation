@@ -11,7 +11,7 @@ gem 'mini_magick'
 gem 'carrierwave'
 gem 'state_machine'
 gem 'jquery-rails'
-gem 'RedCloth', :require => "redcloth"
+gem "RedCloth", "~> 4.2.9", :require => "redcloth"
 gem 'fog'
 gem 'gravtastic'
 gem 'will_paginate'
@@ -38,8 +38,7 @@ group :test do
   gem 'autotest'
   gem 'capybara'
   gem 'database_cleaner'
-  gem 'cucumber-rails', :git => "git://github.com/keithpitt/cucumber-rails", :branch => "latest_capybara_support"
-  gem 'cucumber'
+  gem 'cucumber-rails'
   gem 'pickle'
   gem 'factory_girl_rails'
   gem 'launchy'

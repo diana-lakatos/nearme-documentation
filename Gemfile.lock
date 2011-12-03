@@ -16,15 +16,6 @@ GIT
       riddle (>= 1.2.1)
 
 GIT
-  remote: git://github.com/keithpitt/cucumber-rails
-  revision: 2adfc17c89ebe7ab5fab46136bb16bca3636bd44
-  branch: latest_capybara_support
-  specs:
-    cucumber-rails (0.3.3)
-      aruba (~> 0.2.2)
-      cucumber (~> 0.9.0)
-
-GIT
   remote: git://github.com/rails/exception_notification
   revision: 192a49a02d63d28b23ed41cebadfedd490929cf1
   specs:
@@ -33,7 +24,7 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
-    RedCloth (4.2.3)
+    RedCloth (4.2.9)
     abstract (1.0.0)
     actionmailer (3.0.3)
       actionpack (= 3.0.3)
@@ -64,11 +55,7 @@ GEM
     addressable (2.2.2)
     archive-tar-minitar (0.5.2)
     arel (2.0.4)
-    aruba (0.2.6)
-      background_process
-      cucumber (~> 0.9.4)
     autotest (4.4.5)
-    background_process (1.2)
     bcrypt-ruby (2.1.2)
     builder (2.1.2)
     capistrano (2.5.19)
@@ -102,6 +89,8 @@ GEM
       gherkin (~> 2.2.9)
       json (~> 1.4.6)
       term-ansicolor (~> 1.0.5)
+    cucumber-rails (0.3.2)
+      cucumber (>= 0.8.0)
     culerity (0.2.12)
     database_cleaner (0.6.0)
     devise (1.1.4)
@@ -288,14 +277,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  RedCloth
+  RedCloth (~> 4.2.9)
   autotest
   capistrano
   capushka
   capybara
   carrierwave
-  cucumber
-  cucumber-rails!
+  cucumber-rails
   database_cleaner
   devise
   exception_notification!
