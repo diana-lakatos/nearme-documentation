@@ -23,6 +23,7 @@ gem 'hoptoad_notifier'
 
 group :development do
   gem 'heroku'
+  gem "rails-erd"
 end
 
 group :development, :test do
@@ -42,6 +43,7 @@ group :test do
   gem 'cucumber-rails'
   gem 'pickle'
   gem 'launchy'
+  gem 'simplecov', :require => false
 end
 
 group :development, :production do

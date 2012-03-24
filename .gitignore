@@ -11,3 +11,4 @@ tmp
 *.swo
 *.swp
 public/stylesheets/*.css
+coverage

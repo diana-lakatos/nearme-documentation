@@ -5,6 +5,7 @@ common: &common
   username: <%= `whoami`.chomp %>
   password:
   min_messages: warning
+  host: localhost
 
 development:
   <<: *common
