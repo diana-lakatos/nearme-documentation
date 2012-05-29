@@ -28,7 +28,6 @@ end
 
 group :development, :test do
   gem 'ffaker'
-  gem 'ruby-debug19', :require => "ruby-debug"
   gem 'rspec', '>= 2.0.0'
   gem 'rspec-rails', '>= 2.0.0'
   gem 'factory_girl_rails'
