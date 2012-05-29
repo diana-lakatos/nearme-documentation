@@ -5,6 +5,7 @@ class SearchController < ApplicationController
     if @search
       @workplaces = Workplace.search_by_location(@search).includes(:photos).paginate(:page => params[:page], :per_page => 20)
       @query = @search[:pretty]
+      SearchQuery.create(:query => @search[:query], :agent => request.env['HTTP_USER_AGENT'])
     end
     respond_to do |wants|
       wants.html
