@@ -19,7 +19,7 @@ gem 'tweet-button'
 gem 'haml'
 gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'foreman'
-gem 'hoptoad_notifier'
+gem 'airbrake'
 
 group :development do
   gem 'heroku'

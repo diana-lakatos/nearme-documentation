@@ -38,6 +38,9 @@ GEM
       activesupport (= 3.0.3)
     activesupport (3.0.3)
     addressable (2.2.2)
+    airbrake (3.1.2)
+      activesupport
+      builder
     arel (2.0.4)
     autotest (4.4.5)
     bcrypt-ruby (2.1.2)
@@ -117,9 +120,6 @@ GEM
       rubyzip
       term-ansicolor (~> 1.0.5)
     highline (1.6.1)
-    hoptoad_notifier (2.4.11)
-      activesupport
-      builder
     i18n (0.4.2)
     jquery-rails (0.2.5)
       rails (~> 3.0)
@@ -267,6 +267,7 @@ PLATFORMS
 
 DEPENDENCIES
   RedCloth (~> 4.2.9)
+  airbrake
   autotest
   capistrano
   capybara
@@ -282,7 +283,6 @@ DEPENDENCIES
   gravtastic
   haml
   heroku
-  hoptoad_notifier
   jquery-rails
   launchy
   mini_magick

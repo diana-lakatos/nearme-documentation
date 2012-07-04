@@ -2,7 +2,7 @@ common: &common
   adapter: postgresql
   encoding: unicode
   pool: 5
-  username: <%= `whoami`.chomp %>
+  username: saiperchard
   password:
   min_messages: warning
   host: localhost
