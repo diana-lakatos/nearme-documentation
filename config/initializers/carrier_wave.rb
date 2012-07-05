@@ -3,8 +3,8 @@ CarrierWave.configure do |config|
 
     config.fog_credentials = {
       :provider                 => 'AWS',
-      :aws_access_key_id        => 'AKIAILGH3PESU3PCUJEQ',
-      :aws_secret_access_key    => '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'
+      :aws_access_key_id        => 'AKIAI5EVP6HB47OZZXXA',
+      :aws_secret_access_key    => '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'
     }
     config.fog_directory        = 'desksnearme.production'
     config.fog_host             = 'https://s3.amazonaws.com/desksnearme.production'
