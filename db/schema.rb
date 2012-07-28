@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120529122343) do
+ActiveRecord::Schema.define(:version => 20120802155425) do
+
+  create_table "amenities", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -18,6 +25,10 @@ ActiveRecord::Schema.define(:version => 20120529122343) do
     t.string   "uid"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
+    t.string   "secret"
+    t.string   "token"
+    t.text     "info"
   end
 
   create_table "bookings", :force => true do |t|
@@ -28,6 +39,16 @@ ActiveRecord::Schema.define(:version => 20120529122343) do
     t.string   "state"
     t.integer  "user_id"
     t.date     "date"
+  end
+
+  create_table "companies", :force => true do |t|
+    t.integer  "creator_id"
+    t.string   "name"
+    t.string   "email"
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.datetime "deleted_at"
   end
 
   create_table "feeds", :force => true do |t|
@@ -41,44 +62,59 @@ ActiveRecord::Schema.define(:version => 20120529122343) do
 
   add_index "feeds", ["workplace_id"], :name => "index_feeds_on_workplace_id"
 
-  create_table "oauth_access_grants", :force => true do |t|
-    t.integer  "resource_owner_id", :null => false
-    t.integer  "application_id",    :null => false
-    t.string   "token",             :null => false
-    t.integer  "expires_in",        :null => false
-    t.string   "redirect_uri",      :null => false
-    t.datetime "created_at",        :null => false
-    t.datetime "revoked_at"
-    t.string   "scopes"
+  create_table "listing_amenities", :force => true do |t|
+    t.integer  "listing_id"
+    t.integer  "amenity_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
-  add_index "oauth_access_grants", ["token"], :name => "index_oauth_access_grants_on_token", :unique => true
-
-  create_table "oauth_access_tokens", :force => true do |t|
-    t.integer  "resource_owner_id", :null => false
-    t.integer  "application_id",    :null => false
-    t.string   "token",             :null => false
-    t.string   "refresh_token"
-    t.integer  "expires_in"
-    t.datetime "revoked_at"
-    t.datetime "created_at",        :null => false
-    t.string   "scopes"
+  create_table "listing_organizations", :force => true do |t|
+    t.integer  "listing_id"
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
-  add_index "oauth_access_tokens", ["refresh_token"], :name => "index_oauth_access_tokens_on_refresh_token", :unique => true
-  add_index "oauth_access_tokens", ["resource_owner_id"], :name => "index_oauth_access_tokens_on_resource_owner_id"
-  add_index "oauth_access_tokens", ["token"], :name => "index_oauth_access_tokens_on_token", :unique => true
-
-  create_table "oauth_applications", :force => true do |t|
-    t.string   "name",         :null => false
-    t.string   "uid",          :null => false
-    t.string   "secret",       :null => false
-    t.string   "redirect_uri", :null => false
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+  create_table "listings", :force => true do |t|
+    t.integer  "location_id"
+    t.integer  "creator_id"
+    t.string   "name"
+    t.text     "description"
+    t.string   "currency"
+    t.integer  "price_cents",        :default => 0
+    t.integer  "quantity",           :default => 1
+    t.float    "rating_average",     :default => 0.0
+    t.integer  "rating_count",       :default => 0
+    t.text     "availability_rules"
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.datetime "deleted_at"
   end
 
-  add_index "oauth_applications", ["uid"], :name => "index_oauth_applications_on_uid", :unique => true
+  create_table "locations", :force => true do |t|
+    t.integer  "company_id"
+    t.integer  "creator_id"
+    t.string   "name"
+    t.string   "email"
+    t.text     "description"
+    t.string   "address"
+    t.string   "phone"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.string   "amenities"
+    t.text     "info"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.datetime "deleted_at"
+  end
+
+  create_table "organizations", :force => true do |t|
+    t.string   "name"
+    t.string   "logo"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "photos", :force => true do |t|
     t.integer  "workplace_id", :null => false
@@ -98,13 +134,13 @@ ActiveRecord::Schema.define(:version => 20120529122343) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                               :default => "", :null => false
-    t.string   "encrypted_password",   :limit => 128, :default => "", :null => false
-    t.string   "password_salt",                       :default => "", :null => false
+    t.string   "email",                                 :default => "", :null => false
+    t.string   "encrypted_password",     :limit => 128, :default => "", :null => false
+    t.string   "password_salt",                         :default => "", :null => false
     t.string   "reset_password_token"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                       :default => 0
+    t.integer  "sign_in_count",                         :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -113,7 +149,19 @@ ActiveRecord::Schema.define(:version => 20120529122343) do
     t.datetime "updated_at"
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                      :default => 0,  :null => false
+    t.integer  "bookings_count",                        :default => 0,  :null => false
+    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at"
+    t.datetime "deleted_at"
+    t.datetime "locked_at"
+    t.datetime "reset_password_sent_at"
+    t.integer  "failed_attempts",                       :default => 0
+    t.string   "authentication_token"
+    t.string   "avatar"
+    t.string   "confirmation_token"
+    t.string   "phone"
+    t.string   "unconfirmed_email"
+    t.string   "unlock_token"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

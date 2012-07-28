@@ -8,9 +8,9 @@ module NavigationHelpers
   def path_to(page_name)
     case page_name
 
-    when /the home\s?page/
+    when /^the home\s?page$/
       '/'
-      
+
     when /the twitter auth page/
       'auth/twitter'
 
@@ -33,24 +33,27 @@ module NavigationHelpers
       path_to_pickle $1, $2, :extra => $3                           #  or the forum's post's edit page
 
     when /^#{capture_model}(?:'s)? (.+?) page$/                     # eg. the forum's posts page
-      path_to_pickle $1, :extra => $2                               #  or the forum's edit page
-    
+      if($2 == 'edit')
+        path_to_pickle $1, :action => $2                               #  or the forum's edit page
+      elsif($2 == 'new booking')
+        new_workplace_booking_path(created_model($1))
+      else
+        path_to_pickle $1, :extra => $2                               #  or the forum's edit page
+      end
     when /^the (.+?) page$/                                         # translate to named route
       send "#{$1.downcase.gsub(' ','_')}_path"
-    
-    
-    # Add more mappings here.
-    # Here is an example that pulls values out of the Regexp:
-    #
-    #   when /^(.*)'s profile page$/i
-    #     user_profile_path(User.find_by_login($1))
+      # Add more mappings here.
+      # Here is an example that pulls values out of the Regexp:
+      #
+      #   when /^(.*)'s profile page$/i
+      #     user_profile_path(User.find_by_login($1))
 
     else
       begin
-        page_name =~ /the (.*) page/
-        path_components = $1.split(/\s+/)
+        page_name =~ /^the (.*) page$/
+          path_components = $1.split(/\s+/)
         self.send(path_components.push('path').join('_').to_sym)
-      rescue Object => e
+      rescue NoMethodError, ArgumentError
         raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
           "Now, go and add a mapping in #{__FILE__}"
       end

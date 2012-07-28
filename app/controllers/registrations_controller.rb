@@ -19,7 +19,7 @@ class RegistrationsController < Devise::RegistrationsController
       set_flash_message :notice, :updated
       redirect_to :action => 'edit'
     else
-      render_with_scope :edit
+      render :edit
     end
   end
 

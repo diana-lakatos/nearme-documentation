@@ -8,22 +8,13 @@ module HtmlSelectorsHelpers
   def selector_for(locator)
     case locator
 
-    when /the page/
+    when "the page"
       "html > body"
-
-    when "photos"
-      "ul#photos li img"
-
-    when "the first photo box"
-      "ul#photos li:first-of-type"
-
-    when /a google map/i
-      "div.google-map"
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
-    #  when /the (notice|error|info) flash/
+    #  when /^the (notice|error|info) flash$/
     #    ".flash.#{$1}"
 
     # You can also return an array to use a different selector
@@ -35,7 +26,15 @@ module HtmlSelectorsHelpers
     # This allows you to provide a quoted selector as the scope
     # for "within" steps as was previously the default for the
     # web steps:
-    when /"(.+)"/
+    when "photos"
+      "ul#photos li img"
+
+    when "the first photo box"
+      "ul#photos li:first-of-type"
+
+    when /a google map/i
+      "div.google-map"
+    when /^"(.+)"$/
       $1
 
     else

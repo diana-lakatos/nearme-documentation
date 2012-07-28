@@ -1,5 +1,7 @@
-Factory.define(:authentication) do |a|
-  a.provider "twitter"
-  a.uid "ima_donkey"
-  a.association :user
+FactoryGirl.define do
+  factory :authentication do
+    association :user
+    provider 'twitter'
+    uid 'ima_donkey'
+  end
 end

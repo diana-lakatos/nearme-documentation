@@ -24,7 +24,6 @@
 
       = will_paginate @workplaces
       - @workplaces.each do |workplace|
-        = render :partial => '/workplaces/workplace.html', :locals => { :workplace => workplace }
+        = render :partial => '/workplaces/workplace', :locals => { :workplace => workplace }
       = will_paginate @workplaces
-
       = render :partial => 'workplace_js'

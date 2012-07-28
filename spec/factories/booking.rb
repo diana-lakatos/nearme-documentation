@@ -1,5 +1,7 @@
-Factory.define :booking do |b|
-  b.association :user
-  b.association :workplace
-  b.date { Date.today }
+FactoryGirl.define do
+  factory :booking do
+    association :user
+    association :workplace
+    date { Date.today }
+  end
 end

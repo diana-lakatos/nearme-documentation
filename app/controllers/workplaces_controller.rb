@@ -11,8 +11,13 @@ class WorkplacesController < ApplicationController
   end
 
   def create
+    creator_id = nil;
+    if(current_user.admin?)
+      creator_id = params[:workplace][:creator_id]
+    end
+    params[:workplace].delete(:creator_id)
     @workplace = current_user.workplaces.build(params[:workplace])
-    @workplace.creator_id = params[:workplace][:creator_id] if current_user.admin?
+    @workplace.creator_id = creator_id if current_user.admin? and creator_id
     if @workplace.save
       redirect_to @workplace
     else
@@ -31,6 +36,7 @@ class WorkplacesController < ApplicationController
 
   def update
     @workplace.creator_id = params[:workplace][:creator_id] if current_user.admin?
+    params[:workplace].delete(:creator_id)
     if @workplace.update_attributes(params[:workplace])
       redirect_to @workplace
     else

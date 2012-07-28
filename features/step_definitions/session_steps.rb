@@ -1,12 +1,9 @@
 
 Given (/^I am logged in as #{capture_model}$/) do |user_instance|
   user = model!(user_instance)
-  auth = Factory.create(:authentication, :user => user)
-  stub_twitter_request_token
+  auth = FactoryGirl.create(:authentication, :user => user)
+  OmniAuth.config.add_mock(:twitter, {:uid => auth.uid})
   visit "/auth/twitter"
-  stub_twitter_successful_access_token(auth.uid)
-  stub_twitter_verify_credentials_for(:twitter_username => auth.uid, :twitter_id => auth.id)
-  visit "/auth/twitter/callback?oauth_token=this_need_not_be_real&oauth_verifier=verifier"
 end
 
 Then /^I should be logged out$/ do

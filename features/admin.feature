@@ -11,7 +11,7 @@ Feature: An admin can edit shit
      When I go to the workplace's edit page
       And I should see "Edit a workplace"
       And I should see "Creator"
-  
+
   Scenario: An admin can successfully create a workplace with another creator
     Given a user: "Stevey" exists with name: "Stevey"
       And an admin: "Adminardo" exists

@@ -11,11 +11,8 @@ class User < ActiveRecord::Base
 
   validates_presence_of :name
 
-  # Include default devise modules. Others available are:
-  # :token_authenticatable, :confirmable, :lockable and :timeoutable
-  # devise :database_authenticatable, :registerable,
-  #        :recoverable, :rememberable, :trackable, :validatable
-  devise :database_authenticatable, :registerable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable,
+         :rememberable, :trackable, :validatable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :name, :email
@@ -23,8 +20,8 @@ class User < ActiveRecord::Base
   delegate :to_s, :to => :name
 
   def apply_omniauth(omniauth)
-    self.name = omniauth['user_info']['name'] if email.blank?
-    self.email = omniauth['user_info']['email'] if email.blank?
+    self.name = omniauth['info']['name'] if email.blank?
+    self.email = omniauth['info']['email'] if email.blank?
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
   end
 
