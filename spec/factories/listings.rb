@@ -6,6 +6,7 @@ FactoryGirl.define do
 
     creator
     location
+
     factory :listing_with_amenity do
       after(:create) do |listing|
         listing.amenities << FactoryGirl.create(:amenity, id: 1)

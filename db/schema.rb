@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120802155425) do
+ActiveRecord::Schema.define(:version => 20120802194431) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -117,14 +117,56 @@ ActiveRecord::Schema.define(:version => 20120802155425) do
   end
 
   create_table "photos", :force => true do |t|
-    t.integer  "workplace_id", :null => false
-    t.string   "description",  :null => false
-    t.string   "file",         :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "content_id"
+    t.string   "image"
+    t.string   "caption"
+    t.string   "content_type"
+    t.integer  "position"
+    t.datetime "deleted_at"
   end
 
-  add_index "photos", ["workplace_id"], :name => "index_photos_on_workplace_id"
+  create_table "ratings", :force => true do |t|
+    t.integer  "content_id"
+    t.string   "content_type"
+    t.integer  "user_id"
+    t.float    "rating"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.datetime "deleted_at"
+  end
+
+  create_table "reservation_periods", :force => true do |t|
+    t.integer  "reservation_id"
+    t.integer  "listing_id"
+    t.date     "date"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.datetime "deleted_at"
+  end
+
+  create_table "reservation_seats", :force => true do |t|
+    t.integer  "reservation_id"
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "email"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.datetime "deleted_at"
+  end
+
+  create_table "reservations", :force => true do |t|
+    t.integer  "listing_id"
+    t.integer  "owner_id"
+    t.string   "state"
+    t.string   "confirmation_email"
+    t.integer  "total_amount_cents"
+    t.string   "currency"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.datetime "deleted_at"
+  end
 
   create_table "search_queries", :force => true do |t|
     t.string   "query"

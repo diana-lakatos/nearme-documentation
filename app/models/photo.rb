@@ -1,17 +1,18 @@
 class Photo < ActiveRecord::Base
 
-  mount_uploader :file, ImageUploader
+  attr_accessible :content_id, :caption, :image, :position
+  belongs_to :content, :polymorphic => true
 
-  belongs_to :workplace
+  acts_as_paranoid
+  validates :image, :presence => true
+  validates_presence_of :caption
 
-  validates_presence_of :description
+  mount_uploader :image, PhotoUploader
 
-  # We'll just make the Photo instance act like the actual
-  # uploader
   def method_missing(method, *args, &block)
     super(method, *args, &block)
   rescue NoMethodError
-    file.send(method, *args, &block)
+    image.send(method, *args, &block)
   end
 
 end

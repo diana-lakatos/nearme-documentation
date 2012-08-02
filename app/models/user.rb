@@ -5,9 +5,12 @@ class User < ActiveRecord::Base
   is_gravtastic!
 
   has_many :authentications
-  has_many :workplaces, :foreign_key => "creator_id"
   has_many :bookings
+  has_many :reservations, :foreign_key => :owner_id
+  has_many :workplaces, :foreign_key => "creator_id"
   has_many :workplace_bookings, :through => :workplaces, :source => :bookings
+
+  mount_uploader :avatar, AvatarUploader
 
   validates_presence_of :name
 
@@ -15,7 +18,7 @@ class User < ActiveRecord::Base
          :rememberable, :trackable, :validatable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email
+  attr_accessible :name, :email, :phone
 
   delegate :to_s, :to => :name
 
@@ -34,4 +37,7 @@ class User < ActiveRecord::Base
     update_attributes(attrs)
   end
 
+  def linked_to?(provider)
+    authentications.where(provider: provider).any?
+  end
 end

@@ -6,14 +6,14 @@ class Workplace < ActiveRecord::Base
 
   belongs_to :creator, :class_name => "User", :foreign_key => "creator_id"
   has_many :bookings, :dependent => :delete_all
-  has_many :photos, :dependent => :delete_all do
+  has_many :photos, :as => :content, :dependent => :delete_all do
     def thumb
       (first || build).thumb
     end
   end
   has_many :feeds, :dependent => :delete_all
 
-  scope :featured, where(%{ (select count(*) from "photos" where workplace_id = "workplaces".id) > 0 }).
+  scope :featured, where(%{ (select count(*) from "photos" where content_id = "workplaces".id AND content_type = 'Workplace') > 0  }).
                    where(:fake => false).includes(:photos).order(%{ random() }).limit(5)
   scope :latest,   order("workplaces.created_at DESC")
 

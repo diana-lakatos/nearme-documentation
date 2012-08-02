@@ -59,8 +59,8 @@
         %ul
           - @workplace.photos.each do |photo|
             %li
-              = link_to photo.large.url, :title => photo.description, :rel => "photos", :style => "margin-right: 5px" do
-                = image_tag(photo.thumb.url, :alt => photo.description)
+              = link_to photo.large.url, :title => photo.caption, :rel => "photos", :style => "margin-right: 5px" do
+                = image_tag(photo.thumb.url, :alt => photo.caption)
       - else
         .grid_1.alpha
           = image_tag "desk_photos.png"

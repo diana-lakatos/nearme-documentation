@@ -30,22 +30,10 @@ class Listing < ActiveRecord::Base
   # Ignore it for the most part.
   attr_accessor :score
 
-
-  def self.find_in_boundingbox(bb)
-    # TODO: properly select min/max on start/end
-    includes(:location => :company).where(
-      locations: {
-        latitude:  bb["start"]["lat"]..bb["end"]["lat"],
-        longitude: bb["start"]["lon"]..bb["end"]["lon"]
-      }
-    )
-  end
-
-
   def self.find_by_search_params(params)
     search_hash = {}
-    if(params.has_key?("bounding_box"))
-      bb = params["bounding_box"]
+    if(params.has_key?("boundingbox"))
+      bb = params["boundingbox"]
       search_hash[:locations] = {
         latitude:  bb["start"]["lat"]..bb["end"]["lat"],
         longitude: bb["start"]["lon"]..bb["end"]["lon"]

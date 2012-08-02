@@ -26,9 +26,9 @@ class RegistrationsController < Devise::RegistrationsController
   def destroy
     raise ActionController::RoutingError, "Feature disabled"
   end
-  
+
   private
-  
+
     def build_resource(*args)
       super
       if session[:omniauth]

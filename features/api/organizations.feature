@@ -18,7 +18,7 @@ Feature: List organizations
             "thumb": { "url": "/uploads/thumb_foobear.jpeg" },
             "medium": { "url": "/uploads/medium_foobear.jpeg"},
             "large": { "url": "/uploads/large_foobear.jpeg" },
-            "url": "/media/organization/3/logo/foobear.jpeg"
+            "url": "/media/organization/1/logo/foobear.jpeg"
           }
         },
         {

@@ -47,15 +47,16 @@ group :development, :test do
 end
 
 group :test do
-  gem 'webmock', :git => 'git://github.com/bblimke/webmock'
-  gem 'timecop'
   gem 'autotest'
   gem 'capybara', '1.1.2'
+  gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
-  gem 'cucumber-rails'
-  gem 'pickle'
   gem 'launchy'
+  gem 'mocha'
+  gem 'pickle'
   gem 'simplecov', :require => false
+  gem 'timecop'
+  gem 'webmock', :git => 'git://github.com/bblimke/webmock'
 end
 
 group :development, :production do
