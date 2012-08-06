@@ -1,11 +1,5 @@
 class Listing < ActiveRecord::Base
 
-  has_many :amenities, through: :listing_amenities
-  has_many :listing_amenities
-
-  has_many :organizations, through: :listing_organizations
-  has_many :listing_organizations
-
   has_many :reservations, dependent: :destroy
   has_many :photos,  as: :content, dependent: :destroy
   has_many :ratings, as: :content, dependent: :destroy
@@ -19,7 +13,7 @@ class Listing < ActiveRecord::Base
                   :availability_rules, :creator_id, :name, :description
 
   delegate :name, :description, to: :company, prefix: true
-  delegate :address, :latitude, :longitude, to: :location
+  delegate :amenities, :organizations, :address, :latitude, :longitude, to: :location
 
   monetize :price_cents
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120806164023) do
+ActiveRecord::Schema.define(:version => 20120806183917) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -62,20 +62,6 @@ ActiveRecord::Schema.define(:version => 20120806164023) do
 
   add_index "feeds", ["workplace_id"], :name => "index_feeds_on_workplace_id"
 
-  create_table "listing_amenities", :force => true do |t|
-    t.integer  "listing_id"
-    t.integer  "amenity_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "listing_organizations", :force => true do |t|
-    t.integer  "listing_id"
-    t.integer  "organization_id"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-  end
-
   create_table "listings", :force => true do |t|
     t.integer  "location_id"
     t.integer  "creator_id"
@@ -90,6 +76,20 @@ ActiveRecord::Schema.define(:version => 20120806164023) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.datetime "deleted_at"
+  end
+
+  create_table "location_amenities", :force => true do |t|
+    t.integer  "amenity_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "location_id"
+  end
+
+  create_table "location_organizations", :force => true do |t|
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "location_id"
   end
 
   create_table "locations", :force => true do |t|
