@@ -35,8 +35,8 @@ module NavigationHelpers
     when /^#{capture_model}(?:'s)? (.+?) page$/                     # eg. the forum's posts page
       if($2 == 'edit')
         path_to_pickle $1, :action => $2                               #  or the forum's edit page
-      elsif($2 == 'new booking')
-        new_workplace_booking_path(created_model($1))
+      elsif($2 == 'new reservation')
+        new_listing_reservation_path(created_model($1))
       else
         path_to_pickle $1, :extra => $2                               #  or the forum's edit page
       end

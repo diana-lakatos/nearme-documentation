@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120806183917) do
+ActiveRecord::Schema.define(:version => 20120808141651) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -31,16 +31,6 @@ ActiveRecord::Schema.define(:version => 20120806183917) do
     t.text     "info"
   end
 
-  create_table "bookings", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "workplace_id"
-    t.text     "comment"
-    t.string   "state"
-    t.integer  "user_id"
-    t.date     "date"
-  end
-
   create_table "companies", :force => true do |t|
     t.integer  "creator_id"
     t.string   "name"
@@ -49,18 +39,19 @@ ActiveRecord::Schema.define(:version => 20120806183917) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.datetime "deleted_at"
+    t.string   "url"
   end
 
   create_table "feeds", :force => true do |t|
     t.integer  "user_id"
-    t.integer  "workplace_id"
     t.string   "activity"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "booking_id"
+    t.integer  "listing_id"
+    t.integer  "reservation_id"
   end
 
-  add_index "feeds", ["workplace_id"], :name => "index_feeds_on_workplace_id"
+  add_index "feeds", ["listing_id"], :name => "index_feeds_on_listing_id"
 
   create_table "inquiries", :force => true do |t|
     t.integer  "listing_id"
@@ -76,14 +67,15 @@ ActiveRecord::Schema.define(:version => 20120806183917) do
     t.string   "name"
     t.text     "description"
     t.string   "currency"
-    t.integer  "price_cents",        :default => 0
-    t.integer  "quantity",           :default => 1
-    t.float    "rating_average",     :default => 0.0
-    t.integer  "rating_count",       :default => 0
+    t.integer  "price_cents",          :default => 0
+    t.integer  "quantity",             :default => 1
+    t.float    "rating_average",       :default => 0.0
+    t.integer  "rating_count",         :default => 0
     t.text     "availability_rules"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.datetime "deleted_at"
+    t.boolean  "confirm_reservations"
   end
 
   create_table "location_amenities", :force => true do |t|
@@ -112,9 +104,10 @@ ActiveRecord::Schema.define(:version => 20120806183917) do
     t.float    "longitude"
     t.string   "amenities"
     t.text     "info"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.datetime "deleted_at"
+    t.string   "formatted_address"
   end
 
   create_table "organizations", :force => true do |t|
@@ -174,6 +167,7 @@ ActiveRecord::Schema.define(:version => 20120806183917) do
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
     t.datetime "deleted_at"
+    t.text     "comment"
   end
 
   create_table "search_queries", :force => true do |t|
@@ -228,25 +222,5 @@ ActiveRecord::Schema.define(:version => 20120806183917) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
-
-  create_table "workplaces", :force => true do |t|
-    t.string   "name"
-    t.integer  "maximum_desks"
-    t.text     "description"
-    t.text     "company_description"
-    t.text     "address"
-    t.boolean  "confirm_bookings"
-    t.integer  "creator_id"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "description_html"
-    t.text     "company_description_html"
-    t.text     "url"
-    t.string   "formatted_address"
-    t.boolean  "fake",                     :default => false, :null => false
-    t.integer  "bookings_count",           :default => 0,     :null => false
-  end
 
 end

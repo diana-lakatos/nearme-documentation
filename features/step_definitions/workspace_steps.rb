@@ -1,8 +1,8 @@
 
-Then /^I should see the following workplaces in order:$/ do |table|
-  found = all("article.workplace h2")
-  table.raw.flatten.each_with_index do |workplace, index|
-    found[index].text.should == workplace
+Then /^I should see the following listings in order:$/ do |table|
+  found = all("article.listing h2")
+  table.raw.flatten.each_with_index do |listing, index|
+    found[index].text.should == listing
   end
 end
 

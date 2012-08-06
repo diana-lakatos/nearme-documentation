@@ -12,13 +12,13 @@
     %p There are plenty of fantastic companies worldwide, such as Inspire9, The Frontier Group, eLabs, and Obtiva, who offer up their fantastic working environment to individuals who need a change of scenery or companions. This is fantastic! Unfortunately, until now, it hasn't been easy for individuals to find places like this or to even know that they existed.
     %p
       This is why we built DesksNear.Me. So, start searching for a place to work above, or add a place now!
-    = link_to new_workplace_path, :class => "huge_ass_button workplace" do
+    = link_to new_listing_path, :class => "huge_ass_button listing" do
       = image_tag "marker-big.png"
-      Add my workplace
+      Add my listing
   .grid_7.omega
-    %h1.tk-ratio-display Featured Workplaces
+    %h1.tk-ratio-display Featured Listings
     %section.list.featured
-      = render :partial => "workplaces/featured", :collection => @featured, :as => :workplace
+      = render :partial => "listings/featured", :collection => @featured, :as => :listing
 
 - # Hiding this for now as I think it clutters home page and doesn't really offer much. We'll add an 'About' page
 - if false
@@ -34,8 +34,8 @@
     .grid_7.omega
       %h1.tk-chaparral-pro Don't offer free desks?
       %p
-        We know that many workplaces have extra goodies available for their desks (like food, drinks or equipment access) and they like to charge a small daily rate for visiting freelancers to pay. There are also dedicated co-working spaces out there which charge for access.
-      %p For now, listing non-free places is fine as long as you mention this clearly in your workplace description. In the future there will likely be a small listing fee for paid workspaces.
+        We know that many listings have extra goodies available for their desks (like food, drinks or equipment access) and they like to charge a small daily rate for visiting freelancers to pay. There are also dedicated co-working spaces out there which charge for access.
+      %p For now, listing non-free places is fine as long as you mention this clearly in your listing description. In the future there will likely be a small listing fee for paid workspaces.
       %p
         %strong In the coming months, we will be working with our regular users to discover the best way to manage listing of paid spaces.
       %em &mdash; The Rad Warlike Annex

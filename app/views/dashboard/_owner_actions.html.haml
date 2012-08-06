@@ -1,6 +1,6 @@
-= form_for([booking.workplace, booking]) do |f|
-  - if booking.can_owner_cancel?
+= form_for([reservation.listing, reservation]) do |f|
+  - if reservation.can_owner_cancel?
     = hidden_field_tag :event, "owner_cancel"
-    = f.submit "Cancel", :confirm => "Do you really want to cancel this booking?", :class => "rm"
-  = f.submit "Confirm", :name => "event", :confirm => "Do you want to confirm this booking?", :class => "tick" if booking.can_confirm?
-  = f.submit "Reject",  :name => "event", :confirm => "Do you really want to reject this booking?", :class => "rm" if booking.can_reject?
+    = f.submit "Cancel", :confirm => "Do you really want to cancel this reservation?", :class => "rm"
+  = f.submit "Confirm", :name => "event", :confirm => "Do you want to confirm this reservation?", :class => "tick" if reservation.can_confirm?
+  = f.submit "Reject",  :name => "event", :confirm => "Do you really want to reject this reservation?", :class => "rm" if reservation.can_reject?

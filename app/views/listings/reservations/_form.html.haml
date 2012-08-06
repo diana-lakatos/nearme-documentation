@@ -1,0 +1,8 @@
+%h1.reservation
+  You are making a reservation for:
+  %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
+= simple_form_for [listing, reservation] do |f|
+  = f.input :date, :as => :hidden
+  = f.input :comment, :input_html => { :rows => 3 }
+  = f.submit 'Reserve'
+  = link_to "No, maybe not.", listing, :class => "cancel"

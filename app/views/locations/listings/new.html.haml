@@ -1,0 +1,13 @@
+%h1.tk-adelle Create a listing
+
+= simple_form_for [location, listing] do |f|
+  - textile_hint = "(Parsed using #{link_to("Textile", "http://en.wikipedia.org/wiki/Textile_%28markup_language%29", :target => "_blank")}).".html_safe
+  = f.input :location_id, :collection => current_user.locations, :prompt =>  "Select a location..."
+  = link_to "Create a location", new_location_path
+  = f.input :name, :hint => "What's the name of this listing?"
+  = f.input :quantity, :input_html => { :size => 4, :min => 1 }, :hint => "How many spots do you have?"
+  = f.input :description, :input_html => {:rows => 8}, :hint => ["What resources are available, i.e. internet, speed, public transport, coffee shops near by, coffee included? Why would people love your office? What kinds of drop-ins/coworkers would you prefer? Conditions of entry (e.g. must participate in stand up or something)", textile_hint].join(' ').html_safe
+  - if current_user.admin?
+    = f.association :creator, :select => "Select a creator..."
+  = f.input :confirm_reservations, :as => :radio_buttons, :hint => "Do you want to be able to approve reservations on a case-by-case basis? We'll notify you by email whenever there's a reservation that needs your attention."
+  = f.button :submit

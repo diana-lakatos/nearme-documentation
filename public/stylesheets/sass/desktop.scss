@@ -153,9 +153,9 @@ ul#photos {
     list-style: none;
     float: left; } }
 
-/* === Workplace Detail */
+/* === Listing Detail */
 
-article.workplace {
+article.listing {
   h1 {
     font-weight: 400;
     margin-bottom: 12px; }
@@ -169,16 +169,16 @@ article.workplace {
     border-bottom: 2px solid #CCC;
     margin: 24px 0 12px; } }
 
-section.list article.workplace .details {
+section.list article.listing .details {
   float: left;
   /*  width: 50%;*/
   padding-top: 20px; }
 
-article.workplace div.business_description p {
+article.listing div.business_description p {
   font-size: 14px;
   line-height: 26px; }
 
-section.list article.workplace {
+section.list article.listing {
   border-bottom: 1px solid #DDD;
   padding-bottom: 6px;
   overflow: hidden;
@@ -206,11 +206,11 @@ section.list article.workplace {
     padding: 2px;
     background: #FFF;
     background: rgba(255, 255, 255, 0.6); }
-  table.bookings {
+  table.reservations {
     float: left;
     /*  width: 50%;*/ } }
 
-article.workplace aside address {
+article.listing aside address {
   padding-left: 42px;
   background: transparent url(/images/home.png) no-repeat 6px 6px;
   margin: 6px 0;
@@ -236,22 +236,22 @@ section#featured {
 	overflow: hidden;
 }
 
-section.featured article.workplace {
+section.featured article.listing {
 	overflow: hidden;
 	margin-bottom: 12px;
 }
 
-section.featured article.workplace:last-child {
+section.featured article.listing:last-child {
 	margin-bottom: 0;
 }
 
-section.featured article.workplace h2 {
+section.featured article.listing h2 {
 	line-height: 32px;
 }*/
 
-/* === Booking table */
+/* === Reservation table */
 
-table.bookings.extended {
+table.reservations.extended {
   width: 100%;
   border: none;
   tr {
@@ -298,7 +298,7 @@ table.bookings.extended {
             a {
               color: #176A11;
               background: #87C97B; } } }
-        &.last_bookings {
+        &.last_reservations {
           time {
             color: #C35E11;
             background: #DCC060; }
@@ -423,7 +423,7 @@ section {
     margin: 24px 0;
     overflow: hidden;
     clear: both; }
-  &#content.search div.workplace {
+  &#content.search div.listing {
     border-bottom: 2px solid #CCC;
     &:last-of-type {
       border: 0; } } }
@@ -500,12 +500,12 @@ div {
       background: #BBF6FF;
       color: #206C99; } }
   &.overlay-container {
-    form.booking {
+    form.reservation {
       margin: 0 -12px -12px -12px;
       padding: 0 12px 12px 12px;
       background: #EEE;
       overflow: hidden; }
-    h1.booking {
+    h1.reservation {
       font-size: 16px;
       font-weight: normal;
       margin: 6px 0 12px;
@@ -515,7 +515,7 @@ div {
         font-weight: bold;
         display: block;
         color: #900; } }
-    form.booking {
+    form.reservation {
       div.input.text {
         background: #DDD;
         border-top: 1px solid #CCC;
@@ -552,7 +552,7 @@ div {
       h1 {
         font-size: 16px; } } } }
 
-/* === Booking overlay form */
+/* === Reservation overlay form */
 
 /* === Please Signin for Overlay */
 
@@ -641,7 +641,7 @@ nav.actions a {
   img {
     vertical-align: -3px; } }
 
-/* === Huge Ass Button for workplace */
+/* === Huge Ass Button for listing */
 
 a.huge_ass_button {
   display: block;
@@ -656,7 +656,7 @@ a.huge_ass_button {
   text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
   img {
     vertical-align: -4px; }
-  &.workplace {
+  &.listing {
     background: #2a6199 url(/images/button_blue_bg.jpg) repeat-x left top;
     color: #FFF;
     &:active {

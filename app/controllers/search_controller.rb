@@ -3,14 +3,20 @@ class SearchController < ApplicationController
   def index
     @search = find_search_query
     if @search
-      @workplaces = Workplace.search_by_location(@search).includes(:photos).paginate(:page => params[:page], :per_page => 20)
+      @locations = Listing.search_by_location(@search)
+      if @locations.any?
+        @listings = Listing.where(:location_id => @locations.map(&:id)).includes(:photos).
+          paginate(:page => params[:page], :per_page => 20)
+      else
+        @listings = []
+      end
       @query = @search[:pretty]
       SearchQuery.create(:query => @search[:query], :agent => request.env['HTTP_USER_AGENT'])
     end
     respond_to do |wants|
       wants.html
       wants.js do
-        render :partial => "search/workplaces.html", :layout => false
+        render :partial => "search/listings.html", :layout => false
       end
     end
   end

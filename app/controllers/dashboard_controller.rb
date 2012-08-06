@@ -2,8 +2,8 @@ class DashboardController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @workplaces = current_user.workplaces.all
-    @your_bookings = current_user.bookings.visible
-    @workplace_bookings = current_user.workplace_bookings.upcoming
+    @listings = current_user.listings.all
+    @your_reservations = current_user.reservations.visible
+    @listing_reservations = current_user.listing_reservations.upcoming
   end
 end

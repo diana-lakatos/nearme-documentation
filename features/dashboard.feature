@@ -1,5 +1,5 @@
 Feature: As a user of the site
-  In order for them to manage their bookings / workplaces
+  In order for them to manage their reservations / listings
   As a user
   I want to view the dashboard
 
@@ -7,28 +7,28 @@ Feature: As a user of the site
     Given a user exists
       And I am logged in as the user
 
-  Scenario: A user can visit the workplace from the page
-    Given a workplace exists with creator: the user, name: "Rad Annex"
+  Scenario: A user can visit the listing from the page
+    Given a listing exists with creator: the user, name: "Rad Annex"
      When I go to the dashboard
       And I follow "Rad Annex"
-     Then I should be on the workplace's page
+     Then I should be on the listing's page
 
-  Scenario: A user can add a workplace from this page
+  Scenario: A user can add a listing from this page
     Given I am on the dashboard
-    When I follow "Create Workplace"
-      Then I should be on the new workplace page
+    When I follow "Create Listing"
+      Then I should be on the new listing page
 
-  Scenario: A user can see their workplaces
-    Given a workplace exists with creator: the user, name: "Rad Annex"
+  Scenario: A user can see their listings
+    Given a listing exists with creator: the user, name: "Rad Annex", confirm_reservations: true
      When I am on the dashboard
      Then I should see "Rad Annex"
-      And I should see "Edit Workplace"
+      And I should see "Edit Listing"
       And I should see "0 Unconfirmed"
 
-  Scenario: A user can get to the edit workplace page
-    Given a workplace exists with creator: the user, name: "Rad Annex"
+  Scenario: A user can get to the edit listing page
+    Given a listing exists with creator: the user, name: "Rad Annex"
      When I am on the dashboard
-      And I follow "Edit Workplace"
-     Then I should see "Edit a workplace"
-      And I should be on the workplace's edit page
+      And I follow "Edit Listing"
+     Then I should see "Edit a listing"
+      And I should be on the listing's edit page
 

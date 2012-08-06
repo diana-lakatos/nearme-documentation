@@ -1,7 +1,13 @@
 class Listing < ActiveRecord::Base
 
+  has_many :feeds, :dependent => :delete_all
   has_many :reservations, dependent: :destroy
-  has_many :photos,  as: :content, dependent: :destroy
+  has_many :reservations, :dependent => :delete_all
+  has_many :photos,  as: :content, dependent: :destroy do
+    def thumb
+      (first || build).thumb
+    end
+  end
   has_many :ratings, as: :content, dependent: :destroy
 
   has_many :inquiries
@@ -11,11 +17,15 @@ class Listing < ActiveRecord::Base
 
   belongs_to :creator, :class_name => "User"
 
-  attr_accessible :location_id, :price_cents, :quantity, :rating_average, :rating_count,
+  attr_accessible :confirm_reservations, :location_id, :price_cents, :quantity, :rating_average, :rating_count,
                   :availability_rules, :creator_id, :name, :description
 
   delegate :name, :description, to: :company, prefix: true
-  delegate :amenities, :organizations, :address, :latitude, :longitude, to: :location
+  delegate :url, to: :company
+  delegate :address, :amenities, :formatted_address, :local_geocoding, :organizations, :latitude,
+    :longitude, to: :location
+
+  delegate :to_s, :to => :name
 
   monetize :price_cents
 
@@ -25,6 +35,11 @@ class Listing < ActiveRecord::Base
   # score is to be used by searches. It isn't persisted.
   # Ignore it for the most part.
   attr_accessor :score
+
+  scope :featured, where(%{ (select count(*) from "photos" where content_id = "listings".id AND content_type = 'Listing') > 0  }).
+                   includes(:photos).order(%{ random() }).limit(5)
+
+  scope :latest,   order("listings.created_at DESC")
 
   def self.find_by_search_params(params)
     search_hash = {}
@@ -52,10 +67,22 @@ class Listing < ActiveRecord::Base
     listings
   end
 
+  def self.search_by_location(search)
+    return self if search[:lat].nil? || search[:lng].nil?
+
+    distance = if (search[:southwest] && search[:southwest][:lat] && search[:southwest][:lng]) &&
+                  (search[:northeast] && search[:northeast][:lat] && search[:northeast][:lng])
+      Geocoder::Calculations.distance_between([ search[:southwest][:lat].to_f, search[:southwest][:lng].to_f ],
+                                              [ search[:northeast][:lat].to_f, search[:northeast][:lng].to_f ], :units => :km)
+    else
+      30
+    end
+    Location.near([ search[:lat].to_f, search[:lng].to_f ], distance, :order => "distance", :units => :km)
+  end
+
   def self.find_by_query(query)
     includes(:location => :company).search_by_query(query)
   end
-
 
   include PgSearch
   pg_search_scope :search_by_query, :against => [:name, :description]
@@ -93,16 +120,22 @@ class Listing < ActiveRecord::Base
   def rate_for_user(rating, user)
 
     raise "Cannot rate unsaved listing" if new_record?
-    r = self.ratings.find_or_initialize_by_user_id user.id
+    r = ratings.find_or_initialize_by_user_id user.id
     r.rating = rating
     r.save
 
   end
 
   def rating_for(user)
+    ratings.where(user_id: user.id).pluck(:rating).first
+  end
 
-    self.ratings.where(user_id: user.id).pluck(:rating).first
+  def desks_available?(date)
+    quantity > reservations.on(date).count
+  end
 
+  def created_by?(user)
+    user && user.admin? || user == creator
   end
 
   def inquiry_from!(user, attrs = {})
@@ -111,4 +144,39 @@ class Listing < ActiveRecord::Base
     i.save!; i
   end
 
+  def to_param
+    "#{id}-#{name.parameterize}"
+  end
+
+  def schedule(weeks = 1)
+    {}.tap do |hash|
+      # Build a hash of all week days and their default availabilities
+      weeks.times do |offset|
+        today  = Date.today + offset.weeks
+        monday = today.weekend? ? today.next_week : today.beginning_of_week
+        friday = monday + 4
+        week   = monday..friday
+
+        week.inject(hash) {|m,d| m[d] = quantity; m}
+      end
+
+      # Fetch count of all reservations for each of those dates
+      schedule = reservations.
+        where("reservation_periods.date" => hash.keys).
+        where(:state => [:confirmed, :unconfirmed]).
+        includes(:periods, :seats)
+
+      # Subtract the number of reservations from those days to leave
+      # how many places are remaining, then return the hash
+      schedule.each do |reservation|
+        reservation.periods.each do |period|
+          if hash[period.date] >= reservation.seats.size
+            hash[period.date] -= reservation.seats.size
+          else
+            hash[period.date] = 0
+          end
+        end
+      end
+    end
+  end
 end

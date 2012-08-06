@@ -1,14 +1,14 @@
 class PhotosController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :find_workplace
+  before_filter :find_listing
 
   def index
-    @photos = @workplace.photos
+    @photos = @listing.photos
     @photo ||= @photos.build
   end
 
   def create
-    @photo = @workplace.photos.build(params[:photo])
+    @photo = @listing.photos.build(params[:photo])
     if @photo.save
       redirect_to :action => :index
     else
@@ -18,15 +18,15 @@ class PhotosController < ApplicationController
   end
 
   def destroy
-    @workplace.photos.destroy(params[:id])
+    @listing.photos.destroy(params[:id])
     redirect_to :action => :index
   end
 
   protected
 
-  def find_workplace
-    @workplace = current_user.workplaces.find(params[:workplace_id])
+  def find_listing
+    @listing = current_user.listings.find(params[:listing_id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to :root, :alert => "Could not find workplace"
+    redirect_to :root, :alert => "Could not find listing"
   end
 end

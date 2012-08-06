@@ -1,0 +1,61 @@
+= simple_form_for location do |f|
+  - textile_hint = "(Parsed using #{link_to("Textile", "http://en.wikipedia.org/wiki/Textile_%28markup_language%29", :target => "_blank")}).".html_safe
+  = f.input :company_id, :collection => current_user.companies, :prompt =>  "Select a company..."
+  = link_to "Create a company", new_company_path
+  = f.input :local_geocoding, :as => :hidden
+  = f.input :latitude, :as => :hidden
+  = f.input :longitude, :as => :hidden
+  = f.input :formatted_address, :as => :hidden
+  = f.input :name, :hint => "What's the name of your joint?"
+  = f.input :address, :input_html => {:rows => 4}, :hint => "Don't be shy, we're going to geocode this, so it needs to be accurate."
+  = f.input :description, :input_html => {:rows => 8}, :hint => ["What resources are available, i.e. internet, speed, public transport, coffee shops near by, coffee included? Why would people love your office? What kinds of drop-ins/coworkers would you prefer? Conditions of entry (e.g. must participate in stand up or something)", textile_hint].join(' ').html_safe
+  - if current_user.admin?
+    = f.association :creator, :select => "Select a creator..."
+  = f.button :submit
+:javascript
+  function showLocationSuggestions(results) {
+    if(results.length > 0) {
+      var div = $("<div></div>").attr("id", "address-suggestions");
+      var ul = $("<ul></ul>")
+      var message = $("<p>Please select which location best matches where the location is</p>");
+      for(var i = 0, l = results.length; i < l; i++) {
+        var result = results[i];
+        var loc = result['geometry']['location'];
+        var link = $("<a href='#'></a>")
+            .html(result['formatted_address'])
+            .attr("data-lat", loc.lat())
+            .attr("data-lng", loc.lng());
+        var li = $("<li></li>").append(link);
+        ul.append(li);
+      }
+      var el = div.append(message).append(ul);
+    } else {
+      var el = $("<div></div>").attr("id", "address-suggestions").html("No matches found. Please try another location.");
+    }
+    $("#location_address").after(el);
+  }
+
+  $("#location_address").bind('change', function() {
+    var geocoder = new google.maps.Geocoder();
+    var input = $(this);
+    geocoder.geocode({ address: $(this).val() }, function(results, status) {
+      $("#address-suggestions").remove();
+      showLocationSuggestions(results);
+    });
+  });
+
+  $("#address-suggestions li a").live("click", function() {
+    var selection = $(this);
+    $("#location_latitude").val(selection.attr("data-lat"));
+    $("#location_longitude").val(selection.attr("data-lng"));
+    $("#location_formatted_address").val(selection.html());
+    $("#location_address").val(selection.html());
+    $("#address-suggestions").remove();
+    $("#location_address").focus();
+    return false;
+  });
+
+  $(function() {
+    $("#location_local_geocoding").val(true);
+  });
+

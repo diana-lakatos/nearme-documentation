@@ -62,7 +62,6 @@ class V1::ListingsController < V1::BaseController
     reservation = Reservation.new { |r|
 
       r.listing = listing
-      r.state = 'pending'
       r.confirmation_email = @email
       r.total_amount_cents = listing.price_cents * @quantity
       r.owner = current_user
@@ -110,7 +109,7 @@ class V1::ListingsController < V1::BaseController
   end
 
 
-  # Retrieve the booking availability for a listing
+  # Retrieve the reservation availability for a listing
   def availability
 
     listing = Listing.find(params[:id])

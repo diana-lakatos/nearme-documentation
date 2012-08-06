@@ -1,8 +1,0 @@
-%article.workplace
-  .details
-    - photo = workplace.photos.first
-    .grid_1.alpha
-      = link_to image_tag(photo.medium.url, :title => workplace.description, :alt => workplace.name), workplace
-    .grid_6.omega
-      %h2.tk-ratio-display= link_to workplace.name, workplace
-      %p= workplace_inline_description(workplace, 70)

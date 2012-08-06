@@ -1,4 +1,4 @@
-%form#workplace_search.big_search{:action => search_path, :method => "get"}
+%form#listing_search.big_search{:action => search_path, :method => "get"}
   .inner
     %input.geolocation{:name => "geolocate", :type => "button", :value => ""}/
     %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => value || params[:q]}

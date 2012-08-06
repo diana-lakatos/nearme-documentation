@@ -1,5 +1,6 @@
 @api
 Feature: Profile
+
   Scenario: GET /profile
     Given I am an authenticated api user
     When I send an authenticated GET request for "profile"

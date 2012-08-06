@@ -1,4 +1,4 @@
-Then /^I should see (\d+) workplace photos?$/ do |count|
+Then /^I should see (\d+) listing photos?$/ do |count|
   all(selector_for("photos")).should have(count.to_i).items
 end
 
@@ -7,15 +7,15 @@ When /^I attach the photo "([^"]*)" to "([^"]*)"$/ do |photo, field|
   When %'I attach the file "#{photo}" to "#{field}"'
 end
 
-Then /^the workplace photos should be:$/ do |table|
+Then /^the listing photos should be:$/ do |table|
   all(selector_for("photos")).each do |image|
     table.raw.flatten.should include(image["alt"])
   end
 end
 
-When /^I add the following photos to the workplace:$/ do |table|
+When /^I add the following photos to the listing:$/ do |table|
   steps %{
-    When I go to the workplace's page
+    When I go to the listing's page
     And I follow "Add/Manage Photos"
   }
 
@@ -30,7 +30,7 @@ When /^I add the following photos to the workplace:$/ do |table|
       When I attach the photo "#{row["File"]}" to "New Photo"
       #{attr_steps}
        And I press "Upload"
-      Then I should see #{count + 1} workplace photo
+      Then I should see #{count + 1} listing photo
     }
   end
 end

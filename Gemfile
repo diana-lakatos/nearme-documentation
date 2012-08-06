@@ -8,6 +8,7 @@ gem "RedCloth", "~> 4.2.9", :require => "redcloth"
 gem 'airbrake'
 gem 'active_model_serializers'
 gem 'carrierwave'
+gem 'decent_exposure'
 gem 'devise'
 gem 'omniauth'
 gem 'omniauth-twitter'

@@ -1,41 +1,73 @@
 class Reservation < ActiveRecord::Base
-
-  # The listing to which the reservation relates
   belongs_to :listing
-  attr_accessible :listing_id
+  belongs_to :owner, :class_name => "User"
 
-  # Reservation state: {confirmed, pending, canceled}
-  attr_accessible :state
+  attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
+    :owner_id, :periods, :seats, :state, :total_amount_cents, :user, :comment
 
-  # Confirmation email address
-  # (This could be different to the owner's email address)
-  attr_accessible :confirmation_email
+  has_many :periods, :class_name => "ReservationPeriod", :dependent => :destroy
+  has_many :seats, :class_name => "ReservationSeat", :dependent => :destroy
 
-  # Total cost of the reservation
-  attr_accessible :total_amount_cents
+  validates :periods, :length => { :minimum => 1 }
+  validates :seats, :length => { :minimum => 1 }
+
+  after_create :auto_confirm_reservation
+
+  acts_as_paranoid
+
   monetize :total_amount_cents
 
-  # User that created the reservation
-  belongs_to :owner, :class_name => "User"
-  attr_accessible :owner_id
+  state_machine :state, :initial => :unconfirmed do
+    event :confirm do
+      transition :unconfirmed => :confirmed
+    end
 
-  # Reservation dates
-  has_many :periods, :class_name => "ReservationPeriod", :dependent => :destroy
-  validates :periods, :length => { :minimum => 1 }
-  attr_accessible :periods
+    event :reject do
+      transition :unconfirmed => :rejected
+    end
 
-  # Reservation seats
-  has_many :seats, :class_name => "ReservationSeat", :dependent => :destroy
-  validates :seats, :length => { :minimum => 1 }
-  attr_accessible :seats
+    event :owner_cancel do
+      transition :confirmed => :cancelled
+    end
 
-  # Can this reservation be canceled?
-  # This is a virtual attribute (see below)
-  attr_accessible :cancelable
+    event :user_cancel do
+      transition [:unconfirmed, :confirmed] => :cancelled
+    end
+  end
 
-  # ...
-  attr_accessible :deleted_at
-  acts_as_paranoid
+  scope :on, lambda { |date|
+    joins(:periods).
+      where("reservation_periods.date" => date).
+      where(:state => [:confirmed, :unconfirmed])
+  }
+
+  scope :upcoming, lambda {
+    joins(:periods).
+    where('date >= ?', Date.today).
+    order('date')
+  }
+
+  scope :visible, lambda {
+    without_state(:cancelled).upcoming
+  }
+
+  def initialize(*args)
+    super
+    self.total_amount_cents ||= 0
+  end
+
+  def user=(value)
+    self.owner = value
+    seats.build :user => value
+  end
+
+  def date=(value)
+    periods.build :date => value
+  end
+
+  def date
+    periods.first.date
+  end
 
   # A reservation can be canceled if all of the dates are in the future
   def cancelable
@@ -50,4 +82,8 @@ class Reservation < ActiveRecord::Base
     can_cancel
   end
 
+  protected
+  def auto_confirm_reservation
+    confirm! unless listing.confirm_reservations?
+  end
 end

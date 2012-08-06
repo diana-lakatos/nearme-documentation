@@ -1,0 +1,5 @@
+Dear <%= @user %>,
+
+Your reservation at <%= @listing %> on <%= l(@reservation.date, :format => :long) %> has been confirmed.
+
+<%= render :partial => "footer" %>

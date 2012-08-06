@@ -5,10 +5,12 @@ class User < ActiveRecord::Base
   is_gravtastic!
 
   has_many :authentications
-  has_many :bookings
   has_many :reservations, :foreign_key => :owner_id
-  has_many :workplaces, :foreign_key => "creator_id"
-  has_many :workplace_bookings, :through => :workplaces, :source => :bookings
+  has_many :listings, :foreign_key => "creator_id"
+  has_many :companies, :foreign_key => "creator_id"
+  has_many :locations, :foreign_key => "creator_id"
+
+  has_many :listing_reservations, :through => :listings, :source => :reservations
 
   mount_uploader :avatar, AvatarUploader
 

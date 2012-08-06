@@ -1,9 +1,9 @@
 Feature: User Searches Listings
 
   Scenario: Searching for everything
-    Given a listing in San Francisco
-    And a listing in Cleveland
-    And a listing in Auckland
+    Given a listing in San Francisco exists
+    And a listing in Cleveland exists
+    And a listing in Auckland exists
     When I send a POST request to "listings/search":
     """
     {

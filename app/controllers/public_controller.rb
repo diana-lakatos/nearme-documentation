@@ -1,7 +1,7 @@
 class PublicController < ApplicationController
 
   def index
-    @featured = Workplace.featured
+    @featured = Listing.featured
   end
 
 end

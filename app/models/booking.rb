@@ -1,5 +1,5 @@
 class Booking < ActiveRecord::Base
-  belongs_to :workplace, :counter_cache => true
+  belongs_to :listing, :counter_cache => true
   belongs_to :user,      :counter_cache => true
 
   scope :on, lambda { |date|
@@ -15,10 +15,10 @@ class Booking < ActiveRecord::Base
   }
 
   validates_presence_of :date
-  validates_uniqueness_of :date, :on => :create, :scope => [:user_id, :workplace_id], :message => "you have already booked a desk for that date."
+  validates_uniqueness_of :date, :on => :create, :scope => [:user_id, :listing_id], :message => "you have already booked a desk for that date."
   validate :date_not_past?
 
-  after_create :auto_confirm_booking
+  after_create :auto_confirm_reservation
 
   def date_not_past?
     if self.date.past?
@@ -45,7 +45,7 @@ class Booking < ActiveRecord::Base
   end
 
   protected
-    def auto_confirm_booking
-      confirm! unless workplace.confirm_bookings?
+    def auto_confirm_reservation
+      confirm! unless listing.confirm_reservations?
     end
 end

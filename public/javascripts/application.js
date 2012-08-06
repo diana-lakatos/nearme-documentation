@@ -47,7 +47,7 @@ function setSearchFormToLocation(form, location) {
     button.click();
 }
 
-function doWorkplaceGoogleMaps() {
+function doListingGoogleMaps() {
   var locations = $("aside address, aside details.address"),
       map       = null;
 
@@ -74,7 +74,7 @@ function doWorkplaceGoogleMaps() {
   });
 }
 
-function doInlineBooking() {
+function doInlineReservation() {
   $("td.day .details.availability a").click(function(e){
     e.stopPropagation();
     var overlay = $("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
@@ -99,10 +99,10 @@ function doPhotoFancyBox() {
 
 $(function(){
   doPhotoFancyBox();
-  doInlineBooking();
-  doWorkplaceGoogleMaps();
+  doInlineReservation();
+  doListingGoogleMaps();
   getUserLocationForSearch();
-  $("#workplace_search").submit(function() {
+  $("#listing_search").submit(function() {
     Search.search($("#search").val());
     return false;
   });

@@ -1,4 +1,4 @@
-= form_for(booking) do |f|
-  - if booking.can_user_cancel?
+= form_for(reservation) do |f|
+  - if reservation.can_user_cancel?
     = hidden_field_tag :event, "user_cancel"
-    = f.submit "Cancel", :confirm => "Do you really want to cancel this booking?", :class => "rm"
+    = f.submit "Cancel", :confirm => "Do you really want to cancel this reservation?", :class => "rm"

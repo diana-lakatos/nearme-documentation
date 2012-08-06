@@ -5,7 +5,7 @@ class Workplace < ActiveRecord::Base
   geocoded_by :address
 
   belongs_to :creator, :class_name => "User", :foreign_key => "creator_id"
-  has_many :bookings, :dependent => :delete_all
+  has_many :reservations, :dependent => :delete_all
   has_many :photos, :as => :content, :dependent => :delete_all do
     def thumb
       (first || build).thumb
@@ -29,7 +29,7 @@ class Workplace < ActiveRecord::Base
   attr_protected :description_html, :company_description_html, :creator_id
 
   def desks_available?(date)
-    self.maximum_desks > bookings.on(date).count
+    self.maximum_desks > reservations.on(date).count
   end
 
   def created_by?(user)
@@ -52,19 +52,19 @@ class Workplace < ActiveRecord::Base
         week.inject(hash) {|m,d| m[d] = maximum_desks; m}
       end
 
-      # Fetch count of all bookings for each of those dates
-      schedule = bookings.select("COUNT(*) as count, date").
+      # Fetch count of all reservations for each of those dates
+      schedule = reservations.select("COUNT(*) as count, date").
         where(:date  => hash.keys).
         where(:state => [:confirmed, :unconfirmed]).
         group(:date)
 
-      # Subtract the number of bookings from those days to leave
+      # Subtract the number of reservations from those days to leave
       # how many places are remaining, then return the hash
-      schedule.each do |booking|
-        if hash[booking.date] >= booking.count.to_i
-          hash[booking.date] -= booking.count.to_i
+      schedule.each do |reservation|
+        if hash[reservation.date] >= reservation.count.to_i
+          hash[reservation.date] -= reservation.count.to_i
         else
-          hash[booking.date] = 0
+          hash[reservation.date] = 0
         end
       end
     end

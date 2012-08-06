@@ -1,8 +1,0 @@
-%h1.booking
-  You are making a booking for:
-  %time{:datetime => booking.date}= l(booking.date, :format => :long)
-= simple_form_for [workplace, booking] do |f|
-  = f.input :date, :as => :hidden
-  = f.input :comment, :input_html => { :rows => 3 }
-  = f.submit :label => 'Book'
-  = link_to "No, maybe not.", workplace, :class => "cancel"

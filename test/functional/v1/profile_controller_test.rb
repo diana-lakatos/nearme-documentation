@@ -30,7 +30,7 @@ class V1::ProfileControllerTest < ActionController::TestCase
   end
 
   test "should add avatar image to current user object when data of content type image/jpeg is posted to the method" do
-    raw_post :upload_avatar, {:filename => "avatar.jpg"}, IO.read('test/fixtures/workplace.jpg')
+    raw_post :upload_avatar, {:filename => "avatar.jpg"}, IO.read('test/fixtures/listing.jpg')
     assert_response :success
   end
 
