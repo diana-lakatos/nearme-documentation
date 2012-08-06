@@ -13,6 +13,11 @@ FactoryGirl.define do
     factory :creator do
       sequence(:name) {|n| "Creator-#{n}"}
     end
+
+    factory :authenticated_user do
+      sequence(:name) {|n| "Authenticated-User-#{n}"}
+      authentication_token "EZASABC123UANDME"
+    end
   end
 
 end

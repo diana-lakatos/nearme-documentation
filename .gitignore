@@ -2,7 +2,6 @@
 .bundle
 db/*.sqlite3
 capybara-*
-test/*
 public/uploads
 db/sphinx
 config/*.sphinx.conf
