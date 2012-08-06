@@ -13,13 +13,13 @@ Feature: A user can add photos to a workplace
      When I follow "Add/Manage Photos"
      Then I should see 0 workplace photos
      When I attach the photo "boss's desk.jpg" to "New Photo"
-     When I fill in "Description" with "The Boss' Desk"
+     When I fill in "Caption" with "The Boss' Desk"
       And I press "Upload"
      Then I should see 1 workplace photo
       And the workplace photos should be:
         | The Boss' Desk |
      When I attach the photo "intern chair.jpg" to "New Photo"
-     When I fill in "Description" with "This is where the intern works"
+     When I fill in "Caption" with "This is where the intern works"
       And I press "Upload"
      Then I should see 2 workplace photos
       And the workplace photos should be:
@@ -30,7 +30,7 @@ Feature: A user can add photos to a workplace
    Given I am logged in as the user
      And I am on the workplace's page
     When I add the following photos to the workplace:
-      | File             | Description                    |
+      | File             | Caption                       |
       | boss's desk.jpg  | The Boss' Desk                 |
       | intern chair.jpg | This is where the intern works |
     And I go to the workplace's page

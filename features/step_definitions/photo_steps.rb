@@ -18,11 +18,17 @@ When /^I add the following photos to the workplace:$/ do |table|
     When I go to the workplace's page
     And I follow "Add/Manage Photos"
   }
-  
+
   table.hashes.each_with_index do |row, count|
+    attrs = row.except("File")
+
+    attr_steps = attrs.map do |field_name, value|
+      %(When I fill in "#{field_name}" with "#{value}")
+    end.join("\n")
+
     steps %{
       When I attach the photo "#{row["File"]}" to "New Photo"
-      When I fill in "Description" with "#{row["Description"]}"
+      #{attr_steps}
        And I press "Upload"
       Then I should see #{count + 1} workplace photo
     }

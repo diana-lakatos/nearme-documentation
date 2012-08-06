@@ -13,7 +13,7 @@ Feature: A user can see the homepage
       And a workplace exists with creator: the user, name: "Photo Mania", fake: false
       And I am on the workplace's page
       And I add the following photos to the workplace:
-        | File             | Description                    |
+        | File             | Caption                        |
         | boss's desk.jpg  | The Boss' Desk                 |
         | intern chair.jpg | This is where the intern works |
       And a workplace exists with name: "No Photo Place", fake: false
