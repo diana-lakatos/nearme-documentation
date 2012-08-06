@@ -124,7 +124,8 @@ class V1::ListingsController < V1::BaseController
   def inquiry
     listing = Listing.find(params[:id])
     @message = json_params["query"]
-    # TODO: Send and save the message to the listing owner
+
+    listing.inquiry_from!(current_user, message: @message)
 
     head :no_content
   end

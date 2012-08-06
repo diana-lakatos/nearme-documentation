@@ -93,7 +93,9 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
   test "should accept inquiry" do
     authenticate!
-    raw_post :inquiry, {id: 1}, '{ "message": "hello" }'
+    assert_difference "Listing.find(1).inquiries.count", 1 do
+      raw_post :inquiry, {id: 1}, '{ "message": "hello" }'
+    end
     assert_response :no_content
   end
 
@@ -106,7 +108,9 @@ class V1::ListingsControllerTest < ActionController::TestCase
   test "inquiry should raise when json is missing" do
     assert_raise DNM::MissingJSONData do
       authenticate!
-      raw_post :inquiry, {id: 1}, '{ "no_message": "I am missing!" }'
+      assert_no_difference "Listing.find(1).inquiries.count" do
+        raw_post :inquiry, {id: 1}, '{ "no_message": "I am missing!" }'
+      end
     end
   end
 

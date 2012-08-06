@@ -10,6 +10,8 @@ class Listing < ActiveRecord::Base
   has_many :photos,  as: :content, dependent: :destroy
   has_many :ratings, as: :content, dependent: :destroy
 
+  has_many :inquiries
+
   has_one :company, through: :location
   belongs_to :location
 
@@ -107,6 +109,13 @@ class Listing < ActiveRecord::Base
 
     self.ratings.where(user_id: user.id).pluck(:rating).first
 
+  end
+
+  def inquiry_from!(user, attrs = {})
+    self.inquiries.build(attrs).tap do |i|
+      i.inquiring_user = user
+      i.save!
+    end
   end
 
 end
