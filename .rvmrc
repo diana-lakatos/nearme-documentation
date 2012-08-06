@@ -1,2 +1,1 @@
-rvm use --create --install ruby-1.9.2-p290@desksnearme-legacy >/dev/null 2>&1
-
+rvm use --create ruby-1.9.2-p290@desksnearme-legacy

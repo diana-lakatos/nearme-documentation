@@ -268,9 +268,7 @@ class V1::ListingsController < V1::BaseController
     # Default for quantity
     if @quantity.blank?
       if @assignees.blank?
-
         @quantity = 1
-
       else
 
         # Ensure the quantity matches the number of assignees

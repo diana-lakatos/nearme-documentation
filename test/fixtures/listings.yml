@@ -1,0 +1,13 @@
+one:
+  id: 1
+  creator_id: 1
+  location_id: 1
+  name: "Super Cool Listing"
+  description: "This is a *super* **cool** listing."
+  price_cents: 50000
+  quantity: 5
+  rating_average: 3.25
+  rating_count: 15
+  created_at: "2012-05-10 06:00:10"
+  updated_at: "2012-05-10 06:00:10"
+  # deleted_at: nil
