@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120806033414) do
+ActiveRecord::Schema.define(:version => 20120806183917) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -70,20 +70,6 @@ ActiveRecord::Schema.define(:version => 20120806033414) do
     t.datetime "updated_at",        :null => false
   end
 
-  create_table "listing_amenities", :force => true do |t|
-    t.integer  "listing_id"
-    t.integer  "amenity_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "listing_organizations", :force => true do |t|
-    t.integer  "listing_id"
-    t.integer  "organization_id"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-  end
-
   create_table "listings", :force => true do |t|
     t.integer  "location_id"
     t.integer  "creator_id"
@@ -98,6 +84,20 @@ ActiveRecord::Schema.define(:version => 20120806033414) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.datetime "deleted_at"
+  end
+
+  create_table "location_amenities", :force => true do |t|
+    t.integer  "amenity_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "location_id"
+  end
+
+  create_table "location_organizations", :force => true do |t|
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "location_id"
   end
 
   create_table "locations", :force => true do |t|
@@ -182,6 +182,18 @@ ActiveRecord::Schema.define(:version => 20120806033414) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "user_relationships", :force => true do |t|
+    t.integer  "follower_id"
+    t.integer  "followed_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.datetime "deleted_at"
+  end
+
+  add_index "user_relationships", ["followed_id"], :name => "index_user_relationships_on_followed_id"
+  add_index "user_relationships", ["follower_id", "followed_id"], :name => "index_user_relationships_on_follower_id_and_followed_id", :unique => true
+  add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "", :null => false

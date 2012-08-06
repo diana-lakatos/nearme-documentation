@@ -47,16 +47,16 @@ end
 
 Then /^I receive only listings which have that amenity$/ do
   results = parse_json(last_json)
-  results.size.should == 1
-  results.all? do |r|
+  results["listings"].size.should == 1
+  results["listings"].all? do |r|
     r["amenities"].any? { |a| a["id"] == 1 }
   end
 end
 
 Then /^I receive only listings which have that organization$/ do
   results = parse_json(last_json)
-  results.size.should == 1
-  results.all? do |r|
+  results["listings"].size.should == 1
+  results["listings"].all? do |r|
     r["organizations"].any? { |a| a["id"] == 1 }
   end
 end

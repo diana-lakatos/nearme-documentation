@@ -22,6 +22,24 @@ class User < ActiveRecord::Base
 
   delegate :to_s, :to => :name
 
+  has_many :relationships,
+           :class_name => "UserRelationship",
+           :foreign_key => "follower_id",
+           :dependent => :destroy
+
+  has_many :followed_users,
+           :through => :relationships,
+           :source => :followed
+
+  has_many :reverse_relationships,
+           :class_name => "UserRelationship",
+           :foreign_key => "followed_id",
+           :dependent => :destroy
+
+  has_many :followers,
+           :through => :reverse_relationships,
+           :source => :follower
+
   def apply_omniauth(omniauth)
     self.name = omniauth['info']['name'] if email.blank?
     self.email = omniauth['info']['email'] if email.blank?
@@ -39,5 +57,13 @@ class User < ActiveRecord::Base
 
   def linked_to?(provider)
     authentications.where(provider: provider).any?
+  end
+
+  def following?(other_user)
+    relationships.find_by_followed_id(other_user.id)
+  end
+
+  def follow!(other_user)
+    relationships.create!(followed_id: other_user.id)
   end
 end

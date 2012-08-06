@@ -25,7 +25,7 @@ class V1::ListingsController < V1::BaseController
     # location, date, quantity, price
 
     add_fake_scores listings
-    render :json => listings.to_json(:include => [:amenities, :organizations])
+    render :json => listings.as_json(:include => [:amenities, :organizations])
   end
 
 
@@ -57,8 +57,6 @@ class V1::ListingsController < V1::BaseController
       raise DNM::PropertyUnavailableOnDate.new(date, available, @quantity) \
         if available < @quantity
     }
-
-    puts "** Creating a new reservation..."
 
     # Create the reservation
     reservation = Reservation.new { |r|

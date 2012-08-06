@@ -28,14 +28,6 @@ class AuthenticationTest < ActiveSupport::TestCase
     assert auth.errors[:uid].include?("can't be blank")
   end
 
-  test "needs a User to be valid" do
-    params = @valid_params.clone
-    params.delete :user_id
-    auth = Authentication.new params
-    refute auth.valid?
-    assert auth.errors[:user_id].include?("can't be blank")
-  end
-
   test "has a hash for info" do
     auth = Authentication.new(@valid_params)
     auth.info["thing"] = "stuff"

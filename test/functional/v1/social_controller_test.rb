@@ -3,7 +3,7 @@ require 'test_helper'
 class V1::SocialControllerTest < ActionController::TestCase
 
   test "should get data" do
-    pending "until Sai reviews"
+    authenticate!
     Social::Facebook.stubs(:user_linked?).returns(false)
     Social::Twitter.stubs(:user_linked?).returns(true)
     Social::Linkedin.stubs(:user_linked?).returns(false)
