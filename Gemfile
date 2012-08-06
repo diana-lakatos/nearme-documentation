@@ -36,6 +36,10 @@ group :development do
   gem "rails-erd"
 end
 
+group :development, :test, :staging do
+  gem 'factory_girl_rails', '>=3.0.0'
+end
+
 group :development, :test do
   gem 'ffaker'
   gem 'rspec', '>= 2.0.0'

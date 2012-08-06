@@ -70,5 +70,6 @@ DesksnearMe::Application.routes.draw do
 
     get 'amenities', to: 'amenities#index'
     get 'organizations', to: 'organizations#index'
+    get 'associations', to: 'organizations#index'
   end
 end

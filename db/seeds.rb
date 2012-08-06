@@ -2,16 +2,15 @@
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 
 # Add dummy data in development
-if Rails.env.development?
+if Rails.env.development? || Rails.env.staging?
 
   def log(object)
     puts "== #{object.inspect}"
     object
   end
 
-  puts "Creating Workplaces"
-  5.times do
-    log(Factory(:workplace))
-  end
-
+  puts "Creating Listings"
+  log(FactoryGirl.create(:listing_with_amenity))
+  log(FactoryGirl.create(:listing_with_organization))
+  log(FactoryGirl.create(:listing))
 end
