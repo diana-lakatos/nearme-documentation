@@ -144,6 +144,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   # Patrons
 
   test "should show patrons for a listing" do
+    authenticate!
     get :patrons, id: 1
     assert_response :success
   end
@@ -152,7 +153,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   # Connections
 
   test "should show connections for a listing" do
-    pending "until Sai reviews"
+    authenticate!
     get :connections, id: 1
     assert_response :success
   end

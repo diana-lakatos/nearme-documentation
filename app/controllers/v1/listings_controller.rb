@@ -58,8 +58,6 @@ class V1::ListingsController < V1::BaseController
         if available < @quantity
     }
 
-    puts "** Creating a new reservation..."
-
     # Create the reservation
     reservation = Reservation.new { |r|
 
