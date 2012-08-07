@@ -25,7 +25,7 @@ class V1::ListingsController < V1::BaseController
     # location, date, quantity, price
 
     add_fake_scores listings
-    render :json => listings.as_json(:include => [:amenities, :organizations])
+    render :json => listings
   end
 
 
@@ -324,7 +324,7 @@ class V1::ListingsController < V1::BaseController
   end
 
   def add_fake_scores listings
-    fake_scores =  (0...listings.size).map { rand(10_000)/100.0 }.sort.reverse
+    fake_scores =  (0...listings.size).map { 50.0 }.sort.reverse
     listings.each_with_index { |l, i|
       l.score = fake_scores[i]
     }

@@ -1,12 +1,14 @@
 class ListingSerializer < ApplicationSerializer
 
   attributes :id, :name, :description, :company_name, :company_description,
-             :address, :price, :quantity, :rating, :amenities
+             :address, :price, :quantity, :rating
 
   attribute :latitude,  :key => :lat
   attribute :longitude, :key => :lon
 
   has_many :photos
+  has_many :amenities
+  has_many :organizations
 
   def attributes
 
