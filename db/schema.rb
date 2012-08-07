@@ -62,6 +62,14 @@ ActiveRecord::Schema.define(:version => 20120806183917) do
 
   add_index "feeds", ["workplace_id"], :name => "index_feeds_on_workplace_id"
 
+  create_table "inquiries", :force => true do |t|
+    t.integer  "listing_id"
+    t.integer  "inquiring_user_id"
+    t.text     "message"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
   create_table "listings", :force => true do |t|
     t.integer  "location_id"
     t.integer  "creator_id"

@@ -93,7 +93,16 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
   test "should accept inquiry" do
     authenticate!
-    raw_post :inquiry, {id: 1}, '{ "message": "hello" }'
+
+    listing         = Listing.find(1)
+    listing.creator = FactoryGirl.create(:user)
+    listing.save
+
+    assert_difference "listing.inquiries.count", 1 do
+      assert_difference "ActionMailer::Base.deliveries.count", 2 do
+        raw_post :inquiry, {id: 1}, '{ "message": "hello" }'
+      end
+    end
     assert_response :no_content
   end
 
@@ -106,7 +115,11 @@ class V1::ListingsControllerTest < ActionController::TestCase
   test "inquiry should raise when json is missing" do
     assert_raise DNM::MissingJSONData do
       authenticate!
-      raw_post :inquiry, {id: 1}, '{ "no_message": "I am missing!" }'
+      assert_no_difference "Listing.find(1).inquiries.count" do
+        assert_no_difference "ActionMailer::Base.deliveries.count" do
+          raw_post :inquiry, {id: 1}, '{ "no_message": "I am missing!" }'
+        end
+      end
     end
   end
 

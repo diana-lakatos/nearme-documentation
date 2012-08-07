@@ -1,5 +1,7 @@
-Given /^I am an authenticated api user$/ do
-  @user = FactoryGirl.create(:user)
+Given /^I am an authenticated api user( and my email is (.*?))?$/ do |with_email, email|
+  attrs = {}
+  attrs[:email] = email if with_email
+  @user = FactoryGirl.create(:user, attrs)
   post "/v1/authentication", { email: @user.email, password: 'password' }.to_json
   fail "User was not authenticated" unless last_response.ok?
   @user.reload
@@ -27,6 +29,10 @@ end
 
 Given /^a listed location with an amenity with the id of 1$/ do
   FactoryGirl.create(:listing_with_amenity)
+end
+
+Given /^a listed location with a creator whose email is (.*)?$/ do |email|
+  @listing = FactoryGirl.create(:listing, creator: FactoryGirl.create(:user, email: email))
 end
 
 When /^I send a(n authenticated)? POST request to "(.*?)":$/ do |authenticated, url, body|

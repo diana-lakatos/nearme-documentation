@@ -33,4 +33,10 @@ class UserTest < ActiveSupport::TestCase
 
     assert @user.reservations
   end
+
+  test "users have full email addresses" do
+    @user = User.new(name: "Hulk Hogan", email: "hulk@desksnear.me")
+
+    assert_equal "Hulk Hogan <hulk@desksnear.me>", @user.full_email
+  end
 end

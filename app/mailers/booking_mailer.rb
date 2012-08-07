@@ -1,7 +1,4 @@
-class BookingMailer < ActionMailer::Base
-  default_url_options[:host] = "desksnear.me"
-
-  default :from => "noreply@desksnear.me"
+class BookingMailer < DesksNearMeMailer
 
   def pending_confirmation(booking)
     setup_defaults(booking)
