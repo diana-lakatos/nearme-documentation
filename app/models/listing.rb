@@ -106,10 +106,9 @@ class Listing < ActiveRecord::Base
   end
 
   def inquiry_from!(user, attrs = {})
-    self.inquiries.build(attrs).tap do |i|
-      i.inquiring_user = user
-      i.save!
-    end
+    i = inquiries.build(attrs)
+    i.inquiring_user = user
+    i.save!; i
   end
 
 end
