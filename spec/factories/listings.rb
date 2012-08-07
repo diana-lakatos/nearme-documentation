@@ -4,6 +4,7 @@ FactoryGirl.define do
       "Listing #{n}"
     end
 
+    price_cents 5000
     creator
     location
 

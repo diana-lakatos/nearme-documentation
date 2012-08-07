@@ -33,15 +33,16 @@ When /^I send a(n authenticated)? POST request to "(.*?)":$/ do |authenticated, 
   if url.match(/:id/) && plural_resource = url.match(/^(\w+)\/.*/)
     this_resource = instance_variable_get("@#{plural_resource.captures.first.singularize}")
     parsed_url = url.gsub(/:(\w+)/) {|message| this_resource.send $1}
-    header 'Authorization', @user.authentication_token if authenticated
   else
     parsed_url = url
   end
 
+  header 'Authorization', @user.authentication_token if authenticated
   @response = post "/v1/#{parsed_url}", body
 end
 
-When /^I send a GET request for "(.*?)"$/ do |url|
+When /^I send a(n authenticated)? GET request for "(.*?)"$/ do |authenticated, url|
+  header 'Authorization', @user.authentication_token if authenticated
   @response = get "/v1/#{url}"
 end
 

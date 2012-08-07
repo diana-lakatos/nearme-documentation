@@ -3,6 +3,7 @@ FactoryGirl.define do
     email { "#{name.to_s.downcase.underscore}@example.com" }
     password 'password'
     password_confirmation 'password'
+    phone "1234567890"
 
     sequence(:name) {|n| "User-#{n}"}
 
