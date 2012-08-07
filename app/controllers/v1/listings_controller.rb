@@ -123,7 +123,9 @@ class V1::ListingsController < V1::BaseController
     listing = Listing.find(params[:id])
     @message = json_params["query"]
 
-    listing.inquiry_from!(current_user, message: @message)
+    inquiry = listing.inquiry_from!(current_user, message: @message)
+    InquiryMailer.inquiring_user_notification(inquiry).deliver!
+    InquiryMailer.listing_creator_notification(inquiry).deliver!
 
     head :no_content
   end

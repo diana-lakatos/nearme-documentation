@@ -1,8 +1,8 @@
 Feature: User Inquires about Listing
 
   Scenario: Sending an inquiry
-    Given I am an authenticated api user
-    And a listed location
+    Given I am an authenticated api user and my email is nik@desksnear.me
+    And a listed location with a creator whose email is jared@desksnear.me
     When I send an authenticated POST request to "listings/:id/inquiry":
     """
     {
@@ -10,3 +10,6 @@ Feature: User Inquires about Listing
     }
     """
     Then I receive a response with 204 status code
+    And an inquiry user notification email is sent to "nik@desksnear.me"
+    And an inquiry creator notification email is sent to "jared@desksnear.me"
+
