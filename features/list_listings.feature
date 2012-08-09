@@ -8,10 +8,10 @@ Feature: List listings
     And I am on the home page
     When I follow "Listings"
     Then I should see the following listings in order:
-      | Mocra |
+      | Mocra - $50 |
     Given a listing exists with name: "Inspire9"
     When I follow "Listings"
     Then I should see the following listings in order:
-      | Inspire9 |
-      | Mocra    |
+      | Inspire9 - $50|
+      | Mocra - $50 |
 
