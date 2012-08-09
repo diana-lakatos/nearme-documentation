@@ -1,0 +1,25 @@
+namespace :db do
+  namespace :pull do
+    desc "Drops the current database and replaces it with production"
+    task :production do
+      Rake::Task["db:drop"].invoke
+      Rake::Task["db:create"].invoke
+      system('heroku db:pull --app desksnearme --confirm desksnearme')
+    end
+  end
+  namespace :push do
+    desc "Drops the staging environments shared database and replaces it with the local one"
+    task :staging do
+      system('heroku pg:reset postgres://etktvdzmvgvcpa:BtL4PwY2KcuaauQwSMYHfJaNAf@ec2-23-21-188-175.compute-1.amazonaws.com:5432/dbn3lls0uq00je --app desksnearme-staging --confirm desksnearme-staging')
+      system('heroku db:push --app desksnearme-staging --confirm desksnearme-staging')
+    end
+  end
+  namespace :sync do
+    desc "Synchronizes production database to the staging server"
+    task :production_to_staging do
+      Rake::Task["db:pull:production"].invoke
+      Rake::Task["db:push:staging"].invoke
+      system("heroku run rake db:migrate --app desksnearme-staging")
+    end
+  end
+end
