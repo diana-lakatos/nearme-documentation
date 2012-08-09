@@ -1,4 +1,4 @@
-Feature: A user can cancel a reservation
+Feature: User Cancels Reservation
   In order to not hang out with rad dudes
   As a user
   I want to cancel my reservation and be a filthy hobo who works on the street instead

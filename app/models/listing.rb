@@ -1,8 +1,8 @@
 class Listing < ActiveRecord::Base
 
-  has_many :feeds, :dependent => :delete_all
+  has_many :feeds, dependent: :delete_all
   has_many :reservations, dependent: :destroy
-  has_many :reservations, :dependent => :delete_all
+  has_many :reservations, dependent: :delete_all
   has_many :photos,  as: :content, dependent: :destroy do
     def thumb
       (first || build).thumb
@@ -15,7 +15,7 @@ class Listing < ActiveRecord::Base
   has_one :company, through: :location
   belongs_to :location
 
-  belongs_to :creator, :class_name => "User"
+  belongs_to :creator, class_name: "User"
 
   attr_accessible :confirm_reservations, :location_id, :price_cents, :quantity, :rating_average, :rating_count,
                   :availability_rules, :creator_id, :name, :description
@@ -25,7 +25,7 @@ class Listing < ActiveRecord::Base
   delegate :address, :amenities, :formatted_address, :local_geocoding, :organizations, :latitude,
     :longitude, to: :location
 
-  delegate :to_s, :to => :name
+  delegate :to_s, to: :name
 
   monetize :price_cents
 
@@ -50,7 +50,7 @@ class Listing < ActiveRecord::Base
         longitude: bb["start"]["lon"]..bb["end"]["lon"]
       }
     end
-    listings = includes(:location => :company).where(search_hash)
+    listings = includes(location: :company).where(search_hash)
 
     if(params.has_key?("amenities"))
       listings.select! do |l|
@@ -73,19 +73,19 @@ class Listing < ActiveRecord::Base
     distance = if (search[:southwest] && search[:southwest][:lat] && search[:southwest][:lng]) &&
                   (search[:northeast] && search[:northeast][:lat] && search[:northeast][:lng])
       Geocoder::Calculations.distance_between([ search[:southwest][:lat].to_f, search[:southwest][:lng].to_f ],
-                                              [ search[:northeast][:lat].to_f, search[:northeast][:lng].to_f ], :units => :km)
+                                              [ search[:northeast][:lat].to_f, search[:northeast][:lng].to_f ], units: :km)
     else
       30
     end
-    Location.near([ search[:lat].to_f, search[:lng].to_f ], distance, :order => "distance", :units => :km)
+    Location.near([ search[:lat].to_f, search[:lng].to_f ], distance, order: "distance", units: :km)
   end
 
   def self.find_by_query(query)
-    includes(:location => :company).search_by_query(query)
+    includes(location: :company).search_by_query(query)
   end
 
   include PgSearch
-  pg_search_scope :search_by_query, :against => [:name, :description]
+  pg_search_scope :search_by_query, against: [:name, :description]
 
   # TODO: Create a database index for the availability.
   # TODO: This implementation is really slow!
@@ -93,8 +93,8 @@ class Listing < ActiveRecord::Base
 
     # Get all of the reservations for the property on the given date
     reservations = Reservation.joins(:periods).where(
-        :reservation_periods => { :listing_id => self.id },
-        :reservation_periods => { :date => date }
+        reservation_periods: { listing_id: self.id },
+        reservation_periods: { date: date }
     )
 
     # Tally up all of the seats taken across all reservations
@@ -163,7 +163,7 @@ class Listing < ActiveRecord::Base
       # Fetch count of all reservations for each of those dates
       schedule = reservations.
         where("reservation_periods.date" => hash.keys).
-        where(:state => [:confirmed, :unconfirmed]).
+        where(state: [:confirmed, :unconfirmed]).
         includes(:periods, :seats)
 
       # Subtract the number of reservations from those days to leave

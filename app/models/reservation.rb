@@ -12,6 +12,7 @@ class Reservation < ActiveRecord::Base
   validates :seats, :length => { :minimum => 1 }
 
   after_create :auto_confirm_reservation
+  before_save :update_total_cost
 
   acts_as_paranoid
 
@@ -58,6 +59,7 @@ class Reservation < ActiveRecord::Base
 
   def user=(value)
     self.owner = value
+    self.confirmation_email = value.email
     seats.build :user => value
   end
 
@@ -80,6 +82,10 @@ class Reservation < ActiveRecord::Base
     }
 
     can_cancel
+  end
+
+  def update_total_cost
+    self.total_amount_cents = listing.price_cents
   end
 
   protected
