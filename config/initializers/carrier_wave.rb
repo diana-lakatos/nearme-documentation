@@ -1,5 +1,5 @@
 CarrierWave.configure do |config|
-  if Rails.env.production? || Rails.env.development?
+  if Rails.env.production? || Rails.env.staging? || Rails.env.development?
 
     config.fog_credentials = {
       :provider                 => 'AWS',
@@ -8,6 +8,7 @@ CarrierWave.configure do |config|
     }
     config.fog_directory        = 'desksnearme.production'
     config.fog_host             = 'https://s3.amazonaws.com/desksnearme.production'
+    config.storage = :fog
 
   else
     config.storage = :file
