@@ -18,7 +18,7 @@ class Listing < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
 
   attr_accessible :confirm_reservations, :location_id, :price_cents, :quantity, :rating_average, :rating_count,
-                  :availability_rules, :creator_id, :name, :description
+                  :availability_rules, :creator_id, :name, :description, :price
 
   delegate :name, :description, to: :company, prefix: true
   delegate :url, to: :company

@@ -1,7 +1,7 @@
 %article.listing
   .grid_12.alpha.omega
     .grid_5.alpha
-      %h1.tk-adelle= @listing.name
+      %h1.tk-adelle= "#{@listing.name} - #{listing_price(@listing)}"
       = content_tag(:p, link_to(@listing.url, @listing.url)) if @listing.url
     - if @listing.creator
       .grid_3.omega.creator

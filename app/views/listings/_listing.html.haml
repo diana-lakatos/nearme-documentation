@@ -3,7 +3,7 @@
     .grid_1.alpha
       = link_to image_tag(listing.photos.thumb.url, :title => listing.name, :alt => listing.name), listing
     .grid_4
-      %h2.tk-ratio-display= link_to listing.name, listing
+      %h2.tk-ratio-display= link_to "#{listing.name} - #{listing_price(listing)}", listing
       %address= listing.formatted_address || listing.address
     .grid_7.omega
       = render :partial => "listings/availability", :locals => {:listing => listing, :weeks => 1}
