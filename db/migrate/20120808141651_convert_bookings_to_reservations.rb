@@ -5,8 +5,8 @@ class ConvertBookingsToReservations < ActiveRecord::Migration
     rename_column :listings, :confirm_bookings, :confirm_reservations
     connection.execute <<-SQL
       INSERT INTO reservations
-        (booking_id, listing_id, owner_id, state, comment)
-      SELECT id, listing_id, user_id, state, comment
+        (booking_id, listing_id, owner_id, state, comment, created_at, updated_at)
+      SELECT id, listing_id, user_id, state, comment, created_at, updated_at
       FROM bookings
     SQL
 
