@@ -41,6 +41,26 @@ class Listing < ActiveRecord::Base
 
   scope :latest,   order("listings.created_at DESC")
 
+  # thinking sphinx searching
+  define_index do
+    join location
+    join location.amenities
+    join location.organizations
+
+    indexes :name, :description
+
+    has :price_cents
+    has :quantity # number of desks
+
+    has "radians(#{Location.table_name}.latitude)",  as: :latitude,  type: :float
+    has "radians(#{Location.table_name}.longitude)", as: :longitude, type: :float
+
+    has location.amenities(:id),     as: :amenity_ids
+    has location.organizations(:id), as: :organisation_ids
+
+    group_by :latitude, :longitude
+  end
+
   def self.find_by_search_params(params)
     search_hash = {}
     if(params.has_key?("boundingbox"))

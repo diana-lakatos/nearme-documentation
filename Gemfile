@@ -29,6 +29,7 @@ gem 'state_machine'
 gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'tweet-button'
 gem 'will_paginate'
+gem 'thinking-sphinx'
 
 group :development do
   gem 'heroku'

@@ -18,4 +18,5 @@ class Location < ActiveRecord::Base
 
   # Useful for storing the full geo info for an address, like time zone
   serialize :info, Hash
+
 end
