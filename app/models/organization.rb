@@ -4,4 +4,6 @@ class Organization < ActiveRecord::Base
 
   has_many :listings, through: :listing_organizations
   has_many :listing_organizations
+
+  validates_presence_of :name
 end
