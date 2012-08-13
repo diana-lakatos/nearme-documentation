@@ -20,11 +20,11 @@ Feature: User Searches Listings
 
             ],
           "company_description": null,
-          "company_name": "Company 1",
+          "company_name": "Company in San Francisco",
           "description": null,
           "lat": 37.819959,
           "lon": -122.478696,
-          "name": "Listing 1",
+          "name": "Listing in San Francisco",
           "organizations": [
 
             ],
@@ -49,11 +49,11 @@ Feature: User Searches Listings
 
           ],
         "company_description": null,
-        "company_name": "Company 2",
+        "company_name": "Company in Cleveland",
         "description": null,
         "lat": 41.508806,
         "lon": -81.69548,
-        "name": "Listing 2",
+        "name": "Listing in Cleveland",
         "organizations": [
 
           ],
@@ -78,11 +78,11 @@ Feature: User Searches Listings
 
           ],
         "company_description": null,
-        "company_name": "Company 3",
+        "company_name": "Company in Auckland",
         "description": null,
         "lat": -36.858675,
         "lon": 174.777303,
-        "name": "Listing 3",
+        "name": "Listing in Auckland",
         "organizations": [
 
           ],

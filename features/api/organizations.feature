@@ -15,9 +15,9 @@ Feature: List organizations
           "id": 3,
           "name": "AICPA",
           "logo": {
-            "thumb": { "url": "/uploads/thumb_foobear.jpeg" },
-            "medium": { "url": "/uploads/medium_foobear.jpeg"},
-            "large": { "url": "/uploads/large_foobear.jpeg" },
+            "thumb": { "url": "/media/organization/1/logo/thumb_foobear.jpeg" },
+            "medium": { "url": "/media/organization/1/logo/medium_foobear.jpeg"},
+            "large": { "url": "/media/organization/1/logo/large_foobear.jpeg" },
             "url": "/media/organization/1/logo/foobear.jpeg"
           }
         },

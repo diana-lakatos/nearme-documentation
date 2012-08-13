@@ -12,12 +12,14 @@ FactoryGirl.define do
       address "Parnell, Auckland 1010 New Zealand"
       latitude "-36.858675"
       longitude "174.777303"
+      association(:company, factory: :company_in_auckland)
     end
     factory :location_in_cleveland do
       name "Rock and Roll Hall of Fame"
       address "1100 Rock and Roll Boulevard"
       latitude "41.508806"
       longitude "-81.69548"
+      association(:company, factory: :company_in_cleveland)
     end
 
     factory :location_in_san_francisco do
@@ -25,6 +27,7 @@ FactoryGirl.define do
       address "Golden Gate Bridge"
       latitude "37.819959"
       longitude "-122.478696"
+      association(:company, factory: :company_in_san_francisco)
     end
   end
 end
