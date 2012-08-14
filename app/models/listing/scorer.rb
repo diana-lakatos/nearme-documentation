@@ -48,15 +48,25 @@ class Listing
         center_lat, center_lon = options.delete(:lat), options.delete(:lon)
         ranked_listings        =  @listings.rank_by { |l| l.distance_from(center_lat, center_lon) }
 
+        add_scores(ranked_listings, :boundingbox)
+      end
+
+      def score_amenities(amenity_ids)
+        ranked_listings = @listings.rank_by { |l| (amenity_ids - l.location.amenity_ids).size }
+
+        add_scores(ranked_listings, :amenities)
+      end
+
+      def add_scores(ranked_listings, component_name)
         ranked_listings.each_with_index do |listings, rank|
           listings.each do |l|
-            scores[l][:boundingbox] = ((rank / ranked_listings.size.to_f) * 10_000).round / 100.0
+            scores[l][component_name] = normalize_rank(rank + 1, ranked_listings.size)
           end
         end
       end
 
-      def score_amenities
-
+      def normalize_rank(rank, number_of_ranks)
+        ((rank / number_of_ranks.to_f) * 10_000).round / 100.0
       end
 
   end
