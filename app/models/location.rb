@@ -14,6 +14,9 @@ class Location < ActiveRecord::Base
   belongs_to :creator, :class_name => "User"
   has_many :listings
 
+  validates_presence_of :company_id, :name, :description, :address, :latitude, :longitude
+  validates :email, :email => true
+
   acts_as_paranoid
 
   # Useful for storing the full geo info for an address, like time zone
