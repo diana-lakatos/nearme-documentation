@@ -64,6 +64,7 @@ group :test do
   gem 'simplecov', :require => false
   gem 'timecop'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
+  gem 'shoulda-context'
 end
 
 group :development, :production do

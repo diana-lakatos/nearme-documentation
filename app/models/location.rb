@@ -19,4 +19,10 @@ class Location < ActiveRecord::Base
   # Useful for storing the full geo info for an address, like time zone
   serialize :info, Hash
 
+  def distance_from(other_latitude, other_longitude)
+    Geocoder::Calculations.distance_between([ latitude,       longitude ],
+                                            [ other_latitude, other_longitude],
+                                            units: :km)
+  end
+
 end
