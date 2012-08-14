@@ -1,6 +1,7 @@
-Given /^I am an authenticated api user( and my email is (.*?))?$/ do |with_email, email|
+Given /^I am an authenticated api user( and my name is (.*?))?( and my email is (.*?))?$/ do |with_name, name, with_email, email|
   attrs = {}
   attrs[:email] = email if with_email
+  attrs[:name] = name if with_name
   @user = FactoryGirl.create(:user, attrs)
   post "/v1/authentication", { email: @user.email, password: 'password' }.to_json
   fail "User was not authenticated" unless last_response.ok?

@@ -42,6 +42,8 @@ module DesksnearMe
     config.generators do |g|
       g.test_framework :rspec, :fixture => false
     end
-
+    # note that we *don't* want to rewite for the test env :)
+    config.should_rewrite_email = Rails.env.staging? || Rails.env.development?
+    config.test_email           = "dev@desksnear.me"
   end
 end

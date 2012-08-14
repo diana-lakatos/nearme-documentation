@@ -24,14 +24,17 @@ FactoryGirl.define do
     end
 
     factory :listing_in_auckland do
+      name "Listing in Auckland"
       association(:location, factory: :location_in_auckland)
     end
 
     factory :listing_in_cleveland do
+      name "Listing in Cleveland"
       association(:location, factory: :location_in_cleveland)
     end
 
     factory :listing_in_san_francisco do
+      name "Listing in San Francisco"
       association(:location, factory: :location_in_san_francisco)
     end
 
