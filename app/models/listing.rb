@@ -44,19 +44,11 @@ class Listing < ActiveRecord::Base
   # thinking sphinx searching
   define_index do
     join location
-    join location.amenities
-    join location.organizations
 
     indexes :name, :description
 
-    has :price_cents
-    has :quantity # number of desks
-
     has "radians(#{Location.table_name}.latitude)",  as: :latitude,  type: :float
     has "radians(#{Location.table_name}.longitude)", as: :longitude, type: :float
-
-    has location.amenities(:id),     as: :amenity_ids
-    has location.organizations(:id), as: :organisation_ids
 
     group_by :latitude, :longitude
   end
