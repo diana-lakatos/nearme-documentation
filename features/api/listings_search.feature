@@ -19,7 +19,7 @@ Feature: User Searches Listings
           "amenities": [
 
             ],
-          "company_description": null,
+          "company_description": "Aliquid eos ab quia officiis sequi.",
           "company_name": "Company in San Francisco",
           "description": "Aliquid eos ab quia officiis sequi.",
           "lat": 37.819959,
@@ -48,7 +48,7 @@ Feature: User Searches Listings
         "amenities": [
 
           ],
-        "company_description": null,
+        "company_description": "Aliquid eos ab quia officiis sequi.",
         "company_name": "Company in Cleveland",
         "description": "Aliquid eos ab quia officiis sequi.",
         "lat": 41.508806,
@@ -79,7 +79,7 @@ Feature: User Searches Listings
           ],
         "company_description": "Aliquid eos ab quia officiis sequi.",
         "company_name": "Company in Auckland",
-        "description": null,
+        "description": "Aliquid eos ab quia officiis sequi.",
         "lat": -36.858675,
         "lon": 174.777303,
         "name": "Listing in Auckland",

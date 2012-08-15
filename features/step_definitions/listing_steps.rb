@@ -7,6 +7,9 @@ When /^I create a listing for that location with a price of \$(\d+)\.(\d+)$/ do 
   visit new_listing_path
   select model!("location").name, from: "Location"
   fill_in "Name", with: "Awesome Listing"
+  fill_in "Description", with: "Nulla rutrum neque eu enim eleifend bibendum."
+  fill_in "Quantity", with: "2"
+  choose "listing_confirm_reservations_true"
   fill_in "Price", with: "#{dollars}.#{cents}"
   click_link_or_button("Create Listing")
   @listing = Listing.find_by_name("Awesome Listing")
@@ -24,7 +27,7 @@ end
 Then /^I see the listing details$/ do
   page.should have_content(listing.address)
   page.should have_content(listing.name)
-  page.should have_content(listing.description)
+  page.should have_content(listing.description.strip)
   page.should have_content(listing.url)
 end
 
