@@ -6,7 +6,7 @@ class Listing
       amenities:     0.15,
       organizations: 0.15,
       price:         0.15,
-      date_quantity: 0.15
+      availability:  0.15
     }.freeze
 
     attr_accessor :listings, :scores
@@ -69,12 +69,26 @@ class Listing
         min, max = options.delete(:min), options.delete(:max)
         midpoint = (max - min) / 2
 
-        ranked_listings = @listings.rank_by { |l| l.price - midpoint }
+        ranked_listings = @listings.rank_by { |l| l.price_cents - (midpoint * 100) }
 
         add_scores(ranked_listings, :price)
       end
 
+      def score_availability(options)
+        start_date, end_date = options.delete(:date_start).to_date, options.delete(:date_end).to_date
+        quantity_needed      = options.delete(:quantity_min)
 
+        # FIXME: this is going to do a query for each day!
+        # should be able to request listing availability over a date range easily enough...
+        ranked_listings = @listings.rank_by do |l|
+          (start_date...end_date).inject(0) do |sum, day|
+            sum += (l.availability_for(day) / quantity_needed)
+            sum
+          end
+        end
+
+        add_scores(ranked_listings, :availability)
+      end
 
       def add_scores(ranked_listings, component_name)
         ranked_listings.each_with_index do |listings, rank|

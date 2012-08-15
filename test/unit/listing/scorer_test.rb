@@ -68,6 +68,49 @@ class Listing::ScorerTest < ActiveSupport::TestCase
       end
     end
 
+    context "scoring based on price" do
+      setup do
+        @listings.first.price_cents = 234.50 * 100
+        @listings[1].price_cents    = 900.00 * 100
+        @listings.last.price_cents  = 123.90 * 100
+      end
+
+      should "score correctly" do
+        @scorer.send(:score_price, min: 150, max: 300)
+
+        assert_equal 66.67, @scorer.scores[@listings.first][:price]
+        assert_equal 33.33, @scorer.scores[@listings.last][:price]
+        assert_equal 100.0, @scorer.scores[@listings[1]][:price]
+      end
+    end
+
+    context "scoring based on availability" do
+      setup do
+        @start_date = 5.days.ago.to_date
+        @end_date   = Time.now.to_date
+
+        @listings.each { |l| l.update_attribute(:quantity, 2) }
+
+        periods = (@start_date...@end_date).map do |d|
+          ReservationPeriod.new(date: d, listing_id: @listings.first.id)
+        end
+
+        r = @listings.first.reservations.new(periods:  periods)
+        r.user = FactoryGirl.create(:user)
+        r.save!
+
+        assert_equal 1, @listings.first.availability_for(@start_date)
+        assert_equal 2, @listings.last.availability_for(@start_date)
+      end
+
+      should "score correctly" do
+        @scorer.send(:score_availability, date_start: @start_date, date_end: @end_date, quantity_min: 1)
+
+        assert_equal 33.33, @scorer.scores[@listings.first][:availability]
+        assert_equal 66.67, @scorer.scores[@listings.last][:availability]
+      end
+    end
+
   end
 
 end

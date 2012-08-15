@@ -105,8 +105,7 @@ class Listing < ActiveRecord::Base
 
     # Get all of the reservations for the property on the given date
     reservations = Reservation.joins(:periods).where(
-        reservation_periods: { listing_id: self.id },
-        reservation_periods: { date: date }
+        reservation_periods: { listing_id: self.id, date: date }
     )
 
     # Tally up all of the seats taken across all reservations
