@@ -57,6 +57,14 @@ class Listing
         add_scores(ranked_listings, :amenities)
       end
 
+      # this feels like you could DRY it with the above - but seems to add complexity for
+      # not a lot of benefit at the monement
+      def score_organizations(organization_ids)
+        ranked_listings = @listings.rank_by { |l| (organization_ids - l.location.organization_ids).size }
+
+        add_scores(ranked_listings, :organizations)
+      end
+
       def add_scores(ranked_listings, component_name)
         ranked_listings.each_with_index do |listings, rank|
           listings.each do |l|

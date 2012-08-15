@@ -51,6 +51,23 @@ class Listing::ScorerTest < ActiveSupport::TestCase
       end
     end
 
+    context "scoring based on number of matched organizations" do
+      setup do
+        @org1 = FactoryGirl.create(:organization)
+        @org2 = FactoryGirl.create(:organization)
+
+        @listings.first.location.organizations = [@org1]
+      end
+
+      should "score correctly" do
+        @scorer.send(:score_organizations, [@org1.id])
+
+        assert_equal 50.0,  @scorer.scores[@listings.first][:organizations]
+        assert_equal 100.0, @scorer.scores[@listings[1]][:organizations]
+        assert_equal 100.0, @scorer.scores[@listings.last][:organizations]
+      end
+    end
+
   end
 
 end

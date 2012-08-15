@@ -21,7 +21,7 @@ class Location < ActiveRecord::Base
 
   def distance_from(other_latitude, other_longitude)
     Geocoder::Calculations.distance_between([ latitude,       longitude ],
-                                            [ other_latitude, other_longitude],
+                                            [ other_latitude, other_longitude ],
                                             units: :km)
   end
 
