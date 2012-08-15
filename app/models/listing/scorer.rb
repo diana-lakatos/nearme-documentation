@@ -26,32 +26,32 @@ class Listing
     end
 
     def score(search_parameters)
+      WEIGHTINGS.keys.each do |component|
+        if params = search_parameters.delete(component)
+          send("score_#{component}", params)
+        end
+      end
 
-      @listings.each { |l| l.score_components ||= {} }
-
-      score_boundingbox(search_parameters.delete(:boundingbox))
-
-      # listings.each do |l|
-      #   l.score = WEIGHTINGS.inject(0) do |score, pair|
-      #     # scoring component and what the relative weight of it should be
-      #     component, weight = pair
-      #     score += send("score_#{component}")
-      #     score
-      #   end
-      # end
+      @listings.each do |l|
+        l.score = WEIGHTINGS.inject(0) do |score, weighting_pair|
+          component_name, weighting = weighting_pair
+          score += self.scores[l][component_name] * weighting if self.scores[l][component_name]
+          score
+        end.round(2)
+      end
     end
 
     private
 
       # Ascending proximity to center of `boundingbox`, normalised between 0 and 100
-      def score_boundingbox(options)
+      def score_boundingbox(options = {})
         center_lat, center_lon = options.delete(:lat), options.delete(:lon)
         ranked_listings        =  @listings.rank_by { |l| l.distance_from(center_lat, center_lon) }
 
         add_scores(ranked_listings, :boundingbox)
       end
 
-      def score_amenities(amenity_ids)
+      def score_amenities(amenity_ids = [])
         ranked_listings = @listings.rank_by { |l| (amenity_ids - l.location.amenity_ids).size }
 
         add_scores(ranked_listings, :amenities)
@@ -59,13 +59,13 @@ class Listing
 
       # this feels like you could DRY it with the above - but seems to add complexity for
       # not a lot of benefit at the monement
-      def score_organizations(organization_ids)
+      def score_organizations(organization_ids = [])
         ranked_listings = @listings.rank_by { |l| (organization_ids - l.location.organization_ids).size }
 
         add_scores(ranked_listings, :organizations)
       end
 
-      def score_price(options)
+      def score_price(options = {})
         min, max = options.delete(:min), options.delete(:max)
         midpoint = (max - min) / 2
 
@@ -74,7 +74,7 @@ class Listing
         add_scores(ranked_listings, :price)
       end
 
-      def score_availability(options)
+      def score_availability(options = {})
         start_date, end_date = options.delete(:date_start).to_date, options.delete(:date_end).to_date
         quantity_needed      = options.delete(:quantity_min)
 
@@ -99,7 +99,7 @@ class Listing
       end
 
       def normalize_rank(rank, number_of_ranks)
-        ((rank / number_of_ranks.to_f) * 10_000).round / 100.0
+        ((rank / number_of_ranks.to_f) * 100).round(2)
       end
 
   end

@@ -11,6 +11,35 @@ class Listing::ScorerTest < ActiveSupport::TestCase
       @scorer   = Listing::Scorer.new(@listings)
     end
 
+    context "overall scoring" do
+      setup do
+        @wifi          = FactoryGirl.create(:amenity, name: "Wi-Fi")
+        @drinks_fridge = FactoryGirl.create(:amenity, name: "Drinks Fridge")
+
+        @org           = FactoryGirl.create(:organization)
+
+        @listings.first.price_cents = 234.50 * 100
+        @listings[1].price_cents    = 900.00 * 100
+        @listings.last.price_cents  = 123.90 * 100
+      end
+
+      should "work" do
+
+        search_params = {
+          boundingbox:   { lat: -41.293507, lon: 174.776279 },
+          amenities:     [ @wifi.id, @drinks_fridge.id ],
+          organizations: [ @org.id ],
+          price:         { min: 100, max: 900 },
+        }
+
+        Listing::Scorer.score(@listings, search_params)
+
+        assert_equal 33.33, @listings.first.score
+        assert_equal 55.0,  @listings.last.score
+        assert_equal 51.67, @listings[1].score
+      end
+    end
+
     context "scoring based on distance from bounding box center" do
       should "score correctly" do
         # lat lon is for Wellington, New Zealand
@@ -91,13 +120,7 @@ class Listing::ScorerTest < ActiveSupport::TestCase
 
         @listings.each { |l| l.update_attribute(:quantity, 2) }
 
-        periods = (@start_date...@end_date).map do |d|
-          ReservationPeriod.new(date: d, listing_id: @listings.first.id)
-        end
-
-        r = @listings.first.reservations.new(periods:  periods)
-        r.user = FactoryGirl.create(:user)
-        r.save!
+        create_reservation_for(@start_date, @end_date, @listings.first)
 
         assert_equal 1, @listings.first.availability_for(@start_date)
         assert_equal 2, @listings.last.availability_for(@start_date)
@@ -112,5 +135,17 @@ class Listing::ScorerTest < ActiveSupport::TestCase
     end
 
   end
+
+  private
+
+    def create_reservation_for(start_date, end_date, listing)
+      periods = (start_date...end_date).map do |d|
+        ReservationPeriod.new(date: d, listing_id: listing.id)
+      end
+
+      r = listing.reservations.new(periods: periods)
+      r.user = FactoryGirl.create(:user)
+      r.save!
+    end
 
 end
