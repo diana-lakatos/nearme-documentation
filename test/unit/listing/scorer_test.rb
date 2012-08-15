@@ -36,11 +36,11 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         @scorer.send(:score_amenities, [@wifi.id, @pool_table.id])
 
         # all amenities
-        assert_equal 50.0, @scorer.scores[@listings.first][:amenities]
-        assert_equal 50.0, @scorer.scores[@listings.last][:amenities]
+        assert_equal 33.33, @scorer.scores[@listings.first][:amenities]
+        assert_equal 33.33, @scorer.scores[@listings.last][:amenities]
 
         # no amenities
-        assert_equal 100.0, @scorer.scores[@listings[1]][:amenities]
+        assert_equal 66.67, @scorer.scores[@listings[1]][:amenities]
 
         # now try again with only some of the amenities (wifi is down!)
         @listings.last.location.amenities  = [@drinks_fridge, @pool_table]
@@ -62,9 +62,9 @@ class Listing::ScorerTest < ActiveSupport::TestCase
       should "score correctly" do
         @scorer.send(:score_organizations, [@org1.id])
 
-        assert_equal 50.0,  @scorer.scores[@listings.first][:organizations]
-        assert_equal 100.0, @scorer.scores[@listings[1]][:organizations]
-        assert_equal 100.0, @scorer.scores[@listings.last][:organizations]
+        assert_equal 33.33, @scorer.scores[@listings.first][:organizations]
+        assert_equal 66.67, @scorer.scores[@listings[1]][:organizations]
+        assert_equal 66.67, @scorer.scores[@listings.last][:organizations]
       end
     end
 

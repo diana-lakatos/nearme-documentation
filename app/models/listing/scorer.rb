@@ -4,7 +4,7 @@ class Listing
     WEIGHTINGS = {
       boundingbox:   0.4,
       amenities:     0.15,
-      associations:  0.15,
+      organizations: 0.15,
       price:         0.15,
       date_quantity: 0.15
     }.freeze
@@ -65,10 +65,21 @@ class Listing
         add_scores(ranked_listings, :organizations)
       end
 
+      def score_price(options)
+        min, max = options.delete(:min), options.delete(:max)
+        midpoint = (max - min) / 2
+
+        ranked_listings = @listings.rank_by { |l| l.price - midpoint }
+
+        add_scores(ranked_listings, :price)
+      end
+
+
+
       def add_scores(ranked_listings, component_name)
         ranked_listings.each_with_index do |listings, rank|
           listings.each do |l|
-            scores[l][component_name] = normalize_rank(rank + 1, ranked_listings.size)
+            scores[l][component_name] = normalize_rank(rank + 1, @listings.size)
           end
         end
       end
