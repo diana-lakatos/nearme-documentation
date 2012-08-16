@@ -1,4 +1,6 @@
 = simple_form_for resource, :as => resource_name, :url => url, :html => html do |f|
   = f.input :name
   = f.input :email
+  = f.input :organization_ids, :collection => Organization.order('name').all, :as => :check_boxes, :label => "Organizations"
+  = link_to "Create an organization", new_user_organization_path
   = f.button :submit, :value => submit

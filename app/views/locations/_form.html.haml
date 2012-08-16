@@ -7,7 +7,7 @@
   = f.input :company_id, :collection => current_user.companies, :prompt =>  "Select a company..."
   = link_to "Create a company", new_company_path
   = f.input :organization_ids, :collection => Organization.order('name').all, :as => :check_boxes, :label => "Organizations"
-  = link_to "Create an organization", new_organization_path
+  = link_to "Create an organization", new_location_organization_path
   = f.input :local_geocoding, :as => :hidden
   = f.input :latitude, :as => :hidden
   = f.input :longitude, :as => :hidden

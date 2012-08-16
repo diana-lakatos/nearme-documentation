@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
   has_many :listings, :foreign_key => "creator_id"
   has_many :companies, :foreign_key => "creator_id"
   has_many :locations, :foreign_key => "creator_id"
+  has_many :organization_users
+  has_many :organizations, :through => :organization_users
 
   has_many :listing_reservations, :through => :listings, :source => :reservations
 
@@ -20,7 +22,7 @@ class User < ActiveRecord::Base
          :rememberable, :trackable, :validatable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :phone
+  attr_accessible :name, :email, :organization_ids, :phone
 
   delegate :to_s, :to => :name
 
