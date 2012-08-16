@@ -4,6 +4,7 @@ FactoryGirl.define do
       "Listing #{n}"
     end
 
+    description "Aliquid eos ab quia officiis sequi."
     price_cents 5000
     creator
     location

@@ -1,7 +1,9 @@
 FactoryGirl.define do
   factory :location do
     address "42 Wallaby Way"
-    name "P. Shermans Smilehouse"
+    name "P. Sherman's Smilehouse"
+    email "psherman@smilehouse.com"
+    description "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     latitude "-33.856944"
     longitude "151.215278"
     creator

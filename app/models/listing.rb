@@ -17,6 +17,10 @@ class Listing < ActiveRecord::Base
 
   belongs_to :creator, class_name: "User"
 
+  validates_presence_of :location_id, :creator_id, :name, :description, :price, :quantity
+  validates_inclusion_of :confirm_reservations, :in => [true, false]
+  validates_numericality_of :quantity
+
   attr_accessible :confirm_reservations, :location_id, :price_cents, :quantity, :rating_average, :rating_count,
                   :availability_rules, :creator_id, :name, :description, :price
 

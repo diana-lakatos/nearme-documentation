@@ -41,37 +41,19 @@ class ListingTest < ActiveSupport::TestCase
     assert !listings.include?(listing_without_organization), "Listings dont include listing without organization"
   end
 
-  test "it exists" do
-    assert Listing
-  end
+  should belong_to(:location)
+  should belong_to(:creator)
+  should have_many(:reservations)
+  should have_many(:ratings)
 
-  test "it has a location" do
-    @listing = Listing.new
-    @listing.location = Location.new
-
-    assert @listing.location
-  end
-
-  test "it has a creator" do
-    @listing = Listing.new
-    @listing.creator = User.new
-
-    assert @listing.creator
-  end
-
-  test "it has reservations" do
-    @listing = Listing.new
-    3.times { @listing.reservations << Reservation.new }
-
-    assert @listing.reservations
-  end
-
-  test "it has ratings" do
-    @listing = Listing.new
-    3.times { @listing.ratings << Rating.new }
-
-    assert @listing.ratings
-  end
+  should validate_presence_of(:location_id)
+  should validate_presence_of(:creator_id)
+  should validate_presence_of(:name)
+  should validate_presence_of(:description)
+  should validate_presence_of(:quantity)
+  should ensure_inclusion_of(:confirm_reservations).in_array([true,false])
+  should validate_numericality_of(:price_cents)
+  should validate_numericality_of(:quantity)
 
   def search_all_over_the_world
     return {

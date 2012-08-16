@@ -16,11 +16,13 @@ Feature: An admin can edit shit
     Given a user: "Stevey" exists with name: "Stevey"
       And an admin: "Adminardo" exists
       And I am logged in as the admin: "Adminardo"
-      And a location exists with creator: the user "Adminardo", name: "The Pit of Despair"
+      And a location exists with creator: the user "Adminardo", name: "The Pit of Despair", description: "Aliquid eos ab quia officiis sequi."
       And I am on the new listing page
      When I fill in "Name" with "Joe's Codin' Garage"
       And I select "The Pit of Despair" from "Location"
       And I fill in "Quantity" with "2"
+      And I fill in "Price" with "50.00"
+      And I fill in "Description" with "Proin adipiscing nunc vehicula lacus varius dignissim."
       And I select "Stevey" from "Creator"
       And I choose "Yes"
       And I press "Create Listing"

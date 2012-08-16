@@ -1,23 +1,15 @@
 require 'test_helper'
 
 class CompanyTest < ActiveSupport::TestCase
-  test "it exists" do
-    assert Company
-  end
 
-  test "it has a creator" do
-    @company = Company.new
-    @company.creator = User.new
+  should belong_to(:creator)
+  should have_many(:locations)
 
-    assert @company.creator
-  end
+  should validate_presence_of(:name)
+  should validate_presence_of(:description)
+  should_not allow_value('not_an_email').for(:email)
+  should allow_value('an_email@domain.com').for(:email)
+  should_not allow_value('not_a_url').for(:url)
+  should allow_value('http://a-url.com').for(:url)
 
-  test "it has locations" do
-    @company = Company.new
-    @company.locations << Location.new
-    @company.locations << Location.new
-    @company.locations << Location.new
-
-    assert @company.locations
-  end
 end
