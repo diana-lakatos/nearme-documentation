@@ -17,6 +17,10 @@ class ConvertWorkplacesToListingsAndLocations < ActiveRecord::Migration
       WHERE fake = false
     SQL
 
+    connection.execute <<-SQL
+      SELECT setval('companies_id_seq', (SELECT max(id) + 1 FROM companies));
+    SQL
+
     add_column :locations, :workplace_id, :integer
 
     connection.execute <<-SQL
@@ -27,6 +31,10 @@ class ConvertWorkplacesToListingsAndLocations < ActiveRecord::Migration
         formatted_address
       FROM workplaces
       WHERE fake = false
+    SQL
+
+    connection.execute <<-SQL
+      SELECT setval('locations_id_seq', (SELECT max(id) + 1 FROM locations));
     SQL
 
     connection.execute <<-SQL
@@ -44,6 +52,10 @@ class ConvertWorkplacesToListingsAndLocations < ActiveRecord::Migration
       SELECT id, id, creator_id, name, description, maximum_desks, created_at, updated_at
       FROM workplaces
       WHERE fake = false
+    SQL
+
+    connection.execute <<-SQL
+      SELECT setval('listings_id_seq', (SELECT max(id) + 1 FROM listings));
     SQL
 
     connection.execute <<-SQL
@@ -111,6 +123,10 @@ class ConvertWorkplacesToListingsAndLocations < ActiveRecord::Migration
       FROM listings
       INNER JOIN locations ON locations.id = listings.location_id
       INNER JOIN companies ON locations.company_id = companies.id
+    SQL
+
+    connection.execute <<-SQL
+      SELECT setval('workplaces_id_seq', (SELECT max(id) + 1 FROM workplaces));
     SQL
 
     add_column :feeds, :workplace_id, :integer
