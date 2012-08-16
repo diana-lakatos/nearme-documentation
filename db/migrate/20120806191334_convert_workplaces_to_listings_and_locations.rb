@@ -11,8 +11,8 @@ class ConvertWorkplacesToListingsAndLocations < ActiveRecord::Migration
 
     connection.execute <<-SQL
       INSERT INTO companies
-        (workplace_id, creator_id, name, description, url, created_at, updated_at)
-      SELECT id, creator_id, name, company_description, url, created_at, updated_at
+        (id, workplace_id, creator_id, name, description, url, created_at, updated_at)
+      SELECT id, id, creator_id, name, company_description, url, created_at, updated_at
       FROM workplaces
       WHERE fake = false
     SQL
@@ -21,9 +21,9 @@ class ConvertWorkplacesToListingsAndLocations < ActiveRecord::Migration
 
     connection.execute <<-SQL
       INSERT INTO locations
-        (workplace_id, creator_id, name, description, address, latitude, longitude, created_at, updated_at,
+        (id, workplace_id, creator_id, name, description, address, latitude, longitude, created_at, updated_at,
          formatted_address)
-      SELECT id, creator_id, name, description, address, latitude, longitude, created_at, updated_at,
+      SELECT id, id, creator_id, name, description, address, latitude, longitude, created_at, updated_at,
         formatted_address
       FROM workplaces
       WHERE fake = false
@@ -40,8 +40,8 @@ class ConvertWorkplacesToListingsAndLocations < ActiveRecord::Migration
 
     connection.execute <<-SQL
       INSERT INTO listings
-        (workplace_id, creator_id, name, description, quantity, created_at, updated_at)
-      SELECT id, creator_id, name, description, maximum_desks, created_at, updated_at
+        (id, workplace_id, creator_id, name, description, quantity, created_at, updated_at)
+      SELECT id, id, creator_id, name, description, maximum_desks, created_at, updated_at
       FROM workplaces
       WHERE fake = false
     SQL
@@ -102,9 +102,9 @@ class ConvertWorkplacesToListingsAndLocations < ActiveRecord::Migration
 
     connection.execute <<-SQL
       INSERT INTO workplaces
-        (listing_id, name, maximum_desks, description, company_description, address,
+        (id, listing_id, name, maximum_desks, description, company_description, address,
          confirm_bookings, latitude, longitude, url, created_at, updated_at, formatted_address)
-      SELECT listings.id, listings.name, listings.quantity, listings.description, companies.description,
+      SELECT listings.id, listings.id, listings.name, listings.quantity, listings.description, companies.description,
         locations.address, listings.confirm_bookings, locations.latitude,
         locations.longitude, companies.url, listings.created_at, listings.updated_at,
         locations.formatted_address
