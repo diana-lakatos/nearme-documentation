@@ -42,11 +42,11 @@ group :development, :test, :staging do
 end
 
 group :development, :test do
+  gem 'shoulda'
   gem 'ffaker'
   gem 'rspec', '>= 2.0.0'
   gem 'rspec-rails', '>= 2.0.0'
   gem 'factory_girl_rails', '>=3.0.0'
-  gem 'shoulda-matchers'
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
   gem 'ruby-debug19'

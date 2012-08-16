@@ -4,7 +4,7 @@ Feature: User Adds Location
     And I am logged in as the user
 
   Scenario: Creating a basic listing
-    Given a company exists with creator: the user
+    Given a company exists with creator: the user, description: "Aliquid eos ab quia officiis sequi."
     When I create a location for that company
     Then I can select that location when creating listings
 

@@ -1,30 +1,18 @@
 require 'test_helper'
 
 class LocationTest < ActiveSupport::TestCase
-  test "it exists" do
-    assert Location
-  end
 
-  test "it has a company" do
-    @location = Location.new
-    @location.company = Company.new
+  should belong_to(:creator)
+  should belong_to(:company)
+  should have_many(:listings)
 
-    assert @location.company
-  end
+  should validate_presence_of(:company_id)
+  should validate_presence_of(:name)
+  should validate_presence_of(:description)
+  should validate_presence_of(:address)
+  should validate_presence_of(:latitude)
+  should validate_presence_of(:longitude)
+  should_not allow_value('not_an_email').for(:email)
+  should allow_value('an_email@domain.com').for(:email)
 
-  test "it has a creator" do
-    @location = Location.new
-    @location.creator = User.new
-
-    assert @location.creator
-  end
-
-  test "it has listings" do
-    @location = Location.new
-    @location.listings << Listing.new
-    @location.listings << Listing.new
-    @location.listings << Listing.new
-
-    assert @location.listings
-  end
 end
