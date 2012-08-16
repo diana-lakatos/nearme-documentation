@@ -130,7 +130,7 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         @scorer.send(:score_availability, date_start: @start_date, date_end: @end_date, quantity_min: 1)
 
         assert_equal 33.33, @scorer.scores[@listings.first][:availability]
-        assert_equal 66.67, @scorer.scores[@listings.last][:availability]
+        assert_equal 33.33, @scorer.scores[@listings.last][:availability]
       end
     end
 

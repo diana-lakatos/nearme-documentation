@@ -82,7 +82,7 @@ class Listing
         # should be able to request listing availability over a date range easily enough...
         ranked_listings = @listings.rank_by do |l|
           (start_date...end_date).inject(0) do |sum, day|
-            sum += (l.availability_for(day) / quantity_needed)
+            sum += ([l.desks_booked_on(day), quantity_needed].max / quantity_needed)
             sum
           end
         end
