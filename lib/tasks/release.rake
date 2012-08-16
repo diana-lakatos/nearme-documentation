@@ -3,5 +3,6 @@ namespace :release do
   task :staging do
     system('git push staging staging:master')
     Rake::Task["db:sync:production_to_staging"].invoke
+    Rake::Task["db:seed"].invoke
   end
 end
