@@ -1,3 +1,7 @@
+%p
+  A location is a physical address, to which you will be able to add bookable
+  resources (listings). Once you've created a location, you can add listings to
+  it.
 = simple_form_for location do |f|
   - textile_hint = "(Parsed using #{link_to("Textile", "http://en.wikipedia.org/wiki/Textile_%28markup_language%29", :target => "_blank")}).".html_safe
   = f.input :company_id, :collection => current_user.companies, :prompt =>  "Select a company..."
