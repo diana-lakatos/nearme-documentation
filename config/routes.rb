@@ -13,14 +13,6 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  namespace :location do
-    resources :organizations, :only => [:create, :new], :namespace => 'location'
-  end
-
-  namespace :user do
-    resources :organizations, :only => [:create, :new], :namespace => 'user'
-  end
-
   resources :organizations
 
   match '/auth/:provider/callback' => 'authentications#create'
