@@ -12,12 +12,12 @@ FactoryGirl.define do
 
     factory :listing_with_amenity do
       after(:create) do |listing|
-        listing.amenities << FactoryGirl.create(:amenity, id: 1)
+        listing.amenities << FactoryGirl.create(:amenity)
       end
     end
     factory :listing_with_organization do
       after(:create) do |listing|
-        listing.organizations << FactoryGirl.create(:organization, id: 1)
+        listing.organizations << FactoryGirl.create(:organization)
       end
     end
     factory :listing_at_5_5 do

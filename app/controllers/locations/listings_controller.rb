@@ -12,7 +12,7 @@ module Locations
         flash[:success] = "Successfully created listing"
         redirect_to listing_path(location)
       else
-        flash.new[:error] = "There was a problem saving your location. Please try again"
+        flash.now[:error] = "There was a problem saving your location. Please try again"
         render :new
       end
     end

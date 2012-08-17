@@ -1,14 +1,18 @@
 When /^I create a location for that company$/ do
-  visit new_location_path
-  @company = model!('company')
-  select @company.name, from: 'Company'
-  fill_in "Name", with: @location_name = 'Location'
-  fill_in "Address", with: '1 Market Street, San Francisco, USA'
-  fill_in "Description", with: "There was a house in New Orleans, Bright shining as the sun"
-  click_link_or_button "Create Location"
+  create_location
+end
+
+When /^I create a location with that organization$/ do
+  create_location do
+    check "The Organization"
+  end
 end
 
 Then /^I can select that location when creating listings$/ do
   visit new_listing_path
   select @location_name, from: "Location"
+end
+
+Then /^that location has that organization$/ do
+  @location.organizations.should include model!('organization')
 end

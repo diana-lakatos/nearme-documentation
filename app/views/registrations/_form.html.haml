@@ -1,4 +1,5 @@
 = simple_form_for resource, :as => resource_name, :url => url, :html => html do |f|
   = f.input :name
   = f.input :email
+  = f.input :organization_ids, :collection => Organization.order('name').all, :as => :check_boxes, :label => "Professional Associations", :hint => "Please check any professional associations with which you are affiliated. You can then optionally restrict your listings to users who have identified themselves as a member of these associations."
   = f.button :submit, :value => submit

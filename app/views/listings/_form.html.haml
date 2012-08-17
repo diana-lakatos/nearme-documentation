@@ -1,3 +1,8 @@
+%p
+  A listing is a bookable resource at one of your company's locations. You may
+  have a variety of space available - for example, a desk in a shared space, a
+  windowless office, a corner office, a small meeting room, or a conference
+  room.
 = simple_form_for @listing do |f|
   - textile_hint = "(Parsed using #{link_to("Textile", "http://en.wikipedia.org/wiki/Textile_%28markup_language%29", :target => "_blank")}).".html_safe
   = f.input :location_id, :collection => current_user.locations, :prompt =>  "Select a location..."
