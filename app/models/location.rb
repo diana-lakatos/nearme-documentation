@@ -1,5 +1,5 @@
 class Location < ActiveRecord::Base
-  attr_accessible :address, :amenity_ids, :company_id, :creator_id, :description, :email,
+  attr_accessible :address, :amenity_ids, :company_id, :creator_id, :description, :email, :require_organization_membership,
     :info, :latitude, :local_geocoding, :longitude, :organization_ids, :name, :phone, :formatted_address
   attr_accessor :local_geocoding # set this to true in js
   geocoded_by :address
@@ -28,6 +28,10 @@ class Location < ActiveRecord::Base
     Geocoder::Calculations.distance_between([ latitude,       longitude ],
                                             [ other_latitude, other_longitude ],
                                             units: :km)
+  end
+
+  def required_organizations
+    require_organization_membership? ? organizations : []
   end
 
   private

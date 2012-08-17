@@ -1,9 +1,12 @@
 
 Given (/^I am logged in as #{capture_model}$/) do |user_instance|
   user = model!(user_instance)
-  auth = FactoryGirl.create(:authentication, :user => user)
-  OmniAuth.config.add_mock(:twitter, {:uid => auth.uid})
-  visit "/auth/twitter"
+  login user
+end
+
+When /^I log in as a user who is a member of that organization$/ do
+  user = FactoryGirl.create(:user, organizations: [model!('organization')])
+  login user
 end
 
 Then /^I should be logged out$/ do

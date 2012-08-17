@@ -1,4 +1,5 @@
-Feature: User Adds Location
+Feature: Listing owner creates and edits location
+
   Background:
     Given a user exists
     And I am logged in as the user
@@ -17,3 +18,8 @@ Feature: User Adds Location
     Given an amenity exists
     When I create a location with that amenity
     Then that location has that amenity
+
+  Scenario: With private organizations
+    Given an organization exists with name: "The Organization"
+    When I create a private location with that organization
+    Then that location is private to only members of it's organizations

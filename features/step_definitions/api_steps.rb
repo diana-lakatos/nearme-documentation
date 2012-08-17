@@ -37,6 +37,14 @@ When /^I send a(n authenticated)? GET request for "(.*?)"$/ do |authenticated, u
   @response = get "/v1/#{url}"
 end
 
+When /^I search for listings with that organization$/ do
+    json = {
+      "boundingbox" => {"start" => {"lat" => -180.0,"lon" => -180.0}, "end" => {"lat" => 180.0,"lon" => 180.0 }},
+      "organizations" => [@listing.organizations.first.id]
+    }
+    @response = post "/v1/listings/search", json.to_json
+end
+
 Then /^I receive only listings which have that amenity$/ do
   results = parse_json(last_json)
   results["listings"].size.should == 1
@@ -49,7 +57,7 @@ Then /^I receive only listings which have that organization$/ do
   results = parse_json(last_json)
   results["listings"].size.should == 1
   results["listings"].all? do |r|
-    r["organizations"].any? { |a| a["id"] == 1 }
+    r["organizations"].any? { |a| a["id"] == @listing.organizations.first.id }
   end
 end
 

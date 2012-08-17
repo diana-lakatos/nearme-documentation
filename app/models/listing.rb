@@ -26,7 +26,7 @@ class Listing < ActiveRecord::Base
 
   delegate :name, :description, to: :company, prefix: true
   delegate :url, to: :company
-  delegate :address, :amenities, :formatted_address, :local_geocoding, :organizations, :latitude,
+  delegate :address, :amenities, :formatted_address, :local_geocoding, :organizations, :required_organizations, :latitude,
     :longitude, :distance_from, to: :location
 
   delegate :to_s, to: :name

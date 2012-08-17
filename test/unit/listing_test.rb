@@ -23,6 +23,7 @@ class ListingTest < ActiveSupport::TestCase
 
   test "find_by_search_params restricts based upon amenities" do
     listing_with_amenity = FactoryGirl.create(:listing_with_amenity)
+    search_params['amenities'] = [listing_with_amenity.amenities.last.id]
     listing_without_amenity = FactoryGirl.create(:listing)
 
     search_params = search_all_over_the_world()
@@ -34,7 +35,7 @@ class ListingTest < ActiveSupport::TestCase
   end
 
   test "find_by_search_params restricts based upon organizations" do
-    search_params = search_all_over_the_world()
+    search_params = search_all_over_the_world
     listing_with_organization = FactoryGirl.create(:listing_with_organization)
     search_params['organizations'] = [listing_with_organization.organizations.first.id]
     listing_without_organization = FactoryGirl.create(:listing)
@@ -58,7 +59,7 @@ class ListingTest < ActiveSupport::TestCase
   should validate_numericality_of(:quantity)
 
   def search_all_over_the_world
-    return {
+    {
       "boundingbox" => {
         "start" => {
           "lat" => -180.0,
