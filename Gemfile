@@ -33,7 +33,6 @@ gem 'thinking-sphinx'
 
 group :development do
   gem 'heroku'
-  gem 'sqlite3'
   gem 'taps'
   gem "rails-erd"
 end
@@ -45,8 +44,6 @@ end
 group :development, :test do
   gem 'shoulda'
   gem 'ffaker'
-  gem 'rspec', '>= 2.0.0'
-  gem 'rspec-rails', '>= 2.0.0'
   gem 'factory_girl_rails', '>=3.0.0'
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
@@ -64,7 +61,6 @@ group :test do
   gem 'simplecov', :require => false
   gem 'timecop'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
-  gem 'shoulda-context'
 end
 
 group :development, :production do
