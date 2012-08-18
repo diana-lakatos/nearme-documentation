@@ -43,6 +43,7 @@ GEM
     airbrake (3.1.2)
       activesupport
       builder
+    ansi (1.4.3)
     archive-tar-minitar (0.5.2)
     arel (3.0.2)
     autotest (4.4.5)
@@ -140,6 +141,7 @@ GEM
     mime-types (1.19)
     mini_magick (3.1)
       subexec (~> 0.0.4)
+    minitest (3.3.0)
     mocha (0.12.2)
       metaclass (~> 0.0.1)
     money (5.0.0)
@@ -281,6 +283,8 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
+    turn (0.9.6)
+      ansi
     tweet-button (0.1.0)
     tzinfo (0.3.33)
     warden (1.2.1)
@@ -316,6 +320,7 @@ DEPENDENCIES
   json_spec (= 0.5.0)
   launchy
   mini_magick
+  minitest
   mocha
   money-rails
   newrelic_rpm
@@ -339,6 +344,7 @@ DEPENDENCIES
   texticle (~> 2.0)
   thinking-sphinx
   timecop
+  turn
   tweet-button
   webmock!
   will_paginate

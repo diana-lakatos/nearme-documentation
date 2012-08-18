@@ -56,10 +56,12 @@ group :test do
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
   gem 'launchy'
+  gem 'minitest'
   gem 'mocha'
   gem 'pickle'
   gem 'simplecov', :require => false
   gem 'timecop'
+  gem 'turn'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
 end
 
