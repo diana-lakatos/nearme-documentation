@@ -22,11 +22,13 @@ class ListingTest < ActiveSupport::TestCase
   end
 
   test "find_by_search_params restricts based upon amenities" do
-    search_params = search_all_over_the_world()
-    search_params['amenities'] = [1]
     listing_with_amenity = FactoryGirl.create(:listing_with_amenity)
     listing_without_amenity = FactoryGirl.create(:listing)
+
+    search_params = search_all_over_the_world()
+    search_params['amenities'] = [listing_with_amenity.amenities.first.id]
     listings = Listing.find_by_search_params(search_params)
+
     assert listings.include?(listing_with_amenity), "Listings includes listing with amenity"
     assert !listings.include?(listing_without_amenity), "Listings dont include listing without amenity"
   end
@@ -57,7 +59,7 @@ class ListingTest < ActiveSupport::TestCase
 
   def search_all_over_the_world
     return {
-      "bounding_box" => {
+      "boundingbox" => {
         "start" => {
           "lat" => -180.0,
           "lon" => -180.0
