@@ -31,6 +31,10 @@ gem 'tweet-button'
 gem 'will_paginate'
 gem 'thinking-sphinx'
 
+group :staging, :production do
+  gem 'flying-sphinx'
+end
+
 group :development do
   gem 'heroku'
   gem 'taps'
@@ -65,6 +69,6 @@ group :test do
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
 end
 
-group :development, :production do
+group :production do
   gem 'newrelic_rpm'
 end
