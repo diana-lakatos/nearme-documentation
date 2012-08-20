@@ -15,11 +15,13 @@ FactoryGirl.define do
         listing.amenities << FactoryGirl.create(:amenity)
       end
     end
+
     factory :listing_with_organization do
       after(:create) do |listing|
         listing.organizations << FactoryGirl.create(:organization)
       end
     end
+
     factory :listing_at_5_5 do
       association(:location, factory: :location, latitude: "5.0", longitude: "5.0")
     end
@@ -41,14 +43,3 @@ FactoryGirl.define do
 
   end
 end
-#  factory :listing do
-#    name { "Somewhere Else" }
-#    address { "#{(rand * 99 + 1).to_i} York St Launceston TAS 7250" }
-#    latitude { -34.705022 + (rand * 0.02 - 0.01) }
-#    longitude { 138.710672 + (rand * 0.02 - 0.01) }
-#    description { Faker::Lorem.paragraphs(2).join }
-#    company_description { Faker::Lorem.paragraph }
-#    confirm_reservations true
-#    maximum_desks 3
-#    association :creator, :factory => :user
-#  end
