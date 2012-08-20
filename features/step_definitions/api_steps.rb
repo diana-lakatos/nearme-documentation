@@ -20,22 +20,6 @@ Given /^an organization with logo named (.*)$/ do |name|
   FactoryGirl.create(:organization_with_logo, name: name)
 end
 
-Given /^a listed location with an organization with the id of 1$/ do
-  FactoryGirl.create(:listing_with_organization)
-end
-
-Given /^a listed location( without (amenities|organizations))?$/ do |_,_|
-  @listing = FactoryGirl.create(:listing)
-end
-
-Given /^a listed location with an amenity with the id of 1$/ do
-  FactoryGirl.create(:listing_with_amenity)
-end
-
-Given /^a listed location with a creator whose email is (.*)?$/ do |email|
-  @listing = FactoryGirl.create(:listing, creator: FactoryGirl.create(:user, email: email))
-end
-
 When /^I send a(n authenticated)? POST request to "(.*?)":$/ do |authenticated, url, body|
   if url.match(/:id/) && plural_resource = url.match(/^(\w+)\/.*/)
     this_resource = instance_variable_get("@#{plural_resource.captures.first.singularize}")

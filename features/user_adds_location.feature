@@ -13,6 +13,7 @@ Feature: User Adds Location
     When I create a location with that organization
     Then that location has that organization
 
-  @future
-  Scenario: With Amenities
-
+  Scenario: Adding an Amenity to Location
+    Given an amenity exists
+    When I create a location with that amenity
+    Then that location has that amenity
