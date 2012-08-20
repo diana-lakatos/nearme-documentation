@@ -23,7 +23,6 @@ class ListingTest < ActiveSupport::TestCase
 
   test "find_by_search_params restricts based upon amenities" do
     listing_with_amenity = FactoryGirl.create(:listing_with_amenity)
-    search_params['amenities'] = [listing_with_amenity.amenities.last.id]
     listing_without_amenity = FactoryGirl.create(:listing)
 
     search_params = search_all_over_the_world()
