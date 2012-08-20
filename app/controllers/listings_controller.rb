@@ -5,7 +5,8 @@ class ListingsController < ApplicationController
   before_filter :authorize_viewing!, :only => :show
 
   def index
-    @listings = Listing.latest.paginate :page => params[:page]
+    organizations = current_user ? current_user.organizations : []
+    @listings = Listing.latest.with_organizations(organizations).paginate :page => params[:page]
   end
 
   def new

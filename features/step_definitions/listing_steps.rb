@@ -53,6 +53,14 @@ When /^I view that listing$/ do
   visit listing_path(model!('listing'))
 end
 
+Then /^I (do not )?see that listing listed$/ do |negative|
+  if negative
+    page.should have_no_content model!("listing").name
+  else
+    page.should have_content model!("listing").name
+  end
+end
+
 Then /^I (do not )?see a search result for the (.*) listing$/ do |negative, city|
   listing = instance_variable_get("@listing_in_#{city.downcase.gsub(' ', '_')}")
   if negative

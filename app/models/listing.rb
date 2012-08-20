@@ -44,6 +44,13 @@ class Listing < ActiveRecord::Base
                    includes(:photos).order(%{ random() }).limit(5)
 
   scope :latest,   order("listings.created_at DESC")
+  scope :with_organizations, lambda {|orgs|
+    includes(:location => :organizations).
+      where <<-SQL, orgs.map(&:id)
+        (locations.require_organization_membership = TRUE AND location_organizations.organization_id IN (?))
+        OR locations.require_organization_membership = FALSE
+      SQL
+  }
 
   # thinking sphinx searching
   define_index do
