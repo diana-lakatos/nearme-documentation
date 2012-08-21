@@ -39,24 +39,39 @@ class Listing
         listings
       end
 
+      # TODO: Roll this into Sphinx search (used by web frontend)
+      def search_by_location(search)
+        return self if search[:lat].nil? || search[:lng].nil?
+
+        distance = if (search[:southwest] && search[:southwest][:lat] && search[:southwest][:lng]) &&
+                      (search[:northeast] && search[:northeast][:lat] && search[:northeast][:lng])
+          Geocoder::Calculations.distance_between([ search[:southwest][:lat].to_f, search[:southwest][:lng].to_f ],
+                                                  [ search[:northeast][:lat].to_f, search[:northeast][:lng].to_f ], units: :km)
+        else
+          30
+        end
+        Location.near([ search[:lat].to_f, search[:lng].to_f ], distance, order: "distance", units: :km)
+      end
+
       private
 
         # we use Sphinx's geosearch here, which takes a midpoint and radius
         def find_by_boundingbox(boundingbox)
-          boundingbox = HashWithIndifferentAccess.new(boundingbox) # my kingdom for deep_symbolize_keys...
+          boundingbox.symbolize_keys!
+          boundingbox = boundingbox.inject({}) { |r, h| k, v = h; r[k] = v.symbolize_keys!; r } # my kingdom for deep_symbolize_keys...
 
           north_west = [boundingbox[:start][:lat], boundingbox[:start][:lon]]
           south_east = [boundingbox[:end][:lat],   boundingbox[:end][:lon]]
 
           midpoint         = Geocoder::Calculations.geographic_center([north_west, south_east])
-          radius           = Geocoder::Calculations.distance_between(north_west, midpoint, units: :m)
+          radius_m         = Geocoder::Calculations.distance_between(north_west, midpoint) * 1_000
 
           # sphinx needs the coordinates in radians
           midpoint_radians = Geocoder::Calculations.to_radians(midpoint)
 
           search(
             geo:  midpoint_radians,
-            with: { "@geodist" => radius }
+            with: { "@geodist" => 0.0...radius_m.to_f }
           )
         end
 

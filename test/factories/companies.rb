@@ -6,7 +6,7 @@ FactoryGirl.define do
     creator
     url "http://google.com"
 
-    factory :company_in_auckland do	
+    factory :company_in_auckland do
       name "Company in Auckland"
     end
 
@@ -16,6 +16,10 @@ FactoryGirl.define do
 
     factory :company_in_san_francisco do
       name "Company in San Francisco"
+    end
+
+    factory :company_in_wellington do
+      name "Company in Wellington"
     end
 
   end

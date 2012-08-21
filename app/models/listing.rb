@@ -74,19 +74,6 @@ class Listing < ActiveRecord::Base
   #   listings
   # end
 
-  # def self.search_by_location(search)
-  #   return self if search[:lat].nil? || search[:lng].nil?
-
-  #   distance = if (search[:southwest] && search[:southwest][:lat] && search[:southwest][:lng]) &&
-  #                 (search[:northeast] && search[:northeast][:lat] && search[:northeast][:lng])
-  #     Geocoder::Calculations.distance_between([ search[:southwest][:lat].to_f, search[:southwest][:lng].to_f ],
-  #                                             [ search[:northeast][:lat].to_f, search[:northeast][:lng].to_f ], units: :km)
-  #   else
-  #     30
-  #   end
-  #   Location.near([ search[:lat].to_f, search[:lng].to_f ], distance, order: "distance", units: :km)
-  # end
-
   # def self.find_by_query(query)
   #   includes(location: :company).search_by_query(query)
   # end
