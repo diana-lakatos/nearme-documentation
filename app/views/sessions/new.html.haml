@@ -1,0 +1,27 @@
+- title "Sign In Options"
+
+.grid_4.alpha
+  %h1.tk-chaparral-pro Sign In
+
+  = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+    %div
+      = f.label :email
+      = f.email_field :email
+    %div
+      = f.label :password
+      = f.password_field :password
+    - if devise_mapping.rememberable?
+      %div
+        = f.check_box :remember_me
+        = f.label :remember_me
+    %div
+      = f.submit "Sign In"
+      or
+      = link_to "Register", new_user_registration_url
+
+.grid_8.omega
+  %h1.tk-chaparral-pro Or connect with your favorite service...
+  %a.auth_provider.grid_4.alpha{:href => "/auth/twitter"}
+    = image_tag "twitter_service.png", :alt => "Twitter"
+  %a.auth_provider.grid_4.omega.openid{:href => "/auth/open_id"}
+    = image_tag "openid_service.png", :alt => "OpenID"

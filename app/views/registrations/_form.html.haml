@@ -1,5 +1,12 @@
 = simple_form_for resource, :as => resource_name, :url => url, :html => html do |f|
   = f.input :name
   = f.input :email
+
+  // Need to let the user enter a password if no Provider.
+  // Also need to let them change their password if they had previously used one.
+  - if resource.has_password?
+    = f.input :password
+    = f.input :password_confirmation
+
   = f.input :organization_ids, :collection => Organization.order('name').all, :as => :check_boxes, :label => "Professional Associations", :hint => "Please check any professional associations with which you are affiliated. You can then access listings restricted to members of these associations."
   = f.button :submit, :value => submit

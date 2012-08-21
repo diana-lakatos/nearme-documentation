@@ -2,7 +2,7 @@
   .please_signin
     %h1 Do we know you?
     %p
-      Please #{link_to 'Sign In/Up', authentications_path} to book a desk.
+      Please #{link_to 'Sign In/Up', new_user_session_path} to book a desk.
 - else
   - unless current_user.reservations.on(@date).any?
     = render :partial => "form", :locals => {:listing => @listing, :reservation => @reservation}

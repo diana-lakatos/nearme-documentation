@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
          :rememberable, :trackable, :validatable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :organization_ids, :phone
+  attr_accessible :name, :email, :organization_ids, :phone, :password, :password_confirmation
 
   delegate :to_s, :to => :name
 
@@ -44,17 +44,33 @@ class User < ActiveRecord::Base
            :through => :reverse_relationships,
            :source => :follower
 
+  # Build a new user, taking into account session information such as Provider
+  # authentication.
+  def self.new_with_session(attrs, session)
+    user = new(attrs)
+    user.apply_omniauth(session[:omniauth]) if session[:omniauth]
+    user
+  end
+
   def apply_omniauth(omniauth)
-    self.name = omniauth['info']['name'] if email.blank?
+    self.name = omniauth['info']['name'] if name.blank?
     self.email = omniauth['info']['email'] if email.blank?
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
   end
 
+  # Whether to validate the presence of a password
   def password_required?
-    false
+    # We're changing/setting password, or new user and there are no Provider authentications
+    !password.blank? || !password_confirmation.blank? ||
+      (new_record? && authentications.empty?)
   end
 
-  # No password auth
+  # Whether the user has - or should have - a password.
+  def has_password?
+    encrypted_password.present? || password_required?
+  end
+
+  # Don't require current_password in order to update from Devise.
   def update_with_password(attrs)
     update_attributes(attrs)
   end
