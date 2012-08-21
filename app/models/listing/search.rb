@@ -22,6 +22,8 @@ class Listing
     module ClassMethods
 
       def find_by_search_params(params)
+        params.symbolize_keys!
+
         listings = if params.has_key?(:boundingbox)
           find_by_boundingbox(params.delete(:boundingbox))
         elsif params.has_key?(:query)
@@ -41,6 +43,8 @@ class Listing
 
         # we use Sphinx's geosearch here, which takes a midpoint and radius
         def find_by_boundingbox(boundingbox)
+          boundingbox = HashWithIndifferentAccess.new(boundingbox) # my kingdom for deep_symbolize_keys...
+
           north_west = [boundingbox[:start][:lat], boundingbox[:start][:lon]]
           south_east = [boundingbox[:end][:lat],   boundingbox[:end][:lon]]
 

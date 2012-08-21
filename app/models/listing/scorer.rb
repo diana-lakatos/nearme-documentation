@@ -45,6 +45,8 @@ class Listing
 
       # Ascending proximity to center of `boundingbox`, normalised between 0 and 100
       def score_boundingbox(options = {})
+        options.symbolize_keys!
+
         center_lat, center_lon = options.delete(:lat), options.delete(:lon)
         ranked_listings        =  @listings.rank_by do |l|
           if l.sphinx_attributes && l.sphinx_attributes["@geodist"]
@@ -72,6 +74,8 @@ class Listing
       end
 
       def score_price(options = {})
+        options.symbolize_keys!
+
         min, max        = options.delete(:min), options.delete(:max)
         midpoint        = (max + min) / 2
         midpoint_cents  = midpoint * 100
@@ -82,6 +86,8 @@ class Listing
       end
 
       def score_availability(options = {})
+        options.symbolize_keys!
+
         start_date, end_date = options.delete(:date_start).to_date, options.delete(:date_end).to_date
         quantity_needed      = options.delete(:quantity_min)
 

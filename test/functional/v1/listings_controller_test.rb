@@ -2,6 +2,11 @@ require 'test_helper'
 
 class V1::ListingsControllerTest < ActionController::TestCase
 
+  setup do
+    # stub out sphinx
+    stub_sphinx([FactoryGirl.build(:listing)])
+  end
+
   ##
   # Display
 
