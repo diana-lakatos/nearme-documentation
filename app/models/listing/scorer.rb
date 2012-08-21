@@ -46,7 +46,13 @@ class Listing
       # Ascending proximity to center of `boundingbox`, normalised between 0 and 100
       def score_boundingbox(options = {})
         center_lat, center_lon = options.delete(:lat), options.delete(:lon)
-        ranked_listings        =  @listings.rank_by { |l| l.distance_from(center_lat, center_lon) }
+        ranked_listings        =  @listings.rank_by do |l|
+          if l.sphinx_attributes && l.sphinx_attributes["@geodist"]
+            l.sphinx_attributes["@geodist"]
+          else
+            l.distance_from(center_lat, center_lon)
+          end
+        end
 
         add_scores(ranked_listings, :boundingbox)
       end

@@ -19,15 +19,10 @@ class V1::ListingsController < V1::BaseController
 
 
   def search
-
     listings = Listing.find_by_search_params(json_params)
-    # TODO: Score and sort listings by the search params if present
-    # location, date, quantity, price
 
-    add_fake_scores listings
     render :json => listings
   end
-
 
   def query
 
@@ -320,13 +315,6 @@ class V1::ListingsController < V1::BaseController
                   field:    "id",
                   code:     "missing" }
     render json: e.to_hash, status: e.status
-  end
-
-  def add_fake_scores listings
-    fake_scores =  (0...listings.size).map { 50.0 }.sort.reverse
-    listings.each_with_index { |l, i|
-      l.score = fake_scores[i]
-    }
   end
 
   # Formatted listing availability record
