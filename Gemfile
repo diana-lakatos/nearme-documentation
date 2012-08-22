@@ -33,6 +33,7 @@ gem 'thinking-sphinx'
 
 group :staging, :production do
   gem 'flying-sphinx'
+  gem 'thin'
 end
 
 group :development do

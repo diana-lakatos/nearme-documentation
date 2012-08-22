@@ -36,9 +36,6 @@ class Listing < ActiveRecord::Base
   serialize :availability_rules, Hash
 
   acts_as_paranoid
-  # score is to be used by searches. It isn't persisted.
-  # Ignore it for the most part.
-  attr_accessor :score
 
   scope :featured, where(%{ (select count(*) from "photos" where content_id = "listings".id AND content_type = 'Listing') > 0  }).
                    includes(:photos).order(%{ random() }).limit(5)
@@ -52,63 +49,41 @@ class Listing < ActiveRecord::Base
       SQL
   }
 
-  # thinking sphinx searching
-  define_index do
-    join location
+  include Search
 
-    indexes :name, :description
+  # TODO: remove me
+  # def self.find_by_search_params(params)
+  #   search_hash = {}
+  #   if(params.has_key?("boundingbox"))
+  #     bb = params["boundingbox"]
+  #     search_hash[:locations] = {
+  #       latitude:  bb["start"]["lat"]..bb["end"]["lat"],
+  #       longitude: bb["start"]["lon"]..bb["end"]["lon"]
+  #     }
+  #   end
+  #   listings = includes(location: :company).where(search_hash)
 
-    has "radians(#{Location.table_name}.latitude)",  as: :latitude,  type: :float
-    has "radians(#{Location.table_name}.longitude)", as: :longitude, type: :float
+  #   if(params.has_key?("amenities"))
+  #     listings.select! do |l|
+  #       l.amenities.any? { |a| params["amenities"].include? a.id }
+  #     end
+  #   end
 
-    group_by :latitude, :longitude
-  end
+  #   if(params["organizations"])
+  #     listings.select! do |l|
+  #       l.organizations.any? { |a| params["organizations"].include?(a.id) }
+  #     end
+  #   end
 
-  def self.find_by_search_params(params)
-    search_hash = {}
-    if(params.has_key?("boundingbox"))
-      bb = params["boundingbox"]
-      search_hash[:locations] = {
-        latitude:  bb["start"]["lat"]..bb["end"]["lat"],
-        longitude: bb["start"]["lon"]..bb["end"]["lon"]
-      }
-    end
-    listings = includes(location: :company).where(search_hash)
+  #   listings
+  # end
 
-    if(params.has_key?("amenities"))
-      listings.select! do |l|
-        l.amenities.any? { |a| params["amenities"].include? a.id }
-      end
-    end
+  # def self.find_by_query(query)
+  #   includes(location: :company).search_by_query(query)
+  # end
 
-    if(params["organizations"])
-      listings.select! do |l|
-        l.organizations.any? { |a| params["organizations"].include?(a.id) }
-      end
-    end
-
-    listings
-  end
-
-  def self.search_by_location(search)
-    return self if search[:lat].nil? || search[:lng].nil?
-
-    distance = if (search[:southwest] && search[:southwest][:lat] && search[:southwest][:lng]) &&
-                  (search[:northeast] && search[:northeast][:lat] && search[:northeast][:lng])
-      Geocoder::Calculations.distance_between([ search[:southwest][:lat].to_f, search[:southwest][:lng].to_f ],
-                                              [ search[:northeast][:lat].to_f, search[:northeast][:lng].to_f ], units: :km)
-    else
-      30
-    end
-    Location.near([ search[:lat].to_f, search[:lng].to_f ], distance, order: "distance", units: :km)
-  end
-
-  def self.find_by_query(query)
-    includes(location: :company).search_by_query(query)
-  end
-
-  include PgSearch
-  pg_search_scope :search_by_query, against: [:name, :description]
+  # include PgSearch
+  # pg_search_scope :search_by_query, against: [:name, :description]
 
   # TODO: Create a database index for the availability.
   # TODO: This implementation is really slow!

@@ -38,4 +38,8 @@ class ActiveSupport::TestCase
     request.env['Authorization'] = @user.authentication_token;
   end
 
+  def stub_sphinx(listings_to_return)
+    Listing.stubs(:search).returns(listings_to_return)
+  end
+
 end

@@ -41,5 +41,10 @@ FactoryGirl.define do
       association(:location, factory: :location_in_san_francisco)
     end
 
+    factory :listing_in_wellington do
+      name "Listing in Wellington"
+      association(:location, factory: :location_in_wellington)
+    end
+
   end
 end

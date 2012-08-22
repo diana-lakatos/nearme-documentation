@@ -37,5 +37,13 @@ FactoryGirl.define do
       longitude "-122.478696"
       association(:company, factory: :company_in_san_francisco)
     end
+
+    factory :location_in_wellington do
+      name "35 Ghuznee Street"
+      address "35 Ghuznee Street"
+      latitude "-41.293597"
+      longitude "174.7763361"
+      association(:company, factory: :company_in_wellington)
+    end
   end
 end
