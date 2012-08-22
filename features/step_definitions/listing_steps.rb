@@ -7,8 +7,6 @@ Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and Wi\-Fi)?$/ 
 
   listing.update_attribute(:price_cents, (dollars.to_i * 100) + cents.to_i)
   listing.location.amenities << @wifi if wifi
-  instance_variable_set "@listing_in_#{city.downcase.gsub(' ', '_')}",
-  FactoryGirl.create("listing_in_#{city.downcase.gsub(' ', '_')}")
 end
 
 Given /^a listing exists for a location with a private organization$/ do
