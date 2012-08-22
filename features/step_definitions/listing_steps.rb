@@ -3,6 +3,29 @@ Given /^a listing in (.*) exists$/ do |city|
     FactoryGirl.create("listing_in_#{city.downcase.gsub(' ', '_')}")
 end
 
+Given /^a listed location with an organization with the id of 1$/ do
+  FactoryGirl.create(:listing_with_organization)
+end
+
+Given /^a listed location( without (amenities|organizations))?$/ do |_,_|
+  @listing = FactoryGirl.create(:listing)
+end
+
+Given /^a listed location with an amenity/ do
+  store_model('listing', 'listing', FactoryGirl.create(:listing_with_amenity))
+  store_model('location', 'location', model!('listing').location)
+  store_model('amenity', 'amenity', model!('location').amenities.first)
+end
+
+Given /^a listed location with an amenity with the id of 1$/ do
+  FactoryGirl.create(:listing_with_amenity)
+end
+
+Given /^a listed location with a creator whose email is (.*)?$/ do |email|
+  @listing = FactoryGirl.create(:listing, creator: FactoryGirl.create(:user, email: email))
+end
+
+
 When /^I create a listing for that location with a price of \$(\d+)\.(\d+)$/ do |dollars, cents|
   visit new_listing_path
   select model!("location").name, from: "Location"
@@ -13,6 +36,10 @@ When /^I create a listing for that location with a price of \$(\d+)\.(\d+)$/ do 
   fill_in "Price", with: "#{dollars}.#{cents}"
   click_link_or_button("Create Listing")
   @listing = Listing.find_by_name("Awesome Listing")
+end
+
+When /^I view that listing$/ do
+  visit listing_path(model!('listing'))
 end
 
 Then /^I (do not )?see a search result for the (.*) listing$/ do |negative, city|
