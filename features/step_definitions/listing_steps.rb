@@ -1,18 +1,10 @@
 Given /^a listing in (.*) exists$/ do |city|
-  instance_variable_set "@listing_in_#{city.downcase.gsub(' ', '_')}",
-    FactoryGirl.create("listing_in_#{city.downcase.gsub(' ', '_')}")
+  create_listing_in(city)
 end
 
 Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and Wi\-Fi)?$/ do |city, dollars, cents, wifi|
-  # perhaps someone more well-versed in Cucumber can help here
-  # this gives a StackLevelTooDeep Exception and doesn't call the other step :(
-  # step "a listing in #{city} exists"
+  listing = create_listing_in(city)
 
-  # FIXME: fix the above and remove
-  instance_variable_set "@listing_in_#{city.downcase.gsub(' ', '_')}",
-    FactoryGirl.create("listing_in_#{city.downcase.gsub(' ', '_')}")
-
-  listing = instance_variable_get "@listing_in_#{city.downcase.gsub(' ', '_')}"
   listing.update_attribute(:price_cents, (dollars.to_i * 100) + cents.to_i)
   listing.location.amenities << @wifi if wifi
 end
