@@ -10,26 +10,22 @@ Given /^a listing exists for a location with a private organization$/ do
   store_model('organization', 'organization', location.organizations.first)
 end
 
-Given /^a listed location with an organization with the id of 1$/ do
-  FactoryGirl.create(:listing_with_organization)
+Given /^a listed location with an organization$/ do
+  @listing = FactoryGirl.create(:listing_with_organization)
 end
 
 Given /^a listed location( without (amenities|organizations))?$/ do |_,_|
   @listing = FactoryGirl.create(:listing)
 end
 
+Given /^a listed location with a creator whose email is (.*)?$/ do |email|
+  @listing = FactoryGirl.create(:listing, creator: FactoryGirl.create(:user, email: email))
+end
+
 Given /^a listed location with an amenity/ do
   store_model('listing', 'listing', FactoryGirl.create(:listing_with_amenity))
   store_model('location', 'location', model!('listing').location)
   store_model('amenity', 'amenity', model!('location').amenities.first)
-end
-
-Given /^a listed location with an amenity with the id of 1$/ do
-  FactoryGirl.create(:listing_with_amenity)
-end
-
-Given /^a listed location with a creator whose email is (.*)?$/ do |email|
-  @listing = FactoryGirl.create(:listing, creator: FactoryGirl.create(:user, email: email))
 end
 
 
