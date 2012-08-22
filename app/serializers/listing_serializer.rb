@@ -25,7 +25,7 @@ class ListingSerializer < ApplicationSerializer
     {
       amount:        object.price.to_f,
       period:        object.price_period,
-      label:         object.price.format,
+      label:         (object.price && object.price != 0) ? object.price.format : 'Free',
       currency_code: object.price.currency.iso_code
     }
   end
