@@ -6,6 +6,13 @@ class Listing
     extend ActiveSupport::Concern
 
     included do
+      # score is to be used by searches. It isn't persisted.
+      # Ignore it for the most part.
+      attr_accessor :score
+
+      # strict_match is used to indicate search results that match all relevant criteria
+      attr_accessor :strict_match
+
       # thinking sphinx index
       define_index do
         join location

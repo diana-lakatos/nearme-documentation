@@ -36,9 +36,6 @@ class Listing < ActiveRecord::Base
   serialize :availability_rules, Hash
 
   acts_as_paranoid
-  # score is to be used by searches. It isn't persisted.
-  # Ignore it for the most part.
-  attr_accessor :score
 
   scope :featured, where(%{ (select count(*) from "photos" where content_id = "listings".id AND content_type = 'Listing') > 0  }).
                    includes(:photos).order(%{ random() }).limit(5)

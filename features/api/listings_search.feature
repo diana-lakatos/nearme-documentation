@@ -43,7 +43,8 @@ Feature: User Searches Listings
           "average": 0.0,
           "count": 0
         },
-        "score": 0.0
+        "score": 0.0,
+        "strict_match": true
       }
       ]
     }
@@ -51,7 +52,7 @@ Feature: User Searches Listings
 
   Scenario: Searching for some listings with a few price parameters
     Given a Wi-Fi amenity
-    And a listing in Auckland exists with a price of $50.00 and Wi-Fi
+    And a listing in Auckland exists with a price of $150.00 and Wi-Fi
     And a listing in Wellington exists with a price of $250.00
     And the Sphinx indexes are updated
     When I send a POST request to "listings/search":
@@ -87,16 +88,17 @@ Feature: User Searches Listings
 
          ],
          "price": {
-           "amount": 50.0,
+           "amount": 150.0,
            "currency_code": "USD",
-           "label": "$50.00"
+           "label": "$150.00"
          },
          "quantity": 1,
          "rating": {
            "average": 0.0,
            "count": 0
          },
-         "score": 22.5
+         "score": 22.5,
+         "strict_match": true
        },
        {
          "address": "35 Ghuznee Street",
@@ -125,7 +127,8 @@ Feature: User Searches Listings
            "average": 0.0,
            "count": 0
          },
-         "score": 22.5
+         "score": 22.5,
+         "strict_match": false
        }
      ]
    }
