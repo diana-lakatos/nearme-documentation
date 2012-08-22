@@ -33,8 +33,6 @@ class Listing < ActiveRecord::Base
 
   monetize :price_cents
 
-  serialize :availability_rules, Hash
-
   acts_as_paranoid
   # score is to be used by searches. It isn't persisted.
   # Ignore it for the most part.

@@ -24,6 +24,10 @@ Feature: Location Owner Creates/Edits Listing
     When I create a listing for that location with a price of $50.00
     Then the listing price is shown as $50
 
+  Scenario: Setting availability rules
+    When I create a listing for that location with availability rules
+    Then the listing shows the availability rules
+
   Scenario: A listing owner can edit a listing
     Given a listing exists with creator: the user
     When I go to the listing's page
