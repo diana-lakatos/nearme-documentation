@@ -73,6 +73,7 @@ GEM
       capybara (>= 1.0.0)
       cucumber (~> 1.0.0)
       nokogiri (>= 1.4.6)
+    daemons (1.1.9)
     database_cleaner (0.6.0)
     decent_exposure (1.0.2)
     devise (2.1.2)
@@ -85,6 +86,7 @@ GEM
       mail (~> 2.2)
       rspec (~> 2.0)
     erubis (2.7.0)
+    eventmachine (0.12.10)
     excon (0.6.6)
     factory_girl (3.6.0)
       activesupport (>= 3.0.0)
@@ -287,6 +289,10 @@ GEM
     term-ansicolor (1.0.7)
     texticle (2.0.2)
       activerecord (>= 3.0.0)
+    thin (1.4.1)
+      daemons (>= 1.0.9)
+      eventmachine (>= 0.12.6)
+      rack (>= 1.0.0)
     thinking-sphinx (2.0.12)
       activerecord (>= 3.0.3)
       builder (>= 2.1.2)
@@ -357,6 +363,7 @@ DEPENDENCIES
   state_machine
   taps
   texticle (~> 2.0)
+  thin
   thinking-sphinx
   timecop
   turn
