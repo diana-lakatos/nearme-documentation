@@ -25,10 +25,10 @@ Feature: List organizations
           "id": 2,
           "name": "Lawyers USA",
           "logo": {
-            "thumb": { "url": null },
-            "medium": { "url": null },
-            "large": { "url": null },
-            "url": null
+            "thumb": { "url": "http://placehold.it/100x100" },
+            "medium": { "url": "http://placehold.it/100x100" },
+            "large": { "url": "http://placehold.it/100x100" },
+            "url": "http://placehold.it/100x100"
           }
         }
       ]
