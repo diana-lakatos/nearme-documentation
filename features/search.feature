@@ -26,3 +26,10 @@ Feature: A user can search for a listing
     Then I should see a Google Map
     And I see a search result for the Cleveland listing
     And I do not see a search result for the Auckland listing
+
+
+  @future
+  Scenario: a non member user searches for a private listing
+
+  @future
+  Scenario: a member user searches for a private listing

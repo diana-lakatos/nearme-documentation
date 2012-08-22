@@ -1,9 +1,12 @@
 class ListingsController < ApplicationController
   before_filter :authenticate_user!, :except => [:show, :index]
-  before_filter :find_listing, :only => [:edit, :update, :destroy]
+  before_filter :find_listing, :only => [:show, :edit, :update, :destroy]
+  before_filter :authorize_editing!, :only => [:edit, :update, :destroy]
+  before_filter :authorize_viewing!, :only => :show
 
   def index
-    @listings = Listing.latest.paginate :page => params[:page]
+    organizations = current_user ? current_user.organizations : []
+    @listings = Listing.latest.with_organizations(organizations).paginate :page => params[:page]
   end
 
   def new
@@ -54,9 +57,17 @@ class ListingsController < ApplicationController
 
   def find_listing
     @listing = Listing.find(params[:id])
-    raise ActiveRecord::RecordNotFound unless @listing.created_by?(current_user)
-  rescue ActiveRecord::RecordNotFound
-    redirect_to :root, :alert => "Could not find listing"
   end
 
+  def authorize_editing!
+    redirect_to :root, :alert => "Could not find listing" unless @listing && @listing.created_by?(current_user)
+  end
+
+  def authorize_viewing!
+    if @listing.required_organizations.any?
+      unless current_user && current_user.may_view?(@listing)
+        redirect_to listings_path, :alert => "Sorry, you don't have permission to view that"
+      end
+    end
+  end
 end

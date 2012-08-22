@@ -20,22 +20,6 @@ Given /^an organization with logo named (.*)$/ do |name|
   FactoryGirl.create(:organization_with_logo, name: name)
 end
 
-Given /^a listed location with an organization with the id of 1$/ do
-  FactoryGirl.create(:listing_with_organization)
-end
-
-Given /^a listed location( without (amenities|organizations))?$/ do |_,_|
-  @listing = FactoryGirl.create(:listing)
-end
-
-Given /^a listed location with an amenity with the id of 1$/ do
-  FactoryGirl.create(:listing_with_amenity)
-end
-
-Given /^a listed location with a creator whose email is (.*)?$/ do |email|
-  @listing = FactoryGirl.create(:listing, creator: FactoryGirl.create(:user, email: email))
-end
-
 When /^I send a(n authenticated)? POST request to "(.*?)":$/ do |authenticated, url, body|
   if url.match(/:id/) && plural_resource = url.match(/^(\w+)\/.*/)
     this_resource = instance_variable_get("@#{plural_resource.captures.first.singularize}")
@@ -53,6 +37,14 @@ When /^I send a(n authenticated)? GET request for "(.*?)"$/ do |authenticated, u
   @response = get "/v1/#{url}"
 end
 
+When /^I search for listings with that organization$/ do
+    json = {
+      "boundingbox" => {"start" => {"lat" => -180.0,"lon" => -180.0}, "end" => {"lat" => 180.0,"lon" => 180.0 }},
+      "organizations" => [@listing.organizations.first.id]
+    }
+    @response = post "/v1/listings/search", json.to_json
+end
+
 Then /^I receive only listings which have that amenity$/ do
   results = parse_json(last_json)
   results["listings"].size.should == 1
@@ -65,7 +57,7 @@ Then /^I receive only listings which have that organization$/ do
   results = parse_json(last_json)
   results["listings"].size.should == 1
   results["listings"].all? do |r|
-    r["organizations"].any? { |a| a["id"] == 1 }
+    r["organizations"].any? { |a| a["id"] == @listing.organizations.first.id }
   end
 end
 

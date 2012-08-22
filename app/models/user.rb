@@ -74,4 +74,10 @@ class User < ActiveRecord::Base
   def full_email
     "#{name} <#{email}>"
   end
+
+  def may_view?(listing)
+    listing.creator == self ||
+      listing.required_organizations.none? ||
+      listing.required_organizations.any? {|o| organizations.include? o }
+  end
 end

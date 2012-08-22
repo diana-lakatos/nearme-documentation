@@ -20,6 +20,10 @@
     %p
       %strong Reservation Confirmation Required:
       = @listing.confirm_reservations? ? "Yes" : "No"
+    - if @listing.amenities.any?
+      %ul
+        - @listing.amenities.each do |a|
+          %li=a.name
     - if @listing.description?
       %p= raw @listing.description
     %h2.tk-chaparral-pro Latest Activity

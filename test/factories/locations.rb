@@ -9,6 +9,12 @@ FactoryGirl.define do
     creator
     company
 
+    factory :private_location do
+      after(:create) do |l|
+        l.organizations << FactoryGirl.create(:organization)
+      end
+      require_organization_membership true
+    end
     factory :location_in_auckland do
       name "Auckland Meuseum"
       address "Parnell, Auckland 1010 New Zealand"

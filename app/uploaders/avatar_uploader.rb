@@ -29,4 +29,8 @@ class AvatarUploader < CarrierWave::Uploader::Base
   def extension_white_list
     %w(jpg jpeg gif png)
   end
+
+  def default_url
+    "http://placehold.it/100x100"
+  end
 end

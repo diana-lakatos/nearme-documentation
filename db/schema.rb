@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120816214649) do
+ActiveRecord::Schema.define(:version => 20120818191223) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -104,10 +104,11 @@ ActiveRecord::Schema.define(:version => 20120816214649) do
     t.float    "longitude"
     t.string   "amenities"
     t.text     "info"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
     t.datetime "deleted_at"
     t.string   "formatted_address"
+    t.boolean  "require_organization_membership", :default => false
   end
 
   create_table "organization_users", :force => true do |t|

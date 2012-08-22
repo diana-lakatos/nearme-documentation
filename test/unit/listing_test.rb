@@ -16,18 +16,4 @@ class ListingTest < ActiveSupport::TestCase
   should validate_numericality_of(:price_cents)
   should validate_numericality_of(:quantity)
 
-  def search_all_over_the_world
-    return {
-      "boundingbox" => {
-        "start" => {
-          "lat" => -180.0,
-          "lon" => -180.0
-        },
-        "end" => {
-          "lat" => 180.0,
-          "lon" => 180.0
-        }
-      }
-    }
-  end
 end

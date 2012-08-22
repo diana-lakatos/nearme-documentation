@@ -5,7 +5,14 @@ DesksnearMe::Application.configure do
   config.action_dispatch.x_sendfile_header = "X-Sendfile"
   config.serve_static_assets = false
 
-  config.action_mailer.smtp_settings = SENDGRID_MAIL_SETTINGS
+  config.action_mailer.smtp_settings = {
+    :address        => 'smtp.sendgrid.net',
+    :port           => '587',
+    :authentication => :plain,
+    :user_name      => ENV['SENDGRID_USERNAME'],
+    :password       => ENV['SENDGRID_PASSWORD'],
+    :domain         => 'heroku.com'
+  }
 
   config.i18n.fallbacks = true
   config.active_support.deprecation = :notify

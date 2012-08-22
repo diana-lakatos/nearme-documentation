@@ -7,18 +7,62 @@ Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and Wi\-Fi)?$/ 
 
   listing.update_attribute(:price_cents, (dollars.to_i * 100) + cents.to_i)
   listing.location.amenities << @wifi if wifi
+  instance_variable_set "@listing_in_#{city.downcase.gsub(' ', '_')}",
+  FactoryGirl.create("listing_in_#{city.downcase.gsub(' ', '_')}")
 end
 
+Given /^a listing exists for a location with a private organization$/ do
+  location = FactoryGirl.create(:private_location)
+  store_model('listing', 'listing for private location', FactoryGirl.create(:listing, location: location))
+  store_model('location', 'organization', location)
+  store_model('organization', 'organization', location.organizations.first)
+end
+
+Given /^a listed location with an organization$/ do
+  @listing = FactoryGirl.create(:listing_with_organization)
+end
+
+Given /^a listed location( without (amenities|organizations))?$/ do |_,_|
+  @listing = FactoryGirl.create(:listing)
+end
+
+Given /^a listed location with a creator whose email is (.*)?$/ do |email|
+  @listing = FactoryGirl.create(:listing, creator: FactoryGirl.create(:user, email: email))
+end
+
+Given /^a listed location with an amenity/ do
+  store_model('listing', 'listing', FactoryGirl.create(:listing_with_amenity))
+  store_model('location', 'location', model!('listing').location)
+  store_model('amenity', 'amenity', model!('location').amenities.first)
+end
+
+
 When /^I create a listing for that location with a price of \$(\d+)\.(\d+)$/ do |dollars, cents|
-  visit new_listing_path
-  select model!("location").name, from: "Location"
-  fill_in "Name", with: "Awesome Listing"
-  fill_in "Description", with: "Nulla rutrum neque eu enim eleifend bibendum."
-  fill_in "Quantity", with: "2"
-  choose "listing_confirm_reservations_true"
-  fill_in "Price", with: "#{dollars}.#{cents}"
-  click_link_or_button("Create Listing")
-  @listing = Listing.find_by_name("Awesome Listing")
+  create_listing(model!("location")) do
+    fill_in "Price", with: "#{dollars}.#{cents}"
+  end
+end
+
+When /^I create a listing for an organization$/ do
+  create_listing(model!("location")) do
+    check Organization.first.name
+  end
+end
+
+When /^I visit that listing$/ do
+  visit listing_path(model!('listing'))
+end
+
+When /^I view that listing$/ do
+  visit listing_path(model!('listing'))
+end
+
+Then /^I (do not )?see that listing listed$/ do |negative|
+  if negative
+    page.should have_no_content model!("listing").name
+  else
+    page.should have_content model!("listing").name
+  end
 end
 
 Then /^I (do not )?see a search result for the (.*) listing$/ do |negative, city|
@@ -42,4 +86,9 @@ Then /^the listing price is shown as (.*)$/ do |amount|
   page.should have_content(amount)
   visit listings_path
   page.should have_content(amount)
+end
+
+Then /^I cannot view that listing$/ do
+  page.should have_content "Sorry, you don't have permission to view that"
+  current_path.should == listings_path
 end

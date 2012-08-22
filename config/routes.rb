@@ -78,4 +78,5 @@ DesksnearMe::Application.routes.draw do
     get 'amenities', to: 'amenities#index'
     get 'organizations', to: 'organizations#index'
   end
+  match "/support" => redirect("https://desksnearme.desk.com")
 end
