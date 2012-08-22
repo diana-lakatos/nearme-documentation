@@ -33,8 +33,6 @@ class Listing < ActiveRecord::Base
 
   monetize :price_cents
 
-  serialize :availability_rules, Hash
-
   acts_as_paranoid
 
   scope :featured, where(%{ (select count(*) from "photos" where content_id = "listings".id AND content_type = 'Listing') > 0  }).

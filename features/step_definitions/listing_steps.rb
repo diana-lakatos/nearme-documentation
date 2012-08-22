@@ -41,6 +41,12 @@ When /^I create a listing for that location with a price of \$(\d+)\.(\d+)$/ do 
   end
 end
 
+When /^I create a listing for that location with availability rules$/ do
+  create_listing(model!("location")) do
+    fill_in "Availability rules", with: "I'm always available"
+  end
+end
+
 When /^I create a listing for an organization$/ do
   create_listing(model!("location")) do
     check Organization.first.name
@@ -84,6 +90,11 @@ Then /^the listing price is shown as (.*)$/ do |amount|
   page.should have_content(amount)
   visit listings_path
   page.should have_content(amount)
+end
+
+Then /^the listing shows the availability rules$/ do
+  visit listing_path(listing)
+  page.should have_content("I'm always available")
 end
 
 Then /^I cannot view that listing$/ do

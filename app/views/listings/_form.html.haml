@@ -12,6 +12,7 @@
   = f.input :price, :as => :decimal, :hint => "How much per seat are you charging?"
   = f.input :description, :input_html => {:rows => 8}, :hint => ["What resources are available, i.e. internet, speed, public transport, coffee shops near by, coffee included? Why would people love your office? What kinds of drop-ins/coworkers would you prefer? Conditions of entry (e.g. must participate in stand up or something)", textile_hint].join(' ').html_safe
   = f.input :confirm_reservations, :as => :radio_buttons, :hint => "Do you want to be able to approve reservations on a case-by-case basis? We'll notify you by email whenever there's a reservation that needs your attention."
+  = f.input :availability_rules, :hint => "Indicate rules, such as hours of operation, house rules, etc. for this listing."
   - if current_user.admin?
     = f.association :creator, :select => "Select a creator..."
   = f.button :submit

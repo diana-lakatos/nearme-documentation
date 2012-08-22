@@ -26,6 +26,9 @@
           %li=a.name
     - if @listing.description?
       %p= raw @listing.description
+    - if @listing.availability_rules?
+      %h3.tk-chaparral-pro Availability Rules
+      %p= raw @listing.availability_rules
     %h2.tk-chaparral-pro Latest Activity
     - if @feeds.any?
       %dl.activity_feed
