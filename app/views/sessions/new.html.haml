@@ -4,12 +4,14 @@
   %h1.tk-chaparral-pro Sign In
 
   = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "simple_form login_form" }) do |f|
+    = devise_error_messages!
     %div.input
       = f.label :email
       = f.email_field :email
     %div.input
       = f.label :password
       = f.password_field :password
+      %p Forgot? #{link_to "Reset your password", new_user_password_url}
     - if devise_mapping.rememberable?
       %div.input.checkbox
         = f.check_box :remember_me
@@ -19,9 +21,7 @@
       or
       = link_to "Register", new_user_registration_url
 
-.grid_8.omega
-  %h1.tk-chaparral-pro Or connect with your favorite service...
-  %a.auth_provider.grid_4.alpha{:href => "/auth/twitter"}
-    = image_tag "twitter_service.png", :alt => "Twitter"
-  %a.auth_provider.grid_4.omega.openid{:href => "/auth/open_id"}
-    = image_tag "openid_service.png", :alt => "OpenID"
+  = form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :class => "simple_form password_reset_form" }) do |f|
+    = devise_error_messages!
+
+= render "connect_provider"
