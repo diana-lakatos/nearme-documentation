@@ -66,10 +66,11 @@ class Listing
       end
 
       def score_price(options = {})
-        min, max = options.delete(:min), options.delete(:max)
-        midpoint = (max - min) / 2
+        min, max        = options.delete(:min), options.delete(:max)
+        midpoint        = (max + min) / 2
+        midpoint_cents  = midpoint * 100
 
-        ranked_listings = @listings.rank_by { |l| l.price_cents - (midpoint * 100) }
+        ranked_listings = @listings.rank_by { |l|(l.price_cents - midpoint_cents).abs }
 
         add_scores(ranked_listings, :price)
       end

@@ -23,7 +23,7 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         @listings.last.price_cents  = 123.90 * 100
       end
 
-      should "work" do
+      should "correctly score and weight all components " do
 
         search_params = {
           boundingbox:   { lat: -41.293507, lon: 174.776279 },
@@ -34,8 +34,8 @@ class Listing::ScorerTest < ActiveSupport::TestCase
 
         Listing::Scorer.score(@listings, search_params)
 
-        assert_equal 33.33, @listings.first.score
-        assert_equal 55.0,  @listings.last.score
+        assert_equal 28.33, @listings.first.score
+        assert_equal 60.0,  @listings.last.score
         assert_equal 51.67, @listings[1].score
       end
     end
@@ -107,10 +107,22 @@ class Listing::ScorerTest < ActiveSupport::TestCase
       should "score correctly" do
         @scorer.send(:score_price, min: 150, max: 300)
 
-        assert_equal 66.67, @scorer.scores[@listings.first][:price]
-        assert_equal 33.33, @scorer.scores[@listings.last][:price]
+        assert_equal 33.33, @scorer.scores[@listings.first][:price]
+        assert_equal 66.67, @scorer.scores[@listings.last][:price]
         assert_equal 100.0, @scorer.scores[@listings[1]][:price]
       end
+
+      # i.e $50 more expensive than requested is the same as $50 cheaper
+      should "score listings based on absolute difference from the price range" do
+        @listings.first.price_cents = 150 * 100
+        @listings.last.price_cents  = 50 * 100
+
+        @scorer.send(:score_price, min: 100, max: 100)
+
+        assert_equal 33.33, @scorer.scores[@listings.first][:price]
+        assert_equal 33.33, @scorer.scores[@listings.last][:price]
+      end
+
     end
 
     context "scoring based on availability" do
