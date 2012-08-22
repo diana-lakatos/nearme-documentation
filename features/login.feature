@@ -36,4 +36,3 @@ Feature: A user can login
       And a user should exist with email: "real@email.com"
       And that user should have password "password"
 
-

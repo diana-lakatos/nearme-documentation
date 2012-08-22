@@ -47,7 +47,7 @@ class User < ActiveRecord::Base
   # Build a new user, taking into account session information such as Provider
   # authentication.
   def self.new_with_session(attrs, session)
-    user = new(attrs)
+    user = super
     user.apply_omniauth(session[:omniauth]) if session[:omniauth]
     user
   end

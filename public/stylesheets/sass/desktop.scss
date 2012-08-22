@@ -558,7 +558,7 @@ div {
 
 /* === Authentication */
 
-section.authentications a.auth_provider, section.sessions a.auth_provider {
+section.sessions a.auth_provider {
   background: #FFF;
   background: rgba(255, 255, 255, 0.3);
   -webkit-box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.8);
@@ -803,7 +803,7 @@ form.simple_form {
     color: #990600;
     font-weight: bold; } }
 
-/* === Login Form */
+/* === Login Form === */
 form.login_form {
   label {
     float: none;
@@ -836,9 +836,6 @@ form.login_form {
     input { // Submit button
       margin-top: 0;
       margin-left: 0;
-    }
-
-    a {
     }
   }
 }

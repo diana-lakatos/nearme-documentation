@@ -2,10 +2,10 @@ class RegistrationsController < Devise::RegistrationsController
 
   # NB: Devise calls User.new_with_session when building the new User resource.
   # We use this to apply any Provider based authentications to the user record.
-  def new
-    super
-  end
+  # This is trigged via Devise::RegistrationsController#build_resource
 
+  # We extend the create action to clear out any stored Provider auth data used during
+  # registration.
   def create
     super
 
