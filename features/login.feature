@@ -30,7 +30,7 @@ Feature: A user can login
      When I fill in "Name" with "Brett"
       And I fill in "Email" with "real@email.com"
       And I fill in "Password" with "password"
-      And I fill in "Password confirmation" with "password"
+      And I fill in "Confirm Password" with "password"
       And I press "Continue"
      Then I should see "You have signed up successfully."
       And a user should exist with email: "real@email.com"
