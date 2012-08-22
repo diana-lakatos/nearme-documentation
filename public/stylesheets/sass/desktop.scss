@@ -803,6 +803,46 @@ form.simple_form {
     color: #990600;
     font-weight: bold; } }
 
+/* === Login Form */
+form.login_form {
+  label {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+
+  .input input {
+    width: 280px;
+  }
+
+  .input.checkbox {
+    overflow: hidden;
+
+    input {
+      float: left;
+      width: auto;
+    }
+
+    label {
+      margin-left: 40px;
+      line-height: 22px;
+    }
+  }
+
+  .actions {
+    line-height: 60px;
+    font-size: 18px;
+
+    input { // Submit button
+      margin-top: 0;
+      margin-left: 0;
+    }
+
+    a {
+    }
+  }
+}
+
 /* === Activity Feeds */
 
 dl.activity_feed {

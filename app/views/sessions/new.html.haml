@@ -3,18 +3,18 @@
 .grid_4.alpha
   %h1.tk-chaparral-pro Sign In
 
-  = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
-    %div
+  = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "simple_form login_form" }) do |f|
+    %div.input
       = f.label :email
       = f.email_field :email
-    %div
+    %div.input
       = f.label :password
       = f.password_field :password
     - if devise_mapping.rememberable?
-      %div
+      %div.input.checkbox
         = f.check_box :remember_me
         = f.label :remember_me
-    %div
+    %div.actions
       = f.submit "Sign In"
       or
       = link_to "Register", new_user_registration_url
