@@ -63,6 +63,7 @@ class Listing
       end
 
       def score_amenities(amenity_ids = [])
+        amenity_ids.map!(&:to_i)
         ranked_listings       = @listings.rank_by { |l| (amenity_ids - l.location.amenity_ids).size }
 
         add_strict_matches(:amenities) { |l| (amenity_ids - l.location.amenity_ids).size == 0 }
@@ -72,6 +73,7 @@ class Listing
       # this feels like you could DRY it with the above - but seems to add complexity for
       # not a lot of benefit at the monement
       def score_organizations(organization_ids = [])
+        organization_ids.map!(&:to_i)
         ranked_listings = @listings.rank_by { |l| (organization_ids - l.location.organization_ids).size }
 
         add_strict_matches(:organizations) { |l| (organization_ids - l.location.organization_ids).size == 0 }
@@ -81,7 +83,7 @@ class Listing
       def score_price(options = {})
         options.symbolize_keys!
 
-        min_cents, max_cents = (options.delete(:min) || 0) * 100, (options.delete(:max) || 0) * 100
+        min_cents, max_cents = (options.delete(:min).to_i || 0) * 100, (options.delete(:max).to_i || 0) * 100
         midpoint_cents       = (max_cents + min_cents) / 2
 
         ranked_listings = @listings.rank_by { |l|(l.price_cents - midpoint_cents).abs }
@@ -94,7 +96,7 @@ class Listing
         options.symbolize_keys!
 
         start_date, end_date = options.delete(:date_start).to_date, options.delete(:date_end).to_date
-        quantity_needed      = options.delete(:quantity_min)
+        quantity_needed      = options.delete(:quantity_min).to_i
 
         add_strict_matches(:availability) do |l|
           (start_date...end_date).all? { |day| l.availability_for(day) >= quantity_needed }

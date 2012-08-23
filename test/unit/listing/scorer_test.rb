@@ -92,6 +92,14 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         assert_equal 66.67, @scorer.scores[@listings.last][:amenities]
       end
 
+      should "score correctly if amenity ids are specified as strings" do
+        @scorer.send(:score_amenities, [@wifi.id.to_s, @pool_table.id.to_s])
+
+        assert_equal 33.33, @scorer.scores[@listings.first][:amenities]
+        assert_equal 33.33, @scorer.scores[@listings.last][:amenities]
+        assert_equal 66.67, @scorer.scores[@listings[1]][:amenities]
+      end
+
       should "return a strict_match if all requested amenities are available" do
         @scorer.send(:score_amenities, [@wifi.id, @drinks_fridge.id])
 
@@ -117,6 +125,14 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         assert_equal 66.67, @scorer.scores[@listings.last][:organizations]
       end
 
+      should "score correctly if organization ids are specified as strings" do
+        @scorer.send(:score_organizations, [@org1.id.to_s])
+
+        assert_equal 33.33, @scorer.scores[@listings.first][:organizations]
+        assert_equal 66.67, @scorer.scores[@listings[1]][:organizations]
+        assert_equal 66.67, @scorer.scores[@listings.last][:organizations]
+      end
+
       should "return a strict_match if the listing is a member of all requested organizations" do
         @scorer.send(:score_organizations, [@org1.id])
 
@@ -135,6 +151,14 @@ class Listing::ScorerTest < ActiveSupport::TestCase
 
       should "score correctly" do
         @scorer.send(:score_price, min: 150, max: 300)
+
+        assert_equal 33.33, @scorer.scores[@listings.first][:price]
+        assert_equal 66.67, @scorer.scores[@listings.last][:price]
+        assert_equal 100.0, @scorer.scores[@listings[1]][:price]
+      end
+
+      should "score correctly when prices are specified as strings" do
+        @scorer.send(:score_price, min: "150", max: "300")
 
         assert_equal 33.33, @scorer.scores[@listings.first][:price]
         assert_equal 66.67, @scorer.scores[@listings.last][:price]
@@ -177,6 +201,13 @@ class Listing::ScorerTest < ActiveSupport::TestCase
 
       should "score correctly" do
         @scorer.send(:score_availability, date_start: @start_date, date_end: @end_date, quantity_min: 1)
+
+        assert_equal 33.33, @scorer.scores[@listings.first][:availability]
+        assert_equal 33.33, @scorer.scores[@listings.last][:availability]
+      end
+
+      should "score correctly if minimum quantity is specified as a string" do
+        @scorer.send(:score_availability, date_start: @start_date, date_end: @end_date, quantity_min: "1")
 
         assert_equal 33.33, @scorer.scores[@listings.first][:availability]
         assert_equal 33.33, @scorer.scores[@listings.last][:availability]
