@@ -9,9 +9,9 @@ Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and Wi\-Fi)?$/ 
   listing.location.amenities << @wifi if wifi
 end
 
-Given /^a listing exists for a location with a private organization$/ do
+Given /^a listing(?: with name "([^"]+)")? exists for a location with a private organization?$/ do |name|
   location = FactoryGirl.create(:private_location)
-  store_model('listing', 'listing for private location', FactoryGirl.create(:listing, location: location))
+  store_model('listing', 'listing for private location', FactoryGirl.create(:listing, location: location, name: name))
   store_model('location', 'organization', location)
   store_model('organization', 'organization', location.organizations.first)
 end

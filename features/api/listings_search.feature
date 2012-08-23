@@ -136,3 +136,30 @@ Feature: User Searches Listings
      ]
    }
    """
+
+  Scenario: Searching for a listing that requires organization membership to be visible (a "private" listing) when I am not authenicated
+    Given a listing with name "Secret Cave of Awesome" exists for a location with a private organization
+    And the Sphinx indexes are updated
+    And I am not an authenticated api user
+    When I send a POST request to "listings/query":
+    # NB this is a bounding box around New Zealand :)
+    """
+    {
+      "query": "Cave of Awesome"
+    }
+    """
+    Then the JSON listings should be empty
+
+  Scenario: Searching for a listing that requires organization membership to be visible (a "private" listing)
+    Given a listing with name "Secret Cave of Awesome" exists for a location with a private organization
+    And the Sphinx indexes are updated
+    And I am an authenticated api user
+    And I am a member of the above organization
+    When I send an authenticated POST request to "listings/query":
+    # NB this is a bounding box around New Zealand :)
+    """
+    {
+      "query": "Cave of Awesome"
+    }
+    """
+    Then the JSON should contain that listing
