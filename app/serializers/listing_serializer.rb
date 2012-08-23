@@ -11,7 +11,6 @@ class ListingSerializer < ApplicationSerializer
   has_many :organizations
 
   def attributes
-
     hash = super
 
     # Add score and strict match if present
@@ -23,23 +22,20 @@ class ListingSerializer < ApplicationSerializer
 
   # Serialize price
   def price
-
     {
       amount:        object.price.to_f,
-      label:         object.price.format,
+      period:        object.price_period,
+      label:         (object.price && object.price != 0) ? object.price.format : 'Free',
       currency_code: object.price.currency.iso_code
     }
-
   end
 
   # Serialize rating
   def rating
-
     {
       average: object.rating_average,
       count:   object.rating_count
     }
-
   end
 
 end

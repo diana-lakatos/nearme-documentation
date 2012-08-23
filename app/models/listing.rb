@@ -1,5 +1,11 @@
 class Listing < ActiveRecord::Base
 
+  # Period constants for listing costs
+  PRICE_PERIODS = {
+    :free => nil,
+    :day => 'day'
+  }
+
   has_many :feeds, dependent: :delete_all
   has_many :reservations, dependent: :destroy
   has_many :reservations, dependent: :delete_all
@@ -102,15 +108,17 @@ class Listing < ActiveRecord::Base
     reservations.inject(0) { |sum, r| sum += r.seats.count; sum }
   end
 
-
-  def price_hash
-
-    {
-      amount:        price.to_f,
-      label:         price.format,
-      currency_code: price.currency.iso_code
-    }
-
+  # The period for the listing pricing.
+  # i.e. 'day', etc.
+  # The period is be nil if the listing is free.
+  #
+  # TODO: Implement pricing periods
+  def price_period
+    if !price || price == 0
+      PRICE_PERIODS[:free]
+    else
+      PRICE_PERIODS[:day]
+    end
   end
 
   def rate_for_user(rating, user)

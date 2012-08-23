@@ -35,6 +35,7 @@ Feature: User Searches Listings
           ],
         "price": {
           "amount": 50.0,
+          "period": "day",
           "currency_code": "USD",
           "label": "$50.00"
         },
@@ -89,6 +90,7 @@ Feature: User Searches Listings
          ],
          "price": {
            "amount": 150.0,
+           "period": "day",
            "currency_code": "USD",
            "label": "$150.00"
          },
@@ -119,6 +121,7 @@ Feature: User Searches Listings
          ],
          "price": {
            "amount": 250.0,
+           "period": "day",
            "currency_code": "USD",
            "label": "$250.00"
          },
