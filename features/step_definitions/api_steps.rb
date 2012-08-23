@@ -1,3 +1,7 @@
+Given /^I am not an authenticated api user$/ do
+  @user.should be_nil
+end
+
 Given /^I am an authenticated api user( and my name is (.*?))?( and my email is (.*?))?$/ do |with_name, name, with_email, email|
   attrs = {}
   attrs[:email] = email if with_email
@@ -63,4 +67,21 @@ end
 
 Then /^I receive a response with (\d+) status code$/ do |status_code|
   last_response.status.should == status_code.to_i
+end
+
+Then /^the JSON listings should be empty$/ do
+  results = parse_json(last_json)
+  results["listings"].size.should == 0
+end
+
+Then /^the JSON should contain that listing$/ do
+  results = parse_json(last_json)
+  listing = model!('listing')
+
+  results["listings"].size.should == 1
+  result_listing = results["listings"].first
+
+  result_listing["name"].should         == listing.name
+  result_listing["company_name"].should == listing.company.name
+  result_listing["address"].should      == listing.address
 end

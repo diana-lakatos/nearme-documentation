@@ -14,7 +14,7 @@ class Listing::SearchTest < ActiveSupport::TestCase
     context "when performing a keyword search" do
       setup do
         # stub out sphinx
-        Listing.stubs(:search).with { |arg| arg.is_a?(String) }.returns(@listings)
+        ThinkingSphinx::Search.any_instance.stubs(:search).with { |arg| arg.is_a?(String) }.returns(@listings)
       end
 
       should "return matched listings with scores based on parameters" do
@@ -39,7 +39,7 @@ class Listing::SearchTest < ActiveSupport::TestCase
         end
 
         # stub sphinx
-        Listing.stubs(:search).with { |arg| arg.is_a?(Hash) && arg.has_key?(:geo) }.returns(@listings)
+        ThinkingSphinx::Search.any_instance.stubs(:search).with { |arg| arg.is_a?(Hash) && arg.has_key?(:geo) }.returns(@listings)
       end
 
       should "return matched listings with scores based on parameters" do

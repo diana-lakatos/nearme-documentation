@@ -16,14 +16,31 @@ class Listing
       # thinking sphinx index
       define_index do
         join location
+        join location.organizations
 
         indexes :name, :description
 
         has "radians(#{Location.table_name}.latitude)",  as: :latitude,  type: :float
         has "radians(#{Location.table_name}.longitude)", as: :longitude, type: :float
 
-        group_by :latitude, :longitude
+        # an organization id of 0 in the sphinx index means the entry does not require organization membership
+        # (i.e the listing is public)
+        has "CASE locations.require_organization_membership
+          WHEN TRUE THEN array_to_string(array_agg(\"organizations\".\"id\"), ',')
+          ELSE '0'
+        END", as: :organization_ids, type: :multi
+
+        group_by :latitude, :longitude, :require_organization_membership
       end
+
+      sphinx_scope(:visible_for) do |user|
+        orgs = (user) ? user.organization_ids : []
+        # 0 indicactes a listing with no organization membership required - see define_index block
+        orgs << 0
+
+        { with: { organization_ids: orgs } }
+      end
+
     end
 
     module ClassMethods
@@ -31,13 +48,20 @@ class Listing
       def find_by_search_params(params)
         params.symbolize_keys!
 
-        listings = if params.has_key?(:boundingbox)
-          find_by_boundingbox(params.delete(:boundingbox))
+        # make sure that private listings aren't shown unless the user is authenticated
+        # this uses a sphinx scope
+        scope = Listing.visible_for(params.delete(:current_user))
+
+        scope = if params.has_key?(:boundingbox)
+          find_by_boundingbox(scope, params.delete(:boundingbox))
         elsif params.has_key?(:query)
-          find_by_keyword(params.delete(:query))
+          find_by_keyword(scope, params.delete(:query))
         else
           raise SearchTypeNotSupported.new("You must specify either a bounding box or keywords to search by")
         end
+
+        # convert to array rather than ThinkingSphinx::Search
+        listings = scope.to_a
 
         # now score listings
         Scorer.score(listings, params)
@@ -63,7 +87,7 @@ class Listing
       private
 
         # we use Sphinx's geosearch here, which takes a midpoint and radius
-        def find_by_boundingbox(boundingbox)
+        def find_by_boundingbox(scope, boundingbox)
           boundingbox.symbolize_keys!
           boundingbox = boundingbox.inject({}) { |r, h| k, v = h; r[k] = v.symbolize_keys!; r } # my kingdom for deep_symbolize_keys...
 
@@ -76,15 +100,15 @@ class Listing
           # sphinx needs the coordinates in radians
           midpoint_radians = Geocoder::Calculations.to_radians(midpoint)
 
-          search(
+          scope.search(
             geo:  midpoint_radians,
             with: { "@geodist" => 0.0...radius_m.to_f }
           )
         end
 
-        def find_by_keyword(query)
+        def find_by_keyword(scope, query)
           # sphinx :)
-          search(query)
+          scope.search(query)
         end
 
     end

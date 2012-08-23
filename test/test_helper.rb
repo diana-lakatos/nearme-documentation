@@ -39,7 +39,7 @@ class ActiveSupport::TestCase
   end
 
   def stub_sphinx(listings_to_return)
-    Listing.stubs(:search).returns(listings_to_return)
+    ThinkingSphinx::Search.any_instance.stubs(:search).returns(listings_to_return)
   end
 
 end
