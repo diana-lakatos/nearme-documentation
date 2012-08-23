@@ -6,4 +6,4 @@
       %li.grid_2= link_to "Account", edit_user_registration_path
       %li.grid_2= link_to "Logout", destroy_user_session_path, :method => :delete
     - else
-      %li.grid_2.joined= link_to "Sign In", authentications_path
+      %li.grid_2.joined= link_to "Sign In", new_user_session_path

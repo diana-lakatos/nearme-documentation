@@ -1,16 +1,15 @@
 class RegistrationsController < Devise::RegistrationsController
 
-  def new
-    # Are we coming a provider?
-    if session['omniauth'] || session['user_info']
-      super
-    else
-      raise ActionController::RoutingError, "Feature disabled"
-    end
-  end
+  # NB: Devise calls User.new_with_session when building the new User resource.
+  # We use this to apply any Provider based authentications to the user record.
+  # This is trigged via Devise::RegistrationsController#build_resource
 
+  # We extend the create action to clear out any stored Provider auth data used during
+  # registration.
   def create
     super
+
+    # Clear out temporarily stored Provider authentication data if present
     session[:omniauth] = nil unless @user.new_record?
   end
 
@@ -26,14 +25,5 @@ class RegistrationsController < Devise::RegistrationsController
   def destroy
     raise ActionController::RoutingError, "Feature disabled"
   end
-
-  private
-
-    def build_resource(*args)
-      super
-      if session[:omniauth]
-        @user.apply_omniauth(session[:omniauth])
-      end
-    end
 
 end

@@ -33,3 +33,7 @@ Then(/^I should be logged in as #{capture_model}$/) do |user_instance|
   Then %{I should see "Logout"}
 end
 
+Then /^#{capture_model} should have password "([^"]*)"$/ do |user_instance, password|
+  user = model!(user_instance)
+  user.valid_password?(password).should be_true
+end

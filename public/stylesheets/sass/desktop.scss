@@ -558,7 +558,7 @@ div {
 
 /* === Authentication */
 
-section.authentications a.auth_provider {
+section.sessions a.auth_provider, section.passwords a.auth_provider {
   background: #FFF;
   background: rgba(255, 255, 255, 0.3);
   -webkit-box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.8);
@@ -802,6 +802,43 @@ form.simple_form {
     padding-left: 176px;
     color: #990600;
     font-weight: bold; } }
+
+/* === Login Form === */
+form.login_form, form.password_reset_form {
+  label {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+
+  .input input {
+    width: 280px;
+  }
+
+  .input.checkbox {
+    overflow: hidden;
+
+    input {
+      float: left;
+      width: auto;
+    }
+
+    label {
+      margin-left: 40px;
+      line-height: 22px;
+    }
+  }
+
+  .actions {
+    line-height: 60px;
+    font-size: 18px;
+
+    input { // Submit button
+      margin-top: 0;
+      margin-left: 0;
+    }
+  }
+}
 
 /* === Activity Feeds */
 

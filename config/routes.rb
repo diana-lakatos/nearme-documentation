@@ -16,7 +16,7 @@ DesksnearMe::Application.routes.draw do
   resources :organizations
 
   match '/auth/:provider/callback' => 'authentications#create'
-  devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions' }
+  devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
 
   resources :reservations, :only => :update
 

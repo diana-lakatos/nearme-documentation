@@ -1,0 +1,27 @@
+- title "Sign In Options"
+
+.grid_4.alpha
+  %h1.tk-chaparral-pro Sign In
+
+  = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "simple_form login_form" }) do |f|
+    = devise_error_messages!
+    %div.input
+      = f.label :email
+      = f.email_field :email
+    %div.input
+      = f.label :password
+      = f.password_field :password
+      %p Forgot? #{link_to "Reset your password", new_user_password_url}
+    - if devise_mapping.rememberable?
+      %div.input.checkbox
+        = f.check_box :remember_me
+        = f.label :remember_me
+    %div.actions
+      = f.submit "Sign In"
+      or
+      = link_to "Register", new_user_registration_url
+
+  = form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :class => "simple_form password_reset_form" }) do |f|
+    = devise_error_messages!
+
+= render "connect_provider"
