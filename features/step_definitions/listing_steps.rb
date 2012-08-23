@@ -11,7 +11,11 @@ end
 
 Given /^a listing(?: with name "([^"]+)")? exists for a location with a private organization?$/ do |name|
   location = FactoryGirl.create(:private_location)
-  store_model('listing', 'listing for private location', FactoryGirl.create(:listing, location: location, name: name))
+
+  listing_attrs = { location: location }
+  listing_attrs.merge!(name: name) if name.present?
+
+  store_model('listing', 'listing for private location', FactoryGirl.create(:listing, listing_attrs))
   store_model('location', 'organization', location)
   store_model('organization', 'organization', location.organizations.first)
 end
