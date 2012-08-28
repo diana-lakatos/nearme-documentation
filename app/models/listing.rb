@@ -152,8 +152,8 @@ class Listing < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
-  # FIXME: long method, split me up?
-  def reserve!(email, reserving_user, dates, quantity, assignees)
+  # FIXME: long method, split me up? Does this/a lot of this belong in Reservation instead?
+  def reserve!(email, reserving_user, dates, quantity, assignees = nil)
     # TODO: Use a transaction to ensure atomicity.
     # TODO: Might need to have an elaborate Postgres constraint in order to do this.
 
@@ -167,7 +167,6 @@ class Listing < ActiveRecord::Base
     # Create the reservation
     reservation = self.reservations.build do |r|
       r.confirmation_email = email
-#      r.total_amount_cents = listing.price_cents * @quantity
       r.owner = reserving_user
     end
 

@@ -88,7 +88,7 @@ module DNM
   end
 
   class PropertyUnavailableOnDate < Error
-    def initialize(date, available, req, msg = "Property unavailable")
+    def initialize(date, available, requested, msg = "Property unavailable")
       super msg
       @errors << {
           date: date,
