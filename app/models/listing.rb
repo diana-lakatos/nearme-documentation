@@ -152,6 +152,61 @@ class Listing < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
+  # FIXME: long method, split me up?
+  def reserve!(email, reserving_user, dates, quantity, assignees)
+    # TODO: Use a transaction to ensure atomicity.
+    # TODO: Might need to have an elaborate Postgres constraint in order to do this.
+
+    # Check that the reservation is valid
+    # FIXME: should be able to do this all in sql
+    dates.each do |date|
+      available = self.availability_for(date)
+      raise DNM::PropertyUnavailableOnDate.new(date, available, quantity) if available < quantity
+    end
+
+    # Create the reservation
+    reservation = self.reservations.build do |r|
+      r.confirmation_email = email
+#      r.total_amount_cents = listing.price_cents * @quantity
+      r.owner = reserving_user
+    end
+
+    dates.each do |date|
+      reservation.periods << ReservationPeriod.new do |p|
+        p.date        = date
+        p.listing     = self
+        p.reservation = reservation
+      end
+    end
+
+    unless assignees.blank?
+
+      assignees.each do |assignee|
+
+        reservation.seats << ReservationSeat.new do |s|
+          s.reservation = reservation
+          s.email       = assignee['email']
+          s.name        = assignee['name']
+        end
+
+        # Try and look up the e-mail address, in case it refers to a DNM user.
+        reservation.seats.last.user ||= User.find_by_email(reservation.seats.last.email).first
+      end
+
+    else
+
+      (1..quantity).each do |index|
+        reservation.seats << ReservationSeat.new do |s|
+          s.reservation = reservation
+        end
+      end
+
+    end
+
+    reservation.save!
+    reservation
+  end
+
   def schedule(weeks = 1)
     {}.tap do |hash|
       # Build a hash of all week days and their default availabilities

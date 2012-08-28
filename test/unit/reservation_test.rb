@@ -24,4 +24,8 @@ class ReservationTest < ActiveSupport::TestCase
 
     assert @reservation.periods
   end
+
+  context "with reservation pricing" do
+
+  end
 end

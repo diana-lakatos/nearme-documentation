@@ -3,7 +3,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
-    :owner_id, :periods, :seats, :state, :total_amount_cents, :user, :comment
+    :owner_id, :periods, :seats, :state, :user, :comment
 
   has_many :periods, :class_name => "ReservationPeriod", :dependent => :destroy
   has_many :seats, :class_name => "ReservationSeat", :dependent => :destroy
@@ -12,7 +12,7 @@ class Reservation < ActiveRecord::Base
   validates :seats, :length => { :minimum => 1 }
 
   after_create :auto_confirm_reservation
-  before_save :update_total_cost
+  # before_save :update_total_cost
 
   acts_as_paranoid
 
@@ -84,9 +84,9 @@ class Reservation < ActiveRecord::Base
     can_cancel
   end
 
-  def update_total_cost
-    self.total_amount_cents = listing.price_cents
-  end
+  # def update_total_cost
+  #   self.total_amount_cents = listing.price_cents
+  # end
 
   protected
   def auto_confirm_reservation
