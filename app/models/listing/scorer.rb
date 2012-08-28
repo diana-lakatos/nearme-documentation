@@ -16,6 +16,9 @@ class Listing
     end
 
     def initialize(listings)
+
+      # eager load some stuff so we don't do quite as many queries
+      # self.listings = Listing.where(id: listings.map(&:id)).includes(:photos).includes(location: [ :organizations, :company, :amenities ]).all
       self.listings = listings
 
       # scores and strict_matches are hashes of score components/booleans :)

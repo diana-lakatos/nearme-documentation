@@ -10,6 +10,7 @@ class ListingSerializer < ApplicationSerializer
   has_many :amenities
   has_many :organizations
 
+  # FIXME: for some reason this method is reloading all assocations again?
   def attributes
     hash = super
 

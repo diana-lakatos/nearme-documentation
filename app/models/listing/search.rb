@@ -53,7 +53,7 @@ class Listing
         scope = Listing.visible_for(params.delete(:current_user))
 
         scope = if params.has_key?(:boundingbox)
-          find_by_boundingbox(scope, params.delete(:boundingbox))
+          find_by_boundingbox(scope, params[:boundingbox])
         elsif params.has_key?(:query)
           find_by_keyword(scope, params.delete(:query))
         else
