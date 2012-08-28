@@ -3,7 +3,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
-    :owner_id, :periods, :seats, :state, :total_amount_cents, :user, :comment
+    :owner_id, :periods, :seats, :state, :user, :comment
 
   has_many :periods, :class_name => "ReservationPeriod", :dependent => :destroy
   has_many :seats, :class_name => "ReservationSeat", :dependent => :destroy
@@ -11,8 +11,8 @@ class Reservation < ActiveRecord::Base
   validates :periods, :length => { :minimum => 1 }
   validates :seats, :length => { :minimum => 1 }
 
-  after_create :auto_confirm_reservation
-  before_save :update_total_cost
+  before_validation :set_total_cost, on: :create
+  after_create      :auto_confirm_reservation
 
   acts_as_paranoid
 
@@ -52,11 +52,6 @@ class Reservation < ActiveRecord::Base
     without_state(:cancelled).upcoming
   }
 
-  def initialize(*args)
-    super
-    self.total_amount_cents ||= 0
-  end
-
   def user=(value)
     self.owner = value
     self.confirmation_email = value.email
@@ -84,12 +79,14 @@ class Reservation < ActiveRecord::Base
     can_cancel
   end
 
-  def update_total_cost
-    self.total_amount_cents = listing.price_cents
-  end
+  private
 
-  protected
-  def auto_confirm_reservation
-    confirm! unless listing.confirm_reservations?
-  end
+    def set_total_cost
+      # NB: use of 'size' not 'count' here is deliberate - seats/periods may not be persisted at this point!
+      self.total_amount_cents ||= listing.price_cents * seats.size * periods.size
+    end
+
+    def auto_confirm_reservation
+      confirm! unless listing.confirm_reservations?
+    end
 end
