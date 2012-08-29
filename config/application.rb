@@ -4,7 +4,7 @@ require 'rails/all'
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(:default, Rails.env) if defined?(Bundler)
+Bundler.require(*Rails.groups(:assets => %w(development test))) if defined?(Bundler)
 
 module DesksnearMe
   class Application < Rails::Application
@@ -48,5 +48,9 @@ module DesksnearMe
 
     # Don't access the DB or load models when precompiling assets
     config.assets.initialize_on_precompile = false
+
+    # Enable the asset pipeline
+    config.assets.enabled = true
+    config.assets.digest = true
   end
 end

@@ -1,3 +1,18 @@
+// Core application javascripts.
+//
+// = javascript_include_tag :defaults, "modernizr", "jquery.cookie.js", "/fancybox/jquery.fancybox-1.3.1.pack.js", "jquery.overlay.js", "jqueryui", "jquery.address-1.3.min", "search"
+//
+//= require ./vendor/jquery
+//= require ./vendor/modernizr.js
+//= require ./vendor/jquery.cookie.js
+//= require ./vendor/fancybox/jquery.fancybox-1.3.1.pack.js
+//= require ./vendor/jquery.overlay.js
+//= require ./vendor/jqueryui.js
+//= require ./vendor/jquery.address-1.3.min
+//
+//= require_self/
+//= require search
+
 jQuery.ajaxSetup({
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
 })

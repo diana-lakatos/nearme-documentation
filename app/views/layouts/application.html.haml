@@ -9,13 +9,15 @@
     %meta{:content => "IE=edge,chrome=1", "http-equiv" => "X-UA-Compatible"}/
     = csrf_meta_tag
     %link{:href => "/favicon.ico?9002", :rel => "shortcut icon"}/
-    %link{:href => "/stylesheets/global.css?r=1", :rel => "stylesheet", :type => "text/css"}/
-    %link{:href => "/stylesheets/desktop.css?r=2", :media => "screen, projection", :rel => "stylesheet", :type => "text/css"}/
-    %link{:href => "/stylesheets/overlay.css?r=1", :media => "screen, projection", :rel => "stylesheet", :type => "text/css"}/
-    %link{:href => "/stylesheets/grid.css?r=1", :media => "screen, projection", :rel => "stylesheet", :type => "text/css"}/
-    %link{:href => "/stylesheets/mobile.css?r=1", :media => "handheld", :rel => "stylesheet", :type => "text/css"}/
-    %link{:href => "/fancybox/jquery.fancybox-1.3.1.css", :media => "screen, projection", :rel => "stylesheet", :type => "text/css"}/
-    = javascript_include_tag :defaults, "modernizr", "jquery.cookie.js", "/fancybox/jquery.fancybox-1.3.1.pack.js", "jquery.overlay.js", "jqueryui", "jquery.address-1.3.min", "search"
+    = stylesheet_link_tag 'global'
+    = stylesheet_link_tag 'desktop', :media => "screen, projection"
+    = stylesheet_link_tag 'overlay', :media => "screen, projection"
+    = stylesheet_link_tag 'grid', :media => "screen, projection"
+    = stylesheet_link_tag 'mobile', :media => "handheld"
+    = stylesheet_link_tag 'vendor/fancybox/jquery.fancybox-1.3.1', :media => "screen, projection"
+
+    = javascript_include_tag :application
+
     %script{:src => "https://use.typekit.com/vlg4dft.js", :type => "text/javascript"}
     :javascript
       try{Typekit.load();}catch(e){}
