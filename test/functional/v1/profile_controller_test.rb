@@ -21,8 +21,15 @@ class V1::ProfileControllerTest < ActionController::TestCase
     assert_equal "Alvina Q. DuBuque", @user.name
   end
 
+  test "should raise when no name is included" do
+    assert_raise DNM::MissingJSONData do
+      raw_put :update, {:id => users(:one).id}, '{"phone": "1 234 56890"}'
+    end
+
+  end
+
   test "should update phone" do
-    raw_put :update, {:id => users(:one).id}, '{"phone": "+1 (800) 555-1234"}'
+    raw_put :update, {:id => users(:one).id}, '{ "name": "John Doe", "phone": "+1 (800) 555-1234"}'
     assert_response :success
 
     @user.reload
