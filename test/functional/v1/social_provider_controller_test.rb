@@ -9,6 +9,15 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
     @request.env['Authorization'] = @user.authentication_token
   end
 
+  test "raise DNM::Unauthorized when the uid exists for another user" do
+    Social::Facebook.stubs(:user_linked?).returns(true)
+    Social::Facebook.stubs(:get_user_info).returns(["123", {name:"John Smith"}])
+    Authentication.stubs(:where).returns([stub({ user: nil })])
+    assert_raise DNM::Unauthorized do
+      raw_put :update, { provider: "facebook"}, '{ "token": "abc123" }'
+    end
+  end
+
   test "should get facebook data" do
     Social::Facebook.stubs(:user_linked?).returns(false)
 

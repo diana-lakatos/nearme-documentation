@@ -14,6 +14,11 @@ class V1::SocialProviderController < V1::BaseController
     raise DNM::InvalidJSONData, "token", "Invalid Credentials" if uid.blank?
 
     # Create or update the authorization for this user and provider
+    auth = Authentication.where(provider: provider_name, uid: uid).first
+    if auth && auth.user != current_user
+      raise DNM::Unauthorized
+    end
+
     current_user.authentications.find_or_create_by_provider(provider_name).tap do |a|
       a.uid    = uid
       a.info   = info
