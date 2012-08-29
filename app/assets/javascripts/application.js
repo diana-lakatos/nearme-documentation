@@ -1,6 +1,4 @@
-// Core application javascripts.
-//
-// = javascript_include_tag :defaults, "modernizr", "jquery.cookie.js", "/fancybox/jquery.fancybox-1.3.1.pack.js", "jquery.overlay.js", "jqueryui", "jquery.address-1.3.min", "search"
+// Desks Near Me
 //
 //= require ./vendor/jquery
 //= require ./vendor/modernizr.js
