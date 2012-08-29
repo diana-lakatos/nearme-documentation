@@ -17,19 +17,23 @@ gem 'fog'
 gem 'foreman'
 gem 'geocoder'
 gem 'gravtastic'
+gem 'sass'
 gem 'haml'
-gem 'jquery-rails'
 gem 'mini_magick'
 gem 'money-rails'
 gem 'oauth'
 gem 'paranoia'
-gem 'sass'
 gem 'simple_form'
 gem 'state_machine'
 gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'tweet-button'
 gem 'will_paginate'
 gem 'thinking-sphinx'
+
+group :assets do
+  gem 'jquery-rails'
+  gem 'sass-rails'
+end
 
 group :staging, :production do
   gem 'flying-sphinx'

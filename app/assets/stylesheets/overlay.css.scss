@@ -29,12 +29,12 @@ embed {
 
 .overlay-container.context {
   width: 300px;
-  background: transparent url(/images/overlay_arrow_center.png) no-repeat center top;
+  background: transparent image-url("overlay_arrow_center.png") no-repeat center top;
   padding-top: 9px;
   &.right {
     padding-top: 0;
     padding-left: 12px;
-    background: transparent url(/images/editor/overlay_context_arrow_left.png) no-repeat left center; }
+    background: transparent image-url("editor/overlay_context_arrow_left.png") no-repeat left center; }
   .overlay-content {
     background: #FFF;
     border: 1px solid #222;

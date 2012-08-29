@@ -5,7 +5,7 @@
 */
 
 header {
-  background: #9f7d5d url(/images/header.jpg) repeat-x top center;
+  background: #9f7d5d image-url("header.jpg") repeat-x top center;
   height: 100px;
   margin-bottom: 1px;
   a {
@@ -20,7 +20,7 @@ header {
       overflow: hidden;
       background-color: #58412e;
       background-color: rgba(0, 0, 0, 0.2);
-      background-image: url(/images/logo.png);
+      background-image: image-url("logo.png");
       background-repeat: no-repeat;
       background-position: center top;
       border-radius: 25px 25px;
@@ -75,7 +75,7 @@ header {
 
 section {
   &#content {
-    background: white url(/images/section.jpg) repeat-x top center;
+    background: white image-url("section.jpg") repeat-x top center;
     overflow: hidden;
     padding: 40px 0;
     min-height: 550px; }
@@ -212,7 +212,7 @@ section.list article.listing {
 
 article.listing aside address {
   padding-left: 42px;
-  background: transparent url(/images/home.png) no-repeat 6px 6px;
+  background: transparent image-url("home.png") no-repeat 6px 6px;
   margin: 6px 0;
   font-style: normal;
   font-size: 14px;
@@ -355,13 +355,13 @@ form.big_search .inner {
       float: right;
       width: 26px;
       border: none;
-      background: transparent url(/images/magnifier.png) no-repeat center center;
+      background: transparent image-url("magnifier.png") no-repeat center center;
       height: 40px;
       margin-right: 10px;
       &:hover {
-        background: transparent url(/images/magnifier_alt.png) no-repeat right center; }
+        background: transparent image-url("magnifier_alt.png") no-repeat right center; }
       &:active {
-        background: transparent url(/images/magnifier_down.png) no-repeat right center; } }
+        background: transparent image-url("magnifier_down.png") no-repeat right center; } }
     &[type='text']::-webkit-input-placeholder {
       color: #888;
       font-style: italic; }
@@ -376,20 +376,20 @@ form.big_search .inner {
       border-radius: 11px;
       -moz-border-radius: 11px;
       -o-border-radius: 11px;
-      background: transparent url(/images/geolocation_inactive.png) no-repeat center center;
+      background: transparent image-url("geolocation_inactive.png") no-repeat center center;
       &.active {
         -webkit-animation-name: geopulse;
         -webkit-animation-duration: 2s;
         -webkit-animation-direction: alternate;
         -webkit-animation-iteration-count: infinite;
         -webkit-animation-timing-function: ease-in-out;
-        background: transparent url(/images/geolocation.png) no-repeat center center; } } } }
+        background: transparent image-url("geolocation.png") no-repeat center center; } } } }
 
 div.search input.geolocation.active {
   &.hover, &:hover {
-    background: transparent url(/images/geolocation_alt.png) no-repeat center center; }
+    background: transparent image-url("geolocation_alt.png") no-repeat center center; }
   &:active {
-    background: transparent url(/images/geolocation_down.png) no-repeat center center; } }
+    background: transparent image-url("geolocation_down.png") no-repeat center center; } }
 
 @-webkit-keyframes geopulse {
   0% {
@@ -510,7 +510,7 @@ div {
       font-weight: normal;
       margin: 6px 0 12px;
       padding-left: 48px;
-      background: transparent url(/images/calendar-blue.png) no-repeat 4px center;
+      background: transparent image-url("calendar-blue.png") no-repeat 4px center;
       time {
         font-weight: bold;
         display: block;
@@ -548,7 +548,7 @@ div {
           text-decoration: underline; } } }
     div.please_signin {
       padding-left: 48px;
-      background: transparent url(/images/public.png) no-repeat 4px center;
+      background: transparent image-url("public.png") no-repeat 4px center;
       h1 {
         font-size: 16px; } } } }
 
@@ -657,10 +657,10 @@ a.huge_ass_button {
   img {
     vertical-align: -4px; }
   &.listing {
-    background: #2a6199 url(/images/button_blue_bg.jpg) repeat-x left top;
+    background: #2a6199 image-url("button_blue_bg.jpg") repeat-x left top;
     color: #FFF;
     &:active {
-      background: #2a6199 url(/images/button_blue_alt.jpg) repeat-x left top; } }
+      background: #2a6199 image-url("button_blue_alt.jpg") repeat-x left top; } }
   &:link, &:visited {
     text-decoration: none; }
   &:hover {
@@ -724,12 +724,12 @@ ul.list {
         input {
           &.rm {
             border: none;
-            background: transparent url(/images/cross-small.png) no-repeat left center;
+            background: transparent image-url("cross-small.png") no-repeat left center;
             padding-left: 18px;
             float: right; }
           &.tick {
             border: none;
-            background: transparent url(/images/tick-small.png) no-repeat left center;
+            background: transparent image-url("tick-small.png") no-repeat left center;
             padding-left: 18px;
             float: right; } } } } } }
 
@@ -870,14 +870,14 @@ ul.photos {
       margin: 0; }
     form input.rm {
       border: none;
-      background: transparent url(/images/cross-small.png) no-repeat left center;
+      background: transparent image-url("cross-small.png") no-repeat left center;
       padding-left: 18px;
       float: right; } } }
 
 /* === Tweet it button */
 
 a.tweet_it {
-  background: #4ca2d0 url(/images/twitter.png) no-repeat 3px center;
+  background: #4ca2d0 image-url("twitter.png") no-repeat 3px center;
   border-radius: 6px;
   padding: 6px 6px 6px 28px;
   border-bottom: 1px solid #457499;
