@@ -362,6 +362,7 @@ DEPENDENCIES
   rails (= 3.2.5)
   rails-erd
   ruby-debug19
+  sass
   sass-rails
   shoulda
   simple_form
