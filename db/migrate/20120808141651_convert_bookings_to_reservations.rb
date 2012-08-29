@@ -6,8 +6,9 @@ class ConvertBookingsToReservations < ActiveRecord::Migration
     connection.execute <<-SQL
       INSERT INTO reservations
         (booking_id, listing_id, owner_id, state, comment, created_at, updated_at)
-      SELECT id, listing_id, user_id, state, comment, created_at, updated_at
-      FROM bookings
+      SELECT b.id, b.listing_id, b.user_id, b.state, b.comment, b.created_at, b.updated_at
+      FROM bookings b
+      INNER JOIN listings l on l.id = b.listing_id
     SQL
 
     connection.execute <<-SQL
@@ -16,6 +17,7 @@ class ConvertBookingsToReservations < ActiveRecord::Migration
       SELECT r.id, r.listing_id, b.date, b.created_at, b.updated_at
       FROM reservations r
       INNER JOIN bookings b ON r.booking_id = b.id
+      INNER JOIN listings l on l.id = r.listing_id
     SQL
 
     connection.execute <<-SQL

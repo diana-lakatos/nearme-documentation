@@ -39,6 +39,7 @@ end
 group :development do
   gem 'heroku'
   gem 'taps'
+  gem 'sqlite3'
   gem "rails-erd"
 end
 
