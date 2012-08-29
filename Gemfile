@@ -30,10 +30,8 @@ gem 'tweet-button'
 gem 'will_paginate'
 gem 'thinking-sphinx'
 
-group :assets do
-  gem 'jquery-rails'
-  gem 'sass-rails'
-end
+gem 'jquery-rails'
+gem 'sass-rails'
 
 group :staging, :production do
   gem 'flying-sphinx'
