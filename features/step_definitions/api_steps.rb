@@ -33,7 +33,7 @@ When /^I send a(n authenticated)? POST request to "(.*?)":$/ do |authenticated, 
   end
 
   header 'Authorization', @user.authentication_token if authenticated
-  @response = post "/v1/#{parsed_url}", body
+  @response = post "/v1/#{parsed_url}", ERB.new(body).result(binding)
 end
 
 When /^I send a(n authenticated)? GET request for "(.*?)"$/ do |authenticated, url|

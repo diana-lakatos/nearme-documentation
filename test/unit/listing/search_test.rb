@@ -55,7 +55,7 @@ class Listing::SearchTest < ActiveSupport::TestCase
         )
 
         assert results.all? { |l| l.score.present? }
-        assert_equal [10.0, 15.0, 15.0], results.sort_by(&:score).map(&:score)
+        assert_equal [28.33, 41.67, 50.0], results.sort_by(&:score).map(&:score)
       end
     end
 

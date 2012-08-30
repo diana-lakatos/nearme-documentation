@@ -5,8 +5,15 @@ end
 Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and Wi\-Fi)?$/ do |city, dollars, cents, wifi|
   listing = create_listing_in(city)
 
-  listing.update_attribute(:price_cents, (dollars.to_i * 100) + cents.to_i)
+  listing.update_column(:price_cents, (dollars.to_i * 100) + cents.to_i)
   listing.location.amenities << @wifi if wifi
+end
+
+Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) days$/ do |city, desks, num_days|
+  listing = create_listing_in(city)
+
+  listing.update_column(:quantity, desks)
+  (Date.today...num_days.to_i.days.from_now.to_date).all? { |d| listing.availability_for(d) >= desks.to_i }.should == true
 end
 
 Given /^a listing(?: with name "([^"]+)")? exists for a location with a private organization?$/ do |name|
