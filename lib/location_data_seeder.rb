@@ -21,6 +21,10 @@ class LocationDataSeeder
     "POTUS"
   ]
 
+  LOGO_IMAGES = [
+    "cat1.jpg", "cat2.jpg", "pug1.jpg", "pug2.jpg", "pug3.jpg"
+  ]
+
   attr_accessor :seed
 
   def self.seed(locations)
@@ -48,7 +52,13 @@ class LocationDataSeeder
 
     def create_organizations
       @organizations = SEED_ORGANIZATIONS.map do |n|
-        Organization.find_or_create_by_name(n)
+        o = Organization.find_or_initialize_by_name(n)
+
+        if (rand * 10) > 5
+          o.logo = File.open(Rails.root.join("lib", "seed_images", LOGO_IMAGES.sample))
+        end
+        o.save
+        o
       end
     end
 
