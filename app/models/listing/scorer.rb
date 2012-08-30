@@ -27,6 +27,13 @@ class Listing
     end
 
     def score(search_parameters)
+
+      # availability matching is specified across two different parameters, we combine them
+      # here if they are present
+      if dates = search_parameters.delete(:dates) && quantity = search_parameters.delete(:quantity)
+        search_parameters[:availability] = dates.merge(quantity)
+      end
+
       WEIGHTINGS.keys.each do |component|
         if params = search_parameters.delete(component)
           send("score_#{component}", params)
@@ -98,8 +105,9 @@ class Listing
       def score_availability(options = {})
         options.symbolize_keys!
 
-        start_date, end_date = options.delete(:date_start).to_date, options.delete(:date_end).to_date
-        quantity_needed      = options.delete(:quantity_min).to_i
+        dates                = options.delete(:date)
+        start_date, end_date = dates[:start], dates[:end]
+        quantity_needed      = options.delete(:quantity)[:min].to_i
 
         add_strict_matches(:availability) do |l|
           (start_date...end_date).all? { |day| l.availability_for(day) >= quantity_needed }

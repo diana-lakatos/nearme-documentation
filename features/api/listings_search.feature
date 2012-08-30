@@ -44,7 +44,7 @@ Feature: User Searches Listings
           "average": 0.0,
           "count": 0
         },
-        "score": 0.0,
+        "score": 40.0,
         "strict_match": true
       }
       ]
@@ -99,7 +99,7 @@ Feature: User Searches Listings
            "average": 0.0,
            "count": 0
          },
-         "score": 22.5,
+         "score": 62.5,
          "strict_match": true
        },
        {
@@ -130,7 +130,7 @@ Feature: User Searches Listings
            "average": 0.0,
            "count": 0
          },
-         "score": 22.5,
+         "score": 42.5,
          "strict_match": false
        }
      ]
