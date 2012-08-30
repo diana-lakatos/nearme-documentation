@@ -1,6 +1,7 @@
 // Desks Near Me
 //
 //= require ./vendor/jquery
+//= require ./vendor/rails
 //= require ./vendor/modernizr.js
 //= require ./vendor/jquery.cookie.js
 //= require ./vendor/fancybox/jquery.fancybox-1.3.1.pack.js
