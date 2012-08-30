@@ -14,4 +14,6 @@ DesksnearMe::Application.configure do
 
   config.action_dispatch.best_standards_support = :builtin
 
+  config.assets.digest = false
+
 end

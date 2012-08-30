@@ -740,6 +740,19 @@ form.simple_form {
   .checkbox, .radio {
     display: inline-block;
   }
+
+  .radio {
+    label {
+      width: auto;
+      margin: 0 30px 0 5px;
+      line-height: 22px;
+    }
+
+    input {
+      float: left;
+    }
+  }
+
   label {
     float: left;
     width: 160px;
