@@ -171,7 +171,7 @@ GEM
       net-ssh (>= 1.99.1)
     net-ssh (2.5.2)
     netrc (0.7.7)
-    newrelic_rpm (2.13.4)
+    newrelic_rpm (3.4.1)
     nokogiri (1.5.5)
     oauth (0.4.4)
     omniauth (1.1.0)
