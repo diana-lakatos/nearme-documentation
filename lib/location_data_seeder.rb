@@ -64,14 +64,14 @@ class LocationDataSeeder
 
     def seed_amenities
       @locations.each do |l|
-        num_amenities = (rand * (@amenities.size / 2))
+        num_amenities = (rand * (@amenities.size / 2)) + 1
         l.amenities   = @amenities.sample(num_amenities)
       end
     end
 
     def seed_organizations
       @locations.each do |l|
-        num_orgs        = (rand * (@organizations.size / 2))
+        num_orgs        = (rand * (@organizations.size / 2)) + 1
         l.organizations = @organizations.sample(num_orgs)
       end
     end
