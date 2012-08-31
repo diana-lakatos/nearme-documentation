@@ -71,11 +71,7 @@ Feature: User Searches Listings
       "listings": [
        {
          "address": "Parnell, Auckland 1010 New Zealand",
-         "amenities": [
-           {
-             "name": "Wi-Fi"
-           }
-         ],
+         "amenities": [ 123 ],
          "company_description": "Aliquid eos ab quia officiis sequi.",
          "company_name": "Company in Auckland",
          "description": "Aliquid eos ab quia officiis sequi.",

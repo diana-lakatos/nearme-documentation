@@ -200,14 +200,14 @@ class Listing::ScorerTest < ActiveSupport::TestCase
       end
 
       should "score correctly" do
-        @scorer.send(:score_availability, date: { start: @start_date, end: @end_date }, quantity: { min: 1 })
+        @scorer.send(:score_availability, dates: { start: @start_date, end: @end_date }, quantity: { min: 1 })
 
         assert_equal 33.33, @scorer.scores[@listings.first][:availability]
         assert_equal 33.33, @scorer.scores[@listings.last][:availability]
       end
 
       should "score correctly if minimum quantity is specified as a string" do
-        @scorer.send(:score_availability, date: { start: @start_date, end: @end_date }, quantity: { min: "1" })
+        @scorer.send(:score_availability, dates: { start: @start_date, end: @end_date }, quantity: { min: "1" })
 
         assert_equal 33.33, @scorer.scores[@listings.first][:availability]
         assert_equal 33.33, @scorer.scores[@listings.last][:availability]
@@ -217,7 +217,7 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         2.times { create_reservation_for(@start_date, @end_date, @listings[1]) }
         assert_equal 0, @listings[1].availability_for(@start_date)
 
-        @scorer.send(:score_availability, date: { start: @start_date, end: @end_date }, quantity: { min: 2 })
+        @scorer.send(:score_availability, dates: { start: @start_date, end: @end_date }, quantity: { min: 2 })
 
         assert !@scorer.strict_matches[@listings.first][:availability] # only 1 desk available
         assert !@scorer.strict_matches[@listings[1]][:availability]    # no desks available
