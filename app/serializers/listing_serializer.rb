@@ -8,7 +8,7 @@ class ListingSerializer < ApplicationSerializer
 
   has_many :photos
   has_many :amenities, embed: :ids
-  has_many :organizations, key: :associations
+  has_many :organizations, embed: :ids
 
   # FIXME: for some reason this method is reloading all assocations again?
   def attributes

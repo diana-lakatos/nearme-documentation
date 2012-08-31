@@ -4,7 +4,7 @@ class Listing
     WEIGHTINGS = {
       boundingbox:   0.4,
       amenities:     0.15,
-      associations:  0.15,
+      organizations:  0.15,
       price:         0.15,
       availability:  0.15
     }.freeze
@@ -84,7 +84,7 @@ class Listing
 
       # this feels like you could DRY it with the above - but seems to add complexity for
       # not a lot of benefit at the monement
-      def score_associations(organization_ids = [])
+      def score_organizations(organization_ids = [])
         organization_ids.map!(&:to_i)
         ranked_listings = @listings.rank_by { |l| (organization_ids - l.location.organization_ids).size }
 

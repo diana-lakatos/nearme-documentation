@@ -27,7 +27,7 @@ Feature: User Searches Listings
         "lat": -36.858675,
         "lon": 174.777303,
         "name": "Listing in Auckland",
-        "associations": [
+        "organizations": [
 
           ],
         "photos": [
@@ -78,7 +78,7 @@ Feature: User Searches Listings
          "lat": -36.858675,
          "lon": 174.777303,
          "name": "Listing in Auckland",
-         "associations": [
+         "organizations": [
 
          ],
          "photos": [
@@ -109,7 +109,7 @@ Feature: User Searches Listings
          "lat": -41.293597,
          "lon": 174.7763361,
          "name": "Listing in Wellington",
-         "associations": [
+         "organizations": [
 
          ],
          "photos": [
@@ -143,7 +143,7 @@ Feature: User Searches Listings
     """
     {
       "boundingbox": {"start": {"lat": -32.24997,"lon": 162.94921 }, "end": {"lat": -47.04018,"lon": 180.00000 }},
-      "associations": [ <%= model!("organization").id %> ]
+      "organizations": [ <%= model!("organization").id %> ]
     }
     """
     Then the JSON should be:
@@ -161,16 +161,7 @@ Feature: User Searches Listings
           "lat": -36.858675,
           "lon": 174.777303,
           "name": "Listing in Auckland",
-          "associations": [
-            {
-              "icon": {
-                "large_url": "http://placehold.it/100x100",
-                "medium_url": "http://placehold.it/100x100",
-                "thumb_url": "http://placehold.it/100x100"
-              },
-              "name": "Organization 1"
-            }
-          ],
+          "organizations": [ 1 ],
           "photos": [
 
           ],
@@ -199,7 +190,7 @@ Feature: User Searches Listings
           "lat": -41.293597,
           "lon": 174.7763361,
           "name": "Listing in Wellington",
-          "associations": [
+          "organizations": [
 
           ],
           "photos": [
@@ -251,7 +242,7 @@ Feature: User Searches Listings
           "lat": -36.858675,
           "lon": 174.777303,
           "name": "Listing in Auckland",
-          "associations": [
+          "organizations": [
 
           ],
           "photos": [
@@ -282,7 +273,7 @@ Feature: User Searches Listings
           "lat": -41.293597,
           "lon": 174.7763361,
           "name": "Listing in Wellington",
-          "associations": [
+          "organizations": [
 
           ],
           "photos": [
@@ -334,7 +325,7 @@ Feature: User Searches Listings
           "lat": -36.858675,
           "lon": 174.777303,
           "name": "Listing in Auckland",
-          "associations": [
+          "organizations": [
 
           ],
           "photos": [
@@ -365,7 +356,7 @@ Feature: User Searches Listings
           "lat": -41.293597,
           "lon": 174.7763361,
           "name": "Listing in Wellington",
-          "associations": [
+          "organizations": [
 
           ],
           "photos": [
