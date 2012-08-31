@@ -30,8 +30,10 @@ class Listing
 
       # availability matching is specified across two different parameters, we combine them
       # here if they are present
-      if dates = search_parameters.delete(:dates) && quantity = search_parameters.delete(:quantity)
-        search_parameters[:availability] = dates.merge(quantity)
+      if search_parameters.has_key?(:quantity) && (search_parameters.has_key?(:dates) || search_parameters.has_key?(:date))
+
+        search_parameters[:availability] = { quantity: search_parameters.delete(:quantity),
+                                             dates:    (search_parameters.delete(:dates) || search_parameters.delete(:date)) }
       end
 
       WEIGHTINGS.keys.each do |component|
@@ -105,18 +107,27 @@ class Listing
       def score_availability(options = {})
         options.symbolize_keys!
 
-        dates                = options.delete(:date)
-        start_date, end_date = dates[:start], dates[:end]
-        quantity_needed      = options.delete(:quantity)[:min].to_i
+        dates = options.delete(:dates)
+
+        if dates.is_a?(Hash)
+          # hash date range
+          dates.symbolize_keys!
+          dates = (dates[:start]...dates[:end])
+        else
+          # discrete array of dates
+          dates = dates.map { |d| Date.parse(d) }
+        end
+
+        quantity_needed = options.delete(:quantity).symbolize_keys[:min].to_i
 
         add_strict_matches(:availability) do |l|
-          (start_date...end_date).all? { |day| l.availability_for(day) >= quantity_needed }
+          dates.all? { |day| l.availability_for(day) >= quantity_needed }
         end
 
         # FIXME: this is going to do a query for each day!
         # should be able to request listing availability over a date range easily enough...
         ranked_listings = @listings.rank_by do |l|
-          (start_date...end_date).inject(0) do |sum, day|
+          dates.inject(0) do |sum, day|
             sum += ([l.desks_booked_on(day), quantity_needed].max / quantity_needed)
             sum
           end
