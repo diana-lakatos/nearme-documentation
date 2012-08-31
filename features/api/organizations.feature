@@ -14,21 +14,19 @@ Feature: List organizations
         {
           "id": 3,
           "name": "AICPA",
-          "logo": {
-            "thumb": { "url": "/media/organization/1/logo/thumb_foobear.jpeg" },
-            "medium": { "url": "/media/organization/1/logo/medium_foobear.jpeg"},
-            "large": { "url": "/media/organization/1/logo/large_foobear.jpeg" },
-            "url": "/media/organization/1/logo/foobear.jpeg"
+          "icon": {
+            "large_url": "/media/organization/4/logo/large_foobear.jpeg",
+            "medium_url": "/media/organization/4/logo/medium_foobear.jpeg",
+            "thumb_url": "/media/organization/4/logo/thumb_foobear.jpeg"
           }
         },
         {
           "id": 2,
           "name": "Lawyers USA",
-          "logo": {
-            "thumb": { "url": "http://placehold.it/100x100" },
-            "medium": { "url": "http://placehold.it/100x100" },
-            "large": { "url": "http://placehold.it/100x100" },
-            "url": "http://placehold.it/100x100"
+          "icon": {
+           "large_url": "http://placehold.it/100x100",
+           "medium_url": "http://placehold.it/100x100",
+           "thumb_url": "http://placehold.it/100x100"
           }
         }
       ]

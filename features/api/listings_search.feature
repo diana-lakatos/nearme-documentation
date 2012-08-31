@@ -27,7 +27,7 @@ Feature: User Searches Listings
         "lat": -36.858675,
         "lon": 174.777303,
         "name": "Listing in Auckland",
-        "organizations": [
+        "associations": [
 
           ],
         "photos": [
@@ -78,7 +78,7 @@ Feature: User Searches Listings
          "lat": -36.858675,
          "lon": 174.777303,
          "name": "Listing in Auckland",
-         "organizations": [
+         "associations": [
 
          ],
          "photos": [
@@ -109,7 +109,7 @@ Feature: User Searches Listings
          "lat": -41.293597,
          "lon": 174.7763361,
          "name": "Listing in Wellington",
-         "organizations": [
+         "associations": [
 
          ],
          "photos": [
@@ -132,6 +132,96 @@ Feature: User Searches Listings
      ]
    }
    """
+
+  Scenario: Searching for some listings with organizations
+    Given an organization exists
+    And a listing in Auckland exists which is a member of that organization
+    And a listing in Wellington exists which is NOT a member of that organization
+    And the Sphinx indexes are updated
+    When I send a POST request to "listings/search":
+    # NB this is a bounding box around New Zealand :)
+    """
+    {
+      "boundingbox": {"start": {"lat": -32.24997,"lon": 162.94921 }, "end": {"lat": -47.04018,"lon": 180.00000 }},
+      "associations": [ <%= model!("organization").id %> ]
+    }
+    """
+    Then the JSON should be:
+    """
+    {
+      "listings": [
+        {
+          "address": "Parnell, Auckland 1010 New Zealand",
+          "amenities": [
+
+          ],
+          "company_description": "Aliquid eos ab quia officiis sequi.",
+          "company_name": "Company in Auckland",
+          "description": "Aliquid eos ab quia officiis sequi.",
+          "lat": -36.858675,
+          "lon": 174.777303,
+          "name": "Listing in Auckland",
+          "associations": [
+            {
+              "icon": {
+                "large_url": "http://placehold.it/100x100",
+                "medium_url": "http://placehold.it/100x100",
+                "thumb_url": "http://placehold.it/100x100"
+              },
+              "name": "Organization 1"
+            }
+          ],
+          "photos": [
+
+          ],
+          "price": {
+            "amount": 50.0,
+            "currency_code": "USD",
+            "label": "$50.00",
+            "period": "day"
+          },
+          "quantity": 1,
+          "rating": {
+            "average": 0.0,
+            "count": 0
+          },
+          "score": 40.0,
+          "strict_match": true
+        },
+        {
+          "address": "35 Ghuznee Street",
+          "amenities": [
+
+          ],
+          "company_description": "Aliquid eos ab quia officiis sequi.",
+          "company_name": "Company in Wellington",
+          "description": "Aliquid eos ab quia officiis sequi.",
+          "lat": -41.293597,
+          "lon": 174.7763361,
+          "name": "Listing in Wellington",
+          "associations": [
+
+          ],
+          "photos": [
+
+          ],
+          "price": {
+            "amount": 50.0,
+            "currency_code": "USD",
+            "label": "$50.00",
+            "period": "day"
+          },
+          "quantity": 1,
+          "rating": {
+            "average": 0.0,
+            "count": 0
+          },
+          "score": 20.0,
+          "strict_match": false
+        }
+      ]
+    }
+    """
 
   Scenario: Searching for a listing using availability parameters
     Given a listing in Auckland exists with 5 desks available for the next 7 days
@@ -161,7 +251,7 @@ Feature: User Searches Listings
           "lat": -36.858675,
           "lon": 174.777303,
           "name": "Listing in Auckland",
-          "organizations": [
+          "associations": [
 
           ],
           "photos": [
@@ -192,7 +282,7 @@ Feature: User Searches Listings
           "lat": -41.293597,
           "lon": 174.7763361,
           "name": "Listing in Wellington",
-          "organizations": [
+          "associations": [
 
           ],
           "photos": [
@@ -244,7 +334,7 @@ Feature: User Searches Listings
           "lat": -36.858675,
           "lon": 174.777303,
           "name": "Listing in Auckland",
-          "organizations": [
+          "associations": [
 
           ],
           "photos": [
@@ -275,7 +365,7 @@ Feature: User Searches Listings
           "lat": -41.293597,
           "lon": 174.7763361,
           "name": "Listing in Wellington",
-          "organizations": [
+          "associations": [
 
           ],
           "photos": [
