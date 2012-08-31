@@ -3,12 +3,12 @@ class ListingSerializer < ApplicationSerializer
   attributes :id, :name, :description, :company_name, :company_description,
              :address, :price, :quantity, :rating
 
-  attribute :latitude,  :key => :lat
-  attribute :longitude, :key => :lon
+  attribute :latitude,  key: :lat
+  attribute :longitude, key: :lon
 
   has_many :photos
   has_many :amenities, embed: :ids
-  has_many :organizations
+  has_many :organizations, key: :associations
 
   # FIXME: for some reason this method is reloading all assocations again?
   def attributes

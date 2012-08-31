@@ -9,6 +9,17 @@ Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and Wi\-Fi)?$/ 
   listing.location.amenities << @wifi if wifi
 end
 
+Given /^a listing in (.*) exists which is (NOT )?a member of that organization$/ do |city, not_member|
+  listing = create_listing_in(city)
+
+  unless not_member.present?
+    listing.location.organizations << model!("organization")
+    listing.location.organizations.should include model!("organization")
+  else
+    listing.location.organizations.should_not include model!("organization")
+  end
+end
+
 Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) days$/ do |city, desks, num_days|
   listing = create_listing_in(city)
 
