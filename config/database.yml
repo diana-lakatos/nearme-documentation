@@ -15,5 +15,9 @@ test: &test
   <<: *common
   database: desksnearme_tests
 
+production:
+  <<: *common
+  database: desksnearme_production
+
 cucumber:
   <<: *test
