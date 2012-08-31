@@ -13,6 +13,10 @@ namespace :db do
       system('heroku pg:reset postgres://etktvdzmvgvcpa:BtL4PwY2KcuaauQwSMYHfJaNAf@ec2-23-21-188-175.compute-1.amazonaws.com:5432/dbn3lls0uq00je --app desksnearme-staging --confirm desksnearme-staging')
       system('heroku db:push --app desksnearme-staging --confirm desksnearme-staging')
     end
+    task :production do
+      system('heroku pg:reset postgres://u7ruvrnnngsis:p8ga7rfveikkebenhk2uvo8u6o0@ec2-107-22-220-217.compute-1.amazonaws.com:5542/d8jihti4322eps --app desksnearme --confirm desksnearme')
+      system('heroku db:push --app desksnearme --confirm desksnearme')
+    end
   end
   namespace :sync do
     desc "Synchronizes production database to the staging server"
