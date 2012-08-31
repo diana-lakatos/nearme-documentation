@@ -7,7 +7,7 @@ class ListingSerializer < ApplicationSerializer
   attribute :longitude, :key => :lon
 
   has_many :photos
-  has_many :amenities
+  has_many :amenities, embed: :ids
   has_many :organizations
 
   # FIXME: for some reason this method is reloading all assocations again?
