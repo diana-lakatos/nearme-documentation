@@ -6,6 +6,12 @@ namespace :db do
       Rake::Task["db:create"].invoke
       system('heroku db:pull --app desksnearme --confirm desksnearme')
     end
+    desc "Drops the current database and replaces it with staging"
+    task :staging do
+      Rake::Task["db:drop"].invoke
+      Rake::Task["db:create"].invoke
+      system('heroku db:pull --app desksnearme-staging --confirm desksnearme-staging')
+    end
   end
   namespace :push do
     desc "Drops the staging environments shared database and replaces it with the local one"
