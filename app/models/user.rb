@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
 
   mount_uploader :avatar, AvatarUploader
 
+
   validates_presence_of :name
 
   devise :database_authenticatable, :registerable, :recoverable,
@@ -95,5 +96,9 @@ class User < ActiveRecord::Base
     listing.creator == self ||
       listing.required_organizations.none? ||
       listing.required_organizations.any? {|o| organizations.include? o }
+  end
+
+  def avatar_changed?
+    false
   end
 end

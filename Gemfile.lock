@@ -132,7 +132,7 @@ GEM
       rest-client (~> 1.6.1)
       rubyzip
     hike (1.2.1)
-    i18n (0.6.0)
+    i18n (0.6.1)
     journey (1.0.4)
     jquery-rails (0.2.5)
       rails (~> 3.0)
