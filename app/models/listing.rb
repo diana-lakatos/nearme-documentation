@@ -53,6 +53,34 @@ class Listing < ActiveRecord::Base
       SQL
   }
 
+  # thinking sphinx index
+  define_index do
+    join location
+    join location.organizations
+
+    indexes :name, :description
+
+    has "radians(#{Location.table_name}.latitude)",  as: :latitude,  type: :float
+    has "radians(#{Location.table_name}.longitude)", as: :longitude, type: :float
+
+    # an organization id of 0 in the sphinx index means the entry does not require organization membership
+    # (i.e the listing is public)
+    has "CASE locations.require_organization_membership
+      WHEN TRUE THEN array_to_string(array_agg(\"organizations\".\"id\"), ',')
+      ELSE '0'
+    END", as: :organization_ids, type: :multi
+
+    group_by :latitude, :longitude, :require_organization_membership
+  end
+
+  sphinx_scope(:visible_for) do |user|
+    orgs = (user) ? user.organization_ids : []
+    # 0 indicactes a listing with no organization membership required - see define_index block
+    orgs << 0
+
+    { with: { organization_ids: orgs } }
+  end
+
   include Search
 
   # TODO: remove me
