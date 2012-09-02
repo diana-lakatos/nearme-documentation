@@ -1,4 +1,4 @@
 test:
   port: 9313
 production:
-  version: '1.10-beta'
+  version: '2.1.0'
