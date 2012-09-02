@@ -99,9 +99,10 @@ GEM
       faraday (>= 0.7.4, < 0.9)
     ffaker (1.0.0)
     ffi (1.1.5)
-    flying-sphinx (0.8.2)
+    flying-sphinx (0.7.0)
       faraday_middleware (~> 0.7)
       multi_json (>= 1.0.1)
+      net-ssh (>= 2.0.23)
       rash (~> 0.3.0)
       riddle (>= 1.5.0)
       thinking-sphinx
@@ -335,7 +336,7 @@ DEPENDENCIES
   email_spec
   factory_girl_rails (>= 3.0.0)
   ffaker
-  flying-sphinx
+  flying-sphinx (= 0.7.0)
   fog
   foreman
   geocoder

@@ -34,7 +34,7 @@ gem 'jquery-rails'
 gem 'sass-rails'
 
 group :staging, :production do
-  gem 'flying-sphinx'
+  gem 'flying-sphinx', '0.7.0'
   gem 'thin'
 end
 
