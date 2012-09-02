@@ -1,4 +1,2 @@
 test:
   port: 9313
-production:
-  version: '2.0.4'
