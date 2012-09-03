@@ -9,7 +9,9 @@
     });
 
     var bounds = new google.maps.LatLngBounds();
-    var markers = {}, infos = {};
+    var markers = {};
+    var info_window = new google.maps.InfoWindow();
+
     <% @listings.each do |w| %>
       ll = new google.maps.LatLng(<%= w.latitude %>, <%= w.longitude %>);
       bounds.extend(ll);
@@ -19,11 +21,9 @@
         icon: "<%= image_path("marker.png") %>",
         title: "<%= w.name %>"
       });
-      infos[<%= w.id %>] = new google.maps.InfoWindow({
-        content: "<%= escape_javascript(render(:partial => 'listings/gmap', :locals => { :listing => w })) %>"
-      });
       google.maps.event.addListener(markers[<%= w.id %>], 'click', function() {
-        infos[<%= w.id %>].open(map, markers[<%= w.id %>]);
+        info_window.setContent("<%= escape_javascript(render(:partial => 'listings/gmap', :locals => { :listing => w })) %>");
+        info_window.open(map, markers[<%= w.id %>]);
       });
     <% end %>
     map.fitBounds(bounds);
