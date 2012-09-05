@@ -67,7 +67,7 @@ class Listing
         Scorer.score(listings, params)
 
         # return scored listings
-        listings
+        listings.sort{|a,b| b.score <=> a.score }
       end
 
       # TODO: Roll this into Sphinx search (used by web frontend)
