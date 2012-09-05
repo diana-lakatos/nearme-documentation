@@ -31,7 +31,7 @@ class V1::ReservationsController < V1::BaseController
       in_the_past = true
 
       reservation.periods.each { |period|
-        in_the_past = false if period.date.to_time.utc >= timestamp_now
+        in_the_past = false if period.date.to_time(:utc) >= timestamp_now
       }
 
       # Delete only if the reservation is not in the past
@@ -61,7 +61,7 @@ class V1::ReservationsController < V1::BaseController
       in_the_future = false
 
       reservation.periods.each { |period|
-        in_the_future = true if period.date.to_time.utc >= timestamp_now
+        in_the_future = true if period.date.to_time(:utc) >= timestamp_now
       }
 
       # Delete only if the reservation is not in the future
