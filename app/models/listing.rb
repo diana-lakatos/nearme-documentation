@@ -55,39 +55,6 @@ class Listing < ActiveRecord::Base
 
   include Search
 
-  # TODO: remove me
-  # def self.find_by_search_params(params)
-  #   search_hash = {}
-  #   if(params.has_key?("boundingbox"))
-  #     bb = params["boundingbox"]
-  #     search_hash[:locations] = {
-  #       latitude:  bb["start"]["lat"]..bb["end"]["lat"],
-  #       longitude: bb["start"]["lon"]..bb["end"]["lon"]
-  #     }
-  #   end
-  #   listings = includes(location: :company).where(search_hash)
-
-  #   if(params.has_key?("amenities"))
-  #     listings.select! do |l|
-  #       l.amenities.any? { |a| params["amenities"].include? a.id }
-  #     end
-  #   end
-
-  #   if(params["organizations"])
-  #     listings.select! do |l|
-  #       l.organizations.any? { |a| params["organizations"].include?(a.id) }
-  #     end
-  #   end
-
-  #   listings
-  # end
-
-  # def self.find_by_query(query)
-  #   includes(location: :company).search_by_query(query)
-  # end
-
-  # include PgSearch
-  # pg_search_scope :search_by_query, against: [:name, :description]
 
   # TODO: Create a database index for the availability.
   # TODO: This implementation is really slow!
