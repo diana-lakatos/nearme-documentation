@@ -51,10 +51,27 @@ class V1::ListingsControllerTest < ActionController::TestCase
   ##
   # Reservation
 
-  test "should accept reservation" do
-    authenticate!
-    raw_post :reservation, { id: 1 }, valid_reservation_params.to_json
-    assert_response :success
+  context "when successful" do
+    setup do
+      authenticate!
+      raw_post :reservation, { id: 1 }, valid_reservation_params.to_json
+    end
+
+    should "respond with success" do
+      assert_response :success
+    end
+
+    should "create seats" do
+      seat = Listing.find_by_id(1).reservations.first.seats.first
+      assert_equal "John Carter", seat.name
+      assert_equal "john@example.com", seat.email
+    end
+
+    should "create periods" do
+      reserved_dates = Listing.find_by_id(1).reservations.first.periods.map(&:date)
+      assert reserved_dates.include? Date.parse("2013-01-01")
+      assert reserved_dates.include? Date.parse("2013-01-02")
+    end
   end
 
   test "reservation should raise when a listing is not found" do

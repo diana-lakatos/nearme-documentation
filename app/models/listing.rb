@@ -189,7 +189,7 @@ class Listing < ActiveRecord::Base
         end
 
         # Try and look up the e-mail address, in case it refers to a DNM user.
-        reservation.seats.last.user ||= User.find_by_email(reservation.seats.last.email).first
+        reservation.seats.last.user ||= User.find_by_email(reservation.seats.last.email)
       end
 
     else
