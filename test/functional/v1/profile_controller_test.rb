@@ -13,28 +13,30 @@ class V1::ProfileControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should update profile" do
-    raw_put :update, {:id => users(:one).id}, '{"name": "Alvina Q. DuBuque"}'
-    assert_response :success
+  context "#update" do
+    should "update profile" do
+      raw_put :update, {:id => users(:one).id}, '{"name": "Alvina Q. DuBuque"}'
+      assert_response :success
 
-    @user.reload
-    assert_equal "Alvina Q. DuBuque", @user.name
-  end
-
-  test "should raise when no name is included" do
-    assert_raise DNM::MissingJSONData do
-      raw_put :update, {:id => users(:one).id}, '{"phone": "1 234 56890"}'
+      @user.reload
+      assert_equal "Alvina Q. DuBuque", @user.name
     end
 
+    should "not raise when no name is included" do
+      assert_nothing_raised do
+        raw_put :update, {:id => users(:one).id}, '{"phone": "1 234 56890"}'
+      end
+    end
+
+    should "update phone" do
+      raw_put :update, {:id => users(:one).id}, '{ "name": "John Doe", "phone": "+1 (800) 555-1234"}'
+      assert_response :success
+
+      @user.reload
+      assert_equal "+1 (800) 555-1234", @user.phone
+    end
   end
 
-  test "should update phone" do
-    raw_put :update, {:id => users(:one).id}, '{ "name": "John Doe", "phone": "+1 (800) 555-1234"}'
-    assert_response :success
-
-    @user.reload
-    assert_equal "+1 (800) 555-1234", @user.phone
-  end
 
   test "should add avatar image to current user object when data of content type image/jpeg is posted to the method" do
     raw_post :upload_avatar, {:filename => "avatar.jpg"}, IO.read('test/fixtures/listing.jpg')
