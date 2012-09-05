@@ -73,7 +73,7 @@ class Reservation < ActiveRecord::Base
     # Assume we can cancel until proven otherwise
     can_cancel = true
     periods.each { |p|
-      can_cancel = false if p.date.to_time.utc < timestamp_now
+      can_cancel = false if p.date.to_time(:utc) < timestamp_now
     }
 
     can_cancel
