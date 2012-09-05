@@ -2,7 +2,6 @@ class V1::ProfileController < V1::BaseController
 
   # These endpoints require authentication
   before_filter :require_authentication
-  before_filter :validate_json, only: [:update, :create]
 
   def show
     render json: current_user
@@ -56,10 +55,6 @@ class V1::ProfileController < V1::BaseController
   # Return user attributes we can update
   def profile_params
     json_params.slice("name", "email", "phone")
-  end
-
-  def validate_json
-    raise DNM::MissingJSONData, "name" if json_params["name"].blank?
   end
 
 end
