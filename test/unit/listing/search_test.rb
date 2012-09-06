@@ -11,6 +11,23 @@ class Listing::SearchTest < ActiveSupport::TestCase
       @listings.last.location.amenities = [ @wifi ]
     end
 
+    should "sort by score" do
+      @listings.first.score = 10.0
+      @listings.second.score = 30.0
+      @listings.third.score = 20.0
+
+      ThinkingSphinx::Search.any_instance.stubs(:search).with { |arg| arg.is_a?(String) }.returns(@listings)
+      Listing::Scorer.stubs(:score)
+
+      results = Listing.find_by_search_params(
+        query: "Normally this would be resolved by Sphinx but here it's stubbed out",
+        price: { max: 500, min: 100 },
+        amenities: [ @wifi.id ]
+      )
+
+      assert_equal [30.0, 20.0, 10.0], results.map(&:score)
+    end
+
     context "when performing a keyword search" do
       setup do
         # stub out sphinx
