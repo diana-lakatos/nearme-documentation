@@ -17,7 +17,7 @@ class ReservationSerializer < ApplicationSerializer
     object.periods.map do |p|
 
       # Use a start/end time that spans the entire day
-      timestamp_start = p.date.to_time.utc
+      timestamp_start = p.date.to_time(:utc)
       timestamp_end = timestamp_start + 1.day - 1
 
       {
