@@ -36,7 +36,7 @@ class V1::ListingsController < V1::BaseController
   def reservation
 
     listing     = Listing.find(params[:id])
-    reservation = listing.reserve!(@email, current_user, @dates, @quantity, @asignees)
+    reservation = listing.reserve!(@email, current_user, @dates, @quantity, @assignees)
 
     # Render the newly created reservation
     render :json => reservation
