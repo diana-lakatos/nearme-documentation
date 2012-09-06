@@ -22,6 +22,7 @@ class ReservationMailer < DesksNearMeMailer
   def confirmed_reservation_created(reservation)
     setup_defaults(reservation)
     @user = @listing.creator
+    @reserver = reservation.owner.name
     generate_mail("You have a new reservation")
   end
 
