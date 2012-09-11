@@ -55,7 +55,7 @@ fog_connection = Fog::Storage.new(
 fog_directory = fog_connection.directories.detect { |d| d.key == ENV['S3_BUCKET'] }
 show_error("Could not find S3 bucket #{ENV['S3_BUCKET']}") unless fog_directory
 time = Time.now.utc
-s3_key_prefix = [ENV['S3_PREFIX'], time.strftime("%Y"), time.strftime("%m"), time.strftime("%d"), time.strftime("%H.%M")].compact.join('/')
+s3_key_prefix = [ENV['S3_PREFIX'], [time.strftime("%Y"), time.strftime("%m"), time.strftime("%d"), time.strftime("%H.%M")].join('-')].compact.join('/')
 
 Heroku::Command.run 'pgbackups:capture', %w(--expire)
 
