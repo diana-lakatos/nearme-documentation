@@ -3,6 +3,7 @@
 require 'heroku'
 require 'heroku/command/pgbackups'
 require 'fog'
+require 'open-uri'
 
 def show_usage
   puts "Usage: Execute the script with the following environment variables set:"
@@ -73,17 +74,15 @@ puts "Got URLs: #{urls}"
 urls = urls.split("\n").map(&:strip)
 
 urls.each do |url|
-  puts "Downloading #{url}"
-  system("curl \"#{url}\" > backup.dump")
-  puts "Downloaded."
-
   file_name = URI(url).path.split('/').last
   key = [s3_key_prefix, file_name].join('/')
   puts "Uploading to S3: #{key}"
-  fog_directory.files.create(
-    :key => key,
-    :body => File.open('backup.dump')
-  )
+  open(url) do |f|
+    fog_directory.files.create(
+      :key => key,
+      :body => f
+    )
+  end
   puts "Uploaded."
 end
 
