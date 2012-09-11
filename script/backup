@@ -1,0 +1,93 @@
+#!/usr/bin/env ruby
+
+require 'heroku'
+require 'heroku/command/pgbackups'
+require 'fog'
+
+def show_usage
+  puts "Usage: Execute the script with the following environment variables set:"
+
+  [['HEROKU_API_KEY', 'Your API key for heroku login'],
+   ['HEROKU_APP', 'The name of the heroku app to backup database for'],
+   ['AWS_ACCESS_KEY_ID', 'The S3 access key id for uploading the backup files.'],
+   ['AWS_SECRET_ACCESS_KEY', 'The S3 secret key for uploading the backup files.'],
+   ['AWS_REGION', 'Region the S3 bucket is in'],
+   ['S3_BUCKET', 'The bucket to upload backups to'],
+   ['S3_PREFIX', 'The key prefix for the backup files']
+  ].each do |env, desc|
+    puts "  #{env} - #{desc}"
+    if ENV[env]
+      puts "     Currently: #{ENV[env]}"
+    end
+  end
+
+  puts ""
+  puts "Example:"
+  puts "  AWS_ACCESS_KEY_ID=xxx AWS_SECRET_ACCESS_KEY=xxx S3_BUCKET=desksnearme.backup S3_PREFIX=backups/database HEROKU_API_KEY=xxx HEROKU_APP=desksnearme-staging AWS_REGION=us-west-1 ./script/backup"
+  exit
+end
+
+def show_error(error)
+  puts error
+  exit(1)
+end
+
+unless ENV['HEROKU_API_KEY'] && ENV['HEROKU_APP']
+  show_usage
+end
+
+unless ENV['AWS_ACCESS_KEY_ID'] && ENV['AWS_SECRET_ACCESS_KEY']
+  show_usage
+end
+
+unless ENV['S3_BUCKET']
+  show_usage
+end
+
+fog_connection = Fog::Storage.new(
+  :provider              => 'AWS',
+  :aws_access_key_id     => ENV['AWS_ACCESS_KEY_ID'],
+  :aws_secret_access_key => ENV['AWS_SECRET_ACCESS_KEY'],
+  :region => ENV['AWS_REGION']
+)
+
+fog_directory = fog_connection.directories.detect { |d| d.key == ENV['S3_BUCKET'] }
+show_error("Could not find S3 bucket #{ENV['S3_BUCKET']}") unless fog_directory
+time = Time.now.utc
+s3_key_prefix = [ENV['S3_PREFIX'], time.strftime("%Y"), time.strftime("%m"), time.strftime("%d"), time.strftime("%H.%M")].compact.join('/')
+
+Heroku::Command.run 'pgbackups:capture', %w(--expire)
+
+begin
+  stdout = $stdout
+  $stdout = io = StringIO.new
+  Heroku::Command.run 'pgbackups:url'
+ensure
+  $stdout = stdout
+end
+
+urls = io.string
+puts "Got URLs: #{urls}"
+
+# Split multiple urls
+urls = urls.split("\n").map(&:strip)
+
+urls.each do |url|
+  puts "Downloading #{url}"
+  system("curl \"#{url}\" > backup.dump")
+  puts "Downloaded."
+
+  file_name = URI(url).path.split('/').last
+  key = [s3_key_prefix, file_name].join('/')
+  puts "Uploading to S3: #{key}"
+  fog_directory.files.create(
+    :key => key,
+    :body => File.open('backup.dump')
+  )
+  puts "Uploaded."
+end
+
+puts "Done"
+
+
+

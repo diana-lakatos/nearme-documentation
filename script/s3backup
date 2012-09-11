@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+
+source_bucket = ENV['SOURCE_BUCKET']
+target_bucket = ENV['TARGET_BUCKET']
+s3cmd_config  = ENV['S3CMD_CONFIG']
+
+time = Time.now.utc
+s3_key_prefix = [ENV['S3_PREFIX'], time.strftime("%Y"), time.strftime("%m"), time.strftime("%d"), time.strftime("%H.%M")].compact.join('/')
+
+cmd = "s3cmd --config #{s3cmd_config} sync s3://#{source_bucket} s3://#{target_bucket}/#{s3_key_prefix}/"
+puts "Executing #{cmd}"
+Kernel.exec cmd
+
+
