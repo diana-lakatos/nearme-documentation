@@ -5,6 +5,12 @@
 
   height: 500px;
   background: image-url("sections/home/hero1.jpg") center center no-repeat;
+
+  .shadow {
+    background: image-url("layout/header-shadow.png") top left repeat-x;
+    position: relative;
+    height: 32px;
+  }
 }
 
 #app_store_link {
