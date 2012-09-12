@@ -17,6 +17,8 @@
 
 body {
   background: image-url("layout/background-tile.png");
+
+  @extend .font-banda;
 }
 
 header {
