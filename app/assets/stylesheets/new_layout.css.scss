@@ -12,6 +12,10 @@
 /* #Site Styles
 ================================================== */
 
+.text-right {
+  text-align: right;
+}
+
 // Full width container
 .super-container {
 }
@@ -31,6 +35,24 @@ header {
     width: 391px;
     height: 57px;
     text-indent: -9999px;
+  }
+
+  #header_links {
+    padding-top: 10px;
+
+    a.header-link {
+      @extend .font-banda-bold;
+      display: inline-block;
+      color: $dnm_gray;
+      font-size: 16px;
+      text-transform: uppercase;
+      margin-right: 30px;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }
 

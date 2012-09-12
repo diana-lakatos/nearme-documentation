@@ -21,10 +21,10 @@
       %header.row
         .eight.columns
           = link_to "Desks Near Me", root_url, :id => "logo"
-        .eight.columns
-          = link_to "Sign Up", ""
-          = link_to "Log In", ""
-          = link_to "List Your Space", "", :class => "btn btn-blue btn-medium"
+        #header_links.eight.columns.text-right
+          = link_to "Sign Up", "", :class => "header-link"
+          = link_to "Log In", "", :class => "header-link"
+          = link_to "List Your Space!", "", :class => "btn btn-blue btn-medium"
 
     %section#content{:class => controller_name}
       = flashes
