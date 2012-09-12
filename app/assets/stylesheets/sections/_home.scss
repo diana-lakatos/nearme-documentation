@@ -4,7 +4,8 @@
   border-bottom: 1px solid #ffffff;
 
   height: 500px;
-  background: image-url("sections/home/hero1.jpg") center center no-repeat;
+  background: $dnm_grey image-url("sections/home/hero1.jpg") center center no-repeat;
+  background-size: cover;
 
   .shadow {
     background: image-url("layout/header-shadow.png") top left repeat-x;
