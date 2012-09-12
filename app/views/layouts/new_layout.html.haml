@@ -20,26 +20,33 @@
     .container
       %header
         .eight.columns
-          = link_to root_url do
-            %h1 DesksNear.Me
+          = link_to "Desks Near Me", root_url, :id => "logo"
         .eight.columns
-          = render :partial => "layouts/navigation"
+          = link_to "Sign Up", ""
+          = link_to "Log In", ""
+          = link_to "List Your Space", "", :class => "btn btn-blue"
 
       %section#content{:class => controller_name}
-        .sixteen.columns
-          = flashes
-          = yield
+        = flashes
+        = yield
       %footer
-        .sixteen.columns
-          .copyright
-            = image_tag "team_logo_small.png"
-            %p
-              %strong Copyright &copy; 2012 Desks Near Me Corp
-            %small
-              Icons by
-              = succeed "," do
-                %a{:href => "http://p.yusukekamiyamane.com/"} Yusuke Kamiyamane
-              Fugue icon set.
+        .ten.columns
+          %ul
+            %li
+              = link_to "Home", ""
+            %li
+              = link_to "Browse Spaces", ""
+            %li
+              = link_to "Sign Up", ""
+            %li
+              = link_to "Log In", ""
+            %li
+              = link_to "List Your Space", ""
+            %li
+              = link_to "About Us", ""
+
+        .copyright.six.columns
+          %p Copyright &copy; 2012 Desks Near Me Corp
 
     = yield :script
     = render :partial => "layouts/analytics" if Rails.env.production?
