@@ -30,25 +30,7 @@
       = flashes
       = yield
 
-    .container
-      %footer.row
-        .ten.columns
-          %ul
-            %li
-              = link_to "Home", ""
-            %li
-              = link_to "Browse Spaces", ""
-            %li
-              = link_to "Sign Up", ""
-            %li
-              = link_to "Log In", ""
-            %li
-              = link_to "List Your Space", ""
-            %li
-              = link_to "About Us", ""
-
-        .copyright.six.columns
-          %p Copyright &copy; 2012 Desks Near Me Corp
+    = render :partial => "layouts/footer"
 
     = yield :script
     = render :partial => "layouts/analytics" if Rails.env.production?
