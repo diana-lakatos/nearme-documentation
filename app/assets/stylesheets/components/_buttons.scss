@@ -1,0 +1,29 @@
+.btn {
+  display: inline-block;
+  @extend .font-banda-bold;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fff;
+  text-shadow: 0 -1px rgba(0,0,0,0.3);
+  padding: 0 6px;
+
+  &.btn-medium {
+    height: 39px;
+    line-height: 43px;
+    @include border-radius(8px);
+  }
+
+  &.btn-blue {
+    @include background(linear-gradient(top center, #249fe3, #2091d1));
+    &:hover {
+      @include background(linear-gradient(top center, darken(#249fe3, 2%), darken(#2091d1, 2%)));
+    }
+
+    @include box-shadow(
+      #117db9 0 3px 0 0, // dark part
+      inset rgba(255,255,255,0.1) 0 -1px 0 0, // bottom glow
+      rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
+    );
+  }
+}
+
