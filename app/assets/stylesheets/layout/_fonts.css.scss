@@ -1,0 +1,26 @@
+html {
+  -webkit-font-smoothing: antialiased;
+}
+
+@include font-face("banda", font-files(
+      asset-path("regular-webfont.woff", font),
+      asset-path("regular-webfont.ttf", font),
+      asset-path("regular-webfont.svg", font)
+    ),
+    asset-path("regular-webfont.eot", font), "normal");
+
+@include font-face("banda-bold", font-files(
+      asset-path("bold-webfont.woff", font),
+      asset-path("bold-webfont.ttf", font),
+      asset-path("bold-webfont.svg", font)
+    ),
+    asset-path("bold-webfont.eot", font), "bold");
+
+.font-banda {
+  font-family: "banda";
+}
+
+.font-banda-bold {
+  font-family: "banda bold";
+  font-weight: bold;
+}
