@@ -29,6 +29,7 @@ gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'tweet-button'
 gem 'will_paginate'
 gem 'thinking-sphinx'
+gem "compass-rails"
 
 gem 'jquery-rails'
 gem 'sass-rails'
@@ -43,6 +44,7 @@ group :development do
   gem 'taps'
   gem 'sqlite3'
   gem "rails-erd"
+  gem 'quiet_assets'
 end
 
 group :development, :test, :staging do
