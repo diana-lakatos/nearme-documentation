@@ -18,6 +18,18 @@ body {
   background: image-url("layout/background-tile.png");
 }
 
+header {
+  margin-top: 20px;
+
+  #logo {
+    display: inline-block;
+    background: image-url("layout/logo.png");
+    width: 391px;
+    height: 57px;
+    text-indent: -9999px;
+  }
+}
+
 /* #Page Styles
 ================================================== */
 @import "sections/*";
