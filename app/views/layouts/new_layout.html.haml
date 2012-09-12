@@ -18,7 +18,7 @@
   %body
     #TTWNotify{:style => "display:none;"}
     .container
-      %header
+      %header.row
         .eight.columns
           = link_to "Desks Near Me", root_url, :id => "logo"
         .eight.columns
@@ -26,10 +26,12 @@
           = link_to "Log In", ""
           = link_to "List Your Space", "", :class => "btn btn-blue"
 
-      %section#content{:class => controller_name}
-        = flashes
-        = yield
-      %footer
+    %section#content{:class => controller_name}
+      = flashes
+      = yield
+
+    .container
+      %footer.row
         .ten.columns
           %ul
             %li

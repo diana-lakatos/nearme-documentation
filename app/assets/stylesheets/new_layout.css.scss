@@ -4,10 +4,15 @@
 
 @import "compass";
 @import "compass/css3";
+@import "compass/reset";
 @import "layout/*";
 
 /* #Site Styles
 ================================================== */
+
+// Full width container
+.super-container {
+}
 
 body {
   background: image-url("layout/background-tile.png");
@@ -15,6 +20,7 @@ body {
 
 /* #Page Styles
 ================================================== */
+@import "sections/*";
 
 /* #Media Queries
 ================================================== */
