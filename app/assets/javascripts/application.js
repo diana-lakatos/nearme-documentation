@@ -4,7 +4,7 @@
 //= require ./vendor/rails
 //= require ./vendor/modernizr.js
 //= require ./vendor/jquery.cookie.js
-//= require ./vendor/fancybox/jquery.fancybox-1.3.1.pack.js
+//* require ./vendor/fancybox/jquery.fancybox-1.3.1.pack.js
 //= require ./vendor/jquery.overlay.js
 //= require ./vendor/jqueryui.js
 //= require ./vendor/jquery.address-1.3.min
@@ -16,7 +16,7 @@ jQuery.ajaxSetup({
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
 })
 
-$(document.body).delegate('click', 'a[rel="submit"]', function(e) {
+$(document).on('click', 'a[rel=submit]', function(e) {
   var form = $(this).closest('form');
   if (form.length > 0) {
     e.preventDefault();
@@ -110,6 +110,7 @@ function doInlineReservation() {
   });
 }
 
+/*
 function doPhotoFancyBox() {
   $(".fancy-photos a:has(img), .fancy-photos [href$=.jpg], .fancy-photos a[href$=.png], .fancy-photos a[href$=.gif]")
     .attr("rel", "photos").fancybox({
@@ -130,3 +131,4 @@ $(function(){
     return false;
   });
 });
+*/
