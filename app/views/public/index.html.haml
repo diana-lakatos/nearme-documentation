@@ -4,9 +4,10 @@
   #search_row.twelve.columns.offset-by-two
     .wood-box
       %form#listing_search.home_search{:action => search_path, :method => "get"}
-        %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
         %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => ""}
+        %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
         %a.btn.btn-green.btn-outline.btn-medium{ :rel => "submit", :href => "" }
+          %i.icon
           Search
 
       #suggest_location{:style => "display: none"}

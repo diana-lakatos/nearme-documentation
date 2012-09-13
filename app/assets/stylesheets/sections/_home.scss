@@ -6,6 +6,8 @@
   }
 
   #listing_search {
+    position: relative;
+
     input#search {
       @extend .font-banda;
       padding: 8px 8px;
@@ -21,6 +23,38 @@
       color: #707070;
       text-shadow: #fff 0 1px 0;
       font-size: 22px;
+
+      padding-left: 50px;
+      width: 460px;
+      margin-right: 8px;
+    }
+
+    .btn {
+      height: 48px;
+      line-height: 48px;
+      position: relative;
+      top: -2px;
+      width: 115px;
+
+      .icon {
+        display: inline-block;
+        width: 32px;
+        height: 33px;
+        background: image-url("sections/home/search-icon.png") no-repeat;
+      }
+    }
+
+    .geolocation {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      border: 0;
+      background: image-url("sections/home/geolocate-icon.png");
+      width: 32px;
+      height: 33px;
+      &:active {
+        margin-top: 1px;
+      }
     }
   }
 }

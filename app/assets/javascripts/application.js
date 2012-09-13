@@ -27,7 +27,7 @@ $(document).on('click', 'a[rel=submit]', function(e) {
 
 
 function getUserLocationForSearch() {
-  var searchForm      = $("form.big_search");
+  var searchForm      = $("form#listing_search");
   if(searchForm.length >= 1) {
     var currentLocation = $.cookie("currentLocation");
 
@@ -110,7 +110,6 @@ function doInlineReservation() {
   });
 }
 
-/*
 function doPhotoFancyBox() {
   $(".fancy-photos a:has(img), .fancy-photos [href$=.jpg], .fancy-photos a[href$=.png], .fancy-photos a[href$=.gif]")
     .attr("rel", "photos").fancybox({
@@ -122,7 +121,7 @@ function doPhotoFancyBox() {
 }
 
 $(function(){
-  doPhotoFancyBox();
+//  doPhotoFancyBox();
   doInlineReservation();
   doListingGoogleMaps();
   getUserLocationForSearch();
@@ -131,4 +130,3 @@ $(function(){
     return false;
   });
 });
-*/

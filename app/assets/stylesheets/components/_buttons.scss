@@ -1,4 +1,4 @@
-.btn {
+.btn, a.btn {
   display: inline-block;
   @extend .font-banda-bold;
   text-transform: uppercase;
@@ -6,6 +6,15 @@
   color: #fff;
   text-shadow: 0 -1px rgba(0,0,0,0.3);
   padding: 0 10px;
+  vertical-align: middle;
+
+  i.icon {
+    vertical-align: middle;
+  }
+
+  &:visited, &:hover {
+    color: #fff;
+  }
 
   &.btn-outline {
     border-bottom: 1px solid rgba(0,0,0,0.8);
@@ -20,6 +29,7 @@
   &.btn-medium {
     height: 39px;
     line-height: 39px;
+    font-size: 18px;
     @include border-radius(8px);
   }
 
