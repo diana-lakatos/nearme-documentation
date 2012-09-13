@@ -39,6 +39,7 @@ class ReservationSerializer < ApplicationSerializer
   end
 
   def total_cost
+    object.total_amount ||= 0
 
     {
       amount:        object.total_amount.to_f,
