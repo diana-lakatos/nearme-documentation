@@ -1,7 +1,7 @@
 - title "Sign In Options"
 
-.grid_4.alpha
-  %h1.tk-chaparral-pro Sign In
+.one-third.column
+  %h1 Sign In
 
   = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "simple_form login_form" }) do |f|
     = devise_error_messages!

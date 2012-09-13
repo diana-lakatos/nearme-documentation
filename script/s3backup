@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+# Usage:
+#   Install s3cmd
+#   Setup s3cmd config (s3cmd --configure)
+#
+#   Run script with environment variables:
+#     SOURCE_BUCKET - The bucket to clone
+#     TARGET_BUCKET - The bucket to clone into
+#     S3CMD_CONFIG  - Path to the s3cmd config file
+#     S3_PREFIX     - Prefix for the target s3 bucket keys
+#
+source_bucket = ENV['SOURCE_BUCKET']
+target_bucket = ENV['TARGET_BUCKET']
+s3cmd_config  = ENV['S3CMD_CONFIG']
+
+time = Time.now.utc
+s3_key_prefix = [ENV['S3_PREFIX'], [time.strftime("%Y"), time.strftime("%m"), time.strftime("%d"), time.strftime("%H.%M")].join('-')].compact.join('/')
+
+cmd = "s3cmd --config #{s3cmd_config} sync s3://#{source_bucket} s3://#{target_bucket}/#{s3_key_prefix}/"
+puts "Executing #{cmd}"
+Kernel.exec cmd
+
+
