@@ -25,6 +25,27 @@ class ReservationTest < ActiveSupport::TestCase
     assert @reservation.periods
   end
 
+  context "with serialization" do
+    should "work even if the total amount is nil" do
+      reservation = Reservation.new
+      reservation.total_amount_cents = nil
+
+      expected = { :reservation =>
+        {
+          :id         => nil,
+          :user_id    => nil,
+          :listing_id => nil,
+          :state      => "unconfirmed",
+          :cancelable => true,
+          :total_cost => { :amount=>0.0, :label=>"$0.00", :currency_code=>"USD" },
+          :times      => []
+        }
+      }
+
+      assert_equal expected, ReservationSerializer.new(reservation).as_json
+    end
+  end
+
   context "with reservation pricing" do
     context "and a listing with some availability" do
       setup do
