@@ -24,3 +24,22 @@ html {
 .font-banda-bold {
   font-family: "banda-bold";
 }
+
+h1.page-title {
+  color: $dnm_black;
+  font-weight: normal;
+  font-size: 36px;
+  text-shadow: 0 1px 0 rgba(255,255,255,.8);
+  margin-bottom: 20px;
+}
+
+a, a:visited {
+  color: $dnm_blue;
+  font-family: "banda-bold";
+  text-decoration: none;
+
+  &:hover {
+    color: $link_hover;
+    text-decoration: none;
+  }
+}

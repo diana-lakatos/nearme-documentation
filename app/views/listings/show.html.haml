@@ -1,103 +1,122 @@
+- legacy false
 %article.listing
-  .grid_12.alpha.omega
-    .grid_5.alpha
-      %h1.tk-adelle= "#{@listing.name} - #{listing_price(@listing)}"
-      = content_tag(:p, link_to(@listing.url, @listing.url)) if @listing.url
-    - if @listing.creator
-      .grid_3.omega.creator
-        = image_tag @listing.creator.gravatar_url, :class => 'avatar', :title => @listing.creator.name, :alt => @listing.creator.name
-        %small Created By
-        %br/
-        = @listing.creator.name
+  %h1.page-title
+    = @listing.name
 
-  %section.details.grid_8.alpha
-    .business_description
-      = raw @listing.company_description
-    %h2.tk-chaparral-pro Availability
-    %p Hover over a day to see how many desks are available.
-    = render :partial => "availability", :locals => {:listing => @listing, :weeks => 3}
-    %h2.tk-chaparral-pro Extra Info
+  .column.one-third.description
+    .meta
+      %strong= pluralize(@listing.quantity, "desk")
+      starting at
+      %strong= listing_price(@listing)
     %p
-      %strong Reservation Confirmation Required:
-      = @listing.confirm_reservations? ? "Yes" : "No"
-    - if @listing.amenities.any?
-      %ul
-        - @listing.amenities.each do |a|
-          %li=a.name
-    - if @listing.description?
-      %p= raw @listing.description
-    - if @listing.availability_rules?
-      %h3.tk-chaparral-pro Availability Rules
-      %p= raw @listing.availability_rules
-    %h2.tk-chaparral-pro Latest Activity
-    - if @feeds.any?
-      %dl.activity_feed
-        - @feeds.each do |feed|
-          %dd.feed_item{class: feed.activity}
-            = image_tag feed.user.gravatar_url, :class => "avatar"
-            = render :partial => "feeds/#{feed.activity}", :locals => { :feed => feed }
-            %br/
-            %small
-              %date{datetime: feed.created_at.xmlschema}
-                = time_ago_in_words(feed.created_at)
-                ago
-    - else
-      %p No activity has been generated yet.
+      = raw @listing.description
+    - if @listing.url
+      .listing-link
+        = link_to(strip_http(@listing.url), @listing.url)
 
-  %aside.grid_4.omega
-    - if @listing.created_by?(current_user)
-      %nav.actions
-        = link_to edit_listing_path(@listing)  do
-          = image_tag "pencil-small.png"
-          Edit Listing
-        = link_to listing_photos_path(@listing) do
-          = image_tag "image-small.png"
-          Add/Manage Photos
-        - if current_user.admin?
-          %br/
-          = link_to "Destroy (Admin Only)", @listing, :method => :delete, :confirm => "Are you sure? Its dangerous to go alone..."
-
-    %section#photos.fancy-photos
-      %h2.tk-chaparral-pro Photos
-      - if @listing.photos.any?
-        %ul
-          - @listing.photos.each do |photo|
-            %li
-              = link_to photo.large.url, :title => photo.caption, :rel => "photos", :style => "margin-right: 5px" do
-                = image_tag(photo.thumb.url, :alt => photo.caption)
-      - else
-        .grid_1.alpha
-          = image_tag "desk_photos.png"
-        .grid_3.omega
-          %p
-            %strong Aww nuu.
-            %br/
-            There are no photos uploaded yet.
-          %p Upload a photo to become a featured listing on the homepage!
-
-    %section
-      %h2.tk-chaparral-pro Location
-      #map.google-map{:style => "height: 200px"}
+  .column.one-third.map
+    .meta
+      = simple_format(@listing.formatted_address || @listing.address)
+    #map.google-map
       %address{"data-lat" => @listing.latitude, "data-lng" => @listing.longitude, "data-marker" => image_path("marker.png")}
-        = simple_format(@listing.formatted_address || @listing.address)
-        = link_to "Open in Google Maps", "http://maps.google.com?q=#{@listing.address}", :target => "_blank"
 
-    %section
-      %h2.tk-chaparral-pro Share Listing
-      = custom_tweet_button("Share on Twitter", { :via => "desksnearme", :url => listing_url(@listing), :text => "I'd love to work here!", :related => "desksnearme" }, :class => "tweet_it")
+/ %article.listing
+/   .grid_12.alpha.omega
+/     .grid_5.alpha
+/       %h1.tk-adelle= "#{@listing.name} - #{listing_price(@listing)}"
+/       = content_tag(:p, link_to(@listing.url, @listing.url)) if @listing.url
+/     - if @listing.creator
+/       .grid_3.omega.creator
+/         = image_tag @listing.creator.gravatar_url, :class => 'avatar', :title => @listing.creator.name, :alt => @listing.creator.name
+/         %small Created By
+/         %br/
+/         = @listing.creator.name
 
-- content_for :script do
-  :javascript
-    $(function(){
-      $("td.day details.availability a").click(function(e){
-        $(".overlay-container").overlay('close');
-        e.stopPropagation();
-        var overlay = $("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
-        $(".overlay-container a.cancel").live("click", function(e){
-          e.stopPropagation();
-          $(".overlay-container").overlay('close');
-          return false;
-        });
-        return false;
-      });
-    });
+/   %section.details.grid_8.alpha
+/     .business_description
+/       = raw @listing.company_description
+/     %h2.tk-chaparral-pro Availability
+/     %p Hover over a day to see how many desks are available.
+/     = render :partial => "availability", :locals => {:listing => @listing, :weeks => 3}
+/     %h2.tk-chaparral-pro Extra Info
+/     %p
+/       %strong Reservation Confirmation Required:
+/       = @listing.confirm_reservations? ? "Yes" : "No"
+/     - if @listing.amenities.any?
+/       %ul
+/         - @listing.amenities.each do |a|
+/           %li=a.name
+/     - if @listing.description?
+/       %p= raw @listing.description
+/     - if @listing.availability_rules?
+/       %h3.tk-chaparral-pro Availability Rules
+/       %p= raw @listing.availability_rules
+/     %h2.tk-chaparral-pro Latest Activity
+/     - if @feeds.any?
+/       %dl.activity_feed
+/         - @feeds.each do |feed|
+/           %dd.feed_item{class: feed.activity}
+/             = image_tag feed.user.gravatar_url, :class => "avatar"
+/             = render :partial => "feeds/#{feed.activity}", :locals => { :feed => feed }
+/             %br/
+/             %small
+/               %date{datetime: feed.created_at.xmlschema}
+/                 = time_ago_in_words(feed.created_at)
+/                 ago
+/     - else
+/       %p No activity has been generated yet.
+
+/   %aside.grid_4.omega
+/     - if @listing.created_by?(current_user)
+/       %nav.actions
+/         = link_to edit_listing_path(@listing)  do
+/           = image_tag "pencil-small.png"
+/           Edit Listing
+/         = link_to listing_photos_path(@listing) do
+/           = image_tag "image-small.png"
+/           Add/Manage Photos
+/         - if current_user.admin?
+/           %br/
+/           = link_to "Destroy (Admin Only)", @listing, :method => :delete, :confirm => "Are you sure? Its dangerous to go alone..."
+
+/     %section#photos.fancy-photos
+/       %h2.tk-chaparral-pro Photos
+/       - if @listing.photos.any?
+/         %ul
+/           - @listing.photos.each do |photo|
+/             %li
+/               = link_to photo.large.url, :title => photo.caption, :rel => "photos", :style => "margin-right: 5px" do
+/                 = image_tag(photo.thumb.url, :alt => photo.caption)
+/       - else
+/         .grid_1.alpha
+/           = image_tag "desk_photos.png"
+/         .grid_3.omega
+/           %p
+/             %strong Aww nuu.
+/             %br/
+/             There are no photos uploaded yet.
+/           %p Upload a photo to become a featured listing on the homepage!
+
+/     %section
+/       %h2.tk-chaparral-pro Location
+
+
+/     %section
+/       %h2.tk-chaparral-pro Share Listing
+/       = custom_tweet_button("Share on Twitter", { :via => "desksnearme", :url => listing_url(@listing), :text => "I'd love to work here!", :related => "desksnearme" }, :class => "tweet_it")
+
+/ - content_for :script do
+/   :javascript
+/     $(function(){
+/       $("td.day details.availability a").click(function(e){
+/         $(".overlay-container").overlay('close');
+/         e.stopPropagation();
+/         var overlay = $("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
+/         $(".overlay-container a.cancel").live("click", function(e){
+/           e.stopPropagation();
+/           $(".overlay-container").overlay('close');
+/           return false;
+/         });
+/         return false;
+/       });
+/     });

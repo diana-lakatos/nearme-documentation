@@ -1,0 +1,39 @@
+article.listing {
+
+  .column.description {
+    color: $dnm_black;
+    text-shadow: 0 1px 0 rgba(255,255,255,.8); /* drop shadow */
+
+    .meta {
+      strong { font-family: "banda-bold"; }
+      margin-bottom: 20px;
+    }
+
+    p {
+      line-height: 150%;
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .listing-link {
+      margin-top: 20px;
+    }
+  }
+
+  .column.map {
+
+    #map {
+      width: 320px;
+      height: 345px;
+      background: #fff;
+      margin-top: 20px;
+      -moz-box-shadow: 0 1px 0 rgba(0,0,0,.25); /* drop shadow */
+      -webkit-box-shadow: 0 1px 0 rgba(0,0,0,.25); /* drop shadow */
+      box-shadow: 0 1px 0 rgba(0,0,0,.25); /* drop shadow */
+      @include border-radius(5px);
+    }
+
+  }
+
+
+}
