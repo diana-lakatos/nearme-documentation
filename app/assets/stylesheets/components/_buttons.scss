@@ -7,9 +7,19 @@
   text-shadow: 0 -1px rgba(0,0,0,0.3);
   padding: 0 10px;
 
+  &.btn-outline {
+    border-bottom: 1px solid rgba(0,0,0,0.8);
+
+    &:active {
+      margin-left: -1px;
+      margin-top: -1px;
+      border: 1px solid rgba(0,0,0,0.8);
+    }
+  }
+
   &.btn-medium {
     height: 39px;
-    line-height: 43px;
+    line-height: 39px;
     @include border-radius(8px);
   }
 
@@ -22,6 +32,29 @@
     @include box-shadow(
       #117db9 0 3px 0 0, // dark part
       inset rgba(255,255,255,0.1) 0 -1px 0 0, // bottom glow
+      rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
+    );
+  }
+
+  &.btn-green {
+    @include background(linear-gradient(top center, #9cbf3b, #89a834));
+    &:hover {
+      @include background(linear-gradient(top center, darken(#9cbf3b, 2%), darken(#89a834, 2%)));
+    }
+
+    &:active {
+      @include background(linear-gradient(top center, #89a834, #9cbf3b));
+
+      @include box-shadow(
+        inset rgba(255,255,255,0.1) 0 -4px 0, // bottom glow
+       // inset #628109 0 -3px 0 0, // dark part
+        rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
+      );
+    }
+
+    @include box-shadow(
+      inset rgba(255,255,255,0.1) 0 -4px 0, // bottom glow
+      inset #628109 0 -3px 0 0, // dark part
       rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
     );
   }
