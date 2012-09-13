@@ -1,25 +1,35 @@
-%section#search_row.super-container.row
-  .shadow
-  .container
-    = render :partial => "search/bar", :locals => { :value => "" }
-    #suggest_location{:style => "display: none"}
+- legacy false
 
-.container
-  .one-third.column
-    .box
-      %h2 Introducing Desks Near Me
-      .content
-        %p
-          Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to see
-          great places where they can work. So, where do you want to work today?
+- content_for :hero do
+  %section#search_row.super-container.row
+    .shadow
+    .container
+      .twelve.columns.offset-by-two
+        .wood-box
+          %form#listing_search.home_search{:action => search_path, :method => "get"}
+            %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
+            %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => ""}
 
-  .one-third.column
-    .box
-      %h2 Our commitment to trust & safety
-      .content
-        %p
-          Desks Near Me is safe. From our patent pending in-space technology to our 24/7 support line, we make sure
-          that you can share your space, or visit one, without worry.
+              %a.btn.btn-blue.btn-medium{ :rel => "submit" }
+                Search
 
-  .one-third.column
-    = link_to "Get the iPhone app", "", :id => "app_store_link"
+          #suggest_location{:style => "display: none"}
+
+.one-third.column
+  .box
+    %h2 Introducing Desks Near Me
+    .content
+      %p
+        Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to see
+        great places where they can work. So, where do you want to work today?
+
+.one-third.column
+  .box
+    %h2 Our commitment to trust & safety
+    .content
+      %p
+        Desks Near Me is safe. From our patent pending in-space technology to our 24/7 support line, we make sure
+        that you can share your space, or visit one, without worry.
+
+.one-third.column
+  = link_to "Get the iPhone app", "", :id => "app_store_link"

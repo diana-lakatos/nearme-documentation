@@ -26,9 +26,12 @@
           = link_to "Log In", new_user_session_url, :class => "header-link"
           = link_to "List Your Space!", new_location_url, :class => "btn btn-blue btn-medium"
 
-    %section#content{:class => controller_name}
+    %section#content{:class => "#{controller_name} #{'legacy' if legacy?}"}
+      = yield :hero
       = flashes
-      = yield
+
+      .container
+        = yield
 
     = render :partial => "layouts/footer"
 

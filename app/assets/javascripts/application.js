@@ -16,6 +16,15 @@ jQuery.ajaxSetup({
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
 })
 
+$(document.body).delegate('click', 'a[rel="submit"]', function(e) {
+  var form = $(this).closest('form');
+  if (form.length > 0) {
+    e.preventDefault();
+    form.submit();
+    return false;
+  }
+});
+
 
 function getUserLocationForSearch() {
   var searchForm      = $("form.big_search");

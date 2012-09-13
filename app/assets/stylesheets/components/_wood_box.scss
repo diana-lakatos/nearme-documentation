@@ -1,0 +1,10 @@
+.wood-box {
+  background: image-url("layout/seamless-wood-texture.jpg");
+  border: 1px solid #35261e;
+  @include border-radius(8px);
+
+  @include box-shadow(
+    inset rgba(255,255,255,0.4) 0 1px 1px 0,
+    rgba(0,0,0,0.6) 0 4px 8px 0
+   );
+}

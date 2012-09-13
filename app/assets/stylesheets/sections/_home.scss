@@ -12,6 +12,30 @@
     position: relative;
     height: 32px;
   }
+
+  .wood-box {
+    margin-top: 120px;
+    padding: 12px;
+  }
+
+  #listing_search {
+    input#search {
+      @extend .font-banda;
+      padding: 8px 8px;
+      line-height: 30px;
+      background: #fff;
+      background: linear-gradient(#ececec, #fcfcfc);
+      border: 1px solid #2e1d16;
+      @include border-radius(8px);
+      @include box-shadow(
+        inset rgba(0,0,0,0.6) 3px 3px 8px -4px,
+        rgba(255,255,255,0.1) 0 1px 0 0
+      );
+      color: #707070;
+      text-shadow: #fff 0 1px 0;
+      font-size: 22px;
+    }
+  }
 }
 
 #app_store_link {
