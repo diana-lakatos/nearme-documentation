@@ -14,11 +14,12 @@
       .listing-link
         = link_to(strip_http(@listing.url), @listing.url)
 
-  .column.one-third.map
-    .meta
+  .column.two-thirds.map
+    %address{"data-lat" => @listing.latitude, "data-lng" => @listing.longitude, "data-marker" => image_path("components/map-pin.png")}
       = simple_format(@listing.formatted_address || @listing.address)
-    #map.google-map
-      %address{"data-lat" => @listing.latitude, "data-lng" => @listing.longitude, "data-marker" => image_path("marker.png")}
+    .map-wrapper
+      #map.google-map
+
 
 / %article.listing
 /   .grid_12.alpha.omega

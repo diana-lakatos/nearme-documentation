@@ -8,6 +8,7 @@
 //= require ./vendor/jquery.overlay.js
 //= require ./vendor/jqueryui.js
 //= require ./vendor/jquery.address-1.3.min
+//= require tile.stamen.js
 //
 //= require_self/
 //= require search
@@ -71,21 +72,22 @@ function setSearchFormToLocation(form, location) {
 }
 
 function doListingGoogleMaps() {
-  var locations = $("aside address, aside details.address"),
+  var locations = $(".column.map address"),
       map       = null;
-
 
   $.each(locations, function(index, location) {
     location        = $(location);
     var latlng      = new google.maps.LatLng(location.attr("data-lat"), location.attr("data-lng"));
 
     if(!map) {
+      var layer = "toner";
       map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 13,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        zoom: 15,
+        mapTypeId: layer,
         mapTypeControl: false,
-        center: latlng
+        center: latlng,
       });
+      map.mapTypes.set(layer, new google.maps.StamenMapType(layer));
     }
 
     var image       = location.attr("data-marker");
