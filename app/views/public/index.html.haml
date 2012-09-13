@@ -1,19 +1,16 @@
 - legacy false
 
 - content_for :hero do
-  %section#search_row.super-container.row
-    .shadow
-    .container
-      .twelve.columns.offset-by-two
-        .wood-box
-          %form#listing_search.home_search{:action => search_path, :method => "get"}
-            %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
-            %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => ""}
+  #search_row.twelve.columns.offset-by-two
+    .wood-box
+      %form#listing_search.home_search{:action => search_path, :method => "get"}
+        %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
+        %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => ""}
 
-              %a.btn.btn-blue.btn-medium{ :rel => "submit" }
-                Search
+          %a.btn.btn-blue.btn-medium{ :rel => "submit" }
+            Search
 
-          #suggest_location{:style => "display: none"}
+      #suggest_location{:style => "display: none"}
 
 .one-third.column
   .box
