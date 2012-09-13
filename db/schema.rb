@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120831172659) do
+ActiveRecord::Schema.define(:version => 20120913065803) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -167,10 +167,10 @@ ActiveRecord::Schema.define(:version => 20120831172659) do
     t.integer  "owner_id"
     t.string   "state"
     t.string   "confirmation_email"
-    t.integer  "total_amount_cents"
+    t.integer  "total_amount_cents", :default => 0
     t.string   "currency"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
     t.datetime "deleted_at"
     t.text     "comment"
   end
