@@ -59,12 +59,6 @@ aside section {
 
 /* === HYPER GLOBAL === */
 
-div.overlay-container form.simple_form {
-  label {
-    width: auto; }
-  input {
-    margin-left: 0; } }
-
 p.em {
   font-size: 16px;
   line-height: 28px; }
@@ -644,21 +638,6 @@ ul.list {
 
 form.simple_form {
   overflow: hidden;
-  .checkbox, .radio {
-    display: inline-block;
-  }
-
-  .radio {
-    label {
-      width: auto;
-      margin: 0 30px 0 5px;
-      line-height: 22px;
-    }
-
-    input {
-      float: left;
-    }
-  }
 
   label {
 

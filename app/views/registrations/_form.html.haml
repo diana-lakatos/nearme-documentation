@@ -5,8 +5,8 @@
   // Need to let the user enter a password if no Provider.
   // Also need to let them change their password if they had previously used one.
   - if resource.has_password?
-    = f.input :password, :required => true
-    = f.input :password_confirmation, :required => true, :label => "Confirm Password"
+    = f.input :password, :required => resource.new_record?, :label => "#{'New' unless resource.new_record?} Password", :hint => ("Enter a new password to change. Leave blank to keep current password." unless resource.new_record?)
+    = f.input :password_confirmation, :required => resource.new_record?, :label => "Confirm #{'New' unless resource.new_record?} Password"
 
   = f.input :organization_ids, :collection => Organization.order('name').all, :as => :check_boxes, :label => "Professional Associations", :hint => "Please check any professional associations with which you are affiliated. You can then access listings restricted to members of these associations."
   = f.button :submit, :value => submit
