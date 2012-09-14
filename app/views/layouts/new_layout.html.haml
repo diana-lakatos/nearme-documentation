@@ -22,14 +22,7 @@
         .eight.columns
           = link_to "Desks Near Me", root_url, :id => "logo"
         #header_links.eight.columns.text-right
-          - if user_signed_in?
-            = link_to "Dashboard", dashboard_path, :class => "header-link"
-            = link_to "Account", edit_user_registration_path, :class => "header-link"
-            = link_to "Logout", destroy_user_session_path, :method => :delete, :class => "header-link"
-          - else
-            = link_to "Sign Up", new_user_registration_url, :class => "header-link"
-            = link_to "Log In", new_user_session_url, :class => "header-link"
-            = link_to "List Your Space!", new_location_url, :class => "btn btn-blue btn-medium"
+          = render "shared/header_navigation"
 
     %section#content{:class => "#{controller_name} #{'legacy' if legacy?}"}
       = render "layouts/hero"
@@ -37,7 +30,7 @@
         = flashes
         = yield
 
-    = render :partial => "layouts/footer"
+    = render :partial => "shared/footer"
 
     = yield :script
     = render :partial => "layouts/analytics" if Rails.env.production?
