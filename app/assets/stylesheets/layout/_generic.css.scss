@@ -1,5 +1,13 @@
 // Generic styles to apply to everything
 
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
+
 .text-right {
   text-align: right;
 }
@@ -16,3 +24,6 @@ p {
   margin-bottom: 12px;
 }
 
+.wood-texture {
+  background: image-url("layout/seamless-wood-texture.jpg");
+}

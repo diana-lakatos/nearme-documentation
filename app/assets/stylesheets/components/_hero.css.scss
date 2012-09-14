@@ -1,23 +1,30 @@
 #hero {
-  border-top: 3px solid $dnm_blue;
-  border-bottom: 1px solid #ffffff;
-
-  height: 500px;
-  background: $dnm_grey image-url("sections/home/hero1.jpg") center center no-repeat;
-  background-size: cover;
-
-  box-shadow: inset 0 10px 20px -10px rgba(0,0,0,0.6);
-
-  .shadow {
-    background: image-url("layout/header-shadow.png") top left repeat-x;
-    position: relative;
-    height: 32px;
-  }
-
   &.collapsed {
     height: 35px;
     background: 0;
     border-bottom: 0;
   }
 
+}
+
+.hero-shadow {
+  box-shadow: inset 0 10px 20px -10px rgba(0,0,0,0.6);
+}
+
+
+.hero-blue-top {
+  border-top: 3px solid $dnm_blue;
+  border-bottom: 1px solid #ffffff;
+}
+
+.hero-wood-texture {
+  @extend .wood-texture;
+  border-top: 1px solid #382a23;
+  border-bottom: 1px solid #382a23;
+  color: #cebbae;
+  padding: 12px 0;
+  @include box-shadow(
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    0 0px 8px rgba(0,0,0,0.6)
+  );
 }

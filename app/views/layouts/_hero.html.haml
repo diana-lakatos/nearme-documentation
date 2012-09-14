@@ -1,6 +1,5 @@
 - if content_for?(:hero)
-  %section#hero.super-container.row
-    .container
-      = yield :hero
+  %section#hero.row
+    = yield :hero
 - else
-  #hero.collapsed
+  #hero.collapsed.hero-blue-top

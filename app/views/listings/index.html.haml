@@ -1,15 +1,12 @@
-%h1 Listings
-
-= render :partial => "search/bar", :locals => { :value => "" }
+- content_for :hero do
+  .container
+    .twelve.columns.offset-by-two
+      = render :partial => "search/bar", :locals => { :value => "" }
 
 .clearfix
-
-%nav.actions
-  = link_to new_listing_path do
-    = image_tag "building--plus.png"
-    Create Listing
-
-%p Listing by most recently created. Hover over a day to see how many desks are available.
+  = link_to "List Your Space!", new_listing_path, :class => "btn btn-blue btn-medium right"
+  %h1 Listings
+  %p Listing by most recently created. Hover over a day to see how many desks are available.
 
 %section.list
   = render @listings
