@@ -1,7 +1,8 @@
 - content_for :hero do
-  .container
-    .twelve.columns.offset-by-two
-      = render :partial => "search/bar", :locals => { :value => "" }
+  .hero-wood-texture
+    .container
+      .twelve.columns.offset-by-two
+        = render :partial => "search/bar", :locals => { :value => "" }
 
 .clearfix
   = link_to "List Your Space!", new_listing_path, :class => "btn btn-blue btn-medium right"
