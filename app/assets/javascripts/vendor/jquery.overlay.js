@@ -34,6 +34,8 @@
 		
 */
 
+(function($) {
+
 $.fn.overlay = function() {
 	var args = arguments;
   
@@ -210,3 +212,4 @@ $.fn.overlay = function() {
 	
 	
 }
+})(jQuery);

@@ -1,16 +1,20 @@
 // Desks Near Me
 //
+// Require legacy jQuery dependent code first
+//= require ./vendor/jquery-1.4.1.js
+//= require ./vendor/jqueryui.js
+//= require ./vendor/jquery.overlay.js
+//* require ./vendor/fancybox/jquery.fancybox-1.3.1.pack.js
+//
+// Require new jQuery to override (NB: This is so HAX)
 //= require ./vendor/jquery
 //= require ./vendor/rails
 //= require ./vendor/modernizr.js
 //= require ./vendor/jquery.cookie.js
-//* require ./vendor/fancybox/jquery.fancybox-1.3.1.pack.js
-//= require ./vendor/jquery.overlay.js
-//= require ./vendor/jqueryui.js
 //= require ./vendor/jquery.address-1.3.min
 //= require tile.stamen.js
 //
-//= require_self/
+//= require_self
 //= require search
 
 jQuery.ajaxSetup({
@@ -102,10 +106,11 @@ function doListingGoogleMaps() {
 function doInlineReservation() {
   $("td.day .details.availability a").click(function(e){
     e.stopPropagation();
-    var overlay = $("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
+    e.preventDefault();
+    var overlay = jQueryLegacy("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
     $(".overlay-container a.cancel").live("click", function(e){
       e.stopPropagation();
-      $(".overlay-container").overlay('close');
+      jQueryLegacy(".overlay-container").overlay('close');
       return false;
     });
     return false;
