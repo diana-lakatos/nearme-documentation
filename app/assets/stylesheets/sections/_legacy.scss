@@ -661,13 +661,7 @@ form.simple_form {
   }
 
   label {
-    float: left;
-    width: 160px;
-    margin-right: 12px;
-    font-size: 14px;
-    text-align: right;
-    font-weight: bold;
-    line-height: 34px;
+
     &.collection_radio {
       width: auto;
       float: none; }
@@ -676,20 +670,6 @@ form.simple_form {
       border: none;
       font-weight: bold; } }
   div {
-    &.input {
-      /*	overflow: hidden;*/
-      position: relative;
-      margin: 6px 0;
-      span.hint {
-        font-style: italic;
-        padding-left: 174px;
-        margin-bottom: 12px;
-        vertical-align: middle;
-        display: block; }
-      &.boolean span.hint {
-        display: inline;
-        font-style: normal;
-        padding: 0; } }
     &.field_with_errors {
       background: #FFE1E4;
       background: rgba(255, 0, 0, 0.1);
@@ -699,66 +679,16 @@ form.simple_form {
       padding: 6px 0; }
     &.input {
       input, textarea {
-        font-size: 16px;
-        background: #FFF;
-        border: 1px solid #CCC;
-        padding: 6px;
-        outline: none; } } }
-  input[type='submit'] {
-    border: none;
-    border-bottom: 1px solid #3D5D1A;
-    background: #639927;
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -o-border-radius: 6px;
-    padding: 10px 24px;
-    margin-left: 174px;
-    margin-top: 24px;
-    color: #FFF;
-    font-weight: bold;
-    font-size: 16px; }
+
+         } } }
+
   span.error {
     display: block;
     padding-left: 176px;
     color: #990600;
     font-weight: bold; } }
 
-/* === Login Form === */
-form.login_form, form.password_reset_form {
-  label {
-    float: none;
-    display: block;
-    text-align: left;
-  }
 
-  .input input {
-    width: 280px;
-  }
-
-  .input.checkbox {
-    overflow: hidden;
-
-    input {
-      float: left;
-      width: auto;
-    }
-
-    label {
-      margin-left: 40px;
-      line-height: 22px;
-    }
-  }
-
-  .actions {
-    line-height: 60px;
-    font-size: 18px;
-
-    input { // Submit button
-      margin-top: 0;
-      margin-left: 0;
-    }
-  }
-}
 
 /* === Activity Feeds */
 

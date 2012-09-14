@@ -1,0 +1,68 @@
+form {
+
+  div.input, div.field {
+    margin-bottom: 20px;
+  }
+
+  div.input.check_boxes, div.field.check_boxes {
+    overflow: hidden;
+
+    input {
+      float: left;
+    }
+
+    label {
+      margin-left: 24px;
+    }
+
+    .checkbox {
+      float: left;
+      margin-right: 30px;
+    }
+
+    .hint {
+      clear: left;
+    }
+  }
+
+  .hint {
+    font-size: 80%;
+    display: block;
+  }
+
+  label {
+    @extend .font-banda-bold;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  input[type="text"], input[type="password"], input[type="email"], textarea {
+    @extend .font-banda;
+    margin-bottom: 8px;
+    padding: 8px 8px;
+    line-height: 22px;
+    background: #fff;
+    background: linear-gradient(#ececec, #fcfcfc);
+    border: 1px solid rgba(0,0,0,0.4);
+    @include border-radius(8px);
+    @include box-shadow(
+      inset rgba(0,0,0,0.6) 3px 3px 8px -4px,
+      rgba(255,255,255,0.1) 0 1px 0 0
+    );
+    color: #707070;
+    text-shadow: #fff 0 1px 0;
+    font-size: 22px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  input[type='submit'] {
+    border: none;
+    @extend .btn;
+    @extend .btn-medium;
+    @extend .btn-green;
+ }
+}

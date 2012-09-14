@@ -56,16 +56,16 @@
       @include background(linear-gradient(top center, #89a834, #9cbf3b));
 
       @include box-shadow(
-        inset rgba(255,255,255,0.1) 0 -4px 0, // bottom glow
+        inset rgba(255,255,255,0.1) 0 -4px 0 // bottom glow
        // inset #628109 0 -3px 0 0, // dark part
-        rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
+//        rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
       );
     }
 
     @include box-shadow(
       inset rgba(255,255,255,0.1) 0 -4px 0, // bottom glow
-      inset #628109 0 -3px 0 0, // dark part
-      rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
+      inset #628109 0 -3px 0 0 // dark part
+//      rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
     );
   }
 }

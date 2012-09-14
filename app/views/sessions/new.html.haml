@@ -11,9 +11,9 @@
     %div.input
       = f.label :password
       = f.password_field :password
-      %p Forgot? #{link_to "Reset your password", new_user_password_url}
+      %p.hint Forgot? #{link_to "Reset your password", new_user_password_url}
     - if devise_mapping.rememberable?
-      %div.input.checkbox
+      %div.input.check_boxes
         = f.check_box :remember_me
         = f.label :remember_me
     %div.actions
