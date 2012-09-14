@@ -7,14 +7,14 @@ html {
       asset-path("regular-webfont.ttf", font),
       asset-path("regular-webfont.svg", font)
     ),
-    asset-path("regular-webfont.eot", font), "normal");
+    asset-path("regular-webfont.eot", font));
 
-@include font-face("banda-bold", font-files(
+@include font-face("banda", font-files(
       asset-path("bold-webfont.woff", font),
       asset-path("bold-webfont.ttf", font),
       asset-path("bold-webfont.svg", font)
     ),
-    asset-path("bold-webfont.eot", font), "bold");
+    asset-path("bold-webfont.eot", font), bold);
 
 .font-banda, body {
   font-family: "banda";
@@ -22,7 +22,8 @@ html {
 }
 
 .font-banda-bold {
-  font-family: "banda-bold";
+  font-family: "banda";
+  font-weight: bold;
 }
 
 h1.page-title {
@@ -35,7 +36,8 @@ h1.page-title {
 
 a, a:visited {
   color: $dnm_blue;
-  font-family: "banda-bold";
+  font-family: "banda";
+  font-weight: bold;
   text-decoration: none;
 
   &:hover {

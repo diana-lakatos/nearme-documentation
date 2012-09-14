@@ -476,52 +476,6 @@ section.sessions a.auth_provider, section.passwords a.auth_provider {
 
 /* === Tabs */
 
-div.tabs {
-  > nav {
-    background: #F8F8F8;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -o-border-radius: 6px;
-    padding: 6px 6px 0px;
-    overflow: hidden;
-    margin-bottom: 12px;
-    a {
-      &.selected {
-        background: #EEE; }
-      color: #333;
-      font-size: 14px;
-      font-weight: bold;
-      float: left;
-      padding: 8px 12px;
-      border-radius: 6px 6px 0px 0px;
-      -moz-border-radius: 6px 6px 0px 0px;
-      -o-border-radius: 6px 6px 0px 0px;
-      margin-right: 12px;
-      span.num {
-        font-weight: normal;
-        background: #FFA8AA;
-        color: #850400;
-        border-radius: 14px;
-        -moz-border-radius: 14px;
-        -o-border-radius: 14px;
-        float: right;
-        display: block;
-        padding: 0 7px;
-        font-size: 12px;
-        margin-left: 12px; }
-      &.selected span.num {
-        background: #FFF;
-        color: #333; }
-      &:link {
-        text-decoration: none; } } }
-  nav > a:visited {
-    text-decoration: none; }
-  section.tab {
-    display: none;
-    &.selected {
-      display: block; } } }
-
 /* == Actions Nav */
 
 nav.actions {
@@ -640,7 +594,6 @@ form.simple_form {
   overflow: hidden;
 
   label {
-
     &.collection_radio {
       width: auto;
       float: none; }
