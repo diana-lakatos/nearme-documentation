@@ -12,6 +12,10 @@
   text-align: right;
 }
 
+strong {
+  font-weight: bold;
+}
+
 h1 {
   @extend .font-banda;
   font-size: 32px;

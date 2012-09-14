@@ -35,13 +35,19 @@ aside {
   h2 {
     font-size: 22px; }
   section {
-    background: #F1F1F1;
-    background: rgba(255, 255, 255, 0.5);
-    padding: 0 12px 12px 12px;
-    border-radius: 8px;
-    -moz-border-radius: 8px;
-    -o-border-radius: 8px;
-    margin-bottom: 24px; } }
+    h2 {
+      line-height: 24px;
+      margin-bottom: 12px;
+    }
+    background: #f5f5f5;
+    padding: 8px;
+    border-bottom: 1px solid #a4a4a4;
+    @include border-radius(8px);
+    font-size: 14px;
+    line-height: 140%;
+    margin-bottom: 20px;
+  }
+}
 
 hr {
   margin: 12px 0;
@@ -77,69 +83,6 @@ ul#photos {
 
 /* === Listing Detail */
 
-article.listing {
-  h1 {
-    font-weight: 400;
-    margin-bottom: 12px; }
-  div.creator {
-    img.avatar {
-      width: 48px;
-      float: right;
-      margin-left: 12px; }
-    text-align: right; }
-  section.details h2 {
-    border-bottom: 2px solid #CCC;
-    margin: 24px 0 12px; } }
-
-section.list article.listing .details {
-  float: left;
-  /*  width: 50%;*/
-  padding-top: 20px; }
-
-article.listing div.business_description p {
-  font-size: 14px;
-  line-height: 26px; }
-
-section.list article.listing {
-  border-bottom: 1px solid #DDD;
-  padding-bottom: 6px;
-  overflow: hidden;
-  h2 {
-    font-weight: 500;
-    line-height: 32px;
-    a {
-      &:link, &:visited {
-        text-decoration: none; }
-      &:hover {
-        text-decoration: underline; } } }
-  table {
-    tr {
-      td, th {
-        border: none; }
-      td {
-        time, .details.availability {
-          margin-top: 0px; } } }
-    td .details {
-      float: none;
-      width: auto;
-      padding-top: inherit; } }
-  img {
-    width: 54px;
-    padding: 2px;
-    background: #FFF;
-    background: rgba(255, 255, 255, 0.6); }
-  table.reservations {
-    float: left;
-    /*  width: 50%;*/ } }
-
-article.listing aside address {
-  padding-left: 42px;
-  background: transparent image-url("home.png") no-repeat 6px 6px;
-  margin: 6px 0;
-  font-style: normal;
-  font-size: 14px;
-  a {
-    font-size: 12pxf; } }
 
 /* === Section Featured */
 

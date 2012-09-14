@@ -124,3 +124,70 @@ article.listing {
 
 
 }
+
+.legacy {
+  article.listing {
+    h1 {
+      font-weight: 400;
+      margin-bottom: 12px; }
+    div.creator {
+      img.avatar {
+        width: 48px;
+        float: right;
+        margin-left: 12px; }
+      text-align: right; }
+    section.details h2 {
+      border-bottom: 2px solid #CCC;
+      margin: 24px 0 12px; } }
+
+  section.list article.listing .details {
+    float: left;
+    /*  width: 50%;*/
+    padding-top: 20px; }
+
+  article.listing div.business_description p {
+    font-size: 14px;
+    line-height: 26px; }
+
+  section.list article.listing {
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 6px;
+    overflow: hidden;
+    h2 {
+      font-weight: 500;
+      line-height: 32px;
+      a {
+        &:link, &:visited {
+          text-decoration: none; }
+        &:hover {
+          text-decoration: underline; } } }
+    table {
+      tr {
+        td, th {
+          border: none; }
+        td {
+          time, .details.availability {
+            margin-top: 0px; } } }
+      td .details {
+        float: none;
+        width: auto;
+        padding-top: inherit; } }
+    img {
+      width: 54px;
+      padding: 2px;
+      background: #FFF;
+      background: rgba(255, 255, 255, 0.6); }
+    table.reservations {
+      float: left;
+      /*  width: 50%;*/ } }
+
+  article.listing aside address {
+    padding-left: 42px;
+    background: transparent image-url("home.png") no-repeat 6px 6px;
+    margin: 6px 0;
+    font-style: normal;
+    font-size: 14px;
+    a {
+      font-size: 12pxf; } }
+
+}
