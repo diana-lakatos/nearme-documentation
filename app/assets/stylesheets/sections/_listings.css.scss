@@ -52,7 +52,7 @@
 }
 
 
-section.listings {
+section.listings, .search-results {
   table.reservations {
     th {
       font-weight: bold;
@@ -66,11 +66,9 @@ section.listings {
     }
   }
 
-  .list {
-    .listing {
-      address {
-        font-size: 14px;
-      }
+  .list .listing, &.list .listing {
+    address {
+      font-size: 14px;
     }
   }
 }

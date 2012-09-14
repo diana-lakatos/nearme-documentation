@@ -13,11 +13,11 @@ class SearchController < ApplicationController
       @query = @search[:pretty]
       SearchQuery.create(:query => @search[:query], :agent => request.env['HTTP_USER_AGENT'])
     end
-    respond_to do |wants|
-      wants.html
-      wants.js do
-        render :partial => "search/listings.html", :layout => false
-      end
+
+    if request.xhr?
+      render :partial => "search/listings.html", :layout => false
+    else
+      render
     end
   end
 

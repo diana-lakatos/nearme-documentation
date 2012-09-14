@@ -1,4 +1,5 @@
-var Search = {
+(function($) {
+window.Search = {
 
   init: function(path, serverResults) {
 
@@ -44,6 +45,7 @@ var Search = {
         $.ajax({
           url: path,
           method: "POST",
+          dataType: "text/javascript",
           data: e.parameters,
           success: function(html) {
             container.html(html);
@@ -112,3 +114,4 @@ var Search = {
   }
 
 }
+})(jQuery);
