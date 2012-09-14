@@ -11,6 +11,17 @@ class ReservationSerializer < ApplicationSerializer
   ##
   private
 
+  # Return reservation states as expected by the mobile application
+  RESERVATION_STATES = {
+    unconfirmed:  'pending',
+    confirmed:    'confirmed',
+    rejected:     'rejected',
+    cancelled:    'canceled'
+  }
+  def state
+    RESERVATION_STATES[object.state.to_sym]
+  end
+
   # Return the reservation periods as a hash in the same format as the API spec
   def periods
 
