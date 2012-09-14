@@ -56,6 +56,9 @@ Given /^a listed location with an amenity/ do
   store_model('amenity', 'amenity', model!('location').amenities.first)
 end
 
+Given /^a listed location in San Francisco that does( not)? require confirmation$/ do |confirmation|
+  @listing = FactoryGirl.create(:listing_in_san_francisco, confirm_reservations: !confirmation)
+end
 
 When /^I create a listing for that location with a price of \$(\d+)\.(\d+)$/ do |dollars, cents|
   create_listing(model!("location")) do

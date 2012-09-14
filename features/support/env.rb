@@ -4,6 +4,7 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
+require "json_spec/cucumber"
 require 'cucumber/rails'
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
@@ -48,3 +49,7 @@ end
 #     DatabaseCleaner.strategy = :transaction
 #   end
 #
+
+def last_json
+  page.source
+end
