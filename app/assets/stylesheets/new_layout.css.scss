@@ -23,14 +23,15 @@ body {
 }
 
 header {
-  margin-top: 20px;
+  margin-top: 15px;
 
   #logo {
     display: inline-block;
     background: image-url("layout/logo.png");
-    width: 391px;
-    height: 57px;
+    width: 245px;
+    height: 36px;
     text-indent: -9999px;
+    margin-top: 10px;
   }
 
   #header_links {

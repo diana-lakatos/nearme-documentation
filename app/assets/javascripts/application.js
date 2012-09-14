@@ -104,7 +104,7 @@ function doListingGoogleMaps() {
 }
 
 function doInlineReservation() {
-  $("td.day .details.availability a").click(function(e){
+  $("#content").on("click", "td.day .details.availability a", function(e) {
     e.stopPropagation();
     e.preventDefault();
     var overlay = jQueryLegacy("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
