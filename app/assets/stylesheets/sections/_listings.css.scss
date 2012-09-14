@@ -1,3 +1,27 @@
+section.listings {
+  table.reservations {
+    th {
+      font-weight: bold;
+      text-align: center;
+      padding-bottom: 4px;
+    }
+
+    td.day {
+      font-weight: bold;
+      font-size: 14px;
+    }
+  }
+
+  .list {
+    .listing {
+      address {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+
 article.listing {
 
   .column.description {
