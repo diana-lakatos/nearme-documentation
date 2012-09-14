@@ -100,6 +100,10 @@
 
     %section
       %h2.tk-chaparral-pro Location
+      %address{"data-lat" => @listing.latitude, "data-lng" => @listing.longitude, "data-marker" => image_path("components/map-pin.png")}
+        = simple_format(@listing.formatted_address || @listing.address)
+      .map-wrapper
+        #map.google-map
 
 
     %section

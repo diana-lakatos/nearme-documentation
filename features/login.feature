@@ -6,7 +6,7 @@ Feature: A user can login
   Scenario: A user can login with Twitter
     Given the Twitter OAuth request is successful
       And I go to the home page
-      And I follow "Sign In"
+      And I follow "Log In"
      When I follow "Twitter"
       And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
       And I fill in "Name" with "Brett"
@@ -17,15 +17,15 @@ Feature: A user can login
   Scenario: A user can login with email and password
     Given a user exists with email: "real@email.com", password: "password"
       And I go to the home page
-      And I follow "Sign In"
+      And I follow "Log In"
       And I fill in "Email" with "real@email.com"
       And I fill in "Password" with "password"
-      And I press "Sign In"
+      And I press "Log In"
      Then I should see "Signed in successfully."
 
   Scenario: A user sign up with email and password
     Given I go to the home page
-      And I follow "Sign In"
+      And I follow "Log In"
       And I follow "Register"
      When I fill in "Name" with "Brett"
       And I fill in "Email" with "real@email.com"
