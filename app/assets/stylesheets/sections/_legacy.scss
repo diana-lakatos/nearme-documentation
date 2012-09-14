@@ -406,27 +406,6 @@ footer {
 /* === Flashes */
 
 div {
-  &.flash {
-    border-top: 1px solid rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
-    background: #EEE;
-    padding: 6px 12px;
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -o-border-radius: 6px;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 12px;
-    margin-top: -24px;
-    &.notice, &.alert {
-      background: #FFF9B1;
-      color: #995700; }
-    &.error {
-      background: #FFC7C1;
-      color: #991104; }
-    &.message {
-      background: #BBF6FF;
-      color: #206C99; } }
   &.overlay-container {
     form.reservation {
       margin: 0 -12px -12px -12px;

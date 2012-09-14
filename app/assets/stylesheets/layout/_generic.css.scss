@@ -1,0 +1,13 @@
+// Generic styles to apply to everything
+
+.text-right {
+  text-align: right;
+}
+
+h1 {
+  @extend .font-banda;
+  font-size: 32px;
+  color: #1e2222;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+}
+
