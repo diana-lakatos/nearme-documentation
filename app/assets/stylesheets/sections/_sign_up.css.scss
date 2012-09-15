@@ -27,6 +27,18 @@
       font-size: 16px;
     }
 
+    p.reset-password {
+      margin-left: 200px;
+    }
+
+    .control-group.boolean {
+      margin: 40px 0 20px 0;
+      input {
+        float: left;
+        margin-top: 3px;
+      }
+    }
+
     .control-group.organizations {
       margin-left: 200px;
       .control-label {
