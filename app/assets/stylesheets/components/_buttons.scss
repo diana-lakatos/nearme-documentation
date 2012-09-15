@@ -31,8 +31,8 @@
   }
 
   &.btn-medium {
-    height: 39px;
-    line-height: 39px;
+    height: 38px;
+    line-height: 38px;
     font-size: 18px;
     @include border-radius(8px);
   }
@@ -44,8 +44,8 @@
     }
 
     @include box-shadow(
-      #117db9 0 3px 0 0, // dark part
-      inset rgba(255,255,255,0.1) 0 -1px 0 0, // bottom glow
+      inset rgba(255,255,255,0.1) 0 -4px 0 0, // bottom glow
+      inset #117db9 0 -3px 0 0, // dark part
       rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
     );
   }
