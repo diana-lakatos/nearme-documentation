@@ -13,10 +13,17 @@
           %a.btn.btn-green.btn-outline.btn-medium{ :rel => "submit", :href => "" }
             %i.icon
             Search
+          %hr
+          #search_filters
+            .desks-count
+              %label How many desks do you need?
+              = hidden_field_tag "rooms", "1"
+              .slider
+              .value.number-value 1
 
+        .clearfix
         #suggest_location{:style => "display: none"}
-        /%hr
-        /%p test
+      
 
 .one-third.column
   .box
@@ -34,3 +41,15 @@
 
 .one-third.column
   = link_to "Get the iPhone app", "", :id => "app_store_link"
+
+:javascript
+  $( "#search_filters .desks-count .slider" ).slider({
+    value: 1,
+    min  : 1,
+    max  : 10,
+    step : 1,
+    slide: function(event, ui) {
+      $( "#search_filters .desks-count input" ).val(ui.value);
+      $( "#search_filters .desks-count .value" ).text(ui.value);
+    }
+  });

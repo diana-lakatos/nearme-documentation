@@ -1,5 +1,6 @@
 #listing_search {
   position: relative;
+  overflow: visible;
 
   input#search {
     @extend .font-banda;
@@ -48,6 +49,49 @@
     height: 33px;
     &:active {
       margin-top: 1px;
+    }
+  }
+
+  .slider {
+    float: left;
+    margin-left: 12px;
+    margin-top: 2px;
+  }
+
+  // Filter elements
+  .ui-slider {
+    position: relative;
+    background: #2f1f17;
+    border-radius: 8px;
+    height: 12px;
+    width: 200px;
+    border-top: 1px solid #281a14;
+    border-bottom: 1px solid rgba(255,255,255,0.25);
+
+    .ui-slider-handle {
+      position: absolute;
+      background: image-url("components/slider/knob.png");
+      width: 27px;
+      height: 27px;
+      margin-top: -8px;
+      margin-left: -10px;
+      display: block;
+      outline: none;
+    }
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+  .value {
+    float: left;
+    margin-left: 20px;
+    font-size: 16px;
+    font-weight: bold;
+
+    &.number-value {
+      font-size: 18px;
     }
   }
 }
