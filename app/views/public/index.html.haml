@@ -4,6 +4,9 @@
   .container
     #search_row.twelve.columns.offset-by-two
       .wood-box
+        %h1 Need a space to work?
+        %h2 Search from #{number_with_delimiter Listing.count} spaces nearby
+
         %form#listing_search.home_search{:action => search_path, :method => "get"}
           %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => ""}
           %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
@@ -12,6 +15,8 @@
             Search
 
         #suggest_location{:style => "display: none"}
+        /%hr
+        /%p test
 
 .one-third.column
   .box

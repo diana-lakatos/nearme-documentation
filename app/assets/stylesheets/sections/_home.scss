@@ -9,8 +9,36 @@ section.public {
 
 #search_row {
   .wood-box {
+    h1 {
+      float: left;
+      font-size: 36px;
+      font-weight: bold;
+      color: #eaeaea;
+      margin-bottom: 10px;
+      text-shadow: -1px -1px 0 #2e1d16,
+                    1px -1px 0 #2e1d16,
+                   -1px 1px 0 #2e1d16,
+                    1px 1px 0 #2e1d16,
+                    0 2px 0 rgba(255,255,255,0.2);
+    }
+
+    h2 {
+      float: left;
+      color: #927d70;
+      font-size: 16px;
+      text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+      font-weight: normal;
+      margin-bottom: 0;
+      margin-top: 17px;
+      margin-left: 10px;
+    }
+
     margin-top: 120px;
     padding: 12px;
+  }
+
+  form {
+    clear: both;
   }
 
   // @see listings/#listing_search
