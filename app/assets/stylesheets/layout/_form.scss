@@ -49,7 +49,7 @@ form {
   input[type="text"], input[type="password"], input[type="email"], input[type="url"], input[type="number"], textarea {
     @extend .font-banda;
     margin-bottom: 8px;
-    padding: 8px 8px;
+    padding: 10px 8px 6px 8px;
     line-height: 22px;
     background: #fff;
     background: linear-gradient(#ececec, #fcfcfc);
@@ -75,7 +75,67 @@ form {
   input[type='submit'] {
     border: none;
     @extend .btn;
-    @extend .btn-medium;
-    @extend .btn-green;
- }
+    @extend .btn-large;
+    @extend .btn-blue;
+  }
+}
+
+.form-horizontal {
+
+  .control-group {
+    margin-bottom: 10px;
+    overflow: hidden;
+
+    &.error {
+      input {
+        border-color: #cc0000;
+      }
+      .help-inline {
+        color: #cc0000;
+      }
+    }
+
+    .control-label {
+      width: 180px;
+      float: left;
+      padding-top: 12px;
+      text-align: right;
+      @extend .font-banda-bold;
+      font-size: 18px;
+      color: $dnm_black;
+      abbr { display: none; }
+    }
+
+    .controls {
+      margin-left: 200px;
+
+      input {
+        font-size: 18px;
+        font-weight: normal;
+      }
+    }
+
+  }
+
+}
+
+.two-thirds.column .box form.form-horizontal {
+  input[type="text"], input[type="password"], input[type="email"], input[type="url"] {
+    width: 355px;
+  }
+
+  .controls {
+    &.two-up input {
+      width: 163px;
+      &:first-child {
+        margin-right: 6px;
+      }
+    }
+  }
+
+  .actions {
+    margin-left: 196px;
+    margin-bottom: 20px;
+  }
+
 }

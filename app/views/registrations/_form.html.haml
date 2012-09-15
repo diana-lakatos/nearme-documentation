@@ -1,12 +1,21 @@
-= simple_form_for resource, :as => resource_name, :url => url, :html => html do |f|
-  = f.input :name
-  = f.input :email, :required => true
+= simple_form_for resource, :as => resource_name, :url => url, :html => html.merge(class: "form-horizontal") do |f|
+  = f.input :name, label: "Your name", placeholder: "Enter your full name"
+  = f.input :email, label: "Your email address", placeholder: "Valid email address"
 
   // Need to let the user enter a password if no Provider.
   // Also need to let them change their password if they had previously used one.
   - if resource.has_password?
-    = f.input :password, :required => resource.new_record?, :label => "#{'New' unless resource.new_record?} Password", :hint => ("Enter a new password to change. Leave blank to keep current password." unless resource.new_record?)
-    = f.input :password_confirmation, :required => resource.new_record?, :label => "Confirm #{'New' unless resource.new_record?} Password"
+    .control-group
+      = f.label :password, class: "control-label"
+      .controls.two-up
+        = f.password_field :password,              placeholder: "Your password"
+        = f.password_field :password_confirmation, placeholder: "Confirm password"
 
-  = f.input :organization_ids, :collection => Organization.order('name').all, :as => :check_boxes, :label => "Professional Associations", :hint => "Please check any professional associations with which you are affiliated. You can then access listings restricted to members of these associations."
-  = f.button :submit, :value => submit
+  .control-group.organizations
+    = f.label :organization_ids, label: "Professional Associations"
+    %p
+      Please check any professional associations with which you are affiliated. You can then access listings restricted to members of these associations.
+    = f.input :organization_ids, :collection => Organization.order('name').all, as: :check_boxes, label: false
+
+  .actions
+    = f.submit "Sign Up Now"

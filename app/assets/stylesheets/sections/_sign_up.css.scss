@@ -20,4 +20,38 @@
 
   }
 
+  .sign-up-form {
+    .intro {
+      margin: 20px 10px;
+      line-height: 150%;
+      font-size: 16px;
+    }
+
+    .control-group.organizations {
+      margin-left: 200px;
+      .control-label {
+        margin: 0;
+        float: none;
+        width: auto;
+        text-align: left;
+        margin-bottom: 5px;
+      }
+      p { font-size: 12px; }
+      .controls {
+        margin: 0;
+        overflow: hidden;
+        .checkbox {
+          width: 195px;
+          float: left;
+          margin-bottom: 15px;
+          font-size: 14px;
+          input {
+            float: left;
+            margin: 2px 5px 0 0;
+          }
+        }
+      }
+    }
+  }
+
 }
