@@ -2,7 +2,7 @@
 / %article.listing
 /  %h1.page-title
 /    = @listing.name
-/ 
+/
 /  .column.one-third.description
 /    .meta
 /      %strong= pluralize(@listing.quantity, "desk")
@@ -13,7 +13,7 @@
 /    - if @listing.url
 /      .listing-link
 /        = link_to(strip_http(@listing.url), @listing.url)
-/ 
+/
 /  .column.two-thirds.map
 /    %address{"data-lat" => @listing.latitude, "data-lng" => @listing.longitude, "data-marker" => image_path("components/map-pin.png")}
 /      = simple_format(@listing.formatted_address || @listing.address)
@@ -98,7 +98,7 @@
             There are no photos uploaded yet.
           %p Upload a photo to become a featured listing on the homepage!
 
-    %section
+    %section.map
       %h2.tk-chaparral-pro Location
       %address{"data-lat" => @listing.latitude, "data-lng" => @listing.longitude, "data-marker" => image_path("components/map-pin.png")}
         = simple_format(@listing.formatted_address || @listing.address)

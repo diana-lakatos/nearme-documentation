@@ -79,7 +79,7 @@ function setSearchFormToLocation(form, location) {
 }
 
 function doListingGoogleMaps() {
-  var locations = $(".column.map address"),
+  var locations = $(".map address"),
       map       = null;
 
   $.each(locations, function(index, location) {
@@ -89,7 +89,7 @@ function doListingGoogleMaps() {
     if(!map) {
       var layer = "toner";
       map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15,
+        zoom: 13,
         mapTypeId: layer,
         mapTypeControl: false,
         center: latlng,
