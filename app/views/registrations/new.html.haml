@@ -1,10 +1,17 @@
-%h1 Sign up
+.sign-up
+  .two-thirds.column
+    .box
+      %h2== Sign up to Desks Near Me
+      // Can get here either after connecting with a Provider, or going straight to registration
+      // without a 3rd-party provider. Show a context-aware message for each case.
+      - if resource.authentications.empty?
+        %p Complete the the signup by telling us a bit about yourself.
+      - else
+        %p Complete the rest of the signup by telling us a bit about yourself.
 
-// Can get here either after connecting with a Provider, or going straight to registration
-// without a 3rd-party provider. Show a context-aware message for each case.
-- if resource.authentications.empty?
-  %p Complete the the signup by telling us a bit about yourself.
-- else
-  %p Complete the rest of the signup by telling us a bit about yourself.
+      = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name), :submit => "Continue", :html => {} }
 
-= render :partial => "registrations/form", :locals => { :url => registration_path(resource_name), :submit => "Continue", :html => {} }
+  .one-third.column.third-party
+    %h3== Or sign up using...
+    = link_to image_tag("sections/sign-up/openid.png")
+    = link_to image_tag("sections/sign-up/twitter.png")

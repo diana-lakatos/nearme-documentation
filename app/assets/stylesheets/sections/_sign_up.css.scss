@@ -1,0 +1,23 @@
+.sign-up {
+
+  .third-party {
+
+    h3 {
+      color: $dnm_black;
+      text-shadow: 0 1px 0 rgba(255,255,255,.75); /* drop shadow */
+      font-size: 18px;
+      margin: 23px 0;
+      padding: 0;
+    }
+
+    img {
+      margin-left: 20px;
+      opacity: 0.7;
+      &:hover {
+        opacity: 1.0;
+      }
+    }
+
+  }
+
+}
