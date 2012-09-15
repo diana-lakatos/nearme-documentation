@@ -2,8 +2,8 @@
 //
 // Require legacy jQuery dependent code first
 //= require ./vendor/jquery-1.4.1.js
-//= require ./vendor/jqueryui.js
 //= require ./vendor/jquery.overlay.js
+//= require ./vendor/jquery-ui-1.8.23.custom.min.js
 //= require ./vendor/jquery.address-1.3.min
 //= require search
 //* require ./vendor/fancybox/jquery.fancybox-1.3.1.pack.js
@@ -16,6 +16,9 @@
 //= require tile.stamen.js
 //
 //= require_self
+
+// FIXME: Hax to initialize jQuery UI on 2 versions of JQuery temporaryily
+initializeJQueryUI(jQuery);
 
 jQuery.ajaxSetup({
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
