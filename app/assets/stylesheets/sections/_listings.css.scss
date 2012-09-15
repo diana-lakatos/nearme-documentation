@@ -63,7 +63,7 @@
     position: relative;
     background: #2f1f17;
     border-radius: 8px;
-    height: 12px;
+    height: 11px;
     width: 200px;
     border-top: 1px solid #281a14;
     border-bottom: 1px solid rgba(255,255,255,0.25);
@@ -78,6 +78,13 @@
       display: block;
       outline: none;
     }
+
+    .ui-slider-range {
+      position: absolute;
+      height: 12px;
+      background: image-url("components/slider/slider-range.png");
+      margin-top: -1px;
+    }
   }
 
   label {
@@ -89,10 +96,6 @@
     margin-left: 20px;
     font-size: 16px;
     font-weight: bold;
-
-    &.number-value {
-      font-size: 18px;
-    }
   }
 }
 

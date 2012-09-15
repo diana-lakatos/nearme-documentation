@@ -15,11 +15,19 @@
             Search
           %hr
           #search_filters
-            .desks-count
+            .desks-count.five.columns
               %label How many desks do you need?
               = hidden_field_tag "rooms", "1"
               .slider
               .value.number-value 1
+
+            .price-range.six.columns
+              %label How much do you want to spend?
+              = hidden_field_tag "price_min", "0"
+              = hidden_field_tag "price_max", "0"
+
+              .slider
+              .value
 
         .clearfix
         #suggest_location{:style => "display: none"}
@@ -51,5 +59,20 @@
     slide: function(event, ui) {
       $( "#search_filters .desks-count input" ).val(ui.value);
       $( "#search_filters .desks-count .value" ).text(ui.value);
+    }
+  });
+
+  $( "#search_filters .price-range .slider" ).slider({
+    range: true,
+    values: [0, 100],
+    min  : 0,
+    max  : 300,
+    step : 25,
+    slide: function(event, ui) {
+      $( "#search_filters .price-range input[name*=min]" ).val(ui.values[0]);
+      $( "#search_filters .price-range input[name*=max]" ).val(ui.values[1]);
+
+      var text = "$" + ui.values[0] + " - $" + ui.values[1] + "/day";
+      $( "#search_filters .price-range .value" ).text(text);
     }
   });
