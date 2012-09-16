@@ -30,6 +30,7 @@ gem 'tweet-button'
 gem 'will_paginate'
 gem 'thinking-sphinx'
 gem "compass-rails"
+gem "coffee-rails"
 
 gem 'jquery-rails'
 gem 'sass-rails'

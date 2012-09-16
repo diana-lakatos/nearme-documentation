@@ -8,30 +8,30 @@
         %h2 Search from #{number_with_delimiter Listing.count} spaces nearby
 
         %form#listing_search.home_search{:action => search_path, :method => "get"}
-          %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => ""}
+          %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
           %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
           %a.btn.btn-green.btn-outline.btn-medium{ :rel => "submit", :href => "" }
             %i.icon
             Search
           %hr
           #search_filters
-            .desks-count.five.columns
+            .availability-quantity.five.columns
               %label How many desks do you need?
-              = hidden_field_tag "rooms", "1"
+              = hidden_field_tag "availability[quantity]", "1"
               .slider
               .value.number-value 1
 
             .price-range.six.columns
               %label How much do you want to spend?
-              = hidden_field_tag "price_min", "0"
-              = hidden_field_tag "price_max", "0"
-
+              = hidden_field_tag "price[min]", "0"
+              = hidden_field_tag "price[max]", "100"
               .slider
               .value
+                $0 - $100/day
 
         .clearfix
         #suggest_location{:style => "display: none"}
-      
+
 
 .one-third.column
   .box
@@ -50,29 +50,5 @@
 .one-third.column
   = link_to "Get the iPhone app", "", :id => "app_store_link"
 
-:javascript
-  $( "#search_filters .desks-count .slider" ).slider({
-    value: 1,
-    min  : 1,
-    max  : 10,
-    step : 1,
-    slide: function(event, ui) {
-      $( "#search_filters .desks-count input" ).val(ui.value);
-      $( "#search_filters .desks-count .value" ).text(ui.value);
-    }
-  });
-
-  $( "#search_filters .price-range .slider" ).slider({
-    range: true,
-    values: [0, 100],
-    min  : 0,
-    max  : 300,
-    step : 25,
-    slide: function(event, ui) {
-      $( "#search_filters .price-range input[name*=min]" ).val(ui.values[0]);
-      $( "#search_filters .price-range input[name*=max]" ).val(ui.values[1]);
-
-      var text = "$" + ui.values[0] + " - $" + ui.values[1] + "/day";
-      $( "#search_filters .price-range .value" ).text(text);
-    }
-  });
+- content_for :domready do
+  new DNM.HomeSearch($('#listing_search'))

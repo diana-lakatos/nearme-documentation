@@ -2,8 +2,7 @@ require "will_paginate/array"
 class SearchController < ApplicationController
 
   def index
-    @search = find_search_query
-    if @search
+    if @search = find_search_query
       @listings = Listing.find_by_search_params(@search)
       @listings = @listings.paginate(:page => params[:page], :per_page => 20)
 
@@ -24,11 +23,26 @@ class SearchController < ApplicationController
       query = params[:q] || params[:address]
       lat = params[:lat]
       lng = params[:lng]
-      if query && !lat && !lng
+      query = if query && !lat && !lng
         extract_search_from_geocoding(query)
       elsif query && lat && lng
         extract_search_from_params(query, lat.to_f, lng.to_f)
       end
+
+      if params[:availability].present? && params[:availability][:quantity].present?
+        query[:availability] = {
+          :quantity => { :min => params[:availability][:quantity].try(:to_i) }
+        }
+      end
+
+      if params[:price].present? && (params[:price][:min].present? && params[:price][:max].present?)
+        query[:price] = {
+          :min => params[:price][:min].to_i,
+          :max => params[:price][:max].to_i
+        }
+      end
+
+      query
     end
 
     def extract_search_from_geocoding(query)
@@ -40,7 +54,7 @@ class SearchController < ApplicationController
       geometry = loc['geometry']
 
       search[:pretty] = loc['formatted_address']
-      search[:midpiont] = [geometry['location']['lat'], geometry['location']['lng']]
+      search[:midpoint] = [geometry['location']['lat'], geometry['location']['lng']]
 
       bounds = geometry['bounds']
       if bounds && (loc['types'] == ["country","political"]) || (loc['types'] == ["administrative_area_level_1","political"])

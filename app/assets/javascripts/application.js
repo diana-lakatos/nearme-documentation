@@ -16,6 +16,9 @@
 //= require tile.stamen.js
 //
 //= require_self
+//= require ./sections/search
+
+window.DNM = {}
 
 // FIXME: Hax to initialize jQuery UI on 2 versions of JQuery temporaryily
 initializeJQueryUI(jQuery);
@@ -32,51 +35,6 @@ $(document).on('click', 'a[rel=submit]', function(e) {
     return false;
   }
 });
-
-
-function getUserLocationForSearch() {
-  var searchForm      = $("form#listing_search");
-  if(searchForm.length >= 1) {
-    var currentLocation = $.cookie("currentLocation");
-
-    if(currentLocation)
-      setSearchFormToLocation(searchForm, currentLocation);
-    else {
-      if(Modernizr.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          var geocoder = new google.maps.Geocoder();
-          geocoder.geocode({ address: position.coords.latitude + "," + position.coords.longitude }, function(results, status) {
-            var components = results[0].address_components,
-                city = null,
-                country = null;
-            for(var i = 0, l = components.length; i < l; i++) {
-               var types = components[i]['types'];
-               if(types.indexOf('locality') >= 0 && types.indexOf('political') >= 0) city = components[i]['long_name'];
-               if(types.indexOf('country') >= 0 && types.indexOf('political') >= 0) country = components[i]['long_name'];
-            }
-            if(city) {
-              currentLocation = city + ", " + country;
-              $.cookie("currentLocation", currentLocation);
-              setSearchFormToLocation(searchForm, currentLocation);
-            }
-          });
-        });
-      }
-    }
-  }
-}
-
-function setSearchFormToLocation(form, location) {
-  var input  = $("input:text", form),
-      button = $("input.geolocation", form);
-
-  button.addClass("active").attr("data-geo-val", location).click(function(){
-    input.val($(this).attr("data-geo-val")).focus();
-  });
-
-  if(input.val() == "" && !Search.hasInit)
-    button.click();
-}
 
 function doListingGoogleMaps() {
   var locations = $(".map address"),
@@ -134,9 +92,4 @@ $(function(){
 //  doPhotoFancyBox();
   doInlineReservation();
   doListingGoogleMaps();
-  getUserLocationForSearch();
-  $("#listing_search").submit(function() {
-    Search.search($("#search").val());
-    return false;
-  });
 });
