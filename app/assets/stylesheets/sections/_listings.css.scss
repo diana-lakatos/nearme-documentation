@@ -56,6 +56,7 @@
     float: left;
     margin-left: 12px;
     margin-top: 2px;
+    width: 200px;
   }
 
   // Filter elements
@@ -64,7 +65,6 @@
     background: #2f1f17;
     border-radius: 8px;
     height: 11px;
-    width: 200px;
     border-top: 1px solid #281a14;
     border-bottom: 1px solid rgba(255,255,255,0.25);
 
@@ -87,6 +87,28 @@
     }
   }
 
+  .multiselect {
+    position: relative;
+    display: inline-block;
+
+    .collapsed {
+      background: #2f1f17 image-url("components/multiselect/down.png") right center no-repeat;
+      border: 1px solid #2d1d16;
+      border-bottom: 1px solid #6f5c50;
+      border-bottom: 1px solid rgba(255,255,255,0.25);
+      font-size: 12px;
+      height: 26px;
+      line-height: 26px;
+      padding: 0 20px 0 8px;
+      cursor: pointer;
+      @include border-radius(6px);
+
+      &:hover {
+        background-color: lighten(#2f1f17, 5%);
+      }
+    }
+  }
+
   label {
     font-size: 16px;
   }
@@ -96,6 +118,42 @@
     margin-left: 20px;
     font-size: 16px;
     font-weight: bold;
+  }
+
+  // On the search results page bar
+  &.search_results {
+    hr {
+      margin-right: 0;
+      margin-left: 0;
+      clear: both;
+    }
+
+    label {
+      float: left;
+      margin-right: 12px;
+    }
+
+    .slider {
+      width: 140px;
+    }
+
+    .location {
+      input#search {
+        width: 260px;
+      }
+    }
+
+    .multiselect {
+      width: 168px;
+    }
+
+    .availability-date-start, .availability-date-end {
+      input {
+        width: 80px;
+      }
+    }
+
+
   }
 }
 

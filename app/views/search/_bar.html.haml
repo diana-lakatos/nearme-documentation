@@ -1,23 +1,41 @@
 %form#listing_search.search_results{:action => search_path, :method => "get"}
-  %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
-  %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
-  %a.btn.btn-green.btn-outline.btn-medium{ :rel => "submit", :href => "" }
-    %i.icon
-    Search
+  %div
+    .six.columns.alpha.location
+      %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query", :autocomplete => "off"}
+      %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
+    .two.columns.availability-date-start
+      = text_field_tag "availability[dates][start]", ""
+    .two.columns.availability-date-end
+      = text_field_tag "availability[dates][end]", ""
+    .six.columns.omega.amenities
+      %label Amenities
+      = select_tag "amenities", options_for_select([]), :multiple => true
   %hr
   #search_filters
     .availability-quantity.five.columns
-      %label How many desks do you need?
+      %label Desks
       = hidden_field_tag "availability[quantity]", "1"
       .slider
       .value.number-value 1
 
     .price-range.six.columns
-      %label How much do you want to spend?
+      %label Price
       = hidden_field_tag "price[min]", "0"
       = hidden_field_tag "price[max]", "100"
       .slider
       .value
         $0 - $100/day
+
+    .associations.five.columns
+      %label Associations
+      =# select_tag "amenities", options_for_select([]), :multiple => true
+      .multiselect
+        .collapsed None selected
+        .expanded{ :style => "display: none" }
+          - Amenity.all.each do |amenity|
+            .item
+              = check_box_tag "amenities[]", amenity.id, false, :id => "amenities_#{amenity.id}"
+              = label_tag "amenities_#{amenity.id}", amenity.name
+
 
 

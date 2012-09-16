@@ -1,0 +1,7 @@
+class Multiselect
+  constructor: ->
+
+
+  @bind: ->
+
+

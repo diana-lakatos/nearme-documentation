@@ -19,9 +19,9 @@
     #TTWNotify{:style => "display:none;"}
     .container
       %header.row
-        .eight.columns
+        .eight.columns.alpha
           = link_to "Desks Near Me", root_url, :id => "logo"
-        #header_links.eight.columns.text-right
+        #header_links.eight.columns.text-right.omega
           = render "shared/header_navigation"
 
     %section#content{:class => "#{controller_name}"}
