@@ -13,7 +13,7 @@ class DNM.SearchForm
     @initializeQueryField()
 
   availabilityQuantityChanged: (value) ->
-    @form.find('.availability-quantity input').val(value)
+    @availabilityQuantityField = @form.find('.availability-quantity input').val(value)
     @form.find('.availability-quantity .value').text(value)
 
     @fieldChanged('availability-quantity', value)
@@ -58,7 +58,8 @@ class DNM.SearchForm
       @determineUserLocation()
 
     # Set it by default if available
-    @geolocateButton.trigger('click') if @geolocateButton.attr("data-geo-val")?
+    existing = @geolocateButton.attr("data-geo-val")
+    @queryField.val(existing) if existing?
 
   determineUserLocation: ->
     return unless Modernizr.geolocation
@@ -77,22 +78,51 @@ class DNM.SearchForm
         if city
           currentLocation = "#{city}, #{country}"
           $.cookie("currentLocation", currentLocation)
-          setSearchFormToLocation(searchForm, currentLocation)
+          @queryField.val(currentLocation).change()
 
 class DNM.HomeSearch extends DNM.SearchForm
 
 
 class DNM.SearchResultsPage extends DNM.SearchForm
-  constructor: (form, container) ->
+  constructor: (form, @container) ->
     super(form)
-    @resultsContainer = container
+    @resultsContainer = @container.find('.results')
+    @loadingContainer = @container.find('.loading')
 
   bindEvents: ->
     @form.bind 'submit', (event) =>
       event.preventDefault()
       @triggerSearch()
 
-  filterChanged: (filter, value) ->
-    # Trigger automatic updating of search results
+  startLoading: ->
+    @resultsContainer.hide()
+    @loadingContainer.show()
+
+  finishLoading: ->
+    @loadingContainer.hide()
+    @resultsContainer.show()
+
+  showResults: (html) ->
+    @resultsContainer.html(html)
+    @finishLoading()
+
+  triggerSearch: ->
+    @startLoading()
+    data = @form.serialize()
+    $.ajax(
+      url     : @form.attr("src")
+      type    : 'GET',
+      data    : data,
+      success : (html) => @showResults(html)
+    )
+
+  # Trigger automatic updating of search results
+  fieldChanged: (field, value) ->
+    clearTimeout(@searchTriggerTimeout) if @searchTriggerTimeout
+    @startLoading()
+    @searchTriggerTimeout = setTimeout(
+      => @triggerSearch(),
+      2000
+    )
 
 

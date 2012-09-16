@@ -1,18 +1,15 @@
 - content_for :hero do
   .hero-wood-texture
     .container
-      .twelve.columns.offset-by-two
-        = render :partial => "search/bar", :locals => { :value => "" }
+      = render :partial => "search/bar", :locals => { :value => "" }
 
 
 %h1 Search Results
 #results
-  - if @listings
-    = render :partial => "search/listings"
-  - else
-    .loading.grid_4
-      = image_tag "spinner-red.gif"
+  .results
+    = render :partial => "search/listings" if @listings
+  .loading.four.columns{:style => "display: none"}
+    = image_tag "spinner-red.gif"
 
-
-:javascript
-  Search.init("#{search_path}", resultsFromServer = #{@listings ? "true" : "false"});
+- content_for :domready do
+  new DNM.SearchResultsPage($('#listing_search'), $("#results"))

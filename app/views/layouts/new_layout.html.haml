@@ -24,9 +24,9 @@
         #header_links.eight.columns.text-right
           = render "shared/header_navigation"
 
-    %section#content{:class => "#{controller_name} #{'legacy' if legacy?}"}
+    %section#content{:class => "#{controller_name}"}
       = render "layouts/hero"
-      .container
+      %div{:class => "container #{'legacy' if legacy?}"}
         = flashes
         = yield
 

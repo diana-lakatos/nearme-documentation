@@ -3,7 +3,7 @@ class SearchController < ApplicationController
 
   def index
     if @search = find_search_query
-      @listings = Listing.find_by_search_params(@search)
+      @listings = Listing.find_by_search_params(@search).select(&:strict_match)
       @listings = @listings.paginate(:page => params[:page], :per_page => 20)
 
       @query = @search[:pretty]
