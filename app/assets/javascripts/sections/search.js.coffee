@@ -65,14 +65,15 @@ class DNM.SearchForm
 
 
   initializePriceRangeFilter: ->
+    values = @form.find('.price-range input')
     @form.find('.price-range .slider').slider(
-      range: true, values: [0, 100], min  : 0, max  : 300, step : 25,
+      range: true, values: [values.eq(0).val(), values.eq(1).val()], min  : 0, max  : 300, step : 25,
       slide: (event, ui) => @priceRangeChanged(ui.values)
     )
 
   initializeAvailabilityQuantityFilter: ->
     @form.find(".availability-quantity .slider").slider(
-      value: 1, min  : 1, max  : 10, step : 1,
+      value: @form.find('.availability-quantity input').val(), min  : 1, max  : 10, step : 1,
       slide: (event, ui) => @availabilityQuantityChanged(ui.value)
     )
 

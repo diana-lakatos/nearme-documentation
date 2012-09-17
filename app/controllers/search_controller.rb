@@ -40,7 +40,8 @@ class SearchController < ApplicationController
 
         if params[:availability][:dates].present?
           param = params[:availability][:dates]
-          query[:availability][:dates] = {}
+
+          query[:availability][:dates] = {} if param[:start].present? || param[:end].present?
           query[:availability][:dates][:start] = Date.parse(param[:start]) if param[:start].present?
           query[:availability][:dates][:end]   = Date.parse(param[:end]) if param[:end].present?
         end
