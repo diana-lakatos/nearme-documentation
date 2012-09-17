@@ -1,18 +1,29 @@
 %form#listing_search.search_results{:action => search_path, :method => "get"}
   %div
-    .six.columns.alpha.location
+    .six.columns.location.alpha
       %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query", :autocomplete => "off"}
       %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
-    .two.columns.availability-date-start
+    .columns.availability-date-start
+      %i.date-icon
       = text_field_tag "availability[dates][start]", ""
-    .two.columns.availability-date-end
+    .columns.availability-date-end
+      %i.date-icon
       = text_field_tag "availability[dates][end]", ""
-    .six.columns.omega.amenities
+    .five.columns.amenities.text-right
       %label Amenities
-      = select_tag "amenities", options_for_select([]), :multiple => true
+      .multiselect
+        .collapsed None selected
+        .expanded{ :style => "display: none" }
+          .summary
+            None selected
+          .items
+            - Amenity.all.each do |amenity|
+              .item
+                = check_box_tag "amenities[]", amenity.id, false, :id => "amenities_#{amenity.id}"
+                = label_tag "amenities_#{amenity.id}", amenity.name
   %hr
   #search_filters
-    .availability-quantity.five.columns
+    .availability-quantity.five.columns.alpha
       %label Desks
       = hidden_field_tag "availability[quantity]", "1"
       .slider
@@ -26,16 +37,18 @@
       .value
         $0 - $100/day
 
-    .associations.five.columns
+    .associations.five.columns.text-right
       %label Associations
-      =# select_tag "amenities", options_for_select([]), :multiple => true
       .multiselect
         .collapsed None selected
         .expanded{ :style => "display: none" }
-          - Amenity.all.each do |amenity|
-            .item
-              = check_box_tag "amenities[]", amenity.id, false, :id => "amenities_#{amenity.id}"
-              = label_tag "amenities_#{amenity.id}", amenity.name
+          .summary
+            None selected
+          .items
+            - Organization.all.each do |organization|
+              .item
+                = check_box_tag "organizations[]", organization.id, false, :id => "organization_#{organization.id}"
+                = label_tag "organization_#{organization.id}", organization.name
 
 
 

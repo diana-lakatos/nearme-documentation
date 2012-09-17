@@ -11,19 +11,29 @@ class DNM.SearchForm
     @initializePriceRangeFilter()
     @initializeAvailabilityQuantityFilter()
     @initializeQueryField()
+    @initializeAmenitiesField()
+    @initializeAssociationsField()
+    @initializeDateRangeField()
 
   availabilityQuantityChanged: (value) ->
     @availabilityQuantityField = @form.find('.availability-quantity input').val(value)
     @form.find('.availability-quantity .value').text(value)
-
     @fieldChanged('availability-quantity', value)
 
   priceRangeChanged: (values) ->
     @form.find(".price-range input[name*=min]").val(values[0])
     @form.find(".price-range input[name*=max]").val(values[1])
     @form.find(".price-range .value").text("$#{values[0]} - $#{values[1]}/day")
-
     @fieldChanged('priceRange', values)
+
+  dateRangeFieldChanged: (values) ->
+    @fieldChanged('dateRange', values)
+
+  amenitiesChanged: ->
+    @fieldChanged('amenities')
+
+  associationsChanged: ->
+    @fieldChanged('associations')
 
   fieldChanged: (filter, value) ->
     # Override to trigger automatic updating etc.
@@ -34,6 +44,25 @@ class DNM.SearchForm
       @fieldChanged('query', @queryField.val())
 
     # TODO: Trigger fieldChanged on keypress after a few seconds timeout?
+
+  initializeAmenitiesField: ->
+    @form.find('.amenities .multiselect').on 'change', =>
+      @amenitiesChanged()
+
+  initializeAssociationsField: ->
+    @form.find('.associations .multiselect').on 'change', =>
+      @associationsChanged()
+
+  initializeDateRangeField: ->
+    @form.find('.availability-date-start input, .availability-date-end input').datepicker(
+      dateFormat: 'd M'
+    ).change (event) =>
+      values = [@form.find('.availability-date-start input').val(), @form.find('.availability-date-end input').val()]
+      @dateRangeFieldChanged(values)
+
+    # Hack to only apply jquery-ui theme to datepicker
+    $('#ui-datepicker-div').wrap('<div class="jquery-ui-theme" />')
+
 
   initializePriceRangeFilter: ->
     @form.find('.price-range .slider').slider(

@@ -29,10 +29,21 @@ class SearchController < ApplicationController
         extract_search_from_params(query, lat.to_f, lng.to_f)
       end
 
-      if params[:availability].present? && params[:availability][:quantity].present?
-        query[:availability] = {
-          :quantity => { :min => params[:availability][:quantity].try(:to_i) }
-        }
+      if params[:availability].present?
+        query[:availability] = {}
+
+        if params[:availability][:quantity].present?
+          query[:availability][:quantity] = {
+            :min => params[:availability][:quantity].try(:to_i)
+          }
+        end
+
+        if params[:availability][:dates].present?
+          param = params[:availability][:dates]
+          query[:availability][:dates] = {}
+          query[:availability][:dates][:start] = Date.parse(param[:start]) if param[:start].present?
+          query[:availability][:dates][:end]   = Date.parse(param[:end]) if param[:end].present?
+        end
       end
 
       if params[:price].present? && (params[:price][:min].present? && params[:price][:max].present?)
@@ -40,6 +51,14 @@ class SearchController < ApplicationController
           :min => params[:price][:min].to_i,
           :max => params[:price][:max].to_i
         }
+      end
+
+      if params[:amenities].present?
+        query[:amenities] = params[:amenities].map(&:to_i)
+      end
+
+      if params[:organizations].present?
+        query[:organizations] = params[:organizations].map(&:to_i)
       end
 
       query

@@ -17,8 +17,21 @@
 //
 //= require_self
 //= require ./sections/search
+//= require ./components/multiselect
 
-window.DNM = {}
+window.DNM = {
+  initialize : function() {
+    this.initializeComponents();
+  },
+
+  initializeComponents: function(scope) {
+    Multiselect.initialize(scope)
+  }
+}
+
+$(function() {
+  DNM.initialize()
+})
 
 // FIXME: Hax to initialize jQuery UI on 2 versions of JQuery temporaryily
 initializeJQueryUI(jQuery);

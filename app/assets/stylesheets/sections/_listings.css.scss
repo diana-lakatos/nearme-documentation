@@ -2,26 +2,37 @@
   position: relative;
   overflow: visible;
 
-  input#search {
-    @extend .font-banda;
-    padding: 10px 8px;
-    line-height: 22px;
-    background: #fff;
-    background: linear-gradient(#ececec, #fcfcfc);
-    border: 1px solid #2e1d16;
-    @include border-radius(8px);
-    @include box-shadow(
-      inset rgba(0,0,0,0.6) 3px 3px 8px -4px,
-      rgba(255,255,255,0.1) 0 1px 0 0
-    );
-    color: #707070;
-    text-shadow: #fff 0 1px 0;
-    font-size: 22px;
+  .geolocation {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    border: 0;
+    background: image-url("sections/home/geolocate-icon.png");
+    width: 32px;
+    height: 33px;
 
+    &:active {
+      margin-top: 1px;
+    }
+  }
+
+  &.home_search input#search {
     padding-left: 50px;
     width: 460px;
-    margin-right: 8px;
-    margin-top: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  &.search_results input#search {
+    padding-left: 35px;
+    width: 300px;
+  }
+
+  &.search_results .geolocation {
+    background: image-url("sections/search/geolocate.png");
+    width: 22px;
+    height: 23px;
+    top: 10px;
   }
 
   .btn {
@@ -39,74 +50,11 @@
     }
   }
 
-  .geolocation {
-    position: absolute;
-    top: 8px;
-    left: 10px;
-    border: 0;
-    background: image-url("sections/home/geolocate-icon.png");
-    width: 32px;
-    height: 33px;
-    &:active {
-      margin-top: 1px;
-    }
-  }
-
   .slider {
     float: left;
     margin-left: 12px;
     margin-top: 2px;
     width: 200px;
-  }
-
-  // Filter elements
-  .ui-slider {
-    position: relative;
-    background: #2f1f17;
-    border-radius: 8px;
-    height: 11px;
-    border-top: 1px solid #281a14;
-    border-bottom: 1px solid rgba(255,255,255,0.25);
-
-    .ui-slider-handle {
-      position: absolute;
-      background: image-url("components/slider/knob.png");
-      width: 27px;
-      height: 27px;
-      margin-top: -8px;
-      margin-left: -10px;
-      display: block;
-      outline: none;
-    }
-
-    .ui-slider-range {
-      position: absolute;
-      height: 12px;
-      background: image-url("components/slider/slider-range.png");
-      margin-top: -1px;
-    }
-  }
-
-  .multiselect {
-    position: relative;
-    display: inline-block;
-
-    .collapsed {
-      background: #2f1f17 image-url("components/multiselect/down.png") right center no-repeat;
-      border: 1px solid #2d1d16;
-      border-bottom: 1px solid #6f5c50;
-      border-bottom: 1px solid rgba(255,255,255,0.25);
-      font-size: 12px;
-      height: 26px;
-      line-height: 26px;
-      padding: 0 20px 0 8px;
-      cursor: pointer;
-      @include border-radius(6px);
-
-      &:hover {
-        background-color: lighten(#2f1f17, 5%);
-      }
-    }
   }
 
   label {
@@ -134,21 +82,56 @@
     }
 
     .slider {
-      width: 140px;
+      width: 130px;
     }
 
     .location {
       input#search {
-        width: 260px;
+        width: 290px;
       }
     }
 
+    .associations {
+      height: 24px;
+    }
+
     .multiselect {
+      margin-top: -4px;
       width: 168px;
     }
 
     .availability-date-start, .availability-date-end {
       input {
+        width: 80px;
+      }
+    }
+
+    .amenities {
+      padding-top: 14px;
+    }
+
+    .availability-date-start, .availability-date-end {
+      width: 130px;
+      position: relative;
+
+      .date-icon {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        display: block;
+        background: image-url("sections/search/date-start.png");
+        width: 26px;
+        height: 24px;
+      }
+
+      &.availability-date-end .date-icon {
+        background: image-url("sections/search/date-end.png");
+        width: 22px;
+        height: 23px;
+      }
+
+      input {
+        padding-left: 40px;
         width: 80px;
       }
     }
