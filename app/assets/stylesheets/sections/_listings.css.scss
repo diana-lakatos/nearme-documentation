@@ -68,6 +68,13 @@
     font-weight: bold;
   }
 
+  // On the home search box
+  &.home_search {
+    .multiselect {
+      width: 220px;
+    }
+  }
+
   // On the search results page bar
   &.search_results {
     hr {
@@ -78,7 +85,7 @@
 
     label {
       float: left;
-      margin-right: 12px;
+      margin-right: 0;
     }
 
     .slider {

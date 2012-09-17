@@ -15,22 +15,48 @@
             Search
           %hr
           #search_filters
-            .availability-quantity.five.columns.alpha
-              %label How many desks do you need?
-              = hidden_field_tag "availability[quantity]", "1"
-              .slider
-              .value.number-value 1
+            .row
+              .availability-quantity.five.columns.alpha
+                %label How many desks do you need?
+                = hidden_field_tag "availability[quantity]", "1"
+                .slider
+                .value.number-value 1
 
-            .price-range.six.columns.omega
-              %label How much do you want to spend?
-              = hidden_field_tag "price[min]", "0"
-              = hidden_field_tag "price[max]", "100"
-              .slider
-              .value
-                $0 - $100/day
+              .price-range.six.columns.omega
+                %label How much do you want to spend?
+                = hidden_field_tag "price[min]", "0"
+                = hidden_field_tag "price[max]", "100"
+                .slider
+                .value
+                  $0 - $100/day
+            .row
+              .five.columns.amenities.alpha
+                %label What amenities do you need?
+                .multiselect
+                  .collapsed None selected
+                  .expanded{ :style => "display: none" }
+                    .summary
+                      None selected
+                    .items
+                      - Amenity.all.each do |amenity|
+                        .item
+                          = check_box_tag "amenities[]", amenity.id, search_amenities.include?(amenity.id), :id => "amenities_#{amenity.id}"
+                          = label_tag "amenities_#{amenity.id}", amenity.name
+              .associations.six.columns.omega.alpha
+                %label Do you have any preferred associations?
+                .multiselect
+                  .collapsed None selected
+                  .expanded{ :style => "display: none" }
+                    .summary
+                      None selected
+                    .items
+                      - Organization.all.each do |organization|
+                        .item
+                          = check_box_tag "organizations[]", organization.id, search_organizations.include?(organization.id), :id => "organization_#{organization.id}"
+                          = label_tag "organization_#{organization.id}", organization.name
 
-        .clearfix
-        #suggest_location{:style => "display: none"}
+          .clearfix
+          #suggest_location{:style => "display: none"}
 
 
 .one-third.column.alpha

@@ -7,6 +7,9 @@ class @Multiselect
     @expandedContainer  = @element.find('.expanded')
     @expandedSummary    = @expandedContainer.find('.summary')
 
+    # Disable selection
+    @element.attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false)
+
     # Setup initial state
     @updateValues()
     @bindEvents()
@@ -32,7 +35,7 @@ class @Multiselect
     @updateCount()
 
   open: ->
-    @collapsedContainer.hide()
+    #@collapsedContainer.hide()
     @expandedContainer.show().toggleClass('long', @items.length > 8)
     @isOpen = true
 
@@ -41,7 +44,7 @@ class @Multiselect
 
   close: ->
     @expandedContainer.hide()
-    @collapsedContainer.show()
+    #@collapsedContainer.show()
     @isOpen = false
 
   updateValues: ->

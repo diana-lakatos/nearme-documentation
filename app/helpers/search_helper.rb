@@ -6,7 +6,7 @@ module SearchHelper
 
   def search_availability_dates_end
     params[:availability].present? && params[:availability][:dates].present? && search[:availability][:dates][:end] ||
-      Time.now.advance(:days => 1).strftime('%b %-e')
+      Time.now.advance(:weeks => 1).strftime('%b %-e')
   end
 
   def search_availability_quantity
