@@ -1,22 +1,18 @@
 - title "Reset Password"
 
-.grid_4.alpha
-  %h1.tk-chaparral-pro Reset Password
+.sign-up
+  .two-thirds.column
+    .box.sign-up-form
+      %h2== Reset Your Password
+      %p.intro
+        Enter your new password below and we'll update your account.
 
-  = form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put, :class => "simple_form password_reset_form" }) do |f|
-    = f.hidden_field :reset_password_token
-    = devise_error_messages!
+      = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put, :class => "form-horizontal" }) do |f|
+        = f.hidden_field :reset_password_token
 
-    %p
-      Enter your new password below and we'll update your account.
+        = f.input :password
+        = f.input :password_confirmation, label: "Confirm Password"
 
-    %div.input
-      = f.label :password, "New Password"
-      = f.password_field :password
-    %div.input
-      = f.label :password_confirmation, "Confirm Password"
-      = f.password_field :password_confirmation
-
-    %div.actions
-      = f.submit "Change Password"
+        .actions
+          = f.submit "Change Password"
 

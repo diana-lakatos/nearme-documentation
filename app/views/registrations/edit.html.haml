@@ -1,3 +1,13 @@
-%h2 Account
-%p Here you can edit your details.
-= render :partial => "registrations/form", :locals => { :url => registration_path(resource_name), :submit => "Save Account", :html => { :method => :put } }
+- title "Your Account"
+
+.sign-up
+  .two-thirds.column
+    .box.sign-up-form
+      %h2== Your Account
+      %p.intro
+        You can change your account details below
+
+      = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name) }
+
+  .one-third.column.third-party
+

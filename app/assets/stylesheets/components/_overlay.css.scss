@@ -28,20 +28,29 @@ embed {
     z-index: 150; } }
 
 .overlay-container.context {
+  h1 {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
   width: 300px;
-  background: transparent image-url("overlay_arrow_center.png") no-repeat center top;
   padding-top: 9px;
+
   &.right {
     padding-top: 0;
     padding-left: 12px;
     background: transparent image-url("editor/overlay_context_arrow_left.png") no-repeat left center; }
+
   .overlay-content {
-    background: #FFF;
-    border: 1px solid #222;
-    border-top-width: 0px;
-    border-radius: 0 0 6px 6px;
-    -webkit-box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.6);
-    -moz-box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.6);
-    box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.6);
-    padding: 10px;
-    overflow: hidden; } }
+    @extend .box;
+    border: 1px solid #939798;
+    overflow: hidden;
+    background: #f5f5f5;
+    box-shadow: 0 0 15px -5px rgba(0,0,0,0.6);
+
+    textarea {
+      width: 250px;
+      height: 80px;
+    }
+  }
+}

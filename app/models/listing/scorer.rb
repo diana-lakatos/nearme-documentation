@@ -95,8 +95,9 @@ class Listing
       def score_price(options = {})
         options.symbolize_keys!
 
-        min_cents, max_cents = (options.delete(:min).to_i || 0) * 100, (options.delete(:max).to_i || 0) * 100
-        midpoint_cents       = (max_cents + min_cents) / 2
+        min_cents = (options.delete(:min).try(:to_i) || 0) * 100
+        max_cents = (options.delete(:max).try(:to_i) || min_cent/100) * 100
+        midpoint_cents = (max_cents + min_cents) / 2
 
         ranked_listings = @listings.rank_by { |l|(l.price_cents - midpoint_cents).abs }
 
@@ -113,9 +114,15 @@ class Listing
           # hash date range
           dates.symbolize_keys!
           dates = (dates[:start]...dates[:end])
-        else
+        elsif dates
           # discrete array of dates
           dates = dates.map { |d| Date.parse(d) }
+        else
+          # Default to 14 days
+          dates = []
+          14.times do |i|
+            dates << Time.now.advance(:days => i).to_date
+          end
         end
 
         quantity_needed = options.delete(:quantity).symbolize_keys[:min].to_i

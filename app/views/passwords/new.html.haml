@@ -1,21 +1,19 @@
 - title "Reset Password"
 
-.grid_4.alpha
-  %h1.tk-chaparral-pro Lost Password
+.sign-up
+  .two-thirds.column
+    .box.sign-up-form
+      %h2== Reset Your Password
+      %p.intro
+        Fill in your email below and we'll send you instructions to reset your password.
 
-  = form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :class => "simple_form password_reset_form" }) do |f|
-    = devise_error_messages!
+      = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { class: "form-horizontal" }) do |f|
+        = f.input :email
 
-    %p
-      Fill in your email below and we'll send you instructions to reset your password.
+        .actions
+          = f.submit "Reset Password"
+          or
+          = link_to "Cancel", user_session_url
 
-    %div.input
-      = f.label :email
-      = f.email_field :email
-    %div.actions
-      = f.submit "Reset Password"
-      or
-      = link_to "Cancel", user_session_url
-
-
-= render "sessions/connect_provider"
+  .one-third.column.third-party
+    = render "sessions/connect_provider", action: "log in"

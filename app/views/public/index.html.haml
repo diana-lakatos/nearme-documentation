@@ -1,41 +1,83 @@
-%section#headline
-  .grid_5.image.alpha
-    = image_tag "desk_marker.png"
-  .grid_7.aside_text.omega
-    %h2.tk-chaparral-pro Where do you want to work today?
-    .search
-      = render :partial => "search/bar", :locals => { :value => "" }
-      #suggest_location{:style => "display: none"}
-%section#featured.block
-  .grid_5.alpha.blurb
-    %p.em DesksNear.Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to see great places where they can work.
-    %p There are plenty of fantastic companies worldwide, such as Inspire9, The Frontier Group, eLabs, and Obtiva, who offer up their fantastic working environment to individuals who need a change of scenery or companions. This is fantastic! Unfortunately, until now, it hasn't been easy for individuals to find places like this or to even know that they existed.
-    %p
-      This is why we built DesksNear.Me. So, start searching for a place to work above, or add a place now!
-    = link_to new_listing_path, :class => "huge_ass_button listing" do
-      = image_tag "marker-big.png"
-      Add my listing
-  .grid_7.omega
-    %h1.tk-ratio-display Featured Listings
-    %section.list.featured
-      = render :partial => "listings/featured", :collection => @featured, :as => :listing
+- legacy false
 
-- # Hiding this for now as I think it clutters home page and doesn't really offer much. We'll add an 'About' page
-- if false
-  %section#about.block
-    .grid_5.alpha
-      %h1.tk-chaparral-pro What now?
-      %p.em
-        We have a thousand ideas and just chose a handful to implement in the first 48 hours of our existence.
-      %p
-        We really believe that this has the potential to become an indispensable service for people like us, who need to get out of the home office and hang out with cool people while we work.
-      %p
-        We have big plans for the future. We are committed to continuing with this service and adding in new features - making it easier and better for everyone.
-    .grid_7.omega
-      %h1.tk-chaparral-pro Don't offer free desks?
-      %p
-        We know that many listings have extra goodies available for their desks (like food, drinks or equipment access) and they like to charge a small daily rate for visiting freelancers to pay. There are also dedicated co-working spaces out there which charge for access.
-      %p For now, listing non-free places is fine as long as you mention this clearly in your listing description. In the future there will likely be a small listing fee for paid workspaces.
-      %p
-        %strong In the coming months, we will be working with our regular users to discover the best way to manage listing of paid spaces.
-      %em &mdash; The Rad Warlike Annex
+- content_for :hero do
+  .container
+    #search_row.twelve.columns.offset-by-two.alpha.omega
+      .wood-box
+        %h1 Need a space to work?
+        %h2 Search from #{number_with_delimiter Listing.count} spaces nearby
+
+        %form#listing_search.home_search{:action => search_path, :method => "get"}
+          %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
+          %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
+          %a.btn.btn-green.btn-outline.btn-medium{ :rel => "submit", :href => "" }
+            %i.icon
+            Search
+          %hr
+          #search_filters
+            .row
+              .availability-quantity.five.columns.alpha
+                %label How many desks do you need?
+                = hidden_field_tag "availability[quantity]", "1"
+                .slider
+                .value.number-value 1
+
+              .price-range.six.columns.omega
+                %label How much do you want to spend?
+                = hidden_field_tag "price[min]", "0"
+                = hidden_field_tag "price[max]", "100"
+                .slider
+                .value
+                  $0 - $100/day
+            .row
+              .five.columns.amenities.alpha
+                %label What amenities do you need?
+                .multiselect
+                  .collapsed None selected
+                  .expanded{ :style => "display: none" }
+                    .summary
+                      None selected
+                    .items
+                      - Amenity.all.each do |amenity|
+                        .item
+                          = check_box_tag "amenities[]", amenity.id, search_amenities.include?(amenity.id), :id => "amenities_#{amenity.id}"
+                          = label_tag "amenities_#{amenity.id}", amenity.name
+              .associations.six.columns.omega.alpha
+                %label Do you have any preferred associations?
+                .multiselect
+                  .collapsed None selected
+                  .expanded{ :style => "display: none" }
+                    .summary
+                      None selected
+                    .items
+                      - Organization.all.each do |organization|
+                        .item
+                          = check_box_tag "organizations[]", organization.id, search_organizations.include?(organization.id), :id => "organization_#{organization.id}"
+                          = label_tag "organization_#{organization.id}", organization.name
+
+          .clearfix
+          #suggest_location{:style => "display: none"}
+
+
+.one-third.column.alpha
+  .box
+    %h2 Introducing Desks Near Me
+    %p
+      Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to see
+      great places where they can work. So, where do you want to work today?
+
+/.one-third.column
+/  .box
+/    %h2 Our commitment to trust & safety
+/    %p
+/      Desks Near Me is safe. From our patent pending in-space technology to our 24/7 support line, we make sure
+/      that you can share your space, or visit one, without worry.
+
+.one-third.column
+  = link_to "We're at Dreamforce", "http://dreamforce.desksnear.me", :id => "dream_force_link"
+
+.one-third.column.omega
+  = link_to "Get the iPhone app", "http://itunes.apple.com/app/desks-near-me/id529634519", :id => "app_store_link"
+
+- content_for :domready do
+  new DNM.HomeSearch($('#listing_search'))

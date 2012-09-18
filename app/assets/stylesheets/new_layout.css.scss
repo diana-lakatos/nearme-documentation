@@ -1,0 +1,81 @@
+/*
+ *= require skeleton/skeleton
+ */
+
+@import "compass";
+@import "compass/css3";
+@import "compass/reset";
+@import "layout/*";
+@import "components/*";
+
+@import "vendor/jquery-ui-1.8.23.custom.css.scss";
+
+
+/* #Site Styles
+================================================== */
+
+// Full width container
+.super-container {
+}
+
+body {
+  background: image-url("layout/background-tile.png");
+
+  @extend .font-banda;
+}
+
+header {
+  margin-top: 15px;
+
+  #logo {
+    display: inline-block;
+    background: image-url("layout/logo.png");
+    width: 205px;
+    height: 24px;
+    text-indent: -9999px;
+    margin-top: 16px;
+  }
+
+  #header_links {
+    padding-top: 10px;
+    line-height: 38px;
+
+    a.header-link {
+      @extend .font-banda-bold;
+      display: inline-block;
+      color: $dnm_gray;
+      font-size: 16px;
+      text-transform: uppercase;
+      margin-right: 30px;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+/* #Page Styles
+================================================== */
+@import "sections/*";
+
+/* #Media Queries
+================================================== */
+
+/* Smaller than standard 960 (devices and browsers) */
+@media only screen and (max-width: 959px) {}
+
+/* Tablet Portrait size to standard 960 (devices and browsers) */
+@media only screen and (min-width: 768px) and (max-width: 959px) {}
+
+/* All Mobile Sizes (devices and browser) */
+@media only screen and (max-width: 767px) {}
+
+/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+@media only screen and (min-width: 480px) and (max-width: 767px) {}
+
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+@media only screen and (max-width: 479px) {}
+
+

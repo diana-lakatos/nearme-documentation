@@ -1,5 +1,6 @@
 class Listing
   module Search
+    DEFAULT_MIDPOINT_SEARCH_RADIUS = 15_000
 
     class SearchTypeNotSupported < StandardError; end
 
@@ -52,8 +53,11 @@ class Listing
         # this uses a sphinx scope
         scope = Listing.visible_for(params.delete(:current_user))
 
+
         scope = if params.has_key?(:boundingbox)
           find_by_boundingbox(scope, params[:boundingbox])
+        elsif params.has_key?(:midpoint)
+          find_by_midpoint(scope, params[:midpoint], params[:radius].presence.try(:to_i) || DEFAULT_MIDPOINT_SEARCH_RADIUS)
         elsif params.has_key?(:query)
           find_by_keyword(scope, params.delete(:query))
         else
@@ -86,17 +90,7 @@ class Listing
 
       private
 
-        # we use Sphinx's geosearch here, which takes a midpoint and radius
-        def find_by_boundingbox(scope, boundingbox)
-          boundingbox.symbolize_keys!
-          boundingbox = boundingbox.inject({}) { |r, h| k, v = h; r[k] = v.symbolize_keys!; r } # my kingdom for deep_symbolize_keys...
-
-          north_west = [boundingbox[:start][:lat], boundingbox[:start][:lon]]
-          south_east = [boundingbox[:end][:lat],   boundingbox[:end][:lon]]
-
-          midpoint         = Geocoder::Calculations.geographic_center([north_west, south_east])
-          radius_m         = Geocoder::Calculations.distance_between(north_west, midpoint) * 1_000
-
+        def find_by_midpoint(scope, midpoint, radius_m = DEFAULT_MIDPOINT_SEARCH_RADIUS)
           # sphinx needs the coordinates in radians
           midpoint_radians = Geocoder::Calculations.to_radians(midpoint)
 
@@ -104,6 +98,20 @@ class Listing
             geo:  midpoint_radians,
             with: { "@geodist" => 0.0...radius_m.to_f }
           )
+        end
+
+        # we use Sphinx's geosearch here, which takes a midpoint and radius
+        def find_by_boundingbox(scope, boundingbox)
+          boundingbox.symbolize_keys!
+          boundingbox = boundingbox.inject({}) { |r, h| k, v = h; r[k] = v.symbolize_keys!; r } # my kingdom for deep_symbolize_keys...
+
+          north_west = [boundingbox[:start][:lat].to_f, boundingbox[:start][:lon].to_f]
+          south_east = [boundingbox[:end][:lat].to_f,   boundingbox[:end][:lon].to_f]
+
+          midpoint         = Geocoder::Calculations.geographic_center([north_west, south_east])
+          radius_m         = Geocoder::Calculations.distance_between(north_west, midpoint) * 1_000
+
+          find_by_midpoint(scope, midpoint, radius_m)
         end
 
         def find_by_keyword(scope, query)

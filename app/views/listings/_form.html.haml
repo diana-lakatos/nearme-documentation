@@ -5,8 +5,12 @@
   room.
 = simple_form_for @listing do |f|
   - textile_hint = "(Parsed using #{link_to("Textile", "http://en.wikipedia.org/wiki/Textile_%28markup_language%29", :target => "_blank")}).".html_safe
-  = f.input :location_id, :collection => current_user.locations, :prompt =>  "Select a location..."
-  = link_to "Create a location", new_location_path
+  .clearfix
+    .four.columns
+      = f.input :location_id, :collection => current_user.locations, :prompt =>  "Select a location..."
+    .six.columns
+      Or... #{link_to "Create a location", new_location_path, :class => "btn btn-blue btn-medium"}
+
   = f.input :name, :hint => "What's the name of this listing?"
   = f.input :quantity, :input_html => { :size => 4, :min => 1 }, :hint => "How many spots do you have?"
   = f.input :price, :as => :decimal, :hint => "How much per seat are you charging?"

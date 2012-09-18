@@ -1,0 +1,147 @@
+form {
+  overflow: hidden;
+
+  div.input, div.field {
+    margin-bottom: 20px;
+  }
+
+  div.input.check_boxes, div.field.check_boxes, div.input.boolean,
+  div.input.radio_buttons {
+    overflow: hidden;
+
+    input {
+      float: left;
+    }
+
+    label {
+      margin-left: 24px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    label.check_boxes, label.radio_buttons {
+      margin-left: 0;
+      font-size: 18px;
+    }
+
+    .checkbox, .radio {
+      float: left;
+      margin-right: 30px;
+    }
+
+    .hint {
+      clear: left;
+    }
+  }
+
+  .hint {
+    font-size: 80%;
+    display: block;
+  }
+
+  label {
+    @extend .font-banda-bold;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  input[type="text"], input[type="password"], input[type="email"], input[type="url"], input[type="number"], textarea {
+    @extend .font-banda;
+    margin: 0;
+    margin-bottom: 8px;
+    padding: 6px 8px 6px 8px;
+    line-height: 22px;
+    background: #fff;
+    @include background(linear-gradient(#ececec, #fcfcfc));
+    border: 1px solid rgba(0,0,0,0.4);
+    @include border-radius(8px);
+    @include box-shadow(
+      inset rgba(0,0,0,0.6) 3px 3px 8px -4px,
+      rgba(255,255,255,0.1) 0 1px 0 0
+    );
+    color: #707070;
+    text-shadow: #fff 0 1px 0;
+    font-size: 22px;
+
+    &:focus {
+      outline: none;
+    }
+
+    &.small {
+      padding: 6px 8px;
+    }
+
+    .wood-box &, .hero-wood-texture & {
+      border: 1px solid #2e1d16;
+    }
+  }
+
+  textarea {
+    height: 160px;
+  }
+
+  input[type='submit'] {
+    border: none;
+    @extend .btn;
+    @extend .btn-large;
+    @extend .btn-blue;
+  }
+}
+
+.form-horizontal {
+  .control-group {
+    margin-bottom: 10px;
+    overflow: hidden;
+
+    &.error {
+      input {
+        border-color: #cc0000;
+      }
+      .help-inline {
+        color: #cc0000;
+      }
+    }
+
+    .control-label {
+      width: 180px;
+      float: left;
+      padding-top: 6px;
+      text-align: right;
+      @extend .font-banda-bold;
+      font-size: 18px;
+      color: $dnm_black;
+      abbr { display: none; }
+    }
+
+    .controls {
+      margin-left: 200px;
+
+      input {
+        font-size: 18px;
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+.two-thirds.column .box form.form-horizontal {
+  input[type="text"], input[type="password"], input[type="email"], input[type="url"] {
+    width: 355px;
+  }
+
+  .controls {
+    &.two-up input {
+      width: 163px;
+      &:first-child {
+        margin-right: 6px;
+      }
+    }
+  }
+
+  .actions {
+    margin-left: 196px;
+    margin-bottom: 20px;
+  }
+
+}

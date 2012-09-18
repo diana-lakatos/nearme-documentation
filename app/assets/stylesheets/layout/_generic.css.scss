@@ -1,0 +1,33 @@
+// Generic styles to apply to everything
+
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+strong {
+  font-weight: bold;
+}
+
+h1 {
+  @extend .font-banda;
+  font-size: 32px;
+  color: #1e2222;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+  margin-bottom: 20px;
+}
+
+p {
+  margin-bottom: 12px;
+}
+
+.wood-texture {
+  background: image-url("layout/seamless-wood-texture.jpg");
+}
