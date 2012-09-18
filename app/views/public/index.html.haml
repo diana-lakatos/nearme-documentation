@@ -66,15 +66,18 @@
       Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to see
       great places where they can work. So, where do you want to work today?
 
+/.one-third.column
+/  .box
+/    %h2 Our commitment to trust & safety
+/    %p
+/      Desks Near Me is safe. From our patent pending in-space technology to our 24/7 support line, we make sure
+/      that you can share your space, or visit one, without worry.
+
 .one-third.column
-  .box
-    %h2 Our commitment to trust & safety
-    %p
-      Desks Near Me is safe. From our patent pending in-space technology to our 24/7 support line, we make sure
-      that you can share your space, or visit one, without worry.
+  = link_to "We're at Dreamforce", "http://dreamforce.desksnear.me", :id => "dream_force_link"
 
 .one-third.column.omega
-  = link_to "Get the iPhone app", "", :id => "app_store_link"
+  = link_to "Get the iPhone app", "http://itunes.apple.com/app/desks-near-me/id529634519", :id => "app_store_link"
 
 - content_for :domready do
   new DNM.HomeSearch($('#listing_search'))

@@ -57,6 +57,14 @@ section.public {
   margin-top: -6px;
   display: block;
   text-indent: -9999px;
-  background: image-url("sections/home/get-the-app.png") no-repeat;
-  height: 172px;
+  background: image-url("sections/home/get-the-app.png") no-repeat center 16px;
+  height: 188px;
+}
+
+#dream_force_link {
+  margin-top: -6px;
+  display: block;
+  text-indent: -9999px;
+  background: image-url("sections/home/dreamforce.png") no-repeat;
+  height: 214px;
 }
