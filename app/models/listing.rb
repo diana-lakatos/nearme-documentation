@@ -30,10 +30,10 @@ class Listing < ActiveRecord::Base
   attr_accessible :confirm_reservations, :location_id, :price_cents, :quantity, :rating_average, :rating_count,
                   :availability_rules, :creator_id, :name, :description, :price
 
-  delegate :name, :description, to: :company, prefix: true
+  delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
   delegate :address, :amenities, :formatted_address, :local_geocoding, :organizations, :required_organizations, :latitude,
-    :longitude, :distance_from, to: :location
+    :longitude, :distance_from, to: :location, allow_nil: true
 
   delegate :to_s, to: :name
 
