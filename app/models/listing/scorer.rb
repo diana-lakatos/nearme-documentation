@@ -76,7 +76,7 @@ class Listing
 
       def score_amenities(amenity_ids = [])
         amenity_ids.map!(&:to_i)
-        @listings.reject! { l.location.nil? }
+        @listings.reject! { |l| l.location.nil? }
         ranked_listings       = @listings.rank_by { |l| (amenity_ids - l.location.amenity_ids).size }
 
         add_strict_matches(:amenities) { |l| (amenity_ids - l.location.amenity_ids).size == 0 }
