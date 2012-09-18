@@ -6,7 +6,7 @@ class SearchController < ApplicationController
       @listings = Listing.find_by_search_params(@search).select(&:strict_match).reject { |l| l.location.nil? } # tmp hax
       @listings = @listings.paginate(:page => params[:page], :per_page => 20)
 
-      @query = @search[:pretty]
+      @query = @search[:pretty] || @search[:query]
       SearchQuery.create(:query => @search[:query], :agent => request.env['HTTP_USER_AGENT'])
     end
 
