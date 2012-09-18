@@ -5,10 +5,10 @@
       %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
     .columns.availability-date-start
       %i.date-icon
-      = text_field_tag "availability[dates][start]", search_availability_dates_start
+      = text_field_tag "availability[dates][start]", search_availability_dates_start, :autocomplete => "off"
     .columns.availability-date-end
       %i.date-icon
-      = text_field_tag "availability[dates][end]", search_availability_dates_end
+      = text_field_tag "availability[dates][end]", search_availability_dates_end, :autocomplete => "off"
     .five.columns.amenities.text-right
       %label Amenities
       .multiselect
@@ -25,14 +25,14 @@
   #search_filters
     .availability-quantity.five.columns.alpha
       %label Desks
-      = hidden_field_tag "availability[quantity]", search_availability_quantity
+      = hidden_field_tag "availability[quantity]", search_availability_quantity, :autocomplete => "off"
       .slider
       .value.number-value= search_availability_quantity
 
     .price-range.six.columns
       %label Price
-      = hidden_field_tag "price[min]", search_price_min
-      = hidden_field_tag "price[max]", search_price_max
+      = hidden_field_tag "price[min]", search_price_min, :autocomplete => "off"
+      = hidden_field_tag "price[max]", search_price_max, :autocomplete => "off"
       .slider
       .value
         $#{search_price_min} - $#{search_price_max}/day

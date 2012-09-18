@@ -63,7 +63,7 @@ function doListingGoogleMaps() {
         zoom: 13,
         mapTypeId: layer,
         mapTypeControl: false,
-        center: latlng,
+        center: latlng
       });
       map.mapTypes.set(layer, new google.maps.StamenMapType(layer));
     }

@@ -28,6 +28,7 @@
     right: -2px;
     border: 2px solid #584031;
     @include border-radius(6px);
+    background: #ededed;
     @include background(#ededed linear-gradient(#ebebeb, #ffffff));
     box-shadow: 0 0 4px 0 rgba(0,0,0,0.25);
 
