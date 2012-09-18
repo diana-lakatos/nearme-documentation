@@ -1,13 +1,15 @@
-.grid_3.alpha
-  %h1.tk-adelle Workplaces found near:
-.grid_9.omega
-  = render :partial => "search/bar", :locals => { :value => @query }
-#results.container_12
-  - if @listings
-    = render :partial => "search/listings"
-  - else
-    .loading.grid_4
-      = image_tag "spinner-red.gif"
+- content_for :hero do
+  .hero-wood-texture
+    .container
+      = render :partial => "search/bar", :locals => { :value => "" }
 
-:javascript
-  Search.init("#{search_path}", resultsFromServer = #{@listings ? "true" : "false"});
+
+%h1 Search Results
+#results
+  .results
+    = render :partial => "search/listings" if @listings
+  .loading.four.columns{:style => "display: none"}
+    = image_tag "spinner-red.gif"
+
+- content_for :domready do
+  new DNM.SearchResultsPage($('#listing_search'), $("#results"))

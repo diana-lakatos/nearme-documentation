@@ -1,6 +1,6 @@
-.grid_8.omega
-  %h1.tk-chaparral-pro Or connect with your favorite service...
-  %a.auth_provider.grid_4.alpha{:href => "/auth/twitter"}
-    = image_tag "twitter_service.png", :alt => "Twitter"
-  %a.auth_provider.grid_4.omega.openid{:href => "/auth/open_id"}
-    = image_tag "openid_service.png", :alt => "OpenID"
+.one-third.column.third-party
+  %h3 Or #{action} using...
+  %a.auth_provider.one-third{:href => "/auth/twitter"}
+    = image_tag "sections/sign-up/twitter.png", :alt => "Twitter"
+  %a.auth_provider.one-third.openid{:href => "/auth/open_id"}
+    = image_tag "sections/sign-up/openid.png", :alt => "OpenID"

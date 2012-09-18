@@ -10,7 +10,7 @@ When /^I log in as a user who is a member of that organization$/ do
 end
 
 Then /^I should be logged out$/ do
-  Then %{I should see "Sign In"}
+  Then %{I should see "Log In"}
 end
 
 Given /^I search for "([^"]*)"$/ do |text|
@@ -19,7 +19,7 @@ Given /^I search for "([^"]*)"$/ do |text|
   end
   steps %{
     And I fill in "q" with "#{text}"
-    And I press "submit"
+    And I follow "Search"
   }
 end
 

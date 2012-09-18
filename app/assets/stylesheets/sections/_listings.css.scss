@@ -1,0 +1,300 @@
+#listing_search {
+  position: relative;
+  overflow: visible;
+
+  .geolocation {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    border: 0;
+    background: image-url("sections/home/geolocate-icon.png");
+    width: 32px;
+    height: 33px;
+
+    &:active {
+      margin-top: 1px;
+    }
+  }
+
+  &.home_search input#search {
+    padding-left: 50px;
+    width: 460px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  &.search_results input#search {
+    padding-left: 35px;
+    width: 300px;
+  }
+
+  &.search_results .geolocation {
+    background: image-url("sections/search/geolocate.png");
+    width: 22px;
+    height: 23px;
+    top: 10px;
+  }
+
+  .btn {
+    height: 48px;
+    line-height: 44px;
+    position: relative;
+    vertical-align: top;
+    width: 115px;
+
+    .icon {
+      display: inline-block;
+      width: 32px;
+      height: 33px;
+      background: image-url("sections/home/search-icon.png") no-repeat;
+    }
+  }
+
+  .slider {
+    float: left;
+    margin-left: 12px;
+    margin-top: 2px;
+    width: 200px;
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+  .value {
+    float: left;
+    margin-left: 20px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  // On the home search box
+  &.home_search {
+    .multiselect {
+      width: 220px;
+    }
+  }
+
+  // On the search results page bar
+  &.search_results {
+    hr {
+      margin-right: 0;
+      margin-left: 0;
+      clear: both;
+    }
+
+    label {
+      float: left;
+      margin-right: 0;
+    }
+
+    .slider {
+      width: 130px;
+    }
+
+    .location {
+      input#search {
+        width: 290px;
+      }
+    }
+
+    .associations {
+      height: 24px;
+    }
+
+    .multiselect {
+      margin-top: -4px;
+      width: 168px;
+    }
+
+    .availability-date-start, .availability-date-end {
+      input {
+        width: 80px;
+      }
+    }
+
+    .amenities {
+      padding-top: 14px;
+    }
+
+    .availability-date-start, .availability-date-end {
+      width: 130px;
+      position: relative;
+
+      .date-icon {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        display: block;
+        background: image-url("sections/search/date-start.png");
+        width: 26px;
+        height: 24px;
+      }
+
+      &.availability-date-end .date-icon {
+        background: image-url("sections/search/date-end.png");
+        width: 22px;
+        height: 23px;
+      }
+
+      input {
+        padding-left: 40px;
+        width: 80px;
+      }
+    }
+
+
+  }
+}
+
+
+section.listings, .search-results {
+  table.reservations {
+    th {
+      font-weight: bold;
+      text-align: center;
+      padding-bottom: 4px;
+    }
+
+    td.day {
+      font-weight: bold;
+      font-size: 14px;
+    }
+  }
+
+  .list .listing, &.list .listing {
+    address {
+      font-size: 14px;
+    }
+  }
+}
+
+
+article.listing {
+
+  .column.description {
+    color: $dnm_black;
+    text-shadow: 0 1px 0 rgba(255,255,255,.8); /* drop shadow */
+
+    .meta {
+      strong { font-family: "banda"; font-weight: bold; }
+      margin-bottom: 20px;
+    }
+
+    p {
+      line-height: 150%;
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .listing-link {
+      margin-top: 20px;
+    }
+  }
+
+  .column.map {
+
+    address {
+    }
+
+    .map-wrapper {
+      width: 600px;
+      height: 345px;
+      background: #fff;
+      margin-top: 10px;
+      border: solid $dnm_grey 5px;
+      -moz-box-shadow: 0 1px 0 rgba(0,0,0,.25); /* drop shadow */
+      -webkit-box-shadow: 0 1px 0 rgba(0,0,0,.25); /* drop shadow */
+      box-shadow: 0 1px 0 rgba(0,0,0,.25); /* drop shadow */
+      @include border-radius(5px);
+
+      #map {
+        width: 600px;
+        height: 345px;
+      }
+    }
+
+  }
+
+
+}
+
+.legacy {
+  article.listing {
+
+    section.map {
+      #map {
+        height: 300px;
+      }
+    }
+
+    p, .business_description {
+      font-size: 16px;
+      line-height: 150%;
+      margin: 15px 0;
+    }
+
+    h1 {
+      font-weight: 400;
+      margin-bottom: 12px; }
+    div.creator {
+      img.avatar {
+        width: 48px;
+        float: right;
+        margin-left: 12px; }
+      text-align: right; }
+    section.details h2 {
+      border-bottom: 2px solid #CCC;
+      margin: 24px 0 12px; } }
+
+  section.list article.listing .details {
+    float: left;
+    /*  width: 50%;*/
+    padding-top: 20px; }
+
+  article.listing div.business_description p {
+    font-size: 14px;
+    line-height: 26px; }
+
+  section.list article.listing {
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 6px;
+    overflow: hidden;
+    h2 {
+      font-weight: 500;
+      line-height: 32px;
+      a {
+        &:link, &:visited {
+          text-decoration: none; }
+        &:hover {
+          text-decoration: underline; } } }
+    table {
+      tr {
+        td, th {
+          border: none; }
+        td {
+          time, .details.availability {
+            margin-top: 0px; } } }
+      td .details {
+        float: none;
+        width: auto;
+        padding-top: inherit; } }
+    img {
+      width: 54px;
+      padding: 2px;
+      background: #FFF;
+      background: rgba(255, 255, 255, 0.6); }
+    table.reservations {
+      float: left;
+      /*  width: 50%;*/ } }
+
+  article.listing aside address {
+    padding-left: 42px;
+    background: transparent image-url("home.png") no-repeat 6px 6px;
+    margin: 6px 0;
+    font-style: normal;
+    font-size: 14px;
+    a {
+      font-size: 12pxf; } }
+
+}

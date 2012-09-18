@@ -1,0 +1,16 @@
+.flash {
+  @extend .box;
+  @extend .box-content;
+
+  &.error {
+
+  }
+
+  &.notice, &.alert {
+
+  }
+
+  &.message {
+
+  }
+}

@@ -1,0 +1,18 @@
+.container
+  %footer
+    .inner.row
+      %ul.ten.columns
+        = footer_link "Home", root_url
+        = footer_link "Browse Spaces", listings_url
+        - if user_signed_in?
+          = footer_link "Dashboard", dashboard_path, :class => "header-link"
+          = footer_link "Account", edit_user_registration_path, :class => "header-link"
+          = footer_link "Logout", destroy_user_session_path, :method => :delete, :class => "header-link"
+        - else
+          = footer_link "Sign Up", new_user_registration_url
+          = footer_link "Log In", new_user_session_url
+
+        = footer_link "List Your Space", new_listing_url, nil, :class => "last"
+
+      .copyright.six.columns
+        %p Copyright &copy; 2012 Desks Near Me Corp

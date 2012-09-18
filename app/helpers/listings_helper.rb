@@ -10,4 +10,8 @@ module ListingsHelper
       humanized_money_with_symbol(listing.price)
     end
   end
+
+  def strip_http(url)
+    url.gsub(/https?:\/\/(www\.)?/, "").gsub(/\/$/, "")
+  end
 end

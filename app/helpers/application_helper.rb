@@ -6,6 +6,14 @@ module ApplicationHelper
     content_for(:title) { h(page_title.to_s) }
     @show_title = show_title
   end
+
+  def legacy(is_legacy = true)
+    @is_legacy = is_legacy
+  end
+
+  def legacy?
+    !defined?(@is_legacy) || @is_legacy
+  end
   
   def show_title?
     @show_title

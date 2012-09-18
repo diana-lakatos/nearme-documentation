@@ -1,0 +1,50 @@
+!!!
+%html
+  %head
+    %title
+      DesksNear.Me :: #{show_title? ? yield(:title) : "Where do you want to work today?"}
+    %meta{:content => "DesksNear.Me is a public reservation system for companies to offer desks to freelancers and sole-operators.", :name => "description"}/
+    %meta{:content => "The Rad Warlike Annex", :name => "author"}/
+    %meta{:content => "tellthemwhen_verif_1af11d7040aa81a9ab2e07d4efee180d2e93d030", :name => "TellThemWhen"}/
+    %meta{:content => "IE=edge,chrome=1", "http-equiv" => "X-UA-Compatible"}/
+    = csrf_meta_tag
+    %link{:href => "/favicon.ico?9002", :rel => "shortcut icon"}/
+    = stylesheet_link_tag 'new_layout'
+    = stylesheet_link_tag 'vendor/fancybox/jquery.fancybox-1.3.1', :media => "screen, projection"
+
+    = javascript_include_tag :application
+
+    /[if lt IE 9]
+      = javascript_include_tag 'http://html5shim.googlecode.com/svn/trunk/html5.js'
+
+    %script{:src => "https://maps.google.com/maps/api/js?sensor=true", :type => "text/javascript"}
+  %body
+    #TTWNotify{:style => "display:none;"}
+    .container
+      %header.row
+        .eight.columns.alpha
+          = link_to "Desks Near Me", root_url, :id => "logo"
+        #header_links.eight.columns.text-right.omega
+          = render "shared/header_navigation"
+
+    %section#content{:class => "#{controller_name}"}
+      = render "layouts/hero"
+      %div{:class => "container #{'legacy' if legacy?}"}
+        = flashes
+        = yield
+
+    = render :partial => "shared/footer"
+
+    = yield :script
+    = render :partial => "layouts/analytics" if Rails.env.production?
+
+    %script{:charset => "utf-8", :type => "text/javascript"}
+      (function(){
+      t = document.createElement('script');t.async=true;t.type ='text/javascript';
+      t.src = ('https:' == document.location.protocol ? 'https://secure.' : 'http://api.') + 'tellthemwhen.com/api/v2/notices/620b94a22ed.js';
+      var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(t,s);
+      })();
+    = render :partial => "layouts/feedback"
+
+    = javascript_tag do
+      = yield :domready

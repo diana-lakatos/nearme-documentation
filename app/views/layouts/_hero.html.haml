@@ -1,0 +1,6 @@
+- if content_for?(:hero)
+  %section#hero.row
+    = yield :hero
+- else
+  #hero.collapsed.row.hero-blue-top
+    .hero-wood-spacer

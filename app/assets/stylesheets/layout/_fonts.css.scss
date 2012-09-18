@@ -1,0 +1,47 @@
+html {
+  -webkit-font-smoothing: antialiased;
+}
+
+@include font-face("banda", font-files(
+      asset-path("regular-webfont.woff", font),
+      asset-path("regular-webfont.ttf", font),
+      asset-path("regular-webfont.svg", font)
+    ),
+    asset-path("regular-webfont.eot", font));
+
+@include font-face("banda", font-files(
+      asset-path("bold-webfont.woff", font),
+      asset-path("bold-webfont.ttf", font),
+      asset-path("bold-webfont.svg", font)
+    ),
+    asset-path("bold-webfont.eot", font), bold);
+
+.font-banda, body {
+  font-family: "banda";
+  color: $dnm_black;
+}
+
+.font-banda-bold {
+  font-family: "banda";
+  font-weight: bold;
+}
+
+h1.page-title {
+  color: $dnm_black;
+  font-weight: normal;
+  font-size: 36px;
+  text-shadow: 0 1px 0 rgba(255,255,255,.8);
+  margin-bottom: 20px;
+}
+
+a, a:visited {
+  color: $dnm_blue;
+  font-family: "banda";
+  font-weight: bold;
+  text-decoration: none;
+
+  &:hover {
+    color: $link_hover;
+    text-decoration: none;
+  }
+}

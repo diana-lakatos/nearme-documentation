@@ -1,0 +1,27 @@
+.ui-slider {
+  position: relative;
+  background: #2f1f17;
+  border-radius: 8px;
+  height: 11px;
+  border-top: 1px solid #281a14;
+  border-bottom: 1px solid rgba(255,255,255,0.25);
+
+  .ui-slider-handle {
+    position: absolute;
+    background: image-url("components/slider/knob.png");
+    width: 27px;
+    height: 27px;
+    margin-top: -8px;
+    margin-left: -10px;
+    display: block;
+    outline: none;
+  }
+
+  .ui-slider-range {
+    position: absolute;
+    height: 12px;
+    background: image-url("components/slider/slider-range.png");
+    margin-top: -1px;
+  }
+}
+

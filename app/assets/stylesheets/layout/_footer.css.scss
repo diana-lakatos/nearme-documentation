@@ -1,0 +1,51 @@
+footer {
+  border-top: solid lighten($dnm_black, 60%) 1px;
+  .inner {
+    border-top: solid #fff 1px;
+    padding-top: 17px;
+  }
+  margin-top: 40px;
+  line-height: 18px;
+
+  li {
+    a {
+      float: left;
+      display: block;
+      padding: 0 15px 0 10px;
+      color: $dnm_blue;
+      @extend .font-banda-bold;
+      text-decoration: none;
+      font-size: 14px;
+      background: image-url("layout/footer-bullet.png") right 8px no-repeat;
+      text-shadow: 0 1px 0 rgba(255,255,255,.8);
+      &:hover {
+        color: $link_hover;
+      }
+    }
+
+    &:first-child a {
+      padding-left: 0;
+    }
+
+    &.last a {
+      background: 0;
+    }
+
+    &.active a {
+      color: $dnm_grey;
+      &:hover {
+        color: lighten($dnm_grey, 10%);
+      }
+    }
+
+  }
+
+  .copyright p {
+    float: right;
+    font-size: 14px;
+    text-shadow: 0 1px 0 rgba(255,255,255,.8);
+    padding-left: 20px;
+    background: image-url("layout/footer-logo.png") top left no-repeat;
+  }
+
+}
