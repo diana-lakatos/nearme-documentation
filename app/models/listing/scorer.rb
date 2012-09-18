@@ -96,7 +96,7 @@ class Listing
         options.symbolize_keys!
 
         min_cents = (options.delete(:min).try(:to_i) || 0) * 100
-        max_cents = (options.delete(:max).try(:to_i) || min_cent/100) * 100
+        max_cents = (options.delete(:max).try(:to_i) || min_cents/100) * 100
         midpoint_cents = (max_cents + min_cents) / 2
 
         ranked_listings = @listings.rank_by { |l|(l.price_cents - midpoint_cents).abs }
