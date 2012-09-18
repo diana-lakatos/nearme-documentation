@@ -35,7 +35,7 @@ class ReservationTest < ActiveSupport::TestCase
           :id         => nil,
           :user_id    => nil,
           :listing_id => nil,
-          :state      => "unconfirmed",
+          :state      => "pending",
           :cancelable => true,
           :total_cost => { :amount=>0.0, :label=>"$0.00", :currency_code=>"USD" },
           :times      => []
