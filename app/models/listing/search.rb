@@ -18,6 +18,7 @@ class Listing
       define_index do
         join location
         join location.organizations
+        where  "locations.id is not null"
 
         indexes :name, :description
 
@@ -51,7 +52,7 @@ class Listing
 
         # make sure that private listings aren't shown unless the user is authenticated
         # this uses a sphinx scope
-        scope = Listing.visible_for(params.delete(:current_user))
+        scope = Listing.where("location_id is not null").visible_for(params.delete(:current_user))
 
 
         scope = if params.has_key?(:boundingbox)
