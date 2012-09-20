@@ -115,7 +115,7 @@ class Listing
           # hash date range
           dates.symbolize_keys!
           dates = (dates[:start]...dates[:end])
-        elsif dates
+        elsif dates.is_a?(Array)
           # discrete array of dates
           dates = dates.map { |d| Date.parse(d) }
         else
