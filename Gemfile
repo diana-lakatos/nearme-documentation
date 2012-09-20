@@ -6,7 +6,7 @@ gem 'pg_search'
 
 gem "RedCloth", "~> 4.2.9", :require => "redcloth"
 gem 'airbrake'
-gem 'active_model_serializers'
+gem 'active_model_serializers', git: "git://github.com/josevalim/active_model_serializers.git"
 gem 'carrierwave'
 gem 'decent_exposure'
 gem 'devise'
