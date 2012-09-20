@@ -29,4 +29,18 @@ class Listing::SerializationTest < ActiveSupport::TestCase
     end
   end
 
+  context "a POA daily listing" do
+    setup do
+      @listing = FactoryGirl.create(:listing, :price_cents => nil)
+      @serializer = ListingSerializer.new(@listing)
+    end
+
+    should "return valid price fields" do
+      json = @serializer.as_json[:listing]
+      assert_equal nil, json[:price][:amount]
+      assert_equal Listing::PRICE_PERIODS[:day], json[:price][:period]
+      assert_equal "POA", json[:price][:label]
+    end
+  end
+
 end

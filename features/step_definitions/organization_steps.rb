@@ -7,7 +7,7 @@ end
 When /^I add myself as a member of the organization$/ do
   click_link 'Account'
   check model!('organization').name
-  click_button "Save Account"
+  click_button "Save Changes"
 end
 
 Then /^I am a member of the organization$/ do
