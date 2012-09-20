@@ -76,9 +76,9 @@ Feature: A user can book a desk
      When I follow "Sign In/Up"
       And I follow "Twitter"
       And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
-      And I fill in "Name" with "Jermaine"
-      And I fill in "Email" with "myemail@example.com"
-      And I press "Continue"
+      And I fill in "Your name" with "Jermaine"
+      And I fill in "Your email address" with "myemail@example.com"
+      And I press "Sign Up Now"
      Then I should be on the listing's new reservation page
       And I should see "You are making a reservation for: October 15, 2010"
       And I press "Reserve"
@@ -105,7 +105,7 @@ Feature: A user can book a desk
       | 2010-10-11 | 2010-10-12 | 2010-10-13 | 2010-10-14 | 2010-10-15 |
       | 2010-10-18 | 2010-10-19 | 2010-10-20 | 2010-10-21 | 2010-10-22 |
       | 2010-10-25 | 2010-10-26 | 2010-10-27 | 2010-10-28 | 2010-10-29 |
-    When I follow "Listings"
+    When I go to the listings page
     Then I should see availability for dates:
       | 2010-10-11 | 2010-10-12 | 2010-10-13 | 2010-10-14 | 2010-10-15 |
     But I should not see availability for dates:

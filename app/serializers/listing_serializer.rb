@@ -23,11 +23,20 @@ class ListingSerializer < ApplicationSerializer
 
   # Serialize price
   def price
+    label = case object.price
+    when nil
+      'POA'
+    when 0
+      'Free'
+    else
+      object.price.format
+    end
+
     {
-      amount:        object.price.to_f,
+      amount:        object.price.try(:to_f),
       period:        object.price_period,
-      label:         (object.price && object.price != 0) ? object.price.format : 'Free',
-      currency_code: object.price.currency.iso_code
+      label:         label,
+      currency_code: object.price.try(:currency).try(:iso_code)
     }
   end
 

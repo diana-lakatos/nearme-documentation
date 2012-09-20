@@ -17,6 +17,9 @@ module NavigationHelpers
     when /the account settings page/
       edit_user_registration_path
 
+    when /the listings page/
+      listings_path
+
     when /the dashboard/
       dashboard_path
 

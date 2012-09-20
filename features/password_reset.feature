@@ -16,7 +16,7 @@ Feature: A user can reset their password
       And 1 emails should be delivered to that user
       And the email should contain "Change my password"
       When I follow the password reset link for that user
-      And I fill in "New Password" with "mynewpassword"
+      And I fill in "Password" with "mynewpassword"
       And I fill in "Confirm Password" with "mynewpassword"
       And I press "Change Password"
       Then I should see "Your password was changed successfully"

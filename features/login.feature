@@ -9,9 +9,9 @@ Feature: A user can login
       And I follow "Log In"
      When I follow "Twitter"
       And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
-      And I fill in "Name" with "Brett"
-      And I fill in "Email" with "fuckyoutwitter@yourmum.com"
-      And I press "Continue"
+      And I fill in "Your name" with "Brett"
+      And I fill in "Your email address" with "fuckyoutwitter@yourmum.com"
+      And I press "Sign Up Now"
      Then I should see "You have signed up successfully."
 
   Scenario: A user can login with email and password
@@ -26,12 +26,12 @@ Feature: A user can login
   Scenario: A user sign up with email and password
     Given I go to the home page
       And I follow "Log In"
-      And I follow "Register"
-     When I fill in "Name" with "Brett"
-      And I fill in "Email" with "real@email.com"
+      And I follow "Sign up now"
+     When I fill in "Your name" with "Brett"
+      And I fill in "Your email address" with "real@email.com"
       And I fill in "Password" with "password"
-      And I fill in "Confirm Password" with "password"
-      And I press "Continue"
+      And I fill in "user_password_confirmation" with "password"
+      And I press "Sign Up Now"
      Then I should see "You have signed up successfully."
       And a user should exist with email: "real@email.com"
       And that user should have password "password"

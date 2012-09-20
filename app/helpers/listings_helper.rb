@@ -4,7 +4,10 @@ module ListingsHelper
   end
 
   def listing_price(listing)
-    if(listing.price_cents == 0)
+    case listing.price_cents
+    when nil
+      "POA"
+    when 0
       "Free!"
     else
       humanized_money_with_symbol(listing.price)

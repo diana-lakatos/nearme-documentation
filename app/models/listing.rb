@@ -23,7 +23,7 @@ class Listing < ActiveRecord::Base
 
   belongs_to :creator, class_name: "User"
 
-  validates_presence_of :location_id, :creator_id, :name, :description, :price, :quantity
+  validates_presence_of :location_id, :creator_id, :name, :description, :quantity
   validates_inclusion_of :confirm_reservations, :in => [true, false]
   validates_numericality_of :quantity
 
@@ -37,7 +37,7 @@ class Listing < ActiveRecord::Base
 
   delegate :to_s, to: :name
 
-  monetize :price_cents
+  monetize :price_cents, :allow_nil => true
 
   acts_as_paranoid
 
