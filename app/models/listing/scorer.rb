@@ -100,13 +100,10 @@ class Listing
         max_cents = (options.delete(:max).try(:to_i) || min_cents/100) * 100
         midpoint_cents = (max_cents + min_cents) / 2
 
-        ranked_listings = @listings.rank_by do |l|
-          price_cents = (l.price_cents.nil? ? 0 : l.price_cents)
-          (price_cents - midpoint_cents).abs
-        end
+        ranked_listings = @listings.rank_by { |l| ((l.price_cents || 0) - midpoint_cents).abs }
 
         add_strict_matches(:price) do |l| 
-          price_cents = (l.price_cents.nil? ? 0 : l.price_cents)
+          price_cents = (l.price_cents || 0)
           price_cents >= min_cents && price_cents <= max_cents
         end
         add_scores(ranked_listings, :price)
