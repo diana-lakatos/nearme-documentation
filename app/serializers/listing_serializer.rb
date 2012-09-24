@@ -36,7 +36,7 @@ class ListingSerializer < ApplicationSerializer
       amount:        object.price.try(:to_f) || 0.0,
       period:        object.price_period,
       label:         label,
-      currency_code: object.price.try(:currency).try(:iso_code)
+      currency_code: object.price.try(:currency).try(:iso_code) || 'USD'
     }
   end
 
