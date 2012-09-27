@@ -81,11 +81,15 @@ class Listing < ActiveRecord::Base
   #
   # TODO: Implement pricing periods
   def price_period
-    if !price || price == 0
+    if free?
       PRICE_PERIODS[:free]
     else
       PRICE_PERIODS[:day]
     end
+  end
+
+  def free?
+    price.nil? || price == 0.0
   end
 
   def rate_for_user(rating, user)
