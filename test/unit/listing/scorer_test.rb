@@ -206,6 +206,13 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         assert_equal 33.33, @scorer.scores[@listings.last][:availability]
       end
 
+      should "score correctly when dates are strings" do
+        @scorer.send(:score_availability, dates: { start: @start_date.to_s, end: @end_date.to_s }, quantity: { min: 1 })
+
+        assert_equal 33.33, @scorer.scores[@listings.first][:availability]
+        assert_equal 33.33, @scorer.scores[@listings.last][:availability]
+      end
+
       should "score correctly if minimum quantity is specified as a string" do
         @scorer.send(:score_availability, dates: { start: @start_date, end: @end_date }, quantity: { min: "1" })
 

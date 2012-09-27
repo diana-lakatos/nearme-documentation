@@ -55,6 +55,9 @@ class Listing
 
     private
 
+      def coerce_to_date(d)
+        d.respond_to?(:gsub) ? Date.parse(d) : d
+      end
       # Ascending proximity to center of `boundingbox`, normalised between 0 and 100
       def score_boundingbox(options = {})
         options.symbolize_keys!
@@ -117,10 +120,10 @@ class Listing
         if dates.is_a?(Hash)
           # hash date range
           dates.symbolize_keys!
-          dates = (dates[:start]...dates[:end])
+          dates = (coerce_to_date(dates[:start])...coerce_to_date(dates[:end]))
         elsif dates.is_a?(Array)
           # discrete array of dates
-          dates = dates.map { |d| Date.parse(d) }
+          dates = dates.map { |d| coerce_to_date(d) }
         else
           # Default to 14 days
           dates = []
