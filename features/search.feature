@@ -20,14 +20,16 @@ Feature: A user can search for a listing
     When I search for "darwin"
     Then I should see "No results found"
 
+  @wip
   Scenario: A user searches for "new zealand" and see only stuff in that country
     Given a listing in Auckland exists
     And a listing in Cleveland exists
+    And the Sphinx indexes are updated
     When I go to the home page
-    And I search for "Cleveland, OH, USA"
+    And I search for "New Zealand"
     Then I should see a Google Map
-    And I see a search result for the Cleveland listing
-    And I do not see a search result for the Auckland listing
+    And I see a search result for the Auckland listing
+    And I do not see a search result for the Cleveland listing
 
 
   @future
