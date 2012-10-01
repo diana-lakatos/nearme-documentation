@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: git://github.com/josevalim/active_model_serializers.git
-  revision: b706244122f2ba668ced819cd7d9544d13947c3f
+  revision: bea38dd73a5129be97a491c6d06287ea7060c7e3
   specs:
     active_model_serializers (0.5.2)
       activemodel (>= 3.0)
