@@ -24,6 +24,7 @@ class Listing
 
         has "radians(#{Location.table_name}.latitude)",  as: :latitude,  type: :float
         has "radians(#{Location.table_name}.longitude)", as: :longitude, type: :float
+        has :deleted_at
 
         # an organization id of 0 in the sphinx index means the entry does not require organization membership
         # (i.e the listing is public)
@@ -40,7 +41,7 @@ class Listing
         # 0 indicactes a listing with no organization membership required - see define_index block
         orgs << 0
 
-        { with: { organization_ids: orgs } }
+        { with: { organization_ids: orgs, deleted_at: 0 } }
       end
 
     end
