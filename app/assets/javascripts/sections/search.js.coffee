@@ -118,6 +118,7 @@ class DNM.SearchResultsPage extends DNM.SearchForm
     super(form)
     @resultsContainer = @container.find('.results')
     @loadingContainer = @container.find('.loading')
+    @loadMap()
 
   bindEvents: ->
     @form.bind 'submit', (event) =>
@@ -135,6 +136,54 @@ class DNM.SearchResultsPage extends DNM.SearchForm
   showResults: (html) ->
     @resultsContainer.html(html)
     @finishLoading()
+    @loadMap()
+
+  listings: ->
+    @resultsContainer.find('.listing')
+
+  loadMap: ->
+    mapContainer = @container.find('#listings_map')[0]
+    return unless mapContainer
+
+    @map = {}
+    @map.map = new google.maps.Map(mapContainer, {
+      zoom: 8,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false
+    })
+
+    @map.bounds = new google.maps.LatLngBounds()
+    @map.markers = {}
+    @map.info_window = new google.maps.InfoWindow()
+
+    @listings().each (i, el) =>
+      el = $(el)
+      @plotListing(
+        id:        parseInt(el.attr('data-id'), 10),
+        latitude:  parseFloat(el.attr('data-latitude')),
+        longitude: parseFloat(el.attr('data-longitude')),
+        name:      el.attr('data-name'),
+        element:   el
+      )
+
+    # Update the map bounds based on the plotted listings
+    @map.map.fitBounds(@map.bounds)
+
+  plotListing: (listing) ->
+    ll = new google.maps.LatLng(listing.latitude, listing.longitude)
+    @map.bounds.extend(ll)
+    @map.markers[listing.id] = new google.maps.Marker(
+      position: ll,
+      map:      @map.map,
+      icon:     "/assets/marker.png",
+      title:    listing.name
+    )
+
+    if listing.element
+      popupContent = $('.map-details', listing.element).html()
+      google.maps.event.addListener @map.markers[listing.id], 'click', =>
+        @map.info_window.setContent(popupContent)
+        @map.info_window.open(@map.map, @map.markers[listing.id])
 
   triggerSearch: ->
     @startLoading()

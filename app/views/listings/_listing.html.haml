@@ -1,4 +1,4 @@
-%article.listing
+%article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
   .details.clearfix
     .two.columns.alpha
       = link_to image_tag(listing.photos.thumb.url, :title => listing.name, :alt => listing.name), listing
@@ -7,3 +7,5 @@
       %address= listing.formatted_address || listing.address
     .nine.columns.omega
       = render :partial => "listings/availability", :locals => {:listing => listing, :weeks => 1}
+  .map-details{:style => "display: none"}
+    = render 'listings/gmap', :listing => listing
