@@ -83,7 +83,7 @@ class Reservation < ActiveRecord::Base
 
     def set_total_cost
       # NB: use of 'size' not 'count' here is deliberate - seats/periods may not be persisted at this point!
-      self.total_amount_cents = listing.price_cents * seats.size * periods.size
+      self.total_amount_cents = (listing.price_cents || 0) * seats.size * periods.size
     end
 
     def auto_confirm_reservation
