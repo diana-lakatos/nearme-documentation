@@ -42,7 +42,7 @@ module DesksnearMe
     config.filter_parameters += [:password]
 
     config.generators do |g|
-      g.test_framework :rspec, :fixture => false
+      g.test_framework :test_unit, :fixture => false
     end
     # note that we *don't* want to rewite for the test env :)
     config.should_rewrite_email = Rails.env.staging? || Rails.env.development?
