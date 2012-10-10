@@ -53,7 +53,6 @@ group :development, :test, :staging do
 end
 
 group :development, :test do
-  gem 'shoulda'
   gem 'ffaker'
   gem 'factory_girl_rails', '>=3.0.0'
   gem 'email_spec'
@@ -68,6 +67,7 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'minitest'
+  gem 'shoulda'
   gem 'mocha'
   gem 'pickle'
   gem 'simplecov', :require => false
