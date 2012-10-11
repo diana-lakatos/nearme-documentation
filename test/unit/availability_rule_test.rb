@@ -43,15 +43,15 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
       end
 
       should "have correct availability" do
-        assert @object.availability.open_on?(:day => 0, :hour => 9)
-        assert @object.availability.open_on?(:day => 0, :hour => 16, :minute => 59)
         assert @object.availability.open_on?(:day => 1, :hour => 9)
+        assert @object.availability.open_on?(:day => 1, :hour => 16, :minute => 59)
         assert @object.availability.open_on?(:day => 2, :hour => 9)
         assert @object.availability.open_on?(:day => 3, :hour => 9)
         assert @object.availability.open_on?(:day => 4, :hour => 9)
-        assert !@object.availability.open_on?(:day => 4, :hour => 17)
-        assert !@object.availability.open_on?(:day => 5, :hour => 9)
+        assert @object.availability.open_on?(:day => 5, :hour => 9)
+        assert !@object.availability.open_on?(:day => 5, :hour => 17)
         assert !@object.availability.open_on?(:day => 6, :hour => 9)
+        assert !@object.availability.open_on?(:day => 0, :hour => 9)
         assert_equal 'M-F9-5', @object.availability_template_id
       end
     end
@@ -62,15 +62,15 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
       end
 
       should "have correct availability" do
-        assert @object.availability.open_on?(:day => 0, :hour => 9)
-        assert @object.availability.open_on?(:day => 0, :hour => 16, :minute => 59)
         assert @object.availability.open_on?(:day => 1, :hour => 9)
+        assert @object.availability.open_on?(:day => 1, :hour => 16, :minute => 59)
         assert @object.availability.open_on?(:day => 2, :hour => 9)
         assert @object.availability.open_on?(:day => 3, :hour => 9)
         assert @object.availability.open_on?(:day => 4, :hour => 9)
         assert @object.availability.open_on?(:day => 5, :hour => 9)
-        assert !@object.availability.open_on?(:day => 5, :hour => 17)
-        assert !@object.availability.open_on?(:day => 6, :hour => 9)
+        assert @object.availability.open_on?(:day => 6, :hour => 9)
+        assert !@object.availability.open_on?(:day => 6, :hour => 17)
+        assert !@object.availability.open_on?(:day => 0, :hour => 9)
         assert_equal 'M-S9-5', @object.availability_template_id
       end
     end
@@ -81,15 +81,15 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
       end
 
       should "have correct availability" do
-        assert @object.availability.open_on?(:day => 0, :hour => 8)
-        assert @object.availability.open_on?(:day => 0, :hour => 17, :minute => 59)
         assert @object.availability.open_on?(:day => 1, :hour => 8)
+        assert @object.availability.open_on?(:day => 1, :hour => 17, :minute => 59)
         assert @object.availability.open_on?(:day => 2, :hour => 8)
         assert @object.availability.open_on?(:day => 3, :hour => 8)
         assert @object.availability.open_on?(:day => 4, :hour => 8)
-        assert !@object.availability.open_on?(:day => 4, :hour => 18)
-        assert !@object.availability.open_on?(:day => 5, :hour => 8)
+        assert @object.availability.open_on?(:day => 5, :hour => 8)
+        assert !@object.availability.open_on?(:day => 5, :hour => 18)
         assert !@object.availability.open_on?(:day => 6, :hour => 8)
+        assert !@object.availability.open_on?(:day => 0, :hour => 8)
         assert_equal 'M-F8-6', @object.availability_template_id
       end
     end
