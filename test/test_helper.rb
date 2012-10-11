@@ -4,6 +4,10 @@ require 'rails/test_help'
 require 'minitest/autorun'
 require 'turn'
 
+class MiniTest::Unit::TestCase
+  include Shoulda::Matchers::ActiveModel
+  extend Shoulda::Matchers::ActiveModel
+end
 Turn.config.format = :dotted
 
 class ActiveSupport::TestCase

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120913065803) do
+ActiveRecord::Schema.define(:version => 20121010215734) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -30,6 +30,20 @@ ActiveRecord::Schema.define(:version => 20120913065803) do
     t.string   "token"
     t.text     "info"
   end
+
+  create_table "availability_rules", :force => true do |t|
+    t.string   "target_type"
+    t.integer  "target_id"
+    t.integer  "day"
+    t.integer  "open_hour"
+    t.integer  "open_minute"
+    t.integer  "close_hour"
+    t.integer  "close_minute"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
 
   create_table "companies", :force => true do |t|
     t.integer  "creator_id"

@@ -23,6 +23,7 @@
   = f.input :amenity_ids, :label => "Amenities Provided", :collection => Amenity.order('name').all, :as => :check_boxes, :hint => "Please check any services you provide."
   = f.input :require_organization_membership, :input_html => { :class => "check_boxes" }, :label_html => { :class => "check_box" }, :label => "Require Association Membership", :hint => "This will only show your listings to members of the professional associations you selected above"
   = f.button :submit
+
 :javascript
   function showLocationSuggestions(results) {
     if(results.length > 0) {

@@ -14,6 +14,8 @@ class Location < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
   has_many :listings
 
+  has_many :availability_rules, :as => :target
+
   validates_presence_of :company_id, :name, :description, :address, :latitude, :longitude
   validates :email, email: true, allow_nil: true
 
@@ -23,6 +25,9 @@ class Location < ActiveRecord::Base
 
   # Useful for storing the full geo info for an address, like time zone
   serialize :info, Hash
+
+  # Include a set of helpers for handling availability rules and interface onto them
+  include AvailabilityRule::TargetHelper
 
   def distance_from(other_latitude, other_longitude)
     Geocoder::Calculations.distance_between([ latitude,       longitude ],

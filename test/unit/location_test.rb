@@ -34,4 +34,21 @@ class LocationTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "availability" do
+    should "return an Availability::Summary for the Location's availability rules" do
+      location = Location.new
+      location.availability_rules << AvailabilityRule.new(:day => 0, :open_hour => 6, :open_minute => 0, :close_hour => 20, :close_minute => 0)
+
+      assert location.availability.is_a?(AvailabilityRule::Summary)
+      assert location.availability.open_on?(:day => 0, :hour => 6)
+      assert !location.availability.open_on?(:day => 1)
+    end
+
+    should "be able to assign a template of rules" do
+      location = Location.new
+      location.availability_template_id = 'M-F9-5'
+
+    end
+  end
 end
