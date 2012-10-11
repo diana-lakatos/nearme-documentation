@@ -17,13 +17,10 @@ class AvailabilityRule::Summary
   end
 
   def matches_template?(template)
-    template.days.each do |day|
-      rule = rule_for_day(day)
-      return false unless rule
-      return false unless rule.open_at?(template.hours.begin, 0)
-      return false unless rule.open_at?(template.hours.end - 1, 59)
+    each_day do |day, rule|
+      next if !rule && !template.days.include?(day)
+      return false unless rule && template.includes_rule?(rule)
     end
-
     true
   end
 

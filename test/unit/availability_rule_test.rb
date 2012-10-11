@@ -52,6 +52,7 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
         assert !@object.availability.open_on?(:day => 4, :hour => 17)
         assert !@object.availability.open_on?(:day => 5, :hour => 9)
         assert !@object.availability.open_on?(:day => 6, :hour => 9)
+        assert_equal 'M-F9-5', @object.availability_template_id
       end
     end
 
@@ -70,6 +71,7 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
         assert @object.availability.open_on?(:day => 5, :hour => 9)
         assert !@object.availability.open_on?(:day => 5, :hour => 17)
         assert !@object.availability.open_on?(:day => 6, :hour => 9)
+        assert_equal 'M-S9-5', @object.availability_template_id
       end
     end
 
@@ -88,6 +90,7 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
         assert !@object.availability.open_on?(:day => 4, :hour => 18)
         assert !@object.availability.open_on?(:day => 5, :hour => 8)
         assert !@object.availability.open_on?(:day => 6, :hour => 8)
+        assert_equal 'M-F8-6', @object.availability_template_id
       end
     end
 

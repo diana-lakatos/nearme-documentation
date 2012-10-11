@@ -23,4 +23,9 @@ class AvailabilityRule::Template
       )
     end
   end
+
+  def includes_rule?(rule)
+    @days.include?(rule.day) && @hours.begin == rule.open_hour && @hours.end == rule.close_hour &&
+      rule.open_minute == 0 && rule.close_minute == 0
+  end
 end
