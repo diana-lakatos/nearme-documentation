@@ -26,6 +26,26 @@ class AvailabilityRule < ActiveRecord::Base
     TEMPLATES
   end
 
+  def day_name
+    Date::DAYNAMES[day]
+  end
+
+  def open_time
+    "#{open_hour}:#{open_minute}" if open_hour && open_minute
+  end
+
+  def open_time=(time)
+    self.open_hour, self.open_minute = time.to_s.split(':')
+  end
+
+  def close_time
+    "#{close_hour}:#{close_minute}" if close_hour && close_minute
+  end
+
+  def close_time=(time)
+    self.close_hour, self.close_minute = time.to_s.split(':')
+  end
+
   # Returns whether or not this availability rule is 'open' at a given hour & minute
   def open_at?(hour, minute)
     after_opening = hour > open_hour || open_hour == hour && minute >= open_minute

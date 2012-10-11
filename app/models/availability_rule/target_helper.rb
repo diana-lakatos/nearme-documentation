@@ -15,6 +15,13 @@ module AvailabilityRule::TargetHelper
       raise ArgumentError, "Can't find AvailabilityRule::Template with id '#{id}'"
     end
   end
+
+  # Determine whether the target availability matches one of the predefined templates and return its id
+  def availability_template_id
+    availability = self.availability
+    template = AvailabilityRule.templates.detect { |template| availability.matches_template?(template) }
+    template.id if template
+  end
 end
 
 

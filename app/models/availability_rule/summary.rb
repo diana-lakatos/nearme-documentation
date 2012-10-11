@@ -16,6 +16,17 @@ class AvailabilityRule::Summary
     @rules.detect { |rule| rule.day == day }
   end
 
+  def matches_template?(template)
+    template.days.each do |day|
+      rule = rule_for_day(day)
+      return false unless rule
+      return false unless rule.open_at?(template.hours.begin, 0)
+      return false unless rule.open_at?(template.hours.end - 1, 59)
+    end
+
+    true
+  end
+
   # Return whether or not the target is open given options
   #
   # options - The availability query
