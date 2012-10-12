@@ -23,6 +23,8 @@ class Listing < ActiveRecord::Base
 
   belongs_to :creator, class_name: "User"
 
+  has_many :availability_rules, :as => :target
+
   validates_presence_of :location_id, :creator_id, :name, :description, :quantity
   validates_inclusion_of :confirm_reservations, :in => [true, false]
   validates_numericality_of :quantity
@@ -55,16 +57,29 @@ class Listing < ActiveRecord::Base
 
   include Search
 
+  include AvailabilityRule::TargetHelper
+
+  # Defer to the parent Location for availability rules unless this Listing has specific
+  # rules.
+  def availability
+    if availability_rules.present?
+      super # See: AvailabilityRule::TargetHelper#availability
+    else
+      location.availability
+    end
+  end
+
+  def availability_for(date)
+    if availability.open_on?(:date => date)
+      # Return the number of free desks
+      [self.quantity - desks_booked_on(date), 0].max
+    else
+      0
+    end
+  end
 
   # TODO: Create a database index for the availability.
   # TODO: This implementation is really slow!
-  def availability_for(date)
-
-    # Return the number of free desks
-    [self.quantity - desks_booked_on(date), 0].max
-
-  end
-
   def desks_booked_on(date)
     # Get all of the reservations for the property on the given date
     reservations = Reservation.joins(:periods).where(

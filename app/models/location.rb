@@ -20,6 +20,7 @@ class Location < ActiveRecord::Base
   validates :email, email: true, allow_nil: true
 
   before_validation :fetch_coordinates
+  before_save :assign_default_availability_rules
 
   acts_as_paranoid
 
@@ -41,6 +42,12 @@ class Location < ActiveRecord::Base
   end
 
   private
+
+    def assign_default_availability_rules
+      if !availability_rules.any?
+        AvailabilityRule.default_template.apply(self)
+      end
+    end
 
     def fetch_coordinates
       # If we aren't locally geocoding (cukes and people with JS off)

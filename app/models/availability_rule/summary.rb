@@ -32,11 +32,19 @@ class AvailabilityRule::Summary
   #           :minute - The minute of the day
   def open_on?(options)
     raise ArgumentError.new("Options must be a hash") unless options.is_a?(Hash)
-    raise ArgumentError.new("Must provide day of week") unless options[:day].is_a?(Fixnum)
-    options[:minute] ||= 0
 
-    rule = rule_for_day(options[:day])
-    rule && rule.open_at?(options[:hour], options[:minute])
+    day = options[:day]
+    day ||= options[:date] && options[:date].wday
+    raise ArgumentError.new("Must provide day of week") unless day
+
+    rule = rule_for_day(day)
+    return false unless rule
+
+    if options[:hour]
+      return false unless rule.open_at?(options[:hour], options[:minute] || 0)
+    end
+
+    true
   end
 end
 

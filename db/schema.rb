@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121010215734) do
+ActiveRecord::Schema.define(:version => 20121012012146) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
