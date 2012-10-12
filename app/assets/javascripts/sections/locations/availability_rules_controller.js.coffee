@@ -39,7 +39,7 @@ class @AvailabilityRulesController
   bindEvents: ->
     # Whenever the template selector changes we need to update the state of the UI
     @selector.change (event) =>
-      @updateState()
+      @updateCustomState()
 
     # Whenever changing closed state we need to hide/show the time fields
     @customFields.on 'change', 'input[name*=destroy]', (event) =>
