@@ -1,0 +1,17 @@
+.availability-rules
+  = f.label :availability_template_id, "Availability"
+  = f.select :availability_template_id, availability_template_options(f.object)
+
+  .custom-availability-rules
+    - f.object.availability.each_day do |day, rule|
+      %div{:class => "day day-#{day}"}
+        = f.fields_for(:availability_rules, rule || AvailabilityRule.new(:day => day)) do |af|
+          = af.hidden_field :id if af.object.persisted?
+          = af.hidden_field :day
+          .day-name= af.object.day_name
+          .open-time= af.select :open_time, availability_time_options
+          .close-time= af.select :close_time, availability_time_options
+          .closed-flag
+            = af.check_box :_destroy, :class => "closed", :checked => !af.object.open_time.present?
+            = af.label :_destroy, "Closed?", :class => "inline"
+

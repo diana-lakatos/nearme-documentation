@@ -26,6 +26,10 @@ class AvailabilityRule < ActiveRecord::Base
     TEMPLATES
   end
 
+  def self.default_template
+    templates[0]
+  end
+
   def day_name
     Date::DAYNAMES[day]
   end

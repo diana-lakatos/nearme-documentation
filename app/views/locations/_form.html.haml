@@ -22,24 +22,7 @@
   = f.input :organization_ids, :collection => Organization.order('name').all, :as => :check_boxes, :label => "Professional Associations", :hint => "Please check any professional associations with which you are affiliated. You can then optionally restrict your listings to users who have identified themselves as a member of these associations."
   = f.input :amenity_ids, :label => "Amenities Provided", :collection => Amenity.order('name').all, :as => :check_boxes, :hint => "Please check any services you provide."
   = f.input :require_organization_membership, :input_html => { :class => "check_boxes" }, :label_html => { :class => "check_box" }, :label => "Require Association Membership", :hint => "This will only show your listings to members of the professional associations you selected above"
-
-  .availability-rules
-    = f.label :availability_template_id, "Availability"
-    = f.select :availability_template_id, availability_template_options(f.object)
-
-    .custom-availability-rules
-      - f.object.availability.each_day do |day, rule|
-        %div{:class => "day day-#{day}"}
-          = f.fields_for(:availability_rules, rule || AvailabilityRule.new(:day => day)) do |af|
-            = af.hidden_field :id if af.object.persisted?
-            = af.hidden_field :day
-            .day-name= af.object.day_name
-            .open-time= af.select :open_time, availability_time_options
-            .close-time= af.select :close_time, availability_time_options
-            .closed-flag
-              = af.check_box :_destroy, :class => "closed", :checked => !af.object.open_time.present?
-              = af.label :_destroy, "Closed?", :class => "inline"
-
+  = render 'availability_rules/form', :f => f
   = f.button :submit
 
 :javascript
