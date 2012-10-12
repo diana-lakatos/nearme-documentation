@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120913065803) do
+ActiveRecord::Schema.define(:version => 20121010182812) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -61,13 +61,20 @@ ActiveRecord::Schema.define(:version => 20120913065803) do
     t.datetime "updated_at",        :null => false
   end
 
+  create_table "listing_unit_prices", :force => true do |t|
+    t.integer  "listing_id"
+    t.integer  "price_cents"
+    t.integer  "period"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "listings", :force => true do |t|
     t.integer  "location_id"
     t.integer  "creator_id"
     t.string   "name"
     t.text     "description"
     t.string   "currency"
-    t.integer  "price_cents",          :default => 0
     t.integer  "quantity",             :default => 1
     t.float    "rating_average",       :default => 0.0
     t.integer  "rating_count",         :default => 0

@@ -15,6 +15,7 @@ class Listing < ActiveRecord::Base
     end
   end
   has_many :ratings, as: :content, dependent: :destroy
+  has_many :listing_unit_prices, dependent: :destroy
 
   has_many :inquiries
 
@@ -27,7 +28,7 @@ class Listing < ActiveRecord::Base
   validates_inclusion_of :confirm_reservations, :in => [true, false]
   validates_numericality_of :quantity
 
-  attr_accessible :confirm_reservations, :location_id, :price_cents, :quantity, :rating_average, :rating_count,
+  attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
                   :availability_rules, :creator_id, :name, :description, :price
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
@@ -37,7 +38,6 @@ class Listing < ActiveRecord::Base
 
   delegate :to_s, to: :name
 
-  monetize :price_cents, :allow_nil => true
 
   acts_as_paranoid
 
@@ -90,6 +90,29 @@ class Listing < ActiveRecord::Base
 
   def free?
     price.nil? || price == 0.0
+  end
+
+  def price
+    daily_unit_price.price
+  end
+
+  def price=(price)
+    daily_unit_price.price = price
+    daily_unit_price.save if daily_unit_price.persisted?
+  end
+
+  def price_cents
+    daily_unit_price.price_cents
+  end
+
+  def price_cents= price
+    daily_unit_price.price_cents = price
+    daily_unit_price.save if daily_unit_price.persisted?
+  end
+
+  def daily_unit_price
+    listing_unit_prices << ListingUnitPrice.new(period: 1440, listing: self) unless listing_unit_prices.any? { |l| l.period == 1440 }
+    daily_unit_price = listing_unit_prices.select { |l| l.period == 1440 }.last
   end
 
   def rate_for_user(rating, user)

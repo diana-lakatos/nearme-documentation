@@ -5,7 +5,7 @@ end
 Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and Wi\-Fi)?$/ do |city, dollars, cents, wifi|
   listing = create_listing_in(city)
 
-  listing.update_column(:price_cents, (dollars.to_i * 100) + cents.to_i)
+  listing.price_cents = (dollars.to_i * 100) + cents.to_i
   listing.location.amenities << @wifi if wifi
 end
 
@@ -60,9 +60,9 @@ Given /^a listed location in San Francisco that does( not)? require confirmation
   @listing = FactoryGirl.create(:listing_in_san_francisco, confirm_reservations: !confirmation)
 end
 
-When /^I create a listing for that location with a price of \$(\d+)\.(\d+)$/ do |dollars, cents|
+When /^I create a listing for that location with a (daily|weekly|monthly) price of \$(\d+)\.(\d+)$/ do |period, dollars, cents|
   create_listing(model!("location")) do
-    fill_in "Price", with: "#{dollars}.#{cents}"
+    fill_in "#{period.capitalize} Price", with: "#{dollars}.#{cents}"
   end
 end
 
@@ -110,7 +110,7 @@ Then /^I see the listing details$/ do
   page.should have_content(listing.url)
 end
 
-Then /^the listing price is shown as (.*)$/ do |amount|
+Then /^the listing (daily|weekly|monthly) price is shown as (.*)$/ do |period, amount|
   visit listing_path(listing)
   page.should have_content(amount)
   visit listings_path

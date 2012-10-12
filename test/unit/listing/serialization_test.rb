@@ -3,7 +3,7 @@ require "test_helper"
 class Listing::SerializationTest < ActiveSupport::TestCase
   context "a free listing" do
     setup do
-      @listing = FactoryGirl.create(:listing, :price_cents => 0)
+      @listing = FactoryGirl.create(:free_listing)
       @serializer = ListingSerializer.new(@listing)
     end
 
@@ -17,7 +17,7 @@ class Listing::SerializationTest < ActiveSupport::TestCase
 
   context "a non-free daily listing" do
     setup do
-      @listing = FactoryGirl.create(:listing, :price_cents => 100_00)
+      @listing = FactoryGirl.create(:hundred_dollar_listing)
       @serializer = ListingSerializer.new(@listing)
     end
 
@@ -31,7 +31,7 @@ class Listing::SerializationTest < ActiveSupport::TestCase
 
   context "a POA daily listing" do
     setup do
-      @listing = FactoryGirl.create(:listing, :price_cents => nil)
+      @listing = FactoryGirl.create(:poa_listing)
       @serializer = ListingSerializer.new(@listing)
       @json = @serializer.as_json[:listing]
     end

@@ -145,8 +145,8 @@ class Listing::ScorerTest < ActiveSupport::TestCase
     context "scoring based on price" do
       setup do
         @listings.first.price_cents = 234.50 * 100
-        @listings[1].price_cents    = 900.00 * 100
-        @listings.last.price_cents  = 123.90 * 100
+        @listings[1].price_cents = 900.00 * 100
+        @listings.last.price_cents =  123.90 * 100
       end
 
       should "score correctly" do

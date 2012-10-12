@@ -5,10 +5,30 @@ FactoryGirl.define do
     end
 
     description "Aliquid eos ab quia officiis sequi."
-    price_cents 5000
     creator
     location
     confirm_reservations true
+    after(:create) do |listing|
+      listing.listing_unit_prices << FactoryGirl.create(:listing_unit_price, listing: listing)
+    end
+
+    factory :free_listing do
+      after(:create) do |listing|
+       listing.price_cents = 0
+      end
+    end
+
+    factory :hundred_dollar_listing do
+      after(:create) do |listing|
+       listing.price_cents = 100_00
+      end
+    end
+
+    factory :poa_listing do
+      after(:create) do |listing|
+       listing.price_cents = nil
+      end
+    end
 
     factory :listing_with_amenity do
       after(:create) do |listing|

@@ -20,9 +20,20 @@ Feature: Location Owner Creates/Edits Listing
     Then a listing should exist with name: "Joe's Codin' Garage"
     And I see the listing details
 
+  @future
   Scenario: Setting a price
-    When I create a listing for that location with a price of $50.00
-    Then the listing price is shown as $50
+    When I create a listing for that location with a daily price of $50.00
+    Then the listing daily price is shown as $50
+
+  @future
+  Scenario: Setting a weekly price
+    When I create a listing for that location with a weekly price of $200.00
+    Then the listing weekly price is shown as $200
+
+  @future
+  Scenario: Setting a monthly price
+    When I create a listing for that location with a monthly price of $200.00
+    Then the listing monthly price is shown as $200
 
   Scenario: Setting availability rules
     When I create a listing for that location with availability rules

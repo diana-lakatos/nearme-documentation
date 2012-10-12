@@ -49,7 +49,7 @@ class ReservationTest < ActiveSupport::TestCase
   context "with reservation pricing" do
     context "and a listing with some availability" do
       setup do
-        @listing = FactoryGirl.create(:listing, price_cents: 50 * 100, quantity: 10)
+        @listing = FactoryGirl.create(:listing, quantity: 10)
         @user    = FactoryGirl.create(:user)
       end
 
