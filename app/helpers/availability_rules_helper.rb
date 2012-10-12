@@ -1,8 +1,9 @@
 module AvailabilityRulesHelper
-  def availability_template_options
+  def availability_template_options(object = nil)
+    custom_options = { :selected => true } if object && object.availability_template_id.blank?
     AvailabilityRule.templates.map { |template|
       [template.name, template.id]
-    } + [['Custom', ""]]
+    } + [['Custom', nil, custom_options]]
   end
 
   def availability_time_options

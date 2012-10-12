@@ -1,5 +1,5 @@
 class AvailabilityRule < ActiveRecord::Base
-  attr_accessible :close_hour, :close_minute, :day, :open_hour, :open_minute
+  attr_accessible :day, :close_hour, :close_minute, :open_hour, :open_minute, :open_time, :close_time
 
   # === Associations
   belongs_to :target, :polymorphic => true

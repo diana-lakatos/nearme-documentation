@@ -16,8 +16,15 @@
 //= require tile.stamen.js
 //
 //= require_self
-//= require ./sections/search
+//
+// Standard components
 //= require ./components/multiselect
+//
+// Sections
+//= require ./sections/search
+//= require ./sections/locations/location_form_controller
+//= require ./sections/locations/availability_rules_controller
+
 
 window.DNM = {
   initialize : function() {

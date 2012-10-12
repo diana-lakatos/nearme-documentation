@@ -1,0 +1,14 @@
+.availability-rules {
+  .custom-availability-rules {
+    .day {
+      overflow: hidden;
+      padding: 6px 0;
+
+      .day-name, .open-time, .close-time, .closed-flag {
+        float: left;
+        height: 20px;
+        width: 100px;
+      }
+    }
+  }
+}

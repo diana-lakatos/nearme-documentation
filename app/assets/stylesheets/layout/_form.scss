@@ -44,6 +44,12 @@ form {
     font-size: 18px;
     display: block;
     margin-bottom: 8px;
+
+    &.inline {
+      display: inline-block;
+      font-size: 14px;
+      margin-bottom: auto;
+    }
   }
 
   input[type="text"], input[type="password"], input[type="email"], input[type="url"], input[type="number"], textarea {

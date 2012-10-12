@@ -9,6 +9,8 @@ module AvailabilityRule::TargetHelper
   #
   # id - The id of a Template
   def availability_template_id=(id)
+    return unless id.present?
+
     if template = AvailabilityRule.templates.find { |t| t.id == id }
       template.apply(self)
     else
