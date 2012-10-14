@@ -1,12 +1,13 @@
 # A template which assigns a set of standard AvailabilityRules to a target.
 class AvailabilityRule::Template
-  attr_reader :id, :name, :days, :hours
+  attr_reader :id, :name, :days, :hours, :description
 
   def initialize(options)
     @id      = options[:id]
     @name    = options[:name]
     @days    = options[:days]
     @hours   = options[:hours]
+    @description = options[:description]
   end
 
   def apply(target)

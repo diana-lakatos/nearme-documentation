@@ -4,12 +4,11 @@ module AvailabilityRule::TargetHelper
   def availability
     AvailabilityRule::Summary.new(availability_rules.reject(&:marked_for_destruction?))
   end
-
   # Assigns and applies a given AvailabilityRule::Template
   #
   # id - The id of a Template
   def availability_template_id=(id)
-    return unless id.present?
+    return if id.blank? || id == 'custom'
 
     if template = AvailabilityRule.templates.find { |t| t.id == id }
       template.apply(self)

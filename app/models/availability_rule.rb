@@ -16,9 +16,9 @@ class AvailabilityRule < ActiveRecord::Base
 
   # Predefined availability templates
   TEMPLATES = [
-    Template.new(:id => 'M-F9-5', :name => "Working Week", :days => 1..5, :hours => 9..17),
-    Template.new(:id => 'M-F8-6', :name => "Extended Week", :days => 1..5, :hours => 8..18),
-    Template.new(:id => 'M-S9-5', :name => "Working Week +1", :days => 1..6, :hours => 9..17)
+    Template.new(:id => 'M-F9-5', :name => "Working Week", :days => 1..5, :hours => 9..17, :description => "Mon - Fri, 9:00 AM - 5:00 PM"),
+    Template.new(:id => 'M-F8-6', :name => "Extended Week", :days => 1..5, :hours => 8..18, :description => "Mon - Fri, 8:00 AM - 6:00 PM"),
+    Template.new(:id => 'M-S9-5', :name => "Working Week +1", :days => 1..6, :hours => 9..17, :description => "Mon - Sat, 9:00 AM - 5:00 PM")
   ]
 
   # Return a list of predefined availability rule templates

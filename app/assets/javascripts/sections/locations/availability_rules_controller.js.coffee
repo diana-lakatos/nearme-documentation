@@ -1,8 +1,9 @@
 class @AvailabilityRulesController
 
   constructor: (@container) ->
-    @selector = @container.find('select[name*=availability_template]')
+    @selector = @container.find('input[type=radio][name*=availability_template]')
     @customFields = @container.find('.custom-availability-rules')
+    @clearField = @container.find('[name*=defer_availability_rules]')
 
     # Set up event listeners
     @bindEvents()
@@ -12,10 +13,15 @@ class @AvailabilityRulesController
     @updateDayStates()
 
   updateCustomState: ->
-    if @selector.val() == ''
+    if @selector.filter(':checked').attr('data-custom-rules')?
       @showCustom()
     else
       @hideCustom()
+
+    if @selector.filter(':checked').attr('data-clear-rules')?
+      @clearField.prop('checked', true)
+    else
+      @clearField.prop('checked', false)
 
   updateDayStates: ->
     @customFields.find('input[name*=destroy]').each (i, element) =>

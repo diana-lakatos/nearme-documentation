@@ -30,7 +30,8 @@ class Listing < ActiveRecord::Base
   validates_numericality_of :quantity
 
   attr_accessible :confirm_reservations, :location_id, :price_cents, :quantity, :rating_average, :rating_count,
-                  :availability_rules, :creator_id, :name, :description, :price, :availability_template_id, :availability_rules_attributes
+                  :availability_rules, :creator_id, :name, :description, :price, :availability_template_id, :availability_rules_attributes,
+                  :defer_availability_rules
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
@@ -63,13 +64,25 @@ class Listing < ActiveRecord::Base
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
   def availability
-    puts availability_rules.inspect
-    if availability_rules.empty? && location
+    if defer_availability_rules? && location
       location.availability
     else
       super # See: AvailabilityRule::TargetHelper#availability
     end
   end
+
+  # Trigger clearing of all existing availability rules on save
+  def defer_availability_rules=(clear)
+    if clear.to_i == 1
+      availability_rules.each(&:mark_for_destruction)
+    end
+  end
+
+  # Are we deferring availability rules to the Location?
+  def defer_availability_rules
+    availability_rules.reject(&:marked_for_destruction?).empty?
+  end
+  alias_method :defer_availability_rules?, :defer_availability_rules
 
   def availability_for(date)
     if availability.open_on?(:date => date)
