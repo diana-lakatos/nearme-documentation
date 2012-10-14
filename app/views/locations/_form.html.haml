@@ -26,8 +26,10 @@
   = f.button :submit
 
 :javascript
-  // Initialize the location form
-  new LocationFormController($('form.new_location, form.edit_location'))
+  $(function() {
+    // Initialize the location form
+    new LocationFormController($('form.new_location, form.edit_location'))
+  });
 
   function showLocationSuggestions(results) {
     if(results.length > 0) {

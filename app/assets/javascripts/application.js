@@ -24,6 +24,7 @@
 //= require ./sections/search
 //= require ./sections/locations/location_form_controller
 //= require ./sections/locations/availability_rules_controller
+//= require ./sections/listings/listing_form_controller
 
 
 window.DNM = {

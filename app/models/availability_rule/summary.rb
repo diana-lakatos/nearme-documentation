@@ -5,8 +5,11 @@ class AvailabilityRule::Summary
   end
 
   # Iterate over each day in the week and yield the day of week and the availability rule (if any) for that day.
-  def each_day
-    (0..6).each do |day|
+  def each_day(monday_first = true)
+    days = (0..6).to_a
+    days.push(days.shift) if monday_first
+
+    days.each do |day|
       yield(day, rule_for_day(day))
     end
   end
