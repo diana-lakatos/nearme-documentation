@@ -55,6 +55,7 @@ end
 group :development, :test do
   gem 'shoulda'
   gem 'ffaker'
+  gem 'shoulda'
   gem 'factory_girl_rails', '>=3.0.0'
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
