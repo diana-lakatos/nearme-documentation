@@ -44,11 +44,5 @@ class LocationTest < ActiveSupport::TestCase
       assert location.availability.open_on?(:day => 0, :hour => 6)
       assert !location.availability.open_on?(:day => 1)
     end
-
-    should "be able to assign a template of rules" do
-      location = Location.new
-      location.availability_template_id = 'M-F9-5'
-
-    end
   end
 end
