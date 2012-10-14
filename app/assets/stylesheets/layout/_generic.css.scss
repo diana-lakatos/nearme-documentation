@@ -31,3 +31,23 @@ p {
 .wood-texture {
   background: image-url("layout/seamless-wood-texture.jpg");
 }
+
+// An introduction paragraph at the top of the page content
+.intro {
+  margin: 20px 10px;
+  line-height: 150%;
+  font-size: 16px;
+}
+
+// A normal weighted h3
+@mixin h3-normal {
+  color: $dnm_black;
+  text-shadow: 0 1px 0 rgba(255,255,255,.75); /* drop shadow */
+  font-size: 18px;
+  margin: 23px 0;
+  padding: 0;
+}
+
+.h3-normal {
+  @include h3-normal;
+}

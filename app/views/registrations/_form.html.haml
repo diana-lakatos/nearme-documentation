@@ -11,11 +11,12 @@
         = f.password_field :password,              placeholder: "Your password"
         = f.password_field :password_confirmation, placeholder: "Confirm password"
 
-  .control-group.organizations
+  .control-group.indent.organizations
     = f.label :organization_ids, label: "Professional Associations"
-    %p
+    .hint
       Please check any professional associations with which you are affiliated. You can then access listings restricted to members of these associations.
-    = f.input :organization_ids, :collection => Organization.order('name').all, as: :check_boxes, label: false
+    .two-up
+      = f.input :organization_ids, :collection => Organization.order('name').all, as: :check_boxes, label: false, :wrapper => false
 
   .actions
     = f.submit (resource.persisted?) ? "Save Changes" : "Sign Up Now"

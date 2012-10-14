@@ -37,10 +37,14 @@ form {
   .hint {
     font-size: 80%;
     display: block;
+    margin-bottom: 6px;
   }
 
   label {
     @extend .font-banda-bold;
+  }
+
+  label.control-label {
     font-size: 18px;
     display: block;
     margin-bottom: 8px;
@@ -52,18 +56,45 @@ form {
     }
   }
 
+  // Checkbox wrapper label
+  //
+  // Usage:
+  //   <label class="checkbox"><input type="checkbox" />Label Text</label>
+  label.checkbox {
+    display: block;
+    width: auto;
+    padding-top: 6px;
+    line-height: 18px;
+    font-size: 14px;
+
+    input {
+      float: left;
+      margin: 2px 5px 0 0;
+    }
+  }
+
+  // Two-up controls
+  // i.e. Controls with side-by-side group rendering
+  .two-up {
+    label.checkbox {
+      width: 195px;
+      float: left;
+      margin-bottom: 15px;
+    }
+  }
+
   input[type="text"], input[type="password"], input[type="email"], input[type="url"], input[type="number"], textarea {
     @extend .font-banda;
     margin: 0;
     margin-bottom: 8px;
-    padding: 6px 8px 6px 8px;
+    padding: 8px 8px 8px 8px;
     line-height: 22px;
     background: #fff;
     @include background(linear-gradient(#ececec, #fcfcfc));
     border: 1px solid rgba(0,0,0,0.4);
     @include border-radius(8px);
     @include box-shadow(
-      inset rgba(0,0,0,0.6) 3px 3px 8px -4px,
+      inset rgba(0,0,0,0.4) 3px 3px 8px -4px,
       rgba(255,255,255,0.1) 0 1px 0 0
     );
     color: #707070;
@@ -95,10 +126,47 @@ form {
   }
 }
 
+// Form with horizontal label alignment
+//
+// Usage:
+//   <form class="form-horizontal">
+//     <div class="control-group">
+//       <label>Label on left</label>
+//       <div class="controls">
+//         <!-- input elements right of label -->
+//       </div>
+//     </div>
+//     <div class="control-group indent">
+//       <label>Top label</label>
+//       <div class="controls">
+//         <!-- input elements under label -->
+//       </div>
+//     </div>
+//   </form>
 .form-horizontal {
   .control-group {
     margin-bottom: 10px;
     overflow: hidden;
+
+    // An indented control group
+    &.indent {
+      margin-left: 200px;
+
+      // Override the label so that it's not floating and doesn't float
+      .control-label {
+        width: auto;
+        display: block;
+        float: none;
+        text-align: left;
+        margin: 0;
+        margin-bottom: 5px;
+      }
+
+      // Controls don't need a margin as already indented
+      .controls {
+        margin-left: 0;
+      }
+    }
 
     &.error {
       input {
@@ -110,11 +178,11 @@ form {
     }
 
     .control-label {
+      @extend .font-banda-bold;
       width: 180px;
       float: left;
-      padding-top: 6px;
+      margin-top: 6px;
       text-align: right;
-      @extend .font-banda-bold;
       font-size: 18px;
       color: $dnm_black;
       abbr { display: none; }
@@ -131,7 +199,8 @@ form {
   }
 }
 
-.two-thirds.column .box form.form-horizontal {
+// Width overrides for restricted width forms
+.two-thirds.column form.form-horizontal {
   input[type="text"], input[type="password"], input[type="email"], input[type="url"] {
     width: 355px;
   }
@@ -149,5 +218,4 @@ form {
     margin-left: 196px;
     margin-bottom: 20px;
   }
-
 }

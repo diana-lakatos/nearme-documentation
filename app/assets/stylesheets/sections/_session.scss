@@ -1,22 +1,2 @@
-/* === Login Form === */
-form.login_form, form.password_reset_form {
-  label {
-    float: none;
-    display: block;
-    text-align: left;
-  }
-
-  input[type="text"], input[type="password"], input[type="email"] {
-    width: 280px;
-  }
-
-  .actions {
-    line-height: 60px;
-    font-size: 18px;
-
-    input { // Submit button
-      margin-top: 0;
-      margin-left: 0;
-    }
-  }
+.sign-in {
 }
