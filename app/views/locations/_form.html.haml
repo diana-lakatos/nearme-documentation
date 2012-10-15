@@ -17,7 +17,9 @@
 
   .control-group.indent
     = render 'availability_rules/form', :f => f, :allow_clear => "Use Location's availability"
-  = f.button :submit
+
+  .actions
+    = f.button :submit
 
 :javascript
   $(function() {
