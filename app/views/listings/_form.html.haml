@@ -5,9 +5,7 @@
   room.
 = simple_form_for @listing, :html => { :class => "form-horizontal edit_listing" } do |f|
   - textile_hint = "(Parsed using #{link_to("Textile", "http://en.wikipedia.org/wiki/Textile_%28markup_language%29", :target => "_blank")}).".html_safe
-  .control-group
-    = f.label :location_id, :class => "control-label"
-    = f.input :location_id, :collection => current_user.locations, :prompt =>  "Select a location...", :wrapper => false, :label => false, :hint => "Or... #{link_to "Create a location", new_location_path}"
+  = f.input :location_id, :collection => current_user.locations, :prompt =>  "Select a location...", :hint => "Or... #{link_to "Create a location", new_location_path}"
 
   = f.input :name, :hint => "What's the name of this listing?"
   = f.input :quantity, :input_html => { :size => 4, :min => 1 }, :hint => "How many spots do you have?"

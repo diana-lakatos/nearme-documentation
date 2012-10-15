@@ -1,15 +1,7 @@
-%p
-  A location is a physical address, to which you will be able to add bookable
-  resources (listings). Once you've created a location, you can add listings to
-  it.
-
-= simple_form_for location do |f|
+= simple_form_for location, :html => { :class => "form-horizontal edit_location" } do |f|
   - textile_hint = "(Parsed using #{link_to("Textile", "http://en.wikipedia.org/wiki/Textile_%28markup_language%29", :target => "_blank")}).".html_safe
-  .clearfix
-    .four.columns
-      = f.input :company_id, :collection => current_user.companies, :prompt =>  "Select a company..."
-    .six.columns
-      Or... #{link_to "Create a company", new_company_path, :class => "btn btn-blue btn-medium"}
+
+  = f.input :company_id, :collection => current_user.companies, :prompt =>  "Select a company...", :hint => "Or... #{link_to "Create a company", new_company_path}"
   = f.input :local_geocoding, :as => :hidden
   = f.input :latitude, :as => :hidden
   = f.input :longitude, :as => :hidden
@@ -22,7 +14,9 @@
   = f.input :organization_ids, :collection => Organization.order('name').all, :as => :check_boxes, :label => "Professional Associations", :hint => "Please check any professional associations with which you are affiliated. You can then optionally restrict your listings to users who have identified themselves as a member of these associations."
   = f.input :amenity_ids, :label => "Amenities Provided", :collection => Amenity.order('name').all, :as => :check_boxes, :hint => "Please check any services you provide."
   = f.input :require_organization_membership, :input_html => { :class => "check_boxes" }, :label_html => { :class => "check_box" }, :label => "Require Association Membership", :hint => "This will only show your listings to members of the professional associations you selected above"
-  = render 'availability_rules/form', :f => f, :allow_clear => "Use Location's availability"
+
+  .control-group.indent
+    = render 'availability_rules/form', :f => f, :allow_clear => "Use Location's availability"
   = f.button :submit
 
 :javascript
