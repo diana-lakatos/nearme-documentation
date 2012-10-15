@@ -62,7 +62,7 @@ end
 
 When /^I create a listing for that location with a (daily|weekly|monthly) price of \$(\d+)\.(\d+)$/ do |period, dollars, cents|
   create_listing(model!("location")) do
-    fill_in "#{period.capitalize} Price", with: "#{dollars}.#{cents}"
+    fill_in "#{period.capitalize} price", with: "#{dollars}.#{cents}"
   end
 end
 
@@ -110,7 +110,7 @@ Then /^I see the listing details$/ do
   page.should have_content(listing.url)
 end
 
-Then /^the listing (daily|weekly|monthly) price is shown as (.*)$/ do |period, amount|
+Then /^the listing (daily |weekly |monthly )?price is shown as (.*)$/ do |period, amount|
   visit listing_path(listing)
   page.should have_content(amount)
   visit listings_path
@@ -126,3 +126,15 @@ Then /^I cannot view that listing$/ do
   page.should have_content "Sorry, you don't have permission to view that"
   current_path.should == listings_path
 end
+
+Then /^I should see the following listings in order:$/ do |table|
+  found = all("article.listing h2")
+  table.raw.flatten.each_with_index do |listing, index|
+    found[index].text.should include listing
+  end
+end
+
+Then /^I should see the creators gravatar/ do
+  page.should have_css(".creator img")
+end
+

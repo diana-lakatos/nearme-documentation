@@ -4,13 +4,26 @@ module ListingsHelper
   end
 
   def listing_price(listing)
-    case listing.price_cents
-    when nil
+    cents = listing.listing_unit_prices.collect(&:price_cents)
+    if cents.all?(&:nil?)
       "POA"
-    when 0
+    elsif cents.all? { |p| p == 0 }
       "Free!"
     else
-      humanized_money_with_symbol(listing.price)
+      listing.listing_unit_prices.reject { |p| p.price.nil? }.map do |price|
+        humanized_money_with_symbol(price.price) +" #{human_friendly_time_period(price)}"
+      end.join("; ")
+    end
+  end
+
+  def human_friendly_time_period(unit_price)
+    case unit_price.period
+    when Listing::MINUTES_IN_DAY
+      "per day"
+    when Listing::MINUTES_IN_WEEK
+      "per week"
+    when Listing::MINUTES_IN_MONTH
+      "per month"
     end
   end
 

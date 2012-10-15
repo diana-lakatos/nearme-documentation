@@ -8,12 +8,12 @@ Feature: User Lists listings
     And I am on the home page
     When I follow "Browse Spaces"
     Then I should see the following listings in order:
-      | Mocra - $50 |
+      | Mocra |
     Given a listing exists with name: "Inspire9"
     When I follow "Browse Spaces"
     Then I should see the following listings in order:
-      | Inspire9 - $50|
-      | Mocra - $50 |
+      | Inspire9 |
+      | Mocra |
 
   Scenario: Organization member of a locations private organization may see listings
     Given a listing exists for a location with a private organization
