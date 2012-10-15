@@ -28,14 +28,17 @@ class @AvailabilityRulesController
       @updateClosedState($(element))
 
   showCustom: ->
-    @customFields.show()
     @customFields.find('input, select').prop('disabled', false)
+    @updateDayStates()
+    @customFields.show()
 
   hideCustom: ->
     @customFields.hide()
     @customFields.find('input, select').prop('disabled', true)
 
   updateClosedState: (checkbox) ->
+    return unless @customFields.is(':visible')
+
     times = checkbox.closest('.day').find('.open-time select, .close-time select')
     if checkbox.is(':checked')
       times.hide().prop('disabled', true)

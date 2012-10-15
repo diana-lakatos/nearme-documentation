@@ -49,9 +49,9 @@
           %li=a.name
     - if @listing.description?
       %p= raw @listing.description
-    - if @listing.availability_rules?
+    - if @listing.availability_rules_text?
       %h3 Availability Rules
-      %p= raw @listing.availability_rules
+      %p= raw @listing.availability_rules_text
     %h2 Latest Activity
     - if @feeds.any?
       %dl.activity_feed

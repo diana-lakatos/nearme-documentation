@@ -5,13 +5,15 @@ class V1::ListingsControllerTest < ActionController::TestCase
   setup do
     # stub out sphinx
     stub_sphinx([FactoryGirl.build(:listing)])
+
+    @listing = FactoryGirl.create(:listing)
   end
 
   ##
   # Display
 
   test "show should display a listing" do
-    get :show, id: 1
+    get :show, id: @listing.id
     assert_response :success
   end
 
@@ -54,7 +56,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   context "when successful" do
     setup do
       authenticate!
-      raw_post :reservation, { id: 1 }, valid_reservation_params.to_json
+      raw_post :reservation, { id: @listing.id }, valid_reservation_params.to_json
     end
 
     should "respond with success" do
@@ -62,13 +64,13 @@ class V1::ListingsControllerTest < ActionController::TestCase
     end
 
     should "create seats" do
-      seat = Listing.find_by_id(1).reservations.first.seats.first
+      seat = Listing.find_by_id(@listing.id).reservations.first.seats.first
       assert_equal "John Carter", seat.name
       assert_equal "john@example.com", seat.email
     end
 
     should "create periods" do
-      reserved_dates = Listing.find_by_id(1).reservations.first.periods.map(&:date)
+      reserved_dates = Listing.find_by_id(@listing.id).reservations.first.periods.map(&:date)
       assert reserved_dates.include? Date.parse("2013-01-01")
       assert reserved_dates.include? Date.parse("2013-01-02")
     end
@@ -83,7 +85,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   test "reservation should raise when json is missing" do
     assert_raise DNM::InvalidJSON do
       authenticate!
-      raw_post :reservation, {id: 1}, ''
+      raw_post :reservation, {id: @listing.id}, ''
     end
   end
 
@@ -92,7 +94,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
       authenticate!
       params = valid_reservation_params
       params.delete "dates"
-      raw_post :reservation, {id: 1}, params.to_json
+      raw_post :reservation, {id: @listing.id}, params.to_json
     end
   end
 
@@ -100,13 +102,13 @@ class V1::ListingsControllerTest < ActionController::TestCase
   # Availability
 
   test "should get availability" do
-    raw_post :availability, {id: 1}, '{ "dates": ["2012-01-01", "2012-01-02", "2012-01-03"] }'
+    raw_post :availability, {id: @listing.id}, '{ "dates": ["2012-01-01", "2012-01-02", "2012-01-03"] }'
     assert_response :success
   end
 
   test "availability should raise when json is missing" do
     assert_raise DNM::InvalidJSONData do
-      raw_post :availability, {id: 1}, ''
+      raw_post :availability, {id: @listing.id}, ''
     end
   end
 
@@ -116,13 +118,13 @@ class V1::ListingsControllerTest < ActionController::TestCase
   test "should accept inquiry" do
     authenticate!
 
-    listing         = Listing.find(1)
+    listing         = Listing.find(@listing.id)
     listing.creator = FactoryGirl.create(:user)
     listing.save
 
     assert_difference "listing.inquiries.count", 1 do
       assert_difference "ActionMailer::Base.deliveries.count", 2 do
-        raw_post :inquiry, {id: 1}, '{ "message": "hello" }'
+        raw_post :inquiry, {id: @listing.id}, '{ "message": "hello" }'
       end
     end
     assert_response :no_content
@@ -137,9 +139,9 @@ class V1::ListingsControllerTest < ActionController::TestCase
   test "inquiry should raise when json is missing" do
     assert_raise DNM::MissingJSONData do
       authenticate!
-      assert_no_difference "Listing.find(1).inquiries.count" do
+      assert_no_difference "Listing.find(@listing.id).inquiries.count" do
         assert_no_difference "ActionMailer::Base.deliveries.count" do
-          raw_post :inquiry, {id: 1}, '{ "no_message": "I am missing!" }'
+          raw_post :inquiry, {id: @listing.id}, '{ "no_message": "I am missing!" }'
         end
       end
     end
@@ -157,21 +159,21 @@ class V1::ListingsControllerTest < ActionController::TestCase
   test "share should raise when json is missing" do
     assert_raise DNM::MissingJSONData do
       authenticate!
-      raw_post :share, {id: 1}, '{ "message": "no email addresses" }'
+      raw_post :share, {id: @listing.id}, '{ "message": "no email addresses" }'
     end
   end
 
   test "share should raise when name in json is missing" do
     assert_raise DNM::MissingJSONData do
       authenticate!
-      raw_post :share, {id: 1}, '{ "to": [{ "email": "name-is-missing@example.com" }] }'
+      raw_post :share, {id: @listing.id}, '{ "to": [{ "email": "name-is-missing@example.com" }] }'
     end
   end
 
   test "share should raise when email in json is missing" do
     assert_raise DNM::MissingJSONData do
       authenticate!
-      raw_post :share, {id: 1}, '{ "to": [{ "name": "Mr. No Having Email" }] }'
+      raw_post :share, {id: @listing.id}, '{ "to": [{ "name": "Mr. No Having Email" }] }'
     end
   end
 
@@ -180,7 +182,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
   test "should show patrons for a listing" do
     authenticate!
-    get :patrons, id: 1
+    get :patrons, id: @listing.id
     assert_response :success
   end
 
@@ -189,7 +191,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
   test "should show connections for a listing" do
     authenticate!
-    get :connections, id: 1
+    get :connections, id: @listing.id
     assert_response :success
   end
 

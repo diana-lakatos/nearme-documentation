@@ -54,7 +54,11 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should "set total cost after creating a new reservation" do
-        dates              = [Date.today, Date.tomorrow, Date.today + 5, Date.today + 6]
+        dates              = [Date.today, Date.tomorrow, Date.today + 5, Date.today + 6].map { |d|
+          d += 1 if d.wday == 6
+          d += 1 if d.wday == 0
+          d
+        }
         quantity           =  5
         assert reservation = @listing.reserve!("test@test.com", @user, dates, quantity)
 

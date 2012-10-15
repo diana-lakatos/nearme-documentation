@@ -188,8 +188,8 @@ class Listing::ScorerTest < ActiveSupport::TestCase
 
     context "scoring based on availability" do
       setup do
-        @start_date = 5.days.ago.to_date
-        @end_date   = Time.now.to_date
+        @start_date = 7.days.from_now.beginning_of_week.to_date
+        @end_date   = @start_date + 5
 
         @listings.each { |l| l.update_attribute(:quantity, 2) }
 

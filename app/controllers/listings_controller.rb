@@ -43,6 +43,7 @@ class ListingsController < ApplicationController
     if @listing.update_attributes(params[:listing])
       redirect_to @listing
     else
+      raise @listing.availability_rules.map(&:day).inspect
       render :edit
     end
   end

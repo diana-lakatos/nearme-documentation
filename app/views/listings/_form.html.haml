@@ -21,7 +21,9 @@
     = render 'availability_rules/form', :f => f
   - if current_user.admin?
     = f.association :creator, :select => "Select a creator..."
-  = f.button :submit
+
+  .actions
+    = f.button :submit
 
 :javascript
   $(function() {
