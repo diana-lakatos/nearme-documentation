@@ -34,8 +34,10 @@ form {
     }
   }
 
-  .hint {
+  .hint, .help-block {
     font-size: 80%;
+    font-size: 14px;
+    line-height: 16px;
     display: block;
     margin-bottom: 6px;
   }
@@ -201,7 +203,7 @@ form {
 
 // Width overrides for restricted width forms
 .two-thirds.column form.form-horizontal {
-  input[type="text"], input[type="password"], input[type="email"], input[type="url"] {
+  input[type="text"], input[type="password"], input[type="email"], input[type="url"], textarea {
     width: 355px;
   }
 
