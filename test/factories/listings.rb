@@ -9,7 +9,7 @@ FactoryGirl.define do
     location
     confirm_reservations true
     after(:create) do |listing|
-      listing.listing_unit_prices << FactoryGirl.create(:listing_unit_price, listing: listing)
+      listing.unit_prices << FactoryGirl.create(:unit_price, listing: listing)
     end
 
     factory :free_listing do

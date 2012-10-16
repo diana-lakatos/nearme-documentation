@@ -6,7 +6,7 @@ class ListingTest < ActiveSupport::TestCase
   should belong_to(:creator)
   should have_many(:reservations)
   should have_many(:ratings)
-  should have_many(:listing_unit_prices)
+  should have_many(:unit_prices)
 
   should validate_presence_of(:location_id)
   should validate_presence_of(:creator_id)

@@ -18,7 +18,7 @@ class Listing < ActiveRecord::Base
     end
   end
   has_many :ratings, as: :content, dependent: :destroy
-  has_many :listing_unit_prices, dependent: :destroy
+  has_many :unit_prices, dependent: :destroy
 
   has_many :inquiries
 

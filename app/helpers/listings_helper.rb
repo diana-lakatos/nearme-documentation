@@ -4,13 +4,13 @@ module ListingsHelper
   end
 
   def listing_price(listing)
-    cents = listing.listing_unit_prices.collect(&:price_cents)
+    cents = listing.unit_prices.collect(&:price_cents)
     if cents.all?(&:nil?)
       "POA"
     elsif cents.all? { |p| p == 0 }
       "Free!"
     else
-      listing.listing_unit_prices.reject { |p| p.price.nil? }.map do |price|
+      listing.unit_prices.reject { |p| p.price.nil? }.map do |price|
         humanized_money_with_symbol(price.price) +" #{human_friendly_time_period(price)}"
       end.join("; ")
     end

@@ -61,14 +61,6 @@ ActiveRecord::Schema.define(:version => 20121010182812) do
     t.datetime "updated_at",        :null => false
   end
 
-  create_table "listing_unit_prices", :force => true do |t|
-    t.integer  "listing_id"
-    t.integer  "price_cents"
-    t.integer  "period"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-  end
-
   create_table "listings", :force => true do |t|
     t.integer  "location_id"
     t.integer  "creator_id"
@@ -198,6 +190,14 @@ ActiveRecord::Schema.define(:version => 20121010182812) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "unit_prices", :force => true do |t|
+    t.integer  "listing_id"
+    t.integer  "price_cents"
+    t.integer  "period"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "user_relationships", :force => true do |t|
     t.integer  "follower_id"

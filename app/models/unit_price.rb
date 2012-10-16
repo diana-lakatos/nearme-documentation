@@ -1,4 +1,4 @@
-class ListingUnitPrice < ActiveRecord::Base
+class UnitPrice < ActiveRecord::Base
   attr_accessible :price_cents, :price, :period, :listing
   belongs_to :listing
 
