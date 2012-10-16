@@ -5,6 +5,9 @@ class Listing < ActiveRecord::Base
     :free => nil,
     :day => 'day'
   }
+  MINUTES_IN_DAY = 1440
+  MINUTES_IN_WEEK = 10080
+  MINUTES_IN_MONTH = 43200
 
   has_many :feeds, dependent: :delete_all
   has_many :reservations, dependent: :destroy
@@ -15,6 +18,7 @@ class Listing < ActiveRecord::Base
     end
   end
   has_many :ratings, as: :content, dependent: :destroy
+  has_many :unit_prices, dependent: :destroy
 
   has_many :inquiries
 
@@ -27,8 +31,8 @@ class Listing < ActiveRecord::Base
   validates_inclusion_of :confirm_reservations, :in => [true, false]
   validates_numericality_of :quantity
 
-  attr_accessible :confirm_reservations, :location_id, :price_cents, :quantity, :rating_average, :rating_count,
-                  :availability_rules, :creator_id, :name, :description, :price
+  attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
+                  :availability_rules, :creator_id, :name, :description, :daily_price, :weekly_price, :monthly_price
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
@@ -37,7 +41,6 @@ class Listing < ActiveRecord::Base
 
   delegate :to_s, to: :name
 
-  monetize :price_cents, :allow_nil => true
 
   acts_as_paranoid
 
@@ -54,7 +57,11 @@ class Listing < ActiveRecord::Base
   }
 
   include Search
+  extend PricingPeriods
 
+  add_pricing_period :daily, MINUTES_IN_DAY
+  add_pricing_period :weekly, MINUTES_IN_WEEK
+  add_pricing_period :monthly, MINUTES_IN_MONTH
 
   # TODO: Create a database index for the availability.
   # TODO: This implementation is really slow!
@@ -65,7 +72,7 @@ class Listing < ActiveRecord::Base
 
   end
 
-  def desks_booked_on(date)
+def desks_booked_on(date)
     # Get all of the reservations for the property on the given date
     reservations = Reservation.joins(:periods).where(
         reservation_periods: { listing_id: self.id, date: date }
@@ -75,11 +82,7 @@ class Listing < ActiveRecord::Base
     reservations.inject(0) { |sum, r| sum += r.seats.count; sum }
   end
 
-  # The period for the listing pricing.
-  # i.e. 'day', etc.
-  # The period is be nil if the listing is free.
-  #
-  # TODO: Implement pricing periods
+
   def price_period
     if free?
       PRICE_PERIODS[:free]
@@ -90,6 +93,23 @@ class Listing < ActiveRecord::Base
 
   def free?
     price.nil? || price == 0.0
+  end
+
+  def price
+    daily_price
+  end
+
+  def price=(price)
+    self.daily_price = price
+  end
+
+  def price_cents
+    daily_period.price_cents
+  end
+
+  def price_cents= price
+    daily_period.price_cents = price
+    daily_period.save if daily_period.persisted?
   end
 
   def rate_for_user(rating, user)

@@ -1,6 +1,7 @@
 Feature: User Views Listing
+
   Scenario: Viewing a free listing
-    Given a listing exists with price_cents: 0
+    Given a free listing exists
     Then the listing price is shown as Free
 
   Scenario: Viewing a Listing with Amenities

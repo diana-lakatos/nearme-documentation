@@ -4,7 +4,6 @@ one:
   location_id: 1
   name: "Super Cool Listing"
   description: "This is a *super* **cool** listing."
-  price_cents: 50000
   quantity: 5
   rating_average: 3.25
   rating_count: 15
