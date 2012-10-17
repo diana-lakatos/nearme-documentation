@@ -1,6 +1,6 @@
 class Location < ActiveRecord::Base
   attr_accessible :address, :amenity_ids, :company_id, :creator_id, :description, :email, :require_organization_membership,
-    :info, :latitude, :local_geocoding, :longitude, :organization_ids, :name, :phone, :formatted_address, :availability_rules_attributes, :availability_template_id
+    :info, :latitude, :local_geocoding, :longitude, :organization_ids, :name, :currency, :phone, :formatted_address, :availability_rules_attributes, :availability_template_id
   attr_accessor :local_geocoding # set this to true in js
   geocoded_by :address
 
