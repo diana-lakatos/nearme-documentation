@@ -19,7 +19,7 @@ module AvailabilityRule::TargetHelper
 
   # Determine whether the target availability matches one of the predefined templates and return its id
   def availability_template_id
-    availability = self.availability
+    availability = AvailabilityRule::Summary.new(availability_rules) # Don't defer at all
     template = AvailabilityRule.templates.detect { |template| availability.matches_template?(template) }
     template.id if template
   end

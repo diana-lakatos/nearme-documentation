@@ -21,7 +21,7 @@ module AvailabilityRulesHelper
 
     # Add choices for each of the pre-defined templates
     AvailabilityRule.templates.each do |template|
-      choices << [template.id, "#{template.name} (#{template.description})", { :id => "availability_template_id_#{template.id.to_s.downcase}" }]
+      choices << [template.id, template.full_name, { :id => "availability_template_id_#{template.id.to_s.downcase}" }]
     end
 
     # Add choice for the 'Custom' rule creation

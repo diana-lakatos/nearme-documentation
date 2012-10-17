@@ -68,7 +68,7 @@ end
 
 When /^I create a listing for that location with availability rules$/ do
   create_listing(model!("location")) do
-    fill_in "Availability rules", with: "I'm always available"
+    choose AvailabilityRule.templates.first.full_name
   end
 end
 

@@ -10,6 +10,10 @@ class AvailabilityRule::Template
     @description = options[:description]
   end
 
+  def full_name
+    "#{name} (#{description})"
+  end
+
   def apply(target)
     # Flag existing availability rules for destruction
     target.availability_rules.each(&:mark_for_destruction)

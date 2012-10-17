@@ -29,8 +29,8 @@ class @AvailabilityRulesController
 
   showCustom: ->
     @customFields.find('input, select').prop('disabled', false)
-    @updateDayStates()
     @customFields.show()
+    @updateDayStates()
 
   hideCustom: ->
     @customFields.hide()

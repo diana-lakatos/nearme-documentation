@@ -9,16 +9,16 @@
       = f.radio_button :availability_template_id, template_id, options || {}
       = label_tag(options[:id], label_text, :class => "inline")
 
-  .custom-availability-rules
+  .custom-availability-rules{:style => ('display: none' unless availability_custom?(f.object))}
     - f.object.availability.each_day do |day, rule|
       %div{:class => "day day-#{day}"}
         = f.fields_for(:availability_rules, rule || AvailabilityRule.new(:day => day)) do |af|
-          = af.hidden_field :id, :disabled => availability_custom?(f.object) if af.object.persisted?
-          = af.hidden_field :day, :disabled => availability_custom?(f.object)
+          = af.hidden_field :id, :disabled => !availability_custom?(f.object) if af.object.persisted?
+          = af.hidden_field :day, :disabled => !availability_custom?(f.object)
           .day-name= af.object.day_name
-          .open-time= af.select :open_time, availability_time_options, {}, :disabled => availability_custom?(f.object)
-          .close-time= af.select :close_time, availability_time_options, {}, :disabled => availability_custom?(f.object)
+          .open-time= af.select :open_time, availability_time_options, {}, :disabled => !availability_custom?(f.object)
+          .close-time= af.select :close_time, availability_time_options, {}, :disabled => !availability_custom?(f.object)
           .closed-flag
-            = af.check_box :_destroy, :class => "closed", :checked => !af.object.open_time.present?, :disabled => availability_custom?(f.object)
-            = af.label :_destroy, "Closed?", :class => "inline", :disabled => availability_custom?(f.object)
+            = af.check_box :_destroy, :class => "closed", :checked => !af.object.open_time.present?, :disabled => !availability_custom?(f.object)
+            = af.label :_destroy, "Closed?", :class => "inline", :disabled => !availability_custom?(f.object)
 
