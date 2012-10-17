@@ -81,13 +81,12 @@ ActiveRecord::Schema.define(:version => 20121014040032) do
     t.string   "name"
     t.text     "description"
     t.string   "currency"
-    t.integer  "price_cents",             :default => 0
-    t.integer  "quantity",                :default => 1
-    t.float    "rating_average",          :default => 0.0
-    t.integer  "rating_count",            :default => 0
+    t.integer  "quantity",             :default => 1
+    t.float    "rating_average",       :default => 0.0
+    t.integer  "rating_count",         :default => 0
     t.text     "availability_rules_text"
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.datetime "deleted_at"
     t.boolean  "confirm_reservations"
   end
@@ -205,6 +204,14 @@ ActiveRecord::Schema.define(:version => 20121014040032) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "unit_prices", :force => true do |t|
+    t.integer  "listing_id"
+    t.integer  "price_cents"
+    t.integer  "period"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "user_relationships", :force => true do |t|
     t.integer  "follower_id"

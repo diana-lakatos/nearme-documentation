@@ -20,7 +20,7 @@ Feature: A user can search for a listing
     When I search for "darwin"
     Then I should see "No results found"
 
-  @wip
+  @future
   Scenario: A user searches for "new zealand" and see only stuff in that country
     Given a listing in Auckland exists
     And a listing in Cleveland exists

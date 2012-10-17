@@ -13,7 +13,7 @@ Feature: Location Owner Creates/Edits Listing
     When I fill in "Name" with "Joe's Codin' Garage"
     And I select "The Garage" from "Location"
     And I fill in "Quantity" with "2"
-    And I fill in "Price" with "50.00"
+    And I fill in "Daily price" with "50.00"
     And I fill in "Description" with "Proin adipiscing nunc vehicula lacus varius dignissim."
     And I choose "Yes"
     And I press "Create Listing"
@@ -21,8 +21,16 @@ Feature: Location Owner Creates/Edits Listing
     And I see the listing details
 
   Scenario: Setting a price
-    When I create a listing for that location with a price of $50.00
-    Then the listing price is shown as $50
+    When I create a listing for that location with a daily price of $50.00
+    Then the listing daily price is shown as $50
+
+  Scenario: Setting a weekly price
+    When I create a listing for that location with a weekly price of $200.00
+    Then the listing weekly price is shown as $200
+
+  Scenario: Setting a monthly price
+    When I create a listing for that location with a monthly price of $400.00
+    Then the listing monthly price is shown as $400
 
 # FIXME: Reactivate when exposed on frontend
 #  Scenario: Setting availability rules

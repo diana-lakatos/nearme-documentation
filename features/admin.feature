@@ -21,7 +21,7 @@ Feature: An admin can edit shit
      When I fill in "Name" with "Joe's Codin' Garage"
       And I select "The Pit of Despair" from "Location"
       And I fill in "Quantity" with "2"
-      And I fill in "Price" with "50.00"
+      And I fill in "Daily price" with "50.00"
       And I fill in "Description" with "Proin adipiscing nunc vehicula lacus varius dignissim."
       And I select "Stevey" from "Creator"
       And I choose "Yes"
