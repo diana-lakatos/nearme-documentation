@@ -43,4 +43,8 @@ module AvailabilityRulesHelper
     end
     options
   end
+
+  def availability_custom?(object)
+    object.availability_template_id.blank? && (!object.respond_to?(:defer_availability_rules) || !object.defer_availability_rules?)
+  end
 end
