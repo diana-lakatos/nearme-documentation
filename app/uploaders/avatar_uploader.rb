@@ -6,6 +6,10 @@ class AvatarUploader < CarrierWave::Uploader::Base
     "media/#{model.class.to_s.underscore}/#{model.id}/#{mounted_as}"
   end
 
+  version :mini do
+    process :resize_to_fill => [50, 50]
+  end
+
   version :thumb do
     process :resize_to_fill => [96, 96]
   end

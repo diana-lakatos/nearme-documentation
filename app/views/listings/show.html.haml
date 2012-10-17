@@ -1,4 +1,4 @@
-/ - legacy false
+- legacy false
 / %article.listing
 /  %h1.page-title
 /    = @listing.name
@@ -21,10 +21,28 @@
 /      #map.google-map
 
 
-%article.listing
+%article.space
+
+  %h1 #{@location.name}
+
+  .clearfix
+    .one-third.column.alpha
+      %p.description
+        #{@location.description}
+
+      .host.box
+        %i.flag
+        = image_tag @location.creator.gravatar_url(:size => "50x50"), :class => "avatar"
+        #{@location.creator.name}
+
+    .one-third.column.amenities
+      Amenities here
+    .one-third.column.map
+      Map here
+
   .clearfix
     .twelve.columns.alpha
-      %h1.tk-adelle= "#{@listing.name} - #{listing_price(@listing)}"
+      /%h1.tk-adelle= "#{@listing.name} - #{listing_price(@listing)}"
       = content_tag(:p, link_to(@listing.url, @listing.url)) if @listing.url
     - if @listing.creator
       .four.columns.omega.creator

@@ -30,6 +30,7 @@ class ListingsController < ApplicationController
 
   def show
     @listing = Listing.find(params[:id])
+    @location = @listing.location
     @feeds = @listing.feeds.latest.limit(5)
   end
 
