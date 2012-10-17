@@ -24,6 +24,13 @@ Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) 
   listing = create_listing_in(city)
 
   listing.update_column(:quantity, desks)
+
+  listing.availability_rules.clear
+  wday = Time.now.wday
+  (wday .. (wday+num_days.to_i)).each do |day|
+    listing.availability_rules.create!(:day => day % 7, :open_hour => 8, :close_hour => 18)
+  end
+
   (Date.today...num_days.to_i.days.from_now.to_date).all? { |d| listing.availability_for(d) >= desks.to_i }.should == true
 end
 
