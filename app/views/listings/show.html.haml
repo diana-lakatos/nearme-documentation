@@ -33,7 +33,7 @@
       .host.box
         %i.flag
         = image_tag @location.creator.gravatar_url(:size => "50x50"), :class => "avatar"
-        #{@location.creator.name}
+        .name #{@location.creator.name}
 
     .one-third.column.amenities
       Amenities here
