@@ -32,10 +32,10 @@ Feature: Location Owner Creates/Edits Listing
     When I create a listing for that location with a monthly price of $400.00
     Then the listing monthly price is shown as $400
 
-# FIXME: Reactivate when exposed on frontend
-#  Scenario: Setting availability rules
-#    When I create a listing for that location with availability rules
-#    Then the listing shows the availability rules
+  @future
+  Scenario: Setting availability rules
+    When I create a listing for that location with availability rules
+    Then the listing shows the availability rules
 
   Scenario: A listing owner can edit a listing
     Given a listing exists with creator: the user
@@ -43,7 +43,6 @@ Feature: Location Owner Creates/Edits Listing
     And I follow "Edit Listing"
     And I should see "Edit a listing"
     And I fill in "Name" with "Joe's Codin' Garage"
-    Then show me the page
-    When I press "Update Listing"
+    And I press "Update Listing"
     Then a listing should exist with name: "Joe's Codin' Garage"
     And I see the listing details
