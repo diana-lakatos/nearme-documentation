@@ -20,6 +20,12 @@ Feature: Location Owner Creates/Edits Listing
     Then a listing should exist with name: "Joe's Codin' Garage"
     And I see the listing details
 
+
+  Scenario: Creating a listing for a location that is an alternative currency
+    Given a location exists with creator: the user, name: "The Other Place", description: "Cool beans", currency: "GBP"
+    When I create a listing for that location with a daily price of £50.00
+    Then the listing daily price is shown as £50
+
   Scenario: Setting a price
     When I create a listing for that location with a daily price of $50.00
     Then the listing daily price is shown as $50
