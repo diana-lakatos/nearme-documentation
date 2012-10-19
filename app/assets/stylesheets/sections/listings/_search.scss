@@ -1,0 +1,150 @@
+#listing_search {
+  position: relative;
+  overflow: visible;
+
+  .geolocation {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    border: 0;
+    background: image-url("sections/home/geolocate-icon.png");
+    width: 32px;
+    height: 33px;
+
+    &:active {
+      margin-top: 1px;
+    }
+  }
+
+  &.home_search input#search {
+    padding-left: 50px;
+    width: 460px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  &.search_results input#search {
+    padding-left: 35px;
+    width: 300px;
+  }
+
+  &.search_results .geolocation {
+    background: image-url("sections/search/geolocate.png");
+    width: 22px;
+    height: 23px;
+    top: 10px;
+  }
+
+  .btn {
+    height: 48px;
+    line-height: 44px;
+    position: relative;
+    vertical-align: top;
+    width: 115px;
+
+    .icon {
+      display: inline-block;
+      width: 32px;
+      height: 33px;
+      background: image-url("sections/home/search-icon.png") no-repeat;
+    }
+  }
+
+  .slider {
+    float: left;
+    margin-left: 12px;
+    margin-top: 2px;
+    width: 200px;
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+  .value {
+    float: left;
+    margin-left: 20px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  // On the home search box
+  &.home_search {
+    .multiselect {
+      width: 220px;
+    }
+  }
+
+  // On the search results page bar
+  &.search_results {
+    hr {
+      margin-right: 0;
+      margin-left: 0;
+      clear: both;
+    }
+
+    label {
+      float: left;
+      margin-right: 0;
+    }
+
+    .slider {
+      width: 130px;
+    }
+
+    .location {
+      input#search {
+        width: 290px;
+      }
+    }
+
+    .associations {
+      height: 24px;
+    }
+
+    .multiselect {
+      margin-top: -4px;
+      width: 168px;
+    }
+
+    .availability-date-start, .availability-date-end {
+      input {
+        width: 80px;
+      }
+    }
+
+    .amenities {
+      padding-top: 14px;
+    }
+
+    .availability-date-start, .availability-date-end {
+      width: 130px;
+      position: relative;
+
+      .date-icon {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        display: block;
+        background: image-url("sections/search/date-start.png");
+        width: 26px;
+        height: 24px;
+      }
+
+      &.availability-date-end .date-icon {
+        background: image-url("sections/search/date-end.png");
+        width: 22px;
+        height: 23px;
+      }
+
+      input {
+        padding-left: 40px;
+        width: 80px;
+      }
+    }
+
+
+  }
+}
+
+

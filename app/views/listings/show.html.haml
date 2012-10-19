@@ -22,6 +22,17 @@
 
 
 %article.space
+  - if @listing.created_by?(current_user)
+    %nav.actions
+      = link_to edit_listing_path(@listing)  do
+        = image_tag "pencil-small.png"
+        Edit Listing
+      = link_to listing_photos_path(@listing) do
+        = image_tag "image-small.png"
+        Add/Manage Photos
+      - if current_user.admin?
+        %br/
+        = link_to "Destroy (Admin Only)", @listing, :method => :delete, :confirm => "Are you sure? Its dangerous to go alone..."
 
   %h1 #{@location.name}
 
@@ -30,46 +41,70 @@
       %p.description
         #{@location.description}
 
+      - if @listing.company_description.present?
+        %strong= @listing.company_name
+        %p.company_description
+          = @listing.company_description
+
+      = content_tag(:p, link_to(@listing.url, @listing.url)) if @listing.url
+
       .host.box
         %i.flag
         = image_tag @location.creator.gravatar_url(:size => "50x50"), :class => "avatar"
         .name #{@location.creator.name}
 
+      = custom_tweet_button("Share on Twitter", { :via => "desksnearme", :url => listing_url(@listing), :text => "I'd love to work here!", :related => "desksnearme" }, :class => "tweet_it")
+
     .one-third.column.amenities
-      Amenities here
+      %dl
+        - @location.amenities.group_by(&:category).each do |category, amenities|
+          %dt
+            %i{:class => "icon-amenity-#{category.downcase.underscore}"}
+            = category
+          %dl
+            = amenities.map(&:name).join(', ')
+
+        - if @location.amenities.empty?
+          %dt
+            %i.icon-amenity-other
+            Amenities
+          %dl Nothing listed... that can't be right!
+
     .one-third.column.map
-      Map here
+      .map-wrapper
+        .map-container{:style => "height: 260px;"}
+
+      %address{"data-lat" => @listing.latitude, "data-lng" => @listing.longitude, "data-marker" => image_path("components/map-pin.png")}
+        = location_format_address(@listing.formatted_address || @listing.address)
+
+
+  %hr.divider
 
   .clearfix
     .twelve.columns.alpha
       /%h1.tk-adelle= "#{@listing.name} - #{listing_price(@listing)}"
-      = content_tag(:p, link_to(@listing.url, @listing.url)) if @listing.url
-    - if @listing.creator
-      .four.columns.omega.creator
-        = image_tag @listing.creator.gravatar_url, :class => 'avatar', :title => @listing.creator.name, :alt => @listing.creator.name
-        %small Created By
-        %br/
-        = @listing.creator.name
 
-  %section.details.ten.columns.alpha
-    .business_description
-      = raw @listing.company_description
+  %section.details.ten.columns.alpha.legacy
     %h2 Availability
     %p Hover over a day to see how many desks are available.
     = render :partial => "availability", :locals => {:listing => @listing, :weeks => 3}
+
+    .divider
+
     %h2 Extra Info
     %p
       %strong Reservation Confirmation Required:
       = @listing.confirm_reservations? ? "Yes" : "No"
-    - if @listing.amenities.any?
-      %ul
-        - @listing.amenities.each do |a|
-          %li=a.name
+
     - if @listing.description?
       %p= raw @listing.description
+
     - if @listing.availability_rules_text?
       %h3 Availability Rules
       %p= raw @listing.availability_rules_text
+
+    .divider
+
     %h2 Latest Activity
     - if @feeds.any?
       %dl.activity_feed
@@ -86,17 +121,6 @@
       %p No activity has been generated yet.
 
   %aside.six.columns.omega
-    - if @listing.created_by?(current_user)
-      %nav.actions
-        = link_to edit_listing_path(@listing)  do
-          = image_tag "pencil-small.png"
-          Edit Listing
-        = link_to listing_photos_path(@listing) do
-          = image_tag "image-small.png"
-          Add/Manage Photos
-        - if current_user.admin?
-          %br/
-          = link_to "Destroy (Admin Only)", @listing, :method => :delete, :confirm => "Are you sure? Its dangerous to go alone..."
 
     %section#photos.fancy-photos
       %h2.tk-chaparral-pro Photos
@@ -116,20 +140,13 @@
             There are no photos uploaded yet.
           %p Upload a photo to become a featured listing on the homepage!
 
-    %section.map
-      %h2.tk-chaparral-pro Location
-      %address{"data-lat" => @listing.latitude, "data-lng" => @listing.longitude, "data-marker" => image_path("components/map-pin.png")}
-        = simple_format(@listing.formatted_address || @listing.address)
-      .map-wrapper
-        #map.google-map
-
-
-    %section
-      %h2.tk-chaparral-pro Share Listing
-      = custom_tweet_button("Share on Twitter", { :via => "desksnearme", :url => listing_url(@listing), :text => "I'd love to work here!", :related => "desksnearme" }, :class => "tweet_it")
 
 - content_for :script do
   :javascript
+
+    // Initialize the ui controller
+    new SpaceController($('article.space'))
+
     $(function(){
       $("td.day details.availability a").click(function(e){
         $(".overlay-container").overlay('close');

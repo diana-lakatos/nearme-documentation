@@ -25,6 +25,7 @@
 //= require ./sections/locations/location_form_controller
 //= require ./sections/locations/availability_rules_controller
 //= require ./sections/listings/listing_form_controller
+//= require ./sections/listings/space_controller
 
 
 window.DNM = {
@@ -58,6 +59,7 @@ $(document).on('click', 'a[rel=submit]', function(e) {
 });
 
 function doListingGoogleMaps() {
+  return;
   var locations = $(".map address"),
       map       = null;
 

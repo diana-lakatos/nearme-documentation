@@ -6,4 +6,8 @@ class Amenity < ActiveRecord::Base
 
   validates_presence_of :name
 
+  def category
+    self[:category] || 'Other'
+  end
+
 end

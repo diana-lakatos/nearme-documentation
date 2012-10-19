@@ -16,12 +16,21 @@ strong {
   font-weight: bold;
 }
 
-h1 {
-  @extend .font-banda;
-  font-size: 32px;
+h1, h2, h3, h4, h5 {
+  font-family: "Banda";
+  font-weight: normal;
   color: #1e2222;
   text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+}
+
+h1 {
+  font-size: 32px;
   margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
 }
 
 p {
@@ -50,4 +59,26 @@ p {
 
 .h3-normal {
   @include h3-normal;
+}
+
+body {
+  font-family: "banda";
+  color: $dnm_black;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+}
+
+hr, .hr {
+  padding: 0;
+  border: 0;
+  height: 1px;
+  max-height: 1px;
+  background: #a8a9a9;
+  color: #a8a9a9;
+  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid rgba(255,255,255,0.8);
+  margin: 10px -12px 10px -12px;
+}
+
+.divider {
+  margin: 40px 0;
 }
