@@ -18,6 +18,14 @@ class PhotoUploader < CarrierWave::Uploader::Base
     process :resize_to_fill => [1280, 960]
   end
 
+  version :hero do
+    process :resize_to_fill => [960, 350]
+  end
+
+  version :hero_preview do
+    process :resize_to_fill => [100, 70]
+  end
+
   def extension_white_list
     %w(jpg jpeg gif png)
   end

@@ -1,25 +1,27 @@
 - legacy false
-/ %article.listing
-/  %h1.page-title
-/    = @listing.name
-/
-/  .column.one-third.description
-/    .meta
-/      %strong= pluralize(@listing.quantity, "desk")
-/      starting at
-/      %strong= listing_price(@listing)
-/    %p
-/      = raw @listing.description
-/    - if @listing.url
-/      .listing-link
-/        = link_to(strip_http(@listing.url), @listing.url)
-/
-/  .column.two-thirds.map
-/    %address{"data-lat" => @listing.latitude, "data-lng" => @listing.longitude, "data-marker" => image_path("components/map-pin.png")}
-/      = simple_format(@listing.formatted_address || @listing.address)
-/    .map-wrapper
-/      #map.google-map
 
+- content_for :hero do
+  .hero-wood-texture
+    .container.space-search-return
+      = link_to "Back to search", search_url
+  .hero-gray-texture.hero-shadow
+    .container.space-hero-photos
+      .photos-list
+        .prev
+
+        .photos-wrapper
+          %ul
+            - @location.photos.each do |photo|
+              %li
+                = image_tag photo.url(:hero_preview), :alt => photo.caption, 'data-url' => photo.url(:hero)
+        .next
+
+      .photo{:style => "background-image: url('#{@location.photos.first.url}')"}
+        .caption
+          This is an awesome caption.
+
+      %ul
+        %li
 
 %article.space
   - if @listing.created_by?(current_user)
@@ -89,7 +91,8 @@
     %p Hover over a day to see how many desks are available.
     = render :partial => "availability", :locals => {:listing => @listing, :weeks => 3}
 
-    .divider
+
+  %aside.six.columns.omega
 
     %h2 Extra Info
     %p
@@ -102,8 +105,6 @@
     - if @listing.availability_rules_text?
       %h3 Availability Rules
       %p= raw @listing.availability_rules_text
-
-    .divider
 
     %h2 Latest Activity
     - if @feeds.any?
@@ -120,25 +121,6 @@
     - else
       %p No activity has been generated yet.
 
-  %aside.six.columns.omega
-
-    %section#photos.fancy-photos
-      %h2.tk-chaparral-pro Photos
-      - if @listing.photos.any?
-        %ul
-          - @listing.photos.each do |photo|
-            %li
-              = link_to photo.large.url, :title => photo.caption, :rel => "photos", :style => "margin-right: 5px" do
-                = image_tag(photo.thumb.url, :alt => photo.caption)
-      - else
-        .two.columns.alpha
-          = image_tag "desk_photos.png"
-        .four.columns.omega
-          %p
-            %strong Aww nuu.
-            %br/
-            There are no photos uploaded yet.
-          %p Upload a photo to become a featured listing on the homepage!
 
 
 - content_for :script do

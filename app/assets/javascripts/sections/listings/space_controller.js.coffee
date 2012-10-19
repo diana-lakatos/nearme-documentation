@@ -3,6 +3,10 @@ class @SpaceController
   constructor: (@container) ->
     # Set up the map on the page
     @setupMap()
+    @setupPhotos()
+
+  setupPhotos: ->
+    @photos = new SpacePhotosController($('.space-hero-photos'))
 
   setupMap: ->
     mapContainer = @container.find('.map')

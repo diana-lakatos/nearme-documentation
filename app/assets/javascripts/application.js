@@ -26,6 +26,7 @@
 //= require ./sections/locations/availability_rules_controller
 //= require ./sections/listings/listing_form_controller
 //= require ./sections/listings/space_controller
+//= require ./sections/listings/space_photos_controller
 
 
 window.DNM = {
