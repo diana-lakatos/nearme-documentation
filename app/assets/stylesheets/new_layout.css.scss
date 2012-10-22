@@ -8,6 +8,7 @@
 @import "layout/*";
 @import "components/*";
 
+
 @import "vendor/jquery-ui-1.8.23.custom.css.scss";
 
 
@@ -54,6 +55,10 @@ header {
       }
     }
   }
+}
+
+#content > .container {
+  padding-top: 30px;
 }
 
 /* #Page Styles

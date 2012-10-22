@@ -2,39 +2,36 @@
 
 - content_for :hero do
   .hero-wood-texture
-    .container.space-search-return
+    .container.space-hero-search-return
       = link_to "Back to search", search_url
-  .hero-gray-texture.hero-shadow
-    .container.space-hero-photos
-      .photos-list
-        .prev
 
-        .photos-wrapper
-          %ul
-            - @location.photos.each do |photo|
-              %li
-                = image_tag photo.url(:hero_preview), :alt => photo.caption, 'data-url' => photo.url(:hero)
-        .next
+  - if @location.photos.any?
+    .hero-gray-texture.hero-shadow
+      .container.space-hero-photos
+        .photos-list
+          .prev
+          .photos-wrapper
+            %ul
+              - @location.photos.each do |photo|
+                %li
+                  = image_tag photo.url(:hero_preview), :alt => photo.caption, 'data-url' => photo.url(:hero)
+          .next
 
-      .photo{:style => "background-image: url('#{@location.photos.first.url}')"}
-        .caption
-          This is an awesome caption.
-
-      %ul
-        %li
+        .photo{:style => "background-image: url('#{@location.photos.first.url}')"}
+          .caption
+            This is an awesome caption.
 
 %article.space
   - if @listing.created_by?(current_user)
-    %nav.actions
-      = link_to edit_listing_path(@listing)  do
-        = image_tag "pencil-small.png"
-        Edit Listing
-      = link_to listing_photos_path(@listing) do
-        = image_tag "image-small.png"
-        Add/Manage Photos
+    %ul.subnav.right.gray
+      %li= link_to "Edit", edit_listing_path(@listing)
+      %li= link_to "Manage Photos", listing_photos_path(@listing)
       - if current_user.admin?
-        %br/
-        = link_to "Destroy (Admin Only)", @listing, :method => :delete, :confirm => "Are you sure? Its dangerous to go alone..."
+        %li= link_to "Destroy (Admin Only)", @listing, :method => :delete, :confirm => "Are you sure? Its dangerous to go alone..."
+
+  %ul.subnav.right.blue
+    %li= link_to "Overview", ""
+    %li= link_to "Book", ""
 
   %h1 #{@location.name}
 
@@ -55,7 +52,14 @@
         = image_tag @location.creator.gravatar_url(:size => "50x50"), :class => "avatar"
         .name #{@location.creator.name}
 
-      = custom_tweet_button("Share on Twitter", { :via => "desksnearme", :url => listing_url(@listing), :text => "I'd love to work here!", :related => "desksnearme" }, :class => "tweet_it")
+      .box.share
+        %i.flag
+        %h3 Share this space
+        .first-row
+          %span.twitter.st_twitter_hcount{:displayText => 'Tweet'}
+          %span.st_linkedin_hcount{:displayText => 'LinkedIn'}
+        %span.st_facebook_hcount{:displayText => 'Facebook'}
+        %span.st_email_hcount{:displayText => 'Email'}
 
     .one-third.column.amenities
       %dl
@@ -111,7 +115,7 @@
       %dl.activity_feed
         - @feeds.each do |feed|
           %dd.feed_item{class: feed.activity}
-            = image_tag feed.user.gravatar_url, :class => "avatar"
+            = image_tag feed.user.gravatar_url(:size => "50x50"), :class => "avatar"
             = render :partial => "feeds/#{feed.activity}", :locals => { :feed => feed }
             %br/
             %small
@@ -124,6 +128,14 @@
 
 
 - content_for :script do
+  / ShareThis script
+  / FIXME: Get DNM login/api key
+  = javascript_tag do
+    var switchTo5x=true;
+  = javascript_include_tag "http://w.sharethis.com/button/buttons.js"
+  = javascript_tag do
+    stLight.options({publisher: "ed2de743-77e7-437b-a5a3-f1fa39f72cfc"});
+
   :javascript
 
     // Initialize the ui controller

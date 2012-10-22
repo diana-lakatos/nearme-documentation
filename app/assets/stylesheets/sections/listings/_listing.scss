@@ -1,13 +1,16 @@
 /* Space Page */
 
 // Hero area
-.space-search-return {
+.space-hero-search-return {
+  padding: 15px 0;
+
   a {
     display: block;
     line-height: 24px;
     text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
     background: image-url("sections/listings/search-return.png") center left no-repeat;
     padding-left: 36px;
+    font-size: 20px;
 
     &, &:hover {
       color: #cebbae;
@@ -96,18 +99,31 @@
 
 .space {
 
-  .box.host {
+  h1 {
+    line-height: 40px;
+  }
+
+  .box.host, .box.share {
     position: relative;
 
     i {
       position: absolute;
       top: -3px;
       right: -3px;
-      background: image-url("sections/listings/host-flag.png");
       height: 69px;
       width: 69px;
     }
 
+    &.host i {
+      background: image-url("sections/listings/host-flag.png");
+    }
+
+    &.share i {
+      background: image-url("sections/listings/share-flag.png");
+    }
+  }
+
+  .box.host {
     .avatar {
       float: left;
     }
@@ -116,6 +132,16 @@
       font-size: 22px;
       line-height: 50px;
       margin-left: 60px;
+    }
+  }
+
+  .box.share {
+    .stButton {
+      margin-right: 12px;
+    }
+
+    .first-row {
+      margin-bottom: 6px;
     }
   }
 
