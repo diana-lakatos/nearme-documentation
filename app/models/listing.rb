@@ -61,7 +61,6 @@ class Listing < ActiveRecord::Base
 
   include Search
   extend PricingPeriods
-
   include AvailabilityRule::TargetHelper
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
 

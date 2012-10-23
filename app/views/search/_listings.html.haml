@@ -1,5 +1,5 @@
 %section.search-results.grid_12.alpha.omega.list
-  - if @search.blank?
+  - unless @search.found_location?
     %p Please enter a city or address
   - else
     - if @listings.empty?
