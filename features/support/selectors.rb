@@ -33,7 +33,7 @@ module HtmlSelectorsHelpers
       "ul#photos li:first-of-type"
 
     when /a google map/i
-      "div.google-map"
+      "div.map-container"
     when /^"(.+)"$/
       $1
 

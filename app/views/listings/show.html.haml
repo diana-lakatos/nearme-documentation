@@ -40,6 +40,9 @@
       %p.description
         #{@location.description}
 
+      %p
+        %strong= listing_price(@listing)
+
       - if @listing.company_description.present?
         %strong= @listing.company_name
         %p.company_description
@@ -49,8 +52,8 @@
 
       .host.box
         %i.flag
-        = image_tag @location.creator.gravatar_url(:size => "50x50"), :class => "avatar"
-        .name #{@location.creator.name}
+        = image_tag @listing.creator.gravatar_url(:size => "50x50"), :class => "avatar"
+        .name #{@listing.creator.name}
 
       .box.share
         %i.flag
@@ -63,18 +66,15 @@
 
     .one-third.column.amenities
       %dl
-        - @location.amenities.group_by(&:category).each do |category, amenities|
-          %dt
-            %i{:class => "icon-amenity-#{category.downcase.underscore}"}
-            = category
-          %dl
-            = amenities.map(&:name).join(', ')
+        %dt
+          %i{:class => "icon-amenity-other"}
+          Amenities
 
-        - if @location.amenities.empty?
-          %dt
-            %i.icon-amenity-other
-            Amenities
-          %dl Nothing listed... that can't be right!
+        %dl
+          - unless @location.amenities.empty?
+            = @location.amenities.map(&:name).join(', ')
+          - else
+            Nothing listed... that can't be right!
 
     .one-third.column.map
       .map-wrapper
@@ -99,12 +99,16 @@
   %aside.six.columns.omega
 
     %h2 Extra Info
+
+    %strong= @listing.name
+
+    - if @listing.description?
+      %p= @listing.description
+
+
     %p
       %strong Reservation Confirmation Required:
       = @listing.confirm_reservations? ? "Yes" : "No"
-
-    - if @listing.description?
-      %p= raw @listing.description
 
     - if @listing.availability_rules_text?
       %h3 Availability Rules

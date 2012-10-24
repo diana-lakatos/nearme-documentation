@@ -13,7 +13,8 @@ Feature: User Views Listing
     Given a listing exists for a location with a private organization
     When I log in as a user who is a member of that organization
     And I visit that listing
-    Then I see the listing details
+    Then show me the page
+    And I see the listing details
 
   Scenario: anonymous user may not view a private listing
     Given a listing exists for a location with a private organization

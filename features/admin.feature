@@ -37,7 +37,7 @@ Feature: An admin can edit shit
       And an admin: "Adminardo" exists
       And I am logged in as the admin: "Adminardo"
      When I go to the listing's page
-      And I follow "Edit Listing"
+      And I follow "Edit"
       And I should see "Edit a listing"
       And I fill in "Name" with "Joe's Codin' Garage"
       And I select "Stevey" from "Creator"

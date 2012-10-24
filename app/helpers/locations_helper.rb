@@ -7,5 +7,6 @@ module LocationsHelper
     if parts.length > 1
       content += content_tag(:span, ", #{parts[1, parts.length].join(', ')}")
     end
+    content
   end
 end

@@ -142,6 +142,6 @@ Then /^I should see the following listings in order:$/ do |table|
 end
 
 Then /^I should see the creators gravatar/ do
-  page.should have_css(".creator img")
+  page.should have_css(".host .avatar")
 end
 
