@@ -16,7 +16,7 @@ end
 When /^I add the following photos to the listing:$/ do |table|
   steps %{
     When I go to the listing's page
-    And I follow "Add/Manage Photos"
+    And I follow "Manage Photos"
   }
 
   table.hashes.each_with_index do |row, count|
