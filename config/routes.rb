@@ -26,6 +26,8 @@ DesksnearMe::Application.routes.draw do
 
   resources :authentications
 
+  resources :space, :only => [:new]
+
   root :to => "public#index"
 
   namespace :v1, :defaults => { :format => 'json' } do
