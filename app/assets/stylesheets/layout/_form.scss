@@ -123,8 +123,8 @@ form {
   input[type='submit'] {
     border: none;
     @extend .btn;
-    @extend .btn-large;
-    @extend .btn-blue;
+    @extend .btn-medium;
+    @extend .btn-green;
   }
 }
 
