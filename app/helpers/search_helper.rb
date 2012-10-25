@@ -10,7 +10,7 @@ module SearchHelper
   end
 
   def search_availability_quantity
-    params[:availability].present? && params[:availability][:quantity].to_i
+    params[:availability].present? && params[:availability][:quantity].to_i || 1
   end
 
   def search_organizations
@@ -22,11 +22,11 @@ module SearchHelper
   end
 
   def search_price_min
-    params[:price].present? && params[:price][:min]
+    (params[:price].present? && params[:price][:min]) || 0
   end
 
   def search_price_max
-    params[:price].present? && params[:price][:max]
+    params[:price].present? && params[:price][:max] || 300
   end
 
 end

@@ -23,7 +23,8 @@ class DNM.SearchForm
   priceRangeChanged: (values) ->
     @form.find(".price-range input[name*=min]").val(values[0])
     @form.find(".price-range input[name*=max]").val(values[1])
-    @form.find(".price-range .value").text("$#{values[0]} - $#{values[1]}/day")
+    max_value = if values[1] == 300 then '300+' else values[1]
+    @form.find(".price-range .value").text("$#{values[0]} - $#{max_value}/day")
     @fieldChanged('priceRange', values)
 
   dateRangeFieldChanged: (values) ->
