@@ -25,10 +25,10 @@
               .price-range.six.columns.omega
                 %label How much do you want to spend?
                 = hidden_field_tag "price[min]", "0"
-                = hidden_field_tag "price[max]", "100"
+                = hidden_field_tag "price[max]", "300"
                 .slider
                 .value
-                  $0 - $100/day
+                  $0 - $300+/day
             .row
               .five.columns.amenities.alpha
                 %label What amenities do you need?
