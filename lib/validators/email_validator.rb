@@ -6,7 +6,7 @@ class EmailValidator < ActiveModel::EachValidator
       r = m.domain && m.address == value
       t = m.__send__(:tree)
       r &&= (t.domain.dot_atom_text.elements.size > 1)
-    rescue Exception => e   
+    rescue Exception => e
       r = false
     end
     record.errors[attribute] << (options[:message] || "is invalid") unless r

@@ -3,6 +3,7 @@ module LocationHelper
     visit new_location_path
     @company = model!('company')
     select @company.name, from: 'Company'
+    select "USD - United States Dollar", from: "Currency"
     yield if block_given?
     fill_in "Name", with: @location_name = 'Location'
     fill_in "Address", with: '1 Market Street, San Francisco, USA'
