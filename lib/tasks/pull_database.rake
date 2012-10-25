@@ -16,7 +16,7 @@ namespace :db do
   namespace :push do
     desc "Drops the staging environments shared database and replaces it with the local one"
     task :staging do
-      system('heroku pg:reset postgres://etktvdzmvgvcpa:BtL4PwY2KcuaauQwSMYHfJaNAf@ec2-23-21-188-175.compute-1.amazonaws.com:5432/dbn3lls0uq00je --app desksnearme-staging --confirm desksnearme-staging')
+      system('heroku pg:reset HEROKU_POSTGRESQL_GRAY --app desksnearme-staging --confirm desksnearme-staging')
       system('heroku db:push --app desksnearme-staging --confirm desksnearme-staging')
     end
     task :production do
