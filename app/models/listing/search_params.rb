@@ -75,28 +75,11 @@ class Listing::SearchParams
   end
 
   def extract_search_from_geocoding
-    geocoded = Geocoder.search(location_string).try(:first)
-    return if geocoded.nil?
-
-    @found_location = true;
-    loc = geocoded.data
-    geometry = loc['geometry']
-
-    search_params[:pretty] = loc['formatted_address']
-    search_params[:midpoint] = [geometry['location']['lat'], geometry['location']['lng']]
-
-    bounds = geometry['bounds']
-    if bounds && (loc['types'] == ["country","political"]) || (loc['types'] == ["administrative_area_level_1","political"])
-      search_params[:boundingbox] = {
-        :start => {
-        :lat => bounds['northeast']['lat'].to_f,
-        :lon => bounds['northeast']['lon'].to_f
-      },
-        :end => {
-        :lat => bounds['southwest']['lat'].to_f,
-        :lon => bounds['southwest']['lon'].to_f
-      }
-      }
+    geocoder = SearchGeocoder.new
+    geocoder.build_geocoded_data_from_string(location_string)
+    if geocoder.found_location?
+      @found_location = true;
+      search_params.merge(geocoder.geo_params)
     end
   end
 
