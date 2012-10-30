@@ -60,6 +60,8 @@ group :development, :test do
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
   gem 'ruby-debug19'
+  gem 'jasmine'
+  gem 'jasmine-headless-webkit', '0.9.0.rc.2'
 end
 
 group :test do
