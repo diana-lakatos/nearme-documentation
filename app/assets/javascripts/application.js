@@ -5,7 +5,7 @@
 //= require ./vendor/jquery.overlay.js
 //= require ./vendor/jquery-ui-1.8.23.custom.min.js
 //= require ./vendor/jquery.address-1.3.min
-//= require search
+//= require ./search
 //* require ./vendor/fancybox/jquery.fancybox-1.3.1.pack.js
 //
 // Require new jQuery to override (NB: This is so HAX)
@@ -13,12 +13,11 @@
 //= require ./vendor/rails
 //= require ./vendor/modernizr.js
 //= require ./vendor/jquery.cookie.js
-//= require tile.stamen.js
 //
 //= require_self
 //
 // Standard components
-//= require ./components/multiselect
+//= require_tree ./components
 //
 // Sections
 //= require ./sections/search

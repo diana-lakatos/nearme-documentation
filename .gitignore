@@ -12,3 +12,5 @@ tmp
 *.swp
 public/stylesheets/*.css
 coverage
+runner.html
+.jhw-cache

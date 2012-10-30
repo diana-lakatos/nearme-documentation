@@ -8,7 +8,7 @@ class DNM.SearchForm
 
   # Initialize all filters for the search form
   initializeFields: ->
-    @initializePriceRangeFilter()
+    @priceRange = new PriceRange(@form.find('.price-range'), 300, @)
     @initializeAvailabilityQuantityFilter()
     @initializeQueryField()
     @initializeAmenitiesField()
@@ -19,13 +19,6 @@ class DNM.SearchForm
     @availabilityQuantityField = @form.find('.availability-quantity input').val(value)
     @form.find('.availability-quantity .value').text(value)
     @fieldChanged('availability-quantity', value)
-
-  priceRangeChanged: (values) ->
-    @form.find(".price-range input[name*=min]").val(values[0])
-    @form.find(".price-range input[name*=max]").val(values[1])
-    max_value = if values[1] == 300 then '300+' else values[1]
-    @form.find(".price-range .value").text("$#{values[0]} - $#{max_value}/day")
-    @fieldChanged('priceRange', values)
 
   dateRangeFieldChanged: (values) ->
     @fieldChanged('dateRange', values)
@@ -64,13 +57,6 @@ class DNM.SearchForm
     # Hack to only apply jquery-ui theme to datepicker
     $('#ui-datepicker-div').wrap('<div class="jquery-ui-theme" />')
 
-
-  initializePriceRangeFilter: ->
-    values = @form.find('.price-range input')
-    @form.find('.price-range .slider').slider(
-      range: true, values: [values.eq(0).val(), values.eq(1).val()], min  : 0, max  : 300, step : 25,
-      slide: (event, ui) => @priceRangeChanged(ui.values)
-    )
 
   initializeAvailabilityQuantityFilter: ->
     @form.find(".availability-quantity .slider").slider(
@@ -204,5 +190,3 @@ class DNM.SearchResultsPage extends DNM.SearchForm
       => @triggerSearch(),
       2000
     )
-
-
