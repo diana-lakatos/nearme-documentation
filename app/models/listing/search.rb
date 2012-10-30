@@ -48,6 +48,14 @@ class Listing
 
     module ClassMethods
 
+      def geocoder= geocoder
+        @@geocoder = geocoder
+      end
+
+      def geocoder
+        @@geocoder ||= SearchGeocoder.new
+      end
+
       def find_by_search_params(params)
         params.symbolize_keys!
 
@@ -117,8 +125,12 @@ class Listing
         end
 
         def find_by_keyword(scope, query)
-          # sphinx :)
-          scope.search(query)
+          geocoder.build_geocoded_data_from_string(query)
+          if geocoder.found_location?
+            find_by_midpoint(scope, geocoder.geo_params[:midpoint], geocoder.geo_params[:radius].presence.try(:to_i) || DEFAULT_MIDPOINT_SEARCH_RADIUS)
+          else
+            scope.search(query)
+          end
         end
 
     end
