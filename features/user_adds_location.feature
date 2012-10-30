@@ -9,6 +9,10 @@ Feature: Listing owner creates and edits location
     When I create a location for that company
     Then I can select that location when creating listings
 
+  Scenario: Selecting alternative currency
+    When I create a location with an alternative currency
+    Then that location has that alternative currency
+
   Scenario: With organizations
     Given an organization exists with name: "The Organization"
     When I create a location with that organization

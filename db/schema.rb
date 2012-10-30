@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121014040032) do
+ActiveRecord::Schema.define(:version => 20121017171355) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -80,7 +80,6 @@ ActiveRecord::Schema.define(:version => 20121014040032) do
     t.integer  "creator_id"
     t.string   "name"
     t.text     "description"
-    t.string   "currency"
     t.integer  "quantity",             :default => 1
     t.float    "rating_average",       :default => 0.0
     t.integer  "rating_count",         :default => 0
@@ -121,6 +120,7 @@ ActiveRecord::Schema.define(:version => 20121014040032) do
     t.datetime "deleted_at"
     t.string   "formatted_address"
     t.boolean  "require_organization_membership", :default => false
+    t.string   "currency"
   end
 
   create_table "organization_users", :force => true do |t|

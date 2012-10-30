@@ -1,3 +1,4 @@
+# coding: utf-8
 Given /^a listing in (.*) exists$/ do |city|
   create_listing_in(city)
 end
@@ -67,7 +68,7 @@ Given /^a listed location in San Francisco that does( not)? require confirmation
   @listing = FactoryGirl.create(:listing_in_san_francisco, confirm_reservations: !confirmation)
 end
 
-When /^I create a listing for that location with a (daily|weekly|monthly) price of \$(\d+)\.(\d+)$/ do |period, dollars, cents|
+When /^I create a listing for that location with a (daily|weekly|monthly) price of (\$|£)(\d+)\.(\d+)$/ do |period, currency, dollars, cents|
   create_listing(model!("location")) do
     fill_in "#{period.capitalize} price", with: "#{dollars}.#{cents}"
   end

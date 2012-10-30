@@ -39,7 +39,7 @@ class Listing < ActiveRecord::Base
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
-  delegate :address, :amenities, :formatted_address, :local_geocoding, :organizations, :required_organizations, :latitude,
+  delegate :address, :amenities, :currency, :formatted_address, :local_geocoding, :organizations, :required_organizations, :latitude,
     :longitude, :distance_from, to: :location, allow_nil: true
 
   delegate :to_s, to: :name
@@ -61,7 +61,6 @@ class Listing < ActiveRecord::Base
 
   include Search
   extend PricingPeriods
-
   include AvailabilityRule::TargetHelper
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
 

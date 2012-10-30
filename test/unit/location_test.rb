@@ -15,6 +15,9 @@ class LocationTest < ActiveSupport::TestCase
   should_not allow_value('not_an_email').for(:email)
   should allow_value('an_email@domain.com').for(:email)
 
+  should_not allow_value('xxx').for(:currency)
+  should allow_value('USD').for(:currency)
+
   context "required_organizations" do
     context "when require_organiation_membership is true" do
       context "and the location has organizations" do
