@@ -80,12 +80,12 @@ ActiveRecord::Schema.define(:version => 20121017171355) do
     t.integer  "creator_id"
     t.string   "name"
     t.text     "description"
-    t.integer  "quantity",             :default => 1
-    t.float    "rating_average",       :default => 0.0
-    t.integer  "rating_count",         :default => 0
+    t.integer  "quantity",                :default => 1
+    t.float    "rating_average",          :default => 0.0
+    t.integer  "rating_count",            :default => 0
     t.text     "availability_rules_text"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
     t.datetime "deleted_at"
     t.boolean  "confirm_reservations"
   end

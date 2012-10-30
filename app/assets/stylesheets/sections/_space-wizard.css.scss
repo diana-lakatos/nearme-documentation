@@ -1,0 +1,32 @@
+#space_wizard_faqs {
+  padding-top: 20px;
+
+  h2 {
+    font-weight: bold;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 130%;
+    color: #1e2222;
+  }
+}
+
+#space_wizard {
+  #service_buttons {
+    .btn {
+      $service-icons: sprite-map("sections/space-wizard/signup/service-icons/*.png");
+      font-size: 22px;
+
+      @each $service in (twitter, facebook, linkedin) {
+        i.icon-#{$service} {
+          display: inline-block;
+          background: $service-icons;
+          @include sprite($service-icons, $service, true);
+        }
+      }
+    }
+  }
+}

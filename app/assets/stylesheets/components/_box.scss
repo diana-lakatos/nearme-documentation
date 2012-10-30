@@ -60,5 +60,25 @@
   @include border-bottom-radius(8px);
   font-size: 14px;
   line-height: 140%;
+
+  hr, .hr {
+    color: #cecfcf;
+    background: #cecfcf;
+    border-bottom: 1px solid #fefefe;
+    margin-left: -$padding;
+    margin-right: -$padding;
+    text-align: center;
+    > span {
+      display: inline-block;
+      background: #f5f5f5;
+      padding: 0 8px;
+      position: relative;
+      top: -10px;
+      color: #999999;
+      font-family: "Banda";
+      font-weight: bold;
+      font-size: 18px;
+    }
+  }
 }
 

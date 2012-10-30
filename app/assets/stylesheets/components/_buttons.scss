@@ -81,3 +81,29 @@
   }
 }
 
+.btn-group {
+  display: inline-block;
+  overflow: hidden;
+
+  .btn {
+    float: left;
+    border-right: 1px solid #70882b;
+    border-left: 1px solid #afc76b;
+  }
+
+  .btn:first-child {
+    @include border-right-radius(0px);
+    border-left: none;
+  }
+
+  .btn:not(:first-child):not(:last-child) {
+    @include border-left-radius(0px);
+    @include border-right-radius(0px);
+  }
+
+  .btn:last-child {
+    @include border-left-radius(0px);
+    border-right: none;
+  }
+}
+

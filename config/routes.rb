@@ -26,7 +26,12 @@ DesksnearMe::Application.routes.draw do
 
   resources :authentications
 
-  resources :space, :only => [:new]
+  scope '/space' do
+    %w(signup company space desks).each do |step|
+      get "/#{step}" => "space_wizard##{step}", :as => "space_wizard_#{step}"
+      post "/#{step}" => "space_wizard#submit_#{step}"
+    end
+  end
 
   root :to => "public#index"
 

@@ -1,0 +1,8 @@
+= render :layout => 'wizard_layout', :locals => { :step => 1 } do
+  %p.intro
+    Enter the details of your company below. This information will be displayed on each Space you
+    create.
+
+  = simple_form_for Company.new, :html => { :class => "form-horizontal new_company" } do |f|
+    = render 'companies/form', :f => f
+

@@ -1,0 +1,35 @@
+#space_wizard
+  .two-thirds.column.alpha
+    .box
+      %h2
+        %ul
+          %li{:class => space_wizard_step_class(0, step)}
+            %span Sign Up
+          %li{:class => space_wizard_step_class(1, step)}
+            %span Company
+          %li{:class => space_wizard_step_class(2, step)}
+            %span Your Space
+          %li{:class => space_wizard_step_class(3, step)}
+            %span Desks &amp; Rooms
+
+      = yield
+
+  #space_wizard_faqs.one-third.column.omega
+    %h2 How do bookings work?
+    %p
+      Bookings are an automated process on the Desks Near Me website, however if you
+      select “Confirm Bookings” then we’ll let you approve all bookings on a case-by-case basis.
+
+    %h2 How do I get paid?
+    %p
+      Desks Near Me takes payment for your booking and deposits the money into your account.
+      Desks Near Me charges a 5% commission on each booking sale.
+
+    %h2 Can I have different prices for different desks or rooms?
+    %p
+      Yes! Desks Near Me lets you define each desk or room in your space separately if you wish.
+      You might have a conference room at $100/day but a desk at $10/day.
+
+    %h2 My question isn't here
+    %p
+      No problem. Drop us a line at #{mail_to "hello@desksnear.me"} and we’ll be happy to help you out!
