@@ -13,6 +13,9 @@ class Listing
 
       # strict_match is used to indicate search results that match all relevant criteria
       attr_accessor :strict_match
+      def strict_match?
+        strict_match.nil? || strict_match
+      end
 
       # thinking sphinx index
       define_index do
