@@ -39,6 +39,11 @@ section.public {
 
   form {
     clear: both;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
   }
 
   // @see listings/#listing_search
