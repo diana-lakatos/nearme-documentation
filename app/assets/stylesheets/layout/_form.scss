@@ -118,6 +118,40 @@ form {
     }
   }
 
+  // Wrapper element for input fields.
+  //
+  // Allows manipulation with respect to positioning elements relative
+  // to the input as a psudo-container.
+  .input-icon-wrapper {
+    display: inline-block;
+    position: relative;
+
+    input {
+      padding-left: 35px;
+    }
+
+    // Icons
+    .icon {
+      position: absolute;
+      top: 50%;
+      left: 8px;
+    }
+
+    .icon.icon-loading {
+      background: image-url("components/form/input-loader.gif");
+      height: 16px;
+      width: 16px;
+      margin-top: -12px;
+    }
+
+    .icon.icon-geolocate {
+      background: image-url("components/form/input-target-icon.png");
+      width: 22px;
+      height: 23px;
+      margin-top: -15px;
+    }
+  }
+
   textarea {
     height: 160px;
   }

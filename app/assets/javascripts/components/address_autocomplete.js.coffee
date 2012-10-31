@@ -2,6 +2,7 @@ class @AddressAutocomplete
 
   constructor: (@input) ->
     @bindEvents()
+    @setupInput()
 
   # Show autocomplete matches with the results array
   showMatches: (results) ->
@@ -33,6 +34,7 @@ class @AddressAutocomplete
     geocoder = new google.maps.Geocoder()
 
     geocoder.geocode { address: @input.val() }, (results, status) =>
+      @hideLoading()
       @showMatches(results)
 
   bindEvents: ->
@@ -42,6 +44,7 @@ class @AddressAutocomplete
       false
 
     @input.on 'keypress', (event) =>
+      @showLoading()
       clearTimeout(@_findMatchesTimeout)
       @_findMatchesTimeout = setTimeout =>
         @findMatches()
@@ -54,3 +57,27 @@ class @AddressAutocomplete
     $("#location_address").val(selection.html())
     $("#address-suggestions").remove()
     $("#location_address").focus()
+
+  showLoading: ->
+    @geolocateTrigger.hide()
+    @loadingSpinner.show()
+
+  hideLoading: ->
+    @loadingSpinner.hide()
+    @geolocateTrigger.show()
+
+  setupInput: ->
+    # Wrap input element
+    @input.wrap('<div class="input-icon-wrapper"/>')
+    @inputWrapper = @input.parent()
+
+    # Add icon
+    @geolocateTrigger = $('<i class="icon icon-geolocate geolocate-trigger" />')
+    @inputWrapper.append(@geolocateTrigger)
+
+    # Add loading spinner
+    @loadingSpinner = $('<i class="icon icon-loading" />')
+    @loadingSpinner.hide()
+    @inputWrapper.append(@loadingSpinner)
+
+
