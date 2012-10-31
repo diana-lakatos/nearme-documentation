@@ -105,7 +105,7 @@ class Listing
 
         ranked_listings = @listings.rank_by { |l| ((l.price_cents || 0) - midpoint_cents).abs }
 
-        add_strict_matches(:price) do |l| 
+        add_strict_matches(:price) do |l|
           price_cents = (l.price_cents || 0)
           price_cents >= min_cents && price_cents <= max_cents
         end

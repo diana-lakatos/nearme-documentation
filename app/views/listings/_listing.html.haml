@@ -5,6 +5,8 @@
     .five.columns
       %h2= link_to "#{listing.name} - #{listing_price(listing)}", listing
       %address= listing.formatted_address || listing.address
+      - unless listing.strict_match?
+        %p This result may not exactly match your search criteria
     .nine.columns.omega
       = render :partial => "listings/availability", :locals => {:listing => listing, :weeks => 1}
   .map-details{:style => "display: none"}
