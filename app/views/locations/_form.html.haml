@@ -1,26 +1,25 @@
-= simple_form_for location, :html => { :class => "form-horizontal edit_location" } do |f|
-  - textile_hint = "(Parsed using #{link_to("Textile", "http://en.wikipedia.org/wiki/Textile_%28markup_language%29", :target => "_blank")}).".html_safe
+- textile_hint = "(Parsed using #{link_to("Textile", "http://en.wikipedia.org/wiki/Textile_%28markup_language%29", :target => "_blank")}).".html_safe
 
-  = f.input :company_id, :collection => current_user.companies, :prompt =>  "Select a company...", :hint => "Or... #{link_to "Create a company", new_company_path}"
-  = f.input :local_geocoding, :as => :hidden
-  = f.input :latitude, :as => :hidden
-  = f.input :longitude, :as => :hidden
-  = f.input :formatted_address, :as => :hidden
-  = f.input :name, :hint => "What's the name of your joint?"
-  = f.input :address, :input_html => {:rows => 4}, :hint => "Don't be shy, we're going to geocode this, so it needs to be accurate."
-  = f.input :description, :input_html => {:rows => 8}, :hint => ["What resources are available, i.e. internet, speed, public transport, coffee shops near by, coffee included? Why would people love your office? What kinds of drop-ins/coworkers would you prefer? Conditions of entry (e.g. must participate in stand up or something)", textile_hint].join(' ').html_safe
-  = f.input :currency, :as => :currency, :hint => "What currency would you like to be paid with?"
-  - if current_user.admin?
-    = f.association :creator, :select => "Select a creator..."
-  = f.input :organization_ids, :collection => Organization.order('name').all, :as => :check_boxes, :label => "Professional Associations", :hint => "Please check any professional associations with which you are affiliated. You can then optionally restrict your listings to users who have identified themselves as a member of these associations."
-  = f.input :amenity_ids, :label => "Amenities Provided", :collection => Amenity.order('name').all, :as => :check_boxes, :hint => "Please check any services you provide."
-  = f.input :require_organization_membership, :input_html => { :class => "check_boxes" }, :label_html => { :class => "check_box" }, :label => "Require Association Membership", :hint => "This will only show your listings to members of the professional associations you selected above"
+= f.input :company_id, :collection => current_user.companies, :prompt =>  "Select a company...", :hint => "Or... #{link_to "Create a company", new_company_path}"
+= f.input :local_geocoding, :as => :hidden
+= f.input :latitude, :as => :hidden
+= f.input :longitude, :as => :hidden
+= f.input :formatted_address, :as => :hidden
+= f.input :name, :hint => "What's the name of your joint?"
+= f.input :address, :input_html => {:rows => 4}, :hint => "Don't be shy, we're going to geocode this, so it needs to be accurate."
+= f.input :description, :input_html => {:rows => 8}, :hint => ["What resources are available, i.e. internet, speed, public transport, coffee shops near by, coffee included? Why would people love your office? What kinds of drop-ins/coworkers would you prefer? Conditions of entry (e.g. must participate in stand up or something)", textile_hint].join(' ').html_safe
+= f.input :currency, :as => :currency, :hint => "What currency would you like to be paid with?"
+- if current_user.admin?
+  = f.association :creator, :select => "Select a creator..."
+= f.input :organization_ids, :collection => Organization.order('name').all, :as => :check_boxes, :label => "Professional Associations", :hint => "Please check any professional associations with which you are affiliated. You can then optionally restrict your listings to users who have identified themselves as a member of these associations."
+= f.input :amenity_ids, :label => "Amenities Provided", :collection => Amenity.order('name').all, :as => :check_boxes, :hint => "Please check any services you provide."
+= f.input :require_organization_membership, :input_html => { :class => "check_boxes" }, :label_html => { :class => "check_box" }, :label => "Require Association Membership", :hint => "This will only show your listings to members of the professional associations you selected above"
 
-  .control-group.indent
-    = render 'availability_rules/form', :f => f, :allow_clear => "Use Location's availability"
+.control-group.indent
+  = render 'availability_rules/form', :f => f, :allow_clear => "Use Location's availability"
 
-  .actions
-    = f.button :submit
+.actions
+  = f.button :submit
 
 :javascript
   $(function() {

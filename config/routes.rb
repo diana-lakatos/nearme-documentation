@@ -30,6 +30,7 @@ DesksnearMe::Application.routes.draw do
     %w(signup company space desks).each do |step|
       get "/#{step}" => "space_wizard##{step}", :as => "space_wizard_#{step}"
       post "/#{step}" => "space_wizard#submit_#{step}"
+      put "/#{step}" => "space_wizard#submit_#{step}"
     end
   end
 

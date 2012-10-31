@@ -36,10 +36,12 @@ form {
 
   .hint, .help-block {
     font-size: 80%;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 16px;
     display: block;
-    margin-bottom: 6px;
+    padding-bottom: 6px;
+    background: image-url("components/form/hint.png") left top no-repeat;
+    padding-left: 20px;
   }
 
   label {

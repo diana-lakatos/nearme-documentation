@@ -23,6 +23,7 @@
       @each $service in (twitter, facebook, linkedin) {
         i.icon-#{$service} {
           display: inline-block;
+          vertical-align: text-top;
           background: $service-icons;
           @include sprite($service-icons, $service, true);
         }

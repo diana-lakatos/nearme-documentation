@@ -3,6 +3,6 @@
     Enter the details of your company below. This information will be displayed on each Space you
     create.
 
-  = simple_form_for Company.new, :html => { :class => "form-horizontal new_company" } do |f|
+  = simple_form_for @company, :url => space_wizard_company_url, :html => { :class => "form-horizontal new_company" } do |f|
     = render 'companies/form', :f => f
 
