@@ -4,6 +4,9 @@ class @AddressAutocomplete
     @bindEvents()
     @setupInput()
 
+  onLocate: (callback) ->
+    @_onLocate = callback
+
   # Show autocomplete matches with the results array
   showMatches: (results) ->
     @hideMatches()
@@ -18,6 +21,7 @@ class @AddressAutocomplete
           .html(result['formatted_address'])
           .attr("data-lat", loc.lat())
           .attr("data-lng", loc.lng())
+          .data("result", loc)
         li = $("<li></li>").append(link)
         ul.append(li)
 
@@ -25,7 +29,7 @@ class @AddressAutocomplete
     else
       el = $("<div></div>").attr("id", "address-suggestions").html("No matches found. Please try another location.")
 
-    @input.after(el)
+    @inputWrapper.after(el)
 
   hideMatches: ->
     $('#address-suggestions').remove()
@@ -57,6 +61,8 @@ class @AddressAutocomplete
     $("#location_address").val(selection.html())
     $("#address-suggestions").remove()
     $("#location_address").focus()
+
+    @_onLocate(selection.attr('data-lat'), selection.attr('data-lng')) if @_onLocate
 
   showLoading: ->
     @geolocateTrigger.hide()

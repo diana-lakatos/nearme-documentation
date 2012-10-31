@@ -12,8 +12,14 @@
         %p.hint
           We'll try to geolocate your address on the map below.
 
+        .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
+          .map-container{:style => "height: 240px; width: 373px"}
+
     = f.input :description, :label => 'Space description', :placeholder => 'Tell us about about your space. Be exciting!'
     = f.input :currency, :as => :currency, :label => "Booking currency"
+
+    .actions
+      = f.submit 'Create my space'
 
 :javascript
   $(function() {

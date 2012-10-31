@@ -41,7 +41,7 @@ class SpaceWizardController < ApplicationController
   end
 
   def submit_space
-    @location = @company.locatoins.first_or_initialize
+    @location = @company.locations.first_or_initialize
     @location.attributes = params[:location]
 
     if @location.save

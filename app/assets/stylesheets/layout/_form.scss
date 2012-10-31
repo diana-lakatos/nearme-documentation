@@ -247,6 +247,12 @@ form {
     width: 355px;
   }
 
+  .input-icon-wrapper {
+    input[type="text"] {
+      width: 328px;
+    }
+  }
+
   .controls {
     &.two-up input {
       width: 163px;
