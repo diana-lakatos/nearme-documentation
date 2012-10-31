@@ -1,0 +1,43 @@
+{
+   "results" : [
+      {
+         "address_components" : [
+            {
+               "long_name" : "New Zealand",
+               "short_name" : "NZ",
+               "types" : [ "country", "political" ]
+            }
+         ],
+         "formatted_address" : "New Zealand",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : -29.23134190,
+                  "lng" : -176.15422480
+               },
+               "southwest" : {
+                  "lat" : -52.61941849999999,
+                  "lng" : 165.86943690
+               }
+            },
+            "location" : {
+               "lat" : -40.9005570,
+               "lng" : 174.8859710
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : -34.14420570,
+                  "lng" : 179.0424640
+               },
+               "southwest" : {
+                  "lat" : -52.61941849999999,
+                  "lng" : 165.86943690
+               }
+            }
+         },
+         "types" : [ "country", "political" ]
+      }
+   ],
+   "status" : "OK"
+}

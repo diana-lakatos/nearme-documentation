@@ -11,5 +11,6 @@ module ListingHelper
     wait_until { @listing = Listing.find_by_name(name) }
     store_model('listing', 'user-created listing', @listing)
   end
+
 end
 World(ListingHelper)
