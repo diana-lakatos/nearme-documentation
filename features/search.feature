@@ -24,6 +24,17 @@ Feature: A user can search for a listing
     And I see a search result for the Auckland listing
     And I do not see a search result for the Cleveland listing
 
+  @future
+  Scenario: A user searches with a price range
+    Given a listing exists in Auckland exists with a price of $50.00
+    And a listing exists in Auckland exists with a price of $10.00
+    When I search for "Auckland"
+
+  @future
+  Scenario: A user searches with amenities
+
+  @future
+  Scenario: A user searches with associations
 
   @future
   Scenario: a non member user searches for a private listing
