@@ -61,6 +61,7 @@ class @AddressAutocomplete
     $("#location_address").val(selection.html())
     $("#address-suggestions").remove()
     $("#location_address").focus()
+    $("#location_local_geocoding").val("1")
 
     @_onLocate(selection.attr('data-lat'), selection.attr('data-lng')) if @_onLocate
 

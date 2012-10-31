@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121017171355) do
+ActiveRecord::Schema.define(:version => 20121031222323) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -121,6 +121,7 @@ ActiveRecord::Schema.define(:version => 20121017171355) do
     t.string   "formatted_address"
     t.boolean  "require_organization_membership", :default => false
     t.string   "currency"
+    t.text     "special_notes"
   end
 
   create_table "organization_users", :force => true do |t|
