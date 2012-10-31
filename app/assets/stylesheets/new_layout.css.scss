@@ -30,10 +30,9 @@ header {
   #logo {
     display: inline-block;
     background: image-url("layout/logo.png");
-    width: 205px;
-    height: 24px;
+    width: 244px;
+    height: 52px;
     text-indent: -9999px;
-    margin-top: 16px;
   }
 
   #header_links {
@@ -58,6 +57,8 @@ header {
 
 #content > .container {
   padding-top: 30px;
+  background: image-url("layout/background-logo.png") 0 -60px no-repeat;
+  padding-bottom: 30px;
 }
 
 /* #Page Styles

@@ -10,6 +10,7 @@
 //
 // Require new jQuery to override (NB: This is so HAX)
 //= require ./vendor/jquery
+//= require ./vendor/jquery.ui.touch-punch
 //= require ./vendor/rails
 //= require ./vendor/modernizr.js
 //= require ./vendor/jquery.cookie.js
@@ -38,6 +39,7 @@ $(function() {
 
 // FIXME: Hax to initialize jQuery UI on 2 versions of JQuery temporaryily
 initializeJQueryUI(jQuery);
+initializeJQueryUITouchPunch(jQuery);
 
 jQuery.ajaxSetup({
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
