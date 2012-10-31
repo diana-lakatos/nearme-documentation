@@ -2,16 +2,20 @@
   %p.intro
     Enter the details of your space below! We’ll get you to tell us all your company details later.
 
-  = simple_form_for @location, :url => space_wizard_space_url, :html => { :class => "form-horizontal new_company" } do |f|
+  = simple_form_for @location, :url => space_wizard_space_url, :html => { :class => "form-horizontal new_location" } do |f|
     = f.input :name, :label => 'Space name', :placeholder => 'Name your space!'
 
     .control-group
       %label.control-label Space location
       .controls
-        = f.text_field :address, :placeholder => "Type an address..."
+        = f.text_field :address, :placeholder => "Type an address...", :'data-behavior' => 'address-autocomplete'
         %p.hint
           We'll try to geolocate your address on the map below.
 
     = f.input :description, :label => 'Space description', :placeholder => 'Tell us about about your space. Be exciting!'
     = f.input :currency, :as => :currency, :label => "Booking currency"
 
+:javascript
+  $(function() {
+    new SpaceWizardSpaceForm($('form.new_location'))
+  });
