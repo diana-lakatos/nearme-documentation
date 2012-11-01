@@ -29,6 +29,9 @@ class Listing < ActiveRecord::Base
 
   has_many :availability_rules, :as => :target
 
+  # === Callbacks
+  before_validation :set_default_creator
+
   validates_presence_of :location_id, :creator_id, :name, :description, :quantity
   validates_inclusion_of :confirm_reservations, :in => [true, false]
   validates_numericality_of :quantity
@@ -264,5 +267,12 @@ class Listing < ActiveRecord::Base
         end
       end
     end
+  end
+
+  private
+
+  def set_default_creator
+    self.creator ||= location.try(:creator)
+    self.creator ||= location.try(:company).try(:creator)
   end
 end

@@ -55,6 +55,13 @@ class SpaceWizardController < ApplicationController
   end
 
   def submit_desks
+    @space.attributes = params[:location]
+
+    if @space.save
+      redirect_to space_wizard_complete_url
+    else
+      render :desks
+    end
   end
 
   def complete

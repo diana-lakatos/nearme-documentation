@@ -2,6 +2,8 @@
   .legend
     Listing ##{content_tag(:span, (@space.listings.index(f.object)||0)+1)}
 
+  = f.object.errors.full_messages.to_sentence if f.object.errors.any?
+
   = f.input :name, :placeholder => 'e.g. Conference Room A'
   = f.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" }
   = f.input :description, :placeholder => 'Tell us a bit about the listing. Be exciting!'
