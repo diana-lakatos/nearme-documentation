@@ -101,7 +101,7 @@
     border-left: 1px solid #afc76b;
   }
 
-  .btn:first-child {
+  .btn:first-child:not(:last-child) {
     @include border-right-radius(0px);
     border-left: none;
   }
@@ -111,7 +111,7 @@
     @include border-right-radius(0px);
   }
 
-  .btn:last-child {
+  .btn:last-child:not(:first-child) {
     @include border-left-radius(0px);
     border-right: none;
   }

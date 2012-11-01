@@ -34,12 +34,14 @@ form {
     }
   }
 
-  .hint, .help-block {
+  .hint, .help-block, .preamble, .error-block {
     display: block;
     font-size: 12px;
     line-height: 16px;
     padding-bottom: 6px;
-    background: image-url("components/form/hint.png") left top no-repeat;
+  }
+
+  .hint, .help-block, .error-block {
     padding-left: 20px;
 
     &.no-icon {
@@ -48,12 +50,23 @@ form {
     }
   }
 
+  .hint, .help-block {
+    background: image-url("components/form/hint.png") left top no-repeat;
+  }
+
+  .error-block {
+    color: #e83d33;
+    background: image-url("components/form/error.png") left top no-repeat;
+  }
+
   .preamble {
-    display: block;
-    font-size: 12px;
     color: #1e2222;
-    line-height: 16px;
-    padding-bottom: 6px;
+  }
+
+  .control-group.error {
+    input {
+      border-color: #e58984;
+    }
   }
 
   label {
@@ -269,14 +282,7 @@ form {
       }
     }
 
-    &.error {
-      input {
-        border-color: #cc0000;
-      }
-      .help-inline {
-        color: #cc0000;
-      }
-    }
+
 
     .control-label {
       @extend .font-banda-bold;
