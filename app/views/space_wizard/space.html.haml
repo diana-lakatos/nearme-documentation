@@ -9,8 +9,6 @@
       %label.control-label Space location
       .controls
         = f.text_field :address, :placeholder => "Type an address...", :'data-behavior' => 'address-autocomplete'
-        %p.hint
-          We'll try to geolocate your address on the map below.
 
         .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
           .map-container{:style => "height: 240px; width: 373px"}

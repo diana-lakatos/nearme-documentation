@@ -35,13 +35,25 @@ form {
   }
 
   .hint, .help-block {
-    font-size: 80%;
+    display: block;
     font-size: 12px;
     line-height: 16px;
-    display: block;
     padding-bottom: 6px;
     background: image-url("components/form/hint.png") left top no-repeat;
     padding-left: 20px;
+
+    &.no-icon {
+      background: none;
+      padding-left: 0;
+    }
+  }
+
+  .preamble {
+    display: block;
+    font-size: 12px;
+    color: #1e2222;
+    line-height: 16px;
+    padding-bottom: 6px;
   }
 
   label {
@@ -80,10 +92,27 @@ form {
   // Two-up controls
   // i.e. Controls with side-by-side group rendering
   .two-up {
-    label.checkbox {
+    label.checkbox, label.radio {
       width: 195px;
       float: left;
       margin-bottom: 15px;
+
+      &:nth-last-child(1), &:nth-last-child(2) {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  fieldset, .fieldset {
+    .two-up {
+      label.checkbox, label.radio {
+        width: 170px;
+      }
+    }
+
+    // Prevent additional padding at bottom of fieldset
+    .control-group:last-child {
+      margin-bottom: 0;
     }
   }
 
@@ -115,6 +144,42 @@ form {
 
     .wood-box &, .hero-wood-texture & {
       border: 1px solid #2e1d16;
+    }
+
+    // A mini input field
+    &.mini {
+      width: 60px;
+    }
+  }
+
+  textarea {
+    // 4 lines
+    height: 88px;
+
+    // 2 lines
+    &.short {
+      height: 44px;
+    }
+
+    // 8 Lines
+    &.high {
+      height: 176px;
+    }
+  }
+
+  fieldset, .fieldset {
+    border: 1px solid #c6c6c6;
+    @include border-radius(8px);
+    padding: 20px;
+    margin-bottom: 20px;
+
+    > legend, > .legend {
+      color: #a1a1a1;
+      font-size: 16px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
     }
   }
 
@@ -150,10 +215,6 @@ form {
       height: 23px;
       margin-top: -15px;
     }
-  }
-
-  textarea {
-    height: 160px;
   }
 
   input[type='submit'] {
@@ -265,5 +326,14 @@ form {
   .actions {
     margin-left: 196px;
     margin-bottom: 20px;
+  }
+
+  // Fieldsets require even further smaller width fields
+  .fieldset, fieldset {
+    input[type="text"], input[type="password"], input[type="email"], input[type="url"], input[type="tel"], textarea {
+      width: 330px;
+    }
+
+
   }
 }

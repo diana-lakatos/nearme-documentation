@@ -90,7 +90,7 @@ class SpaceWizardController < ApplicationController
   end
 
   def find_space
-    @space = @company.listings.first
+    @space = @company.locations.first
 
     unless @space
       redirect_to space_wizard_space_url

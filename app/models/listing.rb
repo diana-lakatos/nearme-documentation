@@ -124,6 +124,13 @@ class Listing < ActiveRecord::Base
   def free?
     price.nil? || price == 0.0
   end
+  alias_method :free, :free?
+
+  def free=(free_flag)
+    if free_flag.present? && free_flag.to_i == 1
+      self.price = nil
+    end
+  end
 
   def price
     daily_price

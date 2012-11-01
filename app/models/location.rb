@@ -1,6 +1,7 @@
 class Location < ActiveRecord::Base
   attr_accessible :address, :amenity_ids, :company_id, :creator_id, :description, :email, :require_organization_membership,
-    :info, :latitude, :local_geocoding, :longitude, :organization_ids, :name, :currency, :phone, :formatted_address, :availability_rules_attributes, :availability_template_id
+    :info, :latitude, :local_geocoding, :longitude, :organization_ids, :name, :currency, :phone, :formatted_address, :availability_rules_attributes, :availability_template_id,
+    :special_notes
   attr_accessor :local_geocoding # set this to true in js
   geocoded_by :address
 
@@ -32,6 +33,7 @@ class Location < ActiveRecord::Base
   # Include a set of helpers for handling availability rules and interface onto them
   include AvailabilityRule::TargetHelper
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
+  accepts_nested_attributes_for :listings
 
   def distance_from(other_latitude, other_longitude)
     Geocoder::Calculations.distance_between([ latitude,       longitude ],
