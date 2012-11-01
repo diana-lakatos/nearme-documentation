@@ -58,7 +58,15 @@ class SpaceWizardController < ApplicationController
     @space.attributes = params[:location]
 
     if @space.save
-      redirect_to space_wizard_complete_url
+      flash[:notice] = "Great, your space has been set up!"
+
+      # TODO: When Spaces (Locations) are the exposed public object change
+      #       this.
+      if @space.listings.any?
+        redirect_to listing_url(@space.listings.first)
+      else
+        redirect_to dashboard_url
+      end
     else
       render :desks
     end
