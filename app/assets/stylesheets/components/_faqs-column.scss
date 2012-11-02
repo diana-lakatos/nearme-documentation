@@ -1,0 +1,18 @@
+// Around the app there is generic faqs columns which have specific
+// header and paragraph formatting syles.
+.faqs-column {
+  padding-top: 20px;
+
+  h2 {
+    font-weight: bold;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 130%;
+    color: #1e2222;
+    margin-bottom: 30px;
+  }
+}

@@ -2,19 +2,7 @@
   %p.intro
     Sign up using your favorite service:
 
-  %span#service_buttons.btn-group
-    = link_to provider_auth_url('twitter'), :class => "btn btn-green btn-large twitter" do
-      %i.icon.icon-twitter
-      Twitter
-    /= link_to "/auth/facebook", :class => "btn btn-green btn-large facebook" do
-    /  %i.icon.icon-facebook
-    /  Facebook
-    /= link_to "/auth/linkedin", :class => "btn btn-green btn-large linkedin" do
-    /  %i.icon.icon-linkedin
-    /  LinkedIn
-
-  %p.intro
-    (Facebook and LinkedIn support coming soon!)
+  = render 'authentications/services'
 
   .hr.divider
     %span alternatively
