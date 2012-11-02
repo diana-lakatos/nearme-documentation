@@ -6,7 +6,7 @@
     = f.input :name, :label => 'Space name', :placeholder => 'Name your space!'
 
     .control-group
-      %label.control-label Space location
+      = f.label :address, 'Space location', :class => "control-label"
       .controls
         = f.text_field :address, :placeholder => "Type an address...", :'data-behavior' => 'address-autocomplete'
 

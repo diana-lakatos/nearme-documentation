@@ -78,7 +78,7 @@ class SpaceWizardController < ApplicationController
     @user = current_user
 
     unless @user
-      redirect_to space_wizard_signup_url
+      redirect_to new_space_wizard_url
     end
   end
 

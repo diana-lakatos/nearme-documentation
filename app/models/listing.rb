@@ -38,7 +38,7 @@ class Listing < ActiveRecord::Base
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
                   :creator_id, :name, :description, :daily_price, :weekly_price, :monthly_price,
-                  :availability_template_id, :availability_rules_attributes, :defer_availability_rules
+                  :availability_template_id, :availability_rules_attributes, :defer_availability_rules, :free
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company

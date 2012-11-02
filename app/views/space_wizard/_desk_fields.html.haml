@@ -1,24 +1,23 @@
-.fieldset{:class => ('template' if defined?(template) && template)}
+- is_template = defined?(template) && template
+.fieldset{:class => ('template' if is_template)}
   = link_to 'Close', '', :class => 'close-button'
 
   .legend
     Listing ##{content_tag(:span, (@space.listings.index(f.object)||0)+1)}
 
-  = f.object.errors.full_messages.to_sentence if f.object.errors.any?
-
-  = f.input :name, :placeholder => 'e.g. Conference Room A'
-  = f.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" }
-  = f.input :description, :placeholder => 'Tell us a bit about the listing. Be exciting!'
+  = f.input :name, :placeholder => 'e.g. Conference Room A', :disabled => is_template
+  = f.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" }, :disabled => is_template
+  = f.input :description, :placeholder => 'Tell us a bit about the listing. Be exciting!', :disabled => is_template
 
   .control-group
     = f.label :daily_price, 'Price per day', :class => 'control-label'
 
     .controls
-      = f.number_field :daily_price, :as => :decimal, :label => 'Price per day', :class => 'mini'
+      = f.number_field :daily_price, :as => :decimal, :label => 'Price per day', :class => 'mini', :disabled => is_template
       %span.currency-type= @space.currency
       .inline-rule
         %span or
-      = f.check_box :free
+      = f.check_box :free, :disabled => is_template
       = f.label :free, "Free?"
 
   .control-group
@@ -28,5 +27,5 @@
         Do you want to be able to approve reservations on a case-by-case basis? We'll notify you by email whenever there's a reservation that needs your attention.
 
       .two-up
-        = f.input :confirm_reservations, :as => :radio_buttons, :wrapper => :simple, :input_wrapper => false, :label => false
+        = f.input :confirm_reservations, :as => :radio_buttons, :wrapper => :simple, :input_wrapper => false, :label => false, :disabled => is_template
 
