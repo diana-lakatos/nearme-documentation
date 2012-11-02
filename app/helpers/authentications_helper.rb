@@ -31,4 +31,10 @@ module AuthenticationsHelper
       type.new(session[:omniauth]) if type
     end
   end
+
+  def provider_auth_url(provider)
+    url = "/auth/#{provider}"
+    url += "?wizard=#{params[:wizard]}" if params[:wizard]
+    url
+  end
 end

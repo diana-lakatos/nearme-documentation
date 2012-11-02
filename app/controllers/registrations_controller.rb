@@ -26,4 +26,24 @@ class RegistrationsController < Devise::RegistrationsController
     raise ActionController::RoutingError, "Feature disabled"
   end
 
+  protected
+
+  def is_navigational_format?
+    # Wizards don't get flash messages
+    if params[:wizard]
+      false
+    else
+      super
+    end
+  end
+
+  def after_sign_up_path_for(resource)
+    # Wizards go back to the wizard after signup
+    if params[:wizard]
+      wizard(params[:wizard]).url
+    else
+      super
+    end
+  end
+
 end

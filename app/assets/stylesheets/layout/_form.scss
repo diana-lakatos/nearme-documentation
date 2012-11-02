@@ -185,6 +185,7 @@ form {
     @include border-radius(8px);
     padding: 20px;
     margin-bottom: 20px;
+    position: relative;
 
     > legend, > .legend {
       color: #a1a1a1;
@@ -281,8 +282,6 @@ form {
         margin-left: 0;
       }
     }
-
-
 
     .control-label {
       @extend .font-banda-bold;

@@ -8,14 +8,18 @@ class @SpaceWizardDesksForm
 
     # Initialize each fieldset already rendered
     @container.find('.fieldset:not(.template)').each (i, fieldset) =>
-      new Fieldset($(fieldset))
+      new Fieldset(this, $(fieldset))
 
     @bindEvents()
 
   addDeskFields: ->
-    fieldset = Fieldset.fromTemplate(@template)
+    fieldset = Fieldset.fromTemplate(this, @template)
     fieldset.appendTo(@desksContainer)
     fieldset.setNumber(@desksContainer.find('.fieldset:not(.template)').length)
+
+  deskRemoved: ->
+    @desksContainer.find('.fieldset:not(.template)').each (i, fields) =>
+      $(fields).data('fieldset').setNumber(i+1)
 
   bindEvents: ->
     @container.on 'click', '[data-behavior*=addDesk]', (event) =>
@@ -24,7 +28,7 @@ class @SpaceWizardDesksForm
       false
 
   class Fieldset
-    @fromTemplate: (template) ->
+    @fromTemplate: (form, template) ->
       # A unique ID for the new fieldset
       id = new Date().getTime()
       fields = template.clone()
@@ -39,9 +43,10 @@ class @SpaceWizardDesksForm
         input.prop('name', name)
 
       # Return the new fieldset
-      new Fieldset(fields)
+      new Fieldset(form, fields)
 
-    constructor: (@container) ->
+    constructor: (@form, @container) ->
+      @container.data('fieldset', this)
       @priceInput = @container.find('input[name*=price]')
       @freeCheckbox = @container.find('input[type=checkbox][name*=free]')
       @bindEvents()
@@ -62,6 +67,13 @@ class @SpaceWizardDesksForm
 
       @container.on 'change', 'input[type=checkbox][name*=free]', =>
         @freeChanged()
+
+      @container.on 'click', '.close-button', (e) =>
+        e.preventDefault()
+        @container.fadeOut 'fast', =>
+          @container.remove()
+          @form.deskRemoved()
+        false
 
     freeChanged: ->
       if @freeCheckbox.prop('checked')

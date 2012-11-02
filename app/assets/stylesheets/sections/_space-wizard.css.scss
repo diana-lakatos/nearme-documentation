@@ -15,55 +15,6 @@
     }
   }
 
-  .signup {
-    #service_buttons {
-      .btn {
-        $service-icons: sprite-map("sections/space-wizard/signup/service-icons/*.png");
-        font-size: 22px;
-
-        @each $service in (twitter, facebook, linkedin) {
-          i.icon-#{$service} {
-            display: inline-block;
-            vertical-align: text-top;
-            background: $service-icons;
-            @include sprite($service-icons, $service, true);
-          }
-        }
-      }
-    }
-
-    .connected-provider {
-      overflow: hidden;
-
-      .avatar {
-        float: left;
-
-        img {
-          display: block; // prevent whitespace
-        }
-      }
-
-      h3, p {
-        margin: 0;
-        margin-left: 60px;
-      }
-
-      h3 {
-        font-size: 24px;
-        color: #394449;
-        line-height: 28px;
-      }
-
-      p {
-        font-size: 12px;
-        color: #677a83;
-        a {
-          font-weight: normal;
-        }
-      }
-    }
-  }
-
   form.new_desks {
     .currency-type {
       display: inline-block;

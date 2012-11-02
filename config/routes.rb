@@ -24,9 +24,14 @@ DesksnearMe::Application.routes.draw do
 
   match "/search", :to => "search#index", :as => :search
 
-  resources :authentications
+  resources :authentications do
+    collection do
+      post :clear # Clear authentications stored in session
+    end
+  end
 
   scope '/space' do
+    get '/new' => 'space_wizard#new', :as => "new_space_wizard"
     get '/complete' => "space_wizard#complete", :as => "space_wizard_complete"
 
     %w(signup company space desks).each do |step|

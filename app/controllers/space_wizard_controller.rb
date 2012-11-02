@@ -1,22 +1,14 @@
 class SpaceWizardController < ApplicationController
 
-  before_filter :skip_signup_step_if_logged_in, :only => [:signup, :submit_signup]
-  before_filter :find_user, :except => [:signup, :submit_signup]
-  before_filter :find_company, :except => [:signup, :submit_signup, :company, :submit_company]
-  before_filter :find_space, :except => [:signup, :submit_signup, :company, :submit_company, :space, :submit_space]
+  before_filter :find_user, :except => [:new]
+  before_filter :find_company, :except => [:new, :company, :submit_company]
+  before_filter :find_space, :except => [:new, :company, :submit_company, :space, :submit_space]
 
-  def signup
-    @user = User.new
-  end
-
-  def submit_signup
-    @user = User.new(params[:user])
-
-    if @user.save
-      sign_in @user
+  def new
+    if current_user
       redirect_to space_wizard_company_url
     else
-      render :signup
+      redirect_to new_user_registration_url(:wizard => 'space')
     end
   end
 
@@ -58,33 +50,28 @@ class SpaceWizardController < ApplicationController
     @space.attributes = params[:location]
 
     if @space.save
-      flash[:notice] = "Great, your space has been set up!"
-
-      # TODO: When Spaces (Locations) are the exposed public object change
-      #       this.
-      if @space.listings.any?
-        redirect_to listing_url(@space.listings.first)
-      else
-        redirect_to dashboard_url
-      end
+      redirect_for_complete
     else
       render :desks
     end
   end
 
-  def complete
-  end
-
   private
+
+  def redirect_for_complete
+    flash[:notice] = "Great, your space has been set up!"
+
+    # TODO: When Spaces (Locations) are the exposed public object change
+    #       this.
+    if @space.listings.any?
+      redirect_to listing_url(@space.listings.first)
+    else
+      redirect_to dashboard_url
+    end
+  end
 
   def wizard_session
     session[:space_wizard] ||= {}
-  end
-
-  def skip_signup_step_if_logged_in
-    if current_user
-      redirect_to space_wizard_company_url
-    end
   end
 
   def find_user

@@ -1,13 +1,17 @@
 - legacy false
 - title "Sign up to Desks Near Me"
-.sign-up
-  .two-thirds.column
-    .box
-      %h2== Sign up to Desks Near Me
-      %p.intro
-        Sign up now to Desks Near Me and keep track of your spaces, bookings, favourites and reviews.
 
-      = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name), :submit => "Continue", :html => {} }
+#signup
+  - if registration_wizard
+    = render :layout => "#{registration_wizard}_wizard/wizard_layout", :locals => { :step => 0 } do
+      = render 'registrations/signup_form'
 
-  .one-third.column.third-party
-    = render "sessions/connect_provider", action: "sign up"
+  - else
+    .two-thirds.column.alpha
+      .box
+        %h2== Sign up to Desks Near Me
+
+        = render 'registrations/signup_form'
+
+    .one-third.column.omega
+

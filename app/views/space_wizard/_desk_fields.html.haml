@@ -1,4 +1,6 @@
 .fieldset{:class => ('template' if defined?(template) && template)}
+  = link_to 'Close', '', :class => 'close-button'
+
   .legend
     Listing ##{content_tag(:span, (@space.listings.index(f.object)||0)+1)}
 
