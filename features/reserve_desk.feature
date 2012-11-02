@@ -78,7 +78,7 @@ Feature: A user can book a desk
       And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
       And I fill in "Your name" with "Jermaine"
       And I fill in "Your email address" with "myemail@example.com"
-      And I press "Sign Up Now"
+      And I press "Sign up and get started"
      Then I should be on the listing's new reservation page
       And I should see "You are making a reservation for: October 15, 2010"
       And I press "Reserve"
