@@ -4,6 +4,9 @@ Feature: A user can search for a listing
   As a user
   I want to search for a listing
 
+  Background:
+    Given I am on the home page
+
   Scenario: A user searches for nothing
     When I search for ""
     Then I should see "Please enter a city or address"
@@ -24,11 +27,13 @@ Feature: A user can search for a listing
     And I see a search result for the Auckland listing
     And I do not see a search result for the Cleveland listing
 
-  @future
+  @wip
   Scenario: A user searches with a price range
-    Given a listing exists in Auckland exists with a price of $50.00
-    And a listing exists in Auckland exists with a price of $10.00
-    When I search for "Auckland"
+    Given a listing in Auckland exists with a price of $50.00
+    And a listing in Auckland exists with a price of $10.00
+    When I set the price range to $0 to $25
+    And I search for "Auckland"
+    Then the search results have the lowest price first
 
   @future
   Scenario: A user searches with amenities
