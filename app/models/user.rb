@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
   def password_required?
     # We're changing/setting password, or new user and there are no Provider authentications
     !password.blank? || !password_confirmation.blank? ||
-      (new_record? && authentications.empty?) || (persisted? && authentications.empty?)
+      (new_record? && authentications.empty?)
   end
 
   # Whether the user has - or should have - a password.
