@@ -26,7 +26,7 @@ class Listing::SearchTest < ActiveSupport::TestCase
         amenities: [ @wifi.id ]
       )
 
-      assert_equal [30.0, 20.0, 10.0], results.map(&:score)
+      assert_equal [10.0, 20.0, 30.0], results.map(&:score)
     end
 
     context "when performing a keyword search" do
@@ -46,7 +46,7 @@ class Listing::SearchTest < ActiveSupport::TestCase
           )
 
           assert results.all? { |l| l.score.present? }
-          assert_equal [15.0, 15.0, 10.0], results.map(&:score)
+          assert_equal [10.0, 15.0, 15.0], results.map(&:score)
         end
       end
 
@@ -65,7 +65,7 @@ class Listing::SearchTest < ActiveSupport::TestCase
           )
 
           assert results.all? { |l| l.score.present? }
-          assert_equal [15.0, 15.0, 10.0], results.map(&:score)
+          assert_equal [10.0, 15.0, 15.0], results.map(&:score)
         end
 
       end
