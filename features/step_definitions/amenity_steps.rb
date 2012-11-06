@@ -1,3 +1,3 @@
-Given /^a Wi-Fi amenity$/ do
-  @wifi = FactoryGirl.create(:wifi, id: 123)
+Then /^I see that amenity$/ do
+  page.should have_content model!('amenity').name
 end

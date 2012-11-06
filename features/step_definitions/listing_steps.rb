@@ -1,13 +1,14 @@
 # coding: utf-8
-Given /^a listing in (.*) exists$/ do |city|
-  create_listing_in(city)
+Given /^a listing in (.*) exists( with that amenity)?$/ do |city, amenity|
+  listing = create_listing_in(city)
+  listing.location.amenities << model!("amenity") if amenity
 end
 
-Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and Wi\-Fi)?$/ do |city, dollars, cents, wifi|
+Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and that amenity)?$/ do |city, dollars, cents, amenity|
   listing = create_listing_in(city)
 
   listing.price_cents = (dollars.to_i * 100) + cents.to_i
-  listing.location.amenities << @wifi if wifi
+  listing.location.amenities << model!("amenity") if amenity
 end
 
 Given /^a listing in (.*) exists which is (NOT )?a member of that organization$/ do |city, not_member|

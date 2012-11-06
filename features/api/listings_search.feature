@@ -52,8 +52,8 @@ Feature: User Searches Listings
     """
 
   Scenario: Searching for some listings with a few price parameters
-    Given a Wi-Fi amenity
-    And a listing in Auckland exists with a price of $150.00 and Wi-Fi
+    Given an amenity exists with id: 123
+    And a listing in Auckland exists with a price of $150.00 and that amenity
     And a listing in Wellington exists with a price of $250.00
     And the Sphinx indexes are updated
     When I send a POST request to "listings/search":
