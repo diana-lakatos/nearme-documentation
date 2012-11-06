@@ -49,9 +49,19 @@
 
     @include box-shadow(
       inset rgba(255,255,255,0.1) 0 -4px 0 0, // bottom glow
-      inset #117db9 0 -3px 0 0, // dark part
-      rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
+      inset #117db9 0 -3px 0 0 // dark part
+//      rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
     );
+
+    &:active {
+      background: #2091d1;
+      @include background(linear-gradient(top center, #2091d1, #249fe3));
+      @include box-shadow(
+        inset rgba(255,255,255,0.1) 0 -4px 0 0 // bottom glow
+//        inset #117db9 0 -3px 0 0 // dark part
+  //      rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
+      );
+    }
   }
 
   &.btn-green {
@@ -78,6 +88,32 @@
       inset #628109 0 -3px 0 0 // dark part
 //      rgba(0,0,0,0.3) 0 5px 6px 0 // shadow
     );
+  }
+}
+
+.btn-group {
+  display: inline-block;
+  overflow: hidden;
+
+  .btn {
+    float: left;
+    border-right: 1px solid #70882b;
+    border-left: 1px solid #afc76b;
+  }
+
+  .btn:first-child:not(:last-child) {
+    @include border-right-radius(0px);
+    border-left: none;
+  }
+
+  .btn:not(:first-child):not(:last-child) {
+    @include border-left-radius(0px);
+    @include border-right-radius(0px);
+  }
+
+  .btn:last-child:not(:first-child) {
+    @include border-left-radius(0px);
+    border-right: none;
   }
 }
 

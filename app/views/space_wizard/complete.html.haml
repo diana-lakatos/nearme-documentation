@@ -1,0 +1,15 @@
+= render :layout => 'wizard_layout', :locals => { :step => 5 } do
+  %p.intro
+    Awesome! Your space has been created. There is still a bunch more information you can add. Check out your space below.
+
+  %h3 User
+  = @user.inspect
+
+  %h3 Company
+  = @company.inspect
+
+  %h3 Space
+  = @space.inspect
+
+  %h3 Listings
+  = @space.listings.inspect

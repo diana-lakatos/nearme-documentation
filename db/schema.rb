@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121017171355) do
+ActiveRecord::Schema.define(:version => 20121031222323) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -80,12 +80,12 @@ ActiveRecord::Schema.define(:version => 20121017171355) do
     t.integer  "creator_id"
     t.string   "name"
     t.text     "description"
-    t.integer  "quantity",             :default => 1
-    t.float    "rating_average",       :default => 0.0
-    t.integer  "rating_count",         :default => 0
+    t.integer  "quantity",                :default => 1
+    t.float    "rating_average",          :default => 0.0
+    t.integer  "rating_count",            :default => 0
     t.text     "availability_rules_text"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
     t.datetime "deleted_at"
     t.boolean  "confirm_reservations"
   end
@@ -121,6 +121,7 @@ ActiveRecord::Schema.define(:version => 20121017171355) do
     t.string   "formatted_address"
     t.boolean  "require_organization_membership", :default => false
     t.string   "currency"
+    t.text     "special_notes"
   end
 
   create_table "organization_users", :force => true do |t|

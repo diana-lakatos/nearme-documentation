@@ -41,5 +41,5 @@ module ApplicationHelper
     end
     buffer.html_safe
   end
-  
+
 end

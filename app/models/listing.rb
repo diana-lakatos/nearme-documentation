@@ -29,13 +29,16 @@ class Listing < ActiveRecord::Base
 
   has_many :availability_rules, :as => :target
 
+  # === Callbacks
+  before_validation :set_default_creator
+
   validates_presence_of :location_id, :creator_id, :name, :description, :quantity
   validates_inclusion_of :confirm_reservations, :in => [true, false]
   validates_numericality_of :quantity
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
                   :creator_id, :name, :description, :daily_price, :weekly_price, :monthly_price,
-                  :availability_template_id, :availability_rules_attributes, :defer_availability_rules
+                  :availability_template_id, :availability_rules_attributes, :defer_availability_rules, :free
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
@@ -123,6 +126,13 @@ class Listing < ActiveRecord::Base
 
   def free?
     price.nil? || price == 0.0
+  end
+  alias_method :free, :free?
+
+  def free=(free_flag)
+    if free_flag.present? && free_flag.to_i == 1
+      self.price = nil
+    end
   end
 
   def price
@@ -257,5 +267,12 @@ class Listing < ActiveRecord::Base
         end
       end
     end
+  end
+
+  private
+
+  def set_default_creator
+    self.creator ||= location.try(:creator)
+    self.creator ||= location.try(:company).try(:creator)
   end
 end

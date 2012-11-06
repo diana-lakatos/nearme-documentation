@@ -1,0 +1,33 @@
+= render :layout => 'wizard_layout', :locals => { :step => 2 } do
+  %p.intro
+    Enter the details of your space below! We’ll get you to tell us all your company details later.
+
+  = simple_form_for @location, :url => space_wizard_space_url, :html => { :class => "form-horizontal new_location" } do |f|
+    = f.input :name, :label => 'Space name', :placeholder => 'Name your space!'
+
+    .control-group
+      = f.label :address, 'Space location', :class => "control-label"
+      .controls
+        = f.text_field :address, :placeholder => "Type an address...", :'data-behavior' => 'address-autocomplete'
+
+        .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
+          .map-container{:style => "height: 240px; width: 373px"}
+
+        = f.hidden_field :local_geocoding
+        = f.hidden_field :latitude
+        = f.hidden_field :longitude
+        = f.hidden_field :formatted_address
+
+    = f.input :description, :label => 'Space description', :placeholder => 'Tell us about about your space. Be exciting!'
+    = f.input :email, :label => 'Booking email', :placeholder => 'yourname@example.com'
+    = f.input :phone, :label => 'Booking phone #', :placeholder => '1800 BOOKSPACE'
+    = f.input :currency, :as => :currency, :label => "Booking currency", :default => 'USD'
+    = f.input :special_notes, :as => :string, :label => 'Special terms or notes', :placeholder => 'Any special terms or notes to add?', :hint => "Got a dog? Require an NDA? Write any special conditions for booking."
+
+    .actions
+      = f.submit 'Create my space'
+
+:javascript
+  $(function() {
+    new SpaceWizardSpaceForm($('form.new_location'))
+  });

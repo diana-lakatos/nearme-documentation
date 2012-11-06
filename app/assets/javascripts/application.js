@@ -21,13 +21,7 @@
 //= require_tree ./components
 //
 // Sections
-//= require ./sections/search
-//= require ./sections/locations/location_form_controller
-//= require ./sections/locations/availability_rules_controller
-//= require ./sections/listings/listing_form_controller
-//= require ./sections/listings/space_controller
-//= require ./sections/listings/space_photos_controller
-
+//= require_tree ./sections
 
 window.DNM = {
   initialize : function() {

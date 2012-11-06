@@ -2,19 +2,36 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
-@include font-face("banda", font-files(
-      asset-path("regular-webfont.woff", font),
-      asset-path("regular-webfont.ttf", font),
-      asset-path("regular-webfont.svg", font)
-    ),
-    asset-path("regular-webfont.eot", font));
+@include font-face(
+  "banda",
+  font-files(
+    asset-path("regular-webfont.woff", font),
+    asset-path("regular-webfont.ttf", font),
+    asset-path("regular-webfont.svg", font)
+  ),
+  asset-path("regular-webfont.eot", font)
+);
 
-@include font-face("banda", font-files(
-      asset-path("bold-webfont.woff", font),
-      asset-path("bold-webfont.ttf", font),
-      asset-path("bold-webfont.svg", font)
-    ),
-    asset-path("bold-webfont.eot", font), bold);
+@include font-face("banda",
+  font-files(
+    asset-path("bold-webfont.woff", font),
+    asset-path("bold-webfont.ttf", font),
+    asset-path("bold-webfont.svg", font)
+  ),
+  asset-path("bold-webfont.eot", font),
+  bold
+);
+
+@include font-face("banda",
+  font-files(
+    asset-path("bold-italic-webfont.woff", font),
+    asset-path("bold-italic-webfont.ttf", font),
+    asset-path("bold-italic-webfont.svg", font)
+  ),
+  asset-path("bold-italic-webfont.eot", font),
+  bold,
+  italic
+);
 
 .font-banda {
   font-family: "banda";

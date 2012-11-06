@@ -2,7 +2,7 @@ class CurrencyInput < SimpleForm::Inputs::GroupedCollectionSelectInput
   COMMON_CODES = ['USD', 'EUR', 'NZD', 'AUD', 'GBP']
 
   def grouped_collection
-    common = currencies.select { |c| COMMON_CODES.include? c[:iso_code] }
+    common = currencies.select { |c| COMMON_CODES.include? c[:iso_code] }.sort_by { |c| COMMON_CODES.index(c) }
     [prep_currencies('Common', common), prep_currencies('All', currencies)]
   end
 
