@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
   def password_required?
     # We're changing/setting password, or new user and there are no Provider authentications
     !password.blank? || !password_confirmation.blank? ||
-      (new_record? && authentications.empty?)
+      (new_record? && authentications.empty?) || (persisted? && authentications.empty?)
   end
 
   # Whether the user has - or should have - a password.
@@ -90,6 +90,14 @@ class User < ActiveRecord::Base
 
   def full_email
     "#{name} <#{email}>"
+  end
+
+  def first_name
+    name.split(' ', 2)[0]
+  end
+
+  def last_name
+    name.split(' ', 2)[1]
   end
 
   def may_view?(listing)
