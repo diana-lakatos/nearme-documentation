@@ -4,52 +4,11 @@ Feature: User Searches Listings
     Given a listing in San Francisco exists
     And a listing in Cleveland exists
     And a listing in Auckland exists
-    And the Sphinx indexes are updated
-    When I send a POST request to "listings/search":
-    # NB this is a bounding box around New Zealand :)
-    """
-    {
-      "boundingbox": {"start": {"lat": -32.24997,"lon": 162.94921 }, "end": {"lat": -47.04018,"lon": 180.00000 }}
-    }
-    """
-    Then the JSON should be:
-    """
-    {
-      "listings": [
-      {
-        "address": "Parnell, Auckland 1010 New Zealand",
-        "amenities": [
+    When I send a search request with a bounding box around New Zealand
+    Then the response does include the listing in Auckland
+    And the response does not include the listing in San Francisco
+    And the response does not include the listing in Cleveland
 
-          ],
-        "company_description": "Aliquid eos ab quia officiis sequi.",
-        "company_name": "Company in Auckland",
-        "description": "Aliquid eos ab quia officiis sequi.",
-        "lat": -36.858675,
-        "lon": 174.777303,
-        "name": "Listing in Auckland",
-        "organizations": [
-
-          ],
-        "photos": [
-
-          ],
-        "price": {
-          "amount": 50.0,
-          "period": "day",
-          "currency_code": "USD",
-          "label": "$50.00"
-        },
-        "quantity": 1,
-        "rating": {
-          "average": 0.0,
-          "count": 0
-        },
-        "score": 40.0,
-        "strict_match": true
-      }
-      ]
-    }
-    """
 
   Scenario: Searching for some listings with a few price parameters
     Given an amenity exists with id: 123

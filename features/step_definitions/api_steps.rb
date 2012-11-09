@@ -41,12 +41,20 @@ When /^I send a(n authenticated)? GET request for "(.*?)"$/ do |authenticated, u
   @response = get "/v1/#{url}"
 end
 
+When /^I send a search request with a bounding box around New Zealand$/ do
+    json = {
+      "boundingbox" => { "start" => {"lat" => -32.24997,"lon" => 162.94921 }, "end" => {"lat" => -47.04018,"lon" => 180.00000 } }
+    }
+
+    @response = search_for_json(json)
+end
+
 When /^I search for listings with that organization$/ do
     json = {
       "boundingbox" => {"start" => {"lat" => -180.0,"lon" => -180.0}, "end" => {"lat" => 180.0,"lon" => 180.0 }},
       "organizations" => [@listing.organizations.first.id]
     }
-    @response = post "/v1/listings/search", json.to_json
+    @response = search_for_json(json)
 end
 
 Then /^I receive only listings which have that amenity$/ do
@@ -84,4 +92,17 @@ Then /^the JSON should contain that listing$/ do
   result_listing["name"].should         == listing.name
   result_listing["company_name"].should == listing.company.name
   result_listing["address"].should      == listing.address
+end
+
+Then /^the response does (not )?include the listing in (.*)$/ do |negative, city|
+  results = parse_json(last_json)
+  includes_result = results["listings"].any? do |listing|
+      listing["company_name"].include?(city)
+  end
+
+  if negative
+    includes_result.should be_false
+  else
+    includes_result.should be_true
+  end
 end

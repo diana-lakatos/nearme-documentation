@@ -42,7 +42,7 @@ Feature: A user can search for a listing
     And I search for "Auckland"
     Then the search results have the listing with that amenity first
 
-  @wip
+  @future
   Scenario: A user searches with associations
     Given an association exists
     And a listing in Auckland exists
