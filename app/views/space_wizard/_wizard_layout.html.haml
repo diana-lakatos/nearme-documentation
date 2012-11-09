@@ -15,21 +15,22 @@
       = yield
 
   .one-third.column.omega.faqs-column
-    %h2 How do bookings work?
-    %p
-      Bookings are an automated process on the Desks Near Me website, however if you
-      select “Confirm Bookings” then we’ll let you approve all bookings on a case-by-case basis.
+    - # Only show these on the Desks & Room step
+    - if step == 3
+      %h2 Can I confirm new bookings?
+      %p
+        Bookings are an automated process on the Desks Near Me website, however if you
+        select “Confirm Bookings” then we’ll let you approve all bookings on a case-by-case basis.
 
-    %h2 How do I get paid?
-    %p
-      Desks Near Me takes payment for your booking and deposits the money into your account.
-      Desks Near Me charges a 5% commission on each booking sale.
+      %h2 How do I get paid?
+      %p
+        We're implementing payments soon so you can transact securely on our website; but for now, payments are made in person on the day.
 
-    %h2 Can I have different prices for different desks or rooms?
-    %p
-      Yes! Desks Near Me lets you define each desk or room in your space separately if you wish.
-      You might have a conference room at $100/day but a desk at $10/day.
+      %h2 Can I have different prices for different desks or rooms?
+      %p
+        Yes! Desks Near Me lets you define each desk or room in your space separately if you wish.
+        You might have a conference room at $100/day but a desk at $10/day.
 
-    %h2 My question isn't here
+    %h2 Have a question?
     %p
       No problem. Drop us a line at #{mail_to "hello@desksnear.me"} and we’ll be happy to help you out!
