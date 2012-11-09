@@ -34,17 +34,17 @@ h1 {
 
 h2 {
   font-size: 24px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 h3 {
   font-size: 16px;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   font-weight: bold;
 }
 
 p {
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .wood-texture {
@@ -75,6 +75,7 @@ body {
   font-family: "banda";
   color: $dnm_black;
   text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+  line-height: 20px;
 }
 
 hr, .hr {
