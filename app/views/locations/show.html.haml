@@ -1,0 +1,122 @@
+- legacy false
+
+- content_for :hero do
+  .hero-wood-texture
+    .container.space-hero-search-return
+      = link_to "Back to search", search_url
+
+  - if @location.photos.any?
+    .hero-gray-texture.hero-shadow
+      .container.space-hero-photos
+        .photos-list
+          .prev
+          .photos-wrapper
+            %ul
+              - @location.photos.each do |photo|
+                %li
+                  = image_tag photo.url(:hero_preview), :alt => photo.caption, 'data-url' => photo.url(:hero)
+          .next
+
+        .photo{:style => "background-image: url('#{@location.photos.first.url}')"}
+          .caption
+            This is an awesome caption.
+
+%article#space
+  %ul.subnav.right.blue
+    %li= link_to "Overview", ""
+    %li= link_to "Host", ""
+    %li= link_to "Networking", ""
+    %li= link_to "Book", ""
+
+  %h1 #{@location.name}
+
+  .clearfix
+    .one-third.column.alpha
+      %p.description
+        #{@location.description}
+
+      %strong= @location.phone
+
+      .box.share
+        %i.flag
+        %h3 Share this space
+        .first-row
+          %span.twitter.st_twitter_hcount{:displayText => 'Tweet'}
+          %span.st_linkedin_hcount{:displayText => 'LinkedIn'}
+        %span.st_facebook_hcount{:displayText => 'Facebook'}
+        %span.st_email_hcount{:displayText => 'Email'}
+
+    .one-third.column.amenities
+      %dl
+        %dt
+          %i{:class => "icon-amenity-other"}
+          Amenities
+
+        %dl
+          - unless @location.amenities.empty?
+            = @location.amenities.map(&:name).join(', ')
+          - else
+            Nothing listed... that can't be right!
+
+    .one-third.column.map
+      .map-wrapper
+        .map-container{:style => "height: 260px;"}
+
+      %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, "data-marker" => image_path("components/map-pin.png")}
+        = location_format_address(@location.formatted_address || @location.address)
+
+
+  %hr.divider
+
+  %section.bookings
+    %h2 Make a Booking
+
+    %p Select dates from the calendar below to see the available desks and rooms for those days.
+
+    Calendar here
+
+    .listings
+      - @location.listings.each do |listing|
+        .listing.box.divider.small
+          .images
+            - if listing.photos.any?
+              .image
+                = image_tag listing.photos.first.url(:space_listing)
+            - else
+              .no-photo No Photos
+
+          .description
+            %h3= listing.name
+            %p= listing.description
+            %p.price
+              = listing_price(listing, 1)
+              - if listing_price_show_bulk_tooltip?(listing)
+                %a{:href => "#"} See bulk pricing
+          .book
+            %h3 Book
+            %p Click on the available days below to select how many of this listing you'd like to book on that day.
+
+            .booked-days
+
+              - 6.times do
+                %span.booked-day
+                  %span.count 2
+                  %span.date 10#{content_tag(:sup, 'th')}
+                  %span.month Oct
+
+
+          .clearfix
+
+
+- content_for :script do
+  / ShareThis script
+  / FIXME: Get DNM login/api key
+  = javascript_tag do
+    var switchTo5x=true;
+  = javascript_include_tag "http://w.sharethis.com/button/buttons.js"
+  = javascript_tag do
+    stLight.options({publisher: "ed2de743-77e7-437b-a5a3-f1fa39f72cfc"});
+
+  :javascript
+    // Initialize the ui controller
+    new SpaceController($('article.space'))

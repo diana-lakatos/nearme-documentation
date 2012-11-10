@@ -97,7 +97,7 @@
   }
 }
 
-.space {
+#space, .space {
 
   h1 {
     line-height: 40px;
@@ -193,5 +193,125 @@
     address {
     }
   }
+
+  .bookings {
+    .listing {
+      p {
+        font-size: 12px;
+        line-height: 14px;
+      }
+
+      .images, .description, .book {
+        float: left;
+        width: 295px;
+        margin-left: 20px;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+
+      .images {
+        img {
+          @include border-radius(6px);
+        }
+      }
+
+      .description {
+        h3 {
+          font-size: 16px;
+          margin-bottom: 0;
+        }
+
+        .price {
+          font-size: 22px;
+          font-weight: bold;
+
+          .period {
+            font-size: 16px;
+            font-weight: normal;
+          }
+        }
+
+      }
+
+      .book {
+        color: #848b8f;
+
+        h3 {
+          font-size: 12px;
+          color: #8e9498;
+          font-weight: bold;
+          text-transform: uppercase;
+          margin-bottom: 0;
+        }
+
+        .booked-days {
+          .booked-day {
+            display: inline-block;
+            @include border-radius(4px);
+            padding: 7px;
+            overflow: hidden;
+            border: 1px solid #bfce94;
+            margin: 0 6px 6px 0;
+            min-width: 48px;
+            color: #89a734;
+
+            .date {
+              font-size: 16px;
+              font-weight: bold;
+              display: block;
+
+              sup {
+                vertical-align: top;
+                font-size: 9px;
+              }
+            }
+
+            .month {
+              font-size: 10px;
+              display: block;
+              text-transform: uppercase;
+              line-height: 10px;
+            }
+
+            .count {
+              float: right;
+              border-left: 1px dashed #bfc0c0;
+              color: #bfc0c0;
+              font-weight: bold;
+              font-size: 16px;
+              line-height: 43px;
+              padding: 0 0 0 4px;
+              margin: -7px 0;
+            }
+
+            &.empty {
+              border-color: #bfce94;
+              .count {
+                color: #bfc0c0;
+              }
+            }
+
+            &.selected {
+              border-color: #89a734;
+              .count {
+                color: #91529c;
+              }
+            }
+
+            &.unavailable {
+              border-color: #ee9994;
+              color: #e83d33;
+              .count {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
 }
 

@@ -2,6 +2,10 @@ class LocationsController < ApplicationController
   before_filter :authenticate_user!
   expose :location
 
+  def show
+    @location = location
+  end
+
   def new
     location.availability_template_id = AvailabilityRule.default_template.id
   end

@@ -46,6 +46,10 @@ class Location < ActiveRecord::Base
     require_organization_membership? ? organizations : []
   end
 
+  def admin?(user)
+    creator == user
+  end
+
   private
 
     def assign_default_availability_rules
