@@ -1,4 +1,4 @@
-class @SpaceBookingCalendar
+class @Space.BookingCalendar
 
   # Default callbacks
   _onSelectCallback: (date) ->
@@ -61,7 +61,7 @@ class @SpaceBookingCalendar
     @setDayElement(@current)
     newDate = new Date(@currentDate.getTime())
     newDate.setDate(newDate.getDate() - 7)
-    element = @daysContainer.find(".#{@_dateClassName(newDate)}")
+    element = @daysContainer.find(".#{DNM.util.Date.toClassName(newDate)}")
     @setDayElement(element, true)
 
   # Go forwards in time
@@ -69,7 +69,7 @@ class @SpaceBookingCalendar
     @addDays(@endDate, 7, true, false)
     newDate = new Date(@currentDate.getTime())
     newDate.setDate(newDate.getDate() + 7)
-    element = @daysContainer.find(".#{@_dateClassName(newDate)}")
+    element = @daysContainer.find(".#{DNM.util.Date.toClassName(newDate)}")
     @setDayElement(element, true)
 
 
@@ -92,10 +92,10 @@ class @SpaceBookingCalendar
 
   addDay: (date) ->
     dayElement = $('<li />')
-    dayElement.append("<span class='date'>#{date.getDate()}<sup>#{@_dateSuffix(date)}</sup></span>")
-    dayElement.append("<span class='month'>#{@_dateDayOfWeek(date)}</span>")
+    dayElement.append("<span class='date'>#{date.getDate()}<sup>#{DNM.util.Date.suffix(date)}</sup></span>")
+    dayElement.append("<span class='month'>#{DNM.util.Date.dayName(date, 3)}</span>")
     dayElement.data('date', date)
-    dayElement.addClass(@_dateClassName(date))
+    dayElement.addClass(DNM.util.Date.toClassName(date))
 
     wday = date.getDay()
     if wday == 0 or wday == 6
@@ -114,16 +114,5 @@ class @SpaceBookingCalendar
     else if date.getTime() > @endDate.getTime()
       @endDate = date
 
-  _dateClassName: (date) ->
-    DNM.util.Date.toClassName(date)
-
-  _dateSuffix: (date) ->
-    DNM.util.Date.suffix(date)
-
-  _dateMonth: (date) ->
-    DNM.util.Date.monthName(date, 3)
-
-  _dateDayOfWeek: (date) ->
-    DNM.util.Date.dayName(date, 3)
 
 
