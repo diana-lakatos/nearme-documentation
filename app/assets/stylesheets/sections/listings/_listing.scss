@@ -311,7 +311,74 @@
         }
       }
     }
-  }
 
+   .calendar {
+     overflow: hidden;
+     padding: 0px;
+
+     .slider-window {
+       margin: 0 45px;
+       overflow: hidden;
+     }
+
+      .prev, .next, li {
+        height: 70px;
+      }
+
+      .prev, .next {
+        width: 45px;
+      }
+
+      .prev {
+        float: left;
+        background: image-url("sections/listings/calendar-prev.png") center center no-repeat;
+        border-right: 1px solid #d5d6d6;
+      }
+
+      .next {
+        border-left: 1px solid #fff;
+        float: right;
+        background: image-url("sections/listings/calendar-next.png") center center no-repeat;
+      }
+
+      ul {
+        width: 99999px;
+        position: relative;
+
+        li {
+          float: left;
+          width: 60px;
+          border-right: 1px solid #d5d6d6;
+          border-left: 1px solid #fff;
+
+          .date, .month {
+            display: block;
+            text-align: center;
+          }
+
+          .date {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            margin-top: 16px;
+
+            sup {
+              vertical-align: top;
+              font-size: 12px;
+            }
+          }
+
+          .month {
+            font-size: 12px;
+            line-height: 12px;
+          }
+
+          &.today {
+            background: image-url("sections/listings/calendar-today-flag.png") left 1px no-repeat;
+          }
+        }
+      }
+    }
+  }
 }
 

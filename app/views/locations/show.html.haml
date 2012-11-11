@@ -73,7 +73,14 @@
 
     %p Select dates from the calendar below to see the available desks and rooms for those days.
 
-    Calendar here
+    .calendar.box{:'data-today' => Time.zone.now.strftime('%Y-%m-%d')}
+      .prev
+      .next
+      .slider-window
+        %ul.days
+          / li
+          /   %span.date 31<sup>st</sup>
+          /   %span.month Oct
 
     .listings
       - @location.listings.each do |listing|
@@ -97,13 +104,11 @@
             %p Click on the available days below to select how many of this listing you'd like to book on that day.
 
             .booked-days
-
               - 6.times do
                 %span.booked-day
                   %span.count 2
                   %span.date 10#{content_tag(:sup, 'th')}
                   %span.month Oct
-
 
           .clearfix
 
@@ -119,4 +124,4 @@
 
   :javascript
     // Initialize the ui controller
-    new SpaceController($('article.space'))
+    new SpaceController($('article.space, article#space'))

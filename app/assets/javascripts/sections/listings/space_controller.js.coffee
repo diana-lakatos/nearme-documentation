@@ -4,9 +4,13 @@ class @SpaceController
     # Set up the map on the page
     @setupMap()
     @setupPhotos()
+    @setupCalendar()
 
   setupPhotos: ->
     @photos = new SpacePhotosController($('.space-hero-photos'))
+
+  setupCalendar: ->
+    @calendar = new SpaceBookingCalendar(@container.find('.bookings .calendar'))
 
   setupMap: ->
     mapContainer = @container.find('.map')
