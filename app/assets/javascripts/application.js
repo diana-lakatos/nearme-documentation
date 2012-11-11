@@ -17,6 +17,9 @@
 //
 //= require_self
 //
+// Helper modules, etc.
+//= require_tree ./lib
+//
 // Standard components
 //= require_tree ./components
 //

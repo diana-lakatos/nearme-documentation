@@ -323,6 +323,12 @@
 
       .prev, .next, li {
         height: 70px;
+        cursor: pointer;
+
+        &:hover {
+          //@include box-shadow(inset -6px 4px 8px -4px rgba(0,0,0,0.25));
+          background-color: #ecebeb;
+        }
       }
 
       .prev, .next {
@@ -374,7 +380,17 @@
           }
 
           &.today {
-            background: image-url("sections/listings/calendar-today-flag.png") left 1px no-repeat;
+            background-image: image-url("sections/listings/calendar-today-flag.png");
+            background-position: left 1px;
+            background-repeat: no-repeat;
+          }
+
+          &.weekend {
+            color: #6b7a80;
+          }
+
+          &.selected {
+            color: #91529c;
           }
         }
       }

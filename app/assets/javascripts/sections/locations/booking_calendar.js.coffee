@@ -1,19 +1,42 @@
 class @SpaceBookingCalendar
 
+  # Default callbacks
+  _onSelectCallback: (date) ->
+    # Do nothing
+
+  _onUnselectCallback: (date) ->
+    # Do nothing
+
   constructor: (@container) ->
     @prevElement = @container.find('.prev')
     @nextElement = @container.find('.next')
     @window = @container.find('.slider-window')
     @daysContainer = @container.find('.days')
 
-    @initializeDays()
-    @bindEvents()
+    @_initializeDays()
+    @_bindEvents()
 
-  bindEvents: ->
+  onSelect: (callback) ->
+    @_onSelectCallback = callback
+
+  onUnselect: (callback) ->
+    @_onUnselectCallback = callback
+
+  _bindEvents: ->
     @prevElement.on 'click', => @previous()
     @nextElement.on 'click', => @next()
+    @daysContainer.on 'click', 'li', (event) => @_clickDateElement(event)
 
-  initializeDays: ->
+  _clickDateElement: (event) ->
+    li = $(event.target).closest('li')
+    li.toggleClass('selected')
+
+    if li.is('.selected')
+      @_onSelectCallback(li.data('date')) if @_onSelectCallback
+    else
+      @_onUnselectCallback(li.data('date')) if @_onUnselectCallback
+
+  _initializeDays: ->
     @today = new Date Date.parse(@container.attr('data-today'))
     @startDate = @today
     @endDate   = @startDate
@@ -74,6 +97,10 @@ class @SpaceBookingCalendar
     dayElement.data('date', date)
     dayElement.addClass(@_dateClassName(date))
 
+    wday = date.getDay()
+    if wday == 0 or wday == 6
+      dayElement.addClass('weekend')
+
     if date.getTime() == @today.getTime()
       dayElement.addClass('today')
 
@@ -88,21 +115,15 @@ class @SpaceBookingCalendar
       @endDate = date
 
   _dateClassName: (date) ->
-    "d-#{date.getFullYear()}-#{date.getMonth()}-#{date.getDate()}"
+    DNM.util.Date.toClassName(date)
 
   _dateSuffix: (date) ->
-    switch date.getDate()
-      when 1, 21, 31 then 'st'
-      when 2, 22 then 'nd'
-      when 3, 23 then 'rd'
-      else 'th'
+    DNM.util.Date.suffix(date)
 
   _dateMonth: (date) ->
-    months = ['Janurary', 'Feburary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    months[date.getMonth()-1]
+    DNM.util.Date.monthName(date, 3)
 
   _dateDayOfWeek: (date) ->
-    days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    days[date.getDay()].substring(0, 3)
+    DNM.util.Date.dayName(date, 3)
 
 
