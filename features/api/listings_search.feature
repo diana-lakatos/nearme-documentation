@@ -11,168 +11,22 @@ Feature: User Searches Listings
 
 
   Scenario: Searching for some listings with a few price parameters
-    Given an amenity exists with id: 123
-    And a listing in Auckland exists with a price of $150.00 and that amenity
+    Given a listing in Auckland exists with a price of $150.00
     And a listing in Wellington exists with a price of $250.00
-    And the Sphinx indexes are updated
-    When I send a POST request to "listings/search":
-    # NB this is a bounding box around New Zealand :)
-    """
-    {
-      "boundingbox": {"start": {"lat": -32.24997,"lon": 162.94921 }, "end": {"lat": -47.04018,"lon": 180.00000 }},
-      "price": {"min": 100, "max": 1000},
-      "amenities": [ 123 ]
-    }
-    """
-    Then the JSON should be:
-    """
-    {
-      "listings": [
-       {
-         "address": "Parnell, Auckland 1010 New Zealand",
-         "amenities": [ 123 ],
-         "company_description": "Aliquid eos ab quia officiis sequi.",
-         "company_name": "Company in Auckland",
-         "description": "Aliquid eos ab quia officiis sequi.",
-         "lat": -36.858675,
-         "lon": 174.777303,
-         "name": "Listing in Auckland",
-         "organizations": [
+    When I send a search request with a bounding box around New Zealand and prices between $0 and $200
+    Then the response should have the listing in Auckland with the lowest score
+    Then the response should have the listing in Wellington with the highest score
 
-         ],
-         "photos": [
-
-         ],
-         "price": {
-           "amount": 150.0,
-           "period": "day",
-           "currency_code": "USD",
-           "label": "$150.00"
-         },
-         "quantity": 1,
-         "rating": {
-           "average": 0.0,
-           "count": 0
-         },
-         "score": 62.5,
-         "strict_match": true
-       },
-       {
-         "address": "35 Ghuznee Street",
-         "amenities": [
-
-         ],
-         "company_description": "Aliquid eos ab quia officiis sequi.",
-         "company_name": "Company in Wellington",
-         "description": "Aliquid eos ab quia officiis sequi.",
-         "lat": -41.293597,
-         "lon": 174.7763361,
-         "name": "Listing in Wellington",
-         "organizations": [
-
-         ],
-         "photos": [
-
-         ],
-         "price": {
-           "amount": 250.0,
-           "period": "day",
-           "currency_code": "USD",
-           "label": "$250.00"
-         },
-         "quantity": 1,
-         "rating": {
-           "average": 0.0,
-           "count": 0
-         },
-         "score": 42.5,
-         "strict_match": false
-       }
-     ]
-   }
-   """
 
   Scenario: Searching for some listings with organizations
     Given an organization exists
     And a listing in Auckland exists which is a member of that organization
     And a listing in Wellington exists which is NOT a member of that organization
-    And the Sphinx indexes are updated
-    When I send a POST request to "listings/search":
-    # NB this is a bounding box around New Zealand :)
-    """
-    {
-      "boundingbox": {"start": {"lat": -32.24997,"lon": 162.94921 }, "end": {"lat": -47.04018,"lon": 180.00000 }},
-      "organizations": [ <%= model!("organization").id %> ]
-    }
-    """
-    Then the JSON should be:
-    """
-    {
-      "listings": [
-        {
-          "address": "Parnell, Auckland 1010 New Zealand",
-          "amenities": [
+    When I send a search request with a bounding box around New Zealand with that organization
+    Then the response should have the listing in Auckland with the lowest score
+    Then the response should have the listing in Wellington with the highest score
 
-          ],
-          "company_description": "Aliquid eos ab quia officiis sequi.",
-          "company_name": "Company in Auckland",
-          "description": "Aliquid eos ab quia officiis sequi.",
-          "lat": -36.858675,
-          "lon": 174.777303,
-          "name": "Listing in Auckland",
-          "organizations": [ 1 ],
-          "photos": [
-
-          ],
-          "price": {
-            "amount": 50.0,
-            "currency_code": "USD",
-            "label": "$50.00",
-            "period": "day"
-          },
-          "quantity": 1,
-          "rating": {
-            "average": 0.0,
-            "count": 0
-          },
-          "score": 40.0,
-          "strict_match": true
-        },
-        {
-          "address": "35 Ghuznee Street",
-          "amenities": [
-
-          ],
-          "company_description": "Aliquid eos ab quia officiis sequi.",
-          "company_name": "Company in Wellington",
-          "description": "Aliquid eos ab quia officiis sequi.",
-          "lat": -41.293597,
-          "lon": 174.7763361,
-          "name": "Listing in Wellington",
-          "organizations": [
-
-          ],
-          "photos": [
-
-          ],
-          "price": {
-            "amount": 50.0,
-            "currency_code": "USD",
-            "label": "$50.00",
-            "period": "day"
-          },
-          "quantity": 1,
-          "rating": {
-            "average": 0.0,
-            "count": 0
-          },
-          "score": 20.0,
-          "strict_match": false
-        }
-      ]
-    }
-    """
-
+  @wip
   Scenario: Searching for a listing using availability parameters
     Given a listing in Auckland exists with 5 desks available for the next 7 days
     And a listing in Wellington exists with 10 desks available for the next 7 days

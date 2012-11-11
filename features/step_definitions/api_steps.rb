@@ -42,52 +42,31 @@ When /^I send a(n authenticated)? GET request for "(.*?)"$/ do |authenticated, u
 end
 
 When /^I send a search request with a bounding box around New Zealand$/ do
-    json = {
-      "boundingbox" => { "start" => {"lat" => -32.24997,"lon" => 162.94921 }, "end" => {"lat" => -47.04018,"lon" => 180.00000 } }
-    }
-
-    @response = search_for_json(json)
+  api_search({ bounding_box: :new_zealand })
 end
 
-When /^I search for listings with that organization$/ do
-    json = {
-      "boundingbox" => {"start" => {"lat" => -180.0,"lon" => -180.0}, "end" => {"lat" => 180.0,"lon" => 180.0 }},
-      "organizations" => [@listing.organizations.first.id]
-    }
-    @response = search_for_json(json)
+When /^I send a search request with a bounding box around (.*) and prices between \$(\d+) and \$(\d+)$/ do |location, min, max|
+  api_search(bounding_box: location, price_min: min, price_max: max)
 end
 
-Then /^I receive only listings which have that amenity$/ do
-  results = parse_json(last_json)
-  results["listings"].size.should == 1
-  results["listings"].all? do |r|
-    r["amenities"].any? { |a| a["id"] == 1 }
-  end
+When /^I send a search request with a bounding box around (.*) with that organization$/ do |location|
+  api_search(bounding_box: location, organizations: [model("organization")])
 end
 
-Then /^I receive only listings which have that organization$/ do
-  results = parse_json(last_json)
-  results["listings"].size.should == 1
-  results["listings"].all? do |r|
-    r["organizations"].any? { |a| a["id"] == @listing.organizations.first.id }
-  end
-end
 
 Then /^I receive a response with (\d+) status code$/ do |status_code|
   last_response.status.should == status_code.to_i
 end
 
 Then /^the JSON listings should be empty$/ do
-  results = parse_json(last_json)
-  results["listings"].size.should == 0
+  results_listings.size.should == 0
 end
 
 Then /^the JSON should contain that listing$/ do
-  results = parse_json(last_json)
   listing = model!('listing')
 
-  results["listings"].size.should == 1
-  result_listing = results["listings"].first
+  results_listings.size.should == 1
+  result_listing = results_listings.first
 
   result_listing["name"].should         == listing.name
   result_listing["company_name"].should == listing.company.name
@@ -95,7 +74,6 @@ Then /^the JSON should contain that listing$/ do
 end
 
 Then /^the response does (not )?include the listing in (.*)$/ do |negative, city|
-  results = parse_json(last_json)
   includes_result = results["listings"].any? do |listing|
       listing["company_name"].include?(city)
   end
@@ -105,4 +83,12 @@ Then /^the response does (not )?include the listing in (.*)$/ do |negative, city
   else
     includes_result.should be_true
   end
+end
+
+
+Then /^the response should have the listing in (.*) with the (.*) score$/ do |city,direction|
+  direction = direction == "lowest" ? 1 : -1
+  results_listings.sort_by do |a|
+    a[:score].to_i * direction
+  end.first[:company_name].should include city
 end
