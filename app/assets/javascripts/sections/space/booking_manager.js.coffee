@@ -44,11 +44,11 @@ class @Space.BookingManager
         <div class="date">{{day}} {{date}}<sup>{{suffix}}</sup></div>
         <div class="month">{{month}} {{year}}</div>
         <div class="availability">
-          <span class="available">{{available}}</span><span class="total">/{{total}}</span>
+          <span class="available">{{available}}</span><span class="total">/{{total}}</span> available
         </div>
         <hr />
         <label>
-          Qty. to book
+          Qty. to book:
         </label>
         <input type="number" name="booked-day-qty" value="{{quantity}}" />
       </div>
