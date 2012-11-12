@@ -14,6 +14,7 @@
 //= require ./vendor/rails
 //= require ./vendor/modernizr.js
 //= require ./vendor/jquery.cookie.js
+//= require ./vendor/jquery.popover-1.1.2.js
 //
 //= require_self
 //

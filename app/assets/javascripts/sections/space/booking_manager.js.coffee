@@ -20,6 +20,22 @@ class @Space.BookingManager
   class Listing
     constructor: (@container) ->
       @daysContainer = @container.find('.book .booked-days')
+      @_bindEvents()
+
+    _bindEvents: ->
+      @daysContainer.on 'click', '.booked-day', (event) =>
+        el = $(event.target).closest('.booked-day')
+        $(el).popover(
+          trigger: 'none',
+          content: 'Test content!',
+          position: 'bottom',
+          verticalOffset: 2
+        )
+        $(el).popover('hideAll')
+        $(el).popover('show')
+
+        event.preventDefault()
+        event.stopPropagation()
 
     addDate: (date) ->
       dateEl = @_prepareBookedDayElement(date)
