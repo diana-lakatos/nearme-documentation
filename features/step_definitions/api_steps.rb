@@ -41,19 +41,29 @@ When /^I send a(n authenticated)? GET request for "(.*?)"$/ do |authenticated, u
   @response = get "/v1/#{url}"
 end
 
+When /^I send a search request with the query "(.*)"$/ do |query|
+  api_search({ query: query })
+end
+
 When /^I send a search request with a bounding box around New Zealand$/ do
-  api_search({ bounding_box: :new_zealand })
+  api_search({ bounding_box: "New Zealand" })
 end
 
 When /^I send a search request with a bounding box around (.*) and prices between \$(\d+) and \$(\d+)$/ do |location, min, max|
   api_search(bounding_box: location, price_min: min, price_max: max)
 end
 
-When /^I send a search request with a bounding box around (.*) with that organization$/ do |location|
+When /^I send a search request with a bounding box around (.*) and that organization$/ do |location|
   api_search(bounding_box: location, organizations: [model("organization")])
 end
 
+When /^I send a search request with a bounding box around (.*) and a minimum of (\d+) desks$/ do |location, desks|
+  api_search(bounding_box: location, desks_min: desks)
+end
 
+When /^I send a search request with a bounding box around (.*) available (\d+), (\d+), and (\d+) days from now$/ do |location, first, second, third|
+  api_search(bounding_box: location, dates: [ first, second, third ].map { |i| i.to_i.days.from_now })
+end
 Then /^I receive a response with (\d+) status code$/ do |status_code|
   last_response.status.should == status_code.to_i
 end
@@ -74,8 +84,8 @@ Then /^the JSON should contain that listing$/ do
 end
 
 Then /^the response does (not )?include the listing in (.*)$/ do |negative, city|
-  includes_result = results["listings"].any? do |listing|
-      listing["company_name"].include?(city)
+  includes_result = results_listings.any? do |listing|
+      listing[:company_name].include?(city)
   end
 
   if negative
