@@ -23,6 +23,7 @@ class Location < ActiveRecord::Base
   validates :currency, currency: true, allow_nil: true
 
   before_validation :fetch_coordinates
+  before_validation :set_default_creator
   before_save :assign_default_availability_rules
 
   acts_as_paranoid
@@ -63,6 +64,10 @@ class Location < ActiveRecord::Base
           self.formatted_address = geocoded.formatted_address
         end
       end
+    end
+
+    def set_default_creator
+      self.creator ||= company.try(:creator)
     end
 
 end

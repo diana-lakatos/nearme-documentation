@@ -6,7 +6,7 @@ Feature: User creates reservation
     When I send an authenticated POST request to "listings/:id/reservation":
     """
     {
-      "dates": [ "<%= 1.day.from_now.to_s %>" ],
+      "dates": [ "<%= 1.week.from_now.monday.to_s %>" ],
       "email": "sai@perchard.com",
       "quantity": 1,
       "assignees": [
@@ -23,7 +23,7 @@ Feature: User creates reservation
     When I send an authenticated POST request to "listings/:id/reservation":
     """
     {
-      "dates": [ "<%= 1.day.from_now.to_s %>" ],
+      "dates": [ "<%= 1.week.from_now.monday.to_s %>" ],
       "email": "sai@perchard.com",
       "quantity": 1,
       "assignees": [
