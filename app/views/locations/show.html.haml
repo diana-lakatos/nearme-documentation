@@ -84,7 +84,7 @@
 
     .listings
       - @location.listings.each do |listing|
-        .listing.box.divider.small
+        .listing.box.divider.small{:'data-listing-id' => listing.id}
           .images
             - if listing.photos.any?
               .image

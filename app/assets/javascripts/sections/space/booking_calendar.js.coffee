@@ -37,7 +37,7 @@ class @Space.BookingCalendar
       @_onUnselectCallback(li.data('date')) if @_onUnselectCallback
 
   _initializeDays: ->
-    @today = new Date Date.parse(@container.attr('data-today'))
+    @today = DNM.util.Date.idToDate @container.attr('data-today')
     @startDate = @today
     @endDate   = @startDate
     @addDays(@startDate, 30)

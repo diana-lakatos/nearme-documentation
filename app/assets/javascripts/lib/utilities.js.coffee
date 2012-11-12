@@ -4,7 +4,15 @@ DNM.util =
     DAYS: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
     toClassName: (date) ->
-      "d-#{date.getFullYear()}-#{date.getMonth()}-#{date.getDate()}"
+      "d-#{@toId(date)}"
+
+    toId: (date) ->
+      "#{date.getFullYear()}-#{date.getMonth()+1}-#{date.getDate()}"
+
+    idToDate: (dateId) ->
+      return dateId if dateId instanceof Date
+      if matches = dateId.match(/^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$/)
+        new Date(parseInt(matches[1], 10), parseInt(matches[2], 10)-1, parseInt(matches[3], 10), 0, 0, 0, 0)
 
     suffix: (date) ->
       switch date.getDate()
