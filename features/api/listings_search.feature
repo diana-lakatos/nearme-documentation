@@ -37,15 +37,14 @@ Feature: User Searches Listings
     Then the response should have the listing in Wellington with the lowest score
     Then the response should have the listing in Auckland with the highest score
 
-  @wip
   Scenario: Searching for a listing that requires organization membership to be visible when not authenicated
-    Given a listing in Auckland exists for a location with a private organization
+    Given a listing exists for a location in Auckland with a private organization
     When I send a search request with a bounding box around New Zealand
     Then the JSON listings should be empty
 
-  @wip
   Scenario: Searching for a listing that requires organization membership to be visible when authenicated
-    Given a listing in Auckland exists for a location with a private organization
+    Given a listing exists for a location in Auckland with a private organization
+    And I am an authenticated api user
     And I am a member of that organization
     When I send an authenticated search request with a bounding box around New Zealand
     Then the JSON should contain that listing

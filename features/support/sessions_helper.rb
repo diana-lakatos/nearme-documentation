@@ -4,5 +4,12 @@ module SessionsHelper
     OmniAuth.config.add_mock(:twitter, {:uid => auth.uid})
     visit "/auth/twitter"
   end
+
+  def user
+    return model!("user") if model("user")
+    @user ||= FactoryGirl.create :user
+    store_model("user", "user", @user)
+    model!("user")
+  end
 end
 World(SessionsHelper)

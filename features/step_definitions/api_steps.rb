@@ -32,20 +32,21 @@ When /^I send a(n authenticated)? POST request to "(.*?)":$/ do |authenticated, 
     parsed_url = url
   end
 
-  header 'Authorization', @user.authentication_token if authenticated
+  header 'Authorization', user.authentication_token if authenticated
   @response = post "/v1/#{parsed_url}", ERB.new(body).result(binding)
 end
 
 When /^I send a(n authenticated)? GET request for "(.*?)"$/ do |authenticated, url|
-  header 'Authorization', @user.authentication_token if authenticated
+  header 'Authorization', user.authentication_token if authenticated
   @response = get "/v1/#{url}"
 end
 
-When /^I send a search request with the query "(.*)"$/ do |query|
+When /^I send a(n authenticated)? search request with the query "(.*)"$/ do |authenticated, query|
   api_search({ query: query })
 end
 
-When /^I send a search request with a bounding box around New Zealand$/ do
+When /^I send a(n authenticated)? search request with a bounding box around New Zealand$/ do |authenticated|
+  header 'Authorization', user.authentication_token if authenticated
   api_search({ bounding_box: "New Zealand" })
 end
 
@@ -101,4 +102,8 @@ Then /^the response should have the listing in (.*) with the (.*) score$/ do |ci
   results_listings.sort_by do |a|
     a[:score].to_i * direction
   end.first[:company_name].should include city
+end
+
+Then /^the response should have the (.*) organization$/ do |organization|
+  results_organizations.collect { |o| o[:name] }.should include organization
 end

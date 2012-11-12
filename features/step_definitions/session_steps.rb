@@ -1,7 +1,6 @@
 
 Given (/^I am logged in as #{capture_model}$/) do |user_instance|
-  user = model!(user_instance)
-  login user
+  login model!(user_instance)
 end
 
 When /^I log in as a user who is a member of that organization$/ do

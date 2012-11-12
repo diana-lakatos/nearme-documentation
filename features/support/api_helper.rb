@@ -11,6 +11,10 @@ module ApiHelper
   def results_listings
     parse_json(last_json)["listings"].map(&:symbolize_keys)
   end
+
+  def results_organizations
+    parse_json(last_json)["organizations"].map(&:symbolize_keys)
+  end
 end
 
 
@@ -23,69 +27,50 @@ class APISearchOptions
 
   def to_hash
     json = {}
-    json["query"] = query if has_query?
-    json["boundingbox"] = bounding_box if has_bounding_box?
-    json["price"] = price if has_price?
-    json["organizations"] = organizations if has_organizations?
-    json["quantity"] = quantities if has_quantities?
-    json["dates"] = dates if has_dates?
+    json.merge!(query)
+    json.merge!(bounding_box)
+    json.merge!(price)
+    json.merge!(organizations)
+    json.merge!(quantities)
+    json.merge!(dates)
     json
   end
 
   def bounding_box
+    return {} unless options.has_key?(:bounding_box)
+
     case options[:bounding_box].downcase.gsub(' ', '_').to_sym
     when :new_zealand
-      {"start" => {"lat" => -32.24997,"lon" => 162.94921 }, "end" => {"lat" => -47.04018,"lon" => 180.00000 } }
+      { "boundingbox" => {"start" => {"lat" => -32.24997,"lon" => 162.94921 }, "end" => {"lat" => -47.04018,"lon" => 180.00000 } } }
     else
-      {"start" => {"lat" => -180.0,"lon" => -180.0}, "end" => {"lat" => 180.0,"lon" => 180.0 } }
+      { "boundingbox" => {"start" => {"lat" => -180.0,"lon" => -180.0}, "end" => {"lat" => 180.0,"lon" => 180.0 } } }
     end
   end
 
-  def has_bounding_box?
-    options.has_key?(:bounding_box)
-  end
-
   def dates
-    options[:dates].map(&:to_date)
-  end
-
-  def has_dates?
-    options.has_key?(:dates)
+    return {} unless options.has_key?(:dates)
+    { "dates" => options[:dates].map(&:to_date) }
   end
 
   def organizations
-    options[:organizations].map(&:id)
-  end
-
-  def has_organizations?
-    options.has_key?(:organizations)
+    return {} unless options.has_key?(:organizations)
+    { "organizations" => options[:organizations].map(&:id) } 
   end
 
   def price
-   {"min" => options[:price_min].to_i, "max" => options[:price_max].to_i }
-  end
-
-  def has_price?
-    options.has_key?(:price_min) && options.has_key?(:price_max)
+    return {} unless options.has_key?(:price_min) && options.has_key?(:price_max)
+    { "price" => {"min" => options[:price_min].to_i, "max" => options[:price_max].to_i } }
   end
 
   def quantities
     quantities = {}
     quantities["min"] = options[:desks_min] if options.has_key?(:desks_min)
     quantities["max"] = options[:desks_max] if options.has_key?(:desks_max)
-    quantities
-  end
-
-  def has_quantities?
-    options.has_key?(:desks_min) || options.has_key?(:desks_max)
+    !quantities.empty? ? { "quantity" => quantities }  : {}
   end
 
   def query
-    options[:query]
-  end
-
-  def has_query?
-    options.has_key?(:query)
+    options.has_key?(:query) ? { "query" => options[:query] } : {}
   end
 
 end

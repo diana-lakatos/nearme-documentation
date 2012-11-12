@@ -11,6 +11,10 @@ Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and that amenit
   listing.location.amenities << model!("amenity") if amenity
 end
 
+Given /^a listing in (.*) exists for a location with a private organization$/ do |city|
+  @listing = FactoryGirl.create(:private_listing)
+end
+
 Given /^a listing in (.*) exists which is (NOT )?a member of that organization$/ do |city, not_member|
   listing = create_listing_in(city)
 
@@ -36,7 +40,7 @@ Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) 
   (Date.today...num_days.to_i.days.from_now.to_date).all? { |d| listing.availability_for(d) >= desks.to_i }.should == true
 end
 
-Given /^a listing(?: with name "([^"]+)")? exists for a location with a private organization?$/ do |name|
+Given /^a listing(?: with name "([^"]+)")? exists for a location( in Auckland)? with a private organization?$/ do |name, has_city|
   location = FactoryGirl.create(:private_location)
 
   listing_attrs = { location: location }
