@@ -1,0 +1,10 @@
+.modal-overlay{:style => "display: none"}
+.modal-container{:style => "display: none"}
+  %a.modal-close.close{:href => ""}
+  .modal.modal-content
+  .modal-loading
+
+:javascript
+  $(function() {
+    Modal.listen();
+  });
