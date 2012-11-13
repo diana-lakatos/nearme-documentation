@@ -1,0 +1,7 @@
+<%= render "shared/mailers/header" %>
+Dear <%= @user %>,
+
+<%= @reserver %> has made a reservation for <%= @listing %> on <%= l(@reservation.date, :format => :long) %>.
+
+<%= render :partial => "footer" %>
+<%= render "shared/mailers/footer" %>

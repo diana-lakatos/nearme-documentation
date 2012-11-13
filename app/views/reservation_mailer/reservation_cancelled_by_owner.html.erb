@@ -1,0 +1,10 @@
+<%= render "shared/mailers/header" %>
+Dear <%= @user %>,
+
+Unfortunately, your reservation at <%= @listing %> on <%= l(@reservation.date, :format => :long) %>
+has been cancelled. This reservation was previously confirmed, but the plans have changed.
+
+Good luck finding another listing or reservation for this one on another day :)
+
+<%= render :partial => "footer" %>
+<%= render "shared/mailers/footer" %>

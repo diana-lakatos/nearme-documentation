@@ -1,0 +1,8 @@
+<%= render "shared/mailers/header" %>
+Dear <%= @user %>,
+
+<%= @reservation.owner %> has cancelled their reservation at <%= @listing %>
+on <%= l(@reservation.date, :format => :long) %> that they made earlier.
+
+<%= render :partial => "footer" %>
+<%= render "shared/mailers/footer" %>
