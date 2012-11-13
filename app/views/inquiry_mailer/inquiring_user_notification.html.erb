@@ -1,0 +1,8 @@
+<%= render "shared/mailers/header" %>
+Hi <%= @inquiry.inquiring_user.name %>,
+
+We've passed your email on to the owner of <%= @inquiry.listing.name %>. They'll get back to you soon!
+
+Cheers,
+ - The Desks Near Me Crew
+ <%= render "shared/mailers/footer" %>

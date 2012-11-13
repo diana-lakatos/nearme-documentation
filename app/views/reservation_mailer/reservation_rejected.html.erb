@@ -1,3 +1,4 @@
+<%= render "shared/mailers/header" %>
 Dear <%= @user %>,
 
 Unfortunately, your reservation at <%= @listing %> on <%= l(@reservation.date, :format => :long) %>
@@ -6,4 +7,4 @@ has been rejected.
 I'm sure it's not personal -- they were probably just too busy that day :)
 
 <%= render :partial => "footer" %>
-
+<%= render "shared/mailers/header" %>
