@@ -9,19 +9,18 @@ Feature: User Searches Listings
     And the response does not include the listing in Cleveland
 
   Scenario: Searching for some listings with a few price parameters
-    Given a listing in Auckland exists with a price of $150.00
-    And a listing in Wellington exists with a price of $250.00
-    When I send a search request with a bounding box around New Zealand and prices between $0 and $200
-    Then the response should have the listing in Auckland with the lowest score
-    Then the response should have the listing in Wellington with the highest score
+    Given a listing in Wellington exists with a price of $10.00
+    And a listing in Wellington exists with a price of $25.00
+    When I send a search request with a bounding box around New Zealand and prices between $0 and $20
+    Then the response should have the listing for $10 with the lowest score
+    Then the response should have the listing for $25 with the highest score
 
   Scenario: Searching for some listings with organizations
     Given an organization exists
     And a listing in Auckland exists which is a member of that organization
-    And a listing in Wellington exists which is NOT a member of that organization
+    And a listing in Auckland exists which is NOT a member of that organization
     When I send a search request with a bounding box around New Zealand and that organization
-    Then the response should have the listing in Auckland with the lowest score
-    Then the response should have the listing in Wellington with the highest score
+    Then the response should have the listing with that organization with the lowest score
 
   Scenario: Searching for a listing with a minimum amount of desks
     Given a listing in Auckland exists with 5 desks available for the next 7 days

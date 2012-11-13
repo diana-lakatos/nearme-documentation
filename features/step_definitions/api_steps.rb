@@ -96,12 +96,27 @@ Then /^the response does (not )?include the listing in (.*)$/ do |negative, city
   end
 end
 
-
-Then /^the response should have the listing in (.*) with the (.*) score$/ do |city,direction|
+Then /^the response should have the listing in (.*) with the (.*) score$/ do |city, direction|
   direction = direction == "lowest" ? 1 : -1
   results_listings.sort_by do |a|
     a[:score].to_i * direction
   end.first[:company_name].should include city
+end
+
+Then /^the response should have the listing for \$(\d+) with the (.*) score$/ do |dollars, direction|
+  direction = direction == "lowest" ? 1 : -1
+  results_listings.sort_by do |a|
+    a[:score].to_i * direction
+  end.first[:price]["amount"].to_i.should eq dollars.to_i
+end
+
+Then /^the response should have the listing with that organization with the (.*) score$/ do |direction|
+  direction = direction == "lowest" ? 1 : -1
+  result = results_listings.sort_by do |a|
+    a[:score].to_i * direction
+  end.first
+
+  result[:organizations].should include model!("organization").id
 end
 
 Then /^the response should have the (.*) organization$/ do |organization|
