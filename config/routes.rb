@@ -3,6 +3,10 @@ DesksnearMe::Application.routes.draw do
   resources :companies
   resources :locations do
     resources :listings, :controller => 'locations/listings'
+
+    member do
+      get :availability_summary
+    end
   end
 
   resources :listings do

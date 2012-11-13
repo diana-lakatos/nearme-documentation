@@ -132,7 +132,8 @@
       $('article.space, article#space'),
       {
         bookings: {
-          listings: #{raw location_listings_json}
+          listings: #{raw location_listings_json},
+          availability_summary_url: #{raw availability_summary_location_url(@location).to_json}
         }
       }
     )

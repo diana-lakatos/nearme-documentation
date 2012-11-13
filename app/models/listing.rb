@@ -103,6 +103,11 @@ class Listing < ActiveRecord::Base
     end
   end
 
+  # Maximum quantity available for a given date
+  def quantity_for(date)
+    self.quantity
+  end
+
   # TODO: Create a database index for the availability.
   # TODO: This implementation is really slow!
   def desks_booked_on(date)

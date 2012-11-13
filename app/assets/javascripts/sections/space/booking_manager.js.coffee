@@ -17,10 +17,35 @@ class @Space.BookingManager
 
     # Bind to date selection events
     @calendar.onSelect (date) =>
-      listing.addDate(date) for listing in @listings
+      @addDateForBookings(date)
 
     @calendar.onUnselect (date) =>
-      listing.removeDate(date) for listing in @listings
+
+  addDateForBookings: (date) ->
+    # Do we need availability info for days?
+    needsLoading = !_.all @listings, (listing) =>
+      listing.availabilityLoadedFor(date)
+
+    # Callback to add date option to the listings
+    addDateToListings = =>
+      listing.addDate(date) for listing in @listings
+
+    if needsLoading
+      $.ajax(@options.availability_summary_url, {
+        dataType: 'json',
+        data: { dates: [DNM.util.Date.toId(date)] },
+        success: (data) =>
+          # Go through each response and add date info
+          _.each data, (listingData) =>
+            @findListing(listingData.id).addAvailability(listingData.availability)
+
+          addDateToListings()
+      })
+    else
+      addDateToListings()
+
+  removeDateForBookings: (date) ->
+    listing.removeDate(date) for listing in @listings
 
   _bindEvents: ->
 
@@ -85,7 +110,22 @@ class @Space.BookingManager
       @daysContainer = @container.find('.book .booked-days')
       @id = @options.id
       @bookings = {}
+      @availability = {}
       @_bindEvents()
+
+    addAvailability: (availabilityHash) ->
+      _.extend(@availability, availabilityHash)
+
+    availabilityLoadedFor: (date) ->
+      dateId = DNM.util.Date.toId(date)
+      _.has(@availability, dateId)
+
+    availabilityFor: (date) ->
+      dateId = DNM.util.Date.toId(date)
+      @availability[dateId].available
+
+    hasAvailabilityOn: (date) ->
+      @availabilityFor(date) > 0
 
     isBooked: ->
       @bookedDays().length > 0
@@ -141,6 +181,9 @@ class @Space.BookingManager
     _bindEvents: ->
       @daysContainer.on 'click', '.booked-day', (event) =>
         el = $(event.target).closest('.booked-day')
+        date = el.data('date')
+        return unless @hasAvailabilityOn(date)
+
         el.popover(
           trigger: 'none',
           content: @_popoverContent(el.data('date')),
@@ -192,6 +235,9 @@ class @Space.BookingManager
       })
       el.addClass(DNM.util.Date.toClassName(date))
       el.data('date', date)
+
+      unless @hasAvailabilityOn(date)
+        el.addClass('unavailable')
       el
 
     # Prepare the content for the Popover to modify the bookings for this day
@@ -202,8 +248,8 @@ class @Space.BookingManager
         suffix: DNM.util.Date.suffix(date),
         month: DNM.util.Date.monthName(date),
         year: date.getFullYear(),
-        available: 8,
-        total: 10,
+        available: @availability[DNM.util.Date.toId(date)].available,
+        total: @availability[DNM.util.Date.toId(date)].total,
         quantity: 0,
         listingId: @id,
         dateId: DNM.util.Date.toId(date)
