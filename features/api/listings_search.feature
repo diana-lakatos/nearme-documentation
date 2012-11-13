@@ -41,6 +41,7 @@ Feature: User Searches Listings
     When I send a search request with a bounding box around New Zealand
     Then the JSON listings should be empty
 
+  @wip
   Scenario: Searching for a listing that requires organization membership to be visible when authenicated
     Given a listing exists for a location in Auckland with a private organization
     And I am an authenticated api user
