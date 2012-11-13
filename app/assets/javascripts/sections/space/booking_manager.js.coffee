@@ -16,10 +16,8 @@ class @Space.BookingManager
     @calendar = new Space.BookingCalendar(@container.find('.calendar'))
 
     # Bind to date selection events
-    @calendar.onSelect (date) =>
-      @addDateForBookings(date)
-
-    @calendar.onUnselect (date) =>
+    @calendar.onSelect (date) => @addDateForBookings(date)
+    @calendar.onUnselect (date) => @removeDateForBookings(date)
 
   addDateForBookings: (date) ->
     # Do we need availability info for days?
@@ -31,10 +29,13 @@ class @Space.BookingManager
       listing.addDate(date) for listing in @listings
 
     if needsLoading
+      @calendar.setLoading(date)
       $.ajax(@options.availability_summary_url, {
         dataType: 'json',
         data: { dates: [DNM.util.Date.toId(date)] },
         success: (data) =>
+          @calendar.setLoading(date, false)
+
           # Go through each response and add date info
           _.each data, (listingData) =>
             @findListing(listingData.id).addAvailability(listingData.availability)

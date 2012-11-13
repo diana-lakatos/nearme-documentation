@@ -374,8 +374,9 @@
           width: 60px;
           border-right: 1px solid #d5d6d6;
           border-left: 1px solid #fff;
+          position: relative;
 
-          .date, .month {
+          .date, .day {
             display: block;
             text-align: center;
           }
@@ -393,9 +394,19 @@
             }
           }
 
-          .month {
+          .day {
             font-size: 12px;
             line-height: 12px;
+          }
+
+          .loader {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: image-url("sections/listings/calendar-loader.gif") center center no-repeat;
           }
 
           &.today {
@@ -410,6 +421,17 @@
 
           &.selected {
             color: #91529c;
+          }
+
+          &.loading {
+            * {
+              @include opacity(0.3);
+            }
+
+            .loader {
+              @include opacity(1);
+              display: block;
+            }
           }
         }
       }

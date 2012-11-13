@@ -1,5 +1,13 @@
 class @Space.BookingCalendar
 
+  dateTemplate: '''
+    <li>
+      <span class="date">{{date}}<sup>{{suffix}}</sup></span>
+      <span class="day">{{dayName}}</span>
+      <i class="loader"></i>
+    </li>
+  '''
+
   # Default callbacks
   _onSelectCallback: (date) ->
     # Do nothing
@@ -29,6 +37,10 @@ class @Space.BookingCalendar
 
   _clickDateElement: (event) ->
     li = $(event.target).closest('li')
+
+    # Do nothing if the this date is in the 'loading' state
+    return if @isLoading(li.data('date'))
+
     li.toggleClass('selected')
 
     if li.is('.selected')
@@ -42,6 +54,19 @@ class @Space.BookingCalendar
     @endDate   = @startDate
     @addDays(@startDate, 30)
     @setDayElement(@daysContainer.find(':first-child'))
+
+  # Flag a date as 'loading'
+  #
+  # date - The date to set as loading
+  # isLoading - Whether to enable [or disable loading]. (Default: true)
+  setLoading: (date, isLoading = true) ->
+    klass = DNM.util.Date.toClassName(date)
+    @daysContainer.find(".#{klass}").toggleClass('loading', isLoading)
+
+  # Test whether a date is flagged as 'loading' on the calendar
+  isLoading: (date) ->
+    klass = DNM.util.Date.toClassName(date)
+    @daysContainer.find(".#{klass}").is('.loading')
 
   setDayElement: (element, animate = false) ->
     @current = element
@@ -91,9 +116,11 @@ class @Space.BookingCalendar
       added += 1
 
   addDay: (date) ->
-    dayElement = $('<li />')
-    dayElement.append("<span class='date'>#{date.getDate()}<sup>#{DNM.util.Date.suffix(date)}</sup></span>")
-    dayElement.append("<span class='month'>#{DNM.util.Date.dayName(date, 3)}</span>")
+    dayElement = $ Mustache.render(@dateTemplate, {
+      date: date.getDate(),
+      suffix: DNM.util.Date.suffix(date),
+      dayName: DNM.util.Date.dayName(date, 3)
+    })
     dayElement.data('date', date)
     dayElement.addClass(DNM.util.Date.toClassName(date))
 

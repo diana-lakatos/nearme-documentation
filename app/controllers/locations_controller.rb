@@ -37,6 +37,7 @@ class LocationsController < ApplicationController
   #   ]
   #
   def availability_summary
+    sleep(0.75)
     dates = Array.wrap(params[:dates]).map { |date|
       begin
         Date.parse(date)
