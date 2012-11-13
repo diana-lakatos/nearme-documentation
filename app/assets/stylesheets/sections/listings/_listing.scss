@@ -195,6 +195,23 @@
   }
 
   .bookings {
+
+    .summary {
+      text-align: center;
+      font-size: 16px;
+      strong {
+        font-weight: bold;
+      }
+
+      p {
+        margin-bottom: 0;
+      }
+
+      .btn {
+        margin-left: 12px;
+      }
+    }
+
     .listing {
       p {
         font-size: 12px;

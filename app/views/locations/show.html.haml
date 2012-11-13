@@ -84,7 +84,7 @@
 
     .listings
       - @location.listings.each do |listing|
-        .listing.box.divider.small{:'data-listing-id' => listing.id}
+        .listing.box.divider.small{listing_data_attributes(listing)}
           .images
             - if listing.photos.any?
               .image
@@ -111,6 +111,11 @@
 
           .clearfix
 
+    .summary.inset-box
+      %p
+        %span 2 listings selected over a total of 2 days for $198.00
+        = link_to "Review and book now", "", :class => "btn btn-green btn-medium"
+
 
 - content_for :script do
   / ShareThis script
@@ -123,4 +128,11 @@
 
   :javascript
     // Initialize the ui controller
-    new Space.Controller($('article.space, article#space'))
+    new Space.Controller(
+      $('article.space, article#space'),
+      {
+        bookings: {
+          listings: #{raw location_listings_json}
+        }
+      }
+    )

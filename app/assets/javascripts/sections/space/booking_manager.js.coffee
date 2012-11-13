@@ -1,8 +1,14 @@
 class @Space.BookingManager
-  constructor: (@container) ->
-    @listings = $.map @container.find('.listings .listing'), (el) =>
-      new Listing(this, $(el))
 
+  summaryTemplate: '''
+    <strong>{{listings}} listings</strong> selected over a total of <strong>{{days}} days</strong> for <strong>{{currency_symbol}}{{subtotal_dollars}}</strong>
+  '''
+
+  constructor: (@container, @options = {}) ->
+    @listings = $.map @options.listings, (listing) =>
+      new Listing(this, listing)
+
+    @summaryContainer = @container.find('.summary').hide()
     @_setupCalendar()
     @_bindEvents()
 
@@ -17,20 +23,39 @@ class @Space.BookingManager
       listing.removeDate(date) for listing in @listings
 
   _bindEvents: ->
-    $('body').on 'change', '.booked-day-popover input', =>
-      el = $(event.target).closest('.booked-day-popover')
-      listingId = el.attr('data-listing-id')
-      dateId = el.attr('data-date-id')
-
-      #alert "Changed for #{listingId} - #{dateId} to #{el.find('input').val()}"
-      @findListing(listingId).setBooking(dateId, el.find('input').val())
 
   findListing: (listingId) ->
-    return listing for listing in @listings when listing.id is listingId
+    return listing for listing in @listings when listing.id is parseInt(listingId, 10)
+
+  # Update the summary of the bookings so far
+  updateSummary: ->
+    listings = 0
+    days = []
+    subtotal = 0
+    for listing in @listings when listing.isBooked()
+      listings += 1
+      days = _.union(days, listing.bookedDays())
+      subtotal += listing.bookingSubtotal()
+
+    if listings > 0
+      summaryText = Mustache.render(@summaryTemplate, {
+        listings: listings,
+        days: days.length,
+        currency_symbol: @options.currencySymbol || '$',
+        subtotal_dollars: (subtotal / 100).toFixed(2)
+      })
+      @summaryContainer.show().find('span').html(summaryText)
+    else
+      @summaryContainer.hide()
+
+  # Notifiction received when bookings changed for a listing
+  bookingsChanged: (listing) ->
+    @updateSummary()
 
   # Each Listing has it's own object which keeps track of number booked, availability etc.
   class Listing
 
+    # Template for booked day selection elements
     bookedDayTemplate: '''
       <span class="booked-day empty">
         <span class="count">{{count}}</span>
@@ -39,6 +64,7 @@ class @Space.BookingManager
       </span>
     '''
 
+    # Template for booked day selection popover modals
     popoverTemplate: '''
       <div class="booked-day-popover" data-listing-id="{{listingId}}" data-date-id="{{dateId}}">
         <div class="date">{{day}} {{date}}<sup>{{suffix}}</sup></div>
@@ -54,11 +80,23 @@ class @Space.BookingManager
       </div>
     '''
 
-    constructor: (@manager, @container) ->
+    constructor: (@manager, @options) ->
+      @container = @manager.container.find(".listings .listing[data-listing-id=#{@options.id}]")
       @daysContainer = @container.find('.book .booked-days')
-      @id = @container.attr('data-listing-id')
+      @id = @options.id
       @bookings = {}
       @_bindEvents()
+
+    isBooked: ->
+      @bookedDays().length > 0
+
+    # Return the days where there exist bookings
+    bookedDays: ->
+      _.chain(@bookings).keys().reject((k) => @bookings[k] <= 0).value()
+
+    # Total 'desk days' booked. i.e. number of desks summed across each day
+    bookedDeskDays: ->
+      _.reduce(_.values(@bookings), ((memo, bookings) -> memo + bookings), 0)
 
     # Set booking for specified date
     #
@@ -66,7 +104,7 @@ class @Space.BookingManager
     # amount - Amount to book on this date
     setBooking: (dateId, amount) ->
       amount = parseInt(amount, 10)
-      amount = 0 if amount < 0
+      amount = 0 unless amount > 0
       date = DNM.util.Date.idToDate(dateId)
       @bookings[DNM.util.Date.toId(date)] = amount
       dayBooking = @daysContainer.find(".#{DNM.util.Date.toClassName(date)}")
@@ -75,6 +113,30 @@ class @Space.BookingManager
       dayBooking.toggleClass('selected', amount > 0)
       dayBooking.removeClass('unavailable')
 
+      # Notify manager bookings updated
+      @manager.bookingsChanged(this)
+
+    # Return the subtotal for booking this listing
+    bookingSubtotal: ->
+      # Pricing is based on minute periods.
+      # 1 day = 1440 minutes
+      # 1 week = 10080 (7 days)
+      # 1 month = 43200 minutes (30 days)
+      periodPerDay = 24*60
+      totalPeriodBooked = periodPerDay * @bookedDeskDays()
+
+      # Sort the prices by period, largest first
+      prices = _(@options.prices).sortBy((price) -> price.period).reverse()
+
+      periodRemaining = totalPeriodBooked
+      subtotalCents = 0
+      for price in prices
+        includes = Math.floor(periodRemaining / price.period)
+        subtotalCents += includes * price.price_cents
+        periodRemaining -= includes*price.period
+
+      # Return the subtotal
+      subtotalCents
 
     _bindEvents: ->
       @daysContainer.on 'click', '.booked-day', (event) =>
@@ -91,6 +153,17 @@ class @Space.BookingManager
         event.preventDefault()
         event.stopPropagation()
 
+      updateFromBookedDay = (event) =>
+        el = $(event.target).closest('.booked-day-popover')
+        listingId = el.attr('data-listing-id')
+        return unless parseInt(listingId) is @id
+
+        dateId = el.attr('data-date-id')
+        @setBooking(dateId, el.find('input').val())
+
+      $('body').on 'change', '.booked-day-popover input', (event) => updateFromBookedDay(event)
+      $('body').on 'keyup', '.booked-day-popover input', (event) => updateFromBookedDay(event)
+
     addDate: (date) ->
       dateEl = @_prepareBookedDayElement(date)
 
@@ -106,7 +179,10 @@ class @Space.BookingManager
 
     removeDate: (date) ->
       @daysContainer.find(".#{DNM.util.Date.toClassName(date)}").remove()
+      @setBooking(date, 0) if _.include @bookedDays(), DNM.util.Date.toId(date)
 
+    # Prepare for insertion the dom object representing the ability to choose
+    # bookings for the specified date for this Listing
     _prepareBookedDayElement: (date) ->
       el = $ Mustache.render(@bookedDayTemplate, {
         count: 0,
@@ -118,6 +194,7 @@ class @Space.BookingManager
       el.data('date', date)
       el
 
+    # Prepare the content for the Popover to modify the bookings for this day
     _popoverContent: (date) ->
       Mustache.render(@popoverTemplate, {
         day: DNM.util.Date.dayName(date),

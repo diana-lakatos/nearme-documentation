@@ -36,4 +36,11 @@ module ListingsHelper
   def strip_http(url)
     url.gsub(/https?:\/\/(www\.)?/, "").gsub(/\/$/, "")
   end
+
+  def listing_data_attributes(listing = @listing)
+    {
+      :'data-listing-id' => listing.id
+    }
+  end
+
 end

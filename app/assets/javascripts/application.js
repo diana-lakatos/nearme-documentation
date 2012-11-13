@@ -16,6 +16,7 @@
 //= require ./vendor/jquery.cookie.js
 //= require ./vendor/jquery.popover-1.1.2.js
 //= require ./vendor/mustache.js
+//= require ./vendor/underscore.js
 //
 //= require_self
 //

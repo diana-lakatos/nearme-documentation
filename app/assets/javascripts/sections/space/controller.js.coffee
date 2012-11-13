@@ -1,6 +1,6 @@
 class @Space.Controller
 
-  constructor: (@container) ->
+  constructor: (@container, @options = {}) ->
     # Set up the map on the page
     @setupMap()
     @setupPhotos()
@@ -10,7 +10,7 @@ class @Space.Controller
     @photos = new Space.PhotosController($('.space-hero-photos'))
 
   setupBookings: ->
-    @bookings = new Space.BookingManager(@container.find('.bookings'))
+    @bookings = new Space.BookingManager(@container.find('.bookings'), @options.bookings)
 
   setupMap: ->
     mapContainer = @container.find('.map')
