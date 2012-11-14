@@ -116,17 +116,20 @@ class @Modal
     # FIXME: Pass these in as configuration options to the modal
     @container.css(position: 'absolute', top: '50px', left: '50%', 'margin-left': "-#{parseInt(width/2)}px")
 
+  _bodyIsFixed: ->
+    @bodyContainer.is('.modal-body-wrapper')
+
   # Fix the position of the main page content, preventing scrolling and allowing the window scrollbar to scroll the modal's content instead.
   _fixBody: ->
-    scrollTop = $(window).scrollTop()
-    @_scrollTopWas = scrollTop
-    @bodyContainer.wrap("<div id='modal-body-wrapper'/>").parent().css(width: '100%', position: "fixed", 'margin-top': "-#{scrollTop}px")
+    return if @_bodyIsFixed()
+    @_scrollTopWas = $(window).scrollTop()
+    @bodyContainer.addClass('modal-body-wrapper').css('margin-top': "-#{@_scrollTopWas}px")
     $(window).scrollTop(0)
 
   # Reverse the 'fixing' of the primary page content
   _unfixBody: ->
-    # FIXME: if this is called in error...
-    @bodyContainer.unwrap()
+    return unless @_bodyIsFixed()
+    @bodyContainer.removeClass('modal-body-wrapper').css('margin-top': 'auto')
     $(window).scrollTop(@_scrollTopWas)
 
   # Get the instance of the Modal object

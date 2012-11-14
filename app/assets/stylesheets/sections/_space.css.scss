@@ -1,5 +1,124 @@
+/* Space Page */
+@import "sections/space/calendar";
+@import "sections/space/bookings";
+@import "sections/space/photos";
 
-#space {
+// Hero area
+.space-hero-search-return {
+  padding: 15px 0;
 
+  a {
+    display: block;
+    line-height: 24px;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+    background: image-url("sections/listings/search-return.png") center left no-repeat;
+    padding-left: 36px;
+    font-size: 20px;
 
+    &, &:hover {
+      color: #cebbae;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
+
+#space, .space {
+  h1 {
+    line-height: 40px;
+  }
+
+  .box.host, .box.share {
+    position: relative;
+
+    i {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      height: 69px;
+      width: 69px;
+    }
+
+    &.host i {
+      background: image-url("sections/listings/host-flag.png");
+    }
+
+    &.share i {
+      background: image-url("sections/listings/share-flag.png");
+    }
+  }
+
+  .box.host {
+    .avatar {
+      float: left;
+    }
+
+    .name {
+      font-size: 22px;
+      line-height: 50px;
+      margin-left: 60px;
+    }
+  }
+
+  .box.share {
+    .stButton {
+      margin-right: 12px;
+    }
+
+    .first-row {
+      margin-bottom: 6px;
+    }
+  }
+
+  .amenities {
+    font-size: 12px;
+    line-height: 16px;
+
+    $sprite-map: sprite-map("sections/listings/amenity-categories/*.png");
+
+    dt {
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+
+      i {
+        background: $sprite-map;
+        line-height: 20px;
+        display: inline-block;
+        height: 20px;
+        width: 20px;
+        vertical-align: top;
+        margin-bottom: 0px;
+      }
+    }
+
+    dl {
+      margin-bottom: 8px;
+    }
+
+    i.icon-amenity-access {
+      background-position: sprite-position($sprite-map, "access");
+    }
+
+    i.icon-amenity-other {
+      background-position: sprite-position($sprite-map, "entertainment");
+    }
+  }
+
+  .map {
+    .map-wrapper {
+      margin-bottom: 10px;
+
+      .map-container {
+      }
+    }
+
+    address {
+    }
+  }
+}
+

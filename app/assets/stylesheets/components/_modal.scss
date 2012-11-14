@@ -85,3 +85,8 @@
     @include opacity(1);
   }
 }
+
+.modal-body-wrapper {
+  position: fixed;
+  width: 100%;
+}
