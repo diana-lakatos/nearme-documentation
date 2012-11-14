@@ -213,7 +213,9 @@ class Listing < ActiveRecord::Base
         friday = monday + 4
         week   = monday..friday
 
-        week.inject(hash) {|m,d| m[d] = quantity; m}
+        week.each do |day|
+          hash[day] = quantity
+        end
       end
 
       # Fetch count of all reservations for each of those dates

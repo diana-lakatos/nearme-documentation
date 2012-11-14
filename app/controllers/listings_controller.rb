@@ -30,12 +30,10 @@ class ListingsController < ApplicationController
 
   def show
     @listing = Listing.find(params[:id])
-    @location = @listing.location
-    @feeds = @listing.feeds.latest.limit(5)
+    redirect_to location_url(@listing.location)
   end
 
   def edit
-
   end
 
   def update
