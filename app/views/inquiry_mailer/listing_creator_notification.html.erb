@@ -1,4 +1,4 @@
-<%= render "shared/mailers/header" %>
+<%= render "/shared/mailers/header" %>
 Hi <%= @inquiry.listing.creator.name %>,
 
 We've received a new inquiry from <%= @inquiry.inquiring_user.name %>. They've asked:
@@ -10,4 +10,4 @@ You can answer their question by replying to this email.
 Sweet!
 
  - The Desks Near Me Crew
- <%= render "shared/mailers/footer" %>
+ <%= render "/shared/mailers/footer" %>
