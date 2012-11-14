@@ -238,11 +238,13 @@ class Listing::ScorerTest < ActiveSupport::TestCase
 
     def create_reservation_for(start_date, end_date, listing)
       periods = (start_date...end_date).map do |d|
-        ReservationPeriod.new(date: d, listing_id: listing.id)
+        ReservationPeriod.new(date: d, listing_id: listing.id, quantity: 1)
       end
 
-      r = listing.reservations.new(periods: periods)
-      r.user = FactoryGirl.create(:user)
+      r = listing.reservations.build(:user => FactoryGirl.create(:user))
+      (start_date...end_date).map do |d|
+        r.add_period(d, 1)
+      end
       r.save!
     end
 
