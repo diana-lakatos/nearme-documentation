@@ -1,8 +1,8 @@
 class ReservationSeat < ActiveRecord::Base
 
   # Reservation to which the seat is associated
-  belongs_to :reservation
-  attr_accessible :reservation_id
+  belongs_to :reservation_period
+  attr_accessible :reservation_period_id
 
   # Name on the seat
   attr_accessible :name

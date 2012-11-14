@@ -1,6 +1,7 @@
 module Locations
   class ReservationsController < ApplicationController
     before_filter :find_location
+    before_filter :require_login
 
     # Review a reservation prior to confirmation. Same interface as create.
     def review
@@ -27,12 +28,20 @@ module Locations
           reservation.save!
         end
       end
+
+      render :layout => false
     rescue
       # TODO: Handle expections here
       raise
     end
 
     private
+
+    def require_login
+      unless current_user
+        render :login_required, :layout => false
+      end
+    end
 
     def find_location
       @location = Location.find(params[:location_id])
@@ -42,10 +51,10 @@ module Locations
       reservations = []
       params[:listings].values.each { |listing_params|
         listing = @location.listings.find(listing_params[:id])
-        reservation = listing.reservations.build
+        reservation = listing.reservations.build(:user => current_user)
 
         listing_params[:bookings].values.each do |period|
-          reservation.add_period(period[:date], period[:quantity])
+          reservation.add_period(Date.parse(period[:date]), period[:quantity].to_i)
         end
 
         reservations << reservation

@@ -1,6 +1,6 @@
 %h1 Book space at #{@location.name}
 
-= form_tag location_reservations_url(@location), :method => :post do
+= form_tag location_reservations_url(@location), :method => :post, :remote => true do
   = render 'locations/reservations/fields'
 
   - location_reservation_summaries.each do |date, reservations|

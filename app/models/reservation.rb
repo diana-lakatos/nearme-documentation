@@ -3,13 +3,11 @@ class Reservation < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
-    :owner_id, :periods, :seats, :state, :user, :comment
+    :owner_id, :periods, :state, :user, :comment
 
   has_many :periods, :class_name => "ReservationPeriod", :dependent => :destroy
-  has_many :seats, :class_name => "ReservationSeat", :dependent => :destroy
 
   validates :periods, :length => { :minimum => 1 }
-  validates :seats, :length => { :minimum => 1 }
 
   before_validation :set_total_cost, on: :create
   after_create      :auto_confirm_reservation
@@ -55,11 +53,10 @@ class Reservation < ActiveRecord::Base
   def user=(value)
     self.owner = value
     self.confirmation_email = value.email
-    seats.build :user => value
   end
 
   def date=(value)
-    periods.build :date => value
+    periods.build :date => value, :quantity => 1
   end
 
   def date
@@ -79,8 +76,8 @@ class Reservation < ActiveRecord::Base
     can_cancel
   end
 
-  def add_period(date, quantity = 1)
-    periods.build :date => date
+  def add_period(date, quantity = 1, assignees = [])
+    periods.build :date => date, :quantity => quantity, :assignees => assignees
   end
 
   def total_amount_cents
@@ -96,7 +93,7 @@ class Reservation < ActiveRecord::Base
     # NB: Would use +sum+ but AR doesn't use the internal collection for non-persisted records (it attempts to load the target)
     total = 0
     periods.each do |period|
-      total += period.total_seats
+      total += period.quantity
     end
     total
   end
@@ -105,12 +102,12 @@ class Reservation < ActiveRecord::Base
 
     def calculate_total_cost
       # NB: use of 'size' not 'count' here is deliberate - seats/periods may not be persisted at this point!
-      unit_prices = listing.unit_prices.sort_by { |unit_price| unit_price.period }.reverse
+      unit_prices = listing.unit_prices.reject { |unit_price| unit_price.price_cents.nil? }.sort_by { |unit_price| unit_price.period }.reverse
       desk_days_to_apply = desk_days * Listing::MINUTES_IN_DAY
       total = unit_prices.reduce(0) { |memo, unit_price|
         applications = desk_days_to_apply / unit_price.period
         desk_days_to_apply -= applications * unit_price.period
-        memo + applications * (unit_price.price_cents || 0)
+        memo + applications * unit_price.price_cents
       }
     end
 

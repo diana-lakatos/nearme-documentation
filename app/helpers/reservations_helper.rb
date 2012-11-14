@@ -33,7 +33,7 @@ module ReservationsHelper
     dates = Hash.new { |h, k| h[k] = [] }
     reservations.each do |reservation|
       reservation.periods.each do |period|
-        dates[period.date] << [reservation.listing, 1]
+        dates[period.date] << [reservation.listing, period.quantity]
       end
     end
     dates

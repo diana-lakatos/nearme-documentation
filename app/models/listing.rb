@@ -111,13 +111,7 @@ class Listing < ActiveRecord::Base
   # TODO: Create a database index for the availability.
   # TODO: This implementation is really slow!
   def desks_booked_on(date)
-    # Get all of the reservations for the property on the given date
-    reservations = Reservation.joins(:periods).where(
-        reservation_periods: { listing_id: self.id, date: date }
-    )
-
-    # Tally up all of the seats taken across all reservations
-    reservations.inject(0) { |sum, r| sum += r.seats.count; sum }
+    ReservationSeat.joins(:reservation_period).where(:reservation_periods => { :listing_id => self.id, :date => date }).count
   end
 
 
@@ -189,10 +183,7 @@ class Listing < ActiveRecord::Base
   end
 
   # FIXME: long method, split me up? Does this/a lot of this belong in Reservation instead?
-  def reserve!(email, reserving_user, dates, quantity, assignees = nil)
-    # TODO: Use a transaction to ensure atomicity.
-    # TODO: Might need to have an elaborate Postgres constraint in order to do this.
-
+  def reserve!(email, reserving_user, dates, quantity, assignees = [])
     # Check that the reservation is valid
     # FIXME: should be able to do this all in sql
     dates.each do |date|
@@ -201,35 +192,12 @@ class Listing < ActiveRecord::Base
     end
 
     # Create the reservation
-    reservation = self.reservations.build do |r|
-      r.confirmation_email = email
-      r.owner = reserving_user
-    end
+    reservation = self.reservations.build(
+      :user => reserving_user
+    )
 
     dates.each do |date|
-      reservation.periods.build(
-        :date => date
-      )
-    end
-
-    unless assignees.blank? 
-      assignees.each do |assignee|
-        seat = reservation.seats.build(
-          :email => assignee['email'],
-          :name => assignee['name']
-        )
-
-        # Try and look up the e-mail address, in case it refers to a DNM user.
-        if u = User.find_by_email(reservation.seats.last.email)
-          seat.user = u
-        end
-      end
-    else
-      (1..quantity).each do |index|
-        reservation.seats << ReservationSeat.new do |s|
-          s.reservation = reservation
-        end
-      end
+      reservation.add_period(date, quantity, assignees)
     end
 
     reservation.save!

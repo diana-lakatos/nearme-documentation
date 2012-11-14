@@ -33,6 +33,11 @@ window.DNM = {
   initialize : function() {
     this.initializeAjaxCSRF();
     this.initializeComponents();
+    this.initializeModals();
+  },
+
+  initializeModals: function() {
+    Modal.listen();
   },
 
   initializeComponents: function(scope) {

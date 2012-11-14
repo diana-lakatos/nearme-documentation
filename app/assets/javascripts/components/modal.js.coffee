@@ -14,6 +14,9 @@
 #   Modal.showContent("my new content")
 class @Modal
 
+  @reloadOnClose: ->
+    @_reloadOnClose = true
+
   # Listen for click events on modalized links
   # Modalized links are anchor elements with rel="modal"
   # A custom class can be specified on the modal:
@@ -26,6 +29,9 @@ class @Modal
 
       @load(target.attr("href"), modalClass)
       false
+
+    $('.modal form').live 'ajax:success', (event, data) =>
+      Modal.showContent(data)
 
   # Show the loading status on the modal
   @showLoading : ->
@@ -79,6 +85,9 @@ class @Modal
     @_unfixBody()
     @overlay.hide()
     @container.hide()
+
+    if Modal._reloadOnClose
+      window.location.reload()
 
   # Trigger visibility of the modal
   _show: ->
