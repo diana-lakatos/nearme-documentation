@@ -1,4 +1,4 @@
-<%= render "shared/mailers/header" %>
+<%= render "/shared/mailers/header" %>
 Dear <%= @user %>,
 
 <%= @reservation.owner %> has made a reservation for <%= @listing %> on <%= l(@reservation.date, :format => :long) %>.
@@ -16,4 +16,4 @@ Please confirm or decline their reservation by logging into the site. Just click
 <%= @url %>
 
 <%= render :partial => "footer" %>
-<%= render "shared/mailers/footer" %>
+<%= render "/shared/mailers/footer" %>

@@ -1,4 +1,4 @@
-<%= render "shared/mailers/header" %>
+<%= render "/shared/mailers/header" %>
 Hey there <%= @name %>,
 <br>
 <%= @sharer.name %> has shared a listing with you on Desks Near Me! Click the link below to check it out!
@@ -9,4 +9,4 @@ Hey there <%= @name %>,
   They also wanted to say:
   <%= @message %>
 <%- end %>
-<%= render "shared/mailers/footer" %>
+<%= render "/shared/mailers/footer" %>
