@@ -115,7 +115,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def set_total_cost
-      self.total_amount_cents ||= calculate_total_cost
+      self.total_amount_cents = calculate_total_cost
     end
 
     def auto_confirm_reservation

@@ -207,35 +207,29 @@ class Listing < ActiveRecord::Base
     end
 
     dates.each do |date|
-      reservation.periods << ReservationPeriod.new do |p|
-        p.date        = date
-        p.listing     = self
-        p.reservation = reservation
-      end
+      reservation.periods.build(
+        :date => date
+      )
     end
 
-    unless assignees.blank?
-
+    unless assignees.blank? 
       assignees.each do |assignee|
-
-        reservation.seats << ReservationSeat.new do |s|
-          s.reservation = reservation
-          s.email       = assignee['email']
-          s.name        = assignee['name']
-        end
+        seat = reservation.seats.build(
+          :email => assignee['email'],
+          :name => assignee['name']
+        )
 
         # Try and look up the e-mail address, in case it refers to a DNM user.
-        reservation.seats.last.user ||= User.find_by_email(reservation.seats.last.email)
+        if u = User.find_by_email(reservation.seats.last.email)
+          seat.user = u
+        end
       end
-
     else
-
       (1..quantity).each do |index|
         reservation.seats << ReservationSeat.new do |s|
           s.reservation = reservation
         end
       end
-
     end
 
     reservation.save!
