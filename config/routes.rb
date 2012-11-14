@@ -8,6 +8,8 @@ DesksnearMe::Application.routes.draw do
     end
 
     member do
+      get :host
+      get :networking
       get :availability_summary
     end
   end

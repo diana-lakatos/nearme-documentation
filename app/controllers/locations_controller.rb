@@ -6,6 +6,14 @@ class LocationsController < ApplicationController
     @location = location
   end
 
+  def host
+    @location = location
+  end
+
+  def networking
+    @location = location
+  end
+
   def new
     location.availability_template_id = AvailabilityRule.default_template.id
   end

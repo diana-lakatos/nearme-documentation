@@ -28,6 +28,7 @@
 #space, .space {
   h1 {
     line-height: 40px;
+    margin-bottom: 30px;
   }
 
   .box.host, .box.share {
@@ -118,6 +119,37 @@
     }
 
     address {
+    }
+  }
+
+  .host-company {
+    h2 {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+
+  .activity-feed {
+    li {
+      background: image-url("sections/listings/event-feed-icon.png") top left no-repeat;
+      padding-left: 24px;
+
+      sup {
+        font-size: 70%;
+        line-height: 80%;
+        vertical-align: top;
+      }
+
+      small {
+        font-size: 12px;
+        font-weight: bold;
+        color: #6f7e85;
+      }
+
+      .user {
+        font-weight: bold;
+        color: #2091d0;
+      }
     }
   }
 }

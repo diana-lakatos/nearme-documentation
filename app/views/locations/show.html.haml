@@ -1,140 +1,36 @@
-- legacy false
+= render :layout => 'show_layout', :locals => { :tab => :overview } do
+  .one-third.column.alpha
+    %p.description
+      #{@location.description}
 
-- content_for :hero do
-  .hero-wood-texture
-    .container.space-hero-search-return
-      = link_to "Back to search", search_url
+    %strong= @location.phone
 
-  - if @location.photos.any?
-    .hero-gray-texture.hero-shadow
-      .container.space-hero-photos
-        .photos-list
-          .prev
-          .photos-wrapper
-            %ul
-              - @location.photos.each do |photo|
-                %li
-                  = image_tag photo.url(:hero_preview), :alt => photo.caption, 'data-url' => photo.url(:hero)
-          .next
+    .box.share
+      %i.flag
+      %h3 Share this space
+      .first-row
+        %span.twitter.st_twitter_hcount{:displayText => 'Tweet'}
+        %span.st_linkedin_hcount{:displayText => 'LinkedIn'}
+      %span.st_facebook_hcount{:displayText => 'Facebook'}
+      %span.st_email_hcount{:displayText => 'Email'}
 
-        .photo{:style => "background-image: url('#{@location.photos.first.url}')"}
-          .caption
-            This is an awesome caption.
+  .one-third.column.amenities
+    %dl
+      %dt
+        %i{:class => "icon-amenity-other"}
+        Amenities
 
-%article#space
-  %ul.subnav.right.blue
-    %li= link_to "Overview", ""
-    %li= link_to "Host", ""
-    %li= link_to "Networking", ""
-    %li= link_to "Book", ""
-
-  %h1 #{@location.name}
-
-  .clearfix
-    .one-third.column.alpha
-      %p.description
-        #{@location.description}
-
-      %strong= @location.phone
-
-      .box.share
-        %i.flag
-        %h3 Share this space
-        .first-row
-          %span.twitter.st_twitter_hcount{:displayText => 'Tweet'}
-          %span.st_linkedin_hcount{:displayText => 'LinkedIn'}
-        %span.st_facebook_hcount{:displayText => 'Facebook'}
-        %span.st_email_hcount{:displayText => 'Email'}
-
-    .one-third.column.amenities
       %dl
-        %dt
-          %i{:class => "icon-amenity-other"}
-          Amenities
+        - unless @location.amenities.empty?
+          = @location.amenities.map(&:name).join(', ')
+        - else
+          Nothing listed... that can't be right!
 
-        %dl
-          - unless @location.amenities.empty?
-            = @location.amenities.map(&:name).join(', ')
-          - else
-            Nothing listed... that can't be right!
+  .one-third.column.map
+    .map-wrapper
+      .map-container{:style => "height: 260px;"}
 
-    .one-third.column.map
-      .map-wrapper
-        .map-container{:style => "height: 260px;"}
-
-      %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, "data-marker" => image_path("components/map-pin.png")}
-        = location_format_address(@location.formatted_address || @location.address)
+    %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, "data-marker" => image_path("components/map-pin.png")}
+      = location_format_address(@location.formatted_address || @location.address)
 
 
-  %hr.divider
-
-  %section.bookings
-    %h2 Make a Booking
-
-    %p Select dates from the calendar below to see the available desks and rooms for those days.
-
-    .calendar.box{:'data-today' => Time.zone.now.strftime('%Y-%m-%d')}
-      .prev
-      .next
-      .slider-window
-        %ul.days
-          / li
-          /   %span.date 31<sup>st</sup>
-          /   %span.month Oct
-
-    .listings
-      - @location.listings.each do |listing|
-        .listing.box.divider.small{listing_data_attributes(listing)}
-          .images
-            - if listing.photos.any?
-              .image
-                = image_tag listing.photos.first.url(:space_listing)
-            - else
-              .no-photo No Photos
-
-          .description
-            %h3= listing.name
-            %p= listing.description
-            %p.price
-              = listing_price(listing, 1)
-              - if listing_price_show_bulk_tooltip?(listing)
-                %a{:href => "#"} See bulk pricing
-          .book
-            %h3 Book
-            %p Click on the available days below to select how many of this listing you'd like to book on that day.
-
-            .booked-days
-              /%span.booked-day
-              /  %span.count 2
-              /  %span.date 10#{content_tag(:sup, 'th')}
-              /  %span.month Oct
-
-          .clearfix
-
-    .summary.inset-box
-      %p
-        %span 2 listings selected over a total of 2 days for $198.00
-        = link_to "Review and book now", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBooking'
-
-
-- content_for :script do
-  / ShareThis script
-  / FIXME: Get DNM login/api key
-  = javascript_tag do
-    var switchTo5x=true;
-  = javascript_include_tag "http://w.sharethis.com/button/buttons.js"
-  = javascript_tag do
-    stLight.options({publisher: "ed2de743-77e7-437b-a5a3-f1fa39f72cfc"});
-
-  :javascript
-    // Initialize the ui controller
-    new Space.Controller(
-      $('article.space, article#space'),
-      {
-        bookings: {
-          listings: #{raw location_listings_json},
-          availability_summary_url: #{raw availability_summary_location_url(@location).to_json},
-          review_url: #{raw review_location_reservations_url(@location).to_json}
-        }
-      }
-    )

@@ -1,2 +1,2 @@
-= feed.user.name
-booked a desk for the #{l(feed.reservation.date, :format => :feed)}
+%span.user= feed.user.name
+booked a #{feed.listing.try(:name) || 'desk'} for the #{raw feed.reservation.date.strftime("%-d<sup>#{feed.reservation.date.day.ordinalize.gsub(/[0-9]/, '')}</sup> %b")}

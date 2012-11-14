@@ -1,0 +1,12 @@
+= render :layout => 'show_layout', :locals => { :tab => :host } do
+  .two-thirds.column.host-company
+    %h2= @location.company.name
+    %p
+      = @location.company.description
+
+  .one-third.column
+    .host.box
+      %i.flag
+      = image_tag @location.creator.gravatar_url(:size => "50x50"), :class => "avatar"
+      .name= @location.creator.name
+

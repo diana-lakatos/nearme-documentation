@@ -15,6 +15,7 @@ class Location < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
   has_many :listings
   has_many :photos, :through => :listings
+  has_many :feeds, :through => :listings
 
   has_many :availability_rules, :as => :target
 

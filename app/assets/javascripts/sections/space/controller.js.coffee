@@ -14,6 +14,8 @@ class @Space.Controller
 
   setupMap: ->
     mapContainer = @container.find('.map')
+    return unless mapContainer.length > 0
+
     location = mapContainer.find('address')
     latlng = new google.maps.LatLng(
       location.attr("data-lat"), location.attr("data-lng")
