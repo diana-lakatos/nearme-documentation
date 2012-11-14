@@ -205,37 +205,21 @@ class Listing < ActiveRecord::Base
   end
 
   def schedule(weeks = 1)
-    {}.tap do |hash|
-      # Build a hash of all week days and their default availabilities
-      weeks.times do |offset|
-        today  = Date.today + offset.weeks
-        monday = today.weekend? ? today.next_week : today.beginning_of_week
-        friday = monday + 4
-        week   = monday..friday
+    schedule = {}
 
-        week.each do |day|
-          hash[day] = quantity
-        end
-      end
+    # Build a hash of all week days and their default availabilities
+    weeks.times do |offset|
+      today  = Date.today + offset.weeks
+      monday = today.weekend? ? today.next_week : today.beginning_of_week
+      friday = monday + 4
+      week   = monday..friday
 
-      # Fetch count of all reservations for each of those dates
-      schedule = reservations.
-        where("reservation_periods.date" => hash.keys).
-        where(state: [:confirmed, :unconfirmed]).
-        includes(:periods, :seats)
-
-      # Subtract the number of reservations from those days to leave
-      # how many places are remaining, then return the hash
-      schedule.each do |reservation|
-        reservation.periods.each do |period|
-          if hash[period.date] >= reservation.seats.size
-            hash[period.date] -= reservation.seats.size
-          else
-            hash[period.date] = 0
-          end
-        end
+      week.each do |day|
+        schedule[day] = availability_for(day)
       end
     end
+
+    schedule
   end
 
   private
