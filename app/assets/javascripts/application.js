@@ -31,11 +31,23 @@
 
 window.DNM = {
   initialize : function() {
+    this.initializeAjaxCSRF();
     this.initializeComponents();
   },
 
   initializeComponents: function(scope) {
     Multiselect.initialize(scope)
+  },
+
+  initializeAjaxCSRF: function() {
+    $.ajaxSetup({
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(
+          'X-CSRF-Token',
+           $('meta[name="csrf-token"]').attr('content')
+        );
+      }
+    });
   }
 }
 

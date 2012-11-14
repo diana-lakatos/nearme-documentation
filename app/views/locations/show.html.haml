@@ -114,7 +114,7 @@
     .summary.inset-box
       %p
         %span 2 listings selected over a total of 2 days for $198.00
-        = link_to "Review and book now", "", :class => "btn btn-green btn-medium"
+        = link_to "Review and book now", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBooking'
 
 
 - content_for :script do
@@ -133,7 +133,8 @@
       {
         bookings: {
           listings: #{raw location_listings_json},
-          availability_summary_url: #{raw availability_summary_location_url(@location).to_json}
+          availability_summary_url: #{raw availability_summary_location_url(@location).to_json},
+          review_url: #{raw review_location_reservations_url(@location).to_json}
         }
       }
     )

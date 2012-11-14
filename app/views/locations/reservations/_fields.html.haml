@@ -1,0 +1,5 @@
+- @reservations.each do |reservation|
+  = hidden_field_tag 'listings[][id]', reservation.listing.id
+  - reservation.periods.each do |period|
+    = hidden_field_tag 'listings[][bookings][][date]', period.date.strftime('%Y-%m-%d')
+    = hidden_field_tag 'listings[][bookings][][quantity]', 1 # FIXME fix quantity

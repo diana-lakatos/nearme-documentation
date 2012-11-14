@@ -36,9 +36,9 @@ class @Modal
     @instance().showContent(content)
 
   # Trigger laoding of the URL within the modal via AJAX
-  @load : (url, modalClass = null) ->
+  @load : (ajaxOptions, modalClass = null) ->
     @instance().setClass(modalClass)
-    @instance().load(url)
+    @instance().load(ajaxOptions)
 
   # ===
 
@@ -64,12 +64,14 @@ class @Modal
 
   showContent : (content) ->
     @_show()
+    @container.removeClass('loading')
     @loading.hide()
     @content.html("") if content
     @content.show()
     @content.html(content) if content
 
   showLoading : ->
+    @container.addClass('loading')
     @content.hide()
     @loading.show()
 
@@ -88,11 +90,12 @@ class @Modal
   # Load the given URL in the modal
   # Displays the modal, shows the loading status, fires an AJAX request and 
   # displays the content
-  load : (url) ->
+  load : (ajaxOptions) ->
     @_show()
     @showLoading()
 
-    $.get url, (data) =>
+    request = $.ajax(ajaxOptions)
+    request.success (data) =>
       @showContent(data)
 
   # Position the modal on the page.

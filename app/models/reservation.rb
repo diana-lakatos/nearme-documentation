@@ -79,11 +79,43 @@ class Reservation < ActiveRecord::Base
     can_cancel
   end
 
+  def add_period(date, quantity = 1)
+    periods.build :date => date
+  end
+
+  def total_amount_cents
+    if persisted?
+      super
+    else
+      calculate_total_cost
+    end
+  end
+
+  # Number of desks booked accross all days
+  def desk_days
+    # NB: Would use +sum+ but AR doesn't use the internal collection for non-persisted records (it attempts to load the target)
+    total = 0
+    periods.each do |period|
+      total += period.total_seats
+    end
+    total
+  end
+
   private
 
-    def set_total_cost
+    def calculate_total_cost
       # NB: use of 'size' not 'count' here is deliberate - seats/periods may not be persisted at this point!
-      self.total_amount_cents = (listing.price_cents || 0) * seats.size * periods.size
+      unit_prices = listing.unit_prices.sort_by { |unit_price| unit_price.period }.reverse
+      desk_days_to_apply = desk_days * Listing::MINUTES_IN_DAY
+      total = unit_prices.reduce(0) { |memo, unit_price|
+        applications = desk_days_to_apply / unit_price.period
+        desk_days_to_apply -= applications * unit_price.period
+        memo + applications * (unit_price.price_cents || 0)
+      }
+    end
+
+    def set_total_cost
+      self.total_amount_cents ||= calculate_total_cost
     end
 
     def auto_confirm_reservation

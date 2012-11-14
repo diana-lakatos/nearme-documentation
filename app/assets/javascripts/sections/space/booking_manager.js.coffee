@@ -49,9 +49,26 @@ class @Space.BookingManager
     listing.removeDate(date) for listing in @listings
 
   _bindEvents: ->
+    @summaryContainer.find('[data-behavior=showReviewBooking]').click (event) =>
+      event.preventDefault()
+      Modal.load({
+        url: @options.review_url,
+        type: 'POST',
+        data: @bookingDataForReview()
+      }, 'space-reservation-modal')
 
   findListing: (listingId) ->
     return listing for listing in @listings when listing.id is parseInt(listingId, 10)
+
+  # Build data for booking review
+  bookingDataForReview: ->
+    listings = []
+    for listing in @listings when listing.isBooked()
+      listings.push {
+        id: listing.id,
+        bookings: listing.getBookings()
+      }
+    { listings: listings }
 
   # Update the summary of the bookings so far
   updateSummary: ->
@@ -138,6 +155,11 @@ class @Space.BookingManager
     # Total 'desk days' booked. i.e. number of desks summed across each day
     bookedDeskDays: ->
       _.reduce(_.values(@bookings), ((memo, bookings) -> memo + bookings), 0)
+
+    # Return the bookings data in an array of date & quantity objects
+    getBookings: ->
+      _.map @bookedDays(), (dateId) =>
+        { date: dateId, quantity: @bookings[dateId] }
 
     # Set booking for specified date
     #

@@ -1,0 +1,27 @@
+%h1 Book space at #{@location.name}
+
+= form_tag location_reservations_url(@location), :method => :post do
+  = render 'locations/reservations/fields'
+
+  - location_reservation_summaries.each do |date, reservations|
+    .summary
+      .date= date.strftime("%e %B")
+      .bookings
+        - reservations.each do |listing, amount|
+          .listing-reservation
+            %strong= amount
+            = listing.name
+    %hr
+
+  .summary
+    .total-label Total Cost:
+    .total-amount= location_reservation_total_amount
+
+  %hr
+
+  %p.text-center
+    = submit_tag 'Request Booking Now'
+
+  - if location_reservation_needs_confirmation?
+    %p.notice.text-center
+      This host manually confirms all bookings before payment

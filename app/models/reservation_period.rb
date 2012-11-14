@@ -15,4 +15,9 @@ class ReservationPeriod < ActiveRecord::Base
 
   acts_as_paranoid
 
+  # FIXME: Implement
+  def total_seats
+    1
+  end
+
 end

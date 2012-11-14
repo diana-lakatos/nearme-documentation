@@ -15,33 +15,73 @@
 }
 
 .modal-wrapper {
-  background: #fff;
-  border: 1px solid #cacbcb;
+  background: #f5f5f5;
+  //border: 1px solid #ffffff;
   @include border-radius(8px);
-  box-shadow: 0 0 8px 0 rgba(0,0,0,0.1);
+  @include box-shadow(
+    0 0 6px 0 rgba(0,0,0,0.5),
+    inset 0 0 0 1px #fff
+  );
+
 }
 
 .modal-container {
   width: 500px;
   z-index: 1000;
   padding-bottom: 50px;
+
+  &.loading .modal-close {
+    display: none;
+  }
 }
 
 .modal-loading {
   @extend .modal-wrapper;
-  height: 300px;
-  background: #fff image-url("components/modal/loading.gif") center center no-repeat;
+  height: 200px;
+  background: #f5f5f5 image-url("components/modal/loader.gif") center center no-repeat;
 }
 
 .modal-content {
   @extend .modal-wrapper;
-  padding: 30px;
+  $padding: 20px;
+  padding: $padding;
+
+  h1 {
+    display: block;
+    font-weight: bold;
+    background: image-url("layout/seamless-wood-texture.jpg");
+    color: #fff;
+    line-height: 50px;
+    font-size: 18px;
+    border: 1px solid #2b1b13;
+    @include border-top-radius(8px);
+    padding: 0 $padding;
+    text-shadow: 0 -1px rgba(0,0,0,0.7);
+    box-shadow: 0 2px 8px -1px rgba(0,0,0,0.4);
+    margin: -$padding;
+    margin-bottom: $padding;
+  }
+
+  hr, .hr {
+    background: #cfd2d3;
+    color: #cfd2d3;
+    border-bottom: 0;
+    margin-left: -$padding;
+    margin-right: -$padding;
+    margin-top: $padding;
+    margin-bottom: $padding;
+  }
 }
 
 .modal-close {
-  @extend .reset-a;
   position: absolute;
-  top: -12px;
-  right: -12px;
-  //@include image-element("components/modal/close.png");
+  top: 16px;
+  right: 16px;
+  background: image-url("components/modal/close.png");
+  width: 16px;
+  height: 17px;
+  @include opacity(0.8);
+  &:hover {
+    @include opacity(1);
+  }
 }

@@ -1,10 +1,6 @@
 require 'test_helper'
 
 class ReservationTest < ActiveSupport::TestCase
-  test "it exists" do
-    assert Reservation
-  end
-
   test "it has a listing" do
     @reservation = Reservation.new
     @reservation.listing = Listing.new
