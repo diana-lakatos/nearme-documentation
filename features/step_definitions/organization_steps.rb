@@ -1,5 +1,4 @@
 Given /^I am a member of (?:the above|that) organization$/ do
-  user = @user || model!('user')
   user.organizations << model!('organization')
   user.reload.organizations.should include model!('organization')
 end
@@ -13,3 +12,4 @@ end
 Then /^I am a member of the organization$/ do
   model!('user').reload.organizations.should include model!('organization')
 end
+
