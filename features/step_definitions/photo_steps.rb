@@ -14,8 +14,10 @@ Then /^the listing photos should be:$/ do |table|
 end
 
 When /^I add the following photos to the listing:$/ do |table|
+  # FIXME: This isn't 'correct' (more than one listing will break the semantics)
+  # We can fix it when we implement the new dashboard
   steps %{
-    When I go to the listing's page
+    When I go to the dashboard
     And I follow "Manage Photos"
   }
 
