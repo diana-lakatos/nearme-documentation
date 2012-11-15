@@ -4,7 +4,7 @@
   .container
     #search_row.twelve.columns.offset-by-two.alpha.omega
       .wood-box
-        %h1 Need a space to work?
+        %h1 Find a workspace
         %h2 Search from #{number_with_delimiter Listing.count} spaces nearby
 
         %form#listing_search.home_search{:action => search_path, :method => "get"}
@@ -17,13 +17,13 @@
           #search_filters
             .row
               .availability-quantity.five.columns.alpha
-                %label How many desks do you need?
+                %label Number of Desks
                 = hidden_field_tag "availability[quantity]", search_availability_quantity
                 .slider
                 .value.number-value 1
 
               .price-range.six.columns.omega
-                %label How much do you want to spend?
+                %label Price Range
                 = hidden_field_tag "price[min]", search_price_min
                 = hidden_field_tag "price[max]", search_price_max
                 .slider
@@ -31,7 +31,7 @@
                   $0 - $300+/day
             .row
               .five.columns.amenities.alpha
-                %label What amenities do you need?
+                %label Amenities
                 .multiselect
                   .collapsed None selected
                   .expanded{ :style => "display: none" }
@@ -43,7 +43,7 @@
                           = check_box_tag "amenities[]", amenity.id, search_amenities.include?(amenity.id), :id => "amenities_#{amenity.id}"
                           = label_tag "amenities_#{amenity.id}", amenity.name
               .associations.six.columns.omega.alpha
-                %label Do you have any preferred associations?
+                %label Associations
                 .multiselect
                   .collapsed None selected
                   .expanded{ :style => "display: none" }

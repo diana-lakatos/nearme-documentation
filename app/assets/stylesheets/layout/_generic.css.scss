@@ -1,5 +1,10 @@
 // Generic styles to apply to everything
 
+::selection, ::-moz-selection {
+  background-color: #27B0E6;
+  color: white;
+}
+
 .right {
   float: right;
 }
