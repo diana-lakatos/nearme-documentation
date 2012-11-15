@@ -80,7 +80,7 @@ class V1::ListingsController < V1::BaseController
 
     # Query for a list of seats
     seats = ReservationSeat.joins(
-        :reservation => [:listing]
+        :reservation_period => { :reservation => :listing }
     ).where(
         :listings => {:id => listing.id}
     )
@@ -114,7 +114,7 @@ class V1::ListingsController < V1::BaseController
 
     # Query for a list of seats for the given property, restricted to the user list above
     seats = ReservationSeat.joins(
-        :reservation => [:listing]
+        :reservation_period => { :reservation => :listing }
     ).where(
         :listings => {:id => listing.id},
         :user_id => user_ids

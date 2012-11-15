@@ -38,7 +38,7 @@ class ReservationSerializer < ApplicationSerializer
           start_at: timestamp_start,
           end_at: timestamp_end,
           # Who's assigned the desks
-          assignee: object.seats.map { |s|
+          assignee: p.seats.map { |s|
             {
                 name: s.name,
                 email: s.email

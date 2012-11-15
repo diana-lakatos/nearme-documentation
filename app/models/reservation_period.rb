@@ -36,7 +36,16 @@ class ReservationPeriod < ActiveRecord::Base
     assignees = assignees.dup
     seats.each do |seat|
       if user = assignees.shift
-        seat.user = assignees.shift
+        case user
+        when User
+          seat.user = user
+        else
+          user.stringify_keys!
+          seat.email = user['email']
+          seat.name  = user['name']
+        end
+
+        seat.save!
       end
     end
   end
