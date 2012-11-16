@@ -1,6 +1,10 @@
 When(/^I follow the reservation link for "([^"]*)"$/) do |date|
   date = Date.parse(date)
-  find(:xpath, "//time[@datetime='#{date}']/../div/a").click
+  #find(:xpath, "//time[@datetime='#{date}']/../div/a").click
+  find(:css, ".calendar .d-#{date.strftime('%Y-%m-%d')}").click
+  find(:css, ".booked-day.d-#{date.strftime('%Y-%m-%d')}").click
+  fill_in 'booked-day-qty', :with => '1'
+  click_link "Review and book now"
 end
 
 Then (/^I should not see the reservation link for "([^"]*)"$/) do |date|
@@ -81,7 +85,7 @@ end
 
 Then /^I should see the following reservation events in the feed in order:$/ do |table|
   regex = /<img[^>]+>\s*(.*?)\s+booked a desk for the (\d\d [A-Za-z]+, \d\d\d\d).*datetime="(.*?)"/m
-  feeds = all("dl.activity_feed dd.feed_item.booked").map do |booked_item|
+  feeds = all("ul.activity-feed li").map do |booked_item|
     user, date, at = *booked_item.native.to_s.scan(regex).first
     [user, Date.parse(date), Time.parse(at)]
   end

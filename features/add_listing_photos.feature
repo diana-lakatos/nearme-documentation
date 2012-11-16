@@ -7,7 +7,6 @@ Feature: A user can add photos to a listing
     Given a user exists
       And a listing exists with creator: the user
 
-  @wip
   Scenario: Adding photos to a work place
     Given I am logged in as the user
       And I go to the the dashboard
@@ -28,7 +27,6 @@ Feature: A user can add photos to a listing
         | The Boss' Desk                 |
         | This is where the intern works |
 
-  @wip
   Scenario: Deleting photos
    Given I am logged in as the user
     When I add the following photos to the listing:

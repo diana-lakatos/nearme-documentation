@@ -6,16 +6,16 @@ Feature: A user can book a desk
   Background:
     Given a listing exists with quantity: 10
       And a user exists
-      And the date is "13th October 2010"
 
+  @wip
+  @javascript
   Scenario: A logged in user can book a desk
     Given I am logged in as the user
      When I go to the listing's page
-      And I follow the reservation link for "15th October 2010"
-     Then I should see "You are making a reservation for: October 15, 2010"
-      And I press "Reserve"
-     Then I should be on the listing's page
-      And a reservation period should exist with date: "2010-10-15"
+      And I follow the reservation link for "16th November 2012"
+     Then I should see "16 November"
+      And I press "Request Booking Now"
+      And a reservation period should exist with date: "2012-11-16"
 
   Scenario: A user cannot book a desk in the past
     Given I am logged in as the user
