@@ -136,22 +136,21 @@ form {
     margin-bottom: 8px;
     padding: 8px 8px 8px 8px;
     line-height: 22px;
-    background: #fff;
-    @include background(linear-gradient(#ececec, #fcfcfc));
+    background: rgb(240,240,240);
     border: 1px solid rgba(0,0,0,0.4);
     @include border-radius(8px);
     color: #707070;
-    text-shadow: #fff 0 1px 0;
     font-size: 22px;
     -webkit-transition: box-shadow .2s ease-in;
        -moz-transition: box-shadow .2s ease-in;
             transition: box-shadow .2s ease-in;
 
     &:focus {
+      color:rgb(30,30,30);
       outline: none;
-      -webkit-box-shadow: 0px 0px 1px #27B0E6, 0px 0px 3px #27B0E6, 0px 0px 6px #27B0E6, 0px 0px 9px #27B0E6;
-         -moz-box-shadow: 0px 0px 1px #27B0E6, 0px 0px 3px #27B0E6, 0px 0px 6px #27B0E6, 0px 0px 9px #27B0E6;
-              box-shadow: 0px 0px 1px #27B0E6, 0px 0px 3px #27B0E6, 0px 0px 6px #27B0E6, 0px 0px 9px #27B0E6; 
+      -webkit-box-shadow: 0px 0px 1px #27B0E6, 0px 0px 3px #27B0E6, 0px 0px 6px #27B0E6, 0px 0px 7px #27B0E6;
+         -moz-box-shadow: 0px 0px 1px #27B0E6, 0px 0px 3px #27B0E6, 0px 0px 6px #27B0E6, 0px 0px 7px #27B0E6;
+              box-shadow: 0px 0px 1px #27B0E6, 0px 0px 3px #27B0E6, 0px 0px 6px #27B0E6, 0px 0px 7px #27B0E6; 
     }
 
     &.small {
@@ -362,7 +361,7 @@ form {
   .form-horizontal .control-group .controls {
     margin:10px 0;
   }
-  .two-thirds.column form.form-horizontal .actions {
+  .two-thirds.column form.form-horizontal .actions, .form-horizontal .control-group.indent {
     margin-left:0;
   }
   .two-thirds.column form.form-horizontal {
