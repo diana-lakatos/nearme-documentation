@@ -97,7 +97,8 @@
 
     .location {
       input#search {
-        width: 290px;
+        width: 100%;
+        box-sizing: border-box;
       }
     }
 
@@ -112,16 +113,11 @@
 
     .availability-date-start, .availability-date-end {
       input {
-        width: 80px;
+        width:100%;
       }
     }
 
-    .amenities {
-      padding-top: 14px;
-    }
-
     .availability-date-start, .availability-date-end {
-      width: 130px;
       position: relative;
 
       .date-icon {
@@ -142,11 +138,10 @@
 
       input {
         padding-left: 40px;
-        width: 80px;
+        width:100%;
+        box-sizing: border-box;
       }
     }
-
-
   }
 }
 
@@ -171,9 +166,17 @@
       width:320px;
     }
 
-    &.search_results input#search {
-      padding-left: 35px;
-      width: 300px;
+    &.search_results {
+      input#search {
+        padding-left: 35px;
+        width: 300px;
+      }
+      .slider { 
+        width:80px; 
+      }
+      .multiselect  {
+        width:130px;
+      }
     } 
   }
 }
@@ -182,11 +185,20 @@
  #listing_search {
     &.home_search input#search {
       width:100%;
-      box-sizing: border-box; } }
+      box-sizing: border-box; }
+   &.search_results {
+    .availability-quantity, .price {
+      margin: 20px 0; }
+    .multiselect { 
+        float:left;
+        width:200px;
+        margin-left:10px }
+    .five.columns.amenities {
+      margin:20px 0; }  } }
 
   .associations.six.columns.omega.alpha,
   .price-range.six.columns.omega { 
-    margin-top:20px }
+    margin:20px 0; }
 
    #listing_search .btn, #listing_search form input[type="submit"], form #listing_search input[type="submit"] {
     width:100%;
@@ -199,7 +211,4 @@
       font-size:90%;
     }
     .slider {
-      width: 100px; }
-    .amenities, .associations{
-      display:none;
-    } } }
+      width: 100px; } } }

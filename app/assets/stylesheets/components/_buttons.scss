@@ -4,8 +4,8 @@
   text-transform: uppercase;
   text-decoration: none;
   color: #fff;
-  text-shadow: 0 -1px rgba(0,0,0,0.3);
   padding: 0 10px;
+  -webkit-transition: background .1s ease-in;
 
   .icon {
     vertical-align: middle;
@@ -42,16 +42,9 @@
 
   &.btn-blue {
     background: #249fe3;
-    @include background(linear-gradient(top center, #249fe3, #2091d1));
     &:hover {
-      @include background(linear-gradient(top center, darken(#249fe3, 2%), darken(#2091d1, 2%)));
+      background: darken(#249fe3, 15%);
     }
-
-    @include box-shadow(
-      inset rgba(255,255,255,0.1) 0 -4px 0 0, // bottom glow
-      inset #117db9 0 -3px 0 0, // dark part
-      rgba(0,0,0,0.25) 0 1px 6px 0 // shadow
-    );
 
     &:active {
       background: #2091d1;
@@ -66,28 +59,14 @@
 
   &.btn-green {
     background: #9cbf3b;
-    @include background(linear-gradient(top center, #9cbf3b, #89a834));
     &:hover {
-      background: darken(#9cbf3b, 2%);
-      @include background(linear-gradient(top center, darken(#9cbf3b, 2%), darken(#89a834, 2%)));
+      background: darken(#9cbf3b, 15%);
     }
 
     &:active {
       background: #89a834;
       @include background(linear-gradient(top center, #89a834, #9cbf3b));
-
-      @include box-shadow(
-        inset rgba(255,255,255,0.1) 0 -4px 0, // bottom glow
-       // inset #628109 0 -3px 0 0, // dark part
-        rgba(0,0,0,0.25) 0 1px 6px 0 // shadow
-      );
     }
-
-    @include box-shadow(
-      inset rgba(255,255,255,0.1) 0 -4px 0, // bottom glow
-      inset #628109 0 -3px 0 0, // dark part
-      rgba(0,0,0,0.25) 0 1px 6px 0 // shadow
-    );
   }
 }
 

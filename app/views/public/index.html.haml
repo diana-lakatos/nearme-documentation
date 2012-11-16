@@ -29,32 +29,6 @@
                 .slider
                 .value
                   $0 - $300+/day
-            .row
-              .five.columns.amenities.alpha
-                %label Amenities
-                .multiselect
-                  .collapsed None selected
-                  .expanded{ :style => "display: none" }
-                    .summary
-                      None selected
-                    .items
-                      - Amenity.all.each do |amenity|
-                        .item
-                          = check_box_tag "amenities[]", amenity.id, search_amenities.include?(amenity.id), :id => "amenities_#{amenity.id}"
-                          = label_tag "amenities_#{amenity.id}", amenity.name
-              .associations.six.columns.omega.alpha
-                %label Associations
-                .multiselect
-                  .collapsed None selected
-                  .expanded{ :style => "display: none" }
-                    .summary
-                      None selected
-                    .items
-                      - Organization.all.each do |organization|
-                        .item
-                          = check_box_tag "organizations[]", organization.id, search_organizations.include?(organization.id), :id => "organization_#{organization.id}"
-                          = label_tag "organization_#{organization.id}", organization.name
-
           .clearfix
           #suggest_location{:style => "display: none"}
 
