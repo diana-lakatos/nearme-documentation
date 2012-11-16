@@ -18,7 +18,7 @@ Feature: A user can book at a space
           | listing      | date    | quantity |
           | the listing | Monday  | 1        |
           | the listing | Tuesday | 1        |
-      And the user should have the listing reserved for 'Monday'
+     Then the user should have the listing reserved for 'Monday'
       And the user should have the listing reserved for 'Tuesday'
 
 
