@@ -7,7 +7,6 @@ Feature: A user can book a desk
     Given a listing exists with quantity: 10
       And a user exists
 
-  @wip
   @javascript
   Scenario: A logged in user can book a desk
     Given I am logged in as the user

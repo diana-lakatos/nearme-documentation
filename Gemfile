@@ -34,6 +34,7 @@ gem "coffee-rails"
 
 gem 'jquery-rails'
 gem 'sass-rails'
+gem 'chronic'
 
 group :staging, :production do
   gem 'flying-sphinx', '0.7.0'
