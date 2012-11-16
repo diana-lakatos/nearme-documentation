@@ -3,11 +3,11 @@ When /^I choose to book space for:$/ do |table|
 
   added_dates = []
   table.hashes.each do |row|
-    date = Chronic.parse(row['date']).to_date
+    date = Chronic.parse(row['Date']).to_date
     date_class = "d-#{date.strftime('%Y-%m-%d')}"
-    qty = row['quantity'].to_i
+    qty = row['Quantity'].to_i
     qty = 1 if qty < 1
-    listing = model!(row['listing'])
+    listing = model!(row['Listing'])
 
     # Add the day to the seletion
     unless added_dates.include?(date)
@@ -34,10 +34,10 @@ Given /^random test$/ do
   raise model!('the user').inspect
 end
 
-When /^the user should have(?: ([0-9]+) of)? the listing reserved for '(.+)'$/ do |qty, date|
-  user = model!('the user')
+When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved for '(.+)'$/ do |user, qty, listing, date|
+  user = model!(user)
   qty = qty ? qty.to_i : 1
-  listing = model!('the listing')
+  listing = model!(listing)
   date = Chronic.parse(date).to_date
   assert listing.reservations.any? { |reservation|
     reservation.owner == user && reservation.periods.any? { |p| p.date == date && p.quantity == qty }
