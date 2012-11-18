@@ -74,7 +74,7 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'minitest'
-  gem 'mocha'
+  gem 'mocha', :require => "mocha/setup"
   gem 'pickle'
   gem 'simplecov', :require => false
   gem 'timecop'
