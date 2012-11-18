@@ -266,6 +266,7 @@ GEM
     rake (0.9.2.2)
     rash (0.3.2)
       hashie (~> 1.2.0)
+    rdiscount (1.6.8)
     rdoc (3.12)
       json (~> 1.4)
     rest-client (1.6.7)
@@ -406,6 +407,7 @@ DEPENDENCIES
   quiet_assets
   rails (= 3.2.5)
   rails-erd
+  rdiscount
   ruby-debug19
   sass
   sass-rails
