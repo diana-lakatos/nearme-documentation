@@ -26,7 +26,7 @@ module SearchHelper
   end
 
   def search_price_max
-    params[:price].present? && params[:price][:max] || Listing::SearchParams::MAX_SEARCHABLE_PRICE
+    params[:price].present? && params[:price][:max] || PriceRange::MAX_SEARCHABLE_PRICE
   end
 
 end

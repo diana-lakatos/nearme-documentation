@@ -79,9 +79,9 @@ Then /^the JSON should contain that listing$/ do
   results_listings.size.should == 1
   result_listing = results_listings.first
 
-  result_listing["name"].should         == listing.name
-  result_listing["company_name"].should == listing.company.name
-  result_listing["address"].should      == listing.address
+  result_listing[:name].should         == listing.name
+  result_listing[:company_name].should == listing.company.name
+  result_listing[:address].should      == listing.address
 end
 
 Then /^the response does (not )?include the listing in (.*)$/ do |negative, city|

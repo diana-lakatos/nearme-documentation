@@ -22,22 +22,22 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         @listings[1].price_cents    = 900.00 * 100
         @listings.last.price_cents  = 123.90 * 100
 
-        @search_params = {
-          boundingbox:   { lat: -41.293507, lon: 174.776279 },
+        @search_attrs = {
+          boundingbox:   { start: { lat: -41.293507, lon: 174.776279 }, end: { lat: -42, lon: 175 } },
           amenities:     [ @wifi.id, @drinks_fridge.id ],
           organizations: [ @org.id ],
           price:         { min: 100, max: 900 }
         }
+        @search_params = Listing::Search::Params::Api.new(@search_attrs)
       end
 
       context "overall scoring" do
         should "correctly score and weight all components " do
-
           Listing::Scorer.score(@listings, @search_params)
 
-          assert_equal 28.33, @listings.first.score
-          assert_equal 60.0,  @listings.last.score
-          assert_equal 51.67, @listings[1].score
+          assert_equal 38.33, @listings.first.score
+          assert_equal 70.0,  @listings.last.score
+          assert_equal 46.67, @listings[1].score
         end
       end
 
@@ -45,22 +45,34 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         should "return strict_match as true for listings which fall exactly within the criteria" do
           @listings.first.location.amenities     = [ @wifi, @drinks_fridge ]
           @listings.first.location.organizations = [ @org ]
+          params = Listing::Search::Params::Api.new(@search_attrs.merge(price: { min: 100, max: 250 }))
 
-          Listing::Scorer.score(@listings, @search_params.merge(price: { min: 100, max: 250 }))
+          Listing::Scorer.score(@listings, params)
 
           assert_equal [true, false, false], @listings.map(&:strict_match)
         end
       end
     end
 
-    context "scoring based on distance from bounding box center" do
+    context "scoring based on distance from search area center" do
       should "score correctly" do
-        # lat lon is for Wellington, New Zealand
-        # http://goo.gl/maps/nkFQb
-        @scorer.send(:score_boundingbox, lat: -41.293507, lon: 174.776279)
+        search_area = Listing::Search::Area.new(Coordinate.new(-41.293507, 174.776279), 5.0)
+        @scorer.score_search_area search_area
 
-        assert_equal 33.33, @scorer.scores[@listings.first][:boundingbox]
-        assert_equal 100.0, @scorer.scores[@listings.last][:boundingbox]
+        assert_equal 33.33, @scorer.scores[@listings.first][:search_area]
+        assert_equal 100.0, @scorer.scores[@listings.last][:search_area]
+      end
+    end
+
+    context "scoring based upon geospatial search" do
+      should "return matched listings with scores based on parameters" do
+        @listings.each_with_index do |l, i|
+          l.sphinx_attributes = { "@geodist" => i * 1_000 }
+        end
+        @scorer.score_search_area stub()
+
+        assert_equal 33.33, @scorer.scores[@listings.first][:search_area]
+        assert_equal 100.0, @scorer.scores[@listings.last][:search_area]
       end
     end
 
@@ -92,16 +104,8 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         assert_equal 66.67, @scorer.scores[@listings.last][:amenities]
       end
 
-      should "score correctly if amenity ids are specified as strings" do
-        @scorer.send(:score_amenities, [@wifi.id.to_s, @pool_table.id.to_s])
-
-        assert_equal 33.33, @scorer.scores[@listings.first][:amenities]
-        assert_equal 33.33, @scorer.scores[@listings.last][:amenities]
-        assert_equal 66.67, @scorer.scores[@listings[1]][:amenities]
-      end
-
       should "return a strict_match if all requested amenities are available" do
-        @scorer.send(:score_amenities, [@wifi.id, @drinks_fridge.id])
+        @scorer.score_amenities [@wifi.id, @drinks_fridge.id]
 
         assert @scorer.strict_matches[@listings.first][:amenities]
         assert !@scorer.strict_matches[@listings[1]][:amenities]
@@ -125,14 +129,6 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         assert_equal 66.67, @scorer.scores[@listings.last][:organizations]
       end
 
-      should "score correctly if organization ids are specified as strings" do
-        @scorer.send(:score_organizations, [@org1.id.to_s])
-
-        assert_equal 33.33, @scorer.scores[@listings.first][:organizations]
-        assert_equal 66.67, @scorer.scores[@listings[1]][:organizations]
-        assert_equal 66.67, @scorer.scores[@listings.last][:organizations]
-      end
-
       should "return a strict_match if the listing is a member of all requested organizations" do
         @scorer.send(:score_organizations, [@org1.id])
 
@@ -150,15 +146,7 @@ class Listing::ScorerTest < ActiveSupport::TestCase
       end
 
       should "score correctly" do
-        @scorer.send(:score_price, min: 150, max: 300)
-
-        assert_equal 33.33, @scorer.scores[@listings.first][:price]
-        assert_equal 66.67, @scorer.scores[@listings.last][:price]
-        assert_equal 100.0, @scorer.scores[@listings[1]][:price]
-      end
-
-      should "score correctly when prices are specified as strings" do
-        @scorer.send(:score_price, min: "150", max: "300")
+        @scorer.score_price PriceRange.new(150, 300)
 
         assert_equal 33.33, @scorer.scores[@listings.first][:price]
         assert_equal 66.67, @scorer.scores[@listings.last][:price]
@@ -170,14 +158,14 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         @listings.first.price_cents = 150 * 100
         @listings.last.price_cents  = 50 * 100
 
-        @scorer.send(:score_price, min: 100, max: 100)
+        @scorer.score_price PriceRange.new(100, 100)
 
         assert_equal 33.33, @scorer.scores[@listings.first][:price]
         assert_equal 33.33, @scorer.scores[@listings.last][:price]
       end
 
       should "return a strict match if the listing price is between the minimum and maximum range" do
-        @scorer.send(:score_price, min: 150, max: 250)
+        @scorer.score_price PriceRange.new(150, 250)
 
         assert @scorer.strict_matches[@listings.first][:price]
         assert !@scorer.strict_matches[@listings[1]][:price]
@@ -200,21 +188,7 @@ class Listing::ScorerTest < ActiveSupport::TestCase
       end
 
       should "score correctly" do
-        @scorer.send(:score_availability, dates: { start: @start_date, end: @end_date }, quantity: { min: 1 })
-
-        assert_equal 33.33, @scorer.scores[@listings.first][:availability]
-        assert_equal 33.33, @scorer.scores[@listings.last][:availability]
-      end
-
-      should "score correctly when dates are strings" do
-        @scorer.send(:score_availability, dates: { start: @start_date.to_s, end: @end_date.to_s }, quantity: { min: 1 })
-
-        assert_equal 33.33, @scorer.scores[@listings.first][:availability]
-        assert_equal 33.33, @scorer.scores[@listings.last][:availability]
-      end
-
-      should "score correctly if minimum quantity is specified as a string" do
-        @scorer.send(:score_availability, dates: { start: @start_date, end: @end_date }, quantity: { min: "1" })
+        @scorer.score_availability Listing::Search::Params::Availability.new(dates: { start: @start_date, end: @end_date }, quantity: { min: 1 })
 
         assert_equal 33.33, @scorer.scores[@listings.first][:availability]
         assert_equal 33.33, @scorer.scores[@listings.last][:availability]
@@ -224,7 +198,7 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         2.times { create_reservation_for(@start_date, @end_date, @listings[1]) }
         assert_equal 0, @listings[1].availability_for(@start_date)
 
-        @scorer.send(:score_availability, dates: { start: @start_date, end: @end_date }, quantity: { min: 2 })
+        @scorer.score_availability Listing::Search::Params::Availability.new(dates: { start: @start_date, end: @end_date }, quantity: { min: 2 })
 
         assert !@scorer.strict_matches[@listings.first][:availability] # only 1 desk available
         assert !@scorer.strict_matches[@listings[1]][:availability]    # no desks available

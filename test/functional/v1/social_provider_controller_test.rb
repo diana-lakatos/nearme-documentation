@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'mocha'
 
 class V1::SocialProviderControllerTest < ActionController::TestCase
 
