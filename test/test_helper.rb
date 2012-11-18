@@ -42,3 +42,4 @@ class ActiveSupport::TestCase
   end
 
 end
+require "mocha/setup"

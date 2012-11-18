@@ -57,6 +57,7 @@ end
 group :development, :test do
   gem 'mail_view'
   gem 'shoulda'
+  gem 'shoulda-let', :require => 'shoulda/let'
   gem 'ffaker'
   gem 'shoulda'
   gem 'factory_girl_rails', '>=3.0.0'
@@ -74,7 +75,7 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'minitest'
-  gem 'mocha', :require => "mocha/setup"
+  gem 'mocha', :require => false
   gem 'pickle'
   gem 'simplecov', :require => false
   gem 'timecop'

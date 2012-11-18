@@ -25,6 +25,8 @@ class Listing
     end
 
     def score(search_parameters)
+      @listings.reject! { |l| l.location.nil? }
+
       WEIGHTINGS.keys.each do |component|
         if params = search_parameters.send(component)
           send("score_#{component}", params)
@@ -55,17 +57,13 @@ class Listing
     end
 
     def score_amenities(amenity_ids = [])
-      @listings.reject! { |l| l.location.nil? }
       ranked_listings       = @listings.rank_by { |l| (amenity_ids - l.location.amenity_ids).size }
 
       add_strict_matches(:amenities) { |l| (amenity_ids - l.location.amenity_ids).size == 0 }
       add_scores(ranked_listings, :amenities)
     end
 
-    # this feels like you could DRY it with the above - but seems to add complexity for
-    # not a lot of benefit at the monement
     def score_organizations(organization_ids = [])
-      organization_ids.map!(&:to_i)
       ranked_listings = @listings.rank_by { |l| (organization_ids - l.location.organization_ids).size }
 
       add_strict_matches(:organizations) { |l| (organization_ids - l.location.organization_ids).size == 0 }
