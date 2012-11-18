@@ -31,13 +31,6 @@ class Listing
         group_by :latitude, :longitude, :require_organization_membership
       end
 
-      sphinx_scope(:visible_for) do |user|
-        orgs = (user) ? user.organization_ids : []
-        orgs << 0
-
-        { with: { organization_ids: orgs, deleted_at: 0 } }
-      end
-
     end
 
     module ClassMethods
@@ -51,12 +44,7 @@ class Listing
       end
 
       def find_by_search_params(params)
-        if params.query
-          listings = search(params.query, params.to_scope).to_a
-        else
-          listings = search(params.to_scope).to_a
-        end
-
+        listings = (params.query ? search(params.query, params.to_scope) : search(params.to_scope)).to_a
 
         Scorer.score(listings, params)
 

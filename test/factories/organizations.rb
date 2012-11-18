@@ -14,7 +14,7 @@ FactoryGirl.define do
       name 'NRA'
     end
     factory :organization_with_logo do
-      logo { File.open(File.join(Rails.root, 'spec', 'assets', 'foobear.jpeg')) }
+      logo { File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')) }
     end
   end
 end
