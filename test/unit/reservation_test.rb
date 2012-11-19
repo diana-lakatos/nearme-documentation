@@ -64,7 +64,7 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should "not reset total cost when saving an existing reservation" do
-        dates              = [Date.today]
+        dates              = [1.week.from_now.monday]
         quantity           =  2
         assert reservation = @listing.reserve!("test@test.com", @user, dates, quantity)
 

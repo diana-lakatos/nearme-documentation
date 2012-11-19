@@ -1,7 +1,6 @@
 
 Given (/^I am logged in as #{capture_model}$/) do |user_instance|
-  user = model!(user_instance)
-  login user
+  login model!(user_instance)
 end
 
 When /^I log in as a user who is a member of that organization$/ do
@@ -11,16 +10,6 @@ end
 
 Then /^I should be logged out$/ do
   Then %{I should see "Log In"}
-end
-
-Given /^I search for "([^"]*)"$/ do |text|
-  if text =~ /adelaide/
-    WebMock.stub_request(:get, %r|.*maps\.google\.com.*| ).to_return({:body => File.read(File.join(Rails.root, *%w[features fixtures gmaps adelaide.json]))})
-  end
-  steps %{
-    And I fill in "q" with "#{text}"
-    And I follow "Search"
-  }
 end
 
 When(/^I log in as #{capture_model} with Twitter$/) do |user_instance|

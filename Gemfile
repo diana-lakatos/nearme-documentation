@@ -31,6 +31,7 @@ gem 'will_paginate'
 gem 'thinking-sphinx'
 gem "compass-rails"
 gem "coffee-rails"
+gem "rdiscount"
 
 gem 'jquery-rails'
 gem 'sass-rails'

@@ -1,0 +1,22 @@
+.container
+  %footer
+    .inner.row
+      .sixteen.columns
+        %ul
+          %li= link_to "Home", root_url
+          %li= link_to "Browse Spaces", listings_url
+          - if user_signed_in?
+            %li= link_to "Dashboard", dashboard_path
+            %li= link_to "Account", edit_user_registration_path
+            %li= link_to "Logout", destroy_user_session_path, :method => :delete
+          - else
+            %li= link_to "Sign Up", new_user_registration_url
+            %li= link_to "Log In", new_user_session_url
+
+          %li= link_to "List Your Space", new_space_wizard_url
+          %li= link_to "Blog", "http://blog.desksnear.me/"
+          %li= link_to "Privacy", privacy_url
+          %li.last= link_to "Support", "http://support.desksnear.me"
+
+      .sixteen.columns.copyright
+        %p Copyright &copy; 2012 Desks Near Me Corp &bull; 1.888.998.DESK

@@ -47,22 +47,34 @@ FactoryGirl.define do
     end
 
     factory :listing_in_auckland do
-      name "Listing in Auckland"
+      sequence(:name) do |n|
+        "Listing in Auckland #{n}"
+      end
+
       association(:location, factory: :location_in_auckland)
     end
 
     factory :listing_in_cleveland do
-      name "Listing in Cleveland"
+      sequence(:name) do |n|
+        "Listing in Cleveland #{n}"
+      end
+
       association(:location, factory: :location_in_cleveland)
     end
 
     factory :listing_in_san_francisco do
-      name "Listing in San Francisco"
+      sequence(:name) do |n|
+        "Listing in San Francisco #{n}"
+      end
+
       association(:location, factory: :location_in_san_francisco)
     end
 
     factory :listing_in_wellington do
-      name "Listing in Wellington"
+      sequence(:name) do |n|
+        "Listing in Wellington #{n}"
+      end
+
       association(:location, factory: :location_in_wellington)
     end
 

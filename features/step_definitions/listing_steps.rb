@@ -1,13 +1,18 @@
 # coding: utf-8
-Given /^a listing in (.*) exists$/ do |city|
-  create_listing_in(city)
+Given /^a listing in (.*) exists( with that amenity)?$/ do |city, amenity|
+  listing = create_listing_in(city)
+  listing.location.amenities << model!("amenity") if amenity
 end
 
-Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and Wi\-Fi)?$/ do |city, dollars, cents, wifi|
+Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and that amenity)?$/ do |city, dollars, cents, amenity|
   listing = create_listing_in(city)
 
   listing.price_cents = (dollars.to_i * 100) + cents.to_i
-  listing.location.amenities << @wifi if wifi
+  listing.location.amenities << model!("amenity") if amenity
+end
+
+Given /^a listing in (.*) exists for a location with a private organization$/ do |city|
+  @listing = FactoryGirl.create(:private_listing)
 end
 
 Given /^a listing in (.*) exists which is (NOT )?a member of that organization$/ do |city, not_member|
@@ -35,7 +40,7 @@ Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) 
   (Date.today...num_days.to_i.days.from_now.to_date).all? { |d| listing.availability_for(d) >= desks.to_i }.should == true
 end
 
-Given /^a listing(?: with name "([^"]+)")? exists for a location with a private organization?$/ do |name|
+Given /^a listing(?: with name "([^"]+)")? exists for a location( in Auckland)? with a private organization?$/ do |name, has_city|
   location = FactoryGirl.create(:private_location)
 
   listing_attrs = { location: location }
@@ -102,7 +107,7 @@ Then /^I (do not )?see that listing listed$/ do |negative|
   end
 end
 
-Then /^I (do not )?see a search result for the (.*) listing$/ do |negative, city|
+Then /^I (do not )?see a search result for the ([^\$].*) listing$/ do |negative, city|
   listing = instance_variable_get("@listing_in_#{city.downcase.gsub(' ', '_')}")
   if negative
     page.should have_no_content(listing.name)

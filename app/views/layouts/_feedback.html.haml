@@ -1,19 +1,2 @@
-:javascript
-  var uservoiceOptions = {
-    key: 'desksnearme',
-    host: 'desksnearme.uservoice.com', 
-    forum: '84445',
-    alignment: 'left',
-    background_color:'#000000', 
-    text_color: 'white',
-    hover_color: '#4d4d4d',
-    lang: 'en',
-    showTab: true
-  };
-  function _loadUserVoice() {
-    var s = document.createElement('script');
-    s.src = ("https:" == document.location.protocol ? "https://" : "http://") + "uservoice.com/javascripts/widgets/tab.js";
-    document.getElementsByTagName('head')[0].appendChild(s);
-  }
-  _loadSuper = window.onload;
-  window.onload = (typeof window.onload != 'function') ? _loadUserVoice : function() { _loadSuper(); _loadUserVoice(); };
+.support-tab
+  = link_to image_tag('layout/support-tab.png'), "http://support.desksnear.me"
