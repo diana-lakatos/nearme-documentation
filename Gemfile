@@ -46,6 +46,7 @@ group :development do
   gem 'sqlite3'
   gem "rails-erd"
   gem 'quiet_assets'
+  gem 'mail_view', :git => 'https://github.com/37signals/mail_view.git'
 end
 
 group :development, :test, :staging do

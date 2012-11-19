@@ -1,5 +1,11 @@
 DesksnearMe::Application.routes.draw do
 
+  if Rails.env.development?
+    mount ReservationMailer::Preview => 'mail_view/reservations'
+    mount InquiryMailer::Preview => 'mail_view/inquiries'
+    mount ListingMailer::Preview => 'mail_view/listings'
+  end
+
   resources :companies
   resources :locations do
     resources :listings, :controller => 'locations/listings'
@@ -94,4 +100,5 @@ DesksnearMe::Application.routes.draw do
     get 'organizations', to: 'organizations#index'
   end
   match "/support" => redirect("https://desksnearme.desk.com")
+
 end
