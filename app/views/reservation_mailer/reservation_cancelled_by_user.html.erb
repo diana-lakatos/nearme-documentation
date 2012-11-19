@@ -1,7 +1,7 @@
 <%= render "/shared/mailers/header" %>
-Dear <%= @user %>,
+<p>Dear <%= @user %>,</p>
 
-<%= @reservation.owner %> has cancelled their reservation at <%= @listing %>
-on <%= l(@reservation.date, :format => :long) %> that they made earlier.
+<p><%= @reservation.owner %> has cancelled their reservation at <%= @listing %>
+on <%= l(@reservation.date, :format => :long) %> that they made earlier.</p>
 
 <%= render "/shared/mailers/footer" %>

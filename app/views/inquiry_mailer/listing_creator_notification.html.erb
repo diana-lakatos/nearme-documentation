@@ -1,13 +1,13 @@
 <%= render "/shared/mailers/header" %>
-Hi <%= @inquiry.listing.creator.name %>,
+<p>Hi <%= @inquiry.listing.creator.name %>,</p>
 
-We've received a new inquiry from <%= @inquiry.inquiring_user.name %>. They've asked:
+<p>We've received a new inquiry from <%= @inquiry.inquiring_user.name %>. They've asked:</p>
 
-"<%= @inquiry.message %>"
+<p>"<%= @inquiry.message %>"</p>
 
-You can answer their question by replying to this email.
+<p>You can answer their question by replying to this email.</p>
 
-Sweet!
+<p>Sweet!<br>
 
- - The Desks Near Me Crew
+ - The Desks Near Me Crew</p>
  <%= render "/shared/mailers/footer" %>

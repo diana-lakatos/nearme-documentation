@@ -1,18 +1,18 @@
 <%= render "/shared/mailers/header" %>
-Dear <%= @user %>,
+<p>Dear <%= @user %>,</p>
 
-<%= @reservation.owner %> has made a reservation for <%= @listing %> on <%= l(@reservation.date, :format => :long) %>.
-<%- if @reservation.comment -%>
+<p><%= @reservation.owner %> has made a reservation for <%= @listing %> on <%= l(@reservation.date, :format => :long) %>.
+<%- if @reservation.comment -%></p>
 
-They said:
+<p>They said:</p>
 
-"<%= @reservation.comment %>"
-<%- end -%>
+<p>"<%= @reservation.comment %>"
+<%- end -%></p>
 
-They have been notified that reservation confirmation is required.
+<p>They have been notified that reservation confirmation is required.</p>
 
-Please confirm or decline their reservation by logging into the site. Just click the link below:
+<p>Please confirm or decline their reservation by logging into the site. Just click the link below:</p>
 
-<%= @url %>
+<p><%= @url %></p>
 
 <%= render "/shared/mailers/footer" %>

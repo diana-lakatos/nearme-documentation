@@ -1,9 +1,9 @@
 <%= render "/shared/mailers/header" %>
-Dear <%= @user %>,
+<p>Dear <%= @user %>,</p>
 
-Unfortunately, your reservation at <%= @listing %> on <%= l(@reservation.date, :format => :long) %>
-has been rejected.
+<p>Unfortunately, your reservation at <%= @listing %> on <%= l(@reservation.date, :format => :long) %>
+has been rejected.</p>
 
-I'm sure it's not personal -- they were probably just too busy that day :)
+<p>I'm sure it's not personal -- they were probably just too busy that day :)</p>
 
 <%= render "/shared/mailers/footer" %>

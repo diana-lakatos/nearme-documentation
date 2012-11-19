@@ -1,12 +1,12 @@
 <%= render "/shared/mailers/header" %>
-Hey there <%= @name %>,
-<br>
-<%= @sharer.name %> has shared a listing with you on Desks Near Me! Click the link below to check it out!
-<br>
-<%= listing_url(@listing) %>
-<br>
+<p>Hey there <%= @name %>,</p>
+
+<p><%= @sharer.name %> has shared a listing with you on Desks Near Me! Click the link below to check it out!</p>
+
+<p><%= listing_url(@listing) %></p>
+
 <%- if @message %>
-  They also wanted to say:
-  <%= @message %>
+  <p>They also wanted to say:</p>
+  <p><%= @message %></p>
 <%- end %>
 <%= render "/shared/mailers/footer" %>

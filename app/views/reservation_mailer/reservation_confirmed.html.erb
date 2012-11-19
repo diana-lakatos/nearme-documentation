@@ -1,6 +1,6 @@
 <%= render "/shared/mailers/header" %>
-Dear <%= @user %>,
+<p>Dear <%= @user %>,</p>
 
-Your reservation at <%= @listing %> on <%= l(@reservation.date, :format => :long) %> has been confirmed.
+<p>Your reservation at <%= @listing %> on <%= l(@reservation.date, :format => :long) %> has been confirmed.</p>
 
 <%= render "/shared/mailers/footer" %>

@@ -1,9 +1,9 @@
 <%= render "/shared/mailers/header" %>
-Dear <%= @user %>,
+<p>Dear <%= @user %>,</p>
 
-Unfortunately, your reservation at <%= @listing %> on <%= l(@reservation.date, :format => :long) %>
-has been cancelled. This reservation was previously confirmed, but the plans have changed.
+<p>Unfortunately, your reservation at <%= @listing %> on <%= l(@reservation.date, :format => :long) %>
+has been cancelled. This reservation was previously confirmed, but the plans have changed.</p>
 
-Good luck finding another listing or reservation for this one on another day :)
+<p>Good luck finding another listing or reservation for this one on another day :)</p>
 
 <%= render "/shared/mailers/footer" %>
