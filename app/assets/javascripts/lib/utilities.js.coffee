@@ -7,7 +7,13 @@ DNM.util =
       "d-#{@toId(date)}"
 
     toId: (date) ->
-      "#{date.getFullYear()}-#{date.getMonth()+1}-#{date.getDate()}"
+      f = (i) ->
+        if i < 10
+          "0#{i}"
+        else
+          i
+
+      "#{date.getFullYear()}-#{f(date.getMonth()+1)}-#{f(date.getDate())}"
 
     idToDate: (dateId) ->
       return dateId if dateId instanceof Date

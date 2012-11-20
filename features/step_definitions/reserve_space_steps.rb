@@ -55,3 +55,16 @@ Given /^bookings for #{capture_model} do( not)? need to be confirmed$/ do |listi
   listing.confirm_reservations = require_confirmation.present?
   listing.save!
 end
+
+Then /^the space owner and booker should be notified$/ do
+  nth = "1st"
+  latest_reservation = Reservation.last
+  steps %Q{
+    Then the #{nth} email should be delivered to the listing's owner
+    And the #{nth} email should have subject: "[DesksNear.Me] A new reservation requires your confirmation"
+    And the #{nth} email should contain the listing's owner's name
+    And the #{nth} email should contain "#{latest_reservation.owner.name}"
+    And the #{nth} email should contain "made a reservation"
+    And the #{nth} email should contain "#{latest_reservation.date.strftime('%B %-e')}
+  }
+end
