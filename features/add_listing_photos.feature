@@ -9,7 +9,7 @@ Feature: A user can add photos to a listing
 
   Scenario: Adding photos to a work place
     Given I am logged in as the user
-      And I am on the listing's page
+      And I go to the the dashboard
      When I follow "Manage Photos"
      Then I should see 0 listing photos
      When I attach the photo "boss's desk.jpg" to "New Photo"
@@ -28,12 +28,11 @@ Feature: A user can add photos to a listing
 
   Scenario: Deleting photos
    Given I am logged in as the user
-     And I am on the listing's page
     When I add the following photos to the listing:
       | File             | Caption                       |
       | boss's desk.jpg  | The Boss' Desk                 |
       | intern chair.jpg | This is where the intern works |
-    And I go to the listing's page
+    And I go to the dashboard
     And I follow "Manage Photos"
     Then I should see 2 listing photos
     When I press "Delete" within the first photo box

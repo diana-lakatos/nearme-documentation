@@ -30,6 +30,9 @@
             %td.actions
               = link_to [ :edit, listing ] do
                 Edit Listing #{image_tag "navigation.png"}
+              &nbsp;
+              = link_to [ listing, :photos ] do
+                Manage Photos #{image_tag "navigation.png"}
   %section#my_reservations.tab
     - if @your_reservations.any?
       = render :partial => "user_reservation_list", :locals => {:reservations => @your_reservations}

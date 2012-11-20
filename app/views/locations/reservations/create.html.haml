@@ -1,0 +1,9 @@
+%h1 Book space at #{@location.name}
+
+%p Your reservation has been made!
+
+%p.text-center
+  = link_to "Continue", "", :class => 'btn btn-medium btn-green close'
+
+:javascript
+  Modal.reloadOnClose(#{raw dashboard_url(:anchor => 'my_reservations').to_json})

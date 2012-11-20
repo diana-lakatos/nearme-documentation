@@ -45,8 +45,8 @@ Feature: Location Owner Creates/Edits Listing
 
   Scenario: A listing owner can edit a listing
     Given a listing exists with creator: the user
-    When I go to the listing's page
-    And I follow "Edit"
+    When I go to the dashboard
+    And I follow "Edit Listing"
     And I should see "Edit a listing"
     And I fill in "Name" with "Joe's Codin' Garage"
     And I press "Update Listing"

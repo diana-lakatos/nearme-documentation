@@ -36,12 +36,4 @@ Feature: User Cancels Reservation
       | Joe's Codin Garage on October 21, 2010 (unconfirmed) |
      And I should not see "WoughThorks on October 19, 2010"
 
-  Scenario: A user can book a desk for a day on which they made a reservation but it was cancelled
-    Given I am on the dashboard page
-     When I cancel the reservation for "19th October 2010"
-     When I go to listing: "Joe's Codin Garage"'s page
-      And I follow the reservation link for "19th October 2010"
-      And I press "Reserve"
-     Then I should be on listing "Joe's Codin Garage"'s page
-      And I should see "Reservation Successful."
 

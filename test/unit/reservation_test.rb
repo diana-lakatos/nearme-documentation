@@ -1,10 +1,6 @@
 require 'test_helper'
 
 class ReservationTest < ActiveSupport::TestCase
-  test "it exists" do
-    assert Reservation
-  end
-
   test "it has a listing" do
     @reservation = Reservation.new
     @reservation.listing = Listing.new
@@ -28,13 +24,14 @@ class ReservationTest < ActiveSupport::TestCase
   context "with serialization" do
     should "work even if the total amount is nil" do
       reservation = Reservation.new
+      reservation.listing = FactoryGirl.create(:listing)
       reservation.total_amount_cents = nil
 
       expected = { :reservation =>
         {
           :id         => nil,
           :user_id    => nil,
-          :listing_id => nil,
+          :listing_id => reservation.listing.id,
           :state      => "pending",
           :cancelable => true,
           :total_cost => { :amount=>0.0, :label=>"$0.00", :currency_code=>"USD" },

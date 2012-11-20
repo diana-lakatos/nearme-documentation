@@ -120,7 +120,6 @@ Then /^I see the listing details$/ do
   page.should have_content(listing.address)
   page.should have_content(listing.name)
   page.should have_content(listing.description.strip)
-  page.should have_content(listing.url)
 end
 
 Then /^the listing (daily |weekly |monthly )?price is shown as (.*)$/ do |period, amount|

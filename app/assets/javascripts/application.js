@@ -14,8 +14,14 @@
 //= require ./vendor/rails
 //= require ./vendor/modernizr.js
 //= require ./vendor/jquery.cookie.js
+//= require ./vendor/jquery.popover-1.1.2.js
+//= require ./vendor/mustache.js
+//= require ./vendor/underscore.js
 //
 //= require_self
+//
+// Helper modules, etc.
+//= require_tree ./lib
 //
 // Standard components
 //= require_tree ./components
@@ -25,11 +31,28 @@
 
 window.DNM = {
   initialize : function() {
+    this.initializeAjaxCSRF();
     this.initializeComponents();
+    this.initializeModals();
+  },
+
+  initializeModals: function() {
+    Modal.listen();
   },
 
   initializeComponents: function(scope) {
     Multiselect.initialize(scope)
+  },
+
+  initializeAjaxCSRF: function() {
+    $.ajaxSetup({
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(
+          'X-CSRF-Token',
+           $('meta[name="csrf-token"]').attr('content')
+        );
+      }
+    });
   }
 }
 

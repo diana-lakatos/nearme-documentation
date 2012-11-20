@@ -1,0 +1,216 @@
+#space, .space {
+  .bookings {
+
+    .summary {
+      text-align: center;
+      font-size: 16px;
+      strong {
+        font-weight: bold;
+      }
+
+      p {
+        margin-bottom: 0;
+      }
+
+      .btn {
+        margin-left: 12px;
+      }
+    }
+
+    .listing {
+      p {
+        font-size: 12px;
+        line-height: 14px;
+      }
+
+      .images, .description, .book {
+        float: left;
+        width: 295px;
+        margin-left: 20px;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+
+      .images {
+        img {
+          @include border-radius(6px);
+        }
+      }
+
+      .description {
+        h3 {
+          font-size: 16px;
+          margin-bottom: 0;
+        }
+
+        .price {
+          font-size: 22px;
+          font-weight: bold;
+
+          .period {
+            font-size: 16px;
+            font-weight: normal;
+          }
+        }
+
+      }
+
+      .book {
+        color: #848b8f;
+
+        h3 {
+          font-size: 12px;
+          color: #8e9498;
+          font-weight: bold;
+          text-transform: uppercase;
+          margin-bottom: 0;
+        }
+
+        .booked-days {
+          .booked-day {
+            display: inline-block;
+            @include border-radius(4px);
+            padding: 7px;
+            overflow: hidden;
+            border: 1px solid #bfce94;
+            margin: 0 6px 6px 0;
+            min-width: 48px;
+            color: #89a734;
+            cursor: pointer;
+
+            .date {
+              font-size: 16px;
+              font-weight: bold;
+              display: block;
+
+              sup {
+                vertical-align: top;
+                font-size: 9px;
+              }
+            }
+
+            .month {
+              font-size: 10px;
+              display: block;
+              text-transform: uppercase;
+              line-height: 10px;
+            }
+
+            .count {
+              float: right;
+              border-left: 1px dashed #bfc0c0;
+              color: #bfc0c0;
+              font-weight: bold;
+              font-size: 16px;
+              line-height: 43px;
+              padding: 0 0 0 4px;
+              margin: -7px 0;
+            }
+
+            &.empty {
+              border-color: #bfce94;
+              .count {
+                color: #bfc0c0;
+              }
+            }
+
+            &.selected {
+              border-color: #89a734;
+              .count {
+                color: #91529c;
+              }
+            }
+
+            &.unavailable {
+              border-color: #ee9994;
+              color: #e83d33;
+              .count {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Popover for the booked day
+.booked-day-popover {
+  color: #1e2222;
+  line-height: 14px;
+
+  .date {
+    font-weight: bold;
+
+    sup {
+      font-size: 8px;
+      vertical-align: top;
+      line-height: 8px;
+    }
+  }
+
+  .month {
+    color: #848b8f;
+  }
+
+  .availability {
+    .total, .available {
+      font-weight: bold;
+    }
+
+    .total {
+      color: #848b8f;
+    }
+  }
+
+  label {
+    display: inline-block;
+  }
+
+  input {
+    border: 1px solid #babfc1;
+    background: #fff;
+    outline: none;
+    color: #91529c;
+    font-weight: bold;
+    padding: 4px;
+    width: 30px;
+    font-size: 12px;
+    @include border-radius(4px);
+  }
+}
+
+.space-reservation-modal {
+  // Fix hr's existing modal
+  form {
+    overflow: visible;
+  }
+
+  .summary {
+    overflow: hidden;
+
+    .date, .total-label {
+      float: left;
+      width: 30%;
+    }
+
+    .bookings, .total-amount {
+      float: left;
+      width: 70%;
+    }
+  }
+
+  .total-label, .total-amount {
+    font-weight: bold;
+  }
+
+  p.notice {
+    font-size: 12px;
+    color: #79888e;
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+}

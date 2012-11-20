@@ -1,4 +1,4 @@
-class @SpacePhotosController
+class @Space.PhotosController
 
   constructor: (@container) ->
     @photo = @container.find('.photo')
@@ -70,8 +70,6 @@ class @SpacePhotosController
     }, 'fast')
 
   showPhoto: (listItem) ->
-    console.info listItem.find('img')
-
     @photo.css({
       backgroundImage: "url('#{listItem.find('img').attr('data-url')}')"
     })

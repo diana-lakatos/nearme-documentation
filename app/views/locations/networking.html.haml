@@ -1,0 +1,25 @@
+= render :layout => 'show_layout', :locals => { :tab => :networking } do
+  .one-third.column
+    %h2 Nearby Networking
+    %p Coming soon!
+
+  .one-third.column
+    %h2 My Connections Here
+    %p Coming soon!
+
+  .one-third.column
+    %h2 Latest Activity
+
+    - if @location.feeds.any?
+      %ul.activity-feed
+        - @location.feeds.each do |feed|
+          %li.feed_item{class: feed.activity}
+            = render :partial => "feeds/#{feed.activity}", :locals => { :feed => feed }
+            %small
+              %date{datetime: feed.created_at.xmlschema}
+                = time_ago_in_words(feed.created_at)
+                ago
+    - else
+      %p Nothing has been happening recently. Why don't you book a desk and generate some action!
+
+

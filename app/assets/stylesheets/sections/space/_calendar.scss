@@ -1,0 +1,109 @@
+#space, .space {
+ .calendar {
+   overflow: hidden;
+   padding: 0px;
+
+   .slider-window {
+     margin: 0 45px;
+     overflow: hidden;
+   }
+
+    .prev, .next, li {
+      height: 70px;
+      cursor: pointer;
+
+      &:hover {
+        //@include box-shadow(inset -6px 4px 8px -4px rgba(0,0,0,0.25));
+        background-color: #ecebeb;
+      }
+    }
+
+    .prev, .next {
+      width: 45px;
+    }
+
+    .prev {
+      float: left;
+      background: image-url("sections/listings/calendar-prev.png") center center no-repeat;
+      border-right: 1px solid #d5d6d6;
+    }
+
+    .next {
+      border-left: 1px solid #fff;
+      float: right;
+      background: image-url("sections/listings/calendar-next.png") center center no-repeat;
+    }
+
+    ul {
+      width: 99999px;
+      position: relative;
+
+      li {
+        float: left;
+        width: 60px;
+        border-right: 1px solid #d5d6d6;
+        border-left: 1px solid #fff;
+        position: relative;
+
+        .date, .day {
+          display: block;
+          text-align: center;
+        }
+
+        .date {
+          font-size: 22px;
+          font-weight: bold;
+          margin-bottom: 4px;
+          margin-top: 16px;
+
+          sup {
+            vertical-align: top;
+            font-size: 12px;
+            line-height: 12px;
+          }
+        }
+
+        .day {
+          font-size: 12px;
+          line-height: 12px;
+        }
+
+        .loader {
+          display: none;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: image-url("sections/listings/calendar-loader.gif") center center no-repeat;
+        }
+
+        &.today {
+          background-image: image-url("sections/listings/calendar-today-flag.png");
+          background-position: left 1px;
+          background-repeat: no-repeat;
+        }
+
+        &.weekend {
+          color: #6b7a80;
+        }
+
+        &.selected {
+          color: #91529c;
+        }
+
+        &.loading {
+          * {
+            @include opacity(0.3);
+          }
+
+          .loader {
+            @include opacity(1);
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}
+

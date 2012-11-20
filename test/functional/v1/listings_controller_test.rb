@@ -65,7 +65,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
     end
 
     should "create seats" do
-      seat = Listing.find_by_id(@listing.id).reservations.first.seats.first
+      seat = Listing.find_by_id(@listing.id).reservations.first.periods.first.seats.first
       assert_equal "John Carter", seat.name
       assert_equal "john@example.com", seat.email
     end

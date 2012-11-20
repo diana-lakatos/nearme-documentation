@@ -15,6 +15,7 @@ class Location < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
   has_many :listings
   has_many :photos, :through => :listings
+  has_many :feeds, :through => :listings
 
   has_many :availability_rules, :as => :target
 
@@ -36,6 +37,8 @@ class Location < ActiveRecord::Base
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :listings
 
+  delegate :url, :to => :company
+
   def distance_from(other_latitude, other_longitude)
     Geocoder::Calculations.distance_between([ latitude,       longitude ],
                                             [ other_latitude, other_longitude ],
@@ -44,6 +47,10 @@ class Location < ActiveRecord::Base
 
   def required_organizations
     require_organization_membership? ? organizations : []
+  end
+
+  def admin?(user)
+    creator == user
   end
 
   private

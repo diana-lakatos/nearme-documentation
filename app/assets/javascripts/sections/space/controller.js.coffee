@@ -1,15 +1,29 @@
-class @SpaceController
+class @Space.Controller
 
-  constructor: (@container) ->
+  constructor: (@container, @options = {}) ->
     # Set up the map on the page
     @setupMap()
     @setupPhotos()
+    @setupBookings()
+    @_bindEvents()
+
+  _bindEvents: ->
+    @container.on 'click', '[data-behavior=scrollToBook]', (event) =>
+      event.preventDefault()
+      $('html, body').animate({
+        scrollTop: $(".bookings").offset().top - 20
+      }, 300)
 
   setupPhotos: ->
-    @photos = new SpacePhotosController($('.space-hero-photos'))
+    @photos = new Space.PhotosController($('.space-hero-photos'))
+
+  setupBookings: ->
+    @bookings = new Space.BookingManager(@container.find('.bookings'), @options.bookings)
 
   setupMap: ->
     mapContainer = @container.find('.map')
+    return unless mapContainer.length > 0
+
     location = mapContainer.find('address')
     latlng = new google.maps.LatLng(
       location.attr("data-lat"), location.attr("data-lng")
@@ -29,4 +43,5 @@ class @SpaceController
       map: @map.map,
       icon: location.attr("data-marker")
     })
+
 

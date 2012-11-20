@@ -103,16 +103,15 @@ class Listing < ActiveRecord::Base
     end
   end
 
+  # Maximum quantity available for a given date
+  def quantity_for(date)
+    self.quantity
+  end
+
   # TODO: Create a database index for the availability.
   # TODO: This implementation is really slow!
   def desks_booked_on(date)
-    # Get all of the reservations for the property on the given date
-    reservations = Reservation.joins(:periods).where(
-        reservation_periods: { listing_id: self.id, date: date }
-    )
-
-    # Tally up all of the seats taken across all reservations
-    reservations.inject(0) { |sum, r| sum += r.seats.count; sum }
+    ReservationSeat.joins(:reservation_period => :reservation).where(:reservation_periods => { :listing_id => self.id, :date => date }).merge(Reservation.not_rejected_or_cancelled).count
   end
 
 
@@ -184,10 +183,7 @@ class Listing < ActiveRecord::Base
   end
 
   # FIXME: long method, split me up? Does this/a lot of this belong in Reservation instead?
-  def reserve!(email, reserving_user, dates, quantity, assignees = nil)
-    # TODO: Use a transaction to ensure atomicity.
-    # TODO: Might need to have an elaborate Postgres constraint in order to do this.
-
+  def reserve!(email, reserving_user, dates, quantity, assignees = [])
     # Check that the reservation is valid
     # FIXME: should be able to do this all in sql
     dates.each do |date|
@@ -196,41 +192,12 @@ class Listing < ActiveRecord::Base
     end
 
     # Create the reservation
-    reservation = self.reservations.build do |r|
-      r.confirmation_email = email
-      r.owner = reserving_user
-    end
+    reservation = self.reservations.build(
+      :user => reserving_user
+    )
 
     dates.each do |date|
-      reservation.periods << ReservationPeriod.new do |p|
-        p.date        = date
-        p.listing     = self
-        p.reservation = reservation
-      end
-    end
-
-    unless assignees.blank?
-
-      assignees.each do |assignee|
-
-        reservation.seats << ReservationSeat.new do |s|
-          s.reservation = reservation
-          s.email       = assignee['email']
-          s.name        = assignee['name']
-        end
-
-        # Try and look up the e-mail address, in case it refers to a DNM user.
-        reservation.seats.last.user ||= User.find_by_email(reservation.seats.last.email)
-      end
-
-    else
-
-      (1..quantity).each do |index|
-        reservation.seats << ReservationSeat.new do |s|
-          s.reservation = reservation
-        end
-      end
-
+      reservation.add_period(date, quantity, assignees)
     end
 
     reservation.save!
@@ -238,35 +205,21 @@ class Listing < ActiveRecord::Base
   end
 
   def schedule(weeks = 1)
-    {}.tap do |hash|
-      # Build a hash of all week days and their default availabilities
-      weeks.times do |offset|
-        today  = Date.today + offset.weeks
-        monday = today.weekend? ? today.next_week : today.beginning_of_week
-        friday = monday + 4
-        week   = monday..friday
+    schedule = {}
 
-        week.inject(hash) {|m,d| m[d] = quantity; m}
-      end
+    # Build a hash of all week days and their default availabilities
+    weeks.times do |offset|
+      today  = Date.today + offset.weeks
+      monday = today.weekend? ? today.next_week : today.beginning_of_week
+      friday = monday + 4
+      week   = monday..friday
 
-      # Fetch count of all reservations for each of those dates
-      schedule = reservations.
-        where("reservation_periods.date" => hash.keys).
-        where(state: [:confirmed, :unconfirmed]).
-        includes(:periods, :seats)
-
-      # Subtract the number of reservations from those days to leave
-      # how many places are remaining, then return the hash
-      schedule.each do |reservation|
-        reservation.periods.each do |period|
-          if hash[period.date] >= reservation.seats.size
-            hash[period.date] -= reservation.seats.size
-          else
-            hash[period.date] = 0
-          end
-        end
+      week.each do |day|
+        schedule[day] = availability_for(day)
       end
     end
+
+    schedule
   end
 
   private

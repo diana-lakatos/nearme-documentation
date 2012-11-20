@@ -1,4 +1,7 @@
 /* Space Page */
+@import "sections/space/calendar";
+@import "sections/space/bookings";
+@import "sections/space/photos";
 
 // Hero area
 .space-hero-search-return {
@@ -22,85 +25,10 @@
   }
 }
 
-.space-hero-photos {
-  position: relative;
-
-  .photos-list {
-    position: absolute;
-    left: -125px;
-    top: 0;
-    padding-top: 16px;
-
-    .prev, .next {
-      display: block;
-      width: 28px;
-      height: 17px;
-      margin-left: 40px;
-      margin-bottom: 16px;
-
-      @include opacity(0.8);
-      cursor: pointer;
-
-      &:hover {
-        @include opacity(1);
-      }
-    }
-
-    .prev {
-      background: image-url("sections/listings/photos-list-prev.png");
-    }
-
-    .next {
-      background: image-url("sections/listings/photos-list-next.png");
-    }
-
-    .photos-wrapper {
-      height: 270px;
-      overflow: hidden;
-
-      ul {
-        li {
-          margin-bottom: 16px;
-
-          img {
-            display: block;
-            border: 2px solid #ffffff;
-            @include border-radius(6px);
-          }
-
-          &.selected {
-            img {
-              border-color: #a1ca2e;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .photo {
-    position: relative;
-    height: 350px;
-    background-size: cover;
-
-    .caption {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0,0,0,0.75);
-      color: #fff;
-      text-shadow: 0 -1px 0 rgba(0,0,0,0.6);
-      padding: 12px;
-      font-size: 12px;
-    }
-  }
-}
-
-.space {
-
+#space, .space {
   h1 {
     line-height: 40px;
+    margin-bottom: 30px;
   }
 
   .box.host, .box.share {
@@ -191,6 +119,37 @@
     }
 
     address {
+    }
+  }
+
+  .host-company {
+    h2 {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+
+  .activity-feed {
+    li {
+      background: image-url("sections/listings/event-feed-icon.png") top left no-repeat;
+      padding-left: 24px;
+
+      sup {
+        font-size: 70%;
+        line-height: 80%;
+        vertical-align: top;
+      }
+
+      small {
+        font-size: 12px;
+        font-weight: bold;
+        color: #6f7e85;
+      }
+
+      .user {
+        font-weight: bold;
+        color: #2091d0;
+      }
     }
   }
 }

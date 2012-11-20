@@ -3,6 +3,15 @@ DesksnearMe::Application.routes.draw do
   resources :companies
   resources :locations do
     resources :listings, :controller => 'locations/listings'
+    resources :reservations, :controller => 'locations/reservations', :only => [:create] do
+      post :review, :on => :collection
+    end
+
+    member do
+      get :host
+      get :networking
+      get :availability_summary
+    end
   end
 
   resources :listings do

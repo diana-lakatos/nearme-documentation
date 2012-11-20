@@ -23,4 +23,24 @@ module ReservationsHelper
     end
   end
 
+  def location_reservation_needs_confirmation?(reservations = @reservations)
+    reservations.any? { |reservation|
+      reservation.listing.confirm_reservations?
+    }
+  end
+
+  def location_reservation_summaries(reservations = @reservations)
+    dates = Hash.new { |h, k| h[k] = [] }
+    reservations.each do |reservation|
+      reservation.periods.each do |period|
+        dates[period.date] << [reservation.listing, period.quantity]
+      end
+    end
+    dates
+  end
+
+  def location_reservation_total_amount(reservations = @reservations)
+    total = reservations.sum(&:total_amount)
+    "#{total.symbol}#{total}"
+  end
 end
