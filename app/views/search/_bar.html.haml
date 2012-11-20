@@ -1,14 +1,31 @@
 %form#listing_search.search_results{:action => search_path, :method => "get"}
   %div
-    .six.columns.location.alpha
+    .ten.columns.location.alpha
       %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => @query, :class => "query", :autocomplete => "off"}
       %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
-    .columns.availability-date-start
+    .three.columns.availability-date-start
       %i.date-icon
       = text_field_tag "availability[dates][start]", search_availability_dates_start, :autocomplete => "off"
-    .columns.availability-date-end
+    .three.columns.availability-date-end
       %i.date-icon
-      = text_field_tag "availability[dates][end]", search_availability_dates_end, :autocomplete => "off"
+      = text_field_tag "availability[dates][end]", search_availability_dates_end, :autocomplete => "off"     
+  %hr
+
+  #search_filters
+    .availability-quantity.four.columns.alpha
+      %label Desks
+      = hidden_field_tag "availability[quantity]", search_availability_quantity, :autocomplete => "off"
+      .slider
+      .value.number-value= search_availability_quantity 
+
+    .price-range.seven.columns
+      %label Price
+      = hidden_field_tag "price[min]", search_price_min, :autocomplete => "off"
+      = hidden_field_tag "price[max]", search_price_max, :autocomplete => "off"
+      .slider
+      .value
+        $#{search_price_min} - $#{search_price_max}/day
+
     .five.columns.amenities.text-right
       %label Amenities
       .multiselect
@@ -21,34 +38,7 @@
               .item
                 = check_box_tag "amenities[]", amenity.id, search_amenities.include?(amenity.id), :id => "amenities_#{amenity.id}"
                 = label_tag "amenities_#{amenity.id}", amenity.name
-  %hr
-  #search_filters
-    .availability-quantity.five.columns.alpha
-      %label Desks
-      = hidden_field_tag "availability[quantity]", search_availability_quantity, :autocomplete => "off"
-      .slider
-      .value.number-value= search_availability_quantity
 
-    .price-range.six.columns
-      %label Price
-      = hidden_field_tag "price[min]", search_price_min, :autocomplete => "off"
-      = hidden_field_tag "price[max]", search_price_max, :autocomplete => "off"
-      .slider
-      .value
-        $#{search_price_min} - $#{search_price_max}/day
-
-    .associations.five.columns.text-right
-      %label Associations
-      .multiselect
-        .collapsed None selected
-        .expanded{ :style => "display: none" }
-          .summary
-            None selected
-          .items
-            - Organization.all.each do |organization|
-              .item
-                = check_box_tag "organizations[]", organization.id, search_organizations.include?(organization.id), :id => "organization_#{organization.id}"
-                = label_tag "organization_#{organization.id}", organization.name
 
 
 

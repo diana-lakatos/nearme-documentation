@@ -1,0 +1,5 @@
+<p>Dear <%= @user %>,</p>
+
+<p><%= @reservation.owner %> has cancelled their reservation at <%= @listing %>
+on <%= l(@reservation.date, :format => :long) %> that they made earlier.</p>
+

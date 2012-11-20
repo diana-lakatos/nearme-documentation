@@ -136,20 +136,19 @@ form {
     margin-bottom: 8px;
     padding: 8px 8px 8px 8px;
     line-height: 22px;
-    background: #fff;
-    @include background(linear-gradient(#ececec, #fcfcfc));
+    background: rgb(240,240,240);
     border: 1px solid rgba(0,0,0,0.4);
     @include border-radius(8px);
-    @include box-shadow(
-      inset rgba(0,0,0,0.4) 3px 3px 8px -4px,
-      rgba(255,255,255,0.1) 0 1px 0 0
-    );
     color: #707070;
-    text-shadow: #fff 0 1px 0;
     font-size: 22px;
+    -webkit-transition: box-shadow .2s ease-in;
+       -moz-transition: box-shadow .2s ease-in;
+            transition: box-shadow .2s ease-in;
 
     &:focus {
+      color:rgb(30,30,30);
       outline: none;
+      @include box-shadow(#27B0E6 0px 0px 1px, #27B0E6 0px 0px 3px, #27B0E6 0px 0px 6px, #27B0E6 0px 0px 7px);
     }
 
     &.small {
@@ -339,7 +338,41 @@ form {
     input[type="text"], input[type="password"], input[type="email"], input[type="url"], input[type="tel"], textarea {
       width: 330px;
     }
-
-
   }
 }
+@media screen and (max-width:959px) {
+  .two-thirds.column form.form-horizontal input[type="text"], .two-thirds.column form.form-horizontal input[type="password"], .two-thirds.column form.form-horizontal input[type="email"], .two-thirds.column form.form-horizontal input[type="url"], .two-thirds.column form.form-horizontal input[type="tel"], .two-thirds.column form.form-horizontal textarea, .two-thirds.column form.form-horizontal .controls.two-up input, form .hint, form .help-block, .two-thirds.column form.form-horizontal .fieldset input[type="text"], .two-thirds.column form.form-horizontal .fieldset textarea  {
+    position:relative;
+    float: left;
+    clear: both;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  form .controls .input-icon-wrapper,  .two-thirds.column form.form-horizontal .input-icon-wrapper input[type="text"] {
+    display:block;
+    float:left;
+    width:100%;
+  }
+  .form-horizontal .control-group .control-label {
+    text-align: left;
+  }
+  .form-horizontal .control-group .controls {
+    margin:10px 0;
+  }
+  .two-thirds.column form.form-horizontal .actions, .form-horizontal .control-group.indent {
+    margin-left:0;
+  }
+  .two-thirds.column form.form-horizontal {
+
+  }
+  .actions input[type='submit'] {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+}
+@media screen and (max-width:480px) {
+  select.currency {
+    width: 100%; 
+  }  
+  }

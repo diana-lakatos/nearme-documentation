@@ -54,7 +54,7 @@
     float: left;
     margin-left: 12px;
     margin-top: 2px;
-    width: 200px;
+    width: 180px;
   }
 
   label {
@@ -66,6 +66,9 @@
     margin-left: 20px;
     font-size: 16px;
     font-weight: bold;
+  }
+  .price-range .value {
+    margin-left:30px;
   }
 
   // On the home search box
@@ -94,7 +97,8 @@
 
     .location {
       input#search {
-        width: 290px;
+        width: 100%;
+        box-sizing: border-box;
       }
     }
 
@@ -109,16 +113,11 @@
 
     .availability-date-start, .availability-date-end {
       input {
-        width: 80px;
+        width:100%;
       }
     }
 
-    .amenities {
-      padding-top: 14px;
-    }
-
     .availability-date-start, .availability-date-end {
-      width: 130px;
       position: relative;
 
       .date-icon {
@@ -139,12 +138,77 @@
 
       input {
         padding-left: 40px;
-        width: 80px;
+        width:100%;
+        box-sizing: border-box;
       }
     }
-
-
   }
 }
 
+@media (min-width: 768px) and (max-width: 959px) {
+   #listing_search {
 
+    &.home_search input#search {
+      width:560px; }
+   } 
+  #search_row  {
+    .availability-quantity.five.columns.alpha {
+        .slider {
+          width:150px; } }
+   .price-range.six.columns.omega {
+    width:260px; } 
+      .slider {
+        width:80px } } }
+
+@media (max-width: 959px) {
+ #listing_search {
+    &.home_search input#search {
+      width:320px;
+    }
+
+    &.search_results {
+      input#search {
+        padding-left: 35px;
+        width: 300px;
+      }
+      .slider { 
+        width:80px; 
+      }
+      .multiselect  {
+        width:130px;
+      }
+    } 
+  }
+}
+
+@media  (max-width: 768px) {
+ #listing_search {
+    &.home_search input#search {
+      width:100%;
+      box-sizing: border-box; }
+   &.search_results {
+    .availability-quantity, .price {
+      margin: 20px 0; }
+    .multiselect { 
+        float:left;
+        width:200px;
+        margin-left:10px }
+    .five.columns.amenities {
+      margin:20px 0; }  } }
+
+  .associations.six.columns.omega.alpha,
+  .price-range.six.columns.omega { 
+    margin:20px 0; }
+
+   #listing_search .btn, #listing_search form input[type="submit"], form #listing_search input[type="submit"] {
+    width:100%;
+    text-align:center;
+    box-sizing: border-box; } }
+
+@media  (max-width: 480px) {
+   #listing_search {
+    &.home_search input#search, &.search_results .location input#search {
+      font-size:90%;
+    }
+    .slider {
+      width: 100px; } } }

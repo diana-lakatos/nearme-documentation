@@ -15,4 +15,16 @@ class InquiryMailer < DesksNearMeMailer
          reply_to: inquiry.inquiring_user.full_email
   end
 
+  class Preview < MailView
+  
+    def inquiring_user_notification
+      ::InquiryMailer.inquiring_user_notification(Inquiry.first)
+    end
+
+    def listing_creator_notification
+      ::InquiryMailer.inquiring_user_notification(Inquiry.first)
+    end
+
+  end
+
 end
