@@ -1,4 +1,10 @@
-When /^I choose to book space for:$/ do |table|
+When /^I book space for:$/ do |table|
+  When %{I select to book space for:}, table
+  When %{I click to review the booking}
+  When %{I click to confirm the booking}
+end
+
+When /^I select to book space for:$/ do |table|
   next unless table.hashes.length > 0
 
   added_dates = []
@@ -22,16 +28,16 @@ When /^I choose to book space for:$/ do |table|
 
     fill_in 'booked-day-qty', :with => qty
   end
-
-  click_link "Review and book now"
-  click_button "Request Booking Now"
-  wait_until {
-    page.evaluate_script('jQuery.active') == 0
-  }
 end
 
-Given /^random test$/ do
-  raise model!('the user').inspect
+When /^I click to review the bookings?$/ do
+  click_link "Review and book now"
+  wait_for_ajax
+end
+
+When /^I click to confirm the bookings?$/ do
+  click_button "Request Booking Now"
+  wait_for_ajax
 end
 
 When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved for '(.+)'$/ do |user, qty, listing, date|
@@ -42,4 +48,10 @@ When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved f
   assert listing.reservations.any? { |reservation|
     reservation.owner == user && reservation.periods.any? { |p| p.date == date && p.quantity == qty }
   }
+end
+
+Given /^bookings for #{capture_model} do( not)? need to be confirmed$/ do |listing, require_confirmation|
+  listing = model!(listing)
+  listing.confirm_reservations = require_confirmation.present?
+  listing.save!
 end

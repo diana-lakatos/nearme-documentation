@@ -37,6 +37,7 @@
 
       = render :partial => "layouts/footer"
 
+    = render :partial => "shared/modal"
     = yield :script
     = render :partial => "layouts/analytics" if Rails.env.production?
 
