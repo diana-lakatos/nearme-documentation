@@ -19,16 +19,18 @@
       %span.st_email_hcount{:displayText => 'Email'}
 
   .one-third.column.amenities
-    %dl
-      %dt
-        %i{:class => "icon-amenity-other"}
-        Amenities
+    &nbsp;
+    /
+    /%dl
+    /  %dt
+    /    %i{:class => "icon-amenity-other"}
+    /    Amenities
 
-      %dl
-        - unless @location.amenities.empty?
-          = @location.amenities.map(&:name).join(', ')
-        - else
-          Nothing listed... that can't be right!
+    /  %dl
+    /    - unless @location.amenities.empty?
+    /      = @location.amenities.map(&:name).join(', ')
+    /    - else
+    /      Nothing listed... that can't be right!
 
   .one-third.column.map
     .map-wrapper

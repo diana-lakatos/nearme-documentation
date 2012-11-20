@@ -5,6 +5,14 @@ class @Space.Controller
     @setupMap()
     @setupPhotos()
     @setupBookings()
+    @_bindEvents()
+
+  _bindEvents: ->
+    @container.on 'click', '[data-behavior=scrollToBook]', (event) =>
+      event.preventDefault()
+      $('html, body').animate({
+        scrollTop: $(".bookings").offset().top - 20
+      }, 300)
 
   setupPhotos: ->
     @photos = new Space.PhotosController($('.space-hero-photos'))
