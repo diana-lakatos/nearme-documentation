@@ -7,12 +7,7 @@ DNM.util =
       "d-#{@toId(date)}"
 
     toId: (date) ->
-      f = (i) ->
-        if i < 10
-          "0#{i}"
-        else
-          i
-
+      f = (i) -> if i < 10 then "0#{i}" else i
       "#{date.getFullYear()}-#{f(date.getMonth()+1)}-#{f(date.getDate())}"
 
     idToDate: (dateId) ->
@@ -40,7 +35,4 @@ DNM.util =
         name.substring(0, sub)
       else
         name
-
-
-
 

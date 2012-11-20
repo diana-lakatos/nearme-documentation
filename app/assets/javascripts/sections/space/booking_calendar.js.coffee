@@ -143,5 +143,3 @@ class @Space.BookingCalendar
     else if date.getTime() > @endDate.getTime()
       @endDate = date
 
-
-

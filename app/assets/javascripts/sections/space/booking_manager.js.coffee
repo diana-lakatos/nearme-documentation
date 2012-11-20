@@ -278,5 +278,3 @@ class @Space.BookingManager
         dateId: DNM.util.Date.toId(date)
       })
 
-
-
