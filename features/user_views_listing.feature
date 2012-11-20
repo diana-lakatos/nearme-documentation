@@ -4,6 +4,7 @@ Feature: User Views Listing
     Given a free listing exists
     Then the listing price is shown as Free
 
+  @future
   Scenario: Viewing a Listing with Amenities
     Given a listed location with an amenity
     When I view that listing
