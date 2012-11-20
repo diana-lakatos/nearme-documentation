@@ -10,7 +10,6 @@ Feature: A user can add photos to a listing
   Scenario: Adding photos to a work place
     Given I am logged in as the user
       And I go to the the dashboard
-      Then show me the page
      When I follow "Manage Photos"
      Then I should see 0 listing photos
      When I attach the photo "boss's desk.jpg" to "New Photo"

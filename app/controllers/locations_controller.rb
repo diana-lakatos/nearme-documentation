@@ -1,5 +1,5 @@
 class LocationsController < ApplicationController
-  before_filter :authenticate_user!, :except => [:show, :availability_summary]
+  before_filter :authenticate_user!, :only => [:new, :create]
   expose :location
 
   def show

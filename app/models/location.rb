@@ -37,6 +37,8 @@ class Location < ActiveRecord::Base
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :listings
 
+  delegate :url, :to => :company
+
   def distance_from(other_latitude, other_longitude)
     Geocoder::Calculations.distance_between([ latitude,       longitude ],
                                             [ other_latitude, other_longitude ],

@@ -23,7 +23,6 @@ Feature: Emails should be sent out informing parties about reservations
     And a user: "Bo Jeanes" exists with name: "Bo Jeanes"
 
   @javascript
-  @wip
   Scenario: reservation confirmations required (no comment)
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
     And I am logged in as user "Keith Contractor"
@@ -42,7 +41,6 @@ Feature: Emails should be sent out informing parties about reservations
     And the 2nd email should contain "You have made a reservation for Mocra"
 
   @javascript
-  @wip
   Scenario: reservation confirmations not required
     Given a listing: "Mocra" exists with creator: user "Bo Jeanes", confirm_reservations: false
     And I am logged in as user "Keith Contractor"

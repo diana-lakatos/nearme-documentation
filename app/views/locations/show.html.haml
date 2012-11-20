@@ -3,7 +3,11 @@
     %p.description
       #{@location.description}
 
-    %strong= @location.phone
+    - if @location.phone.present?
+      %strong= @location.phone
+    - if @location.url.present?
+      = link_to @location.url, @location.url, :target => :_blank
+
 
     .box.share
       %i.flag
