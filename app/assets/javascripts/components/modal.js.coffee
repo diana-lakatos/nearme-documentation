@@ -14,8 +14,8 @@
 #   Modal.showContent("my new content")
 class @Modal
 
-  @reloadOnClose: ->
-    @_reloadOnClose = true
+  @reloadOnClose: (url) ->
+    @_reloadOnClose = url
 
   # Listen for click events on modalized links
   # Modalized links are anchor elements with rel="modal"
@@ -86,8 +86,9 @@ class @Modal
     @overlay.hide()
     @container.hide()
 
+    # Redirect if bound
     if Modal._reloadOnClose
-      window.location.reload()
+      window.location = Modal._reloadOnClose
 
   # Trigger visibility of the modal
   _show: ->
