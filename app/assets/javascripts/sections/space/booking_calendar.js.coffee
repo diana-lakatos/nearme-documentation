@@ -86,6 +86,8 @@ class @Space.BookingCalendar
     @setDayElement(@current)
     newDate = new Date(@currentDate.getTime())
     newDate.setDate(newDate.getDate() - 7)
+    newDate = @today if newDate < @today
+
     element = @daysContainer.find(".#{DNM.util.Date.toClassName(newDate)}")
     @setDayElement(element, true)
 
