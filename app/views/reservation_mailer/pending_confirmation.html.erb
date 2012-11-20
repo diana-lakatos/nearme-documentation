@@ -1,8 +1,5 @@
-<%= render "/shared/mailers/header" %>
 <p>Dear <%= @user %>,</p>
 
 <p>You have made a reservation for <%= @listing %> on <%= l(@reservation.date, :format => :long) %>.</p>
 
 <p>Reservations at this location requires confirmation from the owner/manager. You will receive another email if the user confirms or declines your reservation request.</p>
-
-<%= render "/shared/mailers/footer" %>

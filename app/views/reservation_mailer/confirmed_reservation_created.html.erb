@@ -1,6 +1,4 @@
-<%= render "/shared/mailers/header" %>
 <p>Dear <%= @user %>,</p>
 
 <p><%= @reserver %> has made a reservation for <%= @listing %> on <%= l(@reservation.date, :format => :long) %>.</p>
 
-<%= render "/shared/mailers/footer" %>
