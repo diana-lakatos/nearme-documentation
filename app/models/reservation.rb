@@ -50,6 +50,10 @@ class Reservation < ActiveRecord::Base
     without_state(:cancelled).upcoming
   }
 
+  scope :not_rejected_or_cancelled, lambda {
+    without_state(:cancelled, :rejected)
+  }
+
   def user=(value)
     self.owner = value
     self.confirmation_email = value.email

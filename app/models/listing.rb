@@ -111,7 +111,7 @@ class Listing < ActiveRecord::Base
   # TODO: Create a database index for the availability.
   # TODO: This implementation is really slow!
   def desks_booked_on(date)
-    ReservationSeat.joins(:reservation_period).where(:reservation_periods => { :listing_id => self.id, :date => date }).count
+    ReservationSeat.joins(:reservation_period => :reservation).where(:reservation_periods => { :listing_id => self.id, :date => date }).merge(Reservation.not_rejected_or_cancelled).count
   end
 
 
