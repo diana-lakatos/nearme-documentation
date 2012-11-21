@@ -34,6 +34,9 @@ class DNM.SearchForm
 
   initializeQueryField: ->
     @queryField = @form.find('input.query')
+    if @queryField.val() == ''
+      _.defer(=>@geolocateMe())
+
     @queryField.bind 'change', =>
       @fieldChanged('query', @queryField.val())
 
@@ -67,16 +70,15 @@ class DNM.SearchForm
   initializeGeolocateButton: ->
     @geolocateButton = @form.find("input.geolocation")
     @geolocateButton.addClass("active").bind 'click', =>
-      @queryField.val(@geolocateButton.attr("data-geo-val")).change().focus()
-
-    if currentLocation = $.cookie("currentLocation")
-      @geolocateButton.attr("data-geo-val", currentLocation)
-    else
-      @determineUserLocation()
+      @geolocateMe()
 
     # Set it by default if available
     existing = @geolocateButton.attr("data-geo-val")
-    @queryField.val(existing) if existing?
+    @queryField.val(existing) if existing? && @queryField.val() == ''
+
+  geolocateMe: ->
+    @determineUserLocation()
+    @queryField.val(@geolocateButton.attr("data-geo-val")).change().focus()
 
   determineUserLocation: ->
     return unless Modernizr.geolocation
@@ -94,7 +96,6 @@ class DNM.SearchForm
 
         if city
           currentLocation = "#{city}, #{country}"
-          $.cookie("currentLocation", currentLocation)
           @queryField.val(currentLocation).change()
 
 class DNM.HomeSearch extends DNM.SearchForm
