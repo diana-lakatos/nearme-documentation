@@ -4,15 +4,19 @@ When /^I set the price range to \$(\d+) to \$(\d+)$/ do |min,max|
 end
 
 When /^I search for "([^"]*)"$/ do |text|
-  visit '/'
   update_all_indexes
   fill_in "q", with: text
-  click_link_or_button "Search"
+  if page.current_path =~ /search/
+    page.execute_script("$('.query').change()")
+  else
+    click_link_or_button "Search" unless page.current_path =~ /search/
+  end
 end
 
 When /^I select that amenity$/ do
-  page.execute_script("$('#amenities_#{model!("amenity").id}').attr('checked',true)")
-  sleep(5)
+  visit search_path
+  find('.amenities .collapsed').click
+  check model!("amenity").name
 end
 
 Then /^I see the listings on a map$/ do
@@ -24,8 +28,12 @@ Then /^the search results have the \$10 listing first$/ do
   prices.first.should =~ /\$10/
 end
 
+
+
 Then /^the search results have the listing with that amenity first$/ do
+  Capybara.default_wait_time = 25
   listing = Listing.all.select { |l| l.amenities.include? model("amenity") }.first
-  listings_text = page.all('.listing').collect(&:text)
-  listings_text.first.should include listing.name
+  listings_text = page.find('.listing').text
+  listings_text.should include listing.name
+  Capybara.default_wait_time = 5
 end
