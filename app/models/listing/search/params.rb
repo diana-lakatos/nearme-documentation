@@ -34,7 +34,7 @@ class Listing::Search::Params
     return if search_area
     if query
       build_search_area_from_query
-    else
+    elsif midpoint?
       build_search_area_from_midpoint
     end
   end
