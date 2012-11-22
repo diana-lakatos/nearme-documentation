@@ -6,9 +6,11 @@ class ListingMailer < DesksNearMeMailer
       :subject => "#{sharer.name} has shared a listing with you on Desks Near Me"
   end
 
-  class Preview < MailView
-    def share
-      ::ListingMailer.share(Listing.first, User.first.email, User.first.name, User.last, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+  if defined? MailView
+    class Preview < MailView
+      def share
+        ::ListingMailer.share(Listing.first, User.first.email, User.first.name, User.last, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+      end
     end
   end
 
