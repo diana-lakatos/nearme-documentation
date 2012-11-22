@@ -34,12 +34,13 @@ Feature: A user can search for a listing
     And I search for "Auckland"
     Then the search results have the $10 listing first
 
+  #for some reason, this passes independently, but fails sporadically when ran with the suite :(
   Scenario: A user searches with amenities
     Given an amenity exists
     And a listing in Auckland exists
     And a listing in Auckland exists with that amenity
-    When I search for "Auckland"
-    And I select that amenity
+    When I select that amenity
+    And I search for "Auckland"
     Then the search results have the listing with that amenity first
 
   @future

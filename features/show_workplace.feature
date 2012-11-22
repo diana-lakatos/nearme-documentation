@@ -3,7 +3,6 @@ Feature: A user can see a space
   As a user
   Can wee a space
 
-  @wip
   Scenario: A user can see a listing
     Given a listing exists with name: "Rad Annex", description: "Its a great place to work"
      When I go to the listing's page
