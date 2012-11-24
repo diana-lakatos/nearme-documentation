@@ -39,16 +39,14 @@ header {
     line-height: 38px;
 
     a.header-link {
-      @extend .font-banda-bold;
       display: inline-block;
       color: $dnm_gray;
       font-size: 16px;
-      text-transform: uppercase;
       margin-right: 30px;
       text-decoration: none;
 
       &:hover {
-        text-decoration: underline;
+        color:rgb(10,10,10);
       }
     }
   }

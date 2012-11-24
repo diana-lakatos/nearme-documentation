@@ -2,61 +2,44 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
-@include font-face(
-  "banda",
-  font-files(
-    asset-path("regular-webfont.woff", font),
-    asset-path("regular-webfont.ttf", font),
-    asset-path("regular-webfont.svg", font)
-  ),
-  asset-path("regular-webfont.eot", font)
-);
-
-@include font-face("banda",
-  font-files(
-    asset-path("bold-webfont.woff", font),
-    asset-path("bold-webfont.ttf", font),
-    asset-path("bold-webfont.svg", font)
-  ),
-  asset-path("bold-webfont.eot", font),
-  bold
-);
-
-@include font-face("banda",
-  font-files(
-    asset-path("bold-italic-webfont.woff", font),
-    asset-path("bold-italic-webfont.ttf", font),
-    asset-path("bold-italic-webfont.svg", font)
-  ),
-  asset-path("bold-italic-webfont.eot", font),
-  bold,
-  italic
-);
-
-.font-banda {
-  font-family: "banda";
+@font-face {
+    font-family: 'futura-light';
+    src: url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-light.eot');
+    src: url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-light.eot?#iefix') format('embedded-opentype'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-light.woff') format('woff'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-light.ttf') format('truetype'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-light.svg#futura_std_lightlight') format('svg');
+    font-weight: normal;
+    font-style: normal; 
 }
-
-.font-banda-bold {
-  font-family: "banda";
-  font-weight: bold;
+@font-face {
+    font-family: 'futura-medium';
+    src: url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-medium.eot');
+    src: url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-medium.eot?#iefix') format('embedded-opentype'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-medium.woff') format('woff'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-medium.ttf') format('truetype'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-medium.svg#futura_std_mediummedium') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
-
-h1.page-title {
-  color: $dnm_black;
-  font-weight: normal;
-  font-size: 36px;
-  text-shadow: 0 1px 0 rgba(255,255,255,.8);
-  margin-bottom: 20px;
+@font-face {
+    font-family: 'futura-heavy';
+    src: url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-heavy.eot');
+    src: url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-heavy.eot?#iefix') format('embedded-opentype'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-heavy.woff') format('woff'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-heavy.ttf') format('truetype'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-heavy.svg#futura_std_mediumheavy') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 
 a, a:visited {
   color: $dnm_blue;
-  font-family: "banda";
-  font-weight: bold;
+  font-family: "futura-medium";
   text-decoration: none;
+  @include transition(border .1s ease-in);
 
-  &:hover {
+  &:hover { 
     color: $link_hover;
     text-decoration: none;
   }

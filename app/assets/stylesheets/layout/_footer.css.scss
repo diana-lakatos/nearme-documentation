@@ -1,11 +1,9 @@
 footer {
-  border-top: solid lighten($dnm_black, 60%) 1px;
+  border-top: solid lighten($dnm_black, 60%) 2px;
   .inner {
-    border-top: solid #fff 1px;
     padding-top: 17px;
   }
   line-height: 18px;
-
   li {
     a {
       float: left;
@@ -16,7 +14,6 @@ footer {
       text-decoration: none;
       font-size: 14px;
       background: image-url("layout/footer-bullet.png") right 8px no-repeat;
-      text-shadow: 0 1px 0 rgba(255,255,255,.8);
       &:hover {
         color: $link_hover;
       }
