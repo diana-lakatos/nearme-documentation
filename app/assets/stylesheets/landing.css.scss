@@ -65,10 +65,6 @@ body {
 img {
   max-width: 100%;
 }
-h1 {
-  font-size: 60px;
-  line-height: 90px;
-}
 h2 {
   font: normal 50px/60px 'futura-medium', sans-serif;
   margin: 30px 0;
@@ -90,17 +86,23 @@ footer {
   width:100%;
 }
 .row-1 {
-   @include background(image-url("http://desksnearme.assets.s3.amazonaws.com/img/landing-page-warm-border.png"),
-   darken( $blue, 1% ));
-   background-position: left top;
-   background-repeat: repeat-x;
-   min-height: 288px;
+     @include background(image-url("http://desksnearme.assets.s3.amazonaws.com/img/landing-page-warm-border.png"),
+     image-url("http://desksnearme.assets.s3.amazonaws.com/img/collaboration.jpg"));
+     background-position: left bottom, center center;
+     background-repeat: repeat-x, no-repeat;
+     background-size: auto, cover;
+     min-height: 300px;
 
   .wrapper {
-    padding: 30px 45px;
+    padding: 60px 45px;
 
     h1 {
-      margin: 80px auto 40px;
+      display: inline-block;
+      background: $blue;
+      background: rgba(249,158,28,.75);
+      padding: 10px 20px;
+      margin: 100px auto 40px;
+      font: normal 60px/70px 'futura-medium', sans-serif;
     }
   }
 }
@@ -159,7 +161,7 @@ a#sign-up {
   -webkit-transition: background .2s ease-in;
 
   &:hover {
-    background: darken( $orange, 13% );
+    background: darken( $orange, 14% );
   }
 }
 @media screen and (max-width: 768px) {
