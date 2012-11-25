@@ -7,8 +7,9 @@ class Listing < ActiveRecord::Base
 
 
       define_method period_getter_name do
-        unit_prices << UnitPrice.new(period: minutes, listing: self) unless unit_prices.any? { |l| l.period == minutes}
-        unit_prices.select { |l| l.period == minutes }.last
+        unit_price = unit_prices.detect { |l| l.period == minutes }
+        unit_price ||= unit_prices.build(period: minutes, listing: self)
+        unit_price
       end
 
       define_method price_getter_name do

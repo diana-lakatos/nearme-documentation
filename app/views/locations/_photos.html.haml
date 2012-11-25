@@ -11,4 +11,4 @@
 
     .photo{:style => "background-image: url('#{@location.photos.first.url}')"}
       .caption
-        This is an awesome caption.
+        = @location.photos.first.caption

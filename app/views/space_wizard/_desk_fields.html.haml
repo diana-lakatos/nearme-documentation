@@ -32,3 +32,11 @@
         - if f.object.errors[:confirm_reservations].any?
           %p.error-block= f.object.errors[:confirm_reservations].to_sentence
 
+  .control-group
+    = label_tag "Photo", nil, :class => 'control-label'
+
+    .controls
+      .preamble
+        We recommend that you upload at least one photo for your listing. You can add more photos later from the Dashboard.
+      = f.fields_for :photos, Photo.new do |pf|
+        = pf.file_field :image, :disabled => is_template
