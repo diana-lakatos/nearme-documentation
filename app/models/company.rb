@@ -25,14 +25,14 @@ class Company < ActiveRecord::Base
 
   def validate_url_format
     return if url.blank?
-    unless URL_REGEXP.match(url)
-      errors.add(:url, "must be a valid URL")
-      return
+
+    valid = URL_REGEXP.match(url)
+    valid &&= begin
+      URI.parse(url)
+    rescue
+      false
     end
 
-    URI.parse(url)
-    true
-  rescue URI::InvalidURIError
-    errors.add(:url, "must be a valid URL")
+    errors.add(:url, "must be a valid URL") unless valid
   end
 end
