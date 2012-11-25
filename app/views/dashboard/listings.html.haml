@@ -1,0 +1,26 @@
+- render 'dashboard/navigation', :current => :spaces
+
+%h1 Your Listing
+%section#listings.selected.tab
+  %nav.actions
+    = link_to new_listing_path do
+      = image_tag "building--plus.png"
+      Create Listing
+  %table.pretty
+    %thead
+      %tr
+        %th Name
+        %th Reservations
+        %th
+    %tbody
+      - @listings.each do |listing|
+        %tr
+          %td= link_to listing.name, listing
+          %td= listing.confirm_reservations? ? "#{listing.reservations.with_state(:unconfirmed).count} Unconfirmed" : "-"
+          %td.actions
+            = link_to [ :edit, listing ] do
+              Edit Listing #{image_tag "navigation.png"}
+            &nbsp;
+            = link_to [ listing, :photos ] do
+              Manage Photos #{image_tag "navigation.png"}
+

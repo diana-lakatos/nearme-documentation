@@ -40,3 +40,36 @@
   background: image-url("layout/gray-texture.png");
   border-bottom: 1px solid #fff;
 }
+
+.hero-nav {
+  background: #2091d0;
+  border-bottom: 1px solid #a0a0a0;
+  overflow: hidden;
+  @extend .hero-shadow;
+
+  li {
+    float: left;
+    border-right: 1px solid #63b2de;
+    a {
+      display: block;
+      padding: 0 15px;
+      border-right: 1px solid #0c6596;
+      line-height: 40px;
+      font-size: 16px;
+      color: #b5e5ff;
+      text-transform: uppercase;
+      text-shadow: 0 -1px 0 rgba(0,0,0,0.35);
+    }
+
+    &:first-child {
+      border-left: 1px solid #0c6596;
+      a {
+        border-left: 1px solid #63b2de;
+      }
+    }
+  }
+
+  li.current a, a:hover {
+    color: #fff;
+  }
+}
