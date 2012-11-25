@@ -2,7 +2,7 @@ class Listing
   class Scorer
 
     WEIGHTINGS = {
-      boundingbox:   0.4,
+      search_area:   0.4,
       amenities:     0.15,
       organizations:  0.15,
       price:         0.15,
@@ -17,8 +17,6 @@ class Listing
 
     def initialize(listings)
 
-      # eager load some stuff so we don't do quite as many queries
-      # self.listings = Listing.where(id: listings.map(&:id)).includes(:photos).includes(location: [ :organizations, :company, :amenities ]).all
       self.listings = listings
 
       # scores and strict_matches are hashes of score components/booleans :)
@@ -27,17 +25,10 @@ class Listing
     end
 
     def score(search_parameters)
-
-      # availability matching is specified across two different parameters, we combine them
-      # here if they are present
-      if search_parameters.has_key?(:quantity) && (search_parameters.has_key?(:dates) || search_parameters.has_key?(:date))
-
-        search_parameters[:availability] = { quantity: search_parameters.delete(:quantity),
-                                             dates:    (search_parameters.delete(:dates) || search_parameters.delete(:date)) }
-      end
+      @listings.reject! { |l| l.location.nil? }
 
       WEIGHTINGS.keys.each do |component|
-        if params = search_parameters.delete(component)
+        if params = search_parameters.send(component)
           send("score_#{component}", params)
         end
       end
@@ -53,120 +44,79 @@ class Listing
       end
     end
 
-    private
-
-      def coerce_to_date(d)
-        d.respond_to?(:gsub) ? Date.parse(d) : d
-      end
-      # Ascending proximity to center of `boundingbox`, normalised between 0 and 100
-      def score_boundingbox(options = {})
-        options.symbolize_keys!
-
-        center_lat, center_lon = options.delete(:lat), options.delete(:lon)
-        ranked_listings        =  @listings.rank_by do |l|
-          if l.sphinx_attributes && l.sphinx_attributes["@geodist"]
-            l.sphinx_attributes["@geodist"]
-          else
-            l.distance_from(center_lat, center_lon)
-          end
-        end
-
-        # Note that we don't set the strict_matches here - because we are usually passed
-        # a set of listings within a bounding box, so we ignore this component for strict matches
-
-        add_scores(ranked_listings, :boundingbox)
-      end
-
-      def score_amenities(amenity_ids = [])
-        amenity_ids.map!(&:to_i)
-        @listings.reject! { |l| l.location.nil? }
-        ranked_listings       = @listings.rank_by { |l| (amenity_ids - l.location.amenity_ids).size }
-
-        add_strict_matches(:amenities) { |l| (amenity_ids - l.location.amenity_ids).size == 0 }
-        add_scores(ranked_listings, :amenities)
-      end
-
-      # this feels like you could DRY it with the above - but seems to add complexity for
-      # not a lot of benefit at the monement
-      def score_organizations(organization_ids = [])
-        organization_ids.map!(&:to_i)
-        ranked_listings = @listings.rank_by { |l| (organization_ids - l.location.organization_ids).size }
-
-        add_strict_matches(:organizations) { |l| (organization_ids - l.location.organization_ids).size == 0 }
-        add_scores(ranked_listings, :organizations)
-      end
-
-      def score_price(options = {})
-        options.symbolize_keys!
-
-        min_cents = (options.delete(:min).try(:to_i) || 0) * 100
-        max_cents = (options.delete(:max).try(:to_i) || min_cents/100) * 100
-        midpoint_cents = (max_cents + min_cents) / 2
-
-        ranked_listings = @listings.rank_by { |l| ((l.price_cents || 0) - midpoint_cents).abs }
-
-        add_strict_matches(:price) do |l|
-          price_cents = (l.price_cents || 0)
-          price_cents >= min_cents && price_cents <= max_cents
-        end
-        add_scores(ranked_listings, :price)
-      end
-
-      def score_availability(options = {})
-        options.symbolize_keys!
-
-        dates = options.delete(:dates)
-
-        if dates.is_a?(Hash)
-          # hash date range
-          dates.symbolize_keys!
-          dates = (coerce_to_date(dates[:start])...coerce_to_date(dates[:end]))
-        elsif dates.is_a?(Array)
-          # discrete array of dates
-          dates = dates.map { |d| coerce_to_date(d) }
+    def score_search_area(search_area)
+      ranked_listings =  @listings.rank_by do |l|
+        if l.sphinx_attributes && l.sphinx_attributes["@geodist"]
+          l.sphinx_attributes["@geodist"]
         else
-          # Default to 14 days
-          dates = []
-          14.times do |i|
-            dates << Time.now.advance(:days => i).to_date
-          end
-        end
-
-        quantity_needed = options.delete(:quantity).symbolize_keys[:min].to_i
-
-        add_strict_matches(:availability) do |l|
-          dates.all? { |day| l.availability_for(day) >= quantity_needed }
-        end
-
-        # FIXME: this is going to do a query for each day!
-        # should be able to request listing availability over a date range easily enough...
-        ranked_listings = @listings.rank_by do |l|
-          dates.inject(0) do |sum, day|
-            sum += ([l.desks_booked_on(day), quantity_needed].max / quantity_needed)
-            sum
-          end
-        end
-
-        add_scores(ranked_listings, :availability)
-      end
-
-      def add_scores(ranked_listings, component_name)
-        ranked_listings.each_with_index do |listings, rank|
-          listings.each do |l|
-            scores[l][component_name] = normalize_rank(rank + 1, @listings.size)
-          end
+          search_area.distance_from(l.latitude, l.longitude)
         end
       end
 
-      def add_strict_matches(component_name, &block)
-        @listings.each do |l|
-          strict_matches[l][component_name] = block.call(l)
+      add_scores(ranked_listings, :search_area)
+    end
+
+    def score_amenities(amenity_ids = [])
+      ranked_listings       = @listings.rank_by { |l| (amenity_ids - l.location.amenity_ids).size }
+
+      add_strict_matches(:amenities) { |l| (amenity_ids - l.location.amenity_ids).size == 0 }
+      add_scores(ranked_listings, :amenities)
+    end
+
+    def score_organizations(organization_ids = [])
+      ranked_listings = @listings.rank_by { |l| (organization_ids - l.location.organization_ids).size }
+
+      add_strict_matches(:organizations) { |l| (organization_ids - l.location.organization_ids).size == 0 }
+      add_scores(ranked_listings, :organizations)
+    end
+
+    def score_price(price_range)
+
+      ranked_listings = @listings.rank_by { |l| ((l.price_cents || 0) - price_range.midpoint_cents).abs }
+
+      add_strict_matches(:price) do |l|
+        price_range.include_cents?(l.price_cents)
+      end
+
+      add_scores(ranked_listings, :price)
+    end
+
+    def score_availability(availability)
+      add_strict_matches(:availability) do |l|
+        availability.dates.all? do |day|
+          l.availability_for(day) >= availability.min
         end
       end
 
-      def normalize_rank(rank, number_of_ranks)
-        ((rank / number_of_ranks.to_f) * 100).round(2)
+      # FIXME: this is going to do a query for each day!
+      # should be able to request listing availability over a date range easily enough...
+      ranked_listings = @listings.rank_by do |l|
+        availability.dates.inject(0) do |sum, day|
+          sum += ([l.desks_booked_on(day), availability.min].max / availability.min)
+          sum
+        end
       end
+
+      add_scores(ranked_listings, :availability)
+    end
+
+    def add_scores(ranked_listings, component_name)
+      ranked_listings.each_with_index do |listings, rank|
+        listings.each do |l|
+          scores[l][component_name] = normalize_rank(rank + 1, @listings.size)
+        end
+      end
+    end
+
+    def add_strict_matches(component_name, &block)
+      @listings.each do |l|
+        strict_matches[l][component_name] = block.call(l)
+      end
+    end
+
+    def normalize_rank(rank, number_of_ranks)
+      ((rank / number_of_ranks.to_f) * 100).round(2)
+    end
 
   end
 end

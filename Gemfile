@@ -48,6 +48,7 @@ group :development do
   gem 'sqlite3'
   gem "rails-erd"
   gem 'quiet_assets'
+  gem 'mail_view'
 end
 
 group :development, :test, :staging do
@@ -55,8 +56,8 @@ group :development, :test, :staging do
 end
 
 group :development, :test do
-  gem 'mail_view'
   gem 'shoulda'
+  gem 'shoulda-let', :require => 'shoulda/let'
   gem 'ffaker'
   gem 'shoulda'
   gem 'factory_girl_rails', '>=3.0.0'
@@ -74,7 +75,7 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'minitest'
-  gem 'mocha'
+  gem 'mocha', :require => false
   gem 'pickle'
   gem 'simplecov', :require => false
   gem 'timecop'

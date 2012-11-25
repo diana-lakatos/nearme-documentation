@@ -1,4 +1,6 @@
+
 Feature: User Searches Listings
+
   Scenario: Searching for a listing with a bounding box
     Given a listing in San Francisco exists
     And a listing in Cleveland exists

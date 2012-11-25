@@ -193,8 +193,8 @@ GEM
     mime-types (1.19)
     mini_magick (3.1)
       subexec (~> 0.0.4)
-    minitest (3.3.0)
-    mocha (0.12.2)
+    minitest (4.2.0)
+    mocha (0.13.0)
       metaclass (~> 0.0.1)
     money (5.0.0)
       i18n (~> 0.4)
@@ -312,6 +312,8 @@ GEM
       shoulda-context (~> 1.0)
       shoulda-matchers (~> 1.2)
     shoulda-context (1.0.0)
+    shoulda-let (0.0.3)
+      shoulda
     shoulda-matchers (1.2.0)
       activesupport (>= 3.0.0)
     simple_form (2.0.2)
@@ -417,6 +419,7 @@ DEPENDENCIES
   sass
   sass-rails
   shoulda
+  shoulda-let
   simple_form
   simplecov
   sqlite3

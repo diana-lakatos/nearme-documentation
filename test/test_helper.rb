@@ -1,7 +1,6 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
-require 'minitest/autorun'
 require 'turn'
 
 Turn.config.format = :dotted
@@ -43,3 +42,4 @@ class ActiveSupport::TestCase
   end
 
 end
+require "mocha/setup"

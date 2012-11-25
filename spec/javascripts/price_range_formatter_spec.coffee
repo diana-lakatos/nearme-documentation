@@ -1,7 +1,6 @@
 describe "PriceRange", ->
   beforeEach ->
     affix('.price-range input[name=price-min] input[name=price-max] .slider .value')
-    // For some reason I cannot just apply these in the affix?
     $('input[name*=min]').val(0)
     $('input[name*=max]').val(300)
     @parent = jasmine.createSpyObj('Form', ['fieldChanged'])

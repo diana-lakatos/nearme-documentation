@@ -34,7 +34,7 @@ class ReservationMailer < DesksNearMeMailer
   def reservation_cancelled_by_owner(reservation)
     setup_defaults(reservation)
     generate_mail("Your reservation at #{@listing} has been cancelled by the owner")
-  end 
+  end
 
   def reservation_cancelled_by_user(reservation)
     setup_defaults(reservation)
@@ -42,36 +42,38 @@ class ReservationMailer < DesksNearMeMailer
     generate_mail("A reservation has been cancelled")
   end
 
-  class Preview < MailView
-  
-    def pending_confirmation
-      ::ReservationMailer.pending_confirmation(Reservation.first)
-    end
+  if defined? MailView
+    class Preview < MailView
 
-    def reservation_confirmed
-      ::ReservationMailer.reservation_confirmed(Reservation.first)
-    end
+      def pending_confirmation
+        ::ReservationMailer.pending_confirmation(Reservation.first)
+      end
 
-    def unconfirmed_reservation_created
-      ::ReservationMailer.unconfirmed_reservation_created(Reservation.first)
-    end
+      def reservation_confirmed
+        ::ReservationMailer.reservation_confirmed(Reservation.first)
+      end
 
-    def confirmed_reservation_created
-      ::ReservationMailer.confirmed_reservation_created(Reservation.first)
-    end
+      def unconfirmed_reservation_created
+        ::ReservationMailer.unconfirmed_reservation_created(Reservation.first)
+      end
 
-    def reservation_rejected
-     ::ReservationMailer.reservation_rejected(Reservation.first)
-    end
+      def confirmed_reservation_created
+        ::ReservationMailer.confirmed_reservation_created(Reservation.first)
+      end
 
-    def reservation_cancelled_by_owner
-      ::ReservationMailer.reservation_cancelled_by_owner(Reservation.first)
-    end
+      def reservation_rejected
+       ::ReservationMailer.reservation_rejected(Reservation.first)
+      end
 
-    def reservation_cancelled_by_user
-      ::ReservationMailer.reservation_cancelled_by_user(Reservation.first)
-    end
+      def reservation_cancelled_by_owner
+        ::ReservationMailer.reservation_cancelled_by_owner(Reservation.first)
+      end
 
+      def reservation_cancelled_by_user
+        ::ReservationMailer.reservation_cancelled_by_user(Reservation.first)
+      end
+
+    end
   end
 
   private

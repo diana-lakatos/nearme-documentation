@@ -20,12 +20,12 @@ class V1::ListingsController < V1::BaseController
 
   # FIXME: same code in search/query? Can they be the same API endpoint?
   def search
-    listings = Listing.find_by_search_params(json_params.merge(current_user: current_user))
+    listings = Listing.search_from_api(json_params.merge(user: current_user))
     render :json => listings
   end
 
   def query
-    listings = Listing.find_by_search_params(json_params.merge(current_user: current_user))
+    listings = Listing.search_from_api(json_params.merge(user: current_user))
     render :json => listings
   end
 
