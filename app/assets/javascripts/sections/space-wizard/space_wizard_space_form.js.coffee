@@ -25,7 +25,13 @@ class @SpaceWizardSpaceForm
 
     @map.marker = new google.maps.Marker({
       map: @map.map,
-      icon: @mapContainer.attr("data-marker")
+      icon: @mapContainer.attr("data-marker"),
+      draggable: true
     })
+
+    # When the marker is dragged, update the lat/lng form position
+    google.maps.event.addListener @map.marker, 'drag', =>
+      position = @map.marker.getPosition()
+      @address.setLatLng(position.lat(), position.lng())
 
 

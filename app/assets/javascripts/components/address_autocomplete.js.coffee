@@ -55,8 +55,7 @@ class @AddressAutocomplete
       , 1500
 
   pickSuggestion: (selection) ->
-    $("#location_latitude").val(selection.attr("data-lat"))
-    $("#location_longitude").val(selection.attr("data-lng"))
+    @setLatLng(selection.attr("data-lat"), selection.attr("data-lng"))
     $("#location_formatted_address").val(selection.html())
     $("#location_address").val(selection.html())
     $("#address-suggestions").remove()
@@ -64,6 +63,10 @@ class @AddressAutocomplete
     $("#location_local_geocoding").val("1")
 
     @_onLocate(selection.attr('data-lat'), selection.attr('data-lng')) if @_onLocate
+
+  setLatLng: (lat, lng) ->
+    $("#location_latitude").val(lat)
+    $("#location_longitude").val(lng)
 
   showLoading: ->
     @geolocateTrigger.hide()
