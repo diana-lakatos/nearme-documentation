@@ -9,7 +9,8 @@ class CompanyTest < ActiveSupport::TestCase
   should validate_presence_of(:description)
   should_not allow_value('not_an_email').for(:email)
   should allow_value('an_email@domain.com').for(:email)
-  should_not allow_value('not_a_url').for(:url)
+  should_not allow_value('not a url!').for(:url)
   should allow_value('http://a-url.com').for(:url)
+  should allow_value('a-url.com').for(:url)
 
 end

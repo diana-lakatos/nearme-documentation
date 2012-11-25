@@ -16,8 +16,9 @@ class User < ActiveRecord::Base
 
   mount_uploader :avatar, AvatarUploader
 
-
   validates_presence_of :name
+  validates_presence_of :password, :if => :password_required?
+  validates_presence_of :email
 
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :validatable, :token_authenticatable

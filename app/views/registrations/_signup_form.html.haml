@@ -12,11 +12,14 @@
 
     = f.input :name, :label => "Your name", :placeholder => "Enter your full name"
     = f.input :email, :label => "Your email address", :placeholder => "Valid email address"
-    .control-group
-      = f.label :password, "Your password", class: "control-label"
+    .control-group{:class => ("error" if f.object.errors[:password].any?)}
+      = f.label :password, raw("<abbr title='required'>*</abbr> Your password"), class: "control-label required"
       .controls.two-up
         = f.password_field :password,              placeholder: "Your password"
         = f.password_field :password_confirmation, placeholder: "Confirm password"
+
+        - if f.object.errors[:password].any?
+          %p.error-block= f.object.errors[:password].to_sentence
 
     .actions
       = f.submit 'Sign up and get started'
