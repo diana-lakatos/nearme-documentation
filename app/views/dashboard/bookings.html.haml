@@ -1,5 +1,7 @@
 - render 'dashboard/navigation', :current => :bookings
 
 %h1 Your Bookings
-- if @your_reservations.any?
-  = render :partial => "user_reservation_list", :locals => {:reservations => @your_reservations}
+
+%section#my_reservations.tab
+  - if @your_reservations.any?
+    = render "user_reservation_list", :reservations => @your_reservations

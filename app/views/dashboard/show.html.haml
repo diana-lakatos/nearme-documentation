@@ -1,24 +1,4 @@
 - render 'dashboard/navigation', :current => :overview
 
 %h1 Dashboard
-.tabs
-  %section#my_reservations.tab
-    - if @your_reservations.any?
-      = render :partial => "user_reservation_list", :locals => {:reservations => @your_reservations}
-  %section#reservations.tab
-    - if @listing_reservations.any?
-      = render :partial => "listing_reservation_list", :locals => {:reservations => @listing_reservations}
-- content_for :script do
-  :javascript
-    $(function(){
-      $(".tabs nav a").click(function(ev){
-        ev.stopPropagation();
 
-        $(".tabs nav a.selected, .tabs section.tab.selected").removeClass("selected");
-        var tab_id = $(this).attr("href"),
-            section = $(".tabs section" + tab_id)[0];
-        $([this, section]).addClass("selected");
-
-        return false;
-      });
-    });
