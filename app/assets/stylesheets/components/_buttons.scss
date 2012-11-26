@@ -25,6 +25,13 @@
     }
   }
 
+  &.btn-small {
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    @include border-radius(6px);
+  }
+
   &.btn-medium {
     height: 38px;
     line-height: 38px;
@@ -68,6 +75,19 @@
       @include background(linear-gradient(top center, #89a834, #9cbf3b));
     }
   }
+
+  &.btn-red {
+    background: #f34a40;
+    &:hover {
+      background: darken(#f34a40, 15%);
+    }
+
+    &:active {
+      background: #e93e34;
+      @include background(linear-gradient(top center, #e93e34, #f34a40));
+    }
+  }
+
 }
 
 .btn-group {

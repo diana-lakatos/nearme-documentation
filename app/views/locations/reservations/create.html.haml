@@ -6,4 +6,4 @@
   = link_to "Continue", "", :class => 'btn btn-medium btn-green close'
 
 :javascript
-  Modal.reloadOnClose(#{raw dashboard_url(:anchor => 'my_reservations').to_json})
+  Modal.reloadOnClose(#{raw bookings_dashboard_url.to_json})

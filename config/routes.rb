@@ -35,7 +35,13 @@ DesksnearMe::Application.routes.draw do
 
   resources :reservations, :only => :update
 
-  match "/dashboard", :to => "dashboard#index", :as => :dashboard
+  resource :dashboard, :only => [:show], :controller => 'dashboard' do
+    member do
+      get :bookings
+      get :listings
+      get :reservations
+    end
+  end
 
   match "/search", :to => "search#index", :as => :search
 
