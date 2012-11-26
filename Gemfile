@@ -32,15 +32,14 @@ gem 'thinking-sphinx'
 gem "compass-rails"
 gem "coffee-rails"
 gem "rdiscount"
+gem 'delayed_job_active_record'
 
 gem 'jquery-rails'
 gem 'sass-rails'
 gem 'chronic'
 
-group :staging, :production do
-  gem 'flying-sphinx', '0.7.0'
-  gem 'thin'
-end
+gem 'flying-sphinx', '0.7.0'
+gem 'thin'
 
 group :development do
   gem 'heroku'
