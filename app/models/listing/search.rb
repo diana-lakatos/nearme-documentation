@@ -11,6 +11,12 @@ class Listing
       end
 
       define_index do
+        if Rails.env.production? || Rails.env.staging?
+          set_property :delta => FlyingSphinx::DelayedDelta
+        else
+          set_property :delta => true
+        end
+
         join location
         join location.organizations
         where  "locations.id is not null"
