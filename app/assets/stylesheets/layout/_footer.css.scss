@@ -5,18 +5,14 @@ footer {
   }
   line-height: 18px;
   li {
+    float:left;
+    width: 16.6%;
+    text-align: center;
     a {
-      float: left;
-      display: block;
-      padding: 0 15px 0 10px;
       color: $dnm_blue;
-      @extend .font-banda-bold;
       text-decoration: none;
       font-size: 14px;
-      background: image-url("layout/footer-bullet.png") right 8px no-repeat;
-      &:hover {
-        color: $link_hover;
-      }
+      text-align: center;
     }
 
     &:first-child a {
@@ -37,10 +33,12 @@ footer {
   }
 
   .copyright p {
-    font-size: 14px;
-    text-shadow: 0 1px 0 rgba(255,255,255,.8);
+    font-size: 12px;
     padding: 15px 0 0 20px;
-    background: image-url("layout/footer-logo.png") 0 15px no-repeat;
+    max-width: 460px;
+    margin: 0 auto;
+    text-align: center;
+    color: rgb(150,150,150);
   }
 
 }

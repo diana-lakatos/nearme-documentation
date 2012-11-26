@@ -27,7 +27,7 @@ strong {
 
 h1, h2, h3, h4, h5 {
   font-family: "futura-medium", sans-serif;
-  font-weight: normal;
+  font-weight: normal !important;
   color: #1e2222;
 }
 
@@ -44,7 +44,6 @@ h2 {
 h3 {
   font-size: 16px;
   margin-bottom: 20px;
-  font-weight: bold;
 }
 
 p {
@@ -79,7 +78,7 @@ body, input {
   font-family: "futura-medium", sans-serif;
   letter-spacing: 1px;
   color: $dnm_black;
-  line-height: 20px;
+  line-height: 22px;
 }
 
 hr, .hr {

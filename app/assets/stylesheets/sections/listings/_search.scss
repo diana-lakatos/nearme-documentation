@@ -1,7 +1,3 @@
-@import "compass";
-@import "compass/css3";
-@import "compass/reset";
-
 #listing_search {
   position: relative;
   overflow: visible;
@@ -21,10 +17,8 @@
   }
 
   &.home_search input#search {
-    padding-left: 50px;
+    padding: 8px 0 8px 50px;
     width: 460px;
-    padding-top: 10px;
-    padding-bottom: 10px;
   }
 
   &.search_results input#search {
@@ -34,8 +28,8 @@
 
   &.search_results .geolocation {
     background: image-url("sections/search/geolocate.png");
-    width: 22px;
-    height: 23px;
+    width: 32px;
+    height: 33px;
     top: 10px;
   }
 
