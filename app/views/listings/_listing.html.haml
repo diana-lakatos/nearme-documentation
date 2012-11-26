@@ -3,10 +3,7 @@
     .two.columns.alpha
       = link_to image_tag(listing.photos.thumb.url, :title => listing.name, :alt => listing.name), listing
     .five.columns
-      %h2
-        = link_to listing do
-          = listing.name + ' - '
-          = raw listing_price(listing)
+      %h2= link_to "#{listing.name}", listing
       %address= listing.formatted_address || listing.address
       - unless listing.strict_match?
         %p This result may not exactly match your search criteria
