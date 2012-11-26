@@ -4,7 +4,6 @@
     .hero-wood-spacer
     %nav.hero-nav
       %ul.container
-        %li{:class => ('current' if current == :overview)}= link_to "Overview", dashboard_url
         %li{:class => ('current' if current == :account)}= link_to "Account", edit_user_registration_url
         %li{:class => ('current' if current == :bookings)}= link_to "Bookings", bookings_dashboard_url
         - if current_user.listings.any?

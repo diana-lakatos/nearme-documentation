@@ -38,6 +38,19 @@ header {
     padding-top: 10px;
     line-height: 38px;
 
+    .user-welcome {
+      font-size: 16px;
+      text-transform: uppercase;
+      color: #899296;
+      font-weight: bold;
+      margin-right: 30px;
+      display: inline-block;
+
+      strong {
+        color: #394449;
+      }
+    }
+
     a.header-link {
       @extend .font-banda-bold;
       display: inline-block;
