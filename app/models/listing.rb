@@ -38,7 +38,8 @@ class Listing < ActiveRecord::Base
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
                   :creator_id, :name, :description, :daily_price, :weekly_price, :monthly_price,
-                  :availability_template_id, :availability_rules_attributes, :defer_availability_rules, :free
+                  :availability_template_id, :availability_rules_attributes, :defer_availability_rules, :free,
+                  :photos_attributes
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
@@ -66,6 +67,7 @@ class Listing < ActiveRecord::Base
   extend PricingPeriods
   include AvailabilityRule::TargetHelper
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
+  accepts_nested_attributes_for :photos, :allow_destroy => true
 
   add_pricing_period :daily, MINUTES_IN_DAY
   add_pricing_period :weekly, MINUTES_IN_WEEK

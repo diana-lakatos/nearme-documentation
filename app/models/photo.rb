@@ -5,7 +5,6 @@ class Photo < ActiveRecord::Base
 
   acts_as_paranoid
   validates :image, :presence => true
-  validates_presence_of :caption
 
   mount_uploader :image, PhotoUploader
 
