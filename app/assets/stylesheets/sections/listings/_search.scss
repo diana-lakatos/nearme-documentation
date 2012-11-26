@@ -28,9 +28,9 @@
 
   &.search_results .geolocation {
     background: image-url("sections/search/geolocate.png");
-    width: 32px;
-    height: 33px;
-    top: 10px;
+    width: 22px;
+    height: 23px;
+    top: 13px;
   }
 
   .btn {
@@ -120,7 +120,7 @@
 
       .date-icon {
         position: absolute;
-        top: 8px;
+        top: 12px;
         left: 8px;
         display: block;
         background: image-url("sections/search/date-start.png");
