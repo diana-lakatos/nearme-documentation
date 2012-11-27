@@ -27,13 +27,6 @@ Feature: A user can search for a listing
     And I see a search result for the Auckland listing
     And I do not see a search result for the Cleveland listing
 
-  Scenario: A user searches with a price range
-    Given a listing in Auckland exists with a price of $50.00
-    And a listing in Auckland exists with a price of $10.00
-    When I set the price range to $0 to $25
-    And I search for "Auckland"
-    Then the search results have the $10 listing first
-
   #for some reason, this passes independently, but fails sporadically when ran with the suite :(
   Scenario: A user searches with amenities
     Given an amenity exists
@@ -42,6 +35,14 @@ Feature: A user can search for a listing
     When I select that amenity
     And I search for "Auckland"
     Then the search results have the listing with that amenity first
+
+  @wip
+  Scenario: A user searches with a price range
+    Given a listing in Auckland exists with a price of $50.00
+    And a listing in Auckland exists with a price of $10.00
+    When I set the price range to $0 to $25
+    And I search for "Auckland"
+    Then the search results have the $10 listing first
 
   @future
   Scenario: A user searches with associations

@@ -4,7 +4,7 @@ Given /^I am a member of (?:the above|that) organization$/ do
 end
 
 When /^I add myself as a member of the organization$/ do
-  click_link 'Account'
+  click_link 'Dashboard'
   check model!('organization').name
   click_button "Save Changes"
 end

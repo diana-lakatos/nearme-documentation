@@ -28,8 +28,6 @@ Then /^the search results have the \$10 listing first$/ do
   prices.first.should =~ /\$10/
 end
 
-
-
 Then /^the search results have the listing with that amenity first$/ do
   Capybara.default_wait_time = 25
   listing = Listing.all.select { |l| l.amenities.include? model("amenity") }.first
