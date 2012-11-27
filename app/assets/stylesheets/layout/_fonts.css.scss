@@ -13,6 +13,16 @@ html {
     font-style: normal !important; 
 }
 @font-face {
+    font-family: "futura-book";
+    src: url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-book.eot');
+    src: url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-book.eot?#iefix') format('embedded-opentype'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-book.woff') format('woff'),
+         url('http://desksnearme.assets.s3.amazonaws.com/fonts/futurastd-book.ttf') format('truetype'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-book.svg#futura_std_bookbook') format('svg');
+    font-weight: normal !important;
+    font-style: normal !important;
+}
+@font-face {
     font-family: "futura-medium";
     src: url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-medium.eot');
     src: url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-medium.eot?#iefix') format('embedded-opentype'),
@@ -32,15 +42,19 @@ html {
     font-weight: normal !important;
     font-style: normal !important;
 }
-
-a, a:visited {
-  color: $dnm_blue;
-  font-family: "futura-medium";
-  text-decoration: none;
-  @include transition(all .15s ease-in);
-
-  &:hover { 
-    color: darken( $dnm_blue, 20%);
-    text-decoration: none;
-  }
+@font-face {
+    font-family: "futura-bold";
+    src: url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-bold.eot');
+    src: url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-bold.eot?#iefix') format('embedded-opentype'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-bold.woff') format('woff'),
+         url('http://desksnearme.assets.s3.amazonaws.com/fonts/futurastd-bold.ttf') format('truetype'),
+         url('http://s3.amazonaws.com/desksnearme.assets/fonts/futurastd-bold.svg#futura_std_boldbold') format('svg');
+    font-weight: normal !important;
+    font-style: normal !important;
 }
+$font-light: futura-light;
+$font-regular: futura-book;
+$font-medium: futura-medium;
+$font-heavy: futura-heavy;
+$font-bold: futura-bold;
+

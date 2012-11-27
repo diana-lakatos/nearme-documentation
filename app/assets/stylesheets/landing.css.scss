@@ -99,10 +99,22 @@ footer {
     h1 {
       display: inline-block;
       background: $blue;
-      background: rgba(249,158,28,.75);
+      background: rgba(249,158,28,.9);
       padding: 10px 20px;
       margin: 100px auto 40px;
       font: normal 60px/70px 'futura-medium', sans-serif;
+      color: white;
+
+      @media screen and (max-width: 480px) {
+        display: block;
+        width: 100%;
+        box-sizing: border-box; 
+        position:absolute;
+        bottom:7px; 
+        left:0; 
+        margin:0 auto;
+        font: normal 45px/60px 'futura-medium', sans-serif;
+      }
     }
   }
 }

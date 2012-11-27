@@ -1,20 +1,28 @@
+.footer-wrapper {
+  background: $gray;
+  padding: 40px 0;
+}
 footer {
-  border-top: solid lighten($dnm_black, 60%) 2px;
-  .inner {
-    padding-top: 17px;
-  }
   line-height: 18px;
   li {
     float:left;
     width: 16.6%;
     text-align: center;
-    a {
-      color: $dnm_blue;
+    a, a:visited {
+      color: darken( $light-gray, 15%);
       text-decoration: none;
-      font-size: 14px;
+      font-size: 16px;
       text-align: center;
-    }
+      font-family: $font-medium;
 
+      &:hover {
+        color: $light-gray;
+      }
+
+      @media (max-width:480px) {
+        font-size: 10px;
+      }
+    }
     &:first-child a {
       padding-left: 0;
     }
@@ -31,14 +39,17 @@ footer {
     }
 
   }
-
   .copyright p {
-    font-size: 12px;
-    padding: 15px 0 0 20px;
+    font-size: 10px;
+    padding: 40px 0 0 20px;
     max-width: 460px;
     margin: 0 auto;
     text-align: center;
-    color: rgb(150,150,150);
-  }
+    color: darken( $light-gray, 25%);
+    @include transition(all .2s ease-in);
 
+    &:hover {
+      color: $light-gray;
+    }    
+  }
 }
