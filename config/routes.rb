@@ -43,6 +43,20 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+  namespace :manage, :path => 'dashboard' do
+    resources :companies do
+      resources :locations, :only => [:index] do
+      end
+    end
+
+    resources :locations do
+      resources :listings, :only => [:index]
+    end
+
+    resources :listings do
+    end
+  end
+
   match "/search", :to => "search#index", :as => :search
 
   resources :authentications do

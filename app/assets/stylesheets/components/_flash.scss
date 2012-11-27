@@ -1,16 +1,53 @@
 .flash {
-  @extend .box;
-  @extend .box-content;
+  position: relative;
+  border: 1px solid #c6c6c6;
+  color: #394449;
+  background: #f5f5f5;
+  background-repeat: no-repeat;
+  background-position: 13px 13px;
+  margin: 12px 0;
+  padding: 12px;
+  font-size: 16px;
+  background-image: image-url("components/flash/info.png");
+  padding-left: 40px;
+  @include border-radius(8px);
 
   &.error {
-
+    border: 1px solid #e3aca9;
+    color: #e83d33;
+    background-image: image-url("components/flash/error.png");
   }
 
   &.notice, &.alert {
 
   }
 
+  &.success {
+    border: 1px solid #b9c88e;
+    color: #89a734;
+    background-image: image-url("components/flash/success.png");
+  }
+
   &.message {
+
+  }
+
+  .close {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+    background: image-url("layout/close.png");
+    width: 16px;
+    height: 17px;
+    @include opacity(0.7);
+    &:hover {
+      @include opacity(1);
+    }
+  }
+}
+
+.context-flash {
+  &.error {
 
   }
 }
