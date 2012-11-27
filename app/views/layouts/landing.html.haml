@@ -1,0 +1,47 @@
+!!!
+%html
+  %head
+    %title
+      DesksNear.Me :: #{show_title? ? yield(:title) : "Where do you want to work today?"}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}  
+    = stylesheet_link_tag 'landing' 
+.row-1
+  .wrapper
+    .col-1
+      %a{:href=>"http://desksnear.me/"}
+        %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/dnm-watermark.png", :alt => "Desks Near Me"}
+          %a{:href=>"http://desksnear.me/users/sign_up?wizard=space"}
+    .col-2
+      %h1 Become a Host!
+    .clearfix
+.row-2
+  .wrapper
+    .col-1
+      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/dollar-animation.gif", :alt => "Dollar Sign"}
+    .col-2
+      %h2 Rent out your extra space.
+      %p Why let unused space go to waste? Generate revenue by renting out your empty office space. Review & rent to pre-screened professionals in your industry, or open your doors to all.
+    .clearfix   
+.row-3
+  .wrapper
+    .col-1
+      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/collaboration-animation.gif", :alt => "Dollar Sign"}
+    .col-2
+      %h2 Build your network.
+      %p Build your network & client base by opening up your space to professionals in your industry.  Create a co-working environment, and cross polinate with other fields.
+      <a id='sign-up' href='http://desksnear.me/users/sign_up?wizard=space' > List Your Space!</a>      
+    .clearfix
+%footer
+  .wrapper
+    %li 
+      %a{:href=>"mailto:support@desksnear.me", :title=>"Contact"} Contact
+    %li 
+      %a{:href=>"http://support.desksnear.me/", :title=>"Support"}  Support
+    %li 
+      %a{:href=>"http://blog.desksnear.me/", :title=>"Blog"}  Blog    
+    %li.clear 
+      %a{:href=>"https://twitter.com/desksnearme", :title=>"Twitter"} Twitter
+    %li 
+      %a{:href=>"https://www.facebook.com/DesksNearMe", :title=>"Facebook"} Facebook  
+    %li 
+      %a{:href=>"http://instagram.com/desksnearme", :title=>"Instagram"}  Instagram               

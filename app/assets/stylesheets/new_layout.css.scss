@@ -13,18 +13,13 @@
 /* #Site Styles
 ================================================== */
 
-// Full width container
-.super-container {
-}
 
 body {
   background: image-url("layout/background-tile.png");
-
-  @extend .font-banda;
 }
 
 header {
-  margin-top: 15px;
+  margin: 15px 0 0;
 
   #logo {
     display: inline-block;
@@ -52,16 +47,14 @@ header {
     }
 
     a.header-link {
-      @extend .font-banda-bold;
       display: inline-block;
       color: $dnm_gray;
       font-size: 16px;
-      text-transform: uppercase;
       margin-right: 30px;
       text-decoration: none;
 
       &:hover {
-        text-decoration: underline;
+        color:rgb(10,10,10);
       }
     }
   }
@@ -69,7 +62,6 @@ header {
 
 #content > .container {
   padding-top: 30px;
-  background: image-url("layout/background-logo.png") 0 -60px no-repeat;
   padding-bottom: 30px;
 }
 
