@@ -26,7 +26,7 @@
 
     .two-thirds.column 
       %h1 Find a desk near you.
-      %p Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to find great places to work. Whether you need a workspace for a day, or six months, Desks Near Me has you covered.
+      %p Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to find great places to work. Leverage networking opportunities in a shared environment, or work from a single office for greater privacy. Whether you need a workspace for a day, a month, or a year, Desks Near Me has you covered.
       %a
       = link_to "Find a Desk!", search_path, :class => "btn btn-green btn-medium"
   .row
@@ -35,16 +35,10 @@
 
     .two-thirds.column 
       %h1 Rent out your extra space.
-      %p Why let unused space go to waste? Generate revenue by renting out your empty office space. Review & rent to pre-screened professionals in your industry, or open your doors to all.
-      %a.btn.btn-blue.btn-medium{ :rel => "submit", :href => "" }
-        List Your Space!
-  .row
-    .one-third.column.alpha
-      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/collaboration.png", :alt => "Collaboration"}
+      %p Don't let unused space go to waste: generate revenue by renting out your empty office space. Build your network & client base by opening up your space to professionals in your industry. Create a shared space and encourage collaboration between fields.      
 
-    .two-thirds.column 
-      %h1 Connect &amp; Collaborate
-      %p Build your network & client base by opening up your space to professionals in your industry.  Work from a co-working environment, and cross polinate with other fields.      
+      %a.btn.btn-blue.btn-medium{ :rel => "submit", :href => "" }
+        List Your Space!     
 
 - content_for :domready do
   new DNM.HomeSearch($('#listing_search'))
