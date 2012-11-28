@@ -8,7 +8,7 @@ body, input {
   font-family: $font-regular, sans-serif;
   letter-spacing: 1px;
   color: $dnm_black;
-  line-height: 22px;
+  line-height: 24px;
 }
 a, a:visited {
   color: $dnm_blue;
@@ -20,6 +20,10 @@ a, a:visited {
     color: darken( $dnm_blue, 20%);
     text-decoration: none;
   }
+}
+
+img { 
+  max-width:100%;
 }
 
 .right {
@@ -39,7 +43,8 @@ a, a:visited {
 }
 
 strong {
-  font-weight: bold;
+  font-family: $font-bold;
+  font-weight: normal !important;
 }
 
 h1, h2, h3, h4, h5 {

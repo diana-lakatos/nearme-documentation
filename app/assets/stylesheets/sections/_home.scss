@@ -2,8 +2,19 @@ section.public {
   #hero {
     @extend .hero-blue-top;
     height: 500px;
+    width: auto;
     background: $dnm_grey image-url("sections/home/hero1.jpg") center center no-repeat;
     background-size: cover;
+  }
+  .caption a {
+    position: absolute;
+    top: 540px;
+    right: 20px;
+    color: rgba(240,240,240,.7);
+
+    &:hover {
+      color: white;
+    }
   }
 }
 
@@ -13,7 +24,6 @@ section.public {
       float: left;
       font-size: 36px;
       line-height:42px;
-      font-weight: bold;
       color: #eaeaea;
       margin-bottom: 10px;
       text-shadow: -1px -1px 0 #2e1d16,
@@ -34,7 +44,7 @@ section.public {
       margin-left: 10px;
     }
 
-    margin-top: 120px;
+    margin-top: 180px;
     padding: 12px;
   }
 
@@ -58,34 +68,22 @@ section.public {
     margin-left: 0px;
   }
 }
-
-#app_store_link {
-  margin-top: -6px;
-  display: block;
-  text-indent: -9999px;
-  background: image-url("sections/home/get-the-app.png") no-repeat center 16px;
-  height: 188px;
-}
-
-#dream_force_link {
-  margin-top: -6px;
-  display: block;
-  text-indent: -9999px;
-  background: image-url("sections/home/dreamforce.png") no-repeat;
-  height: 214px;
-}
-
-#gmic_link {
-  display: block;
-  background: image-url("sections/home/gmic.png") no-repeat;
-  height: 162px;
-  margin-top: 20px;
-  text-indent: -9999px;
-}
 @media (max-width:959px) { 
   #search_row {
     .wood-box h2 {
       margin:0 0 10px;
     }
   }
-}    
+}  
+section.how-it-works {
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+  .row {
+    margin: 40px 0;
+  }
+  h1{
+    font: normal 40px/50px $font-medium, sans-serif;
+    margin: 10px 0 20px;
+  }
+}  
