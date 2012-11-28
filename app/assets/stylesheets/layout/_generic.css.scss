@@ -4,6 +4,23 @@
   background-color: #27B0E6;
   color: white;
 }
+body, input {
+  font-family: $font-regular, sans-serif;
+  letter-spacing: 1px;
+  color: $dnm_black;
+  line-height: 22px;
+}
+a, a:visited {
+  color: $dnm_blue;
+  font-family: "futura-medium";
+  text-decoration: none;
+  @include transition(all .15s ease-in);
+
+  &:hover { 
+    color: darken( $dnm_blue, 20%);
+    text-decoration: none;
+  }
+}
 
 .right {
   float: right;
@@ -26,7 +43,7 @@ strong {
 }
 
 h1, h2, h3, h4, h5 {
-  font-family: "Banda";
+  font-family: $font-medium;
   font-weight: normal;
   color: #1e2222;
 }
@@ -44,7 +61,6 @@ h2 {
 h3 {
   font-size: 16px;
   margin-bottom: 20px;
-  font-weight: bold;
 }
 
 p {
@@ -70,17 +86,6 @@ p {
   margin: 23px 0;
   padding: 0;
 }
-
-.h3-normal {
-  @include h3-normal;
-}
-
-body {
-  font-family: "Banda", sans-serif;
-  color: $dnm_black;
-  line-height: 20px;
-}
-
 hr, .hr {
   padding: 0;
   border: 0;

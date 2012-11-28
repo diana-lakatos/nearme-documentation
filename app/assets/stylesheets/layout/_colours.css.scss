@@ -1,4 +1,4 @@
-$dnm_blue:   #2091d0;
+$dnm_blue:   #2792C1;
 $dnm_purple: #91529c;
 $dnm_red:    #e83d33;
 $dnm_green:  #89a734;
@@ -6,4 +6,13 @@ $dnm_grey:   #394449;
 $dnm_gray:   $dnm_grey;
 $dnm_black:  #1e2222;
 
-$link_hover: lighten($dnm_blue, 10%);
+$blue:   #2792C1;
+$purple: #91529c;
+$red:    #e83d33;
+$green:  #89a734;
+$grey:   #394449;
+$gray:   $grey;
+$light-gray: #E2E2E2;
+$black:  #1e2222;
+
+$link_hover: darken($dnm_blue, 10%);

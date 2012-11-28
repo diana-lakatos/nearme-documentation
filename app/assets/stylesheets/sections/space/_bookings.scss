@@ -18,14 +18,10 @@
     }
 
     .listing {
-      p {
-        font-size: 12px;
-        line-height: 14px;
-      }
 
       .images, .description, .book {
         float: left;
-        width: 295px;
+        max-width: 295px;
         margin-left: 20px;
 
         &:first-child {
@@ -40,10 +36,6 @@
       }
 
       .description {
-        h3 {
-          font-size: 16px;
-          margin-bottom: 0;
-        }
 
         .price {
           font-size: 22px;

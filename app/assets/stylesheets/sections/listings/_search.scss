@@ -17,10 +17,8 @@
   }
 
   &.home_search input#search {
-    padding-left: 50px;
+    padding: 8px 0 8px 50px;
     width: 460px;
-    padding-top: 10px;
-    padding-bottom: 10px;
   }
 
   &.search_results input#search {
@@ -32,12 +30,12 @@
     background: image-url("sections/search/geolocate.png");
     width: 22px;
     height: 23px;
-    top: 10px;
+    top: 13px;
   }
 
   .btn {
     height: 48px;
-    line-height: 44px;
+    line-height: 48px;
     position: relative;
     vertical-align: top;
     width: 115px;
@@ -122,7 +120,7 @@
 
       .date-icon {
         position: absolute;
-        top: 8px;
+        top: 12px;
         left: 8px;
         display: block;
         background: image-url("sections/search/date-start.png");

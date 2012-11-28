@@ -1,5 +1,6 @@
 Feature: User Views Listing
 
+  @wip
   Scenario: Viewing a free listing
     Given a free listing exists
     Then the listing price is shown as Free
