@@ -314,7 +314,7 @@ form {
 }
 
 // Width overrides for restricted width forms
-.two-thirds.column form.form-horizontal {
+.two-thirds.column form.form-horizontal, .eleven.columns form.form-horizontal {
   input[type="text"], input[type="password"], input[type="email"], input[type="url"], input[type="tel"], textarea {
     width: 355px;
   }

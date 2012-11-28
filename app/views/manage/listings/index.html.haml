@@ -1,0 +1,11 @@
+= render :layout => 'manage/layout' do
+  .box
+    %h2
+      Manage
+      %strong= @location.name
+
+    = render 'manage/locations/navigation', :active => :listings
+
+    List of the listings
+
+
