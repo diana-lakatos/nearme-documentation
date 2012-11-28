@@ -28,7 +28,7 @@ gem 'state_machine'
 gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'tweet-button'
 gem 'will_paginate'
-gem 'thinking-sphinx'
+gem 'thinking-sphinx', '2.0.11'
 gem "compass-rails"
 gem "coffee-rails"
 gem "rdiscount"
@@ -38,7 +38,7 @@ gem 'jquery-rails'
 gem 'sass-rails'
 gem 'chronic'
 
-gem 'flying-sphinx', '0.7.0'
+gem 'flying-sphinx', '0.8.4'
 gem 'thin'
 
 group :development do
