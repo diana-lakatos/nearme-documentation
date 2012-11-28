@@ -25,10 +25,13 @@ ul.nav {
       line-height: 46px;
       font-size: 16px;
       font-weight: bold;
-      color: #1e2222;
       padding: 0 16px;
       text-shadow: 0 1px 0 rgba(255,255,255,0.7);
       position: relative;
+
+      &, &:hover, &:active, &:visited {
+        color: #1e2222;
+      }
     }
   }
 }

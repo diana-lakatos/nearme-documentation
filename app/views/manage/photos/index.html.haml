@@ -1,0 +1,20 @@
+= render :layout => 'manage/layout' do
+  .box
+    %h2
+      Manage
+      %strong="#{@listing.location.name} - #{@listing.name}"
+
+    = render 'manage/listings/navigation', :active => :photos
+
+    = render 'shared/context_flash'
+
+    %ul#photos.photos
+      - @listing.photos.each do |photo|
+        - unless photo.new_record?
+          %li.grid_2
+            = image_tag photo.medium.url, :alt => photo.caption, :width => "100%"
+            %p= photo.caption
+            = link_to "Delete", [:manage, @listing, photo], :method => :delete, :confirm => "Are you sure you want to remove this photo?", :class => "btn btn-red btn-small"
+    %br{:clear => "both"}/
+    = render :partial => "new"
+

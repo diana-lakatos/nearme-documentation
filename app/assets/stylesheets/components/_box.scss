@@ -124,7 +124,7 @@
       border-left: none;
     }
 
-    &:last-child {
+    &:last-child, &.last {
       border-right: 1px solid #758187;
       a {
         border-right: 1px solid #546066;
@@ -148,16 +148,31 @@
         border-left: none;
       }
 
-      &:last-child {
+      &:last-child, &.last {
         border-right: 1px solid #758187;
         a {
           border-right: 1px solid #333a3f;
         }
       }
     }
+
+    &.right-link {
+      float: right;
+
+      &, a {
+        border-right: none;
+        border-left: none;
+      }
+
+      a {
+        font-weight: normal;
+        background: image-url("components/nav/box-return.png") left 10px no-repeat;
+        padding-left: 22px;
+      }
+    }
   }
 
-  li.active + li {
+  li.active + li:not(.right-link) {
     border-left: 1px solid #333a3f;
     a {
       border-left: 1px solid #758187;

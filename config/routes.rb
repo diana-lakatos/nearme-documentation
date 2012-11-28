@@ -51,9 +51,17 @@ DesksnearMe::Application.routes.draw do
 
     resources :locations do
       resources :listings, :only => [:index]
+      member do
+        get :map
+        get :amenities
+        get :availability
+        get :photos
+        get :associations
+      end
     end
 
     resources :listings do
+      resources :photos
     end
   end
 

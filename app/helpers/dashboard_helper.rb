@@ -2,11 +2,10 @@ module DashboardHelper
   def dashboard_company_nav_class(company)
     classes = []
 
-    if @company && @company == company
+    if @location && @location.company == company
       classes << 'expanded'
+    elsif @company && @company == company
       classes << 'active'
-    elsif @location && @location.company == company
-      classes << 'expanded'
     end
 
     classes.join ' '

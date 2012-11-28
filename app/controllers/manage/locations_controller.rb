@@ -1,6 +1,7 @@
 class Manage::LocationsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :find_location
+  before_filter :find_location, :except => [:index]
+  before_filter :find_company
 
   def index
   end

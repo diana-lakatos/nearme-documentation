@@ -4,6 +4,7 @@
       Manage
       %strong= @company.name
 
+    = render 'navigation', :active => :details
     = render 'shared/context_flash'
 
     = simple_form_for([:manage, @company], :html => { :class => 'form-horizontal' }) do |f|
