@@ -4,6 +4,9 @@
     You can allow anything to be booked - conference rooms, premium desks, kitchens, entertainment areas! It’s entirely up to you.
 
   = simple_form_for @space, :url => space_wizard_desks_url, :html => { :class => "form-horizontal new_desks" } do |f|
+    = hidden_field_tag :company_id, @company.id
+    = hidden_field_tag :space_id, @space.id
+
     .listings
       = f.simple_fields_for :listings, (Listing.new unless @space.listings.any?) do |lf|
         = render 'desk_fields', :f => lf

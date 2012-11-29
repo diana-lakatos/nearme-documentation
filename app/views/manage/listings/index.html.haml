@@ -14,4 +14,4 @@
 
         %h3= listing.name
 
-
+    = link_to "Add a Desk or Room", space_wizard_desks_url(:company_id => @location.company.id, :space_id => @location.id), :class => "btn btn-green btn-medium"

@@ -13,31 +13,30 @@ class SpaceWizardController < ApplicationController
   end
 
   def company
-    @company = @user.companies.first_or_initialize
+    @company = @user.companies.build
   end
 
   def submit_company
-    @company = @user.companies.first_or_initialize
+    @company = @user.companies.build
     @company.attributes = params[:company]
 
     if @company.save
-      wizard_session[:company_id] = @company.id
-      redirect_to space_wizard_space_url
+      redirect_to space_wizard_space_url(:company_id => @company.id)
     else
       render :company
     end
   end
 
   def space
-    @location = @company.locations.first_or_initialize
+    @location = @company.locations.build
   end
 
   def submit_space
-    @location = @company.locations.first_or_initialize
+    @location = @company.locations.build
     @location.attributes = params[:location]
 
     if @location.save
-      redirect_to space_wizard_desks_url
+      redirect_to space_wizard_desks_url(:company_id => @company.id, :space_id => @location.id)
     else
       render :space
     end
@@ -60,18 +59,7 @@ class SpaceWizardController < ApplicationController
 
   def redirect_for_complete
     flash[:notice] = "Great, your space has been set up!"
-
-    # TODO: When Spaces (Locations) are the exposed public object change
-    #       this.
-    if @space.listings.any?
-      redirect_to listing_url(@space.listings.first)
-    else
-      redirect_to dashboard_url
-    end
-  end
-
-  def wizard_session
-    session[:space_wizard] ||= {}
+    redirect_to [:edit, :manage, @space]
   end
 
   def find_user
@@ -83,7 +71,7 @@ class SpaceWizardController < ApplicationController
   end
 
   def find_company
-    company_id = wizard_session[:company_id]
+    company_id = params[:company_id]
     @company = current_user.companies.find_by_id(company_id) if company_id
 
     unless @company
@@ -92,7 +80,8 @@ class SpaceWizardController < ApplicationController
   end
 
   def find_space
-    @space = @company.locations.first
+    space_id = params[:space_id]
+    @space = @company.locations.find(space_id)
 
     unless @space
       redirect_to space_wizard_space_url
