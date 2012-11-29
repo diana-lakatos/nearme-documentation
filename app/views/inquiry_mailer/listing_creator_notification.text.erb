@@ -1,11 +1,7 @@
-Hi <%= @inquiry.listing.creator.name %>,
+Dear <%= @inquiry.inquiring_user.name %>,
 
-We've received a new inquiry from <%= @inquiry.inquiring_user.name %>. They've asked:
+<%= @inquiry.inquiring_user.name %> has asked a question about your listing, <%= @inquiry.listing %> on Desks Near Me:
 
-"<%= @inquiry.message %>"
+"<%= @inquiry.message %>""
 
-You can answer their question by replying to this email.
-
-Sweet!
-
- - The Desks Near Me Crew
+Simply reply to this email to get in touch with them!

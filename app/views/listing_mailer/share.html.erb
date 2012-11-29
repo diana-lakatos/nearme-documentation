@@ -1,10 +1,11 @@
-<p>Hey there <%= @name %>,</p>
+<p>Dear <%= @name %>,</p>
 
-<p><%= @sharer.name %> has shared a listing with you on Desks Near Me! Click the link below to check it out!</p>
+<p><%= @sharer.name %> has shared a listing with you!</p>
 
-<p><%= listing_url(@listing) %></p>
+<p><%= link_to "View #{@listing.name} on Desks Near Me", location_url(@listing.location) %>.</p>
 
 <%- if @message %>
   <p>They also wanted to say:</p>
-  <p><%= @message %></p>
+
+  <pre><%= @message %></pre>
 <%- end %>

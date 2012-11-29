@@ -23,7 +23,7 @@ class InquiryMailer < DesksNearMeMailer
       end
 
       def listing_creator_notification
-        ::InquiryMailer.inquiring_user_notification(Inquiry.first)
+        ::InquiryMailer.listing_creator_notification(Inquiry.first)
       end
 
     end

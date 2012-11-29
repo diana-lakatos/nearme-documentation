@@ -1,26 +1,11 @@
-
+%p
+	%strong Location
+	= listing.name
 
 %p
-	Location:
-	= listing.name
-	= "- #{listing.description}" unless listing.description.blank?
+	%strong Dates
+	= reservation_dates(reservation)
 
-%p 
-	Dates:
-	- dates = []
-	- reservation.periods.each do |period|
-		- dates << period.date.strftime('%m/%d/%Y')
-	= dates.to_sentence
-
-%p 
-	Desks:
-	= reservation.periods.first.seats.count
-
-%p 
-	Total Price:
-	- if reservation.total_amount_cents.nil?
-		= humanized_money_with_symbol(0)
-	- else
-		= humanized_money_with_symbol(reservation.total_amount_cents/100.0)
-
-	
+%p
+	%strong Total Price
+	= reservation_total_price(reservation)

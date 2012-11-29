@@ -34,11 +34,11 @@ Feature: Emails should be sent out informing parties about reservations
     And the 1st email should be delivered to user "Bo Jeanes"
     And the 1st email should have subject: "[DesksNear.Me] A new reservation requires your confirmation"
     And the 1st email should contain "Bo Jeanes,"
-    And the 1st email should contain "Keith Contractor has made a reservation for Mocra"
+    And the 1st email should contain "Keith Contractor has made a booking for your listing, Mocra."
     And the 2nd email should be delivered to user "Keith Contractor"
     And the 2nd email should have subject: "[DesksNear.Me] Your reservation is pending confirmation"
     And the 2nd email should contain "Dear Keith Contractor,"
-    And the 2nd email should contain "You have made a reservation for Mocra"
+    And the 2nd email should contain "We'd like you to know that your request to reserve Mocra has been submitted"
 
   @javascript
   Scenario: reservation confirmations not required

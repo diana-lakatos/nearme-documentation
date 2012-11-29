@@ -1,17 +1,8 @@
-Dear <%= @user %>,
+Dear <%= @user.name %>,
 
-<%= @reservation.owner %> has made a reservation for <%= @listing %> on <%= l(@reservation.date, :format => :long) %>.
-<%- if @reservation.comment -%>
+<%= @reservation.owner %> has made a booking for your listing, <%= @listing %>. The specifics of this reservation are set out below.
 
-They said:
-
-"<%= @reservation.comment %>"
-<%- end -%>
-
+<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %>
 They have been notified that reservation confirmation is required.
 
-Please confirm or decline their reservation by logging into the site. Just click the link below:
-
-<%= @url %>
-
-<%= render :partial => "footer" %>
+Please confirm or decline their reservation by <%= link_to 'logging into your dashboard', @url %>.

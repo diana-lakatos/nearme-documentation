@@ -1,5 +1,6 @@
 class DesksNearMeMailer < ActionMailer::Base
-	helper :listings
+  include ActionView::Helpers::TextHelper
+	helper :listings, :reservations
   default from: "no-reply@desksnear.me"
   default_url_options[:host] = "desksnear.me"
   layout 'mailer'

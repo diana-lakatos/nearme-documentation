@@ -1,8 +1,8 @@
 Dear <%= @user %>,
 
-Unfortunately, your reservation at <%= @listing %> on <%= l(@reservation.date, :format => :long) %>
-has been cancelled. This reservation was previously confirmed, but the plans have changed.
+Unfortunately, your booking at <%= @listing %> has been cancelled.
 
-Good luck finding another listing or reservation for this one on another day :)
+<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %>
+This booking was previously confirmed, but the plans have changed. I’m sure it’s nothing personal. Good luck finding another workplace or booking for this one on another day :)
 
-<%= render :partial => "footer" %>
+<%= link_to 'Search for another space', search_path %>

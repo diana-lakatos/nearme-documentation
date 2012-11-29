@@ -1,7 +1,7 @@
-<p>Dear <%= @user %>,</p>
+<p>Dear <%= @user.name %>,</p>
 
-<p><%= @reservation.owner %> has cancelled their booking at <%= @listing %>.
+<p><%= @reservation.owner %> has cancelled their booking at <%= @listing %> that they made earlier.</p>
 
-<p><%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %></p>
+<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %>
 
-<p>We’ll re-list your space as available.</p>
+<p>This is simply to notify you that the user will not be arriving at your space for this day and time. We’ll re-list your space as available.</p>

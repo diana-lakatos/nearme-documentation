@@ -1,8 +1,7 @@
 <p>Dear <%= @inquiry.inquiring_user.name %>,</p>
 
-<p><%= @inquiry.inquiring_user.name %>. has asked a question about your listing <%= @inquiry.listing %></p>
+<p><%= @inquiry.inquiring_user.name %> has asked a question about your listing, <%= @inquiry.listing %> on Desks Near Me:</p>
 
-<p>"<%= @inquiry.message %>"</p>
+<pre><%= @inquiry.message %></pre>
 
 <p>Simply reply to this email to get in touch with them!</p>
-
