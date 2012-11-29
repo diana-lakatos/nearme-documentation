@@ -46,7 +46,7 @@ class ReservationMailer < DesksNearMeMailer
     class Preview < MailView
 
       def pending_confirmation
-        ::ReservationMailer.pending_confirmation(Reservation.first)
+        ::ReservationMailer.pending_confirmation(reservation)
       end
 
       def reservation_confirmed

@@ -1,5 +1,7 @@
 <p>Dear <%= @user %>,</p>
 
-<p><%= @reservation.owner %> has cancelled their reservation at <%= @listing %>
-on <%= l(@reservation.date, :format => :long) %> that they made earlier.</p>
+<p><%= @reservation.owner %> has cancelled their booking at <%= @listing %>.
 
+<p><%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %></p>
+
+<p>We’ll re-list your space as available.</p>

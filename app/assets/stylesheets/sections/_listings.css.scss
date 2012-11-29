@@ -84,6 +84,11 @@ article.listing {
       margin: 15px 0;
     }
 
+    p.close-match {
+      font:normal 12px/18px $font-regular, sans-serif;
+      color: $dnm-gray;
+    }
+
     h1 {
       font-weight: 400;
       margin-bottom: 12px; }

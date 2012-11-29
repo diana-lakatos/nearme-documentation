@@ -154,7 +154,7 @@ form {
     &:focus {
       color:rgb(30,30,30);
       outline: none;
-      @include box-shadow(#27B0E6 0px 0px 1px, #27B0E6 0px 0px 3px, #27B0E6 0px 0px 6px, #27B0E6 0px 0px 7px);
+      @include box-shadow($dnm_blue 0px 0px 1px, $dnm_blue 0px 0px 3px, $dnm_blue 0px 0px 6px);
     }
 
     &.small {

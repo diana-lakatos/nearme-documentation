@@ -3,3 +3,8 @@
 <p>You have made a reservation for <%= @listing %> on <%= l(@reservation.date, :format => :long) %>.</p>
 
 <p>Reservations at this location requires confirmation from the owner/manager. You will receive another email if the user confirms or declines your reservation request.</p>
+
+<p><%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %></p>
+
+<p>You can see all of your [travel plans](link to upcoming bookings) here and change
+them too.</p>

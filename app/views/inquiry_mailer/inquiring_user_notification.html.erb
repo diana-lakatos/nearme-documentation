@@ -1,6 +1,7 @@
 <p>Hi <%= @inquiry.inquiring_user.name %>,</p>
 
-<p>We've passed your email on to the owner of <%= @inquiry.listing.name %>. They'll get back to you soon!</p>
+<p>Thanks for your inquiry about <%= @inquiry.listing.name %>. on Desks Near Me. A copy of your message is set out below.
 
-<p>Cheers,<br>
- - The Desks Near Me Crew</p>
+<p>"<%= @inquiry.message %>"</p>
+
+<p>The host will be in touch with you soon!</p>
