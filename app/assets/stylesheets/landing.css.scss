@@ -2,15 +2,16 @@
 @import "compass/css3";
 @import "compass/reset";
 /* fonts */
-@include font-face("futura-light", font-files("futurastd-light.woff", "futurastd-light.otf", "futurastd-light.ttf", "futurastd-light.svg", "futurastd-light.eot"));
+@include font-face("futura-light", font-files("futurastd-light.woff", "futurastd-light.otf", "futurastd-light.ttf", "futurastd-light.svg"), "futurastd-light.eot");
 
-@include font-face("futura-book", font-files("futurastd-book.woff", "futurastd-book.otf", "futurastd-book.ttf", "futurastd-book.svg", "futurastd-book.eot"));
+@include font-face("futura-book", font-files("futurastd-book.woff", "futurastd-book.otf", "futurastd-book.ttf", "futurastd-book.svg"), "futurastd-book.eot");
 
-@include font-face("futura-medium", font-files("futurastd-medium.woff", "futurastd-medium.otf", "futurastd-medium.ttf", "futurastd-medium.svg", "futurastd-medium.eot"));
+@include font-face("futura-medium", font-files("futurastd-medium.woff", "futurastd-medium.otf", "futurastd-medium.ttf", "futurastd-medium.svg"), "futurastd-medium.eot");
 
-@include font-face("futura-heavy", font-files("futurastd-heavy.woff", "futurastd-heavy.otf", "futurastd-heavy.ttf", "futurastd-heavy.svg", "futurastd-heavy.eot"));
+@include font-face("futura-heavy", font-files("futurastd-heavy.woff", "futurastd-heavy.otf", "futurastd-heavy.ttf", "futurastd-heavy.svg"), "futurastd-heavy.eot");
 
-@include font-face("futura-bold", font-files("futurastd-bold.woff", "futurastd-bold.otf", "futurastd-bold.ttf", "futurastd-bold.svg", "futurastd-bold.eot"));
+@include font-face("futura-bold", font-files("futurastd-bold.woff", "futurastd-bold.otf", "futurastd-bold.ttf", "futurastd-bold.svg"), "futurastd-bold.eot");
+
 .clearfix:after {
   content: ".";
   display: block;
