@@ -11,11 +11,13 @@ class Listing
       end
 
       define_index do
-        if Rails.env.production? || Rails.env.staging?
-          set_property :delta => FlyingSphinx::DelayedDelta
-        else
-          set_property :delta => true
-        end
+
+        ## Delta indexing / flying sphinx seems to be causing issues in production
+        # if Rails.env.production? || Rails.env.staging?
+        #   set_property :delta => FlyingSphinx::DelayedDelta
+        # else
+        #   set_property :delta => true
+        # end
 
         join location
         join location.organizations
