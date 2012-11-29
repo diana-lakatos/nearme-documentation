@@ -22,15 +22,9 @@ section.public {
   .wood-box {
     h1 {
       float: left;
-      font-size: 36px;
-      line-height:42px;
+      font:normal 36px/42px $font-medium, sans-serif;
       color: #eaeaea;
       margin-bottom: 10px;
-      text-shadow: -1px -1px 0 #2e1d16,
-                    1px -1px 0 #2e1d16,
-                   -1px 1px 0 #2e1d16,
-                    1px 1px 0 #2e1d16,
-                    0 2px 0 rgba(255,255,255,0.2);
     }
 
     h2 {
