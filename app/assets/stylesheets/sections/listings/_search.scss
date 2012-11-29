@@ -7,18 +7,32 @@
     top: 8px;
     left: 10px;
     border: 0;
-    background: image-url("sections/home/geolocate-icon.png");
+    background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/search-crosshair.png");
+    background-position: left top;
+    background-repeat: no-repeat;
     width: 32px;
     height: 33px;
+    opacity: .6;
+    @include transition(all .1s ease-in);
 
-    &:active {
-      margin-top: 1px;
+    &:hover {
+      opacity:1;
+    }
+
+    @media (max-width: 480px ) {
+      width:22px;
+      background-size: 22px 23px;
+      height: 23px;
     }
   }
 
   &.home_search input#search {
     padding: 8px 0 8px 50px;
     width: 460px;
+
+    @media (max-width: 480px ) {
+      padding: 8px 0 8px 40px;
+    }
   }
 
   &.search_results input#search {
@@ -27,10 +41,15 @@
   }
 
   &.search_results .geolocation {
-    background: image-url("sections/search/geolocate.png");
+    background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/search-crosshair.png");
+    background-size: 22px 23px;
     width: 22px;
     height: 23px;
     top: 13px;
+
+    @media ( max-width:480px ) {
+      top: 8px;
+    }
   }
 
   .btn {
@@ -39,12 +58,13 @@
     position: relative;
     vertical-align: top;
     width: 115px;
+    font-size: 22px;
 
     .icon {
       display: inline-block;
       width: 32px;
       height: 33px;
-      background: image-url("sections/home/search-icon.png") no-repeat;
+      background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/search.png") no-repeat;
     }
   }
 
@@ -63,7 +83,10 @@
     float: left;
     margin-left: 20px;
     font-size: 16px;
-    font-weight: bold;
+
+    @media (max-width: 480px) {
+      font-size: 14px; 
+    }
   }
   .price-range .value {
     margin-left:30px;
@@ -123,13 +146,13 @@
         top: 12px;
         left: 8px;
         display: block;
-        background: image-url("sections/search/date-start.png");
+        background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat;
         width: 26px;
         height: 24px;
       }
 
       &.availability-date-end .date-icon {
-        background: image-url("sections/search/date-end.png");
+        background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat;
         width: 22px;
         height: 23px;
       }
@@ -138,6 +161,7 @@
         padding-left: 40px;
         width:100%;
         box-sizing: border-box;
+        background: white image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat 8px center;
       }
     }
   }
