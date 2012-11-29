@@ -7,7 +7,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :companies
-  resources :locations do
+  resources :locations, :only => [:show] do
     resources :listings, :controller => 'locations/listings'
     resources :reservations, :controller => 'locations/reservations', :only => [:create] do
       post :review, :on => :collection
@@ -20,8 +20,7 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  resources :listings do
-    resources :photos
+  resources :listings, :only => [:index, :show] do
     resources :reservations, :only => [:new, :create, :update], :controller => "listings/reservations" do
       post :confirm
       post :reject

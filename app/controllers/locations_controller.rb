@@ -14,21 +14,6 @@ class LocationsController < ApplicationController
     @location = location
   end
 
-  def new
-    location.availability_template_id = AvailabilityRule.default_template.id
-  end
-
-  def create
-    location.creator ||= current_user
-    if location.save
-      flash[:success] = "Successfully created location"
-      redirect_to new_listing_path
-    else
-      flash.now[:error] = "There was a problem saving your location. Please try again"
-      render :new
-    end
-  end
-
   # Return a summary in JSON for all listings availability over specified days
   #
   # Usage:
