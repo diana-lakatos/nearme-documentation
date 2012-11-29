@@ -4,7 +4,7 @@ Then /^a shared listing email is( not)? sent to "([^"]+)"$/ do |no_email, email|
   else
     last_email = mailbox_for(email).last
     last_email.subject.should include "shared a listing"
-    last_email.html_part.body.should include listing_path(@listing)
+    last_email.html_part.body.should include location_path(@listing.location)
     last_email.html_part.body
   end
 end

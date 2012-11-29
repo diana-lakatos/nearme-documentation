@@ -32,11 +32,11 @@ Feature: Emails should be sent out informing parties about reservations
       | the listing | Monday | 1        |
     Then 2 emails should be delivered
     And the 1st email should be delivered to user "Bo Jeanes"
-    And the 1st email should have subject: "[DesksNear.Me] A new reservation requires your confirmation"
+    And the 1st email should have subject: "[Desks Near Me] A new reservation requires your confirmation"
     And the 1st email should contain "Bo Jeanes,"
     And the 1st email should contain "Keith Contractor has made a booking for your listing, Mocra."
     And the 2nd email should be delivered to user "Keith Contractor"
-    And the 2nd email should have subject: "[DesksNear.Me] Your reservation is pending confirmation"
+    And the 2nd email should have subject: "[Desks Near Me] Your reservation is pending confirmation"
     And the 2nd email should contain "Dear Keith Contractor,"
     And the 2nd email should contain "We'd like you to know that your request to reserve Mocra has been submitted"
 
@@ -50,9 +50,9 @@ Feature: Emails should be sent out informing parties about reservations
       | the listing | Monday | 1        |
     Then 2 emails should be delivered
     And the 1st email should be delivered to user "Keith Contractor"
-    And the 1st email should have subject: "[DesksNear.Me] Your reservation has been confirmed"
+    And the 1st email should have subject: "[Desks Near Me] Your reservation has been confirmed"
     And the 2nd email should be delivered to user "Bo Jeanes"
-    And the 2nd email should have subject: "[DesksNear.Me] You have a new reservation"
+    And the 2nd email should have subject: "[Desks Near Me] You have a new reservation"
 
   Scenario: reservation gets confirmed
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
@@ -63,7 +63,7 @@ Feature: Emails should be sent out informing parties about reservations
     And I press "Confirm"
     Then 1 email should be delivered
     And the email should be delivered to user "Keith Contractor"
-    And the email should have subject: "[DesksNear.Me] Your reservation has been confirmed"
+    And the email should have subject: "[Desks Near Me] Your reservation has been confirmed"
 
   Scenario: confirmed then cancelled by user
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
@@ -74,7 +74,7 @@ Feature: Emails should be sent out informing parties about reservations
     And I press "Cancel"
     Then 1 email should be delivered
     And the email should be delivered to user "Bo Jeanes"
-    And the email should have subject: "[DesksNear.Me] A reservation has been cancelled"
+    And the email should have subject: "[Desks Near Me] A reservation has been cancelled"
 
   Scenario: confirmed then cancelled by owner
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
@@ -85,7 +85,7 @@ Feature: Emails should be sent out informing parties about reservations
     And I press "Cancel"
     Then 1 email should be delivered
     And the email should be delivered to user "Keith Contractor"
-    And the email should have subject: "[DesksNear.Me] Your reservation at Mocra has been cancelled by the owner"
+    And the email should have subject: "[Desks Near Me] Your reservation at Mocra has been cancelled by the owner"
 
   Scenario: unconfirmed reservation gets cancelled by user
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
@@ -96,7 +96,7 @@ Feature: Emails should be sent out informing parties about reservations
     And I press "Cancel"
     Then 1 email should be delivered
     And the email should be delivered to user "Bo Jeanes"
-    And the email should have subject: "[DesksNear.Me] A reservation has been cancelled"
+    And the email should have subject: "[Desks Near Me] A reservation has been cancelled"
 
   Scenario: unconfirmed reservation gets rejected
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
@@ -107,4 +107,4 @@ Feature: Emails should be sent out informing parties about reservations
     And I press "Reject"
     Then 1 email should be delivered
     And the email should be delivered to user "Keith Contractor"
-    And the email should have subject: "[DesksNear.Me] Sorry, your reservation at Mocra has been rejected"
+    And the email should have subject: "[Desks Near Me] Sorry, your reservation at Mocra has been rejected"
