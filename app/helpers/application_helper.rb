@@ -42,4 +42,8 @@ module ApplicationHelper
     buffer.html_safe
   end
 
+  def context_flash
+    render 'shared/context_flash'
+  end
+
 end

@@ -73,12 +73,6 @@ Given /^a listed location in San Francisco that does( not)? require confirmation
   @listing = FactoryGirl.create(:listing_in_san_francisco, confirm_reservations: !confirmation)
 end
 
-When /^I create a listing for that location with a (daily|weekly|monthly) price of (\$|£)(\d+)\.(\d+)$/ do |period, currency, dollars, cents|
-  create_listing(model!("location")) do
-    fill_in "#{period.capitalize} price", with: "#{dollars}.#{cents}"
-  end
-end
-
 When /^I create a listing for that location with availability rules$/ do
   create_listing(model!("location")) do
     choose AvailabilityRule.templates.first.full_name

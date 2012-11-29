@@ -6,7 +6,7 @@
       %ul.container
         %li{:class => ('current' if current == :account)}= link_to "Account", edit_user_registration_url
         %li{:class => ('current' if current == :bookings)}= link_to "Bookings", bookings_dashboard_url
-        - if current_user.listings.any?
+        - if current_user.companies.any?
           %li{:class => ('current' if current == :spaces)}= link_to "Manage Spaces", [:manage, :companies]
           %li{:class => ('current' if current == :reservations)}= link_to "Manage Reservations", reservations_dashboard_url
 

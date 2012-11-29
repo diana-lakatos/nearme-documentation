@@ -5,13 +5,19 @@ Feature: A user can add photos to a listing
 
   Background:
     Given a user exists
-      And a listing exists with creator: the user
+      And a company exists with creator: the user
+      And a location exists with company: the company, creator: the user
+      And a listing exists with location: the location, creator: the user
 
   Scenario: Adding photos to a work place
     Given I am logged in as the user
       And I go to the the dashboard
      When I follow "Manage Spaces"
-     And I follow "Manage Photos"
+     And I follow "Spaces"
+     And I follow "Edit"
+     And I follow "Desks & Rooms"
+     And I follow "Edit"
+     And I follow "Photos"
      Then I should see 0 listing photos
      When I attach the photo "boss's desk.jpg" to "New Photo"
      When I fill in "Caption" with "The Boss' Desk"
@@ -35,15 +41,12 @@ Feature: A user can add photos to a listing
       | intern chair.jpg | This is where the intern works |
     And I go to the dashboard
     And I follow "Manage Spaces"
-    And I follow "Manage Photos"
+    And I follow "Spaces"
+    And I follow "Edit"
+    And I follow "Desks & Rooms"
+    And I follow "Edit"
+    And I follow "Photos"
     Then I should see 2 listing photos
-    When I press "Delete" within the first photo box
+    When I follow "Delete" within the first photo box
     Then I should see 1 listing photo
-
-  Scenario: A hacker cant edit a listing
-    Given a user: "hacker" exists
-      And I am logged in as the user: "hacker"
-     When I go to the listing's edit page
-      And I should not see "New Photo"
-      And I should see "Could not find listing"
 

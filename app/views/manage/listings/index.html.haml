@@ -5,6 +5,7 @@
       %strong= @location.name
 
     = render 'manage/locations/navigation', :active => :listings
+    = context_flash
 
     - @location.listings.each do |listing|
       .inner-box.listing
@@ -14,4 +15,4 @@
 
         %h3= listing.name
 
-    = link_to "Add a Desk or Room", space_wizard_desks_url(:company_id => @location.company.id, :space_id => @location.id), :class => "btn btn-green btn-medium"
+    = link_to "Add a Desk or Room", [:new, :manage, @location, :listing], :class => "btn btn-green btn-medium"

@@ -3,7 +3,11 @@ class Manage::CompaniesController < ApplicationController
   before_filter :find_company, :except => [:index]
 
   def index
-    redirect_to [:edit, :manage, current_user.companies.first]
+    if current_user.companies.any?
+      redirect_to [:edit, :manage, current_user.companies.first]
+    else
+      redirect_to dashboard_url
+    end
   end
 
   def edit

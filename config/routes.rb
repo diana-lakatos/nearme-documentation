@@ -49,7 +49,7 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :locations do
-      resources :listings, :only => [:index]
+      resources :listings, :only => [:index, :new, :create]
       member do
         get :map
         get :amenities

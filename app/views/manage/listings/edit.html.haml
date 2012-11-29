@@ -6,7 +6,7 @@
 
     = render 'manage/listings/navigation', :active => :details
 
-    = render 'shared/context_flash'
+    = context_flash
 
     = simple_form_for([:manage, @listing], :html => { :class => 'form-horizontal edit_listing' }) do |f|
 

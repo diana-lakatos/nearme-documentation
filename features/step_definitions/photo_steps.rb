@@ -19,7 +19,11 @@ When /^I add the following photos to the listing:$/ do |table|
   steps %{
     When I go to the dashboard
     And I follow "Manage Spaces"
-    And I follow "Manage Photos"
+    And I follow "Spaces"
+    And I follow "Edit"
+    And I follow "Desks & Rooms"
+    And I follow "Edit"
+    And I follow "Photos"
   }
 
   table.hashes.each_with_index do |row, count|
