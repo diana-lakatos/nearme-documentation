@@ -1,6 +1,10 @@
 - legacy false
 
 - content_for :hero do
+  .caption
+    %a
+    = link_to location_path(633) do
+      Club Workspace, London
   .container
     #search_row.twelve.columns.offset-by-two.alpha.omega
       .wood-box
@@ -13,45 +17,28 @@
           %a.btn.btn-green.btn-outline.btn-medium{ :rel => "submit", :href => "" }
             %i.icon
             Search
-          %hr
-          #search_filters
-            .row
-              .availability-quantity.five.columns.alpha
-                %label Number of Desks
-                = hidden_field_tag "availability[quantity]", search_availability_quantity
-                .slider
-                .value.number-value 1
-
-              .price-range.six.columns.omega
-                %label Price Range
-                = hidden_field_tag "price[min]", search_price_min
-                = hidden_field_tag "price[max]", search_price_max
-                .slider
-                .value
-                  $0 - $300+/day
-          .clearfix
           #suggest_location{:style => "display: none"}
 
+%section.how-it-works
+  .row
+    .one-third.column.alpha
+      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/crosshair.png", :alt => "Dollar Sign"}
 
-.one-third.column.alpha
-  .box
-    %h2 Introducing Desks Near Me
-    %p
-      Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to see
-      great places where they can work. So, where do you want to work today?
+    .two-thirds.column 
+      %h1 Find a desk near you.
+      %p Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to find great places to work. Leverage networking opportunities in a shared environment, or work from a single office for greater privacy. Whether you need a workspace for a day, a month, or a year, Desks Near Me has you covered.
+      %a
+      = link_to "Find a Desk!", search_path, :class => "btn btn-green btn-medium"
+  .row
+    .one-third.column.alpha
+      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/dollar.png", :alt => "Dollar Sign"}
 
-/.one-third.column
-/  .box
-/    %h2 Our commitment to trust & safety
-/    %p
-/      Desks Near Me is safe. From our patent pending in-space technology to our 24/7 support line, we make sure
-/      that you can share your space, or visit one, without worry.
+    .two-thirds.column 
+      %h1 Rent out your extra space.
+      %p Don't let unused space go to waste: generate revenue by renting out your empty office space. Build your network & client base by opening up your space to professionals in your industry. Create a shared space and encourage collaboration between fields.      
 
-.one-third.column
-  = link_to "We're at GMIC SV", "http://www.gmic-sv.com/", :id => "gmic_link"
-
-.one-third.column.omega
-  = link_to "Get the iPhone app", "http://itunes.apple.com/app/desks-near-me/id529634519", :id => "app_store_link"
+      %a.btn.btn-blue.btn-medium{  :href => "/users/sign_up?wizard=space" }
+        List Your Space!     
 
 - content_for :domready do
   new DNM.HomeSearch($('#listing_search'))

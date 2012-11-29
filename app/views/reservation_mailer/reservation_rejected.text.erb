@@ -1,9 +1,7 @@
 Dear <%= @user %>,
 
-Unfortunately, your reservation at <%= @listing %> on <%= l(@reservation.date, :format => :long) %>
-has been rejected.
+Unfortunately, your reservation at <%= @listing %> has been rejected.
 
 I'm sure it's not personal -- they were probably just too busy that day :)
 
-<%= render :partial => "footer" %>
-
+<%= link_to 'Try again for another day!', location_url(@listing.location) %>

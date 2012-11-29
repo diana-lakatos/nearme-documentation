@@ -49,7 +49,6 @@
         t.src = ('https:' == document.location.protocol ? 'https://secure.' : 'http://api.') + 'tellthemwhen.com/api/v2/notices/620b94a22ed.js';
         var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(t,s);
         })();
-      = render :partial => "layouts/feedback"
 
     = javascript_tag do
       = yield :domready

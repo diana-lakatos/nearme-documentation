@@ -84,6 +84,11 @@ article.listing {
       margin: 15px 0;
     }
 
+    p.close-match {
+      font:normal 12px/18px $font-regular, sans-serif;
+      color: $dnm-gray;
+    }
+
     h1 {
       font-weight: 400;
       margin-bottom: 12px; }
@@ -110,14 +115,19 @@ article.listing {
     border-bottom: 1px solid #DDD;
     padding-bottom: 6px;
     overflow: hidden;
+
     h2 {
-      font-weight: 500;
-      line-height: 32px;
+      margin-bottom:0;
       a {
-        &:link, &:visited {
-          text-decoration: none; }
-      } 
-    }
+        font:normal '32px/40px' $font-medium, sans-serif;
+        color: darken( $dnm_blue, 25%);
+        margin-bottom:0;
+
+        &:hover {
+          color: black;
+        }
+      }
+    }  
     table {
       tr {
         td, th {

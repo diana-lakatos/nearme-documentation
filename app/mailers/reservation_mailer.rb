@@ -78,13 +78,13 @@ class ReservationMailer < DesksNearMeMailer
 
   private
     def setup_defaults(reservation)
-      @reservation   = reservation
-      @listing = reservation.listing
-      @user      = reservation.owner
+      @reservation  = reservation
+      @listing      = reservation.listing
+      @user         = reservation.owner
     end
 
     def generate_mail(subject)
-      mail :subject => "[DesksNear.Me] #{subject}",
+      mail :subject => "[Desks Near Me] #{subject}",
            :to      => @user.email
     end
 end

@@ -8,6 +8,15 @@ footer {
     float:left;
     width: 16.6%;
     text-align: center;
+
+    @media (max-width:480px) {
+      width:33.3%;
+      padding: 0 0 25px;
+      .clear-footer { 
+        clear: left;
+      }
+
+    }
     a, a:visited {
       color: darken( $light-gray, 15%);
       text-decoration: none;
@@ -18,10 +27,9 @@ footer {
       &:hover {
         color: $light-gray;
       }
-
-      @media (max-width:480px) {
-        font-size: 10px;
-      }
+     @media (max-width:768px) {
+        font-size: 12px;
+      }  
     }
     &:first-child a {
       padding-left: 0;
@@ -41,8 +49,7 @@ footer {
   }
   .copyright p {
     font-size: 10px;
-    padding: 40px 0 0 20px;
-    max-width: 460px;
+    padding: 40px 0 0;
     margin: 0 auto;
     text-align: center;
     color: darken( $light-gray, 25%);

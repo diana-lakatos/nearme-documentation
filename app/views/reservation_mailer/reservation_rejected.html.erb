@@ -1,6 +1,7 @@
 <p>Dear <%= @user %>,</p>
 
-<p>Unfortunately, your reservation at <%= @listing %> on <%= l(@reservation.date, :format => :long) %>
-has been rejected.</p>
+<p>Unfortunately, your reservation at <%= @listing %> has been rejected.</p>
 
 <p>I'm sure it's not personal -- they were probably just too busy that day :)</p>
+
+<p><%= link_to 'Try again for another day!', location_url(@listing.location) %></p>

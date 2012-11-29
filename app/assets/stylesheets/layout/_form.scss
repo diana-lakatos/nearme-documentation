@@ -141,7 +141,7 @@ form {
     margin: 0;
     margin-bottom: 8px;
     padding: 8px 8px 8px 8px;
-    line-height: 22px;
+    line-height: 29px;
     background: rgb(240,240,240);
     border: 1px solid rgba(0,0,0,0.4);
     @include border-radius(8px);
@@ -154,7 +154,7 @@ form {
     &:focus {
       color:rgb(30,30,30);
       outline: none;
-      @include box-shadow(#27B0E6 0px 0px 1px, #27B0E6 0px 0px 3px, #27B0E6 0px 0px 6px, #27B0E6 0px 0px 7px);
+      @include box-shadow($dnm_blue 0px 0px 1px, $dnm_blue 0px 0px 3px, $dnm_blue 0px 0px 6px);
     }
 
     &.small {

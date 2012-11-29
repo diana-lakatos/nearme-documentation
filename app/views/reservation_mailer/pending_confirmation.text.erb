@@ -1,7 +1,6 @@
 Dear <%= @user %>,
 
-You have made a reservation for <%= @listing %> on <%= l(@reservation.date, :format => :long) %>.
+We'd like you to know that your request to reserve <%= @listing.name %> has been submitted. Bookings at this workspace require confirmation from the host. Most of our hosts respond within 5 hours but they have 24 hours to do so. Here is your reservation request for your files:
 
-Reservations at this location requires confirmation from the owner/manager. You will receive another email if the user confirms or declines your reservation request.
-
-<%= render :partial => "footer" %>
+<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %>
+You can see all of your <%= link_to 'travel plans', bookings_dashboard_url %> here and change them too.

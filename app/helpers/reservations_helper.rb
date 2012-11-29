@@ -23,6 +23,20 @@ module ReservationsHelper
     end
   end
 
+  def reservation_total_price(reservation)
+    if reservation.total_amount_cents.nil?
+      "Free!"
+    else
+      humanized_money_with_symbol(reservation.total_amount_cents/100.0)
+    end
+  end
+
+  def reservation_dates(reservation)
+    reservation.periods.map do |period|
+      "#{period.date.strftime('%Y-%m-%d')} (#{pluralize(period.seats.size, 'desk')})"
+    end.to_sentence
+  end
+
   def location_reservation_needs_confirmation?(reservations = @reservations)
     reservations.any? { |reservation|
       reservation.listing.confirm_reservations?
