@@ -47,6 +47,10 @@ header {
       }
     }
 
+    .btn.btn-blue {
+      text-align: center;
+    }
+
     a.header-link {
       display: inline-block;
       color: $dnm_gray;
@@ -76,11 +80,6 @@ header {
 /* Smaller than standard 960 (devices and browsers) */
 @media only screen and (max-width: 959px) {
   header {
-    .btn.btn-blue {
-      position:absolute;
-      top:10px;
-      right:0;
-    }
     a.header-first, a.header-second {
       float:left;
     }  
@@ -122,6 +121,8 @@ header {
     }
     .btn.btn-blue {
       font-size:12px;
+      width: 100%;
+      @include box-sizing(border-box);
     }
     a.header-first, a.header-second {
       font-size:16px !important;
