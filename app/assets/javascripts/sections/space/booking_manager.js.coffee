@@ -100,7 +100,7 @@ class @Space.BookingManager
 
     # Template for booked day selection elements
     bookedDayTemplate: '''
-      <span class="booked-day empty">
+      <span class="booked-day selected">
         <span class="count">{{count}}</span>
         <span class="date">{{date}}<sup>{{suffix}}</sup></span>
         <span class="month">{{month}}</span>
@@ -243,6 +243,10 @@ class @Space.BookingManager
       else
         @daysContainer.prepend(dateEl)
 
+      if @hasAvailabilityOn(date)
+        @setBooking(date, 1)
+      el
+
     removeDate: (date) ->
       @daysContainer.find(".#{DNM.util.Date.toClassName(date)}").remove()
       @setBooking(date, 0) if _.include @bookedDays(), DNM.util.Date.toId(date)
@@ -273,7 +277,7 @@ class @Space.BookingManager
         year: date.getFullYear(),
         available: @availability[DNM.util.Date.toId(date)].available,
         total: @availability[DNM.util.Date.toId(date)].total,
-        quantity: 0,
+        quantity: 1,
         listingId: @id,
         dateId: DNM.util.Date.toId(date)
       })
