@@ -41,7 +41,9 @@ window.DNM = {
   },
 
   initializeComponents: function(scope) {
-    Multiselect.initialize(scope)
+    Multiselect.initialize(scope);
+    Flash.initialize(scope);
+    Accordian.initialize(scope);
   },
 
   initializeAjaxCSRF: function() {

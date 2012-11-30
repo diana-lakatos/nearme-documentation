@@ -3,6 +3,8 @@
     Enter the details of your space below! We’ll get you to tell us all your company details later.
 
   = simple_form_for @location, :url => space_wizard_space_url, :html => { :class => "form-horizontal new_location" } do |f|
+    = hidden_field_tag :company_id, @company.id
+
     = f.input :name, :label => 'Space name', :placeholder => 'Name your space!'
 
     .control-group

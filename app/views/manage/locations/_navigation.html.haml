@@ -1,0 +1,11 @@
+- active ||= :space
+%ul.box-nav
+  %li{:class => ('active' if active == :space)}= link_to "Description & Details", [:edit, :manage, @location]
+  /%li{:class => ('active' if active == :map)}= link_to "Map", [:map, :manage, @location]
+  /%li{:class => ('active' if active == :photos)}= link_to "Photos", [:photos, :manage, @location]
+  /%li{:class => ('active' if active == :availability)}= link_to "Availability", [:availability, :manage, @location]
+  /%li{:class => ('active' if active == :amenities)}= link_to "Amenities", [:amenities, :manage, @location]
+  /%li{:class => ('active' if active == :associtions)}= link_to "Associations", [:associations, :manage, @location]
+  %li{:class => ('active' if active == :listings)}= link_to "Desks & Rooms", [:manage, @location, :listings]
+
+

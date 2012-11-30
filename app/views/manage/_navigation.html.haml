@@ -1,0 +1,16 @@
+.five.columns
+  %ul.nav.accordian
+    - current_user.companies.each do |company|
+      %li{:class => dashboard_company_nav_class(company)}
+        = link_to [:edit, :manage, company] do
+          = company.name
+          %i
+        - if company.locations.any?
+          %ul
+            - company.locations.each do |location|
+              %li{:class => dashboard_location_nav_class(location)}
+                = link_to [:edit, :manage, location] do
+                  = location.name
+                  %i
+
+

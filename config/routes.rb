@@ -7,7 +7,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :companies
-  resources :locations do
+  resources :locations, :only => [:show] do
     resources :listings, :controller => 'locations/listings'
     resources :reservations, :controller => 'locations/reservations', :only => [:create] do
       post :review, :on => :collection
@@ -20,8 +20,7 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  resources :listings do
-    resources :photos
+  resources :listings, :only => [:index, :show] do
     resources :reservations, :only => [:new, :create, :update], :controller => "listings/reservations" do
       post :confirm
       post :reject
@@ -40,6 +39,28 @@ DesksnearMe::Application.routes.draw do
       get :bookings
       get :listings
       get :reservations
+    end
+  end
+
+  namespace :manage, :path => 'dashboard' do
+    resources :companies do
+      resources :locations, :only => [:index] do
+      end
+    end
+
+    resources :locations do
+      resources :listings, :only => [:index, :new, :create]
+      member do
+        get :map
+        get :amenities
+        get :availability
+        get :photos
+        get :associations
+      end
+    end
+
+    resources :listings do
+      resources :photos
     end
   end
 

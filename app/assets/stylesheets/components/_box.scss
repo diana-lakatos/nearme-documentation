@@ -93,3 +93,89 @@
   }
 }
 
+.box-nav {
+  background: #627077;
+  border-bottom: 1px solid #b8b8b8;
+  overflow: hidden;
+  margin: -14px -14px 14px -14px;
+  box-shadow: inset 0 10px 10px -10px rgba(0,0,0,0.6);
+
+  li {
+    float: left;
+    border-left: 1px solid #546066;
+    a {
+      border-left: 1px solid #758187;
+    }
+
+    a {
+      display: block;
+      padding: 0 10px;
+      line-height: 40px;
+      font-size: 14px;
+      color: #b5e5ff;
+      text-shadow: 0 -1px 0 rgba(0,0,0,0.7);
+
+      &:hover {
+        color: #fff;
+      }
+    }
+
+    &:first-child, &:first-child a {
+      border-left: none;
+    }
+
+    &:last-child, &.last {
+      border-right: 1px solid #758187;
+      a {
+        border-right: 1px solid #546066;
+      }
+    }
+
+    &.active {
+      box-shadow: inset 0 10px 10px -10px rgba(0,0,0,0.6);
+      background: #4d5960;
+      border-left: 1px solid #758187;
+
+      a {
+        border-left: 1px solid #333a3f;
+      }
+
+      a, a:hover {
+        color: #fff;
+      }
+
+      &:first-child, &:first-child a {
+        border-left: none;
+      }
+
+      &:last-child, &.last {
+        border-right: 1px solid #758187;
+        a {
+          border-right: 1px solid #333a3f;
+        }
+      }
+    }
+
+    &.right-link {
+      float: right;
+
+      &, a {
+        border-right: none;
+        border-left: none;
+      }
+
+      a {
+        font-weight: normal;
+        background: image-url("components/nav/box-return.png") left 10px no-repeat;
+        padding-left: 22px;
+      }
+    }
+  }
+
+  li.active + li:not(.right-link) {
+    border-left: 1px solid #333a3f;
+    a {
+      border-left: 1px solid #758187;
+    }
+  }
+}

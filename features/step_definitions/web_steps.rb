@@ -209,3 +209,11 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
+
+When /^I confirm the dialog/ do
+  page.driver.browser.switch_to.alert.accept
+end
+
+When /^I dismiss the dialog/ do
+  page.driver.browser.switch_to.alert.dismiss
+end

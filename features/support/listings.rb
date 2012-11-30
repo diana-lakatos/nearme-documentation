@@ -1,7 +1,6 @@
 module ListingsHelpers
   def create_listing(location, name="Awesome Listing")
-    visit new_listing_path
-    select location.name, from: "Location"
+    visit new_manage_location_listing_url(location)
     fill_in "Name", with: name
     fill_in "Description", with: "Nulla rutrum neque eu enim eleifend bibendum."
     fill_in "Quantity", with: "2"

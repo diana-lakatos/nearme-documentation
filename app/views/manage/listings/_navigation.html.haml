@@ -1,0 +1,13 @@
+- active ||= :space
+%ul.box-nav
+  %li{:class => ('active' if active == :details)}= link_to "Description & Details", [:edit, :manage, @listing]
+  %li.last{:class => ('active' if active == :photos)}= link_to "Photos", [:manage, @listing, :photos]
+  /%li{:class => ('active' if active == :pricing)}= link_to "Pricing", [:edit, :manage, @listing]
+  /%li.last{:class => ('active' if active == :availability)}= link_to "Availability", [:edit, :manage, @listing]
+
+  %li.right-link
+    = link_to "Back to space", [:manage, @location, :listings]
+
+
+
+
