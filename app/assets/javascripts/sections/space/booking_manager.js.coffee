@@ -245,7 +245,6 @@ class @Space.BookingManager
 
       if @hasAvailabilityOn(date)
         @setBooking(date, 1)
-      el
 
     removeDate: (date) ->
       @daysContainer.find(".#{DNM.util.Date.toClassName(date)}").remove()
