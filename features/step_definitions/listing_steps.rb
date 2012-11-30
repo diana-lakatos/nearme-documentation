@@ -93,6 +93,10 @@ When /^I view that listing$/ do
   visit listing_path(model!('listing'))
 end
 
+When /^I view that listing's edit page$/ do
+  visit edit_manage_listing_path(model!('listing'))
+end
+
 Then /^I (do not )?see that listing listed$/ do |negative|
   if negative
     page.should have_no_content model!("listing").name
