@@ -3,7 +3,6 @@
 - content_for :hero do
   .hero-wood-texture
     .container.space-hero-search-return
-      = link_to "Back to search", search_url
 
   - if @location.photos.any?
     = render 'photos'

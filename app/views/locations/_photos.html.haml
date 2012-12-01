@@ -1,8 +1,8 @@
 .hero-gray-texture.hero-shadow
-  .container.space-hero-photos
-    .one-third.column.alpha
-      = image_tag("http://placehold.it/350x350")
-    .two-thirds.column.alpha
+  .container.fluid
+    .two-thirds.column.alpha.right
       .photo{:style => "background-image: url('#{@location.photos.first.url}')"}
         .caption
           = @location.photos.first.caption
+    .one-third.column.fluid
+      = image_tag("http://placehold.it/650x350")          

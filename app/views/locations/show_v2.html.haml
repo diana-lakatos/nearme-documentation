@@ -14,18 +14,7 @@
     - if @location.url.present?
       = link_to @location.url, @location.url, :target => :_blank
 
-  .one-third.column
-    .description
-      %h1 #{@listing.name}
-      %p #{@listing.description}
-
-  .one-third.column.map
-    Dates 
-    = text_field_tag "availability[dates][start]", search_availability_dates_start, :autocomplete => "off"
-
-    %h2.price 
-      $250
-
-    = link_to "Review and Book!", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBooking'  
+  .two-thirds.column.omega
+    = render 'bookings' 
 
 
