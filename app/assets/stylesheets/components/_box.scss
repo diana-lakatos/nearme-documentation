@@ -31,7 +31,6 @@
 
       li {
         float: left;
-        font-weight: bold;
         color: #cebbae;
         font-size: 18px;
         background: image-url("components/box/list-separator.png") left center no-repeat;
@@ -39,9 +38,29 @@
         padding-right: 8px;
         line-height: 60px;
 
+          @media (max-width: 960px) {
+            font-size: 14px;
+            margin-left: -10px;
+          }
+
+          @media (max-width: 768px) {
+            font-size: 12px;
+            padding-left: 10px;
+            padding-right: 0px;
+            line-height: 40px;
+            background: none;
+            margin-left:0;
+
+          }
+
+          @media (max-width: 480px) {
+            font-size:14px;
+           } 
+
         &:first-child {
           background: none;
           padding-left: 0;
+          margin-left:0 !important;
         }
 
         &:last-child {
