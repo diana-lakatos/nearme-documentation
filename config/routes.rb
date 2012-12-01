@@ -8,6 +8,7 @@ DesksnearMe::Application.routes.draw do
 
   resources :companies
   resources :locations, :only => [:show] do
+    get :show_v2
     resources :listings, :controller => 'locations/listings'
     resources :reservations, :controller => 'locations/reservations', :only => [:create] do
       post :review, :on => :collection

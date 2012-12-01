@@ -1,0 +1,40 @@
+= render :layout => '/locations/show_layout', :locals => { :tab => :overview } do
+  .one-third.column.alpha
+    %p.description
+      #{@location.description}
+
+    - if @location.phone.present?
+      %strong= @location.phone
+    - if @location.url.present?
+      = link_to @location.url, @location.url, :target => :_blank
+
+
+    .box.share
+      %i.flag
+      %h3 Share this space
+      .first-row
+        %span.twitter.st_twitter_hcount{:displayText => 'Tweet'}
+        %span.st_linkedin_hcount{:displayText => 'LinkedIn'}
+      %span.st_facebook_hcount{:displayText => 'Facebook'}
+      %span.st_email_hcount{:displayText => 'Email'}
+
+  .one-third.column.amenities
+    &nbsp;
+    /
+    /%dl
+    /  %dt
+    /    %i{:class => "icon-amenity-other"}
+    /    Amenities
+
+    /  %dl
+    /    - unless @location.amenities.empty?
+    /      = @location.amenities.map(&:name).join(', ')
+    /    - else
+    /      Nothing listed... that can't be right!
+
+  .one-third.column.map
+    .map-wrapper
+      .map-container{:style => "height: 260px;"}
+
+    %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, "data-marker" => image_path("components/map-pin.png")}
+      = location_format_address(@location.formatted_address || @location.address)

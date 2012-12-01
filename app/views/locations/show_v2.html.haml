@@ -1,0 +1,31 @@
+- @listing = @location.listings.first
+- @listing.description = @location.listings.first.description
+
+= render :layout => 'show_layout_v2', :locals => { :tab => :overview } do
+  .one-third.column.alpha
+    %h1 #{@location.name}
+    %p
+      = location_format_address(@location.formatted_address || @location.address)
+    %p.description
+      #{@location.description}
+
+    - if @location.phone.present?
+      %strong= @location.phone
+    - if @location.url.present?
+      = link_to @location.url, @location.url, :target => :_blank
+
+  .one-third.column
+    .description
+      %h1 #{@listing.name}
+      %p #{@listing.description}
+
+  .one-third.column.map
+    Dates 
+    = text_field_tag "availability[dates][start]", search_availability_dates_start, :autocomplete => "off"
+
+    %h2.price 
+      $250
+
+    = link_to "Review and Book!", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBooking'  
+
+
