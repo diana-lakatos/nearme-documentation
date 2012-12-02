@@ -22,7 +22,7 @@ class @Space.Controller
     @bookings = new Space.BookingManager(@container.find('.bookings'), @options.bookings)
 
   setupMap: ->
-    mapContainer = @container.find('.map')
+    mapContainer = $(".map")
     return unless mapContainer.length > 0
 
     location = mapContainer.find('address')

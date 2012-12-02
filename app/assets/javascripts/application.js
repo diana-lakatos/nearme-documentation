@@ -1,17 +1,13 @@
 // Desks Near Me
 //
-// Require legacy jQuery dependent code first
-//= require ./vendor/jquery-1.4.1.js
-//= require ./vendor/jquery.overlay.js
-//= require ./vendor/jquery-ui-1.8.23.custom.min.js
-//= require ./vendor/jquery.address-1.3.min
-//= require ./search
-//* require ./vendor/fancybox/jquery.fancybox-1.3.1.pack.js
-//
-// Require new jQuery to override (NB: This is so HAX)
 //= require ./vendor/jquery
+//= require ./vendor/jquery-ui-1.8.23.custom.min.js
+//= require ./vendor/jquery.overlay.js
+//= require ./vendor/jquery.address-1.3.min
 //= require ./vendor/jquery-ui.multidatespicker
 //= require ./vendor/jquery.ui.touch-punch
+//= require ./vendor/bootstrap.min.js
+//= require ./search
 //= require ./vendor/rails
 //= require ./vendor/modernizr.js
 //= require ./vendor/jquery.cookie.js
