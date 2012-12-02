@@ -24,6 +24,10 @@ section.public {
       color: white;
     }
   }
+  section#hero + .container { 
+    width: 100%;
+    padding: 0;
+  }
 }
 
 #search_row {
@@ -97,7 +101,33 @@ section.how-it-works {
     text-align: center;
   }
   .row {
-    margin: 20px 0 40px;
+    padding: 30px 0;
+    margin: 0;
+
+    &.find-a-desk {
+    }
+
+    &.rent-your-space {
+    } 
+
+    .inner {
+      position: relative;
+      max-width: 960px;
+      margin: 0 auto;
+
+      @media (min-width: 768px) and (max-width: 959px) {
+        width: 768px;
+      }
+        
+      @media (max-width: 767px) {
+        width:420px;
+      }
+
+      @media (max-width: 480px) {
+        width:300px;
+      } 
+
+    }
   }
   h1{
     font: normal 40px/50px $font-medium, sans-serif;

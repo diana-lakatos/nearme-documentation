@@ -20,25 +20,28 @@
           #suggest_location{:style => "display: none"}
 
 %section.how-it-works
-  .row
-    .one-third.column.alpha
-      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/crosshair.png", :alt => "Dollar Sign"}
+  .row.find-a-desk
+    .inner
+      .one-third.column.alpha
+        %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/crosshair.png", :alt => "Dollar Sign"}
 
-    .two-thirds.column 
-      %h1 Find a desk near you.
-      %p Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to find great places to work. Leverage networking opportunities in a shared environment, or work from a single office for greater privacy. Whether you need a workspace for a day, a month, or a year, Desks Near Me has you covered.
-      %a
-      = link_to "Find a Desk!", search_path, :class => "btn btn-green btn-medium"
-  .row
-    .one-third.column.alpha
-      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/dollar.png", :alt => "Dollar Sign"}
+      .two-thirds.column 
+        %h1 Find a desk near you.
+        %p Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to find great places to work. Leverage networking opportunities in a shared environment, or work from a single office for greater privacy. Whether you need a workspace for a day, a month, or a year, Desks Near Me has you covered.
+        %a
+        = link_to "Find a Desk!", search_path, :class => "btn btn-blue btn-medium"
 
-    .two-thirds.column 
-      %h1 Rent out your extra space.
-      %p Don't let unused space go to waste: generate revenue by renting out your empty office space. Build your network & client base by opening up your space to professionals in your industry. Create a shared space and encourage collaboration between fields.      
+  .row.rent-your-space
+    .inner
+      .one-third.column.alpha
+        %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/dollar.png", :alt => "Dollar Sign"}
 
-      %a.btn.btn-blue.btn-medium{  :href => "/users/sign_up?wizard=space" }
-        List Your Space!     
+      .two-thirds.column 
+        %h1 Rent out your extra space.
+        %p Don't let unused space go to waste: generate revenue by renting out your empty office space. Build your network & client base by opening up your space to professionals in your industry. Create a shared space and encourage collaboration between fields.      
+
+        %a.btn.btn-green.btn-medium{  :href => "/users/sign_up?wizard=space" }
+          List Your Space!     
 
 - content_for :domready do
   new DNM.HomeSearch($('#listing_search'))
