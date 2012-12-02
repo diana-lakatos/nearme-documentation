@@ -23,6 +23,14 @@ section.public {
     &:hover {
       color: white;
     }
+
+    @media (max-width: 768px) {
+      top:460px;
+    }
+
+    @media (max-width: 480px) {
+      top:420px;
+    }    
   }
   section#hero + .container { 
     width: 100%;

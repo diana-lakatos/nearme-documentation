@@ -23,11 +23,11 @@
     #TTWNotify{:style => "display:none;"}
 
     .dnm-page
-      .container
+      .header-container
         %header.row
-          .five.columns.alpha
+          .logo-container
             = link_to "Desks Near Me", root_url, :id => "logo"
-          #header_links.eleven.columns.text-right.omega
+          #header_links.links-container
             = render "layouts/header_navigation"
 
       %section#content{:class => "#{controller_name}"}
