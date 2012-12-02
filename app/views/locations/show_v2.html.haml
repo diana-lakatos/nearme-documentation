@@ -1,7 +1,8 @@
 - @listing = @location.listings.first
-- @listing.description = @location.listings.first.description
+- @listing.description = @location.listings.first.description   
 
-= render :layout => 'show_layout_v2', :locals => { :tab => :overview } do
+= render :layout => 'show_layout_v2', :locals => { :tab => :overview } do   
+
   .one-third.column.alpha
     %h1 #{@location.name}
     %p
@@ -15,6 +16,4 @@
       = link_to @location.url, @location.url, :target => :_blank
 
   .two-thirds.column.omega
-    = render 'bookings' 
-
-
+    = render 'bookings_v2' 

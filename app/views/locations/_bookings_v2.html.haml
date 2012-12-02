@@ -1,0 +1,31 @@
+%section.bookings.quick-book
+  .listings
+    - @location.listings.each do |listing|
+
+      .listing.box.divider.small{listing_data_attributes(listing)}
+        .images
+          - if listing.photos.any?
+            .image{:style => "margin-right: 15px;"}
+              = image_tag listing.photos.first.url(:space_listing)
+
+        %h3= listing.name
+        %p= listing.description.truncate(200)
+
+        %hr
+
+        %div{:style => "float: right;"}
+          = number_field_tag :quantity, 1, :in => 1..listing.quantity, :style => "width: 40px; text-align: center;"
+          = listing.name
+          on
+          .calendar
+            = text_field_tag "dates", nil, :autocomplete => "off", :id => "calendar"
+
+          for
+          %span $198.00
+
+          = link_to "Book", "", :class => "btn btn-green btn-medium"
+      
+        .clearfix
+
+- content_for :domready do
+  $('#calendar').multiDatesPicker();

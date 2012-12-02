@@ -5,13 +5,12 @@
     .container.space-hero-search-return
 
   - if @location.photos.any?
-    = render 'photos'
+    = render 'photos_v2' 
 
 %article#space
 
   .clearfix
     = yield
-
 
 - content_for :script do
   / ShareThis script

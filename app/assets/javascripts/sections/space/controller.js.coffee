@@ -5,6 +5,7 @@ class @Space.Controller
     @setupMap()
     @setupPhotos()
     @setupBookings()
+    @setupQuickBook()
     @_bindEvents()
 
   _bindEvents: ->
@@ -44,4 +45,6 @@ class @Space.Controller
       icon: location.attr("data-marker")
     })
 
+  setupQuickBook: ->
+    @quickbook = new Space.QuickBook(@container.find('.quick-book'))
 

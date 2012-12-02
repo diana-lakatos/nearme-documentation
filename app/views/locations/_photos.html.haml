@@ -1,8 +1,14 @@
 .hero-gray-texture.hero-shadow
-  .container.fluid
-    .two-thirds.column.alpha.right
-      .photo{:style => "background-image: url('#{@location.photos.first.url}')"}
-        .caption
-          = @location.photos.first.caption
-    .one-third.column.fluid
-      = image_tag("http://placehold.it/650x350")          
+  .container.space-hero-photos
+    .photos-list
+      .prev
+      .photos-wrapper
+        %ul
+          - @location.photos.each do |photo|
+            %li
+              = image_tag photo.url(:hero_preview), :alt => photo.caption, 'data-url' => photo.url(:hero)
+      .next
+
+    .photo{:style => "background-image: url('#{@location.photos.first.url}')"}
+      .caption
+        = @location.photos.first.caption

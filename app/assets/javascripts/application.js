@@ -10,6 +10,7 @@
 //
 // Require new jQuery to override (NB: This is so HAX)
 //= require ./vendor/jquery
+//= require ./vendor/jquery-ui.multidatespicker
 //= require ./vendor/jquery.ui.touch-punch
 //= require ./vendor/rails
 //= require ./vendor/modernizr.js

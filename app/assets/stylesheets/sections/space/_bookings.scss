@@ -206,3 +206,37 @@
     margin-bottom: 0;
   }
 }
+
+.quick-book {
+
+  .calendar {
+    position: relative;
+    display: inline;
+
+    .date-icon {
+      position: absolute;
+      top: 12px;
+      left: 8px;
+      display: block;
+      background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat;
+      width: 26px;
+      height: 24px;
+    }
+
+    &.availability-date-end .date-icon {
+      background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat;
+      width: 22px;
+      height: 23px;
+    }
+
+    input {
+      padding-left: 40px;
+      width: 100px;
+      display: inline;
+      box-sizing: border-box;
+      background: white image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat 8px center;
+    }
+  }
+
+}
+
