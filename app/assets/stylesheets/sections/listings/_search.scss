@@ -23,6 +23,7 @@
       width:22px;
       background-size: 22px 23px;
       height: 23px;
+      top:11px;
     }
   }
 
@@ -47,9 +48,6 @@
     height: 23px;
     top: 13px;
 
-    @media ( max-width:480px ) {
-      top: 8px;
-    }
   }
 
   .btn {
@@ -132,6 +130,22 @@
       width: 168px;
     }
 
+    @media (max-width: 768px ) {
+
+      .three.columns.availability-date-start {
+        position: relative; 
+        float: left;
+        width: 48%;
+        margin-right: 4%;
+      }
+
+      .three.columns.availability-date-end {
+        position: relative; 
+        float: left;
+        width: 48%;
+      }
+    }
+
     .availability-date-start, .availability-date-end {
       input {
         width:100%;
@@ -162,6 +176,7 @@
         width:100%;
         box-sizing: border-box;
         background: white image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat 8px center;
+
       }
     }
   }

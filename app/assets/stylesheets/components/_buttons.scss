@@ -13,16 +13,6 @@
     color: #fff;
   }
 
-  &.btn-outline {
-    border-bottom: 1px solid rgba(0,0,0,0.8);
-
-    &:active {
-      margin-left: -1px;
-      margin-top: -1px;
-      border: 1px solid rgba(0,0,0,0.8);
-    }
-  }
-
   &.btn-small {
     height: 30px;
     line-height: 30px;
