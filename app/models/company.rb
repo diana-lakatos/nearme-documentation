@@ -4,7 +4,9 @@ class Company < ActiveRecord::Base
   attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name
 
   belongs_to :creator, class_name: "User"
-  has_many :locations
+
+  has_many :locations,
+           :dependent => :destroy
 
   before_validation :add_default_url_scheme
 

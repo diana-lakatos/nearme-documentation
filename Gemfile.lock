@@ -228,8 +228,6 @@ GEM
     omniauth-twitter (0.0.9)
       omniauth-oauth (~> 1.0)
     orm_adapter (0.4.0)
-    paranoia (1.1.0)
-      activerecord (>= 3.0.0)
     pg (0.14.0)
     pg_search (0.5)
       activerecord (>= 3)
@@ -262,6 +260,8 @@ GEM
       activerecord (~> 3.0)
       activesupport (~> 3.0)
       ruby-graphviz (~> 0.9.18)
+    rails3_acts_as_paranoid (0.2.4)
+      activerecord (~> 3.2)
     railties (3.2.5)
       actionpack (= 3.2.5)
       activesupport (= 3.2.5)
@@ -412,13 +412,13 @@ DEPENDENCIES
   omniauth
   omniauth-openid
   omniauth-twitter
-  paranoia
   pg
   pg_search
   pickle
   quiet_assets
   rails (= 3.2.5)
   rails-erd
+  rails3_acts_as_paranoid
   rdiscount
   ruby-debug19
   sass

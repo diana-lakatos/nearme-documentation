@@ -9,7 +9,10 @@ class ReservationPeriod < ActiveRecord::Base
   attr_accessible :listing_id
 
   # Seats for this date
-  has_many :seats, :class_name => 'ReservationSeat', :dependent => :destroy
+  has_many :seats,
+           :class_name => 'ReservationSeat',
+           :dependent => :destroy
+
   attr_accessible :quantity, :assignees
 
   # Reservation date
