@@ -12,6 +12,9 @@ class PagesController < ApplicationController
   def host_signup_2
   end
 
+  def host_signup_3
+  end
+
   private
 
   # Layout per action
