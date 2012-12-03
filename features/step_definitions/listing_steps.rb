@@ -94,7 +94,7 @@ When /^I view that listing$/ do
 end
 
 When /^I view that listing's edit page$/ do
-  visit edit_manage_listing_path(model!('listing'))
+  visit edit_manage_location_path(model!('listing').location)
 end
 
 Then /^I (do not )?see that listing listed$/ do |negative|
