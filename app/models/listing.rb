@@ -23,9 +23,16 @@ class Listing < ActiveRecord::Base
   has_many :inquiries
 
   has_one :company, through: :location
+  delegate :name, :description, to: :company, prefix: true, allow_nil: true
+  delegate :url, to: :company
+
   belongs_to :location
+  delegate :address, :amenities, :currency, :formatted_address, :local_geocoding, :organizations, :required_organizations, :latitude,
+    :longitude, :distance_from, to: :location, allow_nil: true
+
 
   belongs_to :creator, class_name: "User"
+  delegate :name, to: :creator, prefix: true
 
   has_many :availability_rules, :as => :target
 
@@ -41,12 +48,8 @@ class Listing < ActiveRecord::Base
                   :availability_template_id, :availability_rules_attributes, :defer_availability_rules, :free,
                   :photos_attributes
 
-  delegate :name, :description, to: :company, prefix: true, allow_nil: true
-  delegate :url, to: :company
-  delegate :address, :amenities, :currency, :formatted_address, :local_geocoding, :organizations, :required_organizations, :latitude,
-    :longitude, :distance_from, to: :location, allow_nil: true
-
   delegate :to_s, to: :name
+
 
 
   acts_as_paranoid

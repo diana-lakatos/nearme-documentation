@@ -6,8 +6,6 @@ class InquiryMailerTest < ActiveSupport::TestCase
     @inquiry = FactoryGirl.create(:inquiry)
   end
 
-  # TODO: These may need expanding once we have final copy...
-
   test "listing creator notification works ok" do
     mail = InquiryMailer.listing_creator_notification(@inquiry)
 
