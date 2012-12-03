@@ -67,7 +67,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(0,0,0,0.75);
+      background: rgba(0,0,0,0.5);
       color: #fff;
       text-shadow: 0 -1px 0 rgba(0,0,0,0.6);
       padding: 12px;
@@ -80,11 +80,11 @@
       height: 326px;
     }
     address {
-      background-color: rgba(0,0,0,0.75);
+      background-color: rgba(0,0,0,0.4);
       @include box-sizing(border-box);
-      padding: 10px;
+      padding: 10px 20px;
       height: 70px;
-      color: white;
+      color: rgb(240,240,240);
     }
   }
 
@@ -92,10 +92,16 @@
     margin-bottom: 0;
     .carousel-caption {
       @include box-sizing(border-box);
-      padding: 10px;
-      height: 70px;
+      padding: 20px;
       text-align: right;
-      font-family: $font-bold;
+      font-family: $font-heavy;
+      background: rgba(0,0,0,0);
+      opacity:.1;
+      @include transition(all .1s ease-in);
+
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 
