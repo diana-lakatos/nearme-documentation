@@ -12,12 +12,11 @@
         -# TODO: Add 'Read More for truncated text'
         %p= listing.description.truncate(200)
 
-        %hr
 
-        %div{:style => "float: right;"}
+        .make-reservation
           .quantity
             = number_field_tag :quantity, 1, :in => 1..listing.quantity, :style => "width: 40px; text-align: center;"
-          = listing.name
+          Desk
           on
           .calendar
             = text_field_tag "dates", nil, :autocomplete => "off"
@@ -26,6 +25,6 @@
           %span $0.00
 
           .book
-            = link_to "Review & Book", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBooking'
+            = link_to "Book", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBooking'
       
         .clearfix
