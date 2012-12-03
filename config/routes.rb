@@ -138,6 +138,7 @@ DesksnearMe::Application.routes.draw do
 
   match "/privacy", to: 'pages#privacy'
   match "/host-sign-up", to: 'pages#host_signup'
+  match "/host-sign-up-2", to: 'pages#host_signup_2'
   match "/support" => redirect("https://desksnearme.desk.com")
 
 end
