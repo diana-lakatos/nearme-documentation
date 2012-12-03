@@ -74,4 +74,29 @@
       font-size: 12px;
     }
   }
+
+  .map {
+    .map-container {
+      height: 326px;
+    }
+    address {
+      background-color: rgba(0,0,0,0.75);
+      @include box-sizing(border-box);
+      padding: 10px;
+      height: 70px;
+      color: white;
+    }
+  }
+
+  .carousel {
+    margin-bottom: 0;
+    .carousel-caption {
+      @include box-sizing(border-box);
+      padding: 10px;
+      height: 70px;
+      text-align: right;
+      font-family: $font-bold;
+    }
+  }
+
 }

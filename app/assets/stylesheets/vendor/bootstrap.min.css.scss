@@ -29,3 +29,34 @@
 .carousel-caption h4,.carousel-caption p{color:#ffffff;line-height:20px;}
 .carousel-caption h4{margin:0 0 5px;}
 .carousel-caption p{margin-bottom:0;}
+
+// Pills for indicating active image
+// ---------------------------------
+
+.carousel-pills {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  display: block;
+  text-align: center;
+}
+
+.carousel-pills span {
+  display: inline-block;
+  margin: 0px 5px;
+  width: 10px;
+  height: 10px;
+  @include border-radius(15px);
+  background: #333;
+  @include box-shadow(rgba(0,0,0,.25) 0 1px 3px, rgba(0,0,0,.1) inset 0 -1px 0);
+  cursor: pointer;
+
+  &.active-pill {
+    @include background(linear-gradient(#fff, #eee));
+  }
+
+  &:hover {
+    background: #eee;
+  }
+}

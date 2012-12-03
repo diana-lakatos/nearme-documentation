@@ -1,11 +1,11 @@
 class @Space.Controller
 
   constructor: (@container, @options = {}) ->
-    # Set up the map on the page
+    @setupMultiDatesPicker()
+    @setupCarousel()
     @setupMap()
     @setupPhotos()
     @setupBookings()
-    @setupQuickBook()
     @_bindEvents()
 
   _bindEvents: ->
@@ -45,6 +45,21 @@ class @Space.Controller
       icon: location.attr("data-marker")
     })
 
-  setupQuickBook: ->
-    @quickbook = new Space.QuickBook(@container.find('.quick-book'))
+  setupCarousel: ->
+    carouselContainer = $(".carousel")
+    return unless carouselContainer.length > 0
+    carouselContainer.carousel({
+      pills: true,
+      interval: 10000
+    })
+
+  setupMultiDatesPicker: ->
+    calendarContainer = $(".quick-book .calendar input")
+    return unless calendarContainer.length > 0
+    tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+    calendarContainer.multiDatesPicker({
+      addDates: [tomorrow]
+    });
+    $('#ui-datepicker-div').wrap('<div class="jquery-ui-theme" />')
+
 

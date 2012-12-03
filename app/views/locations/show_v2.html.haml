@@ -5,8 +5,6 @@
 
   .one-third.column.alpha
     %h1 #{@location.name}
-    %p
-      = location_format_address(@location.formatted_address || @location.address)
     %p.description
       #{@location.description}
 

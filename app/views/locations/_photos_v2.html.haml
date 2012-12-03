@@ -2,22 +2,18 @@
   .container.fluid.space-hero-photos
 
     .two-thirds.column.alpha.right
-      #carousel.carousel.slide
+      .carousel.slide
         .carousel-inner
-          - @location.photos.each do |photo|
-            .item= image_tag photo.url(:hero)
-        %a.carousel-control.left{:href => "#carousel", 'data-slide' => "prev"}
-          &lsaquo;
-        %a.carousel-control.right{:href => "#carousel", 'data-slide' => "next"}
-          &rsaquo;
+          - @location.photos.each_with_index do |photo, index|
+            .item{:class => ("active" if index == 0)}
+              = image_tag photo.url(:golden)
+              .carousel-caption
+                %p= photo.caption
 
     .one-third.column.fluid
       .map
         .map-wrapper
-          .map-container{:style => "height: 350px;"}
+          .map-container
 
-        %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, "data-marker" => image_path("components/map-pin.png"), :style => "display: none;"}
-          = location_format_address(@location.formatted_address || @location.address)   
-
-- content_for :domready do
-  $('#carousel').carousel()
+        %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, "data-marker" => image_path("components/map-pin.png")}
+          = location_format_address(@location.formatted_address || @location.address)

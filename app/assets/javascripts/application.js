@@ -1,19 +1,19 @@
 // Desks Near Me
 //
 //= require ./vendor/jquery
-//= require ./vendor/jquery-ui-1.8.23.custom.min.js
-//= require ./vendor/jquery.overlay.js
+//= require ./vendor/jquery-ui-1.8.23.custom.min
+//= require ./vendor/jquery.overlay
 //= require ./vendor/jquery.address-1.3.min
 //= require ./vendor/jquery-ui.multidatespicker
 //= require ./vendor/jquery.ui.touch-punch
-//= require ./vendor/bootstrap.min.js
+//= require ./vendor/bootstrap
 //= require ./search
 //= require ./vendor/rails
-//= require ./vendor/modernizr.js
-//= require ./vendor/jquery.cookie.js
-//= require ./vendor/jquery.popover-1.1.2.js
-//= require ./vendor/mustache.js
-//= require ./vendor/underscore.js
+//= require ./vendor/modernizr
+//= require ./vendor/jquery.cookie
+//= require ./vendor/jquery.popover-1.1.2
+//= require ./vendor/mustache
+//= require ./vendor/underscore
 //
 //= require_self
 //
