@@ -1,6 +1,7 @@
 class @Space.Controller
 
   constructor: (@container, @options = {}) ->
+    @setupCollapse()
     @setupMultiDatesPicker()
     @setupCarousel()
     @setupMap()
@@ -61,5 +62,10 @@ class @Space.Controller
       addDates: [tomorrow]
     });
     $('#ui-datepicker-div').wrap('<div class="jquery-ui-theme" />')
+
+  setupCollapse: ->
+    collapseContainer = $(".accordion")
+    return unless collapseContainer.length > 0
+    collapseContainer.collapse()
 
 

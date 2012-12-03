@@ -16,7 +16,7 @@ class PagesController < ApplicationController
     case action_name
     when "host_signup"
       "landing"
-    when "privacy"
+    else
       "new_layout"
     end
   end

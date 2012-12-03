@@ -3,15 +3,46 @@
 
 = render :layout => 'show_layout_v2', :locals => { :tab => :overview } do   
 
-  .one-third.column.alpha
-    %h1 #{@location.name}
-    %p.description
-      #{@location.description}
+  %h1 #{@location.name}
 
-    - if @location.phone.present?
-      %strong= @location.phone
-    - if @location.url.present?
-      = link_to @location.url, @location.url, :target => :_blank
+  .one-third.column.alpha
+
+    .accordion
+      .accordion-group
+        .accordion-heading
+          %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#overview_tab'}
+            Overview
+        #overview_tab.accordion-body.collapse.in
+          .accordion-inner
+            #{@location.description}
+
+            - if @location.phone.present?
+              %strong= @location.phone
+            - if @location.url.present?
+              = link_to @location.url, @location.url, :target => :_blank
+
+      .accordion-group
+        .accordion-heading
+          %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#host_tab'}
+            Host
+        #host_tab.accordion-body.collapse
+          .accordion-inner
+            %p= "#{@location.creator.name}, #{@location.company.name}"
+            %p= image_tag(@location.creator.avatar.url, :alt => @location.creator.name)
+            - if @location.creator.phone
+              %p= @location.creator.phone 
+            %p= @location.company.description
+ 
+      - if @amenities
+        .accordion-group
+          .accordion-heading
+            %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#amenities_tab'}
+              Amenities
+          #amenities_tab.accordion-body.collapse
+            .accordion-inner
+              %ul
+                - @location.amenities.each do |amenity|
+                  %li= amenity
 
   .two-thirds.column.omega
-    = render 'bookings_v2' 
+    = render 'bookings_v2'
