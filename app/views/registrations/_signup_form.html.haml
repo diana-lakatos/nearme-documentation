@@ -1,11 +1,11 @@
 .signup-no-provider{:style => ('display: none' if user_auth_provider)}
-  %p.intro
-    Sign up using your favorite service:
+  %h3.twitter-login
+    Sign up with Twitter:
 
   = render 'authentications/services'
 
   .hr.divider
-    %span alternatively
+    %span Or
 
   = simple_form_for resource, :as => :user, :url => registration_path(resource_name), :html => { :class => "form-horizontal new_user" } do |f|
     = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
@@ -22,7 +22,7 @@
           %p.error-block= f.object.errors[:password].to_sentence
 
     .actions
-      = f.submit 'Sign up and get started'
+      = f.submit 'Sign up!'
 
 - if user_auth_provider
   .signup-provider
@@ -43,7 +43,7 @@
       = f.input :email, :label => "Your email address", :placeholder => "So we can contact you"
 
       .actions
-        = f.submit 'Sign up and get started'
+        = f.submit 'Sign up!'
 
 :javascript
   $(function() {
