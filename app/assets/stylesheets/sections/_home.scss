@@ -1,10 +1,10 @@
 section.public {
   #hero {
-    @extend .hero-blue-top;
     height: 500px;
     width: auto;
     background: $dnm_grey image-url("sections/home/hero1.jpg") center center no-repeat;
     background-size: cover;
+    @include box-shadow(rgba(black, .2) 0 0 100px 50px inset); 
 
     @media (max-width: 767px) {
       height: 420px;
@@ -113,9 +113,11 @@ section.how-it-works {
     margin: 0;
 
     &.find-a-desk {
+      background: hsla(76, 13%, 15%,.04);
     }
 
     &.rent-your-space {
+      background: hsla(198deg, 16%, 15%, .01);
     } 
 
     .inner {
