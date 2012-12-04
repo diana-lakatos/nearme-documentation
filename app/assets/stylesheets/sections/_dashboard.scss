@@ -1,4 +1,5 @@
 section.dashboard {
+  min-height: 800px;
   div.tabs {
     > nav {
       background: #F8F8F8;
@@ -43,4 +44,7 @@ section.dashboard {
       &.selected {
         display: block; } } }
 
+}
+section.companies, section.registrations, section.sessions {
+  min-height: 800px;
 }

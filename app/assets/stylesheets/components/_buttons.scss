@@ -68,7 +68,15 @@
       @include background(linear-gradient(top center, #e93e34, #f34a40));
     }
   }
+  &.twitter {
+    width:auto;
+    text-align: center;
+    box-sizing: border-box;
 
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
 }
 
 .btn-group {
@@ -77,8 +85,6 @@
 
   .btn {
     float: left;
-    border-right: 1px solid #70882b;
-    border-left: 1px solid #afc76b;
   }
 
   .btn:first-child:not(:last-child) {
