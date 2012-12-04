@@ -3,6 +3,7 @@
 - content_for :hero do
   .hero-wood-texture
     .container.space-hero-search-return
+      %h1 #{@location.name}
 
   - if @location.photos.any?
     = render 'photos_v2' 

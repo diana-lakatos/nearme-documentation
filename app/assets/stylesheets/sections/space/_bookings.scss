@@ -58,6 +58,7 @@
       .make-reservation {
         float: right;
         font:normal 26px/38px $font-medium, sans-serif;
+        margin-top: 10px;
 
         @media (max-width: 480px) {
           width: 100%;
@@ -228,8 +229,12 @@
 
 .quick-book {
 
-  @media (max-width:959px) {
+  @media (min-width: 768px) and (max-width:959px) {
     margin-right: 20px;
+  }
+
+  @media (max-width: 767px) {
+    margin: 0 20px;
   }
 
   .quantity {
@@ -265,11 +270,14 @@
   }
 
   a.btn.btn-medium {
-    padding: 4px 30px;
+    padding: 4px 25px;
     font:normal 26px/38px $font-medium, sans-serif;
     letter-spacing: 2px;
-    vertical-align: middle;
 
+    @media (max-width: 880px) {
+      padding: 4px 10px;
+      font-size: 22px;
+    }
     @media (max-width: 480px) {
       display: block;
       clear: both;

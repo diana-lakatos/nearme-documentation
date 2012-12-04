@@ -1,0 +1,12 @@
+.accordion-group {
+
+	background: rgb(240,240,240);
+	margin-right: 20px;
+	border-radius: 8px;
+
+  @media (max-width: 959px) {
+    margin: 0 20px;
+  }
+
+}
+

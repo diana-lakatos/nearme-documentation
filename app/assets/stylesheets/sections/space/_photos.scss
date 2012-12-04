@@ -77,14 +77,42 @@
 
   .map {
     .map-container {
-      height: 326px;
+      height: 396px;
+      position: relative;
+      z-index: 1;
+
+      @media (max-width: 767px) {
+        height:160px;
+      }
+      @media (max-width: 480px) {
+        height:120px;
+      }      
     }
     address {
-      background-color: rgba(0,0,0,0.4);
+      position: relative;
+      background-color: rgba(0,0,0,0.78);
       @include box-sizing(border-box);
       padding: 10px 20px;
-      height: 70px;
+      margin-top: -65px;
+      height: 65px;
+      width:auto;
+      max-width: 320px;
       color: rgb(240,240,240);
+      z-index: 100;
+
+      strong {
+        font-family: $font-medium;
+      }
+
+      @media (max-width: 768px) {
+        width: 100%;
+        max-width: none;
+        height:40px;
+        margin-top:-40px;
+      }
+      @media (max-width: 320px) {
+        font-size: 10px;
+      }      
     }
   }
 
@@ -96,7 +124,7 @@
       text-align: right;
       font-family: $font-heavy;
       background: rgba(0,0,0,0);
-      opacity:.1;
+      opacity:.3;
       @include transition(all .1s ease-in);
 
       &:hover {

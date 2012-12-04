@@ -3,8 +3,6 @@
 
 = render :layout => 'show_layout_v2', :locals => { :tab => :overview } do   
 
-  %h1 #{@location.name}
-
   .one-third.column.alpha
 
     .accordion
@@ -24,7 +22,7 @@
       .accordion-group
         .accordion-heading
           %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#host_tab'}
-            Host
+            About Host
         #host_tab.accordion-body.collapse
           .accordion-inner
             %p= "#{@location.creator.name}, #{@location.company.name}"
