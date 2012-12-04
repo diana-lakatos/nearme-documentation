@@ -56,7 +56,8 @@ class ReservationPeriod < ActiveRecord::Base
   private
 
   def set_listing
-    self.listing ||= reservation.listing
+    # Check for existence of reservation, as record may be orphaned if rolling back via rails3_acts_as_paranoid
+    self.listing ||= reservation.listing if reservation
   end
 
 end
