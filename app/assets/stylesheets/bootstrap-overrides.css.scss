@@ -8,5 +8,15 @@
     margin: 0 20px;
   }
 
+  a.accordion-toggle {
+  	background: url('http://desksnearme.assets.s3.amazonaws.com/img/ui/arrow-down.png') right center no-repeat;
+  	background-origin: content-box;
+  	color: black;
+  	opacity: .8;
+
+  	&:hover {
+  		opacity: 1;
+  	}
+  }
 }
 

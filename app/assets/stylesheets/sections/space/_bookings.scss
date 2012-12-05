@@ -1,4 +1,21 @@
 #space, .space {
+
+  h3.listing-name {
+    font:normal 24px/33px $font-heavy, sans-serif;
+
+    @media (max-width: 480px) {
+      margin: 10px 0;
+      clear: both;
+      float: left;
+    }
+  }
+
+  p.listing-description {
+    @media (max-width: 480px) {
+      float: left;
+      clear: both;
+    }
+  }
   .bookings {
 
     .summary {
@@ -26,7 +43,12 @@
 
         &:first-child {
           margin-left: 0;
+
+        img {
+          border-radius: 4px;
+          }  
         }
+
       }
 
       .book {
@@ -38,9 +60,6 @@
       }
 
       .images {
-        img {
-          @include border-radius(6px);
-        }
       }
 
       .description {
@@ -169,10 +188,6 @@
   }
 
   .availability {
-    .total, .available {
-      font-weight: bold;
-    }
-
     .total {
       color: #848b8f;
     }
@@ -187,7 +202,6 @@
     background: #fff;
     outline: none;
     color: #91529c;
-    font-weight: bold;
     padding: 4px;
     width: 30px;
     font-size: 12px;
@@ -282,6 +296,7 @@
       display: block;
       clear: both;
       width:100%;
+      margin-top: 10px;
       text-align:center;
       box-sizing: border-box;
       line-height: 32px;

@@ -8,9 +8,11 @@
             .image{:style => "margin-right: 15px;"}
               = image_tag listing.photos.first.url(:space_listing)
 
-        %h3= listing.name
+        %h3.listing-name
+          = listing.name
         -# TODO: Add 'Read More for truncated text'
-        %p= listing.description.truncate(200)
+        %p.listing-description
+          = listing.description.truncate(200)
 
 
         .make-reservation

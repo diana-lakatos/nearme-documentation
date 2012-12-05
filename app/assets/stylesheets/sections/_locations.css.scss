@@ -6,6 +6,9 @@ section.locations {
     @media (max-width: 959px) {
       margin: 8px 20px;
     }
+    @media (max-width: 480px) {
+      text-align: center;
+    }
   }
 }
 .availability-rules {
