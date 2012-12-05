@@ -1,4 +1,3 @@
-function initializeJQueryUITouchPunch(jQuery) {
 /*!
  * jQuery UI Touch Punch 0.2.2
  *
@@ -159,4 +158,3 @@ function initializeJQueryUITouchPunch(jQuery) {
   };
 
 })(jQuery);
-};

@@ -73,13 +73,13 @@
 						if (dateText) {
 							$this.multiDatesPicker('toggleDate', dateText);
 						}
+
 						
 						if (this.multiDatesPicker.mode == 'normal' && this.multiDatesPicker.dates.picked.length > 0 && this.multiDatesPicker.pickableRange) {
 							var min_date = this.multiDatesPicker.dates.picked[0],
 								max_date = new Date(min_date.getTime());
 							
 							methods.sumDays(max_date, this.multiDatesPicker.pickableRange-1);
-								
 							// counts the number of disabled dates in the range
 							if(this.multiDatesPicker.adjustRangeToDisabled) {
 								var c_disabled, 
@@ -106,9 +106,9 @@
 								.datepicker("option", "minDate", min_date)
 								.datepicker("option", "maxDate", max_date);
 						} else {
-							$this
+							/*$this
 								.datepicker("option", "minDate", this.multiDatesPicker.minDate)
-								.datepicker("option", "maxDate", this.multiDatesPicker.maxDate);
+								.datepicker("option", "maxDate", this.multiDatesPicker.maxDate);*/
 						}
 						
 						if(this.tagName == 'INPUT') { // for inputs

@@ -1,7 +1,7 @@
 // Desks Near Me
 //
 //= require ./vendor/jquery
-//= require ./vendor/jquery-ui-1.8.23.custom.min
+//= require ./vendor/jquery-ui-1.9.2.custom
 //= require ./vendor/jquery.overlay
 //= require ./vendor/jquery.address-1.3.min
 //= require ./vendor/jquery-ui.multidatespicker
@@ -58,10 +58,6 @@ window.DNM = {
 $(function() {
   DNM.initialize()
 })
-
-// FIXME: Hax to initialize jQuery UI on 2 versions of JQuery temporaryily
-initializeJQueryUI(jQuery);
-initializeJQueryUITouchPunch(jQuery);
 
 jQuery.ajaxSetup({
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}

@@ -57,10 +57,14 @@ class @Space.Controller
   setupMultiDatesPicker: ->
     calendarContainer = $(".quick-book .calendar input")
     return unless calendarContainer.length > 0
-    tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-    calendarContainer.multiDatesPicker({
+    tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+    calendarContainer.multiDatesPicker(
       addDates: [tomorrow]
-    });
+      onSelect: (d, inst) ->
+        inst.inline = true
+        setTimeout((-> inst.inline = false), 500)
+    )
+
     $('#ui-datepicker-div').wrap('<div class="jquery-ui-theme" />')
 
   setupCollapse: ->
