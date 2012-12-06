@@ -10,16 +10,38 @@ class @Space.BookingManager
 
     @summaryContainer = @container.find('.summary').hide()
     @_setupCalendar()
+    @_setupMultiDatesPicker()
     @_bindEvents()
 
+  # Setup the datepicker for the simple booking UI
+  _setupMultiDatesPicker: ->
+    calendarContainer = $(".quick-book .calendar input")
+    return unless calendarContainer.length > 0
+    tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+    calendarContainer.multiDatesPicker(
+      addDates: [tomorrow]
+      onSelect: (d, inst) =>
+        inst.inline = true
+        setTimeout((-> inst.inline = false), 500)
+
+        listing = @findListing $(inst.input).closest('.listing').attr('data-listing-id')
+        dates = inst.input.multiDatesPicker('getDates', 'object')
+        listing.setDates(dates)
+    )
+
+    $('#ui-datepicker-div').wrap('<div class="jquery-ui-theme" />')
+
+  # Setup calendar for the advanced booking UI
   _setupCalendar: ->
-    @calendar = new Space.BookingCalendar(@container.find('.calendar'))
+    return unless @container.find('#calendar').length > 0
+
+    @calendar = new Space.BookingCalendar(@container.find('#calendar'))
 
     # Bind to date selection events
-    @calendar.onSelect (date) => @addDateForBookings(date)
-    @calendar.onUnselect (date) => @removeDateForBookings(date)
+    @calendar.onSelect (date) => @addDateForBookings(date, @calendar)
+    @calendar.onUnselect (date) => @removeDateForBookings(date, @calendar)
 
-  addDateForBookings: (date) ->
+  addDateForBookings: (date, calendar = null) ->
     # Do we need availability info for days?
     needsLoading = !_.all @listings, (listing) =>
       listing.availabilityLoadedFor(date)
@@ -29,12 +51,12 @@ class @Space.BookingManager
       listing.addDate(date) for listing in @listings
 
     if needsLoading
-      @calendar.setLoading(date)
+      calendar.setLoading(date) if calendar
       $.ajax(@options.availability_summary_url, {
         dataType: 'json',
         data: { dates: [DNM.util.Date.toId(date)] },
         success: (data) =>
-          @calendar.setLoading(date, false)
+          calendar.setLoading(date, false) if calendar
 
           # Go through each response and add date info
           _.each data, (listingData) =>
@@ -57,13 +79,24 @@ class @Space.BookingManager
         data: @bookingDataForReview()
       }, 'space-reservation-modal')
 
+    # Show review booking for a single listing
+    @container.find('[data-behavior=showReviewBookingListing]').click (event) =>
+      event.preventDefault()
+      listing_id = $(event.target).attr('data-listing-id')
+      Modal.load({
+        url: @options.review_url,
+        type: 'POST',
+        data: @bookingDataForReview([@findListing(listing_id)])
+      })
+
+
   findListing: (listingId) ->
     return listing for listing in @listings when listing.id is parseInt(listingId, 10)
 
   # Build data for booking review
-  bookingDataForReview: ->
+  bookingDataForReview: (forListings = @listings) ->
     listings = []
-    for listing in @listings when listing.isBooked()
+    for listing in forListings when listing.isBooked()
       listings.push {
         id: listing.id,
         bookings: listing.getBookings()
@@ -249,6 +282,21 @@ class @Space.BookingManager
     removeDate: (date) ->
       @daysContainer.find(".#{DNM.util.Date.toClassName(date)}").remove()
       @setBooking(date, 0) if _.include @bookedDays(), DNM.util.Date.toId(date)
+
+    # Set the dates active on this listing for booking
+    setDates: (dates) ->
+      dateIds = _.map dates, (date) -> DNM.util.Date.toId(date)
+
+      # Remove dates that aren't included
+      for dateId in @bookedDays()
+        if !_.include(dateIds, dateId)
+          @setBooking(dateId, 0)
+
+      # Add new dates
+      for dateId in dateIds
+        if !_.include(@bookedDays(), dateId)
+          @setBooking(dateId, 1)
+
 
     # Prepare for insertion the dom object representing the ability to choose
     # bookings for the specified date for this Listing
