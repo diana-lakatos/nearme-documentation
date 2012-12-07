@@ -32,14 +32,26 @@ class Bookings.Controller
   #
   # protected
   constructor: (@container, @options = {}) ->
+    @availabilityManager = new Bookings.AvailabilityManager(
+      @options.availability_summary_url
+    )
+
     # The Listings collection is the set of all Listings being managed for bookings on
     # the page. Each listing keeps track of the bookings made on it.
-    @listings = $.map @options.listings, (listing) =>
-      new Bookings.Listing(listing)
+    @listings = $.map @options.listings, (listingData) =>
+      listing = new Bookings.Listing(listingData, @availabilityManager)
+
 
   # Return the listing with the specified ID from the Listing bookings collection
   findListing: (listingId) ->
     return listing for listing in @listings when listing.id is parseInt(listingId, 10)
+
+  reviewBooking: (forListings = @listings) ->
+    Modal.load({
+      url: @options.review_url,
+      type: 'POST',
+      data: @bookingDataForReview(forListings)
+    }, 'space-reservation-modal')
 
   # Build data for booking review
   #

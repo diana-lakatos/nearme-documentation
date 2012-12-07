@@ -98,7 +98,7 @@ class @Bookings.Advanced.ListingView
   # bookings for the specified date for this Listing
   _prepareBookedDayElement: (date) ->
     el = $ Mustache.render(@bookedDayTemplate, {
-      count: 0,
+      count: @listing.bookedFor(date),
       date: date.getDate(),
       suffix: DNM.util.Date.suffix(date),
       month: DNM.util.Date.monthName(date, 3)
@@ -118,9 +118,9 @@ class @Bookings.Advanced.ListingView
       suffix: DNM.util.Date.suffix(date),
       month: DNM.util.Date.monthName(date),
       year: date.getFullYear(),
-      available: @listing.availability[DNM.util.Date.toId(date)].available,
-      total: @listing.availability[DNM.util.Date.toId(date)].total,
-      quantity: 1,
+      available: @listing.availabilityFor(date),
+      total: @listing.totalFor(date),
+      quantity: @listing.bookedFor(date),
       listingId: @listing.id,
       dateId: DNM.util.Date.toId(date)
     })

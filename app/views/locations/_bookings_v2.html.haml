@@ -1,4 +1,4 @@
-%section.bookings.quick-book
+%section.bookings.quick-book{:'data-view' => "simple"}
   .listings
     - @location.listings.each do |listing|
 
@@ -17,7 +17,7 @@
 
         .make-reservation
           .quantity
-            = number_field_tag :quantity, 1, :in => 1..listing.quantity, :style => "width: 40px; text-align: center;"
+            = number_field_tag :quantity, 1, :in => 1..listing.quantity, :style => "width: 40px; text-align: center;", :class => 'quantity'
           Desk
           on
           .calendar

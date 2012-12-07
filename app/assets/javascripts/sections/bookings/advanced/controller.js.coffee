@@ -30,11 +30,7 @@ class @Bookings.Advanced.Controller extends Bookings.Controller
     # Trigger the Booking Review modal when the review button is pressed
     @summaryContainer.find('[data-behavior=showReviewBooking]').click (event) =>
       event.preventDefault()
-      Modal.load({
-        url: @options.review_url,
-        type: 'POST',
-        data: @bookingDataForReview()
-      }, 'space-reservation-modal')
+      @reviewBooking()
 
     # When a date is selected on the calendar, add it as a date available for bookings
     @calendar.onSelect (date) =>
@@ -58,9 +54,6 @@ class @Bookings.Advanced.Controller extends Bookings.Controller
     listing.removeDate(date) for listing in @listings
 
   addDateForBookings: (date) ->
-    # FIXME: Extract availability detection out into a helper object to use on
-    #        simple & advanced views
-    #
     # Do we need availability info for days?
     needsLoading = !_.all @listings, (listing) =>
       listing.availabilityLoadedFor(date)
@@ -71,18 +64,9 @@ class @Bookings.Advanced.Controller extends Bookings.Controller
 
     if needsLoading
       @calendar.setLoading(date)
-      $.ajax(@options.availability_summary_url, {
-        dataType: 'json',
-        data: { dates: [DNM.util.Date.toId(date)] },
-        success: (data) =>
-          @calendar.setLoading(date, false)
-
-          # Go through each response and add date info
-          _.each data, (listingData) =>
-            @findListing(listingData.id).addAvailability(listingData.availability)
-
-          addDateToListings()
-      })
+      @availabilityManager.getAll date, =>
+        @calendar.setLoading(date, false)
+        addDateToListings()
     else
       addDateToListings()
 

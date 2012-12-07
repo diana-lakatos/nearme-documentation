@@ -1,23 +1,31 @@
 # Each Listing has it's own object which keeps track of number booked, availability etc.
 class @Bookings.Listing
-  constructor: (@options) ->
+  defaultQuantity: 1
+
+  constructor: (@options, @availabilityManager) ->
     @id = parseInt(@options.id, 10)
     @bookings = {}
-    @availability = {}
 
-  addAvailability: (availabilityHash) ->
-    _.extend(@availability, availabilityHash)
+  setDefaultQuantity: (qty, updateBookings = false) ->
+    @defaultQuantity = qty if qty >= 0
+
+    if updateBookings
+      @setBooking(day, @defaultQuantity) for day in @bookedDays()
 
   availabilityLoadedFor: (date) ->
-    dateId = DNM.util.Date.toId(date)
-    _.has(@availability, dateId)
+    @availabilityManager.isLoaded(@id, date)
+
+  totalFor: (date) ->
+    @availabilityManager.totalFor(@id, date)
 
   availabilityFor: (date) ->
-    dateId = DNM.util.Date.toId(date)
-    @availability[dateId].available
+    @availabilityManager.availableFor(@id, date)
 
   hasAvailabilityOn: (date) ->
     @availabilityFor(date) > 0
+
+  bookedFor: (date) ->
+    @bookings[DNM.util.Date.toId(date)] || 0
 
   isBooked: ->
     @bookedDays().length > 0
@@ -25,6 +33,10 @@ class @Bookings.Listing
   # Return the days where there exist bookings
   bookedDays: ->
     _.chain(@bookings).keys().reject((k) => @bookings[k] <= 0).value()
+
+  # Return the days where bookings exist as Date objects
+  bookedDates: ->
+    $.map @bookedDays(), (dateId) -> DNM.util.Date.idToDate(dateId)
 
   # Total 'desk days' booked. i.e. number of desks summed across each day
   bookedDeskDays: ->
@@ -70,32 +82,34 @@ class @Bookings.Listing
     subtotalCents
 
   addDate: (date) ->
-    @setBooking(date, 0)
-
-    DNM.Event.notify(this, 'dateAdded', [date])
-
-    # TODO: Notify observers date added (i.e. views)
-    if @hasAvailabilityOn(date)
-      @setBooking(date, 1)
+    @withAvailabilityLoaded date, =>
+      qty = if @hasAvailabilityOn(date) then @defaultQuantity else 0
+      @setBooking(date, qty)
+      DNM.Event.notify(this, 'dateAdded', [date])
 
   removeDate: (date) ->
-    @setBooking(date, 0) if _.include @bookedDays(), DNM.util.Date.toId(date)
-
-    # TODO: Notify observers date removed
-    DNM.Event.notify(this, 'dateRemoved', [date])
+    if _.include @bookedDays(), DNM.util.Date.toId(date)
+      @setBooking(date, 0)
+      DNM.Event.notify(this, 'dateRemoved', [date])
 
   # Set the dates active on this listing for booking
   setDates: (dates) ->
     dateIds = _.map dates, (date) -> DNM.util.Date.toId(date)
 
     # Remove dates that aren't included
-    for dateId in @bookedDays()
-      if !_.include(dateIds, dateId)
-        @setBooking(dateId, 0)
+    for dateId in @bookedDays() when !_.include(dateIds, dateId)
+      @removeDate(DNM.util.Date.idToDate(dateId))
 
     # Add new dates
-    for dateId in dateIds
-      if !_.include(@bookedDays(), dateId)
-        @setBooking(dateId, 1)
+    for dateId in dateIds when !_.include(@bookedDays(), dateId)
+      @addDate(DNM.util.Date.idToDate(dateId))
+
+  # Execute a callback if or once availability has been loaded for a date
+  #
+  # date     - The date to enforce availability loading of
+  # callback - A function to call when availability is loaded
+  withAvailabilityLoaded: (date, callback) ->
+    @availabilityManager.get @id, date, -> callback()
+
 
 
