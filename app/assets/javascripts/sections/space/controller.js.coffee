@@ -19,7 +19,7 @@ class @Space.Controller
     @photos = new Space.PhotosController($('.space-hero-photos'))
 
   setupBookings: ->
-    @bookings = new Space.BookingManager(@container.find('.bookings'), @options.bookings)
+    @bookings = Bookings.Controller.initialize(@container.find('.bookings'), @options.bookings)
 
   setupMap: ->
     mapContainer = $(".map")

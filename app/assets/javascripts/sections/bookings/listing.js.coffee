@@ -1,10 +1,9 @@
 # Each Listing has it's own object which keeps track of number booked, availability etc.
-class @Space.Booking.Listing
-  constructor: (@manager, @options) ->
-    @id = @options.id
+class @Bookings.Listing
+  constructor: (@options) ->
+    @id = parseInt(@options.id, 10)
     @bookings = {}
     @availability = {}
-    @_bindEvents()
 
   addAvailability: (availabilityHash) ->
     _.extend(@availability, availabilityHash)
@@ -46,11 +45,7 @@ class @Space.Booking.Listing
     date = DNM.util.Date.idToDate(dateId)
     @bookings[DNM.util.Date.toId(date)] = amount
 
-    # TODO: notify observers of updated booking (views)
-
-    # Notify manager bookings updated
-    # FIXME: Remove this and bind as observer
-    @manager.bookingsChanged(this)
+    DNM.Event.notify(this, 'bookingChanged', [date, amount])
 
   # Return the subtotal for booking this listing
   bookingSubtotal: ->
@@ -77,6 +72,8 @@ class @Space.Booking.Listing
   addDate: (date) ->
     @setBooking(date, 0)
 
+    DNM.Event.notify(this, 'dateAdded', [date])
+
     # TODO: Notify observers date added (i.e. views)
     if @hasAvailabilityOn(date)
       @setBooking(date, 1)
@@ -85,6 +82,7 @@ class @Space.Booking.Listing
     @setBooking(date, 0) if _.include @bookedDays(), DNM.util.Date.toId(date)
 
     # TODO: Notify observers date removed
+    DNM.Event.notify(this, 'dateRemoved', [date])
 
   # Set the dates active on this listing for booking
   setDates: (dates) ->

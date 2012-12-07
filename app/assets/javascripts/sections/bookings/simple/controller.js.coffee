@@ -1,7 +1,19 @@
 # Contains all the view logic of the 'simple' view of the booking system
-class @Space.Booking.SimpleView
+class @Bookings.Simple.Controller
 
   constructor: ->
+    @_setupMultiDatesPicker()
+
+  bindEvents: ->
+    # Show review booking for a single listing
+    @container.find('[data-behavior=showReviewBookingListing]').click (event) =>
+      event.preventDefault()
+      listing_id = $(event.target).attr('data-listing-id')
+      Modal.load({
+        url: @options.review_url,
+        type: 'POST',
+        data: @bookingDataForReview([@findListing(listing_id)])
+      })
 
   # Setup the datepicker for the simple booking UI
   _setupMultiDatesPicker: ->
