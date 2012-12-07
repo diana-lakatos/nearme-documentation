@@ -51,9 +51,7 @@ module ReservationsHelper
       end
     end
 
-    Hash[
-      dates.keys.sort.map { |k| [k, dates[k]] }
-    ]
+    Hash[dates.keys.sort.map { |k| [k, dates[k]] }]
   end
 
   def location_reservation_total_amount(reservations = @reservations)
