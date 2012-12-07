@@ -97,7 +97,6 @@ class Listing < ActiveRecord::Base
   alias_method :defer_availability_rules?, :defer_availability_rules
 
   def availability_for(date)
-    return (rand*20).floor
     if availability.open_on?(:date => date)
       # Return the number of free desks
       [self.quantity - desks_booked_on(date), 0].max
@@ -108,7 +107,6 @@ class Listing < ActiveRecord::Base
 
   # Maximum quantity available for a given date
   def quantity_for(date)
-    return (rand*30).floor
     self.quantity
   end
 
