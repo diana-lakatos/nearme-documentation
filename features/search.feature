@@ -15,6 +15,7 @@ Feature: A user can search for a listing
     When I search for "bung"
     Then I should see "Please enter a city or address"
 
+  @wip
   Scenario: A user searches for something which yields no results
     When I search for "darwin"
     Then I should see "No results found"
