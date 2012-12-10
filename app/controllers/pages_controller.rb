@@ -9,6 +9,12 @@ class PagesController < ApplicationController
 	def host_signup
 	end
 
+  def host_signup_2
+  end
+
+  def host_signup_3
+  end
+
   private
 
   # Layout per action
@@ -16,8 +22,10 @@ class PagesController < ApplicationController
     case action_name
     when "host_signup"
       "landing"
-    else
+    when "privacy"
       "new_layout"
+    else
+      false
     end
   end
 

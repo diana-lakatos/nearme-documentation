@@ -54,9 +54,9 @@ class @Multiselect
 
   updateCount: (newCount = @items().length) ->
     text = if newCount == 0
-      "None selected"
+      "Amenities"
     else
-      "#{newCount} selected"
+      "Amenities"
 
     @collapsedContainer.text(text)
     @expandedSummary.text(text)

@@ -17,6 +17,8 @@ class Listing::Search::Params
         organization_ids: allowed_organizations
     }
 
+    scope[:per_page] = 100
+
     if search_area
       scope[:geo] = search_area.radians
       scope[:with]["@geodist"] = 0.0...search_area.radius

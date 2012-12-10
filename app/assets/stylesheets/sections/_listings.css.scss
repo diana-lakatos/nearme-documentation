@@ -121,11 +121,9 @@ article.listing {
     overflow: hidden;
 
     h2 {
-      margin-bottom:0;
       a {
         font:normal '32px/40px' $font-medium, sans-serif;
         color: darken( $dnm_blue, 25%);
-        margin-bottom:0;
 
         &:hover {
           color: black;

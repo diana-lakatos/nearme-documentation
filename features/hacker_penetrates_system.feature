@@ -8,7 +8,5 @@ Feature: Hacker Penetrates System
     And a listing exists with creator: the user "wally"
     And a user: "hacker" exists
     And I am logged in as the user: "hacker"
-    When I go to the listing's edit page
-    And I should not see "Edit a listing"
-    And I should see "Could not find listing"
-
+    When I view that listing's edit page
+    Then I should not see "Edit a listing"

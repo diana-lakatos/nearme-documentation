@@ -53,27 +53,27 @@
 
 /* Component containers
 ----------------------------------*/
-.jquery-ui-theme .ui-widget { font-family: Verdana,Arial,sans-serif; font-size: 1.1em; }
+.jquery-ui-theme .ui-widget { font-family: $font-medium, Verdana,Arial,sans-serif; font-size: 1.1em; }
 .jquery-ui-theme .ui-widget .ui-widget { font-size: 1em; }
-.jquery-ui-theme .ui-widget input, .jquery-ui-theme .ui-widget select, .jquery-ui-theme .ui-widget textarea, .jquery-ui-theme .ui-widget button { font-family: Verdana,Arial,sans-serif; font-size: 1em; }
+.jquery-ui-theme .ui-widget input, .jquery-ui-theme .ui-widget select, .jquery-ui-theme .ui-widget textarea, .jquery-ui-theme .ui-widget button { font-family: $font-medium, Verdana,Arial,sans-serif; font-size: 1em; }
 .jquery-ui-theme .ui-widget-content { border: 1px solid #e0cfc2; background: #f4f0ec image-url("jqueryui/ui-bg_inset-soft_100_f4f0ec_1x100.png") 50% bottom repeat-x; color: #1e1b1d; }
 .jquery-ui-theme .ui-widget-content a { color: #1e1b1d; }
-.jquery-ui-theme .ui-widget-header { border: 1px solid #d49768; background: #cb842e image-url("jqueryui/ui-bg_glass_25_cb842e_1x400.png") 50% 50% repeat-x; color: #ffffff; font-weight: bold; }
+.jquery-ui-theme .ui-widget-header { color: black; font-family: $font-heavy; letter-spacing: 1px; text-transform: none; font-size: 20px; }
 .jquery-ui-theme .ui-widget-header a { color: #ffffff; }
 
 /* Interaction states
 ----------------------------------*/
-.jquery-ui-theme .ui-state-default, .jquery-ui-theme .ui-widget-content .ui-state-default, .jquery-ui-theme .ui-widget-header .ui-state-default { border: 1px solid #cdc3b7; background: #ede4d4 image-url("jqueryui/ui-bg_glass_70_ede4d4_1x400.png") 50% 50% repeat-x; font-weight: normal; color: #3f3731; }
+.jquery-ui-theme .ui-state-default, .jquery-ui-theme .ui-widget-content .ui-state-default, .jquery-ui-theme .ui-widget-header .ui-state-default { border: 1px solid #cdc3b7; font-weight: normal; color: #3f3731; }
 .jquery-ui-theme .ui-state-default a, .jquery-ui-theme .ui-state-default a:link, .jquery-ui-theme .ui-state-default a:visited { color: #3f3731; text-decoration: none; }
-.jquery-ui-theme .ui-state-hover, .jquery-ui-theme .ui-widget-content .ui-state-hover, .jquery-ui-theme .ui-widget-header .ui-state-hover, .jquery-ui-theme .ui-state-focus, .jquery-ui-theme .ui-widget-content .ui-state-focus, .jquery-ui-theme .ui-widget-header .ui-state-focus { border: 1px solid #f5ad66; background: #f5f0e5 image-url("jqueryui/ui-bg_glass_100_f5f0e5_1x400.png") 50% 50% repeat-x; font-weight: normal; color: #a46313; }
+.jquery-ui-theme .ui-state-hover, .jquery-ui-theme .ui-widget-content .ui-state-hover, .jquery-ui-theme .ui-state-hover, .jquery-ui-theme .ui-state-focus, .jquery-ui-theme .ui-widget-content .ui-state-focus { border: 1px solid darken( $green, 30%); background: lighten( $green, 5%); font-weight: normal; color: white; }
 .jquery-ui-theme .ui-state-hover a, .jquery-ui-theme .ui-state-hover a:hover { color: #a46313; text-decoration: none; }
-.jquery-ui-theme .ui-state-active, .jquery-ui-theme .ui-widget-content .ui-state-active, .jquery-ui-theme .ui-widget-header .ui-state-active { border: 1px solid #e0cfc2; background: #f4f0ec image-url("jqueryui/ui-bg_highlight-hard_100_f4f0ec_1x100.png") 50% 50% repeat-x; font-weight: normal; color: #b85700; }
+.jquery-ui-theme .ui-state-active, .jquery-ui-theme .ui-widget-content .ui-state-active { border: 1px solid darken( $green, 40% ); background: $green; color: white; }
 .jquery-ui-theme .ui-state-active a, .jquery-ui-theme .ui-state-active a:link, .jquery-ui-theme .ui-state-active a:visited { color: #b85700; text-decoration: none; }
 .jquery-ui-theme .ui-widget :active { outline: none; }
 
 /* Interaction Cues
 ----------------------------------*/
-.jquery-ui-theme .ui-state-highlight, .jquery-ui-theme .ui-widget-content .ui-state-highlight, .jquery-ui-theme .ui-widget-header .ui-state-highlight  {border: 1px solid #d9bb73; background: #f5f5b5 image-url("jqueryui/ui-bg_highlight-hard_75_f5f5b5_1x100.png") 50% top repeat-x; color: #060200; }
+.jquery-ui-theme .ui-state-highlight, .jquery-ui-theme .ui-widget-content .ui-state-highlight, .jquery-ui-theme .ui-widget-header .ui-state-highlight  { border: 1px solid #e0cfc2; background: #f4f0ec; font-weight: normal; color: #b85700; }
 .jquery-ui-theme .ui-state-highlight a, .jquery-ui-theme .ui-widget-content .ui-state-highlight a,.ui-widget-header .ui-state-highlight a { color: #060200; }
 .jquery-ui-theme .ui-state-error, .jquery-ui-theme .ui-widget-content .ui-state-error, .jquery-ui-theme .ui-widget-header .ui-state-error {border: 1px solid #f8893f; background: #fee4bd image-url("jqueryui/ui-bg_highlight-hard_65_fee4bd_1x100.png") 50% top repeat-x; color: #592003; }
 .jquery-ui-theme .ui-state-error a, .jquery-ui-theme .ui-widget-content .ui-state-error a, .jquery-ui-theme .ui-widget-header .ui-state-error a { color: #592003; }
@@ -88,9 +88,9 @@
 /* states and images */
 .jquery-ui-theme .ui-icon { width: 16px; height: 16px; background-image: image-url("jqueryui/ui-icons_c47a23_256x240.png"); }
 .jquery-ui-theme .ui-widget-content .ui-icon {background-image: image-url("jqueryui/ui-icons_c47a23_256x240.png"); }
-.jquery-ui-theme .ui-widget-header .ui-icon {background-image: image-url("jqueryui/ui-icons_ffffff_256x240.png"); }
+.jquery-ui-theme .ui-widget-header .ui-icon {background-image: image-url("jqueryui/ui-icons_c47a23_256x240.png"); }
 .jquery-ui-theme .ui-state-default .ui-icon { background-image: image-url("jqueryui/ui-icons_f08000_256x240.png"); }
-.jquery-ui-theme .ui-state-hover .ui-icon, .jquery-ui-theme .ui-state-focus .ui-icon {background-image: image-url("jqueryui/ui-icons_f08000_256x240.png"); }
+.jquery-ui-theme .ui-state-hover .ui-icon, .jquery-ui-theme .ui-state-focus .ui-icon {background-image: image-url("jqueryui/ui-icons_ffffff_256x240.png"); }
 .jquery-ui-theme .ui-state-active .ui-icon {background-image: image-url("jqueryui/ui-icons_f35f07_256x240.png"); }
 .jquery-ui-theme .ui-state-highlight .ui-icon {background-image: image-url("jqueryui/ui-icons_cb672b_256x240.png"); }
 .jquery-ui-theme .ui-state-error .ui-icon, .jquery-ui-theme .ui-state-error-text .ui-icon {background-image: image-url("jqueryui/ui-icons_ff7519_256x240.png"); }
@@ -393,8 +393,6 @@
 .jquery-ui-theme .ui-datepicker .ui-datepicker-prev-hover, .jquery-ui-theme .ui-datepicker .ui-datepicker-next-hover { top: 1px; }
 .jquery-ui-theme .ui-datepicker .ui-datepicker-prev { left:2px; }
 .jquery-ui-theme .ui-datepicker .ui-datepicker-next { right:2px; }
-.jquery-ui-theme .ui-datepicker .ui-datepicker-prev-hover { left:1px; }
-.jquery-ui-theme .ui-datepicker .ui-datepicker-next-hover { right:1px; }
 .jquery-ui-theme .ui-datepicker .ui-datepicker-prev span, .jquery-ui-theme .ui-datepicker .ui-datepicker-next span { display: block; position: absolute; left: 50%; margin-left: -8px; top: 50%; margin-top: -8px;  }
 .jquery-ui-theme .ui-datepicker .ui-datepicker-title { margin: 0 2.3em; line-height: 1.8em; text-align: center; }
 .jquery-ui-theme .ui-datepicker .ui-datepicker-title select { font-size:1em; margin:1px 0; }
@@ -402,7 +400,7 @@
 .jquery-ui-theme .ui-datepicker select.ui-datepicker-month, 
 .jquery-ui-theme .ui-datepicker select.ui-datepicker-year { width: 49%;}
 .jquery-ui-theme .ui-datepicker table {width: 100%; font-size: .9em; border-collapse: collapse; margin:0 0 .4em; }
-.jquery-ui-theme .ui-datepicker th { padding: .7em .3em; text-align: center; font-weight: bold; border: 0;  }
+.jquery-ui-theme .ui-datepicker th { padding: .7em .3em; text-align: center; border: 0;  }
 .jquery-ui-theme .ui-datepicker td { border: 0; padding: 1px; }
 .jquery-ui-theme .ui-datepicker td span, .jquery-ui-theme .ui-datepicker td a { display: block; padding: .2em; text-align: right; text-decoration: none; }
 .jquery-ui-theme .ui-datepicker .ui-datepicker-buttonpane { background-image: none; margin: .7em 0 0 0; padding:0 .2em; border-left: 0; border-right: 0; border-bottom: 0; }

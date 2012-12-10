@@ -51,15 +51,10 @@ Feature: Location Owner Creates/Edits Listing
     When I create a listing for that location with availability rules
     Then the listing shows the availability rules
 
-  Scenario: A listing owner can edit a listing
-    Given a listing exists with location: the location, creator: the user
-    When I go to the dashboard
-    And I follow "Manage Spaces"
-    And I follow "Spaces"
-    And I follow "Edit"
-    And I follow "Desks & Rooms"
-    And I follow "Edit"
-    And I fill in "Name" with "Joe's Codin' Garage"
-    And I press "Update Listing"
-    Then a listing should exist with name: "Joe's Codin' Garage"
-    And I should see "Great, your listing's details have been updated."
+  Scenario: A listing owner can edit a location
+    When I change that locations name to Joe's Codin' Garage
+    Then a location should exist with name: "Joe's Codin' Garage"
+
+  Scenario: A location owner can delete a location
+    When I delete that location
+    Then that location no longer exists

@@ -5,7 +5,9 @@ class Reservation < ActiveRecord::Base
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
     :owner_id, :periods, :state, :user, :comment
 
-  has_many :periods, :class_name => "ReservationPeriod", :dependent => :destroy
+  has_many :periods,
+           :class_name => "ReservationPeriod",
+           :dependent => :destroy
 
   validates :periods, :length => { :minimum => 1 }
 

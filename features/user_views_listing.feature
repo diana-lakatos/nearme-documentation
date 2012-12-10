@@ -1,10 +1,5 @@
 Feature: User Views Listing
 
-  @wip
-  Scenario: Viewing a free listing
-    Given a free listing exists
-    Then the listing price is shown as Free
-
   @future
   Scenario: Viewing a Listing with Amenities
     Given a listed location with an amenity

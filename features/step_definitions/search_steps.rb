@@ -25,7 +25,8 @@ end
 
 Then /^the search results have the \$10 listing first$/ do
   prices = page.all('.listing').collect(&:text)
-  prices.first.should =~ /\$10/
+  ten_dollar_listing = Listing.all.find { |l| l.price_cents = 10_00 }
+  prices.first.should include ten_dollar_listing.name
 end
 
 Then /^the search results have the listing with that amenity first$/ do

@@ -1,7 +1,6 @@
 - current ||= :overview
 - content_for :hero do
   #hero.collapsed.hero-blue-top
-    .hero-wood-spacer
     %nav.hero-nav
       %ul.container
         %li{:class => ('current' if current == :account)}= link_to "Account", edit_user_registration_url

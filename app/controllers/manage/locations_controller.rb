@@ -9,6 +9,15 @@ class Manage::LocationsController < ApplicationController
   def edit
   end
 
+  def destroy
+    if @location.destroy
+      flash[:context_success] = "You've deleted #{@location.name}"
+    else
+      flash[:context_failure] = "We couldn't delete #{@location.name}"
+    end
+    redirect_to manage_company_locations_path @location.company
+  end
+
   def update
     @location.attributes = params[:location]
 

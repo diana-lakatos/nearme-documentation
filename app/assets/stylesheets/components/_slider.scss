@@ -3,25 +3,25 @@
   background: #2f1f17;
   border-radius: 8px;
   height: 11px;
-  border-top: 1px solid #281a14;
+  margin-top: 6px;
   border-bottom: 1px solid rgba(255,255,255,0.25);
 
   .ui-slider-handle {
     position: absolute;
-    background: image-url("components/slider/knob-basic.png");
+    background: image-url("components/slider/knob-green.png");
     width: 27px;
     height: 27px;
     margin-top: -8px;
-    margin-left: -10px;
+    margin-left: -4px;
     display: block;
     outline: none;
+    @include transition(all 0s false false);
   }
 
   .ui-slider-range {
     position: absolute;
     height: 12px;
-    background: image-url("components/slider/slider-range.png");
+    background: darken( $dnm_green, 25%);
     margin-top: -1px;
   }
 }
-

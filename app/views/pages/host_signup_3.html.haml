@@ -1,0 +1,59 @@
+%html
+  %head
+    %title
+      DesksNear.Me :: #{show_title? ? yield(:title) : "Where do you want to work today?"}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}  
+    = stylesheet_link_tag 'landing'
+
+  %body 
+    .row-1.people
+      .wrapper
+        .col-1
+          %a{:href=>"http://desksnear.me/"}
+            %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/dnm-watermark.png", :alt => "Desks Near Me"}
+        .col-2
+          %a{:href=>"http://desksnear.me/users/sign_up?wizard=space"}
+            %h1.short Become a Host for Free!
+        .clearfix
+    .row-2
+      .wrapper
+        .col-1
+          %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/dollar-animation.gif", :alt => "Dollar Sign"}
+        .col-2
+          %h2 Rent out your extra office space
+          %p Why let your unused space cost you money? Generate revenue by renting out your space monthly, weekly and daily.  Review and rent to pre-screened professionals in your industry, or open your doors to all.
+        .clearfix   
+    .row-3
+      .wrapper
+        .col-1
+          %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/collaboration-animation.gif", :alt => "Collaboration"}
+        .col-2
+          %h2 Build Your Network
+          %p Build your network & client base by leasing your space to professionals in your field. Create a shared space and encourage collaboration between disciplines.
+          <a id='sign-up' href='http://desksnear.me/space/new' > List Your Space!</a>      
+        .clearfix
+    %footer
+      .wrapper
+        %li 
+          %a{:href=>"mailto:support@desksnear.me", :title=>"Contact"} Contact
+        %li 
+          %a{:href=>"http://support.desksnear.me/", :title=>"Support"}  Support
+        %li 
+          %a{:href=>"http://blog.desksnear.me/", :title=>"Blog"}  Blog    
+        %li.clear 
+          %a{:href=>"https://twitter.com/desksnearme", :title=>"Twitter"} Twitter
+        %li 
+          %a{:href=>"https://www.facebook.com/DesksNearMe", :title=>"Facebook"} Facebook  
+        %li 
+          %a{:href=>"http://instagram.com/desksnearme", :title=>"Instagram"}  Instagram               
+
+:javascript
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19145250-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();

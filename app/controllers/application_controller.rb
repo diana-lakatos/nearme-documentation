@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   layout "new_layout"
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   before_filter :set_tabs
 
@@ -26,6 +27,10 @@ class ApplicationController < ActionController::Base
 
   def redirect_for_wizard(wizard_id_or_object)
     redirect_to wizard(wizard_id_or_object).url
+  end
+
+  def not_found
+    render "public/404", :status => :not_found
   end
 
 end
