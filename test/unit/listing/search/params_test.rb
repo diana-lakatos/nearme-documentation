@@ -17,7 +17,6 @@ class Listing::Search::ParamsTest <  ActiveSupport::TestCase
       should "keeps the query if the query is not found" do
         assert_equal "not_found_location", build_params(options_with_midpoint.merge(options_with_query("not_found_location")), fake_geocoder(false)).query
       end
-
     end
   end
 
