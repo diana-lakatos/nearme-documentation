@@ -1,0 +1,84 @@
+// Custom datepicker
+.dnm-datepicker {
+  position: absolute;
+  z-index: 9000;
+  top: 300px;
+  left: 300px;
+
+  background: #f5f5f5;
+  border: 1px solid #c6c6c6;
+  @include border-radius(8px);
+
+  .datepicker-prev, .datepicker-next {
+    float: left;
+    height: 40px;
+    width: 40px;
+    @include opacity(0.8);
+    cursor: pointer;
+    &:hover {
+      @include opacity(1);
+    }
+  }
+
+  .datepicker-prev {
+    background: image-url("components/datepicker/left.png") center center no-repeat;
+  }
+
+  .datepicker-next {
+    float: right;
+    background: image-url("components/datepicker/right.png") center center no-repeat;
+  }
+
+  .datepicker-header {
+    margin: 0 40px;
+    text-align: center;
+    font-weight: bold;
+
+    .datepicker-month {
+      line-height: 30px;
+    }
+
+    .datepicker-year {
+      font-size: 10px;
+      line-height: 10px;
+    }
+  }
+
+  .datepicker-week-header, .datepicker-days {
+    overflow: hidden;
+
+    .datepicker-week-heading, .datepicker-day {
+      float: left;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+    }
+  }
+
+  .datepicker-days-wrapper {
+    position: relative;
+
+    .datepicker-loading {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      @include opacity(0.9);
+      background: #fff;
+    }
+  }
+
+  .datepicker-days {
+    .datepicker-day {
+      &.datepicker-day-dow-0 {
+        clear: left;
+      }
+
+      &.active {
+        background: green;
+      }
+    }
+  }
+}

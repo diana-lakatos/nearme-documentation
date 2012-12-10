@@ -14,6 +14,7 @@
 //= require ./vendor/jquery.popover-1.1.2
 //= require ./vendor/mustache
 //= require ./vendor/underscore
+//= require ./vendor/asevented
 //
 //= require_self
 //
