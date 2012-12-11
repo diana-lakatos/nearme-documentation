@@ -12,7 +12,7 @@ class @Bookings.Listing
     @defaultQuantity = qty if qty >= 0
 
     if updateBookings
-      @setBooking(day, @defaultQuantity) for day in @bookedDays()
+      @updateOrRemoveBooking(DNM.util.Date.idToDate(day), @defaultQuantity) for day in @bookedDays()
 
   availabilityLoadedFor: (date) ->
     @availabilityManager.isLoaded(@id, date)
@@ -53,11 +53,16 @@ class @Bookings.Listing
   #
   # dateId - Date ID string or Date object
   # amount - Amount to book on this date
-  setBooking: (dateId, amount) ->
+  setBooking: (dateId, amount, removeIfZero = false) ->
     amount = parseInt(amount, 10)
     amount = 0 unless amount > 0
     date = DNM.util.Date.idToDate(dateId)
-    @bookings[DNM.util.Date.toId(date)] = amount
+    dateId = DNM.util.Date.toId(date)
+
+    if amount == 0 and removeIfZero
+      delete @bookings[dateId]
+    else
+      @bookings[dateId] = amount
 
     @trigger 'bookingChanged', date, amount
 
@@ -91,8 +96,17 @@ class @Bookings.Listing
 
   removeDate: (date) ->
     if _.include @bookedDays(), DNM.util.Date.toId(date)
-      @setBooking(date, 0)
+      @setBooking(date, 0, true)
       @trigger 'dateRemoved', date
+
+  # Update a booking, or remove it if it isn't available in the quantity specified
+  updateOrRemoveBooking: (date, quantity) ->
+    if @availabilityFor(date) >= quantity
+      if @bookedFor(date) != quantity
+        @setBooking(date, quantity, true)
+        @trigger 'bookingChanged', date, quantity
+    else
+      @removeDate(date)
 
   # Set the dates active on this listing for booking
   setDates: (dates) ->

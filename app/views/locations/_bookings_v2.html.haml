@@ -22,11 +22,12 @@
           on
           .calendar
             = text_field_tag "dates", nil, :autocomplete => "off"
+            %span.total-days 1 day
 
           for
-          %span $0.00
+          %span $#{content_tag(:span, "0.00", :class => 'total')}
 
           .book
             = link_to "Book Now", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id
-      
+
         .clearfix

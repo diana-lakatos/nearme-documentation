@@ -204,10 +204,9 @@ class @Datepicker
       # Refresh the view on the first display
       if !@hasRendered
         @refresh()
-      else
-        @reposition()
 
       @container.show()
+      @reposition()
 
     hide: ->
       @container.hide()
