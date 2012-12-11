@@ -24,13 +24,15 @@
 
   :javascript
     // Initialize the ui controller
-    new Space.Controller(
-      $('article.space, article#space'),
-      {
-        bookings: {
-          listings: #{raw location_listings_json},
-          availability_summary_url: #{raw availability_summary_location_url(@location).to_json},
-          review_url: #{raw review_location_reservations_url(@location).to_json}
+    $(function() {
+      new Space.Controller(
+        $('article.space, article#space'),
+        {
+          bookings: {
+            listings: #{raw location_listings_json},
+            availability_summary_url: #{raw availability_summary_location_url(@location).to_json},
+            review_url: #{raw review_location_reservations_url(@location).to_json}
+          }
         }
-      }
-    )
+      )
+    });

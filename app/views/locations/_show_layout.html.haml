@@ -36,14 +36,16 @@
     stLight.options({publisher: "6a574b36-b1b7-4eff-bbc2-5cda0add4a98"});
 
   :javascript
-    // Initialize the ui controller
-    new Space.Controller(
-      $('article.space, article#space'),
-      {
-        bookings: {
-          listings: #{raw location_listings_json},
-          availability_summary_url: #{raw availability_summary_location_url(@location).to_json},
-          review_url: #{raw review_location_reservations_url(@location).to_json}
+    $(function() {
+      // Initialize the ui controller
+      new Space.Controller(
+        $('article.space, article#space'),
+        {
+          bookings: {
+            listings: #{raw location_listings_json},
+            availability_summary_url: #{raw availability_summary_location_url(@location).to_json},
+            review_url: #{raw review_location_reservations_url(@location).to_json}
+          }
         }
-      }
-    )
+      )
+    });
