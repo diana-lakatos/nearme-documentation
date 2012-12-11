@@ -54,7 +54,7 @@ class @Datepicker
     if @options.trigger
       $(@options.trigger).on 'click', (event) =>
         event.stopPropagation()
-        @view.show()
+        @view.toggle()
 
   bindViewEvents: ->
     @view.bind 'prevClicked', =>
@@ -64,34 +64,34 @@ class @Datepicker
       @model.advanceMonth(1)
 
     @view.bind 'dateClicked', (date) =>
-      @model.toggleDate(date) if @model.canToggleDate(date)
+      @model.toggleDate(date)
 
   show: -> @view.show()
   hide: -> @view.hide()
   getDates: -> @model.getDates()
+  setDates: (dates) -> @model.setDates(dates)
+  removeDate: (date) -> @model.removeDate(date)
+  addDate: (date) -> @model.addDate(date)
 
   class Datepicker.Model
     asEvented.call(Model.prototype)
 
     constructor: (options) ->
       @currentMonth = options.currentMonth
-      @selectedDates = options.selectedDates
+      @_included = []
       @today = options.today
+
+      @setDates(options.selectedDates) if options.selectedDates
 
     advanceMonth: (incr = 1) ->
       @currentMonth = new Date(@currentMonth.getFullYear(), @currentMonth.getMonth()+incr, 1, 0, 0, 0, 0)
       @trigger('monthChanged', @currentMonth)
 
     isSelected: (date) ->
-      including = false
-      including = sd for sd in @selectedDates when sd.getMonth() == date.getMonth() && sd.getDate() == date.getDate() && sd.getFullYear() == date.getFullYear()
-      including
-
-    canToggleDate: (date) ->
-      true
+      @_included.indexOf(@_asId(date)) != -1
 
     getDates: ->
-      @selectedDates.slice(0)
+      _.map @_included, (dateId) => @_fromId(dateId)
 
     toggleDate: (date) ->
       if @isSelected(date)
@@ -100,16 +100,34 @@ class @Datepicker
         @addDate(date)
 
     removeDate: (date) ->
-      including = @isSelected(date)
-      return unless including
+      dateId = @_asId(date)
+      return unless @isSelected(dateId)
 
-      @selectedDates.splice(@selectedDates.indexOf(including, 1))
+      @_included.splice @_included.indexOf(dateId), 1
       @trigger('dateRemoved', date)
 
     addDate: (date) ->
-      @selectedDates.push(date)
+      dateId = @_asId(date)
+      return if @isSelected(dateId)
+
+      @_included.push dateId
       @trigger('dateAdded', date)
 
+    setDates: (dates) ->
+      newDates = []
+      newDates.push(@_asId(date)) for date in dates
+
+      added = _.difference(newDates, @_included)
+      removed = _.difference(@_included, newDates)
+
+      @removeDate(@_fromId(date)) for date in removed
+      @addDate(@_fromId(date)) for date in added
+
+    _asId: (date) ->
+      DNM.util.Date.toId(date)
+
+    _fromId: (dateId) ->
+      DNM.util.Date.idToDate(dateId)
 
   # View renderer for the calendar
   class Datepicker.View
@@ -144,7 +162,17 @@ class @Datepicker
       <div class="datepicker-day datepicker-day-{{year}}-{{month}}-{{day}} datepicker-day-dow-{{dow}} {{klass}}" data-year="{{year}}" data-month="{{month}}" data-day="{{day}}">{{day}}</div>
     '''
 
+    defaultOptions: {
+      # Target for positioning of the popover view
+      positionTarget: null,
+
+      # Padding in px as spacing around the positioning popover
+      positionPadding: 5
+    }
+
     constructor: (@options = {}) ->
+      @options = $.extend({}, @defaultOptions, @options)
+      @positionTarget = @options.positionTarget || @options.trigger
       @container = $('<div />').hide()
       @container.addClass(@options.containerClass || 'dnm-datepicker')
       @container.html(@viewTemplate)
@@ -166,13 +194,47 @@ class @Datepicker
     appendTo: (selector) ->
       $(selector).append(@container)
 
+    toggle: ->
+      if @container.is(':visible')
+        @hide()
+      else
+        @show()
+
     show: ->
       # Refresh the view on the first display
-      @refresh() if !@hasRendered
+      if !@hasRendered
+        @refresh()
+      else
+        @reposition()
+
       @container.show()
 
     hide: ->
       @container.hide()
+
+    reposition: ->
+      return unless @positionTarget
+      width = @container.width()
+      height = @container.height()
+      tOffset = $(@positionTarget).offset()
+      tWidth = $(@positionTarget).width()
+      tHeight = $(@positionTarget).height()
+
+      left = tOffset.left + parseInt(tWidth/2, 10) - parseInt(width/2, 10)
+
+      # Page height
+      pageHeight = $('body').height()
+      if tOffset.top < height || (pageHeight - tOffset.top) > height
+        # Render below element
+        top = tOffset.top + tHeight + @options.positionPadding
+      else
+        # Render above element
+        top = tOffset.top - height - @options.positionPadding
+
+      @container.css(
+        'top': "#{top}px",
+        'left': "#{left}px"
+      )
 
     # Listen to changes on the model to re-render the view
     bindModel: ->
@@ -190,6 +252,8 @@ class @Datepicker
       # Clicking on a date element
       @daysContainer.on 'click', '.datepicker-day', (event) =>
         dayEl = $(event.target).closest('.datepicker-day')
+        return if dayEl.is('.disabled')
+
         y = parseInt(dayEl.attr('data-year'), 10)
         m = parseInt(dayEl.attr('data-month'), 10)
         d = parseInt(dayEl.attr('data-day'), 10)
@@ -223,30 +287,41 @@ class @Datepicker
       @monthHeader.text(DNM.util.Date.monthName(monthDate))
       @yearHeader.text(monthDate.getFullYear())
 
-      # Render each day across the weeks
-      start = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1, 0, 0, 0, 0)
-      start.setDate(start.getDate() - start.getDay())
-
       html = ""
-      for i in [0..34]
-        date = new Date(start.getFullYear(), start.getMonth(), start.getDate()+i, 0, 0, 0, 0)
-        html += @renderDate(date)
+      for date in @datesForMonth(monthDate)
+        html += @renderDate(date, monthDate)
 
       # Set the html in the days container
       @daysContainer.html(html)
+      @reposition()
 
-    renderDate: (date) ->
+    # Get all the dates to render for a given month given that
+    # all dates in a week must be rendered.
+    datesForMonth: (monthDate) ->
+      current = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1, 0, 0, 0, 0)
+      current.setDate(current.getDate() - current.getDay())
+
+      weeks = 4
+      weeks += 1 while new Date(current.getFullYear(), current.getMonth(), current.getDate()+weeks*7, 0, 0, 0, 0).getMonth() == monthDate.getMonth()
+
+      dates = []
+      for i in [0..(weeks*7-1)]
+        dates.push new Date(current.getFullYear(), current.getMonth(), current.getDate()+i, 0, 0, 0, 0)
+      dates
+
+    renderDate: (date, monthDate) ->
       @_render(@dayTemplate,
         year:  date.getFullYear(),
         month: date.getMonth(),
         day:   date.getDate(),
         dow:   date.getDay(),
-        klass: @classForDate(date)
+        klass: @classForDate(date, monthDate)
       )
 
-    classForDate: (date) ->
+    classForDate: (date, monthDate = null) ->
       klass = []
       klass.push "active" if @model.isSelected(date)
+      klass.push "datepicker-day-other-month" if monthDate and monthDate.getMonth() != date.getMonth()
       klass.join ' '
 
     _render: (template, args) ->

@@ -20,8 +20,11 @@ class @Bookings.AvailabilityManager
   totalFor: (listingId, date) ->
     value.total if value = @_value(listingId, date)
 
-  isLoaded: (listingId, date) ->
-    @_value(listingId, date)
+  isLoaded: (listingId, date_or_dates) ->
+    if date_or_dates instanceof Array
+      _.all date_or_dates, (date) => @isLoaded(listingId, date)
+    else
+      @_value(listingId, date_or_dates)
 
   # Determine availability for a given date and listing
   #
@@ -32,16 +35,27 @@ class @Bookings.AvailabilityManager
     dateId = DNM.util.Date.toId(date)
 
     if @isLoaded(listingId, date)
-      @_executeCallback([listingId, date, callback])
+      @_executeCallback([listingId, date, callback]) if callback
     else
       @_scheduleFetch(listingId, date, callback)
 
   getAll: (date, callback) ->
     @_scheduleFetch(null, date, callback)
 
+  getDates: (listingId, dates, callback) ->
+    pending = false
+    for date in dates when !@isLoaded(listingId, date)
+      pending = true
+      @get(listingId, date)
+
+    if pending
+      @pendingCallbacks.push([null, null, callback]) if callback
+    else
+      callback() if callback
+
   # Make request to load pending availability info
   fetchPending: ->
-    dates = $.map(@pendingDates, (date) -> DNM.util.Date.toId(date))
+    dates = _.uniq $.map(@pendingDates, (date) -> DNM.util.Date.toId(date))
     callbacks = @pendingCallbacks
 
     # Reset the pending calls
@@ -74,13 +88,20 @@ class @Bookings.AvailabilityManager
 
   _scheduleFetch: (listingId, date, callback) ->
     @pendingDates.push(date)
-    @pendingCallbacks.push([listingId, date, callback])
+    @pendingCallbacks.push([listingId, date, callback]) if callback
     clearTimeout(@pendingTimeout)
     @pendingTimeout = setTimeout(=>
       @fetchPending()
     , 500)
 
 
-
+  # Wrapper for availability for just a single listing
+  class AvailabilityManager.Listing
+    constructor: (@manager, @listingId) ->
+    isLoaded: (date_or_dates) -> @manager.isLoaded(@listingId, date_or_dates)
+    availableFor: (date) -> @manager.availableFor(@listingId, date)
+    totalFor: (date) -> @manager.totalFor(@listingId, date)
+    get: (date, callback) -> @manager.get(@listingId, date, callback)
+    getDates: (dates, callback) -> @manager.getDates(@listingId, dates, callback)
 
 

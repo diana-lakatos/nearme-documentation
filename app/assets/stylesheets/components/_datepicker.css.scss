@@ -72,13 +72,27 @@
 
   .datepicker-days {
     .datepicker-day {
+      cursor: pointer;
+      font-weight: bold;
+
       &.datepicker-day-dow-0 {
         clear: left;
       }
 
-      &.active {
-        background: green;
+      &.datepicker-day-other-month {
+        color: #6b7a80;
+        @include opacity(0.5);
       }
+
+      &.active {
+        background: #ecebeb;
+        color: #91529c;
+      }
+
+      &.disabled {
+        color: #e83d33;
+      }
+
     }
   }
 }

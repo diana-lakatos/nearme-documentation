@@ -1,6 +1,6 @@
 class @Bookings.Simple.Datepicker
 
-  constructor: (@container) ->
+  constructor: (@container, @availability_manager) ->
 
     availability_manager = {
       monthLoaded: (month) -> true
@@ -10,26 +10,30 @@ class @Bookings.Simple.Datepicker
 
     @datepicker = new window.Datepicker(
       trigger: @container,
-      view: new DatepickerAvailabilityView(availability_manager),
+      view: new DatepickerAvailabilityView(@availability_manager, { trigger: @container }),
       onDatesChanged: (dates) =>
         DNM.Event.notify this, 'datesChanged', [dates]
     )
 
   setDates: (dates) ->
-    console.info "set dates on listing bookings datepicker"
+    @datepicker.setDates(dates)
+
+  addDate: (date) -> @datepicker.addDate(date)
+  removeDate: (date) -> @datepicker.removeDate(date)
 
   getDates: ->
     @datepicker.getDates()
 
   # A view wrapper for the Datepicker to show a loading indicator while we load the date availability
   class DatepickerAvailabilityView extends window.Datepicker.View
-    constructor: (@availabilityManager) ->
-      super()
+    constructor: (@availabilityManager, options = {}) ->
+      super(options)
 
     renderMonth: (month) ->
-      unless @availabilityManager.monthLoaded(month)
+      dates = @datesForMonth(month)
+      unless @availabilityManager.isLoaded(dates)
         @setLoading(true)
-        @availabilityManager.loadMonth month, =>
+        @availabilityManager.getDates dates, =>
           # Will need to re-render for availability information
           @renderMonth(month)
       else
@@ -37,9 +41,9 @@ class @Bookings.Simple.Datepicker
 
       super(month)
 
-    classForDate: (date) ->
+    classForDate: (date, monthDate) ->
       klass = [super]
-      klass.push 'unavailable' unless @availabilityManager.isAvailable(date)
+      klass.push 'disabled' unless @availabilityManager.availableFor(date) > 0
       klass.join ' '
 
 

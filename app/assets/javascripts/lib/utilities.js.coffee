@@ -7,6 +7,7 @@ DNM.util =
       "d-#{@toId(date)}"
 
     toId: (date) ->
+      date = new Date(Date.parse(date)) if typeof date == "string" or date instanceof String
       f = (i) -> if i < 10 then "0#{i}" else i
       "#{date.getFullYear()}-#{f(date.getMonth()+1)}-#{f(date.getDate())}"
 

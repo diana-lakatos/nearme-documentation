@@ -85,7 +85,7 @@ class @Bookings.Listing
     @withAvailabilityLoaded date, =>
       qty = if @hasAvailabilityOn(date) then @defaultQuantity else 0
       @setBooking(date, qty)
-      DNM.Event.notify(this, 'dateAdded', [date])
+      DNM.Event.notify(this, 'dateAdded', [date, qty])
 
   removeDate: (date) ->
     if _.include @bookedDays(), DNM.util.Date.toId(date)
@@ -111,5 +111,7 @@ class @Bookings.Listing
   withAvailabilityLoaded: (date, callback) ->
     @availabilityManager.get @id, date, -> callback()
 
+  getAvailabilityManager: ->
+    new Bookings.AvailabilityManager.Listing(@availabilityManager, @id)
 
 

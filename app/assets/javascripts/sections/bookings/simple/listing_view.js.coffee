@@ -7,8 +7,11 @@ class @Bookings.Simple.ListingView
     @bindEvents()
 
   bindModel: ->
-    DNM.Event.observe @listing, 'dateAdded', =>
-      @datepicker.setDates(@listing.bookedDates()) if @listing.bookedDates().length > 0
+    DNM.Event.observe @listing, 'dateAdded', (date) =>
+      @datepicker.addDate(date)
+
+    DNM.Event.observe @listing, 'dateRemoved', (date) =>
+      @datepicker.removeDate(date)
 
   bindEvents: ->
     @container.find('[data-behavior=showReviewBookingListing]').click (event) =>
@@ -26,8 +29,12 @@ class @Bookings.Simple.ListingView
     DNM.Event.observe @datepicker, 'datesChanged', (dates) =>
       @listing.setDates(dates)
 
+    DNM.Event.observe @listing, 'dateAdded', =>
+
+
   # Setup the datepicker for the simple booking UI
   setupMultiDatesPicker: ->
-    @datepicker = new Bookings.Simple.Datepicker(@container.find(".calendar input"))
+    @datepicker = new Bookings.Simple.Datepicker(@container.find(".calendar input"), @listing.getAvailabilityManager())
+
 
 
