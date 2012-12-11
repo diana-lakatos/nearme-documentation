@@ -42,8 +42,7 @@ class @Bookings.Advanced.Controller extends Bookings.Controller
 
     # If any of the booking details change, we update the summary
     for listing in @listings
-      DNM.Event.observe listing, 'bookingChanged', =>
-        @updateSummary()
+      listing.on 'bookingChanged', => @updateSummary()
 
   # Setup calendar for the advanced booking UI
   setupCalendar: ->

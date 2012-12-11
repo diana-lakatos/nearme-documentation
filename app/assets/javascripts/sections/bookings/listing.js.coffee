@@ -1,5 +1,7 @@
 # Each Listing has it's own object which keeps track of number booked, availability etc.
 class @Bookings.Listing
+  asEvented.call(Listing.prototype)
+
   defaultQuantity: 1
 
   constructor: (@options, @availabilityManager) ->
@@ -57,7 +59,7 @@ class @Bookings.Listing
     date = DNM.util.Date.idToDate(dateId)
     @bookings[DNM.util.Date.toId(date)] = amount
 
-    DNM.Event.notify(this, 'bookingChanged', [date, amount])
+    @trigger 'bookingChanged', date, amount
 
   # Return the subtotal for booking this listing
   bookingSubtotal: ->
@@ -85,12 +87,12 @@ class @Bookings.Listing
     @withAvailabilityLoaded date, =>
       qty = if @hasAvailabilityOn(date) then @defaultQuantity else 0
       @setBooking(date, qty)
-      DNM.Event.notify(this, 'dateAdded', [date, qty])
+      @trigger 'dateAdded', date, qty
 
   removeDate: (date) ->
     if _.include @bookedDays(), DNM.util.Date.toId(date)
       @setBooking(date, 0)
-      DNM.Event.notify(this, 'dateRemoved', [date])
+      @trigger 'dateRemoved', date
 
   # Set the dates active on this listing for booking
   setDates: (dates) ->

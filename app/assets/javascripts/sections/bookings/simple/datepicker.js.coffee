@@ -1,4 +1,5 @@
 class @Bookings.Simple.Datepicker
+  asEvented.call(Datepicker.prototype)
 
   constructor: (@container, @availability_manager) ->
 
@@ -12,7 +13,7 @@ class @Bookings.Simple.Datepicker
       trigger: @container,
       view: new DatepickerAvailabilityView(@availability_manager, { trigger: @container }),
       onDatesChanged: (dates) =>
-        DNM.Event.notify this, 'datesChanged', [dates]
+        @trigger 'datesChanged', dates
     )
 
   setDates: (dates) ->

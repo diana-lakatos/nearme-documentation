@@ -19,7 +19,7 @@ class @Bookings.Simple.Controller extends Bookings.Controller
     # Show review booking for a single listing
     # On each of the listing views, watch for review triggering and trigger the review modal
     for listingView in @listingViews
-      DNM.Event.observe listingView, 'reviewTriggered', (listing) =>
+      listingView.bind 'reviewTriggered', (listing) =>
         @reviewBooking([listing])
 
 

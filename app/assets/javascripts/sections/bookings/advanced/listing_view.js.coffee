@@ -1,5 +1,7 @@
 # Listing view for advanced booking. Handles the view elements.
 class @Bookings.Advanced.ListingView
+  asEvented.call(ListingView)
+
   # Template for booked day selection elements
   bookedDayTemplate: '''
     <span class="booked-day selected">
@@ -39,7 +41,7 @@ class @Bookings.Advanced.ListingView
   bindModel: ->
     # Whenever a date is added to the listing we need to update the booking slots
     # on the view.
-    DNM.Event.observe @listing, 'dateAdded', (date) =>
+    @listing.bind 'dateAdded', (date) =>
       dateEl = @_prepareBookedDayElement(date)
 
       after = null
@@ -50,11 +52,11 @@ class @Bookings.Advanced.ListingView
       else @daysContainer.prepend(dateEl)
 
     # Whenever a date is removed from the calendar, we need to remove it from the list too
-    DNM.Event.observe @listing, 'dateRemoved', (date) =>
+    @listing.bind 'dateRemoved', (date) =>
       @daysContainer.find(".#{DNM.util.Date.toClassName(date)}").remove()
 
     # Whenever the value of a booking is changed, ensure we update the view/form in the listing
-    DNM.Event.observe @listing, 'bookingChanged', (date, amount) =>
+    @listing.bind 'bookingChanged', (date, amount) =>
       dayBooking = @daysContainer.find(".#{DNM.util.Date.toClassName(date)}")
       dayBooking.find('.count').text(amount)
       dayBooking.toggleClass('empty', amount == 0)

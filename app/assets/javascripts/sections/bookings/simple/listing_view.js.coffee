@@ -1,4 +1,5 @@
 class @Bookings.Simple.ListingView
+  asEvented.call(ListingView.prototype)
 
   constructor: (@listing, @container) ->
     @setupMultiDatesPicker()
@@ -7,16 +8,16 @@ class @Bookings.Simple.ListingView
     @bindEvents()
 
   bindModel: ->
-    DNM.Event.observe @listing, 'dateAdded', (date) =>
+    @listing.bind 'dateAdded', (date) =>
       @datepicker.addDate(date)
 
-    DNM.Event.observe @listing, 'dateRemoved', (date) =>
+    @listing.bind 'dateRemoved', (date) =>
       @datepicker.removeDate(date)
 
   bindEvents: ->
     @container.find('[data-behavior=showReviewBookingListing]').click (event) =>
       event.preventDefault()
-      DNM.Event.notify this, 'reviewTriggered', [@listing]
+      @trigger 'reviewTriggered', @listing
 
     quantityChanged = (event) =>
       qty = parseInt($(event.target).val())
@@ -26,10 +27,10 @@ class @Bookings.Simple.ListingView
     @quantityField.on 'change', quantityChanged
     @quantityField.on 'keyup', quantityChanged
 
-    DNM.Event.observe @datepicker, 'datesChanged', (dates) =>
+    @datepicker.bind 'datesChanged', (dates) =>
       @listing.setDates(dates)
 
-    DNM.Event.observe @listing, 'dateAdded', =>
+    @listing.bind 'dateAdded', =>
 
 
   # Setup the datepicker for the simple booking UI
