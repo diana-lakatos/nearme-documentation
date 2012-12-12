@@ -2,13 +2,13 @@ input[type='submit'] {
    -webkit-appearance: none;
 }
 .quantity {
-  background: url("http://desksnearme.assets.s3.amazonaws.com/img/ui/arrow-down.png") 20px center no-repeat;
+  background: url("http://desksnearme.assets.s3.amazonaws.com/img/ui/caret-down.png") 20px center no-repeat;
  select.quantity {
     background:transparent;
     border: none;
     font: normal 26px/38px futura-medium, sans-serif;
     -webkit-appearance:none;
-    padding:0 30px 0 0;
+    padding:0 20px 0 0;
   }  
 }   
 form {

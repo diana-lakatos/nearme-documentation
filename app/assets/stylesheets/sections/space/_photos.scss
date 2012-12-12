@@ -134,8 +134,8 @@
       text-align: right;
       font-family: $font-heavy;
       background: rgba(0,0,0,0);
-      opacity:.3;
-      @include transition(all .1s ease-in);
+      opacity:.5;
+      @include transition(opacity .1s ease-in);
 
       &:hover {
         opacity: 1;
