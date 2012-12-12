@@ -5,6 +5,7 @@ class @Bookings.Simple.ListingView
     @setupMultiDatesPicker()
     @quantityField = @container.find('input.quantity')
     @totalElement = @container.find('.total')
+    @resourceElement = @container.find('.resource')
     @daysElement = @container.find('.total-days')
     @bindModel()
     @bindEvents()
@@ -26,6 +27,8 @@ class @Bookings.Simple.ListingView
       qty = 1 unless qty >= 0
       @listing.setDefaultQuantity(qty, true)
       $(event.target).val(qty)
+      plural = if qty == 1 then '' else 's'
+      @resourceElement.text("desk#{plural}")
 
     @datepicker.bind 'datesChanged', (dates) =>
       @listing.setDates(dates)

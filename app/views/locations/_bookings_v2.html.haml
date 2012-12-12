@@ -14,11 +14,10 @@
         %p.listing-description
           = listing.description.truncate(200)
 
-
         .make-reservation
           .quantity
-            = number_field_tag :quantity, 1, :in => 1..listing.quantity, :style => "width: 40px; text-align: center;", :class => 'quantity'
-          Desk
+            = select_tag :quantity, options_for_select(1..listing.quantity), :style => "width: 40px; text-align: center;", :class => 'quantity'
+          %span.resource desk
           on
           .calendar
             = text_field_tag "dates", nil, :autocomplete => "off"
@@ -28,6 +27,6 @@
           %span $#{content_tag(:span, "0.00", :class => 'total')}
 
           .book
-            = link_to "Book Now", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id
+            = link_to "Book", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id
 
         .clearfix
