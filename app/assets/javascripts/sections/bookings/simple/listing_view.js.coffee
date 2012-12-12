@@ -3,7 +3,7 @@ class @Bookings.Simple.ListingView
 
   constructor: (@listing, @container) ->
     @setupMultiDatesPicker()
-    @quantityField = @container.find('input.quantity')
+    @quantityField = @container.find('select.quantity')
     @totalElement = @container.find('.total')
     @resourceElement = @container.find('.resource')
     @daysElement = @container.find('.total-days')
