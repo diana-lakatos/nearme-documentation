@@ -16,7 +16,7 @@
 
         .make-reservation
           .quantity
-            = select_tag :quantity, options_for_select(1..listing.quantity), :style => "width: 40px; text-align: center;", :class => 'quantity'
+            = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
           %span.resource desk
           on
           .calendar
