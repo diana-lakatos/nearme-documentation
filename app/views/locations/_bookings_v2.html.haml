@@ -10,9 +10,8 @@
 
         %h3.listing-name
           = listing.name
-        -# TODO: Add 'Read More for truncated text'
         %p.listing-description
-          = listing.description.truncate(200)
+          = listing.description
 
         .make-reservation
           .quantity
