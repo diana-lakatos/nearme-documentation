@@ -1,10 +1,9 @@
 // Desks Near Me
 //
 //= require ./vendor/jquery
-//= require ./vendor/jquery-ui-1.9.2.custom
+//= require ./vendor/jquery-ui-1.9.2.custom.min
 //= require ./vendor/jquery.overlay
 //= require ./vendor/jquery.address-1.3.min
-//= require ./vendor/jquery-ui.multidatespicker
 //= require ./vendor/jquery.ui.touch-punch
 //= require ./vendor/bootstrap
 //= require ./search
