@@ -1,8 +1,10 @@
 .btn, a.btn {
   display: inline-block;
   text-decoration: none;
+  font-family: $font-medium;
   color: #fff;
   padding: 0 10px;
+  border: none !important;
   @include transition(background .1s ease-in);
 
   .icon {
@@ -11,6 +13,7 @@
 
   &:visited, &:hover {
     color: #fff;
+    border: none !important;
   }
 
   &.btn-small {
@@ -31,14 +34,14 @@
     height: 50px;
     line-height: 50px;
     font-size: 18px;
-    @include border-radius(8px);
+    @include border-radius(12px);
     padding: 0 20px;
   }
 
   &.btn-blue {
     background: $dnm_blue;
     &:hover {
-      background: darken($dnm_blue, 15%);
+      background: lighten($dnm_blue, 10%);
     }
 
     &:active {
@@ -49,7 +52,7 @@
   &.btn-green {
     background: $dnm_green;
     &:hover {
-      background: darken($dnm_green, 15%);
+      background: lighten($dnm_green, 10%);
     }
 
     &:active {
@@ -58,14 +61,14 @@
   }
 
   &.btn-red {
-    background: #f34a40;
+    background: $dnm_red;
     &:hover {
-      background: darken(#f34a40, 15%);
+      background: lighten($dnm_red, 10%);
     }
 
     &:active {
       background: #e93e34;
-      @include background(linear-gradient(top center, #e93e34, #f34a40));
+      background: darken($dnm_red, 25%);
     }
   }
   &.twitter {

@@ -5,28 +5,8 @@
   }
 }
 
-.hero-wood-texture {
-  @extend .wood-texture;
-  border-top: 1px solid #382a23;
-  border-bottom: 1px solid #2b1b13;
-  color: #cebbae;
-  padding: 12px 0;
-  text-shadow: none;
-}
-
-.hero-wood-spacer {
-  @extend .hero-wood-texture;
-  padding: 0;
-  height: 16px;
-}
-
-.hero-gray-texture {
-  background: image-url("layout/gray-texture.png");
-  border-bottom: 1px solid #fff;
-}
 
 .hero-nav {
-  @extend .hero-wood-texture;
 
   li {
     float: left;
