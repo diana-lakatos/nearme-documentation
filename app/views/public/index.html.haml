@@ -6,18 +6,20 @@
     = link_to location_path(347) do
       La Cantine, Paris
   .container
-    #search_row.twelve.columns.offset-by-two.alpha.omega
+    #search_row.twelve.columns.offset-by-two.alpha.omega      
       .wood-box
         %h1 Need a space to work?
-        %h2 Search from #{number_with_delimiter Listing.count} spaces nearby
 
-        %form#listing_search.home_search{:action => search_path, :method => "get"}
-          %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
-          %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
-          %a.btn.btn-green.btn-outline.btn-medium{ :rel => "submit", :href => "" }
-            %i.icon
-            Search
-          #suggest_location{:style => "display: none"}
+        .black-box
+          %form#listing_search.home_search{:action => search_path, :method => "get"}
+            %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
+            %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
+            %a.btn.btn-green.btn-outline.btn-medium{ :rel => "submit", :href => "" }
+              %i.icon
+              Search
+            #suggest_location{:style => "display: none"}
+
+
 
 %section.how-it-works
   .row.rent-your-space
