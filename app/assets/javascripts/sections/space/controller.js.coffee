@@ -57,6 +57,6 @@ class @Space.Controller
     collapseContainer = $(".accordion")
     return unless collapseContainer.length > 0
     collapseContainer.on('show hide', -> $(this).css('height', 'auto') )
-    collapseContainer.collapse({ parent: true, toggle: true });
+    collapseContainer.collapse({ parent: true, toggle: true })
 
 

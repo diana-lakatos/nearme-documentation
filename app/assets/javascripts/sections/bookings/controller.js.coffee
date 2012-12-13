@@ -39,7 +39,10 @@ class Bookings.Controller
     # The Listings collection is the set of all Listings being managed for bookings on
     # the page. Each listing keeps track of the bookings made on it.
     @listings = $.map @options.listings, (listingData) =>
-      listing = new Bookings.Listing(listingData, @availabilityManager)
+      listing = new Bookings.Listing(
+        listingData,
+        availability: new Bookings.AvailabilityManager.Listing(@availabilityManager, listingData.id)
+      )
 
 
   # Return the listing with the specified ID from the Listing bookings collection

@@ -21,6 +21,7 @@ class @Bookings.Simple.Datepicker
 
     show: ->
       # Refresh if listing quantity has changed since last display
+      # We do this to update the display of available vs unavailable dates
       if @lastDefaultQuantity && @listing.defaultQuantity != @lastDefaultQuantity
         @refresh()
 
@@ -29,9 +30,9 @@ class @Bookings.Simple.Datepicker
 
     renderMonth: (month) ->
       dates = @datesForMonth(month)
-      unless @listing.getAvailabilityManager().isLoaded(dates)
+      unless @listing.availabilityLoadedFor(dates)
         @setLoading(true)
-        @listing.getAvailabilityManager().getDates dates, =>
+        @listing.withAvailabilityLoaded dates, =>
           # Will need to re-render for availability information
           @renderMonth(month)
       else
@@ -44,7 +45,7 @@ class @Bookings.Simple.Datepicker
       qty = @listing.defaultQuantity
       qty = 1 if qty < 1
 
-      klass.push 'disabled' unless @listing.getAvailabilityManager().availableFor(date) >= qty
+      klass.push 'disabled' unless @listing.availabilityFor(date) >= qty
       klass.join ' '
 
 
