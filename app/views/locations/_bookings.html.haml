@@ -1,48 +1,31 @@
-%section.bookings{:'data-view' => "advanced"}
-  %h2 Make a Booking
-
-  %p Select dates from the calendar below to see the available desks and rooms for those days.
-
-  #calendar.calendar.box{:'data-today' => Time.zone.now.strftime('%Y-%m-%d')}
-    .prev
-    .next
-    .slider-window
-      %ul.days
-        / li
-        /   %span.date 31<sup>st</sup>
-        /   %span.month Oct
-
+%section.bookings.quick-book{:'data-view' => "simple"}
   .listings
     - @location.listings.each do |listing|
+
       .listing.box.divider.small{listing_data_attributes(listing)}
         .images
           - if listing.photos.any?
-            .image
+            .image{:style => "margin-right: 15px;"}
               = image_tag listing.photos.first.url(:space_listing)
-          - else
-            .no-photo No Photos
 
-        .description
-          %h3= listing.name
-          %p= listing.description
-          %p.price
-            = listing_price(listing, 1)
-            - if listing_price_show_bulk_tooltip?(listing)
-              %a{:href => "#"} See bulk pricing
+        %h3.listing-name
+          = listing.name
+        %p.listing-description
+          = listing.description
 
-        .book
-          %h3 Book
-          %p Click on the available days below to select how many of this listing you'd like to book on that day.
+        .make-reservation
+          .quantity
+            = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
+          %span.resource desk
+          on
+          .calendar
+            = text_field_tag "dates", nil, :autocomplete => "off"
+            %span.total-days 1 day
 
-          .booked-days
-            /%span.booked-day
-            /  %span.count 2
-            /  %span.date 10#{content_tag(:sup, 'th')}
-            /  %span.month Oct
+          for
+          %span $#{content_tag(:span, "0.00", :class => 'total')}
+
+          .book
+            = link_to "Book", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id
 
         .clearfix
-
-  .summary.inset-box
-    %p
-      %span 2 listings selected over a total of 2 days for $198.00
-      = link_to "Review and book now", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBooking'

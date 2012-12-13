@@ -6,10 +6,6 @@ class LocationsController < ApplicationController
     @location = location
   end
 
-  def show_v2
-    @location = location
-  end
-
   def host
     @location = location
   end

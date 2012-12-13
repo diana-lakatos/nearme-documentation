@@ -3,15 +3,28 @@
 - content_for :hero do
   .hero-wood-texture
     .container.space-hero-search-return
-      %h1 #{@location.name}
+      = link_to "Back to search", search_url
 
   - if @location.photos.any?
-    = render 'photos_v2' 
+    = render 'photos'
 
 %article#space
+  %ul.subnav.right.green
+    %li.current= link_to "Book", "", :'data-behavior' => 'scrollToBook'
+
+  %ul.subnav.right.blue
+    %li{:class => ('current' if tab == :overview)}= link_to "Overview", location_url(@location)
+    %li{:class => ('current' if tab == :host)}= link_to "Host", host_location_url(@location)
+    /%li{:class => ('current' if tab == :networking)}= link_to "Networking", networking_location_url(@location)
+
+  %h1 #{@location.name}
 
   .clearfix
     = yield
+
+  %hr.divider
+
+  = render 'bookings'
 
 - content_for :script do
   / ShareThis script
@@ -23,8 +36,8 @@
     stLight.options({publisher: "6a574b36-b1b7-4eff-bbc2-5cda0add4a98"});
 
   :javascript
-    // Initialize the ui controller
     $(function() {
+      // Initialize the ui controller
       new Space.Controller(
         $('article.space, article#space'),
         {
