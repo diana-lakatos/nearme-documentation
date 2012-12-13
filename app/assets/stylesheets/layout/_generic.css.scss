@@ -4,21 +4,28 @@
   background-color: $dnm_blue;
   color: white;
 }
-body, input {
+body, input, textarea {
   font-family: $font-regular, sans-serif;
   letter-spacing: 1px;
   color: $dnm_black;
   line-height: 24px;
 }
+
 a, a:visited {
+  text-decoration: none;
+  @include transition(color .15s ease-in, opacity .15s ease-in);
+}
+p a, p a:visited {
   color: $dnm_blue;
   font-family: "futura-medium";
   text-decoration: none;
-  @include transition(color .15s ease-in);
+  @include transition(all .15s ease-in);
+  border-bottom: 2px solid transparent;
 
   &:hover { 
-    color: darken( $dnm_blue, 20%);
+    color: darken( $dnm_blue, 10%);
     text-decoration: none;
+    border-bottom: 2px solid darken( $dnm_blue, 10%);
   }
 }
 
@@ -43,7 +50,7 @@ img {
 }
 
 strong {
-  font-family: $font-heavy;
+  font-family: $font-bold;
   font-weight: normal !important;
 }
 
@@ -71,10 +78,6 @@ h3 {
 
 p {
   margin-bottom: 20px;
-}
-
-.wood-texture {
-  background: image-url("layout/seamless-wood-texture.jpg");
 }
 
 // An introduction paragraph at the top of the page content
