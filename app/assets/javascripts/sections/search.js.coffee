@@ -62,7 +62,9 @@ class DNM.SearchForm
 
 
   initializeAvailabilityQuantityFilter: ->
-    @form.find(".availability-quantity .slider").slider(
+    @slider = @form.find(".availability-quantity .slider")
+    return unless @slider.length > 0
+    @slider.slider(
       value: @form.find('.availability-quantity input').val(), min  : 1, max  : 10, step : 1,
       slide: (event, ui) => @availabilityQuantityChanged(ui.value)
     )
