@@ -19,17 +19,18 @@
             - if @location.url.present?
               = link_to @location.url, @location.url, :target => :_blank
 
-      .accordion-group
-        .accordion-heading
-          %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#host_tab'}
-            About Host
-        #host_tab.accordion-body.collapse
-          .accordion-inner
-            %p= "#{@location.creator.name}, #{@location.company.name}"
-            %p= image_tag(@location.creator.avatar.url, :alt => @location.creator.name)
-            - if @location.creator.phone
-              %p= @location.creator.phone 
-            %p= @location.company.description
+      - if @location.creator
+        .accordion-group
+          .accordion-heading
+            %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#host_tab'}
+              About Host
+          #host_tab.accordion-body.collapse
+            .accordion-inner
+              %p= "#{@location.creator.name}, #{@location.company.name}"
+              %p= image_tag(@location.creator.avatar.url, :alt => @location.creator.name)
+              - if @location.creator.phone
+                %p= @location.creator.phone 
+              %p= @location.company.description
  
       - if @amenities
         .accordion-group
