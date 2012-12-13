@@ -1,14 +1,19 @@
 .hero-gray-texture.hero-shadow
-  .container.space-hero-photos
-    .photos-list
-      .prev
-      .photos-wrapper
-        %ul
-          - @location.photos.each do |photo|
-            %li
-              = image_tag photo.url(:hero_preview), :alt => photo.caption, 'data-url' => photo.url(:hero)
-      .next
+  .container.fluid.space-hero-photos
 
-    .photo{:style => "background-image: url('#{@location.photos.first.url}')"}
-      .caption
-        = @location.photos.first.caption
+    .two-thirds.column.alpha.right
+      .carousel.slide
+        .carousel-inner
+          - @location.photos.each_with_index do |photo, index|
+            .item{:class => ("active" if index == 0)}
+              = image_tag photo.url(:golden)
+              .carousel-caption
+                %p= photo.caption
+
+    .one-third.column.fluid
+      .map
+        .map-wrapper
+          .map-container
+
+        %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, "data-marker" => image_path("components/map-pin.png")}
+          = location_format_address(@location.formatted_address || @location.address)

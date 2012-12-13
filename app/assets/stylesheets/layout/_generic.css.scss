@@ -1,7 +1,7 @@
 // Generic styles to apply to everything
 
 ::selection, ::-moz-selection {
-  background-color: #27B0E6;
+  background-color: $dnm_blue;
   color: white;
 }
 body, input {
@@ -14,7 +14,7 @@ a, a:visited {
   color: $dnm_blue;
   font-family: "futura-medium";
   text-decoration: none;
-  @include transition(all .15s ease-in);
+  @include transition(color .15s ease-in);
 
   &:hover { 
     color: darken( $dnm_blue, 20%);
@@ -43,7 +43,7 @@ img {
 }
 
 strong {
-  font-family: $font-bold;
+  font-family: $font-heavy;
   font-weight: normal !important;
 }
 

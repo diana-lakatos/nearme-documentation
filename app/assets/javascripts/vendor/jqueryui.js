@@ -1,5 +1,3 @@
-// Hax to allow setting up jquery-ui on legacy and latest jQuery temporarily
-window.initializeJQueryUI = function(jQuery) {
 /*!
  * jQuery UI 1.8.5
  *
@@ -99,4 +97,3 @@ hasScroll:function(){return this.element.height()<this.element.attr("scrollHeigh
 
 };
 
-initializeJQueryUI(jQuery);

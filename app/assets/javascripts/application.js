@@ -1,22 +1,20 @@
 // Desks Near Me
 //
-// Require legacy jQuery dependent code first
-//= require ./vendor/jquery-1.4.1.js
-//= require ./vendor/jquery.overlay.js
-//= require ./vendor/jquery-ui-1.8.23.custom.min.js
-//= require ./vendor/jquery.address-1.3.min
-//= require ./search
-//* require ./vendor/fancybox/jquery.fancybox-1.3.1.pack.js
-//
-// Require new jQuery to override (NB: This is so HAX)
 //= require ./vendor/jquery
+//= require ./vendor/jquery-ui-1.9.2.custom
+//= require ./vendor/jquery.overlay
+//= require ./vendor/jquery.address-1.3.min
+//= require ./vendor/jquery-ui.multidatespicker
 //= require ./vendor/jquery.ui.touch-punch
+//= require ./vendor/bootstrap
+//= require ./search
 //= require ./vendor/rails
-//= require ./vendor/modernizr.js
-//= require ./vendor/jquery.cookie.js
-//= require ./vendor/jquery.popover-1.1.2.js
-//= require ./vendor/mustache.js
-//= require ./vendor/underscore.js
+//= require ./vendor/modernizr
+//= require ./vendor/jquery.cookie
+//= require ./vendor/jquery.popover-1.1.2
+//= require ./vendor/mustache
+//= require ./vendor/underscore
+//= require ./vendor/asevented
 //
 //= require_self
 //
@@ -61,10 +59,6 @@ window.DNM = {
 $(function() {
   DNM.initialize()
 })
-
-// FIXME: Hax to initialize jQuery UI on 2 versions of JQuery temporaryily
-initializeJQueryUI(jQuery);
-initializeJQueryUITouchPunch(jQuery);
 
 jQuery.ajaxSetup({
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}

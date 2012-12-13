@@ -1,4 +1,4 @@
-class @Space.BookingCalendar
+class @Bookings.Advanced.Calendar
 
   dateTemplate: '''
     <li>

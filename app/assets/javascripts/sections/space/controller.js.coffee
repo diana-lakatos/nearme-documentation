@@ -1,7 +1,8 @@
 class @Space.Controller
 
   constructor: (@container, @options = {}) ->
-    # Set up the map on the page
+    @setupCollapse()
+    @setupCarousel()
     @setupMap()
     @setupPhotos()
     @setupBookings()
@@ -18,10 +19,10 @@ class @Space.Controller
     @photos = new Space.PhotosController($('.space-hero-photos'))
 
   setupBookings: ->
-    @bookings = new Space.BookingManager(@container.find('.bookings'), @options.bookings)
+    @bookings = Bookings.Controller.initialize(@container.find('.bookings'), @options.bookings)
 
   setupMap: ->
-    mapContainer = @container.find('.map')
+    mapContainer = $(".map")
     return unless mapContainer.length > 0
 
     location = mapContainer.find('address')
@@ -43,5 +44,19 @@ class @Space.Controller
       map: @map.map,
       icon: location.attr("data-marker")
     })
+
+  setupCarousel: ->
+    carouselContainer = $(".carousel")
+    return unless carouselContainer.length > 0
+    carouselContainer.carousel({
+      pills: true,
+      interval: 10000
+    })
+
+  setupCollapse: ->
+    collapseContainer = $(".accordion")
+    return unless collapseContainer.length > 0
+    collapseContainer.on('show hide', -> $(this).css('height', 'auto') )
+    collapseContainer.collapse({ parent: true, toggle: true });
 
 

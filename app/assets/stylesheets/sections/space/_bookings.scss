@@ -1,4 +1,21 @@
 #space, .space {
+
+  h3.listing-name {
+    font:normal 24px/33px $font-heavy, sans-serif;
+
+    @media (max-width: 480px) {
+      margin: 10px 0;
+      clear: both;
+      float: left;
+    }
+  }
+
+  p.listing-description {
+    @media (max-width: 480px) {
+      float: left;
+      clear: both;
+    }
+  }
   .bookings {
 
     .summary {
@@ -19,32 +36,55 @@
 
     .listing {
 
-      .images, .description, .book {
+      .images, .description {
         float: left;
         max-width: 295px;
         margin-left: 20px;
 
         &:first-child {
           margin-left: 0;
+
+        img {
+          border-radius: 4px;
+          }  
+        }
+
+      }
+
+      .book {
+        display: inline-block;
+
+        @media (max-width: 480px) {
+          display:block;
         }
       }
 
       .images {
-        img {
-          @include border-radius(6px);
-        }
       }
 
       .description {
 
         .price {
           font-size: 22px;
-          font-weight: bold;
 
           .period {
             font-size: 16px;
             font-weight: normal;
           }
+        }
+      }
+
+      .make-reservation {
+        float: right;
+        font:normal 26px/38px $font-medium, sans-serif;
+        margin-top: 10px;
+
+        @media (max-width: 480px) {
+          width: 100%;
+        }
+        .quantity input { 
+          background: none;
+          border: none;
         }
 
       }
@@ -55,7 +95,6 @@
         h3 {
           font-size: 12px;
           color: #8e9498;
-          font-weight: bold;
           text-transform: uppercase;
           margin-bottom: 0;
         }
@@ -149,10 +188,6 @@
   }
 
   .availability {
-    .total, .available {
-      font-weight: bold;
-    }
-
     .total {
       color: #848b8f;
     }
@@ -167,7 +202,6 @@
     background: #fff;
     outline: none;
     color: #91529c;
-    font-weight: bold;
     padding: 4px;
     width: 30px;
     font-size: 12px;
@@ -206,3 +240,67 @@
     margin-bottom: 0;
   }
 }
+
+.quick-book {
+
+  @media (min-width: 768px) and (max-width:959px) {
+    margin-right: 20px;
+  }
+
+  @media (max-width: 767px) {
+    margin: 0 20px;
+  }
+
+  .quantity {
+    display: inline;
+    input {
+      padding: 0;
+      font-size:26px;
+
+      &:focus {
+        outline:none !important;
+        outline: -webkit-focus-ring-color auto 5px;
+      }
+    }
+  }
+
+  .calendar {
+    position: relative;
+    display: inline-block;
+    vertical-align:middle;
+
+    input {
+      width: 30px;
+      height:38px;
+      display: inline;
+      border: 0;
+      color: transparent;
+      background: transparent image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender-black.png") no-repeat center top;
+
+      &:focus {
+        outline: none !important;
+      }
+    }
+  }
+
+  a.btn.btn-medium {
+    padding: 4px 25px;
+    font:normal 26px/38px $font-medium, sans-serif;
+    letter-spacing: 2px;
+
+    @media (max-width: 880px) {
+      padding: 4px 10px;
+      font-size: 22px;
+    }
+    @media (max-width: 480px) {
+      display: block;
+      clear: both;
+      width:100%;
+      margin-top: 10px;
+      text-align:center;
+      box-sizing: border-box;
+      line-height: 32px;
+    }
+  }
+}
+

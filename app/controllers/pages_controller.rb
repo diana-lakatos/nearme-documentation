@@ -20,6 +20,8 @@ class PagesController < ApplicationController
   # Layout per action
   def resolve_layout
     case action_name
+    when "host_signup"
+      "landing"
     when "privacy"
       "new_layout"
     else

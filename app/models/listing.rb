@@ -128,7 +128,6 @@ class Listing < ActiveRecord::Base
     ReservationSeat.joins(:reservation_period => :reservation).where(:reservation_periods => { :listing_id => self.id, :date => date }).merge(Reservation.not_rejected_or_cancelled).count
   end
 
-
   def price_period
     if free?
       PRICE_PERIODS[:free]
