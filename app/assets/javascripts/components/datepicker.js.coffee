@@ -213,23 +213,40 @@ class @Datepicker
 
     reposition: ->
       return unless @positionTarget
+
+      # Width/height of the datepicker container
       width = @container.width()
       height = @container.height()
+
+      # Offset of the position target reletave to the page
       tOffset = $(@positionTarget).offset()
+
+      # Width/height of the position target
       tWidth = $(@positionTarget).width()
       tHeight = $(@positionTarget).height()
 
-      left = tOffset.left + parseInt(tWidth/2, 10) - parseInt(width/2, 10)
+      # Window height and scroll position
+      wHeight = $(window).height()
+      sTop    = $(window).scrollTop()
 
-      # Page height
-      pageHeight = $('body').height()
-      if tOffset.top < height || (pageHeight - tOffset.top) > height
-        # Render below element
+      # Calculate available viewport height above/below the target
+      heightAbove = tOffset.top - sTop
+      heightBelow = wHeight + sTop - tOffset.top
+
+      # Determine whether to place the datepicker above or below the target element.
+      # If there is enough window height above element to render the container, then we put it
+      # above. If there is not enough (i.e. it would be partially hidden if rendered above), then
+      # we render it below the target.
+      if heightAbove < height
         top = tOffset.top + tHeight + @options.positionPadding
       else
         # Render above element
         top = tOffset.top - height - @options.positionPadding
 
+      # Left position is based off the container width and the position target width/position
+      left = tOffset.left + parseInt(tWidth/2, 10) - parseInt(width/2, 10)
+
+      # Update the position of the datepicker container
       @container.css(
         'top': "#{top}px",
         'left': "#{left}px"
