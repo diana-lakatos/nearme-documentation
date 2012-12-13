@@ -201,6 +201,9 @@ class @Datepicker
         @show()
 
     show: ->
+      # Reset rendering position
+      @renderPosition = null
+
       # Refresh the view on the first display
       if !@hasRendered
         @refresh()
@@ -237,11 +240,13 @@ class @Datepicker
       # If there is enough window height above element to render the container, then we put it
       # above. If there is not enough (i.e. it would be partially hidden if rendered above), then
       # we render it below the target.
-      if heightAbove < height
+      if @renderPosition != 'below' && (@renderPosition == 'above' || heightAbove < height)
         top = tOffset.top + tHeight + @options.positionPadding
+        @renderPosition = 'above'
       else
         # Render above element
         top = tOffset.top - height - @options.positionPadding
+        @renderPosition = 'below'
 
       # Left position is based off the container width and the position target width/position
       left = tOffset.left + parseInt(tWidth/2, 10) - parseInt(width/2, 10)
