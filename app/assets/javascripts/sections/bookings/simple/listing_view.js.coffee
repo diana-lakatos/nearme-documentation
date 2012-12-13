@@ -7,6 +7,7 @@ class @Bookings.Simple.ListingView
     @totalElement = @container.find('.total')
     @resourceElement = @container.find('.resource')
     @daysElement = @container.find('.total-days')
+    @bookButton = @container.find('[data-behavior=showReviewBookingListing]')
     @bindModel()
     @bindEvents()
 
@@ -18,8 +19,9 @@ class @Bookings.Simple.ListingView
       @datepicker.removeDate(date)
 
   bindEvents: ->
-    @container.find('[data-behavior=showReviewBookingListing]').click (event) =>
+    @bookButton.click (event) =>
       event.preventDefault()
+      return if @listing.bookedDays().length is 0
       @trigger 'reviewTriggered', @listing
 
     @quantityField.on 'change', (event) =>
@@ -35,6 +37,7 @@ class @Bookings.Simple.ListingView
 
     @listing.bind 'bookingChanged', =>
       @updateSummary()
+      @bookButton.toggleClass('disabled', @listing.bookedDays().length is 0)
 
   updateSummary: ->
     @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
