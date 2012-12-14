@@ -7,7 +7,7 @@ class RatingTest < ActiveSupport::TestCase
 
   test "it has a listing" do
     @rating = Rating.new
-    @rating.content = Listing.new
+    @rating.content = FactoryGirl.create(:listing)
 
     assert @rating.content
   end

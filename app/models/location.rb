@@ -1,5 +1,5 @@
 class Location < ActiveRecord::Base
-  attr_accessible :address, :amenity_ids, :company_id, :creator_id, :description, :email, :require_organization_membership,
+  attr_accessible :address, :amenity_ids, :company_id, :description, :email, :require_organization_membership,
     :info, :latitude, :local_geocoding, :longitude, :organization_ids, :name, :currency, :phone, :formatted_address, :availability_rules_attributes, :availability_template_id,
     :special_notes, :listings_attributes
   attr_accessor :local_geocoding # set this to true in js
@@ -12,7 +12,7 @@ class Location < ActiveRecord::Base
   has_many :location_organizations
 
   belongs_to :company
-  belongs_to :creator, class_name: "User"
+  delegate :creator, :creator=, :to => :company
 
   has_many :listings,
            :dependent => :destroy
@@ -28,7 +28,6 @@ class Location < ActiveRecord::Base
   validates_length_of :description, :maximum => 250
 
   before_validation :fetch_coordinates
-  before_validation :set_default_creator
   before_save :assign_default_availability_rules
 
   acts_as_paranoid
@@ -79,10 +78,6 @@ class Location < ActiveRecord::Base
           self.formatted_address = geocoded.formatted_address
         end
       end
-    end
-
-    def set_default_creator
-      self.creator ||= company.try(:creator)
     end
 
 end
