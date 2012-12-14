@@ -85,7 +85,6 @@
       }
 
       &.datepicker-day-other-month {
-        color: #6b7a80;
         @include opacity(0.5);
       }
 
@@ -99,6 +98,11 @@
         background: none;
       }
 
+      // Past/historical date
+      &.datepicker-day-past, &.datepicker-day-past.disabled {
+        color: #6b7a80;
+        @include opacity (0.5);
+      }
     }
   }
 }
