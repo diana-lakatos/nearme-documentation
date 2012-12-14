@@ -16,7 +16,7 @@
       padding: 0 15px;
       line-height: 40px;
       font-size: 16px;
-      color: rgba(255,255,255,.6);
+      color: $gray3;
       text-transform: uppercase;
     }
 
@@ -25,6 +25,6 @@
   }
 
   li.current a, a:hover {
-    color: #fff;
+    color: $dnm_black;
   }
 }

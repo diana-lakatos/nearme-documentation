@@ -1,20 +1,17 @@
 .box {
   $padding: 14px;
-  @include border-radius(8px);
+  @include border-radius(4px);
   margin-bottom: 20px;
-  background: #f5f5f5;
+  background: $dnm-white;
   padding: $padding;
-  @include border-bottom-radius(8px);
   font-size: 14px;
   line-height: 140%;
+  border: 1px solid $gray2;
 
   h2 {
     display: block;
-    background: image-url("layout/seamless-wood-texture.jpg");
-    color: #fff;
-    border: 1px solid #2b1b13;
     @include border-top-radius(8px);
-    padding: 8px $padding;
+    padding: 15px $padding;
     margin-top: -$padding;
     margin-left: -$padding;
     margin-right: -$padding;
@@ -26,7 +23,7 @@
 
       li {
         float: left;
-        color: #cebbae;
+        color: $gray3;
         font-size: 18px;
         background: image-url("components/box/list-separator.png") left center no-repeat;
         padding-left: 26px;
@@ -63,7 +60,7 @@
         }
 
         &.current {
-          color: #fff;
+          color: $dnm_black;
         }
 
         &.complete {

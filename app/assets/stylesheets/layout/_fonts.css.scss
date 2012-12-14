@@ -14,3 +14,70 @@ $font-medium: futura-medium;
 $font-heavy: futura-heavy;
 $font-bold: futura-bold;
 
+@include font-face("icomoon", font-files("icomoon.woff", "icomoon.otf", "icomoon.ttf", "icomoon.svg"), "icomoon.eot");
+
+[class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: 'icomoon';
+  font-style: normal;
+  speak: none;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+}
+.icon-untitled:before {
+  content: "\e000";
+}
+.icon-twitter:before {
+  content: "\e001";
+}
+.icon-search:before {
+  content: "\e002";
+}
+.icon-plus:before {
+  content: "\e003";
+}
+.icon-phone:before {
+  content: "\e004";
+}
+.icon-marker:before {
+  content: "\e005";
+}
+.icon-instagram:before {
+  content: "\e006";
+}
+.icon-facebook:before {
+  content: "\e007";
+}
+.icon-edit:before {
+  content: "\e008";
+}
+.icon-drawer:before {
+  content: "\e009";
+}
+.icon-crosshairs:before {
+  content: "\e00a";
+}
+.icon-clock:before {
+  content: "\e00b";
+}
+.icon-check:before {
+  content: "\e00c";
+}
+.icon-calender:before {
+  content: "\e00d";
+}
+.icon-arrow-up:before {
+  content: "\e00e";
+}
+.icon-arrow-right:before {
+  content: "\e00f";
+}
+.icon-arrow-left:before {
+  content: "\e010";
+}
+.icon-arrow-down:before {
+  content: "\e011";
+}
+.icon-app-store:before {
+  content: "\e012";
+}

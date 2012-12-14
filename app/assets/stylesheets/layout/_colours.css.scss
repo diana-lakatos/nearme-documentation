@@ -5,6 +5,7 @@ $dnm_green:  #157A49;
 $dnm_grey:   #394449;
 $dnm_gray:   $dnm_grey;
 $dnm_black:  #1e2222;
+$dnm_white: rgb(250,250,250);
 
 $blue:   #1F539F;
 $purple: #91529c;
@@ -16,5 +17,11 @@ $gray:   $grey;
 $light-gray: #E2E2E2;
 $dark-gray: rgb(80,80,80);
 $black:  #1e2222;
+
+$gray1: rgb(240,240,240);
+$gray2: #e5e5e5;
+$gray3: rgb(160,160,160);
+$gray4: rgb(120,120,120);
+$gray5: rgb(80,80,80);
 
 $link_hover: darken($dnm_blue, 10%);

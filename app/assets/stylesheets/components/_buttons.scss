@@ -12,8 +12,7 @@
   }
 
   &:visited, &:hover {
-    color: #fff;
-    border: none !important;
+    color: #fff !important;
   }
 
   &.btn-small {
@@ -45,7 +44,7 @@
     }
 
     &:active {
-      background: darken($dnm_blue, 25%);
+      background: darken($dnm_blue, 10%);
     }
   }
 
@@ -56,7 +55,7 @@
     }
 
     &:active {
-      background: darken($dnm_green, 25%);
+      background: darken($dnm_green, 10%);
     }
   }
 
@@ -68,7 +67,7 @@
 
     &:active {
       background: #e93e34;
-      background: darken($dnm_red, 25%);
+      background: darken($dnm_red, 10%);
     }
   }
   &.twitter {

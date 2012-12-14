@@ -4,7 +4,7 @@
   background-color: $dnm_blue;
   color: white;
 }
-body, input, textarea {
+body, input, textarea, select {
   font-family: $font-regular, sans-serif;
   letter-spacing: 1px;
   color: $dnm_black;
@@ -13,13 +13,13 @@ body, input, textarea {
 
 a, a:visited {
   text-decoration: none;
-  @include transition(color .15s ease-in, opacity .15s ease-in);
+  @include transition(opacity .15s ease-in, color .15s ease-in, border .15s ease-in);
 }
 p a, p a:visited {
   color: $dnm_blue;
   font-family: "futura-medium";
   text-decoration: none;
-  @include transition(all .15s ease-in);
+  @include transition(opacity .15s ease-in, color .15s ease-in, border .15s ease-in);
   border-bottom: 2px solid transparent;
 
   &:hover { 
