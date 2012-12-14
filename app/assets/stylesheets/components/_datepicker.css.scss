@@ -88,13 +88,23 @@
         @include opacity(0.5);
       }
 
+      &.datepicker-day-today {
+        width: 38px;
+        height: 38px;
+        border: 1px solid $dnm_black;
+
+        &.active {
+          border-color: $dnm_green;
+        }
+      }
+
       &.active {
         background: #bfce94;
-        color: #769129;
+        color: $dnm_green;
       }
 
       &.disabled {
-        color: #e83d33;
+        color: $dnm_red;
         background: none;
       }
 

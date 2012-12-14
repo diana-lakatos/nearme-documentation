@@ -348,7 +348,9 @@ class @Datepicker
       klass.push "datepicker-day-other-month" if monthDate and monthDate.getMonth() != date.getMonth()
 
       now = new Date()
-      if date.getTime() < new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0).getTime()
+      now = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
+      klass.push "datepicker-day-today" if date.getTime() == now.getTime()
+      if date.getTime() < now.getTime()
         klass.push "datepicker-day-past"
         klass.push "disabled" if @options.disablePastDates
       klass.join ' '
