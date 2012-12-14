@@ -242,6 +242,14 @@
 }
 
 .quick-book {
+  
+  .calender-wrapper {
+    display: inline-block;
+    padding: 4px 8px 2px;
+    border: 2px solid $gray3;
+    border-radius: 8px;
+    background: white;
+  }
 
   @media (min-width: 768px) and (max-width:959px) {
     margin-right: 20px;
@@ -252,15 +260,20 @@
   }
 
   .quantity {
-    display: inline;
-    input {
-      padding: 0;
-      font-size:26px;
-
-      &:focus {
-        outline:none !important;
-        outline: -webkit-focus-ring-color auto 5px;
-      }
+    display: inline-block;
+    
+    select {
+      display: inline-block;
+      height: 30px;
+      padding: 4px 6px;
+      font-size: 22px;
+      line-height: 30px;
+      margin-bottom: 4px;
+      color: #555555;
+      vertical-align: middle;
+      -webkit-border-radius: 4px;
+         -moz-border-radius: 4px;
+              border-radius: 4px;
     }
   }
 
@@ -285,7 +298,7 @@
   }
 
   a.btn.btn-medium {
-    padding: 4px 25px;
+    padding: 4px 20px;
     font:normal 26px/38px $font-medium, sans-serif;
     letter-spacing: 2px;
 

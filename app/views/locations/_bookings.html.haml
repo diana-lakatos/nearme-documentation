@@ -18,14 +18,17 @@
             = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
           %span.resource desk
           on
-          .calendar
-            %span.dates
-            %span.total-days 1 day
+
+          .calender-wrapper
+            .calendar
+              %span.dates
+              %span.total-days 1 day
 
           for
           %span $#{content_tag(:span, "0.00", :class => 'total')}
 
           .book
-            = link_to "Book", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id
+            = link_to "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
+              %span.ico-check.padding Book
 
         .clearfix
