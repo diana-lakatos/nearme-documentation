@@ -3,7 +3,7 @@ module GmapsFake
   extend self
 
   def stub_requests
-    WebMock.stub_request(:get, %r|.*maps\.googleapis\.com.*| ).to_return { |request| match_query(request) } 
+    WebMock.stub_request(:get, %r|.*maps\.googleapis\.com.*| ).to_return { |request| match_query(request) }
   end
 
   private
@@ -21,6 +21,7 @@ module GmapsFake
         when /auckland/i then "auckland"
         when /new zealand/i then "new_zealand"
         when /bung/i then return { :status => 404 }
+        when /desks near me/i then return { :status => 404 }
         when /cave of awesome/i then return { :status => 404 }
         else raise StandardError, "Define a place for #{address} (#{request.uri})"
       end

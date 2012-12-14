@@ -16,7 +16,7 @@ $font-bold: futura-bold;
 
 @include font-face("icomoon", font-files("icomoon.woff", "icomoon.otf", "icomoon.ttf", "icomoon.svg"), "icomoon.eot");
 
-[class^="icon-"]:before, [class*=" icon-"]:before {
+[class^="ico-"]:before, [class*=" ico-"]:before {
   font-family: 'icomoon';
   font-style: normal;
   speak: none;
@@ -24,60 +24,63 @@ $font-bold: futura-bold;
   line-height: 1;
   -webkit-font-smoothing: antialiased;
 }
-.icon-untitled:before {
+span.padding:before {
+  padding-right: .4em;
+}
+.ico-untitled:before {
   content: "\e000";
 }
-.icon-twitter:before {
+.ico-twitter:before {
   content: "\e001";
 }
-.icon-search:before {
+.ico-search:before {
   content: "\e002";
 }
-.icon-plus:before {
+.ico-plus:before {
   content: "\e003";
 }
-.icon-phone:before {
+.ico-phone:before {
   content: "\e004";
 }
-.icon-marker:before {
+.ico-marker:before {
   content: "\e005";
 }
-.icon-instagram:before {
+.ico-instagram:before {
   content: "\e006";
 }
-.icon-facebook:before {
+.ico-facebook:before {
   content: "\e007";
 }
-.icon-edit:before {
+.ico-edit:before {
   content: "\e008";
 }
-.icon-drawer:before {
+.ico-drawer:before {
   content: "\e009";
 }
-.icon-crosshairs:before {
+.ico-crosshairs:before {
   content: "\e00a";
 }
-.icon-clock:before {
+.ico-clock:before {
   content: "\e00b";
 }
-.icon-check:before {
+.ico-check:before {
   content: "\e00c";
 }
-.icon-calender:before {
+.ico-calender:before {
   content: "\e00d";
 }
-.icon-arrow-up:before {
+.ico-arrow-up:before {
   content: "\e00e";
 }
-.icon-arrow-right:before {
+.ico-arrow-right:before {
   content: "\e00f";
 }
-.icon-arrow-left:before {
+.ico-arrow-left:before {
   content: "\e010";
 }
-.icon-arrow-down:before {
+.ico-arrow-down:before {
   content: "\e011";
 }
-.icon-app-store:before {
+.ico-app-store:before {
   content: "\e012";
 }

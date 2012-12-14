@@ -1,6 +1,8 @@
 require 'test_helper'
+require 'helpers/gmaps_fake'
 
 class V1::ListingsControllerTest < ActionController::TestCase
+
 
   setup do
     # stub out sphinx
@@ -40,6 +42,8 @@ class V1::ListingsControllerTest < ActionController::TestCase
   # Query
 
   test "should query" do
+    WebMock.disable_net_connect!
+    GmapsFake.stub_requests
     raw_post :query, {}, valid_query_params.to_json
     assert_response :success
   end

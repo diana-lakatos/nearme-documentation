@@ -65,13 +65,7 @@ section.search {
     vertical-align: top;
     width: 115px;
     font-size: 22px;
-
-    .icon {
-      display: inline-block;
-      width: 32px;
-      height: 33px;
-      background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/search.png") no-repeat;
-    }
+    text-align: center;
   }
 
   .slider {
