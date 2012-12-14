@@ -269,10 +269,11 @@
     display: inline-block;
     vertical-align:middle;
 
-    input {
+    .dates, input {
       width: 30px;
       height:38px;
-      display: inline;
+      display: inline-block;
+      vertical-align: middle;
       border: 0;
       color: transparent;
       background: transparent image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender-black.png") no-repeat center top;
