@@ -33,9 +33,12 @@ section.search {
   &.home_search input#search {
     padding: 8px 0 8px 50px;
     width: 460px;
+    float:left;
+    margin-right: 8px;
 
     @media (max-width: 480px ) {
       padding: 8px 0 8px 40px;
+      margin-right:0;
     }
   }
 
