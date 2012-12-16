@@ -243,7 +243,7 @@
 
 .quick-book {
   
-  .calender-wrapper {
+  .calendar-wrapper {
     display: inline-block;
     padding: 4px 8px 2px;
     border: 2px solid $gray3;
@@ -289,7 +289,7 @@
       vertical-align: middle;
       border: 0;
       color: transparent;
-      background: transparent image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender-black.png") no-repeat center top;
+      background: transparent image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calendar-black.png") no-repeat center top;
 
       &:focus {
         outline: none !important;
