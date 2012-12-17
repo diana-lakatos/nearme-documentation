@@ -130,3 +130,13 @@ $(function(){
   doInlineReservation();
   doListingGoogleMaps();
 });
+
+$(function() {
+  var ellipses = $(".truncated-ellipsis")
+
+  $.each(ellipses, function() {
+    $(this).click(function() {
+      $(this).next('.truncated-text').toggleClass('hidden');
+    });
+  });
+});

@@ -46,4 +46,12 @@ module ApplicationHelper
     render 'shared/context_flash'
   end
 
+  def truncate_with_ellipsis(body, html_options = {})
+    content_tag(:div, html_options) do 
+      body[0..250].html_safe +
+      content_tag(:span, "&hellip;".html_safe, :class => 'truncated-ellipsis').html_safe +
+      content_tag(:span, body[251..-1], :class => 'truncated-text hidden').html_safe
+    end
+  end
+
 end
