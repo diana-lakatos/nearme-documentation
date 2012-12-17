@@ -17,8 +17,9 @@
 
 
     .text-center
-      = link_to "Add Another Listing", "", :class => 'btn btn-medium btn-blue', :'data-behavior' => 'addDesk'
-      = f.submit "I'm Done, Save and Continue"
+      = link_to "", :class => 'btn btn-large btn-blue', :'data-behavior' => 'addDesk' do
+        %span.ico-plus.padding Add Listing
+      = f.submit "Save and Continue"
 
 
 :javascript

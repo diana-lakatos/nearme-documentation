@@ -112,11 +112,8 @@
       }
 
       &.datepicker-day-today {
-        width: 38px;
-        height: 38px;
-        border: 1px solid $dnm_black;
-        background: $gray4;
-        color: $gray2;
+        background: $gray3;
+        color: $gray1;
 
         &.active {
           border-color: $dnm_green;
@@ -124,8 +121,8 @@
       }
 
       &.active {
-        background: #bfce94;
-        color: $dnm_green;
+        background: $dnm_green;
+        color: white;
       }
 
       &.disabled {
