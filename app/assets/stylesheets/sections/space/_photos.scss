@@ -132,13 +132,14 @@
       @include box-sizing(border-box);
       padding: 20px;
       text-align: right;
-      font-family: $font-heavy;
+      font-family: $font-medium;
       background: rgba(0,0,0,0);
       opacity:.5;
       @include transition(opacity .1s ease-in);
 
       &:hover {
         opacity: 1;
+        @include text-shadow(black 0 0 2px, black 0 0 4px, black 0 0 6px);
       }
     }
   }
