@@ -12,7 +12,7 @@
             Overview
         #overview_tab.accordion-body.collapse.in
           .accordion-inner
-            %p= truncate_with_ellipsis @location.description
+            %p= truncate_with_ellipsis @location.description, 250
 
             - if @location.phone.present?
               %strong= @location.phone
@@ -29,7 +29,7 @@
               %p
               - if @location.creator.phone
                 %p= @location.creator.phone 
-              %p= truncate_with_ellipsis @location.company.description
+              %p= truncate_with_ellipsis @location.company.description, 250
  
       - if @amenities
         .accordion-group

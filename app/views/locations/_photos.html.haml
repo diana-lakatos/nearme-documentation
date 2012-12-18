@@ -1,16 +1,17 @@
 .hero-gray-texture.hero-shadow
   .container.fluid.space-hero-photos
 
-    .two-thirds.column.alpha.right
-      .carousel.slide
-        .carousel-inner
-          - @location.photos.each_with_index do |photo, index|
-            .item{:class => ("active" if index == 0)}
-              = image_tag photo.url(:golden)
-              .carousel-caption
-                %p= photo.caption
+    - if @location.photos.any?
+      .two-thirds.column.alpha.right
+        .carousel.slide
+          .carousel-inner
+            - @location.photos.each_with_index do |photo, index|
+              .item{:class => ("active" if index == 0)}
+                = image_tag photo.url(:golden)
+                .carousel-caption
+                  %p= photo.caption
 
-    .one-third.column.fluid
+    .column.fluid{:class => @location.photos.any? ? "one-third" : "container"}
       .map
         .map-wrapper
           .map-container
