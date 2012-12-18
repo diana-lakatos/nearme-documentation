@@ -21,3 +21,8 @@
   }
 }
 
+.carousel-control {
+  background: none !important;
+  border: none !important;
+  @include text-shadow(black 0 0 5px);
+}
