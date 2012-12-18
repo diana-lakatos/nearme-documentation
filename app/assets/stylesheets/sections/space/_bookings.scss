@@ -21,9 +21,6 @@
     .summary {
       text-align: center;
       font-size: 16px;
-      strong {
-        font-weight: bold;
-      }
 
       p {
         margin-bottom: 0;
@@ -274,16 +271,7 @@
     
     select {
       display: inline-block;
-      height: 30px;
-      padding: 4px 6px;
-      font-size: 22px;
-      line-height: 30px;
-      margin-bottom: 4px;
-      color: #555555;
       vertical-align: middle;
-      -webkit-border-radius: 4px;
-         -moz-border-radius: 4px;
-              border-radius: 4px;
     }
   }
 

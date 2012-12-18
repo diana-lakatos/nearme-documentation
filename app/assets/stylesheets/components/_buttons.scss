@@ -2,6 +2,7 @@
   display: inline-block;
   text-decoration: none;
   font-family: $font-medium;
+  letter-spacing: 1px;
   color: #fff;
   padding: 0 10px;
   border: none !important;
@@ -70,6 +71,18 @@
       background: darken($dnm_red, 10%);
     }
   }
+
+  &.btn-orange {
+    background: $orange;
+    &:hover {
+      background: lighten($orange, 10%);
+    }
+
+    &:active {
+      background: darken($orange, 10%);
+    }
+  }  
+
   &.twitter {
     width:auto;
     text-align: center;
