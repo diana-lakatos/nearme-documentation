@@ -11,6 +11,10 @@
                 .carousel-caption
                   %p= photo.caption
 
+          - if @location.photos.size > 1
+            = link_to "", ".carousel", :class => "carousel-control left ", 'data-slide' => 'prev'
+            = link_to "", ".carousel", :class => "carousel-control right", 'data-slide' => 'next'
+
     .column.fluid{:class => @location.photos.any? ? "one-third" : "container"}
       .map
         .map-wrapper
