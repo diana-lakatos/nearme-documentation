@@ -1,10 +1,10 @@
 - if user_signed_in?
-  = link_to "List Your Space!", new_space_wizard_url, :class => "btn btn-blue btn-medium header-button"
+  = link_to new_space_wizard_url, :class => "btn btn-blue btn-small" do
+    %span.ico-plus.padding List Your Space
   = link_to "Logout", destroy_user_session_path, :method => :delete, :class => "header-link"
-  = link_to "Dashboard", dashboard_path, :class => "header-link"
-  %span.user-welcome
-    Hey, #{content_tag :strong, current_user.first_name}  
+  = link_to "Dashboard", dashboard_path, :class => "header-link" 
 - else
-  = link_to "List Your Space!", new_space_wizard_url, :class => "btn btn-blue btn-medium header-button"
+  = link_to new_space_wizard_url, :class => "btn btn-blue btn-small" do
+    %span.ico-plus.padding List Your Space
   = link_to "Sign Up", new_user_registration_url, :class => "header-link header-first"
   = link_to "Log In", new_user_session_url, :class => "header-link header-second"

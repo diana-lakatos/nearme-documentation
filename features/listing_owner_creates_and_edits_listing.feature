@@ -12,7 +12,7 @@ Feature: Location Owner Creates/Edits Listing
   Scenario: A location owner can create a listing
     Given I am on the dashboard
     When I follow "Manage Spaces"
-    And I follow "Spaces"
+    And I follow "Listings"
     And I follow "Edit"
     And I follow "Desks & Rooms"
     And I follow "Add a Desk or Room"

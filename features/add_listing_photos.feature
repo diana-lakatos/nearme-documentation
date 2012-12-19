@@ -13,7 +13,7 @@ Feature: A user can add photos to a listing
     Given I am logged in as the user
       And I go to the the dashboard
      When I follow "Manage Spaces"
-     And I follow "Spaces"
+     And I follow "Listings"
      And I follow "Edit"
      And I follow "Desks & Rooms"
      And I follow "Edit"

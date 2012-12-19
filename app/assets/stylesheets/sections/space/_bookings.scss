@@ -21,9 +21,6 @@
     .summary {
       text-align: center;
       font-size: 16px;
-      strong {
-        font-weight: bold;
-      }
 
       p {
         margin-bottom: 0;
@@ -43,10 +40,7 @@
 
         &:first-child {
           margin-left: 0;
-
-        img {
-          border-radius: 4px;
-          }  
+ 
         }
 
       }
@@ -59,7 +53,20 @@
         }
       }
 
-      .images {
+      .truncated-ellipsis {
+        display: inline-block;
+        padding: 0 4px 10px;
+        margin: 0 4px;
+        border-radius: 2px;
+        border-radius: 4px;
+        background: darken( $gray2, 10%);
+        letter-spacing: 1px;
+        color: $dnm_black;
+        font-size: 20px;
+        line-height: 6px;
+        height:6px;
+        vertical-align: middle;
+        font-family: $font-bold;
       }
 
       .description {
@@ -242,6 +249,14 @@
 }
 
 .quick-book {
+  
+  .calendar-wrapper {
+    display: inline-block;
+    padding: 4px 8px 2px;
+    border: 2px solid $gray3;
+    border-radius: 8px;
+    background: white;
+  }
 
   @media (min-width: 768px) and (max-width:959px) {
     margin-right: 20px;
@@ -252,16 +267,30 @@
   }
 
   .quantity {
-    display: inline;
-    input {
-      padding: 0;
-      font-size:26px;
-
-      &:focus {
-        outline:none !important;
-        outline: -webkit-focus-ring-color auto 5px;
-      }
+    display: inline-block;
+    
+    select {
+      display: inline-block;
+      vertical-align: middle;
     }
+
+    span.customSelect {
+      font-size: 100%;
+      width: 40px;
+      padding: 4px 8px 2px 8px;
+      border: 2px solid $gray3;
+      @include border-radius(8px);
+      background: white;
+    }
+
+    span.customSelect.changed {
+    }
+
+    .customSelectInner {
+      width: 100% !important;
+      background:url(components/customselect/canvas-list-nav-item-arrow.gif) no-repeat center right;
+    }
+
   }
 
   .calendar {
@@ -269,13 +298,14 @@
     display: inline-block;
     vertical-align:middle;
 
-    input {
+    .dates, input {
       width: 30px;
       height:38px;
-      display: inline;
+      display: inline-block;
+      vertical-align: middle;
       border: 0;
       color: transparent;
-      background: transparent image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender-black.png") no-repeat center top;
+      background: transparent image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calendar-black.png") no-repeat center top;
 
       &:focus {
         outline: none !important;
@@ -284,7 +314,7 @@
   }
 
   a.btn.btn-medium {
-    padding: 4px 25px;
+    padding: 4px 20px;
     font:normal 26px/38px $font-medium, sans-serif;
     letter-spacing: 2px;
 

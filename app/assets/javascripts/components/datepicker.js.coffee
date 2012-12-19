@@ -167,7 +167,10 @@ class @Datepicker
       positionTarget: null,
 
       # Padding in px as spacing around the positioning popover
-      positionPadding: 5
+      positionPadding: 5,
+
+      # Whether to disable past dates
+      disablePastDates: true
     }
 
     constructor: (@options = {}) ->
@@ -343,6 +346,13 @@ class @Datepicker
       klass = []
       klass.push "active" if @model.isSelected(date)
       klass.push "datepicker-day-other-month" if monthDate and monthDate.getMonth() != date.getMonth()
+
+      now = new Date()
+      now = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
+      klass.push "datepicker-day-today" if date.getTime() == now.getTime()
+      if date.getTime() < now.getTime()
+        klass.push "datepicker-day-past"
+        klass.push "disabled" if @options.disablePastDates
       klass.join ' '
 
     _render: (template, args) ->

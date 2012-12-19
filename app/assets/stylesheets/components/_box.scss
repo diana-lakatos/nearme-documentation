@@ -2,23 +2,20 @@
   $padding: 14px;
   @include border-radius(8px);
   margin-bottom: 20px;
-  background: #f5f5f5;
+  background: $dnm-white;
   padding: $padding;
-  @include border-bottom-radius(8px);
-  font-size: 14px;
-  line-height: 140%;
+  border: 1px solid $gray2;
 
   h2 {
     display: block;
-    background: image-url("layout/seamless-wood-texture.jpg");
-    color: #fff;
-    border: 1px solid #2b1b13;
-    @include border-top-radius(8px);
-    padding: 8px $padding;
+    padding: 15px $padding;
+    background: $gray2;
     margin-top: -$padding;
     margin-left: -$padding;
     margin-right: -$padding;
     margin-bottom: $padding;
+      @include border-corner-radius(top, left, 8px);
+      @include border-corner-radius(top, right, 8px);
 
     // Wizzard items
     ul {
@@ -26,10 +23,9 @@
 
       li {
         float: left;
-        color: #cebbae;
+        color: $gray3;
         font-size: 18px;
-        background: image-url("components/box/list-separator.png") left center no-repeat;
-        padding-left: 26px;
+        padding-left: 14px;
         padding-right: 8px;
         line-height: 60px;
 
@@ -55,7 +51,7 @@
         &:first-child {
           background: none;
           padding-left: 0;
-          margin-left:0 !important;
+          margin-left:6px;
         }
 
         &:last-child {
@@ -63,14 +59,23 @@
         }
 
         &.current {
-          color: #fff;
+          color: $dnm_black;
         }
 
         &.complete {
           a, span {
             display: inline-block;
-            background: image-url("components/box/list-tick.png") left center no-repeat;
-            padding-left: 24px;
+
+            &:before {
+              font-family: 'icomoon';
+              font-style: normal;
+              speak: none;
+              font-weight: normal;
+              line-height: 1;
+              -webkit-font-smoothing: antialiased;
+              content: "\e00c";
+              padding-right: 6px;              
+            }
           }
         }
       }
@@ -86,7 +91,7 @@
     text-align: center;
     > span {
       display: inline-block;
-      background: #f5f5f5;
+      background: rgb(250,250,250);
       padding: 0 8px;
       position: relative;
       top: -10px;
@@ -105,62 +110,41 @@
 }
 
 .box-nav {
-  background: #627077;
-  border-bottom: 1px solid #b8b8b8;
   overflow: hidden;
   margin: -14px -14px 14px -14px;
 
   li {
     float: left;
-    border-left: 1px solid #546066;
-    a {
-      border-left: 1px solid #758187;
-    }
 
     a {
       display: block;
       padding: 0 10px;
       line-height: 40px;
       font-size: 14px;
-      color: rgba(255,255,255,.6);
+      color: $gray4;
 
       &:hover {
-        color: #fff;
+        color: $dnm_black;
       }
     }
 
     &:first-child, &:first-child a {
-      border-left: none;
     }
 
     &:last-child, &.last {
-      border-right: 1px solid #758187;
-      a {
-        border-right: 1px solid #546066;
-      }
     }
 
     &.active {
-      background: #4d5960;
-      border-left: 1px solid #758187;
 
       a {
-        border-left: 1px solid #333a3f;
       }
 
       a, a:hover {
-        color: #fff;
+        color: $dnm_black;
       }
 
       &:first-child, &:first-child a {
         border-left: none;
-      }
-
-      &:last-child, &.last {
-        border-right: 1px solid #758187;
-        a {
-          border-right: 1px solid #333a3f;
-        }
       }
     }
 
@@ -181,9 +165,5 @@
   }
 
   li.active + li:not(.right-link) {
-    border-left: 1px solid #333a3f;
-    a {
-      border-left: 1px solid #758187;
-    }
   }
 }

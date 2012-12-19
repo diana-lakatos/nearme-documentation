@@ -12,7 +12,7 @@
             Overview
         #overview_tab.accordion-body.collapse.in
           .accordion-inner
-            #{@location.description}
+            %p= truncate_with_ellipsis @location.description, 250
 
             - if @location.phone.present?
               %strong= @location.phone
@@ -23,15 +23,15 @@
         .accordion-group
           .accordion-heading
             %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#host_tab'}
-              About Host
+
+              Company
           #host_tab.accordion-body.collapse
             .accordion-inner
-              %p= "#{@location.creator.name}, #{@location.company.name}"
-              %p= image_tag(@location.creator.avatar.url, :alt => @location.creator.name)
+              %p
               - if @location.creator.phone
                 %p= @location.creator.phone 
-              %p= @location.company.description
- 
+              %p= truncate_with_ellipsis @location.company.description, 250
+
       - if @amenities
         .accordion-group
           .accordion-heading

@@ -42,4 +42,8 @@ class ActiveSupport::TestCase
   end
 
 end
+
+require 'thinking_sphinx/test'
+ThinkingSphinx::Test.init
+
 require "mocha/setup"
