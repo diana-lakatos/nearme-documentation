@@ -5,7 +5,7 @@ Feature: A user can add a space
 
   Scenario: An unregistered user starts by signing up
     Given I go to the home page
-     And  I follow "List Your Space!"
+     And  I follow "List Your Space"
      Then I should be at the "Sign Up" step
      When I fill in "Your name" with "Brett Jones"
      And I fill in "Your email address" with "brettjones@email.com"

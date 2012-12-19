@@ -13,7 +13,7 @@ Feature: As a user of the site
   Scenario: A user can see their listings
      When I am on the dashboard
      And  I follow "Manage Spaces"
-     And I follow "Spaces"
+     And I follow "Listings"
      And I follow "Edit"
      And I follow "Desks & Rooms"
      Then I should see "Rad Annex"
