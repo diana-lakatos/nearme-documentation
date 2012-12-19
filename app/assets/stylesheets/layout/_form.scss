@@ -62,6 +62,7 @@ form {
 
   .hint, .help-block {
     background: image-url("components/form/hint.png") left top no-repeat;
+    margin-top: 8px;
   }
 
   .error-block {
@@ -313,18 +314,18 @@ form {
 // Width overrides for restricted width forms
 .two-thirds.column form.form-horizontal, .eleven.columns form.form-horizontal {
   input[type="text"], input[type="password"], input[type="email"], input[type="url"], input[type="tel"], textarea {
-    width: 355px;
+    width: 367px;
   }
 
   .input-icon-wrapper {
     input[type="text"] {
-      width: 328px;
+      width: 340px;
     }
   }
 
   .controls {
     &.two-up input {
-      width: 163px;
+      width: 169px;
       &:first-child {
         margin-right: 6px;
       }
