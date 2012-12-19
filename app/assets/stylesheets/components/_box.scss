@@ -14,6 +14,8 @@
     margin-left: -$padding;
     margin-right: -$padding;
     margin-bottom: $padding;
+      @include border-corner-radius(top, left, 8px);
+      @include border-corner-radius(top, right, 8px);
 
     // Wizzard items
     ul {
