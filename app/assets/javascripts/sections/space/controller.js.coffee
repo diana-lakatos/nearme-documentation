@@ -49,7 +49,7 @@ class @Space.Controller
     carouselContainer = $(".carousel")
     return unless carouselContainer.length > 0
     carouselContainer.carousel({
-      pills: true,
+      pills: false,
       interval: 10000
     })
 

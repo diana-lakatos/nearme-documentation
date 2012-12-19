@@ -46,20 +46,11 @@
   $padding: 20px;
   padding: $padding;
 
-  h1 {
-    display: block;
-    font-weight: bold;
-    background: image-url("layout/seamless-wood-texture.jpg");
-    color: #fff;
-    line-height: 50px;
-    font-size: 18px;
-    border: 1px solid #2b1b13;
-    @include border-top-radius(8px);
+  h2 {
     padding: 0 $padding;
-    text-shadow: 0 -1px rgba(0,0,0,0.7);
-    box-shadow: 0 2px 8px -1px rgba(0,0,0,0.4);
     margin: -$padding;
     margin-bottom: $padding;
+    margin-top:20px;
   }
 
   hr, .hr {
@@ -75,11 +66,12 @@
 
 .modal-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  background: image-url("components/modal/close.png");
-  width: 16px;
-  height: 17px;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  color:black;
+  font-size:18px;
   @include opacity(0.8);
   &:hover {
     @include opacity(1);
