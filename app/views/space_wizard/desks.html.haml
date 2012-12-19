@@ -1,6 +1,6 @@
 = render :layout => 'wizard_layout', :locals => { :step => 3 } do
   %p.intro
-    Add the desks and rooms (”listings”) that are available for booking in your space.
+    Add listings that are available for booking in your space.
     You can allow anything to be booked - conference rooms, premium desks, kitchens, entertainment areas! It’s entirely up to you.
 
   = simple_form_for @space, :url => space_wizard_desks_url, :html => { :class => "form-horizontal new_desks" } do |f|

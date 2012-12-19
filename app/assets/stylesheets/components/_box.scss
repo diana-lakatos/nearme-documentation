@@ -123,17 +123,10 @@
       line-height: 40px;
       font-size: 14px;
       color: $gray2;
-      border-right: 1px solid $dnm_black;
 
       &:hover {
         color: $dnm_white;
       }
-    }
-
-    &:first-child, &:first-child a {
-    }
-
-    &:last-child, &.last {
     }
 
     &.active {
