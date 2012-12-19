@@ -4,7 +4,7 @@
   margin-bottom: 20px;
   background: $dnm-white;
   padding: $padding;
-  border: 1px solid $gray2;
+  border: 2px solid $gray2;
 
   h2 {
     display: block;
@@ -14,16 +14,17 @@
     margin-left: -$padding;
     margin-right: -$padding;
     margin-bottom: $padding;
-      @include border-corner-radius(top, left, 8px);
-      @include border-corner-radius(top, right, 8px);
+    @include border-corner-radius(top, left, 6px);
+    @include border-corner-radius(top, right, 6px);
 
     // Wizzard items
     ul {
       overflow: hidden;
+      background: $gray3;
 
       li {
         float: left;
-        color: $gray3;
+        color: $gray1;
         font-size: 18px;
         padding-left: 14px;
         padding-right: 8px;
@@ -59,7 +60,7 @@
         }
 
         &.current {
-          color: $dnm_black;
+          color: $dnm_white;
         }
 
         &.complete {
@@ -112,6 +113,7 @@
 .box-nav {
   overflow: hidden;
   margin: -14px -14px 14px -14px;
+  background: $gray3;
 
   li {
     float: left;
@@ -121,10 +123,11 @@
       padding: 0 10px;
       line-height: 40px;
       font-size: 14px;
-      color: $gray4;
+      color: $gray2;
+      border-right: 1px solid $dnm_black;
 
       &:hover {
-        color: $dnm_black;
+        color: $dnm_white;
       }
     }
 
@@ -140,7 +143,8 @@
       }
 
       a, a:hover {
-        color: $dnm_black;
+        background: $dnm_black;
+        color: $dnm_white;
       }
 
       &:first-child, &:first-child a {

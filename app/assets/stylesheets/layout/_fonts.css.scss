@@ -14,7 +14,7 @@ $font-medium: futura-medium;
 $font-heavy: futura-heavy;
 $font-bold: futura-bold;
 
-@include font-face("icomoon", font-files("icomoon.woff", "icomoon.otf", "icomoon.ttf", "icomoon.svg"), "icomoon.eot");
+@include font-face("icomoon", font-files("icomoon.woff", "icomoon.otf", "icomoon.ttf", "icomoon.svg#icomoon"), "icomoon.eot");
 
 [class^="ico-"]:before, [class*=" ico-"]:before {
   font-family: 'icomoon';
