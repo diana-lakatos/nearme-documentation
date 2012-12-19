@@ -20,11 +20,10 @@
     // Wizzard items
     ul {
       overflow: hidden;
-      background: $gray3;
 
       li {
         float: left;
-        color: $gray1;
+        color: $gray3;
         font-size: 18px;
         padding-left: 14px;
         padding-right: 8px;
@@ -60,7 +59,7 @@
         }
 
         &.current {
-          color: $dnm_white;
+          color: $dnm_black;
         }
 
         &.complete {
