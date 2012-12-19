@@ -1,12 +1,12 @@
-@include font-face("futura-light", font-files("futurastd-light.woff", "futurastd-light.otf", "futurastd-light.ttf", "futurastd-light.svg"), "futurastd-light.eot");
+@include font-face("futura-light", font-files("futurastd-light.woff", "futurastd-light.otf", "futurastd-light.ttf", "futurastd-light.svg#futura_std_lightlight"), "futurastd-light.eot");
 
-@include font-face("futura-book", font-files("futurastd-book.woff", "futurastd-book.otf", "futurastd-book.ttf", "futurastd-book.svg"), "futurastd-book.eot");
+@include font-face("futura-book", font-files("futurastd-book.woff", "futurastd-book.otf", "futurastd-book.ttf", "futurastd-book.svg#futura_std_bookbook"), "futurastd-book.eot");
 
-@include font-face("futura-medium", font-files("futurastd-medium.woff", "futurastd-medium.otf", "futurastd-medium.ttf", "futurastd-medium.svg"), "futurastd-medium.eot");
+@include font-face("futura-medium", font-files("futurastd-medium.woff", "futurastd-medium.otf", "futurastd-medium.ttf", "futurastd-medium.svg#futura_std_mediummedium"), "futurastd-medium.eot");
 
-@include font-face("futura-heavy", font-files("futurastd-heavy.woff", "futurastd-heavy.otf", "futurastd-heavy.ttf", "futurastd-heavy.svg"), "futurastd-heavy.eot");
+@include font-face("futura-heavy", font-files("futurastd-heavy.woff", "futurastd-heavy.otf", "futurastd-heavy.ttf", "futurastd-heavy.svg#futura_std_mediumheavy"), "futurastd-heavy.eot");
 
-@include font-face("futura-bold", font-files("futurastd-bold.woff", "futurastd-bold.otf", "futurastd-bold.ttf", "futurastd-bold.svg"), "futurastd-bold.eot");
+@include font-face("futura-bold", font-files("futurastd-bold.woff", "futurastd-bold.otf", "futurastd-bold.ttf", "futurastd-bold.svg#futura_std_bookbold"), "futurastd-bold.eot");
 
 $font-light: futura-light;
 $font-regular: futura-book;
@@ -14,7 +14,7 @@ $font-medium: futura-medium;
 $font-heavy: futura-heavy;
 $font-bold: futura-bold;
 
-@include font-face("icomoon", font-files("icomoon.woff", "icomoon.otf", "icomoon.ttf", "icomoon.svg"), "icomoon.eot");
+@include font-face("icomoon", font-files("icomoon.woff", "icomoon.otf", "icomoon.ttf", "icomoon.svg#icomoon"), "icomoon.eot");
 
 [class^="ico-"]:before, [class*=" ico-"]:before {
   font-family: 'icomoon';
