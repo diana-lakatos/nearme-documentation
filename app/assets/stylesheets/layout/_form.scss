@@ -186,17 +186,14 @@ form {
   fieldset, .fieldset {
     border: 1px solid #c6c6c6;
     @include border-radius(8px);
-    padding: 20px;
+    padding: 14px;
+    box-sizing: border-box;
     margin-bottom: 20px;
     position: relative;
 
     > legend, > .legend {
-      color: #a1a1a1;
-      font-size: 16px;
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
+    @extend h2;
+    border-radius: 8px 8px 0 0;
     }
   }
 
@@ -342,7 +339,7 @@ form {
   // Fieldsets require even further smaller width fields
   .fieldset, fieldset {
     input[type="text"], input[type="password"], input[type="email"], input[type="url"], input[type="tel"], textarea {
-      width: 330px;
+      width: 328px;
     }
   }
 }

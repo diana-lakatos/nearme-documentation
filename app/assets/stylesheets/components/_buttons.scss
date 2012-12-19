@@ -8,6 +8,14 @@
   border: none !important;
   @include transition(background .1s ease-in);
 
+  &.full-width {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  &.margin-bottom {
+    margin-bottom: 1em;
+  }
   .icon {
     vertical-align: middle;
   }

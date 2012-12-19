@@ -162,15 +162,14 @@ hr, .hr {
 }
 
 .close-button {
-  text-indent: -9999px;
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 6px;
+  right: 6px;
+  font-size: 1.2em;
   cursor: pointer;
-  @include opacity(0.9);
-  background: image-url("layout/close.png");
-  width: 16px;
-  height: 17px;
+  color:black;
+  opacity: .6;
+ 
 
   &:hover {
     @include opacity(1);
