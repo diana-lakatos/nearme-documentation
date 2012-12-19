@@ -1,3 +1,6 @@
+section.search {
+  min-height:900px;
+}
 #listing_search {
   position: relative;
   overflow: visible;
@@ -30,9 +33,12 @@
   &.home_search input#search {
     padding: 8px 0 8px 50px;
     width: 460px;
+    float:left;
+    margin-right: 8px;
 
     @media (max-width: 480px ) {
       padding: 8px 0 8px 40px;
+      margin-right:0;
     }
   }
 
@@ -47,7 +53,12 @@
     width: 22px;
     height: 23px;
     top: 13px;
+  }
 
+  &.search_results {
+    .availability-quantity, .price-range, .amenities {
+      margin: 10px 0 0;
+    }
   }
 
   .btn {
@@ -57,19 +68,13 @@
     vertical-align: top;
     width: 115px;
     font-size: 22px;
-
-    .icon {
-      display: inline-block;
-      width: 32px;
-      height: 33px;
-      background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/search.png") no-repeat;
-    }
+    text-align: center;
   }
 
   .slider {
     float: left;
     margin-left: 12px;
-    margin-top: 2px;
+    margin-top: 6px;
     width: 180px;
   }
 
@@ -126,11 +131,15 @@
     }
 
     .multiselect {
-      margin-top: -4px;
-      width: 168px;
+      margin: -4px 0 0 15px;
+      width: 220px;
+
+      @media (max-width: 767px) {
+        margin-left: 0;
+      }
     }
 
-    @media (max-width: 768px ) {
+    @media (max-width: 767px ) {
 
       .three.columns.availability-date-start {
         position: relative; 
@@ -160,13 +169,13 @@
         top: 12px;
         left: 8px;
         display: block;
-        background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat;
+        background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calendar.png") no-repeat;
         width: 26px;
         height: 24px;
       }
 
       &.availability-date-end .date-icon {
-        background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat;
+        background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calendar.png") no-repeat;
         width: 22px;
         height: 23px;
       }
@@ -175,7 +184,7 @@
         padding-left: 40px;
         width:100%;
         box-sizing: border-box;
-        background: white image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat 8px center;
+        background: rgb(250,250,250) image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calendar.png") no-repeat 8px center;
 
       }
     }
@@ -211,27 +220,24 @@
       .slider { 
         width:80px; 
       }
+      .amenities {
+        width: 230px;
+      }
       .multiselect  {
-        width:130px;
+        width:220px;
       }
     } 
   }
 }
 
-@media  (max-width: 768px) {
+@media  (max-width: 767px) {
  #listing_search {
     &.home_search input#search {
       width:100%;
       box-sizing: border-box; }
    &.search_results {
-    .availability-quantity, .price {
-      margin: 20px 0; }
-    .multiselect { 
-        float:left;
-        width:200px;
-        margin-left:10px }
-    .five.columns.amenities {
-      margin:20px 0; }  } }
+    .availability-quantity, .price-range, .amenities {
+      margin: 10px 0; } } }
 
   .associations.six.columns.omega.alpha,
   .price-range.six.columns.omega { 

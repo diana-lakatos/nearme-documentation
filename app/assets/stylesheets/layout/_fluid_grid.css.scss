@@ -1,0 +1,40 @@
+.container.fluid, .locations .container {
+	position: relative;
+	width:100%;
+	box-sizing: border-box;
+	max-width: 960px;
+
+	.one-third.column {
+		width: 33.3333%;
+		box-sizing: border-box;
+		margin:0;
+
+		&.padding {
+			padding: 0 20px;
+		}
+			
+		&.right {
+			float: right;
+		}
+
+		@media (max-width: 767px) {
+			width: 100%;
+			clear: both;
+		}
+	}
+
+	.two-thirds.column {
+		width: 66.6666%;
+		box-sizing: border-box;
+		margin:0;
+
+		&.right {
+			float: right;
+		}
+
+		@media (max-width: 767px) {
+			width: 100%;
+			clear: both;
+		}	
+	}
+}

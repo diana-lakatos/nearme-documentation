@@ -10,15 +10,22 @@ class Listing < ActiveRecord::Base
   MINUTES_IN_MONTH = 43200
 
   has_many :feeds, dependent: :delete_all
-  has_many :reservations, dependent: :destroy
-  has_many :reservations, dependent: :delete_all
+
+  has_many :reservations,
+           dependent: :destroy
+
   has_many :photos,  as: :content, dependent: :destroy do
     def thumb
       (first || build).thumb
     end
   end
-  has_many :ratings, as: :content, dependent: :destroy
-  has_many :unit_prices, dependent: :destroy
+
+  has_many :ratings,
+           as: :content,
+           dependent: :destroy
+
+  has_many :unit_prices,
+           dependent: :destroy
 
   has_many :inquiries
 
@@ -34,7 +41,9 @@ class Listing < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
   delegate :name, to: :creator, prefix: true
 
-  has_many :availability_rules, :as => :target
+  has_many :availability_rules,
+           :as => :target,
+           :dependent => :destroy
 
   # === Callbacks
   before_validation :set_default_creator
@@ -118,7 +127,6 @@ class Listing < ActiveRecord::Base
   def desks_booked_on(date)
     ReservationSeat.joins(:reservation_period => :reservation).where(:reservation_periods => { :listing_id => self.id, :date => date }).merge(Reservation.not_rejected_or_cancelled).count
   end
-
 
   def price_period
     if free?

@@ -1,10 +1,10 @@
 section.public {
   #hero {
-    @extend .hero-blue-top;
     height: 500px;
     width: auto;
-    background: $dnm_grey image-url("sections/home/hero1.jpg") center center no-repeat;
+    background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/la-cantine.jpg") center center no-repeat;
     background-size: cover;
+    @include box-shadow(rgba(black, .2) 0 0 20px 20px inset); 
 
     @media (max-width: 767px) {
       height: 420px;
@@ -41,7 +41,6 @@ section.public {
 #search_row {
   .wood-box {
     margin-top: 180px;
-    padding: 12px;
 
     @media (max-width: 767px) {
       margin-top: 100px;
@@ -52,14 +51,26 @@ section.public {
     }
 
     h1 {
+      display: block;
       float: left;
-      font:normal 36px/42px $font-medium, sans-serif;
-      color: #eaeaea;
+      font:normal 48px/54px $font-medium, sans-serif;
+      color: $light-gray;
       margin-bottom: 10px;
+      @include text-shadow(black 0 0 5px, black 0 0 8px, black 0 0 10px, black 0 0 20px, black 0 0 30px);
+
 
       @media (max-width: 480px) {
         font:normal 24px/32px $font-medium, sans-serif;
       }
+    }
+
+    .black-box {
+      float: left;
+      clear: both;
+      background: rgb(30,30,30);
+      padding: 8px;
+      border-radius: 12px;
+      box-sizing: border-box;
     }
 
     h2 {
@@ -75,8 +86,15 @@ section.public {
         font:normal 16px/22px $font-medium, sans-serif;
       }      
     }
-  }
+    form input[type="text"] {
+      margin-bottom: 0;
 
+      @media (max-width: 768px) {
+        margin-bottom: 8px;
+      }
+    }
+  }
+  
   form {
     clear: both;
 
@@ -113,9 +131,11 @@ section.how-it-works {
     margin: 0;
 
     &.find-a-desk {
+      background: hsla(76, 13%, 15%,.04);
     }
 
     &.rent-your-space {
+      background: hsla(198deg, 16%, 15%, .01);
     } 
 
     .inner {

@@ -1,12 +1,26 @@
 #space, .space {
+
+  h3.listing-name {
+    font:normal 24px/33px $font-heavy, sans-serif;
+
+    @media (max-width: 480px) {
+      margin: 10px 0;
+      clear: both;
+      float: left;
+    }
+  }
+
+  p.listing-description {
+    @media (max-width: 480px) {
+      float: left;
+      clear: both;
+    }
+  }
   .bookings {
 
     .summary {
       text-align: center;
       font-size: 16px;
-      strong {
-        font-weight: bold;
-      }
 
       p {
         margin-bottom: 0;
@@ -19,32 +33,65 @@
 
     .listing {
 
-      .images, .description, .book {
+      .images, .description {
         float: left;
         max-width: 295px;
         margin-left: 20px;
 
         &:first-child {
           margin-left: 0;
+ 
+        }
+
+      }
+
+      .book {
+        display: inline-block;
+
+        @media (max-width: 480px) {
+          display:block;
         }
       }
 
-      .images {
-        img {
-          @include border-radius(6px);
-        }
+      .truncated-ellipsis {
+        display: inline-block;
+        padding: 0 4px 10px;
+        margin: 0 4px;
+        border-radius: 2px;
+        border-radius: 4px;
+        background: darken( $gray2, 10%);
+        letter-spacing: 1px;
+        color: $dnm_black;
+        font-size: 20px;
+        line-height: 6px;
+        height:6px;
+        vertical-align: middle;
+        font-family: $font-bold;
       }
 
       .description {
 
         .price {
           font-size: 22px;
-          font-weight: bold;
 
           .period {
             font-size: 16px;
             font-weight: normal;
           }
+        }
+      }
+
+      .make-reservation {
+        float: right;
+        font:normal 26px/38px $font-medium, sans-serif;
+        margin-top: 10px;
+
+        @media (max-width: 480px) {
+          width: 100%;
+        }
+        .quantity input { 
+          background: none;
+          border: none;
         }
 
       }
@@ -55,7 +102,6 @@
         h3 {
           font-size: 12px;
           color: #8e9498;
-          font-weight: bold;
           text-transform: uppercase;
           margin-bottom: 0;
         }
@@ -149,10 +195,6 @@
   }
 
   .availability {
-    .total, .available {
-      font-weight: bold;
-    }
-
     .total {
       color: #848b8f;
     }
@@ -167,7 +209,6 @@
     background: #fff;
     outline: none;
     color: #91529c;
-    font-weight: bold;
     padding: 4px;
     width: 30px;
     font-size: 12px;
@@ -206,3 +247,90 @@
     margin-bottom: 0;
   }
 }
+
+.quick-book {
+  
+  .calendar-wrapper {
+    display: inline-block;
+    padding: 4px 8px 2px;
+    border: 2px solid $gray3;
+    border-radius: 8px;
+    background: white;
+  }
+
+  @media (min-width: 768px) and (max-width:959px) {
+    margin-right: 20px;
+  }
+
+  @media (max-width: 767px) {
+    margin: 0 20px;
+  }
+
+  .quantity {
+    display: inline-block;
+    
+    select {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    span.customSelect {
+      font-size: 100%;
+      width: 40px;
+      padding: 4px 8px 2px 8px;
+      border: 2px solid $gray3;
+      @include border-radius(8px);
+      background: white;
+    }
+
+    span.customSelect.changed {
+    }
+
+    .customSelectInner {
+      width: 100% !important;
+      background:url(components/customselect/canvas-list-nav-item-arrow.gif) no-repeat center right;
+    }
+
+  }
+
+  .calendar {
+    position: relative;
+    display: inline-block;
+    vertical-align:middle;
+
+    .dates, input {
+      width: 30px;
+      height:38px;
+      display: inline-block;
+      vertical-align: middle;
+      border: 0;
+      color: transparent;
+      background: transparent image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calendar-black.png") no-repeat center top;
+
+      &:focus {
+        outline: none !important;
+      }
+    }
+  }
+
+  a.btn.btn-medium {
+    padding: 4px 20px;
+    font:normal 26px/38px $font-medium, sans-serif;
+    letter-spacing: 2px;
+
+    @media (max-width: 880px) {
+      padding: 4px 10px;
+      font-size: 22px;
+    }
+    @media (max-width: 480px) {
+      display: block;
+      clear: both;
+      width:100%;
+      margin-top: 10px;
+      text-align:center;
+      box-sizing: border-box;
+      line-height: 32px;
+    }
+  }
+}
+

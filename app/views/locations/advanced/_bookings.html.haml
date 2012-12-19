@@ -1,0 +1,48 @@
+%section.bookings{:'data-view' => "advanced"}
+  %h2 Make a Booking
+
+  %p Select dates from the calendar below to see the available desks and rooms for those days.
+
+  #calendar.calendar.box{:'data-today' => Time.zone.now.strftime('%Y-%m-%d')}
+    .prev
+    .next
+    .slider-window
+      %ul.days
+        / li
+        /   %span.date 31<sup>st</sup>
+        /   %span.month Oct
+
+  .listings
+    - @location.listings.each do |listing|
+      .listing.box.divider.small{listing_data_attributes(listing)}
+        .images
+          - if listing.photos.any?
+            .image
+              = image_tag listing.photos.first.url(:space_listing)
+          - else
+            .no-photo No Photos
+
+        .description
+          %h3= listing.name
+          %p= listing.description
+          %p.price
+            = listing_price(listing, 1)
+            - if listing_price_show_bulk_tooltip?(listing)
+              %a{:href => "#"} See bulk pricing
+
+        .book
+          %h3 Book
+          %p Click on the available days below to select how many of this listing you'd like to book on that day.
+
+          .booked-days
+            /%span.booked-day
+            /  %span.count 2
+            /  %span.date 10#{content_tag(:sup, 'th')}
+            /  %span.month Oct
+
+        .clearfix
+
+  .summary.inset-box
+    %p
+      %span 2 listings selected over a total of 2 days for $198.00
+      = link_to "Review and book now", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBooking'

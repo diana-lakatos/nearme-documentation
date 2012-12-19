@@ -1,0 +1,28 @@
+.accordion-group {
+
+	background: $dnm_white;
+	margin-right: 20px;
+	border-radius: 8px;
+
+  @media (max-width: 959px) {
+    margin: 0 20px;
+  }
+
+  a.accordion-toggle {
+  	background: url('http://desksnearme.assets.s3.amazonaws.com/img/ui/arrow-down.png') right center no-repeat;
+  	background-origin: content-box;
+  	color: black;
+  	opacity: .8;
+    @include transition(opacity .1s ease-in);
+
+  	&:hover {
+  		opacity: 1;
+  	}
+  }
+}
+
+.carousel-control {
+  background: none !important;
+  border: none !important;
+  @include text-shadow(black 0 0 5px);
+}

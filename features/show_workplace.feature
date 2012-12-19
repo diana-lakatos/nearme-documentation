@@ -11,7 +11,7 @@ Feature: A user can see a space
       And I should see a Google Map
       And I should see "http://google.com"
 
-
+  @wip
   Scenario: A can see who created the listing
     Given a user exists with name: "Keith Pitt"
       And I am logged in as the user

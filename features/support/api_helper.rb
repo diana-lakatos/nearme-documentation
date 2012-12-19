@@ -54,7 +54,7 @@ class APISearchOptions
 
   def organizations
     return {} unless options.has_key?(:organizations)
-    { "organizations" => options[:organizations].map(&:id) } 
+    { "organizations" => options[:organizations].map(&:id) }
   end
 
   def price

@@ -67,11 +67,80 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(0,0,0,0.75);
+      background: rgba(0,0,0,0.5);
       color: #fff;
       text-shadow: 0 -1px 0 rgba(0,0,0,0.6);
       padding: 12px;
       font-size: 12px;
     }
   }
+
+  .map {
+    .map-container {
+      height: 396px;
+      position: relative;
+      z-index: 1;
+
+      @media (max-width: 767px) {
+        height:160px;
+      }
+      @media (max-width: 480px) {
+        height:100px;
+      }      
+    }
+    address {
+      position: relative;
+      background: rgba(0,0,0,0.8);
+      @include box-sizing(border-box);
+      padding: 10px 20px;
+      margin-top: -65px;
+      height: 65px;
+      width: auto;
+      color: rgb(240,240,240);
+      z-index: 100;
+      @include transition(background .2s ease-in);
+
+      &:hover {
+        background: rgba(0,0,0,.95);
+      }
+      strong {
+        font-family: $font-medium;
+      }
+
+      @media (max-width: 768px) {
+        width: 100%;
+        max-width: none;
+        height:40px;
+        margin-top:-40px;
+      }
+      @media (max-width: 480px) {
+        margin-top:0;
+        font-size:12px;
+        background-color: rgba(255,255,255,.01) !Important;
+        border: none;
+        color: rgb(240,240,240);
+        padding: 4px 20px;
+        height: auto;
+      }      
+    }
+  }
+
+  .carousel {
+    margin-bottom: 0;
+    .carousel-caption {
+      @include box-sizing(border-box);
+      padding: 20px;
+      text-align: right;
+      font-family: $font-medium;
+      background: rgba(0,0,0,0);
+      opacity:.5;
+      @include transition(opacity .1s ease-in);
+
+      &:hover {
+        opacity: 1;
+        @include text-shadow(black 0 0 2px, black 0 0 4px, black 0 0 6px);
+      }
+    }
+  }
+
 }

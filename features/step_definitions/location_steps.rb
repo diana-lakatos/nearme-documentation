@@ -41,3 +41,18 @@ end
 Then /^that location is private to only members of it's organizations$/ do
   @location.require_organization_membership?.should be_true
 end
+
+When /^I change that locations name to Joe's Codin' Garage$/ do
+  visit edit_manage_location_path model!('location')
+  fill_in "Space name", with: "Joe's Codin' Garage"
+  click_link_or_button "Update Location"
+end
+
+When /^I delete that location$/ do
+  visit manage_company_locations_path model!('location').company
+  click_link_or_button "Delete"
+end
+
+Then /^that location no longer exists$/ do
+  expect { model!('location') }.to raise_error ActiveRecord::RecordNotFound
+end

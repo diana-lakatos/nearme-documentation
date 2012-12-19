@@ -5,13 +5,13 @@ Feature: A user can add a space
 
   Scenario: An unregistered user starts by signing up
     Given I go to the home page
-     And  I follow "List Your Space!"
+     And  I follow "List Your Space"
      Then I should be at the "Sign Up" step
      When I fill in "Your name" with "Brett Jones"
      And I fill in "Your email address" with "brettjones@email.com"
      And I fill in "Your password" with "password"
      And I fill in "user_password_confirmation" with "password"
-     When I press "Sign up and get started"
+     When I press "Sign up!"
      Then a user should exist with email: "brettjones@email.com"
      And I should be at the "Company" step
      When I fill in "Your company name" with "My Company"

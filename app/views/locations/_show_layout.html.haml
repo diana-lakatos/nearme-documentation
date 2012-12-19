@@ -3,28 +3,14 @@
 - content_for :hero do
   .hero-wood-texture
     .container.space-hero-search-return
-      = link_to "Back to search", search_url
+      %h1 #{@location.name}
 
-  - if @location.photos.any?
-    = render 'photos'
+  = render 'photos' 
 
 %article#space
-  %ul.subnav.right.green
-    %li.current= link_to "Book", "", :'data-behavior' => 'scrollToBook'
-
-  %ul.subnav.right.blue
-    %li{:class => ('current' if tab == :overview)}= link_to "Overview", location_url(@location)
-    %li{:class => ('current' if tab == :host)}= link_to "Host", host_location_url(@location)
-    /%li{:class => ('current' if tab == :networking)}= link_to "Networking", networking_location_url(@location)
-
-  %h1 #{@location.name}
 
   .clearfix
     = yield
-
-  %hr.divider
-
-  = render 'bookings'
 
 - content_for :script do
   / ShareThis script
@@ -37,13 +23,15 @@
 
   :javascript
     // Initialize the ui controller
-    new Space.Controller(
-      $('article.space, article#space'),
-      {
-        bookings: {
-          listings: #{raw location_listings_json},
-          availability_summary_url: #{raw availability_summary_location_url(@location).to_json},
-          review_url: #{raw review_location_reservations_url(@location).to_json}
+    $(function() {
+      new Space.Controller(
+        $('article.space, article#space'),
+        {
+          bookings: {
+            listings: #{raw location_listings_json},
+            availability_summary_url: #{raw availability_summary_location_url(@location).to_json},
+            review_url: #{raw review_location_reservations_url(@location).to_json}
+          }
         }
-      }
-    )
+      )
+    });

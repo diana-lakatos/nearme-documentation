@@ -15,6 +15,7 @@ Feature: A user can search for a listing
     When I search for "bung"
     Then I should see "Please enter a city or address"
 
+  @wip
   Scenario: A user searches for something which yields no results
     When I search for "darwin"
     Then I should see "No results found"
@@ -36,7 +37,6 @@ Feature: A user can search for a listing
     And I search for "Auckland"
     Then the search results have the listing with that amenity first
 
-  @wip
   Scenario: A user searches with a price range
     Given a listing in Auckland exists with a price of $50.00
     And a listing in Auckland exists with a price of $10.00

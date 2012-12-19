@@ -3,11 +3,12 @@ class Listing::Search::Params
   DEFAULT_SEARCH_RADIUS = 15_000.0
 
   attr_accessor :user, :allowed_organizations, :availability, :geocoder, :price,
-    :organizations, :amenities, :options, :search_area, :midpoint
+    :organizations, :amenities, :options, :search_area, :midpoint, :query
 
   def initialize(options, geocoder=nil)
     @geocoder = geocoder || Listing::Search::Geocoder.new
     process_options(options)
+    build_search_area
   end
 
   def to_scope
@@ -17,15 +18,13 @@ class Listing::Search::Params
         organization_ids: allowed_organizations
     }
 
+    scope[:per_page] = 100
+
     if search_area
       scope[:geo] = search_area.radians
       scope[:with]["@geodist"] = 0.0...search_area.radius
     end
     scope
-  end
-
-  def query
-    search_area ? nil : @query
   end
 
   private
@@ -34,7 +33,8 @@ class Listing::Search::Params
     return if search_area
     if query
       build_search_area_from_query
-    elsif midpoint? || boundingbox?
+    end
+    if !search_area && (midpoint? || boundingbox?)
       build_search_area_from_midpoint
     end
   end
@@ -48,6 +48,16 @@ class Listing::Search::Params
     provided_boundingbox.none?(&:nil?)
   end
 
+  def provided_boundingbox
+    box = options.fetch(:boundingbox, { start: { lat: nil, lon: nil }, end: { lat: nil, lon: nil } })
+    [box[:start][:lat], box[:start][:lon], box[:end][:lat], box[:end][:lon]]
+  end
+
+  def provided_midpoint
+    location = options.fetch(:location, { lon: nil, lat: nil })
+    [location[:lat], location[:lon]]
+  end
+
   def process_options(opts)
     @options = opts.respond_to?(:deep_symbolize_keys) ? opts.deep_symbolize_keys : opts
     @user = options.fetch(:user, nil) ||  NullUser.new
@@ -55,6 +65,8 @@ class Listing::Search::Params
     @availability = options[:availability].present?  ? Availability.new(options[:availability]) : NullAvailability.new
     @amenities = options[:amenities].present? ? options[:amenities].map(&:to_i) : []
     @organizations = options[:organizations].present? ? options[:organizations].map(&:to_i) : []
+    @query = @location_string = options.fetch(:query, nil) || options.fetch(:q, nil) || options.fetch(:address, nil)
+    @found_location = false
     build_price_from_options
   end
 
@@ -81,5 +93,11 @@ class Listing::Search::Params
   end
 
   def build_search_area_from_query
+    @search_area = geocoder.find_location(query)
+    if @search_area
+      @found_location = true;
+      @location_string = geocoder.pretty
+      @query = nil
+    end
   end
 end

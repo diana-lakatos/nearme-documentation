@@ -4,29 +4,32 @@ class User < ActiveRecord::Base
 
   is_gravtastic!
 
-  has_many :authentications
-  has_many :reservations, :foreign_key => :owner_id
-  has_many :listings, :foreign_key => "creator_id"
-  has_many :companies, :foreign_key => "creator_id"
-  has_many :locations, :foreign_key => "creator_id"
+  acts_as_paranoid
+
+  has_many :authentications,
+           :dependent => :destroy
+
+  has_many :locations,
+           :foreign_key => "creator_id",
+           :dependent => :destroy
+
+  has_many :reservations,
+           :foreign_key => :owner_id
+
+  has_many :listings,
+           :foreign_key => "creator_id"
+
+  has_many :companies,
+           :foreign_key => "creator_id"
+
   has_many :organization_users
-  has_many :organizations, :through => :organization_users
 
-  has_many :listing_reservations, :through => :listings, :source => :reservations
+  has_many :organizations,
+           :through => :organization_users
 
-  mount_uploader :avatar, AvatarUploader
-
-  validates_presence_of :name
-  validates_presence_of :password, :if => :password_required?
-  validates_presence_of :email
-
-  devise :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :validatable, :token_authenticatable
-
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :organization_ids, :phone, :password, :password_confirmation
-
-  delegate :to_s, :to => :name
+  has_many :listing_reservations,
+           :through => :listings,
+           :source => :reservations
 
   has_many :relationships,
            :class_name => "UserRelationship",
@@ -45,6 +48,20 @@ class User < ActiveRecord::Base
   has_many :followers,
            :through => :reverse_relationships,
            :source => :follower
+
+  mount_uploader :avatar, AvatarUploader
+
+  validates_presence_of :name
+  validates_presence_of :password, :if => :password_required?
+  validates_presence_of :email
+
+  devise :database_authenticatable, :registerable, :recoverable,
+         :rememberable, :trackable, :validatable, :token_authenticatable
+
+  # Setup accessible (or protected) attributes for your model
+  attr_accessible :name, :email, :organization_ids, :phone, :password, :password_confirmation
+
+  delegate :to_s, :to => :name
 
   # Build a new user, taking into account session information such as Provider
   # authentication.

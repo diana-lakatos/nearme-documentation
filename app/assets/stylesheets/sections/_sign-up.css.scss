@@ -17,6 +17,17 @@
     }
   }
 
+  h3.twitter-login {
+    float:left;
+    width: 180px;
+    text-align: right;
+    margin: 8px 20px 0 0;
+
+    @media (max-width: 767px) {
+      text-align: left;
+      margin-bottom: 8px;
+    }
+  }
   .connected-provider {
     overflow: hidden;
 
