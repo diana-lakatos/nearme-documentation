@@ -163,7 +163,6 @@ class DNM.SearchResultsPage extends DNM.SearchForm
     @map.markers[listing.id] = new google.maps.Marker(
       position: ll,
       map:      @map.map,
-      icon:     "/assets/marker.png",
       title:    listing.name
     )
 
