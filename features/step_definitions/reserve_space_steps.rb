@@ -32,16 +32,20 @@ When /^I select to book space( using the advanced view)? for:$/ do |advanced, ta
       fill_in 'booked-day-qty', :with => qty
 
     else
-      date_class = "datepicker-day-#{date.strftime('%Y-%m-%d')}"
+      year = date.strftime('%Y')
+      month = date.strftime('%m').to_i - 1 # + 1 because month JS is (0..11)
+      day = date.strftime('%d')
+      date_class = "datepicker-day-#{year}-#{month}-#{day}"
 
       select qty.to_s, :from => "quantity"
 
       # Activate the datepicker
-      find(:css, ".calendar").click
+      find(:css, ".calendar-wrapper").click
+      sleep(2)
 
       # Add the day to the seletion
       unless added_dates.include?(date)
-        find(:css, ".dnm-datepicker .#{date_class}").click
+        find(:css, ".#{date_class}").click
         added_dates << date
       end
     end
@@ -50,7 +54,7 @@ When /^I select to book space( using the advanced view)? for:$/ do |advanced, ta
 end
 
 When /^I click to review the bookings?$/ do
-  click_link "Review and book now"
+  click_link "Book"
   wait_for_ajax
 end
 
