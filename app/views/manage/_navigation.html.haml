@@ -3,7 +3,7 @@
     - current_user.companies.each do |company|
       %li{:class => dashboard_company_nav_class(company)}
         = link_to [:edit, :manage, company] do
-          = company.name
+          %strong= company.name
         - if company.locations.any?
 
           - company.locations.each do |location|
