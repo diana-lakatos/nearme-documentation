@@ -66,6 +66,8 @@ module ApplicationHelper
         content_tag(:span, excess_body.join(" ").html_safe, :class => 'truncated-text hidden').html_safe
       end
 
+    else
+      body
     end
 
   end
