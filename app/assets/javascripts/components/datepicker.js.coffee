@@ -134,8 +134,8 @@ class @Datepicker
     asEvented.call(View.prototype)
 
     viewTemplate: '''
-      <div class="datepicker-prev"></div>
-      <div class="datepicker-next"></div>
+      <div class="datepicker-prev ico-arrow-left"></div>
+      <div class="datepicker-next ico-arrow-right"></div>
 
       <div class="datepicker-header">
         <div class="datepicker-month"></div>

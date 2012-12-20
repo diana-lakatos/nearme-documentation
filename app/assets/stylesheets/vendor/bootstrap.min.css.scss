@@ -53,22 +53,7 @@
 .carousel .active.right{left:100%;}
 .carousel-control{
   position:absolute;top:50%;left:15px;width:40px;height:40px;margin-top:-20px;color:#ffffff;text-align:center;background:#222222;border:3px solid #ffffff;-webkit-border-radius:23px;-moz-border-radius:23px;border-radius:23px;opacity:0.5;filter:alpha(opacity=50);
-  &:before {
-    font-family: 'icomoon';
-    font-style: normal;
-    font-size: 28px;
-    speak: none;
-    font-weight: normal;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-  &.left:before {
-    content: "\e010";
-  }
-  &.right:before {
-    content: "\e00f";
-    margin-left: 10px;
-  }
+
 }
 
 .carousel-control.right{left:auto;right:15px;}
