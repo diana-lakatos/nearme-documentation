@@ -9,7 +9,9 @@ body, input, textarea, select {
   color: $dnm_black;
   line-height: 24px;
 }
-
+input {
+  -webkit-appearance: none;
+}
 a, a:visited {
   text-decoration: none;
   @include transition(opacity .15s ease-in, color .15s ease-in, border .15s ease-in);

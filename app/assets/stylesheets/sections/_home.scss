@@ -13,6 +13,9 @@ section.public {
     @media (max-width: 480px) {
       height: 380px;
     }
+    @media (max-width: 320px) {
+      height: 320px;
+    }    
   }
   .caption a {
     position: absolute;
@@ -30,7 +33,10 @@ section.public {
 
     @media (max-width: 480px) {
       top:420px;
-    }    
+    } 
+    @media (max-width: 320px) {
+      top:328px;
+    }        
   }
   section#hero + .container { 
     width: 100%;
@@ -154,7 +160,14 @@ section.how-it-works {
       @media (max-width: 480px) {
         width:300px;
       } 
+    }
 
+    .two-thirds.column {
+
+      @media(max-width: 320px) {
+        width: 280px;
+        margin: 0 10px;
+      }
     }
   }
   h1{
