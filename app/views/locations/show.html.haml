@@ -16,8 +16,7 @@
 
             - if @location.phone.present?
               %strong= @location.phone
-            - if @location.url.present?
-              = link_to @location.url, @location.url, :target => :_blank
+
 
       - if @location.creator
         .accordion-group
