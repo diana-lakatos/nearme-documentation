@@ -2,6 +2,7 @@
 
   h3.listing-name {
     font:normal 24px/33px $font-heavy, sans-serif;
+    margin-bottom: 6px;
 
     @media (max-width: 480px) {
       margin: 10px 0;
@@ -328,8 +329,9 @@
       width:100%;
       margin-top: 10px;
       text-align:center;
-      box-sizing: border-box;
-      line-height: 32px;
+      padding: 8px 0;
+      font-size: 30px;
+      line-height: 40px;
     }
   }
 }
