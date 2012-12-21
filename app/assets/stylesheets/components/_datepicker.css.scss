@@ -25,32 +25,10 @@
   }
 
   .datepicker-prev {
-
-    &:before {
-      content: "\e010";
-      font-family: 'icomoon';
-      font-style: normal;
-      speak: none;
-      font-weight: normal;
-      line-height: 1;
-      -webkit-font-smoothing: antialiased;
-      color: black; 
-    }   
   }
 
   .datepicker-next {
     float: right;
-
-    &:before {
-      font-family: 'icomoon';
-      font-style: normal;
-      speak: none;
-      font-weight: normal;
-      line-height: 1;
-      -webkit-font-smoothing: antialiased;
-      color: black;
-      content: "\e00f";   
-    }
   }
 
   .datepicker-header {

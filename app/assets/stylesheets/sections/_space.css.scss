@@ -4,25 +4,6 @@
 @import "sections/space/photos";
 
 // Hero area
-.space-hero-search-return {
-
-  a {
-    display: block;
-    line-height: 24px;
-    text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
-    background: image-url("sections/listings/search-return.png") center left no-repeat;
-    padding-left: 36px;
-    font-size: 20px;
-
-    &, &:hover {
-      color: #cebbae;
-    }
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-}
 
 #space, .space {
   h1 {

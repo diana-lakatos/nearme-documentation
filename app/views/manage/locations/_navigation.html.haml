@@ -6,6 +6,6 @@
   /%li{:class => ('active' if active == :availability)}= link_to "Availability", [:availability, :manage, @location]
   /%li{:class => ('active' if active == :amenities)}= link_to "Amenities", [:amenities, :manage, @location]
   /%li{:class => ('active' if active == :associtions)}= link_to "Associations", [:associations, :manage, @location]
-  %li{:class => ('active' if active == :listings)}= link_to "Desks & Rooms", [:manage, @location, :listings]
+  %li{:class => ('active' if active == :listings)}= link_to "Listings", [:manage, @location, :listings]
 
 
