@@ -16,70 +16,56 @@
     margin-bottom: $padding;
     @include border-corner-radius(top, left, 6px);
     @include border-corner-radius(top, right, 6px);
+  }
 
-    // Wizzard items
-    ul {
-      overflow: hidden;
+  // Wizzard items
+  ul {
+    overflow: hidden;
+    display: block;
+    background: $gray2;
+    margin-top: -$padding;
+    margin-left: -$padding;
+    margin-right: -$padding;
+    margin-bottom: $padding;
+    @include border-corner-radius(top, left, 6px);
+    @include border-corner-radius(top, right, 6px);
 
-      li {
-        float: left;
-        color: $gray3;
-        font-size: 18px;
-        padding-left: 14px;
-        padding-right: 8px;
-        line-height: 60px;
+    li {
+      float: left;
+      color: $gray3;
+      font-size: 18px;
+      padding: 0 14px;
+      line-height: 60px;
 
-          @media (max-width: 960px) {
-            font-size: 14px;
-            margin-left: -10px;
-          }
+        @media (max-width: 960px) {
+          font-size: 14px;
+          margin-left: -10px;
+        }
 
-          @media (max-width: 768px) {
-            font-size: 12px;
-            padding-left: 10px;
-            padding-right: 0px;
-            line-height: 40px;
-            background: none;
-            margin-left:0;
-
-          }
-
-          @media (max-width: 480px) {
-            font-size:14px;
-           } 
-
-        &:first-child {
+        @media (max-width: 768px) {
+          font-size: 12px;
+          padding-left: 10px;
+          padding-right: 0px;
+          line-height: 40px;
           background: none;
-          padding-left: 0;
-          margin-left:6px;
+          margin-left:0;
+
         }
 
-        &:last-child {
-          padding-right: 0;
-        }
+        @media (max-width: 480px) {
+          font-size:14px;
+         } 
 
-        &.current {
-          color: $dnm_black;
-        }
+      &:last-child {
+        padding-right: 0;
+      }
 
-        &.complete {
-          a, span {
-            display: inline-block;
-
-            &:before {
-              font-family: 'icomoon';
-              font-style: normal;
-              speak: none;
-              font-weight: normal;
-              line-height: 1;
-              -webkit-font-smoothing: antialiased;
-              content: "\e00c";
-              padding-right: 6px;              
-            }
-          }
-        }
+      &.current {
+        background: $dnm_black;
+        color: $dnm_white;
       }
     }
+
   }
 
   hr, .hr {
