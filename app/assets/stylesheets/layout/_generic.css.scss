@@ -9,7 +9,7 @@ body, input, textarea, select {
   color: $dnm_black;
   line-height: 24px;
 }
-input {
+input[type=text], textarea {
   -webkit-appearance: none;
 }
 a, a:visited {
