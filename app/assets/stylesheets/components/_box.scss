@@ -39,26 +39,11 @@
 
         @media (max-width: 960px) {
           font-size: 14px;
-          margin-left: -10px;
-        }
-
-        @media (max-width: 768px) {
-          font-size: 12px;
-          padding-left: 10px;
-          padding-right: 0px;
-          line-height: 40px;
-          background: none;
-          margin-left:0;
-
         }
 
         @media (max-width: 480px) {
           font-size:14px;
          } 
-
-      &:last-child {
-        padding-right: 0;
-      }
 
       &.current {
         background: $dnm_black;
