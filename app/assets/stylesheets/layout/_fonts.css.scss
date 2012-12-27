@@ -1,18 +1,8 @@
-@include font-face("futura-light", font-files("futurastd-light.woff", "futurastd-light.otf", "futurastd-light.ttf", "futurastd-light.svg#futura_std_lightlight"), "futurastd-light.eot");
-
-@include font-face("futura-book", font-files("futurastd-book.woff", "futurastd-book.otf", "futurastd-book.ttf", "futurastd-book.svg#futura_std_bookbook"), "futurastd-book.eot");
-
-@include font-face("futura-medium", font-files("futurastd-medium.woff", "futurastd-medium.otf", "futurastd-medium.ttf", "futurastd-medium.svg#futura_std_mediummedium"), "futurastd-medium.eot");
-
-@include font-face("futura-heavy", font-files("futurastd-heavy.woff", "futurastd-heavy.otf", "futurastd-heavy.ttf", "futurastd-heavy.svg#futura_std_mediumheavy"), "futurastd-heavy.eot");
-
-@include font-face("futura-bold", font-files("futurastd-bold.woff", "futurastd-bold.otf", "futurastd-bold.ttf", "futurastd-bold.svg#futura_std_bookbold"), "futurastd-bold.eot");
-
-$font-light: futura-light;
-$font-regular: futura-book;
-$font-medium: futura-medium;
-$font-heavy: futura-heavy;
-$font-bold: futura-bold;
+$font-light: 'futura-pt';
+$font-regular: 'futura-pt';
+$font-medium: 'futura-pt';
+$font-heavy: 'futura-pt';
+$font-bold: 'futura-pt';
 
 @include font-face("icomoon", font-files("icomoon.woff", "icomoon.otf", "icomoon.ttf", "icomoon.svg#icomoon"), "icomoon.eot");
 
@@ -27,72 +17,94 @@ $font-bold: futura-bold;
 span.padding:before {
   padding-right: .4em;
 }
+.ico-lock:before {
+  content: "\e000";
+}
 .ico-x:before {
   content: "\e001";
 }
 .ico-twitter:before {
   content: "\e002";
 }
-.ico-search:before {
+.ico-sign-up:before {
   content: "\e003";
 }
-.ico-plus:before {
+.ico-search:before {
   content: "\e004";
 }
-.ico-phone:before {
+.ico-plus:before {
   content: "\e005";
 }
-.ico-marker:before {
+.ico-phone:before {
   content: "\e006";
 }
-.ico-logout:before {
+.ico-marker:before {
   content: "\e007";
 }
-.ico-link:before {
+.ico-logout:before {
   content: "\e008";
 }
-.ico-instagram:before {
+.ico-login:before {
   content: "\e009";
 }
-.ico-facebook:before {
+.ico-link:before {
+  content: "\e00a";
+}
+.ico-instagram:before {
   content: "\e00b";
 }
-.ico-edit:before {
+.ico-info:before {
   content: "\e00c";
 }
-.ico-drawer:before {
+.ico-facebook:before {
   content: "\e00d";
 }
-.ico-crosshairs:before {
+.ico-edit:before {
   content: "\e00e";
 }
-.ico-clock:before {
+.ico-drawer:before {
   content: "\e00f";
 }
-.ico-check:before {
+.ico-dashboard:before {
   content: "\e010";
 }
-.ico-calender:before {
+.ico-crosshairs:before {
   content: "\e011";
 }
-.ico-arrow-up:before {
+.ico-clock:before {
   content: "\e012";
 }
-.ico-arrow-right:before {
+.ico-check:before {
   content: "\e013";
 }
-.ico-arrow-left:before {
+.ico-calender:before {
   content: "\e014";
 }
-.ico-arrow-down:before {
+.ico-arrow-up:before {
   content: "\e015";
 }
-.ico-app-store:before {
+.ico-arrow-right:before {
   content: "\e016";
 }
-.ico-dashboard:before {
-  content: "\e000";
+.ico-arrow-left:before {
+  content: "\e017";
 }
-.ico-info:before {
-  content: "\e00a";
+.ico-arrow-down:before {
+  content: "\e018";
+}
+.ico-app-store:before {
+  content: "\e019";
+}
+
+// Icon Font Styling 
+
+.ico-phone:before {
+  font-size: 75%;
+  padding-right: 2px;
+}
+.ico-twitter:before {
+  font-size: 125%;
+}
+.ico-lock:before {
+  padding-right: 4px;
 }

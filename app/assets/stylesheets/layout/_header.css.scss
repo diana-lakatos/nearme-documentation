@@ -4,7 +4,7 @@
 
 		.row {
 
-      @media (min-width: 480px) and (max-width: 768px) {
+      @media (min-width: 480px) and (max-width: 767px) {
         padding: 0 20px;
       }
 			@media (max-width: 320px) {
@@ -107,7 +107,7 @@ header {
       display: inline-block;
       float: right;
       color: $dnm_gray;
-      font-size: 16px;
+      font-size: 20px;
       margin-right: 30px;
       text-decoration: none;
 

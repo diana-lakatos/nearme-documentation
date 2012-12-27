@@ -13,8 +13,8 @@
         .black-box
           %form#listing_search.home_search{:action => search_path, :method => "get"}
             %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
-            %input.geolocation{:name => "geolocate", :type => "button", :value => ""}
-              %span.ico-crosshair
+            .geolocation
+              %span.ico-crosshairs
             %a.btn.btn-green.btn-outline.btn-medium{ :rel => "submit", :href => "" }
               %span.ico-search
               Search

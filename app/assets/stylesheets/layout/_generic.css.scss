@@ -18,7 +18,6 @@ a, a:visited {
 }
 p a, p a:visited {
   color: $dnm_blue;
-  font-family: "futura-medium";
   text-decoration: none;
   @include transition(opacity .15s ease-in, color .15s ease-in, border .15s ease-in);
   border-bottom: 2px solid transparent;
@@ -52,7 +51,7 @@ img {
 
 strong {
   font-family: $font-bold;
-  font-weight: normal !important;
+  font-weight: 700;
 }
 
 h1, h2, h3, h4, h5 {
