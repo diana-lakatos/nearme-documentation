@@ -138,6 +138,10 @@ $(function() {
   $.each(ellipses, function() {
     $(this).click(function() {
       $(this).next('.truncated-text').toggleClass('hidden');
+      // If within an accordion, i.e. if has a parent of class accordion
+      if ($(this).parents('.accordion').length) {
+        $('.accordion').css('height', 'auto');
+      }
     });
   });
 });
