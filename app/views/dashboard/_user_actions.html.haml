@@ -1,4 +1,6 @@
 = form_for(reservation) do |f|
   - if reservation.can_user_cancel?
     = hidden_field_tag :event, "user_cancel"
+    -#= link_to url_for(reservation), :method => :post, :confirm => "Do you really want to cancel this reservation?", :class => "btn btn-small btn-red" do
+    -# %span.ico-x.padding Cancel
     = f.submit "Cancel", :confirm => "Do you really want to cancel this reservation?", :class => "btn btn-small btn-red"

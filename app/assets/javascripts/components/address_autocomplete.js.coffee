@@ -82,7 +82,7 @@ class @AddressAutocomplete
     @inputWrapper = @input.parent()
 
     # Add icon
-    @geolocateTrigger = $('<i class="icon icon-geolocate geolocate-trigger" />')
+    @geolocateTrigger = $('<i class="icon ico-crosshairs geolocate-trigger" />')
     @inputWrapper.append(@geolocateTrigger)
 
     # Add loading spinner
