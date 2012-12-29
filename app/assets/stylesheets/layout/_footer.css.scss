@@ -9,7 +9,7 @@ footer {
     width: 12.5%;
     text-align: center;
 
-    @media (max-width:768px) {
+    @media (max-width:767px) {
       width:25%;
       padding: 0 0 25px;
       .clear-footer { 
@@ -27,7 +27,7 @@ footer {
       &:hover {
         color: $light-gray;
       }
-     @media (max-width:768px) {
+     @media (max-width:767px) {
         font-size: 12px;
       }  
     }

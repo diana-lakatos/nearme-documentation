@@ -253,13 +253,13 @@
   
   .calendar-wrapper {
     display: inline-block;
-    padding: 4px 8px 2px;
+    padding: 2px 8px;
     border: 2px solid $gray3;
     border-radius: 8px;
     background: white;
   }
 
-  @media (min-width: 768px) and (max-width:959px) {
+  @media (min-width: 767px) and (max-width:959px) {
     margin-right: 20px;
   }
 
@@ -277,8 +277,8 @@
 
     span.customSelect {
       font-size: 100%;
-      width: 40px;
-      padding: 4px 8px 2px 8px;
+      min-width: 32px;
+      padding: 2px 8px;
       border: 2px solid $gray3;
       @include border-radius(8px);
       background: white;
@@ -297,7 +297,7 @@
   .calendar {
     position: relative;
     display: inline-block;
-    vertical-align:middle;
+    vertical-align:top;
 
     .dates, input {
       width: 30px;
@@ -306,7 +306,7 @@
       vertical-align: middle;
       border: 0;
       color: transparent;
-      background: transparent image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calendar-black.png") no-repeat center top;
+      background: transparent;
 
       &:focus {
         outline: none !important;

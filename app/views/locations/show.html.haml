@@ -15,7 +15,7 @@
             %p= truncate_with_ellipsis @location.description, 250
 
             - if @location.phone.present?
-              %strong= @location.phone
+              %strong.ico-phone.padding= @location.phone
 
 
       - if @location.creator
@@ -28,7 +28,7 @@
             .accordion-inner
               %p
               - if @location.creator.phone
-                %p= @location.creator.phone 
+                %p.ico-phone.padding= @location.creator.phone 
               %p= truncate_with_ellipsis @location.company.description, 250
 
       - if @amenities

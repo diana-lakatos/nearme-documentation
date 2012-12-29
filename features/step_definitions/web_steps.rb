@@ -217,3 +217,7 @@ end
 When /^I dismiss the dialog/ do
   page.driver.browser.switch_to.alert.dismiss
 end
+
+Then /^I should see a link to (.+)$/ do |link|
+  page.should have_selector('a', :href => link)
+end

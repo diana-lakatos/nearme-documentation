@@ -60,6 +60,11 @@ class DNM.SearchForm
     # Hack to only apply jquery-ui theme to datepicker
     $('#ui-datepicker-div').wrap('<div class="jquery-ui-theme" />')
 
+    @form.find('.availability-date-start .calendar').on 'click', =>
+      @form.find('.availability-date-start input').datepicker('show')
+
+    @form.find('.availability-date-end .calendar').on 'click', =>
+      @form.find('.availability-date-end input').datepicker('show')
 
   initializeAvailabilityQuantityFilter: ->
     @slider = @form.find(".availability-quantity .slider")
@@ -70,7 +75,7 @@ class DNM.SearchForm
     )
 
   initializeGeolocateButton: ->
-    @geolocateButton = @form.find("input.geolocation")
+    @geolocateButton = @form.find(".geolocation")
     @geolocateButton.addClass("active").bind 'click', =>
       @geolocateMe()
 

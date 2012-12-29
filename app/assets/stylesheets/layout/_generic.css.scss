@@ -5,9 +5,8 @@
   color: white;
 }
 body, input, textarea, select {
-  font-family: $font-regular, sans-serif;
+  font:400 18px/24px $font-regular, sans-serif;
   color: $dnm_black;
-  line-height: 24px;
 }
 input[type=text], textarea {
   -webkit-appearance: none;
@@ -18,7 +17,6 @@ a, a:visited {
 }
 p a, p a:visited {
   color: $dnm_blue;
-  font-family: "futura-medium";
   text-decoration: none;
   @include transition(opacity .15s ease-in, color .15s ease-in, border .15s ease-in);
   border-bottom: 2px solid transparent;
@@ -52,7 +50,7 @@ img {
 
 strong {
   font-family: $font-bold;
-  font-weight: normal !important;
+  font-weight: 700;
 }
 
 h1, h2, h3, h4, h5 {
