@@ -6,7 +6,7 @@ Feature: A user can login
   Scenario: A user can login with Twitter
     Given the Twitter OAuth request is successful
       And I go to the home page
-      And I follow "Log In"
+      And I follow "Login"
      When I follow "Twitter"
       And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
       And I fill in "Your name" with "Brett"
@@ -17,7 +17,7 @@ Feature: A user can login
   Scenario: A user can login with email and password
     Given a user exists with email: "real@email.com", password: "password"
       And I go to the home page
-      And I follow "Log In"
+      And I follow "Login"
       And I fill in "Your email address" with "real@email.com"
       And I fill in "Your password" with "password"
       And I press "Log In"

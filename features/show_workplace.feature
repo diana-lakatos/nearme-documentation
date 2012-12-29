@@ -9,7 +9,7 @@ Feature: A user can see a space
      Then I should see "Rad Annex"
       And I should see "Its a great place to work"
       And I should see a Google Map
-      And I should see "http://google.com"
+      And I should see a link to "http://google.com"
 
   @wip
   Scenario: A can see who created the listing

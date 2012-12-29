@@ -8,7 +8,7 @@ Feature: A user can reset their password
 
   Scenario: A user can reset their password
     Given I go to the home page
-      And I follow "Log In"
+      And I follow "Login"
       And I follow "Reset your password"
       When I fill in "Email" with "real@email.com"
       And I press "Reset Password"

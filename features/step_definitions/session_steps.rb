@@ -9,7 +9,7 @@ When /^I log in as a user who is a member of that organization$/ do
 end
 
 Then /^I should be logged out$/ do
-  Then %{I should see "Log In"}
+  Then %{I should see "Login"}
 end
 
 When(/^I log in as #{capture_model} with Twitter$/) do |user_instance|
