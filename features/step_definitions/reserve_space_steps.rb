@@ -45,7 +45,6 @@ When /^I select to book space( using the advanced view)? for:$/ do |advanced, ta
       # Add the day to the seletion
       unless added_dates.include?(date)
 
-        find(:css, ".datepicker-next").click
         find(:css, date_class).click
         added_dates << date
 

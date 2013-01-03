@@ -42,7 +42,6 @@ gem 'flying-sphinx', '0.8.4'
 gem 'thin'
 
 group :development do
-  gem 'heroku'
   gem 'taps'
   gem 'sqlite3'
   gem "rails-erd"

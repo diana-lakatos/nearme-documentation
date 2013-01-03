@@ -153,11 +153,6 @@ GEM
     gravtastic (3.1.0)
     haml (3.1.6)
     hashie (1.2.0)
-    heroku (2.25.0)
-      launchy (>= 0.3.2)
-      netrc (~> 0.7.1)
-      rest-client (~> 1.6.1)
-      rubyzip
     hike (1.2.1)
     i18n (0.6.1)
     jasmine (1.2.1)
@@ -212,7 +207,6 @@ GEM
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-ssh (2.5.2)
-    netrc (0.7.7)
     newrelic_rpm (3.4.1)
     nokogiri (1.5.5)
     oauth (0.4.4)
@@ -396,7 +390,6 @@ DEPENDENCIES
   geocoder
   gravtastic
   haml
-  heroku
   jasmine
   jasmine-headless-webkit (= 0.9.0.rc.2)
   jquery-rails

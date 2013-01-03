@@ -2,7 +2,7 @@ section.public {
   #hero {
     height: 500px;
     width: auto;
-    background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/la-cantine.jpg") center center no-repeat;
+    background: image-url("https://s3.amazonaws.com/desksnearme.assets/img/la-cantine.jpg") center center no-repeat;
     background-size: cover;
     @include box-shadow(rgba(black, .2) 0 0 20px 20px inset); 
 

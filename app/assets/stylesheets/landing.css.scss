@@ -73,9 +73,9 @@ footer {
   width:100%;
 }
 .row-1 {
-     background: url("http://desksnearme.assets.s3.amazonaws.com/img/collaboration.jpg") center center no-repeat;
-     @include background(image-url("http://desksnearme.assets.s3.amazonaws.com/img/landing-page-warm-border.png"),
-     image-url("http://desksnearme.assets.s3.amazonaws.com/img/collaboration.jpg"));
+     background: url("https://s3.amazonaws.com/desksnearme.assets/img/collaboration.jpg") center center no-repeat;
+     @include background(image-url("https://s3.amazonaws.com/desksnearme.assets/img/landing-page-warm-border.png"),
+     image-url("https://s3.amazonaws.com/desksnearme.assets/img/collaboration.jpg"));
      background-position: left bottom, center center;
      background-repeat: repeat-x, no-repeat;
      background-size: auto, cover;
@@ -119,7 +119,7 @@ footer {
 }
 .row-1.people {
  background: url("https://s3.amazonaws.com/desksnearme.production/uploads/photos/279/5084513350_56197d1dba_o1111.jpg") center center no-repeat;
- @include background(image-url("http://desksnearme.assets.s3.amazonaws.com/img/landing-page-warm-border.png"),
+ @include background(image-url("https://s3.amazonaws.com/desksnearme.assets/img/landing-page-warm-border.png"),
  image-url("https://s3.amazonaws.com/desksnearme.production/uploads/photos/279/5084513350_56197d1dba_o1111.jpg"));
  background-position: left bottom, center center;
  background-repeat: repeat-x, no-repeat;
