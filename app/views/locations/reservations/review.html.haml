@@ -19,6 +19,23 @@
 
   %hr
 
+  .payment.form-horizontal
+
+    .control-group
+      = label_tag :card_number, "Card number", :class => 'control-label'
+      .controls.card-number
+        = text_field_tag :card_number, nil, name: nil
+
+    .control-group
+      = label_tag :card_expires, "Expires", :class => 'control-label'
+      .controls.card-expires
+        = text_field_tag :card_expires, nil, name: nil
+
+    .control-group
+      = label_tag :card_code, "Card code", :class => 'control-label'
+      .controls.card-code
+        = text_field_tag :card_code, nil, name: nil
+
   %p.text-center
     = submit_tag 'Request Booking Now'
 
