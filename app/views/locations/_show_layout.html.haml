@@ -19,14 +19,6 @@
     = yield
 
 - content_for :script do
-  / ShareThis script
-  / FIXME: Get DNM login/api key
-  = javascript_tag do
-    var switchTo5x=true;
-  = javascript_include_tag "http://w.sharethis.com/button/buttons.js"
-  = javascript_tag do
-    stLight.options({publisher: "6a574b36-b1b7-4eff-bbc2-5cda0add4a98"});
-
   :javascript
     // Initialize the ui controller
     $(function() {

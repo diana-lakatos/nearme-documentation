@@ -29,12 +29,12 @@
     .control-group
       = label_tag :card_expires, "Expires", :class => 'control-label'
       .controls.card-expires
-        = text_field_tag :card_expires, nil, name: nil
+        = text_field_tag :card_expires, nil, name: nil, size: 4, placeholder: 'MMYY'
 
     .control-group
       = label_tag :card_code, "Card code", :class => 'control-label'
       .controls.card-code
-        = text_field_tag :card_code, nil, name: nil
+        = text_field_tag :card_code, nil, name: nil, size: 3, placeholder: 'CVC'
 
   %p.text-center
     = submit_tag 'Request Booking Now'
