@@ -8,7 +8,6 @@ public/association
 public/user
 db/sphinx
 config/*.sphinx.conf
-config/initializers/stripe.rb
 log
 tmp
 *.swo
