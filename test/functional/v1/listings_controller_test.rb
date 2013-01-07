@@ -79,8 +79,8 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
     should "create periods" do
       reserved_dates = Listing.find_by_id(@listing.id).reservations.first.periods.map(&:date)
-      assert reserved_dates.include? Date.parse("2013-01-01")
-      assert reserved_dates.include? Date.parse("2013-01-02")
+      assert reserved_dates.include? Date.parse("2015-01-01")
+      assert reserved_dates.include? Date.parse("2015-01-02")
     end
   end
 
@@ -230,7 +230,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
     { "quantity" => 1,
       "email" => "foo@example.com",
       "assignees" => [{ "name" => "John Carter", "email" => "john@example.com" }],
-      "dates" => ["2013-01-01", "2013-01-02"] }
+      "dates" => ["2015-01-01", "2015-01-02"] }
   end
 
   def valid_additional_params
