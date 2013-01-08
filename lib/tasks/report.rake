@@ -285,4 +285,64 @@ namespace :report do
     puts "Listings exported to #{path}."
   end
 
+  #### Locations without listings
+
+  desc "Export locations with no associated listings"
+  task :locations_without_listings => :environment do
+
+    locations = Location.
+      joins("left join listings on listings.location_id = locations.id").
+      where("listings.location_id is null")
+
+    path = path("locations_without_listings")
+
+    CSV.open(path, File::WRONLY|File::CREAT|File::EXCL) do |csv|
+
+      csv << [
+        "new_this_week",
+        "user.name",
+        "user.email",
+        "user.phone",
+        "company.email",
+        "company.name",
+        "company.url",
+        "location.id",
+        "location.name",
+        "location.address",
+        "location.description",
+        "location.email",
+        "location.info",
+        "location.phone",
+        "location_created_at"
+      ]
+
+      locations.each do |location|
+        csv << [
+          location.created_at > (Time.now - 7.days) ? 1 : 0,
+          (location.creator.name if location.creator),
+          (location.creator.email if location.creator),
+          (location.creator.phone if location.creator),
+          location.company.email,
+          location.company.name,
+          location.company.url,
+          location.id,
+          location.name,
+          location.address,
+          location.description,
+          location.email,
+          location.info,
+          location.phone,
+          location.created_at.strftime('%Y-%m-%d')
+        ]
+      end
+
+    end
+
+    puts "Locations without listings exported to #{path}."
+  end
+
+end
+
+def path(name)
+  "tmp/csv_data/#{name}_#{Time.now.strftime('%Y-%m-%d')}.csv"
 end
