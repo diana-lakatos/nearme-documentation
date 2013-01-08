@@ -12,8 +12,7 @@ Feature: A user can book at a space
   @javascript @wip
   Scenario: A logged in user can book a listing
     Given I am logged in as the user
-     When I go to the location's page
-      And I book space for:
+      When I book space for:
           | Listing     | Date   | Quantity  |
           | the listing | Monday  | 1        |
           | the listing | Tuesday | 1        |
@@ -29,7 +28,7 @@ Feature: A user can book at a space
     Given I am logged in as the user
     And bookings for the listing do not need to be confirmed
     When I go to the location's page
-    And I select to book space for:
+    And I book space for:
       | Listing | Date | Quantity|
       | the listing | Monday | 1 |
     And I click to review the booking
@@ -41,7 +40,7 @@ Feature: A user can book at a space
     Given I am logged in as the user
     And bookings for that listing do need to be confirmed
     When I go to the location's page
-    And I select to book space for:
+    And I book space for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 1        |
     And I click to review the booking
@@ -53,8 +52,8 @@ Feature: A user can book at a space
     Given the listing has the following reservations:
       | Date   | Quantity |
       | Monday | 10       |
-    When I go to the locatoin's page
-    Then I can't select to book space for:
+    When I go to the location's page
+    Then I can't book space for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 1        |
 
