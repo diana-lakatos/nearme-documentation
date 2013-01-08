@@ -5,17 +5,20 @@
     %a
     = link_to location_path(347) do
       La Cantine, Paris
-  .container
-    #search_row.twelve.columns.offset-by-two.alpha.omega      
-      .wood-box
-        %h1 Need a space to work?
+  .container-fluid    
+    .row-fluid
+      #search_row.span10.offset1    
+        .wood-box.row-fluid
+          %h1 Need a space to work?
 
-        .black-box
-          %form#listing_search.home_search{:action => search_path, :method => "get"}
-            %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
-            .geolocation
-              %span.ico-crosshairs
-            %a.btn.btn-green.btn-outline.btn-medium{ :rel => "submit", :href => "" }
+        .black-box.row-fluid
+          .span9
+            %form#listing_search.home_search{:action => search_path, :method => "get"}
+              %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
+              .geolocation
+                %span.ico-crosshairs
+          .span3      
+            %a.btn.btn-green.btn-large{ :rel => "submit", :href => "" }
               %span.ico-search
               Search
             #suggest_location{:style => "display: none"}

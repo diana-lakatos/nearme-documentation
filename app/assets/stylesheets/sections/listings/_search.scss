@@ -1,9 +1,13 @@
 section.search {
   min-height:900px;
 }
+#search_row {
+  .btn-green {
+    width: 100%;
+    text-align: center;
+  }
+}
 #listing_search {
-  position: relative;
-  overflow: visible;
 
   .geolocation {
     position: absolute;
@@ -19,30 +23,14 @@ section.search {
     &:hover {
       opacity:.95;
     }
-
-    @media (max-width: 480px ) {
-      width:22px;
-      background-size: 22px 23px;
-      height: 23px;
-      top:11px;
-    }
   }
 
   &.home_search input#search {
     padding: 8px 0 8px 50px;
-    width: 460px;
+    width: 100%;
     float:left;
     margin-right: 8px;
-
-    @media (max-width: 480px ) {
-      padding: 8px 0 8px 40px;
-      margin-right:0;
-    }
-  }
-
-  &.search_results input#search {
-    padding-left: 50px;
-    width: 300px;
+    box-sizing: border-box;
   }
 
   &.search_results .geolocation {
@@ -179,12 +167,7 @@ section.search {
   }
 }
 
-@media (min-width: 767px) and (max-width: 959px) {
-   #listing_search {
-
-    &.home_search input#search {
-      width:560px; }
-   } 
+@media (min-width: 767px) and (max-width: 959px) { 
   #search_row  {
     .availability-quantity.five.columns.alpha {
         .slider {
@@ -196,14 +179,8 @@ section.search {
 
 @media (max-width: 959px) {
  #listing_search {
-    &.home_search input#search {
-      width:320px;
-    }
 
     &.search_results {
-      input#search {
-        width: 300px;
-      }
       .slider { 
         width:80px; 
       }
@@ -219,9 +196,6 @@ section.search {
 
 @media  (max-width: 767px) {
  #listing_search {
-    &.home_search input#search {
-      width:100%;
-      box-sizing: border-box; }
    &.search_results {
     .availability-quantity, .price-range, .amenities {
       margin: 10px 0; } } }
