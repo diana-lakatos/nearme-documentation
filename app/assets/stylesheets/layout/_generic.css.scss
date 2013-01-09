@@ -175,7 +175,9 @@ hr, .hr {
     @include opacity(1);
   }
 }
-
+.margin-bottom {
+  margin-bottom: 20px;
+}
 .hidden {
   display: none;
 }

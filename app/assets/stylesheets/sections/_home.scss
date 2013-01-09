@@ -46,6 +46,7 @@ section.public {
 
 #search_row {
   margin-top: 180px;
+  
 
   @media (max-width: 767px) {
     margin-top: 100px;
@@ -70,8 +71,6 @@ section.public {
   }
 
   .black-box {
-    float: left;
-    clear: both;
     background: rgb(30,30,30);
     padding: 8px;
     border-radius: 12px;

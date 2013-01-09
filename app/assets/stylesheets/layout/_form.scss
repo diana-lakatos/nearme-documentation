@@ -1,6 +1,9 @@
-input {
+input, textarea {
   box-sizing: border-box;
   width: 100%;
+}
+input[type='checkbox'] {
+  width: auto;
 }
 input[type=submit] {
    -webkit-appearance: none;
@@ -209,6 +212,7 @@ form {
   .input-icon-wrapper {
     display: inline-block;
     position: relative;
+    width: 100%;
 
     input {
       padding-left: 35px;

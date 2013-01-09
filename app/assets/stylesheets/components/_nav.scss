@@ -1,5 +1,8 @@
-nav.hero-nav {
-  ul.container {
+.dashboard-nav {
+  ul {
+    position: relative;
+    float: left;
+    width: 100%;
     background: $gray2;
     color: $gray4;
     @include border-radius(8px);
@@ -7,6 +10,8 @@ nav.hero-nav {
 
     li {
       float: left;
+      width: 25%;
+      text-align: center;
 
       a {
         display: block;

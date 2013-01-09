@@ -1,5 +1,5 @@
-#space_wizard
-  .two-thirds.column.alpha
+#space_wizard.row-fluid
+  .span8.offset2
     .box
       %ul.space-wizard
         %li{:class => space_wizard_step_class(0, step)}
@@ -13,24 +13,3 @@
 
       = yield
 
-  .one-third.column.omega.faqs-column
-    - # Only show these on the Desks & Room step
-    - if step == 3
-      %h2 Can I confirm new bookings?
-      %p
-        Bookings are an automated process on the Desks Near Me website, however if you
-        select “Confirm Bookings” then we’ll let you approve all bookings on a case-by-case basis.
-
-      %h2 How do I get paid?
-      %p
-        Desks Near Me is free to use!  We are building a great payment tool for you to take payments online through our booking engine. Stay tuned for that to be available in the next month.
-
-      %h2 Can I have different prices for different desks or rooms?
-      %p
-        Yes! Desks Near Me lets you define each desk or room in your space separately if you wish.
-        You might have a conference room at $200/day but a desk at $50/day.
-
-    %h2 Have a question?
-    %p
-      No problem. Drop us a line at #{mail_to "support@desksnear.me"} and we’ll be happy to help you out! You can also check out
-      our #{link_to "support center", "http://support.desksnear.me"}.

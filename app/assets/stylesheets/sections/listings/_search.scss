@@ -8,11 +8,10 @@ section.search {
   }
 }
 #listing_search {
-
   .geolocation {
     position: absolute;
-    top: 8px;
-    left: 10px;
+    top: 81px;
+    left: 17px;
     border: 0;
     background: transparent;
     @include transition(all .1s ease-in);
@@ -29,8 +28,6 @@ section.search {
     padding: 8px 0 8px 50px;
     width: 100%;
     float:left;
-    margin-right: 8px;
-    box-sizing: border-box;
   }
 
   &.search_results .geolocation {
@@ -122,20 +119,17 @@ section.search {
       }
     }
 
-    @media (max-width: 767px ) {
+    .availability-date-start {
+      position: relative; 
+      float: left;
+      width: 49%;
+      margin-right: 2%;
+    }
 
-      .three.columns.availability-date-start {
-        position: relative; 
-        float: left;
-        width: 48%;
-        margin-right: 4%;
-      }
-
-      .three.columns.availability-date-end {
-        position: relative; 
-        float: left;
-        width: 48%;
-      }
+    .availability-date-end {
+      position: relative; 
+      float: left;
+      width: 49%;
     }
 
     .availability-date-start, .availability-date-end {

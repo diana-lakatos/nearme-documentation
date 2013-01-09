@@ -26,7 +26,7 @@
 
     .dnm-page
       .container-fluid
-        .row-fluid
+        .header.row-fluid
           .logo-container.pull-left
             = link_to "Desks Near Me", root_url, :id => "logo"
           #header_links.links-container.pull-right
@@ -34,7 +34,7 @@
 
       %section#content{:class => "#{controller_name}"}
         = render "layouts/hero"
-        %div{:class => "container #{'legacy' if legacy?}"}
+        %div{:class => "container-fluid #{'legacy' if legacy?}"}
           = flashes
           = yield
 
