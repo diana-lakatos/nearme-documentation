@@ -10,7 +10,7 @@ section.search {
 #listing_search {
   .geolocation {
     position: absolute;
-    top: 81px;
+    top: 17px;
     left: 17px;
     border: 0;
     background: transparent;
@@ -75,35 +75,23 @@ section.search {
     margin-left:30px;
   }
 
-  // On the home search box
-  &.home_search {
-    .multiselect {
-      width: 220px;
-    }
-  }
-
   // On the search results page bar
   &.search_results {
-    hr {
-      margin-right: 0;
-      margin-left: 0;
-      clear: both;
-    }
-
     label {
       float: left;
       margin-right: 0;
     }
 
+    .span6 {
+      position: relative;
+    }
     .slider {
-      width: 130px;
+      width: 60%;
     }
 
-    .location {
-      input#search {
-        width: 100%;
-        box-sizing: border-box;
-      }
+    input#search {
+      position: relative;
+      padding: 8px 0 8px 50px;
     }
 
     .associations {
@@ -111,8 +99,8 @@ section.search {
     }
 
     .multiselect {
-      margin: -4px 0 0 15px;
-      width: 220px;
+      margin: -4px 0 0;
+      width: 100%;
 
       @media (max-width: 767px) {
         margin-left: 0;
@@ -160,50 +148,3 @@ section.search {
     }
   }
 }
-
-@media (min-width: 767px) and (max-width: 959px) { 
-  #search_row  {
-    .availability-quantity.five.columns.alpha {
-        .slider {
-          width:150px; } }
-   .price-range.six.columns.omega {
-    width:260px; } 
-      .slider {
-        width:80px } } }
-
-@media (max-width: 959px) {
- #listing_search {
-
-    &.search_results {
-      .slider { 
-        width:80px; 
-      }
-      .amenities {
-        width: 230px;
-      }
-      .multiselect  {
-        width:220px;
-      }
-    } 
-  }
-}
-
-@media  (max-width: 767px) {
- #listing_search {
-   &.search_results {
-    .availability-quantity, .price-range, .amenities {
-      margin: 10px 0; } } }
-
-  .associations.six.columns.omega.alpha,
-  .price-range.six.columns.omega { 
-    margin:20px 0; }
-
-   #listing_search .btn, #listing_search form input[type="submit"], form #listing_search input[type="submit"] {
-    width:100%;
-    text-align:center;
-    box-sizing: border-box; } }
-
-@media  (max-width: 480px) {
-   #listing_search {
-    .slider {
-      width: 100px; } } }

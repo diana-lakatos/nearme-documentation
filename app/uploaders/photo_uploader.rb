@@ -31,7 +31,7 @@ class PhotoUploader < CarrierWave::Uploader::Base
   end
 
   version :golden do
-    process :resize_to_fill => [640, 396]
+    process :resize_to_fill => [768, 475]
   end
 
   def extension_white_list

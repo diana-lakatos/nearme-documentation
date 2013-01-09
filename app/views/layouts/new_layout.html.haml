@@ -26,11 +26,12 @@
 
     .dnm-page
       .container-fluid
-        .header.row-fluid
-          .logo-container.pull-left
-            = link_to "Desks Near Me", root_url, :id => "logo"
-          #header_links.links-container.pull-right
-            = render "layouts/header_navigation"
+        .navbar.navbar-inverse.navbar-fixed-top
+          .navbar-inner
+            .logo-container.pull-left
+              = link_to "Desks Near Me", root_url, :id => "logo"
+            #header_links.links-container.pull-right
+              = render "layouts/header_navigation"
 
       %section#content{:class => "#{controller_name}"}
         = render "layouts/hero"

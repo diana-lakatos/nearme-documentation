@@ -1,6 +1,7 @@
 section.public {
   #hero {
-    height: 500px;
+    margin-top: -32px;
+    height: 530px;
     width: auto;
     background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/locations-651.jpg") center center no-repeat;
     background-size: cover;
@@ -47,7 +48,6 @@ section.public {
 #search_row {
   margin-top: 180px;
   
-
   @media (max-width: 767px) {
     margin-top: 100px;
   }
@@ -71,6 +71,7 @@ section.public {
   }
 
   .black-box {
+    position: relative;
     background: rgb(30,30,30);
     padding: 8px;
     border-radius: 12px;
