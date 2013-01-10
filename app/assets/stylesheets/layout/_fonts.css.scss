@@ -17,10 +17,10 @@ $font-bold: 'futura-pt';
 span.padding:before {
   padding-right: .4em;
 }
-.ico-lock:before {
+.ico-x:before {
   content: "\e000";
 }
-.ico-x:before {
+.ico-user:before {
   content: "\e001";
 }
 .ico-twitter:before {
@@ -41,59 +41,74 @@ span.padding:before {
 .ico-marker:before {
   content: "\e007";
 }
-.ico-logout:before {
+.ico-manage-guests:before {
   content: "\e008";
 }
-.ico-login:before {
+.ico-logout:before {
   content: "\e009";
 }
-.ico-link:before {
+.ico-login:before {
   content: "\e00a";
 }
-.ico-instagram:before {
+.ico-lock:before {
   content: "\e00b";
 }
-.ico-info:before {
+.ico-location:before {
   content: "\e00c";
 }
-.ico-facebook:before {
+.ico-link:before {
   content: "\e00d";
 }
-.ico-edit:before {
+.ico-instagram:before {
   content: "\e00e";
 }
-.ico-drawer:before {
+.ico-info:before {
   content: "\e00f";
 }
-.ico-dashboard:before {
+.ico-facebook:before {
   content: "\e010";
 }
-.ico-crosshairs:before {
+.ico-edit:before {
   content: "\e011";
 }
-.ico-clock:before {
+.ico-drawer:before {
   content: "\e012";
 }
-.ico-check:before {
+.ico-dashboard:before {
   content: "\e013";
 }
-.ico-calender:before {
+.ico-crosshairs:before {
   content: "\e014";
 }
-.ico-arrow-up:before {
+.ico-clock:before {
   content: "\e015";
 }
-.ico-arrow-right:before {
+.ico-check:before {
   content: "\e016";
 }
-.ico-arrow-left:before {
+.ico-calender:before {
   content: "\e017";
 }
-.ico-arrow-down:before {
+.ico-bookings:before {
   content: "\e018";
 }
-.ico-app-store:before {
+.ico-arrow-up:before {
   content: "\e019";
+}
+.ico-arrow-right:before {
+  content: "\e01a";
+}
+.ico-arrow-left:before {
+  content: "\e01b";
+}
+.ico-arrow-down:before {
+  content: "\e01c";
+}
+.ico-app-store:before {
+  content: "\e01d";
+}
+.ico-add-location:before {
+  content: "\e01e";
 }
 
 // Icon Font Styling 

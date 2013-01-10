@@ -3,8 +3,8 @@
 - content_for :hero do
   .caption
     %a
-    = link_to location_path(347) do
-      La Cantine, Paris
+    = link_to location_path(580) do
+      coworkinglab, Dornbirn
   .container-fluid    
     .row-fluid
       #search_row.span10.offset1    
@@ -28,24 +28,24 @@
 %section.how-it-works
   .row-fluid.padding-row
     .span3.offset1
-      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/gif/dollar-animation-gray.gif", :alt => "Dollar Sign"}
+      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/gif/dollar-animation.gif", :alt => "Dollar Sign"}
 
     .span6 
       %h1 Rent out your extra space.
       %p Don't let unused space go to waste: generate revenue by renting out your empty office space. Build your network & client base by opening up your space to professionals in your industry. Create a shared space and encourage collaboration between fields.      
 
-      = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium" do
-        %span.ico-plus.padding List Your Space
+      = link_to new_space_wizard_url, :class => "btn btn-blue btn-large" do
+        %span.ico-add-location.padding List Your Space
 
   .row-fluid.padding-bottom
     .span3.offset1
-      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/gif/crosshair-broadcast-animation.gif", :alt => "Dollar Sign"}
+      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/gif/crosshair-animation.gif", :alt => "Dollar Sign"}
 
     .span6 
       %h1 Find a desk near you.
       %p Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to find great places to work. Leverage networking opportunities in a shared environment, or work from a single office for greater privacy. Whether you need a workspace for a day, a month, or a year, Desks Near Me has you covered.
 
-      = link_to search_path, :class => "btn btn-green btn-medium" do
+      = link_to search_path, :class => "btn btn-green btn-large" do
         %span.ico-search.padding Find a Desk
               
 

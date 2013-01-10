@@ -34,11 +34,17 @@
              -o-transition: none;
                 transition: none; 
 
+        @media (max-width: 600px) {
+          background-size: 171px 21px;
+          width: 171px;
+          height: 21px;
+          margin: 15px 0 0;
+        } 
        
-        @media (max-width: 480px) {
+        @media (max-width: 320px) {
           background-size: 114px 14px;
           width: 114px;
-          height: 14px;
+          height: 18px;
           margin: 20px 0 0;
         }        
       }
@@ -80,7 +86,7 @@
       float: right;
       margin-right: 20px;
 
-			@media (max-width: 630px) {
+			@media (max-width: 660px) {
 				display: none;
 			}
 		}

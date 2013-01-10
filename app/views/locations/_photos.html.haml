@@ -1,23 +1,24 @@
-.row-fluid.location-photos
+.container-fluid
+  .row-fluid.location-photos.padding-bottom
 
-  - if @location.photos.any?
-    .span8
-      .carousel.slide
-        .carousel-inner
-          - @location.photos.each_with_index do |photo, index|
-            .item{:class => ("active" if index == 0)}
-              = image_tag photo.url(:golden)
-              .carousel-caption
-                %p= photo.caption
+    - if @location.photos.any?
+      .span8.pull-right
+        .carousel.slide
+          .carousel-inner
+            - @location.photos.each_with_index do |photo, index|
+              .item{:class => ("active" if index == 0)}
+                = image_tag photo.url(:golden)
+                .carousel-caption
+                  %p= photo.caption
 
-        - if @location.photos.size > 1
-          = link_to "", ".carousel", :class => "carousel-control left ico-arrow-left", 'data-slide' => 'prev'
-          = link_to "", ".carousel", :class => "carousel-control right ico-arrow-right", 'data-slide' => 'next'
+          - if @location.photos.size > 1
+            = link_to "", ".carousel", :class => "carousel-control left ico-arrow-left", 'data-slide' => 'prev'
+            = link_to "", ".carousel", :class => "carousel-control right ico-arrow-right", 'data-slide' => 'next'
 
-  .span4{:class => @location.photos.any? ? "one-third" : "container"}
-    .map
-      .map-wrapper
-        .map-container
+    .span4.pull-right{:class => @location.photos.any? }
+      .map
+        .map-wrapper
+          .map-container
 
-      %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, "data-marker" => image_path("components/map-pin.png")}
-        = location_format_address(@location.formatted_address || @location.address)
+        %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, "data-marker" => image_path("components/map-pin.png")}
+          = location_format_address(@location.formatted_address || @location.address)

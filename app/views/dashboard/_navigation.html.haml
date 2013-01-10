@@ -3,10 +3,18 @@
   .container-fluid.margin-bottom
     .dashboard-nav.row-fluid
       %ul
-        %li{:class => ('current' if current == :account)}= link_to "Account", edit_user_registration_url
-        %li{:class => ('current' if current == :bookings)}= link_to "Your Bookings", bookings_dashboard_url
+        %li{:class => ('current' if current == :account)}
+          = link_to edit_user_registration_url do
+            %span.ico-user.padding Account  
+        %li{:class => ('current' if current == :bookings)}
+          = link_to bookings_dashboard_url do
+            %span.ico-bookings.padding Your Bookings 
         - if current_user.companies.any?
-          %li{:class => ('current' if current == :spaces)}= link_to "Manage Locations", [:manage, :companies]
-          %li{:class => ('current' if current == :reservations)}= link_to "Manage Guests", reservations_dashboard_url
+          %li{:class => ('current' if current == :spaces)}
+            = link_to [:manage, :companies] do
+              %span.ico-location.padding Manage Locations
+          %li{:class => ('current' if current == :reservations)}
+            = link_to reservations_dashboard_url do
+              %span.ico-manage-guests.padding Manage Guests  
 
 
