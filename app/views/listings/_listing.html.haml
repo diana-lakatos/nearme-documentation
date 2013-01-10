@@ -1,13 +1,12 @@
 %article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
-  .details.clearfix
-    .two.columns.alpha
-      = link_to image_tag(listing.photos.thumb.url, :title => listing.name, :alt => listing.name), listing
-    .five.columns
-      %h2= link_to "#{listing.name}", listing
-      %address= listing.formatted_address || listing.address
-      - unless listing.strict_match?
-        %p.close-match This result may not exactly match your search criteria
-    .nine.columns.omega
-      = render :partial => "listings/availability", :locals => {:listing => listing, :weeks => 1}
-  .map-details{:style => "display: none"}
-    = render 'listings/gmap', :listing => listing
+  .row-fluid
+    = link_to listing do
+      - if listing.photos.first
+        = image_tag listing.photos.first.url(:space_listing), :title => listing.name, :alt => listing.name
+      - else
+        = image_tag "http://placehold.it/290x180"
+  .row-fluid
+    %h2= link_to "#{listing.name}", listing
+    %address= listing.formatted_address || listing.address
+
+

@@ -75,7 +75,9 @@ article.listing {
 
 .legacy {
   article.listing {
-
+  float: left;
+  width: 25%;
+  
     section.map {
       #map {
         height: 300px;
@@ -103,7 +105,6 @@ article.listing {
         margin-left: 12px; }
       text-align: right; }
     section.details h2 {
-      border-bottom: 2px solid #CCC;
       margin: 24px 0 12px; } }
 
   section.list article.listing .details {
@@ -116,7 +117,6 @@ article.listing {
     line-height: 26px; }
 
   section.list article.listing {
-    border-bottom: 1px solid #DDD;
     padding-bottom: 6px;
     overflow: hidden;
 

@@ -1,83 +1,15 @@
-.location-photos {
-  position: relative;
+.location-photos.row-fluid {
+  .span4.pull-right {
+    width: 34%;
+    margin-left: 0;
 
-  .photos-list {
-    position: absolute;
-    left: -125px;
-    top: 0;
-    padding-top: 16px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-
-    .prev, .next {
-      display: block;
-      width: 28px;
-      height: 17px;
-      margin-left: 40px;
-      margin-bottom: 16px;
-
-      @include opacity(0.8);
-      cursor: pointer;
-
-      &:hover {
-        @include opacity(1);
-      }
-    }
-
-    .prev {
-      background: image-url("sections/listings/photos-list-prev.png");
-    }
-
-    .next {
-      background: image-url("sections/listings/photos-list-next.png");
-    }
-
-    .photos-wrapper {
-      height: 270px;
-      overflow: hidden;
-
-      ul {
-        li {
-          margin-bottom: 16px;
-
-          img {
-            display: block;
-            border: 2px solid #ffffff;
-            @include border-radius(6px);
-          }
-
-          &.selected {
-            img {
-              border-color: #a1ca2e;
-            }
-          }
-        }
-      }
+    @media (max-width: 767px ) {
+      width: 100%;
     }
   }
-
-  .photo {
-    position: relative;
-    height: 350px;
-    background-size: cover;
-
-    .caption {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0,0,0,0.5);
-      color: #fff;
-      text-shadow: 0 -1px 0 rgba(0,0,0,0.6);
-      padding: 12px;
-      font-size: 12px;
-    }
-  }
-
   .map {
     .map-container {
-      height: 396px;
+      height: 554px;
       position: relative;
       z-index: 1;
 
@@ -90,7 +22,7 @@
     }
     address {
       position: relative;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.7);
       @include box-sizing(border-box);
       padding: 10px 20px;
       margin-top: -65px;
@@ -126,20 +58,41 @@
 
   .carousel {
     margin-bottom: 0;
+
+
+    .carousel-control {
+      font-size: 22px;
+      top: 50%;
+      width: 26px;
+      height: 22px;
+    }
     .carousel-caption {
       @include box-sizing(border-box);
       padding: 20px;
-      text-align: right;
       font-family: $font-medium;
       background: rgba(0,0,0,0);
+      color: white;
       opacity:.5;
-      @include transition(opacity .1s ease-in);
+      @include transition(opacity .2s ease-in, text-shadow .1s ease-in);
+      position: absolute;
+      bottom: 20px;
+      left: 91%;
+      height: 20px;
+      overflow: hidden;
+      width:20px;
 
       &:hover {
+        width: auto;
+        left: 0%;
+        text-align: right;
+        color: white;
         opacity: 1;
         @include text-shadow(black 0 0 2px, black 0 0 4px, black 0 0 6px);
+
+        &:before {
+          content:"";
+        }
       }
     }
   }
-
 }

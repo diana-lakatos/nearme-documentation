@@ -20,7 +20,6 @@
         %strong>
           = pluralize(@listings.length, "listing")
           found
-        \. Hover over a day to see how many desks are available.
 
       - @listings.each do |listing|
         = render :partial => '/listings/listing', :locals => { :listing => listing }
