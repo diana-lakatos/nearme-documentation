@@ -22,7 +22,7 @@
       #logo {
         display:inline-block;
         float: left;
-        margin-top: 10px;
+        margin-top: 12px;
         background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/desksnear.me-white.png") no-repeat;
         width: 228px;
         height: 28px;
@@ -81,12 +81,12 @@
     }
 
 		a.btn.btn-blue {
-      margin-top: 4px;
+      margin-top: 1px;
       text-align: center;
       float: right;
       margin-right: 20px;
 
-			@media (max-width: 660px) {
+			@media (max-width: 676px) {
 				display: none;
 			}
 		}
