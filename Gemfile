@@ -6,13 +6,15 @@ gem 'pg_search'
 
 gem "RedCloth", "~> 4.2.9", :require => "redcloth"
 gem 'airbrake'
-gem 'active_model_serializers', git: "git://github.com/josevalim/active_model_serializers.git"
+gem 'active_model_serializers'
 gem 'carrierwave'
 gem 'decent_exposure'
 gem 'devise'
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'omniauth-openid'
+gem 'omniauth-facebook'
+gem 'omniauth-linkedin'
 gem 'fog'
 gem 'foreman'
 gem 'geocoder'

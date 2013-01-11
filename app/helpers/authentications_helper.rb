@@ -3,20 +3,36 @@ module AuthenticationsHelper
   class AuthProvider
     def initialize(auth)
       @auth = auth
+      puts @auth
     end
 
     def name
-      @auth['info']['name']
+      @auth['info']['name'].html_safe
+    end
+
+    def avatar_url
+      @auth['info']['image'].html_safe
     end
   end
 
   class TwitterProvider < AuthProvider
-    def avatar_url
-      "http://api.twitter.com/1/users/profile_image?screen_name=#{@auth['info']['nickname']}&size=normal"
-    end
 
     def connection_description
       "Connected via Twitter as <a href=\"http://twitter.com/#{@auth['info']['nickname']}\">@#{@auth['info']['nickname']}</a>".html_safe
+    end
+  end
+
+  class LinkedinProvider < AuthProvider
+
+    def connection_description
+      "Connected via LinkedIn as <a href=\"#{@auth['info']['urls']['public_profile']}\">#{@auth['info']['name']}</a>".html_safe
+    end
+  end
+
+  class FacebookProvider < AuthProvider
+
+    def connection_description
+      "Connected via FaceBook as <a href=\"#{@auth['info']['urls']['link']}\">#{@auth['info']['name']}</a>".html_safe
     end
   end
 
@@ -26,6 +42,10 @@ module AuthenticationsHelper
       type = case session[:omniauth]['provider']
       when 'twitter'
         TwitterProvider
+      when 'facebook'
+        FacebookProvider
+      when 'linkedin'
+        LinkedinProvider
       end
 
       type.new(session[:omniauth]) if type
