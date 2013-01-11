@@ -1,6 +1,12 @@
 section.search {
   min-height:900px;
+
+  .loading {
+    margin: 100px auto;
+    width: 30px;
+  }
 }
+
 #search_row {
   .btn-green {
     width: 100%;

@@ -39,6 +39,11 @@
         max-width: 295px;
         margin-left: 20px;
 
+        @media ( max-width: 480px) {
+          max-width: 100%;
+          margin: 0;
+        }
+
         &:first-child {
           margin-left: 0;
  
@@ -84,10 +89,10 @@
 
       .make-reservation {
         float: right;
-        font:normal 26px/38px $font-medium, sans-serif;
+        font:normal 26px/46px $font-medium, sans-serif;
         margin-top: 10px;
 
-        @media (max-width: 480px) {
+        @media (max-width: 890px) {
           width: 100%;
         }
         .quantity input { 
@@ -100,76 +105,8 @@
       .book {
         color: #848b8f;
 
-        h3 {
-          font-size: 12px;
-          color: #8e9498;
-          text-transform: uppercase;
-          margin-bottom: 0;
-        }
-
-        .booked-days {
-          .booked-day {
-            display: inline-block;
-            @include border-radius(4px);
-            padding: 7px;
-            overflow: hidden;
-            border: 1px solid #bfce94;
-            margin: 0 6px 6px 0;
-            min-width: 48px;
-            color: #89a734;
-            cursor: pointer;
-
-            .date {
-              font-size: 12px;
-              font-weight: bold;
-              display: block;
-
-              sup {
-                vertical-align: top;
-                font-size: 9px;
-              }
-            }
-
-            .month {
-              font-size: 10px;
-              display: block;
-              text-transform: uppercase;
-              line-height: 10px;
-            }
-
-            .count {
-              float: right;
-              border-left: 1px dashed #bfc0c0;
-              color: #bfc0c0;
-              font-weight: bold;
-              font-size: 12px;
-              line-height: 43px;
-              padding: 0 0 0 4px;
-              margin: -7px 0;
-            }
-
-            &.empty {
-              border-color: #bfce94;
-              .count {
-                color: #bfc0c0;
-              }
-            }
-
-            &.selected {
-              border-color: #89a734;
-              .count {
-                color: #91529c;
-              }
-            }
-
-            &.unavailable {
-              border-color: #ee9994;
-              color: #e83d33;
-              .count {
-                display: none;
-              }
-            }
-          }
+        @media (max-width: 890px) {
+          width: 100%;
         }
       }
     }
@@ -306,16 +243,15 @@
     }
   }
 
-  a.btn.btn-medium {
-    @media (max-width: 480px) {
+  a.btn.btn-large {
+    vertical-align: bottom;
+
+    @media (max-width: 890px) {
       display: block;
       clear: both;
       width:100%;
       margin-top: 10px;
       text-align:center;
-      padding: 8px 0;
-      font-size: 30px;
-      line-height: 40px;
     }
   }
 }
