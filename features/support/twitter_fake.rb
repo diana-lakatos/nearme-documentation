@@ -4,7 +4,7 @@
 #
 module TwitterFake
 
-  BASE_URL = "https://api.twitter.com"
+  TWITTER_BASE_URL = "https://api.twitter.com"
 
   def disable_remote_http
     WebMock.disable_net_connect!(:allow_localhost => true)
@@ -26,7 +26,7 @@ module TwitterFake
       }
     JSON
 
-    verify_credentials_url = BASE_URL + '/1/account/verify_credentials.json'
+    verify_credentials_url = TWITTER_BASE_URL + '/1/account/verify_credentials.json'
     stub_http_request_for_fake_twitter(:get, verify_credentials_url, {
       :status => 200,
       :body => response_json
@@ -34,21 +34,21 @@ module TwitterFake
   end
 
   def stub_twitter_request_token
-    stub_http_request_for_fake_twitter(:any, "#{BASE_URL}/oauth/request_token", {
+    stub_http_request_for_fake_twitter(:any, "#{TWITTER_BASE_URL}/oauth/request_token", {
       :status => 200,
       :body => "oauth_token=this_need_not_be_real&oauth_token_secret=same_for_this"
     })
   end
 
   def stub_twitter_successful_access_token(user_id = nil)
-    stub_http_request_for_fake_twitter(:any, "#{BASE_URL}/oauth/access_token", {
+    stub_http_request_for_fake_twitter(:any, "#{TWITTER_BASE_URL}/oauth/access_token", {
       :status => 200,
       :body => "oauth_token=this_need_not_be_real&oauth_token_secret=same_for_this&user_id=#{user_id}"
     })
   end
 
   def stub_twitter_denied_access_token
-    stub_http_request_for_fake_twitter(:any, "#{BASE_URL}/oauth/access_token", {
+    stub_http_request_for_fake_twitter(:any, "#{TWITTER_BASE_URL}/oauth/access_token", {
       :status => 401,
       :body => ''
     })

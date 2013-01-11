@@ -3,15 +3,14 @@ module AuthenticationsHelper
   class AuthProvider
     def initialize(auth)
       @auth = auth
-      puts @auth
     end
 
     def name
-      @auth['info']['name'].html_safe
+      @auth['info']['name']
     end
 
     def avatar_url
-      @auth['info']['image'].html_safe
+      @auth['info']['image']
     end
   end
 

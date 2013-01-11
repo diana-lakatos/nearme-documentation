@@ -12,6 +12,11 @@ class RegistrationsController < Devise::RegistrationsController
     session[:omniauth] = nil unless @user.new_record?
   end
 
+  def edit
+    @supported_providers = Authentication::available_providers
+    super
+  end
+
   def update
     if resource.update_with_password(params[resource_name])
       set_flash_message :notice, :updated
