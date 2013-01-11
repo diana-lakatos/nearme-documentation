@@ -36,6 +36,12 @@
 
   @media (max-width: 767px) {
     width: 100%;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    width: auto;
+    margin: 0;
   }
 }
 
@@ -71,14 +77,14 @@
 
 .modal-close {
   position: absolute;
-  top: 48px;
-  right: -8px;
+  top: 44px;
+  right: -12px;
   width: 18px;
   height: 18px;
   color:black;
   font-size:18px;
   z-index: 1003;
-  @include opacity(0.8);
+  @include opacity(0.3);
 
   &:hover {
     @include opacity(1);
@@ -86,9 +92,13 @@
   }
 
   @media (max-width: 767px) {
-    top: 8px;
-    right: 8px;
+    top: -22px;
+    right: 12px;
   }
+  @media (max-width: 480px) {
+    top: -32px;
+    right: -2px;
+  }  
 }
 
 .modal-body-wrapper {
@@ -96,11 +106,3 @@
   width: 100%;
 }
 
-@media only screen and (max-width: 480px) {
-  .modal-container {
-    width: auto;
-    left: 8px !important;
-    right: 8px !important;
-    margin-left: 0 !important;
-  }
-}
