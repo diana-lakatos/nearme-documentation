@@ -27,7 +27,7 @@ class PhotoUploader < CarrierWave::Uploader::Base
   end
 
   version :space_listing do
-    process :resize_to_fill => [290, 180]
+    process :resize_to_fill => [410, 254]
   end
 
   version :golden do

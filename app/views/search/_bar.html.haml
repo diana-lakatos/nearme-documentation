@@ -1,5 +1,9 @@
 %form#listing_search.search_results{:action => search_path, :method => "get"}
   .row-fluid
+    %h1
+      Search Results
+      %strong #{pluralize(@listings.length, "listing")} found
+  .row-fluid
     .span6
       %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => @query, :class => "query", :autocomplete => "off"}
       .geolocation
