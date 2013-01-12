@@ -8,6 +8,7 @@ class @Bookings.Listing
     @id = parseInt(@data.id, 10)
     @availability = options.availability
     @bookings = {}
+    @defaultQuantity = options.defaultQuantity
 
   setDefaultQuantity: (qty, updateBookings = false) ->
     @defaultQuantity = qty if qty >= 0
@@ -127,6 +128,3 @@ class @Bookings.Listing
   # callback - A function to call when availability is loaded
   withAvailabilityLoaded: (date_or_dates, callback) ->
     @availability.get date_or_dates, -> callback()
-
-
-

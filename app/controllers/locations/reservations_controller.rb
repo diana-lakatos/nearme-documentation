@@ -1,10 +1,12 @@
 module Locations
   class ReservationsController < ApplicationController
     before_filter :find_location
+    before_filter :store_bookings_request, only: :review
     before_filter :require_login
 
     # Review a reservation prior to confirmation. Same interface as create.
     def review
+      @params_listings = params[:listings]
       @reservations = build_reservations
       render :layout => false
     end
@@ -23,6 +25,7 @@ module Locations
     #     ...
     #   ]
     def create
+      @params_listings = params[:listings]
       Location.transaction do
         build_reservations.each do |reservation|
           reservation.save!
@@ -49,7 +52,7 @@ module Locations
 
     def build_reservations
       reservations = []
-      params[:listings].values.each { |listing_params|
+      @params_listings.values.each { |listing_params|
         listing = @location.listings.find(listing_params[:id])
         reservation = listing.reservations.build(:user => current_user)
 

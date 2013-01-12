@@ -10,6 +10,14 @@ class @Bookings.Simple.ListingView
     @bookButton = @container.find('[data-behavior=showReviewBookingListing]')
     @bindModel()
     @bindEvents()
+    @initQuantity()
+
+  initQuantity: ->
+   if @listing.defaultQuantity != 1
+      qty = @validateQuantityAndUpdatePlural(@listing.defaultQuantity)
+      @quantityField.val(qty)
+      @quantityField.find('option[value="' + qty + '"]').attr("selected",true)
+      @container.find('.customSelect.quantity .customSelectInner').text(qty)
 
   bindModel: ->
     @listing.bind 'dateAdded', (date) =>
@@ -26,11 +34,9 @@ class @Bookings.Simple.ListingView
 
     @quantityField.on 'change', (event) =>
       qty = parseInt($(event.target).val())
-      qty = 1 unless qty >= 0
-      @listing.setDefaultQuantity(qty, true)
+      qty = @validateQuantityAndUpdatePlural(qty)
       $(event.target).val(qty)
-      plural = if qty == 1 then '' else 's'
-      @resourceElement.text("desk#{plural}")
+      @listing.setDefaultQuantity(qty, true)
 
     @datepicker.bind 'datesChanged', (dates) =>
       @listing.setDates(dates)
@@ -38,6 +44,12 @@ class @Bookings.Simple.ListingView
     @listing.bind 'bookingChanged', =>
       @updateSummary()
       @bookButton.toggleClass('disabled', @listing.bookedDays().length is 0)
+
+  validateQuantityAndUpdatePlural: (qty) ->
+    qty = 1 unless qty >= 0
+    plural = if qty == 1 then '' else 's'
+    @resourceElement.text("desk#{plural}")
+    return qty
 
   updateSummary: ->
     @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
@@ -48,6 +60,3 @@ class @Bookings.Simple.ListingView
   # Setup the datepicker for the simple booking UI
   setupMultiDatesPicker: ->
     @datepicker = new Bookings.Simple.Datepicker(@container.find(".calendar-wrapper"), @listing)
-
-
-

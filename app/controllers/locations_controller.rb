@@ -4,6 +4,8 @@ class LocationsController < ApplicationController
 
   def show
     @location = location
+    @requested_bookings = bookings_request
+    #clear_requested_bookings
   end
 
   def host

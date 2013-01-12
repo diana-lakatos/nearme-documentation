@@ -9,10 +9,11 @@ class @Bookings.AvailabilityManager
   availability: {
   }
 
-  constructor: (url) ->
+  constructor: (url,fetchCompleteCallback) ->
     @url = url
     @pendingDates = []
     @pendingCallbacks = []
+    @fetchCompleteCallback = fetchCompleteCallback || ->
 
   availableFor: (listingId, date) ->
     value.available if value = @_value(listingId, date)
@@ -79,6 +80,8 @@ class @Bookings.AvailabilityManager
 
         for callback in callbacks
           @_executeCallback(callback)
+
+        @fetchCompleteCallback()
     })
 
   _value: (listingId, date) ->
@@ -109,5 +112,3 @@ class @Bookings.AvailabilityManager
     totalFor: (date) -> @manager.totalFor(@listingId, date)
     get: (date_or_dates, callback) -> @manager.get(@listingId, date_or_dates, callback)
     getDates: (dates, callback) -> @manager.getDates(@listingId, dates, callback)
-
-

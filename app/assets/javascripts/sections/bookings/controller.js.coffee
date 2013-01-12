@@ -33,7 +33,7 @@ class Bookings.Controller
   # protected
   constructor: (@container, @options = {}) ->
     @availabilityManager = new Bookings.AvailabilityManager(
-      @options.availability_summary_url
+      @options.availability_summary_url, @options.fetchCompleteCallback
     )
 
     # The Listings collection is the set of all Listings being managed for bookings on
@@ -41,7 +41,8 @@ class Bookings.Controller
     @listings = $.map @options.listings, (listingData) =>
       listing = new Bookings.Listing(
         listingData,
-        availability: new Bookings.AvailabilityManager.Listing(@availabilityManager, listingData.id)
+        availability: new Bookings.AvailabilityManager.Listing(@availabilityManager, listingData.id),
+        requested_bookings: @options.requested_bookings
       )
 
 
