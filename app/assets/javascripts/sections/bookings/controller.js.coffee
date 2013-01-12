@@ -38,7 +38,12 @@ class Bookings.Controller
 
     # The Listings collection is the set of all Listings being managed for bookings on
     # the page. Each listing keeps track of the bookings made on it.
+    requested_bookings =  _.toArray(@options.requested_bookings)
     @listings = $.map @options.listings, (listingData) =>
+      requested_bookings_for_listing = []
+      match_listing = _.find(requested_bookings, (bookings) ->  bookings.id == listingData.id.toString() )
+      if match_listing != undefined
+        requested_bookings_for_listing = match_listing.bookings
       listing = new Bookings.Listing(
         listingData,
         availability: new Bookings.AvailabilityManager.Listing(@availabilityManager, listingData.id),

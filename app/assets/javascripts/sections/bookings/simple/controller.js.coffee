@@ -3,7 +3,7 @@ class @Bookings.Simple.Controller extends Bookings.Controller
 
   constructor: (container, options = {}) ->
     super(container, options)
-    @requested_bookings = [] #  Array.prototype.slice.call(options.requested_bookings)
+    @requested_bookings =  _.toArray(options.requested_bookings)
     if @requested_bookings.length == 0
       # On this view, we automatically add a booking for 'tomorrow' if there is no other preset dates
       tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
@@ -20,9 +20,11 @@ class @Bookings.Simple.Controller extends Bookings.Controller
     @bindEvents()
 
   process_requested_bookings_for: (listing) ->
+    listing.quantity = 1
     for requested_listing in @requested_bookings
-     if requested_listing.id == listing.id
-       for booking in listing.bookings
+     if requested_listing.id == listing.id.toString()
+       listing.quantity = requested_listing.bookings[0].quantity
+       for booking in _.toArray(requested_listing.bookings)
          do (booking) ->
           listing.addDate(new Date(booking.date + " 00:00"))
 

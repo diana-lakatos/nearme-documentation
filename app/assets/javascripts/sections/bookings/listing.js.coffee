@@ -8,7 +8,6 @@ class @Bookings.Listing
     @id = parseInt(@data.id, 10)
     @availability = options.availability
     @bookings = {}
-    @defaultQuantity = options.defaultQuantity
 
   setDefaultQuantity: (qty, updateBookings = false) ->
     @defaultQuantity = qty if qty >= 0

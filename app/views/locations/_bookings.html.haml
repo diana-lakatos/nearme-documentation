@@ -27,7 +27,7 @@
           %span $#{content_tag(:span, "0.00", :class => 'total')}
 
           .book
-            = link_to "", :id =>"book-button", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
+            = link_to "", :id =>"book-#{listing.id}", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
               %span.ico-check.padding Book
 
         .clearfix

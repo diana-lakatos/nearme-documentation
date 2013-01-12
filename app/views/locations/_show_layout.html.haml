@@ -40,7 +40,7 @@
             requested_bookings:#{@requested_bookings.to_json},
             #{
              if @requested_bookings.count > 0
-               "fetchCompleteCallback: function(){ $('#book-button').trigger('click'); }"
+               "fetchCompleteCallback: function(){ $('#book-#{@requested_bookings["0"][:id]}').trigger('click'); }"
              else
                "fetchCompleteCallback: function(){ }"
              end

@@ -4,8 +4,9 @@ class LocationsController < ApplicationController
 
   def show
     @location = location
+    # set when an unauthenticated user try to book
     @requested_bookings = bookings_request
-    #clear_requested_bookings
+    clear_requested_bookings
   end
 
   def host
