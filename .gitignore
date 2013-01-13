@@ -16,3 +16,4 @@ public/stylesheets/*.css
 coverage
 runner.html
 .jhw-cache
+bin/
