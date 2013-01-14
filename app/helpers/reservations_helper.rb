@@ -1,4 +1,14 @@
 module ReservationsHelper
+
+  # Return a URL with HTTPS scheme for location reservation
+  def secure_location_reservations_url(location, options = {})
+    if Rails.env.production?
+      options = options.reverse_merge(:protocol => "https://")
+    end
+
+    location_reservations_url(location, options)
+  end
+
   def reservation_schedule_for(listing, weeks = 1, &block)
     new_row = false
 
