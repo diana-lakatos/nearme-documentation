@@ -2,7 +2,7 @@
   .listings
     - @location.listings.each do |listing|
 
-      .listing.box.divider.small{listing_data_attributes(listing)}
+      .listing.box{listing_data_attributes(listing)}
         .images
           - if listing.photos.any?
             .image{:style => "margin-right: 15px;"}
