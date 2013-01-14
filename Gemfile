@@ -1,12 +1,12 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.5'
+gem 'rails', '3.2.11'
 gem 'pg'
 gem 'pg_search'
 
 gem "RedCloth", "~> 4.2.9", :require => "redcloth"
 gem 'airbrake'
-gem 'active_model_serializers', git: "git://github.com/josevalim/active_model_serializers.git"
+gem 'active_model_serializers', git: "git://github.com/rails-api/active_model_serializers.git"
 gem 'carrierwave'
 gem 'decent_exposure'
 gem 'devise'
