@@ -8,7 +8,7 @@
             -if authentication.is_only_login_possibility?
               %span.btn.btn-blue.btn-small
                 #{provider}
-              (provide a password to be able to disconnect)
+              (log out and reset password if you would like to disconnect)
             -else
               = link_to authentication_path(authentication), :method => :delete , :class => "btn btn-blue btn-small" do
                 Disconnect #{provider}
