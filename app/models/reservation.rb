@@ -141,7 +141,7 @@ class Reservation < ActiveRecord::Base
       if self.create_charge
         stripe_charge = Stripe::Charge.create(
           amount: total_amount_cents,
-          currency: "AUD", #currency,
+          currency: currency,
           customer: owner.stripe_id
         )
       end
