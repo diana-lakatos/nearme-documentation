@@ -12,27 +12,45 @@ module AuthenticationsHelper
     def avatar_url
       @auth['info']['image']
     end
+
+    def connection_description
+      "Connected via #{@auth['provider'].titleize} as <a href='#{destination_url}'>#{display_url}</a>".html_safe
+    end
   end
 
   class TwitterProvider < AuthProvider
 
-    def connection_description
-      "Connected via Twitter as <a href=\"http://twitter.com/#{@auth['info']['nickname']}\">@#{@auth['info']['nickname']}</a>".html_safe
+    def destination_url
+      "http://twitter.com/#{@auth['info']['nickname']}"
+    end
+
+    def display_url
+      "@#{@auth['info']['nickname']}"
     end
   end
 
   class LinkedinProvider < AuthProvider
 
-    def connection_description
-      "Connected via LinkedIn as <a href=\"#{@auth['info']['urls']['public_profile']}\">#{@auth['info']['name']}</a>".html_safe
+    def destination_url
+      "#{@auth['info']['urls']['public_profile']}"
     end
+
+    def display_url
+      "#{@auth['info']['name']}"
+    end
+
   end
 
   class FacebookProvider < AuthProvider
 
-    def connection_description
-      "Connected via FaceBook as <a href=\"#{@auth['info']['urls']['link']}\">#{@auth['info']['name']}</a>".html_safe
+    def destination_url
+      "#{@auth['info']['urls']['link']}"
     end
+
+    def display_url
+      "#{@auth['info']['name']}"
+    end
+
   end
 
   # Return an object wrapping the omniauth provider which provides some view-model methods

@@ -12,4 +12,5 @@
               Disconnect 
         - else 
           = link_to provider_auth_url(provider.downcase) do
-            Connect 
+            Connect
+  - end unless supported_providers.nil?

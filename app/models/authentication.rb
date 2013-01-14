@@ -21,6 +21,6 @@ class Authentication < ActiveRecord::Base
   end
 
   def is_only_login_possibility?
-    return user.password.blank? && user.authentications.size == 1
+    return !user.has_password? && user.authentications.size == 1
   end
 end
