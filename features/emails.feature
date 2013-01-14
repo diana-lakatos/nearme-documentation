@@ -7,7 +7,7 @@ Feature: Emails should be sent out informing parties about reservations
     Given a user: "Keith Contractor" exists with name: "Keith Contractor", email: "keith@example.com"
     And a user: "Bo Jeanes" exists with name: "Bo Jeanes", email: "bo@example.com"
 
-  @javascript @wip
+  @javascript
   Scenario: reservation confirmations required (no comment)
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
     And I am logged in as user "Keith Contractor"
@@ -17,7 +17,7 @@ Feature: Emails should be sent out informing parties about reservations
     Then a confirm reservation email should be sent to bo@example.com
     And a reservation awaiting confirmation email should be sent to keith@example.com
 
-  @javascript @wip
+  @javascript
   Scenario: reservation confirmations not required
     Given a listing: "Mocra" exists with creator: user "Bo Jeanes", confirm_reservations: false
     And I am logged in as user "Keith Contractor"
@@ -29,10 +29,9 @@ Feature: Emails should be sent out informing parties about reservations
 
   @wip @javascript
   Scenario: reservation gets confirmed
-    Given a listing with a reservation next week
+    Given Bo Jeanes has a listing with an unconfirmed reservation for Keith Contractor
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
     And a reservation exists with listing: listing "Mocra", user: user "Keith Contractor", date: "2010-10-15"
-    And all emails have been delivered
     And I am logged in as user "Bo Jeanes"
     When I confirm the reservation
     Then a reservation confirmed email should be sent to keith@example.com

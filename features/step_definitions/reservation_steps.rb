@@ -1,3 +1,10 @@
+Given /^(.*) has a listing with an unconfirmed reservation for (.*)$/ do |lister, reserver|
+  lister = User.find_by_name(lister)
+  reserver = User.find_by_name(reserver)
+  @listing = FactoryGirl.create(:listing, creator: lister)
+  require 'ruby-debug'; Debugger.start; Debugger.settings[:autoeval] = 1; Debugger.settings[:autolist] = 1; debugger
+end
+
 Given /^the listing has the following reservations:$/ do |table|
   table.hashes.each do |row|
     num = row["Number of Reservations"].to_i
