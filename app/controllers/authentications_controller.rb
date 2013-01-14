@@ -39,27 +39,32 @@ class AuthenticationsController < ApplicationController
     head :ok
   end
 
+  def failure
+    flash[:error] = "We are sorry, but we could not authenticate you for the following reason: '#{params[:message] ? params[:message] : "Unknown"}'. Please try again."
+    redirect_to new_user_session_url
+  end
+
   private
 
-    def redirect_if_login
-      redirect_to :root if user_signed_in?
-    end
+  def redirect_if_login
+    redirect_to :root if user_signed_in?
+  end
 
-    def wizard_id
-      oparams = request.env['omniauth.params']
-      oparams && oparams['wizard']
-    end
+  def wizard_id
+    oparams = request.env['omniauth.params']
+    oparams && oparams['wizard']
+  end
 
-    def use_flash_messages?
-      wizard_id.blank?
-    end
+  def use_flash_messages?
+    wizard_id.blank?
+  end
 
-    def after_sign_in_path_for(resource)
-      if wizard_id
-        wizard(wizard_id).url
-      else
-        super
-      end
+  def after_sign_in_path_for(resource)
+    if wizard_id
+      wizard(wizard_id).url
+    else
+      super
     end
+  end
 
 end
