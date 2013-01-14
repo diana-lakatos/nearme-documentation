@@ -8,18 +8,23 @@ Feature: A user can login
       And I go to the home page
       And I follow "Login"
      When I follow "Twitter"
-      And I grant access to the Twitter application for Twitter user "jerkcity" with ID 999
       And I fill in "Your name" with "Brett"
       And I fill in "Your email address" with "twitter@email.com"
       And I press "Sign up!"
      Then I should see "You have signed up successfully."
+
+  Scenario: A user will be given error message if he fails to login with Twitter
+    Given the Twitter OAuth request is unsuccessful
+      And I go to the home page
+      And I follow "Login"
+     When I follow "Twitter"
+     Then I should see "We are sorry, but we could not authenticate you for the following reason: 'testing_invalid_credentials'. Please try again."
 
   Scenario: A user can login with Facebook
     Given the Facebook OAuth request is successful
       And I go to the home page
       And I follow "Login"
      When I follow "Facebook"
-      And I grant access to the Facebook application for Facebook user "jerkcity" with ID 999
       And I fill in "Your name" with "Brett"
       And I fill in "Your email address" with "facebook@email.com"
       And I press "Sign up!"
@@ -30,7 +35,6 @@ Feature: A user can login
       And I go to the home page
       And I follow "Login"
      When I follow "LinkedIn"
-      And I grant access to the LinkedIn application for LinkedIn user "jerkcity" with ID 999
       And I fill in "Your name" with "Brett"
       And I fill in "Your email address" with "linkedin@email.com"
       And I press "Sign up!"
@@ -42,7 +46,6 @@ Feature: A user can login
       And I go to the home page
       And I follow "Login"
      When I follow "LinkedIn"
-      And I grant access to the LinkedIn application for LinkedIn user "jerkcity" with ID 999
       And I fill in "Your name" with "Brett"
       And I fill in "Your email address" with "dont-steal-me@example.com"
       And I press "Sign up!"
@@ -54,7 +57,7 @@ Feature: A user can login
       And the Facebook OAuth request is successful
       And I go to the home page
       And I follow "Dashboard"
-     When I follow "Connect"
+     When I follow "Connect to Facebook"
      Then I should see "Authentication successful"
 
   Scenario: A user can login with email and password
@@ -77,4 +80,6 @@ Feature: A user can login
      Then I should see "You have signed up successfully."
       And a user should exist with email: "real@email.com"
       And that user should have password "password"
+
+
 
