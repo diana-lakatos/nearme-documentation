@@ -9,6 +9,9 @@ class Reservation < ActiveRecord::Base
            :class_name => "ReservationPeriod",
            :dependent => :destroy
 
+  has_many :charges,
+           :dependent => :destroy
+
   validates :periods, :length => { :minimum => 1 }
 
   before_validation :set_total_cost, on: :create
@@ -133,14 +136,22 @@ class Reservation < ActiveRecord::Base
     end
 
     def charge_stripe_customer
+      charge = self.charges.build(amount: total_amount_cents)
+
       if self.create_charge
-        charge = Stripe::Charge.create(
+        stripe_charge = Stripe::Charge.create(
           amount: total_amount_cents,
           currency: "AUD", #currency,
           customer: owner.stripe_id
         )
       end
+
+      charge.success = true
+      charge.response = stripe_charge.to_yaml
+      charge.save!
     rescue => e
-      logger.error "Stripe::CardError - #{e.message}"
+      charge.success = false
+      charge.response = e.to_yaml
+      charge.save!
     end
 end
