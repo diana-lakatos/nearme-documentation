@@ -127,4 +127,19 @@ class User < ActiveRecord::Base
   def avatar_changed?
     false
   end
+
+  def create_stripe_customer(card_number, card_expires, card_code)
+    customer = Stripe::Customer.create(
+      card: {
+        number: card_number,
+        exp_month: card_expires[0,2],
+        exp_year: card_expires[2,2],
+        cvc: card_code
+      },
+      email: self.email
+    )
+    self.stripe_id = customer.id
+    self.save!
+    customer
+  end
 end

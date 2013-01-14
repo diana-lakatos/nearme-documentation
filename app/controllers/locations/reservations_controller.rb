@@ -23,16 +23,33 @@ module Locations
     #     ...
     #   ]
     def create
+      @errors = []
+      @do_not_create_charge = params[:do_not_create_charge].to_i
+
       Location.transaction do
+
         build_reservations.each do |reservation|
+          reservation.create_charge = !@do_not_create_charge if reservation.total_amount > 0
           reservation.save!
         end
+
+        unless @do_not_create_charge == 1 || current_user.stripe_id
+          begin
+            current_user.create_stripe_customer(params[:card_number], params[:card_expires], params[:card_code])
+          rescue => e
+            @errors << e.message
+          end
+        end
+
       end
 
-      render :layout => false
-    rescue
-      # TODO: Handle expections here
-      raise
+      if @errors.present?
+        @reservations = build_reservations
+        render :review, :layout => false
+      else
+        render :layout => false
+      end
+
     end
 
     private

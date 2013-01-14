@@ -19,22 +19,42 @@
 
   %hr
 
-  .payment.form-horizontal
+  - if @reservations.sum(&:total_amount) > 0 && @reservations.each { |r| r.currency == "usd" || "cad" }
 
-    .control-group
-      = label_tag :card_number, "Card number", :class => 'control-label'
-      .controls.card-number
-        = text_field_tag :card_number, nil, name: nil
+    .payment.form-horizontal
 
-    .control-group
-      = label_tag :card_expires, "Expires", :class => 'control-label'
-      .controls.card-expires
-        = text_field_tag :card_expires, nil, name: nil, size: 4, placeholder: 'MMYY'
+      %p
+        = check_box_tag :do_not_create_charge
+        = label_tag :do_not_create_charge, 'I will make payment in person.'
 
-    .control-group
-      = label_tag :card_code, "Card code", :class => 'control-label'
-      .controls.card-code
-        = text_field_tag :card_code, nil, name: nil, size: 3, placeholder: 'CVC'
+      .hr.divider
+        %span Or
+
+      - if @errors.present?
+        .flash.error
+          %ul
+            - @errors.each do |e|
+              %li= e
+
+      .control-group
+        = label_tag :card_number, "Card number", :class => 'control-label'
+        .controls.card-number
+          = text_field_tag :card_number, nil
+
+      .control-group
+        = label_tag :card_expires, "Expires", :class => 'control-label'
+        .controls.card-expires
+          = text_field_tag :card_expires, nil, size: 4, placeholder: 'MMYY'
+
+      .control-group
+        = label_tag :card_code, "Card code", :class => 'control-label'
+        .controls.card-code
+          = text_field_tag :card_code, nil, size: 3, placeholder: 'CVC'
+
+    %hr
+
+  - else
+    = hidden_field_tag :do_not_create_charge, 1
 
   %p.text-center
     = submit_tag 'Request Booking Now'

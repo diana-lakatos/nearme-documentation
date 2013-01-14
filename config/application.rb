@@ -46,7 +46,7 @@ module DesksnearMe
     end
     # note that we *don't* want to rewite for the test env :)
     config.should_rewrite_email = Rails.env.staging? || Rails.env.development?
-    config.test_email           = "dev@desksnear.me"
+    config.test_email           = "Sai@desksnear.me"
 
     # Don't access the DB or load models when precompiling assets
     config.assets.initialize_on_precompile = false

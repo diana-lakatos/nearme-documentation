@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121126173130) do
+ActiveRecord::Schema.define(:version => 20130109011008) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -204,6 +204,7 @@ ActiveRecord::Schema.define(:version => 20121126173130) do
     t.datetime "updated_at",                        :null => false
     t.datetime "deleted_at"
     t.text     "comment"
+    t.boolean  "create_charge"
   end
 
   create_table "search_queries", :force => true do |t|
@@ -272,6 +273,7 @@ ActiveRecord::Schema.define(:version => 20121126173130) do
     t.string   "phone"
     t.string   "unconfirmed_email"
     t.string   "unlock_token"
+    t.string   "stripe_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

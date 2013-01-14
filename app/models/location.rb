@@ -56,6 +56,10 @@ class Location < ActiveRecord::Base
     creator == user
   end
 
+  def currency
+    read_attribute(:currency).presence || "USD"
+  end
+
   private
 
     def assign_default_availability_rules

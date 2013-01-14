@@ -2,6 +2,9 @@
 
 %p Your reservation has been made!
 
+- unless @do_not_create_charge == 1
+  %p Your credit card will be charged when your reservation is confirmed by the host.
+
 %p.text-center
   = link_to "Continue", "", :class => 'btn btn-medium btn-green close'
 

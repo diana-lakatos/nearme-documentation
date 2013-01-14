@@ -12,6 +12,7 @@ class Reservation < ActiveRecord::Base
   validates :periods, :length => { :minimum => 1 }
 
   before_validation :set_total_cost, on: :create
+  before_validation :set_currency, on: :create
   after_create      :auto_confirm_reservation
 
   acts_as_paranoid
@@ -19,6 +20,8 @@ class Reservation < ActiveRecord::Base
   monetize :total_amount_cents
 
   state_machine :state, :initial => :unconfirmed do
+    after_transition :unconfirmed => :confirmed, :do => :charge_stripe_customer
+
     event :confirm do
       transition :unconfirmed => :confirmed
     end
@@ -121,7 +124,23 @@ class Reservation < ActiveRecord::Base
       self.total_amount_cents = calculate_total_cost
     end
 
+    def set_currency
+      self.currency = self.listing.location.currency
+    end
+
     def auto_confirm_reservation
       confirm! unless listing.confirm_reservations?
+    end
+
+    def charge_stripe_customer
+      if self.create_charge
+        charge = Stripe::Charge.create(
+          amount: total_amount_cents,
+          currency: "AUD", #currency,
+          customer: owner.stripe_id
+        )
+      end
+    rescue => e
+      logger.error "Stripe::CardError - #{e.message}"
     end
 end
