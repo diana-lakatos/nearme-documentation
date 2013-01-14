@@ -27,7 +27,7 @@ Feature: Emails should be sent out informing parties about reservations
     Then a reservation confirmed email should be sent to keith@example.com
     Then a new reservation email should be sent to bo@example.com
 
-  @wip @javascript
+  @borked @javascript
   Scenario: reservation gets confirmed
     Given Bo Jeanes has a listing with an unconfirmed reservation for Keith Contractor
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
@@ -36,7 +36,7 @@ Feature: Emails should be sent out informing parties about reservations
     When I confirm the reservation
     Then a reservation confirmed email should be sent to keith@example.com
 
-  @wip @javascript
+  @borked @javascript
   Scenario: confirmed then cancelled by user
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
     And a reservation exists with listing: listing "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
@@ -45,7 +45,7 @@ Feature: Emails should be sent out informing parties about reservations
     When I cancel the reservation
     Then a reservation cancelled email should be sent to bo@example.com
 
-  @wip
+  @borked
   @javascript
   Scenario: confirmed then cancelled by owner
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
@@ -55,7 +55,7 @@ Feature: Emails should be sent out informing parties about reservations
     When I cancel the reservation
     Then a reservation cancelled by owner email should be sent to keith@example.com
 
-  @wip
+  @borked
   @javascript
   Scenario: unconfirmed reservation gets cancelled by user
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
@@ -65,7 +65,7 @@ Feature: Emails should be sent out informing parties about reservations
     When I cancel the reservation
     Then a reservation cancelled email should be sent to bo@example.com
 
-  @wip
+  @borked
   @javascript
   Scenario: unconfirmed reservation gets rejected
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
