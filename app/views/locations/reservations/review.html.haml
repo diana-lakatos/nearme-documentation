@@ -1,6 +1,6 @@
 %h1 Book space at #{@location.name}
 
-= form_tag secure_location_reservations_url(@location), :method => :post, :remote => true do
+= form_tag secure_location_reservations_url(@location), :method => :post, :remote => true, :class => "payment form-horizontal" do
   = render 'locations/reservations/fields'
 
   - location_reservation_summaries.each do |date, reservations|
@@ -19,16 +19,17 @@
 
   %hr
 
-  - if @reservations.sum(&:total_amount) > 0 && @reservations.each { |r| r.currency == "usd" || "cad" }
+  - if reservation_needs_payment_details?
+    .control-group
+      = radio_button_tag :payment_method, "manual", reservation_manual_payment?
+      = label_tag :payment_method_manual, 'I will make the payment in person on arrival'
 
-    .payment.form-horizontal
-
-      %p
-        = check_box_tag :do_not_create_charge
-        = label_tag :do_not_create_charge, 'I will make payment in person.'
-
-      .hr.divider
-        %span Or
+    .control-group
+      = radio_button_tag :payment_method, "credit_card", reservation_credit_card_payment?
+      = label_tag :payment_method_credit_card, 'Charge my credit card once booking confirmed'
+    
+    #credit_card_fields{:style => "display: none"}
+      %hr.divider
 
       - if @errors.present?
         .flash.error
@@ -53,12 +54,26 @@
 
     %hr
 
-  - else
-    = hidden_field_tag :do_not_create_charge, 1
-
   %p.text-center
     = submit_tag 'Request Booking Now'
 
   - if location_reservation_needs_confirmation?
     %p.notice.text-center
       This host manually confirms all bookings before payment
+
+:javascript
+  $(function() {
+
+    function hideShowCreditCardFields() {
+      var input = $('input#payment_method_credit_card'), fields = $('#credit_card_fields');
+
+      if (input.is(':checked')) {
+        fields.show();
+      } else {
+        fields.hide();
+      }
+    }
+
+    $('input[name*=payment_method]').click(hideShowCreditCardFields);
+    hideShowCreditCardFields();
+  });

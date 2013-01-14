@@ -2,7 +2,7 @@
 
 %p Your reservation has been made!
 
-- unless @do_not_create_charge == 1
+- if reservation_credit_card_payment?
   %p Your credit card will be charged when your reservation is confirmed by the host.
 
 %p.text-center

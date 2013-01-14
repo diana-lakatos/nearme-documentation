@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130109011008) do
+ActiveRecord::Schema.define(:version => 20130114212323) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -44,6 +44,15 @@ ActiveRecord::Schema.define(:version => 20130109011008) do
   end
 
   add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
+
+  create_table "charges", :force => true do |t|
+    t.integer  "reservation_id"
+    t.boolean  "success"
+    t.text     "response"
+    t.integer  "amount"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
 
   create_table "companies", :force => true do |t|
     t.integer  "creator_id"
@@ -200,11 +209,12 @@ ActiveRecord::Schema.define(:version => 20130109011008) do
     t.string   "confirmation_email"
     t.integer  "total_amount_cents", :default => 0
     t.string   "currency"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
+    t.string   "payment_method",     :default => "credit_card"
   end
 
   create_table "search_queries", :force => true do |t|

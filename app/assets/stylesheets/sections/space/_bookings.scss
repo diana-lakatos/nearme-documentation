@@ -247,6 +247,22 @@
     font-weight: bold;
     margin-bottom: 0;
   }
+
+  form.payment .control-group {
+    .control-label {
+      width: auto;
+    }
+    .controls {
+      margin-left: 30%;
+
+      &.card-number input {
+        width: 90%;
+      }
+      &.card-expires input, &.card-code input {
+        width: 80px;
+      }
+    }
+  }
 }
 
 .quick-book {

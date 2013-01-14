@@ -264,23 +264,6 @@ form {
 //     </div>
 //   </form>
 .form-horizontal {
-
-  &.payment .control-group {
-    .control-label {
-      width: auto;
-    }
-    .controls {
-      margin-left: 30%;
-
-      &.card-number input {
-        width: 90%;
-      }
-      &.card-expires input, &.card-code input {
-        width: 80px;
-      }
-    }
-  }
-
   .control-group {
     margin-bottom: 10px;
     overflow: hidden;

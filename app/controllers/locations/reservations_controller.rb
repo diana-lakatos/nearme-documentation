@@ -24,23 +24,24 @@ module Locations
     #   ]
     def create
       @errors = []
-      @do_not_create_charge = params[:do_not_create_charge].to_i
+      @reservations = build_reservations
 
-      Location.transaction do
-
-        build_reservations.each do |reservation|
-          reservation.create_charge = !@do_not_create_charge if reservation.total_amount > 0
-          reservation.save!
+      # Set up the set up the credit card billing for the customer where applicable
+      unless !@reservations.first.credit_card_payment?
+        begin
+          current_user.create_stripe_customer(params[:card_number], params[:card_expires], params[:card_code])
+        rescue => e
+          @errors << e.message
         end
+      end
 
-        unless @do_not_create_charge == 1 || current_user.stripe_id
-          begin
-            current_user.create_stripe_customer(params[:card_number], params[:card_expires], params[:card_code])
-          rescue => e
-            @errors << e.message
+      # Make the reservations
+      if @errors.empty?
+        Location.transaction do
+          @reservations.each do |reservation|
+            reservation.save!
           end
         end
-
       end
 
       if @errors.present?
@@ -49,7 +50,6 @@ module Locations
       else
         render :layout => false
       end
-
     end
 
     private
@@ -65,10 +65,13 @@ module Locations
     end
 
     def build_reservations
+      # NB: We can reserve multiple listings via the same form. The simple view doesn't allow this (single listing reservation), but the
+      # advanced view does. A Reservation refers to a single listing, so we build multiple reservations - one for each Listing.
       reservations = []
       params[:listings].values.each { |listing_params|
         listing = @location.listings.find(listing_params[:id])
         reservation = listing.reservations.build(:user => current_user)
+        reservation.payment_method = params[:payment_method] if params[:payment_method].present?
 
         listing_params[:bookings].values.each do |period|
           reservation.add_period(Date.parse(period[:date]), period[:quantity].to_i)

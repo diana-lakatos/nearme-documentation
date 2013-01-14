@@ -1,4 +1,9 @@
 class Reservation < ActiveRecord::Base
+  PAYMENT_METHODS = {
+    :credit_card => 'credit_card',
+    :manual      => 'manual'
+  }
+
   belongs_to :listing
   belongs_to :owner, :class_name => "User"
 
@@ -23,7 +28,7 @@ class Reservation < ActiveRecord::Base
   monetize :total_amount_cents
 
   state_machine :state, :initial => :unconfirmed do
-    after_transition :unconfirmed => :confirmed, :do => :charge_stripe_customer
+    after_transition :unconfirmed => :confirmed, :do => :attempt_payment_capture
 
     event :confirm do
       transition :unconfirmed => :confirmed
@@ -49,9 +54,7 @@ class Reservation < ActiveRecord::Base
   }
 
   scope :upcoming, lambda {
-    joins(:periods).
-    where('date >= ?', Date.today).
-    order('date')
+    where('(SELECT 1 FROM reservation_periods WHERE date >= ? LIMIT 1) IS NOT NULL', Date.today)
   }
 
   scope :visible, lambda {
@@ -61,6 +64,8 @@ class Reservation < ActiveRecord::Base
   scope :not_rejected_or_cancelled, lambda {
     without_state(:cancelled, :rejected)
   }
+
+  validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
 
   def user=(value)
     self.owner = value
@@ -110,6 +115,14 @@ class Reservation < ActiveRecord::Base
     total
   end
 
+  def credit_card_payment?
+    payment_method == Reservation::PAYMENT_METHODS[:credit_card]
+  end
+
+  def manual_payment?
+    payment_method == Reservation::PAYMENT_METHODS[:manual]
+  end
+
   private
 
     def calculate_total_cost
@@ -135,7 +148,9 @@ class Reservation < ActiveRecord::Base
       confirm! unless listing.confirm_reservations?
     end
 
-    def charge_stripe_customer
+    def attempt_payment_capture
+      return if manual_payment? || total_amount <= 0
+
       charge = self.charges.build(amount: total_amount_cents)
 
       if self.create_charge

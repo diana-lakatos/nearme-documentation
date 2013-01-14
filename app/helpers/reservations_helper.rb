@@ -9,6 +9,18 @@ module ReservationsHelper
     location_reservations_url(location, options)
   end
 
+  def reservation_needs_payment_details?
+    @reservations.sum(&:total_amount) > 0 && @reservations.each { |r| r.currency == "usd" || "cad" }
+  end
+
+  def reservation_manual_payment?
+    @reservations.first.manual_payment?
+  end
+
+  def reservation_credit_card_payment?
+    @reservations.first.credit_card_payment?
+  end
+
   def reservation_schedule_for(listing, weeks = 1, &block)
     new_row = false
 
