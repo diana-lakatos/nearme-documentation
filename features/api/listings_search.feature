@@ -17,6 +17,7 @@ Feature: User Searches Listings
     Then the response should have the listing for $10 with the lowest score
     Then the response should have the listing for $25 with the highest score
 
+  @wip
   Scenario: Searching for some listings with organizations
     Given an organization exists
     And a listing in Auckland exists which is a member of that organization
