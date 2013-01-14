@@ -42,6 +42,11 @@ class AuthenticationsController < ApplicationController
     head :ok
   end
 
+  def failure
+    flash[:error] = "We are sorry, but we could not authenticate you for the following reason: '#{params[:message] ? params[:message] : "Unknown"}'. Please try again."
+    redirect_to new_user_session_url
+  end
+
   private
 
   # 2013-01-11 Maciek: Deleted redirect_if_login, because we allow connecting social acounts
