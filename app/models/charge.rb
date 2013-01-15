@@ -1,4 +1,16 @@
 class Charge < ActiveRecord::Base
   attr_accessible :amount, :reservation_id, :response, :success
   belongs_to :reservation
+
+  def charge_successful(gateway_object)
+    self.success = true
+    self.response = gateway_object.to_yaml
+    save!
+  end
+
+  def charge_failed(exception)
+    self.success = false
+    self.response = exception.to_yaml
+    save!
+  end
 end

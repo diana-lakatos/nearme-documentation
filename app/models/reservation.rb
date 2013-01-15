@@ -151,22 +151,11 @@ class Reservation < ActiveRecord::Base
     def attempt_payment_capture
       return if manual_payment? || total_amount <= 0
 
-      charge = self.charges.build(amount: total_amount_cents)
-
-      if self.create_charge
-        stripe_charge = Stripe::Charge.create(
-          amount: total_amount_cents,
-          currency: currency,
-          customer: owner.stripe_id
-        )
-      end
-
-      charge.success = true
-      charge.response = stripe_charge.to_yaml
-      charge.save!
-    rescue => e
-      charge.success = false
-      charge.response = e.to_yaml
-      charge.save!
+      billing_gateway = owner.billing_gateway
+      billing_gateway.charge(
+        amount: total_amount_cents,
+        currency: currency,
+        reference: self
+      )
     end
 end

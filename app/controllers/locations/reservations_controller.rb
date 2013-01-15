@@ -29,9 +29,14 @@ module Locations
       # Set up the set up the credit card billing for the customer where applicable
       unless !@reservations.first.credit_card_payment?
         begin
-          current_user.create_stripe_customer(params[:card_number], params[:card_expires], params[:card_code])
-        rescue => e
-          @errors << e.message
+          current_user.billing_gateway.store_card(
+            number: params[:card_number], 
+            expiry_month: params[:card_expires].to_s[0,2],
+            expiry_year: params[:card_expires].to_s[2,2], 
+            cvc: params[:card_code]
+          )
+        rescue User::BillingGateway::BillingError 
+          @errors << $!.message
         end
       end
 
@@ -45,7 +50,6 @@ module Locations
       end
 
       if @errors.present?
-        @reservations = build_reservations
         render :review, :layout => false
       else
         render :layout => false
@@ -71,6 +75,8 @@ module Locations
       params[:listings].values.each { |listing_params|
         listing = @location.listings.find(listing_params[:id])
         reservation = listing.reservations.build(:user => current_user)
+
+        # Assign the payment method chosen on the form to the Reservation
         reservation.payment_method = params[:payment_method] if params[:payment_method].present?
 
         listing_params[:bookings].values.each do |period|

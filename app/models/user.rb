@@ -2,6 +2,9 @@ class User < ActiveRecord::Base
 
   include Gravtastic
 
+  # Includes billing gateway helper method and sets up billing charge association
+  include BillingGateway::UserHelper
+
   is_gravtastic!
 
   acts_as_paranoid
