@@ -7,7 +7,16 @@ class @Bookings.Listing
   constructor: (@data, options) ->
     @id = parseInt(@data.id, 10)
     @availability = options.availability
-    @bookings = {}
+    @bookings = options.bookings
+    @initBookings()
+
+  initBookings:() ->
+    if !_.isEmpty(@bookings)
+      _.each(@bookings, (quantity,date) =>
+        @addDate(new Date(date + " 00:00"))
+      )
+
+      @setDefaultQuantity(_.values(@bookings)[0],false)
 
   setDefaultQuantity: (qty, updateBookings = false) ->
     @defaultQuantity = qty if qty >= 0

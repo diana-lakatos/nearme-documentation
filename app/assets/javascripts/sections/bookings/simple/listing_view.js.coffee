@@ -13,8 +13,8 @@ class @Bookings.Simple.ListingView
     @initQuantity()
 
   initQuantity: ->
-   if @listing.quantity != 1
-      qty = @validateQuantityAndUpdatePlural(@listing.quantity)
+   if @listing.defaultQuantity != 1
+      qty = @validateQuantityAndUpdatePlural(@listing.defaultQuantity)
       @quantityField.val(qty)
       @quantityField.find('option[value="' + qty + '"]').attr("selected",true)
       @container.find('.customSelect.quantity .customSelectInner').text(qty)
