@@ -4,6 +4,13 @@ class Reservation < ActiveRecord::Base
     :manual      => 'manual'
   }
 
+  PAYMENT_STATUSES = {
+    :paid => 'paid',
+    :failed => 'failed',
+    :pending => 'pending',
+    :unknown => 'unknown'
+  }
+
   belongs_to :listing
   belongs_to :owner, :class_name => "User"
 
@@ -14,14 +21,14 @@ class Reservation < ActiveRecord::Base
            :class_name => "ReservationPeriod",
            :dependent => :destroy
 
-  has_many :charges,
-           :dependent => :destroy
+  has_many :charges, :as => :reference, :dependent => :nullify, :dependent => :destroy
 
   validates :periods, :length => { :minimum => 1 }
 
   before_validation :set_total_cost, on: :create
   before_validation :set_currency, on: :create
-  after_create      :auto_confirm_reservation
+  before_create :set_default_payment_status
+  after_create  :auto_confirm_reservation
 
   acts_as_paranoid
 
@@ -66,6 +73,7 @@ class Reservation < ActiveRecord::Base
   }
 
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
+  validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
   def user=(value)
     self.owner = value
@@ -123,7 +131,25 @@ class Reservation < ActiveRecord::Base
     payment_method == Reservation::PAYMENT_METHODS[:manual]
   end
 
+  def free?
+    total_amount <= 0
+  end
+
+  def paid?
+    payment_status == PAYMENT_STATUSES[:paid]
+  end
+
   private
+
+    def set_default_payment_status
+      return if payment_status
+
+      self.payment_status = if free?
+        PAYMENT_STATUSES[:paid]
+      else
+        PAYMENT_STATUSES[:pending]
+      end
+    end
 
     def calculate_total_cost
       # NB: use of 'size' not 'count' here is deliberate - seats/periods may not be persisted at this point!
@@ -149,7 +175,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def attempt_payment_capture
-      return if manual_payment? || total_amount <= 0
+      return if manual_payment? || free? || paid?
 
       billing_gateway = owner.billing_gateway
       billing_gateway.charge(
@@ -157,5 +183,8 @@ class Reservation < ActiveRecord::Base
         currency: currency,
         reference: self
       )
+
+      self.payment_status = PAYMENT_STATUSES[:paid]
+      save!
     end
 end
