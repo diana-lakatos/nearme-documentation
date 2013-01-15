@@ -15,8 +15,8 @@ class ListingSerializer < ApplicationSerializer
     hash = super
 
     # Add score and strict match if present
-    hash.merge!(:score => listing.score)               unless listing.score.nil?
-    hash.merge!(:strict_match => listing.strict_match) unless listing.strict_match.nil?
+    hash.merge!(:score => object.score)               unless object.score.nil?
+    hash.merge!(:strict_match => object.strict_match) unless object.strict_match.nil?
 
     hash
   end
