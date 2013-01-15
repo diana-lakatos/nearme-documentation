@@ -5,7 +5,7 @@ module Locations
 
     # Review a reservation prior to confirmation. Same interface as create.
     def review
-      @reservations = build_reservations
+      @reservations = build_reservations(Reservation::PAYMENT_METHODS[:credit_card])
       render :layout => false
     end
 
@@ -26,28 +26,8 @@ module Locations
       @errors = []
       @reservations = build_reservations
 
-      # Set up the set up the credit card billing for the customer where applicable
-      unless !@reservations.first.credit_card_payment?
-        begin
-          current_user.billing_gateway.store_card(
-            number: params[:card_number], 
-            expiry_month: params[:card_expires].to_s[0,2],
-            expiry_year: params[:card_expires].to_s[2,2], 
-            cvc: params[:card_code]
-          )
-        rescue User::BillingGateway::BillingError 
-          @errors << $!.message
-        end
-      end
-
-      # Make the reservations
-      if @errors.empty?
-        Location.transaction do
-          @reservations.each do |reservation|
-            reservation.save!
-          end
-        end
-      end
+      setup_credit_card_customer if using_credit_card?
+      make_reservations if @errors.empty?
 
       if @errors.present?
         render :review, :layout => false
@@ -68,7 +48,7 @@ module Locations
       @location = Location.find(params[:location_id])
     end
 
-    def build_reservations
+    def build_reservations(payment_method = params[:payment_method])
       # NB: We can reserve multiple listings via the same form. The simple view doesn't allow this (single listing reservation), but the
       # advanced view does. A Reservation refers to a single listing, so we build multiple reservations - one for each Listing.
       reservations = []
@@ -77,7 +57,7 @@ module Locations
         reservation = listing.reservations.build(:user => current_user)
 
         # Assign the payment method chosen on the form to the Reservation
-        reservation.payment_method = params[:payment_method] if params[:payment_method].present?
+        reservation.payment_method = payment_method if payment_method
 
         listing_params[:bookings].values.each do |period|
           reservation.add_period(Date.parse(period[:date]), period[:quantity].to_i)
@@ -88,5 +68,29 @@ module Locations
       reservations
     end
 
+    def using_credit_card?
+      @reservations.first.credit_card_payment?
+    end
+
+    def setup_credit_card_customer
+      begin
+        current_user.billing_gateway.store_card(
+          number: params[:card_number], 
+          expiry_month: params[:card_expires].to_s[0,2],
+          expiry_year: params[:card_expires].to_s[2,2], 
+          cvc: params[:card_code]
+        )
+      rescue User::BillingGateway::BillingError 
+        @errors << $!.message
+      end
+    end
+
+    def make_reservations
+      Location.transaction do
+        @reservations.each do |reservation|
+          reservation.save!
+        end
+      end
+    end
   end
 end

@@ -9,7 +9,6 @@ When /^I select to book space( using the advanced view)? for:$/ do |advanced, ta
 
   added_dates = []
   table.hashes.each do |row|
-
     date = Chronic.parse(row['Date']).to_date
     qty = row['Quantity'].to_i
     qty = 1 if qty < 1
@@ -30,7 +29,6 @@ When /^I select to book space( using the advanced view)? for:$/ do |advanced, ta
       end
 
       fill_in 'booked-day-qty', :with => qty
-
     else
       year = date.strftime('%Y')
       month = date.strftime('%m').to_i - 1 # - 1 because month JS is (0..11)
@@ -44,13 +42,10 @@ When /^I select to book space( using the advanced view)? for:$/ do |advanced, ta
 
       # Add the day to the seletion
       unless added_dates.include?(date)
-
         find(:css, date_class).click
         added_dates << date
-
       end
     end
-
   end
 end
 
@@ -59,7 +54,11 @@ When /^I click to review the bookings?$/ do
   wait_for_ajax
 end
 
-When /^I click to confirm the bookings?$/ do
+When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
+  unless credit_card
+    choose 'payment_method_manual'
+  end
+
   click_button "Request Booking Now"
   wait_for_ajax
 end

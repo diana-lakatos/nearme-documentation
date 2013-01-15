@@ -1,5 +1,5 @@
 class Charge < ActiveRecord::Base
-  attr_accessible :amount, :reservation_id, :response, :success
+  attr_accessible :amount, :reference, :user_id, :currency, :response, :success
   belongs_to :user
   belongs_to :reference, :polymorphic => true
 

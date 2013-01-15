@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130115043002) do
+ActiveRecord::Schema.define(:version => 20130115202157) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20130115043002) do
     t.datetime "updated_at",     :null => false
     t.integer  "user_id"
     t.string   "reference_type"
+    t.string   "currency"
   end
 
   create_table "companies", :force => true do |t|
@@ -211,13 +212,13 @@ ActiveRecord::Schema.define(:version => 20130115043002) do
     t.string   "confirmation_email"
     t.integer  "total_amount_cents", :default => 0
     t.string   "currency"
-    t.datetime "created_at",                                    :null => false
-    t.datetime "updated_at",                                    :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",     :default => "credit_card"
-    t.string   "payment_status",     :default => "unknown",     :null => false
+    t.string   "payment_status",     :default => "unknown", :null => false
+    t.string   "payment_method",     :default => "manual"
   end
 
   create_table "search_queries", :force => true do |t|
