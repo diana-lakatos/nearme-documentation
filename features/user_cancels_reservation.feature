@@ -25,15 +25,11 @@ Feature: User Cancels Reservation
       | WoughThorks on October 19, 2010 (unconfirmed)        |
       | WoughThorks on October 20, 2010 (unconfirmed)        |
       | Joe's Codin Garage on October 21, 2010 (unconfirmed) |
-  @wip
+
+
   Scenario: A user can cancel a reservation
     Given I am on the dashboard page
     When I cancel the reservation for "19th October 2010"
-    Then I should see "You have cancelled the reservation"
-     And I should see the following reservations in order:
-      | Joe's Codin Garage on October 18, 2010 (unconfirmed) |
-      | WoughThorks on October 20, 2010 (unconfirmed)        |
-      | Joe's Codin Garage on October 21, 2010 (unconfirmed) |
-     And I should not see "WoughThorks on October 19, 2010"
+    Then I should have a cancelled reservation on "19th October 2010"
 
 

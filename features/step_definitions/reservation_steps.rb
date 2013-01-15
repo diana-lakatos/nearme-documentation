@@ -41,6 +41,10 @@ When(/^I cancel the reservation for "([^"]*)"$/) do |date|
   end
 end
 
+Then /^I should have a cancelled reservation on "([^"]*)"$/ do |date|
+  user.cancelled_reservations.collect { |r| Chronic.parse(r.date) }.should include Chronic.parse(date)
+end
+
 
 When /^I book space for:$/ do |table|
   When %{I select to book space for:}, table
