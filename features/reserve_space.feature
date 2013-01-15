@@ -9,7 +9,7 @@ Feature: A user can book at a space
       And a listing exists with location: that location, quantity: 10
       And a user exists
 
-  @javascript
+  @javascript @wip
   Scenario: A logged in user can book a listing
     Given I am logged in as the user
      When I go to the location's page
@@ -24,7 +24,7 @@ Feature: A user can book at a space
   @future
   Scenario: A user cannot book a desk in the past
 
-  @javascript
+  @javascript @wip
   Scenario: Booking for a 'automatically confirm' listing should show relevant details
     Given I am logged in as the user
     And bookings for the listing do not need to be confirmed
@@ -36,6 +36,7 @@ Feature: A user can book at a space
     Then I should see "This host manually confirms all bookings before payment"
 
   @javascript
+  @wip
   Scenario: Booking for a non-'automatically confirm' listing should show relevant details
     Given I am logged in as the user
     And bookings for that listing do need to be confirmed
