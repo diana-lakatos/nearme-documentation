@@ -112,6 +112,7 @@ class DNM.SearchResultsPage extends DNM.SearchForm
     @resultsContainer = @container.find('.results')
     @loadingContainer = @container.find('.loading')
     @loadMap()
+    @loadListingMaps()
 
   bindEvents: ->
     @form.bind 'submit', (event) =>
@@ -126,6 +127,36 @@ class DNM.SearchResultsPage extends DNM.SearchForm
     @loadingContainer.hide()
     @resultsContainer.show()
 
+  listingMaps: ->
+    @resultsContainer.find('.listing-map')
+
+  loadListingMaps: ->
+    @listingMaps().each (i, el) =>
+      el = $(el)
+      listing = el.closest('article')
+      @drawListingMaps(
+        id:        parseInt(listing.attr('data-id'), 10),
+        latitude:  parseFloat(listing.attr('data-latitude')),
+        longitude: parseFloat(listing.attr('data-longitude')),
+        name:      listing.attr('data-name'),
+        element:   listing
+      )
+
+  drawListingMaps: (listing) ->
+    mapContainer = listing.element.find('.listing-map')[0]
+    listing_map = {}
+    ll = new google.maps.LatLng(listing.latitude, listing.longitude)
+
+    listing_map.map = new google.maps.StreetViewPanorama(mapContainer, {
+      position: ll,
+      addressControl: false,
+      linksControl: false,
+      panControl: false,
+      zoomControl: false,
+      enableCloseButton: false,
+      visible: true
+    })
+
   showResults: (html) ->
     @resultsContainer.html(html)
     @finishLoading()
@@ -133,7 +164,7 @@ class DNM.SearchResultsPage extends DNM.SearchForm
 
   listings: ->
     @resultsContainer.find('.listing')
-
+    
   loadMap: ->
     mapContainer = @container.find('#listings_map')[0]
     return unless mapContainer
@@ -172,7 +203,7 @@ class DNM.SearchResultsPage extends DNM.SearchForm
     )
 
     if listing.element
-      popupContent = $('.map-details', listing.element).html()
+      popupContent = $('.listing-info', listing.element).html()
       google.maps.event.addListener @map.markers[listing.id], 'click', =>
         @map.info_window.setContent(popupContent)
         @map.info_window.open(@map.map, @map.markers[listing.id])

@@ -4,9 +4,7 @@
       - if listing.photos.first
         = image_tag listing.photos.first.url(:space_listing), :title => listing.name, :alt => listing.name
       - else
-        = image_tag "http://placehold.it/410x254"
-  .row-fluid
+        .listing-map
+  .row-fluid.listing-info
     %h2= link_to "#{listing.name}", listing
     %address= listing.formatted_address || listing.address
-
-

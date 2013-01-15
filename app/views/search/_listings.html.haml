@@ -17,5 +17,6 @@
       .google-map
         #listings_map.inner
 
-      - @listings.each do |listing|
-        = render :partial => '/listings/listing', :locals => { :listing => listing }
+      #listings
+        - @listings.each do |listing|
+          = render :partial => '/listings/listing', :locals => { :listing => listing }
