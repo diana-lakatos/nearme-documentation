@@ -17,14 +17,6 @@ Feature: User Searches Listings
     Then the response should have the listing for $10 with the lowest score
     Then the response should have the listing for $25 with the highest score
 
-  @borked
-  Scenario: Searching for some listings with organizations
-    Given an organization exists
-    And a listing in Auckland exists which is a member of that organization
-    And a listing in Auckland exists which is NOT a member of that organization
-    When I send a search request with a bounding box around New Zealand and that organization
-    Then the response should have the listing with that organization with the lowest score
-
   Scenario: Searching for a listing with a minimum amount of desks
     Given a listing in Auckland exists with 5 desks available for the next 7 days
     And a listing in Wellington exists with 10 desks available for the next 7 days
@@ -44,10 +36,3 @@ Feature: User Searches Listings
     When I send a search request with a bounding box around New Zealand
     Then the JSON listings should be empty
 
-  @borked
-  Scenario: Searching for a listing that requires organization membership to be visible when authenicated
-    Given a listing exists for a location in Auckland with a private organization
-    And I am an authenticated api user
-    And I am a member of that organization
-    When I send an authenticated search request with a bounding box around New Zealand
-    Then the JSON should contain that listing
