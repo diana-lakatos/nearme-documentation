@@ -2,8 +2,8 @@ class DescriptionInput < SimpleForm::Inputs::Base
   include ActionView::Helpers::TagHelper
   def input
     limit = 250
-    hint = "Short description get better result, #{limit} characters should be enough."
-    out  = "#{@builder.text_field(attribute_name, {:max_length => limit})}".html_safe
+    hint = "You will get better results with a more concise description. Descriptions are limited to #{limit} characters."
+    out  = "#{@builder.text_field(attribute_name, {:maxlength => limit})}".html_safe
     out << content_tag(:p, hint, :class => 'help-block')
   end
 end
