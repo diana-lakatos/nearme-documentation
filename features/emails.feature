@@ -27,52 +27,32 @@ Feature: Emails should be sent out informing parties about reservations
     Then a reservation confirmed email should be sent to keith@example.com
     Then a new reservation email should be sent to bo@example.com
 
-  @borked @javascript
+  @javascript
   Scenario: reservation gets confirmed
-    Given Bo Jeanes has a listing with an unconfirmed reservation for Keith Contractor
-    Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
-    And a reservation exists with listing: listing "Mocra", user: user "Keith Contractor", date: "2010-10-15"
-    And I am logged in as user "Bo Jeanes"
-    When I confirm the reservation
+    Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
+    When the owner confirms the reservation
     Then a reservation confirmed email should be sent to keith@example.com
 
-  @borked @javascript
-  Scenario: confirmed then cancelled by user
-    Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
-    And a reservation exists with listing: listing "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
-    And all emails have been delivered
-    And I am logged in as user "Keith Contractor"
-    When I cancel the reservation
+  @javascript
+  Scenario: confirmed then cancelled by visitor
+    Given Bo Jeanes has a confirmed reservation for Keith Contractor
+    When the visitor cancels the reservation
     Then a reservation cancelled email should be sent to bo@example.com
 
-  @borked
   @javascript
   Scenario: confirmed then cancelled by owner
-    Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
-    And a reservation exists with listing: listing "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
-    And all emails have been delivered
-    And I am logged in as user "Bo Jeanes"
-    When I cancel the reservation
+    Given Bo Jeanes has a confirmed reservation for Keith Contractor
+    When the owner cancels the reservation
     Then a reservation cancelled by owner email should be sent to keith@example.com
 
-  @borked
   @javascript
-  Scenario: unconfirmed reservation gets cancelled by user
-    Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
-    And a reservation exists with listing: listing "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "unconfirmed"
-    And all emails have been delivered
-    And I am logged in as user "Keith Contractor"
-    When I cancel the reservation
+  Scenario: unconfirmed reservation gets cancelled by visitor
+    Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
+    When the visitor cancels the reservation
     Then a reservation cancelled email should be sent to bo@example.com
 
-  @borked
   @javascript
   Scenario: unconfirmed reservation gets rejected
-    Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
-    And a reservation exists with listing: listing "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "unconfirmed"
-    And all emails have been delivered
-    And I am logged in as user "Bo Jeanes"
-    When I reject the reservation
-    Then 1 email should be delivered
-    And the email should be delivered to user "Keith Contractor"
-    And the email should have subject: "[Desks Near Me] Sorry, your reservation at Mocra has been rejected"
+    Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
+    When the owner rejects the reservation
+    Then a reservation rejected email should be sent to keith@example.com

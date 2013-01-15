@@ -1,8 +1,13 @@
-Given /^(.*) has a listing with an unconfirmed reservation for (.*)$/ do |lister, reserver|
+Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed, reserver|
   lister = User.find_by_name(lister)
   reserver = User.find_by_name(reserver)
   @listing = FactoryGirl.create(:listing, creator: lister)
-  require 'ruby-debug'; Debugger.start; Debugger.settings[:autoeval] = 1; Debugger.settings[:autolist] = 1; debugger
+  reservation = @listing.reserve!(reserver, [Date.tomorrow], 1)
+  unless confirmed != " "
+    reservation.confirm!
+    reservation.save
+  end
+
 end
 
 Given /^the listing has the following reservations:$/ do |table|
@@ -32,8 +37,6 @@ When(/^I try to book at #{capture_model} on "([^"]*)"$/) do |listing_instance, d
   visit "/listings/#{listing.to_param}/reservations/new?date=#{date}"
 end
 
-
-
 When(/^I cancel the reservation for "([^"]*)"$/) do |date|
   date = Date.parse(date)
   within(:css, "li[data-date='#{date}']") do
@@ -52,10 +55,18 @@ When /^I book space for:$/ do |table|
   When %{I click to confirm the booking}
 end
 
-When /^I (confirm|reject|cancel) the reservation$/ do |action|
-  visit reservations_dashboard_path
-  require 'ruby-debug'; Debugger.start; Debugger.settings[:autoeval] = 1; Debugger.settings[:autolist] = 1; debugger
+When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, action|
+  if user == "visitor"
+    login User.find_by_name("Keith Contractor")
+    visit bookings_dashboard_path
+  else
+    login User.find_by_name("Bo Jeanes")
+    visit reservations_dashboard_path
+  end
+
   click_link_or_button action.capitalize
+  page.driver.browser.switch_to.alert.accept
+  wait_for_ajax
 end
 
 When /^I select to book space( using the advanced view)? for:$/ do |advanced, table|
@@ -214,7 +225,11 @@ Then /^a reservation cancelled email should be sent to (.*)$/ do |email|
 end
 
 Then /^a reservation cancelled by owner email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include /Your reservation at (.*) has been cancelled by the owner/
+  last_email_for(email).subject.should match /Your reservation at (.*) has been cancelled by the owner/
+end
+
+Then /^a reservation rejected email should be sent to (.*)$/ do |email|
+  last_email_for(email).subject.should match /reservation at (.*) has been rejected/
 end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|
