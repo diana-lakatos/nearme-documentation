@@ -5,7 +5,7 @@ input, textarea {
 input[type='checkbox'] {
   width: auto;
 }
-input[type=submit] {
+input[type=submit], input[type=text] {
    -webkit-appearance: none;
 }
     

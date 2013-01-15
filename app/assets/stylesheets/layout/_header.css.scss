@@ -54,15 +54,10 @@
       padding-top: 10px;
       line-height: 38px;
 
-      @media (max-width: 320px ){
-        line-height: 16px;
-        padding: 0 0 14px;
-      }
-
       a.header-link {
         display: inline-block;
         float: right;
-        color: $gray2;
+        color: $gray3;
         font-size: 20px;
         margin-right: 20px;
         text-decoration: none;
