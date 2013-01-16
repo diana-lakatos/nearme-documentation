@@ -112,7 +112,6 @@ class DNM.SearchResultsPage extends DNM.SearchForm
     @resultsContainer = @container.find('.results')
     @loadingContainer = @container.find('.loading')
     @loadMap()
-    @loadListingMaps()
 
   bindEvents: ->
     @form.bind 'submit', (event) =>
@@ -126,36 +125,6 @@ class DNM.SearchResultsPage extends DNM.SearchForm
   finishLoading: ->
     @loadingContainer.hide()
     @resultsContainer.show()
-
-  listingMaps: ->
-    @resultsContainer.find('.listing-map')
-
-  loadListingMaps: ->
-    @listingMaps().each (i, el) =>
-      el = $(el)
-      listing = el.closest('article')
-      @drawListingMaps(
-        id:        parseInt(listing.attr('data-id'), 10),
-        latitude:  parseFloat(listing.attr('data-latitude')),
-        longitude: parseFloat(listing.attr('data-longitude')),
-        name:      listing.attr('data-name'),
-        element:   listing
-      )
-
-  drawListingMaps: (listing) ->
-    mapContainer = listing.element.find('.listing-map')[0]
-    listing_map = {}
-    ll = new google.maps.LatLng(listing.latitude, listing.longitude)
-
-    listing_map.map = new google.maps.StreetViewPanorama(mapContainer, {
-      position: ll,
-      addressControl: false,
-      linksControl: false,
-      panControl: false,
-      zoomControl: false,
-      enableCloseButton: false,
-      visible: true
-    })
 
   showResults: (html) ->
     @resultsContainer.html(html)
