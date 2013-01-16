@@ -25,6 +25,7 @@ class Location < ActiveRecord::Base
   validates_presence_of :company_id, :name, :description, :address, :latitude, :longitude
   validates :email, email: true, allow_nil: true
   validates :currency, currency: true, allow_nil: true
+  validates_length_of :description, :maximum => 250
 
   before_validation :fetch_coordinates
   before_validation :set_default_creator
