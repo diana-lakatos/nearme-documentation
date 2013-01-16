@@ -1,6 +1,6 @@
 Feature: User associates with organization
 
-  @wip
+  @broken
   Scenario: success
     Given an organization exists with name: "Order of the Phoenix"
     And a user exists
