@@ -32,13 +32,18 @@ class Bookings.Controller
   #
   # protected
   constructor: (@container, @options = {}) ->
+    requested_bookings =  _.toArray(@options.requested_bookings)
+
+    fetchCompleteCallback = $.noop()
+    if !_.isEmpty(requested_bookings)
+      fetchCompleteCallback = -> $("#book-#{requested_bookings[0].id}").trigger('click')
+
     @availabilityManager = new Bookings.AvailabilityManager(
-      @options.availability_summary_url, @options.fetchCompleteCallback
+      @options.availability_summary_url, fetchCompleteCallback
     )
 
     # The Listings collection is the set of all Listings being managed for bookings on
     # the page. Each listing keeps track of the bookings made on it.
-    requested_bookings =  _.toArray(@options.requested_bookings)
     @listings = _.map @options.listings, (listingData) =>
       bookings = {}
       match_listing = _.find(requested_bookings, (bookings) ->  bookings.id == listingData.id.toString() )
