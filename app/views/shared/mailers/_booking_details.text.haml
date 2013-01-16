@@ -3,3 +3,9 @@
 = "Dates - #{reservation_dates(reservation)}"
 
 = "Total Price - #{reservation_total_price(reservation)}"
+
+- if reservation.paid?
+  = "Paid!"
+  - if reservation.credit_card?
+    - subject = defined?(host) ? "the user's" : "your"
+    = "#{reservation_total_price(reservation)} has been charged to #{subject} credit card"

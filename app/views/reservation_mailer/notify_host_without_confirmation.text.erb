@@ -2,4 +2,4 @@ Dear <%= @user %>,
 
 <%= @reserver %> has made a reservation for listing, <%= @listing %>. The specifics of this reservation are set out below.
 
-<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %>
+<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation, :host => true } %>
