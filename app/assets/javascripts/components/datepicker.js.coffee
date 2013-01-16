@@ -134,8 +134,8 @@ class @Datepicker
     asEvented.call(View.prototype)
 
     viewTemplate: '''
-      <div class="datepicker-prev"></div>
-      <div class="datepicker-next"></div>
+      <div class="datepicker-prev ico-arrow-left"></div>
+      <div class="datepicker-next ico-arrow-right"></div>
 
       <div class="datepicker-header">
         <div class="datepicker-month"></div>
@@ -167,7 +167,10 @@ class @Datepicker
       positionTarget: null,
 
       # Padding in px as spacing around the positioning popover
-      positionPadding: 5
+      positionPadding: 5,
+
+      # Whether to disable past dates
+      disablePastDates: true
     }
 
     constructor: (@options = {}) ->
@@ -201,6 +204,9 @@ class @Datepicker
         @show()
 
     show: ->
+      # Reset rendering position
+      @renderPosition = null
+
       # Refresh the view on the first display
       if !@hasRendered
         @refresh()
@@ -213,23 +219,42 @@ class @Datepicker
 
     reposition: ->
       return unless @positionTarget
+
+      # Width/height of the datepicker container
       width = @container.width()
       height = @container.height()
+
+      # Offset of the position target reletave to the page
       tOffset = $(@positionTarget).offset()
+
+      # Width/height of the position target
       tWidth = $(@positionTarget).width()
       tHeight = $(@positionTarget).height()
 
-      left = tOffset.left + parseInt(tWidth/2, 10) - parseInt(width/2, 10)
+      # Window height and scroll position
+      wHeight = $(window).height()
+      sTop    = $(window).scrollTop()
 
-      # Page height
-      pageHeight = $('body').height()
-      if tOffset.top < height || (pageHeight - tOffset.top) > height
-        # Render below element
+      # Calculate available viewport height above/below the target
+      heightAbove = tOffset.top - sTop
+      heightBelow = wHeight + sTop - tOffset.top
+
+      # Determine whether to place the datepicker above or below the target element.
+      # If there is enough window height above element to render the container, then we put it
+      # above. If there is not enough (i.e. it would be partially hidden if rendered above), then
+      # we render it below the target.
+      if @renderPosition != 'below' && (@renderPosition == 'above' || heightAbove < height)
         top = tOffset.top + tHeight + @options.positionPadding
+        @renderPosition = 'above'
       else
         # Render above element
         top = tOffset.top - height - @options.positionPadding
+        @renderPosition = 'below'
 
+      # Left position is based off the container width and the position target width/position
+      left = tOffset.left + parseInt(tWidth/2, 10) - parseInt(width/2, 10)
+
+      # Update the position of the datepicker container
       @container.css(
         'top': "#{top}px",
         'left': "#{left}px"
@@ -321,6 +346,13 @@ class @Datepicker
       klass = []
       klass.push "active" if @model.isSelected(date)
       klass.push "datepicker-day-other-month" if monthDate and monthDate.getMonth() != date.getMonth()
+
+      now = new Date()
+      now = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
+      klass.push "datepicker-day-today" if date.getTime() == now.getTime()
+      if date.getTime() < now.getTime()
+        klass.push "datepicker-day-past"
+        klass.push "disabled" if @options.disablePastDates
       klass.join ' '
 
     _render: (template, args) ->

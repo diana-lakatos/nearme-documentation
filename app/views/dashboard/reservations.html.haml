@@ -1,17 +1,18 @@
 - render 'dashboard/navigation', :current => :reservations
 
-%h1 Reservations of Your Listings
+.box
+  %h2 Guest Reservations of Your Listings
 
-%section#reservations.tab
-  %ul.reservations.list
-    - @listing_reservations.each do |reservation|
-      %li
-        %p.em
-          %strong= reservation.owner
-          (#{mail_to reservation.owner.email, 'Email'}) on
-          %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
-          (#{reservation.state_name})
-          %br/
-          = reservation.comment
-        .actions
-          = render :partial => "owner_actions", :locals => {:reservation => reservation} if current_user == reservation.listing.creator
+  %section#reservations.tab
+    %ul.reservations.list
+      - @listing_reservations.each do |reservation|
+        %li
+          %p.em
+            %strong= reservation.owner
+            (#{mail_to reservation.owner.email, 'Email'}) on
+            %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
+            (#{reservation.state_name})
+            %br/
+            = reservation.comment
+          .actions
+            = render :partial => "owner_actions", :locals => {:reservation => reservation} if current_user == reservation.listing.creator

@@ -12,10 +12,10 @@ Feature: A user can add photos to a listing
   Scenario: Adding photos to a work place
     Given I am logged in as the user
       And I go to the the dashboard
-     When I follow "Manage Spaces"
-     And I follow "Spaces"
+     When I follow "Manage Locations"
+     And I follow "Locations"
      And I follow "Edit"
-     And I follow "Desks & Rooms"
+     And I follow "Listings"
      And I follow "Edit"
      And I follow "Photos"
      Then I should see 0 listing photos
@@ -40,10 +40,10 @@ Feature: A user can add photos to a listing
       | boss's desk.jpg  | The Boss' Desk                 |
       | intern chair.jpg | This is where the intern works |
     And I go to the dashboard
-    And I follow "Manage Spaces"
-    And I follow "Spaces"
+    And I follow "Manage Locations"
+    And I follow "Locations"
     And I follow "Edit"
-    And I follow "Desks & Rooms"
+    And I follow "Listings"
     And I follow "Edit"
     And I follow "Photos"
     Then I should see 2 listing photos

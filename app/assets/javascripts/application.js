@@ -1,11 +1,11 @@
 // Desks Near Me
 //
 //= require ./vendor/jquery
-//= require ./vendor/jquery-ui-1.9.2.custom
+//= require ./vendor/jquery-ui-1.9.2.custom.min
 //= require ./vendor/jquery.overlay
 //= require ./vendor/jquery.address-1.3.min
-//= require ./vendor/jquery-ui.multidatespicker
 //= require ./vendor/jquery.ui.touch-punch
+//= require ./vendor/customSelect.jquery
 //= require ./vendor/bootstrap
 //= require ./search
 //= require ./vendor/rails
@@ -130,4 +130,18 @@ $(function(){
 //  doPhotoFancyBox();
   doInlineReservation();
   doListingGoogleMaps();
+});
+
+$(function() {
+  var ellipses = $(".truncated-ellipsis")
+
+  $.each(ellipses, function() {
+    $(this).click(function() {
+      $(this).next('.truncated-text').toggleClass('hidden');
+      // If within an accordion, i.e. if has a parent of class accordion
+      if ($(this).parents('.accordion').length) {
+        $('.accordion').css('height', 'auto');
+      }
+    });
+  });
 });

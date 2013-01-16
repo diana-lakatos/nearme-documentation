@@ -28,8 +28,10 @@ class V1::ListingsControllerTest < ActionController::TestCase
   # Search
 
   test "should search" do
+    ThinkingSphinx::Test.start
     raw_post :search, {}, valid_search_params.to_json
     assert_response :success
+    ThinkingSphinx::Test.stop
   end
 
   test "search should raise when boundingbox is missing" do
@@ -42,10 +44,12 @@ class V1::ListingsControllerTest < ActionController::TestCase
   # Query
 
   test "should query" do
+    ThinkingSphinx::Test.start
     WebMock.disable_net_connect!
     GmapsFake.stub_requests
     raw_post :query, {}, valid_query_params.to_json
     assert_response :success
+    ThinkingSphinx::Test.stop
   end
 
   test "query should raise when boundingbox is missing" do
@@ -75,8 +79,8 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
     should "create periods" do
       reserved_dates = Listing.find_by_id(@listing.id).reservations.first.periods.map(&:date)
-      assert reserved_dates.include? Date.parse("2013-01-01")
-      assert reserved_dates.include? Date.parse("2013-01-02")
+      assert reserved_dates.include? Date.parse("2015-01-01")
+      assert reserved_dates.include? Date.parse("2015-01-02")
     end
   end
 
@@ -226,7 +230,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
     { "quantity" => 1,
       "email" => "foo@example.com",
       "assignees" => [{ "name" => "John Carter", "email" => "john@example.com" }],
-      "dates" => ["2013-01-01", "2013-01-02"] }
+      "dates" => ["2015-01-01", "2015-01-02"] }
   end
 
   def valid_additional_params

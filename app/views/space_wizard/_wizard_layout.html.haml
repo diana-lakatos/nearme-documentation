@@ -1,16 +1,15 @@
 #space_wizard
   .two-thirds.column.alpha
     .box
-      %h2
-        %ul
-          %li{:class => space_wizard_step_class(0, step)}
-            %span Sign Up
-          %li{:class => space_wizard_step_class(1, step)}
-            %span Company
-          %li{:class => space_wizard_step_class(2, step)}
-            %span Your Space
-          %li{:class => space_wizard_step_class(3, step)}
-            %span Desks &amp; Rooms
+      %ul.space-wizard
+        %li{:class => space_wizard_step_class(0, step)}
+          %span Sign Up
+        %li{:class => space_wizard_step_class(1, step)}
+          %span Company
+        %li{:class => space_wizard_step_class(2, step)}
+          %span Location
+        %li{:class => space_wizard_step_class(3, step)}
+          %span Listings
 
       = yield
 

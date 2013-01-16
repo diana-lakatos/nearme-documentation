@@ -1,16 +1,27 @@
 .btn, a.btn {
   display: inline-block;
   text-decoration: none;
+  font-family: $font-medium;
+  letter-spacing: 1px;
   color: #fff;
   padding: 0 10px;
+  border: none !important;
   @include transition(background .1s ease-in);
 
+  &.full-width {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  &.margin-bottom {
+    margin-bottom: 1em;
+  }
   .icon {
     vertical-align: middle;
   }
 
   &:visited, &:hover {
-    color: #fff;
+    color: #fff !important;
   }
 
   &.btn-small {
@@ -31,43 +42,55 @@
     height: 50px;
     line-height: 50px;
     font-size: 18px;
-    @include border-radius(8px);
+    @include border-radius(12px);
     padding: 0 20px;
   }
 
   &.btn-blue {
     background: $dnm_blue;
     &:hover {
-      background: darken($dnm_blue, 15%);
+      background: lighten($dnm_blue, 10%);
     }
 
     &:active {
-      background: darken($dnm_blue, 25%);
+      background: darken($dnm_blue, 10%);
     }
   }
 
   &.btn-green {
     background: $dnm_green;
     &:hover {
-      background: darken($dnm_green, 15%);
+      background: lighten($dnm_green, 10%);
     }
 
     &:active {
-      background: darken($dnm_green, 25%);
+      background: darken($dnm_green, 10%);
     }
   }
 
   &.btn-red {
-    background: #f34a40;
+    background: $dnm_red;
     &:hover {
-      background: darken(#f34a40, 15%);
+      background: lighten($dnm_red, 10%);
     }
 
     &:active {
       background: #e93e34;
-      @include background(linear-gradient(top center, #e93e34, #f34a40));
+      background: darken($dnm_red, 10%);
     }
   }
+
+  &.btn-orange {
+    background: $orange;
+    &:hover {
+      background: lighten($orange, 10%);
+    }
+
+    &:active {
+      background: darken($orange, 10%);
+    }
+  }  
+
   &.twitter {
     width:auto;
     text-align: center;

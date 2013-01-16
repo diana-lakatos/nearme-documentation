@@ -37,7 +37,7 @@
     - if user_auth_provider
       .signup-provider
         .inner-box.connected-provider
-          = link_to 'Close', '', :class => "close-button"
+          = link_to '', '', :class => "close-button ico-x"
           .avatar
             = image_tag user_auth_provider.avatar_url
           %h3= user_auth_provider.name

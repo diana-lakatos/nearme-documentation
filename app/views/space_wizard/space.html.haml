@@ -1,14 +1,16 @@
 = render :layout => 'wizard_layout', :locals => { :step => 2 } do
   %p.intro
-    Enter the details of your space below! We’ll get you to tell us all your company details later.
+    Enter the details of your location below! We’ll get you to tell us all your company details later.
 
   = simple_form_for @location, :url => space_wizard_space_url, :html => { :class => "form-horizontal new_location" } do |f|
     = hidden_field_tag :company_id, @company.id
 
-    = f.input :name, :label => 'Space name', :placeholder => 'Name your space!'
+    = f.input :name, :label => 'Location name', :placeholder => 'Name your Location!'
 
     .control-group
-      = f.label :address, 'Space location', :class => "control-label"
+      = f.label :address, :class => "control-label" do
+        %abbr{:title => "required"} *
+        Location address
       .controls
         = f.text_field :address, :placeholder => "Type an address...", :'data-behavior' => 'address-autocomplete'
 
@@ -20,14 +22,14 @@
         = f.hidden_field :longitude
         = f.hidden_field :formatted_address
 
-    = f.input :description, :label => 'Space description', :placeholder => 'Describe the overall look, feel, and ambience of your space. Be exciting!'
-    = f.input :email, :label => 'Booking email', :placeholder => 'yourname@example.com'
+    = f.input :description, :label => 'Location description', :placeholder => 'Describe the overall look, feel, and ambience of your location. Be exciting!'
+    = f.input :email, :label => 'Booking email', :placeholder => 'yourname@example.com', :required => true
     = f.input :phone, :label => 'Booking phone #', :placeholder => '1800 BOOKSPACE'
     = f.input :currency, :as => :currency, :label => "Booking currency", :default => 'USD'
     = f.input :special_notes, :as => :string, :label => 'Special terms or notes', :placeholder => 'Any special terms or notes to add?', :hint => "Got a dog? Require an NDA? Write any special conditions for booking."
 
     .actions
-      = f.submit 'Create my space'
+      = f.submit 'Create my Location'
 
 :javascript
   $(function() {

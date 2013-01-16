@@ -1,65 +1,77 @@
 .dnm-page {
 	
-	.header-container {
-		width:100%;
-		max-width: 960px;
-		padding: 0 20px;
-		box-sizing: border-box;
-		margin: 0 auto;
+	.container.header {
 
 		.row {
+
+      @media (min-width: 480px) and (max-width: 767px) {
+        padding: 0 20px;
+      }
 			@media (max-width: 320px) {
 				margin-bottom:0;
 			}
 		}
 		.logo-container {
-			width: 35%;
 			float: left;
+      margin-top: 2px;
 
-			@media( max-width:320px) {
-				width: 100%;
-			}
+      @media (max-width: 767px) {
+        margin-top:14px;
+      }
+
+      @media (max-width: 320px) {
+        margin-top:2px;
+      }
+
 		}
 
 		.links-container {
-			width: 65%;
 			float: right;
+
 		}		
 
 		a.btn.btn-blue {
+      margin-top: 4px;
 			@media (max-width: 630px) {
 				display: none;
 			}
 		}
-
 	}
 }
 
 header {
-  margin: 15px 0 0;
+  margin: 10px 0 0;
+
+  @media (max-width: 320px) {
+   padding: 10px 0;
+
+   .logo-container {
+    margin: 0;
+   }
+  }
 
   #logo {
-    display: inline-block;
-    background: image-url("layout/logo.png");
-    width: 244px;
-    height: 52px;
+    display:inline-block;
+    float: left;
+    margin-top: 10px;
+    background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/desksnear.me.png") no-repeat;
+    width: 228px;
+    height: 28px;
+    background-size: 227px 28px;
     text-indent: -9999px;
+    border: none !important;
 	  -webkit-transition: none;
 	  	 -moz-transition: none;
 	       -o-transition: none;
-	          transition: none;
+	          transition: none; 
 
-    @media (max-width: 480px) {
-    	background-size: 183px 39px;
-    	background-position: left 9px;
-    	background-repeat: no-repeat;
-    }
-
+   
     @media (max-width: 320px) {
-    	background-size: 244px 52px;
-    	background-position: center center;
-    	background-repeat: no-repeat;
-    }    
+      background-size: 114px 14px;
+      width: 114px;
+      height: 14px;
+      margin: 0;
+    }        
   }
 
   #header_links {
@@ -95,7 +107,7 @@ header {
       display: inline-block;
       float: right;
       color: $dnm_gray;
-      font-size: 16px;
+      font-size: 20px;
       margin-right: 30px;
       text-decoration: none;
 

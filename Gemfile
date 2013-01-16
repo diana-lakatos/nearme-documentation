@@ -1,12 +1,12 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.5'
+gem 'rails', '3.2.11'
 gem 'pg'
 gem 'pg_search'
 
 gem "RedCloth", "~> 4.2.9", :require => "redcloth"
 gem 'airbrake'
-gem 'active_model_serializers', git: "git://github.com/rails-api/active_model_serializers"
+gem 'active_model_serializers', git: "git://github.com/rails-api/active_model_serializers.git"
 gem 'carrierwave'
 gem 'decent_exposure'
 gem 'devise'
@@ -41,12 +41,11 @@ gem 'chronic'
 # gem 'flying-sphinx', '0.8.4'
 gem 'thin'
 
-gem 'engineyard'
-# gem 'ey_config'
+gem 'ey_config'
 
 group :development do
   # gem 'heroku'
-  gem 'taps'
+  # gem 'taps'
   gem 'sqlite3'
   gem "rails-erd"
   gem 'quiet_assets'
@@ -65,7 +64,7 @@ group :development, :test do
   gem 'factory_girl_rails', '>=3.0.0'
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
-  gem 'ruby-debug19'
+  # gem 'ruby-debug19'
   gem 'jasmine'
   gem 'jasmine-headless-webkit', '0.9.0.rc.2'
 end

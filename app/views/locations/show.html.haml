@@ -12,24 +12,23 @@
             Overview
         #overview_tab.accordion-body.collapse.in
           .accordion-inner
-            #{@location.description}
+            %p= truncate_with_ellipsis @location.description, 250
 
             - if @location.phone.present?
-              %strong= @location.phone
-            - if @location.url.present?
-              = link_to @location.url, @location.url, :target => :_blank
+              %strong.ico-phone.padding= @location.phone
 
-      .accordion-group
-        .accordion-heading
-          %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#host_tab'}
-            About Host
-        #host_tab.accordion-body.collapse
-          .accordion-inner
-            %p= "#{@location.creator.name}, #{@location.company.name}"
-            %p= image_tag(@location.creator.avatar.url, :alt => @location.creator.name)
-            - if @location.creator.phone
-              %p= @location.creator.phone 
-            %p= @location.company.description
+
+      - if @location.creator
+        .accordion-group
+          .accordion-heading
+            %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#host_tab'}
+              Company
+          #host_tab.accordion-body.collapse
+            .accordion-inner
+              %p
+              - if @location.creator.phone
+                %p.ico-phone.padding= @location.creator.phone 
+              %p= truncate_with_ellipsis @location.company.description, 250
  
       - if @amenities
         .accordion-group

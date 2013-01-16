@@ -10,16 +10,14 @@ section.search {
     top: 8px;
     left: 10px;
     border: 0;
-    background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/search-crosshair.png");
-    background-position: left top;
-    background-repeat: no-repeat;
-    width: 32px;
-    height: 33px;
-    opacity: .6;
+    background: transparent;
     @include transition(all .1s ease-in);
+    font-size: 32px;
+    opacity: .6;
+    color: $dnm_black; 
 
     &:hover {
-      opacity:1;
+      opacity:.95;
     }
 
     @media (max-width: 480px ) {
@@ -33,23 +31,23 @@ section.search {
   &.home_search input#search {
     padding: 8px 0 8px 50px;
     width: 460px;
+    float:left;
+    margin-right: 8px;
 
     @media (max-width: 480px ) {
       padding: 8px 0 8px 40px;
+      margin-right:0;
     }
   }
 
   &.search_results input#search {
-    padding-left: 35px;
+    padding-left: 50px;
     width: 300px;
   }
 
   &.search_results .geolocation {
-    background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/search-crosshair.png");
-    background-size: 22px 23px;
-    width: 22px;
-    height: 23px;
-    top: 13px;
+    top: 8px;
+    left: 10px;
   }
 
   &.search_results {
@@ -65,13 +63,7 @@ section.search {
     vertical-align: top;
     width: 115px;
     font-size: 22px;
-
-    .icon {
-      display: inline-block;
-      width: 32px;
-      height: 33px;
-      background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/search.png") no-repeat;
-    }
+    text-align: center;
   }
 
   .slider {
@@ -167,34 +159,27 @@ section.search {
     .availability-date-start, .availability-date-end {
       position: relative;
 
-      .date-icon {
+      .calendar {
         position: absolute;
-        top: 12px;
-        left: 8px;
+        top: 10px;
+        left: 10px;
         display: block;
-        background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat;
-        width: 26px;
-        height: 24px;
-      }
-
-      &.availability-date-end .date-icon {
-        background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat;
-        width: 22px;
-        height: 23px;
+        font-size: 28px;
+        opacity: .6;
       }
 
       input {
-        padding-left: 40px;
+        padding-left: 50px;
         width:100%;
         box-sizing: border-box;
-        background: white image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/calender.png") no-repeat 8px center;
+        background: $dnm_white;
 
       }
     }
   }
 }
 
-@media (min-width: 768px) and (max-width: 959px) {
+@media (min-width: 767px) and (max-width: 959px) {
    #listing_search {
 
     &.home_search input#search {
@@ -217,7 +202,6 @@ section.search {
 
     &.search_results {
       input#search {
-        padding-left: 35px;
         width: 300px;
       }
       .slider { 
@@ -253,8 +237,5 @@ section.search {
 
 @media  (max-width: 480px) {
    #listing_search {
-    &.home_search input#search, &.search_results .location input#search {
-      font-size:90%;
-    }
     .slider {
       width: 100px; } } }

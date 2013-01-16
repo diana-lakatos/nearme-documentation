@@ -1,6 +1,6 @@
 .accordion-group {
 
-	background: rgb(240,240,240);
+	background: $dnm_white;
 	margin-right: 20px;
 	border-radius: 8px;
 
@@ -13,6 +13,7 @@
   	background-origin: content-box;
   	color: black;
   	opacity: .8;
+    @include transition(opacity .1s ease-in);
 
   	&:hover {
   		opacity: 1;
@@ -20,3 +21,8 @@
   }
 }
 
+.carousel-control {
+  background: none !important;
+  border: none !important;
+  @include text-shadow(black 0 0 5px);
+}

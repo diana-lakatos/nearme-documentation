@@ -4,8 +4,9 @@ class @Bookings.Listing
 
   defaultQuantity: 1
 
-  constructor: (@options, @availabilityManager) ->
-    @id = parseInt(@options.id, 10)
+  constructor: (@data, options) ->
+    @id = parseInt(@data.id, 10)
+    @availability = options.availability
     @bookings = {}
 
   setDefaultQuantity: (qty, updateBookings = false) ->
@@ -14,14 +15,14 @@ class @Bookings.Listing
     if updateBookings
       @updateOrRemoveBooking(DNM.util.Date.idToDate(day), @defaultQuantity) for day in @bookedDays()
 
-  availabilityLoadedFor: (date) ->
-    @availabilityManager.isLoaded(@id, date)
+  availabilityLoadedFor: (date_or_dates) ->
+    @availability.isLoaded(date_or_dates)
 
   totalFor: (date) ->
-    @availabilityManager.totalFor(@id, date)
+    @availability.totalFor(date)
 
   availabilityFor: (date) ->
-    @availabilityManager.availableFor(@id, date)
+    @availability.availableFor(date)
 
   hasAvailabilityOn: (date) ->
     @availabilityFor(date) > 0
@@ -76,7 +77,7 @@ class @Bookings.Listing
     totalPeriodBooked = periodPerDay * @bookedDeskDays()
 
     # Sort the prices by period, largest first
-    prices = _(@options.prices).sortBy((price) -> price.period).reverse()
+    prices = _(@data.prices).sortBy((price) -> price.period).reverse()
 
     periodRemaining = totalPeriodBooked
     subtotalCents = 0
@@ -124,10 +125,8 @@ class @Bookings.Listing
   #
   # date     - The date to enforce availability loading of
   # callback - A function to call when availability is loaded
-  withAvailabilityLoaded: (date, callback) ->
-    @availabilityManager.get @id, date, -> callback()
+  withAvailabilityLoaded: (date_or_dates, callback) ->
+    @availability.get date_or_dates, -> callback()
 
-  getAvailabilityManager: ->
-    new Bookings.AvailabilityManager.Listing(@availabilityManager, @id)
 
 

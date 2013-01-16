@@ -31,16 +31,18 @@ class @Bookings.AvailabilityManager
   # listingId - Listing id to get availability for
   # date      - Date to fetch
   # callback  - Callback function to exectue
-  get: (listingId, date, callback) ->
+  get: (listingId, date_or_dates, callback) ->
+    if date_or_dates instanceof Array
+      return @getDates(listingId, date_or_dates, callback)
+    else
+      date = date_or_dates
+
     dateId = DNM.util.Date.toId(date)
 
     if @isLoaded(listingId, date)
       @_executeCallback([listingId, date, callback]) if callback
     else
       @_scheduleFetch(listingId, date, callback)
-
-  getAll: (date, callback) ->
-    @_scheduleFetch(null, date, callback)
 
   getDates: (listingId, dates, callback) ->
     pending = false
@@ -52,6 +54,10 @@ class @Bookings.AvailabilityManager
       @pendingCallbacks.push([null, null, callback]) if callback
     else
       callback() if callback
+
+  getAll: (date, callback) ->
+    @_scheduleFetch(null, date, callback)
+
 
   # Make request to load pending availability info
   fetchPending: ->
@@ -101,7 +107,7 @@ class @Bookings.AvailabilityManager
     isLoaded: (date_or_dates) -> @manager.isLoaded(@listingId, date_or_dates)
     availableFor: (date) -> @manager.availableFor(@listingId, date)
     totalFor: (date) -> @manager.totalFor(@listingId, date)
-    get: (date, callback) -> @manager.get(@listingId, date, callback)
+    get: (date_or_dates, callback) -> @manager.get(@listingId, date_or_dates, callback)
     getDates: (dates, callback) -> @manager.getDates(@listingId, dates, callback)
 
 

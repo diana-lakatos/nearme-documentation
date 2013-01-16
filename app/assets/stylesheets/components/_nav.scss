@@ -1,15 +1,61 @@
+nav.hero-nav {
+  ul.container {
+    background: $gray2;
+    color: $gray4;
+    @include border-radius(8px);
+    @include background-clip(padding-box);
+
+    li {
+      float: left;
+
+      a {
+        display: block;
+        padding: 0 15px;
+        line-height: 40px;
+        font-size: 16px;
+        color: $gray4;
+      }
+
+      &:first-child {
+        @include border-left-radius(8px);
+      }
+
+      @media (max-width: 480px) {
+        clear: both; 
+        width: 100%;
+
+        &:first-child {
+          @include border-top-radius(8px);
+          @include border-bottom-radius(0px);
+        }
+      }
+    }
+
+    li.current a {
+      color: $dnm_white;
+    }
+
+    li.current {
+      background: $dnm_black;
+      color: $dnm_white;
+    }
+  }
+}
 ul.nav {
-  background: #f5f5f5;
-  border-bottom: 1px solid #9e9e9e;
+  background: $dnm_white;
+  border: 2px solid $gray2;
   @include border-radius(8px);
   overflow: hidden;
 
   li {
-    border-top: 1px solid #ffffff;
-    border-bottom: 1px solid #d5d6d6; // gray
+    border-bottom: 1px solid $gray4; // gray
 
-    &:hover, &.active {
-      background: #f0eded;
+    &.active {
+      background: $dnm_black;
+
+      a {
+        color: $dnm_white;
+      }
     }
 
     &:first-child {
@@ -25,9 +71,10 @@ ul.nav {
       font:normal 16px/22px $font-medium, sans-serif;
       padding: 8px 16px;
       position: relative;
+      color: $gray3;
 
-      &, &:hover, &:active, &:visited {
-        color: #1e2222;
+      &:active {
+        color: $dnm_white;
       }
     }
   }
@@ -42,9 +89,7 @@ ul.nav.accordian {
 
       i {
         position: absolute;
-        top: 14px;
         right: 12px;
-        background: image-url("components/nav/collapsed.png");
         width: 16px;
         height: 17px;
       }
@@ -52,13 +97,11 @@ ul.nav.accordian {
 
     > ul {
       display: none;
-      border-top: 1px solid #fff;
       border-bottom: 1px solid #155f89;
 
       li {
-        border-top: 1px solid #4da7d9;
-        border-bottom: 1px solid #1a74a6;
-        background: #2091d0;
+        border-bottom: 1px solid $gray4;
+        background: $gray3;
 
         &:first-child {
           border-top: none;
@@ -77,12 +120,10 @@ ul.nav.accordian {
 
           i {
             position: absolute;
-            top: 12px;
+            top: 8px;
             right: 12px;
-            background: image-url("components/nav/arrow-right.png");
             width: 13px;
             height: 23px;
-            display: none;
           }
         }
 
@@ -107,7 +148,6 @@ ul.nav.accordian {
       border-bottom: none;
 
       > a i {
-        background: image-url("components/nav/expanded.png");
       }
 
       > ul {
