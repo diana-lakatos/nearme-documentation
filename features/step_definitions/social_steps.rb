@@ -3,25 +3,11 @@ Before do
 end
 
 Given /^the (.*) OAuth request is successful$/ do |social|
-  OmniAuth.config.mock_auth[social.downcase.to_sym] = OmniAuth::AuthHash.new({
-    :provider => social.downcase,
-    :uid => '123545',
-    :info => { 
-      # those parameters need to correspond to information needed in app/helpers/authentications_helper
-      :name => "#{social} name",
-      :image => "donthave.j[g",
-      :nickname => 'omnitester', #for twitter
-      :urls => {
-        :public_profile => "htttp://myprofile.com", #linkedin
-        :link => "htttp://myprofile.com",#facebook
-      }
-    }
-  })
+  mock_successful_authentication_with_provider(social)
 end
 
 Given /^the (.*) OAuth request is unsuccessful$/ do |social|
-  OmniAuth.config.logger = Rails.logger #otherwise the error goes to STDOUT
-  OmniAuth.config.mock_auth[social.downcase.to_sym] = :testing_invalid_credentials
+  mock_unsuccessful_authentication_with_provider(social)
 end
 
 Given /^Existing User with email "([^"]*)"$/ do |email|

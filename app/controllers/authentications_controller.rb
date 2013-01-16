@@ -29,9 +29,9 @@ class AuthenticationsController < ApplicationController
     @authentication = current_user.authentications.find(params[:id])
     unless @authentication.is_only_login_possibility?
       @authentication.destroy
-      flash[:notice] = "Successfully destroyed authentication."
+      flash[:notice] = "Successfully disconnected your #{@authentication.provider_name}"
     else
-      flash[:error] = "We are sorry, but we cannot allow you disconnecting your account"
+      flash[:error] = "We are unable to disconnect your account from #{@authentication.provider_name}. Make sure you have at least one other account linked so you can log in!"
     end
     redirect_to edit_user_registration_url
   end
@@ -48,8 +48,6 @@ class AuthenticationsController < ApplicationController
   end
 
   private
-
-  # 2013-01-11 Maciek: Deleted redirect_if_login, because we allow connecting social acounts
 
   def wizard_id
     oparams = request.env['omniauth.params']

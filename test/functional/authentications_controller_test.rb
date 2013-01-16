@@ -22,7 +22,6 @@ class AuthenticationsControllerTest < ActionController::TestCase
   test "authentication can be deleted if user has no  password but more than one authentications" do
     create_signed_in_user_with_authentication
     add_authentication("twitter", "abc123")
-    count = @user.authentications.count
     assert_difference('@user.authentications.count', -1) do
       delete :destroy, id: @user.authentications.first.id
     end

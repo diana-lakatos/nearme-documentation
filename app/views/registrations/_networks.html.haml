@@ -2,17 +2,6 @@
   - supported_providers.each do |provider|
     %li{:class=>"service_provider", :id => "#provider_#{provider.downcase}"}
       %div{:class => "service_provider_name"}
-      .service_provider_link
         %p
-          - if (authentication = Authentication.find_by_provider_and_user_id(provider.downcase, current_user.id))
-            -if authentication.is_only_login_possibility?
-              %span.btn.btn-blue.btn-small
-                #{provider}
-              (log out and reset password if you would like to disconnect)
-            -else
-              = link_to authentication_path(authentication), :method => :delete , :class => "btn btn-blue btn-small" do
-                Disconnect #{provider}
-          - else 
-            = link_to provider_auth_url(provider.downcase), :class => "btn btn-blue btn-small" do
-              Connect to #{provider}
+          = build_link_for(provider)
   - end unless supported_providers.nil?

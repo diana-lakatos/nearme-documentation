@@ -6,6 +6,8 @@ class RegistrationsController < Devise::RegistrationsController
 
   # We extend the create action to clear out any stored Provider auth data used during
   # registration.
+  before_filter :find_supported_providers, :only => [:edit, :update]
+
   def create
     super
     # Clear out temporarily stored Provider authentication data if present
@@ -13,7 +15,6 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def edit
-    @supported_providers = Authentication::available_providers
     super
   end
 
@@ -49,6 +50,10 @@ class RegistrationsController < Devise::RegistrationsController
     else
       super
     end
+  end
+
+  def find_supported_providers
+    @supported_providers = Authentication::available_providers
   end
 
 end

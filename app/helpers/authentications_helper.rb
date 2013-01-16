@@ -14,7 +14,7 @@ module AuthenticationsHelper
     end
 
     def connection_description
-      "Connected via #{@auth['provider'].titleize} as <a href='#{destination_url}'>#{display_url}</a>".html_safe
+      "Connected via #{title} as <a href='#{destination_url}'>#{display_url}</a>".html_safe
     end
   end
 
@@ -26,6 +26,10 @@ module AuthenticationsHelper
 
     def display_url
       "@#{@auth['info']['nickname']}"
+    end
+
+    def title
+      "Twitter"
     end
   end
 
@@ -39,6 +43,10 @@ module AuthenticationsHelper
       "#{@auth['info']['name']}"
     end
 
+    def title
+      "LinkedIn"
+    end
+
   end
 
   class FacebookProvider < AuthProvider
@@ -49,6 +57,10 @@ module AuthenticationsHelper
 
     def display_url
       "#{@auth['info']['name']}"
+    end
+
+    def title
+      "FaceBook"
     end
 
   end
