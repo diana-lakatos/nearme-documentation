@@ -7,8 +7,8 @@ GIT
       crack (>= 0.1.7)
 
 GIT
-  remote: git://github.com/josevalim/active_model_serializers.git
-  revision: bea38dd73a5129be97a491c6d06287ea7060c7e3
+  remote: git://github.com/rails-api/active_model_serializers.git
+  revision: e3bfd07ac47b76c69a22a7a4c357c053cd935b91
   specs:
     active_model_serializers (0.5.2)
       activemodel (>= 3.0)
