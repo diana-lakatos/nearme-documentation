@@ -6,7 +6,7 @@ gem 'pg_search'
 
 gem "RedCloth", "~> 4.2.9", :require => "redcloth"
 gem 'airbrake'
-gem 'active_model_serializers', git: "git://github.com/josevalim/active_model_serializers.git"
+gem 'active_model_serializers', git: "git://github.com/rails-api/active_model_serializers"
 gem 'carrierwave'
 gem 'decent_exposure'
 gem 'devise'
@@ -38,11 +38,14 @@ gem 'jquery-rails'
 gem 'sass-rails'
 gem 'chronic'
 
-gem 'flying-sphinx', '0.8.4'
+# gem 'flying-sphinx', '0.8.4'
 gem 'thin'
 
+gem 'engineyard'
+# gem 'ey_config'
+
 group :development do
-  gem 'heroku'
+  # gem 'heroku'
   gem 'taps'
   gem 'sqlite3'
   gem "rails-erd"
