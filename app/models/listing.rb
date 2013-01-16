@@ -51,6 +51,7 @@ class Listing < ActiveRecord::Base
   validates_presence_of :location_id, :creator_id, :name, :description, :quantity
   validates_inclusion_of :confirm_reservations, :in => [true, false]
   validates_numericality_of :quantity
+  validates_length_of :description, :maximum => 250
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
                   :creator_id, :name, :description, :daily_price, :weekly_price, :monthly_price,
