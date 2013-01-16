@@ -39,11 +39,18 @@ When /^I select to book space( using the advanced view)? for:$/ do |advanced, ta
 
       # Activate the datepicker
       find(:css, ".calendar-wrapper").click
+      wait_until {
+        page.has_no_selector?('.datepicker-loading', visible: true)
+      }
 
       # Add the day to the seletion
       unless added_dates.include?(date)
-        find(:css, date_class).click
+        el = find(:css, date_class)
+        el.click
         added_dates << date
+
+        # Toggle hiding the calendar
+        find(:css, ".calendar-wrapper").click
       end
     end
   end

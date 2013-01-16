@@ -9,14 +9,14 @@ Feature: A user can book at a space
       And a listing exists with location: that location, quantity: 10
       And a user exists
 
-  @javascript @broken
+  @javascript
   Scenario: A logged in user can book a listing
     Given I am logged in as the user
      When I go to the location's page
       And I book space for:
           | Listing     | Date   | Quantity  |
-          | the listing | Monday  | 1        |
-          | the listing | Tuesday | 1        |
+          | the listing | next Monday  | 1        |
+          | the listing | next Tuesday | 1        |
      Then the user should have the listing reserved for 'Monday'
       And the user should have the listing reserved for 'Tuesday'
 
@@ -24,7 +24,7 @@ Feature: A user can book at a space
   @future
   Scenario: A user cannot book a desk in the past
 
-  @javascript @broken
+  @javascript
   Scenario: Booking for a 'automatically confirm' listing should show relevant details
     Given I am logged in as the user
     And bookings for the listing do not need to be confirmed
@@ -36,7 +36,6 @@ Feature: A user can book at a space
     Then I should see "This host manually confirms all bookings before payment"
 
   @javascript
-  @broken
   Scenario: Booking for a non-'automatically confirm' listing should show relevant details
     Given I am logged in as the user
     And bookings for that listing do need to be confirmed
@@ -53,7 +52,7 @@ Feature: A user can book at a space
     Given the listing has the following reservations:
       | Date   | Quantity |
       | Monday | 10       |
-    When I go to the locatoin's page
+    When I go to the location's page
     Then I can't select to book space for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 1        |
@@ -76,4 +75,10 @@ Feature: A user can book at a space
       And I press "Reserve"
      Then I should be on the listing's page
       And a reservation period should exist with date: "2010-10-15"
+
+  @javascript
+  @future
+  Scenario: Booking and paying by credit card
+    Given: I am logged in as the user
+    When I go to the location's page
 
