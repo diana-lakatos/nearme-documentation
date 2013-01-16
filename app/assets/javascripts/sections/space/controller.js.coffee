@@ -1,6 +1,10 @@
 class @Space.Controller
 
   constructor: (@container, @options = {}) ->
+    @photosContainer = $('.photos-container')
+    @mapContainer    = $('.map')
+    @googleMapElementWrapper = @mapContainer.find('.map-container')
+
     @setupCollapse()
     @setupCarousel()
     @setupMap()
@@ -22,16 +26,16 @@ class @Space.Controller
     @bookings = Bookings.Controller.initialize(@container.find('.bookings'), @options.bookings)
 
   setupMap: ->
-    mapContainer = $(".map")
-    return unless mapContainer.length > 0
+    return unless @mapContainer.length > 0
 
-    location = mapContainer.find('address')
+    location = @mapContainer.find('address')
     latlng = new google.maps.LatLng(
       location.attr("data-lat"), location.attr("data-lng")
     )
 
     @map = { map: null, markers: [] }
-    @map.map = new google.maps.Map(mapContainer.find('.map-container')[0], {
+    @map.initialCenter = latlng
+    @map.map = new google.maps.Map(@googleMapElementWrapper[0], {
       zoom: 13,
       mapTypeControl: false,
       streetViewControl: false,
@@ -44,6 +48,30 @@ class @Space.Controller
       map: @map.map,
       icon: location.attr("data-marker")
     })
+
+    @setupMapHeightConstraintToPhotosSection()
+
+  # TODO: There's potentially a better way to do this, by constraining the dimensions via a
+  #       defined aspect ratio for the the map and the photos and using a dom wrapper to maintain that
+  #       aspect ratio (%'age padding with abs. positioned inner container). 
+  #       At some point we can look into that but this works for now.
+  setupMapHeightConstraintToPhotosSection: ->
+    return unless @photosContainer.length > 0
+    return unless @map
+
+    resizeMapHeightToPhotosHeight = =>
+      height = @photosContainer.height()
+      @googleMapElementWrapper.height(height)
+      google.maps.event.trigger(@map.map, 'resize')
+      @map.map.setCenter(@map.initialCenter)
+      @pendingMapHeightChange = false
+
+    $(window).resize =>
+      return if @pendingMapHeightChange
+      @pendingMapHeightChange = true
+      setTimeout(resizeMapHeightToPhotosHeight, 25)
+
+    resizeMapHeightToPhotosHeight()
 
   setupCarousel: ->
     carouselContainer = $(".carousel")

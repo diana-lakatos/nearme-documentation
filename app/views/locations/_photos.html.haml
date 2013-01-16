@@ -2,7 +2,7 @@
   .row-fluid.location-photos
 
     - if @location.photos.any?
-      .span8.pull-right
+      .span8.pull-right.photos-container
         .carousel.slide
           .carousel-inner
             - @location.photos.each_with_index do |photo, index|
