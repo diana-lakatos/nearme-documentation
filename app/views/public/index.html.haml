@@ -15,12 +15,10 @@
             %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
             .geolocation
               %span.ico-crosshairs
-            %a.btn.btn-green.btn-outline.btn-medium{ :rel => "submit", :href => "" }
+            %a.btn.btn-green.btn-outline.btn-medium{ "data-disable-with" => "Searching...", :rel => "submit", :href => "" }
               %span.ico-search
               Search
             #suggest_location{:style => "display: none"}
-
-
 
 %section.how-it-works
   .row.rent-your-space
@@ -32,7 +30,7 @@
         %h1 Rent out your extra space.
         %p Don't let unused space go to waste: generate revenue by renting out your empty office space. Build your network & client base by opening up your space to professionals in your industry. Create a shared space and encourage collaboration between fields.      
 
-        = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium" do
+        = link_to_once new_space_wizard_url, :class => "btn btn-blue btn-medium" do
           %span.ico-plus.padding List Your Space
 
   .row.find-a-desk
@@ -44,7 +42,7 @@
         %h1 Find a desk near you.
         %p Desks Near Me is a simple and beautiful way for freelancers, contractors, and other nomadic workers to find great places to work. Leverage networking opportunities in a shared environment, or work from a single office for greater privacy. Whether you need a workspace for a day, a month, or a year, Desks Near Me has you covered.
 
-        = link_to search_path, :class => "btn btn-green btn-medium" do
+        = link_to_once search_path, :class => "btn btn-green btn-medium" do
           %span.ico-search.padding Find a Desk
               
 

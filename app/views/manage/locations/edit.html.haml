@@ -38,7 +38,7 @@
         = render 'availability_rules/form', :f => f, :allow_clear => "Use Location's availability"
 
       .actions
-        = f.button :submit
+        = f.button :submit, :disable_with => "Updating..."
 
 :javascript
   $(function() {

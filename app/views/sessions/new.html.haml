@@ -22,7 +22,7 @@
           = f.input :remember_me, as: :boolean, inline_label: "Remember Me", label: false
 
         .actions
-          = f.submit "Log In"
+          = f.submit "Log In", :disable_with => "Logging In..."
 
   .one-third.column.faqs-column
     %h2 Already have an account?
