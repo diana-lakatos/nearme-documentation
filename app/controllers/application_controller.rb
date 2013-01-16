@@ -6,12 +6,6 @@ class ApplicationController < ActionController::Base
 
   before_filter :set_tabs
 
-  #booking_request: {"listings"=>
-      #{"0"=>{"id"=>"728",
-             #"bookings"=>{"0"=>{"date"=>"2013-01-16", "quantity"=>"3"},
-                          #"1"=>{"date"=>"2013-01-23", "quantity"=>"3"},
-                          #"2"=>{"date"=>"2013-01-30", "quantity"=>"3"}}}}, "action"=>"review", "controller"=>"locations/reservations", "location_id"=>"733"}
-
   def store_bookings_request
     unless current_user
       session[:user_return_to] =  "/locations/#{params[:location_id]}"
