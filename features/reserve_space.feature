@@ -21,10 +21,6 @@ Feature: A user can book at a space
       And the user should have the listing reserved for 'Tuesday'
 
   @javascript
-  @future
-  Scenario: A user cannot book a desk in the past
-
-  @javascript
   Scenario: Booking for a 'automatically confirm' listing should show relevant details
     Given I am logged in as the user
     And bookings for the listing do not need to be confirmed
@@ -45,6 +41,23 @@ Feature: A user can book at a space
       | the listing | Monday | 1        |
     And I click to review the booking
     Then I should not see "This host manually confirms all bookings before payment"
+
+  @javascript
+  Scenario: Booking and paying by credit card
+     Given I am logged in as the user
+      When I go to the location's page
+       And I select to book space for:
+        | Listing     | Date   | Quantity |
+        | the listing | Monday | 1        |
+       And I click to review the booking
+       And I provide reservation credit card details 
+       And I click to confirm the booking with credit card
+       Then I should see "credit card will be charged when your reservation is confirmed"
+       And the user should have a billing profile
+
+  @javascript
+  @future
+  Scenario: A user cannot book a desk in the past
 
   @javascript
   @future
@@ -75,10 +88,3 @@ Feature: A user can book at a space
       And I press "Reserve"
      Then I should be on the listing's page
       And a reservation period should exist with date: "2010-10-15"
-
-  @javascript
-  @future
-  Scenario: Booking and paying by credit card
-    Given: I am logged in as the user
-    When I go to the location's page
-

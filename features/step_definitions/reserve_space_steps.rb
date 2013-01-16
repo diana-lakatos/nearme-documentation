@@ -61,8 +61,18 @@ When /^I click to review the bookings?$/ do
   wait_for_ajax
 end
 
+When /^I provide reservation credit card details$/ do
+  mock_billing_gateway
+
+  choose 'payment_method_credit_card'
+  fill_in 'card_number', :with => "4111111111111111"
+  fill_in 'card_expires', :with => '1218'
+  fill_in 'card_code', :with => '123'
+  @credit_card_reservation = true
+end
+
 When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
-  unless credit_card
+  if !credit_card && !@credit_card_reservation
     choose 'payment_method_manual'
   end
 
