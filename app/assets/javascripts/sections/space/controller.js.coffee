@@ -1,6 +1,7 @@
 class @Space.Controller
 
   constructor: (@container, @options = {}) ->
+    @mapAndPhotosContainer = $('.location-photos')
     @photosContainer = $('.photos-container')
     @mapContainer    = $('.map')
     @googleMapElementWrapper = @mapContainer.find('.map-container')
@@ -60,7 +61,14 @@ class @Space.Controller
     return unless @map
 
     resizeMapHeightToPhotosHeight = =>
-      height = @photosContainer.height()
+      # We use a known aspect ratio to determine the dynamic height because:
+      #   a) If the image hasn't loaded yet we won't have the height
+      #   b) Likewise if the image won't load (error, etc.) we wouldn't otherwise get a relevant height 
+      aspectRatioW = @mapAndPhotosContainer.attr('data-photo-aspect-w')
+      aspectRatioH = @mapAndPhotosContainer.attr('data-photo-aspect-h')
+
+      width = @photosContainer.width()
+      height = parseInt(Math.round(width * aspectRatioH/aspectRatioW))
       @googleMapElementWrapper.height(height)
       google.maps.event.trigger(@map.map, 'resize')
       @map.map.setCenter(@map.initialCenter)
