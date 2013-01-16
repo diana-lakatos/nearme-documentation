@@ -1,6 +1,6 @@
 %ul.services_list
   - supported_providers.each do |provider|
-    %li{:class=>"service_provider", :id => "#provider_#{provider.downcase}"}
+    %li{:class=>"service_provider", :id => "provider_#{provider.downcase}"}
       %div{:class => "service_provider_name"}
         %p
           = build_link_for(provider)
