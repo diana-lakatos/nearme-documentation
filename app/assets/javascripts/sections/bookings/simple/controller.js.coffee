@@ -6,7 +6,7 @@ class @Bookings.Simple.Controller extends Bookings.Controller
     # On this view, we automatically add a booking for 'tomorrow' if there is no other preset dates
     tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
     for listing in @listings
-      if !_.isEmpty(listing.bookings)
+      if _.isEmpty(listing.bookings)
         listing.addDate(tomorrow)
 
     # Initialize each of the listing views
