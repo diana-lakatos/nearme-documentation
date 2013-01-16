@@ -9,18 +9,6 @@ Feature: Location Owner Creates/Edits Listing
     And a company exists with creator: the user, name: "Garage Co"
     And a location exists with company: the company, creator: the user, name: "The Garage", description: "Aliquid eos ab quia officiis sequi."
 
-  @wip
-  Scenario: Host creates company
-    Given I am logged in as a user
-    When I create a company
-    Then I can create locations for that company
-
-  @wip
-  Scenario: Host creates company
-    Given I am logged in as a user with a company
-    When I create a location for that company
-    Then I can create listings for that location
-
   Scenario: A location owner can create a listing
     Given I am on the dashboard
     When I follow "Manage Locations"
