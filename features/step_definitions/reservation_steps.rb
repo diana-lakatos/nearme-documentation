@@ -68,21 +68,6 @@ Then /^I should not see availability for dates:$/ do |table|
   end
 end
 
-Given /^the following reservations are made for the listing:$/ do |table|
-  users = {}
-
-  table.hashes.each do |row|
-    user = users[row['User']] ||= FactoryGirl.create(:user, :name => row['User'])
-    Timecop.freeze(Time.parse row['At'])
-    model!('the listing').reservations.create(
-      :user      => user,
-      :date      => Date.parse(row['For'])
-    )
-
-    Timecop.return
-  end
-end
-
 Then /^I should see the following reservation events in the feed in order:$/ do |table|
   regex = /<img[^>]+>\s*(.*?)\s+booked a desk for the (\d\d [A-Za-z]+, \d\d\d\d).*datetime="(.*?)"/m
   feeds = all("ul.activity-feed li").map do |booked_item|

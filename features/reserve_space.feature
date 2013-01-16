@@ -1,3 +1,4 @@
+@wip
 Feature: A user can book at a space
   In order to have a place to work
   As a user
