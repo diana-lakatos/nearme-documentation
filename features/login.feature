@@ -30,6 +30,21 @@ Feature: A user can login
      When I sign up with LinkedIn
      Then there should be no LinkedIn account
 
+  Scenario: User signed up with social provider can set up his password
+    Given I signed up with LinkedIn without password
+     When I type in my password in edit page
+     Then I should have password
+
+  Scenario: User created via LinkedIn after updating password should be able to disconnect LinkedIn
+    Given I signed up with LinkedIn with password
+     When I disconnect LinkedIn
+     Then there should be no LinkedIn account
+
+  Scenario: User with one login possibility should not be able to disconnect authentication
+    Given I signed up with Twitter without password
+     When I want to disconnect Twitter
+     Then there is no disconnect Twitter link
+
   Scenario: An authenticated user can add Facebook 
     Given I am logged in manually  
      When I connect to Facebook
@@ -38,7 +53,7 @@ Feature: A user can login
   Scenario: A user can login with email and password
     Given A valid user exists
      When I sign in with valid credentials
-     Then I should see "Signed in successfully."
+     Then I am signed in as this user
 
   Scenario: A user sign up with email and password
     Given There is no user with my email

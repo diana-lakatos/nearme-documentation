@@ -27,7 +27,7 @@ class AuthenticationsController < ApplicationController
 
   def destroy
     @authentication = current_user.authentications.find(params[:id])
-    unless @authentication.is_only_login_possibility?
+    if @authentication.can_be_deleted?
       @authentication.destroy
       flash[:notice] = "Successfully disconnected your #{@authentication.provider_name}"
     else

@@ -54,13 +54,6 @@ end
 
 group :development, :test, :staging do
   gem 'factory_girl_rails', '>=3.0.0'
-#  gem 'spork-testunit'
-#  gem 'guard-spork'
-#  gem 'guard-test'
-end
-
-group :development, :test, :osx do
-#    gem 'rb-fsevent', '~> 0.9.1', :require => false # gem only for OS X
 end
 
 group :development, :test do

@@ -1,7 +1,8 @@
+#fill-password-request.flash.notice.hidden
+  If you disconnect this account, you will have no possibility to log in. To avoid this, please save your password
 %ul.services_list
   - supported_providers.each do |provider|
-    %li{:class=>"service_provider", :id => "provider_#{provider.downcase}"}
-      %div{:class => "service_provider_name"}
-        %p
-          = build_link_for(provider)
+    %li.service_provider{:id => "provider_#{provider.downcase}"}
+      %p.service_provider_name
+        = build_link_for(provider)
   - end unless supported_providers.nil?

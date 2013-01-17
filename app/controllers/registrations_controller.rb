@@ -53,7 +53,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def find_supported_providers
-    @supported_providers = Authentication::available_providers
+    @supported_providers = Authentication.available_providers
   end
 
 end

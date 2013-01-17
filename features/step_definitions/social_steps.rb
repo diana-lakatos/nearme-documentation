@@ -11,16 +11,27 @@ Given /^the (.*) OAuth request is unsuccessful$/ do |social|
 end
 
 Given /^Existing user with (.*) email$/ do |social|
-  pre_existing_user("#{social.downcase}@example.com", 'password')
+  pre_existing_user({:email => "#{social.downcase}@example.com"})
 end
 
 
 Given /^I am logged in manually$/ do
-  sign_up_manually("valid@example.com", 'password', 'Name', true)
+  sign_up_manually
 end
 
 When /I sign up with (.*)$/ do |social|
   sign_up_with_provider(social)
+end
+
+Given /I signed up with (.*) without password$/ do |social|
+  mock_successful_authentication_with_provider(social)
+  sign_up_with_provider(social)
+end
+
+Given /I signed up with (.*) with password$/ do |social|
+  sign_up_manually({:email => "#{social.downcase}@example.com"})
+  mock_successful_authentication_with_provider(social)
+  toggle_connection_with(social)
 end
 
 When /I connect to (.*)$/ do |social|
@@ -28,8 +39,33 @@ When /I connect to (.*)$/ do |social|
   toggle_connection_with(social)
 end
 
+When /I disconnect (.*)/ do |social|
+  toggle_connection_with(social)
+end
+
+When /I want to disconnect/ do
+  visit edit_user_registration_path
+end
+
+Then /there is no disconnect (.*) link/ do |social|
+  begin
+    toggle_connection_with(social)
+    assert false, "Disconnect #{social} from user when it was not expected"
+  rescue
+    assert true
+  end
+end
+
 When /I try to sign up with (.*)$/ do |social|
   try_to_sign_up_with_provider(social)
+end
+
+When /I type in my password in edit page/ do
+  update_current_user_information({:password => 'my_password'})
+end
+
+Then /I should have password/ do
+  assert User.first.has_password?
 end
 
 When /I manually sign up with valid credentials$/ do 
@@ -64,10 +100,20 @@ Then /account of valid user should be connected with (.*)$/ do |social|
 end
 
 Then /there should be no (.*) account$/ do |social|
-  assert_equal nil, Authentication.find_by_provider(social.downcase)
+  assert_nil Authentication.find_by_provider(social.downcase)
+end
+
+Then /there should be (Twitter|Facebook|LinkedIn) account$/ do |social|
+  assert_not_nil Authentication.find_by_provider(social.downcase)
 end
 
 Then /I am signed in as the new user/ do
+  user = User.find_by_email('valid@example.com')
+  assert_equal "Name", user.name
+  assert_equal 1, User.all.count
+end
+
+Then /I am signed in as this user/ do
   user = User.find_by_email('valid@example.com')
   assert_equal "Name", user.name
   assert_equal 1, User.all.count

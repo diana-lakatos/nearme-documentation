@@ -8,6 +8,8 @@ class Authentication < ActiveRecord::Base
 
   serialize :info, Hash
 
+  AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter" ]
+
   def provider_name
     if provider == 'open_id'
       "OpenID"
@@ -17,10 +19,11 @@ class Authentication < ActiveRecord::Base
   end
 
   def self.available_providers
-    return ["Facebook", "LinkedIn", "Twitter" ]
+    AVAILABLE_PROVIDERS
   end
 
-  def is_only_login_possibility?
-    return !user.has_password? && user.authentications.size == 1
+  def can_be_deleted?
+    # we can delete authentication if user has other option to log in, i.e. has set password or other authentications
+    user.has_password? || user.authentications.size > 1
   end
 end

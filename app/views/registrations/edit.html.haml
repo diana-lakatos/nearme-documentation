@@ -14,7 +14,12 @@
       %p.intro
         You can add various networks
 
-      = render :partial => "registrations/networks", :locals => { :supported_providers => @supported_providers }
+      = render "registrations/networks", :supported_providers => @supported_providers
 
   .one-third.column.third-party
 
+
+:javascript
+  $(function() {
+    new EditUserForm()
+  });

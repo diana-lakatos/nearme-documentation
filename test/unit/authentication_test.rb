@@ -34,39 +34,39 @@ class AuthenticationTest < ActiveSupport::TestCase
     assert_equal "stuff", auth.info["thing"]
   end
 
-  test "is only login possibility if user has nil password and he has no other authentications" do
+  test "cannot be deleted if user has nil password and he has no other authentications" do
     auth = Authentication.new(@valid_params, :user => User.new)
     auth.user.authentications << auth
-    assert_equal true, auth.is_only_login_possibility?
+    assert_equal false, auth.can_be_deleted?
   end
 
-  test "is only login possibility if user has blank password and he has no other authentications" do
+  test "cannot be deleted if user has blank password and he has no other authentications" do
     auth = Authentication.new(@valid_params, :user => User.new)
     auth.user.encrypted_password = ''
     auth.user.authentications << auth
-    assert_equal true, auth.is_only_login_possibility?
+    assert_equal false, auth.can_be_deleted?
   end
 
-  test "is not only login possibility if user has not blank password and he has no other authentications" do
+  test "can be deleted if user has not blank password and he has no other authentications" do
     auth = Authentication.new(@valid_params, :user => User.new)
     auth.user.encrypted_password = "aaaaaa"
     auth.user.authentications << auth
-    assert_equal false, auth.is_only_login_possibility?
+    assert_equal true, auth.can_be_deleted?
   end
 
-  test "is not only login possibility if user has blank password but he has other authentications" do
+  test "can be deleted if user has blank password but he has other authentications" do
     auth = Authentication.new(@valid_params, :user => User.new)
     auth.user.encrypted_password = ""
     auth.user.authentications << Authentication.new
     auth.user.authentications << auth
-    assert_equal false, auth.is_only_login_possibility?
+    assert_equal true, auth.can_be_deleted?
   end
 
-  test "is not only login possibility if user has not blank password and he has other authentications" do
+  test "can be deleted if user has not blank password and he has other authentications" do
     auth = Authentication.new(@valid_params, :user => User.new)
     auth.user.encrypted_password = "aaaaaa"
     auth.user.authentications << auth
     auth.user.authentications << Authentication.new
-    assert_equal false, auth.is_only_login_possibility?
+    assert_equal true, auth.can_be_deleted?
   end
 end
