@@ -11,6 +11,7 @@ class Company < ActiveRecord::Base
   before_validation :add_default_url_scheme
 
   validates_presence_of :name, :description
+  validates_length_of :description, :maximum => 250
   validates :email, email: true, allow_blank: true
   validate :validate_url_format
 

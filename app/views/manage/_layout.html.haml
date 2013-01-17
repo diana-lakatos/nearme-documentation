@@ -1,6 +1,8 @@
 = render 'dashboard/navigation', :current => :spaces
-= render 'manage/navigation'
 
-.eleven.columns
-  = yield
+.row-fluid
+  = render 'manage/navigation'
+
+  .span8
+    = yield
 

@@ -18,6 +18,9 @@ class LocationTest < ActiveSupport::TestCase
   should_not allow_value('xxx').for(:currency)
   should allow_value('USD').for(:currency)
 
+  should allow_value('x' * 250).for(:description)
+  should_not allow_value('x' * 251).for(:description)
+
   context "required_organizations" do
     context "when require_organiation_membership is true" do
       context "and the location has organizations" do

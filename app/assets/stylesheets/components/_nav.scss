@@ -1,46 +1,3 @@
-nav.hero-nav {
-  ul.container {
-    background: $gray2;
-    color: $gray4;
-    @include border-radius(8px);
-    @include background-clip(padding-box);
-
-    li {
-      float: left;
-
-      a {
-        display: block;
-        padding: 0 15px;
-        line-height: 40px;
-        font-size: 16px;
-        color: $gray4;
-      }
-
-      &:first-child {
-        @include border-left-radius(8px);
-      }
-
-      @media (max-width: 480px) {
-        clear: both; 
-        width: 100%;
-
-        &:first-child {
-          @include border-top-radius(8px);
-          @include border-bottom-radius(0px);
-        }
-      }
-    }
-
-    li.current a {
-      color: $dnm_white;
-    }
-
-    li.current {
-      background: $dnm_black;
-      color: $dnm_white;
-    }
-  }
-}
 ul.nav {
   background: $dnm_white;
   border: 2px solid $gray2;
@@ -48,7 +5,7 @@ ul.nav {
   overflow: hidden;
 
   li {
-    border-bottom: 1px solid $gray4; // gray
+    border-bottom: 1px solid $gray2; 
 
     &.active {
       background: $dnm_black;

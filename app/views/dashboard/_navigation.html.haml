@@ -1,12 +1,20 @@
 - current ||= :overview
 - content_for :hero do
-  #hero.collapsed.hero-blue-top
-    %nav.hero-nav
-      %ul.container
-        %li{:class => ('current' if current == :account)}= link_to "Account", edit_user_registration_url
-        %li{:class => ('current' if current == :bookings)}= link_to "Your Bookings", bookings_dashboard_url
+  .container-fluid.margin-bottom
+    .dashboard-nav.row-fluid
+      %ul
+        %li{:class => ('current' if current == :account)}
+          = link_to edit_user_registration_url do
+            %span.ico-user.padding.account  
+        %li{:class => ('current' if current == :bookings)}
+          = link_to bookings_dashboard_url do
+            %span.ico-bookings.padding.bookings
         - if current_user.companies.any?
-          %li{:class => ('current' if current == :spaces)}= link_to "Manage Locations", [:manage, :companies]
-          %li{:class => ('current' if current == :reservations)}= link_to "Manage Guest Reservations", reservations_dashboard_url
+          %li{:class => ('current' if current == :spaces)}
+            = link_to [:manage, :companies] do
+              %span.ico-location.padding.locations
+          %li{:class => ('current' if current == :reservations)}
+            = link_to reservations_dashboard_url do
+              %span.ico-manage-guests.padding.guests  
 
 

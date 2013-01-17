@@ -2,7 +2,7 @@
 
 = f.input :name, :placeholder => 'e.g. Conference Room A', :disabled => is_template
 = f.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" }, :disabled => is_template
-= f.input :description, :placeholder => 'Tell us a bit about the listing. Be exciting!', :disabled => is_template
+= f.input :description, :input_html => { :maxlength => 250}, :placeholder => 'Tell us a bit about the listing. Be exciting!', :disabled => is_template
 
 .control-group
   = f.label :daily_price, 'Price per day', :class => 'control-label'
