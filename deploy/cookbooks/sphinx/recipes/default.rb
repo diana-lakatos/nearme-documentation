@@ -27,7 +27,7 @@ utility_name = "sphinx"
 # If you don't want scheduled reindexes, just leave this set to nil.
 # Setting it equal to 10 would run the cron job every 10 minutes.
 
-# cron_interval = nil #If this is not set your data will NOT be indexed
+cron_interval = nil #If this is not set your data will NOT be indexed
 
 if utility_name
   sphinx_instance = node[:utility_instances].find {|u| u[:name] == utility_name }
