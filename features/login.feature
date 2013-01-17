@@ -18,7 +18,6 @@ Feature: A user can login
     When I sign up with LinkedIn
     Then an account should be created for that LinkedIn user
 
-
   Scenario: A user will be given error message if he fails to login with Twitter
     Given the Twitter OAuth request is unsuccessful
      When I try to sign up with Twitter

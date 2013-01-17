@@ -14,11 +14,6 @@ Given /^Existing user with (.*) email$/ do |social|
   pre_existing_user({:email => "#{social.downcase}@example.com"})
 end
 
-
-Given /^I am logged in manually$/ do
-  sign_up_manually
-end
-
 When /I sign up with (.*)$/ do |social|
   sign_up_with_provider(social)
 end
