@@ -15,7 +15,7 @@
             = link_to "", ".carousel", :class => "carousel-control left ico-arrow-left", 'data-slide' => 'prev'
             = link_to "", ".carousel", :class => "carousel-control right ico-arrow-right", 'data-slide' => 'next'
 
-    .span4.pull-right{:class => @location.photos.any? }
+    .pull-right{:class => @location.photos.any? ? ".span4" : ".span12" }
       .map
         .map-wrapper
           .map-container
