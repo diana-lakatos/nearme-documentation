@@ -63,17 +63,5 @@
 
 :javascript
   $(function() {
-
-    function hideShowCreditCardFields() {
-      var input = $('input#payment_method_credit_card'), fields = $('#credit_card_fields');
-
-      if (input.is(':checked')) {
-        fields.show();
-      } else {
-        fields.hide();
-      }
-    }
-
-    $('input[name*=payment_method]').click(hideShowCreditCardFields);
-    hideShowCreditCardFields();
+    new Bookings.ReservationModal($('form.payment'))
   });
