@@ -69,53 +69,42 @@ When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, 
   wait_for_ajax
 end
 
-When /^I select to book space( using the advanced view)? for:$/ do |advanced, table|
+When /^I select to book space for:$/ do |table|
   next unless table.hashes.length > 0
 
   added_dates = []
   table.hashes.each do |row|
-
     date = Chronic.parse(row['Date']).to_date
     qty = row['Quantity'].to_i
     qty = 1 if qty < 1
+
     listing = model!(row['Listing'])
 
-    if advanced
-      date_class = "d-#{date.strftime('%Y-%m-%d')}"
-
-      # Add the day to the seletion
-      unless added_dates.include?(date)
-        find(:css, ".calendar .#{date_class}").click
-        added_dates << date
-      end
-
-      # Choose the qty for the listing booking
-      within ".listing[data-listing-id=\"#{listing.id}\"]" do
-        find(:css, ".booked-day.#{date_class}").click
-      end
-
-      fill_in 'booked-day-qty', :with => qty
-
-    else
+    if current_path != location_path(listing.location)
       visit listing_path listing
-      year = date.strftime('%Y')
-      month = date.strftime('%m').to_i - 1 # - 1 because month JS is (0..11)
-      day = date.strftime('%d').to_i
-      date_class = ".datepicker-day-#{year}-#{month}-#{day}"
-
-      select qty.to_s, :from => "quantity"
-
-      # Activate the datepicker
-      find(:css, ".calendar-wrapper").click
-
-      # Add the day to the seletion
-      unless added_dates.include?(date)
-
-        find(:css, date_class).click
-        added_dates << date
-
-      end
     end
+
+    year = date.strftime('%Y')
+    month = date.strftime('%m').to_i - 1 # - 1 because month JS is (0..11)
+    day = date.strftime('%d').to_i
+    date_class = ".datepicker-day-#{year}-#{month}-#{day}"
+
+    select qty.to_s, :from => "quantity"
+
+    # Activate the datepicker
+    find(:css, ".calendar-wrapper").click
+    wait_until {
+      page.has_no_selector?('.datepicker-loading', visible: true)
+    }
+
+    # Add the day to the seletion
+    unless added_dates.include?(date)
+      el = find(:css, date_class)
+      el.click
+      added_dates << date
+    end
+
+    find(:css, ".calendar-wrapper").click
 
   end
 end

@@ -9,7 +9,7 @@ Feature: A user can book at a space
       And a listing exists with location: that location, quantity: 10
       And a user exists
 
-  @javascript @borked
+  @javascript
   Scenario: A logged in user can book a listing
     Given I am logged in as the user
       When I book space for:
