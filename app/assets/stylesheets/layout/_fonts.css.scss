@@ -12,15 +12,16 @@ $font-bold: 'futura-pt';
   speak: none;
   font-weight: normal;
   line-height: 1;
+  border: none;
   -webkit-font-smoothing: antialiased;
 }
 span.padding:before {
   padding-right: .4em;
 }
-.ico-lock:before {
+.ico-x:before {
   content: "\e000";
 }
-.ico-x:before {
+.ico-user:before {
   content: "\e001";
 }
 .ico-twitter:before {
@@ -29,71 +30,95 @@ span.padding:before {
 .ico-sign-up:before {
   content: "\e003";
 }
-.ico-search:before {
+.ico-sign-up-Jared-Armstrongs-conflicted-copy-2013-01-10:before {
   content: "\e004";
 }
-.ico-plus:before {
+.ico-search:before {
   content: "\e005";
 }
-.ico-phone:before {
+.ico-plus:before {
   content: "\e006";
 }
-.ico-marker:before {
+.ico-phone:before {
   content: "\e007";
 }
-.ico-logout:before {
+.ico-marker:before {
   content: "\e008";
 }
-.ico-login:before {
+.ico-manage-guests:before {
   content: "\e009";
 }
-.ico-link:before {
+.ico-mail:before {
   content: "\e00a";
 }
-.ico-instagram:before {
+.ico-logout:before {
   content: "\e00b";
 }
-.ico-info:before {
+.ico-login:before {
   content: "\e00c";
 }
-.ico-facebook:before {
+.ico-lock:before {
   content: "\e00d";
 }
-.ico-edit:before {
+.ico-location:before {
   content: "\e00e";
 }
-.ico-drawer:before {
+.ico-link:before {
   content: "\e00f";
 }
-.ico-dashboard:before {
+.ico-instagram:before {
   content: "\e010";
 }
-.ico-crosshairs:before {
+.ico-info:before {
   content: "\e011";
 }
-.ico-clock:before {
+.ico-facebook:before {
   content: "\e012";
 }
-.ico-check:before {
+.ico-edit:before {
   content: "\e013";
 }
-.ico-calender:before {
+.ico-drawer:before {
   content: "\e014";
 }
-.ico-arrow-up:before {
-  content: "\e015";
-}
-.ico-arrow-right:before {
+.ico-crosshairs:before {
   content: "\e016";
 }
-.ico-arrow-left:before {
+.ico-clock:before {
   content: "\e017";
 }
-.ico-arrow-down:before {
+.ico-check:before {
   content: "\e018";
 }
-.ico-app-store:before {
+.ico-calender:before {
   content: "\e019";
+}
+.ico-bookings:before {
+  content: "\e01a";
+}
+.ico-bookings-Jared-Armstrongs-conflicted-copy-2013-01-10:before {
+  content: "\e01b";
+}
+.ico-arrow-up:before {
+  content: "\e01c";
+}
+.ico-arrow-right:before {
+  content: "\e01d";
+}
+.ico-arrow-left:before {
+  content: "\e01e";
+}
+.ico-arrow-down:before {
+  content: "\e01f";
+}
+.ico-app-store:before {
+  content: "\e020";
+}
+.ico-add-location:before {
+  content: "\e021";
+}
+.ico-dashboard:before {
+  content: "\e015";
 }
 
 // Icon Font Styling 

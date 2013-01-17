@@ -20,16 +20,14 @@ module SessionsHelper
 
   def log_out
     visit root_path
-    click_link 'Logout'
+    click_link 'Log out'
   end
 
-  begin
-    def user
-      return model!("user") if model("user")
-      @user ||= FactoryGirl.create :user
-      store_model("user", "user", @user)
-      model!("user")
-    end
+  def user
+    return model!("user") if model("user")
+    @user ||= FactoryGirl.create :user
+    store_model("user", "user", @user)
+    model!("user")
   end
 end
 World(SessionsHelper)

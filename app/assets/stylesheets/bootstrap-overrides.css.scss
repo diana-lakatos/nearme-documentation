@@ -1,12 +1,24 @@
+body {
+  padding-top: 90px;
+}
+.padding-row {
+  padding: 1.5em 0;
+}
+.padding-bottom {
+  padding: 0 0 1.5em;
+}
+.navbar-fixed-top,
+.navbar-fixed-bottom {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+  margin:0 !important;
+}
 .accordion-group {
 
 	background: $dnm_white;
-	margin-right: 20px;
 	border-radius: 8px;
-
-  @media (max-width: 959px) {
-    margin: 0 20px;
-  }
 
   a.accordion-toggle {
   	background: url('http://desksnearme.assets.s3.amazonaws.com/img/ui/arrow-down.png') right center no-repeat;
@@ -25,4 +37,12 @@
   background: none !important;
   border: none !important;
   @include text-shadow(black 0 0 5px);
+}
+
+.container-fluid {
+  @media (min-width: 1400px) {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }

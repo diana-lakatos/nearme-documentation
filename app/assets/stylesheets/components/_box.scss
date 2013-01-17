@@ -36,19 +36,32 @@
       color: $gray3;
       font-size: 18px;
       padding: 0 14px;
+      width: 25%;
+      box-sizing: border-box;
+      text-align: center;
       line-height: 60px;
+      border-right: 1px solid $gray1;
+
+      &:last-child {
+        border: none;
+      }
 
         @media (max-width: 960px) {
           font-size: 14px;
         }
 
         @media (max-width: 480px) {
-          font-size:14px;
+          clear: both;
+          width: 100%;
+          border-right: none;
+          border-bottom: 1px solid $gray1;
+          font-size: 22px;
          } 
 
       &.current {
         background: $dnm_black;
         color: $dnm_white;
+        border: none;
       }
     }
 
@@ -57,7 +70,8 @@
   hr, .hr {
     color: #cecfcf;
     background: #cecfcf;
-    border-bottom: 1px solid #fefefe;
+    border-bottom: 2px solid $gray2;
+    border-top: none;
     margin-left: -$padding;
     margin-right: -$padding;
     text-align: center;
