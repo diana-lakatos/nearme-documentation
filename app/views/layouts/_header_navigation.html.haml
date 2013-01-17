@@ -1,14 +1,14 @@
 - if user_signed_in?
-  = link_to destroy_user_session_path, :method => :delete, :class => "header-link" do
+  = link_to_once destroy_user_session_path, :method => :delete, :class => "header-link" do
     %span.ico-logout.padding Log out
-  = link_to dashboard_path, :class => "header-link" do
+  = link_to_once dashboard_path, :class => "header-link" do
     %span.ico-dashboard.padding Dashboard  
 - else
-  = link_to new_user_session_url, :class => "header-link header-second" do
+  = link_to_once new_user_session_url, :class => "header-link header-second" do
     %span.ico-login.padding Log in
-  = link_to new_user_registration_url, :class => "header-link header-first" do
+  = link_to_once new_user_registration_url, :class => "header-link header-first" do
     %span.ico-sign-up.padding Sign Up    
 
 - if !user_signed_in? || current_user.companies.empty?
-  = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium" do
+  = link_to_once new_space_wizard_url, :class => "btn btn-blue btn-medium" do
     %span.ico-add-location List Your Space
