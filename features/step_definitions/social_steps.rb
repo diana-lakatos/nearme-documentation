@@ -47,13 +47,9 @@ When /I want to disconnect/ do
   visit edit_user_registration_path
 end
 
-Then /there is no disconnect (.*) link/ do |social|
-  begin
-    toggle_connection_with(social)
-    assert false, "Disconnect #{social} from user when it was not expected"
-  rescue
-    assert true
-  end
+Then /I cannot disconnect (.*)$/ do |social|
+  toggle_connection_with(social)
+  assert_not_nil Authentication.find_by_provider(social.downcase)
 end
 
 When /I try to sign up with (.*)$/ do |social|

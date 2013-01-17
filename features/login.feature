@@ -43,7 +43,7 @@ Feature: A user can login
   Scenario: User with one login possibility should not be able to disconnect authentication
     Given I signed up with Twitter without password
      When I want to disconnect Twitter
-     Then there is no disconnect Twitter link
+     Then I cannot disconnect Twitter
 
   Scenario: An authenticated user can add Facebook 
     Given I am logged in manually  
