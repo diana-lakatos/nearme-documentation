@@ -9,7 +9,7 @@ When /^I log in as a user who is a member of that organization$/ do
 end
 
 Then /^I should be logged out$/ do
-  Then %{I should see "Login"}
+  Then %{I should see "Log in"}
 end
 
 When(/^I log in as #{capture_model} with Twitter$/) do |user_instance|
@@ -19,7 +19,7 @@ end
 
 Then(/^I should be logged in as #{capture_model}$/) do |user_instance|
   user = model!(user_instance)
-  Then %{I should see "Logout"}
+  Then %{I should see "Log out"}
 end
 
 Then /^#{capture_model} should have password "([^"]*)"$/ do |user_instance, password|
