@@ -4,7 +4,7 @@ class User::BillingGateway
   # Generic billing gateway error
   BillingError = Class.new(StandardError)
 
-  # Invalid card during a charge
+  # Invalid/declined card during a charge
   CardError = Class.new(BillingError)
 
   # Invalid parameters provided with request

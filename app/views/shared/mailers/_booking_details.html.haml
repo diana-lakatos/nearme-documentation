@@ -13,7 +13,7 @@
 - if !reservation.free? && reservation.paid?
   %p
     %strong Paid
-    - if reservation.credit_card?
+    - if reservation.credit_card_payment?
       = reservation_total_price(reservation) 
       - subject = defined?(host) ? "the user's" : "your"
       has been charged to #{subject} credit card

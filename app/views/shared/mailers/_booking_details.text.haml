@@ -6,6 +6,6 @@
 
 - if reservation.paid?
   = "Paid!"
-  - if reservation.credit_card?
+  - if reservation.credit_card_payment?
     - subject = defined?(host) ? "the user's" : "your"
     = "#{reservation_total_price(reservation)} has been charged to #{subject} credit card"

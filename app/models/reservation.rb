@@ -178,13 +178,20 @@ class Reservation < ActiveRecord::Base
       return if manual_payment? || free? || paid?
 
       billing_gateway = owner.billing_gateway
-      billing_gateway.charge(
-        amount: total_amount_cents,
-        currency: currency,
-        reference: self
-      )
 
-      self.payment_status = PAYMENT_STATUSES[:paid]
+      begin
+        billing_gateway.charge(
+          amount: total_amount_cents,
+          currency: currency,
+          reference: self
+        )
+        self.payment_status = PAYMENT_STATUSES[:paid]
+      rescue User::BillingGateway::CardError
+        # TODO: Need to handle re-attempting charge, etc.
+        self.payment_status = PAYMENT_STATUSES[:failed]
+      end
+
       save!
+    rescue
     end
 end
