@@ -21,7 +21,7 @@ class Reservation < ActiveRecord::Base
            :class_name => "ReservationPeriod",
            :dependent => :destroy
 
-  has_many :charges, :as => :reference, :dependent => :nullify, :dependent => :destroy
+  has_many :charges, :as => :reference, :dependent => :nullify
 
   validates :periods, :length => { :minimum => 1 }
 
