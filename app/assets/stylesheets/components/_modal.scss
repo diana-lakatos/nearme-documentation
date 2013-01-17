@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255,255,255,0.7);
+  background: rgba(0,0,0,0.7);
 
   html.no-rgba & {
     background: #000;
@@ -26,12 +26,22 @@
 }
 
 .modal-container {
-  width: 500px;
+  width: 600px;
   z-index: 1000;
   padding-bottom: 50px;
 
   &.loading .modal-close {
     display: none;
+  }
+
+  @media (max-width: 767px) {
+    width: 100%;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    width: auto;
+    margin: 0;
   }
 }
 
@@ -45,6 +55,7 @@
   @extend .modal-wrapper;
   $padding: 20px;
   padding: $padding;
+  z-index: 1001;
 
   h2 {
     padding: 0 $padding;
@@ -66,16 +77,28 @@
 
 .modal-close {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 44px;
+  right: -12px;
   width: 18px;
   height: 18px;
   color:black;
   font-size:18px;
-  @include opacity(0.8);
+  z-index: 1003;
+  @include opacity(0.3);
+
   &:hover {
     @include opacity(1);
+    color: black;
   }
+
+  @media (max-width: 767px) {
+    top: -22px;
+    right: 12px;
+  }
+  @media (max-width: 480px) {
+    top: -32px;
+    right: -2px;
+  }  
 }
 
 .modal-body-wrapper {
@@ -83,11 +106,3 @@
   width: 100%;
 }
 
-@media only screen and (max-width: 480px) {
-  .modal-container {
-    width: auto;
-    left: 8px !important;
-    right: 8px !important;
-    margin-left: 0 !important;
-  }
-}

@@ -2,17 +2,16 @@
  *= require skeleton/skeleton
  */
 
-
-
 @import "compass";
 @import "compass/css3";
 @import "compass/reset";
+@import "vendor/bootstrap.min.css.scss";
 @import "layout/*";
 @import "components/*";
 @import "bootstrap-overrides";
 
 @import "vendor/jquery-ui-1.8.23.custom.css.scss";
-@import "vendor/bootstrap.min.css.scss";
+
 
 /* #Site Styles
 ================================================== */

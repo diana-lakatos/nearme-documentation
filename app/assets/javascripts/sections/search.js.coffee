@@ -135,7 +135,7 @@ class DNM.SearchResultsPage extends DNM.SearchForm
 
   listings: ->
     @resultsContainer.find('.listing')
-
+    
   loadMap: ->
     mapContainer = @container.find('#listings_map')[0]
     return unless mapContainer
@@ -174,7 +174,7 @@ class DNM.SearchResultsPage extends DNM.SearchForm
     )
 
     if listing.element
-      popupContent = $('.map-details', listing.element).html()
+      popupContent = $('.listing-info', listing.element).html()
       google.maps.event.addListener @map.markers[listing.id], 'click', =>
         @map.info_window.setContent(popupContent)
         @map.info_window.open(@map.map, @map.markers[listing.id])

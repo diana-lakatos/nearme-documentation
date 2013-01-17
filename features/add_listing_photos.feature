@@ -11,8 +11,7 @@ Feature: A user can add photos to a listing
 
   Scenario: Adding photos to a work place
     Given I am logged in as the user
-      And I go to the the dashboard
-     When I follow "Manage Locations"
+     And I go to the manage locations page
      And I follow "Locations"
      And I follow "Edit"
      And I follow "Listings"
@@ -39,8 +38,7 @@ Feature: A user can add photos to a listing
       | File             | Caption                       |
       | boss's desk.jpg  | The Boss' Desk                 |
       | intern chair.jpg | This is where the intern works |
-    And I go to the dashboard
-    And I follow "Manage Locations"
+    And I go to the manage locations page
     And I follow "Locations"
     And I follow "Edit"
     And I follow "Listings"

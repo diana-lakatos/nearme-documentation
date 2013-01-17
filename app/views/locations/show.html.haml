@@ -2,45 +2,42 @@
 - @listing.description = @location.listings.first.description   
 
 = render :layout => 'show_layout', :locals => { :tab => :overview } do   
-
-  .one-third.column.alpha
-
-    .accordion
-      .accordion-group
-        .accordion-heading
-          %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#overview_tab'}
-            Overview
-        #overview_tab.accordion-body.collapse.in
-          .accordion-inner
-            %p= truncate_with_ellipsis @location.description, 250
-
-            - if @location.phone.present?
-              %strong.ico-phone.padding= @location.phone
-
-
-      - if @location.creator
+  .row-fluid
+    .span4
+      .accordion
         .accordion-group
           .accordion-heading
-            %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#host_tab'}
-
-              Company
-          #host_tab.accordion-body.collapse
+            %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#overview_tab'}
+              Overview
+          #overview_tab.accordion-body.collapse.in
             .accordion-inner
-              %p
-              - if @location.creator.phone
-                %p.ico-phone.padding= @location.creator.phone 
-              %p= truncate_with_ellipsis @location.company.description, 250
+              %p= truncate_with_ellipsis @location.description, 250
 
-      - if @amenities
-        .accordion-group
-          .accordion-heading
-            %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#amenities_tab'}
-              Amenities
-          #amenities_tab.accordion-body.collapse
-            .accordion-inner
-              %ul
-                - @location.amenities.each do |amenity|
-                  %li= amenity
+              - if @location.phone.present?
+                %strong.ico-phone.padding= @location.phone
 
-  .two-thirds.column.omega
-    = render 'bookings'
+        - if @location.creator
+          .accordion-group
+            .accordion-heading
+              %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#host_tab'}
+                Company
+            #host_tab.accordion-body.collapse
+              .accordion-inner
+                %p
+                - if @location.creator.phone
+                  %p.ico-phone.padding= @location.creator.phone 
+                %p= truncate_with_ellipsis @location.company.description, 250
+   
+        - if @amenities
+          .accordion-group
+            .accordion-heading
+              %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#amenities_tab'}
+                Amenities
+            #amenities_tab.accordion-body.collapse
+              .accordion-inner
+                %ul
+                  - @location.amenities.each do |amenity|
+                    %li= amenity
+
+    .span8
+      = render 'bookings'
