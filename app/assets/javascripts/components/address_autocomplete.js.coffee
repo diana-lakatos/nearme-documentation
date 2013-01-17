@@ -20,6 +20,7 @@ class @AddressAutocomplete
         link = $("<a href='#'></a>")
           .html(result['formatted_address'])
           .attr("data-lat", loc.lat())
+          .attr("data-address-components", @buildAddressComponentsString(result))
           .attr("data-lng", loc.lng())
           .data("result", loc)
         li = $("<li></li>").append(link)
@@ -30,6 +31,20 @@ class @AddressAutocomplete
       el = $("<div></div>").attr("id", "address-suggestions").html("No matches found. Please try another location.")
 
     @inputWrapper.after(el)
+
+  buildAddressComponentsString: (result) ->
+    #it will require some parsing 
+    #component =  components.split("+") 
+    #parts = component.split("|") -> parts[0] = long_name, parts[1] = short_name, parts[2] = types
+    #types = parts[2].split(",") 
+    address_component_string = ""
+    for address_component in result['address_components']
+      address_component_string += "long:" + address_component['long_name'] + "|short:" + address_component['short_name']
+      if !!address_component_string['types']
+        address_component_string += "|types:" + address_component['types'].join(',')
+      address_component_string += "+"
+    address_component_string.slice(0, -1)
+
 
   hideMatches: ->
     $('#address-suggestions').remove()
