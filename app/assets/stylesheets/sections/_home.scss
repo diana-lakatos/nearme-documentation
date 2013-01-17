@@ -1,8 +1,9 @@
 section.public {
   #hero {
-    height: 500px;
+    margin-top: -32px;
+    height: 530px;
     width: auto;
-    background: image-url("https://s3.amazonaws.com/desksnearme.assets/img/la-cantine.jpg") center center no-repeat;
+    background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/locations-651.jpg") center center no-repeat;
     background-size: cover;
     @include box-shadow(rgba(black, .2) 0 0 20px 20px inset); 
 
@@ -28,14 +29,14 @@ section.public {
     }
 
     @media (max-width: 767px) {
-      top:460px;
+      top:440px;
     }
 
     @media (max-width: 480px) {
-      top:420px;
+      top:400px;
     } 
     @media (max-width: 320px) {
-      top:328px;
+      top:300px;
     }        
   }
   section#hero + .container { 
@@ -45,59 +46,56 @@ section.public {
 }
 
 #search_row {
-  .wood-box {
-    margin-top: 180px;
+  margin-top: 180px;
+  
+  @media (max-width: 767px) {
+    margin-top: 100px;
+  }
 
-    @media (max-width: 767px) {
-      margin-top: 100px;
-    }
+  @media (max-width: 480px) {
+    margin-top: 70px;
+  }
+
+  h1 {
+    display: block;
+    float: left;
+    font:normal 48px/54px $font-medium, sans-serif;
+    color: $light-gray;
+    margin-bottom: 10px;
+    @include text-shadow(black 0 0 5px, black 0 0 8px, black 0 0 10px, black 0 0 20px, black 0 0 30px);
+
 
     @media (max-width: 480px) {
-      margin-top: 70px;
+      font:normal 24px/32px $font-medium, sans-serif;
     }
+  }
 
-    h1 {
-      display: block;
-      float: left;
-      font:normal 48px/54px $font-medium, sans-serif;
-      color: $light-gray;
-      margin-bottom: 10px;
-      @include text-shadow(black 0 0 5px, black 0 0 8px, black 0 0 10px, black 0 0 20px, black 0 0 30px);
+  .black-box {
+    position: relative;
+    background: rgb(30,30,30);
+    padding: 8px;
+    border-radius: 12px;
+    box-sizing: border-box;
+  }
 
+  h2 {
+    float: left;
+    color: #927d70;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 10px 0 10px 10px;
+    margin-top: 17px;
+    margin-left: 10px;
 
-      @media (max-width: 480px) {
-        font:normal 24px/32px $font-medium, sans-serif;
-      }
-    }
+    @media (max-width: 480px) {
+      font:normal 16px/22px $font-medium, sans-serif;
+    }      
+  }
+  form input[type="text"] {
+    margin-bottom: 0;
 
-    .black-box {
-      float: left;
-      clear: both;
-      background: rgb(30,30,30);
-      padding: 8px;
-      border-radius: 12px;
-      box-sizing: border-box;
-    }
-
-    h2 {
-      float: left;
-      color: #927d70;
-      font-size: 16px;
-      font-weight: normal;
-      margin: 10px 0 10px 10px;
-      margin-top: 17px;
-      margin-left: 10px;
-
-      @media (max-width: 480px) {
-        font:normal 16px/22px $font-medium, sans-serif;
-      }      
-    }
-    form input[type="text"] {
-      margin-bottom: 0;
-
-      @media (max-width: 768px) {
-        margin-bottom: 8px;
-      }
+    @media (max-width: 768px) {
+      margin-bottom: 8px;
     }
   }
   

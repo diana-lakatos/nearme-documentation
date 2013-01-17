@@ -23,6 +23,9 @@ module NavigationHelpers
     when /the dashboard/
       dashboard_path
 
+    when /the manage locations page/
+      manage_companies_path
+
     when /^#{capture_model}(?:'s)? page$/                           # eg. the forum's page
       path_to_pickle $1
 

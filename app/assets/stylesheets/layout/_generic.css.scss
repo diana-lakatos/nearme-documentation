@@ -11,8 +11,8 @@ body, input, textarea, select {
 input[type=text], textarea {
   -webkit-appearance: none;
 }
-a, a:visited {
-  text-decoration: none;
+a, a:visited, a:hover {
+  text-decoration: none !important;
   @include transition(opacity .15s ease-in, color .15s ease-in, border .15s ease-in);
 }
 p a, p a:visited {
@@ -175,7 +175,9 @@ hr, .hr {
     @include opacity(1);
   }
 }
-
+.margin-bottom {
+  margin-bottom: 20px;
+}
 .hidden {
   display: none;
 }

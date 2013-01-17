@@ -1,14 +1,13 @@
 - legacy false
 
 - content_for :hero do
-  .hero-wood-texture
-    .container.space-hero-search-return
-      %h1 
-        #{@location.name}
- 
-        - if @location.url.present?
-          = link_to @location.url, :target => :_blank do
-            %div.ico-link
+  .container-fluid
+    %h1 
+      #{@location.name}
+
+      - if @location.url.present?
+        = link_to @location.url, :target => :_blank do
+          %div.ico-link
 
 
   = render 'photos' 

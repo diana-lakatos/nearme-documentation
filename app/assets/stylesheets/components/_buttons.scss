@@ -6,6 +6,7 @@
   color: #fff;
   padding: 0 10px;
   border: none !important;
+  box-sizing: border-box;
   @include transition(background .1s ease-in);
 
   &.full-width {
@@ -41,7 +42,7 @@
   &.btn-large {
     height: 50px;
     line-height: 50px;
-    font-size: 18px;
+    font-size: 22px;
     @include border-radius(12px);
     padding: 0 20px;
   }
@@ -71,12 +72,12 @@
   &.btn-red {
     background: $dnm_red;
     &:hover {
-      background: lighten($dnm_red, 10%);
+      background: darken($dnm_red, 10%);
     }
 
     &:active {
       background: #e93e34;
-      background: darken($dnm_red, 10%);
+      background: darken($dnm_red, 15%);
     }
   }
 

@@ -4,7 +4,10 @@
     %title
       Desks Near Me - #{show_title? ? yield(:title) : "Where do you want to work today?"}
     %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}  
-    %meta{:content => "Rent out your extra space, or find a desk near you.", :name => "description"}/
+    %meta{:content => "DesksNear.Me is a public reservation system for companies to offer desks to freelancers and sole-operators.", :name => "description"}/
+    %meta{:content => "The Rad Warlike Annex", :name => "author"}/
+    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
+    %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
     %meta{:content => "tellthemwhen_verif_1af11d7040aa81a9ab2e07d4efee180d2e93d030", :name => "TellThemWhen"}/
     %meta{:content => "IE=edge,chrome=1", "http-equiv" => "X-UA-Compatible"}/
     = csrf_meta_tag
@@ -28,16 +31,17 @@
     #TTWNotify{:style => "display:none;"}
 
     .dnm-page
-      .header.container
-        %header.row
-          .logo-container
-            = link_to "Desks Near Me", root_url, :id => "logo"
-          #header_links.links-container
-            = render "layouts/header_navigation"
+      .container-fluid
+        .navbar.navbar-inverse.navbar-fixed-top
+          .navbar-inner
+            .logo-container.pull-left
+              = link_to "Desks Near Me", root_url, :id => "logo"
+            #header_links.links-container.pull-right
+              = render "layouts/header_navigation"
 
       %section#content{:class => "#{controller_name}"}
         = render "layouts/hero"
-        %div{:class => "container #{'legacy' if legacy?}"}
+        %div{:class => "container-fluid #{'legacy' if legacy?}"}
           = flashes
           = yield
 
