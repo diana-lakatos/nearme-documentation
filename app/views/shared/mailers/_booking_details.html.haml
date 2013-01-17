@@ -1,14 +1,14 @@
 %p
-	%strong Location
-	= listing.name
+  %strong Location
+  = listing.name
 
 %p
-	%strong Dates
-	= reservation_dates(reservation)
+  %strong Dates
+  = reservation_dates(reservation)
 
 %p
-	%strong Total Price
-	= reservation_total_price(reservation)
+  %strong Total Price
+  = reservation_total_price(reservation)
 
 - if !reservation.free? && reservation.paid?
   %p
