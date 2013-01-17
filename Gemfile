@@ -43,6 +43,8 @@ gem 'thin'
 
 gem 'ey_config'
 
+gem 'unicorn'
+
 group :development do
   # gem 'heroku'
   # gem 'taps'
