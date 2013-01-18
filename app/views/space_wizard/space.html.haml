@@ -29,7 +29,7 @@
     = f.input :special_notes, :as => :string, :label => 'Special terms or notes', :placeholder => 'Any special terms or notes to add?', :hint => "Got a dog? Require an NDA? Write any special conditions for booking."
 
     .actions
-      = f.submit 'Create my Location'
+      = f.submit 'Create my Location', :disable_with => 'Creating...'
 
 :javascript
   $(function() {
