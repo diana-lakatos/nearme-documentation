@@ -60,11 +60,7 @@ Then /I should have password/ do
 end
 
 When /I manually sign up with valid credentials$/ do 
-  sign_up_manually
-end
-
-Given /A valid user exists/ do
-  pre_existing_user
+  sign_up_manually({:name => 'User-1'})
 end
 
 When /I sign in with valid credentials/ do 
@@ -98,15 +94,9 @@ Then /there should be (Twitter|Facebook|LinkedIn) account$/ do |social|
   assert_not_nil Authentication.find_by_provider(social.downcase)
 end
 
-Then /I am signed in as the new user/ do
+Then /I am correctly signed in/ do
   user = User.find_by_email('valid@example.com')
-  assert_equal "Name", user.name
-  assert_equal 1, User.all.count
-end
-
-Then /I am signed in as this user/ do
-  user = User.find_by_email('valid@example.com')
-  assert_equal "Name", user.name
+  assert_equal "User-1", user.name
   assert_equal 1, User.all.count
 end
 
