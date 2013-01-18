@@ -197,7 +197,7 @@ class Listing < ActiveRecord::Base
   end
 
   # FIXME: long method, split me up? Does this/a lot of this belong in Reservation instead?
-  def reserve!(email, reserving_user, dates, quantity, assignees = [])
+  def reserve!(reserving_user, dates, quantity, assignees = [])
     # Check that the reservation is valid
     # FIXME: should be able to do this all in sql
     dates.each do |date|
