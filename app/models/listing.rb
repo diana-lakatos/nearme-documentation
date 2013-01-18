@@ -243,3 +243,9 @@ class Listing < ActiveRecord::Base
     self.creator ||= location.try(:company).try(:creator)
   end
 end
+
+class NullListing
+  def description
+    ""
+  end
+end
