@@ -11,7 +11,7 @@
       = f.input :name, :label => "Your company name", :placeholder => "Enter your business name"
       = f.input :url, :label => "Company website URL", :placeholder => "www.mycompany.com"
       = f.input :email, :label => "Company email", :placeholder => "yourname@example.com"
-      = f.input :description, :label => "Company description", :placeholder => "Tell us a bit about your company. People will read this when booking your space. Be exciting!"
+      = f.input :description,:as => :description, :label => "Company description", :placeholder => "Tell us a bit about your company. People will read this when booking your space. Be exciting!"
 
       .actions
         = f.button :submit, f.object.new_record? ? 'Create My Company' : 'Update Company'

@@ -7,21 +7,11 @@
       = render 'registrations/signup_form'
 
   - else
-    .two-thirds.column.alpha
-      .box
-        %h2== Sign up to Desks Near Me
+    .row-fluid
+      .span8.offset2
+        .box
+          %h2== Sign up to Desks Near Me
 
-        = render 'registrations/signup_form'
+          = render 'registrations/signup_form'
 
-    .one-third.column.omega.faqs-column
-      %h2 Already have an account?
-      %p
-        If you've already registered a DesksNearMe account then head
-        over to the #{link_to "log in", new_user_session_url} page instead.
-
-      %h2 Forgotten your password?
-      %p
-        If you've forgotten your password, then don't sweat. We can help you recover
-        access to your account. Just head over to the #{link_to "reset password", new_user_password_url}
-        page and follow the steps.
 

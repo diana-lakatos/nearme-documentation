@@ -1,38 +1,27 @@
 - legacy false
 - title "Sign In"
 
-#signup
-  .two-thirds.column.alpha
-    .box
-      %h2 Log in to Desks Near Me
+.row-fluid
+  #signup
+    .span8.offset2
+      .box
+        %h2 Log in to Desks Near Me
 
-      %h3.twitter-login
-        Log in with twitter:
+        %h3.twitter-login
+          Log in with twitter:
 
-      = render 'authentications/services'
+        = render 'authentications/services'
 
-      .hr.divider
-        %span alternatively
+        .hr.divider
+          %span Or
 
-      = simple_form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "form-horizontal" }) do |f|
-        = f.input :email, :label => "Your email address",  :placeholder => "Email address you registered with"
-        = f.input :password, :label => "Your password", :hint => "Forgot? #{link_to "Reset your password", new_user_password_url}"
+        = simple_form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "form-horizontal" }) do |f|
+          = f.input :email, :label => "Your email address",  :placeholder => "Email address you registered with"
+          = f.input :password, :label => "Your password", :hint => "Forgot? #{link_to "Reset your password", new_user_password_url}"
 
-        - if devise_mapping.rememberable?
-          = f.input :remember_me, as: :boolean, inline_label: "Remember Me", label: false
+          - if devise_mapping.rememberable?
+            = f.input :remember_me, as: :boolean, inline_label: "Remember Me", label: false
 
-        .actions
-          = f.submit "Log In"
-
-  .one-third.column.faqs-column
-    %h2 Already have an account?
-    %p
-      If you've already registered a DesksNearMe account then head
-      over to the #{link_to "log in", new_user_session_url} page instead.
-
-    %h2 Forgotten your password?
-    %p
-      If you've forgotten your password, then don't sweat. We can help you recover
-      access to your account. Just head over to the #{link_to "reset password", new_user_password_url}
-      page and follow the steps.
+          .actions
+            = f.submit "Log In"
 

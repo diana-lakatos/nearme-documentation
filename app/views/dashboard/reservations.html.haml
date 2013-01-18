@@ -9,7 +9,11 @@
         %li
           %p.em
             %strong= reservation.owner
-            (#{mail_to reservation.owner.email, 'Email'}) on
+
+            = link_to "mailto:#{reservation.owner.email}" do
+              %span.ico-mail.padding
+
+            on
             %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
             (#{reservation.state_name})
             %br/

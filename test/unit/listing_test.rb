@@ -15,5 +15,7 @@ class ListingTest < ActiveSupport::TestCase
   should validate_presence_of(:quantity)
   should ensure_inclusion_of(:confirm_reservations).in_array([true,false])
   should validate_numericality_of(:quantity)
+  should allow_value('x' * 250).for(:description)
+  should_not allow_value('x' * 251).for(:description)
 
 end

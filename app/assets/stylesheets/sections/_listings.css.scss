@@ -1,32 +1,24 @@
 @import "sections/listings/search";
 
-section.listings, .search-results {
-  table.reservations {
-    th {
-      font-weight: bold;
-      text-align: center;
-      padding-bottom: 4px;
-    }
-
-    td.day {
-      font-weight: bold;
-      font-size: 14px;
-    }
-  }
-
-  .list .listing, &.list .listing {
-    address {
-      font-size: 14px;
-    }
-  }
-
-}
-
-.listing.divider.small {
-  margin: 0 0 20px;
-}
-
 article.listing {
+  float: left;
+  width: 25%;
+  height: 350px;
+
+  @media (max-width: 960px) {
+    width: 33.333333333%;
+    height: 290px;
+  }
+
+  @media (max-width: 650px) {
+    width: 50%;
+  }
+
+  @media (max-width: 450px) {
+    width: 100%;
+    height: auto;
+    margin-bottom: 1.5em; 
+  }
 
   .column.description {
     color: $dnm_black;
@@ -48,10 +40,12 @@ article.listing {
     }
   }
 
-  .column.map {
+  .listing-map {
+    max-width: 100%;
+    height: 240px;
+  }
 
-    address {
-    }
+  .column.map {
 
     .map-wrapper {
       width: 600px;
@@ -116,19 +110,23 @@ article.listing {
     line-height: 26px; }
 
   section.list article.listing {
-    border-bottom: 1px solid #DDD;
-    padding-bottom: 6px;
     overflow: hidden;
 
+    address {
+      padding-right: .75em;
+    }
     h2 {
+      margin: .25em .75em .25em 0;
       a {
         font:normal '32px/40px' $font-medium, sans-serif;
         color: darken( $dnm_blue, 25%);
+
 
         &:hover {
           color: black;
         }
       }
+
     }  
     table {
       tr {
@@ -168,6 +166,7 @@ article.listing {
 .activity_feed .booked.feed_item {
   margin-bottom: 20px;
 }
+
 @media (max-width: 767px) {
   section.listings .list .listing address, section.listings.list .listing address, .search-results .list .listing address, .search-results.list .listing address {
     margin: 10px 0;

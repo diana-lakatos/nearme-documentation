@@ -10,8 +10,7 @@ Feature: Location Owner Creates/Edits Listing
     And a location exists with company: the company, creator: the user, name: "The Garage", description: "Aliquid eos ab quia officiis sequi."
 
   Scenario: A location owner can create a listing
-    Given I am on the dashboard
-    When I follow "Manage Locations"
+    Given I am on the manage locations page
     And I follow "Locations"
     And I follow "Edit"
     And I follow "Listings"

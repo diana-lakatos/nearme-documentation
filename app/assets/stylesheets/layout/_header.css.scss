@@ -1,126 +1,89 @@
 .dnm-page {
 	
-	.container.header {
+	.navbar {
+    background: $dnm_black;
 
-		.row {
+    .navbar-inner {
+      background: $dnm_black;
+      padding: 0 0 10px 20px;
+      max-width: 1400px;
+      box-sizing: border-box;
+      margin: 0 auto;
+    }
 
-      @media (min-width: 480px) and (max-width: 767px) {
-        padding: 0 20px;
-      }
-			@media (max-width: 320px) {
-				margin-bottom:0;
-			}
-		}
 		.logo-container {
 			float: left;
       margin-top: 2px;
-
-      @media (max-width: 767px) {
-        margin-top:14px;
-      }
 
       @media (max-width: 320px) {
         margin-top:2px;
       }
 
-		}
+      #logo {
+        display:inline-block;
+        float: left;
+        margin-top: 12px;
+        background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/desksnear.me-white.png") no-repeat;
+        width: 228px;
+        height: 28px;
+        background-size: 227px 28px;
+        text-indent: -9999px;
+        border: none !important;
+        -webkit-transition: none;
+           -moz-transition: none;
+             -o-transition: none;
+                transition: none; 
 
-		.links-container {
-			float: right;
+        @media (max-width: 600px) {
+          background-size: 171px 21px;
+          width: 171px;
+          height: 21px;
+          margin: 15px 0 0;
+        } 
+       
+        @media (max-width: 320px) {
+          background-size: 114px 14px;
+          width: 114px;
+          height: 18px;
+          margin: 20px 0 0;
+        }        
+      }
+		}	
 
-		}		
+    #header_links {
+      padding-top: 10px;
+      line-height: 38px;
+
+      a.header-link {
+        display: inline-block;
+        float: right;
+        color: $gray3;
+        font-size: 20px;
+        margin-right: 20px;
+        text-decoration: none;
+
+        &:hover {
+          color: white;
+        }
+
+        @media (max-width: 480px) {
+          margin-right:10px;
+        }
+        @media (max-width: 320px) {
+          font-size: 22px;
+        }      
+      }
+    }
 
 		a.btn.btn-blue {
-      margin-top: 4px;
-			@media (max-width: 630px) {
+      margin-top: 1px;
+      text-align: center;
+      float: right;
+      margin-right: 20px;
+
+			@media (max-width: 676px) {
 				display: none;
 			}
 		}
 	}
-}
-
-header {
-  margin: 10px 0 0;
-
-  @media (max-width: 320px) {
-   padding: 10px 0;
-
-   .logo-container {
-    margin: 0;
-   }
-  }
-
-  #logo {
-    display:inline-block;
-    float: left;
-    margin-top: 10px;
-    background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/desksnear.me.png") no-repeat;
-    width: 228px;
-    height: 28px;
-    background-size: 227px 28px;
-    text-indent: -9999px;
-    border: none !important;
-	  -webkit-transition: none;
-	  	 -moz-transition: none;
-	       -o-transition: none;
-	          transition: none; 
-
-   
-    @media (max-width: 320px) {
-      background-size: 114px 14px;
-      width: 114px;
-      height: 14px;
-      margin: 0;
-    }        
-  }
-
-  #header_links {
-    padding-top: 10px;
-    line-height: 38px;
-
-    @media (max-width: 320px ){
-    	line-height: 16px;
-    	padding: 0 0 14px;
-    }
-
-    .user-welcome {
-      font-size: 16px;
-      text-transform: uppercase;
-      color: #899296;
-      font-weight: bold;
-      margin-right: 30px;
-      display: inline-block;
-      float: right;
-
-      strong {
-        color: #394449;
-      }
-
-    }
-
-    .btn.btn-blue {
-      text-align: center;
-      float: right;
-    }
-
-    a.header-link {
-      display: inline-block;
-      float: right;
-      color: $dnm_gray;
-      font-size: 20px;
-      margin-right: 30px;
-      text-decoration: none;
-
-      &:hover {
-        color:rgb(10,10,10);
-      }
-
-      @media (max-width: 480px) {
-      	margin-right:10px;
-      }
-      @media (max-width: 320px) {
-      	font-size: 22px;
-      }      
-    }
-  }
 }
