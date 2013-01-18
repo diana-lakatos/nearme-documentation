@@ -1,5 +1,5 @@
 - @listing = @location.listings.first
-- @listing.description = @location.listings.first.description   
+- @listing.description = @location.listings.first.description if @location.listings.first
 
 = render :layout => 'show_layout', :locals => { :tab => :overview } do   
   .row-fluid
