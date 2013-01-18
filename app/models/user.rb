@@ -78,6 +78,11 @@ class User < ActiveRecord::Base
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
   end
 
+
+  def cancelled_reservations
+    reservations.cancelled
+  end
+
   # Whether to validate the presence of a password
   def password_required?
     # We're changing/setting password, or new user and there are no Provider authentications
