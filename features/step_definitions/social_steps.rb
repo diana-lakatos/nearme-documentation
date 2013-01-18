@@ -60,7 +60,7 @@ Then /I should have password/ do
 end
 
 When /I manually sign up with valid credentials$/ do 
-  sign_up_manually({:name => 'User-1'})
+  sign_up_manually({:name => 'I am user'})
 end
 
 When /I sign in with valid credentials/ do 
@@ -96,7 +96,7 @@ end
 
 Then /I am correctly signed in/ do
   user = User.find_by_email('valid@example.com')
-  assert_equal "User-1", user.name
+  assert_equal "I am user", user.name
   assert_equal 1, User.all.count
 end
 

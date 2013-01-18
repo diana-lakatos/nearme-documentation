@@ -50,7 +50,7 @@ Feature: A user can login
      Then account of valid user should be connected with Facebook
 
   Scenario: A user can login with email and password
-    Given a user exists with email: "valid@example.com", password: "password"
+    Given a user exists with email: "valid@example.com", password: "password", name: "I am user"
      When I sign in with valid credentials
      Then I am correctly signed in
 
