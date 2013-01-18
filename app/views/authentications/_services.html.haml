@@ -2,12 +2,12 @@
   = link_to_once provider_auth_url('twitter'), :disable_with => "Connecting...", :class => "btn btn-blue btn-large twitter" do
     %i.icon.ico-twitter.padding
     Twitter
-  /= link_to "/auth/facebook", :class => "btn btn-green btn-large facebook" do
-  /  %i.icon.icon-facebook
-  /  Facebook
-  /= link_to "/auth/linkedin", :class => "btn btn-green btn-large linkedin" do
-  /  %i.icon.icon-linkedin
-  /  LinkedIn
+  = link_to provider_auth_url('facebook'), :class => "btn btn-blue btn-large facebook" do
+    %i.icon.icon-facebook
+    Facebook
+  = link_to provider_auth_url('linkedin'), :class => "btn btn-blue btn-large linkedin" do
+    %i.icon.icon-linkedin
+    LinkedIn
 
 
 
