@@ -2,7 +2,5 @@
   If you disconnect this account, you will have no possibility to log in. To avoid this, please save your password
 %ul.services_list
   - supported_providers.each do |provider|
-    %li.service_provider{:id => "provider_#{provider.downcase}"}
-      %p.service_provider_name
-        = build_link_for(provider)
+    = build_link_for(provider, "btn btn-blue btn-medium #{provider.downcase}").html_safe
   - end unless supported_providers.nil?
