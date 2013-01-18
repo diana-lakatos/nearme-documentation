@@ -93,14 +93,14 @@
   }  
 
   &.twitter {
-    width:auto;
-    text-align: center;
-    box-sizing: border-box;
-
-    @media (max-width: 768px) {
-      width: 100%;
-    }
+    background: #33CCFF;
   }
+  &.facebook {
+    background: #3B5998;
+  }
+  &.linkedin{
+    background: #4875B4;
+  }    
 }
 
 .btn-group {
