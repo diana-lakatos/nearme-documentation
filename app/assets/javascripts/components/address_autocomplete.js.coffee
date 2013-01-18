@@ -1,6 +1,41 @@
+class @AddressComponentParser
+
+  component_separator = "+"
+  part_separator = "|"
+  key_value_separator = ":"
+  type_separator = ","
+
+
+  buildAddressComponentsString: (result) ->
+    #it will require some parsing 
+    #component =  components.split("+") 
+    #parts = component.split("|") -> parts[0] = long_name, parts[1] = short_name, parts[2] = types
+    #types = parts[2].split(",") 
+    address_component_string = ""
+    for address_component in result['address_components']
+      address_component_string += @add_names(address_component)
+      address_component_string += @add_types(address_component)
+      address_component_string += component_separator
+    address_component_string.slice(0, -1)
+
+  add_names: (address_component) ->
+    "long_name" + key_value_separator + address_component['long_name'] + part_separator +
+    "short_name" + key_value_separator + address_component['short_name']
+
+  add_types: (address_component) ->
+    if !!address_component['types']
+      part_separator + "types" + key_value_separator + address_component['types'].join(type_separator)
+
+  buildAddressComponentsForm: (addressComponentsString) ->
+    alert('invoked')
+
+    
+
+
 class @AddressAutocomplete
 
   constructor: (@input) ->
+    @addressComponentParser = new AddressComponentParser
     @bindEvents()
     @setupInput()
 
@@ -20,7 +55,7 @@ class @AddressAutocomplete
         link = $("<a href='#'></a>")
           .html(result['formatted_address'])
           .attr("data-lat", loc.lat())
-          .attr("data-address-components", @buildAddressComponentsString(result))
+          .attr("data-address-components", @addressComponentParser.buildAddressComponentsString(result))
           .attr("data-lng", loc.lng())
           .data("result", loc)
         li = $("<li></li>").append(link)
@@ -32,18 +67,6 @@ class @AddressAutocomplete
 
     @inputWrapper.after(el)
 
-  buildAddressComponentsString: (result) ->
-    #it will require some parsing 
-    #component =  components.split("+") 
-    #parts = component.split("|") -> parts[0] = long_name, parts[1] = short_name, parts[2] = types
-    #types = parts[2].split(",") 
-    address_component_string = ""
-    for address_component in result['address_components']
-      address_component_string += "long:" + address_component['long_name'] + "|short:" + address_component['short_name']
-      if !!address_component_string['types']
-        address_component_string += "|types:" + address_component['types'].join(',')
-      address_component_string += "+"
-    address_component_string.slice(0, -1)
 
 
   hideMatches: ->
@@ -76,7 +99,7 @@ class @AddressAutocomplete
     $("#address-suggestions").remove()
     $("#location_address").focus()
     $("#location_local_geocoding").val("1")
-
+    @addressComponentParser.buildAddressComponentsForm(selection.attr("data-address-components"))
     @_onLocate(selection.attr('data-lat'), selection.attr('data-lng')) if @_onLocate
 
   setLatLng: (lat, lng) ->
@@ -104,5 +127,4 @@ class @AddressAutocomplete
     @loadingSpinner = $('<i class="icon icon-loading" />')
     @loadingSpinner.hide()
     @inputWrapper.append(@loadingSpinner)
-
 
