@@ -3,6 +3,8 @@
     %span.ico-logout.padding Log out
   = link_to dashboard_path, :class => "header-link" do
     %span.ico-dashboard.padding Dashboard  
+  = link_to controlpanel_path, :class => "header-link" do
+    %span.ico-dashboard.padding New Dashboard  
 - else
   = link_to new_user_session_url, :class => "header-link header-second" do
     %span.ico-login.padding Log in

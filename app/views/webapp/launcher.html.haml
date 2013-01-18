@@ -1,0 +1,20 @@
+!!!
+%html
+  %head
+    %title
+      DesksNear.Me :: #{show_title? ? yield(:title) : "Where do you want to work today?"}
+    %meta{:content => "DesksNear.Me is a public reservation system for companies to offer desks to freelancers and sole-operators.", :name => "description"}/
+    %meta{:content => "The Rad Warlike Annex", :name => "author"}/
+    %meta{:content => "tellthemwhen_verif_1af11d7040aa81a9ab2e07d4efee180d2e93d030", :name => "TellThemWhen"}/
+    %meta{:content => "IE=edge,chrome=1", "http-equiv" => "X-UA-Compatible"}/
+    = csrf_meta_tag
+    %link{:href => "/favicon.ico?9002", :rel => "shortcut icon"}/
+    = stylesheet_link_tag 'new_layout'
+    = stylesheet_link_tag 'vendor/fancybox/jquery.fancybox-1.3.1', :media => "screen, projection"
+
+    = requirejs_include_tag "webapp"
+    <script type="text/javascript" src="//use.typekit.net/nyj7syq.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+  %body
+    %div{:id => 'main'}

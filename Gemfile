@@ -41,6 +41,8 @@ gem 'chronic'
 gem 'flying-sphinx', '0.8.4'
 gem 'thin'
 
+gem 'requirejs-rails'
+
 group :development do
   gem 'heroku'
   gem 'taps'
@@ -64,7 +66,8 @@ group :development, :test do
   gem 'json_spec', '0.5.0'
   gem 'ruby-debug19'
   gem 'jasmine'
-  gem 'jasmine-headless-webkit', '0.9.0.rc.2'
+  #gem 'jasmine-headless-webkit', '0.9.0.rc.2'
+  gem 'teabag'
 end
 
 group :test do

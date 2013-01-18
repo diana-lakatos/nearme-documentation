@@ -34,6 +34,8 @@ DesksnearMe::Application.routes.draw do
 
   resources :reservations, :only => :update
 
+  match 'controlpanel' => 'controlpanel#index', as: :controlpanel
+
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
       get :bookings
