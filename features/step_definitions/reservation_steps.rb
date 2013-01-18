@@ -2,7 +2,7 @@ Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed
   lister = User.find_by_name(lister)
   reserver = User.find_by_name(reserver)
   @listing = FactoryGirl.create(:listing, creator: lister)
-  reservation = @listing.reserve!(reserver, [Date.tomorrow], 1)
+  reservation = @listing.reserve!(reserver, [Chronic.parse('Monday', context: :future)], 1)
   unless confirmed != " "
     reservation.confirm!
     reservation.save
