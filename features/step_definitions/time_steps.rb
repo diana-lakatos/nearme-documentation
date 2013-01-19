@@ -1,5 +1,5 @@
 Given(/^the date is "([^"]*)"$/) do |date|
-  Timecop.freeze Date.parse(date)
+  Timecop.travel Date.parse(date)
 end
 
 # Return to normal

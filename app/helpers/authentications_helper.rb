@@ -8,16 +8,61 @@ module AuthenticationsHelper
     def name
       @auth['info']['name']
     end
-  end
 
-  class TwitterProvider < AuthProvider
     def avatar_url
-      "http://api.twitter.com/1/users/profile_image?screen_name=#{@auth['info']['nickname']}&size=normal"
+      @auth['info']['image']
     end
 
     def connection_description
-      "Connected via Twitter as <a href=\"http://twitter.com/#{@auth['info']['nickname']}\">@#{@auth['info']['nickname']}</a>".html_safe
+      "Connected via #{title} as <a href='#{destination_url}'>#{display_url}</a>".html_safe
     end
+  end
+
+  class TwitterProvider < AuthProvider
+
+    def destination_url
+      "http://twitter.com/#{@auth['info']['nickname']}"
+    end
+
+    def display_url
+      "@#{@auth['info']['nickname']}"
+    end
+
+    def title
+      "Twitter"
+    end
+  end
+
+  class LinkedinProvider < AuthProvider
+
+    def destination_url
+      "#{@auth['info']['urls']['public_profile']}"
+    end
+
+    def display_url
+      "#{@auth['info']['name']}"
+    end
+
+    def title
+      "LinkedIn"
+    end
+
+  end
+
+  class FacebookProvider < AuthProvider
+
+    def destination_url
+      "#{@auth['info']['urls']['link']}"
+    end
+
+    def display_url
+      "#{@auth['info']['name']}"
+    end
+
+    def title
+      "FaceBook"
+    end
+
   end
 
   # Return an object wrapping the omniauth provider which provides some view-model methods
@@ -26,6 +71,10 @@ module AuthenticationsHelper
       type = case session[:omniauth]['provider']
       when 'twitter'
         TwitterProvider
+      when 'facebook'
+        FacebookProvider
+      when 'linkedin'
+        LinkedinProvider
       end
 
       type.new(session[:omniauth]) if type

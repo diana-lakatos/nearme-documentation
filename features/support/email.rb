@@ -16,6 +16,12 @@ module EmailHelpers
       to
     end
   end
+
+  def last_email_for(email)
+    last_email = mailbox_for(email).last
+    last_email.should_not be_nil, "No emails sent to #{email}, expected an email"
+    last_email
+  end
 end
 
 World(EmailHelpers)
