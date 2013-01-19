@@ -3,6 +3,8 @@ class Location < ActiveRecord::Base
     :info, :latitude, :local_geocoding, :longitude, :organization_ids, :name, :currency, :phone, :formatted_address, :availability_rules_attributes, :availability_template_id,
     :special_notes, :listings_attributes
   attr_accessor :local_geocoding # set this to true in js
+  attr_accessor :address_component_params # data to create address_component_names and _types will be stored here
+
   geocoded_by :address
 
   has_many :amenities, through: :location_amenities
@@ -21,6 +23,8 @@ class Location < ActiveRecord::Base
   has_many :feeds, :through => :listings
 
   has_many :availability_rules, :as => :target
+
+  has_many :address_component_names, :dependent => :destroy
 
   validates_presence_of :company_id, :name, :description, :address, :latitude, :longitude
   validates :email, email: true, allow_nil: true
@@ -56,6 +60,7 @@ class Location < ActiveRecord::Base
   def admin?(user)
     creator == user
   end
+
 
   private
 

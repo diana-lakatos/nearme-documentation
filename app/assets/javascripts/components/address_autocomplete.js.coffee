@@ -1,37 +1,3 @@
-class @AddressComponentParser
-
-  component_separator = "+"
-  part_separator = "|"
-  key_value_separator = ":"
-  type_separator = ","
-
-
-  buildAddressComponentsString: (result) ->
-    #it will require some parsing 
-    #component =  components.split("+") 
-    #parts = component.split("|") -> parts[0] = long_name, parts[1] = short_name, parts[2] = types
-    #types = parts[2].split(",") 
-    address_component_string = ""
-    for address_component in result['address_components']
-      address_component_string += @add_names(address_component)
-      address_component_string += @add_types(address_component)
-      address_component_string += component_separator
-    address_component_string.slice(0, -1)
-
-  add_names: (address_component) ->
-    "long_name" + key_value_separator + address_component['long_name'] + part_separator +
-    "short_name" + key_value_separator + address_component['short_name']
-
-  add_types: (address_component) ->
-    if !!address_component['types']
-      part_separator + "types" + key_value_separator + address_component['types'].join(type_separator)
-
-  buildAddressComponentsForm: (addressComponentsString) ->
-    alert('invoked')
-
-    
-
-
 class @AddressAutocomplete
 
   constructor: (@input) ->
@@ -73,6 +39,7 @@ class @AddressAutocomplete
     $('#address-suggestions').remove()
 
   findMatches: ->
+    @addressComponentParser.clearAddressComponentInputs()
     geocoder = new google.maps.Geocoder()
 
     geocoder.geocode { address: @input.val() }, (results, status) =>
@@ -127,4 +94,64 @@ class @AddressAutocomplete
     @loadingSpinner = $('<i class="icon icon-loading" />')
     @loadingSpinner.hide()
     @inputWrapper.append(@loadingSpinner)
+
+class @AddressComponentParser
+
+  componentSeparator = "+"
+  partSeparator = "|"
+  keyValueSeparator = ":"
+  typeSeparator = ","
+
+  buildAddressComponentsString: (result) ->
+    #it will require some parsing 
+    #component =  components.split("+") 
+    #parts = component.split("|") -> parts[0] = long_name, parts[1] = short_name, parts[2] = types
+    #types = parts[2].split(",") 
+    addressComponentString = ""
+    for addressComponent in result['address_components']
+      addressComponentString += @add_names(addressComponent)
+      addressComponentString += @add_types(addressComponent)
+      addressComponentString += componentSeparator
+    addressComponentString.slice(0, -1)
+
+  add_names: (addressComponent) ->
+    "long_name" + keyValueSeparator + addressComponent['long_name'] + partSeparator +
+    "short_name" + keyValueSeparator + addressComponent['short_name']
+
+  add_types: (addressComponent) ->
+    if !!addressComponent['types']
+      partSeparator + "types" + keyValueSeparator + addressComponent['types'].join(typeSeparator)
+
+  buildAddressComponentsForm: (addressComponentsString) ->
+    addressComponentsArray = addressComponentsString.split(componentSeparator)
+    index = 0
+    for addressComponent in addressComponentsArray
+      @buildInputsForComponent(addressComponent, index)
+      index++
+        
+
+  buildInputsForComponent: (component, index) ->
+    parts = component.split(partSeparator)
+    for part in parts
+      @buildInputForPart(part, index)
+
+  buildInputForPart: (part, index) ->
+    part_components = part.split(keyValueSeparator)
+    key = part_components[0]
+    value = part_components[1]
+    @buildInput("address_components[#{index}][#{key}]", value)
+
+
+  buildInput: (name, value) ->
+    input = document.createElement('input')
+    input.name = name
+    input.value = value
+    input.className = 'address_components_input'
+    input.type = 'hidden'
+    $("#location_address").parent().append(input)
+
+  clearAddressComponentInputs: ->
+    $('.address_components_input').each ->
+      $(this).remove()
+
 
