@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(:version => 20130119001758) do
   end
 
   create_table "address_component_types", :force => true do |t|
-    t.string "type"
+    t.string "name"
   end
 
   create_table "amenities", :force => true do |t|

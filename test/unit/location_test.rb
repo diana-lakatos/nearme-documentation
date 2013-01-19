@@ -32,6 +32,7 @@ class LocationTest < ActiveSupport::TestCase
         end
       end
     end
+
     context "when require_organization_membership is false" do
       should "be empty" do
         location = Location.new
@@ -51,4 +52,89 @@ class LocationTest < ActiveSupport::TestCase
       assert !location.availability.open_on?(:day => 1)
     end
   end
-end
+
+  context "creating address components" do
+
+    setup do
+      @user = FactoryGirl.create(:user)
+      @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
+      @location = FactoryGirl.build(:location_in_auckland, :creator_id => @user.id)
+      @company.locations << @location
+      @location.address_components_hash = get_params_for_address_components
+    end
+
+    context 'formatted address has not changed ' do
+
+
+      should "not create address components" do
+        @location.save!
+        @location.phone = "000 0000 000"
+        @location.build_address_components_if_necessary
+        assert_equal(0, @location.address_component_names.count)
+      end
+
+    end
+
+    context 'formatted address has changed' do
+
+      should "create address components" do
+        @location.save!
+        @location.formatted_address = "Ursynowska, Warszawa, Poland"
+        @location.build_address_components_if_necessary
+        assert_equal(6, @location.address_component_names.count)
+      end
+
+    end
+
+    context 'is new record' do
+
+      should " create address components" do
+        @location.build_address_components
+        assert_equal(6, @location.address_component_names.count)
+      end
+
+    end
+  end
+
+  private
+
+  def get_params_for_address_components
+    # real data from google geocoder
+    {
+      "0"=> {
+      "long_name"=>"Ursynowska", 
+      "short_name"=>"Ursynowska", 
+      "types"=>"route"
+    }, 
+      "1"=>{
+      "long_name"=>"Mokotow", 
+      "short_name"=>"Mokotow", 
+      "types"=>"sublocality,political"
+    }, 
+      "2"=>{
+      "long_name"=>"Warsaw", 
+      "short_name"=>"Warsaw", 
+      "types"=>"locality,political"
+    },
+      "3"=>{
+      "long_name"=> "Warszawa", 
+      "short_name"=>"Warszawa", 
+      "types"=>"administrative_area_level_3,political"
+    }, 
+      "4"=>{
+      "long_name"=>"Warszawa", 
+      "short_name"=>"Warszawa", 
+      "types"=>"administrative_area_level_2,political"
+    }, 
+      "5"=>{
+      "long_name"=>"Masovian Voivodeship", 
+      "short_name"=>"Masovian Voivodeship", 
+      "types"=>"administrative_area_level_1,political"
+    }, 
+      "6"=>{
+      "long_name"=>"Poland", 
+      "short_name"=>"PL", 
+      "types"=>"country,political"
+    }
+    }
+  end end

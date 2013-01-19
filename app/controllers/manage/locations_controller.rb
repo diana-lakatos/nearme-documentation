@@ -21,7 +21,7 @@ class Manage::LocationsController < ApplicationController
   def update
   
     @location.attributes = params[:location]
-    @location.address_component_params = params[:address_components] || []
+    @location.address_components_hash = params[:address_components] || {}
 
     if @location.save
       flash[:context_success] = "Great, your Space has been updated!"
