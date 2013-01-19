@@ -9,21 +9,15 @@ Feature: Emails should be sent out informing parties about reservations
 
   @javascript
   Scenario: reservation confirmations required (no comment)
-    Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
-    And I am logged in as user "Keith Contractor"
-    When I book space for:
-      | Listing     | Date | Quantity|
-      | the listing | Monday | 1 |
+    Given Bo Jeanes does require confirmation for his listing
+    When Keith Contractor books a space for that listing
     Then a confirm reservation email should be sent to bo@example.com
     And a reservation awaiting confirmation email should be sent to keith@example.com
 
   @javascript
   Scenario: reservation confirmations not required
-    Given a listing: "Mocra" exists with creator: user "Bo Jeanes", confirm_reservations: false
-    And I am logged in as user "Keith Contractor"
-    When I book space for:
-      | Listing     | Date | Quantity|
-      | the listing | Monday | 1 |
+    Given Bo Jeanes does not require confirmation for his listing
+    When Keith Contractor books a space for that listing
     Then a reservation confirmed email should be sent to keith@example.com
     Then a new reservation email should be sent to bo@example.com
 

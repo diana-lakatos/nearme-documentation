@@ -60,7 +60,9 @@ Given /^a listed location( without (amenities|organizations))?$/ do |_,_|
 end
 
 Given /^a listed location with a creator whose email is (.*)?$/ do |email|
-  @listing = FactoryGirl.create(:listing, creator: FactoryGirl.create(:user, email: email))
+  @listing = FactoryGirl.create(:listing)
+  @listing.creator.email = email
+  @listing.creator.save
 end
 
 Given /^a listed location with an amenity/ do
@@ -71,6 +73,14 @@ end
 
 Given /^a listed location in San Francisco that does( not)? require confirmation$/ do |confirmation|
   @listing = FactoryGirl.create(:listing_in_san_francisco, confirm_reservations: !confirmation)
+end
+
+Given /^(.*) does( not)? require confirmation for his listing$/ do |person, no_confirmation|
+  @listing = FactoryGirl.create(:listing)
+  @listing.confirm_reservations = !no_confirmation
+  @listing.save
+  @listing.location.company.creator = User.find_by_name(person)
+  @listing.location.company.save
 end
 
 When /^I create a listing for that location with availability rules$/ do
