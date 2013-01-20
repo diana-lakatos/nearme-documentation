@@ -63,9 +63,9 @@ class LocationsController < ApplicationController
         :id => listing.id,
         :availability => Hash[
           dates.map { |date|
-        [date.strftime("%Y-%m-%d"), { :available => listing.availability_for(date), :total => listing.quantity_for(date) }]
-      }
-      ]
+            [date.strftime("%Y-%m-%d"), { :available => listing.availability_for(date), :total => listing.quantity_for(date) }]
+          }
+        ]
       }
     }.to_json
   end
