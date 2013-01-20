@@ -16,7 +16,6 @@ class LocationsController < ApplicationController
   def populate_address_components
     counter = 0
     params["address_components"].each do |location_id, address_components|
-      logger.debug "#{location_id} => #{address_components}"
       @location = Location.find(location_id)
       @location.address_components_hash = address_components
       @location.address_component_names.destroy_all
