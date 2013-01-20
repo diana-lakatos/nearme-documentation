@@ -1,4 +1,5 @@
 class Manage::LocationsController < ApplicationController
+  require 'ruby-debug'
   before_filter :authenticate_user!
   before_filter :find_location, :except => [:index]
   before_filter :find_company
@@ -19,9 +20,9 @@ class Manage::LocationsController < ApplicationController
   end
 
   def update
-  
     @location.attributes = params[:location]
     @location.address_components_hash = params[:address_components] || {}
+    @location.build_address_components_if_necessary
 
     if @location.save
       flash[:context_success] = "Great, your Space has been updated!"

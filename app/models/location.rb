@@ -76,7 +76,7 @@ class Location < ActiveRecord::Base
   end
 
   def cleanup_address_components
-    address_component_names.destroy
+    address_component_names.destroy_all
   end
 
   def build_address_components
