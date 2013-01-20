@@ -128,6 +128,14 @@ class @AddressComponentParser
     for addressComponent in addressComponentsArray
       @buildInputsForComponent(addressComponent, index)
       index++
+
+  buildAddressComponentsFormForLocation: (addressComponentsString, location_id) ->
+    addressComponentsArray = addressComponentsString.split(componentSeparator)
+    index = 0
+    for addressComponent in addressComponentsArray
+      key = "" + location_id + "][" + index
+      @buildInputsForComponent(addressComponent, key)
+      index++
         
 
   buildInputsForComponent: (component, index) ->
@@ -154,4 +162,16 @@ class @AddressComponentParser
     $('.address_components_input').each ->
       $(this).remove()
 
+
+class @AddressComponentsPopulator
+
+  constructor: (@formatted_address, @location_id) ->
+    geocoder = new google.maps.Geocoder()
+    @location_id
+    @addressComponentParser = new AddressComponentParser()
+
+    geocoder.geocode { address: @formatted_address }, (results, status) =>
+      for result in results
+        @addressComponentParser.buildAddressComponentsFormForLocation(@addressComponentParser.buildAddressComponentsString(result), @location_id)
+      
 
