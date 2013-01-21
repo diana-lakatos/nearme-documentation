@@ -12,7 +12,7 @@ class Location < ActiveRecord::Base
   has_many :location_organizations
 
   belongs_to :company
-  delegate :creator, :creator=, :to => :company
+  delegate :creator, :to => :company
 
   has_many :listings,
            :dependent => :destroy
@@ -58,6 +58,11 @@ class Location < ActiveRecord::Base
 
   def description
     read_attribute(:description) || (listings.first || NullListing.new).description
+  end
+
+  def creator=(creator)
+    company.creator = creator
+    company.save
   end
 
   private

@@ -79,8 +79,7 @@ Given /^(.*) does( not)? require confirmation for his listing$/ do |person, with
   @listing = FactoryGirl.create(:listing)
   @listing.confirm_reservations = !with_confirmation
   @listing.save
-  @listing.location.company.creator = User.find_by_name(person)
-  @listing.location.company.save
+  @listing.creator = User.find_by_name(person)
 end
 
 When /^I create a listing for that location with availability rules$/ do

@@ -2,8 +2,7 @@ Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed
   lister = User.find_by_name(lister)
   reserver = User.find_by_name(reserver)
   @listing = FactoryGirl.create(:listing)
-  @listing.location.company.creator = lister
-  @listing.location.company.save
+  @listing.creator = lister
   reservation = @listing.reserve!(reserver, [next_regularly_available_day], 1)
   unless confirmed != " "
     reservation.confirm!
