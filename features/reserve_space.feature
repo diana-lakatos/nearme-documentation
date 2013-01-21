@@ -45,12 +45,9 @@ Feature: A user can book at a space
   Scenario: Booking and paying by credit card
      Given I am logged in as the user
       When I go to the location's page
-       And I select to book space for:
+       And I book space with credit card for:
         | Listing     | Date   | Quantity |
         | the listing | Monday | 1        |
-       And I click to review the booking
-       And I provide reservation credit card details 
-       And I click to confirm the booking with credit card
        Then I should see "credit card will be charged when your reservation is confirmed"
        And the user should have a billing profile
 

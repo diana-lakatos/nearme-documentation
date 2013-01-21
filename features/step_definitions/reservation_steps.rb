@@ -49,9 +49,10 @@ Then /^I should have a cancelled reservation on "([^"]*)"$/ do |date|
 end
 
 
-When /^I book space for:$/ do |table|
+When /^I book space( with credit card)? for:$/ do |with_credit_card, table|
   When %{I select to book space for:}, table
   When %{I click to review the booking}
+  When %{I provide reservation credit card details} if with_credit_card
   When %{I click to confirm the booking}
 end
 
