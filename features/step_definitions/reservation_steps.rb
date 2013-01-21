@@ -100,7 +100,7 @@ When /^I select to book space for:$/ do |table|
     # Add the day to the seletion
     unless added_dates.include?(date)
       el = find(:css, date_class)
-      el.click
+      el.click unless date == Date.tomorrow
       added_dates << date
     end
 
@@ -126,7 +126,7 @@ When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved f
   date = Chronic.parse(date).to_date
   assert listing.reservations.any? { |reservation|
     reservation.owner == user && reservation.periods.any? { |p| p.date == date && p.quantity == qty }
-  }
+  }, "Unable to find a reservation for #{listing.name} on #{date}"
 end
 
 Then /^the space owner and booker should be notified$/ do
