@@ -37,6 +37,7 @@ module Social
       return [nil, nil] if uid.blank?
 
       info = {
+        "nickname"     => "#{raw_info["firstName"]} #{raw_info["lastName"]}",
         "first_name"  => raw_info["firstName"],
         "last_name"   => raw_info["lastName"],
         "name"        => "#{raw_info["firstName"]} #{raw_info["lastName"]}",

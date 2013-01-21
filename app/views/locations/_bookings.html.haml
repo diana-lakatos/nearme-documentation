@@ -10,7 +10,7 @@
 
         %h3.listing-name
           = listing.name
-        
+
         = truncate_with_ellipsis listing.description, 250, :class => "listing-description"
 
         .make-reservation
@@ -27,7 +27,7 @@
           %span $#{content_tag(:span, "0.00", :class => 'total')}
 
           .book
-            = link_to "",:id =>"book-#{listing.id}", :class => "btn btn-green btn-large", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
+            = link_to_once "", :disable_with =>"Booking...", :class => "btn btn-green btn-large", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
               %span.ico-check.padding Book
 
         .clearfix

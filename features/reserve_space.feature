@@ -9,11 +9,10 @@ Feature: A user can book at a space
       And a listing exists with location: that location, quantity: 10
       And a user exists
 
-  @javascript @wip
+  @javascript
   Scenario: A logged in user can book a listing
     Given I am logged in as the user
-     When I go to the location's page
-      And I book space for:
+      When I book space for:
           | Listing     | Date   | Quantity  |
           | the listing | Monday  | 1        |
           | the listing | Tuesday | 1        |
@@ -21,27 +20,22 @@ Feature: A user can book at a space
       And the user should have the listing reserved for 'Tuesday'
 
   @javascript
-  @future
-  Scenario: A user cannot book a desk in the past
-
-  @javascript @wip
   Scenario: Booking for a 'automatically confirm' listing should show relevant details
     Given I am logged in as the user
     And bookings for the listing do not need to be confirmed
     When I go to the location's page
-    And I select to book space for:
+    And I book space for:
       | Listing | Date | Quantity|
       | the listing | Monday | 1 |
     And I click to review the booking
     Then I should see "This host manually confirms all bookings before payment"
 
   @javascript
-  @wip
   Scenario: Booking for a non-'automatically confirm' listing should show relevant details
     Given I am logged in as the user
     And bookings for that listing do need to be confirmed
     When I go to the location's page
-    And I select to book space for:
+    And I book space for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 1        |
     And I click to review the booking
@@ -53,8 +47,8 @@ Feature: A user can book at a space
     Given the listing has the following reservations:
       | Date   | Quantity |
       | Monday | 10       |
-    When I go to the locatoin's page
-    Then I can't select to book space for:
+    When I go to the location's page
+    Then I can't book space for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 1        |
 

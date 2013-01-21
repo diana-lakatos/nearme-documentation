@@ -57,6 +57,10 @@ class Location < ActiveRecord::Base
     creator == user
   end
 
+  def description
+    read_attribute(:description) || (listings.first || NullListing.new).description
+  end
+
   private
 
     def assign_default_availability_rules
