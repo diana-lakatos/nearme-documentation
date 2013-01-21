@@ -10,7 +10,7 @@ module ReservationsHelper
   end
 
   def reservation_needs_payment_details?
-    @reservations.sum(&:total_amount) > 0 && @reservations.each { |r| r.currency == "usd" || "cad" }
+    @reservations.sum(&:total_amount) > 0 && @reservations.all? { |r| r.currency == "USD" || "CAD" }
   end
 
   def reservation_manual_payment?
