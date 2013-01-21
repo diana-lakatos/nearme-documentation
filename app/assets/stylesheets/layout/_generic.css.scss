@@ -32,6 +32,11 @@ img {
   max-width:100%;
 }
 
+/* fix for google maps zoom controls */
+.map-wrapper .map-container img{
+  max-width: none;
+}
+
 .right {
   float: right;
 }

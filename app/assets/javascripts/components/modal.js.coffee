@@ -30,7 +30,7 @@ class @Modal
       @load(target.attr("href"), modalClass)
       false
 
-    $('.modal form').live 'ajax:success', (event, data) =>
+    $('.modal-content form').live 'ajax:success', (event, data) =>
       Modal.showContent(data)
 
   # Show the loading status on the modal
