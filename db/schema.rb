@@ -218,7 +218,7 @@ ActiveRecord::Schema.define(:version => 20130115202157) do
     t.text     "comment"
     t.boolean  "create_charge"
     t.string   "payment_status",     :default => "unknown", :null => false
-    t.string   "payment_method",     :default => "manual"
+    t.string   "payment_method",     :default => "manual",  :null => false
   end
 
   create_table "search_queries", :force => true do |t|

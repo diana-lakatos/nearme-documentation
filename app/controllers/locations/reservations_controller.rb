@@ -7,6 +7,9 @@ module Locations
     def review
       @reservations = build_reservations(Reservation::PAYMENT_METHODS[:credit_card])
       render :layout => false
+    rescue
+      Rails.logger.info($!.inspect)
+      raise $!.inspect
     end
 
     # Reserve bulk listings on a Location
