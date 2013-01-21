@@ -8,17 +8,11 @@ module Bookings
   def add_dates(dates)
     find(:css, ".calendar-wrapper").click
 
-    wait_until {
-      page.has_no_selector?('.datepicker-loading', visible: true)
-    }
+    wait_until { page.has_no_selector?('.datepicker-loading', visible: true) }
 
-    added_dates = []
-    dates.each do | date|
-      unless added_dates.include?(date)
-        el = find(:css, datepicker_class_for(date))
-        el.click unless date == Date.tomorrow
-        added_dates << date
-      end
+    (dates.uniq - [Date.tomorrow]).each do | date|
+      el = find(:css, datepicker_class_for(date))
+      el.click
     end
 
     find(:css, ".calendar-wrapper").click
