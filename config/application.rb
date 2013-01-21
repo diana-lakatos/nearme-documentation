@@ -54,5 +54,10 @@ module DesksnearMe
     # Enable the asset pipeline
     config.assets.enabled = true
     config.assets.digest = true
+
+    # Stripe payment gateway setup as Test environment.
+    # Override in relevant environment config
+    config.stripe_api_key = "sk_test_lpr4WQXQdncpXjjX6IJx01W7"
+    config.stripe_public_key = "pk_test_iCGA8nFZdILrI1UtuMOZD2aq"
   end
 end

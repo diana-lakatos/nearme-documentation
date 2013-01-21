@@ -11,4 +11,8 @@ DesksnearMe::Application.configure do
   config.serve_static_assets = true
   config.static_cache_control = "public, max-age=3600"
   config.whiny_nils = true
+
+  # Set Stripe config to no config setup for Tests
+  config.stripe_api_key = nil
+  config.stripe_public_key = nil
 end
