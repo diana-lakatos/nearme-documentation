@@ -20,10 +20,6 @@ Feature: A user can book at a space
       And the user should have the listing reserved for 'Tuesday'
 
   @javascript
-  @future
-  Scenario: A user cannot book a desk in the past
-
-  @javascript
   Scenario: Booking for a 'automatically confirm' listing should show relevant details
     Given I am logged in as the user
     And bookings for the listing do not need to be confirmed
