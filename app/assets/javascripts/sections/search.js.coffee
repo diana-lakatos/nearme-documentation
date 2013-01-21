@@ -5,6 +5,7 @@ class DNM.SearchForm
   constructor: (@form) ->
     @initializeFields()
     @initializeGeolocateButton()
+    autocomplete = new google.maps.places.Autocomplete(document.getElementById('search'), {})
 
   # Initialize all filters for the search form
   initializeFields: ->
@@ -106,7 +107,8 @@ class DNM.SearchForm
           @queryField.val(currentLocation).change()
 
 class DNM.HomeSearch extends DNM.SearchForm
-
+  constructor: (form, @container) ->
+    super(form)
 
 class DNM.SearchResultsPage extends DNM.SearchForm
   constructor: (form, @container) ->
