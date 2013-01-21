@@ -23,6 +23,49 @@ class User::BillingGateway
     end
   end
 
+  # Wrapper object for credit card details. 
+  # Encapsulates conversion and validation logic.
+  #
+  # Instantiate a CardDetails object from user params, for passing to the billing gateway
+  # customer setup methods.
+  # Use the #valid? test to tentatively determine whether or not the details could be valid.
+  class CardDetails
+    attr_accessor :number, :expiry_month, :expiry_year, :cvc
+
+    # TODO: Add validations, etc.
+    # include ActiveModel::Validations
+    # validates_numericality_of :expiry_month, :within => 1..12
+    # validates_numericality_of :expiry_year, :within => 0..99
+    # ...
+
+    # Initialize a CardDetails object encapsulating credit card details
+    # 
+    # details_hash - Hash of card detials
+    #                :number - Credit card number string
+    #                :expiry_month - Credit card expiry MM
+    #                :expiry_year  - Credit card expiry YY
+    #                :cvc    - Card CVC/CVV/CSC code
+    def initialize(details_hash)
+      self.number = details_hash[:number]
+      self.expiry_month = details_hash[:expiry_month]
+      self.expiry_year = details_hash[:expiry_year]
+      self.cvc = details_hash[:cvc]
+    end
+
+    def valid?
+      number.present? && expiry_month.present? && expiry_year.present? && cvc.present?
+    end
+
+    def to_stripe_params
+      {
+        number: number,
+        exp_month: expiry_month.to_i,
+        exp_year: expiry_year.to_i,
+        cvc: cvc.to_i
+      }
+    end
+  end
+
   def initialize(user)
     @user = user
   end 
@@ -34,11 +77,7 @@ class User::BillingGateway
 
   # Store the credit card against the user
   #
-  # card_details - Hash of credit card information
-  #                :number - Credit card number string
-  #                :expiry_month - Credit card expiry MM
-  #                :expiry_year  - Credit card expiry YY
-  #                :cvc    - Card CVC/CVV/CSC code
+  # card_details - CardDetails object with credit card information
   #
   # Raises an exception on error.
   def store_card(card_details)
@@ -84,7 +123,7 @@ class User::BillingGateway
     rescue
       charge.charge_failed($!)
 
-      # Re-raise for wrapping in customer error wrapper
+      # Re-raise for wrapping in custom error wrapper
       raise
     end
 
@@ -100,12 +139,7 @@ class User::BillingGateway
   # Set up a customer and store their credit card details
   def setup_customer(card_details)
     stripe_customer = Stripe::Customer.create(
-      card: {
-        number: card_details[:number],
-        exp_month: card_details[:expiry_month],
-        exp_year: card_details[:expiry_year],
-        cvc: card_details[:cvc]
-      },
+      card: card_details.to_stripe_params,
       email: @user.email
     )
 
@@ -121,12 +155,7 @@ class User::BillingGateway
   # Update the card details associated with an existing customer
   def update_card(card_details)
     stripe_customer = Stripe::Customer.retrieve(@user.stripe_id)
-    stripe_customer.card = {
-      number: card_details[:number],
-      exp_month: card_details[:expiry_month],
-      exp_year: card_details[:expiry_year],
-      cvc: card_details[:cvc]
-    }
+    stripe_customer.card = card_details.to_stripe_params
     stripe_customer.save
   rescue Stripe::InvalidRequestError => e
     # If the error is in retrieving the customer, set up the customer instead.

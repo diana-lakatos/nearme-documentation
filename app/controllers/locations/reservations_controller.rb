@@ -77,14 +77,20 @@ module Locations
 
     def setup_credit_card_customer
       begin
-        current_user.billing_gateway.store_card(
+        card_details = User::BillingGateway::CardDetails.new(
           number: params[:card_number], 
           expiry_month: params[:card_expires].to_s[0,2],
           expiry_year: params[:card_expires].to_s[2,2], 
           cvc: params[:card_code]
         )
-      rescue User::BillingGateway::BillingError 
-        @errors << $!.message
+
+        if card_details.valid?
+          current_user.billing_gateway.store_card(card_details)
+        else
+          @errors << "Those credit card details don't look valid"
+        end
+      rescue User::BillingGateway::BillingError => e
+        @errors << e.message
       end
     end
 

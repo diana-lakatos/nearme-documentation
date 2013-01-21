@@ -128,20 +128,15 @@ class User::BillingGatewayTest < ActiveSupport::TestCase
   end
 
   def card_details
-    {
+    User::BillingGateway::CardDetails.new(
       number: "1444444444444444", 
       expiry_month: '12', 
       expiry_year: '18', 
       cvc: '123'
-    }
+    )
   end
 
   def stripe_card_details(card_details = self.card_details)
-    {
-      number: card_details[:number],
-      exp_month: card_details[:expiry_month],
-      exp_year: card_details[:expiry_year],
-      cvc: card_details[:cvc]
-    }
+    card_details.to_stripe_params
   end
 end
