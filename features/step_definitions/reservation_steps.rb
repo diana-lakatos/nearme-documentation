@@ -82,7 +82,7 @@ When /^I select to book space for:$/ do |table|
     listing = model!(row['Listing'])
 
     if current_path != location_path(listing.location)
-      visit listing_path listing
+      visit location_path listing.location
     end
 
     year = date.strftime('%Y')

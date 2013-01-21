@@ -12,12 +12,13 @@ Feature: A user can book at a space
   @javascript
   Scenario: A logged in user can book a listing
     Given I am logged in as the user
-      When I book space for:
+      When I go to the location's page
+      And I book space for:
           | Listing     | Date   | Quantity  |
           | the listing | next Monday  | 1        |
           | the listing | next Tuesday | 1        |
-     Then the user should have the listing reserved for 'Monday'
-      And the user should have the listing reserved for 'Tuesday'
+     Then the user should have the listing reserved for 'next Monday'
+      And the user should have the listing reserved for 'next Tuesday'
 
   @javascript
   Scenario: Booking for a 'automatically confirm' listing should show relevant details
