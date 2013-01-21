@@ -42,10 +42,10 @@ class User::BillingGateway
     else
       setup_customer(card_details)
     end
-  rescue Stripe::InvalidRequestError
-    raise InvalidRequestError, $!
-  rescue Stripe::StripeError
-    raise BillingError, $!
+  rescue Stripe::InvalidRequestError => e
+    raise InvalidRequestError, e
+  rescue Stripe::StripeError => e
+    raise BillingError, e
   end
 
   # Make a charge against the user
@@ -84,10 +84,10 @@ class User::BillingGateway
     end
 
     charge
-  rescue Stripe::CardError
-    raise CardError, $!
-  rescue Stripe::StripeError
-    raise BillingError, $!
+  rescue Stripe::CardError => e
+    raise CardError, e
+  rescue Stripe::StripeError => e
+    raise BillingError, e
   end
 
   protected
@@ -118,9 +118,9 @@ class User::BillingGateway
       cvc: card_details[:cvc]
     }
     stripe_customer.save
-  rescue Stripe::InvalidRequestError
+  rescue Stripe::InvalidRequestError => e
     # If the error is in retrieving the customer, set up the customer instead.
-    if $!.param == 'id'
+    if e.param == 'id'
       return setup_customer(card_details)
     else
       raise
