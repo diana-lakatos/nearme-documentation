@@ -110,7 +110,7 @@ When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved f
   date = Chronic.parse(date).to_date
   assert listing.reservations.any? { |reservation|
     reservation.owner == user && reservation.periods.any? { |p| p.date == date && p.quantity == qty }
-  }
+  }, "Unable to find a reservation for #{listing.name} on #{date}"
 end
 
 Then (/^I should not see the reservation link for "([^"]*)"$/) do |date|

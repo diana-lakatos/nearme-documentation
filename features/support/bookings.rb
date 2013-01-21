@@ -16,7 +16,7 @@ module Bookings
     dates.each do | date|
       unless added_dates.include?(date)
         el = find(:css, datepicker_class_for(date))
-        el.click
+        el.click unless date == Date.tomorrow
         added_dates << date
       end
     end
