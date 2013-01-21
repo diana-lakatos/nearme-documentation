@@ -19,6 +19,10 @@ module ApplicationHelper
     @show_title
   end
 
+  def stripe_public_key
+    DesksnearMe::Application.config.stripe_public_key
+  end
+
   def our_twitter_accounts
     buffer = []
     {
