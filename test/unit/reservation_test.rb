@@ -23,7 +23,7 @@ class ReservationTest < ActiveSupport::TestCase
 
   context "confirmation" do
     should "attempt to charge user card if paying by credit card" do
-      reservation = FactoryGirl.build(:reservation, :payment_method => Reservation::PAYMENT_METHODS[:credit_card])
+      reservation = FactoryGirl.build(:reservation_with_credit_card)
       reservation.add_period(Date.today)
       reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
       reservation.save!
@@ -47,7 +47,7 @@ class ReservationTest < ActiveSupport::TestCase
           :listing_id => reservation.listing.id,
           :state      => "pending",
           :cancelable => true,
-          :total_cost => { :amount=>0.0, :label=>"$0.00", :currency_code=>"USD" },
+          :total_cost => { :amount=>0.0, :label=>"$0.00", :currency_code=> "USD" },
           :times      => []
         }
       }
