@@ -1,7 +1,3 @@
-#= require_self
-#= require ./advanced/controller
-#= require ./simple/controller
-#
 # Controller for handling all of the booking selection logic on a Space page
 #
 # The controller is initialize with the bookings DOM container.
@@ -11,23 +7,6 @@
 #
 # This class is a base controller, extended by the Advanced/Simple views. It provides common methods/logic.
 class Bookings.Controller
-  Bookings.Advanced = {}
-  Bookings.Simple = {}
-
-  # Initialize the relevant controller for the bookings container based on the type of view
-  # (advanced or simple)
-  #
-  # Returns a Bookings controller
-  @initialize: (@container, @options = {}) ->
-    # Initialize the relevant view for the bookings
-    view = switch container.attr('data-view')
-      when "simple"   then Bookings.Simple.Controller
-      when "advanced" then Bookings.Advanced.Controller
-      else
-        throw "No bookings view available."
-
-    new view(container, options)
-
   # Initialize the Bookings controller
   #
   # protected
@@ -44,6 +23,23 @@ class Bookings.Controller
         availability: new Bookings.AvailabilityManager.Listing(@availabilityManager, listingData.id)
       )
 
+    # We automatically add a booking for 'tomorrow'
+    tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+    for listing in @listings
+      listing.addDate(tomorrow)
+
+    # Initialize each of the listing views
+    @listingViews = $.map @listings, (listing) =>
+      new Bookings.ListingView(listing, @container.find(".listing[data-listing-id=#{listing.id}]"))
+
+    @bindEvents()
+
+  bindEvents: ->
+    # Show review booking for a single listing
+    # On each of the listing views, watch for review triggering and trigger the review modal
+    for listingView in @listingViews
+      listingView.bind 'reviewTriggered', (listing) =>
+        @reviewBooking([listing])
 
   # Return the listing with the specified ID from the Listing bookings collection
   findListing: (listingId) ->

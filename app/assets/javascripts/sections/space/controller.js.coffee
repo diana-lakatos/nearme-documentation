@@ -24,7 +24,7 @@ class @Space.Controller
     @photos = new Space.PhotosController($('.space-hero-photos'))
 
   setupBookings: ->
-    @bookings = Bookings.Controller.initialize(@container.find('.bookings'), @options.bookings)
+    @bookings = new Bookings.Controller(@container.find('.bookings'), @options.bookings)
 
   setupMap: ->
     return unless @mapContainer.length > 0

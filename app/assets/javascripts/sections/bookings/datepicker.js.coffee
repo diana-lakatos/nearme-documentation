@@ -1,4 +1,4 @@
-class @Bookings.Simple.Datepicker
+class @Bookings.Datepicker
   asEvented.call(Datepicker.prototype)
 
   constructor: (@container, @listing) ->

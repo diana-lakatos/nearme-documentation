@@ -1,4 +1,4 @@
-class @Bookings.Simple.ListingView
+class @Bookings.ListingView
   asEvented.call(ListingView.prototype)
 
   constructor: (@listing, @container) ->
@@ -47,7 +47,7 @@ class @Bookings.Simple.ListingView
 
   # Setup the datepicker for the simple booking UI
   setupMultiDatesPicker: ->
-    @datepicker = new Bookings.Simple.Datepicker(@container.find(".calendar-wrapper"), @listing)
+    @datepicker = new Bookings.Datepicker(@container.find(".calendar-wrapper"), @listing)
 
 
 

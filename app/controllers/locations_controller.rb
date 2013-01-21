@@ -6,14 +6,6 @@ class LocationsController < ApplicationController
     @location = location
   end
 
-  def host
-    @location = location
-  end
-
-  def networking
-    @location = location
-  end
-
   # Return a summary in JSON for all listings availability over specified days
   #
   # Usage:
