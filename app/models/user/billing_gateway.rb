@@ -27,6 +27,11 @@ class User::BillingGateway
     @user = user
   end 
 
+  # Return whether or not we have existing card details stored for this user.
+  def has_stored_details?
+    @user.stripe_id.present?
+  end
+
   # Store the credit card against the user
   #
   # card_details - Hash of credit card information
@@ -37,7 +42,7 @@ class User::BillingGateway
   #
   # Raises an exception on error.
   def store_card(card_details)
-    if @user.stripe_id.present?
+    if has_stored_details?
       update_card(card_details)
     else
       setup_customer(card_details)
@@ -104,7 +109,12 @@ class User::BillingGateway
       email: @user.email
     )
 
-    @user.stripe_id = stripe_customer.id
+    store_customer_id(stripe_customer.id)
+  end
+
+  # Store customer Id against the user
+  def store_customer_id(customer_id)
+    @user.stripe_id = customer_id
     @user.save!
   end
 
