@@ -75,9 +75,9 @@ Given /^a listed location in San Francisco that does( not)? require confirmation
   @listing = FactoryGirl.create(:listing_in_san_francisco, confirm_reservations: !confirmation)
 end
 
-Given /^(.*) does( not)? require confirmation for his listing$/ do |person, no_confirmation|
+Given /^(.*) does( not)? require confirmation for his listing$/ do |person, with_confirmation|
   @listing = FactoryGirl.create(:listing)
-  @listing.confirm_reservations = !no_confirmation
+  @listing.confirm_reservations = !with_confirmation
   @listing.save
   @listing.location.company.creator = User.find_by_name(person)
   @listing.location.company.save
