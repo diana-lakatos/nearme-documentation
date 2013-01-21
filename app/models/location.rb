@@ -61,6 +61,10 @@ class Location < ActiveRecord::Base
     read_attribute(:currency).presence || "USD"
   end
 
+  def description
+    read_attribute(:description) || (listings.first || NullListing.new).description
+  end
+
   private
 
     def assign_default_availability_rules

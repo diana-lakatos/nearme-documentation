@@ -1,6 +1,9 @@
-
 Given (/^I am logged in as #{capture_model}$/) do |user_instance|
   login model!(user_instance)
+end
+
+Given /^I am logged in manually$/ do
+  sign_up_manually
 end
 
 When /^I log in as a user who is a member of that organization$/ do
@@ -12,10 +15,6 @@ Then /^I should be logged out$/ do
   Then %{I should see "Log in"}
 end
 
-When(/^I log in as #{capture_model} with Twitter$/) do |user_instance|
-  Given %{I am logged in as #{user_instance}}
-   When %{I go to the login page}
-end
 
 Then(/^I should be logged in as #{capture_model}$/) do |user_instance|
   user = model!(user_instance)

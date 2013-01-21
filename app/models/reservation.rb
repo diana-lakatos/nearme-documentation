@@ -72,6 +72,10 @@ class Reservation < ActiveRecord::Base
     without_state(:cancelled, :rejected)
   }
 
+  scope :cancelled, lambda {
+    with_state(:cancelled)
+  }
+
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 

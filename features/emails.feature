@@ -3,108 +3,56 @@ Feature: Emails should be sent out informing parties about reservations
   As a user or listing owner
   I want to receive emails updating me about the status of my reservations
 
-  # Emails
-  #
-  # 1. When user creates a reservation, one of (depending on confirmation setting) [DONE]:
-  #   a) email to owner asking to confirm/decline [DONE]
-  #   b) email to owner telling them that a reservation has been made [DONE]
-  # 2. When user cancels a reservation, send email to owner
-  # 3. When owner cancels a reservation, send email to user
-  # 4. When owner declines a reservation, send email to user
-  # 5. When owner confirms a reservation, send email to user
-  # 6. When user creates a reservation, one of (depending on confirmation) [DONE]
-  #   a) email to user telling them to wait for confirmation [DONE]
-  #   b) email to user telling them their reservation is confirmed [DONE]
-
-
   Background:
-    Given the date is "13th October 2010"
-    And a user: "Keith Contractor" exists with name: "Keith Contractor"
-    And a user: "Bo Jeanes" exists with name: "Bo Jeanes"
+    Given a user: "Keith Contractor" exists with name: "Keith Contractor", email: "keith@example.com"
+    And a user: "Bo Jeanes" exists with name: "Bo Jeanes", email: "bo@example.com"
 
-  @javascript @broken
+  @javascript
   Scenario: reservation confirmations required (no comment)
     Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
     And I am logged in as user "Keith Contractor"
-    When I go to the listing's page
-    And I book space for:
-      | Listing     | Date   | Quantity |
-      | the listing | Monday | 1        |
-    Then 2 emails should be delivered
-    And the 1st email should be delivered to user "Bo Jeanes"
-    And the 1st email should have subject: "[Desks Near Me] A new reservation requires your confirmation"
-    And the 1st email should contain "Bo Jeanes,"
-    And the 1st email should contain "Keith Contractor has made a booking for your listing, Mocra."
-    And the 2nd email should be delivered to user "Keith Contractor"
-    And the 2nd email should have subject: "[Desks Near Me] Your reservation is pending confirmation"
-    And the 2nd email should contain "Dear Keith Contractor,"
-    And the 2nd email should contain "We'd like you to know that your request to reserve Mocra has been submitted"
+    When I book space for:
+      | Listing     | Date | Quantity|
+      | the listing | Monday | 1 |
+    Then a confirm reservation email should be sent to bo@example.com
+    And a reservation awaiting confirmation email should be sent to keith@example.com
 
-  @javascript @broken
+  @javascript
   Scenario: reservation confirmations not required
     Given a listing: "Mocra" exists with creator: user "Bo Jeanes", confirm_reservations: false
     And I am logged in as user "Keith Contractor"
-    When I go to the listing's page
-    And I book space for:
-      | Listing     | Date   | Quantity |
-      | the listing | Monday | 1        |
-    Then 2 emails should be delivered
-    And the 1st email should be delivered to user "Keith Contractor"
-    And the 1st email should have subject: "[Desks Near Me] Your reservation has been confirmed"
-    And the 2nd email should be delivered to user "Bo Jeanes"
-    And the 2nd email should have subject: "[Desks Near Me] You have a new reservation"
+    When I book space for:
+      | Listing     | Date | Quantity|
+      | the listing | Monday | 1 |
+    Then a reservation confirmed email should be sent to keith@example.com
+    Then a new reservation email should be sent to bo@example.com
 
+  @javascript
   Scenario: reservation gets confirmed
-    Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
-    And a reservation exists with listing: listing "Mocra", user: user "Keith Contractor", date: "2010-10-15"
-    And all emails have been delivered
-    And I am logged in as user "Bo Jeanes"
-    When I follow "Dashboard"
-    And I press "Confirm"
-    Then 1 email should be delivered
-    And the email should be delivered to user "Keith Contractor"
-    And the email should have subject: "[Desks Near Me] Your reservation has been confirmed"
+    Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
+    When the owner confirms the reservation
+    Then a reservation confirmed email should be sent to keith@example.com
 
-  Scenario: confirmed then cancelled by user
-    Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
-    And a reservation exists with listing: listing "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
-    And all emails have been delivered
-    And I am logged in as user "Keith Contractor"
-    When I follow "Dashboard"
-    And I press "Cancel"
-    Then 1 email should be delivered
-    And the email should be delivered to user "Bo Jeanes"
-    And the email should have subject: "[Desks Near Me] A reservation has been cancelled"
+  @javascript
+  Scenario: confirmed then cancelled by visitor
+    Given Bo Jeanes has a confirmed reservation for Keith Contractor
+    When the visitor cancels the reservation
+    Then a reservation cancelled email should be sent to bo@example.com
 
+  @javascript
   Scenario: confirmed then cancelled by owner
-    Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
-    And a reservation exists with listing: listing "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "confirmed"
-    And all emails have been delivered
-    And I am logged in as user "Bo Jeanes"
-    When I follow "Dashboard"
-    And I press "Cancel"
-    Then 1 email should be delivered
-    And the email should be delivered to user "Keith Contractor"
-    And the email should have subject: "[Desks Near Me] Your reservation at Mocra has been cancelled by the owner"
+    Given Bo Jeanes has a confirmed reservation for Keith Contractor
+    When the owner cancels the reservation
+    Then a reservation cancelled by owner email should be sent to keith@example.com
 
-  Scenario: unconfirmed reservation gets cancelled by user
-    Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
-    And a reservation exists with listing: listing "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "unconfirmed"
-    And all emails have been delivered
-    And I am logged in as user "Keith Contractor"
-    When I follow "Dashboard"
-    And I press "Cancel"
-    Then 1 email should be delivered
-    And the email should be delivered to user "Bo Jeanes"
-    And the email should have subject: "[Desks Near Me] A reservation has been cancelled"
+  @javascript
+  Scenario: unconfirmed reservation gets cancelled by visitor
+    Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
+    When the visitor cancels the reservation
+    Then a reservation cancelled email should be sent to bo@example.com
 
+  @javascript
   Scenario: unconfirmed reservation gets rejected
-    Given a listing: "Mocra" exists with name: "Mocra", creator: user "Bo Jeanes", confirm_reservations: true
-    And a reservation exists with listing: listing "Mocra", user: user "Keith Contractor", date: "2010-10-15", state: "unconfirmed"
-    And all emails have been delivered
-    And I am logged in as user "Bo Jeanes"
-    When I follow "Dashboard"
-    And I press "Reject"
-    Then 1 email should be delivered
-    And the email should be delivered to user "Keith Contractor"
-    And the email should have subject: "[Desks Near Me] Sorry, your reservation at Mocra has been rejected"
+    Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
+    When the owner rejects the reservation
+    Then a reservation rejected email should be sent to keith@example.com
