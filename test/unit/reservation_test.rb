@@ -3,7 +3,7 @@ require 'test_helper'
 class ReservationTest < ActiveSupport::TestCase
   test "it has a listing" do
     @reservation = Reservation.new
-    @reservation.listing = Listing.new
+    @reservation.listing = FactoryGirl.create(:listing)
 
     assert @reservation.listing
   end

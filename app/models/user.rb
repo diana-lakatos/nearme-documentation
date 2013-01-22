@@ -12,18 +12,18 @@ class User < ActiveRecord::Base
   has_many :authentications,
            :dependent => :destroy
 
+  has_many :companies,
+           :foreign_key => "creator_id"
+
   has_many :locations,
-           :foreign_key => "creator_id",
+           :through => :companies,
            :dependent => :destroy
 
   has_many :reservations,
            :foreign_key => :owner_id
 
   has_many :listings,
-           :foreign_key => "creator_id"
-
-  has_many :companies,
-           :foreign_key => "creator_id"
+           :through => :locations
 
   has_many :organization_users
 

@@ -5,7 +5,6 @@ FactoryGirl.define do
     end
 
     description "Aliquid eos ab quia officiis sequi."
-    creator
     location
     confirm_reservations true
     after(:create) do |listing|

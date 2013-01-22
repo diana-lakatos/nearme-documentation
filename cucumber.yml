@@ -1,9 +1,12 @@
 <%
 rerun = File.file?('rerun.txt') ? IO.read('rerun.txt') : ""
 rerun_opts = rerun.to_s.strip.empty? ? "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} features" : "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} #{rerun}"
-std_opts = "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} --strict --tags ~@wip --tags ~@borked --tags ~@future"
+base_opts = " --strict --tags ~@wip --tags ~@borked --tags ~@future"
+std_opts = "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} #{base_opts}"
+verbose_opts = "--format pretty #{base_opts}"
 %>
 default: <%= std_opts %> features
 wip: "--tags @wip --tags ~@future --wip features"
 borked: --tags @borked --wip features
 rerun: <%= rerun_opts %> --format rerun --out rerun.txt --strict --tags ~@wip --tags ~@borked
+verbose: <%= verbose_opts %>
