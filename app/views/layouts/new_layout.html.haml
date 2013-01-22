@@ -15,13 +15,14 @@
     = stylesheet_link_tag 'new_layout'
     = stylesheet_link_tag 'vendor/fancybox/jquery.fancybox-1.3.1', :media => "screen, projection"
 
-    = javascript_include_tag "https://maps.google.com/maps/api/js?sensor=true"
+    = javascript_include_tag "//maps.google.com/maps/api/js?sensor=true"
+    = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
     = javascript_include_tag :application
     <script type="text/javascript" src="//use.typekit.net/nyj7syq.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     
     /[if lt IE 9]
-      = javascript_include_tag 'http://html5shim.googlecode.com/svn/trunk/html5.js'
+      = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'
 
   %body
     #TTWNotify{:style => "display:none;"}

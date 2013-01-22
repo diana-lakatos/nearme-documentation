@@ -14,6 +14,6 @@
       = f.input :description,:as => :description, :label => "Company description", :placeholder => "Tell us a bit about your company. People will read this when booking your space. Be exciting!"
 
       .actions
-        = f.button :submit, f.object.new_record? ? 'Create My Company' : 'Update Company'
+        = f.button :submit, f.object.new_record? ? 'Create My Company' : 'Update Company', :disable_with => f.object.new_record? ? 'Creating...' : 'Updating...'
 
 

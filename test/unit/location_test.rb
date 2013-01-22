@@ -2,7 +2,6 @@ require 'test_helper'
 
 class LocationTest < ActiveSupport::TestCase
 
-  should belong_to(:creator)
   should belong_to(:company)
   should have_many(:listings)
 
@@ -42,6 +41,24 @@ class LocationTest < ActiveSupport::TestCase
     end
   end
 
+  context "#description" do
+    context "when not set" do
+      context "and there is not a listing for the location" do
+        should "return an empty string" do
+          location = Location.new
+          assert_equal "", location.description
+        end
+      end
+      context "and there is a listing with a description" do
+        should "return the first listings description" do
+          location = Location.new
+          listing = Listing.new(description: "listing description")
+          location.listings << listing
+          assert_equal "listing description", location.description
+        end
+      end
+    end
+  end
   context "availability" do
     should "return an Availability::Summary for the Location's availability rules" do
       location = Location.new
@@ -58,7 +75,7 @@ class LocationTest < ActiveSupport::TestCase
     setup do
       @user = FactoryGirl.create(:user)
       @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
-      @location = FactoryGirl.build(:location_in_auckland, :creator_id => @user.id)
+      @location = FactoryGirl.build(:location_in_auckland)
       @company.locations << @location
       @location.address_components_hash = get_params_for_address_components
     end

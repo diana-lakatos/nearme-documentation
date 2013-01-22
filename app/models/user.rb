@@ -9,18 +9,18 @@ class User < ActiveRecord::Base
   has_many :authentications,
            :dependent => :destroy
 
+  has_many :companies,
+           :foreign_key => "creator_id"
+
   has_many :locations,
-           :foreign_key => "creator_id",
+           :through => :companies,
            :dependent => :destroy
 
   has_many :reservations,
            :foreign_key => :owner_id
 
   has_many :listings,
-           :foreign_key => "creator_id"
-
-  has_many :companies,
-           :foreign_key => "creator_id"
+           :through => :locations
 
   has_many :organization_users
 
@@ -51,6 +51,7 @@ class User < ActiveRecord::Base
 
   mount_uploader :avatar, AvatarUploader
 
+
   validates_presence_of :name
   validates_presence_of :password, :if => :password_required?
   validates_presence_of :email
@@ -75,6 +76,11 @@ class User < ActiveRecord::Base
     self.name = omniauth['info']['name'] if name.blank?
     self.email = omniauth['info']['email'] if email.blank?
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
+  end
+
+
+  def cancelled_reservations
+    reservations.cancelled
   end
 
   # Whether to validate the presence of a password

@@ -108,7 +108,6 @@ ActiveRecord::Schema.define(:version => 20130119001758) do
 
   create_table "listings", :force => true do |t|
     t.integer  "location_id"
-    t.integer  "creator_id"
     t.string   "name"
     t.text     "description"
     t.integer  "quantity",                :default => 1
@@ -138,7 +137,6 @@ ActiveRecord::Schema.define(:version => 20130119001758) do
 
   create_table "locations", :force => true do |t|
     t.integer  "company_id"
-    t.integer  "creator_id"
     t.string   "name"
     t.string   "email"
     t.text     "description"

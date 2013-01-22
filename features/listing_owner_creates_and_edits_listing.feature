@@ -24,32 +24,6 @@ Feature: Location Owner Creates/Edits Listing
     Then a listing should exist with name: "Joe's Codin' Garage"
     And I should see "Great, your new Desk/Room has been added!"
 
-  @future
-  Scenario: Creating a listing for a location that is an alternative currency
-    Given a location exists with creator: the user, name: "The Other Place", description: "Cool beans", currency: "GBP"
-    When I create a listing for that location with a daily price of £50.00
-    Then the listing daily price is shown as £50
-
-  @future
-  Scenario: Setting a price
-    When I create a listing for that location with a daily price of $50.00
-    Then the listing daily price is shown as $50
-
-  @future
-  Scenario: Setting a weekly price
-    When I create a listing for that location with a weekly price of $200.00
-    Then the listing weekly price is shown as $200
-
-  @future
-  Scenario: Setting a monthly price
-    When I create a listing for that location with a monthly price of $400.00
-    Then the listing monthly price is shown as $400
-
-  @future
-  Scenario: Setting availability rules
-    When I create a listing for that location with availability rules
-    Then the listing shows the availability rules
-
   Scenario: A listing owner can edit a location
     When I change that locations name to Joe's Codin' Garage
     Then a location should exist with name: "Joe's Codin' Garage"

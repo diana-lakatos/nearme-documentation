@@ -77,8 +77,8 @@
 
 .modal-close {
   position: absolute;
-  top: 44px;
-  right: -12px;
+  top: 24px;
+  right: 12px;
   width: 18px;
   height: 18px;
   color:black;
@@ -92,12 +92,12 @@
   }
 
   @media (max-width: 767px) {
-    top: -22px;
+    top: 22px;
     right: 12px;
   }
   @media (max-width: 480px) {
-    top: -32px;
-    right: -2px;
+    top: 22px;
+    right: 12px;
   }  
 }
 

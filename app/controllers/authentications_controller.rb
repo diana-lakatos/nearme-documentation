@@ -1,6 +1,5 @@
 class AuthenticationsController < ApplicationController
 
-  before_filter :redirect_if_login
 
   def create
     omniauth = request.env["omniauth.auth"]
@@ -12,7 +11,7 @@ class AuthenticationsController < ApplicationController
     elsif current_user
       current_user.authentications.create!(:provider => omniauth['provider'], :uid => omniauth['uid'])
       flash[:notice] = "Authentication successful."
-      redirect_to user_registration_url
+      redirect_to edit_user_registration_url
     else
       user = User.new
       user.apply_omniauth(omniauth)
@@ -28,9 +27,13 @@ class AuthenticationsController < ApplicationController
 
   def destroy
     @authentication = current_user.authentications.find(params[:id])
-    @authentication.destroy
-    flash[:notice] = "Successfully destroyed authentication."
-    redirect_to new_user_session_url
+    if @authentication.can_be_deleted?
+      @authentication.destroy
+      flash[:notice] = "Successfully disconnected your #{@authentication.provider_name}"
+    else
+      flash[:error] = "We are unable to disconnect your account from #{@authentication.provider_name}. Make sure you have at least one other account linked so you can log in!"
+    end
+    redirect_to edit_user_registration_url
   end
 
   # Clear any omniauth data stored in session
@@ -39,27 +42,28 @@ class AuthenticationsController < ApplicationController
     head :ok
   end
 
+  def failure
+    flash[:error] = "We are sorry, but we could not authenticate you for the following reason: '#{params[:message] ? params[:message] : "Unknown"}'. Please try again."
+    redirect_to new_user_session_url
+  end
+
   private
 
-    def redirect_if_login
-      redirect_to :root if user_signed_in?
-    end
+  def wizard_id
+    oparams = request.env['omniauth.params']
+    oparams && oparams['wizard']
+  end
 
-    def wizard_id
-      oparams = request.env['omniauth.params']
-      oparams && oparams['wizard']
-    end
+  def use_flash_messages?
+    wizard_id.blank?
+  end
 
-    def use_flash_messages?
-      wizard_id.blank?
+  def after_sign_in_path_for(resource)
+    if wizard_id
+      wizard(wizard_id).url
+    else
+      super
     end
-
-    def after_sign_in_path_for(resource)
-      if wizard_id
-        wizard(wizard_id).url
-      else
-        super
-      end
-    end
+  end
 
 end

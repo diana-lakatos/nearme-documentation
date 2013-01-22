@@ -1,7 +1,4 @@
-- @listing = @location.listings.first
-- @listing.description = @location.listings.first.description
-
-= render :layout => 'show_layout', :locals => { :tab => :overview } do   
+= render :layout => 'show_layout', :locals => { :tab => :overview } do
   .row-fluid
     .span4
       .accordion
@@ -26,9 +23,9 @@
               .accordion-inner
                 %p
                 - if @location.creator.phone
-                  %p.ico-phone.padding= @location.creator.phone 
+                  %p.ico-phone.padding= @location.creator.phone
                 %p= truncate_with_ellipsis @location.company.description, 250
-   
+
         - if @amenities
           .accordion-group
             .accordion-heading
