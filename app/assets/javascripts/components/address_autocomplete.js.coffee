@@ -1,6 +1,7 @@
 class @AddressAutocomplete
 
   constructor: (@input) ->
+    @addressComponentParser = new AddressComponentParser
     @bindEvents()
     @setupInput()
 
@@ -20,6 +21,7 @@ class @AddressAutocomplete
         link = $("<a href='#'></a>")
           .html(result['formatted_address'])
           .attr("data-lat", loc.lat())
+          .attr("data-address-components", @addressComponentParser.buildAddressComponentsString(result))
           .attr("data-lng", loc.lng())
           .data("result", loc)
         li = $("<li></li>").append(link)
@@ -31,10 +33,13 @@ class @AddressAutocomplete
 
     @inputWrapper.after(el)
 
+
+
   hideMatches: ->
     $('#address-suggestions').remove()
 
   findMatches: ->
+    @addressComponentParser.clearAddressComponentInputs()
     geocoder = new google.maps.Geocoder()
 
     geocoder.geocode { address: @input.val() }, (results, status) =>
@@ -61,7 +66,7 @@ class @AddressAutocomplete
     $("#address-suggestions").remove()
     $("#location_address").focus()
     $("#location_local_geocoding").val("1")
-
+    @addressComponentParser.buildAddressComponentsForm(selection.attr("data-address-components"))
     @_onLocate(selection.attr('data-lat'), selection.attr('data-lng')) if @_onLocate
 
   setLatLng: (lat, lng) ->
@@ -90,4 +95,83 @@ class @AddressAutocomplete
     @loadingSpinner.hide()
     @inputWrapper.append(@loadingSpinner)
 
+class @AddressComponentParser
+
+  componentSeparator = "+"
+  partSeparator = "|"
+  keyValueSeparator = ":"
+  typeSeparator = ","
+
+  buildAddressComponentsString: (result) ->
+    #it will require some parsing 
+    #component =  components.split("+") 
+    #parts = component.split("|") -> parts[0] = long_name, parts[1] = short_name, parts[2] = types
+    #types = parts[2].split(",") 
+    addressComponentString = ""
+    for addressComponent in result['address_components']
+      addressComponentString += @add_names(addressComponent)
+      addressComponentString += @add_types(addressComponent)
+      addressComponentString += componentSeparator
+    addressComponentString.slice(0, -1)
+
+  add_names: (addressComponent) ->
+    "long_name" + keyValueSeparator + addressComponent['long_name'] + partSeparator +
+    "short_name" + keyValueSeparator + addressComponent['short_name']
+
+  add_types: (addressComponent) ->
+    if !!addressComponent['types']
+      partSeparator + "types" + keyValueSeparator + addressComponent['types'].join(typeSeparator)
+
+  buildAddressComponentsForm: (addressComponentsString) ->
+    addressComponentsArray = addressComponentsString.split(componentSeparator)
+    index = 0
+    for addressComponent in addressComponentsArray
+      @buildInputsForComponent(addressComponent, index)
+      index++
+
+  buildAddressComponentsFormForLocation: (addressComponentsString, location_id) ->
+    addressComponentsArray = addressComponentsString.split(componentSeparator)
+    index = 0
+    for addressComponent in addressComponentsArray
+      key = "" + location_id + "][" + index
+      @buildInputsForComponent(addressComponent, key)
+      index++
+        
+
+  buildInputsForComponent: (component, index) ->
+    parts = component.split(partSeparator)
+    for part in parts
+      @buildInputForPart(part, index)
+
+  buildInputForPart: (part, index) ->
+    part_components = part.split(keyValueSeparator)
+    key = part_components[0]
+    value = part_components[1]
+    @buildInput("address_components[#{index}][#{key}]", value)
+
+
+  buildInput: (name, value) ->
+    input = document.createElement('input')
+    input.name = name
+    input.value = value
+    input.className = 'address_components_input'
+    input.type = 'hidden'
+    $("#location_address").parent().append(input)
+
+  clearAddressComponentInputs: ->
+    $('.address_components_input').each ->
+      $(this).remove()
+
+
+class @AddressComponentsPopulator
+
+  constructor: (@formatted_address, @location_id) ->
+    geocoder = new google.maps.Geocoder()
+    @location_id
+    @addressComponentParser = new AddressComponentParser()
+
+    geocoder.geocode { address: @formatted_address }, (results, status) =>
+      for result in results
+        @addressComponentParser.buildAddressComponentsFormForLocation(@addressComponentParser.buildAddressComponentsString(result), @location_id)
+      
 
