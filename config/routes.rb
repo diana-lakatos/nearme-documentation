@@ -34,7 +34,9 @@ DesksnearMe::Application.routes.draw do
 
   resources :reservations, :only => :update
 
-  match 'controlpanel' => 'controlpanel#index', as: :controlpanel
+  ## routing after 'controlpanel/' is handled in backbone cf. router.js
+  get 'controlpanel' => 'controlpanel#index', as: :controlpanel
+  get 'controlpanel/*ignore' => 'controlpanel#index', as: :controlpanel
 
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
@@ -100,6 +102,12 @@ DesksnearMe::Application.routes.draw do
     delete 'profile/avatar', :to => 'profile#destroy_avatar'
 
     get  'iplookup',  :to => 'iplookup#index'
+
+    resources :locations do
+      collection do
+        get 'list'
+      end
+    end
 
     resources :listings, :only => [:show] do
       member do

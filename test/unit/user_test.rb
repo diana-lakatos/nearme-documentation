@@ -89,4 +89,11 @@ class UserTest < ActiveSupport::TestCase
     assert user.may_view? listing
   end
 
+  test "user should have a default company" do
+    user = FactoryGirl.create(:user)
+    company = FactoryGirl.create(:company, :name => 'company_XYZ', :creator_id => user.id)
+    assert_equal 'company_XYZ', user.default_company.name
+  end
+
+
 end

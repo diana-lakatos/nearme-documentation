@@ -235,6 +235,9 @@ GEM
     polyglot (0.3.3)
     quiet_assets (1.0.1)
       railties (~> 3.1)
+    rabl (0.7.9)
+      activesupport (>= 2.3.14)
+      multi_json (~> 1.0)
     rack (1.4.3)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -416,6 +419,7 @@ DEPENDENCIES
   pg_search
   pickle
   quiet_assets
+  rabl
   rails (= 3.2.11)
   rails-erd
   rails3_acts_as_paranoid

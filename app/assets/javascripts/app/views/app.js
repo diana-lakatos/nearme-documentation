@@ -1,8 +1,5 @@
-define(['backbone',
-  'hbs!templates/app'
-],
-
-function(Backbone, template) {
+define(['backbone', 'views/locations/list', 'hbs!templates/app'],
+function(Backbone, LocationsView, template) {
   var AppView = Backbone.View.extend({
     id: 'main',
     tagName: 'div',
@@ -10,17 +7,33 @@ function(Backbone, template) {
     el: 'body',
     template: template,
 
-    events: {
-    },
+    events: {},
 
     initialize: function() {
+      this.views = {
+        locations: LocationsView
+      };
+
+      locationsView = new LocationsView();
     },
 
     render: function() {
       this.$el.html(this.template());
+      new this.contentView().render();
       return this;
+    },
+
+    setView: function(name) {
+      switch (name) {
+      case 'locations':
+        this.contentView = this.views.locations;
+        break;
+      default:
+        alert('view unknown');
+      }
     }
   });
 
   return AppView;
 });
+

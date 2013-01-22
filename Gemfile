@@ -33,6 +33,7 @@ gem "compass-rails"
 gem "coffee-rails"
 gem "rdiscount"
 gem 'delayed_job_active_record'
+gem 'rabl'
 
 gem 'jquery-rails'
 gem 'sass-rails'

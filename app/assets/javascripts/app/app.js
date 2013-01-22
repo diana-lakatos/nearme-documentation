@@ -1,18 +1,15 @@
-/*define([$,_], function($,_) {*/
-  //var App = function() {
-  //};
-
-  //App.prototype = {
-  //};
-
-  //return App;
-/*});*/
-
-define(['views/app'], function(AppView) {
+define(['backbone','backbone_sync', 'router', 'views/app'], function(Backbone, Sync, AppRouter, AppView) {
   var App = function() {
-    this.views = {};
-    this.views.app = new AppView();
-    this.views.app.render();
+    Backbone.Sync = Sync;
+    Backbone.Events.on("show:locations", function() {
+      AppRouter.navigate("locations");
+      var appView = new AppView();
+      appView.setView('locations');
+      appView.render();
+    });
+
+    AppRouter.initialize();
+
   };
   return App;
 });

@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
-
   include Gravtastic
+
+  before_save :ensure_authentication_token
 
   is_gravtastic!
 
@@ -126,5 +127,9 @@ class User < ActiveRecord::Base
 
   def avatar_changed?
     false
+  end
+
+  def default_company
+    self.companies.first
   end
 end
