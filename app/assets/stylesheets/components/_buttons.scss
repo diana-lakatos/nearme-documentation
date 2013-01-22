@@ -93,14 +93,26 @@
   }  
 
   &.twitter {
-    width:auto;
-    text-align: center;
-    box-sizing: border-box;
+    background: #33CCFF;
 
-    @media (max-width: 768px) {
-      width: 100%;
-    }
+    &:hover {
+      background: darken(#33CCFF, 15%);
+    }      
   }
+  &.facebook {
+    background: #3B5998;
+
+    &:hover {
+      background: darken(#3B5998, 15%);
+    }      
+  }
+  &.linkedin{
+    background: #4875B4;
+
+    &:hover {
+      background: darken(#4875B4, 15%);
+    }    
+  }    
 }
 
 .btn-group {
