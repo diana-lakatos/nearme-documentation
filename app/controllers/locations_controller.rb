@@ -25,14 +25,6 @@ class LocationsController < ApplicationController
     render :text => "Done, added components for #{counter} locations."
   end
 
-  def host
-    @location = location
-  end
-
-  def networking
-    @location = location
-  end
-
   # Return a summary in JSON for all listings availability over specified days
   #
   # Usage:
