@@ -52,6 +52,7 @@ class User < ActiveRecord::Base
 
   mount_uploader :avatar, AvatarUploader
 
+
   validates_presence_of :name
   validates_presence_of :password, :if => :password_required?
   validates_presence_of :email
@@ -76,6 +77,11 @@ class User < ActiveRecord::Base
     self.name = omniauth['info']['name'] if name.blank?
     self.email = omniauth['info']['email'] if email.blank?
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
+  end
+
+
+  def cancelled_reservations
+    reservations.cancelled
   end
 
   # Whether to validate the presence of a password
