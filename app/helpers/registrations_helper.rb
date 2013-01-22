@@ -18,10 +18,16 @@ module RegistrationsHelper
       unless authentication.can_be_deleted?
         class_for_links += ' provider-not-disconnectable'
       end
-        link_to "Disconnect #{provider}", authentication_path(authentication), :method => :delete , :class => class_for_links
+        link_to authentication_path(authentication), :method => :delete , :class => class_for_links do
+          "<span class='ico-#{provider.downcase}'>".html_safe +
+          "Disconnect #{provider}"
+        end
     else
       # user is not connected to this social provider yet - no authentication in the database
-      link_to "Connect to #{provider}", provider_auth_url(provider.downcase), :class => class_for_links
+      link_to provider_auth_url(provider.downcase), :class => class_for_links do
+        "<span class='ico-#{provider.downcase}'>".html_safe +
+        "Connect to #{provider}"
+      end
     end
   end
 
