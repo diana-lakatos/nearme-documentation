@@ -57,11 +57,14 @@ class Reservation < ActiveRecord::Base
   scope :on, lambda { |date|
     joins(:periods).
       where("reservation_periods.date" => date).
-      where(:state => [:confirmed, :unconfirmed])
+      where(:state => [:confirmed, :unconfirmed]).
+      uniq
   }
 
   scope :upcoming, lambda {
-    where('(SELECT 1 FROM reservation_periods WHERE date >= ? LIMIT 1) IS NOT NULL', Date.today)
+    joins(:periods).
+      where('reservation_periods.date >= ?', Date.today).
+      uniq
   }
 
   scope :visible, lambda {
