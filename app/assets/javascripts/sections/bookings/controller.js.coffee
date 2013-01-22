@@ -1,11 +1,7 @@
 # Controller for handling all of the booking selection logic on a Space page
 #
-# The controller is initialize with the bookings DOM container.
-#
-# The dom-container should have a data-view attribute with value of either "advanced" or "simple", for the
-# two respective bookings view types.
-#
-# This class is a base controller, extended by the Advanced/Simple views. It provides common methods/logic.
+# The controller is initialize with the bookings DOM container, and an options hash including
+# JS objects representing each Listing on the Location.
 class Bookings.Controller
   # Initialize the Bookings controller
   #

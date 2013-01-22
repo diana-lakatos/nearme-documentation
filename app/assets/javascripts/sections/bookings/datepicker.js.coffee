@@ -1,3 +1,6 @@
+# Wraps our custom Datepicker implementation for use as a Booking selection calendar.
+#
+# See also: components/datepicker.js
 class @Bookings.Datepicker
   asEvented.call(Datepicker.prototype)
 

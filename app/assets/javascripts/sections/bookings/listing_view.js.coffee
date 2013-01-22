@@ -1,3 +1,4 @@
+# This class essentially handles any display logic specific to the Listing row/element on the page.
 class @Bookings.ListingView
   asEvented.call(ListingView.prototype)
 
