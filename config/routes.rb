@@ -37,7 +37,7 @@ DesksnearMe::Application.routes.draw do
 
   ## routing after 'controlpanel/' is handled in backbone cf. router.js
   get 'controlpanel' => 'controlpanel#index', as: :controlpanel
-  #get 'controlpanel/*ignore' => 'controlpanel#index', as: :controlpanel
+  get 'controlpanel/locations' => 'controlpanel#index', as: :controlpanel
 
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do

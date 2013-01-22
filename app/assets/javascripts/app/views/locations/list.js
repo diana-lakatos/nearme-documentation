@@ -15,14 +15,19 @@ define(['jquery', 'backbone', 'collections/location', 'hbs!templates/locations/l
       this.collection.fetch();
     },
 
-    /*events: {*/
-      ////"click .location-header": "load"
-    /*},*/
+    events: {
+      "click .add-location": "addlocation",
+      "click .add-listing": "addlocation"
+    },
 
-    newlocation: function(event) {
+    addlocation: function(event) {
       event.preventDefault();
-      Backbone.Events.trigger("locations:new");
-      /* // Create the modal view*/
+      alert('create location triggered');
+    },
+
+    addlisting: function(event) {
+      event.preventDefault();
+      alert('create listing triggered');
     },
 
     render: function() {
