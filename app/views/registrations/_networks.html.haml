@@ -2,5 +2,5 @@
   If you disconnect this account, you will have no possibility to log in. To avoid this, please save your password
 .row-fluid.padding-bottom
   - supported_providers.each do |provider|
-    = build_link_for(provider, "btn btn-blue btn-small #{provider.downcase}").html_safe
+    = build_link_for(provider, "btn btn-blue btn-small #{provider.downcase} provider_#{provider.downcase}").html_safe
   - end unless supported_providers.nil?
