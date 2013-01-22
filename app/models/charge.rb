@@ -13,4 +13,5 @@ class Charge < ActiveRecord::Base
     self.response = exception.to_yaml
     save!
   end
+
 end

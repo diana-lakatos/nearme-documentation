@@ -109,6 +109,10 @@ class Location < ActiveRecord::Base
     company.save
   end
 
+  def phone
+    read_attribute(:phone) || creator.try(:phone)
+  end
+
   private
 
     def assign_default_availability_rules

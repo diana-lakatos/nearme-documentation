@@ -53,6 +53,20 @@ module ReservationsHelper
     end
   end
 
+  def reservation_paid(reservation)
+    if reservation.free?
+      humanized_money_with_symbol(0.0)
+    elsif reservation.paid?
+      humanized_money_with_symbol(reservation.successful_payment_amount/100.0)
+    else
+      reservation.payment_status.titleize
+    end
+  end
+
+  def reservation_balance(reservation)
+    humanized_money_with_symbol(reservation.balance/100.0)
+  end
+
   def reservation_dates(reservation)
     reservation.periods.map do |period|
       "#{period.date.strftime('%Y-%m-%d')} (#{pluralize(period.seats.size, 'desk')})"

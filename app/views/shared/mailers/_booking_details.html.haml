@@ -1,19 +1,38 @@
-%p
-  %strong Location
-  = listing.name
+%h2 Booking
 
-%p
-  %strong Dates
-  = reservation_dates(reservation)
+%h4 Location
+%p= listing.location.name
 
-%p
-  %strong Total Price
-  = reservation_total_price(reservation)
+%h4 Listing
+%p= listing.name
 
-- if !reservation.free? && reservation.paid?
-  %p
-    %strong Paid
-    - if reservation.credit_card_payment?
-      = reservation_total_price(reservation) 
-      - subject = defined?(host) ? "the user's" : "your"
-      has been charged to #{subject} credit card
+%h4 Quantity
+%p= reservation.reservation_seats.size
+
+%h4 Dates
+%ul
+  - reservation.reservation_periods.each do |reservation_period|
+    %li= reservation_period.strftime("%A %e %B %Y")
+
+%h4 Host
+%p= mail_to listing.creator.email, listing.creator.name
+
+- listing.location.phone.present?
+  %h4 Contact
+  %p= listing.location.phone
+
+%h2 Payment
+
+%h4 Total
+%p= reservation_total_price(reservation)
+
+- if reservation.credit_card_payment?
+
+  %h4 Paid
+  %p= reservation_paid(reservation)
+
+  %h4 Balance
+  %p= reservation_balance(reservation)
+
+  - if reservation.pending?
+    %p This reservation is currently pending confirmation, and will be charged when confirmed.

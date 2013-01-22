@@ -79,6 +79,10 @@ class Reservation < ActiveRecord::Base
     with_state(:cancelled)
   }
 
+  scope :successful_charges, lambda {
+    charges.where(:success => true)
+  }
+
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
@@ -130,6 +134,14 @@ class Reservation < ActiveRecord::Base
     total
   end
 
+  def successful_payment_amount
+    successful_charges.first.try(:amount) || 0.0
+  end
+
+  def balance
+    successful_payment_amount - total_amount
+  end
+
   def credit_card_payment?
     payment_method == Reservation::PAYMENT_METHODS[:credit_card]
   end
@@ -144,6 +156,10 @@ class Reservation < ActiveRecord::Base
 
   def paid?
     payment_status == PAYMENT_STATUSES[:paid]
+  end
+
+  def pending?
+    payment_status == PAYMENT_STATUSES[:pending]
   end
 
   private
@@ -201,4 +217,5 @@ class Reservation < ActiveRecord::Base
       save!
     rescue
     end
+
 end
