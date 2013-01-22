@@ -12,6 +12,9 @@ class V1::ListingsController < V1::BaseController
   # Default error handler
   rescue_from ActiveRecord::RecordNotFound, with: :listing_not_found
 
+  def list
+    @listings = current_user.company(params[:location_id]).listings.select('id,name')
+  end
 
   def show
     render :json => Listing.find(params[:id])

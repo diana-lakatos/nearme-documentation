@@ -1,9 +1,11 @@
 <div class="accordion-group">
   <div class="accordion-heading">
-    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-{{location.id}}">{{{location.name}}}</a>
+    <a class="accordion-toggle collapsed location-header" data-toggle="collapse" data-parent="#location-holder" data-location-id="{{id}}" href="#collapse-{{id}}">{{{name}}}</a>
   </div>
-  <div id="collapse-{{location.id}}" class="accordion-body collapse in" style="height: 0px;">
-    <div class="accordion-inner">bla bla bla</div>
+  <div id="collapse-{{id}}" class="accordion-body collapse in" style="height: 0px;">
+    <div id="listing-for-{{id}}" class="accordion-inner">
+     {{#listings}} {{> templates_listings_list}} {{/listings}} 
+    </div>
   </div>
 </div>
 

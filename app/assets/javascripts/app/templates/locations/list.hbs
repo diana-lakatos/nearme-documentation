@@ -1,4 +1,4 @@
 <div class="accordion" id="locations-holder">
-  {{#info }} {{> templates_locations_listItem}} {{/info}}
+  {{#each locations}} {{> templates_locations_listItem}} {{/each}}
 </div>
-<a href="" class="btn btn-green btn-large" data-behavior="" data-disable-with="Loading..."><span class="ico-plus padding">New Location</span></a>
+<a href="" class="btn btn-green btn-large create" data-behavior="" data-disable-with="Loading..."><span class="ico-plus padding">New Location</span></a>
