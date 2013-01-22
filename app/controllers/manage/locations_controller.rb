@@ -1,5 +1,4 @@
 class Manage::LocationsController < ApplicationController
-  require 'ruby-debug'
   before_filter :authenticate_user!
   before_filter :find_location, :except => [:index]
   before_filter :find_company
