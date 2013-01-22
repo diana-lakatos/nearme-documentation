@@ -1,5 +1,5 @@
 //define(['jquery', 'backone', 'collections/location', 'views/locations/new', 'hbs!templates/locations/list'], function($, Backbone,locationCollection, NewlocationView, locationListTemplate) {
-define(['jquery', 'backbone', 'collections/location', 'hbs!templates/locations/list'], function($, Backbone,locationCollection, locationListTemplate) {
+define(['jquery', 'backbone', 'collections/location', 'hbs!templates/locations/list','bootstrap'], function($, Backbone,locationCollection, locationListTemplate) {
   var Locations = Backbone.View.extend({
     id: "locationsView",
     template: locationListTemplate,
@@ -64,10 +64,8 @@ define(['jquery', 'backbone', 'collections/location', 'hbs!templates/locations/l
     render: function() {
       if (this.collection) {
         var self = this;
-        $('#content').html(this.template({
-          info: this.collection.toJSON()
-        }
-        ));
+        $('#dyn-content').html(this.template({ info: this.collection.toJSON() }));
+        $(".collapse").collapse();
       } else {
         this._setCollection();
       }

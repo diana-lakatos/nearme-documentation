@@ -1,3 +1,9 @@
-<li data-id='{{location.id}}' class=" thumbnails locationButton">
-  <div class="location-name">{{{location.name}}}</div>
-</li>
+<div class="accordion-group">
+  <div class="accordion-heading">
+    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-{{location.id}}">{{{location.name}}}</a>
+  </div>
+  <div id="collapse-{{location.id}}" class="accordion-body collapse in" style="height: 0px;">
+    <div class="accordion-inner">bla bla bla</div>
+  </div>
+</div>
+

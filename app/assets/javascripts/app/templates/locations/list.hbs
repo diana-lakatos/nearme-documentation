@@ -1,9 +1,4 @@
-<div class="container">
-  <ul  class="thumbnails" style="text-align:center;" data-role="listview" id="location-list">
-    <li data-id='new' class="create {{style}}"><button class="btn create-item" alt="{{name}}">Location name</button></li>
-    {{#info }}
-      {{> templates_locations_listItem}}
-    {{/info}}
-    <li data-id='new' class="create"><button class="btn create-item" alt="{{name}}"></button>New Location</li>
-  </ul>
+<div class="accordion" id="locations-holder">
+  {{#info }} {{> templates_locations_listItem}} {{/info}}
 </div>
+<a href="" class="btn btn-green btn-large" data-behavior="" data-disable-with="Loading..."><span class="ico-plus padding">New Location</span></a>
