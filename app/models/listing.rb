@@ -38,23 +38,23 @@ class Listing < ActiveRecord::Base
     :longitude, :distance_from, to: :location, allow_nil: true
 
 
-  belongs_to :creator, class_name: "User"
+  delegate :creator, :creator=, to: :location
   delegate :name, to: :creator, prefix: true
+
 
   has_many :availability_rules,
            :as => :target,
            :dependent => :destroy
 
   # === Callbacks
-  before_validation :set_default_creator
 
-  validates_presence_of :location_id, :creator_id, :name, :description, :quantity
+  validates_presence_of :location_id, :name, :description, :quantity
   validates_inclusion_of :confirm_reservations, :in => [true, false]
   validates_numericality_of :quantity
   validates_length_of :description, :maximum => 250
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
-                  :creator_id, :name, :description, :daily_price, :weekly_price, :monthly_price,
+                  :name, :description, :daily_price, :weekly_price, :monthly_price,
                   :availability_template_id, :availability_rules_attributes, :defer_availability_rules, :free,
                   :photos_attributes
 
@@ -236,12 +236,6 @@ class Listing < ActiveRecord::Base
     schedule
   end
 
-  private
-
-  def set_default_creator
-    self.creator ||= location.try(:creator)
-    self.creator ||= location.try(:company).try(:creator)
-  end
 end
 
 class NullListing

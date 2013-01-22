@@ -2,7 +2,6 @@ require 'test_helper'
 
 class LocationTest < ActiveSupport::TestCase
 
-  should belong_to(:creator)
   should belong_to(:company)
   should have_many(:listings)
 

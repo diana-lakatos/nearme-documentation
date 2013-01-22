@@ -1,8 +1,9 @@
 Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed, reserver|
   lister = User.find_by_name(lister)
   reserver = User.find_by_name(reserver)
-  @listing = FactoryGirl.create(:listing, creator: lister)
-  reservation = @listing.reserve!(reserver, [Chronic.parse('Monday', context: :future)], 1)
+  @listing = FactoryGirl.create(:listing)
+  @listing.creator = lister
+  reservation = @listing.reserve!(reserver, [next_regularly_available_day], 1)
   unless confirmed != " "
     reservation.confirm!
     reservation.save
@@ -55,7 +56,12 @@ When /^I book space for:$/ do |table|
   When %{I click to confirm the booking}
 end
 
+When /^(.*) books a space for that listing$/ do |person|
+  listing.reserve!(User.find_by_name(person), [next_regularly_available_day], 1)
+end
+
 When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, action|
+
   if user == "visitor"
     login User.find_by_name("Keith Contractor")
     visit bookings_dashboard_path
@@ -72,41 +78,16 @@ end
 When /^I select to book space for:$/ do |table|
   next unless table.hashes.length > 0
 
-  added_dates = []
-  table.hashes.each do |row|
-    date = Chronic.parse(row['Date']).to_date
-    qty = row['Quantity'].to_i
-    qty = 1 if qty < 1
-
-    listing = model!(row['Listing'])
-
-    if current_path != location_path(listing.location)
-      visit listing_path listing
-    end
-
-    year = date.strftime('%Y')
-    month = date.strftime('%m').to_i - 1 # - 1 because month JS is (0..11)
-    day = date.strftime('%d').to_i
-    date_class = ".datepicker-day-#{year}-#{month}-#{day}"
-
-    select qty.to_s, :from => "quantity"
-
-    # Activate the datepicker
-    find(:css, ".calendar-wrapper").click
-    wait_until {
-      page.has_no_selector?('.datepicker-loading', visible: true)
-    }
-
-    # Add the day to the seletion
-    unless added_dates.include?(date)
-      el = find(:css, date_class)
-      el.click unless date == Date.tomorrow
-      added_dates << date
-    end
-
-    find(:css, ".calendar-wrapper").click
-
+  dates = table.hashes.map do |row|
+    Chronic.parse(row['Date']).to_date
   end
+
+  qty = table.hashes.first['Quantity'].to_i
+  qty = 1 if qty < 1
+
+  listing = model!(table.hashes.first['Listing'])
+  start_to_book(listing, dates, qty)
+
 end
 
 When /^I click to review the bookings?$/ do
@@ -122,24 +103,13 @@ end
 When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved for '(.+)'$/ do |user, qty, listing, date|
   user = model!(user)
   qty = qty ? qty.to_i : 1
+
   listing = model!(listing)
+
   date = Chronic.parse(date).to_date
   assert listing.reservations.any? { |reservation|
     reservation.owner == user && reservation.periods.any? { |p| p.date == date && p.quantity == qty }
   }, "Unable to find a reservation for #{listing.name} on #{date}"
-end
-
-Then /^the space owner and booker should be notified$/ do
-  nth = "1st"
-  latest_reservation = Reservation.last
-  steps %Q{
-    Then the #{nth} email should be delivered to the listing's owner
-    And the #{nth} email should have subject: "[DesksNear.Me] A new reservation requires your confirmation"
-    And the #{nth} email should contain the listing's owner's name
-    And the #{nth} email should contain "#{latest_reservation.owner.name}"
-    And the #{nth} email should contain "made a reservation"
-    And the #{nth} email should contain "#{latest_reservation.date.strftime('%B %-e')}
-  }
 end
 
 Then (/^I should not see the reservation link for "([^"]*)"$/) do |date|

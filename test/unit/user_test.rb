@@ -40,27 +40,22 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "Hulk Hogan <hulk@desksnear.me>", @user.full_email
   end
 
-  test "may_view? is true when listing has no required organizations" do
-
-  end
-
   test "user may view listing with no required organizations" do
     user = User.new
-    listing = Listing.new
-    listing.location = Location.new
+    listing = FactoryGirl.create(:listing)
     assert user.may_view? listing
   end
 
   test "creator may view listing with no required organizations" do
     user = User.new
-    listing = Listing.new
+    listing = FactoryGirl.create(:listing)
     listing.creator = user
     assert user.may_view? listing
   end
 
   test "creator may view listing with required organizations" do
     user = User.new
-    listing = Listing.new
+    listing = FactoryGirl.create(:listing)
     listing.stubs(:required_organizations => ['organization'])
     listing.creator = user
     assert user.may_view? listing
@@ -68,7 +63,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "user with no organizations may not view listing with organizations" do
     user = User.new
-    listing = Listing.new
+    listing = FactoryGirl.create(:listing)
     listing.stubs(:required_organizations => ['darpa'])
     assert !(user.may_view? listing)
   end
@@ -76,7 +71,7 @@ class UserTest < ActiveSupport::TestCase
   test "user with other organizations may not view listing with organizations" do
     user = User.new
     user.stubs :organizations => ['aarp']
-    listing = Listing.new
+    listing = FactoryGirl.create(:listing)
     listing.stubs :required_organizations => ['darpa']
     assert !(user.may_view? listing)
   end
@@ -84,7 +79,7 @@ class UserTest < ActiveSupport::TestCase
   test "user may view listing with matching organizations" do
     user = User.new
     user.stubs :organizations => ['darpa']
-    listing = Listing.new
+    listing = FactoryGirl.create(:listing)
     listing.stubs :required_organizations => ['darpa']
     assert user.may_view? listing
   end
