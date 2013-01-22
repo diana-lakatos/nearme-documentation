@@ -94,12 +94,24 @@
 
   &.twitter {
     background: #33CCFF;
+
+    &:hover {
+      background: darken(#33CCFF, 15%);
+    }      
   }
   &.facebook {
     background: #3B5998;
+
+    &:hover {
+      background: darken(#3B5998, 15%);
+    }      
   }
   &.linkedin{
     background: #4875B4;
+
+    &:hover {
+      background: darken(#4875B4, 15%);
+    }    
   }    
 }
 
