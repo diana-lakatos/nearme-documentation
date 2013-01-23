@@ -25,7 +25,6 @@ class Listing::Search::Params
       scope[:with]["@geodist"] = 0.0...search_area.radius
     end
 
-    Rails.logger.info scope.inspect
     scope
   end
 
@@ -84,8 +83,6 @@ class Listing::Search::Params
     if boundingbox?
       @midpoint = Midpoint.new(*provided_boundingbox).center
       @radius = @midpoint.distance_from(provided_boundingbox.slice(0,2))
-      Rails.logger.info @midpoint.inspect
-      Rails.logger.info @radius.inspect
     elsif midpoint?
       @midpoint = Coordinate.new(*provided_midpoint)
     end
