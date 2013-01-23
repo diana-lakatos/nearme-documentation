@@ -72,6 +72,13 @@ module ApplicationHelper
 
   end
 
+  def number_to_currency_symbol(price, options = {})
+    options[:unit] = 'USD' unless options[:unit]
+    currency = options[:unit]
+    options[:unit] = Money::Currency.new(options[:unit]).symbol
+    content_tag('span', number_to_currency(price, options), :rel => 'tooltip', :title => currency)
+  end
+
   def link_to_once(*args, &block)
     options = args.first || {}
     html_options = args.second || {}
