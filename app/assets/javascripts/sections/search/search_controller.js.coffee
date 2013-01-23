@@ -83,6 +83,7 @@ class Search.SearchController extends Search.Controller
       else
         lat = null
         lng = null
+        bb  = [null, null, null, null]
 
       @form.find('input[name*=lat]').val(lat)
       @form.find('input[name*=lng]').val(lng)
@@ -90,7 +91,6 @@ class Search.SearchController extends Search.Controller
       @form.find('input[name*=ny]').val(bb[1])
       @form.find('input[name*=sx]').val(bb[2])
       @form.find('input[name*=sy]').val(bb[3])
-
 
       $.ajax(
         url     : @form.attr("src")
