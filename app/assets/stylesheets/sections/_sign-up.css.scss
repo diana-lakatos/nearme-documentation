@@ -1,6 +1,10 @@
 @import "sections/sign-up/third-party";
 
 #signup {
+  @media (min-width: 768px) {
+   margin-top: 6em;
+  }
+
   #service_buttons {
     .btn {
       $service-icons: sprite-map("sections/space-wizard/signup/service-icons/*.png");
@@ -23,39 +27,36 @@
     text-align: right;
     margin: 8px 20px 0 0;
 
-    @media (max-width: 767px) {
+    @media (max-width: 1080px) {
+      display: block;
       text-align: left;
       margin-bottom: 8px;
+      width: 100%;
+      clear: both;
     }
   }
-  .connected-provider {
-    overflow: hidden;
-
-    .avatar {
-      float: left;
-
-      img {
-        display: block; // prevent whitespace
-      }
-    }
-
-    h3, p {
-      margin: 0;
-      margin-left: 60px;
-    }
-
-    h3 {
-      font-size: 24px;
-      color: #394449;
-      line-height: 28px;
-    }
-
-    p {
-      font-size: 12px;
-      color: #677a83;
-      a {
-        font-weight: normal;
-      }
+  .btn.facebook, 
+  .btn.linkedin,
+  .btn.twitter {
+    @media (max-width: 525px) {
+      width: 100%;
+      text-align: center;
+      margin-bottom: .25em;
     }
   }
+  .btn.linkedin {
+    &:hover {
+      background: darken(#4875B4, 15%);
+    }
+  }
+  .btn.twitter {
+    &:hover {
+      background: darken(#33CCFF, 15%);
+    }  
+  }
+  .btn.facebook {
+    &:hover {
+      background: darken(#3B5998, 15%);
+    }  
+  }  
 }
