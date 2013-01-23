@@ -11,7 +11,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121214170841) do
+ActiveRecord::Schema.define(:version => 20130119001758) do
+
+  create_table "address_component_names", :force => true do |t|
+    t.string  "long_name"
+    t.string  "short_name"
+    t.integer "location_id"
+  end
+
+  create_table "address_component_names_address_component_types", :force => true do |t|
+    t.integer "address_component_name_id"
+    t.integer "address_component_type_id"
+  end
+
+  create_table "address_component_types", :force => true do |t|
+    t.string "name"
+  end
 
   create_table "amenities", :force => true do |t|
     t.string   "name"

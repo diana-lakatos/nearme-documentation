@@ -14,9 +14,7 @@ module UserHelper
 
   def toggle_connection_with(provider)
     visit edit_user_registration_path
-    within "#provider_#{provider.downcase}" do
-      click_link connection_link_text_for_provider(provider)
-    end
+    find(:css, ".provider_#{provider.downcase}").click
   end
 
   def try_to_sign_up_manually(options = {})

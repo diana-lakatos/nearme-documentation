@@ -4,10 +4,6 @@ module Provider
      symbol_to_name(normalize_symbol(provider))
   end
 
-  def connection_link_text_for_provider(provider)
-     symbol_to_name(normalize_symbol(provider))
-  end
-
   private 
 
   def normalize_symbol(provider)
