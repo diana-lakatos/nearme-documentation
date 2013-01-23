@@ -1,6 +1,5 @@
 one:
   id: 1
-  creator_id: 16
   location_id: 1
   name: "Super Cool Listing"
   description: "This is a *super* **cool** listing."

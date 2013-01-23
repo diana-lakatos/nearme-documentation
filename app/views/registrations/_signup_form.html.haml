@@ -1,6 +1,6 @@
 .signup-no-provider{:style => ('display: none' if user_auth_provider)}
   %h3.twitter-login
-    Sign up with Twitter:
+    Sign up with:
 
   = render 'authentications/services'
 
@@ -22,7 +22,7 @@
           %p.error-block= f.object.errors[:password].to_sentence
 
     .actions
-      = f.submit 'Sign up'
+      = f.submit 'Sign up', :disable_with => "Signing up..."
 
 - if user_auth_provider
   .signup-provider

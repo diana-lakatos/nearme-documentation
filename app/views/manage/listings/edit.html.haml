@@ -28,7 +28,7 @@
         = f.association :creator, :select => "Select a creator..."
 
       .actions
-        = f.button :submit
+        = f.button :submit, :disable_with => "Updating..."
 
 :javascript
   $(function() {

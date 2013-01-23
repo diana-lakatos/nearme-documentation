@@ -6,13 +6,6 @@ GIT
       addressable (>= 2.2.2)
       crack (>= 0.1.7)
 
-GIT
-  remote: git://github.com/rails-api/active_model_serializers.git
-  revision: e3bfd07ac47b76c69a22a7a4c357c053cd935b91
-  specs:
-    active_model_serializers (0.5.2)
-      activemodel (>= 3.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -30,6 +23,8 @@ GEM
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.2.1)
+    active_model_serializers (0.6.0)
+      activemodel (>= 3.0)
     activemodel (3.2.11)
       activesupport (= 3.2.11)
       builder (~> 3.0.0)
@@ -159,6 +154,7 @@ GEM
       rest-client (~> 1.6.1)
       rubyzip
     hike (1.2.1)
+    httpauth (0.2.0)
     i18n (0.6.1)
     jasmine (1.2.1)
       jasmine-core (>= 1.2.0)
@@ -181,6 +177,8 @@ GEM
     json_spec (0.5.0)
       json (~> 1.0)
       rspec (~> 2.0)
+    jwt (0.1.5)
+      multi_json (>= 1.0)
     launchy (2.1.2)
       addressable (~> 2.3)
     libwebsocket (0.1.7.1)
@@ -217,11 +215,24 @@ GEM
     newrelic_rpm (3.4.1)
     nokogiri (1.5.5)
     oauth (0.4.4)
+    oauth2 (0.8.0)
+      faraday (~> 0.8)
+      httpauth (~> 0.1)
+      jwt (~> 0.1.4)
+      multi_json (~> 1.0)
+      rack (~> 1.2)
     omniauth (1.1.0)
       hashie (~> 1.2)
       rack
+    omniauth-facebook (1.4.1)
+      omniauth-oauth2 (~> 1.1.0)
+    omniauth-linkedin (0.0.8)
+      omniauth-oauth (~> 1.0)
     omniauth-oauth (1.0.1)
       oauth
+      omniauth (~> 1.0)
+    omniauth-oauth2 (1.1.1)
+      oauth2 (~> 0.8.0)
       omniauth (~> 1.0)
     omniauth-openid (1.0.1)
       omniauth (~> 1.0)
@@ -377,7 +388,7 @@ PLATFORMS
 
 DEPENDENCIES
   RedCloth (~> 4.2.9)
-  active_model_serializers!
+  active_model_serializers
   airbrake
   autotest
   capybara (= 1.1.2)
@@ -413,6 +424,8 @@ DEPENDENCIES
   newrelic_rpm
   oauth
   omniauth
+  omniauth-facebook
+  omniauth-linkedin
   omniauth-openid
   omniauth-twitter
   pg

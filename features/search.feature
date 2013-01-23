@@ -15,7 +15,6 @@ Feature: A user can search for a listing
     When I search for "bung"
     Then I should see "Please enter a city or address"
 
-  @wip
   Scenario: A user searches for something which yields no results
     When I search for "darwin"
     Then I should see "No results found"
@@ -28,34 +27,9 @@ Feature: A user can search for a listing
     And I see a search result for the Auckland listing
     And I do not see a search result for the Cleveland listing
 
-  #for some reason, this passes independently, but fails sporadically when ran with the suite :(
-  @wip
-  Scenario: A user searches with amenities
-    Given an amenity exists
-    And a listing in Auckland exists
-    And a listing in Auckland exists with that amenity
-    When I search for "Auckland"
-    And I select that amenity
-    Then the search results have the listing with that amenity first
-
   Scenario: A user searches with a price range
     Given a listing in Auckland exists with a price of $50.00
     And a listing in Auckland exists with a price of $10.00
     When I set the price range to $0 to $25
     And I search for "Auckland"
     Then the search results have the $10 listing first
-
-  @future
-  Scenario: A user searches with associations
-    Given an association exists
-    And a listing in Auckland exists
-    And a listing in Auckland exists with that association
-    When I select that association
-    And I search for "Auckland"
-    Then the search results have the listing with that association first
-
-  @future
-  Scenario: a non member user searches for a private listing
-
-  @future
-  Scenario: a member user searches for a private listing

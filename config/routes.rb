@@ -18,6 +18,11 @@ DesksnearMe::Application.routes.draw do
       get :networking
       get :availability_summary
     end
+
+    collection do
+      get :populate_address_components_form
+      post :populate_address_components
+    end
   end
 
   resources :listings, :only => [:index, :show] do
@@ -30,6 +35,7 @@ DesksnearMe::Application.routes.draw do
   resources :organizations
 
   match '/auth/:provider/callback' => 'authentications#create'
+  match "/auth/failure", to: "authentications#failure"
   devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
 
   resources :reservations, :only => :update

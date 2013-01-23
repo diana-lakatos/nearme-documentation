@@ -1,3 +1,4 @@
+
 class @SignupForm
 
   constructor: (@container) ->
