@@ -7,22 +7,36 @@ class Bookings.Controller
   #
   # protected
   constructor: (@container, @options = {}) ->
+    requested_bookings =  _.toArray(@options.requested_bookings)
+
+    fetchCompleteCallback = $.noop
+    if !_.isEmpty(requested_bookings)
+      fetchCompleteCallback = -> $("#book-#{requested_bookings[0].id}").trigger('click')
+
     @availabilityManager = new Bookings.AvailabilityManager(
-      @options.availability_summary_url
+      @options.availability_summary_url, fetchCompleteCallback
     )
 
     # The Listings collection is the set of all Listings being managed for bookings on
     # the page. Each listing keeps track of the bookings made on it.
-    @listings = $.map @options.listings, (listingData) =>
+    @listings = _.map @options.listings, (listingData) =>
+      bookings = {}
+      match_listing = _.find(requested_bookings, (bookings) ->  bookings.id == listingData.id.toString() )
+      if match_listing != undefined
+         _.each  match_listing.bookings, (bookingData) =>
+           bookings[bookingData.date] = Number(bookingData.quantity)
+
       listing = new Bookings.Listing(
         listingData,
-        availability: new Bookings.AvailabilityManager.Listing(@availabilityManager, listingData.id)
+        availability: new Bookings.AvailabilityManager.Listing(@availabilityManager, listingData.id),
+        bookings: bookings
       )
 
     # We automatically add a booking for 'tomorrow'
     tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
     for listing in @listings
-      listing.addDate(tomorrow)
+      if _.isEmpty(listing.bookings)
+        listing.addDate(tomorrow)
 
     # Initialize each of the listing views
     @listingViews = $.map @listings, (listing) =>
