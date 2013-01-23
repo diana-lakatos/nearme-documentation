@@ -1,4 +1,11 @@
 %form#listing_search.search_results{:action => search_path, :method => "get"}
+  = hidden_field_tag 'lat', ''
+  = hidden_field_tag 'lng', ''
+  = hidden_field_tag 'nx', ''
+  = hidden_field_tag 'ny', ''
+  = hidden_field_tag 'sx', ''
+  = hidden_field_tag 'sy', ''
+
   .row-fluid
     %h1
       Search Results

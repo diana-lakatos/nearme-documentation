@@ -24,6 +24,8 @@ class Listing::Search::Params
       scope[:geo] = search_area.radians
       scope[:with]["@geodist"] = 0.0...search_area.radius
     end
+
+    Rails.logger.info scope.inspect
     scope
   end
 
@@ -31,21 +33,17 @@ class Listing::Search::Params
 
   def build_search_area
     return if search_area
-    if query
-      build_search_area_from_query
-    end
-    if !search_area && (midpoint? || boundingbox?)
-      build_search_area_from_midpoint
-    end
+
+    build_search_area_from_midpoint
+    build_search_area_from_query if !search_area && query
   end
 
-
   def midpoint?
-    provided_midpoint.none?(&:nil?)
+    provided_midpoint.none?(&:blank?)
   end
 
   def boundingbox?
-    provided_boundingbox.none?(&:nil?)
+    provided_boundingbox.none?(&:blank?)
   end
 
   def provided_boundingbox
@@ -86,16 +84,22 @@ class Listing::Search::Params
     if boundingbox?
       @midpoint = Midpoint.new(*provided_boundingbox).center
       @radius = @midpoint.distance_from(provided_boundingbox.slice(0,2))
+      Rails.logger.info @midpoint.inspect
+      Rails.logger.info @radius.inspect
     elsif midpoint?
       @midpoint = Coordinate.new(*provided_midpoint)
     end
-    @search_area = Listing::Search::Area.new(midpoint, radius)
+
+    if @midpoint
+      @found_location = true
+      @search_area = Listing::Search::Area.new(midpoint, radius)
+    end
   end
 
   def build_search_area_from_query
     @search_area = geocoder.find_location(query)
     if @search_area
-      @found_location = true;
+      @found_location = true
       @location_string = geocoder.pretty
       @query = nil
     end
