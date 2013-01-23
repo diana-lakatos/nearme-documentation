@@ -1,6 +1,6 @@
 - is_template = defined?(template) && template
 .fieldset{:class => ('template' if is_template)}
-  = link_to '', '', :class => 'close-button ico-x'
+  = link_to '', '', :class => 'close-button ico-close'
 
   .legend
     Listing ##{content_tag(:span, (@space.listings.index(f.object)||0)+1)}
