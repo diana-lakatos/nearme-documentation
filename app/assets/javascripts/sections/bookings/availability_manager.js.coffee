@@ -13,7 +13,7 @@ class @Bookings.AvailabilityManager
     @url = url
     @pendingDates = []
     @pendingCallbacks = []
-    @fetchCompleteCallback = fetchCompleteCallback || $.noop()
+    @fetchCompleteCallback = fetchCompleteCallback || $.noop
 
   availableFor: (listingId, date) ->
     value.available if value = @_value(listingId, date)

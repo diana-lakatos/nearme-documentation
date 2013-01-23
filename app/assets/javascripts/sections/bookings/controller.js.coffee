@@ -9,7 +9,7 @@ class Bookings.Controller
   constructor: (@container, @options = {}) ->
     requested_bookings =  _.toArray(@options.requested_bookings)
 
-    fetchCompleteCallback = $.noop()
+    fetchCompleteCallback = $.noop
     if !_.isEmpty(requested_bookings)
       fetchCompleteCallback = -> $("#book-#{requested_bookings[0].id}").trigger('click')
 
