@@ -14,6 +14,9 @@ class Search.Geocoder
   class Result
     constructor: (@result) ->
 
+    isValid: ->
+      @result.geometry
+
     city: ->
       @_addressComponentOfType('locality', 'political')?.long_name
 
@@ -45,6 +48,10 @@ class Search.Geocoder
         match = match && t.indexOf(type) != -1 for type in types
         component = c if match
       component
+
+  # Return a wrapped geocoder/places API response result object 
+  @wrapResult: (resultObject) ->
+    new Result(resultObject)
 
   constructor: ->
     @geocoder = new google.maps.Geocoder()

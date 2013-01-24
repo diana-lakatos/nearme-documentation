@@ -28,6 +28,16 @@ class Listing::Search::Params
     scope
   end
 
+  # Return whether the search params are searching for the presense of the query,
+  # as keyword(s) in addition to geo/feature lookup.
+  # For example, API searches can include keywords but the web UI serches are always
+  # geolocation based, with no keywords.
+  #
+  # This method should be overriden to apply the relevant behaviour.
+  def keyword_search?
+    query.present?
+  end
+
   private
 
   def build_search_area

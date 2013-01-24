@@ -52,7 +52,7 @@ class Listing
       end
 
       def find_by_search_params(params)
-        listings = (params.query ? search(params.to_scope) : search(params.to_scope)).to_a
+        listings = (params.keyword_search? ? search(params.query, params.to_scope) : search(params.to_scope)).to_a
 
         Scorer.score(listings, params)
 

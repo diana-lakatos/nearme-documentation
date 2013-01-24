@@ -1,4 +1,4 @@
-# Controller for Search results and filtering
+# Controller for Search results and filtering page
 class Search.SearchController extends Search.Controller
   constructor: (form, @container) ->
     super(form)
@@ -73,25 +73,7 @@ class Search.SearchController extends Search.Controller
   triggerSearch: ->
     @startLoading()
 
-    deferred = @geocoder.geocodeAddress(@queryField.val())
-    deferred.always (results) =>
-      if results
-        result = results.getBestResult()
-        lat = result.lat()
-        lng = result.lng()
-        bb  = result.boundingBox()
-      else
-        lat = null
-        lng = null
-        bb  = [null, null, null, null]
-
-      @form.find('input[name*=lat]').val(lat)
-      @form.find('input[name*=lng]').val(lng)
-      @form.find('input[name*=nx]').val(bb[0])
-      @form.find('input[name*=ny]').val(bb[1])
-      @form.find('input[name*=sx]').val(bb[2])
-      @form.find('input[name*=sy]').val(bb[3])
-
+    @geocodeSearchQuery =>
       $.ajax(
         url     : @form.attr("src")
         type    : 'GET',
@@ -107,3 +89,4 @@ class Search.SearchController extends Search.Controller
       => @triggerSearch(),
       2000
     )
+

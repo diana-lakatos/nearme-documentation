@@ -1,10 +1,6 @@
 %form#listing_search.search_results{:action => search_path, :method => "get"}
-  = hidden_field_tag 'lat', ''
-  = hidden_field_tag 'lng', ''
-  = hidden_field_tag 'nx', ''
-  = hidden_field_tag 'ny', ''
-  = hidden_field_tag 'sx', ''
-  = hidden_field_tag 'sy', ''
+  - search_geofields.each do |geofield|
+    = hidden_field_tag geofield, ''
 
   .row-fluid
     %h1
