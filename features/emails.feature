@@ -21,31 +21,31 @@ Feature: Emails should be sent out informing parties about reservations
     Then a reservation confirmed email should be sent to keith@example.com
     Then a new reservation email should be sent to bo@example.com
 
-  @javascript @borked
+  @javascript
   Scenario: reservation gets confirmed
     Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
     When the owner confirms the reservation
     Then a reservation confirmed email should be sent to keith@example.com
 
-  @javascript @borked
+  @javascript
   Scenario: confirmed then cancelled by visitor
     Given Bo Jeanes has a confirmed reservation for Keith Contractor
     When the visitor cancels the reservation
     Then a reservation cancelled email should be sent to bo@example.com
 
-  @javascript @borked
+  @javascript
   Scenario: confirmed then cancelled by owner
     Given Bo Jeanes has a confirmed reservation for Keith Contractor
     When the owner cancels the reservation
     Then a reservation cancelled by owner email should be sent to keith@example.com
 
-  @javascript @borked
+  @javascript
   Scenario: unconfirmed reservation gets cancelled by visitor
     Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
     When the visitor cancels the reservation
     Then a reservation cancelled email should be sent to bo@example.com
 
-  @javascript @borked
+  @javascript
   Scenario: unconfirmed reservation gets rejected
     Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
     When the owner rejects the reservation

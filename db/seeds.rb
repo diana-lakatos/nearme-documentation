@@ -20,12 +20,12 @@ if Rails.env.development? || Rails.env.staging?
     [coffee, wifi],
     [coffee, wifi, kitchen]
   ]
+
   locations = [
-      log(FactoryGirl.create(:location_in_auckland, :amenities => amenities.sample)),
-      log(FactoryGirl.create(:location_in_cleveland, :amenities => amenities.sample)),
-      log(FactoryGirl.create(:location_in_san_francisco, :amenities => amenities.sample))
-    ]
-  end.flatten
+    log(FactoryGirl.create(:location_in_auckland, :amenities => amenities.sample)),
+    log(FactoryGirl.create(:location_in_cleveland, :amenities => amenities.sample)),
+    log(FactoryGirl.create(:location_in_san_francisco, :amenities => amenities.sample))
+  ]
 
   locations.each do |location|
     log FactoryGirl.create(:listing, :location => location)
