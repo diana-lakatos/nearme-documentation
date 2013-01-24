@@ -1,11 +1,13 @@
-<div class="accordion-group">
-  <div class="accordion-heading">
-    <a class="accordion-toggle collapsed location-header" data-toggle="collapse" data-parent="#location-holder" data-location-id="{{id}}" href="#collapse-{{id}}">{{{name}}}</a>
+<section class="nav">
+  <head class="inverse">
+    <span class="location-header" data-location-id="{{id}}">{{{name}}}</span>
+  </head>
+  <div class="accordion" id="location-{{id}}-listings-holder">
+    {{> templates_locations_overview}} 
+    {{> templates_locations_photos}} 
+    {{> templates_locations_availability}} 
+    {{> templates_locations_amenities}} 
   </div>
-  <div id="collapse-{{id}}" class="accordion-body collapse in" style="height: 0px;">
-    <div id="listing-for-{{id}}" class="accordion-inner">
-     {{> templates_listings_list}}
-    </div>
-  </div>
-</div>
+  <section id="listing-for-{{id}}" class="">{{> templates_listings_list}}</section>
+</section>
 
