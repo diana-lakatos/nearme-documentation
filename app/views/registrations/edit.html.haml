@@ -8,15 +8,9 @@
       %p.intro
         You can change your account details below
 
-      = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name) }
-
-      %h2== Your Networks
-      %p.intro
-        You can add various networks
 
       = render "registrations/networks", :supported_providers => @supported_providers
-
-  .one-third.column.third-party
+      = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name) }
 
 
 :javascript

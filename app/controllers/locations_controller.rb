@@ -4,6 +4,9 @@ class LocationsController < ApplicationController
 
   def show
     @location = location
+    # set when an unauthenticated user try to book
+    @requested_bookings = bookings_request
+    clear_requested_bookings
   end
 
   def populate_address_components_form
@@ -23,14 +26,6 @@ class LocationsController < ApplicationController
       counter += 1
     end if params["address_components"]
     render :text => "Done, added components for #{counter} locations."
-  end
-
-  def host
-    @location = location
-  end
-
-  def networking
-    @location = location
   end
 
   # Return a summary in JSON for all listings availability over specified days

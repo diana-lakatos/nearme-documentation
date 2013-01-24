@@ -1,7 +1,8 @@
 module Social
   module Facebook
-    KEY    = ENV["FACEBOOK_KEY"]
-    SECRET = ENV["FACEBOOK_SECRET"]
+
+    KEY    = ENV["FACEBOOK_KEY_#{Rails.env.upcase}"]
+    SECRET = ENV["FACEBOOK_SECRET_#{Rails.env.upcase}"]
 
     def self.meta
       { name: "Facebook",

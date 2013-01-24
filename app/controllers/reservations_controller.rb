@@ -1,8 +1,8 @@
 class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
   before_filter :fetch_reservations
-  before_filter :fetch_reservation,      :only   => :update
-  before_filter :validate_event,     :only   => :update
+  before_filter :fetch_reservation, :only => :update
+  before_filter :validate_event, :only => :update
 
   def update
     @reservation.fire_events(current_event)
