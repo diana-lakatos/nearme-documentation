@@ -1,10 +1,14 @@
 <div class="accordion-group">
   <div class="accordion-heading">
-    <a class="accordion-toggle collapsed listing-header" data-toggle="collapse" data-parent="#listing-holder" data-listing-id="{{listing.id}}" href="#collapse-{{listing.id}}">{{{listing.name}}}</a>
+    <a class="accordion-toggle collapsed listing-header" data-toggle="collapse"
+    data-parent="#listing-holder" data-listing-id="{{listing.id}}" href="#collapse-{{listing.id}}">{{{listing.name}}}</a>
   </div>
   <div id="collapse-{{listing.id}}" class="accordion-body collapse in" style="height: 0px;">
     <div id="listing-for-{{listing.id}}" class="accordion-inner">
-      Listing content should come here
+      <div class="accordion" id="location-{{id}}-listings-holder">
+        {{> templates_listings_overview}}
+        {{> templates_listings_photos}}
+      </div>
     </div>
   </div>
 </div>
