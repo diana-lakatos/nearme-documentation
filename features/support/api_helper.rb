@@ -12,9 +12,6 @@ module ApiHelper
     parse_json(last_json)["listings"].map(&:symbolize_keys)
   end
 
-  def results_organizations
-    parse_json(last_json)["organizations"].map(&:symbolize_keys)
-  end
 end
 
 
@@ -30,7 +27,6 @@ class APISearchOptions
     json.merge!(query)
     json.merge!(bounding_box)
     json.merge!(price)
-    json.merge!(organizations)
     json.merge!(quantities)
     json.merge!(dates)
     json
@@ -50,11 +46,6 @@ class APISearchOptions
   def dates
     return {} unless options.has_key?(:dates)
     { "dates" => options[:dates].map(&:to_date) }
-  end
-
-  def organizations
-    return {} unless options.has_key?(:organizations)
-    { "organizations" => options[:organizations].map(&:id) }
   end
 
   def price

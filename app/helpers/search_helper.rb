@@ -13,10 +13,6 @@ module SearchHelper
     params[:availability].present? && params[:availability][:quantity].to_i || 1
   end
 
-  def search_organizations
-    params[:organizations].present? && params[:organizations].map(&:to_i) || []
-  end
-
   def search_amenities
     params[:amenities].present? && params[:amenities].map(&:to_i) || []
   end

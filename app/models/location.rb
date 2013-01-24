@@ -1,6 +1,8 @@
 class Location < ActiveRecord::Base
-  attr_accessible :address, :amenity_ids, :company_id, :description, :email, :require_organization_membership,
-    :info, :latitude, :local_geocoding, :longitude, :organization_ids, :name, :currency, :phone, :formatted_address, :availability_rules_attributes, :availability_template_id,
+  attr_accessible :address, :amenity_ids, :company_id, :description, :email,
+    :info, :latitude, :local_geocoding, :longitude, :name,
+    :currency, :phone, :formatted_address, :availability_rules_attributes,
+    :availability_template_id,
     :special_notes, :listings_attributes
   attr_accessor :local_geocoding # set this to true in js
   attr_accessor :address_components_hash # data to create address_component_names and _types will be stored here
@@ -9,9 +11,6 @@ class Location < ActiveRecord::Base
 
   has_many :amenities, through: :location_amenities
   has_many :location_amenities
-
-  has_many :organizations, through: :location_organizations
-  has_many :location_organizations
 
   belongs_to :company
   delegate :creator, :to => :company
@@ -52,8 +51,8 @@ class Location < ActiveRecord::Base
                                             units: :km)
   end
 
-  def required_organizations
-    require_organization_membership? ? organizations : []
+  def organizations
+    []
   end
 
   def admin?(user)
