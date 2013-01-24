@@ -20,6 +20,20 @@ class Listing::Search::ParamsTest <  ActiveSupport::TestCase
     end
   end
 
+  context '#keyword_search?' do
+    should "return true if there is a query" do
+      params = build_params(options_with_midpoint(options_with_query), fake_geocoder(true))
+      assert params.query.present?
+      assert params.keyword_search?
+    end
+
+    should "return false if there is no query" do
+      params = build_params(options_with_midpoint(options_with_query(nil)), fake_geocoder(false))
+      assert params.query.blank?
+      assert !params.keyword_search?
+    end
+  end
+
   context "#to_scope" do
     should "never include deleted items" do
       scope = scope_for(options_with_query, fake_geocoder(false))
@@ -50,10 +64,16 @@ class Listing::Search::ParamsTest <  ActiveSupport::TestCase
         assert_equal scope[:with]["@geodist"], 0.0...5.0
       end
       context "and a midpoint is provided" do
-        should "still use the query location" do
-          scope = scope_for(options_with_midpoint.merge(options_with_query("found_location")), fake_geocoder(search_area(query_midpoint)))
-          assert_equal scope[:with]["@geodist"], 0.0...5.0
-          assert_equal scope[:geo], query_midpoint.radians
+        should "should not trigger the geocoder" do
+          scope = scope_for(options_with_midpoint.merge(options_with_query("found_location")), fake_geocoder_never_used)
+          assert true # expectation
+        end
+      end
+
+      context "and a bounding box is provided" do
+        should "should not trigger the geocoder" do
+          scope = scope_for(options_with_bounding_box.merge(options_with_query("found_location")), fake_geocoder_never_used)
+          assert true # expectation
         end
       end
     end

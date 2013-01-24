@@ -29,16 +29,16 @@ class Listing::SearchTest < ActiveSupport::TestCase
       assert_equal [10.0, 20.0, 30.0], results.map(&:score)
     end
 
-    context "when no query exists" do
+    context "when not a keyword search" do
       should "search for only the scope" do
-        params = stub(query: nil, to_scope: { a: 'b' })
+        params = stub(keyword_search?: false, query: 'Address', to_scope: { a: 'b' })
         Listing.expects(:search).with({ a: 'b' }).returns(@listings)
         Listing.find_by_search_params(params)
       end
     end
-    context "when a query exists" do
+    context "when a keyword search" do
       should "searches for the scope with the query" do
-        params = stub(query: 'hooray', to_scope: { a: 'b' })
+        params = stub(keyword_search?: true, query: 'hooray', to_scope: { a: 'b' })
         Listing.expects(:search).with('hooray', { a: 'b' }).returns(@listings)
         Listing.find_by_search_params(params)
       end
