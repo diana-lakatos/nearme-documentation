@@ -32,6 +32,7 @@ window.DNM = {
     this.initializeAjaxCSRF();
     this.initializeComponents();
     this.initializeModals();
+    this.initializeTooltips();
   },
 
   initializeModals: function() {
@@ -53,6 +54,10 @@ window.DNM = {
         );
       }
     });
+  },
+
+  initializeTooltips: function(){
+    $('[rel=tooltip]').tooltip() 
   }
 }
 

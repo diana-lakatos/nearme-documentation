@@ -46,6 +46,12 @@ module ApplicationHelper
     render 'shared/context_flash'
   end
 
+  def tooltip(tooltip_text, link_text = "", options = {})
+    options[:rel] = "tooltip"
+    options[:title] = tooltip_text
+    content_tag(:a, link_text, options)
+  end
+
   def truncate_with_ellipsis(body, length, html_options = {})
 
     if body.size > length

@@ -16,10 +16,8 @@
     = f.label :free, "Free?"
 
 .control-group{:class => ('error' if f.object.errors[:confirm_reservations].any?)}
-  = f.label :confirm_reservations, raw("<abbr title='required'>*</abbr> Confirm bookings"), :class => "control-label required"
+  = f.label :confirm_reservations, raw("<abbr title='required'>*</abbr> #{tooltip("Do you want to be able to approve reservations on a case-by-case basis? We'll notify you by email whenever there's a reservation that needs your attention.","Confirm bookings")} "), :class => "control-label required"
   .controls
-    .preamble
-      Do you want to be able to approve reservations on a case-by-case basis? We'll notify you by email whenever there's a reservation that needs your attention.
 
     .two-up
       = f.input :confirm_reservations, :as => :radio_buttons, :wrapper => :simple, :input_wrapper => false, :label => false, :disabled => is_template
@@ -28,10 +26,8 @@
         %p.error-block= f.object.errors[:confirm_reservations].to_sentence
 
 .control-group
-  = label_tag "Photo", nil, :class => 'control-label'
+  = label_tag "Photo", tooltip("We recommend that you upload at least one photo for your listing. You can add more photos later from the Dashboard.", "Photo"), :class => 'control-label'
 
   .controls
-    .preamble
-      We recommend that you upload at least one photo for your listing. You can add more photos later from the Dashboard.
     = f.fields_for :photos, Photo.new do |pf|
       = pf.file_field :image, :disabled => is_template
