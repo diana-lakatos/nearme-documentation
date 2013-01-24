@@ -1,6 +1,7 @@
 module ApplicationHelper
 
   include TweetButton
+  include CurrencyHelper
 
   def title(page_title, show_title = true)
     content_for(:title) { h(page_title.to_s) }
@@ -70,13 +71,6 @@ module ApplicationHelper
       body
     end
 
-  end
-
-  def number_to_currency_symbol(price, options = {})
-    options[:unit] = 'USD' unless options[:unit]
-    currency = options[:unit]
-    options[:unit] = Money::Currency.new(options[:unit]).symbol
-    content_tag('span', number_to_currency(price, options), :rel => 'tooltip', :title => currency)
   end
 
   def link_to_once(*args, &block)

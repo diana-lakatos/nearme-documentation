@@ -24,7 +24,7 @@
               %span.total-days 1 day
 
           for
-          %span #{number_to_currency_symbol(content_tag(:span, "0.00", :class => 'total'), :unit => @location.currency)}
+          %span #{currency_content_tag(@location.currency)}
 
           .book
             = link_to_once "", :id =>"book-#{listing.id}", :disable_with =>"Booking...", :class => "btn btn-green btn-large", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
