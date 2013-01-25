@@ -6,7 +6,7 @@
   padding: $padding;
   border: 2px solid $gray2;
 
-  h2 {
+  h2, header {
     display: block;
     padding: 15px $padding;
     background: $gray2;
@@ -94,6 +94,23 @@
     margin-bottom: 20px;
   }
 }
+
+.box-inverse {
+  border: none;
+  header {
+    background: $dnm_black;
+    color: $dnm_white;
+  }
+}
+
+.box-dim {
+  border: none;
+  header {
+    background: $gray4;
+    color: $dnm_white;
+  }
+}
+
 
 .box-nav {
   overflow: hidden;

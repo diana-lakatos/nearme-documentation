@@ -3,9 +3,295 @@
     <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#locations-holder"
     href="#collapse-location-{{id}}-overview">Overview</a>
   </div>
-  <div id="collapse-location-{{id}}-overview" class="accordion-body collapse in"
+  <div id="collapse-location-{{id}}-overview" class="accordion-body collapse"
   style="height: 0px;">
-    <div id="location-{{id}}-overview" class="accordion-inner">Overview content should come here</div>
+    <div id="location-{{id}}-overview" class="accordion-inner">
+      <form accept-charset="UTF-8" action="/dashboard/locations/893" class="simple_form form-horizontal edit_location"
+      id="edit_location_893" method="post" novalidate="novalidate">
+        <div style="margin:0;padding:0;display:inline">
+          <input name="utf8" type="hidden" value="ÃÂ¢ÃÂÃÂ">
+          <input name="_method" type="hidden" value="put">
+          <input name="authenticity_token" type="hidden" value="Z1OMcgwukp7xvxeLizN81uwZdXW5MsK8CeqS8/a0PEg=">
+        </div>
+        <div class="control-group string required">
+          <label class="string required control-label" for="location_name">
+            <abbr title="required">*</abbr>Space name</label>
+          <div class="controls">
+            <input class="string required" id="location_name" name="location[name]"
+            placeholder="Name your space!" size="50" type="text" value="location1">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="location_address">Space location</label>
+          <div class="controls">
+            <div class="input-icon-wrapper">
+              <input autocomplete="off" data-behavior="address-autocomplete" id="location_address"
+              name="location[address]" placeholder="Type an address..." size="30" type="text"
+              value="2213 Elliott Avenue, Seattle, WA 98121, USA">
+              <i class="icon ico-crosshairs geolocate-trigger"></i>
+              <i class="icon icon-loading" style="display: none;"></i>
+            </div>
+            <div class="map" data-marker="/assets/components/map-pin.png" style="display: none">
+              <div class="map-container" style="height: 240px; width: 373px; position: relative; background-color: rgb(229, 227, 223); overflow: hidden; -webkit-transform: translateZ(0);">
+                <div style="position: absolute; left: 0px; top: 0px; overflow: hidden; width: 100%; height: 100%; z-index: 0;">
+                  <div style="position: absolute; left: 0px; top: 0px; overflow: hidden; width: 100%; height: 100%; z-index: 0;">
+                    <div style="position: absolute; left: 0px; top: 0px; z-index: 1; cursor: url(http://maps.gstatic.com/mapfiles/openhand_8_8.cur), default; -webkit-transform-origin: 0px 0px; -webkit-transform: matrix(1, 0, 0, 1, 0, 0);">
+                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 200;">
+                        <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 101;"></div>
+                      </div>
+                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 201;">
+                        <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 102;">
+                          <div style="position: absolute; left: 0px; top: 0px; z-index: 0;">
+                            <div style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
+                          </div>
+                        </div>
+                        <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 103;">
+                          <div style="position: absolute; left: 0px; top: 0px; z-index: -1;">
+                            <div style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 202;">
+                        <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 104;"></div>
+                        <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 105;"></div>
+                        <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 106;"></div>
+                      </div>
+                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 100;">
+                        <div style="position: absolute; left: 0px; top: 0px; z-index: 0;">
+                          <div style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
+                        </div>
+                      </div>
+                      <div style="position: absolute; z-index: 0;">
+                        <div style="overflow: hidden;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <input id="location_local_geocoding" name="location[local_geocoding]"
+            type="hidden">
+            <input id="location_latitude" name="location[latitude]" type="hidden"
+            value="47.6118658">
+            <input id="location_longitude" name="location[longitude]" type="hidden"
+            value="-122.3476751">
+            <input id="location_formatted_address" name="location[formatted_address]"
+            type="hidden" value="2213 Elliott Avenue, Seattle, WA 98121, USA">
+          </div>
+        </div>
+        <div class="control-group text required">
+          <label class="text required control-label" for="location_description">
+            <abbr title="required">*</abbr>Space description</label>
+          <div class="controls">
+            <textarea class="text required" cols="40" id="location_description" name="location[description]"
+            placeholder="Describe the overall look, feel, and ambience of your space. Be exciting!"
+            rows="20">nice location</textarea>
+          </div>
+        </div>
+        <div class="control-group email optional">
+          <label class="email optional control-label" for="location_email">Booking email</label>
+          <div class="controls">
+            <input class="string email optional" id="location_email" name="location[email]"
+            placeholder="yourname@example.com" size="50" type="email" value="olivier.oudry@gmail.com">
+          </div>
+        </div>
+        <div class="control-group tel optional">
+          <label class="tel optional control-label" for="location_phone">Booking phone #</label>
+          <div class="controls">
+            <input class="string tel optional" id="location_phone" name="location[phone]"
+            placeholder="1800 BOOKSPACE" size="50" type="tel" value="">
+          </div>
+        </div>
+        <div class="control-group currency optional">
+          <label class="currency optional control-label" for="location_currency">Booking currency</label>
+          <div class="controls">
+            <select class="currency optional" id="location_currency" name="location[currency]">
+              <optgroup label="Common">
+                <option value="USD" selected="selected">USD - United States Dollar</option>
+                <option value="NZD">NZD - New Zealand Dollar</option>
+                <option value="GBP">GBP - British Pound</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="AUD">AUD - Australian Dollar</option>
+              </optgroup>
+              <optgroup label="All">
+                <option value="AED">AED - United Arab Emirates Dirham</option>
+                <option value="AFN">AFN - Afghan Afghani</option>
+                <option value="ALL">ALL - Albanian Lek</option>
+                <option value="AMD">AMD - Armenian Dram</option>
+                <option value="ANG">ANG - Netherlands Antillean Gulden</option>
+                <option value="AOA">AOA - Angolan Kwanza</option>
+                <option value="ARS">ARS - Argentine Peso</option>
+                <option value="AUD">AUD - Australian Dollar</option>
+                <option value="AWG">AWG - Aruban Florin</option>
+                <option value="AZN">AZN - Azerbaijani Manat</option>
+                <option value="BAM">BAM - Bosnia and Herzegovina Convertible Mark</option>
+                <option value="BBD">BBD - Barbadian Dollar</option>
+                <option value="BDT">BDT - Bangladeshi Taka</option>
+                <option value="BGN">BGN - Bulgarian Lev</option>
+                <option value="BHD">BHD - Bahraini Dinar</option>
+                <option value="BIF">BIF - Burundian Franc</option>
+                <option value="BMD">BMD - Bermudian Dollar</option>
+                <option value="BND">BND - Brunei Dollar</option>
+                <option value="BOB">BOB - Bolivian Boliviano</option>
+                <option value="BRL">BRL - Brazilian Real</option>
+                <option value="BSD">BSD - Bahamian Dollar</option>
+                <option value="BTN">BTN - Bhutanese Ngultrum</option>
+                <option value="BWP">BWP - Botswana Pula</option>
+                <option value="BYR">BYR - Belarusian Ruble</option>
+                <option value="BZD">BZD - Belize Dollar</option>
+                <option value="CAD">CAD - Canadian Dollar</option>
+                <option value="CDF">CDF - Congolese Franc</option>
+                <option value="CHF">CHF - Swiss Franc</option>
+                <option value="CLP">CLP - Chilean Peso</option>
+                <option value="CNY">CNY - Chinese Renminbi Yuan</option>
+                <option value="COP">COP - Colombian Peso</option>
+                <option value="CRC">CRC - Costa Rican ColÃÂÃÂ³n</option>
+                <option value="CUC">CUC - Cuban Convertible Peso</option>
+                <option value="CUP">CUP - Cuban Peso</option>
+                <option value="CVE">CVE - Cape Verdean Escudo</option>
+                <option value="CZK">CZK - Czech Koruna</option>
+                <option value="DJF">DJF - Djiboutian Franc</option>
+                <option value="DKK">DKK - Danish Krone</option>
+                <option value="DOP">DOP - Dominican Peso</option>
+                <option value="DZD">DZD - Algerian Dinar</option>
+                <option value="EEK">EEK - Estonian Kroon</option>
+                <option value="EGP">EGP - Egyptian Pound</option>
+                <option value="ERN">ERN - Eritrean Nakfa</option>
+                <option value="ETB">ETB - Ethiopian Birr</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="FJD">FJD - Fijian Dollar</option>
+                <option value="FKP">FKP - Falkland Pound</option>
+                <option value="GBP">GBP - British Pound</option>
+                <option value="GEL">GEL - Georgian Lari</option>
+                <option value="GHS">GHS - Ghanaian Cedi</option>
+                <option value="GHS">GHS - Ghanaian Cedi</option>
+                <option value="GIP">GIP - Gibraltar Pound</option>
+                <option value="GMD">GMD - Gambian Dalasi</option>
+                <option value="GNF">GNF - Guinean Franc</option>
+                <option value="GTQ">GTQ - Guatemalan Quetzal</option>
+                <option value="GYD">GYD - Guyanese Dollar</option>
+                <option value="HKD">HKD - Hong Kong Dollar</option>
+                <option value="HNL">HNL - Honduran Lempira</option>
+                <option value="HRK">HRK - Croatian Kuna</option>
+                <option value="HTG">HTG - Haitian Gourde</option>
+                <option value="HUF">HUF - Hungarian Forint</option>
+                <option value="IDR">IDR - Indonesian Rupiah</option>
+                <option value="ILS">ILS - Israeli New Sheqel</option>
+                <option value="INR">INR - Indian Rupee</option>
+                <option value="IQD">IQD - Iraqi Dinar</option>
+                <option value="IRR">IRR - Iranian Rial</option>
+                <option value="ISK">ISK - Icelandic KrÃÂÃÂ³na</option>
+                <option value="JMD">JMD - Jamaican Dollar</option>
+                <option value="JOD">JOD - Jordanian Dinar</option>
+                <option value="JPY">JPY - Japanese Yen</option>
+                <option value="JPY">JPY - Japanese Yen</option>
+                <option value="KES">KES - Kenyan Shilling</option>
+                <option value="KGS">KGS - Kyrgyzstani Som</option>
+                <option value="KHR">KHR - Cambodian Riel</option>
+                <option value="KMF">KMF - Comorian Franc</option>
+                <option value="KPW">KPW - North Korean Won</option>
+                <option value="KRW">KRW - South Korean Won</option>
+                <option value="KWD">KWD - Kuwaiti Dinar</option>
+                <option value="KYD">KYD - Cayman Islands Dollar</option>
+                <option value="KZT">KZT - Kazakhstani Tenge</option>
+                <option value="LAK">LAK - Lao Kip</option>
+                <option value="LBP">LBP - Lebanese Pound</option>
+                <option value="LKR">LKR - Sri Lankan Rupee</option>
+                <option value="LRD">LRD - Liberian Dollar</option>
+                <option value="LSL">LSL - Lesotho Loti</option>
+                <option value="LTL">LTL - Lithuanian Litas</option>
+                <option value="LVL">LVL - Latvian Lats</option>
+                <option value="LYD">LYD - Libyan Dinar</option>
+                <option value="MAD">MAD - Moroccan Dirham</option>
+                <option value="MDL">MDL - Moldovan Leu</option>
+                <option value="MGA">MGA - Malagasy Ariary</option>
+                <option value="MKD">MKD - Macedonian Denar</option>
+                <option value="MMK">MMK - Myanmar Kyat</option>
+                <option value="MNT">MNT - Mongolian TÃÂÃÂ¶grÃÂÃÂ¶g</option>
+                <option value="MOP">MOP - Macanese Pataca</option>
+                <option value="MRO">MRO - Mauritanian Ouguiya</option>
+                <option value="MUR">MUR - Mauritian Rupee</option>
+                <option value="MVR">MVR - Maldivian Rufiyaa</option>
+                <option value="MWK">MWK - Malawian Kwacha</option>
+                <option value="MXN">MXN - Mexican Peso</option>
+                <option value="MYR">MYR - Malaysian Ringgit</option>
+                <option value="MZN">MZN - Mozambican Metical</option>
+                <option value="NAD">NAD - Namibian Dollar</option>
+                <option value="NGN">NGN - Nigerian Naira</option>
+                <option value="NIO">NIO - Nicaraguan CÃÂÃÂ³rdoba</option>
+                <option value="NOK">NOK - Norwegian Krone</option>
+                <option value="NPR">NPR - Nepalese Rupee</option>
+                <option value="NZD">NZD - New Zealand Dollar</option>
+                <option value="OMR">OMR - Omani Rial</option>
+                <option value="PAB">PAB - Panamanian Balboa</option>
+                <option value="PEN">PEN - Peruvian Nuevo Sol</option>
+                <option value="PGK">PGK - Papua New Guinean Kina</option>
+                <option value="PHP">PHP - Philippine Peso</option>
+                <option value="PKR">PKR - Pakistani Rupee</option>
+                <option value="PLN">PLN - Polish ZÃÂÃÂoty</option>
+                <option value="PYG">PYG - Paraguayan GuaranÃÂÃÂ­</option>
+                <option value="QAR">QAR - Qatari Riyal</option>
+                <option value="RON">RON - Romanian Leu</option>
+                <option value="RSD">RSD - Serbian Dinar</option>
+                <option value="RUB">RUB - Russian Ruble</option>
+                <option value="RWF">RWF - Rwandan Franc</option>
+                <option value="SAR">SAR - Saudi Riyal</option>
+                <option value="SBD">SBD - Solomon Islands Dollar</option>
+                <option value="SCR">SCR - Seychellois Rupee</option>
+                <option value="SDG">SDG - Sudanese Pound</option>
+                <option value="SEK">SEK - Swedish Krona</option>
+                <option value="SGD">SGD - Singapore Dollar</option>
+                <option value="SHP">SHP - Saint Helenian Pound</option>
+                <option value="SKK">SKK - Slovak Koruna</option>
+                <option value="SLL">SLL - Sierra Leonean Leone</option>
+                <option value="SOS">SOS - Somali Shilling</option>
+                <option value="SRD">SRD - Surinamese Dollar</option>
+                <option value="STD">STD - SÃÂÃÂ£o TomÃÂÃÂ© and PrÃÂÃÂ­ncipe Dobra</option>
+                <option
+                value="SVC">SVC - Salvadoran ColÃÂÃÂ³n</option>
+                  <option value="SYP">SYP - Syrian Pound</option>
+                  <option value="SZL">SZL - Swazi Lilangeni</option>
+                  <option value="THB">THB - Thai Baht</option>
+                  <option value="TJS">TJS - Tajikistani Somoni</option>
+                  <option value="TMM">TMM - Turkmenistani Manat</option>
+                  <option value="TND">TND - Tunisian Dinar</option>
+                  <option value="TOP">TOP - Tongan PaÃÂÃÂ»anga</option>
+                  <option value="TRY">TRY - Turkish Lira</option>
+                  <option value="TTD">TTD - Trinidad and Tobago Dollar</option>
+                  <option value="TWD">TWD - New Taiwan Dollar</option>
+                  <option value="TZS">TZS - Tanzanian Shilling</option>
+                  <option value="UAH">UAH - Ukrainian Hryvnia</option>
+                  <option value="UGX">UGX - Ugandan Shilling</option>
+                  <option value="USD" selected="selected">USD - United States Dollar</option>
+                  <option value="UYU">UYU - Uruguayan Peso</option>
+                  <option value="UZS">UZS - Uzbekistani Som</option>
+                  <option value="VEF">VEF - Venezuelan BolÃÂÃÂ­var</option>
+                  <option value="VND">VND - Vietnamese ÃÂÃÂÃÂ¡ÃÂ»ÃÂng</option>
+                  <option value="VUV">VUV - Vanuatu Vatu</option>
+                  <option value="WST">WST - Samoan Tala</option>
+                  <option value="XAF">XAF - Central African Cfa Franc</option>
+                  <option value="XCD">XCD - East Caribbean Dollar</option>
+                  <option value="XOF">XOF - West African Cfa Franc</option>
+                  <option value="XPF">XPF - Cfp Franc</option>
+                  <option value="YER">YER - Yemeni Rial</option>
+                  <option value="ZAR">ZAR - South African Rand</option>
+                  <option value="ZMK">ZMK - Zambian Kwacha</option>
+                  <option value="ZWD">ZWD - Zimbabwean Dollar</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+        <div class="control-group string optional">
+          <label class="string optional control-label" for="location_special_notes">Special terms or notes</label>
+          <div class="controls">
+            <input class="string optional" id="location_special_notes" name="location[special_notes]"
+            placeholder="Any special terms or notes to add?" size="50" type="text"
+            value="">
+            <p class="help-block">Got a dog? Require an NDA? Write any special conditions for booking.</p>
+          </div>
+        </div>
+    </div>
+    </form>
   </div>
 </div>
 

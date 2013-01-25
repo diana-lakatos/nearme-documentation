@@ -1,4 +1,9 @@
-<div class="accordion" id="location-{{id}}-listings-holder">
-  {{#listings }} {{> templates_listings_listItem}} {{/listings}}
-</div>
-<a href="" class="btn btn-green btn-large add-listing" data-behavior="" data-disable-with="Loading..."><span class="ico-plus padding">New Listing</span></a>
+<section class="listings">
+  <div class="accordion" id="location-{{id}}-listings-holder">{{#listings }} {{> templates_listings_listItem}} {{/listings}}</div>
+  <div class="action"> 
+    <a href="" class="btn btn-blue btn-large add-listing" data-behavior="" data-disable-with="Loading...">
+      <span class="ico-plus padding">Add a Listing</span>
+    </a>
+  </div>
+</section>
+

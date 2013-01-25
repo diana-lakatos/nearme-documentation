@@ -1,8 +1,8 @@
-<section class="nav">
-  <head class="inverse">
+<section class="box box-inverse">
+  <header data-toggle="collapse" data-target="#location-{{id}}-listings-holder">
     <span class="location-header" data-location-id="{{id}}">{{{name}}}</span>
-  </head>
-  <div class="accordion" id="location-{{id}}-listings-holder">
+  </header>
+  <div class="accordion location-content collapse in" id="location-{{id}}-listings-holder">
     {{> templates_locations_overview}} 
     {{> templates_locations_photos}} 
     {{> templates_locations_availability}} 

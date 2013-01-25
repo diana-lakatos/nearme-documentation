@@ -15,23 +15,6 @@ body {
   z-index: 1030;
   margin:0 !important;
 }
-.accordion-group {
-
-	background: $dnm_white;
-	border-radius: 8px;
-
-  a.accordion-toggle {
-  	background: url('http://desksnearme.assets.s3.amazonaws.com/img/ui/arrow-down.png') right center no-repeat;
-  	background-origin: content-box;
-  	color: black;
-  	opacity: .8;
-    @include transition(opacity .1s ease-in);
-
-  	&:hover {
-  		opacity: 1;
-  	}
-  }
-}
 
 .carousel-control {
   background: none !important;

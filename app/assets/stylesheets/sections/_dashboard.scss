@@ -1,3 +1,58 @@
+/*   Begin new dashboard */
+@mixin dashboard-acc-group {
+  .accordion-group {
+     border: none;
+     border-radius: 0;
+     border-bottom: 1px solid $gray2;
+     margin-top: 10px;
+  }
+}
+
+section.locations-holder {
+  margin-bottom: 20px;
+  .location-content {
+    margin-bottom: 0;
+    @include dashboard-acc-group
+  }
+  section.box {
+    padding-bottom: 0;
+    header {
+      margin-bottom: 0;
+      cursor: pointer;
+    }
+  }
+
+  div.action {
+   border-radius: 8px; 
+   background: $dnm_black;
+    padding: 20px;
+    a.btn{
+      width: 100%;
+    text-align: center;
+    }
+  }
+}
+section.listings {
+  .accordion {
+    margin: auto -14px;
+    @include dashboard-acc-group;
+    .box{
+      margin-bottom:0;
+      padding-bottom: 0; 
+      header {
+        margin-bottom:0;
+        border-radius: 0;
+      } 
+    } 
+  }
+  div.action {
+    border-radius: 0;
+    border-bottom-left-radius: 8px; 
+    border-bottom-right-radius: 8px; 
+    margin: auto -14px;
+  }
+}
+/*   End new dashboard */
 section.dashboard {
   min-height: 800px;
 }
