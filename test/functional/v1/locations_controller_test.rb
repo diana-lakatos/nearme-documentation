@@ -12,4 +12,13 @@ class V1::LocationsControllerTest < ActionController::TestCase
     get :list
     assert_response :success
   end
+
+  test "destroy should be successful" do
+    authenticate!
+    company = FactoryGirl.create(:company, :name => 'company_XYZ', :creator_id => @user.id)
+    @location = FactoryGirl.create(:location, :company_id => company.id)
+    delete :destroy, id: @location
+    assert_response :success
+  end
+
  end
