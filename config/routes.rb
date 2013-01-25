@@ -18,6 +18,11 @@ DesksnearMe::Application.routes.draw do
       get :networking
       get :availability_summary
     end
+
+    collection do
+      get :populate_address_components_form
+      post :populate_address_components
+    end
   end
 
   resources :listings, :only => [:index, :show] do

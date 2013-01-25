@@ -1,4 +1,4 @@
-%section.bookings.quick-book{:'data-view' => "simple"}
+%section.bookings.quick-book
   .listings
     - @location.listings.each do |listing|
 
@@ -10,14 +10,13 @@
 
         %h3.listing-name
           = listing.name
-        
+
         = truncate_with_ellipsis listing.description, 250, :class => "listing-description"
 
         .make-reservation
           .quantity
             = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
-          %span.resource desk
-          on
+          %span.resource desk on
 
           .calendar-wrapper
             .calendar
@@ -28,7 +27,7 @@
           %span $#{content_tag(:span, "0.00", :class => 'total')}
 
           .book
-            = link_to_once "", :disable_with =>"Booking...", :class => "btn btn-green btn-large", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
+            = link_to_once "", :id =>"book-#{listing.id}", :disable_with =>"Booking...", :class => "btn btn-green btn-large", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
               %span.ico-check.padding Book
 
         .clearfix
