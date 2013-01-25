@@ -51,10 +51,6 @@ class Location < ActiveRecord::Base
                                             units: :km)
   end
 
-  def organizations
-    []
-  end
-
   def admin?(user)
     creator == user
   end

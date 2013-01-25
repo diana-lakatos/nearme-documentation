@@ -34,8 +34,9 @@ class Listing < ActiveRecord::Base
   delegate :url, to: :company
 
   belongs_to :location
-  delegate :address, :amenities, :currency, :formatted_address, :local_geocoding, :organizations, :latitude,
-    :longitude, :distance_from, to: :location, allow_nil: true
+  delegate :address, :amenities, :currency, :formatted_address,
+    :local_geocoding, :latitude, :longitude, :distance_from, to: :location,
+    allow_nil: true
 
 
   delegate :creator, :creator=, to: :location
