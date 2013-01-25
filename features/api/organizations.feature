@@ -3,8 +3,7 @@ Feature: List organizations
   As an API client
   I want to list organizations
 
-  @borked
   Scenario: GET /organizations
     Given no organizations
     When I send a GET request for "organizations"
-    Then the response should be an empty organizations list
+    Then the response contains an empty organizations list

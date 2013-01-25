@@ -12,6 +12,10 @@ module ApiHelper
     parse_json(last_json)["listings"].map(&:symbolize_keys)
   end
 
+  def result
+    parse_json(last_json)
+  end
+
 end
 
 

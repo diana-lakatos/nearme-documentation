@@ -1,3 +1,7 @@
+Given /^no organizations$/ do
+
+end
+
 Given /^I am not an authenticated api user$/ do
   @user.should be_nil
 end
@@ -82,6 +86,10 @@ Then /^the response does (not )?include the listing in (.*)$/ do |negative, city
   else
     includes_result.should be_true
   end
+end
+
+Then /^the response contains an empty organizations list$/ do
+  result["organizations"].should be_empty
 end
 
 Then /^the response should have the listing in (.*) with the (.*) score$/ do |city, direction|
