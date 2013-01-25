@@ -18,7 +18,7 @@
             <abbr title="required">*</abbr>Space name</label>
           <div class="controls">
             <input class="string required" id="location_name" name="location[name]"
-            placeholder="Name your space!" size="50" type="text" value="location1">
+            placeholder="Name your space!" size="50" type="text" value="{{name}}">
           </div>
         </div>
         <div class="control-group">
@@ -85,21 +85,21 @@
           <div class="controls">
             <textarea class="text required" cols="40" id="location_description" name="location[description]"
             placeholder="Describe the overall look, feel, and ambience of your space. Be exciting!"
-            rows="20">nice location</textarea>
+            rows="20">{{description}}</textarea>
           </div>
         </div>
         <div class="control-group email optional">
           <label class="email optional control-label" for="location_email">Booking email</label>
           <div class="controls">
             <input class="string email optional" id="location_email" name="location[email]"
-            placeholder="yourname@example.com" size="50" type="email" value="olivier.oudry@gmail.com">
+            placeholder="yourname@example.com" size="50" type="email" value="{{email}}">
           </div>
         </div>
         <div class="control-group tel optional">
           <label class="tel optional control-label" for="location_phone">Booking phone #</label>
           <div class="controls">
             <input class="string tel optional" id="location_phone" name="location[phone]"
-            placeholder="1800 BOOKSPACE" size="50" type="tel" value="">
+            placeholder="1800 BOOKSPACE" size="50" type="tel" value="{{phone}}">
           </div>
         </div>
         <div class="control-group currency optional">
@@ -286,7 +286,7 @@
           <div class="controls">
             <input class="string optional" id="location_special_notes" name="location[special_notes]"
             placeholder="Any special terms or notes to add?" size="50" type="text"
-            value="">
+            value="{{special_notes}}">
             <p class="help-block">Got a dog? Require an NDA? Write any special conditions for booking.</p>
           </div>
         </div>

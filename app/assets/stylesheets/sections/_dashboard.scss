@@ -19,6 +19,10 @@ section.locations-holder {
     header {
       margin-bottom: 0;
       cursor: pointer;
+      .action {
+        float: right;
+        padding: 0;
+      }
     }
   }
 

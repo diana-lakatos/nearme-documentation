@@ -1,6 +1,7 @@
 <section class="box box-inverse">
   <header data-toggle="collapse" data-target="#location-{{id}}-listings-holder">
     <span class="location-header" data-location-id="{{id}}">{{{name}}}</span>
+    <div class="action" style="display:none;"><button data-id="{{id}}" class="btn btn-danger delete">Delete Me</button></div>
   </header>
   <div class="accordion location-content collapse in" id="location-{{id}}-listings-holder">
     {{> templates_locations_overview}} 

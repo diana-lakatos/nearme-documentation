@@ -1,7 +1,9 @@
-define(['jquery', 'backbone', 'collections/location', 'hbs!templates/locations/list','bootstrap'], function($, Backbone, LocationCollection,  locationListTemplate) {
+define(['jquery', 'backbone', 'collections/location','views/locations/item', 'hbs!templates/locations/list', 'bootstrap'], function($, Backbone, LocationCollection, LocationView, locationListTemplate) {
   var Locations = Backbone.View.extend({
+    el: '#dyn-content',
     template: locationListTemplate,
     initialize: function() {
+      _.bindAll(this, 'render', 'addAll', 'addOne');
     },
 
     _setCollection: function() {
@@ -17,8 +19,9 @@ define(['jquery', 'backbone', 'collections/location', 'hbs!templates/locations/l
 
     events: {
       "click .add-location": "addlocation",
-      "click .add-listing": "addlocation"
+      "click .add-listing": "addlisting"
     },
+
 
     addlocation: function(event) {
       event.preventDefault();
@@ -30,12 +33,20 @@ define(['jquery', 'backbone', 'collections/location', 'hbs!templates/locations/l
       alert('create listing triggered');
     },
 
+    addAll: function() {
+      this.collection.each(this.addOne);
+    },
+
+    addOne: function(location) {
+        var view = new LocationView({ model: location});
+        $(this.$el).children('.locations-holder').prepend(view.render().el);
+      },
+
     render: function() {
       if (this.collection) {
-        var self = this;
-        $('#dyn-content').html(this.template({ locations: this.collection.toJSON() }));
+        this.$el.html(this.template());
+        this.addAll();
         $(".collapse").collapse();
-        this.setElement("#dyn-content");
       } else {
         this._setCollection();
       }

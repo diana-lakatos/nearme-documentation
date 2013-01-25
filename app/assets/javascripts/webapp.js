@@ -11,8 +11,7 @@ requirejs.config({
     handlebars: 'libs/handlebars/handlebars',
     i18nprecompile: 'libs/handlebars/i18nprecompile',
     hbs: 'libs/handlebars/hbs',
-    text: 'libs/require/text',
-    // required plugin to load non js file
+    text: 'libs/require/text', // required plugin to load non js file
     templates: 'templates' // path for template files
   },
 
