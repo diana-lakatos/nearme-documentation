@@ -53,6 +53,7 @@ group :development do
   gem "rails-erd"
   gem 'quiet_assets'
   gem 'mail_view'
+  gem 'sextant'
 end
 
 group :development, :test, :staging do
