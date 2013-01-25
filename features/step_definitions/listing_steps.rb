@@ -58,14 +58,6 @@ When /^I create a listing for that location with availability rules$/ do
   end
 end
 
-When /^I visit that listing$/ do
-  visit listing_path(model!('listing'))
-end
-
-When /^I view that listing$/ do
-  visit listing_path(model!('listing'))
-end
-
 When /^I view that listing's edit page$/ do
   visit edit_manage_location_path(model!('listing').location)
 end
@@ -87,29 +79,6 @@ Then /^I (do not )?see a search result for the ([^\$].*) listing$/ do |negative,
   end
 end
 
-Then /^I see the listing details$/ do
-  page.should have_content(listing.address)
-  page.should have_content(listing.name)
-  page.should have_content(listing.description.strip)
-end
-
-Then /^the listing (daily |weekly |monthly )?price is shown as (.*)$/ do |period, amount|
-  visit listing_path(listing)
-  page.should have_content(amount)
-  visit listings_path
-  page.should have_content(amount)
-end
-
-Then /^the listing shows the availability rules$/ do
-  visit listing_path(listing)
-  page.should have_content("I'm always available")
-end
-
-Then /^I cannot view that listing$/ do
-  page.should have_content "Sorry, you don't have permission to view that"
-  current_path.should == listings_path
-end
-
 Then /^I should see the following listings in order:$/ do |table|
   found = all("article.listing h2")
   table.raw.flatten.each_with_index do |listing, index|
@@ -120,4 +89,3 @@ end
 Then /^I should see the creators gravatar/ do
   page.should have_css(".host .avatar")
 end
-
