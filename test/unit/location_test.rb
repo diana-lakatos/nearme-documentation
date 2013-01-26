@@ -107,7 +107,6 @@ class LocationTest < ActiveSupport::TestCase
 
       should "modify address components" do
         new_attributes = FactoryGirl.attributes_for(:san_francisco_address_components)
-        assert_not_equal(new_attributes[:address_components_hash], @location.address_components)
         @location.formatted_address = new_attributes[:formatted_address]
         @location.address_components_hash = new_attributes[:address_components_hash]
         @location.save!
