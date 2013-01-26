@@ -1,8 +1,9 @@
-define(['jquery', 'backbone', 'hbs!templates/locations/item'], function($, Backbone, locationTemplate) {
+define(['jquery', 'backbone','Collections/listing', 'Views/listings/item', 'hbs!templates/locations/item'], function($, Backbone, listingCollection, ListingView, locationTemplate) {
   var LocationView = Backbone.View.extend({
     template: locationTemplate,
     initialize: function() {
-      _.bindAll(this, 'render');
+      _.bindAll(this, 'render','addAll','addOne');
+      this.listingCollection = new listingCollection(this.model.get('listings'));
     },
 
     events: {
@@ -12,8 +13,19 @@ define(['jquery', 'backbone', 'hbs!templates/locations/item'], function($, Backb
 
     render: function() {
       this.setElement(this.template(this.model.toJSON()));
+      this.addAll();
       return this;
     },
+
+    addAll: function() {
+      this.listingCollection.each(this.addOne);
+    },
+
+    addOne: function(listing) {
+        var view = new ListingView({model: listing});
+        var hookElt = '#location-' + this.model.id + '-listings-holder';
+        $(this.$el).find(hookElt).append(view.render().el);
+      },
 
     toggleAction: function(event) {
       var field = $(event.currentTarget);
@@ -27,9 +39,7 @@ define(['jquery', 'backbone', 'hbs!templates/locations/item'], function($, Backb
         this.$el.fadeOut();
       }
     }
-
   });
   return LocationView;
 
 });
-

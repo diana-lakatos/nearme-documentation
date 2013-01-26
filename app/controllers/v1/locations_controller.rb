@@ -10,9 +10,9 @@ class V1::LocationsController <  V1::BaseController
   def create
     @location = Location.create(params[:location])
     if @location.save
-      render :json => {:success => true, :id => @model.id}
+      render :json => {:success => true, :id => @location.id}
     else
-      render :json => { :errors => @model.errors.full_messages }, :status => 422
+      render :json => { :errors => @location.errors.full_messages }, :status => 422
     end
   end
 
@@ -21,7 +21,7 @@ class V1::LocationsController <  V1::BaseController
     if @location.destroy
       render json: { success: true, id: @location.id }
     else
-      render :json => { :errors => @model.errors.full_messages }, :status => 422
+      render :json => { :errors => @location.errors.full_messages }, :status => 422
     end
   end
 end

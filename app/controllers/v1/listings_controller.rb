@@ -1,7 +1,7 @@
 class V1::ListingsController < V1::BaseController
 
   # Endpoints that require authentication
-  before_filter :require_authentication,         only: [:connections, :inquiry, :reservation, :share]
+  before_filter :require_authentication,         only: [:destroy, :connections, :inquiry, :reservation, :share]
 
   before_filter :validate_search_params!,        only: :search
   before_filter :validate_query_params!,         only: :query
@@ -15,6 +15,16 @@ class V1::ListingsController < V1::BaseController
   def list
     @listings = current_user.company(params[:location_id]).listings.select('id,name')
   end
+
+  def destroy
+    @listing = current_user.listings.find(params[:id])
+    if @listing.destroy
+      render json: { success: true, id: @listing.id }
+    else
+      render :json => { :errors => @listing.errors.full_messages }, :status => 422
+    end
+  end
+
 
   def show
     render :json => Listing.find(params[:id])
