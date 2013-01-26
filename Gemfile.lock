@@ -6,6 +6,14 @@ GIT
       addressable (>= 2.2.2)
       crack (>= 0.1.7)
 
+GIT
+  remote: git://github.com/engageis/activerecord-postgres-hstore.git
+  revision: f92b012ea1a7149388c24fd52740e6d091706e66
+  specs:
+    activerecord-postgres-hstore (0.5.3)
+      rails
+      rake
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -389,6 +397,7 @@ PLATFORMS
 DEPENDENCIES
   RedCloth (~> 4.2.9)
   active_model_serializers
+  activerecord-postgres-hstore!
   airbrake
   autotest
   capybara (= 1.1.2)

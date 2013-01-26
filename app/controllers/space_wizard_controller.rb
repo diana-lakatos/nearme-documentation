@@ -37,7 +37,6 @@ class SpaceWizardController < ApplicationController
     @location.address_components_hash = params[:address_components] || {}
 
     if @location.save
-      @location.build_address_components
       redirect_to space_wizard_desks_url(:company_id => @company.id, :space_id => @location.id)
     else
       render :space

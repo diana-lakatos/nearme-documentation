@@ -73,85 +73,51 @@ class LocationTest < ActiveSupport::TestCase
   context "creating address components" do
 
     setup do
-      @user = FactoryGirl.create(:user)
-      @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
-      @location = FactoryGirl.build(:location_in_auckland)
-      @company.locations << @location
-      @location.address_components_hash = get_params_for_address_components
+      @location = FactoryGirl.create(:ursynowska_address_components)
     end
 
-    context 'formatted address has not changed ' do
+    context 'creates address components for new record' do
+
+      should " create address components" do
+        assert_equal(5, @location.address_components.count)
+      end
+
+      should "be able to get city" do
+        assert_equal('Warsaw', @location.address_components["city"])
+        assert_equal('Mokotow', @location.address_components["suburb"])
+      end
+
+    end
+
+    context 'formatted address has not changed' do
 
 
-      should "not create address components" do
-        @location.save!
+      should "not modify address components" do
+        previous_address_components = @location.address_components
         @location.phone = "000 0000 000"
-        @location.build_address_components_if_necessary
-        assert_equal(0, @location.address_component_names.count)
+        @location.address_components_hash = FactoryGirl.attributes_for(:san_francisco_address_components)[:address_components_hash]
+        @location.save!
+        @location.reload
+        assert_equal(previous_address_components, @location.address_components)
       end
 
     end
 
     context 'formatted address has changed' do
 
-      should "create address components" do
+      should "modify address components" do
+        new_attributes = FactoryGirl.attributes_for(:san_francisco_address_components)
+        assert_not_equal(new_attributes[:address_components_hash], @location.address_components)
+        @location.formatted_address = new_attributes[:formatted_address]
+        @location.address_components_hash = new_attributes[:address_components_hash]
         @location.save!
-        @location.formatted_address = "Ursynowska, Warszawa, Poland"
-        @location.build_address_components_if_necessary
-        assert_equal(6, @location.address_component_names.count)
+        @location.reload
+        assert_equal("San Francisco", @location.address_components["city"])
       end
 
     end
 
-    context 'is new record' do
-
-      should " create address components" do
-        @location.build_address_components
-        assert_equal(6, @location.address_component_names.count)
-      end
-
-    end
   end
 
-  private
 
-  def get_params_for_address_components
-    # real data from google geocoder
-    {
-      "0"=> {
-      "long_name"=>"Ursynowska", 
-      "short_name"=>"Ursynowska", 
-      "types"=>"route"
-    }, 
-      "1"=>{
-      "long_name"=>"Mokotow", 
-      "short_name"=>"Mokotow", 
-      "types"=>"sublocality,political"
-    }, 
-      "2"=>{
-      "long_name"=>"Warsaw", 
-      "short_name"=>"Warsaw", 
-      "types"=>"locality,political"
-    },
-      "3"=>{
-      "long_name"=> "Warszawa", 
-      "short_name"=>"Warszawa", 
-      "types"=>"administrative_area_level_3,political"
-    }, 
-      "4"=>{
-      "long_name"=>"Warszawa", 
-      "short_name"=>"Warszawa", 
-      "types"=>"administrative_area_level_2,political"
-    }, 
-      "5"=>{
-      "long_name"=>"Masovian Voivodeship", 
-      "short_name"=>"Masovian Voivodeship", 
-      "types"=>"administrative_area_level_1,political"
-    }, 
-      "6"=>{
-      "long_name"=>"Poland", 
-      "short_name"=>"PL", 
-      "types"=>"country,political"
-    }
-    }
-  end end
+end

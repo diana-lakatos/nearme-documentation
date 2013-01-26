@@ -7,6 +7,7 @@ gem 'pg_search'
 gem "RedCloth", "~> 4.2.9", :require => "redcloth"
 gem 'airbrake'
 gem 'active_model_serializers'
+gem 'activerecord-postgres-hstore', github: 'engageis/activerecord-postgres-hstore'
 gem 'carrierwave'
 gem 'decent_exposure'
 gem 'devise'

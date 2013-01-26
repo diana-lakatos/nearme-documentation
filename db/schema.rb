@@ -11,23 +11,9 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130119001758) do
+ActiveRecord::Schema.define(:version => 20130126153259) do
 
-  create_table "address_component_names", :force => true do |t|
-    t.string  "long_name"
-    t.string  "short_name"
-    t.integer "location_id"
-  end
-
-  create_table "address_component_names_address_component_types", :force => true do |t|
-    t.integer "address_component_name_id"
-    t.integer "address_component_type_id"
-  end
-
-  create_table "address_component_types", :force => true do |t|
-    t.string "name"
-  end
-
+    execute "CREATE EXTENSION IF NOT EXISTS hstore"
   create_table "amenities", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -152,7 +138,10 @@ ActiveRecord::Schema.define(:version => 20130119001758) do
     t.boolean  "require_organization_membership", :default => false
     t.string   "currency"
     t.text     "special_notes"
+    t.hstore   "address_components"
   end
+
+  add_index "locations", ["address_components"], :name => "locations_gin_address_components"
 
   create_table "organization_users", :force => true do |t|
     t.integer "organization_id"
