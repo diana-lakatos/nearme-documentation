@@ -1,7 +1,7 @@
 module ApplicationHelper
 
   include TweetButton
-  
+
   def title(page_title, show_title = true)
     content_for(:title) { h(page_title.to_s) }
     @show_title = show_title
@@ -14,11 +14,11 @@ module ApplicationHelper
   def legacy?
     !defined?(@is_legacy) || @is_legacy
   end
-  
+
   def show_title?
     @show_title
   end
-  
+
   def our_twitter_accounts
     buffer = []
     {
@@ -59,7 +59,7 @@ module ApplicationHelper
       end
 
       excess_body = (body.split - truncated_body)
-      
+
       content_tag(:p, html_options) do
         truncated_body.join(" ").html_safe +
         content_tag(:span, "&hellip;".html_safe, :class => 'truncated-ellipsis').html_safe +
@@ -72,4 +72,15 @@ module ApplicationHelper
 
   end
 
+  def link_to_once(*args, &block)
+    options = args.first || {}
+    html_options = args.second || {}
+
+    unless html_options.key?(:disable_with) then html_options[:disable_with] = "Loading..." end
+    if block_given?
+      link_to(capture(&block), options, html_options)
+    else
+      link_to(options, html_options)
+    end
+  end
 end

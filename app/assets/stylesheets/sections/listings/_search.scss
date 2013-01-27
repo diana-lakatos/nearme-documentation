@@ -1,14 +1,23 @@
 section.search {
   min-height:900px;
+
+  .loading {
+    margin: 100px auto;
+    width: 30px;
+  }
+}
+
+#search_row {
+  .btn-green {
+    width: 100%;
+    text-align: center;
+  }
 }
 #listing_search {
-  position: relative;
-  overflow: visible;
-
   .geolocation {
     position: absolute;
-    top: 8px;
-    left: 10px;
+    top: 15px;
+    left: 17px;
     border: 0;
     background: transparent;
     @include transition(all .1s ease-in);
@@ -19,34 +28,16 @@ section.search {
     &:hover {
       opacity:.95;
     }
-
-    @media (max-width: 480px ) {
-      width:22px;
-      background-size: 22px 23px;
-      height: 23px;
-      top:11px;
-    }
   }
 
   &.home_search input#search {
     padding: 8px 0 8px 50px;
-    width: 460px;
+    width: 100%;
     float:left;
-    margin-right: 8px;
-
-    @media (max-width: 480px ) {
-      padding: 8px 0 8px 40px;
-      margin-right:0;
-    }
-  }
-
-  &.search_results input#search {
-    padding-left: 50px;
-    width: 300px;
   }
 
   &.search_results .geolocation {
-    top: 8px;
+    top: 7px;
     left: 10px;
   }
 
@@ -54,16 +45,6 @@ section.search {
     .availability-quantity, .price-range, .amenities {
       margin: 10px 0 0;
     }
-  }
-
-  .btn {
-    height: 48px;
-    line-height: 48px;
-    position: relative;
-    vertical-align: top;
-    width: 115px;
-    font-size: 22px;
-    text-align: center;
   }
 
   .slider {
@@ -90,35 +71,23 @@ section.search {
     margin-left:30px;
   }
 
-  // On the home search box
-  &.home_search {
-    .multiselect {
-      width: 220px;
-    }
-  }
-
   // On the search results page bar
   &.search_results {
-    hr {
-      margin-right: 0;
-      margin-left: 0;
-      clear: both;
-    }
-
     label {
       float: left;
       margin-right: 0;
     }
 
+    .span6 {
+      position: relative;
+    }
     .slider {
-      width: 130px;
+      width: 60%;
     }
 
-    .location {
-      input#search {
-        width: 100%;
-        box-sizing: border-box;
-      }
+    input#search {
+      position: relative;
+      padding: 8px 0 8px 50px;
     }
 
     .associations {
@@ -126,28 +95,25 @@ section.search {
     }
 
     .multiselect {
-      margin: -4px 0 0 15px;
-      width: 220px;
+      margin: -4px 0 0;
+      width: 100%;
 
       @media (max-width: 767px) {
         margin-left: 0;
       }
     }
 
-    @media (max-width: 767px ) {
+    .availability-date-start {
+      position: relative; 
+      float: left;
+      width: 49%;
+      margin-right: 2%;
+    }
 
-      .three.columns.availability-date-start {
-        position: relative; 
-        float: left;
-        width: 48%;
-        margin-right: 4%;
-      }
-
-      .three.columns.availability-date-end {
-        position: relative; 
-        float: left;
-        width: 48%;
-      }
+    .availability-date-end {
+      position: relative; 
+      float: left;
+      width: 49%;
     }
 
     .availability-date-start, .availability-date-end {
@@ -178,64 +144,3 @@ section.search {
     }
   }
 }
-
-@media (min-width: 767px) and (max-width: 959px) {
-   #listing_search {
-
-    &.home_search input#search {
-      width:560px; }
-   } 
-  #search_row  {
-    .availability-quantity.five.columns.alpha {
-        .slider {
-          width:150px; } }
-   .price-range.six.columns.omega {
-    width:260px; } 
-      .slider {
-        width:80px } } }
-
-@media (max-width: 959px) {
- #listing_search {
-    &.home_search input#search {
-      width:320px;
-    }
-
-    &.search_results {
-      input#search {
-        width: 300px;
-      }
-      .slider { 
-        width:80px; 
-      }
-      .amenities {
-        width: 230px;
-      }
-      .multiselect  {
-        width:220px;
-      }
-    } 
-  }
-}
-
-@media  (max-width: 767px) {
- #listing_search {
-    &.home_search input#search {
-      width:100%;
-      box-sizing: border-box; }
-   &.search_results {
-    .availability-quantity, .price-range, .amenities {
-      margin: 10px 0; } } }
-
-  .associations.six.columns.omega.alpha,
-  .price-range.six.columns.omega { 
-    margin:20px 0; }
-
-   #listing_search .btn, #listing_search form input[type="submit"], form #listing_search input[type="submit"] {
-    width:100%;
-    text-align:center;
-    box-sizing: border-box; } }
-
-@media  (max-width: 480px) {
-   #listing_search {
-    .slider {
-      width: 100px; } } }

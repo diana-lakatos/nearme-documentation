@@ -1,5 +1,13 @@
-input[type=submit] {
+input, textarea {
+  box-sizing: border-box;
+  width: 100%;
+}
+input[type='checkbox'] {
+  width: auto;
+}
+input[type=submit], input[type=text] {
    -webkit-appearance: none;
+   cursor: pointer;
 }
     
 form {
@@ -205,6 +213,7 @@ form {
   .input-icon-wrapper {
     display: inline-block;
     position: relative;
+    width: 100%;
 
     input {
       padding-left: 35px;

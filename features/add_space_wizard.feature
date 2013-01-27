@@ -11,7 +11,7 @@ Feature: A user can add a space
      And I fill in "Your email address" with "brettjones@email.com"
      And I fill in "Your password" with "password"
      And I fill in "user_password_confirmation" with "password"
-     When I press "Sign up!"
+     When I press "Sign up"
      Then a user should exist with email: "brettjones@email.com"
      And I should be at the "Company" step
      When I fill in "Your company name" with "My Company"

@@ -1,5 +1,8 @@
 # encoding: utf-8
 class PhotoUploader < CarrierWave::Uploader::Base
+  SPACE_FULL_IMAGE_W = 895
+  SPACE_FULL_IMAGE_H = 554
+
   include CarrierWave::MiniMagick
 
   def store_dir
@@ -27,11 +30,11 @@ class PhotoUploader < CarrierWave::Uploader::Base
   end
 
   version :space_listing do
-    process :resize_to_fill => [290, 180]
+    process :resize_to_fill => [410, 254]
   end
 
   version :golden do
-    process :resize_to_fill => [640, 396]
+    process :resize_to_fill => [SPACE_FULL_IMAGE_W, SPACE_FULL_IMAGE_H]
   end
 
   def extension_white_list

@@ -11,8 +11,7 @@ Feature: As a user of the site
       And a listing exists with location: the location, creator: the user, name: "Rad Annex", confirm_reservations: true
 
   Scenario: A user can see their listings
-     When I am on the dashboard
-     And  I follow "Manage Locations"
+     When I am on the manage locations page
      And I follow "Locations"
      And I follow "Edit"
      And I follow "Listings"
