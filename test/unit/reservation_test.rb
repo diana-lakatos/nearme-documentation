@@ -3,7 +3,7 @@ require 'test_helper'
 class ReservationTest < ActiveSupport::TestCase
   test "it has a listing" do
     @reservation = Reservation.new
-    @reservation.listing = Listing.new
+    @reservation.listing = FactoryGirl.create(:listing)
 
     assert @reservation.listing
   end
@@ -57,7 +57,7 @@ class ReservationTest < ActiveSupport::TestCase
           d
         }
         quantity           =  5
-        assert reservation = @listing.reserve!("test@test.com", @user, dates, quantity)
+        assert reservation = @listing.reserve!(@user, dates, quantity)
 
         # listing cost * 4 days * 5 people :)
         assert_equal @listing.price_cents * dates.size * quantity, reservation.total_amount_cents
@@ -66,7 +66,7 @@ class ReservationTest < ActiveSupport::TestCase
       should "not reset total cost when saving an existing reservation" do
         dates              = [1.week.from_now.monday]
         quantity           =  2
-        assert reservation = @listing.reserve!("test@test.com", @user, dates, quantity)
+        assert reservation = @listing.reserve!(@user, dates, quantity)
 
         assert_not_nil reservation.total_amount_cents
 
@@ -84,7 +84,7 @@ class ReservationTest < ActiveSupport::TestCase
         assert quantity > @listing.availability_for(dates.first)
 
         assert_raises DNM::PropertyUnavailableOnDate do
-          @listing.reserve!("test@test.com", @user, dates, quantity)
+          @listing.reserve!(@user, dates, quantity)
         end
       end
 

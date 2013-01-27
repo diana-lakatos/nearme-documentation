@@ -11,4 +11,24 @@ module RegistrationsHelper
       nil
     end
   end
+
+  def build_link_for(provider, class_for_links)
+    if (authentication = Authentication.find_by_provider_and_user_id(provider.downcase, current_user.id))
+      # authentication already exists in the database
+      unless authentication.can_be_deleted?
+        class_for_links += ' provider-not-disconnectable'
+      end
+        link_to authentication_path(authentication), :method => :delete , :class => class_for_links do
+          "<span class='ico-#{provider.downcase}'>".html_safe +
+          "Disconnect #{provider}"
+        end
+    else
+      # user is not connected to this social provider yet - no authentication in the database
+      link_to provider_auth_url(provider.downcase), :class => class_for_links do
+        "<span class='ico-#{provider.downcase}'>".html_safe +
+        "Connect to #{provider}"
+      end
+    end
+  end
+
 end

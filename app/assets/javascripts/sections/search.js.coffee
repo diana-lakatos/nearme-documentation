@@ -5,6 +5,7 @@ class DNM.SearchForm
   constructor: (@form) ->
     @initializeFields()
     @initializeGeolocateButton()
+    autocomplete = new google.maps.places.Autocomplete(document.getElementById('search'), {})
 
   # Initialize all filters for the search form
   initializeFields: ->
@@ -67,7 +68,9 @@ class DNM.SearchForm
       @form.find('.availability-date-end input').datepicker('show')
 
   initializeAvailabilityQuantityFilter: ->
-    @form.find(".availability-quantity .slider").slider(
+    @slider = @form.find(".availability-quantity .slider")
+    return unless @slider.length > 0
+    @slider.slider(
       value: @form.find('.availability-quantity input').val(), min  : 1, max  : 10, step : 1,
       slide: (event, ui) => @availabilityQuantityChanged(ui.value)
     )
@@ -104,7 +107,8 @@ class DNM.SearchForm
           @queryField.val(currentLocation).change()
 
 class DNM.HomeSearch extends DNM.SearchForm
-
+  constructor: (form, @container) ->
+    super(form)
 
 class DNM.SearchResultsPage extends DNM.SearchForm
   constructor: (form, @container) ->

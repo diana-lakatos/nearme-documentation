@@ -8,6 +8,12 @@
       %p.intro
         You can change your account details below
 
+
+      = render "registrations/networks", :supported_providers => @supported_providers
       = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name) }
 
 
+:javascript
+  $(function() {
+    new EditUserForm()
+  });

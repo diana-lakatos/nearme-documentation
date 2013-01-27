@@ -20,6 +20,12 @@ begin
       t.profile = 'default'
     end
 
+    Cucumber::Rake::Task.new({:borked => 'db:test:prepare'}, 'Run features that should pass') do |t|
+      t.binary = vendored_cucumber_bin # If nil, the gem's binary is used.
+      t.fork = true # You may get faster startup if you set this to false
+      t.profile = 'borked'
+    end
+
     Cucumber::Rake::Task.new({:wip => 'db:test:prepare'}, 'Run features that are being worked on') do |t|
       t.binary = vendored_cucumber_bin
       t.fork = true # You may get faster startup if you set this to false
@@ -30,6 +36,12 @@ begin
       t.binary = vendored_cucumber_bin
       t.fork = true # You may get faster startup if you set this to false
       t.profile = 'rerun'
+    end
+
+    Cucumber::Rake::Task.new({:verbose => 'db:test:prepare'}, 'Run features with verbose output') do |t|
+      t.binary = vendored_cucumber_bin # If nil, the gem's binary is used.
+      t.fork = true # You may get faster startup if you set this to false
+      t.profile = 'verbose'
     end
 
     desc 'Run all features'
