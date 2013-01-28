@@ -5,6 +5,7 @@ class Search.SearchController extends Search.Controller
     @resultsContainer = @container.find('.results')
     @loadingContainer = @container.find('.loading')
     @loadMap()
+    @bindEvents()
 
   bindEvents: ->
     @form.bind 'submit', (event) =>
