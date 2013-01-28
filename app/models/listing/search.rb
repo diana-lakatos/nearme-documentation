@@ -52,11 +52,15 @@ class Listing
       end
 
       def find_by_search_params(params)
-        listings = (params.keyword_search? ? search(params.query, params.to_scope) : search(params.to_scope)).to_a
+        search_args = if params.keyword_search?
+          [params.query, params.to_scope]
+        else
+          [params.to_scope]
+        end
 
+        listings = search(*search_args).to_a
         Scorer.score(listings, params)
-
-        listings.sort{|a,b| a.score <=> b.score }
+        listings.sort { |a,b| a.score <=> b.score }
       end
     end
   end
