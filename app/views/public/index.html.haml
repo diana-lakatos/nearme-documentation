@@ -13,9 +13,6 @@
 
         .black-box.row-fluid
           %form#listing_search.home_search{:action => search_path, :method => "get"}
-            - search_geofields.each do |geofield|
-              = hidden_field_tag geofield, ''
-
             .span9
               %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
               .geolocation
@@ -25,6 +22,9 @@
                 %span.ico-search
                 Search
               #suggest_location{:style => "display: none"}
+
+            - search_geofields.each do |geofield|
+              = hidden_field_tag geofield, ''
 
 %section.how-it-works
   .row-fluid.padding-row
