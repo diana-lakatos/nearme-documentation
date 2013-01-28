@@ -23,8 +23,6 @@ class Search.Controller
     @priceRange = new PriceRange(@form.find('.price-range'), 300, @)
     @initializeAvailabilityQuantityFilter()
     @initializeQueryField()
-    @initializeAmenitiesField()
-    @initializeAssociationsField()
     @initializeDateRangeField()
 
   availabilityQuantityChanged: (value) ->
@@ -34,12 +32,6 @@ class Search.Controller
 
   dateRangeFieldChanged: (values) ->
     @fieldChanged('dateRange', values)
-
-  amenitiesChanged: ->
-    @fieldChanged('amenities')
-
-  associationsChanged: ->
-    @fieldChanged('associations')
 
   fieldChanged: (filter, value) ->
     # Override to trigger automatic updating etc.
@@ -53,14 +45,6 @@ class Search.Controller
       @fieldChanged('query', @queryField.val())
 
     # TODO: Trigger fieldChanged on keypress after a few seconds timeout?
-
-  initializeAmenitiesField: ->
-    @form.find('.amenities .multiselect').on 'change', =>
-      @amenitiesChanged()
-
-  initializeAssociationsField: ->
-    @form.find('.associations .multiselect').on 'change', =>
-      @associationsChanged()
 
   initializeDateRangeField: ->
     @form.find('.availability-date-start input, .availability-date-end input').datepicker(
