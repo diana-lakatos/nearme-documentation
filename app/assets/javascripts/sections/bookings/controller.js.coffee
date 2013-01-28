@@ -3,9 +3,7 @@
 # The controller is initialize with the bookings DOM container, and an options hash including
 # JS objects representing each Listing on the Location.
 class Bookings.Controller
-  # Initialize the Bookings controller
-  #
-  # protected
+  
   constructor: (@container, @options = {}) ->
     requested_bookings =  _.toArray(@options.requested_bookings)
 

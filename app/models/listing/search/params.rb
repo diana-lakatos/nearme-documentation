@@ -24,28 +24,35 @@ class Listing::Search::Params
       scope[:geo] = search_area.radians
       scope[:with]["@geodist"] = 0.0...search_area.radius
     end
+
     scope
+  end
+
+  # Return whether the search params are searching for the presense of the query,
+  # as keyword(s) in addition to geo/feature lookup.
+  # For example, API searches can include keywords but the web UI serches are always
+  # geolocation based, with no keywords.
+  #
+  # This method should be overriden to apply the relevant behaviour.
+  def keyword_search?
+    query.present?
   end
 
   private
 
   def build_search_area
     return if search_area
-    if query
-      build_search_area_from_query
-    end
-    if !search_area && (midpoint? || boundingbox?)
-      build_search_area_from_midpoint
-    end
+
+    build_search_area_from_midpoint
+    build_search_area_from_query if !search_area && query
   end
 
-
   def midpoint?
-    provided_midpoint.none?(&:nil?)
+    provided_midpoint.none?(&:blank?)
   end
 
   def boundingbox?
-    provided_boundingbox.none?(&:nil?)
+    provided_boundingbox.none?(&:blank?)
   end
 
   def provided_boundingbox
@@ -89,13 +96,17 @@ class Listing::Search::Params
     elsif midpoint?
       @midpoint = Coordinate.new(*provided_midpoint)
     end
-    @search_area = Listing::Search::Area.new(midpoint, radius)
+
+    if @midpoint
+      @found_location = true
+      @search_area = Listing::Search::Area.new(midpoint, radius)
+    end
   end
 
   def build_search_area_from_query
     @search_area = geocoder.find_location(query)
     if @search_area
-      @found_location = true;
+      @found_location = true
       @location_string = geocoder.pretty
       @query = nil
     end

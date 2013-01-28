@@ -7,7 +7,6 @@
 //= require ./vendor/jquery.ui.touch-punch
 //= require ./vendor/customSelect.jquery
 //= require ./vendor/bootstrap
-//= require ./search
 //= require ./vendor/rails
 //= require ./vendor/modernizr
 //= require ./vendor/jquery.cookie
