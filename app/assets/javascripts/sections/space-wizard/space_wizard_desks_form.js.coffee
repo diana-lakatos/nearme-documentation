@@ -25,6 +25,7 @@ class @SpaceWizardDesksForm
     @container.on 'click', '[data-behavior*=addDesk]', (event) =>
       event.preventDefault()
       @addDeskFields()
+      window.DNM.initializeTooltips()
       false
 
   class Fieldset

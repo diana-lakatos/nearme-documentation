@@ -3,6 +3,10 @@ module SearchParamsTestHelper
     stub("Geocoder", find_location: finds_result, pretty: "City, State")
   end
 
+  def fake_geocoder_never_used
+    stub("Geocoder").expects(:find_location).never
+  end
+
   def options_with_bounding_box(options={})
     { boundingbox: { start: { lat: 10, lon:-10 } , end: { lat: 18, lon: 18 } } }.merge(options)
   end
