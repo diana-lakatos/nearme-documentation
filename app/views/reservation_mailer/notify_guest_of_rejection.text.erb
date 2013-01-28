@@ -1,7 +1,5 @@
-Dear <%= @user %>,
+The booking that you made on <%= @reservation.created_at.strftime("%A, %e %B") %> for '<%= @listing.name %>' at <%= link_to(@listing.location.name, location_url(@listing.location)) %> was declined by the host.
 
-Unfortunately, your reservation at <%= @listing %> has been rejected.
+I'm sure it's not personal - they were probably just busy that day.
 
-I'm sure it's not personal -- they were probably just too busy that day :)
-
-<%= link_to 'Try again for another day!', location_url(@listing.location) %>
+Don't worry - <%= link_to 'find other locations near you', search_url %>!

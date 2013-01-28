@@ -1,5 +1,5 @@
-Dear <%= @user %>,
+<%= @reserver %> has made a booking for '<%= @listing.name %>' at <%= link_to(@listing.location.name, location_url(@listing.location)) %>.
 
-<%= @reserver %> has made a reservation for listing, <%= @listing %>. The specifics of this reservation are set out below.
+<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %>
 
-<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation, :host => true } %>
+You can manage guest bookings <%= link_to 'via the Dashboard', @url %>.

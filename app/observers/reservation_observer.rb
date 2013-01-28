@@ -10,8 +10,8 @@ class ReservationObserver < ActiveRecord::Observer
   end
 
   def after_confirm(reservation, transction)
-    Feed.create(:user => reservation.owner, :listing => reservation.listing, :reservation => reservation, :activity => "booked")
     ReservationMailer.notify_guest_of_confirmation(reservation).deliver
+    ReservationMailer.notify_host_of_confirmation(reservation).deliver
   end
 
   def after_reject(reservation, transaction)

@@ -1,8 +1,7 @@
-Dear <%= @user.name %>,
-
-<%= @reservation.owner %> has made a booking for your listing, <%= @listing %>. The specifics of this reservation are set out below.
+<%= @reservation.owner %> has made a booking for '<%= @listing.name %>' at <%= link_to(@listing.location.name, location_url(@listing.location)) %>.
 
 <%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation, :host => true } %>
-They have been notified that reservation confirmation is required.
 
-Please confirm or decline their reservation by <%= link_to 'logging into your dashboard', @url %>.
+The guest has been notified that confirmation is required from you.
+
+Please confirm or decline their booking <%= link_to 'via the Dashboard', @url %>.

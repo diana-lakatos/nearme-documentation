@@ -1,56 +1,78 @@
 class ReservationMailer < DesksNearMeMailer
 
-  def notify_guest_with_confirmation(reservation)
+  def notify_guest_of_cancellation(reservation)
     setup_defaults(reservation)
-    generate_mail("Your reservation is pending confirmation")
+    generate_mail("A booking you made has been cancelled by the owner")
   end
 
   def notify_guest_of_confirmation(reservation)
     setup_defaults(reservation)
-    generate_mail("Your reservation has been confirmed")
+    generate_mail("A booking you made has been confirmed")
   end
 
+  def notify_guest_of_rejection(reservation)
+    setup_defaults(reservation)
+    generate_mail("A booking you made has been rejected")
+  end
+
+  def notify_guest_with_confirmation(reservation)
+    setup_defaults(reservation)
+    generate_mail("A booking you made is pending confirmation")
+  end
+
+  def notify_host_of_cancellation(reservation)
+    setup_defaults(reservation)
+    @user = @listing.creator
+    generate_mail("A guest has cancelled a booking")
+  end
+
+  def notify_host_of_confirmation(reservation)
+    setup_defaults(reservation)
+    @user = @listing.creator
+    generate_mail("You have confirmed a booking")
+  end
+  
   def notify_host_with_confirmation(reservation)
     setup_defaults(reservation)
 
     @user = @listing.creator
     @url  = dashboard_url
 
-    generate_mail("A new reservation requires your confirmation")
+    generate_mail("A booking requires your confirmation")
   end
 
   def notify_host_without_confirmation(reservation)
     setup_defaults(reservation)
     @user = @listing.creator
     @reserver = reservation.owner.name
-    generate_mail("You have a new reservation")
-  end
-
-  def notify_guest_of_rejection(reservation)
-    setup_defaults(reservation)
-    generate_mail("Sorry, your reservation at #{@listing} has been rejected")
-  end
-
-  def notify_guest_of_cancellation(reservation)
-    setup_defaults(reservation)
-    generate_mail("Your reservation at #{@listing} has been cancelled by the owner")
-  end
-
-  def notify_host_of_cancellation(reservation)
-    setup_defaults(reservation)
-    @user = @listing.creator
-    generate_mail("A reservation has been cancelled")
+    generate_mail("A guest has made a booking")
   end
 
   if defined? MailView
     class Preview < MailView
 
-      def notify_guest_with_confirmation
-        ::ReservationMailer.notify_guest_with_confirmation(Reservation.first)
+      def notify_guest_of_cancellation
+        ::ReservationMailer.notify_guest_of_cancellation(Reservation.first)
       end
 
       def notify_guest_of_confirmation
         ::ReservationMailer.notify_guest_of_confirmation(Reservation.first)
+      end
+
+      def notify_guest_of_rejection
+       ::ReservationMailer.notify_guest_of_rejection(Reservation.first)
+      end
+
+      def notify_guest_with_confirmation
+        ::ReservationMailer.notify_guest_with_confirmation(Reservation.first)
+      end
+
+      def notify_host_of_cancellation
+        ::ReservationMailer.notify_host_of_cancellation(Reservation.first)
+      end
+
+      def notify_host_of_confirmation
+        ::ReservationMailer.notify_host_of_confirmation(Reservation.first)
       end
 
       def notify_host_with_confirmation
@@ -59,18 +81,6 @@ class ReservationMailer < DesksNearMeMailer
 
       def notify_host_without_confirmation
         ::ReservationMailer.notify_host_without_confirmation(Reservation.first)
-      end
-
-      def notify_guest_of_rejection
-       ::ReservationMailer.notify_guest_of_rejection(Reservation.first)
-      end
-
-      def notify_guest_of_cancellation
-        ::ReservationMailer.notify_guest_of_cancellation(Reservation.first)
-      end
-
-      def notify_host_of_cancellation
-        ::ReservationMailer.notify_host_of_cancellation(Reservation.first)
       end
 
     end

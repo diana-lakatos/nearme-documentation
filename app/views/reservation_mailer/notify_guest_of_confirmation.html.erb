@@ -1,7 +1,5 @@
-<p>Dear <%= @user %>,</p>
-
-<p>Your booking at <%= @listing.name %> has been confirmed. Here is your reservation request for your files:</p>
+<p>Your booking for '<%= @listing.name %>' at <%= link_to(@listing.location.name, location_url(@listing.location)) %> has been confirmed.</p>
 
 <%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation, :host => true } %>
 
-<p>You can see all of your <%= link_to 'travel plans', bookings_dashboard_url %> here and change them too.</p>
+<p>You can <%= link_to 'review your travel plans on the Dashboard', bookings_dashboard_url %>.</p>
