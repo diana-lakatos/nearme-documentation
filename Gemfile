@@ -40,7 +40,6 @@ gem 'jquery-rails'
 gem 'sass-rails'
 gem 'chronic'
 
-# gem 'flying-sphinx', '0.8.4'
 gem 'thin'
 
 gem 'ey_config'
@@ -48,8 +47,6 @@ gem 'ey_config'
 gem 'unicorn'
 
 group :development do
-  # gem 'heroku'
-  # gem 'taps'
   gem 'sqlite3'
   gem "rails-erd"
   gem 'quiet_assets'
@@ -68,7 +65,7 @@ group :development, :test do
   gem 'factory_girl_rails', '>=3.0.0'
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
-  # gem 'ruby-debug19'
+  gem 'ruby-debug19'
   gem 'jasmine'
   gem 'jasmine-headless-webkit', '0.9.0.rc.2'
 end
