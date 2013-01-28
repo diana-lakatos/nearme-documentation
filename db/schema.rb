@@ -13,7 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20130126153259) do
 
-    execute "CREATE EXTENSION IF NOT EXISTS hstore"
   create_table "amenities", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -138,10 +137,8 @@ ActiveRecord::Schema.define(:version => 20130126153259) do
     t.boolean  "require_organization_membership", :default => false
     t.string   "currency"
     t.text     "special_notes"
-    t.hstore   "address_components"
+    t.text     "address_components"
   end
-
-  add_index "locations", ["address_components"], :name => "locations_gin_address_components"
 
   create_table "organization_users", :force => true do |t|
     t.integer "organization_id"

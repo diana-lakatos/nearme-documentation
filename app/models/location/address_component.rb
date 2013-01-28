@@ -19,7 +19,8 @@ module Location::AddressComponent
     end
 
     def add(address_component)
-      unless((important_types = (@available_types & address_component["types"].split(","))).empty?)
+      types = ( address_component["types"].kind_of?(String) ? address_component["types"].split(",") : address_component["types"])
+      unless (important_types = (@available_types & types)).empty?
         important_types.each do |important_type|
           @hash[IMPORTANT_TYPES[important_type]] = address_component["long_name"]
         end
@@ -45,6 +46,7 @@ module Location::AddressComponent
       end
       address_component_hash.get_result
     end
+
 
   end
 

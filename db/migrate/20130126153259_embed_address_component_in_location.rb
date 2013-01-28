@@ -1,9 +1,6 @@
 class EmbedAddressComponentInLocation < ActiveRecord::Migration
   def up
-    add_column :locations, :address_components, :hstore
-    execute "CREATE INDEX locations_gin_address_components ON locations USING GIN(address_components)"
-    # please note that GIN might not be optimal, read:
-    # http://www.postgresql.org/docs/9.2/static/textsearch-indexes.html
+    add_column :locations, :address_components, :text
     drop_table :address_component_names
     drop_table :address_component_types
     drop_table :address_component_names_address_component_types

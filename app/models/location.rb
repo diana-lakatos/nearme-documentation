@@ -4,7 +4,7 @@ class Location < ActiveRecord::Base
     :special_notes, :listings_attributes
   attr_accessor :local_geocoding # set this to true in js
   attr_accessor :address_components_hash # data to create address_component_names and _types will be stored here
-  serialize :address_components, ActiveRecord::Coders::Hstore
+  serialize :address_components, JSON
 
   geocoded_by :address
 
