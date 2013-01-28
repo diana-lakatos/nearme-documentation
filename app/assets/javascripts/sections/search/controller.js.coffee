@@ -21,14 +21,8 @@ class Search.Controller
   # Initialize all filters for the search form
   initializeFields: ->
     @priceRange = new PriceRange(@form.find('.price-range'), 300, @)
-    @initializeAvailabilityQuantityFilter()
     @initializeQueryField()
     @initializeDateRangeField()
-
-  availabilityQuantityChanged: (value) ->
-    @availabilityQuantityField = @form.find('.availability-quantity input').val(value)
-    @form.find('.availability-quantity .value').text(value)
-    @fieldChanged('availability-quantity', value)
 
   dateRangeFieldChanged: (values) ->
     @fieldChanged('dateRange', values)
@@ -61,14 +55,6 @@ class Search.Controller
 
     @form.find('.availability-date-end .calendar').on 'click', =>
       @form.find('.availability-date-end input').datepicker('show')
-
-  initializeAvailabilityQuantityFilter: ->
-    @slider = @form.find(".availability-quantity .slider")
-    return unless @slider.length > 0
-    @slider.slider(
-      value: @form.find('.availability-quantity input').val(), min  : 1, max  : 10, step : 1,
-      slide: (event, ui) => @availabilityQuantityChanged(ui.value)
-    )
 
   initializeGeolocateButton: ->
     @geolocateButton = @form.find(".geolocation")
