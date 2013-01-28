@@ -81,12 +81,13 @@ class Search.SearchController extends Search.Controller
         success : (html) => @showResults(html)
       )
 
+  # Trigger the search after waiting a set time for further updated user input/filters
+  triggerSearchAfterDelay: _.debounce(-> 
+    @triggerSearch()
+  , 2000)
+
   # Trigger automatic updating of search results
   fieldChanged: (field, value) ->
-    clearTimeout(@searchTriggerTimeout) if @searchTriggerTimeout
     @startLoading()
-    @searchTriggerTimeout = setTimeout(
-      => @triggerSearch(),
-      2000
-    )
+    @triggerSearchAfterDelay()
 
