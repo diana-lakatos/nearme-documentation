@@ -112,7 +112,10 @@ class Search.Controller
       boundingBox = result.boundingBox()
       params['lat'] = result.lat()
       params['lng'] = result.lng()
-      params[axis] = boundingBox[i] for axis,i in ['nx', 'ny', 'sx', 'sy']
+      params['nx']  = boundingBox[0]
+      params['ny']  = boundingBox[1]
+      params['sx']  = boundingBox[2]
+      params['sy']  = boundingBox[3]
     
     # Write params to search form
     for field, value of params 
