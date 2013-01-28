@@ -159,6 +159,11 @@ class Listing < ActiveRecord::Base
     daily_period.save if daily_period.persisted?
   end
 
+  def parse_price(price)
+    price = price.to_f
+    price > 0 ? price : 0
+  end
+
   def rate_for_user(rating, user)
 
     raise "Cannot rate unsaved listing" if new_record?

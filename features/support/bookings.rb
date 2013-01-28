@@ -7,10 +7,15 @@ module Bookings
 
   def add_dates(dates)
     find(:css, ".calendar-wrapper").click
-
-    wait_until { page.has_no_selector?('.datepicker-loading', visible: true) }
+    wait_until_datepicker_finished_loading
 
     (dates.uniq - [Date.tomorrow]).each do | date|
+      if date > Date.today && date.month != Date.today.month
+        # Advance the datepicker
+        find(:css, '.datepicker-next').click
+        wait_until_datepicker_finished_loading
+      end
+
       el = find(:css, datepicker_class_for(date))
       el.click
     end
@@ -28,6 +33,10 @@ module Bookings
 
   def next_regularly_available_day
     Chronic.parse('Monday')
+  end
+
+  def wait_until_datepicker_finished_loading
+    wait_until { page.has_no_selector?('.datepicker-loading', visible: true) }
   end
 
 end
