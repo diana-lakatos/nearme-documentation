@@ -19,7 +19,7 @@
       %span.total-days 1 day
 
     for
-    %span $#{content_tag(:span, "0.00", :class => 'total')}
+    %span #{currency_content_tag(listing.currency)}
 
     .book
       = link_to "Book", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id
