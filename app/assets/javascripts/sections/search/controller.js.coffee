@@ -101,11 +101,10 @@ class Search.Controller
   setGeolocatedQuery: (query, result) ->
     @currentGeolocationResultQuery = query
     @currentGeolocationResult = result
-    @assignSearchParamsFromGeolocationResult(result)
+    @assignFormParams @searchParamsFromGeolocationResult(result)
 
-  # Updates the hidden search params based on a geolocation result (Search.Geolocator.Result)
-  # If result is null or undefined, then clears out the existing geo-search params.
-  assignSearchParamsFromGeolocationResult: (result, searchQuery = null) ->
+  # Returns special search params based on a geolocation result (Search.Geolocator.Result), or no result.
+  searchParamsFromGeolocationResult: (result) ->
     params = { lat: null, lng: null, nx: null, ny: null, sx: null, sy: null }
 
     if result
@@ -116,9 +115,12 @@ class Search.Controller
       params['ny']  = boundingBox[1]
       params['sx']  = boundingBox[2]
       params['sy']  = boundingBox[3]
-    
+
+    params
+
+  assignFormParams: (paramsHash) ->
     # Write params to search form
-    for field, value of params 
+    for field, value of paramsHash
       @form.find("input[name*=#{field}]").val(value)
 
   # Geocde the search query and assign it as the geocoded result
