@@ -18,6 +18,10 @@ When /^I select that amenity$/ do
   check model!("amenity").name
 end
 
+When /^I visit search result page without query$/ do
+  visit '/search'
+end
+
 Then /^I see the listings on a map$/ do
   page.should have_css('div#listings_map')
 end

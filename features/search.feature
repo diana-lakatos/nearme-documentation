@@ -27,6 +27,12 @@ Feature: A user can search for a listing
     And I see a search result for the Auckland listing
     And I do not see a search result for the Cleveland listing
 
+  Scenario: Search result is stored in session
+    Given a listing in Auckland exists
+    When I search for "Auckland"
+     And I visit search result page without query
+    Then I see the listings on a map
+
   Scenario: A user searches with a price range
     Given a listing in Auckland exists with a price of $50.00
     And a listing in Auckland exists with a price of $10.00
