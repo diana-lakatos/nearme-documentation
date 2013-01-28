@@ -75,13 +75,8 @@ class Search.Controller
     @geolocateButton.addClass("active").bind 'click', =>
       @geolocateMe()
 
-    # Set it by default if available
-    existing = @geolocateButton.attr("data-geo-val")
-    @queryField.val(existing) if existing? && @queryField.val() == ''
-
   geolocateMe: ->
     @determineUserLocation()
-    @queryField.val(@geolocateButton.attr("data-geo-val")).change().focus()
 
   determineUserLocation: ->
     return unless Modernizr.geolocation
@@ -89,7 +84,11 @@ class Search.Controller
       deferred = @geocoder.reverseGeocodeLatLng(position.coords.latitude, position.coords.longitude)
       deferred.done (resultset) =>
         cityAddress = resultset.getBestResult().cityAddress()
-        @queryField.val(cityAddress).change() if cityAddress
+
+        existingVal = @queryField.val()
+        if cityAddress != existingVal
+          @queryField.val(cityAddress)
+          @fieldChanged('query', @queryField.val())
 
   # Is the given query currently geolocated by the search
   isQueryGeolocated: (query) ->
