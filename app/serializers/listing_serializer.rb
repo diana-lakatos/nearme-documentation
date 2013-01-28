@@ -16,6 +16,8 @@ class ListingSerializer < ApplicationSerializer
     # Add score and strict match if present
     hash.merge!(:score => object.score)               unless object.score.nil?
     hash.merge!(:strict_match => object.strict_match) unless object.strict_match.nil?
+
+    # This remains for backwards compatibility for iOS
     hash.merge!(:organizations => [])
     hash
   end
