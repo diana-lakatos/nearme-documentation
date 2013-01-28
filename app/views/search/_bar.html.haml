@@ -8,7 +8,7 @@
       %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => @query, :class => "query", :autocomplete => "off"}
       .geolocation
         %span.ico-crosshairs
-    .span6    
+    .span6
       .three.columns.availability-date-start
         = text_field_tag "availability[dates][start]", search_availability_dates_start, :autocomplete => "off" 
         .calendar
@@ -17,34 +17,3 @@
         = text_field_tag "availability[dates][end]", search_availability_dates_end, :autocomplete => "off"     
         .calendar
           %span.ico-calender
-  -# Temporarily removed ( ineffective until price & amenity data is accurate)
-    #search_filters.row-fluid
-      .availability-quantity.span3
-        %label Desks
-        = hidden_field_tag "availability[quantity]", search_availability_quantity, :autocomplete => "off"
-        .slider
-        .value.number-value= search_availability_quantity 
-
-      .price-range.span6
-        %label Price
-        = hidden_field_tag "price[min]", search_price_min, :autocomplete => "off"
-        = hidden_field_tag "price[max]", search_price_max, :autocomplete => "off"
-        .slider
-        .value
-          $#{search_price_min} - $#{search_price_max}/day
-
-      .amenities.span3.pull-right
-        .multiselect
-          .collapsed Amenities
-          .expanded{ :style => "display: none" }
-            .summary
-              Amenities
-            .items
-              - Amenity.all.each do |amenity|
-                .item
-                  = check_box_tag "amenities[]", amenity.id, search_amenities.include?(amenity.id), :id => "amenities_#{amenity.id}"
-                  = label_tag "amenities_#{amenity.id}", amenity.name
-
-
-
-

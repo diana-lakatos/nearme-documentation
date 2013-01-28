@@ -1,5 +1,6 @@
 class Listing < ActiveRecord::Base
   module PricingPeriods
+
     def add_pricing_period(period, minutes)
       period_getter_name = "#{period.to_s}_period".to_sym
       price_getter_name = "#{period.to_s}_price".to_sym
@@ -18,9 +19,11 @@ class Listing < ActiveRecord::Base
 
       define_method price_setter_name do |price|
         period = send(period_getter_name)
-        period.price = price
+        period.price = parse_price(price)
         period.save if period.persisted?
       end
+
     end
+
   end
 end
