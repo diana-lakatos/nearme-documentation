@@ -1,3 +1,5 @@
+require 'money-rails'
+
 module ReservationsHelper
 
   # Return a URL with HTTPS scheme for location reservation
