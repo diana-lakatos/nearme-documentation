@@ -20,6 +20,7 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
       this.setElement(this.template(this.model.toJSON()));
       this.addAll();
       if (this.model.isNew()){
+        $('.add-listing',this.$el).hide();
       }
       return this;
     },
@@ -78,7 +79,6 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
 
     _afterSave: function(data){
       if (this.wasNew){
-        alert('new');
         this.delegateEvents();
         this.wasNew = false;
         this.render();
