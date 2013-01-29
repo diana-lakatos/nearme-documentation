@@ -34,8 +34,9 @@ class Listing < ActiveRecord::Base
   delegate :url, to: :company
 
   belongs_to :location
-  delegate :address, :amenities, :currency, :formatted_address, :local_geocoding, :organizations, :required_organizations, :latitude,
-    :longitude, :distance_from, to: :location, allow_nil: true
+  delegate :address, :amenities, :currency, :formatted_address,
+    :local_geocoding, :latitude, :longitude, :distance_from, to: :location,
+    allow_nil: true
 
 
   delegate :creator, :creator=, to: :location
@@ -68,13 +69,6 @@ class Listing < ActiveRecord::Base
                    includes(:photos).order(%{ random() }).limit(5)
 
   scope :latest,   order("listings.created_at DESC")
-  scope :with_organizations, lambda {|orgs|
-    includes(:location => :organizations).
-      where <<-SQL, orgs.map(&:id)
-        (locations.require_organization_membership = TRUE AND location_organizations.organization_id IN (?))
-        OR locations.require_organization_membership = FALSE
-      SQL
-  }
 
   include Search
   extend PricingPeriods

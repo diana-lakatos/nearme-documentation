@@ -7,7 +7,7 @@
       background: $dnm_black;
       padding: 0 0 10px 20px;
       max-width: 1400px;
-      box-sizing: border-box;
+      @include box-sizing(border-box);
       margin: 0 auto;
     }
 

@@ -30,9 +30,7 @@
   display: block;
   width: 100%;
   min-height: 30px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+@include box-sizing(border-box);
 }
 article,
 aside,
@@ -337,9 +335,7 @@ a:hover {
   display: block;
   width: 100%;
   min-height: 30px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+@include box-sizing(border-box);
   float: left;
   margin-left: 2.127659574468085%;
   *margin-left: 2.074468085106383%;
@@ -519,7 +515,7 @@ a:hover {
 .container-fluid {
   padding-right: 20px;
   padding-left: 20px;
-  box-sizing: border-box; 
+  @include box-sizing(border-box); 
   *zoom: 1;
 }
 .container-fluid:before,
@@ -2175,9 +2171,7 @@ a.thumbnail:hover {
   -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   -moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+@include box-sizing(border-box);
   -webkit-transition: width 0.6s ease;
   -moz-transition: width 0.6s ease;
   -o-transition: width 0.6s ease;
@@ -3084,16 +3078,12 @@ a.thumbnail:hover {
     display: block;
     width: 100%;
     margin-left: 0;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
   }
   .span12,
   .row-fluid .span12 {
     width: 100%;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
   }
   .row-fluid [class*="offset"]:first-child {
     margin-left: 0;
@@ -3108,9 +3098,7 @@ a.thumbnail:hover {
     display: block;
     width: 100%;
     min-height: 30px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
   }
   .input-prepend input,
   .input-append input,
@@ -3293,9 +3281,7 @@ a.thumbnail:hover {
     display: block;
     width: 100%;
     min-height: 30px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
     float: left;
     margin-left: 2.7624309392265194%;
     *margin-left: 2.709239449864817%;
@@ -3603,9 +3589,7 @@ a.thumbnail:hover {
     display: block;
     width: 100%;
     min-height: 30px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
     float: left;
     margin-left: 2.564102564102564%;
     *margin-left: 2.5109110747408616%;
