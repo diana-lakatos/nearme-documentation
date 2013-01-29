@@ -37,7 +37,7 @@
       font-size: 18px;
       padding: 0 14px;
       width: 25%;
-      box-sizing: border-box;
+      @include box-sizing(border-box);
       text-align: center;
       line-height: 60px;
       border-right: 1px solid $gray1;

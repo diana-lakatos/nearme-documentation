@@ -75,7 +75,7 @@ section.public {
     background: rgb(30,30,30);
     padding: 8px;
     border-radius: 12px;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
   }
 
   h2 {
