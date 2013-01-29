@@ -14,15 +14,3 @@ Feature: User Lists listings
     Then I should see the following listings in order:
       | Inspire9 |
       | Mocra |
-
-  Scenario: Organization member of a locations private organization may see listings
-    Given a listing exists for a location with a private organization
-    When I log in as a user who is a member of that organization
-    And I go to the listings page
-    Then I see that listing listed
-
-  Scenario: User who is not a member of a locations private organization may not see listings
-    Given a listing exists for a location with a private organization
-    And I am on the home page
-    When I go to the listings page
-    Then I do not see that listing listed

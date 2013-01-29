@@ -16,8 +16,6 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         @wifi          = FactoryGirl.create(:amenity, name: "Wi-Fi")
         @drinks_fridge = FactoryGirl.create(:amenity, name: "Drinks Fridge")
 
-        @org           = FactoryGirl.create(:organization)
-
         @listings.first.price_cents = 234.50 * 100
         @listings[1].price_cents    = 900.00 * 100
         @listings.last.price_cents  = 123.90 * 100
@@ -25,7 +23,6 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         @search_attrs = {
           boundingbox:   { start: { lat: -41.293507, lon: 174.776279 }, end: { lat: -42, lon: 175 } },
           amenities:     [ @wifi.id, @drinks_fridge.id ],
-          organizations: [ @org.id ],
           price:         { min: 100, max: 900 }
         }
         @search_params = Listing::Search::Params::Api.new(@search_attrs)
@@ -35,16 +32,15 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         should "correctly score and weight all components " do
           Listing::Scorer.score(@listings, @search_params)
 
-          assert_equal 38.33, @listings.first.score
-          assert_equal 70.0,  @listings.last.score
-          assert_equal 46.67, @listings[1].score
+          assert_equal 33.33, @listings.first.score
+          assert_equal 65.0,  @listings.last.score
+          assert_equal 41.67, @listings[1].score
         end
       end
 
       context "with strict matches" do
         should "return strict_match as true for listings which fall exactly within the criteria" do
           @listings.first.location.amenities     = [ @wifi, @drinks_fridge ]
-          @listings.first.location.organizations = [ @org ]
           params = Listing::Search::Params::Api.new(@search_attrs.merge(price: { min: 100, max: 250 }))
 
           Listing::Scorer.score(@listings, params)
@@ -110,31 +106,6 @@ class Listing::ScorerTest < ActiveSupport::TestCase
         assert @scorer.strict_matches[@listings.first][:amenities]
         assert !@scorer.strict_matches[@listings[1]][:amenities]
         assert @scorer.strict_matches[@listings.last][:amenities]
-      end
-    end
-
-    context "scoring based on number of matched organizations" do
-      setup do
-        @org1 = FactoryGirl.create(:organization)
-        @org2 = FactoryGirl.create(:organization)
-
-        @listings.first.location.organizations = [@org1]
-      end
-
-      should "score correctly" do
-        @scorer.send(:score_organizations, [@org1.id])
-
-        assert_equal 33.33, @scorer.scores[@listings.first][:organizations]
-        assert_equal 66.67, @scorer.scores[@listings[1]][:organizations]
-        assert_equal 66.67, @scorer.scores[@listings.last][:organizations]
-      end
-
-      should "return a strict_match if the listing is a member of all requested organizations" do
-        @scorer.send(:score_organizations, [@org1.id])
-
-        assert @scorer.strict_matches[@listings.first][:organizations]
-        assert !@scorer.strict_matches[@listings[1]][:organizations]
-        assert !@scorer.strict_matches[@listings.last][:organizations]
       end
     end
 

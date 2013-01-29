@@ -1,3 +1,7 @@
+Given /^no organizations$/ do
+
+end
+
 Given /^I am not an authenticated api user$/ do
   @user.should be_nil
 end
@@ -14,14 +18,6 @@ end
 
 Given /^an amenity named (.*)$/ do |name|
   FactoryGirl.create(:amenity, name: name)
-end
-
-Given /^an organization named (.*)$/ do |name|
-  FactoryGirl.create(:organization, name: name)
-end
-
-Given /^an organization with logo named (.*)$/ do |name|
-  FactoryGirl.create(:organization_with_logo, name: name)
 end
 
 When /^I send a(n authenticated)? POST request to "(.*?)":$/ do |authenticated, url, body|
@@ -52,10 +48,6 @@ end
 
 When /^I send a search request with a bounding box around (.*) and prices between \$(\d+) and \$(\d+)$/ do |location, min, max|
   api_search(bounding_box: location, price_min: min, price_max: max)
-end
-
-When /^I send a search request with a bounding box around (.*) and that organization$/ do |location|
-  api_search(bounding_box: location, organizations: [model("organization")])
 end
 
 When /^I send a search request with a bounding box around (.*) and a minimum of (\d+) desks$/ do |location, desks|
@@ -96,6 +88,10 @@ Then /^the response does (not )?include the listing in (.*)$/ do |negative, city
   end
 end
 
+Then /^the response contains an empty organizations list$/ do
+  result["organizations"].should be_empty
+end
+
 Then /^the response should have the listing in (.*) with the (.*) score$/ do |city, direction|
   direction = direction == "lowest" ? 1 : -1
   results_listings.sort_by do |a|
@@ -108,17 +104,4 @@ Then /^the response should have the listing for \$(\d+) with the (.*) score$/ do
   results_listings.sort_by do |a|
     a[:score].to_i * direction
   end.first[:price]["amount"].to_i.should eq dollars.to_i
-end
-
-Then /^the response should have the listing with that organization with the (.*) score$/ do |direction|
-  direction = direction == "lowest" ? 1 : -1
-  result = results_listings.sort_by do |a|
-    a[:score].to_i * direction
-  end.first
-
-  result[:organizations].should include model!("organization").id
-end
-
-Then /^the response should have the (.*) organization$/ do |organization|
-  results_organizations.collect { |o| o[:name] }.should include organization
 end

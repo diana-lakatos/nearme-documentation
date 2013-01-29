@@ -11,9 +11,7 @@
 = f.input :currency, :as => :currency, :hint => "What currency would you like to be paid with?"
 - if current_user.admin?
   = f.association :creator, :select => "Select a creator..."
-= f.input :organization_ids, :collection => Organization.order('name').all, :as => :check_boxes, :label => "Professional Associations", :hint => "Please check any professional associations with which you are affiliated. You can then optionally restrict your listings to users who have identified themselves as a member of these associations."
 = f.input :amenity_ids, :label => "Amenities Provided", :collection => Amenity.order('name').all, :as => :check_boxes, :hint => "Please check any services you provide."
-= f.input :require_organization_membership, :input_html => { :class => "check_boxes" }, :label_html => { :class => "check_box" }, :label => "Require Association Membership", :hint => "This will only show your listings to members of the professional associations you selected above"
 
 .control-group.indent
   = render 'availability_rules/form', :f => f, :allow_clear => "Use Location's availability"

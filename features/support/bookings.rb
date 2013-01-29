@@ -1,6 +1,6 @@
 module Bookings
   def start_to_book(listing, dates, qty = 1)
-    visit listing_path listing
+    visit location_path listing.location
     select qty.to_s, :from => "quantity"
     add_dates(dates)
   end

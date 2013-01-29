@@ -40,19 +40,6 @@ class Listing::Search::ParamsTest <  ActiveSupport::TestCase
       assert_equal scope[:with][:deleted_at], 0
     end
 
-    should "always includes an organization id of 0" do
-      scope = scope_for(options_with_query, fake_geocoder(false))
-      assert_equal scope[:with][:organization_ids], [0]
-    end
-
-    context "when a user is provided" do
-      should "includes the organization ids in the with section" do
-        options = { query: "asdf", user: Struct.new(:organization_ids).new([1,2,3]) }
-        scope = scope_for(options, fake_geocoder(false))
-        assert_equal scope[:with][:organization_ids], [1,2,3,0]
-      end
-    end
-
     context "when a query is found" do
       should "gives the locations radians to the geo section"  do
         scope = scope_for(options_with_query, fake_geocoder(search_area))
