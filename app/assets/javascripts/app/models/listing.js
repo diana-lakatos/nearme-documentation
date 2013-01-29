@@ -3,7 +3,6 @@ define(['backbone'], function(Backbone) {
     initialize: function(attributes) {},
 
     defaults: {
-      ref_id: null
     },
 
     url: function() {

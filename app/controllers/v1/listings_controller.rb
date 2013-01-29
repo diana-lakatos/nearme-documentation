@@ -20,7 +20,7 @@ class V1::ListingsController < V1::BaseController
 
   def create
     @listing = Listing.create(params[:listing])
-    @listing.location_id = params["ref_id"]
+    @listing.location_id = params["location_id"]
     if @listing.save
       render :json => {:success => true, :id => @listing.id}
     else

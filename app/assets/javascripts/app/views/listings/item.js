@@ -1,9 +1,8 @@
-define(['jquery', 'backbone', 'hbs!templates/listings/item'], function($, Backbone, listingTemplate) {
+define(['jquery', 'backbone', 'hbs!templates/listings/item','bootstrap'], function($, Backbone, listingTemplate) {
   var ListingView = Backbone.View.extend({
     template: listingTemplate,
     initialize: function() {
-      _.bindAll(this, 'render');
-      this.model.set('ref_id', this.options.refId);
+      _.bindAll(this, 'render','_afterSave');
     },
 
     events: {
@@ -57,7 +56,21 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item'], function($, Backbo
         this.model.trash();
         this.$el.fadeOut();
       }
+    },
+
+    _afterSave: function(data){
+      if (this.wasNew){
+       // this.delegateEvents();
+        this.wasNew = false;
+       // this.render();
+      }
+      var elt = $(this.$el).find('.save-listing span');
+      elt.text('Saved!');
+      var initValue = elt.css('font-size');
+      elt.animate({fontSize: "2em" }, 1500 );
+      elt.animate({fontSize: initValue }, 1500, function(){elt.text('Save');});
     }
+
 
   });
   return ListingView;
