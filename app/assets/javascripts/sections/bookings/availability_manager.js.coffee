@@ -9,11 +9,10 @@ class @Bookings.AvailabilityManager
   availability: {
   }
 
-  constructor: (url,fetchCompleteCallback) ->
+  constructor: (url) ->
     @url = url
     @pendingDates = []
     @pendingCallbacks = []
-    @fetchCompleteCallback = fetchCompleteCallback || $.noop
 
   availableFor: (listingId, date) ->
     value.available if value = @_value(listingId, date)
@@ -80,8 +79,6 @@ class @Bookings.AvailabilityManager
 
         for callback in callbacks
           @_executeCallback(callback)
-
-        @fetchCompleteCallback()
     })
 
   _value: (listingId, date) ->

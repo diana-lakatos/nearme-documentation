@@ -4,9 +4,11 @@ class LocationsController < ApplicationController
 
   def show
     @location = location
-    # set when an unauthenticated user try to book
-    @requested_bookings = bookings_request
-    clear_requested_bookings
+
+    # Attempt to restore a stored reservation state from the session.
+    if params[:restore_reservations]
+      restore_initial_bookings_from_stored_reservation
+    end
   end
 
   def populate_address_components_form
@@ -63,4 +65,13 @@ class LocationsController < ApplicationController
       }
     }.to_json
   end
+
+  private
+
+  def restore_initial_bookings_from_stored_reservation
+    if session[:stored_reservation_location_id] == @location.id
+      @initial_bookings = session[:stored_reservation_bookings]
+    end
+  end
+
 end

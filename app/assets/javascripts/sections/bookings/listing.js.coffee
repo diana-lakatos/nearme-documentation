@@ -7,16 +7,7 @@ class @Bookings.Listing
   constructor: (@data, options) ->
     @id = parseInt(@data.id, 10)
     @availability = options.availability
-    @bookings = options.bookings
-    @initBookings()
-
-  initBookings:() ->
-    if !_.isEmpty(@bookings)
-      _.each(@bookings, (quantity,date) =>
-        @addDate(new Date(date + " 00:00"))
-      )
-
-      @setDefaultQuantity(_.values(@bookings)[0],false)
+    @bookings = {}
 
   setDefaultQuantity: (qty, updateBookings = false) ->
     @defaultQuantity = qty if qty >= 0
@@ -76,6 +67,12 @@ class @Bookings.Listing
 
     @trigger 'bookingChanged', date, amount
 
+  # Set bookings for the listing from a collection of
+  # booking date & quantity hashes.
+  setBookings: (arrayOfBookings, forceAvailability = true) ->
+    for booking in _.toArray(arrayOfBookings)
+      @addDate(DNM.util.Date.idToDate(booking.date), booking.quantity || booking.amount, forceAvailability) 
+
   # Return the subtotal for booking this listing
   bookingSubtotal: ->
     # Pricing is based on minute periods.
@@ -98,11 +95,16 @@ class @Bookings.Listing
     # Return the subtotal
     subtotalCents
 
-  addDate: (date) ->
-    @withAvailabilityLoaded date, =>
-      qty = if @hasAvailabilityOn(date) then @defaultQuantity else 0
+  addDate: (date, qty = null, forceAvailability = true) ->
+    callback = =>
+      qty ||= if @hasAvailabilityOn(date) then @defaultQuantity else 0
       @setBooking(date, qty)
       @trigger 'dateAdded', date, qty
+
+    if forceAvailability
+      @withAvailabilityLoaded date, callback
+    else
+      callback()
 
   removeDate: (date) ->
     if _.include @bookedDays(), DNM.util.Date.toId(date)
