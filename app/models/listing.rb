@@ -50,7 +50,6 @@ class Listing < ActiveRecord::Base
   # === Callbacks
 
   validates_presence_of :location_id, :name, :description, :quantity
-  validates_inclusion_of :confirm_reservations, :in => [true, false]
   validates_numericality_of :quantity
   validates_length_of :description, :maximum => 250
 
