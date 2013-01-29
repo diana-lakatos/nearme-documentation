@@ -1,9 +1,6 @@
 <section class="box box-dim">
   <header data-toggle="collapse" class="listing" data-target="#collapse-{{id}}">
     <span data-listing-id="{{id}}" class="listing-header">{{{name}}}</span>
-    <div class="actions right" style="display:none;">
-      <a href="" class="btn btn-red btn-small delete-listing" data-id="{{id}}"><span class="ico-close padding">Delete</span></a>
-    </div>
   </header>
   <div id="collapse-{{id}}" class="accordion-body listing-content collapse in" style="height: 0px;">
     <div id="listing-for-{{id}}" class="accordion-inner">
@@ -13,6 +10,7 @@
           {{> templates_listings_overview}} 
           {{> templates_listings_photos}}
         </form>
+        <a href="" class="delete delete-listing" data-id="{{id}}"><span class="ico-close">Delete this listing</span></a>
         <div class="action">
           <a href="" class="btn btn-green btn-large save-listing" data-disable-with="Saving..."><span class="ico-check padding">Save</span></a>
         </div>

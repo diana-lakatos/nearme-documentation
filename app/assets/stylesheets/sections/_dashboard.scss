@@ -14,8 +14,16 @@ section.locations-holder {
     margin-bottom: 0;
     div.action{
       background: $dnm_white;
+      padding: 20px 14px;
     }
     @include dashboard-acc-group
+  }
+  .delete {
+    display: block;
+    padding-top: 10px;
+    font-size: 80%;
+    color: $gray3;
+    padding-left: 14px;
   }
   section.box {
     padding-bottom: 0;
@@ -35,7 +43,7 @@ section.locations-holder {
     padding: 20px;
     a.btn{
       width: 100%;
-    text-align: center;
+      text-align: center;
     }
   }
 }

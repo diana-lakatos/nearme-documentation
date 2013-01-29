@@ -1,9 +1,7 @@
 <section class="box box-inverse">
   <header data-toggle="collapse" class="location" data-target="#location-{{id}}-details-holder">
     <span class="location-header" data-location-id="{{id}}">{{{name}}}</span>
-    <div class="actions right" style="display:none;">
-      <a href="" class="btn btn-red btn-small delete-location" data-id="{{id}}"><span class="ico-close padding">Delete</span></a>
-    </div>
+    <span class="ico-edit right"/>
   </header>
   <div class="accordion location-content collapse in" id="location-{{id}}-details-holder">
     <form  class="simple_form form-horizontal edit_location" id="edit_location_{{id}}">
@@ -12,6 +10,7 @@
     {{> templates_locations_availability}} 
     {{> templates_locations_amenities}} 
     </form>
+    <a href="" class="delete delete-location" data-id="{{id}}"><span class="ico-close">Delete this location</span></a>
     <div class="action"> 
       <a href="" class="btn btn-green btn-large save-location" data-disable-with="Saving..."><span class="ico-check padding">Save</span></a>
     </div>
