@@ -13,7 +13,7 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item','bootstrap'], functi
     },
 
     render: function() {
-      this.setElement(this.template(this.model.toJSON()));
+      this.$el.html(this.template(this.model.toJSON()));
       return this;
     },
 
@@ -59,19 +59,17 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item','bootstrap'], functi
     },
 
     _afterSave: function(data){
-      if (this.wasNew){
-       // this.delegateEvents();
-        this.wasNew = false;
-       // this.render();
-      }
       var elt = $(this.$el).find('.save-listing span');
       elt.text('Saved!');
       var initValue = elt.css('font-size');
       elt.animate({fontSize: "2em" }, 1500 );
       elt.animate({fontSize: initValue }, 1500, function(){elt.text('Save');});
+
+      if (this.wasNew){
+        this.wasNew = false;
+        this.render();
+      }
     }
-
-
   });
   return ListingView;
 

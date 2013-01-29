@@ -17,7 +17,7 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
     },
 
     render: function() {
-      this.setElement(this.template(this.model.toJSON()));
+      this.$el.html(this.template(this.model.toJSON()));
       this.addAll();
       if (this.model.isNew()){
         $('.add-listing',this.$el).hide();
@@ -85,16 +85,17 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
     },
 
     _afterSave: function(data){
-      if (this.wasNew){
-        //this.delegateEvents();
-        this.wasNew = false;
-        //this.render();
-      }
       var elt = $(this.$el).find('.save-location span');
       elt.text('Saved!');
       var initValue = elt.css('font-size');
       elt.animate({fontSize: "2em" }, 1500 );
       elt.animate({fontSize: initValue }, 1500, function(){elt.text('Save');});
+
+      if (this.wasNew){
+        this.wasNew = false;
+        this.render();
+        this.delegateEvents();
+      }
     }
   });
   return LocationView;
