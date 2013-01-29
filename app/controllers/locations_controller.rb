@@ -1,9 +1,8 @@
 class LocationsController < ApplicationController
   before_filter :authenticate_user!, :only => [:new, :create, :populate_address_components_form, :populate_address_components]
-  expose :location
 
   def show
-    @location = location
+    @location = Location.find(params[:id])
     # set when an unauthenticated user try to book
     @requested_bookings = bookings_request
     clear_requested_bookings
