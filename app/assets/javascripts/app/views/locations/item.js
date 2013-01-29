@@ -9,8 +9,8 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
 
     events: {
       "click header.location": "toggleAction",
-      "click .save": "save",
-      "click .delete": "trash",
+      "click .save-location": "save",
+      "click .delete-location": "trash",
       "click .add-listing": "createListing",
       "keyup input#name": "nameChanged"
 
@@ -30,7 +30,7 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
     },
 
     addOne: function(listing) {
-        var view = new ListingView({model: listing});
+        var view = new ListingView({model: listing, refId: this.model.id});
         var hookElt = '#location-' + this.model.id + '-listings-holder';
         $(this.$el).find(hookElt).append(view.render().el);
       },
@@ -44,7 +44,6 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
       event.preventDefault();
       event.stopPropagation();
       var listing = new ListingModel({name: 'New listing'});
-      //var listing = new ListingModel();
       this.addOne(listing);
     },
 

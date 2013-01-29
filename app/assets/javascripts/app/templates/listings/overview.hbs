@@ -6,13 +6,11 @@
   <div id="collapse-listings-{{id}}-overview" class="accordion-body collapse"
   style="height: 0px;">
     <div id="location-{{id}}-overview" class="accordion-inner">
-      <form 
-      class="simple_form form-horizontal edit_listing" novalidate="novalidate">
         <div class="control-group string required">
           <label class="string required control-label" for="listing_name">
             <abbr title="required">*</abbr>Name</label>
           <div class="controls">
-            <input class="string required" id="listing_name" name="listing[name]"
+            <input class="string required" id="listing_name" name="name"
             size="50" type="text" value="{{name}}">
             <p class="help-block">What's the name of this listing?</p>
           </div>
@@ -22,14 +20,14 @@
             <abbr title="required">*</abbr>Quantity</label>
           <div class="controls">
             <input class="numeric integer required" id="listing_quantity" min="1"
-            name="listing[quantity]" size="4" step="1" type="number" value="{{quantity}}">
+            name="quantity" size="4" step="1" type="number" value="{{quantity}}">
             <p class="help-block">How many spots do you have?</p>
           </div>
         </div>
         <div class="control-group decimal optional">
           <label class="decimal optional control-label" for="listing_daily_price">Daily price</label>
           <div class="controls">
-            <input class="numeric decimal optional" id="listing_daily_price" name="listing[daily_price]"
+            <input class="numeric decimal optional" id="listing_daily_price" name="daily_price"
             step="any" type="number" min="0" value="{{daily_price}}">
             <p class="help-block">How much per seat per day are you charging?</p>
           </div>
@@ -37,14 +35,14 @@
         <div class="control-group decimal optional">
           <label class="decimal optional control-label" for="listing_weekly_price">Weekly price</label>
           <div class="controls">
-            <input class="numeric decimal optional" id="listing_weekly_price" name="listing[weekly_price]" value="{{weekly_price}}" step="any" type="number">
+            <input class="numeric decimal optional" id="listing_weekly_price" name="weekly_price" value="{{weekly_price}}" step="any" type="number">
             <p class="help-block">How much per seat per week are you charging?</p>
           </div>
         </div>
         <div class="control-group decimal optional">
           <label class="decimal optional control-label" for="listing_monthly_price">Monthly price</label>
           <div class="controls">
-            <input class="numeric decimal optional" id="listing_monthly_price" name="listing[monthly_price]" value="{{monthly_price}}" step="any" type="number">
+            <input class="numeric decimal optional" id="listing_monthly_price" name="monthly_price" value="{{monthly_price}}" step="any" type="number">
             <p class="help-block">How much per seat per month are you charging?</p>
           </div>
         </div>
@@ -52,7 +50,7 @@
           <label class="description required control-label" for="listing_description">
             <abbr title="required">*</abbr>Description</label>
           <div class="controls">
-            <textarea cols="40" id="listing_description" maxlength="250" name="listing[description]"
+            <textarea cols="40" id="listing_description" maxlength="250" name="description"
               rows="2">{{{description}}}</textarea>
             <p class="help-block">You will get better results with a more concise description. Descriptions
               are limited to 250 characters.</p>
@@ -70,54 +68,55 @@
           <div class="controls">
             <label class="radio">
               <input checked="checked" class="radio_buttons optional" id="listing_confirm_reservations_true"
-              name="listing[confirm_reservations]" type="radio" {{#if confirm_reservations}}checked="checked"{{/if}} value="true">Yes</label>
+              name="confirm_reservations" type="radio" {{#if confirm_reservations}}checked="checked"{{/if}} value="true">Yes</label>
             <label class="radio">
               <input class="radio_buttons optional" id="listing_confirm_reservations_false"
-              name="listing[confirm_reservations]" {{#if confirm_reservations}}checked="checked"{{/if}} type="radio" value="false">No</label>
+              name="confirm_reservations" {{#if confirm_reservations}}checked="checked"{{/if}} type="radio" value="false">No</label>
           </div>
         </div>
         <div class="control-group indent">
           <div class="availability-rules">
+            {{#checkbox availability_template_id}}
             <label class="control-label">Availability</label>
-            <input name="listing[defer_availability_rules]" type="hidden"
+            <input name="defer_availability_rules" type="hidden"
             value="0">
-            <input checked="checked" id="listing_defer_availability_rules" name="listing[defer_availability_rules]"
+            <input id="listing_defer_availability_rules" name="defer_availability_rules"
             style="display: none" type="checkbox" value="1">
             <div>
               <input checked="checked" data-clear-rules="true" id="availability_rules_defer"
-              name="listing[availability_template_id]" type="radio" value="">
+              name="availability_template_id" type="radio" value="">
               <label class="inline" for="availability_rules_defer">Use Location availability</label>
             </div>
             <div>
-              <input id="availability_template_id_m-f9-5" name="listing[availability_template_id]"
+              <input id="availability_template_id_m-f9-5" name="availability_template_id"
               type="radio" value="M-F9-5">
               <label class="inline" for="availability_template_id_m-f9-5">Working Week (Mon - Fri, 9:00 AM - 5:00 PM)</label>
             </div>
             <div>
-              <input id="availability_template_id_m-f8-6" name="listing[availability_template_id]"
+              <input id="availability_template_id_m-f8-6" name="availability_template_id"
               type="radio" value="M-F8-6">
               <label class="inline" for="availability_template_id_m-f8-6">Extended Week (Mon - Fri, 8:00 AM - 6:00 PM)</label>
             </div>
             <div>
-              <input id="availability_template_id_m-s9-5" name="listing[availability_template_id]"
+              <input id="availability_template_id_m-s9-5" name="availability_template_id"
               type="radio" value="M-S9-5">
               <label class="inline" for="availability_template_id_m-s9-5">Working Week +1 (Mon - Sat, 9:00 AM - 5:00 PM)</label>
             </div>
             <div>
-              <input data-custom-rules="true" id="availability_rules_custom" name="listing[availability_template_id]"
+              <input data-custom-rules="true" id="availability_rules_custom" name="availability_template_id"
               type="radio" value="custom">
               <label class="inline" for="availability_rules_custom">Custom</label>
             </div>
             <div class="custom-availability-rules" style="display: none;">
               <div class="day day-1">
-                <input disabled="" id="listing_availability_rules_attributes_0_id" name="listing[availability_rules_attributes][0][id]"
+                <input disabled="" id="listing_availability_rules_attributes_0_id" name="availability_rules_attributes[0][id]"
                 type="hidden" value="3541">
-                <input disabled="" id="listing_availability_rules_attributes_0_day" name="listing[availability_rules_attributes][0][day]"
+                <input disabled="" id="listing_availability_rules_attributes_0_day" name="availability_rules_attributes[0][day]"
                 type="hidden" value="1">
                 <div class="day-name">Monday</div>
                 <div class="open-time">
                   <select disabled="" id="listing_availability_rules_attributes_0_open_time"
-                  name="listing[availability_rules_attributes][0][open_time]">
+                  name="availability_rules_attributes[0][open_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -194,7 +193,7 @@
                 </div>
                 <div class="close-time">
                   <select disabled="" id="listing_availability_rules_attributes_0_close_time"
-                  name="listing[availability_rules_attributes][0][close_time]">
+                  name="availability_rules_attributes[0][close_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -270,23 +269,23 @@
                   </select>
                 </div>
                 <div class="closed-flag">
-                  <input disabled="" name="listing[availability_rules_attributes][0][_destroy]"
+                  <input disabled="" name="availability_rules_attributes[0][_destroy]"
                   type="hidden" value="0">
                   <input class="closed" disabled="" id="listing_availability_rules_attributes_0__destroy"
-                  name="listing[availability_rules_attributes][0][_destroy]" type="checkbox"
+                  name="availability_rules_attributes[0][_destroy]" type="checkbox"
                   value="1">
                   <label class="inline" disabled="disabled" for="listing_availability_rules_attributes_0__destroy">Closed?</label>
                 </div>
               </div>
               <div class="day day-2">
-                <input disabled="" id="listing_availability_rules_attributes_1_id" name="listing[availability_rules_attributes][1][id]"
+                <input disabled="" id="listing_availability_rules_attributes_1_id" name="availability_rules_attributes[1][id]"
                 type="hidden" value="3542">
-                <input disabled="" id="listing_availability_rules_attributes_1_day" name="listing[availability_rules_attributes][1][day]"
+                <input disabled="" id="listing_availability_rules_attributes_1_day" name="availability_rules_attributes[1][day]"
                 type="hidden" value="2">
                 <div class="day-name">Tuesday</div>
                 <div class="open-time">
                   <select disabled="" id="listing_availability_rules_attributes_1_open_time"
-                  name="listing[availability_rules_attributes][1][open_time]">
+                  name="availability_rules_attributes[1][open_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -363,7 +362,7 @@
                 </div>
                 <div class="close-time">
                   <select disabled="" id="listing_availability_rules_attributes_1_close_time"
-                  name="listing[availability_rules_attributes][1][close_time]">
+                  name="availability_rules_attributes[1][close_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -439,23 +438,23 @@
                   </select>
                 </div>
                 <div class="closed-flag">
-                  <input disabled="" name="listing[availability_rules_attributes][1][_destroy]"
+                  <input disabled="" name="availability_rules_attributes[1][_destroy]"
                   type="hidden" value="0">
                   <input class="closed" disabled="" id="listing_availability_rules_attributes_1__destroy"
-                  name="listing[availability_rules_attributes][1][_destroy]" type="checkbox"
+                  name="availability_rules_attributes[1][_destroy]" type="checkbox"
                   value="1">
                   <label class="inline" disabled="disabled" for="listing_availability_rules_attributes_1__destroy">Closed?</label>
                 </div>
               </div>
               <div class="day day-3">
-                <input disabled="" id="listing_availability_rules_attributes_2_id" name="listing[availability_rules_attributes][2][id]"
+                <input disabled="" id="listing_availability_rules_attributes_2_id" name="availability_rules_attributes[2][id]"
                 type="hidden" value="3543">
-                <input disabled="" id="listing_availability_rules_attributes_2_day" name="listing[availability_rules_attributes][2][day]"
+                <input disabled="" id="listing_availability_rules_attributes_2_day" name="availability_rules_attributes[2][day]"
                 type="hidden" value="3">
                 <div class="day-name">Wednesday</div>
                 <div class="open-time">
                   <select disabled="" id="listing_availability_rules_attributes_2_open_time"
-                  name="listing[availability_rules_attributes][2][open_time]">
+                  name="availability_rules_attributes[2][open_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -532,7 +531,7 @@
                 </div>
                 <div class="close-time">
                   <select disabled="" id="listing_availability_rules_attributes_2_close_time"
-                  name="listing[availability_rules_attributes][2][close_time]">
+                  name="availability_rules_attributes[2][close_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -608,23 +607,23 @@
                   </select>
                 </div>
                 <div class="closed-flag">
-                  <input disabled="" name="listing[availability_rules_attributes][2][_destroy]"
+                  <input disabled="" name="availability_rules_attributes[2][_destroy]"
                   type="hidden" value="0">
                   <input class="closed" disabled="" id="listing_availability_rules_attributes_2__destroy"
-                  name="listing[availability_rules_attributes][2][_destroy]" type="checkbox"
+                  name="availability_rules_attributes[2][_destroy]" type="checkbox"
                   value="1">
                   <label class="inline" disabled="disabled" for="listing_availability_rules_attributes_2__destroy">Closed?</label>
                 </div>
               </div>
               <div class="day day-4">
-                <input disabled="" id="listing_availability_rules_attributes_3_id" name="listing[availability_rules_attributes][3][id]"
+                <input disabled="" id="listing_availability_rules_attributes_3_id" name="availability_rules_attributes[3][id]"
                 type="hidden" value="3544">
-                <input disabled="" id="listing_availability_rules_attributes_3_day" name="listing[availability_rules_attributes][3][day]"
+                <input disabled="" id="listing_availability_rules_attributes_3_day" name="availability_rules_attributes[3][day]"
                 type="hidden" value="4">
                 <div class="day-name">Thursday</div>
                 <div class="open-time">
                   <select disabled="" id="listing_availability_rules_attributes_3_open_time"
-                  name="listing[availability_rules_attributes][3][open_time]">
+                  name="availability_rules_attributes[3][open_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -701,7 +700,7 @@
                 </div>
                 <div class="close-time">
                   <select disabled="" id="listing_availability_rules_attributes_3_close_time"
-                  name="listing[availability_rules_attributes][3][close_time]">
+                  name="availability_rules_attributes[3][close_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -777,23 +776,23 @@
                   </select>
                 </div>
                 <div class="closed-flag">
-                  <input disabled="" name="listing[availability_rules_attributes][3][_destroy]"
+                  <input disabled="" name="availability_rules_attributes[3][_destroy]"
                   type="hidden" value="0">
                   <input class="closed" disabled="" id="listing_availability_rules_attributes_3__destroy"
-                  name="listing[availability_rules_attributes][3][_destroy]" type="checkbox"
+                  name="availability_rules_attributes[3][_destroy]" type="checkbox"
                   value="1">
                   <label class="inline" disabled="disabled" for="listing_availability_rules_attributes_3__destroy">Closed?</label>
                 </div>
               </div>
               <div class="day day-5">
-                <input disabled="" id="listing_availability_rules_attributes_4_id" name="listing[availability_rules_attributes][4][id]"
+                <input disabled="" id="listing_availability_rules_attributes_4_id" name="availability_rules_attributes[4][id]"
                 type="hidden" value="3545">
-                <input disabled="" id="listing_availability_rules_attributes_4_day" name="listing[availability_rules_attributes][4][day]"
+                <input disabled="" id="listing_availability_rules_attributes_4_day" name="availability_rules_attributes[4][day]"
                 type="hidden" value="5">
                 <div class="day-name">Friday</div>
                 <div class="open-time">
                   <select disabled="" id="listing_availability_rules_attributes_4_open_time"
-                  name="listing[availability_rules_attributes][4][open_time]">
+                  name="availability_rules_attributes[4][open_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -870,7 +869,7 @@
                 </div>
                 <div class="close-time">
                   <select disabled="" id="listing_availability_rules_attributes_4_close_time"
-                  name="listing[availability_rules_attributes][4][close_time]">
+                  name="availability_rules_attributes[4][close_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -946,21 +945,21 @@
                   </select>
                 </div>
                 <div class="closed-flag">
-                  <input disabled="" name="listing[availability_rules_attributes][4][_destroy]"
+                  <input disabled="" name="availability_rules_attributes[4][_destroy]"
                   type="hidden" value="0">
                   <input class="closed" disabled="" id="listing_availability_rules_attributes_4__destroy"
-                  name="listing[availability_rules_attributes][4][_destroy]" type="checkbox"
+                  name="availability_rules_attributes[4][_destroy]" type="checkbox"
                   value="1">
                   <label class="inline" disabled="disabled" for="listing_availability_rules_attributes_4__destroy">Closed?</label>
                 </div>
               </div>
               <div class="day day-6">
-                <input disabled="" id="listing_availability_rules_attributes_5_day" name="listing[availability_rules_attributes][5][day]"
+                <input disabled="" id="listing_availability_rules_attributes_5_day" name="availability_rules_attributes[5][day]"
                 type="hidden" value="6">
                 <div class="day-name">Saturday</div>
                 <div class="open-time">
                   <select disabled="" id="listing_availability_rules_attributes_5_open_time"
-                  name="listing[availability_rules_attributes][5][open_time]">
+                  name="availability_rules_attributes[5][open_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -1037,7 +1036,7 @@
                 </div>
                 <div class="close-time">
                   <select disabled="" id="listing_availability_rules_attributes_5_close_time"
-                  name="listing[availability_rules_attributes][5][close_time]">
+                  name="availability_rules_attributes[5][close_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -1113,21 +1112,21 @@
                   </select>
                 </div>
                 <div class="closed-flag">
-                  <input disabled="" name="listing[availability_rules_attributes][5][_destroy]"
+                  <input disabled="" name="availability_rules_attributes[5][_destroy]"
                   type="hidden" value="0">
                   <input checked="checked" class="closed" disabled="" id="listing_availability_rules_attributes_5__destroy"
-                  name="listing[availability_rules_attributes][5][_destroy]" type="checkbox"
+                  name="availability_rules_attributes[5][_destroy]" type="checkbox"
                   value="1">
                   <label class="inline" disabled="disabled" for="listing_availability_rules_attributes_5__destroy">Closed?</label>
                 </div>
               </div>
               <div class="day day-0">
-                <input disabled="" id="listing_availability_rules_attributes_6_day" name="listing[availability_rules_attributes][6][day]"
+                <input disabled="" id="listing_availability_rules_attributes_6_day" name="availability_rules_attributes[6][day]"
                 type="hidden" value="0">
                 <div class="day-name">Sunday</div>
                 <div class="open-time">
                   <select disabled="" id="listing_availability_rules_attributes_6_open_time"
-                  name="listing[availability_rules_attributes][6][open_time]">
+                  name="availability_rules_attributes[6][open_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -1204,7 +1203,7 @@
                 </div>
                 <div class="close-time">
                   <select disabled="" id="listing_availability_rules_attributes_6_close_time"
-                  name="listing[availability_rules_attributes][6][close_time]">
+                  name="availability_rules_attributes[6][close_time]">
                     <option value="0:0">12:00 AM</option>
                     <option value="0:15">12:15 AM</option>
                     <option value="0:45">12:45 AM</option>
@@ -1280,18 +1279,18 @@
                   </select>
                 </div>
                 <div class="closed-flag">
-                  <input disabled="" name="listing[availability_rules_attributes][6][_destroy]"
+                  <input disabled="" name="availability_rules_attributes[6][_destroy]"
                   type="hidden" value="0">
                   <input checked="checked" class="closed" disabled="" id="listing_availability_rules_attributes_6__destroy"
-                  name="listing[availability_rules_attributes][6][_destroy]" type="checkbox"
+                  name="availability_rules_attributes[6][_destroy]" type="checkbox"
                   value="1">
                   <label class="inline" disabled="disabled" for="listing_availability_rules_attributes_6__destroy">Closed?</label>
                 </div>
               </div>
             </div>
+            {{/checkbox}}
           </div>
         </div>
-      </form>
     </div>
   </div>
 </div>

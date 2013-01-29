@@ -115,7 +115,7 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
-    resources :listings, :only => [:show, :update, :destroy] do
+    resources :listings, :only => [:show,:create, :update, :destroy] do
       member do
         post 'reservation'
         post 'availability'

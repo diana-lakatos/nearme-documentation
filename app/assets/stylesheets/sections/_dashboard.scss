@@ -42,6 +42,11 @@ section.locations-holder {
 section.listings {
   .accordion {
     margin: auto -14px;
+    .listing-content {
+      div.action{
+        background: $dnm_white;
+      }
+    }
     @include dashboard-acc-group;
     .box{
       margin-bottom:0;

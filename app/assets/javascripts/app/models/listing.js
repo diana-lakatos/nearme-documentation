@@ -2,6 +2,10 @@ define(['backbone'], function(Backbone) {
   var ListingModel = Backbone.Model.extend({
     initialize: function(attributes) {},
 
+    defaults: {
+      ref_id: null
+    },
+
     url: function() {
       var base = '/v1/listings';
       if (this.isNew()) {
