@@ -40,12 +40,13 @@ gem 'jquery-rails'
 gem 'sass-rails'
 gem 'chronic'
 
-gem 'flying-sphinx', '0.8.4'
 gem 'thin'
 
+gem 'ey_config'
+
+gem 'unicorn'
+
 group :development do
-  gem 'heroku'
-  gem 'taps'
   gem 'sqlite3'
   gem "rails-erd"
   gem 'quiet_assets'
