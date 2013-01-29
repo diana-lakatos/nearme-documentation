@@ -10,11 +10,7 @@ module Bookings
     wait_until_datepicker_finished_loading
 
     (dates.uniq - [Date.tomorrow]).each do | date|
-      if date > Date.today && date.month != Date.today.month
-        # Advance the datepicker
-        find(:css, '.datepicker-next').click
-        wait_until_datepicker_finished_loading
-      end
+      ensure_datepicker_is_on_right_month(date)
 
       el = find(:css, datepicker_class_for(date))
       el.click
@@ -23,6 +19,14 @@ module Bookings
     find(:css, ".calendar-wrapper").click
   end
 
+
+
+  def ensure_datepicker_is_on_right_month(date)
+      if date > Date.today && !find(:css, '.datepicker-month').text.include?(Date::MONTHNAMES[date.month])
+        find(:css, '.datepicker-next').click
+        wait_until_datepicker_finished_loading
+      end
+  end
 
   def datepicker_class_for(date)
     year = date.strftime('%Y')
