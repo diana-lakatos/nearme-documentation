@@ -1,4 +1,9 @@
 module SearchHelper
+  # Special geolocation fields for the search form(s)
+  def search_geofields
+    %w(lat lng nx ny sx sy)
+  end
+
   def search_availability_dates_start
     params[:availability].present? && params[:availability][:dates].present? && params[:availability][:dates][:start] ||
       Time.now.strftime('%b %-e')
