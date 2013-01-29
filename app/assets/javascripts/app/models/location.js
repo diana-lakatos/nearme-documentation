@@ -1,6 +1,10 @@
 define(['backbone'], function(Backbone) {
   var LocationModel = Backbone.Model.extend({
-    initialize: function(attributes) {},
+    initialize: function(attributes) {
+      if( !this.get('amenity_ids') ){
+        this.set({amenity_ids: []});
+      }
+    },
 
     defaults: {
         'longitude':'0',

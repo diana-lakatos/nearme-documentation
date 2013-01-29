@@ -1,5 +1,5 @@
 collection @locations, :root => false, :object_root => false
-  attributes :id, :name, :description, :email, :phone, :latitude, :longitude, :currency, :special_notes, :formatted_address
+  attributes :id, :name, :description, :email, :phone, :latitude, :longitude, :currency, :special_notes, :formatted_address, :amenity_ids
 
   child :listings, :child_root => false do
     attributes :id, :name, :description, :quantity, :availability_template_id, :confirm_reservations

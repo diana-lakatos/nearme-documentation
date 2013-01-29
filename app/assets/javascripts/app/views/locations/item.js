@@ -59,7 +59,15 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
       this.wasNew = this.model.isNew();
       var arr = this.$el.find('.edit_location').serializeArray();
       var data = _(arr).reduce(function(acc, field) {
-        acc[field.name] = field.value;
+        if (acc[field.name]) { // deal with array checkbox type like amenities_ids[]
+          if (!_.isArray(acc[field.name])) {
+            acc[field.name] = [acc[field.name]];
+          }
+          acc[field.name].push(field.value);
+        }
+        else {
+          acc[field.name] = field.value;
+        }
         return acc;
       }, {});
       console.log(data);

@@ -8,34 +8,18 @@
       <div class="control-group check_boxes optional">
         <label class="check_boxes optional control-label">Amenities Provided</label>
         <div class="controls">
-          <label class="checkbox">
-            <input class="check_boxes optional" id="location_amenity_ids_2" name="location[amenity_ids][]"
-            type="checkbox" value="2">Coffee/Tea</label>
-          <label class="checkbox">
-            <input class="check_boxes optional" id="location_amenity_ids_7" name="location[amenity_ids][]"
-            type="checkbox" value="7">Eateries Nearby</label>
-          <label class="checkbox">
-            <input class="check_boxes optional" id="location_amenity_ids_9" name="location[amenity_ids][]"
-            type="checkbox" value="9">Fax</label>
-          <label class="checkbox">
-            <input class="check_boxes optional" id="location_amenity_ids_3" name="location[amenity_ids][]"
-            type="checkbox" value="3">Internet Access</label>
-          <label class="checkbox">
-            <input class="check_boxes optional" id="location_amenity_ids_6" name="location[amenity_ids][]"
-            type="checkbox" value="6">Kitchen</label>
-          <label class="checkbox">
-            <input class="check_boxes optional" id="location_amenity_ids_5" name="location[amenity_ids][]"
-            type="checkbox" value="5">Meeting/Conference Rooms</label>
-          <label class="checkbox">
-            <input class="check_boxes optional" id="location_amenity_ids_8" name="location[amenity_ids][]"
-            type="checkbox" value="8">Printer</label>
-          <label class="checkbox">
-            <input class="check_boxes optional" id="location_amenity_ids_4" name="location[amenity_ids][]"
-            type="checkbox" value="4">Transport Nearby</label>
-          <label class="checkbox">
-            <input class="check_boxes optional" id="location_amenity_ids_1" name="location[amenity_ids][]"
-            type="checkbox" value="1">Wi-Fi</label>
-          <input name="location[amenity_ids][]" type="hidden" value="">
+         {{#multicheckbox amenity_ids}}
+          <label class="checkbox"><input class="check_boxes optional" id="location_amenity_ids_2" name="amenity_ids" type="checkbox" value="2">Coffee/Tea</label>
+          <label class="checkbox"><input class="check_boxes optional" id="location_amenity_ids_7" name="amenity_ids" type="checkbox" value="7">Eateries Nearby</label>
+          <label class="checkbox"><input class="check_boxes optional" id="location_amenity_ids_9" name="amenity_ids" type="checkbox" value="9">Fax</label>
+          <label class="checkbox"><input class="check_boxes optional" id="location_amenity_ids_3" name="amenity_ids" type="checkbox" value="3">Internet Access</label>
+          <label class="checkbox"><input class="check_boxes optional" id="location_amenity_ids_6" name="amenity_ids" type="checkbox" value="6">Kitchen</label>
+          <label class="checkbox"><input class="check_boxes optional" id="location_amenity_ids_5" name="amenity_ids" type="checkbox" value="5">Meeting/Conference Rooms</label>
+          <label class="checkbox"><input class="check_boxes optional" id="location_amenity_ids_8" name="amenity_ids" type="checkbox" value="8">Printer</label>
+          <label class="checkbox"><input class="check_boxes optional" id="location_amenity_ids_4" name="amenity_ids" type="checkbox" value="4">Transport Nearby</label>
+          <label class="checkbox"><input class="check_boxes optional" id="location_amenity_ids_1" name="amenity_ids" type="checkbox" value="1">Wi-Fi</label>
+          <input name="amenity_ids" type="hidden" value="">
+          {{/multicheckbox}}
           <p class="help-block">Please check any services you provide.</p>
         </div>
       </div>
