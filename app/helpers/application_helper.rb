@@ -1,5 +1,7 @@
 module ApplicationHelper
 
+  include FormHelper
+  include TooltipHelper
   include TweetButton
   include CurrencyHelper
 
@@ -46,6 +48,7 @@ module ApplicationHelper
   def context_flash
     render 'shared/context_flash'
   end
+
 
   def truncate_with_ellipsis(body, length, html_options = {})
 

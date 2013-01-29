@@ -1,4 +1,7 @@
 %form#listing_search.search_results{:action => search_path, :method => "get"}
+  - search_geofields.each do |geofield|
+    = hidden_field_tag geofield, ''
+
   .row-fluid
     %h1
       Search Results

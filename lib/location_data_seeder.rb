@@ -37,9 +37,7 @@ class LocationDataSeeder
 
   def seed
     create_amenities
-    create_organizations
     seed_amenities
-    seed_organizations
   end
 
   private
@@ -50,30 +48,10 @@ class LocationDataSeeder
       end
     end
 
-    def create_organizations
-      @organizations = SEED_ORGANIZATIONS.map do |n|
-        o = Organization.find_or_initialize_by_name(n)
-
-        if (rand * 10) > 5
-          o.logo = File.open(Rails.root.join("lib", "seed_images", LOGO_IMAGES.sample))
-        end
-        o.save
-        o
-      end
-    end
-
     def seed_amenities
       @locations.each do |l|
         num_amenities = (rand * (@amenities.size / 2)) + 1
         l.amenities   = @amenities.sample(num_amenities)
       end
     end
-
-    def seed_organizations
-      @locations.each do |l|
-        num_orgs        = (rand * (@organizations.size / 2)) + 1
-        l.organizations = @organizations.sample(num_orgs)
-      end
-    end
-
 end

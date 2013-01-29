@@ -6,11 +6,6 @@ Given /^I am logged in manually$/ do
   sign_up_manually
 end
 
-When /^I log in as a user who is a member of that organization$/ do
-  user = FactoryGirl.create(:user, organizations: [model!('organization')])
-  login user
-end
-
 Then /^I should be logged out$/ do
   Then %{I should see "Log in"}
 end
