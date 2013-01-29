@@ -8,7 +8,7 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
     },
 
     events: {
-      "click header": "toggleAction",
+      "click header.location": "toggleAction",
       "click .save": "save",
       "click .delete": "trash",
       "click .add-listing": "createListing",
@@ -36,7 +36,7 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
 
     toggleAction: function(event) {
       var field = $(event.currentTarget);
-      $(".action", field).toggle();
+      $(".actions", field).toggle();
     },
 
     createListing: function() {

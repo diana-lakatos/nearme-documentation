@@ -1,7 +1,9 @@
 <section class="box box-dim">
-  <header data-toggle="collapse" data-target="#collapse-{{id}}">
-  <span data-listing-id="{{id}}">{{{name}}}</span>
-    <div class="action"><button data-id="{{id}}" class="btn btn-danger listing-delete">Delete Me</button></div>
+  <header data-toggle="collapse" class="listing" data-target="#collapse-{{id}}">
+    <span data-listing-id="{{id}}">{{{name}}}</span>
+    <div class="actions right" style="display:none;">
+      <a href="" class="btn btn-red btn-small delete" data-id="{{id}}"><span class="ico-close padding">Delete</span></a>
+    </div>
   </header>
   <div id="collapse-{{id}}" class="accordion-body collapse in" style="height: 0px;">
     <div id="listing-for-{{id}}" class="accordion-inner">

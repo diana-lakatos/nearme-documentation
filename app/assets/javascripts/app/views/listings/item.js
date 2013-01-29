@@ -6,7 +6,7 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item'], function($, Backbo
     },
 
     events: {
-      "click header": "toggleAction",
+      "click header.listing": "toggleAction",
       "click .save": "save",
       "click .listing-delete": "trash"
     },
@@ -18,7 +18,7 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item'], function($, Backbo
 
     toggleAction: function(event) {
       var field = $(event.currentTarget);
-      $(".action", field).toggle();
+      $(".actions", field).toggle();
     },
 
     save: function(event){
