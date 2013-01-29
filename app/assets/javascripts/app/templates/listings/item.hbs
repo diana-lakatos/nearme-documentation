@@ -1,6 +1,6 @@
 <section class="box box-dim">
   <header data-toggle="collapse" data-target="#collapse-{{id}}">
-    <span data-listing-id="{{id}}">{{{name}}}</span>
+  <span data-listing-id="{{id}}">{{{name}}}</span>
     <div class="action"><button data-id="{{id}}" class="btn btn-danger listing-delete">Delete Me</button></div>
   </header>
   <div id="collapse-{{id}}" class="accordion-body collapse in" style="height: 0px;">
@@ -8,6 +8,7 @@
       <div class="accordion" id="location-{{location_id}}-listings-holder">
         {{> templates_listings_overview}}
         {{> templates_listings_photos}}
+        <button class="save" value="Save">Save Me</button>
       </div>
     </div>
   </div>

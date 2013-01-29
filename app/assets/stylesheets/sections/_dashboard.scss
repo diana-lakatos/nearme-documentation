@@ -12,6 +12,9 @@ section.locations-holder {
   margin-bottom: 20px;
   .location-content {
     margin-bottom: 0;
+    div.action{
+      background: $dnm_white;
+    }
     @include dashboard-acc-group
   }
   section.box {

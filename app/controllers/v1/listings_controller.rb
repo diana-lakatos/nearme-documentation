@@ -1,8 +1,10 @@
 class V1::ListingsController < V1::BaseController
 
-  # Endpoints that require authentication
-  before_filter :require_authentication,         only: [:destroy, :connections, :inquiry, :reservation, :share]
+  skip_before_filter :verify_authenticity_token, :only => [:create, :update, :destroy]
 
+  # Endpoints that require authentication
+  before_filter :require_authentication,         only: [:update, :destroy, :connections, :inquiry, :reservation, :share]
+  before_filter :find_listing,                   only: [:update, :destroy]
   before_filter :validate_search_params!,        only: :search
   before_filter :validate_query_params!,         only: :query
   before_filter :validate_reservation_params!,   only: :reservation
@@ -17,8 +19,16 @@ class V1::ListingsController < V1::BaseController
   end
 
   def destroy
-    @listing = current_user.listings.find(params[:id])
     if @listing.destroy
+      render json: { success: true, id: @listing.id }
+    else
+      render :json => { :errors => @listing.errors.full_messages }, :status => 422
+    end
+  end
+
+  def update
+    @listing.attributes = params[:listing]
+    if @listing.save
       render json: { success: true, id: @listing.id }
     else
       render :json => { :errors => @listing.errors.full_messages }, :status => 422
@@ -287,4 +297,9 @@ class V1::ListingsController < V1::BaseController
         availability: list
     }
   end
+
+  private
+    def find_listing
+      @listing = current_user.listing.find(params[:id])
+    end
 end

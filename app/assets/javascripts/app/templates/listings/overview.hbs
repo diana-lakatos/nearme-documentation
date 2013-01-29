@@ -1,25 +1,19 @@
 <div class="accordion-group">
   <div class="accordion-heading">
     <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#{{id}}-listings-holder"
-    href="#collapse-listings-{{id}}-overview">Overview</a>
+      href="#collapse-listings-{{id}}-overview">Overview</a>
   </div>
   <div id="collapse-listings-{{id}}-overview" class="accordion-body collapse"
   style="height: 0px;">
     <div id="location-{{id}}-overview" class="accordion-inner">
-      <form accept-charset="UTF-8" action="/dashboard/listings/975-boardroom"
-      class="simple_form form-horizontal edit_listing" id="edit_listing_975"
-      method="post" novalidate="novalidate">
-        <div style="margin:0;padding:0;display:inline">
-          <input name="utf8" type="hidden" value="â">
-          <input name="_method" type="hidden" value="put">
-          <input name="authenticity_token" type="hidden" value="Z1OMcgwukp7xvxeLizN81uwZdXW5MsK8CeqS8/a0PEg=">
-        </div>
+      <form 
+      class="simple_form form-horizontal edit_listing" novalidate="novalidate">
         <div class="control-group string required">
           <label class="string required control-label" for="listing_name">
             <abbr title="required">*</abbr>Name</label>
           <div class="controls">
             <input class="string required" id="listing_name" name="listing[name]"
-            size="50" type="text" value="Boardroom">
+            size="50" type="text" value="{{name}}">
             <p class="help-block">What's the name of this listing?</p>
           </div>
         </div>
@@ -28,7 +22,7 @@
             <abbr title="required">*</abbr>Quantity</label>
           <div class="controls">
             <input class="numeric integer required" id="listing_quantity" min="1"
-            name="listing[quantity]" size="4" step="1" type="number" value="6">
+            name="listing[quantity]" size="4" step="1" type="number" value="{{quantity}}">
             <p class="help-block">How many spots do you have?</p>
           </div>
         </div>
@@ -36,23 +30,21 @@
           <label class="decimal optional control-label" for="listing_daily_price">Daily price</label>
           <div class="controls">
             <input class="numeric decimal optional" id="listing_daily_price" name="listing[daily_price]"
-            step="any" type="number" value="50.00">
+            step="any" type="number" min="0" value="{{daily_price}}">
             <p class="help-block">How much per seat per day are you charging?</p>
           </div>
         </div>
         <div class="control-group decimal optional">
           <label class="decimal optional control-label" for="listing_weekly_price">Weekly price</label>
           <div class="controls">
-            <input class="numeric decimal optional" id="listing_weekly_price" name="listing[weekly_price]"
-            step="any" type="number">
+            <input class="numeric decimal optional" id="listing_weekly_price" name="listing[weekly_price]" value="{{weekly_price}}" step="any" type="number">
             <p class="help-block">How much per seat per week are you charging?</p>
           </div>
         </div>
         <div class="control-group decimal optional">
           <label class="decimal optional control-label" for="listing_monthly_price">Monthly price</label>
           <div class="controls">
-            <input class="numeric decimal optional" id="listing_monthly_price" name="listing[monthly_price]"
-            step="any" type="number">
+            <input class="numeric decimal optional" id="listing_monthly_price" name="listing[monthly_price]" value="{{monthly_price}}" step="any" type="number">
             <p class="help-block">How much per seat per month are you charging?</p>
           </div>
         </div>
@@ -61,7 +53,7 @@
             <abbr title="required">*</abbr>Description</label>
           <div class="controls">
             <textarea cols="40" id="listing_description" maxlength="250" name="listing[description]"
-            rows="2">nice listing</textarea>
+              rows="2">{{{description}}}</textarea>
             <p class="help-block">You will get better results with a more concise description. Descriptions
               are limited to 250 characters.</p>
             <p class="help-block">What resources are available, i.e. internet, speed, public transport,
@@ -78,10 +70,10 @@
           <div class="controls">
             <label class="radio">
               <input checked="checked" class="radio_buttons optional" id="listing_confirm_reservations_true"
-              name="listing[confirm_reservations]" type="radio" value="true">Yes</label>
+              name="listing[confirm_reservations]" type="radio" {{#if confirm_reservations}}checked="checked"{{/if}} value="true">Yes</label>
             <label class="radio">
               <input class="radio_buttons optional" id="listing_confirm_reservations_false"
-              name="listing[confirm_reservations]" type="radio" value="false">No</label>
+              name="listing[confirm_reservations]" {{#if confirm_reservations}}checked="checked"{{/if}} type="radio" value="false">No</label>
           </div>
         </div>
         <div class="control-group indent">

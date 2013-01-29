@@ -2,6 +2,12 @@ define(['backbone'], function(Backbone) {
   var LocationModel = Backbone.Model.extend({
     initialize: function(attributes) {},
 
+    defaults: {
+        'longitude':'0',
+        'latitude':'0',
+        'formatted_address':'TODO: plug geolocalization control'
+
+    },
     url: function() {
       var base = '/v1/locations';
       if (this.isNew()) {

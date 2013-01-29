@@ -1,9 +1,9 @@
-define(['jquery', 'backbone', 'collections/location','views/locations/item', 'hbs!templates/locations/list', 'bootstrap'], function($, Backbone, LocationCollection, LocationView, locationListTemplate) {
+define(['jquery', 'backbone', 'collections/location', 'models/location', 'views/locations/item', 'hbs!templates/locations/list', 'bootstrap'], function($, Backbone, LocationCollection, LocationModel, LocationView, locationListTemplate) {
   var Locations = Backbone.View.extend({
     el: '#dyn-content',
     template: locationListTemplate,
     initialize: function() {
-      _.bindAll(this, 'render', 'addAll', 'addOne');
+      _.bindAll(this, 'render', 'addAll', 'addOne', 'createLocation');
     },
 
     _setCollection: function() {
@@ -18,27 +18,23 @@ define(['jquery', 'backbone', 'collections/location','views/locations/item', 'hb
     },
 
     events: {
-      "click .add-location": "addlocation",
-      "click .add-listing": "addlisting"
+      "click .add-location": "createLocation"
     },
 
-
-    addlocation: function(event) {
+    createLocation: function()
+    {
       event.preventDefault();
-      alert('create location triggered');
-    },
-
-    addlisting: function(event) {
-      event.preventDefault();
-      alert('create listing triggered');
+      event.stopPropagation();
+      var locationModel = new LocationModel({name: 'New location'});
+      this.addOne(locationModel);
     },
 
     addAll: function() {
       this.collection.each(this.addOne);
     },
 
-    addOne: function(location) {
-        var view = new LocationView({ model: location});
+    addOne: function(locationModel) {
+        var view = new LocationView({ model: locationModel });
         $(this.$el).children('.locations-holder').prepend(view.render().el);
       },
 

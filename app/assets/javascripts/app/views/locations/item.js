@@ -1,19 +1,26 @@
-define(['jquery', 'backbone','Collections/listing', 'Views/listings/item', 'hbs!templates/locations/item'], function($, Backbone, listingCollection, ListingView, locationTemplate) {
+define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/listings/item', 'hbs!templates/locations/item'], function($, Backbone, ListingCollection, ListingModel, ListingView, locationTemplate) {
   var LocationView = Backbone.View.extend({
     template: locationTemplate,
     initialize: function() {
-      _.bindAll(this, 'render','addAll','addOne');
-      this.listingCollection = new listingCollection(this.model.get('listings'));
+      _.bindAll(this, 'render','addAll','addOne','_afterSave');
+      this.listingCollection = new ListingCollection(this.model.get('listings'));
+      var self = this;
     },
 
     events: {
       "click header": "toggleAction",
-      "click .delete": "trash"
+      "click .save": "save",
+      "click .delete": "trash",
+      "click .add-listing": "createListing",
+      "keyup input#name": "nameChanged"
+
     },
 
     render: function() {
       this.setElement(this.template(this.model.toJSON()));
       this.addAll();
+      if (this.model.isNew()){
+      }
       return this;
     },
 
@@ -32,11 +39,49 @@ define(['jquery', 'backbone','Collections/listing', 'Views/listings/item', 'hbs!
       $(".action", field).toggle();
     },
 
+    createListing: function() {
+      event.preventDefault();
+      event.stopPropagation();
+      var listing = new ListingModel({name: 'New listing'});
+      //var listing = new ListingModel();
+      this.addOne(listing);
+    },
+
+    nameChanged: function(event){
+      $('.location-header[data-location-id='+ this.model.id +']', this.$el).text($(event.target).val());
+    },
+
+
+    save: function() {
+      event.preventDefault();
+      event.stopPropagation();
+      this.wasNew = this.model.isNew();
+      var arr = this.$el.find('.edit_location').serializeArray();
+      var data = _(arr).reduce(function(acc, field) {
+        acc[field.name] = field.value;
+        return acc;
+      }, {});
+      console.log(data);
+      //this.model.save({name: this.$el.find('#location_name').val()});
+      this.model.save(data, {success: this._afterSave});
+    },
+
     trash: function(event) {
+      event.preventDefault();
+      event.stopPropagation();
       var result = confirm("Are you sure you want to delete this Space?");
       if (result === true) {
         this.model.trash();
         this.$el.fadeOut();
+      }
+    },
+
+    _afterSave: function(data){
+      if (this.wasNew){
+        alert('new');
+        this.delegateEvents();
+        this.wasNew = false;
+        this.render();
       }
     }
   });
