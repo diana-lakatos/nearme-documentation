@@ -8,21 +8,22 @@
   <div id="location-{{id}}-availability" class="accordion-inner">
   <div class="control-group indent">
     <div class="availability-rules">
+      {{#checkbox availability_template_id}}
       <div>
-        <input checked="checked" id="availability_template_id_m-f9-5" name="location[availability_template_id]" type="radio" value="M-F9-5">
+        <input id="availability_template_id_m-f9-5" name="availability_template_id" type="radio" value="M-F9-5">
         <label class="inline" for="availability_template_id_m-f9-5">Working Week (Mon - Fri, 9:00 AM - 5:00 PM)</label>
       </div>
       <div>
-        <input id="availability_template_id_m-f8-6" name="location[availability_template_id]" type="radio" value="M-F8-6">
+        <input id="availability_template_id_m-f8-6" name="availability_template_id" type="radio" value="M-F8-6">
         <label class="inline" for="availability_template_id_m-f8-6">Extended Week (Mon - Fri, 8:00 AM - 6:00 PM)</label>
       </div>
       <div>
-        <input id="availability_template_id_m-s9-5" name="location[availability_template_id]" type="radio" value="M-S9-5">
+        <input id="availability_template_id_m-s9-5" name="availability_template_id" type="radio" value="M-S9-5">
         <label class="inline" for="availability_template_id_m-s9-5">Working Week +1 (Mon - Sat, 9:00 AM - 5:00 PM)</label>
       </div>
       <div>
-        <input data-custom-rules="true" id="availability_rules_custom" name="location[availability_template_id]" type="radio" value="custom">
-        <label class="inline" for="availability_rules_custom">Custom</label>
+        <input data-custom-rules="true" id="availability_rules_custom" name="availability_template_id" type="radio" value="custom">
+        <label class="inline" for="availability_rules_custom">TODO: Custom</label>
       </div>
       <div class="custom-availability-rules" style="display: none;">
         <div class="day day-1">
@@ -1125,6 +1126,7 @@
           </div>
         </div>
       </div>
+    {{/checkbox}}
     </div>
   </div>
   </div>

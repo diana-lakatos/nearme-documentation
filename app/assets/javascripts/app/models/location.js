@@ -7,9 +7,10 @@ define(['backbone'], function(Backbone) {
     },
 
     defaults: {
-        'longitude':'0',
-        'latitude':'0',
-        'formatted_address':'TODO: plug geolocalization control'
+        'longitude': '0',
+        'latitude': '0',
+        'formatted_address': 'TODO: plug geolocalization control',
+        'availability_template_id': 'M-F9-5'
 
     },
     url: function() {
