@@ -51,6 +51,8 @@ section.listings {
     .box{
       margin-bottom:0;
       padding-bottom: 0; 
+      border-radius: 0;
+      border-left: 8px solid $gray4; 
       header {
         margin-bottom:0;
         border-radius: 0;
