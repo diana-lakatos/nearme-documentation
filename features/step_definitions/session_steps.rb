@@ -1,4 +1,8 @@
-Given (/^I am logged in as #{capture_model}$/) do |user_instance|
+Given(/^I am logged in as #{capture_model}$/) do |user_instance|
+  login model!(user_instance)
+end
+
+When(/^I log in as #{capture_model}$/) do |user_instance|
   login model!(user_instance)
 end
 

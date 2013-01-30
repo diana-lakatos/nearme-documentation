@@ -40,3 +40,19 @@ Feature: A user can book at a space
       | the listing | Monday | 1        |
     And I click to review the booking
     Then I should not see "This host manually confirms all bookings before payment"
+
+  @javascript
+  Scenario: Booking for an anonymous user should return them to the booking state after logging in
+    When I go to the location's page
+    And I select to book space for:
+      | Listing     | Date   | Quantity |
+      | the listing | Monday | 2        |
+    And I click to review the booking
+    Then I should be asked to log in before making a booking
+    When I log in to continue booking
+    Then I should be on the location's page
+    And I should see the booking confirmation screen for:
+      | Listing     | Date   | Quantity |
+      | the listing | Monday | 2        |    
+
+
