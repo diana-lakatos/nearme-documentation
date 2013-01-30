@@ -1,26 +1,24 @@
-define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/listings/item', 'hbs!templates/locations/item'], function($, Backbone, ListingCollection, ListingModel, ListingView, locationTemplate) {
+define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/listings/item', 'hbs!templates/locations/item'], function($, Backbone, ListingCollection, ListingModel, ListingView, locationTemplate) {
   var LocationView = Backbone.View.extend({
     template: locationTemplate,
     initialize: function() {
-      _.bindAll(this, 'render','addAll','addOne','_afterSave');
+      _.bindAll(this, 'render', 'addAll', 'addOne','trash', '_afterSave');
       this.listingCollection = new ListingCollection(this.model.get('listings'));
       var self = this;
     },
 
     events: {
-      "click header.location": "toggleAction",
       "click .save-location": "save",
       "click .delete-location": "trash",
       "click .add-listing": "createListing",
       "keyup input#name": "nameChanged"
-
     },
 
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
       this.addAll();
-      if (this.model.isNew()){
-        $('.add-listing',this.$el).hide();
+      if (this.model.isNew()) {
+        $('.add-listing', this.$el).hide();
       }
       return this;
     },
@@ -30,32 +28,35 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
     },
 
     addOne: function(listing) {
-        var view = new ListingView({model: listing});
-        var hookElt = '#location-' + this.model.id + '-listings-holder';
-        $(this.$el).find(hookElt).append(view.render().el);
-      },
-
-    toggleAction: function(event) {
-      var field = $(event.currentTarget);
-      $(".actions", field).toggle();
+      var view = new ListingView({
+        model: listing
+      });
+      var hookElt = '#location-' + this.model.id + '-listings-holder';
+      var content = view.render().el;
+      $(this.$el).find(hookElt).append(content);
+      if (listing.isNew()) {
+        $(".listing-content", $(content)).collapse('show'); // expend the listing container
+      }
     },
 
     createListing: function() {
       event.preventDefault();
       event.stopPropagation();
-      var listing = new ListingModel({name: 'New listing', location_id: this.model.id});
+      var listing = new ListingModel({
+        name: 'New listing',
+        location_id: this.model.id
+      });
       this.addOne(listing);
     },
 
-    nameChanged: function(event){
-      $('.location-header[data-location-id='+ this.model.id +']', this.$el).text($(event.target).val());
+    nameChanged: function(event) {
+      $('.location-header[data-location-id=' + this.model.id + ']', this.$el).text($(event.target).val());
     },
-
 
     save: function() {
       event.preventDefault();
       event.stopPropagation();
-      this.wasNew = this.model.isNew();
+      this.justCreated = this.model.isNew();
       var arr = this.$el.find('.edit_location').serializeArray();
       var data = _(arr).reduce(function(acc, field) {
         if (acc[field.name]) { // deal with array checkbox type like amenities_ids[]
@@ -63,15 +64,14 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
             acc[field.name] = [acc[field.name]];
           }
           acc[field.name].push(field.value);
-        }
-        else {
+        } else {
           acc[field.name] = field.value;
         }
         return acc;
       }, {});
-      console.log(data);
-      //this.model.save({name: this.$el.find('#location_name').val()});
-      this.model.save(data, {success: this._afterSave});
+      this.model.save(data, {
+        success: this._afterSave
+      });
     },
 
     trash: function(event) {
@@ -80,24 +80,33 @@ define(['jquery', 'backbone','Collections/listing', 'Models/listing', 'Views/lis
       var result = confirm("Are you sure you want to delete this Space?");
       if (result === true) {
         this.model.trash();
-        this.$el.fadeOut();
+        this.$el.fadeOut(400, function() {
+          self.remove();
+        });
       }
     },
 
-    _afterSave: function(data){
+    _afterSave: function(data) {
       var elt = $(this.$el).find('.save-location span');
       elt.text('Saved!');
       var initValue = elt.css('font-size');
-      elt.animate({fontSize: "2em" }, 1500 );
-      elt.animate({fontSize: initValue }, 1500, function(){elt.text('Save');});
+      elt.animate({
+        fontSize: "2em"
+      }, 1500);
+      elt.animate({
+        fontSize: initValue
+      }, 1500, function() {
+        elt.text('Save');
+      });
 
-      if (this.wasNew){
-        this.wasNew = false;
+      if (this.justCreated) {
+        this.justCreated = false;
         this.render();
-        this.delegateEvents();
+        $('.location-content', this.$el).collapse('show');
       }
     }
   });
   return LocationView;
 
 });
+

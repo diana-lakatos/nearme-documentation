@@ -34,28 +34,25 @@ define(['jquery', 'backbone', 'collections/location', 'models/location', 'views/
     },
 
     addOne: function(locationModel) {
-        var view = new LocationView({ model: locationModel });
-        $(this.$el).children('.locations-holder').prepend(view.render().el);
-      },
+      var view = new LocationView({ model: locationModel });
+      var content = view.render().el;
+      $(this.$el).find('.locations-area').append(content);
+      if (locationModel.isNew()) {
+        $(".location-content", $(content)).collapse('show'); // expend the location container
+      }
+    },
 
     render: function() {
       if (this.collection) {
         this.$el.html(this.template());
         this.addAll();
-        $(".collapse").collapse();
+        $(".collapse").collapse({toggle: false});
       } else {
         this._setCollection();
       }
       return this;
     }
 
-    /*load: function(event) {*/
-      //// list listing for this location and display in "listing-for-{{location-id}}" element
-      //var locationId = $(event.target.data('id'));
-      //var hookElt = '#listing-for-' + locationId;
-      //var listingsView = new ListingsView({locationId : locationId});
-      //$(hookElt).html(listingView.render());
-    /*}*/
   });
   return Locations;
 

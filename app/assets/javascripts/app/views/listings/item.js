@@ -6,7 +6,6 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item','bootstrap'], functi
     },
 
     events: {
-      "click header.listing": "toggleAction",
       "click .save-listing": "save",
       "click .delete-listing": "trash",
       "keyup input#listing_name": "nameChanged"
@@ -17,11 +16,6 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item','bootstrap'], functi
       return this;
     },
 
-    toggleAction: function(event) {
-      var field = $(event.currentTarget);
-      $(".actions", field).toggle();
-    },
-
     nameChanged: function(event){
       $('.listing-header[data-listing-id='+ this.model.id +']', this.$el).text($(event.target).val());
     },
@@ -29,7 +23,7 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item','bootstrap'], functi
    save: function() {
       event.preventDefault();
       event.stopPropagation();
-      this.wasNew = this.model.isNew();
+      this.justCreated = this.model.isNew();
       var arr = this.$el.find('.edit_listing').serializeArray();
       var data = _(arr).reduce(function(acc, field) {
         if (acc[field.name]) { // deal with array checkbox type like amenities_ids[]
@@ -43,8 +37,6 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item','bootstrap'], functi
         }
         return acc;
       }, {});
-      console.log(data);
-      //this.model.save({name: this.$el.find('#location_name').val()});
       this.model.save(data, {success: this._afterSave});
     },
 
@@ -54,7 +46,8 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item','bootstrap'], functi
       var result = confirm("Are you sure you want to delete this Listing?");
       if (result === true) {
         this.model.trash();
-        this.$el.fadeOut();
+        var self = this;
+        this.$el.fadeOut(400, function(){self.remove();});
       }
     },
 
@@ -65,13 +58,13 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item','bootstrap'], functi
       elt.animate({fontSize: "2em" }, 1500 );
       elt.animate({fontSize: initValue }, 1500, function(){elt.text('Save');});
 
-      if (this.wasNew){
-        this.wasNew = false;
+      if (this.justCreated){
         this.render();
+        this.justCreated = false;
+        $('.listing-content', this.$el).collapse('show');
       }
     }
   });
   return ListingView;
 
 });
-
