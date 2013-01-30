@@ -32,8 +32,6 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  resources :organizations
-
   match '/auth/:provider/callback' => 'authentications#create'
   match "/auth/failure", to: "authentications#failure"
   devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }

@@ -23,11 +23,6 @@ class User < ActiveRecord::Base
   has_many :listings,
            :through => :locations
 
-  has_many :organization_users
-
-  has_many :organizations,
-           :through => :organization_users
-
   has_many :listing_reservations,
            :through => :listings,
            :source => :reservations
@@ -61,7 +56,7 @@ class User < ActiveRecord::Base
          :rememberable, :trackable, :validatable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :organization_ids, :phone, :password, :password_confirmation
+  attr_accessible :name, :email, :phone, :password, :password_confirmation
 
   delegate :to_s, :to => :name
 
@@ -123,12 +118,6 @@ class User < ActiveRecord::Base
 
   def last_name
     name.split(' ', 2)[1]
-  end
-
-  def may_view?(listing)
-    listing.creator == self ||
-      listing.required_organizations.none? ||
-      listing.required_organizations.any? {|o| organizations.include? o }
   end
 
   def avatar_changed?

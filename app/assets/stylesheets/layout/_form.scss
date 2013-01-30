@@ -1,5 +1,5 @@
 input, textarea {
-  box-sizing: border-box;
+  @include box-sizing(border-box);
   width: 100%;
 }
 input[type='checkbox'] {
@@ -196,7 +196,7 @@ form {
     border: 1px solid #c6c6c6;
     @include border-radius(8px);
     padding: 14px;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
     margin-bottom: 20px;
     position: relative;
 
@@ -360,7 +360,7 @@ form {
     float: left;
     clear: both;
     width: 100%;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
   }
   form .controls .input-icon-wrapper,  .two-thirds.column form.form-horizontal .input-icon-wrapper input[type="text"] {
     display:block;
@@ -381,7 +381,7 @@ form {
   }
   .actions input[type='submit'] {
     width: 100%;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
     text-align: center;
   }
 }

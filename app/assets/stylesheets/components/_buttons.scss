@@ -6,12 +6,12 @@
   color: #fff;
   padding: 0 10px;
   border: none !important;
-  box-sizing: border-box;
+  @include box-sizing(border-box);
   @include transition(background .1s ease-in);
 
   &.full-width {
     width: 100%;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
   }
 
   &.margin-bottom {

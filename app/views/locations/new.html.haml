@@ -8,5 +8,5 @@
       resources (listings). Once you've created a location, you can add listings to
       it.
 
-    = simple_form_for location, :html => { :class => "form-horizontal edit_location" } do |f|
+    = simple_form_for @location, :html => { :class => "form-horizontal edit_location" } do |f|
       = render "form", :f => f
