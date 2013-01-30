@@ -13,10 +13,7 @@ section.public {
 
     @media (max-width: 480px) {
       height: 380px;
-    }
-    @media (max-width: 320px) {
-      height: 320px;
-    }    
+    }   
   }
   .caption a {
     position: absolute;
@@ -34,9 +31,6 @@ section.public {
 
     @media (max-width: 480px) {
       top:400px;
-    } 
-    @media (max-width: 320px) {
-      top:300px;
     }        
   }
   section#hero + .container { 
