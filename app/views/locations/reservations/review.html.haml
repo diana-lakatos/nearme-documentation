@@ -21,12 +21,11 @@
 
   - if reservation_needs_payment_details?
     .control-group
+      = radio_button_tag :payment_method, "credit_card", reservation_credit_card_payment?, true
+      = label_tag :payment_method_credit_card, 'Charge my credit card once booking confirmed'
+    .control-group
       = radio_button_tag :payment_method, "manual", reservation_manual_payment?
       = label_tag :payment_method_manual, 'I will make the payment in person on arrival'
-
-    .control-group
-      = radio_button_tag :payment_method, "credit_card", reservation_credit_card_payment?
-      = label_tag :payment_method_credit_card, 'Charge my credit card once booking confirmed'
     
     #credit_card_fields{:style => "display: none"}
       %hr.divider
