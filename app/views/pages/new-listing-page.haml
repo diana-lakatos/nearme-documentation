@@ -1,4 +1,4 @@
-= render :layout => '/locations/show_layout', :locals => { :tab => :overview } do
+= render :layout => '/locations/show_layout', :locals => { :tab => :overview, :location => @location } do
   .one-third.column.alpha
     %p.description
       #{@location.description}
