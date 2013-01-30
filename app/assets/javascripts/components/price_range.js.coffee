@@ -3,10 +3,12 @@ class @PriceRange
     @element = $(element)
     @parent = parent
     @max = max
+    @slider = @element.find('.slider')
+    return unless @slider.length > 0
 
     values = @element.find('input').map (k, el) -> el['value']
 
-    @element.find('.slider').slider(
+    @slider.slider(
       range: true, values: [values[0], values[1]], min  : 0, max  : @max, step : 25,
       slide: (event, ui) => @onChange(ui.values)
     )

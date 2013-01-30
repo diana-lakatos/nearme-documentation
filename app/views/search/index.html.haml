@@ -10,4 +10,4 @@
     = image_tag "spinner-red.gif"
 
 - content_for :domready do
-  new DNM.SearchResultsPage($('#listing_search'), $("#results"))
+  new Search.SearchController($('#listing_search'), $("#results"))

@@ -2,8 +2,8 @@ require 'active_support/core_ext'
 class Listing::Search::Params
   DEFAULT_SEARCH_RADIUS = 15_000.0
 
-  attr_accessor :user, :allowed_organizations, :availability, :geocoder, :price,
-    :organizations, :amenities, :options, :search_area, :midpoint, :query
+  attr_accessor  :availability, :geocoder, :price, :amenities, :options,
+    :search_area, :midpoint, :query
 
   def initialize(options, geocoder=nil)
     @geocoder = geocoder || Listing::Search::Geocoder.new
@@ -15,7 +15,6 @@ class Listing::Search::Params
     scope = {}
     scope[:with] = {
         deleted_at: 0,
-        organization_ids: allowed_organizations
     }
 
     scope[:per_page] = 100
@@ -24,28 +23,35 @@ class Listing::Search::Params
       scope[:geo] = search_area.radians
       scope[:with]["@geodist"] = 0.0...search_area.radius
     end
+
     scope
+  end
+
+  # Return whether the search params are searching for the presense of the query,
+  # as keyword(s) in addition to geo/feature lookup.
+  # For example, API searches can include keywords but the web UI serches are always
+  # geolocation based, with no keywords.
+  #
+  # This method should be overriden to apply the relevant behaviour.
+  def keyword_search?
+    query.present?
   end
 
   private
 
   def build_search_area
     return if search_area
-    if query
-      build_search_area_from_query
-    end
-    if !search_area && (midpoint? || boundingbox?)
-      build_search_area_from_midpoint
-    end
+
+    build_search_area_from_midpoint
+    build_search_area_from_query if !search_area && query
   end
 
-
   def midpoint?
-    provided_midpoint.none?(&:nil?)
+    provided_midpoint.none?(&:blank?)
   end
 
   def boundingbox?
-    provided_boundingbox.none?(&:nil?)
+    provided_boundingbox.none?(&:blank?)
   end
 
   def provided_boundingbox
@@ -60,11 +66,8 @@ class Listing::Search::Params
 
   def process_options(opts)
     @options = opts.respond_to?(:deep_symbolize_keys) ? opts.deep_symbolize_keys : opts
-    @user = options.fetch(:user, nil) ||  NullUser.new
-    @allowed_organizations = user.organization_ids.push(0)
     @availability = options[:availability].present?  ? Availability.new(options[:availability]) : NullAvailability.new
     @amenities = options[:amenities].present? ? options[:amenities].map(&:to_i) : []
-    @organizations = options[:organizations].present? ? options[:organizations].map(&:to_i) : []
     @query = @location_string = options.fetch(:query, nil) || options.fetch(:q, nil) || options.fetch(:address, nil)
     @found_location = false
     build_price_from_options
@@ -89,13 +92,17 @@ class Listing::Search::Params
     elsif midpoint?
       @midpoint = Coordinate.new(*provided_midpoint)
     end
-    @search_area = Listing::Search::Area.new(midpoint, radius)
+
+    if @midpoint
+      @found_location = true
+      @search_area = Listing::Search::Area.new(midpoint, radius)
+    end
   end
 
   def build_search_area_from_query
     @search_area = geocoder.find_location(query)
     if @search_area
-      @found_location = true;
+      @found_location = true
       @location_string = geocoder.pretty
       @query = nil
     end

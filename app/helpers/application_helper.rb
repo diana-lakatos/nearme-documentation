@@ -1,6 +1,9 @@
 module ApplicationHelper
 
+  include FormHelper
+  include TooltipHelper
   include TweetButton
+  include CurrencyHelper
 
   def title(page_title, show_title = true)
     content_for(:title) { h(page_title.to_s) }
@@ -45,6 +48,7 @@ module ApplicationHelper
   def context_flash
     render 'shared/context_flash'
   end
+
 
   def truncate_with_ellipsis(body, length, html_options = {})
 

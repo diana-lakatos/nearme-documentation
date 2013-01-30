@@ -11,9 +11,26 @@ class ListingTest < ActiveSupport::TestCase
   should validate_presence_of(:name)
   should validate_presence_of(:description)
   should validate_presence_of(:quantity)
-  should ensure_inclusion_of(:confirm_reservations).in_array([true,false])
   should validate_numericality_of(:quantity)
   should allow_value('x' * 250).for(:description)
   should_not allow_value('x' * 251).for(:description)
 
+  setup do
+    @listing = FactoryGirl.build(:listing)
+  end
+
+  test "setting the price with hyphens" do
+    @listing.daily_price = "50-100"
+    assert_equal 5000, @listing.price_cents
+  end
+
+  test "price with other strange characters" do
+    @listing.daily_price = "50.0-!@\#$%^&*()100"
+    assert_equal 5000, @listing.price_cents
+  end
+
+  test "negative price is 0" do
+    @listing.daily_price = "-100"
+    assert_equal 0, @listing.price_cents
+  end
 end

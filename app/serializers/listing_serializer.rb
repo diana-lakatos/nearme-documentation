@@ -8,7 +8,6 @@ class ListingSerializer < ApplicationSerializer
 
   has_many :photos
   has_many :amenities, embed: :ids
-  has_many :organizations, embed: :ids
 
   # FIXME: for some reason this method is reloading all assocations again?
   def attributes
@@ -18,6 +17,8 @@ class ListingSerializer < ApplicationSerializer
     hash.merge!(:score => object.score)               unless object.score.nil?
     hash.merge!(:strict_match => object.strict_match) unless object.strict_match.nil?
 
+    # This remains for backwards compatibility for iOS
+    hash.merge!(:organizations => [])
     hash
   end
 
