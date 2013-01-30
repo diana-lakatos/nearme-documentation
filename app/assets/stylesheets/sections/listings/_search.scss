@@ -137,7 +137,7 @@ section.search {
       input {
         padding-left: 50px;
         width:100%;
-        box-sizing: border-box;
+        @include box-sizing(border-box);
         background: $dnm_white;
 
       }

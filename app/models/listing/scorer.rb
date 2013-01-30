@@ -4,7 +4,6 @@ class Listing
     WEIGHTINGS = {
       search_area:   0.4,
       amenities:     0.15,
-      organizations:  0.15,
       price:         0.15,
       availability:  0.15
     }.freeze
@@ -25,7 +24,7 @@ class Listing
     end
 
     def score(search_parameters)
-      @listings.reject! { |l| l.location.nil? }
+      @listings.reject! { |l| l.nil? || l.location.nil? }
 
       WEIGHTINGS.keys.each do |component|
         if params = search_parameters.send(component)
@@ -61,13 +60,6 @@ class Listing
 
       add_strict_matches(:amenities) { |l| (amenity_ids - l.location.amenity_ids).size == 0 }
       add_scores(ranked_listings, :amenities)
-    end
-
-    def score_organizations(organization_ids = [])
-      ranked_listings = @listings.rank_by { |l| (organization_ids - l.location.organization_ids).size }
-
-      add_strict_matches(:organizations) { |l| (organization_ids - l.location.organization_ids).size == 0 }
-      add_scores(ranked_listings, :organizations)
     end
 
     def score_price(price_range)

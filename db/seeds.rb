@@ -12,11 +12,6 @@ if Rails.env.development? || Rails.env.staging?
   puts "Creating Listings"
   log(FactoryGirl.create(:listing))
 
-  organizations = [
-    log(FactoryGirl.create(:darpa)),
-    log(FactoryGirl.create(:nra)),
-    log(FactoryGirl.create(:aarp))
-  ]
   coffee = FactoryGirl.create(:amenity, :name => "Coffee")
   wifi = FactoryGirl.create(:amenity, :name => "Wifi")
   kitchen = FactoryGirl.create(:amenity, :name => "Kitchen")
@@ -25,13 +20,12 @@ if Rails.env.development? || Rails.env.staging?
     [coffee, wifi],
     [coffee, wifi, kitchen]
   ]
-  locations = organizations.map do |organization|
-    [
-      log(FactoryGirl.create(:location_in_auckland, :organizations => [organization], :amenities => amenities.sample)),
-      log(FactoryGirl.create(:location_in_cleveland, :organizations => [organization], :amenities => amenities.sample)),
-      log(FactoryGirl.create(:location_in_san_francisco, :organizations => [organization], :amenities => amenities.sample))
-    ]
-  end.flatten
+
+  locations = [
+    log(FactoryGirl.create(:location_in_auckland, :amenities => amenities.sample)),
+    log(FactoryGirl.create(:location_in_cleveland, :amenities => amenities.sample)),
+    log(FactoryGirl.create(:location_in_san_francisco, :amenities => amenities.sample))
+  ]
 
   locations.each do |location|
     log FactoryGirl.create(:listing, :location => location)
