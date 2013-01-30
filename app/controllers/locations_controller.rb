@@ -43,6 +43,8 @@ class LocationsController < ApplicationController
   #   ]
   #
   def availability_summary
+    @location = Location.find(params[:id])
+
     dates = Array.wrap(params[:dates]).map { |date|
       begin
         Date.parse(date)
@@ -51,7 +53,7 @@ class LocationsController < ApplicationController
       end
     }.compact
 
-    render :json => location.listings.map { |listing|
+    render :json => @location.listings.map { |listing|
       {
         :id => listing.id,
         :availability => Hash[
