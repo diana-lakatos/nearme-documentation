@@ -42,7 +42,7 @@ FactoryGirl.define do
 
     factory :ursynowska_address_components do
       formatted_address "Ursynowska, Warsaw, Poland"
-      address_components_hash {{
+      address_components {{
         "0"=> {
         "long_name"=>"Ursynowska", 
         "short_name"=>"Ursynowska", 
@@ -81,9 +81,25 @@ FactoryGirl.define do
       }}
     end
 
+    factory :warsaw_address_components do
+      formatted_address "Warsaw"
+      address_components {{
+        "2"=>{
+          "long_name"=>"Warsaw", 
+          "short_name"=>"Warsaw", 
+          "types"=>"locality,political"
+        },
+          "3"=>{
+          "long_name"=> "Warszawa", 
+          "short_name"=>"Warszawa", 
+          "types"=>"administrative_area_level_3,political"
+        }
+      }}
+    end
+
     factory :san_francisco_address_components do
       formatted_address "San Francisco, CA, USA"
-      address_components_hash {{
+      address_components{{
         "0"=>{
           "long_name"=>"San Francisco", 
           "short_name"=>"SF", 

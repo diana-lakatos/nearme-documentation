@@ -3,9 +3,9 @@ class Location < ActiveRecord::Base
     :info, :latitude, :local_geocoding, :longitude, :name,
     :currency, :phone, :formatted_address, :availability_rules_attributes,
     :availability_template_id,
-    :special_notes, :listings_attributes
+    :special_notes, :listings_attributes, :suburb, :city, :state, :country, :address_components
   attr_accessor :local_geocoding # set this to true in js
-  attr_accessor :address_components_hash # data to create address_component_names and _types will be stored here
+
   serialize :address_components, JSON
 
   geocoded_by :address
@@ -31,7 +31,7 @@ class Location < ActiveRecord::Base
 
   before_validation :fetch_coordinates
   before_save :assign_default_availability_rules
-  before_save :parse_address_components_hash
+  before_save :parse_address_components
 
   acts_as_paranoid
 
@@ -55,12 +55,25 @@ class Location < ActiveRecord::Base
     creator == user
   end
 
-  def parse_address_components_hash
-    if formatted_address_changed?
-      if address_components_hash
-        self.address_components = Location::AddressComponent::Parser.parse_geocoder_address_component_hash(address_components_hash)
+  SUPPORTED_FIELDS = {
+    "route" => "street",
+    "country" => "country",
+    "locality"  =>  "city",
+    "sublocality" => "suburb",
+    "administrative_area_level_1" => "state",
+  }
+
+  def parse_address_components
+      if address_components_changed?
+        data_parser = Location::GoogleGeolocationDataParser.new(address_components)
+        SUPPORTED_FIELDS.values.each do |component|
+            begin
+              self.send("#{component}=".to_sym, data_parser.send(component.to_sym))
+            rescue
+              # nothing happened - one of the expected supported fields was not found
+            end
+        end
       end
-    end
   end
 
   def description

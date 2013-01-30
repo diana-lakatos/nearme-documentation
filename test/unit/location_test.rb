@@ -57,44 +57,46 @@ class LocationTest < ActiveSupport::TestCase
 
     context 'creates address components for new record' do
 
-      should " create address components" do
-        assert_equal(5, @location.address_components.count)
+      should "store address components" do
+        assert_equal(7, @location.address_components.count)
       end
 
-      should "be able to get city" do
-        assert_equal('Warsaw', @location.address_components["city"])
-        assert_equal('Mokotow', @location.address_components["suburb"])
+      should "be able to get city, suburb, state and country" do
+        assert_equal 'Ursynowska', @location.street
+        assert_equal 'Warsaw', @location.city
+        assert_equal 'Mokotow', @location.suburb
+        assert_equal 'Masovian Voivodeship', @location.state
+        assert_equal 'Poland', @location.country
+      end
+
+      should "ignore missing fields and store the one present" do
+      @location = FactoryGirl.create(:warsaw_address_components)
+        assert_equal 'Warsaw', @location.city
+        assert_nil @location.suburb
       end
 
     end
 
-    context 'formatted address has not changed' do
 
-
-      should "not modify address components" do
-        previous_address_components = @location.address_components
-        @location.phone = "000 0000 000"
-        @location.address_components_hash = FactoryGirl.attributes_for(:san_francisco_address_components)[:address_components_hash]
+      should "handle trash" do
+        @location.address_components = { 0 => { "does" => "not", "exist" => ", but", "should" => "work"} }
         @location.save!
         @location.reload
-        assert_equal(previous_address_components, @location.address_components)
+        assert_nil @location.city
       end
 
-    end
 
-    context 'formatted address has changed' do
-
-      should "should update address components from the address_components_hash after saving" do
-        new_attributes = FactoryGirl.attributes_for(:san_francisco_address_components)
-        @location.formatted_address = new_attributes[:formatted_address]
-        @location.address_components_hash = new_attributes[:address_components_hash]
-        assert_not_equal("San Francisco", @location.address_components["city"])
+      should "should update all address components fields based on address_components" do
+        @location.attributes = FactoryGirl.attributes_for(:san_francisco_address_components)
+        assert_not_equal("San Francisco", @location.city)
         @location.save!
         @location.reload
-        assert_equal("San Francisco", @location.address_components["city"])
+        assert_equal("San Francisco", @location.city)
+        assert_equal("California", @location.state)
+        assert_equal("United States", @location.country)
+        assert_nil(@location.suburb)
+        assert_nil(@location.street)
       end
-
-    end
 
   end
 
