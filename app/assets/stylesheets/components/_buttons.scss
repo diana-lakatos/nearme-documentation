@@ -97,6 +97,14 @@
 
     &:hover {
       background: darken(#33CCFF, 15%);
+    }
+
+    &.connected {
+      background: $dnm_red;
+
+      &:hover {
+        background: darken($dnm_red, 10%);
+      }      
     }      
   }
   &.facebook {
@@ -104,14 +112,28 @@
 
     &:hover {
       background: darken(#3B5998, 15%);
-    }      
+    }  
+    &.connected {
+      background: $dnm_red;
+
+      &:hover {
+        background: darken($dnm_red, 10%);
+      }      
+    }         
   }
   &.linkedin{
     background: #4875B4;
 
     &:hover {
       background: darken(#4875B4, 15%);
-    }    
+    }
+    &.connected {
+      background: $dnm_red;
+
+      &:hover {
+        background: darken($dnm_red, 10%);
+      }      
+    }         
   }    
 }
 
