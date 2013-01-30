@@ -82,6 +82,6 @@ group :test do
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
 end
 
-group :production do
+group :staging, :production do
   gem 'newrelic_rpm'
 end

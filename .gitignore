@@ -8,6 +8,7 @@ public/association
 public/user
 db/sphinx
 config/*.sphinx.conf
+config/ey.yml
 log
 tmp
 *.swo
