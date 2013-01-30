@@ -88,10 +88,10 @@ Then /^the response does (not )?include the listing in (.*)$/ do |negative, city
   end
 end
 
-Then /^the response should have the (.*) organization$/ do |organization|
-  results_organizations.collect { |o| o[:name] }.should include organization
+Then /^the response contains an empty organizations list$/ do
+  result["organizations"].empty?.should be_true
 end
 
-Then /^the response contains an empty organizations list$/ do
-  result["organizations"].should be_empty
+Then /^the response should have the (.*) organization$/ do |organization|
+  results_organizations.collect { |o| o[:name] }.should include organization
 end
