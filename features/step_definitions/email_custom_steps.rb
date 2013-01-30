@@ -1,6 +1,6 @@
 Then /^a shared listing email is( not)? sent to "([^"]+)"$/ do |no_email, email|
   if no_email
-    last_email = mailbox_for(email).select { |e| e.subject.include?("shared a listing") }.should be_empty
+    last_email = mailbox_for(email).select { |e| e.subject.include?("shared a listing") }.empty?.should be_true
   else
     last_email = mailbox_for(email).last
     last_email.subject.should include "shared a listing"
@@ -13,7 +13,7 @@ end
 
 Then /^an? inquiry user notification email is( not)? sent to "([^"]+)"$/ do |no_email, email|
   if no_email
-    last_email = mailbox_for(email).select { |e| e.subject.include?("passed on your inquiry") }.should be_empty
+    last_email = mailbox_for(email).select { |e| e.subject.include?("passed on your inquiry") }.empty?.should be_true
   else
     last_email = mailbox_for(email).last
     last_email.should_not be_nil, "No emails sent to #{email}, expected an email"
@@ -24,7 +24,7 @@ end
 
 Then /^an? inquiry creator notification email is( not)? sent to "([^"]+)"$/ do |no_email, email|
   if no_email
-    last_email = mailbox_for(email).select { |e| e.subject.include?("New enquiry from") }.should be_empty
+    last_email = mailbox_for(email).select { |e| e.subject.include?("New enquiry from") }.empty?.should be_true
   else
     last_email = mailbox_for(email).last
     last_email.should_not be_nil, "No emails sent to #{email}, expected an email"

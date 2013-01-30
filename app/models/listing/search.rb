@@ -12,15 +12,7 @@ class Listing
 
       define_index do
 
-        ## Delta indexing / flying sphinx seems to be causing issues in production
-        # if Rails.env.production? || Rails.env.staging?
-        #   set_property :delta => FlyingSphinx::DelayedDelta
-        # else
-        #   set_property :delta => true
-        # end
-
         join location
-        join location.organizations
         where  "locations.id is not null"
 
         indexes :name, :description
@@ -29,14 +21,7 @@ class Listing
         has "radians(#{Location.table_name}.longitude)", as: :longitude, type: :float
         has :deleted_at
 
-        # an organization id of 0 in the sphinx index means the entry does not require organization membership
-        # (i.e the listing is public)
-        has "CASE locations.require_organization_membership
-          WHEN TRUE THEN array_to_string(array_agg(\"organizations\".\"id\"), ',')
-          ELSE '0'
-        END", as: :organization_ids, type: :multi
-
-        group_by :latitude, :longitude, :require_organization_membership
+        group_by :latitude, :longitude
       end
 
     end

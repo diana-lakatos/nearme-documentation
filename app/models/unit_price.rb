@@ -3,6 +3,7 @@ class UnitPrice < ActiveRecord::Base
   belongs_to :listing
 
   validates_uniqueness_of :period, scope: [ :price_cents, :listing_id ]
-  delegate :currency, to: :listing
+  delegate :currency, to: :listing, :allow_nil => true
   monetize :price_cents, :allow_nil => true
+
 end

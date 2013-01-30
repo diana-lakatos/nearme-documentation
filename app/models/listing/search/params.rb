@@ -2,8 +2,8 @@ require 'active_support/core_ext'
 class Listing::Search::Params
   DEFAULT_SEARCH_RADIUS = 15_000.0
 
-  attr_accessor :user, :allowed_organizations, :availability, :geocoder, :price,
-    :organizations, :amenities, :options, :search_area, :midpoint, :query
+  attr_accessor  :availability, :geocoder, :price, :amenities, :options,
+    :search_area, :midpoint, :query
 
   def initialize(options, geocoder=nil)
     @geocoder = geocoder || Listing::Search::Geocoder.new
@@ -15,7 +15,6 @@ class Listing::Search::Params
     scope = {}
     scope[:with] = {
         deleted_at: 0,
-        organization_ids: allowed_organizations
     }
 
     scope[:per_page] = 100
@@ -67,11 +66,8 @@ class Listing::Search::Params
 
   def process_options(opts)
     @options = opts.respond_to?(:deep_symbolize_keys) ? opts.deep_symbolize_keys : opts
-    @user = options.fetch(:user, nil) ||  NullUser.new
-    @allowed_organizations = user.organization_ids.push(0)
     @availability = options[:availability].present?  ? Availability.new(options[:availability]) : NullAvailability.new
     @amenities = options[:amenities].present? ? options[:amenities].map(&:to_i) : []
-    @organizations = options[:organizations].present? ? options[:organizations].map(&:to_i) : []
     @query = @location_string = options.fetch(:query, nil) || options.fetch(:q, nil) || options.fetch(:address, nil)
     @found_location = false
     build_price_from_options
