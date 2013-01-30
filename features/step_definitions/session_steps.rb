@@ -7,13 +7,13 @@ Given /^I am logged in manually$/ do
 end
 
 Then /^I should be logged out$/ do
-  Then %{I should see "Log in"}
+  step "I should see \"Log in\""
 end
 
 
 Then(/^I should be logged in as #{capture_model}$/) do |user_instance|
   user = model!(user_instance)
-  Then %{I should see "Log out"}
+  Then "I should see \"Log out\""
 end
 
 Then /^#{capture_model} should have password "([^"]*)"$/ do |user_instance, password|
