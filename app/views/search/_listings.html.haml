@@ -14,8 +14,6 @@
         %p
           Still cant find what your looking for? Why not #{link_to "create your own listing", new_space_wizard_path}!
     - else
-      .google-map
-        #listings_map.inner
 
       #listings
         = render :partial => '/listings/listing', :collection => @listings 

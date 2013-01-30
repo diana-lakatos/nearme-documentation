@@ -5,13 +5,19 @@ class Search.SearchController extends Search.Controller
     @resultsContainer = @container.find('.results')
     @loadingContainer = @container.find('.loading')
     @resultsCountContainer = $('#results_count')
-    @loadMap()
+    @initializeMap()
     @bindEvents()
 
   bindEvents: ->
     @form.bind 'submit', (event) =>
       event.preventDefault()
       @triggerSearch()
+
+  initializeMap: ->
+    mapContainer = @container.find('#listings_map')[0]
+    return unless mapContainer
+    @map = new Map(mapContainer)
+    @updateMapWithListingResults()
 
   startLoading: ->
     @resultsContainer.hide()
@@ -25,10 +31,7 @@ class Search.SearchController extends Search.Controller
     @resultsContainer.html(html)
     @updateListingsCount()
     @finishLoading()
-    @loadMap()
-
-  listings: ->
-    @resultsContainer.find('.listing')
+    @updateMapWithListingResults()
 
   updateListingsCount: () ->
     if(typeof @resultsCountContainer != 'undefined')
@@ -37,25 +40,12 @@ class Search.SearchController extends Search.Controller
       if(count != 1)
         listing_text += "s"
       @resultsCountContainer.html(count + " " + listing_text )
-    
-  loadMap: ->
-    mapContainer = @container.find('#listings_map')[0]
-    return unless mapContainer
-
-    @map = {}
-    @map.map = new google.maps.Map(mapContainer, {
-      zoom: 8,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapTypeControl: false
-    })
-
-    @map.bounds = new google.maps.LatLngBounds()
-    @map.markers = {}
-    @map.info_window = new google.maps.InfoWindow()
-
-    @listings().each (i, el) =>
+  
+  updateMapWithListingResults: ->
+    listings = []
+    @resultsContainer.find('.listing').each (i, el) =>
       el = $(el)
-      @plotListing(
+      listings.push(
         id:        parseInt(el.attr('data-id'), 10),
         latitude:  parseFloat(el.attr('data-latitude')),
         longitude: parseFloat(el.attr('data-longitude')),
@@ -63,23 +53,7 @@ class Search.SearchController extends Search.Controller
         element:   el
       )
 
-    # Update the map bounds based on the plotted listings
-    @map.map.fitBounds(@map.bounds)
-
-  plotListing: (listing) ->
-    ll = new google.maps.LatLng(listing.latitude, listing.longitude)
-    @map.bounds.extend(ll)
-    @map.markers[listing.id] = new google.maps.Marker(
-      position: ll,
-      map:      @map.map,
-      title:    listing.name
-    )
-
-    if listing.element
-      popupContent = $('.listing-info', listing.element).html()
-      google.maps.event.addListener @map.markers[listing.id], 'click', =>
-        @map.info_window.setContent(popupContent)
-        @map.info_window.open(@map.map, @map.markers[listing.id])
+    @map.plotListings(listings)
 
   triggerSearch: ->
     @startLoading()
@@ -101,4 +75,53 @@ class Search.SearchController extends Search.Controller
   fieldChanged: (field, value) ->
     @startLoading()
     @triggerSearchAfterDelay()
+
+  # Encapsulates the map behaviour for the serach results
+  class Map
+    constructor: (@container) ->
+      @markers = []
+      @infoWindow = new google.maps.InfoWindow() 
+      @googleMap = new google.maps.Map(@container, {
+        zoom: 8,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: false
+      })
+      @clearPlottedListings()
+
+      $(window).resize =>
+        google.maps.event.trigger(@googleMap, 'resize') 
+        @fitBounds()
+
+    clearPlottedListings: ->
+      marker.setMap(null) for marker in @markers if @markers
+      @markers = []
+      @bounds = new google.maps.LatLngBounds()
+
+    plotListings: (listings, clearPreviousPlot = true) ->
+      @clearPlottedListings() if clearPreviousPlot
+      @plotListing(listing) for listing in listings
+      @fitBounds()
+
+    plotListing: (listing) ->
+      latLng = new google.maps.LatLng(listing.latitude, listing.longitude)
+      marker = new google.maps.Marker(
+        position: latLng,
+        map:      @googleMap,
+        title:    listing.name
+      )
+      @markers.push(marker)
+      @bounds.extend(latLng)
+
+      # Bind the event for showing the info details on click
+      if listing.element
+        google.maps.event.addListener marker, 'click', =>
+          @showInfoWindowForListing(listing, marker)
+
+    fitBounds: ->
+      @googleMap.fitBounds(@bounds)
+
+    showInfoWindowForListing: (listing, marker) ->
+      popupContent = $('.listing-info', listing.element).html()
+      @infoWindow.setContent(popupContent)
+      @infoWindow.open(@googleMap, marker)     
 
