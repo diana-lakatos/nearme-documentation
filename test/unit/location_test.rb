@@ -105,10 +105,11 @@ class LocationTest < ActiveSupport::TestCase
 
     context 'formatted address has changed' do
 
-      should "modify address components" do
+      should "should update address components from the address_components_hash after saving" do
         new_attributes = FactoryGirl.attributes_for(:san_francisco_address_components)
         @location.formatted_address = new_attributes[:formatted_address]
         @location.address_components_hash = new_attributes[:address_components_hash]
+        assert_not_equal("San Francisco", @location.address_components["city"])
         @location.save!
         @location.reload
         assert_equal("San Francisco", @location.address_components["city"])
