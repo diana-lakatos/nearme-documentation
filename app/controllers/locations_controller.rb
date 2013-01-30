@@ -1,9 +1,10 @@
 class LocationsController < ApplicationController
+
   before_filter :authenticate_user!, :only => [:new, :create]
   expose :location
 
   def show
-    @location = location
+    @location = Location.find(params[:id])
     # set when an unauthenticated user try to book
     @requested_bookings = bookings_request
     clear_requested_bookings
@@ -25,6 +26,8 @@ class LocationsController < ApplicationController
   #   ]
   #
   def availability_summary
+    @location = Location.find(params[:id])
+
     dates = Array.wrap(params[:dates]).map { |date|
       begin
         Date.parse(date)
@@ -33,7 +36,7 @@ class LocationsController < ApplicationController
       end
     }.compact
 
-    render :json => location.listings.map { |listing|
+    render :json => @location.listings.map { |listing|
       {
         :id => listing.id,
         :availability => Hash[
