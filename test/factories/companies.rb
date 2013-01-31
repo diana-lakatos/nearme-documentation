@@ -10,6 +10,10 @@ FactoryGirl.define do
       name "Company in Auckland"
     end
 
+    factory :company_in_adelaide do
+      name "Company in Adelaide"
+    end
+
     factory :company_in_cleveland do
       name "Company in Cleveland"
     end

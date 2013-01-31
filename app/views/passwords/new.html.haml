@@ -1,19 +1,18 @@
 - title "Reset Password"
 
 .sign-up
-  .two-thirds.column
-    .box
-      %h2== Reset Your Password
-      %p.intro
-        Fill in your email below and we'll send you instructions to reset your password.
+  .container-fluid
+    .row-fluid
+      .span8.offset2
+        .box
+          %h2== Reset Your Password
+          %p.intro
+            Fill in your email below and we'll send you instructions to reset your password.
 
-      = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { class: "form-horizontal" }) do |f|
-        = f.input :email
+          = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { class: "form-horizontal" }) do |f|
+            = f.input :email
 
-        .actions
-          = f.submit "Reset Password"
-          or
-          = link_to "Cancel", user_session_url
+            .actions
+              = f.submit "Reset Password"
 
-  .one-third.column.third-party
-    = render "sessions/connect_provider", action: "log in"
+

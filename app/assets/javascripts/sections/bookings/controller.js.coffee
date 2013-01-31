@@ -5,42 +5,47 @@
 class Bookings.Controller
   
   constructor: (@container, @options = {}) ->
-    requested_bookings =  _.toArray(@options.requested_bookings)
-
-    fetchCompleteCallback = $.noop
-    if !_.isEmpty(requested_bookings)
-      fetchCompleteCallback = -> $("#book-#{requested_bookings[0].id}").trigger('click')
+    @options.initial_bookings ||= {}
 
     @availabilityManager = new Bookings.AvailabilityManager(
-      @options.availability_summary_url, fetchCompleteCallback
+      @options.availability_summary_url
     )
 
     # The Listings collection is the set of all Listings being managed for bookings on
     # the page. Each listing keeps track of the bookings made on it.
     @listings = _.map @options.listings, (listingData) =>
-      bookings = {}
-      match_listing = _.find(requested_bookings, (bookings) ->  bookings.id == listingData.id.toString() )
-      if match_listing != undefined
-         _.each  match_listing.bookings, (bookingData) =>
-           bookings[bookingData.date] = Number(bookingData.quantity)
-
-      listing = new Bookings.Listing(
+      new Bookings.Listing(
         listingData,
-        availability: new Bookings.AvailabilityManager.Listing(@availabilityManager, listingData.id),
-        bookings: bookings
+        availability: new Bookings.AvailabilityManager.Listing(@availabilityManager, listingData.id)
       )
 
-    # We automatically add a booking for 'tomorrow'
-    tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
-    for listing in @listings
-      if _.isEmpty(listing.bookings)
-        listing.addDate(tomorrow)
-
     # Initialize each of the listing views
-    @listingViews = $.map @listings, (listing) =>
+    @listingViews = _.map @listings, (listing) =>
       new Bookings.ListingView(listing, @container.find(".listing[data-listing-id=#{listing.id}]"))
 
+    # Initialize default bookings
+    listingsWithRestoredBookings = []
+    tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+    for listing in @listings
+      # Determine if there are any bookings to assign that have been passed through
+      if initialBookings = @options.initial_bookings[listing.id.toString()]
+        # We set the bookings - passing false as second argument to add them instantly, rather than
+        # deferring to availability loaded.
+        #
+        # FIXME: We should remove that availability behaviour from the model?
+        listing.setBookings(initialBookings, false)
+
+      if listing.isBooked()
+        listingsWithRestoredBookings.push listing
+      else
+        # We automatically add a booking for 'tomorrow'
+        listing.addDate(tomorrow) if !listing.isBooked()
+
     @bindEvents()
+
+    # Check whether this is a restored session from a peviously logged out user.
+    if @options.returnedFromSession and listingsWithRestoredBookings.length > 0
+      @reviewBooking(listingsWithRestoredBookings)
 
   bindEvents: ->
     # Show review booking for a single listing

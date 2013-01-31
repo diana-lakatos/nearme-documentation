@@ -11,22 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130124171246) do
-
-  create_table "address_component_names", :force => true do |t|
-    t.string  "long_name"
-    t.string  "short_name"
-    t.integer "location_id"
-  end
-
-  create_table "address_component_names_address_component_types", :force => true do |t|
-    t.integer "address_component_name_id"
-    t.integer "address_component_type_id"
-  end
-
-  create_table "address_component_types", :force => true do |t|
-    t.string "name"
-  end
+ActiveRecord::Schema.define(:version => 20130130205412) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -150,12 +135,18 @@ ActiveRecord::Schema.define(:version => 20130124171246) do
     t.float    "latitude"
     t.float    "longitude"
     t.text     "info"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.datetime "deleted_at"
     t.string   "formatted_address"
     t.string   "currency"
     t.text     "special_notes"
+    t.text     "address_components"
+    t.string   "street"
+    t.string   "suburb"
+    t.string   "city"
+    t.string   "state"
+    t.string   "country"
   end
 
   create_table "photos", :force => true do |t|

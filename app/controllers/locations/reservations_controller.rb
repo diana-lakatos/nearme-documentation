@@ -1,13 +1,13 @@
 module Locations
   class ReservationsController < ApplicationController
     before_filter :find_location
-    before_filter :store_bookings_request, only: :review
-    before_filter :require_login
+    before_filter :require_login_for_reservation
 
     # Review a reservation prior to confirmation. Same interface as create.
     def review
       @params_listings = params[:listings]
       @reservations = build_reservations(Reservation::PAYMENT_METHODS[:credit_card])
+
       render :layout => false
     rescue
       Rails.logger.info($!.inspect)
@@ -44,8 +44,10 @@ module Locations
 
     private
 
-    def require_login
+    def require_login_for_reservation
       unless current_user
+        # Persist the reservation request so that when we return it will be restored.
+        store_reservation_request
         render :login_required, :layout => false
       end
     end
@@ -58,7 +60,7 @@ module Locations
       # NB: We can reserve multiple listings via the same form. The simple view doesn't allow this (single listing reservation), but the
       # advanced view does. A Reservation refers to a single listing, so we build multiple reservations - one for each Listing.
       reservations = []
-      @params_listings.values.each { |listing_params|
+      params[:listings].values.each { |listing_params|
         listing = @location.listings.find(listing_params[:id])
         reservation = listing.reservations.build(:user => current_user)
 
@@ -103,6 +105,25 @@ module Locations
           reservation.save!
         end
       end
+    end
+
+    # Store the reservation request in the session so that it can be restored when returning to the listings controller.
+    def store_reservation_request
+      session[:stored_reservation_location_id] = @location.id
+      session[:stored_reservation_bookings] = prepare_requested_bookings_json
+    end
+
+    # Marshals the booking request parameters into a better structured hash format for transmission and
+    # future assignment to the Bookings JS controller.
+    #
+    # Returns a Hash of listing id's to hash of date & quantity values.
+    #  { '123' => { 'date' => '2012-08-10', 'quantity => '1' }, ... }
+    def prepare_requested_bookings_json(booking_request = params[:listings])
+      Hash[
+        booking_request.values.map { |hash_of_id_and_bookings| 
+          [hash_of_id_and_bookings['id'], hash_of_id_and_bookings['bookings'].values]
+        } 
+      ] if booking_request.present?
     end
   end
 end

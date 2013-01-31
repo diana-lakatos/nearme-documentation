@@ -47,6 +47,14 @@ FactoryGirl.define do
       association(:location, factory: :location_in_auckland)
     end
 
+    factory :listing_in_adelaide do
+      sequence(:name) do |n|
+        "Listing in Adeilaide #{n}"
+      end
+
+      association(:location, factory: :location_in_adelaide)
+    end
+
     factory :listing_in_cleveland do
       sequence(:name) do |n|
         "Listing in Cleveland #{n}"
