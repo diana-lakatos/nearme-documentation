@@ -5,7 +5,7 @@ Feature: User Cancels Reservation
 
   Background:
     Given a user exists
-      And the date is "17th October 2010" # FIXME: Avoid time-freezing
+      And the date is "17th October 2010"
       And I am logged in as the user
       And the following listings exist:
         | listing          | name               |
@@ -27,7 +27,7 @@ Feature: User Cancels Reservation
       | Joe's Codin Garage on October 21, 2010 (unconfirmed) |
 
   Scenario: A user can cancel a reservation
-    When I go to the dashboard page
+    Given I am on the dashboard page
     When I cancel the reservation for "19th October 2010"
     Then I should have a cancelled reservation on "19th October 2010"
 

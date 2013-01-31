@@ -19,13 +19,11 @@ module Bookings
     find(:css, ".calendar-wrapper").click
   end
 
-
-
   def ensure_datepicker_is_on_right_month(date)
-      if date > Date.today && !find(:css, '.datepicker-month').text.include?(Date::MONTHNAMES[date.month])
-        find(:css, '.datepicker-next').click
-        wait_until_datepicker_finished_loading
-      end
+    if date > Date.today && !find(:css, '.datepicker-month').text.include?(Date::MONTHNAMES[date.month])
+      find(:css, '.datepicker-next').click
+      wait_until_datepicker_finished_loading
+    end
   end
 
   def datepicker_class_for(date)
