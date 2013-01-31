@@ -1,10 +1,12 @@
 module Locations
   class ReservationsController < ApplicationController
     before_filter :find_location
+    before_filter :store_bookings_request, only: :review
     before_filter :require_login
 
     # Review a reservation prior to confirmation. Same interface as create.
     def review
+      @params_listings = params[:listings]
       @reservations = build_reservations(Reservation::PAYMENT_METHODS[:credit_card])
       render :layout => false
     rescue
@@ -26,9 +28,10 @@ module Locations
     #     ...
     #   ]
     def create
+      @params_listings = params[:listings]
       @errors = []
-      @reservations = build_reservations
 
+      @reservations = build_reservations
       setup_credit_card_customer if using_credit_card?
       make_reservations if @errors.empty?
 
@@ -55,7 +58,7 @@ module Locations
       # NB: We can reserve multiple listings via the same form. The simple view doesn't allow this (single listing reservation), but the
       # advanced view does. A Reservation refers to a single listing, so we build multiple reservations - one for each Listing.
       reservations = []
-      params[:listings].values.each { |listing_params|
+      @params_listings.values.each { |listing_params|
         listing = @location.listings.find(listing_params[:id])
         reservation = listing.reservations.build(:user => current_user)
 

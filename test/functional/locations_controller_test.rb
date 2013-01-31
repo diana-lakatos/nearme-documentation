@@ -6,7 +6,7 @@ include Devise::TestHelpers
 
   setup do
     @user = FactoryGirl.create(:user)
-    sign_in @user   
+    sign_in @user
     @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
     @location = FactoryGirl.create(:location_in_auckland)
     @company.locations << @location

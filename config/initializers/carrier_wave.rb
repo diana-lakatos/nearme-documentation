@@ -9,11 +9,11 @@ CarrierWave.configure do |config|
   case Rails.env
   when "production"
     config.fog_directory        = 'desksnearme.production'
-    config.fog_host             = 'https://s3.amazonaws.com/desksnearme.production'
+    config.asset_host           = 'https://s3.amazonaws.com/desksnearme.production'
     config.storage              = :fog
   when "staging"
     config.fog_directory        = 'desksnearme.staging'
-    config.fog_host             = 'https://s3.amazonaws.com/desksnearme.staging'
+    config.asset_host           = 'https://s3.amazonaws.com/desksnearme.staging'
     config.storage              = :fog
   else
     config.storage              = :file

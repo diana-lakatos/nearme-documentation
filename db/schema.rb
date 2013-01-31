@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130119001758) do
+ActiveRecord::Schema.define(:version => 20130124171246) do
 
   create_table "address_component_names", :force => true do |t|
     t.string  "long_name"
@@ -140,13 +140,6 @@ ActiveRecord::Schema.define(:version => 20130119001758) do
     t.integer  "location_id"
   end
 
-  create_table "location_organizations", :force => true do |t|
-    t.integer  "organization_id"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-    t.integer  "location_id"
-  end
-
   create_table "locations", :force => true do |t|
     t.integer  "company_id"
     t.string   "name"
@@ -157,25 +150,12 @@ ActiveRecord::Schema.define(:version => 20130119001758) do
     t.float    "latitude"
     t.float    "longitude"
     t.text     "info"
-    t.datetime "created_at",                                         :null => false
-    t.datetime "updated_at",                                         :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.datetime "deleted_at"
     t.string   "formatted_address"
-    t.boolean  "require_organization_membership", :default => false
     t.string   "currency"
     t.text     "special_notes"
-  end
-
-  create_table "organization_users", :force => true do |t|
-    t.integer "organization_id"
-    t.integer "user_id"
-  end
-
-  create_table "organizations", :force => true do |t|
-    t.string   "name"
-    t.string   "logo"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
   end
 
   create_table "photos", :force => true do |t|

@@ -14,7 +14,7 @@ end
 Given /^the listing has the following reservations:$/ do |table|
   table.hashes.each do |row|
     num = row["Number of Reservations"].to_i
-    Given %'#{num} reservations exist with listing: the listing, date: "#{row["Date"]}"'
+    step "#{num} reservations exist with listing: the listing, date: \"#{row['Date']}\""
   end
 end
 
@@ -51,10 +51,10 @@ end
 
 
 When /^I book space( with credit card)? for:$/ do |with_credit_card, table|
-  When %{I select to book space for:}, table
-  When %{I click to review the booking}
-  When %{I provide reservation credit card details} if with_credit_card
-  When %{I click to confirm the booking}
+  step "I select to book space for:", table
+  step "I click to review the booking"
+  step "I provide reservation credit card details" if with_credit_card
+  step "I click to confirm the booking"
 end
 
 When /^(.*) books a space for that listing$/ do |person|

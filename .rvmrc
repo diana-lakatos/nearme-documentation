@@ -1,1 +1,1 @@
-rvm use --create ruby-1.9.2-p320@desksnearme
+rvm use --create 1.9.3-p327@desksnearme

@@ -78,4 +78,14 @@ section.dashboard {
 
 section.companies, section.registrations, section.sessions {
   min-height: 800px;
+
+  .btn.facebook, 
+  .btn.linkedin,
+  .btn.twitter {
+    @media (max-width: 668px) {
+      width: 100%;
+      text-align: center;
+      margin-bottom: .25em;
+    }
+  }  
 }

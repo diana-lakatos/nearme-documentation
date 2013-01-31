@@ -41,11 +41,13 @@ gem 'jquery-rails'
 gem 'sass-rails'
 gem 'chronic'
 
-gem 'flying-sphinx', '0.8.4'
 gem 'thin'
 
+gem 'ey_config'
+
+gem 'unicorn'
+
 group :development do
-  gem 'taps'
   gem 'sqlite3'
   gem "rails-erd"
   gem 'quiet_assets'
@@ -57,16 +59,13 @@ group :development, :test, :staging do
 end
 
 group :development, :test do
-  gem 'shoulda'
+  gem 'shoulda', '3.3.2'
   gem 'shoulda-let', :require => 'shoulda/let'
   gem 'ffaker'
-  gem 'shoulda'
   gem 'factory_girl_rails', '>=3.0.0'
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
-  gem 'ruby-debug19'
   gem 'jasmine'
-  gem 'jasmine-headless-webkit', '0.9.0.rc.2'
 end
 
 group :test do
@@ -84,6 +83,6 @@ group :test do
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
 end
 
-group :production do
+group :staging, :production do
   gem 'newrelic_rpm'
 end

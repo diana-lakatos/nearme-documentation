@@ -30,8 +30,3 @@ Feature: User Searches Listings
     When I send a search request with a bounding box around New Zealand available 2, 3, and 5 days from now
     Then the response should have the listing in Wellington with the lowest score
     Then the response should have the listing in Auckland with the highest score
-
-  Scenario: a listing that requires organization membership is not visible when unauthenicated
-    Given a listing exists for a location in Auckland with a private organization
-    When I send a search request with a bounding box around New Zealand
-    Then the JSON listings should be empty

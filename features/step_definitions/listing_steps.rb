@@ -11,21 +11,6 @@ Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and that amenit
   listing.location.amenities << model!("amenity") if amenity
 end
 
-Given /^a listing in (.*) exists for a location with a private organization$/ do |city|
-  @listing = FactoryGirl.create(:private_listing)
-end
-
-Given /^a listing in (.*) exists which is (NOT )?a member of that organization$/ do |city, not_member|
-  listing = create_listing_in(city)
-
-  unless not_member.present?
-    listing.location.organizations << model!("organization")
-    listing.location.organizations.should include model!("organization")
-  else
-    listing.location.organizations.should_not include model!("organization")
-  end
-end
-
 Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) days$/ do |city, desks, num_days|
   listing = create_listing_in(city)
 
@@ -40,22 +25,7 @@ Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) 
   (Date.today...num_days.to_i.days.from_now.to_date).all? { |d| listing.availability_for(d) >= desks.to_i }.should == true
 end
 
-Given /^a listing(?: with name "([^"]+)")? exists for a location( in Auckland)? with a private organization?$/ do |name, has_city|
-  location = FactoryGirl.create(:private_location)
-
-  listing_attrs = { location: location }
-  listing_attrs.merge!(name: name) if name.present?
-
-  store_model('listing', 'listing for private location', FactoryGirl.create(:listing, listing_attrs))
-  store_model('location', 'organization', location)
-  store_model('organization', 'organization', location.organizations.first)
-end
-
-Given /^a listed location with an organization$/ do
-  @listing = FactoryGirl.create(:listing_with_organization)
-end
-
-Given /^a listed location( without (amenities|organizations))?$/ do |_,_|
+Given /^a listed location( without (amenities))?$/ do |_,_|
   @listing = FactoryGirl.create(:listing)
 end
 
@@ -88,20 +58,6 @@ When /^I create a listing for that location with availability rules$/ do
   end
 end
 
-When /^I create a listing for an organization$/ do
-  create_listing(model!("location")) do
-    check Organization.first.name
-  end
-end
-
-When /^I visit that listing$/ do
-  visit listing_path(model!('listing'))
-end
-
-When /^I view that listing$/ do
-  visit listing_path(model!('listing'))
-end
-
 When /^I view that listing's edit page$/ do
   visit edit_manage_location_path(model!('listing').location)
 end
@@ -123,29 +79,6 @@ Then /^I (do not )?see a search result for the ([^\$].*) listing$/ do |negative,
   end
 end
 
-Then /^I see the listing details$/ do
-  page.should have_content(listing.address)
-  page.should have_content(listing.name)
-  page.should have_content(listing.description.strip)
-end
-
-Then /^the listing (daily |weekly |monthly )?price is shown as (.*)$/ do |period, amount|
-  visit listing_path(listing)
-  page.should have_content(amount)
-  visit listings_path
-  page.should have_content(amount)
-end
-
-Then /^the listing shows the availability rules$/ do
-  visit listing_path(listing)
-  page.should have_content("I'm always available")
-end
-
-Then /^I cannot view that listing$/ do
-  page.should have_content "Sorry, you don't have permission to view that"
-  current_path.should == listings_path
-end
-
 Then /^I should see the following listings in order:$/ do |table|
   found = all("article.listing h2")
   table.raw.flatten.each_with_index do |listing, index|
@@ -156,4 +89,3 @@ end
 Then /^I should see the creators gravatar/ do
   page.should have_css(".host .avatar")
 end
-

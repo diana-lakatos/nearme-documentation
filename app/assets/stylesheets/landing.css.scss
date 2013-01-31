@@ -36,7 +36,7 @@ body {
   color: rgb(230,230,230);
   font: normal 18px/30px 'futura-book', sans-serif;
   letter-spacing: 1px;
-  box-sizing: border-box;
+  @include box-sizing(border-box);
 
   p {
     color: rgb(230,230,230);
@@ -104,7 +104,7 @@ footer {
       @media screen and (max-width: 480px) {
         display: block;
         width: 100%;
-        box-sizing: border-box; 
+        @include box-sizing(border-box); 
         position:absolute;
         bottom:7px; 
         left:0; 

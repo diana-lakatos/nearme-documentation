@@ -7,7 +7,6 @@
 //= require ./vendor/jquery.ui.touch-punch
 //= require ./vendor/customSelect.jquery
 //= require ./vendor/bootstrap
-//= require ./search
 //= require ./vendor/rails
 //= require ./vendor/modernizr
 //= require ./vendor/jquery.cookie
@@ -32,6 +31,7 @@ window.DNM = {
     this.initializeAjaxCSRF();
     this.initializeComponents();
     this.initializeModals();
+    this.initializeTooltips();
   },
 
   initializeModals: function() {
@@ -53,6 +53,10 @@ window.DNM = {
         );
       }
     });
+  },
+
+  initializeTooltips: function(){
+    $('[rel=tooltip]').tooltip() 
   }
 }
 
