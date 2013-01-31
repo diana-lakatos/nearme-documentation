@@ -13,14 +13,17 @@ class Search.SearchController extends Search.Controller
       event.preventDefault()
       @triggerSearch()
 
-    @map.on 'boundsMoved', =>
-      @triggerSearchWithBounds(@map.getBounds())
+    # TODO: Limit the zoom range for the serach we make as to not ask for rediculous levels of listings
+    # What is that zoom range?
+    @map.on 'mapDragged', =>
+      @triggerSearchWithBoundsAfterDelay()
 
   initializeMap: ->
     mapContainer = @container.find('#listings_map')[0]
     return unless mapContainer
-    @map = new Map(mapContainer)
+    @map = new Search.Map(mapContainer)
     @updateMapWithListingResults()
+    @map.fitBounds()
 
   startLoading: ->
     @resultsContainer.hide()
@@ -33,8 +36,6 @@ class Search.SearchController extends Search.Controller
   showResults: (html) ->
     @resultsContainer.html(html)
     @updateListingsCount()
-    @finishLoading()
-    @updateMapWithListingResults()
 
   updateListingsCount: () ->
     if(typeof @resultsCountContainer != 'undefined')
@@ -45,98 +46,72 @@ class Search.SearchController extends Search.Controller
       @resultsCountContainer.html(count + " " + listing_text )
   
   updateMapWithListingResults: ->
+   @map.clearPlottedListings()
+   @map.plotListings(@getListingsFromResults())
+   @map.fitBounds()
+
+  getListingsFromResults: ->
     listings = []
     @resultsContainer.find('.listing').each (i, el) =>
-      el = $(el)
-      listings.push(
-        id:        parseInt(el.attr('data-id'), 10),
-        latitude:  parseFloat(el.attr('data-latitude')),
-        longitude: parseFloat(el.attr('data-longitude')),
-        name:      el.attr('data-name'),
-        element:   el
-      )
+      listings.push new Search.Listing(el)
+    listings
 
-    @map.plotListings(listings)
+  triggerSearchWithBounds: ->
+    bounds = @map.getBoundsArray()
+    @assignFormParams(
+      nx: bounds[0],
+      ny: bounds[1],
+      sx: bounds[2],
+      sy: bounds[3]
+    )
 
-  triggerSearchWithBounds: (bounds) ->
-    # update nx ny sx sy form attributes
-    # trigger search
-    # caveats:
-    #  need to not 'move' the map again from the results - stick it to the bounds search
-    #  for ux reasons.
-    #   - flag whether a bounds search in the request closure for callback
-    #
-    # server side:
-    #   - bounds search needs to conver to radius that encompasses the bounds, then reject results
-    #     outside of the bounds?.( Actually, can reject adding listings not in bounds client-side for now - simpler)
+    search = @triggerSearch()
+    search.success (html) =>
+      @showResults(html)
+      for listing in @getListingsFromResults()
+        unless @map.plotListingIfInMapBounds(listing)
+          listing.hide()
+      @map.removeListingsOutOfMapBounds()
+      @finishLoading()
 
+  # Provide a debounced method to trigger the search after a period of constant state
+  triggerSearchWithBoundsAfterDelay: _.debounce(->
+    @triggerSearchWithBounds()
+  , 300)
+
+  # Trigger the search from manipulating the query.
+  # Note that the behaviour semantics are different to manually moving the map.
+  triggerSearchFromQuery: ->
+    @startLoading()
+    @geocodeSearchQuery =>
+      search = @triggerSearch()
+      search.success (html) =>
+        @showResults(html)
+        @updateMapWithListingResults()
+        @finishLoading()
+        @map.fitBounds()
+
+  # Trigger search
+  #
+  # Returns a jQuery Promise object which can be bound to execute response semantics.
   triggerSearch: ->
     @startLoading()
 
-    @geocodeSearchQuery =>
-      $.ajax(
-        url     : @form.attr("src")
-        type    : 'GET',
-        data    : @form.serialize(),
-        success : (html) => @showResults(html)
-      )
+    $.ajax(
+      url     : @form.attr("src")
+      type    : 'GET',
+      data    : @form.serialize()
+    )
 
   # Trigger the search after waiting a set time for further updated user input/filters
-  triggerSearchAfterDelay: _.debounce(-> 
-    @triggerSearch()
+  triggerSearchFromQueryAfterDelay: _.debounce(-> 
+    @triggerSearchFromQuery()
   , 2000)
 
   # Trigger automatic updating of search results
   fieldChanged: (field, value) ->
     @startLoading()
-    @triggerSearchAfterDelay()
+    @triggerSearchFromQueryAfterDelay()
 
-  # Encapsulates the map behaviour for the serach results
-  class Map
-    constructor: (@container) ->
-      @markers = []
-      @infoWindow = new google.maps.InfoWindow() 
-      @googleMap = new google.maps.Map(@container, {
-        zoom: 8,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        mapTypeControl: false
-      })
-      @clearPlottedListings()
 
-      $(window).resize =>
-        google.maps.event.trigger(@googleMap, 'resize') 
-        @fitBounds()
-
-    clearPlottedListings: ->
-      marker.setMap(null) for marker in @markers if @markers
-      @markers = []
-      @bounds = new google.maps.LatLngBounds()
-
-    plotListings: (listings, clearPreviousPlot = true) ->
-      @clearPlottedListings() if clearPreviousPlot
-      @plotListing(listing) for listing in listings
-      @fitBounds()
-
-    plotListing: (listing) ->
-      latLng = new google.maps.LatLng(listing.latitude, listing.longitude)
-      marker = new google.maps.Marker(
-        position: latLng,
-        map:      @googleMap,
-        title:    listing.name
-      )
-      @markers.push(marker)
-      @bounds.extend(latLng)
-
-      # Bind the event for showing the info details on click
-      if listing.element
-        google.maps.event.addListener marker, 'click', =>
-          @showInfoWindowForListing(listing, marker)
-
-    fitBounds: ->
-      @googleMap.fitBounds(@bounds)
-
-    showInfoWindowForListing: (listing, marker) ->
-      popupContent = $('.listing-info', listing.element).html()
-      @infoWindow.setContent(popupContent)
-      @infoWindow.open(@googleMap, marker)     
 
