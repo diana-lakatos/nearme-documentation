@@ -6,33 +6,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :set_tabs
 
-  def store_bookings_request
-    unless current_user
-      session[:user_return_to] =  "/locations/#{params[:location_id]}"
-      session[:user_bookings_request] = request.params[:listings]
-    end
-  end
-
   protected
-
-  def bookings_request
-    logger.info("bookings_request: #{session[:user_bookings_request]}")
-    session[:user_bookings_request] || Array.new
-  end
-
-  def requested_dates
-    if session[:user_reservations]
-       dates = session[:user_reservations][:listings]["0"][:bookings].map { |index,booking| booking.fetch("date") }
-    else
-      Array.new
-    end
-  end
-
-  def clear_requested_bookings
-    session.delete(:user_bookings_request)
-  end
-
-  private
 
   def set_tabs
   end
