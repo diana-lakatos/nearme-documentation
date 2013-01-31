@@ -187,7 +187,7 @@ Then /^a confirm reservation email should be sent to (.*)$/ do |email|
 end
 
 Then /^a reservation awaiting confirmation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "Your reservation is pending confirmation"
+  last_email_for(email).subject.should include "A booking you made is pending confirmation"
 end
 
 Then /^a reservation confirmed email should be sent to (.*)$/ do |email|
@@ -207,5 +207,5 @@ Then /^a reservation rejected email should be sent to (.*)$/ do |email|
 end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "You have a new reservation"
+  last_email_for(email).subject.should include "A guest has made a booking"
 end
