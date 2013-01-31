@@ -2,15 +2,15 @@
 
 - content_for :hero do
   .container-fluid
-    %h1 
-      #{@location.name}
+    %h1
+      #{location.name}
 
-      - if @location.url.present?
-        = link_to @location.url, :target => :_blank do
+      - if location.url.present?
+        = link_to location.url, :target => :_blank do
           %div.ico-link
 
 
-  = render 'photos' 
+  = render 'photos'
 
 %article#space
 
@@ -36,7 +36,13 @@
             listings: #{raw location_listings_json},
             availability_summary_url: #{raw availability_summary_location_url(@location).to_json},
             review_url: #{raw review_location_reservations_url(@location).to_json},
-            requested_bookings:#{@requested_bookings.to_json}
+
+            // Have we returned from setting up a session. If there are bookings, the JS controller
+            // will trigger showing the booking confirmation modal.
+            returnedFromSession: #{@initial_bookings.present? ? 'true' : 'false'},
+
+            // FIXME: We should move the 'Today' default booking behaviour to this seed data.
+            initial_bookings: #{@initial_bookings.to_json}
           }
         });
       });

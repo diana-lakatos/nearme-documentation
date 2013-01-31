@@ -89,7 +89,7 @@ Then /^the response does (not )?include the listing in (.*)$/ do |negative, city
 end
 
 Then /^the response contains an empty organizations list$/ do
-  result["organizations"].should be_empty
+  result["organizations"].empty?.should be_true
 end
 
 Then /^the response should have the listing in (.*) with the (.*) score$/ do |city, direction|

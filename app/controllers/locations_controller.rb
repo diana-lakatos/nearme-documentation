@@ -1,12 +1,13 @@
 class LocationsController < ApplicationController
   before_filter :authenticate_user!, :only => [:new, :create, :populate_address_components_form, :populate_address_components]
-  expose :location
 
   def show
-    @location = location
-    # set when an unauthenticated user try to book
-    @requested_bookings = bookings_request
-    clear_requested_bookings
+    @location = Location.find(params[:id])
+
+    # Attempt to restore a stored reservation state from the session.
+    if params[:restore_reservations]
+      restore_initial_bookings_from_stored_reservation
+    end
   end
 
   def populate_address_components_form
@@ -44,6 +45,8 @@ class LocationsController < ApplicationController
   #   ]
   #
   def availability_summary
+    @location = Location.find(params[:id])
+
     dates = Array.wrap(params[:dates]).map { |date|
       begin
         Date.parse(date)
@@ -52,7 +55,7 @@ class LocationsController < ApplicationController
       end
     }.compact
 
-    render :json => location.listings.map { |listing|
+    render :json => @location.listings.map { |listing|
       {
         :id => listing.id,
         :availability => Hash[
@@ -63,4 +66,15 @@ class LocationsController < ApplicationController
       }
     }.to_json
   end
+
+  private
+
+  # Assigns the initial bookings to send to the JS controller from stored reservation request prior
+  # to initiating a user session. See Locations::ReservationsController for more details
+  def restore_initial_bookings_from_stored_reservation
+    if session[:stored_reservation_location_id] == @location.id
+      @initial_bookings = session[:stored_reservation_bookings]
+    end
+  end
+
 end
