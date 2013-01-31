@@ -1,6 +1,7 @@
 require 'money-rails'
 
 module ReservationsHelper
+  include CurrencyHelper
 
   # Return a URL with HTTPS scheme for location reservation
   def secure_location_reservations_url(location, options = {})
@@ -51,22 +52,22 @@ module ReservationsHelper
     if reservation.total_amount_cents.nil?
       "Free!"
     else
-      humanized_money_with_symbol(reservation.total_amount_cents/100.0)
+      humanized_money_with_cents_and_symbol(reservation.total_amount_cents/100.0)
     end
   end
 
   def reservation_paid(reservation)
     if reservation.free?
-      humanized_money_with_symbol(0.0)
+      humanized_money_with_cents_and_symbol(0.0)
     elsif reservation.paid?
-      humanized_money_with_symbol(reservation.successful_payment_amount/100.0)
+      humanized_money_with_cents_and_symbol(reservation.successful_payment_amount/100.0)
     else
       reservation.payment_status.titleize
     end
   end
 
   def reservation_balance(reservation)
-    humanized_money_with_symbol(reservation.balance/100.0)
+    humanized_money_with_cents_and_symbol(reservation.balance/100.0)
   end
 
   def reservation_dates(reservation)

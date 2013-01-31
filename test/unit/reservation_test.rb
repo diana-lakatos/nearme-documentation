@@ -37,38 +37,6 @@ class ReservationTest < ActiveSupport::TestCase
     end
   end
 
-  context "payment calculations" do
-    setup do
-      @reservation = FactoryGirl.build(:reservation_with_credit_card, total_amount_cents: 100_00)
-    end
-
-    context "unpaid reservations" do
-      should "reservation paid is a string" do
-        assert reservation_paid(@reservation).is_a?(String)
-      end
-
-      should "reservation balance equal to negative reservation amount" do
-        assert_equal "-$1.00", reservation_balance(@reservation)
-      end
-    end
-
-    context "paid reservations" do
-      setup do
-        @reservation.confirm
-        @reservation.reload 
-      end
-
-      should "reservation paid equal to reservation amount" do
-        assert_equal "$1.00", reservation_paid(@reservation)
-      end
-
-      should "reservation balance equal to zero" do
-        assert_equal "$0.00", reservation_balance(@reservation)
-      end
-    end
-    
-  end
-
   context "with serialization" do
     should "work even if the total amount is nil" do
       reservation = Reservation.new
