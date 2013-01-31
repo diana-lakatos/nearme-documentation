@@ -16,6 +16,15 @@ FactoryGirl.define do
       longitude "174.777303"
       association(:company, factory: :company_in_auckland)
     end
+
+    factory :location_in_adelaide do
+      name "Adelaide Meuseum"
+      address "Adelaide"
+      latitude "-41.4391386"
+      longitude "147.1405474"
+      association(:company, factory: :company_in_adelaide)
+    end
+
     factory :location_in_cleveland do
       name "Rock and Roll Hall of Fame"
       address "1100 Rock and Roll Boulevard"

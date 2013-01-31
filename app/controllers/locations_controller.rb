@@ -5,9 +5,11 @@ class LocationsController < ApplicationController
 
   def show
     @location = Location.find(params[:id])
-    # set when an unauthenticated user try to book
-    @requested_bookings = bookings_request
-    clear_requested_bookings
+
+    # Attempt to restore a stored reservation state from the session.
+    if params[:restore_reservations]
+      restore_initial_bookings_from_stored_reservation
+    end
   end
 
   # Return a summary in JSON for all listings availability over specified days
@@ -47,4 +49,15 @@ class LocationsController < ApplicationController
       }
     }.to_json
   end
+
+  private
+
+  # Assigns the initial bookings to send to the JS controller from stored reservation request prior
+  # to initiating a user session. See Locations::ReservationsController for more details
+  def restore_initial_bookings_from_stored_reservation
+    if session[:stored_reservation_location_id] == @location.id
+      @initial_bookings = session[:stored_reservation_bookings]
+    end
+  end
+
 end

@@ -3,19 +3,22 @@ When /^I set the price range to \$(\d+) to \$(\d+)$/ do |min,max|
   set_hidden_field "price_min", min
 end
 
-When /^I search for "([^"]*)"$/ do |text|
-  update_all_indexes
-  fill_in "q", with: text
-  if page.current_path =~ /search/
-    page.execute_script("$('.query').change()")
-  else
-    click_link_or_button "Search" unless page.current_path =~ /search/
-  end
+When /^I search for "([^"]*)"$/ do |query|
+  search_for(query)
+end
+
+When /^I make another search for "([^"]*)"$/ do |query|
+  visit root_path
+  search_for(query)
 end
 
 When /^I select that amenity$/ do
   find(:css, '.amenities .collapsed').click
   check model!("amenity").name
+end
+
+When /^I leave and come back$/ do
+  visit search_path
 end
 
 Then /^I see the listings on a map$/ do
