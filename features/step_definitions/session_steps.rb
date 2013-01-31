@@ -1,4 +1,8 @@
-Given (/^I am logged in as #{capture_model}$/) do |user_instance|
+Given(/^I am logged in as #{capture_model}$/) do |user_instance|
+  login model!(user_instance)
+end
+
+When(/^I log in as #{capture_model}$/) do |user_instance|
   login model!(user_instance)
 end
 
@@ -8,6 +12,12 @@ end
 
 Then /^I should be logged out$/ do
   step "I should see \"Log in\""
+end
+
+Given /^I am not logged in$/ do
+  if page.has_content?("Log out")
+    click_link "Log out"
+  end
 end
 
 

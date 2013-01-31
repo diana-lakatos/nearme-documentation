@@ -20,12 +20,27 @@ Feature: A user can search for a listing
     Then I should see "No results found"
 
   Scenario: A user searches for a location
-    Given a listing in Auckland exists
-    And a listing in Cleveland exists
+    Given a listing in Cleveland exists
+    And a listing in Auckland exists
     When I search for "Auckland"
     Then I see the listings on a map
     And I see a search result for the Auckland listing
     And I do not see a search result for the Cleveland listing
+
+  Scenario: Search result is remembered
+    Given a listing in Auckland exists
+    When I search for "Auckland"
+     And I leave and come back
+    Then I see a search result for the Auckland listing
+
+  Scenario: Search result can be overwritten
+    Given a listing in Auckland exists
+      And a listing in Adelaide exists
+     When I search for "Adelaide"
+      And I make another search for "Auckland"
+      And I leave and come back
+     Then I see a search result for the Auckland listing
+      And I do not see a search result for the Adelaide listing
 
   Scenario: A user searches with a price range
     Given a listing in Auckland exists with a price of $50.00

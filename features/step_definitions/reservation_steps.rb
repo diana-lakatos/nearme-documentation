@@ -50,9 +50,10 @@ Then /^I should have a cancelled reservation on "([^"]*)"$/ do |date|
 end
 
 
-When /^I book space for:$/ do |table|
+When /^I book space( with credit card)? for:$/ do |with_credit_card, table|
   step "I select to book space for:", table
   step "I click to review the booking"
+  step "I provide reservation credit card details" if with_credit_card
   step "I click to confirm the booking"
 end
 
@@ -75,7 +76,7 @@ When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, 
   wait_for_ajax
 end
 
-When /^I select to book space for:$/ do |table|
+When /^I select to book( and review)? space for:$/ do |and_review, table|
   next unless table.hashes.length > 0
 
   dates = table.hashes.map do |row|
@@ -87,7 +88,7 @@ When /^I select to book space for:$/ do |table|
 
   listing = model!(table.hashes.first['Listing'])
   start_to_book(listing, dates, qty)
-
+  step "I click to review the booking" if and_review
 end
 
 When /^I click to review the bookings?$/ do
@@ -95,9 +96,58 @@ When /^I click to review the bookings?$/ do
   wait_for_ajax
 end
 
-When /^I click to confirm the bookings?$/ do
+When /^I provide reservation credit card details$/ do
+  mock_billing_gateway
+
+  choose 'payment_method_credit_card'
+  fill_in 'card_number', :with => "4111111111111111"
+  fill_in 'card_expires', :with => '1218'
+  fill_in 'card_code', :with => '123'
+  @credit_card_reservation = true
+end
+
+When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
+  if !credit_card && !@credit_card_reservation
+    choose 'payment_method_manual'
+  end
+
   click_button "Request Booking Now"
   wait_for_ajax
+end
+
+Then(/^I should see the booking confirmation screen for:$/) do |table|
+  wait_for_ajax
+
+  # Parse the table
+  dates = table.hashes.map do |row|
+    Chronic.parse(row['Date']).to_date
+  end
+
+  qty = table.hashes.first['Quantity'].to_i
+  qty = 1 if qty < 1 
+
+  listing = model!(table.hashes.first['Listing'])
+
+  within '.space-reservation-modal' do
+    assert page.has_content?("Book space at #{listing.location.name}")
+    dates.each do |date|
+      formatted_date = date.strftime('%-d %B')
+      booking_line = "#{qty} #{listing.name}"
+      assert page.has_content?(formatted_date), "Modal should see #{formatted_date}"
+      assert page.has_content?(booking_line), "Modal should see #{booking_line}"
+    end
+  end
+end
+
+Then(/^I should be asked to log in before making a booking$/) do
+  within '.space-reservation-modal' do
+    assert page.has_content?("Log in or sign up")
+  end
+end
+
+When(/^I log in to continue booking$/) do
+  click_link "Log in or sign up"
+  step "I log in as the user"
 end
 
 When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved for '(.+)'$/ do |user, qty, listing, date|
@@ -168,29 +218,29 @@ Then /^I should see the following reservation events in the feed in order:$/ do 
 end
 
 Then /^a confirm reservation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A new reservation requires your confirmation"
+  last_email_for(email).subject.should include "A booking requires your confirmation"
 end
 
 Then /^a reservation awaiting confirmation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "Your reservation is pending confirmation"
+  last_email_for(email).subject.should include "A booking you made is pending confirmation"
 end
 
 Then /^a reservation confirmed email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "Your reservation has been confirmed"
+  last_email_for(email).subject.should include "A booking you made has been confirmed"
 end
 
 Then /^a reservation cancelled email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A reservation has been cancelled"
+  last_email_for(email).subject.should include "A guest has cancelled a booking"
 end
 
 Then /^a reservation cancelled by owner email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match /Your reservation at (.*) has been cancelled by the owner/
+  last_email_for(email).subject.should match "A booking you made has been cancelled by the owner"
 end
 
 Then /^a reservation rejected email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match /reservation at (.*) has been rejected/
+  last_email_for(email).subject.should match "A booking you made has been rejected"
 end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "You have a new reservation"
+  last_email_for(email).subject.should include "A guest has made a booking"
 end

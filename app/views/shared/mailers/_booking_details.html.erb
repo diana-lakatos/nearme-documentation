@@ -1,0 +1,40 @@
+<h1>Booking</h1>
+
+<h2>Listing</h2>
+<p>'<%= listing.name %>' at <%= link_to(listing.location.name, location_url(listing.location)) %></p>
+
+<h2>Quantity</h2>
+<p><%= reservation.periods.first.seats.size %></p>
+
+<h2>Dates</h2>
+<ul>
+<% reservation.periods.each do |period| %>
+  <li><%= period.date.strftime("%A %e %B %Y") %>
+<% end %>
+</ul>
+
+<h2>Host</h2>
+<p><%= mail_to listing.creator.email, listing.creator.name %></p>
+
+<% if listing.location.phone.present? %>
+  <h2>Contact</h2>
+  <p><%= listing.location.phone %></p>
+<% end %>
+
+<h1>Payment</h1>
+
+<h2>Total</h2>
+<p><%= reservation_total_price(reservation) %></p>
+
+<% if reservation.credit_card_payment? %>
+  <h2>Paid</h2>
+  <p><%= reservation_paid(reservation) %></p>
+
+  <h2>Balance</h2>
+  <p><%= reservation_balance(reservation) %></p>
+
+  <% if reservation.pending? %>
+    <p>This reservation is currently pending confirmation, and will be charged when confirmed.</p>
+  <% end %>
+
+<% end %>

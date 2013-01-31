@@ -72,6 +72,16 @@
     margin-right: -$padding;
     margin-top: $padding;
     margin-bottom: $padding;
+    text-align: center;
+  }
+  .hr span {
+    display: inline-block;
+    background: #fafafa;
+    padding: 0 8px;
+    position: relative;
+    top: -10px;
+    color: #999999;
+    font-size: 18px
   }
 }
 

@@ -11,14 +11,18 @@
     %meta{:content => "tellthemwhen_verif_1af11d7040aa81a9ab2e07d4efee180d2e93d030", :name => "TellThemWhen"}/
     %meta{:content => "IE=edge,chrome=1", "http-equiv" => "X-UA-Compatible"}/
     = csrf_meta_tag
+    = tag :meta, :name => "stripe-key", :content => stripe_public_key
     %link{:href => "/favicon.ico?9002", :rel => "shortcut icon"}/
     = stylesheet_link_tag 'new_layout'
     = stylesheet_link_tag 'vendor/fancybox/jquery.fancybox-1.3.1', :media => "screen, projection"
 
+    = javascript_include_tag "//use.typekit.net/nyj7syq.js"
+    = javascript_include_tag "https://js.stripe.com/v1/"
     = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
     = javascript_include_tag :application
-    <script type="text/javascript" src="//use.typekit.net/nyj7syq.js"></script>
-    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    :javascript
+      try{Typekit.load();}catch(e){}
     
     /[if lt IE 9]
       = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'

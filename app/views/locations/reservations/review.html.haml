@@ -1,6 +1,6 @@
 %h1 Book space at #{@location.name}
 
-= form_tag location_reservations_url(@location), :method => :post, :remote => true do
+= form_tag secure_location_reservations_url(@location), :method => :post, :remote => true, :class => "payment form-horizontal" do
   = render 'locations/reservations/fields'
 
   - location_reservation_summaries.each do |date, reservations|
@@ -19,9 +19,49 @@
 
   %hr
 
+  - if reservation_needs_payment_details?
+    .control-group
+      = radio_button_tag :payment_method, "credit_card", reservation_credit_card_payment?
+      = label_tag :payment_method_credit_card, 'Charge my credit card once booking confirmed'
+      
+    .control-group
+      = radio_button_tag :payment_method, "manual", reservation_manual_payment?
+      = label_tag :payment_method_manual, 'I will make the payment in person on arrival'
+    
+    #credit_card_fields{:style => "display: none"}
+      %hr.divider
+
+      - if @errors.present?
+        .flash.error
+          %ul
+            - @errors.each do |e|
+              %li= e
+
+      .control-group
+        = label_tag :card_number, "Card number", :class => 'control-label'
+        .controls.card-number
+          = text_field_tag :card_number, nil
+
+      .control-group
+        = label_tag :card_expires, "Expires", :class => 'control-label'
+        .controls.card-expires
+          = text_field_tag :card_expires, nil, size: 4, placeholder: 'MMYY'
+
+      .control-group
+        = label_tag :card_code, "Card code", :class => 'control-label'
+        .controls.card-code
+          = text_field_tag :card_code, nil, size: 3, placeholder: 'CVC'
+
+    %hr
+
   %p.text-center
     = submit_tag 'Request Booking Now'
 
   - if location_reservation_needs_confirmation?
     %p.notice.text-center
       This host manually confirms all bookings before payment
+
+:javascript
+  $(function() {
+    new Bookings.ReservationModal($('form.payment'))
+  });

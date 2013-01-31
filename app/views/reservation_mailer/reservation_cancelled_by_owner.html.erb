@@ -1,9 +1,0 @@
-<p>Dear <%= @user %>,</p>
-
-<p>Unfortunately, your booking at <%= @listing %> has been cancelled.</p>
-
-<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %>
-
-<p>This booking was previously confirmed, but the plans have changed. I’m sure it’s nothing personal. Good luck finding another workplace or booking for this one on another day :)</p>
-
-<p><%= link_to 'Search for another space', search_path %></p>
