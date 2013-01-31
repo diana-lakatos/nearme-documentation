@@ -21,6 +21,7 @@ section.locations-holder {
       top: 15px;
       left: 10px;
     }
+
     @include dashboard-acc-group
   }
   .delete {
@@ -30,9 +31,24 @@ section.locations-holder {
     color: $gray3;
     padding-left: 14px;
   }
+  .alert{
+      border-radius: 12px;
+  }
+  .close {
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 20px;
+    color: #000000;
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 0.2;
+    filter: alpha(opacity=20);
+  }
+
   section.box {
     padding-bottom: 0;
     header {
+      height:24px;
       margin-bottom: 0;
       cursor: pointer;
       .action {
@@ -50,6 +66,7 @@ section.locations-holder {
       width: 100%;
       text-align: center;
     }
+
   }
 }
 section.listings {
@@ -67,6 +84,7 @@ section.listings {
       border-radius: 0;
       border-left: 8px solid $gray4; 
       header {
+        height: 24px;
         margin-bottom:0;
         border-radius: 0;
       } 

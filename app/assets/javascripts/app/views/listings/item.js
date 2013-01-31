@@ -1,8 +1,8 @@
-define(['jquery', 'backbone', 'hbs!templates/listings/item','bootstrap'], function($, Backbone, listingTemplate) {
+define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shared/errors', 'bootstrap'], function($, Backbone, listingTemplate, errorsTemplate) {
   var ListingView = Backbone.View.extend({
     template: listingTemplate,
     initialize: function() {
-      _.bindAll(this, 'render','_afterSave');
+      _.bindAll(this, 'render','_afterSave', '_showError');
     },
 
     events: {
@@ -37,7 +37,7 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item','bootstrap'], functi
         }
         return acc;
       }, {});
-      this.model.save(data, {success: this._afterSave});
+      this.model.save(data, {success: this._afterSave, error: this._showError});
     },
 
     trash: function(event) {
@@ -63,7 +63,16 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item','bootstrap'], functi
         this.justCreated = false;
         $('.listing-content', this.$el).collapse('show');
       }
+    },
+
+    _showError: function(data){
+      var msg = $.parseJSON(data.responseText).errors.join(", ");
+      var content = errorsTemplate({msg:msg});
+      var id = !this.model.isNew()? this.model.id : '';
+      $('.action', this.$el.find('#listing-for-'+ id)).prepend(content);
+      $('.alert-error', this.$el).fadeIn();
     }
+
   });
   return ListingView;
 

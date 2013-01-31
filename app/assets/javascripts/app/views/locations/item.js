@@ -1,8 +1,8 @@
-define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/listings/item', 'hbs!templates/locations/item', 'location_finder'], function($, Backbone, ListingCollection, ListingModel, ListingView, locationTemplate) {
+define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/listings/item', 'hbs!templates/locations/item', 'hbs!templates/shared/errors',  'location_finder'], function($, Backbone, ListingCollection, ListingModel, ListingView, locationTemplate, errorsTemplate) {
   var LocationView = Backbone.View.extend({
     template: locationTemplate,
     initialize: function() {
-      _.bindAll(this, 'render', 'addAll', 'addOne','trash', '_afterSave');
+      _.bindAll(this, 'render', 'addAll', 'addOne','trash', '_afterSave', '_showError');
       this.listingCollection = new ListingCollection(this.model.get('listings'));
       var self = this;
     },
@@ -21,7 +21,7 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       if (this.model.isNew()) {
         $('.add-listing', this.$el).hide();
       }
-      new Search.LocationFinder($('form#edit_location_'+ this.model.id, this.$el));
+      new Search.LocationFinder($('form#edit_location_'+ this._getId(), this.$el));
       return this;
     },
 
@@ -77,7 +77,8 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
         return acc;
       }, {});
       this.model.save(data, {
-        success: this._afterSave
+        success: this._afterSave,
+        error: this._showError
       });
     },
 
@@ -111,7 +112,19 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
         this.render();
         $('.location-content', this.$el).collapse('show');
       }
+    },
+
+    _showError: function(data){
+      var msg = $.parseJSON(data.responseText).errors.join(", ");
+      var content = errorsTemplate({msg:msg});
+      $('.action', this.$el.find('#location-'+ this._getId() +'-details-holder')).prepend(content);
+      $('.alert-error', this.$el).fadeIn();
+    },
+
+    _getId: function(){
+      return  !this.model.isNew()? this.model.id : '';
     }
+
   });
   return LocationView;
 
