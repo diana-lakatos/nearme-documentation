@@ -75,7 +75,7 @@ When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, 
   wait_for_ajax
 end
 
-When /^I select to book space for:$/ do |table|
+When /^I select to book( and review)? space for:$/ do |and_review, table|
   next unless table.hashes.length > 0
 
   dates = table.hashes.map do |row|
@@ -87,7 +87,7 @@ When /^I select to book space for:$/ do |table|
 
   listing = model!(table.hashes.first['Listing'])
   start_to_book(listing, dates, qty)
-
+  step "I click to review the booking" if and_review
 end
 
 When /^I click to review the bookings?$/ do

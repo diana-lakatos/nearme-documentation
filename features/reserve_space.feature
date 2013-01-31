@@ -8,10 +8,10 @@ Feature: A user can book at a space
       And a location exists with company: that company
       And a listing exists with location: that location, quantity: 10
       And a user exists
+      And I am logged in as the user
 
   @javascript
   Scenario: A logged in user can book a listing
-    Given I am logged in as the user
       When I book space for:
           | Listing     | Date   | Quantity  |
           | the listing | Monday  | 1        |
@@ -21,8 +21,7 @@ Feature: A user can book at a space
 
   @javascript
   Scenario: Booking for a 'automatically confirm' listing should show relevant details
-    Given I am logged in as the user
-    And bookings for the listing do not need to be confirmed
+    Given bookings for the listing do not need to be confirmed
     When I go to the location's page
     And I book space for:
       | Listing | Date | Quantity|
@@ -32,8 +31,7 @@ Feature: A user can book at a space
 
   @javascript
   Scenario: Booking for a non-'automatically confirm' listing should show relevant details
-    Given I am logged in as the user
-    And bookings for that listing do need to be confirmed
+    Given bookings for that listing do need to be confirmed
     When I go to the location's page
     And I book space for:
       | Listing     | Date   | Quantity |
@@ -42,17 +40,23 @@ Feature: A user can book at a space
     Then I should not see "This host manually confirms all bookings before payment"
 
   @javascript
-  Scenario: Booking for an anonymous user should return them to the booking state after logging in
-    When I go to the location's page
-    And I select to book space for:
+  Scenario: As an anonymous user I should be asked to log in before booking
+    Given I am not logged in
+    When I select to book and review space for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 2        |
-    And I click to review the booking
     Then I should be asked to log in before making a booking
-    When I log in to continue booking
-    Then I should be on the location's page
-    And I should see the booking confirmation screen for:
+
+  @javascript
+  Scenario: As an anonymous user I should return to my booking state after logging in
+    Given I am not logged in
+    When I select to book and review space for:
+      | Listing     | Date   | Quantity |
+      | the listing | Monday | 2        |
+    And I log in to continue booking
+    Then I should see the booking confirmation screen for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 2        |    
+
 
 
