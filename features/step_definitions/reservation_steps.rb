@@ -183,7 +183,7 @@ Then /^I should see the following reservation events in the feed in order:$/ do 
 end
 
 Then /^a confirm reservation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A new reservation requires your confirmation"
+  last_email_for(email).subject.should include "A booking requires your confirmation"
 end
 
 Then /^a reservation awaiting confirmation email should be sent to (.*)$/ do |email|
@@ -191,19 +191,19 @@ Then /^a reservation awaiting confirmation email should be sent to (.*)$/ do |em
 end
 
 Then /^a reservation confirmed email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "Your reservation has been confirmed"
+  last_email_for(email).subject.should include "A booking you made has been confirmed"
 end
 
 Then /^a reservation cancelled email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A reservation has been cancelled"
+  last_email_for(email).subject.should include "A guest has cancelled a booking"
 end
 
 Then /^a reservation cancelled by owner email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match /Your reservation at (.*) has been cancelled by the owner/
+  last_email_for(email).subject.should match "A booking you made has been cancelled by the owner"
 end
 
 Then /^a reservation rejected email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match /reservation at (.*) has been rejected/
+  last_email_for(email).subject.should match "A booking you made has been rejected"
 end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|
