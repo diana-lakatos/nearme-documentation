@@ -16,6 +16,11 @@ section.locations-holder {
       background: $dnm_white;
       padding: 20px 14px;
     }
+    div.geolocation{
+      position: absolute;
+      top: 15px;
+      left: 10px;
+    }
     @include dashboard-acc-group
   }
   .delete {

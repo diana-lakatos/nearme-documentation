@@ -1,114 +1,107 @@
 <div class="accordion-group">
   <div class="accordion-heading">
-    <a class="accordion-toggle location-overview" data-toggle="collapse" data-parent="#locations-holder" href="#collapse-location-{{id}}-overview">Overview</a>
+    <a class="accordion-toggle location-overview" data-toggle="collapse" data-parent="#locations-holder"
+    href="#collapse-location-{{id}}-overview">Overview</a>
   </div>
-  <div id="collapse-location-{{id}}-overview" class="accordion-body collapse in location-overview-body" >
+  <div id="collapse-location-{{id}}-overview" class="accordion-body collapse in location-overview-body">
     <div id="location-{{id}}-overview" class="accordion-inner">
-
-        <div class="control-group string required">
-          <label class="string required control-label" for="name">
-            <abbr title="required">*</abbr>Space name</label>
-          <div class="controls">
-            <input class="string required" id="name" name="name"
-            placeholder="Name your space!" size="50" type="text" value="{{name}}">
-          </div>
+      <div class="control-group string required">
+        <label class="string required control-label" for="name">
+          <abbr title="required">*</abbr>Space name</label>
+        <div class="controls">
+          <input class="string required" id="name" name="name" placeholder="Name your space!"
+          size="50" type="text" value="{{name}}">
         </div>
-        <div class="control-group">
-          <label class="control-label" for="address">Space location</label>
-          <div class="controls">
-            <div class="input-icon-wrapper">
-              <input autocomplete="off" data-behavior="address-autocomplete" id="address"
-              name="address" placeholder="Type an address..." size="30" type="text"
-              value="{{formatted_address}}">
-              <i class="icon ico-crosshairs geolocate-trigger"></i>
-              <i class="icon icon-loading" style="display: none;"></i>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="address">Space location</label>
+        <div class="controls">
+          <div class="input-icon-wrapper">
+            <input class="query" id="address" name="address" placeholder="Type an address..." type="text" value="{{formatted_address}}" autocomplete="off">
+            <div class="geolocation active">
+              <span class="ico-crosshairs"></span>
             </div>
-            <div class="map" data-marker="/assets/components/map-pin.png" style="display: none">
-              <div class="map-container" style="height: 240px; width: 373px; position: relative; background-color: rgb(229, 227, 223); overflow: hidden; -webkit-transform: translateZ(0);">
+          </div>
+          <div class="map" data-marker="/assets/components/map-pin.png" style="display: none">
+            <div class="map-container" style="height: 240px; width: 373px; position: relative; background-color: rgb(229, 227, 223); overflow: hidden; -webkit-transform: translateZ(0);">
+              <div style="position: absolute; left: 0px; top: 0px; overflow: hidden; width: 100%; height: 100%; z-index: 0;">
                 <div style="position: absolute; left: 0px; top: 0px; overflow: hidden; width: 100%; height: 100%; z-index: 0;">
-                  <div style="position: absolute; left: 0px; top: 0px; overflow: hidden; width: 100%; height: 100%; z-index: 0;">
-                    <div style="position: absolute; left: 0px; top: 0px; z-index: 1; cursor: url(http://maps.gstatic.com/mapfiles/openhand_8_8.cur), default; -webkit-transform-origin: 0px 0px; -webkit-transform: matrix(1, 0, 0, 1, 0, 0);">
-                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 200;">
-                        <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 101;"></div>
-                      </div>
-                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 201;">
-                        <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 102;">
-                          <div style="position: absolute; left: 0px; top: 0px; z-index: 0;">
-                            <div style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
-                          </div>
-                        </div>
-                        <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 103;">
-                          <div style="position: absolute; left: 0px; top: 0px; z-index: -1;">
-                            <div style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 202;">
-                        <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 104;"></div>
-                        <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 105;"></div>
-                        <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 106;"></div>
-                      </div>
-                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 100;">
+                  <div style="position: absolute; left: 0px; top: 0px; z-index: 1; cursor: url(http://maps.gstatic.com/mapfiles/openhand_8_8.cur), default; -webkit-transform-origin: 0px 0px; -webkit-transform: matrix(1, 0, 0, 1, 0, 0);">
+                    <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 200;">
+                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 101;"></div>
+                    </div>
+                    <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 201;">
+                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 102;">
                         <div style="position: absolute; left: 0px; top: 0px; z-index: 0;">
                           <div style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
                         </div>
                       </div>
-                      <div style="position: absolute; z-index: 0;">
-                        <div style="overflow: hidden;"></div>
+                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 103;">
+                        <div style="position: absolute; left: 0px; top: 0px; z-index: -1;">
+                          <div style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
+                        </div>
                       </div>
+                    </div>
+                    <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 202;">
+                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 104;"></div>
+                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 105;"></div>
+                      <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 106;"></div>
+                    </div>
+                    <div style="-webkit-transform: translateZ(0); position: absolute; left: 0px; top: 0px; z-index: 100;">
+                      <div style="position: absolute; left: 0px; top: 0px; z-index: 0;">
+                        <div style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
+                      </div>
+                    </div>
+                    <div style="position: absolute; z-index: 0;">
+                      <div style="overflow: hidden;"></div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <input id="local_geocoding" name="local_geocoding"
-            type="hidden">
-            <input id="latitude" name="latitude" type="hidden"
-            value="{{latitude}}">
-            <input id="longitude" name="longitude" type="hidden"
-            value="{{longitude}}">
-            <input id="formatted_address" name="formatted_address"
-            type="hidden" value="{{formatted_address}}">
           </div>
+          <input id="local_geocoding" name="local_geocoding" type="hidden">
+          <input id="latitude" name="latitude" type="hidden" value="{{latitude}}">
+          <input id="longitude" name="longitude" type="hidden" value="{{longitude}}">
+          <input id="formatted_address" name="formatted_address" type="hidden" value="{{formatted_address}}">
         </div>
-        <div class="control-group text required">
-          <label class="text required control-label" for="description">
-            <abbr title="required">*</abbr>Space description</label>
-          <div class="controls">
-            <textarea class="text required" cols="40" id="description" name="description"
-            placeholder="Describe the overall look, feel, and ambience of your space. Be exciting!"
-            rows="20">{{description}}</textarea>
-          </div>
+      </div>
+      <div class="control-group text required">
+        <label class="text required control-label" for="description">
+          <abbr title="required">*</abbr>Space description</label>
+        <div class="controls">
+          <textarea class="text required" cols="40" id="description" name="description"
+          placeholder="Describe the overall look, feel, and ambience of your space. Be exciting!"
+          rows="20">{{description}}</textarea>
         </div>
-        <div class="control-group email optional">
-          <label class="email optional control-label" for="email">Booking email</label>
-          <div class="controls">
-            <input class="string email optional" id="email" name="email"
-            placeholder="yourname@example.com" size="50" type="email" value="{{email}}">
-          </div>
+      </div>
+      <div class="control-group email optional">
+        <label class="email optional control-label" for="email">Booking email</label>
+        <div class="controls">
+          <input class="string email optional" id="email" name="email" placeholder="yourname@example.com"
+          size="50" type="email" value="{{email}}">
         </div>
-        <div class="control-group tel optional">
-          <label class="tel optional control-label" for="phone">Booking phone #</label>
-          <div class="controls">
-            <input class="string tel optional" id="phone" name="phone"
-            placeholder="1800 BOOKSPACE" size="50" type="tel" value="{{phone}}">
-          </div>
+      </div>
+      <div class="control-group tel optional">
+        <label class="tel optional control-label" for="phone">Booking phone #</label>
+        <div class="controls">
+          <input class="string tel optional" id="phone" name="phone" placeholder="1800 BOOKSPACE"
+          size="50" type="tel" value="{{phone}}">
         </div>
-        <div class="control-group currency optional">
-          <label class="currency optional control-label" for="currency">Booking currency</label>
-          <div class="controls">
-            {{> templates_shared_currency}}
-          </div>
+      </div>
+      <div class="control-group currency optional">
+        <label class="currency optional control-label" for="currency">Booking currency</label>
+        <div class="controls">{{> templates_shared_currency}}</div>
+      </div>
+      <div class="control-group string optional">
+        <label class="string optional control-label" for="special_notes">Special terms or notes</label>
+        <div class="controls">
+          <input class="string optional" id="special_notes" name="special_notes"
+          placeholder="Any special terms or notes to add?" size="50" type="text"
+          value="{{special_notes}}">
+          <p class="help-block">Got a dog? Require an NDA? Write any special conditions for booking.</p>
         </div>
-        <div class="control-group string optional">
-          <label class="string optional control-label" for="special_notes">Special terms or notes</label>
-          <div class="controls">
-            <input class="string optional" id="special_notes" name="special_notes"
-            placeholder="Any special terms or notes to add?" size="50" type="text"
-            value="{{special_notes}}">
-            <p class="help-block">Got a dog? Require an NDA? Write any special conditions for booking.</p>
-          </div>
-        </div>
+      </div>
     </div>
   </div>
 </div>

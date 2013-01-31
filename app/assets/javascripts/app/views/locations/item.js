@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/listings/item', 'hbs!templates/locations/item'], function($, Backbone, ListingCollection, ListingModel, ListingView, locationTemplate) {
+define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/listings/item', 'hbs!templates/locations/item', 'location_finder'], function($, Backbone, ListingCollection, ListingModel, ListingView, locationTemplate) {
   var LocationView = Backbone.View.extend({
     template: locationTemplate,
     initialize: function() {
@@ -11,7 +11,8 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       "click .save-location": "save",
       "click .delete-location": "trash",
       "click .add-listing": "createListing",
-      "keyup input#name": "nameChanged"
+      "keyup input#name": "nameChanged",
+      "keyup #address" : "valChanged"
     },
 
     render: function() {
@@ -20,6 +21,7 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       if (this.model.isNew()) {
         $('.add-listing', this.$el).hide();
       }
+      new Search.LocationFinder($('form#edit_location_'+ this.model.id, this.$el));
       return this;
     },
 
@@ -51,6 +53,11 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
 
     nameChanged: function(event) {
       $('.location-header[data-location-id=' + this.model.id + ']', this.$el).text($(event.target).val());
+    },
+
+    valChanged: function(event) {
+      var viewTarget = null;
+      $('#formatted_address', this.$el).val($(event.target).val());
     },
 
     save: function() {
