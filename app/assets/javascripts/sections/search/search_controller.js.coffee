@@ -13,6 +13,9 @@ class Search.SearchController extends Search.Controller
       event.preventDefault()
       @triggerSearch()
 
+    @map.on 'boundsMoved', =>
+      @triggerSearchWithBounds(@map.getBounds())
+
   initializeMap: ->
     mapContainer = @container.find('#listings_map')[0]
     return unless mapContainer
@@ -54,6 +57,18 @@ class Search.SearchController extends Search.Controller
       )
 
     @map.plotListings(listings)
+
+  triggerSearchWithBounds: (bounds) ->
+    # update nx ny sx sy form attributes
+    # trigger search
+    # caveats:
+    #  need to not 'move' the map again from the results - stick it to the bounds search
+    #  for ux reasons.
+    #   - flag whether a bounds search in the request closure for callback
+    #
+    # server side:
+    #   - bounds search needs to conver to radius that encompasses the bounds, then reject results
+    #     outside of the bounds?.( Actually, can reject adding listings not in bounds client-side for now - simpler)
 
   triggerSearch: ->
     @startLoading()
