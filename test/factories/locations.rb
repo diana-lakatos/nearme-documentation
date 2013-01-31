@@ -7,6 +7,7 @@ FactoryGirl.define do
     latitude "-33.856944"
     longitude "151.215278"
     availability_template_id "M-F9-5"
+    association(:location_type, factory: :location_type)
     company
 
     factory :location_in_auckland do

@@ -6,6 +6,7 @@ FactoryGirl.define do
 
     description "Aliquid eos ab quia officiis sequi."
     location
+    association :listing_type
     confirm_reservations true
     after(:create) do |listing|
       listing.unit_prices << FactoryGirl.create(:unit_price, listing: listing)

@@ -120,6 +120,12 @@ ActiveRecord::Schema.define(:version => 20130205205139) do
     t.datetime "updated_at",        :null => false
   end
 
+  create_table "listing_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "listings", :force => true do |t|
     t.integer  "location_id"
     t.string   "name"
@@ -133,6 +139,7 @@ ActiveRecord::Schema.define(:version => 20130205205139) do
     t.datetime "deleted_at"
     t.boolean  "confirm_reservations"
     t.boolean  "delta",                   :default => true, :null => false
+    t.integer  "listing_type_id"
   end
 
   create_table "location_amenities", :force => true do |t|
@@ -140,6 +147,12 @@ ActiveRecord::Schema.define(:version => 20130205205139) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "location_id"
+  end
+
+  create_table "location_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "locations", :force => true do |t|
@@ -165,6 +178,7 @@ ActiveRecord::Schema.define(:version => 20130205205139) do
     t.string   "state"
     t.string   "country"
     t.string   "slug"
+    t.integer  "location_type_id"
   end
 
   add_index "locations", ["slug"], :name => "index_locations_on_slug"

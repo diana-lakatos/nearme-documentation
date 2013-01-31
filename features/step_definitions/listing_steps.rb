@@ -79,6 +79,36 @@ Then /^I (do not )?see a search result for the ([^\$].*) listing$/ do |negative,
   end
 end
 
+When /^I provide valid listing information$/ do 
+  create_listing_without_visit(model!("location"), "Valid listing") do
+    fill_in "Quantity", with: "2"
+    fill_in "Description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
+    fill_in "Price per day", with: "50.00"
+    choose "Yes"
+    uncheck "Free"
+    select "Desk"
+  end
+end
+
+When /^I don't provide listing type$/ do
+  try_to_create_listing(model!("location"), "Invalid listing") do
+    select("", :from => "listing_listing_type_id")
+  end
+end
+
+Then /^this listing should not exist$/ do
+  assert_nil Listing.find_by_name("Invalid listing")
+end
+
+Then /^this listing should exist$/ do
+  listing = Listing.find_by_name("Valid listing")
+  assert_equal 2, listing.quantity
+  assert_equal "Proin adipiscing nunc vehicula lacus varius dignissim.", listing.description
+  assert listing.confirm_reservations
+  assert_equal "Desk", listing.listing_type.name
+  assert_equal 5000, listing.daily_price.cents
+end
+
 Then /^I should see the following listings in order:$/ do |table|
   found = all("article.listing h2")
   table.raw.flatten.each_with_index do |listing, index|

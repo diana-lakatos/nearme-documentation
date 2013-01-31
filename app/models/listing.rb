@@ -35,6 +35,7 @@ class Listing < ActiveRecord::Base
   delegate :url, to: :company
 
   belongs_to :location
+  belongs_to :listing_type
   delegate :address, :amenities, :currency, :formatted_address,
     :local_geocoding, :latitude, :longitude, :distance_from, to: :location,
     allow_nil: true
@@ -50,14 +51,14 @@ class Listing < ActiveRecord::Base
 
   # === Callbacks
 
-  validates_presence_of :location_id, :name, :description, :quantity
+  validates_presence_of :location_id, :name, :description, :quantity, :listing_type_id
   validates_numericality_of :quantity
   validates_length_of :description, :maximum => 250
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
                   :name, :description, :daily_price, :weekly_price, :monthly_price,
                   :availability_template_id, :availability_rules_attributes, :defer_availability_rules, :free,
-                  :photos_attributes
+                  :photos_attributes, :listing_type_id
 
   delegate :to_s, to: :name
 

@@ -23,6 +23,7 @@
         = f.hidden_field :formatted_address
 
     = f.input :description, :as => :description, :label => 'Location description', :placeholder => 'Describe the overall look, feel, and ambience of your location. Be exciting!'
+    = f.association :location_type, :label => "Location Type"
     = f.input :email, :label => 'Booking email', :placeholder => 'yourname@example.com', :required => true
     = f.input :phone, :label => 'Booking phone #', :placeholder => '1800 BOOKSPACE'
     = f.input :currency, :as => :currency, :label => "Booking currency", :default => 'USD'

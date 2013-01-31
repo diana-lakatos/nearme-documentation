@@ -31,4 +31,7 @@ if Rails.env.development? || Rails.env.staging?
     log FactoryGirl.create(:listing, :location => location)
   end
 
+
+
 end
+
