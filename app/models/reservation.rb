@@ -1,4 +1,16 @@
 class Reservation < ActiveRecord::Base
+  PAYMENT_METHODS = {
+    :credit_card => 'credit_card',
+    :manual      => 'manual'
+  }
+
+  PAYMENT_STATUSES = {
+    :paid => 'paid',
+    :failed => 'failed',
+    :pending => 'pending',
+    :unknown => 'unknown'
+  }
+
   belongs_to :listing
   belongs_to :owner, :class_name => "User"
 
@@ -9,16 +21,22 @@ class Reservation < ActiveRecord::Base
            :class_name => "ReservationPeriod",
            :dependent => :destroy
 
+  has_many :charges, :as => :reference, :dependent => :nullify
+
   validates :periods, :length => { :minimum => 1 }
 
   before_validation :set_total_cost, on: :create
-  after_create      :auto_confirm_reservation
+  before_validation :set_currency, on: :create
+  before_create :set_default_payment_status
+  after_create  :auto_confirm_reservation
 
   acts_as_paranoid
 
   monetize :total_amount_cents
 
   state_machine :state, :initial => :unconfirmed do
+    after_transition :unconfirmed => :confirmed, :do => :attempt_payment_capture
+
     event :confirm do
       transition :unconfirmed => :confirmed
     end
@@ -39,13 +57,14 @@ class Reservation < ActiveRecord::Base
   scope :on, lambda { |date|
     joins(:periods).
       where("reservation_periods.date" => date).
-      where(:state => [:confirmed, :unconfirmed])
+      where(:state => [:confirmed, :unconfirmed]).
+      uniq
   }
 
   scope :upcoming, lambda {
     joins(:periods).
-    where('date >= ?', Date.today).
-    order('date')
+      where('reservation_periods.date >= ?', Date.today).
+      uniq
   }
 
   scope :visible, lambda {
@@ -59,6 +78,9 @@ class Reservation < ActiveRecord::Base
   scope :cancelled, lambda {
     with_state(:cancelled)
   }
+
+  validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
+  validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
   def user=(value)
     self.owner = value
@@ -108,7 +130,45 @@ class Reservation < ActiveRecord::Base
     total
   end
 
+  def successful_payment_amount
+    charges.where(:success => true).first.try(:amount) || 0.0
+  end
+
+  def balance
+    successful_payment_amount - total_amount_cents
+  end
+
+  def credit_card_payment?
+    payment_method == Reservation::PAYMENT_METHODS[:credit_card]
+  end
+
+  def manual_payment?
+    payment_method == Reservation::PAYMENT_METHODS[:manual]
+  end
+
+  def free?
+    total_amount <= 0
+  end
+
+  def paid?
+    payment_status == PAYMENT_STATUSES[:paid]
+  end
+
+  def pending?
+    payment_status == PAYMENT_STATUSES[:pending]
+  end
+
   private
+
+    def set_default_payment_status
+      return if payment_status
+
+      self.payment_status = if free?
+        PAYMENT_STATUSES[:paid]
+      else
+        PAYMENT_STATUSES[:pending]
+      end
+    end
 
     def calculate_total_cost
       # NB: use of 'size' not 'count' here is deliberate - seats/periods may not be persisted at this point!
@@ -125,7 +185,33 @@ class Reservation < ActiveRecord::Base
       self.total_amount_cents = calculate_total_cost
     end
 
+    def set_currency
+      self.currency = self.listing.location.currency
+    end
+
     def auto_confirm_reservation
       confirm! unless listing.confirm_reservations?
     end
+
+    def attempt_payment_capture
+      return if manual_payment? || free? || paid?
+
+      billing_gateway = owner.billing_gateway
+
+      begin
+        billing_gateway.charge(
+          amount: total_amount_cents,
+          currency: currency,
+          reference: self
+        )
+        self.payment_status = PAYMENT_STATUSES[:paid]
+      rescue User::BillingGateway::CardError
+        # TODO: Need to handle re-attempting charge, etc.
+        self.payment_status = PAYMENT_STATUSES[:failed]
+      end
+
+      save!
+    rescue
+    end
+
 end

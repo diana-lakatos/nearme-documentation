@@ -26,7 +26,6 @@ Feature: User Cancels Reservation
       | WoughThorks on October 20, 2010 (unconfirmed)        |
       | Joe's Codin Garage on October 21, 2010 (unconfirmed) |
 
-
   Scenario: A user can cancel a reservation
     Given I am on the dashboard page
     When I cancel the reservation for "19th October 2010"

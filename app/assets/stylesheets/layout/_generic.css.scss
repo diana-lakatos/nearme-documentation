@@ -1,5 +1,9 @@
 // Generic styles to apply to everything
 
+body {
+  background: rgb(240,240,240);
+}
+
 ::selection, ::-moz-selection {
   background-color: $dnm_blue;
   color: white;

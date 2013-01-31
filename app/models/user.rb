@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
   include Gravtastic
 
   before_save :ensure_authentication_token
+  # Includes billing gateway helper method and sets up billing charge association
+  include BillingGateway::UserHelper
 
   is_gravtastic!
 

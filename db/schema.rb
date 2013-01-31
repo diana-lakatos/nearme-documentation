@@ -11,22 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130124171246) do
-
-  create_table "address_component_names", :force => true do |t|
-    t.string  "long_name"
-    t.string  "short_name"
-    t.integer "location_id"
-  end
-
-  create_table "address_component_names_address_component_types", :force => true do |t|
-    t.integer "address_component_name_id"
-    t.integer "address_component_type_id"
-  end
-
-  create_table "address_component_types", :force => true do |t|
-    t.string "name"
-  end
+ActiveRecord::Schema.define(:version => 20130130205412) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -59,6 +44,18 @@ ActiveRecord::Schema.define(:version => 20130124171246) do
   end
 
   add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
+
+  create_table "charges", :force => true do |t|
+    t.integer  "reference_id"
+    t.boolean  "success"
+    t.text     "response"
+    t.integer  "amount"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "user_id"
+    t.string   "reference_type"
+    t.string   "currency"
+  end
 
   create_table "companies", :force => true do |t|
     t.integer  "creator_id"
@@ -138,12 +135,18 @@ ActiveRecord::Schema.define(:version => 20130124171246) do
     t.float    "latitude"
     t.float    "longitude"
     t.text     "info"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.datetime "deleted_at"
     t.string   "formatted_address"
     t.string   "currency"
     t.text     "special_notes"
+    t.text     "address_components"
+    t.string   "street"
+    t.string   "suburb"
+    t.string   "city"
+    t.string   "state"
+    t.string   "country"
   end
 
   create_table "photos", :force => true do |t|
@@ -193,10 +196,13 @@ ActiveRecord::Schema.define(:version => 20130124171246) do
     t.string   "confirmation_email"
     t.integer  "total_amount_cents", :default => 0
     t.string   "currency"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
     t.datetime "deleted_at"
     t.text     "comment"
+    t.boolean  "create_charge"
+    t.string   "payment_method",     :default => "manual",  :null => false
+    t.string   "payment_status",     :default => "unknown", :null => false
   end
 
   create_table "search_queries", :force => true do |t|
@@ -265,6 +271,7 @@ ActiveRecord::Schema.define(:version => 20130124171246) do
     t.string   "phone"
     t.string   "unconfirmed_email"
     t.string   "unlock_token"
+    t.string   "stripe_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

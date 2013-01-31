@@ -6,7 +6,7 @@ std_opts = "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} #{base_opts}"
 verbose_opts = "--format pretty #{base_opts}"
 %>
 default: <%= std_opts %> features
-wip: --tags @wip --wip features
+wip: "--tags @wip --tags ~@future --wip features"
 borked: --tags @borked --wip features
 rerun: <%= rerun_opts %> --format rerun --out rerun.txt --strict --tags ~@wip --tags ~@borked
 verbose: <%= verbose_opts %>

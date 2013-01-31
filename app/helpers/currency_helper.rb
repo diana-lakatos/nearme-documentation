@@ -12,4 +12,11 @@ module CurrencyHelper
     number_to_currency_symbol(currency, content_tag(el.to_sym, price, content_tag_options), currency_options) 
   end
 
+  def humanized_money_with_cents_and_symbol(money)
+    return "" unless money.respond_to?(:to_money)
+
+    money = money.to_money
+    money.format(:symbol => true)
+  end
+
 end
