@@ -11,18 +11,13 @@ Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and that amenit
   listing.location.amenities << model!("amenity") if amenity
 end
 
+
+Given /^a listing which is fully booked$/ do
+  @listing = build_fully_booked_listing
+end
+
 Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) days$/ do |city, desks, num_days|
-  listing = create_listing_in(city)
-
-  listing.update_column(:quantity, desks)
-
-  listing.availability_rules.clear
-  wday = Time.now.wday
-  (wday .. (wday+num_days.to_i)).each do |day|
-    listing.availability_rules.create!(:day => day % 7, :open_hour => 8, :close_hour => 18)
-  end
-
-  (Date.today...num_days.to_i.days.from_now.to_date).all? { |d| listing.availability_for(d) >= desks.to_i }.should == true
+  listing = build_listing_in_city(city, desks: desks, number_of_days: num_days)
 end
 
 Given /^a listed location( without (amenities))?$/ do |_,_|

@@ -39,5 +39,36 @@ module ListingsHelpers
     instance_variable_set "@listing_in_#{city.downcase.gsub(' ', '_')}",
       FactoryGirl.create("listing_in_#{city.downcase.gsub(' ', '_')}")
   end
+
+  def build_listing_in(city, options={})
+
+    create_listing_in(city)
+
+    if desks = options.fetch(:desks, false)
+      listing.update_column(:quantity, desks)
+    end
+
+    if num_days = options.fetch(:number_of_days, false)
+      listing.availability_rules.clear
+
+      wday = Time.now.wday
+      (wday .. (wday+num_days.to_i)).each do |day|
+        listing.availability_rules.create!(:day => day % 7, :open_hour => 8, :close_hour => 18)
+      end
+    end
+  end
+
+  def build_fully_booked_listing
+    FactoryGirl.create(:fully_booked_listing)
+  end
+
+  def date_before_listing_is_fully_booked
+    listing.reservations.first.periods.first.date - 1.day
+  end
+
+  def date_after_listing_is_fully_booked
+    listing.reservations.first.periods.last.date +  1.day
+  end
 end
+
 World(ListingsHelpers)

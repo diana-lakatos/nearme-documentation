@@ -78,9 +78,31 @@ Feature: A user can search for a listing
      Then I see a search result for the Auckland listing
       And I do not see a search result for the Adelaide listing
 
+
+  @wip
+  Scenario: Searching for a listing which is fully booked
+    Given a listing which is fully booked
+    When I search with a date range covering the date it is fully booked
+    Then that listing is not included in the search results
+
+  @future
+  Scenario: Searching for a listing which is closed on the weekends
+    Given a listing which is closed on the weekends
+    When I search with a date range of 2 weeks
+    Then that listing is included in the search results
+
+  @future
+  Scenario: Searching without setting a date range
+    Given there are listings which are unavailable
+    And there are listings which are available
+    When I search without setting a date range
+    Then all the listings are included in the search results
+
+  @future
   Scenario: A user searches with a price range
     Given a listing in Auckland exists with a price of $50.00
     And a listing in Auckland exists with a price of $10.00
     When I set the price range to $0 to $25
     And I search for "Auckland"
-    Then the search results have the $10 listing first
+    Then the search results have the $10 listing
+    And the search results do not have the $25 listing

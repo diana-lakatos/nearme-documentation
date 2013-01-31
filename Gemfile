@@ -66,6 +66,7 @@ group :development, :test do
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
   gem 'jasmine'
+  gem 'debugger'
 end
 
 group :test do
