@@ -1,13 +1,24 @@
 .navbar-inverse {
   ul.nav {
-    li {
+    li.dropdown {
+      @media (max-width: 480px) {
+       a.dropdown-toggle > span, b.caret{
+          display:none;
+        }
+
+      }
       ul.dropdown-menu {
+        min-width: 120px;
+        left: 14px;
         background:$dnm_black;
         li {
           background:$dnm_black;
-          a:hover{
-            background:$dnm_black;
-            color: $dnm_white;
+          a {
+            padding: 8px 5px;
+            &:hover{
+              background:$dnm_black;
+              color: $dnm_white;
+            }
           }
           &.divider{
             border-color: $gray4;
@@ -27,7 +38,7 @@
       a {
         display: block;
         font:normal 16px/22px $font-medium, sans-serif;
-        padding: 8px 16px;
+        padding: 8px 14px;
         position: relative;
         color: $gray3;
 

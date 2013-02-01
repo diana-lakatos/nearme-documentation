@@ -14,9 +14,10 @@ Then /^I should be logged out$/ do
   step "I should see \"Log in\""
 end
 
-Given /^I am not logged in$/ do
+Given (/^I am not logged in as #{capture_model}$/) do |user_instance|
   if page.has_content?("Log out")
-    click_link "Account"
+    user = model!(user_instance)
+    click_link user.first_name
     click_link "Log out"
   end
 end

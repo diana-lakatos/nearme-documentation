@@ -3,7 +3,7 @@
   %ul.nav
     %li.dropdown
       %a.ico-dashboard.dropdown-toggle.header-link{"data-toggle" => "dropdown", :href => "#"}
-        Dashboard
+        %span Dashboard
         %b.caret
       %ul.dropdown-menu
         %li
@@ -18,7 +18,8 @@
             %span.ico-bookings.padding Your Bookings
     %li.dropdown
       %a.ico-user.dropdown-toggle.header-link{"data-toggle" => "dropdown", :href => "#"}
-        Account
+        %span
+          = current_user.first_name
         %b.caret
       %ul.dropdown-menu
         %li
