@@ -1,4 +1,4 @@
-.navbar {
+.navbar-inverse {
   ul.nav {
     li {
       ul.dropdown-menu {
@@ -33,6 +33,12 @@
 
         &:active {
           color: $dnm_white;
+        }
+      }
+      &.dropdown.open {
+        background: $dnm_black;
+        .dropdown-toggle {
+          background: $dnm_black;
         }
       }
     }
