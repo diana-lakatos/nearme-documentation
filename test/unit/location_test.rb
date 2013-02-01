@@ -71,7 +71,7 @@ class LocationTest < ActiveSupport::TestCase
   context "creating address components" do
 
     setup do
-      @location = FactoryGirl.create(:ursynowska_address_components)
+      @location = FactoryGirl.create(:location_ursynowska_address_components)
     end
 
     context 'creates address components for new record' do
@@ -89,33 +89,30 @@ class LocationTest < ActiveSupport::TestCase
       end
 
       should "ignore missing fields and store the one present" do
-      @location = FactoryGirl.create(:warsaw_address_components)
+        @location = FactoryGirl.create(:location_warsaw_address_components)
         assert_equal 'Warsaw', @location.city
         assert_nil @location.suburb
       end
 
     end
 
+    should "handle trash" do
+      @location.address_components = { 0 => { "does" => "not", "exist" => ", but", "should" => "work"} }
+      @location.save!
+      @location.reload
+      assert_nil @location.city
+    end
 
-      should "handle trash" do
-        @location.address_components = { 0 => { "does" => "not", "exist" => ", but", "should" => "work"} }
-        @location.save!
-        @location.reload
-        assert_nil @location.city
-      end
-
-
-      should "should update all address components fields based on address_components" do
-        @location.attributes = FactoryGirl.attributes_for(:san_francisco_address_components)
-        assert_not_equal("San Francisco", @location.city)
-        @location.save!
-        @location.reload
-        assert_equal("San Francisco", @location.city)
-        assert_equal("California", @location.state)
-        assert_equal("United States", @location.country)
-        assert_nil(@location.suburb)
-        assert_nil(@location.street)
-      end
+    should "should update all address components fields based on address_components" do
+      @location.attributes = FactoryGirl.attributes_for(:location_san_francisco_address_components)
+      assert_not_equal("San Francisco", @location.city)
+      @location.parse_address_components
+      assert_equal("San Francisco", @location.city)
+      assert_equal("California", @location.state)
+      assert_equal("United States", @location.country)
+      assert_nil(@location.suburb)
+      assert_nil(@location.street)
+    end
 
   end
 

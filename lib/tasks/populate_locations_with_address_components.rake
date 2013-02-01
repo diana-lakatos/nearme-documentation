@@ -7,10 +7,10 @@ namespace :populate do
       Location.find_each do |l|
         populator.populate(l)
       end
+      puts "Done."
     rescue
-      puts "Populator was terminated: #{$!.inspect}"
+      puts "Populator failed: #{$!.inspect}"
     end
-    puts "All locations are populated."
   end
 
 end

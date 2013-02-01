@@ -7,7 +7,7 @@ class Location < ActiveRecord::Base
     :info, :latitude, :local_geocoding, :longitude, :name,
     :currency, :phone, :formatted_address, :availability_rules_attributes,
     :availability_template_id,
-    :special_notes, :listings_attributes, :suburb, :city, :state, :country, :address_components
+    :special_notes, :listings_attributes, :suburb, :city, :state, :country, :street, :address_components
   attr_accessor :local_geocoding # set this to true in js
 
   serialize :address_components, JSON
@@ -21,7 +21,7 @@ class Location < ActiveRecord::Base
   delegate :creator, :to => :company
 
   has_many :listings,
-           :dependent => :destroy
+    :dependent => :destroy
 
   has_many :photos, :through => :listings
   has_many :feeds, :through => :listings
@@ -63,25 +63,16 @@ class Location < ActiveRecord::Base
     read_attribute(:currency).presence || "USD"
   end
 
-  SUPPORTED_FIELDS = {
-    "route" => "street",
-    "country" => "country",
-    "locality"  =>  "city",
-    "sublocality" => "suburb",
-    "administrative_area_level_1" => "state",
-  }
 
   def parse_address_components
-      if address_components_changed?
-        data_parser = Location::GoogleGeolocationDataParser.new(address_components)
-        SUPPORTED_FIELDS.values.each do |component|
-            begin
-              self.send("#{component}=".to_sym, data_parser.send(component.to_sym))
-            rescue
-              # nothing happened - one of the expected supported fields was not found
-            end
-        end
-      end
+    if address_components_changed?
+      data_parser = Location::GoogleGeolocationDataParser.new(address_components)
+      self.city = data_parser.fetch_address_component("city")
+      self.suburb = data_parser.fetch_address_component("suburb")
+      self.street = data_parser.fetch_address_component("street")
+      self.country = data_parser.fetch_address_component("country")
+      self.state = data_parser.fetch_address_component("state")
+    end
   end
 
   def description
@@ -99,22 +90,22 @@ class Location < ActiveRecord::Base
 
   private
 
-    def assign_default_availability_rules
-      if !availability_rules.any?
-        AvailabilityRule.default_template.apply(self)
-      end
+  def assign_default_availability_rules
+    if !availability_rules.any?
+      AvailabilityRule.default_template.apply(self)
     end
+  end
 
-    def fetch_coordinates
-      # If we aren't locally geocoding (cukes and people with JS off)
-      if address_changed? && !(latitude_changed? || longitude_changed?)
-        geocoded = Geocoder.search(address).try(:first)
-        if geocoded
-          self.latitude = geocoded.coordinates[0]
-          self.longitude = geocoded.coordinates[1]
-          self.formatted_address = geocoded.formatted_address
-        end
+  def fetch_coordinates
+    # If we aren't locally geocoding (cukes and people with JS off)
+    if address_changed? && !(latitude_changed? || longitude_changed?)
+      geocoded = Geocoder.search(address).try(:first)
+      if geocoded
+        self.latitude = geocoded.coordinates[0]
+        self.longitude = geocoded.coordinates[1]
+        self.formatted_address = geocoded.formatted_address
       end
     end
+  end
 
 end
