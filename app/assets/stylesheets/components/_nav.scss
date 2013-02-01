@@ -1,4 +1,46 @@
-ul.nav {
+.navbar {
+  ul.nav {
+    li {
+      ul.dropdown-menu {
+        background:$dnm_black;
+        li {
+          background:$dnm_black;
+          a:hover{
+            background:$dnm_black;
+            color: $dnm_white;
+          }
+          &.divider{
+            border-color: $gray4;
+          }
+        }
+        &::after{
+          border-bottom-color:$dnm_black;
+        }
+      }
+      &.active {
+        background: $dnm_black;
+        a {
+          color: $dnm_white;
+        }
+      }
+
+      a {
+        display: block;
+        font:normal 16px/22px $font-medium, sans-serif;
+        padding: 8px 16px;
+        position: relative;
+        color: $gray3;
+
+        &:active {
+          color: $dnm_white;
+        }
+      }
+    }
+  }
+}
+
+
+ul.nav.dashboard {
   background: $dnm_white;
   border: 2px solid $gray2;
   @include border-radius(8px);
