@@ -16,6 +16,7 @@ end
 
 Given /^I am not logged in$/ do
   if page.has_content?("Log out")
+    click_link "Account"
     click_link "Log out"
   end
 end
