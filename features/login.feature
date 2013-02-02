@@ -54,6 +54,11 @@ Feature: A user can login
      When I sign in with valid credentials
      Then I am correctly signed in
 
+  Scenario: A user is automatically remembered
+    Given a user exists with email: "valid@example.com", password: "password", name: "I am user"
+     When I sign in with valid credentials
+     Then I am remembered
+
   Scenario: A user sign up with email and password
     Given There is no user with my email
      When I manually sign up with valid credentials 

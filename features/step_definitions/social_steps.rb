@@ -100,4 +100,10 @@ Then /I am correctly signed in/ do
   assert_equal 1, User.all.count
 end
 
+Then /I am remembered/ do
+  user = User.find_by_email('valid@example.com')
+  assert_equal Time.now.utc.to_date, user.remember_created_at.to_date
+  assert_equal 20, user.remember_token.length
+end
+
 
