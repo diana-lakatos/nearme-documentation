@@ -24,6 +24,9 @@
     .actions
       = f.submit 'Sign up', :disable_with => "Signing up..."
 
+  .hr.divider
+    %span By signing up, you confirm that you accept the Terms of Service and Privacy Policy.
+
 - if user_auth_provider
   .signup-provider
     .inner-box.connected-provider
