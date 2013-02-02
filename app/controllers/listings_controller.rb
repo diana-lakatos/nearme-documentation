@@ -7,7 +7,7 @@ class ListingsController < ApplicationController
 
   def show
     @listing = Listing.find(params[:id])
-    redirect_to location_url(@listing.location)
+    redirect_to location_path(@listing.location)
   end
 
   protected

@@ -36,3 +36,21 @@ end
 Then /^that location no longer exists$/ do
   expect { model!('location') }.to raise_error ActiveRecord::RecordNotFound
 end
+
+When /^I visit this location page$/ do
+  @location = Location.last
+  visit location_path(@location)
+end
+
+When /^I visit the second location page$/ do
+  @location = Location.last
+  visit location_path(@location)
+end
+
+Then /^Url for this location should be friendly$/ do
+    assert_equal "/locations/ursynowska-warsaw-poland", URI.parse(current_url).path
+end
+
+Then /^I should see the second location$/ do
+    assert_equal "/locations/ursynowska-warsaw-poland--2", URI.parse(current_url).path
+end

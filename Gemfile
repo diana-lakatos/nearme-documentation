@@ -36,6 +36,7 @@ gem "coffee-rails"
 gem "rdiscount"
 gem 'delayed_job_active_record'
 gem 'stripe'
+gem 'friendly_id'
 
 gem 'jquery-rails'
 gem 'sass-rails'
