@@ -21,7 +21,7 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       if (this.model.isNew()) {
         $('.add-listing', this.$el).hide();
       }
-      new Search.LocationFinder($('form#edit_location_'+ this._getId(), this.$el));
+      new DNM.LocationFinder($('form#edit_location_'+ this._getId(), this.$el));
       return this;
     },
 

@@ -14,8 +14,13 @@ requirejs.config({
     text: 'libs/require/text', // required plugin to load non js file
     templates: 'templates', // path for template files
     modernizr: 'libs/modernizr',
+    namespace: 'components/namespace',
     location_finder: 'components/location_finder',
-    search_controller: 'components/controller',
+    map: 'components/map',
+    geo_finder: 'components/geo_finder',
+    geo_position: 'components/geo_position',
+    geo_locator: 'components/geo_locator',
+    geo_record: 'components/geo_record',
     geocoder: 'components/geocoder',
     google: 'https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false&callback=focus'
   },
@@ -33,11 +38,11 @@ requirejs.config({
       exports: "backbone_sync"
     },
      'geocoder': {
-      deps: ['search_controller', 'google'],
+      deps: ['google'],
       exports: 'geocoder'
     },
     'location_finder': {
-      deps: ['search_controller', 'modernizr', 'geocoder', 'google'],
+      deps: ['namespace', 'map', 'geo_finder', 'geo_position', 'geo_record', 'geo_locator', 'modernizr', 'geocoder', 'google'],
       exports: "location_finder"
     }
   },

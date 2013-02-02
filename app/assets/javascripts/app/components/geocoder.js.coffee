@@ -1,4 +1,4 @@
-class Search.Geocoder
+class DNM.Geocoder
 
   class ResultSet
     constructor: (results) ->

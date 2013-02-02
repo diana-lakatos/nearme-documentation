@@ -21,7 +21,13 @@ section.locations-holder {
       top: 15px;
       left: 10px;
     }
-
+    div.map {
+      .map-container {
+        border: 2px solid rgb(220,220,220);
+        border-radius: 8px;
+        height: 240px;
+      }
+    }
     @include dashboard-acc-group
   }
   .delete {
