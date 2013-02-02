@@ -40,8 +40,6 @@ gem 'jquery-rails'
 gem 'sass-rails'
 gem 'chronic'
 
-gem 'thin'
-
 gem 'ey_config'
 
 gem 'unicorn'
@@ -58,6 +56,7 @@ group :development, :test, :staging do
 end
 
 group :development, :test do
+  gem 'thin'
   gem 'shoulda', '3.3.2'
   gem 'shoulda-let', :require => 'shoulda/let'
   gem 'ffaker'
