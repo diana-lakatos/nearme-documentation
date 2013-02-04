@@ -111,7 +111,7 @@ When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
     choose 'payment_method_manual'
   end
 
-  click_button "Request Booking Now"
+  click_button "Request Booking"
   wait_for_ajax
 end
 
