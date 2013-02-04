@@ -149,7 +149,13 @@ form {
     }
   }
 
-  input[type="text"], input[type="password"], input[type="email"], input[type="tel"], input[type="url"], input[type="number"], textarea {
+  // overwrite default width - make its width dynamic instea of constant 
+  .control-group .chzn-container-multi{
+    width: auto !important;
+    display: block !important;
+  }
+
+  input[type="text"], input[type="password"], input[type="email"], input[type="tel"], input[type="url"], input[type="number"], textarea, .chzn-container-multi ul.chzn-choices {
     margin: 0;
     margin-bottom: 8px;
     padding: 8px 8px 8px 8px;
@@ -275,7 +281,6 @@ form {
 .form-horizontal {
   .control-group {
     margin-bottom: 10px;
-    overflow: hidden;
 
     // An indented control group
     &.indent {

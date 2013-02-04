@@ -7,7 +7,3 @@ When /^I create a company$/ do
   click_link_or_button "Create My Company"
 end
 
-Then /^I can select that company when creating locations$/ do
-  visit new_location_path
-  select @company_name, from: "Company"
-end
