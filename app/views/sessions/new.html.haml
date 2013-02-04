@@ -16,12 +16,8 @@
           %span Or
 
         = simple_form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "form-horizontal" }) do |f|
-          = f.input :email, :label => "Your email address",  :placeholder => "Email address you registered with"
+          = f.input :email, :label => "Your email address",  :placeholder => "Email address you registered with", :required => false
           = f.input :password, :label => "Your password", :hint => "Forgot? #{link_to "Reset your password", new_user_password_url}"
-
-          - if devise_mapping.rememberable?
-            = f.input :remember_me, as: :boolean, inline_label: "Remember Me", label: false
 
           .actions
             = f.submit "Log In"
-

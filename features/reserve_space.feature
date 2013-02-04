@@ -47,14 +47,14 @@ Feature: A user can book at a space
        And the user should have a billing profile
 
   Scenario: As an anonymous user I should be asked to log in before booking
-    Given I am not logged in
+    Given I am not logged in as the user
     When I select to book and review space for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 2        |
     Then I should be asked to log in before making a booking
 
   Scenario: As an anonymous user I should return to my booking state after logging in
-    Given I am not logged in
+    Given I am not logged in as the user
     When I select to book and review space for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 2        |

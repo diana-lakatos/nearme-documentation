@@ -7,6 +7,7 @@ class AuthenticationsController < ApplicationController
     authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
     if authentication
       flash[:notice] = "Signed in successfully." if use_flash_messages?
+      authentication.user.remember_me!
       sign_in_and_redirect(:user, authentication.user)
     elsif current_user
       current_user.authentications.create!(:provider => omniauth['provider'], :uid => omniauth['uid'])
@@ -17,6 +18,7 @@ class AuthenticationsController < ApplicationController
       user.apply_omniauth(omniauth)
       if user.save
         flash[:notice] = "Signed in successfully." if use_flash_messages?
+        user.remember_me!
         sign_in_and_redirect(:user, user)
       else
         session[:omniauth] = omniauth.except('extra')

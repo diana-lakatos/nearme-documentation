@@ -37,15 +37,13 @@ gem "rdiscount"
 gem 'delayed_job_active_record'
 gem 'rabl'
 gem 'stripe'
+gem 'friendly_id'
 
 gem 'jquery-rails'
 gem 'sass-rails'
 gem 'chronic'
 
 gem 'requirejs-rails'
-
-gem 'thin'
-
 gem 'ey_config'
 
 gem 'unicorn'
@@ -63,6 +61,7 @@ group :development, :test, :staging do
 end
 
 group :development, :test do
+  gem 'thin'
   gem 'shoulda', '3.3.2'
   gem 'shoulda-let', :require => 'shoulda/let'
   gem 'ffaker'
