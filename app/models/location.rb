@@ -1,4 +1,8 @@
 class Location < ActiveRecord::Base
+
+  extend FriendlyId
+  friendly_id :formatted_address, use: :slugged
+
   attr_accessible :address, :amenity_ids, :company_id, :description, :email,
     :info, :latitude, :local_geocoding, :longitude, :name,
     :currency, :phone, :formatted_address, :availability_rules_attributes,

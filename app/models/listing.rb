@@ -1,6 +1,7 @@
 class Listing < ActiveRecord::Base
 
   # Period constants for listing costs
+
   PRICE_PERIODS = {
     :free => nil,
     :day => 'day'

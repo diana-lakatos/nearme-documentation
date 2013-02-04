@@ -4,6 +4,7 @@ class Search.SearchController extends Search.Controller
     super(form)
     @resultsContainer = @container.find('.results')
     @loadingContainer = @container.find('.loading')
+    @resultsCountContainer = $('#results_count')
     @loadMap()
     @bindEvents()
 
@@ -22,11 +23,20 @@ class Search.SearchController extends Search.Controller
 
   showResults: (html) ->
     @resultsContainer.html(html)
+    @updateListingsCount()
     @finishLoading()
     @loadMap()
 
   listings: ->
     @resultsContainer.find('.listing')
+
+  updateListingsCount: () ->
+    if(typeof @resultsCountContainer != 'undefined')
+      count = @resultsContainer.find('.listing').length
+      listing_text = "listing"
+      if(count != 1)
+        listing_text += "s"
+      @resultsCountContainer.html(count + " " + listing_text )
     
   loadMap: ->
     mapContainer = @container.find('#listings_map')[0]

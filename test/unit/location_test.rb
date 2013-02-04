@@ -49,6 +49,25 @@ class LocationTest < ActiveSupport::TestCase
     end
   end
 
+  context "friendly url" do
+    should 'store slug in the database' do
+      @location = FactoryGirl.build(:location_in_san_francisco, :formatted_address => 'San Francisco, CA, California, USA')
+      @location.save!
+      @location.reload
+      assert_equal "san-francisco-ca-california-usa", @location.slug
+    end
+
+    should 'update slug along with formatted_address ' do
+      @location = FactoryGirl.create(:location_in_san_francisco, :formatted_address => 'Ursynowska, warsaw, Poland')
+      assert_equal "ursynowska-warsaw-poland", @location.slug
+      @location.formatted_address = 'San Francisco, CA, California, USA'
+      @location.save!
+      assert_equal "san-francisco-ca-california-usa", @location.slug
+    end
+
+  end
+
+
   context "creating address components" do
 
     setup do

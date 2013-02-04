@@ -15,9 +15,45 @@ Feature: A user can search for a listing
     When I search for "bung"
     Then I should see "Please enter a city or address"
 
+  Scenario: Listing count is 0 when no listings were found
+   Given a listing in Cleveland exists
+     And a listing in Auckland exists
+    When I search for "bung"
+    Then I should see "0 listings found"
+
+  Scenario: Listing count reflects number of listings shown
+   Given a listing in Cleveland exists
+     And a listing in Auckland exists
+     And a listing in Auckland exists
+     And a listing in Auckland exists
+    When I search for "Auckland"
+    Then I should see "3 listings found"
+
+  Scenario: Listing count text is correctly pluralized after updated
+   Given a listing in Auckland exists
+    When I search for "bung"
+    Then I should see "0 listings found"
+    When I search for "Auckland"
+    Then I should see "1 listing found"
+
+  Scenario: Listing count is 0 after update that yields no results
+   Given a listing in Auckland exists
+    When I search for "Auckland"
+    Then I should see "1 listing found"
+    When I search for "bung"
+    Then I should see "0 listings found"
+
   Scenario: A user searches for something which yields no results
     When I search for "darwin"
     Then I should see "No results found"
+
+  Scenario: A user searches for a location
+    Given a listing in Cleveland exists
+    And a listing in Auckland exists
+    When I search for "Auckland"
+    Then I see the listings on a map
+    And I see a search result for the Auckland listing
+    And I do not see a search result for the Cleveland listing
 
   Scenario: A user searches for a location
     Given a listing in Cleveland exists

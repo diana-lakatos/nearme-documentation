@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130130205412) do
+ActiveRecord::Schema.define(:version => 20130202194509) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -147,8 +147,10 @@ ActiveRecord::Schema.define(:version => 20130130205412) do
     t.string   "city"
     t.string   "state"
     t.string   "country"
-  end
-
+    t.string   "slug"
+   end
+   
+   add_index "locations", ["slug"], :name => "index_locations_on_slug"
   create_table "photos", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"

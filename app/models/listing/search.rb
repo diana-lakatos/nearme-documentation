@@ -4,11 +4,6 @@ class Listing
     extend ActiveSupport::Concern
 
     included do
-      attr_accessor :score, :strict_match
-
-      def strict_match?
-        strict_match.nil? || strict_match
-      end
 
       define_index do
 
@@ -44,8 +39,6 @@ class Listing
         end
 
         listings = search(*search_args).to_a
-        Scorer.score(listings, params)
-        listings.sort { |a,b| a.score <=> b.score }
       end
     end
   end
