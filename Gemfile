@@ -41,6 +41,7 @@ gem 'friendly_id'
 gem 'jquery-rails'
 gem 'sass-rails'
 gem 'chronic'
+gem 'chosen-rails'
 
 gem 'ey_config'
 
@@ -52,6 +53,8 @@ group :development do
   gem "rails-erd"
   gem 'quiet_assets'
   gem 'mail_view'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 group :development, :test, :staging do

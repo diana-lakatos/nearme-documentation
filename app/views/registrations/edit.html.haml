@@ -2,6 +2,7 @@
 
 .row-fluid
   .span8.offset2
+
     .box
       %h2== Your Account
       %p.intro
@@ -11,6 +12,10 @@
       = render "registrations/networks", :supported_providers => @supported_providers
       = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name) }
 
+    - unless resource.companies.blank?
+      .box
+        %h2== Company
+        = render :partial => "registrations/company_form", :locals => { :url => registration_path(resource_name) }
 
 :javascript
   $(function() {
