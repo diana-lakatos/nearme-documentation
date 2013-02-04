@@ -23,3 +23,15 @@
 # the configuration and use this file as a manifest.
 #
 # For more information: http://github.com/modeset/teabag
+#
+
+## Load dependencies (filtering if there are file params), then execute.
+#require Teabag.resolveDependenciesFromParams(["app_spec"]), Teabag.execute
+
+#= require require.js
+#= require config.js
+requirejs.config(baseUrl: "/assets/app")
+Teabag.defer = true
+
+# Load dependencies (filtering if there are file params), then execute.
+require Teabag.resolveDependenciesFromParams(['models/location_spec']), Teabag.execute

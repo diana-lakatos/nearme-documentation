@@ -12,7 +12,17 @@ requirejs.config({
     i18nprecompile: 'libs/handlebars/i18nprecompile',
     hbs: 'libs/handlebars/hbs',
     text: 'libs/require/text', // required plugin to load non js file
-    templates: 'templates' // path for template files
+    templates: 'templates', // path for template files
+    modernizr: 'libs/modernizr',
+    namespace: 'components/namespace',
+    location_finder: 'components/location_finder',
+    map: 'components/map',
+    geo_finder: 'components/geo_finder',
+    geo_position: 'components/geo_position',
+    geo_locator: 'components/geo_locator',
+    geo_record: 'components/geo_record',
+    geocoder: 'components/geocoder',
+    google: 'https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false&callback=focus'
   },
 
   shim: {
@@ -26,6 +36,14 @@ requirejs.config({
     'backbone_sync': {
       deps: ["jquery", "backbone"],
       exports: "backbone_sync"
+    },
+     'geocoder': {
+      deps: ['google'],
+      exports: 'geocoder'
+    },
+    'location_finder': {
+      deps: ['namespace', 'map', 'geo_finder', 'geo_position', 'geo_record', 'geo_locator', 'modernizr', 'geocoder', 'google'],
+      exports: "location_finder"
     }
   },
 
@@ -38,3 +56,4 @@ requirejs.config({
   }
 
 });
+

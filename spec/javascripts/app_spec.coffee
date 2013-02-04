@@ -1,6 +1,4 @@
-#= require require
-#= require webapp
-
-describe "App", ->
-  it "should be present", ->
-    expect( window.DNMAPP).toBeDefined
+define "app_spec", ["app"], (App) ->
+  describe "App", ->
+    it "should be present", ->
+      expect( window.DNM).toBeDefined
