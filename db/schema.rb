@@ -148,9 +148,10 @@ ActiveRecord::Schema.define(:version => 20130202194509) do
     t.string   "state"
     t.string   "country"
     t.string   "slug"
-   end
-   
-   add_index "locations", ["slug"], :name => "index_locations_on_slug"
+  end
+
+  add_index "locations", ["slug"], :name => "index_locations_on_slug"
+
   create_table "photos", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
