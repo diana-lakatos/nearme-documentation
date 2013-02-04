@@ -31,15 +31,3 @@ Feature: Location Owner Creates/Edits Listing
   Scenario: A location owner can delete a location
     When I delete that location
     Then that location no longer exists
-
-  Scenario: Location has friendly url
-    Given a location exists with company: the company, creator: the user, name: "Friendly url", description: "Aliquid eos ab quia officiis sequi.", formatted_address: "Ursynowska, Warsaw, Poland"
-    When I visit this location page
-    Then Url for this location should be friendly
-    
-  Scenario: Firneldy url for location work for duplicated formatted addresses
-    Given a location exists with company: the company, creator: the user, name: "Friendly url", description: "Aliquid eos ab quia officiis sequi.", formatted_address: "Ursynowska, Warsaw, Poland"
-      And a location exists with company: the company, creator: the user, name: "Url friendly 2", description: "Aliquid eos ab quia officiis sequi.", formatted_address: "Ursynowska, Warsaw, Poland"
-    When I visit the second location page
-    Then I should see the second location
-
