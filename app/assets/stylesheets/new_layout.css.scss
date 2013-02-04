@@ -7,22 +7,6 @@
 @import "components/*";
 @import "bootstrap-overrides";
 @import "vendor/jquery-ui-1.8.23.custom";
-
-
-/* #Site Styles
-================================================== */
-
-body {
-  background: rgb(240,240,240);
-}
-
-#content > .container {
-  padding-top: 30px;
-  padding-bottom: 30px;
-}
-
-/* #Page Styles
-================================================== */
 @import "sections/*";
 @import "sections/*/**";
 
