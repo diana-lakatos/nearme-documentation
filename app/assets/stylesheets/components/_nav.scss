@@ -10,6 +10,9 @@
       ul.dropdown-menu {
         min-width: 120px;
         left: 14px;
+        @media (max-width: 480px) {
+          left: -80px;
+        }
         background:$dnm_black;
         li {
           background:$dnm_black;
