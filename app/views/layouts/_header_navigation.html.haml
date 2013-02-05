@@ -24,17 +24,17 @@
       %ul.dropdown-menu
         %li
           = link_to_once edit_user_registration_path do
-            %span.ico-crosshairs.padding Settings
+            %span.ico-settings.padding Settings
         %li
           = link_to_once destroy_user_session_path, :method => :delete do
             %span.ico-logout.padding Log out
 
 
 - else
-  = link_to_once new_user_session_url, :class => "header-link header-second" do
-    %span.ico-login.padding Log in
-  = link_to_once new_user_registration_url, :class => "header-link header-first" do
-    %span.ico-sign-up.padding Sign Up    
+  = link_to_once new_user_session_url, :class => "header-link header-second margin-right" do
+    %span.ico-login.padding 
+  = link_to_once new_user_registration_url, :class => "header-link header-first margin-right" do
+    %span.ico-sign-up.padding     
 
 - if !user_signed_in? || current_user.companies.empty?
   = link_to_once new_space_wizard_url, :class => "btn btn-blue btn-medium" do
