@@ -65,9 +65,10 @@
   %p.text-center
     = submit_tag 'Request Booking'
 
-  - if location_reservation_needs_confirmation?
-    %p.notice.text-center
-      This host manually confirms all bookings before payment
+  %p.notice.text-center
+    - if location_reservation_needs_confirmation?
+      This host manually confirms all bookings before payment.
+    By requesting a booking, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, target: '_blank'}.
 
 :javascript
   $(function() {
