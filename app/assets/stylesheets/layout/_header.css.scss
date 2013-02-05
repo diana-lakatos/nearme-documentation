@@ -69,22 +69,6 @@
           margin-right: 20px;
         }
 
-        &.header-first:after {
-          content: "Sign Up";
-
-          @media (max-width: 320px) {
-            content: "";
-          }          
-        }
-
-        &.header-second:after {
-          content: "Log In";
-
-          @media (max-width: 320px) {
-            content: "";
-          }
-        } 
-
         &.ico-dashboard.dropdown-toggle {
 
           @media (max-width: 320px) {
