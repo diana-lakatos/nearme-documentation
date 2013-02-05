@@ -49,7 +49,7 @@ FactoryGirl.define do
       association(:company, factory: :company_in_wellington)
     end
 
-    factory :ursynowska_address_components do
+    factory :location_ursynowska_address_components do
       formatted_address "Ursynowska, Warsaw, Poland"
       address_components {{
         "0"=> {
@@ -90,7 +90,7 @@ FactoryGirl.define do
       }}
     end
 
-    factory :warsaw_address_components do
+    factory :location_warsaw_address_components do
       formatted_address "Warsaw"
       address_components {{
         "2"=>{
@@ -106,7 +106,7 @@ FactoryGirl.define do
       }}
     end
 
-    factory :san_francisco_address_components do
+    factory :location_san_francisco_address_components do
       formatted_address "San Francisco, CA, USA"
       address_components{{
         "0"=>{

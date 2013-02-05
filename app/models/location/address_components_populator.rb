@@ -1,6 +1,6 @@
 class Location::AddressComponentsPopulator
 
-  LIMIT = 2
+  LIMIT = 500
 
   def initialize
     @current_geocoding = 0
