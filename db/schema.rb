@@ -13,6 +13,21 @@
 
 ActiveRecord::Schema.define(:version => 20130202194509) do
 
+  create_table "address_component_names", :force => true do |t|
+    t.string  "long_name"
+    t.string  "short_name"
+    t.integer "location_id"
+  end
+
+  create_table "address_component_names_address_component_types", :force => true do |t|
+    t.integer "address_component_name_id"
+    t.integer "address_component_type_id"
+  end
+
+  create_table "address_component_types", :force => true do |t|
+    t.string "name"
+  end
+
   create_table "amenities", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -62,10 +77,13 @@ ActiveRecord::Schema.define(:version => 20130202194509) do
     t.string   "name"
     t.string   "email"
     t.text     "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.datetime "deleted_at"
     t.string   "url"
+    t.text     "mailing_address"
+    t.string   "routing_number"
+    t.string   "account_number"
   end
 
   create_table "delayed_jobs", :force => true do |t|
