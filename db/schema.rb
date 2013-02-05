@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130202194509) do
+ActiveRecord::Schema.define(:version => 20130205205139) do
 
   create_table "address_component_names", :force => true do |t|
     t.string  "long_name"
@@ -82,8 +82,7 @@ ActiveRecord::Schema.define(:version => 20130202194509) do
     t.datetime "deleted_at"
     t.string   "url"
     t.text     "mailing_address"
-    t.string   "routing_number"
-    t.string   "account_number"
+    t.string   "paypal_email"
   end
 
   create_table "delayed_jobs", :force => true do |t|

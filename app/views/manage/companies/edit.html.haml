@@ -11,9 +11,9 @@
       = f.input :name, :label => "Your company name", :placeholder => "Enter your business name"
       = f.input :url, :label => "Company website URL", :placeholder => "www.mycompany.com"
       = f.input :email, :label => "Company email", :placeholder => "yourname@example.com"
-      = f.input :description,:as => :description, :label => "Company description", :placeholder => "Tell us a bit about your company. People will read this when booking your space. Be exciting!"
+      = f.input :description, :as => :description, :label => "Company description", :placeholder => "Tell us a bit about your company. People will read this when booking your space. Be exciting!"
+      = f.input :mailing_address, :hint => "Checks for revenue accrued by your listings will be sent to this address. <a href='http://support.desksnear.me/customer/portal/articles/939242' target='_blank'>Find out more about payments in the Support Center</a>."
+      = f.input :paypal_email, :hint => "If you specify a PayPal email, we will make an PayPal transfer instead of sending checks."
 
       .actions
         = f.button :submit, f.object.new_record? ? 'Create My Company' : 'Update Company', :disable_with => f.object.new_record? ? 'Creating...' : 'Updating...'
-
-
