@@ -22,9 +22,9 @@ class Listing::Search::Params::Availability
   def extract_dates(dates = {})
     if dates.is_a? Array
       @dates.map { |d| coerce_date(d) } if dates.is_a? Array
-    elsif dates.is_a? Hash
-      start = coerce_date(dates[:start]) if dates[:start].present?
-      finish = coerce_date(dates[:end]) if dates[:end].present?
+    elsif dates.is_a?(Hash) && dates[:start].present? && dates[:end].present?
+      start = coerce_date(dates[:start])
+      finish = coerce_date(dates[:end])
       @dates = (start...finish)
     else
       @dates = default_dates
@@ -36,7 +36,7 @@ class Listing::Search::Params::Availability
   end
 
   def default_dates
-    (Date.today...14.days.from_now.to_date)
+    []
   end
 end
 

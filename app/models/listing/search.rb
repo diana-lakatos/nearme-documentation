@@ -7,13 +7,14 @@ class Listing
 
       define_index do
 
+        indexes :name, :description
+
         join location
         where  "locations.id is not null"
 
-        indexes :name, :description
-
         has "radians(#{Location.table_name}.latitude)",  as: :latitude,  type: :float
         has "radians(#{Location.table_name}.longitude)", as: :longitude, type: :float
+
         has :deleted_at
 
         group_by :latitude, :longitude
@@ -39,6 +40,7 @@ class Listing
         end
 
         listings = search(*search_args).to_a
+        listings.reject { |listing| params.availability.dates.any? { |date| listing.fully_booked_on?(date) } }
       end
     end
   end

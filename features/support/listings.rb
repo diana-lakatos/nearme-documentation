@@ -62,12 +62,20 @@ module ListingsHelpers
     FactoryGirl.create(:fully_booked_listing)
   end
 
+  def build_listing_which_is_closed_on_weekends
+    FactoryGirl.create(:listing_in_cleveland)
+  end
+
   def date_before_listing_is_fully_booked
     listing.reservations.first.periods.first.date - 1.day
   end
 
   def date_after_listing_is_fully_booked
     listing.reservations.first.periods.last.date +  1.day
+  end
+
+  def latest_listing
+    Listing.last
   end
 end
 

@@ -4,6 +4,15 @@ Given /^a listing in (.*) exists( with that amenity)?$/ do |city, amenity|
   listing.location.amenities << model!("amenity") if amenity
 end
 
+
+Given /^there are listings which are unavailable$/ do
+  4.times { build_fully_booked_listing }
+end
+
+Given /^there are listings which are available$/ do
+  4.times { build_listing_which_is_closed_on_weekends }
+end
+
 Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and that amenity)?$/ do |city, dollars, cents, amenity|
   listing = create_listing_in(city)
 
@@ -11,9 +20,12 @@ Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and that amenit
   listing.location.amenities << model!("amenity") if amenity
 end
 
-
 Given /^a listing which is fully booked$/ do
   @listing = build_fully_booked_listing
+end
+
+Given /^a listing which is closed on the weekend$/ do
+  @listing = build_listing_which_is_closed_on_weekends
 end
 
 Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) days$/ do |city, desks, num_days|

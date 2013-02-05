@@ -13,7 +13,6 @@ class SearchController < ApplicationController
     @query = @search.location_string
 
     SearchQuery.create(:query => @search.location_string, :agent => request.env['HTTP_USER_AGENT'])
-
     if request.xhr?
       render :partial => "search/listings", :layout => false
     else

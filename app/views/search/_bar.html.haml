@@ -13,10 +13,10 @@
         %span.ico-crosshairs
     .span6
       .three.columns.availability-date-start
-        = text_field_tag "availability[dates][start]", search_availability_dates_start, :autocomplete => "off"
+        = text_field_tag "availability[dates][start]", search_availability_dates_start, :autocomplete => "off", :placeholder => "Starting on"
         .calendar
           %span.ico-calender
       .three.columns.availability-date-end
-        = text_field_tag "availability[dates][end]", search_availability_dates_end, :autocomplete => "off"
+        = text_field_tag "availability[dates][end]", search_availability_dates_end, :autocomplete => "off", :placeholder => "Ending on"
         .calendar
           %span.ico-calender
