@@ -12,4 +12,10 @@ collection @locations, :root => false, :object_root => false
     node :monthly_price do |u|
       u.monthly_price.cents / 100 if u.monthly_price
     end
-end
+  end
+
+  child :availability_full_week => :availabilities do |u|
+    node do |m|
+      { :day => m[:day] ,:day_name => m[:rule].day_name, :id => m[:rule].id, :open_time => m[:rule].open_time, :close_time => m[:rule].close_time}
+    end
+  end

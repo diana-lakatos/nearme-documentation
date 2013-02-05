@@ -3,8 +3,6 @@ class V1::LocationsController <  V1::BaseController
   before_filter :require_authentication
   before_filter :find_location, only: [:update, :destroy]
 
-  expose :location
-
   def list
     @locations = current_user.default_company.locations
   end
