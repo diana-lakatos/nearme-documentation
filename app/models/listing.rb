@@ -205,7 +205,7 @@ class Listing < ActiveRecord::Base
     reservation = reservations.build(:user => reserving_user)
 
     dates.each do |date|
-      raise DNM::PropertyUnavailableOnDate.new(date, available, quantity) unless available_on?(date, quantity)
+      raise DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
       reservation.add_period(date, quantity, assignees)
     end
 
