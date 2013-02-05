@@ -4,6 +4,11 @@ module AvailabilityRule::TargetHelper
   def availability
     AvailabilityRule::Summary.new(availability_rules.reject(&:marked_for_destruction?))
   end
+
+  def availability_full_week
+      availability.full_week(monday_firt = true)
+  end
+
   # Assigns and applies a given AvailabilityRule::Template
   #
   # id - The id of a Template
