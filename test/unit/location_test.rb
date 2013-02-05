@@ -47,6 +47,19 @@ class LocationTest < ActiveSupport::TestCase
       assert location.availability.open_on?(:day => 0, :hour => 6)
       assert !location.availability.open_on?(:day => 1)
     end
+
+    should "return an Array of all availability sorted by day" do
+      location = Location.new
+      location.availability_rules << AvailabilityRule.new(:day => 0, :open_hour => 6, :open_minute => 0, :close_hour => 20, :close_minute => 0)
+      location.availability_rules << AvailabilityRule.new(:day => 2, :open_hour => 6, :open_minute => 0, :close_hour => 20, :close_minute => 0)
+      availability_all = location.availability.all
+      assert availability_all.is_a?(Array)
+      assert_equal availability_all[0][:day], 0
+      assert_equal availability_all[1][:day], 1
+      assert_equal availability_all[1][:rule], nil
+      assert_equal availability_all[2][:rule].day, 2
+    end
+
   end
 
   context "friendly url" do
@@ -114,7 +127,16 @@ class LocationTest < ActiveSupport::TestCase
       assert_nil(@location.street)
     end
 
+    should "should update all address components fields based on address_components" do
+      @location.attributes = FactoryGirl.attributes_for(:san_francisco_address_components)
+      assert_not_equal("San Francisco", @location.city)
+      @location.save!
+      @location.reload
+      assert_equal("San Francisco", @location.city)
+      assert_equal("California", @location.state)
+      assert_equal("United States", @location.country)
+      assert_nil(@location.suburb)
+      assert_nil(@location.street)
+    end
   end
-
-
 end
