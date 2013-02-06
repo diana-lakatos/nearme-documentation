@@ -8,8 +8,8 @@ class Search.Map
 
     # Set up the Google maps object
     @googleMap = new google.maps.Map(@container, {
-      zoom: 10,
-      minZoom: 10,
+      zoom: 8,
+      minZoom: 8,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       mapTypeControl: false
     })
