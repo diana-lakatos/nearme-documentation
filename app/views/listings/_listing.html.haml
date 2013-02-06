@@ -7,4 +7,6 @@
         = image_tag google_maps_streetview_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name
   .row-fluid.listing-info
     %h2= link_to "#{listing.name}", listing
-    %address= listing.formatted_address || listing.address
+    %address
+      %span.ico-marker
+      = listing.formatted_address || listing.address
