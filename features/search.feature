@@ -19,7 +19,7 @@ Feature: A user can search for a listing
    Given a listing in Cleveland exists
      And a listing in Auckland exists
     When I search for "bung"
-    Then I should see "0 listings found"
+    Then I should see "0 results found"
 
   Scenario: Listing count reflects number of listings shown
    Given a listing in Cleveland exists
@@ -27,21 +27,21 @@ Feature: A user can search for a listing
      And a listing in Auckland exists
      And a listing in Auckland exists
     When I search for "Auckland"
-    Then I should see "3 listings found"
+    Then I should see "3 results found"
 
   Scenario: Listing count text is correctly pluralized after updated
    Given a listing in Auckland exists
     When I search for "bung"
-    Then I should see "0 listings found"
+    Then I should see "0 results found"
     When I search for "Auckland"
-    Then I should see "1 listing found"
+    Then I should see "1 result found"
 
   Scenario: Listing count is 0 after update that yields no results
    Given a listing in Auckland exists
     When I search for "Auckland"
-    Then I should see "1 listing found"
+    Then I should see "1 result found"
     When I search for "bung"
-    Then I should see "0 listings found"
+    Then I should see "0 results found"
 
   Scenario: A user searches for something which yields no results
     When I search for "darwin"

@@ -11,7 +11,7 @@ class Search.SearchController extends Search.Controller
   bindEvents: ->
     @form.bind 'submit', (event) =>
       event.preventDefault()
-      @triggerSearch()
+      @triggerSearchFromQuery()
 
     @map.on 'viewportChanged', =>
       @triggerSearchWithBoundsAfterDelay()
