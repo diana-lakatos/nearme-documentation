@@ -12,7 +12,8 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       "click .delete-location": "trash",
       "click .add-listing": "createListing",
       "keyup input#name": "nameChanged",
-      "keyup #address" : "valChanged"
+      "keyup #address" : "valChanged",
+      "click .availability-rules input[type=radio]" : "availabilityChanged"
     },
 
     render: function() {
@@ -58,6 +59,14 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
     valChanged: function(event) {
       var viewTarget = null;
       $('#formatted_address', this.$el).val($(event.target).val());
+    },
+
+    availabilityChanged: function(event) {
+      if((event.target).id === "availability_rules_custom") {
+        $('.custom-availability-rules').show();
+      } else {
+        $('.custom-availability-rules').hide();
+      }
     },
 
     save: function() {
