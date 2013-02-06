@@ -8,6 +8,13 @@
   }
 }
 
+.availability-rules {
+  padding-left: 2px;
+  .open-time, .close-time {
+    padding-right: 10px;
+  }
+}
+
 section.locations-holder {
   margin-bottom: 20px;
   .location-content {
