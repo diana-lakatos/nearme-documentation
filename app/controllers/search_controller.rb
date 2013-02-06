@@ -9,7 +9,7 @@ class SearchController < ApplicationController
 
     @search = Listing::Search::Params::Web.new(params)
 
-    @listings = Listing.find_by_search_params(@search).reject { |l| l.location.nil? } # tmp hax
+    @listings = Listing.find_by_search_params(@search)
     @query = @search.location_string
 
     SearchQuery.create(:query => @search.location_string, :agent => request.env['HTTP_USER_AGENT'])

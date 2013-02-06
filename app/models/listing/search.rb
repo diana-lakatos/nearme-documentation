@@ -40,7 +40,7 @@ class Listing
         end
 
         listings = search(*search_args).to_a
-        listings.reject { |listing| params.availability.dates.any? { |date| listing.fully_booked_on?(date) } }
+        listings.reject(&:nil?).reject { |l| l.location.nil? }.reject { |listing| params.availability.dates.any? { |date| listing.fully_booked_on?(date) } }
       end
     end
   end
