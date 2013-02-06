@@ -31,10 +31,10 @@
 
 
 - else
-  = link_to_once new_user_session_url, :class => "header-link header-second margin-right" do
+  = link_to_once new_user_session_url(get_return_to_url), :class => "header-link header-second margin-right"  do
     %span.ico-login.padding Log In
-  = link_to_once new_user_registration_url, :class => "header-link header-first margin-right" do
-    %span.ico-sign-up.padding Sign Up 
+  = link_to_once new_user_registration_url(get_return_to_url), :class => "header-link header-first margin-right" do
+    %span.ico-sign-up.padding Sign Up    
 
 - if !user_signed_in? || current_user.companies.empty?
   = link_to_once new_space_wizard_url, :class => "btn btn-blue btn-medium" do

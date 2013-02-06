@@ -22,10 +22,18 @@ Given (/^I am not logged in as #{capture_model}$/) do |user_instance|
   end
 end
 
-
 Then(/^I should be logged in as #{capture_model}$/) do |user_instance|
   user = model!(user_instance)
   Then "I should see \"Log Out\""
+end
+
+Then /^I should( not)? be redirected to the previous search page$/ do |without_redirect|
+  current_path = URI.parse(current_url)
+  if without_redirect
+    assert_equal new_user_session_path, current_path.path
+  else
+    assert_equal search_path(:q => "Auckland"), current_path.path + "?" + current_path.query
+  end
 end
 
 Then /^#{capture_model} should have password "([^"]*)"$/ do |user_instance, password|

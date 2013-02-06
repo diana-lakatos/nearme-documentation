@@ -1,8 +1,3 @@
-When /^I make another search for "([^"]*)"$/ do |query|
-  visit root_path
-  search_for(query)
-end
-
 When /^I search for "([^"]*)"$/ do |text|
   search_for(text)
 end
@@ -11,9 +6,18 @@ When /^I search without setting a date range$/ do
   visit search_path
   search_for(latest_listing.address)
 end
+
 When /^I search with a date range covering the date it is fully booked$/ do
   visit search_path
   search_for(listing.address, { start_date: date_before_listing_is_fully_booked, end_date: date_after_listing_is_fully_booked })
+end
+When /^I performed search for "([^"]*)"$/ do |query|
+  visit search_path(:q => query)
+end
+
+When /^I make another search for "([^"]*)"$/ do |query|
+  visit root_path
+  search_for(query)
 end
 
 When /^I search with a date range of 2 weeks$/ do
