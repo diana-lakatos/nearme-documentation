@@ -3,10 +3,10 @@ class Search.Map
   asEvented.call(Map.prototype)
 
   constructor: (@container) ->
-    # Map of listing ids to markers
-    @markers = {}
+    @initializeGoogleMap()
+    @bindEvents()
 
-    # Set up the Google maps object
+  initializeGoogleMap: ->
     @googleMap = new google.maps.Map(@container, {
       zoom: 8,
       minZoom: 8,
@@ -16,28 +16,23 @@ class Search.Map
 
     # Info window pops over and contains details for each marker/listing
     @infoWindow = new google.maps.InfoWindow() 
+    @resetMapMarkers()
 
-    # Keeps track of items within the bounds for repositioning the map
-    @initializeListingBounds()
-
-    # This initializes the bounds and map position
-    @clearPlottedListings()
-
+  bindEvents: ->
+    # Ensure the map is notified of window resize, and positioning adjusted.
     $(window).resize =>
       google.maps.event.trigger(@googleMap, 'resize') 
       @fitBounds()
 
-    # Notify observers when the map is dragged
     google.maps.event.addListener @googleMap, 'dragend', =>
       @trigger 'viewportChanged'
 
     google.maps.event.addListener @googleMap, 'zoom_changed', =>
       @trigger 'viewportChanged'
 
-  clearPlottedListings: ->
-    for listingId, marker of @markers
-      marker.setMap(null)
-    # Easiest way to clear the hash is to initialize a new one
+  # Clears any plotted listings and resets the map
+  resetMapMarkers: ->
+    marker.setMap(null) for listingId, marker of @markers if @markers
     @markers = {}
     @initializeListingBounds()
 
@@ -59,21 +54,20 @@ class Search.Map
     # removed listings.
     @initializeListingBounds()
 
-  plotListings: (listings, clearPreviousPlot = true) ->
-    @clearPlottedListings() if clearPreviousPlot
-    @plotListing(listing, i) for listing, i in listings
+  plotListings: (listings) ->
+    @plotListing(listing) for listing in listings
 
   # Only plot a listing if it fits within the map bounds.
   # Returns whether or not a listing was plotted. 
-  plotListingIfInMapBounds: (listing, offset = 0) ->
+  plotListingIfInMapBounds: (listing) ->
     latLng = listing.latLng()
     if @googleMap.getBounds().contains(latLng)
-      @plotListing(listing, offset)
+      @plotListing(listing)
       true
     else
       false
 
-  plotListing: (listing, offset = 0) ->
+  plotListing: (listing) ->
     # Don't re-plot the same listing
     return if @markers[listing.id()]
 
@@ -86,10 +80,8 @@ class Search.Map
     @markers[listing.id()] = marker
     @bounds.extend(listing.latLng())
 
-    setTimeout(->
-      marker.setAnimation(google.maps.Animation.DROP)
-      marker.setVisible(true)
-    ,0)
+    marker.setAnimation(google.maps.Animation.DROP)
+    marker.setVisible(true)
 
     # Bind the event for showing the info details on click
     google.maps.event.addListener marker, 'click', =>

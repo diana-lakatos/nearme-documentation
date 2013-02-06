@@ -42,7 +42,7 @@ class Search.SearchController extends Search.Controller
   
   # Update the map with the current listing results, and adjust the map display.
   updateMapWithListingResults: ->
-    @map.clearPlottedListings()
+    @map.resetMapMarkers()
     @map.plotListings(@getListingsFromResults())
     @map.fitBounds()
 
