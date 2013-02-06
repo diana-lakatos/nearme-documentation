@@ -1,11 +1,11 @@
-input[type=text], textarea {
+input[type=text], input[type=email], input[type=password], textarea {
   @include box-sizing(border-box);
   width: 100%;
 }
 input[type='checkbox'], input[type='radio'] {
   width: auto;
 }
-input[type=submit], input[type=text] {
+input[type=submit], input[type=text], input[type=email], input[type=password] {
    -webkit-appearance: none;
    cursor: pointer;
 }

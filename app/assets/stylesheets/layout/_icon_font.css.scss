@@ -1,5 +1,24 @@
 @include font-face("icomoon", font-files("icomoon.woff", "icomoon.otf", "icomoon.ttf", "icomoon.svg#icomoon"), "icomoon.eot");
 
+// Icon Font Styling 
+
+span.padding:before {
+  padding-right: .4em;
+}
+span.padding-left {
+  padding-left: .4em;
+}
+.ico-phone:before {
+  font-size: 75%;
+  padding-right: 2px;
+}
+.ico-twitter:before {
+  font-size: 125%;
+}
+.ico-lock:before {
+  padding-right: 4px;
+}
+
 .ico-user:before, .ico-twitter:before, .ico-trash:before, .ico-sign-up:before, .ico-settings:before, .ico-search:before, .ico-plus:before, .ico-phone:before, .ico-marker:before, .ico-manage-guests:before, .ico-mail:before, .ico-logout:before, .ico-login:before, .ico-lock:before, .ico-location:before, .ico-linkedin:before, .ico-link:before, .ico-instagram:before, .ico-info:before, .ico-facebook:before, .ico-edit:before, .ico-drawer:before, .ico-dashboard:before, .ico-crosshairs:before, .ico-credit-card:before, .ico-close:before, .ico-clock:before, .ico-check:before, .ico-calender:before, .ico-bookings:before, .ico-arrow-up:before, .ico-arrow-right:before, .ico-arrow-left:before, .ico-arrow-down:before, .ico-app-store:before, .ico-add-location:before {
   font-family: 'icomoon';
   speak: none;
@@ -115,20 +134,4 @@
 }
 .ico-add-location:before {
   content: "\e023";
-}
-
-// Icon Font Styling 
-
-span.padding:before {
-  padding-right: .4em;
-}
-.ico-phone:before {
-  font-size: 75%;
-  padding-right: 2px;
-}
-.ico-twitter:before {
-  font-size: 125%;
-}
-.ico-lock:before {
-  padding-right: 4px;
 }

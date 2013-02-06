@@ -62,8 +62,8 @@ ActiveRecord::Schema.define(:version => 20130206214818) do
     t.string   "name"
     t.string   "email"
     t.text     "description"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.datetime "deleted_at"
     t.string   "url"
     t.string   "paypal_email"
