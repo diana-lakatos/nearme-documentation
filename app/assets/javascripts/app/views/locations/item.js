@@ -12,8 +12,9 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       "click .delete-location": "trash",
       "click .add-listing": "createListing",
       "keyup input#name": "nameChanged",
-      "keyup #address" : "valChanged",
-      "click .availability-rules input[type=radio]" : "availabilityChanged"
+      "keyup #address": "valChanged",
+      "click .availability-rules input[type=radio]" : "availabilityChanged",
+      "click .closed": "updateClosedState"
     },
 
     render: function() {
@@ -69,18 +70,46 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       }
     },
 
+    updateClosedState: function(event) {
+      var checkbox = $(event.target);
+      var times = checkbox.closest('.day').find('.open-time select, .close-time select');
+      if (checkbox.is(':checked')) {
+        times.hide();
+      }
+      else {
+        times.show();
+      }
+    },
+
     save: function() {
       event.preventDefault();
       event.stopPropagation();
       this.justCreated = this.model.isNew();
       var arr = this.$el.find('.edit_location').serializeArray();
+      var pattern = new RegExp(/([a-z_]+)\[([^\]]+)\]\[([^\]]+)\]/); // match my_attributes_array[1][id]
+
       var data = _(arr).reduce(function(acc, field) {
-        if (acc[field.name]) { // deal with array checkbox type like amenities_ids[]
+        if (acc[field.name] && !pattern.test(field.name) ) { // deal with array checkbox type like amenities_ids[]
           if (!_.isArray(acc[field.name])) {
             acc[field.name] = [acc[field.name]];
           }
           acc[field.name].push(field.value);
-        } else {
+        }else if (pattern.test(field.name)) {
+          var split = field.name.match(pattern);
+          var name = split[1];
+          var index = split[2];
+          var param = split[3];
+
+          if (!acc[name]) {
+            acc[name] = {};
+          }
+          if (!acc[name][index]) {
+            acc[name][index] = {};
+          }
+          acc[name][index][param] = field.value;
+        }
+
+        else {
           acc[field.name] = field.value;
         }
         return acc;
