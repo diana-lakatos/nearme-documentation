@@ -1,12 +1,8 @@
 define(['backbone', 'views/locations/list', 'hbs!templates/app'],
 function(Backbone, LocationsView, template) {
   var AppView = Backbone.View.extend({
-    id: 'main',
-    tagName: 'div',
-    className: 'container-fluid',
-    el: 'body',
+    el: '#content',
     template: template,
-
     events: {},
 
     initialize: function() {

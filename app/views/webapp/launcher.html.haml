@@ -1,20 +1,53 @@
 !!!
+!!!
 %html
   %head
     %title
-      DesksNear.Me :: #{show_title? ? yield(:title) : "Where do you want to work today?"}
+      Desks Near Me - #{show_title? ? yield(:title) : "Where do you want to work today?"}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}  
     %meta{:content => "DesksNear.Me is a public reservation system for companies to offer desks to freelancers and sole-operators.", :name => "description"}/
     %meta{:content => "The Rad Warlike Annex", :name => "author"}/
+    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
+    %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
     %meta{:content => "tellthemwhen_verif_1af11d7040aa81a9ab2e07d4efee180d2e93d030", :name => "TellThemWhen"}/
     %meta{:content => "IE=edge,chrome=1", "http-equiv" => "X-UA-Compatible"}/
     %meta{:content => "#{current_user.authentication_token}", :name => "token"}/
     = csrf_meta_tag
     %link{:href => "/favicon.ico?9002", :rel => "shortcut icon"}/
     = stylesheet_link_tag 'new_layout'
+    = javascript_include_tag "//use.typekit.net/nyj7syq.js"
+    = javascript_include_tag "https://js.stripe.com/v1/"
 
     = requirejs_include_tag "webapp"
-    <script type="text/javascript" src="//use.typekit.net/nyj7syq.js"></script>
-    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    :javascript
+      try{Typekit.load();}catch(e){}
+    
+    /[if lt IE 9]
+      = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'
 
   %body
-    %div{:id => 'main'}
+    #TTWNotify{:style => "display:none;"}
+
+    .dnm-page
+      .container-fluid
+        .navbar.navbar-inverse.navbar-fixed-top
+          .navbar-inner
+            .logo-container.pull-left
+              = link_to "Desks Near Me", root_url, :id => "logo"
+            #header_links.links-container.pull-right
+              = render "layouts/header_navigation"
+
+      %section#content{:class => "#{controller_name}"}
+        %div{:class => "container-fluid #{'legacy' if legacy?}"}
+          %h2 LOADING...
+      = render :partial => "layouts/footer"
+
+    = render :partial => "layouts/analytics" if Rails.env.production?
+
+    - if Rails.env.production?
+      %script{:charset => "utf-8", :type => "text/javascript"}
+        (function(){
+        t = document.createElement('script');t.async=true;t.type ='text/javascript';
+        t.src = ('https:' == document.location.protocol ? 'https://secure.' : 'http://api.') + 'tellthemwhen.com/api/v2/notices/620b94a22ed.js';
+        var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(t,s);
+        })();
