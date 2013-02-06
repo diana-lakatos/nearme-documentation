@@ -17,7 +17,7 @@ Feature: Location Owner Creates/Edits Listing
     And I follow "Listings"
     And I follow "Add a Listing"
     When I provide valid listing information
-    Then this listing should exist 
+    Then this listing should exist
 
   Scenario: A listing owner can edit a location
     When I change that locations name to Joe's Codin' Garage

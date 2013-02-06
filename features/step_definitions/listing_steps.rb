@@ -79,7 +79,7 @@ Then /^I (do not )?see a search result for the ([^\$].*) listing$/ do |negative,
   end
 end
 
-When /^I provide valid listing information$/ do 
+When /^I provide valid listing information$/ do
   create_listing_without_visit(model!("location"), "Valid listing") do
     fill_in "Quantity", with: "2"
     fill_in "Description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
