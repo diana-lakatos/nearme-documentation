@@ -25,19 +25,38 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
       event.stopPropagation();
       this.justCreated = this.model.isNew();
       var arr = this.$el.find('.edit_listing').serializeArray();
+      var pattern = new RegExp(/([a-z_]+)\[([^\]]+)\]\[([^\]]+)\]/); // match my_attributes_array[1][id]
+
       var data = _(arr).reduce(function(acc, field) {
-        if (acc[field.name]) { // deal with array checkbox type like amenities_ids[]
+        if (acc[field.name] && !pattern.test(field.name) ) { // deal with array checkbox type like amenities_ids[]
           if (!_.isArray(acc[field.name])) {
             acc[field.name] = [acc[field.name]];
           }
           acc[field.name].push(field.value);
+        }else if (pattern.test(field.name)) {
+          var split = field.name.match(pattern);
+          var name = split[1];
+          var index = split[2];
+          var param = split[3];
+
+          if (!acc[name]) {
+            acc[name] = {};
+          }
+          if (!acc[name][index]) {
+            acc[name][index] = {};
+          }
+          acc[name][index][param] = field.value;
         }
+
         else {
           acc[field.name] = field.value;
         }
         return acc;
       }, {});
-      this.model.save(data, {success: this._afterSave, error: this._showError});
+      this.model.save(data, {
+        success: this._afterSave,
+        error: this._showError
+      });
     },
 
     trash: function(event) {

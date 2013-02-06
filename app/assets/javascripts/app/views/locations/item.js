@@ -2,7 +2,7 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
   var LocationView = Backbone.View.extend({
     template: locationTemplate,
     initialize: function() {
-      _.bindAll(this, 'render', 'addAll', 'addOne','trash', '_afterSave', '_showError');
+      _.bindAll(this, 'render', 'addAll', 'addOne','trash', 'toggleCmd', '_afterSave', '_showError');
       this.listingCollection = new ListingCollection(this.model.get('listings'));
       var self = this;
     },
@@ -20,9 +20,7 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
       this.addAll();
-      if (this.model.isNew()) {
-        $('.add-listing', this.$el).hide();
-      }
+      this.toggleCmd();
       new DNM.LocationFinder($('form#edit_location_'+ this._getId(), this.$el));
       return this;
     },
@@ -63,10 +61,11 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
     },
 
     availabilityChanged: function(event) {
+      var customRules = $(event.target).closest('.availability-rules').find('.custom-availability-rules');
       if((event.target).id === "availability_rules_custom") {
-        $('.custom-availability-rules').show();
+        customRules.show();
       } else {
-        $('.custom-availability-rules').hide();
+        customRules.hide();
       }
     },
 
@@ -78,6 +77,14 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       }
       else {
         times.show();
+      }
+    },
+    toggleCmd: function(event) {
+      var target = $('.add-listing', this.$el);
+      if (!this.model.isNew()) {
+        target.fadeIn().css('display','inline-block');// using show() renders display "inline" instead of "inline-block"
+      } else {
+        target.hide();
       }
     },
 
@@ -148,8 +155,7 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
 
       if (this.justCreated) {
         this.justCreated = false;
-        this.render();
-        $('.location-content', this.$el).collapse('show');
+        this.toggleCmd();
       }
     },
 

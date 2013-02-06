@@ -7,52 +7,9 @@
       <div class="control-group indent">
         <div class="availability-rules">
           {{#checkbox availability_template_id}}
-          <div>
-            <input id="availability_template_id_m-f9-5" name="availability_template_id" type="radio" value="M-F9-5">
-            <label class="inline" for="availability_template_id_m-f9-5">Working Week (Mon - Fri, 9:00 AM - 5:00 PM)</label>
-          </div>
-          <div>
-            <input id="availability_template_id_m-f8-6" name="availability_template_id" type="radio" value="M-F8-6">
-            <label class="inline" for="availability_template_id_m-f8-6">Extended Week (Mon - Fri, 8:00 AM - 6:00 PM)</label>
-          </div>
-          <div>
-            <input id="availability_template_id_m-s9-5" name="availability_template_id" type="radio" value="M-S9-5">
-            <label class="inline" for="availability_template_id_m-s9-5">Working Week +1 (Mon - Sat, 9:00 AM - 5:00 PM)</label>
-          </div>
-          <div>
-            <input data-custom-rules="true" id="availability_rules_custom" name="availability_template_id" type="radio" value="custom">
-            <label class="inline" for="availability_rules_custom">Custom</label>
-          </div>
+            {{>templates_shared_ruleList}}
           {{/checkbox}}
-          <div class="custom-availability-rules" {{#compare availability_template_id "!==" "custom"}} style="display: none;" {{/compare}}>
-            {{#each availability_rules_attributes}}
-            <div class="day day-{{day}}">
-              <input id="availability_rules_attributes_{{@index}}_id" name="availability_rules_attributes[{{@index}}][id]" type="hidden" value="{{id}}">
-              <input id="availability_rules_attributes_{{@index}}_day" name="availability_rules_attributes[{{@index}}][day]" type="hidden" value="{{day}}">
-              <div class="day-name">{{day_name}}</div>
-              <div class="open-time">
-                <select {{#unless id}} style="display:none;" {{/unless}} id="availability_rules_attributes_{{@index}}_open_time" name="availability_rules_attributes[{{@index}}][open_time]">
-                  {{#select open_time}}
-                  {{> templates_shared_availabilityOptions}}
-                  {{/select}}
-                </select>
-              </div>
-              <div class="close-time">
-                <select {{#unless id}} style="display:none;" {{/unless}} id="availability_rules_attributes_{{@index}}_close_time" name="availability_rules_attributes[{{@index}}][close_time]">
-                  {{#select close_time}}
-                  {{> templates_shared_availabilityOptions}}
-                  {{/select}}
-                </select>
-              </div>
-              <div class="closed-flag">
-                <input name="availability_rules_attributes[{{@index}}][_destroy]" type="hidden" value="0">
-                <input class="closed" id="availability_rules_attributes_{{@index}}__destroy" name="availability_rules_attributes[{{@index}}][_destroy]" type="checkbox" {{#unless id}} checked="checked" {{/unless}} value="1">
-
-                <label class="inline" for="availability_rules_attributes_{{@index}}__destroy">Closed?</label>
-              </div>
-            </div>
-          {{/each}}
-        </div>
+          {{>templates_shared_customRules}}
       </div>
       </div>
     </div>
