@@ -126,6 +126,7 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       var result = confirm("Are you sure you want to delete this Space?");
       if (result === true) {
         this.model.trash();
+        var self = this;
         this.$el.fadeOut(400, function() {
           self.remove();
         });

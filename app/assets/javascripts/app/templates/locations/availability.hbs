@@ -25,7 +25,7 @@
           </div>
           {{/checkbox}}
           <div class="custom-availability-rules" {{#compare availability_template_id "!==" "custom"}} style="display: none;" {{/compare}}>
-            {{#each availability_rules}}
+            {{#each availability_rules_attributes}}
             <div class="day day-{{day}}">
               <input id="availability_rules_attributes_{{@index}}_id" name="availability_rules_attributes[{{@index}}][id]" type="hidden" value="{{id}}">
               <input id="availability_rules_attributes_{{@index}}_day" name="availability_rules_attributes[{{@index}}][day]" type="hidden" value="{{day}}">

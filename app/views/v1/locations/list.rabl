@@ -16,7 +16,7 @@ collection @locations, :root => false, :object_root => false
     end
   end
 
-  child :availability_full_week => :availability_rules do |u|
+  child :availability_full_week => :availability_rules_attributes do |u|
     node do |m|
       { :day => m[:day] ,:day_name => m[:rule].day_name, :id => m[:rule].id, :open_time => m[:rule].open_time, :close_time => m[:rule].close_time}
     end
