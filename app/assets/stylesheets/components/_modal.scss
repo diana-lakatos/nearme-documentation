@@ -72,6 +72,16 @@
     margin-right: -$padding;
     margin-top: $padding;
     margin-bottom: $padding;
+    text-align: center;
+  }
+  .hr span {
+    display: inline-block;
+    background: #fafafa;
+    padding: 0 8px;
+    position: relative;
+    top: -10px;
+    color: #999999;
+    font-size: 18px
   }
 }
 
@@ -105,4 +115,31 @@
   position: fixed;
   width: 100%;
 }
+
+// Payments
+
+input#card_number {
+  padding-left: 50px;
+}
+
+.credit-card-icon {
+  margin: -48px 0 18px 12px;
+  font-size: 155%;
+  width: 20px;
+  opacity: .7;
+}
+
+.card-info {
+  float: left 
+}
+
+.card-info.expiry {
+  width: 49%;
+  margin-right: 1%;
+}
+
+.card-info.security {
+  width: 49%;
+  margin-left: 1%;   
+} 
 

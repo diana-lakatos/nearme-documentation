@@ -7,5 +7,5 @@ Feature: A user can logout of the site
     Given a user exists
       And I am logged in as the user
      When I go to the home page
-      And I follow "Log out"
+      And I follow "Log Out"
      Then I should be logged out

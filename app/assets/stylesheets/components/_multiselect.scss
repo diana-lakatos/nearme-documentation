@@ -5,7 +5,7 @@
   text-align: left;
 
   .collapsed {
-    background: $gray2 image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/arrow-down.png") 95% center no-repeat;
+    background: $gray2 image-url("https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png") 95% center no-repeat;
     font-size: 16px;
     line-height: 26px;
     cursor: pointer;
@@ -16,7 +16,7 @@
 
     &:hover {
       opacity: 1;
-      background: darken($gray2, 10%) image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/arrow-down.png") 95% center no-repeat;
+      background: darken($gray2, 10%) image-url("https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png") 95% center no-repeat;
     }
   }
 
@@ -38,7 +38,7 @@
 
     .summary {
       border-bottom: 1px solid #d6d6d6;
-      background: lighten($dark-gray, 60%) image-url("http://desksnearme.assets.s3.amazonaws.com/img/ui/arrow-down.png") 95% center no-repeat;
+      background: lighten($dark-gray, 60%) image-url("https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png") 95% center no-repeat;
       font-size: 16px;
       line-height: 26px;
       padding: 4px 8px;

@@ -4,21 +4,17 @@ class Listing
     extend ActiveSupport::Concern
 
     included do
-      attr_accessor :score, :strict_match
-
-      def strict_match?
-        strict_match.nil? || strict_match
-      end
 
       define_index do
+
+        indexes :name, :description
 
         join location
         where  "locations.id is not null"
 
-        indexes :name, :description
-
         has "radians(#{Location.table_name}.latitude)",  as: :latitude,  type: :float
         has "radians(#{Location.table_name}.longitude)", as: :longitude, type: :float
+
         has :deleted_at
 
         group_by :latitude, :longitude
@@ -44,8 +40,7 @@ class Listing
         end
 
         listings = search(*search_args).to_a
-        Scorer.score(listings, params)
-        listings.sort { |a,b| a.score <=> b.score }
+        listings.reject(&:nil?).reject { |l| l.location.nil? }.reject { |listing| params.availability.dates.any? { |date| listing.fully_booked_on?(date) } }
       end
     end
   end

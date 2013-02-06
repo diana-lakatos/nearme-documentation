@@ -3,6 +3,7 @@ require 'test_helper'
 class LocationTest < ActiveSupport::TestCase
 
   should belong_to(:company)
+  should belong_to(:location_type)
   should have_many(:listings)
 
   should validate_presence_of(:company_id)
@@ -11,6 +12,7 @@ class LocationTest < ActiveSupport::TestCase
   should validate_presence_of(:address)
   should validate_presence_of(:latitude)
   should validate_presence_of(:longitude)
+  should validate_presence_of(:location_type_id)
   should_not allow_value('not_an_email').for(:email)
   should allow_value('an_email@domain.com').for(:email)
 
@@ -49,88 +51,72 @@ class LocationTest < ActiveSupport::TestCase
     end
   end
 
+  context "friendly url" do
+    should 'store slug in the database' do
+      @location = FactoryGirl.build(:location_in_san_francisco, :formatted_address => 'San Francisco, CA, California, USA')
+      @location.save!
+      @location.reload
+      assert_equal "san-francisco-ca-california-usa", @location.slug
+    end
+
+    should 'update slug along with formatted_address ' do
+      @location = FactoryGirl.create(:location_in_san_francisco, :formatted_address => 'Ursynowska, warsaw, Poland')
+      assert_equal "ursynowska-warsaw-poland", @location.slug
+      @location.formatted_address = 'San Francisco, CA, California, USA'
+      @location.save!
+      assert_equal "san-francisco-ca-california-usa", @location.slug
+    end
+
+  end
+
+
   context "creating address components" do
 
     setup do
-      @user = FactoryGirl.create(:user)
-      @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
-      @location = FactoryGirl.build(:location_in_auckland)
-      @company.locations << @location
-      @location.address_components_hash = get_params_for_address_components
+      @location = FactoryGirl.create(:location_ursynowska_address_components)
     end
 
-    context 'formatted address has not changed ' do
+    context 'creates address components for new record' do
 
+      should "store address components" do
+        assert_equal(7, @location.address_components.count)
+      end
 
-      should "not create address components" do
-        @location.save!
-        @location.phone = "000 0000 000"
-        @location.build_address_components_if_necessary
-        assert_equal(0, @location.address_component_names.count)
+      should "be able to get city, suburb, state and country" do
+        assert_equal 'Ursynowska', @location.street
+        assert_equal 'Warsaw', @location.city
+        assert_equal 'Mokotow', @location.suburb
+        assert_equal 'Masovian Voivodeship', @location.state
+        assert_equal 'Poland', @location.country
+      end
+
+      should "ignore missing fields and store the one present" do
+        @location = FactoryGirl.create(:location_warsaw_address_components)
+        assert_equal 'Warsaw', @location.city
+        assert_nil @location.suburb
       end
 
     end
 
-    context 'formatted address has changed' do
-
-      should "create address components" do
-        @location.save!
-        @location.formatted_address = "Ursynowska, Warszawa, Poland"
-        @location.build_address_components_if_necessary
-        assert_equal(6, @location.address_component_names.count)
-      end
-
+    should "handle trash" do
+      @location.address_components = { 0 => { "does" => "not", "exist" => ", but", "should" => "work"} }
+      @location.save!
+      @location.reload
+      assert_nil @location.city
     end
 
-    context 'is new record' do
-
-      should " create address components" do
-        @location.build_address_components
-        assert_equal(6, @location.address_component_names.count)
-      end
-
+    should "should update all address components fields based on address_components" do
+      @location.attributes = FactoryGirl.attributes_for(:location_san_francisco_address_components)
+      assert_not_equal("San Francisco", @location.city)
+      @location.parse_address_components
+      assert_equal("San Francisco", @location.city)
+      assert_equal("California", @location.state)
+      assert_equal("United States", @location.country)
+      assert_nil(@location.suburb)
+      assert_nil(@location.street)
     end
+
   end
 
-  private
 
-  def get_params_for_address_components
-    # real data from google geocoder
-    {
-      "0"=> {
-      "long_name"=>"Ursynowska", 
-      "short_name"=>"Ursynowska", 
-      "types"=>"route"
-    }, 
-      "1"=>{
-      "long_name"=>"Mokotow", 
-      "short_name"=>"Mokotow", 
-      "types"=>"sublocality,political"
-    }, 
-      "2"=>{
-      "long_name"=>"Warsaw", 
-      "short_name"=>"Warsaw", 
-      "types"=>"locality,political"
-    },
-      "3"=>{
-      "long_name"=> "Warszawa", 
-      "short_name"=>"Warszawa", 
-      "types"=>"administrative_area_level_3,political"
-    }, 
-      "4"=>{
-      "long_name"=>"Warszawa", 
-      "short_name"=>"Warszawa", 
-      "types"=>"administrative_area_level_2,political"
-    }, 
-      "5"=>{
-      "long_name"=>"Masovian Voivodeship", 
-      "short_name"=>"Masovian Voivodeship", 
-      "types"=>"administrative_area_level_1,political"
-    }, 
-      "6"=>{
-      "long_name"=>"Poland", 
-      "short_name"=>"PL", 
-      "types"=>"country,political"
-    }
-    }
-  end end
+end

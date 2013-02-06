@@ -1,4 +1,70 @@
-ul.nav {
+.navbar-inverse {
+  ul.nav {
+    li.dropdown {
+      @media (max-width: 480px) {
+       a.dropdown-toggle > span, b.caret{
+          display:none;
+        }
+
+      }
+      ul.dropdown-menu {
+        min-width: 130px;
+        left: 7px;
+        @media (max-width: 480px) {
+          left: -70px;
+        }
+        background:$dnm_black;
+        li {
+          background:$dnm_black;
+          a {
+            padding: 4px 8px;
+            &:hover{
+              background:$dnm_black;
+              color: $dnm_white;
+            }
+          }
+          &.divider{
+            border-color: $gray4;
+            padding: 0;
+          }
+        }
+        &::after{
+          border-bottom-color:$dnm_black;
+        }
+      }
+      &.active {
+        background: $dnm_black;
+        a {
+          color: $dnm_white;
+        }
+      }
+
+      a {
+        display: block;
+        font:normal 16px/22px $font-medium, sans-serif;
+        padding: 8px 14px;
+        position: relative;
+        color: $gray3;
+
+        &:active {
+          color: $dnm_white;
+        }
+      }
+      &.dropdown.open {
+        background: $dnm_black;
+        .dropdown-toggle {
+          background: $dnm_black;
+        }
+      }
+    }
+  }
+}
+
+.dropdown-menu .divider {
+  margin: 2px 0;
+}
+
+ul.nav.dashboard {
   background: $dnm_white;
   border: 2px solid $gray2;
   @include border-radius(8px);

@@ -7,7 +7,8 @@ Feature: A user can add photos to a listing
     Given a user exists
       And a company exists with creator: the user
       And a location exists with company: the company, creator: the user
-      And a listing exists with location: the location, creator: the user
+      And a listing_type exists with name: "Desk"
+      And a listing exists with location: the location, creator: the user, listing_type: the listing_type
 
   Scenario: Adding photos to a work place
     Given I am logged in as the user

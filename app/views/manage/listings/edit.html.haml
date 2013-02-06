@@ -11,6 +11,7 @@
     = simple_form_for([:manage, @listing], :html => { :class => 'form-horizontal edit_listing' }) do |f|
 
       = f.input :name, :hint => "What's the name of this listing?"
+      = f.association :listing_type, :label => "Listing Type"
       = f.input :quantity, :input_html => { :size => 4, :min => 1 }, :hint => "How many spots do you have?"
       = f.input :daily_price, :as => :decimal, :hint => "How much per seat per day are you charging?"
       = f.input :weekly_price, :as => :decimal, :hint => "How much per seat per week are you charging?"

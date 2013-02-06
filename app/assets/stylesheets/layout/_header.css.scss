@@ -59,19 +59,22 @@
         float: right;
         color: $gray3;
         font-size: 20px;
-        margin-right: 20px;
         text-decoration: none;
 
         &:hover {
           color: white;
         }
 
-        @media (max-width: 480px) {
-          margin-right:10px;
+        &.margin-right {
+          margin-right: 20px;
         }
-        @media (max-width: 320px) {
-          font-size: 22px;
-        }      
+
+        &.ico-dashboard.dropdown-toggle {
+
+          @media (max-width: 320px) {
+            width: 10px;
+          }
+        }  
       }
     }
 

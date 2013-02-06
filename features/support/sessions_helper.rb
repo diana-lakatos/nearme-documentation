@@ -1,7 +1,11 @@
 module SessionsHelper
 
   def login(user)
-    auth = FactoryGirl.create(:authentication, :user => user)
+    auth = user.authentications.find_or_initialize_by_provider('twitter')
+    if auth.new_record?
+      auth.uid = FactoryGirl.attributes_for(:authentication)[:uid]
+      auth.save!
+    end
     OmniAuth.config.add_mock(:twitter, {:uid => auth.uid})
     visit "/auth/twitter"
   end
@@ -20,7 +24,7 @@ module SessionsHelper
 
   def log_out
     visit root_path
-    click_link 'Log out'
+    click_link 'Log Out'
   end
 
   def user

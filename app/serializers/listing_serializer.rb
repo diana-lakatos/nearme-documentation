@@ -13,9 +13,8 @@ class ListingSerializer < ApplicationSerializer
   def attributes
     hash = super
 
-    # Add score and strict match if present
-    hash.merge!(:score => object.score)               unless object.score.nil?
-    hash.merge!(:strict_match => object.strict_match) unless object.strict_match.nil?
+    hash.merge!(:score => 0)
+    hash.merge!(:strict_match => true)
 
     # This remains for backwards compatibility for iOS
     hash.merge!(:organizations => [])

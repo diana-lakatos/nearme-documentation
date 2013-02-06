@@ -1,7 +1,7 @@
 class Company < ActiveRecord::Base
   URL_REGEXP = URI::regexp(%w(http https))
 
-  attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name
+  attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email
 
   belongs_to :creator, class_name: "User"
 

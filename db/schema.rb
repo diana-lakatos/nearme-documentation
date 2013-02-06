@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130124171246) do
+ActiveRecord::Schema.define(:version => 20130205205139) do
 
   create_table "address_component_names", :force => true do |t|
     t.string  "long_name"
@@ -60,15 +60,29 @@ ActiveRecord::Schema.define(:version => 20130124171246) do
 
   add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
 
+  create_table "charges", :force => true do |t|
+    t.integer  "reference_id"
+    t.boolean  "success"
+    t.text     "response"
+    t.integer  "amount"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "user_id"
+    t.string   "reference_type"
+    t.string   "currency"
+  end
+
   create_table "companies", :force => true do |t|
     t.integer  "creator_id"
     t.string   "name"
     t.string   "email"
     t.text     "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.datetime "deleted_at"
     t.string   "url"
+    t.text     "mailing_address"
+    t.string   "paypal_email"
   end
 
   create_table "delayed_jobs", :force => true do |t|
@@ -106,6 +120,12 @@ ActiveRecord::Schema.define(:version => 20130124171246) do
     t.datetime "updated_at",        :null => false
   end
 
+  create_table "listing_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "listings", :force => true do |t|
     t.integer  "location_id"
     t.string   "name"
@@ -119,6 +139,7 @@ ActiveRecord::Schema.define(:version => 20130124171246) do
     t.datetime "deleted_at"
     t.boolean  "confirm_reservations"
     t.boolean  "delta",                   :default => true, :null => false
+    t.integer  "listing_type_id"
   end
 
   create_table "location_amenities", :force => true do |t|
@@ -126,6 +147,12 @@ ActiveRecord::Schema.define(:version => 20130124171246) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "location_id"
+  end
+
+  create_table "location_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "locations", :force => true do |t|
@@ -138,13 +165,23 @@ ActiveRecord::Schema.define(:version => 20130124171246) do
     t.float    "latitude"
     t.float    "longitude"
     t.text     "info"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.datetime "deleted_at"
     t.string   "formatted_address"
     t.string   "currency"
     t.text     "special_notes"
+    t.text     "address_components"
+    t.string   "street"
+    t.string   "suburb"
+    t.string   "city"
+    t.string   "state"
+    t.string   "country"
+    t.string   "slug"
+    t.integer  "location_type_id"
   end
+
+  add_index "locations", ["slug"], :name => "index_locations_on_slug"
 
   create_table "photos", :force => true do |t|
     t.datetime "created_at"
@@ -193,10 +230,13 @@ ActiveRecord::Schema.define(:version => 20130124171246) do
     t.string   "confirmation_email"
     t.integer  "total_amount_cents", :default => 0
     t.string   "currency"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
     t.datetime "deleted_at"
     t.text     "comment"
+    t.boolean  "create_charge"
+    t.string   "payment_method",     :default => "manual",  :null => false
+    t.string   "payment_status",     :default => "unknown", :null => false
   end
 
   create_table "search_queries", :force => true do |t|
@@ -265,6 +305,7 @@ ActiveRecord::Schema.define(:version => 20130124171246) do
     t.string   "phone"
     t.string   "unconfirmed_email"
     t.string   "unlock_token"
+    t.string   "stripe_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

@@ -35,6 +35,8 @@ gem "compass-rails"
 gem "coffee-rails"
 gem "rdiscount"
 gem 'delayed_job_active_record'
+gem 'stripe'
+gem 'friendly_id'
 
 gem 'jquery-rails'
 gem 'sass-rails'
@@ -64,6 +66,7 @@ group :development, :test do
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
   gem 'jasmine'
+  gem 'debugger'
 end
 
 group :test do

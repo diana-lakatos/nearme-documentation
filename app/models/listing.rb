@@ -1,6 +1,7 @@
 class Listing < ActiveRecord::Base
 
   # Period constants for listing costs
+
   PRICE_PERIODS = {
     :free => nil,
     :day => 'day'
@@ -34,6 +35,7 @@ class Listing < ActiveRecord::Base
   delegate :url, to: :company
 
   belongs_to :location
+  belongs_to :listing_type
   delegate :address, :amenities, :currency, :formatted_address,
     :local_geocoding, :latitude, :longitude, :distance_from, to: :location,
     allow_nil: true
@@ -49,14 +51,14 @@ class Listing < ActiveRecord::Base
 
   # === Callbacks
 
-  validates_presence_of :location_id, :name, :description, :quantity
+  validates_presence_of :location_id, :name, :description, :quantity, :listing_type_id
   validates_numericality_of :quantity
   validates_length_of :description, :maximum => 250
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
                   :name, :description, :daily_price, :weekly_price, :monthly_price,
                   :availability_template_id, :availability_rules_attributes, :defer_availability_rules, :free,
-                  :photos_attributes
+                  :photos_attributes, :listing_type_id
 
   delegate :to_s, to: :name
 
@@ -102,8 +104,13 @@ class Listing < ActiveRecord::Base
   end
   alias_method :defer_availability_rules?, :defer_availability_rules
 
+
+  def open_on?(date)
+    availability.open_on?(:date => date)
+  end
+
   def availability_for(date)
-    if availability.open_on?(:date => date)
+    if open_on?(date)
       # Return the number of free desks
       [self.quantity - desks_booked_on(date), 0].max
     else
@@ -194,26 +201,28 @@ class Listing < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
-  # FIXME: long method, split me up? Does this/a lot of this belong in Reservation instead?
   def reserve!(reserving_user, dates, quantity, assignees = [])
-    # Check that the reservation is valid
-    # FIXME: should be able to do this all in sql
-    dates.each do |date|
-      available = self.availability_for(date)
-      raise DNM::PropertyUnavailableOnDate.new(date, available, quantity) if available < quantity
-    end
-
-    # Create the reservation
-    reservation = self.reservations.build(
-      :user => reserving_user
-    )
+    reservation = reservations.build(:user => reserving_user)
 
     dates.each do |date|
+      raise DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
       reservation.add_period(date, quantity, assignees)
     end
 
     reservation.save!
     reservation
+  end
+
+  def dates_fully_booked
+    reservations.map(:date).select { |d| fully_booked_on?(date) }
+  end
+
+  def fully_booked_on?(date)
+    open_on?(date) && !available_on?(date)
+  end
+
+  def available_on?(date, quantity=1)
+    availability_for(date) >= quantity
   end
 
   def schedule(weeks = 1)

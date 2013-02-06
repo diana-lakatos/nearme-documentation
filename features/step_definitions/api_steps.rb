@@ -92,16 +92,6 @@ Then /^the response contains an empty organizations list$/ do
   result["organizations"].empty?.should be_true
 end
 
-Then /^the response should have the listing in (.*) with the (.*) score$/ do |city, direction|
-  direction = direction == "lowest" ? 1 : -1
-  results_listings.sort_by do |a|
-    a[:score].to_i * direction
-  end.first[:company_name].should include city
-end
-
-Then /^the response should have the listing for \$(\d+) with the (.*) score$/ do |dollars, direction|
-  direction = direction == "lowest" ? 1 : -1
-  results_listings.sort_by do |a|
-    a[:score].to_i * direction
-  end.first[:price]["amount"].to_i.should eq dollars.to_i
+Then /^the response should have the (.*) organization$/ do |organization|
+  results_organizations.collect { |o| o[:name] }.should include organization
 end

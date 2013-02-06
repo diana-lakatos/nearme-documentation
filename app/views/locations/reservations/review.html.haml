@@ -1,6 +1,6 @@
 %h1 Book space at #{@location.name}
 
-= form_tag location_reservations_url(@location), :method => :post, :remote => true do
+= form_tag secure_location_reservations_url(@location), :method => :post, :remote => true, :class => "payment form-horizontal" do
   = render 'locations/reservations/fields'
 
   - location_reservation_summaries.each do |date, reservations|
@@ -19,9 +19,58 @@
 
   %hr
 
-  %p.text-center
-    = submit_tag 'Request Booking Now'
+  - if reservation_needs_payment_details?
+    .control-group
+      = radio_button_tag :payment_method, "credit_card", reservation_credit_card_payment?
+      = label_tag :payment_method_credit_card, 'Charge my credit card once booking confirmed'
+      
+    .control-group
+      = radio_button_tag :payment_method, "manual", reservation_manual_payment?
+      = label_tag :payment_method_manual, 'I will make the payment in person upon arrival'
+    
+    #credit_card_fields{:style => "display: none"}
+      %hr.divider
 
-  - if location_reservation_needs_confirmation?
-    %p.notice.text-center
-      This host manually confirms all bookings before payment
+      - if @errors.present?
+        .flash.error
+          %ul
+            - @errors.each do |e|
+              %li= e
+
+      .row-fluid.padding-bottom        
+        .span6
+          .ico-lock.padding Submit a secure payment.
+        .span6         
+          = image_tag 'credit-cards.png', :alt => "Visa, Mastercard, American Express, Discover"
+
+      .row-fluid
+        = label_tag :card_number, "Credit Card Number", :class => 'control-label'
+        .controls.card-number
+          = text_field_tag :card_number, nil
+          .credit-card-icon
+            %span.ico-credit-card
+
+      .card-info.expiry
+        = label_tag :card_expires, "Expires On", :class => 'control-label'
+        .controls.card-expires
+          = text_field_tag :card_expires, nil, size: 4, placeholder: 'MMYY'
+
+      .card-info.security
+        = label_tag :card_code, "Security Code", :class => 'control-label'
+        .controls.card-code
+          = text_field_tag :card_code, nil, size: 3, placeholder: 'CVC'
+
+    %hr
+
+  %p.text-center
+    = submit_tag 'Request Booking'
+
+  %p.notice.text-center
+    - if location_reservation_needs_confirmation?
+      This host manually confirms all bookings before payment.
+    By requesting a booking, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, target: '_blank'}.
+
+:javascript
+  $(function() {
+    new Bookings.ReservationModal($('form.payment'))
+  });

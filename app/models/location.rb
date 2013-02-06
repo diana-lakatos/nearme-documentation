@@ -1,11 +1,16 @@
 class Location < ActiveRecord::Base
+
+  extend FriendlyId
+  friendly_id :formatted_address, use: :slugged
+
   attr_accessible :address, :amenity_ids, :company_id, :description, :email,
     :info, :latitude, :local_geocoding, :longitude, :name,
     :currency, :phone, :formatted_address, :availability_rules_attributes,
-    :availability_template_id,
-    :special_notes, :listings_attributes
+    :availability_template_id, :special_notes, :listings_attributes, :suburb, 
+    :city, :state, :country, :street, :address_components, :location_type_id
   attr_accessor :local_geocoding # set this to true in js
-  attr_accessor :address_components_hash # data to create address_component_names and _types will be stored here
+
+  serialize :address_components, JSON
 
   geocoded_by :address
 
@@ -13,25 +18,25 @@ class Location < ActiveRecord::Base
   has_many :location_amenities
 
   belongs_to :company
+  belongs_to :location_type
   delegate :creator, :to => :company
 
   has_many :listings,
-           :dependent => :destroy
+    :dependent => :destroy
 
   has_many :photos, :through => :listings
   has_many :feeds, :through => :listings
 
   has_many :availability_rules, :as => :target
 
-  has_many :address_component_names, :dependent => :destroy
-
-  validates_presence_of :company_id, :name, :description, :address, :latitude, :longitude
+  validates_presence_of :company_id, :name, :description, :address, :latitude, :longitude, :location_type_id
   validates :email, email: true, allow_nil: true
   validates :currency, currency: true, allow_nil: true
   validates_length_of :description, :maximum => 250
 
   before_validation :fetch_coordinates
   before_save :assign_default_availability_rules
+  before_save :parse_address_components
 
   acts_as_paranoid
 
@@ -55,39 +60,19 @@ class Location < ActiveRecord::Base
     creator == user
   end
 
-  def build_address_components_if_necessary
-    if formatted_address_changed?
-      unless address_components_hash.empty? 
-        cleanup_address_components
-        build_address_components
-        true
-      else
-        false
-      end
-    else
-      false
-    end
+  def currency
+    read_attribute(:currency).presence || "USD"
   end
 
-  def cleanup_address_components
-    address_component_names.destroy_all
-  end
 
-  def build_address_components
-    cached_types_hash = {}
-    parsed_address_components_hash = AddressComponent::Parser.parse_geocoder_address_component_hash(address_components_hash)
-    parsed_address_components_hash.each do |index, address_component|
-      address_component_name = AddressComponentName.new({:short_name => address_component["short_name"], :long_name => address_component["long_name"]})
-      address_component_name.location = self
-      address_component_name.save!
-      address_component["types"].each do |type|
-        if cached_types_hash[type]
-          address_component_name.address_component_types << cached_types_hash[type]
-        else
-          address_component_type = AddressComponentType.find_or_create_by_name(type)
-          address_component_name.address_component_types << address_component_type
-        end
-      end
+  def parse_address_components
+    if address_components_changed?
+      data_parser = Location::GoogleGeolocationDataParser.new(address_components)
+      self.city = data_parser.fetch_address_component("city")
+      self.suburb = data_parser.fetch_address_component("suburb")
+      self.street = data_parser.fetch_address_component("street")
+      self.country = data_parser.fetch_address_component("country")
+      self.state = data_parser.fetch_address_component("state")
     end
   end
 
@@ -100,24 +85,28 @@ class Location < ActiveRecord::Base
     company.save
   end
 
+  def phone
+    read_attribute(:phone) || creator.try(:phone)
+  end
+
   private
 
-    def assign_default_availability_rules
-      if !availability_rules.any?
-        AvailabilityRule.default_template.apply(self)
-      end
+  def assign_default_availability_rules
+    if !availability_rules.any?
+      AvailabilityRule.default_template.apply(self)
     end
+  end
 
-    def fetch_coordinates
-      # If we aren't locally geocoding (cukes and people with JS off)
-      if address_changed? && !(latitude_changed? || longitude_changed?)
-        geocoded = Geocoder.search(address).try(:first)
-        if geocoded
-          self.latitude = geocoded.coordinates[0]
-          self.longitude = geocoded.coordinates[1]
-          self.formatted_address = geocoded.formatted_address
-        end
+  def fetch_coordinates
+    # If we aren't locally geocoding (cukes and people with JS off)
+    if address_changed? && !(latitude_changed? || longitude_changed?)
+      geocoded = Geocoder.search(address).try(:first)
+      if geocoded
+        self.latitude = geocoded.coordinates[0]
+        self.longitude = geocoded.coordinates[1]
+        self.formatted_address = geocoded.formatted_address
       end
     end
+  end
 
 end

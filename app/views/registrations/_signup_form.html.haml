@@ -24,6 +24,8 @@
     .actions
       = f.submit 'Sign up', :disable_with => "Signing up..."
 
+  %h3.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path}.
+
 - if user_auth_provider
   .signup-provider
     .inner-box.connected-provider

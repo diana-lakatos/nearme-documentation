@@ -1,6 +1,9 @@
 require 'test_helper'
+require 'reservations_helper'
 
 class ReservationTest < ActiveSupport::TestCase
+  include ReservationsHelper
+
   test "it has a listing" do
     @reservation = Reservation.new
     @reservation.listing = FactoryGirl.create(:listing)
@@ -21,6 +24,19 @@ class ReservationTest < ActiveSupport::TestCase
     assert @reservation.periods
   end
 
+  context "confirmation" do
+    should "attempt to charge user card if paying by credit card" do
+      reservation = FactoryGirl.build(:reservation_with_credit_card)
+      reservation.add_period(Date.today)
+      reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+      reservation.save!
+
+      reservation.owner.billing_gateway.expects(:charge)
+      reservation.confirm
+      assert reservation.reload.paid?
+    end
+  end
+
   context "with serialization" do
     should "work even if the total amount is nil" do
       reservation = Reservation.new
@@ -34,7 +50,7 @@ class ReservationTest < ActiveSupport::TestCase
           :listing_id => reservation.listing.id,
           :state      => "pending",
           :cancelable => true,
-          :total_cost => { :amount=>0.0, :label=>"$0.00", :currency_code=>"USD" },
+          :total_cost => { :amount=>0.0, :label=>"$0.00", :currency_code=> "USD" },
           :times      => []
         }
       }

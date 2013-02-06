@@ -17,4 +17,8 @@ DesksnearMe::Application.configure do
 
   config.i18n.fallbacks = true
   config.active_support.deprecation = :notify
+
+  # Set Stripe config to live config
+  config.stripe_api_key = "sk_live_YJet2CBSWgQ2UeuvQiG0vKEC"
+  config.stripe_public_key = "pk_live_h3zjCFhi02B4c9juuzmFOe3n"
 end
