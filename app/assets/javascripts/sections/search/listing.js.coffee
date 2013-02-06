@@ -20,4 +20,4 @@ class Search.Listing
     @_element.find('.listing-info').html() 
 
   hide: ->
-    @_element.hide()
+    @_element.hide().addClass('hidden')

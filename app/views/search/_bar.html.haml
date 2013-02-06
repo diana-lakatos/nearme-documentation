@@ -5,7 +5,7 @@
   .row-fluid
     %h1
       Search Results
-      %strong #{content_tag(:span, pluralize((@search.found_location? ? @listings.length : 0), "listing"), :id => "results_count")} found
+      %strong #{content_tag(:span, pluralize((@search.found_location? ? @listings.length : 0), "listing"), :id => "search_results_count")} found
   .row-fluid
     .span6
       %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => @query, :class => "query", :autocomplete => "off"}

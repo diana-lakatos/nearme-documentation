@@ -4,7 +4,7 @@ class Search.SearchController extends Search.Controller
     super(form)
     @resultsContainer = @container.find('.results')
     @loadingContainer = @container.find('.loading')
-    @resultsCountContainer = $('#results_count')
+    @resultsCountContainer = $('#search_results_count')
     @initializeMap()
     @bindEvents()
 
@@ -32,15 +32,13 @@ class Search.SearchController extends Search.Controller
 
   showResults: (html) ->
     @resultsContainer.html(html)
-    @updateListingsCount()
+    @updateResultsCount()
 
-  updateListingsCount: () ->
-    if(typeof @resultsCountContainer != 'undefined')
-      count = @resultsContainer.find('.listing').length
-      listing_text = "listing"
-      if(count != 1)
-        listing_text += "s"
-      @resultsCountContainer.html(count + " " + listing_text )
+  updateResultsCount: ->
+    count = @resultsContainer.find('.listing:not(.hidden)').length
+    inflection = 'result'
+    inflection += 's' unless count == 1
+    @resultsCountContainer.html("#{count} #{inflection}")
   
   # Update the map with the current listing results, and adjust the map display.
   updateMapWithListingResults: ->
@@ -56,6 +54,7 @@ class Search.SearchController extends Search.Controller
       listing.hide() unless wasPlotted
         
     @map.removeListingsOutOfMapBounds()
+    @updateResultsCount()
 
   # Return Search.Listing objects from the search results.
   getListingsFromResults: ->
