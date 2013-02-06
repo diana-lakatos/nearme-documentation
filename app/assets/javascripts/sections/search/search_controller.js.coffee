@@ -13,9 +13,7 @@ class Search.SearchController extends Search.Controller
       event.preventDefault()
       @triggerSearch()
 
-    # TODO: Limit the zoom range for the serach we make as to not ask for rediculous levels of listings
-    # What is that zoom range?
-    @map.on 'mapDragged', =>
+    @map.on 'viewportChanged', =>
       @triggerSearchWithBoundsAfterDelay()
 
   initializeMap: ->
@@ -23,7 +21,6 @@ class Search.SearchController extends Search.Controller
     return unless mapContainer
     @map = new Search.Map(mapContainer)
     @updateMapWithListingResults()
-    @map.fitBounds()
 
   startLoading: ->
     @resultsContainer.hide()
@@ -45,17 +42,29 @@ class Search.SearchController extends Search.Controller
         listing_text += "s"
       @resultsCountContainer.html(count + " " + listing_text )
   
+  # Update the map with the current listing results, and adjust the map display.
   updateMapWithListingResults: ->
-   @map.clearPlottedListings()
-   @map.plotListings(@getListingsFromResults())
-   @map.fitBounds()
+    @map.clearPlottedListings()
+    @map.plotListings(@getListingsFromResults())
+    @map.fitBounds()
 
+  # Within the current map display, plot the listings from the current results. Remove listings
+  # that aren't within the current map bounds from the results.
+  plotListingResultsWithinBounds: ->
+    for listing in @getListingsFromResults()
+      wasPlotted = @map.plotListingIfInMapBounds(listing)
+      listing.hide() unless wasPlotted
+        
+    @map.removeListingsOutOfMapBounds()
+
+  # Return Search.Listing objects from the search results.
   getListingsFromResults: ->
     listings = []
     @resultsContainer.find('.listing').each (i, el) =>
       listings.push new Search.Listing(el)
     listings
 
+  # Triggers a search request with the current map bounds as the geo constraint
   triggerSearchWithBounds: ->
     bounds = @map.getBoundsArray()
     @assignFormParams(
@@ -65,14 +74,8 @@ class Search.SearchController extends Search.Controller
       sy: bounds[3]
     )
 
-    search = @triggerSearch()
-    search.success (html) =>
-      @showResults(html)
-      for listing in @getListingsFromResults()
-        unless @map.plotListingIfInMapBounds(listing)
-          listing.hide()
-      @map.removeListingsOutOfMapBounds()
-      @finishLoading()
+    @triggerSearchAndHandleResults =>
+      @plotListingResultsWithinBounds()
 
   # Provide a debounced method to trigger the search after a period of constant state
   triggerSearchWithBoundsAfterDelay: _.debounce(->
@@ -84,34 +87,33 @@ class Search.SearchController extends Search.Controller
   triggerSearchFromQuery: ->
     @startLoading()
     @geocodeSearchQuery =>
-      search = @triggerSearch()
-      search.success (html) =>
-        @showResults(html)
+      @triggerSearchAndHandleResults =>
         @updateMapWithListingResults()
-        @finishLoading()
-        @map.fitBounds()
-
-  # Trigger search
-  #
-  # Returns a jQuery Promise object which can be bound to execute response semantics.
-  triggerSearch: ->
-    @startLoading()
-
-    $.ajax(
-      url     : @form.attr("src")
-      type    : 'GET',
-      data    : @form.serialize()
-    )
 
   # Trigger the search after waiting a set time for further updated user input/filters
   triggerSearchFromQueryAfterDelay: _.debounce(-> 
     @triggerSearchFromQuery()
   , 2000)
 
+  # Triggers a search with default UX behaviour and semantics.
+  triggerSearchAndHandleResults: (callback) ->
+    @startLoading()
+    @triggerSearchRequest().success (html) =>
+      @showResults(html)
+      callback() if callback
+      @finishLoading()
+
+  # Trigger the API request for search
+  #
+  # Returns a jQuery Promise object which can be bound to execute response semantics.
+  triggerSearchRequest: ->
+    $.ajax(
+      url  : @form.attr("src")
+      type : 'GET',
+      data : @form.serialize()
+    )
+
   # Trigger automatic updating of search results
   fieldChanged: (field, value) ->
     @startLoading()
     @triggerSearchFromQueryAfterDelay()
-
-
-

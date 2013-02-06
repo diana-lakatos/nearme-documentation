@@ -8,7 +8,8 @@ class Search.Map
 
     # Set up the Google maps object
     @googleMap = new google.maps.Map(@container, {
-      zoom: 8,
+      zoom: 10,
+      minZoom: 10,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       mapTypeControl: false
     })
@@ -28,7 +29,10 @@ class Search.Map
 
     # Notify observers when the map is dragged
     google.maps.event.addListener @googleMap, 'dragend', =>
-      @trigger 'mapDragged'
+      @trigger 'viewportChanged'
+
+    google.maps.event.addListener @googleMap, 'zoom_changed', =>
+      @trigger 'viewportChanged'
 
   clearPlottedListings: ->
     for listingId, marker of @markers
@@ -50,6 +54,10 @@ class Search.Map
       unless mapBounds.contains(latLng)
         marker.setMap(null)
         delete @markers[listingId]
+
+    # Need to refresh the map bounds object since we've
+    # removed listings.
+    @initializeListingBounds()
 
   plotListings: (listings, clearPreviousPlot = true) ->
     @clearPlottedListings() if clearPreviousPlot
