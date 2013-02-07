@@ -1,10 +1,10 @@
 collection @locations, :root => false, :object_root => false
-  attributes :id, :name, :description, :email, :phone, :latitude, :longitude, :currency, :special_notes, :formatted_address, :amenity_ids
+  attributes :id, :name, :description, :email, :phone, :latitude, :longitude, :currency, :location_type_id, :special_notes, :formatted_address, :amenity_ids
   node :availability_template_id do |u|
      (!u.availability_template_id.nil?) ? u.availability_template_id : "custom"
   end
   child :listings, :child_root => false do
-    attributes :id, :name, :description, :quantity, :confirm_reservations, :location_id
+    attributes :id, :name, :description, :quantity, :confirm_reservations, :location_id, :listing_type_id
     node :daily_price do |u|
       u.daily_price.cents / 100 if u.daily_price
     end

@@ -43,6 +43,13 @@
           rows="20">{{description}}</textarea>
         </div>
       </div>
+      <div class="control-group select required">
+        <label class="select required control-label" for="location_location_type_id">
+          <abbr title="required">*</abbr>Location Type</label>
+        <div class="controls">
+          {{> templates_locations_locationType}}
+        </div>
+      </div>
       <div class="control-group email optional">
         <label class="email optional control-label" for="email">Booking email</label>
         <div class="controls">
