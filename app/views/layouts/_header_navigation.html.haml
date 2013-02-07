@@ -31,9 +31,9 @@
 
 
 - else
-  = link_to_once new_user_session_url, :class => "header-link header-second margin-right ico-login padding-right" do
+  = link_to_once new_user_session_url(get_return_to_url), :class => "header-link header-second margin-right ico-login padding-right" do
     %span.padding-left Log In
-  = link_to_once new_user_registration_url, :class => "header-link header-first margin-right ico-sign-up padding-right" do
+  = link_to_once new_user_registration_url(get_return_to_url), :class => "header-link header-first margin-right ico-sign-up padding-right" do
     %span.padding-left Sign Up
 
 - if !user_signed_in? || current_user.companies.empty?

@@ -32,7 +32,7 @@ Then /^I should( not)? be redirected to the previous search page$/ do |without_r
   if without_redirect
     assert_equal new_user_session_path, current_path.path
   else
-    assert_equal search_path(:q => "Auckland"), current_path.path + "?" + current_path.query
+    assert_equal search_path(:q => "Auckland"), [current_path.path, "?", current_path.query].join
   end
 end
 

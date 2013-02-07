@@ -44,8 +44,8 @@ Feature: A user can login
      When I want to disconnect Twitter
      Then I cannot disconnect Twitter
 
-  Scenario: An authenticated user can add Facebook 
-    Given I am logged in manually  
+  Scenario: An authenticated user can add Facebook
+    Given I am logged in manually
      When I connect to Facebook
      Then account of valid user should be connected with Facebook
 
@@ -75,7 +75,7 @@ Feature: A user can login
 
   Scenario: A user sign up with email and password
     Given There is no user with my email
-     When I manually sign up with valid credentials 
+     When I manually sign up with valid credentials
      Then I am correctly signed in
 
 
