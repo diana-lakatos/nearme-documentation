@@ -3,27 +3,29 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
     template: listingTemplate,
     initialize: function() {
       _.bindAll(this, 'render','_afterSave', '_showError');
+      this.thumbnail_url = this.options.thumbnail_url;
     },
 
-    events: {
-      "click .save-listing": "save",
-      "click .delete-listing": "trash",
-      "keyup input#listing_name": "nameChanged"
-    },
+   events: {
+     "click .save-listing": "save",
+     "click .delete-listing": "trash",
+     "keyup input#listing_name": "nameChanged"
+   },
 
-    render: function() {
-      this.$el.html(this.template(this.model.toJSON()));
-      return this;
-    },
+   render: function() {
+     var data = this.model.toJSON();
+     data.thumbnail_url = this.thumbnail_url;
+     this.$el.html(this.template(data));
+     return this;
+   },
 
-    nameChanged: function(event){
-      $('.listing-header[data-listing-id='+ this.model.id +']', this.$el).text($(event.target).val());
-    },
+   nameChanged: function(event){
+     $('.listing-header[data-listing-id='+ this.model.id +']', this.$el).text($(event.target).val());
+   },
 
    save: function() {
       event.preventDefault();
       event.stopPropagation();
-      this.justCreated = this.model.isNew();
       var arr = this.$el.find('.edit_listing').serializeArray();
       var pattern = new RegExp(/([a-z_]+)\[([^\]]+)\]\[([^\]]+)\]/); // match my_attributes_array[1][id]
 
@@ -76,12 +78,6 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
       var initValue = elt.css('font-size');
       elt.animate({fontSize: "2em" }, 1500 );
       elt.animate({fontSize: initValue }, 1500, function(){elt.text('Save');});
-
-      if (this.justCreated){
-        this.render();
-        this.justCreated = false;
-        $('.listing-content', this.$el).collapse('show');
-      }
     },
 
     _showError: function(data){

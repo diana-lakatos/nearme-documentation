@@ -26,12 +26,14 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
     },
 
     addAll: function() {
+      this.thumbnail_url = this.getThumbnailUrl();
       this.listingCollection.each(this.addOne);
     },
 
     addOne: function(listing) {
       var view = new ListingView({
-        model: listing
+        model: listing,
+        thumbnail_url: this.thumbnail_url
       });
       var hookElt = '#location-' + this.model.id + '-listings-holder';
       var content = view.render().el;
@@ -39,6 +41,11 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       if (listing.isNew()) {
         $(".listing-content", $(content)).collapse('show'); // expend the listing container
       }
+    },
+
+    getThumbnailUrl: function() {
+      var params = $.param({sensor: false, size: '64x64', location: this.model.get('latitude')+ ',' + this.model.get('longitude')});
+      return "http://maps.googleapis.com/maps/api/streetview?" + params;
     },
 
     createListing: function() {
