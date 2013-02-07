@@ -72,6 +72,7 @@ group :development, :test do
   gem 'teabag' # jasmine launcher
   gem 'better_errors' # add more details error in browser
   gem 'binding_of_caller' # extension for better_errors for more granular info
+  gem 'debugger'
 end
 
 group :test do

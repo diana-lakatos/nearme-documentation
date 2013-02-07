@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130202194509) do
+ActiveRecord::Schema.define(:version => 20130206214818) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -62,10 +62,12 @@ ActiveRecord::Schema.define(:version => 20130202194509) do
     t.string   "name"
     t.string   "email"
     t.text     "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.datetime "deleted_at"
     t.string   "url"
+    t.string   "paypal_email"
+    t.text     "mailing_address"
   end
 
   create_table "delayed_jobs", :force => true do |t|
@@ -103,6 +105,12 @@ ActiveRecord::Schema.define(:version => 20130202194509) do
     t.datetime "updated_at",        :null => false
   end
 
+  create_table "listing_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "listings", :force => true do |t|
     t.integer  "location_id"
     t.string   "name"
@@ -116,6 +124,7 @@ ActiveRecord::Schema.define(:version => 20130202194509) do
     t.datetime "deleted_at"
     t.boolean  "confirm_reservations"
     t.boolean  "delta",                   :default => true, :null => false
+    t.integer  "listing_type_id"
   end
 
   create_table "location_amenities", :force => true do |t|
@@ -123,6 +132,12 @@ ActiveRecord::Schema.define(:version => 20130202194509) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "location_id"
+  end
+
+  create_table "location_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "locations", :force => true do |t|
@@ -148,6 +163,7 @@ ActiveRecord::Schema.define(:version => 20130202194509) do
     t.string   "state"
     t.string   "country"
     t.string   "slug"
+    t.integer  "location_type_id"
   end
 
   add_index "locations", ["slug"], :name => "index_locations_on_slug"

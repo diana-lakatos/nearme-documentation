@@ -6,6 +6,8 @@ Feature: A user can add a space
   Scenario: An unregistered user starts by signing up
     Given I go to the home page
      And  I follow "List Your Space"
+     And a listing_type exists with name: "Desk"
+     And a location_type exists with name: "Company Office"
      Then I should be at the "Sign Up" step
      When I fill in "Your name" with "Brett Jones"
      And I fill in "Your email address" with "brettjones@email.com"
@@ -26,6 +28,7 @@ Feature: A user can add a space
      And I fill in "Location description" with "Awesome space"
      And I fill in "Booking email" with "bookings@mycompany.com"
      And I fill in "Booking phone #" with "123456"
+     And I select "Company Office" from "Location Type"
      And I fill in "Special terms or notes" with "My special terms"
      When I press "Create my Location"
      Then a location should exist with name: "My Office"
@@ -34,6 +37,7 @@ Feature: A user can add a space
      And I fill in "Quantity available" with "2"
      And I fill in "Description" with "Awesome conference room"
      And I fill in "Price per day" with "200"
+     And I select "Desk" from "Listing Type"
      And I choose "Yes"
      And I press "Save and Continue"
      Then I should see "Great, your space has been set up!"

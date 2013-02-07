@@ -6,6 +6,7 @@ FactoryGirl.define do
 
     description "Aliquid eos ab quia officiis sequi."
     location
+    association :listing_type
     confirm_reservations true
     after(:create) do |listing|
       listing.unit_prices << FactoryGirl.create(:unit_price, listing: listing)
@@ -28,6 +29,7 @@ FactoryGirl.define do
        listing.price_cents = nil
       end
     end
+
 
     factory :listing_with_amenity do
       after(:create) do |listing|
@@ -61,6 +63,14 @@ FactoryGirl.define do
       end
 
       association(:location, factory: :location_in_cleveland)
+
+      factory :fully_booked_listing do
+        after(:create) do |listing|
+          user = FactoryGirl.create(:user)
+          dates = (4.days.from_now.to_date..10.days.from_now.to_date).reject { |d| listing.availability_for(d) == 0 }.to_a
+          listing.reserve!(user, dates, listing.quantity)
+        end
+      end
     end
 
     factory :listing_in_san_francisco do

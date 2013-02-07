@@ -3,8 +3,6 @@ class PagesController < ApplicationController
 
 	layout :resolve_layout
 
-	def privacy
-	end
 
 	def host_signup
 	end
@@ -22,7 +20,7 @@ class PagesController < ApplicationController
     case action_name
     when "host_signup"
       "landing"
-    when "privacy"
+    when "legal"
       "new_layout"
     else
       false

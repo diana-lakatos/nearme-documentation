@@ -1,12 +1,12 @@
-%section.search-results.grid_12.alpha.omega.list
+%section.search-results.list
   - unless @search.found_location?
     %p Please enter a city or address
   - else
     - if @listings.empty?
       %br/
-      .four.columns.alpha.offset-by-two
+      .span3
         = image_tag "marker_missing.png"
-      .eight.columns.omega
+      .span9
         %br/
         %br/
         %h1.tk-adelle.fat No results found
@@ -14,8 +14,6 @@
         %p
           Still cant find what your looking for? Why not #{link_to "create your own listing", new_space_wizard_path}!
     - else
-      .google-map
-        #listings_map.inner
 
       #listings
         = render :partial => '/listings/listing', :collection => @listings 

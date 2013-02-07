@@ -40,7 +40,6 @@ module Bookings
   def wait_until_datepicker_finished_loading
     wait_until { page.has_no_selector?('.datepicker-loading', visible: true) }
   end
-
 end
 
 World(Bookings)

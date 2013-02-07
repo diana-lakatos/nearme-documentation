@@ -150,7 +150,7 @@ DesksnearMe::Application.routes.draw do
     get 'organizations', to: 'organizations#index'
   end
 
-  match "/privacy", to: 'pages#privacy'
+  match "/legal", to: 'pages#legal'
   match "/host-sign-up", to: 'pages#host_signup_1'
   match "/host-sign-up-2", to: 'pages#host_signup_2'
   match "/host-sign-up-3", to: 'pages#host_signup_3'

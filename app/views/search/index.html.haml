@@ -2,10 +2,13 @@
   .container-fluid
     = render :partial => "search/bar", :locals => { :value => "" }
 
-
 #results
+  .google-map
+    #listings_map.inner
+
   .results
     = render :partial => "search/listings" if @listings
+    
   .loading.four.columns{:style => "display: none"}
     = image_tag "spinner-red.gif"
 

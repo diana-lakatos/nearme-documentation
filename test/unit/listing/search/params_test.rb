@@ -99,7 +99,7 @@ class Listing::Search::ParamsTest <  ActiveSupport::TestCase
 
       should "gives the radius to the with section" do
         scope = scope_for(options_with_bounding_box, fake_geocoder(false))
-        assert_equal 0.0...977008.5143096122, scope[:with]["@geodist"]
+        assert_equal 0.0...1572342.7910536479, scope[:with]["@geodist"]
       end
     end
   end

@@ -4,6 +4,15 @@ Given /^a listing in (.*) exists( with that amenity)?$/ do |city, amenity|
   listing.location.amenities << model!("amenity") if amenity
 end
 
+
+Given /^there are listings which are unavailable$/ do
+  4.times { build_fully_booked_listing }
+end
+
+Given /^there are listings which are available$/ do
+  4.times { build_listing_which_is_closed_on_weekends }
+end
+
 Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and that amenity)?$/ do |city, dollars, cents, amenity|
   listing = create_listing_in(city)
 
@@ -11,18 +20,16 @@ Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and that amenit
   listing.location.amenities << model!("amenity") if amenity
 end
 
+Given /^a listing which is fully booked$/ do
+  @listing = build_fully_booked_listing
+end
+
+Given /^a listing which is closed on the weekend$/ do
+  @listing = build_listing_which_is_closed_on_weekends
+end
+
 Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) days$/ do |city, desks, num_days|
-  listing = create_listing_in(city)
-
-  listing.update_column(:quantity, desks)
-
-  listing.availability_rules.clear
-  wday = Time.now.wday
-  (wday .. (wday+num_days.to_i)).each do |day|
-    listing.availability_rules.create!(:day => day % 7, :open_hour => 8, :close_hour => 18)
-  end
-
-  (Date.today...num_days.to_i.days.from_now.to_date).all? { |d| listing.availability_for(d) >= desks.to_i }.should == true
+  listing = build_listing_in_city(city, desks: desks, number_of_days: num_days)
 end
 
 Given /^a listed location( without (amenities))?$/ do |_,_|
@@ -77,6 +84,36 @@ Then /^I (do not )?see a search result for the ([^\$].*) listing$/ do |negative,
   else
     page.should have_content(listing.name)
   end
+end
+
+When /^I provide valid listing information$/ do
+  create_listing_without_visit(model!("location"), "Valid listing") do
+    fill_in "Quantity", with: "2"
+    fill_in "Description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
+    fill_in "Price per day", with: "50.00"
+    choose "Yes"
+    uncheck "Free"
+    select "Desk"
+  end
+end
+
+When /^I don't provide listing type$/ do
+  try_to_create_listing(model!("location"), "Invalid listing") do
+    select("", :from => "listing_listing_type_id")
+  end
+end
+
+Then /^this listing should not exist$/ do
+  assert_nil Listing.find_by_name("Invalid listing")
+end
+
+Then /^this listing should exist$/ do
+  listing = Listing.find_by_name("Valid listing")
+  assert_equal 2, listing.quantity
+  assert_equal "Proin adipiscing nunc vehicula lacus varius dignissim.", listing.description
+  assert listing.confirm_reservations
+  assert_equal "Desk", listing.listing_type.name
+  assert_equal 5000, listing.daily_price.cents
 end
 
 Then /^I should see the following listings in order:$/ do |table|

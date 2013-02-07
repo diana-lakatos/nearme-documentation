@@ -6,8 +6,8 @@ class Location < ActiveRecord::Base
   attr_accessible :address, :amenity_ids, :company_id, :description, :email,
     :info, :latitude, :local_geocoding, :longitude, :name,
     :currency, :phone, :formatted_address, :availability_rules_attributes,
-    :availability_template_id,
-    :special_notes, :listings_attributes, :suburb, :city, :state, :country, :street, :address_components
+    :availability_template_id, :special_notes, :listings_attributes, :suburb, 
+    :city, :state, :country, :street, :address_components, :location_type_id
   attr_accessor :local_geocoding # set this to true in js
 
   serialize :address_components, JSON
@@ -18,6 +18,7 @@ class Location < ActiveRecord::Base
   has_many :location_amenities
 
   belongs_to :company
+  belongs_to :location_type
   delegate :creator, :to => :company
 
   has_many :listings,
@@ -28,7 +29,7 @@ class Location < ActiveRecord::Base
 
   has_many :availability_rules, :as => :target
 
-  validates_presence_of :company_id, :name, :description, :address, :latitude, :longitude
+  validates_presence_of :company_id, :name, :description, :address, :latitude, :longitude, :location_type_id
   validates :email, email: true, allow_nil: true
   validates :currency, currency: true, allow_nil: true
   validates_length_of :description, :maximum => 250

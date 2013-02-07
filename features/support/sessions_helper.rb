@@ -24,7 +24,7 @@ module SessionsHelper
 
   def log_out
     visit root_path
-    click_link 'Log out'
+    click_link 'Log Out'
   end
 
   def user
