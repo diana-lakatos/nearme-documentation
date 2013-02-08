@@ -1,7 +1,7 @@
 section.public {
   #hero {
     margin-top: -32px;
-    height: 530px;
+    height: 580px;
     width: auto;
     background: image-url("http://desksnearme.assets.s3.amazonaws.com/img/locations-651.jpg") center center no-repeat;
     background-size: cover;
@@ -17,7 +17,7 @@ section.public {
   }
   .caption a {
     position: absolute;
-    top: 540px;
+    top: 580px;
     right: 20px;
     color: rgba(240,240,240,.7);
 
@@ -26,11 +26,11 @@ section.public {
     }
 
     @media (max-width: 767px) {
-      top:440px;
+      top:430px;
     }
 
     @media (max-width: 480px) {
-      top:400px;
+      display: none;
     }        
   }
   section#hero + .container { 
@@ -59,8 +59,8 @@ section.public {
     @include text-shadow(black 0 0 5px, black 0 0 8px, black 0 0 10px, black 0 0 20px, black 0 0 30px);
 
 
-    @media (max-width: 480px) {
-      font:normal 24px/32px $font-medium, sans-serif;
+    @media (max-width: 320px) {
+      font:normal 28px/32px $font-medium, sans-serif;
     }
   }
 
