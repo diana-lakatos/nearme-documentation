@@ -1,7 +1,7 @@
 .navbar-inverse {
   ul.nav {
     li.dropdown {
-      @media (max-width: 480px) {
+      @media (max-width: 600px) {
        a.dropdown-toggle > span, b.caret{
           display:none;
         }
@@ -10,7 +10,7 @@
       ul.dropdown-menu {
         min-width: 130px;
         left: 7px;
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
           left: -70px;
         }
         background:$dnm_black;

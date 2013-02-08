@@ -63,8 +63,18 @@ When /I manually sign up with valid credentials$/ do
   sign_up_manually({:name => 'I am user'})
 end
 
+When /I navigate away via Log In link and sign in$/ do 
+  click_link 'Log In'
+  login_manually
+end
+
 When /I sign in with valid credentials/ do 
   login_manually
+end
+
+When /I sign in with invalid credentials/ do 
+  click_link 'Log In'
+  login_manually('invalid@example.com')
 end
 
 Given /There is no user with my email/ do
@@ -97,7 +107,6 @@ end
 Then /I am correctly signed in/ do
   user = User.find_by_email('valid@example.com')
   assert_equal "I am user", user.name
-  assert_equal 1, User.all.count
 end
 
 Then /I am remembered/ do
@@ -105,5 +114,3 @@ Then /I am remembered/ do
   assert_equal Time.now.utc.to_date, user.remember_created_at.to_date
   assert_equal 20, user.remember_token.length
 end
-
-

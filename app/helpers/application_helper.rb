@@ -80,6 +80,10 @@ module ApplicationHelper
 
   end
 
+  def get_return_to_url
+    params[:controller]=='session' ? {} : {:return_to => "#{request.protocol}#{request.host_with_port}#{request.fullpath}"}
+  end
+
   def link_to_once(*args, &block)
     options = args.first || {}
     html_options = args.second || {}

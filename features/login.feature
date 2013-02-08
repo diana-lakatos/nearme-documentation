@@ -44,8 +44,8 @@ Feature: A user can login
      When I want to disconnect Twitter
      Then I cannot disconnect Twitter
 
-  Scenario: An authenticated user can add Facebook 
-    Given I am logged in manually  
+  Scenario: An authenticated user can add Facebook
+    Given I am logged in manually
      When I connect to Facebook
      Then account of valid user should be connected with Facebook
 
@@ -59,9 +59,23 @@ Feature: A user can login
      When I sign in with valid credentials
      Then I am remembered
 
+  Scenario: A user is redirected to the page accessed prior to login page after successful logging in
+    Given a user exists with email: "valid@example.com", password: "password", name: "I am user"
+      And a listing in Auckland exists
+      And I performed search for "Auckland"
+     When I navigate away via Log In link and sign in
+     Then I should be redirected to the previous search page
+
+  Scenario: A user is not redirected to the page accessed prior to login page after failure in logging in
+    Given a user exists with email: "valid@example.com", password: "password", name: "I am user"
+      And a listing in Auckland exists
+      And I performed search for "Auckland"
+     When I sign in with invalid credentials
+     Then I should not be redirected to the previous search page
+
   Scenario: A user sign up with email and password
     Given There is no user with my email
-     When I manually sign up with valid credentials 
+     When I manually sign up with valid credentials
      Then I am correctly signed in
 
 
