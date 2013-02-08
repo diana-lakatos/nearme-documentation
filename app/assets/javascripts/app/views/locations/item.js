@@ -39,6 +39,7 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       $(this.$el).find('.listings-holder').append(content);
       if (listing.isNew()) {
         $(".listing-content", $(content)).collapse('show'); // expend the listing container
+        $("input#listing_name", $(content)).focus();
       }
     },
 

@@ -25,7 +25,7 @@ define(['jquery', 'backbone', 'collections/location', 'models/location', 'views/
     {
       event.preventDefault();
       event.stopPropagation();
-      var locationModel = new LocationModel({name: 'New location'});
+      var locationModel = new LocationModel();
       this.addOne(locationModel);
     },
 
@@ -39,6 +39,7 @@ define(['jquery', 'backbone', 'collections/location', 'models/location', 'views/
       $(this.$el).find('.locations-area').append(content);
       if (locationModel.isNew()) {
         $(".location-content", $(content)).collapse('show'); // expend the location container
+        $("input#name", $(content)).focus();
       }
     },
 
