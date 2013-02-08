@@ -56,6 +56,7 @@ module ApplicationHelper
 
   def truncate_with_ellipsis(body, length, html_options = {})
 
+    body ||= ''
     if body.size > length
 
       size = 0
