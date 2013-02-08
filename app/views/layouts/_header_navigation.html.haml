@@ -37,5 +37,5 @@
     %span.padding-left Sign Up
 
 - if !user_signed_in? || current_user.companies.empty?
-  = link_to_once new_space_wizard_url, :class => "btn btn-blue btn-medium" do
-    %span.ico-add-location.padding List Your Space
+  = link_to_once new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location" do
+    %span.padding-left List Your Space
