@@ -35,9 +35,8 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
         model: listing,
         thumbnail_url: this.thumbnail_url
       });
-      var hookElt = '#location-' + this.model.id + '-listings-holder';
       var content = view.render().el;
-      $(this.$el).find(hookElt).append(content);
+      $(this.$el).find('.listings-holder').append(content);
       if (listing.isNew()) {
         $(".listing-content", $(content)).collapse('show'); // expend the listing container
       }

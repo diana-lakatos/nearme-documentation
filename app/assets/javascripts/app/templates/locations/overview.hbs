@@ -35,8 +35,7 @@
         </div>
       </div>
       <div class="control-group text required">
-        <label class="text required control-label" for="description">
-          <abbr title="required">*</abbr>Space description</label>
+        <label class="text required control-label" for="description"><abbr title="required">*</abbr>Space description</label>
         <div class="controls">
           <textarea class="text required" cols="40" id="description" name="description"
           placeholder="Describe the overall look, feel, and ambience of your space. Be exciting!"
@@ -50,10 +49,10 @@
           {{> templates_locations_locationType}}
         </div>
       </div>
-      <div class="control-group email optional">
-        <label class="email optional control-label" for="email">Booking email</label>
+      <div class="control-group email required">
+        <label class="email required control-label" for="email"><abbr title="required">*</abbr>Booking email</label>
         <div class="controls">
-          <input class="string email optional" id="email" name="email" placeholder="yourname@example.com"
+          <input class="string email required" id="email" name="email" placeholder="yourname@example.com"
           size="50" type="email" value="{{email}}">
         </div>
       </div>

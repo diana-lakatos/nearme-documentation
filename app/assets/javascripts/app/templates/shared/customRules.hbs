@@ -5,10 +5,10 @@
     <input id="availability_rules_attributes_{{@index}}_day" name="availability_rules_attributes[{{@index}}][day]" type="hidden" value="{{day}}">
     <div class="day-name">{{day_name}}</div>
     <div class="open-time">
-      <select {{#unless id}} style="display:none;" {{/unless}} id="availability_rules_attributes_{{@index}}_open_time" name="availability_rules_attributes[{{@index}}][open_time]">{{#select open_time}} {{> templates_shared_availabilityOptions}} {{/select}}</select>
+      <select {{#unless open_time}} style="display:none;" {{/unless}} id="availability_rules_attributes_{{@index}}_open_time" name="availability_rules_attributes[{{@index}}][open_time]">{{#select open_time}} {{> templates_shared_availabilityOptions}} {{/select}}</select>
     </div>
     <div class="close-time">
-      <select {{#unless id}} style="display:none;" {{/unless}} id="availability_rules_attributes_{{@index}}_close_time" name="availability_rules_attributes[{{@index}}][close_time]">{{#select close_time}} {{> templates_shared_availabilityOptions}} {{/select}}</select>
+      <select {{#unless open_time}} style="display:none;" {{/unless}} id="availability_rules_attributes_{{@index}}_close_time" name="availability_rules_attributes[{{@index}}][close_time]">{{#select close_time}} {{> templates_shared_availabilityOptions}} {{/select}}</select>
     </div>
     <div class="closed-flag">
       <input name="availability_rules_attributes[{{@index}}][_destroy]" type="hidden" value="0">
