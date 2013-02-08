@@ -1,5 +1,7 @@
 class Listing::Search::Geocoder
 
+  MAX_RADIUS = 15_000.0
+
   attr :geo_params, :pretty, :search_area
 
   def find_location(query)

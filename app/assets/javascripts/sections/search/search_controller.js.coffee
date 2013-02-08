@@ -1,4 +1,8 @@
 # Controller for Search results and filtering page
+#
+# FIXME: This and the home search form should be separate. Instead we should abstract out
+#        a common "search query" input field which handles the geolocation of the query,
+#        and notifies observers when it is changed.
 class Search.SearchController extends Search.Controller
   constructor: (form, @container) ->
     super(form)
@@ -14,6 +18,10 @@ class Search.SearchController extends Search.Controller
       @triggerSearchFromQuery()
 
     @map.on 'viewportChanged', =>
+      # NB: The viewport can change during 'query based' result loading, when the map fits
+      #     the bounds of the search results. We don't want to trigger a bounding box based
+      #     lookup during a controlled viewport change such as this.
+      return if @processingResults
       @triggerSearchWithBoundsAfterDelay()
 
   initializeMap: ->
@@ -98,9 +106,11 @@ class Search.SearchController extends Search.Controller
   triggerSearchAndHandleResults: (callback) ->
     @startLoading()
     @triggerSearchRequest().success (html) =>
+      @processingResults = true
       @showResults(html)
       callback() if callback
       @finishLoading()
+      @processingResults = false
 
   # Trigger the API request for search
   #
