@@ -24,6 +24,7 @@ class V1::ListingsController < V1::BaseController
     if @listing.save
       render :json => {:success => true, :id => @listing.id}
     else
+      logger.info("ERRORS:#{@listing.errors.full_messages}")
       render :json => { :errors => @listing.errors.full_messages }, :status => 422
     end
   end

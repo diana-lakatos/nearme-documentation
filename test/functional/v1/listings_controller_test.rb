@@ -12,6 +12,37 @@ class V1::ListingsControllerTest < ActionController::TestCase
   end
 
   ##
+  # C*UD
+  #
+  test "create should be successful" do
+    skip("To investigate return 422 with 'Location can't be blank' error, but shouldn't as location_id is passed as parameter")
+    location = get_authenticated_location
+    post :create, {listing: {location_id: location.id, name: 'My listing', description: 'nice listing', listing_type_id: 1, quantity: 10}, format: 'json'}
+    Rails.logger.info("LOCATION:#{Location.find(location.id).to_json}")
+    debugger
+    assert_response :success
+  end
+
+  test "update should be successful" do
+    listing = get_authenticated_listing
+    new_name = 'My listing'
+    put :update, id: listing, listing: { name: new_name }, format: 'json'
+    listing = Listing.find(listing.id)
+    assert_equal new_name, listing.name
+    assert_response :success
+
+  end
+
+
+
+  test "destroy should be successful" do
+    @listing = get_authenticated_listing
+    delete :destroy, id: @listing.id, format: 'json'
+    assert_response :success
+  end
+
+
+  ##
   # Display
 
   test "show should display a listing" do
@@ -204,6 +235,17 @@ class V1::ListingsControllerTest < ActionController::TestCase
   end
 
   private
+
+  def get_authenticated_location
+    authenticate!
+    company = FactoryGirl.create(:company, :name => 'company_XYZ', :creator_id => @user.id)
+    location = FactoryGirl.create(:location, :company_id => company.id)
+  end
+
+  def get_authenticated_listing
+    location = get_authenticated_location
+    listing = FactoryGirl.create(:listing, :location_id => location.id)
+  end
 
   def valid_search_params
     {
