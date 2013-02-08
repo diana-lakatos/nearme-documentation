@@ -51,14 +51,14 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       event.preventDefault();
       event.stopPropagation();
       var listing = new ListingModel({
-        name: 'New listing',
         location_id: this.model.id
       });
       this.addOne(listing);
     },
 
     nameChanged: function(event) {
-      $('.location-header[data-location-id=' + this.model.id + ']', this.$el).text($(event.target).val());
+      var target = $(event.target);
+      target.closest('section.location').find('span.location-header').text(target.val());
     },
 
     valChanged: function(event) {

@@ -1,7 +1,7 @@
-<section class="box box-dim">
+<section class="box box-dim listing">
   <header data-toggle="collapse" class="listing collapsed" data-target="#collapse-{{id}}">
   <span><img class="listing-header-thumbnail" src="{{thumbnail_url}}"></span>
-    <span data-listing-id="{{id}}" class="listing-header">{{{name}}}</span>
+    <span class="listing-header">{{#if name}}{{{name}}}{{else}}New listing{{/if}}</span>
     <span class="ico-edit right"/>
   </header>
   <div id="collapse-{{id}}" class="accordion-body listing-content collapse"> 

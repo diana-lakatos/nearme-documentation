@@ -19,8 +19,9 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
      return this;
    },
 
-   nameChanged: function(event){
-     $('.listing-header[data-listing-id='+ this.model.id +']', this.$el).text($(event.target).val());
+   nameChanged: function(event) {
+     var target = $(event.target);
+     target.closest('section.listing').find('span.listing-header').text(target.val());
    },
 
    save: function() {

@@ -1,6 +1,6 @@
-<section class="box box-inverse">
+<section class="box box-inverse location">
   <header data-toggle="collapse" class="location" data-target="#location-{{id}}-details-holder">
-    <span class="location-header" data-location-id="{{id}}">{{{name}}}</span>
+  <span class="location-header">{{#if name}}{{{name}}}{{else}}New location{{/if}}</span>
     <span class="ico-edit right"/>
   </header>
   <div class="accordion location-content collapse" id="location-{{id}}-details-holder">
