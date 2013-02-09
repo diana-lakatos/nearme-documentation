@@ -4,6 +4,7 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
     initialize: function() {
       _.bindAll(this, 'render','_afterSave', '_showError');
       this.thumbnail_url = this.options.thumbnail_url;
+      this._deleteTrigger = '.delete-listing'; // helper for testing
     },
 
    events: {
@@ -24,38 +25,10 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
      target.closest('section.listing').find('span.listing-header').text(target.val());
    },
 
-   save: function() {
+   save: function(event) {
       event.preventDefault();
       event.stopPropagation();
-      var arr = this.$el.find('.edit_listing').serializeArray();
-      var pattern = new RegExp(/([a-z_]+)\[([^\]]+)\]\[([^\]]+)\]/); // match my_attributes_array[1][id]
-
-      var data = _(arr).reduce(function(acc, field) {
-        if (acc[field.name] && !pattern.test(field.name) ) { // deal with array checkbox type like amenities_ids[]
-          if (!_.isArray(acc[field.name])) {
-            acc[field.name] = [acc[field.name]];
-          }
-          acc[field.name].push(field.value);
-        }else if (pattern.test(field.name)) {
-          var split = field.name.match(pattern);
-          var name = split[1];
-          var index = split[2];
-          var param = split[3];
-
-          if (!acc[name]) {
-            acc[name] = {};
-          }
-          if (!acc[name][index]) {
-            acc[name][index] = {};
-          }
-          acc[name][index][param] = field.value;
-        }
-
-        else {
-          acc[field.name] = field.value;
-        }
-        return acc;
-      }, {});
+      var data = this._serializeData(this.$el.find('.edit_listing'));
       this.model.save(data, {
         success: this._afterSave,
         error: this._showError
@@ -87,8 +60,41 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
       var id = !this.model.isNew()? this.model.id : '';
       $('.action', this.$el.find('#listing-for-'+ id)).prepend(content);
       $('.alert-error', this.$el).fadeIn();
-    }
+    },
 
+    _serializeData: function($fragment) {
+      var arr = $fragment.serializeArray();
+      var pattern = new RegExp(/([a-z_]+)\[([^\]]+)\]\[([^\]]+)\]/); // match my_attributes_array[1][id]
+
+      var data = _(arr).reduce(function(acc, field) {
+        if (acc[field.name] && !pattern.test(field.name) ) { // deal with array checkbox type like amenities_ids[]
+          if (!_.isArray(acc[field.name])) {
+            acc[field.name] = [acc[field.name]];
+          }
+          acc[field.name].push(field.value);
+        }else if (pattern.test(field.name)) { // deal with  nested object
+          var split = field.name.match(pattern);
+          var name = split[1];
+          var index = split[2];
+          var param = split[3];
+
+          if (!acc[name]) {
+            acc[name] = {};
+          }
+          if (!acc[name][index]) {
+            acc[name][index] = {};
+          }
+          acc[name][index][param] = field.value;
+        }
+
+        else {
+          acc[field.name] = field.value;
+        }
+        return acc;
+      }, {});
+
+      return data;
+    }
   });
   return ListingView;
 

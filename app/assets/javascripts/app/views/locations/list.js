@@ -4,6 +4,8 @@ define(['jquery', 'backbone', 'collections/location', 'models/location', 'views/
     template: locationListTemplate,
     initialize: function() {
       _.bindAll(this, 'render', 'addAll', 'addOne', 'createLocation');
+      this._childContainer = '.locations-area';
+      this._addTrigger = '.add-location';
     },
 
     _setCollection: function() {
@@ -21,8 +23,7 @@ define(['jquery', 'backbone', 'collections/location', 'models/location', 'views/
       "click .add-location": "createLocation"
     },
 
-    createLocation: function()
-    {
+    createLocation: function(event) {
       event.preventDefault();
       event.stopPropagation();
       var locationModel = new LocationModel();
@@ -36,7 +37,7 @@ define(['jquery', 'backbone', 'collections/location', 'models/location', 'views/
     addOne: function(locationModel) {
       var view = new LocationView({ model: locationModel });
       var content = view.render().el;
-      $(this.$el).find('.locations-area').append(content);
+      $(this.$el).find(this._childContainer).append(content);
       if (locationModel.isNew()) {
         $(".location-content", $(content)).collapse('show'); // expend the location container
         $("input#name", $(content)).focus();

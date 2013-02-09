@@ -1,15 +1,16 @@
 define(['backbone'], function(Backbone) {
   var LocationModel = Backbone.Model.extend({
-    initialize: function(attributes) {
-      if( !this.get('amenity_ids') ){
-        this.set({amenity_ids: []});
-      }
-    },
+    initialize: function(attributes) {},
 
     defaults: {
+        'name': null,
+        'description': null,
+        'location_type': null,
+        'email': null,
         'longitude': '0',
         'latitude': '0',
         'formatted_address': '',
+        'amenity_ids':[],
         'availability_template_id': 'M-F9-5',
         'availability_rules_attributes': [
             {

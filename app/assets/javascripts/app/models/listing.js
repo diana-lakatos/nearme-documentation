@@ -3,6 +3,11 @@ define(['backbone'], function(Backbone) {
     initialize: function(attributes) {},
 
     defaults: {
+        'location_id': null,
+        'name': null,
+        'description': null,
+        'quantity': null,
+        'listing_type_id': null,
         'availability_template_id': 'M-F9-5',
         'availability_rules_attributes': [
             {

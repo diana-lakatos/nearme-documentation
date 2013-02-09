@@ -30,8 +30,20 @@
 
 #= require require.js
 #= require config.js
+#= require helpers/sinon
+#= require helpers/jasmine-jquery
 requirejs.config(baseUrl: "/assets/app")
 Teabag.defer = true
 
 # Load dependencies (filtering if there are file params), then execute.
-require Teabag.resolveDependenciesFromParams(['models/location_spec']), Teabag.execute
+require Teabag.resolveDependenciesFromParams([
+  'models/location_spec',
+  'models/listing_spec',
+  'collections/location_spec',
+  'collections/listing_spec',
+  'views/locations/list_spec',
+  'views/locations/item_spec',
+  'views/listings/item_spec'
+
+]) , Teabag.execute
+#setTimeout(Teabag.execute,10000)

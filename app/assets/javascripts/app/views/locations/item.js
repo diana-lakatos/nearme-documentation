@@ -4,7 +4,9 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
     initialize: function() {
       _.bindAll(this, 'render', 'addAll', 'addOne','trash', 'toggleCmd', '_afterSave', '_showError');
       this.listingCollection = new ListingCollection(this.model.get('listings'));
-      var self = this;
+      this._childContainer = '.listings-holder';
+      this._addTrigger = '.add-listing'; // helper for testing
+      this._deleteTrigger = '.delete-location'; // helper for testing
     },
 
     events: {
@@ -36,7 +38,7 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
         thumbnail_url: this.thumbnail_url
       });
       var content = view.render().el;
-      $(this.$el).find('.listings-holder').append(content);
+      $(this.$el).find(this._childContainer).append(content);
       if (listing.isNew()) {
         $(".listing-content", $(content)).collapse('show'); // expend the listing container
         $("input#listing_name", $(content)).focus();
@@ -48,7 +50,7 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       return "http://maps.googleapis.com/maps/api/streetview?" + params;
     },
 
-    createListing: function() {
+    createListing: function(event) {
       event.preventDefault();
       event.stopPropagation();
       var listing = new ListingModel({
@@ -95,39 +97,12 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       }
     },
 
-    save: function() {
+    save: function(event) {
       event.preventDefault();
       event.stopPropagation();
       this.justCreated = this.model.isNew();
-      var arr = this.$el.find('.edit_location').serializeArray();
-      var pattern = new RegExp(/([a-z_]+)\[([^\]]+)\]\[([^\]]+)\]/); // match my_attributes_array[1][id]
 
-      var data = _(arr).reduce(function(acc, field) {
-        if (acc[field.name] && !pattern.test(field.name) ) { // deal with array checkbox type like amenities_ids[]
-          if (!_.isArray(acc[field.name])) {
-            acc[field.name] = [acc[field.name]];
-          }
-          acc[field.name].push(field.value);
-        }else if (pattern.test(field.name)) {
-          var split = field.name.match(pattern);
-          var name = split[1];
-          var index = split[2];
-          var param = split[3];
-
-          if (!acc[name]) {
-            acc[name] = {};
-          }
-          if (!acc[name][index]) {
-            acc[name][index] = {};
-          }
-          acc[name][index][param] = field.value;
-        }
-
-        else {
-          acc[field.name] = field.value;
-        }
-        return acc;
-      }, {});
+      var data = this._serializeData(this.$el.find('.edit_location'));
       this.model.save(data, {
         success: this._afterSave,
         error: this._showError
@@ -175,6 +150,40 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
 
     _getId: function(){
       return  !this.model.isNew()? this.model.id : '';
+    },
+
+    _serializeData: function($fragment) {
+      var arr = $fragment.serializeArray();
+      var pattern = new RegExp(/([a-z_]+)\[([^\]]+)\]\[([^\]]+)\]/); // match my_attributes_array[1][id]
+
+      var data = _(arr).reduce(function(acc, field) {
+        if (acc[field.name] && !pattern.test(field.name) ) { // deal with array checkbox type like amenities_ids[]
+          if (!_.isArray(acc[field.name])) {
+            acc[field.name] = [acc[field.name]];
+          }
+          acc[field.name].push(field.value);
+        }else if (pattern.test(field.name)) { // deal with  nested object
+          var split = field.name.match(pattern);
+          var name = split[1];
+          var index = split[2];
+          var param = split[3];
+
+          if (!acc[name]) {
+            acc[name] = {};
+          }
+          if (!acc[name][index]) {
+            acc[name][index] = {};
+          }
+          acc[name][index][param] = field.value;
+        }
+
+        else {
+          acc[field.name] = field.value;
+        }
+        return acc;
+      }, {});
+
+      return data;
     }
 
   });
