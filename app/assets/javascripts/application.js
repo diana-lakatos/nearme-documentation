@@ -11,6 +11,7 @@
 //= require ./vendor/modernizr
 //= require ./vendor/jquery.cookie
 //= require ./vendor/jquery.popover-1.1.2
+//= require ./vendor/jquery.payment
 //= require ./vendor/mustache
 //= require ./vendor/underscore
 //= require ./vendor/asevented
