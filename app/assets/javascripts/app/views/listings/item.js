@@ -2,30 +2,49 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
   var ListingView = Backbone.View.extend({
     template: listingTemplate,
     initialize: function() {
-      _.bindAll(this, 'render','_afterSave', '_showError');
+      _.bindAll(this, 'render', '_afterSave', '_showError');
       this.thumbnail_url = this.options.thumbnail_url;
       this._deleteTrigger = '.delete-listing'; // helper for testing
+      this._availabilityTrigger = '.edit_listing .availability-rules input[type=radio]'; // helper for testing
     },
 
-   events: {
-     "click .save-listing": "save",
-     "click .delete-listing": "trash",
-     "keyup input#listing_name": "nameChanged"
-   },
+    events: {
+      "click .save-listing": "save",
+      "click .delete-listing": "trash",
+      "click .edit_listing .availability-rules input[type=radio]": "availabilityChanged",
+      "keyup input#listing_name": "nameChanged"
+    },
 
-   render: function() {
-     var data = this.model.toJSON();
-     data.thumbnail_url = this.thumbnail_url;
-     this.$el.html(this.template(data));
-     return this;
-   },
+    render: function() {
+      var data = this.model.toJSON();
+      data.thumbnail_url = this.thumbnail_url;
+      this.$el.html(this.template(data));
+      return this;
+    },
 
-   nameChanged: function(event) {
-     var target = $(event.target);
-     target.closest('section.listing').find('span.listing-header').text(target.val());
-   },
+    nameChanged: function(event) {
+      var target = $(event.target);
+      target.closest('section.listing').find('span.listing-header').text(target.val());
+    },
 
-   save: function(event) {
+    availabilityChanged: function(event) {
+      var target = event.target;
+      var customRules = $(target).closest('.availability-rules').find('.custom-availability-rules');
+      if (target.id === "availability_rules_custom") {
+        customRules.show();
+      } else {
+        customRules.hide();
+      }
+
+      var deferRule = $(target).closest('.availability-rules').find('#defer_availability_rules');
+      if (target.id === "availability_rules_defer") {
+        deferRule.val(1);
+      } else {
+        deferRule.val(0);
+      }
+    },
+
+    save: function(event) {
       event.preventDefault();
       event.stopPropagation();
       var data = this._serializeData(this.$el.find('.edit_listing'));
@@ -42,37 +61,46 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
       if (result === true) {
         this.model.trash();
         var self = this;
-        this.$el.fadeOut(400, function(){self.remove();});
+        this.$el.fadeOut(400, function() {
+          self.remove();
+        });
       }
     },
 
-    _afterSave: function(data){
+    _afterSave: function(data) {
       var elt = $(this.$el).find('.save-listing span');
       elt.text('Saved!');
       var initValue = elt.css('font-size');
-      elt.animate({fontSize: "2em" }, 1500 );
-      elt.animate({fontSize: initValue }, 1500, function(){elt.text('Save');});
+      elt.animate({
+        fontSize: "2em"
+      }, 1500);
+      elt.animate({
+        fontSize: initValue
+      }, 1500, function() {
+        elt.text('Save');
+      });
     },
 
-    _showError: function(data){
+    _showError: function(data) {
       var msg = $.parseJSON(data.responseText).errors.join(", ");
-      var content = errorsTemplate({msg:msg});
-      var id = !this.model.isNew()? this.model.id : '';
-      $('.action', this.$el.find('#listing-for-'+ id)).prepend(content);
+      var content = errorsTemplate({
+        msg: msg
+      });
+      var id = !this.model.isNew() ? this.model.id : '';
+      $('.action', this.$el.find('#listing-for-' + id)).prepend(content);
       $('.alert-error', this.$el).fadeIn();
     },
 
     _serializeData: function($fragment) {
       var arr = $fragment.serializeArray();
       var pattern = new RegExp(/([a-z_]+)\[([^\]]+)\]\[([^\]]+)\]/); // match my_attributes_array[1][id]
-
       var data = _(arr).reduce(function(acc, field) {
-        if (acc[field.name] && !pattern.test(field.name) ) { // deal with array checkbox type like amenities_ids[]
+        if (acc[field.name] && !pattern.test(field.name)) { // deal with array checkbox type like amenities_ids[]
           if (!_.isArray(acc[field.name])) {
             acc[field.name] = [acc[field.name]];
           }
           acc[field.name].push(field.value);
-        }else if (pattern.test(field.name)) { // deal with  nested object
+        } else if (pattern.test(field.name)) { // deal with  nested object
           var split = field.name.match(pattern);
           var name = split[1];
           var index = split[2];
@@ -85,9 +113,7 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
             acc[name][index] = {};
           }
           acc[name][index][param] = field.value;
-        }
-
-        else {
+        } else {
           acc[field.name] = field.value;
         }
         return acc;
@@ -99,3 +125,4 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
   return ListingView;
 
 });
+

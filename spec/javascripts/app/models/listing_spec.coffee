@@ -11,6 +11,7 @@ define "models/listing_spec", ["models/listing"], (Listing) ->
         expect(listing.attributes.description).toBeDefined()
         expect(listing.attributes.listing_type_id).toBeDefined()
         expect(listing.attributes.quantity).toBeDefined()
+        expect(listing.attributes.defer_availability_rules).toBeDefined()
         expect(listing.attributes.availability_template_id).toBeDefined()
 
       it "should exhibit attributes", ->

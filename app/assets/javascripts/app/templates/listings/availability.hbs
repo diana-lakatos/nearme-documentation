@@ -6,6 +6,7 @@
     <div id="listing-{{id}}-availability" class="accordion-inner">
       <div class="control-group indent">
         <div class="availability-rules">
+          <input id="defer_availability_rules" name="defer_availability_rules" type="hidden" value="{{defer_availability_rules}}">
           {{#checkbox availability_template_id}}
           <div>
             <input data-clear-rules="true" id="availability_rules_defer" name="availability_template_id" type="radio" value="">

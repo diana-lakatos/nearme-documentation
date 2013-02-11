@@ -9,6 +9,7 @@ define(['backbone'], function(Backbone) {
         'quantity': null,
         'listing_type_id': null,
         'availability_template_id': 'M-F9-5',
+        'defer_availability_rules': 0,
         'availability_rules_attributes': [
             {
                 "day": 1,

@@ -15,7 +15,7 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
       "click .add-listing": "createListing",
       "keyup input#name": "nameChanged",
       "keyup #address": "valChanged",
-      "click .availability-rules input[type=radio]" : "availabilityChanged",
+      "click .edit_location .availability-rules input[type=radio]" : "availabilityChanged",
       "click .closed": "updateClosedState"
     },
 
@@ -70,8 +70,9 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
     },
 
     availabilityChanged: function(event) {
-      var customRules = $(event.target).closest('.availability-rules').find('.custom-availability-rules');
-      if((event.target).id === "availability_rules_custom") {
+      var target = event.target;
+      var customRules = $(target).closest('.availability-rules').find('.custom-availability-rules');
+      if(target.id === "availability_rules_custom") {
         customRules.show();
       } else {
         customRules.hide();
