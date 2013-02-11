@@ -1,19 +1,106 @@
+.navbar {
+  background: $dnm_black;
+
+  .navbar-inner {
+    background: $dnm_black;
+    max-width: 1400px;
+    @include box-sizing(border-box);
+    padding: 0 0 0 20px;
+    height: 60px;
+    margin: 0 auto;
+
+    #logo {
+      display:inline-block;
+      float: left;
+      margin-top: 14px;
+      background: url("/assets/desksnear.me-white.png") no-repeat;
+      width: 228px;
+      height: 28px;
+      background-size: 227px 28px;
+      text-indent: -9999px;
+      border: none !important;
+      -webkit-transition: none;
+         -moz-transition: none;
+           -o-transition: none;
+              transition: none; 
+
+     
+      @media (max-width: 767px) {
+        width: 50px;
+        height: 50px;
+        margin: 2px 0;
+        background: url('/assets/desksnearme-icon.png');
+        background-size: 50px 50px;
+      }        
+    }    
+  }
+
+  .nav-links {
+    padding-top: 10px;
+    line-height: 38px;
+
+    a.nav-link {
+      display: inline-block;
+      float: right;
+      color: $gray3;
+      font-size: 20px;
+      text-decoration: none;
+
+      &:hover {
+        color: white;
+      }
+
+      &.margin-right {
+        margin-right: 20px;
+      }
+
+      @media (max-width: 600px) {
+        span {
+          display: none;
+        }
+      }
+
+      &.ico-dashboard.dropdown-toggle {
+
+        @media (max-width: 320px) {
+          width: 10px;
+        }
+      }  
+    }
+  }
+
+  a.btn.btn-blue {
+    margin-top: 1px;
+    text-align: center;
+    float: right;
+    margin-right: 10px;
+
+    @media (max-width: 600px) {
+      span {
+        display: none;
+      }
+    }
+  }
+}
 .navbar-inverse {
   ul.nav {
+    float: right;
+
     li.dropdown {
-      @media (max-width: 600px) {
-       a.dropdown-toggle > span, b.caret{
+      @media (max-width: 767px) {
+       a.dropdown-toggle > span{
           display:none;
         }
 
       }
       ul.dropdown-menu {
         min-width: 130px;
-        left: 7px;
-        @media (max-width: 600px) {
-          left: -70px;
-        }
+        left: 8px;
         background:$dnm_black;
+        border: none; 
+        @media (max-width: 767px) {
+          left: -20px;
+        }
         li {
           background:$dnm_black;
           a {
@@ -49,7 +136,11 @@
         &:active {
           color: $dnm_white;
         }
+        &.nav-link {
+          font-size: 20px;
+        }        
       }
+
       &.dropdown.open {
         background: $dnm_black;
         .dropdown-toggle {
@@ -64,44 +155,6 @@
   margin: 2px 0;
 }
 
-ul.nav.dashboard {
-  background: $dnm_white;
-  border: 2px solid $gray2;
-  @include border-radius(8px);
-  overflow: hidden;
-
-  li {
-    border-bottom: 1px solid $gray2; 
-
-    &.active {
-      background: $dnm_black;
-
-      a {
-        color: $dnm_white;
-      }
-    }
-
-    &:first-child {
-      border-top: none;
-    }
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    a {
-      display: block;
-      font:normal 16px/22px $font-medium, sans-serif;
-      padding: 8px 16px;
-      position: relative;
-      color: $gray3;
-
-      &:active {
-        color: $dnm_white;
-      }
-    }
-  }
-}
 
 // Accordian nav
 // First level of elements expands out
