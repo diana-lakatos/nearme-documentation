@@ -17,7 +17,7 @@
 
     .pull-right{:class => @location.photos.any? ? "span4" : "span12" }
       .map
-        .map-wrapper
+        .map-wrapper.google-map
           .map-container
 
         %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, "data-marker" => image_path("components/map-pin.png")}
