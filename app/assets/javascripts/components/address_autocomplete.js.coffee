@@ -147,7 +147,7 @@ class @AddressComponentParser
     part_components = part.split(keyValueSeparator)
     key = part_components[0]
     value = part_components[1]
-    @buildInput("address_components[#{index}][#{key}]", value)
+    @buildInput("location[address_components][#{index}][#{key}]", value)
 
 
   buildInput: (name, value) ->
