@@ -1,10 +1,10 @@
 %article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
   .row-fluid
-    = link_to listing do
+    = link_to listing, :class => "#{listing.photos.present? ? 'with' : 'without'}-photo" do
       - if listing.photos.first
-        = image_tag listing.photos.first.url(:space_listing), :title => listing.name, :alt => listing.name
-      - else
-        = image_tag google_maps_streetview_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name
+        = image_tag listing.photos.first.url(:space_listing), :title => listing.name, :alt => listing.name, :class => "listing-photo"
+
+      = image_tag google_maps_streetview_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name, :class => "listing-streetview"
   .row-fluid.listing-info
     %h2= link_to "#{listing.name}", listing
     %address
