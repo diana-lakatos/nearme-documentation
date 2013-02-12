@@ -1,6 +1,6 @@
 .box {
   $padding: 14px;
-  @include border-radius(8px);
+  @include border-radius(12px);
   margin-bottom: 20px;
   background: $dnm-white;
   padding: $padding;
@@ -14,8 +14,8 @@
     margin-left: -$padding;
     margin-right: -$padding;
     margin-bottom: $padding;
-    @include border-corner-radius(top, left, 6px);
-    @include border-corner-radius(top, right, 6px);
+    @include border-corner-radius(top, left, 12px);
+    @include border-corner-radius(top, right, 12px);
   }
 
   // Wizzard items

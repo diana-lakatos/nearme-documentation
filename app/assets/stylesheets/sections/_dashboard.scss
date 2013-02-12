@@ -63,7 +63,6 @@ section.locations-holder {
     header {
       height:24px;
       margin-bottom: 0;
-      padding: 16px 15px 16px 6px;
       cursor: pointer;
       .action {
         float: right;
@@ -73,9 +72,9 @@ section.locations-holder {
   }
 
   div.action {
-   border-radius: 8px; 
+   border-radius: 12px; 
    background: $dnm_black;
-    padding: 20px;
+    padding: 6px;
     a.btn{
       width: 100%;
       text-align: center;
@@ -105,15 +104,15 @@ section.listings {
         border-radius: 0;
         img.listing-header-thumbnail {
          height: 52px;
-         widht: 52px;
+         width: 52px;
         }
       } 
     } 
   }
   div.action {
     border-radius: 0;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
     margin: auto -14px;
   }
 }
