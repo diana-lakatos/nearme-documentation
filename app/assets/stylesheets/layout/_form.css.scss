@@ -2,16 +2,25 @@ select {
  margin: 10px 0;
 }
 
-input[type=text], input[type=email], input[type=password], textarea {
+input[type=text], 
+input[type=email], 
+input[type=password],
+input[type=tel], 
+textarea {
   @include box-sizing(border-box);
   width: 100%;
 }
+
 input[type='checkbox'], input[type='radio'] {
   width: auto;
 }
-input[type=submit], input[type=text], input[type=email], input[type=password] {
-   -webkit-appearance: none;
-   cursor: pointer;
+
+input[type=submit], 
+input[type=text], 
+input[type=email], 
+input[type=password] {
+  -webkit-appearance: none;
+  cursor: pointer;
 }
     
 form {

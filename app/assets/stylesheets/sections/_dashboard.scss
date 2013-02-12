@@ -71,15 +71,20 @@ section.locations-holder {
     }
   }
 
-  div.action {
-   border-radius: 12px; 
-   background: $dnm_black;
-    padding: 6px;
+  div.action { 
     a.btn{
       width: 100%;
       text-align: center;
-    }
+      @include box-sizing(border-box);
 
+      &.add-listing {
+        @include border-top-radius(0);
+      }
+
+      &.add-location {
+        margin-top: 20px;
+      }
+    }
   }
 }
 section.listings {
@@ -88,6 +93,7 @@ section.listings {
     .listing-content {
       div.action{
         background: $dnm_white;
+        padding: 20px 14px;
       }
     }
     @include dashboard-acc-group;
@@ -95,16 +101,17 @@ section.listings {
       margin-bottom:0;
       padding-bottom: 0; 
       border-radius: 0;
-      border-left: 8px solid $dnm_black;
+      border-left: 4px solid $gray6;
       header {
         height: 52px;
         line-height: 52px;
-        padding: 0 15px 4px 6px;
+        padding: 0 15px 0px 0px;
         margin-bottom:0;
         border-radius: 0;
         img.listing-header-thumbnail {
          height: 52px;
          width: 52px;
+         margin-top: -5px;
         }
       } 
     } 
@@ -113,7 +120,7 @@ section.listings {
     border-radius: 0;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
-    margin: auto -14px;
+    margin: auto -14px; 
   }
 }
 /*   End new dashboard */
@@ -142,10 +149,9 @@ section.dashboard {
           font-size: 22px;
           color: $gray4;
 
-        &:hover {
-          color: black;
-        }
-
+          &:hover {
+            color: black;
+          }
         }
 
         &:first-child {
