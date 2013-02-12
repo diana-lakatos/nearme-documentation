@@ -69,16 +69,22 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
 
     _afterSave: function(data) {
       var elt = $(this.$el).find('.save-listing span');
-      elt.text('Saved!');
-      var initValue = elt.css('font-size');
+     elt.animate({
+        opacity: 0.2
+      }, 500, function() {
+        elt.text('Saved!');
+      });
       elt.animate({
-        fontSize: "2em"
-      }, 1500);
+        opacity: 1
+      });
       elt.animate({
-        fontSize: initValue
-      }, 1500, function() {
+        opacity: 0.2
+      }, 500, function() {
         elt.text('Save');
       });
+      elt.animate({
+        opacity: 1
+      }, 1500 );
     },
 
     _showError: function(data) {

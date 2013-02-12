@@ -125,16 +125,22 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
 
     _afterSave: function(data) {
       var elt = $(this.$el).find('.save-location span');
-      elt.text('Saved!');
-      var initValue = elt.css('font-size');
       elt.animate({
-        fontSize: "2em"
-      }, 1500);
+        opacity: 0.2
+      }, 500, function() {
+        elt.text('Saved!');
+      });
       elt.animate({
-        fontSize: initValue
-      }, 1500, function() {
+        opacity: 1
+      });
+      elt.animate({
+        opacity: 0.2
+      }, 500, function() {
         elt.text('Save');
       });
+      elt.animate({
+        opacity: 1
+      }, 1500 );
 
       if (this.justCreated) {
         this.justCreated = false;
