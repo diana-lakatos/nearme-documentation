@@ -46,7 +46,7 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
     },
 
     getThumbnailUrl: function() {
-      var params = $.param({sensor: false, size: '64x64', location: this.model.get('latitude')+ ',' + this.model.get('longitude')});
+      var params = $.param({sensor: false, size: '52x52', location: this.model.get('latitude')+ ',' + this.model.get('longitude')});
       return "http://maps.googleapis.com/maps/api/streetview?" + params;
     },
 

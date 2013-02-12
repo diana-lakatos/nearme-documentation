@@ -63,6 +63,7 @@ section.locations-holder {
     header {
       height:24px;
       margin-bottom: 0;
+      padding: 16px 15px 16px 6px;
       cursor: pointer;
       .action {
         float: right;
@@ -97,13 +98,14 @@ section.listings {
       border-radius: 0;
       border-left: 8px solid $dnm_black;
       header {
-        height: 64px;
-        line-height: 64px;
+        height: 52px;
+        line-height: 52px;
+        padding: 0 15px 4px 6px;
         margin-bottom:0;
         border-radius: 0;
         img.listing-header-thumbnail {
-         height: 64px; 
-         widht: 64px; 
+         height: 52px;
+         widht: 52px;
         }
       } 
     } 
