@@ -24,15 +24,8 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
       this.route(/^locations\/([0-9]+)$/, 'editLocation');
     },
 
-    home: function() {
-      //var homeView = new HomeView();
-      //ViewManager.show(homeView);
-    },
-
     locations: function() {
       Backbone.Events.trigger("show:locations");
-      //var locationsView = new LocationsView();
-      //ViewManager.show(locationView);
     },
 
     defaultAction: function(actions) {
@@ -46,7 +39,7 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
       app_router = new AppRouter();
       Backbone.history.start({
         pushState: true,
-        root: "/controlpanel/"
+        root: "/dashboard/"
       });
     };
 
