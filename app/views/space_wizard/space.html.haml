@@ -37,4 +37,6 @@
     $(function() {
       new SpaceWizardSpaceForm($('form.new_location'))
     });
-    analytics.track('Add a Space - Step 2 - Location');
+  - if apply_analytics?
+    :javascript
+      analytics.track('Add a Space - Step 2 - Location');

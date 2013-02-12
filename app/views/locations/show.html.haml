@@ -75,9 +75,11 @@
           }
         });
       });
-      analytics.track('Viewed a Location', {
-        name: '#{@location.name}',
-        address: '#{(@location.formatted_address || @location.address)}'
+  - if apply_analytics?
+    :javascript 
+      analytics.track("Viewed a Location", {
+        name: "#{@location.name}",
+        address: "#{(@location.formatted_address || @location.address)}"
       });
 
   

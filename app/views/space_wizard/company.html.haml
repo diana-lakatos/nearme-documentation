@@ -7,5 +7,6 @@
     = render 'companies/form', :f => f
 
 - content_for :script do
-  :javascript
-    analytics.track('Add a Space - Step 1 - Company');
+  - if apply_analytics?
+    :javascript
+      analytics.track('Add a Space - Step 1 - Company');

@@ -2,5 +2,6 @@
   .signup
 
 - content_for :script do
-  :javascript
-    analytics.track('Add a Space - Step 0 - Sign Up');
+  - if apply_analytics?
+    :javascript
+      analytics.track('Add a Space - Step 0 - Sign Up');

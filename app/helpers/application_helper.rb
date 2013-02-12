@@ -22,6 +22,14 @@ module ApplicationHelper
     @show_title
   end
 
+  def apply_analytics?(params = {})
+    if params[:require_user]
+      current_user && Rails.env.development?
+    else
+      Rails.env.development?
+    end
+  end
+
   def stripe_public_key
     DesksnearMe::Application.config.stripe_public_key
   end

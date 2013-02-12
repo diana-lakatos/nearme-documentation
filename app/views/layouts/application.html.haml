@@ -20,7 +20,7 @@
     :javascript
       try{Typekit.load();}catch(e){}
 
-    = render :partial => "layouts/analytics" if Rails.env.production?
+    = render :partial => "layouts/analytics" if apply_analytics?
     
     /[if lt IE 9]
       = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'
@@ -46,9 +46,12 @@
 
     = render :partial => "shared/modal"
 
-    - if current_user
+    - if apply_analytics?(:require_user => true)
       :javascript
-        analytics.identify(#{current_user.id}, { name: '#{current_user.name}', email: '#{current_user.email}' });
+        analytics.identify(#{current_user.id}, {
+          name: "#{current_user.name}",
+          email: "#{current_user.email}"
+        });
 
     = yield :script
 
