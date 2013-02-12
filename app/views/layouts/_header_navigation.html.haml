@@ -1,6 +1,6 @@
 - if user_signed_in?
-  = link_to controlpanel_path, :class => "header-link" do
-    %span.ico-dashboard.padding New Dashboard  
+  = link_to manage_companies_path, :class => "header-link" do
+    %span.ico-dashboard.padding Old Dashboard  
 
   %ul.nav
     %li.dropdown
@@ -9,7 +9,7 @@
         %b.caret
       %ul.dropdown-menu
         %li
-          = link_to_once manage_companies_path do
+          = link_to_once controlpanel_path do
             %span.ico-location.padding Manage Locations
         %li
           = link_to_once reservations_dashboard_path do
