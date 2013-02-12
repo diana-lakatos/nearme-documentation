@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.11'
+gem 'rails', '3.2.12'
 gem 'pg'
 gem 'pg_search'
 
@@ -54,6 +54,8 @@ group :development do
   gem 'quiet_assets'
   gem 'mail_view'
   gem 'sextant'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 group :development, :test, :staging do

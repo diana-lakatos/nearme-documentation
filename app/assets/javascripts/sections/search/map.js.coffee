@@ -9,7 +9,7 @@ class Search.Map
   initializeGoogleMap: ->
     @googleMap = new google.maps.Map(@container, {
       zoom: 8,
-      minZoom: 8,
+      minZoom: 4,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       mapTypeControl: false
     })

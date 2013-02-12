@@ -70,6 +70,11 @@ ActiveRecord::Schema.define(:version => 20130206214818) do
     t.text     "mailing_address"
   end
 
+  create_table "companies_industries", :id => false, :force => true do |t|
+    t.integer "industry_id"
+    t.integer "company_id"
+  end
+
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
     t.integer  "attempts",   :default => 0
@@ -96,6 +101,17 @@ ActiveRecord::Schema.define(:version => 20130206214818) do
   end
 
   add_index "feeds", ["listing_id"], :name => "index_feeds_on_listing_id"
+
+  create_table "industries", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "industries_users", :id => false, :force => true do |t|
+    t.integer "industry_id"
+    t.integer "user_id"
+  end
 
   create_table "inquiries", :force => true do |t|
     t.integer  "listing_id"

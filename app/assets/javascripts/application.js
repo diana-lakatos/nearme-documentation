@@ -11,6 +11,7 @@
 //= require ./vendor/modernizr
 //= require ./vendor/jquery.cookie
 //= require ./vendor/jquery.popover-1.1.2
+//= require ./vendor/chosen.jquery
 //= require ./vendor/mustache
 //= require ./vendor/underscore
 //= require ./vendor/asevented
@@ -32,6 +33,7 @@ window.DNM = {
     this.initializeComponents();
     this.initializeModals();
     this.initializeTooltips();
+    this.initializeCustomSelects();
   },
 
   initializeModals: function() {
@@ -57,6 +59,10 @@ window.DNM = {
 
   initializeTooltips: function(){
     $('[rel=tooltip]').tooltip() 
+  },
+
+  initializeCustomSelects: function(){
+    $('.custom-select').chosen()
   }
 }
 
