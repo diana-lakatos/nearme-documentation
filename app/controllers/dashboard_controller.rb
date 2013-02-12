@@ -26,4 +26,7 @@ class DashboardController < ApplicationController
     @listings = current_user.listings.all
   end
 
+  def new_dashboard
+    render 'webapp/launcher', layout: false
+  end
 end
