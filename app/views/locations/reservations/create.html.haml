@@ -10,3 +10,12 @@
 
 :javascript
   Modal.reloadOnClose(#{raw bookings_dashboard_url.to_json})
+  analytics.track('Confirmed a Booking', { 
+    name: '#{@location.name}',
+    address: '#{(@location.formatted_address || @location.address)}',
+    quantity: #{@reservations.first.quantity},
+    days: #{@reservations.first.total_days},
+    amount: #{@reservations.first.total_amount_dollars},
+    currency: '#{@location.currency}',
+    transaction: #{reservation_credit_card_payment?}
+  });

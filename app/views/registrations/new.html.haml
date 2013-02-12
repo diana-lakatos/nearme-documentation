@@ -14,4 +14,6 @@
 
           = render 'registrations/signup_form'
 
-
+- content_for :script do
+  :javascript
+    analytics.track('Signed Up');
