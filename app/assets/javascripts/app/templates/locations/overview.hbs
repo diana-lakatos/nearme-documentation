@@ -1,7 +1,7 @@
 <div class="accordion-group">
   <div class="accordion-heading">
     <a class="accordion-toggle location-overview" data-toggle="collapse" data-parent="#locations-holder"
-    href="#collapse-location-{{view_id}}-overview">Overview</a>
+    href="#collapse-location-{{view_id}}-overview"><h2>Overview</h2></a>
   </div>
   <div id="collapse-location-{{view_id}}-overview" class="accordion-body collapse in location-overview-body">
     <div id="location-{{id}}-overview" class="accordion-inner">
@@ -70,7 +70,10 @@
       <div class="control-group string optional">
         <label rel="tooltip" data-original-title="Got a dog? Require an NDA? Write any special conditions for booking." class="string optional control-label" for="special_notes">Special terms or notes</label>
         <div class="controls">
-          <input class="string optional" id="special_notes" name="special_notes" placeholder="Any special terms or notes to add?" size="50" type="text" value="{{special_notes}}">
+          <textarea class="string optional" id="special_notes" name="special_notes"
+          placeholder="Any special terms or notes to add?" cols="40"
+          value="{{special_notes}}">
+          </textarea>
         </div>
       </div>
     </div>
