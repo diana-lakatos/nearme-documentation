@@ -9,14 +9,18 @@ function(Backbone, LocationsView, template) {
       this.views = {
         locations: LocationsView
       };
-
       locationsView = new LocationsView();
+      this.initializeTooltips();
     },
 
     render: function() {
       this.$el.html(this.template());
       new this.contentView().render();
       return this;
+    },
+
+    initializeTooltips: function(){
+      this.$el.tooltip({selector:'[rel=tooltip]',placement: 'bottom'});
     },
 
     setView: function(name) {

@@ -18,6 +18,7 @@ define(['jquery', 'backbone', 'hbs!templates/listings/item', 'hbs!templates/shar
     render: function() {
       var data = this.model.toJSON();
       data.thumbnail_url = this.thumbnail_url;
+      data.view_id = this.cid;
       this.$el.html(this.template(data));
       return this;
     },

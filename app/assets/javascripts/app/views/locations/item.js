@@ -20,7 +20,9 @@ define(['jquery', 'backbone', 'Collections/listing', 'Models/listing', 'Views/li
     },
 
     render: function() {
-      this.$el.html(this.template(this.model.toJSON()));
+      var data = this.model.toJSON();
+      data.view_id = this.cid;
+      this.$el.html(this.template(data));
       this.addAll();
       this.toggleCmd();
       new DNM.LocationFinder($('form#edit_location_'+ this._getId(), this.$el));
