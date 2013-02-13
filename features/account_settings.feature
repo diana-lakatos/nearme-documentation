@@ -12,7 +12,9 @@ Feature: A user can edit their settings
     Given I go to the account settings page
       And I fill in "Your name" with "Keith"
       And I fill in "Job title" with "My job"
+      And I fill in "Biography" with "This is my biography"
       And I fill in "Your email address" with "new@email.com"
+      And I upload avatar
      When I press "Save Changes"
      Then I should see "You updated your account successfully."
       And a user should exist with email: "new@email.com"
