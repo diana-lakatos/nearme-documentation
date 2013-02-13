@@ -3,7 +3,6 @@
   .accordion-group {
      border: none;
      border-radius: 0;
-     border-bottom: 1px solid $gray2;
      margin-top: 10px;
   }
 }
@@ -12,7 +11,12 @@
   padding-left: 2px;
   .open-time, .close-time {
     padding-right: 10px;
+    margin: 0;
   }
+}
+
+.accordion-heading .accordion-toggle {
+  padding: 15px 3px;
 }
 
 section.locations-holder {
@@ -21,12 +25,13 @@ section.locations-holder {
     margin-bottom: 0;
     div.action{
       background: $dnm_white;
-      padding: 20px 14px;
+      padding: 20px 0;
     }
     div.geolocation{
       position: absolute;
-      top: 15px;
+      top: 13px;
       left: 10px;
+      color: $gray5;
     }
     div.map {
       .map-container {
@@ -41,11 +46,14 @@ section.locations-holder {
     display: block;
     padding-top: 10px;
     font-size: 80%;
-    color: $gray3;
-    padding-left: 14px;
+    color: $gray5;
+
+    &:hover {
+      color: $gray7;
+    }
   }
   .alert{
-      border-radius: 12px;
+      @include border-radius(12px);
   }
   .close {
     float: right;
@@ -61,9 +69,16 @@ section.locations-holder {
   section.box {
     padding-bottom: 0;
     header {
-      height:24px;
+      height: 24px;
+      font-size: 24px;
       margin-bottom: 0;
       cursor: pointer;
+
+      span {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
       .action {
         float: right;
         padding: 0;
@@ -83,17 +98,37 @@ section.locations-holder {
 
       &.add-location {
         margin-top: 20px;
+        background: $gray3;
+        color: $dnm_black;
+        @include transition(all .15s ease-in);
+
+        &:hover {
+          background: $gray4;
+        }
       }
     }
   }
 }
 section.listings {
+  section.box {
+    header {
+      height: 24px;
+      font-size: 20px;
+      margin-bottom: 0;
+      cursor: pointer;
+
+      span {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  } 
   .accordion {
-    margin: auto -14px;
+    margin: auto -15px;
     .listing-content {
       div.action{
         background: $dnm_white;
-        padding: 20px 14px;
+        padding: 20px 15px;
       }
     }
     @include dashboard-acc-group;
@@ -101,7 +136,7 @@ section.listings {
       margin-bottom:0;
       padding-bottom: 0; 
       border-radius: 0;
-      border-left: 4px solid $gray6;
+      border-left: 4px solid $gray3;
       header {
         height: 52px;
         line-height: 52px;
@@ -120,7 +155,7 @@ section.listings {
     border-radius: 0;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
-    margin: auto -14px; 
+    margin: auto -15px; 
   }
 }
 /*   End new dashboard */
@@ -134,7 +169,7 @@ section.dashboard {
       width: 100%;
       background: $gray2;
       color: $gray4;
-      @include border-radius(8px);
+      @include border-radius(12px);
       @include background-clip(padding-box);
 
       li {
@@ -155,11 +190,11 @@ section.dashboard {
         }
 
         &:first-child {
-          @include border-left-radius(8px);
+          @include border-left-radius(12px);
         }
 
         &:last-child {
-          @include border-right-radius(8px);
+          @include border-right-radius(12px);
         }
 
         .account:after {
