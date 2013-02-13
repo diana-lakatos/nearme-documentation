@@ -30,7 +30,7 @@ class Search.Listing
 
   # The content that goes in the map popup when clicking the marker
   popupContent: ->
-    @_element.find('.listing-info').html() 
+    @_element.find('.listing-map-popover-content').html() 
 
   # Don't show this result.
   hide: ->
