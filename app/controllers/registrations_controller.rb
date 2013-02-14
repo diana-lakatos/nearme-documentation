@@ -12,6 +12,7 @@ class RegistrationsController < Devise::RegistrationsController
     super
     # Clear out temporarily stored Provider authentication data if present
     session[:omniauth] = nil unless @user.new_record?
+    flash[:redirected_from_sign_up] = true
   end
 
   def edit

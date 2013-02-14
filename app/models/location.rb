@@ -64,6 +64,21 @@ class Location < ActiveRecord::Base
     read_attribute(:currency).presence || "USD"
   end
 
+  def suburb
+    read_attribute(:suburb).presence || "Unknown"
+  end
+
+  def city
+    read_attribute(:city).presence || "Unknown"
+  end
+
+  def state
+    read_attribute(:state).presence || "Unknown"
+  end
+
+  def country
+    read_attribute(:country).presence || "Unknown"
+  end
 
   def parse_address_components
     if address_components_changed?

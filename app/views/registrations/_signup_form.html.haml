@@ -52,9 +52,7 @@
     $(function() {
       new SignupForm($('#signup'))
     });
-  - if apply_analytics?
-    :javascript
-      analytics.trackLink($('.desksnearme.submit'), 'Signed Up via Desks Near Me');
-      analytics.trackLink($('.twitter.submit'), 'Signed Up via Twitter');
-      analytics.trackLink($('.facebook.submit'), 'Signed Up via Facebook');
-      analytics.trackLink($('.linkedin.submit'), 'Signed Up via LinkedIn');
+    analytics.trackLink($('.desksnearme.submit'), 'Signed Up via Desks Near Me');
+    analytics.trackLink($('.twitter.submit'), 'Signed Up via Twitter');
+    analytics.trackLink($('.facebook.submit'), 'Signed Up via Facebook');
+    analytics.trackLink($('.linkedin.submit'), 'Signed Up via LinkedIn');

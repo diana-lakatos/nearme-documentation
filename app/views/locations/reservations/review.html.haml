@@ -74,13 +74,14 @@
   $(function() {
     new Bookings.ReservationModal($('form.payment'))
   });
-- if apply_analytics?
-  :javascript
-    analytics.track("Reviewed a Booking", { 
-      name: "#{@location.name}",
-      address: "#{(@location.formatted_address || @location.address)}",
-      quantity: #{@reservations.first.quantity},
-      days: #{@reservations.first.total_days},
-      amount: #{@reservations.first.total_amount_dollars},
-      currency: "#{@location.currency}"
-    });
+  analytics.track("Reviewed a Booking", { 
+    suburb: "#{@location.suburb}",
+    city: "#{@location.city}",
+    state: "#{@location.state}",
+    country: "#{@location.country}",
+    quantity: #{@reservations.first.quantity},
+    days: #{@reservations.first.total_days},
+    amount: #{@reservations.first.total_amount_dollars},
+    currency: "#{@reservations.first.currency}",
+    transaction: #{reservation_credit_card_payment?}
+  });
