@@ -5,6 +5,15 @@
     <input class="string required" id="listing_name" name="name"  placeholder="Name your listing!" size="50" type="text" value="{{name}}">
   </div>
 </div>
+<div class="control-group description required">
+  <label class="description required control-label" for="listing_description">
+    <abbr title="required">*</abbr><a href='#' rel="tooltip" data-original-title="Describe your location. Descriptions
+      are limited to 250 characters">Description</a></label>
+  <div class="controls">
+    <textarea cols="30" id="listing_description" maxlength="250" name="description"
+      rows="2">{{{description}}}</textarea>
+  </div>
+</div>
 <div class="control-group select required">
   <label class="select required control-label" for="listing_listing_type_id">
     <abbr title="required">*</abbr>Listing Type</label>
@@ -35,15 +44,6 @@
   <label class="decimal optional control-label" for="listing_monthly_price"><a href='#' rel="tooltip" data-original-title="How much per seat per month are you charging?">Monthly price</a></label>
   <div class="controls">
     <input class="numeric decimal optional" id="listing_monthly_price" name="monthly_price" value="{{monthly_price}}" step="any" type="number">
-  </div>
-</div>
-<div class="control-group description required">
-  <label class="description required control-label" for="listing_description">
-    <abbr title="required">*</abbr><a href='#' rel="tooltip" data-original-title="Describe your location. Descriptions
-      are limited to 250 characters">Description</a></label>
-  <div class="controls">
-    <textarea cols="40" id="listing_description" maxlength="250" name="description"
-      rows="2">{{{description}}}</textarea>
   </div>
 </div>
 <div class="control-group">
