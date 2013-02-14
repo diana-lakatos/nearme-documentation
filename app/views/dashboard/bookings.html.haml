@@ -1,17 +1,20 @@
-.box 
-  %h2 
-    Your Bookings
-
-  %section#my_reservations.ta
-    %ul.reservations.list
-      - @your_reservations.each do |reservation|
-        %li{"data-date" => reservation.date}
-          %p.em
-            %strong= link_to(reservation.listing.name, reservation.listing)
-            on
-            %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
-            (#{reservation.state_name})
-            %br/
-            = reservation.comment
-          .actions
-            = render :partial => "user_actions",  :locals => {:reservation => reservation} if current_user == reservation.owner
+.row-fluid
+  .span8.offset2
+    %h1
+      %span.ico-bookings.padding My Bookings
+.row-fluid
+  .span8.offset2      
+    .box 
+      %section#my_reservations.ta
+        %ul.reservations.list
+          - @your_reservations.each do |reservation|
+            %li{"data-date" => reservation.date}
+              %p.em
+                %strong= link_to(reservation.listing.name, reservation.listing)
+                on
+                %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
+                (#{reservation.state_name})
+                %br/
+                = reservation.comment
+              .actions
+                = render :partial => "user_actions",  :locals => {:reservation => reservation} if current_user == reservation.owner
