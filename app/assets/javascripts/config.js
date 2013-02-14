@@ -2,18 +2,18 @@ requirejs.config({
   baseUrl: '/assets/app',
 
   paths: {
-    jquery: 'libs/jquery/jquery',
-    underscore: 'libs/underscore',
+    jquery: '../vendor/jquery',
+    underscore: '../vendor/underscore',
     json: 'libs/json',
     backbone: 'libs/backbone/backbone',
     backbone_sync: 'libs/backbone/backbone.sync.rails',
-    bootstrap: 'libs/bootstrap',
+    bootstrap: '../vendor/bootstrap',
     handlebars: 'libs/handlebars/handlebars',
     i18nprecompile: 'libs/handlebars/i18nprecompile',
     hbs: 'libs/handlebars/hbs',
     text: 'libs/require/text', // required plugin to load non js file
     templates: 'templates', // path for template files
-    modernizr: 'libs/modernizr',
+    modernizr: '../vendor/modernizr',
     namespace: 'components/namespace',
     location_finder: 'components/location_finder',
     map: 'components/map',
