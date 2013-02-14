@@ -20,7 +20,7 @@ a[rel="tooltip"] {
   color: $dnm_black;
 }
 .tooltip {
-  font-size: 100%;
+  @include adjust-font-size-to(16px);
   color: $gray2;
 }
 .collapse.in {

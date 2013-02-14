@@ -42,12 +42,12 @@
     a.nav-link {
       display: inline-block;
       float: right;
-      color: $gray3;
+      color: $gray5;
       font-size: 20px;
       text-decoration: none;
 
       &:hover {
-        color: white;
+        color: $gray2;
       }
 
       &.margin-right {
@@ -104,7 +104,7 @@
             }
           }
           &.divider{
-            border-color: $gray4;
+            border-color: $gray7;
             padding: 0;
           }
         }
@@ -124,10 +124,10 @@
         font:normal 16px/22px $font-medium, sans-serif;
         padding: 8px 14px;
         position: relative;
-        color: $gray3;
+        color: $gray4;
 
         &:active {
-          color: $dnm_white;
+          color: $gray2;
         }
         &.nav-link {
           font-size: 20px;

@@ -1,20 +1,24 @@
-.box
-  %h2 Guest Reservations of Your Listings
+.row-fluid
+  .span8.offset2
+    %h1
+      %span.ico-manage-guests.padding Manage Guests
+.row-fluid
+  .span8.offset2 
+    .box
+      %section#reservations.tab
+        %ul.reservations.list
+          - @listing_reservations.each do |reservation|
+            %li
+              %p.em
+                %strong= reservation.owner
 
-  %section#reservations.tab
-    %ul.reservations.list
-      - @listing_reservations.each do |reservation|
-        %li
-          %p.em
-            %strong= reservation.owner
+                = link_to "mailto:#{reservation.owner.email}" do
+                  %span.ico-mail.padding
 
-            = link_to "mailto:#{reservation.owner.email}" do
-              %span.ico-mail.padding
-
-            on
-            %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
-            (#{reservation.state_name})
-            %br/
-            = reservation.comment
-          .actions
-            = render :partial => "owner_actions", :locals => {:reservation => reservation} if current_user == reservation.listing.creator
+                on
+                %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
+                (#{reservation.state_name})
+                %br/
+                = reservation.comment
+              .actions
+                = render :partial => "owner_actions", :locals => {:reservation => reservation} if current_user == reservation.listing.creator
