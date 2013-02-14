@@ -64,6 +64,10 @@ class Location < ActiveRecord::Base
     read_attribute(:currency).presence || "USD"
   end
 
+  def street
+    read_attribute(:street).presence || "Unknown"
+  end
+
   def suburb
     read_attribute(:suburb).presence || "Unknown"
   end
