@@ -30,6 +30,12 @@ if Rails.env.development? || Rails.env.staging?
       listing =  FactoryGirl.create(:listing, :location => location)
     end
 
+    ["Business", "Co-working", "Public"].each do |name|
+      LocationType.create(:name => name)
+    end
+    business_location = LocationType.find_by_name("Business")
+    Location.update_all(:location_type_id => business_location.id)
+
   end
 
 end
