@@ -5,6 +5,7 @@ class V1::LocationsController <  V1::BaseController
 
   def list
     @locations = current_user.default_company.locations
+    render :json => @locations, :root => false
   end
 
   def create

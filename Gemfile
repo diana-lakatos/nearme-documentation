@@ -35,7 +35,6 @@ gem "compass-rails"
 gem "coffee-rails"
 gem "rdiscount"
 gem 'delayed_job_active_record'
-gem 'rabl'
 gem 'stripe'
 gem 'friendly_id'
 
