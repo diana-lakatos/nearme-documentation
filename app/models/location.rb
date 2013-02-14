@@ -61,27 +61,27 @@ class Location < ActiveRecord::Base
   end
 
   def currency
-    read_attribute(:currency).presence || "USD"
+    super.presence || "USD"
   end
 
   def street
-    read_attribute(:street).presence || "Unknown"
+    super.presence || "Unknown"
   end
 
   def suburb
-    read_attribute(:suburb).presence || "Unknown"
+    super.presence || "Unknown"
   end
 
   def city
-    read_attribute(:city).presence || "Unknown"
+    super.presence || "Unknown"
   end
 
   def state
-    read_attribute(:state).presence || "Unknown"
+    super.presence || "Unknown"
   end
 
   def country
-    read_attribute(:country).presence || "Unknown"
+    super.presence || "Unknown"
   end
 
   def parse_address_components
