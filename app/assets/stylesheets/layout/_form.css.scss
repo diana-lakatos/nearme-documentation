@@ -9,7 +9,8 @@ input[type=radio] {
 input[type=text], 
 input[type=email], 
 input[type=password],
-input[type=tel], 
+input[type=tel],
+input[type=url], 
 textarea {
   @include box-sizing(border-box);
   width: 100%;
@@ -28,7 +29,6 @@ input[type=password] {
 }
     
 form {
-  overflow: hidden;
 
   div.input, div.field {
     margin-bottom: 20px;
@@ -297,6 +297,7 @@ form {
 //   </form>
 .form-horizontal {
   .control-group {
+    clear: both;
     margin-bottom: 10px;
 
     // An indented control group
@@ -320,15 +321,14 @@ form {
     }
 
     .control-label {
-      @extend .font-banda-bold;
       width: 180px;
       float: left;
       margin-top: 7px;
       text-align: right;
-      font-size: 16px;
       color: $dnm_black;
 
-      abbr {
+      &.flush-top {
+        margin-top: 0;
       }
     }
 

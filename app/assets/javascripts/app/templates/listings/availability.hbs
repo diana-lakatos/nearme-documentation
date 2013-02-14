@@ -1,22 +1,15 @@
-<div class="accordion-group">
-  <div class="accordion-heading">
-    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#listings-holder" href="#collapse-listing-{{view_id}}-availability"><h2>Availability</h2></a>
-  </div>
-  <div id="collapse-listing-{{view_id}}-availability" class="accordion-body collapse in">
-    <div id="listing-{{id}}-availability" class="accordion-inner">
-      <div class="control-group indent">
-        <div class="availability-rules">
-          <input id="defer_availability_rules" name="defer_availability_rules" type="hidden" value="{{defer_availability_rules}}">
-          {{#checkbox availability_template_id}}
-          <div>
-            <input data-clear-rules="true" id="availability_rules_defer" name="availability_template_id" type="radio" value="">
-            <label class="inline" for="availability_rules_defer">Use Location availability</label>
-          </div>
-          {{> templates_shared_ruleList}}
-          {{/checkbox}}
-          {{> templates_shared_customRules}} 
-      </div>
-      </div>
+<div class="control-group string required">
+  <label class="string required control-label flush-top" for="availability">
+  <abbr title="required">*</abbr>Availability</label>
+  <div class="controls">
+    <input id="defer_availability_rules" name="defer_availability_rules" type="hidden" value="{{defer_availability_rules}}">
+    {{#checkbox availability_template_id}}
+    <div>
+      <input data-clear-rules="true" id="availability_rules_defer" name="availability_template_id" type="radio" value="">
+      <label class="inline" for="availability_rules_defer">Use Location availability</label>
     </div>
+    {{> templates_shared_ruleList}}
+    {{/checkbox}}
+    {{> templates_shared_customRules}} 
   </div>
 </div>

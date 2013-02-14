@@ -1,18 +1,10 @@
-<div class="accordion-group">
-  <div class="accordion-heading">
-    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#locations-holder" href="#collapse-location-{{view_id}}-availability"><h2>Availability</h2></a>
-  </div>
-  <div id="collapse-location-{{view_id}}-availability" class="accordion-body collapse in">
-    <div id="location-{{id}}-availability" class="accordion-inner">
-      <div class="control-group indent">
-        <div class="availability-rules">
-          {{#checkbox availability_template_id}}
-            {{>templates_shared_ruleList}}
-          {{/checkbox}}
-          {{>templates_shared_customRules}}
-      </div>
-      </div>
-    </div>
-  </div>
+<div class="control-group">
+  <label class='control-label flush-top'>Availability</label>
+  <div class="controls availability-rules">
+    {{#checkbox availability_template_id}}
+      {{>templates_shared_ruleList}}
+    {{/checkbox}}
+    {{>templates_shared_customRules}}
+  </div>  
 </div>
 

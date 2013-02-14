@@ -20,7 +20,7 @@ function(Backbone, LocationsView, template) {
     },
 
     initializeTooltips: function(){
-      this.$el.tooltip({selector:'[rel=tooltip]',placement: 'bottom'});
+      this.$el.tooltip({selector:'[rel=tooltip]',placement: 'top'});
     },
 
     setView: function(name) {

@@ -33,14 +33,14 @@
 
     li {
       float: left;
-      color: $gray3;
+      color: $gray5;
       font-size: 18px;
       padding: 0 14px;
       width: 25%;
       @include box-sizing(border-box);
       text-align: center;
       line-height: 60px;
-      border-right: 1px solid $gray1;
+      border-right: 1px solid rgb(200,200,200);
 
       &:last-child {
         border: none;
@@ -59,12 +59,11 @@
          } 
 
       &.current {
-        background: $dnm_black;
-        color: $dnm_white;
+        background: rgb(200,200,200);
+        color: $dnm_black;
         border: none;
       }
     }
-
   }
 
   hr, .hr {
