@@ -86,6 +86,12 @@ group :development do
   gem 'quiet_assets'
   gem 'mail_view'
   gem 'sextant'
+  gem 'guard-minitest', :require => false
+  gem 'guard-spork', :require => false
+  gem 'guard-cucumber', :require => false
+  gem 'spork-minitest', :git => 'git@github.com:Slashek/spork-minitest.git', :require => false
+  gem 'rb-fsevent', :require => RUBY_PLATFORM.include?('darwin') && 'rb-fsevent'
+  gem 'ruby-prof'
 end
 
 group :test do
@@ -100,4 +106,13 @@ group :test do
   gem 'timecop'
   gem 'turn'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
+  gem 'guard-minitest'
+  gem 'guard-spork'
+  gem 'guard-cucumber'
+  gem 'spork-minitest', :git => 'git@github.com:Slashek/spork-minitest.git'
+  gem 'rb-inotify', :require => false
+  gem 'rb-fsevent', :require => false
+  gem 'rb-fchange', :require => false
+  #gem 'growl_notify'
+  gem 'ruby-prof'
 end
