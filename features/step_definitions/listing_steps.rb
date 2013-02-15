@@ -117,9 +117,9 @@ Then /^this listing should exist$/ do
 end
 
 Then /^I should see the following listings in order:$/ do |table|
-  found = all("article.listing h2")
+  found = all("article.listing h2").map(&:text).uniq
   table.raw.flatten.each_with_index do |listing, index|
-    found[index].text.should include listing
+    found[index].should include listing
   end
 end
 
