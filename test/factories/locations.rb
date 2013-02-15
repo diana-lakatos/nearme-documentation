@@ -52,56 +52,58 @@ FactoryGirl.define do
 
     factory :location_ursynowska_address_components do
       formatted_address "Ursynowska, Warsaw, Poland"
-      address_components {{
-        "0"=> {
-        "long_name"=>"Ursynowska", 
-        "short_name"=>"Ursynowska", 
-        "types"=>"route"
-      }, 
-        "1"=>{
-        "long_name"=>"Mokotow", 
-        "short_name"=>"Mokotow", 
-        "types"=>"sublocality,political"
-      }, 
-        "2"=>{
-        "long_name"=>"Warsaw", 
-        "short_name"=>"Warsaw", 
-        "types"=>"locality,political"
-      },
-        "3"=>{
-        "long_name"=> "Warszawa", 
-        "short_name"=>"Warszawa", 
-        "types"=>"administrative_area_level_3,political"
-      }, 
-        "4"=>{
-          "long_name"=>"Warszawa", 
-          "short_name"=>"Warszawa", 
-          "types"=>"administrative_area_level_2,political"
-        }, 
-        "5"=>{
-          "long_name"=>"Masovian Voivodeship", 
-          "short_name"=>"Masovian Voivodeship", 
-          "types"=>"administrative_area_level_1,political"
-        }, 
-        "6"=>{
-          "long_name"=>"Poland", 
-          "short_name"=>"PL", 
-          "types"=>"country,political"
+      address_components do
+        {
+          "0"=> {
+          "long_name"=>"Ursynowska",
+          "short_name"=>"Ursynowska",
+          "types"=>"route"
+        },
+          "1"=>{
+          "long_name"=>"Mokotow",
+          "short_name"=>"Mokotow",
+          "types"=>"sublocality,political"
+        },
+          "2"=>{
+          "long_name"=>"Warsaw",
+          "short_name"=>"Warsaw",
+          "types"=>"locality,political"
+        },
+          "3"=>{
+          "long_name"=> "Warszawa",
+          "short_name"=>"Warszawa",
+          "types"=>"administrative_area_level_3,political"
+        },
+          "4"=>{
+            "long_name"=>"Warszawa",
+            "short_name"=>"Warszawa",
+            "types"=>"administrative_area_level_2,political"
+          },
+          "5"=>{
+            "long_name"=>"Masovian Voivodeship",
+            "short_name"=>"Masovian Voivodeship",
+            "types"=>"administrative_area_level_1,political"
+          },
+          "6"=>{
+            "long_name"=>"Poland",
+            "short_name"=>"PL",
+            "types"=>"country,political"
+          }
         }
-      }}
+      end
     end
 
     factory :location_warsaw_address_components do
       formatted_address "Warsaw"
       address_components {{
         "2"=>{
-          "long_name"=>"Warsaw", 
-          "short_name"=>"Warsaw", 
+          "long_name"=>"Warsaw",
+          "short_name"=>"Warsaw",
           "types"=>"locality,political"
         },
           "3"=>{
-          "long_name"=> "Warszawa", 
-          "short_name"=>"Warszawa", 
+          "long_name"=> "Warszawa",
+          "short_name"=>"Warszawa",
           "types"=>"administrative_area_level_3,political"
         }
       }}
@@ -111,21 +113,21 @@ FactoryGirl.define do
       formatted_address "San Francisco, CA, USA"
       address_components{{
         "0"=>{
-          "long_name"=>"San Francisco", 
-          "short_name"=>"SF", 
+          "long_name"=>"San Francisco",
+          "short_name"=>"SF",
           "types"=>"locality,political"
-        }, 
+        },
         "1"=>{
-          "long_name"=>"San Francisco", 
-          "short_name"=>"San Francisco", 
+          "long_name"=>"San Francisco",
+          "short_name"=>"San Francisco",
           "types"=>"administrative_area_level_2,political"},
         "2"=>{
-          "long_name"=>"California", 
-          "short_name"=>"CA", 
-          "types"=>"administrative_area_level_1,political"}, 
+          "long_name"=>"California",
+          "short_name"=>"CA",
+          "types"=>"administrative_area_level_1,political"},
         "3"=>{
-          "long_name"=>"United States", 
-          "short_name"=>"US", 
+          "long_name"=>"United States",
+          "short_name"=>"US",
           "types"=>"country,political"
         }
       }}
@@ -134,32 +136,32 @@ FactoryGirl.define do
       formatted_address "Major MacKenzie Drive, Vaughan, ON L6A, Canada"
       address_components{{
          "0"=> {
-          "long_name"=>"Major MacKenzie Drive", 
+          "long_name"=>"Major MacKenzie Drive",
           "short_name"=>"Major MacKenzie Dr",
-          "types"=>"route"}, 
+          "types"=>"route"},
         "1"=>{
-          "long_name"=>"Maple", 
-          "short_name"=>"Maple", 
-          "types"=>"neighborhood, political"}, 
+          "long_name"=>"Maple",
+          "short_name"=>"Maple",
+          "types"=>"neighborhood, political"},
         "2"=>{
-          "long_name"=>"Vaughan", 
-          "short_name"=>"Vaughan", 
-          "types"=>"administrative_area_level_3, political"}, 
+          "long_name"=>"Vaughan",
+          "short_name"=>"Vaughan",
+          "types"=>"administrative_area_level_3, political"},
         "3"=>{
-          "long_name"=>"York Regional Municipality", 
-          "short_name"=>"York Regional Municipality", 
-          "types"=>"administrative_area_level_2, political"}, 
+          "long_name"=>"York Regional Municipality",
+          "short_name"=>"York Regional Municipality",
+          "types"=>"administrative_area_level_2, political"},
         "4"=>{
-          "long_name"=>"Ontario", 
-          "short_name"=>"ON", 
-          "types"=>"administrative_area_level_1, political"}, 
+          "long_name"=>"Ontario",
+          "short_name"=>"ON",
+          "types"=>"administrative_area_level_1, political"},
         "5"=>{
-          "long_name"=>"Canada", 
-          "short_name"=>"CA", 
-          "types"=>"country, political"}, 
+          "long_name"=>"Canada",
+          "short_name"=>"CA",
+          "types"=>"country, political"},
         "6"=>{
-          "long_name"=>"L6A", 
-          "short_name"=>"L6A", 
+          "long_name"=>"L6A",
+          "short_name"=>"L6A",
           "types"=>"postal_code"}
       }}
     end

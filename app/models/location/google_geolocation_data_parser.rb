@@ -1,5 +1,7 @@
 class Location::GoogleGeolocationDataParser
 
+  attr :address_components, :result_hash
+
   MAPPING_HASH = {
     "route" => "street",
     "country" => "country",
@@ -8,70 +10,40 @@ class Location::GoogleGeolocationDataParser
     "administrative_area_level_1" => "state",
   }
 
-  BACKUP_HASH = {
-    "administrative_area_level_3" => "city"
-  }
-
 
   def initialize(address_components)
-    init
+    return unless address_components
     @result_hash = {}
-    @backup_hash = {}
-    parse(address_components)
-  end
-
-  def init
-    @available_types = MAPPING_HASH.keys
-    @backup_types = BACKUP_HASH.keys
-  end
-
-  def parse(address_components)
-    if address_components
-      address_components.each do |index, address_component|
-        @address_component = address_component
-        extract_component
-      end
-      apply_backup
+    @address_components = address_components.to_enum.map { |c| Component.new(c[1]) }
+    MAPPING_HASH.each_pair do |type, field_on_location|
+      result_hash[field_on_location] = find_component_for(type).long_name
     end
   end
 
+  def find_component_for(type)
+    component = address_components.find do |component|
+      component.types.include?(type)
+    end || Component.new({ "long_name" => "", "types" => ""})
 
-  def extract_component
-    if !(important_types = get_important_types).empty?
-      important_types.each do |important_type|
-        @result_hash[MAPPING_HASH[important_type].downcase] = @address_component["long_name"]
-      end
-    elsif !(backup_types = get_backup_types).empty?
-      backup_types.each do |backup_type|
-        Rails.logger.debug 'replacing'
-        @backup_hash[BACKUP_HASH[backup_type]] = @address_component["long_name"]
-      end
+    if type == "locality" and component.missing?
+      component = find_component_for("administrative_area_level_3") 
+    end
+    component
+  end
+
+  def fetch_address_component(name)
+    result_hash.fetch(name, nil)
+  end
+
+  class Component
+    attr_reader :long_name, :types
+    def initialize(hash)
+      @long_name = hash.fetch("long_name", "")
+      @types = hash.fetch("types", "").split(",")
+    end
+
+    def missing?
+      long_name.empty?
     end
   end
-
-  def apply_backup
-    @backup_hash.each do |key, value|
-      @result_hash[key] = value unless @result_hash[key]
-    end
-  
-  end
-
-  def fetch_address_component(string)
-    @result_hash[string]
-  end
-
-  def get_important_types
-    @available_types & get_address_component_types
-  end
-
-  def get_backup_types
-    @backup_types & get_address_component_types
-  end
-
-  def get_address_component_types
-    return [] unless @address_component["types"].present?
-    @address_component["types"].kind_of?(String) ? @address_component["types"].split(",") : @address_component["types"]
-  end
-
 end
-
