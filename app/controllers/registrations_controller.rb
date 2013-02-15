@@ -10,6 +10,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     super
+    AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(@user)
     # Clear out temporarily stored Provider authentication data if present
     session[:omniauth] = nil unless @user.new_record?
   end
