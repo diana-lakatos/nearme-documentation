@@ -130,5 +130,38 @@ FactoryGirl.define do
         }
       }}
     end
+     factory :location_vaughan_address_components do
+      formatted_address "Major MacKenzie Drive, Vaughan, ON L6A, Canada"
+      address_components{{
+         "0"=> {
+          "long_name"=>"Major MacKenzie Drive", 
+          "short_name"=>"Major MacKenzie Dr",
+          "types"=>"route"}, 
+        "1"=>{
+          "long_name"=>"Maple", 
+          "short_name"=>"Maple", 
+          "types"=>"neighborhood, political"}, 
+        "2"=>{
+          "long_name"=>"Vaughan", 
+          "short_name"=>"Vaughan", 
+          "types"=>"administrative_area_level_3, political"}, 
+        "3"=>{
+          "long_name"=>"York Regional Municipality", 
+          "short_name"=>"York Regional Municipality", 
+          "types"=>"administrative_area_level_2, political"}, 
+        "4"=>{
+          "long_name"=>"Ontario", 
+          "short_name"=>"ON", 
+          "types"=>"administrative_area_level_1, political"}, 
+        "5"=>{
+          "long_name"=>"Canada", 
+          "short_name"=>"CA", 
+          "types"=>"country, political"}, 
+        "6"=>{
+          "long_name"=>"L6A", 
+          "short_name"=>"L6A", 
+          "types"=>"postal_code"}
+      }}
+    end
   end
 end
