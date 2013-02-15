@@ -12,7 +12,8 @@ class Search.Map
       minZoom: 4,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       disableDefaultUI: true
-      zoomControl: true
+      zoomControl: true,
+      scrollwheel: false
     })
 
     # Info window pops over and contains details for each marker/listing
