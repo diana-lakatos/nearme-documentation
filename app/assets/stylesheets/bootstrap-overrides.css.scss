@@ -15,6 +15,9 @@ body {
   z-index: 1030;
   margin:0 !important;
 }
+abbr[title] {
+  cursor: auto;
+}
 .accordion-group {
 
 	background: $dnm_white;
