@@ -48,6 +48,14 @@ module UserHelper
     log_out
   end
 
+
+  def user
+    return model!("user") if model("user")
+    @user ||= FactoryGirl.create :user
+    store_model("user", "user", @user)
+    model!("user")
+  end
+
 private
   def default_options
     {:email => "valid@example.com", :password => 'password', :name => 'Name'}
