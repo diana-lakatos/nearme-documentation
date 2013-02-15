@@ -10,3 +10,9 @@
     %address
       %span.ico-marker
       = listing.formatted_address || listing.address
+
+  .listing-map-popover-content{:style => "display: none"}
+    %h2= link_to "#{listing.name}", listing
+    %address
+      %span.ico-marker
+      = listing.formatted_address || listing.address 
