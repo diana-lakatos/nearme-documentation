@@ -20,6 +20,11 @@ class Location::GoogleGeolocationDataParser
     end
   end
 
+  def fetch_address_component(name)
+    result_hash.fetch(name, nil)
+  end
+
+  private
   def find_component_for(type)
     component = address_components.find do |component|
       component.types.include?(type)
@@ -29,10 +34,6 @@ class Location::GoogleGeolocationDataParser
       component = find_component_for("administrative_area_level_3") 
     end
     component
-  end
-
-  def fetch_address_component(name)
-    result_hash.fetch(name, nil)
   end
 
   class Component
