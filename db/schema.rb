@@ -62,17 +62,12 @@ ActiveRecord::Schema.define(:version => 20130213190320) do
     t.string   "name"
     t.string   "email"
     t.text     "description"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.datetime "deleted_at"
     t.string   "url"
     t.string   "paypal_email"
     t.text     "mailing_address"
-  end
-
-  create_table "company_industries", :id => false, :force => true do |t|
-    t.integer "industry_id"
-    t.integer "company_id"
   end
 
   create_table "delayed_jobs", :force => true do |t|
@@ -101,12 +96,6 @@ ActiveRecord::Schema.define(:version => 20130213190320) do
   end
 
   add_index "feeds", ["listing_id"], :name => "index_feeds_on_listing_id"
-
-  create_table "industries", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
 
   create_table "inquiries", :force => true do |t|
     t.integer  "listing_id"
@@ -258,11 +247,6 @@ ActiveRecord::Schema.define(:version => 20130213190320) do
     t.integer  "period"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-  end
-
-  create_table "user_industries", :id => false, :force => true do |t|
-    t.integer "industry_id"
-    t.integer "user_id"
   end
 
   create_table "user_relationships", :force => true do |t|
