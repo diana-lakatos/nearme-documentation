@@ -45,6 +45,7 @@ gem 'chronic'
 gem 'ey_config'
 
 gem 'unicorn'
+gem 'premailer-rails3'
 
 group :development do
   gem 'sqlite3'
