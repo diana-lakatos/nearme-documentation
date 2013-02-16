@@ -12,6 +12,7 @@
 //= require ./vendor/jquery.cookie
 //= require ./vendor/jquery.popover-1.1.2
 //= require ./vendor/jquery.payment
+//= require chosen-jquery
 //= require ./vendor/mustache
 //= require ./vendor/underscore
 //= require ./vendor/asevented
@@ -33,6 +34,7 @@ window.DNM = {
     this.initializeComponents();
     this.initializeModals();
     this.initializeTooltips();
+    this.initializeCustomSelects();
   },
 
   initializeModals: function() {
@@ -58,6 +60,16 @@ window.DNM = {
 
   initializeTooltips: function(){
     $('[rel=tooltip]').tooltip() 
+  },
+
+  initializeCustomSelects: function(){
+    $('.custom-select').chosen()
+    $('.chzn-choices input').focus(function(){
+        $(this).parent().parent().addClass('chzn-choices-active')
+    }).blur(function(){
+        $(this).parent().parent().removeClass('chzn-choices-active')
+    })
+        
   }
 }
 

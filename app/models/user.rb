@@ -14,6 +14,8 @@ class User < ActiveRecord::Base
 
   has_many :companies,
            :foreign_key => "creator_id"
+  attr_accessible :companies_attributes
+  accepts_nested_attributes_for :companies
 
   has_many :locations,
            :through => :companies,
@@ -47,6 +49,10 @@ class User < ActiveRecord::Base
            :through => :reverse_relationships,
            :source => :follower
 
+  has_many :user_industries
+  has_many :industries, :through => :user_industries
+
+
   mount_uploader :avatar, AvatarUploader
 
 
@@ -58,7 +64,7 @@ class User < ActiveRecord::Base
          :rememberable, :trackable, :validatable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :phone, :job_title, :password, :password_confirmation, :avatar, :biography
+  attr_accessible :name, :email, :phone, :job_title, :password, :password_confirmation, :avatar, :biography, :industry_ids
 
   delegate :to_s, :to => :name
 
