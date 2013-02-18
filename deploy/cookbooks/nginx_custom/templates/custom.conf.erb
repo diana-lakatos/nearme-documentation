@@ -1,0 +1,6 @@
+# Rewrite http(s)://www.desksnear.me/foo -> http(s)://desksnear.me/foo
+
+if ($host ~* /www\.(.*)/) {
+  set $host_without_www $1;
+  rewrite ^(.*)$ $scheme://$host_without_www$1 permanent;
+}
