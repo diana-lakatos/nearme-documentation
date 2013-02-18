@@ -205,16 +205,16 @@ section.search {
       background: rgba(255, 255, 255, 0.6);
     }
 
-    .with-photo {
-      .listing-streetview {
+    a {
+      .listing-secondary-image {
         display: none;
       }
 
       &:hover {
-        .listing-photo {
+        .listing-primary-image {
           display: none;
         }        
-        .listing-streetview {
+        .listing-secondary-image {
           display: block;
         }
       }
