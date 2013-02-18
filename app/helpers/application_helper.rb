@@ -22,21 +22,12 @@ module ApplicationHelper
     @show_title
   end
 
-  def stripe_public_key
-    DesksnearMe::Application.config.stripe_public_key
+  def apply_analytics?
+    Rails.env.production?
   end
 
-  def our_twitter_accounts
-    buffer = []
-    {
-      "Keith Pitt" => "keithpitt",
-      "Warren Seen" => "warren_s",
-      "Bo Jeanes" => "bjeanes",
-      "Alex Eckermann" => "alexeckermann"
-    }.each do |k,v|
-      buffer << link_to(k, "http://twitter.com/#{v}")
-    end
-    buffer.join(', ').html_safe
+  def stripe_public_key
+    DesksnearMe::Application.config.stripe_public_key
   end
 
   def flashes
@@ -52,7 +43,6 @@ module ApplicationHelper
   def context_flash
     render 'shared/context_flash'
   end
-
 
   def truncate_with_ellipsis(body, length, html_options = {})
 

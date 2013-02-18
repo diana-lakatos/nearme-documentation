@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
 
   protect_from_forgery
-  layout "new_layout"
+  layout "application"
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   before_filter :set_tabs

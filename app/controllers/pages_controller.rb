@@ -21,7 +21,7 @@ class PagesController < ApplicationController
     when "host_signup"
       "landing"
     when "legal"
-      "new_layout"
+      "application"
     else
       false
     end

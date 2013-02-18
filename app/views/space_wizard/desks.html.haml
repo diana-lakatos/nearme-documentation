@@ -21,8 +21,9 @@
         %span.ico-plus.padding Add new Listing
       = f.submit "Save and Continue"
 
-
-:javascript
-  $(function() {
-    new SpaceWizardDesksForm($('form.new_desks'));
-  });
+- content_for :script do
+  :javascript
+    $(function() {
+      new SpaceWizardDesksForm($('form.new_desks'));
+    });
+    analytics.track('Add a Space - Step 3 - Listings');

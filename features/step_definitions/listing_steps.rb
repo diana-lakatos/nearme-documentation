@@ -29,7 +29,7 @@ Given /^a listing which is closed on the weekend$/ do
 end
 
 Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) days$/ do |city, desks, num_days|
-  listing = build_listing_in_city(city, desks: desks, number_of_days: num_days)
+  build_listing_in_city(city, desks: desks, number_of_days: num_days)
 end
 
 Given /^a listed location( without (amenities))?$/ do |_,_|

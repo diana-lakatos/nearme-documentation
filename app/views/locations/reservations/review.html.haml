@@ -74,3 +74,14 @@
   $(function() {
     new Bookings.ReservationModal($('form.payment'))
   });
+  analytics.track("Reviewed a Booking", { 
+    suburb: "#{@location.suburb}",
+    city: "#{@location.city}",
+    state: "#{@location.state}",
+    country: "#{@location.country}",
+    quantity: #{@reservations.first.quantity},
+    days: #{@reservations.first.total_days},
+    amount: #{@reservations.first.total_amount_dollars},
+    currency: "#{@reservations.first.currency}",
+    transaction: #{reservation_credit_card_payment?}
+  });
