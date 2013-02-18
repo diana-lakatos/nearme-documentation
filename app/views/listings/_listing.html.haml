@@ -6,9 +6,15 @@
       - else
         = image_tag google_maps_streetview_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name, :class => "listing-primary-image"
 
-      = image_tag google_maps_road_map_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name, :class => "listing-secondary-image"
+      = image_tag google_maps_roadj_map_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name, :class => "listing-secondary-image"
   .row-fluid.listing-info
     %h2= link_to "#{listing.name}", listing
     %address
       %span.ico-marker
       = listing.formatted_address || listing.address
+
+  .listing-map-popover-content{:style => "display: none"}
+    %h2= link_to "#{listing.name}", listing
+    %address
+      %span.ico-marker
+      = listing.formatted_address || listing.address 

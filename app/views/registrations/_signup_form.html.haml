@@ -22,7 +22,7 @@
           %p.error-block= f.object.errors[:password].to_sentence
 
     .actions
-      = f.submit 'Sign up', :disable_with => "Signing up..."
+      = f.submit 'Sign up', :disable_with => "Signing up...", :class => 'desksnearme submit'
 
   %h3.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path}.
 
@@ -47,7 +47,12 @@
       .actions
         = f.submit 'Sign up'
 
-:javascript
-  $(function() {
-    new SignupForm($('#signup'))
-  });
+- content_for :script do
+  :javascript
+    $(function() {
+      new SignupForm($('#signup'))
+    });
+    analytics.trackLink($('.desksnearme.submit'), 'Signed Up via Desks Near Me');
+    analytics.trackLink($('.twitter.submit'), 'Signed Up via Twitter');
+    analytics.trackLink($('.facebook.submit'), 'Signed Up via Facebook');
+    analytics.trackLink($('.linkedin.submit'), 'Signed Up via LinkedIn');

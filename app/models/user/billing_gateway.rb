@@ -52,6 +52,9 @@ class User::BillingGateway
       self.cvc = details_hash[:cvc]
     end
 
+    def parse_expiry_string(expiry_string)
+    end
+
     def valid?
       number.present? && expiry_month.present? && expiry_year.present? && cvc.present?
     end

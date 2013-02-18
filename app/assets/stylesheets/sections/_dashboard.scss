@@ -1,83 +1,47 @@
-section.dashboard {
+section.dashboard, 
+section.companies, 
+section.registrations, 
+section.sessions,
+section.listings {
   min-height: 800px;
 }
-  .dashboard-nav {
-    ul {
-      position: relative;
-      float: left;
-      width: 100%;
-      background: $gray2;
-      color: $gray4;
-      @include border-radius(8px);
-      @include background-clip(padding-box);
 
-      li {
-        float: left;
-        width: 25%;
-        text-align: center;
+  ul.nav.dashboard {
+    position: relative;
+    width: 100%;
+    background: $gray2;
+    color: $gray4;
+    @include border-radius(12px);
+    @include background-clip(padding-box);
+    margin-bottom: 20px;
 
+    li {
+
+      &.active {
         a {
-          display: block;
-          padding: .5em 0;
-          line-height: 40px;
-          font-size: 22px;
-          color: $gray4;
-
-        &:hover {
           color: black;
-        }
-
-        }
-
-        &:first-child {
-          @include border-left-radius(8px);
-        }
-
-        &:last-child {
-          @include border-right-radius(8px);
-        }
-
-        .account:after {
-          content:"Account";
-        }
-
-        .bookings:after {
-          content:"Bookings";
-        } 
-
-        .locations:after {
-          content:"Locations";
-        } 
-
-        .guests:after {
-          content:"Guests";
-        }
-
-        @media (max-width: 480px) {
-          .account:after,
-          .bookings:after,
-          .locations:after,
-          .guests:after {
-            content:""
-          }    
-        } 
+          border-left: 4px solid $gray4;
+        }  
       }
-
-      li.current a,
-      li.current:hover a {
-        color: $dnm_white;
+      &:first-child {
+        @include border-top-radius(12px);
       }
+      &:last-child {
+        @include border-bottom-radius(12px);
+      }  
 
-      li.current,
-      li.current:hover {
-        background: $dnm_black;
-        color: $dnm_white;
-      }
+      a {
+        padding: .5em;
+        line-height: 40px;
+        font-size: 22px;
+        color: $gray4;
+
+      &:hover {
+        color: black;
+        background: $gray2;
+      }     
     }
   }
-
-section.companies, section.registrations, section.sessions {
-  min-height: 800px;
 
   .btn.facebook, 
   .btn.linkedin,

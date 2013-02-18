@@ -1,14 +1,17 @@
-= simple_form_for resource, :as => resource_name, :url => url, :html => { class: "form-horizontal" } do |f|
+= simple_form_for resource, :as => resource_name, :url => url, :html => { class: "form-horizontal form-expandable" } do |f|
   = f.input :name, label: "Your name", placeholder: "Enter your full name"
   = f.input :email, label: "Your email address", placeholder: "Valid email address"
-
   // Need to let the user enter a password if no Provider.
   // Also need to let them change their password if they had previously used one.
   .control-group
-    = f.label :password, class: "control-label"
+    = f.label :password, 'Change Password', class: "control-label"
     .controls.two-up
-      = f.password_field :password,              placeholder: "Your password"
+      = f.password_field :password,              placeholder: "Password"
       = f.password_field :password_confirmation, placeholder: "Confirm password"
+  = f.association :industries, :blank => false, :input_html => { :class => 'custom-select' }
+  = f.input :avatar
+  = f.input :job_title, label: "Job title", placeholder: "Your job title"
+  = f.input :biography, label: "Biography", placeholder: "Your biography"
 
   .actions
     = f.submit (resource.persisted?) ? "Save Changes" : "Sign Up Now"

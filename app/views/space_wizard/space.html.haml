@@ -32,7 +32,9 @@
     .actions
       = f.submit 'Create my Location', :disable_with => 'Creating...'
 
-:javascript
-  $(function() {
-    new SpaceWizardSpaceForm($('form.new_location'))
-  });
+- content_for :script do
+  :javascript
+    $(function() {
+      new SpaceWizardSpaceForm($('form.new_location'))
+    });
+    analytics.track('Add a Space - Step 2 - Location');

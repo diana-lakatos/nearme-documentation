@@ -29,7 +29,7 @@ Given /^a listing which is closed on the weekend$/ do
 end
 
 Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) days$/ do |city, desks, num_days|
-  listing = build_listing_in_city(city, desks: desks, number_of_days: num_days)
+  build_listing_in_city(city, desks: desks, number_of_days: num_days)
 end
 
 Given /^a listed location( without (amenities))?$/ do |_,_|
@@ -117,9 +117,9 @@ Then /^this listing should exist$/ do
 end
 
 Then /^I should see the following listings in order:$/ do |table|
-  found = all("article.listing h2")
+  found = all("article.listing h2").map(&:text).uniq
   table.raw.flatten.each_with_index do |listing, index|
-    found[index].text.should include listing
+    found[index].should include listing
   end
 end
 

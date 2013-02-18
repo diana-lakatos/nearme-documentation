@@ -82,10 +82,11 @@ module Locations
 
     def setup_credit_card_customer
       begin
+        params[:card_expires] = params[:card_expires].strip
         card_details = User::BillingGateway::CardDetails.new(
           number: params[:card_number], 
-          expiry_month: params[:card_expires].to_s[0,2],
-          expiry_year: params[:card_expires].to_s[2,2], 
+          expiry_month: params[:card_expires][0,2],
+          expiry_year: params[:card_expires][-2,2],
           cvc: params[:card_code]
         )
 

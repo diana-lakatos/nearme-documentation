@@ -120,6 +120,18 @@ class Reservation < ActiveRecord::Base
     end
   end
 
+  def total_amount_dollars
+    total_amount_cents/100.0
+  end
+
+  def total_days
+    periods.size
+  end
+
+  def quantity
+    periods.map(&:quantity).inject(&:+) / periods.size.to_f
+  end
+
   # Number of desks booked accross all days
   def desk_days
     # NB: Would use +sum+ but AR doesn't use the internal collection for non-persisted records (it attempts to load the target)
