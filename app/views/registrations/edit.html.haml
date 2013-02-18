@@ -2,13 +2,10 @@
 
 .row-fluid
   .span8.offset2
-
+    %h2
+      %span.ico-settings.padding Account Settings
     .box
-      %h2== Your Account
-      %p.intro
-        =image_tag(resource.avatar.thumb.url)
-        You can change your account details below
-          
+      %p
       = render "registrations/networks", :supported_providers => @supported_providers
       = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name) }
 
