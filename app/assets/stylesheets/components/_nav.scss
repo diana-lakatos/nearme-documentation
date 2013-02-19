@@ -10,9 +10,8 @@
     margin: 0 auto;
 
     #logo {
-      display:inline-block;
       float: left;
-      margin-top: 14px;
+      margin-top: 4px;
       background: url("/assets/desksnear.me-white.png") no-repeat;
       width: 228px;
       height: 28px;
@@ -28,7 +27,7 @@
       @media (max-width: 767px) {
         width: 50px;
         height: 50px;
-        margin: 2px 0;
+        margin: -8px 0 0;
         background: url('/assets/desksnearme-icon.png');
         background-size: 50px 50px;
       }        
@@ -37,7 +36,7 @@
 
   .nav-links {
     padding-top: 10px;
-    line-height: 38px;
+    line-height: 40px;
 
     a.nav-link {
       display: inline-block;
@@ -58,14 +57,7 @@
         span {
           display: none;
         }
-      }
-
-      &.ico-dashboard.dropdown-toggle {
-
-        @media (max-width: 320px) {
-          width: 10px;
-        }
-      }  
+      } 
     }
   }
 
