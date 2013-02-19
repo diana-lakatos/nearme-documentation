@@ -36,6 +36,11 @@ class Search.SearchController extends Search.Controller
     @map = new Search.Map(mapContainer)
     @updateMapWithListingResults()
 
+    if DNM.isDesktop()
+      $(mapContainer).parent().affix(
+        offset: { top: 175 }
+      )
+
   startLoading: ->
     @resultsContainer.hide()
     @loadingContainer.show()
@@ -53,7 +58,7 @@ class Search.SearchController extends Search.Controller
     inflection = 'result'
     inflection += 's' unless count == 1
     @resultsCountContainer.html("#{count} #{inflection}")
-  
+
   # Update the map with the current listing results, and adjust the map display.
   updateMapWithListingResults: ->
     @map.resetMapMarkers()
@@ -66,7 +71,7 @@ class Search.SearchController extends Search.Controller
     for listing in @getListingsFromResults()
       wasPlotted = @map.plotListingIfInMapBounds(listing)
       listing.hide() unless wasPlotted
-        
+
     @updateResultsCount()
 
   # Return Search.Listing objects from the search results.
@@ -115,7 +120,7 @@ class Search.SearchController extends Search.Controller
         @updateMapWithListingResults()
 
   # Trigger the search after waiting a set time for further updated user input/filters
-  triggerSearchFromQueryAfterDelay: _.debounce(-> 
+  triggerSearchFromQueryAfterDelay: _.debounce(->
     @triggerSearchFromQuery()
   , 2000)
 

@@ -58,13 +58,13 @@ class Search.Map
     })
 
     # Info window pops over and contains details for each marker/listing
-    @infoWindow = new google.maps.InfoWindow() 
+    @infoWindow = new google.maps.InfoWindow()
     @resetMapMarkers()
 
   bindEvents: ->
     # Ensure the map is notified of window resize, and positioning adjusted.
     $(window).resize =>
-      google.maps.event.trigger(@googleMap, 'resize') 
+      google.maps.event.trigger(@googleMap, 'resize')
       @fitBounds()
 
     google.maps.event.addListener @googleMap, 'dragend', =>
@@ -83,7 +83,7 @@ class Search.Map
     @initializeListingBounds()
 
   initializeListingBounds: ->
-    @bounds = new google.maps.LatLngBounds() 
+    @bounds = new google.maps.LatLngBounds()
     for listingId, marker of @markers
       @bounds.extend(marker.getPosition())
 
@@ -104,7 +104,7 @@ class Search.Map
     @plotListing(listing) for listing in listings
 
   # Only plot a listing if it fits within the map bounds.
-  # Returns whether or not a listing was plotted. 
+  # Returns whether or not a listing was plotted.
   plotListingIfInMapBounds: (listing) ->
     latLng = listing.latLng()
     if @googleMap.getBounds().contains(latLng)
@@ -179,4 +179,4 @@ class Search.Map
   showInfoWindowForListing: (listing) ->
     @infoWindow.setContent(listing.popupContent())
     if marker = @markers[listing.id()]
-      @infoWindow.open(@googleMap, marker)     
+      @infoWindow.open(@googleMap, marker)

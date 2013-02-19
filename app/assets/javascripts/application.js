@@ -16,6 +16,7 @@
 //= require ./vendor/mustache
 //= require ./vendor/underscore
 //= require ./vendor/asevented
+//= require ./vendor/detect-mobile-browser
 //
 //= require_self
 //
@@ -69,7 +70,14 @@ window.DNM = {
     }).blur(function(){
         $(this).parent().parent().removeClass('chzn-choices-active')
     })
-        
+  },
+
+  isMobile: function() {
+    return $.browser.mobile;
+  },
+
+  isDesktop: function() {
+    return !this.isMobile();
   }
 }
 

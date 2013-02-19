@@ -6,6 +6,18 @@ section.search {
     width: 30px;
   }
 
+  .google-map-wrapper {
+    margin-bottom: 12px;
+  }
+
+  .google-map-wrapper, .google-map .inner {
+    height: 300px;
+
+    @media (max-width: 480px) {
+      height: 150px;
+    }
+  }
+
   div.google-map {
     background: #FFF;
     background: $gray2;
@@ -15,17 +27,28 @@ section.search {
     -o-border-radius: 6px;
     margin: 12px 0;
 
+    &.affix {
+      z-index: 9000;
+      top: 48px;
+
+      @media (min-width: 1400px) {
+        .inner {
+          width: 1360px;
+        }
+      }
+
+      @media (max-width: 1399px) {
+        left: 20px;
+        right: 20px;
+      }
+    }
+
     .inner {
       border: 1px solid #CCC;
       border-radius: 6px;
       -moz-border-radius: 6px;
       -o-border-radius: 6px;
-      height: 300px; 
-
-      @media (max-width: 480px) {
-        height: 150px;
-      } 
-    } 
+    }
   }
 }
 
@@ -46,7 +69,7 @@ section.search {
     @include transition(all .1s ease-in);
     font-size: 32px;
     opacity: .6;
-    color: $dnm_black; 
+    color: $dnm_black;
 
     &:hover {
       opacity:.95;
@@ -87,7 +110,7 @@ section.search {
     font-size: 16px;
 
     @media (max-width: 480px) {
-      font-size: 14px; 
+      font-size: 14px;
     }
   }
   .price-range .value {
@@ -127,14 +150,14 @@ section.search {
     }
 
     .availability-date-start {
-      position: relative; 
+      position: relative;
       float: left;
       width: 49%;
       margin-right: 2%;
     }
 
     .availability-date-end {
-      position: relative; 
+      position: relative;
       float: left;
       width: 49%;
     }
@@ -191,7 +214,7 @@ section.search {
     @media (max-width: 450px) {
       width: 100%;
       height: auto;
-      margin-bottom: 1.5em; 
+      margin-bottom: 1.5em;
     }
 
     address {
@@ -217,11 +240,11 @@ section.search {
       &:hover {
         .listing-primary-image {
           display: none;
-        }        
+        }
         .listing-secondary-image {
           display: block;
         }
       }
     }
-  }  
+  }
 }
