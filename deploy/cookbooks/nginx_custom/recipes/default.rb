@@ -22,7 +22,7 @@ if %w(app_master app solo).include?(node[:instance_role])
       backup false
     end
     
-    sudo '/etc/init.d/nginx reload'
+    execute 'sudo /etc/init.d/nginx reload'
     
   end
   
