@@ -1,31 +1,29 @@
 # cookbooks/nginx_custom/recipes/default.rb
 #
-# Cookbook Name: nginx-custom
+# Cookbook Name: nginx_custom
 # Recipe: default
 #
 
-service "nginx"
-
-if (['app_master', 'app'].include?(node[:instance_role]))
+if %w(app_master app solo).include?(node[:instance_role])
+  
   node[:applications].each do |app_name, app|
     
     template "/etc/nginx/servers/#{app_name}/custom.conf" do
       source 'custom.conf.erb'
-      owner 'deploy'
-      group 'deploy'
+      owner node[:owner_name]
       mode 0644
       backup false
-      notifies :reload, resources(services: %w(nginx))
     end
     
     template "/etc/nginx/servers/#{app_name}/custom.ssl.conf" do
       source 'custom.ssl.conf.erb'
-      owner 'deploy'
-      group 'deploy'
+      owner node[:owner_name]
       mode 0644
       backup false
-      notifies :reload, resources(services: %w(nginx))
     end
     
+    sudo '/etc/init.d/nginx reload'
+    
   end
+  
 end
