@@ -24,7 +24,7 @@ FactoryGirl.define do
       end
     end
 
-    factory :poa_listing do
+    factory :call_listing do
       after(:create) do |listing|
        listing.price_cents = nil
       end
