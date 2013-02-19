@@ -38,10 +38,8 @@ gem 'delayed_job_active_record'
 gem 'stripe'
 gem 'friendly_id'
 
-gem 'jquery-rails'
 gem 'sass-rails'
 gem 'chronic'
-gem 'chosen-rails'
 
 gem 'requirejs-rails'
 gem 'ey_config'
@@ -62,6 +60,14 @@ end
 
 group :development, :test, :staging do
   gem 'factory_girl_rails', '>=3.0.0'
+end
+
+group :assets do
+  gem 'handlebars_assets'
+  gem 'mustachejs-rails'
+  gem 'jquery-rails'
+  gem 'chosen-rails'
+  gem 'rails-backbone'
 end
 
 group :development, :test do

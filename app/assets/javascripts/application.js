@@ -1,6 +1,6 @@
 // Desks Near Me
 //
-//= require ./vendor/jquery
+//= require jquery
 //= require ./vendor/jquery-ui-1.9.2.custom.min
 //= require ./vendor/jquery.overlay
 //= require ./vendor/jquery.address-1.3.min
@@ -12,15 +12,21 @@
 //= require ./vendor/jquery.cookie
 //= require ./vendor/jquery.popover-1.1.2
 //= require ./vendor/jquery.payment
-//= require chosen-jquery
-//= require ./vendor/mustache
-//= require ./vendor/underscore
 //= require ./vendor/asevented
+//= require underscore
+//= require backbone
+//= require backbone_rails_sync
+//= require backbone_datalink
+//= require mustache
+//= require handlebars.runtime
+//= require chosen-jquery
+//
 //
 //= require_self
-//
 // Helper modules, etc.
 //= require_tree ./lib
+//= require_tree ./app/models
+//= require_tree ./app
 //
 // Standard components
 //= require_tree ./components
@@ -29,6 +35,7 @@
 //= require_tree ./sections
 
 window.DNM = {
+  UI: {},
   initialize : function() {
     this.initializeAjaxCSRF();
     this.initializeComponents();
@@ -59,7 +66,7 @@ window.DNM = {
   },
 
   initializeTooltips: function(){
-    $('[rel=tooltip]').tooltip() 
+    $('[rel=tooltip]').tooltip()
   },
 
   initializeCustomSelects: function(){

@@ -14,14 +14,15 @@
     %meta{:content => "#{current_user.authentication_token}", :name => "token"}/
     = csrf_meta_tag
     %link{:href => "/favicon.ico?9002", :rel => "shortcut icon"}/
-    = stylesheet_link_tag 'new_layout'
+    = stylesheet_link_tag 'application'
     = javascript_include_tag "//use.typekit.net/nyj7syq.js"
     = javascript_include_tag "https://js.stripe.com/v1/"
 
-    = requirejs_include_tag "webapp"
+    = javascript_include_tag "application"
+    = javascript_include_tag "webapp"
     :javascript
       try{Typekit.load();}catch(e){}
-    
+
     /[if lt IE 9]
       = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'
 

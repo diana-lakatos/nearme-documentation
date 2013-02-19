@@ -1,61 +1,57 @@
-define(['jquery', 'backbone', 'collections/location', 'models/location', 'views/locations/item', 'hbs!templates/locations/list', 'bootstrap'], function($, Backbone, LocationCollection, LocationModel, LocationView, locationListTemplate) {
-  var Locations = Backbone.View.extend({
-    el: '#dyn-content',
-    template: locationListTemplate,
-    initialize: function() {
-      _.bindAll(this, 'render', 'addAll', 'addOne', 'createLocation');
-      this._childContainer = '.locations-area';
-      this._addTrigger = '.add-location';
-    },
+Locations = Backbone.View.extend({
+  el: '#dyn-content',
+  template: HandlebarsTemplates['locations/list'],
+  initialize: function() {
+    _.bindAll(this, 'render', 'addAll', 'addOne', 'createLocation');
+    this._childContainer = '.locations-area';
+    this._addTrigger = '.add-location';
+  },
 
-    _setCollection: function() {
-      this.collection = new LocationCollection();
-      this.collection.on("fetch", function() {
-        this.$el.html("<img src='/assets/images/spinner.gif'>");
-      }, this);
+  _setCollection: function() {
+    this.collection = new LocationCollection();
+    this.collection.on("fetch", function() {
+      this.$el.html("<img src='/assets/images/spinner.gif'>");
+    }, this);
 
-      // Automatically re-render whenever the Collection is populated.
-      this.collection.on("reset", this.render, this);
-      this.collection.fetch();
-    },
+    // Automatically re-render whenever the Collection is populated.
+    this.collection.on("reset", this.render, this);
+    this.collection.fetch();
+  },
 
-    events: {
-      "click .add-location": "createLocation"
-    },
+  events: {
+    "click .add-location": "createLocation"
+  },
 
-    createLocation: function(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      var locationModel = new LocationModel();
-      this.addOne(locationModel);
-    },
+  createLocation: function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    var locationModel = new LocationModel();
+    this.addOne(locationModel);
+  },
 
-    addAll: function() {
-      this.collection.each(this.addOne);
-    },
+  addAll: function() {
+    this.collection.each(this.addOne);
+  },
 
-    addOne: function(locationModel) {
-      var view = new LocationView({ model: locationModel });
-      var content = view.render().el;
-      $(this.$el).find(this._childContainer).append(content);
-      if (locationModel.isNew()) {
-        $(".location-content", $(content)).collapse('show'); // expend the location container
-        $("input#name", $(content)).focus();
-      }
-    },
-
-    render: function() {
-      if (this.collection) {
-        this.$el.html(this.template());
-        this.addAll();
-        $(".collapse").collapse({toggle: false});
-      } else {
-        this._setCollection();
-      }
-      return this;
+  addOne: function(locationModel) {
+    var view = new LocationView({ model: locationModel });
+    var content = view.render().el;
+    $(this.$el).find(this._childContainer).append(content);
+    if (locationModel.isNew()) {
+      $(".location-content", $(content)).collapse('show'); // expend the location container
+      $("input#name", $(content)).focus();
     }
+  },
 
-  });
-  return Locations;
+  render: function() {
+    if (this.collection) {
+      this.$el.html(this.template());
+      this.addAll();
+      $(".collapse").collapse({toggle: false});
+    } else {
+      this._setCollection();
+    }
+    return this;
+  }
 
 });

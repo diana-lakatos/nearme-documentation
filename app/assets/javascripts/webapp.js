@@ -1,5 +1,3 @@
-//= require  config
-require(['app'], function(App) {
+$(document).ready(function() {
   window.DNMAPP = new App();
-});
-
+})
