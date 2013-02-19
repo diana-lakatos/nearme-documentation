@@ -2,9 +2,11 @@
   .row-fluid
     = link_to listing do
       - if listing.photos.first
-        = image_tag listing.photos.first.url(:space_listing), :title => listing.name, :alt => listing.name
+        = image_tag listing.photos.first.url(:space_listing), :title => listing.name, :alt => listing.name, :class => "listing-primary-image"
       - else
-        = image_tag google_maps_streetview_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name
+        = image_tag google_maps_streetview_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name, :class => "listing-primary-image"
+
+      = image_tag google_maps_road_map_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name, :class => "listing-secondary-image"
   .row-fluid.listing-info
     %h2= link_to "#{listing.name}", listing
     %address
