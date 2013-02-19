@@ -6,7 +6,7 @@ class Location < ActiveRecord::Base
   attr_accessible :address, :amenity_ids, :company_id, :description, :email,
     :info, :latitude, :local_geocoding, :longitude, :name,
     :currency, :phone, :formatted_address, :availability_rules_attributes,
-    :availability_template_id, :special_notes, :listings_attributes, :suburb, 
+    :availability_template_id, :special_notes, :listings_attributes, :suburb,
     :city, :state, :country, :street, :address_components, :location_type_id
   attr_accessor :local_geocoding # set this to true in js
 
@@ -25,7 +25,6 @@ class Location < ActiveRecord::Base
     :dependent => :destroy
 
   has_many :photos, :through => :listings
-  has_many :feeds, :through => :listings
 
   has_many :availability_rules, :as => :target
 

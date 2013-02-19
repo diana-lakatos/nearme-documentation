@@ -10,8 +10,6 @@ class Listing < ActiveRecord::Base
   MINUTES_IN_WEEK = 10080
   MINUTES_IN_MONTH = 43200
 
-  has_many :feeds, dependent: :delete_all
-
   has_many :reservations,
            dependent: :destroy
 

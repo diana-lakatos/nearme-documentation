@@ -30,9 +30,8 @@
     .dnm-page
       .container-fluid
         .navbar.navbar-inverse.navbar-fixed-top
-          .navbar-inner
-            .logo-container.pull-left
-              = link_to "Desks Near Me", root_url, :id => "logo"
+          .navbar-inner.nav-links
+            = link_to "Desks Near Me", root_url, :id => "logo"
             #header_links.links-container.pull-right
               = render "layouts/header_navigation"
 

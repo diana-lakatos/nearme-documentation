@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130213190320) do
+ActiveRecord::Schema.define(:version => 20130219201753) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -90,17 +90,6 @@ ActiveRecord::Schema.define(:version => 20130213190320) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
-
-  create_table "feeds", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "activity"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "listing_id"
-    t.integer  "reservation_id"
-  end
-
-  add_index "feeds", ["listing_id"], :name => "index_feeds_on_listing_id"
 
   create_table "industries", :force => true do |t|
     t.string   "name"
