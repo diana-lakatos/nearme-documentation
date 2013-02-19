@@ -40,7 +40,7 @@ if Rails.env.development? || Rails.env.staging?
 
 end
 
-["Accounting", "Atvertising", "Apparel", "Automotive",
+["Accounting", "Advertising", "Apparel", "Automotive",
   "Banking", "Broadcasting", "Brokerage", "Biotechnology",
   "Computer", "Consulting", "Education", "Electronics",
   "Energy", "Entertainment", "Executive Search", "Financial Services",
