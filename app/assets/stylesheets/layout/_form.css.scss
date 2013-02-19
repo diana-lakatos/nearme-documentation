@@ -15,21 +15,21 @@ textarea {
   @include box-sizing(border-box);
   width: 100%;
 }
-
-input[type='checkbox'], input[type='radio'] {
+input[type='checkbox'], 
+input[type='radio'] {
   width: auto;
 }
-
 input[type=submit], 
 input[type=text], 
 input[type=email], 
-input[type=password] {
-  -webkit-appearance: none;
-  cursor: pointer;
+input[type=password],
+input[type=url],
+input[type=tel] {
+   -webkit-appearance: none;
+   cursor: pointer;
 }
-    
-form {
 
+form {
   div.input, div.field {
     margin-bottom: 20px;
   }
@@ -107,6 +107,12 @@ form {
 
   label {
     @extend .font-banda-bold;
+    a[rel=tooltip] {
+      color: $dnm_black;
+      &:hover {
+        color: $dnm_gray;
+      }
+    }
   }
 
   label.control-label {
@@ -197,6 +203,29 @@ form {
     // A mini input field
     &.mini {
       width: 60px;
+    }
+  }
+
+  ul.chzn-choices.chzn-choices-active{
+      color:rgb(30,30,30);
+      outline: none;
+      border: 2px solid rgb(100,100,100);
+  }
+
+    // overwrite default width - make its width dynamic instea of constant 
+  .control-group .chzn-container-multi{
+    width: auto !important;
+    display: block !important;
+
+    ul li {
+      span, input {
+        font-size: 18px;
+      }
+      &.search-field input {
+        height: 100%;
+        font-family: $font-regular, sans-serif;
+        padding: 0px;
+      }
     }
   }
 

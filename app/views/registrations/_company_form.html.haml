@@ -1,0 +1,12 @@
+= simple_form_for resource, :as => resource_name, :url => url, :html => { class: "form-horizontal form-expandable", :id => 'edit_company' } do |f|
+  = f.simple_fields_for :companies do |builder|
+    = builder.input :name, :label => "Your company name", :placeholder => "Enter your business name"
+    = builder.association :industries, :label => tooltip("test text", "Industries"), :blank => false, :input_html => { :class => 'custom-select' }
+    = builder.input :url, :label => "Website", :placeholder => "www.mycompany.com"
+    = builder.input :email, :label => "Company email", :placeholder => "yourname@example.com"
+    = builder.input :description, :as => :description, :label => tooltip("You will get better results with a more concise description. Descriptions are limited to 250 characters.", "Description")
+    = builder.input :mailing_address, :label => tooltip("Checks for revenue accrued by your listings will be sent to this address. Find out more about payments in the Support Center.", "Mailing address")
+    = builder.input :paypal_email, :label => tooltip("If you specify a PayPal email, we will make a PayPal transfer instead of sending checks.", "PayPal email")
+
+  .actions
+    = f.submit (resource.persisted?) ? "Save Changes" : "Sign Up Now"

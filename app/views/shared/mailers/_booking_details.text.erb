@@ -5,6 +5,11 @@ Listing
 ------------------------------------
 '<%= listing.name %>' at <%= link_to(listing.location.name, location_url(listing.location)) %>
 
+<% unless listing.location.special_notes.strip.empty? %>
+  Special notes
+  ------------------------------------
+  <%= listing.location.special_notes.strip %>
+<% end if listing.location.special_notes %>
 Quantity
 ------------------------------------
 <%= reservation.periods.first.seats.size %>

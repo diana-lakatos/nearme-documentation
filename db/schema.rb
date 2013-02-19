@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130206214818) do
+ActiveRecord::Schema.define(:version => 20130213190320) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -62,15 +62,15 @@ ActiveRecord::Schema.define(:version => 20130206214818) do
     t.string   "name"
     t.string   "email"
     t.text     "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.datetime "deleted_at"
     t.string   "url"
     t.string   "paypal_email"
     t.text     "mailing_address"
   end
 
-  create_table "companies_industries", :id => false, :force => true do |t|
+  create_table "company_industries", :id => false, :force => true do |t|
     t.integer "industry_id"
     t.integer "company_id"
   end
@@ -106,11 +106,6 @@ ActiveRecord::Schema.define(:version => 20130206214818) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "industries_users", :id => false, :force => true do |t|
-    t.integer "industry_id"
-    t.integer "user_id"
   end
 
   create_table "inquiries", :force => true do |t|
@@ -265,6 +260,11 @@ ActiveRecord::Schema.define(:version => 20130206214818) do
     t.datetime "updated_at",  :null => false
   end
 
+  create_table "user_industries", :id => false, :force => true do |t|
+    t.integer "industry_id"
+    t.integer "user_id"
+  end
+
   create_table "user_relationships", :force => true do |t|
     t.integer  "follower_id"
     t.integer  "followed_id"
@@ -307,6 +307,8 @@ ActiveRecord::Schema.define(:version => 20130206214818) do
     t.string   "unconfirmed_email"
     t.string   "unlock_token"
     t.string   "stripe_id"
+    t.string   "job_title"
+    t.text     "biography"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

@@ -41,11 +41,14 @@ gem 'friendly_id'
 gem 'jquery-rails'
 gem 'sass-rails'
 gem 'chronic'
+gem 'chosen-rails'
 
 gem 'requirejs-rails'
 gem 'ey_config'
 
 gem 'unicorn'
+gem 'premailer-rails3'
+gem 'chameleon'
 
 group :development do
   gem 'sqlite3'
@@ -53,6 +56,8 @@ group :development do
   gem 'quiet_assets'
   gem 'mail_view'
   gem 'sextant'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 group :development, :test, :staging do

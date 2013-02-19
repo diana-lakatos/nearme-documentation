@@ -26,6 +26,9 @@ a[rel="tooltip"] {
 .collapse.in {
   padding: 20px 0 0;
 }
+abbr[title] {
+  cursor: auto;
+}
 .accordion-group {
 
 	background: $dnm_white;
@@ -67,4 +70,8 @@ abbr[data-original-title] {
     margin-left: auto;
     margin-right: auto;
   }
+}
+
+.tooltip-inner {
+  line-height: 1.5em;
 }

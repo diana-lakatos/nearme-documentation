@@ -1,23 +1,83 @@
-= render :layout => 'show_layout', :locals => { :tab => :overview, :location => @location} do
-  .row-fluid
-    .span4
-      .box
-        %h2 About
-        %p= truncate_with_ellipsis @location.description, 250
+- legacy false
 
-        - if @location.phone.present?
-          %strong.ico-phone.padding= @location.phone
+- content_for :hero do
+  .container-fluid
+    %h1
+      #{@location.name}
 
-        - if @location.creator
-          %p
-          - if @location.creator.phone
-            %p.ico-phone.padding= @location.creator.phone
-          %p= truncate_with_ellipsis @location.company.description, 250
+      - if @location.url.present?
+        = link_to @location.url, :target => :_blank do
+          %div.ico-link
 
-        - if @amenities            
-          %ul
-            - @location.amenities.each do |amenity|
-              %li= amenity
+  = render 'photos'
 
-    .span8
-      = render 'bookings'
+%article#space
+
+  .clearfix
+    .row-fluid
+      .span4
+        .accordion
+          .accordion-group
+            .accordion-heading
+              %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#overview_tab'}
+                Overview
+            #overview_tab.accordion-body.collapse.in
+              .accordion-inner
+                %p= truncate_with_ellipsis @location.description, 250
+
+                - if @location.phone.present?
+                  %strong.ico-phone.padding= @location.phone
+
+          - if @location.creator
+            .accordion-group
+              .accordion-heading
+                %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#host_tab'}
+                  Company
+              #host_tab.accordion-body.collapse
+                .accordion-inner
+                  %p
+                  - if @location.creator.phone
+                    %p.ico-phone.padding= @location.creator.phone
+                  %p= truncate_with_ellipsis @location.company.description, 250
+
+          - if @amenities
+            .accordion-group
+              .accordion-heading
+                %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#amenities_tab'}
+                  Amenities
+              #amenities_tab.accordion-body.collapse
+                .accordion-inner
+                  %ul
+                    - @location.amenities.each do |amenity|
+                      %li= amenity
+
+      .span8
+        = render 'bookings'
+
+- content_for :script do
+  :javascript
+    // Initialize the ui controller
+    $(function() {
+      new Space.Controller(
+        $('article.space, article#space'),
+        {
+          bookings: {
+            listings: #{raw location_listings_json},
+            availability_summary_url: #{raw availability_summary_location_url(@location).to_json},
+            review_url: #{raw review_location_reservations_url(@location).to_json},
+
+            // Have we returned from setting up a session. If there are bookings, the JS controller
+            // will trigger showing the booking confirmation modal.
+            returnedFromSession: #{@initial_bookings.present? ? 'true' : 'false'},
+
+            // FIXME: We should move the 'Today' default booking behaviour to this seed data.
+            initial_bookings: #{@initial_bookings.to_json}
+          }
+        });
+      });
+    analytics.track("Viewed a Location", {
+      suburb: "#{@location.suburb}",
+      city: "#{@location.city}",
+      state: "#{@location.state}",
+      country: "#{@location.country}",
+    });

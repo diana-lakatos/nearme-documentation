@@ -2,9 +2,7 @@
   .span8.offset2
     %h1
       %span.ico-bookings.padding My Bookings
-.row-fluid
-  .span8.offset2      
-    .box 
+    .box
       %section#my_reservations.ta
         %ul.reservations.list
           - @your_reservations.each do |reservation|

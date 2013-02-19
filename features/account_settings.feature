@@ -14,17 +14,25 @@ Feature: A user can edit their settings
   Scenario: A user can successfully edit their settings
     Given I go to the account settings page
       And I fill in "Your name" with "Keith"
+      And I fill in "Job title" with "My job"
+      And I fill in "Biography" with "This is my biography"
       And I fill in "Your email address" with "new@email.com"
+      And I upload avatar
      When I press "Save Changes"
      Then I should see "You updated your account successfully."
       And a user should exist with email: "new@email.com"
 
-  Scenario: A user can select industries
+  Scenario: A user can select industries for self
     Given a company exists with creator: the user
       And I go to the account settings page
-     When I select industries for user and company
+     When I select industries for user
      Then I should be connected to selected industries 
-      And Company should be connected to selected industries 
+
+  Scenario: A user can select industries for company
+    Given a company exists with creator: the user
+      And I go to the account settings page
+     When I select industries for company
+    Then Company should be connected to selected industries 
 
   Scenario: A user with company will see company settings
      Given a company exists with creator: the user
@@ -41,7 +49,7 @@ Feature: A user can edit their settings
      When I go to the account settings page
      Then I should not see company settings
 
-  Scenario: A user can badly edit their settings
+  Scenario: A user should not be allowed to provide invalid settings
     Given I go to the account settings page
       And I fill in "Your name" with ""
       And I fill in "Your email address" with ""

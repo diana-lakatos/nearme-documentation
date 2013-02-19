@@ -12,18 +12,21 @@ class Search.Map
       minZoom: 4,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       disableDefaultUI: true
-      zoomControl: true
+      zoomControl: true,
+      scrollwheel: false
     })
 
     # Info window pops over and contains details for each marker/listing
-    @infoWindow = new google.maps.InfoWindow() 
+    @infoWindow = new google.maps.InfoWindow()
     @resetMapMarkers()
 
   bindEvents: ->
     # Ensure the map is notified of window resize, and positioning adjusted.
     $(window).resize =>
-      google.maps.event.trigger(@googleMap, 'resize') 
-      @fitBounds()
+      google.maps.event.trigger(@googleMap, 'resize')
+      # NB: We don't update the map bounds here as the mobile UI's seemingly do
+      # minor dimension changes during scrolling resulting in poor UX if we modify
+      # the map bounds which triggers viewportChanged callbacks.
 
     google.maps.event.addListener @googleMap, 'dragend', =>
       @trigger 'viewportChanged'
@@ -38,7 +41,7 @@ class Search.Map
     @initializeListingBounds()
 
   initializeListingBounds: ->
-    @bounds = new google.maps.LatLngBounds() 
+    @bounds = new google.maps.LatLngBounds()
     for listingId, marker of @markers
       @bounds.extend(marker.getPosition())
 
@@ -59,7 +62,7 @@ class Search.Map
     @plotListing(listing) for listing in listings
 
   # Only plot a listing if it fits within the map bounds.
-  # Returns whether or not a listing was plotted. 
+  # Returns whether or not a listing was plotted.
   plotListingIfInMapBounds: (listing) ->
     latLng = listing.latLng()
     if @googleMap.getBounds().contains(latLng)
@@ -101,4 +104,4 @@ class Search.Map
   showInfoWindowForListing: (listing) ->
     @infoWindow.setContent(listing.popupContent())
     if marker = @markers[listing.id()]
-      @infoWindow.open(@googleMap, marker)     
+      @infoWindow.open(@googleMap, marker)
