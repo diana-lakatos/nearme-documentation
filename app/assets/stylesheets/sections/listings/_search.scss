@@ -175,6 +175,10 @@ section.search {
     height: 350px;
     overflow: hidden;
 
+    &.focussed {
+      background: $gray2;
+    }
+
     @media (max-width: 960px) {
       width: 33.333333333%;
       height: 290px;
