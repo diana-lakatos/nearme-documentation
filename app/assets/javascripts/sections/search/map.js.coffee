@@ -65,7 +65,9 @@ class Search.Map
     # Ensure the map is notified of window resize, and positioning adjusted.
     $(window).resize =>
       google.maps.event.trigger(@googleMap, 'resize')
-      @fitBounds()
+      # NB: We don't update the map bounds here as the mobile UI's seemingly do
+      # minor dimension changes during scrolling resulting in poor UX if we modify
+      # the map bounds which triggers viewportChanged callbacks.
 
     google.maps.event.addListener @googleMap, 'dragend', =>
       @trigger 'viewportChanged'
