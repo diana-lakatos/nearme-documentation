@@ -7,7 +7,7 @@ class Search.Listing
 
   @forElement: (el) ->
     el = $(el)
-    listing ||= el.data("mapListing")
+    listing = el.data("mapListing")
     listing ||= new Search.Listing(el)
     el.data("mapListing", listing)
     listing
