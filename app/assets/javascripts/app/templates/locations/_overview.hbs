@@ -39,7 +39,7 @@
   <label class="select required control-label" for="location_location_type_id">
     <abbr title="required">*</abbr>Location Type</label>
   <div class="controls">
-    {{!> app/templates/locations/locationType}}
+    {{> app/templates/locations/_locationType}}
   </div>
 </div>
 <div class="control-group email required">
@@ -58,7 +58,7 @@
 </div>
 <div class="control-group currency optional">
   <label class="currency optional control-label" for="currency">Currency</label>
-  <div class="controls">{{!> app/templates/shared/currency}}</div>
+  <div class="controls">{{> app/templates/shared/_currency}}</div>
 </div>
 <div class="control-group string optional">
   <label class="string optional control-label" for="special_notes"><a href='#' rel="tooltip" data-original-title="Got a dog? Require an NDA? Write any special conditions for booking.">Special Terms or Notes</a></label>
