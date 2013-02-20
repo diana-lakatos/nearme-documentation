@@ -8,6 +8,14 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def require_ssl
+    return if Rails.env.development?
+
+    unless request.ssl?
+      redirect_to "https://#{request.host}#{request.fullpath}"
+    end
+  end
+
   def set_tabs
   end
 
