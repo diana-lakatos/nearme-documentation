@@ -26,19 +26,21 @@ Feature: A user can edit their settings
     Given a company exists with creator: the user
       And I go to the account settings page
      When I select industries for user
-     Then I should be connected to selected industries 
+     Then I should be connected to selected industries
 
+  @wip
   Scenario: A user can select industries for company
     Given a company exists with creator: the user
       And I go to the account settings page
      When I select industries for company
-    Then Company should be connected to selected industries 
+    Then Company should be connected to selected industries
 
   Scenario: A user with company will see company settings
      Given a company exists with creator: the user
      When I go to the account settings page
      Then I should see company settings
 
+    @wip
     Scenario: A user can update existing company
      Given a company exists with creator: the user
        And I go to the account settings page
@@ -54,4 +56,4 @@ Feature: A user can edit their settings
       And I fill in "Your name" with ""
       And I fill in "Your email address" with ""
      When I press "Save Changes"
-     Then I should see "can't be blank" 
+     Then I should see "can't be blank"

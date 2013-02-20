@@ -18,7 +18,7 @@
 
   - unless resource.companies.blank?
     .box.company_settings
-      %h2 
+      %h2
         Company "#{resource.companies[0].name}" settings
         = f.simple_fields_for :companies do |builder|
           = builder.input :name, :label => "Your company name", :placeholder => "Enter your business name"
