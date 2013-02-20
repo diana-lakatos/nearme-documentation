@@ -7,6 +7,9 @@ require_recipe "logrotate"
 
 require_recipe "newrelic_server_monitoring"
 
+require_recipe "redis"
+require_recipe "redis-yml"
+
 require_recipe "resque"
 
 #enable Extension modules for a given Postgresql database
