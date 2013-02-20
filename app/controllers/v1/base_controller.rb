@@ -40,7 +40,7 @@ class V1::BaseController < ApplicationController
 
   # Retrieve the current authorization token
   def auth_token
-    request.headers['Authorization'] || params[:token] || request.env['HTTP_TOKEN']
+    request.headers['Authorization'] || params[:token]
   end
 
   # Render an error message
