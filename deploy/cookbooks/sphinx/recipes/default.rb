@@ -29,17 +29,6 @@ utility_name = "sphinx"
 
 cron_interval = 10 #If this is not set your data will NOT be indexed
 
-sphinx_version = '2.0.6'
-
-enable_package "app-misc/sphinx" do
-  version sphinx_version
-end
-
-package "app-misc/sphinx" do
-  version sphinx_version
-  action :install
-end
-
 if utility_name
   sphinx_instance = node[:utility_instances].find {|u| u[:name] == utility_name }
   

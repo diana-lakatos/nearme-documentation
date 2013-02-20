@@ -9,6 +9,9 @@ require_recipe "newrelic_server_monitoring"
 
 require_recipe "nginx_custom"
 
+require_recipe "redis"
+require_recipe "redis-yml"
+
 require_recipe "resque"
 
 
