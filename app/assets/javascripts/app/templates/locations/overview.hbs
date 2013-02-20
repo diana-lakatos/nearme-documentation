@@ -18,7 +18,7 @@
     </div>
     <div class="map" data-marker="/assets/components/map-pin.png" style="display: none">
       <div class="map-container" >
-        
+
       </div>
     </div>
     <input id="local_geocoding" name="local_geocoding" type="hidden">
@@ -39,7 +39,7 @@
   <label class="select required control-label" for="location_location_type_id">
     <abbr title="required">*</abbr>Location Type</label>
   <div class="controls">
-    {{> templates_locations_locationType}}
+    {{!> app/templates/locations/locationType}}
   </div>
 </div>
 <div class="control-group email required">
@@ -58,7 +58,7 @@
 </div>
 <div class="control-group currency optional">
   <label class="currency optional control-label" for="currency">Currency</label>
-  <div class="controls">{{> templates_shared_currency}}</div>
+  <div class="controls">{{!> app/templates/shared/currency}}</div>
 </div>
 <div class="control-group string optional">
   <label class="string optional control-label" for="special_notes"><a href='#' rel="tooltip" data-original-title="Got a dog? Require an NDA? Write any special conditions for booking.">Special Terms or Notes</a></label>
