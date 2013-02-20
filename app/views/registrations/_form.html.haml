@@ -16,18 +16,5 @@
     = image_tag resource.avatar_url(:thumb).to_s
   = f.input :avatar, label: "Avatar",  as: :avatar, content: yield(:avatar_thumb)
 
-  - unless resource.companies.blank?
-    .box.company_settings
-      %h2
-        Company "#{resource.companies[0].name}" settings
-        = f.simple_fields_for :companies do |builder|
-          = builder.input :name, :label => "Your company name", :placeholder => "Enter your business name"
-          = builder.association :industries, :blank => false, :input_html => { :class => 'custom-select' }
-          = builder.input :url, :label => "Company website URL", :placeholder => "www.mycompany.com"
-          = builder.input :email, :label => "Company email", :placeholder => "yourname@example.com"
-          = builder.input :description, :as => :description, :label => "Company description", :placeholder => "Tell us a bit about your company. People will read this when booking your space. Be exciting!"
-          = builder.input :mailing_address, :hint => "Checks for revenue accrued by your listings will be sent to this address. <a href='http://support.desksnear.me/customer/portal/articles/939242' target='_blank'>Find out more about payments in the Support Center</a>."
-          = builder.input :paypal_email, :label => "PayPal email", :hint => "If you specify a PayPal email, we will make a PayPal transfer instead of sending checks."
-
   .actions
     = f.submit (resource.persisted?) ? "Save Changes" : "Sign Up Now"
