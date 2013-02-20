@@ -11,7 +11,7 @@
     %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
     %meta{:content => "tellthemwhen_verif_1af11d7040aa81a9ab2e07d4efee180d2e93d030", :name => "TellThemWhen"}/
     %meta{:content => "IE=edge,chrome=1", "http-equiv" => "X-UA-Compatible"}/
-    %meta{:content => "#{current_user.authentication_token}", :name => "token"}/
+    %meta{:content => "#{current_user.authentication_token}", :name => "auth-token"}/
     = csrf_meta_tag
     %link{:href => "/favicon.ico?9002", :rel => "shortcut icon"}/
     = stylesheet_link_tag 'application'

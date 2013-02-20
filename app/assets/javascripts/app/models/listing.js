@@ -1,6 +1,4 @@
 ListingModel = Backbone.Model.extend({
-  initialize: function(attributes) {},
-
   defaults: {
       'location_id': null,
       'name': null,
