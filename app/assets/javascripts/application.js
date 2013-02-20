@@ -6,7 +6,7 @@
 //= require ./vendor/jquery.address-1.3.min
 //= require ./vendor/jquery.ui.touch-punch
 //= require ./vendor/customSelect.jquery
-//= require ./vendor/bootstrap
+//= require bootstrap
 //= require ./vendor/rails
 //= require ./vendor/modernizr
 //= require ./vendor/jquery.cookie
