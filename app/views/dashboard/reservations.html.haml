@@ -3,7 +3,9 @@
     %h1
       %span.ico-manage-guests.padding Manage Guests
     .box
-      - if @listing_reservations.count > 0
+      - if @listing_reservations.empty?
+        = link_to "Share your space", manage_locations_path
+      - else
         %section#reservations.tab
           %ul.reservations.list
             - @listing_reservations.each do |reservation|
@@ -21,5 +23,3 @@
                   = reservation.comment
                 .actions
                   = render :partial => "owner_actions", :locals => {:reservation => reservation} if current_user == reservation.listing.creator
-        - else
-          = link_to "Share your space", manage_locations_path
