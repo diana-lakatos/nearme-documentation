@@ -11,6 +11,14 @@ Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed
 
 end
 
+Given /^no guests exists$/ do
+  @guests = nil
+end
+
+Then /^I should see a link "(.*?)"$/ do |link|
+  page.should have_content(link)
+end
+
 Given /^the listing has the following reservations:$/ do |table|
   table.hashes.each do |row|
     num = row["Number of Reservations"].to_i
