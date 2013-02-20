@@ -3,22 +3,17 @@ class AfterSignupMailer < DesksNearMeMailer
   def help_offer(user)
 
     @user = user
-    define_content
     mail to:      user.email,
       from: "michelle@desksnear.me",
-      subject: "Welcome to DesksNear.me"
+      subject: "Welcome to DesksNear.me",
+      template_name: choose_template
   end
 
 
   private
 
-  def define_content
-
-    if @user.listings.count > 0
-      @content = "I notice you added a new listing, and wanted to reach out and see if you need any further help!"
-    else
-      @content = "I wanted to reach out and see if you need any help listing or booking a space." 
-    end
+  def choose_template
+    @user.listings.empty? ? :help_with_listing : :further_help
   end
 
 end
