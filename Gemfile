@@ -48,18 +48,8 @@ gem 'unicorn'
 gem 'premailer-rails3'
 gem 'chameleon'
 
-group :development do
-  gem 'sqlite3'
-  gem "rails-erd"
-  gem 'quiet_assets'
-  gem 'mail_view'
-  gem 'sextant'
-  gem 'better_errors'
-  gem 'binding_of_caller'
-end
-
-group :development, :test, :staging do
-  gem 'factory_girl_rails', '>=3.0.0'
+group :staging, :production do
+  gem 'newrelic_rpm'
 end
 
 group :assets do
@@ -68,6 +58,11 @@ group :assets do
   gem 'jquery-rails'
   gem 'chosen-rails'
   gem 'rails-backbone'
+end
+
+
+group :development, :test, :staging do
+  gem 'factory_girl_rails', '>=3.0.0'
 end
 
 group :development, :test do
@@ -84,8 +79,14 @@ group :development, :test do
   gem 'debugger'
 end
 
+group :development do
+  gem "rails-erd"
+  gem 'quiet_assets'
+  gem 'mail_view'
+  gem 'sextant'
+end
+
 group :test do
-  gem 'autotest'
   gem 'capybara', '1.1.2'
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
@@ -97,8 +98,4 @@ group :test do
   gem 'timecop'
   gem 'turn'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
-end
-
-group :staging, :production do
-  gem 'newrelic_rpm'
 end
