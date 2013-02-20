@@ -3,7 +3,10 @@
     %h1
       %span.ico-bookings.padding My Bookings
     .box
-      - if @your_reservations.count > 0
+      - if @your_reservations.empty?
+        %p You have no bookings
+        = render :partial =>"shared/search_box"
+      - else
         %section#my_reservations.ta
           %ul.reservations.list
             - @your_reservations.each do |reservation|
@@ -17,6 +20,3 @@
                   = reservation.comment
                 .actions
                   = render :partial => "user_actions",  :locals => {:reservation => reservation} if current_user == reservation.owner
-      - else
-        %p You have no bookings
-        = render :partial =>"shared/search_box"
