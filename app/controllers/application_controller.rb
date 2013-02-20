@@ -20,7 +20,9 @@ class ApplicationController < ActionController::Base
   end
 
   def stored_url_for(resource_or_scope)
-    session[:user_return_to] || root_path
+    redirect_url = session[:user_return_to] || root_path
+    session[:user_return_to] = nil
+    redirect_url
   end
 
   def after_sign_in_path_for(resource)
