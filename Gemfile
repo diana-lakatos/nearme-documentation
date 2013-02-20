@@ -30,11 +30,16 @@ gem 'state_machine'
 gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'tweet-button'
 gem 'will_paginate'
-gem 'thinking-sphinx', '2.0.11'
+gem 'thinking-sphinx', '2.0.14', :require => 'thinking_sphinx'
+gem 'ts-resque-delta', '1.1.1'
+gem 'resque'
+# gem 'mysql2' # Required for ThinkingSphinx: https://github.com/pat/thinking-sphinx/blob/ee496c9e/README.textile
+# gem 'ts-sidekiq-delta', git: 'git://github.com/pat/ts-resque-delta.git', branch: 'sidekiq'
+# gem 'sidekiq', '~> 2.7.2'
 gem "compass-rails"
 gem "coffee-rails"
 gem "rdiscount"
-gem 'delayed_job_active_record'
+# gem 'delayed_job_active_record'
 gem 'stripe'
 gem 'friendly_id'
 

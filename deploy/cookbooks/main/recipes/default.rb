@@ -9,6 +9,9 @@ require_recipe "newrelic_server_monitoring"
 
 require_recipe "nginx_custom"
 
+require_recipe "resque"
+
+
 #enable Extension modules for a given Postgresql database
 # if ['solo','db_master', 'db_slave'].include?(node[:instance_role])
   # Extensions that support both Postgres 9.0, 9.1 and 9.2

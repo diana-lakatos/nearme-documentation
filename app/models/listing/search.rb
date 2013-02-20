@@ -4,22 +4,25 @@ class Listing
     extend ActiveSupport::Concern
 
     included do
-
+    
       define_index do
-
+    
         indexes :name, :description
-
+    
         join location
         where  "locations.id is not null"
-
+    
         has "radians(#{Location.table_name}.latitude)",  as: :latitude,  type: :float
         has "radians(#{Location.table_name}.longitude)", as: :longitude, type: :float
-
+    
         has :deleted_at
-
+    
         group_by :latitude, :longitude
+        
+        set_property :delta => ThinkingSphinx::Deltas::ResqueDelta
+        
       end
-
+    
     end
 
     module ClassMethods
