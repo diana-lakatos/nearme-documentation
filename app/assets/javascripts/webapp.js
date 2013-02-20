@@ -1,3 +1,3 @@
 $(document).ready(function() {
-  window.DNMAPP = new App();
+  DNM.Dashboard();
 })

@@ -1,5 +1,5 @@
 LocationView = Backbone.View.extend({
-  template: HandlebarsTemplates['locations/item'],
+  template: HandlebarsTemplates['app/templates/locations/item'],
   initialize: function() {
     _.bindAll(this, 'render', 'addAll', 'addOne','trash', 'toggleCmd', '_afterSave', '_showError');
     this.listingCollection = new ListingCollection(this.model.get('listings'));

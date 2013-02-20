@@ -1,6 +1,6 @@
-Locations = Backbone.View.extend({
+LocationsView = Backbone.View.extend({
   el: '#dyn-content',
-  template: HandlebarsTemplates['locations/list'],
+  template: HandlebarsTemplates['app/templates/locations/list'],
   initialize: function() {
     _.bindAll(this, 'render', 'addAll', 'addOne', 'createLocation');
     this._childContainer = '.locations-area';

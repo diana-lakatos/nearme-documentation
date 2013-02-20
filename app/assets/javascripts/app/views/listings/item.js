@@ -1,5 +1,5 @@
 ListingView = Backbone.View.extend({
-  template: HandlebarsTemplates['listings/item'],
+  template: HandlebarsTemplates['app/templates/listings/item'],
   initialize: function() {
     _.bindAll(this, 'render', '_afterSave', '_showError');
     this.thumbnail_url = this.options.thumbnail_url;

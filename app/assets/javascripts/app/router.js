@@ -1,4 +1,4 @@
-AppRouter = Backbone.Router.extend({
+DNM.Router = Backbone.Router.extend({
   routes: {
     'locations': 'locations',
     '*actions': 'defaultAction'

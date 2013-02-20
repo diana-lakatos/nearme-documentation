@@ -1,6 +1,6 @@
 AppView = Backbone.View.extend({
   el: '#content',
-  template: HandlebarsTemplates['app'],
+  template: HandlebarsTemplates['app/templates/app'],
   events: {},
 
   initialize: function() {
