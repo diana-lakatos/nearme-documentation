@@ -41,7 +41,6 @@ gem 'friendly_id'
 gem 'sass-rails'
 gem 'chronic'
 
-gem 'requirejs-rails'
 gem 'ey_config'
 
 gem 'unicorn'
