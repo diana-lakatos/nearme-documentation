@@ -9,6 +9,7 @@ public/user
 db/sphinx
 config/*.sphinx.conf
 config/ey.yml
+config/redis.yml
 log
 tmp
 *.swo
