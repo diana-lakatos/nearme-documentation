@@ -79,7 +79,6 @@ group :development, :test do
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
   gem 'jasmine'
-  gem 'teabag' # jasmine launcher
   gem 'better_errors' # add more details error in browser
   gem 'binding_of_caller' # extension for better_errors for more granular info
   gem 'debugger'

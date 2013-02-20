@@ -254,9 +254,6 @@ GEM
     pg_search (0.5.7)
       activerecord (>= 3)
       activesupport (>= 3)
-    phantomjs-mac (0.0.3)
-    phantomjs.rb (0.0.5)
-      phantomjs-mac
     pickle (0.4.11)
       cucumber (>= 0.8)
       rake
@@ -369,9 +366,6 @@ GEM
       multi_json (>= 1.0.4, < 2)
       rest-client (~> 1.4)
     subexec (0.2.2)
-    teabag (0.5.4)
-      phantomjs.rb (~> 0.0.5)
-      railties (>= 3.2.5, < 5)
     texticle (2.0.3)
       activerecord (~> 3.0)
     thin (1.5.0)
@@ -475,7 +469,6 @@ DEPENDENCIES
   sqlite3
   state_machine
   stripe
-  teabag
   texticle (~> 2.0)
   thin
   thinking-sphinx (= 2.0.11)
