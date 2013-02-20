@@ -17,6 +17,8 @@ body {
 }
 abbr[title] {
   cursor: auto;
+  border: none;
+  color: $dnm_red;
 }
 .accordion-group {
 
@@ -51,5 +53,8 @@ abbr[title] {
 }
 
 .tooltip-inner {
-  line-height: 1.5em;
+  max-width: 120px;
+}
+.tooltip {
+  @include adjust-font-size-to(16px);
 }

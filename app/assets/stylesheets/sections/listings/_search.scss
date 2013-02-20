@@ -111,6 +111,12 @@ section.search {
     input#search {
       position: relative;
       padding: 8px 0 8px 50px;
+      background: $dnm_white;
+      border: 2px solid #ebebeb;
+
+      &:focus {
+        border: 2px solid rgb(200,200,200);
+      }
     }
 
     .associations {
