@@ -86,7 +86,7 @@ section.locations-holder {
     }
   }
 
-  div.action { 
+  div.action {
     a.btn{
       width: 100%;
       text-align: center;
@@ -122,7 +122,7 @@ section.listings {
         text-overflow: ellipsis;
       }
     }
-  } 
+  }
   .accordion {
     margin: auto -15px;
     .listing-content {
@@ -134,7 +134,7 @@ section.listings {
     @include dashboard-acc-group;
     .box{
       margin-bottom:0;
-      padding-bottom: 0; 
+      padding-bottom: 0;
       border-radius: 0;
       border-left: 4px solid $gray3;
       header {
@@ -148,20 +148,20 @@ section.listings {
           width: 52px;
           margin-top: -5px;
         }
-      } 
-    } 
+      }
+    }
   }
   div.action {
     border-radius: 0;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
-    margin: auto -15px; 
+    margin: auto -15px;
   }
 }
 /*   End new dashboard */
-section.dashboard, 
-section.companies, 
-section.registrations, 
+section.dashboard,
+section.companies,
+section.registrations,
 section.sessions,
 section.listings {
   min-height: 800px;
@@ -196,11 +196,11 @@ ul.nav.dashboard {
 
   .bookings:after {
     content:"Bookings";
-  } 
+  }
 
   .locations:after {
     content:"Locations";
-  } 
+  }
 
   .guests:after {
     content:"Guests";
@@ -212,8 +212,8 @@ ul.nav.dashboard {
     .locations:after,
     .guests:after {
       content:""
-    }    
-  } 
+    }
+  }
 }
 
 li.current a,
@@ -223,14 +223,14 @@ li.current:hover a {
     a {
       color: black;
       border-left: 4px solid $gray4;
-    }  
+    }
   }
   &:first-child {
     @include border-top-radius(12px);
   }
   &:last-child {
     @include border-bottom-radius(12px);
-  }  
+  }
 
   a {
     padding: .5em;
@@ -241,16 +241,23 @@ li.current:hover a {
     &:hover {
       color: black;
       background: $gray2;
-    }     
+    }
   }
 }
 
-.btn.facebook, 
+.btn.facebook,
 .btn.linkedin,
 .btn.twitter {
   @media (max-width: 668px) {
     width: 100%;
     text-align: center;
     margin-bottom: .25em;
+  }
+}
+.avatar-container {
+  display: inline-block;
+
+  img {
+    margin-right: 1em;
   }
 }

@@ -60,7 +60,7 @@ section.search {
   }
 
   &.search_results .geolocation {
-    top: 7px;
+    top: 9px;
     left: 10px;
   }
 
@@ -111,6 +111,12 @@ section.search {
     input#search {
       position: relative;
       padding: 8px 0 8px 50px;
+      background: $dnm_white;
+      border: 2px solid #ebebeb;
+
+      &:focus {
+        border: 2px solid rgb(200,200,200);
+      }
     }
 
     .associations {
@@ -190,6 +196,13 @@ section.search {
       margin-bottom: 1.5em; 
     }
 
+    h2 {
+      margin: 6px 16px 6px 0;
+
+      a {
+        color: $dnm_black;
+      }
+    }
     address {
       padding-right: .75em;
 
@@ -200,8 +213,8 @@ section.search {
 
     img {
       max-width:100%;
-      padding: 2px;
-      background: #FFF;
+      padding: 1px;
+      background: $dnm_white;
       background: rgba(255, 255, 255, 0.6);
     }
 
