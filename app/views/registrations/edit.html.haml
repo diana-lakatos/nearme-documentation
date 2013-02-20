@@ -2,15 +2,19 @@
 
 .row-fluid
   .span8.offset2
+    %h2
+      %span.ico-settings.padding Account Settings
     .box
-      %h2== Your Account
-      %p.intro
-        You can change your account details below
-
-
+      %h2
+        %span.ico-user.padding Profile
+      %p
       = render "registrations/networks", :supported_providers => @supported_providers
       = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name) }
 
+    - unless resource.companies.blank?
+      .box
+        %h2== Company
+        = render :partial => "registrations/company_form", :locals => { :url => registration_path(resource_name) }
 
 :javascript
   $(function() {

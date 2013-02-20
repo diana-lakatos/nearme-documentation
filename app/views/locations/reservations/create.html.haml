@@ -10,3 +10,19 @@
 
 :javascript
   Modal.reloadOnClose(#{raw bookings_dashboard_url.to_json})
+
+  analytics.track("Confirmed a Booking", { 
+    suburb: "#{@location.suburb}",
+    city: "#{@location.city}",
+    state: "#{@location.state}",
+    country: "#{@location.country}",
+    quantity: #{@reservations.first.quantity},
+    days: #{@reservations.first.total_days},
+    amount: #{@reservations.first.total_amount_dollars},
+    currency: "#{@reservations.first.currency}",
+    transaction: #{reservation_credit_card_payment?}
+  });
+
+- if reservation_credit_card_payment?
+  :javascript
+    analytics.trackCharge(#{@reservations.first.total_amount_dollars})

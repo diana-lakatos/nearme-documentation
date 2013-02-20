@@ -9,29 +9,47 @@ if Rails.env.development? || Rails.env.staging?
     object
   end
 
-  puts "Creating Listings"
-  log(FactoryGirl.create(:listing))
+  if(Location.count==0)
 
-  coffee = FactoryGirl.create(:amenity, :name => "Coffee")
-  wifi = FactoryGirl.create(:amenity, :name => "Wifi")
-  kitchen = FactoryGirl.create(:amenity, :name => "Kitchen")
-  amenities = [
-    [coffee],
-    [coffee, wifi],
-    [coffee, wifi, kitchen]
-  ]
+    coffee = FactoryGirl.create(:amenity, :name => "Coffee")
+    wifi = FactoryGirl.create(:amenity, :name => "Wifi")
+    kitchen = FactoryGirl.create(:amenity, :name => "Kitchen")
+    amenities = [
+      [coffee],
+      [coffee, wifi],
+      [coffee, wifi, kitchen]
+    ]
 
-  locations = [
-    log(FactoryGirl.create(:location_in_auckland, :amenities => amenities.sample)),
-    log(FactoryGirl.create(:location_in_cleveland, :amenities => amenities.sample)),
-    log(FactoryGirl.create(:location_in_san_francisco, :amenities => amenities.sample))
-  ]
+    locations = [
+      log(FactoryGirl.create(:location_in_auckland, :amenities => amenities.sample)),
+      log(FactoryGirl.create(:location_in_cleveland, :amenities => amenities.sample)),
+      log(FactoryGirl.create(:location_in_san_francisco, :amenities => amenities.sample))
+    ]
 
-  locations.each do |location|
-    log FactoryGirl.create(:listing, :location => location)
+    locations.each do |location|
+      listing =  FactoryGirl.create(:listing, :location => location)
+    end
+
+    ["Business", "Co-working", "Public"].each do |name|
+      LocationType.create(:name => name)
+    end
+    business_location = LocationType.find_by_name("Business")
+    Location.update_all(:location_type_id => business_location.id)
+
   end
-
-
 
 end
 
+["Accounting", "Advertising", "Apparel", "Automotive",
+  "Banking", "Broadcasting", "Brokerage", "Biotechnology",
+  "Computer", "Consulting", "Education", "Electronics",
+  "Energy", "Entertainment", "Executive Search", "Financial Services",
+  "Farming", "Food & Beverage", "Gaming", "Health Professional",
+  "Insurance", "Internet", "Investment Banking", "Legal",
+  "Lodging", "Manufacturing", "Medical" , "Movies",
+  "Music", "Pharmaceutical", "Private Equity", "Publishing",
+  "Real Estate", "Retail", "Service", "Software",
+  "Sports" , "Technology", "Telecommunications", "Tourism",
+  "Transportation", "Venture Capital", "Wholesale"].each do |name|
+  log(Industry.create(:name => name)) unless Industry.find_by_name(name)
+  end

@@ -1,12 +1,15 @@
 class Company < ActiveRecord::Base
   URL_REGEXP = URI::regexp(%w(http https))
 
-  attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email
+  attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email, :industry_ids
 
   belongs_to :creator, class_name: "User"
 
   has_many :locations,
            :dependent => :destroy
+
+  has_many :company_industries
+  has_many :industries, :through => :company_industries
 
   before_validation :add_default_url_scheme
 

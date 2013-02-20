@@ -3,6 +3,11 @@
 <h2>Listing</h2>
 <p>'<%= listing.name %>' at <%= link_to(listing.location.name, location_url(listing.location)) %></p>
 
+<% unless listing.location.special_notes.strip.empty? %>
+  <h2>Special notes</h2>
+  <p><%= listing.location.special_notes.strip %></p>
+<% end if listing.location.special_notes %>
+
 <h2>Quantity</h2>
 <p><%= reservation.periods.first.seats.size %></p>
 

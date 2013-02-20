@@ -6,3 +6,6 @@
   = simple_form_for @company, :url => space_wizard_company_url, :html => { :class => "form-horizontal new_company" } do |f|
     = render 'companies/form', :f => f
 
+- content_for :script do
+  :javascript
+    analytics.track('Add a Space - Step 1 - Company');

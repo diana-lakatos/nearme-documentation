@@ -53,12 +53,12 @@
       .card-info.expiry
         = label_tag :card_expires, "Expires On", :class => 'control-label'
         .controls.card-expires
-          = text_field_tag :card_expires, nil, size: 4, placeholder: 'MMYY'
+          = text_field_tag :card_expires, nil, size: 4, placeholder: 'MM/YY'
 
       .card-info.security
         = label_tag :card_code, "Security Code", :class => 'control-label'
         .controls.card-code
-          = text_field_tag :card_code, nil, size: 3, placeholder: 'CVC'
+          = text_field_tag :card_code, nil, size: 3, placeholder: 'CCV'
 
     %hr
 
@@ -73,4 +73,15 @@
 :javascript
   $(function() {
     new Bookings.ReservationModal($('form.payment'))
+  });
+  analytics.track("Reviewed a Booking", { 
+    suburb: "#{@location.suburb}",
+    city: "#{@location.city}",
+    state: "#{@location.state}",
+    country: "#{@location.country}",
+    quantity: #{@reservations.first.quantity},
+    days: #{@reservations.first.total_days},
+    amount: #{@reservations.first.total_amount_dollars},
+    currency: "#{@reservations.first.currency}",
+    transaction: #{reservation_credit_card_payment?}
   });

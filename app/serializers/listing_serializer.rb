@@ -25,7 +25,7 @@ class ListingSerializer < ApplicationSerializer
   def price
     label = case object.price
     when nil
-      'POA'
+      'Call'
     when 0
       'Free'
     else

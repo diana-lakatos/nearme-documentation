@@ -1,18 +1,29 @@
-input[type=text], textarea {
+input[type=submit], 
+input[type=text], 
+input[type=email], 
+input[type=password],
+input[type=url],
+input[type=tel],
+textarea,
+.chzn-container-multi ul.chzn-choices {
   @include box-sizing(border-box);
   width: 100%;
 }
-input[type='checkbox'], input[type='radio'] {
+input[type='checkbox'], 
+input[type='radio'] {
   width: auto;
 }
-input[type=submit], input[type=text] {
+input[type=submit], 
+input[type=text], 
+input[type=email], 
+input[type=password],
+input[type=url],
+input[type=tel] {
    -webkit-appearance: none;
    cursor: pointer;
 }
     
 form {
-  overflow: hidden;
-
   div.input, div.field {
     margin-bottom: 20px;
   }
@@ -90,6 +101,12 @@ form {
 
   label {
     @extend .font-banda-bold;
+    a[rel=tooltip] {
+      color: $dnm_black;
+      &:hover {
+        color: $dnm_gray;
+      }
+    }
   }
 
   label.control-label {
@@ -149,15 +166,15 @@ form {
     }
   }
 
-  input[type="text"], input[type="password"], input[type="email"], input[type="tel"], input[type="url"], input[type="number"], textarea {
+  input[type="text"], input[type="password"], input[type="email"], input[type="tel"], input[type="url"], input[type="number"], textarea, .chzn-container-multi ul.chzn-choices {
     margin: 0;
     margin-bottom: 8px;
     padding: 8px 8px 8px 8px;
     line-height: 29px;
-    background: rgb(250,250,250);
-    border: 2px solid rgb(220,220,220);
+    background: rgb(235,235,235);
+    border: 2px solid rgb(235,235,235);
     @include border-radius(8px);
-    color: #707070;
+    color: rgb(100,100,100);
     font-size: 22px;
     @include transition(border .2s ease-in, opacity .2s ease-in, color .2s ease-in);
 
@@ -165,6 +182,7 @@ form {
       color:rgb(30,30,30);
       outline: none;
       border: 2px solid rgb(100,100,100);
+      background: rgb(245,245,245);
     }
 
     &.small {
@@ -174,6 +192,29 @@ form {
     // A mini input field
     &.mini {
       width: 60px;
+    }
+  }
+
+  ul.chzn-choices.chzn-choices-active{
+      color:rgb(30,30,30);
+      outline: none;
+      border: 2px solid rgb(100,100,100);
+  }
+
+    // overwrite default width - make its width dynamic instea of constant 
+  .control-group .chzn-container-multi{
+    width: auto !important;
+    display: block !important;
+
+    ul li {
+      span, input {
+        font-size: 18px;
+      }
+      &.search-field input {
+        height: 100%;
+        font-family: $font-regular, sans-serif;
+        padding: 0px;
+      }
     }
   }
 
@@ -275,7 +316,6 @@ form {
 .form-horizontal {
   .control-group {
     margin-bottom: 10px;
-    overflow: hidden;
 
     // An indented control group
     &.indent {

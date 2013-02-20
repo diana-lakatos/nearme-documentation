@@ -130,8 +130,7 @@ class User::BillingGatewayTest < ActiveSupport::TestCase
   def card_details
     User::BillingGateway::CardDetails.new(
       number: "1444444444444444", 
-      expiry_month: '12', 
-      expiry_year: '18', 
+      expiry_string: '12 / 18', 
       cvc: '123'
     )
   end

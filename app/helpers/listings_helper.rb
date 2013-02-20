@@ -6,7 +6,7 @@ module ListingsHelper
   def listing_price(listing, max = nil)
     cents = listing.unit_prices.collect(&:price_cents)
     if cents.all?(&:nil?)
-      "POA"
+      "Call"
     elsif cents.all? { |p| p == 0 }
       "Free!"
     else

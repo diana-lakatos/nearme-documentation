@@ -26,6 +26,9 @@ module SearchHelpers
 
 
   def click_date(date)
+    until page.has_content?(date.strftime("%B"))
+      page.execute_script("$('.ui-datepicker-next').click();")
+    end
     script ="$('td[data-handler=\"selectDay\"]:contains(\"#{date.day}\"):first').click()"
     page.execute_script(script)
   end

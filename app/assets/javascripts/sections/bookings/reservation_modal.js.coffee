@@ -6,6 +6,13 @@ class Bookings.ReservationModal
 
   bindEvents: ->
     @container.find('input[name*=payment_method]').click(@hideShowCreditCardFields)
+    @formatCreditCardFields()
+
+  formatCreditCardFields: ->
+    $('#card_number').payment('formatCardNumber')
+    $('#card_expires').payment('formatCardExpiry')
+    $('#card_code').payment('formatCardCVC')
+
 
   hideShowCreditCardFields: ->
     input = $('input#payment_method_credit_card')

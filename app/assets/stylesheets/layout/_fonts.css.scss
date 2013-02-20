@@ -40,7 +40,7 @@ h2 {
 }
 
 h3 {
-  font-size: 16px;
+  @include adjust-font-size-to(16px);
 }
 
 p {
@@ -50,4 +50,12 @@ p {
 strong {
   font-family: $font-bold;
   font-weight: 700;
+}
+
+address {
+  @include adjust-font-size-to(14px);
+
+  .ico-marker {
+    opacity: .7;
+  }
 }

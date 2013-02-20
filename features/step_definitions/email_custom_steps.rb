@@ -5,7 +5,6 @@ Then /^a shared listing email is( not)? sent to "([^"]+)"$/ do |no_email, email|
     last_email = mailbox_for(email).last
     last_email.subject.should include "shared a listing"
     last_email.html_part.body.should include location_path(@listing.location)
-    last_email.html_part.body
   end
 end
 
@@ -18,7 +17,6 @@ Then /^an? inquiry user notification email is( not)? sent to "([^"]+)"$/ do |no_
     last_email = mailbox_for(email).last
     last_email.should_not be_nil, "No emails sent to #{email}, expected an email"
     last_email.subject.should include "passed on your inquiry"
-    last_email.body
   end
 end
 

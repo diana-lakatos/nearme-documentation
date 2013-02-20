@@ -14,6 +14,7 @@ class Search.Controller
       place = null unless place.isValid()
 
       @setGeolocatedQuery(@queryField.val(), place)
+      @fieldChanged('query', @queryField.val())
 
   initializeGeocoder: ->
     @geocoder = new Search.Geocoder()

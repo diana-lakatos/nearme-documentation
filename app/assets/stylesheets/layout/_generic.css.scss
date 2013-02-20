@@ -23,12 +23,10 @@ p a, p a:visited {
   color: $dnm_blue;
   text-decoration: none;
   @include transition(opacity .15s ease-in, color .15s ease-in, border .15s ease-in);
-  border-bottom: 2px solid transparent;
 
   &:hover { 
-    color: darken( $dnm_blue, 10%);
+    color: darken( $dnm_blue, 30%);
     text-decoration: none;
-    border-bottom: 2px solid darken( $dnm_blue, 10%);
   }
 }
 
