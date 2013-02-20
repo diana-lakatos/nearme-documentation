@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def require_ssl
-    return if Rails.env.development?
+    return if Rails.env.development? || Rails.env.test?
 
     unless request.ssl?
       redirect_to "https://#{request.host}#{request.fullpath}"
