@@ -407,7 +407,7 @@ DEPENDENCIES
   autotest
   better_errors
   binding_of_caller
-  bootstrap-sass
+  bootstrap-sass (~> 2.3.0.0)
   capybara (= 1.1.2)
   carrierwave
   chameleon

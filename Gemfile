@@ -39,7 +39,7 @@ gem 'stripe'
 gem 'friendly_id'
 
 gem 'sass-rails'
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', '~> 2.3.0.0'
 gem 'chronic'
 
 gem 'ey_config'
