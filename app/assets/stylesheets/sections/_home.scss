@@ -113,57 +113,26 @@ section.public {
     margin-left: 0px;
   }
 }
-@media (max-width:959px) { 
-  #search_row {
-    .wood-box h2 {
-      margin:0 0 10px;
-    }
-  }
-}  
+  
 section.how-it-works {
-  @media (max-width: 767px) {
-    text-align: center;
-  }
-  .row {
+  text-align: center;
+
+  .row-fluid {
     padding: 30px 0;
     margin: 0;
-
-    &.find-a-desk {
-      background: hsla(76, 13%, 15%,.04);
-    }
-
-    &.rent-your-space {
-      background: hsla(198deg, 16%, 15%, .01);
-    } 
-
-    .inner {
-      position: relative;
-      max-width: 960px;
-      margin: 0 auto;
-
-      @media (min-width: 768px) and (max-width: 959px) {
-        width: 768px;
-      }
-        
-      @media (max-width: 767px) {
-        width:420px;
-      }
-
-      @media (max-width: 480px) {
-        width:300px;
-      } 
-    }
-
-    .two-thirds.column {
-
-      @media(max-width: 320px) {
-        width: 280px;
-        margin: 0 10px;
-      }
-    }
   }
+
   h1{
-    font: normal 40px/50px $font-medium, sans-serif;
+    @include adjust-font-size-to(60px);
     margin: 10px 0 20px;
+  }
+
+  h2{
+    @include adjust-font-size-to(30px);
+    margin: 10px 0 20px;
+  }
+
+  .btn {
+    width: 300px;
   }
 }  
