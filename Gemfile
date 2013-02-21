@@ -33,9 +33,8 @@ gem 'will_paginate'
 gem 'thinking-sphinx', '2.0.14', :require => 'thinking_sphinx'
 gem 'ts-resque-delta', '1.1.1'
 gem 'resque'
-# gem 'mysql2' # Required for ThinkingSphinx: https://github.com/pat/thinking-sphinx/blob/ee496c9e/README.textile
-# gem 'ts-sidekiq-delta', git: 'git://github.com/pat/ts-resque-delta.git', branch: 'sidekiq'
-# gem 'sidekiq', '~> 2.7.2'
+gem 'redis'
+gem 'connection_pool'
 gem "compass-rails"
 gem "coffee-rails"
 gem "rdiscount"

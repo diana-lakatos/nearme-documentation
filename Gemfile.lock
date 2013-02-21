@@ -88,6 +88,7 @@ GEM
       sass (~> 3.1)
     compass-rails (1.0.3)
       compass (>= 0.12.2, < 0.14)
+    connection_pool (1.0.0)
     crack (0.3.1)
     css_parser (1.2.6)
       addressable
@@ -421,6 +422,7 @@ DEPENDENCIES
   chronic
   coffee-rails
   compass-rails
+  connection_pool
   cucumber-rails
   database_cleaner
   debugger
@@ -464,6 +466,7 @@ DEPENDENCIES
   rails-erd
   rails3_acts_as_paranoid
   rdiscount
+  redis
   resque
   sass
   sass-rails
