@@ -114,23 +114,6 @@
       %h3 Availability Rules
       %p= raw @listing.availability_rules_text
 
-    %h2 Latest Activity
-    - if @feeds.any?
-      %dl.activity_feed
-        - @feeds.each do |feed|
-          %dd.feed_item{class: feed.activity}
-            = image_tag feed.user.gravatar_url(:size => "50x50"), :class => "avatar"
-            = render :partial => "feeds/#{feed.activity}", :locals => { :feed => feed }
-            %br/
-            %small
-              %date{datetime: feed.created_at.xmlschema}
-                = time_ago_in_words(feed.created_at)
-                ago
-    - else
-      %p No activity has been generated yet.
-
-
-
 - content_for :script do
   / ShareThis script
   / FIXME: Get DNM login/api key

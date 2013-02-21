@@ -11,6 +11,14 @@ Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed
 
 end
 
+Given /^no guests exists$/ do
+  @guests = nil
+end
+
+Then /^I should see a link "(.*?)"$/ do |link|
+  page.should have_content(link)
+end
+
 Given /^the listing has the following reservations:$/ do |table|
   table.hashes.each do |row|
     num = row["Number of Reservations"].to_i
@@ -124,7 +132,7 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
   end
 
   qty = table.hashes.first['Quantity'].to_i
-  qty = 1 if qty < 1 
+  qty = 1 if qty < 1
 
   listing = model!(table.hashes.first['Listing'])
 
@@ -200,21 +208,6 @@ Then /^I should not see availability for dates:$/ do |table|
   table.raw.flatten.each do |date|
     dates.should_not include(date)
   end
-end
-
-Then /^I should see the following reservation events in the feed in order:$/ do |table|
-  regex = /<img[^>]+>\s*(.*?)\s+booked a desk for the (\d\d [A-Za-z]+, \d\d\d\d).*datetime="(.*?)"/m
-  feeds = all("ul.activity-feed li").map do |booked_item|
-    user, date, at = *booked_item.native.to_s.scan(regex).first
-    [user, Date.parse(date), Time.parse(at)]
-  end
-
-  table = table.hashes.map do |row|
-    user, date, at = *row.values_at('User', 'For', 'At')
-    [user, Date.parse(date), Time.parse(at)]
-  end
-
-  feeds.should == table
 end
 
 Then /^a confirm reservation email should be sent to (.*)$/ do |email|

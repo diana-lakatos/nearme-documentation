@@ -1,4 +1,19 @@
-input[type=text], input[type=email], input[type=password], textarea {
+select {
+ margin: 10px 0;
+}
+input[type=radio] {
+  vertical-align: inherit;
+  padding-right: 4px;
+}
+
+input[type=submit], 
+input[type=text], 
+input[type=email], 
+input[type=password],
+input[type=url],
+input[type=tel],
+textarea,
+.chzn-container-multi ul.chzn-choices {
   @include box-sizing(border-box);
   width: 100%;
 }
@@ -15,7 +30,7 @@ input[type=tel] {
    -webkit-appearance: none;
    cursor: pointer;
 }
-    
+
 form {
   div.input, div.field {
     margin-bottom: 20px;
@@ -159,15 +174,21 @@ form {
     }
   }
 
+  // overwrite default width - make its width dynamic instea of constant 
+  .control-group .chzn-container-multi{
+    width: auto !important;
+    display: block !important;
+  }
+
   input[type="text"], input[type="password"], input[type="email"], input[type="tel"], input[type="url"], input[type="number"], textarea, .chzn-container-multi ul.chzn-choices {
     margin: 0;
     margin-bottom: 8px;
     padding: 8px 8px 8px 8px;
     line-height: 29px;
-    background: rgb(250,250,250);
-    border: 2px solid rgb(220,220,220);
+    background: rgb(235,235,235);
+    border: 2px solid rgb(235,235,235);
     @include border-radius(8px);
-    color: #707070;
+    color: rgb(100,100,100);
     font-size: 22px;
     @include transition(border .2s ease-in, opacity .2s ease-in, color .2s ease-in);
 
@@ -175,6 +196,7 @@ form {
       color:rgb(30,30,30);
       outline: none;
       border: 2px solid rgb(100,100,100);
+      background: rgb(245,245,245);
     }
 
     &.small {
@@ -307,6 +329,7 @@ form {
 //   </form>
 .form-horizontal {
   .control-group {
+    clear: both;
     margin-bottom: 10px;
 
     // An indented control group
@@ -330,15 +353,14 @@ form {
     }
 
     .control-label {
-      @extend .font-banda-bold;
       width: 180px;
       float: left;
       margin-top: 7px;
       text-align: right;
-      font-size: 16px;
       color: $dnm_black;
 
-      abbr {
+      &.flush-top {
+        margin: 0 0 20px;
       }
     }
 

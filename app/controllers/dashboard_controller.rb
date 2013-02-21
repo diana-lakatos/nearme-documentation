@@ -26,4 +26,11 @@ class DashboardController < ApplicationController
     @listings = current_user.listings.all
   end
 
+  def new_dashboard
+    if current_user.companies.blank?
+      redirect_to new_space_wizard_url
+    else
+      render 'webapp/launcher', layout: false
+    end
+  end
 end

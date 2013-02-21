@@ -1,0 +1,24 @@
+<section class="box box-dim listing">
+  <header data-toggle="collapse" class="listing collapsed" data-target="#collapse-{{view_id}}">
+  <span><img class="listing-header-thumbnail" src="{{thumbnail_url}}"></span>
+    <span class="listing-header">{{#if name}}{{{name}}}{{else}}New listing{{/if}}</span>
+    <span class="ico-edit right"/>
+  </header>
+  <div id="collapse-{{view_id}}" class="accordion-body listing-content collapse">
+    <div id="listing-for-{{id}}" class="accordion-inner">
+      <div class="accordion" id="location-{{ref_id}}-listings-holder">
+        <form class="simple_form form-horizontal edit_listing" id="edit_listing_{{id}}">
+          <input type="hidden" value="{{location_id}}" />
+          {{> app/templates/listings/_overview}}
+          {{!> app/templates/listings/photos}}
+          {{> app/templates/listings/_availability}}
+        </form>
+        <a href="" class="delete delete-listing" data-id="{{id}}"><span class="ico-trash padding">Delete this listing</span></a>
+        <div class="action">
+          <a href="" class="btn btn-green btn-large save-listing" data-disable-with="Saving..."><span class="ico-check padding">Save</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

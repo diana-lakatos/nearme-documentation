@@ -48,8 +48,8 @@ module DesksnearMe
     config.should_rewrite_email = Rails.env.staging? || Rails.env.development?
     config.test_email           = ENV['DNM_TEST_EMAIL'] || "dev@desksnear.me"
 
-    # Don't access the DB or load models when precompiling assets
-    config.assets.initialize_on_precompile = false
+    # Access the DB or load models when precompiling assets
+    config.assets.initialize_on_precompile = true
 
     # Enable the asset pipeline
     config.assets.enabled = true

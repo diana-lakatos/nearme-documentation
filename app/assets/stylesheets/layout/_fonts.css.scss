@@ -21,9 +21,8 @@ h3,
 h4, 
 h5 {
   font-family: $font-medium, sans-serif;
-  font-weight: normal;
+  font-weight: 500;
   color: #1e2222;
-  margin-bottom: 20px;
 }
 
 h1 {
@@ -37,10 +36,18 @@ h1 {
 
 h2 {
   @include adjust-font-size-to(24px);
+
+  @media (max-width: 480px) {
+    @include adjust-font-size-to(20px);
+  }  
 }
 
 h3 {
-  @include adjust-font-size-to(16px);
+  @include adjust-font-size-to(20px);
+}
+
+h4 {
+  @include adjust-font-size-to(18px);
 }
 
 p {

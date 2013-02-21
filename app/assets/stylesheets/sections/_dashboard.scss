@@ -1,55 +1,263 @@
-section.dashboard, 
-section.companies, 
-section.registrations, 
+/*   Begin new dashboard */
+@mixin dashboard-acc-group {
+  .accordion-group {
+    border: none;
+    border-radius: 0;
+    margin-top: 10px;
+  }
+}
+
+.availability-rules {
+  padding-left: 2px;
+  .open-time, .close-time {
+    padding-right: 10px;
+    margin: 0;
+  }
+}
+
+.accordion-heading .accordion-toggle {
+  padding: 15px 3px;
+}
+
+section.locations-holder {
+  margin-bottom: 20px;
+  .location-content {
+    margin-bottom: 0;
+    div.action{
+      background: $dnm_white;
+      padding: 20px 0;
+    }
+    div.geolocation{
+      position: absolute;
+      top: 13px;
+      left: 10px;
+      color: $gray5;
+    }
+    div.map {
+      .map-container {
+        border: 2px solid rgb(220,220,220);
+        border-radius: 8px;
+        height: 240px;
+      }
+    }
+    @include dashboard-acc-group
+  }
+  .delete {
+    display: block;
+    padding-top: 10px;
+    font-size: 80%;
+    color: $gray5;
+
+    &:hover {
+      color: $gray7;
+    }
+  }
+  .alert{
+    @include border-radius(12px);
+  }
+  .close {
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 20px;
+    color: #000000;
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 0.2;
+    filter: alpha(opacity=20);
+  }
+
+  section.box {
+    padding-bottom: 0;
+    header {
+      height: 24px;
+      font-size: 24px;
+      margin-bottom: 0;
+      cursor: pointer;
+
+      span {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .action {
+        float: right;
+        padding: 0;
+      }
+    }
+  }
+
+  div.action {
+    a.btn{
+      width: 100%;
+      text-align: center;
+      @include box-sizing(border-box);
+
+      &.add-listing {
+        @include border-top-radius(0);
+      }
+
+      &.add-location {
+        margin-top: 20px;
+        background: $gray3;
+        color: $dnm_black;
+        @include transition(all .15s ease-in);
+
+        &:hover {
+          background: $gray4;
+        }
+      }
+    }
+  }
+}
+section.listings {
+  section.box {
+    header {
+      height: 24px;
+      font-size: 20px;
+      margin-bottom: 0;
+      cursor: pointer;
+
+      span {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+  .accordion {
+    margin: auto -15px;
+    .listing-content {
+      div.action{
+        background: $dnm_white;
+        padding: 20px 15px;
+      }
+    }
+    @include dashboard-acc-group;
+    .box{
+      margin-bottom:0;
+      padding-bottom: 0;
+      border-radius: 0;
+      border-left: 4px solid $gray3;
+      header {
+        height: 52px;
+        line-height: 52px;
+        padding: 0 15px 0px 0px;
+        margin-bottom:0;
+        border-radius: 0;
+        img.listing-header-thumbnail {
+          height: 52px;
+          width: 52px;
+          margin-top: -5px;
+        }
+      }
+    }
+  }
+  div.action {
+    border-radius: 0;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin: auto -15px;
+  }
+}
+/*   End new dashboard */
+section.dashboard,
+section.companies,
+section.registrations,
 section.sessions,
 section.listings {
   min-height: 800px;
 }
 
-  ul.nav.dashboard {
-    position: relative;
-    width: 100%;
-    background: $gray2;
-    color: $gray4;
-    @include border-radius(12px);
-    @include background-clip(padding-box);
-    margin-bottom: 20px;
+ul.nav.dashboard {
+  position: relative;
+  width: 100%;
+  background: $gray2;
+  color: $gray4;
+  @include border-radius(12px);
+  @include background-clip(padding-box);
+  margin-bottom: 20px;
 
-    li {
-
-      &.active {
-        a {
-          color: black;
-          border-left: 4px solid $gray4;
-        }  
-      }
-      &:first-child {
-        @include border-top-radius(12px);
-      }
-      &:last-child {
-        @include border-bottom-radius(12px);
-      }  
-
-      a {
-        padding: .5em;
-        line-height: 40px;
-        font-size: 22px;
-        color: $gray4;
-
-      &:hover {
-        color: black;
-        background: $gray2;
-      }     
+  li {
+    &:hover {
+      color: black;
     }
   }
 
-  .btn.facebook, 
-  .btn.linkedin,
-  .btn.twitter {
-    @media (max-width: 668px) {
-      width: 100%;
-      text-align: center;
-      margin-bottom: .25em;
+  &:first-child {
+    @include border-left-radius(12px);
+  }
+
+  &:last-child {
+    @include border-right-radius(12px);
+  }
+
+  .account:after {
+    content:"Account";
+  }
+
+  .bookings:after {
+    content:"Bookings";
+  }
+
+  .locations:after {
+    content:"Locations";
+  }
+
+  .guests:after {
+    content:"Guests";
+  }
+
+  @media (max-width: 480px) {
+    .account:after,
+    .bookings:after,
+    .locations:after,
+    .guests:after {
+      content:""
     }
-  }  
+  }
+}
+
+li.current a,
+li.current:hover a {
+  color: $dnm_white;
+  &.active {
+    a {
+      color: black;
+      border-left: 4px solid $gray4;
+    }
+  }
+  &:first-child {
+    @include border-top-radius(12px);
+  }
+  &:last-child {
+    @include border-bottom-radius(12px);
+  }
+
+  a {
+    padding: .5em;
+    line-height: 40px;
+    font-size: 22px;
+    color: $gray4;
+
+    &:hover {
+      color: black;
+      background: $gray2;
+    }
+  }
+}
+
+.btn.facebook,
+.btn.linkedin,
+.btn.twitter {
+  @media (max-width: 668px) {
+    width: 100%;
+    text-align: center;
+    margin-bottom: .25em;
+  }
+}
+.avatar-container {
+  display: inline-block;
+
+  img {
+    margin-right: 1em;
+  }
 }

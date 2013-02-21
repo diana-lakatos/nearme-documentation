@@ -11,20 +11,7 @@
         .wood-box.row-fluid
           %h1 Find a space to work
 
-        .black-box.row-fluid
-          %form#listing_search.home_search{:action => search_path, :method => "get"}
-            .span9
-              %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
-              .geolocation
-                %span.ico-crosshairs
-            .span3      
-              %a.btn.btn-green.btn-large{ "data-disable-with" => "Searching...", :rel => "submit", :href => "" }
-                %span.ico-search
-                Search
-              #suggest_location{:style => "display: none"}
-
-            - search_geofields.each do |geofield|
-              = hidden_field_tag geofield, ''
+        = render :partial => "shared/search_box"
 
 %section.how-it-works
   .row-fluid.padding-row

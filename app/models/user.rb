@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
-
   include Gravtastic
 
+  before_save :ensure_authentication_token
   # Includes billing gateway helper method and sets up billing charge association
   include BillingGateway::UserHelper
 
@@ -130,5 +130,9 @@ class User < ActiveRecord::Base
 
   def avatar_changed?
     false
+  end
+
+  def default_company
+    self.companies.first
   end
 end

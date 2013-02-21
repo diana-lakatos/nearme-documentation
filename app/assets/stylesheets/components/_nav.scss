@@ -10,9 +10,8 @@
     margin: 0 auto;
 
     #logo {
-      display:inline-block;
       float: left;
-      margin-top: 14px;
+      margin-top: 4px;
       background: url("/assets/desksnear.me-white.png") no-repeat;
       width: 228px;
       height: 28px;
@@ -22,32 +21,32 @@
       -webkit-transition: none;
          -moz-transition: none;
            -o-transition: none;
-              transition: none; 
+              transition: none;
 
-     
+
       @media (max-width: 767px) {
         width: 50px;
         height: 50px;
-        margin: 2px 0;
+        margin: -8px 0 0;
         background: url('/assets/desksnearme-icon.png');
         background-size: 50px 50px;
-      }        
-    }    
+      }
+    }
   }
 
   .nav-links {
     padding-top: 10px;
-    line-height: 38px;
+    line-height: 40px;
 
     a.nav-link {
       display: inline-block;
       float: right;
-      color: $gray3;
+      color: $gray5;
       font-size: 20px;
       text-decoration: none;
 
       &:hover {
-        color: white;
+        color: $gray2;
       }
 
       &.margin-right {
@@ -59,13 +58,6 @@
           display: none;
         }
       }
-
-      &.ico-dashboard.dropdown-toggle {
-
-        @media (max-width: 320px) {
-          width: 10px;
-        }
-      }  
     }
   }
 
@@ -97,7 +89,7 @@
         min-width: 130px;
         left: 8px;
         background:$dnm_black;
-        border: none; 
+        border: none;
         @media (max-width: 767px) {
           left: -20px;
         }
@@ -111,7 +103,7 @@
             }
           }
           &.divider{
-            border-color: $gray4;
+            border-color: $gray7;
             padding: 0;
           }
         }
@@ -131,14 +123,14 @@
         font:normal 16px/22px $font-medium, sans-serif;
         padding: 8px 14px;
         position: relative;
-        color: $gray3;
+        color: $gray4;
 
         &:active {
-          color: $dnm_white;
+          color: $gray2;
         }
         &.nav-link {
           font-size: 20px;
-        }        
+        }
       }
 
       &.dropdown.open {

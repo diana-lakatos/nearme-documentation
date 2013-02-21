@@ -38,24 +38,28 @@ gem 'delayed_job_active_record'
 gem 'stripe'
 gem 'friendly_id'
 
-gem 'jquery-rails'
 gem 'sass-rails'
+gem 'bootstrap-sass', '~> 2.3.0.0'
 gem 'chronic'
-gem 'chosen-rails'
 
 gem 'ey_config'
 
 gem 'unicorn'
 gem 'premailer-rails3'
+gem 'chameleon'
 
-group :development do
-  gem 'sqlite3'
-  gem "rails-erd"
-  gem 'quiet_assets'
-  gem 'mail_view'
-  gem 'better_errors'
-  gem 'binding_of_caller'
+group :staging, :production do
+  gem 'newrelic_rpm'
 end
+
+group :assets do
+  gem 'handlebars_assets'
+  gem 'mustachejs-rails'
+  gem 'jquery-rails'
+  gem 'chosen-rails'
+  gem 'rails-backbone'
+end
+
 
 group :development, :test, :staging do
   gem 'factory_girl_rails', '>=3.0.0'
@@ -70,11 +74,19 @@ group :development, :test do
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
   gem 'jasmine'
+  gem 'better_errors' # add more details error in browser
+  gem 'binding_of_caller' # extension for better_errors for more granular info
   gem 'debugger'
 end
 
+group :development do
+  gem "rails-erd"
+  gem 'quiet_assets'
+  gem 'mail_view'
+  gem 'sextant'
+end
+
 group :test do
-  gem 'autotest'
   gem 'capybara', '1.1.2'
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
@@ -86,8 +98,4 @@ group :test do
   gem 'timecop'
   gem 'turn'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
-end
-
-group :staging, :production do
-  gem 'newrelic_rpm'
 end

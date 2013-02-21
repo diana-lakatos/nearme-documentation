@@ -49,6 +49,21 @@ class LocationTest < ActiveSupport::TestCase
       assert location.availability.open_on?(:day => 0, :hour => 6)
       assert !location.availability.open_on?(:day => 1)
     end
+
+    should "return an Array of full week availability ordered by day" do
+      location = Location.new
+      location.availability_rules << AvailabilityRule.new(:day => 0, :open_hour => 6, :open_minute => 0, :close_hour => 20, :close_minute => 0)
+      location.availability_rules << AvailabilityRule.new(:day => 2, :open_hour => 6, :open_minute => 0, :close_hour => 20, :close_minute => 0)
+      availability_all = location.availability.full_week
+      assert availability_all.is_a?(Array)
+      assert_equal availability_all.count, 7
+      assert_equal availability_all[0][:day], 1
+      assert_equal availability_all[1][:day], 2
+      assert_equal availability_all[1][:rule].id, nil
+      assert_equal availability_all[2][:rule].day, 3
+      assert_equal availability_all[6][:rule].day, 0
+    end
+
   end
 
   context "friendly url" do
@@ -115,8 +130,5 @@ class LocationTest < ActiveSupport::TestCase
       assert_equal("Unknown", @location.suburb)
       assert_equal("Unknown", @location.street)
     end
-
   end
-
-
 end

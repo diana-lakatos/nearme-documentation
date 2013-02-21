@@ -9,9 +9,12 @@
       = f.password_field :password,              placeholder: "Password"
       = f.password_field :password_confirmation, placeholder: "Confirm password"
   = f.association :industries, :blank => false, :input_html => { :class => 'custom-select' }
-  = f.input :avatar
   = f.input :job_title, label: "Job title", placeholder: "Your job title"
   = f.input :biography, label: "Biography", placeholder: "Your biography"
+
+  - provide :avatar_thumb do
+    = image_tag resource.avatar_url(:thumb).to_s
+  = f.input :avatar, label: "Avatar",  as: :avatar, content: yield(:avatar_thumb)
 
   .actions
     = f.submit (resource.persisted?) ? "Save Changes" : "Sign Up Now"

@@ -29,15 +29,15 @@ class Listing::SerializationTest < ActiveSupport::TestCase
     end
   end
 
-  context "a POA daily listing" do
+  context "a 'Call' daily listing" do
     setup do
-      @listing = FactoryGirl.create(:poa_listing)
+      @listing = FactoryGirl.create(:call_listing)
       @serializer = ListingSerializer.new(@listing)
       @json = @serializer.as_json[:listing]
     end
 
-    should "be labeled as POA" do
-      assert_equal "POA", @json[:price][:label]
+    should "be labeled as 'Call'" do
+      assert_equal "Call", @json[:price][:label]
     end
   end
 

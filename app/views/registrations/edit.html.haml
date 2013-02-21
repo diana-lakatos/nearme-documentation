@@ -5,6 +5,8 @@
     %h2
       %span.ico-settings.padding Account Settings
     .box
+      %h2
+        %span.ico-user.padding Profile
       %p
       = render "registrations/networks", :supported_providers => @supported_providers
       = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name) }
