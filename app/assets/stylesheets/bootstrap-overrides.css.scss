@@ -23,9 +23,7 @@ a[rel="tooltip"] {
   @include adjust-font-size-to(16px);
   color: $gray2;
 }
-.collapse.in {
-  padding: 20px 0 0;
-}
+
 abbr[title] {
   cursor: auto;
   border: none;
