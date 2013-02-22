@@ -5,5 +5,6 @@
 #= require ./search/geocoder
 #= require ./search/map
 #= require ./search/listing
+#= require ./search/redo_search_map_control
 
 @Search = {}
