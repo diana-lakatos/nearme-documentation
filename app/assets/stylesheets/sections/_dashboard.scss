@@ -155,6 +155,22 @@ section.listings {
     margin: auto -15px;
   }
 }
+
+.fileupload {
+  .fileinput-button {
+    position: relative;
+    input.browse-file {
+      opacity:0;
+      position:absolute;
+      top:0;
+      left:0;
+      height:inherit;
+      width:inherit;
+    }
+  }
+}
+
+
 /*   End new dashboard */
 section.dashboard,
 section.companies,
