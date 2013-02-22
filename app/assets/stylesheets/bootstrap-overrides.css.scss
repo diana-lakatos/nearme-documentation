@@ -1,12 +1,22 @@
 body {
-  padding-top: 90px;
+  padding: 90px 0 0;
 }
+
 .padding-row {
   padding: 1.5em 0;
 }
+
 .padding-bottom {
   padding: 0 0 1.5em;
 }
+
+.container-fluid {
+
+  @media (max-width: 767px) {
+    padding: 0 20px;
+  }  
+}
+
 .navbar-fixed-top,
 .navbar-fixed-bottom {
   position: fixed;
@@ -58,6 +68,10 @@ abbr[data-original-title] {
   color: $dnm_red;
 }
 
+.btn {
+  text-shadow: none;
+  box-shadow: none;
+}
 .carousel-control {
   background: none !important;
   border: none !important;
@@ -66,7 +80,7 @@ abbr[data-original-title] {
 
 .container-fluid {
   @media (min-width: 1400px) {
-    max-width: 1400px;
+    max-width: 1360px;
     margin-left: auto;
     margin-right: auto;
   }

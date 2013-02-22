@@ -7,7 +7,6 @@
   width: 280px;
 
   background: $dnm_black;
-  border: 2px solid $gray3;
   @include border-radius(8px);
 
   .datepicker-prev, .datepicker-next {
@@ -17,11 +16,11 @@
     padding:10px;
     font-size:20px;
     line-height: 20px;
-    @include opacity(0.4);
-    color: $gray1;
+    opacity: 40%;
+    color: $gray3;
     cursor: pointer;
     &:hover {
-      @include opacity(1);
+      opacity: 100%;
     }
   }
 
@@ -83,6 +82,7 @@
     .datepicker-day {
       cursor: pointer;
       font-weight: bold;
+      color: $gray7;
 
       &.datepicker-day-dow-0 {
         clear: left;
@@ -93,7 +93,7 @@
       }
 
       &.datepicker-day-other-month {
-        @include opacity(0.5);
+        color: $gray;
       }
 
       &.active {
@@ -108,8 +108,7 @@
 
       // Past/historical date
       &.datepicker-day-past, &.datepicker-day-past.disabled {
-        color: #6b7a80;
-        @include opacity (0.5);
+        color: $gray5;
       }
     }
   }

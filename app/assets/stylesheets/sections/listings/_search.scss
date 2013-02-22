@@ -33,6 +33,7 @@ section.search {
   .btn-green {
     width: 100%;
     text-align: center;
+    overflow: hidden;
   }
 }
 
@@ -183,7 +184,7 @@ section.search {
 
     @media (max-width: 960px) {
       width: 33.333333333%;
-      height: 290px;
+      height: 300px;
     }
 
     @media (max-width: 650px) {
@@ -197,7 +198,8 @@ section.search {
     }
 
     h2 {
-      margin: 6px 16px 6px 0;
+      margin: 0px 16px 6px 0;
+      line-height: 32px;
 
       a {
         color: $dnm_black;
