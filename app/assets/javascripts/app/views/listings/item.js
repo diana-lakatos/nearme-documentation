@@ -5,6 +5,7 @@ ListingView = Backbone.View.extend({
     this.thumbnail_url = this.options.thumbnail_url;
     this._deleteTrigger = '.delete-listing'; // helper for testing
     this._availabilityTrigger = '.edit_listing .availability-rules input[type=radio]'; // helper for testing
+    this.view_id = this.cid;
   },
 
   events: {
@@ -17,7 +18,7 @@ ListingView = Backbone.View.extend({
   render: function() {
     var data = this.model.toJSON();
     data.thumbnail_url = this.thumbnail_url;
-    data.view_id = this.cid;
+    data.view_id = this.view_id;
     this.$el.html(this.template(data));
     return this;
   },
@@ -87,13 +88,12 @@ ListingView = Backbone.View.extend({
     }, 1500 );
   },
 
-  _showError: function(data) {
-    var msg = $.parseJSON(data.responseText).errors.join(", ");
-    var content = HandlebarsTemplates['shared/errors']({
+  _showError: function(data, xhr) {
+    var msg = $.parseJSON(xhr.responseText).errors.join(", ");
+    var content = HandlebarsTemplates['app/templates/shared/errors']({
       msg: msg
     });
-    var id = !this.model.isNew() ? this.model.id : '';
-    $('.action', this.$el.find('#listing-for-' + id)).prepend(content);
+    $('.action', this.$el.find('#listing-'+ this.view_id +'-details-holder')).prepend(content);
     $('.alert-error', this.$el).fadeIn();
   },
 
