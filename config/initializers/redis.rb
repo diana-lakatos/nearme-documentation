@@ -1,4 +1,4 @@
-config = if File.exists?("#{Rails.root}/config/redis.yml") 
+config = if File.exists?("#{Rails.root}/config/redis.yml")
   YAML::load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
 else
   {}

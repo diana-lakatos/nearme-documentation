@@ -1,2 +1,2 @@
 web: rails server thin -p $PORT -e $RACK_ENV
-worker: rake jobs:work
+worker: env QUEUE=* rake environment resque:work
