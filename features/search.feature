@@ -63,18 +63,12 @@ Feature: A user can search for a listing
     And I see a search result for the Auckland listing
     And I do not see a search result for the Cleveland listing
 
-  Scenario: Search result is remembered
-    Given a listing in Auckland exists
-    When I search for "Auckland"
-     And I leave and come back
-    Then I see a search result for the Auckland listing
-
-  Scenario: Search result can be overwritten
+  Scenario: Returning to the search results shows the previous results
     Given a listing in Auckland exists
       And a listing in Adelaide exists
      When I search for "Adelaide"
       And I make another search for "Auckland"
-      And I leave and come back
+      And I leave the page and hit back
      Then I see a search result for the Auckland listing
       And I do not see a search result for the Adelaide listing
 
@@ -94,11 +88,3 @@ Feature: A user can search for a listing
     When I search without setting a date range
     Then all the listings are included in the search results
 
-  @future
-  Scenario: A user searches with a price range
-    Given a listing in Auckland exists with a price of $50.00
-    And a listing in Auckland exists with a price of $10.00
-    When I set the price range to $0 to $25
-    And I search for "Auckland"
-    Then the search results have the $10 listing
-    And the search results do not have the $25 listing

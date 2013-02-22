@@ -25,8 +25,8 @@ When /^I search with a date range of 2 weeks$/ do
   search_for(listing.address, { start_date: Date.today, end_date: 2.weeks.from_now })
 end
 
-When /^I leave and come back$/ do
-  visit search_path
+When /^I leave the page and hit back$/ do
+  visit current_url
 end
 
 Then /^all the listings are included in the search results$/ do
