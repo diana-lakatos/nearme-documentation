@@ -14,10 +14,14 @@ class Location::GoogleGeolocationDataParserTest < ActiveSupport::TestCase
   test 'using administrative_area_level_3 as city if city is nil ' do
     address_components = Location::GoogleGeolocationDataParser.new(FactoryGirl.build(:location_vaughan_address_components).address_components)
     assert_equal "Major MacKenzie Drive", address_components.fetch_address_component("street")
-    assert_equal "", address_components.fetch_address_component("suburb")
     assert_equal "Vaughan", address_components.fetch_address_component("city")
     assert_equal "Ontario", address_components.fetch_address_component("state")
     assert_equal "Canada", address_components.fetch_address_component("country")
+  end
+
+  test 'using neighborhood as suburb if suburb is nil ' do
+    address_components = Location::GoogleGeolocationDataParser.new(FactoryGirl.build(:location_vaughan_address_components).address_components)
+    assert_equal "Maple", address_components.fetch_address_component("suburb")
   end
 
 end
