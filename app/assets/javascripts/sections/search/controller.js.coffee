@@ -95,19 +95,27 @@ class Search.Controller
 
     if result
       boundingBox = result.boundingBox()
-      params['lat'] = result.lat()
-      params['lng'] = result.lng()
-      params['nx']  = boundingBox[0]
-      params['ny']  = boundingBox[1]
-      params['sx']  = boundingBox[2]
-      params['sy']  = boundingBox[3]
+      params['lat'] = @formatCoordinate(result.lat())
+      params['lng'] = @formatCoordinate(result.lng())
+      params['nx']  = @formatCoordinate(boundingBox[0])
+      params['ny']  = @formatCoordinate(boundingBox[1])
+      params['sx']  = @formatCoordinate(boundingBox[2])
+      params['sy']  = @formatCoordinate(boundingBox[3])
 
     params
+
+  formatCoordinate: (coord) ->
+    coord.toFixed(5)
 
   assignFormParams: (paramsHash) ->
     # Write params to search form
     for field, value of paramsHash
       @form.find("input[name*=#{field}]").val(value)
+
+  getSearchParams: ->
+    params = {}
+    params[param] = @form.find("input[name*=#{param}]").val() for param in ['lat', 'lng', 'nx', 'ny', 'sx', 'sy', 'q']
+    params
 
   # Geocde the search query and assign it as the geocoded result
   geocodeSearchQuery: (callback) ->
@@ -124,6 +132,3 @@ class Search.Controller
 
       @setGeolocatedQuery(query, result)
       callback()
-
-
-
