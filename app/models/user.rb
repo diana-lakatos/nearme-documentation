@@ -27,6 +27,9 @@ class User < ActiveRecord::Base
   has_many :listings,
            :through => :locations
 
+  has_many :photos,
+           :through => :listings
+
   has_many :listing_reservations,
            :through => :listings,
            :source => :reservations
