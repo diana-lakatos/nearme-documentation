@@ -35,6 +35,7 @@ gem 'ts-resque-delta', '1.1.1'
 gem 'resque'
 gem "compass-rails"
 gem "coffee-rails"
+gem 'delayed_job_active_record'
 gem "rdiscount"
 gem 'stripe'
 gem 'friendly_id'
