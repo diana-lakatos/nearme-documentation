@@ -20,12 +20,12 @@ section.search {
       border-radius: 6px;
       -moz-border-radius: 6px;
       -o-border-radius: 6px;
-      height: 300px; 
+      height: 300px;
 
       @media (max-width: 480px) {
         height: 150px;
-      } 
-    } 
+      }
+    }
   }
 }
 
@@ -47,7 +47,7 @@ section.search {
     @include transition(all .1s ease-in);
     font-size: 32px;
     opacity: .6;
-    color: $dnm_black; 
+    color: $dnm_black;
 
     &:hover {
       opacity:.95;
@@ -88,7 +88,7 @@ section.search {
     font-size: 16px;
 
     @media (max-width: 480px) {
-      font-size: 14px; 
+      font-size: 14px;
     }
   }
   .price-range .value {
@@ -134,14 +134,14 @@ section.search {
     }
 
     .availability-date-start {
-      position: relative; 
+      position: relative;
       float: left;
       width: 49%;
       margin-right: 2%;
     }
 
     .availability-date-end {
-      position: relative; 
+      position: relative;
       float: left;
       width: 49%;
     }
@@ -194,7 +194,7 @@ section.search {
     @media (max-width: 450px) {
       width: 100%;
       height: auto;
-      margin-bottom: 1.5em; 
+      margin-bottom: 1.5em;
     }
 
     h2 {
@@ -218,6 +218,7 @@ section.search {
       padding: 1px;
       background: $dnm_white;
       background: rgba(255, 255, 255, 0.6);
+      display: block;
     }
 
     a {
@@ -228,11 +229,11 @@ section.search {
       &:hover {
         .listing-primary-image {
           display: none;
-        }        
+        }
         .listing-secondary-image {
           display: block;
         }
       }
     }
-  }  
+  }
 }
