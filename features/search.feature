@@ -55,14 +55,6 @@ Feature: A user can search for a listing
     And I see a search result for the Auckland listing
     And I do not see a search result for the Cleveland listing
 
-  Scenario: A user searches for a location
-    Given a listing in Cleveland exists
-    And a listing in Auckland exists
-    When I search for "Auckland"
-    Then I see the listings on a map
-    And I see a search result for the Auckland listing
-    And I do not see a search result for the Cleveland listing
-
   Scenario: Returning to the search results shows the previous results
     Given a listing in Auckland exists
       And a listing in Adelaide exists

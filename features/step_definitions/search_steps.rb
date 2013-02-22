@@ -26,7 +26,8 @@ When /^I search with a date range of 2 weeks$/ do
 end
 
 When /^I leave the page and hit back$/ do
-  visit current_url
+  visit root_path
+  page.evaluate_script('window.history.back()')
 end
 
 Then /^all the listings are included in the search results$/ do
