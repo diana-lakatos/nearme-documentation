@@ -60,10 +60,7 @@ class @SpaceWizardDesksForm
       @container.find('.legend span').text(i)
 
     bindEvents: ->
-      @container.on 'keypress', 'input[name*=price]', =>
-        @priceChanged()
-
-      @container.on 'blur', 'input[name*=price]', =>
+      @container.on 'keyup change blur', 'input[name*=price]', =>
         @priceChanged()
 
       @container.on 'change', 'input[type=checkbox][name*=free]', =>

@@ -14,42 +14,26 @@
 %article#space
 
   .clearfix
-    .row-fluid
+    .row-fluid.padding-row
       .span4
-        .accordion
-          .accordion-group
-            .accordion-heading
-              %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#overview_tab'}
-                Overview
-            #overview_tab.accordion-body.collapse.in
-              .accordion-inner
-                %p= truncate_with_ellipsis @location.description, 250
+        %h2 Overview
+        %p= truncate_with_ellipsis @location.description, 250
 
-                - if @location.phone.present?
-                  %strong.ico-phone.padding= @location.phone
+        - if @location.phone.present?
+          %strong.ico-phone.padding= @location.phone
 
-          - if @location.creator
-            .accordion-group
-              .accordion-heading
-                %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#host_tab'}
-                  Company
-              #host_tab.accordion-body.collapse
-                .accordion-inner
-                  %p
-                  - if @location.creator.phone
-                    %p.ico-phone.padding= @location.creator.phone
-                  %p= truncate_with_ellipsis @location.company.description, 250
+        - if @location.creator
+          %h2 Company
+          %p
+        - if @location.creator.phone
+          %p.ico-phone.padding= @location.creator.phone
+        %p= truncate_with_ellipsis @location.company.description, 250
 
-          - if @amenities
-            .accordion-group
-              .accordion-heading
-                %a.accordion-toggle{'data-toggle' => 'collapse', 'data-parent' => '.accordion', 'href' => '#amenities_tab'}
-                  Amenities
-              #amenities_tab.accordion-body.collapse
-                .accordion-inner
-                  %ul
-                    - @location.amenities.each do |amenity|
-                      %li= amenity
+      - if @amenities
+        %h2 Amenities
+        %ul
+          - @location.amenities.each do |amenity|
+            %li= amenity
 
       .span8
         = render 'bookings'
