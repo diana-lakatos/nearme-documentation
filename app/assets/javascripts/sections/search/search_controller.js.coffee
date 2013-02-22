@@ -139,5 +139,6 @@ class Search.SearchController extends Search.Controller
   updateUrlForSearchQuery: ->
     if window.history?.replaceState
       url = document.location.href.replace(/\?.*$/, "")
-      url = "#{url}?#{$.param(@getSearchParams())}"
+      params = @getSearchParams()
+      url = "#{url}?#{$.param(params)}"
       history.replaceState(params, "Search Results", url)
