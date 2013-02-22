@@ -33,12 +33,9 @@ gem 'will_paginate'
 gem 'thinking-sphinx', '2.0.14', :require => 'thinking_sphinx'
 gem 'ts-resque-delta', '1.1.1'
 gem 'resque'
-gem 'redis'
-gem 'connection_pool'
 gem "compass-rails"
 gem "coffee-rails"
 gem "rdiscount"
-# gem 'delayed_job_active_record'
 gem 'stripe'
 gem 'friendly_id'
 

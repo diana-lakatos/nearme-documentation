@@ -4,16 +4,11 @@
 #
 if node[:instance_role] == 'util'
   
-  execute "install resque gem" do
-    command "gem install resque redis redis-namespace yajl-ruby -r"
-    not_if { "gem list | grep resque" }
-  end
-  
-  case node[:ec2][:instance_type]
-  when 'm1.small' then worker_count = 1
-  when 'c1.medium'then worker_count = 2
-  when 'c1.xlarge' then worker_count = 4
-  else worker_count = 2
+  worker_count = case node[:ec2][:instance_type]
+  when 'm1.small' then 1
+  when 'c1.medium'then 2
+  when 'c1.xlarge' then 4
+  else 2
   end
   
   node[:applications].each do |app, data|
@@ -23,9 +18,9 @@ if node[:instance_role] == 'util'
       mode 0644 
       source "monitrc.conf.erb" 
       variables({ 
-      :num_workers => worker_count,
-      :app_name => app, 
-      :rails_env => node[:environment][:framework_env] 
+        :num_workers => worker_count,
+        :app_name => app, 
+        :rails_env => node[:environment][:framework_env] 
       }) 
     end
     

@@ -4,8 +4,4 @@ else
   {}
 end
 
-REDIS = ConnectionPool.new(timeout: 1, size: 5) do
-  Redis.new(config)
-end
-
 Resque.redis = config.symbolize_keys
