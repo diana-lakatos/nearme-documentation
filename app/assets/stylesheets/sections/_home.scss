@@ -162,8 +162,17 @@ section.how-it-works {
       }
     }
   }
-  h1{
+
+  h1 {
     font: normal 40px/50px $font-medium, sans-serif;
     margin: 10px 0 20px;
+  }
+
+  p {
+    @media (max-width: 767px) {
+      max-width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 }  
