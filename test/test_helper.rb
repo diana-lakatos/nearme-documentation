@@ -1,8 +1,5 @@
 require 'rubygems'
 require 'spork'
-#uncomment the following line to use spork with the debugger
-#require 'spork/ext/ruby-debug'
-
 Spork.prefork do
   # Loading more in this block will cause your tests to run faster. However,
   # if you change any configuration or code from libraries loaded here, you'll
@@ -14,49 +11,53 @@ Spork.prefork do
   require 'thinking_sphinx/test'
   require 'mocha/setup'
   require 'mocha/integration/test_unit'
+  require 'webmock/test_unit'
 
-Turn.config.format = :dot
+  Turn.config.format = :dot
 
-class ActiveSupport::TestCase
-  # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
-  #
-  # Note: You'll currently still have to declare fixtures explicitly in integration tests
-  # -- they do not yet inherit this setting
-  fixtures :all
+  class ActiveSupport::TestCase
+    # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
+    #
+    # Note: You'll currently still have to declare fixtures explicitly in integration tests
+    # -- they do not yet inherit this setting
+    fixtures :all
 
-  # Add more helper methods to be used by all tests here...
+    # Add more helper methods to be used by all tests here...
 
-  def raw_post(action, params, body)
-    # The problem with doing this is that the JSON sent to the app
-    # is that Rails will parse and put the JSON payload into params.
-    # But this approach doesn't behave like that for tests.
-    # The controllers are doing more work by parsing JSON than necessary.
-    @request.env['RAW_POST_DATA'] = body
-    response = post(action, params)
-    @request.env.delete('RAW_POST_DATA')
-    response
+    def raw_post(action, params, body)
+      # The problem with doing this is that the JSON sent to the app
+      # is that Rails will parse and put the JSON payload into params.
+      # But this approach doesn't behave like that for tests.
+      # The controllers are doing more work by parsing JSON than necessary.
+      @request.env['RAW_POST_DATA'] = body
+      response = post(action, params)
+      @request.env.delete('RAW_POST_DATA')
+      response
+    end
+
+    def raw_put(action, params, body)
+      @request.env['RAW_POST_DATA'] = body
+      response = put(action, params)
+      @request.env.delete('RAW_POST_DATA')
+      response
+    end
+
+    def authenticate!
+      @user = FactoryGirl.create(:authenticated_user)
+      request.env['Authorization'] = @user.authentication_token;
+    end
+
+    def stub_sphinx(listings_to_return)
+      ThinkingSphinx::Search.any_instance.stubs(:search).returns(listings_to_return)
+    end
+    DatabaseCleaner.strategy = :truncation
+
+    def stub_image_url(image_url)
+      stub_request(:get, image_url).to_return(:status => 200, :body => File.expand_path("../assets/foobear.jpeg", __FILE__), :headers => {'Content-Type' => 'image/jpeg'})
+    end
   end
 
-  def raw_put(action, params, body)
-    @request.env['RAW_POST_DATA'] = body
-    response = put(action, params)
-    @request.env.delete('RAW_POST_DATA')
-    response
-  end
-
-  def authenticate!
-    @user = FactoryGirl.create(:authenticated_user)
-    request.env['Authorization'] = @user.authentication_token;
-  end
-
-  def stub_sphinx(listings_to_return)
-    ThinkingSphinx::Search.any_instance.stubs(:search).returns(listings_to_return)
-  end
-  DatabaseCleaner.strategy = :truncation
-
-end
-
-ThinkingSphinx::Test.init
+  ThinkingSphinx::Test.init
 
 end
 

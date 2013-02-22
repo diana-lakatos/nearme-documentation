@@ -22,10 +22,6 @@ class AvatarUploader < CarrierWave::Uploader::Base
     process :resize_to_fill => [1280, 960]
   end
 
-  def extension_white_list
-    %w(jpg jpeg gif png)
-  end
-
   def default_url
     "http://placehold.it/100x100"
   end

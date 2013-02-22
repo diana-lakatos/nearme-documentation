@@ -42,4 +42,43 @@ class UserTest < ActiveSupport::TestCase
 
     assert_equal "Hulk Hogan <hulk@desksnear.me>", @user.full_email
   end
+
+  test "avatar not uploaded if user did not upload it" do
+    @user = FactoryGirl.create(:user)
+    assert_equal false, @user.avatar_provided?
+  end
+
+  test "avatar is uploaded if user uploaded it" do
+    @user = FactoryGirl.build(:user)
+    @user.avatar = File.open(File.expand_path("../../assets/foobear.jpeg", __FILE__))
+    @user.save!
+    assert @user.avatar_provided?
+  end
+
+  test "image without extension does not prevent from saving user" do
+    @user = FactoryGirl.build(:user)
+    @user.avatar = File.open(File.expand_path("../../assets/image_no_extension", __FILE__))
+    @user.save!
+    assert @user.avatar_provided?
+  end
+
+  test "image uploaded via remote url is uploaded after save" do
+    stub_image_url("http://www.example.com/image.jpg")
+    @user = FactoryGirl.create(:user)
+    @user.remote_avatar_url = "http://www.example.com/image.jpg"
+    begin
+      @user.save!
+    rescue
+    end
+    assert @user.avatar_provided?
+  end
+
+  test "image uploaded via remote url is not uploaded before save" do
+    stub_image_url("http://www.example.com/image.jpg")
+    @user = FactoryGirl.create(:user)
+    @user.remote_avatar_url = "http://www.example.com/image.jpg"
+    @user.reload
+    assert @user.avatar_provided?
+  end
+
 end
