@@ -30,26 +30,17 @@ LocationView = Backbone.View.extend({
   },
 
   addAll: function() {
-    this.thumbnail_url = this.getThumbnailUrl();
     this.listingCollection.each(this.addOne);
   },
 
   addOne: function(listing) {
-    var view = new ListingView({
-      model: listing,
-      thumbnail_url: this.thumbnail_url
-    });
+    var view = new ListingView({ model: listing });
     var content = view.render().el;
     $(this.$el).find(this._childContainer).append(content);
     if (listing.isNew()) {
       $(".listing-content", $(content)).collapse('show'); // expend the listing container
       $("input#listing_name", $(content)).focus();
     }
-  },
-
-  getThumbnailUrl: function() {
-    var params = $.param({sensor: false, size: '52x52', location: this.model.get('latitude')+ ',' + this.model.get('longitude')});
-    return "http://maps.googleapis.com/maps/api/streetview?" + params;
   },
 
   createListing: function(event) {
