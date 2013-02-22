@@ -2,7 +2,6 @@ ListingView = Backbone.View.extend({
   template: HandlebarsTemplates['app/templates/listings/item'],
   initialize: function() {
     _.bindAll(this, 'render', '_afterSave', '_showError');
-    this.thumbnail_url = this.options.thumbnail_url;
     this._deleteTrigger = '.delete-listing'; // helper for testing
     this._availabilityTrigger = '.edit_listing .availability-rules input[type=radio]'; // helper for testing
     this.view_id = this.cid;
@@ -17,7 +16,6 @@ ListingView = Backbone.View.extend({
 
   render: function() {
     var data = this.model.toJSON();
-    data.thumbnail_url = this.thumbnail_url;
     data.view_id = this.view_id;
     this.$el.html(this.template(data));
     return this;
