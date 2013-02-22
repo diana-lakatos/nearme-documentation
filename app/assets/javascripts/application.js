@@ -13,6 +13,8 @@
 //= require ./vendor/jquery.popover-1.1.2
 //= require ./vendor/jquery.payment
 //= require ./vendor/asevented
+//= require ./vendor/jquery.ui.widget
+//= require ./vendor/jquery.fileupload
 //= require underscore
 //= require backbone
 //= require backbone_rails_sync

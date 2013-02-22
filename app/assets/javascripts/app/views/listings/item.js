@@ -1,7 +1,8 @@
 ListingView = Backbone.View.extend({
   template: HandlebarsTemplates['app/templates/listings/item'],
   initialize: function() {
-    _.bindAll(this, 'render', '_afterSave', '_showError');
+    _.bindAll(this, 'render', '_getId', '_afterSave', '_showError');
+    this.photoCollection = new PhotoCollection(this.model.get('photos_attributes'));
     this._deleteTrigger = '.delete-listing'; // helper for testing
     this._availabilityTrigger = '.edit_listing .availability-rules input[type=radio]'; // helper for testing
     this.view_id = this.cid;
@@ -18,7 +19,14 @@ ListingView = Backbone.View.extend({
     var data = this.model.toJSON();
     data.view_id = this.view_id;
     this.$el.html(this.template(data));
+    var photoManagerView = new PhotoManagerView({el: $('#photos-' + this.cid,this.$el),collection:this.photoCollection, ref_type:'Listing', getRefId:this._getId});
+    photoManagerView.render();
+
     return this;
+  },
+
+  _getId: function() {
+      return this.model.id || null;
   },
 
   nameChanged: function(event) {

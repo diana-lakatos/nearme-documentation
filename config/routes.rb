@@ -113,6 +113,8 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
+    resources :photos
+
     resources :listings, :only => [:show,:create, :update, :destroy] do
       member do
         post 'reservation'
