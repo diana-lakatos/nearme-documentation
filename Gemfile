@@ -31,7 +31,7 @@ gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'tweet-button'
 gem 'will_paginate'
 gem 'thinking-sphinx', '2.0.14', :require => 'thinking_sphinx'
-gem 'ts-resque-delta', '1.1.1'
+gem 'ts-resque-delta', '1.2.4'
 gem 'resque'
 gem "compass-rails"
 gem "coffee-rails"
