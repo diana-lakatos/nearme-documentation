@@ -30,11 +30,13 @@ gem 'state_machine'
 gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'tweet-button'
 gem 'will_paginate'
-gem 'thinking-sphinx', '2.0.11'
+gem 'thinking-sphinx', '2.0.14', :require => 'thinking_sphinx'
+gem 'ts-resque-delta', '1.1.1'
+gem 'resque'
 gem "compass-rails"
 gem "coffee-rails"
-gem "rdiscount"
 gem 'delayed_job_active_record'
+gem "rdiscount"
 gem 'stripe'
 gem 'friendly_id'
 
