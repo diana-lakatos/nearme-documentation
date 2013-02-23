@@ -94,6 +94,14 @@ group :development do
   gem 'ruby-prof'
 end
 
+group :test_tools do
+  gem 'guard-minitest', :require => false
+  gem 'guard-spork', :require => false
+  gem 'guard-cucumber', :require => false
+  gem 'spork-minitest', :git => 'git@github.com:Slashek/spork-minitest.git', :require => false
+  gem 'ruby-prof'
+end
+
 group :test do
   gem 'capybara', '1.1.2'
   gem 'cucumber-rails', :require => false
@@ -106,13 +114,4 @@ group :test do
   gem 'timecop'
   gem 'turn'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
-  gem 'guard-minitest'
-  gem 'guard-spork'
-  gem 'guard-cucumber'
-  gem 'spork-minitest', :git => 'git@github.com:Slashek/spork-minitest.git'
-  gem 'rb-inotify', :require => false
-  gem 'rb-fsevent', :require => false
-  gem 'rb-fchange', :require => false
-  #gem 'growl_notify'
-  gem 'ruby-prof'
 end
