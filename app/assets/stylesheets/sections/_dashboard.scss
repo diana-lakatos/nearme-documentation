@@ -155,7 +155,12 @@ section.listings {
     margin: auto -15px;
   }
 }
-
+.gallery{
+  li.photo {
+    margin-bottom:20px;
+    border-bottom:1px solid $gray4;
+  }
+}
 .fileupload {
   .fileinput-button {
     position: relative;

@@ -3,6 +3,7 @@ PhotoView = Backbone.View.extend({
   initialize: function() {
     _.bindAll(this, 'render', 'trash');
     this._deleteTrigger = '.delete-photo'; // helper for testing
+    this.listenTo(this.model, "change", this.render);
   },
 
   events: {
@@ -12,6 +13,7 @@ PhotoView = Backbone.View.extend({
   render: function() {
     var data = this.model.toJSON();
     data.view_id = this.cid;
+    data.cid = this.model.cid;
     this.$el.html(this.template(data));
     return this;
   },
