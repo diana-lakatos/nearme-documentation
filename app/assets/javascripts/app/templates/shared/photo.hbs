@@ -1,5 +1,6 @@
-<li style="margin-bottom:20px;border-bottom:1px solid gray;">
+<li class="photo-item">
   <div>
+    {{#if id}}
     <img src="{{thumb_url}}">
     <input id="photos_attributes{{id}}_id" name="photos_attributes[{{id}}][id]"
     type="hidden" value="{{id}}">
@@ -7,6 +8,11 @@
       <input class="string required" id="photos_attributes{{id}}_caption" name="photos_attributes[{{id}}][caption]"
       placeholder="Enter Photo Caption..." size="50" type="text" value="{{caption}}">
     </div>
-      <a href="" class="delete delete-photo" data-id="{{id}}"><span class="ico-trash"></span></a>
+    <a href="" class="delete delete-photo" data-id="{{id}}"><span class="ico-trash"></span></a>
+    {{else}}
+       <div class="progress progress-striped active">
+         <div id="{{cid}}" class="bar" style="width: 0%;"></div>
+       </div>
+    {{/if}}
   </div>
 </li>

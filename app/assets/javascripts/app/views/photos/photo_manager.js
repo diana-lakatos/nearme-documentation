@@ -1,7 +1,7 @@
 PhotoManagerView = Backbone.View.extend({
   template: HandlebarsTemplates['app/templates/shared/photoManager'],
   initialize: function() {
-    _.bindAll(this, 'render', 'addAll', 'addOne');
+    _.bindAll(this, 'render', 'addAll', 'addOne', '_findModelByFilename');
     this._childContainer = '.gallery';
     this.ref_type = this.options.ref_type;
     this.getRefId = this.options.getRefId;
@@ -60,25 +60,31 @@ PhotoManagerView = Backbone.View.extend({
       url: '/v1/photos',
       paramName: 'image',
       add: function(e, data) {
+        var photoModel = new PhotoModel();
+        photoModel.set({filename: data.files[0].name});
+        self.collection.add(photoModel, {silent:true});
+        self.addOne(photoModel);
         data.formData = self._getRefData();
         data.submit();
       },
       done: function(e, data) {
-        self.addOne(new PhotoModel(data.result));
+        var photoModel = self._findModelByFilename(data.files[0].name);
+        photoModel.set(data.result);
       },
       progress: function(e, data) {
+        var photoModel = self._findModelByFilename(data.files[0].name);
         var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('.progress .bar', self.$el).css('width', progress + '%');
-      },
-
-      progressall: function(e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('.progressall .bar', self.$el).css('width', progress + '%');
+        $('.progress #' + photoModel.cid + '.bar', self.$el).css('width', progress + '%');
       }
 
     });
 
+  },
+
+  _findModelByFilename: function(filename) {
+    return this.collection.where({filename: filename})[0];
   }
+
 
 });
 
