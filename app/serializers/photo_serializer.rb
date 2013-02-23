@@ -1,6 +1,6 @@
 class PhotoSerializer < ApplicationSerializer
 
-  attributes :id, :caption, :thumb_url, :medium_url, :large_url
+  attributes :id, :caption, :thumb_url, :medium_url, :large_url, :space_listing_url
 
   def caption
     object.caption || ""
@@ -16,6 +16,10 @@ class PhotoSerializer < ApplicationSerializer
 
   def large_url
     object.image_url(:large)
+  end
+
+  def space_listing_url
+    object.image_url(:space_listing)
   end
 
 end
