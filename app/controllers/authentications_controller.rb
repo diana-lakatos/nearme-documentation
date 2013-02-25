@@ -11,6 +11,8 @@ class AuthenticationsController < ApplicationController
       sign_in_and_redirect(:user, authentication.user)
     elsif current_user
       current_user.authentications.create!(:provider => omniauth['provider'], :uid => omniauth['uid'])
+      current_user.use_social_provider_image(omniauth['info']['image'])
+      current_user.save!
       flash[:notice] = "Authentication successful."
       redirect_to edit_user_registration_url
     else

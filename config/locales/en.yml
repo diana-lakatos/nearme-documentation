@@ -5,3 +5,6 @@ en:
   date:
     formats:
       feed: "%d %B, %Y"
+  errors:
+    messages:
+      wrong_content_type: "is the wrong content type"

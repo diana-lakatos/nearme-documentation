@@ -62,6 +62,7 @@ class User < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :password, :if => :password_required?
   validates_presence_of :email
+  validates :avatar, :file_mime_type => {:content_type => /image/}, :if => Proc.new{|user| user.avatar.file.present? && user.avatar.file.content_type.present?}
 
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :validatable, :token_authenticatable
@@ -82,6 +83,7 @@ class User < ActiveRecord::Base
   def apply_omniauth(omniauth)
     self.name = omniauth['info']['name'] if name.blank?
     self.email = omniauth['info']['email'] if email.blank?
+    use_social_provider_image(omniauth['info']['image']) if omniauth['info']['image']
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
   end
 
@@ -137,5 +139,13 @@ class User < ActiveRecord::Base
 
   def default_company
     self.companies.first
+  end
+
+  def use_social_provider_image(url)
+    self.remote_avatar_url = url unless avatar_provided?
+  end
+
+  def avatar_provided?
+    return AvatarUploader.new.to_s != self.avatar.to_s
   end
 end
