@@ -99,7 +99,7 @@ ListingView = Backbone.View.extend({
     var content = HandlebarsTemplates['app/templates/shared/errors']({
       msg: msg
     });
-    $('.action', this.$el.find('#listing-'+ this.view_id +'-details-holder')).prepend(content);
+    $('.action-listing', this.$el.find('#listing-'+ this.view_id +'-details-holder')).prepend(content);
     $('.alert-error', this.$el).fadeIn();
   },
 
