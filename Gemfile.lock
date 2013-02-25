@@ -7,7 +7,7 @@ GIT
       crack (>= 0.1.7)
 
 GIT
-  remote: git@github.com:Slashek/spork-minitest.git
+  remote: https://github.com/Slashek/spork-minitest.git
   revision: 2979d438702cfd089debf6b610b6a736b4c5322d
   specs:
     spork-minitest (1.0.0.beta2)
