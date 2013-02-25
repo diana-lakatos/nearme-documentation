@@ -7,17 +7,19 @@ class Search.Map
   MARKERS =
     hover:
       image: new google.maps.MarkerImage(
-        '/assets/google-maps/marker-images/hover.png',
-        new google.maps.Size(20,29),
+        '/assets/google-maps/marker-images/hover-2x.png',
+        new google.maps.Size(40,57),
         new google.maps.Point(0,0),
-        new google.maps.Point(10,29)
+        new google.maps.Point(10,29),
+        new google.maps.Size(20,29)
       )
 
       shadow: new google.maps.MarkerImage(
-        '/assets/google-maps/marker-images/hover-shadow.png',
-        new google.maps.Size(38,29),
+        '/assets/google-maps/marker-images/hover-shadow-2x.png',
+        new google.maps.Size(72,57),
         new google.maps.Point(0,0),
-        new google.maps.Point(10,29)
+        new google.maps.Point(10,29),
+        new google.maps.Size(38,29)
       )
 
       shape:
@@ -26,17 +28,19 @@ class Search.Map
 
     default:
       image: new google.maps.MarkerImage(
-        '/assets/google-maps/marker-images/default.png',
-        new google.maps.Size(20,29),
+        '/assets/google-maps/marker-images/default-2x.png',
+        new google.maps.Size(40,57),
         new google.maps.Point(0,0),
-        new google.maps.Point(10,29)
+        new google.maps.Point(10,29),
+        new google.maps.Size(20,29)
       )
 
       shadow: new google.maps.MarkerImage(
-        '/assets/google-maps/marker-images/default-shadow.png',
-        new google.maps.Size(38,29),
+        '/assets/google-maps/marker-images/default-shadow-2x.png',
+        new google.maps.Size(72,57),
         new google.maps.Point(0,0),
-        new google.maps.Point(10,29)
+        new google.maps.Point(10,29),
+        new google.maps.Size(38,29)
       )
 
       shape:
