@@ -1,4 +1,6 @@
 PhotoView = Backbone.View.extend({
+  tagName: 'li',
+  className: 'photo-item',
   template: HandlebarsTemplates['app/templates/shared/photo'],
   initialize: function() {
     _.bindAll(this, 'render', 'trash');
