@@ -156,9 +156,21 @@ section.listings {
   }
 }
 .gallery{
-  li.photo {
-    margin-bottom:20px;
-    border-bottom:1px solid $gray4;
+  li.photo-item {
+    margin-bottom: 20px;
+    img {
+      float: left;
+    }
+    .delete-photo {
+      float: left;
+      padding-top: 235px;
+    }
+    .caption-photo {
+      margin-top: 10px;
+    }
+    &:last-child {
+     margin-bottom: 0;
+    }
   }
 }
 .fileupload {
