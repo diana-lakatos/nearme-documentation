@@ -33,15 +33,17 @@
 
   .row-fluid
     .span4
+      %h2 Expand Your Network
+      = image_tag("illustrations/handshake.png")  
+      %p Build your network & client base by leasing to professionals in your field
+    .span4
       %h2 Reduce Overhead
       = image_tag("illustrations/dollar.png")
-    .span4
-      %h2 Meaningful Connections
-      = image_tag("illustrations/handshake.png")
+      %p Generate extra revenue by renting out your empty office space
     .span4
       %h2 Trust & Convenience
       = image_tag("illustrations/heart.png")
-
+      %p Do business securely with trusted professionals
   .row-fluid    
     = link_to_once new_space_wizard_url, :class => "btn btn-blue btn-large" do
       %span.ico-add-location.padding List Your Space
