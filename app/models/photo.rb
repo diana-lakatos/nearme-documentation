@@ -1,6 +1,6 @@
 class Photo < ActiveRecord::Base
 
-  attr_accessible :content_id, :caption, :image, :position
+  attr_accessible :content_id, :content_type, :caption, :image, :position
   belongs_to :content, :polymorphic => true
 
   acts_as_paranoid

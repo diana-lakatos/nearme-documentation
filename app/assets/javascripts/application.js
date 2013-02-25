@@ -14,6 +14,7 @@
 //= require ./vendor/jquery.payment
 //= require ./vendor/asevented
 //= require ./vendor/detect-mobile-browser
+//= require jquery-fileupload/basic
 //= require underscore
 //= require backbone
 //= require backbone_rails_sync

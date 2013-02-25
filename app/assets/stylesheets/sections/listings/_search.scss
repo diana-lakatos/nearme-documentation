@@ -263,20 +263,5 @@ section.search {
       background: rgba(255, 255, 255, 0.6);
       display: block;
     }
-
-    a {
-      .listing-secondary-image {
-        display: none;
-      }
-
-      &:hover {
-        .listing-primary-image {
-          display: none;
-        }
-        .listing-secondary-image {
-          display: block;
-        }
-      }
-    }
   }
 }

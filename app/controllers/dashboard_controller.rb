@@ -13,7 +13,7 @@ class DashboardController < ApplicationController
 
   # Legacy dashboard page for managing bookings (user)
   def bookings
-    @your_reservations = current_user.reservations.visible
+    @your_reservations = current_user.reservations.visible.to_a.sort_by(&:date)
   end
 
   # Legacy dashboard page for managing reservations (owner)
@@ -26,11 +26,9 @@ class DashboardController < ApplicationController
     @listings = current_user.listings.all
   end
 
-  def new_dashboard
+  def index
     if current_user.companies.blank?
       redirect_to new_space_wizard_url
-    else
-      render 'webapp/launcher', layout: false
     end
   end
 end
