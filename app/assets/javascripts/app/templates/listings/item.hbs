@@ -1,10 +1,9 @@
 <section class="box box-dim listing">
-  <header data-toggle="collapse" class="listing collapsed" data-target="#collapse-{{view_id}}">
-  <span><img class="listing-header-thumbnail" src="{{thumbnail_url}}"></span>
-    <span class="listing-header">{{#if name}}{{{name}}}{{else}}New listing{{/if}}</span>
+  <header data-toggle="collapse" class="listing collapsed" data-target="#listing-{{view_id}}-details-holder">
+    <span class="padding ico-desk listing-header">{{#if name}}{{{name}}}{{else}}New listing{{/if}}</span>
     <span class="ico-edit right"/>
   </header>
-  <div id="collapse-{{view_id}}" class="accordion-body listing-content collapse">
+  <div id="listing-{{view_id}}-details-holder" class="accordion-body listing-content collapse">
     <div id="listing-for-{{id}}" class="accordion-inner">
       <div class="accordion" id="location-{{ref_id}}-listings-holder">
         <form class="simple_form form-horizontal edit_listing" id="edit_listing_{{id}}">

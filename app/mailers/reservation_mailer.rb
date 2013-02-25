@@ -95,6 +95,7 @@ class ReservationMailer < DesksNearMeMailer
 
     def generate_mail(subject)
       mail :subject => "[Desks Near Me] #{subject}",
-           :to      => @user.email
+           :to      => @user.email,
+           :bcc     => "notifications@desksnear.me"
     end
 end

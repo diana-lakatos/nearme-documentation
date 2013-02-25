@@ -75,6 +75,10 @@ class Search.Map
     google.maps.event.addListener @googleMap, 'zoom_changed', =>
       @trigger 'viewportChanged'
 
+  # Adds one of our custom map controls to the map
+  addControl: (control) ->
+    control.setMap(@googleMap)
+
   # Clears any plotted listings and resets the map
   resetMapMarkers: ->
     if @markers

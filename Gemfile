@@ -30,11 +30,13 @@ gem 'state_machine'
 gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'tweet-button'
 gem 'will_paginate'
-gem 'thinking-sphinx', '2.0.11'
+gem 'thinking-sphinx', '2.0.14', :require => 'thinking_sphinx'
+gem 'ts-resque-delta', '1.2.4'
+gem 'resque'
 gem "compass-rails"
 gem "coffee-rails"
-gem "rdiscount"
 gem 'delayed_job_active_record'
+gem "rdiscount"
 gem 'stripe'
 gem 'friendly_id'
 
@@ -84,8 +86,13 @@ group :development do
   gem 'quiet_assets'
   gem 'mail_view'
   gem 'sextant'
+  gem 'guard-minitest', :require => false
+  gem 'guard-spork', :require => false
+  gem 'guard-cucumber', :require => false
+  gem 'spork-minitest', :git => 'https://github.com/Slashek/spork-minitest.git', :require => false
+  gem 'rb-fsevent', :require => RUBY_PLATFORM.include?('darwin') && 'rb-fsevent'
+  gem 'ruby-prof'
 end
-
 group :test do
   gem 'capybara', '1.1.2'
   gem 'cucumber-rails', :require => false

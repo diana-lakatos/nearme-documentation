@@ -6,6 +6,7 @@ LocationView = Backbone.View.extend({
     this._childContainer = '.listings-holder';
     this._addTrigger = '.add-listing'; // helper for testing
     this._deleteTrigger = '.delete-location'; // helper for testing
+    this.view_id = this.cid;
   },
 
   events: {
@@ -20,7 +21,7 @@ LocationView = Backbone.View.extend({
 
   render: function() {
     var data = this.model.toJSON();
-    data.view_id = this.cid;
+    data.view_id = this.view_id;
     this.$el.html(this.template(data));
     this.addAll();
     this.toggleCmd();
@@ -29,26 +30,17 @@ LocationView = Backbone.View.extend({
   },
 
   addAll: function() {
-    this.thumbnail_url = this.getThumbnailUrl();
     this.listingCollection.each(this.addOne);
   },
 
   addOne: function(listing) {
-    var view = new ListingView({
-      model: listing,
-      thumbnail_url: this.thumbnail_url
-    });
+    var view = new ListingView({ model: listing });
     var content = view.render().el;
     $(this.$el).find(this._childContainer).append(content);
     if (listing.isNew()) {
       $(".listing-content", $(content)).collapse('show'); // expend the listing container
       $("input#listing_name", $(content)).focus();
     }
-  },
-
-  getThumbnailUrl: function() {
-    var params = $.param({sensor: false, size: '52x52', location: this.model.get('latitude')+ ',' + this.model.get('longitude')});
-    return "http://maps.googleapis.com/maps/api/streetview?" + params;
   },
 
   createListing: function(event) {
@@ -149,10 +141,10 @@ LocationView = Backbone.View.extend({
     }
   },
 
-  _showError: function(data){
-    var msg = $.parseJSON(data.responseText).errors.join(", ");
-    var content = HandlebarsTemplates['templates/shared/errors']({msg:msg});
-    $('.action', this.$el.find('#location-'+ this._getId() +'-details-holder')).prepend(content);
+  _showError: function(data, xhr){
+    var msg = $.parseJSON(xhr.responseText).errors.join(", ");
+    var content = HandlebarsTemplates['app/templates/shared/errors']({msg:msg});
+    $('.action', this.$el.find('#location-'+ this.view_id +'-details-holder')).prepend(content);
     $('.alert-error', this.$el).fadeIn();
   },
 

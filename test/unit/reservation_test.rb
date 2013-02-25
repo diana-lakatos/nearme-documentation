@@ -1,6 +1,7 @@
 require 'test_helper'
 require 'reservations_helper'
-
+require File.dirname(__FILE__) + '/../../lib/dnm_errors.rb'
+ 
 class ReservationTest < ActiveSupport::TestCase
   include ReservationsHelper
 

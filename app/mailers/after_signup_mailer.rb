@@ -4,7 +4,7 @@ class AfterSignupMailer < DesksNearMeMailer
 
     @user = user
     mail to:      user.email,
-      from: "michelle@desksnear.me",
+      from: "micheller@desksnear.me",
       subject: "Welcome to DesksNear.me",
       template_name: choose_template
   end

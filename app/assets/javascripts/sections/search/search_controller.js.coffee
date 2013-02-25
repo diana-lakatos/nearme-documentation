@@ -22,6 +22,8 @@ class Search.SearchController extends Search.Controller
       #     the bounds of the search results. We don't want to trigger a bounding box based
       #     lookup during a controlled viewport change such as this.
       return if @processingResults
+      return unless @redoSearchMapControl.isEnabled()
+
       @triggerSearchWithBoundsAfterDelay()
 
     @map.on 'mouseoverListingMarker', (mapListing) =>
@@ -33,7 +35,13 @@ class Search.SearchController extends Search.Controller
   initializeMap: ->
     mapContainer = @container.find('#listings_map')[0]
     return unless mapContainer
+
     @map = new Search.Map(mapContainer)
+
+    # Add our map viewport search control, which enables/disables searching on map move
+    @redoSearchMapControl = new Search.RedoSearchMapControl(enabled: true)
+    @map.addControl(@redoSearchMapControl)
+
     @updateMapWithListingResults()
 
     if DNM.isDesktop()
@@ -97,10 +105,10 @@ class Search.SearchController extends Search.Controller
   triggerSearchWithBounds: ->
     bounds = @map.getBoundsArray()
     @assignFormParams(
-      nx: bounds[0],
-      ny: bounds[1],
-      sx: bounds[2],
-      sy: bounds[3]
+      nx: @formatCoordinate(bounds[0]),
+      ny: @formatCoordinate(bounds[1]),
+      sx: @formatCoordinate(bounds[2]),
+      sy: @formatCoordinate(bounds[3])
     )
 
     @triggerSearchAndHandleResults =>
@@ -129,6 +137,7 @@ class Search.SearchController extends Search.Controller
     @startLoading()
     @triggerSearchRequest().success (html) =>
       @processingResults = true
+      @updateUrlForSearchQuery()
       @showResults(html)
       callback() if callback
       @finishLoading()
@@ -148,3 +157,10 @@ class Search.SearchController extends Search.Controller
   fieldChanged: (field, value) ->
     @startLoading()
     @triggerSearchFromQueryAfterDelay()
+
+  updateUrlForSearchQuery: ->
+    if window.history?.replaceState
+      url = document.location.href.replace(/\?.*$/, "")
+      params = @getSearchParams()
+      url = "#{url}?#{$.param(params)}"
+      history.replaceState(params, "Search Results", url)
