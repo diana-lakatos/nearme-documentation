@@ -89,19 +89,10 @@ group :development do
   gem 'guard-minitest', :require => false
   gem 'guard-spork', :require => false
   gem 'guard-cucumber', :require => false
-  gem 'spork-minitest', :git => 'git@github.com:Slashek/spork-minitest.git', :require => false
+  gem 'spork-minitest', :git => 'https://github.com/Slashek/spork-minitest.git', :require => false
   gem 'rb-fsevent', :require => RUBY_PLATFORM.include?('darwin') && 'rb-fsevent'
   gem 'ruby-prof'
 end
-
-group :test_tools do
-  gem 'guard-minitest', :require => false
-  gem 'guard-spork', :require => false
-  gem 'guard-cucumber', :require => false
-  gem 'spork-minitest', :git => 'git@github.com:Slashek/spork-minitest.git', :require => false
-  gem 'ruby-prof'
-end
-
 group :test do
   gem 'capybara', '1.1.2'
   gem 'cucumber-rails', :require => false
