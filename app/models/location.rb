@@ -1,5 +1,5 @@
 class Location < ActiveRecord::Base
-
+  
   extend FriendlyId
   friendly_id :formatted_address, use: :slugged
 
