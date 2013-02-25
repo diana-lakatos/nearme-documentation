@@ -13,7 +13,7 @@ class DashboardController < ApplicationController
 
   # Legacy dashboard page for managing bookings (user)
   def bookings
-    @your_reservations = current_user.reservations.visible
+    @your_reservations = current_user.reservations.visible.to_a.sort_by(&:date)
   end
 
   # Legacy dashboard page for managing reservations (owner)
