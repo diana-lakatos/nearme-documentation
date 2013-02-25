@@ -1,0 +1,15 @@
+  <div>
+    {{#if id}}
+      <img src="{{space_listing_url}}">
+      <a href="" class="delete delete-photo" data-id="{{id}}"><span class="ico-trash"></span></a>
+      <input id="photos_attributes{{id}}_id" name="photos_attributes[{{id}}][id]" type="hidden" value="{{id}}">
+      <div>
+        <input class="string required caption-photo" id="photos_attributes{{id}}_caption" name="photos_attributes[{{id}}][caption]"
+        placeholder="Enter Photo Caption..." size="50" type="text" value="{{caption}}">
+      </div>
+    {{else}}
+       <div class="progress progress-striped active">
+         <div id="{{cid}}" class="bar" style="width: 0%;"></div>
+       </div>
+    {{/if}}
+  </div>

@@ -9,6 +9,8 @@ class ListingWebSerializer < ApplicationSerializer
   attribute :availability_template_id
   attribute :availability_full_week, :key => :availability_rules_attributes
 
+  has_many :photos, :key => :photos_attributes
+
   def defer_availability_rules
     object.defer_availability_rules? ? 1 : 0
   end

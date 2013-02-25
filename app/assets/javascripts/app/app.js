@@ -17,7 +17,7 @@
         }
       }, options);
       Backbone.oldSync(method, model, params);
-    }
+    };
     Backbone.Events.on("show:locations", function() {
       router.navigate("locations");
       var appView = new AppView();
