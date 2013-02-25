@@ -114,3 +114,12 @@ Then /I am remembered/ do
   assert_equal Time.now.utc.to_date, user.remember_created_at.to_date
   assert_equal 20, user.remember_token.length
 end
+
+Then /^I do (not )?have avatar$/ do |without_avatar|
+  user = User.last
+  if without_avatar
+    assert !user.avatar_provided?
+  else
+    assert user.avatar_provided?
+  end
+end
