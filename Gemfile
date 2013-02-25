@@ -60,6 +60,7 @@ group :assets do
   gem 'jquery-rails'
   gem 'chosen-rails'
   gem 'rails-backbone'
+  gem 'jquery-fileupload-rails'
 end
 
 
