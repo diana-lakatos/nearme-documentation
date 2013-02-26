@@ -19,7 +19,7 @@ Feature: User Cancels Reservation
        | listing "Joe's Codin Garage" | 2010-10-21 | the user |
 
   Scenario: A user can see a list of their reservations
-    When I go to the dashboard page
+    When I go to the bookings page
     Then I should see the following reservations in order:
       | Joe's Codin Garage on October 18, 2010 (unconfirmed) |
       | WoughThorks on October 19, 2010 (unconfirmed)        |
@@ -27,7 +27,7 @@ Feature: User Cancels Reservation
       | Joe's Codin Garage on October 21, 2010 (unconfirmed) |
 
   Scenario: A user can cancel a reservation
-    Given I am on the dashboard page
+    Given I am on the bookings page
     When I cancel the reservation for "19th October 2010"
     Then I should have a cancelled reservation on "19th October 2010"
 

@@ -29,6 +29,18 @@ Feature: A user can login
      When I sign up with LinkedIn
      Then there should be no LinkedIn account
 
+  Scenario: Already existing user without avatar gets facebook's picture as avatar when connected
+    Given I am logged in manually
+      And I do not have avatar
+      And the Facebook OAuth request is successful
+     When I connect to Facebook
+     Then I do have avatar
+
+  Scenario: User who creates account via facebook should have avatar from facebook
+    Given the Facebook OAuth request is successful
+     When I sign up with Facebook
+     Then I do have avatar
+
   Scenario: User signed up with social provider can set up his password
     Given I signed up with LinkedIn without password
      When I type in my password in edit page

@@ -1,6 +1,7 @@
 class LocationsController < ApplicationController
 
   before_filter :authenticate_user!, :only => [:new, :create]
+  before_filter :require_ssl, :only => :show
 
   def show
     @location = Location.find(params[:id])

@@ -1,3 +1,11 @@
+select {
+ margin: 10px 0;
+}
+input[type=radio] {
+  vertical-align: inherit;
+  padding-right: 4px;
+}
+
 input[type=submit], 
 input[type=text], 
 input[type=email], 
@@ -22,7 +30,7 @@ input[type=tel] {
    -webkit-appearance: none;
    cursor: pointer;
 }
-    
+
 form {
   div.input, div.field {
     margin-bottom: 20px;
@@ -164,6 +172,12 @@ form {
     .control-group:last-child {
       margin-bottom: 0;
     }
+  }
+
+  // overwrite default width - make its width dynamic instea of constant 
+  .control-group .chzn-container-multi{
+    width: auto !important;
+    display: block !important;
   }
 
   input[type="text"], input[type="password"], input[type="email"], input[type="tel"], input[type="url"], input[type="number"], textarea, .chzn-container-multi ul.chzn-choices {
@@ -315,6 +329,7 @@ form {
 //   </form>
 .form-horizontal {
   .control-group {
+    clear: both;
     margin-bottom: 10px;
 
     // An indented control group
@@ -338,15 +353,14 @@ form {
     }
 
     .control-label {
-      @extend .font-banda-bold;
       width: 180px;
       float: left;
       margin-top: 7px;
       text-align: right;
-      font-size: 16px;
       color: $dnm_black;
 
-      abbr {
+      &.flush-top {
+        margin: 0 0 20px;
       }
     }
 

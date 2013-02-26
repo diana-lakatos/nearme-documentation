@@ -13,7 +13,8 @@ module DesksnearMe
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += %W(#{config.root}/inputs #{config.root}/lib #{config.root}/lib/validators)
+    config.autoload_paths += %W(#{config.root}/inputs)
+    config.autoload_paths += Dir["#{config.root}/lib", "#{config.root}/lib/**/"]
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -48,8 +49,8 @@ module DesksnearMe
     config.should_rewrite_email = Rails.env.staging? || Rails.env.development?
     config.test_email           = ENV['DNM_TEST_EMAIL'] || "dev@desksnear.me"
 
-    # Don't access the DB or load models when precompiling assets
-    config.assets.initialize_on_precompile = false
+    # Access the DB or load models when precompiling assets
+    config.assets.initialize_on_precompile = true
 
     # Enable the asset pipeline
     config.assets.enabled = true

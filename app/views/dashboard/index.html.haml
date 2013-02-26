@@ -1,0 +1,9 @@
+%h2 LOADING...
+
+- content_for :meta do
+  %meta{:content => "#{current_user.authentication_token}", :name => "auth-token"}/
+
+:javascript
+  $(function() {
+    DNM.Dashboard();
+  });

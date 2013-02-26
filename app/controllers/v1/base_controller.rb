@@ -16,12 +16,9 @@ class V1::BaseController < ApplicationController
 
   # Parse the request body from JSON
   def json_params
-
     @json_params ||= ActiveSupport::JSON.decode(request.body)
-
-  rescue MultiJson::DecodeError
-    raise DNM::InvalidJSON
-
+    raise DNM::InvalidJSON if @json_params.nil?
+    @json_params
   end
 
   # Ensure the user is authenticated

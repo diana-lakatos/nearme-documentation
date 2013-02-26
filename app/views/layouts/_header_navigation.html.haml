@@ -1,5 +1,4 @@
 - if user_signed_in?
-
   %ul.nav
     %li.dropdown
       %a.ico-dashboard.dropdown-toggle.nav-link{"data-toggle" => "dropdown", :href => "#"}
@@ -7,7 +6,7 @@
         %b.caret
       %ul.dropdown-menu
         %li
-          = link_to_once manage_companies_path do
+          = link_to_once controlpanel_path do
             %span.ico-location.padding Manage Locations
         %li
           = link_to_once reservations_dashboard_path do
@@ -28,7 +27,6 @@
         %li
           = link_to_once destroy_user_session_path, :method => :delete do
             %span.ico-logout.padding Log Out
-
 
 - else
   = link_to_once new_user_session_url(get_return_to_url), :class => "nav-link header-second margin-right ico-login padding-right" do
