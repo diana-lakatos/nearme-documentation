@@ -76,7 +76,7 @@ When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, 
     visit bookings_dashboard_path
   else
     login User.find_by_name("Bo Jeanes")
-    visit reservations_dashboard_path
+    visit manage_guests_dashboard_path
   end
 
   click_link_or_button action.capitalize

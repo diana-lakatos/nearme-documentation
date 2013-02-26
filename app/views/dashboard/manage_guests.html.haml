@@ -3,19 +3,23 @@
     %h1
       %span.ico-manage-guests.padding Manage Guests
     .box
-      - if @listing_reservations.empty?
-        = link_to "Share your space", manage_locations_path
+      - if @guest_list.empty?
+        %h4 Looks like you don't have any guests yet! You should show off your space!
+        %ul
+          - @locations.each do |location|
+            %li
+              =link_to "Tweet about #{location.name}", tweet_location_url(location)
+              or share this link directly:
+              =link_to location_url(location), location_url(location)
       - else
         %section#reservations.tab
           %ul.reservations.list
-            - @listing_reservations.each do |reservation|
+            - @guest_list.each do |reservation|
               %li
                 %p.em
                   %strong= reservation.owner
-
                   = link_to "mailto:#{reservation.owner.email}" do
                     %span.ico-mail.padding
-
                   on
                   %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
                   (#{reservation.state_name})
