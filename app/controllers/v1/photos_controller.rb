@@ -5,6 +5,7 @@ class V1::PhotosController <  V1::BaseController
 
   def create
     @photo = Photo.create(params)
+    @photo.creator_id = current_user.id
     if @photo.save
        render :json => @photo, :root => false
     else
@@ -22,6 +23,6 @@ class V1::PhotosController <  V1::BaseController
 
   private
     def find_photo
-      @photo = Photo.find(params[:id])
+      @photo = current_user.photos.find(params[:id])
     end
 end

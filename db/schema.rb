@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130219201753) do
+ActiveRecord::Schema.define(:version => 20130226192011) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -177,6 +177,7 @@ ActiveRecord::Schema.define(:version => 20130219201753) do
     t.string   "content_type"
     t.integer  "position"
     t.datetime "deleted_at"
+    t.integer  "creator_id"
   end
 
   create_table "ratings", :force => true do |t|
