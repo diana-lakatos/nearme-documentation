@@ -1,10 +1,10 @@
 %span#service_buttons
-  = link_to_once provider_auth_url('twitter'), :disable_with => "Connecting...", :class => "btn btn-blue btn-large twitter submit" do
-    %i.icon.ico-twitter.padding
-    Twitter 
   = link_to provider_auth_url('facebook'), :disable_with => "Connecting...", :class => "btn btn-blue btn-large facebook submit" do
     %i.icon.icon-facebook
     Facebook 
   = link_to provider_auth_url('linkedin'), :disable_with => "Connecting...", :class => "btn btn-blue btn-large linkedin submit" do
     %i.icon.icon-linkedin
     LinkedIn
+  = link_to_once provider_auth_url('twitter'), :disable_with => "Connecting...", :class => "btn btn-blue btn-large twitter submit" do
+    %i.icon.ico-twitter.padding
+    Twitter 
