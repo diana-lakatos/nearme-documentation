@@ -22,6 +22,6 @@ class V1::PhotosController <  V1::BaseController
 
   private
     def find_photo
-      @photo = current_user.photos.find(params[:id])
+      @photo = Photo.find(params[:id])
     end
 end
