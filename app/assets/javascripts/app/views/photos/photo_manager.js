@@ -74,7 +74,12 @@ PhotoManagerView = Backbone.View.extend({
       progress: function(e, data) {
         var photoModel = self._findModelByFilename(data.files[0].name);
         var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('.progress #' + photoModel.cid + '.bar', self.$el).css('width', progress + '%');
+        var $uiProgress = $('#'+ photoModel.cid +'.progress', self.$el);
+        $uiProgress.find('.bar').css('width', progress + '%');
+        if (progress == 100) {
+          $uiProgress.fadeOut();
+          $('#' + photoModel.cid + 'loading.loading', self.$el).fadeIn();
+        }
       }
 
     });
