@@ -28,14 +28,23 @@ by typing `spork minitest` or `spork cucumber`. Then run
 ## Releasing
 
 
-### Hotfixes
+### Hotfix
 
 There will be times when we must hotfix production. To do so:
 
-1. Commit the change to master (Preferably via pull request)
-5. Cherry-pick the change from master branch into production branch
-6. Deploy production branches recipes to staging
-6. Deploy production branch to staging
-6. Smoke test
-6. Tag the production branch
-7. Deploy the tag to production
+1. Branch from master with prefix `HOT-`
+2. Make necessary changes. Run tests. Push to GitHub.
+3. Create pull request for branch to master and go through an expedited review (have someone on hand to do it immediately)
+4. Once change is accepted and on master, checkout production and cherry-pick the commit:
+  * `git cherry-pick <commit ref 8..40>`
+5. Push to GitHub and deploy to staging with the production branch.
+  * `ey deploy -e dnme_staging -r production`
+6. Smoke test on staging.
+7. All good? Tag the production branch.
+  * `git tag -a <X.Y.Z> -m 'HOTFIX deploy to production. <insert meaningful message>'`
+8. Push and deploy the new tag to production.
+  * `ey deploy -e dnme_production -r <X.Y.Z>`
+9. Smoke test on production. And breathe...
+
+#### Useful links:
+* [Rollback last deploy](https://github.com/mdyd-dev/desksnearme/wiki/Engine-Yard-Cheat-Sheet#wiki-3)
