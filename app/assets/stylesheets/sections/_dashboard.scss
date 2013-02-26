@@ -36,8 +36,7 @@ section.locations-holder {
     }
     div.map {
       .map-container {
-        border: 2px solid rgb(220,220,220);
-        border-radius: 8px;
+        border-radius: 12px;
         height: 240px;
       }
     }
@@ -69,6 +68,7 @@ section.locations-holder {
 
   section.box {
     padding-bottom: 0;
+
     header {
       height: 24px;
       font-size: 24px;
@@ -78,6 +78,26 @@ section.locations-holder {
       span {
         white-space: nowrap;
         text-overflow: ellipsis;
+      }
+
+      &.listing:not(.collapsed),
+      &.location:not(.collapsed), {
+        span.ico-edit {
+          opacity: 1;
+        }
+      }
+
+      &:hover {
+        span.ico-edit {
+          opacity: .7;
+        }        
+      }
+      span.ico-edit {
+        opacity: .3;
+
+        &:hover {
+          opacity: 1;
+        }
       }
 
       .action {
@@ -92,6 +112,16 @@ section.locations-holder {
       width: 100%;
       text-align: center;
       @include box-sizing(border-box);
+      @include transition(opacity .15s ease-in);
+
+      &.btn-blue.btn-large {
+        text-align: left;
+        opacity: .5;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
 
       &.add-listing {
         @include border-top-radius(0);
@@ -99,17 +129,11 @@ section.locations-holder {
 
       &.add-location {
         margin-top: 20px;
-        background: $gray3;
-        color: $dnm_black;
-        @include transition(all .15s ease-in);
-
-        &:hover {
-          background: $gray4;
-        }
       }
     }
   }
 }
+
 section.listings {
   section.box {
     header {
@@ -117,7 +141,11 @@ section.listings {
       font-size: 20px;
       margin-bottom: 0;
       cursor: pointer;
-      .listing-header { padding-left: 12px; }
+
+      .listing-header { 
+        padding-left: 14px; 
+      }
+
       span {
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -138,7 +166,9 @@ section.listings {
       margin-bottom:0;
       padding-bottom: 0;
       border-radius: 0;
-      border-left: 4px solid $gray3;
+      border-left: 4px solid $gray4;
+      border-bottom: 1px solid $gray4;
+
       header {
         height: 52px;
         line-height: 52px;
@@ -163,7 +193,15 @@ section.listings {
     }
     .delete-photo {
       float: left;
-      padding-top: 235px;
+      margin: 0px 0 0 -70px;
+      @include adjust-font-size-to(24px);
+      @include text-shadow( 0 0 3px 0 black);
+      color: white;
+      opacity: .5;
+
+      &:hover {
+        opacity: 1;
+      }
     }
     .caption-photo {
       margin-top: 10px;
@@ -196,83 +234,6 @@ section.sessions {
   min-height: 800px;
 }
 
-ul.nav.dashboard {
-  position: relative;
-  width: 100%;
-  background: $gray2;
-  color: $gray4;
-  @include border-radius(12px);
-  @include background-clip(padding-box);
-  margin-bottom: 20px;
-
-  li {
-    &:hover {
-      color: black;
-    }
-  }
-
-  &:first-child {
-    @include border-left-radius(12px);
-  }
-
-  &:last-child {
-    @include border-right-radius(12px);
-  }
-
-  .account:after {
-    content:"Account";
-  }
-
-  .bookings:after {
-    content:"Bookings";
-  }
-
-  .locations:after {
-    content:"Locations";
-  }
-
-  .guests:after {
-    content:"Guests";
-  }
-
-  @media (max-width: 480px) {
-    .account:after,
-    .bookings:after,
-    .locations:after,
-    .guests:after {
-      content:""
-    }
-  }
-}
-
-li.current a,
-li.current:hover a {
-  color: $dnm_white;
-  &.active {
-    a {
-      color: black;
-      border-left: 4px solid $gray4;
-    }
-  }
-  &:first-child {
-    @include border-top-radius(12px);
-  }
-  &:last-child {
-    @include border-bottom-radius(12px);
-  }
-
-  a {
-    padding: .5em;
-    line-height: 40px;
-    font-size: 22px;
-    color: $gray4;
-
-    &:hover {
-      color: black;
-      background: $gray2;
-    }
-  }
-}
 
 .btn.facebook,
 .btn.linkedin,
