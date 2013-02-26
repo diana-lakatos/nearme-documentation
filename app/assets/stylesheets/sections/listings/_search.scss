@@ -222,7 +222,9 @@ section.search {
     overflow: hidden;
 
     &.focussed {
-      background: $gray2;
+      h2, h2 a{
+        color: #FF8D00;
+      }
     }
 
     @media (max-width: 960px) {
