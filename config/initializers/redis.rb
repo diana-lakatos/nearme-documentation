@@ -1,5 +1,7 @@
-Resque.redis = if File.exists?("#{Rails.root}/config/redis.yml")
+redis_conf = if File.exists?("#{Rails.root}/config/redis.yml")
   YAML::load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
 else
-  "localhost:6379"
+  { host: 'localhost', port: 6379 }
 end
+
+Resque.redis = Redis.new redis_conf
