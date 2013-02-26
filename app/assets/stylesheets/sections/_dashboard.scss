@@ -93,25 +93,34 @@ section.locations-holder {
 
         span.ico-edit {
           @include opacity(1);
-        }
+
+          &:hover {
+            @include opacity(.7);
+          }  
+        }  
       }
 
       &:hover {
 
         span.ico-edit {
-          @include opacity(.7);
+          @include opacity(1);
         }        
       }
 
       &.listing.collapsed,
       &.location.collapsed {
+
         span.ico-edit {
           @include opacity(.3);
+        }
 
-          &:hover {
-            @include opacity(1);
-          }
-        }  
+        &:hover {
+
+          span.ico-edit {
+            @include opacity(.7);
+          }        
+        }
+
       }
 
       .action {
