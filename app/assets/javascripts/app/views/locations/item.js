@@ -144,7 +144,9 @@ LocationView = Backbone.View.extend({
   _showError: function(data, xhr){
     var msg = $.parseJSON(xhr.responseText).errors.join(", ");
     var content = HandlebarsTemplates['app/templates/shared/errors']({msg:msg});
-    $('.action', this.$el.find('#location-'+ this.view_id +'-details-holder')).prepend(content);
+    var $target = $('.action', this.$el.find('#location-'+ this.view_id +'-details-holder'));
+    $target.find('.alert').remove();
+    $target.prepend(content);
     $('.alert-error', this.$el).fadeIn();
   },
 
