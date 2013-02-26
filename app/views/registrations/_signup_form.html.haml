@@ -22,7 +22,7 @@
           %p.error-block= f.object.errors[:password].to_sentence
 
     .actions
-      = f.submit 'Sign up', :disable_with => "Signing up...", :class => 'desksnearme submit'
+      = f.submit 'Sign up', :class => 'desksnearme submit', :disable_with => "Signing up..."
 
   %h3.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path}.
 
