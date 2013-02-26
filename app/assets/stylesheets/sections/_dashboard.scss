@@ -169,7 +169,7 @@ section.listings {
       margin-top: 10px;
     }
     .loading {
-      background:url('/assets/ajax-loader.gif') no-repeat center;
+      background: image-url('ajax-loader.gif') no-repeat center;
     }
     &:last-child {
      margin-bottom: 0;
