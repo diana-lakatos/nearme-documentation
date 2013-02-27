@@ -4,7 +4,7 @@ class @LocationFormController
     @setupComponents()
 
   setupComponents: ->
-    @address = new AddressAutocomplete(@container.find('[data-behavior=address-autocomplete]'))
+    @address = new AddressField(@container.find('[data-behavior=address-autocomplete]'))
     @availabilityRuleController = new AvailabilityRulesController(@container.find('.availability-rules'))
     @setupMap()
     @address.onLocate (lat, lng) =>
