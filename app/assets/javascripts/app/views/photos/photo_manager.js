@@ -8,10 +8,6 @@ PhotoManagerView = Backbone.View.extend({
     this.collection = this.options.collection;
   },
 
-  events: {
-    'click .fileinput_button': 'showFileSelector'
-  },
-
   //required by backend to create relation with parent element
   _getRefData: function() {
     return [{
@@ -29,11 +25,6 @@ PhotoManagerView = Backbone.View.extend({
     this.addAll();
     this.initUploader();
     return this;
-  },
-
-  showFileSelector: function() {
-    event.preventDefault();
-    event.stopPropagation();
   },
 
   addAll: function() {

@@ -177,15 +177,19 @@ section.listings {
   }
 }
 .fileupload {
+   cursor: pointer;
   .fileinput-button {
+    display: block;
     position: relative;
     input.browse-file {
+      display:block;
+      cursor: pointer;
       opacity:0;
       position:absolute;
       top:0;
       left:0;
       height:inherit;
-      width:inherit;
+      width:100%;
     }
   }
 }
