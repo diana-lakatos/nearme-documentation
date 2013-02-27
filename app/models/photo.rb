@@ -1,7 +1,8 @@
 class Photo < ActiveRecord::Base
 
-  attr_accessible :content_id, :content_type, :caption, :image, :position
+  attr_accessible :creator_id, :content_id, :content_type, :caption, :image, :position
   belongs_to :content, :polymorphic => true
+  belongs_to :creator, class_name: "User"
 
   acts_as_paranoid
 
@@ -9,6 +10,7 @@ class Photo < ActiveRecord::Base
   skip_callback :destroy, :after, :remove_image!
 
   validates :image, :presence => true
+  validates :content_type, :presence => true
 
   mount_uploader :image, PhotoUploader
 

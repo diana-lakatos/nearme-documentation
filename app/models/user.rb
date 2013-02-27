@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
            :through => :locations
 
   has_many :photos,
-           :through => :listings
+           :foreign_key => "creator_id"
 
   has_many :listing_reservations,
            :through => :listings,
