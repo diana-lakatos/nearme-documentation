@@ -13,6 +13,7 @@
 //= require ./vendor/jquery.popover-1.1.2
 //= require ./vendor/jquery.payment
 //= require ./vendor/asevented
+//= require ./vendor/detect-mobile-browser
 //= require jquery-fileupload/basic
 //= require underscore
 //= require backbone
@@ -78,6 +79,14 @@ window.DNM = {
     }).blur(function(){
         $(this).parent().parent().removeClass('chzn-choices-active')
     })
+  },
+
+  isMobile: function() {
+    return $.browser.mobile;
+  },
+
+  isDesktop: function() {
+    return !this.isMobile();
   }
 }
 

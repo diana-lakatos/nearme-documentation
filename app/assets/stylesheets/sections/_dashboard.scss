@@ -21,6 +21,7 @@
 
 section.locations-holder {
   margin-bottom: 20px;
+
   .location-content {
     margin-bottom: 0;
     form{margin-top:20px}
@@ -28,21 +29,26 @@ section.locations-holder {
       background: $dnm_white;
       padding: 20px 0;
     }
+
     div.geolocation{
       position: absolute;
       top: 13px;
       left: 10px;
       color: $gray5;
     }
+
     div.map {
+
       .map-container {
-        border: 2px solid rgb(220,220,220);
-        border-radius: 8px;
+        border-radius: 12px;
         height: 240px;
       }
     }
+
     @include dashboard-acc-group
+
   }
+
   .delete {
     display: block;
     padding-top: 10px;
@@ -53,9 +59,11 @@ section.locations-holder {
       color: $gray7;
     }
   }
+
   .alert{
     @include border-radius(12px);
   }
+
   .close {
     float: right;
     font-size: 20px;
@@ -63,12 +71,12 @@ section.locations-holder {
     line-height: 20px;
     color: #000000;
     text-shadow: 0 1px 0 #ffffff;
-    opacity: 0.2;
-    filter: alpha(opacity=20);
+    @include opacity(0.2);
   }
 
   section.box {
     padding-bottom: 0;
+
     header {
       height: 24px;
       font-size: 24px;
@@ -80,6 +88,41 @@ section.locations-holder {
         text-overflow: ellipsis;
       }
 
+      &.listing,
+      &.location {
+
+        span.ico-edit {
+          @include opacity(1);
+
+          &:hover {
+            @include opacity(.7);
+          }  
+        }  
+      }
+
+      &:hover {
+
+        span.ico-edit {
+          @include opacity(1);
+        }        
+      }
+
+      &.listing.collapsed,
+      &.location.collapsed {
+
+        span.ico-edit {
+          @include opacity(.3);
+        }
+
+        &:hover {
+
+          span.ico-edit {
+            @include opacity(.7);
+          }        
+        }
+
+      }
+
       .action {
         float: right;
         padding: 0;
@@ -88,10 +131,21 @@ section.locations-holder {
   }
 
   div.action {
-    a.btn{
+    
+    a.btn {
       width: 100%;
       text-align: center;
       @include box-sizing(border-box);
+      @include transition(opacity .15s ease-in);
+
+      &.btn-blue.btn-large {
+        text-align: left;
+        @include opacity(.5);
+
+        &:hover {
+          @include opacity(1);
+        }
+      }
 
       &.add-listing {
         @include border-top-radius(0);
@@ -99,25 +153,25 @@ section.locations-holder {
 
       &.add-location {
         margin-top: 20px;
-        background: $gray3;
-        color: $dnm_black;
-        @include transition(all .15s ease-in);
-
-        &:hover {
-          background: $gray4;
-        }
       }
     }
   }
 }
+
 section.listings {
+  
   section.box {
+    
     header {
       height: 24px;
       font-size: 20px;
       margin-bottom: 0;
       cursor: pointer;
-      .listing-header { padding-left: 12px; }
+
+      .listing-header { 
+        padding-left: 24px; 
+      }
+
       span {
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -126,19 +180,28 @@ section.listings {
   }
   .accordion {
     margin: auto -15px;
-    .accordion-inner{ padding-top: 20px; }
+
+    .accordion-inner { 
+      padding-top: 20px;
+    }
+
     .listing-content {
+      
       div.action{
         background: $dnm_white;
         padding: 20px 15px;
       }
     }
+
     @include dashboard-acc-group;
-    .box{
+
+    .box {
       margin-bottom:0;
       padding-bottom: 0;
       border-radius: 0;
-      border-left: 4px solid $gray3;
+      border-left: 4px solid $gray4;
+      border-bottom: 1px solid $gray4;
+
       header {
         height: 52px;
         line-height: 52px;
@@ -155,7 +218,8 @@ section.listings {
     margin: auto -15px;
   }
 }
-.gallery{
+
+.gallery {
   li.photo-item {
     margin-bottom: 20px;
     img {
@@ -176,6 +240,7 @@ section.listings {
     }
   }
 }
+
 .fileupload {
    cursor: pointer;
    input.browse-file {
@@ -183,9 +248,9 @@ section.listings {
       height: 0;
       width: 0;
    }
-   .fileinput-button {
-     display: block;
-   }
+  .fileinput-button {
+    display: block;
+  }
 }
 
 
@@ -197,83 +262,6 @@ section.sessions {
   min-height: 800px;
 }
 
-ul.nav.dashboard {
-  position: relative;
-  width: 100%;
-  background: $gray2;
-  color: $gray4;
-  @include border-radius(12px);
-  @include background-clip(padding-box);
-  margin-bottom: 20px;
-
-  li {
-    &:hover {
-      color: black;
-    }
-  }
-
-  &:first-child {
-    @include border-left-radius(12px);
-  }
-
-  &:last-child {
-    @include border-right-radius(12px);
-  }
-
-  .account:after {
-    content:"Account";
-  }
-
-  .bookings:after {
-    content:"Bookings";
-  }
-
-  .locations:after {
-    content:"Locations";
-  }
-
-  .guests:after {
-    content:"Guests";
-  }
-
-  @media (max-width: 480px) {
-    .account:after,
-    .bookings:after,
-    .locations:after,
-    .guests:after {
-      content:""
-    }
-  }
-}
-
-li.current a,
-li.current:hover a {
-  color: $dnm_white;
-  &.active {
-    a {
-      color: black;
-      border-left: 4px solid $gray4;
-    }
-  }
-  &:first-child {
-    @include border-top-radius(12px);
-  }
-  &:last-child {
-    @include border-bottom-radius(12px);
-  }
-
-  a {
-    padding: .5em;
-    line-height: 40px;
-    font-size: 22px;
-    color: $gray4;
-
-    &:hover {
-      color: black;
-      background: $gray2;
-    }
-  }
-}
 
 .btn.facebook,
 .btn.linkedin,
@@ -284,6 +272,7 @@ li.current:hover a {
     margin-bottom: .25em;
   }
 }
+
 .avatar-container {
   display: inline-block;
 

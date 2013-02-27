@@ -26,6 +26,12 @@ class Search.SearchController extends Search.Controller
 
       @triggerSearchWithBoundsAfterDelay()
 
+    @map.on 'mouseoverListingMarker', (mapListing) =>
+      @findResultsListing(mapListing.id())?.focus()
+
+    @map.on 'mouseoutListingMarker', (mapListing) =>
+      @findResultsListing(mapListing.id())?.blur()
+
   initializeMap: ->
     mapContainer = @container.find('#listings_map')[0]
     return unless mapContainer
@@ -37,6 +43,11 @@ class Search.SearchController extends Search.Controller
     @map.addControl(@redoSearchMapControl)
 
     @updateMapWithListingResults()
+
+    if DNM.isDesktop()
+      $(mapContainer).parent().affix(
+        offset: { top: 175 }
+      )
 
   startLoading: ->
     @resultsContainer.hide()
@@ -69,15 +80,26 @@ class Search.SearchController extends Search.Controller
       wasPlotted = @map.plotListingIfInMapBounds(listing)
       listing.hide() unless wasPlotted
 
-    @map.removeListingsOutOfMapBounds()
     @updateResultsCount()
 
   # Return Search.Listing objects from the search results.
   getListingsFromResults: ->
     listings = []
     @resultsContainer.find('.listing').each (i, el) =>
-      listings.push new Search.Listing(el)
+      listing = Search.Listing.forElement(el)
+
+      listing.on 'mouseoverElement', =>
+        @map.focusListingMarker(listing)
+
+      listing.on 'mouseoutElement', =>
+        @map.blurListingMarker(listing)
+
+      listings.push listing
     listings
+
+  findResultsListing: (listingId) ->
+    for listing in @getListingsFromResults()
+      return listing if listing.id() == listingId
 
   # Triggers a search request with the current map bounds as the geo constraint
   triggerSearchWithBounds: ->

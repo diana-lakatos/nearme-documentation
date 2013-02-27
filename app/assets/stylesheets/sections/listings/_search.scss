@@ -6,6 +6,18 @@ section.search {
     width: 30px;
   }
 
+  .google-map-wrapper {
+    margin-bottom: 12px;
+  }
+
+  .google-map-wrapper, .google-map .inner {
+    height: 300px;
+
+    @media (max-width: 480px) {
+      height: 150px;
+    }
+  }
+
   div.google-map {
     background: #FFF;
     background: $gray2;
@@ -14,6 +26,22 @@ section.search {
     -moz-border-radius: 6px;
     -o-border-radius: 6px;
     margin: 12px 0;
+
+    &.affix {
+      z-index: 9000;
+      top: 48px;
+
+      @media (min-width: 1400px) {
+        .inner {
+          width: 1360px;
+        }
+      }
+
+      @media (max-width: 1399px) {
+        left: 20px;
+        right: 20px;
+      }
+    }
 
     .inner {
       border: 1px solid #CCC;
@@ -192,6 +220,12 @@ section.search {
     width: 25%;
     height: 350px;
     overflow: hidden;
+
+    &.focussed {
+      h2, h2 a{
+        color: #FF8D00;
+      }
+    }
 
     @media (max-width: 960px) {
       width: 33.333333333%;
