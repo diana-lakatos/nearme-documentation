@@ -22,6 +22,8 @@ class PagesController < ApplicationController
       "landing"
     when "legal"
       "application"
+    when "w_hotels"
+      "application"      
     else
       false
     end
