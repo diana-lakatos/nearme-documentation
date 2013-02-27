@@ -4,13 +4,13 @@
       %span.ico-manage-guests.padding Manage Guests
     .box
       - if @guest_list.empty?
-        %h4 Looks like you don't have any guests yet! You should show off your space!
-        %ul
-          - @locations.each do |location|
-            %li
-              =link_to "Tweet about #{location.name}", tweet_location_url(location)
-              or share this link directly:
-              =link_to location_url(location), location_url(location)
+        %h2 You don't have any reservations yet
+        %p Promote your locations by tweeting or sharing a direct link!
+        - @locations.each do |location|
+          %h3= location.name
+          %ul
+            %li=link_to "Tweet", tweet_location_url(location), :class => 'ico-twitter'
+            %li=link_to location_url(location), location_url(location), :class => 'ico-link'
       - else
         %section#reservations.tab
           %ul.reservations.list
