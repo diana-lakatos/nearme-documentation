@@ -23,14 +23,11 @@ module NavigationHelpers
     when /the dashboard/
       dashboard_path
 
-    when /the reservations/
-      reservations_dashboard_path
-
     when /the bookings/
       bookings_dashboard_path
 
     when /the guests/
-      reservations_dashboard_path
+      manage_guests_dashboard_path
 
     when /the manage locations page/
       manage_companies_path

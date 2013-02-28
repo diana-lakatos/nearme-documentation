@@ -46,7 +46,7 @@ DesksnearMe::Application.routes.draw do
     member do
       get :bookings
       get :listings
-      get :reservations
+      get :manage_guests
     end
   end
 
