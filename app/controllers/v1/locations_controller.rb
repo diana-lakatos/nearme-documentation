@@ -1,5 +1,5 @@
 class V1::LocationsController <  V1::BaseController
-  skip_before_filter :verify_authenticity_token, :only => [:create, :update, :destroy]
+  before_filter :verify_authenticity_token
   before_filter :require_authentication
   before_filter :find_location, only: [:update, :destroy]
 
@@ -21,7 +21,7 @@ class V1::LocationsController <  V1::BaseController
   def update
     @location.attributes = params[:location]
     if @location.save
-      render json: { success: true, id: @location.id }
+       render :json => @location, :root => false
     else
       render :json => { :errors => @location.errors.full_messages }, :status => 422
     end
@@ -40,5 +40,4 @@ class V1::LocationsController <  V1::BaseController
     def find_location
       @location = current_user.locations.find(params[:id])
     end
-
 end

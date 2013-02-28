@@ -19,9 +19,10 @@ LocationView = Backbone.View.extend({
     "click .closed": "updateClosedState"
   },
 
-  render: function() {
+  render: function(expand) {
     var data = this.model.toJSON();
     data.view_id = this.view_id;
+    data.expand = expand ? 'in':'';
     this.$el.html(this.template(data));
     this.addAll();
     this.toggleCmd();
@@ -83,12 +84,13 @@ LocationView = Backbone.View.extend({
     }
   },
   toggleCmd: function(event) {
-    var target = $('.add-listing', this.$el);
-    if (!this.model.isNew()) {
-      target.fadeIn().css('display','inline-block');// using show() renders display "inline" instead of "inline-block"
-    } else {
-      target.hide();
-    }
+    //$('.accordion.location-content').collapse('show');
+    /*var target = $('.add-listing', this.$el);*/
+    //if (!this.model.isNew()) {
+      //target.fadeIn().css('display','inline-block');// using show() renders display "inline" instead of "inline-block"
+    //} else {
+      //target.hide();
+    /*}*/
   },
 
   save: function(event) {
@@ -118,6 +120,7 @@ LocationView = Backbone.View.extend({
 
   _afterSave: function(data) {
     var elt = $(this.$el).find('.save-location span');
+    var self = this;
     elt.animate({
       opacity: 0.2
     }, 500, function() {
@@ -133,12 +136,12 @@ LocationView = Backbone.View.extend({
     });
     elt.animate({
       opacity: 1
-    }, 1500 );
+    }, 1500, function(){ self.render('expand'); } );
 
-    if (this.justCreated) {
-      this.justCreated = false;
-      this.toggleCmd();
-    }
+    //if (this.justCreated) {
+      //this.justCreated = false;
+      //this.toggleCmd();
+    /*}*/
   },
 
   _showError: function(data, xhr){

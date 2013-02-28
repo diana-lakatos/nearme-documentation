@@ -30,9 +30,13 @@ class V1::ListingsController < V1::BaseController
   end
 
   def update
+    if params[:listing][:photos_attributes] == nil
+      params[:listing].delete :photos_attributes
+    end
     @listing.attributes = params[:listing]
+
     if @listing.save
-      render json: { success: true, id: @listing.id }
+      render :json => @listing, :root => false, :serializer => ListingWebSerializer
     else
       render :json => { :errors => @listing.errors.full_messages }, :status => 422
     end
