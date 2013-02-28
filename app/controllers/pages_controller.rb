@@ -23,7 +23,7 @@ class PagesController < ApplicationController
     when "legal"
       "application"
     when "w_hotels"
-      "application"      
+      "w"      
     else
       false
     end

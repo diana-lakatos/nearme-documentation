@@ -1,69 +1,58 @@
-.row-fluid
-  .span12
-    = image_tag "w-hotels/w-header.jpg" 
+.row-fluid.padding-row
+  .span12.header-image
+    = image_tag "w-hotels/w-header.jpg"
 
-%hr 
+.container-fluid
 
-.row-fluid
-  %h1 Announcing W Hotels & Desks Near Me Parntership
+  .row-fluid
+    %h1 Announcing W Hotels & Desks Near Me Parntership
 
-.row-fluid
-  .span4
-    %p Lo-fi swag messenger bag, plaid thundercats tumblr fanny pack farm-to-table intelligentsia. Chambray chillwave stumptown, irony cray semiotics flannel high life twee locavore 8-bit biodiesel. Organic tousled art party cliche swag aesthetic, echo park authentic ennui four loko. Plaid farm-to-table butcher keffiyeh, pop-up pickled squid occupy organic kale chips post-ironic next level pitchfork PBR sustainable. Narwhal skateboard selfies chambray readymade disrupt. Post-ironic sustainable typewriter, viral mumblecore marfa vice four loko cliche high life tousled american apparel. Sustainable squid wes anderson polaroid chillwave, ethical craft beer.
-  .span4
-    %p Forage thundercats high life readymade blue bottle stumptown pug umami leggings vice, tousled bespoke semiotics. Cosby sweater polaroid high life, 90's sustainable vegan gluten-free meggings actually squid VHS pork belly. Lo-fi pork belly trust fund small batch, put a bird on it mcsweeney's fashion axe banksy cosby sweater vinyl vice. Selfies hashtag disrupt pickled fap ugh banjo salvia small batch. Chillwave butcher mcsweeney's ethnic. Master cleanse terry richardson truffaut aesthetic fingerstache carles bespoke. Pickled intelligentsia carles, godard banh mi mcsweeney's mumblecore narwhal gentrify Austin etsy YOLO cred flannel art party.
-  .span4
-    %p Terry richardson keffiyeh truffaut wayfarers, cliche pour-over mixtape mcsweeney's banjo semiotics hashtag. Leggings high life retro pug neutra stumptown artisan, sartorial PBR. Blog retro sriracha hoodie, kogi fap chambray polaroid intelligentsia butcher truffaut gluten-free fixie +1. Put a bird on it next level flexitarian, literally banh mi cray shoreditch skateboard chillwave mlkshk thundercats keytar ethnic fashion axe. Truffaut viral 8-bit american apparel shoreditch try-hard. Viral whatever freegan marfa occupy, gluten-free trust fund ugh retro fap pour-over skateboard next level. Try-hard PBR pug keytar aesthetic lomo.
+  .row-fluid
+    .span4
+      %p Lo-fi swag messenger bag, plaid thundercats tumblr fanny pack farm-to-table intelligentsia. Chambray chillwave stumptown, irony cray semiotics flannel high life twee locavore 8-bit biodiesel. Organic tousled art party cliche swag aesthetic, echo park authentic ennui four loko. 
+    .span4
+      %p Forage thundercats high life readymade blue bottle stumptown pug umami leggings vice, tousled bespoke semiotics. Cosby sweater polaroid high life, 90's sustainable vegan gluten-free meggings actually squid VHS pork belly. 
+    .span4
+      %p Terry richardson keffiyeh truffaut wayfarers, cliche pour-over mixtape mcsweeney's banjo semiotics hashtag. Leggings high life retro pug neutra stumptown artisan, sartorial PBR. Blog retro sriracha hoodie, kogi fap chambray polaroid.
 
-%hr 
+  .row-fluid.padding-row
+    .span8
+      #w-ny.carousel.slide
+        %ol.carousel-indicators
+          %li.active{"data-slide-to" => "0", "data-target" => "#myCarousel"}
+          %li{"data-slide-to" => "1", "data-target" => "#myCarousel"}
+          %li{"data-slide-to" => "2", "data-target" => "#myCarousel"}
+        / Carousel items
+        .carousel-inner
+          .active.item
+            = image_tag "w-hotels/w-6.jpg"     
+          .item
+            = image_tag "w-hotels/w-3.jpg"     
+          .item
+            = image_tag "w-hotels/w-2.jpg"    
+        / Carousel nav
+        %a.carousel-control.left{"data-slide" => "prev", :href => "#w-ny"} ‹
+        %a.carousel-control.right{"data-slide" => "next", :href => "#w-ny"} ›
 
-.row-fluid
-  .span8
-    #w-ny.carousel.slide
-      %ol.carousel-indicators
-        %li.active{"data-slide-to" => "0", "data-target" => "#myCarousel"}
-        %li{"data-slide-to" => "1", "data-target" => "#myCarousel"}
-        %li{"data-slide-to" => "2", "data-target" => "#myCarousel"}
-      / Carousel items
-      .carousel-inner
-        .active.item
-          = image_tag "w-hotels/w-6.jpg"     
-        .item
-          = image_tag "w-hotels/w-3.jpg"     
-        .item
-          = image_tag "w-hotels/w-2.jpg"    
-      / Carousel nav
-      %a.carousel-control.left{"data-slide" => "prev", :href => "#w-ny"} ‹
-      %a.carousel-control.right{"data-slide" => "next", :href => "#w-ny"} ›
+    .span4
+      %h1 Union Square W Hotel
+      %p In the center of the city that is the center of the universe, lies the W New York. W New York has the latest technology, creative catering, and innovative spaces—everything you need to make your meeting memorable and soirée spectacular.
 
-  .span4
-    %h1 Union Square W Hotel
-    %p literally banh mi cray shoreditch skateboard chillwave mlkshk thundercats keytar ethnic fashion axe. Truffaut viral 8-bit american apparel shoreditch try-hard. Viral whatever freegan marfa occupy, gluten-free trust fund ugh retro fap pour-over skateboard next level. Try-hard PBR pug keytar aesthetic lomo.
+  .row-fluid.padding-row
+    .span8.pull-right
+      = image_tag "w-hotels/w-10.jpg"       
+    .span4.pull-right
+      %h1 The Living Room
+      %p Sink into comfort in our Living Room, our urban sanctuary by David Rockwell. Read Assouline brand books in natural light pouring through the 2-story windows. Challenge a friend to a game of chess. Sip concoctions from Oasis. Contemplate the cascading waterfall.  Just be.
+      %a.btn.btn-large.btn-green
+        %span.ico-check.padding Book!     
 
+  .row-fluid.padding-row
+    .span8
+      = image_tag "w-hotels/w-8.jpg"     
+    .span4
+      %h1 Perfect for work or play
+      %p Find your personal haven from the concrete cacophony of Manhattan in our 693 completely renovated guest rooms, suites and spa suites. Dive into the comfort of our pillow-top beds. Lounge in soft terry robes. Or curl up and take in a flick from our video/DVD library.
+      %a.btn.btn-large.btn-green
+        %span.ico-check.padding Book!       
 
-%hr 
-
-.row-fluid
-  .span4
-    %h1 Private Event Space
-    %p literally banh mi cray shoreditch skateboard chillwave mlkshk thundercats keytar ethnic fashion axe. Truffaut viral 8-bit american apparel shoreditch try-hard. Viral whatever freegan marfa occupy, gluten-free trust fund ugh retro fap pour-over skateboard next level. Try-hard PBR pug keytar aesthetic lomo.
-    %a.btn.btn-large.btn-green
-      %span.ico-check.padding Book!     
-  .span8
-    = image_tag "w-hotels/w-10.jpg"     
-
-
-%hr 
-
-.row-fluid.padding
-  .span8
-    = image_tag "w-hotels/w-8.jpg"     
-  .span4
-    %h1 Meeting Room
-    %p literally banh mi cray shoreditch skateboard chillwave mlkshk thundercats keytar ethnic fashion axe. Truffaut viral 8-bit american apparel shoreditch try-hard. Viral whatever freegan marfa occupy, gluten-free trust fund ugh retro fap pour-over skateboard next level. Try-hard PBR pug keytar aesthetic lomo.
-    %a.btn.btn-large.btn-green
-      %span.ico-check.padding Book!       
-
-%hr
-
-.row-fluid
