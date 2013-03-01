@@ -1,45 +1,55 @@
-<h1>Booking</h1>
+<h2 style='display: inline-block;'>Listing</h2>
+<span>'<%= listing.name %>' at <%= link_to(listing.location.name, location_url(listing.location)) %></span>
 
-<h2>Listing</h2>
-<p>'<%= listing.name %>' at <%= link_to(listing.location.name, location_url(listing.location)) %></p>
+<br>
 
 <% unless listing.location.special_notes.strip.empty? %>
-  <h2>Special notes</h2>
-  <p><%= listing.location.special_notes.strip %></p>
+  <h2 style='display: inline-block;'>Special notes</h2>
+  <span><%= listing.location.special_notes.strip %></span>
 <% end if listing.location.special_notes %>
 
-<h2>Quantity</h2>
-<p><%= reservation.periods.first.seats.size %></p>
+<br>
 
-<h2>Dates</h2>
+<h2 style='display: inline-block;'>Quantity</h2>
+<span><%= reservation.periods.first.seats.size %></span>
+
+<br>
+
+<h2 style='display: inline-block;'>Dates</h2>
 <ul>
 <% reservation.periods.each do |period| %>
   <li><%= period.date.strftime("%A %e %B %Y") %>
 <% end %>
 </ul>
 
-<h2>Host</h2>
-<p><%= mail_to listing.creator.email, listing.creator.name %></p>
+<br>
+
+<h2 style='display: inline-block;'>Host</h2>
+<span><%= mail_to listing.creator.email, listing.creator.name %></span>
+
+<br>
 
 <% if listing.location.phone.present? %>
-  <h2>Contact</h2>
-  <p><%= listing.location.phone %></p>
+  <h2 style='display: inline-block;'>Contact</h2>
+  <span><%= listing.location.phone %></span>
 <% end %>
 
-<h1>Payment</h1>
+<br>
 
-<h2>Total</h2>
-<p><%= reservation_total_price(reservation) %></p>
+<h2 style='display: inline-block;'>Total</h2>
+<span><%= reservation_total_price(reservation) %></span>
+
+<br>
 
 <% if reservation.credit_card_payment? %>
-  <h2>Paid</h2>
-  <p><%= reservation_paid(reservation) %></p>
+  <h2 style='display: inline-block;'>Paid</h2>
+  <span><%= reservation_paid(reservation) %></span>
 
-  <h2>Balance</h2>
-  <p><%= reservation_balance(reservation) %></p>
+  <h2 style='display: inline-block;'>Balance</h2>
+  <span><%= reservation_balance(reservation) %></span>
 
   <% if reservation.pending? %>
-    <p>This reservation is currently pending confirmation, and will be charged when confirmed.</p>
+    <span>This reservation is currently pending confirmation, and will be charged when confirmed.</span>
   <% end %>
 
 <% end %>
