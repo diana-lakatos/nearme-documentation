@@ -1,18 +1,22 @@
 .row-fluid
   .span8.offset2
-    %h1 
+    %h1
       %span.ico-bookings.padding My Bookings
-    .box 
-      %section#my_reservations.ta
-        %ul.reservations.list
-          - @your_reservations.each do |reservation|
-            %li{"data-date" => reservation.date}
-              %p.em
-                %strong= link_to(reservation.listing.name, reservation.listing)
-                on
-                %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
-                (#{reservation.state_name})
-                %br/
-                = reservation.comment
-              .actions
-                = render :partial => "user_actions",  :locals => {:reservation => reservation} if current_user == reservation.owner
+    .box
+      - if @your_reservations.empty?
+        %p You have no bookings
+        = render :partial =>"shared/search_box"
+      - else
+        %section#my_reservations.ta
+          %ul.reservations.list
+            - @your_reservations.each do |reservation|
+              %li{"data-date" => reservation.date}
+                %p.em
+                  %strong= link_to(reservation.listing.name, reservation.listing)
+                  on
+                  %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
+                  (#{reservation.state_name})
+                  %br/
+                  = reservation.comment
+                .actions
+                  = render :partial => "user_actions",  :locals => {:reservation => reservation} if current_user == reservation.owner

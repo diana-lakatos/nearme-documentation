@@ -11,25 +11,12 @@
         .wood-box.row-fluid
           %h1 Find a space to work
 
-        .black-box.row-fluid
-          %form#listing_search.home_search{:action => search_path, :method => "get"}
-            .span9
-              %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
-              .geolocation
-                %span.ico-crosshairs
-            .span3      
-              %a.btn.btn-green.btn-large{ "data-disable-with" => "Searching...", :rel => "submit", :href => "" }
-                %span.ico-search
-                Search
-              #suggest_location{:style => "display: none"}
-
-            - search_geofields.each do |geofield|
-              = hidden_field_tag geofield, ''
+        = render :partial => "shared/search_box"
 
 %section.how-it-works
   .row-fluid.padding-row
     .span3.offset1
-      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/gif/dollar-animation.gif", :alt => "Dollar Sign"}
+      %img{:src => "//s3.amazonaws.com/desksnearme.assets/img/gif/dollar-animation.gif", :alt => "Dollar Sign"}
 
     .span6 
       %h1 Rent out your extra space.
@@ -40,7 +27,7 @@
 
   .row-fluid.padding-bottom
     .span3.offset1
-      %img{:src => "http://desksnearme.assets.s3.amazonaws.com/img/gif/crosshair-animation.gif", :alt => "Dollar Sign"}
+      %img{:src => "//s3.amazonaws.com/desksnearme.assets/img/gif/crosshair-animation.gif", :alt => "Dollar Sign"}
 
     .span6 
       %h1 Find a desk near you.

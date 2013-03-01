@@ -56,7 +56,7 @@ class @Modal
     @overlay = $('.modal-overlay')
 
     # Bind to any element with "close" class to trigger close on the modal
-    @container.delegate ".close", 'click', (e) =>
+    @container.delegate ".close, .close-modal, .modal-close", 'click', (e) =>
       e.preventDefault()
       @hide()
 
@@ -98,7 +98,7 @@ class @Modal
     @positionModal()
 
   # Load the given URL in the modal
-  # Displays the modal, shows the loading status, fires an AJAX request and 
+  # Displays the modal, shows the loading status, fires an AJAX request and
   # displays the content
   load : (ajaxOptions) ->
     @_show()

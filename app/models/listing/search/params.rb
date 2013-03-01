@@ -1,4 +1,5 @@
 require 'active_support/core_ext'
+
 class Listing::Search::Params
   DEFAULT_SEARCH_RADIUS = 15_000.0
 
@@ -12,16 +13,16 @@ class Listing::Search::Params
   end
 
   def to_scope
-    scope = {}
-    scope[:with] = {
-        deleted_at: 0,
+    scope = {
+      with: {
+        deleted_at: 0
+      },
+      per_page: 100
     }
-
-    scope[:per_page] = 100
 
     if search_area
       scope[:geo] = search_area.radians
-      scope[:with]["@geodist"] = 0.0...search_area.radius
+      scope[:with]['@geodist'] = 0.0...search_area.radius
     end
 
     scope
@@ -66,7 +67,7 @@ class Listing::Search::Params
 
   def process_options(opts)
     @options = opts.respond_to?(:deep_symbolize_keys) ? opts.deep_symbolize_keys : opts
-    @availability = options[:availability].present?  ? Availability.new(options[:availability]) : NullAvailability.new
+    @availability = options[:availability].present? ? Availability.new(options[:availability]) : NullAvailability.new
     @amenities = options[:amenities].present? ? options[:amenities].map(&:to_i) : []
     @query = @location_string = options.fetch(:query, nil) || options.fetch(:q, nil) || options.fetch(:address, nil)
     @found_location = false

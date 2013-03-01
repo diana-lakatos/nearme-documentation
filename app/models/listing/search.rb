@@ -18,6 +18,9 @@ class Listing
         has :deleted_at
 
         group_by :latitude, :longitude
+
+        set_property :delta => ThinkingSphinx::Deltas::ResqueDelta
+
       end
 
     end

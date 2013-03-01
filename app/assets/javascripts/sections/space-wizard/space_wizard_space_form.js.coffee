@@ -2,7 +2,8 @@ class @SpaceWizardSpaceForm
 
   constructor: (@container) ->
     @setupMap()
-    @address = new AddressAutocomplete(@container.find('[data-behavior=address-autocomplete]'))
+
+    @address = new AddressField(@container.find('[data-behavior=address-autocomplete]'))
     @address.onLocate (lat, lng) =>
       latlng = new google.maps.LatLng(lat, lng)
 
@@ -33,5 +34,3 @@ class @SpaceWizardSpaceForm
     google.maps.event.addListener @map.marker, 'drag', =>
       position = @map.marker.getPosition()
       @address.setLatLng(position.lat(), position.lng())
-
-

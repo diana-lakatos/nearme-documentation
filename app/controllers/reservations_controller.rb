@@ -7,7 +7,7 @@ class ReservationsController < ApplicationController
   def update
     @reservation.fire_events(current_event)
     flash[:notice] = "You have #{@reservation.state_name} the reservation"
-    redirect_to dashboard_path
+    redirect_to manage_guests_dashboard_path
   end
 
   protected
@@ -22,7 +22,7 @@ class ReservationsController < ApplicationController
     def validate_event
       unless allowed_events.include? current_event
         flash[:error] = "Not a valid reservation operation"
-        redirect_to dashboard_path
+        redirect_to manage_guests_dashboard_path
       end
     end
 

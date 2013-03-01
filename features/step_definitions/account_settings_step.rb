@@ -1,3 +1,8 @@
+When /^I upload avatar$/ do
+  avatar = File.join(Rails.root, *%w[features fixtures photos], "intern chair.jpg")
+  attach_file(:avatar, avatar)
+end
+
 When /^I select industries for (.*)$/ do |object|
   if(object=='user')
     within('select[@id="user_industry_ids"]') do
@@ -15,11 +20,11 @@ When /^I select industries for (.*)$/ do |object|
     end
 end
 
-Then /^I should be connected to selected industries$/ do 
+Then /^I should be connected to selected industries$/ do
   assert_equal ["Computer Science", "Telecommunication"], model!("the user").industries.pluck(:name)
 end
 
-Then /^Company should be connected to selected industries$/ do 
+Then /^Company should be connected to selected industries$/ do
   assert_equal ["IT", "Telecommunication"], model!("the company").industries.pluck(:name)
 end
 
@@ -31,7 +36,7 @@ Then /^I should see company settings$/ do
   assert page.has_selector?('#edit_company')
 end
 
-When /^I update company settings$/ do 
+When /^I update company settings$/ do
   fill_in "user_companies_attributes_0_name", with: "Updated name"
   fill_in "user_companies_attributes_0_url", with: "http://updated-url.example.com"
   fill_in "user_companies_attributes_0_email", with: "updated@example.com"

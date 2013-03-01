@@ -14,6 +14,15 @@ class AvailabilityRule::Summary
     end
   end
 
+  # Iterate over each day in the week if no rule is available for a day an new empty rule is created
+  def full_week(monday_first = true)
+    result = []
+    each_day do |day, rule|
+        result << { day: day, rule: (rule || AvailabilityRule.new(:day => day))}
+    end
+    result
+  end
+
   # Return the availability rule (if any) for the given day of the week.
   def rule_for_day(day)
     @rules.detect { |rule| rule.day == day }

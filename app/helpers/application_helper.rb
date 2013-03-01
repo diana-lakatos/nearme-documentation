@@ -72,7 +72,11 @@ module ApplicationHelper
   end
 
   def get_return_to_url
-    params[:controller]=='session' ? {} : {:return_to => "#{request.protocol}#{request.host_with_port}#{request.fullpath}"}
+     in_signed_in_or_sign_up? ? {} : {:return_to => "#{request.protocol}#{request.host_with_port}#{request.fullpath}"}
+  end
+
+  def in_signed_in_or_sign_up?
+    params[:controller]=='sessions' || (params[:controller]=='registrations' && params[:action]=='new')
   end
 
   def link_to_once(*args, &block)

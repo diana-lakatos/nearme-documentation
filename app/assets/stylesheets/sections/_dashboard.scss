@@ -1,62 +1,304 @@
-section.dashboard, 
-section.companies, 
-section.registrations, 
-section.sessions,
-section.listings {
-  min-height: 800px;
+/*   Begin new dashboard */
+@mixin dashboard-acc-group {
+  .accordion-group {
+    border: none;
+    border-radius: 0;
+    margin-top: 10px;
+  }
 }
 
-  ul.nav.dashboard {
-    position: relative;
-    width: 100%;
-    background: $gray2;
-    color: $gray4;
-    @include border-radius(12px);
-    @include background-clip(padding-box);
-    margin-bottom: 20px;
+.availability-rules {
+  padding-left: 2px;
+  .open-time, .close-time {
+    padding-right: 10px;
+    margin: 0;
+  }
+}
 
-    li {
+.accordion-heading .accordion-toggle {
+  padding: 15px 3px;
+}
 
-      &.active {
-        a {
-          color: black;
-          border-left: 4px solid $gray4;
-        }  
+section.locations-holder {
+  margin-bottom: 20px;
+
+  .location-content {
+    margin-bottom: 0;
+    form{margin-top:20px}
+    div.action{
+      background: $dnm_white;
+      padding: 20px 0;
+    }
+
+    div.geolocation{
+      position: absolute;
+      top: 13px;
+      left: 10px;
+      color: $gray5;
+    }
+
+    div.map {
+
+      .map-container {
+        border-radius: 12px;
+        height: 240px;
+        clear: both;
       }
-      &:first-child {
-        @include border-top-radius(12px);
-      }
-      &:last-child {
-        @include border-bottom-radius(12px);
-      }  
+    }
 
-      a {
-        padding: .5em;
-        line-height: 40px;
-        font-size: 22px;
-        color: $gray4;
+    @include dashboard-acc-group
 
-      &:hover {
-        color: black;
-        background: $gray2;
-      }     
+  }
+
+  .delete {
+    display: block;
+    padding-top: 10px;
+    font-size: 80%;
+    color: $gray5;
+
+    &:hover {
+      color: $gray7;
     }
   }
 
-  .btn.facebook, 
-  .btn.linkedin,
-  .btn.twitter {
-    @media (max-width: 668px) {
+  .alert{
+    @include border-radius(12px);
+  }
+
+  .close {
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 20px;
+    color: #000000;
+    text-shadow: 0 1px 0 #ffffff;
+    @include opacity(0.2);
+  }
+
+  section.box {
+    padding-bottom: 0;
+
+    header {
+      height: 24px;
+      font-size: 24px;
+      margin-bottom: 0;
+      cursor: pointer;
+
+      span {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      &.listing,
+      &.location {
+
+        span.ico-edit {
+          @include opacity(1);
+
+          &:hover {
+            @include opacity(.7);
+          }  
+        }  
+      }
+
+      &:hover {
+
+        span.ico-edit {
+          @include opacity(1);
+        }        
+      }
+
+      &.listing.collapsed,
+      &.location.collapsed {
+
+        span.ico-edit {
+          @include opacity(.3);
+        }
+
+        &:hover {
+
+          span.ico-edit {
+            @include opacity(.7);
+          }        
+        }
+
+      }
+
+      .action {
+        float: right;
+        padding: 0;
+      }
+    }
+  }
+
+  div.action {
+    
+    a.btn {
       width: 100%;
       text-align: center;
-      margin-bottom: .25em;
+      @include box-sizing(border-box);
+      @include transition(opacity .15s ease-in);
+
+      &.btn-blue.btn-large {
+        text-align: left;
+        @include opacity(.5);
+
+        &:hover {
+          @include opacity(1);
+        }
+      }
+
+      &.add-listing {
+        @include border-top-radius(0);
+      }
+
+      &.add-location {
+        margin-top: 20px;
+      }
     }
-  }  
+  }
 }
+
+section.listings {
+  
+  section.box {
+    
+    header {
+      height: 24px;
+      font-size: 20px;
+      margin-bottom: 0;
+      cursor: pointer;
+
+      .listing-header { 
+        padding-left: 24px; 
+      }
+
+      span {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+  .accordion {
+    margin: auto -15px;
+
+    .accordion-inner { 
+      padding-top: 20px;
+    }
+
+    .listing-content {
+      
+      div.action{
+        background: $dnm_white;
+        padding: 20px 15px;
+      }
+    }
+
+    @include dashboard-acc-group;
+
+    .box {
+      margin-bottom:0;
+      padding-bottom: 0;
+      border-radius: 0;
+      border-left: 4px solid $gray4;
+      border-bottom: 1px solid $gray4;
+
+      header {
+        height: 52px;
+        line-height: 52px;
+        padding: 0 15px 0px 0px;
+        margin-bottom:0;
+        border-radius: 0;
+      }
+    }
+  }
+  div.action {
+    border-radius: 0;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin: auto -15px;
+  }
+}
+
+.gallery {
+  li.photo-item {
+    margin-bottom: 20px;
+    img {
+      float: left;
+    }
+    .delete-photo {
+      float: left;
+      margin: 0px 0 0 -45px;
+      @include adjust-font-size-to(24px);
+      @include text-shadow(black 0 0 5px);
+      color: white;
+      @include opacity(.5);
+
+      &:hover {
+        @include opacity(1);
+      }
+    }
+    .caption-photo {
+      margin-top: 10px;
+    }
+    .loading {
+      background: image-url('ajax-loader.gif') no-repeat center;
+    }
+    &:last-child {
+     margin-bottom: 0;
+    }
+  }
+}
+
+.fileupload {
+   cursor: pointer;
+   input.browse-file {
+      visibility:hidden;
+      height: 0;
+      width: 0;
+   }
+  .fileinput-button {
+    display: block;
+    text-align: center;
+  }
+}
+
+
+/*   End new dashboard */
+section.dashboard,
+section.companies,
+section.registrations,
+section.sessions {
+  min-height: 800px;
+}
+
+
+.btn.facebook,
+.btn.linkedin,
+.btn.twitter {
+  @media (max-width: 668px) {
+    width: 100%;
+    text-align: center;
+    margin-bottom: .25em;
+  }
+}
+
 .avatar-container {
   display: inline-block;
 
   img {
     margin-right: 1em;
+  }
+}
+
+section.dashboard {
+  ul li {
+    margin-top: 10px;
+    a {
+      color: $dnm-blue;
+      &:hover {
+        color: darken($dnm-blue, 10%);
+      }
+    }
   }
 }

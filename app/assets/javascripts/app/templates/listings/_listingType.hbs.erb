@@ -1,0 +1,8 @@
+<select class="select required" id="listing_listing_type_id" name="listing_type_id">
+  <option value=""></option>
+  {{#select listing_type_id}}
+  <% ListingType.all.each do |type| %>
+    <option value="<%= type.id %>"><%= type.name %></option>
+  <% end %>
+  {{/select}}
+</select>

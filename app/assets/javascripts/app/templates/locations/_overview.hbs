@@ -1,0 +1,74 @@
+<div class="control-group string required">
+  <label class="string required control-label" for="name">
+    <abbr title="required">*</abbr>Location Name</label>
+  <div class="controls">
+    <input class="string required" id="name" name="name" placeholder="Name your Location!"
+    size="50" type="text" value="{{name}}">
+  </div>
+</div>
+<div class="control-group string required">
+  <label class="string required control-label " for="address"><abbr title="required">*</abbr>Address</label>
+  <div class="controls">
+    <div class="input-icon-wrapper">
+      <input class="query" id="address" name="address" placeholder="Type an address..."
+      type="text" value="{{formatted_address}}" autocomplete="off">
+      <div class="geolocation active">
+        <span class="ico-crosshairs"></span>
+      </div>
+    </div>
+    <div class="map" data-marker="/assets/components/map-pin.png" style="display: none">
+      <div class="map-container" >
+
+      </div>
+    </div>
+    <input id="local_geocoding" name="local_geocoding" type="hidden">
+    <input id="latitude" name="latitude" type="hidden" value="{{latitude}}">
+    <input id="longitude" name="longitude" type="hidden" value="{{longitude}}">
+    <input id="formatted_address" name="formatted_address" type="hidden" value="{{formatted_address}}">
+  </div>
+</div>
+<div class="control-group text required">
+  <label class="text required control-label" for="description"><abbr title="required">*</abbr>Description</label>
+  <div class="controls">
+    <textarea class="text required" cols="40" id="description" name="description"
+    placeholder="Describe the overall look, feel, and ambience of your space. Be exciting!"
+    rows="20">{{description}}</textarea>
+  </div>
+</div>
+<div class="control-group select required">
+  <label class="select required control-label" for="location_location_type_id">
+    <abbr title="required">*</abbr>Location Type</label>
+  <div class="controls">
+    {{> app/templates/locations/_locationType}}
+  </div>
+</div>
+<div class="control-group email required">
+  <label class="email required control-label" for="email"><abbr title="required">*</abbr>Booking Email</label>
+  <div class="controls">
+    <input class="string email required" id="email" name="email" placeholder="yourname@example.com"
+    size="50" type="email" value="{{email}}">
+  </div>
+</div>
+<div class="control-group tel optional">
+  <label class="tel optional control-label" for="phone">Phone Number</label>
+  <div class="controls">
+    <input class="string tel optional" id="phone" name="phone" placeholder="1800 BOOKSPACE"
+    size="50" type="tel" value="{{phone}}">
+  </div>
+</div>
+<div class="control-group currency optional">
+  <label class="currency optional control-label" for="currency">Currency</label>
+  <div class="controls">{{> app/templates/shared/_currency}}</div>
+</div>
+<div class="control-group string optional">
+  <label class="string optional control-label" for="special_notes"><a href='#' rel="tooltip" data-original-title="Got a dog? Require an NDA? Write any special conditions for booking.">Special Terms or Notes</a></label>
+  <div class="controls">
+    <textarea class="string optional" id="special_notes" name="special_notes"
+    placeholder="Any special terms or notes to add?" cols="40"
+    value="{{special_notes}}">
+    </textarea>
+  </div>
+</div>
+
+
+

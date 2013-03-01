@@ -6,6 +6,18 @@ section.search {
     width: 30px;
   }
 
+  .google-map-wrapper {
+    margin-bottom: 12px;
+  }
+
+  .google-map-wrapper, .google-map .inner {
+    height: 300px;
+
+    @media (max-width: 480px) {
+      height: 150px;
+    }
+  }
+
   div.google-map {
     background: #FFF;
     background: $gray2;
@@ -15,17 +27,44 @@ section.search {
     -o-border-radius: 6px;
     margin: 12px 0;
 
+    &.affix {
+      z-index: 9000;
+      top: 48px;
+
+      @media (min-width: 1400px) {
+        .inner {
+          width: 1360px;
+        }
+      }
+
+      @media (max-width: 1399px) {
+        left: 20px;
+        right: 20px;
+      }
+    }
+
     .inner {
       border: 1px solid #CCC;
       border-radius: 6px;
       -moz-border-radius: 6px;
       -o-border-radius: 6px;
-      height: 300px; 
+      height: 300px;
 
       @media (max-width: 480px) {
         height: 150px;
-      } 
-    } 
+      }
+    }
+
+    .search-map-redo-search-control {
+      background: rgba(255,255,255,0.7);
+      padding: 2px 4px;
+      margin: 5px;
+      @include border-radius(4px);
+
+      label {
+        font-size: 14px;
+      }
+    }
   }
 }
 
@@ -33,6 +72,7 @@ section.search {
   .btn-green {
     width: 100%;
     text-align: center;
+    overflow: hidden;
   }
 }
 
@@ -46,7 +86,7 @@ section.search {
     @include transition(all .1s ease-in);
     font-size: 32px;
     opacity: .6;
-    color: $dnm_black; 
+    color: $dnm_black;
 
     &:hover {
       opacity:.95;
@@ -87,7 +127,7 @@ section.search {
     font-size: 16px;
 
     @media (max-width: 480px) {
-      font-size: 14px; 
+      font-size: 14px;
     }
   }
   .price-range .value {
@@ -133,14 +173,14 @@ section.search {
     }
 
     .availability-date-start {
-      position: relative; 
+      position: relative;
       float: left;
       width: 49%;
       margin-right: 2%;
     }
 
     .availability-date-end {
-      position: relative; 
+      position: relative;
       float: left;
       width: 49%;
     }
@@ -181,9 +221,15 @@ section.search {
     height: 350px;
     overflow: hidden;
 
+    &.focussed {
+      h2, h2 a{
+        color: #FF8D00;
+      }
+    }
+
     @media (max-width: 960px) {
       width: 33.333333333%;
-      height: 290px;
+      height: 300px;
     }
 
     @media (max-width: 650px) {
@@ -193,11 +239,12 @@ section.search {
     @media (max-width: 450px) {
       width: 100%;
       height: auto;
-      margin-bottom: 1.5em; 
+      margin-bottom: 1.5em;
     }
 
     h2 {
-      margin: 6px 16px 6px 0;
+      margin: 0px 16px 6px 0;
+      line-height: 32px;
 
       a {
         color: $dnm_black;
@@ -216,21 +263,7 @@ section.search {
       padding: 1px;
       background: $dnm_white;
       background: rgba(255, 255, 255, 0.6);
+      display: block;
     }
-
-    a {
-      .listing-secondary-image {
-        display: none;
-      }
-
-      &:hover {
-        .listing-primary-image {
-          display: none;
-        }        
-        .listing-secondary-image {
-          display: block;
-        }
-      }
-    }
-  }  
+  }
 }

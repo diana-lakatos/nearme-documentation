@@ -1,8 +1,10 @@
 class V1::ListingsController < V1::BaseController
 
-  # Endpoints that require authentication
-  before_filter :require_authentication,         only: [:connections, :inquiry, :reservation, :share]
+  skip_before_filter :verify_authenticity_token, :only => [:create, :update, :destroy]
 
+  # Endpoints that require authentication
+  before_filter :require_authentication,         only: [:create, :update, :destroy, :connections, :inquiry, :reservation, :share]
+  before_filter :find_listing,                   only: [:update, :destroy]
   before_filter :validate_search_params!,        only: :search
   before_filter :validate_query_params!,         only: :query
   before_filter :validate_reservation_params!,   only: :reservation
@@ -12,6 +14,41 @@ class V1::ListingsController < V1::BaseController
   # Default error handler
   rescue_from ActiveRecord::RecordNotFound, with: :listing_not_found
 
+  def list
+    @listings = current_user.company(params[:location_id]).listings.select('id,name')
+  end
+
+  def create
+    @listing = Listing.create(params[:listing])
+    @listing.location_id = params["location_id"]
+    if @listing.save
+      render :json => {:success => true, :id => @listing.id}
+    else
+      logger.info("ERRORS:#{@listing.errors.full_messages}")
+      render :json => { :errors => @listing.errors.full_messages }, :status => 422
+    end
+  end
+
+  def update
+    if params[:listing][:photos_attributes] == nil
+      params[:listing].delete :photos_attributes
+    end
+    @listing.attributes = params[:listing]
+
+    if @listing.save
+      render :json => @listing, :root => false, :serializer => ListingWebSerializer
+    else
+      render :json => { :errors => @listing.errors.full_messages }, :status => 422
+    end
+  end
+
+  def destroy
+    if @listing.destroy
+      render json: { success: true, id: @listing.id }
+    else
+      render :json => { :errors => @listing.errors.full_messages }, :status => 422
+    end
+  end
 
   def show
     render :json => Listing.find(params[:id])
@@ -274,4 +311,9 @@ class V1::ListingsController < V1::BaseController
         availability: list
     }
   end
+
+  private
+    def find_listing
+      @listing = current_user.listings.find(params[:id])
+    end
 end

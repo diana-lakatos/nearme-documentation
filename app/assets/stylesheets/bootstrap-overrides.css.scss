@@ -1,12 +1,22 @@
 body {
-  padding-top: 90px;
+  padding: 90px 0 0;
 }
+
 .padding-row {
   padding: 1.5em 0;
 }
+
 .padding-bottom {
   padding: 0 0 1.5em;
 }
+
+.container-fluid {
+
+  @media (max-width: 767px) {
+    padding: 0 20px;
+  }  
+}
+
 .navbar-fixed-top,
 .navbar-fixed-bottom {
   position: fixed;
@@ -15,6 +25,15 @@ body {
   z-index: 1030;
   margin:0 !important;
 }
+
+a[rel="tooltip"] {
+  color: $dnm_black;
+}
+.tooltip {
+  @include adjust-font-size-to(16px);
+  color: $gray2;
+}
+
 abbr[title] {
   cursor: auto;
   border: none;
@@ -23,7 +42,7 @@ abbr[title] {
 .accordion-group {
 
 	background: $dnm_white;
-	border-radius: 8px;
+	border-radius: 12px;
 
   a.accordion-toggle {
   	background: url('https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png') right center no-repeat;
@@ -35,9 +54,24 @@ abbr[title] {
   	&:hover {
   		opacity: 1;
   	}
-  }
+  } 
 }
 
+.accordion-inner {
+  border-top:none;
+} 
+
+abbr[title],
+abbr[data-original-title] {
+  cursor: auto;
+  border:none;
+  color: $dnm_red;
+}
+
+.btn {
+  text-shadow: none;
+  box-shadow: none;
+}
 .carousel-control {
   background: none !important;
   border: none !important;
@@ -46,7 +80,7 @@ abbr[title] {
 
 .container-fluid {
   @media (min-width: 1400px) {
-    max-width: 1400px;
+    max-width: 1360px;
     margin-left: auto;
     margin-right: auto;
   }

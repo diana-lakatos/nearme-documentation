@@ -38,11 +38,15 @@ DesksnearMe::Application.routes.draw do
 
   resources :reservations, :only => :update
 
+  ## routing after 'dashboard/' is handled in backbone cf. router.js
+  get 'dashboard' => 'dashboard#index', as: :controlpanel
+  get 'dashboard/locations' => 'dashboard#index', as: :controlpanel
+
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
       get :bookings
       get :listings
-      get :reservations
+      get :manage_guests
     end
   end
 
@@ -103,7 +107,15 @@ DesksnearMe::Application.routes.draw do
 
     get  'iplookup',  :to => 'iplookup#index'
 
-    resources :listings, :only => [:show] do
+    resources :locations do
+      collection do
+        get 'list'
+      end
+    end
+
+    resources :photos
+
+    resources :listings, :only => [:show,:create, :update, :destroy] do
       member do
         post 'reservation'
         post 'availability'
@@ -144,6 +156,8 @@ DesksnearMe::Application.routes.draw do
   match "/host-sign-up", to: 'pages#host_signup_1'
   match "/host-sign-up-2", to: 'pages#host_signup_2'
   match "/host-sign-up-3", to: 'pages#host_signup_3'
+  match "/w-hotels-desks-near-me", to: 'pages#w_hotels'
+  match "/W-hotels-desks-near-me", to: 'pages#w_hotels'
   match "/support" => redirect("https://desksnearme.desk.com")
 
 end

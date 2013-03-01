@@ -1,0 +1,29 @@
+.row-fluid
+  .span8.offset2
+    %h1
+      %span.ico-manage-guests.padding Manage Guests
+    .box
+      - if @guest_list.empty?
+        %h2 You don't have any reservations yet
+        %p Promote your locations by tweeting or sharing a direct link!
+        - @locations.each do |location|
+          %h3= location.name
+          %ul
+            %li=link_to "Tweet", tweet_location_url(location), :class => 'ico-twitter'
+            %li=link_to location_url(location), location_url(location), :class => 'ico-link'
+      - else
+        %section#reservations.tab
+          %ul.reservations.list
+            - @guest_list.each do |reservation|
+              %li
+                %p.em
+                  %strong= reservation.owner
+                  = link_to "mailto:#{reservation.owner.email}" do
+                    %span.ico-mail.padding
+                  on
+                  %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
+                  (#{reservation.state_name})
+                  %br/
+                  = reservation.comment
+                .actions
+                  = render :partial => "owner_actions", :locals => {:reservation => reservation} if current_user == reservation.listing.creator
