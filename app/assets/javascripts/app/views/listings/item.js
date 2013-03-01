@@ -134,7 +134,21 @@ ListingView = Backbone.View.extend({
       }
       return acc;
     }, {});
-
+    this._cleanCustomRules(data);
     return data;
+  },
+
+  _cleanCustomRules: function(data) {
+    if(data.availability_template_id !== "custom") {
+      _.each(data.availability_rules_attributes, function(rule,index){
+        if (rule.id === "" ) {
+          delete data.availability_rules_attributes[index];
+        }
+        else {
+          rule._destroy = 1;
+        }
+      });
+    }
   }
+
 });

@@ -28,7 +28,7 @@ class ListingWebSerializer < ApplicationSerializer
   end
 
   def availability_template_id
-     (object.defer_availability_rules?) ? (object.availability_template_id || '')  : "custom"
+     (object.defer_availability_rules?) ? '' : (object.availability_template_id || "custom")
   end
 
   def availability_full_week
