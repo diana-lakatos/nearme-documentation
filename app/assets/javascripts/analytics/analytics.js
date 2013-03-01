@@ -1,29 +1,39 @@
-window.analytics = {
-  track: function() {
-    mixpanel.track(arguments);
-  },
-  trackLink: function() {
-    mixpanel.track_links(arguments);
-  },
-  trackForm: function() {
-    mixpanel.track_forms(arguments);
-  },
-  trackPageView: function() {
-    mixpanel.track_pageview(arguments);
-  },
-  identify: function() {
-    mixpanel.identify(arguments);
-  },
-  alias: function() {
-    mixpanel.alias(arguments);
-  },
-  set: function() {
-    mixpanel.people.set(arguments);
-  },
-  increment: function() {
-    mixpanel.people.increment(arguments);
-  },
-  trackCharge: function() {
-    mixpanel.people.track_charge(arguments);
+(function() {
+  function  callMixpanel(function_name, args) {
+    mixpanel[function_name].apply(mixpanel, args);
   }
-}
+
+  function callMixpanelPeople(function_name, args) {
+    mixpanel.people[function_name].apply(mixpanel.people, args);
+  }
+
+  window.analytics = {
+    track: function() {
+      callMixpanel('track', arguments);
+    },
+    trackLink: function() {
+      callMixpanel('track_links', arguments);
+    },
+    trackForm: function() {
+      callMixpanel('track_forms', arguments);
+    },
+    trackPageView: function() {
+      callMixpanel('track_pageview', arguments);
+    },
+    identify: function() {
+      callMixpanel('identify', arguments);
+    },
+    alias: function() {
+      callMixpanel('alias', arguments);
+    },
+    set: function() {
+      callMixpanelPeople('set', arguments);
+    },
+    increment: function() {
+      callMixpanelPeople('increment', arguments);
+    },
+    trackCharge: function() {
+      callMixpanelPeople('track_charge', arguments);
+    }
+  }
+})();
