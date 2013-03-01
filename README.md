@@ -44,6 +44,9 @@ Here is the process I follow when merging a pull request:
 6. If you do *not* feel the feature is worth merging, close the ticket
    with a comment explaining why.
 
+## Review Design
+Before merging front-end changes into master, have [Harold](mail:toharold@desksnear.me) review the UI & UX. Make sure you are testing your changes on mobile > tablet > desktop before your design review.
+
 
 ## Releasing
 
