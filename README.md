@@ -25,8 +25,27 @@ by typing `spork minitest` or `spork cucumber`. Then run
 * [Testing tools](https://github.com/mdyd-dev/desksnearme/wiki/Testing-Tools)
 
 
-## Releasing
+## Merging Pull Requests
+We follow a pull request strategy to ensure every change gets a second pair of
+eyes on both the code and the functionality before being deployed to staging.
 
+Here is the process I follow when merging a pull request:
+
+1. Pull the code down, and make it up to date with master (either by rebase or
+   merge)
+2. Run rake
+3. Do a smoke test: run happy/sad paths, resize the browser to phone/tablet
+   sizes, etc. Keep an eye out for behavior that seems odd or visual anomolies.
+4. Do a code review: look for missing tests, duplication, complexity, etc.
+5. If you feel the feature is worth merging
+   * Merge into master with a commit that states [delivers#tracker-number]
+   * Merge into staging, using --ff-only
+   * Release staging to the staging environment
+6. If you do *not* feel the feature is worth merging, close the ticket
+   with a comment explaining why.
+
+
+## Releasing
 
 ### Hotfix
 
