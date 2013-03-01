@@ -1,9 +1,9 @@
 %nav
   %ul
-    %li.grid_2= link_to_once "Listings", listings_path
+    %li.grid_2= link_to "Listings", listings_path
     - if user_signed_in?
-      %li.grid_2= link_to_once "Dashboard", dashboard_path
-      %li.grid_2= link_to_once "Account", edit_user_registration_path
-      %li.grid_2= link_to_once "Logout", destroy_user_session_path, :method => :delete
+      %li.grid_2= link_to "Dashboard", dashboard_path
+      %li.grid_2= link_to "Account", edit_user_registration_path
+      %li.grid_2= link_to "Logout", destroy_user_session_path, :method => :delete
     - else
-      %li.grid_2.joined= link_to_once "Sign In", new_user_session_path
+      %li.grid_2.joined= link_to "Sign In", new_user_session_path
