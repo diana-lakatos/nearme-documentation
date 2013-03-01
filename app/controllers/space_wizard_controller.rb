@@ -59,7 +59,7 @@ class SpaceWizardController < ApplicationController
 
   def redirect_for_complete
     flash[:notice] = "Great, your space has been set up!"
-    redirect_to [:edit, :manage, @space]
+    redirect_to controlpanel_path
   end
 
   def find_user
