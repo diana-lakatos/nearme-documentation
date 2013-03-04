@@ -4,7 +4,7 @@
       %span.ico-bookings.padding My Bookings
     .box
       - if @your_reservations.empty?
-        %p You currently have no bookings. Search for a space near you!
+        %p You currently have no bookings. Find a space near you!
         = render :partial =>"shared/search_box"
       - else
         %section#my_reservations.ta

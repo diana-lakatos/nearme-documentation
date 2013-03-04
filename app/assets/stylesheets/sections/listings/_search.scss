@@ -68,7 +68,8 @@ section.search {
   }
 }
 
-#search_row {
+#search_row,
+.black-box {
   .btn-green {
     width: 100%;
     text-align: center;
@@ -85,11 +86,19 @@ section.search {
     background: transparent;
     @include transition(all .1s ease-in);
     font-size: 32px;
-    opacity: .6;
+    @include opacity(.6);
     color: $dnm_black;
+    cursor: pointer;
 
     &:hover {
       opacity:.95;
+    }
+
+    &.no-bookings {
+      position: relative;
+      top: -48px;
+      left: 10px;
+      height: 20px;
     }
   }
 
