@@ -96,20 +96,21 @@ class V1::ListingsControllerTest < ActionController::TestCase
     setup do
       authenticate!
       raw_post :reservation, { id: @listing.id }, valid_reservation_params.to_json
+      @reservation = Listing.find_by_id(@listing.id).reservations.first
     end
 
     should "respond with success" do
       assert_response :success
     end
 
-    should "create seats" do
-      seat = Listing.find_by_id(@listing.id).reservations.first.periods.first.seats.first
-      assert_equal "John Carter", seat.name
-      assert_equal "john@example.com", seat.email
+    should "set quantity" do
+      assert_equal 1, @reservation.quantity
     end
 
     should "create periods" do
-      reserved_dates = Listing.find_by_id(@listing.id).reservations.first.periods.map(&:date)
+      periods = @reservation.periods
+      reserved_dates = periods.map(&:date)
+
       assert reserved_dates.include? Date.parse("2015-01-01")
       assert reserved_dates.include? Date.parse("2015-01-02")
     end

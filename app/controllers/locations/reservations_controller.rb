@@ -9,9 +9,6 @@ module Locations
       @reservations = build_reservations(Reservation::PAYMENT_METHODS[:credit_card])
 
       render :layout => false
-    rescue
-      Rails.logger.info($!.inspect)
-      raise $!.inspect
     end
 
     # Reserve bulk listings on a Location
@@ -68,7 +65,9 @@ module Locations
         reservation.payment_method = payment_method if payment_method
 
         listing_params[:bookings].values.each do |period|
-          reservation.add_period(Date.parse(period[:date]), period[:quantity].to_i)
+          # FIXME: Factor out quantity from dates parameters, as it is now always the same.
+          reservation.quantity = period[:quantity].to_i
+          reservation.add_period(Date.parse(period[:date]))
         end
 
         reservations << reservation
@@ -84,7 +83,7 @@ module Locations
       begin
         params[:card_expires] = params[:card_expires].strip
         card_details = User::BillingGateway::CardDetails.new(
-          number: params[:card_number], 
+          number: params[:card_number],
           expiry_month: params[:card_expires][0,2],
           expiry_year: params[:card_expires][-2,2],
           cvc: params[:card_code]
@@ -121,9 +120,9 @@ module Locations
     #  { '123' => { 'date' => '2012-08-10', 'quantity => '1' }, ... }
     def prepare_requested_bookings_json(booking_request = params[:listings])
       Hash[
-        booking_request.values.map { |hash_of_id_and_bookings| 
+        booking_request.values.map { |hash_of_id_and_bookings|
           [hash_of_id_and_bookings['id'], hash_of_id_and_bookings['bookings'].values]
-        } 
+        }
       ] if booking_request.present?
     end
   end

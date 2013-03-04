@@ -15,7 +15,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
-    :owner_id, :periods, :state, :user, :comment
+    :owner_id, :periods, :state, :user, :comment, :quantity
 
   has_many :periods,
            :class_name => "ReservationPeriod",
@@ -24,6 +24,7 @@ class Reservation < ActiveRecord::Base
   has_many :charges, :as => :reference, :dependent => :nullify
 
   validates :periods, :length => { :minimum => 1 }
+  validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
 
   before_validation :set_total_cost, on: :create
   before_validation :set_currency, on: :create
@@ -88,7 +89,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def date=(value)
-    periods.build :date => value, :quantity => 1
+    periods.build :date => value
   end
 
   def date
@@ -108,8 +109,8 @@ class Reservation < ActiveRecord::Base
     can_cancel
   end
 
-  def add_period(date, quantity = 1, assignees = [])
-    periods.build :date => date, :quantity => quantity, :assignees => assignees
+  def add_period(date)
+    periods.build :date => date
   end
 
   def total_amount_cents
@@ -128,18 +129,9 @@ class Reservation < ActiveRecord::Base
     periods.size
   end
 
-  def quantity
-    periods.map(&:quantity).inject(&:+) / periods.size.to_f
-  end
-
   # Number of desks booked accross all days
   def desk_days
-    # NB: Would use +sum+ but AR doesn't use the internal collection for non-persisted records (it attempts to load the target)
-    total = 0
-    periods.each do |period|
-      total += period.quantity
-    end
-    total
+    (quantity || 0) * periods.size
   end
 
   def successful_payment_amount
