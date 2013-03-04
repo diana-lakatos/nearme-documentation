@@ -1,45 +1,59 @@
-<h1>Booking</h1>
+<br>
+<h1>Booking Details</h1><br>
+<strong style='display: inline-block;'>Listing</strong>
+<span style="float: right;">'<%= listing.name %>' at <%= link_to(listing.location.name, location_url(listing.location)) %></span>
 
-<h2>Listing</h2>
-<p>'<%= listing.name %>' at <%= link_to(listing.location.name, location_url(listing.location)) %></p>
+<hr>
 
 <% unless listing.location.special_notes.strip.empty? %>
-  <h2>Special notes</h2>
-  <p><%= listing.location.special_notes.strip %></p>
+  <strong style='display: inline-block;'>Special notes</strong>
+  <span style="float: right;"><%= listing.location.special_notes.strip %></span>
+  <hr>
 <% end if listing.location.special_notes %>
 
-<h2>Quantity</h2>
-<p><%= reservation.periods.first.seats.size %></p>
 
-<h2>Dates</h2>
-<ul>
-<% reservation.periods.each do |period| %>
-  <li><%= period.date.strftime("%A %e %B %Y") %>
+<strong style='display: inline-block;'>Quantity</strong>
+<span style="float: right;"><%= reservation.periods.first.seats.size %></span>
+
+<hr>
+
+<strong style='display: inline-block;'>Dates</strong>
+<span style="float: right;"><% reservation.periods.each do |period| %>
+  <%= period.date.strftime("%A %e %B %Y") %>
 <% end %>
-</ul>
+</span>
 
-<h2>Host</h2>
-<p><%= mail_to listing.creator.email, listing.creator.name %></p>
+
+<hr>
+
+<strong style='display: inline-block;'>Host</strong>
+<span style="float: right;"><%= mail_to listing.creator.email, listing.creator.name %></span>
+
+<hr>
 
 <% if listing.location.phone.present? %>
-  <h2>Contact</h2>
-  <p><%= listing.location.phone %></p>
+  <strong style='display: inline-block;'>Contact</strong>
+  <span style="float: right;"><%= listing.location.phone %></span>
+  <hr>
 <% end %>
 
-<h1>Payment</h1>
 
-<h2>Total</h2>
-<p><%= reservation_total_price(reservation) %></p>
+<strong style='display: inline-block;'>Total</strong>
+<span style="float: right;"><%= reservation_total_price(reservation) %></span>
+
+<hr>
 
 <% if reservation.credit_card_payment? %>
-  <h2>Paid</h2>
-  <p><%= reservation_paid(reservation) %></p>
+  <strong style='display: inline-block;'>Paid</strong>
+  <span style="float: right;"><%= reservation_paid(reservation) %></span>
 
-  <h2>Balance</h2>
-  <p><%= reservation_balance(reservation) %></p>
+  <strong style='display: inline-block;'>Balance</strong>
+  <span style="float: right;"><%= reservation_balance(reservation) %></span>
 
   <% if reservation.pending? %>
-    <p>This reservation is currently pending confirmation, and will be charged when confirmed.</p>
+    <span style="float: right;">This reservation is currently pending confirmation, and will be charged when confirmed.</span>
   <% end %>
 
 <% end %>
+
+<br>
