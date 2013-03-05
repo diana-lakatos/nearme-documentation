@@ -7,7 +7,9 @@ class RegistrationsController < Devise::RegistrationsController
   # We extend the create action to clear out any stored Provider auth data used during
   # registration.
   before_filter :find_supported_providers, :only => [:edit, :update]
-
+  
+  layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
+  
   def create
     super
     AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(@user) unless @user.new_record?

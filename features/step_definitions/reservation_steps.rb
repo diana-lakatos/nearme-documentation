@@ -143,14 +143,17 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
   end
 end
 
-Then(/^I should be asked to log in before making a booking$/) do
+Then(/^I should be asked to sign up before making a booking$/) do
   within '.space-reservation-modal' do
-    assert page.has_content?("Log in or sign up")
+    assert page.has_content?("Sign up")
   end
 end
 
 When(/^I log in to continue booking$/) do
-  click_link "Log in or sign up"
+  within '.space-reservation-modal' do
+    assert page.has_content?("Click here to log in")
+  end
+  click_link "Already a user? Click here to log in."
   step "I log in as the user"
 end
 
