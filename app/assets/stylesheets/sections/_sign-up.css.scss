@@ -13,6 +13,11 @@
       text-align: center;
       margin: 0;
 
+      &.facebook,
+      &.linkedin {
+        margin-right: 2%;
+      }
+
       @media (max-width: 767px) {
        clear: both;
        width: 100%;
