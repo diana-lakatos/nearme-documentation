@@ -9,7 +9,6 @@ module Locations
     def review
       @params_listings = params[:listings]
       @reservations = build_reservations(Reservation::PAYMENT_METHODS[:credit_card])
-      # render :layout => false
     end
 
     # Reserve bulk listings on a Location
