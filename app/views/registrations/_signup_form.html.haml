@@ -19,7 +19,7 @@
         - if f.object.errors[:password].any?
           %p.error-block= f.object.errors[:password].to_sentence
  
-      %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path}.
+      %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, :target => '_blank'}.
 
     .actions
       = f.submit 'Sign up', :disable_with => "Signing up...", :class => 'desksnearme submit'
