@@ -151,9 +151,9 @@ end
 
 When(/^I log in to continue booking$/) do
   within '.space-reservation-modal' do
-    assert page.has_content?("Click here to log in")
+    assert page.has_content?("Click here to Log in")
   end
-  click_link "Already a user? Click here to log in."
+  click_link "Already a user? Click here to Log in."
   step "I log in as the user"
 end
 

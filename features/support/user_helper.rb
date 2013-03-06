@@ -2,7 +2,7 @@ module UserHelper
 
   def try_to_sign_up_with_provider(provider)
     visit new_user_registration_path
-    click_link authentication_link_text_for_provider(provider)
+    click_link provider.downcase
   end
 
   def sign_up_with_provider(provider, email = nil)
