@@ -3,7 +3,7 @@ module Locations
     before_filter :find_location
     before_filter :require_login_for_reservation
     
-    layout Proc.new { |c| if c.request.xhr? then false else true end }
+    layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
     
     # Review a reservation prior to confirmation. Same interface as create.
     def review
