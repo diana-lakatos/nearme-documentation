@@ -1,10 +1,10 @@
 @import "compass/typography/vertical_rhythm";
 
-$font-light: 'futura-pt';
-$font-regular: 'futura-pt';
-$font-medium: 'futura-pt';
-$font-heavy: 'futura-pt';
-$font-bold: 'futura-pt';
+$font-light: 'futura-pt', sans-serif;
+$font-regular: 'futura-pt', sans-serif;
+$font-medium: 'futura-pt', sans-serif;
+$font-heavy: 'futura-pt', sans-serif;
+$font-bold: 'futura-pt', sans-serif;
 
 $base-font-size: 18px;
 $base-line-height: 24px;
@@ -55,7 +55,7 @@ p {
 }
 
 strong {
-  font-family: $font-bold;
+  font-family: $font-bold, sans-serif;
   font-weight: 700;
 }
 
@@ -63,6 +63,6 @@ address {
   @include adjust-font-size-to(14px);
 
   .ico-marker {
-    opacity: .7;
+    @include opacity(.7);
   }
 }
