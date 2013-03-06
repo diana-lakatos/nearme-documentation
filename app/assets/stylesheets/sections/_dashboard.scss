@@ -292,12 +292,22 @@ section.sessions {
 }
 
 section.dashboard {
-  ul li {
-    margin-top: 10px;
-    a {
-      color: $dnm-blue;
-      &:hover {
-        color: darken($dnm-blue, 10%);
+  
+  ul {
+
+    li {
+      float: left;
+      margin-right: .5em;
+
+      @media (max-width: 767px) {
+        clear: both;
+        width: 100%;
+        margin: 0 0 .5em;
+
+        a {
+          width: 100%;
+          text-align: center;
+        }
       }
     }
   }

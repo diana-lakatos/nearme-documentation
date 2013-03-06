@@ -63,7 +63,7 @@
     %hr
 
   %p.text-center
-    = submit_tag 'Request Booking'
+    = submit_tag 'Request Booking', data: { 'disable-with' => 'Booking...' }
 
   %p.notice.text-center
     - if location_reservation_needs_confirmation?

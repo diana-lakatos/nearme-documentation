@@ -1,10 +1,10 @@
 %span#service_buttons
-  = link_to provider_auth_url('facebook'), :disable_with => "Connecting...", :class => "btn btn-blue btn-large facebook submit" do
+  = link_to provider_auth_url('facebook'), :disable_with => "Connecting...", :class => "btn btn-blue btn-large facebook submit", :id => 'facebook' do
     %i.icon.icon-facebook
-    Facebook 
-  = link_to provider_auth_url('linkedin'), :disable_with => "Connecting...", :class => "btn btn-blue btn-large linkedin submit" do
+    Connect 
+  = link_to provider_auth_url('linkedin'), :disable_with => "Connecting...", :class => "btn btn-blue btn-large linkedin submit", :id => 'linkedin' do
     %i.icon.icon-linkedin
-    LinkedIn
-  = link_to provider_auth_url('twitter'), :disable_with => "Connecting...", :class => "btn btn-blue btn-large twitter submit" do
+    Connect
+  = link_to provider_auth_url('twitter'), :disable_with => "Connecting...", :class => "btn btn-blue btn-large twitter submit", :id => 'twitter' do
     %i.icon.ico-twitter.padding
-    Twitter 
+    Connect

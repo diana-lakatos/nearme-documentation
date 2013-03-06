@@ -4,13 +4,18 @@
       %span.ico-manage-guests.padding Manage Guests
     .box
       - if @guest_list.empty?
-        %h2 You don't have any reservations yet
-        %p Promote your locations by tweeting or sharing a direct link!
+        %p You currently have no reservations. Promote your locations by tweeting or sharing a direct link!
         - @locations.each do |location|
-          %h3= location.name
           %ul
-            %li=link_to "Tweet", tweet_location_url(location), :class => 'ico-twitter'
-            %li=link_to location_url(location), location_url(location), :class => 'ico-link'
+            %li
+              =link_to tweet_location_url(location), :class => 'btn btn-blue btn-large twitter submit' do
+                %span.ico-twitter.padding="Share #{location.name}" 
+            %li
+              = link_to location_url(location), :class => 'btn btn-blue btn-large' do
+                %span.ico-link.padding= "#{location.name} Link"
+            %li
+              .clearfix
+          .clearfix      
       - else
         %section#reservations.tab
           %ul.reservations.list
