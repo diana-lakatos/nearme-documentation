@@ -9,6 +9,15 @@
     .btn {
       $service-icons: sprite-map("sections/space-wizard/signup/service-icons/*.png");
       font-size: 22px;
+      width: 32%;
+      text-align: center;
+      margin: 0;
+
+      @media (max-width: 767px) {
+       clear: both;
+       width: 100%;
+       margin: 0 0 .25em;
+      }
 
       @each $service in (twitter, facebook, linkedin) {
         i.icon-#{$service} {
@@ -21,11 +30,30 @@
     }
   }
 
+  .already-a-user {
+    position: absolute;
+    width: 94%;
+    padding-right: 40px;
+
+    a {
+      display: block;
+      margin: 40px auto;
+      color: $dnm_white;
+      @include opacity(.7);
+      @include transition(opacity, ease-in, .1s);
+
+      &:hover {
+        @include opacity(1);
+      }
+    }
+  }
+
   h3.legal {
     margin: 10px 0 0 0;
     color: $gray3;
     text-align: center;
   }
+
   h3.twitter-login {
     float:left;
     width: 180px;
@@ -40,29 +68,31 @@
       clear: both;
     }
   }
+
   .btn.facebook, 
-  .btn.linkedin,
-  .btn.twitter {
-    @media (max-width: 525px) {
-      width: 100%;
-      text-align: center;
-      margin-bottom: .25em;
-    }
-    @media (min-width: 525px) {
-      margin-right: .25em;
+  .btn.linkedin {
+    
+    @media (min-width: 767px) {
+      margin-right: 2%;
     }    
   }
+
   .btn.linkedin {
+    
     &:hover {
       background: darken(#4875B4, 15%);
     }
   }
+
   .btn.twitter {
+    
     &:hover {
       background: darken(#33CCFF, 15%);
     }  
   }
+
   .btn.facebook {
+    
     &:hover {
       background: darken(#3B5998, 15%);
     }  
