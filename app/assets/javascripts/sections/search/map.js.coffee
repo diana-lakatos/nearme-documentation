@@ -62,7 +62,8 @@ class Search.Map
     })
 
     # Info window pops over and contains details for each marker/listing
-    @infoWindow = new google.maps.InfoWindow()
+    @popover = new GoogleMapPopover()
+
     @resetMapMarkers()
 
   bindEvents: ->
@@ -187,6 +188,7 @@ class Search.Map
     [ne.lat(), ne.lng(), sw.lat(), sw.lng()]
 
   showInfoWindowForListing: (listing) ->
-    @infoWindow.setContent(listing.popupContent())
+    @popover.setContent listing.popupContent()
+
     if marker = @markers[listing.id()]
-      @infoWindow.open(@googleMap, marker)
+      @popover.open(@googleMap, marker)

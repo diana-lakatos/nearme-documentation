@@ -1,0 +1,23 @@
+@mixin css-arrow-size($width: 14px) {
+  width: 0;
+  height: 0;
+  border: $width solid transparent;
+}
+
+@mixin css-arrow-direction($direction: up, $color: #d3d3d4) {
+  @if $direction == up {
+    border-bottom-color: $color;
+  } @else if $direction == down {
+    border-top-color: $color;
+  } @else if $direction == left {
+    border-right-color: $color;
+  } @else if $direction == right {
+    border-left-color: $color;
+  }
+}
+
+// Turn an element into a CSS arrow with the given width.
+@mixin css-arrow($width: 14px, $direction: up, $color: #d3d3d4) {
+  @include css-arrow-size($width: $width);
+  @include css-arrow-direction($direction: $direction, $color: $color);
+}
