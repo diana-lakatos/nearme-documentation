@@ -18,6 +18,11 @@ When /I sign up with (.*)$/ do |social|
   sign_up_with_provider(social)
 end
 
+When /I sign up as (.*) in the modal/ do |model|
+  fill_in_user_sign_up_details()
+  click_button 'Sign up'
+end
+
 Given /I signed up with (.*) without password$/ do |social|
   mock_successful_authentication_with_provider(social)
   sign_up_with_provider(social)

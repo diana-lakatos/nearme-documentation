@@ -18,9 +18,12 @@ module UserHelper
   end
 
   def try_to_sign_up_manually(options = {})
-    options = options.reverse_merge(default_options)
-
     visit new_user_registration_path
+    fill_in_user_sign_up_details(options)
+  end
+  
+  def fill_in_user_sign_up_details(options = {})
+    options = options.reverse_merge(default_options)
     fill_in 'user_name', with: options[:name]
     fill_in 'user_email', with: options[:email]
     fill_in 'user_password', with: options[:password]

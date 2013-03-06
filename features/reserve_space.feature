@@ -62,3 +62,15 @@ Feature: A user can book at a space
     Then I should see the booking confirmation screen for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 2        |
+  
+  Scenario: As an anonymous user I should return to my booking state after signing up
+    Given I am not logged in as the user
+    When I select to book and review space for:
+      | Listing     | Date   | Quantity |
+      | the listing | Monday | 2        |
+    And I sign up in the modal to continue booking
+    Then I should see the booking confirmation screen for:
+      | Listing     | Date   | Quantity |
+      | the listing | Monday | 2        |
+
+  

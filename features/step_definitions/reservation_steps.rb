@@ -157,6 +157,13 @@ When(/^I log in to continue booking$/) do
   step "I log in as the user"
 end
 
+When(/^I sign up in the modal to continue booking$/) do
+  within '.space-reservation-modal' do
+    assert page.has_content?("Sign up to Desks Near Me")
+  end
+  step "I sign up as a user in the modal"
+end
+
 When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved for '(.+)'$/ do |user, qty, listing, date|
   user = model!(user)
   qty = qty ? qty.to_i : 1
