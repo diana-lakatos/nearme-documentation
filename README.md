@@ -68,5 +68,13 @@ There will be times when we must hotfix production. To do so:
   * `ey deploy -e dnme_production -r <X.Y.Z>`
 9. Smoke test on production. And breathe...
 
+## Introducing new tools/gems/frameworks/etc.
+
+The preference is to use existing tools/gems/frameworks, where possible. Check
+the Gemfile to see what we're already using.
+
+If you feel a new tool is required, discuss with the team to gain a consensus on
+the whether it is required, appropriate, and the best choice.
+
 #### Useful links:
 * [Rollback last deploy](https://github.com/mdyd-dev/desksnearme/wiki/Engine-Yard-Cheat-Sheet#wiki-3)
