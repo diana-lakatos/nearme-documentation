@@ -1,5 +1,7 @@
 /*   Begin new dashboard */
+
 @mixin dashboard-acc-group {
+  
   .accordion-group {
     border: none;
     border-radius: 0;
@@ -179,6 +181,7 @@ section.listings {
       }
     }
   }
+
   .accordion {
     margin: auto -15px;
 
@@ -191,6 +194,7 @@ section.listings {
       div.action{
         background: $dnm_white;
         padding: 20px 15px;
+        clear: both;
       }
     }
 
@@ -212,6 +216,7 @@ section.listings {
       }
     }
   }
+
   div.action {
     border-radius: 0;
     border-bottom-left-radius: 12px;
@@ -221,11 +226,14 @@ section.listings {
 }
 
 .gallery {
+
   li.photo-item {
     margin-bottom: 20px;
+
     img {
       float: left;
     }
+
     .delete-photo {
       float: left;
       margin: 0px 0 0 -45px;
@@ -238,12 +246,15 @@ section.listings {
         @include opacity(1);
       }
     }
+
     .caption-photo {
       margin-top: 10px;
     }
+
     .loading {
       background: image-url('ajax-loader.gif') no-repeat center;
     }
+
     &:last-child {
      margin-bottom: 0;
     }
@@ -252,11 +263,13 @@ section.listings {
 
 .fileupload {
    cursor: pointer;
+
    input.browse-file {
       visibility:hidden;
       height: 0;
       width: 0;
    }
+
   .fileinput-button {
     display: block;
     text-align: center;
