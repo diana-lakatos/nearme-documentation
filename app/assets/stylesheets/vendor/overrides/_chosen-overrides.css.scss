@@ -1,0 +1,39 @@
+.chzn-container-multi ul.chzn-choices {
+  @include form-field;
+}
+
+// overwrite default width - make its width dynamic insteat of constant 
+.control-group .chzn-container-multi{
+  width: auto !important;
+  display: block !important;
+}
+
+.chzn-container-multi .chzn-choices .search-choice {
+  margin: 4px 0 0 5px;
+  padding: 2px 20px 6px 5px;
+}
+
+.chzn-container-multi .chzn-choices .search-field {
+  margin-left: 5px;
+}
+
+ul.chzn-choices.chzn-choices-active{
+    @include form-field-focus;
+}
+
+  // overwrite default width - make its width dynamic instea of constant 
+.control-group .chzn-container-multi{
+  width: auto !important;
+  display: block !important;
+
+  ul li {
+    span, input {
+      font-size: 18px;
+    }
+    &.search-field input {
+      height: 100%;
+      font-family: $font-regular, sans-serif;
+      padding: 0px;
+    }
+  }
+}

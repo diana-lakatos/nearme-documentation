@@ -77,7 +77,11 @@ section.public {
     @include box-sizing(border-box);
 
     .geolocation.no-bookings {
-      top:-41px;
+      top:-40px;
+
+      @media (max-width: 767px) {
+        top:-48px;
+      }
     }
   }
 
