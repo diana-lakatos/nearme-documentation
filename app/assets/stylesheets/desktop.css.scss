@@ -935,7 +935,7 @@ section.search div#results {
   background: #FFF;
   border: 1px solid #CCC;
   padding: 6px;
-  z-index: 9001;
+  z-index: $absolute-top-z-index + 1;
   ul {
     list-style: none;
     li {

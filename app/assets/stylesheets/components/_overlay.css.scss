@@ -10,7 +10,7 @@ embed {
 
 .overlay-container.overlay-open {
   visibility: visible;
-  z-index: 999900; }
+  z-index: $absolute-top-z-index * 100; }
 
 .overlay-backing {
   width: 0;

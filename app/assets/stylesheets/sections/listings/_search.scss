@@ -28,7 +28,7 @@ section.search {
     margin: 12px 0;
 
     &.affix {
-      z-index: 9000;
+      z-index: $nav-z-index - 30;
       top: 48px;
 
       @media (min-width: 1400px) {
