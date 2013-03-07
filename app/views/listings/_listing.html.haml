@@ -5,18 +5,29 @@
         = image_tag listing.photos.first.url(:space_listing), :title => listing.name, :alt => listing.name
       - else
         = image_tag google_maps_streetview_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name
-
+    - if listing.daily_price
+      %span.label.label-success
+        = "#{money_without_cents_and_with_symbol(listing.daily_price)}/day"
   .row-fluid.listing-info
-    %h2= link_to "#{listing.name}", listing
+    %h2
+      = link_to "#{listing.name}", listing
     %address
       %span.ico-marker
       = listing.formatted_address || listing.address
 
+
   .listing-map-popover-content{:style => "display: none"}
-    .map-popover-content
-      %h2= link_to "#{listing.name}", listing
+    .popover-image-container
+      = link_to listing do
+        - if listing.photos.first
+          = image_tag listing.photos.first.url(:medium), :title => listing.name, :alt => listing.name
+        - else
+          = image_tag google_maps_streetview_url(:height => 114, :width => 144, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name
+    .popover-info-container
+      %h3= link_to "#{listing.name}", listing
       %address
         %span.ico-marker
         = listing.formatted_address || listing.address
-      %p
-        = link_to "More information", listing
+      - if listing.daily_price
+        %span.label.label-success
+          = "#{money_without_cents_and_with_symbol(listing.daily_price)}/day"

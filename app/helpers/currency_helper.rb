@@ -19,4 +19,11 @@ module CurrencyHelper
     money.format(:symbol => true)
   end
 
+  def humanized_money_with_symbol(money)
+    return "" unless money.respond_to?(:to_money)
+
+    money = money.to_money
+    money.format(:symbol => true, :no_cents_if_whole => true)
+  end
+
 end

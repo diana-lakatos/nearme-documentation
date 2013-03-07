@@ -23,11 +23,11 @@
     .control-group
       = radio_button_tag :payment_method, "credit_card", reservation_credit_card_payment?
       = label_tag :payment_method_credit_card, 'Charge my credit card once booking confirmed'
-      
+
     .control-group
       = radio_button_tag :payment_method, "manual", reservation_manual_payment?
       = label_tag :payment_method_manual, 'I will make the payment in person upon arrival'
-    
+
     #credit_card_fields{:style => "display: none"}
       %hr.divider
 
@@ -37,10 +37,10 @@
             - @errors.each do |e|
               %li= e
 
-      .row-fluid.padding-bottom        
+      .row-fluid.padding-bottom
         .span6
           .ico-lock.padding Submit a secure payment.
-        .span6         
+        .span6
           = image_tag 'credit-cards.png', :alt => "Visa, Mastercard, American Express, Discover"
 
       .row-fluid
@@ -63,7 +63,7 @@
     %hr
 
   %p.text-center
-    = submit_tag 'Request Booking', data: { 'disable-with' => 'Booking...' }
+    = submit_tag 'Request Booking', :disable_with => "Booking..."
 
   %p.notice.text-center
     - if location_reservation_needs_confirmation?
@@ -74,7 +74,7 @@
   $(function() {
     new Bookings.ReservationModal($('form.payment'))
   });
-  analytics.track("Reviewed a Booking", { 
+  analytics.track("Reviewed a Booking", {
     suburb: "#{@location.suburb}",
     city: "#{@location.city}",
     state: "#{@location.state}",

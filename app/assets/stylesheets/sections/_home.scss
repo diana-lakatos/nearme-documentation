@@ -75,6 +75,10 @@ section.public {
     padding: 8px;
     border-radius: 12px;
     @include box-sizing(border-box);
+
+    .geolocation.no-bookings {
+      top:-41px;
+    }
   }
 
   h2 {
