@@ -80,7 +80,7 @@ section.search {
           color: $dnm_black;
 
           &:hover {
-            color: $dnm_orange;
+            color: $dnm_blue;
           }
         }
       }
@@ -265,7 +265,7 @@ section.search {
     &.focussed {
       
       h2, h2 a{
-        color: #FF8D00;
+        color: $dnm_blue;
       }
 
       span.label.label-success {

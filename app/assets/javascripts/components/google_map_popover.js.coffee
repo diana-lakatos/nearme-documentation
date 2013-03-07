@@ -5,7 +5,7 @@ class @GoogleMapPopover
     pixelOffset: null
     maxWidth: 0
     boxStyle:
-      width: "220px"
+      width: "288px"
     alignBottom: true
     contentWrapper: """
       <div>
@@ -40,7 +40,7 @@ class @GoogleMapPopover
 
   getDefaultOptions: ->
     $.extend {}, @defaultOptions, {
-      pixelOffset: new google.maps.Size(-116, -40)
+      pixelOffset: new google.maps.Size(-150, -40)
     }
 
   wrapContent: (content) ->
