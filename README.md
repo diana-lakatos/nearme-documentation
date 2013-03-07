@@ -74,7 +74,7 @@ The preference is to use existing tools/gems/frameworks, where possible. Check
 the Gemfile to see what we're already using.
 
 If you feel a new tool is required, discuss with the team to gain a consensus on
-the whether it is required, appropriate, and the best choice.
+the whether it is required, appropriate, and the preferred option.
 
 #### Useful links:
 * [Rollback last deploy](https://github.com/mdyd-dev/desksnearme/wiki/Engine-Yard-Cheat-Sheet#wiki-3)
