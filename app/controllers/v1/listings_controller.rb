@@ -104,7 +104,7 @@ class V1::ListingsController < V1::BaseController
 
   def patrons
     listing = Listing.find(params[:id])
-    patrons = User.joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
+    patrons = User.patron_of(listing)
     render json: formatted_patrons(listing, patrons)
   end
 
@@ -112,7 +112,7 @@ class V1::ListingsController < V1::BaseController
   # Return the user's connections associated with the listing
   def connections
     listing = Listing.find(params[:id])
-    users = current_user.followed_users
+    users = current_user.followed_users.patron_of(listing)
     patrons = User.joins(:reservations).where(:reservations => { :listing_id => listing.id }).where(:id => users.pluck('users.id')).uniq
     render json: formatted_patrons(listing, patrons)
   end
