@@ -1,32 +1,23 @@
 class Listing::Search::Geocoder
 
-  attr :geo_params, :pretty, :search_area
-
-  def find_location(query)
-    data = build_geocoded_data_from_string(query)
-    return unless data
-    search_area
+  def self.find_search_area(query)
+    geocoded = ::Geocoder.search(query).try(:first)
+    return nil if geocoded.nil?
+    
+    geo = geocoded.data['geometry']
+    center = [geo['location']['lat'], geo['location']['lng']]
+    
+    bounds = if b = geo['viewport'] || geo['bounds']
+      [b['northeast'].values, b['southwest'].values]
+    else
+      radius = geo['location_type'] == 'ROOFTOP' ? Listing::Search::Params::MIN_SEARCH_RADIUS : Listing::Search::Params::DEFAULT_SEARCH_RADIUS
+      box = ::Geocoder::Calculations.bounding_box([center.lat, center.long], radius)
+      [box[0..1], box[2..3]]
+    end
+    
+    radius ||= ::Geocoder::Calculations.distance_between(*bounds)
+    
+    return Listing::Search::Area.new(center, bounds, radius)
   end
-
-  private
-    def build_geocoded_data_from_string(location)
-      @geo_params = {}
-      geocoded = ::Geocoder.search(location).try(:first)
-      return if geocoded.nil?
-      loc = geocoded.data
-      geometry = loc['geometry']
-      @pretty = geo_params[:pretty] = loc['formatted_address']
-      geo_params[:midpoint] = [geometry['location']['lat'], geometry['location']['lng']]
-      bounds = geometry.has_key?("bounds") ? geometry["bounds"] : geometry["viewport"]
-      geo_params[:edge] =  bounds['southwest'].collect { |c| c[1].to_f }
-      build_search_area
-      geo_params
-    end
-
-    def build_search_area
-      center = Coordinate.new(*geo_params[:midpoint])
-      radius = center.distance_from(*geo_params[:edge])
-      @search_area = Listing::Search::Area.new(center, radius)
-    end
 
 end

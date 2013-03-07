@@ -6,10 +6,10 @@ class Listing::Search::Params::WebTest <  ActiveSupport::TestCase
   context '#keyword_search?' do
     should "return false regardless of whether a query is set" do
       params = build_params(options_with_query, fake_geocoder(false))
-      assert params.query.present?, params.inspect
+      assert params.query.present?
       assert !params.keyword_search?
 
-      params = build_params(options_with_query(nil), fake_geocoder(false))
+      params = build_params(options_with_query({}), fake_geocoder(false))
       assert params.query.blank?
       assert !params.keyword_search?
     end
@@ -18,14 +18,14 @@ class Listing::Search::Params::WebTest <  ActiveSupport::TestCase
   context '#bounding_box' do
     should "use nx,ny,sx,sy parameters instead of defaults" do
       params = build_params(options_with_bounding_box({ :nx => 0, :ny => 0.5, :sx => -0.5, :sy => 1 }))
-      assert_equal [0, 0.5, -0.5, 1], params.provided_boundingbox
+      assert_equal [[0, 0.5], [-0.5, 1]], params.bounding_box
     end
   end
 
-  context '#provided_midpoint' do
+  context '#midpoint' do
     should 'use lat,lng parameters instead of defaults' do
-      params = build_params(options_with_midpoint({ :lat => -1, :lng => 1 }))
-      assert_equal [-1, 1], params.provided_midpoint
+      params = build_params(options_with_location({ location: { :lat => -1, :lon => 1 } }))
+      assert_equal [-1, 1], params.midpoint
     end
   end
 

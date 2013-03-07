@@ -3,28 +3,6 @@ class Listing
 
     extend ActiveSupport::Concern
 
-    included do
-
-      define_index do
-
-        indexes :name, :description
-
-        join location
-        where  "locations.id is not null"
-
-        has "radians(#{Location.table_name}.latitude)",  as: :latitude,  type: :float
-        has "radians(#{Location.table_name}.longitude)", as: :longitude, type: :float
-
-        has :deleted_at
-
-        group_by :latitude, :longitude
-
-        set_property :delta => ThinkingSphinx::Deltas::ResqueDelta
-
-      end
-
-    end
-
     module ClassMethods
 
       def search_from_api(params, geocoder = nil)
@@ -36,14 +14,19 @@ class Listing
       end
 
       def find_by_search_params(params)
-        search_args = if params.keyword_search?
-          [params.query, params.to_scope]
-        else
-          [params.to_scope]
+        return [] unless params.found_location?
+        
+        args = params.to_args
+        locations = Location.near(*args)
+        return [] unless locations.any?
+        
+        listings = Listing.where(["listings.location_id IN(?)", locations.map(&:id)]).includes(:photos, :location)
+        
+        params.availability.dates.each do |date|
+          listings.reject! { |listing| listing.fully_booked_on?(date) }
         end
-
-        listings = search(*search_args).to_a
-        listings.reject(&:nil?).reject { |l| l.location.nil? }.reject { |listing| params.availability.dates.any? { |date| listing.fully_booked_on?(date) } }
+        
+        listings
       end
     end
   end
