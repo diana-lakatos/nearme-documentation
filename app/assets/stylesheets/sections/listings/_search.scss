@@ -65,6 +65,38 @@ section.search {
         font-size: 14px;
       }
     }
+
+    .map-popover-content {
+      padding-left: 20px;
+      font-size: 15px;
+      position: relative;
+
+      h2 {
+        font-size: 16px;
+        margin: 0;
+        line-height: 20px;
+
+        a {
+          color: $dnm_black;
+
+          &:hover {
+            color: $dnm_blue;
+          }
+        }
+      }
+
+      address {
+        .ico-marker {
+          width: 17px;
+          display: inline-block;
+          margin-left: -20px;
+        }
+      }
+
+      p {
+        margin-bottom: 0;
+      }
+    }
   }
 }
 
@@ -233,7 +265,7 @@ section.search {
     &.focussed {
       
       h2, h2 a{
-        color: #FF8D00;
+        color: $dnm_blue;
       }
 
       span.label.label-success {
