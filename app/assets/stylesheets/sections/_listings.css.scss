@@ -1,1 +1,26 @@
 @import "sections/listings/search";
+
+.popover-image-container {
+  float: left;
+  width: 144px;
+}
+
+.popover-info-container {
+  float: left;
+  width: 134px;
+  margin-left: 10px;
+
+  h3 a {
+    color: $dnm_black;
+  }
+
+  address {
+    @include adjust-font-size-to(12px);
+    line-height: 1.4em;
+    margin-top: .25em;
+  }
+
+  span.label.label-sucess {
+    float: left;
+  }  
+}
