@@ -4,6 +4,7 @@ FactoryGirl.define do
     association :listing
     date { Date.today }
     payment_status 'pending'
+    quantity 1
 
     factory :reservation_with_credit_card do
       payment_method Reservation::PAYMENT_METHODS[:credit_card]

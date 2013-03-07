@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130226192011) do
+ActiveRecord::Schema.define(:version => 20130304210142) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -221,8 +221,9 @@ ActiveRecord::Schema.define(:version => 20130226192011) do
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",     :default => "manual",  :null => false
     t.string   "payment_status",     :default => "unknown", :null => false
+    t.string   "payment_method",     :default => "manual",  :null => false
+    t.integer  "quantity",           :default => 1,         :null => false
   end
 
   create_table "search_queries", :force => true do |t|

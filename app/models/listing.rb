@@ -121,10 +121,8 @@ class Listing < ActiveRecord::Base
     self.quantity
   end
 
-  # TODO: Create a database index for the availability.
-  # TODO: This implementation is really slow!
   def desks_booked_on(date)
-    ReservationSeat.joins(:reservation_period => :reservation).where(:reservation_periods => { :listing_id => self.id, :date => date }).merge(Reservation.not_rejected_or_cancelled).count
+    reservations.not_rejected_or_cancelled.joins(:periods).where(:reservation_periods => { :date => date }).sum(:quantity)
   end
 
   def price_period
@@ -199,12 +197,15 @@ class Listing < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
-  def reserve!(reserving_user, dates, quantity, assignees = [])
-    reservation = reservations.build(:user => reserving_user)
+  def reserve!(reserving_user, dates, quantity)
+    reservation = reservations.build(
+      :user => reserving_user,
+      :quantity => quantity
+    )
 
     dates.each do |date|
       raise DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
-      reservation.add_period(date, quantity, assignees)
+      reservation.add_period(date)
     end
 
     reservation.save!
