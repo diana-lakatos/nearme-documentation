@@ -113,6 +113,10 @@ class Reservation < ActiveRecord::Base
     periods.build :date => date
   end
 
+  def booked_on?(date)
+    periods.detect { |period| period.date == date }
+  end
+
   def total_amount_cents
     if persisted?
       super

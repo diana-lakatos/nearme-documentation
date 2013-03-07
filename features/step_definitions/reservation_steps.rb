@@ -1,4 +1,4 @@
-Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed, reserver|
+  Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed, reserver|
   lister = User.find_by_name(lister)
   reserver = User.find_by_name(reserver)
   @listing = FactoryGirl.create(:listing)
@@ -172,7 +172,7 @@ When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved f
 
   date = Chronic.parse(date).to_date
   assert listing.reservations.any? { |reservation|
-    reservation.owner == user && reservation.periods.any? { |p| p.date == date } && reservation.quantity == qty
+    reservation.owner == user && reservation.quantity == qty && reservation.booked_on?(date)
   }, "Unable to find a reservation for #{listing.name} on #{date}"
 end
 
