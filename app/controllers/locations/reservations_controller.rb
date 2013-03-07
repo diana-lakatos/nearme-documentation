@@ -3,12 +3,12 @@ module Locations
     before_filter :find_location
     before_filter :require_login_for_reservation
 
+    layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
+
     # Review a reservation prior to confirmation. Same interface as create.
     def review
       @params_listings = params[:listings]
       @reservations = build_reservations(Reservation::PAYMENT_METHODS[:credit_card])
-
-      render :layout => false
     end
 
     # Reserve bulk listings on a Location
@@ -33,9 +33,7 @@ module Locations
       make_reservations if @errors.empty?
 
       if @errors.present?
-        render :review, :layout => false
-      else
-        render :layout => false
+        render :review
       end
     end
 
@@ -45,7 +43,7 @@ module Locations
       unless current_user
         # Persist the reservation request so that when we return it will be restored.
         store_reservation_request
-        render :login_required, :layout => false
+        redirect_to new_user_registration_path(:return_to => location_url(@location, :restore_reservations => true))
       end
     end
 
