@@ -3,8 +3,38 @@
     max-width: none;
   }
 
-  label { 
+  label {
     width: auto;
-    display: inline; 
+    display: inline;
+  }
+
+  .google-map-popover {
+    background: #e6e7e8;
+    border: 1px solid #858980;
+    @include border-radius(5px);
+    padding: 6px;
+    color: #58595b;
+
+    .close {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+    }
+
+    em.arrow, em.arrow-border {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+    }
+
+    em.arrow {
+      margin-left: -9px;
+      @include css-arrow($width: 9px, $direction: down, $color: #e6e7e8);
+    }
+
+    em.arrow-border {
+      margin-left: -10px;
+      @include css-arrow($width: 10px, $direction: down, $color: #858980);
+    }
   }
 }

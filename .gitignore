@@ -20,3 +20,4 @@ runner.html
 .jhw-cache
 bin/
 tags
+dump.rdb

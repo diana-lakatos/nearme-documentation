@@ -28,7 +28,7 @@ section.search {
     margin: 12px 0;
 
     &.affix {
-      z-index: 9000;
+      z-index: $nav-z-index - 30;
       top: 48px;
 
       @media (min-width: 1400px) {
@@ -63,6 +63,38 @@ section.search {
 
       label {
         font-size: 14px;
+      }
+    }
+
+    .map-popover-content {
+      padding-left: 20px;
+      font-size: 15px;
+      position: relative;
+
+      h2 {
+        font-size: 16px;
+        margin: 0;
+        line-height: 20px;
+
+        a {
+          color: $dnm_black;
+
+          &:hover {
+            color: $dnm_blue;
+          }
+        }
+      }
+
+      address {
+        .ico-marker {
+          width: 17px;
+          display: inline-block;
+          margin-left: -20px;
+        }
+      }
+
+      p {
+        margin-bottom: 0;
       }
     }
   }
@@ -231,8 +263,13 @@ section.search {
     overflow: hidden;
 
     &.focussed {
+      
       h2, h2 a{
-        color: #FF8D00;
+        color: $dnm_blue;
+      }
+
+      span.label.label-success {
+        @include opacity(1);
       }
     }
 
@@ -251,8 +288,20 @@ section.search {
       margin-bottom: 1.5em;
     }
 
+    span.label.label-success {
+      position: relative;
+      float:right;
+      margin: -36px 15px 0 0;
+      padding: 4px 6px;
+      text-shadow: none;
+      font-size: .75em;
+      @include opacity(.7);
+      @include transition(opacity, .5s);
+
+    }
+
     h2 {
-      margin: 0px 16px 6px 0;
+      margin: 8px 16px 6px 0;
       line-height: 32px;
 
       a {

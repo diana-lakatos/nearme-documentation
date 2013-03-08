@@ -55,6 +55,9 @@ class User < ActiveRecord::Base
   has_many :user_industries
   has_many :industries, :through => :user_industries
 
+  scope :patron_of, lambda { |listing|
+    joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
+  }
 
   mount_uploader :avatar, AvatarUploader
 
