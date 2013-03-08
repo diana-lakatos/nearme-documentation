@@ -1,3 +1,5 @@
+// Bootstrap Overrides - Do not edit the Vendor Bootstrap files, override them
+
 body {
   padding: 90px 0 0;
 }
@@ -22,13 +24,14 @@ body {
   position: fixed;
   right: 0;
   left: 0;
-  z-index: 1030;
+  z-index: $nav-z-index;
   margin:0 !important;
 }
 
 a[rel="tooltip"] {
   color: $dnm_black;
 }
+
 .tooltip {
   @include adjust-font-size-to(16px);
   color: $gray2;
@@ -39,6 +42,7 @@ abbr[title] {
   border: none;
   color: $dnm_red;
 }
+
 .accordion-group {
 
 	background: $dnm_white;
@@ -87,8 +91,14 @@ abbr[data-original-title] {
 }
 
 .tooltip-inner {
-  max-width: 120px;
+  max-width: 140px;
 }
+
 .tooltip {
   @include adjust-font-size-to(16px);
 }
+
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  filter: alpha(opacity=$opacity);
+}    

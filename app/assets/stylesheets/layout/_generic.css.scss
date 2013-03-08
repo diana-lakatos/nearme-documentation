@@ -8,29 +8,40 @@ body {
   background-color: $dnm_blue;
   color: white;
 }
-body, input, textarea, select {
+
+body,
+input,
+textarea,
+select {
   font:400 18px/24px $font-regular, sans-serif;
   color: $dnm_black;
 }
-input[type=text], textarea {
+
+input[type=text],
+textarea {
   -webkit-appearance: none;
 }
-a, a:visited, a:hover {
+
+a,
+a:visited,
+a:hover {
   text-decoration: none !important;
   @include transition(opacity .15s ease-in, color .15s ease-in, border .15s ease-in);
 }
-p a, p a:visited {
+
+p a,
+p a:visited {
   color: $dnm_blue;
   text-decoration: none;
   @include transition(opacity .15s ease-in, color .15s ease-in, border .15s ease-in);
 
-  &:hover { 
+  &:hover {
     color: darken( $dnm_blue, 30%);
     text-decoration: none;
   }
 }
 
-img { 
+img {
   max-width:100%;
 }
 
@@ -83,15 +94,8 @@ strong {
   font-size: 16px;
 }
 
-// A normal weighted h3
-@mixin h3-normal {
-  color: $dnm_black;
-  text-shadow: 0 1px 0 rgba(255,255,255,.75); /* drop shadow */
-  font-size: 18px;
-  margin: 23px 0;
-  padding: 0;
-}
-hr, .hr {
+hr,
+.hr {
   padding: 0;
   border: 0;
   height: 1px;
@@ -149,15 +153,17 @@ hr, .hr {
   cursor: pointer;
   color:black;
   opacity: .6;
- 
+
 
   &:hover {
     @include opacity(1);
   }
 }
+
 .margin-bottom {
   margin-bottom: 20px;
 }
+
 .hidden {
   display: none;
 }

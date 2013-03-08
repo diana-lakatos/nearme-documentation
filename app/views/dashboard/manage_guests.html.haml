@@ -3,19 +3,28 @@
     %h1
       %span.ico-manage-guests.padding Manage Guests
     .box
-      - if @listing_reservations.empty?
-        = link_to "Share your space", manage_locations_path
+      - if @guest_list.empty?
+        %p You currently have no reservations. Promote your locations by tweeting or sharing a direct link!
+        - @locations.each do |location|
+          %ul
+            %li
+              =link_to tweet_location_url(location), :class => 'btn btn-blue btn-large twitter submit' do
+                %span.ico-twitter.padding="Share #{location.name}" 
+            %li
+              = link_to location_url(location), :class => 'btn btn-blue btn-large' do
+                %span.ico-link.padding= "#{location.name} Link"
+            %li
+              .clearfix
+          .clearfix      
       - else
         %section#reservations.tab
           %ul.reservations.list
-            - @listing_reservations.each do |reservation|
+            - @guest_list.each do |reservation|
               %li
                 %p.em
                   %strong= reservation.owner
-
                   = link_to "mailto:#{reservation.owner.email}" do
                     %span.ico-mail.padding
-
                   on
                   %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
                   (#{reservation.state_name})

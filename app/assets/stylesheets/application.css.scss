@@ -1,11 +1,12 @@
-@import "bootstrap";
 @import "compass";
 @import "compass/css3";
 @import "compass/reset";
+@import "globals/*";
 @import "chosen";
+@import "vendor/*";
+@import "vendor/*/**";
 @import "layout/*";
+@import "pages/*";
 @import "components/*";
-@import "bootstrap-overrides";
-@import "vendor/jquery-ui-1.8.23.custom";
 @import "sections/*";
-@import "sections/*/**";
+

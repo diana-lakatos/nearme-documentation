@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
            :through => :locations
 
   has_many :photos,
-           :through => :listings
+           :foreign_key => "creator_id"
 
   has_many :listing_reservations,
            :through => :listings,
@@ -55,6 +55,9 @@ class User < ActiveRecord::Base
   has_many :user_industries
   has_many :industries, :through => :user_industries
 
+  scope :patron_of, lambda { |listing|
+    joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
+  }
 
   mount_uploader :avatar, AvatarUploader
 

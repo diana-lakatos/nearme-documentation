@@ -1,4 +1,4 @@
-Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed, reserver|
+  Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed, reserver|
   lister = User.find_by_name(lister)
   reserver = User.find_by_name(reserver)
   @listing = FactoryGirl.create(:listing)
@@ -9,10 +9,6 @@ Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed
     reservation.save
   end
 
-end
-
-Given /^no guests exists$/ do
-  @guests = nil
 end
 
 Then /^I should see a link "(.*?)"$/ do |link|
@@ -76,7 +72,7 @@ When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, 
     visit bookings_dashboard_path
   else
     login User.find_by_name("Bo Jeanes")
-    visit reservations_dashboard_path
+    visit manage_guests_dashboard_path
   end
 
   click_link_or_button action.capitalize
@@ -147,15 +143,25 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
   end
 end
 
-Then(/^I should be asked to log in before making a booking$/) do
+Then(/^I should be asked to sign up before making a booking$/) do
   within '.space-reservation-modal' do
-    assert page.has_content?("Log in or sign up")
+    assert page.has_content?("Sign up")
   end
 end
 
 When(/^I log in to continue booking$/) do
-  click_link "Log in or sign up"
+  within '.space-reservation-modal' do
+    assert page.has_content?("Click here to Log in")
+  end
+  click_link "Already a user? Click here to Log in."
   step "I log in as the user"
+end
+
+When(/^I sign up in the modal to continue booking$/) do
+  within '.space-reservation-modal' do
+    assert page.has_content?("Sign up to Desks Near Me")
+  end
+  step "I sign up as a user in the modal"
 end
 
 When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved for '(.+)'$/ do |user, qty, listing, date|
@@ -166,7 +172,7 @@ When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved f
 
   date = Chronic.parse(date).to_date
   assert listing.reservations.any? { |reservation|
-    reservation.owner == user && reservation.periods.any? { |p| p.date == date && p.quantity == qty }
+    reservation.owner == user && reservation.quantity == qty && reservation.booked_on?(date)
   }, "Unable to find a reservation for #{listing.name} on #{date}"
 end
 

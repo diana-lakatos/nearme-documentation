@@ -51,10 +51,10 @@
   <div class="controls">
     <label class="radio">
       <input checked="checked" class="radio_buttons optional" id="listing_confirm_reservations_true"
-      name="confirm_reservations" type="radio" {{#if confirm_reservations}}checked="checked"{{/if}} value="true">Yes</label>
+      name="confirm_reservations" type="radio" {{#compare confirm_reservations true}}checked="checked"{{/compare}} value="true">Yes</label>
     <label class="radio">
       <input class="radio_buttons optional" id="listing_confirm_reservations_false"
-      name="confirm_reservations" {{#if confirm_reservations}}checked="checked"{{/if}} type="radio" value="false">No</label>
+      name="confirm_reservations" {{#compare confirm_reservations false}}checked="checked"{{/compare}} type="radio" value="false">No</label>
   </div>
 </div>
 

@@ -28,6 +28,10 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)
     stored_url_for(resource)
   end
+  
+  def after_sign_up_path_for(resource)
+    stored_url_for(resource)
+  end
 
   # Some generic information on wizard for use accross controllers
   WizardInfo = Struct.new(:id, :url)

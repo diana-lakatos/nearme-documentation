@@ -6,6 +6,18 @@ section.search {
     width: 30px;
   }
 
+  .google-map-wrapper {
+    margin-bottom: 12px;
+  }
+
+  .google-map-wrapper, .google-map .inner {
+    height: 300px;
+
+    @media (max-width: 480px) {
+      height: 150px;
+    }
+  }
+
   div.google-map {
     background: #FFF;
     background: $gray2;
@@ -14,6 +26,22 @@ section.search {
     -moz-border-radius: 6px;
     -o-border-radius: 6px;
     margin: 12px 0;
+
+    &.affix {
+      z-index: $nav-z-index - 30;
+      top: 48px;
+
+      @media (min-width: 1400px) {
+        .inner {
+          width: 1360px;
+        }
+      }
+
+      @media (max-width: 1399px) {
+        left: 20px;
+        right: 20px;
+      }
+    }
 
     .inner {
       border: 1px solid #CCC;
@@ -37,10 +65,43 @@ section.search {
         font-size: 14px;
       }
     }
+
+    .map-popover-content {
+      padding-left: 20px;
+      font-size: 15px;
+      position: relative;
+
+      h2 {
+        font-size: 16px;
+        margin: 0;
+        line-height: 20px;
+
+        a {
+          color: $dnm_black;
+
+          &:hover {
+            color: $dnm_blue;
+          }
+        }
+      }
+
+      address {
+        .ico-marker {
+          width: 17px;
+          display: inline-block;
+          margin-left: -20px;
+        }
+      }
+
+      p {
+        margin-bottom: 0;
+      }
+    }
   }
 }
 
-#search_row {
+#search_row,
+.black-box {
   .btn-green {
     width: 100%;
     text-align: center;
@@ -57,11 +118,19 @@ section.search {
     background: transparent;
     @include transition(all .1s ease-in);
     font-size: 32px;
-    opacity: .6;
+    @include opacity(.6);
     color: $dnm_black;
+    cursor: pointer;
 
     &:hover {
       opacity:.95;
+    }
+
+    &.no-bookings {
+      position: relative;
+      top: -48px;
+      left: 10px;
+      height: 20px;
     }
   }
 
@@ -193,6 +262,17 @@ section.search {
     height: 350px;
     overflow: hidden;
 
+    &.focussed {
+      
+      h2, h2 a{
+        color: $dnm_blue;
+      }
+
+      span.label.label-success {
+        @include opacity(1);
+      }
+    }
+
     @media (max-width: 960px) {
       width: 33.333333333%;
       height: 300px;
@@ -208,8 +288,20 @@ section.search {
       margin-bottom: 1.5em;
     }
 
+    span.label.label-success {
+      position: relative;
+      float:right;
+      margin: -36px 15px 0 0;
+      padding: 4px 6px;
+      text-shadow: none;
+      font-size: .75em;
+      @include opacity(.7);
+      @include transition(opacity, .5s);
+
+    }
+
     h2 {
-      margin: 0px 16px 6px 0;
+      margin: 8px 16px 6px 0;
       line-height: 32px;
 
       a {

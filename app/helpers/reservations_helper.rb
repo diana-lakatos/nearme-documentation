@@ -72,7 +72,7 @@ module ReservationsHelper
 
   def reservation_dates(reservation)
     reservation.periods.map do |period|
-      "#{period.date.strftime('%Y-%m-%d')} (#{pluralize(period.seats.size, 'desk')})"
+      "#{period.date.strftime('%Y-%m-%d')} (#{pluralize(reservation.quantity, 'desk')})"
     end.to_sentence
   end
 
@@ -86,7 +86,7 @@ module ReservationsHelper
     dates = Hash.new { |h, k| h[k] = [] }
     reservations.each do |reservation|
       reservation.periods.each do |period|
-        dates[period.date] << [reservation.listing, period.quantity]
+        dates[period.date] << [reservation.listing, reservation.quantity]
       end
     end
 

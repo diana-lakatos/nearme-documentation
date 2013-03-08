@@ -9,6 +9,7 @@ section.locations {
       vertical-align: top;
       height:14px;
     }
+
     .ico-link {
       font-size: 12px;
       line-height: 18px;
@@ -21,8 +22,11 @@ section.locations {
     }
   }
 }
+
 .availability-rules {
+
   .custom-availability-rules {
+    
     .day {
       overflow: hidden;
       padding: 6px 0;
@@ -32,8 +36,21 @@ section.locations {
         float: left;
         height: 28px;
         width: 90px;
+
+        @media (max-width: 480px) {
+          width: 110px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        
+        .day-name {
+          clear: both;
+          width: 100%;
+        }
       }
     }
+
     select {
       margin-top: -6px;
     }

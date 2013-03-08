@@ -47,7 +47,6 @@ gem 'chronic'
 gem 'ey_config'
 
 gem 'unicorn'
-gem 'premailer-rails3'
 gem 'chameleon'
 
 group :staging, :production do
@@ -77,8 +76,6 @@ group :development, :test do
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
   gem 'jasmine'
-  gem 'better_errors' # add more details error in browser
-  gem 'binding_of_caller' # extension for better_errors for more granular info
   gem 'debugger'
 end
 
@@ -95,7 +92,7 @@ group :development do
   gem 'ruby-prof'
 end
 group :test do
-  gem 'capybara', '1.1.2'
+  gem 'capybara', '~>1.1.2'
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
   gem 'launchy'

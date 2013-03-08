@@ -30,9 +30,13 @@ class V1::ListingsController < V1::BaseController
   end
 
   def update
+    if params[:listing][:photos_attributes] == nil
+      params[:listing].delete :photos_attributes
+    end
     @listing.attributes = params[:listing]
+
     if @listing.save
-      render json: { success: true, id: @listing.id }
+      render :json => @listing, :root => false, :serializer => ListingWebSerializer
     else
       render :json => { :errors => @listing.errors.full_messages }, :status => 422
     end
@@ -61,27 +65,20 @@ class V1::ListingsController < V1::BaseController
     render :json => listings
   end
 
-
   # Create a new reservation
   def reservation
-
     listing     = Listing.find(params[:id])
-    reservation = listing.reserve!(current_user, @dates, @quantity, @assignees)
+    reservation = listing.reserve!(current_user, @dates, @quantity)
 
     # Render the newly created reservation
     render :json => reservation
-
   end
-
 
   # Retrieve the reservation availability for a listing
   def availability
-
     listing = Listing.find(params[:id])
     render :json => formatted_availability_for(listing, @dates)
-
   end
-
 
   def inquiry
     listing = Listing.find(params[:id])
@@ -94,7 +91,6 @@ class V1::ListingsController < V1::BaseController
     head :no_content
   end
 
-
   def share
     users = validate_share_params!
     listing = Listing.find(params[:id])
@@ -106,64 +102,20 @@ class V1::ListingsController < V1::BaseController
     head :no_content
   end
 
-
   def patrons
     listing = Listing.find(params[:id])
-
-    # Query for a list of seats
-    seats = ReservationSeat.joins(
-        :reservation_period => { :reservation => :listing }
-    ).where(
-        :listings => {:id => listing.id}
-    )
-
-    # Now extract the corresponding user IDs
-    user_ids = seats.map { |seat| seat.user_id }.uniq
-
-    # Ignore users that aren't DNM account holders
-    user_ids = user_ids.reject { |id| id.blank? }
-
-    # Remove the current user's ID
-    user_ids.delete(current_user.id)
-
-    # Perform a full user lookup and return
-    patrons = User.includes().where(:id => user_ids)
-
+    patrons = User.patron_of(listing)
     render json: formatted_patrons(listing, patrons)
   end
 
 
   # Return the user's connections associated with the listing
   def connections
-
     listing = Listing.find(params[:id])
-
-    # List of users that the current user is connected to
-    users = current_user.followed_users
-
-    # Corresponding user ID list
-    user_ids = users.map { |u| u.id }
-
-    # Query for a list of seats for the given property, restricted to the user list above
-    seats = ReservationSeat.joins(
-        :reservation_period => { :reservation => :listing }
-    ).where(
-        :listings => {:id => listing.id},
-        :user_id => user_ids
-    )
-
-    # Now extract the corresponding user IDs
-    user_ids = seats.map { |seat| seat.user_id }.uniq
-
-    # Remove the current user's ID
-    user_ids.delete(current_user.id)
-
-    # Perform a full user lookup
-    patrons = User.includes().where(:id => user_ids)
-
+    users = current_user.followed_users.patron_of(listing)
+    patrons = User.joins(:reservations).where(:reservations => { :listing_id => listing.id }).where(:id => users.pluck('users.id')).uniq
     render json: formatted_patrons(listing, patrons)
   end
-
 
   ##
   ##
@@ -171,7 +123,6 @@ class V1::ListingsController < V1::BaseController
 
   # Formatted hash of patrons for a given listing
   def formatted_patrons(listing, patrons)
-
     {
       listing_id: listing.id,
       users: patrons.map { |p|
@@ -235,26 +186,9 @@ class V1::ListingsController < V1::BaseController
       if @assignees.blank?
         @quantity = 1
       else
-
-        # Ensure the quantity matches the number of assignees
-        if @assignees.size != @quantity
-          raise DNM::InvalidJSONData, "quantity"
-        end
-
+        @quantity = @assignees.length
       end
     end
-
-    # Check the list of assignees
-    if not @assignees.blank?
-
-      # Make sure each assignee has a name and email address
-      @assignees.each { |user|
-        raise DNM::MissingJSONData, "name"  if user["name"].blank?
-        raise DNM::MissingJSONData, "email" if user["email"].blank?
-      }
-
-    end
-
   end
 
   def validate_availability_params!

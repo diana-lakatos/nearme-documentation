@@ -1,18 +1,20 @@
 // Desks Near Me
 //
 //= require jquery
+//= require jquery_ujs
 //= require ./vendor/jquery-ui-1.9.2.custom.min
 //= require ./vendor/jquery.overlay
 //= require ./vendor/jquery.address-1.3.min
 //= require ./vendor/jquery.ui.touch-punch
 //= require ./vendor/customSelect.jquery
 //= require bootstrap
-//= require ./vendor/rails
 //= require ./vendor/modernizr
 //= require ./vendor/jquery.cookie
 //= require ./vendor/jquery.popover-1.1.2
 //= require ./vendor/jquery.payment
 //= require ./vendor/asevented
+//= require ./vendor/detect-mobile-browser
+//= require ./vendor/infobox
 //= require jquery-fileupload/basic
 //= require underscore
 //= require backbone
@@ -78,6 +80,14 @@ window.DNM = {
     }).blur(function(){
         $(this).parent().parent().removeClass('chzn-choices-active')
     })
+  },
+
+  isMobile: function() {
+    return $.browser.mobile;
+  },
+
+  isDesktop: function() {
+    return !this.isMobile();
   }
 }
 

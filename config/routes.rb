@@ -46,7 +46,7 @@ DesksnearMe::Application.routes.draw do
     member do
       get :bookings
       get :listings
-      get :reservations
+      get :manage_guests
     end
   end
 
@@ -156,6 +156,8 @@ DesksnearMe::Application.routes.draw do
   match "/host-sign-up", to: 'pages#host_signup_1'
   match "/host-sign-up-2", to: 'pages#host_signup_2'
   match "/host-sign-up-3", to: 'pages#host_signup_3'
+  match "/w-hotels-desks-near-me", to: 'pages#w_hotels'
+  match "/W-hotels-desks-near-me", to: 'pages#w_hotels'
   match "/support" => redirect("https://desksnearme.desk.com")
 
 end

@@ -2,7 +2,6 @@ ListingView = Backbone.View.extend({
   template: HandlebarsTemplates['app/templates/listings/item'],
   initialize: function() {
     _.bindAll(this, 'render', '_getId', '_afterSave', '_showError');
-    this.photoCollection = new PhotoCollection(this.model.get('photos_attributes'));
     this._deleteTrigger = '.delete-listing'; // helper for testing
     this._availabilityTrigger = '.edit_listing .availability-rules input[type=radio]'; // helper for testing
     this.view_id = this.cid;
@@ -15,9 +14,11 @@ ListingView = Backbone.View.extend({
     "keyup input#listing_name": "nameChanged"
   },
 
-  render: function() {
+  render: function(expand) {
+    this.photoCollection = new PhotoCollection(this.model.get('photos_attributes'));
     var data = this.model.toJSON();
     data.view_id = this.view_id;
+    data.expand = expand? 'in': '';
     this.$el.html(this.template(data));
     var photoManagerView = new PhotoManagerView({el: $('#photos-' + this.cid,this.$el),collection:this.photoCollection, ref_type:'Listing', getRefId:this._getId});
     photoManagerView.render();
@@ -76,7 +77,8 @@ ListingView = Backbone.View.extend({
 
   _afterSave: function(data) {
     var elt = $(this.$el).find('.save-listing span');
-   elt.animate({
+    var self = this;
+    elt.animate({
       opacity: 0.2
     }, 500, function() {
       elt.text('Saved!');
@@ -91,7 +93,7 @@ ListingView = Backbone.View.extend({
     });
     elt.animate({
       opacity: 1
-    }, 1500 );
+    }, 1500, function(){ self.render('expand');} );
   },
 
   _showError: function(data, xhr) {
@@ -99,7 +101,9 @@ ListingView = Backbone.View.extend({
     var content = HandlebarsTemplates['app/templates/shared/errors']({
       msg: msg
     });
-    $('.action-listing', this.$el.find('#listing-'+ this.view_id +'-details-holder')).prepend(content);
+    var $target = $('.action-listing', this.$el.find('#listing-'+ this.view_id +'-details-holder'));
+    $target.find('.alert').remove();
+    $target.prepend(content);
     $('.alert-error', this.$el).fadeIn();
   },
 
@@ -130,7 +134,21 @@ ListingView = Backbone.View.extend({
       }
       return acc;
     }, {});
-
+    this._cleanCustomRules(data);
     return data;
+  },
+
+  _cleanCustomRules: function(data) {
+    if(data.availability_template_id !== "custom") {
+      _.each(data.availability_rules_attributes, function(rule,index){
+        if (rule.id === "" ) {
+          delete data.availability_rules_attributes[index];
+        }
+        else {
+          rule._destroy = 1;
+        }
+      });
+    }
   }
+
 });

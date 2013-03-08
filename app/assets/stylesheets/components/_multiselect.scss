@@ -22,7 +22,7 @@
 
   .expanded {
     position: absolute;
-    z-index: 9999;
+    z-index: $absolute-top-z-index + 999;
     top: -2px;
     left: -2px;
     right: -2px;
