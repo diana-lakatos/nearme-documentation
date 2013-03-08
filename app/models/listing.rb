@@ -224,6 +224,13 @@ class Listing < ActiveRecord::Base
     availability_for(date) >= quantity
   end
 
+  def first_available_date
+    date = Date.today + 1.day
+    max_date = date + 31.days
+    date = date + 1.day until availability_for(date) > 0 || date==max_date
+    date
+  end
+
   def schedule(weeks = 1)
     schedule = {}
 

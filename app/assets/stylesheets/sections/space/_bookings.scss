@@ -57,6 +57,13 @@
         @media (max-width: 480px) {
           display:block;
         }
+
+        .btn.disabled{
+          @include opacity(0.5);
+        }
+        .btn.click-disabled{
+          @include opacity(0.75);
+        }
       }
 
       .truncated-ellipsis {
