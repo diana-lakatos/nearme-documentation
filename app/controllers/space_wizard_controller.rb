@@ -5,6 +5,7 @@ class SpaceWizardController < ApplicationController
   before_filter :find_space, :except => [:new, :company, :submit_company, :space, :submit_space]
 
   def new
+    flash.keep(:notice)
     if current_user
       redirect_to space_wizard_company_url
     else

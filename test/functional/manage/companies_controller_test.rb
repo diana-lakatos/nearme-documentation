@@ -17,7 +17,7 @@ class Manage::CompaniesControllerTest < ActionController::TestCase
 
       should "Notify the user they must first add a company" do
         get :index
-        assert_equal "Please add your company first", flash[:success]
+        assert_equal "Please add your company first", flash[:notice]
       end
     end
 

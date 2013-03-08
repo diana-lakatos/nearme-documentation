@@ -6,7 +6,7 @@ class Manage::CompaniesController < ApplicationController
     if current_user.companies.any?
       redirect_to [:edit, :manage, current_user.companies.first]
     else
-      flash[:success] = "Please add your company first"
+      flash[:notice] = "Please add your company first"
       redirect_to new_space_wizard_url
     end
   end
