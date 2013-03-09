@@ -5,9 +5,9 @@
   top: 300px;
   left: 300px;
   width: 280px;
-
   background: $dnm_black;
   @include border-radius(8px);
+  @include box-shadow( 0 0 20px black);
 
   .datepicker-prev, .datepicker-next {
     float: left;
