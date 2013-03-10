@@ -26,17 +26,17 @@ a,
 a:visited,
 a:hover {
   text-decoration: none !important;
-  @include transition(opacity .15s ease-in, color .15s ease-in, border .15s ease-in);
+  @include transition(opacity .07s ease-in, color .07s ease-in, border .07s ease-in);
 }
 
 p a,
 p a:visited {
   color: $dnm_blue;
   text-decoration: none;
-  @include transition(opacity .15s ease-in, color .15s ease-in, border .15s ease-in);
+  @include transition(opacity .07s ease-in, color .07s ease-in, border .07s ease-in);
 
   &:hover {
-    color: darken( $dnm_blue, 30%);
+    color: darken( $dnm_blue, 20%);
     text-decoration: none;
   }
 }
