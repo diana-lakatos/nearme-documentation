@@ -131,27 +131,31 @@ section.how-it-works {
   text-align: center;
 
   .row-fluid {
-    padding: 30px 0;
+    padding: 30px 0 0;
     margin: 0;
   }
 
   h1{
     @include adjust-font-size-to(60px);
-    margin: 10px 0 20px;
+    margin: 10px 0 0;
+    font-weight: 900;
+    color: $gray8;
   }
 
   h2{
     @include adjust-font-size-to(30px);
     margin: 10px 0 20px;
+    color: $gray7;
   }
 
   p {
-    margin: 20px auto;
+    margin: 20px auto 0;
     max-width: 280px;
   }
 
   .btn {
     width: 300px;
+    margin-bottom: 50px;
   }  
 
   p {
