@@ -312,6 +312,10 @@ form {
       text-align: right;
       color: $dnm_black;
 
+      &.social-networks {
+        margin-top: 1px;
+      }
+      
       &.flush-top {
         margin: 0 0 20px;
 

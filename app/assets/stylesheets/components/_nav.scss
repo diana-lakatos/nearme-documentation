@@ -46,7 +46,7 @@
       text-decoration: none;
 
       &:hover {
-        color: $gray2;
+        color: $gray4;
       }
 
       &.margin-right {
@@ -99,7 +99,7 @@
             padding: 4px 8px;
             &:hover{
               background:$dnm_black;
-              color: $dnm_white;
+              color: $gray3;
             }
           }
           &.divider{
@@ -123,10 +123,10 @@
         font:normal 16px/22px $font-medium, sans-serif;
         padding: 8px 14px;
         position: relative;
-        color: $gray4;
+        color: $gray5;
 
         &:active {
-          color: $gray2;
+          color: $gray3;
         }
         &.nav-link {
           font-size: 20px;

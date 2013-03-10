@@ -1,14 +1,13 @@
 class AfterSignupMailer < DesksNearMeMailer
 
-  def help_offer(user)
+  def help_offer(user_id)
 
-    @user = user
-    mail to:      user.email,
+    @user = User.find(user_id)
+    mail to:      @user.email,
       from: "micheller@desksnear.me",
       subject: "Welcome to DesksNear.me",
       template_name: choose_template
   end
-
 
   private
 
