@@ -7,7 +7,7 @@ class AfterSignupMailerTest < ActiveSupport::TestCase
   end
 
   test "help offer works ok" do
-    mail = AfterSignupMailer.help_offer(@user)
+    mail = AfterSignupMailer.help_offer(@user.id)
 
     assert mail.html_part.body.include?(@name)
     assert_equal ["micheller@desksnear.me"], mail.from
@@ -15,14 +15,13 @@ class AfterSignupMailerTest < ActiveSupport::TestCase
   end
 
   test "offer help with listing" do
-    mail = AfterSignupMailer.help_offer(@user)
+    mail = AfterSignupMailer.help_offer(@user.id)
     assert mail.html_part.body.include?("if you need any help listing or booking a space")
   end
 
   test "offer help with anything if listing created" do
     @listing = FactoryGirl.create(:listing, :creator => @user)
-    
-    mail = AfterSignupMailer.help_offer(@user)
+    mail = AfterSignupMailer.help_offer(@user.id)
     assert mail.html_part.body.include?("I notice you added a new listing")
   end
 
