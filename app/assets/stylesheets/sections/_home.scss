@@ -146,6 +146,10 @@ section.how-it-works {
     @include adjust-font-size-to(30px);
     margin: 10px 0 20px;
     color: $gray7;
+
+    @media (max-width: 767px) {
+      margin-top: 30px;
+    }
   }
 
   p {
@@ -154,9 +158,17 @@ section.how-it-works {
   }
 
   .btn {
-    width: 300px;
-    margin-bottom: 50px;
+    width: auto;
+    max-width: 300px;
+    margin:0 auto 50px;
   }  
+
+  hr {
+    height: 0;
+    background: none;
+    border: none;
+    border-bottom: 1px dashed $gray4;
+  }
 
   p {
     @media (max-width: 767px) {
