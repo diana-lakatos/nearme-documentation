@@ -23,7 +23,6 @@ input[type=tel] {
 }
 
 .fileupload {
-   cursor: pointer;
 
    input.browse-file {
       visibility:hidden;
@@ -34,20 +33,65 @@ input[type=tel] {
   .fileinput-button {
     display: block;
     text-align: center;
+    cursor: pointer;
   }
 
-  .bar{
-    display: block;
-    height: 16px;
-    background: green;
-    width: 0%;
+  .progress{
+    clear: both;
   }
+  
+  .photo-item {
+    margin-bottom: 20px;
+    overflow: hidden;
+
+    img {
+      float: left;
+    }
+
+    .delete-photo {
+      float: left;
+      cursor: pointer;
+      margin: 0px 0 0 -45px;
+      @include adjust-font-size-to(24px);
+      @include text-shadow(black 0 0 5px);
+      color: white;
+      @include opacity(.5);
+
+      &:hover {
+        @include opacity(1);
+      }
+    }
+
+    .delete-photo-thumb {
+      margin: 0px 0 0 -25px;
+    }
+
+    &:last-child {
+     margin-bottom: 0;
+    }
+  }
+
+  .thumbnail-processing{
+    width: 100%;
+    height: 50px;
+    text-align: center;
+
+    .loading-icon{
+      width: 100%;
+      height: 16px;
+      background: url(/assets/ajax-loader.gif) no-repeat center;
+    }
+
+    .loading-text{
+      padding-top: 5px;
+    }
+  }
+
 }
 
 .control-fileupload label{
   margin-top: 31px !important;
 }
-
 
 form {
   div.input, div.field {
