@@ -34,7 +34,10 @@ DesksnearMe::Application.routes.draw do
 
   match '/auth/:provider/callback' => 'authentications#create'
   match "/auth/failure", to: "authentications#failure"
-  devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
+  devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' } 
+  devise_scope :user do
+    put "users/avatar", :to => "registrations#avatar", :as => "avatar"
+  end
 
   resources :reservations, :only => :update
 
@@ -141,11 +144,11 @@ DesksnearMe::Application.routes.draw do
     resource :social, only: [:show], controller: 'social' do
       # Hmm, can this be better?
       resource :facebook, only: [:show, :update, :destroy],
-                          controller: 'social_provider', provider: 'facebook'
+        controller: 'social_provider', provider: 'facebook'
       resource :twitter,  only: [:show, :update, :destroy],
-                          controller: 'social_provider', provider: 'twitter'
+        controller: 'social_provider', provider: 'twitter'
       resource :linkedin, only: [:show, :update, :destroy],
-                          controller: 'social_provider', provider: 'linkedin'
+        controller: 'social_provider', provider: 'linkedin'
     end
 
     get 'amenities', to: 'amenities#index'

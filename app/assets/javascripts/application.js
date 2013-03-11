@@ -46,6 +46,7 @@ window.DNM = {
     this.initializeModals();
     this.initializeTooltips();
     this.initializeCustomSelects();
+    this.initUploader();
   },
 
   initializeModals: function() {
@@ -56,6 +57,39 @@ window.DNM = {
     Multiselect.initialize(scope);
     Flash.initialize(scope);
     Accordian.initialize(scope);
+  },
+
+  initUploader: function() {
+    $('.fileinput-button').click(function(){
+      $('.browse-file', $(this).parent()).trigger('click');
+    });
+    $('.browse-file').fileupload({
+        dataType: 'json',
+        add: function (e, data) {
+          data.submit();
+        },
+        done: function (e, data) {
+          uploaded = $(this).parent().parent().find('.uploaded')
+          if(uploaded.find('ul').length > 0){
+            uploaded.find('ul').append('<li><img src="' + data.result.url + '"></li>')
+          } else{
+            // improve UI by making it fluent
+            if(uploaded.find('img').length > 0){
+              uploaded.find('img').attr('src', data.result.url);
+            } else{
+              uploaded.html('<img src="' + data.result.url + '">')
+            }
+          }
+        },
+        progress: function(e, data) {
+          var progressBar = $(this).parent().parent().find('.progress-bar')
+          var progress = parseInt(data.loaded / data.total * 100, 10);
+          progressBar.find('.bar').css('width', progress + '%');
+          if (progress == 100) {
+            progressBar.find('.bar').css('width', 0 + '%');
+          }
+        }
+    });
   },
 
   initializeAjaxCSRF: function() {

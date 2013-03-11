@@ -12,9 +12,10 @@
   = f.input :job_title, label: "Job title", placeholder: "Your job title"
   = f.input :biography, label: "Biography", placeholder: "Your biography"
 
-  - provide :avatar_thumb do
-    = image_tag resource.avatar_url(:thumb).to_s
-  = f.input :avatar, label: "Avatar",  as: :avatar, content: yield(:avatar_thumb)
+  = file_upload_input_with_label('Profile Photo', avatar_path, "avatar", "Upload Photo") do
+    = (resource.avatar.file.present? ? (image_tag resource.avatar_url(:thumb).to_s) : '')
+
 
   .actions
     = f.submit (resource.persisted?) ? "Save Changes" : "Sign Up Now"
+
