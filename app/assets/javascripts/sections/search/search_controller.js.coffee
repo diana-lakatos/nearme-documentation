@@ -6,6 +6,7 @@
 class Search.SearchController extends Search.Controller
   constructor: (form, @container) ->
     super(form)
+    @listings = {}
     @resultsContainer = @container.find('.results')
     @loadingContainer = @container.find('.loading')
     @resultsCountContainer = $('#search_results_count')
@@ -26,10 +27,10 @@ class Search.SearchController extends Search.Controller
 
       @triggerSearchWithBoundsAfterDelay()
 
-    @map.on 'mouseoverListingMarker', (mapListing) =>
+    @map.on 'mapListingFocussed', (mapListing) =>
       @findResultsListing(mapListing.id())?.focus()
 
-    @map.on 'mouseoutListingMarker', (mapListing) =>
+    @map.on 'mapListingBlurred', (mapListing) =>
       @findResultsListing(mapListing.id())?.blur()
 
   initializeMap: ->
@@ -86,16 +87,30 @@ class Search.SearchController extends Search.Controller
   getListingsFromResults: ->
     listings = []
     @resultsContainer.find('.listing').each (i, el) =>
-      listing = Search.Listing.forElement(el)
+      listing = @listingForElementOrBuild(el)
+      listings.push listing
+    listings
 
+  # Initialize or build a Search.Listing object from the DOM element.
+  # Handles memoizing by listing ID and swapping the backing DOM element
+  # for the leasting from search result refreshes/changes.
+  #
+  # TODO: Migrate to generating the result HTML elements client-side so we can
+  #       avoid this complexity.
+  listingForElementOrBuild: (element) ->
+    id = $(element).attr('data-id')
+    unless @listings[id]
+      listing = Search.Listing.forElement(element)
       listing.on 'mouseoverElement', =>
         @map.focusListingMarker(listing)
 
       listing.on 'mouseoutElement', =>
-        @map.blurListingMarker(listing)
+        @map.blurListingMarker(listing) if listing.shouldBlur()
 
-      listings.push listing
-    listings
+      @listings[id] = listing
+    listing = @listings[id]
+    listing.setElement(element)
+    listing
 
   findResultsListing: (listingId) ->
     for listing in @getListingsFromResults()
