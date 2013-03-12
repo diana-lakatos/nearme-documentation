@@ -1,8 +1,9 @@
 class AfterSignupMailer < DesksNearMeMailer
 
   def help_offer(user_id)
-
     @user = User.find(user_id)
+    @sent_by = 'Michelle R'
+    
     mail to:      @user.email,
       from: "micheller@desksnear.me",
       subject: "Welcome to DesksNear.me",
