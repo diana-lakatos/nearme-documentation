@@ -1,0 +1,35 @@
+body.careers {
+  background: $gray3;
+  color: %gray6 !important;
+  @include adjust-font-size-to(20px);
+  line-height: 28px;
+
+  h1 {
+      @include adjust-font-size-to(50px);
+      margin: 10px 0 20px;
+      font-weight: 900;
+      color: $gray7;
+    }
+
+  h2 {
+    @include adjust-font-size-to(40px);
+    margin: 10px 0 30px;
+    color: $gray7;
+  }
+
+  h3 {
+    @include adjust-font-size-to(30px);
+    color: $gray7;
+  }
+
+  img {
+    margin: 0 auto 20px;
+    display: block;
+  }
+
+  .btn.btn-large {
+    width: 100%;
+    margin: 2em auto;
+    text-align: center;
+  }
+}

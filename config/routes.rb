@@ -158,6 +158,7 @@ DesksnearMe::Application.routes.draw do
   match "/host-sign-up-3", to: 'pages#host_signup_3'
   match "/w-hotels-desks-near-me", to: 'pages#w_hotels'
   match "/W-hotels-desks-near-me", to: 'pages#w_hotels'
+  match "/careers", to: 'pages#careers'
   match "/support" => redirect("https://desksnearme.desk.com")
 
 end
