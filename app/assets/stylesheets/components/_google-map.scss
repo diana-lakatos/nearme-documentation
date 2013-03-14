@@ -28,12 +28,12 @@
     }
 
     em.arrow {
-      margin-left: -9px;
+      margin-left: -10px; // NB: Not -9px, as the map markers are not exactly symmetrical so it appears off-center
       @include css-arrow($width: 9px, $direction: down, $color: #e6e7e8);
     }
 
     em.arrow-border {
-      margin-left: -10px;
+      margin-left: -11px; // NB: Not -11px, as the map markers are not exactly symmetrical so it appears off-center
       @include css-arrow($width: 10px, $direction: down, $color: #858980);
     }
   }

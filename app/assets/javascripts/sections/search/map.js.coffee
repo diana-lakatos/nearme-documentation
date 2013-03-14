@@ -133,11 +133,12 @@ class Search.Map
 
     google.maps.event.addListener marker, 'mouseover', =>
       @focusMarker(marker)
-      @trigger 'mouseoverListingMarker', listing
+      @trigger 'mapListingFocussed', listing
 
     google.maps.event.addListener marker, 'mouseout', =>
-      @blurMarker(marker)
-      @trigger 'mouseoutListingMarker', listing
+      if listing.shouldBlur()
+        @blurMarker(marker)
+        @trigger 'mapListingBlurred', listing
 
   focusMarker: (marker) ->
     marker.setOptions(
@@ -172,7 +173,19 @@ class Search.Map
     [ne.lat(), ne.lng(), sw.lat(), sw.lng()]
 
   showInfoWindowForListing: (listing) ->
-    @popover.setContent listing.popupContent()
+    marker = @markers[listing.id()]
+    return unless marker
 
-    if marker = @markers[listing.id()]
-      @popover.open(@googleMap, marker)
+    @popover.setContent listing.popupContent()
+    @popover.open(@googleMap, marker)
+
+    # Focus the listing marker immediately for visual UX
+    listing.popoverOpened()
+    @focusListingMarker(listing)
+    @trigger 'mapListingFocussed', listing
+
+    # Blur the listing marker the next time the popover is closed
+    @popover.one 'closed', =>
+      listing.popoverClosed()
+      @blurListingMarker(listing)
+      @trigger 'mapListingBlurred', listing

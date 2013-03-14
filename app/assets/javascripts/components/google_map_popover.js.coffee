@@ -1,5 +1,7 @@
 # Wrapper class for our custom Google Map popover dialog boxes.
 class @GoogleMapPopover
+  asEvented.apply @prototype
+
   defaultOptions:
     boxClass: 'google-map-popover'
     pixelOffset: null
@@ -31,9 +33,12 @@ class @GoogleMapPopover
 
   close: ->
     @infoBox.close()
+    @trigger 'closed'
 
   open: (map, position) ->
+    @close()
     @infoBox.open(map, position)
+    @trigger 'opened'
 
   setContent: (content) ->
     @infoBox.setContent @wrapContent(content)

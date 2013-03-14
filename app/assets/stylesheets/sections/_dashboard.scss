@@ -261,22 +261,6 @@ section.listings {
   }
 }
 
-.fileupload {
-   cursor: pointer;
-
-   input.browse-file {
-      visibility:hidden;
-      height: 0;
-      width: 0;
-   }
-
-  .fileinput-button {
-    display: block;
-    text-align: center;
-  }
-}
-
-
 /*   End new dashboard */
 section.dashboard,
 section.companies,

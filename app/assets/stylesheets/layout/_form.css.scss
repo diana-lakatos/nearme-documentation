@@ -22,6 +22,33 @@ input[type=tel] {
    cursor: pointer;
 }
 
+.fileupload {
+   cursor: pointer;
+
+   input.browse-file {
+      visibility:hidden;
+      height: 0;
+      width: 0;
+   }
+
+  .fileinput-button {
+    display: block;
+    text-align: center;
+  }
+
+  .bar{
+    display: block;
+    height: 16px;
+    background: green;
+    width: 0%;
+  }
+}
+
+.control-fileupload label{
+  margin-top: 31px !important;
+}
+
+
 form {
   div.input, div.field {
     margin-bottom: 20px;

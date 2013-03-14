@@ -37,6 +37,16 @@ class RegistrationsController < Devise::RegistrationsController
     raise ActionController::RoutingError, "Feature disabled"
   end
 
+  def avatar
+    @user = current_user
+    @user.avatar = params[:avatar]
+    if @user.save
+       render :json => { :url => @user.avatar_url(:thumb).to_s }
+    else
+      render :json => [{:error => @user.errors.full_messages}], :status => 422
+    end
+  end
+
   protected
 
   def is_navigational_format?

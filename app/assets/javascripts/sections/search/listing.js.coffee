@@ -20,6 +20,14 @@ class Search.Listing
     @_name = @_element.attr('data-name')
     @bindEvents()
 
+  # The current implementation of the search results use server-side generated html elements.
+  # Since these can change, we want to swap the element we're bound to but still refer to the
+  # same client-side Listing object to simplify our event binding and behaviour
+  setElement: (element) ->
+    if @_element[0] != $(element)[0]
+      @_element = $(element)
+      @bindEvents()
+
   bindEvents: ->
     @_element.on 'mouseover', =>
       @focus()
@@ -38,6 +46,9 @@ class Search.Listing
   blur: ->
     @_element.removeClass('focussed')
 
+  shouldBlur: ->
+    !@popoverOpen
+
   id: ->
     @_id
 
@@ -52,6 +63,12 @@ class Search.Listing
 
   latLng: ->
     @_latLng ||= new google.maps.LatLng(@_lat, @_lng)
+
+  popoverOpened: ->
+    @popoverOpen = true
+
+  popoverClosed: ->
+    @popoverOpen = false
 
   # The content that goes in the map popup when clicking the marker
   popupContent: ->

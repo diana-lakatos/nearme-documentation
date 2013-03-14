@@ -1,31 +1,19 @@
 require 'active_support/core_ext'
 
 class Listing::Search::Params
-  DEFAULT_SEARCH_RADIUS = 15_000.0
-
-  attr_accessor  :availability, :geocoder, :price, :amenities, :options,
-    :search_area, :midpoint, :query
+  DEFAULT_SEARCH_RADIUS = 150.0 # in miles
+  MIN_SEARCH_RADIUS = 7.0 # in miles
+  
+  attr_accessor :geocoder
+  attr_reader :availability, :price, :amenities, :options, :search_area, :midpoint, :query, :bounding_box, :location
 
   def initialize(options, geocoder=nil)
-    @geocoder = geocoder || Listing::Search::Geocoder.new
+    @geocoder = geocoder || Listing::Search::Geocoder
     process_options(options)
-    build_search_area
   end
 
-  def to_scope
-    scope = {
-      with: {
-        deleted_at: 0
-      },
-      per_page: 100
-    }
-
-    if search_area
-      scope[:geo] = search_area.radians
-      scope[:with]['@geodist'] = 0.0...search_area.radius
-    end
-
-    scope
+  def to_args
+    [midpoint, radius] if midpoint.present?
   end
 
   # Return whether the search params are searching for the presense of the query,
@@ -37,75 +25,70 @@ class Listing::Search::Params
   def keyword_search?
     query.present?
   end
+  
+  def radius
+    @radius ||= begin
+      if bounding_box.present?
+        ::Geocoder::Calculations.distance_between(*bounding_box) / 2
+      else
+        Listing::Search::Params::DEFAULT_SEARCH_RADIUS
+      end
+    end
+    
+    @radius > MIN_SEARCH_RADIUS ? @radius : MIN_SEARCH_RADIUS
+  end
+  
+  def midpoint
+    @midpoint ||= begin
+      if @options[:location].present?
+        [@options[:location][:lat], @options[:location][:lon]]
+      elsif bounding_box.present?
+        ::Geocoder::Calculations.geographic_center(bounding_box)
+      end
+    end
+  end
+  
+  def bounding_box
+    @bounding_box ||= begin
+      if @options[:boundingbox].present?
+        box = @options[:boundingbox]
+        [[box[:start][:lat], box[:start][:lon]], [box[:end][:lat], box[:end][:lon]]]
+      end
+    end
+  end
+  
+  def found_location?
+    midpoint.present? or bounding_box.present?
+  end
 
   private
-
-  def build_search_area
-    return if search_area
-
-    build_search_area_from_midpoint
-    build_search_area_from_query if !search_area && query
-  end
-
-  def midpoint?
-    provided_midpoint.none?(&:blank?)
-  end
-
-  def boundingbox?
-    provided_boundingbox.none?(&:blank?)
-  end
-
-  def provided_boundingbox
-    box = options.fetch(:boundingbox, { start: { lat: nil, lon: nil }, end: { lat: nil, lon: nil } })
-    [box[:start][:lat], box[:start][:lon], box[:end][:lat], box[:end][:lon]]
-  end
-
-  def provided_midpoint
-    location = options.fetch(:location, { lon: nil, lat: nil })
-    [location[:lat], location[:lon]]
-  end
-
+  
   def process_options(opts)
-    @options = opts.respond_to?(:deep_symbolize_keys) ? opts.deep_symbolize_keys : opts
-    @availability = options[:availability].present? ? Availability.new(options[:availability]) : NullAvailability.new
-    @amenities = options[:amenities].present? ? options[:amenities].map(&:to_i) : []
-    @query = @location_string = options.fetch(:query, nil) || options.fetch(:q, nil) || options.fetch(:address, nil)
-    @found_location = false
-    build_price_from_options
-  end
-
-  def build_price_from_options
-    if options[:price].present?
-      @price = PriceRange.new(options[:price][:min], options[:price][:max])
+    @options = opts.respond_to?(:deep_symbolize_keys) ? opts.deep_symbolize_keys : opts.symbolize_keys
+    
+    @availability = if @options[:availability].present? 
+      Availability.new(@options[:availability])
     else
-      @price = NullPriceRange.new
+      NullAvailability.new
     end
-  end
-
-  def radius
-    @radius || Listing::Search::Params::DEFAULT_SEARCH_RADIUS
-  end
-
-  def build_search_area_from_midpoint
-    if boundingbox?
-      @midpoint = Midpoint.new(*provided_boundingbox).center
-      @radius = @midpoint.distance_from(provided_boundingbox.slice(0,2))
-    elsif midpoint?
-      @midpoint = Coordinate.new(*provided_midpoint)
+    
+    @amenities = [*@options[:amenities]].map(&:to_i)
+    
+    @query = @location_string = @options[:query] || @options[:q] || @options[:address]
+    
+    if not found_location? and query.present?
+      @location = @geocoder.find_search_area(query)
+      if @location.present?
+        @bounding_box, @midpoint, @radius = @location.bounds, @location.center, @location.radius
+      end
     end
-
-    if @midpoint
-      @found_location = true
-      @search_area = Listing::Search::Area.new(midpoint, radius)
+    
+    @price = if @options[:price].present?
+      PriceRange.new(@options[:price][:min], @options[:price][:max])
+    else
+      NullPriceRange.new
     end
+    
   end
-
-  def build_search_area_from_query
-    @search_area = geocoder.find_location(query)
-    if @search_area
-      @found_location = true
-      @location_string = geocoder.pretty
-      @query = nil
-    end
-  end
+  
 end
