@@ -16,12 +16,19 @@
         .make-reservation
           .quantity
             = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
-          %span.resource desk on
+          %span.resource desk from
 
-          .calendar-wrapper
+          .calendar-wrapper.date-start
             .calendar
               %span.ico-calender
-              %span.total-days 1 day
+              %span.calendar-text Start
+
+          to
+
+          .calendar-wrapper.date-end
+            .calendar
+              %span.ico-calender
+              %span.calendar-text End
 
           for
           %span #{currency_content_tag(@location.currency)}
