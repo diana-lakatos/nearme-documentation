@@ -4,11 +4,17 @@ class AuthenticationsController < ApplicationController
   def create
     omniauth = request.env["omniauth.auth"]
     omniauth_params = request.env["omniauth.params"]
+
     authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
     if authentication
-      flash[:notice] = "Signed in successfully." if use_flash_messages?
-      authentication.user.remember_me!
-      sign_in_and_redirect(:user, authentication.user)
+      if current_user && current_user.id != authentication.user.id 
+        flash[:notice] = "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account." if use_flash_messages?
+        redirect_to edit_user_registration_path
+      else
+        flash[:notice] = "Signed in successfully." if use_flash_messages?
+        authentication.user.remember_me!
+        sign_in_and_redirect(:user, authentication.user)
+      end
     elsif current_user
       current_user.authentications.create!(:provider => omniauth['provider'], :uid => omniauth['uid'])
       current_user.use_social_provider_image(omniauth['info']['image'])
