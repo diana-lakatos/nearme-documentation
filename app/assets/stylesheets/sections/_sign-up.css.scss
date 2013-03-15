@@ -101,3 +101,35 @@
     }  
   }  
 }
+
+
+.sign-up-modal {
+  // Fix hr's existing modal
+  form {
+    overflow: visible;
+  }
+  
+  #signup {
+    margin: 0;
+    
+    .span8.offset2 {
+      margin: 0;
+      width: auto;
+      
+      .box {
+        margin: 0;
+        padding: 0;
+        background: transparent;
+      }
+      
+      .box h2 {
+        margin-top: -20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+      
+    }
+    
+  }
+  
+}
