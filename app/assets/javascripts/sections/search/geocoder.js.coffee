@@ -45,11 +45,11 @@ class Search.Geocoder
       for c in @result.address_components
         t = c.types
         match = true
-        match = match && t.indexOf(type) != -1 for type in types
+        match = match && _.contains(t, type) for type in types
         component = c if match
       component
 
-  # Return a wrapped geocoder/places API response result object 
+  # Return a wrapped geocoder/places API response result object
   @wrapResult: (resultObject) ->
     new Result(resultObject)
 

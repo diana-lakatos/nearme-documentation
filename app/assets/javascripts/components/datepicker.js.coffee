@@ -88,7 +88,7 @@ class @Datepicker
       @trigger('monthChanged', @currentMonth)
 
     isSelected: (date) ->
-      @_included.indexOf(@_asId(date)) != -1
+      _.contains(@_included, @_asId(date))
 
     getDates: ->
       _.map @_included, (dateId) => @_fromId(dateId)
@@ -103,7 +103,7 @@ class @Datepicker
       dateId = @_asId(date)
       return unless @isSelected(dateId)
 
-      @_included.splice @_included.indexOf(dateId), 1
+      @_included.splice _.indexOf(@_included, dateId), 1
       @trigger('dateRemoved', date)
 
     addDate: (date) ->
