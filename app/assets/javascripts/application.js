@@ -120,12 +120,12 @@ function doListingGoogleMaps() {
 
     if(!map) {
       var layer = "toner";
-      map = new google.maps.Map(document.getElementById("map"), {
+      map = SmartGoogleMap.getMap(document.getElementById("map"), {
         zoom: 13,
         mapTypeId: layer,
         mapTypeControl: false,
         center: latlng
-      });
+      })
       map.mapTypes.set(layer, new google.maps.StamenMapType(layer));
     }
 

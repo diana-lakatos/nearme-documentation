@@ -6,7 +6,7 @@
 #results
   .google-map-wrapper
     .google-map
-      #listings_map.inner
+      #listings_map.inner{:tabindex => -1}
 
   .results
     = render :partial => "search/listings" if @listings

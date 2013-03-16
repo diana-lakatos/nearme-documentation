@@ -36,13 +36,12 @@ class Search.Map
     @bindEvents()
 
   initializeGoogleMap: ->
-    @googleMap = new google.maps.Map(@container, {
+    @googleMap = SmartGoogleMap.createMap(@container, {
       zoom: 8,
       minZoom: 4,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       disableDefaultUI: true
       zoomControl: true,
-      scrollwheel: false
     })
 
     # Info window pops over and contains details for each marker/listing
