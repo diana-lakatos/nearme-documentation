@@ -34,6 +34,7 @@ class Search.Map
   constructor: (@container) ->
     @initializeGoogleMap()
     @bindEvents()
+    @cacheMarkers()
 
   initializeGoogleMap: ->
     @googleMap = SmartGoogleMap.createMap(@container, {
@@ -188,3 +189,7 @@ class Search.Map
       listing.popoverClosed()
       @blurListingMarker(listing)
       @trigger 'mapListingBlurred', listing
+
+  cacheMarkers: ->
+    # hack if css sprites cannot be used
+    $('body').append("<div style='display:none;'><img src='/assets/google-maps/marker-images/hover-2x.png' /><img src='/assets/google-maps/marker-images/default-2x.png' /></div>")
