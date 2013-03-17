@@ -11,10 +11,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130304210142) do
+ActiveRecord::Schema.define(:version => 20130316165122) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "amenity_type_id"
+  end
+
+  add_index "amenities", ["amenity_type_id"], :name => "index_amenities_on_amenity_type_id"
+
+  create_table "amenity_types", :force => true do |t|
+    t.string   "name"
+    t.integer  "position"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -221,8 +231,8 @@ ActiveRecord::Schema.define(:version => 20130304210142) do
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_status",     :default => "unknown", :null => false
     t.string   "payment_method",     :default => "manual",  :null => false
+    t.string   "payment_status",     :default => "unknown", :null => false
     t.integer  "quantity",           :default => 1,         :null => false
   end
 

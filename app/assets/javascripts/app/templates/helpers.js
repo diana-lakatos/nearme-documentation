@@ -73,6 +73,15 @@
   }
   Handlebars.registerHelper( 'select', select );
 
+  function multiselect( values, options ) {
+    var $el = $('<select />').html( options.fn(this) );
+    _.each(values, function(value){
+      $el.find('[value="' + value + '"]').attr({'selected':'selected'});
+    });
+    return $el.html();
+  }
+  Handlebars.registerHelper( 'multiselect', multiselect );
+
   function shorten(text) {
     return (text.length > 10)? text.substr(0,7) + "..." : text;
   }

@@ -27,6 +27,7 @@ LocationView = Backbone.View.extend({
     this.addAll();
     this.toggleCmd();
     new DNM.LocationFinder($('form#edit_location_'+ this._getId(), this.$el));
+    setTimeout(function() { $('.custom-select').chosen(); }, 200) 
     return this;
   },
 
