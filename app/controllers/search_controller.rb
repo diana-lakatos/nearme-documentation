@@ -2,7 +2,7 @@ require "will_paginate/array"
 class SearchController < ApplicationController
   
   layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
-  helper_method :search, :query, :listings
+  helper_method :search, :query, :listings, :result_view
   
   SEARCH_RESULT_VIEWS = %w(list map)
   

@@ -7,24 +7,26 @@ class Search.SearchController extends Search.Controller
   constructor: (form, @container) ->
     super(form)
     @listings = {}
-    @resultsContainer = @container.find('.results')
+    @resultsContainer = @container.find('#results')
     @loadingContainer = @container.find('.loading')
     @resultsCountContainer = $('#search_results_count')
+    @processingResults = true
     @initializeMap()
     @bindEvents()
+    setTimeout((=> @processingResults = false), 1000)
 
   bindEvents: ->
     @form.bind 'submit', (event) =>
       event.preventDefault()
       @triggerSearchFromQuery()
-
+    
     @map.on 'viewportChanged', =>
       # NB: The viewport can change during 'query based' result loading, when the map fits
       #     the bounds of the search results. We don't want to trigger a bounding box based
       #     lookup during a controlled viewport change such as this.
       return if @processingResults
       return unless @redoSearchMapControl.isEnabled()
-
+    
       @triggerSearchWithBoundsAfterDelay()
 
     @map.on 'mapListingFocussed', (mapListing) =>
@@ -45,10 +47,6 @@ class Search.SearchController extends Search.Controller
 
     @updateMapWithListingResults()
 
-    if DNM.isDesktop()
-      $(mapContainer).parent().affix(
-        offset: { top: 175 }
-      )
 
   startLoading: ->
     @resultsContainer.hide()

@@ -1,0 +1,16 @@
+%article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
+  .listing-map-popover-content{:style => "display: none"}
+    .popover-image-container
+      = link_to listing do
+        - if listing.photos.first
+          = image_tag listing.photos.first.url(:medium), :title => listing.name, :alt => listing.name
+        - else
+          = image_tag google_maps_streetview_url(:height => 114, :width => 144, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name
+    .popover-info-container
+      %h3= link_to "#{listing.name}", listing
+      %address
+        %span.ico-marker
+        = listing.formatted_address || listing.address
+      - if listing.daily_price
+        %span.label.label-success
+          = "#{money_without_cents_and_with_symbol(listing.daily_price)}/day"
