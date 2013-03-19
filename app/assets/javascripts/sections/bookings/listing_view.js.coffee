@@ -31,7 +31,9 @@ class @Bookings.ListingView
     @bookButton.click (event) =>
       event.preventDefault()
       return if @listing.bookedDays().length is 0
-      @trigger 'reviewTriggered', @listing
+      @disableBookButton()
+      @trigger 'reviewTriggered', @listing, =>
+        @enableBookButton()
 
     @quantityField.on 'change', (event) =>
       qty = parseInt($(event.target).val())
@@ -44,7 +46,18 @@ class @Bookings.ListingView
 
     @listing.bind 'bookingChanged', =>
       @updateSummary()
-      @bookButton.toggleClass('disabled', @listing.bookedDays().length is 0)
+      if @listing.bookedDays().length == 0
+        @bookButton.addClass('disabled')
+        @bookButton.tooltip()
+      else
+        @bookButton.removeClass('disabled')
+        @bookButton.tooltip('destroy')
+
+  disableBookButton : () ->
+      @bookButton.addClass('click-disabled').find('span').text('Booking...')
+
+  enableBookButton : () ->
+    $('.click-disabled').removeClass('click-disabled').find('span').text('Book')
 
   validateQuantityAndUpdatePlural: (qty) ->
     qty = 1 unless qty >= 0

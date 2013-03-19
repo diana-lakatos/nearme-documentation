@@ -8,7 +8,7 @@ module Bookings
   def add_dates(dates)
     find(:css, ".calendar-wrapper").click
     wait_until_datepicker_finished_loading
-    dates.uniq.each do | date|
+    (dates.uniq - [listing.first_available_date]).each do | date|
       ensure_datepicker_is_on_right_month(date)
 
       el = find(:css, datepicker_class_for(date))
