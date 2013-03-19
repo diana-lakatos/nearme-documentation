@@ -1,0 +1,29 @@
+%article.listing.box.divider.small{listing_data_attributes(listing)}
+  %aside.images
+    - if listing.photos.any?
+      .image{:style => "margin-right: 15px;"}
+        = image_tag listing.photos.first.url(:space_listing)
+  
+  %header
+    %h1.listing-name= listing.name
+    %h2.location= listing.location.name
+    %p.listing-availability
+      -# Please ignore the shitty formatting of the following output. Work in progress!
+      = pretty_availability_sentence(listing.availability)
+  
+  -# .make-reservation
+  -#   .quantity
+  -#     = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
+  -#   %span.resource desk
+  -#   on
+  -#   .calendar
+  -#     = text_field_tag "dates", nil, :autocomplete => "off"
+  -#     %span.total-days 1 day
+  -# 
+  -#   for
+  -#   %span #{currency_content_tag(listing.currency)}
+  -# 
+  -#   .book
+  -#     = link_to "Book", "", :class => "btn btn-green btn-medium", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id
+  
+  .clearfix

@@ -47,4 +47,30 @@ module AvailabilityRulesHelper
   def availability_custom?(object)
     object.availability_template_id.blank? && (!object.respond_to?(:defer_availability_rules) || !object.defer_availability_rules?)
   end
+  
+  # First revision of this method. Will be refined!
+  def pretty_availability_sentence(availability)
+    days = availability.full_week.select { |d| availability.open_on?(day: d[:day]) }
+    hours = days.group_by { |day| rule = day[:rule]; [[rule.open_hour, rule.open_minute], [rule.close_hour, rule.close_minute]] }
+    hour_groups = hours.collect { |time, days| { times: time, days: days.map { |h| h.fetch(:day) }} }
+    
+    sentence = []
+    
+    hour_groups.each do |group|
+      day_part = []
+      group[:days].each do |day|
+        day_part << Date::ABBR_DAYNAMES[day]
+      end
+      
+      hour_part = []
+      group[:times].each do |hour|
+        hour_part << "#{hour[0]}:#{hour[1].to_s.rjust(2, '0')}"
+      end
+      
+      sentence.push("#{day_part.join('-')} #{hour_part.join('-')}")
+    end
+    
+    sentence.to_sentence
+  end
+  
 end
