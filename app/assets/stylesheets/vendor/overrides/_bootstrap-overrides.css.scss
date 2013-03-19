@@ -1,4 +1,4 @@
-// Bootstrap Overrides - Do not edit the Vendor Bootstrap files, override them
+// Bootstrap Overrides - Do not edit the Vendor Bootstrap files, override them please!
 
 body {
   padding: 90px 0 0;
@@ -94,11 +94,36 @@ abbr[data-original-title] {
   max-width: 140px;
 }
 
+.label,
+.badge {
+
+  @media (max-width: 480px) {
+  padding: 1px 2px;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 14px;
+  }
+}
+
 .tooltip {
   @include adjust-font-size-to(16px);
 }
 
+// Override bootstrap mixin that caused opacity to be reduced by 10x
 @mixin opacity($opacity) {
   opacity: $opacity;
   filter: alpha(opacity=$opacity);
 }    
+
+@media (max-width: 767px) {
+  // Make all grid-sized elements block level again
+  [class*="span"]:not(.nested),
+  .uneditable-input[class*="span"], // Makes uneditable inputs full-width when using grid sizing
+  .row-fluid [class*="span"]:not(.nested) {
+    float: none;
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    @include box-sizing(border-box);
+  }
+}

@@ -1,18 +1,18 @@
 %article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
   .row-fluid
-    .span4
+    .span4.nested
       = link_to listing do
         - if listing.photos.first
           = image_tag listing.photos.first.url(:space_listing), :title => listing.name, :alt => listing.name
         - else
           = image_tag google_maps_streetview_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name
-    .span8
+    .span8.nested
       %h2
         = link_to "#{listing.name}", listing
-      %address
+      %address.visible-desktop
         %span.ico-marker
         = listing.formatted_address || listing.address
-      %p 
+      %p.hidden-phone 
         -# Please ignore the shitty formatting of the following output. Work in progress!
         = pretty_availability_sentence(listing.availability)
       %aside.prices
@@ -20,8 +20,8 @@
           %span.label.label-success
             = "#{money_without_cents_and_with_symbol(listing.daily_price)}/day"
         - if listing.weekly_price
-          %span.label.label-success
-            = "#{money_without_cents_and_with_symbol(listing.weekly_price)}/week"
+          %span.label.label-warning
+            = "#{money_without_cents_and_with_symbol(listing.weekly_price)}/wk"
         - if listing.monthly_price
-          %span.label.label-success
-            = "#{money_without_cents_and_with_symbol(listing.monthly_price)}/month"
+          %span.label.label-important
+            = "#{money_without_cents_and_with_symbol(listing.monthly_price)}/mo"
