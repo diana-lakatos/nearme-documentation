@@ -261,15 +261,35 @@ section.results {
   
   article.listing {
 
-    @media (max-width: 480px) {
-      margin-left: -20px;
+    border-bottom: 1px solid $gray5;
+
+    @media (max-width: 1400px) {
+      margin: 0 -20px;
+    }
+
+    img {
+      display: block;
     }
     
     h2  {
 
+      text-overflow: ellipsis;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+
+      @media( min-width: 768px) {
+        @include adjust-font-size-to(32px);
+      }
+
       @media( max-width: 480px) {
         @include adjust-font-size-to(16px);
       }
+    }
+
+    aside.prices {
+      position: absolute;
+      right: 10px;
     }
   }
 }

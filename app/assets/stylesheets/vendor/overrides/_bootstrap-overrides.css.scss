@@ -94,6 +94,17 @@ abbr[data-original-title] {
   max-width: 140px;
 }
 
+.label,
+.badge {
+
+  @media (max-width: 480px) {
+  padding: 1px 2px;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 14px;
+  }
+}
+
 .tooltip {
   @include adjust-font-size-to(16px);
 }
