@@ -6,6 +6,7 @@ class @Bookings.Listing
 
   constructor: (@data, options) ->
     @id = parseInt(@data.id, 10)
+    @firstAvailableDate = new Date(@data.first_available_date)
     @availability = options.availability
     @bookings = {}
 

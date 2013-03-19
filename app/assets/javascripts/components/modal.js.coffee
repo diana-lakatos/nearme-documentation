@@ -46,6 +46,11 @@ class @Modal
     @instance().setClass(modalClass)
     @instance().load(ajaxOptions)
 
+  @load : (ajaxOptions, modalClass = null, callback = null) ->
+    @instance().setClass(modalClass)
+    @instance().load(ajaxOptions)
+    @instance().setCallback(callback)
+
   # ===
 
   constructor: (@options) ->
@@ -63,6 +68,9 @@ class @Modal
     # Bind to the overlay to close the modal
     @overlay.bind 'click', (e) =>
       @hide()
+
+  setCallback : (callback) ->
+    @callback = callback
 
   setClass : (klass) ->
     @container.attr("class", 'modal-container') # FIXME: Make the modal markup dynamic and customizable default class(es)
@@ -85,6 +93,8 @@ class @Modal
     @_unfixBody()
     @overlay.hide()
     @container.hide()
+    if @callback
+      @callback()
 
     # Redirect if bound
     if Modal._reloadOnClose
