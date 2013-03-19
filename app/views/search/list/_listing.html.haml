@@ -20,8 +20,8 @@
           %span.label.label-success
             = "#{money_without_cents_and_with_symbol(listing.daily_price)}/day"
         - if listing.weekly_price
-          %span.label.label-success
-            = "#{money_without_cents_and_with_symbol(listing.weekly_price)}/week"
+          %span.label.label-warning
+            = "#{money_without_cents_and_with_symbol(listing.weekly_price)}/wk"
         - if listing.monthly_price
-          %span.label.label-success
-            = "#{money_without_cents_and_with_symbol(listing.monthly_price)}/month"
+          %span.label.label-important
+            = "#{money_without_cents_and_with_symbol(listing.monthly_price)}/mo"
