@@ -26,6 +26,11 @@ gem 'money-rails'
 gem 'oauth'
 gem 'rails3_acts_as_paranoid'
 gem 'simple_form'
+
+# Use edge to fix validation of nested attributes: https://github.com/bcardarella/client_side_validations/pull/505
+gem 'client_side_validations', :git => "https://github.com/bcardarella/client_side_validations.git"
+
+gem 'client_side_validations-simple_form'
 gem 'state_machine'
 gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'tweet-button'
@@ -79,6 +84,7 @@ group :development, :test do
   gem 'json_spec', '0.5.0'
   gem 'jasmine'
   gem 'debugger'
+  gem 'pry'
 end
 
 group :development do

@@ -6,7 +6,7 @@ class LocationTest < ActiveSupport::TestCase
   should belong_to(:location_type)
   should have_many(:listings)
 
-  should validate_presence_of(:company_id)
+  should validate_presence_of(:company)
   should validate_presence_of(:name)
   should validate_presence_of(:description)
   should validate_presence_of(:address)

@@ -17,6 +17,6 @@
         = link_to location do
           %h3= location.name
 
-    = link_to space_wizard_space_url(:company_id => @company.id), :class => "btn btn-blue btn-medium" do 
+    = link_to space_wizard_list_url(:company_id => @company.id), :class => "btn btn-blue btn-medium" do 
       %span.ico-add-location.padding Add a Location
 
