@@ -49,6 +49,8 @@ gem 'ey_config'
 gem 'unicorn'
 gem 'chameleon'
 
+gem 'mixpanel'
+
 group :staging, :production do
   gem 'newrelic_rpm'
 end

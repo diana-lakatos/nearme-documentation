@@ -1,4 +1,8 @@
 window.analytics = {
+  init: function(){
+    console.log('Analytics.init');
+    console.log(arguments)
+  },
   track: function() {
     console.info('Analytics.track'); 
     console.info(arguments); 

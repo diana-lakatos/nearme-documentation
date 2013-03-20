@@ -1,12 +1,17 @@
 @import "compass/typography/vertical_rhythm";
 
 $base-font-size: 18px;
-$base-line-height: 24px;
+$base-line-height: 28px;
+$round-to-nearest-half-line: true;
 @include establish-baseline;
 
-body, input, textarea, select {
-  font-family: $font-regular, sans-serif;
-  color: $dnm_black;
+body, 
+input, 
+textarea, 
+select,
+p {
+  font:400 18px/28px $font-regular, sans-serif;
+  color: $gray7;
 }
 
 h1, 
@@ -16,7 +21,7 @@ h4,
 h5 {
   font-family: $font-medium, sans-serif;
   font-weight: 500;
-  color: #1e2222;
+  color: $gray8;
 }
 
 h1 {

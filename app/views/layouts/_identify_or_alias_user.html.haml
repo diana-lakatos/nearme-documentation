@@ -1,3 +1,5 @@
+:javascript
+  analytics.init("#{MIXPANEL_TOKEN}");
 - if flash[:redirected_from_sign_up] && current_user
   :javascript
     analytics.alias(#{current_user.id});

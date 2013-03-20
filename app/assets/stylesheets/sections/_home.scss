@@ -5,7 +5,9 @@ section.public {
     height: 580px;
     width: auto;
     background: image-url("https://s3.amazonaws.com/desksnearme.production/uploads/photos/653/hall.jpg") center center no-repeat;
-    background-size: cover;
+    @include background-size(cover);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='https://s3.amazonaws.com/desksnearme.production/uploads/photos/653/hall.jpg', sizingMethod='scale');
+    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='https://s3.amazonaws.com/desksnearme.production/uploads/photos/653/hall.jpg', sizingMethod='scale')";
     @include box-shadow(rgba(black, .2) 0 0 20px 20px inset); 
 
     @media (max-width: 767px) {
@@ -79,7 +81,7 @@ section.public {
     .geolocation.no-bookings {
       top:-40px;
 
-      @media (max-width: 767px) {
+      @media (max-width: 768px) {
         top:-48px;
       }
     }
@@ -140,12 +142,20 @@ section.how-it-works {
     margin: 10px 0 0;
     font-weight: 900;
     color: $gray8;
+
+    @media (max-width: 480px) {
+      @include adjust-font-size-to(42px);
+    }
   }
 
   h2{
     @include adjust-font-size-to(30px);
     margin: 10px 0 20px;
     color: $gray7;
+
+    @media (min-width: 768px) and (max-width: 900px) {
+      @include adjust-font-size-to(24px);
+    }
 
     @media (max-width: 767px) {
       margin-top: 30px;

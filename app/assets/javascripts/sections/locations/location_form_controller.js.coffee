@@ -19,11 +19,11 @@ class @LocationFormController
     @mapContainer = @container.find('.map')
 
     @map = { map: null, markers: [] }
-    @map.map = new google.maps.Map(@mapContainer.find('.map-container')[0], {
+    @map.map = SmartGoogleMap.createMap(@mapContainer.find('.map-container')[0], {
       zoom: 16,
       mapTypeControl: false,
       streetViewControl: false
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
     })
 
     @map.marker = new google.maps.Marker({

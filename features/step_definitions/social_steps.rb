@@ -39,6 +39,12 @@ When /I connect to (.*)$/ do |social|
   toggle_connection_with(social)
 end
 
+When /I want connect to (.*) that belongs to other user$/ do |social|
+  create_user_for_provider(social)
+  mock_successful_authentication_with_provider(social)
+  toggle_connection_with(social)
+end
+
 When /I disconnect (.*)/ do |social|
   toggle_connection_with(social)
 end
@@ -127,4 +133,10 @@ Then /^I do (not )?have avatar$/ do |without_avatar|
   else
     assert user.avatar_provided?
   end
+end
+
+Then  /^I should not be relogged as other user$/ do
+  current_path = URI.parse(current_url).path
+  assert_equal edit_user_registration_path, current_path
+
 end

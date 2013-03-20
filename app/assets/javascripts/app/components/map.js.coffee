@@ -3,7 +3,7 @@ class DNM.UI.Map
     @geoPosition = geoPosition
     @anchor = uiParams.anchor
     @map = { map: null, markers: [] }
-    @map.map = new google.maps.Map(@anchor[0], {
+    @map.map = SmartGoogleMap.createMap(@anchor[0], {
       zoom: 16,
       mapTypeControl: false,
       streetViewControl: false
