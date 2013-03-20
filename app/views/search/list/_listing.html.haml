@@ -9,12 +9,11 @@
     .span8.nested
       %h2
         = link_to "#{listing.name}", listing
-      %address.visible-desktop
+      %h5.hidden-phone 
         %span.ico-marker
-        = listing.formatted_address || listing.address
-      %p.hidden-phone 
-        -# Please ignore the shitty formatting of the following output. Work in progress!
-        = pretty_availability_sentence(listing.availability)
+          %strong
+            = listing.location.name
+          = pretty_availability_sentence(listing.availability)
       %aside.prices
         - if listing.daily_price
           %span.label.label-success

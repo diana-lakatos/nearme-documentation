@@ -261,7 +261,7 @@ section.results {
   
   article.listing {
 
-    border-bottom: 1px solid $gray5;
+    border-bottom: 1px solid $gray3;
 
     @media (max-width: 1400px) {
       margin: 0 -20px;
@@ -287,9 +287,32 @@ section.results {
       }
     }
 
-    aside.prices {
-      position: absolute;
-      right: 10px;
+    aside.prices {  
+      margin-top: 1em;
+
+      @media (max-width: 480px) {
+        margin:0;
+        position: absolute;
+        right: 10px;
+      }  
+
+    .label {
+ 
+      @media (min-width: 980px) {
+        padding: 4px 6px;
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 14px;
+      }
+
+      @media (max-width: 480px) {
+        padding: 1px 2px;
+        font-size: 10px;
+        font-weight: bold;
+        line-height: 14px;
+      }
+    }
+
     }
   }
 }
