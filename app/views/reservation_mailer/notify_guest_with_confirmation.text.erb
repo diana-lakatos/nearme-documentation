@@ -2,6 +2,6 @@ Your request to book '<%= @listing.name %>' at <%= link_to(@listing.location.nam
 
 Bookings at this workspace require confirmation. Hosts have 24 hours to confirm, but most reply sooner.
 
-<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %>
+<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } -%>
 
 You can <%= link_to 'review your travel plans on the Dashboard', bookings_dashboard_url %>.

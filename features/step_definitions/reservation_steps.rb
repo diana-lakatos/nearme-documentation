@@ -89,6 +89,16 @@ When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, 
   wait_for_ajax
 end
 
+When /^the reservation expires/ do
+  login User.find_by_name("Keith Contractor")
+  visit bookings_dashboard_path
+  
+  reservation = User.find_by_name("Keith Contractor").reservations.first
+  reservation.expire!
+  
+  visit bookings_dashboard_path
+end
+
 When /^I select to book( and review)? space for:$/ do |and_review, table|
   next unless table.hashes.length > 0
 
@@ -251,4 +261,8 @@ end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|
   last_email_for(email).subject.should include "A guest has made a booking"
+end
+
+Then /^a reservation expiration email should be sent to (.*)$/ do |email|
+  last_email_for(email).subject.should include "expired"
 end

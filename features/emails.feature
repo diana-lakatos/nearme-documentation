@@ -50,3 +50,9 @@ Feature: Emails should be sent out informing parties about reservations
     Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
     When the owner rejects the reservation
     Then a reservation rejected email should be sent to keith@example.com
+
+  Scenario: unconfirmed reservation expires
+    Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
+    When the reservation expires
+    Then a reservation expiration email should be sent to keith@example.com
+    Then a reservation expiration email should be sent to bo@example.com
