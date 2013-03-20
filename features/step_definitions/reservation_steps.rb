@@ -61,6 +61,15 @@ When /^I book space( with credit card)? for:$/ do |with_credit_card, table|
   step "I click to confirm the booking"
 end
 
+When /^I book space as new user for:$/ do |table|
+  step "I select to book space for:", table
+  step "I click to review the booking"
+  fill_in_user_sign_up_details
+  click_button "Sign up"
+  store_model("user", "user", User.last)
+  step "I click to confirm the booking"
+end
+
 When /^(.*) books a space for that listing$/ do |person|
   listing.reserve!(User.find_by_name(person), [next_regularly_available_day], 1)
 end
