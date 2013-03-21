@@ -1,27 +1,26 @@
-- legacy false
-= render 'search/header'
+- content_for :hero do
+  = render 'search/header'
+  %section#map.google-map-wrapper
+    .google-map
+      #listings_map.inner
 
-%section#search
-  - if listings.any?
-    %section#map.google-map-wrapper
-      .google-map
-        #listings_map.inner
-    %section#results
-      = render partial: 'search/map/listing', collection: listings
-  - else
-    %section.no_results
-      .span3
-        = image_tag "marker_missing.png"
-      .span9
-        %br/
-        %br/
-        %h1.tk-adelle.fat No results found
-        %p Try a different location or a post code. Make sure the location is properly formatted and include the city and state.
-        %p
-          Still cant find what your looking for? Why not #{link_to "create your own listing", new_space_wizard_path}!
+- if listings.any?
+  %section#results
+    = render partial: 'search/map/listing', collection: listings
+- else
+  %section#no_results
+    .span3
+      = image_tag "marker_missing.png"
+    .span9
+      %br/
+      %br/
+      %h1.tk-adelle.fat No results found
+      %p Try a different location or a post code. Make sure the location is properly formatted and include the city and state.
+      %p
+        Still cant find what your looking for? Why not #{link_to "create your own listing", new_space_wizard_path}!
 
-  .loading.four.columns{:style => "display: none"}
-    = image_tag "spinner-red.gif"
+.loading.four.columns{:style => "display: none"}
+  = image_tag "spinner-red.gif"
 
 - content_for :domready do
-  new Search.SearchController($('#listing_search'), $("section#search"))
+  new Search.SearchController($('#listing_search'), $("section#content.search"))

@@ -1,5 +1,5 @@
-- legacy false
-= render 'search/header'
+- content_for :hero do
+  = render 'search/header'
 
 %section#search
   - if listings.any?

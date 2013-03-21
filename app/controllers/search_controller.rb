@@ -20,6 +20,10 @@ class SearchController < ApplicationController
     @query ||= search.location_string
   end
   
+  def locations
+    # @locations ||= Location.find_by_search_params(search)
+  end
+  
   def listings
     @listings ||= Listing.find_by_search_params(search)
   end
