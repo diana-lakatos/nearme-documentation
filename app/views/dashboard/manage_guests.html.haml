@@ -10,7 +10,7 @@
         - @locations.each do |location|
           %ul
             %li
-              =link_to tweet_location_url(location), :class => 'btn btn-blue btn-large twitter submit' do
+              =link_to tweet_location_url(location), :ref => "mg", :class => 'btn btn-blue btn-large twitter submit' do
                 %span.ico-twitter.padding="Share #{location.name}" 
             %li
               = link_to location_url(location), :class => 'btn btn-blue btn-large' do
