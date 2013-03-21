@@ -114,7 +114,7 @@ class Search.Controller
 
   getSearchParams: ->
     params = {}
-    params[param] = @form.find("input[name*=#{param}]").val() for param in ['lat', 'lng', 'nx', 'ny', 'sx', 'sy', 'q']
+    params[param] = @form.find("input[name*=#{param}]").val() for param in ['lat', 'lng', 'nx', 'ny', 'sx', 'sy', 'q', 'v']
     params
 
   # Geocde the search query and assign it as the geocoded result
