@@ -5,15 +5,19 @@
         = hidden_field_tag geofield, ''
       
       .row-fluid
-        .span1
-          %a{ href: search_path(params.merge(v: 'Map')) }
-            %span.ico-marker
-          %a{ href: search_path(params.merge(v: 'List')) }
-            %span.ico-list
-        .span7
-          %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => query, :class => "query", :autocomplete => "off"}
-          .geolocation
-            %span.ico-crosshairs
+        .span8
+          .row-fluid
+            .span2.nested
+              %a.map{ href: search_path(params.merge(v: 'Map')) }
+                %span.ico-marker
+              %a.list{ href: search_path(params.merge(v: 'List')) }
+                %span.ico-list
+            .span10.nested            
+              %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => query, :class => "query", :autocomplete => "off"}
+              .geolocation
+                %span.ico-crosshairs
+              .search-icon
+                %span.ico-search                
         .span4
           .three.columns.availability-date-start
             = text_field_tag "availability[dates][start]", search_availability_dates_start, :autocomplete => "off", :placeholder => "Starting on"

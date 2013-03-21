@@ -101,15 +101,15 @@ abbr[data-original-title] {
 
 
 .label-success {
-  background: lighten($dnm_green, 16%);
+  background: lighten($green, 16%);
 }
 
 .label-warning {
-  background: lighten($dnm_green, 8%);
+  background: lighten($green, 8%);
 }
 
 .label-important {
-  background: $dnm_green;
+  background: $green;
 }
 
 // Override bootstrap mixin that caused opacity to be reduced by 10x
