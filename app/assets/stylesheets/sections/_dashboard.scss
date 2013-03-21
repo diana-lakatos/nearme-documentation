@@ -21,6 +21,10 @@
   padding: 15px 3px;
 }
 
+.location-content.in.collapse{
+  overflow: visible;
+}
+
 section.locations-holder {
   margin-bottom: 20px;
 
@@ -296,7 +300,6 @@ section.dashboard {
   ul {
 
     li {
-      float: left;
       margin-right: .5em;
 
       @media (max-width: 767px) {
