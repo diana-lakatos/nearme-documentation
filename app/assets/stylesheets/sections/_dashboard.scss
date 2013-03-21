@@ -229,6 +229,7 @@ section.listings {
 
   li.photo-item {
     margin-bottom: 20px;
+    clear: both;
 
     img {
       float: left;
@@ -253,6 +254,8 @@ section.listings {
 
     .loading {
       background: image-url('ajax-loader.gif') no-repeat center;
+      min-width: 20px;
+      min-height: 24px;
     }
 
     &:last-child {
