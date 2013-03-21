@@ -260,8 +260,9 @@ section.search {
 section.results {
   
   article.listing {
-
-    border-bottom: 1px solid $gray3;
+    position: relative;
+    border-bottom: 2px solid $gray2;
+    padding-right: 20px;
 
     @media (max-width: 1400px) {
       margin: 0 -20px;
@@ -271,8 +272,8 @@ section.results {
       display: block;
     }
     
-    h2  {
-
+    h2 {
+      margin: .25em;
       text-overflow: ellipsis;
       max-width: 100%;
       white-space: nowrap;
@@ -287,32 +288,40 @@ section.results {
       }
     }
 
-    aside.prices {  
-      margin-top: 1em;
+    h4.location-hours {
+      margin: .25em 0;
+      color: $gray6;
 
-      @media (max-width: 480px) {
-        margin:0;
-        position: absolute;
-        right: 10px;
-      }  
-
-    .label {
- 
-      @media (min-width: 980px) {
-        padding: 4px 6px;
-        font-size: 16px;
-        font-weight: bold;
-        line-height: 14px;
-      }
-
-      @media (max-width: 480px) {
-        padding: 1px 2px;
-        font-size: 10px;
-        font-weight: bold;
-        line-height: 14px;
-      }
     }
 
+    h5.listing-description {
+      color: $gray5;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    aside.prices {  
+      position: absolute;
+      right: 20px; 
+      bottom: 10px;
+
+      .label {
+        
+
+        @media (min-width: 767px) {
+          padding: 4px 6px;
+          font-size: 16px;
+          font-weight: bold;
+          line-height: 14px;
+        }
+
+        @media (max-width: 480px) {
+          padding: 1px 2px;
+          font-size: 10px;
+          font-weight: bold;
+          line-height: 14px;
+        }
+      }
     }
   }
 }

@@ -130,3 +130,10 @@ abbr[data-original-title] {
     @include box-sizing(border-box);
   }
 }
+
+.hidden-iphone {
+  
+  @media (max-width:480px) {
+    display: none !important;
+  }
+}

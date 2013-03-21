@@ -9,11 +9,13 @@
     .span8.nested
       %h2
         = link_to "#{listing.name}", listing
-      %h5.hidden-phone 
+      %h4.hidden-iphone.location-hours 
         %span.ico-marker
           %strong
             = listing.location.name
           = pretty_availability_sentence(listing.availability)
+      %h5.hidden-phone.listing-description
+        = listing.description 
       %aside.prices
         - if listing.daily_price
           %span.label.label-success
