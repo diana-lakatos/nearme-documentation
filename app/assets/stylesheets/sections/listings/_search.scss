@@ -291,7 +291,7 @@ section.search {
 
 // Search Results List View
 section.results {
-  
+
   article.listing {
     position: relative;
     border-bottom: 2px solid $gray2;
@@ -308,7 +308,7 @@ section.results {
     img {
       display: block;
     }
-    
+
     h2 {
       margin: .25em;
       text-overflow: ellipsis;
@@ -325,10 +325,13 @@ section.results {
       }
     }
 
+    .details-container {
+      overflow: hidden;
+    }
+
     h4.location-hours {
       margin: .25em 0;
       color: $gray6;
-
     }
 
     h5.listing-description {
@@ -337,14 +340,12 @@ section.results {
       text-overflow: ellipsis;
     }
 
-    aside.prices {  
+    aside.prices {
       position: absolute;
-      right: 20px; 
+      right: 20px;
       bottom: 10px;
 
       .label {
-        
-
         @media (min-width: 767px) {
           padding: 4px 6px;
           font-size: 16px;
