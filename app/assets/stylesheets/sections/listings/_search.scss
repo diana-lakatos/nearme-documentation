@@ -106,12 +106,6 @@ section.search {
   }
 }
 
-// #hero {
-//   clear: both;
-//   display: block;
-//   
-// }
-
 header#listing_search {
   position: fixed;
   left: 0;
@@ -125,24 +119,38 @@ header#listing_search {
   height: 60px;
   background: $gray2;
   
-  .span1, .span7, .span4 {
+  
+  
+  a.map,
+  a.list {
+    display: inline-block;
+    height:45px;
+    width: 45px;
+    background: $dnm_white;
+    border-radius: 12px;
+    border: 2px solid #ebebeb;
+    font-size: 24px;
+    line-height: 45px;
+    text-align: center;
+    color: $gray5;
+  
+  }
+  
+  .span2.nested {
+    min-width: 105px;
+  }
+  
+  .span10.nested {
     position: relative;
   }
   
   nav.search-view {
-    width: 100%;
-    clear: both;
     height: 49px;
-    margin: 5px 0;
+    margin-top: 5px;
     
     a {
       @include border-radius(4px);
       text-align: center;
-      display: block;
-      float: left;
-      width: 47%;
-      height: 49px;
-      margin: 0 3% 0 0;
       background: #ebebeb; // Needs better color
       line-height: 49px;
       
@@ -159,10 +167,6 @@ header#listing_search {
       font-size: 24px;
     }
     
-    a:last-child {
-      margin-right: 0;
-    }
-    
   }
   
   
@@ -175,10 +179,9 @@ header#listing_search {
       margin-bottom: 0px;
     }
     
-    .geolocation {
+    .geolocation, .search-icon {
       position: absolute;
       top: 17px;
-      left: 17px;
       border: 0;
       background: transparent;
       @include transition(all .1s ease-in);
@@ -186,11 +189,15 @@ header#listing_search {
       @include opacity(.6);
       color: $dnm_black;
       cursor: pointer;
-    
+      
       &:hover {
         opacity:.95;
       }
+    }
     
+    .geolocation {
+      left: 17px;
+      
       &.no-bookings {
         position: relative;
         top: -48px;
@@ -199,11 +206,20 @@ header#listing_search {
       }
     }
     
+    .search-icon {
+      right: 17px;
+    }
+    
     &.search_results {
       
       .geolocation {
         top: 13px;
         left: 13px;
+      }
+      
+      .search-icon {
+        top: 13px;
+        right: 13px;
       }
       
       input#search {
@@ -417,11 +433,15 @@ header#listing_search {
 
 // Search Results List View
 section.results {
-  
+
   article.listing {
     position: relative;
     border-bottom: 2px solid $gray2;
     padding-right: 20px;
+
+    &:last-child {
+      border: none;
+    }
 
     @media (max-width: 1400px) {
       margin: 0 -20px;
@@ -430,7 +450,7 @@ section.results {
     img {
       display: block;
     }
-    
+
     h2 {
       margin: .25em;
       text-overflow: ellipsis;
@@ -442,15 +462,18 @@ section.results {
         @include adjust-font-size-to(32px);
       }
 
-      @media( max-width: 480px) {
+      @media( max-width: 320px) {
         @include adjust-font-size-to(16px);
       }
+    }
+
+    .details-container {
+      overflow: hidden;
     }
 
     h4.location-hours {
       margin: .25em 0;
       color: $gray6;
-
     }
 
     h5.listing-description {
@@ -459,14 +482,12 @@ section.results {
       text-overflow: ellipsis;
     }
 
-    aside.prices {  
+    aside.prices {
       position: absolute;
-      right: 20px; 
+      right: 20px;
       bottom: 10px;
 
       .label {
-        
-
         @media (min-width: 767px) {
           padding: 4px 6px;
           font-size: 16px;
@@ -474,7 +495,7 @@ section.results {
           line-height: 14px;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 320px) {
           padding: 1px 2px;
           font-size: 10px;
           font-weight: bold;
