@@ -15,6 +15,7 @@ module LocationsHelper
       {
         :id => listing.id,
         :name => listing.name,
+        :first_available_date => listing.first_available_date.strftime("%Y/%m/%d"),
         :prices => listing.unit_prices.reject { |unit_price| unit_price.price.nil? }.map { |unit_price|
           {
             :price_cents => unit_price.price_cents,

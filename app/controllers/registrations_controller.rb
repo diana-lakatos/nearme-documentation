@@ -8,9 +8,9 @@ class RegistrationsController < Devise::RegistrationsController
   # registration.
   before_filter :find_supported_providers, :only => [:edit, :update]
   before_filter :set_return_to, :only => [:new, :create]
-  
+
   layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
-  
+
   def create
     super
     AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(@user.id) unless @user.new_record?
@@ -41,10 +41,16 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.avatar = params[:avatar]
     if @user.save
-       render :json => { :url => @user.avatar_url(:thumb).to_s }
+      render :json => { :url => @user.avatar_url(:thumb).to_s, :destroy_url => destroy_avatar_path }
     else
       render :json => [{:error => @user.errors.full_messages}], :status => 422
     end
+  end
+
+  def destroy_avatar
+    @user = current_user
+    @user.remove_avatar!
+    render :json => {}, :status => 200
   end
 
   protected
@@ -70,9 +76,9 @@ class RegistrationsController < Devise::RegistrationsController
   def find_supported_providers
     @supported_providers = Authentication.available_providers
   end
-  
+
   def set_return_to
     session[:user_return_to] = params[:return_to] if params[:return_to].present?
   end
-  
+
 end

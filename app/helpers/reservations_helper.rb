@@ -97,4 +97,17 @@ module ReservationsHelper
     total = reservations.sum(&:total_amount)
     "#{total.symbol}#{total}"
   end
+
+  def format_reservation_periods(reservation)
+    reservation.periods.map do |period|
+      period.date.strftime('%e %b')
+    end.join(', ')
+  end
+
+  def location_query_string(location = @location)
+    query = [location.state, location.city, location.country]
+    query.reject! { |item| !item.present? || item == "Unknown" }
+    query.join('%2C+')
+  end
+
 end

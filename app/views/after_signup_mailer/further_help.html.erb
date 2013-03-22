@@ -1,3 +1,16 @@
-<p>Hey <%= @user.name%>,</p>
+<p>Hi <%= @user.first_name %>,</p>
 
-<p>I'm Michelle, co-founder of Desks Near Me. I notice you added a new listing, and wanted to reach out and see if you need any further help!</p>
+<p>Thanks for listing your space with Desks Near Me!</p>
+
+<p>We're working hard to make it easy for the right business professionals to find and book your space.</p>
+
+<p>You'll find that you can accept booking requests, accept payments direct to your account and upload as many listing as you want. (All your listings are free to add.)</p>
+
+<p>Start building awareness of your listing by <%= link_to "tweeting about your space", tweet_location_url(@user.listings.first.location) %> or adding <%= link_to "a link to your location", location_url(@user.listings.first.location) %> to your email signature.</p>
+
+<p>Cheers, </p>
+
+<p>Michelle Regner<br />
+CEO<br />
+Desks Near Me</p>
+

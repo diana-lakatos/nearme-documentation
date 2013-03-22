@@ -25,7 +25,6 @@ class Bookings.Controller
 
     # Initialize default bookings
     listingsWithRestoredBookings = []
-    tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
     for listing in @listings
       # Determine if there are any bookings to assign that have been passed through
       if initialBookings = @options.initial_bookings[listing.id.toString()]
@@ -39,7 +38,7 @@ class Bookings.Controller
         listingsWithRestoredBookings.push listing
       else
         # We automatically add a booking for 'tomorrow'
-        listing.addDate(tomorrow) if !listing.isBooked()
+        listing.addDate(listing.firstAvailableDate) if !listing.isBooked()
 
     @bindEvents()
 
@@ -51,19 +50,19 @@ class Bookings.Controller
     # Show review booking for a single listing
     # On each of the listing views, watch for review triggering and trigger the review modal
     for listingView in @listingViews
-      listingView.bind 'reviewTriggered', (listing) =>
-        @reviewBooking([listing])
+      listingView.bind 'reviewTriggered', (listing, callback = ->) =>
+        @reviewBooking([listing], callback)
 
   # Return the listing with the specified ID from the Listing bookings collection
   findListing: (listingId) ->
     return listing for listing in @listings when listing.id is parseInt(listingId, 10)
 
-  reviewBooking: (forListings = @listings) ->
+  reviewBooking: (forListings = @listings, callback = -> ) ->
     Modal.load({
       url: @options.review_url,
       type: 'POST',
       data: @bookingDataForReview(forListings)
-    }, 'space-reservation-modal')
+    }, 'space-reservation-modal sign-up-modal', callback)
 
   # Build data for booking review
   #

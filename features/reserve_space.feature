@@ -73,4 +73,13 @@ Feature: A user can book at a space
       | Listing     | Date   | Quantity |
       | the listing | Monday | 2        |
 
+  Scenario: Not logged in user is prompted to log in during booking flow
+    Given I am not logged in as the user
+     When I book space as new user for:
+          | Listing     | Date         | Quantity  |
+          | the listing | next Monday  | 1         |
+          | the listing | next Tuesday | 1         |
+     Then user should have the listing reserved for 'next Monday'
+      And user should have the listing reserved for 'next Tuesday'
+
   

@@ -27,7 +27,7 @@
           %span #{currency_content_tag(@location.currency)}
 
           .book
-            = link_to "", :id =>"book-#{listing.id}", :class => "btn btn-green btn-large", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
+            = link_to_once "", :id =>"book-#{listing.id}", :disable_with => false, :rel => "tooltip", :class => "btn btn-green btn-large", :'data-original-title' => "Please select days first", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
               %span.ico-check.padding Book
 
         .clearfix

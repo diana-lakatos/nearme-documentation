@@ -8,6 +8,9 @@
   }
 
   window.analytics = {
+    init: function() {
+      callMixpanel('init', arguments);
+    },
     track: function() {
       callMixpanel('track', arguments);
     },

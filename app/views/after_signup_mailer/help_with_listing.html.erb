@@ -1,3 +1,24 @@
-<p>Hey <%= @user.name%>,</p>
+<p>Hi <%= @user.first_name %>,</p>
 
-<p>I'm Michelle, co-founder of Desks Near Me. I wanted to reach out and see if you need any help listing or booking a space.</p>
+<p>Welcome to Desks Near Me!</p>
+
+<p>I saw that you signed up but haven't added a space for rent.</p>
+
+<p>Are you searching for your next flexible space to work?<br />
+
+<p>Or, do you have unused office space and desks you’d like to offer others to rent?</p>
+
+<p><%= link_to "You can search and book here", search_url %> to find a space for the day, week or month.</p>
+
+<p>It's FREE (seriously) to add your space and start making money.</p> 
+
+<p>Simply log in <%= link_to "here", new_space_wizard_url %> to add all the details.</p>
+
+<p>If you have any questions, feedback or just want to drop me a note, just hit reply to this email and I'll be sure to get back to you.</p>
+
+<p>Cheers,</p>
+
+<p>Michelle Regner<br />
+CEO<br />
+Desks Near Me</p>
+

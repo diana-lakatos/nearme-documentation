@@ -4,6 +4,7 @@ DesksnearMe::Application.routes.draw do
     mount ReservationMailer::Preview => 'mail_view/reservations'
     mount InquiryMailer::Preview => 'mail_view/inquiries'
     mount ListingMailer::Preview => 'mail_view/listings'
+    mount AfterSignupMailer::Preview => 'mail_view/after_signup'
   end
 
   resources :companies
@@ -37,6 +38,7 @@ DesksnearMe::Application.routes.draw do
   devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' } 
   devise_scope :user do
     put "users/avatar", :to => "registrations#avatar", :as => "avatar"
+    delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
   end
 
   resources :reservations, :only => :update

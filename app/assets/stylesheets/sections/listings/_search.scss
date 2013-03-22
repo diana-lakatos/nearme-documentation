@@ -123,7 +123,7 @@ section.search {
     cursor: pointer;
 
     &:hover {
-      opacity:.95;
+      @include opacity(.95);
     }
 
     &.no-bookings {
@@ -305,7 +305,7 @@ section.search {
       line-height: 32px;
 
       a {
-        color: $dnm_black;
+        color: $gray8;
       }
     }
     address {

@@ -34,15 +34,15 @@ class Search.Map
   constructor: (@container) ->
     @initializeGoogleMap()
     @bindEvents()
+    @cacheMarkers()
 
   initializeGoogleMap: ->
-    @googleMap = new google.maps.Map(@container, {
+    @googleMap = SmartGoogleMap.createMap(@container, {
       zoom: 8,
       minZoom: 4,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       disableDefaultUI: true
       zoomControl: true,
-      scrollwheel: false
     })
 
     # Info window pops over and contains details for each marker/listing
@@ -189,3 +189,7 @@ class Search.Map
       listing.popoverClosed()
       @blurListingMarker(listing)
       @trigger 'mapListingBlurred', listing
+
+  cacheMarkers: ->
+    # hack if css sprites cannot be used
+    $('body').append("<div style='display:none;'><img src='/assets/google-maps/marker-images/hover-2x.png' /><img src='/assets/google-maps/marker-images/default-2x.png' /></div>")
