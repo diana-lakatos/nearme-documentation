@@ -97,6 +97,13 @@ section.search {
   }
 }
 
+.listing-map-popover-content {
+  
+  .ico-close {
+    font-size: 50%;
+  }
+}
+
 #search_row,
 .black-box {
   .btn-green {
@@ -469,6 +476,7 @@ section.results {
 
     .details-container {
       overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     h4.location-hours {
@@ -476,7 +484,10 @@ section.results {
       color: $gray6;
     }
 
-    h5.listing-description {
+    p.listing-description {
+      display: block;
+      height: auto;
+      margin: .5em 0;
       color: $gray5;
       overflow: hidden;
       text-overflow: ellipsis;

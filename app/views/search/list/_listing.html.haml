@@ -14,7 +14,7 @@
           %strong
             = listing.location.name
           = pretty_availability_sentence(listing.availability)
-      %h5.hidden-phone.listing-description
+      %p.hidden-phone.listing-description
         = listing.description
       %aside.prices
         - if listing.daily_price

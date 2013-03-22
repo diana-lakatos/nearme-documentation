@@ -11,16 +11,25 @@
   margin-left: 10px;
 
   h3 a {
-    color: $dnm_black;
+    display: block;
+    text-overflow: ellipsis;
+    max-width: 134px;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   address {
     @include adjust-font-size-to(12px);
     line-height: 1.4em;
     margin-top: .25em;
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
-  span.label.label-sucess {
-    float: left;
+  span.label {
+    float: right;
+    margin: 6px 0 0 3px;
   }  
 }
