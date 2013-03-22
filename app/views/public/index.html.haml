@@ -31,9 +31,9 @@
       %h2 Security and Convenience
       = image_tag("illustrations/lock.png")
       %p Do business with trusted professionals quickly and easily using our secure dashboard.
-  .row-fluid    
-    = link_to_once new_space_wizard_url, :class => "btn btn-blue btn-large" do
-      %span.ico-add-location.padding List Now
+  .row-fluid
+    = link_to new_space_wizard_url, :class => "btn btn-blue btn-large" do
+      %span.ico-add-location.padding List Your Space
   %hr
   .row-fluid
     %h1
@@ -56,8 +56,8 @@
 
 
   .row-fluid.padding-bottom  
-    = link_to_once search_path, :class => "btn btn-green btn-large" do
-      %span.ico-search.padding Search Now
+    = link_to search_path, :class => "btn btn-green btn-large" do
+      %span.ico-search.padding Find a Desk
 
 - content_for :domready do
   new Search.HomeController($('#listing_search'))

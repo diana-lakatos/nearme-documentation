@@ -4,6 +4,7 @@ DesksnearMe::Application.routes.draw do
     mount ReservationMailer::Preview => 'mail_view/reservations'
     mount InquiryMailer::Preview => 'mail_view/inquiries'
     mount ListingMailer::Preview => 'mail_view/listings'
+    mount AfterSignupMailer::Preview => 'mail_view/after_signup'
   end
 
   resources :companies

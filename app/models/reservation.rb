@@ -176,6 +176,10 @@ class Reservation < ActiveRecord::Base
     expire! if unconfirmed?
   end
   
+  def expiry_time
+    created_at + 24.hours
+  end
+
   private
 
     def set_default_payment_status
@@ -210,9 +214,9 @@ class Reservation < ActiveRecord::Base
     def auto_confirm_reservation
       confirm! unless listing.confirm_reservations?
     end
-    
+  
     def create_scheduled_expiry_task
-      Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :should_expire!, nil), run_at: 24.hours.from_now
+      Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :should_expire!, nil), run_at: expiry_time
     end
 
     def attempt_payment_capture

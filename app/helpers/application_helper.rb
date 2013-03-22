@@ -5,6 +5,7 @@ module ApplicationHelper
   include TweetButton
   include CurrencyHelper
   include FileuploadHelper
+  include SharingHelper
 
   def title(page_title, show_title = true)
     content_for(:title) { h(page_title.to_s) }

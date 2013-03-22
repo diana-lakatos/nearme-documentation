@@ -17,7 +17,7 @@
                   %strong= link_to(reservation.listing.name, reservation.listing)
                   on
                   %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
-                  (#{reservation.state_name})
+                  (#{reservation.state_name}#{bookings_time_to_expiry(reservation)}) 
                   %br/
                   = reservation.comment
                 .actions
