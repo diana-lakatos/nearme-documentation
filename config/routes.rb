@@ -1,6 +1,6 @@
 DesksnearMe::Application.routes.draw do
 
-  if Rails.env.development? || Rails.env.staging?
+  if Rails.env.development?
     mount ReservationMailer::Preview => 'mail_view/reservations'
     mount InquiryMailer::Preview => 'mail_view/inquiries'
     mount ListingMailer::Preview => 'mail_view/listings'
