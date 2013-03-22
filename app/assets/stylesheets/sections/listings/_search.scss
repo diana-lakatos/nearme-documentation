@@ -258,8 +258,22 @@ header#listing_search {
       }
       
       .search-icon {
-        top: 13px;
-        right: 13px;
+        display: block;
+        height: 39px;
+        padding: 6px 13px 0 0;
+        width: 67px;
+        background: image-url("components/form/right-fade.png") right top repeat-y;
+        top: 7px;
+        right:2px;
+        text-align: right;
+        @include opacity(1);
+        color: $gray5;
+        @include border-top-right-radius(12px);
+        @include border-bottom-right-radius(12px);
+
+        &:hover {
+          color: $gray7;
+        }
       }
       
       .search-container {
