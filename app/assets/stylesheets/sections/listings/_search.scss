@@ -3,10 +3,18 @@ section.search {
   padding-top: 30px;
 
   .loading {
-    margin: 100px auto;
-    width: 30px;
+    position: absolute;
+    top: 160px;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+    padding: 8px;
+    width: 32px;
+    height: 32px;
+    background: #e6e6e6;
+    @include border-radius(8px);
   }
-
+  
   .google-map-wrapper {
     margin-bottom: 12px;
   }
@@ -106,20 +114,67 @@ section.search {
   }
 }
 
+#listing_search {
+  position: relative;
+  
+  .geolocation, .search-icon {
+    position: absolute;
+    top: 17px;
+    border: 0;
+    background: transparent;
+    @include transition(all .1s ease-in);
+    font-size: 32px;
+    width: 34px;
+    @include opacity(.6);
+    color: $dnm_black;
+    cursor: pointer;
+    
+    &:hover {
+      opacity:.95;
+    }
+  }
+  
+  .geolocation {
+    left: 17px;
+    
+    &.no-bookings {
+      position: relative;
+      top: -48px;
+      left: 10px;
+      height: 20px;
+    }
+  }
+  
+  .search-icon {
+    right: 17px;
+  }
+  
+  input#search {
+    padding: 8px 0 8px 50px;
+  }
+  
+}
+
+form#listing_search {
+  display: block;
+  height: 49px;
+  overflow: hidden;
+}
+
 header#listing_search {
   position: fixed;
   left: 0;
   right: 0;
   top: 60px;
+  height: 60px;
+  max-width: none;
   margin: 0 auto;
   padding: 0 10px;
   z-index: 1000;
-  max-width: none;
-
-  height: 60px;
+  overflow: hidden;
+  
+  
   background: $gray2;
-  
-  
   
   a.map,
   a.list {
@@ -169,7 +224,6 @@ header#listing_search {
     
   }
   
-  
   form {
     max-width: 1400px;
     margin: 0 auto;
@@ -177,37 +231,6 @@ header#listing_search {
     input {
       margin-top: 5px;
       margin-bottom: 0px;
-    }
-    
-    .geolocation, .search-icon {
-      position: absolute;
-      top: 17px;
-      border: 0;
-      background: transparent;
-      @include transition(all .1s ease-in);
-      font-size: 32px;
-      @include opacity(.6);
-      color: $dnm_black;
-      cursor: pointer;
-      
-      &:hover {
-        opacity:.95;
-      }
-    }
-    
-    .geolocation {
-      left: 17px;
-      
-      &.no-bookings {
-        position: relative;
-        top: -48px;
-        left: 10px;
-        height: 20px;
-      }
-    }
-    
-    .search-icon {
-      right: 17px;
     }
     
     &.search_results {
@@ -224,7 +247,7 @@ header#listing_search {
       
       input#search {
         position: relative;
-        padding: 8px 0 8px 50px;
+        
         background: $dnm_white;
         border: 2px solid #ebebeb;
   
@@ -278,158 +301,6 @@ header#listing_search {
   }
 
 }
-  
-  // ---
-
-// #listing_search {
-//   
-//   
-//   
-//   .geolocation {
-//     position: absolute;
-//     top: 15px;
-//     left: 15px;
-//     border: 0;
-//     background: transparent;
-//     @include transition(all .1s ease-in);
-//     font-size: 32px;
-//     @include opacity(.6);
-//     color: $dnm_black;
-//     cursor: pointer;
-// 
-//     &:hover {
-//       opacity:.95;
-//     }
-// 
-//     &.no-bookings {
-//       position: relative;
-//       top: -48px;
-//       left: 10px;
-//       height: 20px;
-//     }
-//   }
-// 
-//   &.home_search input#search {
-//     padding: 8px 0 8px 50px;
-//     width: 100%;
-//     float:left;
-//   }
-// 
-//   &.search_results .geolocation {
-//     top: 9px;
-//     left: 10px;
-//   }
-// 
-//   &.search_results {
-//     .availability-quantity, .price-range, .amenities {
-//       margin: 10px 0 0;
-//     }
-//   }
-// 
-//   .slider {
-//     float: left;
-//     margin-left: 12px;
-//     margin-top: 6px;
-//     width: 180px;
-//   }
-// 
-//   label {
-//     font-size: 16px;
-//   }
-// 
-//   .value {
-//     float: left;
-//     margin-left: 20px;
-//     font-size: 16px;
-// 
-//     @media (max-width: 480px) {
-//       font-size: 14px;
-//     }
-//   }
-//   .price-range .value {
-//     margin-left:30px;
-//   }
-// 
-//   // On the search results page bar
-//   &.search_results {
-//     label {
-//       float: left;
-//       margin-right: 0;
-//     }
-// 
-//     .span6 {
-//       position: relative;
-//     }
-//     .slider {
-//       width: 60%;
-//     }
-// 
-//     input#search {
-//       position: relative;
-//       padding: 8px 0 8px 50px;
-//       background: $dnm_white;
-//       border: 2px solid #ebebeb;
-// 
-//       &:focus {
-//         border: 2px solid rgb(200,200,200);
-//       }
-//     }
-// 
-//     .associations {
-//       height: 24px;
-//     }
-// 
-//     .multiselect {
-//       margin: -4px 0 0;
-//       width: 100%;
-// 
-//       @media (max-width: 767px) {
-//         margin-left: 0;
-//       }
-//     }
-// 
-//     .availability-date-start {
-//       position: relative;
-//       float: left;
-//       width: 49%;
-//       margin-right: 2%;
-//     }
-// 
-//     .availability-date-end {
-//       position: relative;
-//       float: left;
-//       width: 49%;
-//     }
-// 
-//     .availability-date-start, .availability-date-end {
-//       input {
-//         width:100%;
-//       }
-//     }
-// 
-//     .availability-date-start, .availability-date-end {
-//       position: relative;
-// 
-//       .calendar {
-//         position: absolute;
-//         top: 10px;
-//         left: 10px;
-//         display: block;
-//         font-size: 28px;
-//         opacity: .6;
-//       }
-// 
-//       input {
-//         padding-left: 50px;
-//         width:100%;
-//         @include box-sizing(border-box);
-//         background: $dnm_white;
-// 
-//       }
-//     }
-//   }
-// }
-
 
 // Search Results List View
 section.results {

@@ -20,7 +20,7 @@
         Still cant find what your looking for? Why not #{link_to "create your own listing", new_space_wizard_path}!
 
 .loading.four.columns{:style => "display: none"}
-  = image_tag "spinner-red.gif"
+  = image_tag "spinner.gif"
 
 - content_for :domready do
   new Search.SearchController($('#listing_search'), $("section#content.search"))
