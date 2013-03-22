@@ -20,20 +20,21 @@ class Search.SearchController extends Search.Controller
       event.preventDefault()
       @triggerSearchFromQuery()
     
-    @map.on 'viewportChanged', =>
-      # NB: The viewport can change during 'query based' result loading, when the map fits
-      #     the bounds of the search results. We don't want to trigger a bounding box based
-      #     lookup during a controlled viewport change such as this.
-      return if @processingResults
-      return unless @redoSearchMapControl.isEnabled()
-    
-      @triggerSearchWithBoundsAfterDelay()
-
-    @map.on 'mapListingFocussed', (mapListing) =>
-      @findResultsListing(mapListing.id())?.focus()
-
-    @map.on 'mapListingBlurred', (mapListing) =>
-      @findResultsListing(mapListing.id())?.blur()
+    if @map?
+      @map.on 'viewportChanged', =>
+        # NB: The viewport can change during 'query based' result loading, when the map fits
+        #     the bounds of the search results. We don't want to trigger a bounding box based
+        #     lookup during a controlled viewport change such as this.
+        return if @processingResults
+        return unless @redoSearchMapControl.isEnabled()
+      
+        @triggerSearchWithBoundsAfterDelay()
+  
+      @map.on 'mapListingFocussed', (mapListing) =>
+        @findResultsListing(mapListing.id())?.focus()
+  
+      @map.on 'mapListingBlurred', (mapListing) =>
+        @findResultsListing(mapListing.id())?.blur()
 
   initializeMap: ->
     mapContainer = @container.find('#listings_map')[0]
@@ -44,7 +45,12 @@ class Search.SearchController extends Search.Controller
     # Add our map viewport search control, which enables/disables searching on map move
     @redoSearchMapControl = new Search.RedoSearchMapControl(enabled: true)
     @map.addControl(@redoSearchMapControl)
+    
+    $(window).resize =>
+      @map.resizeToFillViewport()
 
+    $(window).trigger('resize')
+    
     @updateMapWithListingResults()
 
 
@@ -65,7 +71,9 @@ class Search.SearchController extends Search.Controller
     inflection = 'result'
     inflection += 's' unless count == 1
     @resultsCountContainer.html("#{count} #{inflection}")
-
+  
+  
+  
   # Update the map with the current listing results, and adjust the map display.
   updateMapWithListingResults: ->
     @map.resetMapMarkers()

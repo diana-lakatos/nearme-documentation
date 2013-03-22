@@ -1,5 +1,6 @@
 section.search {
   min-height:900px;
+  padding-top: 30px;
 
   .loading {
     margin: 100px auto;
@@ -17,15 +18,15 @@ section.search {
       height: 150px;
     }
   }
-
+  
+  #no_results {
+    position: absolute;
+    top: 140px;
+  }
+  
   div.google-map {
-    background: #FFF;
     background: $gray2;
-    padding: 3px;
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -o-border-radius: 6px;
-    margin: 12px 0;
+    margin: 0;
 
     &.affix {
       z-index: $nav-z-index - 30;
@@ -44,10 +45,6 @@ section.search {
     }
 
     .inner {
-      border: 1px solid #CCC;
-      border-radius: 6px;
-      -moz-border-radius: 6px;
-      -o-border-radius: 6px;
       height: 300px;
 
       @media (max-width: 480px) {
@@ -109,151 +106,313 @@ section.search {
   }
 }
 
-#listing_search {
-  .geolocation {
-    position: absolute;
-    top: 17px;
-    left: 17px;
-    border: 0;
-    background: transparent;
-    @include transition(all .1s ease-in);
-    font-size: 32px;
-    @include opacity(.6);
-    color: $dnm_black;
-    cursor: pointer;
+// #hero {
+//   clear: both;
+//   display: block;
+//   
+// }
 
-    &:hover {
-      opacity:.95;
-    }
+header#listing_search {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 60px;
+  margin: 0 auto;
+  padding: 0 10px;
+  z-index: 1000;
+  max-width: none;
 
-    &.no-bookings {
-      position: relative;
-      top: -48px;
-      left: 10px;
-      height: 20px;
-    }
+  height: 60px;
+  background: $gray2;
+  
+  .span1, .span7, .span4 {
+    position: relative;
   }
-
-  &.home_search input#search {
-    padding: 8px 0 8px 50px;
+  
+  nav.search-view {
     width: 100%;
-    float:left;
-  }
-
-  &.search_results .geolocation {
-    top: 9px;
-    left: 10px;
-  }
-
-  &.search_results {
-    .availability-quantity, .price-range, .amenities {
-      margin: 10px 0 0;
-    }
-  }
-
-  .slider {
-    float: left;
-    margin-left: 12px;
-    margin-top: 6px;
-    width: 180px;
-  }
-
-  label {
-    font-size: 16px;
-  }
-
-  .value {
-    float: left;
-    margin-left: 20px;
-    font-size: 16px;
-
-    @media (max-width: 480px) {
-      font-size: 14px;
-    }
-  }
-  .price-range .value {
-    margin-left:30px;
-  }
-
-  // On the search results page bar
-  &.search_results {
-    label {
+    clear: both;
+    height: 49px;
+    margin: 5px 0;
+    
+    a {
+      @include border-radius(4px);
+      text-align: center;
+      display: block;
       float: left;
+      width: 47%;
+      height: 49px;
+      margin: 0 3% 0 0;
+      background: #ebebeb; // Needs better color
+      line-height: 49px;
+      
+      color:rgb(30,30,30);
+    }
+    
+    a:hover {
+      background: $gray;
+      color: #FFF;
+    }
+    
+    a span {
+      line-height: 49px;
+      font-size: 24px;
+    }
+    
+    a:last-child {
       margin-right: 0;
     }
-
-    .span6 {
-      position: relative;
-    }
-    .slider {
-      width: 60%;
-    }
-
-    input#search {
-      position: relative;
-      padding: 8px 0 8px 50px;
-      background: $dnm_white;
-      border: 2px solid #ebebeb;
-
-      &:focus {
-        border: 2px solid rgb(200,200,200);
-      }
-    }
-
-    .associations {
-      height: 24px;
-    }
-
-    .multiselect {
-      margin: -4px 0 0;
-      width: 100%;
-
-      @media (max-width: 767px) {
-        margin-left: 0;
-      }
-    }
-
-    .availability-date-start {
-      position: relative;
-      float: left;
-      width: 49%;
-      margin-right: 2%;
-    }
-
-    .availability-date-end {
-      position: relative;
-      float: left;
-      width: 49%;
-    }
-
-    .availability-date-start, .availability-date-end {
-      input {
-        width:100%;
-      }
-    }
-
-    .availability-date-start, .availability-date-end {
-      position: relative;
-
-      .calendar {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        display: block;
-        font-size: 28px;
-        opacity: .6;
-      }
-
-      input {
-        padding-left: 50px;
-        width:100%;
-        @include box-sizing(border-box);
-        background: $dnm_white;
-
-      }
-    }
+    
   }
+  
+  
+  form {
+    max-width: 1400px;
+    margin: 0 auto;
+
+    input {
+      margin-top: 5px;
+      margin-bottom: 0px;
+    }
+    
+    .geolocation {
+      position: absolute;
+      top: 17px;
+      left: 17px;
+      border: 0;
+      background: transparent;
+      @include transition(all .1s ease-in);
+      font-size: 32px;
+      @include opacity(.6);
+      color: $dnm_black;
+      cursor: pointer;
+    
+      &:hover {
+        opacity:.95;
+      }
+    
+      &.no-bookings {
+        position: relative;
+        top: -48px;
+        left: 10px;
+        height: 20px;
+      }
+    }
+    
+    &.search_results {
+      
+      .geolocation {
+        top: 13px;
+        left: 13px;
+      }
+      
+      input#search {
+        position: relative;
+        padding: 8px 0 8px 50px;
+        background: $dnm_white;
+        border: 2px solid #ebebeb;
+  
+        &:focus {
+          border: 2px solid rgb(200,200,200);
+        }
+      }
+      
+      .availability-date-start {
+        position: relative;
+        float: left;
+        width: 49%;
+        margin-right: 2%;
+      }
+  
+      .availability-date-end {
+        position: relative;
+        float: left;
+        width: 49%;
+      }
+  
+      .availability-date-start, .availability-date-end {
+        input {
+          width:100%;
+        }
+      }
+  
+      .availability-date-start, .availability-date-end {
+        position: relative;
+  
+        .calendar {
+          position: absolute;
+          top: 15px;
+          left: 13px;
+          display: block;
+          font-size: 28px;
+          opacity: .6;
+        }
+  
+        input {
+          padding-left: 50px;
+          width:100%;
+          @include box-sizing(border-box);
+          background: $dnm_white;
+  
+        }
+      }
+      
+    }
+    
+  }
+
 }
+  
+  // ---
+
+// #listing_search {
+//   
+//   
+//   
+//   .geolocation {
+//     position: absolute;
+//     top: 15px;
+//     left: 15px;
+//     border: 0;
+//     background: transparent;
+//     @include transition(all .1s ease-in);
+//     font-size: 32px;
+//     @include opacity(.6);
+//     color: $dnm_black;
+//     cursor: pointer;
+// 
+//     &:hover {
+//       opacity:.95;
+//     }
+// 
+//     &.no-bookings {
+//       position: relative;
+//       top: -48px;
+//       left: 10px;
+//       height: 20px;
+//     }
+//   }
+// 
+//   &.home_search input#search {
+//     padding: 8px 0 8px 50px;
+//     width: 100%;
+//     float:left;
+//   }
+// 
+//   &.search_results .geolocation {
+//     top: 9px;
+//     left: 10px;
+//   }
+// 
+//   &.search_results {
+//     .availability-quantity, .price-range, .amenities {
+//       margin: 10px 0 0;
+//     }
+//   }
+// 
+//   .slider {
+//     float: left;
+//     margin-left: 12px;
+//     margin-top: 6px;
+//     width: 180px;
+//   }
+// 
+//   label {
+//     font-size: 16px;
+//   }
+// 
+//   .value {
+//     float: left;
+//     margin-left: 20px;
+//     font-size: 16px;
+// 
+//     @media (max-width: 480px) {
+//       font-size: 14px;
+//     }
+//   }
+//   .price-range .value {
+//     margin-left:30px;
+//   }
+// 
+//   // On the search results page bar
+//   &.search_results {
+//     label {
+//       float: left;
+//       margin-right: 0;
+//     }
+// 
+//     .span6 {
+//       position: relative;
+//     }
+//     .slider {
+//       width: 60%;
+//     }
+// 
+//     input#search {
+//       position: relative;
+//       padding: 8px 0 8px 50px;
+//       background: $dnm_white;
+//       border: 2px solid #ebebeb;
+// 
+//       &:focus {
+//         border: 2px solid rgb(200,200,200);
+//       }
+//     }
+// 
+//     .associations {
+//       height: 24px;
+//     }
+// 
+//     .multiselect {
+//       margin: -4px 0 0;
+//       width: 100%;
+// 
+//       @media (max-width: 767px) {
+//         margin-left: 0;
+//       }
+//     }
+// 
+//     .availability-date-start {
+//       position: relative;
+//       float: left;
+//       width: 49%;
+//       margin-right: 2%;
+//     }
+// 
+//     .availability-date-end {
+//       position: relative;
+//       float: left;
+//       width: 49%;
+//     }
+// 
+//     .availability-date-start, .availability-date-end {
+//       input {
+//         width:100%;
+//       }
+//     }
+// 
+//     .availability-date-start, .availability-date-end {
+//       position: relative;
+// 
+//       .calendar {
+//         position: absolute;
+//         top: 10px;
+//         left: 10px;
+//         display: block;
+//         font-size: 28px;
+//         opacity: .6;
+//       }
+// 
+//       input {
+//         padding-left: 50px;
+//         width:100%;
+//         @include box-sizing(border-box);
+//         background: $dnm_white;
+// 
+//       }
+//     }
+//   }
+// }
 
 
 // Search Results List View

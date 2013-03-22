@@ -164,7 +164,12 @@ class Search.Map
 
   fitBounds: ->
     @googleMap.fitBounds(@bounds) unless @bounds.isEmpty()
-
+  
+  resizeToFillViewport: ->
+    offset = $(@container).offset()
+    viewport = $(window).height()
+    $(@container).height(viewport - offset.top)
+  
   # Return an array of [nx, ny, sx, sy] coordinates
   getBoundsArray: ->
     bounds = @googleMap.getBounds()

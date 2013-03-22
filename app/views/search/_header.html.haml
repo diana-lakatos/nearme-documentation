@@ -1,15 +1,16 @@
 - content_for :hero do
-  %header.container-fluid
-    %form#listing_search.search_results{:action => search_path(v: result_view), :method => "get"}
+  %header#listing_search.container-fluid
+    %form.search_results{:action => search_path(v: result_view), :method => "get"}
       - search_geofields.each do |geofield|
         = hidden_field_tag geofield, ''
       = hidden_field_tag :v, result_view
       .row-fluid
         .span1
-          %a{ href: search_path(params.merge(v: 'Map')) }
-            %span.ico-marker
-          %a{ href: search_path(params.merge(v: 'List')) }
-            %span.ico-list
+          %nav.search-view
+            %a{ href: search_path(params.merge(v: 'Map')) }
+              %span.ico-marker
+            %a{ href: search_path(params.merge(v: 'List')) }
+              %span.ico-list
         .span7
           %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => query, :class => "query", :autocomplete => "off"}
           .geolocation
