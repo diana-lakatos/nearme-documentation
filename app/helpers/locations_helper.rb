@@ -16,12 +16,12 @@ module LocationsHelper
         :id => listing.id,
         :name => listing.name,
         :first_available_date => listing.first_available_date.strftime("%Y/%m/%d"),
-        :prices => listing.unit_prices.reject { |unit_price| unit_price.price.nil? }.map { |unit_price|
+        :prices => listing.period_prices.reject { |period, price| price.nil? }.map { |period, price|
           {
-            :price_cents => unit_price.price_cents,
-            :period      => unit_price.period,
-            :currency_code   => unit_price.price.currency.iso_code,
-            :currency_symbol => unit_price.price.currency.symbol
+            :price_cents => price.cents,
+            :period      => period.to_i,
+            :currency_code   => price.currency.iso_code,
+            :currency_symbol => price.currency.symbol
           }
         }
       }
