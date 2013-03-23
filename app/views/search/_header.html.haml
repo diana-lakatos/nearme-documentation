@@ -7,9 +7,9 @@
         = hidden_field_tag :v, result_view
         .row-fluid
           .span8
-            %a.map{ href: search_path(params.merge(v: 'map')) }
+            %a.map{ href: search_path(params.merge(v: 'map')), class: result_view == 'map' ? 'active' : nil, title: 'Map' }
               %span.ico-marker
-            %a.list{ href: search_path(params.merge(v: 'list')) }
+            %a.list{ href: search_path(params.merge(v: 'list')), class: result_view == 'list' ? 'active' : nil, title: 'List' }
               %span.ico-list
             .search-container 
               %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => query, :class => "query", :autocomplete => "off"}
