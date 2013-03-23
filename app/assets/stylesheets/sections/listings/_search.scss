@@ -1,6 +1,9 @@
 section.search {
-  min-height:900px;
   padding-top: 30px;
+
+  footer {
+    display: none;
+  }
 
   .loading {
     position: absolute;

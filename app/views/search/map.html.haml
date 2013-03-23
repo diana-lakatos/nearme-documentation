@@ -23,4 +23,4 @@
   = image_tag "spinner.gif"
 
 - content_for :domready do
-  new Search.SearchController($('#listing_search'), $("section#content.search"))
+  new Search.SearchController($('#listing_search form'), $("section#content.search"))
