@@ -169,12 +169,6 @@ form#listing_search {
 }
 
 header#listing_search {
-  
-  .header-inner {
-    position: relative;
-    max-width: 1360px;
-    margin: 0 auto;
-  }
   position: fixed;
   left: 0;
   right: 0;
@@ -184,11 +178,17 @@ header#listing_search {
   margin: 0 auto;
   padding: 0 10px;
   z-index: 1000;
-  overflow: hidden;
-  
-  
+  overflow: hidden;  
   background: $gray2;
+ 
   
+  .header-inner {
+    position: relative;
+    max-width: 1360px;
+    margin: 0 auto;
+  }
+  
+
   a.map,
   a.list {  
     position: absolute;
@@ -324,7 +324,7 @@ header#listing_search {
           left: 13px;
           display: block;
           font-size: 28px;
-          opacity: .6;
+          @include opacity(.6);
         }
   
         input {
@@ -334,12 +334,9 @@ header#listing_search {
           background: $dnm_white;
   
         }
-      }
-      
-    }
-    
+      }      
+    }    
   }
-
 }
 
 // Search Results List View
@@ -347,8 +344,12 @@ section.results {
 
   article.listing {
     position: relative;
-    border-bottom: 2px solid $gray2;
+    border-bottom: 1px solid $gray5;
     padding-right: 20px;
+
+    .span8 {
+      max-height: 254px !important;
+    }
 
     &:last-child {
       border: none;
@@ -386,20 +387,36 @@ section.results {
     h4.location-hours {
       margin: .25em 0;
       color: $gray6;
+
+      @media (max-width: 614px) {
+        display: none;
+      }
     }
 
     p.listing-description {
+      position: relative;
       display: block;
-      height: auto;
       margin: 1em 0;
       color: darken($gray4, 10%);
       overflow: hidden;
       text-overflow: ellipsis;
       line-height: 28px;
+      max-height: 56px;
+
+
+      &:after {
+        content:" ";
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+        margin-left: -30px;
+        background: image-url("components/form/right-fade-gray.png") right bottom no-repeat;
+      }
     }
 
     aside.prices {
       position: absolute;
+      z-index: 101;
       right: 20px;
       bottom: 10px;
 
