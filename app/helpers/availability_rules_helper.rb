@@ -63,8 +63,9 @@ module AvailabilityRulesHelper
       end
       
       hour_part = []
-      group[:times].each do |hour|
-        hour_part << "#{hour[0]}:#{hour[1].to_s.rjust(2, '0')}"
+      group[:times].each do |time|
+        hour, minutes = (time[0] > 12 ? time[0] - 12 : time[0]), time[1].to_s.rjust(2, '0')
+        hour_part << "#{hour}:#{minutes}"
       end
       
       sentence.push("#{day_part.join('-')} #{hour_part.join('-')}")
