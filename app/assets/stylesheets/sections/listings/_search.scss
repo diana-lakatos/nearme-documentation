@@ -206,6 +206,11 @@ header#listing_search {
     line-height: 45px;
     text-align: center;
     color: $gray5; 
+
+    &.active {
+      border: 2px solid $gray6;
+      color: $gray6;
+    }
   }
 
   a.map {
