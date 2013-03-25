@@ -29,18 +29,17 @@ input[type=tel] {
 .fileupload {
 
    input.browse-file {
-      height: 0;
-      display: none;
-      width: 0;
-      padding: 0;
-      margin: 0;
+     height: 0px;
+     width: 0px;
+     margin: 0px;
+     padding: 0px;
    }
 
   .fileinput-button {
     display: block;
     text-align: center;
-    cursor: pointer;
     margin-top: 15px;
+    cursor: pointer;
   }
 
   .progress{
