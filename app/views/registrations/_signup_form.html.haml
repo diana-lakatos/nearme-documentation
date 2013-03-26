@@ -9,18 +9,19 @@
     = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
 
     .name-holder
-      = f.text_field :name, :label => "Your name", :placeholder => "Enter your full name"
+      = f.text_field :name, :label => "Full Name", :placeholder => "Enter your full name"
+      %span.ico-user
 
     .email-holder   
-      = f.text_field :email, :label => "Your email address", :placeholder => "Valid email address"
+      = f.text_field :email, :label => "Email", :placeholder => "Valid email address"
       %span.ico-mail
 
     .password-holder
-      = f.password_field :password,              placeholder: "Your password"
+      = f.password_field :password,              placeholder: "Password"
       %span.ico-lock
       
     .password-holder  
-      = f.password_field :password_confirmation, placeholder: "Confirm password"
+      = f.password_field :password_confirmation, placeholder: "Confirm Password"
       %span.ico-lock
 
     - if f.object.errors[:password].any?
