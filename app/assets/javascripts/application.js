@@ -14,6 +14,7 @@
 //= require ./vendor/asevented
 //= require ./vendor/detect-mobile-browser
 //= require ./vendor/infobox
+//= require ./vendor/jquery.scrollto
 //= require jquery-fileupload/basic
 //= require underscore
 //= require backbone
@@ -22,6 +23,8 @@
 //= require mustache
 //= require handlebars.runtime
 //= require chosen-jquery
+//= require rails.validations
+//= require rails.validations.simple_form
 //
 //
 //= require_self

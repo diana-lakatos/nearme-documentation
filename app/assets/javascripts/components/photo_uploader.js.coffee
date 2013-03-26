@@ -5,6 +5,7 @@ class @PhotoUploader
       new PhotoUploader($(element))
 
   constructor : (container) ->
+    @container = container
     @fileInput = container.find('.browse-file').eq(0)
     @button = container.find('.fileinput-button').eq(0)
     @photos = container.find('.photo-item a')
@@ -32,7 +33,6 @@ class @PhotoUploader
   initializeFileUploader : =>
     @fileInput.fileupload {
         dataType: 'json',
-        replaceFileInput: false,
         add: (e, data) =>
           @add(data)
         ,
@@ -53,6 +53,8 @@ class @PhotoUploader
       @replaceExistingImg(data)
     else
       @addImg(data)
+    @fileInput = @container.find('.browse-file').eq(0)
+    @initializeFileUploader()
 
   progress: (data) =>
     progress = parseInt(data.loaded / data.total * 100, 10)
@@ -100,5 +102,8 @@ class @PhotoUploader
     href = $('<a data-url="' + data.result.destroy_url + '" class="delete-photo delete-photo-thumb"><span class="ico-trash"></span></a>')
     @photoItem = @getPhotoItem(data.files[0].name)
     @photoItem.html('<img src="' + data.result.url + '">')
+    if @multiplePhoto()
+      @photoItem.append('<input type="hidden" name="uploaded_photos[]" value="' + data.result.id + '">')
+
     @photoItem.append(href)
 

@@ -14,7 +14,6 @@ class CurrencyInput < SimpleForm::Inputs::GroupedCollectionSelectInput
     :name
   end
 
-
   def prep_currencies(name, currencies)
     CurrencyGroup.new(name, currencies.collect do |c|
       Currency.new(c[:iso_code], c[:name])

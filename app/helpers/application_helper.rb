@@ -32,14 +32,11 @@ module ApplicationHelper
     DesksnearMe::Application.config.stripe_public_key
   end
 
-  def flashes
-    # :notice, :error and :message are used by omnisocia, but your only
-    # suppsed to use alter and notice.
-    buffer = ""
-    [ :alert, :notice, :message, :error ].each do |f|
-      buffer << content_tag(:div, flash[f], :class => "flash #{f}") if flash.key?(f)
+  def flash_class(level)
+    case level
+    when :notice then "alert-info"
+    when :error then "alert-error"
     end
-    buffer.html_safe
   end
 
   def context_flash

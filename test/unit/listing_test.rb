@@ -8,7 +8,7 @@ class ListingTest < ActiveSupport::TestCase
   should have_many(:ratings)
   should have_many(:unit_prices)
 
-  should validate_presence_of(:location_id)
+  should validate_presence_of(:location)
   should validate_presence_of(:name)
   should validate_presence_of(:description)
   should validate_presence_of(:quantity)

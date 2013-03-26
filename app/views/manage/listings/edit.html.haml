@@ -16,7 +16,8 @@
       = f.input :daily_price, :as => :decimal, :hint => "How much per seat per day are you charging?"
       = f.input :weekly_price, :as => :decimal, :hint => "How much per seat per week are you charging?"
       = f.input :monthly_price, :as => :decimal, :hint => "How much per seat per month are you charging?"
-      = f.input :description, :as => :description, :input_html => {:rows => 8}, :hint => ["What resources are available, i.e. internet, speed, public transport, coffee shops near by, coffee included? Why would people love your office? What kinds of drop-ins/coworkers would you prefer? Conditions of entry (e.g. must participate in stand up or something)"].join(' ').html_safe
+      = f.input :description, :hint => ["What resources are available, i.e. internet, speed, public transport, coffee shops near by, coffee included? Why would people love your office? What kinds of drop-ins/coworkers would you prefer? Conditions of entry (e.g. must participate in stand up or something)"].join(' ').html_safe, :input_html => { :maxlength => 250, :rows => 2 }
+
 
       .control-group.indent
         = f.label :confirm_reservations, "Confirm Reservations?", :class => "control-label"
