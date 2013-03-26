@@ -1,3 +1,4 @@
+
 #signup {
 
   #service_buttons {
@@ -126,30 +127,7 @@
     }    
   }
 
-  .email-holder,
-  .password-holder,
-  .name-holder {
-    position: relative;
-    width: 100%;
-
-    input {
-      padding-left: 32px;
-
-      &:focus {
-        
-        span {
-          @include opacity(.9);
-        }
-      }
-    }
-
-    span {
-      position: absolute;
-      top: 13px;
-      left: 8px;
-      @include opacity(.5);
-    }
-  }
+  @include icon-form;
 
   p.notice {
     font-size: 12px;
@@ -163,3 +141,4 @@
     } 
   }     
 }
+
