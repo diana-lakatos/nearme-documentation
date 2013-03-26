@@ -32,6 +32,17 @@ class ReservationMailer < DesksNearMeMailer
     generate_mail("You have confirmed a booking")
   end
   
+  def notify_guest_of_expiration(reservation)
+    setup_defaults(reservation)
+    generate_mail("A booking you made has expired")
+  end
+  
+  def notify_host_of_expiration(reservation)
+    setup_defaults(reservation)
+    @user = @listing.creator
+    generate_mail("A booking for one of your listings has expired")
+  end
+  
   def notify_host_with_confirmation(reservation)
     setup_defaults(reservation)
 
@@ -59,6 +70,10 @@ class ReservationMailer < DesksNearMeMailer
         ::ReservationMailer.notify_guest_of_confirmation(Reservation.first)
       end
 
+      def notify_guest_of_expiration
+        ::ReservationMailer.notify_guest_of_expiration(Reservation.first)
+      end
+
       def notify_guest_of_rejection
        ::ReservationMailer.notify_guest_of_rejection(Reservation.first)
       end
@@ -75,6 +90,10 @@ class ReservationMailer < DesksNearMeMailer
         ::ReservationMailer.notify_host_of_confirmation(Reservation.first)
       end
 
+      def notify_host_of_expiration
+        ::ReservationMailer.notify_host_of_expiration(Reservation.first)
+      end
+
       def notify_host_with_confirmation
         ::ReservationMailer.notify_host_with_confirmation(Reservation.first)
       end
@@ -82,7 +101,6 @@ class ReservationMailer < DesksNearMeMailer
       def notify_host_without_confirmation
         ::ReservationMailer.notify_host_without_confirmation(Reservation.first)
       end
-
     end
   end
 

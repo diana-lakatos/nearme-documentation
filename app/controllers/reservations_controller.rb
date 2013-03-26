@@ -7,30 +7,40 @@ class ReservationsController < ApplicationController
   def update
     @reservation.fire_events(current_event)
     flash[:notice] = "You have #{@reservation.state_name} the reservation"
-    redirect_to manage_guests_dashboard_path
+    redirect_to redirection_path
   end
 
   protected
-    def fetch_reservations
-      @reservations = current_user.reservations
-    end
 
-    def fetch_reservation
-      @reservation = @reservations.find(params[:id])
-    end
+  def fetch_reservations
+    @reservations = current_user.reservations
+  end
 
-    def validate_event
-      unless allowed_events.include? current_event
-        flash[:error] = "Not a valid reservation operation"
-        redirect_to manage_guests_dashboard_path
-      end
-    end
+  def fetch_reservation
+    @reservation = @reservations.find(params[:id])
+  end
 
-    def allowed_events
-      [:user_cancel]
+  def validate_event
+    unless allowed_events.include? current_event
+      flash[:error] = "Not a valid reservation operation"
+      redirect_to redirection_path
     end
+  end
 
-    def current_event
-      params[:event].downcase.to_sym
+  def allowed_events
+    [:user_cancel]
+  end
+
+  def current_event
+    params[:event].downcase.to_sym
+  end
+
+  def redirection_path
+    if @reservation.owner.id == current_user.id
+      bookings_dashboard_path
+    else
+      manage_guests_dashboard_path
     end
+  end
+
 end

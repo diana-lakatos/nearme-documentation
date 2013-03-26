@@ -62,7 +62,7 @@ class Bookings.Controller
       url: @options.review_url,
       type: 'POST',
       data: @bookingDataForReview(forListings)
-    }, 'space-reservation-modal sign-up-modal')
+    }, 'space-reservation-modal sign-up-modal', callback)
 
   # Build data for booking review
   #

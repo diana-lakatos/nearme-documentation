@@ -39,12 +39,12 @@
       %section#content{:class => "#{controller_name}"}
         = render "layouts/hero"
 
-        = flashes
+        = render 'shared/flash'
         = yield
 
-      = render :partial => "layouts/footer"
+      = render "layouts/footer"
 
-    = render :partial => "shared/modal"
+    = render "shared/modal"
 
     = render :partial => "layouts/identify_or_alias_user"
 

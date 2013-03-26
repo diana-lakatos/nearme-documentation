@@ -36,7 +36,7 @@ class @Space.Controller
 
     @map = { map: null, markers: [] }
     @map.initialCenter = latlng
-    @map.map = new google.maps.Map(@googleMapElementWrapper[0], {
+    @map.map = SmartGoogleMap.createMap(@googleMapElementWrapper[0], {
       zoom: 13,
       mapTypeControl: false,
       streetViewControl: false,

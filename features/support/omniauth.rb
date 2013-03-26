@@ -5,6 +5,11 @@ module OmniauthHelper
     stub_image_url
   end
 
+  def create_user_for_provider(provider)
+    @authentication = FactoryGirl.create(:authentication, {:uid => "123545", :provider => provider.downcase})
+    @authentication.user
+  end
+
   def mock_successful_authentication_with_provider(provider, options = {})
     omniauth_image_url("http://www.example.com/my_picture.jpg")
     options = options.reverse_merge(

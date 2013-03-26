@@ -1,0 +1,5 @@
+Your booking at <%= @listing.location.name %> has expired.
+
+<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } -%>
+
+Don't worry - find other locations near you: <%= search_url(q: location_query_string(@listing.location)) %>

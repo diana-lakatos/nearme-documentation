@@ -14,6 +14,7 @@
 //= require ./vendor/asevented
 //= require ./vendor/detect-mobile-browser
 //= require ./vendor/infobox
+//= require ./vendor/jquery.scrollto
 //= require jquery-fileupload/basic
 //= require underscore
 //= require backbone
@@ -22,10 +23,13 @@
 //= require mustache
 //= require handlebars.runtime
 //= require chosen-jquery
+//= require rails.validations
+//= require rails.validations.simple_form
 //
 //
 //= require_self
 // Helper modules, etc.
+//= require_tree ./ext
 //= require_tree ./lib
 //= require_tree ./app/models
 //= require_tree ./app/templates
@@ -45,7 +49,6 @@ window.DNM = {
     this.initializeModals();
     this.initializeTooltips();
     this.initializeCustomSelects();
-    this.initUploader();
   },
 
   initializeModals: function() {
@@ -56,39 +59,7 @@ window.DNM = {
     Multiselect.initialize(scope);
     Flash.initialize(scope);
     Accordian.initialize(scope);
-  },
-
-  initUploader: function() {
-    $('.fileinput-button').click(function(){
-      $('.browse-file', $(this).parent()).trigger('click');
-    });
-    $('.browse-file').fileupload({
-        dataType: 'json',
-        add: function (e, data) {
-          data.submit();
-        },
-        done: function (e, data) {
-          uploaded = $(this).parent().parent().find('.uploaded')
-          if(uploaded.find('ul').length > 0){
-            uploaded.find('ul').append('<li><img src="' + data.result.url + '"></li>')
-          } else{
-            // improve UI by making it fluent
-            if(uploaded.find('img').length > 0){
-              uploaded.find('img').attr('src', data.result.url);
-            } else{
-              uploaded.html('<img src="' + data.result.url + '">')
-            }
-          }
-        },
-        progress: function(e, data) {
-          var progressBar = $(this).parent().parent().find('.progress-bar')
-          var progress = parseInt(data.loaded / data.total * 100, 10);
-          progressBar.find('.bar').css('width', progress + '%');
-          if (progress == 100) {
-            progressBar.find('.bar').css('width', 0 + '%');
-          }
-        }
-    });
+    PhotoUploader.initialize(scope);
   },
 
   initializeAjaxCSRF: function() {
@@ -152,12 +123,12 @@ function doListingGoogleMaps() {
 
     if(!map) {
       var layer = "toner";
-      map = new google.maps.Map(document.getElementById("map"), {
+      map = SmartGoogleMap.getMap(document.getElementById("map"), {
         zoom: 13,
         mapTypeId: layer,
         mapTypeControl: false,
         center: latlng
-      });
+      })
       map.mapTypes.set(layer, new google.maps.StamenMapType(layer));
     }
 
@@ -202,3 +173,14 @@ $(function() {
     });
   });
 });
+
+String.prototype.hashCode = function(){
+    var hash = 0, i, char;
+    if (this.length == 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        char = this.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+};

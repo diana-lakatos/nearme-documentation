@@ -32,7 +32,7 @@ class Listing < ActiveRecord::Base
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
 
-  belongs_to :location
+  belongs_to :location, inverse_of: :listings
   belongs_to :listing_type
   delegate :address, :amenities, :currency, :formatted_address,
     :local_geocoding, :latitude, :longitude, :distance_from, to: :location,
@@ -49,7 +49,7 @@ class Listing < ActiveRecord::Base
 
   # === Callbacks
 
-  validates_presence_of :location_id, :name, :description, :quantity, :listing_type_id
+  validates_presence_of :location, :name, :description, :quantity, :listing_type_id
   validates_numericality_of :quantity
   validates_length_of :description, :maximum => 250
 

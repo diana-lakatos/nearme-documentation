@@ -140,7 +140,7 @@ section.search {
     cursor: pointer;
     
     &:hover {
-      opacity:.95;
+      @include opacity(.95);
     }
   }
   
@@ -390,6 +390,10 @@ section.results {
     .details-container {
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    a {
+      color: $gray8;
     }
 
     h4.location-hours {

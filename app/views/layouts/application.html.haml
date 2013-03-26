@@ -37,14 +37,14 @@
               = render "layouts/header_navigation"
 
       %section#content{:class => "#{controller_name}"}
-        = render "layouts/hero"
+        = render 'layouts/hero'
         %div{:class => "container-fluid #{'legacy' if legacy?}"}
-          = flashes
+          = render 'shared/render_flash'
           = yield
 
-      = render :partial => "layouts/footer"
+      = render 'layouts/footer'
 
-    = render :partial => "shared/modal"
+    = render 'shared/modal'
 
     = render :partial => "layouts/identify_or_alias_user"
 

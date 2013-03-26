@@ -1,67 +1,65 @@
 class SpaceWizardController < ApplicationController
 
   before_filter :find_user, :except => [:new]
-  before_filter :find_company, :except => [:new, :company, :submit_company]
-  before_filter :find_space, :except => [:new, :company, :submit_company, :space, :submit_space]
+  before_filter :find_company, :except => [:new]
+  before_filter :find_location, :except => [:new]
+  before_filter :find_listing, :except => [:new]
 
   def new
     flash.keep(:notice)
     if current_user
-      redirect_to space_wizard_company_url
+      redirect_to space_wizard_list_url
     else
       redirect_to new_user_registration_url(:wizard => 'space')
     end
   end
 
-  def company
-    @company = @user.companies.build
+  def list
+    @company ||= @user.companies.build
+    @location ||= @company.locations.build
+    @listing ||= @location.listings.build
   end
 
-  def submit_company
-    @company = @user.companies.build
+  def submit_listing
+    @company ||= @user.companies.build
     @company.attributes = params[:company]
 
     if @company.save
-      redirect_to space_wizard_space_url(:company_id => @company.id)
+      if params[:uploaded_photos]
+        listing = @company.locations.first.listings.first
+        listing.photos << current_user.photos.find(params[:uploaded_photos])
+        listing.save!
+      end
+      redirect_to controlpanel_path, notice: 'Your space was listed! You can provide more details about your location and listing from this page.'
     else
-      render :company
+      render :list
     end
   end
 
-  def space
-    @location = @company.locations.build
-  end
 
-  def submit_space
-    @location = @company.locations.build
-    @location.attributes = params[:location]
-
-    if @location.save
-      redirect_to space_wizard_desks_url(:company_id => @company.id, :space_id => @location.id)
+  def submit_photo
+    @photo = Photo.new
+    @photo.image = params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:photos_attributes]["0"][:image]
+    @photo.content_type = 'Listing'
+    @photo.creator_id = current_user.id
+    if @photo.save
+      render :json => {:id => @photo.id, :url => @photo.image_url(:thumb).to_s, :destroy_url => destroy_space_wizard_photo_path(:id => @photo.id) }
     else
-      render :space
+      render :json => [{:error => @photo.errors.full_messages}], :status => 422
     end
   end
 
-  def desks
-  end
-
-  def submit_desks
-    @space.attributes = params[:location]
-
-    if @space.save
-      redirect_for_complete
+  def destroy_photo
+    @photo = current_user.photos.find(params[:id])
+    if @photo.destroy
+      render json: { success: true, id: @photo.id }
     else
-      render :desks
+      render :json => { :errors => @photo.errors.full_messages }, :status => 422
     end
   end
+
 
   private
-
-  def redirect_for_complete
-    flash[:notice] = "Great, your space has been set up!"
-    redirect_to controlpanel_path
-  end
 
   def find_user
     @user = current_user
@@ -72,20 +70,20 @@ class SpaceWizardController < ApplicationController
   end
 
   def find_company
-    company_id = params[:company_id]
-    @company = current_user.companies.find_by_id(company_id) if company_id
-
-    unless @company
-      redirect_to space_wizard_company_url
+    if current_user.companies.any?
+      @company = current_user.companies.first
     end
   end
 
-  def find_space
-    space_id = params[:space_id]
-    @space = @company.locations.find(space_id)
+  def find_location
+    if @company && @company.locations.any?
+      @location = @company.locations.first
+    end
+  end
 
-    unless @space
-      redirect_to space_wizard_space_url
+  def find_listing
+    if @location && @location.listings.any?
+      @listing = @location.listings.first
     end
   end
 

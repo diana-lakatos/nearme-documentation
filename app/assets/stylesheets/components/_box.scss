@@ -36,7 +36,7 @@
       color: $gray5;
       font-size: 18px;
       padding: 0 14px;
-      width: 25%;
+      width: 50%;
       @include box-sizing(border-box);
       text-align: center;
       line-height: 60px;
@@ -59,8 +59,8 @@
          } 
 
       &.current {
-        background: rgb(200,200,200);
-        color: $dnm_black;
+        background: $gray8;
+        color: $gray2;
         border: none;
       }
     }
