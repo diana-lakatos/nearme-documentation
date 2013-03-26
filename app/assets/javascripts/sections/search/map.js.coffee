@@ -67,7 +67,7 @@ class Search.Map
   # Adds one of our custom map controls to the map
   addControl: (control) ->
     control.setMap(@googleMap)
-
+  
   # Clears any plotted listings and resets the map
   resetMapMarkers: ->
     if @markers
@@ -198,3 +198,9 @@ class Search.Map
   cacheMarkers: ->
     # hack if css sprites cannot be used
     $('body').append("<div style='display:none;'><img src='/assets/google-maps/marker-images/hover-2x.png' /><img src='/assets/google-maps/marker-images/default-2x.png' /></div>")
+  
+  show: ->
+    $(@container).show()
+    
+  hide: ->
+    $(@container).hide()

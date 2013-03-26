@@ -7,7 +7,7 @@ class Search.SearchController extends Search.Controller
   constructor: (form, @container) ->
     super(form)
     @listings = {}
-    @resultsContainer = @container.find('#results')
+    @resultsContainer = => @container.find('#results')
     @loadingContainer = @container.find('.loading')
     @resultsCountContainer = $('#search_results_count')
     @processingResults = true
@@ -55,30 +55,32 @@ class Search.SearchController extends Search.Controller
 
 
   startLoading: ->
-    @resultsContainer.hide()
+    @resultsContainer().hide()
     @loadingContainer.show()
 
   finishLoading: ->
     @loadingContainer.hide()
-    @resultsContainer.show()
+    @resultsContainer().show()
 
   showResults: (html) ->
-    @resultsContainer.html(html)
+    @resultsContainer().replaceWith(html)
     @updateResultsCount()
 
   updateResultsCount: ->
-    count = @resultsContainer.find('.listing:not(.hidden)').length
+    count = @resultsContainer().find('.listing:not(.hidden)').length
     inflection = 'result'
     inflection += 's' unless count == 1
     @resultsCountContainer.html("#{count} #{inflection}")
-  
-  
   
   # Update the map with the current listing results, and adjust the map display.
   updateMapWithListingResults: ->
     @map.resetMapMarkers()
     @map.plotListings(@getListingsFromResults())
     @map.fitBounds()
+    if $.isEmptyObject(@map.markers)
+      @map.hide()
+    else
+      @map.show()
 
   # Within the current map display, plot the listings from the current results. Remove listings
   # that aren't within the current map bounds from the results.
@@ -92,7 +94,7 @@ class Search.SearchController extends Search.Controller
   # Return Search.Listing objects from the search results.
   getListingsFromResults: ->
     listings = []
-    @resultsContainer.find('.listing').each (i, el) =>
+    @resultsContainer().find('.listing').each (i, el) =>
       listing = @listingForElementOrBuild(el)
       listings.push listing
     listings
@@ -146,7 +148,7 @@ class Search.SearchController extends Search.Controller
     @startLoading()
     @geocodeSearchQuery =>
       @triggerSearchAndHandleResults =>
-        @updateMapWithListingResults()
+        @updateMapWithListingResults() if @map?
 
   # Trigger the search after waiting a set time for further updated user input/filters
   triggerSearchFromQueryAfterDelay: _.debounce(->

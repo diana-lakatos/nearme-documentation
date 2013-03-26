@@ -1,4 +1,4 @@
-section.search {
+section.search#content {
   padding-top: 30px;
 
   footer {
@@ -30,9 +30,13 @@ section.search {
     }
   }
   
-  #no_results {
-    position: absolute;
-    top: 140px;
+  #results.no_results {
+     padding: 40px 0;
+     
+     &.map {
+       position: absolute;
+       top: 110px;
+     }
   }
   
   div.google-map {
@@ -267,7 +271,7 @@ header#listing_search {
       
       .search-icon {
         display: block;
-        height: 39px;
+        height: 34px;
         padding: 6px 13px 0 0;
         width: 67px;
         background: image-url("components/form/right-fade.png") right top repeat-y;

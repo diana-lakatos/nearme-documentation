@@ -11,7 +11,7 @@ module SearchHelpers
     end
 
     if page.current_path =~ /search/
-      page.execute_script("$('#listing_search').submit()")
+      page.execute_script("$('#listing_search form').submit()")
       wait_until_results_are_returned
     else
       click_link_or_button "Search"

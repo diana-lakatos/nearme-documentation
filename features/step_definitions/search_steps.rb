@@ -5,6 +5,7 @@ end
 When /^I search without setting a date range$/ do
   visit search_path
   search_for(latest_listing.address)
+  wait_until_results_are_returned
 end
 
 When /^I search with a date range covering the date it is fully booked$/ do
@@ -48,7 +49,6 @@ Then /^that listing is( not)? included in the search results$/ do |not_included|
   if not_included
     page.should_not have_content listing.name
   else
-    binding.pry
     page.should have_content listing.name
   end
 end
