@@ -5,19 +5,26 @@
   .hr.divider
     %span Or
 
-  = simple_form_for resource, :as => :user, :url => registration_path(resource_name, :return_to => params[:return_to]), :html => { :class => "form-horizontal new_user" } do |f|
+  = form_for resource, :as => :user, :url => registration_path(resource_name) do |f|
     = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
 
-    = f.input :name, :label => "Your name", :placeholder => "Enter your full name"
-    = f.input :email, :label => "Your email address", :placeholder => "Valid email address"
-    .control-group{:class => ("error" if f.object.errors[:password].any?)}
-      = f.label :password, raw("<abbr title='required'>*</abbr> Your password"), class: "control-label required"
-      .controls.two-up
-        = f.password_field :password,              placeholder: "Your password"
-        = f.password_field :password_confirmation, placeholder: "Confirm password"
+    .name-holder
+      = f.text_field :name, :label => "Your name", :placeholder => "Enter your full name"
 
-        - if f.object.errors[:password].any?
-          %p.error-block= f.object.errors[:password].to_sentence
+    .email-holder   
+      = f.text_field :email, :label => "Your email address", :placeholder => "Valid email address"
+      %span.ico-mail
+
+    .password-holder
+      = f.password_field :password,              placeholder: "Your password"
+      %span.ico-lock
+      
+    .password-holder  
+      = f.password_field :password_confirmation, placeholder: "Confirm password"
+      %span.ico-lock
+
+    - if f.object.errors[:password].any?
+      %p.error-block= f.object.errors[:password].to_sentence
  
       %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, :target => '_blank'}.
 
