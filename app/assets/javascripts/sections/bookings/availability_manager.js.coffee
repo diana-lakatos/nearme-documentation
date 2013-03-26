@@ -9,6 +9,12 @@ class @Bookings.AvailabilityManager
   availability: {
   }
 
+  # Cache of year month date arrays.
+  # Format:
+  # { "YYYY-MM" : [array_of_dates] }
+  yearMonthCache: {
+  }
+
   constructor: (url) ->
     @url = url
     @pendingDates = []
@@ -46,6 +52,9 @@ class @Bookings.AvailabilityManager
       @_executeCallback([listingId, date, callback]) if callback
     else
       @_scheduleFetch(listingId, date, callback)
+
+  getMonth: (listingId, monthDate, callback) ->
+    @get(listingId, DNM.util.Date.datesInMonth(monthDate), callback)
 
   getDates: (listingId, dates, callback) ->
     pending = false
@@ -113,3 +122,4 @@ class @Bookings.AvailabilityManager
     totalFor: (date) -> @manager.totalFor(@listingId, date)
     get: (date_or_dates, callback) -> @manager.get(@listingId, date_or_dates, callback)
     getDates: (dates, callback) -> @manager.getDates(@listingId, dates, callback)
+    getMonth: (month, callback) -> @manager.getMonth(@listingId, month, callback)

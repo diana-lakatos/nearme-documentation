@@ -139,9 +139,15 @@ class @Bookings.Datepicker
     # the calendar.
     renderMonth: (month) ->
       dates = @datesForMonth(month)
-      unless @listing.availabilityLoadedFor(dates)
+
+      # TMP hax until remove ajax availability
+      datesPrev = @datesForMonth(DNM.util.Date.previousMonth(month))
+      datesNext = @datesForMonth(DNM.util.Date.nextMonth(month))
+
+      allDates = _.union(dates, datesPrev, datesNext);
+      unless @listing.availabilityLoadedFor(allDates)
         @setLoading(true)
-        @listing.withAvailabilityLoaded dates, =>
+        @listing.withAvailabilityLoaded allDates, =>
           # Will need to re-render for availability information
           @renderMonth(month)
       else
@@ -173,6 +179,9 @@ class @Bookings.Datepicker
       super({})
       @listing = listing
 
+      # Minimum consecutive days
+      @minDays = 5
+
     setMode: (mode) ->
       @mode = mode
 
@@ -184,11 +193,35 @@ class @Bookings.Datepicker
           @trigger 'rangeApplied'
 
         when DatepickerModelWithModeAndConstraints.MODE_PICK
-          super(date)
-          # addOrRemoveDateAdjustingForConstraints(date)
-          # NB: if trying to remove a single range, the above
-          #     should re-add the range. i.e. can't remove the minimum
-        #     range.
+          if @isSelected(date)
+            @removeDate(date)
+
+            # Remove previous date if doesn't meet constraint anymore
+            current = DNM.util.Date.previous(date)
+            while !DNM.util.Date.inPast(date) and (!@canSelectDate(current) or @isSelected(current))
+              if @canSelectDate(current)
+                break if @meetsConstraint(current)
+                @removeDate(current)
+              current = DNM.util.Date.previous(current)
+
+            current = DNM.util.Date.next(date)
+            while !DNM.util.Date.inPast(date) and (!@canSelectDate(current) or @isSelected(current))
+              if @canSelectDate(current)
+                break if @meetsConstraint(current)
+                @removeDate(current)
+              current = DNM.util.Date.next(current)
+          else
+            # Add the date
+            @addDate(date)
+
+            # Check has @minDays around the date
+            unless @meetsConstraint(date)
+              # Add days after the date until the constraint is met
+              current = date
+              while !@meetsConstraint(date)
+                current = DNM.util.Date.next(current)
+                console.info("Trying to add", current, "for clicked date", date)
+                @addDate(current) if @canSelectDate(current)
 
     setRangeTo: (date) ->
       startDate = @getDates()[0] || date
@@ -198,6 +231,39 @@ class @Bookings.Datepicker
 
       current = startDate
       while DNM.util.Date.toId(current) != DNM.util.Date.toId(date)
-        @addDate(current) if @listing.availabilityFor(current) >= @listing.defaultQuantity
+        @addDate(current) if @canSelectDate(current)
         current = new Date(current.getFullYear(), current.getMonth(), current.getDate()+1, 0, 0, 0)
       @addDate(date) if @listing.availabilityFor(date) >= @listing.defaultQuantity
+
+    canSelectDate: (date) ->
+      @listing.availabilityFor(date) >= @listing.defaultQuantity
+
+    # Returns whether or not there are minDays available days booked around
+    # the specified date.
+    meetsConstraint: (date) ->
+      @consecutiveDays(date) >= @minDays
+
+    # Return the consecutive days currently at the date, *or* the required minumum consecutive days - whatever is less.
+    consecutiveDays: (date) ->
+      return unless @isSelected(date)
+      consecutive = 1
+
+      # Scan dates previous
+      current = DNM.util.Date.previous(date)
+      while !DNM.util.Date.inPast(date) and consecutive < @minDays and (!@canSelectDate(current) or @isSelected(current))
+        consecutive++ if @isSelected(current)
+        current = DNM.util.Date.previous(current)
+
+      # Scan future dates
+      current = DNM.util.Date.next(date)
+      while !DNM.util.Date.inPast(date) and consecutive < @minDays and (!@canSelectDate(current) or @isSelected(current))
+        consecutive++ if @isSelected(current)
+        current = DNM.util.Date.next(current)
+
+      consecutive
+
+
+
+
+
+
