@@ -4,6 +4,7 @@ class Search.Controller
   constructor: (@form) ->
     @initializeFields()
     @initializeGeolocateButton()
+    @initializeSearchButton()
     @initializeAutocomplete()
     @initializeGeocoder()
 
@@ -38,7 +39,17 @@ class Search.Controller
 
     @queryField.bind 'change', =>
       @fieldChanged('query', @queryField.val())
-
+      
+    @queryField.bind 'focus', =>
+      if @queryField.val() is @queryField.data('placeholder')
+        @queryField.val('')
+      true
+    
+    @queryField.bind 'blur', =>
+      if @queryField.val().length < 1 and @queryField.data('placeholder')?
+        _.defer(=>@queryField.val(@queryField.data('placeholder')))
+      true
+    
     # TODO: Trigger fieldChanged on keypress after a few seconds timeout?
 
   initializeDateRangeField: ->
@@ -62,6 +73,13 @@ class Search.Controller
     @geolocateButton.addClass("active").bind 'click', =>
       @geolocateMe()
 
+  initializeSearchButton: ->
+    @searchButton = @form.find(".search-icon")
+    if @searchButton.length > 0
+      @searchButton.bind 'click', =>
+        @form.submit()
+  
+
   geolocateMe: ->
     @determineUserLocation()
 
@@ -74,7 +92,7 @@ class Search.Controller
 
         existingVal = @queryField.val()
         if cityAddress != existingVal
-          @queryField.val(cityAddress)
+          @queryField.val(cityAddress).data('placeholder', cityAddress)
           @fieldChanged('query', @queryField.val())
 
   # Is the given query currently geolocated by the search

@@ -2,14 +2,9 @@
 - content_for :hero do
   = render 'search/header'
 
-- loading = capture do
-  .loading
-    = image_tag "spinner.gif" 
-
 - if listings.any?
   %section#results
     = render partial: 'search/list/listing', collection: listings
-    = loading
 - else
   %section#results.no_results
     .span3
@@ -21,8 +16,9 @@
       %p Try a different location or a post code. Make sure the location is properly formatted and include the city and state.
       %p
         Still cant find what your looking for? Why not #{link_to "create your own listing", new_space_wizard_path}!
-    = loading
-  
+
+.loading{ style: 'display: none;' }
+  = image_tag "spinner.gif" 
 
 - content_for :domready do
   new Search.SearchController($('#listing_search form'), $("section#content.search"))

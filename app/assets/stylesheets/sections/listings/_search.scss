@@ -82,7 +82,7 @@ section.search#content {
       padding-left: 20px;
       font-size: 15px;
       position: relative;
-
+      
       h2 {
         font-size: 16px;
         margin: 0;
@@ -110,6 +110,10 @@ section.search#content {
       }
     }
   }
+}
+
+.google-map-popover-content .listing-sibling {
+  overflow: hidden;
 }
 
 .listing-map-popover-content {

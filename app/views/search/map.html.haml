@@ -5,14 +5,10 @@
     .google-map
       #listings_map.inner
 
-- loading = capture do
-  .loading
-    = image_tag "spinner.gif" 
-
 - if listings.any?
+  - unique_listings = listings.uniq { |l| l.location_id }
   %section#results
-    = render partial: 'search/map/listing', collection: listings
-    = loading
+    = render partial: 'search/map/listing', collection: unique_listings
 - else
   %section#results.no_results.map
     .span3
@@ -24,7 +20,9 @@
       %p Try a different location or a post code. Make sure the location is properly formatted and include the city and state.
       %p
         Still cant find what your looking for? Why not #{link_to "create your own listing", new_space_wizard_path}!
-    = loading
+
+.loading{ style: 'display: none;' }
+  = image_tag "spinner.gif"
 
 - content_for :domready do
   new Search.SearchController($('#listing_search form'), $("section#content.search"))
