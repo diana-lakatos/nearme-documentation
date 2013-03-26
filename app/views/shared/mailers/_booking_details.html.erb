@@ -17,10 +17,7 @@
 <hr>
 
 <strong style='display: inline-block;'>Dates</strong>
-<span style="float: right;"><% reservation.periods.each do |period| %>
-  <%= period.date.strftime("%A %e %B %Y") %>
-<% end %>
-</span>
+<span style="float: right;"><%= format_reservation_periods(reservation) %></span>
 
 
 <hr>

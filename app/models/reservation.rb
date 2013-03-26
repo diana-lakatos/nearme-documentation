@@ -30,6 +30,7 @@ class Reservation < ActiveRecord::Base
   before_validation :set_currency, on: :create
   before_create :set_default_payment_status
   after_create  :auto_confirm_reservation
+  after_create  :create_scheduled_expiry_task
 
   acts_as_paranoid
 
@@ -53,6 +54,11 @@ class Reservation < ActiveRecord::Base
     event :user_cancel do
       transition [:unconfirmed, :confirmed] => :cancelled
     end
+    
+    event :expire do
+      transition :unconfirmed => :expired
+    end
+    
   end
 
   scope :on, lambda { |date|
@@ -165,6 +171,14 @@ class Reservation < ActiveRecord::Base
   def pending?
     payment_status == PAYMENT_STATUSES[:pending]
   end
+  
+  def should_expire!
+    expire! if unconfirmed?
+  end
+  
+  def expiry_time
+    created_at + 24.hours
+  end
 
   private
 
@@ -199,6 +213,10 @@ class Reservation < ActiveRecord::Base
 
     def auto_confirm_reservation
       confirm! unless listing.confirm_reservations?
+    end
+  
+    def create_scheduled_expiry_task
+      Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :should_expire!, nil), run_at: expiry_time
     end
 
     def attempt_payment_capture

@@ -61,6 +61,15 @@ When /^I book space( with credit card)? for:$/ do |with_credit_card, table|
   step "I click to confirm the booking"
 end
 
+When /^I book space as new user for:$/ do |table|
+  step "I select to book space for:", table
+  step "I click to review the booking"
+  fill_in_user_sign_up_details
+  click_button "Sign up"
+  store_model("user", "user", User.last)
+  step "I click to confirm the booking"
+end
+
 When /^(.*) books a space for that listing$/ do |person|
   listing.reserve!(User.find_by_name(person), [next_regularly_available_day], 1)
 end
@@ -78,6 +87,16 @@ When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, 
   click_link_or_button action.capitalize
   page.driver.browser.switch_to.alert.accept
   wait_for_ajax
+end
+
+When /^the reservation expires/ do
+  login User.find_by_name("Keith Contractor")
+  visit bookings_dashboard_path
+  
+  reservation = User.find_by_name("Keith Contractor").reservations.first
+  reservation.expire!
+  
+  visit bookings_dashboard_path
 end
 
 When /^I select to book( and review)? space for:$/ do |and_review, table|
@@ -242,4 +261,8 @@ end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|
   last_email_for(email).subject.should include "A guest has made a booking"
+end
+
+Then /^a reservation expiration email should be sent to (.*)$/ do |email|
+  last_email_for(email).subject.should include "expired"
 end
