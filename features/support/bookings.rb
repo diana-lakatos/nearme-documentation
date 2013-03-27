@@ -6,21 +6,42 @@ module Bookings
   end
 
   def add_dates(dates)
-    find(:css, ".calendar-wrapper").click
-    wait_until_datepicker_finished_loading
-    (dates.uniq - [listing.first_available_date]).each do | date|
-      ensure_datepicker_is_on_right_month(date)
+    dates.uniq!
 
-      el = find(:css, datepicker_class_for(date))
-      el.click
+    # Select start date
+    start_date = dates.shift
+
+    # First date is auto selected
+    unless start_date == listing.first_available_date
+      find(:css, ".calendar-wrapper.date-start").click
+      select_datepicker_date(start_date)
     end
 
-    find(:css, ".calendar-wrapper").click
+    if dates.length > 0
+      find(:css, ".calendar-wrapper.date-end").click
+
+      # This is a hack to move from the range mode to the pick mode
+      select_datepicker_date(start_date)
+
+      dates.each do | date|
+        select_datepicker_date(date)
+      end
+
+      # Close the datepicker
+      find(:css, ".calendar-wrapper.date-end").click
+    end
+  end
+
+  def select_datepicker_date(date)
+    ensure_datepicker_is_on_right_month(date)
+    wait_until_datepicker_finished_loading
+    el = find(:css, datepicker_class_for(date), :visible => true)
+    el.click
   end
 
   def ensure_datepicker_is_on_right_month(date)
-    if date > Date.today && !find(:css, '.datepicker-month').text.include?(Date::MONTHNAMES[date.month])
-      find(:css, '.datepicker-next').click
+    if date > Date.today && !find(:css, '.datepicker-month', :visible => true).text.include?(Date::MONTHNAMES[date.month])
+      find(:css, '.datepicker-next', :visible => true).click
       wait_until_datepicker_finished_loading
     end
   end
