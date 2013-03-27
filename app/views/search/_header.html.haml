@@ -6,7 +6,7 @@
           = hidden_field_tag geofield, ''
         = hidden_field_tag :v, result_view
         .row-fluid
-          .span8
+          .span12
             .list-map-toggle
               %a.map{ href: search_path(params.merge(v: 'map')), class: result_view == 'map' ? 'active' : nil, title: 'Map' }
                 %span.ico-marker
@@ -18,12 +18,12 @@
                 %span.ico-crosshairs
               .search-icon
                 %span.ico-search                
-          .span4.hidden-phone
-            .three.columns.availability-date-start
-              = text_field_tag "availability[dates][start]", search_availability_dates_start, :autocomplete => "off", :placeholder => "Start"
-              .calendar
-                %span.ico-calender
-            .three.columns.availability-date-end
-              = text_field_tag "availability[dates][end]", search_availability_dates_end, :autocomplete => "off", :placeholder => "End"
-              .calendar
-                %span.ico-calender
+            .calendar-container.hidden-phone
+              .three.columns.availability-date-start
+                = text_field_tag "availability[dates][start]", search_availability_dates_start, :autocomplete => "off", :placeholder => "Start"
+                .calendar
+                  %span.ico-calender
+              .three.columns.availability-date-end
+                = text_field_tag "availability[dates][end]", search_availability_dates_end, :autocomplete => "off", :placeholder => "End"
+                .calendar
+                  %span.ico-calender

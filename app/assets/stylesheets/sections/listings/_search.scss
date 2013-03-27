@@ -276,7 +276,7 @@ header#listing_search {
       
       .geolocation {
         top: 13px;
-        left: 113px;
+        left: 118px;
       }
       
       .search-icon {
@@ -296,6 +296,10 @@ header#listing_search {
         &:hover {
           color: $gray7;
         }
+
+        @media (min-width: 768px) {
+          right: 222px;
+        }
       }
       
       .search-container {
@@ -304,6 +308,10 @@ header#listing_search {
         width: 100%;
         padding-left: 110px;
         @include box-sizing(border-box);
+
+        @media (min-width: 768px) {
+          padding-right: 220px;
+        }
 
         input#search {
           display: block;
@@ -318,43 +326,50 @@ header#listing_search {
         }
       }
       
-      .availability-date-start {
-        position: relative;
-        float: left;
-        width: 49%;
-        margin-right: 2%;
-      }
-  
-      .availability-date-end {
-        position: relative;
-        float: left;
-        width: 49%;
-      }
-  
-      .availability-date-start, .availability-date-end {
-        input {
-          width:100%;
+      .calendar-container {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 215px;
+
+        .availability-date-start {
+          position: relative;
+          float: left;
+          width: 49%;
+          margin-right: 2%;
         }
-      }
-  
-      .availability-date-start, .availability-date-end {
-        position: relative;
-  
-        .calendar {
-          position: absolute;
-          top: 15px;
-          left: 13px;
-          display: block;
-          font-size: 28px;
-          @include opacity(.6);
+    
+        .availability-date-end {
+          position: relative;
+          float: left;
+          width: 49%;
         }
-  
-        input {
-          padding-left: 50px;
-          width:100%;
-          @include box-sizing(border-box);
-          background: $dnm_white;
-  
+    
+        .availability-date-start, .availability-date-end {
+          input {
+            width:100%;
+          }
+        }
+    
+        .availability-date-start, .availability-date-end {
+          position: relative;
+    
+          .calendar {
+            position: absolute;
+            top: 15px;
+            left: 13px;
+            display: block;
+            font-size: 28px;
+            @include opacity(.6);
+          }
+    
+          input {
+            padding-left: 50px;
+            width:100%;
+            @include box-sizing(border-box);
+            background: $dnm_white;
+    
+          }
         }
       }      
     }    
@@ -406,7 +421,7 @@ section.search section#results.list {
     }
 
     a {
-      color: $gray8;
+      color: $gray7;
     }
 
     h4.location-hours {
@@ -426,17 +441,7 @@ section.search section#results.list {
       overflow: hidden;
       text-overflow: ellipsis;
       line-height: 28px;
-      max-height: 56px;
 
-
-      &:after {
-        content:" ";
-        display: inline-block;
-        width: 50px;
-        height: 24px;
-        margin-left: -30px;
-        background: image-url("components/form/right-fade-gray.png") right bottom no-repeat;
-      }
     }
 
     aside.prices {
