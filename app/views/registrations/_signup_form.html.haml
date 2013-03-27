@@ -10,21 +10,14 @@
 
     = f.input :name, :label => "Your name", :placeholder => "Enter your full name"
     = f.input :email, :label => "Your email address", :placeholder => "Valid email address"
-    .control-group{:class => ("error" if f.object.errors[:password].any?)}
-      = f.label :password, raw("<abbr title='required'>*</abbr> Your password"), class: "control-label required"
-      .controls.two-up
-        = f.password_field :password,              placeholder: "Your password"
-        = f.password_field :password_confirmation, placeholder: "Confirm password"
-
-        - if f.object.errors[:password].any?
-          %p.error-block= f.object.errors[:password].to_sentence
+    = f.input :password, :label => "Your password", placeholder: "Your password", required: true
  
-      %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, :target => '_blank'}.
+    %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, :target => '_blank'}.
 
     .actions
       = f.submit 'Sign up', :disable_with => "Signing up...", :class => 'desksnearme submit'
 
-.text-center.already-a-user= link_to('Already a user? Click here to Log in.', new_user_session_path(:return_to => params[:return_to]))      
+.text-center.already-a-user= link_to('Already a user? Click here to Log In.', new_user_session_path(:return_to => params[:return_to]))      
 
 - if user_auth_provider
   .signup-provider

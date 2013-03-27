@@ -18,3 +18,5 @@
 
           .actions
             = f.submit "Log In"
+
+      .text-center.already-a-user= link_to('Not registered? Click here to Sign Up', new_user_registration_path(:return_to => params[:return_to]))      

@@ -12,7 +12,6 @@ Feature: A user can add a space
      When I fill in "Your name" with "Brett Jones"
      And I fill in "Your email address" with "brettjones@email.com"
      And I fill in "Your password" with "password"
-     And I fill in "user_password_confirmation" with "password"
      When I press "Sign up"
      Then a user should exist with email: "brettjones@email.com"
      And I should be at the "List Your Space" step
