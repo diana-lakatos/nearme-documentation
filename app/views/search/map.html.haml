@@ -7,7 +7,7 @@
 
 - if listings.any?
   - unique_listings = listings.uniq { |l| l.location_id }
-  %section#results
+  %section#results.map
     = render partial: 'search/map/listing', collection: unique_listings
 - else
   %section#results.no_results.map

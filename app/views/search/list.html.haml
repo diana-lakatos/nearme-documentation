@@ -3,7 +3,7 @@
   = render 'search/header'
 
 - if listings.any?
-  %section#results
+  %section#results.list
     = render partial: 'search/list/listing', collection: listings
 - else
   %section#results.no_results

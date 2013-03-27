@@ -61,6 +61,7 @@ h5 a {
 h1 {
   @include adjust-font-size-to(32px);
   margin-bottom: 20px;
+  color: $gray8;
 
   @media (max-width: 480px) {
     @include adjust-font-size-to(24px);
