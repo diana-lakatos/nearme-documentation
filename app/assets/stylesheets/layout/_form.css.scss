@@ -1,5 +1,9 @@
 select {
- margin: 16px 0;
+  margin: 16px 0;
+}
+
+input[type=file] {
+  margin: 12px 0;
 }
 
 input[type=radio] {
@@ -25,15 +29,18 @@ input[type=tel] {
 .fileupload {
 
    input.browse-file {
-      visibility:hidden;
       height: 0;
+      display: none;
       width: 0;
+      padding: 0;
+      margin: 0;
    }
 
   .fileinput-button {
     display: block;
     text-align: center;
     cursor: pointer;
+    margin-top: 15px;
   }
 
   .progress{
@@ -89,8 +96,16 @@ input[type=tel] {
 
 }
 
-.control-fileupload label{
-  margin-top: 31px !important;
+#space_wizard {
+  .periodicity {
+    margin-right: 10px;
+  }
+  input[type='checkbox'] {
+    margin: 16px 0;
+  }
+  .chzn-container {
+    margin: 16px 0;
+  }
 }
 
 form {
@@ -164,7 +179,7 @@ form {
   }
 
   .control-group.error {
-    input {
+    input, textarea {
       border-color: #e58984;
     }
   }
@@ -202,11 +217,6 @@ form {
     line-height: 18px;
     font-size: 14px;
     overflow: hidden;
-
-    input {
-      float: left;
-      margin: 2px 5px 0 0;
-    }
   }
 
   // Two-up controls
@@ -251,7 +261,11 @@ form {
 
     // A mini input field
     &.mini {
-      width: 60px;
+      width: 80px;
+    }
+
+    &:disabled {
+      @include opacity(0.5);
     }
   }
 

@@ -1,10 +1,12 @@
 .box {
+  position: relative;
   $padding: 15px;
-  @include border-radius(12px);
+  @include border-radius($border-radius);
   @include background-clip(border-box);
   margin-bottom: 20px;
   background: $dnm-white;
   padding: $padding;
+  line-height: 28px;
 
   > h2, header {
     display: block;
@@ -36,7 +38,7 @@
       color: $gray5;
       font-size: 18px;
       padding: 0 14px;
-      width: 25%;
+      width: 50%;
       @include box-sizing(border-box);
       text-align: center;
       line-height: 60px;
@@ -59,8 +61,8 @@
          } 
 
       &.current {
-        background: rgb(200,200,200);
-        color: $dnm_black;
+        background: $gray8;
+        color: $gray2;
         border: none;
       }
     }

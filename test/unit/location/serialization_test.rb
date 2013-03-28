@@ -96,7 +96,8 @@ class Location::SerializationTest < ActiveSupport::TestCase
   end
 
   def setup_listing_with listing_number
-    FactoryGirl.create_list(:hundred_dollar_listing, listing_number , location_id: @location.id)
+    FactoryGirl.create_list(:hundred_dollar_listing, listing_number, location: @location)
+    @location.reload
   end
 
   def serialize

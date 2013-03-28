@@ -24,7 +24,7 @@
     .actions
       = f.submit 'Sign up', :class => 'desksnearme submit', :disable_with => "Signing up..."
 
-.text-center.already-a-user= link_to('Already a user? Click here to Log in.', new_user_session_path(:return_to => params[:return_to]))      
+.text-center.already-a-user= link_to('Already a user?', new_user_session_path(:return_to => params[:return_to]))      
 
 - if user_auth_provider
   .signup-provider

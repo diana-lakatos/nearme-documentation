@@ -87,13 +87,12 @@ DesksnearMe::Application.routes.draw do
 
   scope '/space' do
     get '/new' => 'space_wizard#new', :as => "new_space_wizard"
-    get '/complete' => "space_wizard#complete", :as => "space_wizard_complete"
-
-    %w(company space desks).each do |step|
-      get "/#{step}" => "space_wizard##{step}", :as => "space_wizard_#{step}"
-      post "/#{step}" => "space_wizard#submit_#{step}"
-      put "/#{step}" => "space_wizard#submit_#{step}"
-    end
+    get "/list" => "space_wizard#list", :as => "space_wizard_list"
+    post "/list" => "space_wizard#submit_listing"
+    put "/list" => "space_wizard#submit_listing"
+    post "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo"
+    put "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo"
+    delete "/photo" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
   end
 
   root :to => "public#index"
