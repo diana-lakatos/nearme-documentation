@@ -8,7 +8,7 @@ class Search.SearchController extends Search.Controller
     super(form)
     @listings = {}
     @resultsContainer = => @container.find('#results')
-    @loadingContainer = @container.find('.loading')
+    @loadingContainer = => @container.find('.loading')
     @resultsCountContainer = $('#search_results_count')
     @processingResults = true
     @initializeMap()
@@ -53,14 +53,11 @@ class Search.SearchController extends Search.Controller
     
     @updateMapWithListingResults()
 
-
   startLoading: ->
-    @resultsContainer().hide()
-    @loadingContainer.show()
+    @loadingContainer().show()
 
   finishLoading: ->
-    @loadingContainer.hide()
-    @resultsContainer().show()
+    @loadingContainer().hide()
 
   showResults: (html) ->
     @resultsContainer().replaceWith(html)
