@@ -161,6 +161,7 @@ class Search.SearchController extends Search.Controller
     @triggerSearchRequest().success (html) =>
       @processingResults = true
       @updateUrlForSearchQuery()
+      @updateLinksForSearchQuery()
       @showResults(html)
       callback() if callback
       @finishLoading()
@@ -187,3 +188,13 @@ class Search.SearchController extends Search.Controller
       params = @getSearchParams()
       url = "#{url}?#{$.param(params)}"
       history.replaceState(params, "Search Results", url)
+
+  updateLinksForSearchQuery: ->
+    url = document.location.href.replace(/\?.*$/, "")
+    params = @getSearchParams()
+
+    $('.list-map-toggle a', @form).each ->
+      _params = $.extend(params, { v: (if $(this).hasClass('map') then 'map' else 'list') })
+      _url = "#{url}?#{$.param(_params)}"
+      $(this).attr('href', _url)
+    
