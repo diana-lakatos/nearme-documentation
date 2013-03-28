@@ -24,7 +24,9 @@ class @Bookings.Datepicker
     @startDatepicker = new window.Datepicker(
       trigger: @startElement
       view: new DatepickerAvailabilityView(@listing, trigger: @startElement, text: @TEXT_START)
-      modelClass: window.Datepicker.Model.Single
+      model: new window.Datepicker.Model.Single(
+        allowDeselection: false
+      )
     )
 
     # Initialize the end datepicker component
@@ -105,6 +107,9 @@ class @Bookings.Datepicker
     # Reset the end datepicker
     @endDatepicker.setDates(@startDatepicker.getDates())
     @setDatepickerMode(DatepickerModelWithModeAndConstraints.MODE_RANGE)
+
+    # Show the end datepicker instantly
+    @endDatepicker.show()
 
     @datesWereChanged()
 
