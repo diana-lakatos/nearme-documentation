@@ -1,5 +1,10 @@
 #space, .space {
 
+  .listings-separator{
+    margin-bottom: 20px;
+  }
+
+
   h3.listing-name {
     @include adjust-font-size-to(22px);
     margin-bottom: 6px;
