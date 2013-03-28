@@ -7,6 +7,7 @@ Feature: User Cancels Reservation
     Given a user exists
       And the date is "17th October 2010"
       And I am logged in as the user
+      And I freeze time
       And the following listings exist:
         | listing          | name               |
         | Joe's Codin Garage | Joe's Codin Garage |
@@ -21,10 +22,10 @@ Feature: User Cancels Reservation
   Scenario: A user can see a list of their reservations
     When I go to the bookings page
     Then I should see the following reservations in order:
-      | Joe's Codin Garage on October 18, 2010 (unconfirmed - 23h 59m 59s to expiry) |
-      | WoughThorks on October 19, 2010 (unconfirmed - 23h 59m 59s to expiry)        |
-      | WoughThorks on October 20, 2010 (unconfirmed - 23h 59m 59s to expiry)        |
-      | Joe's Codin Garage on October 21, 2010 (unconfirmed - 23h 59m 59s to expiry) |
+      | Joe's Codin Garage on October 18, 2010 (unconfirmed - 24h 0s to expiry) |
+      | WoughThorks on October 19, 2010 (unconfirmed - 24h 0s to expiry)        |
+      | WoughThorks on October 20, 2010 (unconfirmed - 24h 0s to expiry)        |
+      | Joe's Codin Garage on October 21, 2010 (unconfirmed - 24h 0s to expiry) |
 
   Scenario: A user can cancel a reservation
     Given I am on the bookings page
