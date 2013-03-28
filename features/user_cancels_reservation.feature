@@ -7,6 +7,7 @@ Feature: User Cancels Reservation
     Given a user exists
       And the date is "17th October 2010"
       And I am logged in as the user
+      And I freeze time
       And the following listings exist:
         | listing          | name               |
         | Joe's Codin Garage | Joe's Codin Garage |
