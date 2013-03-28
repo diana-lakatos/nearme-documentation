@@ -169,6 +169,8 @@ class Search.Map
     offset = $(@container).offset()
     viewport = $(window).height()
     $(@container).height(viewport - offset.top)
+    _.defer => google.maps.event.trigger(@googleMap, 'resize')
+    true
   
   # Return an array of [nx, ny, sx, sy] coordinates
   getBoundsArray: ->

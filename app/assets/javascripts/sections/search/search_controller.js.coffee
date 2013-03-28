@@ -46,9 +46,9 @@ class Search.SearchController extends Search.Controller
     @redoSearchMapControl = new Search.RedoSearchMapControl(enabled: true)
     @map.addControl(@redoSearchMapControl)
     
-    $(window).resize =>
-      @map.resizeToFillViewport()
-
+    resizeMapThrottle = _.throttle((=> @map.resizeToFillViewport()), 200)
+    
+    $(window).resize resizeMapThrottle
     $(window).trigger('resize')
     
     @updateMapWithListingResults()
@@ -64,7 +64,6 @@ class Search.SearchController extends Search.Controller
 
   showResults: (html) ->
     @resultsContainer().replaceWith(html)
-    @updateResultsCount()
 
   updateResultsCount: ->
     count = @resultsContainer().find('.listing:not(.hidden)').length
@@ -76,7 +75,8 @@ class Search.SearchController extends Search.Controller
   updateMapWithListingResults: ->
     @map.resetMapMarkers()
     @map.plotListings(@getListingsFromResults())
-    @map.fitBounds()
+    @map.resizeToFillViewport()
+    _.defer => @map.fitBounds()
     if $.isEmptyObject(@map.markers)
       @map.hide()
     else
