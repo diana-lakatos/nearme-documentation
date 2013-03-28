@@ -16,12 +16,14 @@ module Bookings
       find(:css, ".calendar-wrapper.date-start").click
       select_datepicker_date(start_date)
     end
-
+    
     if dates.length > 0
-      find(:css, ".calendar-wrapper.date-end").click
-
-      # This is a hack to move from the range mode to the pick mode
-      select_datepicker_date(start_date)
+      if page.has_no_selector?('.dnm-datepicker', visible: true)
+        find(:css, ".calendar-wrapper.date-end").click
+        
+        # This is a hack to move from the range mode to the pick mode
+        select_datepicker_date(start_date)
+      end
 
       dates.each do | date|
         select_datepicker_date(date)
