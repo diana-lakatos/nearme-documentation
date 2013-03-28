@@ -63,6 +63,13 @@
     }
   }
 
+  .datepicker-text {
+    background: $gray1;
+    text-align: center;
+    border-bottom: 1px solid #cbcbcd;
+    line-height: 32px;
+  }
+
   .datepicker-days-wrapper {
     position: relative;
     background: $gray1;
@@ -107,7 +114,7 @@
       }
 
       // Past/historical date
-      &.datepicker-day-past, &.datepicker-day-past.disabled {
+      &.closed, &.disabled.closed, &.datepicker-day-past, &.datepicker-day-past.disabled {
         color: $gray5;
       }
     }

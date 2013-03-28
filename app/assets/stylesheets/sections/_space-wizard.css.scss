@@ -40,7 +40,11 @@ section.space_wizard {
       padding-left: 30px;
       margin-left: -25px;
       width: 120px;
-    }    
+    }
+
+    .already-a-user {
+      display: none;
+    }   
   }
 
   .input-disabled{

@@ -1,10 +1,12 @@
 .box {
+  position: relative;
   $padding: 15px;
-  @include border-radius(12px);
+  @include border-radius($border-radius);
   @include background-clip(border-box);
   margin-bottom: 20px;
   background: $dnm-white;
   padding: $padding;
+  line-height: 28px;
 
   > h2, header {
     display: block;

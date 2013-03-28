@@ -111,4 +111,5 @@ group :test do
   gem 'timecop'
   gem 'turn'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
+  gem 'simplecov', :require => false
 end

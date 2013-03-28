@@ -20,6 +20,9 @@ class @Bookings.AvailabilityManager
   totalFor: (listingId, date) ->
     value.total if value = @_value(listingId, date)
 
+  openFor: (listingId, date) ->
+    value.open if value = @_value(listingId, date)
+
   isLoaded: (listingId, date_or_dates) ->
     if date_or_dates instanceof Array
       _.all date_or_dates, (date) => @isLoaded(listingId, date)
@@ -105,6 +108,7 @@ class @Bookings.AvailabilityManager
   class AvailabilityManager.Listing
     constructor: (@manager, @listingId) ->
     isLoaded: (date_or_dates) -> @manager.isLoaded(@listingId, date_or_dates)
+    openFor: (date) -> @manager.openFor(@listingId, date)
     availableFor: (date) -> @manager.availableFor(@listingId, date)
     totalFor: (date) -> @manager.totalFor(@listingId, date)
     get: (date_or_dates, callback) -> @manager.get(@listingId, date_or_dates, callback)

@@ -62,7 +62,7 @@ Feature: A user can book at a space
     Then I should see the booking confirmation screen for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 2        |
-  
+
   Scenario: As an anonymous user I should return to my booking state after signing up
     Given I am not logged in as the user
     When I select to book and review space for:
@@ -82,4 +82,4 @@ Feature: A user can book at a space
      Then user should have the listing reserved for 'next Monday'
       And user should have the listing reserved for 'next Tuesday'
 
-  
+
