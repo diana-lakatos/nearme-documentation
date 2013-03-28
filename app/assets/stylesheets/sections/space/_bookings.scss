@@ -85,14 +85,8 @@
       }
 
       .make-reservation {
-        float: right;
         font:normal 26px/46px $font-medium, sans-serif;
-        color: $gray8;
-        margin-top: 10px;
 
-        @media (max-width: 890px) {
-          width: 100%;
-        }
         .quantity input { 
           background: none;
           border: none;
@@ -108,47 +102,6 @@
         }
       }
     }
-  }
-}
-
-// Popover for the booked day
-.booked-day-popover {
-  color: #1e2222;
-  line-height: 14px;
-
-  .date {
-    font-weight: bold;
-
-    sup {
-      font-size: 8px;
-      vertical-align: top;
-      line-height: 8px;
-    }
-  }
-
-  .month {
-    color: #848b8f;
-  }
-
-  .availability {
-    .total {
-      color: #848b8f;
-    }
-  }
-
-  label {
-    display: inline-block;
-  }
-
-  input {
-    border: 1px solid #babfc1;
-    background: #fff;
-    outline: none;
-    color: #91529c;
-    padding: 4px;
-    width: 30px;
-    font-size: 12px;
-    @include border-radius(4px);
   }
 }
 
@@ -263,23 +216,11 @@
   }
 
   a.btn.btn-large {
-<<<<<<< HEAD
-    vertical-align: bottom;
-
-    @media (max-width: 1200px) {
-      display: block;
-      clear: both;
-      width:100%;
-      margin-top: 10px;
-      text-align:center;
-    }
-=======
     display: block;
     clear: both;
     width:100%;
     margin-top: 10px;
     text-align:center;
->>>>>>> [starts#46938297] new booking module partial & css file
   }
 }
 

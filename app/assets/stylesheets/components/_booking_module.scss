@@ -4,30 +4,92 @@
   right: 0;
   width: 300px;
 
-  .book {
-    width: 100%;
-
-    .btn.disabled{
-      @include opacity(0.5);
-    }
-    .btn.click-disabled{
-      @include opacity(0.75);
-    }
-  }
-
   .booking-module {
     position: relative;
     $padding: 12px;
     @include border-radius($border-radius);
     @include background-clip(border-box);
     background: $gray8;
+    color: $gray3;
     padding: $padding;
     line-height: 28px;
 
-    .btn {
-      width: 100%; 
+    .book {
+      width: 100%;
+
+      .btn.disabled{
+        @include opacity(0.5);
+      }
+      .btn.click-disabled{
+        @include opacity(0.75);
+      }
+    }
+      
+    .calendar-wrapper {
+      padding: 2px 8px;
+      border: 2px solid $gray3;
+      border-radius: 8px;
+      background: white;
     }
 
+    .quantity {
+      display: block;
+      
+      select {
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      span.customSelect {
+        font-size: 100%;
+        min-width: 32px;
+        padding: 2px 8px;
+        border: 2px solid $gray3;
+        @include border-radius(8px);
+        background: white;
+      }
+
+      span.customSelect.changed {
+      }
+
+      .customSelectInner {
+        width: 100% !important;
+        background:url(components/customselect/canvas-list-nav-item-arrow.gif) no-repeat center right;
+      }
+
+    }
+
+    .calendar {
+      position: relative;
+      display: inline-block;
+      vertical-align:top;
+
+      .dates, input {
+        width: 30px;
+        height:38px;
+        display: inline-block;
+        vertical-align: middle;
+        border: 0;
+        color: transparent;
+        background: transparent;
+
+        &:focus {
+          outline: none !important;
+        }
+      }
+    }
+
+    .price {
+      text-align: center;
+    }
+
+    a.btn.btn-large {
+      display: block;
+      clear: both;
+      width:100%;
+      margin-top: 10px;
+      text-align:center;
+    }
   }
 }
 
