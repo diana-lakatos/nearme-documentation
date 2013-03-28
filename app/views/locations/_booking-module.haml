@@ -1,0 +1,29 @@
+%section.booking-module
+  .make-reservation
+    .quantity
+      = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
+    %span.resource desk from
+
+    .calendar-wrapper.date-start
+      .calendar
+        %span.ico-calender
+        %span.calendar-text Start
+
+    to
+
+    .calendar-wrapper.date-end
+      .calendar
+        %span.ico-calender
+        %span.calendar-text End
+
+    for
+    %span #{currency_content_tag(@location.currency)}
+
+    .book
+      = link_to_once "", :id =>"book-#{listing.id}", :disable_with => false, :rel => "tooltip", :class => "btn btn-green btn-large", :'data-original-title' => "Please select days first", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
+        %span.ico-check.padding Book
+
+  .clearfix
+
+- content_for :domready do
+  $('.quantity select').customSelect();

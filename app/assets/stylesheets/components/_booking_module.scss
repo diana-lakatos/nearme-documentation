@@ -1,0 +1,33 @@
+.booking-module-container {
+  position: absolute; 
+  top: 0;
+  right: 0;
+  width: 300px;
+
+  .book {
+    width: 100%;
+
+    .btn.disabled{
+      @include opacity(0.5);
+    }
+    .btn.click-disabled{
+      @include opacity(0.75);
+    }
+  }
+
+  .booking-module {
+    position: relative;
+    $padding: 12px;
+    @include border-radius($border-radius);
+    @include background-clip(border-box);
+    background: $gray8;
+    padding: $padding;
+    line-height: 28px;
+
+    .btn {
+      width: 100%; 
+    }
+
+  }
+}
+

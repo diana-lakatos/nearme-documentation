@@ -56,21 +56,6 @@
 
       }
 
-      .book {
-        display: inline-block;
-
-        @media (max-width: 480px) {
-          display:block;
-        }
-
-        .btn.disabled{
-          @include opacity(0.5);
-        }
-        .btn.click-disabled{
-          @include opacity(0.75);
-        }
-      }
-
       .truncated-ellipsis {
         display: inline-block;
         padding: 0 4px 10px;
@@ -278,6 +263,7 @@
   }
 
   a.btn.btn-large {
+<<<<<<< HEAD
     vertical-align: bottom;
 
     @media (max-width: 1200px) {
@@ -287,6 +273,13 @@
       margin-top: 10px;
       text-align:center;
     }
+=======
+    display: block;
+    clear: both;
+    width:100%;
+    margin-top: 10px;
+    text-align:center;
+>>>>>>> [starts#46938297] new booking module partial & css file
   }
 }
 
