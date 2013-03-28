@@ -2,7 +2,8 @@
   .listings
     - if selected_listing
       = render :partial => 'booking', :locals => { :listing => selected_listing, :selected_listing => true }
-      %h2.listings-separator Other listings at this location
+      - unless (@location.listings - [selected_listing]).empty?
+        %h2.listings-separator Other listings at this location 
     - (@location.listings - [selected_listing]).each do |listing|
       = render :partial => 'booking', :locals => { :listing => listing, :selected_listing => false }
 
