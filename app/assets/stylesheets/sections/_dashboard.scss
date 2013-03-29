@@ -8,6 +8,14 @@
     margin-top: 10px;
   }
 }
+div.availability-rules .custom-availability-rules .day .open-time,
+div.availability-rules .custom-availability-rules .day .close-time{
+  width: auto;
+}
+
+.accordion.in:hover { 
+  overflow:visible;
+}
 
 .availability-rules {
   padding-left: 2px;
@@ -21,9 +29,6 @@
   padding: 15px 3px;
 }
 
-.location-content.in.collapse{
-  overflow: visible;
-}
 
 section.locations-holder {
   margin-bottom: 20px;

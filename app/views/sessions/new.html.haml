@@ -12,9 +12,18 @@
         .hr.divider
           %span Or
 
-        = simple_form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "form-horizontal" }) do |f|
-          = f.input :email, :label => "Your email address",  :placeholder => "Email address you registered with", :required => false
-          = f.input :password, :label => "Your password", :hint => "Forgot? #{link_to "Reset your password", new_user_password_url}"
+        = form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
+          .email-holder
+            = f.text_field :email, :placeholder => "Email"
+            %span.ico-mail
+          .password-holder  
+            = f.password_field :password, :placeholder => "Password"
+            %span.ico-lock
+
+          %p.notice
+            =raw "Forgot? #{link_to('Reset your password', new_user_password_url)}"
 
           .actions
             = f.submit "Log In"
+
+      .text-center.already-a-user= link_to('Not registered? Click here to Sign Up', new_user_registration_path(:return_to => params[:return_to]))      
