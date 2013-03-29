@@ -1,106 +1,45 @@
 #space, .space {
 
-  .listings-separator{
-    margin-bottom: 20px;
+  .listing-photo-and-description {
+    float: left;
+    width: 100%;
+    padding-right:330px;
   }
 
+  .truncated-ellipsis {
+    display: inline-block;
+    padding: 0 4px 10px;
+    margin: 0 4px;
+    border-radius: 2px;
+    border-radius: 4px;
+    background: darken( $gray2, 10%);
+    letter-spacing: 1px;
+    color: $dnm_black;
+    font-size: 20px;
+    line-height: 6px;
+    height:6px;
+    vertical-align: middle;
+    font-family: $font-bold;
+  }
 
-  h3.listing-name {
-    @include adjust-font-size-to(22px);
-    margin-bottom: 6px;
+  .description {
 
-    @media (max-width: 480px) {
-      margin: 10px 0;
-      clear: both;
-      float: left;
+    .price {
+      font-size: 22px;
+
+      .period {
+        font-size: 16px;
+        font-weight: normal;
+      }
     }
   }
 
-  p.listing-description {
-    @media (max-width: 480px) {
-      float: left;
-      clear: both;
-    }
-  }
-  .bookings {
+  .make-reservation {
+    font:normal 26px/46px $font-medium, sans-serif;
 
-    .summary {
-      text-align: center;
-      font-size: 16px;
-
-      p {
-        margin-bottom: 0;
-      }
-
-      .btn {
-        margin-left: 12px;
-      }
-    }
-
-    .listing {
-
-      .images, .description {
-        float: left;
-        max-width: 295px;
-        margin-left: 20px;
-
-        @media ( max-width: 480px) {
-          max-width: 100%;
-          margin: 0;
-        }
-
-        &:first-child {
-          margin-left: 0;
- 
-        }
-
-      }
-
-      .truncated-ellipsis {
-        display: inline-block;
-        padding: 0 4px 10px;
-        margin: 0 4px;
-        border-radius: 2px;
-        border-radius: 4px;
-        background: darken( $gray2, 10%);
-        letter-spacing: 1px;
-        color: $dnm_black;
-        font-size: 20px;
-        line-height: 6px;
-        height:6px;
-        vertical-align: middle;
-        font-family: $font-bold;
-      }
-
-      .description {
-
-        .price {
-          font-size: 22px;
-
-          .period {
-            font-size: 16px;
-            font-weight: normal;
-          }
-        }
-      }
-
-      .make-reservation {
-        font:normal 26px/46px $font-medium, sans-serif;
-
-        .quantity input { 
-          background: none;
-          border: none;
-        }
-
-      }
-
-      .book {
-        color: #848b8f;
-
-        @media (max-width: 1200px) {
-          width: 100%;
-        }
-      }
+    .quantity input { 
+      background: none;
+      border: none;
     }
   }
 }
