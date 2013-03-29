@@ -1,3 +1,4 @@
+@timecop
 Feature: User Cancels Reservation
   In order to not hang out with rad dudes
   As a user
@@ -5,9 +6,8 @@ Feature: User Cancels Reservation
 
   Background:
     Given a user exists
-      And the date is "17th October 2010"
+      And I freeze time at "17th October 2010"
       And I am logged in as the user
-      And I freeze time
       And the following listings exist:
         | listing          | name               |
         | Joe's Codin Garage | Joe's Codin Garage |
@@ -31,5 +31,3 @@ Feature: User Cancels Reservation
     Given I am on the bookings page
     When I cancel the reservation for "19th October 2010"
     Then I should have a cancelled reservation on "19th October 2010"
-
-
