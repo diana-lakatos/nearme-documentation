@@ -71,7 +71,7 @@ class User < ActiveRecord::Base
          :rememberable, :trackable, :validatable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :phone, :job_title, :password, :password_confirmation, :avatar, :biography, :industry_ids
+  attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :biography, :industry_ids
 
   delegate :to_s, :to => :name
 
@@ -98,8 +98,7 @@ class User < ActiveRecord::Base
   # Whether to validate the presence of a password
   def password_required?
     # We're changing/setting password, or new user and there are no Provider authentications
-    !password.blank? || !password_confirmation.blank? ||
-      (new_record? && authentications.empty?)
+    !password.blank? || (new_record? && authentications.empty?)
   end
 
   # Whether the user has - or should have - a password.

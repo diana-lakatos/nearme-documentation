@@ -1,3 +1,4 @@
+
 #signup {
 
   #service_buttons {
@@ -116,7 +117,7 @@
     
     .span8.offset2 {
       margin: 0;
-      width: auto;
+      width: 100%;
       
       .box {
         margin: 0;
@@ -126,12 +127,23 @@
       
       .box h2 {
         margin-top: -20px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-      }
-      
-    }
-    
+        padding: 10px;
+      }      
+    }    
   }
-  
+
+  @include icon-form;
+
+  p.notice {
+    font-size: 12px;
+    color: gray2;
+    margin: .5em 0;
+    font-weight: 600px;
+    @include opacity(.7);
+
+    &:hover {
+      @include opacity(1);
+    } 
+  }     
 }
+
