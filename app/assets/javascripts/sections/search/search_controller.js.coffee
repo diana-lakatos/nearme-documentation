@@ -7,31 +7,34 @@ class Search.SearchController extends Search.Controller
   constructor: (form, @container) ->
     super(form)
     @listings = {}
-    @resultsContainer = @container.find('.results')
-    @loadingContainer = @container.find('.loading')
+    @resultsContainer = => @container.find('#results')
+    @loadingContainer = => @container.find('.loading')
     @resultsCountContainer = $('#search_results_count')
+    @processingResults = true
     @initializeMap()
     @bindEvents()
+    setTimeout((=> @processingResults = false), 1000)
 
   bindEvents: ->
     @form.bind 'submit', (event) =>
       event.preventDefault()
       @triggerSearchFromQuery()
-
-    @map.on 'viewportChanged', =>
-      # NB: The viewport can change during 'query based' result loading, when the map fits
-      #     the bounds of the search results. We don't want to trigger a bounding box based
-      #     lookup during a controlled viewport change such as this.
-      return if @processingResults
-      return unless @redoSearchMapControl.isEnabled()
-
-      @triggerSearchWithBoundsAfterDelay()
-
-    @map.on 'mapListingFocussed', (mapListing) =>
-      @findResultsListing(mapListing.id())?.focus()
-
-    @map.on 'mapListingBlurred', (mapListing) =>
-      @findResultsListing(mapListing.id())?.blur()
+    
+    if @map?
+      @map.on 'viewportChanged', =>
+        # NB: The viewport can change during 'query based' result loading, when the map fits
+        #     the bounds of the search results. We don't want to trigger a bounding box based
+        #     lookup during a controlled viewport change such as this.
+        return if @processingResults
+        return unless @redoSearchMapControl.isEnabled()
+      
+        @triggerSearchWithBoundsAfterDelay()
+  
+      @map.on 'mapListingFocussed', (mapListing) =>
+        @findResultsListing(mapListing.id())?.focus()
+  
+      @map.on 'mapListingBlurred', (mapListing) =>
+        @findResultsListing(mapListing.id())?.blur()
 
   initializeMap: ->
     mapContainer = @container.find('#listings_map')[0]
@@ -42,37 +45,39 @@ class Search.SearchController extends Search.Controller
     # Add our map viewport search control, which enables/disables searching on map move
     @redoSearchMapControl = new Search.RedoSearchMapControl(enabled: true)
     @map.addControl(@redoSearchMapControl)
-
+    
+    resizeMapThrottle = _.throttle((=> @map.resizeToFillViewport()), 200)
+    
+    $(window).resize resizeMapThrottle
+    $(window).trigger('resize')
+    
     @updateMapWithListingResults()
 
-    if DNM.isDesktop()
-      $(mapContainer).parent().affix(
-        offset: { top: 175 }
-      )
-
   startLoading: ->
-    @resultsContainer.hide()
-    @loadingContainer.show()
+    @loadingContainer().show()
 
   finishLoading: ->
-    @loadingContainer.hide()
-    @resultsContainer.show()
+    @loadingContainer().hide()
 
   showResults: (html) ->
-    @resultsContainer.html(html)
-    @updateResultsCount()
+    @resultsContainer().replaceWith(html)
 
   updateResultsCount: ->
-    count = @resultsContainer.find('.listing:not(.hidden)').length
+    count = @resultsContainer().find('.listing:not(.hidden)').length
     inflection = 'result'
     inflection += 's' unless count == 1
     @resultsCountContainer.html("#{count} #{inflection}")
-
+  
   # Update the map with the current listing results, and adjust the map display.
   updateMapWithListingResults: ->
     @map.resetMapMarkers()
     @map.plotListings(@getListingsFromResults())
-    @map.fitBounds()
+    @map.resizeToFillViewport()
+    _.defer => @map.fitBounds()
+    if $.isEmptyObject(@map.markers)
+      @map.hide()
+    else
+      @map.show()
 
   # Within the current map display, plot the listings from the current results. Remove listings
   # that aren't within the current map bounds from the results.
@@ -86,7 +91,7 @@ class Search.SearchController extends Search.Controller
   # Return Search.Listing objects from the search results.
   getListingsFromResults: ->
     listings = []
-    @resultsContainer.find('.listing').each (i, el) =>
+    @resultsContainer().find('.listing').each (i, el) =>
       listing = @listingForElementOrBuild(el)
       listings.push listing
     listings
@@ -140,7 +145,7 @@ class Search.SearchController extends Search.Controller
     @startLoading()
     @geocodeSearchQuery =>
       @triggerSearchAndHandleResults =>
-        @updateMapWithListingResults()
+        @updateMapWithListingResults() if @map?
 
   # Trigger the search after waiting a set time for further updated user input/filters
   triggerSearchFromQueryAfterDelay: _.debounce(->
@@ -153,6 +158,7 @@ class Search.SearchController extends Search.Controller
     @triggerSearchRequest().success (html) =>
       @processingResults = true
       @updateUrlForSearchQuery()
+      @updateLinksForSearchQuery()
       @showResults(html)
       callback() if callback
       @finishLoading()
@@ -179,3 +185,13 @@ class Search.SearchController extends Search.Controller
       params = @getSearchParams()
       url = "#{url}?#{$.param(params)}"
       history.replaceState(params, "Search Results", url)
+
+  updateLinksForSearchQuery: ->
+    url = document.location.href.replace(/\?.*$/, "")
+    params = @getSearchParams()
+
+    $('.list-map-toggle a', @form).each ->
+      _params = $.extend(params, { v: (if $(this).hasClass('map') then 'map' else 'list') })
+      _url = "#{url}?#{$.param(_params)}"
+      $(this).attr('href', _url)
+    

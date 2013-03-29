@@ -1,4 +1,4 @@
-// Bootstrap Overrides - Do not edit the Vendor Bootstrap files, override them
+// Bootstrap Overrides - Do not edit the Vendor Bootstrap files, override them please!
 
 body {
   padding: 90px 0 0;
@@ -34,7 +34,7 @@ a[rel="tooltip"] {
 
 .tooltip {
   @include adjust-font-size-to(16px);
-  color: $gray2;
+  color: $gray3;
 }
 
 abbr[title] {
@@ -76,6 +76,7 @@ abbr[data-original-title] {
   text-shadow: none;
   box-shadow: none;
 }
+
 .carousel-control {
   background: none !important;
   border: none !important;
@@ -98,7 +99,41 @@ abbr[data-original-title] {
   @include adjust-font-size-to(16px);
 }
 
+
+.label-success {
+  background: lighten($green, 16%);
+}
+
+.label-warning {
+  background: lighten($green, 8%);
+}
+
+.label-important {
+  background: $green;
+}
+
+// Override bootstrap mixin that caused opacity to be reduced by 10x
 @mixin opacity($opacity) {
   opacity: $opacity;
   filter: alpha(opacity=$opacity);
 }    
+
+@media (max-width: 767px) {
+  // Make all grid-sized elements block level again
+  [class*="span"]:not(.nested),
+  .uneditable-input[class*="span"], // Makes uneditable inputs full-width when using grid sizing
+  .row-fluid [class*="span"]:not(.nested) {
+    float: none;
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    @include box-sizing(border-box);
+  }
+}
+
+.hidden-iphone {
+  
+  @media (max-width:480px) {
+    display: none !important;
+  }
+}

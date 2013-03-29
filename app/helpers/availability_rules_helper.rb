@@ -47,4 +47,45 @@ module AvailabilityRulesHelper
   def availability_custom?(object)
     object.availability_template_id.blank? && (!object.respond_to?(:defer_availability_rules) || !object.defer_availability_rules?)
   end
+  
+  # First revision of this method. Will be refined!
+  def pretty_availability_sentence(availability)
+    days = availability.full_week.select { |d| availability.open_on?(day: d[:day]) }
+    hours = days.group_by { |day| rule = day[:rule]; [[rule.open_hour, rule.open_minute], [rule.close_hour, rule.close_minute]] }
+    hour_groups = hours.collect { |time, days| { times: time, days: days.map { |h| h.fetch(:day) }} }
+    
+    sentence = []
+    
+    hour_groups.each do |group|
+      day_ranges, current_range, n = [], [], nil
+      
+      group[:days].each do |d|
+        if n.nil? or n + 1 == d
+          current_range.push(d)
+        else
+          day_ranges.push(current_range)
+          current_range = [d]
+        end
+        n = d
+      end
+      day_ranges.push(current_range)
+      
+      day_part = day_ranges.map do |group|
+        str = Date::ABBR_DAYNAMES[group.first]
+        str += "-#{Date::ABBR_DAYNAMES[group.last]}" if group.count > 1
+        str
+      end
+      
+      hour_part = []
+      group[:times].each do |time|
+        hour, minutes, ordinal = (time[0] > 12 ? time[0] - 12 : time[0]), time[1].to_s.rjust(2, '0'), (time[0] > 12 ? 'pm' : 'am')
+        hour_part << "#{hour}:#{minutes}#{ordinal}"
+      end
+      
+      sentence.push("#{day_part.join(',')} #{hour_part.join('-')}")
+    end
+    
+    sentence.to_sentence
+  end
+  
 end
