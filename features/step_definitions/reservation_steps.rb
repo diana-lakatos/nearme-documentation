@@ -263,3 +263,11 @@ end
 Then /^a reservation expiration email should be sent to (.*)$/ do |email|
   last_email_for(email).subject.should include "expired"
 end
+
+Before('@timecop') do
+  Timecop.freeze Time.now
+end
+
+After('@timecop') do
+  Timecop.return
+end
