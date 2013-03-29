@@ -8,6 +8,7 @@
     position: relative;
     float: right; 
     clear: both;
+    width: 100%;
   }
 
 
@@ -33,21 +34,24 @@
     }
       
     .calendar-wrapper {
+      display: block;
       margin: 0 0 8px;
       padding: 6px 8px;
       @include border-radius(8px);
+      @include box-sizing(border-box);
       background: $gray2;
       color: $gray6;
-      width: 95px;
+      width: 48%;
+      float: left;
 
       &.date-end {
         float: right;
+        margin-right:0;
       }
 
       .calendar {
         position: relative;
         display: inline-block;
-        min-width: 42px;
 
         .dates, input {
           width: 30px;
@@ -68,8 +72,9 @@
     }
 
     .quantity {
-      display: block;
       position: relative;
+      display: block;
+      clear: both;
       height: 42px;
       line-height: 42px;
 

@@ -3,7 +3,7 @@
   .listing.box {
     overflow: hidden;
     height: auto;
-    @media (min-width: 768px) {
+    @media (min-width: 640px) {
       height: 208px;
     }
   }
@@ -15,7 +15,7 @@
     height: 208px;
     width: 350px;
 
-    @media (max-width: 767px) {
+    @media (max-width: 640px) {
       position: relative;
       float: left; 
       clear: both;
