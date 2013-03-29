@@ -6,54 +6,39 @@
 #   trigger: $('triger')
 # )
 class @Datepicker
+  asEvented.apply @prototype
+
   defaultOptions: {
     containerClass: 'dnm-datepicker',
     appendTo: 'body',
-
-    # The initial month of the view, specified as a Date object
-    initialMonth: null,
-
-    # The 'today' for the view, specified as a Date object
-    today: null,
-
-    # The initial 'selected dates' for the calendar
-    selectedDates: null,
 
     # Inject the view object managed by this Datepicker
     view: null,
     viewClass: null,
 
-    # Events
-    # Triggered when the set of selected dates is changed
-    onDatesChanged: null
+    model: null,
+    modelClass: null,
   }
 
   constructor: (@options = {}) ->
     @options = $.extend({}, @defaultOptions, @options)
 
-    @model = new Datepicker.Model(
-      selectedDates: @options.selectedDates || [],
-      currentMonth:  @options.initialMonth || new Date(),
-      today:         @options.today || new Date()
-    )
+    @model = @options.model || new (@options.modelClass || Datepicker.Model)(@options)
 
     @view = @options.view || new (@options.viewClass || Datepicker.View)(@options)
     @view.setModel(@model)
     @view.appendTo($(@options.appendTo))
-
-    if @options.onDatesChanged
-      @model.on 'dateRemoved dateAdded', => @options.onDatesChanged(@model.getDates())
 
     @bindViewEvents()
     @bindEvents()
 
   bindEvents: ->
     $('body').on 'click', (event) =>
-      @view.hide()
+      if $(@options.trigger)[0] != event.target && $(@options.trigger).has(event.target).length == 0
+        @view.hide()
 
     if @options.trigger
       $(@options.trigger).on 'click', (event) =>
-        event.stopPropagation()
         @view.toggle()
 
   bindViewEvents: ->
@@ -65,6 +50,16 @@ class @Datepicker
 
     @view.bind 'dateClicked', (date) =>
       @model.toggleDate(date)
+      @trigger 'datesChanged', @model.getDates()
+
+    @model.bind 'dateAdded', (date) =>
+      @view.dateAdded(date)
+
+    @model.bind 'dateRemoved', (date) =>
+      @view.dateRemoved(date)
+
+    @model.bind 'monthChanged', (newMonth) =>
+      @view.renderMonth(newMonth)
 
   show: -> @view.show()
   hide: -> @view.hide()
@@ -76,12 +71,24 @@ class @Datepicker
   class Datepicker.Model
     asEvented.call(Model.prototype)
 
-    constructor: (options) ->
-      @currentMonth = options.currentMonth
-      @_included = []
-      @today = options.today
+    defaultOptions: {
+      # The initial month of the view, specified as a Date object
+      currentMonth: new Date(),
 
-      @setDates(options.selectedDates) if options.selectedDates
+      # The 'today' for the view, specified as a Date object
+      today: new Date(),
+
+      # The initial 'selected dates' for the calendar
+      selectedDates: []
+    }
+
+    constructor: (@options) ->
+      @options = $.extend({}, @defaultOptions, @options)
+      @currentMonth = @options.currentMonth
+      @_included = []
+      @today = @options.today
+
+      @setDates(@options.selectedDates) if @options.selectedDates
 
     advanceMonth: (incr = 1) ->
       @currentMonth = new Date(@currentMonth.getFullYear(), @currentMonth.getMonth()+incr, 1, 0, 0, 0, 0)
@@ -91,7 +98,8 @@ class @Datepicker
       _.contains(@_included, @_asId(date))
 
     getDates: ->
-      _.map @_included, (dateId) => @_fromId(dateId)
+      dates = _.map @_included, (dateId) => @_fromId(dateId)
+      _.sortBy(dates, (date) -> date.getTime())
 
     toggleDate: (date) ->
       if @isSelected(date)
@@ -100,18 +108,10 @@ class @Datepicker
         @addDate(date)
 
     removeDate: (date) ->
-      dateId = @_asId(date)
-      return unless @isSelected(dateId)
-
-      @_included.splice _.indexOf(@_included, dateId), 1
-      @trigger('dateRemoved', date)
+      @trigger('dateRemoved', date) if @_removeDate(date)
 
     addDate: (date) ->
-      dateId = @_asId(date)
-      return if @isSelected(dateId)
-
-      @_included.push dateId
-      @trigger('dateAdded', date)
+      @trigger('dateAdded', date) if @_addDate(date)
 
     setDates: (dates) ->
       newDates = []
@@ -123,11 +123,45 @@ class @Datepicker
       @removeDate(@_fromId(date)) for date in removed
       @addDate(@_fromId(date)) for date in added
 
+    clear: ->
+      @setDates([])
+
+    _addDate: (date) ->
+      dateId = @_asId(date)
+      return if @isSelected(dateId)
+
+      @_included.push dateId
+      true
+
+    _removeDate: (date) ->
+      dateId = @_asId(date)
+      return unless @isSelected(dateId)
+      @_included.splice _.indexOf(@_included, dateId), 1
+      true
+
     _asId: (date) ->
       DNM.util.Date.toId(date)
 
     _fromId: (dateId) ->
       DNM.util.Date.idToDate(dateId)
+
+  # A special case of the datepicker backing model that only allows the selection of
+  # a single date.
+  class Datepicker.Model.Single extends Datepicker.Model
+    defaultOptions: $.extend({}, @prototype.defaultOptions, {
+      # Allow deselecting the current active date
+      allowDeselection: true
+    })
+
+    toggleDate: (date) ->
+      # Check to see if we allow deselection
+      return if !@options.allowDeselection and @isSelected(date)
+      super(date)
+
+    addDate: (date) ->
+      if @_included.length > 0
+        @removeDate(@_fromId(@_included[0]))
+      super(date)
 
   # View renderer for the calendar
   class Datepicker.View
@@ -140,6 +174,9 @@ class @Datepicker
       <div class="datepicker-header">
         <div class="datepicker-month"></div>
         <div class="datepicker-year"></div>
+      </div>
+
+      <div class="datepicker-text">
       </div>
 
       <div class="datepicker-week-header">
@@ -186,16 +223,19 @@ class @Datepicker
       @weekHeader = @container.find('.datepicker-week-header')
       @daysContainer = @container.find('.datepicker-days')
       @loading = @container.find('.datepicker-loading').hide()
-
+      @setText(@options.text) if @options.text
       @bindEvents()
 
     # Set the model for the view
-    setModel: (@model) ->
-      @bindModel()
+    setModel: (model) ->
+      @model = model
 
     # Render the the datepicker view by appending it to a container
     appendTo: (selector) ->
       $(selector).append(@container)
+
+    setText: (text) ->
+      @container.find('.datepicker-text').html(text)
 
     toggle: ->
       if @container.is(':visible')
@@ -260,16 +300,11 @@ class @Datepicker
         'left': "#{left}px"
       )
 
-    # Listen to changes on the model to re-render the view
-    bindModel: ->
-      @model.bind 'dateAdded', (date) =>
-        @dateElement(date).addClass('active')
+    dateAdded: (date) =>
+      @dateElement(date).addClass('active')
 
-      @model.bind 'dateRemoved', (date) =>
-        @dateElement(date).removeClass('active')
-
-      @model.bind 'monthChanged', (newMonth) =>
-        @renderMonth(newMonth)
+    dateRemoved: (date) =>
+      @dateElement(date).removeClass('active')
 
     # Setup and bind fields within the container
     bindEvents: ->
@@ -357,9 +392,4 @@ class @Datepicker
 
     _render: (template, args) ->
       Mustache.render(template, args)
-
-
-
-
-
 

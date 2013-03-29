@@ -73,4 +73,8 @@ class @Bookings.ListingView
 
   # Setup the datepicker for the simple booking UI
   setupMultiDatesPicker: ->
-    @datepicker = new Bookings.Datepicker(@container.find(".calendar-wrapper"), @listing)
+    @datepicker = new Bookings.Datepicker(
+      listing: @listing
+      startElement: @container.find(".calendar-wrapper.date-start")
+      endElement: @container.find(".calendar-wrapper.date-end")
+    )

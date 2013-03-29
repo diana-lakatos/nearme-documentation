@@ -39,7 +39,7 @@
       %section#content{:class => "#{controller_name}"}
         = render "layouts/hero"
         %div{:class => "container-fluid #{'legacy' if legacy?}"}
-          = flashes
+          = render 'shared/render_flash'
           = yield
 
       = render :partial => "layouts/footer"

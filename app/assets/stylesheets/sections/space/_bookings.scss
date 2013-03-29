@@ -1,7 +1,7 @@
 #space, .space {
 
   h3.listing-name {
-    font:normal 24px/33px $font-heavy, sans-serif;
+    @include adjust-font-size-to(22px);
     margin-bottom: 6px;
 
     @media (max-width: 480px) {

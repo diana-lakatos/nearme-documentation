@@ -33,8 +33,7 @@
 
   .already-a-user {
     position: absolute;
-    width: 94%;
-    padding-right: 40px;
+    width: 100%;
 
     a {
       display: block;
@@ -46,6 +45,12 @@
       &:hover {
         @include opacity(1);
       }
+    }
+  }
+
+  #space_wizard {
+    .already-a-user a {
+      display: none;
     }
   }
 

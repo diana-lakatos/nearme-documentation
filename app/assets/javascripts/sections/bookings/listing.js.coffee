@@ -31,6 +31,9 @@ class @Bookings.Listing
   bookedFor: (date) ->
     @bookings[DNM.util.Date.toId(date)] || 0
 
+  openFor: (date) ->
+    @availability.openFor(date)
+
   isBooked: ->
     @bookedDays().length > 0
 
@@ -40,11 +43,15 @@ class @Bookings.Listing
 
   # Return the days where bookings exist as Date objects
   bookedDates: ->
-    $.map @bookedDays(), (dateId) -> DNM.util.Date.idToDate(dateId)
+    _.map @bookedDays(), (dateId) ->
+      DNM.util.Date.idToDate(dateId)
 
   # Total 'desk days' booked. i.e. number of desks summed across each day
   bookedDeskDays: ->
-    _.reduce(_.values(@bookings), ((memo, bookings) -> memo + bookings), 0)
+    _.reduce(_.values(@bookings),
+      (memo, bookings) ->
+        memo + bookings
+      , 0)
 
   # Return the bookings data in an array of date & quantity objects
   getBookings: ->
@@ -72,7 +79,7 @@ class @Bookings.Listing
   # booking date & quantity hashes.
   setBookings: (arrayOfBookings, forceAvailability = true) ->
     for booking in _.toArray(arrayOfBookings)
-      @addDate(DNM.util.Date.idToDate(booking.date), booking.quantity || booking.amount, forceAvailability) 
+      @addDate(DNM.util.Date.idToDate(booking.date), booking.quantity || booking.amount, forceAvailability)
 
   # Return the subtotal for booking this listing
   bookingSubtotal: ->
