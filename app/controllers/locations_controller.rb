@@ -5,6 +5,7 @@ class LocationsController < ApplicationController
 
   def show
     @location = Location.find(params[:id])
+    @listing = @location.listings.find(params[:listing_id]) if params[:listing_id]
 
     # Attempt to restore a stored reservation state from the session.
     if params[:restore_reservations]

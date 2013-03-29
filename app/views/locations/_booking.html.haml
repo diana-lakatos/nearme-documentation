@@ -1,0 +1,36 @@
+.listing.box
+  .images
+    - if listing.photos.any?
+      .image{:style => "margin-right: 15px;"}
+        = image_tag listing.photos.first.url(:space_listing)
+
+  %h3.listing-name
+    = listing.name
+  %p
+    = truncate_with_ellipsis listing.description, 250, :class => "listing-description"
+
+  .make-reservation
+    .quantity
+      = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
+    %span.resource desk from
+
+    .calendar-wrapper.date-start
+      .calendar
+        %span.ico-calender
+        %span.calendar-text Start
+
+    to
+
+    .calendar-wrapper.date-end
+      .calendar
+        %span.ico-calender
+        %span.calendar-text End
+
+    for
+    %span #{currency_content_tag(@location.currency)}
+
+    .book
+      = link_to_once "", :id =>"book-#{listing.id}", :disable_with => false, :rel => "tooltip", :class => "btn btn-green btn-large", :'data-original-title' => "Please select days first", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
+        %span.ico-check.padding Book
+
+  .clearfix
