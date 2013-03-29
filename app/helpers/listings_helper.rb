@@ -4,22 +4,18 @@ module ListingsHelper
   end
 
   def listing_price(listing, max = nil)
-    cents = listing.unit_prices.collect(&:price_cents)
+    cents = [listing.daily_price_cents, listing.weekly_price_cents, listing.monthly_price_cents]
     if cents.all?(&:nil?)
       "Call"
     elsif cents.all? { |p| p == 0 }
       "Free!"
     else
-      prices = listing.unit_prices.reject { |p| p.price.nil? }.map do |price|
-        humanized_money_with_symbol(price.price) + " " + content_tag(:span, human_friendly_time_period(price), :class => 'period')
+      prices = listing.period_prices.reject { |key, price| p.nil? }.map do |period, price|
+        humanized_money_with_symbol(price) + " " + content_tag(:span, phuman_friendly_time_perio(period), :class => 'period')
       end
 
       prices[0, max || prices.length].join(';').html_safe
     end
-  end
-
-  def listing_price_show_bulk_tooltip?(listing)
-    listing.unit_prices.reject { |p| p.price.nil? || p.price == 0 }.length > 1
   end
 
   def human_friendly_time_period(unit_price)
@@ -31,6 +27,10 @@ module ListingsHelper
     when Listing::MINUTES_IN_MONTH
       "per month"
     end
+  end
+
+  def listing_price_show_bulk_tooltip?(listing)
+    listing.prices.reject { |p| p.nil? || p == 0 }.length > 1
   end
 
   def strip_http(url)

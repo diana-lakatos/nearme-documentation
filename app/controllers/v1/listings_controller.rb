@@ -5,6 +5,7 @@ class V1::ListingsController < V1::BaseController
   # Endpoints that require authentication
   before_filter :require_authentication,         only: [:create, :update, :destroy, :connections, :inquiry, :reservation, :share]
   before_filter :find_listing,                   only: [:update, :destroy]
+  before_filter :convert_price_params,           only: [:create, :update]
   before_filter :validate_search_params!,        only: :search
   before_filter :validate_query_params!,         only: :query
   before_filter :validate_reservation_params!,   only: :reservation
@@ -245,5 +246,11 @@ class V1::ListingsController < V1::BaseController
   private
     def find_listing
       @listing = current_user.listings.find(params[:id])
+    end
+
+    def convert_price_params
+      params[:listing][:daily_price] = params[:listing][:daily_price].to_f if params[:listing][:daily_price]
+      params[:listing][:weekly_price] = params[:listing][:weekly_price].to_f if params[:listing][:weekly_price]
+      params[:listing][:monthly_price] = params[:listing][:monthly_price].to_f if params[:listing][:monthly_price]
     end
 end
