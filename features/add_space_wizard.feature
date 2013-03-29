@@ -9,9 +9,9 @@ Feature: A user can add a space
      And a location_type exists with name: "Business"
      And a listing_type exists with name: "Desk"
      Then I should be at the "Sign Up" step
-     When I fill in "Your name" with "Brett Jones"
-     And I fill in "Your email address" with "brettjones@email.com"
-     And I fill in "Your password" with "password"
+     When I fill in "user_name" with "Brett Jones"
+     And I fill in "user_email" with "brettjones@email.com"
+     And I fill in "user_password" with "password"
      When I press "Sign up"
      Then a user should exist with email: "brettjones@email.com"
      And I should be at the "List Your Space" step
