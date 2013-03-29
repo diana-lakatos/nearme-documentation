@@ -21,18 +21,19 @@ class Listing::Search::Params::Availability
 
   def extract_dates(dates = {})
     if dates.is_a? Array
-      @dates.map { |d| coerce_date(d) } if dates.is_a? Array
+      @dates = @dates.map { |d| coerce_date(d) }.compact
     elsif dates.is_a?(Hash) && dates[:start].present? && dates[:end].present?
-      start = coerce_date(dates[:start])
-      finish = coerce_date(dates[:end])
-      @dates = (start...finish)
-    else
-      @dates = default_dates
+      start, finish = coerce_date(dates[:start]), coerce_date(dates[:end])
+      @dates = (start...finish) if start.present? and finish.present?
     end
+    
+    @dates ||= default_dates
   end
 
   def coerce_date(date)
     date.respond_to?(:gsub) ? Date.parse(date) : date
+  rescue ArgumentError # if the provided date is not a valid format
+    nil
   end
 
   def default_dates
