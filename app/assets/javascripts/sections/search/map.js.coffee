@@ -37,7 +37,7 @@ class Search.Map
     @cacheMarkers()
 
   initializeGoogleMap: ->
-    @googleMap = SmartGoogleMap.createMap(@container, {
+    @googleMap = new google.maps.Map(@container, {
       zoom: 8,
       minZoom: 4,
       mapTypeId: google.maps.MapTypeId.ROADMAP,

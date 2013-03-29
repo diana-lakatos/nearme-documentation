@@ -9,11 +9,15 @@
   }
 
   .google-map-popover {
-    background: #e6e7e8;
+    background: $gray3; //#e6e7e8;
     border: 1px solid #858980;
     @include border-radius(5px);
     padding: 6px;
     color: #58595b;
+
+    &:hover {
+      background: $gray2;
+    }
 
     .close {
       position: absolute;
@@ -29,7 +33,7 @@
 
     em.arrow {
       margin-left: -10px; // NB: Not -9px, as the map markers are not exactly symmetrical so it appears off-center
-      @include css-arrow($width: 9px, $direction: down, $color: #e6e7e8);
+      @include css-arrow($width: 9px, $direction: down, $color: $gray3);
     }
 
     em.arrow-border {
