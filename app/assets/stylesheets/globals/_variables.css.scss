@@ -32,13 +32,17 @@ $gray9: rgb(40,40,40);
 
 $link_hover: darken($dnm_blue, 10%);
 
-// Typekit Webfonts
+// Border Radius
+$border-radius: 12px;
 
-$font-light: 'futura-pt', sans-serif;
-$font-regular: 'futura-pt', sans-serif;
-$font-medium: 'futura-pt', sans-serif;
-$font-heavy: 'futura-pt', sans-serif;
-$font-bold: 'futura-pt', sans-serif;
+// Webfonts
+
+$font-light: 'Futura-regular', sans-serif;
+$font-regular: 'Futura-regular', sans-serif;
+$font-medium: 'Futura-medium', sans-serif;
+$font-demi: 'Futura-demi', sans-serif;
+$font-heavy: 'Futura-heavy', sans-serif;
+$font-bold: 'Futura-heavy', sans-serif;
 
 // Z index
 
