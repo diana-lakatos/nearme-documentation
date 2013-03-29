@@ -1,0 +1,36 @@
+.browser-alert.chrome-frame {
+  background: $dnm_red;
+  position: fixed;
+  top: 60px;
+  left: 0px;
+  right: 0px;
+  z-index: $nav-z-index;
+  
+  .browser-alert-inner {
+    background: $dnm_red;
+    max-width: 1400px;
+    @include box-sizing(border-box);
+    padding: 0 0 0 20px;
+    height: 60px;
+    margin: 0 auto;
+    text-align: center;
+    
+    p {
+      margin: 0;
+      line-height: 60px;
+      color: $gray9;
+      
+      a {
+        border-bottom: 1px dotted $gray9;
+        
+        &:link, &:visited {
+          color: $gray9;
+        }
+        
+        &:hover, &:visited:hover, &:active {
+          border-bottom-style: solid;
+        }
+      }
+    }
+  }
+}
