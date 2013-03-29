@@ -1,20 +1,18 @@
 .booking-module-container
   .booking-module
-    .quantity
-      = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
-      %span.resource desk 
 
     .calendar-wrapper.date-start
       .calendar
         %span.ico-calender
         %span.calendar-text Start
 
-    to
-
     .calendar-wrapper.date-end
       .calendar
         %span.ico-calender
         %span.calendar-text End
+    .quantity
+      %span.resource Desks
+      = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity' 
     .price
       Total:
       %span #{currency_content_tag(@location.currency)}

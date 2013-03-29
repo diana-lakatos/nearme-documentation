@@ -1,9 +1,17 @@
 #space, .space {
 
-  .listing-photo-and-description {
+  .listing-photo-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 270px;
+  }
+
+  .listing-description-container {
     float: left;
     width: 100%;
-    padding-right:330px;
+    padding: 0 280px;
+    @include box-sizing(border-box);
   }
 
   .truncated-ellipsis {
@@ -31,15 +39,6 @@
         font-size: 16px;
         font-weight: normal;
       }
-    }
-  }
-
-  .make-reservation {
-    font:normal 26px/46px $font-medium, sans-serif;
-
-    .quantity input { 
-      background: none;
-      border: none;
     }
   }
 }
@@ -132,34 +131,6 @@
       background:url(components/customselect/canvas-list-nav-item-arrow.gif) no-repeat center right;
     }
 
-  }
-
-  .calendar {
-    position: relative;
-    display: inline-block;
-    vertical-align:top;
-
-    .dates, input {
-      width: 30px;
-      height:38px;
-      display: inline-block;
-      vertical-align: middle;
-      border: 0;
-      color: transparent;
-      background: transparent;
-
-      &:focus {
-        outline: none !important;
-      }
-    }
-  }
-
-  a.btn.btn-large {
-    display: block;
-    clear: both;
-    width:100%;
-    margin-top: 10px;
-    text-align:center;
   }
 }
 

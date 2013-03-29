@@ -2,7 +2,7 @@
   position: absolute; 
   top: 0;
   right: 0;
-  width: 300px;
+  width: 260px;
 
   .booking-module {
     position: relative;
@@ -12,7 +12,7 @@
     background: $gray8;
     color: $gray3;
     padding: $padding;
-    line-height: 28px;
+    font: normal 22px/26px 'Futura-regular', sans-serif; 
 
     .book {
       width: 100%;
@@ -26,30 +26,55 @@
     }
       
     .calendar-wrapper {
-      padding: 2px 8px;
-      border: 2px solid $gray3;
-      border-radius: 8px;
-      background: white;
+      margin: 0 0 8px;
+      padding: 6px 8px;
+      @include border-radius(8px);
+      background: $gray2;
+      color: $gray6;
+
+      &.date-end {
+        float: right;
+      }
+
+      .calendar {
+        position: relative;
+        display: inline-block;
+        min-width: 42px;
+
+        .dates, input {
+          width: 30px;
+          height:38px;
+          display: inline-block;
+          vertical-align: middle;
+          border: 0;
+          color: transparent;
+          background: transparent;
+          border: none;
+          color: $gray6;
+
+          &:focus {
+            outline: none !important;
+          }
+        }
+      }    
     }
 
     .quantity {
       display: block;
-      
-      select {
-        display: inline-block;
-        vertical-align: middle;
-      }
+      position: relative;
+      height: 42px;
+      line-height: 42px;
 
       span.customSelect {
+        position: absolute;
+        right: 0;
+        top: 0;
         font-size: 100%;
         min-width: 32px;
-        padding: 2px 8px;
-        border: 2px solid $gray3;
+        padding:0;
         @include border-radius(8px);
-        background: white;
-      }
-
-      span.customSelect.changed {
+        border: none;
+        background: transparent;
       }
 
       .customSelectInner {
@@ -59,35 +84,20 @@
 
     }
 
-    .calendar {
-      position: relative;
-      display: inline-block;
-      vertical-align:top;
-
-      .dates, input {
-        width: 30px;
-        height:38px;
-        display: inline-block;
-        vertical-align: middle;
-        border: 0;
-        color: transparent;
-        background: transparent;
-
-        &:focus {
-          outline: none !important;
-        }
-      }
-    }
-
     .price {
-      text-align: center;
+      height: 42px;
+      line-height: 42px;
+      text-align: left;
+
+      span {
+        float: right;
+      }
     }
 
     a.btn.btn-large {
       display: block;
       clear: both;
       width:100%;
-      margin-top: 10px;
       text-align:center;
     }
   }
