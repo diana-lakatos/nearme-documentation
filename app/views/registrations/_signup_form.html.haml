@@ -12,22 +12,18 @@
       = f.text_field :name, :label => "Full Name", :placeholder => "Enter your full name"
       %span.ico-user
 
-    .email-holder   
+    .email-holder
       = f.text_field :email, :label => "Email", :placeholder => "Valid email address"
       %span.ico-mail
 
     .password-holder
-      = f.password_field :password,              placeholder: "Password"
-      %span.ico-lock
-      
-    .password-holder  
-      = f.password_field :password_confirmation, placeholder: "Confirm Password"
+      = f.password_field :password, placeholder: "Password"
       %span.ico-lock
 
     - if f.object.errors[:password].any?
       %p.error-block= f.object.errors[:password].to_sentence
- 
-      %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, :target => '_blank'}.
+
+    %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, :target => '_blank'}.
 
     .actions
       = f.submit 'Sign up', :disable_with => "Signing up...", :class => 'desksnearme submit'

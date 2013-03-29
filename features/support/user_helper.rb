@@ -27,7 +27,6 @@ module UserHelper
     fill_in 'user_name', with: options[:name]
     fill_in 'user_email', with: options[:email]
     fill_in 'user_password', with: options[:password]
-    fill_in 'user_password_confirmation', with: options[:password]
   end
 
   def update_current_user_information(options = {})
@@ -35,7 +34,6 @@ module UserHelper
     fill_in 'user_name', with: options[:name] if options[:name]
     fill_in 'user_email', with: options[:email] if options[:email]
     fill_in 'user_password', with: options[:password] if options[:password]
-    fill_in 'user_password_confirmation', with: options[:password] if options[:password]
     click_button "Save Changes"
   end
 
