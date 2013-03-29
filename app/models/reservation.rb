@@ -141,6 +141,7 @@ class Reservation < ActiveRecord::Base
 
   # Number of desks booked accross all days
   def desk_days
+    # NB: use of 'size' not 'count' here is deliberate - seats/periods may not be persisted at this point!
     (quantity || 0) * periods.size
   end
 
@@ -193,13 +194,13 @@ class Reservation < ActiveRecord::Base
     end
 
     def calculate_total_cost
-      # NB: use of 'size' not 'count' here is deliberate - seats/periods may not be persisted at this point!
-      unit_prices = listing.unit_prices.reject { |unit_price| unit_price.price_cents.nil? }.sort_by { |unit_price| unit_price.period }.reverse
+      period_prices = listing.period_prices.reject { |period, price| price.nil? }.sort_by { |period, price| period }.reverse
       desk_days_to_apply = desk_days * Listing::MINUTES_IN_DAY
-      total = unit_prices.reduce(0) { |memo, unit_price|
-        applications = desk_days_to_apply / unit_price.period
-        desk_days_to_apply -= applications * unit_price.period
-        memo + applications * unit_price.price_cents
+      total = period_prices.reduce(0) { |memo, price_array|
+        # price array if of format [period, price], where period is integer and price is Money object 
+        applications = desk_days_to_apply / price_array[0].to_i
+        desk_days_to_apply -= applications * price_array[0].to_i
+        memo + applications * price_array[1].cents
       }
     end
 

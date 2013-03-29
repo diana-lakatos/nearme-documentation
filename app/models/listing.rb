@@ -2,16 +2,8 @@ class Listing < ActiveRecord::Base
 
   # Period constants for listing costs
 
-  PRICE_PERIODS = {
-    :free => nil,
-    :day => 'day'
-  }
-  MINUTES_IN_DAY = 1440
-  MINUTES_IN_WEEK = 10080
-  MINUTES_IN_MONTH = 43200
-
   has_many :reservations,
-           dependent: :destroy
+    dependent: :destroy
 
   has_many :photos,  as: :content, dependent: :destroy do
     def thumb
@@ -19,12 +11,18 @@ class Listing < ActiveRecord::Base
     end
   end
 
-  has_many :ratings,
-           as: :content,
-           dependent: :destroy
+  PRICE_PERIODS = {
+    :free => nil,
+    :day => 'day'
+  }
 
-  has_many :unit_prices,
-           dependent: :destroy
+  MINUTES_IN_DAY = 1440
+  MINUTES_IN_WEEK = 10080
+  MINUTES_IN_MONTH = 43200
+  has_many :ratings,
+    as: :content,
+    dependent: :destroy
+
 
   has_many :inquiries
 
@@ -44,40 +42,42 @@ class Listing < ActiveRecord::Base
 
 
   has_many :availability_rules,
-           :as => :target,
-           :dependent => :destroy
+    :as => :target,
+    :dependent => :destroy
 
   # === Callbacks
 
   validates_presence_of :location, :name, :description, :quantity, :listing_type_id
   validates_numericality_of :quantity
   validates_length_of :description, :maximum => 250
+  validates_with PriceValidator
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
-                  :name, :description, :daily_price, :weekly_price, :monthly_price,
-                  :availability_template_id, :availability_rules_attributes, :defer_availability_rules, :free,
-                  :photos_attributes, :listing_type_id
+    :name, :description, :daily_price, :weekly_price, :monthly_price,
+    :daily_price_cents, :weekly_price_cents, :monthly_price_cents, :availability_template_id, 
+    :availability_rules_attributes, :defer_availability_rules, :free,
+    :photos_attributes, :listing_type_id
+
 
   delegate :to_s, to: :name
 
+
+  monetize :daily_price_cents, :allow_nil => true
+  monetize :weekly_price_cents, :allow_nil => true
+  monetize :monthly_price_cents, :allow_nil => true
 
 
   acts_as_paranoid
 
   scope :featured, where(%{ (select count(*) from "photos" where content_id = "listings".id AND content_type = 'Listing') > 0  }).
-                   includes(:photos).order(%{ random() }).limit(5)
+    includes(:photos).order(%{ random() }).limit(5)
 
   scope :latest,   order("listings.created_at DESC")
 
   include Search
-  extend PricingPeriods
   include AvailabilityRule::TargetHelper
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :photos, :allow_destroy => true
-
-  add_pricing_period :daily, MINUTES_IN_DAY
-  add_pricing_period :weekly, MINUTES_IN_WEEK
-  add_pricing_period :monthly, MINUTES_IN_MONTH
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
@@ -125,6 +125,15 @@ class Listing < ActiveRecord::Base
     reservations.not_rejected_or_cancelled.joins(:periods).where(:reservation_periods => { :date => date }).sum(:quantity)
   end
 
+  def prices
+    [daily_price, weekly_price, monthly_price]
+  end
+
+  def period_prices
+    # day = 1440 minutes, week = 10080 minutes, month = 43200 minutes
+    {MINUTES_IN_DAY => daily_price, MINUTES_IN_WEEK => weekly_price, MINUTES_IN_MONTH => monthly_price}
+  end
+
   def price_period
     if free?
       PRICE_PERIODS[:free]
@@ -134,36 +143,22 @@ class Listing < ActiveRecord::Base
   end
 
   def free?
-    price.nil? || price == 0.0
+    if persisted?
+      (daily_price_cents.to_f + weekly_price_cents.to_f + monthly_price_cents.to_f) == 0.0
+    else
+      @marked_free
+    end
   end
   alias_method :free, :free?
 
+
   def free=(free_flag)
-    if free_flag.present? && free_flag.to_i == 1
-      self.price = nil
+    @marked_free = free_flag
+    if free_flag.present? && free_flag
+      daily_price = nil
+      weekly_price = nil
+      monthly_price = nil
     end
-  end
-
-  def price
-    daily_price
-  end
-
-  def price=(price)
-    self.daily_price = price
-  end
-
-  def price_cents
-    daily_period.price_cents
-  end
-
-  def price_cents= price
-    daily_period.price_cents = price
-    daily_period.save if daily_period.persisted?
-  end
-
-  def parse_price(price)
-    price = price.to_f
-    price > 0 ? price : 0
   end
 
   def rate_for_user(rating, user)

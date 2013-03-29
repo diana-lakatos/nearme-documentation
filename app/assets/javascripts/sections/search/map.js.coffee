@@ -37,7 +37,7 @@ class Search.Map
     @cacheMarkers()
 
   initializeGoogleMap: ->
-    @googleMap = SmartGoogleMap.createMap(@container, {
+    @googleMap = new google.maps.Map(@container, {
       zoom: 8,
       minZoom: 4,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -67,7 +67,7 @@ class Search.Map
   # Adds one of our custom map controls to the map
   addControl: (control) ->
     control.setMap(@googleMap)
-
+  
   # Clears any plotted listings and resets the map
   resetMapMarkers: ->
     if @markers
@@ -164,7 +164,14 @@ class Search.Map
 
   fitBounds: ->
     @googleMap.fitBounds(@bounds) unless @bounds.isEmpty()
-
+  
+  resizeToFillViewport: ->
+    offset = $(@container).offset()
+    viewport = $(window).height()
+    $(@container).height(viewport - offset.top)
+    _.defer => google.maps.event.trigger(@googleMap, 'resize')
+    true
+  
   # Return an array of [nx, ny, sx, sy] coordinates
   getBoundsArray: ->
     bounds = @googleMap.getBounds()
@@ -193,3 +200,9 @@ class Search.Map
   cacheMarkers: ->
     # hack if css sprites cannot be used
     $('body').append("<div style='display:none;'><img src='/assets/google-maps/marker-images/hover-2x.png' /><img src='/assets/google-maps/marker-images/default-2x.png' /></div>")
+  
+  show: ->
+    $(@container).show()
+    
+  hide: ->
+    $(@container).hide()
