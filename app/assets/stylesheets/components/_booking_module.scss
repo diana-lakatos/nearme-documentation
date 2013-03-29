@@ -2,7 +2,14 @@
   position: absolute; 
   top: 0;
   right: 0;
-  width: 260px;
+  width: 280px;
+
+  @media (max-width: 640px) {
+    position: relative;
+    float: right; 
+    clear: both;
+  }
+
 
   .booking-module {
     position: relative;
@@ -31,6 +38,7 @@
       @include border-radius(8px);
       background: $gray2;
       color: $gray6;
+      width: 95px;
 
       &.date-end {
         float: right;

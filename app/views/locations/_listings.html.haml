@@ -6,7 +6,7 @@
         .listing-photo-container
           .images
             - if listing.photos.any?
-              .image{:style => "margin-right: 15px;"}
+              .image
                 = image_tag listing.photos.first.url(:space_listing)
         .listing-description-container
           %h3.listing-name

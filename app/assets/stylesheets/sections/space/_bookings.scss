@@ -1,17 +1,41 @@
 #space, .space {
 
+  .listing.box {
+    overflow: hidden;
+    height: auto;
+    @media (min-width: 768px) {
+      height: 208px;
+    }
+  }
+
   .listing-photo-container {
     position: absolute;
     left: 0;
     top: 0;
-    width: 270px;
+    height: 208px;
+    width: 350px;
+
+    @media (max-width: 767px) {
+      position: relative;
+      float: left; 
+      clear: both;
+      width: 100%;
+      height: auto;
+    }
   }
 
   .listing-description-container {
     float: left;
     width: 100%;
-    padding: 0 280px;
+    padding: 0 280px 0 346px;
     @include box-sizing(border-box);
+
+    @media (max-width: 767px) {
+      float: left; 
+      clear: both;
+      width: 100%;
+      padding: 0;
+    }    
   }
 
   .truncated-ellipsis {

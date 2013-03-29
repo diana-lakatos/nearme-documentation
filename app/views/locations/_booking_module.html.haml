@@ -11,10 +11,10 @@
         %span.ico-calender
         %span.calendar-text End
     .quantity
-      %span.resource Desks
+      %span.resource= listing.listing_type.name.pluralize
       = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity' 
     .price
-      Total:
+      Total
       %span #{currency_content_tag(@location.currency)}
 
     .book
