@@ -47,6 +47,6 @@ $font-bold: 'Futura-heavy', sans-serif;
 
 // Z index
 
-$nav-z-index: 1030;
 $modal-z-index: 1000;
+$nav-z-index: $modal-z-index - 2; // -1 is overlay, so it must be lower than overlay, that's why -2
 $absolute-top-z-index: 9000;
