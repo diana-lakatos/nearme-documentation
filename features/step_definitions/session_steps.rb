@@ -40,3 +40,7 @@ Then /^#{capture_model} should have password "([^"]*)"$/ do |user_instance, pass
   user = model!(user_instance)
   user.valid_password?(password).should be_true
 end
+
+Then /^I should see an indication I've just signed in$/ do
+  step 'I should see "You have signed up successfully."'
+end

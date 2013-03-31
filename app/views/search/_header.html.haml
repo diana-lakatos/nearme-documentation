@@ -1,0 +1,29 @@
+- content_for :hero do
+  %header#listing_search.container-fluid  
+    .header-inner
+      %form.search_results{:action => search_path(v: result_view), :method => "get"}
+        - search_geofields.each do |geofield|
+          = hidden_field_tag geofield, ''
+        = hidden_field_tag :v, result_view
+        .row-fluid
+          .span12
+            .list-map-toggle
+              %a.map{ href: search_path(params.merge(v: 'map')), class: result_view == 'map' ? 'active' : nil, title: 'Map' }
+                %span.ico-marker
+              %a.list{ href: search_path(params.merge(v: 'list')), class: result_view == 'list' ? 'active' : nil, title: 'List' }
+                %span.ico-list
+            .search-container 
+              %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => query, :class => "query", :autocomplete => "off"}
+              .geolocation
+                %span.ico-crosshairs
+              .search-icon
+                %span.ico-search                
+            .calendar-container.hidden-phone
+              .three.columns.availability-date-start
+                = text_field_tag "availability[dates][start]", search_availability_dates_start, :autocomplete => "off", :placeholder => "Start"
+                .calendar
+                  %span.ico-calender
+              .three.columns.availability-date-end
+                = text_field_tag "availability[dates][end]", search_availability_dates_end, :autocomplete => "off", :placeholder => "End"
+                .calendar
+                  %span.ico-calender

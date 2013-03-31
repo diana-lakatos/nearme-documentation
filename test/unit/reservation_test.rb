@@ -120,7 +120,7 @@ class ReservationTest < ActiveSupport::TestCase
         assert reservation = @listing.reserve!(@user, dates, quantity)
 
         # listing cost * 4 days * 5 people :)
-        assert_equal @listing.price_cents * dates.size * quantity, reservation.total_amount_cents
+        assert_equal @listing.daily_price_cents * dates.size * quantity, reservation.total_amount_cents
       end
 
       should "not reset total cost when saving an existing reservation" do

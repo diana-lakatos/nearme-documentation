@@ -1,0 +1,31 @@
+- legacy false
+- content_for :hero do
+  = render 'search/header'
+  %section#map.google-map-wrapper
+    .google-map
+      #listings_map.inner
+
+- content_for :loading do
+  .loading{ style: 'display: none;' }
+    = image_tag "spinner.gif"
+
+- if listings.any?
+  - unique_listings = listings.uniq { |l| l.location_id }
+  %section#results.map
+    = render partial: 'search/map/listing', collection: unique_listings
+    = yield :loading
+- else
+  %section#results.no_results.map
+    .span3
+      = image_tag "marker_missing.png"
+    .span9
+      %br/
+      %br/
+      %h1.tk-adelle.fat No results found
+      %p Try a different location or a post code. Make sure the location is properly formatted and include the city and state.
+      %p
+        Still cant find what your looking for? Why not #{link_to "create your own listing", new_space_wizard_path}!
+    = yield :loading
+
+- content_for :domready do
+  new Search.SearchController($('#listing_search form'), $("section#content.search"))

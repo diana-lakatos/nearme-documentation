@@ -26,7 +26,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   test "update should be successful" do
     listing = get_authenticated_listing
     new_name = 'My listing'
-    put :update, id: listing, listing: { name: new_name }, format: 'json'
+    put :update, id: listing, listing: { name: new_name, daily_price: "10-50" }, format: 'json'
     listing = Listing.find(listing.id)
     assert_equal new_name, listing.name
     assert_response :success

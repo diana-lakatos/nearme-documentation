@@ -38,7 +38,7 @@
             %li= amenity
 
       .span8
-        = render 'bookings'
+        = render :partial => 'bookings', :locals => { :selected_listing => @listing }
 
 - content_for :script do
   :javascript

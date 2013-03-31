@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130316165122) do
+ActiveRecord::Schema.define(:version => 20130323132053) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -135,6 +135,9 @@ ActiveRecord::Schema.define(:version => 20130316165122) do
     t.boolean  "confirm_reservations"
     t.boolean  "delta",                   :default => true, :null => false
     t.integer  "listing_type_id"
+    t.integer  "daily_price_cents"
+    t.integer  "weekly_price_cents"
+    t.integer  "monthly_price_cents"
   end
 
   create_table "location_amenities", :force => true do |t|

@@ -6,7 +6,6 @@ class ListingTest < ActiveSupport::TestCase
   should belong_to(:listing_type)
   should have_many(:reservations)
   should have_many(:ratings)
-  should have_many(:unit_prices)
 
   should validate_presence_of(:location)
   should validate_presence_of(:name)
@@ -14,6 +13,7 @@ class ListingTest < ActiveSupport::TestCase
   should validate_presence_of(:quantity)
   should validate_presence_of(:listing_type_id)
   should validate_numericality_of(:quantity)
+
   should allow_value('x' * 250).for(:description)
   should_not allow_value('x' * 251).for(:description)
 
@@ -21,19 +21,67 @@ class ListingTest < ActiveSupport::TestCase
     @listing = FactoryGirl.build(:listing)
   end
 
-  test "setting the price with hyphens" do
-    @listing.daily_price = "50-100"
-    assert_equal 5000, @listing.price_cents
-  end
+  context "free flag and prices" do
 
-  test "price with other strange characters" do
-    @listing.daily_price = "50.0-!@\#$%^&*()100"
-    assert_equal 5000, @listing.price_cents
-  end
+    should "not valid if free flag is false and no prices are provided" do
+      @listing.free = false
+      @listing.daily_price = nil
+      @listing.weekly_price = nil
+      @listing.monthly_price = nil
+      assert !@listing.valid?
+    end
 
-  test "negative price is 0" do
-    @listing.daily_price = "-100"
-    assert_equal 0, @listing.price_cents
+    should "not valid if free flag is nil and no prices are provided" do
+      @listing.free = nil
+      @listing.daily_price = nil
+      @listing.weekly_price = nil
+      @listing.monthly_price = nil
+      assert !@listing.valid?
+    end
+
+    should "not valid if free flag is nil and prices are 0" do
+      @listing.free = nil
+      @listing.daily_price = 0.0
+      @listing.weekly_price = 0
+      @listing.monthly_price = nil
+      assert !@listing.valid?
+    end
+
+    should "valid if free flag is true and no prices are provided" do
+      @listing.free = true
+      @listing.daily_price = nil
+      @listing.weekly_price = nil
+      @listing.monthly_price = nil
+      @listing.save
+      assert @listing.valid?
+    end
+
+    should "valid if free flag is false and at daily price is greater than zero" do
+      @listing.free = true
+      @listing.daily_price = 1.0
+      @listing.weekly_price = nil
+      @listing.monthly_price = nil
+      @listing.save
+      assert @listing.valid?
+    end
+
+    should "valid if free flag is false and at weekly price is greater than zero" do
+      @listing.free = true
+      @listing.daily_price = 0
+      @listing.weekly_price = 1.0
+      @listing.monthly_price = nil
+      @listing.save
+      assert @listing.valid?
+    end
+
+    should "valid if free flag is false and at monthly price is greater than zero" do
+      @listing.free = true
+      @listing.daily_price = 0
+      @listing.weekly_price = 0
+      @listing.monthly_price = 5
+      @listing.save
+      assert @listing.valid?
+    end
   end
 
   context "first available date" do

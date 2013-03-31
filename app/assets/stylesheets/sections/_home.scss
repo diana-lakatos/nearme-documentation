@@ -58,7 +58,7 @@ section.public {
   h1 {
     display: block;
     float: left;
-    font:normal 48px/54px $font-regular, sans-serif;
+    font:400 48px/54px $font-regular, sans-serif;
     color: $light-gray;
     margin-bottom: 10px;
     @include text-shadow(black 0 0 5px, black 0 0 8px, black 0 0 10px, black 0 0 20px, black 0 0 30px);
@@ -140,7 +140,6 @@ section.how-it-works {
   h1{
     @include adjust-font-size-to(60px);
     margin: 10px 0 0;
-    font-weight: 900;
     color: $gray8;
 
     @media (max-width: 480px) {
