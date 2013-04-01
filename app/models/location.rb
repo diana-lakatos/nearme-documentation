@@ -29,7 +29,7 @@ class Location < ActiveRecord::Base
 
   has_many :availability_rules, :as => :target
 
-  validates_presence_of :company, :name, :description, :address, :latitude, :longitude, :location_type_id, :currency
+  validates_presence_of :company, :description, :address, :latitude, :longitude, :location_type_id, :currency
   validates :email, email: true, allow_nil: true
   validates :currency, currency: true, allow_nil: false
   validates_length_of :description, :maximum => 250
@@ -60,6 +60,10 @@ class Location < ActiveRecord::Base
 
   def admin?(user)
     creator == user
+  end
+
+  def name
+    super.presence || company.name
   end
 
   def currency

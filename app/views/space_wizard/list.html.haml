@@ -3,9 +3,9 @@
 
   = simple_form_for @company, :url => space_wizard_list_url, :validate => true, :html => { :class => "form-horizontal new_company", :multipart => true } do |f|
 
-    = f.simple_fields_for :locations, @location do |locations_form|
+    = f.input :name, :label => 'Company name'
 
-      = locations_form.input :name, :label => 'Location name', :placeholder => 'For example, "Twitter Headquarters" or "Empire State Building".'
+    = f.simple_fields_for :locations, @location do |locations_form|
 
       = locations_form.input :description, :label => 'Location description', :placeholder => 'Describe the overall look, feel, and ambience of your location.', :input_html => { :maxlength => 250, :rows => 2 }
 
