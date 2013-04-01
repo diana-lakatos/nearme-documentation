@@ -15,9 +15,9 @@
 }
 
 .modal-wrapper {
-  background: #f5f5f5;
+  background: $gray1;
   //border: 1px solid #ffffff;
-  @include border-radius(8px);
+  @include border-radius($border-radius);
   @include box-shadow(
     0 0 6px 0 rgba(0,0,0,0.5),
     inset 0 0 0 1px #fff
