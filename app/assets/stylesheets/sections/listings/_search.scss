@@ -343,7 +343,6 @@ section.search section#results.list {
   article.listing {
     position: relative;
     border-bottom: 1px solid $gray5;
-    padding-right: 20px;
 
     .span8 {
       max-height: 254px !important;
@@ -409,7 +408,7 @@ section.search section#results.list {
     aside.prices {
       position: absolute;
       z-index: 101;
-      right: 20px;
+      right: 10px;
       bottom: 10px;
 
       .label {
