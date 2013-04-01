@@ -22,3 +22,4 @@ bin/
 tags
 dump.rdb
 .eyrc
+.idea/*
