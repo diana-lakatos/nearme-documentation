@@ -1,4 +1,21 @@
 namespace :populate do
+  desc "Populates unit prices"
+  task :prices => :environment do
+    {"daily_price_cents" => 1440, "weekly_price_cents" => 10080, "monthly_price_cents" => 43200}.each do |column, period|
+       ActiveRecord::Base.connection.execute("
+          UPDATE listings AS l
+          SET #{column} = up.price_cents
+          FROM unit_prices AS up
+          WHERE l.id = up.listing_id
+            AND up.period = #{period}
+            AND (
+              l.#{column} IS NULL 
+              OR l.#{column} = 0
+            )
+
+        ")
+    end
+  end
 
   desc "Populates missing amenities and ensures they belong to the right amenity type"
   task :amenities => :environment do
