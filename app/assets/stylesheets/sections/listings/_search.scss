@@ -102,10 +102,14 @@ section.search#content {
 
 #listing_search {
   position: relative;
+
+  .span9 {
+    position: relative;
+  }
   
   .geolocation, .search-icon {
     position: absolute;
-    top: 17px;
+    top: 10px;
     border: 0;
     background: transparent;
     @include transition(all .1s ease-in);
@@ -119,18 +123,11 @@ section.search#content {
       @include opacity(.95);
     }
   }
-  
+
   .geolocation {
-    left: 17px;
-    
-    &.no-bookings {
-      position: relative;
-      top: -48px;
-      left: 10px;
-      height: 20px;
-    }
+    left: 10px;
   }
-  
+    
   .search-icon {
     right: 17px;
   }
@@ -139,12 +136,6 @@ section.search#content {
     padding: 8px 0 8px 50px;
   }
   
-}
-
-form#listing_search {
-  display: block;
-  height: 49px;
-  overflow: hidden;
 }
 
 header#listing_search {
