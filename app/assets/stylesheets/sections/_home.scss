@@ -78,13 +78,6 @@ section.public {
     border-radius: 12px;
     @include box-sizing(border-box);
 
-    .geolocation.no-bookings {
-      top:-40px;
-
-      @media (max-width: 768px) {
-        top:-48px;
-      }
-    }
   }
 
   h2 {
