@@ -67,6 +67,7 @@ group :assets do
   gem 'chosen-rails'
   gem 'rails-backbone'
   gem 'jquery-fileupload-rails'
+  gem 'uglifier'
 end
 
 
