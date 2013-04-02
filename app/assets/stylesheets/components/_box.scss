@@ -4,7 +4,6 @@
   @include border-radius($border-radius);
   @include background-clip(border-box);
   @include box-sizing(border-box);
-  overflow: hidden;
   margin-bottom: 20px;
   background: $dnm-white;
   padding: $padding;
