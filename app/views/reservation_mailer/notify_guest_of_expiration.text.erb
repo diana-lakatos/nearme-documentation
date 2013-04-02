@@ -1,4 +1,4 @@
-Your booking at <%= @listing.location.name %> has expired.
+Your booking at <%= @listing.location.name %> has expired, because the host didn't confirm within 24 hours.
 
 <%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } -%>
 
