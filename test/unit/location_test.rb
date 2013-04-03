@@ -7,7 +7,6 @@ class LocationTest < ActiveSupport::TestCase
   should have_many(:listings)
 
   should validate_presence_of(:company)
-  should validate_presence_of(:name)
   should validate_presence_of(:description)
   should validate_presence_of(:address)
   should validate_presence_of(:latitude)
@@ -21,6 +20,16 @@ class LocationTest < ActiveSupport::TestCase
 
   should allow_value('x' * 250).for(:description)
   should_not allow_value('x' * 251).for(:description)
+
+  context "#name" do
+    should "use company name if location name is nil" do
+      @location = FactoryGirl.create(:location_in_san_francisco)
+      @location.name = nil
+      @location.save!
+      @location.reload
+      assert_equal @location.company.name, @location.name
+    end
+  end
 
   context "#description" do
     context "when not set" do
