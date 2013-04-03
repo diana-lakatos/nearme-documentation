@@ -20,16 +20,16 @@ class DashboardController < ApplicationController
 
   #routes
   def manage_guests
-    @locations  = current_user.locations.all
+    @locations  = current_user.companies.first.locations
     @guest_list ||= current_user.listing_reservations.upcoming
   end
 
   def locations
-    @locations ||= current_user.locations.all
+    @locations ||= current_user.companies.first.locations.all
   end
 
   def listings
-    @listings = current_user.listings.all
+    @listings = current_user.companies.first.listings.all
   end
 
   def bookings
