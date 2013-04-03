@@ -16,15 +16,15 @@ class ListingWebSerializer < ApplicationSerializer
   end
 
   def daily_price
-    object.daily_price.cents / 100 if object.daily_price
+    object.daily_price_cents / 100 if object.daily_price
   end
 
   def weekly_price
-    object.weekly_price.cents / 100 if object.weekly_price
+    object.weekly_price_cents / 100 if object.weekly_price
   end
 
   def monthly_price
-    object.monthly_price.cents / 100 if object.monthly_price
+    object.monthly_price_cents / 100 if object.monthly_price
   end
 
   def availability_template_id

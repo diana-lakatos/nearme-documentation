@@ -68,7 +68,7 @@ img {
 
 strong {
   font-family: $font-bold;
-  font-weight: 700;
+  font-weight: normal;
 }
 
 .truncated-ellipsis {
@@ -136,7 +136,7 @@ hr,
 }
 
 .divider {
-  margin: 40px 0;
+  margin: 20px 0;
 
   &.small {
     margin: 20px 0;

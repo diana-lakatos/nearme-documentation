@@ -95,4 +95,4 @@ Feature: A user can login
     Given There is no user with my email
      When I manually sign up with valid credentials
      Then I am correctly signed in
-      And I should see "You have signed up successfully."
+      And I should see an indication I've just signed in

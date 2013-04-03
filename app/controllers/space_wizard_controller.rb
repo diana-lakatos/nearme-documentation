@@ -4,6 +4,7 @@ class SpaceWizardController < ApplicationController
   before_filter :find_company, :except => [:new]
   before_filter :find_location, :except => [:new]
   before_filter :find_listing, :except => [:new]
+  before_filter :convert_price_params, only: [:submit_listing]
 
   def new
     flash.keep(:notice)
@@ -85,6 +86,13 @@ class SpaceWizardController < ApplicationController
     if @location && @location.listings.any?
       @listing = @location.listings.first
     end
+  end
+
+  def convert_price_params
+    # method to_f removes all special characters, like hyphen. However we do not want to convert nil to 0, that's why modifier.
+    params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:daily_price] = params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:daily_price].to_f if params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:daily_price]
+    params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:weekly_price] = params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:weekly_price].to_f if params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:weekly_price]
+    params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:monthly_price] = params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:monthly_price].to_f if params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:monthly_price]
   end
 
 end

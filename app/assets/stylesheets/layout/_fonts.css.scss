@@ -40,19 +40,21 @@ textarea,
 select,
 p {
   font:400 18px/28px $font-regular, sans-serif;
-  color: $gray7;
+  color: $gray6;
 }
 
-h1 {
-  font-family: $font-demi, sans-serif;
-  color: $gray8;
-}
- 
-h2, 
-h3, 
-h4, 
-h5 {
+h1,
+h1 a, 
+h2,
+h2 a, 
+h3,
+h3 a, 
+h4,
+h4 a, 
+h5,
+h5 a {
   font-family: $font-medium, sans-serif;
+  font-weight: normal;
   color: $gray7;
 }
 
@@ -97,3 +99,15 @@ address {
     @include opacity(.7);
   }
 }
+
+p.notice {
+  font-size: 12px;
+  color: gray2;
+  margin: .5em 0;
+  font-weight: 600px;
+  @include opacity(.7);
+
+  &:hover {
+    @include opacity(1);
+  } 
+} 

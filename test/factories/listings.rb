@@ -8,25 +8,23 @@ FactoryGirl.define do
     location
     association :listing_type
     confirm_reservations true
-    after(:create) do |listing|
-      listing.unit_prices << FactoryGirl.create(:unit_price, listing: listing)
-    end
+    daily_price_cents 5000
 
     factory :free_listing do
       after(:create) do |listing|
-       listing.price_cents = 0
+        listing.daily_price_cents = 0
       end
     end
 
     factory :hundred_dollar_listing do
       after(:create) do |listing|
-       listing.price_cents = 100_00
+        listing.daily_price_cents = 100_00
       end
     end
 
     factory :call_listing do
       after(:create) do |listing|
-       listing.price_cents = nil
+        listing.daily_price_cents = nil
       end
     end
 

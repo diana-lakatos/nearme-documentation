@@ -57,4 +57,8 @@ class @GoogleMapPopover
       @close()
 
     wrapper.find('.google-map-popover-content').html(content)
+
+    wrapper.find('.listing-sibling').on 'click', (event) ->
+      location.href = $(@).attr('data-link')
+
     wrapper[0]

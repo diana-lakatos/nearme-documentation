@@ -58,7 +58,7 @@ section.public {
   h1 {
     display: block;
     float: left;
-    font:normal 48px/54px $font-regular, sans-serif;
+    font:400 48px/54px $font-regular, sans-serif;
     color: $light-gray;
     margin-bottom: 10px;
     @include text-shadow(black 0 0 5px, black 0 0 8px, black 0 0 10px, black 0 0 20px, black 0 0 30px);
@@ -78,13 +78,6 @@ section.public {
     border-radius: 12px;
     @include box-sizing(border-box);
 
-    .geolocation.no-bookings {
-      top:-40px;
-
-      @media (max-width: 768px) {
-        top:-48px;
-      }
-    }
   }
 
   h2 {
@@ -140,8 +133,8 @@ section.how-it-works {
   h1{
     @include adjust-font-size-to(60px);
     margin: 10px 0 0;
-    font-weight: 900;
     color: $gray8;
+    font-family: $font-demi;
 
     @media (max-width: 480px) {
       @include adjust-font-size-to(42px);
@@ -151,7 +144,7 @@ section.how-it-works {
   h2{
     @include adjust-font-size-to(30px);
     margin: 10px 0 20px;
-    color: $gray7;
+    color: lighten($gray7, 10%);
 
     @media (min-width: 768px) and (max-width: 900px) {
       @include adjust-font-size-to(24px);

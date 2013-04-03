@@ -5,6 +5,7 @@ end
 When /^I search without setting a date range$/ do
   visit search_path
   search_for(latest_listing.address)
+  wait_until_results_are_returned
 end
 
 When /^I search with a date range covering the date it is fully booked$/ do
@@ -30,6 +31,10 @@ When /^I leave the page and hit back$/ do
   page.evaluate_script('window.history.back()')
 end
 
+When /^I view the results in the (map|list) view$/ do |view|
+  click_link view.titlecase
+end
+
 Then /^all the listings are included in the search results$/ do
   Listing.all.each do |listing|
     page.should have_content listing.name
@@ -37,7 +42,7 @@ Then /^all the listings are included in the search results$/ do
 end
 
 Then /^I see the listings on a map$/ do
-  page.should have_css('div#listings_map')
+  page.should have_css('#listings_map')
 end
 
 Then /^that listing is( not)? included in the search results$/ do |not_included|

@@ -1,31 +1,46 @@
-section.search {
-  min-height:900px;
+section.search#content {
+  padding-top: 30px;
+  min-height: 800px;
+
+  footer {
+    display: none;
+  }
 
   .loading {
-    margin: 100px auto;
-    width: 30px;
+    position: absolute;
+    top: 160px;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+    padding: 8px;
+    width: 32px;
+    height: 32px;
+    background: #e6e6e6;
+    @include border-radius(8px);
+    z-index: 1002;
   }
-
-  .google-map-wrapper {
-    margin-bottom: 12px;
-  }
-
+  
   .google-map-wrapper, .google-map .inner {
-    height: 300px;
-
+    z-index: 1001;
+    
     @media (max-width: 480px) {
       height: 150px;
     }
   }
-
+  
+  #results.no_results {
+     padding: 40px 0;
+     z-index: 1000;
+     
+     &.map {
+       position: absolute;
+       top: 110px;
+     }
+  }
+  
   div.google-map {
-    background: #FFF;
     background: $gray2;
-    padding: 3px;
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -o-border-radius: 6px;
-    margin: 12px 0;
+    margin: 0;
 
     &.affix {
       z-index: $nav-z-index - 30;
@@ -44,10 +59,6 @@ section.search {
     }
 
     .inner {
-      border: 1px solid #CCC;
-      border-radius: 6px;
-      -moz-border-radius: 6px;
-      -o-border-radius: 6px;
       height: 300px;
 
       @media (max-width: 480px) {
@@ -65,38 +76,18 @@ section.search {
         font-size: 14px;
       }
     }
+  }
+}
 
-    .map-popover-content {
-      padding-left: 20px;
-      font-size: 15px;
-      position: relative;
+.google-map-popover-content .listing-sibling {
+  overflow: hidden;
+  cursor: pointer;
+}
 
-      h2 {
-        font-size: 16px;
-        margin: 0;
-        line-height: 20px;
-
-        a {
-          color: $dnm_black;
-
-          &:hover {
-            color: $dnm_blue;
-          }
-        }
-      }
-
-      address {
-        .ico-marker {
-          width: 17px;
-          display: inline-block;
-          margin-left: -20px;
-        }
-      }
-
-      p {
-        margin-bottom: 0;
-      }
-    }
+.listing-map-popover-content {
+  
+  .ico-close {
+    font-size: 50%;
   }
 }
 
@@ -110,218 +101,351 @@ section.search {
 }
 
 #listing_search {
-  .geolocation {
+  position: relative;
+
+  .span9 {
+    position: relative;
+  }
+  
+  .geolocation, .search-icon {
     position: absolute;
-    top: 17px;
-    left: 17px;
+    top: 9px;
     border: 0;
     background: transparent;
     @include transition(all .1s ease-in);
     font-size: 32px;
+    width: 34px;
     @include opacity(.6);
     color: $dnm_black;
     cursor: pointer;
-
+    
     &:hover {
       @include opacity(.95);
     }
-
-    &.no-bookings {
-      position: relative;
-      top: -48px;
-      left: 10px;
-      height: 20px;
-    }
   }
 
-  &.home_search input#search {
-    padding: 8px 0 8px 50px;
-    width: 100%;
-    float:left;
-  }
-
-  &.search_results .geolocation {
-    top: 9px;
+  .geolocation {
     left: 10px;
   }
-
-  &.search_results {
-    .availability-quantity, .price-range, .amenities {
-      margin: 10px 0 0;
-    }
+    
+  .search-icon {
+    right: 17px;
   }
-
-  .slider {
-    float: left;
-    margin-left: 12px;
-    margin-top: 6px;
-    width: 180px;
+  
+  input#search {
+    padding: 8px 0 8px 50px;
   }
+  
+}
 
-  label {
-    font-size: 16px;
+header#listing_search {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 60px;
+  height: 60px;
+  max-width: none;
+  margin: 0 auto;
+  padding: 0 10px;
+  z-index: 1000;
+  overflow: hidden;  
+  background: $gray2;
+ 
+  
+  .header-inner {
+    position: relative;
+    max-width: 1360px;
+    margin: 0 auto;
   }
+  
+  .list-map-toggle {
+    @include border-radius($border-radius);
+    background: $dnm_white;
+    position: absolute;
+    top: 5px;
+    left: 0px;
+    width: 100px;
+    height: 49px;
 
-  .value {
-    float: left;
-    margin-left: 20px;
-    font-size: 16px;
-
-    @media (max-width: 480px) {
-      font-size: 14px;
-    }
-  }
-  .price-range .value {
-    margin-left:30px;
-  }
-
-  // On the search results page bar
-  &.search_results {
-    label {
-      float: left;
-      margin-right: 0;
-    }
-
-    .span6 {
-      position: relative;
-    }
-    .slider {
-      width: 60%;
-    }
-
-    input#search {
-      position: relative;
-      padding: 8px 0 8px 50px;
+    a.map,
+    a.list {  
+      position: absolute;
+      display: block;
+      z-index: 100;
+      height:45px;
+      width: 45px;
       background: $dnm_white;
-      border: 2px solid #ebebeb;
+      @include border-radius($border-radius);
+      border: 2px solid $dnm_white;
+      font-size: 24px;
+      line-height: 45px;
+      text-align: center;
+      color: $gray5; 
 
-      &:focus {
-        border: 2px solid rgb(200,200,200);
+      &.active {
+        background: $gray4;
+        color: $gray6;
+        border: 2px solid $gray4;
       }
     }
 
-    .associations {
-      height: 24px;
+    a.map {
+      top: 0;
+      left: 51px;
     }
 
-    .multiselect {
-      margin: -4px 0 0;
-      width: 100%;
+    a.list {
+      top: 0;
+      left: 0px;
+    }
+  }
+  
+  nav.search-view {
+    height: 49px;
+    margin-top: 5px;
+    
+    a {
+      @include border-radius(4px);
+      text-align: center;
+      background: #ebebeb; // Needs better color
+      line-height: 49px;
+      
+      color:rgb(30,30,30);
+    }
+    
+    a:hover {
+      background: $gray;
+      color: #FFF;
+    }
+    
+    a span {
+      line-height: 49px;
+      font-size: 24px;
+    }
+    
+  }
+  
+  form {
+    max-width: 1400px;
+    margin: 0 auto;
 
-      @media (max-width: 767px) {
-        margin-left: 0;
+    input {
+      margin-top: 5px;
+      margin-bottom: 0px;
+    }
+    
+    &.search_results {
+      
+      .geolocation {
+        top: 13px;
+        left: 118px;
       }
-    }
-
-    .availability-date-start {
-      position: relative;
-      float: left;
-      width: 49%;
-      margin-right: 2%;
-    }
-
-    .availability-date-end {
-      position: relative;
-      float: left;
-      width: 49%;
-    }
-
-    .availability-date-start, .availability-date-end {
-      input {
-        width:100%;
-      }
-    }
-
-    .availability-date-start, .availability-date-end {
-      position: relative;
-
-      .calendar {
-        position: absolute;
-        top: 10px;
-        left: 10px;
+      
+      .search-icon {
         display: block;
-        font-size: 28px;
-        opacity: .6;
-      }
+        height: 34px;
+        padding: 6px 13px 0 0;
+        width: 67px;
+        background: image-url("components/form/right-fade.png") right top repeat-y;
+        top: 7px;
+        right:2px;
+        text-align: right;
+        @include opacity(1);
+        color: $gray5;
+        @include border-top-right-radius(12px);
+        @include border-bottom-right-radius(12px);
 
-      input {
-        padding-left: 50px;
-        width:100%;
+        &:hover {
+          color: $gray7;
+        }
+
+        @media (min-width: 768px) {
+          right: 222px;
+        }
+      }
+      
+      .search-container {
+        position: relative; 
+        float: left;
+        width: 100%;
+        padding-left: 110px;
         @include box-sizing(border-box);
-        background: $dnm_white;
 
+        @media (min-width: 768px) {
+          padding-right: 220px;
+        }
+
+        input#search {
+          display: block;
+          position: relative;
+          float: left;          
+          background: $dnm_white;
+          border: 2px solid #ebebeb;
+    
+          &:focus {
+            border: 2px solid rgb(200,200,200);
+          }
+        }
       }
-    }
+      
+      .calendar-container {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 215px;
+
+        .availability-date-start {
+          position: relative;
+          float: left;
+          width: 49%;
+          margin-right: 2%;
+        }
+    
+        .availability-date-end {
+          position: relative;
+          float: left;
+          width: 49%;
+        }
+    
+        .availability-date-start, .availability-date-end {
+          input {
+            width:100%;
+          }
+        }
+    
+        .availability-date-start, .availability-date-end {
+          position: relative;
+    
+          .calendar {
+            position: absolute;
+            top: 15px;
+            left: 13px;
+            display: block;
+            font-size: 28px;
+            @include opacity(.6);
+          }
+    
+          input {
+            padding-left: 50px;
+            width:100%;
+            @include box-sizing(border-box);
+            background: $dnm_white;
+    
+          }
+        }
+      }      
+    }    
   }
 }
 
-.search-results {
+section.search section#results.list {
+  
   article.listing {
-    float: left;
-    width: 25%;
-    height: 350px;
-    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid $gray5;
 
-    &.focussed {
-      
-      h2, h2 a{
-        color: $dnm_blue;
-      }
-
-      span.label.label-success {
-        @include opacity(1);
-      }
+    .span8 {
+      max-height: 254px !important;
     }
 
-    @media (max-width: 960px) {
-      width: 33.333333333%;
-      height: 300px;
+    &:last-child {
+      border: none;
     }
 
-    @media (max-width: 650px) {
-      width: 50%;
-    }
-
-    @media (max-width: 450px) {
-      width: 100%;
-      height: auto;
-      margin-bottom: 1.5em;
-    }
-
-    span.label.label-success {
-      position: relative;
-      float:right;
-      margin: -36px 15px 0 0;
-      padding: 4px 6px;
-      text-shadow: none;
-      font-size: .75em;
-      @include opacity(.7);
-      @include transition(opacity, .5s);
-
-    }
-
-    h2 {
-      margin: 8px 16px 6px 0;
-      line-height: 32px;
-
-      a {
-        color: $gray8;
-      }
-    }
-    address {
-      padding-right: .75em;
-
-      @media (max-width: 767px) {
-        margin: 10px 0;
-      }
+    @media (max-width: 1400px) {
+      margin: 0 -20px;
     }
 
     img {
-      max-width:100%;
-      padding: 1px;
-      background: $dnm_white;
-      background: rgba(255, 255, 255, 0.6);
       display: block;
+    }
+
+    h2 {
+      margin: .25em 0;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+
+      @media( min-width: 768px) {
+        @include adjust-font-size-to(32px);
+      }
+
+      @media( max-width: 320px) {
+        @include adjust-font-size-to(16px);
+      }
+    }
+
+    .details-container {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    a {
+      color: $gray7;
+    }
+
+    h4.location-hours {
+      margin: .25em 0;
+      color: $gray5;
+      padding: 0 10px 0 0;
+
+      strong {
+        color: $gray6;
+        margin-right: 1em;
+      }
+
+      @media (max-width: 614px) {
+        display: none;
+      }
+    }
+
+    p.listing-description {
+      position: relative;
+      display: block;
+      margin: 1em 0;
+      padding: 0 20px 0 0;
+      color: darken($gray4, 10%);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 28px;
+
+    }
+
+    aside.prices {
+      position: absolute;
+      z-index: 101;
+      right: 10px;
+      bottom: 10px;
+
+      .label {
+        @media (min-width: 767px) {
+          padding: 6px 6px;
+          font-size: 18px;
+          font-weight: bold;
+          line-height: 14px;
+        }
+
+        @media (max-width: 320px) {
+          padding: 1px 2px;
+          font-size: 10px;
+          font-weight: bold;
+          line-height: 14px;
+        }
+      }
+    }
+
+    .span8 {
+      position: relative;
+
+      .bottom-fade {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 30px;
+        @include background-image(linear-gradient(rgba(250,250,250,0), $gray1));
+      }
     }
   }
 }

@@ -7,7 +7,7 @@
     %meta{:content => "Desks Near Me connects individuals and teams with office space across the globe, and provides a platform for businesses to list spare space.", :name => "description"}/
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
-    %meta{:content => "IE=edge,chrome=1", "http-equiv" => "X-UA-Compatible"}/
+    %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
     = yield(:meta)
     = csrf_meta_tag
     = tag :meta, :name => "stripe-key", :content => stripe_public_key
@@ -16,7 +16,9 @@
     = javascript_include_tag "https://js.stripe.com/v1/"
     = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
     = javascript_include_tag :application
-
+    /[if lt IE 8]
+    = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
+    = javascript_include_tag :chrome_frame
     :javascript
       try{Typekit.load();}catch(e){}
 

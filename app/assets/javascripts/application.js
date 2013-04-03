@@ -15,6 +15,7 @@
 //= require ./vendor/detect-mobile-browser
 //= require ./vendor/infobox
 //= require ./vendor/jquery.scrollto
+//= require ./vendor/placeholder
 //= require jquery-fileupload/basic
 //= require underscore
 //= require backbone
