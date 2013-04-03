@@ -66,6 +66,7 @@ class Location::SerializationTest < ActiveSupport::TestCase
     should "have no listings" do
       assert @json[:listings].empty?
     end
+
   end
 
   context "a location with listings" do
