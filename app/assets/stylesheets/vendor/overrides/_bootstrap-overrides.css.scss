@@ -116,7 +116,7 @@ abbr[data-original-title] {
 @mixin opacity($opacity) {
   opacity: $opacity;
   filter: alpha(opacity=$opacity);
-}    
+}
 
 @media (max-width: 767px) {
   // Make all grid-sized elements block level again
@@ -132,7 +132,7 @@ abbr[data-original-title] {
 }
 
 .hidden-iphone {
-  
+
   @media (max-width:480px) {
     display: none !important;
   }

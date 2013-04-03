@@ -7,19 +7,13 @@ class @PhotoUploader
   constructor : (container) ->
     @container = container
     @fileInput = container.find('.browse-file').eq(0)
-    @button = container.find('.fileinput-button').eq(0)
     @photos = container.find('.photo-item a')
     @uploaded = container.find('.uploaded').eq(0)
     @init()
   
   init : ->
-    @listenToTrigger()
     @listenToDeletePhoto()
     @initializeFileUploader()
-
-  listenToTrigger : ->
-    @button.click =>
-      @fileInput.trigger 'click'
 
   listenToDeletePhoto: ->
     @uploaded.on 'click', '.delete-photo', (event) ->
@@ -32,20 +26,29 @@ class @PhotoUploader
 
   initializeFileUploader : =>
     @fileInput.fileupload {
-        dataType: 'json',
         add: (e, data) =>
           @add(data)
         ,
         done:  (e, data) =>
+          data.result = @parseResult(data)
           @done(data)
         ,
         progress: (e, data) =>
+          data.result = @parseResult(data)
           @progress(data)
     }
 
   add: (data) =>
     @setPhotoItem(data.files[0].name)
     data.submit()
+
+  parseResult: (data) ->
+    if $.browser.msie
+      result_to_parse = $('pre', data.result).text()
+    else
+      result_to_parse = data.result
+    jQuery.parseJSON(result_to_parse)
+
 
 
   done: (data) =>
@@ -59,7 +62,7 @@ class @PhotoUploader
   progress: (data) =>
     progress = parseInt(data.loaded / data.total * 100, 10)
     @photoItem = @getPhotoItem(data.files[0].name)
-    @progressBar = @photoItem.find('.progress').eq(0)
+    @progressBar = @photoItem.find('.progress .bar').eq(0)
     @progressBar.css('width', progress + '%')
     if progress == 100
       @progressBar.css('width', 0 + '%')

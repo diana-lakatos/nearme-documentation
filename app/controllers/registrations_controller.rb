@@ -41,16 +41,16 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.avatar = params[:avatar]
     if @user.save
-      render :json => { :url => @user.avatar_url(:thumb).to_s, :destroy_url => destroy_avatar_path }
+      render :text => { :url => @user.avatar_url(:thumb).to_s, :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain' 
     else
-      render :json => [{:error => @user.errors.full_messages}], :status => 422
+      render :text => [{:error => @user.errors.full_messages}].to_json,:content_type => 'text/plain', :status => 422
     end
   end
 
   def destroy_avatar
     @user = current_user
     @user.remove_avatar!
-    render :json => {}, :status => 200
+    render :text => {}, :status => 200, :content_type => 'text/plain' 
   end
 
   protected

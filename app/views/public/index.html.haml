@@ -33,7 +33,7 @@
       %p Do business with trusted professionals quickly and easily using our secure dashboard.
   .row-fluid
     = link_to new_space_wizard_url, :class => "btn btn-blue btn-large" do
-      %span.ico-add-location.padding List Your Space
+      %span.ico-add-location.padding List Now
   %hr
   .row-fluid
     %h1
@@ -57,7 +57,7 @@
 
   .row-fluid.padding-bottom  
     = link_to search_path, :class => "btn btn-green btn-large" do
-      %span.ico-search.padding Find a Desk
+      %span.ico-search.padding Search Now
 
 - content_for :domready do
   new Search.HomeController($('#listing_search'))
