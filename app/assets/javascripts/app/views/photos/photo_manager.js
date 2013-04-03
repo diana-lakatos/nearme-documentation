@@ -8,10 +8,6 @@ PhotoManagerView = Backbone.View.extend({
     this.collection = this.options.collection;
   },
 
-  events: {
-    'click .fileinput-button': 'showFileSelector'
-  },
-
   //required by backend to create relation with parent element
   _getRefData: function() {
     return [{
@@ -20,6 +16,9 @@ PhotoManagerView = Backbone.View.extend({
     }, {
       name: 'content_id',
       value: this.getRefId() // can be null or not depending if parent exist.
+    }, {
+      name: 'token',
+      value: $('meta[name="auth-token"]').attr('content')
     }];
 
   },
@@ -29,10 +28,6 @@ PhotoManagerView = Backbone.View.extend({
     this.addAll();
     this.initUploader();
     return this;
-  },
-
-  showFileSelector: function(event) {
-    $('.browse-file', this.$el).trigger('click');
   },
 
   addAll: function() {
@@ -50,13 +45,14 @@ PhotoManagerView = Backbone.View.extend({
   initUploader: function() {
     var self = this;
     var token = $('meta[name="auth-token"]').attr('content');
+    var csrf_token = $('meta[name="csrf-token"]').attr('content');
     // Initialize the jQuery File Upload widget:
     $('.fileupload', this.$el).fileupload({
       headers: {
-        'Authorization': token
+        'Authorization': token,
+        'X-CSRF-Token': csrf_token
       },
-      dataType: 'json',
-      url: '/v1/photos',
+      url: '/v1/photos?photouploader=true',
       paramName: 'image',
       add: function(e, data) {
         var photoModel = new PhotoModel();
@@ -68,7 +64,14 @@ PhotoManagerView = Backbone.View.extend({
       },
       done: function(e, data) {
         var photoModel = self._findModelByFilename(data.files[0].name);
-        photoModel.set(data.result);
+        var result_to_parse;
+        if($.browser.msie){
+          result_to_parse = $('pre', data.result).text();
+        }
+        else{
+          result_to_parse = data.result;
+        }
+        photoModel.set(jQuery.parseJSON(result_to_parse));
       },
       progress: function(e, data) {
         var photoModel = self._findModelByFilename(data.files[0].name);

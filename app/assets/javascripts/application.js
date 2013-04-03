@@ -113,6 +113,14 @@ $(document).on('click', 'a[rel=submit]', function(e) {
   }
 });
 
+if($.browser.mozilla) {
+  $(document).on('click', 'label', function(e) {
+    if(e.currentTarget === this && e.target.nodeName !== 'INPUT') {
+      $(this.control).click();
+    }
+  });
+};
+
 function doListingGoogleMaps() {
   return;
   var locations = $(".map address"),
