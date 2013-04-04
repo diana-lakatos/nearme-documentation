@@ -30,13 +30,13 @@
     margin-left: -$padding;
     margin-right: -$padding;
     margin-bottom: $padding;
-    @include border-corner-radius(top, left, 6px);
-    @include border-corner-radius(top, right, 6px);
+    @include border-corner-radius(top, left, $border-radius);
+    @include border-corner-radius(top, right, $border-radius);
 
     li {
       float: left;
       color: $gray5;
-      font-size: 18px;
+      font-size: 22px;
       padding: 0 14px;
       width: 50%;
       @include box-sizing(border-box);
@@ -48,16 +48,11 @@
         border: none;
       }
 
-        @media (max-width: 960px) {
-          font-size: 14px;
-        }
-
         @media (max-width: 480px) {
           clear: both;
           width: 100%;
           border-right: none;
           border-bottom: 1px solid $gray1;
-          font-size: 22px;
          } 
 
       &.current {
@@ -124,7 +119,6 @@
       display: block;
       padding: 0 10px;
       line-height: 40px;
-      font-size: 14px;
       color: $gray2;
 
       &:hover {
