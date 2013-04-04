@@ -17,10 +17,8 @@
     = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
     = javascript_include_tag :application
     /[if lt IE 8]
-    = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
-    = javascript_include_tag :chrome_frame
-    :javascript
-      try{Typekit.load();}catch(e){}
+      = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
+      = javascript_include_tag :chrome_frame
 
     = render :partial => "layouts/analytics"
 
