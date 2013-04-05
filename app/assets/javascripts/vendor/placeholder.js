@@ -142,16 +142,26 @@
     function hidePlaceholder(elem) {
         var type;
         if (elem.value === elem.getAttribute(ATTR_CURRENT_VAL) && elem.getAttribute(ATTR_ACTIVE) === "true") {
-            elem.setAttribute(ATTR_ACTIVE, "false");
-            elem.value = "";
-            elem.className = elem.className.replace(classNameRegExp, "");
+          // check if this is IE8 element
+          var cloned_input_id_position = elem.id.indexOf("_placeholder_replacer");
+          if(cloned_input_id_position !== -1){
+            var real_id = elem.id.substr(0, cloned_input_id_position);
+            real_elem = elem.parentNode.getElementsByTagName('input')[1];
+            real_elem.parentNode.removeChild(elem);
+            elem = real_elem;
+            elem.removeAttribute("style");
+            elem.focus();
+          }
+          elem.setAttribute(ATTR_ACTIVE, "false");
+          elem.value = "";
+          elem.className = elem.className.replace(classNameRegExp, "");
 
-            // If the polyfill has changed the type of the element we need to change it back
-            type = elem.getAttribute(ATTR_INPUT_TYPE);
-            if (type) {
-                elem.type = type;
-            }
-            return true;
+          // If the polyfill has changed the type of the element we need to change it back
+          type = elem.getAttribute(ATTR_INPUT_TYPE);
+          if (type) {
+              elem.type = type;
+          }
+          return true;
         }
         return false;
     }
@@ -171,6 +181,15 @@
             } else if (elem.type === "password") {
                 if (Utils.changeType(elem, "text")) {
                     elem.setAttribute(ATTR_INPUT_TYPE, "password");
+                } else{
+                    var cloned_elem = document.createElement('input');
+                    cloned_elem.type = 'text';
+                    cloned_elem.id = elem.id + '_placeholder_replacer';
+                    cloned_elem.className = elem.className + ' ' + placeholderClassName;
+                    cloned_elem.placeholder = elem.placeholder;
+                    elem.parentNode.insertBefore(cloned_elem, elem);
+                    elem.style.display = 'none';
+                    newElement(cloned_elem);
                 }
             }
             return true;
