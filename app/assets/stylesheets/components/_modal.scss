@@ -91,14 +91,12 @@
   right: 8px;
   width: 18px;
   height: 18px;
-  color:black;
-  font-size:18px;
+  color:$icon;
+  font-size: 18px;
   z-index: $modal-z-index + 3;
-  @include opacity(0.3);
 
   &:hover {
-    @include opacity(1);
-    color: black;
+    color: $icon-hover;
   } 
 }
 

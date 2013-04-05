@@ -5,10 +5,10 @@
   margin: 0;
   margin-bottom: 8px;
   padding: 8px 8px 8px 8px;
-  background: rgb(235,235,235);
-  border: 2px solid rgb(235,235,235);
-  @include border-radius(8px);
-  color: rgb(100,100,100);
+  background: $gray2;
+  border: 2px solid $gray2;
+  @include border-radius($border-radius);
+  color: $gray8;
   font-size: 22px;
   line-height: 29px;
   @include transition(border .2s ease-in, opacity .2s ease-in, color .2s ease-in);
@@ -22,12 +22,10 @@
 
 @mixin form-field-focus {
 
-  background: rgb(245,245,245);
-  border: 2px solid rgb(100,100,100);
-  color:rgb(30,30,30);
+  background: $gray1;
+  border: 2px solid $gray7;
+  color: $gray9;
   outline: none;
-  border: 2px solid rgb(100,100,100);
-  background: rgb(245,245,245);
 }
 
 
@@ -44,8 +42,8 @@
 
       &:focus {
         
-        span {
-          @include opacity(.9);
+        + span {
+          color: $icon-hover
         }
       }
     }
@@ -54,7 +52,7 @@
       position: absolute;
       top: 11px;
       left: 8px;
-      @include opacity(.5);
+      color: $icon;
     }
   }
 }  
