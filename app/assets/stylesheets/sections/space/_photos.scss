@@ -71,12 +71,12 @@
       font-family: $font-medium;
       background: rgba(0,0,0,0);
       color: white;
-      opacity:.5;
+      @include opacity(.5);
       @include transition(opacity .2s ease-in, text-shadow .1s ease-in);
       position: absolute;
       bottom: 20px;
       right: 20px !important;
-      width: 3px;
+      width: 2px;
       height: 6px;
       overflow: hidden;
       white-space:nowrap;
@@ -84,7 +84,7 @@
       &:hover {
         width: auto;
         color: white;
-        opacity: 1;
+        @include opacity(1);
         @include text-shadow(black 0 0 2px, black 0 0 4px, black 0 0 6px);
 
         &:before {

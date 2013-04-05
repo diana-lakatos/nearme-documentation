@@ -117,12 +117,11 @@ section.search#content {
     @include transition(all .1s ease-in);
     font-size: 32px;
     width: 34px;
-    @include opacity(.6);
-    color: $dnm_black;
     cursor: pointer;
+    color: $icon;
     
     &:hover {
-      @include opacity(.95);
+      color: $icon-hover;
     }
   }
 
@@ -321,10 +320,11 @@ header#listing_search {
           .calendar {
             position: absolute;
             top: 15px;
-            left: 13px;
+            left: 10px;
             display: block;
-            font-size: 28px;
-            @include opacity(.6);
+            font-size: 30px;
+            color: $icon;
+
           }
     
           input {
@@ -332,6 +332,13 @@ header#listing_search {
             width:100%;
             @include box-sizing(border-box);
             background: $dnm_white;
+
+            &:focus {
+
+              + .calendar {
+                color: $icon-hover;
+              }
+            }
     
           }
         }
