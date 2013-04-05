@@ -108,6 +108,7 @@ p.notice, div.pnotice {
   font-weight: 600px;
   @include opacity(.7);
   filter: inherit;
+  @include transition(all .1s ease-in);
 
   &:hover {
     @include opacity(1);
