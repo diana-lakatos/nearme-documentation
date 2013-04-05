@@ -17,7 +17,6 @@
     @include form-field-focus;
   }
 
-  @include icon-form;    
 }
 
 @mixin form-field-focus {
@@ -29,30 +28,3 @@
 }
 
 
-@mixin icon-form {
-
-  .email-holder,
-  .password-holder,
-  .name-holder {
-    position: relative;
-    width: 100%;
-
-    input {
-      padding-left: 32px;
-
-      &:focus {
-        
-        + span {
-          color: $icon-hover
-        }
-      }
-    }
-
-    span {
-      position: absolute;
-      top: 11px;
-      left: 8px;
-      color: $icon;
-    }
-  }
-}  
