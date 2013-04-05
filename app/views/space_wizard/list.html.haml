@@ -1,68 +1,70 @@
 = render :layout => 'wizard_layout', :locals => { :step => 1 } do
   - title "List your space"
 
-  = simple_form_for @company, :url => space_wizard_list_url, :validate => true, :html => { :class => "form-horizontal new_company", :multipart => true } do |f|
+  = simple_form_for @user, :url => space_wizard_list_url, :validate => true, :html => { :class => "form-horizontal new_company", :multipart => true } do |f|
 
-    = f.input :name, :label => 'Company name'
+    = f.simple_fields_for :companies, @company do |builder|
 
-    = f.simple_fields_for :locations, @location do |locations_form|
+      = builder.input :name, :label => 'Company name'
 
-      = locations_form.input :description, :label => 'Location description', :placeholder => 'Describe the overall look, feel, and ambience of your location.', :input_html => { :maxlength => 250, :rows => 2 }
+      = builder.simple_fields_for :locations, @location do |locations_form|
 
-      .control-group
-        = locations_form.label :address, :class => "control-label" do
-          %abbr{:title => "required"} *
-          Location address
-        .controls
-          = locations_form.text_field :address, :'data-behavior' => 'address-autocomplete', :placeholder => ""
-
-          .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
-            .map-container{:style => "height: 240px; width: 100%;"}
-
-          = locations_form.hidden_field :local_geocoding
-          = locations_form.hidden_field :latitude
-          = locations_form.hidden_field :longitude
-          = locations_form.hidden_field :formatted_address
-
-      = locations_form.association :location_type, :label => "Location type"
-
-      = locations_form.simple_fields_for :listings, @listing do |listings_form|
-        = listings_form.input :name, :label => 'Listing name', :placeholder => 'Examples, "Shared Desks", "Meeting Room", "Private Office"'
-        = listings_form.input :description, :label => 'Listing description', :input_html => { :maxlength => 250}, :placeholder => 'Describe the individual listing that will be rented'
-        = listings_form.association :listing_type, :label => "Listing type"
-        = listings_form.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" }
-        = locations_form.input :currency, :as => :currency, :label => "Currency", :default => 'USD', :input_html => { :class => 'custom-select' }
+        = locations_form.input :description, :label => 'Location description', :placeholder => 'Describe the overall look, feel, and ambience of your location.', :input_html => { :maxlength => 250, :rows => 2 }
 
         .control-group
-          = listings_form.label :daily_price, 'Price', :class => 'control-label'
-
+          = locations_form.label :address, :class => "control-label" do
+            %abbr{:title => "required"} *
+            Location address
           .controls
-            %span.currency-holder
-            = listings_form.number_field :daily_price, :as => :decimal, :label => false, :class => 'mini', :value => ''
-            %span.periodicity /day
-          .controls 
-            %span.currency-holder
-            = listings_form.number_field :weekly_price, :as => :decimal, :label => false, :class => 'mini', :value => ''
-            %span.periodicity /week
-          .controls 
-            %span.currency-holder
-            = listings_form.number_field :monthly_price, :as => :decimal, :label => false, :class => 'mini', :value => ''
-            %span.periodicity /month
-          .controls
-            .inline-rule
-              %span Or
-            = listings_form.check_box :free
-            = listings_form.label :free, "Free?"
+            = locations_form.text_field :address, :'data-behavior' => 'address-autocomplete', :placeholder => ""
 
-        = listings_form.input :confirm_reservations, :label => 'Bookings require my confirmation'
+            .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
+              .map-container{:style => "height: 240px; width: 100%;"}
 
-        = file_upload_input_with_label('Photos', space_wizard_photo_path, "company[locations_attributes][0][listings_attributes][0][photos_attributes][0][image]", "Upload Photos") do
-          - unless current_user.companies.any? { |c| c.id }
-            - current_user.photos.each do |photo|
-              = fileupload_photo_with_input(photo.image_url(:thumb), destroy_space_wizard_photo_path(:id => photo.id), photo.id) unless photo.content_id
+            = locations_form.hidden_field :local_geocoding
+            = locations_form.hidden_field :latitude
+            = locations_form.hidden_field :longitude
+            = locations_form.hidden_field :formatted_address
 
-    .actions
-      = f.submit 'List my Space', :disable_with => 'Creating...'
+        = locations_form.association :location_type, :label => "Location type"
+
+        = locations_form.simple_fields_for :listings, @listing do |listings_form|
+          = listings_form.input :name, :label => 'Listing name', :placeholder => 'Examples, "Shared Desks", "Meeting Room", "Private Office"'
+          = listings_form.input :description, :label => 'Listing description', :input_html => { :maxlength => 250}, :placeholder => 'Describe the individual listing that will be rented'
+          = listings_form.association :listing_type, :label => "Listing type"
+          = listings_form.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" }
+          = locations_form.input :currency, :as => :currency, :label => "Currency", :default => 'USD', :input_html => { :class => 'custom-select' }
+
+          .control-group
+            = listings_form.label :daily_price, 'Price', :class => 'control-label'
+
+            .controls
+              %span.currency-holder
+              = listings_form.number_field :daily_price, :as => :decimal, :label => false, :class => 'mini', :value => ''
+              %span.periodicity /day
+            .controls 
+              %span.currency-holder
+              = listings_form.number_field :weekly_price, :as => :decimal, :label => false, :class => 'mini', :value => ''
+              %span.periodicity /week
+            .controls 
+              %span.currency-holder
+              = listings_form.number_field :monthly_price, :as => :decimal, :label => false, :class => 'mini', :value => ''
+              %span.periodicity /month
+            .controls
+              .inline-rule
+                %span Or
+              = listings_form.check_box :free
+              = listings_form.label :free, "Free?"
+
+          = listings_form.input :confirm_reservations, :label => 'Bookings require my confirmation'
+
+          = file_upload_input_with_label('Photos', space_wizard_photo_path, "company[locations_attributes][0][listings_attributes][0][photos_attributes][0][image]", "Upload Photos") do
+            - unless current_user.companies.any? { |c| c.id }
+              - current_user.photos.each do |photo|
+                = fileupload_photo_with_input(photo.image_url(:thumb), destroy_space_wizard_photo_path(:id => photo.id), photo.id) unless photo.content_id
+
+      .actions
+        = f.submit 'List my Space', :disable_with => 'Creating...'
 
 .hidden
   - Money::Currency.table.values.each do |c|

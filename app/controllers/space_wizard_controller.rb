@@ -22,10 +22,9 @@ class SpaceWizardController < ApplicationController
   end
 
   def submit_listing
-    @company ||= @user.companies.build
-    @company.attributes = params[:company]
+    @user.attributes = params[:user]
 
-    if @company.save
+    if @user.save
       if params[:uploaded_photos]
         listing = @company.locations.first.listings.first
         listing.photos << current_user.photos.find(params[:uploaded_photos])
