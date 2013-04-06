@@ -11,6 +11,7 @@ class AfterSignupMailer < DesksNearMeMailer
 
     mail to:      @user.email,
       from: "micheller@desksnear.me",
+      reply_to: "micheller@desksnear.me",
       subject: "Welcome to DesksNear.me",
       template_name: choose_template
   end
