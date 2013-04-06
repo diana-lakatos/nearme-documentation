@@ -1,4 +1,12 @@
+if(!window.console) {
+  console = {
+    log : function(){},
+    info : function(){}
+  }
+}
+
 window.analytics = {
+
   init: function(){
     console.log('Analytics.init');
     console.log(arguments)
