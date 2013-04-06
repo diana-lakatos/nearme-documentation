@@ -1,5 +1,8 @@
 require 'test_helper'
 require 'helpers/search_params_test_helper'
+require Rails.root.join('app', 'models', 'listing', 'search', 'errors.rb')
+require Rails.root.join('app', 'models', 'listing', 'search', 'params', 'availability.rb')
+
 class Listing::Search::Params::ApiTest <  ActiveSupport::TestCase
   include SearchParamsTestHelper
   context "#new" do

@@ -7,7 +7,7 @@ FactoryGirl.define do
     quantity 1
 
     factory :reservation_with_credit_card do
-      payment_method Reservation::PAYMENT_METHODS[:credit_card]
+      payment_method 'credit_card'
     end
   end
 end
