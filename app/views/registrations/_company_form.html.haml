@@ -1,7 +1,7 @@
 = simple_form_for resource, :as => resource_name, :url => url, :html => { class: "form-horizontal form-expandable", :id => 'edit_company' } do |f|
   = f.simple_fields_for :companies do |builder|
     = builder.input :name, :label => "Your company name", :placeholder => "Enter your business name"
-    = builder.association :industries, :label =>  "Industries", :blank => false, :input_html => { 'data-placeholder' => "Select one or multiple", :class => 'custom-select' }
+    = builder.association :industries, :label =>  "Industries", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select' }
     = builder.input :url, :label => "Website", :placeholder => "www.mycompany.com"
     = builder.input :email, :label => "Company email", :placeholder => "yourname@example.com"
     = builder.input :description, :label => "Description", :placeholder => "Give a brief description of your company", :input_html => { :maxlength => 250}
