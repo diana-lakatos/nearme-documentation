@@ -3,7 +3,8 @@
   .listing.box {
     overflow: hidden;
     height: auto;
-    @media (min-width: 640px) {
+
+    @media (min-width: 480px) {
       height: 208px;
     }
   }
@@ -13,9 +14,9 @@
     left: 0;
     top: 0;
     height: 208px;
-    width: 350px;
+    width: 410px;
 
-    @media (max-width: 640px) {
+    @media (max-width: 480px) {
       position: relative;
       float: left; 
       clear: both;
@@ -27,10 +28,26 @@
   .listing-description-container {
     float: left;
     width: 100%;
-    padding: 0 280px 0 346px;
+    padding: 0 280px 0 420px;
     @include box-sizing(border-box);
 
-    @media (max-width: 767px) {
+    @media (min-width: 480px) and (max-width: 900px) {
+      position: absolute;
+      left: 10px;
+      color: white; 
+      padding: 0;
+
+      .listing-name {
+        color: white;
+        @include text-shadow(black 0 0 5px);
+      }
+
+      .listing-description {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
       float: left; 
       clear: both;
       width: 100%;
