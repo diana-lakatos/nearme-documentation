@@ -48,5 +48,6 @@ section.space_wizard {
 
   .input-disabled{
     @include opacity(.4);
+    filter: inherit;
   }
 }

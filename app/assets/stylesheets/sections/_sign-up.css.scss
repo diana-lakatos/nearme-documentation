@@ -137,11 +137,6 @@
     color: gray2;
     margin: .5em 0;
     font-weight: 600px;
-    @include opacity(.7);
-
-    &:hover {
-      @include opacity(1);
-    } 
   }     
 }
 
