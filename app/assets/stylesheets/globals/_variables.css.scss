@@ -57,3 +57,10 @@ $absolute-top-z-index: 9000;
 
 $legacy-support-for-ie8: true;
 
+// Override bootstrap mixin that caused opacity to be reduced by 10x
+
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  filter: alpha(opacity=$opacity * 100);
+}
+
