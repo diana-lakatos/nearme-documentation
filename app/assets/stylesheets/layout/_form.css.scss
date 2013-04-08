@@ -24,7 +24,6 @@ input[type=url],
 input[type=tel] {
    -webkit-appearance: none;
    cursor: pointer;
-   @include icon-form; 
 }
 
 .fileupload {
@@ -496,3 +495,27 @@ form {
     width: 100%; 
   }  
 }
+
+.input-icon-holder {
+  position: relative;
+  width: 100%;
+
+  input {
+    padding-left: 32px !important;
+
+    &:focus {
+      
+      + span {
+        color: $icon-hover !important;
+      }
+    }
+  }
+
+  span {
+    position: absolute;
+    top: 11px;
+    left: 8px;
+    color: $icon;
+  }
+}
+  
