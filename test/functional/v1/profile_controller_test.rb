@@ -60,4 +60,12 @@ class V1::ProfileControllerTest < ActionController::TestCase
     assert_blank json["avatar"]
   end
 
+  test "not raising error when removing not existing avatar" do
+    delete :destroy_avatar
+
+    json = JSON.parse(response.body)
+    assert json
+    assert_blank json["avatar"]
+  end
+
 end

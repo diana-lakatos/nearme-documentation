@@ -43,8 +43,7 @@ class V1::ProfileController < V1::BaseController
   end
 
   def destroy_avatar
-    current_user.avatar.remove! if current_user.avatar
-    current_user.save!
+    current_user.remove_avatar!
     render json: current_user
   end
 
