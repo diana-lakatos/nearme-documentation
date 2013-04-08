@@ -458,3 +458,23 @@ section.search section#results.list {
     }
   }
 }
+
+.ias_loader {
+
+  h1{
+    text-align: center;
+    margin: 15px 0px;
+    @include adjust-font-size-to(35px);
+    font-weight: bold;
+
+    div{
+      display: inline-block;
+      background: image-url("spinner.gif") no-repeat 0% 50%;
+      padding: 0px 0px 0px 45px;
+    }
+  }
+
+
+}
+
+

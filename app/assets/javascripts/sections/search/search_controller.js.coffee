@@ -13,6 +13,7 @@ class Search.SearchController extends Search.Controller
     @processingResults = true
     @initializeMap()
     @bindEvents()
+    @initializeEndlessScrolling()
     setTimeout((=> @processingResults = false), 1000)
 
   bindEvents: ->
@@ -35,6 +36,19 @@ class Search.SearchController extends Search.Controller
   
       @map.on 'mapListingBlurred', (mapListing) =>
         @findResultsListing(mapListing.id())?.blur()
+
+  initializeEndlessScrolling: ->
+    $('#results').scrollTop(0)
+    jQuery.ias({
+    container : '#results',
+    item: '.listing',
+    pagination: '.pagination',
+    next: '.next_page',
+    triggerPageThreshold: 25,
+    thresholdMargin: -250,
+    loader: '<h1><div>Loading More Results</div></h1>'
+    })
+
 
   initializeMap: ->
     mapContainer = @container.find('#listings_map')[0]
@@ -163,6 +177,8 @@ class Search.SearchController extends Search.Controller
       callback() if callback
       @finishLoading()
       @processingResults = false
+      @initializeEndlessScrolling()
+
 
   # Trigger the API request for search
   #
