@@ -20,7 +20,7 @@ class Listing
         locations = Location.near(*args)
         return [] unless locations.any?
         
-        listings = Listing.where(["listings.location_id IN(?)", locations.map(&:id)]).includes(:photos, :location)
+        listings = Listing.where(["listings.location_id IN(?)", locations.map(&:id)]).includes(:photos)
         
         params.availability.dates.each do |date|
           listings.reject! { |listing| listing.fully_booked_on?(date) }

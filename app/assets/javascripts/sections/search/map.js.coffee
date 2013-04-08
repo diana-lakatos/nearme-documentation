@@ -6,6 +6,12 @@ class Search.Map
   # Generated from: http://powerhut.co.uk/googlemaps/custom_markers.php
   MARKERS =
     hover:
+      icon:
+        url: '/assets/google-maps/marker-images/hover-2x.png'
+        size: new google.maps.Size(20,29)
+        origin: new google.maps.Point(0,0)
+        anchor: new google.maps.Point(10,29)
+        scaledSize: new google.maps.Size(20,29)
       image: new google.maps.MarkerImage(
         '/assets/google-maps/marker-images/hover-2x.png',
         new google.maps.Size(40,57),
@@ -19,6 +25,12 @@ class Search.Map
         type: 'poly'
 
     default:
+      icon:
+        url: '/assets/google-maps/marker-images/default-2x.png'
+        size: new google.maps.Size(40,57)
+        origin: new google.maps.Point(0,0)
+        anchor: new google.maps.Point(10,29)
+        scaledSize: new google.maps.Size(20,29)
       image: new google.maps.MarkerImage(
         '/assets/google-maps/marker-images/default-2x.png',
         new google.maps.Size(40,57),
@@ -30,21 +42,38 @@ class Search.Map
       shape:
         coord: [14,0,15,1,16,2,17,3,18,4,18,5,19,6,19,7,19,8,19,9,19,10,19,11,19,12,19,13,18,14,18,15,17,16,17,17,16,18,16,19,15,20,14,21,14,22,13,23,13,24,12,25,11,26,11,27,8,27,7,26,7,25,6,24,6,23,5,22,4,21,4,20,3,19,3,18,2,17,2,16,1,15,0,14,0,13,0,12,0,11,0,10,0,9,0,8,0,7,0,6,0,5,1,4,1,3,2,2,3,1,5,0,14,0]
         type: 'poly'
-
+  
+  GOOGLE_MAP_OPTIONS =
+    zoom: 8,
+    minZoom: 4,
+    maxZoom: 18,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    disableDefaultUI: true,
+    zoomControl: true,
+    styles:
+      [{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#457cbc"}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"weight":0.1},{"color":"#d0bfe0"},{"visibility":"off"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"visibility":"on"},{"lightness":5},{"color":"#e6e4e7"}]},{"featureType":"poi.business","elementType":"labels","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#f6edbc"}]},{"featureType":"road.arterial","elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"featureType":"poi.school","elementType":"labels","stylers":[{"weight":0.1},{"visibility":"simplified"}]},{"featureType":"poi.medical","elementType":"labels","stylers":[{"visibility":"simplified"}]},{"featureType":"poi","elementType":"geometry.fill"},{"featureType":"poi.business","stylers":[{"visibility": "off"}]}]
+    
+  GOOGLE_MAP_OPTIONS.clusterer =
+    maxZoom: GOOGLE_MAP_OPTIONS.maxZoom + 1
+    averageCenter: true
+    styles:
+      [
+        { width: 28, height: 28, url: 'assets/images/transparent.png' },
+        { width: 32, height: 32, url: 'assets/images/transparent.png' },
+        { width: 42, height: 42, url: 'assets/images/transparent.png' }
+      ]
+    calculator: (markers, numStyles) ->
+      idx = MarkerClusterer.CALCULATOR(markers, numStyles).index
+      return { index: idx, text: markers.length.toString(), title: markers.length.toString() }
+  
   constructor: (@container) ->
     @initializeGoogleMap()
     @bindEvents()
     @cacheMarkers()
 
   initializeGoogleMap: ->
-    @googleMap = new google.maps.Map(@container, {
-      zoom: 8,
-      minZoom: 4,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      disableDefaultUI: true
-      zoomControl: true,
-    })
-
+    @googleMap = new google.maps.Map(@container, GOOGLE_MAP_OPTIONS)
+    @clusterer = new MarkerClusterer(@googleMap, [], GOOGLE_MAP_OPTIONS.clusterer)
     # Info window pops over and contains details for each marker/listing
     @popover = new GoogleMapPopover()
 
@@ -63,7 +92,19 @@ class Search.Map
 
     google.maps.event.addListener @googleMap, 'zoom_changed', =>
       @trigger 'viewportChanged'
-
+      @clusterer.setZoomOnClick(@googleMap.getZoom() < GOOGLE_MAP_OPTIONS.maxZoom)
+      @popover.close()
+    
+    google.maps.event.addListener @googleMap, 'click', (e)=>
+      @popover.close()
+      @trigger 'click'
+    
+    @clusterer.addListener 'click', (cluster)=>
+      return if @googleMap.getZoom() < GOOGLE_MAP_OPTIONS.maxZoom
+      _.defer => @showInfoWindowForCluster(cluster) # Clashes with map.click on some devices, need to add small delay to show
+      
+    null
+  
   # Adds one of our custom map controls to the map
   addControl: (control) ->
     control.setMap(@googleMap)
@@ -75,6 +116,7 @@ class Search.Map
         marker.setMap(null)
 
     @markers = {}
+    @listings = {}
     @initializeListingBounds()
 
   initializeListingBounds: ->
@@ -97,7 +139,9 @@ class Search.Map
 
   plotListings: (listings) ->
     @plotListing(listing) for listing in listings
-
+    @clusterer.fitMapToMarkers()
+    
+  
   # Only plot a listing if it fits within the map bounds.
   # Returns whether or not a listing was plotted.
   plotListingIfInMapBounds: (listing) ->
@@ -117,14 +161,16 @@ class Search.Map
       map:      @googleMap,
       title:    listing.name(),
       visible:  false,
-      icon: MARKERS.default.image,
+      icon: MARKERS.default.icon,
       shadow: null,
       shape: MARKERS.default.shape
     )
     @markers[listing.id()] = marker
+    @listings[listing.id()] = listing
     @bounds.extend(listing.latLng())
-
-    marker.setAnimation(google.maps.Animation.DROP)
+    @clusterer.addMarker(marker)
+    
+    # marker.setAnimation(google.maps.Animation.DROP)
     marker.setVisible(true)
 
     # Bind the event for showing the info details on click
@@ -141,11 +187,7 @@ class Search.Map
         @trigger 'mapListingBlurred', listing
 
   focusMarker: (marker) ->
-    marker.setOptions(
-      icon: MARKERS.hover.image,
-      shadow: MARKERS.hover.shadow,
-      shape: MARKERS.hover.shape
-    )
+    null
 
   blurMarker: (marker) ->
     marker.setOptions(
@@ -178,12 +220,55 @@ class Search.Map
     ne = bounds.getNorthEast()
     sw = bounds.getSouthWest()
     [ne.lat(), ne.lng(), sw.lat(), sw.lng()]
+    
+  getListingForMarker: (marker) ->
+    listing_id = null
+    for idx, _marker of @markers
+      if _marker is marker
+        listing_id = idx
+        break
+    return @listings[listing_id]
+
+  showInfoWindowForCluster: (cluster) ->
+    listings = for marker in cluster.getMarkers()
+      @getListingForMarker(marker)
+    
+    html = ""
+    locations = {}
+    for listing in listings
+      continue unless listing?
+      el = listing.element()
+      group = locations[el.data('location')]
+      unless group?
+        locations[el.data('location')] = el.find('.listing-location-title').html()
+      locations[el.data('location')] += el.find('.listing-map-popover-content').html()
+    
+    for idx, content of locations
+      html += content
+    
+    @popover.setContent html 
+    @popover.open @googleMap, marker
+    
+    # Focus the listing marker immediately for visual UX
+    listing.popoverOpened()
+    # @focusListingMarker(listing)
+    @trigger 'mapListingFocussed', listing
+    
+    # Blur the listing marker the next time the popover is closed
+    @popover.one 'closed', =>
+      listing.popoverClosed()
+      @blurListingMarker(listing)
+      @trigger 'mapListingBlurred', listing
+    
+    true
 
   showInfoWindowForListing: (listing) ->
     marker = @markers[listing.id()]
     return unless marker
-
-    @popover.setContent listing.popupContent()
+    
+    title = listing.element().find('.listing-location-title').html()
+    
+    @popover.setContent title + listing.popupContent()
     @popover.open(@googleMap, marker)
 
     # Focus the listing marker immediately for visual UX

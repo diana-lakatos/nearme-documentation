@@ -17,6 +17,7 @@
 //= require ./vendor/jquery.scrollto
 //= require ./vendor/placeholder
 //= require ./vendor/jquery.ias
+//= require ./vendor/markerclusterer_packed
 //= require jquery-fileupload/basic
 //= require underscore
 //= require backbone

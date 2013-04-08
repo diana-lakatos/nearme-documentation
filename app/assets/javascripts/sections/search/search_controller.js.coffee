@@ -20,8 +20,15 @@ class Search.SearchController extends Search.Controller
     @form.bind 'submit', (event) =>
       event.preventDefault()
       @triggerSearchFromQuery()
+   
+    @form.find('#search').on 'focus blur', (e)->
+      if e.type is 'focus' then $(@form).addClass('query-active') else $(@form).removeClass('query-active')
+      true
     
     if @map?
+      @map.on 'click', =>
+        $(@form).find('input.query').blur()
+      
       @map.on 'viewportChanged', =>
         # NB: The viewport can change during 'query based' result loading, when the map fits
         #     the bounds of the search results. We don't want to trigger a bounding box based
@@ -87,7 +94,7 @@ class Search.SearchController extends Search.Controller
   
   # Update the map with the current listing results, and adjust the map display.
   updateMapWithListingResults: ->
-    @map.resetMapMarkers()
+    @map.popover.close()
     @map.plotListings(@getListingsFromResults())
     @map.resizeToFillViewport()
     _.defer => @map.fitBounds()
