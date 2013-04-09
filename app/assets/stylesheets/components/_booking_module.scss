@@ -4,7 +4,7 @@
   right: 0;
   width: 280px;
 
-  @media (max-width: 480px) {
+  @media (max-width: 580px) {
     position: relative;
     float: right; 
     clear: both;
@@ -21,6 +21,11 @@
     color: $gray3;
     padding: $padding;
     font: normal 22px/26px 'Futura-regular', sans-serif; 
+
+
+    @media (max-width: 580px) {
+      margin: 0 -15px -15px;
+    }
 
     .book {
       width: 100%;
