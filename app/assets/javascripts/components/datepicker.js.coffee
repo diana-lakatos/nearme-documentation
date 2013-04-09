@@ -73,7 +73,7 @@ class @Datepicker
 
     defaultOptions: {
       # The initial month of the view, specified as a Date object
-      currentMonth: new Date(),
+      currentMonth: null,
 
       # The 'today' for the view, specified as a Date object
       today: new Date(),
@@ -93,6 +93,9 @@ class @Datepicker
     advanceMonth: (incr = 1) ->
       @currentMonth = new Date(@currentMonth.getFullYear(), @currentMonth.getMonth()+incr, 1, 0, 0, 0, 0)
       @trigger('monthChanged', @currentMonth)
+
+    getCurrentMonth: ->
+      @currentMonth ||= _.last(@getDates()) or new Date()
 
     isSelected: (date) ->
       _.contains(@_included, @_asId(date))
@@ -326,7 +329,7 @@ class @Datepicker
 
     # Render all state again
     refresh: ->
-      @renderMonth(@model.currentMonth)
+      @renderMonth(@model.getCurrentMonth())
       @hasRendered = true
 
     # Set loading state

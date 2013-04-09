@@ -49,7 +49,6 @@
         {
           bookings: {
             listings: #{raw location_listings_json},
-            availability_summary_url: #{raw availability_summary_location_url(@location).to_json},
             review_url: #{raw review_location_reservations_url(@location).to_json},
 
             // Have we returned from setting up a session. If there are bookings, the JS controller

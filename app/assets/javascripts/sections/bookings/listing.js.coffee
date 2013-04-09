@@ -4,10 +4,11 @@ class @Bookings.Listing
 
   defaultQuantity: 1
 
-  constructor: (@data, options) ->
+  constructor: (@data) ->
     @id = parseInt(@data.id, 10)
     @firstAvailableDate = new Date(@data.first_available_date)
-    @availability = options.availability
+    @availability = new Availability(@data.availability)
+    @minimumBookingDays = @data.minimum_booking_days
     @bookings = {}
     @minimumBookingDays = @data.minimum_booking_days
 
@@ -17,11 +18,8 @@ class @Bookings.Listing
     if updateBookings
       @updateOrRemoveBooking(DNM.util.Date.idToDate(day), @defaultQuantity) for day in @bookedDays()
 
-  availabilityLoadedFor: (date_or_dates) ->
-    @availability.isLoaded(date_or_dates)
-
   totalFor: (date) ->
-    @availability.totalFor(date)
+    @data.quantity
 
   availabilityFor: (date) ->
     @availability.availableFor(date)
@@ -78,9 +76,9 @@ class @Bookings.Listing
 
   # Set bookings for the listing from a collection of
   # booking date & quantity hashes.
-  setBookings: (arrayOfBookings, forceAvailability = true) ->
+  setBookings: (arrayOfBookings) ->
     for booking in _.toArray(arrayOfBookings)
-      @addDate(DNM.util.Date.idToDate(booking.date), booking.quantity || booking.amount, forceAvailability)
+      @addDate(DNM.util.Date.idToDate(booking.date), booking.quantity || booking.amount)
 
   # Return the subtotal for booking this listing
   bookingSubtotal: ->
@@ -104,16 +102,10 @@ class @Bookings.Listing
     # Return the subtotal
     subtotalCents
 
-  addDate: (date, qty = null, forceAvailability = true) ->
-    callback = =>
-      qty ||= if @hasAvailabilityOn(date) then @defaultQuantity else 0
-      @setBooking(date, qty)
-      @trigger 'dateAdded', date, qty
-
-    if forceAvailability
-      @withAvailabilityLoaded date, callback
-    else
-      callback()
+  addDate: (date, qty = null) ->
+    qty ||= if @hasAvailabilityOn(date) then @defaultQuantity else 0
+    @setBooking(date, qty)
+    @trigger 'dateAdded', date, qty
 
   removeDate: (date) ->
     if _.include @bookedDays(), DNM.util.Date.toId(date)
@@ -141,9 +133,24 @@ class @Bookings.Listing
     for dateId in dateIds when !_.include(@bookedDays(), dateId)
       @addDate(DNM.util.Date.idToDate(dateId))
 
-  # Execute a callback if or once availability has been loaded for a date
-  #
-  # date     - The date to enforce availability loading of
-  # callback - A function to call when availability is loaded
-  withAvailabilityLoaded: (date_or_dates, callback) ->
-    @availability.get date_or_dates, -> callback()
+  # Wrap queries on the availability data
+  class Availability
+    constructor: (@data) ->
+
+    openFor: (date) ->
+      @_value(date) != null
+
+    availableFor: (date) ->
+      val = @_value(date)
+      if val
+        val
+      else
+        0
+
+    _value: (date) ->
+      ym = "#{date.getFullYear()}-#{date.getMonth()+1}"
+      if @data[ym]
+        @data[ym][date.getDate()-1]
+      else
+        null
+

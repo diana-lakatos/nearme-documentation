@@ -260,6 +260,10 @@ class Listing < ActiveRecord::Base
     end
   end
 
+  def availability_status_between(start_date, end_date)
+    AvailabilityRule::ListingStatus.new(self, start_date, end_date)
+  end
+
 end
 
 class NullListing
