@@ -244,6 +244,26 @@ class Listing < ActiveRecord::Base
     schedule
   end
 
+  # Number of minimum consecutive booking days required for this listing
+  def minimum_booking_days
+    if free? || daily_price.present?
+      1
+    else
+      days_per_week = availability.days_open.length
+      multiple = if weekly_price.present?
+        1
+      elsif monthly_price.present?
+        4
+      end
+
+      days_per_week*multiple
+    end
+  end
+
+  def availability_status_between(start_date, end_date)
+    AvailabilityRule::ListingStatus.new(self, start_date, end_date)
+  end
+
 end
 
 class NullListing

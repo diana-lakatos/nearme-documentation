@@ -133,22 +133,6 @@ class @Bookings.Datepicker
       @lastDefaultQuantity = @listing.defaultQuantity
       super
 
-    # Extend the rendering method to trigger a "loading" indicator/overlay.
-    # We need to load the date availability for the listing for all of the dates
-    # that display, so that we can render whether or not there is availability on
-    # the calendar.
-    renderMonth: (month) ->
-      dates = @datesForMonth(month)
-      unless @listing.availabilityLoadedFor(dates)
-        @setLoading(true)
-        @listing.withAvailabilityLoaded dates, =>
-          # Will need to re-render for availability information
-          @renderMonth(month)
-      else
-        @setLoading(false)
-
-      super(month)
-
     # Extend the class generation method to add disabled state if the listing quantity selection
     # exceeds the availability for a given date.
     classForDate: (date, monthDate) ->

@@ -58,5 +58,9 @@ class AvailabilityRule::Summary
 
     true
   end
+
+  def days_open
+    @rules.map { |rule| rule.day }
+  end
 end
 

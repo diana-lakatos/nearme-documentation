@@ -7,17 +7,10 @@ class Bookings.Controller
   constructor: (@container, @options = {}) ->
     @options.initial_bookings ||= {}
 
-    @availabilityManager = new Bookings.AvailabilityManager(
-      @options.availability_summary_url
-    )
-
     # The Listings collection is the set of all Listings being managed for bookings on
     # the page. Each listing keeps track of the bookings made on it.
     @listings = _.map @options.listings, (listingData) =>
-      new Bookings.Listing(
-        listingData,
-        availability: new Bookings.AvailabilityManager.Listing(@availabilityManager, listingData.id)
-      )
+      new Bookings.Listing(listingData)
 
     # Initialize each of the listing views
     @listingViews = _.map @listings, (listing) =>
