@@ -61,11 +61,12 @@ $listing-header-height: 58px;
       width: 100%;
       height: auto;
       margin: -15px -15px 0 -15px;
-    }
 
-    img {
-      width: 410px;
-      margin: 0 auto;
+      img {
+        width: 410px;
+        height: 208px;
+        margin: 0 auto;
+      }      
     }
   }
 
@@ -86,8 +87,12 @@ $listing-header-height: 58px;
       display: block;
       float: left;
       clear: both;
-      margin: 1em 0 0;
+      margin: 15px 0 0;
       padding: 0;
+    }
+
+    @media (max-width: $booking-module-breakpoint) {
+      margin: 15px 0;
     }
   }
 
