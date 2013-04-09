@@ -9,6 +9,7 @@ class @Bookings.Listing
     @firstAvailableDate = new Date(@data.first_available_date)
     @availability = options.availability
     @bookings = {}
+    @minimumBookingDays = @data.minimum_booking_days
 
   setDefaultQuantity: (qty, updateBookings = false) ->
     @defaultQuantity = qty if qty >= 0

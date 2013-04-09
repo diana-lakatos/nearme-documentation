@@ -144,7 +144,7 @@ class @Bookings.Datepicker
       datesPrev = @datesForMonth(DNM.util.Date.previousMonth(month))
       datesNext = @datesForMonth(DNM.util.Date.nextMonth(month))
 
-      allDates = _.union(dates, datesPrev, datesNext);
+      allDates = _.union(dates, datesPrev, datesNext)
       unless @listing.availabilityLoadedFor(allDates)
         @setLoading(true)
         @listing.withAvailabilityLoaded allDates, =>
@@ -177,10 +177,9 @@ class @Bookings.Datepicker
 
     constructor: (listing) ->
       super({})
-      @listing = listing
 
-      # Minimum consecutive days
-      @minDays = 5
+      @listing = listing
+      @minDays = listing.minimumBookingDays or 1
 
     setMode: (mode) ->
       @mode = mode
@@ -189,39 +188,17 @@ class @Bookings.Datepicker
       switch @mode
         when DatepickerModelWithModeAndConstraints.MODE_RANGE
           @setRangeTo(date)
-          # extendRangeToFitConstraints()
+          @extendRangeToMeetConstraint(date)
           @trigger 'rangeApplied'
 
         when DatepickerModelWithModeAndConstraints.MODE_PICK
           if @isSelected(date)
             @removeDate(date)
-
-            # Remove previous date if doesn't meet constraint anymore
-            current = DNM.util.Date.previous(date)
-            while !DNM.util.Date.inPast(date) and (!@canSelectDate(current) or @isSelected(current))
-              if @canSelectDate(current)
-                break if @meetsConstraint(current)
-                @removeDate(current)
-              current = DNM.util.Date.previous(current)
-
-            current = DNM.util.Date.next(date)
-            while !DNM.util.Date.inPast(date) and (!@canSelectDate(current) or @isSelected(current))
-              if @canSelectDate(current)
-                break if @meetsConstraint(current)
-                @removeDate(current)
-              current = DNM.util.Date.next(current)
+            @reduceRangeToMeetConstraint(date)
           else
             # Add the date
             @addDate(date)
-
-            # Check has @minDays around the date
-            unless @meetsConstraint(date)
-              # Add days after the date until the constraint is met
-              current = date
-              while !@meetsConstraint(date)
-                current = DNM.util.Date.next(current)
-                console.info("Trying to add", current, "for clicked date", date)
-                @addDate(current) if @canSelectDate(current)
+            @extendRangeToMeetConstraint(date)
 
     setRangeTo: (date) ->
       startDate = @getDates()[0] || date
@@ -237,6 +214,36 @@ class @Bookings.Datepicker
 
     canSelectDate: (date) ->
       @listing.availabilityFor(date) >= @listing.defaultQuantity
+
+    # Starting at a given date, scan dates validate that it meets the consecutive bookings
+    # constraint. If it doesn't, add next available dates until it does.
+    extendRangeToMeetConstraint: (date) ->
+      # Add days after the date until the constraint is met
+      current = date
+      while !@meetsConstraint(date)
+        current = DNM.util.Date.next(current)
+        @addDate(current) if @canSelectDate(current)
+
+    # Starting from a given date, scan the dates around it to ensure that the act of removing that
+    # date hasn't invalidated the minimum date selection constraints. If it has, remove relevant
+    # dates to restore selected dates to a state that reflects the minimum consecutive days constraint.
+    reduceRangeToMeetConstraint: (date) ->
+      # Remove previous date if doesn't meet constraint anymore
+      previous = (date) -> DNM.util.Date.previous(date)
+      next     = (date) -> DNM.util.Date.next(date)
+
+      # Iterates with an advancer through the selected dates adjacent to the starting date, 
+      # and validates that that date meets the restrictions.
+      reducer = (advancer) =>
+        current = advancer(date)
+        while !DNM.util.Date.inPast(current) and (!@canSelectDate(current) or @isSelected(current))
+          if @canSelectDate(current)
+            break if @meetsConstraint(current)
+            @removeDate(current)
+          current = advancer(current)
+
+      reducer(previous)
+      reducer(next)
 
     # Returns whether or not there are minDays available days booked around
     # the specified date.
