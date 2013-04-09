@@ -1,4 +1,9 @@
+$booking-module-height: 208px;
+$booking-module-width: 280px;
 $booking-module-breakpoint: 580px;
+$booking-module-breakpoint-desktop: 900px;
+$listing-photo-width: 410px;
+$listing-header-height: 58px;
 
 #space, .space {
 
@@ -6,8 +11,29 @@ $booking-module-breakpoint: 580px;
     overflow: hidden;
     height: auto;
 
-    @media (min-width: $booking-module-breakpoint) {
-      height: 208px;
+    @media (min-width: $booking-module-breakpoint-desktop) {
+      height: $booking-module-height;
+
+      header {
+        display: none;
+      }
+    }
+
+    @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
+
+      .booking-module-container {
+        float: right; 
+        clear: both;
+        width: 50%;
+        top: $listing-header-height;
+      }      
+    }
+
+    @media (max-width: $booking-module-breakpoint) {
+
+      header{
+        display: block;
+      }
     }
   }
 
@@ -17,6 +43,16 @@ $booking-module-breakpoint: 580px;
     top: 0;
     height: 208px;
     width: 410px;
+    overflow: hidden;
+
+    @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
+      position: relative;
+      float: left; 
+      clear: both;
+      width: 50%;
+      height: $booking-module-height;
+      margin: -15px 0 0 -15px;
+    }
 
     @media (max-width: $booking-module-breakpoint) {
       position: relative;
@@ -24,37 +60,35 @@ $booking-module-breakpoint: 580px;
       clear: both;
       width: 100%;
       height: auto;
+      margin: -15px -15px 0 -15px;
+    }
+
+    img {
+      width: 410px;
+      margin: 0 auto;
     }
   }
 
-  .listing-description-container {
+  .listing-name, .listing-description {
     float: left;
     width: 100%;
     padding: 0 280px 0 420px;
     @include box-sizing(border-box);
 
-    @media (min-width: $booking-module-breakpoint) and (max-width: 900px) {
-      position: absolute;
-      left: 10px;
-      color: white; 
-      padding: 0;
+    @media  (max-width: $booking-module-breakpoint-desktop) {
+      display: none;     
+    }   
+  }
 
-      .listing-name {
-        color: white;
-        @include text-shadow(black 0 0 5px);
-      }
+  .listing-description {
 
-      .listing-description {
-        display: none;
-      }
-    }
-
-    @media (max-width: $booking-module-breakpoint) {
-      float: left; 
+    @media (max-width: $booking-module-breakpoint-desktop) {
+      display: block;
+      float: left;
       clear: both;
-      width: 100%;
+      margin: 1em 0 0;
       padding: 0;
-    }    
+    }
   }
 
   .truncated-ellipsis {

@@ -3,16 +3,18 @@
     - @location.listings.each do |listing|
 
       .listing.box{listing_data_attributes(listing)}
+        %header
+          = listing.name
         .listing-photo-container
           .images
             - if listing.photos.any?
               .image
                 = image_tag listing.photos.first.url(:space_listing)
-        .listing-description-container
-          %h3.listing-name
-            = listing.name
-          %p
-            = truncate_with_ellipsis listing.description, 250, :class => "listing-description"
+
+        %h2.listing-name
+          = listing.name
+        %p.listing-description
+          = truncate_with_ellipsis listing.description, 250, :class => "listing-description"
 
         = render 'booking_module', listing: listing
         .clearfix
