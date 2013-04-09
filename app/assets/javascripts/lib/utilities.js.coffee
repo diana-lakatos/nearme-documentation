@@ -19,8 +19,8 @@ DNM.util =
     inPast: (date) ->
       now = new Date()
       past = now.getFullYear() > date.getFullYear()
-      past ||= now.getFullYear() == now.getFullYear() and now.getMonth() > date.getMonth()
-      past ||= now.getFullYear() == now.getFullYear() and now.getMonth() == date.getMonth() and now.getDate() > date.getDate()
+      past ||= now.getFullYear() == date.getFullYear() and now.getMonth() > date.getMonth()
+      past ||= now.getFullYear() == date.getFullYear() and now.getMonth() == date.getMonth() and now.getDate() > date.getDate()
       past
 
     suffix: (date) ->

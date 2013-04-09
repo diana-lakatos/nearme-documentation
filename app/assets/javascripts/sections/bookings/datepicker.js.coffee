@@ -198,9 +198,12 @@ class @Bookings.Datepicker
     extendRangeToMeetConstraint: (date) ->
       # Add days after the date until the constraint is met
       current = date
+      i = 0
       while !@meetsConstraint(date)
         current = DNM.util.Date.next(current)
         @addDate(current) if @canSelectDate(current)
+        i++
+        break if i > 30
 
     # Starting from a given date, scan the dates around it to ensure that the act of removing that
     # date hasn't invalidated the minimum date selection constraints. If it has, remove relevant
@@ -212,13 +215,19 @@ class @Bookings.Datepicker
 
       # Iterates with an advancer through the selected dates adjacent to the starting date, 
       # and validates that that date meets the restrictions.
-      reducer = (advancer) =>
-        current = advancer(date)
+      reducer = (iteratorFunc) =>
+        current = iteratorFunc(date)
         while !DNM.util.Date.inPast(current) and (!@canSelectDate(current) or @isSelected(current))
+          # TODO: WHen reaching the start/end of the loaded availability range,
+          # all dates will be unselectable. Need to restrict this loop on the start/end of the 
+          # date ranges. Also add to other loops? (consec counter and range extender)
+          # break if current < @listing.minimumDate
+          # break if current > @listing.maximumDate
+
           if @canSelectDate(current)
             break if @meetsConstraint(current)
             @removeDate(current)
-          current = advancer(current)
+          current = iteratorFunc(current)
 
       reducer(previous)
       reducer(next)
@@ -230,25 +239,34 @@ class @Bookings.Datepicker
 
     # Return the consecutive days currently at the date, *or* the required minumum consecutive days - whatever is less.
     consecutiveDays: (date) ->
-      return unless @isSelected(date)
+      return 0 if !@isSelected(date)
+
+      # Counter
       consecutive = 1
 
-      # Scan dates previous
-      current = DNM.util.Date.previous(date)
-      while !DNM.util.Date.inPast(date) and consecutive < @minDays and (!@canSelectDate(current) or @isSelected(current))
-        consecutive++ if @isSelected(current)
-        current = DNM.util.Date.previous(current)
+      # Iterator functions (backwards, forwards)
+      directionPrev = (date) -> DNM.util.Date.previous(date)
+      directionNext = (date) -> DNM.util.Date.next(date)
 
-      # Scan future dates
-      current = DNM.util.Date.next(date)
-      while !DNM.util.Date.inPast(date) and consecutive < @minDays and (!@canSelectDate(current) or @isSelected(current))
-        consecutive++ if @isSelected(current)
-        current = DNM.util.Date.next(current)
+      # Our counting algorithm
+      counter = (iteratorFunc) =>
+        current = iteratorFunc(date)
+        i = 0
+        while consecutive < @minDays
+          break if i > 28 # Count only up to 28, hard code prevention of infinite loop
+          break if DNM.util.Date.inPast(current)
 
+          isSelected = @isSelected(current)
+          break if @canSelectDate(current) and !isSelected
+          
+          consecutive++ if isSelected
+          current = iteratorFunc(current)
+          i++
+
+      # Count backwards and forwards
+      counter(directionPrev)
+      counter(directionNext)
+
+      # Return our count
       consecutive
-
-
-
-
-
 
