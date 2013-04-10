@@ -151,16 +151,11 @@ class @Bookings.Listing
       @_value(date) != null
 
     availableFor: (date) ->
-      val = @_value(date)
-      if val
-        val
-      else
-        0
+      @_value(date) or 0
 
     _value: (date) ->
-      ym = "#{date.getFullYear()}-#{date.getMonth()+1}"
-      if @data[ym]
-        @data[ym][date.getDate()-1]
+      if month = @data["#{date.getFullYear()}-#{date.getMonth()+1}"]
+        month[date.getDate()-1]
       else
         null
 
