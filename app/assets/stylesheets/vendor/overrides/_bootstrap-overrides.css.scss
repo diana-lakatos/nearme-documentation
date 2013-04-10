@@ -23,6 +23,15 @@ body {
       margin: 0 -22px;
     }
   }  
+
+  @media (max-width: 480px) {
+    padding: 0 .75em;
+  }
+
+  @media (max-width: 320px) {
+    padding: 0 .5em;
+  }
+
 }
 
 .navbar-fixed-top,
