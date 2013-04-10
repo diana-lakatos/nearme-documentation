@@ -143,7 +143,6 @@ class Datepicker.View
 
   updateDate: (date) ->
     klass = @classForDate(date, @model.getCurrentMonth())
-    console.info date, klass
     @dateElement(date).removeClass().addClass(klass)
 
   # Setup and bind fields within the container
