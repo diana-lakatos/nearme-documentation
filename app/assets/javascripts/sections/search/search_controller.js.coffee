@@ -40,15 +40,17 @@ class Search.SearchController extends Search.Controller
   initializeEndlessScrolling: ->
     $('#results').scrollTop(0)
     jQuery.ias({
-    container : '#results',
-    item: '.listing',
-    pagination: '.pagination',
-    next: '.next_page',
-    triggerPageThreshold: 25,
-    thresholdMargin: -250,
-    loader: '<h1><div>Loading More Results</div></h1>'
+      container : '#results',
+      item: '.listing',
+      pagination: '.pagination',
+      next: '.next_page',
+      triggerPageThreshold: 25,
+      thresholdMargin: -250,
+      loader: '<h1><div>Loading More Results</div></h1>',
+      onRenderComplete: (items) ->
+        for item in items
+          new HeightConstrainer( $('article.listing[data-id='+item.getAttribute("data-id")+'] .details-container'), $('article.listing[data-id='+item.getAttribute("data-id")+'] .photo-container'), { ratio: 254/410 })
     })
-
 
   initializeMap: ->
     mapContainer = @container.find('#listings_map')[0]
