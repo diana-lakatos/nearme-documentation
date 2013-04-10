@@ -198,7 +198,7 @@ class Reservation < ActiveRecord::Base
       desk_days_to_apply = desk_days * Listing::MINUTES_IN_DAY
       total = period_prices.reduce(0) { |memo, price_array|
         # price array if of format [period, price], where period is integer and price is Money object 
-        applications = desk_days_to_apply / price_array[0].to_i
+        applications = (desk_days_to_apply / price_array[0].to_i).floor
         desk_days_to_apply -= applications * price_array[0].to_i
         memo + applications * price_array[1].cents
       }

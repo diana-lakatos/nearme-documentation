@@ -133,7 +133,7 @@ class ReservationTest < ActiveSupport::TestCase
           end
           @dates.flatten!
         end
-        should "with monthly and weekly prices zero" do
+        should "work with monthly and weekly prices zero" do
 
           @listing.daily_price = 5
           @listing.weekly_price = 0
@@ -142,11 +142,11 @@ class ReservationTest < ActiveSupport::TestCase
           quantity = 5
           assert reservation = @listing.reserve!(@user, @dates, quantity)
 
-          # 50 days, each costs 5$
-          assert_equal 50 * @listing.daily_price_cents * quantity, reservation.total_amount_cents
+          # 50*5 days, each costs 5$
+          assert_equal 250 * @listing.daily_price_cents, reservation.total_amount_cents
         end
 
-        should "with weekly price non zero and monthly zero" do
+        should "work with weekly price non zero and monthly zero" do
 
           @listing.daily_price = 5
           @listing.weekly_price = 30
@@ -155,11 +155,11 @@ class ReservationTest < ActiveSupport::TestCase
           quantity = 5
           assert reservation = @listing.reserve!(@user, @dates, quantity)
 
-          # 7 weeks [ 49 days ] each for 30$, and 1 days for 5$ each
-          assert_equal ((7 * @listing.weekly_price_cents) + (1 * @listing.daily_price_cents)) * quantity, reservation.total_amount_cents
+          # 250 days, which is 35 weeks and 5 days
+          assert_equal ((35 * @listing.weekly_price_cents) + (5 * @listing.daily_price_cents)), reservation.total_amount_cents
         end
 
-        should "with weekly price non zero and monthly zero" do
+        should "work with both weekly and monthly price non zero" do
 
           @listing.daily_price = 5
           @listing.weekly_price = 30
@@ -168,8 +168,8 @@ class ReservationTest < ActiveSupport::TestCase
           quantity = 5
           assert reservation = @listing.reserve!(@user, @dates, quantity)
 
-          # 1 month [ 30 days], 2 weeks [ 14 days ], and 6 days
-          assert_equal ((1 * @listing.monthly_price_cents) + (2 * @listing.weekly_price_cents) + (1.8 * @listing.daily_price_cents)) * quantity, reservation.total_amount_cents
+          # 250 days, which is 8months, 1week and 5 days
+          assert_equal (8 * @listing.monthly_price_cents) + (1 * @listing.weekly_price_cents) + (3 * @listing.daily_price_cents), reservation.total_amount_cents
         end
       end
 
