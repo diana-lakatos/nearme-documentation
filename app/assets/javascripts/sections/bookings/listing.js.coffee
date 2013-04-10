@@ -14,12 +14,8 @@ class @Bookings.Listing
     @minimumDate = DNM.util.Date.idToDate(@data.minimum_date)
     @maximumDate = DNM.util.Date.idToDate(@data.maximum_date)
 
-  setDefaultQuantity: (qty, updateBookings = false) ->
+  setDefaultQuantity: (qty) ->
     @defaultQuantity = qty if qty >= 0
-
-    if updateBookings
-      for day in @bookedDays()
-        @updateOrRemoveBooking(DNM.util.Date.idToDate(day), @defaultQuantity)
 
   # Returns whether the date is within the bounds available for booking
   dateWithinBounds: (date) ->
@@ -66,6 +62,10 @@ class @Bookings.Listing
   getBookings: ->
     _.map @bookedDays(), (dateId) =>
       { date: dateId, quantity: @bookings[dateId] }
+
+  resetBookings: ->
+    for date in @bookedDates()
+      @removeDate(date)
 
   # Set booking for specified date
   #

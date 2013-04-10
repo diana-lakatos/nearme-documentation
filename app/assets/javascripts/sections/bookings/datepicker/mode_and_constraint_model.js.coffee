@@ -21,6 +21,8 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
     @mode = mode
 
   toggleDate: (date) ->
+    return unless @canSelectDate(date)
+
     switch @mode
       when Bookings.Datepicker.ModeAndConstraintModel.MODE_RANGE
         @setRangeTo(date)
@@ -131,9 +133,7 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
     # Our counting algorithm
     counter = (iteratorFunc) =>
       current = iteratorFunc(date)
-      i = 0
       while consecutive < @minDays
-        break if i > 28 # Count only up to 28, hard code prevention of infinite loop
         break unless @listing.dateWithinBounds(current)
 
         isSelected = @isSelected(current)
@@ -141,7 +141,6 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
         
         consecutive++ if isSelected
         current = iteratorFunc(current)
-        i++
 
     # Count backwards and forwards
     counter(directionPrev)

@@ -39,7 +39,8 @@ class @Bookings.ListingView
       qty = parseInt($(event.target).val())
       qty = @validateQuantityAndUpdatePlural(qty)
       $(event.target).val(qty)
-      @listing.setDefaultQuantity(qty, true)
+      @listing.setDefaultQuantity(qty)
+      @listing.resetBookings()
 
     @datepicker.bind 'datesChanged', (dates) =>
       @listing.setDates(dates)
