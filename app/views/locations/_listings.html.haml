@@ -13,8 +13,8 @@
 
         %h2.listing-name
           = listing.name
-        %p.listing-description
-          = truncate_with_ellipsis listing.description, 250, :class => "listing-description"
+
+        = truncate_with_ellipsis listing.description, 200, :class => "listing-description"
 
         = render 'booking_module', listing: listing
         .clearfix

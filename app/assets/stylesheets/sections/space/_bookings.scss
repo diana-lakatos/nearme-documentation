@@ -3,6 +3,7 @@ $booking-module-width: 280px;
 $booking-module-breakpoint: 580px;
 $booking-module-breakpoint-desktop: 900px;
 $listing-photo-width: 410px;
+$listing-photo-height: 254px;
 $listing-header-height: 58px;
 
 #space, .space {
@@ -49,24 +50,26 @@ $listing-header-height: 58px;
       position: relative;
       float: left; 
       clear: both;
-      width: 50%;
+      width: 55%;
       height: $booking-module-height;
       margin: -15px 0 0 -15px;
+
+      img {
+        width: $listing-photo-width;
+        height: $listing-photo-height;
+        margin: 0 auto;
+        max-width: $listing-photo-width;
+      }       
     }
 
     @media (max-width: $booking-module-breakpoint) {
       position: relative;
       float: left; 
       clear: both;
-      width: 100%;
+      width: 110%;
       height: auto;
-      margin: -15px -15px 0 -15px;
-
-      img {
-        width: 410px;
-        height: 208px;
-        margin: 0 auto;
-      }      
+      margin: -15px 0 0 -15px;
+     
     }
   }
 
@@ -192,8 +195,12 @@ $listing-header-height: 58px;
     display: inline-block;
     
     select {
-      display: inline-block;
+      position: absolute;
+      top: 0; 
+      right: 0;
+      margin: 0;
       vertical-align: middle;
+      z-index: $modal-z-index - 3;
     }
 
     span.customSelect {
