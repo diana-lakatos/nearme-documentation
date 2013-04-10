@@ -1,6 +1,6 @@
 require 'test_helper'
 require 'reservations_helper'
- 
+
 class ReservationTest < ActiveSupport::TestCase
   include ReservationsHelper
 
@@ -23,34 +23,34 @@ class ReservationTest < ActiveSupport::TestCase
 
     assert @reservation.periods
   end
-  
+
   describe 'expiration' do
-    
+
     context 'with an unsaved reservation' do
-      
+
       setup do
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
         @reservation.add_period(Date.today)
         @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
         Timecop.freeze
       end
-      
+
       teardown do
         Timecop.return
       end
-      
+
       should 'create a delayed_job task to run in 24 hours time when saved' do
         lambda {
           @reservation.save!
         }.should change(Delayed::Job, :count).by(1)
-        
+
         assert Delayed::Job.first.run_at == 24.hours.from_now
       end
-      
+
     end
-    
+
     context 'with a confirmed reservation' do
-      
+
       setup do
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
         @reservation.add_period(Date.today)
@@ -58,16 +58,16 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation.save!
         @reservation.confirm
       end
-      
+
       should 'not send any email if the expire method is called' do
         ReservationObserver.any_instance.expects(:after_expires).never
         assert_raises @reservation.expire
       end
-      
+
     end
-    
+
   end
-  
+
   context "confirmation" do
     should "attempt to charge user card if paying by credit card" do
       reservation = FactoryGirl.build(:reservation_with_credit_card)
@@ -121,6 +121,56 @@ class ReservationTest < ActiveSupport::TestCase
 
         # listing cost * 4 days * 5 people :)
         assert_equal @listing.daily_price_cents * dates.size * quantity, reservation.total_amount_cents
+      end
+
+      context "total amount" do
+
+        setup do 
+          @dates = (1..10).map do |week_no|
+            (1..5).map do |day_no|
+              Date.today.end_of_week + day_no.days + week_no.weeks
+            end
+          end
+          @dates.flatten!
+        end
+        should "with monthly and weekly prices zero" do
+
+          @listing.daily_price = 5
+          @listing.weekly_price = 0
+          @listing.monthly_price = 0
+          @listing.save!
+          quantity = 5
+          assert reservation = @listing.reserve!(@user, @dates, quantity)
+
+          # 50 days, each costs 5$
+          assert_equal 50 * @listing.daily_price_cents * quantity, reservation.total_amount_cents
+        end
+
+        should "with weekly price non zero and monthly zero" do
+
+          @listing.daily_price = 5
+          @listing.weekly_price = 30
+          @listing.monthly_price = 0
+          @listing.save!
+          quantity = 5
+          assert reservation = @listing.reserve!(@user, @dates, quantity)
+
+          # 7 weeks [ 49 days ] each for 30$, and 1 days for 5$ each
+          assert_equal ((7 * @listing.weekly_price_cents) + (1 * @listing.daily_price_cents)) * quantity, reservation.total_amount_cents
+        end
+
+        should "with weekly price non zero and monthly zero" do
+
+          @listing.daily_price = 5
+          @listing.weekly_price = 30
+          @listing.monthly_price = 100
+          @listing.save!
+          quantity = 5
+          assert reservation = @listing.reserve!(@user, @dates, quantity)
+
+          # 1 month [ 30 days], 2 weeks [ 14 days ], and 6 days
+          assert_equal ((1 * @listing.monthly_price_cents) + (2 * @listing.weekly_price_cents) + (1.8 * @listing.daily_price_cents)) * quantity, reservation.total_amount_cents
+        end
       end
 
       should "not reset total cost when saving an existing reservation" do
