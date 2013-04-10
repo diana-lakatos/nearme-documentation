@@ -11,7 +11,7 @@ $listing-header-height: 58px;
   .listing.box {
     overflow: hidden;
     height: auto;
-
+      
     @media (min-width: $booking-module-breakpoint-desktop) {
       height: $booking-module-height;
 
@@ -19,6 +19,19 @@ $listing-header-height: 58px;
         display: none;
       }
     }
+
+    .bottom-fade {
+      position: absolute;
+      bottom: 0;
+      left: $listing-photo-width;
+      width: 100%;
+      height: 40px;
+      @include background-image(linear-gradient(rgba(250,250,250,0), $dnm_white));
+
+      @media (max-width: $booking-module-breakpoint-desktop) {
+        display: none;
+      }
+    } 
 
     @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
 
@@ -85,6 +98,7 @@ $listing-header-height: 58px;
   }
 
   .listing-description {
+    margin: 15px 0 0;
 
     @media (max-width: $booking-module-breakpoint-desktop) {
       display: block;
@@ -97,22 +111,6 @@ $listing-header-height: 58px;
     @media (max-width: $booking-module-breakpoint) {
       margin: 15px 0;
     }
-  }
-
-  .truncated-ellipsis {
-    display: inline-block;
-    padding: 0 4px 10px;
-    margin: 0 4px;
-    border-radius: 2px;
-    border-radius: 4px;
-    background: darken( $gray2, 10%);
-    letter-spacing: 1px;
-    color: $dnm_black;
-    font-size: 20px;
-    line-height: 6px;
-    height:6px;
-    vertical-align: middle;
-    font-family: $font-bold;
   }
 
   .description {

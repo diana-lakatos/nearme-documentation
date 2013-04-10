@@ -12,14 +12,13 @@
   header {
     display: block;
     padding: $padding;
-    background: $gray3;
+    background: $gray2;
     margin-top: -$padding;
     margin-left: -$padding;
     margin-right: -$padding;
     margin-bottom: $padding;
     @include border-corner-radius(top, left, $border-radius);
     @include border-corner-radius(top, right, $border-radius);
-    @extend h2
   }
 
   // Wizzard items

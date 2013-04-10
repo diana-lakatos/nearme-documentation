@@ -38,16 +38,6 @@
       }
     }
     
-    span.ico-arrow-right {
-      display: block;
-      float: left;
-      width: 8%;
-      margin: 7px 0 0;
-      text-align: center;
-      font-size: 75%;
-      color: $gray5;
-    }
-
     .calendar-wrapper {
       display: block;
       margin: 0 0 8px;
@@ -56,7 +46,7 @@
       @include box-sizing(border-box);
       background: $gray2;
       color: $gray6;
-      width: 46%;
+      width: 48%;
       float: left;
 
       &.date-end {

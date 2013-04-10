@@ -4,7 +4,8 @@
 
       .listing.box{listing_data_attributes(listing)}
         %header
-          = listing.name
+          %h2
+            = listing.name
         .listing-photo-container
           .images
             - if listing.photos.any?
@@ -15,6 +16,8 @@
           = listing.name
 
         = truncate_with_ellipsis listing.description, 200, :class => "listing-description"
+
+        .bottom-fade
 
         = render 'booking_module', listing: listing
         .clearfix
