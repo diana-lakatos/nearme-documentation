@@ -10,14 +10,18 @@ $listing-header-height: 58px;
 
   .listing.box {
     overflow: hidden;
-    height: auto;
+    height: $booking-module-height;
       
     @media (min-width: $booking-module-breakpoint-desktop) {
       height: $booking-module-height;
+    }
 
-      header {
-        display: none;
-      }
+    @media (max-width: $booking-module-breakpoint-desktop) {
+      height: auto;
+    }
+
+    @media (max-width: $booking-module-breakpoint) {
+      height: auto;
     }
 
     .bottom-fade {
@@ -49,6 +53,14 @@ $listing-header-height: 58px;
         display: block;
       }
     }
+  }
+
+  header {
+    display: none;
+
+     @media (max-width: $booking-module-breakpoint-desktop) {
+      display: block;
+    }   
   }
 
   .listing-photo-container {
