@@ -31,7 +31,7 @@ class Datepicker.View
   '''
 
   dayTemplate: '''
-    <div class="datepicker-day datepicker-day-{{year}}-{{month}}-{{day}} datepicker-day-dow-{{dow}} {{klass}}" data-year="{{year}}" data-month="{{month}}" data-day="{{day}}">{{day}}</div>
+    <div class="{{klass}}" data-year="{{year}}" data-month="{{month}}" data-day="{{day}}">{{day}}</div>
   '''
 
   defaultOptions: {
@@ -135,11 +135,16 @@ class Datepicker.View
       'left': "#{left}px"
     )
 
-  dateAdded: (date) =>
-    @dateElement(date).addClass('active')
+  dateAdded: (date) ->
+    @updateDate(date)
 
-  dateRemoved: (date) =>
-    @dateElement(date).removeClass('active')
+  dateRemoved: (date) ->
+    @updateDate(date)
+
+  updateDate: (date) ->
+    klass = @classForDate(date, @model.getCurrentMonth())
+    console.info date, klass
+    @dateElement(date).removeClass().addClass(klass)
 
   # Setup and bind fields within the container
   bindEvents: ->
@@ -213,7 +218,13 @@ class Datepicker.View
     )
 
   classForDate: (date, monthDate = null) ->
-    klass = []
+    # Standard date classes
+    klass = [
+      'datepicker-day',
+      "datepicker-day-#{date.getFullYear()}-#{date.getMonth()}-#{date.getDate()}",
+      "datepicker-day-dow-#{date.getDay()}"
+    ]
+
     klass.push "active" if @model.isSelected(date)
     klass.push "datepicker-day-other-month" if monthDate and monthDate.getMonth() != date.getMonth()
 

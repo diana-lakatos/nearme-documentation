@@ -113,6 +113,10 @@
         background: none;
       }
 
+      &.active.implicit {
+        @include opacity(0.75);
+      }
+
       // Past/historical date
       &.closed, &.disabled.closed, &.datepicker-day-past, &.datepicker-day-past.disabled {
         color: $gray5;

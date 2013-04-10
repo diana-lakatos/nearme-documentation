@@ -17,6 +17,11 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
     @listing = listing
     @minDays = listing.minimumBookingDays or 1
 
+    # "Range dates" are dates which haven't been explicitly added,
+    # but are implicitly added through range selection or as a requirement
+    # for minimum consecutive days.
+    @rangeDates = {}
+
   setMode: (mode) ->
     @mode = mode
 
@@ -34,7 +39,6 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
           @removeDate(date)
           @reduceRangeToMeetConstraint(date)
         else
-          # Add the date
           @addDate(date)
           @extendRangeToMeetConstraint(date)
 
@@ -50,9 +54,36 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
 
     current = startDate
     while DNM.util.Date.toId(current) != DNM.util.Date.toId(date)
-      @addDate(current) if @canSelectDate(current)
+      if @canSelectDate(current)
+        @addRangeDate(current)
+
       current = DNM.util.Date.next(current)
+
     @addDate(date) if @canSelectDate(date)
+
+  # Wrap remove date to clear the previous 'range date' state, a special
+  # state for this specific use case.
+  removeDate: (date) ->
+    @clearRangeDate(date)
+    super
+
+  # Wrapper for addDate that sets the date as an range-added date.
+  addRangeDate: (date) ->
+    @setRangeDate(date)
+    @addDate(date)
+
+  # Test whether a date was implicitly added as a 'range date'
+  isRangeDate: (date) ->
+    @rangeDates[DNM.util.Date.toId(date)]
+
+  # Flag whether a date was implicitly selected via a range selection
+  # (and also constraint requirement)
+  setRangeDate: (date) ->
+    @rangeDates[DNM.util.Date.toId(date)] = true
+
+  # Clear that a date was selected via range selection
+  clearRangeDate: (date) ->
+    @rangeDates[DNM.util.Date.toId(date)] = false
 
   canSelectDate: (date) ->
     @listing.availabilityFor(date) >= @listing.defaultQuantity
@@ -60,21 +91,32 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
   # Starting at a given date, scan dates validate that it meets the consecutive bookings
   # constraint. If it doesn't, add next available dates until it does.
   extendRangeToMeetConstraint: (date) ->
-    futureIterator = (date) -> DNM.util.Date.next(date)
-    pastIterator   = (date) -> DNM.util.Date.previous(date)
-
+    # Algorithm for extending to meet the min days constraint
     extender = (iteratorFunc) =>
-      current = iteratorFunc(date)
+      # We try to keep going until the target date meets the 
+      # 'consecutive days' constraint.
+      current = date
       until @meetsConstraint(date)
-        break unless @listing.dateWithinBounds(current)
-        @addDate(current) if @canSelectDate(current)
+        # Grab the next date along
         current = iteratorFunc(current)
+
+        # If we fall outside of the bookable dates for this listing,
+        # break our loop.
+        break unless @listing.dateWithinBounds(current)
+
+        # If we can select this date, we add it.
+        if @canSelectDate(current)
+          @addRangeDate(current)
+
+    # Iteration functions
+    directionNext = (date) -> DNM.util.Date.next(date)
+    directionPrev = (date) -> DNM.util.Date.previous(date)
 
     # Try to extend forward first, then work backwards.
     # We go backwards due to an edge case at the end of the bookable range,
     # where we need to add dates in the past to constraint the selection.
-    extender(futureIterator)
-    extender(pastIterator)
+    extender(directionNext)
+    extender(directionPrev)
 
   # Starting from a given date, scan the dates around it to ensure that the act of removing that
   # date hasn't invalidated the minimum date selection constraints. If it has, remove relevant
@@ -131,21 +173,30 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
     directionNext = (date) -> DNM.util.Date.next(date)
 
     # Our counting algorithm
+    # We're trying to count the "consecutive days" total for the target date.
+    # That is the number of connected days before or after the current date,
+    # ignoring dates that aren't available for booking.
     counter = (iteratorFunc) =>
       current = iteratorFunc(date)
       while consecutive < @minDays
         break unless @listing.dateWithinBounds(current)
 
-        isSelected = @isSelected(current)
-        break if @canSelectDate(current) and !isSelected
+        if @isSelected(current)
+          # We increment our counter if the date is selected
+          consecutive++
+        else
+          # As soon as we encounter a date that is selectable, but isn't selected
+          # we can break our counting loop, as it is no longer consecutive.
+          break if @canSelectDate(current)
         
-        consecutive++ if isSelected
+        # Advance to the next date to test against
         current = iteratorFunc(current)
 
-    # Count backwards and forwards
+    # Count backwards and forwards, using the same algorithm with a different
+    # iteration function.
     counter(directionPrev)
     counter(directionNext)
 
-    # Return our count
+    # Return our count of consecutive days
     consecutive
 

@@ -21,6 +21,11 @@ class @Bookings.Datepicker.AvailabilityView extends window.Datepicker.View
 
     klass.push 'disabled' unless @listing.availabilityFor(date) >= qty
     klass.push 'closed' unless @listing.openFor(date)
-    klass.join ' '
 
+    # Our custom model keeps track of whether dates were added via the range
+    # selection.
+    if @model.isRangeDate and @model.isRangeDate(date)
+      klass.push 'implicit'
+
+    klass.join ' '
 
