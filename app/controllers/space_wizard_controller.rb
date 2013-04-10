@@ -89,9 +89,19 @@ class SpaceWizardController < ApplicationController
 
   def convert_price_params
     # method to_f removes all special characters, like hyphen. However we do not want to convert nil to 0, that's why modifier.
-    params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:daily_price] = params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:daily_price].to_f if params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:daily_price]
-    params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:weekly_price] = params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:weekly_price].to_f if params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:weekly_price]
-    params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:monthly_price] = params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:monthly_price].to_f if params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:monthly_price]
+    if params_hash_complete?
+      prm = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
+      [:daily_price, :weekly_prie, :monthly_price].each do |period_price|
+        prm[period_price] = prm[period_price].to_f if prm[period_price]
+      end
+    end
+  end
+
+  def params_hash_complete?
+    params[:user] && 
+    params[:user][:companies_attributes] && 
+    params[:user][:companies_attributes]["0"][:locations_attributes] &&
+    params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes] 
   end
 
 end
