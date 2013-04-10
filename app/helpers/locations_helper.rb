@@ -12,13 +12,16 @@ module LocationsHelper
 
   def location_listings_json(location = @location)
     location.listings.map { |listing|
+      availability = listing.availability_status_between(Date.today, Date.today.advance(:years => 1))
       {
         :id => listing.id,
         :name => listing.name,
         :first_available_date => listing.first_available_date.strftime("%Y/%m/%d"),
         :minimum_booking_days => listing.minimum_booking_days,
         :quantity => listing.quantity,
-        :availability => listing.availability_status_between(Date.today, Date.today.advance(:years => 1)).as_json,
+        :availability => availability.as_json,
+        :minimum_date => availability.start_date,
+        :maximum_date => availability.end_date,
         :prices => listing.period_prices.reject { |period, price| price.nil? }.map { |period, price|
           {
             :price_cents => price.cents,

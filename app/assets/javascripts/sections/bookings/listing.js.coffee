@@ -11,12 +11,22 @@ class @Bookings.Listing
     @minimumBookingDays = @data.minimum_booking_days
     @bookings = {}
     @minimumBookingDays = @data.minimum_booking_days
+    @minimumDate = DNM.util.Date.idToDate(@data.minimum_date)
+    @maximumDate = DNM.util.Date.idToDate(@data.maximum_date)
 
   setDefaultQuantity: (qty, updateBookings = false) ->
     @defaultQuantity = qty if qty >= 0
 
     if updateBookings
-      @updateOrRemoveBooking(DNM.util.Date.idToDate(day), @defaultQuantity) for day in @bookedDays()
+      for day in @bookedDays()
+        @updateOrRemoveBooking(DNM.util.Date.idToDate(day), @defaultQuantity)
+
+  # Returns whether the date is within the bounds available for booking
+  dateWithinBounds: (date) ->
+    time = date.getTime()
+    return false if time < @minimumDate.getTime()
+    return false if time > @maximumDate.getTime()
+    true
 
   totalFor: (date) ->
     @data.quantity
