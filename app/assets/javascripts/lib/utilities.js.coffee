@@ -16,13 +16,6 @@ DNM.util =
       if matches = dateId.match(/^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$/)
         new Date(parseInt(matches[1], 10), parseInt(matches[2], 10)-1, parseInt(matches[3], 10), 0, 0, 0, 0)
 
-    inPast: (date) ->
-      now = new Date()
-      past = now.getFullYear() > date.getFullYear()
-      past ||= now.getFullYear() == date.getFullYear() and now.getMonth() > date.getMonth()
-      past ||= now.getFullYear() == date.getFullYear() and now.getMonth() == date.getMonth() and now.getDate() > date.getDate()
-      past
-
     suffix: (date) ->
       switch date.getDate()
         when 1, 21, 31 then 'st'
