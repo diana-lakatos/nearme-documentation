@@ -11,5 +11,5 @@ When /^I fill in valid space details$/ do
   fill_in 'Listing description', with:'We have a group of several shared desks available.'
   select 'Desk', from: 'Listing type'
   fill_in 'Quantity available', with:1
-  attach_file 'company[locations_attributes][0][listings_attributes][0][photos_attributes][0][image]', "#{Rails.root}/test/assets/foobear.jpeg"
+  attach_file 'user[companies_attributes][0][locations_attributes][0][listings_attributes][0][photos_attributes][0][image]', "#{Rails.root}/test/assets/foobear.jpeg"
 end

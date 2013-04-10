@@ -58,7 +58,7 @@
 
           = listings_form.input :confirm_reservations, :label => 'Bookings require my confirmation'
 
-          = file_upload_input_with_label('Photos', space_wizard_photo_path, "company[locations_attributes][0][listings_attributes][0][photos_attributes][0][image]", "Upload Photos") do
+          = file_upload_input_with_label('Photos', space_wizard_photo_path, "user[companies_attributes][0][locations_attributes][0][listings_attributes][0][photos_attributes][0][image]", "Upload Photos") do
             - unless current_user.companies.any? { |c| c.id }
               - current_user.photos.each do |photo|
                 = fileupload_photo_with_input(photo.image_url(:thumb), destroy_space_wizard_photo_path(:id => photo.id), photo.id) unless photo.content_id
