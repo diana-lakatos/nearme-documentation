@@ -1,6 +1,6 @@
 # Each Listing has it's own object which keeps track of number booked, availability etc.
 class @Bookings.Listing
-  asEvented.call(Listing.prototype)
+  asEvented.call(@prototype)
 
   defaultQuantity: 1
 
