@@ -39,7 +39,7 @@ class SpaceWizardController < ApplicationController
 
   def submit_photo
     @photo = Photo.new
-    @photo.image = params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:photos_attributes]["0"][:image]
+    @photo.image = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:photos_attributes]["0"][:image]
     @photo.content_type = 'Listing'
     @photo.creator_id = current_user.id
     if @photo.save
