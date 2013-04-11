@@ -37,22 +37,19 @@ $listing-header-height: 58px;
       }
     } 
 
-    @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
+    .booking-module-container {
 
-      .booking-module-container {
+      @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
         float: right; 
         clear: both;
         width: 50%;
         top: $listing-header-height;
-      }      
-    }
-
-    @media (max-width: $booking-module-breakpoint) {
-
-      header{
-        display: block;
       }
-    }
+
+      .booking-module {
+
+      }  
+    }  
   }
 
   header {
