@@ -102,6 +102,7 @@
       .make-reservation {
         float: right;
         font:normal 26px/46px $font-medium, sans-serif;
+        color: $gray8;
         margin-top: 10px;
 
         @media (max-width: 890px) {
@@ -117,7 +118,7 @@
       .book {
         color: #848b8f;
 
-        @media (max-width: 890px) {
+        @media (max-width: 1200px) {
           width: 100%;
         }
       }
@@ -279,7 +280,7 @@
   a.btn.btn-large {
     vertical-align: bottom;
 
-    @media (max-width: 890px) {
+    @media (max-width: 1200px) {
       display: block;
       clear: both;
       width:100%;
