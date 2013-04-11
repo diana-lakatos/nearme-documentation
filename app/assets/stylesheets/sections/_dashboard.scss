@@ -94,6 +94,7 @@ section.locations-holder {
       font-size: 24px;
       margin-bottom: 0;
       cursor: pointer;
+      color: $gray8;
 
       span {
         white-space: nowrap;
@@ -152,7 +153,7 @@ section.locations-holder {
 
       &.btn-blue.btn-large {
         text-align: left;
-        @include opacity(.5);
+        @include opacity(.3);
 
         &:hover {
           @include opacity(1);
