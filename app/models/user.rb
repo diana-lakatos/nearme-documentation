@@ -151,4 +151,8 @@ class User < ActiveRecord::Base
   def avatar_provided?
     return AvatarUploader.new.to_s != self.avatar.to_s
   end
+
+  def first_listing
+    companies.first.locations.first.listings.first
+  end
 end

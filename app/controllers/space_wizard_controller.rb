@@ -26,7 +26,7 @@ class SpaceWizardController < ApplicationController
 
     if @user.save
       if params[:uploaded_photos]
-        listing = @company.locations.first.listings.first
+        listing = @user.first_listing
         listing.photos << current_user.photos.find(params[:uploaded_photos])
         listing.save!
       end
