@@ -66,6 +66,11 @@ class @Bookings.Datepicker
     @endDatepickerModel.on 'rangeApplied', =>
       @setDatepickerMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_PICK)
 
+      # If the user selects the same start/end date, let's close the datepicker
+      # and assume they were only trying to select one day.
+      if @endDatepicker.getDates().length <= 1
+        @endDatepicker.hide()
+
   setDates: (dates) ->
     dates = @sortDates(date)
     @startDatepicker.setDates(dates)
