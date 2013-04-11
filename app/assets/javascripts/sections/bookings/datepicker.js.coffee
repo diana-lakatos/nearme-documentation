@@ -9,9 +9,9 @@ class @Bookings.Datepicker
   asEvented.call(Datepicker.prototype)
 
   # Some text constants used in the UI
-  TEXT_START: 'Select a start date'
-  TEXT_END_RANGE: 'Select an end date'
-  TEXT_END_PICK: 'Add or remove days'
+  TEXT_START: '<div class="datepicker-text-fadein">Select a start date</div>'
+  TEXT_END_RANGE: '<div class="datepicker-text-fadein">Select an end date</div>'
+  TEXT_END_PICK: '<div class="datepicker-text-fadein">Add or remove days</div>'
 
   # Initialize the date picker components
   #
