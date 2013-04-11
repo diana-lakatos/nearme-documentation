@@ -13,14 +13,14 @@
           %span Or
 
         = form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
-          .email-holder
+          .email-holder.input-icon-holder
             = f.text_field :email, :placeholder => "Email"
             %span.ico-mail
-          .password-holder  
+          .password-holder.input-icon-holder
             = f.password_field :password, :placeholder => "Password"
             %span.ico-lock
 
-          %p.notice
+          %div.pnotice
             =raw "Forgot? #{link_to('Reset your password', new_user_password_url)}"
 
           .actions

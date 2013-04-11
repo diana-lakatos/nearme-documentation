@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
            :foreign_key => "creator_id"
   attr_accessible :companies_attributes
   accepts_nested_attributes_for :companies
+  validates_associated :companies
 
   has_many :locations,
            :through => :companies,
@@ -65,7 +66,7 @@ class User < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :password, :if => :password_required?
   validates_presence_of :email
-  validates :avatar, :file_mime_type => {:content_type => /image/}, :if => Proc.new{|user| user.avatar.file.present? && user.avatar.file.content_type.present?}
+  validates :avatar, :file_mime_type => {:content_type => /image/}, :if => Proc.new{|user| user.avatar.present? && user.avatar.file.present? && user.avatar.file.content_type.present? }
 
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :validatable, :token_authenticatable
@@ -149,5 +150,9 @@ class User < ActiveRecord::Base
 
   def avatar_provided?
     return AvatarUploader.new.to_s != self.avatar.to_s
+  end
+
+  def first_listing
+    companies.first.locations.first.listings.first
   end
 end

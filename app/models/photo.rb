@@ -11,6 +11,7 @@ class Photo < ActiveRecord::Base
 
   validates :image, :presence => true
   validates :content_type, :presence => true
+  validates_length_of :caption, :maximum => 120, :allow_blank => true
 
   mount_uploader :image, PhotoUploader
 

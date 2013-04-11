@@ -16,10 +16,18 @@ Spork.prefork do
   # newer version of cucumber-rails. Consider adding your own code to a new file 
   # instead of editing this one. Cucumber will automatically load all features/**/*.rb
   # files.
+  if Spork.using_spork?
+    Spork.trap_method(Rails::Application, :eager_load!)
+    Spork.trap_method(Rails::Application::RoutesReloader, :reload!)
+    Spork.trap_method(Rails::Application, :reload_routes!)
+    Spork.trap_method(ThinkingSphinx::Context, :prepare)
+    Rails.application.railties.all { |r| r.eager_load! }
+  end
 
   require "json_spec/cucumber"
   require 'cucumber/rails'
   require 'ruby-debug'
+
 
   # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
   # order to ease the transition to Capybara we set the default here. If you'd

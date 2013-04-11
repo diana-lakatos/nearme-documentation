@@ -1,7 +1,3 @@
-section.registrations {
-  @include icon-form; 
-}
-
 section.space_wizard {
   min-height: 800px;
   
@@ -52,5 +48,6 @@ section.space_wizard {
 
   .input-disabled{
     @include opacity(.4);
+    filter: inherit;
   }
 }
