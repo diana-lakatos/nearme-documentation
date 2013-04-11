@@ -75,7 +75,15 @@ module ApplicationHelper
   end
 
   def in_signed_in_or_sign_up?
-    params[:controller]=='sessions' || (params[:controller]=='registrations' && params[:action]=='new')
+    in_signed_in? || in_sign_up?
+  end
+
+  def in_signed_in?
+    params[:controller]=='sessions'
+  end
+
+  def in_sign_up?
+    params[:controller]=='registrations'
   end
 
   def link_to_once(*args, &block)

@@ -33,6 +33,10 @@ class ApplicationController < ActionController::Base
     stored_url_for(resource)
   end
 
+  def already_signed_in?
+    request.xhr? && current_user ?  (render 'sessions/already_signed_in') : false
+  end
+
   # Some generic information on wizard for use accross controllers
   WizardInfo = Struct.new(:id, :url)
 

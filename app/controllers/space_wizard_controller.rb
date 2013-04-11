@@ -11,7 +11,7 @@ class SpaceWizardController < ApplicationController
     if current_user
       redirect_to space_wizard_list_url
     else
-      redirect_to new_user_registration_url(:wizard => 'space')
+      redirect_to new_user_registration_url(:wizard => 'space', :return_to => space_wizard_list_path)
     end
   end
 
