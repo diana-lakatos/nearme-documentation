@@ -16,6 +16,7 @@
 //= require ./vendor/infobox
 //= require ./vendor/jquery.scrollto
 //= require ./vendor/placeholder
+//= require ./vendor/jquery.ias
 //= require jquery-fileupload/basic
 //= require underscore
 //= require backbone

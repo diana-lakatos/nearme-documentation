@@ -9,6 +9,7 @@
 - if listings.any?
   %section#results.list
     = render partial: 'search/list/listing', collection: listings
+    = will_paginate listings
     = yield :loading
 - else
   %section#results.no_results

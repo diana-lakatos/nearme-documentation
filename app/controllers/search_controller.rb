@@ -25,7 +25,18 @@ class SearchController < ApplicationController
   end
   
   def listings
-    @listings ||= Listing.find_by_search_params(search)
+    @listings ||=  get_listings
+  end
+
+  def get_listings
+    collection = Listing.find_by_search_params(search)
+    params[:page] ||= 1
+    if result_view == 'list'
+      collection = WillPaginate::Collection.create(params[:page], 20, collection.count) do |pager|
+        pager.replace(collection[pager.offset, pager.per_page].to_a)
+      end
+    end
+    collection
   end
   
   def result_view

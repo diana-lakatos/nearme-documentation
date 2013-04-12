@@ -58,7 +58,7 @@ class @SpaceWizardSpaceForm
     @container.on 'change', 'input[type=checkbox][name*=free]', =>
       @freeChanged()
 
-    @container.on 'change', '#company_locations_attributes_0_currency', (event) ->
+    @container.on 'change', '#user_companies_attributes_0_locations_attributes_0_currency', (event) ->
       $('.currency-holder').html($('#currency_'+ $(this).val()).text())
     $('#company_locations_attributes_0_currency').trigger('change')
 
