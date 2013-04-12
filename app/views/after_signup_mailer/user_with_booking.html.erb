@@ -1,0 +1,37 @@
+<p>Hi <%= @user.name %>,</p>
+
+<p>
+  Welcome to Desks Near Me, and congratulations on your first booked space!  
+</p>
+
+<p>
+  That’s great that you just booked your first space in <%= @user.reservations.first.listing.location.city.present? ? @user.reservations.first.listing.location.city : @user.reservations.first.listing.location.name %>. 
+</p>
+
+<p>
+  Here are a few tips to highlight some of our best features that our guests love.
+</p>
+
+
+<p>
+  Search for other spaces while you are on the go! <%= link_to "Download our iPhone app", "https://itunes.apple.com/us/app/desks-near-me/id529634519?mt=8" %>.
+</p>
+
+
+<p>
+  You can <%= link_to "search and book here", search_url %> to find your next space for the day, week or month.
+</p>
+
+
+<p>
+  Maybe you have extra space too? It's FREE (seriously) to add your space and start making money. Simply <%= link_to "login here to add your space", new_user_session_url(:return_to => space_wizard_list_path)  %>.
+</p>
+
+
+<% if @user.reservations.first.listing.location.city.present? %>
+<p>
+  <%= link_to "Check the weather in #{@user.reservations.first.listing.location.city}", "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=#{@user.reservations.first.listing.location.city}" %>.
+</p>
+<% end %>
+
+<%= render 'footer' %>

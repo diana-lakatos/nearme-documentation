@@ -1,0 +1,18 @@
+Hi <%= @user.name %>,
+
+Welcome to Desks Near Me, and congratulations on your first booked space!  
+
+That’s great that you just booked your first space in <%= @user.reservations.first.listing.location.city.present? ? @user.reservations.first.listing.location.city : @user.reservations.first.listing.location.name %>. 
+
+Here are a few tips to highlight some of our best features that our guests love.
+
+Search for other spaces while you are on the go! Download our iPhone app https://itunes.apple.com/us/app/desks-near-me/id529634519?mt=8.
+
+You can search and book here <%= search_url %> to find your next space for the day, week or month.
+
+Maybe you have extra space too? It's FREE (seriously) to add your space and start making money. Simply login here to add your space <%= new_user_session_url(:return_to => space_wizard_list_path) %>.
+
+<% if @user.reservations.first.listing.location.city.present? %>Check the weather in <% @user.reservations.first.listing.location.city %> http://www.wunderground.com/cgi-bin/findweather/getForecast?query=<%=@user.reservations.first.listing.location.city %>.
+
+<% end %>
+<%= render 'footer' %>
