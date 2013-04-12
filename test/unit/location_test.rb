@@ -22,12 +22,13 @@ class LocationTest < ActiveSupport::TestCase
   should_not allow_value('x' * 251).for(:description)
 
   context "#name" do
-    should "use company name if location name is nil" do
+    should "use combination of company name and street" do
       @location = FactoryGirl.create(:location_in_san_francisco)
-      @location.name = nil
-      @location.save!
-      @location.reload
-      assert_equal @location.company.name, @location.name
+      @location.company.name = 'This is company name'
+      @location.street = 'Street'
+      @location.company.save!
+      @location.company.reload
+      assert_equal "This is company name @ Street", @location.name
     end
   end
 

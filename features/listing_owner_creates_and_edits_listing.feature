@@ -8,7 +8,7 @@ Feature: Location Owner Creates/Edits Listing
     And I am logged in as the user
     And a company exists with creator: the user, name: "Garage Co"
     And a listing_type exists with name: "Desk"
-    And a location exists with company: the company, creator: the user, name: "The Garage", description: "Aliquid eos ab quia officiis sequi."
+    And a location exists with company: the company, creator: the user, address: "The Garage", description: "Aliquid eos ab quia officiis sequi."
 
   Scenario: A location owner can create a listing
     Given I am on the manage locations page
@@ -20,8 +20,8 @@ Feature: Location Owner Creates/Edits Listing
     Then this listing should exist
 
   Scenario: A listing owner can edit a location
-    When I change that locations name to Joe's Codin' Garage
-    Then a location should exist with name: "Joe's Codin' Garage"
+    When I change that locations address to Auckland
+    Then a location should exist with address: "Auckland"
 
   Scenario: A location owner can delete a location
     When I delete that location

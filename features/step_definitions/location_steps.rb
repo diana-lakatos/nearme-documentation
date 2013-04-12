@@ -22,9 +22,9 @@ Then /^that location has that alternative currency$/ do
   @location.currency.should == "EUR"
 end
 
-When /^I change that locations name to Joe's Codin' Garage$/ do
+When /^I change that locations address to Auckland$/ do
   visit edit_manage_location_path model!('location')
-  fill_in "Space name", with: "Joe's Codin' Garage"
+  fill_in "Space location", with: "Auckland"
   click_link_or_button "Update Location"
 end
 

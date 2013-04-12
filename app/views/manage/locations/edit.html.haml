@@ -9,8 +9,6 @@
     = simple_form_for([:manage, @location], :html => { :class => 'form-horizontal edit_location' }) do |f|
       = render 'shared/context_flash'
 
-      = f.input :name, :label => 'Space name', :placeholder => 'Name your space!'
-
       .control-group
         = f.label :address, 'Space location', :class => "control-label"
         .controls

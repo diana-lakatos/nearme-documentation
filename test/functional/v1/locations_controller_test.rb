@@ -27,10 +27,10 @@ class V1::LocationsControllerTest < ActionController::TestCase
   end
 
   test "update should be successful" do
-    new_name = 'My location'
-    put :update, id: @location, location: { name: new_name }, format: 'json'
+    new_description = 'My awesome description'
+    put :update, id: @location, location: { description: new_description }, format: 'json'
     @location = Location.find(@location.id)
-    assert_equal new_name, @location.name
+    assert_equal new_description, @location.description
     assert_response :success
 
   end
