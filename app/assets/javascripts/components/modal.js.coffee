@@ -116,7 +116,10 @@ class @Modal
 
     request = $.ajax(ajaxOptions)
     request.success (data) =>
-      @showContent(data)
+      if data.redirect
+        document.location = data.redirect
+      else
+        @showContent(data)
 
   # Position the modal on the page.
   positionModal: ->
