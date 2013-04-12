@@ -1,0 +1,25 @@
+<p>
+  Hi <%= @user.name %>,
+</p>
+
+<p>
+  Welcome to Desks Near Me!  
+</p>
+
+<p>
+  I saw that you signed up but haven't booked or added a space for rent.  I’ll give you a quick overview of what you’ll discover when you use Desks Near Me.
+</p>
+
+<p>
+  Are you searching for your next flexible space to work? <%= link_to "You can search and book here", search_url %> to find a space for the day, week or month; or
+</p>
+
+<p>
+  Do you have unused office space and desks you’d like to offer others to rent? It's FREE (seriously) to add your space and start making money. 
+</p>
+
+<p>
+  Simply login to add all the details through <%= link_to "your dashboard", controlpanel_path %>.
+</p>
+
+<%= render 'footer' %>

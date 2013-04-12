@@ -19,12 +19,19 @@ class AfterSignupMailer < DesksNearMeMailer
     class Preview < MailView
 
       def help_offer_with_listing
-        ::AfterSignupMailer.help_offer(User.first)
+        @user = User.all.detect { |u| !u.listings.empty?  }
+        ::AfterSignupMailer.help_offer(@user)
       end
 
-      def help_offer_without_listing
-        @user = User.all.detect { |u| u.listings.empty? }
-        raise "No user without listing" unless @user
+      def help_offer_with_booking
+        @user = User.all.detect { |u| !u.reservations.empty? && u.listings.empty? }
+        raise "No user with booking and without listing" unless @user
+        ::AfterSignupMailer.help_offer(@user)
+      end
+
+      def help_offer_without_listing_and_booking
+        @user = User.all.detect { |u| u.listings.empty? && u.reservations.empty? }
+        raise "No user without listing and without reservation" unless @user
         ::AfterSignupMailer.help_offer(@user)
       end
 
@@ -34,7 +41,11 @@ class AfterSignupMailer < DesksNearMeMailer
   private
 
   def choose_template
-    @user.listings.empty? ? :help_with_listing : :further_help
+    if @user.listings.empty?
+      @user.reservations.empty? ? :user_without_listing_and_booking : :user_with_booking
+    else
+      :user_with_listing
+    end
   end
 
 end
