@@ -44,9 +44,10 @@ class Search.SearchController extends Search.Controller
       item: '.listing',
       pagination: '.pagination',
       next: '.next_page',
-      triggerPageThreshold: 25,
-      thresholdMargin: -250,
-      loader: '<h1><div>Loading More Results</div></h1>',
+      triggerPageThreshold: 50,
+      history: false,
+      thresholdMargin: -90,
+      loader: '<h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1>',
       onRenderComplete: (items) ->
         for item in items
           new HeightConstrainer( $('article.listing[data-id='+item.getAttribute("data-id")+'] .details-container'), $('article.listing[data-id='+item.getAttribute("data-id")+'] .photo-container'), { ratio: 254/410 })
