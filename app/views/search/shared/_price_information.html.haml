@@ -1,0 +1,9 @@
+- if listing.daily_price.to_f > 0 || (listing.weekly_price.to_f == 0 && listing.monthly_price.to_f == 0)
+  %span.label.label-success
+    = "#{money_without_cents_and_with_symbol(listing.daily_price.to_f)}/day"
+- if listing.weekly_price.to_f > 0
+  %span.label.label-warning
+    = "#{money_without_cents_and_with_symbol(listing.weekly_price)}/wk"
+- if listing.monthly_price.to_f > 0
+  %span.label.label-important
+    = "#{money_without_cents_and_with_symbol(listing.monthly_price)}/mo"
