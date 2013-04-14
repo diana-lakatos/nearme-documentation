@@ -1,6 +1,12 @@
 # coding: utf-8
-Given /^a listing in (.*) exists( with that amenity)?$/ do |city, amenity|
+Given /^a listing( with nil prices)? in (.*) exists( with that amenity)?$/ do |nil_prices, city, amenity|
   listing = create_listing_in(city)
+  if nil_prices
+    listing.daily_price = nil
+    listing.weekly_price = nil
+    listing.monthly_price = nil
+    listing.save!
+  end
   listing.location.amenities << model!("amenity") if amenity
 end
 
