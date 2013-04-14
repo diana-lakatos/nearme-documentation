@@ -22,7 +22,7 @@ module LocationsHelper
         :availability => availability.as_json,
         :minimum_date => availability.start_date,
         :maximum_date => availability.end_date,
-        :prices => listing.period_prices.reject { |period, price| price.nil? }.map { |period, price|
+        :prices => listing.period_prices.reject { |period, price| price.nil? || price.cents <= 0 }.map { |period, price|
           {
             :price_cents => price.cents,
             :period      => period.to_i,

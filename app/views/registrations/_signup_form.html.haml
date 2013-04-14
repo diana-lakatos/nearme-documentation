@@ -26,7 +26,7 @@
     %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, :target => '_blank'}.
 
     .actions
-      = f.submit 'Sign up', :disable_with => "Signing up...", :class => 'desksnearme submit'
+      = f.submit 'Sign up', :class => 'desksnearme submit', :disable_with => "Signing up..."
 
 .text-center.already-a-user= link_to('Already a user?', new_user_session_path(:return_to => params[:return_to]))      
 

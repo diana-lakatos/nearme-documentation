@@ -5,6 +5,7 @@
         - search_geofields.each do |geofield|
           = hidden_field_tag geofield, ''
         = hidden_field_tag :v, result_view
+        = hidden_field_tag :page, 1
         .row-fluid
           .span12
             .list-map-toggle

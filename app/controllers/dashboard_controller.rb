@@ -20,7 +20,7 @@ class DashboardController < ApplicationController
 
   #routes
   def manage_guests
-    @locations  = current_user.companies.first.locations
+    @locations  = current_user.try(:companies).first.try(:locations)
     @guest_list ||= current_user.listing_reservations.upcoming
   end
 

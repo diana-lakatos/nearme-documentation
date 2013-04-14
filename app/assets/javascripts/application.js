@@ -16,6 +16,7 @@
 //= require ./vendor/infobox
 //= require ./vendor/jquery.scrollto
 //= require ./vendor/placeholder
+//= require ./vendor/jquery.ias
 //= require jquery-fileupload/basic
 //= require underscore
 //= require backbone
@@ -120,6 +121,12 @@ if($.browser.mozilla) {
     }
   });
 };
+
+$(document).on('click', 'div.alert a.close', function(e){
+  wrapper = $(this).closest('.alert');
+  wrapper.fadeOut('slow');
+  return false;
+});
 
 function doListingGoogleMaps() {
   return;

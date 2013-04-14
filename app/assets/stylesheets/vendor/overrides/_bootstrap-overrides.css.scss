@@ -113,9 +113,10 @@ abbr[data-original-title] {
 }
 
 // Override bootstrap mixin that caused opacity to be reduced by 10x
+
 @mixin opacity($opacity) {
   opacity: $opacity;
-  filter: alpha(opacity=$opacity);
+  filter: alpha(opacity=$opacity * 100);
 }
 
 @media (max-width: 767px) {

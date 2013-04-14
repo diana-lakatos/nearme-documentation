@@ -19,4 +19,14 @@ namespace :simplify do
     LocationType.delete_all(['name NOT IN (?)', new_location_type_names])
   end
 
+  desc "Remove all listing types, add three of them and set the default"
+  task :listing_types => :environment do
+    new_office_space_ids = ListingType.where(['name IN (?)', ["Event Space", "Room"]]).pluck(:id)
+    new_office = ListingType.where(:name => 'Office Space').first
+    Listing.update_all({:listing_type_id => new_office.id}, ['listing_type_id IN (?)', new_office_space_ids]) if new_office && !new_office_space_ids.empty?
+    ListingType.where(['name IN (?)', ["Event Space", "Room"]]).all.each do |listing_type|
+      listing_type.destroy
+    end
+    puts "#{new_office_space_ids.count} listings have been updated"
+  end
 end

@@ -14,16 +14,30 @@ class AfterSignupMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?("Welcome to Desks Near Me!")
   end
 
-  test "offer help with listing" do
+  context "version if user booked a listing" do
+
+    setup do
+      @reservation = FactoryGirl.create(:reservation, :owner => @user)
+    end
+
+    should "use proper template" do
+      mail = AfterSignupMailer.help_offer(@user.id)
+      assert mail.html_part.body.include?("and congratulations on your first booked space!")
+      assert !mail.html_part.body.include?("The Desks Near Me Team")
+    end
+
+  end
+
+  test "version if user added a listing" do
+    @listing = FactoryGirl.create(:listing, :creator => @user)
     mail = AfterSignupMailer.help_offer(@user.id)
-    assert mail.html_part.body.include?("I saw that you signed up but haven't added a space for rent.")
+    assert mail.html_part.body.include?("Thanks for listing your space with Desks Near Me!")
     assert !mail.html_part.body.include?("The Desks Near Me Team")
   end
 
-  test "offer help with anything if listing created" do
-    @listing = FactoryGirl.create(:listing, :creator => @user)
+  test "version if user neither booked a listing nor added a listing" do
     mail = AfterSignupMailer.help_offer(@user.id)
-    assert mail.html_part.body.include?("Thanks for listing your space")
+    assert mail.html_part.body.include?("I saw that you signed up but haven't booked or added a space for rent")
     assert !mail.html_part.body.include?("The Desks Near Me Team")
   end
 

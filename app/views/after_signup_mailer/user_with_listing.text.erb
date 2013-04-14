@@ -1,0 +1,11 @@
+Hi <%= @user.name %>,
+
+Thanks for listing your space with Desks Near Me!  
+
+We’re working really hard to make it easy for the right business professionals to find and book your space.
+
+You'll find that you can accept booking requests or automate them, accept payments direct to your account, and upload as many listings as you want. (It’s always free to list and add as many as you like.)
+
+Start building awareness of your listing by tweeting about your space (<%= tweet_location_url(@user.listings.first.location) %>) or adding a link (<%= location_path(@user.listings.first.location) %>) to your email signature or company website.
+
+<%= render 'footer' %>
