@@ -78,6 +78,7 @@ class @Bookings.Datepicker
     dates = @sortDates(date)
     @startDatepicker.setDates(dates)
     @endDatepicker.setDates(dates)
+    @endDatepickerModel.ensureDatesMeetConstraint()
     @updateElementText()
 
   addDate: (date) ->
@@ -85,6 +86,7 @@ class @Bookings.Datepicker
     if !startDate or startDate.getTime() > date.getTime()
       @startDatepicker.addDate(date)
     @endDatepicker.addDate(date)
+    @endDatepickerModel.extendRangeToMeetConstraint(date)
     @updateElementText()
 
   removeDate: (date) ->

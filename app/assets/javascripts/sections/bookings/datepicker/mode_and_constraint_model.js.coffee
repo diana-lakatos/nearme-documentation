@@ -92,6 +92,10 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
   canSelectDate: (date) ->
     @listing.availabilityFor(date) >= @listing.defaultQuantity
 
+  ensureDatesMeetConstraint: ->
+    for date in @getDates()
+      @extendRangeToMeetConstraint(date)
+
   # Starting at a given date, scan dates validate that it meets the consecutive bookings
   # constraint. If it doesn't, add next available dates until it does.
   extendRangeToMeetConstraint: (date) ->
