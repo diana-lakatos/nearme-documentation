@@ -30,6 +30,10 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
 
     switch @mode
       when Bookings.Datepicker.ModeAndConstraintModel.MODE_RANGE
+        # Reset the range
+        @setDates(@getDates().slice(0,1))
+
+        # Extend the range
         @setRangeTo(date)
         @extendRangeToMeetConstraint(date)
         @trigger 'rangeApplied'

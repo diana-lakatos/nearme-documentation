@@ -64,11 +64,14 @@ class @Bookings.Datepicker
     # is toggled with the 'range' mode on. We bind this to set the mode to the second
     # mode, to add/remove dates.
     @endDatepickerModel.on 'rangeApplied', =>
-      @setDatepickerMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_PICK)
+      # For now, we only provide the add/remove pick mode for listings allowing
+      # individual day selection.
+      if @listing.minimumBookingDays <= 1
+        @setDatepickerMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_PICK)
 
       # If the user selects the same start/end date, let's close the datepicker
       # and assume they were only trying to select one day.
-      if @endDatepicker.getDates().length <= 1
+      if @listing.minimumBookingDays > 1 or @endDatepicker.getDates().length <= 1
         @endDatepicker.hide()
 
   setDates: (dates) ->
