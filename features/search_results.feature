@@ -11,14 +11,14 @@ Feature: A user can see search results
   Scenario: Shows $0 only for day if all prices are 0
     Given Auckland listing has prices: 0, 0, 0
      When I search for "Auckland"
-     Then I should see "$0/day"
+     Then I should not see "$0/day"
      Then I should not see "$0/wk"
      Then I should not see "$0/mo"
 
   Scenario: Shows $0 only for day, if other prices are 0 or nil
     Given Auckland listing has prices: nil, nil, 0
      When I search for "Auckland"
-     Then I should see "$0/day"
+     Then I should not see "$0/day"
      Then I should not see "$0/wk"
      Then I should not see "$0/mo"
 
