@@ -1,26 +1,25 @@
-.container-fluid.flush
-  .row-fluid.location-photos{:'data-photo-aspect-w' => PhotoUploader::SPACE_FULL_IMAGE_W, :'data-photo-aspect-h' => PhotoUploader::SPACE_FULL_IMAGE_H}
+.row-fluid.location-photos{:'data-photo-aspect-w' => PhotoUploader::SPACE_FULL_IMAGE_W, :'data-photo-aspect-h' => PhotoUploader::SPACE_FULL_IMAGE_H}
 
-    - if @location.photos.any?
-      .span8.pull-right.photos-container
-        .carousel.slide
-          .carousel-inner
-            - @location.photos.each_with_index do |photo, index|
-              .item{:class => ("active" if index == 0)}
-                = image_tag photo.url(:golden)
-                - if photo.caption.present?
-                  .carousel-caption.ico-info
-                    = photo.caption
+  - if @location.photos.any?
+    .span8.pull-right.photos-container
+      .carousel.slide
+        .carousel-inner
+          - @location.photos.each_with_index do |photo, index|
+            .item{:class => ("active" if index == 0)}
+              = image_tag photo.url(:golden)
+              - if photo.caption.present?
+                .carousel-caption.ico-info
+                  = photo.caption
 
-          - if @location.photos.size > 1
-            = link_to "", ".carousel", :class => "carousel-control left ico-arrow-left", 'data-slide' => 'prev'
-            = link_to "", ".carousel", :class => "carousel-control right ico-arrow-right", 'data-slide' => 'next'
+        - if @location.photos.size > 1
+          = link_to "", ".carousel", :class => "carousel-control left ico-arrow-left", 'data-slide' => 'prev'
+          = link_to "", ".carousel", :class => "carousel-control right ico-arrow-right", 'data-slide' => 'next'
 
-    .pull-right{:class => @location.photos.any? ? "span4" : "span12" }
-      .map
-        .map-wrapper.google-map
-          .map-container
+  .pull-left{:class => @location.photos.any? ? "span4" : "span12" }
+    .map
+      .map-wrapper.google-map
+        .map-container
 
-        %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, "data-marker" => image_path("components/map-pin.png")}
-          %span.ico-marker
-          = location_format_address(@location.formatted_address || @location.address)
+      %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, :class => 'hidden'}
+        %span.ico-marker
+        = location_format_address(@location.formatted_address || @location.address)

@@ -11,7 +11,20 @@
         = link_to @location.url, :target => :_blank do
           %div.ico-link
 
-  = render 'photos'
+
+%ul.nav.nav-tabs#location-tabs
+  %li.active
+    %a{:href=>"#photos",  'data-toggle' => "tab"}
+      Photos & Map
+  %li
+    %a{:href=>"#details",  'data-toggle' => "tab"}
+      Details
+
+.tab-content
+  .tab-pane.active#photos
+    = render 'photos'
+  .tab-pane#details
+    = render 'details'
 
 %article#space
 

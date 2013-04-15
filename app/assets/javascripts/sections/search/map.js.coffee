@@ -162,7 +162,7 @@ class Search.Map
       visible:  false,
       icon: MARKERS.default.icon,
       shadow: null,
-      shape: MARKERS.default.shape
+      shape: GoogleMapMarker.getMarkerOptions().default.shape
     )
     @markers[listing.id()] = marker
     @listings[listing.id()] = listing
