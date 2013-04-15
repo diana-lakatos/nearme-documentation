@@ -90,51 +90,49 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
   clearRangeDate: (date) ->
     @rangeDates[DNM.util.Date.toId(date)] = false
 
+  # Returns whether or not a date is 'selectable' based on the listing availability
   canSelectDate: (date) ->
     @listing.availabilityFor(date) >= @listing.defaultQuantity
 
+  # Ensure all included dates meet the consecutive days constraint, and
+  # extend them if they don't.
   ensureDatesMeetConstraint: ->
     for date in @getDates()
       @extendRangeToMeetConstraint(date)
+ 
+  # Returns whether or not there are minDays available days booked around
+  # the specified date.
+  meetsConstraint: (date) ->
+    @consecutiveDays(date) >= @minDays
 
   # Starting at a given date, scan dates validate that it meets the consecutive bookings
   # constraint. If it doesn't, add next available dates until it does.
   extendRangeToMeetConstraint: (date) ->
     # Algorithm for extending to meet the min days constraint
-    extender = (iteratorFunc) =>
+    bookingExtensionAlgorithm = (dateIterator) =>
       # We try to keep going until the target date meets the 
       # 'consecutive days' constraint.
-      current = date
       until @meetsConstraint(date)
-        # Grab the next date along
-        current = iteratorFunc(current)
+        currentDate = dateIterator()
 
         # If we fall outside of the bookable dates for this listing,
         # break our loop.
-        break unless @listing.dateWithinBounds(current)
+        break unless @listing.dateWithinBounds(currentDate)
 
         # If we can select this date, we add it.
-        if @canSelectDate(current)
-          @addRangeDate(current)
-
-    # Iteration functions
-    directionNext = (date) -> DNM.util.Date.next(date)
-    directionPrev = (date) -> DNM.util.Date.previous(date)
+        if @canSelectDate(currentDate)
+          @addRangeDate(currentDate)
 
     # Try to extend forward first, then work backwards.
     # We go backwards due to an edge case at the end of the bookable range,
     # where we need to add dates in the past to constraint the selection.
-    extender(directionNext)
-    extender(directionPrev)
+    bookingExtensionAlgorithm(DNM.util.Date.nextDateIterator(date))
+    bookingExtensionAlgorithm(DNM.util.Date.previousDateIterator(date))
 
   # Starting from a given date, scan the dates around it to ensure that the act of removing that
   # date hasn't invalidated the minimum date selection constraints. If it has, remove relevant
   # dates to restore selected dates to a state that reflects the minimum consecutive days constraint.
   reduceRangeToMeetConstraint: (date) ->
-    # Remove previous date if doesn't meet constraint anymore
-    previous = (date) -> DNM.util.Date.previous(date)
-    next     = (date) -> DNM.util.Date.next(date)
-
     # Iterates with an advancer through the selected dates adjacent to the starting date, 
     # and validates that that date meets the restrictions.
     #
@@ -147,65 +145,45 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
     #       in 'consecutive' semantics.
     #   * Date is not selected
     #     * We are done - as we assume other dates already meet requirements.
-    reducer = (iteratorFunc) =>
-      current = iteratorFunc(date)
-      while @listing.dateWithinBounds(current)
-        if @canSelectDate(current)
-          break if !@isSelected(current)
-          break if @meetsConstraint(current)
+    bookingRemovalAlgorithm = (dateIterator) =>
+      while currentDate = dateIterator()
+        break unless @listing.dateWithinBounds(currentDate)
+        if @canSelectDate(currentDate)
+          break if !@isSelected(currentDate)
+          break if @meetsConstraint(currentDate)
 
           # Can no longer have this date selected
-          @removeDate(current)
-
-        # Iterate along to the next date
-        current = iteratorFunc(current)
+          @removeDate(currentDate)
 
     # Check both future and past connected selected dates are now valid
-    reducer(previous)
-    reducer(next)
-
-  # Returns whether or not there are minDays available days booked around
-  # the specified date.
-  meetsConstraint: (date) ->
-    @consecutiveDays(date) >= @minDays
+    bookingRemovalAlgorithm(DNM.util.Date.previousDateIterator(date))
+    bookingRemovalAlgorithm(DNM.util.Date.nextDateIterator(date))
 
   # Return the consecutive days currently at the date, *or* the required minumum
   # consecutive days - whatever is less.
   consecutiveDays: (date) ->
     return 0 if !@isSelected(date)
 
-    # Counter
-    consecutive = 1
+    consecutiveDaysCount = 1
+    countingAlgorithm = (dateIterator) =>
+      # We're trying to count the "consecutive days" total for the target date.
+      # That is the number of connected days before or after the current date,
+      # ignoring dates that aren't available for booking.
+      while consecutiveDaysCount < @minDays
+        currentDate = dateIterator()
+        break unless @listing.dateWithinBounds(currentDate)
 
-    # Iterator functions (backwards, forwards)
-    directionPrev = (date) -> DNM.util.Date.previous(date)
-    directionNext = (date) -> DNM.util.Date.next(date)
-
-    # Our counting algorithm
-    # We're trying to count the "consecutive days" total for the target date.
-    # That is the number of connected days before or after the current date,
-    # ignoring dates that aren't available for booking.
-    counter = (iteratorFunc) =>
-      current = iteratorFunc(date)
-      while consecutive < @minDays
-        break unless @listing.dateWithinBounds(current)
-
-        if @isSelected(current)
+        if @isSelected(currentDate)
           # We increment our counter if the date is selected
-          consecutive++
+          consecutiveDaysCount++
         else
           # As soon as we encounter a date that is selectable, but isn't selected
           # we can break our counting loop, as it is no longer consecutive.
-          break if @canSelectDate(current)
-        
-        # Advance to the next date to test against
-        current = iteratorFunc(current)
+          break if @canSelectDate(currentDate)
 
     # Count backwards and forwards, using the same algorithm with a different
     # iteration function.
-    counter(directionPrev)
-    counter(directionNext)
-
-    # Return our count of consecutive days
-    consecutive
+    countingAlgorithm(DNM.util.Date.previousDateIterator(date))
+    countingAlgorithm(DNM.util.Date.nextDateIterator(date))
+    consecutiveDaysCount
 

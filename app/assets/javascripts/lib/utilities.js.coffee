@@ -66,5 +66,15 @@ DNM.util =
     sortDates: (datesArray) ->
       _.sortBy datesArray, (date) -> date.getTime()
 
+    # Return a function which returns a Date, and for each call advances the
+    # date one day from the previously returned date provided date.
+    nextDateIterator: (currentDate) ->
+      -> currentDate = DNM.util.Date.next(currentDate)
+
+    # Return a function which returns a Date, and for each call advances the
+    # date one day previous from the previously returned date or provided date.
+    previousDateIterator: (currentDate) ->
+      -> currentDate = DNM.util.Date.previous(currentDate)
+
 
 
