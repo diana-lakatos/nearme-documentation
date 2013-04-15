@@ -73,3 +73,9 @@ class @Datepicker
   removeDate: (date) -> @model.removeDate(date)
   addDate: (date) -> @model.addDate(date)
 
+  getView: ->
+    @view
+
+  getModel: ->
+    @model
+

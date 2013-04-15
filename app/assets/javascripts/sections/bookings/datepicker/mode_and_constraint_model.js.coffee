@@ -19,7 +19,8 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
 
     # "Range dates" are dates which haven't been explicitly added,
     # but are implicitly added through range selection or as a requirement
-    # for minimum consecutive days.
+    # for minimum consecutive days. We keep track of these so we can display
+    # them differently on the view.
     @rangeDates = {}
 
   setMode: (mode) ->

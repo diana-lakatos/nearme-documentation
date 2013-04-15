@@ -63,3 +63,8 @@ DNM.util =
       else
         name
 
+    sortDates: (datesArray) ->
+      _.sortBy datesArray, (date) -> date.getTime()
+
+
+
