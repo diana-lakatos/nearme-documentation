@@ -10,13 +10,19 @@ $listing-header-height: 58px;
   margin: 0px;
 }
 
+#location-tabs > li > a {
+  background-color: $gray6;
+  color: $gray2;
+}
+
 #location-tabs > li > a:hover {
-  background-color: $gray2;
+  background-color: $gray5;
 }
 
 #location-tabs > li.active > a {
-  background-color: $gray1;
+  background-color: $gray7;
 }
+
 
 
 #space, .space {

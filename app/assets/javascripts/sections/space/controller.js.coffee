@@ -34,6 +34,11 @@ class @Space.Controller
       location.attr("data-lat"), location.attr("data-lng")
     )
 
+    if @photosContainer.length > 0
+      mapTypeId = google.maps.MapTypeId.ROADMAP
+    else
+      mapTypeId = google.maps.MapTypeId.SATELLITE
+
     @map = { map: null, markers: [] }
     @map.initialCenter = latlng
     @map.map = SmartGoogleMap.createMap(@googleMapElementWrapper[0], {
@@ -41,7 +46,7 @@ class @Space.Controller
       mapTypeControl: false,
       streetViewControl: false,
       center: latlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: mapTypeId
     })
 
     marker =  new google.maps.Marker({
