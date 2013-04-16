@@ -16,7 +16,7 @@
     // padding: 6px;
     color: #58595b;
     
-    @media (max-height: 640px) {
+    @media (max-height: 500px) {
       .google-map-popover-content {
         max-height: 130px;
         overflow-y: auto;
