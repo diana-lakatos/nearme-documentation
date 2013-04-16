@@ -52,6 +52,7 @@ class Search.Map
     zoomControl: true,
     styles:
       [{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#457cbc"}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"weight":0.1},{"color":"#d0bfe0"},{"visibility":"off"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"visibility":"on"},{"lightness":5},{"color":"#e6e4e7"}]},{"featureType":"poi.business","elementType":"labels","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#f6edbc"}]},{"featureType":"road.arterial","elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"featureType":"poi.school","elementType":"labels","stylers":[{"weight":0.1},{"visibility":"simplified"}]},{"featureType":"poi.medical","elementType":"labels","stylers":[{"visibility":"simplified"}]},{"featureType":"poi","elementType":"geometry.fill"},{"featureType":"poi.business","stylers":[{"visibility": "off"}]}]
+    # JSON generated using: http://gmaps-samples-v3.googlecode.com/svn/trunk/styledmaps/wizard/index.html
     
   GOOGLE_MAP_OPTIONS.clusterer =
     maxZoom: GOOGLE_MAP_OPTIONS.maxZoom + 1
@@ -140,7 +141,6 @@ class Search.Map
   plotListings: (listings) ->
     @plotListing(listing) for listing in listings
     @clusterer.fitMapToMarkers()
-    
   
   # Only plot a listing if it fits within the map bounds.
   # Returns whether or not a listing was plotted.
@@ -177,33 +177,6 @@ class Search.Map
     google.maps.event.addListener marker, 'click', =>
       @showInfoWindowForListing(listing)
 
-    google.maps.event.addListener marker, 'mouseover', =>
-      @focusMarker(marker)
-      @trigger 'mapListingFocussed', listing
-
-    google.maps.event.addListener marker, 'mouseout', =>
-      if listing.shouldBlur()
-        @blurMarker(marker)
-        @trigger 'mapListingBlurred', listing
-
-  focusMarker: (marker) ->
-    null
-
-  blurMarker: (marker) ->
-    marker.setOptions(
-      icon: MARKERS.default.image,
-      shadow: MARKERS.default.shadow,
-      shape: MARKERS.default.shape
-    )
-
-  focusListingMarker: (listing) ->
-    marker = @markers[listing.id()]
-    @focusMarker(marker) if marker
-
-  blurListingMarker: (listing) ->
-    marker = @markers[listing.id()]
-    @blurMarker(marker) if marker
-
   fitBounds: ->
     @googleMap.fitBounds(@bounds) unless @bounds.isEmpty()
   
@@ -222,7 +195,7 @@ class Search.Map
     [ne.lat(), ne.lng(), sw.lat(), sw.lng()]
     
   getListingForMarker: (marker) ->
-    listing_id = null
+    listing_id = null 
     for idx, _marker of @markers
       if _marker is marker
         listing_id = idx
@@ -230,35 +203,21 @@ class Search.Map
     return @listings[listing_id]
 
   showInfoWindowForCluster: (cluster) ->
-    listings = for marker in cluster.getMarkers()
-      @getListingForMarker(marker)
+    listings = _.map(cluster.getMarkers(), (marker) => @getListingForMarker(marker))
+    listingsByLocation = _.groupBy(_.compact(listings), (listing) -> listing.location())
     
     html = ""
-    locations = {}
-    for listing in listings
-      continue unless listing?
-      el = listing.element()
-      group = locations[el.data('location')]
-      unless group?
-        locations[el.data('location')] = el.find('.listing-location-title').html()
-      locations[el.data('location')] += el.find('.listing-map-popover-content').html()
-    
-    for idx, content of locations
-      html += content
-    
+    for location, group of listingsByLocation
+      html += group[0].popoverTitleContent()
+      html += listing.popoverContent() for listing in group
+      
     @popover.setContent html 
-    @popover.open @googleMap, marker
+    @popover.open @googleMap, cluster.getMarkers()[0] 
     
-    # Focus the listing marker immediately for visual UX
-    listing.popoverOpened()
-    # @focusListingMarker(listing)
-    @trigger 'mapListingFocussed', listing
+    listing.popoverOpened() for listing in listings
     
-    # Blur the listing marker the next time the popover is closed
     @popover.one 'closed', =>
-      listing.popoverClosed()
-      @blurListingMarker(listing)
-      @trigger 'mapListingBlurred', listing
+      listing.popoverClosed() for listing in listings
     
     true
 
@@ -266,21 +225,15 @@ class Search.Map
     marker = @markers[listing.id()]
     return unless marker
     
-    title = listing.element().find('.listing-location-title').html()
-    
-    @popover.setContent title + listing.popupContent()
+    @popover.setContent listing.popoverTitleContent() + listing.popoverContent()
     @popover.open(@googleMap, marker)
 
     # Focus the listing marker immediately for visual UX
     listing.popoverOpened()
-    @focusListingMarker(listing)
-    @trigger 'mapListingFocussed', listing
 
     # Blur the listing marker the next time the popover is closed
     @popover.one 'closed', =>
       listing.popoverClosed()
-      @blurListingMarker(listing)
-      @trigger 'mapListingBlurred', listing
 
   cacheMarkers: ->
     # hack if css sprites cannot be used

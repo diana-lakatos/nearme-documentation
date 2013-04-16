@@ -14,9 +14,10 @@ class Search.Listing
 
   constructor: (element) ->
     @_element = $(element)
-    @_id  = parseInt(@_element.attr('data-id'), 10)
-    @_lat = parseFloat(@_element.attr('data-latitude'))
-    @_lng = parseFloat(@_element.attr('data-longitude'))
+    @_id  = parseInt(@_element.data('id'), 10)
+    @_lat = parseFloat(@_element.data('latitude'))
+    @_lng = parseFloat(@_element.data('longitude'))
+    @_location = parseInt(@_element.data('location'))
     @_name = @_element.attr('data-name')
     @bindEvents()
 
@@ -29,26 +30,14 @@ class Search.Listing
       @bindEvents()
 
   bindEvents: ->
-    @_element.on 'mouseover', =>
-      @focus()
-      @trigger 'mouseoverElement'
-
-    @_element.on 'mouseout', =>
-      @blur()
-      @trigger 'mouseoutElement'
-
+    null
+  
   element: ->
     @_element
 
-  focus: ->
-    @_element.addClass('focussed')
-
-  blur: ->
-    @_element.removeClass('focussed')
-
   shouldBlur: ->
     !@popoverOpen
-
+  
   id: ->
     @_id
 
@@ -64,6 +53,9 @@ class Search.Listing
   latLng: ->
     @_latLng ||= new google.maps.LatLng(@_lat, @_lng)
 
+  location: ->
+    @_location
+
   popoverOpened: ->
     @popoverOpen = true
 
@@ -71,8 +63,11 @@ class Search.Listing
     @popoverOpen = false
 
   # The content that goes in the map popup when clicking the marker
-  popupContent: ->
+  popoverContent: ->
     @_element.find('.listing-map-popover-content').html()
+
+  popoverTitleContent: ->
+    @_element.find('.listing-location-title').html()
 
   # Don't show this result.
   hide: ->

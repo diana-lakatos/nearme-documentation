@@ -20,14 +20,15 @@ class Search.SearchController extends Search.Controller
     @form.bind 'submit', (event) =>
       event.preventDefault()
       @triggerSearchFromQuery()
-   
-    @form.find('#search').on 'focus blur', (e)->
-      if e.type is 'focus' then $(@form).addClass('query-active') else $(@form).removeClass('query-active')
-      true
+    
+    @searchField = @form.find('#search')
+    
+    @searchField.on 'focus', => $(@form).addClass('query-active')
+    @searchField.on 'blur', => $(@form).removeClass('query-active')
     
     if @map?
       @map.on 'click', =>
-        $(@form).find('input.query').blur()
+        @searchField.blur()
       
       @map.on 'viewportChanged', =>
         # NB: The viewport can change during 'query based' result loading, when the map fits
@@ -38,12 +39,6 @@ class Search.SearchController extends Search.Controller
       
         @triggerSearchWithBoundsAfterDelay()
   
-      @map.on 'mapListingFocussed', (mapListing) =>
-        @findResultsListing(mapListing.id())?.focus()
-  
-      @map.on 'mapListingBlurred', (mapListing) =>
-        @findResultsListing(mapListing.id())?.blur()
-
   initializeEndlessScrolling: ->
     $('#results').scrollTop(0)
     jQuery.ias({
@@ -128,22 +123,9 @@ class Search.SearchController extends Search.Controller
   #       avoid this complexity.
   listingForElementOrBuild: (element) ->
     id = $(element).attr('data-id')
-    unless @listings[id]
-      listing = Search.Listing.forElement(element)
-      listing.on 'mouseoverElement', =>
-        @map.focusListingMarker(listing)
-
-      listing.on 'mouseoutElement', =>
-        @map.blurListingMarker(listing) if listing.shouldBlur()
-
-      @listings[id] = listing
-    listing = @listings[id]
+    listing = @listings[id] ?= Search.Listing.forElement(element)
     listing.setElement(element)
     listing
-
-  findResultsListing: (listingId) ->
-    for listing in @getListingsFromResults()
-      return listing if listing.id() == listingId
 
   # Triggers a search request with the current map bounds as the geo constraint
   triggerSearchWithBounds: ->
