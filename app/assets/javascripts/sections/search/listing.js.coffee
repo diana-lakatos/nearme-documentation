@@ -30,7 +30,6 @@ class Search.Listing
       @bindEvents()
 
   bindEvents: ->
-    null
   
   element: ->
     @_element
