@@ -1,0 +1,31 @@
+.row-fluid
+  .span4
+    %h2 Overview
+    %p= truncate_with_ellipsis @location.description, 250
+
+
+  .span4
+    - if @location.creator
+      %h2 Company
+      %p
+    - if @location.creator.phone
+      %p.ico-phone.padding= @location.creator.phone
+    %p= truncate_with_ellipsis @location.company.description, 250
+
+    - if @amenities
+      %h2 Amenities
+      %ul
+        - @location.amenities.each do |amenity|
+          %li= amenity
+
+  .span4
+    %h2 Contact
+    - if @location.phone.present?
+      %strong.ico-phone.padding= @location.phone
+    - if @location.creator.phone
+      %p.ico-phone.padding= @location.creator.phone      
+    %h2 Amenities      
+    - if @amenities
+      %ul
+        - @location.amenities.each do |amenity|
+          %li= amenity      
