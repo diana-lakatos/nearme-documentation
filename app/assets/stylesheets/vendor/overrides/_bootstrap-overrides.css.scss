@@ -105,7 +105,6 @@ abbr[data-original-title] {
   @include adjust-font-size-to(16px);
 }
 
-
 .label-success {
   background: lighten($green, 16%);
 }
@@ -116,6 +115,11 @@ abbr[data-original-title] {
 
 .label-important {
   background: $green;
+}
+
+.nav-tabs > li > a {
+  @include border-top-radius($border-radius / 2);
+
 }
 
 // Override bootstrap mixin that caused opacity to be reduced by 10x
