@@ -10,9 +10,8 @@
     = image_tag "spinner.gif"
 
 - if listings.any?
-  - unique_listings = listings.uniq { |l| l.location_id }
   %section#results.map
-    = render partial: 'search/map/listing', collection: unique_listings
+    = render partial: 'search/map/listing', collection: listings
     = yield :loading
 - else
   %section#results.no_results.map

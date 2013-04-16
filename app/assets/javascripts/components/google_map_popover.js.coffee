@@ -45,7 +45,7 @@ class @GoogleMapPopover
 
   getDefaultOptions: ->
     $.extend {}, @defaultOptions, {
-      pixelOffset: new google.maps.Size(-150, -40)
+      pixelOffset: new google.maps.Size(-144, -40)
     }
 
   wrapContent: (content) ->
