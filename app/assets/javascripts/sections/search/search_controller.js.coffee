@@ -90,13 +90,24 @@ class Search.SearchController extends Search.Controller
   # Update the map with the current listing results, and adjust the map display.
   updateMapWithListingResults: ->
     @map.popover.close()
-    @map.plotListings(@getListingsFromResults())
-    @map.resizeToFillViewport()
-    _.defer => @map.fitBounds()
-    if $.isEmptyObject(@map.markers)
-      @map.hide()
-    else
+    
+    listings = @getListingsFromResults()
+    
+    if listings? and listings.length > 0
+      @map.plotListings(listings)
+      
+      # Only show bounds of new results
+      bounds = new google.maps.LatLngBounds()
+      bounds.extend(listing.latLng()) for listing in listings
+      _.defer => @map.fitBounds(bounds)
+      
       @map.show()
+      
+      # In case the map is hidden
+      @map.resizeToFillViewport()
+      
+    else
+      @map.hide()
 
   # Within the current map display, plot the listings from the current results. Remove listings
   # that aren't within the current map bounds from the results.
