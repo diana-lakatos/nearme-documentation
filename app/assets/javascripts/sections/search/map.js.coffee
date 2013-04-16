@@ -140,7 +140,6 @@ class Search.Map
 
   plotListings: (listings) ->
     @plotListing(listing) for listing in listings
-    @clusterer.fitMapToMarkers()
   
   # Only plot a listing if it fits within the map bounds.
   # Returns whether or not a listing was plotted.
@@ -176,8 +175,8 @@ class Search.Map
     google.maps.event.addListener marker, 'click', =>
       @showInfoWindowForListing(listing)
 
-  fitBounds: ->
-    @googleMap.fitBounds(@bounds) unless @bounds.isEmpty()
+  fitBounds: (bounds) ->
+    @googleMap.fitBounds(bounds || @bounds)
   
   resizeToFillViewport: ->
     offset = $(@container).offset()
