@@ -170,7 +170,6 @@ class Search.Map
     @bounds.extend(listing.latLng())
     @clusterer.addMarker(marker)
     
-    # marker.setAnimation(google.maps.Animation.DROP)
     marker.setVisible(true)
 
     # Bind the event for showing the info details on click
