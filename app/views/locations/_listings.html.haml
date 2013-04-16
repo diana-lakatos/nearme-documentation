@@ -14,8 +14,8 @@
 
         %h2.listing-name
           = listing.name
-
-        = truncate_with_ellipsis listing.description, 200, :class => "listing-description"
+        .listing-description
+          = truncate_with_ellipsis listing.description, 200
 
         .bottom-fade
 

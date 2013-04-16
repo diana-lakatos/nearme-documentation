@@ -140,6 +140,14 @@ $listing-header-height: 58px;
     @media (max-width: $booking-module-breakpoint) {
       margin: 15px 0;
     }
+
+    p {
+      overflow: auto;
+
+      @media (min-width: $booking-module-breakpoint) {
+        max-height: 140px;
+      }
+    }
   }
 
   .description {
