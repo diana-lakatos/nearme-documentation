@@ -213,11 +213,6 @@ class Search.Map
     @popover.setContent html 
     @popover.open @googleMap, cluster.getMarkers()[0] 
     
-    listing.popoverOpened() for listing in listings
-    
-    @popover.one 'closed', =>
-      listing.popoverClosed() for listing in listings
-    
     true
 
   showInfoWindowForListing: (listing) ->
@@ -226,13 +221,6 @@ class Search.Map
     
     @popover.setContent listing.popoverTitleContent() + listing.popoverContent()
     @popover.open(@googleMap, marker)
-
-    # Focus the listing marker immediately for visual UX
-    listing.popoverOpened()
-
-    # Blur the listing marker the next time the popover is closed
-    @popover.one 'closed', =>
-      listing.popoverClosed()
 
   cacheMarkers: ->
     # hack if css sprites cannot be used

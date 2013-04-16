@@ -34,9 +34,6 @@ class Search.Listing
   
   element: ->
     @_element
-
-  shouldBlur: ->
-    !@popoverOpen
   
   id: ->
     @_id
@@ -55,12 +52,6 @@ class Search.Listing
 
   location: ->
     @_location
-
-  popoverOpened: ->
-    @popoverOpen = true
-
-  popoverClosed: ->
-    @popoverOpen = false
 
   # The content that goes in the map popup when clicking the marker
   popoverContent: ->
