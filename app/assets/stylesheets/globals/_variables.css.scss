@@ -37,6 +37,7 @@ $icon-hover: $gray7;
 
 // Border Radius
 $border-radius: 12px;
+$border-radius-mobile: 6px;
 
 // Webfonts
 
@@ -52,6 +53,10 @@ $font-bold: 'Futura-heavy', sans-serif;
 $modal-z-index: 1000;
 $nav-z-index: $modal-z-index - 2; // -1 is overlay, so it must be lower than overlay, that's why -2
 $absolute-top-z-index: 9000;
+
+
+// Breakpoints
+$iphone-landscape: 480px;
 
 // IE support
 

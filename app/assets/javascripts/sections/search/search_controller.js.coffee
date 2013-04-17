@@ -21,7 +21,15 @@ class Search.SearchController extends Search.Controller
       event.preventDefault()
       @triggerSearchFromQuery()
     
+    @searchField = @form.find('#search')
+    
+    @searchField.on 'focus', => $(@form).addClass('query-active')
+    @searchField.on 'blur', => $(@form).removeClass('query-active')
+    
     if @map?
+      @map.on 'click', =>
+        @searchField.blur()
+      
       @map.on 'viewportChanged', =>
         # NB: The viewport can change during 'query based' result loading, when the map fits
         #     the bounds of the search results. We don't want to trigger a bounding box based
@@ -31,12 +39,6 @@ class Search.SearchController extends Search.Controller
       
         @triggerSearchWithBoundsAfterDelay()
   
-      @map.on 'mapListingFocussed', (mapListing) =>
-        @findResultsListing(mapListing.id())?.focus()
-  
-      @map.on 'mapListingBlurred', (mapListing) =>
-        @findResultsListing(mapListing.id())?.blur()
-
   initializeEndlessScrolling: ->
     $('#results').scrollTop(0)
     jQuery.ias({
@@ -87,14 +89,25 @@ class Search.SearchController extends Search.Controller
   
   # Update the map with the current listing results, and adjust the map display.
   updateMapWithListingResults: ->
-    @map.resetMapMarkers()
-    @map.plotListings(@getListingsFromResults())
-    @map.resizeToFillViewport()
-    _.defer => @map.fitBounds()
-    if $.isEmptyObject(@map.markers)
-      @map.hide()
-    else
+    @map.popover.close()
+    
+    listings = @getListingsFromResults()
+    
+    if listings? and listings.length > 0
+      @map.plotListings(listings)
+      
+      # Only show bounds of new results
+      bounds = new google.maps.LatLngBounds()
+      bounds.extend(listing.latLng()) for listing in listings
+      _.defer => @map.fitBounds(bounds)
+      
       @map.show()
+      
+      # In case the map is hidden
+      @map.resizeToFillViewport()
+      
+    else
+      @map.hide()
 
   # Within the current map display, plot the listings from the current results. Remove listings
   # that aren't within the current map bounds from the results.
@@ -121,22 +134,9 @@ class Search.SearchController extends Search.Controller
   #       avoid this complexity.
   listingForElementOrBuild: (element) ->
     id = $(element).attr('data-id')
-    unless @listings[id]
-      listing = Search.Listing.forElement(element)
-      listing.on 'mouseoverElement', =>
-        @map.focusListingMarker(listing)
-
-      listing.on 'mouseoutElement', =>
-        @map.blurListingMarker(listing) if listing.shouldBlur()
-
-      @listings[id] = listing
-    listing = @listings[id]
+    listing = @listings[id] ?= Search.Listing.forElement(element)
     listing.setElement(element)
     listing
-
-  findResultsListing: (listingId) ->
-    for listing in @getListingsFromResults()
-      return listing if listing.id() == listingId
 
   # Triggers a search request with the current map bounds as the geo constraint
   triggerSearchWithBounds: ->

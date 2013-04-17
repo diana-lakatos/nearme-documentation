@@ -1,35 +1,25 @@
 @import "sections/listings/search";
 
+#content.search #results.map article.listing {
+  display: none;
+}
+
 .popover-image-container {
   float: left;
-  width: 144px;
+  width: 94px;
+  
+  &, img {
+    height: 58px;
+  }
+  
+  img {
+    max-width: none;
+  }
+  
+  a {
+    display: block; 
+    float: left;
+  }
 }
 
-.popover-info-container {
-  float: left;
-  width: 134px;
-  margin-left: 10px;
 
-  h4 a {
-    display: block;
-    text-overflow: ellipsis;
-    max-width: 134px;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  address {
-    @include adjust-font-size-to(12px);
-    line-height: 1.4em;
-    margin-top: .25em;
-    display: block;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  span.label {
-    float: right;
-    margin: 6px 0 0 3px;
-  }  
-}
