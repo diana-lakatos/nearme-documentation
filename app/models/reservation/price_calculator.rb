@@ -4,7 +4,8 @@
 # Pass it a reservation, and let it do its thing.
 # 
 # NB: Note that there is a corresponding JS calculation class
-#     to calculate the price client-side.
+#     to calculate the price client-side. If logic changes, 
+#     be sure to update that as well.
 class Reservation::PriceCalculator
   def initialize(reservation)
     @reservation = reservation
@@ -55,10 +56,6 @@ class Reservation::PriceCalculator
   end
 
   private
-
-  def contiguous_block_days
-    contiguous_blocks.map(&:length)    
-  end
 
   def listing
     @reservation.listing

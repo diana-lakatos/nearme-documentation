@@ -1,3 +1,8 @@
+# Object encapsulating our pricing calculation logic.
+#
+# NB: Note that there is a corresponding Ruby calculating class
+#     to calculate the price server-side. If the logic changes,
+#     be sure to update that as well.
 class @Bookings.PriceCalculator
 
   constructor: (@listing) ->
