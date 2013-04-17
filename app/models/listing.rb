@@ -249,14 +249,29 @@ class Listing < ActiveRecord::Base
     if free? || daily_price.present?
       1
     else
-      days_per_week = availability.days_open.length
       multiple = if weekly_price.present?
         1
       elsif monthly_price.present?
         4
       end
 
-      days_per_week*multiple
+      booking_days_per_week*multiple
+    end
+  end
+
+  def booking_days_per_week
+    availability.days_open.length
+  end
+
+  # Returns a hash of booking block sizes to prices for that block size.
+  def prices_by_days
+    if free?
+      { 1 => 0.to_money }
+    else
+      block_size = booking_days_per_week
+      Hash[
+        [[1, daily_price], [block_size, weekly_price], [4*block_size, monthly_price]]
+      ].reject { |size, price| !price || price.zero? }
     end
   end
 

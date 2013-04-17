@@ -13,6 +13,7 @@ class @Bookings.Listing
     @minimumBookingDays = @data.minimum_booking_days
     @minimumDate = DNM.util.Date.idToDate(@data.minimum_date)
     @maximumDate = DNM.util.Date.idToDate(@data.maximum_date)
+    @pricesByDays = @data.prices_by_days
 
   setDefaultQuantity: (qty) ->
     @defaultQuantity = qty if qty >= 0
@@ -23,6 +24,9 @@ class @Bookings.Listing
     return false if time < @minimumDate.getTime()
     return false if time > @maximumDate.getTime()
     true
+
+  canBookDate: (date) ->
+    @availabilityFor(date) >= @defaultQuantity
 
   totalFor: (date) ->
     @data.quantity
@@ -92,6 +96,8 @@ class @Bookings.Listing
 
   # Return the subtotal for booking this listing
   bookingSubtotal: ->
+    return new Bookings.PriceCalculator(this).getPrice()
+
     # Pricing is based on minute periods.
     # 1 day = 1440 minutes
     # 1 week = 10080 (7 days)

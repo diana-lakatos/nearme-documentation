@@ -92,7 +92,7 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
 
   # Returns whether or not a date is 'selectable' based on the listing availability
   canSelectDate: (date) ->
-    @listing.availabilityFor(date) >= @listing.defaultQuantity
+    @listing.canBookDate(date)
 
   # Ensure all included dates meet the consecutive days constraint, and
   # extend them if they don't.
