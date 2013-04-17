@@ -11,6 +11,11 @@ class LocationsController < ApplicationController
     if params[:restore_reservations]
       restore_initial_bookings_from_stored_reservation
     end
+
+    Track::Search.viewed_a_location({
+      user_signed_in: user_signed_in?,
+      location: @location.attributes
+    })
   end
 
   # Return a summary in JSON for all listings availability over specified days

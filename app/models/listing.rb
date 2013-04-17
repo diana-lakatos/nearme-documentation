@@ -69,9 +69,6 @@ class Listing < ActiveRecord::Base
 
   acts_as_paranoid
 
-  scope :featured, where(%{ (select count(*) from "photos" where content_id = "listings".id AND content_type = 'Listing') > 0  }).
-    includes(:photos).order(%{ random() }).limit(5)
-
   scope :latest,   order("listings.created_at DESC")
 
   include Search

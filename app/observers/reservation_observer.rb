@@ -25,23 +25,21 @@ class ReservationObserver < ActiveRecord::Observer
   def after_owner_cancel(reservation, transaction)
     ReservationMailer.notify_guest_of_cancellation(reservation).deliver
   end
-  
+
   def after_expire(reservation, transaction)
     ReservationMailer.notify_guest_of_expiration(reservation).deliver
     ReservationMailer.notify_host_of_expiration(reservation).deliver
     track_expire_event(reservation)
   end
-  
+
   private
-  
+
   def track_expire_event(reservation)
-    tracker = Mixpanel::Tracker.new MIXPANEL_TOKEN
-    tracker.track 'Reservation Expired (Host)', { distinct_id: reservation.listing.creator.id }
-    tracker.track 'Reservation Expired (Guest)', { distinct_id: reservation.owner_id }
+    #@mixpanel.track 'Reservation Expired (Host)', { distinct_id: reservation.listing.creator.id }
   rescue
     nil
   end
-  
-  
+
+
 
 end

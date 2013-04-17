@@ -4,8 +4,6 @@ class ApplicationController < ActionController::Base
   layout "application"
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
-  before_filter :set_tabs
-
   protected
 
   def require_ssl
@@ -14,9 +12,6 @@ class ApplicationController < ActionController::Base
     unless request.ssl?
       redirect_to "https://#{request.host}#{request.fullpath}"
     end
-  end
-
-  def set_tabs
   end
 
   def stored_url_for(resource_or_scope)
@@ -28,7 +23,7 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)
     stored_url_for(resource)
   end
-  
+
   def after_sign_up_path_for(resource)
     stored_url_for(resource)
   end
@@ -60,3 +55,4 @@ class ApplicationController < ActionController::Base
   end
 
 end
+
