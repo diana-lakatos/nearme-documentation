@@ -21,6 +21,11 @@ section.locations {
       }
     }
   }
+  .span4.pull-left {
+    @media (min-width: 768px) {
+      width: 34%;
+    }
+  }
 }
 
 .tab-pane#details {

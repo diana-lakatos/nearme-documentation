@@ -1,7 +1,7 @@
 .row-fluid.location-photos{:'data-photo-aspect-w' => PhotoUploader::SPACE_FULL_IMAGE_W, :'data-photo-aspect-h' => PhotoUploader::SPACE_FULL_IMAGE_H}
 
   - if @location.photos.any?
-    .span8.pull-right.photos-container
+    .span8.photos-container
       .carousel.slide
         .carousel-inner
           - @location.photos.each_with_index do |photo, index|
