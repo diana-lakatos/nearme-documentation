@@ -27,7 +27,6 @@ class @Space.Controller
     # For each listing on the page, initialize a controller for handling booking
     # selection.
     for listingData in @options.bookings.listings
-      console.info @options.bookings
       listingController = new Bookings.Controller(@container.find(".listings [data-listing-id=#{listingData.id}]"),
         listingData,
         reviewUrl: @options.bookings.review_url,

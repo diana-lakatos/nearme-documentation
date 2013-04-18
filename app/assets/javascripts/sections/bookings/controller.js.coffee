@@ -7,11 +7,6 @@ class Bookings.Controller
   constructor: (@container, @listingData, @options = {}) ->
     @listing = new Bookings.Listing(@listingData)
 
-    # Initialize default bookings
-    # Determine if there are any bookings to assign that have been passed through
-    if @options.initialBookings
-      @listing.setBookings(@options.initialBookings)
-
     @setupMultiDatesPicker()
     @quantityField = @container.find('select.quantity')
     @totalElement = @container.find('.total')
@@ -19,23 +14,21 @@ class Bookings.Controller
     @daysElement = @container.find('.total-days')
     @bookButton = @container.find('[data-behavior=showReviewBookingListing]')
     @bindModel()
-    @initQuantity()
+    @initializeQuantityField()
     @bindEvents()
+ 
+    # Initialize default bookings
+    # Determine if there are any bookings to assign that have been passed through
+    initialDates = @options.initialBookings or [@listing.firstAvailableDate]
+    @datepicker.setDates(initialDates)
 
-    if @listing.isBooked()
-      @reviewBooking() if @options.showReviewBookingImmediately
-    else
-      # We automatically add a booking for 'tomorrow'
-      @listing.addDate(@listing.firstAvailableDate)
+    if @options.initialBookings and @options.showReviewBookingImmediately
+      @reviewBooking()
 
   bindEvents: ->
-    @bookButton.click (event) =>
+    @bookButton.on 'click', (event) =>
       event.preventDefault()
-      return if @listing.bookedDays().length is 0
-
-      @disableBookButton()
-      @reviewBooking =>
-        @enableBookButton()
+      @reviewBooking()
 
     @quantityField.on 'change', (event) =>
       qty = parseInt($(event.target).val())
@@ -59,6 +52,7 @@ class Bookings.Controller
   reviewBooking: (callback = -> ) ->
     return unless @listing.isBooked()
 
+    @disableBookButton()
     Modal.load({
       url: @options.reviewUrl,
       type: 'POST',
@@ -68,14 +62,7 @@ class Bookings.Controller
           bookings: @listing.getBookings()
         }]
       }
-    }, 'space-reservation-modal sign-up-modal', callback)
-
-  initQuantity: ->
-   if @listing.defaultQuantity != 1
-      qty = @validateQuantityAndUpdatePlural(@listing.defaultQuantity)
-      @quantityField.val(qty)
-      @quantityField.find('option[value="' + qty + '"]').attr("selected",true)
-      @container.find('.customSelect.quantity .customSelectInner').text(qty)
+    }, 'space-reservation-modal sign-up-modal', => @enableBookButton())
 
   bindModel: ->
     @listing.bind 'dateAdded', (date) =>
@@ -89,6 +76,11 @@ class Bookings.Controller
 
   enableBookButton : () ->
     $('.click-disabled').removeClass('click-disabled').find('span').text('Book')
+
+  initializeQuantityField: (value = @listing.defaultQuantity) ->
+    qty = @validateQuantityAndUpdatePlural(value)
+    @quantityField.val(qty)
+    @container.find('.customSelect.quantity .customSelectInner').text(qty)
 
   validateQuantityAndUpdatePlural: (qty) ->
     qty = 1 unless qty >= 0
