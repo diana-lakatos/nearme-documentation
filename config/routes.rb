@@ -56,21 +56,10 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  namespace :manage, :path => 'dashboard' do
-    resources :companies do
-      resources :locations, :only => [:index] do
-      end
-    end
+  namespace :manage do
 
     resources :locations do
-      resources :listings, :only => [:index, :new, :create]
-      member do
-        get :map
-        get :amenities
-        get :availability
-        get :photos
-        get :associations
-      end
+      resources :listings
     end
 
     resources :listings do

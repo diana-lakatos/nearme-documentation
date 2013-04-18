@@ -1,4 +1,4 @@
-class Manage::ListingsController < ApplicationController
+class Manage::ListingsController < Manage::BaseController
   before_filter :authenticate_user!
 
   before_filter :find_listing, :except => [:index, :new, :create]
@@ -15,8 +15,8 @@ class Manage::ListingsController < ApplicationController
     @listing = @location.listings.build(params[:listing])
 
     if @listing.save
-      flash[:context_success] = "Great, your new Desk/Room has been added!"
-      redirect_to [:edit, :manage, @listing]
+      flash[:notice] = "Great, your new Desk/Room has been added!"
+      redirect_to manage_locations_path
     else
       render :new
     end
@@ -29,8 +29,8 @@ class Manage::ListingsController < ApplicationController
     @listing.attributes = params[:listing]
 
     if @listing.save
-      flash[:context_success] = "Great, your listing's details have been updated."
-      redirect_to [:edit, :manage, @listing]
+      flash[:notice] = "Great, your listing's details have been updated."
+      redirect_to manage_locations_path
     else
       render :edit
     end
@@ -39,8 +39,8 @@ class Manage::ListingsController < ApplicationController
   def destroy
     @listing.destroy
 
-    flash[:context_success] = "That listing has been deleted."
-    redirect_to [:manage, @location, :listings]
+    flash[:notice] = "That listing has been deleted."
+    redirect_to manage_locations_path
   end
 
   private

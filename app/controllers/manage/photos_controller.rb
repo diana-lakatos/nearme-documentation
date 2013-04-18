@@ -1,4 +1,4 @@
-class Manage::PhotosController < ApplicationController
+class Manage::PhotosController < Manage::BaseController
   before_filter :authenticate_user!
   before_filter :find_listing
   before_filter :find_photo, :except => [:index, :create]

@@ -9,12 +9,9 @@
           %section.box.location
             %header.location
               %span.padding.ico-location.location-header
-                = @location.name
+                New location
             .location-content
               = render @location
-              = link_to manage_location_path(@location), :method => :delete, :class => "delete delete-location" do
-                %span.ico-trash.padding
-                  Delete this location
 
             %section.listings
               .action

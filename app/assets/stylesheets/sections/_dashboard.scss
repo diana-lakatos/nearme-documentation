@@ -31,7 +31,12 @@ div.availability-rules .custom-availability-rules .day .close-time{
 
 
 section.locations-holder {
+
   margin-bottom: 20px;
+
+  .edit-link{
+    color: $gray8;
+  }
 
   .location-content {
     margin-bottom: 0;
@@ -93,7 +98,6 @@ section.locations-holder {
       height: 24px;
       font-size: 24px;
       margin-bottom: 0;
-      cursor: pointer;
       color: $gray8;
 
       span {
@@ -179,7 +183,6 @@ section.listings {
       height: 24px;
       font-size: 20px;
       margin-bottom: 0;
-      cursor: pointer;
 
       .listing-header { 
         padding-left: 24px; 
@@ -190,6 +193,7 @@ section.listings {
         text-overflow: ellipsis;
       }
     }
+
   }
 
   .accordion {
@@ -206,6 +210,11 @@ section.listings {
         padding: 20px 15px;
         clear: both;
       }
+    }
+
+    header.listing.empty{
+      text-align: center;
+      color: $gray6;
     }
 
     @include dashboard-acc-group;

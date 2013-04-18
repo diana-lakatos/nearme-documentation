@@ -1,0 +1,33 @@
+= f.input :name, :label => 'Listing name', :placeholder => 'Examples, "Shared Desks", "Meeting Room", "Private Office"'
+= f.input :description, :label => 'Listing description', :input_html => { :maxlength => 250}, :placeholder => 'Describe the individual listing that will be rented'
+= f.association :listing_type, :label => "Listing type"
+= f.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" }
+= locations_form.input :currency, :as => :currency, :label => "Currency", :default => 'USD', :input_html => { :class => 'custom-select' }
+
+.control-group
+  = f.label :daily_price, 'Price', :class => 'control-label'
+
+  .controls
+    %span.currency-holder
+    = f.number_field :daily_price, :as => :decimal, :label => false, :class => 'mini', :value => ''
+    %span.periodicity /day
+  .controls 
+    %span.currency-holder
+    = f.number_field :weekly_price, :as => :decimal, :label => false, :class => 'mini', :value => ''
+    %span.periodicity /week
+  .controls 
+    %span.currency-holder
+    = f.number_field :monthly_price, :as => :decimal, :label => false, :class => 'mini', :value => ''
+    %span.periodicity /month
+  .controls
+    .inline-rule
+      %span Or
+    = f.check_box :free
+    = f.label :free, "Free?"
+
+= f.input :confirm_reservations, :label => 'Bookings require my confirmation'
+
+= file_upload_input_with_label('Photos', space_wizard_photo_path, "user[companies_attributes][0][locations_attributes][0][listings_attributes][0][photos_attributes][0][image]", "Upload Photos") do
+  - unless current_user.companies.any? { |c| c.id }
+    - current_user.photos.each do |photo|
+      = fileupload_photo_with_input(photo.image_url(:thumb), destroy_space_wizard_photo_path(:id => photo.id), photo.id) unless photo.content_id

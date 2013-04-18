@@ -1,21 +1,29 @@
-class Manage::LocationsController < ApplicationController
+class Manage::LocationsController < Manage::BaseController
   before_filter :authenticate_user!
-  before_filter :find_location, :except => [:index]
+  before_filter :find_location, :except => [:index, :new, :create]
   before_filter :find_company
 
   def index
+    @locations = current_user.locations
+  end
+
+  def new
+    @location = @company.locations.build
+    AvailabilityRule.default_template.apply(@location)
+  end
+
+  def create
+    @location = @company.locations.build(params[:location])
+
+    if @location.save
+      flash[:notice] = "Great, your new Desk/Room has been added!"
+      redirect_to manage_locations_path
+    else
+      render :new
+    end
   end
 
   def edit
-  end
-
-  def destroy
-    if @location.destroy
-      flash[:context_success] = "You've deleted #{@location.name}"
-    else
-      flash[:context_failure] = "We couldn't delete #{@location.name}"
-    end
-    redirect_to manage_company_locations_path @location.company
   end
 
   def update
@@ -23,10 +31,19 @@ class Manage::LocationsController < ApplicationController
 
     if @location.save
       flash[:context_success] = "Great, your Space has been updated!"
-      redirect_to [:edit, :manage, @location]
+      redirect_to manage_locations_path
     else
       render :edit
     end
+  end
+
+  def destroy
+    if @location.destroy
+      flash[:notice] = "You've deleted #{@location.name}"
+    else
+      flash[:error] = "We couldn't delete #{@location.name}"
+    end
+    redirect_to manage_locations_path
   end
 
   private
@@ -36,10 +53,11 @@ class Manage::LocationsController < ApplicationController
   end
 
   def find_company
-    @company = if @location
-      @location.company
-    else
-      current_user.companies.find(params[:company_id])
+    @company = current_user.companies.first
+    unless @company
+      flash[:notice] = "Please add your company first"
+      redirect_to new_space_wizard_url
     end
   end
+
 end
