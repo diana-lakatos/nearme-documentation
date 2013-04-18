@@ -37,6 +37,8 @@ class Location::GoogleGeolocationDataParser
       component = find_component_for("neighborhood") 
     end
     component
+  rescue
+    Component.new({ "long_name" => "", "types" => ""})
   end
 
   class Component

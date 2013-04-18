@@ -57,37 +57,37 @@ FactoryGirl.define do
           "0"=> {
           "long_name"=>"Ursynowska",
           "short_name"=>"Ursynowska",
-          "types"=>"route"
+          "types"=>["route"]
         },
           "1"=>{
           "long_name"=>"Mokotow",
           "short_name"=>"Mokotow",
-          "types"=>"sublocality,political"
+          "types"=>["sublocality","political"]
         },
           "2"=>{
           "long_name"=>"Warsaw",
           "short_name"=>"Warsaw",
-          "types"=>"locality,political"
+          "types"=>["locality","political"]
         },
           "3"=>{
           "long_name"=> "Warszawa",
           "short_name"=>"Warszawa",
-          "types"=>"administrative_area_level_3,political"
+          "types"=>["administrative_area_level_3","political"]
         },
           "4"=>{
             "long_name"=>"Warszawa",
             "short_name"=>"Warszawa",
-            "types"=>"administrative_area_level_2,political"
+            "types"=>["administrative_area_level_2","political"]
           },
           "5"=>{
             "long_name"=>"Masovian Voivodeship",
             "short_name"=>"Masovian Voivodeship",
-            "types"=>"administrative_area_level_1,political"
+            "types"=>["administrative_area_level_1","political"]
           },
           "6"=>{
             "long_name"=>"Poland",
             "short_name"=>"PL",
-            "types"=>"country,political"
+            "types"=>["country","political"]
           }
         }
       end
@@ -99,12 +99,12 @@ FactoryGirl.define do
         "2"=>{
           "long_name"=>"Warsaw",
           "short_name"=>"Warsaw",
-          "types"=>"locality,political"
+          "types"=>["locality","political"]
         },
           "3"=>{
           "long_name"=> "Warszawa",
           "short_name"=>"Warszawa",
-          "types"=>"administrative_area_level_3,political"
+          "types"=>["administrative_area_level_3","political"]
         }
       }}
     end
@@ -115,20 +115,20 @@ FactoryGirl.define do
         "0"=>{
           "long_name"=>"San Francisco",
           "short_name"=>"SF",
-          "types"=>"locality,political"
+          "types"=>["locality","political"]
         },
         "1"=>{
           "long_name"=>"San Francisco",
           "short_name"=>"San Francisco",
-          "types"=>"administrative_area_level_2,political"},
+          "types"=>["administrative_area_level_2","political"]},
         "2"=>{
           "long_name"=>"California",
           "short_name"=>"CA",
-          "types"=>"administrative_area_level_1,political"},
+          "types"=>["administrative_area_level_1","political"]},
         "3"=>{
           "long_name"=>"United States",
           "short_name"=>"US",
-          "types"=>"country,political"
+          "types"=>["country","political"]
         }
       }}
     end
@@ -138,31 +138,31 @@ FactoryGirl.define do
          "0"=> {
           "long_name"=>"Major MacKenzie Drive",
           "short_name"=>"Major MacKenzie Dr",
-          "types"=>"route"},
+          "types"=>["route"]},
         "1"=>{
           "long_name"=>"Maple",
           "short_name"=>"Maple",
-          "types"=>"neighborhood, political"},
+          "types"=>["neighborhood","political"]},
         "2"=>{
           "long_name"=>"Vaughan",
           "short_name"=>"Vaughan",
-          "types"=>"administrative_area_level_3, political"},
+          "types"=>["administrative_area_level_3","political"]},
         "3"=>{
           "long_name"=>"York Regional Municipality",
           "short_name"=>"York Regional Municipality",
-          "types"=>"administrative_area_level_2, political"},
+          "types"=>["administrative_area_level_2","political"]},
         "4"=>{
           "long_name"=>"Ontario",
           "short_name"=>"ON",
-          "types"=>"administrative_area_level_1, political"},
+          "types"=>["administrative_area_level_1","political"]},
         "5"=>{
           "long_name"=>"Canada",
           "short_name"=>"CA",
-          "types"=>"country, political"},
+          "types"=>["country","political"]},
         "6"=>{
           "long_name"=>"L6A",
           "short_name"=>"L6A",
-          "types"=>"postal_code"}
+          "types"=>["postal_code"]}
       }}
     end
   end

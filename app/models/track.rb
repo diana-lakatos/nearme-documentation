@@ -19,9 +19,9 @@ class Track
       listing_name: listing.name,
       listing_quantity: listing.quantity,
       listing_confirm: listing.confirm_reservations,
-      listing_daily_price: listing.daily_price.dollars,
-      listing_weekly_price: listing.weekly_price.dollars,
-      listing_monthly_price: listing.monthly_price.dollars
+      listing_daily_price: listing.daily_price.try(:dollars),
+      listing_weekly_price: listing.weekly_price.try(:dollars),
+      listing_monthly_price: listing.monthly_price.try(:dollars)
     }
   end
 
