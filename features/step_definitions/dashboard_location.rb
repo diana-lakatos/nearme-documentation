@@ -1,19 +1,37 @@
-Given /^Location with my details should be created$/ do
-  location = Location.last
-  assert_location_data(location)
+Given /^(Location|Listing) with my details should be created$/ do |model|
+  if model=='Location'
+    location = Location.last
+    assert_location_data(location)
+  else
+    listing = Listing.last
+    assert_listing_data(listing)
+  end
 end
 
-Given /^Location should be updated$/ do
-  location = Location.last
-  assert_location_data(location)
+Given /^(Location|Listing) should be updated$/ do |model|
+  if model=='Location'
+    location = Location.last
+    assert_location_data(location)
+  else
+    listing = Listing.last
+    assert_listing_data(listing)
+  end
 end
 
-When /^I fill location form with valid details$/ do
-  fill_location_form
+When /^I fill (location|listing) form with valid details$/ do |model|
+  if model == 'location'
+    fill_location_form
+  else 
+    fill_listing_form
+  end
 end
 
-When /^I provide new location data$/ do
-  fill_location_form
+When /^I provide new (location|listing) data$/ do |model|
+  if model == 'location'
+    fill_location_form
+  else 
+    fill_listing_form
+  end
 end
 
 When /^I submit the form$/ do
@@ -24,6 +42,14 @@ When /^I click edit icon$/ do
   page.find('.edit-link').click
 end
 
-Then /^Location has been deleted$/ do
+When /^I click edit listing icon$/ do
+  page.find('.listing .edit-link').click
+end
+
+Then /^(Location|Listing) has been deleted$/ do |model|
+  if model=='Location'
   assert_nil Location.first
+  else
+  assert_nil Listing.first
+  end
 end

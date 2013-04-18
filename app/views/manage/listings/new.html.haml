@@ -16,12 +16,9 @@
                   %section.box.box-dim.listing
                     %header.listing
                       %span.padding.ico-desk.listing-header
-                        = @listing.name
+                        New Listing
                     .accordion-inner
                       = render :partial => 'listing', :locals => {:listing => @listing, :location => @location}
-                      = link_to manage_location_listing_path(@location, @listing), :method => :delete, :class => "delete delete-listing" do
-                        %span.ico-trash.padding
-                          Delete this listing
 
             %section.listings
               .action
