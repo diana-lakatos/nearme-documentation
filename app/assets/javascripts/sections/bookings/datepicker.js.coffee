@@ -41,6 +41,7 @@ class @Bookings.Datepicker
     @endDatepicker.getModel().on 'rangeApplied', =>
       # For now, we only provide the add/remove pick mode for listings allowing
       # individual day selection.
+      @setDatepickerToPickMode()
       
       # If the user selects the same start/end date, let's close the datepicker
       # and assume they were only trying to select one day.
