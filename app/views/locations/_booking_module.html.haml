@@ -1,6 +1,17 @@
 .booking-module-container
   .booking-module
-
+    - if listing.daily_price
+      %span.label.label-daily-price
+        = "#{money_without_cents_and_with_symbol(listing.daily_price)}"
+        %span.period   Day
+    - if listing.weekly_price
+      %span.label.label-weekly-price
+        = "#{money_without_cents_and_with_symbol(listing.weekly_price)}"
+        %span.period   Week
+    - if listing.monthly_price
+      %span.label.label-monthly-price
+        = "#{money_without_cents_and_with_symbol(listing.monthly_price)}"
+        %span.period   Month   
     .calendar-wrapper.date-start
       .calendar
         %span.ico-calender

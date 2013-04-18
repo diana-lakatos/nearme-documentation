@@ -1,11 +1,3 @@
-$booking-module-height: 208px;
-$booking-module-width: 280px;
-$booking-module-breakpoint: 580px;
-$booking-module-breakpoint-desktop: 900px;
-$listing-photo-width: 410px;
-$listing-photo-height: 254px;
-$listing-header-height: 58px;
-
 #location-tabs{
   margin: 0px;
 }
@@ -84,8 +76,8 @@ $listing-header-height: 58px;
     position: absolute;
     left: 0;
     top: 0;
-    height: 208px;
-    width: 410px;
+    height: $listing-photo-height;
+    width: $listing-photo-width;
     overflow: hidden;
 
     @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {

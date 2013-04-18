@@ -105,15 +105,15 @@ abbr[data-original-title] {
   @include adjust-font-size-to(16px);
 }
 
-.label-success {
+.label-daily-price {
   background: lighten($green, 16%);
 }
 
-.label-warning {
+.label-weekly-price {
   background: lighten($green, 8%);
 }
 
-.label-important {
+.label-monthly-price {
   background: $green;
 }
 
