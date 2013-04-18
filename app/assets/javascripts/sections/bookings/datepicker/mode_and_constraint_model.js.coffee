@@ -31,8 +31,15 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
 
     switch @mode
       when Bookings.Datepicker.ModeAndConstraintModel.MODE_RANGE
+        startDate = @getDates().slice(0, 1)[0]
+
+        # Return if there is no start date, or if date selected
+        # is before the start date (can't select backwards)
+        if !startDate or startDate.getTime() > date.getTime()
+          return
+
         # Reset the range
-        @setDates(@getDates().slice(0,1))
+        @setDates([startDate])
 
         # Extend the range
         @setRangeTo(date)
