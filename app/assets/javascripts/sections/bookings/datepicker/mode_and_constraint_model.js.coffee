@@ -38,6 +38,11 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
         if !startDate or startDate.getTime() > date.getTime()
           return
 
+        # Don't allow making a range selection that doesn't meet
+        # the consecutive days constraint
+        if @minDays > 1 and @consecutiveDaysBetween(startDate, date) < @minDays
+          return
+
         # Reset the range
         @setDates([startDate])
 
@@ -166,8 +171,8 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
     bookingRemovalAlgorithm(DNM.util.Date.previousDateIterator(date))
     bookingRemovalAlgorithm(DNM.util.Date.nextDateIterator(date))
 
-  # Return the consecutive days currently at the date, *or* the required minumum
-  # consecutive days - whatever is less.
+  # Return the consecutive days currently booked at the date, *or* 
+  # the required minumum consecutive days - whatever is less.
   consecutiveDays: (date) ->
     return 0 if !@isSelected(date)
 
@@ -193,4 +198,15 @@ class @Bookings.Datepicker.ModeAndConstraintModel extends window.Datepicker.Mode
     countingAlgorithm(DNM.util.Date.previousDateIterator(date))
     countingAlgorithm(DNM.util.Date.nextDateIterator(date))
     consecutiveDaysCount
+
+  # Return a count of the available consecutive days between two dates, or the
+  # minimum required consecutive days - whichever is less.
+  consecutiveDaysBetween: (startDate, endDate) ->
+    return 0 if endDate.getTime() < startDate.getTime()
+    count = 0
+    current = startDate
+    while count < @minDays and current.getTime() <= endDate.getTime()
+      count += 1 if @canSelectDate(current)
+      current = DNM.util.Date.next(current)
+    count
 
