@@ -7,23 +7,23 @@ class Bookings.Controller
   constructor: (@container, @listingData, @options = {}) ->
     @listing = new Bookings.Listing(@listingData)
 
-    @setupMultiDatesPicker()
+    @bindDomElements()
+    @initializeDatepicker()
+    @bindEvents()
+ 
+    @assignInitialDates()
+    @updateQuantityField()
+
+    if @options.initialBookings and @options.showReviewBookingImmediately
+      @reviewBooking()
+
+  # Bind to the various DOM elements managed by this controller.
+  bindDomElements: ->
     @quantityField = @container.find('select.quantity')
     @totalElement = @container.find('.total')
     @resourceElement = @container.find('.resource')
     @daysElement = @container.find('.total-days')
     @bookButton = @container.find('[data-behavior=showReviewBookingListing]')
-    @bindModel()
-    @initializeQuantityField()
-    @bindEvents()
- 
-    # Initialize default bookings
-    # Determine if there are any bookings to assign that have been passed through
-    initialDates = @options.initialBookings or [@listing.firstAvailableDate]
-    @datepicker.setDates(initialDates)
-
-    if @options.initialBookings and @options.showReviewBookingImmediately
-      @reviewBooking()
 
   bindEvents: ->
     @bookButton.on 'click', (event) =>
@@ -31,24 +31,39 @@ class Bookings.Controller
       @reviewBooking()
 
     @quantityField.on 'change', (event) =>
-      qty = parseInt($(event.target).val())
-      qty = @validateQuantityAndUpdatePlural(qty)
-      $(event.target).val(qty)
-      @listing.setDefaultQuantity(qty)
-      @listing.resetBookings()
+      @listing.setDefaultQuantity(parseInt($(event.target).val()))
+      @updateQuantityField()
+      @datepicker.reset()
 
     @datepicker.bind 'datesChanged', (dates) =>
       @listing.setDates(dates)
+      @delayedUpdateBookingStatus()
 
-    @listing.bind 'bookingChanged', =>
-      @updateSummary()
-      if @listing.bookedDays().length == 0
-        @bookButton.addClass('disabled')
-        @bookButton.tooltip()
-      else
-        @bookButton.removeClass('disabled')
-        @bookButton.tooltip('destroy')
+  # Setup the datepicker for the simple booking UI
+  initializeDatepicker: ->
+    @datepicker = new Bookings.Datepicker(
+      listing: @listing
+      startElement: @container.find(".calendar-wrapper.date-start")
+      endElement: @container.find(".calendar-wrapper.date-end")
+    )
 
+  # Assign initial dates from a restored session or the default
+  # start date.
+  assignInitialDates: ->
+    initialDates = if @options.initialBookings
+      # Format is:
+      # [ {date: '2013-11-04', quantity: 2}, ...]
+      @listing.setDefaultQuantity(@options.initialBookings[0].quantity)
+
+      # Map bookings to JS dates
+      (DNM.util.Date.idToDate(booking.date) for booking in @options.initialBookings)
+    else
+      [@listing.firstAvailableDate]
+
+    @datepicker.setDates(initialDates)
+
+  # Trigger showing the review booking form based on selected
+  # dates.
   reviewBooking: (callback = -> ) ->
     return unless @listing.isBooked()
 
@@ -64,41 +79,39 @@ class Bookings.Controller
       }
     }, 'space-reservation-modal sign-up-modal', => @enableBookButton())
 
-  bindModel: ->
-    @listing.bind 'dateAdded', (date) =>
-      @datepicker.addDate(date)
+  # Update the view to display pricing, date selections, etc. based on
+  # current selected dates.
+  updateBookingStatus: ->
+    @updateSummary()
+    if !@listing.isBooked()
+      @bookButton.addClass('disabled')
+      @bookButton.tooltip()
+    else
+      @bookButton.removeClass('disabled')
+      @bookButton.tooltip('destroy')
 
-    @listing.bind 'dateRemoved', (date) =>
-      @datepicker.removeDate(date)
+  # A deferred version of the booking status view updating, so we don't
+  # execute it multiple times in a short span of time.
+  delayedUpdateBookingStatus: _.debounce(->
+    @updateBookingStatus()
+  , 5)
 
-  disableBookButton : () ->
-      @bookButton.addClass('click-disabled').find('span').text('Booking...')
+  disableBookButton: ->
+    @bookButton.addClass('click-disabled').find('span').text('Booking...')
 
-  enableBookButton : () ->
+  enableBookButton: ->
     $('.click-disabled').removeClass('click-disabled').find('span').text('Book')
 
-  initializeQuantityField: (value = @listing.defaultQuantity) ->
-    qty = @validateQuantityAndUpdatePlural(value)
-    @quantityField.val(qty)
-    @container.find('.customSelect.quantity .customSelectInner').text(qty)
-
-  validateQuantityAndUpdatePlural: (qty) ->
-    qty = 1 unless qty >= 0
+  updateQuantityField: (qty = @listing.defaultQuantity) ->
     plural = if qty == 1 then '' else 's'
     @resourceElement.text("desk#{plural}")
-    return qty
+    @container.find('.customSelect.quantity .customSelectInner').text(qty)
+    @quantityField.val(qty)
 
   updateSummary: ->
     @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
-    days = @listing.bookedDays().length
+    days = @listing.bookedDates().length
     plural = if days == 1 then '' else 's'
     @daysElement.text("#{days} day#{plural}")
 
-  # Setup the datepicker for the simple booking UI
-  setupMultiDatesPicker: ->
-    @datepicker = new Bookings.Datepicker(
-      listing: @listing
-      startElement: @container.find(".calendar-wrapper.date-start")
-      endElement: @container.find(".calendar-wrapper.date-end")
-    )
 

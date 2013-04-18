@@ -41,9 +41,7 @@ class @Bookings.Datepicker
     @endDatepicker.getModel().on 'rangeApplied', =>
       # For now, we only provide the add/remove pick mode for listings allowing
       # individual day selection.
-      if @listing.minimumBookingDays <= 1
-        @setDatepickerMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_PICK)
-
+      
       # If the user selects the same start/end date, let's close the datepicker
       # and assume they were only trying to select one day.
       if @listing.minimumBookingDays > 1 or @endDatepicker.getDates().length <= 1
@@ -81,10 +79,20 @@ class @Bookings.Datepicker
 
   setDates: (dates) ->
     dates = DNM.util.Date.sortDates(dates)
-    @startDatepicker.setDates(dates)
+    @startDatepicker.setDates(dates.slice(0,1))
     @endDatepicker.setDates(dates)
     @endDatepicker.getModel().ensureDatesMeetConstraint()
+    
+    # If we're specifying more than just a start date, we need
+    # to set the mode to Pick.
+    if dates.length > 1
+      @setDatepickerToPickMode()
+
     @updateElementText()
+    @trigger 'datesChanged', @endDatepicker.getDates()
+
+  reset: ->
+    @setDates([])
 
   addDate: (date) ->
     # If the added date is prior to the current start date, we set the
@@ -119,15 +127,14 @@ class @Bookings.Datepicker
     @startElement.find('.calendar-text').text(startText)
     @endElement.find('.calendar-text').text(endText)
 
-  # Sets the mode of the end datepicker, and adjusts the instructional text accordingly
-  setDatepickerMode: (mode) ->
-    switch mode
-      when Bookings.Datepicker.ModeAndConstraintModel.MODE_RANGE
-        @endDatepicker.getModel().setMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_RANGE)
-        @endDatepicker.getView().setText(@TEXT_END_RANGE)
-      when Bookings.Datepicker.ModeAndConstraintModel.MODE_PICK
-        @endDatepicker.getModel().setMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_PICK)
-        @endDatepicker.getView().setText(@TEXT_END_PICK)
+  setDatepickerToPickMode: ->
+    return if @listing.minimumBookingDays > 1
+    @endDatepicker.getModel().setMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_PICK)
+    @endDatepicker.getView().setText(@TEXT_END_PICK)
+
+  setDatepickerToRangeMode: ->
+    @endDatepicker.getModel().setMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_RANGE)
+    @endDatepicker.getView().setText(@TEXT_END_RANGE)
 
   datesWereChanged: ->
     @updateElementText()
@@ -138,8 +145,8 @@ class @Bookings.Datepicker
     @startDatepicker.hide()
 
     # Reset the end datepicker
-    @endDatepicker.setDates(@startDatepicker.getDates())
-    @setDatepickerMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_RANGE)
+    @setDates(@startDatepicker.getDates())
+    @setDatepickerToRangeMode()
 
     # Show the end datepicker instantly
     @endDatepicker.show()

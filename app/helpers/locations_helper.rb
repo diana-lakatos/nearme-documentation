@@ -16,7 +16,7 @@ module LocationsHelper
       {
         :id => listing.id,
         :name => listing.name,
-        :first_available_date => listing.first_available_date.strftime("%Y/%m/%d"),
+        :first_available_date => listing.first_available_date.strftime("%Y-%m-%d"),
         :minimum_booking_days => listing.minimum_booking_days,
         :quantity => listing.quantity,
         :availability => availability.as_json,
