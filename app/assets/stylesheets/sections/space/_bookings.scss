@@ -110,7 +110,7 @@
   .listing-name, .listing-description {
     float: left;
     width: 100%;
-    padding: 0 280px 0 420px;
+    padding: 0 280px 0 410px;
     @include box-sizing(border-box);
 
     @media  (max-width: $booking-module-breakpoint-desktop) {

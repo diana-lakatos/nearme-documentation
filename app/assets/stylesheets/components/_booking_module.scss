@@ -9,6 +9,9 @@
     float: left;
     clear: both;
     width: 100%;
+    margin: 0 -$padding -$padding;
+    padding: 0 $padding $padding;
+    @include box-sizing(padding-box);
   }
 
   .book {
@@ -34,11 +37,19 @@
     padding: $padding;
     font: normal 22px/26px 'Futura-regular', sans-serif; 
 
+    @media (max-width: $booking-module-breakpoint-desktop) {
+      @include border-radius(0);
+    }
+
+    @media (max-width: $booking-module-breakpoint) {
+      @include border-bottom-radius($border-radius);
+    }
+
     .label {
       display: block;
       float: left;
       width: 30%;
-      height: 41px;
+      height: 34px;
       background: transparent;
       color: $gray4;
       font-size: 22px;
@@ -67,9 +78,16 @@
       }
     }
     
+    hr {
+      margin: 0 -12px 10px;
+      height: 0 !Important;
+      background-color: $gray6;
+      border-bottom: 2px solid $gray6;
+    }
+
     .calendar-wrapper {
       display: block;
-      margin: 0 0 8px;
+      margin: 0 0 6px;
       padding: 6px 8px;
       @include border-radius(8px);
       @include box-sizing(border-box);
@@ -132,8 +150,9 @@
     }
 
     .price {
-      height: 42px;
-      line-height: 42px;
+      height: 30px;
+      line-height: 30px;
+      margin-bottom: 8px;
       text-align: left;
 
       span {

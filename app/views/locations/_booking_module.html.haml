@@ -12,14 +12,14 @@
       %span.label.label-monthly-price
         = "#{money_without_cents_and_with_symbol(listing.monthly_price)}"
         %span.period   Month   
+    %hr        
     .calendar-wrapper.date-start
       .calendar
-        %span.ico-calender
+        %span.ico-calender-check-in
         %span.calendar-text Start
-        
     .calendar-wrapper.date-end
       .calendar
-        %span.ico-calender
+        %span.ico-calender-check-out
         %span.calendar-text End
     .quantity
       %span.resource= listing.listing_type.name.pluralize
@@ -30,7 +30,8 @@
 
     .book
       = link_to_once "", :id =>"book-#{listing.id}", :disable_with => false, :rel => "tooltip", :class => "btn btn-green btn-large", :'data-original-title' => "Please select days first", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
-        %span.ico-check.padding Book
+        %span.ico-check.padding 
+        Book
 
   .clearfix
 
