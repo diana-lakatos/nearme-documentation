@@ -3,7 +3,6 @@
 #= require ./bookings/listing
 #= require ./bookings/reservation_modal
 #= require ./bookings/datepicker
-#= require ./bookings/listing_view
 
 @Bookings = {
 }
