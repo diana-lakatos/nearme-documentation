@@ -16,5 +16,15 @@ class Listing::Search::Params::Web < Listing::Search::Params
     @midpoint ||= [@options[:lat], @options[:lng]] if @options[:lat].present?
     @midpoint
   end
-  
+
+  def address_components
+    @address_components || {
+      "street" => "Unknown",
+      "country" => "Unknown",
+      "city" => "Unknown",
+      "suburb" => "Unknown",
+      "state" => "Unknown"
+    }
+  end
+
 end

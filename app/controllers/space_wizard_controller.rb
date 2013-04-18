@@ -30,10 +30,15 @@ class SpaceWizardController < ApplicationController
         listing.photos << current_user.photos.find(params[:uploaded_photos])
         listing.save!
       end
+
+      Track::List.created_a_location('wizard', @user.locations.first)
+      Track::List.created_a_listing('wizard', @user.first_listing)
+
       redirect_to controlpanel_path, notice: 'Your space was listed! You can provide more details about your location and listing from this page.'
     else
       render :list
     end
+
   end
 
 

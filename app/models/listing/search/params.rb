@@ -79,7 +79,7 @@ class Listing::Search::Params
     if not found_location? and query.present?
       @location = @geocoder.find_search_area(query)
       if @location.present?
-        @bounding_box, @midpoint, @radius = @location.bounds, @location.center, @location.radius
+        @bounding_box, @midpoint, @radius, @address_components = @location.bounds, @location.center, @location.radius, @location.address_components
       end
     end
     
@@ -88,7 +88,7 @@ class Listing::Search::Params
     else
       NullPriceRange.new
     end
-    
+
   end
   
 end

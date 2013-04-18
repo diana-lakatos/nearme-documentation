@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class LocationsControllerTest < ActionController::TestCase
+class SearchControllerTest < ActionController::TestCase
 
 include Devise::TestHelpers
 
@@ -13,15 +13,10 @@ include Devise::TestHelpers
     stub_request(:get, /.*api\.mixpanel\.com.*/)
   end
 
-  test "should return success status for show action if no listings" do
-    get :show, :id => @location.id
-    assert_response :success
-  end
-
-  test "should track location view" do
-    Track::Search.expects(:viewed_a_location)
-    get :show, id: @location.id
+  # This fails because the search method is triggered twice every search for some reason
+  test "should track search view" do
+    Track::Search.expects(:conducted_a_search)
+    get :index
   end
 
 end
-

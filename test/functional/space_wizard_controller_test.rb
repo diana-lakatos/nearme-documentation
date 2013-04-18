@@ -9,6 +9,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
     sign_in @user
     FactoryGirl.create(:listing_type)
     FactoryGirl.create(:location_type)
+    stub_request(:get, /.*api\.mixpanel\.com.*/)
   end
 
   context "price must be formatted" do
@@ -41,10 +42,16 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
     should "not raise exception if hash is incomplete" do
       assert_no_difference('Listing.count') do
-        post :submit_listing, { "user"=> {"companies_attributes"=> {"0"=> { "name"=>"International Secret Intelligence Service" } } } } 
+        post :submit_listing, { "user"=> {"companies_attributes"=> {"0"=> { "name"=>"International Secret Intelligence Service" } } } }
       end
     end
 
+  end
+
+  should "track location and listing creation" do
+    Track::List.expects(:created_a_location)
+    Track::List.expects(:created_a_listing)
+    post :submit_listing, get_params
   end
 
   private

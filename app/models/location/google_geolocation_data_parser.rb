@@ -43,7 +43,7 @@ class Location::GoogleGeolocationDataParser
     attr_reader :long_name, :types
     def initialize(hash)
       @long_name = hash.fetch("long_name", "")
-      @types = hash.fetch("types", "").split(",")
+      @types = hash.fetch("types", "").split(",")[0]
     end
 
     def missing?
