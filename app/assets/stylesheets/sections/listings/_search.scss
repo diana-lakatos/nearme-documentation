@@ -2,12 +2,19 @@ $map-z-index: $nav-z-index - 20;
 
 section.search#content {
   padding-top: 30px;
-  min-height: 800px;
 
+  @media (max-width: $iphone-landscape) {
+    padding-top: 8px;
+  }
+  
   footer {
     display: none;
   }
-
+  
+  & + .footer-wrapper {
+    display: none;
+  }
+  
   .loading {
     position: absolute;
     top: 160px;
@@ -30,9 +37,20 @@ section.search#content {
     }
   }
   
+  .google-map-wrapper .cluster[title] {
+    background: rgb(186,0,13) !important; 
+    font-size: 18px !important;
+    color: #FFF !important;
+    border: 2px solid rgb(107,11,13);
+    @include border-radius(42px);
+    @include box-shadow(0px 0px 3px 1px rgba(0,0,0,0.4));
+    margin-top: -10px;
+    margin-left: -2px;
+  }
+  
   #results.no_results {
      padding: 40px 0;
-     z-index: 1000;
+     z-index: $map-z-index - 1;
      
      &.map {
        position: absolute;
@@ -78,12 +96,22 @@ section.search#content {
         font-size: 14px;
       }
     }
+    
+    @media (max-width: 960px) {
+      .search-map-redo-search-control {
+        display: none;
+      }
+    }
   }
 }
 
 .google-map-popover-content .listing-sibling {
   overflow: hidden;
   cursor: pointer;
+  
+  &:hover {
+    background-color: $gray4;
+  }
 }
 
 .listing-map-popover-content {
@@ -107,6 +135,10 @@ section.search#content {
 
   .span9 {
     position: relative;
+
+    input {
+      padding: 8px 0 8px 50px;
+    }
   }
   
   .geolocation, .search-icon {
@@ -131,12 +163,7 @@ section.search#content {
     
   .search-icon {
     right: 17px;
-  }
-  
-  input#search {
-    padding: 8px 0 8px 50px;
-  }
-  
+  }  
 }
 
 header#listing_search {
@@ -151,8 +178,11 @@ header#listing_search {
   z-index: $nav-z-index - 10;
   overflow: hidden;  
   background: $gray2;
- 
-  
+
+  @media (max-width: $iphone-landscape) {
+    height: 38px;
+  }
+
   .header-inner {
     position: relative;
     max-width: 1360px;
@@ -167,6 +197,12 @@ header#listing_search {
     left: 0px;
     width: 100px;
     height: 49px;
+
+    @media (max-width: $iphone-landscape) {
+      height: 28px;
+      width: 54px;
+      @include border-radius($border-radius-mobile);
+    }
 
     a.map,
     a.list {  
@@ -183,6 +219,14 @@ header#listing_search {
       text-align: center;
       color: $gray5; 
 
+      @media (max-width: $iphone-landscape) {
+        height: 24px;
+        width: 24px;
+        font-size: 16px;
+        line-height: 24px;
+        @include border-radius($border-radius-mobile);
+      }
+
       &.active {
         background: $gray4;
         color: $gray6;
@@ -193,6 +237,10 @@ header#listing_search {
     a.map {
       top: 0;
       left: 51px;
+
+      @media (max-width: $iphone-landscape) {
+        left: 28px;
+      }      
     }
 
     a.list {
@@ -228,26 +276,73 @@ header#listing_search {
   
   form {
     max-width: 1400px;
-    margin: 0 auto;
+    margin: 0 auto;    
+    @include transition(margin .1s linear, padding .1s linear);
 
     input {
       margin-top: 5px;
       margin-bottom: 0px;
     }
-    
+
+    .search-container {
+      position: relative; 
+      float: left;
+      width: 100%;
+      padding-left: 110px;
+      @include box-sizing(border-box);
+
+      @media (min-width: 768px) {
+        padding-right: 220px;
+      }
+
+      @media (max-width: 480px) {
+        padding-left: 60px;
+      }
+
+      input[type="text"]#search {
+        display: block;
+        position: relative;
+        float: left;
+        margin-top: 5px 0 0;         
+        background: $dnm_white;
+        padding: 8px 0 8px 50px;
+        border: 2px solid #ebebeb;
+  
+        &:focus {
+          border: 2px solid rgb(200,200,200);
+        }
+
+        @media (max-width: 480px) {
+          height: 28px;
+          @include border-radius($border-radius-mobile);
+          border: none;
+          font-size: 16px;
+          line-height: 24px !important;
+          margin: 5px 0 0;
+          padding: 0 0 0 24px;
+        }        
+      }
+    }
+
     &.search_results {
       
       .geolocation {
         top: 13px;
         left: 118px;
+
+        @media (max-width: $iphone-landscape) {
+          left: 64px;
+          font-size: 18px;
+          top: 5px;
+        }
       }
       
       .search-icon {
         display: block;
         height: 34px;
         padding: 6px 13px 0 0;
-        width: 67px;
-        background: image-url("components/form/right-fade.png") right top repeat-y;
+        width: 42px;
+        @include background-image(linear-gradient(left, rgba(255,255,255,0), $dnm_white 30%, $dnm_white));
         top: 7px;
         right:2px;
         text-align: right;
@@ -263,32 +358,17 @@ header#listing_search {
         @media (min-width: 768px) {
           right: 222px;
         }
-      }
-      
-      .search-container {
-        position: relative; 
-        float: left;
-        width: 100%;
-        padding-left: 110px;
-        @include box-sizing(border-box);
 
-        @media (min-width: 768px) {
-          padding-right: 220px;
-        }
-
-        input#search {
-          display: block;
-          position: relative;
-          float: left;          
-          background: $dnm_white;
-          border: 2px solid #ebebeb;
-    
-          &:focus {
-            border: 2px solid rgb(200,200,200);
-          }
-        }
+        @media (max-width: $iphone-landscape) {
+          font-size: 18px;
+          top: 5px;
+          height: 28px;
+          width: 28px;
+          background: transparent;
+          padding: 0 6px 0 0;
+        }        
       }
-      
+            
       .calendar-container {
         position: absolute;
         top: 0px;
@@ -338,13 +418,35 @@ header#listing_search {
               + .calendar {
                 color: $icon-hover;
               }
-            }
-    
+            }    
           }
         }
       }      
-    }    
-  }
+    }
+
+    @media (max-width: 767px) {
+
+      &.query-active {
+        @include transition(padding .5s linear, margin .5s linear);
+
+        .list-map-toggle {
+        margin-left: -110px;
+        }
+
+        .search-container {
+          padding-left: 0;
+        }
+
+        .geolocation {
+          left: 8px;
+
+          @media (max-width: $iphone-landscape) {
+            left: 5px;
+          }
+        }
+      } 
+    }         
+  }  
 }
 
 section.search section#results.list {
