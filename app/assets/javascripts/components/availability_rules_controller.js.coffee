@@ -41,9 +41,9 @@ class @AvailabilityRulesController
 
     times = checkbox.closest('.day').find('.open-time select, .close-time select')
     if checkbox.is(':checked')
-      times.hide().prop('disabled', true)
+      times.prop('disabled', true)
     else
-      times.show().prop('disabled', false)
+      times.prop('disabled', false)
 
   bindEvents: ->
     # Whenever the template selector changes we need to update the state of the UI

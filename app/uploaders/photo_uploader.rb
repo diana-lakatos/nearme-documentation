@@ -9,6 +9,8 @@ class PhotoUploader < CarrierWave::Uploader::Base
     "uploads/photos/#{model.id}/"
   end
 
+  process :auto_orient
+
   version :thumb do
     process :resize_to_fill => [96, 96]
   end
@@ -35,6 +37,13 @@ class PhotoUploader < CarrierWave::Uploader::Base
 
   version :golden do
     process :resize_to_fill => [SPACE_FULL_IMAGE_W, SPACE_FULL_IMAGE_H]
+  end
+
+  def auto_orient
+    manipulate! do |img|
+      img.auto_orient
+      img
+    end
   end
 
   def extension_white_list

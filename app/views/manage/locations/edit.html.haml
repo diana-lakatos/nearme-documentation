@@ -12,7 +12,7 @@
                 = @location.name
             .location-content
               = render @location
-              = link_to manage_location_path(@location), :method => :delete, :class => "delete delete-location" do
+              = link_to manage_location_path(@location), :method => :delete, :confirm => 'Are you sure?', :class => "delete delete-location" do
                 %span.ico-trash.padding
                   Delete this location
 

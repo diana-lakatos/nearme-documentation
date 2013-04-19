@@ -15,6 +15,10 @@ class Manage::ListingsController < Manage::BaseController
     @listing = @location.listings.build(params[:listing])
 
     if @listing.save
+      if params[:uploaded_photos]
+        @listing.photos << current_user.photos.find(params[:uploaded_photos])
+        @listing.save!
+      end
       flash[:notice] = "Great, your new Desk/Room has been added!"
       redirect_to manage_locations_path
     else

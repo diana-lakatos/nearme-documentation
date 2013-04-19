@@ -105,8 +105,21 @@ class @PhotoUploader
     href = $('<a data-url="' + data.result.destroy_url + '" class="delete-photo delete-photo-thumb"><span class="ico-trash"></span></a>')
     @photoItem = @getPhotoItem(data.files[0].name)
     @photoItem.html('<img src="' + data.result.url + '">')
-    if @multiplePhoto()
-      @photoItem.append('<input type="hidden" name="uploaded_photos[]" value="' + data.result.id + '">')
-
     @photoItem.append(href)
+    if @multiplePhoto()
+      if @container.find('#photo-item-input-template').length > 0
+        input = @container.find('#photo-item-input-template').clone()
+        input.attr('disabled', false)
+        input.attr('type', 'text')
+        last_input = @container.find('input[data-number]').eq(-1)
+        console.log last_input
+        data_number = parseInt(last_input.attr('data-number')) + 1
+        input.attr('data-number', data_number)
+        name_prefix = input.attr('name') + '[' + data_number + ']'
+        input.attr('name', name_prefix + '[caption]')
+        @photoItem.append(input)
+        @photoItem.append('<input type="hidden" name="' + name_prefix + '[id]" value="' + data.result.id + '">')
+      else
+        @photoItem.append('<input type="hidden" name="uploaded_photos[]" value="' + data.result.id + '">')
+
 

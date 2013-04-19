@@ -36,7 +36,21 @@ section.locations-holder {
 
   .edit-link{
     color: $gray8;
+    display: block;
+    &:hover{
+     @include opacity(.7);
+
+    }
+
   }
+
+  header{
+    overflow: hidden;
+
+    .location-header, .listing-header{
+    }
+  }
+
 
   .location-content {
     margin-bottom: 0;
@@ -105,45 +119,11 @@ section.locations-holder {
         text-overflow: ellipsis;
       }
 
-      &.listing,
-      &.location {
-
-        span.ico-edit {
-          @include opacity(1);
-
-          &:hover {
-            @include opacity(.7);
-          }  
-        }  
-      }
-
-      &:hover {
-
-        span.ico-edit {
-          @include opacity(1);
-        }        
-      }
-
-      &.listing.collapsed,
-      &.location.collapsed {
-
-        span.ico-edit {
-          @include opacity(.3);
-        }
-
-        &:hover {
-
-          span.ico-edit {
-            @include opacity(.7);
-          }        
-        }
-
-      }
-
       .action {
         float: right;
         padding: 0;
       }
+
     }
   }
 
@@ -317,16 +297,6 @@ section.dashboard {
     li {
       margin-right: .5em;
 
-      @media (max-width: 767px) {
-        clear: both;
-        width: 100%;
-        margin: 0 0 .5em;
-
-        a {
-          width: 100%;
-          text-align: center;
-        }
-      }
     }
   }
 }

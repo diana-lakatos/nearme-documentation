@@ -12,11 +12,12 @@
           - @locations.each do |location|
             %div
               %section.box.location
-                %header.location
-                  %span.padding.ico-location.location-header
-                    = location.name
-                    = link_to edit_manage_location_path(location), :class => 'right edit-link' do
-                      %span.ico-edit
+                = link_to edit_manage_location_path(location), :class => 'edit-link' do
+                  %header.location
+                    %span.padding.ico-location.location-header
+                      %span.entity-name
+                        = location.name
+                      %span.ico-edit.right
                 %section.listings
                   .accordion.listings-holder
                     - if location.listings.empty?
@@ -28,11 +29,12 @@
                       - location.listings.each do |listing|
                         %div
                           %section.box.box-dim.listing
-                            %header.listing
-                              %span.padding.ico-desk.listing-header
-                                = listing.name
-                              = link_to edit_manage_location_listing_path(location, listing), :class => 'right edit-link' do
-                                %span.ico-edit
+                            = link_to edit_manage_location_listing_path(location, listing), :class => 'edit-link' do
+                              %header.listing
+                                %span.padding.ico-desk.listing-header
+                                  %span.entity-name
+                                    = listing.name
+                                  %span.ico-edit.right
                   .action
                     = link_to new_manage_location_listing_path(location), :class => "btn btn-blue btn-large add-listing" do
                       %span.ico-add-desk.padding
@@ -41,3 +43,9 @@
         = link_to new_manage_location_path, :class => "btn btn-blue btn-large add-location" do
           %span.ico-add-location.padding
             Create New Location
+
+- content_for :script do
+  :javascript
+    $(function() {
+      new DashboardController($('section.locations-holder'))
+    });

@@ -19,7 +19,7 @@
                         = @listing.name
                     .accordion-inner
                       = render :partial => 'listing', :locals => {:listing => @listing, :location => @location}
-                      = link_to manage_location_listing_path(@location, @listing), :method => :delete, :class => "delete delete-listing" do
+                      = link_to manage_location_listing_path(@location, @listing), :method => :delete, :confirm => 'Are you sure?', :class => "delete delete-listing" do
                         %span.ico-trash.padding
                           Delete this listing
 
