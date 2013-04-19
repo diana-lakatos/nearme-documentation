@@ -9,6 +9,8 @@ module Locations
     def review
       @params_listings = params[:listings]
       @reservations = build_reservations(Reservation::PAYMENT_METHODS[:credit_card])
+      Track::Book.opened_booking_modal(user_signed_in?, @reservations.first, @location)
+      render nothing: true
     end
 
     # Reserve bulk listings on a Location

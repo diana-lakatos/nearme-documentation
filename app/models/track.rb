@@ -65,7 +65,7 @@ class Track
   end
 
   class Book
-    def self.opened_booking_modal(logged_in, reservation, location)
+    def self.opened_booking_modal(user_signed_in, reservation, location)
       Track.analytics.track('Opened the Booking Modal', [
                               {
                                 logged_in: user_signed_in
