@@ -120,7 +120,7 @@ class @Bookings.Datepicker
 
   updateElementText: ->
     # Set the date on the element
-    startDate = _.first(@startDatepicker.getDates())
+    startDate = _.first(@endDatepicker.getDates())
     endDate = _.last(@endDatepicker.getDates())
     startText = if startDate then @formatDateForLabel(startDate) else 'Start'
     endText = if endDate then @formatDateForLabel(endDate) else 'End'
