@@ -15,11 +15,12 @@ span.padding-left {
 .ico-twitter:before {
   font-size: 125%;
 }
-.ico-lock:before {
+.ico-lock:before,
+.ico-calendar-start {
   padding-right: 4px;
 }
 
-.ico-tag:before, .ico-print:before, .ico-screen:before, .ico-filter:before, .ico-calender-check-in:before, .ico-calender-check-out:before, .ico-user:before, .ico-plus:before, .ico-info:before, .ico-facebook:before, .ico-check:before, .ico-bookings:before, .ico-arrow-up:before, .ico-arrow-right:before, .ico-arrow-left:before, .ico-arrow-down:before, .ico-twitter:before, .ico-sign-up:before, .ico-search:before, .ico-phone:before, .ico-marker:before, .ico-mail:before, .ico-logout:before, .ico-login:before, .ico-lock:before, .ico-location:before, .ico-linkedin:before, .ico-instagram:before, .ico-edit:before, .ico-drawer:before, .ico-dashboard:before, .ico-crosshairs:before, .ico-close:before, .ico-clock:before, .ico-calender:before, .ico-add-location:before, .ico-manage-guests:before, .ico-link:before, .ico-app-store:before, .ico-credit-card:before, .ico-trash:before, .ico-settings:before, .ico-upload-photos:before, .ico-desk:before, .ico-add-desk:before, .ico-save:before, .ico-trash-open:before, .ico-profile:before, .ico-warning:before, .ico-chevron-up:before, .ico-chevron-right:before, .ico-chevron-down:before, .ico-chevron-left:before {
+.ico-tag:before, .ico-print:before, .ico-screen:before, .ico-filter:before, .ico-calendar-start:before, .ico-calendar-end:before, .ico-user:before, .ico-plus:before, .ico-info:before, .ico-facebook:before, .ico-check:before, .ico-bookings:before, .ico-arrow-up:before, .ico-arrow-right:before, .ico-arrow-left:before, .ico-arrow-down:before, .ico-twitter:before, .ico-sign-up:before, .ico-search:before, .ico-phone:before, .ico-marker:before, .ico-mail:before, .ico-logout:before, .ico-login:before, .ico-lock:before, .ico-location:before, .ico-linkedin:before, .ico-instagram:before, .ico-edit:before, .ico-drawer:before, .ico-dashboard:before, .ico-crosshairs:before, .ico-close:before, .ico-clock:before, .ico-calender:before, .ico-add-location:before, .ico-manage-guests:before, .ico-link:before, .ico-app-store:before, .ico-credit-card:before, .ico-trash:before, .ico-settings:before, .ico-upload-photos:before, .ico-desk:before, .ico-add-desk:before, .ico-save:before, .ico-trash-open:before, .ico-profile:before, .ico-warning:before, .ico-chevron-up:before, .ico-chevron-right:before, .ico-chevron-down:before, .ico-chevron-left:before {
   font-family: 'icon-font';
   speak: none;
   font-style: normal;
@@ -39,10 +40,10 @@ span.padding-left {
 .ico-filter:before {
   content: "\e003";
 }
-.ico-calender-check-in:before {
+.ico-calendar-start:before {
   content: "\e004";
 }
-.ico-calender-check-out:before {
+.ico-calendar-end:before {
   content: "\e005";
 }
 .ico-user:before {

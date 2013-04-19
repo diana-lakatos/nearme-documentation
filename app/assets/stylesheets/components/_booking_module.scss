@@ -9,9 +9,10 @@
     float: left;
     clear: both;
     width: 100%;
-    margin: 0 -$padding -$padding;
-    padding: 0 $padding $padding;
-    @include box-sizing(padding-box);
+    margin: 0 -15px -15px;
+    @include box-sizing(content-box);
+    padding: 0 15px;
+
   }
 
   .book {
@@ -43,6 +44,7 @@
 
     @media (max-width: $booking-module-breakpoint) {
       @include border-bottom-radius($border-radius);
+      margin: 0 -15px;
     }
 
     .label {
@@ -54,6 +56,10 @@
       color: $gray4;
       font-size: 22px;
       text-align: center;
+
+      &.unavailable {
+        @include opacity(.1);
+      }
 
       .period {
         display: block;
@@ -88,7 +94,7 @@
     .calendar-wrapper {
       display: block;
       margin: 0 0 6px;
-      padding: 6px 8px;
+      padding: 6px 4px 6px 6px;
       @include border-radius(8px);
       @include box-sizing(border-box);
       background: $gray2;

@@ -6,6 +6,10 @@ module CurrencyHelper
     content_tag('span', number_to_currency(price, options), :rel => 'tooltip', :title => currency)
   end
 
+  def currency_symbol_from_code(currency = 'USD')
+    Money::Currency.new(currency).symbol 
+  end
+
   def currency_content_tag(currency, price = "0.00", el = :span, currency_options = {}, content_tag_options = {} )
     currency ||= 'USD'
     content_tag_options.reverse_merge!({ :class => "total" })

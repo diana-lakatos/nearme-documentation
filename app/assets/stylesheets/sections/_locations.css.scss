@@ -30,10 +30,13 @@ section.locations {
 
 .tab-pane#details {
   background: $dnm_white;
-  padding: $padding;
   @include box-sizing(border-box);
   @include border-bottom-radius($border-radius);
-  overflow: auto;
+
+  .row-fluid {
+    padding: $padding;
+    @include box-sizing(border-box);
+  }
 }
 
 .availability-rules {
