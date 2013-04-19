@@ -15,13 +15,23 @@ class Locations::ReservationsControllerTest < ActionController::TestCase
 
     should "track booking modal open" do
       Track::Book.expects(:opened_booking_modal)
-      xhr :post, :review, { listings: booking_listing_params, location_id: @listing.location.id }
+      xhr :post, :review, { listings: booking_params_for(@listing), location_id: @listing.location.id }
     end
 
   end
 
-  def booking_listing_params
-    {"0"=>{"id"=>"511", "bookings"=>{"0"=>{"date"=>"2013-04-19", "quantity"=>"1"}}}}
+  def booking_params_for(listing)
+    {
+      "0" => {
+        "id" => listing.location.id,
+        "bookings" => {
+          "0" => {
+            "date" => Chronic.parse('Monday'),
+            "quantity"=>"1"
+          }
+        }
+      }
+    }
   end
 
 end
