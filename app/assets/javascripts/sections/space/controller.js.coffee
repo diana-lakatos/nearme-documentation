@@ -43,7 +43,11 @@ class @Space.Controller
     @map.initialCenter = latlng
     @map.map = SmartGoogleMap.createMap(@googleMapElementWrapper[0], {
       zoom: 13,
+      zoomControlOptions: {
+          style:google.maps.ZoomControlStyle.SMALL
+      },
       mapTypeControl: false,
+      panControl: false,
       streetViewControl: false,
       center: latlng,
       mapTypeId: mapTypeId
@@ -60,8 +64,8 @@ class @Space.Controller
 
     @map.markers.push marker
 
-    @popover = new GoogleMapPopover()
-    @popover.setContent @mapContainer.find('address').text()
+    @popover = new GoogleMapPopover({'boxStyle': { 'width': '190px' }, 'pixelOffset': new google.maps.Size(-95, -40) })
+    @popover.setContent @mapContainer.find('address').html()
     @popover.open(@map.map, marker)
 
     google.maps.event.addListener marker, 'click', =>
@@ -109,7 +113,7 @@ class @Space.Controller
   listenToTabs: ->
     if @constrainer != 'undefined'
     # we do not want to listen to this event when there is no constrainer - height will not be updated via CSS @media, because of hardcoded style='height: XX' 
-      $('a[href=#details]').on 'shown', =>
+      $('a[href=#details]').on 'show', =>
         @adjustDetailsHeightToPhotosHeight()
 
     # we want this to be listen always to avoid issue with rendering google map after toggling from invisible to visible
@@ -124,7 +128,11 @@ class @Space.Controller
         @map.map.setCenter(@map.initialCenter)
 
   adjustDetailsHeightToPhotosHeight: ->
-    $('#details').height($('#photos').height())
+    # it would be great to use outerHeight, but it won't work ;-) need to be adjusted if detail
+    padding_top = parseInt($('#details').css('padding-top'))
+    padding_bottom = parseInt($('#details').css('padding-bottom'))
+    base_height = $('#photos').height() - parseInt($('#photos').css('padding-bottom')) - parseInt($('#photos').css('padding-top'))
+    $('#details').height(base_height-padding_top-padding_bottom)
 
   setupCarousel: ->
     carouselContainer = $(".carousel")
