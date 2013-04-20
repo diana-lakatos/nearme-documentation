@@ -90,6 +90,10 @@ class Location < ActiveRecord::Base
     super.presence || "Unknown"
   end
 
+  def address
+    read_attribute(:formatted_address) || read_attribute(:address)
+  end
+
   def parse_address_components
     if address_components_changed?
       data_parser = Location::GoogleGeolocationDataParser.new(address_components)
@@ -112,6 +116,10 @@ class Location < ActiveRecord::Base
 
   def phone
     read_attribute(:phone) || creator.try(:phone)
+  end
+
+  def email
+    read_attribute(:email) || creator.try(:email)
   end
 
   private

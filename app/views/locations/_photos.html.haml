@@ -22,4 +22,7 @@
 
       %address{"data-lat" => @location.latitude, "data-lng" => @location.longitude, :class => 'hidden'}
         #address-popover
-          = location_format_address(@location.formatted_address || @location.address)
+          = location_format_address(@location.address)
+          = link_to "https://maps.google.com/maps?q=#{@location.address}", target: '_blank' do
+            %span.ico-link.padding
+

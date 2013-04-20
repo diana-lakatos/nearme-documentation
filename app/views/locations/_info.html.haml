@@ -9,11 +9,8 @@
           %li= amenity     
 
   .span4
-    - if @location.creator
-      %h2 About Us
-      %p
-    - if @location.creator.phone
-      %p.ico-phone.padding= @location.creator.phone
+    %h2 About Us
+    %p
     %p= truncate_with_ellipsis @location.company.description, 250
 
     - if @amenities
@@ -24,8 +21,13 @@
 
   .span4
     %h2 Contact
-    - if @location.phone.present?
-      %strong.ico-phone.padding= @location.phone
-    - if @location.creator.phone
-      %p.ico-phone.padding= @location.creator.phone      
-    
+    %p
+    - if user_signed_in?
+      = location_contact_phone(@location)
+      = location_contact_email(@location)
+    - else
+      %span.ico-warning.padding
+        =raw "#{link_to('Sign in', new_user_session_path)} or #{link_to('sign up', new_user_registration_path)} to contact the host."
+
+
+
