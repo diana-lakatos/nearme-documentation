@@ -9,6 +9,8 @@
 
 - if content_for? :currency
   = yield(:currency)
+- else
+  = hidden_field_tag '', listing.location.currency, :id => 'currency-select'
 
 - if only_inputs.empty? ? true : only_inputs.include?(:price)
   .control-group
