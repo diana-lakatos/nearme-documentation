@@ -14,6 +14,12 @@
       = f.hidden_field :latitude
       = f.hidden_field :longitude
       = f.hidden_field :formatted_address 
+      #address-component-wrapper.hidden
+        #address-component-template
+          - # we need this input to avoid hardcoding 'name' parameter for dynamically inserted inputs for address_components
+          - # i.e. in dashboard we use location[address_component], but in list your space it is user[company_attribues]... etc
+          - # must be disabled, otherwise update action could overwrite existing information with empty strings!!!
+          = f.input :address_components, :input_html => { :id => 'address_component_input' }, :disabled => true
 
 = f.input :description, :label => 'Location description', :placeholder => 'Describe the overall look, feel, and ambience of your location.', :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? ? true : only_inputs.include?(:description)
 = f.association :location_type, :label => "Location type"  if only_inputs.empty? ? true : only_inputs.include?(:location_type)
