@@ -1,51 +1,26 @@
-.row-fluid
-  .span8.offset2
-    %h1
-      %span.ico-location.padding
-        Manage Locations
-    %section.locations-holder
-      %section.locations-area
-        - if @locations.empty?
-          %span.empty
-            You haven't created any locations yet
-        - else
-          - @locations.each do |location|
-            %div
-              %section.box.location
-                = link_to edit_manage_location_path(location), :class => 'edit-link' do
-                  %header.location
-                    %span.padding.ico-location.location-header
-                      %span.entity-name
-                        = location.name
-                      %span.ico-edit.right
-                %section.listings
-                  .accordion.listings-holder
-                    - if location.listings.empty?
-                      %div
-                        %section.box.box-dim.listing
-                          %header.listing.empty
-                            You haven't created any listings at this location!
-                    - else
-                      - location.listings.each do |listing|
-                        %div
-                          %section.box.box-dim.listing
-                            = link_to edit_manage_location_listing_path(location, listing), :class => 'edit-link' do
-                              %header.listing
-                                %span.padding.ico-desk.listing-header
-                                  %span.entity-name
-                                    = listing.name
-                                  %span.ico-edit.right
-                  .action
-                    = link_to new_manage_location_listing_path(location), :class => "btn btn-blue btn-large add-listing" do
-                      %span.ico-add-desk.padding
-                        Create New Listing
-      .action
-        = link_to new_manage_location_path, :class => "btn btn-blue btn-large add-location" do
-          %span.ico-add-location.padding
-            Create New Location
+= render :layout => 'manage/layout/dashboard' do
+  - if @locations.empty?
+    %span.empty
+      You haven't created any locations yet
+  - else
+    - @locations.each do |location|
+      = render :layout => 'manage/layout/location_header', :locals => { :location => location, :editable => true } do
+        %section.listings
+          .accordion.listings-holder
+            - if location.listings.empty?
+              %div
+                %section.box.box-dim.listing
+                  %header.listing.empty
+                    You haven't created any listings at this location!
+            - else
+              - location.listings.each do |listing|
+                = render :partial => 'manage/layout/listing_header', :locals => { :listing => listing, :location => location, :editable => true }
+          .action
+            = link_to new_manage_location_listing_path(location), :class => "btn btn-blue btn-large add-listing" do
+              %span.ico-add-desk.padding
+                Create New Listing
+  .action
+  = link_to new_manage_location_path, :class => "btn btn-blue btn-large add-location" do
+    %span.ico-add-location.padding
+      Create New Location
 
-- content_for :script do
-  :javascript
-    $(function() {
-      new DashboardController($('section.locations-holder'))
-    });

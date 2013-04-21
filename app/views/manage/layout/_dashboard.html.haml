@@ -5,3 +5,11 @@
         Manage Locations
     %section.locations-holder
       %section.locations-area
+        = yield
+
+- content_for :script do
+  :javascript
+    $(function() {
+      new Dashboard.Controller($('section.locations-holder'))
+    });
+

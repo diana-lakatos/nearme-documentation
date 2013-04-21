@@ -1,0 +1,25 @@
+= render :layout => 'manage/layout/dashboard' do
+  = render :layout => 'manage/layout/location_header', :locals => { :location => location, :editable => false } do
+    %section.listings
+      .accordion.listings-holder
+        = render :layout => 'manage/layout/listing_header', :locals => { :listing => listing, :location => location, :editable => false } do
+          .accordion-inner
+            = render :partial => 'listing', :locals => {:listing => listing, :location => location}
+            - if listing.persisted?
+              = link_to manage_location_listing_path(@location, @listing), :method => :delete, :confirm => 'Are you sure?', :class => "delete delete-listing" do
+                %span.ico-trash.padding
+                  Delete this listing
+
+    %section.listings
+      .action
+        = link_to '#', :class => 'btn btn-green btn-large add-listing', :id => 'submit-link', :disable_with => 'Submiting...' do
+          %span.ico-save.padding
+            Save
+
+- content_for :script do
+  :javascript
+    $(function() {
+      new Dashboard.ListingController($('#listing-form'))
+      new AvailabilityRulesController($('#listing-form'))
+    });
+

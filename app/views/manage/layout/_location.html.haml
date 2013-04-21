@@ -1,0 +1,22 @@
+= render :layout => 'manage/layout/dashboard' do
+  = render :layout => 'manage/layout/location_header', :locals => { :location => location, :editable => false } do
+    .location-content
+      = render location
+      - if location.persisted?
+        = link_to manage_location_path(@location), :method => :delete, :confirm => 'Are you sure?', :class => "delete delete-location" do
+          %span.ico-trash.padding
+            Delete this location
+
+    %section.listings
+      .action
+        = link_to '#', :class => 'btn btn-green btn-large add-listing', :id => 'submit-link', :disable_with => 'Submiting...' do
+          %span.ico-save.padding
+            Save
+
+- content_for :script do
+  :javascript
+    $(function() {
+      new Dashboard.LocationController($('#location-form'))
+      new AvailabilityRulesController($('#location-form'))
+    });
+
