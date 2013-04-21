@@ -6,10 +6,17 @@ class @Dashboard.ListingController
 
     @priceInputs = @container.find('input[name*=price]')
     @freeCheckbox = @container.find('input[type=checkbox][name*=free]')
+    @currencySelect = @container.find('#currency-select')
+    @currencyHolders = @container.find('.currency-holder')
 
     @bindEvents()
+    @updateCurrency()
 
   bindEvents: =>
+
+    @container.on 'change', @currencySelect, (event) =>
+      @updateCurrency()
+
     @submitLink.on 'click',  =>
       @container.submit()
       false
@@ -19,6 +26,10 @@ class @Dashboard.ListingController
 
     @container.on 'change', 'input[type=checkbox][name*=free]', =>
       @freeChanged()
+
+  updateCurrency: () =>
+      @currencyHolders.html($('#currency_'+ @currencySelect.val()).text())
+
 
   freeChanged: ->
     if @freeCheckbox.prop('checked')
