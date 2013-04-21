@@ -18,7 +18,7 @@ module LocationHelper
     select "Co-working", from: "location_location_type_id"
     fill_in "location_email", with: "location@example.com"
     fill_in "location_special_notes", with: "Special terms are here"
-    select "PLN", from: "location_currency"
+    select "PLN", from: "currency-select"
     select "Amenity1", from: "location_amenity_ids"
     select "Amenity3", from: "location_amenity_ids"
   end
