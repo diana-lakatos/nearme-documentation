@@ -38,7 +38,6 @@ class @AddressComponentParser
     @addressComponentWrapper = @form.find('#address-component-wrapper')
 
   buildAddressComponentsInputs: (place) =>
-    console.log place
     @clearAddressComponentInputs()
     @index = 0
     for addressComponent in place.result.address_components

@@ -39,7 +39,7 @@ class @PhotoUploader
     }
 
   add: (data) =>
-    @setPhotoItem(data.files[0].name)
+    @setPhotoItem(@getUniqueString(data))
     data.submit()
 
   parseResult: (data) ->
@@ -48,8 +48,6 @@ class @PhotoUploader
     else
       result_to_parse = data.result
     jQuery.parseJSON(result_to_parse)
-
-
 
   done: (data) =>
     if @singlePhotoExists() && !@multiplePhoto()
@@ -61,7 +59,7 @@ class @PhotoUploader
 
   progress: (data) =>
     progress = parseInt(data.loaded / data.total * 100, 10)
-    @photoItem = @getPhotoItem(data.files[0].name)
+    @photoItem = @getPhotoItem(@getUniqueString(data))
     @progressBar = @photoItem.find('.progress .bar').eq(0)
     @progressBar.css('width', progress + '%')
     if progress == 100
@@ -103,7 +101,7 @@ class @PhotoUploader
 
   addImg: (data) =>
     href = $('<a data-url="' + data.result.destroy_url + '" class="delete-photo delete-photo-thumb"><span class="ico-trash"></span></a>')
-    @photoItem = @getPhotoItem(data.files[0].name)
+    @photoItem = @getPhotoItem(@getUniqueString(data))
     @photoItem.html('<img src="' + data.result.url + '">')
     @photoItem.append(href)
     if @multiplePhoto()
@@ -112,7 +110,6 @@ class @PhotoUploader
         input.attr('disabled', false)
         input.attr('type', 'text')
         last_input = @container.find('input[data-number]').eq(-1)
-        console.log last_input
         data_number = parseInt(last_input.attr('data-number')) + 1
         input.attr('data-number', data_number)
         name_prefix = input.attr('name') + '[' + data_number + ']'
@@ -122,4 +119,8 @@ class @PhotoUploader
       else
         @photoItem.append('<input type="hidden" name="uploaded_photos[]" value="' + data.result.id + '">')
 
-
+  getUniqueString: (data) ->
+    if $.browser.msie
+      data.files[0].name
+    else
+      data.files[0].lastModifiedDate.toString()
