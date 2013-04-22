@@ -12,8 +12,8 @@
                   = photo.caption
 
         - if @location.photos.size > 1
-          = link_to "", ".carousel", :class => "carousel-control left ico-arrow-left", 'data-slide' => 'prev'
-          = link_to "", ".carousel", :class => "carousel-control right ico-arrow-right", 'data-slide' => 'next'
+          = link_to "", ".carousel", :class => "carousel-control left ico-chevron-left", 'data-slide' => 'prev'
+          = link_to "", ".carousel", :class => "carousel-control right ico-chevron-right", 'data-slide' => 'next'
 
     - else
       #panorama
@@ -28,5 +28,5 @@
         #address-popover
           = location_format_address(@location.address)
           = link_to "https://maps.google.com/maps?q=#{@location.address}", target: '_blank' do
-            %span.ico-link.padding
+            %span.ico-open-link.padding
 
