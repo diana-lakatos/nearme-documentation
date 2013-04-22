@@ -61,7 +61,7 @@ class @Space.Controller
       shape: GoogleMapMarker.getMarkerOptions().default.shape
     })
 
-    if $('#panorama')
+    if $('#panorama').length > 0
       panoramaOptions = {
         position: latlng,
         addressControlOptions: {
