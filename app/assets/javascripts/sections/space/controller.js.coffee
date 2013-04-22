@@ -61,6 +61,23 @@ class @Space.Controller
       shape: GoogleMapMarker.getMarkerOptions().default.shape
     })
 
+    if $('#panorama')
+      panoramaOptions = {
+        position: latlng,
+        addressControlOptions: {
+          position: google.maps.ControlPosition.BOTTOM
+        },
+        linksControl: false,
+        panControl: false,
+        zoomControlOptions: {
+          style: google.maps.ZoomControlStyle.SMALL
+        },
+        enableCloseButton: false,
+        visible:true
+      }
+      @panorama = new google.maps.StreetViewPanorama(document.getElementById("panorama"), panoramaOptions)
+      @map.map.setStreetView(@panorama)
+
 
     @map.markers.push marker
 
@@ -81,35 +98,35 @@ class @Space.Controller
   setupMapHeightConstraintToPhotosSection: ->
 
     @constrainer = 'undefined'
-    return unless @photosContainer.length > 0
-    return unless @map
-    # We use a known aspect ratio to determine the dynamic height because:
-    #   a) If the image hasn't loaded yet we won't have the height
-    #   b) Likewise if the image won't load (error, etc.) we wouldn't otherwise get a relevant height
-    aspectRatioW = parseInt(@mapAndPhotosContainer.attr('data-photo-aspect-w'))
-    aspectRatioH = parseInt(@mapAndPhotosContainer.attr('data-photo-aspect-h'))
+    if @photosContainer.find('.item').length > 0
+      return unless @map
+      # We use a known aspect ratio to determine the dynamic height because:
+      #   a) If the image hasn't loaded yet we won't have the height
+      #   b) Likewise if the image won't load (error, etc.) we wouldn't otherwise get a relevant height
+      aspectRatioW = parseInt(@mapAndPhotosContainer.attr('data-photo-aspect-w'))
+      aspectRatioH = parseInt(@mapAndPhotosContainer.attr('data-photo-aspect-h'))
 
 
-    @constrainer = new HeightConstrainer(
-      @googleMapElementWrapper,
-      @photosContainer,
-      ratio: aspectRatioH/aspectRatioW
-    )
+      @constrainer = new HeightConstrainer(
+        @googleMapElementWrapper,
+        @photosContainer,
+        ratio: aspectRatioH/aspectRatioW
+      )
 
-  # when we resize browser, height of google map is being adjusted based on photo's width. However, when we are in #details tab, we need to disable those calculations,
-  # because height is calculated wrongly for hidden elements. We need to reproduce the behaviour of the height adjustment also for #details tab, and this is what this code does
-    details_constrainer = new HeightConstrainer(
-      $('#details'),
-      $('#details'),
-  # 0.65755 was set based on trials and errors approach. Since photo is about 70% of full width, the remaining 30% is google map, I tried to make the same proportions
-      ratio: (aspectRatioH/aspectRatioW)*0.65755
-    )
+    # when we resize browser, height of google map is being adjusted based on photo's width. However, when we are in #details tab, we need to disable those calculations,
+    # because height is calculated wrongly for hidden elements. We need to reproduce the behaviour of the height adjustment also for #details tab, and this is what this code does
+      details_constrainer = new HeightConstrainer(
+        $('#details'),
+        $('#details'),
+    # 0.65755 was set based on trials and errors approach. Since photo is about 70% of full width, the remaining 30% is google map, I tried to make the same proportions
+        ratio: (aspectRatioH/aspectRatioW)*0.65755
+      )
+    
+    else
+        $('#panorama').height(@googleMapElementWrapper.height())
+        google.maps.event.trigger(@panorama, 'resize')
+        google.maps.event.trigger(@panorama, 'zoom_changed')
 
-    @constrainer.on 'constrained', =>
-      google.maps.event.trigger(@map.map, 'resize')
-      @map.map.setCenter(@map.initialCenter)
-
-  
   listenToTabs: ->
     if @constrainer != 'undefined'
     # we do not want to listen to this event when there is no constrainer - height will not be updated via CSS @media, because of hardcoded style='height: XX' 

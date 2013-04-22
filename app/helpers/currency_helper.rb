@@ -3,7 +3,9 @@ module CurrencyHelper
   def number_to_currency_symbol(currency, price = '0.00', options = {})
     currency ||= 'USD'
     options[:unit] = Money::Currency.new(currency).symbol 
-    content_tag('span', number_to_currency(price, options), :rel => 'tooltip', :title => currency)
+
+    options.reverse_merge!({ :rel => 'tooltip', :title => currency })
+    content_tag('span', number_to_currency(price, options),  options)
   end
 
   def currency_symbol_from_code(currency = 'USD')

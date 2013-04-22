@@ -1,7 +1,7 @@
 .row-fluid.location-photos{:'data-photo-aspect-w' => PhotoUploader::SPACE_FULL_IMAGE_W, :'data-photo-aspect-h' => PhotoUploader::SPACE_FULL_IMAGE_H}
 
-  - if @location.photos.any?
-    .span8.photos-container
+  .span8.photos-container
+    - if @location.photos.any?
       .carousel.slide
         .carousel-inner
           - @location.photos.each_with_index do |photo, index|
@@ -15,7 +15,11 @@
           = link_to "", ".carousel", :class => "carousel-control left ico-arrow-left", 'data-slide' => 'prev'
           = link_to "", ".carousel", :class => "carousel-control right ico-arrow-right", 'data-slide' => 'next'
 
-  .pull-left{:class => @location.photos.any? ? "span4" : "span12" }
+    - else
+      #panorama
+
+
+  .pull-left{:class => "span4" }
     .map
       .map-wrapper.google-map
         .map-container
