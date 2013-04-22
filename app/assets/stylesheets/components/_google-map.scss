@@ -1,4 +1,5 @@
 .google-map {
+
   img {
     max-width: none;
   }
@@ -6,6 +7,11 @@
   label {
     width: auto;
     display: inline;
+  }
+
+  .gmnoprint,
+  .gmnoprint {
+    display: none;
   }
 
   .google-map-popover {
