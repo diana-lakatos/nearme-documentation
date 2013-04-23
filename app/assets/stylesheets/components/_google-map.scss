@@ -9,11 +9,6 @@
     display: inline;
   }
 
-  .gmnoprint,
-  .gmnoprint {
-    display: none;
-  }
-
   .google-map-popover {
     background: $gray3; //#e6e7e8;
     border: 1px solid #858980;
@@ -62,6 +57,17 @@
     em.arrow-border {
       margin-left: -11px; // NB: Not -11px, as the map markers are not exactly symmetrical so it appears off-center
       @include css-arrow($width: 10px, $direction: down, $color: #858980);
+    }
+
+    #address-popover {
+      a {
+        padding-left: 4px;
+        color: $gray5;
+
+        &:hover {
+          color: $gray7;
+        }
+      }
     }
   }
 }

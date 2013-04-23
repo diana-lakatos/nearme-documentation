@@ -13,11 +13,10 @@ section.locations {
     .ico-open-link {
       font-size: 14px;
       line-height: 18px;
-      color: black;
-      @include opacity(.5);
+      color: $gray5;
 
       &:hover {
-        @include opacity(.7);
+        color: $gray7;
       }
     }
   }
