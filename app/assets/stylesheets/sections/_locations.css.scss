@@ -35,6 +35,7 @@ section.locations {
   .row-fluid {
     padding: $padding;
     @include box-sizing(border-box);
+    background: $dnm_white;
   }
 }
 

@@ -9,6 +9,17 @@
     display: inline;
   }
 
+  gmnoprint {
+    display: none;
+  }
+
+  .gmnoprint {
+
+    @media (max-width: 767px) {
+      display: none;
+    }
+  }
+
   .google-map-popover {
     background: $gray3; //#e6e7e8;
     border: 1px solid #858980;
