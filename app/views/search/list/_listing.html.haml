@@ -17,15 +17,7 @@
       %p.hidden-phone.listing-description
         = listing.description
       %aside.prices
-        - if listing.daily_price
-          %span.label.label-daily-price
-            = "#{money_without_cents_and_with_symbol(listing.daily_price)}/day"
-        - if listing.weekly_price
-          %span.label.label-weekly-price
-            = "#{money_without_cents_and_with_symbol(listing.weekly_price)}/wk"
-        - if listing.monthly_price
-          %span.label.label-monthly-price
-            = "#{money_without_cents_and_with_symbol(listing.monthly_price)}/mo"
+        = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
       .bottom-fade
 - # We may want to move this, but I've put it here for simplicities sake and as an example for now.
 :javascript
