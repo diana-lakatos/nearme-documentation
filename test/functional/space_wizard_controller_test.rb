@@ -41,7 +41,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
     should "not raise exception if hash is incomplete" do
       assert_no_difference('Listing.count') do
-        post :submit_listing, { "user"=> {"companies_attributes"=> {"0"=> { "name"=>"International Secret Intelligence Service" } } } } 
+        post :submit_listing, { "company"=> { "name"=>"International Secret Intelligence Service" } }  
       end
     end
 
@@ -50,9 +50,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
   private
 
   def get_params(daily_price = nil, weekly_price = nil, monthly_price = nil)
-    { "user"=>
-      {"companies_attributes"=>
-        {"0"=>
+        {"company"=>
           {
             "name"=>"International Secret Intelligence Service", 
             "locations_attributes"=>
@@ -80,12 +78,10 @@ class SpaceWizardControllerTest < ActionController::TestCase
               }
           }
         }
-      }
-    }
   end
 
   def remove_price_from_params(params)
-    params["user"]["companies_attributes"]["0"]["locations_attributes"]["0"]["listings_attributes"]["0"].delete(["daily_price", "weekly_price", "monthly_price"])
+    params["company"]["locations_attributes"]["0"]["listings_attributes"]["0"].delete(["daily_price", "weekly_price", "monthly_price"])
     params
   end
 end

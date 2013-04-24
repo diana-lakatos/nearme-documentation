@@ -1,0 +1,8 @@
+- only_inputs = [] if local_assigns[:only_inputs].nil?
+= f.input :name, :label => "Your company name", :placeholder => "Enter your business name" if (only_inputs.empty? ? true : only_inputs.include?(:name))
+= f.association :industries, :label =>  "Industries", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select' } if (only_inputs.empty? ? true : only_inputs.include?(:industries))
+= f.input :url, :label => "Website", :placeholder => "www.mycompany.com" if (only_inputs.empty? ? true : only_inputs.include?(:url))
+= f.input :email, :label => "Company email", :placeholder => "yourname@example.com" if (only_inputs.empty? ? true : only_inputs.include?(:email))
+= f.input :description, :label => "Description", :placeholder => "Give a brief description of your company", :input_html => { :maxlength => 250} if (only_inputs.empty? ? true : only_inputs.include?(:description))
+= f.input :mailing_address, :label => tooltip("Checks for revenue accrued by your listings will be sent to this address. Find out more about payments in the Support Center.", "Mailing address") if (only_inputs.empty? ? true : only_inputs.include?(:mailing_address))
+= f.input :paypal_email, :label => tooltip("If you specify a PayPal email, we will make a PayPal transfer instead of sending checks.", "PayPal email") if (only_inputs.empty? ? true : only_inputs.include?(:paypal_email))

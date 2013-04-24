@@ -35,7 +35,7 @@ class Manage::PhotosController < ApplicationController
   def get_proper_hash
     # we came from list your space flow
     if params[:user]
-      @param = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
+      @param = params[:company][:locations_attributes]["0"][:listings_attributes]["0"]
       @content_type = 'Listing'
       @content = nil
     # we came from dashboard

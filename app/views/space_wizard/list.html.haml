@@ -1,25 +1,23 @@
 = render :layout => 'wizard_layout', :locals => { :step => 1 } do
   - title "List your space"
 
-  = simple_form_for @user, :url => space_wizard_list_url, :validate => true, :html => { :class => "form-horizontal new_company", :multipart => true, :id => 'list-space-flow-form' } do |f|
+  = simple_form_for @company, :url => space_wizard_list_url, :validate => true, :html => { :class => "form-horizontal new_company", :multipart => true, :id => 'list-space-flow-form' } do |f|
 
-    = f.simple_fields_for :companies, @company do |builder|
+    = render :partial => 'companies/company_form', :locals => { :f => f, :company => @company, :only_inputs => [ :name, :industries ] }
 
-      = builder.input :name, :label => 'Company name'
+    = f.simple_fields_for :locations, @location do |locations_form|
 
-      = builder.simple_fields_for :locations, @location do |locations_form|
+      = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :description, :address, :location_type ] }
 
-        = render :partial => 'locations/location_form', :locals => { :f => locations_form, :only_inputs => [ :description, :address, :location_type ] }
+      = locations_form.simple_fields_for :listings, @listing do |listings_form|
 
-        = locations_form.simple_fields_for :listings, @listing do |listings_form|
+        - content_for :currency do
+          = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :currency ] }
 
-          - content_for :currency do
-            = render :partial => 'locations/location_form', :locals => { :f => locations_form, :only_inputs => [ :currency ] }
+        = render :partial => 'listings/listing_form', :locals => { :f => listings_form, :listing => @listing, :photo_input_name_prefix => "company[locations_attributes][0][listings_attributes][0]", :only_inputs => [ :name, :description, :listing_type, :quantity, :price, :confirm_reservations, :photos ] }
 
-          = render :partial => 'listings/listing_form', :locals => { :f => listings_form, :listing => @listing, :photo_input_name_prefix => "user[companies_attributes][0][locations_attributes][0][listings_attributes][0]", :only_inputs => [ :name, :description, :listing_type, :quantity, :price, :confirm_reservations, :photos ] }
-
-      .actions
-        = f.submit 'List my Space', :disable_with => 'Creating...'
+    .actions
+      = f.submit 'List my Space', :disable_with => 'Creating...'
 
 - content_for :script do
   :javascript
