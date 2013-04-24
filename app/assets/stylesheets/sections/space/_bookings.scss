@@ -3,9 +3,8 @@
 }
 
 #address-popover{
-  font-size: 15px;
-  line-height: 22px;
-  padding: 8px 20px 8px 10px;
+  @include adjust-font-size-to(14px);
+  padding: 6px;
 }
 
 #location-tabs > li > a {
