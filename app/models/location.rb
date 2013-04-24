@@ -19,7 +19,6 @@ class Location < ActiveRecord::Base
 
   belongs_to :company, inverse_of: :locations
   belongs_to :location_type
-  delegate :creator, :to => :company
 
   has_many :listings,
     dependent:  :destroy,
@@ -91,7 +90,7 @@ class Location < ActiveRecord::Base
   end
 
   def address
-    read_attribute(:formatted_address) || read_attribute(:address)
+    read_attribute(:formatted_address).presence || read_attribute(:address)
   end
 
   def parse_address_components
@@ -106,7 +105,7 @@ class Location < ActiveRecord::Base
   end
 
   def description
-    read_attribute(:description) || (listings.first || NullListing.new).description
+    read_attribute(:description).presence || (listings.first || NullListing.new).description
   end
 
   def creator=(creator)
@@ -114,12 +113,16 @@ class Location < ActiveRecord::Base
     company.save
   end
 
+  def creator
+    company ? company.creator : nil
+  end
+
   def phone
-    read_attribute(:phone) || creator.try(:phone)
+    read_attribute(:phone).presence || creator.try(:phone)
   end
 
   def email
-    read_attribute(:email) || creator.try(:email)
+    read_attribute(:email).presence || creator.try(:email) 
   end
 
   private

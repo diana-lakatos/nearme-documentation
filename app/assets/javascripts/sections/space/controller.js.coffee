@@ -5,6 +5,9 @@ class @Space.Controller
     @photosContainer = $('.photos-container')
     @mapContainer    = $('.map')
     @googleMapElementWrapper = @mapContainer.find('.map-container')
+    @panoramaContainer = $('#panorama')
+    @photosTab = $('#photos')
+    @detailsTab = $('#details')
 
     @setupCollapse()
     @setupCarousel()
@@ -61,7 +64,7 @@ class @Space.Controller
       shape: GoogleMapMarker.getMarkerOptions().default.shape
     })
 
-    if $('#panorama').length > 0
+    if @panoramaContainer.length > 0
       panoramaOptions = {
         position: latlng,
         addressControlOptions: {
@@ -75,7 +78,7 @@ class @Space.Controller
         enableCloseButton: false,
         visible:true
       }
-      @panorama = new google.maps.StreetViewPanorama(document.getElementById("panorama"), panoramaOptions)
+      @panorama = new google.maps.StreetViewPanorama(document.getElementById(@panoramaContainer.attr('id')), panoramaOptions)
       @map.map.setStreetView(@panorama)
 
 
@@ -97,7 +100,7 @@ class @Space.Controller
   #       At some point we can look into that but this works for now.
   setupMapHeightConstraintToPhotosSection: ->
 
-    @constrainer = 'undefined'
+    @constrainer = null
     if @photosContainer.find('.item').length > 0
       return unless @map
       # We use a known aspect ratio to determine the dynamic height because:
@@ -116,40 +119,39 @@ class @Space.Controller
     # when we resize browser, height of google map is being adjusted based on photo's width. However, when we are in #details tab, we need to disable those calculations,
     # because height is calculated wrongly for hidden elements. We need to reproduce the behaviour of the height adjustment also for #details tab, and this is what this code does
       details_constrainer = new HeightConstrainer(
-        $('#details'),
-        $('#details'),
+        @detailsTab,
+        @detailsTab,
     # 0.65755 was set based on trials and errors approach. Since photo is about 70% of full width, the remaining 30% is google map, I tried to make the same proportions
         ratio: (aspectRatioH/aspectRatioW)*0.65755
       )
     
     else
-        $('#panorama').height(@googleMapElementWrapper.height())
+        @panoramaContainer.height(@googleMapElementWrapper.height())
         google.maps.event.trigger(@panorama, 'resize')
         google.maps.event.trigger(@panorama, 'zoom_changed')
 
   listenToTabs: ->
-    if @constrainer != 'undefined'
+    if @constrainer
     # we do not want to listen to this event when there is no constrainer - height will not be updated via CSS @media, because of hardcoded style='height: XX' 
-      $('a[href=#details]').on 'show', =>
+      $("a[href=##{@detailsTab.attr('id')}]").on 'show', =>
         @adjustDetailsHeightToPhotosHeight()
 
     # we want this to be listen always to avoid issue with rendering google map after toggling from invisible to visible
-    $('a[href=#photos]').on 'shown', =>
-      if @constrainer != 'undefined'
+    $("a[href=##{@photosTab.attr('id')}]").on 'shown', =>
+      if @constrainer
         # we need to not only resize map, but also update height of it - which is constrainer job
         @constrainer.constrain()
-      else
-        # no need to update height, but google map will be displayed incorrectly
-        google.maps.event.trigger(@map.map, 'resize')
-        google.maps.event.trigger(@map.map, 'zoom_changed')
-        @map.map.setCenter(@map.initialCenter)
+      google.maps.event.trigger(@map.map, 'resize')
+      google.maps.event.trigger(@map.map, 'zoom_changed')
+      @map.map.setCenter(@map.initialCenter)
 
   adjustDetailsHeightToPhotosHeight: ->
     # it would be great to use outerHeight, but it won't work ;-) need to be adjusted if detail
-    padding_top = parseInt($('#details').css('padding-top'))
-    padding_bottom = parseInt($('#details').css('padding-bottom'))
-    base_height = $('#photos').height() - parseInt($('#photos').css('padding-bottom')) - parseInt($('#photos').css('padding-top'))
-    $('#details').height(base_height-padding_top-padding_bottom)
+    #
+    padding_top = parseInt(@detailsTab.css('padding-top'))
+    padding_bottom = parseInt(@detailsTab.css('padding-bottom'))
+    base_height = @photosTab.height() - parseInt(@photosTab.css('padding-bottom')) - parseInt(@photosTab.css('padding-top'))
+    @detailsTab.height(base_height-padding_top-padding_bottom)
 
   setupCarousel: ->
     carouselContainer = $(".carousel")
