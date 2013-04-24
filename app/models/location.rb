@@ -19,6 +19,7 @@ class Location < ActiveRecord::Base
 
   belongs_to :company, inverse_of: :locations
   belongs_to :location_type
+  delegate :creator, :to => :company, :allow_nil => true
 
   has_many :listings,
     dependent:  :destroy,
@@ -111,10 +112,6 @@ class Location < ActiveRecord::Base
   def creator=(creator)
     company.creator = creator
     company.save
-  end
-
-  def creator
-    company ? company.creator : nil
   end
 
   def phone
