@@ -22,14 +22,26 @@ class LocationTest < ActiveSupport::TestCase
   should_not allow_value('x' * 251).for(:description)
 
   context "#name" do
-    should "use combination of company name and street" do
+
+    setup do
       @location = FactoryGirl.create(:location_in_san_francisco)
       @location.company.name = 'This is company name'
+    end
+    should "use combination of company name and street if available" do
       @location.street = 'Street'
       @location.company.save!
       @location.company.reload
       assert_equal "This is company name @ Street", @location.name
     end
+
+    should "use combination of company name and part of address if available" do
+      @location.street = nil
+      @location.address = 'Street, City, Country'
+      @location.company.save!
+      @location.company.reload
+      assert_equal "This is company name @ Street", @location.name
+    end
+
   end
 
   context "#description" do
@@ -137,8 +149,8 @@ class LocationTest < ActiveSupport::TestCase
       assert_equal "San Francisco", @location.city
       assert_equal "California", @location.state
       assert_equal "United States", @location.country
-      assert_equal("Unknown", @location.suburb)
-      assert_equal("Unknown", @location.street)
+      assert_equal "Unknown", @location.suburb
+      assert_equal "San Francisco", @location.street # this is first part of address
     end
   end
 end

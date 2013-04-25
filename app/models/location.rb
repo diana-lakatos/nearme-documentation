@@ -71,7 +71,7 @@ class Location < ActiveRecord::Base
   end
 
   def street
-    super.presence || "Unknown"
+    super.presence || address.split(",")[0]
   end
 
   def suburb
