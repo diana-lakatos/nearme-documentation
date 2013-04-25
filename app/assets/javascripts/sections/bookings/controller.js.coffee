@@ -97,10 +97,10 @@ class Bookings.Controller
   , 5)
 
   disableBookButton: ->
-    @bookButton.addClass('click-disabled').find('span').text('Booking...')
+    @bookButton.addClass('click-disabled').find('span.text').text('Booking...')
 
   enableBookButton: ->
-    $('.click-disabled').removeClass('click-disabled').find('span').text('Book')
+    $('.click-disabled').removeClass('click-disabled').find('span.text').text('Book')
 
   updateQuantityField: (qty = @listing.defaultQuantity) ->
     plural = if qty == 1 then '' else 's'
