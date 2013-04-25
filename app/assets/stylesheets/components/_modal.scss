@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.9);
 
   html.no-rgba & {
     background: #000;
@@ -45,9 +45,14 @@
       top: 12px;
       right: 20px;
     }
-    
+
     .modal-content {
       background: transparent;
+
+      h2 {
+        margin-left: -10px;
+        color: $gray2;
+      }
 
       .hr span {
         color: $gray3;
