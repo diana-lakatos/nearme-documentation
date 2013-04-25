@@ -136,6 +136,10 @@
       height: 42px;
       line-height: 42px;
 
+      .resource {
+        text-transform: capitalize;
+      }
+
       span.customSelect {
         position: absolute;
         right: 0;
