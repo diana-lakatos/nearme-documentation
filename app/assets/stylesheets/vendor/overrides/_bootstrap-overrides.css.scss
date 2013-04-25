@@ -16,6 +16,12 @@ body {
 
   @media (max-width: 767px) {
     padding: 0 20px;
+  }
+
+  &.flush {
+    @media (max-width: 1400px) {
+      margin: 0 -22px;
+    }
   }  
 }
 
@@ -77,6 +83,10 @@ abbr[data-original-title] {
   box-shadow: none;
 }
 
+.nav-tabs {
+  border: none;
+}
+
 .carousel-control {
   background: none !important;
   border: none !important;
@@ -99,17 +109,21 @@ abbr[data-original-title] {
   @include adjust-font-size-to(16px);
 }
 
-
-.label-success {
+.label-daily-price {
   background: lighten($green, 16%);
 }
 
-.label-warning {
+.label-weekly-price {
   background: lighten($green, 8%);
 }
 
-.label-important {
+.label-monthly-price {
   background: $green;
+}
+
+.nav-tabs > li > a {
+  @include border-top-radius($border-radius / 2);
+
 }
 
 // Override bootstrap mixin that caused opacity to be reduced by 10x

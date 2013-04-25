@@ -27,4 +27,21 @@ module LocationsHelper
       }
     }.to_json
   end
+
+  def location_contact_phone(location)
+    if location.phone.present?
+      content_tag(:p,
+        content_tag(:span, location.phone, class: 'ico-phone padding')
+      )
+    end
+  end
+
+  def location_contact_email(location)
+    if location.email.present?
+      content_tag(:p,
+        content_tag(:span, location.email, class: 'ico-mail padding')
+      )
+    end
+  end
+
 end

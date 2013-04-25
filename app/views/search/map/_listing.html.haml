@@ -13,8 +13,5 @@
             = image_tag google_maps_streetview_url(:height => 89, :width => 144, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name
       .popover-info-container
         %h4= link_to "#{listing.name}", listing
-        %address
-          %span.ico-marker
-          = listing.location.name
-          = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
+        = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
 

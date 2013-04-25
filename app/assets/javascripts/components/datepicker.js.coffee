@@ -207,7 +207,11 @@ class @Datepicker
       positionPadding: 5,
 
       # Whether to disable past dates
-      disablePastDates: true
+      disablePastDates: true,
+
+      # How many pixels away from the right of the window to force
+      # the datepicker to render.
+      windowRightPadding: 20
     }
 
     constructor: (@options = {}) ->
@@ -273,6 +277,7 @@ class @Datepicker
 
       # Window height and scroll position
       wHeight = $(window).height()
+      wWidth  = $(window).width()
       sTop    = $(window).scrollTop()
 
       # Calculate available viewport height above/below the target
@@ -293,6 +298,12 @@ class @Datepicker
 
       # Left position is based off the container width and the position target width/position
       left = tOffset.left + parseInt(tWidth/2, 10) - parseInt(width/2, 10)
+
+      # Don't let it render outside of the window viewport on the right side.
+      # Also force minimum padding, and shift the position left until it fits properly.
+      rightPos = left + width
+      if rightPos > (wWidth - @options.windowRightPadding)
+        left -= (rightPos - wWidth + @options.windowRightPadding)
 
       # Update the position of the datepicker container
       @container.css(
