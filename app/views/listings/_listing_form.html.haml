@@ -42,7 +42,7 @@
 
 - if only_inputs.empty? ? true : only_inputs.include?(:photos)
   = file_upload_input_with_label('Photos', manage_photos_path('size' => 'space_listing'), "#{photo_input_name_prefix}[photos_attributes][0][image]", "Upload Photos") do
-    - if listing.persisted?
+    - if listing && listing.persisted?
       %li.hidden.photo-item
         = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes]", nil, :placeholder => 'Enter Photo Caption...', :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
       - i = 0

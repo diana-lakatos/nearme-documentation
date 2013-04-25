@@ -1,7 +1,7 @@
 = render :layout => 'wizard_layout', :locals => { :step => 1 } do
   - title "List your space"
 
-  = simple_form_for @company, :url => space_wizard_list_url, :validate => true, :html => { :class => "form-horizontal new_company", :multipart => true, :id => 'list-space-flow-form' } do |f|
+  = simple_form_for @company, :url => space_wizard_list_url, :validate => false, :html => { :class => "form-horizontal new_company", :multipart => true, :id => 'list-space-flow-form' } do |f|
 
     = render :partial => 'companies/company_form', :locals => { :f => f, :company => @company, :only_inputs => [ :name, :industries ] }
 

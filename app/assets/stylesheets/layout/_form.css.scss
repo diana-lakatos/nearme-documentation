@@ -182,7 +182,8 @@ form {
   }
 
   .control-group.error {
-    input, textarea {
+    // ul is for chosen
+    input, textarea, ul, select {
       border-color: #e58984;
     }
   }

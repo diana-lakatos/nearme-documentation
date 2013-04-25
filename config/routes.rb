@@ -44,10 +44,6 @@ DesksnearMe::Application.routes.draw do
 
   resources :reservations, :only => :update
 
-  ## routing after 'dashboard/' is handled in backbone cf. router.js
-  get 'dashboard' => 'dashboard#index', as: :controlpanel
-  get 'dashboard/locations' => 'dashboard#index', as: :controlpanel
-
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
       get :bookings

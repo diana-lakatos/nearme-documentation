@@ -31,16 +31,8 @@ class SpaceWizardController < ApplicationController
         listing.photos << current_user.photos.find(params[:uploaded_photos])
         listing.save!
       end
-      redirect_to controlpanel_path, notice: 'Your space was listed! You can provide more details about your location and listing from this page.'
+      redirect_to manage_locations_path, notice: 'Your space was listed! You can provide more details about your location and listing from this page.'
     else
-      @location ||= @company.locations.build
-      @listing ||= @location.listings.build
-      if params[:company][:locations_attributes]
-        @location.attributes = params[:company][:locations_attributes]["0"]
-        if params[:company][:locations_attributes]["0"][:listing_attributes]
-          @location.attributes = params[:company][:locations_attributes]["0"][:listing_attributes]["0"]
-        end
-      end
       render :list
     end
   end

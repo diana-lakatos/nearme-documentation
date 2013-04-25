@@ -4,6 +4,7 @@ end
 
 When /^I fill in valid space details$/ do
   fill_in 'Your company name', with: 'International Secret Intelligence Service'
+  select 'Industry', from: 'Industries'
   fill_in 'Location description', with: 'Our historic 11-story Southern Pacific Building, also known as "The Landmark", was completed in 1916. We are in the 172 m Spear Tower.'
   fill_in 'Location address', with: 'usa'
   select 'Business', from: 'Location type'
