@@ -21,7 +21,6 @@ class Bookings.Controller
   bindDomElements: ->
     @quantityField = @container.find('select.quantity')
     @totalElement = @container.find('.total')
-    @resourceElement = @container.find('.resource')
     @daysElement = @container.find('.total-days')
     @bookButton = @container.find('[data-behavior=showReviewBookingListing]')
 
@@ -103,15 +102,10 @@ class Bookings.Controller
     $('.click-disabled').removeClass('click-disabled').find('span.text').text('Book')
 
   updateQuantityField: (qty = @listing.defaultQuantity) ->
-    plural = if qty == 1 then '' else 's'
-    @resourceElement.text("desk#{plural}")
     @container.find('.customSelect.quantity .customSelectInner').text(qty)
     @quantityField.val(qty)
 
   updateSummary: ->
     @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
-    days = @listing.bookedDates().length
-    plural = if days == 1 then '' else 's'
-    @daysElement.text("#{days} day#{plural}")
 
 
