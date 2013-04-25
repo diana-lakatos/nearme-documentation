@@ -10,9 +10,9 @@
       %h2
         = link_to "#{listing.name}", listing
       %h4.hidden-iphone.location-hours
-        %span.ico-marker
+        %span.ico-location
           %strong
-            = listing.location.name
+            = listing.location.company.name
           = pretty_availability_sentence(listing.availability)
       %p.hidden-phone.listing-description
         = listing.description

@@ -19,17 +19,6 @@
       border: none !important;
       @include transition(0,0,0);
 
-      @media (-webkit-min-device-pixel-ratio: 1.5), 
-      (min-resolution: 144dpi) { 
-        background: url("/assets/desks-near-me-logo@2x.png") no-repeat;
-        background-size: 50% auto;
-
-        @media (max-width: 767px) {
-          background: url("/assets/desks-near-me-icon@2x.png") no-repeat;
-          background-size: 100%;        
-        }
-      }
-
       @media (max-width: 767px) {
         width: 50px;
         height: 50px;
@@ -37,6 +26,17 @@
         background: url('/assets/desks-near-me-icon.png');
        
       }
+
+      @media (-webkit-min-device-pixel-ratio: 1.5), 
+      (min-resolution: 144dpi) { 
+        background: url("/assets/desks-near-me-logo@2x.png") no-repeat;
+        background-size: 100%;
+
+        @media (max-width: 767px) {
+          background: url("/assets/desks-near-me-icon@2x.png") no-repeat;
+          background-size: 100%;        
+        }
+      }     
     }
   }
 

@@ -1,9 +1,9 @@
 - unless listing.daily_price.to_f.zero?
-  %span.label.label-success
+  %span.label.label-daily-price
     = "#{money_without_cents_and_with_symbol(listing.daily_price)}/day"
 - unless listing.weekly_price.to_f.zero?
-  %span.label.label-warning
+  %span.label.label-weekly-price
     = "#{money_without_cents_and_with_symbol(listing.weekly_price)}/wk"
 - unless listing.monthly_price.to_f.zero?
-  %span.label.label-important
+  %span.label.label-monthly-price
     = "#{money_without_cents_and_with_symbol(listing.monthly_price)}/mo"

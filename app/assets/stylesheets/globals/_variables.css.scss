@@ -31,13 +31,22 @@ $gray7: rgb(80,80,80);
 $gray8: rgb(60,60,60);
 $gray9: rgb(40,40,40);
 
+$link-color: $dnm_blue;
 $link_hover: darken($dnm_blue, 10%);
 $icon: $gray5;
 $icon-hover: $gray7;
 
+
 // Border Radius
+
 $border-radius: 12px;
 $border-radius-mobile: 6px;
+
+
+// Padding
+
+$padding: 15px;
+
 
 // Webfonts
 
@@ -48,6 +57,7 @@ $font-demi: 'Futura-demi', sans-serif;
 $font-heavy: 'Futura-heavy', sans-serif;
 $font-bold: 'Futura-heavy', sans-serif;
 
+
 // Z index
 
 $modal-z-index: 1000;
@@ -56,7 +66,19 @@ $absolute-top-z-index: 9000;
 
 
 // Breakpoints
+
 $iphone-landscape: 480px;
+$booking-module-breakpoint: 580px;
+$booking-module-breakpoint-desktop: 900px;
+
+
+// Booking Module
+
+$listing-photo-width: 410px;
+$listing-photo-height: 254px;
+$booking-module-height: $listing-photo-height;
+$booking-module-width: 280px;
+$listing-header-height: 58px;
 
 // IE support
 

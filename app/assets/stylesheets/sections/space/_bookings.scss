@@ -1,169 +1,166 @@
-#space, .space {
-
-  .listings-separator{
-    margin-bottom: 20px;
-  }
-
-
-  h3.listing-name {
-    @include adjust-font-size-to(22px);
-    margin-bottom: 6px;
-
-    @media (max-width: 480px) {
-      margin: 10px 0;
-      clear: both;
-      float: left;
-    }
-  }
-
-  p.listing-description {
-    @media (max-width: 480px) {
-      float: left;
-      clear: both;
-    }
-  }
-  .bookings {
-
-    .summary {
-      text-align: center;
-      font-size: 16px;
-
-      p {
-        margin-bottom: 0;
-      }
-
-      .btn {
-        margin-left: 12px;
-      }
-    }
-
-    .listing {
-
-      .images, .description {
-        float: left;
-        max-width: 295px;
-        margin-left: 20px;
-
-        @media ( max-width: 480px) {
-          max-width: 100%;
-          margin: 0;
-        }
-
-        &:first-child {
-          margin-left: 0;
- 
-        }
-
-      }
-
-      .book {
-        display: inline-block;
-
-        @media (max-width: 480px) {
-          display:block;
-        }
-
-        .btn.disabled{
-          @include opacity(0.5);
-        }
-        .btn.click-disabled{
-          @include opacity(0.75);
-        }
-      }
-
-      .truncated-ellipsis {
-        display: inline-block;
-        padding: 0 4px 10px;
-        margin: 0 4px;
-        border-radius: 2px;
-        border-radius: 4px;
-        background: darken( $gray2, 10%);
-        letter-spacing: 1px;
-        color: $dnm_black;
-        font-size: 20px;
-        line-height: 6px;
-        height:6px;
-        vertical-align: middle;
-        font-family: $font-bold;
-      }
-
-      .description {
-
-        .price {
-          font-size: 22px;
-
-          .period {
-            font-size: 16px;
-            font-weight: normal;
-          }
-        }
-      }
-
-      .make-reservation {
-        float: right;
-        font:normal 26px/46px $font-medium, sans-serif;
-        color: $gray8;
-        margin-top: 10px;
-
-        @media (max-width: 890px) {
-          width: 100%;
-        }
-        .quantity input { 
-          background: none;
-          border: none;
-        }
-
-      }
-
-      .book {
-        color: #848b8f;
-
-        @media (max-width: 1200px) {
-          width: 100%;
-        }
-      }
-    }
-  }
+#location-tabs{
+  margin: 0px;
 }
 
-// Popover for the booked day
-.booked-day-popover {
-  color: #1e2222;
-  line-height: 14px;
+#address-popover{
+  @include adjust-font-size-to(14px);
+  padding: 6px;
+}
 
-  .date {
-    font-weight: bold;
+#location-tabs > li > a {
+  background-color: $gray5;
+  color: $gray2;
+  border: none;
+}
 
-    sup {
-      font-size: 8px;
-      vertical-align: top;
-      line-height: 8px;
+#location-tabs > li > a:hover {
+  background-color: $gray6;
+}
+
+#location-tabs > li.active > a {
+  background-color: $gray7;
+}
+
+
+
+#space, .space {
+
+  .listing.box {
+    overflow: hidden;
+    height: $booking-module-height;
+      
+    @media (min-width: $booking-module-breakpoint-desktop) {
+      height: $booking-module-height;
+    }
+
+    @media (max-width: $booking-module-breakpoint-desktop) {
+      height: auto;
+    }
+
+    @media (max-width: $booking-module-breakpoint) {
+      height: auto;
+    }
+
+    .bottom-fade {
+      position: absolute;
+      bottom: 0;
+      left: $listing-photo-width;
+      width: 100%;
+      height: 40px;
+      @include background-image(linear-gradient(rgba(250,250,250,0), $dnm_white));
+
+      @media (max-width: $booking-module-breakpoint-desktop) {
+        display: none;
+      }
+    } 
+
+    .booking-module-container {
+
+      @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
+        float: right; 
+        clear: both;
+        width: 50%;
+        top: $listing-header-height;
+      }
+
+      .booking-module {
+
+      }  
+    }  
+  }
+
+  header {
+    display: none;
+
+     @media (max-width: $booking-module-breakpoint-desktop) {
+      display: block;
+    }   
+  }
+
+  .listing-photo-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: $listing-photo-height;
+    width: $listing-photo-width;
+    overflow: hidden;
+
+    @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
+      position: relative;
+      float: left; 
+      clear: both;
+      width: 55%;
+      height: $booking-module-height;
+      margin: -15px 0 0 -15px;
+
+      img {
+        width: $listing-photo-width;
+        height: $listing-photo-height;
+        margin: 0 auto;
+        max-width: $listing-photo-width;
+      }       
+    }
+
+    @media (max-width: $booking-module-breakpoint) {
+      position: relative;
+      float: left; 
+      clear: both;
+      width: 110%;
+      height: auto;
+      margin: -15px 0 0 -15px;
+     
     }
   }
 
-  .month {
-    color: #848b8f;
+  .listing-name, .listing-description {
+    float: left;
+    width: 100%;
+    padding: 0 300px 0 410px;
+    @include box-sizing(border-box);
+
+    @media  (max-width: $booking-module-breakpoint-desktop) {
+      display: none;     
+    }   
   }
 
-  .availability {
-    .total {
-      color: #848b8f;
+  .listing-description {
+    margin: 15px 0 0;
+
+    @media (max-width: $booking-module-breakpoint-desktop) {
+      display: block;
+      float: left;
+      clear: both;
+      margin: 15px 0 0;
+      padding: 0;
+    }
+
+    @media (max-width: $booking-module-breakpoint) {
+      margin: 15px 0;
+    }
+
+    p {
+      overflow: auto;
+
+      @media (min-width: $booking-module-breakpoint) {
+        max-height: 140px;
+      }
+
+      @media (max-width: $booking-module-breakpoint-desktop) {
+        margin-bottom: 0;
+      }      
     }
   }
 
-  label {
-    display: inline-block;
-  }
+  .description {
 
-  input {
-    border: 1px solid #babfc1;
-    background: #fff;
-    outline: none;
-    color: #91529c;
-    padding: 4px;
-    width: 30px;
-    font-size: 12px;
-    @include border-radius(4px);
+    .price {
+      font-size: 22px;
+
+      .period {
+        font-size: 16px;
+        font-weight: normal;
+      }
+    }
   }
 }
 
@@ -234,8 +231,12 @@
     display: inline-block;
     
     select {
-      display: inline-block;
+      position: absolute;
+      top: 0; 
+      right: 0;
+      margin: 0;
       vertical-align: middle;
+      z-index: $modal-z-index - 3;
     }
 
     span.customSelect {
@@ -255,38 +256,6 @@
       background:url(components/customselect/canvas-list-nav-item-arrow.gif) no-repeat center right;
     }
 
-  }
-
-  .calendar {
-    position: relative;
-    display: inline-block;
-    vertical-align:top;
-
-    .dates, input {
-      width: 30px;
-      height:38px;
-      display: inline-block;
-      vertical-align: middle;
-      border: 0;
-      color: transparent;
-      background: transparent;
-
-      &:focus {
-        outline: none !important;
-      }
-    }
-  }
-
-  a.btn.btn-large {
-    vertical-align: bottom;
-
-    @media (max-width: 1200px) {
-      display: block;
-      clear: both;
-      width:100%;
-      margin-top: 10px;
-      text-align:center;
-    }
   }
 }
 

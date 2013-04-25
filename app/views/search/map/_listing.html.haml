@@ -4,19 +4,14 @@
       %span.ico-location
       = listing.location.name
   .listing-map-popover-content{:style => "display: none"}
-    - sibling_listings = listing.location.listings
-    - sibling_listings.each do |listing|
-      .listing-sibling{'data-link' => listing_path(listing)}
-        .popover-image-container
-          = link_to listing do
-            - if listing.photos.first
-              = image_tag listing.photos.first.url(:medium), :title => listing.name, :alt => listing.name
-            - else
-              = image_tag google_maps_streetview_url(:height => 89, :width => 144, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name
-        .popover-info-container
-          %h4= link_to "#{listing.name}", listing
-          %address
-            %span.ico-marker
-            = listing.location.name
-            = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
+    .listing-sibling{'data-link' => listing_path(listing)}
+      .popover-image-container
+        = link_to listing do
+          - if listing.photos.first
+            = image_tag listing.photos.first.url(:medium), :title => listing.name, :alt => listing.name
+          - else
+            = image_tag google_maps_streetview_url(:height => 89, :width => 144, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name
+      .popover-info-container
+        %h4= link_to "#{listing.name}", listing
+        = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
 
