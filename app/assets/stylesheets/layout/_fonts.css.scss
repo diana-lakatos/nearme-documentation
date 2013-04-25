@@ -56,6 +56,10 @@ h5 a {
   font-family: $font-medium, sans-serif;
   font-weight: normal;
   color: $gray7;
+
+  &:hover {
+    color: $gray7;
+  }
 }
 
 h1 {

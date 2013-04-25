@@ -19,7 +19,7 @@ class Location < ActiveRecord::Base
 
   belongs_to :company, inverse_of: :locations
   belongs_to :location_type
-  delegate :creator, :to => :company
+  delegate :creator, :to => :company, :allow_nil => true
 
   has_many :listings,
     dependent:  :destroy,
@@ -90,6 +90,10 @@ class Location < ActiveRecord::Base
     super.presence || "Unknown"
   end
 
+  def address
+    read_attribute(:formatted_address).presence || read_attribute(:address)
+  end
+
   def parse_address_components
     if address_components_changed?
       data_parser = Location::GoogleGeolocationDataParser.new(address_components)
@@ -102,7 +106,7 @@ class Location < ActiveRecord::Base
   end
 
   def description
-    read_attribute(:description) || (listings.first || NullListing.new).description
+    read_attribute(:description).presence || (listings.first || NullListing.new).description
   end
 
   def creator=(creator)
@@ -111,7 +115,11 @@ class Location < ActiveRecord::Base
   end
 
   def phone
-    read_attribute(:phone) || creator.try(:phone)
+    read_attribute(:phone).presence || creator.try(:phone)
+  end
+
+  def email
+    read_attribute(:email).presence || creator.try(:email) 
   end
 
   private

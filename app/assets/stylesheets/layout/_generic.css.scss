@@ -28,7 +28,7 @@ p a:visited {
   @include transition(opacity .07s ease-in, color .07s ease-in, border .07s ease-in);
 
   &:hover {
-    color: darken( $dnm_blue, 20%);
+    color: darken( $dnm_blue, 10%);
     text-decoration: none;
   }
 }

@@ -1,0 +1,31 @@
+.row-fluid
+  .span4
+    %h2 Our Space
+    %p= truncate_with_ellipsis @location.description, 250    
+    - if @amenities
+      %h2 Amenities  
+      %ul
+        - @location.amenities.each do |amenity|
+          %li= amenity     
+
+  .span4
+    %h2 About Us
+    %p
+    %p= truncate_with_ellipsis @location.company.description, 250
+
+    - if @amenities
+      %h2 Amenities
+      %ul
+        - @location.amenities.each do |amenity|
+          %li= amenity
+
+  .span4
+    %h2 Contact
+    %p
+    - if user_signed_in?
+      = location_contact_phone(@location)
+      = location_contact_email(@location)
+    - else
+      %span.ico-warning.padding
+        =raw "#{link_to('Log in', new_user_session_path, rel: 'modal.sign-up-modal')} or #{link_to('sign up', new_user_registration_path, rel: 'modal.sign-up-modal')} to contact the host."
+

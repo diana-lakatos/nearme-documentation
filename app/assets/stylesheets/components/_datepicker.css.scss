@@ -6,8 +6,10 @@
   left: 300px;
   width: 280px;
   background: $dnm_black;
-  @include border-radius(8px);
+  @include border-radius($border-radius);
   @include box-shadow( 0 0 40px black);
+  @include background-clip(border-box);
+  overflow: hidden;
 
   .datepicker-prev, .datepicker-next {
     float: left;
@@ -63,6 +65,11 @@
     }
   }
 
+  .datepicker-days {
+    @include border-bottom-radius($border-radius);
+    @include background-clip(border-box);
+  }  
+
   .datepicker-text {
     background: $gray1;
     text-align: center;
@@ -73,6 +80,8 @@
   .datepicker-days-wrapper {
     position: relative;
     background: $gray1;
+    @include border-bottom-radius($border-radius);
+    @include background-clip(border-box);
 
     .datepicker-loading {
       position: absolute;

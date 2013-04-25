@@ -1,4 +1,4 @@
-@include font-face("icomoon", font-files("icomoon.woff", "icomoon.otf", "icomoon.ttf", "icomoon.svg#icomoon"), "icomoon.eot");
+@include font-face("icon-font", font-files("icon-font.woff", "icon-font.otf", "icon-font.ttf", "icon-font.svg#icon-font"), "icon-font.eot");
 
 // Icon Font Styling 
 
@@ -15,85 +15,86 @@ span.padding-left {
 .ico-twitter:before {
   font-size: 125%;
 }
-.ico-lock:before {
+.ico-lock:before,
+.ico-calendar-start {
   padding-right: 4px;
 }
 
-.ico-image:before, .ico-profile:before, .ico-save:before, .ico-instagram:before, .ico-link:before, .ico-phone:before, .ico-plus:before, .ico-marker:before, .ico-facebook:before, .ico-edit:before, .ico-drawer:before, .ico-twitter:before, .ico-close:before, .ico-search:before, .ico-clock:before, .ico-check:before, .ico-calender:before, .ico-arrow-up:before, .ico-arrow-left:before, .ico-arrow-right:before, .ico-arrow-down:before, .ico-app-store:before, .ico-info:before, .ico-login:before, .ico-lock:before, .ico-location:before, .ico-mail:before, .ico-linkedin:before, .ico-user:before, .ico-manage-guests:before, .ico-bookings:before, .ico-credit-card:before, .ico-trash:before, .ico-settings:before, .ico-logout:before, .ico-sign-up:before, .ico-add-location:before, .ico-upload-photos:before, .ico-desk:before, .ico-add-desk:before, .ico-crosshairs:before, .ico-dashboard:before, .ico-trash-open:before, .ico-tag:before, .ico-settings-2:before, .ico-list:before, .ico-heart:before {
-  font-family: 'icomoon';
+.ico-tag:before, .ico-print:before, .ico-screen:before, .ico-filter:before, .ico-calendar-start:before, .ico-calendar-end:before, .ico-user:before, .ico-plus:before, .ico-info:before, .ico-facebook:before, .ico-check:before, .ico-bookings:before, .ico-arrow-up:before, .ico-arrow-right:before, .ico-arrow-left:before, .ico-arrow-down:before, .ico-twitter:before, .ico-sign-up:before, .ico-search:before, .ico-phone:before, .ico-marker:before, .ico-mail:before, .ico-logout:before, .ico-login:before, .ico-lock:before, .ico-location:before, .ico-linkedin:before, .ico-instagram:before, .ico-edit:before, .ico-drawer:before, .ico-dashboard:before, .ico-crosshairs:before, .ico-close:before, .ico-clock:before, .ico-calender:before, .ico-add-location:before, .ico-manage-guests:before, .ico-link:before, .ico-app-store:before, .ico-credit-card:before, .ico-trash:before, .ico-settings:before, .ico-upload-photos:before, .ico-desk:before, .ico-add-desk:before, .ico-save:before, .ico-trash-open:before, .ico-profile:before, .ico-warning:before, .ico-chevron-up:before, .ico-chevron-right:before, .ico-chevron-down:before, .ico-chevron-left:before, .ico-list:before, .ico-open-link:before {
+  font-family: 'icon-font';
   speak: none;
   font-style: normal;
   font-weight: normal;
   line-height: 1;
   -webkit-font-smoothing: antialiased;
 }
-.ico-image:before {
+.ico-tag:before {
   content: "\e000";
 }
-.ico-profile:before {
+.ico-print:before {
   content: "\e001";
 }
-.ico-save:before {
+.ico-screen:before {
   content: "\e002";
 }
-.ico-instagram:before {
+.ico-filter:before {
   content: "\e003";
 }
-.ico-link:before {
+.ico-calendar-start:before {
   content: "\e004";
 }
-.ico-phone:before {
+.ico-calendar-end:before {
   content: "\e005";
 }
-.ico-plus:before {
+.ico-user:before {
   content: "\e006";
 }
-.ico-marker:before {
+.ico-plus:before {
   content: "\e007";
 }
-.ico-facebook:before {
+.ico-info:before {
   content: "\e008";
 }
-.ico-edit:before {
+.ico-facebook:before {
   content: "\e009";
 }
-.ico-drawer:before {
+.ico-check:before {
   content: "\e00a";
 }
-.ico-twitter:before {
+.ico-bookings:before {
   content: "\e00b";
 }
-.ico-close:before {
+.ico-arrow-up:before {
   content: "\e00c";
 }
-.ico-search:before {
+.ico-arrow-right:before {
   content: "\e00d";
 }
-.ico-clock:before {
+.ico-arrow-left:before {
   content: "\e00e";
 }
-.ico-check:before {
+.ico-arrow-down:before {
   content: "\e00f";
 }
-.ico-calender:before {
+.ico-twitter:before {
   content: "\e010";
 }
-.ico-arrow-up:before {
+.ico-sign-up:before {
   content: "\e011";
 }
-.ico-arrow-left:before {
+.ico-search:before {
   content: "\e012";
 }
-.ico-arrow-right:before {
+.ico-phone:before {
   content: "\e013";
 }
-.ico-arrow-down:before {
+.ico-marker:before {
   content: "\e014";
 }
-.ico-app-store:before {
+.ico-mail:before {
   content: "\e015";
 }
-.ico-info:before {
+.ico-logout:before {
   content: "\e016";
 }
 .ico-login:before {
@@ -105,66 +106,90 @@ span.padding-left {
 .ico-location:before {
   content: "\e019";
 }
-.ico-mail:before {
+.ico-linkedin:before {
   content: "\e01a";
 }
-.ico-linkedin:before {
+.ico-instagram:before {
   content: "\e01b";
 }
-.ico-user:before {
+.ico-edit:before {
   content: "\e01c";
 }
-.ico-manage-guests:before {
+.ico-drawer:before {
   content: "\e01d";
 }
-.ico-bookings:before {
+.ico-dashboard:before {
   content: "\e01e";
 }
-.ico-credit-card:before {
+.ico-crosshairs:before {
   content: "\e01f";
 }
-.ico-trash:before {
+.ico-close:before {
   content: "\e020";
 }
-.ico-settings:before {
+.ico-clock:before {
   content: "\e021";
 }
-.ico-logout:before {
+.ico-calender:before {
   content: "\e022";
 }
-.ico-sign-up:before {
+.ico-add-location:before {
   content: "\e023";
 }
-.ico-add-location:before {
+.ico-manage-guests:before {
   content: "\e024";
 }
-.ico-upload-photos:before {
+.ico-link:before {
   content: "\e025";
 }
-.ico-desk:before {
+.ico-app-store:before {
   content: "\e026";
 }
-.ico-add-desk:before {
+.ico-credit-card:before {
   content: "\e027";
 }
-.ico-crosshairs:before {
+.ico-trash:before {
   content: "\e028";
 }
-.ico-dashboard:before {
+.ico-settings:before {
   content: "\e029";
 }
-.ico-trash:hover:before {
+.ico-upload-photos:before {
   content: "\e02a";
 }
-.ico-tag:before {
+.ico-desk:before {
   content: "\e02b";
 }
-.ico-settings-2:before {
+.ico-add-desk:before {
   content: "\e02c";
 }
-.ico-list:before {
+.ico-save:before {
   content: "\e02d";
 }
-.ico-heart:before {
+.ico-trash-open:before {
   content: "\e02e";
+}
+.ico-profile:before {
+  content: "\e02f";
+}
+.ico-warning:before {
+  content: "\e030";
+}
+.ico-chevron-up:before {
+  content: "\e031";
+}
+.ico-chevron-right:before {
+  content: "\e032";
+}
+.ico-chevron-down:before {
+  content: "\e033";
+}
+.ico-chevron-left:before {
+  content: "\e034";
+}
+.ico-list:before {
+  content: "\e035";
+}
+.ico-open-link:before {
+  content: "\e036";
 }
