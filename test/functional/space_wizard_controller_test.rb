@@ -6,6 +6,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
+    @industry = FactoryGirl.create(:industry)
     sign_in @user
     FactoryGirl.create(:listing_type)
     FactoryGirl.create(:location_type)
@@ -53,6 +54,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
         {"company"=>
           {
             "name"=>"International Secret Intelligence Service", 
+            "industry_ids"=>["#{@industry.id}"], 
             "locations_attributes"=>
               {"0"=>
                 {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.", 
