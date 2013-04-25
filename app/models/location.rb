@@ -4,8 +4,8 @@ class Location < ActiveRecord::Base
   friendly_id :formatted_address, use: :slugged
 
   attr_accessible :address, :amenity_ids, :company_id, :description, :email,
-    :info, :latitude, :local_geocoding, :longitude, :name,
-    :currency, :phone, :formatted_address, :availability_rules_attributes,
+    :info, :latitude, :local_geocoding, :longitude, :currency, 
+    :phone, :formatted_address, :availability_rules_attributes,
     :availability_template_id, :special_notes, :listings_attributes, :suburb,
     :city, :state, :country, :street, :address_components, :location_type_id, :photos
   attr_accessor :local_geocoding # set this to true in js
@@ -58,12 +58,12 @@ class Location < ActiveRecord::Base
                                             units: :km)
   end
 
-  def admin?(user)
-    creator == user
+  def name
+    "#{company.name} @ #{street}"
   end
 
-  def name
-    super.presence || company.name
+  def admin?(user)
+    creator == user
   end
 
   def currency

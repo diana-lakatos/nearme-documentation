@@ -13,7 +13,6 @@ LocationView = Backbone.View.extend({
     "click .save-location": "save",
     "click .delete-location": "trash",
     "click .add-listing": "createListing",
-    "keyup input#name": "nameChanged",
     "keyup #address": "valChanged",
     "click .edit_location .availability-rules input[type=radio]" : "availabilityChanged",
     "click .closed": "updateClosedState"
@@ -52,11 +51,6 @@ LocationView = Backbone.View.extend({
       location_id: this.model.id
     });
     this.addOne(listing);
-  },
-
-  nameChanged: function(event) {
-    var target = $(event.target);
-    target.closest('section.location').find('span.location-header').text(target.val());
   },
 
   valChanged: function(event) {
@@ -138,11 +132,6 @@ LocationView = Backbone.View.extend({
     elt.animate({
       opacity: 1
     }, 1500, function(){ self.render('expand'); } );
-
-    //if (this.justCreated) {
-      //this.justCreated = false;
-      //this.toggleCmd();
-    /*}*/
   },
 
   _showError: function(data, xhr){
