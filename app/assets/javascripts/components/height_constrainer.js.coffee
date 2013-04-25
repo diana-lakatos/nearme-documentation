@@ -34,7 +34,7 @@ class @HeightConstrainer
     )
 
   constrain: ->
-    if $(@targetElement).is(':visible')
+    if @targetElement.is(':visible')
       height = if @options.ratio
         Math.round(@contextElement.width() * @options.ratio)
       else
