@@ -144,6 +144,13 @@ class Reservation::PriceCalculatorTest < ActiveSupport::TestCase
       assert_equal 6750_00, @calculator.price.cents
     end
 
+    should "take into account quantity" do
+      @reservation.quantity = 3
+      seed_reservation_dates date_groups_of(45, 3)
+
+      assert_equal 3*6750_00, @calculator.price.cents
+    end
+
     context "free booking" do
       setup do
         @listing.stubs(:prices_by_days).returns({

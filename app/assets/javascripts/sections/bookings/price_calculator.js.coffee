@@ -9,7 +9,7 @@ class @Bookings.PriceCalculator
 
   getPrice: ->
     _.inject(@contiguousBlocks(), (sum, block) =>
-      sum + @priceForDays(block.length)
+      sum + @priceForDays(block.length)*@listing.defaultQuantity
     , 0)
 
   priceForDays: (days) ->
