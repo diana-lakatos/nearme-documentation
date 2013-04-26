@@ -4,6 +4,7 @@ class Manage::ListingsController < Manage::BaseController
   before_filter :find_location
 
   def index
+    redirect_to new_manage_location_listing_path(@location)
   end
 
   def new
