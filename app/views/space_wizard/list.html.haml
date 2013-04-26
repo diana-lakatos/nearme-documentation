@@ -7,7 +7,7 @@
 
     = f.simple_fields_for :locations, @location do |locations_form|
 
-      = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :description, :address, :location_type ] }
+      = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :description, :address, :location_type, :phone ] }
 
       = locations_form.simple_fields_for :listings, @listing do |listings_form|
 

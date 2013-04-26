@@ -7,6 +7,7 @@ When /^I fill in valid space details$/ do
   select 'Industry', from: 'Industries'
   fill_in 'Location description', with: 'Our historic 11-story Southern Pacific Building, also known as "The Landmark", was completed in 1916. We are in the 172 m Spear Tower.'
   fill_in 'Location address', with: 'usa'
+  fill_in 'Phone Number', with: '844100999'
   select 'Business', from: 'Location type'
   fill_in 'Listing name', with:'Desk'
   fill_in 'Listing description', with:'We have a group of several shared desks available.'
