@@ -11,6 +11,7 @@ class @SpaceWizardSpaceForm
 
     #@bindEvents()
     #@unlockInput()
+    #comment the next line to disable control group disable
 
   unlockInput: (with_focus = true) ->
     if @input_number < @input_length
@@ -27,12 +28,25 @@ class @SpaceWizardSpaceForm
           @input_number = @input_number + 1
           @unlockInput()
 
+  toggleEnabledPriceFields: =>
+    $('.enable_daily,.enable_weekly,.enable_monthly').each (index, item) =>
+      $item = $(item)
+      $item.next().attr('disabled', !$item.is(':checked'))
+
   bindEvents: =>
 
     $('#company_industry_ids').change (event) =>
       callback = => @validateIndustries event
       # yes I hate it too. Chosen has a bug - it triggers change before removing element from dom...
       setTimeout callback, 100
+
+    @container.on 'click', '.enable_daily,.enable_weekly,.enable_monthly', (event) =>
+      @toggleEnabledPriceFields()
+      $('.free_checkbox').prop('checked', !$('.enable_daily,.enable_weekly,.enable_monthly').is(':checked'))
+
+    @container.on 'click', '.free_checkbox', (event) =>
+      $('.enable_daily,.enable_weekly,.enable_monthly').prop('checked', !$('.free_checkbox').is(':checked'))
+      @toggleEnabledPriceFields()
 
     # Progress to the next form field when a selection is made from select elements
     @container.on 'change', 'select', (event) =>

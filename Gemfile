@@ -106,6 +106,7 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'minitest'
+  gem 'minitest-reporters'
   gem 'mocha', :require => false
   gem 'pickle'
   gem 'simplecov', :require => false

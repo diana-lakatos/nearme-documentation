@@ -71,8 +71,11 @@ class SpaceWizardControllerTest < ActionController::TestCase
                        "listing_type_id"=>"1", 
                        "quantity"=>"1", 
                        "daily_price"=>daily_price, 
+                       "enable_daily" => daily_price.nil? ? nil : "1",
                        "weekly_price"=>weekly_price, 
+                       "enable_weekly" => weekly_price.nil? ? nil : "1",
                        "monthly_price"=> monthly_price, 
+                       "enable_monthly" => monthly_price.nil? ? nil : "1",
                        "free"=>"0", 
                        "confirm_reservations"=>"0"}
                     }, 
@@ -87,3 +90,4 @@ class SpaceWizardControllerTest < ActionController::TestCase
     params
   end
 end
+

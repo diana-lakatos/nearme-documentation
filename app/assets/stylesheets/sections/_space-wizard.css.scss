@@ -43,9 +43,9 @@ section.space_wizard {
 
     .already-a-user {
       display: none;
-    }   
-  }
+    }
 
+  }
   .input-disabled{
     @include opacity(.4);
     filter: inherit;

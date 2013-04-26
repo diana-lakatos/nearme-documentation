@@ -161,6 +161,18 @@ class Listing < ActiveRecord::Base
     end
   end
 
+  def enable_daily
+    !persisted? || self.daily_price_cents.present?
+  end
+
+  def enable_weekly
+    !persisted? || self.weekly_price_cents.present?
+  end
+
+  def enable_monthly
+    !persisted? || self.monthly_price_cents.present?
+  end
+
   def rate_for_user(rating, user)
 
     raise "Cannot rate unsaved listing" if new_record?

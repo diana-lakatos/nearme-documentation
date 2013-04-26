@@ -394,6 +394,22 @@ form {
       }
     }
 
+    .controls.free-price {
+      float: left;
+      margin-left: 20px;
+
+      @media screen and (max-width: 959px) {
+        clear: none;
+      }
+    }
+
+    .actual-price-control-group {
+      float: left;
+      .controls {
+        margin-left: 0px;
+      }
+    }
+
     .control-label {
       width: 180px;
       float: left;
@@ -524,3 +540,4 @@ form {
   }
 }
   
+
