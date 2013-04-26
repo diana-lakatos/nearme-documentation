@@ -40,16 +40,40 @@ if Rails.env.development? || Rails.env.staging?
 
 end
 
-["Accounting", "Advertising", "Apparel", "Automotive",
-  "Banking", "Broadcasting", "Brokerage", "Biotechnology",
-  "Computer", "Consulting", "Education", "Electronics",
-  "Energy", "Entertainment", "Executive Search", "Financial Services",
-  "Farming", "Food & Beverage", "Gaming", "Health Professional",
-  "Insurance", "Internet", "Investment Banking", "Legal",
-  "Lodging", "Manufacturing", "Medical" , "Movies",
-  "Music", "Pharmaceutical", "Private Equity", "Publishing",
-  "Real Estate", "Retail", "Service", "Software",
-  "Sports" , "Technology", "Telecommunications", "Tourism",
-  "Transportation", "Venture Capital", "Wholesale"].each do |name|
-  log(Industry.create(:name => name)) unless Industry.find_by_name(name)
+ 
+
+
+
+["Accounting", "Airlines/Aviation", "Alternative Dispute Resolution", "Alternative Medicine",
+ "Animation", "Apparel & Fashion", "Architecture & Planning", "Arts and Crafts", "Automotive",
+ "Aviation & Aerospace", "Banking", "Biotechnology", "Broadcast Media", "Building Materials",
+ "Business Supplies and Equipment", "Capital Markets", "Chemicals", "Civic & Social Organization",
+ "Civil Engineering", "Commercial Real Estate", "Computer & Network Security", "Computer Games",
+ "Computer Hardware", "Computer Networking", "Computer Software", "Construction", "Consumer Electronics",
+ "Consumer Goods", "Consumer Services", "Cosmetics", "Dairy", "Defense & Space", "Design",
+ "Education Management", "E-Learning", "Electrical/Electronic Manufacturing", "Entertainment",
+ "Environmental Services", "Events Services", "Executive Office", "Facilities Services",
+ "Farming", "Financial Services", "Fine Art", "Fishery", "Food & Beverages", "Food Production",
+ "Fund-Raising", "Furniture", "Gambling & Casinos", "Glass, Ceramics & Concrete",
+ "Government Administration", "Government Relations", "Graphic Design", "Health, Wellness and Fitness",
+ "Higher Education", "Hospital & Health Care", "Hospitality", "Human Resources", "Import and Export",
+ "Individual & Family Services", "Industrial Automation", "Information Services", "Information Technology and Services",
+ "Insurance", "International Affairs", "International Trade and Development", "Internet", "Investment Banking",
+ "Investment Management", "Judiciary", "Law Enforcement", "Law Practice", "Legal Services", "Legislative Office",
+ "Leisure, Travel & Tourism", "Libraries", "Logistics and Supply Chain", "Luxury Goods & Jewelry", "Machinery",
+ "Management Consulting", "Maritime", "Marketing and Advertising", "Market Research", "Mechanical or Industrial Engineering",
+ "Media Production", "Medical Devices", "Medical Practice", "Mental Health Care", "Military",
+ "Mining & Metals", "Motion Pictures and Film", "Museums and Institutions", "Music", "Nanotechnology",
+ "Newspapers", "Nonprofit Organization Management", "Oil & Energy", "Online Media", "Outsourcing/Offshoring",
+ "Package/Freight Delivery", "Packaging and Containers", "Paper & Forest Products", "Performing Arts",
+ "Pharmaceuticals", "Philanthropy", "Photography", "Plastics", "Political Organization", "Primary/Secondary Education",
+ "Printing", "Professional Training & Coaching", "Program Development", "Public Policy",
+ "Public Relations and Communications", "Public Safety", "Publishing", "Railroad Manufacture", "Ranching",
+ "Real Estate", "Recreational Facilities and Services", "Religious Institutions", "Renewables & Environment",
+ "Research", "Restaurants", "Retail", "Security and Investigations", "Semiconductors", "Shipbuilding",
+ "Sporting Goods", "Sports", "Staffing and Recruiting", "Supermarkets", "Telecommunications", "Textiles",
+ "Think Tanks", "Tobacco", "Translation and Localization", "Transportation/Trucking/Railroad", "Utilities",
+ "Venture Capital & Private Equity", "Veterinary", "Warehousing", "Wholesale", "Wine and Spirits",
+ "Wireless", "Writing and Editing"].each do |name|
+    log(Industry.create(:name => name)) unless Industry.find_by_name(name)
   end
