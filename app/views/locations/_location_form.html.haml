@@ -1,5 +1,5 @@
-- only_inputs = [] if local_assigns[:only_inputs].nil?
-- if (only_inputs.empty? ? true : only_inputs.include?(:address))
+- only_inputs = [] if only_inputs.nil?
+- if only_inputs.empty? || only_inputs.include?(:address)
   %div{:class => "control-group #{"error" if f.object.errors.include?(:address).present?}"}
     = f.label :address, :class => "control-label" do
       %abbr{:title => "required"} *
@@ -25,14 +25,14 @@
           - # must be disabled, otherwise update action could overwrite existing information with empty strings!!!
           = f.input :address_components, :input_html => { :id => 'address_component_input' }, :disabled => true
 
-= f.input :description, :label => 'Location description', :placeholder => 'Describe the overall look, feel, and ambience of your location.', :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? ? true : only_inputs.include?(:description)
-= f.association :location_type, :label => "Location type"  if only_inputs.empty? ? true : only_inputs.include?(:location_type)
-= f.input :email, :label => 'Booking Email', :placeholder => 'Your booking email' if only_inputs.empty? ? true : only_inputs.include?(:email)
-= f.input :phone, :label => 'Phone Number', :placeholder => 'Your phone number' if only_inputs.empty? ? true : only_inputs.include?(:phone)
-= f.input :special_notes, :label => 'Special Terms or Notes ', :placeholder => 'For example, how your guests should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your guest\'s stay' if only_inputs.empty? ? true : only_inputs.include?(:special_notes)
-= f.input :currency, :as => :currency, :label => "Currency", :default => 'USD', :input_html => { :class => 'custom-select', :id => 'currency-select' } if only_inputs.empty? ? true : only_inputs.include?(:currency)
-- if only_inputs.empty? ? true : only_inputs.include?(:availability_rules)
+= f.input :description, :label => 'Location description', :placeholder => 'Describe the overall look, feel, and ambience of your location.', :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? || only_inputs.include?(:description)
+= f.association :location_type, :label => "Location type"  if only_inputs.empty? || only_inputs.include?(:location_type)
+= f.input :email, :label => 'Booking Email', :placeholder => 'Your booking email' if only_inputs.empty? || only_inputs.include?(:email)
+= f.input :phone, :label => 'Phone Number', :placeholder => 'Your phone number' if only_inputs.empty? || only_inputs.include?(:phone)
+= f.input :special_notes, :label => 'Special Terms or Notes ', :placeholder => 'For example, how your guests should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your guest\'s stay' if only_inputs.empty? || only_inputs.include?(:special_notes)
+= f.input :currency, :as => :currency, :label => "Currency", :default => 'USD', :input_html => { :class => 'custom-select', :id => 'currency-select' } if only_inputs.empty? || only_inputs.include?(:currency)
+- if only_inputs.empty? || only_inputs.include?(:availability_rules)
   .control-group
     = render :partial => 'availability_rules/form', :locals => { :f => f }
-= f.association :amenities, :collection => AmenityType.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? ? true : only_inputs.include?(:amenities)
+= f.association :amenities, :collection => AmenityType.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
 

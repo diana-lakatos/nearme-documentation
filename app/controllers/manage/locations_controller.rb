@@ -1,7 +1,7 @@
 class Manage::LocationsController < Manage::BaseController
-  before_filter :authenticate_user!
-  before_filter :find_location, :except => [:index, :new, :create]
   before_filter :find_company
+  before_filter :redirect_if_no_company
+  before_filter :find_location, :except => [:index, :new, :create]
 
   def index
     @locations = current_user.locations
@@ -21,6 +21,10 @@ class Manage::LocationsController < Manage::BaseController
     else
       render :new
     end
+  end
+
+  def show
+    redirect_to edit_manage_location_path(@location)
   end
 
   def edit
@@ -49,11 +53,14 @@ class Manage::LocationsController < Manage::BaseController
   private
 
   def find_location
-    @location = current_user.locations.find(params[:id])
+    @location = @company.locations.find(params[:id])
   end
 
   def find_company
     @company = current_user.companies.first
+  end
+
+  def redirect_if_no_company
     unless @company
       flash[:notice] = "Please add your company first"
       redirect_to new_space_wizard_url

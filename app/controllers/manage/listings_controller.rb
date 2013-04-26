@@ -1,5 +1,4 @@
 class Manage::ListingsController < Manage::BaseController
-  before_filter :authenticate_user!
 
   before_filter :find_listing, :except => [:index, :new, :create]
   before_filter :find_location
@@ -24,6 +23,10 @@ class Manage::ListingsController < Manage::BaseController
     else
       render :new
     end
+  end
+
+  def show
+    redirect_to edit_manage_location_listing_path(@location, @listing)
   end
 
   def edit

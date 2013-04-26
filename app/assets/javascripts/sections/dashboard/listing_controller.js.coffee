@@ -1,6 +1,7 @@
 class @Dashboard.ListingController
 
   constructor: (@container) ->
+    new AvailabilityRulesController(@container)
     @submitLink = $('#submit-link')
     @container.find('#submit-input').hide()
 

@@ -1,6 +1,7 @@
 class @Dashboard.LocationController
 
   constructor: (@container) ->
+    new AvailabilityRulesController(@container)
     @setupMap()
     @submitLink = $('#submit-link')
     @container.find('#submit-input').hide()

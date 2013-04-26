@@ -1,16 +1,17 @@
 class @AvailabilityRulesController
 
   constructor: (@container) ->
-    @selector = @container.find('input[type=radio][name*=availability_template]')
-    @customFields = @container.find('.custom-availability-rules')
-    @clearField = @container.find('[name*=defer_availability_rules]')
+    if @container.find('input[type=radio][name*=availability_template]').length > 0
+      @selector = @container.find('input[type=radio][name*=availability_template]')
+      @customFields = @container.find('.custom-availability-rules')
+      @clearField = @container.find('[name*=defer_availability_rules]')
 
-    # Set up event listeners
-    @bindEvents()
+      # Set up event listeners
+      @bindEvents()
 
-    # Update for initial state
-    @updateCustomState()
-    @updateDayStates()
+      # Update for initial state
+      @updateCustomState()
+      @updateDayStates()
 
   updateCustomState: ->
     if @selector.filter(':checked').attr('data-custom-rules')?
