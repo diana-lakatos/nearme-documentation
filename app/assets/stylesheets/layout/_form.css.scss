@@ -394,43 +394,6 @@ form {
       }
     }
 
-    .controls.free-price {
-      float: left;
-      margin-left: 20px;
-
-      @media screen and (max-width: 959px) {
-        clear: none;
-      }
-
-      @media (max-width: 340px) {
-        margin-left: 10px;
-      }     
-    }
-
-    .actual-price-control-group {
-      float: left;
-
-      @media screen and (max-width:959px) {
-        clear: both;
-      }
-
-      .controls {
-        margin-left: 9px;
-
-         @media screen and (max-width:959px) {
-          margin: 0 0 0 9px;
-         }
-
-        @media (max-width: 340px) {
-          margin-left: -9px;
-        }
-
-        input[type='checkbox'] {
-          margin-right: 10px;
-        }
-      }
-    }
-
     .control-label {
       width: 180px;
       float: left;

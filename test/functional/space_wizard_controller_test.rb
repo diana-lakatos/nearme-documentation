@@ -26,7 +26,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
     should "handle hyphen and other special chars" do
       assert_difference('Listing.count', 1) do
-        post :submit_listing, get_params("10.00-32.00", "10", "99!@\#$%^&*()-+=\"'50")
+        post :submit_listing, get_params("10.00-32.00", "10-39", "99!@\#$%^&*()-+=\"'50")
       end
       @listing = Listing.last
       assert_equal 1000, @listing.daily_price_cents

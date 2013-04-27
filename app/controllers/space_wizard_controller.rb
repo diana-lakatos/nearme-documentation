@@ -92,9 +92,12 @@ class SpaceWizardController < ApplicationController
     # method to_f removes all special characters, like hyphen. However we do not want to convert nil to 0, that's why modifier.
     if params_hash_complete?
       prm = params[:company][:locations_attributes]["0"][:listings_attributes]["0"]
-      ['daily', 'weekly', 'monthly'].each do |period|
-        prm["#{period}_price".to_sym] = prm["#{period}_price".to_sym].to_f if prm["#{period}_price".to_sym] && prm["#{period}_price".to_sym].to_f > 0 && prm["enable_#{period}".to_sym] == "1"
-        prm.delete("enable_#{period}".to_sym) # we do not need this anymore
+      {:daily_price => :enable_daily, :weekly_price => :enable_weekly, :monthly_price => :enable_monthly}.each do |period_price, enable_period|
+        if prm[period_price] && !prm[period_price].to_f.zero? && prm[enable_period] == "1"
+          prm[period_price] = prm[period_price].to_f if prm[period_price]
+        else
+          prm[period_price] = nil
+        end
       end
     end
   end

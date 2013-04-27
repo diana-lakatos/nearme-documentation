@@ -53,3 +53,24 @@ Feature: As a user of the site
      When I click edit listing icon
      When I follow "Delete this listing"
      Then Listing has been deleted
+
+  Scenario: A user can disable existing price in listing
+    Given a location exists with company: the company
+      And a listing exists with location: the location, daily_price_cents: 1000
+      And I am on the manage locations page
+     When I click edit listing icon
+      And I disable daily pricing
+      And I submit the form
+      And I click edit listing icon
+     Then Listing daily pricing should be disabled
+
+  Scenario: A user can enable new pricing in listing
+    Given a location exists with company: the company
+      And a listing exists with location: the location, daily_price_cents: 1000
+      And I am on the manage locations page
+     When I click edit listing icon
+      And I enable weekly pricing
+      And I submit the form
+      And I click edit listing icon
+     Then Listing weekly pricing should be enabled
+

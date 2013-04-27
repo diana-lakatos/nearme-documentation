@@ -28,7 +28,7 @@ gem 'rails3_acts_as_paranoid'
 gem 'simple_form'
 
 # Use edge to fix validation of nested attributes: https://github.com/bcardarella/client_side_validations/pull/505
-gem 'client_side_validations', :git => "https://github.com/bcardarella/client_side_validations.git"
+gem 'client_side_validations', :git => "https://github.com/bcardarella/client_side_validations.git", :branch => '3-2-stable'
 
 gem 'client_side_validations-simple_form'
 gem 'state_machine'
@@ -106,7 +106,6 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'minitest'
-  gem 'minitest-reporters'
   gem 'mocha', :require => false
   gem 'pickle'
   gem 'simplecov', :require => false

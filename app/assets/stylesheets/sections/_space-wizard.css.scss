@@ -22,25 +22,6 @@ section.space_wizard {
       }
     }
 
-    .currency-holder {
-      position: relative;
-      z-index: 2; 
-      margin-left: 11px;
-      width: 30px;
-      text-align: right;
-      color: $gray7;       
-    }
-
-    #company_locations_attributes_0_listings_attributes_0_daily_price,
-    #company_locations_attributes_0_listings_attributes_0_weekly_price,
-    #company_locations_attributes_0_listings_attributes_0_monthly_price {
-      position: relative;
-      z-index: 1;
-      padding-left: 30px;
-      margin-left: -25px;
-      width: 120px;
-    }
-
     .already-a-user {
       display: none;
     }

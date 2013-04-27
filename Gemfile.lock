@@ -15,9 +15,10 @@ GIT
 
 GIT
   remote: https://github.com/bcardarella/client_side_validations.git
-  revision: a6a515504520e9925ca63524ae9854168163283e
+  revision: 75d0dad8e4d49ba16c25e511b6514ea1408d2423
+  branch: 3-2-stable
   specs:
-    client_side_validations (3.2.1)
+    client_side_validations (3.2.5)
 
 GEM
   remote: http://rubygems.org/
@@ -229,11 +230,6 @@ GEM
     mini_magick (3.4)
       subexec (~> 0.2.1)
     minitest (4.3.3)
-    minitest-reporters (0.14.16)
-      ansi
-      builder
-      minitest (>= 2.12, < 5.0)
-      powerbar
     mixpanel (3.5.2)
       escape
       json
@@ -289,9 +285,6 @@ GEM
       cucumber (>= 0.8)
       rake
     polyglot (0.3.3)
-    powerbar (1.0.11)
-      ansi (~> 1.4.0)
-      hashie (>= 1.1.0)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -502,7 +495,6 @@ DEPENDENCIES
   mail_view
   mini_magick
   minitest
-  minitest-reporters
   mixpanel
   mocha
   money-rails
