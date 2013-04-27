@@ -2,5 +2,5 @@
   %span.padding.ico-desk.listing-header
     %span.entity-name
       = listing.persisted? ? listing.name : 'New Listing'
-    - if editable && listing.persisted?
-      %span.ico-edit.right
+  - if editable && listing.persisted?
+    %span.ico-edit.right
