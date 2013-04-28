@@ -5,6 +5,12 @@
   right: 0;
   bottom: 0;
   background: rgba(0,0,0,0.9);
+  opacity: 0;
+  @include transition(opacity 0.2s ease-in-out);
+
+  &.visible {
+    opacity: 1;
+  }
 
   html.no-rgba & {
     background: #000;
@@ -24,6 +30,12 @@
   width: 600px;
   z-index: $modal-z-index;
   padding-bottom: 50px;
+  @include transition(opacity 0.2s ease-in-out);
+  opacity: 0;
+
+  &.visible {
+    opacity: 1;
+  }
 
   &.loading .modal-close {
     display: none;
@@ -76,6 +88,21 @@
   $padding: 20px;
   padding: $padding;
   z-index: $modal-z-index + 1;
+  @include transition(opacity 0.2s);
+
+  // NB: Chrome doesn't like other vendor-prefixed transition
+  // types.
+  @include transition(transform 0.2s);
+  @include transition(-webkit-transform 0.2s);
+  @include transition(-moz-transform 0.2s);
+  @include transition(-ms-transform 0.2s);
+  @include opacity(0);
+  @include transform(translateY(-200px));
+
+  &.visible {
+    @include opacity(1);
+    @include transform(translateY(0));
+  }
 
   h2 {
     padding: 0 $padding;
