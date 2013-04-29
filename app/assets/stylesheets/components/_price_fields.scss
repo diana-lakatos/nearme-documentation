@@ -3,10 +3,6 @@
   .control-group {
     .free-price {
       float: left;
-      @media (max-width: $booking-module-breakpoint-desktop) {
-        float: none;
-        position: relative;
-      }
     }
 
     .price-inputs-wrapper{

@@ -9,12 +9,13 @@
   }
 }
 div.availability-rules .custom-availability-rules .day .open-time,
-div.availability-rules .custom-availability-rules .day .close-time{
+div.availability-rules .custom-availability-rules .day .close-time {
   width: auto;
 }
 
-.dashboard-home-link{
-  &:hover{
+.dashboard-home-link {
+  
+  &:hover {
    @include opacity(.7);
   }
 }
@@ -42,6 +43,11 @@ section.locations-holder {
 
   .add-location{
     width: 100%;
+    @include opacity(.4);
+
+    &:hover {
+      @include opacity(1);
+    }
   }
 
   .edit-link{
@@ -52,10 +58,13 @@ section.locations-holder {
      color: $gray7;
 
     }
-
   }
 
-  header{
+  .ico-edit {
+    color: $gray5;
+  }
+
+  header {
     overflow: hidden;
 
     .entity-name{
@@ -63,15 +72,18 @@ section.locations-holder {
       overflow: hidden;
     }
 
-    .location-header{
-      .ico-edit{
+    .location-header {
+      
+      .ico-edit {
         position: absolute;
         top: 14px;
         right: 14px;
       }
     }
-    .listing-header{
-      .ico-edit{
+
+    .listing-header {
+      
+      .ico-edit {
         position: absolute;
         top: 1px;
         right: 14px;
@@ -79,16 +91,19 @@ section.locations-holder {
     }
   }
 
-
   .location-content {
     margin-bottom: 0;
-    form{margin-top:20px}
+
+    form { 
+      margin-top:20px 
+    }
+
     div.action{
       background: $dnm_white;
       padding: 20px 0;
     }
 
-    div.geolocation{
+    div.geolocation {
       position: absolute;
       top: 13px;
       left: 10px;
@@ -119,7 +134,7 @@ section.locations-holder {
     }
   }
 
-  .alert{
+  .alert {
     @include border-radius(12px);
   }
 
@@ -142,6 +157,12 @@ section.locations-holder {
       margin-bottom: 0;
       color: $gray8;
 
+      &:hover {
+        .ico-edit {
+          color: $gray7;
+        }
+      }
+
       span {
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -151,7 +172,6 @@ section.locations-holder {
         float: right;
         padding: 0;
       }
-
     }
   }
 
