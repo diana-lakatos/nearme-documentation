@@ -30,6 +30,10 @@ input[type=tel] {
    cursor: pointer;
 }
 
+
+label.radio {
+  margin-right: .4em;
+}
 .fileupload {
 
    input.browse-file {
@@ -397,7 +401,7 @@ form {
     .control-label {
       width: 180px;
       float: left;
-      margin-top: 13px;
+      margin-top: 11px;
       text-align: right;
       color: $gray8;
 
@@ -405,7 +409,10 @@ form {
         margin-top: 1px;
       }
       
-      &.flush-top {
+      &.flush-top,
+      &.currency,
+      &.boolean.optional,
+      &.radio_buttons.optional {
         margin: 0 0 20px;
 
         @media (max-width: 480px) {

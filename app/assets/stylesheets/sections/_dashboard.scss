@@ -40,7 +40,6 @@ section.locations-holder {
 
   margin-bottom: 20px;
 
-
   .add-location{
     width: 100%;
   }
@@ -48,8 +47,9 @@ section.locations-holder {
   .edit-link{
     color: $gray8;
     display: block;
+
     &:hover{
-     @include opacity(.7);
+     color: $gray7;
 
     }
 
@@ -161,7 +161,7 @@ section.locations-holder {
       width: 100%;
       text-align: center;
       @include box-sizing(border-box);
-      @include transition(opacity .15s ease-in);
+      @include transition(all .2s ease-in-out);
 
       &.btn-blue.btn-large {
         text-align: left;
@@ -224,7 +224,7 @@ section.listings {
     margin: auto -15px;
 
     .accordion-inner { 
-      padding-top: 20px;
+      padding: 20px 0 0;
     }
 
     .listing-content {

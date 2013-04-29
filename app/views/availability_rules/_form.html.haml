@@ -1,5 +1,5 @@
 .availability-rules
-  %label.control-label Availability
+  %label.control-label.flush-top Availability
 
   - if f.object.respond_to?(:defer_availability_rules)
     = f.check_box :defer_availability_rules, :style => "display: none" 

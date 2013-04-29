@@ -39,8 +39,9 @@
 
       %section#content{:class => "#{@section_name || controller_name}"}
         = render 'layouts/hero'
-        %div{:class => "container-fluid #{'legacy' if legacy?}"}
-          = render 'shared/render_flash'
+        .container-fluid
+          .span8.offset2
+            = render 'shared/render_flash'
           = yield
 
       = render 'layouts/footer'

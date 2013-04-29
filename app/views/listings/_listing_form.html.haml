@@ -50,7 +50,9 @@
   .control-group
     = render :partial => 'availability_rules/form', :locals => { :f => f }
 
-= f.input :confirm_reservations, :label => 'Bookings require my confirmation' if only_inputs.empty? || only_inputs.include?(:confirm_reservations)
+
+- if only_inputs.empty? || only_inputs.include?(:confirm_reservations)
+  = f.input :confirm_reservations, :label => 'Confirm guest bookings', :as => 'radio'
 
 - if only_inputs.empty? || only_inputs.include?(:photos)
   = file_upload_input_with_label('Photos', manage_photos_path('size' => 'space_listing'), "#{photo_input_name_prefix}[photos_attributes][0][image]", "Upload Photos") do
