@@ -83,7 +83,7 @@ class Track
   class Search
 
     def self.conducted_a_search(view, search)
-      address_components = search.address_components.result_hash
+      address_components = search.address_components.try(:result_hash)
 
       Track.analytics.track('Conducted a Search', {
         search_view: view,

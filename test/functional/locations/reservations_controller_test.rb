@@ -7,8 +7,8 @@ class Locations::ReservationsControllerTest < ActionController::TestCase
   context "making a booking" do
 
     setup do
-      @listing = FactoryGirl.build(:listing_in_san_francisco)
-      @user = FactoryGirl.build(:user)
+      @listing = FactoryGirl.create(:listing_in_san_francisco)
+      @user = FactoryGirl.create(:user)
       sign_in @user
       stub_request(:get, /.*api\.mixpanel\.com.*/)
     end

@@ -8,16 +8,13 @@ class SearchController < ApplicationController
 
   def index
     render "search/#{result_view}"
+    Track::Search.conducted_a_search(result_view, @search)
   end
 
   private
 
   def search
     @search ||= Listing::Search::Params::Web.new(params)
-
-    Track::Search.conducted_a_search(result_view, @search)
-
-    @search
   end
 
   def query
