@@ -51,6 +51,9 @@ class @Modal
     @instance().load(ajaxOptions)
     @instance().setCallback(callback)
 
+  @setClass: (klass) ->
+    @instance().setClass(klass)
+
   # ===
 
   constructor: (@options) ->
@@ -73,7 +76,9 @@ class @Modal
     @callback = callback
 
   setClass : (klass) ->
-    @container.attr("class", 'modal-container') # FIXME: Make the modal markup dynamic and customizable default class(es)
+    @container.removeClass(@customClass) if @customClass
+    
+    @customClass = klass
     @container.addClass(klass) if klass
 
   showContent : (content) ->
@@ -105,6 +110,10 @@ class @Modal
     setTimeout =>
       @overlay.hide()
       @container.hide()
+
+      # Clear any assigned modal class
+      @setClass(null)
+
       @_unfixBody()
       @callback() if @callback
     , 200
