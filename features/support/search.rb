@@ -34,7 +34,6 @@ module SearchHelpers
   end
 
   def wait_until_calendar_loads
-    wait_until_datepicker_finished_loading
   end
 
   def wait_until_results_are_returned

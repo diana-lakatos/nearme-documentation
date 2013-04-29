@@ -12,20 +12,15 @@ module Bookings
     start_date = dates.shift
 
     # First date is auto selected
-    unless start_date == listing.first_available_date
-      find(:css, ".calendar-wrapper.date-start").click
-      select_datepicker_date(start_date)
-    end
-    
+    ensure_datepicker_open(".calendar-wrapper.date-start")
+    select_datepicker_date(start_date)
+
     if dates.length > 0
-      if page.has_no_selector?('.dnm-datepicker', visible: true)
-        find(:css, ".calendar-wrapper.date-end").click
-        
-        # This is a hack to move from the range mode to the pick mode
-        select_datepicker_date(start_date)
-      end
+      # This is a hack to move from the range mode to the pick mode
+      select_datepicker_date(start_date)
 
       dates.each do | date|
+        ensure_datepicker_open('.calendar-wrapper.date-end')
         select_datepicker_date(date)
       end
 
@@ -34,9 +29,14 @@ module Bookings
     end
   end
 
+  def ensure_datepicker_open(klass)
+    if page.has_no_selector?('.dnm-datepicker', visible: true)
+      find(:css, klass).click
+    end
+  end
+
   def select_datepicker_date(date)
     ensure_datepicker_is_on_right_month(date)
-    wait_until_datepicker_finished_loading
     el = find(:css, datepicker_class_for(date), :visible => true)
     el.click
   end
@@ -44,7 +44,6 @@ module Bookings
   def ensure_datepicker_is_on_right_month(date)
     if date > Date.today && !find(:css, '.datepicker-month', :visible => true).text.include?(Date::MONTHNAMES[date.month])
       find(:css, '.datepicker-next', :visible => true).click
-      wait_until_datepicker_finished_loading
     end
   end
 
@@ -59,9 +58,6 @@ module Bookings
     Chronic.parse('Monday')
   end
 
-  def wait_until_datepicker_finished_loading
-    wait_until { page.has_no_selector?('.datepicker-loading', visible: true) }
-  end
 end
 
 World(Bookings)

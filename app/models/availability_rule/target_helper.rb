@@ -6,7 +6,7 @@ module AvailabilityRule::TargetHelper
   end
 
   def availability_full_week
-      availability.full_week(monday_firt = true)
+    availability.full_week(monday_firt = true)
   end
 
   # Assigns and applies a given AvailabilityRule::Template

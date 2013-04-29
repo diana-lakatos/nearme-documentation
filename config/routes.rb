@@ -17,7 +17,6 @@ DesksnearMe::Application.routes.draw do
     member do
       get :host
       get :networking
-      get :availability_summary
     end
 
     collection do
