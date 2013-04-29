@@ -58,5 +58,11 @@ class AvailabilityRule::Summary
 
     true
   end
+
+  # Returns an array of days that the listing is open for
+  # Days are 0..6, where 0 is Sunday and 6 is Saturday
+  def days_open
+    @rules.map { |rule| rule.day }
+  end
 end
 

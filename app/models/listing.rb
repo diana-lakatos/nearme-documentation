@@ -245,6 +245,41 @@ class Listing < ActiveRecord::Base
     schedule
   end
 
+  # Number of minimum consecutive booking days required for this listing
+  def minimum_booking_days
+    if free? || daily_price_cents.to_i > 0
+      1
+    else
+      multiple = if weekly_price_cents.to_i > 0
+        1
+      elsif monthly_price_cents.to_i > 0
+        4
+      end
+
+      booking_days_per_week*multiple
+    end
+  end
+
+  def booking_days_per_week
+    availability.days_open.length
+  end
+
+  # Returns a hash of booking block sizes to prices for that block size.
+  def prices_by_days
+    if free?
+      { 1 => 0.to_money }
+    else
+      block_size = booking_days_per_week
+      Hash[
+        [[1, daily_price], [block_size, weekly_price], [4*block_size, monthly_price]]
+      ].reject { |size, price| !price || price.zero? }
+    end
+  end
+
+  def availability_status_between(start_date, end_date)
+    AvailabilityRule::ListingStatus.new(self, start_date, end_date)
+  end
+
 end
 
 class NullListing

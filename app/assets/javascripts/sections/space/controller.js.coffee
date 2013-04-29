@@ -27,7 +27,15 @@ class @Space.Controller
     @photos = new Space.PhotosController($('.space-hero-photos'))
 
   setupBookings: ->
-    @bookings = new Bookings.Controller(@container.find('.bookings'), @options.bookings)
+    # For each listing on the page, initialize a controller for handling booking
+    # selection.
+    for listingData in @options.bookings.listings
+      listingController = new Bookings.Controller(@container.find(".listings [data-listing-id=#{listingData.id}]"),
+        listingData,
+        reviewUrl: @options.bookings.review_url,
+        initialBookings: @options.bookings.initial_bookings?[listingData.id.toString()],
+        showReviewBookingImmediately: @options.bookings.returnedFromSession
+      )
 
   setupMap: ->
     return unless @mapContainer.length > 0
