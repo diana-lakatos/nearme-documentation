@@ -233,8 +233,8 @@ ActiveRecord::Schema.define(:version => 20130412154424) do
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",     :default => "manual",  :null => false
     t.string   "payment_status",     :default => "unknown", :null => false
+    t.string   "payment_method",     :default => "manual",  :null => false
     t.integer  "quantity",           :default => 1,         :null => false
   end
 

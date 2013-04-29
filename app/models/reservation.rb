@@ -194,14 +194,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def calculate_total_cost
-      period_prices = listing.period_prices.reject { |period, price| price.nil? || price.cents <= 0 }.sort_by { |period, price| period }.reverse
-      desk_days_to_apply = desk_days * Listing::MINUTES_IN_DAY
-      total = period_prices.reduce(0) { |memo, price_array|
-        # price array if of format [period, price], where period is integer and price is Money object 
-        applications = (desk_days_to_apply / price_array[0].to_i).floor
-        desk_days_to_apply -= applications * price_array[0].to_i
-        memo + applications * price_array[1].cents
-      }
+      PriceCalculator.new(self).price.cents
     end
 
     def set_total_cost

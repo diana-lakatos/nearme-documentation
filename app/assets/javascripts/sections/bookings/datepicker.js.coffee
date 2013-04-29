@@ -1,3 +1,7 @@
+#= require_self
+#= require ./datepicker/availability_view
+#= require ./datepicker/mode_and_constraint_model
+#
 # Wraps our custom Datepicker implementation for use as a Booking selection calendar.
 #
 # See also: components/datepicker.js
@@ -5,9 +9,9 @@ class @Bookings.Datepicker
   asEvented.call(Datepicker.prototype)
 
   # Some text constants used in the UI
-  TEXT_START: 'Select a start date'
-  TEXT_END_RANGE: 'Select an end date'
-  TEXT_END_PICK: 'Add or remove days'
+  TEXT_START: '<div class="datepicker-text-fadein">Select a start date</div>'
+  TEXT_END_RANGE: '<div class="datepicker-text-fadein">Select an end date</div>'
+  TEXT_END_PICK: '<div class="datepicker-text-fadein">Add or remove days</div>'
 
   # Initialize the date picker components
   #
@@ -20,25 +24,11 @@ class @Bookings.Datepicker
     @startElement = options.startElement
     @endElement = options.endElement
 
-    # Initialize the start datepicker component
-    @startDatepicker = new window.Datepicker(
-      trigger: @startElement
-      view: new DatepickerAvailabilityView(@listing, trigger: @startElement, text: @TEXT_START)
-      model: new window.Datepicker.Model.Single(
-        allowDeselection: false
-      )
-    )
+    @initializeStartDatepicker()
+    @initializeEndDatepicker()
+    @bindEvents()
 
-    # Initialize the end datepicker component
-    @endDatepickerModel = new DatepickerModelWithModeAndConstraints(@listing)
-    @endDatepickerView = new DatepickerAvailabilityView(@listing, trigger: @endElement, text: @TEXT_END_RANGE)
-    @endDatepicker = new window.Datepicker(
-      trigger: @endElement
-      view: @endDatepickerView
-      model: @endDatepickerModel
-    )
-
-    # Whenever the user modifies their date selection we trigger the datesChanged event
+  bindEvents: ->
     @startDatepicker.on 'datesChanged', (dates) =>
       @startDatepickerWasChanged()
 
@@ -48,20 +38,72 @@ class @Bookings.Datepicker
     # The 'rangeApplied' event is fired by our custom endDatepicker model when a date
     # is toggled with the 'range' mode on. We bind this to set the mode to the second
     # mode, to add/remove dates.
-    @endDatepickerModel.on 'rangeApplied', =>
-      @setDatepickerMode(DatepickerModelWithModeAndConstraints.MODE_PICK)
+    @endDatepicker.getModel().on 'rangeApplied', =>
+      # For now, we only provide the add/remove pick mode for listings allowing
+      # individual day selection.
+      @setDatepickerToPickMode()
+      
+      # If the user selects the same start/end date, let's close the datepicker
+      # and assume they were only trying to select one day.
+      if @listing.minimumBookingDays > 1 or @endDatepicker.getDates().length <= 1
+        @endDatepicker.hide()
+
+  initializeStartDatepicker: ->
+    @startDatepicker = new window.Datepicker(
+      trigger: @startElement,
+
+      # Custom view to handle bookings availability display
+      view: new Bookings.Datepicker.AvailabilityView(@listing,
+        trigger: @startElement,
+        text: @TEXT_START
+      ),
+
+      # Limit to a single date selected at a time
+      model: new window.Datepicker.Model.Single(
+        allowDeselection: false
+      )
+    )
+
+  initializeEndDatepicker: ->
+    @endDatepicker = new window.Datepicker(
+      trigger: @endElement
+
+      # Custom view to handle bookings availability display
+      view: new Bookings.Datepicker.AvailabilityView(@listing,
+        trigger: @endElement,
+        text: @TEXT_END_RANGE
+      ),
+
+      # Custom backing model to handle logic of range and constraints
+      model: new Bookings.Datepicker.ModeAndConstraintModel(@listing)
+    )
 
   setDates: (dates) ->
-    dates = @sortDates(date)
-    @startDatepicker.setDates(dates)
+    dates = DNM.util.Date.sortDates(dates)
+    @startDatepicker.setDates(dates.slice(0,1))
     @endDatepicker.setDates(dates)
+    @endDatepicker.getModel().ensureDatesMeetConstraint()
+    
+    # If we're specifying more than just a start date, we need
+    # to set the mode to Pick.
+    if dates.length > 1
+      @setDatepickerToPickMode()
+
     @updateElementText()
+    @trigger 'datesChanged', @endDatepicker.getDates()
+
+  reset: ->
+    @setDates([])
 
   addDate: (date) ->
+    # If the added date is prior to the current start date, we set the
+    # start date range to that date.
     startDate = @startDatepicker.getDates()[0]
     if !startDate or startDate.getTime() > date.getTime()
       @startDatepicker.addDate(date)
+
     @endDatepicker.addDate(date)
+    @endDatepicker.getModel().extendRangeToMeetConstraint(date)
     @updateElementText()
 
   removeDate: (date) ->
@@ -78,23 +120,22 @@ class @Bookings.Datepicker
 
   updateElementText: ->
     # Set the date on the element
-    startDate = @startDatepicker.getDates()[0]
-    endDate = _.last @endDatepicker.getDates()
+    startDate = _.first(@endDatepicker.getDates())
+    endDate = _.last(@endDatepicker.getDates())
     startText = if startDate then @formatDateForLabel(startDate) else 'Start'
     endText = if endDate then @formatDateForLabel(endDate) else 'End'
 
     @startElement.find('.calendar-text').text(startText)
     @endElement.find('.calendar-text').text(endText)
 
-  # Sets the mode of the end datepicker, and adjusts the instructional text accordingly
-  setDatepickerMode: (mode) ->
-    switch mode
-      when DatepickerModelWithModeAndConstraints.MODE_RANGE
-        @endDatepickerModel.setMode(DatepickerModelWithModeAndConstraints.MODE_RANGE)
-        @endDatepickerView.setText(@TEXT_END_RANGE)
-      when DatepickerModelWithModeAndConstraints.MODE_PICK
-        @endDatepickerModel.setMode(DatepickerModelWithModeAndConstraints.MODE_PICK)
-        @endDatepickerView.setText(@TEXT_END_PICK)
+  setDatepickerToPickMode: ->
+    return if @listing.minimumBookingDays > 1
+    @endDatepicker.getModel().setMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_PICK)
+    @endDatepicker.getView().setText(@TEXT_END_PICK)
+
+  setDatepickerToRangeMode: ->
+    @endDatepicker.getModel().setMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_RANGE)
+    @endDatepicker.getView().setText(@TEXT_END_RANGE)
 
   datesWereChanged: ->
     @updateElementText()
@@ -105,99 +146,16 @@ class @Bookings.Datepicker
     @startDatepicker.hide()
 
     # Reset the end datepicker
-    @endDatepicker.setDates(@startDatepicker.getDates())
-    @setDatepickerMode(DatepickerModelWithModeAndConstraints.MODE_RANGE)
+    @setDates(@startDatepicker.getDates())
+    @setDatepickerToRangeMode()
 
     # Show the end datepicker instantly
     @endDatepicker.show()
 
+    # Bubble event
     @datesWereChanged()
-
-  sortDates: (datesArray) ->
-    _.sortBy datesArray, (date) -> date.getTime()
 
   formatDateForLabel: (date) ->
     "#{DNM.util.Date.monthName(date, 3)} #{date.getDate()}"
 
-  # A view wrapper for the Datepicker to show a loading indicator while we load the date availability
-  class DatepickerAvailabilityView extends window.Datepicker.View
-    constructor: (@listing, options = {}) ->
-      super(options)
 
-    show: ->
-      # Refresh if listing quantity has changed since last display
-      # We do this to update the display of available vs unavailable dates
-      if @lastDefaultQuantity && @listing.defaultQuantity != @lastDefaultQuantity
-        @refresh()
-
-      @lastDefaultQuantity = @listing.defaultQuantity
-      super
-
-    # Extend the rendering method to trigger a "loading" indicator/overlay.
-    # We need to load the date availability for the listing for all of the dates
-    # that display, so that we can render whether or not there is availability on
-    # the calendar.
-    renderMonth: (month) ->
-      dates = @datesForMonth(month)
-      unless @listing.availabilityLoadedFor(dates)
-        @setLoading(true)
-        @listing.withAvailabilityLoaded dates, =>
-          # Will need to re-render for availability information
-          @renderMonth(month)
-      else
-        @setLoading(false)
-
-      super(month)
-
-    # Extend the class generation method to add disabled state if the listing quantity selection
-    # exceeds the availability for a given date.
-    classForDate: (date, monthDate) ->
-      klass = [super]
-      qty = @listing.defaultQuantity
-      qty = 1 if qty < 1
-
-      klass.push 'disabled' unless @listing.availabilityFor(date) >= qty
-      klass.push 'closed' unless @listing.openFor(date)
-      klass.join ' '
-
-
-  class DatepickerModelWithModeAndConstraints extends window.Datepicker.Model
-    # Modes for the selection type. The different modes have different semantics when
-    # a date is toggled.
-    @MODE_RANGE = 'range'
-    @MODE_PICK = 'pick'
-
-    mode: @MODE_RANGE
-
-    constructor: (listing) ->
-      super({})
-      @listing = listing
-
-    setMode: (mode) ->
-      @mode = mode
-
-    toggleDate: (date) ->
-      switch @mode
-        when DatepickerModelWithModeAndConstraints.MODE_RANGE
-          @setRangeTo(date)
-          # extendRangeToFitConstraints()
-          @trigger 'rangeApplied'
-
-        when DatepickerModelWithModeAndConstraints.MODE_PICK
-          super(date)
-          # addOrRemoveDateAdjustingForConstraints(date)
-          # NB: if trying to remove a single range, the above
-          #     should re-add the range. i.e. can't remove the minimum
-        #     range.
-
-    setRangeTo: (date) ->
-      startDate = @getDates()[0] || date
-
-      if startDate.getTime() > date.getTime()
-        startDate = date
-
-      current = startDate
-      while DNM.util.Date.toId(current) != DNM.util.Date.toId(date)
-        @addDate(current) if @listing.availabilityFor(current) >= @listing.defaultQuantity
-        current = new Date(current.getFullYear(), current.getMonth(), current.getDate()+1, 0, 0, 0)
-      @addDate(date) if @listing.availabilityFor(date) >= @listing.defaultQuantity

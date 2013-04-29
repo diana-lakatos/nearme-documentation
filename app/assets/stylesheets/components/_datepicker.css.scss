@@ -1,4 +1,19 @@
 // Custom datepicker
+@-webkit-keyframes opacity-fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@-moz-keyframes opacity-fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes opacity-fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .dnm-datepicker {
   position: absolute;
   z-index: $absolute-top-z-index;
@@ -71,10 +86,21 @@
   }  
 
   .datepicker-text {
-    background: $gray1;
     text-align: center;
     border-bottom: 1px solid #cbcbcd;
     line-height: 32px;
+    color: $dnm-black;
+    background-color: $dnm-black;
+  }
+
+  .datepicker-text-fadein {
+    -webkit-animation-name: opacity-fadein;
+    -moz-animation-name: opacity-fadein;
+    animation-name: opacity-fadein;
+    -webkit-animation-duration: 0.3s;
+    -moz-animation-duration: 0.3s;
+    animation-duration: 0.3s;
+    background-color: $gray1;
   }
 
   .datepicker-days-wrapper {
@@ -120,6 +146,10 @@
       &.disabled {
         color: $dnm_red;
         background: none;
+      }
+
+      &.active.implicit {
+        @include opacity(0.75);
       }
 
       // Past/historical date

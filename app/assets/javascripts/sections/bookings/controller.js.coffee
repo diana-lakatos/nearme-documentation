@@ -4,75 +4,108 @@
 # JS objects representing each Listing on the Location.
 class Bookings.Controller
   
-  constructor: (@container, @options = {}) ->
-    @options.initial_bookings ||= {}
+  constructor: (@container, @listingData, @options = {}) ->
+    @listing = new Bookings.Listing(@listingData)
 
-    @availabilityManager = new Bookings.AvailabilityManager(
-      @options.availability_summary_url
-    )
-
-    # The Listings collection is the set of all Listings being managed for bookings on
-    # the page. Each listing keeps track of the bookings made on it.
-    @listings = _.map @options.listings, (listingData) =>
-      new Bookings.Listing(
-        listingData,
-        availability: new Bookings.AvailabilityManager.Listing(@availabilityManager, listingData.id)
-      )
-
-    # Initialize each of the listing views
-    @listingViews = _.map @listings, (listing) =>
-      new Bookings.ListingView(listing, @container.find(".listing[data-listing-id=#{listing.id}]"))
-
-    # Initialize default bookings
-    listingsWithRestoredBookings = []
-    for listing in @listings
-      # Determine if there are any bookings to assign that have been passed through
-      if initialBookings = @options.initial_bookings[listing.id.toString()]
-        # We set the bookings - passing false as second argument to add them instantly, rather than
-        # deferring to availability loaded.
-        #
-        # FIXME: We should remove that availability behaviour from the model?
-        listing.setBookings(initialBookings, false)
-
-      if listing.isBooked()
-        listingsWithRestoredBookings.push listing
-      else
-        # We automatically add a booking for 'tomorrow'
-        listing.addDate(listing.firstAvailableDate) if !listing.isBooked()
-
+    @bindDomElements()
+    @initializeDatepicker()
     @bindEvents()
+ 
+    @assignInitialDates()
+    @updateQuantityField()
 
-    # Check whether this is a restored session from a peviously logged out user.
-    if @options.returnedFromSession and listingsWithRestoredBookings.length > 0
-      @reviewBooking(listingsWithRestoredBookings)
+    if @options.initialBookings and @options.showReviewBookingImmediately
+      @reviewBooking()
+
+  # Bind to the various DOM elements managed by this controller.
+  bindDomElements: ->
+    @quantityField = @container.find('select.quantity')
+    @totalElement = @container.find('.total')
+    @daysElement = @container.find('.total-days')
+    @bookButton = @container.find('[data-behavior=showReviewBookingListing]')
 
   bindEvents: ->
-    # Show review booking for a single listing
-    # On each of the listing views, watch for review triggering and trigger the review modal
-    for listingView in @listingViews
-      listingView.bind 'reviewTriggered', (listing, callback = ->) =>
-        @reviewBooking([listing], callback)
+    @bookButton.on 'click', (event) =>
+      event.preventDefault()
+      @reviewBooking()
 
-  # Return the listing with the specified ID from the Listing bookings collection
-  findListing: (listingId) ->
-    return listing for listing in @listings when listing.id is parseInt(listingId, 10)
+    @quantityField.on 'change', (event) =>
+      @listing.setDefaultQuantity(parseInt($(event.target).val()))
+      @updateQuantityField()
+      @datepicker.reset()
 
-  reviewBooking: (forListings = @listings, callback = -> ) ->
+    @datepicker.bind 'datesChanged', (dates) =>
+      @listing.setDates(dates)
+      @delayedUpdateBookingStatus()
+
+  # Setup the datepicker for the simple booking UI
+  initializeDatepicker: ->
+    @datepicker = new Bookings.Datepicker(
+      listing: @listing
+      startElement: @container.find(".calendar-wrapper.date-start")
+      endElement: @container.find(".calendar-wrapper.date-end")
+    )
+
+  # Assign initial dates from a restored session or the default
+  # start date.
+  assignInitialDates: ->
+    initialDates = if @options.initialBookings
+      # Format is:
+      # [ {date: '2013-11-04', quantity: 2}, ...]
+      @listing.setDefaultQuantity(@options.initialBookings[0].quantity)
+
+      # Map bookings to JS dates
+      (DNM.util.Date.idToDate(booking.date) for booking in @options.initialBookings)
+    else
+      [@listing.firstAvailableDate]
+
+    @datepicker.setDates(initialDates)
+
+  # Trigger showing the review booking form based on selected
+  # dates.
+  reviewBooking: (callback = -> ) ->
+    return unless @listing.isBooked()
+
+    @disableBookButton()
     Modal.load({
-      url: @options.review_url,
+      url: @options.reviewUrl,
       type: 'POST',
-      data: @bookingDataForReview(forListings)
-    }, 'space-reservation-modal sign-up-modal', callback)
-
-  # Build data for booking review
-  #
-  # forListings - The set of listings to gather booking parameters for. Defaults to all listings.
-  bookingDataForReview: (forListings = @listings) ->
-    listings = []
-    for listing in forListings when listing.isBooked()
-      listings.push {
-        id: listing.id,
-        bookings: listing.getBookings()
+      data: {
+        listings: [{
+          id: @listing.id,
+          bookings: @listing.getBookings()
+        }]
       }
-    { listings: listings }
+    }, 'space-reservation-modal sign-up-modal', => @enableBookButton())
+
+  # Update the view to display pricing, date selections, etc. based on
+  # current selected dates.
+  updateBookingStatus: ->
+    @updateSummary()
+    if !@listing.isBooked()
+      @bookButton.addClass('disabled')
+      @bookButton.tooltip()
+    else
+      @bookButton.removeClass('disabled')
+      @bookButton.tooltip('destroy')
+
+  # A deferred version of the booking status view updating, so we don't
+  # execute it multiple times in a short span of time.
+  delayedUpdateBookingStatus: _.debounce(->
+    @updateBookingStatus()
+  , 5)
+
+  disableBookButton: ->
+    @bookButton.addClass('click-disabled').find('span.text').text('Booking...')
+
+  enableBookButton: ->
+    $('.click-disabled').removeClass('click-disabled').find('span.text').text('Book')
+
+  updateQuantityField: (qty = @listing.defaultQuantity) ->
+    @container.find('.customSelect.quantity .customSelectInner').text(qty)
+    @quantityField.val(qty)
+
+  updateSummary: ->
+    @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
+
 
