@@ -6,7 +6,7 @@
   bottom: 0;
   background: rgba(0,0,0,0.9);
   opacity: 0;
-  @include transition(opacity 0.2s ease-in-out);
+  @include transition(opacity 0.3s ease-in-out);
 
   &.visible {
     opacity: 1;
@@ -30,7 +30,7 @@
   width: 600px;
   z-index: $modal-z-index;
   padding-bottom: 50px;
-  @include transition(opacity 0.2s ease-in-out);
+  @include transition(opacity 0.5s ease-in-out);
   opacity: 0;
 
   &.visible {
@@ -92,10 +92,10 @@
 
   // NB: Chrome doesn't like other vendor-prefixed transition
   // types.
-  @include transition(transform 0.2s);
-  @include transition(-webkit-transform 0.2s);
-  @include transition(-moz-transform 0.2s);
-  @include transition(-ms-transform 0.2s);
+  @include transition(transform 0.4s);
+  @include transition(-webkit-transform 0.4s);
+  @include transition(-moz-transform 0.4s);
+  @include transition(-ms-transform 0.4s);
   @include opacity(0);
   @include transform(translateY(-200px));
 
