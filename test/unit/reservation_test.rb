@@ -149,4 +149,88 @@ class ReservationTest < ActiveSupport::TestCase
 
     end
   end
+
+  context 'validations' do
+    setup do
+      @user = FactoryGirl.create(:user)
+
+      @listing = FactoryGirl.create(:listing, quantity: 2)
+      @listing.availability_template_id = AvailabilityRule.templates.first.id
+      @listing.save!
+
+      @reservation = Reservation.new(:user => @user, :quantity => 1)
+      @reservation.listing = @listing
+
+      @sunday = Date.today.end_of_week
+      @monday = Date.today.next_week.beginning_of_week
+    end
+
+    context 'date availability' do
+      should "validate date quantity available" do
+        @reservation.add_period(@monday)
+        assert @reservation.valid?
+
+        @reservation.quantity = 3
+        assert !@reservation.valid?
+      end
+
+      should "validate date available" do
+        assert @listing.open_on?(@monday)
+        assert !@listing.open_on?(@sunday)
+
+        @reservation.add_period(@monday)
+        assert @reservation.valid?
+
+        @reservation.add_period(@sunday)
+        assert !@reservation.valid?
+      end
+
+      should "validate against other reservations" do
+        reservation = @listing.reservations.build(:user => @user, :quantity => 2)
+        reservation.add_period(@monday)
+        reservation.save!
+        
+        @reservation.add_period(@monday)
+        assert !@reservation.valid? 
+      end
+    end
+
+    context 'minimum contiguous block requirement' do
+      setup do
+        @listing.daily_price = nil
+        @listing.weekly_price = 100_00
+        @listing.save!
+
+        assert_equal 5, @listing.minimum_booking_days
+      end
+
+      should "require minimum days" do
+        4.times do |i|
+          @reservation.add_period(@monday + i)
+        end
+
+        assert !@reservation.valid?
+
+        @reservation.add_period(@monday+4)
+        assert @reservation.valid?
+      end
+
+      should "test all blocks" do
+        5.times do |i|
+          @reservation.add_period(@monday + i)
+        end
+
+        # Leave a week in between
+        4.times do |i|
+          @reservation.add_period(@monday + i + 14)
+        end
+
+        assert !@reservation.valid?
+
+        @reservation.add_period(@monday+ 4 + 14)
+        assert @reservation.valid?
+      end
+
+    end
+  end
 end
