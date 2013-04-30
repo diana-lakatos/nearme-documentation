@@ -47,11 +47,8 @@ class @AddressComponentParser
       @index += 1
 
   buildInput: (name, value) =>
-    input = document.createElement('input')
-    input.name = name
-    input.type = 'hidden'
-    input.value = value
-    input.className = 'address_components_input'
+    input = $('<input type="hidden"/>')
+    input.attr('name', name).addClass('address_components_input').val(value)
     @addressComponentWrapper.append(input)
 
   clearAddressComponentInputs: =>
