@@ -163,7 +163,7 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
 end
 
 Then(/^I should be asked to sign up before making a booking$/) do
-  within '.space-reservation-modal' do
+  within '.sign-up-modal' do
     assert page.has_content?("Sign up")
   end
 end
@@ -174,7 +174,7 @@ When(/^I log in to continue booking$/) do
 end
 
 When(/^I sign up in the modal to continue booking$/) do
-  within '.space-reservation-modal' do
+  within '.sign-up-modal' do
     assert page.has_content?("Sign up to Desks Near Me")
   end
   step "I sign up as a user in the modal"
