@@ -8,9 +8,7 @@ class LocationsController < ApplicationController
     @listing = @location.listings.find(params[:listing_id]) if params[:listing_id]
 
     # Attempt to restore a stored reservation state from the session.
-    if params[:restore_reservations]
-      restore_initial_bookings_from_stored_reservation
-    end
+    restore_initial_bookings_from_stored_reservation
   end
 
   private
@@ -18,9 +16,9 @@ class LocationsController < ApplicationController
   # Assigns the initial bookings to send to the JS controller from stored reservation request prior
   # to initiating a user session. See Locations::ReservationsController for more details
   def restore_initial_bookings_from_stored_reservation
-    if session[:stored_reservation_location_id] == @location.id
-      @initial_bookings = session[:stored_reservation_bookings]
-    end
+    @initial_bookings = if params[:restore_reservations] && session[:stored_reservation_location_id] == @location.id
+      session[:stored_reservation_bookings]
+    end || {}
   end
 
 end

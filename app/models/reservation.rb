@@ -163,6 +163,10 @@ class Reservation < ActiveRecord::Base
     payment_method == Reservation::PAYMENT_METHODS[:manual]
   end
 
+  def currency
+    super.presence || listing.location.currency
+  end
+
   def free?
     total_amount <= 0
   end
@@ -246,7 +250,7 @@ class Reservation < ActiveRecord::Base
 
       if invalid_dates.any?
         date_format = '%B %-d %Y'
-        errors.add(:base, "Unfortunately the following dates are no longer available: #{invalid_dates.map { |d| d.strftime(date_format) }}")
+        errors.add(:base, "Unfortunately the following dates are no longer available: #{invalid_dates.map { |d| d.strftime(date_format) }.join(', ')}")
       end
     end
 

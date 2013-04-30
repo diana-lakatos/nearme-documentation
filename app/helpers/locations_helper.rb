@@ -25,7 +25,8 @@ module LocationsHelper
         :maximum_date => availability.end_date,
         :prices_by_days => Hash[
           listing.prices_by_days.map { |k, v| [k, v.cents] }
-        ]
+        ],
+        :initial_bookings => @initial_bookings[listing.id]
       }
     }.to_json
   end

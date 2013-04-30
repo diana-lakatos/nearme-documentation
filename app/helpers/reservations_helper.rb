@@ -13,15 +13,7 @@ module ReservationsHelper
   end
 
   def reservation_needs_payment_details?
-    @reservations.sum(&:total_amount) > 0 && @reservations.all? { |r| r.currency == "USD" || "CAD" }
-  end
-
-  def reservation_manual_payment?
-    @reservations.first.manual_payment?
-  end
-
-  def reservation_credit_card_payment?
-    @reservations.first.credit_card_payment?
+    @reservation.total_amount > 0 && %w(USD CAD).include?(@reservation.currency)
   end
 
   def reservation_schedule_for(listing, weeks = 1, &block)
@@ -74,28 +66,6 @@ module ReservationsHelper
     reservation.periods.map do |period|
       "#{period.date.strftime('%Y-%m-%d')} (#{pluralize(reservation.quantity, 'desk')})"
     end.to_sentence
-  end
-
-  def listing_reservation_needs_confirmation?(reservations = @reservations)
-    reservations.any? { |reservation|
-      reservation.listing.confirm_reservations?
-    }
-  end
-
-  def listing_reservation_summaries(reservations = @reservations)
-    dates = Hash.new { |h, k| h[k] = [] }
-    reservations.each do |reservation|
-      reservation.periods.each do |period|
-        dates[period.date] << [reservation.listing, reservation.quantity]
-      end
-    end
-
-    Hash[dates.keys.sort.map { |k| [k, dates[k]] }]
-  end
-
-  def listing_reservation_total_amount(reservations = @reservations)
-    total = reservations.sum(&:total_amount)
-    "#{total.symbol}#{total}"
   end
 
   def format_reservation_periods(reservation)

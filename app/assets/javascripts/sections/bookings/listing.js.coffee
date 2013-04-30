@@ -17,6 +17,9 @@ class @Bookings.Listing
   setDefaultQuantity: (qty) ->
     @defaultQuantity = qty if qty >= 0
 
+  getQuantity: ->
+    @defaultQuantity
+
   # Returns whether the date is within the bounds available for booking
   dateWithinBounds: (date) ->
     time = date.getTime()
@@ -43,11 +46,6 @@ class @Bookings.Listing
   # Return the days where bookings exist as Date objects
   bookedDates: ->
     @bookedDatesArray
-
-  # Return the bookings data in an array of date & quantity objects
-  getBookings: ->
-    _.map @bookedDays(), (dateId) =>
-      { date: dateId, quantity: @defaultQuantity }
 
   # Return the subtotal for booking this listing
   bookingSubtotal: ->

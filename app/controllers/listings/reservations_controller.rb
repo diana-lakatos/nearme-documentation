@@ -1,38 +1,30 @@
 module Listings
   class ReservationsController < ApplicationController
     before_filter :find_listing
+    before_filter :build_reservation
     before_filter :require_login_for_reservation
 
     layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
 
     # Review a reservation prior to confirmation. Same interface as create.
     def review
-      @params_listings = params[:listings]
-      @reservations = build_reservations(Reservation::PAYMENT_METHODS[:credit_card])
+      @reservation.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
     end
 
     # Reserve bulk listings on a Location
     #
     # Parameters:
-    #   listings: [
-    #     {
-    #       id: 101,
-    #       bookings: [
-    #         { date: 'YYYY-MM-DD', quantity: 10 },
-    #         ...
-    #       ]
-    #     },
-    #     ...
-    #   ]
+    #   reservation: {
+    #     dates: ['YYYY-MM-DD', ...]
+    #     quantity: 1
+    #   }
     def create
-      @params_listings = params[:listings]
       @errors = []
-
-      @reservations = build_reservations
       setup_credit_card_customer if using_credit_card?
-      make_reservations if @errors.empty?
 
-      if @errors.present?
+      if @errors.empty? && @reservation.save
+        render # Successfully reserved listing
+      else
         render :review
       end
     end
@@ -52,41 +44,33 @@ module Listings
       @location = @listing.location
     end
 
-    def build_reservations(payment_method = params[:payment_method])
-      # NB: We can reserve multiple listings via the same form. The simple view doesn't allow this (single listing reservation), but the
-      # advanced view does. A Reservation refers to a single listing, so we build multiple reservations - one for each Listing.
-      reservations = []
-      params[:listings].values.each { |listing_params|
-        next unless @listing.id = listing_params[:id].to_i
+    def build_reservation
+      @reservation = @listing.reservations.build
+      @reservation.user = current_user if current_user
+      @reservation.quantity = params[:reservation][:quantity]
 
-        reservation = @listing.reservations.build(:user => current_user)
+      # Assign the payment method chosen on the form to the Reservation
+      @reservation.payment_method = params[:payment_method] if params[:payment_method].present?
 
-        # Assign the payment method chosen on the form to the Reservation
-        reservation.payment_method = payment_method if payment_method
+      params[:reservation][:dates].each do |date_str|
+        @reservation.add_period(Date.parse(date_str))
+      end
 
-        listing_params[:bookings].values.each do |period|
-          # FIXME: Factor out quantity from dates parameters, as it is now always the same.
-          reservation.quantity = period[:quantity].to_i
-          reservation.add_period(Date.parse(period[:date]))
-        end
-
-        reservations << reservation
-      }
-      reservations
+      @reservation
     end
 
     def using_credit_card?
-      @reservations.first.credit_card_payment?
+      @reservation.credit_card_payment?
     end
 
     def setup_credit_card_customer
       begin
-        params[:card_expires] = params[:card_expires].strip
+        params[:card_expires] = params[:card_expires].to_s.strip
         card_details = User::BillingGateway::CardDetails.new(
-          number: params[:card_number],
-          expiry_month: params[:card_expires][0,2],
-          expiry_year: params[:card_expires][-2,2],
-          cvc: params[:card_code]
+          number: params[:card_number].to_s,
+          expiry_month: params[:card_expires].to_s[0,2],
+          expiry_year: params[:card_expires].to_s[-2,2],
+          cvc: params[:card_code].to_s
         )
 
         if card_details.valid?
@@ -99,31 +83,21 @@ module Listings
       end
     end
 
-    def make_reservations
-      Listing.transaction do
-        @reservations.each do |reservation|
-          reservation.save!
-        end
-      end
-    end
-
     # Store the reservation request in the session so that it can be restored when returning to the listings controller.
     def store_reservation_request
       session[:stored_reservation_location_id] = @listing.location.id
-      session[:stored_reservation_bookings] = prepare_requested_bookings_json
-    end
 
-    # Marshals the booking request parameters into a better structured hash format for transmission and
-    # future assignment to the Bookings JS controller.
-    #
-    # Returns a Hash of listing id's to hash of date & quantity values.
-    #  { '123' => { 'date' => '2012-08-10', 'quantity => '1' }, ... }
-    def prepare_requested_bookings_json(booking_request = params[:listings])
-      Hash[
-        booking_request.values.map { |hash_of_id_and_bookings|
-          [hash_of_id_and_bookings['id'], hash_of_id_and_bookings['bookings'].values]
+      # Marshals the booking request parameters into a better structured hash format for transmission and
+      # future assignment to the Bookings JS controller.
+      #
+      # Returns a Hash of listing id's to hash of date & quantity values.
+      #  { '123' => { 'date' => '2012-08-10', 'quantity => '1' }, ... }
+      session[:stored_reservation_bookings] = {
+        @listing.id => {
+          :quantity => @reservation.quantity,
+          :dates => @reservation.periods.map(&:date).map { |date| date.strftime('%Y-%m-%d') }
         }
-      ] if booking_request.present?
+      }
     end
   end
 end

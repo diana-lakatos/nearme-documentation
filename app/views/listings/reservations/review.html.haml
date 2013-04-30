@@ -3,29 +3,36 @@
 = form_tag secure_listing_reservations_url(@listing), :method => :post, :remote => true, :class => "payment form-horizontal" do
   = render 'listings/reservations/fields'
 
-  - listing_reservation_summaries.each do |date, reservations|
+  - if @reservation.errors.present?
+    .flash.error
+      %p Whoops! We couldn't make that reservation.
+      %ul
+        - @reservation.errors[:base].each do |error|
+          %li= error
+        
+    
+  - @reservation.periods.each do |period|
     .summary
-      .date= date.strftime("%e %B")
+      .date= period.date.strftime("%e %B")
       .bookings
-        - reservations.each do |listing, amount|
-          .listing-reservation
-            %strong= amount
-            = listing.name
+        .listing-reservation
+          %strong= @reservation.quantity
+          = @listing.name
     %hr
 
   .summary
     .total-label Total Cost:
-    .total-amount= listing_reservation_total_amount
+    .total-amount= @reservation.total_amount
 
   %hr
 
   - if reservation_needs_payment_details?
     .control-group
-      = radio_button_tag :payment_method, "credit_card", reservation_credit_card_payment?
+      = radio_button_tag :payment_method, "credit_card", @reservation.credit_card_payment?
       = label_tag :payment_method_credit_card, 'Charge my credit card once booking confirmed'
 
     .control-group
-      = radio_button_tag :payment_method, "manual", reservation_manual_payment?
+      = radio_button_tag :payment_method, "manual", @reservation.manual_payment?
       = label_tag :payment_method_manual, 'I will make the payment in person upon arrival'
 
     #credit_card_fields{:style => "display: none"}
@@ -63,7 +70,7 @@
     %hr
 
   %p.notice.text-center
-    - if listing_reservation_needs_confirmation?
+    - if @reservation.listing.confirm_reservations?
       This host manually confirms all bookings before payment.
     By requesting a booking, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, target: '_blank'}.
 
@@ -78,9 +85,9 @@
     city: "#{@location.city}",
     state: "#{@location.state}",
     country: "#{@location.country}",
-    quantity: #{@reservations.first.quantity},
-    days: #{@reservations.first.total_days},
-    amount: #{@reservations.first.total_amount_dollars},
-    currency: "#{@reservations.first.currency}",
-    transaction: #{reservation_credit_card_payment?}
+    quantity: #{@reservation.quantity},
+    days: #{@reservation.total_days},
+    amount: #{@reservation.total_amount_dollars},
+    currency: "#{@reservation.currency}",
+    transaction: #{@reservation.credit_card_payment?}
   });
