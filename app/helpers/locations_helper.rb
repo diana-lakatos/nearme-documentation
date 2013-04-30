@@ -16,6 +16,7 @@ module LocationsHelper
       {
         :id => listing.id,
         :name => listing.name,
+        :review_url => review_listing_reservations_url(listing),
         :first_available_date => listing.first_available_date.strftime("%Y-%m-%d"),
         :minimum_booking_days => listing.minimum_booking_days,
         :quantity => listing.quantity,
@@ -24,7 +25,8 @@ module LocationsHelper
         :maximum_date => availability.end_date,
         :prices_by_days => Hash[
           listing.prices_by_days.map { |k, v| [k, v.cents] }
-        ]
+        ],
+        :initial_bookings => @initial_bookings[listing.id]
       }
     }.to_json
   end

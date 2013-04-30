@@ -14,7 +14,7 @@ class Bookings.Controller
     @assignInitialDates()
     @updateQuantityField()
 
-    if @options.initialBookings and @options.showReviewBookingImmediately
+    if @listingData.initial_bookings and @options.showReviewBookingImmediately
       @reviewBooking()
 
   # Bind to the various DOM elements managed by this controller.
@@ -49,13 +49,13 @@ class Bookings.Controller
   # Assign initial dates from a restored session or the default
   # start date.
   assignInitialDates: ->
-    initialDates = if @options.initialBookings
+    initialDates = if @listingData.initial_bookings
       # Format is:
-      # [ {date: '2013-11-04', quantity: 2}, ...]
-      @listing.setDefaultQuantity(@options.initialBookings[0].quantity)
+      # {quantity: 1, dates: ['2013-11-04', ...] }
+      @listing.setDefaultQuantity(@listingData.initial_bookings.quantity)
 
       # Map bookings to JS dates
-      (DNM.util.Date.idToDate(booking.date) for booking in @options.initialBookings)
+      (DNM.util.Date.idToDate(date) for date in @listingData.initial_bookings.dates)
     else
       [@listing.firstAvailableDate]
 
@@ -68,13 +68,14 @@ class Bookings.Controller
 
     @disableBookButton()
     Modal.load({
-      url: @options.reviewUrl,
+      url: @listingData.review_url,
       type: 'POST',
       data: {
-        listings: [{
-          id: @listing.id,
-          bookings: @listing.getBookings()
-        }]
+        listing_id: @listing.id,
+        reservation: {
+          dates: @listing.bookedDays(),
+          quantity: @listing.getQuantity()
+        }
       }
     }, 'space-reservation-modal', => @enableBookButton())
 
