@@ -74,6 +74,7 @@ DesksnearMe::Application.routes.draw do
 
     resources :listings do
       resources :photos
+      resources :reservations, :only => [:update], :controller => 'listings/reservations'
     end
   end
 
