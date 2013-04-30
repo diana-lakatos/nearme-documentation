@@ -27,6 +27,7 @@ class Track
 
   def self.reservation_hash(reservation)
     {
+      payment_method: reservation.payment_method,
       booking_desks: reservation.quantity,
       booking_days: reservation.total_days,
       booking_total: reservation.total_amount_dollars
@@ -74,6 +75,21 @@ class Track
                               Track.location_hash(location)
                             ].inject(:merge))
     end
+
+    def self.requested_a_booking(reservation, location)
+      Track.analytics.track('Requested a Booking', [
+                              Track.reservation_hash(reservation),
+                              Track.location_hash(location)
+                            ].inject(:merge))
+    end
+
+    def self.confirmed_a_booking(reservation, location)
+      Track.analytics.track('Confirmed a Booking', [
+                              Track.reservation_hash(reservation),
+                              Track.location_hash(location)
+                            ].inject(:merge))
+    end
+
   end
 
   class User

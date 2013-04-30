@@ -4,6 +4,10 @@ require 'reservations_helper'
 class ReservationTest < ActiveSupport::TestCase
   include ReservationsHelper
 
+  setup do
+    stub_request(:get, /.*api\.mixpanel\.com.*/)
+  end
+
   test "it has a listing" do
     @reservation = Reservation.new
     @reservation.listing = FactoryGirl.create(:listing)
@@ -22,6 +26,19 @@ class ReservationTest < ActiveSupport::TestCase
     @reservation = Reservation.new
 
     assert @reservation.periods
+  end
+
+  context 'booking events' do
+
+    setup do
+      @reservation = FactoryGirl.create(:reservation)
+    end
+
+    should 'track booking confirmation' do
+      Track::Book.expects(:confirmed_a_booking)
+      assert @reservation.confirm!
+    end
+
   end
 
   describe 'expiration' do

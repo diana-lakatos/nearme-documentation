@@ -89,6 +89,8 @@ class Reservation < ActiveRecord::Base
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
+  delegate :location, to: :listing
+
   def user=(value)
     self.owner = value
     self.confirmation_email = value.email

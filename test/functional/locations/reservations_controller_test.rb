@@ -18,6 +18,11 @@ class Locations::ReservationsControllerTest < ActionController::TestCase
       xhr :post, :review, { listings: booking_params_for(@listing), location_id: @listing.location.id }
     end
 
+    should "track booking request" do
+      Track::Book.expects(:requested_a_booking)
+      xhr :post, :create, { listings: booking_params_for(@listing), location_id: @listing.location.id }
+    end
+
   end
 
   def booking_params_for(listing)

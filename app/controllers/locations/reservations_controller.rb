@@ -35,6 +35,8 @@ module Locations
 
       if @errors.present?
         render :review
+      else
+        Track::Book.requested_a_booking(@reservations.first, @location)
       end
     end
 

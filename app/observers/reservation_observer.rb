@@ -12,6 +12,7 @@ class ReservationObserver < ActiveRecord::Observer
   def after_confirm(reservation, transction)
     ReservationMailer.notify_guest_of_confirmation(reservation).deliver
     ReservationMailer.notify_host_of_confirmation(reservation).deliver
+    Track::Book.confirmed_a_booking(reservation, reservation.location)
   end
 
   def after_reject(reservation, transaction)
