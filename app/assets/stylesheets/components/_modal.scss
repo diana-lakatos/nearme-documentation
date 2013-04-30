@@ -4,7 +4,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.9);
+  opacity: 0;
+  @include transition(opacity 0.3s ease-in-out);
+
+  &.visible {
+    opacity: 1;
+  }
 
   html.no-rgba & {
     background: #000;
@@ -18,17 +24,18 @@
   background: $gray1;
   //border: 1px solid #ffffff;
   @include border-radius($border-radius);
-  @include box-shadow(
-    0 0 6px 0 rgba(0,0,0,0.5),
-    inset 0 0 0 1px #fff
-  );
-
 }
 
 .modal-container {
   width: 600px;
   z-index: $modal-z-index;
   padding-bottom: 50px;
+  @include transition(opacity 0.5s ease-in-out);
+  opacity: 0;
+
+  &.visible {
+    opacity: 1;
+  }
 
   &.loading .modal-close {
     display: none;
@@ -43,6 +50,31 @@
     width: auto;
     margin: 0;
   }
+
+  &.sign-up-modal {
+    
+    .modal-close {
+      top: 12px;
+      right: 20px;
+    }
+
+    .modal-content {
+      background: transparent;
+
+      h2 {
+        margin-left: -10px;
+        color: $gray2;
+      }
+
+      .hr span {
+        color: $gray3;
+      }
+    }
+
+    .modal-loading {
+      background: transparent;
+    }    
+  }
 }
 
 .modal-loading {
@@ -56,6 +88,21 @@
   $padding: 20px;
   padding: $padding;
   z-index: $modal-z-index + 1;
+  @include transition(opacity 0.2s);
+
+  // NB: Chrome doesn't like other vendor-prefixed transition
+  // types.
+  @include transition(transform 0.4s);
+  @include transition(-webkit-transform 0.4s);
+  @include transition(-moz-transform 0.4s);
+  @include transition(-ms-transform 0.4s);
+  @include opacity(0);
+  @include transform(translateY(-200px));
+
+  &.visible {
+    @include opacity(1);
+    @include transform(translateY(0));
+  }
 
   h2 {
     padding: 0 $padding;
@@ -65,8 +112,7 @@
   }
 
   hr, .hr {
-    background: #cfd2d3;
-    color: #cfd2d3;
+    background: transparent;
     border-bottom: 0;
     margin-left: -$padding;
     margin-right: -$padding;
@@ -76,11 +122,11 @@
   }
   .hr span {
     display: inline-block;
-    background: $gray1;
+    background: transparent;
     padding: 0 8px;
     position: relative;
     top: -10px;
-    color: $gray8;
+    color: $gray6;
     font-weight: bold;
   }
 }
