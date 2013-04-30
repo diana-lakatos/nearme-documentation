@@ -1,9 +1,9 @@
 %h1 Book space at #{@location.name}
 
-= form_tag secure_location_reservations_url(@location), :method => :post, :remote => true, :class => "payment form-horizontal" do
-  = render 'locations/reservations/fields'
+= form_tag secure_listing_reservations_url(@listing), :method => :post, :remote => true, :class => "payment form-horizontal" do
+  = render 'listings/reservations/fields'
 
-  - location_reservation_summaries.each do |date, reservations|
+  - listing_reservation_summaries.each do |date, reservations|
     .summary
       .date= date.strftime("%e %B")
       .bookings
@@ -15,7 +15,7 @@
 
   .summary
     .total-label Total Cost:
-    .total-amount= location_reservation_total_amount
+    .total-amount= listing_reservation_total_amount
 
   %hr
 
@@ -63,7 +63,7 @@
     %hr
 
   %p.notice.text-center
-    - if location_reservation_needs_confirmation?
+    - if listing_reservation_needs_confirmation?
       This host manually confirms all bookings before payment.
     By requesting a booking, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, target: '_blank'}.
 

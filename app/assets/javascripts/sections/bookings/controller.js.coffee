@@ -68,7 +68,7 @@ class Bookings.Controller
 
     @disableBookButton()
     Modal.load({
-      url: @options.reviewUrl,
+      url: @listingData.review_url,
       type: 'POST',
       data: {
         listings: [{

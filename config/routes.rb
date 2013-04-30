@@ -10,9 +10,6 @@ DesksnearMe::Application.routes.draw do
   resources :companies
   resources :locations, :only => [:show] do
     resources :listings, :controller => 'locations/listings'
-    resources :reservations, :controller => 'locations/reservations', :only => [:create] do
-      post :review, :on => :collection
-    end
 
     member do
       get :host
@@ -26,9 +23,8 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :listings, :only => [:index, :show] do
-    resources :reservations, :only => [:new, :create, :update], :controller => "listings/reservations" do
-      post :confirm
-      post :reject
+    resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
+      post :review, :on => :collection
     end
   end
 

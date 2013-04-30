@@ -3,13 +3,13 @@ require 'money-rails'
 module ReservationsHelper
   include CurrencyHelper
 
-  # Return a URL with HTTPS scheme for location reservation
-  def secure_location_reservations_url(location, options = {})
+  # Return a URL with HTTPS scheme for listing reservation
+  def secure_listing_reservations_url(listing, options = {})
     if Rails.env.production?
       options = options.reverse_merge(:protocol => "https://")
     end
 
-    location_reservations_url(location, options)
+    listing_reservations_url(listing, options)
   end
 
   def reservation_needs_payment_details?
@@ -76,13 +76,13 @@ module ReservationsHelper
     end.to_sentence
   end
 
-  def location_reservation_needs_confirmation?(reservations = @reservations)
+  def listing_reservation_needs_confirmation?(reservations = @reservations)
     reservations.any? { |reservation|
       reservation.listing.confirm_reservations?
     }
   end
 
-  def location_reservation_summaries(reservations = @reservations)
+  def listing_reservation_summaries(reservations = @reservations)
     dates = Hash.new { |h, k| h[k] = [] }
     reservations.each do |reservation|
       reservation.periods.each do |period|
@@ -93,7 +93,7 @@ module ReservationsHelper
     Hash[dates.keys.sort.map { |k| [k, dates[k]] }]
   end
 
-  def location_reservation_total_amount(reservations = @reservations)
+  def listing_reservation_total_amount(reservations = @reservations)
     total = reservations.sum(&:total_amount)
     "#{total.symbol}#{total}"
   end

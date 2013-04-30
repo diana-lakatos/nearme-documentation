@@ -16,6 +16,7 @@ module LocationsHelper
       {
         :id => listing.id,
         :name => listing.name,
+        :review_url => review_listing_reservations_url(listing),
         :first_available_date => listing.first_available_date.strftime("%Y-%m-%d"),
         :minimum_booking_days => listing.minimum_booking_days,
         :quantity => listing.quantity,
