@@ -1,8 +1,7 @@
 require 'test_helper'
 
-class Listings::ReservationsControllerTest < ActionController::TestCase
-
-include Devise::TestHelpers
+class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
 
   setup do
     @reservation = FactoryGirl.build(:reservation_with_credit_card)

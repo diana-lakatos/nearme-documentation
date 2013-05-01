@@ -25,6 +25,8 @@ class Reservation < ActiveRecord::Base
 
   validates :periods, :length => { :minimum => 1 }
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
+  validate :validate_all_dates_available, on: :create
+  validate :validate_contiguous_blocks, on: :create
 
   before_validation :set_total_cost, on: :create
   before_validation :set_currency, on: :create
@@ -163,6 +165,10 @@ class Reservation < ActiveRecord::Base
     payment_method == Reservation::PAYMENT_METHODS[:manual]
   end
 
+  def currency
+    super.presence || listing.location.currency
+  end
+
   def free?
     total_amount <= 0
   end
@@ -196,14 +202,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def calculate_total_cost
-      period_prices = listing.period_prices.reject { |period, price| price.nil? || price.cents <= 0 }.sort_by { |period, price| period }.reverse
-      desk_days_to_apply = desk_days * Listing::MINUTES_IN_DAY
-      total = period_prices.reduce(0) { |memo, price_array|
-        # price array if of format [period, price], where period is integer and price is Money object 
-        applications = (desk_days_to_apply / price_array[0].to_i).floor
-        desk_days_to_apply -= applications * price_array[0].to_i
-        memo + applications * price_array[1].cents
-      }
+      PriceCalculator.new(self).price.cents
     end
 
     def set_total_cost
@@ -241,6 +240,42 @@ class Reservation < ActiveRecord::Base
 
       save!
     rescue
+    end
+
+    def validate_all_dates_available
+      invalid_dates = []
+      periods.each do |period|
+        unless listing.available_on?(period.date, quantity)
+          invalid_dates << period.date
+        end
+      end
+
+      if invalid_dates.any?
+        date_format = '%B %-d %Y'
+        errors.add(:base, "Unfortunately the following dates are no longer available: #{invalid_dates.map { |d| d.strftime(date_format) }.join(', ')}")
+      end
+    end
+
+    def validate_contiguous_blocks
+      invalid_blocks = []
+      calc = PriceCalculator.new(self)
+      calc.contiguous_blocks.each do |block|
+        if block.length < listing.minimum_booking_days
+          invalid_blocks << block
+        end
+      end
+
+      if invalid_blocks.any?
+        date_format = '%B %-d %Y'
+        invalid_blocks_formatted = invalid_blocks.map { |block|
+          if block.length == 1
+            block[0].strftime(date_format)
+          else
+            "#{block[0].strftime(date_format)} - #{block.last.strftime(date_format)}"
+          end
+        }
+        errors.add(:base, "Unfortunately a minimum of #{listing.minimum_booking_days} consecutive bookable days are required. The following dates don't meet this requirement: #{invalid_blocks_formatted.join(', ')}")
+      end
     end
 
 end

@@ -1,79 +1,105 @@
 module Listings
-  class ReservationsController < ::ReservationsController
+  class ReservationsController < ApplicationController
     before_filter :find_listing
-    before_filter :require_creator, :except => [:new, :create]
-    before_filter :find_date, :only => [:new, :create]
-    before_filter :ensure_date_valid, :only => [:new, :create]
-    before_filter :ensure_desk_available, :only => [:new, :create]
+    before_filter :build_reservation
+    before_filter :require_login_for_reservation
 
-    def index
+    layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
+
+    # Review a reservation prior to confirmation. Same interface as create.
+    def review
+      @reservation.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
+      Track::Book.opened_booking_modal(user_signed_in?, @reservations.first, @location)
     end
 
-    def new
-      session[:user_return_to] = current_user ? nil : request.fullpath
-      @reservation = @reservations.build(:date => params[:date])
-      respond_to do |wants|
-        wants.js { render :layout => false }
-        wants.html { render }
-      end
-    end
-
+    # Reserve bulk listings on a Location
+    #
+    # Parameters:
+    #   reservation: {
+    #     dates: ['YYYY-MM-DD', ...]
+    #     quantity: 1
+    #   }
     def create
-      session[:user_return_to] = nil
-      @reservation = @reservations.build(params[:reservation].merge(:user => current_user))
-      if @reservation.save
-        flash[:notice] = "Reservation Successful."
-        begin
-          redirect_to request.xhr? ? :back : @listing
-        rescue
-          redirect_to @listing
-        end
+      @errors = []
+      setup_credit_card_customer if using_credit_card?
+
+      if @errors.empty? && @reservation.save
+        render # Successfully reserved listing
+        Track::Book.requested_a_booking(@reservations.first, @location)
       else
-        render :new
+        render :review
       end
     end
 
-    protected
+    private
 
-    def ensure_date_valid
-      if @date < Date.today
-        flash[:notice] = "Who do you think you are, Marty McFly? You can't book a desk in the past!"
-        redirect_to @listing and return
+    def require_login_for_reservation
+      unless current_user
+        # Persist the reservation request so that when we return it will be restored.
+        store_reservation_request
+        redirect_to new_user_registration_path(:return_to => location_url(@listing.location, :restore_reservations => true))
       end
-    end
-
-    def ensure_desk_available
-      unless @listing.desks_available?(@date)
-        flash[:notice] = "There are no more desks left for that date. Sorry."
-        redirect_to @listing and return
-      end
-    end
-
-    def require_creator
-      unless @listing.created_by?(current_user)
-        flash[:error] = "You didn't create this listing, so you can't do stuff to it."
-        redirect_to @listing
-      end
-    end
-
-    def find_date
-      @date = Date.parse(params[:date] || params[:reservation][:date])
-    rescue
-      @date = Date.today
     end
 
     def find_listing
-      @listing ||= Listing.find(params[:listing_id])
+      @listing = Listing.find(params[:listing_id])
+      @location = @listing.location
     end
 
-    def fetch_reservations
-      @reservations = find_listing.reservations
+    def build_reservation
+      @reservation = @listing.reservations.build
+      @reservation.user = current_user if current_user
+      @reservation.quantity = params[:reservation][:quantity]
+
+      # Assign the payment method chosen on the form to the Reservation
+      @reservation.payment_method = params[:payment_method] if params[:payment_method].present?
+
+      params[:reservation][:dates].each do |date_str|
+        @reservation.add_period(Date.parse(date_str))
+      end
+
+      @reservation
     end
 
-    def allowed_events
-      events = [:owner_cancel]
-      events += [:confirm, :reject] if find_listing.confirm_reservations?
-      events
+    def using_credit_card?
+      @reservation.credit_card_payment?
+    end
+
+    def setup_credit_card_customer
+      begin
+        params[:card_expires] = params[:card_expires].to_s.strip
+        card_details = User::BillingGateway::CardDetails.new(
+          number: params[:card_number].to_s,
+          expiry_month: params[:card_expires].to_s[0,2],
+          expiry_year: params[:card_expires].to_s[-2,2],
+          cvc: params[:card_code].to_s
+        )
+
+        if card_details.valid?
+          current_user.billing_gateway.store_card(card_details)
+        else
+          @errors << "Those credit card details don't look valid"
+        end
+      rescue User::BillingGateway::BillingError => e
+        @errors << e.message
+      end
+    end
+
+    # Store the reservation request in the session so that it can be restored when returning to the listings controller.
+    def store_reservation_request
+      session[:stored_reservation_location_id] = @listing.location.id
+
+      # Marshals the booking request parameters into a better structured hash format for transmission and
+      # future assignment to the Bookings JS controller.
+      #
+      # Returns a Hash of listing id's to hash of date & quantity values.
+      #  { '123' => { 'date' => '2012-08-10', 'quantity => '1' }, ... }
+      session[:stored_reservation_bookings] = {
+        @listing.id => {
+          :quantity => @reservation.quantity,
+          :dates => @reservation.periods.map(&:date).map { |date| date.strftime('%Y-%m-%d') }
+        }
+      }
     end
   end
 end

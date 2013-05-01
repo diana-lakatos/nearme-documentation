@@ -17,6 +17,9 @@
     @include form-field-focus;
   }
 
+  @media (max-width: 480px) {
+    font-size: 18px;
+  }
 }
 
 @mixin form-field-focus {

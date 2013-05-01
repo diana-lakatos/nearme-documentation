@@ -1,0 +1,4 @@
+= hidden_field_tag "reservation[quantity]", @reservation.quantity
+- @reservation.periods.each do |period|
+  = hidden_field_tag "reservation[dates][]", period.date.strftime('%Y-%m-%d')
+

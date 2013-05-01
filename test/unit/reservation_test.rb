@@ -136,58 +136,7 @@ class ReservationTest < ActiveSupport::TestCase
         quantity           =  5
         assert reservation = @listing.reserve!(@user, dates, quantity)
 
-        # listing cost * 4 days * 5 people :)
-        assert_equal @listing.daily_price_cents * dates.size * quantity, reservation.total_amount_cents
-      end
-
-      context "total amount" do
-
-        setup do 
-          @dates = (1..10).map do |week_no|
-            (1..5).map do |day_no|
-              Date.today.end_of_week + day_no.days + week_no.weeks
-            end
-          end
-          @dates.flatten!
-        end
-        should "work with monthly and weekly prices zero" do
-
-          @listing.daily_price = 5
-          @listing.weekly_price = 0
-          @listing.monthly_price = 0
-          @listing.save!
-          quantity = 5
-          assert reservation = @listing.reserve!(@user, @dates, quantity)
-
-          # 50*5 days, each costs 5$
-          assert_equal 250 * @listing.daily_price_cents, reservation.total_amount_cents
-        end
-
-        should "work with weekly price non zero and monthly zero" do
-
-          @listing.daily_price = 5
-          @listing.weekly_price = 30
-          @listing.monthly_price = 0
-          @listing.save!
-          quantity = 5
-          assert reservation = @listing.reserve!(@user, @dates, quantity)
-
-          # 250 days, which is 35 weeks and 5 days
-          assert_equal ((35 * @listing.weekly_price_cents) + (5 * @listing.daily_price_cents)), reservation.total_amount_cents
-        end
-
-        should "work with both weekly and monthly price non zero" do
-
-          @listing.daily_price = 5
-          @listing.weekly_price = 30
-          @listing.monthly_price = 100
-          @listing.save!
-          quantity = 5
-          assert reservation = @listing.reserve!(@user, @dates, quantity)
-
-          # 250 days, which is 8months, 1week and 5 days
-          assert_equal (8 * @listing.monthly_price_cents) + (1 * @listing.weekly_price_cents) + (3 * @listing.daily_price_cents), reservation.total_amount_cents
-        end
+        assert_equal Reservation::PriceCalculator.new(reservation).price.cents, reservation.total_amount_cents
       end
 
       should "not reset total cost when saving an existing reservation" do
@@ -213,6 +162,90 @@ class ReservationTest < ActiveSupport::TestCase
         assert_raises DNM::PropertyUnavailableOnDate do
           @listing.reserve!(@user, dates, quantity)
         end
+      end
+
+    end
+  end
+
+  context 'validations' do
+    setup do
+      @user = FactoryGirl.create(:user)
+
+      @listing = FactoryGirl.create(:listing, quantity: 2)
+      @listing.availability_template_id = AvailabilityRule.templates.first.id
+      @listing.save!
+
+      @reservation = Reservation.new(:user => @user, :quantity => 1)
+      @reservation.listing = @listing
+
+      @sunday = Date.today.end_of_week
+      @monday = Date.today.next_week.beginning_of_week
+    end
+
+    context 'date availability' do
+      should "validate date quantity available" do
+        @reservation.add_period(@monday)
+        assert @reservation.valid?
+
+        @reservation.quantity = 3
+        assert !@reservation.valid?
+      end
+
+      should "validate date available" do
+        assert @listing.open_on?(@monday)
+        assert !@listing.open_on?(@sunday)
+
+        @reservation.add_period(@monday)
+        assert @reservation.valid?
+
+        @reservation.add_period(@sunday)
+        assert !@reservation.valid?
+      end
+
+      should "validate against other reservations" do
+        reservation = @listing.reservations.build(:user => @user, :quantity => 2)
+        reservation.add_period(@monday)
+        reservation.save!
+        
+        @reservation.add_period(@monday)
+        assert !@reservation.valid? 
+      end
+    end
+
+    context 'minimum contiguous block requirement' do
+      setup do
+        @listing.daily_price = nil
+        @listing.weekly_price = 100_00
+        @listing.save!
+
+        assert_equal 5, @listing.minimum_booking_days
+      end
+
+      should "require minimum days" do
+        4.times do |i|
+          @reservation.add_period(@monday + i)
+        end
+
+        assert !@reservation.valid?
+
+        @reservation.add_period(@monday+4)
+        assert @reservation.valid?
+      end
+
+      should "test all blocks" do
+        5.times do |i|
+          @reservation.add_period(@monday + i)
+        end
+
+        # Leave a week in between
+        4.times do |i|
+          @reservation.add_period(@monday + i + 14)
+        end
+
+        assert !@reservation.valid?
+
+        @reservation.add_period(@monday+ 4 + 14)
+        assert @reservation.valid?
       end
 
     end

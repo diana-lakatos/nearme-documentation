@@ -39,17 +39,3 @@ if Rails.env.development? || Rails.env.staging?
   end
 
 end
-
-["Accounting", "Advertising", "Apparel", "Automotive",
-  "Banking", "Broadcasting", "Brokerage", "Biotechnology",
-  "Computer", "Consulting", "Education", "Electronics",
-  "Energy", "Entertainment", "Executive Search", "Financial Services",
-  "Farming", "Food & Beverage", "Gaming", "Health Professional",
-  "Insurance", "Internet", "Investment Banking", "Legal",
-  "Lodging", "Manufacturing", "Medical" , "Movies",
-  "Music", "Pharmaceutical", "Private Equity", "Publishing",
-  "Real Estate", "Retail", "Service", "Software",
-  "Sports" , "Technology", "Telecommunications", "Tourism",
-  "Transportation", "Venture Capital", "Wholesale"].each do |name|
-  log(Industry.create(:name => name)) unless Industry.find_by_name(name)
-  end

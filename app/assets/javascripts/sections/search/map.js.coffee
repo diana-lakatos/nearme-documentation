@@ -49,10 +49,7 @@ class Search.Map
     maxZoom: 18,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     disableDefaultUI: true,
-    zoomControl: true,
-    styles:
-      [{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#457cbc"}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"weight":0.1},{"color":"#d0bfe0"},{"visibility":"off"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"visibility":"on"},{"lightness":5},{"color":"#e6e4e7"}]},{"featureType":"poi.business","elementType":"labels","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#f6edbc"}]},{"featureType":"road.arterial","elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"featureType":"poi.school","elementType":"labels","stylers":[{"weight":0.1},{"visibility":"simplified"}]},{"featureType":"poi.medical","elementType":"labels","stylers":[{"visibility":"simplified"}]},{"featureType":"poi","elementType":"geometry.fill"},{"featureType":"poi.business","stylers":[{"visibility": "off"}]}]
-    # JSON generated using: http://gmaps-samples-v3.googlecode.com/svn/trunk/styledmaps/wizard/index.html
+    zoomControl: true
     
   GOOGLE_MAP_OPTIONS.clusterer =
     maxZoom: GOOGLE_MAP_OPTIONS.maxZoom + 1
@@ -73,7 +70,7 @@ class Search.Map
     @cacheMarkers()
 
   initializeGoogleMap: ->
-    @googleMap = new google.maps.Map(@container, GOOGLE_MAP_OPTIONS)
+    @googleMap = SmartGoogleMap.createMap(@container, GOOGLE_MAP_OPTIONS, { exclude: ['draggable'] })
     @clusterer = new MarkerClusterer(@googleMap, [], GOOGLE_MAP_OPTIONS.clusterer)
     # Info window pops over and contains details for each marker/listing
     @popover = new GoogleMapPopover()
@@ -162,7 +159,7 @@ class Search.Map
       visible:  false,
       icon: MARKERS.default.icon,
       shadow: null,
-      shape: MARKERS.default.shape
+      shape: GoogleMapMarker.getMarkerOptions().default.shape
     )
     @markers[listing.id()] = marker
     @listings[listing.id()] = listing

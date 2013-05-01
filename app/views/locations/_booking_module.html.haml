@@ -1,0 +1,51 @@
+.booking-module-container
+  .booking-module
+    - if listing.daily_price
+      %span.label.label-daily-price
+        = "#{money_without_cents_and_with_symbol(listing.daily_price)}"
+        %span.period   Day
+    - else
+      %span.label.unavailable
+        Price
+        %span.period   N/A        
+    - if listing.weekly_price
+      %span.label.label-weekly-price
+        = "#{money_without_cents_and_with_symbol(listing.weekly_price)}"
+        %span.period   Week
+    - else
+      %span.label.unavailable
+        Price
+        %span.period   N/A          
+    - if listing.monthly_price
+      %span.label.label-monthly-price
+        = "#{money_without_cents_and_with_symbol(listing.monthly_price)}"
+        %span.period   Month
+    - else
+      %span.label.unavailable
+        Price
+        %span.period   N/A              
+    %hr        
+    .calendar-wrapper.date-start
+      .calendar
+        %span.ico-calendar-start
+        %span.calendar-text Start
+    .calendar-wrapper.date-end
+      .calendar
+        %span.ico-calendar-end
+        %span.calendar-text End
+    .quantity
+      %span.resource= listing.listing_type.name.pluralize
+      = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity' 
+    .price
+      Total
+      %span #{currency_content_tag(@location.currency, 0.00, :span, { :rel => false })}
+
+    .book
+      = link_to_once "", :id =>"book-#{listing.id}", :disable_with => false, :rel => "tooltip", :class => "btn btn-green btn-large", :'data-original-title' => "Please select days first", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
+        %span.ico-check.padding 
+        %span.text Book
+
+  .clearfix
+
+  - content_for :domready do
+    $('.quantity select').customSelect();

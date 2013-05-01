@@ -6,20 +6,36 @@ section.locations {
 
     a {
       display: inline-block;
-      vertical-align: top;
-      height:14px;
+      vertical-align: middle;
+      height:28px;
     }
 
-    .ico-link {
-      font-size: 12px;
+    .ico-open-link {
+      font-size: 14px;
       line-height: 18px;
-      color: black;
-      opacity:.7;
+      color: $gray5;
 
       &:hover {
-        opacity:1;
+        color: $gray7;
       }
     }
+  }
+  .span4.pull-left {
+    @media (min-width: 768px) {
+      width: 34%;
+    }
+  }
+}
+
+.tab-pane#details {
+  background: $dnm_white;
+  @include box-sizing(border-box);
+  @include border-bottom-radius($border-radius);
+
+  .row-fluid {
+    padding: $padding;
+    @include box-sizing(border-box);
+    background: $dnm_white;
   }
 }
 

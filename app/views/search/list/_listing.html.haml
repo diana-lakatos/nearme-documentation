@@ -10,22 +10,14 @@
       %h2
         = link_to "#{listing.name}", listing
       %h4.hidden-iphone.location-hours
-        %span.ico-marker
+        %span.ico-location
           %strong
-            = listing.location.name
+            = listing.location.company.name
           = pretty_availability_sentence(listing.availability)
       %p.hidden-phone.listing-description
         = listing.description
       %aside.prices
-        - if listing.daily_price
-          %span.label.label-success
-            = "#{money_without_cents_and_with_symbol(listing.daily_price)}/day"
-        - if listing.weekly_price
-          %span.label.label-warning
-            = "#{money_without_cents_and_with_symbol(listing.weekly_price)}/wk"
-        - if listing.monthly_price
-          %span.label.label-important
-            = "#{money_without_cents_and_with_symbol(listing.monthly_price)}/mo"
+        = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
       .bottom-fade
 - # We may want to move this, but I've put it here for simplicities sake and as an example for now.
 :javascript
