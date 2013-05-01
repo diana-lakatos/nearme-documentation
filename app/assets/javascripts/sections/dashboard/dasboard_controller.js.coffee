@@ -35,14 +35,14 @@ class @Dashboard.Controller
   getEditLocationIcoWidth: =>
     ico_icon = @locationHeader.find('.ico-edit')
     if ico_icon.length > 0
-      24 + HEADER_SPACE_FROM_ICO_EDIT # better would be, but this returns wrong value: @locationHeader.find('.ico-edit').width()
+      58 + HEADER_SPACE_FROM_ICO_EDIT # better would be, but this returns wrong value: @locationHeader.find('.ico-edit').width()
     else
-      0
+      24 + HEADER_SPACE_FROM_ICO_EDIT
 
   getEditListingIcoWidth: =>
     ico_icon = @listingHeader.find('.ico-edit')
     if ico_icon.length > 0
-      20 + HEADER_SPACE_FROM_ICO_EDIT # better would be, but this returns wrong value: @listingHeader.find('.ico-edit').width()
+      80 + HEADER_SPACE_FROM_ICO_EDIT # better would be, but this returns wrong value: @listingHeader.find('.ico-edit').width()
     else
-      0
+      50 + HEADER_SPACE_FROM_ICO_EDIT
 
