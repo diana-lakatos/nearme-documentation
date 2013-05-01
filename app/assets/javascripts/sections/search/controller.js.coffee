@@ -24,10 +24,6 @@ class Search.Controller
   initializeFields: ->
     @priceRange = new PriceRange(@form.find('.price-range'), 300, @)
     @initializeQueryField()
-    @initializeDateRangeField()
-
-  dateRangeFieldChanged: (values) ->
-    @fieldChanged('dateRange', values)
 
   fieldChanged: (filter, value) ->
     # Override to trigger automatic updating etc.
@@ -51,22 +47,6 @@ class Search.Controller
       true
     
     # TODO: Trigger fieldChanged on keypress after a few seconds timeout?
-
-  initializeDateRangeField: ->
-    @form.find('.availability-date-start input, .availability-date-end input').datepicker(
-      dateFormat: 'd M'
-    ).change (event) =>
-      values = [@form.find('.availability-date-start input').val(), @form.find('.availability-date-end input').val()]
-      @dateRangeFieldChanged(values)
-
-    # Hack to only apply jquery-ui theme to datepicker
-    $('#ui-datepicker-div').wrap('<div class="jquery-ui-theme" />')
-
-    @form.find('.availability-date-start .calendar').on 'click', =>
-      @form.find('.availability-date-start input').datepicker('show')
-
-    @form.find('.availability-date-end .calendar').on 'click', =>
-      @form.find('.availability-date-end input').datepicker('show')
 
   initializeGeolocateButton: ->
     @geolocateButton = @form.find(".geolocation")

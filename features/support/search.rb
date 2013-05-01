@@ -19,21 +19,8 @@ module SearchHelpers
   end
 
   def select_date(locator, date)
-    find("#{locator} .calendar").click
-    wait_until_calendar_loads
-    click_date(date)
-  end
-
-
-  def click_date(date)
-    until page.has_content?(date.strftime("%B"))
-      page.execute_script("$('.ui-datepicker-next').click();")
-    end
-    script ="$('td[data-handler=\"selectDay\"]:contains(\"#{date.day}\"):first').click()"
-    page.execute_script(script)
-  end
-
-  def wait_until_calendar_loads
+    ensure_datepicker_open(locator)
+    select_datepicker_date(date)
   end
 
   def wait_until_results_are_returned

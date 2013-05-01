@@ -68,6 +68,7 @@ class @Datepicker
 
   show: -> @view.show()
   hide: -> @view.hide()
+  toggle: -> @view.toggle()
   getDates: -> @model.getDates()
   setDates: (dates) -> @model.setDates(dates)
   removeDate: (date) -> @model.removeDate(date)

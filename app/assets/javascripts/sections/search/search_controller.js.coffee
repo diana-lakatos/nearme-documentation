@@ -6,6 +6,8 @@
 class Search.SearchController extends Search.Controller
   constructor: (form, @container) ->
     super(form)
+    @initializeDateRangeField()
+
     @listings = {}
     @resultsContainer = => @container.find('#results')
     @loadingContainer = => @container.find('.loading')
@@ -39,6 +41,82 @@ class Search.SearchController extends Search.Controller
       
         @triggerSearchWithBoundsAfterDelay()
   
+  initializeDateRangeField: ->
+    @startDatepicker = new window.Datepicker(
+      trigger: @form.find('.availability-date-start'),
+      positionTarget: @form.find('.availability-date-start input'),
+      text: '<div class="datepicker-text-fadein">Select a start date</div>',
+
+      # Limit to a single date selected at a time
+      model: new window.Datepicker.Model.Single(
+        allowDeselection: true
+      )
+    )
+
+    @endDatepicker = new window.Datepicker(
+      view: new Search.SearchRangeDatepickerView(@startDatepicker,
+        positionTarget: @form.find('.availability-date-end input'),
+        text: '<div class="datepicker-text-fadein">Select an end date</div>'
+      ),
+
+      # Limit to a single date selected at a time
+      model: new window.Datepicker.Model.Single(
+        allowDeselection: false
+      )
+    )
+
+    @startDatepicker.on 'datesChanged', =>
+      @startDatepickerChanged()
+    
+    @endDatepicker.on 'datesChanged', =>
+      @updateDateFields()
+
+    @form.find('.availability-date-end').on 'click', (e) =>
+      if @startDatepicker.getDates()[0]
+        @startDatepicker.hide()
+        @endDatepicker.toggle()
+      else
+        @startDatepicker.show()
+
+      e.stopPropagation()
+      false
+
+  updateDateFields: ->
+    startDate = @startDatepicker.getDates()[0]
+    endDate   = @endDatepicker.getDates()[0]
+
+    startDate = if startDate
+      "#{startDate.getDate()} #{DNM.util.Date.monthName(startDate, 3)}"
+    else
+      ""
+
+    endDate = if endDate
+      "#{endDate.getDate()} #{DNM.util.Date.monthName(endDate, 3)}"
+    else
+      ""
+
+    @form.find('.availability-date-start input').val(startDate)
+    @form.find('.availability-date-end input').val(endDate)
+    @dateRangeFieldChanged([startDate, endDate])
+
+  startDatepickerChanged: ->
+    @startDatepicker.hide()
+
+    if startDate = @startDatepicker.getDates()[0]
+      endDate = @endDatepicker.getDates()[0]
+      if !endDate or endDate.getTime() < startDate.getTime()
+        @endDatepicker.setDates([startDate])
+
+      @endDatepicker.show()
+    else
+      # Deselection
+      @endDatepicker.setDates([])
+
+    @updateDateFields()
+
+  dateRangeFieldChanged: (values) ->
+    @fieldChanged('dateRange', values)
+
   initializeEndlessScrolling: ->
     $('#results').scrollTop(0)
     jQuery.ias({
