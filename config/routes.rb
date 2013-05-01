@@ -53,12 +53,13 @@ DesksnearMe::Application.routes.draw do
       resources :listings
     end
 
-    resources :listings do
-      resources :photos, :only => [:create, :destroy] do
-        collection do
-          put '', :to => :create # it's a dirty hack for photo uploader, in edit listing/location it uses PUT instead of POST.. put '' matches manage/photos
-        end
+    resources :photos, :only => [:create, :destroy] do
+      collection do
+        put '', :to => :create # it's a dirty hack for photo uploader, in edit listing/location it uses PUT instead of POST.. put '' matches manage/photos
       end
+    end
+
+    resources :listings do
       resources :reservations, :only => [:update], :controller => 'listings/reservations'
     end
   end
