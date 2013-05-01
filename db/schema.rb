@@ -13,21 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20130430130418) do
 
-  create_table "address_component_names", :force => true do |t|
-    t.string  "long_name"
-    t.string  "short_name"
-    t.integer "location_id"
-  end
-
-  create_table "address_component_names_address_component_types", :force => true do |t|
-    t.integer "address_component_name_id"
-    t.integer "address_component_type_id"
-  end
-
-  create_table "address_component_types", :force => true do |t|
-    t.string "name"
-  end
-
   create_table "amenities", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",      :null => false
@@ -93,8 +78,6 @@ ActiveRecord::Schema.define(:version => 20130430130418) do
     t.string   "url"
     t.string   "paypal_email"
     t.text     "mailing_address"
-    t.float    "rating_average"
-    t.integer  "rating_count"
   end
 
   create_table "company_industries", :id => false, :force => true do |t|
@@ -117,19 +100,6 @@ ActiveRecord::Schema.define(:version => 20130430130418) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
-
-  create_table "guest_ratings", :force => true do |t|
-    t.integer  "reservation_id"
-    t.integer  "user_id"
-    t.float    "value"
-    t.text     "comment"
-    t.datetime "deleted_at"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "guest_ratings", ["reservation_id", "value"], :name => "index_guest_ratings_on_reservation_id_and_value"
-  add_index "guest_ratings", ["user_id", "value"], :name => "index_guest_ratings_on_user_id_and_value"
 
   create_table "industries", :force => true do |t|
     t.string   "name"
@@ -207,8 +177,6 @@ ActiveRecord::Schema.define(:version => 20130430130418) do
     t.string   "country"
     t.string   "slug"
     t.integer  "location_type_id"
-    t.float    "rating_average"
-    t.integer  "rating_count"
   end
 
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
@@ -223,6 +191,16 @@ ActiveRecord::Schema.define(:version => 20130430130418) do
     t.integer  "position"
     t.datetime "deleted_at"
     t.integer  "creator_id"
+  end
+
+  create_table "ratings", :force => true do |t|
+    t.integer  "content_id"
+    t.string   "content_type"
+    t.integer  "user_id"
+    t.float    "rating"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.datetime "deleted_at"
   end
 
   create_table "reservation_periods", :force => true do |t|
@@ -256,8 +234,8 @@ ActiveRecord::Schema.define(:version => 20130430130418) do
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",     :default => "manual",  :null => false
     t.string   "payment_status",     :default => "unknown", :null => false
+    t.string   "payment_method",     :default => "manual",  :null => false
     t.integer  "quantity",           :default => 1,         :null => false
   end
 
@@ -335,24 +313,9 @@ ActiveRecord::Schema.define(:version => 20130430130418) do
     t.string   "stripe_id"
     t.string   "job_title"
     t.text     "biography"
-    t.float    "rating_average"
-    t.integer  "rating_count"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
-
-  create_table "visit_ratings", :force => true do |t|
-    t.integer  "reservation_id"
-    t.integer  "user_id"
-    t.float    "value"
-    t.text     "comment"
-    t.datetime "deleted_at"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "visit_ratings", ["reservation_id", "value"], :name => "index_visit_ratings_on_reservation_id_and_value"
-  add_index "visit_ratings", ["user_id", "value"], :name => "index_visit_ratings_on_user_id_and_value"
 
 end
