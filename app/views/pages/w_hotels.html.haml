@@ -1,22 +1,10 @@
-.row-fluid.padding-row
-  .span12.header-image
-    = image_tag "w-hotels/w-header.jpg"
+%section#w-hotels
 
-.container-fluid
-
-  .row-fluid
-    %h1 Luxury Workspaces in the Heart of New York City
-
-  .row-fluid
-    .span4
-      %p Now, working remotely can feel like home. DesksNear.Me has partnered with W Hotels to offer chic, collaborative workspace options at Manhattan’s W New York Union Square.  
-    .span4
-      %p You’ll find amenities to fit every project, whether you’re working with a group or on your own. Host intimate meetings in the luxuriously appointed Living Room, or find focus in private work suites.  
-    .span4
-      %p Wireless high-speed Internet access, AV equipment, and video conferencing services are all on site, should you require them. Need to coordinate meetings with colleagues and clients? The hotel is conveniently located in one of the city’s most accessible neighborhoods, just minutes from Chelsea, Midtown, and Soho.
+  - listing = Listing.find(500)
+  - @location = listing.location
 
   .row-fluid.padding-row
-    .span8
+    .span12.header-image
       #w-ny.carousel.slide
         %ol.carousel-indicators
           %li.active{"data-slide-to" => "0", "data-target" => "#myCarousel"}
@@ -25,33 +13,75 @@
         / Carousel items
         .carousel-inner
           .active.item
-            = image_tag "w-hotels/w-6.jpg"     
+            = image_tag "w-hotels/w-hotels+desks-near-me.jpg"  
           .item
-            = image_tag "w-hotels/w-3.jpg"     
+            = image_tag "w-hotels/w-downtown-living-room.jpg"             
           .item
-            = image_tag "w-hotels/w-2.jpg"    
+            = image_tag "w-hotels/w-downtown-balcony.jpg"     
+          .item
+            = image_tag "w-hotels/w-downtown-chairs.jpg"
+          .item
+            = image_tag "w-hotels/w-downtown-bar.jpg"
+          .item
+            = image_tag "w-hotels/w-downtown-exterior.jpg"                        
         / Carousel nav
         %a.carousel-control.left{"data-slide" => "prev", :href => "#w-ny"} ‹
         %a.carousel-control.right{"data-slide" => "next", :href => "#w-ny"} ›
 
-    .span4
-      %h1 Union Square W Hotel
-      %p In the center of the city that is the center of the universe, lies the W New York. W New York has the latest technology, creative catering, and innovative spaces—everything you need to make your meeting memorable and soirée spectacular.
+  .container-fluid
 
-  .row-fluid.padding-row
-    .span8.pull-right
-      = image_tag "w-hotels/w-10.jpg"       
-    .span4.pull-left
-      %h1 The Living Room
-      %p Sink into comfort in our Living Room, our urban sanctuary by David Rockwell. Read Assouline brand books in natural light pouring through the 2-story windows. Challenge a friend to a game of chess. Sip concoctions from Oasis. Contemplate the cascading waterfall.  Just be.
-      %a.btn.btn-large.btn-green
-        %span.ico-check.padding Book!     
+    .row-fluid
+      %h1 Luxury Workspaces in the Heart of New York City
 
-  .row-fluid.padding-row
-    .span8
-      = image_tag "w-hotels/w-8.jpg"     
-    .span4
-      %h1 Perfect for work or play
-      %p Find your personal haven from the concrete cacophony of Manhattan in our 693 completely renovated guest rooms, suites and spa suites. Dive into the comfort of our pillow-top beds. Lounge in soft terry robes. Or curl up and take in a flick from our video/DVD library.
-      %a.btn.btn-large.btn-green
-        %span.ico-check.padding Book!       
+    .row-fluid
+      .span4
+        %p Now, working remotely can feel like home. Desks Near Me has partnered with W Hotels to offer chic, collaborative workspace options at Manhattan’s W New York Union Square.  
+      .span4
+        %p You’ll find amenities to fit every project, whether you’re working with a group or on your own. Host intimate meetings in the luxuriously appointed Living Room, or find focus in private work suites.  
+      .span4
+        %p Wireless high-speed Internet access, AV equipment, and video conferencing services are all on site, should you require them. Need to coordinate meetings with colleagues and clients? The hotel is conveniently located in Downtown Manhattan.
+    .row-fluid.padding-row
+      .span8
+        = image_tag "w-hotels/w-10.jpg"       
+      .span4
+        %h1 Private Office
+        %p Close enough to rub shoulders with Financial District movers and shakers and surrounded by such inimitable icons as the Statue of Liberty and 1 World Trade Center, enjoy your own work space at W New York – Downtown. Power wheel and deal with a private office featuring an L shaped desk, seating, high speed internet access, plus hotel amenities at your fingertips.
+        
+        .booking-module-container
+          .booking-module
+            %span.label.label-daily-price 
+              $150
+              %span.period   Day       
+            %span.label.label-weekly-price
+              $750
+              %span.period   Week
+            %span.label.label-monthly-price
+              $3000
+              %span.period   Month            
+            %hr        
+            .calendar-wrapper.date-start
+              .calendar
+                %span.ico-calendar-start
+                %span.calendar-text Start
+            .calendar-wrapper.date-end
+              .calendar
+                %span.ico-calendar-end
+                %span.calendar-text End
+            .quantity
+              %span.resource= listing.listing_type.name.pluralize
+              = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity' 
+            .price
+              Total
+              %span #{currency_content_tag(@location.currency, 0.00, :span, { :rel => false })}
+
+            .book
+              = link_to_once "", :id =>"book-#{listing.id}", :disable_with => false, :rel => "tooltip", :class => "btn btn-green btn-large", :'data-original-title' => "Please select days first", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
+                %span.ico-check.padding 
+                %span.text Book
+
+          .clearfix
+
+          - content_for :domready do
+            $('.quantity select').customSelect();
+
+      
