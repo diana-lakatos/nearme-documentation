@@ -7,5 +7,6 @@
     - if editable && listing.persisted?
       %span.ico-edit.right
 
-    = link_to listing_path(listing) do
-      %span.ico-open-link     
+    - if listing.persisted?
+      = link_to listing_path(listing) do
+        %span.ico-open-link

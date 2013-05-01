@@ -5,5 +5,7 @@
       = location.persisted? ? location.name : 'New Location'
     - if editable && location.persisted?
       %span.ico-edit.right 
-    = link_to location_path(location) do
-      %span.ico-open-link           
+
+    - if location.persisted?
+      = link_to location_path(location) do
+        %span.ico-open-link
