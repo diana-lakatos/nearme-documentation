@@ -82,18 +82,14 @@ class Search.SearchController extends Search.Controller
       false
 
   updateDateFields: ->
-    startDate = @startDatepicker.getDates()[0]
-    endDate   = @endDatepicker.getDates()[0]
+    formatDate = (date) ->
+      if date
+        "#{date.getDate()} #{DNM.util.Date.monthName(date, 3)}"
+      else
+        ""
 
-    startDate = if startDate
-      "#{startDate.getDate()} #{DNM.util.Date.monthName(startDate, 3)}"
-    else
-      ""
-
-    endDate = if endDate
-      "#{endDate.getDate()} #{DNM.util.Date.monthName(endDate, 3)}"
-    else
-      ""
+    startDate = formatDate @startDatepicker.getDates()[0]
+    endDate   = formatDate @endDatepicker.getDates()[0]
 
     @form.find('.availability-date-start input').val(startDate)
     @form.find('.availability-date-end input').val(endDate)
