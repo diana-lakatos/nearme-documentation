@@ -2,7 +2,6 @@ class V1::LocationsController <  V1::BaseController
   before_filter :verify_authenticity_token
   before_filter :require_authentication
   before_filter :find_location, only: [:update, :destroy]
-  before_filter :remove_name_from_params, only: [:create, :update]
 
   def list
     @locations = current_user.default_company.locations
@@ -42,7 +41,4 @@ class V1::LocationsController <  V1::BaseController
       @location = current_user.locations.find(params[:id])
     end
 
-    def remove_name_from_params
-      params[:location].delete('name') if params[:location] && params[:location][:name]
-    end
 end
