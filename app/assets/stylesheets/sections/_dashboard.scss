@@ -21,7 +21,7 @@ div.availability-rules .custom-availability-rules .day .close-time {
 }
 
 .accordion.in:hover { 
-  overflow:visible;
+  overflow: visible;
 }
 
 .availability-rules {
@@ -60,8 +60,13 @@ section.locations-holder {
     }
   }
 
-  .ico-edit {
+  .ico-edit,
+  .ico-open-link {
     color: $gray5;
+
+    &:hover {
+      color: $gray7;
+    }
   }
 
   header {
@@ -82,17 +87,29 @@ section.locations-holder {
       .ico-edit {
         position: absolute;
         top: 14px;
-        right: 14px;
+        right: 50px;
       }
+
+      .ico-open-link {
+        position: absolute;
+        top: 11px;
+        right: 14px;
+      }      
     }
 
     .listing-header {
       
       .ico-edit {
         position: absolute;
-        top: 1px;
-        right: 14px;
+        top: 2px;
+        right: 52px;
       }
+
+      .ico-open-link {
+        position: absolute;
+        top: 0px;
+        right: 17px;
+      }      
     }
   }
 
@@ -161,12 +178,6 @@ section.locations-holder {
       font-size: 24px;
       margin-bottom: 0;
       color: $gray8;
-
-      &:hover {
-        .ico-edit {
-          color: $gray7;
-        }
-      }
 
       span {
         white-space: nowrap;
