@@ -32,8 +32,6 @@ class @Space.Controller
     for listingData in @options.bookings.listings
       listingController = new Bookings.Controller(@container.find(".listings [data-listing-id=#{listingData.id}]"),
         listingData,
-        reviewUrl: @options.bookings.review_url,
-        initialBookings: @options.bookings.initial_bookings?[listingData.id.toString()],
         showReviewBookingImmediately: @options.bookings.returnedFromSession
       )
 

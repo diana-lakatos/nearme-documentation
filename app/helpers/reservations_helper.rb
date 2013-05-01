@@ -3,49 +3,17 @@ require 'money-rails'
 module ReservationsHelper
   include CurrencyHelper
 
-  # Return a URL with HTTPS scheme for location reservation
-  def secure_location_reservations_url(location, options = {})
+  # Return a URL with HTTPS scheme for listing reservation
+  def secure_listing_reservations_url(listing, options = {})
     if Rails.env.production?
       options = options.reverse_merge(:protocol => "https://")
     end
 
-    location_reservations_url(location, options)
+    listing_reservations_url(listing, options)
   end
 
   def reservation_needs_payment_details?
-    @reservations.sum(&:total_amount) > 0 && @reservations.all? { |r| r.currency == "USD" || "CAD" }
-  end
-
-  def reservation_manual_payment?
-    @reservations.first.manual_payment?
-  end
-
-  def reservation_credit_card_payment?
-    @reservations.first.credit_card_payment?
-  end
-
-  def reservation_schedule_for(listing, weeks = 1, &block)
-    new_row = false
-
-    listing.schedule(weeks).to_a.in_groups_of(5).each do |group|
-      group.each do |date, num_of_desks|
-        availability = case num_of_desks
-          when 0
-            "booked"
-          when 1, 2, 3
-            "last_reservations"
-          else
-            "available"
-        end
-
-        availability = "unavailable" if date.past?
-
-        yield(date, num_of_desks, availability, new_row)
-        new_row = false
-      end
-
-      new_row = true
-    end
+    @reservation.total_amount > 0 && %w(USD CAD).include?(@reservation.currency)
   end
 
   def reservation_total_price(reservation)
@@ -74,28 +42,6 @@ module ReservationsHelper
     reservation.periods.map do |period|
       "#{period.date.strftime('%Y-%m-%d')} (#{pluralize(reservation.quantity, 'desk')})"
     end.to_sentence
-  end
-
-  def location_reservation_needs_confirmation?(reservations = @reservations)
-    reservations.any? { |reservation|
-      reservation.listing.confirm_reservations?
-    }
-  end
-
-  def location_reservation_summaries(reservations = @reservations)
-    dates = Hash.new { |h, k| h[k] = [] }
-    reservations.each do |reservation|
-      reservation.periods.each do |period|
-        dates[period.date] << [reservation.listing, reservation.quantity]
-      end
-    end
-
-    Hash[dates.keys.sort.map { |k| [k, dates[k]] }]
-  end
-
-  def location_reservation_total_amount(reservations = @reservations)
-    total = reservations.sum(&:total_amount)
-    "#{total.symbol}#{total}"
   end
 
   def format_reservation_periods(reservation)

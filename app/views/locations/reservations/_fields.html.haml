@@ -1,5 +1,0 @@
-- @reservations.each do |reservation|
-  = hidden_field_tag "listings[#{reservation.listing_id}][id]", reservation.listing.id
-  - reservation.periods.each_with_index do |period, index|
-    = hidden_field_tag "listings[#{reservation.listing_id}][bookings][#{index}][date]", period.date.strftime('%Y-%m-%d')
-    = hidden_field_tag "listings[#{reservation.listing_id}][bookings][#{index}][quantity]", reservation.quantity

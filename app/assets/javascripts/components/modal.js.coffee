@@ -51,6 +51,9 @@ class @Modal
     @instance().load(ajaxOptions)
     @instance().setCallback(callback)
 
+  @setClass: (klass) ->
+    @instance().setClass(klass)
+
   # ===
 
   constructor: (@options) ->
@@ -73,7 +76,9 @@ class @Modal
     @callback = callback
 
   setClass : (klass) ->
-    @container.attr("class", 'modal-container') # FIXME: Make the modal markup dynamic and customizable default class(es)
+    @container.removeClass(@customClass) if @customClass
+    
+    @customClass = klass
     @container.addClass(klass) if klass
 
   showContent : (content) ->
@@ -84,17 +89,34 @@ class @Modal
     @content.show()
     @content.html(content) if content
 
+    # We need to ensure there has been a reflow displaying the target element
+    # before applying the class with the animation transitions
+    setTimeout =>
+      @content.addClass('visible')
+    , 20
+
   showLoading : ->
     @container.addClass('loading')
     @content.hide()
     @loading.show()
 
   hide: ->
-    @_unfixBody()
-    @overlay.hide()
-    @container.hide()
-    if @callback
-      @callback()
+    @content.removeClass('visible')
+    @overlay.removeClass('visible')
+    @container.removeClass('visible')
+
+    # We need to ensure our transitions have had enough time to execute
+    # prior to hiding the element.
+    setTimeout =>
+      @overlay.hide()
+      @container.hide()
+
+      # Clear any assigned modal class
+      @setClass(null)
+
+      @_unfixBody()
+      @callback() if @callback
+    , 200
 
     # Redirect if bound
     if Modal._reloadOnClose
@@ -106,6 +128,13 @@ class @Modal
     @overlay.show()
     @container.show()
     @positionModal()
+
+    # We need to ensure there has been a reflow displaying the target element
+    # before applying the class with the animation transitions
+    setTimeout =>
+      @overlay.addClass('visible')
+      @container.addClass('visible')
+    , 20
 
   # Load the given URL in the modal
   # Displays the modal, shows the loading status, fires an AJAX request and

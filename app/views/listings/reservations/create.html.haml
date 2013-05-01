@@ -2,7 +2,7 @@
 
 %p Your reservation has been made!
 
-- if reservation_credit_card_payment?
+- if @reservation.credit_card_payment?
   %p Your credit card will be charged when your reservation is confirmed by the host.
 
 %p.text-center
@@ -16,13 +16,13 @@
     city: "#{@location.city}",
     state: "#{@location.state}",
     country: "#{@location.country}",
-    quantity: #{@reservations.first.quantity},
-    days: #{@reservations.first.total_days},
-    amount: #{@reservations.first.total_amount_dollars},
-    currency: "#{@reservations.first.currency}",
-    transaction: #{reservation_credit_card_payment?}
+    quantity: #{@reservation.quantity},
+    days: #{@reservation.total_days},
+    amount: #{@reservation.total_amount_dollars},
+    currency: "#{@reservation.currency}",
+    transaction: #{@reservation.credit_card_payment?}
   });
 
-- if reservation_credit_card_payment?
+- if @reservation.credit_card_payment?
   :javascript
-    analytics.trackCharge(#{@reservations.first.total_amount_dollars})
+    analytics.trackCharge(#{@reservation.total_amount_dollars})
