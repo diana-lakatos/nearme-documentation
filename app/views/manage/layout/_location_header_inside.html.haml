@@ -1,6 +1,7 @@
 %header.location
-  %span.padding.ico-location.location-header
+  %div.padding.location-header
+    %span.ico-location.entity-icon
     %span.entity-name
       = location.persisted? ? location.name : 'New Location'
-  - if editable && location.persisted?
-    %span.ico-edit.right 
+    - if editable && location.persisted?
+      %span.ico-edit.right 

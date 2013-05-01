@@ -67,7 +67,12 @@ section.locations-holder {
   header {
     overflow: hidden;
 
-    .entity-name{
+    .entity-icon {
+      float: left;
+      margin-right: 15px;
+    }
+
+    .entity-name {
       display: inline-block;
       overflow: hidden;
     }

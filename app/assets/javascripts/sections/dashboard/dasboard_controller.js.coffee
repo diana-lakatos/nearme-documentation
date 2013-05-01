@@ -23,10 +23,7 @@ class @Dashboard.Controller
     @container.find('header.listing .entity-name').css('maxWidth', (@listingHeader.width() - @getReservedWidthForListing()) + 'px')
 
   getEntityIcoWidth: (el) =>
-    span_with_entity_ico_width = el.find('> span').outerWidth(true)
-    
-    target_width = el.find('.entity-name').width()
-    span_with_entity_ico_width - target_width
+    el.find('.entity-icon').outerWidth(true)
 
   getReservedWidthForLocation: =>
      @locationIcoWidth + @locationEditIcoWidth
