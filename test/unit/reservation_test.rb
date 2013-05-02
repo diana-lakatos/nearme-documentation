@@ -39,6 +39,27 @@ class ReservationTest < ActiveSupport::TestCase
       assert @reservation.confirm!
     end
 
+    should 'track booking rejection' do
+      Track::Book.expects(:rejected_a_booking)
+      assert @reservation.reject!
+    end
+
+    should 'track host booking cancellation' do
+      Track::Book.expects(:cancelled_a_booking)
+      assert @reservation.user_cancel!
+    end
+
+    should 'track guest booking cancellation' do
+      Track::Book.expects(:cancelled_a_booking)
+      @reservation.confirm!
+      assert @reservation.owner_cancel!
+    end
+
+    should 'track booking expiry' do
+      Track::Book.expects(:booking_expired)
+      assert @reservation.expire!
+    end
+
   end
 
   describe 'expiration' do

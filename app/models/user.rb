@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
   include Gravtastic
 
   before_save :ensure_authentication_token
+  after_create :send_welcome_email
+
   # Includes billing gateway helper method and sets up billing charge association
   include BillingGateway::UserHelper
 
@@ -155,4 +157,13 @@ class User < ActiveRecord::Base
   def first_listing
     companies.first.locations.first.listings.first
   end
+
+  # Callback methods
+
+  def send_welcome_email
+    unless new_record?
+      AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(id)
+    end
+  end
+
 end

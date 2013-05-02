@@ -63,7 +63,7 @@ class Location < ActiveRecord::Base
   end
 
   def name
-    super.presence || company.name
+    "#{company.name} @ #{street}"
   end
 
   def currency

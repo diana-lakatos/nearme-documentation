@@ -8,7 +8,7 @@ class SearchController < ApplicationController
 
   def index
     render "search/#{result_view}"
-    Track::Search.conducted_a_search(result_view, @search)
+    Track::Search.conducted_a_search(current_user_id, result_view, @search)
   end
 
   private

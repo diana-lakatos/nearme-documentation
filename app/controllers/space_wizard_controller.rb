@@ -31,8 +31,8 @@ class SpaceWizardController < ApplicationController
         listing.save!
       end
 
-      Track::List.created_a_location('wizard', @user.locations.first)
-      Track::List.created_a_listing('wizard', @user.first_listing)
+      Track::List.created_a_location(current_user_id, 'wizard', @user.locations.first)
+      Track::List.created_a_listing(current_user_id, 'wizard', @user.first_listing)
 
       redirect_to controlpanel_path, notice: 'Your space was listed! You can provide more details about your location and listing from this page.'
     else

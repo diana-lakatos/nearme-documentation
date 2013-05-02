@@ -32,6 +32,12 @@ class ApplicationController < ActionController::Base
     request.xhr? && current_user ?  (render :json => { :redirect => stored_url_for(nil) }) : false
   end
 
+  def current_user_id
+    if user_signed_in?
+      current_user.id
+    end
+  end
+
   # Some generic information on wizard for use accross controllers
   WizardInfo = Struct.new(:id, :url)
 

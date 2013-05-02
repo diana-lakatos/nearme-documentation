@@ -18,10 +18,15 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     super
-    AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(@user.id) unless @user.new_record?
+    binding.pry
+
+    # Only track the sign up if the user has actually been saved (i.e. there are no errors)
+    if @user.persisted?
+      Track::User.signed_up(@user, params[:return_to], session[:omniauth])
+    end
+
     # Clear out temporarily stored Provider authentication data if present
     session[:omniauth] = nil unless @user.new_record?
-    flash[:redirected_from_sign_up] = true
   end
 
   def edit

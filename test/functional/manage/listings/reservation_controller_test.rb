@@ -8,6 +8,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     @reservation.add_period(Date.today)
     @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
     @reservation.save!
+    stub_request(:get, /.*api\.mixpanel\.com.*/)
   end
 
   test "a host is redirected to bookings if valid event" do

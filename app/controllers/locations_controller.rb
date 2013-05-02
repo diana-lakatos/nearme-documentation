@@ -10,7 +10,7 @@ class LocationsController < ApplicationController
     # Attempt to restore a stored reservation state from the session.
     restore_initial_bookings_from_stored_reservation
 
-    Track::Search.viewed_a_location(user_signed_in?, @location)
+    Track::Search.viewed_a_location(current_user_id, user_signed_in?, @location)
   end
 
   private

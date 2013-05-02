@@ -12,35 +12,28 @@ class ReservationObserver < ActiveRecord::Observer
   def after_confirm(reservation, transction)
     ReservationMailer.notify_guest_of_confirmation(reservation).deliver
     ReservationMailer.notify_host_of_confirmation(reservation).deliver
-    Track::Book.confirmed_a_booking(reservation, reservation.location)
+    Track::Book.confirmed_a_booking(current_user_id, reservation, reservation.location)
   end
 
   def after_reject(reservation, transaction)
     ReservationMailer.notify_guest_of_rejection(reservation).deliver
+    Track::Book.rejected_a_booking(current_user_id, reservation, reservation.location)
   end
 
   def after_user_cancel(reservation, transaction)
     ReservationMailer.notify_host_of_cancellation(reservation).deliver
+    Track::Book.cancelled_a_booking(current_user_id, 'host', reservation, reservation.location)
   end
 
   def after_owner_cancel(reservation, transaction)
     ReservationMailer.notify_guest_of_cancellation(reservation).deliver
+    Track::Book.cancelled_a_booking(current_user_id, 'guest', reservation, reservation.location)
   end
 
   def after_expire(reservation, transaction)
     ReservationMailer.notify_guest_of_expiration(reservation).deliver
     ReservationMailer.notify_host_of_expiration(reservation).deliver
-    track_expire_event(reservation)
+    Track::Book.booking_expired(current_user_id, reservation, reservation.location)
   end
-
-  private
-
-  def track_expire_event(reservation)
-    #@mixpanel.track 'Reservation Expired (Host)', { distinct_id: reservation.listing.creator.id }
-  rescue
-    nil
-  end
-
-
 
 end
