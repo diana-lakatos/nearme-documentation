@@ -1,80 +1,52 @@
 class @SpaceWizardSpaceForm
 
   constructor: (@container) ->
-    @setupMap()
 
-    @address = new AddressField(@container.find('[data-behavior=address-autocomplete]'))
-    @address.onLocate (lat, lng) =>
-      latlng = new google.maps.LatLng(lat, lng)
+    #THIS CODE IS COMMENTED BECAUSE CLIENT_SIDE_VALIDATION 3.2.5 GEM IS NOT STABLE AT THE TIME BEING.
+    # 3.2.5 version does not validate nested inputs [ listing fields ], version 3.2.1 validates listing fields,
+    # but does not validate company name. 
+    
+    #$('.custom-select').chosen()
+    #@container.find('.control-group').addClass('input-disabled').find(':input').attr("disabled", true)
+    #$(".custom-select").trigger("liszt:updated")
 
-      @map.marker.setPosition(latlng)
-      @mapContainer.show()
-      google.maps.event.trigger(@map.map, 'resize')
-      @map.map.setCenter(latlng)
+    #@input_number = 0
+    #@input_length = @container.find('.control-group').length
 
-    @container.find('.control-group').addClass('input-disabled').find(':input').attr("disabled", true)
-    @input_number = 0
-    @input_length = @container.find('.control-group').length
+    #@bindEvents()
+    #@unlockInput()
+    #comment the next line to disable control group disable
 
-    @priceInputs = @container.find('input[name*=price]')
-    @freeCheckbox = @container.find('input[type=checkbox][name*=free]')
-    @bindEvents()
-    @unlockInput()
-
-  unlockInput: ->
+  unlockInput: (with_focus = true) ->
     if @input_number < @input_length
-      @container.find('.control-group').eq(@input_number).removeClass('input-disabled').find(':input').removeAttr("disabled").eq(0).focus()
-      # hack to ignore chosen - just unlock the next field after chosen
-      if @container.find('.control-group').eq(@input_number).find('.custom-select').length > 0
-        @input_number = @input_number + 1
-        @unlockInput()
-
-  setupMap: ->
-    @mapContainer = @container.find('.map')
-
-    @map = { map: null, markers: [] }
-    @map.map = SmartGoogleMap.createMap(@mapContainer.find('.map-container')[0], {
-      zoom: 16,
-      mapTypeControl: false,
-      streetViewControl: false,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    })
-
-    @map.marker = new google.maps.Marker({
-      map: @map.map,
-      icon: @mapContainer.attr("data-marker"),
-      draggable: true
-    })
-
-    # When the marker is dragged, update the lat/lng form position
-    google.maps.event.addListener @map.marker, 'drag', =>
-      position = @map.marker.getPosition()
-      @address.setLatLng(position.lat(), position.lng())
+      input = @container.find('> .control-group').eq(@input_number).removeClass('input-disabled').find(':input').removeAttr("disabled").eq(0)
+      if with_focus
+       input.focus()
+      # hack to ignore currency chosen - just unlock the next field after chosen
+      if @container.find('> .control-group').eq(@input_number).find('.custom-select').length > 0
+        @container.find('> .control-group').eq(@input_number).find('.custom-select').trigger("liszt:updated")
+        # hack to focus industries chosen - show lists of available industries
+        if @container.find('> .control-group').eq(@input_number).find('#company_industry_ids').length > 0
+          @container.find('> .control-group').eq(@input_number).find('#company_industry_ids_chzn input').focus()
+        else
+          @input_number = @input_number + 1
+          @unlockInput()
 
   bindEvents: =>
-    @container.on 'keyup change blur', 'input[name*=daily_price], input[name*=weekly_price], input[name*=monthly_price]', (event) =>
-      @priceChanged(event)
 
-    @container.on 'change', 'input[type=checkbox][name*=free]', =>
-      @freeChanged()
-
-    @container.on 'change', '#user_companies_attributes_0_locations_attributes_0_currency', (event) ->
-      $('.currency-holder').html($('#currency_'+ $(this).val()).text())
-    $('#company_locations_attributes_0_currency').trigger('change')
+    $('#company_industry_ids').change (event) =>
+      callback = => @validateIndustries event
+      # yes I hate it too. Chosen has a bug - it triggers change before removing element from dom...
+      setTimeout callback, 100
 
     # Progress to the next form field when a selection is made from select elements
     @container.on 'change', 'select', (event) =>
-      $(event.target).closest('.control-group').next().removeClass('input-disabled').find(':input').removeAttr('disabled').focus()
+      if $(event.target).closest('#company_industry_ids').length == 0
+        $(event.target).closest('.control-group').next().removeClass('input-disabled').find(':input').removeAttr('disabled').focus()
 
     ClientSideValidations.callbacks.element.pass = (element, callback, eventData) =>
       callback()
-      index = element.closest('.control-group').index()
-      if @allValid()
-        if index > @input_number
-          @input_number = index
-        else
-          @input_number = @input_number + 1
-        @unlockInput()
+      @successfulValidationHandler(element)
 
     ClientSideValidations.callbacks.element.fail = (element, message, callback, eventData) =>
       callback()
@@ -85,23 +57,28 @@ class @SpaceWizardSpaceForm
       form.closest('.error-block').parent().ScrollTo()
 
     ClientSideValidations.callbacks.form.before = (form, eventData) =>
-      if @container.find('.control-group :input:disabled').length > 0
-        if @container.find('.control-group').eq(@input_number).find(':input').eq(0).val() != ''
-          @container.find('.control-group').eq(@input_number+1).removeClass('input-disabled').find(':input').removeAttr('disabled')
+      if @container.find('> .control-group :input:disabled').length > 0
+        if @container.find('> .control-group').eq(@input_number).find(':input').eq(0).val() != ''
+          @container.find('> .control-group').eq(@input_number+1).removeClass('input-disabled').find(':input').removeAttr('disabled')
 
-  freeChanged: ->
-    if @freeCheckbox.prop('checked')
-      @priceInputs.val('')
+  successfulValidationHandler: (element) =>
+    index = element.closest('.control-group').index()
+    if @allValid()
+      if index > @input_number
+        @input_number = index
+      else
+        @input_number = @input_number + 1
+      @unlockInput()
+
+  validateIndustries: (event) =>
+    # there is always one element - search input
+    if $(event.target).parent().find('ul .search-choice').length > 0
+      $(event.target).closest('.control-group').removeClass('error')
+      @successfulValidationHandler($(event.target))
     else
-      @priceInputs.eq(0).focus().val('')
+      $(event.target).closest('.control-group').addClass('error')
+      $(event.target).closest('.control-group').find('ul').effect('shake', { easing: 'linear' })
+      $(event.target).closest('.control-group').find('#company_industry_ids_chzn input').focus()
 
   allValid: ->
     @container.find('.error-block').length == 0
-
-  priceChanged: (event) ->
-    prices = (parseFloat(priceInput.value) for priceInput in @priceInputs)
-    (if price > 0 then checkFree = false) for price in prices
-    if checkFree != false then checkFree = true
-    @freeCheckbox.prop('checked', checkFree)
-
-

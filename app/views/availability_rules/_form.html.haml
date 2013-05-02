@@ -1,15 +1,15 @@
 .availability-rules
-  %label.control-label Availability
+  %label.control-label.flush-top Availability
 
   - if f.object.respond_to?(:defer_availability_rules)
     = f.check_box :defer_availability_rules, :style => "display: none" 
 
   - availability_choices(f.object).each do |template_id, label_text, options|
-    %div
+    .controls
       = f.radio_button :availability_template_id, template_id, options || {}
       = label_tag(options[:id], label_text, :class => "inline")
 
-  .custom-availability-rules{:style => ('display: none' unless availability_custom?(f.object))}
+  .controls.custom-availability-rules{:style => ('display: none' unless availability_custom?(f.object))}
     - f.object.availability.each_day do |day, rule|
       %div{:class => "day day-#{day}"}
         = f.fields_for(:availability_rules, rule || AvailabilityRule.new(:day => day)) do |af|

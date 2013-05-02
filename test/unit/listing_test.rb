@@ -66,8 +66,6 @@ class ListingTest < ActiveSupport::TestCase
     end
   end
 
-# Uncomment "free flag and price" context after dashboard refactoring
-=begin
   context "free flag and prices" do
 
     should "not valid if free flag is false and no prices are provided" do
@@ -130,7 +128,6 @@ class ListingTest < ActiveSupport::TestCase
       assert @listing.valid?
     end
   end
-=end
 
   context "first available date" do
     should "return monday for friday" do

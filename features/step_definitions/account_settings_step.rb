@@ -21,11 +21,11 @@ When /^I select industries for (.*)$/ do |object|
 end
 
 Then /^I should be connected to selected industries$/ do
-  assert_equal ["Computer Science", "Telecommunication"], model!("the user").industries.pluck(:name)
+  assert_equal ["Computer Science", "Telecommunication"], model!("the user").industries.pluck(:name)[0..1]
 end
 
 Then /^Company should be connected to selected industries$/ do
-  assert_equal ["IT", "Telecommunication"], model!("the company").industries.pluck(:name)
+  assert_equal ["IT", "Telecommunication"], model!("the company").industries.pluck(:name)[0..1]
 end
 
 Then /^I should not see company settings$/ do

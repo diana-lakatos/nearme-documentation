@@ -15,9 +15,10 @@ GIT
 
 GIT
   remote: https://github.com/bcardarella/client_side_validations.git
-  revision: a6a515504520e9925ca63524ae9854168163283e
+  revision: 75d0dad8e4d49ba16c25e511b6514ea1408d2423
+  branch: 3-2-stable
   specs:
-    client_side_validations (3.2.1)
+    client_side_validations (3.2.5)
 
 GEM
   remote: http://rubygems.org/

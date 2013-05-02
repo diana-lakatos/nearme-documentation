@@ -6,6 +6,8 @@ class AvatarUploader < CarrierWave::Uploader::Base
     "media/#{model.class.to_s.underscore}/#{model.id}/#{mounted_as}"
   end
 
+  process :auto_orient
+
   version :mini do
     process :resize_to_fill => [50, 50]
   end
@@ -25,4 +27,12 @@ class AvatarUploader < CarrierWave::Uploader::Base
   def default_url
     "http://placehold.it/100x100"
   end
+
+  def auto_orient
+    manipulate! do |img|
+      img.auto_orient
+      img
+    end
+  end
+
 end

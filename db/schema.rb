@@ -155,7 +155,6 @@ ActiveRecord::Schema.define(:version => 20130430130418) do
 
   create_table "locations", :force => true do |t|
     t.integer  "company_id"
-    t.string   "name"
     t.string   "email"
     t.text     "description"
     t.string   "address"

@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :location do
     address "42 Wallaby Way"
-    name "P. Sherman's Smilehouse"
     email "psherman@smilehouse.com"
     description "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     latitude "-33.856944"
@@ -11,7 +10,6 @@ FactoryGirl.define do
     company
 
     factory :location_in_auckland do
-      name "Auckland Meuseum"
       address "Parnell, Auckland 1010 New Zealand"
       latitude "-36.858675"
       longitude "174.777303"
@@ -19,7 +17,6 @@ FactoryGirl.define do
     end
 
     factory :location_in_adelaide do
-      name "Adelaide Meuseum"
       address "Adelaide"
       latitude "-41.4391386"
       longitude "147.1405474"
@@ -27,7 +24,6 @@ FactoryGirl.define do
     end
 
     factory :location_in_cleveland do
-      name "Rock and Roll Hall of Fame"
       address "1100 Rock and Roll Boulevard"
       latitude "41.508806"
       longitude "-81.69548"
@@ -35,7 +31,6 @@ FactoryGirl.define do
     end
 
     factory :location_in_san_francisco do
-      name "Golden Gate Bridge"
       address "Golden Gate Bridge"
       latitude "37.819959"
       longitude "-122.478696"
@@ -43,7 +38,6 @@ FactoryGirl.define do
     end
 
     factory :location_in_wellington do
-      name "35 Ghuznee Street"
       address "35 Ghuznee Street"
       latitude "-41.293597"
       longitude "174.7763361"

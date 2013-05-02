@@ -34,9 +34,6 @@
 // Helper modules, etc.
 //= require_tree ./ext
 //= require_tree ./lib
-//= require_tree ./app/models
-//= require_tree ./app/templates
-//= require_tree ./app
 //
 // Standard components
 //= require_tree ./components

@@ -80,9 +80,13 @@ Spork.each_run do
   if ENV['DRB']
     require 'simplecov'
   end
-  FactoryGirl.reload
-  DatabaseCleaner.clean
+  class ActionController::TestCase
+    fixtures :all
+  end
   class ActiveSupport::TestCase
     fixtures :all
   end
+  FactoryGirl.reload
+  DatabaseCleaner.clean
+
 end

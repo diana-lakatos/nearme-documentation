@@ -37,9 +37,9 @@
             #header_links.links-container.pull-right
               = render "layouts/header_navigation"
 
-      %section#content{:class => "#{controller_name}"}
+      %section#content{:class => "#{@section_name || controller_name}"}
         = render 'layouts/hero'
-        %div{:class => "container-fluid #{'legacy' if legacy?}"}
+        .container-fluid
           = render 'shared/render_flash'
           = yield
 
