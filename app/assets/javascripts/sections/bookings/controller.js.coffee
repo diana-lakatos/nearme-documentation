@@ -101,7 +101,7 @@ class Bookings.Controller
     $('.click-disabled').removeClass('click-disabled').find('span.text').text('Book')
 
   quantityWasChanged: ->
-    @listing.setDefaultQuantity(parseInt($(event.target).val()))
+    @listing.setDefaultQuantity(parseInt(@quantityField.val(), 10))
     @updateQuantityField()
 
     # Reset the datepicker if the booking is no longer available
