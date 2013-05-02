@@ -14,7 +14,7 @@
 
         = form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
           .email-holder.input-icon-holder
-            = f.text_field :email, :placeholder => "Email"
+            = f.text_field :email, :value => @email, :placeholder => "Email"
             %span.ico-mail
           .password-holder.input-icon-holder
             = f.password_field :password, :placeholder => "Password"
@@ -27,3 +27,15 @@
             = f.submit "Log In"
 
         .text-center.already-a-user= link_to('New User?', new_user_registration_path(:return_to => params[:return_to]), :rel => "modal.sign-up-modal")      
+
+
+- if @email
+  - focus_input = "#new_user #user_password"
+- else
+  - focus_input = "#new_user #user_email"
+:javascript
+  $(function() {
+    $("#{focus_input}").focus()
+  });
+    
+  
