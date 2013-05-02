@@ -4,10 +4,16 @@ class Photo < ActiveRecord::Base
   belongs_to :content, :polymorphic => true
   belongs_to :creator, class_name: "User"
 
+
+
   acts_as_paranoid
 
+  after_create :notify_user_about_change
+  after_destroy :notify_user_about_change
   # Don't delete the photo from s3
   skip_callback :destroy, :after, :remove_image!
+
+  delegate :notify_user_about_change, :to => :content, :allow_nil => true
 
   validates :image, :presence => true
   validates :content_type, :presence => true

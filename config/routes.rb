@@ -34,6 +34,7 @@ DesksnearMe::Application.routes.draw do
   devise_scope :user do
     put "users/avatar", :to => "registrations#avatar", :as => "avatar"
     get "users/", :to => "registrations#new"
+    get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
   end
 
