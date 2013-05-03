@@ -14,6 +14,7 @@ class Search.SearchController extends Search.Controller
     @initializeMap()
     @bindEvents()
     @initializeEndlessScrolling()
+    @reinitializeEndlessScrolling = false
     setTimeout((=> @processingResults = false), 1000)
 
   bindEvents: ->
@@ -46,13 +47,17 @@ class Search.SearchController extends Search.Controller
       item: '.listing',
       pagination: '.pagination',
       next: '.next_page',
-      triggerPageThreshold: 50,
+      triggerPageThreshold: 99,
       history: false,
       thresholdMargin: -90,
       loader: '<h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1>',
       onRenderComplete: (items) ->
         for item in items
           new HeightConstrainer( $('article.listing[data-id='+item.getAttribute("data-id")+'] .details-container'), $('article.listing[data-id='+item.getAttribute("data-id")+'] .photo-container'), { ratio: 254/410 })
+        # when there are no more resuls, add special div element which tells us, that we need to reinitialize ias - it disables itself on the last page...
+        if !$('#results .pagination .next_page').attr('href')
+          $('#results').append('<div id="reinitialize"></div>')
+          reinitialize = $('#reinitialize')
     })
 
   initializeMap: ->
@@ -80,6 +85,7 @@ class Search.SearchController extends Search.Controller
 
   showResults: (html) ->
     @resultsContainer().replaceWith(html)
+    $('.pagination').hide()
 
   updateResultsCount: ->
     count = @resultsContainer().find('.listing:not(.hidden)').length
@@ -160,6 +166,10 @@ class Search.SearchController extends Search.Controller
   # Note that the behaviour semantics are different to manually moving the map.
   triggerSearchFromQuery: ->
     @startLoading()
+     # Infinite-Ajax-Scroller [ ias ] which we use disables itself when there are no more results
+     # we need to reenable it when it is necessary, and only then - otherwise we will get duplicates
+    if $('#reinitialize').length > 0
+      @initializeEndlessScrolling()
     @geocodeSearchQuery =>
       @triggerSearchAndHandleResults =>
         @updateMapWithListingResults() if @map?
@@ -180,8 +190,6 @@ class Search.SearchController extends Search.Controller
       callback() if callback
       @finishLoading()
       @processingResults = false
-      @initializeEndlessScrolling()
-
 
   # Trigger the API request for search
   #
