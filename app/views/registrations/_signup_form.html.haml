@@ -9,11 +9,11 @@
     = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
 
     .name-holder.input-icon-holder
-      = f.text_field :name, :label => "Full Name", :placeholder => "Enter your full name"
+      = f.text_field :name, :label => "Full Name", :placeholder => "Full name"
       %span.ico-user
 
     .email-holder.input-icon-holder
-      = f.text_field :email, :label => "Email", :placeholder => "Valid email address"
+      = f.text_field :email, :label => "Email", :placeholder => "Email"
       %span.ico-mail
 
     .password-holder.input-icon-holder
