@@ -65,8 +65,8 @@ class ReservationTest < ActiveSupport::TestCase
       assert @reservation.owner_cancel!
     end
 
-    should 'track (negative) charge on guest booking cancellation' do
-      Track::User.expects(:charge)
+    should 'track positive charge on confirmation and (negative) charge on guest booking cancellation' do
+      Track::User.expects(:charge).twice
       @reservation.confirm!
       assert @reservation.owner_cancel!
     end
