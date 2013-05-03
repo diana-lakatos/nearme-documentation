@@ -18,7 +18,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     super
-    binding.pry
 
     # Only track the sign up if the user has actually been saved (i.e. there are no errors)
     if @user.persisted?

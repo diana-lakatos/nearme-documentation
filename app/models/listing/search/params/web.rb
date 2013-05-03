@@ -18,13 +18,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def address_components
-    @address_components || {
-      "street" => "Unknown",
-      "country" => "Unknown",
-      "city" => "Unknown",
-      "suburb" => "Unknown",
-      "state" => "Unknown"
-    }
+    @address_components
   end
 
 end

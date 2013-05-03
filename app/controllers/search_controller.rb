@@ -8,7 +8,9 @@ class SearchController < ApplicationController
 
   def index
     render "search/#{result_view}"
-    Track::Search.conducted_a_search(current_user_id, result_view, @search)
+    binding.pry
+
+    Track::Search.conducted_a_search(current_user_id, result_view, @search, number_of_results)
   end
 
   private
@@ -42,6 +44,14 @@ class SearchController < ApplicationController
       requested_view
     else
       'list'
+    end
+  end
+
+  def number_of_results
+    if result_view == 'list'
+      @listings.total_entries
+    else
+     @listings.size
     end
   end
 

@@ -21,16 +21,6 @@ class LocationTest < ActiveSupport::TestCase
   should allow_value('x' * 250).for(:description)
   should_not allow_value('x' * 251).for(:description)
 
-  context "#name" do
-    should "use company name if location name is nil" do
-      @location = FactoryGirl.create(:location_in_san_francisco)
-      @location.name = nil
-      @location.save!
-      @location.reload
-      assert_equal @location.company.name, @location.name
-    end
-  end
-
   context "#description" do
     context "when not set" do
       context "and there is not a listing for the location" do
