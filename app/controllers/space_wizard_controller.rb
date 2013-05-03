@@ -24,9 +24,10 @@ class SpaceWizardController < ApplicationController
   end
 
   def submit_listing
-    @user.attributes = params[:user]
+    @company ||= @user.companies.build
+    @company.attributes = params[:company]
 
-    if @user.save
+    if params_hash_complete? && @company.save
       if params[:uploaded_photos]
         listing = @user.first_listing
         listing.photos << current_user.photos.find(params[:uploaded_photos])
@@ -36,7 +37,7 @@ class SpaceWizardController < ApplicationController
       Track::List.created_a_location(current_user_id, 'wizard', @user.locations.first)
       Track::List.created_a_listing(current_user_id, 'wizard', @user.first_listing)
 
-      redirect_to controlpanel_path, notice: 'Your space was listed! You can provide more details about your location and listing from this page.'
+      redirect_to manage_locations_path, notice: 'Your space was listed! You can provide more details about your location and listing from this page.'
     else
       render :list
     end
@@ -46,7 +47,7 @@ class SpaceWizardController < ApplicationController
 
   def submit_photo
     @photo = Photo.new
-    @photo.image = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:photos_attributes]["0"][:image]
+    @photo.image = params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:photos_attributes]["0"][:image]
     @photo.content_type = 'Listing'
     @photo.creator_id = current_user.id
     if @photo.save
@@ -97,18 +98,21 @@ class SpaceWizardController < ApplicationController
   def convert_price_params
     # method to_f removes all special characters, like hyphen. However we do not want to convert nil to 0, that's why modifier.
     if params_hash_complete?
-      prm = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
-      [:daily_price, :weekly_prie, :monthly_price].each do |period_price|
-        prm[period_price] = prm[period_price].to_f if prm[period_price]
+      prm = params[:company][:locations_attributes]["0"][:listings_attributes]["0"]
+      {:daily_price => :enable_daily, :weekly_price => :enable_weekly, :monthly_price => :enable_monthly}.each do |period_price, enable_period|
+        if prm[period_price] && !prm[period_price].to_f.zero? && prm[enable_period] == "1"
+          prm[period_price] = prm[period_price].to_f if prm[period_price]
+        else
+          prm[period_price] = nil
+        end
       end
     end
   end
 
   def params_hash_complete?
-    params[:user] && 
-    params[:user][:companies_attributes] && 
-    params[:user][:companies_attributes]["0"][:locations_attributes] &&
-    params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes] 
+    params[:company] && 
+    params[:company][:locations_attributes] &&
+    params[:company][:locations_attributes]["0"][:listings_attributes] 
   end
 
 end

@@ -1,0 +1,9 @@
+%div
+  %section.box.location
+    - if editable && location.persisted?
+      = link_to edit_manage_location_path(location), :class => 'edit-link' do
+        = render :partial => 'manage/layout/location_header_inside', :locals => { :location => location, :editable => editable }
+    - else
+      = render :partial => 'manage/layout/location_header_inside', :locals => { :location => location, :editable => editable }
+
+    = yield if block_given?

@@ -1,0 +1,12 @@
+%header.listing
+  %div.padding.listing-header
+    %span.ico-desk.entity-icon
+    %span.entity-name
+      = listing.persisted? ? listing.name : 'New Listing'
+    
+    - if editable && listing.persisted?
+      %span.ico-edit.right
+
+    - if listing.persisted?
+      = link_to listing_path(listing) do
+        %span.ico-open-link

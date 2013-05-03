@@ -9,12 +9,19 @@
   }
 }
 div.availability-rules .custom-availability-rules .day .open-time,
-div.availability-rules .custom-availability-rules .day .close-time{
+div.availability-rules .custom-availability-rules .day .close-time {
   width: auto;
 }
 
+.dashboard-home-link {
+  
+  &:hover {
+   @include opacity(.7);
+  }
+}
+
 .accordion.in:hover { 
-  overflow:visible;
+  overflow: visible;
 }
 
 .availability-rules {
@@ -31,17 +38,94 @@ div.availability-rules .custom-availability-rules .day .close-time{
 
 
 section.locations-holder {
+
   margin-bottom: 20px;
+
+  .add-location{
+    width: 100%;
+    @include opacity(.4);
+
+    &:hover {
+      @include opacity(1);
+    }
+  }
+
+  .edit-link{
+    color: $gray8;
+    display: block;
+
+    &:hover{
+     color: $gray7;
+
+    }
+  }
+
+  .ico-edit,
+  .ico-open-link {
+    color: $gray5;
+
+    &:hover {
+      color: $gray7;
+    }
+  }
+
+  header {
+    overflow: hidden;
+
+    .entity-icon {
+      float: left;
+      margin-right: 15px;
+    }
+
+    .entity-name {
+      display: inline-block;
+      overflow: hidden;
+    }
+
+    .location-header {
+      
+      .ico-edit {
+        position: absolute;
+        top: 14px;
+        right: 50px;
+      }
+
+      .ico-open-link {
+        position: absolute;
+        top: 11px;
+        right: 14px;
+      }      
+    }
+
+    .listing-header {
+      
+      .ico-edit {
+        position: absolute;
+        top: 2px;
+        right: 52px;
+      }
+
+      .ico-open-link {
+        position: absolute;
+        top: 0px;
+        right: 17px;
+      }      
+    }
+  }
 
   .location-content {
     margin-bottom: 0;
-    form{margin-top:20px}
+
+    form { 
+      margin-top:20px 
+    }
+
     div.action{
       background: $dnm_white;
       padding: 20px 0;
     }
 
-    div.geolocation{
+    div.geolocation {
       position: absolute;
       top: 13px;
       left: 10px;
@@ -72,7 +156,7 @@ section.locations-holder {
     }
   }
 
-  .alert{
+  .alert {
     @include border-radius(12px);
   }
 
@@ -93,47 +177,11 @@ section.locations-holder {
       height: 24px;
       font-size: 24px;
       margin-bottom: 0;
-      cursor: pointer;
       color: $gray8;
 
       span {
         white-space: nowrap;
         text-overflow: ellipsis;
-      }
-
-      &.listing,
-      &.location {
-
-        span.ico-edit {
-          @include opacity(1);
-
-          &:hover {
-            @include opacity(.7);
-          }  
-        }  
-      }
-
-      &:hover {
-
-        span.ico-edit {
-          @include opacity(1);
-        }        
-      }
-
-      &.listing.collapsed,
-      &.location.collapsed {
-
-        span.ico-edit {
-          @include opacity(.3);
-        }
-
-        &:hover {
-
-          span.ico-edit {
-            @include opacity(.7);
-          }        
-        }
-
       }
 
       .action {
@@ -149,7 +197,7 @@ section.locations-holder {
       width: 100%;
       text-align: center;
       @include box-sizing(border-box);
-      @include transition(opacity .15s ease-in);
+      @include transition(all .2s ease-in-out);
 
       &.btn-blue.btn-large {
         text-align: left;
@@ -169,6 +217,22 @@ section.locations-holder {
       }
     }
   }
+
+  .photo-item{
+
+    border-bottom: 1px dashed $gray4;
+    padding-bottom: 10px;
+
+    input{
+      margin-top: 10px;
+    }
+
+    &:last-child{
+      border-bottom: none;
+      padding-bottom: 0px;
+    }
+
+  }
 }
 
 section.listings {
@@ -179,7 +243,6 @@ section.listings {
       height: 24px;
       font-size: 20px;
       margin-bottom: 0;
-      cursor: pointer;
 
       .listing-header { 
         padding-left: 24px; 
@@ -190,13 +253,14 @@ section.listings {
         text-overflow: ellipsis;
       }
     }
+
   }
 
   .accordion {
     margin: auto -15px;
 
     .accordion-inner { 
-      padding-top: 20px;
+      padding: 20px 0 0;
     }
 
     .listing-content {
@@ -206,6 +270,11 @@ section.listings {
         padding: 20px 15px;
         clear: both;
       }
+    }
+
+    header.listing.empty{
+      text-align: center;
+      color: $gray6;
     }
 
     @include dashboard-acc-group;
@@ -308,16 +377,6 @@ section.dashboard {
     li {
       margin-right: .5em;
 
-      @media (max-width: 767px) {
-        clear: both;
-        width: 100%;
-        margin: 0 0 .5em;
-
-        a {
-          width: 100%;
-          text-align: center;
-        }
-      }
     }
   }
 }

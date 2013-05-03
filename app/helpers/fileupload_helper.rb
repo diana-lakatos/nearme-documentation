@@ -25,16 +25,16 @@ module FileuploadHelper
     get_fileupload_photo_html(photo_url, destroy_photo_path, html_tag)
   end
 
-  def get_fileupload_photo_html(photo_url, destroy_photo_path, html_tag, content = '')
+  def get_fileupload_photo_html(photo_url, destroy_photo_path, html_tag = :li, content = '', options = {}, &block)
     content_tag(html_tag, 
-      content.html_safe +
       image_tag(photo_url) + 
-      link_to(content_tag(:span, '', :class=> 'ico-trash'), '' , {"data-url" => destroy_photo_path, :class => 'delete-photo delete-photo-thumb'}),
+      link_to(content_tag(:span, '', :class=> 'ico-trash'), '' , {"data-url" => destroy_photo_path, :class => 'delete-photo delete-photo-thumb'}) +
+      content.html_safe,
     :class => 'photo-item')
   end
 
-  def fileupload_photo_with_input(photo_url, destroy_photo_path, input_value, input_name = 'uploaded_photos[]',  html_tag = :li)
-    get_fileupload_photo_html(photo_url, destroy_photo_path, html_tag, "<input name='#{input_name}' value='#{input_value}' type='hidden'>")
+  def fileupload_photo_with_input(photo_url, destroy_photo_path, input_value, input_name = 'uploaded_photos[]',  html_tag = :li, options = {}, &block)
+    get_fileupload_photo_html(photo_url, destroy_photo_path, html_tag, "<input name='#{input_name}' value='#{input_value}' type='hidden'>", &block)
   end
   
   

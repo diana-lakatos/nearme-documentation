@@ -1,0 +1,30 @@
+.form-horizontal {
+
+  .control-group {
+    .free-price {
+      float: left;
+    }
+
+    .price-inputs-wrapper{
+      padding-right: 20px;
+    }
+
+    .currency-holder {
+      position: relative;
+      z-index: 2; 
+      margin-left: 11px;
+      width: 30px;
+      text-align: right;
+      color: $gray7;       
+    }
+
+    .price-input {
+      position: relative;
+      z-index: 1;
+      padding-left: 30px;
+      margin-left: -25px;
+      width: 120px;
+    }
+
+  }
+}

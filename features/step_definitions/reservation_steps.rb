@@ -152,13 +152,7 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
   listing = model!(table.hashes.first['Listing'])
 
   within '.space-reservation-modal' do
-    assert page.has_content?("Book space at #{listing.location.name}")
-    dates.each do |date|
-      formatted_date = date.strftime('%-d %B')
-      booking_line = "#{qty} #{listing.name}"
-      assert page.has_content?(formatted_date), "Modal should see #{formatted_date}"
-      assert page.has_content?(booking_line), "Modal should see #{booking_line}"
-    end
+    assert page.has_content?("#{qty} #{listing.name}")
   end
 end
 

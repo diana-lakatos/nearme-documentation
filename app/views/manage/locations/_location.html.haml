@@ -1,0 +1,5 @@
+= simple_form_for [:manage, location], :html => { :class => "form-horizontal", :multipart => true, :id => 'location-form' } do |f|
+
+  = render :partial => 'locations/location_form', :locals => { :f => f, :location => location }
+
+  = f.submit "Save", :id => 'submit-input'

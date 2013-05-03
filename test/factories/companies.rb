@@ -6,6 +6,10 @@ FactoryGirl.define do
     creator
     url "http://google.com"
 
+    before(:create) do |company|
+      company.industries << FactoryGirl.create(:industry) if company.industries.empty?
+    end
+
     factory :company_in_auckland do
       name "Company in Auckland"
     end

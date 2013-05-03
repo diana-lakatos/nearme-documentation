@@ -1,21 +1,76 @@
 Feature: As a user of the site
-  In order for them to manage their reservations / listings
+  In order to promote my company
   As a user
-  I want to view the dashboard
+  I want to manage my locaations
 
   Background:
     Given a user exists
       And I am logged in as the user
       And a company exists with creator: the user
-      And a location exists with company: the company, creator: the user, name: "Rad Annex House"
-      And a listing exists with location: the location, creator: the user, name: "Rad Annex", confirm_reservations: true
+      And a location_type exists with name: "Business"
+      And a location_type exists with name: "Co-working"
+      And a listing_type exists with name: "ListingType1"
+      And a listing_type exists with name: "ListingType2"
+      And a amenity_type exists with name: "AmenityType1"
+      And a amenity exists with amenity_type: the amenity_type, name: "Amenity1"
+      And a amenity exists with amenity_type: the amenity_type, name: "Amenity2"
+      And a amenity exists with amenity_type: the amenity_type, name: "Amenity3"
 
-  Scenario: A user can see their listings
-     When I am on the manage locations page
-     And I follow "Locations"
-     And I follow "Edit"
-     And I follow "Listings"
-     Then I should see "Rad Annex"
-      And I should see "Edit"
+  Scenario: A user can add new location
+    Given I am on the manage locations page
+     When I follow "Create New Location"
+      And I fill location form with valid details
+      And I submit the form
+     Then Location with my details should be created
+     
+  Scenario: A user can edit existing location
+    Given a location exists with company: the company
+      And I am on the manage locations page
+     When I click edit icon
+      And I provide new location data
+      And I submit the form
+     Then Location should be updated
+     When I click edit icon
+     When I follow "Delete this location"
+     Then Location has been deleted
 
+  Scenario: A user can add new listing
+    Given a location exists with company: the company
+      And I am on the manage locations page
+     When I follow "Create New Listing"
+      And I fill listing form with valid details
+      And I submit the form
+     Then Listing with my details should be created
+
+  Scenario: A user can edit existing listing
+    Given a location exists with company: the company
+      And a listing exists with location: the location
+      And I am on the manage locations page
+     When I click edit listing icon
+      And I provide new listing data
+      And I submit the form
+     Then Listing should be updated
+     When I click edit listing icon
+     When I follow "Delete this listing"
+     Then Listing has been deleted
+
+  Scenario: A user can disable existing price in listing
+    Given a location exists with company: the company
+      And a listing exists with location: the location, daily_price_cents: 1000
+      And I am on the manage locations page
+     When I click edit listing icon
+      And I disable daily pricing
+      And I submit the form
+      And I click edit listing icon
+     Then Listing daily pricing should be disabled
+
+  Scenario: A user can enable new pricing in listing
+    Given a location exists with company: the company
+      And a listing exists with location: the location, daily_price_cents: 1000
+      And I am on the manage locations page
+     When I click edit listing icon
+      And I enable weekly pricing
+      And I submit the form
+      And I click edit listing icon
+     Then Listing weekly pricing should be enabled
 

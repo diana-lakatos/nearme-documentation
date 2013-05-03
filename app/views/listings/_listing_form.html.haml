@@ -1,0 +1,75 @@
+- only_inputs = [] if only_inputs.nil?
+- photo_input_name_prefix = "listing" if local_assigns[:photo_input_name_prefix].nil?
+
+= f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
+= f.input :name, :label => 'Listing name', :placeholder => 'Examples, "Shared Desks", "Meeting Room", "Private Office"' if only_inputs.empty? || only_inputs.include?(:name)
+= f.input :description, :label => 'Listing description', :input_html => { :maxlength => 250}, :placeholder => 'Describe the individual listing that will be rented' if only_inputs.empty? || only_inputs.include?(:description)
+= f.association :listing_type, :label => "Listing type" if only_inputs.empty? || only_inputs.include?(:listing_type)
+= f.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" } if only_inputs.empty? || only_inputs.include?(:quantity)
+
+- if content_for? :currency
+  = yield(:currency)
+- else
+  = hidden_field_tag '', listing.location.currency, :id => 'currency-select'
+
+- if only_inputs.empty? || only_inputs.include?(:price)
+  %div{:class => "control-group #{"error" if f.object.errors.include?(:free).present?}"}
+    = f.label :daily_price, 'Price', :class => 'control-label' do
+      %abbr{:title => "required"} *
+      Price
+
+    .controls
+      .price-inputs-wrapper.left
+        %div
+          = f.check_box :enable_daily, class: 'enable_daily', 'data-enable-price' => true
+          %span.currency-holder
+          = f.number_field :daily_price, :as => :decimal, :label => false, :class => 'mini', :class => "price-input", 'data-price-input' => true
+          %span.periodicity /day
+
+        %div
+          = f.check_box :enable_weekly, class: 'enable_weekly', 'data-enable-price' => true
+          %span.currency-holder
+          = f.number_field :weekly_price, :as => :decimal, :label => false, :class => 'mini', :class => "price-input", 'data-price-input' => true
+          %span.periodicity /week
+
+        %div
+          = f.check_box :enable_monthly, class: 'enable_monthly', 'data-enable-price' => true
+          %span.currency-holder
+          = f.number_field :monthly_price, :as => :decimal, :label => false, :class => 'mini', :class => "price-input", 'data-price-input' => true
+          %span.periodicity /month
+      .free-price
+        .inline-rule
+        .or-part Or
+        = f.check_box :free, 'data-free-checkbox' => true
+        = f.label :free, "Free"
+  - if f.object.errors.include?(:free).present?
+    %p.error-block
+      = 'must be free if all prices are zero'
+
+- if only_inputs.empty? || only_inputs.include?(:availability_rules)
+  .control-group
+    = render :partial => 'availability_rules/form', :locals => { :f => f }
+
+
+- if only_inputs.empty? || only_inputs.include?(:confirm_reservations)
+  = f.input :confirm_reservations, :label => 'Confirm guest bookings', :as => :radio_buttons
+
+- if only_inputs.empty? || only_inputs.include?(:photos)
+  = file_upload_input_with_label('Photos', manage_photos_path('size' => 'space_listing'), "#{photo_input_name_prefix}[photos_attributes][0][image]", "Upload Photos") do
+    - if listing && listing.persisted?
+      %li.hidden.photo-item
+        = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes]", nil, :placeholder => 'Enter Photo Caption...', :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
+      - i = 0
+      - # existing listing - we want to display only photos that belong to this listing
+      - listing.photos.each do |photo|
+        = get_fileupload_photo_html(photo.image_url(:space_listing), destroy_space_wizard_photo_path(:id => photo.id), :li, ((text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{i}][caption]", photo.caption, :placeholder => 'Enter Photo Caption...', 'data-number' => i) + (hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{i}][id]", photo.id )) )
+        - i += 1
+    - else
+      - # new listing - if user uploaded photos and reloaded the page, we want to display all photos that do not belong to anything so far
+      - current_user.photos.select { |p| p.content.nil? && p.content_type=='Listing' }.each do |photo|
+        = fileupload_photo_with_input(photo.image_url(:thumb), destroy_space_wizard_photo_path(:id => photo.id), photo.id)
+
+.hidden
+  - Money::Currency.table.values.each do |c|
+    %span{:id => "currency_#{c[:iso_code]}"} 
+      = c[:symbol]

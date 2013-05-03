@@ -1,8 +1,16 @@
-.header-image {
-  margin-top: -60px;
-}
+section#w-hotels {
 
-.span4.pull-left {
-  margin-left: 0;
+  .header-image {
+    margin-top: -60px;
+  }
+
+  .span4 {
+    position: relative;
+  }
+
+  .booking-module-container  {
+    position: relative !Important;
+    width: 100% !Important;
+  }
 
 }

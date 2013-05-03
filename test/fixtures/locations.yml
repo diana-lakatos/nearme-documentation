@@ -1,7 +1,6 @@
 one:
   id: 1
   company_id: 1
-  name: "Supert Cool Location"
   description: "This is a *super* **cool** location."
   email: "location-1@example.com"
   address: "1234 Main St, Anytown, MD 98765, USA"

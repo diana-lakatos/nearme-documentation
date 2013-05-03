@@ -1,6 +1,0 @@
-- active ||= :space
-%ul.box-nav
-  %li{:class => ('active' if active == :space)}= link_to "Description & Details", [:edit, :manage, @location]
-  %li{:class => ('active' if active == :listings)}= link_to "Listings", [:manage, @location, :listings]
-
-

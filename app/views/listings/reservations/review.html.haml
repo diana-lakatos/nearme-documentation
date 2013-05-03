@@ -1,4 +1,5 @@
-%h1 Book space at #{@location.name}
+%h2 
+  %span.ico-location.padding #{@location.name}
 
 = form_tag secure_listing_reservations_url(@listing), :method => :post, :remote => true, :class => "payment form-horizontal" do
   = render 'listings/reservations/fields'
@@ -9,16 +10,12 @@
       %ul
         - @reservation.errors[:base].each do |error|
           %li= error
-        
-    
-  - @reservation.periods.each do |period|
-    .summary
-      .date= period.date.strftime("%e %B")
-      .bookings
-        .listing-reservation
-          %strong= @reservation.quantity
-          = @listing.name
-    %hr
+
+  %h2= "#{@reservation.quantity} #{@listing.name}"
+
+  = "#{pluralize(@reservation.periods.size, 'day')} between #{@reservation.periods.first.date.strftime("%B %e")} and #{@reservation.periods.last.date.strftime("%B %e")}."
+
+  %hr
 
   .summary
     .total-label Total Cost:
@@ -69,10 +66,9 @@
 
     %hr
 
-  %p.notice.text-center
     - if @reservation.listing.confirm_reservations?
-      This host manually confirms all bookings before payment.
-    By requesting a booking, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, target: '_blank'}.
+      %p.text-center
+        This host manually confirms all bookings before payment.
 
   = submit_tag 'Request Booking', :disable_with => "Booking..."
 

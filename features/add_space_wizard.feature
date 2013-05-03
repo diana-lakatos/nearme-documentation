@@ -8,6 +8,7 @@ Feature: A user can add a space
      And  I follow "List Your Space"
      And a location_type exists with name: "Business"
      And a listing_type exists with name: "Desk"
+     And a industry exists with name: "Industry"
      Then I should be at the "Sign Up" step
      When I fill in "user_name" with "Brett Jones"
      And I fill in "user_email" with "brettjones@email.com"
