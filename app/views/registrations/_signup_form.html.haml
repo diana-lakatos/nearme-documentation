@@ -9,15 +9,15 @@
     = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
 
     .name-holder.input-icon-holder
-      = f.text_field :name, :label => "Full Name", :placeholder => "Full name"
+      = f.text_field :name, :label => "Full Name", :placeholder => "Full name", :tabindex => '1'
       %span.ico-user
 
     .email-holder.input-icon-holder
-      = f.text_field :email, :label => "Email", :placeholder => "Email"
+      = f.text_field :email, :label => "Email", :placeholder => "Email", :tabindex => '2'
       %span.ico-mail
 
     .password-holder.input-icon-holder
-      = f.password_field :password, placeholder: "Password"
+      = f.password_field :password, placeholder: "Password", :tabindex => '3'
       %span.ico-lock
 
     - if f.object.errors[:password].any?
@@ -26,7 +26,7 @@
     %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, :target => '_blank'}.
 
     .actions
-      = f.submit 'Sign up', :class => 'desksnearme submit', :disable_with => "Signing up..."
+      = f.submit 'Sign up', :class => 'desksnearme submit', :disable_with => "Signing up...", :tabindex => '4'
 
 .text-center.already-a-user= link_to('Already a user?', new_user_session_path(:return_to => params[:return_to]), :rel => "modal.sign-up-modal")      
 
