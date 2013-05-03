@@ -6,6 +6,7 @@ class Track
 
   def self.location_hash(location)
     {
+      location_address: location.address,
       location_currency: location.currency,
       location_suburb: location.suburb,
       location_city: location.city,
@@ -73,6 +74,15 @@ class Track
         Track.distinct_id(current_user_id)
       ].inject(:merge))
     end
+
+    def self.viewed_list_your_space_sign_up(current_user_id)
+      Track.analytics.track('Viewed List Your Space, Sign Up', Track.distinct_id(current_user_id))
+    end
+
+    def self.viewed_list_your_space_list(current_user_id)
+      Track.analytics.track('Viewed List Your Space, List', Track.distinct_id(current_user_id))
+    end
+
   end
 
   class Book
@@ -133,24 +143,25 @@ class Track
   end
 
   class User
-    def self.signed_up(user, return_to, omniauth)
+    def self.signed_up(user, referrer, omniauth)
+      # We should .alias the user here so we keep events relating to their anonymous browsing.
+      # When this is merged: https://github.com/zevarito/mixpanel/pull/92
+
+      Track.analytics.set(user.id, Track.user_hash(user))
+
       Track.analytics.track('Signed Up', [
         {
-          via: Track::User.via(return_to),
-          return_to: return_to,
+          via: Track::User.via(referrer),
           provider: Track::User.provider(omniauth)
         },
         Track.distinct_id(user.id)
       ].inject(:merge))
-
-      Track.analytics.set(user.id, Track.user_hash(user))
     end
 
-    def self.logged_in(user, return_to, omniauth)
+    def self.logged_in(user, referrer, omniauth)
       Track.analytics.track('Logged In', [
         {
-          via: Track::User.via(return_to),
-          return_to: return_to,
+          via: Track::User.via(referrer),
           provider: Track::User.provider(omniauth)
         },
         Track.distinct_id(user.id)
@@ -159,8 +170,8 @@ class Track
       Track.analytics.set(user.id, Track.user_hash(user))
     end
 
-    def self.via(return_to)
-      if return_to == '/space/list'
+    def self.via(referrer)
+      if referrer.include?('return_to=%2Fspace%2Flist&wizard=space')
         'flow'
       else
         'other'

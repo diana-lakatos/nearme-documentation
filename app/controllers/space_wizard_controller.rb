@@ -9,8 +9,10 @@ class SpaceWizardController < ApplicationController
   def new
     flash.keep(:notice)
     if current_user
+      Track::List.viewed_list_your_space_list(current_user_id)
       redirect_to space_wizard_list_url
     else
+      Track::List.viewed_list_your_space_sign_up(current_user_id)
       redirect_to new_user_registration_url(:wizard => 'space', :return_to => space_wizard_list_path)
     end
   end

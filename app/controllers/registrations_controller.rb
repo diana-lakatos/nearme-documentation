@@ -21,7 +21,7 @@ class RegistrationsController < Devise::RegistrationsController
 
     # Only track the sign up if the user has actually been saved (i.e. there are no errors)
     if @user.persisted?
-      Track::User.signed_up(@user, params[:return_to], session[:omniauth])
+      Track::User.signed_up(@user, request.referrer, session[:omniauth])
     end
 
     # Clear out temporarily stored Provider authentication data if present

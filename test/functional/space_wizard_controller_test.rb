@@ -54,6 +54,17 @@ class SpaceWizardControllerTest < ActionController::TestCase
     post :submit_listing, get_params
   end
 
+  should 'track list your space list view' do
+    Track::List.expects(:viewed_list_your_space_list)
+    get :new
+  end
+
+  should 'track list your space sign up view' do
+    sign_out @user
+    Track::List.expects(:viewed_list_your_space_sign_up)
+    get :new
+  end
+
   private
 
   def get_params(daily_price = nil, weekly_price = nil, monthly_price = nil)
