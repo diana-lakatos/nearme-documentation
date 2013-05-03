@@ -139,6 +139,10 @@ class Reservation < ActiveRecord::Base
     total_amount_cents/100.0
   end
 
+  def total_negative_amount_dollars
+    total_amount_dollars * -1
+  end
+
   def total_days
     periods.size
   end

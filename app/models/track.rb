@@ -170,6 +170,10 @@ class Track
       Track.analytics.set(user.id, Track.user_hash(user))
     end
 
+    def self.charge(current_user_id, total_amount_dollars)
+      Track.analytics.track_charge(current_user_id, total_amount_dollars)
+    end
+
     def self.via(referrer)
       if !referrer.nil? && referrer.include?('return_to=%2Fspace%2Flist&wizard=space')
         'flow'

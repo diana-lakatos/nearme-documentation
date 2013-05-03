@@ -13,6 +13,7 @@ class ReservationObserver < ActiveRecord::Observer
     ReservationMailer.notify_guest_of_confirmation(reservation).deliver
     ReservationMailer.notify_host_of_confirmation(reservation).deliver
     Track::Book.confirmed_a_booking(reservation.location.creator.id, reservation, reservation.location)
+    Track::User.charge(reservation.owner.id, reservation.total_amount_dollars)
   end
 
   def after_reject(reservation, transaction)
@@ -23,11 +24,13 @@ class ReservationObserver < ActiveRecord::Observer
   def after_user_cancel(reservation, transaction)
     ReservationMailer.notify_host_of_cancellation(reservation).deliver
     Track::Book.cancelled_a_booking(reservation.location.creator.id, 'host', reservation, reservation.location)
+    Track::User.charge(reservation.owner.id, reservation.total_negative_amount_dollars)
   end
 
   def after_owner_cancel(reservation, transaction)
     ReservationMailer.notify_guest_of_cancellation(reservation).deliver
     Track::Book.cancelled_a_booking(reservation.owner.id, 'guest', reservation, reservation.location)
+    Track::User.charge(reservation.owner.id, reservation.total_negative_amount_dollars)
   end
 
   def after_expire(reservation, transaction)
