@@ -171,7 +171,7 @@ class Track
     end
 
     def self.via(referrer)
-      if referrer.include?('return_to=%2Fspace%2Flist&wizard=space')
+      if !referrer.nil? && referrer.include?('return_to=%2Fspace%2Flist&wizard=space')
         'flow'
       else
         'other'
