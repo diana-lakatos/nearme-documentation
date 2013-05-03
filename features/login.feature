@@ -96,3 +96,9 @@ Feature: A user can login
      When I manually sign up with valid credentials
      Then I am correctly signed in
       And I should see an indication I've just signed in
+
+  Scenario: A user is prompted to log in if tries to sign up with existing email
+    Given a user exists with email: "user@example.com"
+    When an anonymous user attempts to sign up with email user@example.com
+    Then a new account is not created
+     And a flash message is displayed informing them of this fact and prompting them to sign in via a 'Sign In' link

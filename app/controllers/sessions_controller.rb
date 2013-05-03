@@ -6,6 +6,7 @@ class SessionsController < Devise::SessionsController
   layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
   
   def new
+    @email ||= params[:email]
     super unless already_signed_in?
   end
 
