@@ -8,7 +8,6 @@ class SearchController < ApplicationController
 
   def index
     render "search/#{result_view}"
-    binding.pry
 
     Track::Search.conducted_a_search(current_user_id, result_view, @search, number_of_results)
   end

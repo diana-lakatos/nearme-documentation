@@ -47,7 +47,7 @@ class Track
     hash = {}
 
     unless current_user_id.nil?
-      hash.merge({ distinct_id: current_user_id })
+      hash.merge!({ distinct_id: current_user_id })
     end
 
     hash
@@ -179,19 +179,15 @@ class Track
   class Search
 
     def self.conducted_a_search(current_user_id, view, search, number_of_results)
-      address_components = if number_of_results > 0 && search.address_components.present?
-        search.address_components.result_hash
-      else
-        {}
-      end
+      ac = Track::Search.address_components(search, number_of_results)
 
       Track.analytics.track('Conducted a Search', [
         {
           search_view: view,
-          search_suburb: address_components.fetch('suburb', 'Unknown'),
-          search_city: address_components.fetch('city', 'Unknown'),
-          search_state: address_components.fetch('state', 'Unknown'),
-          search_country: address_components.fetch('country', 'Unknown'),
+          search_suburb: ac.fetch('suburb', nil),
+          search_city: ac.fetch('city', nil),
+          search_state: ac.fetch('state', nil),
+          search_country: ac.fetch('country', nil),
           search_result_count: number_of_results
         },
         Track.distinct_id(current_user_id)
@@ -208,6 +204,13 @@ class Track
       ].inject(:merge))
     end
 
+    def self.address_components(search, number_of_results)
+      if number_of_results > 0 && search.address_components.present?
+        search.address_components.result_hash
+      else
+        {}
+      end
+    end
   end
 
 end
