@@ -9,15 +9,15 @@
     = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
 
     .name-holder.input-icon-holder
-      = f.input :name, :label => false, :placeholder => "Full name", :tabindex => '1'
+      = f.input :name, :label => false, :placeholder => "Full name", :input_html => { :tabindex => '1' }
       %span.ico-user
 
     .email-holder.input-icon-holder
-      = f.input :email, :label => false, :placeholder => "Email", :tabindex => '2'
+      = f.input :email, :label => false, :placeholder => "Email", :input_html => { :tabindex => '2' }
       %span.ico-mail
 
     .password-holder.input-icon-holder
-      = f.input :password, :label => false, placeholder: "Password", :tabindex => '3'
+      = f.input :password, :label => false, placeholder: "Password", :input_html => { :tabindex => '3' }
       %span.ico-lock
 
     %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, :target => '_blank'}.
