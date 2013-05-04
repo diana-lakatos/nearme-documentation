@@ -6,6 +6,10 @@ When(/^I log in as #{capture_model}$/) do |user_instance|
   login model!(user_instance)
 end
 
+When /^an anonymous user attempts to sign up with email (.*)$/ do |email|
+  sign_up_manually({:email => email})
+end
+
 Given /^I am logged in manually$/ do
   sign_up_manually
 end
@@ -43,4 +47,12 @@ end
 
 Then /^I should see an indication I've just signed in$/ do
   step 'I should see "You have signed up successfully."'
+end
+
+Then /^a new account is not created$/ do
+  assert_equal 1, User.count
+end
+
+Then /^a flash message is displayed informing them of this fact and prompting them to sign in via a '(.*)' link$/ do |link_content|
+  page.first('.alert p').text.should match(link_content)
 end

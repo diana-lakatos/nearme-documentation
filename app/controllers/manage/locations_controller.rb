@@ -16,7 +16,7 @@ class Manage::LocationsController < Manage::BaseController
     @location = @company.locations.build(params[:location])
 
     if @location.save
-      flash[:notice] = "Great, your new Desk/Room has been added!"
+      flash[:notice] = "Great, your new Space has been added!"
       redirect_to manage_locations_path
     else
       render :new

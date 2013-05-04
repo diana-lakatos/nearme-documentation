@@ -10,6 +10,7 @@ class Manage::ListingsController < Manage::BaseController
 
   def new
     @listing = @location.listings.build
+    AvailabilityRule.default_template.apply(@listing)
   end
 
   def create
@@ -66,8 +67,6 @@ class Manage::ListingsController < Manage::BaseController
   def find_listing
     @listing = current_user.listings.find(params[:id])
   end
-
-  private
 
   def convert_price_params
     # method to_f removes all special characters, like hyphen. However we do not want to convert nil to 0, that's why modifier.

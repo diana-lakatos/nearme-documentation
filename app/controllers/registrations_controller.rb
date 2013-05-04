@@ -17,9 +17,13 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def create
+    if User.find_by_email(params[:user][:email])
+      set_flash_message :notice, :email_exists, :email => params[:user][:email], :link => (ActionController::Base.helpers.link_to 'Sign In', new_user_session_url(:email => params[:user][:email]), :rel => 'modal.sign-up-modal', :class => "nav-link header-second margin-right ico-login padding-right")
+    end if params[:user] && !params[:user][:email].blank?
     super
     AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(@user.id) unless @user.new_record?
     # Clear out temporarily stored Provider authentication data if present
+
     session[:omniauth] = nil unless @user.new_record?
     flash[:redirected_from_sign_up] = true
   end

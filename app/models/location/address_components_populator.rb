@@ -27,6 +27,10 @@ class Location::AddressComponentsPopulator
     raise('Limit reached') unless @current_geocoding < LIMIT
   end
 
+  def set_result(result)
+    @result = result
+  end
+
   def wrap_result_address_components
     wrapper_hash = {}
     @result.address_components.each_with_index do |address_component_hash, index|

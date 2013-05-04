@@ -106,6 +106,21 @@ class LocationTest < ActiveSupport::TestCase
 
   end
 
+  context "geolocate ourselves" do
+
+    def setup
+      @location = FactoryGirl.create(:location_in_san_francisco)
+    end
+
+    should "not be valid if cannot geolocate" do
+        stub_request(:get, "http://maps.googleapis.com/maps/api/geocode/json?address=this%20does%20not%20exists%20at%20all&language=en&sensor=false").to_return(:status => 200, :body => "{}", :headers => {})
+      @location.address = "this does not exists at all"
+      @location.save
+      assert @location.errors.include?(:latitude)
+    end
+
+  end
+
 
   context "creating address components" do
 
