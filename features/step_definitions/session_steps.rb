@@ -53,6 +53,6 @@ Then /^a new account is not created$/ do
   assert_equal 1, User.count
 end
 
-Then /^a flash message is displayed informing them of this fact and prompting them to sign in via a '(.*)' link$/ do |link_content|
-  page.first('.alert p').text.should match(link_content)
+Then /^a user is taken into sign in modal without page reload$/ do
+  page.first('.alert p').text.should match("please log in.")
 end

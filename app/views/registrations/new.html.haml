@@ -14,12 +14,10 @@
 
           = render 'registrations/signup_form'
 
-- content_for :script do
-  :javascript
-    analytics.track('Signed Up');
-
-- # If we're rendering in a modal, ensure we have the correct style class assigned.
 - if request.xhr?
   :javascript
     Modal.setClass('sign-up-modal')
 
+- content_for :script do
+  :javascript
+    analytics.track('Signed Up');

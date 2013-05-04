@@ -59,4 +59,13 @@ class ApplicationController < ActionController::Base
     render "public/404", :status => :not_found
   end
 
+  def render_redirect_url_as_json
+        self.response_body = nil
+        redirection_url = response.location
+        response.location = nil
+        response.status = 200
+        render :json => { "redirect" => redirection_url }
+        self.content_type = 'application/json'
+  end
+
 end

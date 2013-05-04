@@ -175,7 +175,7 @@ When(/^I sign up in the modal to continue booking$/) do
 end
 
 When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved for '(.+)'$/ do |user, qty, listing, date|
-  user = model!(user)
+  user = User.last
   qty = qty ? qty.to_i : 1
 
   listing = model!(listing)
