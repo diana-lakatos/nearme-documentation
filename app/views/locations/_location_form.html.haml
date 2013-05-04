@@ -1,14 +1,17 @@
 - only_inputs = [] if only_inputs.nil?
 - if only_inputs.empty? || only_inputs.include?(:address)
-  %div{:class => "control-group #{"error" if f.object.errors.include?(:address).present?}"}
+  %div{:class => "control-group #{"error" if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)}"}
     = f.label :address, :class => "control-label" do
       %abbr{:title => "required"} *
       Location address
     .controls
       = f.text_field :address, :'data-behavior' => 'address-autocomplete', :placeholder => ""
-      - if f.object.errors.include?(:address).present?
+      - if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)
         %p.error-block
-          = f.object.errors[:address][0]
+          - if f.object.errors[:address].present?
+            = f.object.errors[:address][0]
+          - else
+            does not exists
 
 
       .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
