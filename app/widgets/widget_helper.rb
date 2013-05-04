@@ -31,7 +31,7 @@ class WidgetHelper
       @result_hash[:items] << get_count_until_date(date)
       @result_hash[:x_axis] << date.strftime('%d-%m')
     end
-    @result_hash[:y_axis] = [0, @result_hash[:items].last+@result_hash[:items].last*0.1]
+    @result_hash[:y_axis] = [@result_hash[:items].first, @result_hash[:items].last]
     @result_hash
   end
 
