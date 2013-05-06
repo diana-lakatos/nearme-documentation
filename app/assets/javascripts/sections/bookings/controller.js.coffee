@@ -30,9 +30,7 @@ class Bookings.Controller
       @reviewBooking()
 
     @quantityField.on 'change', (event) =>
-      @listing.setDefaultQuantity(parseInt($(event.target).val()))
-      @updateQuantityField()
-      @datepicker.reset()
+      @quantityWasChanged()
 
     @datepicker.bind 'datesChanged', (dates) =>
       @listing.setDates(dates)
@@ -101,6 +99,15 @@ class Bookings.Controller
 
   enableBookButton: ->
     $('.click-disabled').removeClass('click-disabled').find('span.text').text('Book')
+
+  quantityWasChanged: ->
+    @listing.setDefaultQuantity(parseInt(@quantityField.val(), 10))
+    @updateQuantityField()
+
+    # Reset the datepicker if the booking is no longer available
+    # with the new quantity.
+    @datepicker.reset() unless @listing.bookingValid()
+    @updateSummary()
 
   updateQuantityField: (qty = @listing.defaultQuantity) ->
     @container.find('.customSelect.quantity .customSelectInner').text(qty)

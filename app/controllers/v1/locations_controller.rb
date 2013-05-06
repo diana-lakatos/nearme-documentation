@@ -40,4 +40,5 @@ class V1::LocationsController <  V1::BaseController
     def find_location
       @location = current_user.locations.find(params[:id])
     end
+
 end

@@ -1,14 +1,14 @@
 .booking-module-container
   .booking-module
-    - if listing.daily_price
-      %span.label.label-daily-price
+    - unless listing.daily_price.to_f.zero?
+      %span.label.label-daily-price 
         = "#{money_without_cents_and_with_symbol(listing.daily_price)}"
         %span.period   Day
     - else
       %span.label.unavailable
         Price
         %span.period   N/A        
-    - if listing.weekly_price
+    - unless listing.weekly_price.to_f.zero?
       %span.label.label-weekly-price
         = "#{money_without_cents_and_with_symbol(listing.weekly_price)}"
         %span.period   Week
@@ -16,7 +16,7 @@
       %span.label.unavailable
         Price
         %span.period   N/A          
-    - if listing.monthly_price
+    - unless listing.monthly_price.to_f.zero?
       %span.label.label-monthly-price
         = "#{money_without_cents_and_with_symbol(listing.monthly_price)}"
         %span.period   Month

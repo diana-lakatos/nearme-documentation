@@ -39,10 +39,6 @@ DesksnearMe::Application.routes.draw do
 
   resources :reservations, :only => :update
 
-  ## routing after 'dashboard/' is handled in backbone cf. router.js
-  get 'dashboard' => 'dashboard#index', as: :controlpanel
-  get 'dashboard/locations' => 'dashboard#index', as: :controlpanel
-
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
       get :bookings
@@ -51,25 +47,19 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  namespace :manage, :path => 'dashboard' do
-    resources :companies do
-      resources :locations, :only => [:index] do
-      end
-    end
+  namespace :manage do
 
     resources :locations do
-      resources :listings, :only => [:index, :new, :create]
-      member do
-        get :map
-        get :amenities
-        get :availability
-        get :photos
-        get :associations
+      resources :listings
+    end
+
+    resources :photos, :only => [:create, :destroy] do
+      collection do
+        put '', :to => :create # it's a dirty hack for photo uploader, in edit listing/location it uses PUT instead of POST.. put '' matches manage/photos
       end
     end
 
     resources :listings do
-      resources :photos
       resources :reservations, :only => [:update], :controller => 'listings/reservations'
     end
   end

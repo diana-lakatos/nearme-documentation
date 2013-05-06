@@ -1,8 +1,0 @@
-<select class="select required" id="location_location_type_id" name="location_type_id">
-  <option value=""></option>
-  {{#select location_type_id}}
-  <% LocationType.all.each do |type| %>
-    <option value ="<%= type.id %>"><%= type.name %></option>
-  <% end %>
-  {{/select}}
-</select>

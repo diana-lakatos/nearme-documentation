@@ -55,6 +55,14 @@ class @Bookings.Listing
   setDates: (dates) ->
     @bookedDatesArray = dates
 
+  # Check the selected dates are valid with the quantity
+  # and availability
+  bookingValid: ->
+    for date in @bookedDates()
+      if @availabilityFor(date) < @getQuantity()
+        return false
+    true
+
   # Wrap queries on the availability data
   class Availability
     constructor: (@data) ->

@@ -2,6 +2,10 @@ select {
   margin: 16px 0;
 }
 
+.custom-availability-rules select{
+  margin: 16px 2px;
+}
+
 input[type=file] {
   margin: 12px 0;
 }
@@ -26,6 +30,15 @@ input[type=tel] {
    cursor: pointer;
 }
 
+
+label.radio {
+  margin-right: .4em;
+}
+
+.radio_buttons.required {
+  margin-top: 17px;
+}
+
 .fileupload {
 
    input.browse-file {
@@ -42,7 +55,7 @@ input[type=tel] {
     cursor: pointer;
   }
 
-  .progress{
+  .progress {
     clear: both;
   }
   
@@ -77,18 +90,18 @@ input[type=tel] {
     }
   }
 
-  .thumbnail-processing{
+  .thumbnail-processing {
     width: 100%;
     height: 50px;
     text-align: center;
 
-    .loading-icon{
+    .loading-icon {
       width: 100%;
       height: 16px;
       background: url(/assets/ajax-loader.gif) no-repeat center;
     }
 
-    .loading-text{
+    .loading-text {
       padding-top: 5px;
     }
   }
@@ -178,7 +191,8 @@ form {
   }
 
   .control-group.error {
-    input, textarea {
+    // ul is for chosen
+    input, textarea, ul, select {
       border-color: #e58984;
     }
   }
@@ -392,7 +406,7 @@ form {
     .control-label {
       width: 180px;
       float: left;
-      margin-top: 13px;
+      margin-top: 11px;
       text-align: right;
       color: $gray8;
 
@@ -400,7 +414,10 @@ form {
         margin-top: 1px;
       }
       
-      &.flush-top {
+      &.flush-top,
+      &.currency,
+      &.boolean.optional,
+      &.radio_buttons.optional {
         margin: 0 0 20px;
 
         @media (max-width: 480px) {
@@ -519,3 +536,4 @@ form {
   }
 }
   
+

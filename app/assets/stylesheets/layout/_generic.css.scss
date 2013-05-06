@@ -108,23 +108,32 @@ hr,
 //  <span class="inline-rule"><span>or</span></span>
 .inline-rule {
   display: inline-block;
-  height: 1px;
+  height: 162px;
   background: #b4b5b5;
   text-align: center;
   vertical-align: middle;
   line-height: 14px;
   margin: 0;
+  width: 1px;
 
-  > span {
-    display: inline-block;
-    margin: 0 25px;
-    padding: 0 5px;
-    font-size: 14px;
-    position: relative;
-    top: -7px;
-    background: $dnm_white;
-    color: $gray5;
+  @media (max-width: $iphone-portrait) {
+    display: none;
   }
+}
+
+.or-part {
+  display: inline-block;
+  margin: 0 0;
+  padding: 0 5px;
+  font-size: 14px;
+  position: relative;
+  bottom: 0px;
+  left: -16px;
+  background: $dnm_white;
+  color: $gray5;
+  @media (max-width: $iphone-portrait) {
+    left: 0;
+  }  
 }
 
 .divider {
@@ -142,7 +151,7 @@ hr,
   font-size: 1.2em;
   cursor: pointer;
   color:black;
-  opacity: .6;
+  @include opacity(.6);
 
 
   &:hover {

@@ -45,20 +45,20 @@ class Listing < ActiveRecord::Base
     :as => :target,
     :dependent => :destroy
 
-  # === Callbacks
+  before_validation :remove_disabled_prices
 
   validates_presence_of :location, :name, :description, :quantity, :listing_type_id
   validates_numericality_of :quantity
   validates_length_of :description, :maximum => 250
-  # Uncomment PriceValidator when dashboard is refactored
-  #validates_with PriceValidator
+  validates_with PriceValidator
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
     :name, :description, :daily_price, :weekly_price, :monthly_price,
     :daily_price_cents, :weekly_price_cents, :monthly_price_cents, :availability_template_id, 
     :availability_rules_attributes, :defer_availability_rules, :free,
-    :photos_attributes, :listing_type_id
+    :photos_attributes, :listing_type_id, :enable_daily, :enable_weekly, :enable_monthly
 
+  attr_accessor :enable_daily, :enable_weekly, :enable_monthly
 
   delegate :to_s, to: :name
 
@@ -80,6 +80,29 @@ class Listing < ActiveRecord::Base
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :photos, :allow_destroy => true
 
+  def enable_daily
+    @enable_daily || price_enabled_by_default?(daily_price)
+  end
+    
+  def enable_weekly
+    @enable_weekly || price_enabled_by_default?(weekly_price)
+  end
+    
+  def enable_monthly
+    @enable_monthly || price_enabled_by_default?(monthly_price)
+  end
+
+  def price_enabled_by_default?(price)
+    # if object is persisted, it means that owner already provided prices
+    if persisted?
+      # only prices greater than 0 are enabled
+      price.to_f > 0
+    else
+      # if object is not persisted and form has not been submited yet, all prices are enabled
+      true
+    end
+  end
+
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
   def availability
@@ -88,6 +111,12 @@ class Listing < ActiveRecord::Base
     else
       super # See: AvailabilityRule::TargetHelper#availability
     end
+  end
+
+  def remove_disabled_prices
+    daily_price_cents = nil if !enable_daily || daily_price.to_f.zero?
+    weekly_price_cents = nil if !enable_weekly || weekly_price.to_f.zero?
+    monthly_price_cents = nil if !enable_monthly || monthly_price.to_f.zero?
   end
 
   # Trigger clearing of all existing availability rules on save

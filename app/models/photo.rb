@@ -15,6 +15,8 @@ class Photo < ActiveRecord::Base
 
   mount_uploader :image, PhotoUploader
 
+  AVAILABLE_CONTENT = ['Listing', 'Location']
+
   def method_missing(method, *args, &block)
     super(method, *args, &block)
   rescue NoMethodError

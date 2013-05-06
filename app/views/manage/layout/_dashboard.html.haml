@@ -1,0 +1,16 @@
+.row-fluid
+  .span8.offset2
+    %h1
+      = link_to manage_locations_path, :class => 'dashboard-home-link' do
+        %span.ico-location.padding
+          Manage Locations
+    %section.locations-holder
+      %section.locations-area
+        = yield
+
+- content_for :script do
+  :javascript
+    $(function() {
+      new Dashboard.Controller($('section.locations-holder'))
+    });
+

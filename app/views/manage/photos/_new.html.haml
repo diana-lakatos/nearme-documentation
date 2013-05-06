@@ -1,4 +1,0 @@
-= simple_form_for([:manage, @listing, @photo || Photo.new], :html => {:multipart => true}) do |f|
-  = f.input :image, :as => :file, :label => "New Photo"
-  = f.input :caption
-  = f.button :submit, "Upload"

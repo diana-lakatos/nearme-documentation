@@ -41,6 +41,10 @@ select,
 p {
   font:400 18px/28px $font-regular, sans-serif;
   color: $gray6;
+
+  @media (max-width: 480px) {
+    @include adjust-font-size-to(16px);
+  }
 }
 
 h1,

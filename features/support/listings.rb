@@ -77,6 +77,32 @@ module ListingsHelpers
   def latest_listing
     Listing.last
   end
+
+  def fill_listing_form
+    fill_in "listing_name", with: "My Name"
+    fill_in "listing_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
+    select "ListingType2", from: "listing_listing_type_id"
+    fill_in "listing_quantity", with: "5"
+    fill_in "listing_daily_price", with: "10"
+    fill_in "listing_weekly_price", with: "60"
+    fill_in "listing_monthly_price", with: "200"
+    page.find("#listing_enable_weekly").set(true)
+  end
+
+  def assert_listing_data(listing, update = false)
+    assert_equal 'My Name', listing.name
+    assert_equal 'Proin adipiscing nunc vehicula lacus varius dignissim.', listing.description
+    assert_equal 'ListingType2', listing.listing_type.name
+    assert_equal 5, listing.quantity
+    assert_equal 1000, listing.daily_price_cents
+    assert_equal 6000, listing.weekly_price_cents
+    if update
+      # the trick is that checkbox 'enable_monthly' is unchecked in update, so it should be nil!
+      assert_nil listing.monthly_price_cents
+    else
+      assert_equal 20000, listing.monthly_price_cents
+    end
+  end
 end
 
 World(ListingsHelpers)

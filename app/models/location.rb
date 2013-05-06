@@ -4,8 +4,8 @@ class Location < ActiveRecord::Base
   friendly_id :formatted_address, use: :slugged
 
   attr_accessible :address, :amenity_ids, :company_id, :description, :email,
-    :info, :latitude, :local_geocoding, :longitude, :name,
-    :currency, :phone, :formatted_address, :availability_rules_attributes,
+    :info, :latitude, :local_geocoding, :longitude, :currency, 
+    :phone, :formatted_address, :availability_rules_attributes,
     :availability_template_id, :special_notes, :listings_attributes, :suburb,
     :city, :state, :country, :street, :address_components, :location_type_id, :photos
   attr_accessor :local_geocoding # set this to true in js
@@ -29,7 +29,7 @@ class Location < ActiveRecord::Base
 
   has_many :availability_rules, :as => :target
 
-  validates_presence_of :company, :description, :address, :latitude, :longitude, :location_type_id, :currency
+  validates_presence_of :company, :description, :address, :latitude, :longitude, :location_type_id, :currency, :phone
   validates :email, email: true, allow_nil: true
   validates :currency, currency: true, allow_nil: false
   validates_length_of :description, :maximum => 250
@@ -58,12 +58,12 @@ class Location < ActiveRecord::Base
                                             units: :km)
   end
 
-  def admin?(user)
-    creator == user
+  def name
+    "#{company.name} @ #{street}"
   end
 
-  def name
-    super.presence || company.name
+  def admin?(user)
+    creator == user
   end
 
   def currency
@@ -71,7 +71,7 @@ class Location < ActiveRecord::Base
   end
 
   def street
-    super.presence || "Unknown"
+    super.presence || address.split(",")[0]
   end
 
   def suburb
@@ -133,11 +133,19 @@ class Location < ActiveRecord::Base
   def fetch_coordinates
     # If we aren't locally geocoding (cukes and people with JS off)
     if address_changed? && !(latitude_changed? || longitude_changed?)
-      geocoded = Geocoder.search(address).try(:first)
+      geocoded = Geocoder.search(read_attribute(:address)).try(:first)
       if geocoded
+        logger.debug geocoded.to_json
         self.latitude = geocoded.coordinates[0]
         self.longitude = geocoded.coordinates[1]
         self.formatted_address = geocoded.formatted_address
+        populator = Location::AddressComponentsPopulator.new
+        populator.set_result(geocoded)
+        self.address_components = populator.wrap_result_address_components
+      else
+        # do not allow to save when cannot geolocate
+        self.latitude = nil
+        self.longitude = nil
       end
     end
   end

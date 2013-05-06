@@ -39,10 +39,6 @@ module ApplicationHelper
     end
   end
 
-  def context_flash
-    render 'shared/context_flash'
-  end
-
   def truncate_with_ellipsis(body, length, html_options = {})
 
     body ||= ''

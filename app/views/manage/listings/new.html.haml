@@ -1,13 +1,1 @@
-= render :layout => 'manage/layout' do
-  .box
-    %h2
-      New listing for
-      %strong="#{@location.name}"
-
-    = render 'manage/locations/navigation', :active => :listings
-
-    = simple_form_for([:manage, @location, @listing], :html => { :class => 'form-horizontal new_listing' }) do |f|
-      = render 'form', :f => f
-
-      .actions
-        = f.button :submit, :disable_with => 'Creating...'
+= render :partial => 'manage/layout/listing_form', :locals => { :location => @location, :listing => @listing, :editable => false }

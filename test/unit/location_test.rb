@@ -22,13 +22,26 @@ class LocationTest < ActiveSupport::TestCase
   should_not allow_value('x' * 251).for(:description)
 
   context "#name" do
-    should "use company name if location name is nil" do
+
+    setup do
       @location = FactoryGirl.create(:location_in_san_francisco)
-      @location.name = nil
-      @location.save!
-      @location.reload
-      assert_equal @location.company.name, @location.name
+      @location.company.name = 'This is company name'
     end
+    should "use combination of company name and street if available" do
+      @location.street = 'Street'
+      @location.company.save!
+      @location.company.reload
+      assert_equal "This is company name @ Street", @location.name
+    end
+
+    should "use combination of company name and part of address if available" do
+      @location.street = nil
+      @location.address = 'Street, City, Country'
+      @location.company.save!
+      @location.company.reload
+      assert_equal "This is company name @ Street", @location.name
+    end
+
   end
 
   context "#description" do
@@ -93,6 +106,21 @@ class LocationTest < ActiveSupport::TestCase
 
   end
 
+  context "geolocate ourselves" do
+
+    def setup
+      @location = FactoryGirl.create(:location_in_san_francisco)
+    end
+
+    should "not be valid if cannot geolocate" do
+        stub_request(:get, "http://maps.googleapis.com/maps/api/geocode/json?address=this%20does%20not%20exists%20at%20all&language=en&sensor=false").to_return(:status => 200, :body => "{}", :headers => {})
+      @location.address = "this does not exists at all"
+      @location.save
+      assert @location.errors.include?(:latitude)
+    end
+
+  end
+
 
   context "creating address components" do
 
@@ -136,8 +164,8 @@ class LocationTest < ActiveSupport::TestCase
       assert_equal "San Francisco", @location.city
       assert_equal "California", @location.state
       assert_equal "United States", @location.country
-      assert_equal("Unknown", @location.suburb)
-      assert_equal("Unknown", @location.street)
+      assert_equal "Unknown", @location.suburb
+      assert_equal "San Francisco", @location.street # this is first part of address
     end
   end
 end
