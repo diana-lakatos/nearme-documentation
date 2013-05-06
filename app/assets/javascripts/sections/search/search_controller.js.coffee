@@ -84,7 +84,7 @@ class Search.SearchController extends Search.Controller
   updateDateFields: ->
     formatDate = (date) ->
       if date
-        "#{date.getDate()} #{DNM.util.Date.monthName(date, 3)}"
+        "#{DNM.util.Date.monthName(date, 3)} #{date.getDate()}"
       else
         ""
 
