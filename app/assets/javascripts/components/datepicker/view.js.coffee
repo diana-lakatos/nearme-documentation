@@ -107,8 +107,8 @@ class Datepicker.View
     tOffset = $(@positionTarget).offset()
 
     # Width/height of the position target
-    tWidth = $(@positionTarget).width()
-    tHeight = $(@positionTarget).height()
+    tWidth = $(@positionTarget).outerWidth()
+    tHeight = $(@positionTarget).outerHeight()
 
     # Window height and scroll position
     wHeight = $(window).height()
