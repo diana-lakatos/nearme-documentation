@@ -12,7 +12,7 @@ module LocationsHelper
 
   def location_listings_json(location = @location)
     location.listings.map { |listing|
-      listing_bookings_data(listing)
+      listing_booking_data(listing)
     }.to_json
   end
 
