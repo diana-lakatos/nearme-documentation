@@ -34,7 +34,7 @@
         %span.ico-calendar-end
         %span.calendar-text End
     .quantity
-      %span.resource= listing.listing_type.name.pluralize
+      %span.resource{:'data-singular' => listing.listing_type.name, :'data-plural' => listing.listing_type.name.pluralize}= listing.listing_type.name
       = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity' 
     .price
       Total
