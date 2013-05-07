@@ -33,7 +33,7 @@ class Location::AddressComponentsPopulator
 
   def wrap_result_address_components
     wrapper_hash = {}
-    address_components.each_with_index do |address_component_hash, index|
+    @result.address_components.each_with_index do |address_component_hash, index|
       wrapper_hash["#{index}"] = address_component_hash
     end
     wrapper_hash

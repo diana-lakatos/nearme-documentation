@@ -10,11 +10,6 @@ class SessionsController < Devise::SessionsController
     super unless already_signed_in?
   end
 
-  def create
-    super
-    Track::User.logged_in(current_user, params[:return_to], session[:omniauth])
-  end
-
   private
 
   def set_default_remember_me

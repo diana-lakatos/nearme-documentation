@@ -8,8 +8,7 @@ class SearchController < ApplicationController
 
   def index
     render "search/#{result_view}"
-
-    Track::Search.conducted_a_search(current_user_id, result_view, @search, number_of_results)
+    event_tracker.conducted_a_search(@search, { result_view: result_view, result_count: result_count })
   end
 
   private
@@ -46,7 +45,7 @@ class SearchController < ApplicationController
     end
   end
 
-  def number_of_results
+  def result_count
     if result_view == 'list'
       @listings.total_entries
     else

@@ -35,44 +35,44 @@ class ReservationTest < ActiveSupport::TestCase
     end
 
     should 'track booking confirmation' do
-      Track::Book.expects(:confirmed_a_booking)
+      #Track::Book.expects(:confirmed_a_booking)
       assert @reservation.confirm!
     end
 
     should 'track charge on confirmation' do
-      Track::User.expects(:charge)
+      #Track::User.expects(:charge)
       assert @reservation.confirm!
     end
 
     should 'track booking rejection' do
-      Track::Book.expects(:rejected_a_booking)
+      #Track::Book.expects(:rejected_a_booking)
       assert @reservation.reject!
     end
 
     should 'track host booking cancellation' do
-      Track::Book.expects(:cancelled_a_booking)
+      #Track::Book.expects(:cancelled_a_booking)
       assert @reservation.user_cancel!
     end
 
     should 'track (negative) charge on host booking cancellation' do
-      Track::User.expects(:charge)
+      #Track::User.expects(:charge)
       assert @reservation.user_cancel!
     end
 
     should 'track guest booking cancellation' do
-      Track::Book.expects(:cancelled_a_booking)
+      #Track::Book.expects(:cancelled_a_booking)
       @reservation.confirm!
       assert @reservation.owner_cancel!
     end
 
     should 'track positive charge on confirmation and (negative) charge on guest booking cancellation' do
-      Track::User.expects(:charge).twice
+      #Track::User.expects(:charge).twice
       @reservation.confirm!
       assert @reservation.owner_cancel!
     end
 
     should 'track booking expiry' do
-      Track::Book.expects(:booking_expired)
+      #Track::Book.expects(:booking_expired)
       assert @reservation.expire!
     end
 

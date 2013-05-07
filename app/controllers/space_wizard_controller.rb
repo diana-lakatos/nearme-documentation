@@ -9,10 +9,10 @@ class SpaceWizardController < ApplicationController
   def new
     flash.keep(:notice)
     if current_user
-      Track::List.viewed_list_your_space_list(current_user_id)
+      event_tracker.viewed_list_your_space_list
       redirect_to space_wizard_list_url
     else
-      Track::List.viewed_list_your_space_sign_up(current_user_id)
+      event_tracker.viewed_list_your_space_sign_up
       redirect_to new_user_registration_url(:wizard => 'space', :return_to => space_wizard_list_path)
     end
   end
@@ -34,8 +34,8 @@ class SpaceWizardController < ApplicationController
         listing.save!
       end
 
-      Track::List.created_a_location(current_user_id, 'wizard', @user.locations.first)
-      Track::List.created_a_listing(current_user_id, 'wizard', @user.first_listing)
+      event_tracker.created_a_location(@user.locations.first, { via: 'wizard' })
+      event_tracker.created_a_listing(@user.first_listing, { via: 'wizard' })
 
       redirect_to manage_locations_path, notice: 'Your space was listed! You can provide more details about your location and listing from this page.'
     else

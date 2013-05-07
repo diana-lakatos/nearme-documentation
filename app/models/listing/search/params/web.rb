@@ -21,4 +21,19 @@ class Listing::Search::Params::Web < Listing::Search::Params
     @address_components
   end
 
+  def suburb
+    address_components.result_hash.fetch('suburb') rescue nil
+  end
+
+  def city
+    address_components.result_hash.fetch('city') rescue nil
+  end
+
+  def state
+    address_components.result_hash.fetch('state') rescue nil
+  end
+
+  def country
+    address_components.result_hash.fetch('country') rescue nil
+  end
 end

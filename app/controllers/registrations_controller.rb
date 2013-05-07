@@ -24,11 +24,10 @@ class RegistrationsController < Devise::RegistrationsController
 
     # Only track the sign up if the user has actually been saved (i.e. there are no errors)
     if @user.persisted?
-      Track::User.signed_up(@user, request.referrer, session[:omniauth])
+      event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: provider })
     end
 
     # Clear out temporarily stored Provider authentication data if present
-
     session[:omniauth] = nil unless @user.new_record?
   end
 
@@ -85,4 +84,23 @@ class RegistrationsController < Devise::RegistrationsController
     session[:user_return_to] = params[:return_to] if params[:return_to].present?
   end
 
+  private
+
+  def provider
+    provider = unless session[:omniauth].nil?
+      session[:omniauth][:provider]
+    else
+      'native'
+    end
+  end
+
+  def signed_up_via
+    if !request.referrer.nil? && request.referrer.include?('return_to=%2Fspace%2Flist&wizard=space')
+      'flow'
+    else
+      'other'
+    end
+  end
+
 end
+

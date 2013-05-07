@@ -9,7 +9,7 @@ module Listings
     # Review a reservation prior to confirmation. Same interface as create.
     def review
       @reservation.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
-      Track::Book.opened_booking_modal(current_user_id, user_signed_in?, @reservation, @location)
+      event_tracker.opened_booking_modal(@reservation, @location)
     end
 
     # Reserve bulk listings on a Location
@@ -24,8 +24,8 @@ module Listings
       setup_credit_card_customer if using_credit_card?
 
       if @errors.empty? && @reservation.save
+        event_tracker.requested_a_booking(@reservation, @location)
         render # Successfully reserved listing
-        Track::Book.requested_a_booking(current_user_id, @reservation, @location)
       else
         render :review
       end

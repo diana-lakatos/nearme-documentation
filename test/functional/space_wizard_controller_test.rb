@@ -50,19 +50,19 @@ class SpaceWizardControllerTest < ActionController::TestCase
   end
 
   should "track location and listing creation" do
-    Track::List.expects(:created_a_location)
-    Track::List.expects(:created_a_listing)
+    #Track::List.expects(:created_a_location)
+    #Track::List.expects(:created_a_listing)
     post :submit_listing, get_params
   end
 
   should 'track list your space list view' do
-    Track::List.expects(:viewed_list_your_space_list)
+    #Track::List.expects(:viewed_list_your_space_list)
     get :new
   end
 
   should 'track list your space sign up view' do
     sign_out @user
-    Track::List.expects(:viewed_list_your_space_sign_up)
+    #Track::List.expects(:viewed_list_your_space_sign_up)
     get :new
   end
 

@@ -1,4 +1,4 @@
-class Analytics
+class MixpanelApi
 
   MIXPANEL_TOKEN = if Rails.env.production?
     '7ffff7057407af5fe5f71701a1ab26b2'

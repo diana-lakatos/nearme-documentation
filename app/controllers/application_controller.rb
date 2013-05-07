@@ -6,6 +6,16 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def event_tracker
+    @event_tracker ||= begin
+      Analytics::EventTracker.new(MixpanelApi.new, current_user)
+    end
+  end
+
+  def current_user=(user)
+    event_tracker.user = current_user
+  end
+
   def require_ssl
     return if Rails.env.development? || Rails.env.test?
 
@@ -30,12 +40,6 @@ class ApplicationController < ActionController::Base
 
   def already_signed_in?
     request.xhr? && current_user ?  (render :json => { :redirect => stored_url_for(nil) }) : false
-  end
-
-  def current_user_id
-    if user_signed_in?
-      current_user.id
-    end
   end
 
   # Some generic information on wizard for use accross controllers
