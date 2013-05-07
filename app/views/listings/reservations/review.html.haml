@@ -14,7 +14,7 @@
 
   %h2= "#{@reservation.quantity} #{@listing.name}"
 
-  = "#{pluralize(@reservation.periods.size, 'day')} between #{@reservation.periods.first.date.strftime("%B %e")} and #{@reservation.periods.last.date.strftime("%B %e")}."
+  %p= "#{pluralize(@reservation.periods.size, 'day')} between #{@reservation.periods.first.date.strftime("%B %e")} and #{@reservation.periods.last.date.strftime("%B %e")}."
 
   %hr
 
@@ -64,8 +64,6 @@
         = label_tag :card_code, "Security Code", :class => 'control-label'
         .controls.card-code
           = text_field_tag :card_code, nil, size: 3, placeholder: 'CCV'
-
-    %hr
 
     - if @reservation.listing.confirm_reservations?
       %p.text-center

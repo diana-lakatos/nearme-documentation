@@ -66,8 +66,12 @@
         color: $gray2;
       }
 
-      .hr span {
-        color: $gray3;
+      .hr {
+        background: transparent;
+
+        span {
+          color: $gray3;
+        }  
       }
     }
 
@@ -123,7 +127,6 @@
   }
 
   hr, .hr {
-    background: transparent;
     border-bottom: 0;
     margin-left: -$padding;
     margin-right: -$padding;
