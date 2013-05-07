@@ -1,5 +1,6 @@
-%h2 
-  %span.ico-location.padding #{@location.name}
+%header
+  %h2 
+    %span.ico-location.padding #{@location.name}
 
 = form_tag secure_listing_reservations_url(@listing), :method => :post, :remote => true, :class => "payment form-horizontal" do
   = render 'listings/reservations/fields'
@@ -48,7 +49,7 @@
           = image_tag 'credit-cards.png', :alt => "Visa, Mastercard, American Express, Discover"
 
       .row-fluid
-        = label_tag :card_number, "Credit Card Number", :class => 'control-label'
+        = label_tag :card_number, "Credit Card Number", :class => 'control-label', placeholder: 'Credit Card Number'
         .controls.card-number
           = text_field_tag :card_number, nil
           .credit-card-icon

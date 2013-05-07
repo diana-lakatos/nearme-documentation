@@ -104,11 +104,22 @@
     @include transform(translateY(0));
   }
 
-  h2 {
-    padding: 0 $padding;
-    margin: -$padding;
+
+  header {
+    display: block;
+    padding: $padding;
+    background: $gray4;
+    color: $gray7;
+    margin-top: -$padding;
+    margin-left: -$padding;
+    margin-right: -$padding;
     margin-bottom: $padding;
-    margin-top:20px;
+    @include border-corner-radius(top, left, $border-radius);
+    @include border-corner-radius(top, right, $border-radius);
+
+    h2 {
+      color: $gray7;
+    }
   }
 
   hr, .hr {
