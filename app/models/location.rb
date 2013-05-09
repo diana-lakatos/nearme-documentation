@@ -135,7 +135,6 @@ class Location < ActiveRecord::Base
     if address_changed? && !(latitude_changed? || longitude_changed?)
       geocoded = Geocoder.search(read_attribute(:address)).try(:first)
       if geocoded
-        logger.debug geocoded.to_json
         self.latitude = geocoded.coordinates[0]
         self.longitude = geocoded.coordinates[1]
         self.formatted_address = geocoded.formatted_address
