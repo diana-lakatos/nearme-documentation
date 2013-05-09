@@ -165,7 +165,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def currency
-    super.presence || listing.location.currency
+    super.presence || listing.currency
   end
 
   def free?
@@ -213,7 +213,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def set_currency
-      self.currency = self.listing.location.currency
+      self.currency = listing.currency
     end
 
     def auto_confirm_reservation
