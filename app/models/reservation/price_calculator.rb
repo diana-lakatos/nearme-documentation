@@ -13,10 +13,12 @@ class Reservation::PriceCalculator
     @reservation = reservation
   end
 
+  # Returns the total price for the listing and it's chosen
+  # periods. Returns nil if the selection is unbookable
   def price
     contiguous_blocks.map { |block|
       price_for_days(block.size) * reservation.quantity
-    }.sum.to_money
+    }.sum.to_money if valid?
   end
 
   # Returns true if the selection of dates are valid in terms of the pricing
@@ -24,7 +26,7 @@ class Reservation::PriceCalculator
   # not be bookable (i.e. 1 day is unbookable for a listing that requires
   # minimum of 5 days).
   def valid?
-    contiguous_blocks.all? { |block|
+    !contiguous_blocks.empty? && contiguous_blocks.all? { |block|
       block.length >= listing.minimum_booking_days
     }
   end

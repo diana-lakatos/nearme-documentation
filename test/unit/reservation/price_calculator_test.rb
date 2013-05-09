@@ -12,6 +12,7 @@ class Reservation::PriceCalculatorTest < ActiveSupport::TestCase
     })
     @listing.stubs(:open_on?).returns(true)
     @listing.stubs(:availability_for).returns(10)
+    @listing.stubs(:minimum_booking_days).returns(1)
 
     @reservation.stubs(:listing).returns(@listing)
 
@@ -61,16 +62,16 @@ class Reservation::PriceCalculatorTest < ActiveSupport::TestCase
       assert_equal 3*6750_00, @calculator.price.cents
     end
 
+    should "return nil for empty booking" do
+      assert_nil @calculator.price
+    end
+
     context "free booking" do
       setup do
         @listing.stubs(:prices_by_days).returns({
             1 => 0.to_money
           }
         )
-      end
-
-      should "return 0 for empty booking" do
-        assert_equal 0, @calculator.price.cents
       end
 
       should "return 0 for free booking" do
@@ -123,6 +124,26 @@ class Reservation::PriceCalculatorTest < ActiveSupport::TestCase
       should "take into account listing availability" do
         assert_equal 500.to_money*2, @calculator.price
       end
+    end
+  end
+
+  context '#valid?' do
+    setup do
+      @listing.stubs(:minimum_booking_days).returns(5)
+    end
+
+    should "return false if any blocks don't meet minimum date requrement" do
+      seed_reservation_dates date_groups_of(4, 1)
+
+      assert !@calculator.valid?
+      assert_nil @calculator.price
+    end
+
+    should "return true if blocks meet minimum date requirement" do
+      seed_reservation_dates date_groups_of(5, 1)
+
+      assert @calculator.valid?
+      assert_equal 400.to_money, @calculator.price
     end
   end
 
