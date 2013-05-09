@@ -19,6 +19,7 @@ class Reservation < ActiveRecord::Base
 
   has_many :periods,
            :class_name => "ReservationPeriod",
+           :inverse_of => :reservation,
            :dependent => :destroy
 
   has_many :charges, :as => :reference, :dependent => :nullify
@@ -214,7 +215,7 @@ class Reservation < ActiveRecord::Base
     def auto_confirm_reservation
       confirm! unless listing.confirm_reservations?
     end
-  
+
     def create_scheduled_expiry_task
       Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :should_expire!, nil), run_at: expiry_time
     end
@@ -241,16 +242,9 @@ class Reservation < ActiveRecord::Base
     end
 
     def validate_all_dates_available
-      invalid_dates = []
-      periods.each do |period|
-        unless listing.available_on?(period.date, quantity)
-          invalid_dates << period.date
-        end
-      end
-
+      invalid_dates = periods.reject(&:bookable?)
       if invalid_dates.any?
-        date_format = '%B %-d %Y'
-        errors.add(:base, "Unfortunately the following dates are no longer available: #{invalid_dates.map { |d| d.strftime(date_format) }.join(', ')}")
+        errors.add(:base, "Unfortunately the following bookings are no longer available: #{invalid_dates.map(&:as_formatted_string).join(', ')}")
       end
     end
 
