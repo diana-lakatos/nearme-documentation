@@ -27,7 +27,7 @@ class Reservation < ActiveRecord::Base
   validates :periods, :length => { :minimum => 1 }
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
   validate :validate_all_dates_available, on: :create
-  validate :validate_contiguous_blocks, on: :create
+  validate :validate_booking_selection, on: :create
 
   before_validation :set_total_cost, on: :create
   before_validation :set_currency, on: :create
@@ -188,6 +188,10 @@ class Reservation < ActiveRecord::Base
     created_at + 24.hours
   end
 
+  def price_calculator
+    @price_calculator ||= PriceCalculator.new(self)
+  end
+
   private
 
     def set_default_payment_status
@@ -248,25 +252,9 @@ class Reservation < ActiveRecord::Base
       end
     end
 
-    def validate_contiguous_blocks
-      invalid_blocks = []
-      calc = PriceCalculator.new(self)
-      calc.contiguous_blocks.each do |block|
-        if block.length < listing.minimum_booking_days
-          invalid_blocks << block
-        end
-      end
-
-      if invalid_blocks.any?
-        date_format = '%B %-d %Y'
-        invalid_blocks_formatted = invalid_blocks.map { |block|
-          if block.length == 1
-            block[0].strftime(date_format)
-          else
-            "#{block[0].strftime(date_format)} - #{block.last.strftime(date_format)}"
-          end
-        }
-        errors.add(:base, "Unfortunately a minimum of #{listing.minimum_booking_days} consecutive bookable days are required. The following dates don't meet this requirement: #{invalid_blocks_formatted.join(', ')}")
+    def validate_booking_selection
+      unless price_calculator.valid?
+        errors.add(:base, "Booking selection does not meet requirements. A minimum of #{listing.minimum_booking_days} consecutive bookable days are required.")
       end
     end
 
