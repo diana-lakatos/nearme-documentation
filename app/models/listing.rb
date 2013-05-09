@@ -265,24 +265,6 @@ class Listing < ActiveRecord::Base
     date
   end
 
-  def schedule(weeks = 1)
-    schedule = {}
-
-    # Build a hash of all week days and their default availabilities
-    weeks.times do |offset|
-      today  = Date.today + offset.weeks
-      monday = today.weekend? ? today.next_week : today.beginning_of_week
-      friday = monday + 4
-      week   = monday..friday
-
-      week.each do |day|
-        schedule[day] = availability_for(day)
-      end
-    end
-
-    schedule
-  end
-
   # Number of minimum consecutive booking days required for this listing
   def minimum_booking_days
     if free? || daily_price_cents.to_i > 0
