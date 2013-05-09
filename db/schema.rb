@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130503133439) do
+ActiveRecord::Schema.define(:version => 20130506044855) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -176,6 +176,8 @@ ActiveRecord::Schema.define(:version => 20130503133439) do
     t.string   "country"
     t.string   "slug"
     t.integer  "location_type_id"
+    t.string   "name"
+    t.string   "custom_page"
   end
 
   add_index "locations", ["slug"], :name => "index_locations_on_slug"

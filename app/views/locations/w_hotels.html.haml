@@ -1,8 +1,4 @@
 %section#w-hotels
-
-  - listing = Listing.find(500)
-  - @location = listing.location
-
   .row-fluid.padding-row
     .span12.header-image
       #w-ny.carousel.slide
@@ -40,48 +36,22 @@
         %p You’ll find amenities to fit every project, whether you’re working with a group or on your own. Host intimate meetings in the luxuriously appointed Living Room, or find focus in private work suites.  
       .span4
         %p Wireless high-speed Internet access, AV equipment, and video conferencing services are all on site, should you require them. Need to coordinate meetings with colleagues and clients? The hotel is conveniently located in Downtown Manhattan.
-    .row-fluid.padding-row
+    .row-fluid.padding-row.w-hotels-listing.quick-book
       .span8
         = image_tag "w-hotels/w-10.jpg"       
       .span4
         %h1 Private Office
         %p Close enough to rub shoulders with Financial District movers and shakers and surrounded by such inimitable icons as the Statue of Liberty and 1 World Trade Center, enjoy your own work space at W New York – Downtown. Power wheel and deal with a private office featuring an L shaped desk, seating, high speed internet access, plus hotel amenities at your fingertips.
         
-        .booking-module-container
-          .booking-module
-            %span.label.label-daily-price 
-              $150
-              %span.period   Day       
-            %span.label.label-weekly-price
-              $750
-              %span.period   Week
-            %span.label.label-monthly-price
-              $3000
-              %span.period   Month            
-            %hr        
-            .calendar-wrapper.date-start
-              .calendar
-                %span.ico-calendar-start
-                %span.calendar-text Start
-            .calendar-wrapper.date-end
-              .calendar
-                %span.ico-calendar-end
-                %span.calendar-text End
-            .quantity
-              %span.resource= listing.listing_type.name.pluralize
-              = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity' 
-            .price
-              Total
-              %span #{currency_content_tag(@location.currency, 0.00, :span, { :rel => false })}
-
-            .book
-              = link_to_once "", :id =>"book-#{listing.id}", :disable_with => false, :rel => "tooltip", :class => "btn btn-green btn-large", :'data-original-title' => "Please select days first", :'data-behavior' => 'showReviewBookingListing', :'data-listing-id' => listing.id do
-                %span.ico-check.padding 
-                %span.text Book
-
-          .clearfix
-
-          - content_for :domready do
-            $('.quantity select').customSelect();
-
+        = render 'locations/booking_module', listing: @listing
       
+:javascript
+  $(function() {
+    new Bookings.Controller($('#w-hotels .w-hotels-listing'),
+      #{raw listing_booking_data(@listing).to_json},
+      {
+        showReviewBookingImmediately: #{params[:restore_reservations].present?.to_json}
+      }
+    )
+  });
+
