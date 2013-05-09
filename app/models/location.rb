@@ -21,6 +21,11 @@ class Location < ActiveRecord::Base
   belongs_to :location_type
   delegate :creator, :to => :company, :allow_nil => true
 
+  after_save :notify_user_about_change
+  after_destroy :notify_user_about_change
+
+  delegate :notify_user_about_change, :to => :company, :allow_nil => true
+
   has_many :listings,
     dependent:  :destroy,
     inverse_of: :location

@@ -56,6 +56,8 @@ gem 'chameleon'
 
 gem 'mixpanel'
 
+gem 'gibbon'
+
 group :staging, :production do
   gem 'newrelic_rpm'
 end
@@ -113,4 +115,5 @@ group :test do
   gem 'turn'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
   gem 'simplecov', :require => false
+  gem 'vcr'
 end
