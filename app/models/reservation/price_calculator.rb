@@ -2,9 +2,9 @@
 #
 # Object encapsulating our pricing calculation logic.
 # Pass it a reservation, and let it do its thing.
-# 
+#
 # NB: Note that there is a corresponding JS calculation class
-#     to calculate the price client-side. If logic changes, 
+#     to calculate the price client-side. If logic changes,
 #     be sure to update that as well.
 class Reservation::PriceCalculator
   attr_reader :reservation
@@ -29,6 +29,12 @@ class Reservation::PriceCalculator
     }
   end
 
+  private
+
+  def listing
+    @reservation.listing
+  end
+
   # Price for contiguous days in as a Money object
   def price_for_days(days)
     prices = listing.prices_by_days
@@ -40,7 +46,7 @@ class Reservation::PriceCalculator
     }
     price = prices[block_size]
 
-    # Our pricing logic per block is the block price 
+    # Our pricing logic per block is the block price
     # plus a pro-rated cost for each additional day used
     (((days/block_size.to_f) * price.cents).round / 100.0).to_money
   end
@@ -65,12 +71,6 @@ class Reservation::PriceCalculator
     end
 
     blocks.values
-  end
-
-  private
-
-  def listing
-    @reservation.listing
   end
 
   # Are to dates deemed "contiguous" by our custom definition?
