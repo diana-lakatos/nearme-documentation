@@ -20,6 +20,7 @@ class Bookings.Controller
   # Bind to the various DOM elements managed by this controller.
   bindDomElements: ->
     @quantityField = @container.find('select.quantity')
+    @quantityResourceElement = @container.find('.quantity .resource')
     @totalElement = @container.find('.total')
     @daysElement = @container.find('.total-days')
     @bookButton = @container.find('[data-behavior=showReviewBookingListing]')
@@ -112,6 +113,10 @@ class Bookings.Controller
   updateQuantityField: (qty = @listing.defaultQuantity) ->
     @container.find('.customSelect.quantity .customSelectInner').text(qty)
     @quantityField.val(qty)
+    if qty > 1
+      @quantityResourceElement.text(@quantityResourceElement.data('plural'))
+    else
+      @quantityResourceElement.text(@quantityResourceElement.data('singular'))
 
   updateSummary: ->
     @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
