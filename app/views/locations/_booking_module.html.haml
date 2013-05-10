@@ -42,8 +42,12 @@
 
     - if listing.hourly_reservations?
 
-      = select_tag "start_minute", listing_booking_minute_options(listing), :class => "start_minute"
-      = select_tag "end_minute", listing_booking_minute_options(listing), :class => "start_minute"
+      .calendar-wrapper.time-picker
+        = select_tag "start_minute", listing_booking_minute_options(listing), :class => "start_minute", :style => "display: none"
+        = select_tag "end_minute", listing_booking_minute_options(listing), :class => "start_minute", :style => "display: none"
+        .time
+          %span.ico-clock
+          %span.time-text 9:00am
 
     - else
       .calendar-wrapper.date-end

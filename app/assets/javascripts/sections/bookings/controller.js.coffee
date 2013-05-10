@@ -76,7 +76,7 @@ class Bookings.Controller
 
   initializeTimePicker: ->
     @timePicker = new Bookings.TimePicker(
-      @container
+      @container.find('.time-picker')
     )
 
     @timePicker.on 'change', =>

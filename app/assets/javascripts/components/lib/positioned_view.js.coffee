@@ -7,7 +7,7 @@ class @PositionedView
     <div></div>
   """
 
-  constructor: (options) ->
+  constructor: (@options) ->
     @container = $(@containerTemplate).hide()
     @container.addClass(@options.containerClass) if @options.containerClass
     @positionTarget = @options.positionTarget
