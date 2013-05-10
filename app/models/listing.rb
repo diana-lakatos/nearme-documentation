@@ -57,9 +57,10 @@ class Listing < ActiveRecord::Base
     :name, :description, :daily_price, :weekly_price, :monthly_price,
     :daily_price_cents, :weekly_price_cents, :monthly_price_cents, :availability_template_id, 
     :availability_rules_attributes, :defer_availability_rules, :free,
-    :photos_attributes, :listing_type_id, :enable_daily, :enable_weekly, :enable_monthly
+    :photos_attributes, :listing_type_id, :enable_daily, :enable_weekly, :enable_monthly, :enable_hourly,
+    :hourly_reservations, :hourly_price, :hourly_price_cents
 
-  attr_accessor :enable_daily, :enable_weekly, :enable_monthly
+  attr_accessor :enable_daily, :enable_weekly, :enable_monthly, :enable_hourly
 
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
@@ -71,6 +72,7 @@ class Listing < ActiveRecord::Base
   monetize :daily_price_cents, :allow_nil => true
   monetize :weekly_price_cents, :allow_nil => true
   monetize :monthly_price_cents, :allow_nil => true
+  monetize :hourly_price_cents, :allow_nil => true
 
 
   acts_as_paranoid
@@ -84,6 +86,10 @@ class Listing < ActiveRecord::Base
   include AvailabilityRule::TargetHelper
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :photos, :allow_destroy => true
+
+  def enable_hourly
+    @enable_hourly || price_enabled_by_default?(hourly_price)
+  end
 
   def enable_daily
     @enable_daily || price_enabled_by_default?(daily_price)
@@ -137,7 +143,6 @@ class Listing < ActiveRecord::Base
   end
   alias_method :defer_availability_rules?, :defer_availability_rules
 
-
   def open_on?(date)
     availability.open_on?(:date => date)
   end
@@ -187,7 +192,7 @@ class Listing < ActiveRecord::Base
   alias_method :free, :free?
 
   def has_price?
-    !(daily_price_cents.to_f + weekly_price_cents.to_f + monthly_price_cents.to_f).zero?
+    !(hourly_price_cents.to_f + daily_price_cents.to_f + weekly_price_cents.to_f + monthly_price_cents.to_f).zero?
   end
 
 
@@ -280,6 +285,10 @@ class Listing < ActiveRecord::Base
     end
   end
 
+  def minumum_booking_minutes
+    (super || 60) if hourly_reservations?
+  end
+
   def booking_days_per_week
     availability.days_open.length
   end
@@ -293,6 +302,19 @@ class Listing < ActiveRecord::Base
       Hash[
         [[1, daily_price], [block_size, weekly_price], [4*block_size, monthly_price]]
       ].reject { |size, price| !price || price.zero? }
+    end
+  end
+
+  def price_schedule
+    if hourly_reservations?
+      {
+        :hourly => {
+          1 => hourly_price,
+          :minimum_minutes => minimum_booking_minutes
+        }
+      }
+    else
+      { :daily => prices_by_days }
     end
   end
 

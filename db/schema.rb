@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130506044855) do
+ActiveRecord::Schema.define(:version => 20130509045923) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -129,15 +129,17 @@ ActiveRecord::Schema.define(:version => 20130506044855) do
     t.float    "rating_average",          :default => 0.0
     t.integer  "rating_count",            :default => 0
     t.text     "availability_rules_text"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
     t.datetime "deleted_at"
     t.boolean  "confirm_reservations"
-    t.boolean  "delta",                   :default => true, :null => false
+    t.boolean  "delta",                   :default => true,  :null => false
     t.integer  "listing_type_id"
     t.integer  "daily_price_cents"
     t.integer  "weekly_price_cents"
     t.integer  "monthly_price_cents"
+    t.boolean  "hourly_reservations",     :default => false, :null => false
+    t.integer  "hourly_price_cents"
   end
 
   create_table "location_amenities", :force => true do |t|
@@ -235,8 +237,8 @@ ActiveRecord::Schema.define(:version => 20130506044855) do
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",     :default => "manual",  :null => false
     t.string   "payment_status",     :default => "unknown", :null => false
+    t.string   "payment_method",     :default => "manual",  :null => false
     t.integer  "quantity",           :default => 1,         :null => false
   end
 
