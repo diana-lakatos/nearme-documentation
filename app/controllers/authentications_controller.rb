@@ -8,7 +8,7 @@ class AuthenticationsController < ApplicationController
     authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
     if authentication
       if current_user && current_user.id != authentication.user.id 
-        flash[:notice] = "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account." if use_flash_messages?
+        flash[:error] = "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account." if use_flash_messages?
         redirect_to edit_user_registration_path
       else
         flash[:notice] = "Signed in successfully." if use_flash_messages?

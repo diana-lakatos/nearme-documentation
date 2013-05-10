@@ -62,7 +62,7 @@ class Manage::LocationsController < Manage::BaseController
 
   def redirect_if_no_company
     unless @company
-      flash[:notice] = "Please add your company first"
+      flash[:alert] = "Please add your company first"
       redirect_to new_space_wizard_url
     end
   end

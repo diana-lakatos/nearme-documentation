@@ -7,7 +7,7 @@ class SpaceWizardController < ApplicationController
   before_filter :convert_price_params, only: [:submit_listing]
 
   def new
-    flash.keep(:notice)
+    flash.keep(:alert)
     if current_user
       redirect_to space_wizard_list_url
     else

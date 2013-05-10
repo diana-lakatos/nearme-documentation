@@ -13,7 +13,7 @@ class DashboardController < ApplicationController
 
   def index
     if current_user.companies.blank?
-      flash[:notice] = "Please add your company first"
+      flash[:alert] = "Please add your company first"
       redirect_to new_space_wizard_url
     end
   end

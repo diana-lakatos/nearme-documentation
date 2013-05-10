@@ -35,7 +35,18 @@ module ApplicationHelper
   def flash_class(level)
     case level
     when :notice then "alert-info"
+    when :alert then "alert-alert"
     when :error then "alert-error"
+    end
+  end
+
+  def flash_ico(level)
+    logger.debug "level:"
+    logger.debug "#{level} #{level.class}"
+    case level
+    when :notice then "ico-check"
+    when :alert then "ico-arrow-right"
+    when :error then "ico-warning"
     end
   end
 

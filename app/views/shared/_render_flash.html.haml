@@ -1,6 +1,17 @@
 - [:notice, :error, :alert].each do |level|
   - unless flash[level].blank?
     %div{class: "alert #{flash_class(level)}"}
-      %a.close{href: '#'} &times;
-      = content_tag :p, flash[level].html_safe
+      %p
+        - unless level == :alert
+          %span{class: "left-icon #{flash_ico(level)}"}
+        = flash.discard(level).html_safe
+        - if level == :alert
+          %span{class: "right-icon #{flash_ico(level)}"}
+        %a.close{href: '#'} &times;
+    :javascript
+      setTimeout(function() {
+        if($(".alert.#{flash_class(level)}").length > 0){
+          $(".alert.#{flash_class(level)}").fadeOut();
+        }
+      }, 7000);
 
