@@ -64,5 +64,15 @@ class AvailabilityRule::Summary
   def days_open
     @rules.map { |rule| rule.day }
   end
+
+  # Returns the minute of the day that the listing opens, or nil
+  def open_minute_for(date)
+    rule_for_day(date.day).try(:day_open_minute)
+  end
+
+  # Returns the minute of the day that the listing closes, or nil
+  def close_minute_for(date)
+    rule_for_day(date.day).try(:day_close_minute)
+  end
 end
 

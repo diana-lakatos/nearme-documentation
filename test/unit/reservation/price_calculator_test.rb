@@ -62,8 +62,8 @@ class Reservation::PriceCalculatorTest < ActiveSupport::TestCase
       assert_equal 3*6750_00, @calculator.price.cents
     end
 
-    should "return nil for empty booking" do
-      assert_nil @calculator.price
+    should "return 0 for empty booking" do
+      assert_equal 0.to_money, @calculator.price
     end
 
     context "free booking" do
@@ -136,7 +136,6 @@ class Reservation::PriceCalculatorTest < ActiveSupport::TestCase
       seed_reservation_dates date_groups_of(4, 1)
 
       assert !@calculator.valid?
-      assert_nil @calculator.price
     end
 
     should "return true if blocks meet minimum date requirement" do

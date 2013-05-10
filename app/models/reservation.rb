@@ -29,7 +29,7 @@ class Reservation < ActiveRecord::Base
   validate :validate_all_dates_available, on: :create
   validate :validate_booking_selection, on: :create
 
-  before_validation :set_total_cost, on: :create
+  before_create :set_total_cost
   before_validation :set_currency, on: :create
   before_create :set_default_payment_status
   after_create  :auto_confirm_reservation
@@ -57,11 +57,11 @@ class Reservation < ActiveRecord::Base
     event :user_cancel do
       transition [:unconfirmed, :confirmed] => :cancelled
     end
-    
+
     event :expire do
       transition :unconfirmed => :expired
     end
-    
+
   end
 
   scope :on, lambda { |date|
@@ -179,17 +179,21 @@ class Reservation < ActiveRecord::Base
   def pending?
     payment_status == PAYMENT_STATUSES[:pending]
   end
-  
+
   def should_expire!
     expire! if unconfirmed?
   end
-  
+
   def expiry_time
     created_at + 24.hours
   end
 
   def price_calculator
-    @price_calculator ||= PriceCalculator.new(self)
+    @price_calculator ||= if listing.hourly_reservations?
+      HourlyPriceCalculator.new(self)
+    else
+      PriceCalculator.new(self)
+    end
   end
 
   private
@@ -205,7 +209,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def calculate_total_cost
-      PriceCalculator.new(self).price.cents
+      price_calculator.price.try(:cents)
     end
 
     def set_total_cost

@@ -55,6 +55,14 @@ class AvailabilityRule < ActiveRecord::Base
     after_opening && before_closing
   end
 
+  def day_open_minute
+    open_hour*60+open_minute
+  end
+
+  def day_close_minute
+    close_hour*60+close_minute
+  end
+
   private
 
   def apply_default_minutes

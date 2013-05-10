@@ -18,7 +18,7 @@ class Reservation::PriceCalculator
   def price
     contiguous_blocks.map { |block|
       price_for_days(block.size) * reservation.quantity
-    }.sum.to_money if valid?
+    }.sum.to_money
   end
 
   # Returns true if the selection of dates are valid in terms of the pricing
