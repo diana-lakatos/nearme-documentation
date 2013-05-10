@@ -62,6 +62,16 @@ class RegistrationsController < Devise::RegistrationsController
     render :text => {}, :status => 200, :content_type => 'text/plain' 
   end
 
+  def verify
+    @user = User.find(params[:id])
+    if @user.verify_email_with_token(params[:token])
+      flash[:notice] = "Thanks - your email address has been verified!"
+    else
+      flash[:error] = "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+    end
+    redirect_to root_path
+  end
+
   protected
 
   def is_navigational_format?

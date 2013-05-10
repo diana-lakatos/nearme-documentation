@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
 
   has_many :companies,
            :foreign_key => "creator_id"
+
   attr_accessible :companies_attributes
   accepts_nested_attributes_for :companies
   validates_associated :companies
@@ -58,6 +59,10 @@ class User < ActiveRecord::Base
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
+  }
+
+  scope :needs_mailchimp_update, -> {
+      where("mailchimp_synchronized_at IS NULL OR mailchimp_synchronized_at < updated_at")
   }
 
   mount_uploader :avatar, AvatarUploader
@@ -155,4 +160,37 @@ class User < ActiveRecord::Base
   def first_listing
     companies.first.locations.first.listings.first
   end
+
+  def has_listing_without_price?
+    listings.any?(&:free?)
+  end
+
+  def mailchimp_synchronized!
+    touch(:mailchimp_synchronized_at)
+  end
+
+  def mailchimp_synchronized?
+    mailchimp_synchronized_at.present? && mailchimp_synchronized_at >= updated_at
+  end
+
+  def mailchimp_exported?
+    mailchimp_synchronized_at.present?
+  end
+
+  def email_verification_token
+    Digest::SHA1.hexdigest(
+      "--dnm-token-#{self.id}-#{self.created_at}"
+    )
+  end
+
+  def verify_email_with_token(token)
+    if token.present? && self.email_verification_token == token
+      self.verified = true
+      self.save!
+      true
+    else
+      false
+    end
+  end
+
 end

@@ -14,6 +14,9 @@ class Company < ActiveRecord::Base
 
   before_validation :add_default_url_scheme
 
+  after_save :notify_user_about_change
+  after_destroy :notify_user_about_change
+
   validates_presence_of :name, :industries
   validates_length_of :description, :maximum => 250
   validates :email, email: true, allow_blank: true
@@ -24,6 +27,10 @@ class Company < ActiveRecord::Base
   acts_as_paranoid
 
   accepts_nested_attributes_for :locations
+
+  def notify_user_about_change
+    creator.try(:touch)
+  end
 
   private
 
@@ -46,4 +53,5 @@ class Company < ActiveRecord::Base
 
     errors.add(:url, "must be a valid URL") unless valid
   end
+
 end

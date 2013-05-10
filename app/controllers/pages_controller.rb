@@ -1,11 +1,9 @@
-
 class PagesController < ApplicationController
 
-	layout :resolve_layout
+  layout :resolve_layout
 
-
-	def host_signup
-	end
+  def host_signup
+  end
 
   def host_signup_2
   end
@@ -22,13 +20,11 @@ class PagesController < ApplicationController
       "landing"
     when "legal"
       "application"
-    when "w_hotels"
-      "w"  
     when "careers"
       "careers"            
     else
       false
     end
   end
-
 end
+

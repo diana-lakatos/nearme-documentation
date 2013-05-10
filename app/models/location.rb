@@ -21,6 +21,11 @@ class Location < ActiveRecord::Base
   belongs_to :location_type
   delegate :creator, :to => :company, :allow_nil => true
 
+  after_save :notify_user_about_change
+  after_destroy :notify_user_about_change
+
+  delegate :notify_user_about_change, :to => :company, :allow_nil => true
+
   has_many :listings,
     dependent:  :destroy,
     inverse_of: :location
@@ -135,7 +140,6 @@ class Location < ActiveRecord::Base
     if address_changed? && !(latitude_changed? || longitude_changed?)
       geocoded = Geocoder.search(read_attribute(:address)).try(:first)
       if geocoded
-        logger.debug geocoded.to_json
         self.latitude = geocoded.coordinates[0]
         self.longitude = geocoded.coordinates[1]
         self.formatted_address = geocoded.formatted_address
