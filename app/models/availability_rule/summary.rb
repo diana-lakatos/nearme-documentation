@@ -67,12 +67,21 @@ class AvailabilityRule::Summary
 
   # Returns the minute of the day that the listing opens, or nil
   def open_minute_for(date)
-    rule_for_day(date.day).try(:day_open_minute)
+    rule_for_day(date.wday).try(:day_open_minute)
   end
 
   # Returns the minute of the day that the listing closes, or nil
   def close_minute_for(date)
-    rule_for_day(date.day).try(:day_close_minute)
+    rule_for_day(date.wday).try(:day_close_minute)
   end
+
+  def earliest_open_minute
+    @rules.map(&:day_open_minute).min
+  end
+
+  def latest_close_minute
+    @rules.map(&:day_close_minute).max
+  end
+
 end
 

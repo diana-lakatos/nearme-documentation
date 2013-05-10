@@ -13,12 +13,19 @@ class @Bookings.Listing
     @minimumDate = DNM.util.Date.idToDate(@data.minimum_date)
     @maximumDate = DNM.util.Date.idToDate(@data.maximum_date)
     @pricesByDays = @data.prices_by_days
+    @hourlyPrice = @data.hourly_price_cents
 
   setDefaultQuantity: (qty) ->
     @defaultQuantity = qty if qty >= 0
 
   getQuantity: ->
     @defaultQuantity
+
+  isReservedHourly: ->
+    @data.hourly_reservations
+
+  isReservedDaily: ->
+    !@isReservedHourly()
 
   # Returns whether the date is within the bounds available for booking
   dateWithinBounds: (date) ->
@@ -49,11 +56,29 @@ class @Bookings.Listing
 
   # Return the subtotal for booking this listing
   bookingSubtotal: ->
-    new Bookings.PriceCalculator(this).getPrice()
+    @priceCalculator().getPrice()
+
+  priceCalculator: ->
+    if @isReservedHourly()
+      new Bookings.PriceCalculator.HourlyPriceCalculator(this)
+    else
+      new Bookings.PriceCalculator(this)
 
   # Set the dates active on this listing for booking
   setDates: (dates) ->
     @bookedDatesArray = dates
+
+  getStartMinute: ->
+    @startMinute
+
+  getEndMinute: ->
+    @endMinute
+
+  setStartMinute: (start) ->
+    @startMinute = start
+
+  setEndMinute: (end) ->
+    @endMinute = end
 
   # Check the selected dates are valid with the quantity
   # and availability
@@ -62,6 +87,18 @@ class @Bookings.Listing
       if @availabilityFor(date) < @getQuantity()
         return false
     true
+
+  reservationOptions: ->
+    options = {
+      dates: @bookedDays(),
+      quantity: @getQuantity()
+    }
+
+    if @isReservedHourly()
+      options.start_minute = @getStartMinute()
+      options.end_minute   = @getEndMinute()
+
+    options
 
   # Wrap queries on the availability data
   class Availability

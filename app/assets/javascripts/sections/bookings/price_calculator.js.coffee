@@ -9,7 +9,7 @@ class @Bookings.PriceCalculator
 
   getPrice: ->
     _.inject(@contiguousBlocks(), (sum, block) =>
-      sum + @priceForDays(block.length)*@listing.defaultQuantity
+      sum + @priceForDays(block.length)*@listing.getQuantity()
     , 0)
 
   priceForDays: (days) ->
@@ -35,7 +35,7 @@ class @Bookings.PriceCalculator
       if !previous_date or !@isContiguous(previous_date, date)
         current_block = []
         blocks.push(current_block)
-      
+
       current_block.push(date)
       previous_date = date
 
@@ -49,4 +49,15 @@ class @Bookings.PriceCalculator
       break if @listing.canBookDate(from)
 
     return DNM.util.Date.toId(from) == DNM.util.Date.toId(to)
+
+
+  class @HourlyPriceCalculator
+    constructor: (@listing) ->
+
+    getPrice: ->
+      bookedMinutes = (@minutesBooked()/60)*@listing.bookedDates().length
+      @listing.hourlyPrice*bookedMinutes*@listing.getQuantity()
+
+    minutesBooked: ->
+      @listing.getEndMinute() - @listing.getStartMinute()
 

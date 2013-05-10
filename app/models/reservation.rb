@@ -118,8 +118,8 @@ class Reservation < ActiveRecord::Base
     can_cancel
   end
 
-  def add_period(date)
-    periods.build :date => date
+  def add_period(date, start_minute = nil, end_minute = nil)
+    periods.build :date => date, :start_minute => start_minute, :end_minute => end_minute
   end
 
   def booked_on?(date)

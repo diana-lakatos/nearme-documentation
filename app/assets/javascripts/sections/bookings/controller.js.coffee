@@ -3,14 +3,18 @@
 # The controller is initialize with the bookings DOM container, and an options hash including
 # JS objects representing each Listing on the Location.
 class Bookings.Controller
-  
+
   constructor: (@container, @listingData, @options = {}) ->
     @listing = new Bookings.Listing(@listingData)
 
     @bindDomElements()
     @initializeDatepicker()
+
+    if @listing.isReservedHourly()
+      @initializeTimePicker()
+
     @bindEvents()
- 
+
     @assignInitialDates()
     @updateQuantityField()
 
@@ -39,11 +43,46 @@ class Bookings.Controller
 
   # Setup the datepicker for the simple booking UI
   initializeDatepicker: ->
-    @datepicker = new Bookings.Datepicker(
-      listing: @listing
-      startElement: @container.find(".calendar-wrapper.date-start")
-      endElement: @container.find(".calendar-wrapper.date-end")
+    startElement = @container.find(".calendar-wrapper.date-start")
+    endElement = @container.find(".calendar-wrapper.date-end")
+
+    if @listing.isReservedHourly()
+      @datepicker = new window.Datepicker(
+        trigger: startElement,
+
+        # Custom view to handle bookings availability display
+        view: new Bookings.Datepicker.AvailabilityView(@listing,
+          trigger: startElement,
+          text: '<div class="datepicker-text-fadein">Select date</div>'
+        ),
+
+        # Limit to a single date selected at a time
+        model: new window.Datepicker.Model.Single(
+          allowDeselection: false
+        )
+      )
+
+      @datepicker.bind 'datesChanged', (dates) =>
+        date = dates[0]
+        startElement.find('.calendar-text').text("#{DNM.util.Date.monthName(date, 3)} #{date.getDate()}")
+    else
+      # Special datepicker wrapper that handles the start/end date semantics,
+      # ranges, pick/choose, etc.
+      @datepicker = new Bookings.Datepicker(
+        listing: @listing
+        startElement: startElement
+        endElement: endElement
+      )
+
+  initializeTimePicker: ->
+    @timePicker = new Bookings.TimePicker(
+      @container
     )
+
+    @timePicker.on 'change', =>
+      @updateTimesFromTimePicker()
+
+    @updateTimesFromTimePicker()
 
   # Assign initial dates from a restored session or the default
   # start date.
@@ -60,6 +99,11 @@ class Bookings.Controller
 
     @datepicker.setDates(initialDates)
 
+  updateTimesFromTimePicker: ->
+    @listing.setStartMinute(@timePicker.startMinute())
+    @listing.setEndMinute(@timePicker.endMinute())
+    @updateSummary()
+
   # Trigger showing the review booking form based on selected
   # dates.
   reviewBooking: (callback = -> ) ->
@@ -71,10 +115,7 @@ class Bookings.Controller
       type: 'POST',
       data: {
         listing_id: @listing.id,
-        reservation: {
-          dates: @listing.bookedDays(),
-          quantity: @listing.getQuantity()
-        }
+        reservation: @listing.reservationOptions()
       }
     }, 'space-reservation-modal', => @enableBookButton())
 

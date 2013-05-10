@@ -52,8 +52,13 @@ module Listings
       # Assign the payment method chosen on the form to the Reservation
       @reservation.payment_method = params[:payment_method] if params[:payment_method].present?
 
+      if @listing.hourly_reservations?
+        start_minute = params[:reservation][:start_minute].try(:to_i)
+        end_minute   = params[:reservation][:end_minute].try(:to_i)
+      end
+
       params[:reservation][:dates].each do |date_str|
-        @reservation.add_period(Date.parse(date_str))
+        @reservation.add_period(Date.parse(date_str), start_minute, end_minute)
       end
 
       @reservation

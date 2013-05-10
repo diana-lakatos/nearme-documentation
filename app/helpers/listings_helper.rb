@@ -11,6 +11,8 @@ module ListingsHelper
       :name => listing.name,
       :review_url => review_listing_reservations_url(listing),
       :first_available_date => listing.first_available_date.strftime("%Y-%m-%d"),
+      :hourly_reservations => listing.hourly_reservations?,
+      :hourly_price_cents => listing.hourly_price_cents,
       :minimum_booking_days => listing.minimum_booking_days,
       :quantity => listing.quantity,
       :availability => availability.as_json,
@@ -61,6 +63,17 @@ module ListingsHelper
     {
       :'data-listing-id' => listing.id
     }
+  end
+
+  def listing_booking_minute_options(listing = @listing)
+    start_minute = @listing.availability.earliest_open_minute
+    end_minute = @listing.availability.latest_close_minute
+
+    options = []
+    (start_minute..end_minute).step(15) do |m|
+      options << ['%d:%0.2d' % [m/60, m%60], m]
+    end
+    options_for_select options
   end
 
 end
