@@ -56,7 +56,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       context "#create" do
 
         should "create listing" do
-          assert_no_difference('@user.listings.count') do
+          assert_raise ActiveRecord::RecordNotFound do
             # @location belongs to @user, not signed in @other_user - @user should not get new listing
             post :create, { :listing => FactoryGirl.attributes_for(:listing).reverse_merge!({:listing_type_id => @listing_type.id}), :location_id => @location.id}
           end
@@ -64,13 +64,13 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       end
 
       should "update listing" do
-        put :update, :id => @listing.id, :listing => { :name => 'new name' }
-        @listing.reload
-        assert_not_equal 'new name', @listing.name
+        assert_raise ActiveRecord::RecordNotFound do
+          put :update, :id => @listing.id, :listing => { :name => 'new name' }
+        end
       end
 
       should "destroy listing" do
-        assert_no_difference('@user.listings.count', -1) do
+        assert_raise ActiveRecord::RecordNotFound do
           delete :destroy, :id => @listing.id
         end
       end

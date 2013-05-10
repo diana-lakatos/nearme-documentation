@@ -1,30 +1,75 @@
-body { 
-  background: image-url('90s-texture.png') left top repeat; 
-  text-align: left; 
-  font-family: 'futura-pt' arial, sans-serif; 
+html, 
+body {
+  height: 100%;
+  margin: 0px;
   padding: 0px;
-  margin: 8px 0px;
-}
+  background: rgb(240, 240, 240);
+} 
 
-h1 { 
-  color:rgb(249, 90, 97);  
-  margin:10px 0 0; 
-  font-style: italic; 
-}
+.container-fluid {
+  display:table;
+  height:100%;
+  width:100%;
+  padding-right:0px;
+  padding-left: 0px;
+}   
 
-div.dialog { 
-  margin: 0 auto; 
-  text-align: center; 
+.error-background {
+  width: 86%;
+  height: 86%;
+  position: absolute;
+  left: 7%;
+  top: 7%;
+  z-index: 1;
 
-  p {
-    color: black;
+  @media (max-width: 480px){
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+  }
+
+  path {
+    fill: rgb(230, 230, 230);
   }
 }
 
-.logo { 
-  margin: 20px; 
+.row-fluid {
+  display:table-cell;
+  height:100%;
+  width:100%;
+  vertical-align:middle;
 }
 
-#search_row{
-  margin: 0px;
-}
+.centering {
+  float:none;
+  margin:0px auto;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  margin-top: -38px;
+
+
+  @media (max-width: 480px){
+    padding: 0px 25px;
+  }
+  h1 {
+    font-size: 38px;
+  }
+
+  div {
+    text-align: center;
+    font-size: 26px;
+
+    &.suggestion-text {
+      margin-top: 15px;
+      font-size: 22px;
+
+      a {
+        color: rgb(120,120,120);
+        text-decoration: underline !important;
+        font-weight: bold;
+      }
+    }
+  }
+} 

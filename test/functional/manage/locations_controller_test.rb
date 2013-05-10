@@ -66,13 +66,13 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       end
 
       should "update location" do
-        put :update, :id => @location.id, :location => { :description => 'new description' }
-        @location.reload
-        assert_not_equal 'new description', @location.description
+        assert_raise ActiveRecord::RecordNotFound do
+          put :update, :id => @location.id, :location => { :description => 'new description' }
+        end
       end
 
       should "destroy location" do
-        assert_no_difference('@user.locations.count', -1) do
+        assert_raise ActiveRecord::RecordNotFound do
           delete :destroy, :id => @location.id
         end
       end
