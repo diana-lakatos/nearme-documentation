@@ -7,6 +7,11 @@
 
     .price-inputs-wrapper{
       padding-right: 20px;
+
+      label {
+        float: left;
+        top: 16px;
+      }
     }
 
     .currency-holder {
@@ -25,6 +30,7 @@
       margin-left: -25px;
       width: 120px;
     }
+
 
   }
 }

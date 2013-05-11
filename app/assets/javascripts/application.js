@@ -49,10 +49,15 @@ window.DNM = {
     this.initializeModals();
     this.initializeTooltips();
     this.initializeCustomSelects();
+    this.initializeCustomInputs();
   },
 
   initializeModals: function() {
     Modal.listen();
+  },
+
+  initializeCustomInputs: function() {
+    CustomInputs.initialize();
   },
 
   initializeComponents: function(scope) {
@@ -111,14 +116,6 @@ $(document).on('click', 'a[rel=submit]', function(e) {
     return false;
   }
 });
-
-if($.browser.mozilla) {
-  $(document).on('click', 'label', function(e) {
-    if(e.currentTarget === this && e.target.nodeName !== 'INPUT') {
-      $(this.control).click();
-    }
-  });
-};
 
 $(document).on('click', 'div.alert a.close', function(e){
   wrapper = $(this).closest('.alert');
@@ -186,6 +183,21 @@ $(function() {
       }
     });
   });
+});
+
+$(function(){
+    $.extend($.fn.disableTextSelect = function() {
+        return this.each(function(){
+            if($.browser.mozilla){//Firefox
+                $(this).css('MozUserSelect','none');
+            }else if($.browser.msie){//IE
+                $(this).bind('selectstart',function(){return false;});
+            }else{//Opera, etc.
+                $(this).mousedown(function(){return false;});
+            }
+        });
+    });
+    $('.no-select').disableTextSelect();//No text selection on elements with a class of 'noSelect'
 });
 
 String.prototype.hashCode = function(){

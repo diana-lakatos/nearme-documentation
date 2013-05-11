@@ -21,27 +21,31 @@
     .controls
       .price-inputs-wrapper.left
         %div
-          = f.check_box :enable_daily, class: 'enable_daily', 'data-enable-price' => true
+          %label.checkbox{:for => "listing_enable_daily"}
+            = f.check_box :enable_daily, class: 'enable_daily', 'data-enable-price' => true
           %span.currency-holder
           = f.number_field :daily_price, :as => :decimal, :label => false, :class => 'mini', :class => "price-input", 'data-price-input' => true
           %span.periodicity /day
 
         %div
-          = f.check_box :enable_weekly, class: 'enable_weekly', 'data-enable-price' => true
+          %label.checkbox{:for => "listing_enable_weekly"}
+            = f.check_box :enable_weekly, class: 'enable_weekly', 'data-enable-price' => true
           %span.currency-holder
           = f.number_field :weekly_price, :as => :decimal, :label => false, :class => 'mini', :class => "price-input", 'data-price-input' => true
           %span.periodicity /week
 
         %div
-          = f.check_box :enable_monthly, class: 'enable_monthly', 'data-enable-price' => true
+          %label.checkbox{:for => "listing_enable_monthly"}
+            = f.check_box :enable_monthly, class: 'enable_monthly', 'data-enable-price' => true
           %span.currency-holder
           = f.number_field :monthly_price, :as => :decimal, :label => false, :class => 'mini', :class => "price-input", 'data-price-input' => true
           %span.periodicity /month
       .free-price
         .inline-rule
         .or-part Or
-        = f.check_box :free, 'data-free-checkbox' => true
-        = f.label :free, "Free"
+        %label.checkbox{:for => "listing_free"}
+          = f.check_box :free, 'data-free-checkbox' => true
+          Free
   - if f.object.errors.include?(:free).present?
     %p.error-block
       = 'must be free if all prices are zero'

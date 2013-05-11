@@ -6,8 +6,9 @@
 
   - availability_choices(f.object).each do |template_id, label_text, options|
     .controls
-      = f.radio_button :availability_template_id, template_id, options || {}
-      = label_tag(options[:id], label_text, :class => "inline")
+      = label_tag(options[:id], :class => "inline radio") do
+        = f.radio_button :availability_template_id, template_id, options || {}
+        = label_text
 
   .controls.custom-availability-rules{:style => ('display: none' unless availability_custom?(f.object))}
     - f.object.availability.each_day do |day, rule|
@@ -19,6 +20,7 @@
           .open-time= af.select :open_time, availability_time_options, {}, :disabled => !availability_custom?(f.object)
           .close-time= af.select :close_time, availability_time_options, {}, :disabled => !availability_custom?(f.object)
           .closed-flag
-            = af.check_box :_destroy, :class => "closed", :checked => !af.object.open_time.present?, :disabled => !availability_custom?(f.object)
-            = af.label :_destroy, "Closed?", :class => "inline", :disabled => !availability_custom?(f.object)
+            = af.label :_destroy, :class => "inline checkbox", :disabled => !availability_custom?(f.object) do
+              Closed?
+              = af.check_box :_destroy, :class => "closed", :checked => !af.object.open_time.present?, :disabled => !availability_custom?(f.object)
 

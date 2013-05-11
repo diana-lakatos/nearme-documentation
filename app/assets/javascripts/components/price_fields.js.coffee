@@ -27,4 +27,4 @@ class @PriceFields
 
 
   toggleEnablingPriceCheckbox: (element) =>
-    element.siblings('input[data-price-input]').attr('disabled', !element.is(':checked'))
+    element.parent().siblings('input[data-price-input]').attr('disabled', !element.is(':checked'))

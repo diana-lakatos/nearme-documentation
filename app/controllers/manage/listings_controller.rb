@@ -16,6 +16,7 @@ class Manage::ListingsController < Manage::BaseController
   def create
     @listing = @location.listings.build(params[:listing])
 
+    logger.debug "Listing has #{@listing.to_json}"
     if @listing.save
       if params[:uploaded_photos]
         @listing.photos << current_user.photos.find(params[:uploaded_photos])
@@ -24,6 +25,7 @@ class Manage::ListingsController < Manage::BaseController
       flash[:notice] = "Great, your new Desk/Room has been added!"
       redirect_to manage_locations_path
     else
+      Rails.logger.debug "listing not valid: #{@listing.errors.to_json}"
       render :new
     end
   end
@@ -61,6 +63,7 @@ class Manage::ListingsController < Manage::BaseController
                 else
                   current_user.locations.find(params[:location_id])
                 end
+    Rails.logger.debug "location found: #{@location.id}"
   end
 
   def find_listing

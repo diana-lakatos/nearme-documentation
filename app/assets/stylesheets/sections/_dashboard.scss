@@ -26,10 +26,20 @@ div.availability-rules .custom-availability-rules .day .close-time {
 
 .availability-rules {
   padding-left: 2px;
+
+   .radio {
+
+     .icon,
+     .icon-to-fade {
+       margin-top: 4px;
+     }
+   }
+
   .open-time, .close-time {
     padding-right: 10px;
     margin: 0;
   }
+
 }
 
 .accordion-heading .accordion-toggle {
