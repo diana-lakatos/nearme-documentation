@@ -186,7 +186,7 @@ class User < ActiveRecord::Base
   def verify_email_with_token(token)
     if token.present? && self.email_verification_token == token
       self.verified = true
-      self.save!
+      self.save(:validate => false)
       true
     else
       false
