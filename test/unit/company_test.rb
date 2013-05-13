@@ -13,4 +13,13 @@ class CompanyTest < ActiveSupport::TestCase
   should allow_value('a-url.com').for(:url)
   should allow_value('x' * 250).for(:description)
   should_not allow_value('x' * 251).for(:description)
+
+  should "be valid even if its location is not valid" do
+    @company = FactoryGirl.create(:company)
+    @location = FactoryGirl.create(:location, :company => @company)
+    @location.address = nil
+    @location.save(:validate => false)
+    @company.reload
+    assert @company.valid?
+  end
 end

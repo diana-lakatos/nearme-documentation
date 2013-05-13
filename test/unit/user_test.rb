@@ -21,6 +21,15 @@ class UserTest < ActiveSupport::TestCase
     assert @user.authentications
   end
 
+  should "be valid even if its company is not valid" do
+    @user = FactoryGirl.create(:user)
+    @company = FactoryGirl.create(:company, :creator => @user)
+    @company.name = nil
+    @company.save(:validate => false)
+    @user.reload
+    assert @user.valid?
+  end
+
   should "know what authentication providers it is linked to" do
     @user = User.find(16)
     @user.authentications.find_or_create_by_provider("exists").tap do |a|
