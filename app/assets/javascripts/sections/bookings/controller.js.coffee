@@ -40,7 +40,7 @@ class Bookings.Controller
     @datepicker.bind 'datesChanged', (dates) =>
       @listing.setDates(dates)
       @delayedUpdateBookingStatus()
-      @timePicker.updateOptions() if @timePicker
+      @timePicker.updateSelectableTimes() if @timePicker
 
   # Setup the datepicker for the simple booking UI
   initializeDatepicker: ->
@@ -75,17 +75,20 @@ class Bookings.Controller
         endElement: endElement
       )
 
+  # Sets up the time picker view controller which handles the user selecting the
+  # start/end times for the reservation.
   initializeTimePicker: ->
     @timePicker = new Bookings.TimePicker(
       @listing,
-      @container.find('.time-picker')
+      @container.find('.time-picker'),
+      {
+        openMinute: @listing.data.earliest_open_minute,
+        closeMinute: @listing.data.latest_close_minute
+      }
     )
-    @timePicker.setSelectableTimeRange(@listing.data.earliest_open_minute, @listing.data.latest_close_minute)
 
     @timePicker.on 'change', =>
       @updateTimesFromTimePicker()
-
-    @updateTimesFromTimePicker()
 
   # Assign initial dates from a restored session or the default
   # start date.
@@ -104,8 +107,7 @@ class Bookings.Controller
     @datepicker.trigger 'datesChanged', initialDates
 
   updateTimesFromTimePicker: ->
-    @listing.setStartMinute(@timePicker.startMinute())
-    @listing.setEndMinute(@timePicker.endMinute())
+    @listing.setTimes(@timePicker.startMinute(), @timePicker.endMinute())
     @updateSummary()
     @updateBookingStatus()
 

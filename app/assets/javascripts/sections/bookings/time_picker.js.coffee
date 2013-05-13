@@ -2,14 +2,15 @@ class @Bookings.TimePicker
   asEvented.call @prototype
   BOOKING_STEP = 15
 
-  constructor: (@listing, @container) ->
+  constructor: (@listing, @container, options = {}) ->
     @allMinutes = []
     @disabledStartTimes = []
     @disabledEndTimes = []
 
-    @view = new View(
-      positionTarget: @container
-    )
+    @openMinute = options.openMinute or 9*60
+    @closeMinute = options.closeMinute or 18*60
+
+    @view = new View(positionTarget: @container)
     @view.appendTo($('body'))
     @view.closeIfClickedOutside(@container)
 
@@ -17,6 +18,8 @@ class @Bookings.TimePicker
     @endTime = @view.endTime
     @loading = @view.loading
 
+    # Populate the time selects based on the open hours
+    @populateTimeOptions()
     @bindEvents()
 
   bindEvents: ->
@@ -45,16 +48,16 @@ class @Bookings.TimePicker
 
   # Set the selectable time range for potential valid opening hours for the listing.
   # Creates a set of <option> elements in the relevent <select> containers.
-  setSelectableTimeRange: (start, end) ->
-    return if end < start
+  populateTimeOptions: ->
+    return if @closeMinute <= @openMinute
 
     # Reset the allowed minute list
     @allMinutes = []
 
     # Build up a list of minutes and select option html elements
     options = []
-    curr = start
-    while curr <= end
+    curr = @openMinute
+    while curr <= @closeMinute
       @allMinutes.push(curr)
       options.push "<option value='#{curr}'>#{@formatMinute(curr)}</option>"
       curr += BOOKING_STEP
@@ -67,7 +70,7 @@ class @Bookings.TimePicker
 
   # Update the selectable options  based on the hourly
   # availability schedule of the listing for the current date.
-  updateOptions: ->
+  updateSelectableTimes: ->
     date = @listing.bookedDates()[0]
 
     # Load schedule runs instantly if available, or fires an ajax
@@ -115,14 +118,24 @@ class @Bookings.TimePicker
 
   disableEndTimesFromStartTime: ->
     if start = @startMinute()
+      # We disable all times before or at the current start time
       before = (min for min in @allMinutes when min <= start)
+
+      # We disable any time after the first unavailable end-time,
+      # as a time booking needs to be contiguous.
       firstAfter = _.detect @disabledEndTimes, (min) -> min > start+BOOKING_STEP
       after = (min for min in @allMinutes when min >= firstAfter)
+
+      # Combine the two sets for the times to disable
       disable = _.union(@disabledEndTimes, before, after)
     else
       disable = @allMinutes
 
+    # Disable the minute options in the array for the end time picker
     @setDisabledTimesForSelect(@endTime, disable)
+
+    # If we don't have a valid end time now, assign a default based on the next
+    # available end time.
     if !@endMinute()
       usable = @endTime.find("option:not(:disabled)")[0]
       @endTime.val(usable.value) if usable

@@ -6,12 +6,15 @@ module ListingsHelper
   # Listing data for initialising a client-side bookings module
   def listing_booking_data(listing)
     first_date = listing.first_available_date
+
+    # Daily open/quantity availability data for datepickers
     availability = listing.availability_status_between(Date.today, Date.today.advance(:years => 1))
-    hourly_availability = if listing.hourly_reservations?
-      {
-        first_date.strftime("%Y-%m-%d") => listing.hourly_availability_schedule(first_date).as_json
-      }
-    end
+
+    # Initial hourly availability schedule data for hourly reservations
+    hourly_availability = {
+      first_date.strftime("%Y-%m-%d") => listing.hourly_availability_schedule(first_date).as_json
+    } if listing.hourly_reservations?
+
     {
       :id => listing.id,
       :name => listing.name,
@@ -73,17 +76,6 @@ module ListingsHelper
     {
       :'data-listing-id' => listing.id
     }
-  end
-
-  def listing_booking_minute_options(listing = @listing)
-    start_minute = @listing.availability.earliest_open_minute
-    end_minute = @listing.availability.latest_close_minute
-
-    options = []
-    (start_minute..end_minute).step(15) do |m|
-      options << ['%d:%0.2d' % [m/60, m%60], m]
-    end
-    options_for_select options
   end
 
 end

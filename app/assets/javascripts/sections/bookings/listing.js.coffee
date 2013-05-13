@@ -82,21 +82,14 @@ class @Bookings.Listing
   setDates: (dates) ->
     @bookedDatesArray = dates
 
-  getStartMinute: ->
-    @startMinute
-
-  getEndMinute: ->
-    @endMinute
-
-  setStartMinute: (start) ->
+  # Set the start/end minutes for an hourly listing reservation.
+  setTimes: (start, end) ->
     @startMinute = start
+    @endMinute = end
 
   minutesBooked: ->
     return 0 unless @startMinute and @endMinute
     @endMinute - @startMinute
-
-  setEndMinute: (end) ->
-    @endMinute = end
 
   # Check the selected dates are valid with the quantity
   # and availability
@@ -112,9 +105,11 @@ class @Bookings.Listing
       quantity: @getQuantity()
     }
 
+    # Hourly reserved listings send through the start/end minute of
+    # the day with the booking request.
     if @isReservedHourly()
-      options.start_minute = @getStartMinute()
-      options.end_minute   = @getEndMinute()
+      options.start_minute = @startMinute
+      options.end_minute   = @endMinute
 
     options
 
@@ -134,6 +129,11 @@ class @Bookings.Listing
       else
         null
 
+  # Extends the simple daily availability wrapper to provide quantity
+  # down to the hourly level for specific days. Provides the same semantics
+  # if called without a provided minute, or provides hourly semantics if called
+  # with a minute as an additional parameter.
+  # Encapsulates deferred loading of the hourly availability.
   class HourlyAvailability extends Availability
     constructor: (@data, @schedule, @scheduleUrl) ->
       super(@data)
@@ -147,6 +147,9 @@ class @Bookings.Listing
     hasSchedule: (date) ->
       !!@_schedule(date)
 
+    # Fire off a remote request (if required) to load the hourly availability
+    # schedule for a given date. Execute the provided callback when ready
+    # to use.
     loadSchedule: (date, callback) ->
       if !@hasSchedule(date)
         dateId = DNM.util.Date.toId(date)
