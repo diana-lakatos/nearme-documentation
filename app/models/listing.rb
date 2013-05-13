@@ -212,11 +212,12 @@ class Listing < ActiveRecord::Base
 
 
   def free=(free_flag)
-    @marked_free = free_flag
-    if free_flag.present? && free_flag
-      daily_price = nil
-      weekly_price = nil
-      monthly_price = nil
+    @marked_free = free_flag && free_flag != "0"
+    if @marked_free
+      self.hourly_price = nil
+      self.daily_price = nil
+      self.weekly_price = nil
+      self.monthly_price = nil
     end
   end
 

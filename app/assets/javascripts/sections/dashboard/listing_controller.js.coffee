@@ -28,23 +28,22 @@ class @Dashboard.ListingController
     @priceFieldsHourly = new PriceFields(@container.find('.price-inputs-hourly'))
     @priceFieldsDaily = new PriceFields(@container.find('.price-inputs-daily'))
 
-    dailyInput = @container.find('.price-inputs-daily').find('input[type="radio"]')
-    hourlyInput = @container.find('.price-inputs-hourly').find('input[type="radio"]')
+    @dailyInput = @container.find('.price-inputs-daily').find('input[type="radio"]')
+    @hourlyInput = @container.find('.price-inputs-hourly').find('input[type="radio"]')
 
-    hourlyInput.on 'change', (e) =>
-      if hourlyInput.is(':checked')
-        @priceFieldsHourly.show()
-        @priceFieldsDaily.hide()
-      else
-        @priceFieldsHourly.hide()
-        @priceFieldsDaily.show()
+    @hourlyInput.on 'change', (e) =>
+      @togglePriceFields()
 
-    dailyInput.on 'change', (e) =>
-      if dailyInput.is(':checked')
-        @priceFieldsHourly.hide()
-        @priceFieldsDaily.show()
-      else
-        @priceFieldsHourly.show()
-        @priceFieldsDaily.hide()
+    @dailyInput.on 'change', (e) =>
+      @togglePriceFields()
 
+    @togglePriceFields()
+
+  togglePriceFields: ->
+    if @dailyInput.is(':checked')
+      @priceFieldsHourly.hide()
+      @priceFieldsDaily.show()
+    else
+      @priceFieldsHourly.show()
+      @priceFieldsDaily.hide()
 

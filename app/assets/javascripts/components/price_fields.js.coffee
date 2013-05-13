@@ -12,9 +12,11 @@ class @PriceFields
 
   show: ->
     @inputWrapper.show()
+    @inputWrapper.find('input.hide-disabled:disabled').removeClass('hide-disabled').prop('disabled', false)
 
   hide: ->
     @inputWrapper.hide()
+    @inputWrapper.find('input:not(:disabled)').addClass('hide-disabled').prop('disabled', true)
 
   bindEvents: ->
     @enablingPriceCheckboxes.change (event) =>
