@@ -49,7 +49,6 @@ class @Bookings.TimePicker
     ampm = if ((minute / 60) >= 12) then 'pm' else 'am'
     "#{h}:#{if m < 10 then '0' else ''}#{m}#{ampm}"
 
-
   class View extends PositionedView
     viewTemplate: """
       <div class="datepicker-header">
@@ -72,7 +71,6 @@ class @Bookings.TimePicker
           <select/>
         </div>
       </div>
-
     """
 
     defaultOptions:
