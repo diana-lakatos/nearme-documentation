@@ -1,8 +1,8 @@
 module Listings
   class ReservationsController < ApplicationController
     before_filter :find_listing
-    before_filter :build_reservation
-    before_filter :require_login_for_reservation
+    before_filter :build_reservation, :only => [:review, :create]
+    before_filter :require_login_for_reservation, :only => [:review, :create]
 
     layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
 
@@ -27,6 +27,10 @@ module Listings
       else
         render :review
       end
+    end
+
+    def hourly_availability_schedule
+      render :json => @listing.hourly_availability_schedule(Date.parse(params[:date])).as_json
     end
 
     private

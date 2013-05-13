@@ -280,8 +280,12 @@ class Listing < ActiveRecord::Base
 
   def first_available_date
     date = Date.today + 1.day
-    max_date = date + 31.days
-    date = date + 1.day until availability_for(date) > 0 || date==max_date
+
+    unless hourly_reservations?
+      max_date = date + 31.days
+      date = date + 1.day until availability_for(date) > 0 || date==max_date
+    end
+
     date
   end
 
@@ -335,6 +339,10 @@ class Listing < ActiveRecord::Base
 
   def availability_status_between(start_date, end_date)
     AvailabilityRule::ListingStatus.new(self, start_date, end_date)
+  end
+
+  def hourly_availability_schedule(date)
+    AvailabilityRule::HourlyListingStatus.new(self, date)
   end
 
 end

@@ -5,14 +5,22 @@ module ListingsHelper
 
   # Listing data for initialising a client-side bookings module
   def listing_booking_data(listing)
+    first_date = listing.first_available_date
     availability = listing.availability_status_between(Date.today, Date.today.advance(:years => 1))
+    hourly_availability = if listing.hourly_reservations?
+      {
+        first_date.strftime("%Y-%m-%d") => listing.hourly_availability_schedule(first_date).as_json
+      }
+    end
     {
       :id => listing.id,
       :name => listing.name,
       :review_url => review_listing_reservations_url(listing),
-      :first_available_date => listing.first_available_date.strftime("%Y-%m-%d"),
+      :hourly_availability_schedule_url => hourly_availability_schedule_listing_reservations_url(listing, :format => :json),
+      :first_available_date => first_date.strftime("%Y-%m-%d"),
       :hourly_reservations => listing.hourly_reservations?,
       :hourly_price_cents => listing.hourly_price_cents,
+      :hourly_availability_schedule => hourly_availability,
       :earliest_open_minute => listing.availability.earliest_open_minute,
       :latest_close_minute => listing.availability.latest_close_minute,
       :minimum_booking_days => listing.minimum_booking_days,

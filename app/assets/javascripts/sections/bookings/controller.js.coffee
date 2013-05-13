@@ -40,6 +40,7 @@ class Bookings.Controller
     @datepicker.bind 'datesChanged', (dates) =>
       @listing.setDates(dates)
       @delayedUpdateBookingStatus()
+      @timePicker.updateOptions() if @timePicker
 
   # Setup the datepicker for the simple booking UI
   initializeDatepicker: ->
@@ -76,6 +77,7 @@ class Bookings.Controller
 
   initializeTimePicker: ->
     @timePicker = new Bookings.TimePicker(
+      @listing,
       @container.find('.time-picker')
     )
     @timePicker.setSelectableTimeRange(@listing.data.earliest_open_minute, @listing.data.latest_close_minute)

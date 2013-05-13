@@ -6,7 +6,16 @@ class @Bookings.Listing
   constructor: (@data) ->
     @id = parseInt(@data.id, 10)
     @firstAvailableDate = DNM.util.Date.idToDate(@data.first_available_date)
-    @availability = new Availability(@data.availability)
+
+    if @isReservedHourly()
+      @availability = new HourlyAvailability(
+        @data.availability,
+        @data.hourly_availability_schedule,
+        @data.hourly_availability_schedule_url
+      )
+    else
+      @availability = new Availability(@data.availability)
+
     @bookedDatesArray = []
 
     @minimumBookingDays = @data.minimum_booking_days
@@ -34,11 +43,11 @@ class @Bookings.Listing
     return false if time > @maximumDate.getTime()
     true
 
-  canBookDate: (date) ->
-    @availabilityFor(date) >= @defaultQuantity
+  canBookDate: (date, min) ->
+    @availabilityFor(date, min) >= @defaultQuantity
 
-  availabilityFor: (date) ->
-    @availability.availableFor(date)
+  availabilityFor: (date, minute = null) ->
+    @availability.availableFor(date, minute)
 
   openFor: (date) ->
     @availability.openFor(date)
@@ -83,7 +92,8 @@ class @Bookings.Listing
     @startMinute = start
 
   minutesBooked: ->
-    @getEndMinute() - @getStartMinute()
+    return 0 unless @startMinute and @endMinute
+    @endMinute - @startMinute
 
   setEndMinute: (end) ->
     @endMinute = end
@@ -123,4 +133,38 @@ class @Bookings.Listing
         month[date.getDate()-1]
       else
         null
+
+  class HourlyAvailability extends Availability
+    constructor: (@data, @schedule, @scheduleUrl) ->
+      super(@data)
+
+    openFor: (date, minute) ->
+      @_value(date, minute) != null
+
+    availableFor: (date, minute) ->
+      @_value(date, minute) or 0
+
+    hasSchedule: (date) ->
+      !!@_schedule(date)
+
+    loadSchedule: (date, callback) ->
+      if !@hasSchedule(date)
+        dateId = DNM.util.Date.toId(date)
+        $.get(@scheduleUrl + "?date=#{dateId}").success (data) =>
+          @schedule[dateId] = data
+          callback(date)
+      else
+        callback(date)
+
+    _schedule: (date) ->
+      @schedule[DNM.util.Date.toId(date)]
+
+    _value: (date, minute) ->
+      if minute
+        if hours = @_schedule(date)
+          hours[minute.toString()] or null
+        else
+          super(date)
+      else
+        super(date)
 
