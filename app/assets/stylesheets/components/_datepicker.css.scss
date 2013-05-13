@@ -103,7 +103,7 @@
     background-color: $gray1;
   }
 
-  .datepicker-days-wrapper {
+  .datepicker-days-wrapper, .time-wrapper {
     position: relative;
     background: $gray1;
     @include border-bottom-radius($border-radius);
@@ -169,3 +169,16 @@
     right: 20px !important;
   }
 }
+
+// Special style for the timepicker
+.time-wrapper {
+  height: 160px;
+  padding-top: 70px;
+
+  .time-start, .ico-arrow-right, .time-end {
+    float: left;
+    margin-left: 15px;
+    line-height: 50px;
+  }
+}
+

@@ -78,6 +78,7 @@ class Bookings.Controller
     @timePicker = new Bookings.TimePicker(
       @container.find('.time-picker')
     )
+    @timePicker.setSelectableTimeRange(@listing.data.earliest_open_minute, @listing.data.latest_close_minute)
 
     @timePicker.on 'change', =>
       @updateTimesFromTimePicker()
@@ -98,6 +99,7 @@ class Bookings.Controller
       [@listing.firstAvailableDate]
 
     @datepicker.setDates(initialDates)
+    @datepicker.trigger 'datesChanged', initialDates
 
   updateTimesFromTimePicker: ->
     @listing.setStartMinute(@timePicker.startMinute())
