@@ -42,6 +42,8 @@ class AvailabilityRule::Summary
   #           :day  - The day of the week
   #           :hour - The hour of the day
   #           :minute - The minute of the day
+  #           :start_minute - Start minute of the day
+  #           :end_minute - End minute of the day
   def open_on?(options)
     raise ArgumentError.new("Options must be a hash") unless options.is_a?(Hash)
 
@@ -54,6 +56,14 @@ class AvailabilityRule::Summary
 
     if options[:hour]
       return false unless rule.open_at?(options[:hour], options[:minute] || 0)
+    end
+
+    if options[:start_minute]
+      return false unless rule.open_at?(options[:start_minute]/60, options[:start_minute]%60)
+    end
+
+    if options[:end_minute]
+      return false unless rule.open_at?(options[:end_minute]/60, options[:end_minute]%60)
     end
 
     true

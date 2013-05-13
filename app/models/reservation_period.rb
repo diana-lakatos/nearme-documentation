@@ -6,8 +6,6 @@ class ReservationPeriod < ActiveRecord::Base
 
   attr_accessible :date, :start_minute, :end_minute
 
-  acts_as_paranoid
-
   delegate :listing, :to => :reservation
 
   # Returns the number of hours reserved on this date.
@@ -30,7 +28,7 @@ class ReservationPeriod < ActiveRecord::Base
   end
 
   def bookable?
-    listing.available_on?(date, reservation.quantity)
+    listing.available_on?(date, reservation.quantity, self[:start_minute], self[:end_minute])
   end
 
   def as_formatted_string

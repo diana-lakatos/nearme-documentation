@@ -23,8 +23,29 @@ class ReservationPeriodTest < ActiveSupport::TestCase
     end
 
     context "hourly listings" do
+      setup do
+        @nine = 9*60
+        @one  = 13*60
+      end
+
       should "determine status correctly" do
-        flunk
+        period = @reservation.periods.build(:date => @next_monday, :start_minute => @nine, :end_minute => @one)
+        assert period.bookable?
+
+        res = @listing.reservations.build(:quantity => 1, :user => @user)
+        res.add_period(@next_monday, @nine, @one)
+        res.save!
+        assert period.bookable?
+
+        res = @listing.reservations.build(:quantity => 1, :user => @user)
+        res.add_period(@next_monday, @nine, @one)
+        res.save!
+        assert !period.bookable?
+      end
+
+      should "not be bookable at a closed time" do
+        period = @reservation.periods.build(:date => @next_monday, :start_minute => 0, :end_minute => 30)
+        assert !period.bookable?
       end
     end
   end

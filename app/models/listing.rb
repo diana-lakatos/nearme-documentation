@@ -143,14 +143,14 @@ class Listing < ActiveRecord::Base
   end
   alias_method :defer_availability_rules?, :defer_availability_rules
 
-  def open_on?(date)
-    availability.open_on?(:date => date)
+  def open_on?(date, start_min = nil, end_min = nil)
+    availability.open_on?(:date => date, :start_minute => start_min, :end_minute => end_min)
   end
 
-  def availability_for(date)
-    if open_on?(date)
+  def availability_for(date, start_min = nil, end_min = nil)
+    if open_on?(date, start_min, end_min)
       # Return the number of free desks
-      [self.quantity - desks_booked_on(date), 0].max
+      [self.quantity - desks_booked_on(date, start_min, end_min), 0].max
     else
       0
     end
@@ -161,8 +161,23 @@ class Listing < ActiveRecord::Base
     self.quantity
   end
 
-  def desks_booked_on(date)
-    reservations.not_rejected_or_cancelled.joins(:periods).where(:reservation_periods => { :date => date }).sum(:quantity)
+  def desks_booked_on(date, start_minute = nil, end_minute = nil)
+    scope = reservations.not_rejected_or_cancelled.joins(:periods).where(:reservation_periods => { :date => date })
+
+    if start_minute
+      hourly_conditions = []
+      hourly_values = []
+      hourly_conditions << "(reservation_periods.start_minute IS NULL AND reservation_periods.end_minute IS NULL)"
+
+      [start_minute, end_minute].compact.each do |minute|
+        hourly_conditions << "(? BETWEEN reservation_periods.start_minute AND reservation_periods.end_minute)"
+        hourly_values << minute
+      end
+
+      scope = scope.where(hourly_conditions.join(' OR '), *hourly_values)
+    end
+
+    scope.sum(:quantity)
   end
 
   def prices
@@ -259,8 +274,8 @@ class Listing < ActiveRecord::Base
     open_on?(date) && !available_on?(date)
   end
 
-  def available_on?(date, quantity=1)
-    availability_for(date) >= quantity
+  def available_on?(date, quantity=1, start_min = nil, end_min = nil)
+    availability_for(date, start_min, end_min) >= quantity
   end
 
   def first_available_date
