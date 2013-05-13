@@ -16,7 +16,19 @@ class RegistrationsControllerTest < ActionController::TestCase
       @user.reload
       @controller.current_user.id == @user.id
       assert @user.verified
+    end
+
+    should "redirect verified user with listing to dashboard" do
+      @company = FactoryGirl.create(:company, :creator => @user)
+      @location = FactoryGirl.create(:location, :company => @company)
+      FactoryGirl.create(:listing, :location => @location)
+      get :verify, :id => @user.id, :token => @user.email_verification_token
       assert_redirected_to manage_locations_path
+    end
+
+    should "redirect verified user without listing to settings" do
+      get :verify, :id => @user.id, :token => @user.email_verification_token
+      assert_redirected_to edit_user_registration_path(@user)
     end
 
     should "handle situation when user is verified" do
@@ -26,7 +38,6 @@ class RegistrationsControllerTest < ActionController::TestCase
       @user.reload
       @controller.current_user.id == @user.id
       assert @user.verified
-      assert_redirected_to manage_locations_path
     end
 
     should "not verify user if id is incorrect" do
