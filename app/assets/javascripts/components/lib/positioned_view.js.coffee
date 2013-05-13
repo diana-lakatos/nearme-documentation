@@ -7,12 +7,27 @@ class @PositionedView
     <div></div>
   """
 
+  defaultOptions__PositionedView:
+    positionTarget: null
+    containerClass: null
+    windowRightPadding: 20
+    positionPadding: 5
+
   constructor: (@options) ->
+    @options = $.extend({}, @defaultOptions__PositionedView, @options)
+
     @container = $(@containerTemplate).hide()
     @container.addClass(@options.containerClass) if @options.containerClass
     @positionTarget = @options.positionTarget
 
     @container.on 'click', (event) => event.stopPropagation()
+
+  closeIfClickedOutside: (clickTarget) ->
+    clickTarget = $(clickTarget)
+
+    $('body').on 'click', (event) =>
+      if clickTarget[0] != event.target && clickTarget.has(event.target).length == 0
+        @hide()
 
   # Render the the view by appending it to a container
   appendTo: (selector) ->

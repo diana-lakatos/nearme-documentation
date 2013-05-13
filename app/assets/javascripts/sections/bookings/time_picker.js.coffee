@@ -6,6 +6,8 @@ class @Bookings.TimePicker
       positionTarget: @container
     )
     @view.appendTo($('body'))
+    @view.closeIfClickedOutside(@container)
+
     @startTime = @view.startTime
     @endTime = @view.endTime
 
@@ -15,10 +17,6 @@ class @Bookings.TimePicker
     @bindEvents()
 
   bindEvents: ->
-    $('body').on 'click', (event) =>
-      if @container[0] != event.target && @container.has(event.target).length == 0
-        @view.hide()
-
     @startTime.on 'change', =>
       @container.find('.time-text').text(@formatMinute(@startTime.val()))
       @trigger 'change'
@@ -77,13 +75,13 @@ class @Bookings.TimePicker
 
     """
 
-    constructor: (options) ->
-      options = $.extend({
-        containerClass: 'dnm-datepicker',
-        positionPadding: 10,
-        windowRightPadding: 20
-      }, options)
-      super(options)
+    defaultOptions:
+      containerClass: 'dnm-datepicker'
+
+    constructor: (@options) ->
+      @options = $.extend({}, @defaultOptions, @options)
+      super(@options)
+
       @container.html(@viewTemplate)
       @startTime = @container.find('.time-start select')
       @endTime = @container.find('.time-end select')
