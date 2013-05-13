@@ -55,9 +55,6 @@ class @Bookings.PriceCalculator
     constructor: (@listing) ->
 
     getPrice: ->
-      bookedHours = (@minutesBooked()/60)*@listing.bookedDates().length
+      bookedHours = (@listing.minutesBooked()/60)*@listing.bookedDates().length
       @listing.hourlyPrice*bookedHours*@listing.getQuantity()
-
-    minutesBooked: ->
-      @listing.getEndMinute() - @listing.getStartMinute()
 

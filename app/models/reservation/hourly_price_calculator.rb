@@ -12,7 +12,7 @@ class Reservation::HourlyPriceCalculator
 
   def valid?
     # TODO: Add minimum hourly requirement, etc.
-    !@reservation.periods.empty?
+    !@reservation.periods.empty? && @reservation.periods.all? { |p| p.hours > 0 }
   end
 
   private

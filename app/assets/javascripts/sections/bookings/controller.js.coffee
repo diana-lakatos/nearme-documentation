@@ -105,6 +105,7 @@ class Bookings.Controller
     @listing.setStartMinute(@timePicker.startMinute())
     @listing.setEndMinute(@timePicker.endMinute())
     @updateSummary()
+    @updateBookingStatus()
 
   # Trigger showing the review booking form based on selected
   # dates.

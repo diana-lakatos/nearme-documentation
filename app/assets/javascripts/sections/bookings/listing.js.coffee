@@ -44,7 +44,12 @@ class @Bookings.Listing
     @availability.openFor(date)
 
   isBooked: ->
-    @bookedDates().length > 0
+    hasDate = @bookedDates().length > 0
+    hasTime = if @isReservedHourly()
+      @minutesBooked() > 0
+    else
+      true
+    hasDate and hasTime
 
   # Return the days where there exist bookings
   bookedDays: ->
@@ -76,6 +81,9 @@ class @Bookings.Listing
 
   setStartMinute: (start) ->
     @startMinute = start
+
+  minutesBooked: ->
+    @getEndMinute() - @getStartMinute()
 
   setEndMinute: (end) ->
     @endMinute = end
