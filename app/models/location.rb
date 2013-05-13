@@ -39,8 +39,6 @@ class Location < ActiveRecord::Base
   validates :currency, currency: true, allow_nil: false
   validates_length_of :description, :maximum => 250
 
-  validates_associated :listings
-
   before_validation :fetch_coordinates
   before_save :assign_default_availability_rules
   before_save :parse_address_components

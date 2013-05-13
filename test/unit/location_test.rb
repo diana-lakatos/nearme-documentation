@@ -21,6 +21,15 @@ class LocationTest < ActiveSupport::TestCase
   should allow_value('x' * 250).for(:description)
   should_not allow_value('x' * 251).for(:description)
 
+  should "be valid even if its listing is not valid" do
+    @location = FactoryGirl.create(:location)
+    @listing = FactoryGirl.create(:listing, :location => @location)
+    @listing.name = nil
+    @listing.save(:validate => false)
+    @location.reload
+    assert @location.valid?
+  end
+
   context "#name" do
 
     setup do

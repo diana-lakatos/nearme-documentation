@@ -17,7 +17,6 @@ class User < ActiveRecord::Base
 
   attr_accessible :companies_attributes
   accepts_nested_attributes_for :companies
-  validates_associated :companies
 
   has_many :locations,
            :through => :companies,
