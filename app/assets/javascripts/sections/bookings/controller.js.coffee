@@ -156,6 +156,7 @@ class Bookings.Controller
     # Reset the datepicker if the booking is no longer available
     # with the new quantity.
     @datepicker.reset() unless @listing.bookingValid()
+    @timePicker.updateSelectableTimes() if @timePicker
     @updateSummary()
 
   updateQuantityField: (qty = @listing.defaultQuantity) ->

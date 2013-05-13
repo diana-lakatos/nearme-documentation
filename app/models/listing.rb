@@ -104,14 +104,8 @@ class Listing < ActiveRecord::Base
   end
 
   def price_enabled_by_default?(price)
-    # if object is persisted, it means that owner already provided prices
-    if persisted?
-      # only prices greater than 0 are enabled
-      price.to_f > 0
-    else
-      # if object is not persisted and form has not been submited yet, all prices are enabled
-      true
-    end
+    # only prices greater than 0 are enabled
+    price.to_f > 0
   end
 
   # Defer to the parent Location for availability rules unless this Listing has specific
@@ -125,9 +119,9 @@ class Listing < ActiveRecord::Base
   end
 
   def remove_disabled_prices
-    daily_price_cents = nil if !enable_daily || daily_price.to_f.zero?
-    weekly_price_cents = nil if !enable_weekly || weekly_price.to_f.zero?
-    monthly_price_cents = nil if !enable_monthly || monthly_price.to_f.zero?
+    self.daily_price_cents = nil if !enable_daily || daily_price.to_f.zero?
+    self.weekly_price_cents = nil if !enable_weekly || weekly_price.to_f.zero?
+    self.monthly_price_cents = nil if !enable_monthly || monthly_price.to_f.zero?
   end
 
   # Trigger clearing of all existing availability rules on save

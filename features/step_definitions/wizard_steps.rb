@@ -4,7 +4,7 @@ end
 
 When /^I fill in valid space details$/ do
   fill_in 'Your company name', with: 'International Secret Intelligence Service'
-  select 'Industry', from: 'Industries'
+  page.execute_script "$('select#company_industry_ids').val('Industry')"
   fill_in 'Location description', with: 'Our historic 11-story Southern Pacific Building, also known as "The Landmark", was completed in 1916. We are in the 172 m Spear Tower.'
   fill_in 'Location address', with: 'usa'
   fill_in 'Phone Number', with: '844100999'
@@ -13,5 +13,5 @@ When /^I fill in valid space details$/ do
   fill_in 'Listing description', with:'We have a group of several shared desks available.'
   select 'Desk', from: 'Listing type'
   fill_in 'Quantity available', with:1
-  attach_file 'company[locations_attributes][0][listings_attributes][0][photos_attributes][0][image]', "#{Rails.root}/test/assets/foobear.jpeg"
+  #attach_file 'company[locations_attributes][0][listings_attributes][0][photos_attributes][0][image]', "#{Rails.root}/test/assets/foobear.jpeg"
 end

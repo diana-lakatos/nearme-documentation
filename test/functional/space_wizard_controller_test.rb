@@ -34,12 +34,6 @@ class SpaceWizardControllerTest < ActionController::TestCase
       assert_equal 9900, @listing.monthly_price_cents
     end
 
-    should "not raise exception if no price is provided" do
-      assert_difference('Listing.count', 1) do
-        post :submit_listing, remove_price_from_params(get_params)
-      end
-    end
-
     should "not raise exception if hash is incomplete" do
       assert_no_difference('Listing.count') do
         post :submit_listing, { "company"=> { "name"=>"International Secret Intelligence Service" } }  
