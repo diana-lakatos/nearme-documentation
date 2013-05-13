@@ -36,7 +36,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       @user.save!
       get :verify, :id => @user.id, :token => @user.email_verification_token
       @user.reload
-      @controller.current_user.id == @user.id
+      assert_nil @controller.current_user
       assert @user.verified
     end
 

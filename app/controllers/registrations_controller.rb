@@ -69,7 +69,11 @@ class RegistrationsController < Devise::RegistrationsController
       flash[:notice] = "Thanks - your email address has been verified!"
       redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path(@user) 
     else
-      flash[:error] = "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+      if @user.verified
+        flash[:notice] = "The email address has been already verified"
+      else
+        flash[:error] = "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+      end
       redirect_to root_path
     end
   end
