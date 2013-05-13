@@ -292,7 +292,7 @@ class Listing < ActiveRecord::Base
 
   # Number of minimum consecutive booking days required for this listing
   def minimum_booking_days
-    if free? || daily_price_cents.to_i > 0
+    if free? || hourly_reservations? || daily_price_cents.to_i > 0
       1
     else
       multiple = if weekly_price_cents.to_i > 0
