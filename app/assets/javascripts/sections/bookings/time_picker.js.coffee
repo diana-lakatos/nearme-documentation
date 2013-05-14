@@ -68,6 +68,9 @@ class @Bookings.TimePicker
     # End time is all but the first start time
     @endTime.html(_.difference(options, [options[0]]).join("\n"))
 
+    @view.startTimeDidChange()
+    @view.endTimeDidChange()
+
   # Update the selectable options  based on the hourly
   # availability schedule of the listing for the current date.
   updateSelectableTimes: ->
@@ -97,7 +100,7 @@ class @Bookings.TimePicker
       # Automatically pick the first available start-time
       if !@startMinute()
         if min = _.difference(@allMinutes, @disabledStartTimes)[0]
-          @startTime.val(min)
+          @startTime.val(min).trigger 'change'
 
       # Disable the relevant end-times based on the available end times
       # and also the current start time selected.
@@ -138,7 +141,7 @@ class @Bookings.TimePicker
     # available end time.
     if !@endMinute()
       usable = @endTime.find("option:not(:disabled)")[0]
-      @endTime.val(usable.value) if usable
+      @endTime.val(usable.value).trigger 'change' if usable
 
   # Return a minute of the day formatted in h:mmpm
   formatMinute: (minute) ->
@@ -146,7 +149,7 @@ class @Bookings.TimePicker
     h = 12 if h == 0
     m = minute % 60
     ampm = if ((minute / 60) >= 12) then 'pm' else 'am'
-    "#{h}:#{if m < 10 then '0' else ''}#{m}#{ampm}"
+    "#{h}:#{if m < 10 then '0' else ''}#{m} #{ampm}"
 
   class View extends PositionedView
     viewTemplate: """
@@ -160,13 +163,13 @@ class @Bookings.TimePicker
 
       <div class="time-wrapper">
         <div class="time-start">
-          <span></span>
+          <span><label></label><i class="ico-chevron-down"></i></span>
           <select/>
         </div>
         <span class="ico-arrow-right">
         </span>
         <div class="time-end">
-          <span></span>
+          <span><label></label><i class="ico-chevron-down"></i></span>
           <select/>
         </div>
 
@@ -183,6 +186,23 @@ class @Bookings.TimePicker
 
       @container.html(@viewTemplate)
       @startTime = @container.find('.time-start select')
+      @startTimeSpan = @container.find('.time-start span label')
       @endTime = @container.find('.time-end select')
+      @endTimeSpan = @container.find('.time-end span label')
       @loading = @container.find('.datepicker-loading')
+
+      @bindEvents()
+
+    bindEvents: ->
+      @startTime.on 'change', =>
+        @startTimeDidChange()
+
+      @endTime.on 'change', =>
+        @endTimeDidChange()
+
+    startTimeDidChange: ->
+      @startTimeSpan.text(@startTime.find('option:selected').text())
+
+    endTimeDidChange: ->
+      @endTimeSpan.text(@endTime.find('option:selected').text())
 
