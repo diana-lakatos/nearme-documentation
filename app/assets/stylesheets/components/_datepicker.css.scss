@@ -214,6 +214,10 @@
       height: 40px;
       margin: 0;
       @include opacity(0);
+
+      option[disabled] {
+        color: $gray4;
+      }
     }
   }
 }
