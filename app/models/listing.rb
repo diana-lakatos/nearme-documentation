@@ -19,9 +19,6 @@ class Listing < ActiveRecord::Base
   MINUTES_IN_DAY = 1440
   MINUTES_IN_WEEK = 10080
   MINUTES_IN_MONTH = 43200
-  has_many :ratings,
-    as: :content,
-    dependent: :destroy
 
 
   has_many :inquiries

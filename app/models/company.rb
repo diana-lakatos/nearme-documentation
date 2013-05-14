@@ -22,8 +22,6 @@ class Company < ActiveRecord::Base
   validates :email, email: true, allow_blank: true
   validate :validate_url_format
   
-  validates_associated :locations
-
   acts_as_paranoid
 
   accepts_nested_attributes_for :locations
