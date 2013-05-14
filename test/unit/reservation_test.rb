@@ -150,6 +150,33 @@ class ReservationTest < ActiveSupport::TestCase
     end
   end
 
+  context "payments" do
+    should "set default payment status to pending" do
+      reservation = FactoryGirl.build(:reservation)
+      reservation.payment_status = nil
+      reservation.save!
+      assert reservation.pending?
+
+      reservation = FactoryGirl.build(:reservation)
+      reservation.payment_status = Reservation::PAYMENT_STATUSES[:unknown]
+      reservation.save!
+      assert reservation.pending?
+
+      reservation = FactoryGirl.build(:reservation)
+      reservation.payment_status = Reservation::PAYMENT_STATUSES[:paid]
+      reservation.save!
+      assert !reservation.pending?
+    end
+
+    should "set default payment status to paid for free reservations" do
+      reservation = FactoryGirl.build(:reservation)
+      Reservation::PriceCalculator.any_instance.stubs(:price).returns(0.to_money)
+      reservation.save!
+      assert reservation.free?
+      assert reservation.paid?
+    end
+  end
+
   context 'validations' do
     setup do
       @user = FactoryGirl.create(:user)

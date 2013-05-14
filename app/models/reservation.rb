@@ -30,7 +30,7 @@ class Reservation < ActiveRecord::Base
 
   before_validation :set_total_cost, on: :create
   before_validation :set_currency, on: :create
-  before_create :set_default_payment_status
+  before_validation :set_default_payment_status, on: :create
   after_create  :auto_confirm_reservation
   after_create  :create_scheduled_expiry_task
 
@@ -190,7 +190,7 @@ class Reservation < ActiveRecord::Base
   private
 
     def set_default_payment_status
-      return if payment_status
+      return if paid?
 
       self.payment_status = if free?
         PAYMENT_STATUSES[:paid]
