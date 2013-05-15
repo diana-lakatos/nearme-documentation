@@ -93,8 +93,7 @@ class V1::ReservationsController < V1::BaseController
       # Notify the host of the cancelation...
 
       # Perform the cancelation
-      @reservation.state = 'canceled'
-      @reservation.save!
+      @reservation.user_cancel
 
       head :no_content
 

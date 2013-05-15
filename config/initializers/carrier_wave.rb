@@ -12,8 +12,8 @@ CarrierWave.configure do |config|
     config.asset_host           = 'https://s3.amazonaws.com/desksnearme.production'
     config.storage              = :fog
   when "staging"
-    config.fog_directory        = 'desksnearme.staging'
-    config.asset_host           = 'https://s3.amazonaws.com/desksnearme.staging'
+    config.fog_directory        = 'desksnearme.staging-prod-copy'
+    config.asset_host           = 'https://s3.amazonaws.com/desksnearme.staging-prod-copy'
     config.storage              = :fog
   else
     config.storage              = :file
