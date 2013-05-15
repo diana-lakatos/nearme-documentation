@@ -1,5 +1,7 @@
 require 'test_helper'
 require 'reservations_helper'
+require Rails.root.join('lib', 'dnm_errors.rb')
+require Rails.root.join('app', 'serializers', 'reservation_serializer.rb')
 
 class ReservationTest < ActiveSupport::TestCase
   include ReservationsHelper
@@ -22,6 +24,54 @@ class ReservationTest < ActiveSupport::TestCase
     @reservation = Reservation.new
 
     assert @reservation.periods
+  end
+
+  context 'cancelable' do
+    
+    setup do
+        @reservation = Reservation.new
+        @reservation.listing = FactoryGirl.create(:listing)
+        @reservation.owner = FactoryGirl.create(:user)
+        @reservation.add_period((Date.today+1.day))
+    end
+
+    should 'be cancelable if all periods are for future' do
+        assert @reservation.cancelable
+    end
+
+    should 'be cancelable if all periods are for future and confirmed' do
+        @reservation.confirm!
+        assert @reservation.cancelable
+    end
+
+    should 'not be cancelable if at least one period is for past' do
+        @reservation.add_period((Date.today+2.day))
+        @reservation.add_period((Date.today-2.day))
+        assert !@reservation.cancelable
+    end
+
+    should 'not be cancelable if user canceled' do
+        @reservation.user_cancel!
+        assert !@reservation.cancelable
+    end
+
+    should 'not be cancelable if owner rejected' do
+        @reservation.reject!
+        assert !@reservation.cancelable
+    end
+
+    should 'not be cancelable if expired' do
+        @reservation.expire!
+        assert !@reservation.cancelable
+    end
+
+    should 'not be cancelable if owner canceled' do
+        @reservation.confirm!
+        @reservation.owner_cancel!
+        Rails.logger.debug @reservation.state
+        assert !@reservation.cancelable
+    end
+
   end
 
   describe 'expiration' do
