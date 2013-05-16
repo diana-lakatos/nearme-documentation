@@ -59,4 +59,8 @@ class ApplicationController < ActionController::Base
     render "public/404", :status => :not_found
   end
 
+  def rename_flash_messages
+    flash['create green'] = flash.discard(:notice) if flash[:notice]
+  end
+
 end

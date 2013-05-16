@@ -8,10 +8,10 @@ class AuthenticationsController < ApplicationController
     authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
     if authentication
       if current_user && current_user.id != authentication.user.id 
-        flash[:notice] = "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account." if use_flash_messages?
+        flash['warning red'] = "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account." if use_flash_messages?
         redirect_to edit_user_registration_path
       else
-        flash[:notice] = "Signed in successfully." if use_flash_messages?
+        flash['create green'] = "Signed in successfully." if use_flash_messages?
         authentication.user.remember_me!
         sign_in_and_redirect(:user, authentication.user)
       end
@@ -19,13 +19,13 @@ class AuthenticationsController < ApplicationController
       current_user.authentications.create!(:provider => omniauth['provider'], :uid => omniauth['uid'])
       current_user.use_social_provider_image(omniauth['info']['image'])
       current_user.save!
-      flash[:notice] = "Authentication successful."
+      flash['create green'] = "Authentication successful."
       redirect_to edit_user_registration_url
     else
       user = User.new
       user.apply_omniauth(omniauth)
       if user.save
-        flash[:notice] = "Signed in successfully." if use_flash_messages?
+        flash['create green'] = "Signed in successfully." if use_flash_messages?
         user.remember_me!
         sign_in_and_redirect(:user, user)
       else
@@ -39,9 +39,9 @@ class AuthenticationsController < ApplicationController
     @authentication = current_user.authentications.find(params[:id])
     if @authentication.can_be_deleted?
       @authentication.destroy
-      flash[:notice] = "Successfully disconnected your #{@authentication.provider_name}"
+      flash['delete red'] = "Successfully disconnected your #{@authentication.provider_name}"
     else
-      flash[:error] = "We are unable to disconnect your account from #{@authentication.provider_name}. Make sure you have at least one other account linked so you can log in!"
+      flash['warning red'] = "We are unable to disconnect your account from #{@authentication.provider_name}. Make sure you have at least one other account linked so you can log in!"
     end
     redirect_to edit_user_registration_url
   end
@@ -53,7 +53,7 @@ class AuthenticationsController < ApplicationController
   end
 
   def failure
-    flash[:error] = "We are sorry, but we could not authenticate you for the following reason: '#{params[:message] ? params[:message] : "Unknown"}'. Please try again."
+    flash['warning red'] = "We are sorry, but we could not authenticate you for the following reason: '#{params[:message] ? params[:message] : "Unknown"}'. Please try again."
     redirect_to new_user_session_url
   end
 

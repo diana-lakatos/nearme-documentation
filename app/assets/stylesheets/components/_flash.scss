@@ -1,3 +1,68 @@
+.alert {
+  position: absolute;
+  z-index: $flash-z-index;
+  border: none;
+  border-radius: 0px;
+  top: 60px;
+  text-align: center;
+  color: white;
+  text-shadow: none;
+  padding: 0px;
+  width: 100%;
+
+  p {
+    color: white;
+    font-size: 24px;
+    line-height: 60px;
+    margin: 0px;
+    padding: 0px 49px 0px 0px;
+
+    span.left-icon {
+      margin-right: 15px;
+    }
+
+    span.right-icon {
+      margin-left: 5px;
+    }
+  }
+
+  a.close {
+    position: absolute;
+    top: 0px;
+    right: 20px;
+    font-size: 36px;
+    line-height: 60px;
+    color: white;
+    @include opacity(.7);
+  }
+
+  &.green {
+    background-color: #00693A;
+  }
+
+  &.blue {
+    background-color: #004DA7;
+  }
+
+  &.red {
+    background-color: #DB0006;
+  }
+
+  &.orange {
+    background-color: #DB6606;
+  }
+
+}
+
+.modal-content{
+
+  .alert{
+    position: relative;
+    top: auto;
+    left: auto;
+  }
+}
+
 .flash {
   position: relative;
   border: 1px solid #c6c6c6;
@@ -43,11 +108,5 @@
     &:hover {
       @include opacity(1);
     }
-  }
-}
-
-.context-flash {
-  &.error {
-
   }
 }
