@@ -1,5 +1,6 @@
 module ApplicationHelper
 
+  include FlashHelper
   include FormHelper
   include TooltipHelper
   include TweetButton
@@ -30,24 +31,6 @@ module ApplicationHelper
 
   def stripe_public_key
     DesksnearMe::Application.config.stripe_public_key
-  end
-
-  def flash_class(level)
-    case level
-    when :notice then "alert-info"
-    when :alert then "alert-alert"
-    when :error then "alert-error"
-    end
-  end
-
-  def flash_ico(level)
-    logger.debug "level:"
-    logger.debug "#{level} #{level.class}"
-    case level
-    when :notice then "ico-check"
-    when :alert then "ico-arrow-right"
-    when :error then "ico-warning"
-    end
   end
 
   def truncate_with_ellipsis(body, length, html_options = {})

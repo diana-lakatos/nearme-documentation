@@ -7,7 +7,7 @@ class SpaceWizardController < ApplicationController
   before_filter :convert_price_params, only: [:submit_listing]
 
   def new
-    flash.keep(:alert)
+    flash.keep('warning orange')
     if current_user
       redirect_to space_wizard_list_url
     else
@@ -31,7 +31,8 @@ class SpaceWizardController < ApplicationController
         listing.photos << current_user.photos.find(params[:uploaded_photos])
         listing.save!
       end
-      redirect_to manage_locations_path, notice: 'Your space was listed! You can provide more details about your location and listing from this page.'
+      flash['create green'] = 'Your space was listed! You can provide more details about your location and listing from this page.'
+      redirect_to manage_locations_path
     else
       render :list
     end

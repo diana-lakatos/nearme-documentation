@@ -36,16 +36,20 @@
     @include opacity(.7);
   }
 
-  &.alert-info {
+  &.green {
     background-color: #00693A;
   }
 
-  &.alert-alert {
+  &.blue {
     background-color: #004DA7;
   }
 
-  &.alert-error {
+  &.red {
     background-color: #DB0006;
+  }
+
+  &.orange {
+    background-color: #DB6606;
   }
 
 }
@@ -104,11 +108,5 @@
     &:hover {
       @include opacity(1);
     }
-  }
-}
-
-.context-flash {
-  &.error {
-
   }
 }
