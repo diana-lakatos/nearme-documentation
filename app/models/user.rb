@@ -17,7 +17,6 @@ class User < ActiveRecord::Base
 
   attr_accessible :companies_attributes
   accepts_nested_attributes_for :companies
-  validates_associated :companies
 
   has_many :locations,
            :through => :companies,
@@ -71,7 +70,7 @@ class User < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :password, :if => :password_required?
   validates_presence_of :email
-  validates :avatar, :file_mime_type => {:content_type => /image/}, :if => Proc.new{|user| user.avatar.present? && user.avatar.file.present? && user.avatar.file.content_type.present? }
+  #validates :avatar, :file_mime_type => {:content_type => /image/}, :if => Proc.new{|user| user.avatar.present? && user.avatar.file.present? && user.avatar.file.content_type.present? }
 
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :validatable, :token_authenticatable
@@ -184,9 +183,9 @@ class User < ActiveRecord::Base
   end
 
   def verify_email_with_token(token)
-    if token.present? && self.email_verification_token == token
+    if token.present? && self.email_verification_token == token && !self.verified
       self.verified = true
-      self.save!
+      self.save(:validate => false)
       true
     else
       false

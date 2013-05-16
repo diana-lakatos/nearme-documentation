@@ -73,9 +73,7 @@ class @Space.Controller
     if @panoramaContainer.length > 0
       panoramaOptions = {
         position: latlng,
-        addressControlOptions: {
-          position: google.maps.ControlPosition.BOTTOM
-        },
+        addressControl: false,
         linksControl: false,
         panControl: false,
         zoomControlOptions: {

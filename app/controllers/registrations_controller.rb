@@ -66,11 +66,17 @@ class RegistrationsController < Devise::RegistrationsController
   def verify
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
+      sign_in(@user)
       flash['create green'] = "Thanks - your email address has been verified!"
+      redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path(@user) 
     else
-      flash['warning red'] = "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+      if @user.verified
+        flash['warning orange'] = "The email address has been already verified"
+      else
+        flash['warning red'] = "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+      end
+      redirect_to root_path
     end
-    redirect_to root_path
   end
 
   protected
