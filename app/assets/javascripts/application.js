@@ -122,7 +122,7 @@ if($.browser.mozilla) {
 
 $(document).on('click', 'div.alert a.close', function(e){
   wrapper = $(this).closest('.alert');
-  wrapper.fadeOut('slow');
+  wrapper.addClass('timeout');
   return false;
 });
 

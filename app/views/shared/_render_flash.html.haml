@@ -5,11 +5,10 @@
       %p
         %span{class: "left-icon #{flash_info[:icon]}"}
         = value.html_safe
-        %a.close{href: '#'} &times;
+        %a.close.ico-close.right{href: '#'}
     :javascript
+      $('.alert').css({"display":'none'}).delay(200).css({'display': 'block'}).addClass('appear')
       setTimeout(function() {
-        if($(".alert.#{flash_info[:color]}").length > 0){
-          $(".alert.#{flash_info[:color]}").fadeOut();
-        }
+          $(".alert").addClass('timeout');
       }, 7000);
 
