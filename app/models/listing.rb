@@ -52,6 +52,7 @@ class Listing < ActiveRecord::Base
   validates_length_of :description, :maximum => 250
   validates_with PriceValidator
 
+
   attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
     :name, :description, :daily_price, :weekly_price, :monthly_price,
     :daily_price_cents, :weekly_price_cents, :monthly_price_cents, :availability_template_id, 
@@ -60,6 +61,10 @@ class Listing < ActiveRecord::Base
 
   attr_accessor :enable_daily, :enable_weekly, :enable_monthly
 
+  after_save :notify_user_about_change
+  after_destroy :notify_user_about_change
+
+  delegate :notify_user_about_change, :to => :location, :allow_nil => true
   delegate :to_s, to: :name
 
 
@@ -174,12 +179,16 @@ class Listing < ActiveRecord::Base
 
   def free?
     if persisted?
-      (daily_price_cents.to_f + weekly_price_cents.to_f + monthly_price_cents.to_f) == 0.0
+      !has_price?
     else
       @marked_free
     end
   end
   alias_method :free, :free?
+
+  def has_price?
+    !(daily_price_cents.to_f + weekly_price_cents.to_f + monthly_price_cents.to_f).zero?
+  end
 
 
   def free=(free_flag)
