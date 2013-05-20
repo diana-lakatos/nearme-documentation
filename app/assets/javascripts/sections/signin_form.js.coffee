@@ -1,4 +1,4 @@
-class @SigninForm extends @Form
+class @SigninForm extends @ModalForm
 
   constructor: (@container) ->
     @form = @container.find('#new_user')

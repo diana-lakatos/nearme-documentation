@@ -1,4 +1,4 @@
-class @Form
+class @ModalForm
 
   constructor: (@container, @form) ->
     if !$.browser.msie
