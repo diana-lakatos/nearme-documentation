@@ -64,6 +64,7 @@
 
   &.timeout{
     @include animation(fadeOutUp 1s 1 forwards);
+    z-index: 0;
   }
 }
 
