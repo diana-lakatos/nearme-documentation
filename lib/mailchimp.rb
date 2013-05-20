@@ -42,7 +42,7 @@ class Mailchimp
     max_count = User.count
     User.needs_mailchimp_update.find_in_batches(:batch_size => 200) do |users|
       count += users.count
-      puts "Starting batch... #{count}/#{max_count}"
+      #puts "Starting batch... #{count}/#{max_count}"
       final_result.merge!( 
                           @api_wrapper.list_batch_subscribe(
                             :id => @list_id, 
