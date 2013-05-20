@@ -17,7 +17,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
     should "create listing" do
       assert_difference('@location2.listings.count') do
-        post :create, { :listing => FactoryGirl.attributes_for(:listing_in_auckland).reverse_merge!({:listing_type_id => @listing_type.id}), :location_id => @location2.id}
+        post :create, { :listing => FactoryGirl.attributes_for(:listing_in_auckland).reverse_merge!({:listing_type_id => @listing_type.id, :enable_daily => "1", :daily_price => 10 }), :location_id => @location2.id}
       end
       assert_redirected_to manage_locations_path
     end
