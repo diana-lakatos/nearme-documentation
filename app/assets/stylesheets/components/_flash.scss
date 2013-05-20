@@ -9,6 +9,7 @@
   text-shadow: none;
   padding: 0px;
   width: 100%;
+  @include opacity(.8);
 
   p {
     color: white;
@@ -28,6 +29,7 @@
 
   a.close {
     position: absolute;
+    top:  0;
     right: 20px;
     font-size: 24px;
     line-height: 60px;
@@ -45,23 +47,23 @@
   }
 
   &.blue {
-    background-color: #004DA7;
+    background-color: $dnm_blue;
   }
 
   &.red {
-    background-color: #DB0006;
+    background-color: $dnm_red;
   }
 
   &.orange {
-    background-color: #DB6606;
+    background-color: $dnm_orange;
   }
 
   &.appear{
-    @include animation(bounceInDown 1s 1 forwards);
+    @include animation(fadeInDown  1.2s 1 forwards);
   }
 
   &.timeout{
-    @include animation(bounceOutUp 1s 1 forwards);
+    @include animation(fadeOutUp 1s 1 forwards);
   }
 }
 
