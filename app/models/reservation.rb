@@ -56,25 +56,10 @@ class Reservation < ActiveRecord::Base
     event :user_cancel do
       transition [:unconfirmed, :confirmed] => :cancelled
     end
-    
+
     event :expire do
       transition :unconfirmed => :expired
     end
-    
-    state :unconfirmed, :confirmed do
-      # A reservation can be canceled if not already canceled and all of the dates are in the future
-      def cancelable
-        timestamp_now = Time.now.utc
-        periods.all? { |p| p.date.to_time(:utc) >= timestamp_now }
-      end
-    end
-
-    state all - [:unconfirmed, :confirmed] do
-      def cancelable
-        false
-      end
-    end
-
   end
 
   scope :on, lambda { |date|
@@ -116,6 +101,22 @@ class Reservation < ActiveRecord::Base
 
   def date
     periods.first.date
+  end
+
+  def cancelable?
+    case
+    when confirmed?, unconfirmed?
+      # A reservation can be canceled if not already canceled and all of the dates are in the future
+      !started?
+    else
+      false
+    end
+  end
+  alias_method :cancelable, :cancelable?
+
+  # Returns whether any of the reserved dates have started
+  def started?
+    periods.any? { |p| p.date <= Date.today }
   end
 
   def add_period(date)
