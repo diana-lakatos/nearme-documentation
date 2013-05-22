@@ -15,7 +15,6 @@ class Manage::ListingsController < Manage::BaseController
 
   def create
     @listing = @location.listings.build(params[:listing])
-    @listing.daily_price = 10
 
     if @listing.save
       if params[:uploaded_photos]
