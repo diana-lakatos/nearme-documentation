@@ -1,12 +1,9 @@
+- render_content_outside_container!
+
 %section#w-hotels
   .row-fluid.padding-row
     .span12.header-image
       #w-ny.carousel.slide
-        %ol.carousel-indicators
-          %li.active{"data-slide-to" => "0", "data-target" => "#myCarousel"}
-          %li{"data-slide-to" => "1", "data-target" => "#myCarousel"}
-          %li{"data-slide-to" => "2", "data-target" => "#myCarousel"}
-        / Carousel items
         .carousel-inner
           .active.item
             = image_tag "w-hotels/w-hotels+desks-near-me.jpg"  
@@ -37,7 +34,7 @@
       .span4
         %p Wireless high-speed Internet access, AV equipment, and video conferencing services are all on site, should you require them. Need to coordinate meetings with colleagues and clients? The hotel is conveniently located in Downtown Manhattan.
     .row-fluid.padding-row.w-hotels-listing.quick-book.location-photos
-      .span8
+      .span8.listing
         - if @location.photos.any?
           .carousel.slide
             .carousel-inner
@@ -55,7 +52,7 @@
         - else
           #panorama
 
-      .span4
+      .span4.listing
         %h1 Private Office
         %p Close enough to rub shoulders with Financial District movers and shakers and surrounded by such inimitable icons as the Statue of Liberty and 1 World Trade Center, enjoy your own work space at W New York – Downtown. Power wheel and deal with a private office featuring an L shaped desk, seating, high speed internet access, plus hotel amenities at your fingertips.
         

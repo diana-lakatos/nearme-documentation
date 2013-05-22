@@ -133,8 +133,11 @@ section.search#content {
 #listing_search {
   position: relative;
 
-  .span9 {
+  .span9,
+  .span3 {
     position: relative;
+    max-height: 50px;
+    overflow: hidden;
 
     input {
       padding: 8px 0 8px 50px;

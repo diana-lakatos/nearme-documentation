@@ -25,7 +25,9 @@ module ApplicationHelper
   end
 
   def apply_analytics?
-    Rails.env.production?
+    # Enable mixpanel in all environments. We use a different account for
+    # production.
+    true
   end
 
   def stripe_public_key
