@@ -192,7 +192,7 @@ class UserTest < ActiveSupport::TestCase
               end
 
               should "not be synchronized if change to listing happened since last synchronize" do
-                @listing.name = "New name"
+                @listing.weekly_price = 10
                 @listing.save!
                 assert !@user.mailchimp_synchronized?
               end
