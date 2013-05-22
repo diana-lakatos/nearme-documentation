@@ -29,6 +29,7 @@
 
   %body
 
+    = render 'shared/render_flash'
     .dnm-page
       .container-fluid
         .navbar.navbar-inverse.navbar-fixed-top
@@ -40,7 +41,6 @@
       %section#content{:class => "#{@section_name || controller_name}"}
         = render 'layouts/hero'
         .container-fluid
-          = render 'shared/render_flash'
           = yield unless render_content_outside_container?
         = yield if render_content_outside_container?
 

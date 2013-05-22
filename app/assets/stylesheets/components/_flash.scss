@@ -1,53 +1,94 @@
-.flash {
-  position: relative;
-  border: 1px solid #c6c6c6;
-  color: #394449;
-  background: #f5f5f5;
-  background-repeat: no-repeat;
-  background-position: 13px 13px;
-  margin: 12px 0;
-  padding: 12px;
-  font-size: 16px;
-  background-image: image-url("components/flash/info.png");
-  padding-left: 40px;
-  @include border-radius(8px);
+.alert {
+  position: absolute;
+  z-index: $flash-z-index;
+  border: none;
+  border-radius: 0px;
+  top: 60px;
+  text-align: center;
+  color: white;
+  text-shadow: none;
+  padding: 0px;
+  width: 100%;
+  @include opacity(.8);
 
-  &.error {
-    border: 1px solid #e3aca9;
-    color: #e83d33;
-    background-image: image-url("components/flash/error.png");
+  p {
+    color: white;
+    font-size: 24px;
+    line-height: 60px;
+    margin: 0px;
+    padding: 0px 49px 0px 0px;
+
+    span.left-icon {
+      margin-right: 15px;
+    }
+
+    span.right-icon {
+      margin-left: 5px;
+    }
   }
 
-  &.notice, &.alert {
+  a.close {
+    position: absolute;
+    top:  0;
+    right: 20px;
+    font-size: 24px;
+    line-height: 60px;
+    color: white;
+    @include opacity(.6);
 
+    &:hover {
+      color: white;
+      @include opacity(.8);
+    }
   }
 
   &.success {
-    border: 1px solid #b9c88e;
-    color: #89a734;
-    background-image: image-url("components/flash/success.png");
-  }
+    background-color: #00693A;
 
-  &.message {
-
-  }
-
-  .close {
-    position: absolute;
-    top: 13px;
-    right: 13px;
-    background: image-url("layout/close.png");
-    width: 16px;
-    height: 17px;
-    @include opacity(0.7);
-    &:hover {
-      @include opacity(1);
+    i {
+      @extend .ico-check;
     }
+  }
+
+  &.error {
+    background-color: $dnm_red;
+
+    i {
+      @extend .ico-warning;
+    }
+  }
+
+  &.deleted {
+    background-color: $dnm_red;
+
+    i {
+      @extend .ico-close;
+    }
+  }
+
+  &.warning {
+    background-color: $dnm_orange;
+
+    i {
+      @extend .ico-warning;
+    }
+  }
+
+  &.appear{
+    @include animation(fadeInDown  1.2s 1 forwards);
+  }
+
+  &.timeout{
+    @include animation(fadeOutUp 1s 1 forwards);
+    z-index: 0;
   }
 }
 
-.context-flash {
-  &.error {
+.modal-content{
 
+  .alert{
+    position: relative;
+    top: auto;
+    left: auto;
   }
 }
