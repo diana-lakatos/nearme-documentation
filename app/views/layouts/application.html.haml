@@ -41,7 +41,8 @@
         = render 'layouts/hero'
         .container-fluid
           = render 'shared/render_flash'
-          = yield
+          = yield unless render_content_outside_container?
+        = yield if render_content_outside_container?
 
       = render 'layouts/footer'
 

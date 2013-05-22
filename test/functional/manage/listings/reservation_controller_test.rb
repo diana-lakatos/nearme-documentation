@@ -5,7 +5,8 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
 
   setup do
     @reservation = FactoryGirl.build(:reservation_with_credit_card)
-    @reservation.add_period(Date.today)
+    @reservation.periods = []
+    @reservation.add_period(Time.now.next_week.to_date)
     @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
     @reservation.save!
   end
