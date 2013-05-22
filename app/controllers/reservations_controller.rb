@@ -22,13 +22,13 @@ class ReservationsController < ApplicationController
 
   def validate_event
     unless allowed_events.key? current_event
-      flash['warning red'] = "Not a valid reservation operation"
+      flash[:error] = "Not a valid reservation operation"
       redirect_to redirection_path
     end
   end
 
   def allowed_events
-    {:user_cancel => 'delete red'}
+    {:user_cancel => :deleted}
   end
 
   def current_event

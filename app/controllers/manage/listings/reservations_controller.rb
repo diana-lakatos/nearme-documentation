@@ -5,7 +5,7 @@ class Manage::Listings::ReservationsController < ApplicationController
 
   def update
     @reservation.fire_events(current_event)
-    flash['create green'] = "You have #{@reservation.state_name} the reservation"
+    flash[:success] = "You have #{@reservation.state_name} the reservation"
     redirect_to manage_guests_dashboard_url
   end
 

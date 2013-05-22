@@ -19,7 +19,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     if User.find_by_email(params[:user][:email])
-      set_flash_message 'warning orange', :email_exists, :email => params[:user][:email], :link => (ActionController::Base.helpers.link_to 'Sign In', new_user_session_url(:email => params[:user][:email]), :rel => 'modal.sign-up-modal', :class => "nav-link header-second margin-right ico-login padding-right")
+      set_flash_message :warning, :email_exists, :email => params[:user][:email], :link => (ActionController::Base.helpers.link_to 'Sign In', new_user_session_url(:email => params[:user][:email]), :rel => 'modal.sign-up-modal', :class => "nav-link header-second margin-right ico-login padding-right")
     end if params[:user] && !params[:user][:email].blank?
     super
     AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(@user.id) unless @user.new_record?
@@ -35,7 +35,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update
     if resource.update_with_password(params[resource_name])
-      set_flash_message 'create green', :updated
+      set_flash_message :create, :updated
       sign_in(resource, :bypass => true)
       redirect_to :action => 'edit'
     else
@@ -67,13 +67,13 @@ class RegistrationsController < Devise::RegistrationsController
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
-      flash['create green'] = "Thanks - your email address has been verified!"
+      flash[:success] = "Thanks - your email address has been verified!"
       redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path(@user) 
     else
       if @user.verified
-        flash['warning orange'] = "The email address has been already verified"
+        flash[:warning] = "The email address has been already verified"
       else
-        flash['warning red'] = "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+        flash[:error] = "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
       end
       redirect_to root_path
     end

@@ -1,6 +1,5 @@
 module ApplicationHelper
 
-  include FlashHelper
   include FormHelper
   include TooltipHelper
   include TweetButton

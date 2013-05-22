@@ -60,7 +60,7 @@ class ApplicationController < ActionController::Base
   end
 
   def rename_flash_messages
-    flash['create green'] = flash.discard(:notice) if flash[:notice]
+    flash[:success] = flash[:notice] if flash[:notice]
   end
 
 end

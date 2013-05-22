@@ -1,14 +1,7 @@
-- flash.each do |key, value|
-  - flash_info = get_flash_info_hash(key)
-  - if flash_info.present? && value
-    %div{class: "alert #{flash_info[:color]}"}
+- [:success, :warning, :error, :deleted].each do |key|
+  - if flash[key].present?
+    %div{class: "alert #{key}", 'data-flash-message' => true}
       %p
-        %span{class: "left-icon #{flash_info[:icon]}"}
-        = value.html_safe
+        %i
+        = flash[key].html_safe
         %a.close.ico-close.right{href: '#'}
-    :javascript
-      $('.alert').css({"display":'none'}).delay(200).css({'display': 'block'}).addClass('appear')
-      setTimeout(function() {
-          $(".alert").addClass('timeout');
-      }, 7000);
-
