@@ -133,8 +133,11 @@ section.search#content {
 #listing_search {
   position: relative;
 
-  .span9 {
+  .span9,
+  .span3 {
     position: relative;
+    max-height: 50px;
+    overflow: hidden;
 
     input {
       padding: 8px 0 8px 50px;
@@ -292,7 +295,7 @@ header#listing_search {
       @include box-sizing(border-box);
 
       @media (min-width: 768px) {
-        padding-right: 220px;
+        padding-right: 280px;
       }
 
       @media (max-width: 480px) {
@@ -373,7 +376,7 @@ header#listing_search {
         position: absolute;
         top: 0px;
         right: 0px;
-        width: 215px;
+        width: 275px;
         font-size: 14px;
 
         .availability-date-start {
@@ -577,5 +580,4 @@ section.search section#results.list {
 
 
 }
-
 

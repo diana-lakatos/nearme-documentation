@@ -39,6 +39,8 @@ gem 'thinking-sphinx', '2.0.14', :require => 'thinking_sphinx'
 gem 'ts-resque-delta', '1.2.4'
 gem 'resque'
 gem "compass-rails"
+# when we upgrade compass, we should change it into animate - actually they plan to add this to compass by default
+gem 'animation'
 gem "coffee-rails"
 gem 'delayed_job_active_record'
 gem "rdiscount"
@@ -55,6 +57,8 @@ gem 'unicorn'
 gem 'chameleon'
 
 gem 'mixpanel'
+
+gem 'gibbon'
 
 group :staging, :production do
   gem 'newrelic_rpm'
@@ -113,4 +117,5 @@ group :test do
   gem 'turn'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
   gem 'simplecov', :require => false
+  gem 'vcr'
 end

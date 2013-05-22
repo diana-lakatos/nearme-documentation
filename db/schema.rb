@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130430130418) do
+ActiveRecord::Schema.define(:version => 20130506044855) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -176,6 +176,8 @@ ActiveRecord::Schema.define(:version => 20130430130418) do
     t.string   "country"
     t.string   "slug"
     t.integer  "location_type_id"
+    t.string   "name"
+    t.string   "custom_page"
   end
 
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
@@ -233,8 +235,8 @@ ActiveRecord::Schema.define(:version => 20130430130418) do
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_status",     :default => "unknown", :null => false
     t.string   "payment_method",     :default => "manual",  :null => false
+    t.string   "payment_status",     :default => "unknown", :null => false
     t.integer  "quantity",           :default => 1,         :null => false
   end
 
@@ -281,13 +283,13 @@ ActiveRecord::Schema.define(:version => 20130430130418) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                 :default => "", :null => false
-    t.string   "encrypted_password",     :limit => 128, :default => "", :null => false
-    t.string   "password_salt",                         :default => "", :null => false
+    t.string   "email",                                    :default => "",    :null => false
+    t.string   "encrypted_password",        :limit => 128, :default => "",    :null => false
+    t.string   "password_salt",                            :default => "",    :null => false
     t.string   "reset_password_token"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                         :default => 0
+    t.integer  "sign_in_count",                            :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -296,13 +298,13 @@ ActiveRecord::Schema.define(:version => 20130430130418) do
     t.datetime "updated_at"
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                        :default => 0,  :null => false
+    t.integer  "bookings_count",                           :default => 0,     :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "locked_at"
     t.datetime "reset_password_sent_at"
-    t.integer  "failed_attempts",                       :default => 0
+    t.integer  "failed_attempts",                          :default => 0
     t.string   "authentication_token"
     t.string   "avatar"
     t.string   "confirmation_token"
@@ -312,6 +314,8 @@ ActiveRecord::Schema.define(:version => 20130430130418) do
     t.string   "stripe_id"
     t.string   "job_title"
     t.text     "biography"
+    t.datetime "mailchimp_synchronized_at"
+    t.boolean  "verified",                                 :default => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

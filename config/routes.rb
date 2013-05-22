@@ -34,6 +34,7 @@ DesksnearMe::Application.routes.draw do
   devise_scope :user do
     put "users/avatar", :to => "registrations#avatar", :as => "avatar"
     get "users/", :to => "registrations#new"
+    get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
   end
 
@@ -147,8 +148,8 @@ DesksnearMe::Application.routes.draw do
   match "/host-sign-up", to: 'pages#host_signup_1'
   match "/host-sign-up-2", to: 'pages#host_signup_2'
   match "/host-sign-up-3", to: 'pages#host_signup_3'
-  match "/w-hotels-desks-near-me", to: 'pages#w_hotels'
-  match "/W-hotels-desks-near-me", to: 'pages#w_hotels'
+  match "/w-hotels-desks-near-me", to: 'locations#w_hotels', as: :w_hotels_location
+  match "/W-hotels-desks-near-me", to: 'locations#w_hotels'
   match "/careers", to: 'pages#careers'
   match "/support" => redirect("https://desksnearme.desk.com")
 

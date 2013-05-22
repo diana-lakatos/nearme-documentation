@@ -5,7 +5,8 @@
   #signup
     .span8.offset2
       .box
-        %h2 Log in to Desks Near Me
+        %header
+          %h2 Log in to Desks Near Me
 
         = render 'authentications/services'
 
@@ -14,17 +15,17 @@
 
         = form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
           .email-holder.input-icon-holder
-            = f.text_field :email, :value => @email, :placeholder => "Email"
+            = f.text_field :email, :value => @email, :placeholder => "Email", :tabindex => '1'
             %span.ico-mail
           .password-holder.input-icon-holder
-            = f.password_field :password, :placeholder => "Password"
+            = f.password_field :password, :placeholder => "Password", :tabindex => '2'
             %span.ico-lock
 
           %div.pnotice
             =raw "Forgot? #{link_to('Reset your password', new_user_password_url)}"
 
           .actions
-            = f.submit "Log In"
+            = f.submit "Log In", :tabindex => '3'
 
         .text-center.already-a-user= link_to('New User?', new_user_registration_path(:return_to => params[:return_to]), :rel => "modal.sign-up-modal")      
 
@@ -35,7 +36,7 @@
   - focus_input = "#new_user #user_email"
 :javascript
   $(function() {
-    $("#{focus_input}").focus()
+    if(!$.browser.msie){
+      $("#{focus_input}").focus();
+    }
   });
-    
-  

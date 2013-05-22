@@ -7,7 +7,7 @@ class SpaceWizardController < ApplicationController
   before_filter :convert_price_params, only: [:submit_listing]
 
   def new
-    flash.keep(:notice)
+    flash.keep(:warning)
     if current_user
       event_tracker.viewed_list_your_space_list
       redirect_to space_wizard_list_url
@@ -37,13 +37,13 @@ class SpaceWizardController < ApplicationController
       event_tracker.created_a_location(@user.locations.first, { via: 'wizard' })
       event_tracker.created_a_listing(@user.first_listing, { via: 'wizard' })
 
-      redirect_to manage_locations_path, notice: 'Your space was listed! You can provide more details about your location and listing from this page.'
+      flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
+      redirect_to manage_locations_path
     else
       render :list
     end
 
   end
-
 
   def submit_photo
     @photo = Photo.new

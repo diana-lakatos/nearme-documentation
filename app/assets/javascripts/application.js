@@ -120,12 +120,6 @@ if($.browser.mozilla) {
   });
 };
 
-$(document).on('click', 'div.alert a.close', function(e){
-  wrapper = $(this).closest('.alert');
-  wrapper.fadeOut('slow');
-  return false;
-});
-
 function doListingGoogleMaps() {
   return;
   var locations = $(".map address"),

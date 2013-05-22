@@ -112,6 +112,20 @@ class User::BillingGatewayTest < ActiveSupport::TestCase
     end
   end
 
+  context 'CardDetails' do
+    context '#to_stripe_params' do
+      should "return cvc as a string" do
+        card_details = User::BillingGateway::CardDetails.new(
+          number: "1444444444444444",
+          expiry_string: '12 / 18',
+          cvc: '032'
+        )
+
+        assert_equal '032', card_details.to_stripe_params[:cvc]
+      end
+    end
+  end
+
   protected
 
   # Return an exception that will be caught as a Stripe::CardError
