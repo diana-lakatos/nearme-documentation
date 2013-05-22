@@ -64,7 +64,7 @@ class User::BillingGateway
         number: number,
         exp_month: expiry_month.to_i,
         exp_year: expiry_year.to_i,
-        cvc: cvc.to_i
+        cvc: cvc.to_s
       }
     end
   end
