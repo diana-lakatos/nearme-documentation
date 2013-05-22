@@ -44,7 +44,7 @@ When /^I provide new (location|listing) data$/ do |model|
 end
 
 When /^I submit the form$/ do
-  click_button 'Save'
+  page.find('#submit-link').click
 end
 
 When /^I click edit icon$/ do

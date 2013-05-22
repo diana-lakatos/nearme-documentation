@@ -1,5 +1,4 @@
 @javascript
-@wip
 Feature: A user can add a space
   In order to let people easily list a space
   As a user
