@@ -31,7 +31,7 @@ class Reservation < ActiveRecord::Base
 
   before_create :set_total_cost
   before_validation :set_currency, on: :create
-  before_create :set_default_payment_status
+  before_validation :set_default_payment_status, on: :create
   after_create  :auto_confirm_reservation
   after_create  :create_scheduled_expiry_task
 
@@ -61,7 +61,6 @@ class Reservation < ActiveRecord::Base
     event :expire do
       transition :unconfirmed => :expired
     end
-
   end
 
   scope :on, lambda { |date|
@@ -105,17 +104,20 @@ class Reservation < ActiveRecord::Base
     periods.first.date
   end
 
-  # A reservation can be canceled if all of the dates are in the future
-  def cancelable
-    timestamp_now = Time.now.utc
+  def cancelable?
+    case
+    when confirmed?, unconfirmed?
+      # A reservation can be canceled if not already canceled and all of the dates are in the future
+      !started?
+    else
+      false
+    end
+  end
+  alias_method :cancelable, :cancelable?
 
-    # Assume we can cancel until proven otherwise
-    can_cancel = true
-    periods.each { |p|
-      can_cancel = false if p.date.to_time(:utc) < timestamp_now
-    }
-
-    can_cancel
+  # Returns whether any of the reserved dates have started
+  def started?
+    periods.any? { |p| p.date <= Date.today }
   end
 
   def add_period(date, start_minute = nil, end_minute = nil)
@@ -199,7 +201,7 @@ class Reservation < ActiveRecord::Base
   private
 
     def set_default_payment_status
-      return if payment_status
+      return if paid?
 
       self.payment_status = if free?
         PAYMENT_STATUSES[:paid]

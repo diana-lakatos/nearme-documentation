@@ -25,18 +25,13 @@ module ApplicationHelper
   end
 
   def apply_analytics?
-    Rails.env.production?
+    # Enable mixpanel in all environments. We use a different account for
+    # production.
+    true
   end
 
   def stripe_public_key
     DesksnearMe::Application.config.stripe_public_key
-  end
-
-  def flash_class(level)
-    case level
-    when :notice then "alert-info"
-    when :error then "alert-error"
-    end
   end
 
   def truncate_with_ellipsis(body, length, html_options = {})

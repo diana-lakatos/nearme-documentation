@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Execute a environment release.
+#
+# Usage:
+#
+#
+
+case "$1" in
+"production")
+  ey deploy -e dnme_production -r production
+  ;;
+"staging")
+  ey deploy -e dnme_staging -r staging
+  ;;
+"starwood")
+  ey deploy -e starwood -r hh-starwood
+  ;;
+*)
+  echo "Usage:"
+  echo "  script/release environment_name"
+  ;;
+esac
+

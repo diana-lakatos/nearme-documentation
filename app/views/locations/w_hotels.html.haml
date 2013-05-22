@@ -1,12 +1,9 @@
+- render_content_outside_container!
+
 %section#w-hotels
   .row-fluid.padding-row
     .span12.header-image
       #w-ny.carousel.slide
-        %ol.carousel-indicators
-          %li.active{"data-slide-to" => "0", "data-target" => "#myCarousel"}
-          %li{"data-slide-to" => "1", "data-target" => "#myCarousel"}
-          %li{"data-slide-to" => "2", "data-target" => "#myCarousel"}
-        / Carousel items
         .carousel-inner
           .active.item
             = image_tag "w-hotels/w-hotels+desks-near-me.jpg"  
@@ -36,10 +33,26 @@
         %p You’ll find amenities to fit every project, whether you’re working with a group or on your own. Host intimate meetings in the luxuriously appointed Living Room, or find focus in private work suites.  
       .span4
         %p Wireless high-speed Internet access, AV equipment, and video conferencing services are all on site, should you require them. Need to coordinate meetings with colleagues and clients? The hotel is conveniently located in Downtown Manhattan.
-    .row-fluid.padding-row.w-hotels-listing.quick-book
-      .span8
-        = image_tag "w-hotels/w-10.jpg"       
-      .span4
+    .row-fluid.padding-row.w-hotels-listing.quick-book.location-photos
+      .span8.listing
+        - if @location.photos.any?
+          .carousel.slide
+            .carousel-inner
+              - @location.photos.each_with_index do |photo, index|
+                .item{:class => ("active" if index == 0)}
+                  = image_tag photo.url(:golden)
+                  - if photo.caption.present?
+                    .carousel-caption.ico-info
+                      = photo.caption
+
+            - if @location.photos.size > 1
+              = link_to "", ".carousel", :class => "carousel-control left ico-chevron-left", 'data-slide' => 'prev'
+              = link_to "", ".carousel", :class => "carousel-control right ico-chevron-right", 'data-slide' => 'next'
+
+        - else
+          #panorama
+
+      .span4.listing
         %h1 Private Office
         %p Close enough to rub shoulders with Financial District movers and shakers and surrounded by such inimitable icons as the Statue of Liberty and 1 World Trade Center, enjoy your own work space at W New York – Downtown. Power wheel and deal with a private office featuring an L shaped desk, seating, high speed internet access, plus hotel amenities at your fingertips.
         
@@ -52,6 +65,8 @@
       {
         showReviewBookingImmediately: #{params[:restore_reservations].present?.to_json}
       }
-    )
+    );
+
   });
+
 
