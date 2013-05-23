@@ -64,13 +64,13 @@ class ReservationTest < ActiveSupport::TestCase
     should 'track guest booking cancellation' do
       #Track::Book.expects(:cancelled_a_booking)
       @reservation.confirm!
-      assert @reservation.owner_cancel!
+      assert @reservation.host_cancel!
     end
 
     should 'track positive charge on confirmation and (negative) charge on guest booking cancellation' do
       #Track::User.expects(:charge).twice
       @reservation.confirm!
-      assert @reservation.owner_cancel!
+      assert @reservation.host_cancel!
     end
 
     should 'track booking expiry' do
@@ -120,7 +120,7 @@ class ReservationTest < ActiveSupport::TestCase
 
     should 'not be cancelable if owner canceled' do
         @reservation.confirm!
-        @reservation.owner_cancel!
+        @reservation.host_cancel!
         Rails.logger.debug @reservation.state
         assert !@reservation.cancelable
     end

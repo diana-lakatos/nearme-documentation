@@ -49,7 +49,7 @@ class Reservation < ActiveRecord::Base
       transition :unconfirmed => :rejected
     end
 
-    event :owner_cancel do
+    event :host_cancel do
       transition :confirmed => :cancelled
     end
 
@@ -186,11 +186,16 @@ class Reservation < ActiveRecord::Base
   def pending?
     payment_status == PAYMENT_STATUSES[:pending]
   end
-  
+
   def should_expire!
-    expire! if unconfirmed?
+    if unconfirmed?
+      expire!
+      ReservationMailer.notify_guest_of_expiration(reservation).deliver
+      ReservationMailer.notify_host_of_expiration(reservation).deliver
+      event_tracker.booking_expired(reservation, reservation.location)
+    end
   end
-  
+
   def expiry_time
     created_at + 24.hours
   end

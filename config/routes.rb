@@ -69,7 +69,7 @@ DesksnearMe::Application.routes.draw do
         member do
           post :confirm
           post :reject
-          post :owner_cancel
+          post :host_cancel
         end
       end
     end

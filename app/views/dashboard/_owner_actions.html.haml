@@ -1,5 +1,5 @@
-- if reservation.can_owner_cancel?
-  = form_for reservation, method: :post, url: owner_cancel_manage_listing_reservation_path(reservation.listing, reservation) do |f|
+- if reservation.can_host_cancel?
+  = form_for reservation, method: :post, url: host_cancel_manage_listing_reservation_path(reservation.listing, reservation) do |f|
     = f.submit "Cancel", :confirm => "Do you really want to cancel this reservation?", :class => "btn btn-red btn-small"
 
 - if reservation.can_confirm?
