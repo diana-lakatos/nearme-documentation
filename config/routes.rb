@@ -40,9 +40,6 @@ DesksnearMe::Application.routes.draw do
 
   resources :reservations do
     member do
-      post :confirm
-      post :reject
-      post :owner_cancel
       post :user_cancel
     end
   end
@@ -68,7 +65,13 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :listings do
-      resources :reservations, :only => [:update], :controller => 'listings/reservations'
+      resources :reservations, :controller => 'listings/reservations' do
+        member do
+          post :confirm
+          post :reject
+          post :owner_cancel
+        end
+      end
     end
   end
 

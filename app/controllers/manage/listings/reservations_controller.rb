@@ -3,9 +3,21 @@ class Manage::Listings::ReservationsController < ApplicationController
   before_filter :find_listing
   before_filter :find_reservation
 
-  def update
-    @reservation.fire_events(current_event)
-    flash[:success] = "You have #{@reservation.state_name} the reservation"
+  def confirm
+    @reservation.confirm
+    flash[:success] = "You have confirmed the reservation!"
+    redirect_to manage_guests_dashboard_url
+  end
+
+  def reject
+    @reservation.reject
+    flash[:deleted] = "You have rejected the reservation. Maybe next time!"
+    redirect_to manage_guests_dashboard_url
+  end
+
+  def owner_cancel
+    @reservation.owner_cancel
+    flash[:deleted] = "You have cancelled this reservation."
     redirect_to manage_guests_dashboard_url
   end
 
