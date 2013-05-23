@@ -14,7 +14,7 @@
 
 - if only_inputs.empty? || only_inputs.include?(:price)
   %div{:class => "control-group #{"error" if f.object.errors.include?(:free).present?}"}
-    = f.label :daily_price, 'Price', :class => 'control-label' do
+    = f.label :daily_price, 'Price', :class => 'control-label flush-top' do
       %abbr{:title => "required"} *
       Price
 
