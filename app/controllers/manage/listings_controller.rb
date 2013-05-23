@@ -22,7 +22,7 @@ class Manage::ListingsController < Manage::BaseController
         @listing.photos << current_user.photos.find(params[:uploaded_photos])
         @listing.save!
       end
-      flash[:notice] = "Great, your new Desk/Room has been added!"
+      flash[:success] = "Great, your new Desk/Room has been added!"
       redirect_to manage_locations_path
     else
       Rails.logger.debug "listing not valid: #{@listing.errors.to_json}"
@@ -41,7 +41,7 @@ class Manage::ListingsController < Manage::BaseController
     @listing.attributes = params[:listing]
 
     if @listing.save
-      flash[:notice] = "Great, your listing's details have been updated."
+      flash[:success] = "Great, your listing's details have been updated."
       redirect_to manage_locations_path
     else
       render :edit
@@ -51,7 +51,7 @@ class Manage::ListingsController < Manage::BaseController
   def destroy
     @listing.destroy
 
-    flash[:notice] = "That listing has been deleted."
+    flash[:deleted] = "That listing has been deleted."
     redirect_to manage_locations_path
   end
 
