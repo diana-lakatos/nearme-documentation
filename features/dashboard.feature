@@ -1,3 +1,5 @@
+@wip
+@javascript
 Feature: As a user of the site
   In order to promote my company
   As a user

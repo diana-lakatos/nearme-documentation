@@ -101,12 +101,7 @@ module ListingsHelpers
     assert_equal 5, listing.quantity
     assert_equal 1000, listing.daily_price_cents
     assert_equal 6000, listing.weekly_price_cents
-    if update
-      # the trick is that checkbox 'enable_monthly' is unchecked in update, so it should be nil!
-      assert_nil listing.monthly_price_cents
-    else
-      assert_equal 20000, listing.monthly_price_cents
-    end
+    assert_equal 20000, listing.monthly_price_cents
   end
 end
 
