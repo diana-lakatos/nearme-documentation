@@ -11,7 +11,7 @@ DesksnearMe::Application.configure do
     :authentication => :plain,
     :enable_starttls_auto => true,
     :user_name      => "admin@desksnear.me",
-    :password       => "K6c#H3UWi}%DD6vUT$9",
+    :password       => "K6c#H3UWi}%DD6vUT$9W",
     :domain         => 'desksnear.me'
   }
 
