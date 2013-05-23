@@ -1,12 +1,36 @@
 class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
   before_filter :fetch_reservations
-  before_filter :fetch_reservation, :only => :update
-  before_filter :validate_event, :only => :update
+  before_filter :fetch_reservation, :only => [:confirm, :reject, :owner_cancel, :user_cancel]
 
-  def update
-    @reservation.fire_events(current_event)
-    flash[allowed_events[current_event]] = "You have #{@reservation.state_name} the reservation"
+  before_filter :only => [:confirm, :reject, :owner_cancel, :user_cancel] do |controller|
+    unless allowed_events.include?(controller.action_name)
+      flash[:error] = "Not a valid reservation operation."
+      redirect_to redirection_path
+    end
+  end
+
+  def confirm
+    @reservation.confirm
+    flash[:success] = "You have confirmed the reservation!"
+    redirect_to redirection_path
+  end
+
+  def reject
+    @reservation.reject
+    flash[:deleted] = "You have rejected the reservation. Maybe next time!"
+    redirect_to redirection_path
+  end
+
+  def owner_cancel
+    @reservation.owner_cancel
+    flash[:deleted] = "You have cancelled this reservation."
+    redirect_to redirection_path
+  end
+
+  def user_cancel
+    @reservation.user_cancel
+    flash[:deleted] = "You have cancelled your reservation."
     redirect_to redirection_path
   end
 
@@ -20,15 +44,14 @@ class ReservationsController < ApplicationController
     @reservation = @reservations.find(params[:id])
   end
 
-  def validate_event
-    unless allowed_events.key? current_event
-      flash[:error] = "Not a valid reservation operation"
-      redirect_to redirection_path
-    end
-  end
-
   def allowed_events
-    {:user_cancel => :deleted}
+    if current_user == @reservation.location.creator
+      ['confirm', 'reject', 'owner_cancel']
+    elsif current_user = @reservation.owner
+      ['user_cancel']
+    else
+      []
+    end
   end
 
   def current_event

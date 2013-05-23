@@ -38,7 +38,14 @@ DesksnearMe::Application.routes.draw do
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
   end
 
-  resources :reservations, :only => :update
+  resources :reservations do
+    member do
+      post :confirm
+      post :reject
+      post :owner_cancel
+      post :user_cancel
+    end
+  end
 
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do

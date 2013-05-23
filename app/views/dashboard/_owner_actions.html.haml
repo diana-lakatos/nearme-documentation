@@ -1,7 +1,12 @@
-= form_for([:manage, reservation.listing, reservation]) do |f|
-  - if reservation.can_owner_cancel?
-    = hidden_field_tag :event, "owner_cancel"
+- if reservation.can_owner_cancel?
+  = form_for reservation, method: :post, url: owner_cancel_reservation_path(reservation) do |f|
     = f.submit "Cancel", :confirm => "Do you really want to cancel this reservation?", :class => "btn btn-red btn-small"
 
-  = f.submit "Confirm", :name => "event", :confirm => "Do you want to confirm this reservation?", :class => "btn btn-green btn-small" if reservation.can_confirm?
-  = f.submit "Reject",  :name => "event", :confirm => "Do you really want to reject this reservation?", :class => "btn btn-red btn-small" if reservation.can_reject?
+- if reservation.can_confirm?
+  = form_for reservation, method: :post, url: confirm_reservation_path(reservation) do |f|
+    = f.submit "Confirm", :name => "event", :confirm => "Do you want to confirm this reservation?", :class => "btn btn-green btn-small"
+
+- if reservation.can_reject?
+  = form_for reservation, method: :post, url: reject_reservation_path(reservation) do |f|
+    = f.submit "Reject",  :name => "event", :confirm => "Do you really want to reject this reservation?", :class => "btn btn-red btn-small"
+
