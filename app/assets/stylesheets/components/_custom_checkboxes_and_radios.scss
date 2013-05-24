@@ -1,18 +1,18 @@
 // Checkbox & Radio
 .checkbox,
-.radio{
+.radio,{
   margin-bottom: 12px;
   padding-left: 28px;
   position: relative;
 
   &:hover {
     color: $checkbox-radio-color;
-  }
+}
 
-  input {
-    outline: none !important;
-    @include opacity(0);
-  }
+input {
+  outline: none !important;
+  @include opacity(0);
+}
 
 }
 
@@ -27,71 +27,33 @@
     position: absolute;
     top: 3px;
     background: $checkbox-radio-neutral;
+    @include transition(all $checkbox-radio-transition-duration ease-in-out);
 
     .checkbox-icon-inner {
-
-    }
-  }
-
-  &.checked{
-
-    .checkbox-icon-outer {
-      border-color: $checkbox-radio-color;
-      color: $checkbox-radio-color;
-
-      .checkbox-icon-inner {
-        @extend .ico-check;
-        font-size: 12px;
-        position: absolute;
-        top: -6px;
-        left: 1px;
-      }
-    }
-
+      @extend .ico-check;
+      font-size: 18px;
+      position: absolute;
+      top: -9px;
+      left: 2px;
+      @include opacity(0);
+      @include transition(all $checkbox-radio-transition-duration ease-in-out);
   }
 }
 
-.checkbox {
-  .radio-icon-outer {
-    border-radius: 50%;
-    height: 18px;
-    left: 0;
-    position: absolute;
-    width: 18px;
-    top: 3px;
-    background: $gray;
+&.checked{
 
-    .radio-icon-inner {
-      width: 6px;
-      height: 6px;
-      position: absolute;
-      left: 3px;
-      display: block;
-      border-radius: 50%;
-      top: 3px;
-      border: 4px solid $checkbox-radio-neutral;
-      background: $checkbox-radio-neutral;
+  .checkbox-icon-outer {
+    border-color: $checkbox-radio-color;
+    color: $checkbox-radio-color;
+    @include transition(all $checkbox-radio-transition-duration ease-in-out);
 
-      &.checked {
-        border: 3px solid $checkbox-radio-neutral;
-        background: $checkbox-radio-color
-      }
-
+    .checkbox-icon-inner {
+      @include opacity(1);
+      @include transition(all $checkbox-radio-transition-duration ease-in-out);
     }
   }
 
-  &.checked{
-
-    .radio-icon-outer {
-      background: $checkbox-radio-color;
-
-      .radio-icon-inner {
-        border: 3px solid $checkbox-radio-neutral;
-        background: $checkbox-radio-color
-      }
-    }
-
-  }
+}
 }
 
 // Radio
@@ -104,6 +66,7 @@
     width: 18px;
     top: 3px;
     background: $gray;
+    @include transition(all $checkbox-radio-transition-duration ease-in-out);
 
     .radio-icon-inner {
       width: 6px;
@@ -115,44 +78,81 @@
       top: 3px;
       border: 4px solid $checkbox-radio-neutral;
       background: $checkbox-radio-neutral;
+      @include transition(all $checkbox-radio-transition-duration ease-in-out);
 
-      &.checked {
-        border: 3px solid $checkbox-radio-neutral;
-        background: $checkbox-radio-color
-      }
-
-    }
   }
+}
 
-  &.checked{
+&.checked{
 
-    .radio-icon-outer {
+  .radio-icon-outer {
+    background: $checkbox-radio-color;
+    @include transition(all $checkbox-radio-transition-duration ease-in-out);
+
+    .radio-icon-inner {
+      border: 3px solid $checkbox-radio-neutral;
       background: $checkbox-radio-color;
-
-      .radio-icon-inner {
-        border: 3px solid $checkbox-radio-neutral;
-        background: $checkbox-radio-color
-      }
+      @include transition(all $checkbox-radio-transition-duration ease-in-out);
     }
-
   }
+
+}
 }
 
 .error {
 
-    .radio {
+  .radio {
 
-      .radio-icon-outer {
-        background: $red;
-      }
+    .radio-icon-outer {
+      background: $red;
     }
+  }
 
-    .checkbox {
+  .checkbox {
 
-      .checkbox-icon-outer {
-        border-color: $red;
-        color: $red;
-      }
+    .checkbox-icon-outer {
+      border-color: $red;
+      color: $red;
     }
+  }
 
 }
+
+.switch .has-switch span.switch-primary,
+.switch .has-switch span.switch-left {
+  // overwrite default styles
+}
+
+
+.control-group {
+
+  .controls {
+
+    span.customSelect { 
+
+      @include form-field;
+      font-size: 18px;
+
+      &.disabled{
+        @include opacity(0.5);
+      }
+    }
+
+    .customSelectInner {
+      width: 100% !important;
+    }
+
+  }
+
+  &.error {
+
+    .controls {
+
+      span.customSelect{
+        border-color: #e58984;
+      }
+    }
+  }
+      
+}
+

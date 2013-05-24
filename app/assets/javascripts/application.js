@@ -7,6 +7,7 @@
 //= require ./vendor/jquery.ui.touch-punch
 //= require ./vendor/customSelect.jquery
 //= require bootstrap
+//= require bootstrap-switch
 //= require ./vendor/modernizr
 //= require ./vendor/jquery.cookie
 //= require ./vendor/jquery.popover-1.1.2
@@ -83,6 +84,7 @@ window.DNM = {
   },
 
   initializeCustomSelects: function(){
+     $('select:not(.custom-select)').customSelect();
     $('.custom-select').chosen()
     $('.chzn-choices input').focus(function(){
         $(this).parent().parent().addClass('chzn-choices-active')

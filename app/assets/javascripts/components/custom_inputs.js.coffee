@@ -1,6 +1,5 @@
 class @CustomInputs
 
-
   @initialize: =>
     @checkBox = ".checkbox"
     @checkBoxInput = @checkBox + " input[type='checkbox']"

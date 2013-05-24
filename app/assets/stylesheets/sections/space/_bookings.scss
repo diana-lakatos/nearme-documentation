@@ -240,23 +240,6 @@
       z-index: $modal-z-index - 3;
     }
 
-    span.customSelect {
-      font-size: 100%;
-      min-width: 32px;
-      padding: 2px 8px;
-      border: 2px solid $gray3;
-      @include border-radius(8px);
-      background: white;
-    }
-
-    span.customSelect.changed {
-    }
-
-    .customSelectInner {
-      width: 100% !important;
-      background:url(components/customselect/canvas-list-nav-item-arrow.gif) no-repeat center right;
-    }
-
   }
 }
 
