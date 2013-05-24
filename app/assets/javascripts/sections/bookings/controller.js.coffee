@@ -66,6 +66,10 @@ class Bookings.Controller
       @datepicker.bind 'datesChanged', (dates) =>
         date = dates[0]
         startElement.find('.calendar-text').text("#{DNM.util.Date.monthName(date, 3)} #{date.getDate()}")
+
+        if @datepicker.getView().isVisible()
+          @datepicker.hide()
+          @timePicker.show()
     else
       # Special datepicker wrapper that handles the start/end date semantics,
       # ranges, pick/choose, etc.

@@ -36,6 +36,12 @@ class @Bookings.TimePicker
     @bind 'change', =>
       @container.find('.time-text').text(@formatMinute(@startTime.val()))
 
+  show: ->
+    @view.show()
+
+  hide: ->
+    @view.hide()
+
   # Return the selected start minute
   startMinute: ->
     val = @startTime.val()

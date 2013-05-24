@@ -34,7 +34,7 @@ class @PositionedView
     $(selector).append(@container)
 
   toggle: ->
-    if @container.is(':visible')
+    if @isVisible()
       @hide()
     else
       @show()
@@ -48,6 +48,9 @@ class @PositionedView
 
   hide: ->
     @container.hide()
+
+  isVisible: ->
+    @container.is(':visible')
 
   reposition: ->
     return unless @positionTarget
