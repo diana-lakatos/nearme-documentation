@@ -91,7 +91,7 @@ class ReservationTest < ActiveSupport::TestCase
             @reservation.save!
           end
 
-          assert_equal 24.hours.from_now, Delayed::Job.first.run_at
+          assert_equal 24.hours.from_now.to_i, Delayed::Job.first.run_at.to_i
         end
       end
 
