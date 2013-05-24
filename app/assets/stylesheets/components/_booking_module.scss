@@ -71,6 +71,11 @@
         text-transform: uppercase;
         letter-spacing: 1px;
       }
+
+      &.label-hourly-price {
+        // Only one price field, center it.
+        margin-left: 33%;
+      }
     }
 
     .book {
