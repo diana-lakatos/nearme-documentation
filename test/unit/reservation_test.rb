@@ -74,15 +74,12 @@ class ReservationTest < ActiveSupport::TestCase
 
   end
 
-  describe 'expiration' do
-
     context 'with an unsaved reservation' do
 
       setup do
         @reservation = FactoryGirl.build(:reservation_with_credit_card_and_valid_period)
-        @reservation.add_period(Date.today)
         @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
-        Timecop.freeze
+        Timecop.freeze(@reservation.periods.first.date)
       end
 
       teardown do
@@ -102,8 +99,7 @@ class ReservationTest < ActiveSupport::TestCase
     context 'with a confirmed reservation' do
 
       setup do
-        @reservation = FactoryGirl.build(:reservation_with_credit_card)
-        @reservation.add_period(Date.today)
+        @reservation = FactoryGirl.build(:reservation_with_credit_card_and_valid_period)
         @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
         @reservation.save!
         @reservation.confirm
@@ -111,12 +107,12 @@ class ReservationTest < ActiveSupport::TestCase
 
       should 'not send any email if the expire method is called' do
         ReservationObserver.any_instance.expects(:after_expires).never
-        assert_raises @reservation.expire
+        assert_raises StateMachine::InvalidTransition do
+          @reservation.expire!
+        end
       end
 
     end
-
-  end
 
   context "confirmation" do
     should "attempt to charge user card if paying by credit card" do
