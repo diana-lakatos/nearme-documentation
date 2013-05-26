@@ -189,6 +189,12 @@ class Reservation < ActiveRecord::Base
     created_at + 24.hours
   end
 
+  # get periods as contiguous blocks, ignoring listing availability
+  def periods_as_absolute_contiguous_blocks
+    block_finder = ContiguousBlockFinder.new(self, true)
+    block_finder.contiguous_blocks
+  end
+
   private
 
     def set_default_payment_status
@@ -258,8 +264,8 @@ class Reservation < ActiveRecord::Base
 
     def validate_contiguous_blocks
       invalid_blocks = []
-      calc = PriceCalculator.new(self)
-      calc.contiguous_blocks.each do |block|
+      block_finder = ContiguousBlockFinder.new(self)
+      block_finder.contiguous_blocks.each do |block|
         if block.length < listing.minimum_booking_days
           invalid_blocks << block
         end

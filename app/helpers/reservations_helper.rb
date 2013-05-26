@@ -56,4 +56,19 @@ module ReservationsHelper
     query.join('%2C+')
   end
 
+  def selected_dates_summary(reservation)
+    html_string_array = reservation.periods_as_absolute_contiguous_blocks.map do |block|
+      if block.size == 1
+      period_to_string(block.first)
+      else
+        period_to_string(block.first) + ' - ' + period_to_string(block.last)
+      end
+    end
+    (html_string_array * "<br />").html_safe
+  end
+
+  def period_to_string(date)
+    date.strftime('%A, %B %e')
+  end
+
 end

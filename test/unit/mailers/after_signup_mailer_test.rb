@@ -17,9 +17,7 @@ class AfterSignupMailerTest < ActiveSupport::TestCase
   context "version if user booked a listing" do
 
     setup do
-      @reservation = FactoryGirl.build(:reservation, :owner => @user)
-      @reservation.periods = []
-      @reservation.add_period(Time.now.next_week.to_date)
+      @reservation = FactoryGirl.build(:reservation_with_valid_period, :owner => @user)
       @reservation.save!
     end
 
