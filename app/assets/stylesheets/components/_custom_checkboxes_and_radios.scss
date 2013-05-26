@@ -136,6 +136,11 @@ input {
       &.disabled{
         @include opacity(0.5);
       }
+
+    }
+
+    select[disabled] ~ span.customSelect {
+      @include opacity(0.5);
     }
 
     .customSelectInner {

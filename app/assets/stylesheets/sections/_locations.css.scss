@@ -50,9 +50,16 @@ section.locations {
       padding: 6px 0;
       margin-top: 6px;
 
+      .day-name {
+        margin-top: 10px;
+      }
+
+      .closed-flag {
+        margin-top: 13px;
+      }
+
       .day-name, .open-time, .close-time, .closed-flag {
         float: left;
-        height: 28px;
         width: 90px;
 
         @media (max-width: 480px) {

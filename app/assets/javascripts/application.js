@@ -84,7 +84,7 @@ window.DNM = {
   },
 
   initializeCustomSelects: function(){
-     $('select:not(.custom-select)').customSelect();
+    $('select:not(.custom-select)').customSelect();
     $('.custom-select').chosen()
     $('.chzn-choices input').focus(function(){
         $(this).parent().parent().addClass('chzn-choices-active')
