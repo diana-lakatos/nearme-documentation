@@ -1,11 +1,6 @@
 class Listing::Search::Params::Web < Listing::Search::Params
   attr :location_string
 
-  # Web searches are always only geo-location based lookups at this stage.
-  def keyword_search?
-    false
-  end
-
   def bounding_box
     @bounding_box ||= [[@options[:nx], @options[:ny]], [@options[:sx], @options[:sy]]] if @options[:nx].present?
     super
@@ -16,5 +11,5 @@ class Listing::Search::Params::Web < Listing::Search::Params
     @midpoint ||= [@options[:lat], @options[:lng]] if @options[:lat].present?
     @midpoint
   end
-  
+
 end

@@ -115,6 +115,10 @@ class UserTest < ActiveSupport::TestCase
         @user.mailchimp_synchronized!
       end
 
+      teardown do
+        Timecop.return
+      end
+
       context "user CRUD" do
 
         should "be synchronized if no change happened since last synchronize" do

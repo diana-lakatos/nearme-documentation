@@ -30,9 +30,10 @@ class ReservationTest < ActiveSupport::TestCase
     
     setup do
         @reservation = Reservation.new
-        @reservation.listing = FactoryGirl.create(:listing)
+        @reservation.listing = FactoryGirl.create(:always_open_listing)
         @reservation.owner = FactoryGirl.create(:user)
-        @reservation.add_period((Date.today+1.day))
+        @reservation.add_period(Date.today.next_week+1)
+        @reservation.save!
     end
 
     should 'be cancelable if all periods are for future' do
@@ -74,15 +75,14 @@ class ReservationTest < ActiveSupport::TestCase
 
   end
 
-  describe 'expiration' do
+  context 'expiration' do
 
     context 'with an unsaved reservation' do
 
       setup do
-        @reservation = FactoryGirl.build(:reservation_with_credit_card)
-        @reservation.add_period(Date.today)
+        @reservation = FactoryGirl.build(:reservation_with_credit_card_and_valid_period)
         @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
-        Timecop.freeze
+        Timecop.freeze(@reservation.periods.first.date)
       end
 
       teardown do
@@ -90,11 +90,13 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should 'create a delayed_job task to run in 24 hours time when saved' do
-        lambda {
-          @reservation.save!
-        }.should change(Delayed::Job, :count).by(1)
+        Timecop.freeze(Time.now) do
+          assert_difference 'Delayed::Job.count' do
+            @reservation.save!
+          end
 
-        assert Delayed::Job.first.run_at == 24.hours.from_now
+          assert_equal 24.hours.from_now.to_i, Delayed::Job.first.run_at.to_i
+        end
       end
 
     end
@@ -102,8 +104,7 @@ class ReservationTest < ActiveSupport::TestCase
     context 'with a confirmed reservation' do
 
       setup do
-        @reservation = FactoryGirl.build(:reservation_with_credit_card)
-        @reservation.add_period(Date.today)
+        @reservation = FactoryGirl.build(:reservation_with_credit_card_and_valid_period)
         @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
         @reservation.save!
         @reservation.confirm
@@ -111,7 +112,9 @@ class ReservationTest < ActiveSupport::TestCase
 
       should 'not send any email if the expire method is called' do
         ReservationObserver.any_instance.expects(:after_expires).never
-        assert_raises @reservation.expire
+        assert_raises StateMachine::InvalidTransition do
+          @reservation.expire!
+        end
       end
 
     end
@@ -120,8 +123,7 @@ class ReservationTest < ActiveSupport::TestCase
 
   context "confirmation" do
     should "attempt to charge user card if paying by credit card" do
-      reservation = FactoryGirl.build(:reservation_with_credit_card)
-      reservation.add_period(Date.today)
+      reservation = FactoryGirl.build(:reservation_with_credit_card_and_valid_period)
       reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
       reservation.save!
 
@@ -202,24 +204,24 @@ class ReservationTest < ActiveSupport::TestCase
 
   context "payments" do
     should "set default payment status to pending" do
-      reservation = FactoryGirl.build(:reservation)
+      reservation = FactoryGirl.build(:reservation_with_valid_period)
       reservation.payment_status = nil
       reservation.save!
       assert reservation.pending?
 
-      reservation = FactoryGirl.build(:reservation)
+      reservation = FactoryGirl.build(:reservation_with_valid_period)
       reservation.payment_status = Reservation::PAYMENT_STATUSES[:unknown]
       reservation.save!
       assert reservation.pending?
 
-      reservation = FactoryGirl.build(:reservation)
+      reservation = FactoryGirl.build(:reservation_with_valid_period)
       reservation.payment_status = Reservation::PAYMENT_STATUSES[:paid]
       reservation.save!
       assert !reservation.pending?
     end
 
     should "set default payment status to paid for free reservations" do
-      reservation = FactoryGirl.build(:reservation)
+      reservation = FactoryGirl.build(:reservation_with_valid_period)
       Reservation::PriceCalculator.any_instance.stubs(:price).returns(0.to_money)
       reservation.save!
       assert reservation.free?
