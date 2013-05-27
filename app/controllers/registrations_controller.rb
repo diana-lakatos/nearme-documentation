@@ -59,7 +59,8 @@ class RegistrationsController < Devise::RegistrationsController
 
   def destroy_avatar
     @user = current_user
-    @user.remove_avatar!
+    @user.remove_avatar = true
+    @user.save!
     render :text => {}, :status => 200, :content_type => 'text/plain' 
   end
 
