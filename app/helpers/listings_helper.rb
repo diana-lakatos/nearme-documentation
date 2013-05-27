@@ -63,4 +63,8 @@ module ListingsHelper
     }
   end
 
+  def  selected_listing_siblings(location, listing)
+    @siblings ||= location.listings - [listing]
+  end
+
 end

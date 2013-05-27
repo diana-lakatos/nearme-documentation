@@ -36,11 +36,11 @@
             - if @listing
               = render 'listing', :listing => @listing 
 
-              - unless (@location.listings.count-1).zero?
+              - unless selected_listing_siblings(@location, @listing).empty?
                 %h2{:class => 'other-listing-separator'}
-                  Other #{pluralize(@location.listings.count-1, 'listing')} at #{@location.name}
+                  Other #{pluralize((selected_listing_siblings(@location, @listing)).count, 'listing')} at #{@location.name}
 
-            = render :partial => 'listing', :collection => (@location.listings - [@listing])
+            = render :partial => 'listing', :collection => (selected_listing_siblings(@location, @listing))
 
 
 - content_for :script do
