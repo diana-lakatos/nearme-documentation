@@ -189,12 +189,6 @@ class Reservation < ActiveRecord::Base
     created_at + 24.hours
   end
 
-  # get periods as contiguous blocks, ignoring listing availability
-  def periods_as_absolute_contiguous_blocks
-    block_finder = ContiguousBlockFinder.new(self, true)
-    block_finder.contiguous_blocks
-  end
-
   private
 
     def set_default_payment_status

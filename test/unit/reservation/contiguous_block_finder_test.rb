@@ -75,15 +75,6 @@ class Reservation::ContiguousBlockFinderTest < ActiveSupport::TestCase
         assert_equal @dates.slice(4, 1), blocks[1], blocks.inspect
       end
 
-      should "be able to ignore listing availability" do
-        @contiguous_block_finder = Reservation::ContiguousBlockFinder.new(@reservation, true)
-        blocks = @contiguous_block_finder.contiguous_blocks
-
-        assert_equal @dates.slice(0, 1), blocks[0], blocks.inspect
-        assert_equal @dates.slice(1, 1), blocks[1], blocks.inspect
-        assert_equal @dates.slice(2, 2), blocks[2], blocks.inspect
-        assert_equal @dates.slice(4, 1), blocks[3], blocks.inspect
-      end
     end
   end
 

@@ -1,7 +1,6 @@
 class Reservation::ContiguousBlockFinder
-  def initialize(reservation, ignore_availability = false)
+  def initialize(reservation)
     @reservation = reservation
-    @ignore_availability = ignore_availability
   end
 
   # Return an array where each element is an array of contiguous booked
@@ -42,7 +41,7 @@ class Reservation::ContiguousBlockFinder
       from = from.advance(:days => 1)
 
       # Break if we reach a bookable date
-      break if (@ignore_availability ? true : (listing.open_on?(from) && listing.availability_for(from) >= @reservation.quantity))
+      break if listing.open_on?(from) && listing.availability_for(from) >= @reservation.quantity
     end
 
     return from == to
