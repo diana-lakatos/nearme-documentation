@@ -26,10 +26,11 @@
     top: -2px;
     left: -2px;
     right: -2px;
-    background: lighten($dark-gray, 60%);
+    background: lighten($gray7, 60%);
     border-radius: 8px;
 
-    .summary, .item {
+    .summary, 
+    .item {
       padding: 0 8px;
       color: #1e2222;
       font-size: 12px;
@@ -38,7 +39,7 @@
 
     .summary {
       border-bottom: 1px solid #d6d6d6;
-      background: lighten($dark-gray, 60%) image-url("https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png") 95% center no-repeat;
+      background: lighten($gray7, 60%) image-url("https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png") 95% center no-repeat;
       font-size: 16px;
       line-height: 26px;
       padding: 4px 8px;

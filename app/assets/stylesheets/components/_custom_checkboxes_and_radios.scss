@@ -1,4 +1,5 @@
 // Checkbox & Radio
+
 .checkbox,
 .radio,{
   margin-bottom: 12px;
@@ -7,13 +8,12 @@
 
   &:hover {
     color: $checkbox-radio-color;
-}
+  }
 
-input {
-  outline: none !important;
-  @include opacity(0);
-}
-
+  input {
+    outline: none !important;
+    @include opacity(0);
+  }
 }
 
 .checkbox {
@@ -27,7 +27,7 @@ input {
     position: absolute;
     top: 3px;
     background: $checkbox-radio-neutral;
-    @include transition(all $checkbox-radio-transition-duration ease-in-out);
+    @include transition(all $checkbox-radio-transition ease-in-out);
 
     .checkbox-icon-inner {
       @extend .ico-check;
@@ -36,37 +36,38 @@ input {
       top: -9px;
       left: 2px;
       @include opacity(0);
-      @include transition(all $checkbox-radio-transition-duration ease-in-out);
-  }
-}
-
-&.checked{
-
-  .checkbox-icon-outer {
-    border-color: $checkbox-radio-color;
-    color: $checkbox-radio-color;
-    @include transition(all $checkbox-radio-transition-duration ease-in-out);
-
-    .checkbox-icon-inner {
-      @include opacity(1);
-      @include transition(all $checkbox-radio-transition-duration ease-in-out);
+      @include transition(all $checkbox-radio-transition ease-in-out);
     }
   }
 
-}
+  &.checked {
+
+    .checkbox-icon-outer {
+      border-color: $checkbox-radio-color;
+      color: $checkbox-radio-color;
+      @include transition(all $checkbox-radio-transition ease-in-out);
+
+      .checkbox-icon-inner {
+        @include opacity(1);
+        @include transition(all $checkbox-radio-transition ease-in-out);
+      }
+    }
+  }
 }
 
 // Radio
+
 .radio {
+
   .radio-icon-outer {
-    border-radius: 50%;
-    height: 18px;
-    left: 0;
     position: absolute;
-    width: 18px;
     top: 3px;
+    left: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
     background: $gray;
-    @include transition(all $checkbox-radio-transition-duration ease-in-out);
+    @include transition(all $checkbox-radio-transition ease-in-out);
 
     .radio-icon-inner {
       width: 6px;
@@ -78,25 +79,23 @@ input {
       top: 3px;
       border: 4px solid $checkbox-radio-neutral;
       background: $checkbox-radio-neutral;
-      @include transition(all $checkbox-radio-transition-duration ease-in-out);
-
-  }
-}
-
-&.checked{
-
-  .radio-icon-outer {
-    background: $checkbox-radio-color;
-    @include transition(all $checkbox-radio-transition-duration ease-in-out);
-
-    .radio-icon-inner {
-      border: 3px solid $checkbox-radio-neutral;
-      background: $checkbox-radio-color;
-      @include transition(all $checkbox-radio-transition-duration ease-in-out);
+      @include transition(all $checkbox-radio-transition ease-in-out);
     }
   }
 
-}
+  &.checked {
+
+    .radio-icon-outer {
+      background: $checkbox-radio-color;
+      @include transition(all $checkbox-radio-transition ease-in-out);
+
+      .radio-icon-inner {
+        border: 3px solid $checkbox-radio-neutral;
+        background: $checkbox-radio-color;
+        @include transition(all $checkbox-radio-transition ease-in-out);
+      }
+    }
+  }
 }
 
 .error {
