@@ -40,7 +40,7 @@ class AfterSignupMailerTest < ActiveSupport::TestCase
 
   test "version if user neither booked a listing nor added a listing" do
     mail = AfterSignupMailer.help_offer(@user.id)
-    assert mail.html_part.body.include?("I saw that you signed up but haven't booked or added a space for rent")
+    assert mail.html_part.body.include?("I saw that you signed up but haven't added a space for rent")
     assert !mail.html_part.body.include?("The Desks Near Me Team")
   end
 
