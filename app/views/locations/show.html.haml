@@ -31,7 +31,17 @@
   .clearfix
     .row-fluid.padding-row
       .span12
-        = render 'listings'
+        %section.bookings.quick-book
+          .listings
+            - if @listing
+              = render 'listing', :listing => @listing 
+
+              - unless selected_listing_siblings(@location, @listing).empty?
+                %h2{:class => 'other-listing-separator'}
+                  #{pluralize((selected_listing_siblings(@location, @listing)).count, ' other listing')} at this location}
+
+            = render :partial => 'listing', :collection => (selected_listing_siblings(@location, @listing))
+
 
 - content_for :script do
   :javascript

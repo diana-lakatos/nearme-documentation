@@ -41,9 +41,11 @@
 <% if reservation.credit_card_payment? %>
   <strong style='display: inline-block;'>Paid</strong>
   <span style="float: right;"><%= reservation_paid(reservation) %></span>
+  <hr/>
 
   <strong style='display: inline-block;'>Balance</strong>
   <span style="float: right;"><%= reservation_balance(reservation) %></span>
+  <hr/>
 
   <% if reservation.pending? %>
     <span style="float: right;">This reservation is currently pending confirmation, and will be charged when confirmed.</span>

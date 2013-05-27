@@ -150,15 +150,11 @@ class Reservation::PriceCalculatorTest < ActiveSupport::TestCase
 
   # Return dates in groups to use for seeding the tests
   def date_groups_of(count = 1, quantity = 3)
-    dates = []
-    quantity.times do |i|
-      arr = []
-      count.times do |c|
-        arr << Date.today.advance(:months => i*count, :days => c)
+    quantity.times.map do |i|
+      count.times.map do |c|
+        Date.today.advance(:months => i*count, :days => c)
       end
-      dates << arr
     end
-    dates
   end
 
   def seed_reservation_dates(dates, reservation = @reservation)

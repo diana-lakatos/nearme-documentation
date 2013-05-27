@@ -19,7 +19,7 @@
       = hourly_summary_for_period @reservation.periods.first
 
   - else
-    %p= "#{pluralize(@reservation.periods.size, 'day')} between #{@reservation.periods.first.date.strftime("%B %e")} and #{@reservation.periods.last.date.strftime("%B %e")}."
+    %p= selected_dates_summary(@reservation)
 
   %hr
 
