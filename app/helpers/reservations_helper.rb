@@ -13,7 +13,7 @@ module ReservationsHelper
   end
 
   def reservation_needs_payment_details?
-    @reservation.total_amount > 0 && %w(USD CAD).include?(@reservation.currency)
+    !@reservation.total_amount.zero? && %w(USD CAD).include?(@reservation.currency)
   end
 
   def reservation_total_price(reservation)

@@ -30,9 +30,10 @@ class ReservationTest < ActiveSupport::TestCase
     
     setup do
         @reservation = Reservation.new
-        @reservation.listing = FactoryGirl.create(:listing)
+        @reservation.listing = FactoryGirl.create(:always_open_listing)
         @reservation.owner = FactoryGirl.create(:user)
-        @reservation.add_period((Date.today+1.day))
+        @reservation.add_period(Date.today.next_week+1)
+        @reservation.save!
     end
 
     should 'be cancelable if all periods are for future' do
@@ -74,6 +75,8 @@ class ReservationTest < ActiveSupport::TestCase
 
   end
 
+  context 'expiration' do
+
     context 'with an unsaved reservation' do
 
       setup do
@@ -87,11 +90,13 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should 'create a delayed_job task to run in 24 hours time when saved' do
-        lambda {
-          @reservation.save!
-        }.should change(Delayed::Job, :count).by(1)
+        Timecop.freeze(Time.now) do
+          assert_difference 'Delayed::Job.count' do
+            @reservation.save!
+          end
 
-        assert Delayed::Job.first.run_at == 24.hours.from_now
+          assert_equal 24.hours.from_now.to_i, Delayed::Job.first.run_at.to_i
+        end
       end
 
     end
@@ -113,6 +118,8 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
     end
+
+  end
 
   context "confirmation" do
     should "attempt to charge user card if paying by credit card" do

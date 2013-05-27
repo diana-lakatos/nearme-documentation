@@ -10,6 +10,14 @@ FactoryGirl.define do
     confirm_reservations true
     daily_price_cents 5000
 
+    factory :always_open_listing do
+      after(:create) do |listing|
+        listing.availability.each_day do |dow, rule|
+          listing.availability_rules.create!(:day => dow, :open_hour => 9, :close_hour => 18)
+        end
+      end
+    end
+
     factory :free_listing do
       after(:create) do |listing|
         listing.daily_price_cents = 0
