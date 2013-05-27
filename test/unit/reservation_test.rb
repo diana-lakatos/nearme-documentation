@@ -30,9 +30,10 @@ class ReservationTest < ActiveSupport::TestCase
     
     setup do
         @reservation = Reservation.new
-        @reservation.listing = FactoryGirl.create(:listing)
+        @reservation.listing = FactoryGirl.create(:always_open_listing)
         @reservation.owner = FactoryGirl.create(:user)
-        @reservation.add_period((Date.today+1.day))
+        @reservation.add_period(Date.today.next_week+1)
+        @reservation.save!
     end
 
     should 'be cancelable if all periods are for future' do
@@ -74,7 +75,7 @@ class ReservationTest < ActiveSupport::TestCase
 
   end
 
-  describe 'expiration' do
+  context 'expiration' do
 
     context 'with an unsaved reservation' do
 
@@ -82,19 +83,16 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
         @reservation.add_period(Date.today)
         @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
-        Timecop.freeze
-      end
-
-      teardown do
-        Timecop.return
       end
 
       should 'create a delayed_job task to run in 24 hours time when saved' do
-        lambda {
-          @reservation.save!
-        }.should change(Delayed::Job, :count).by(1)
+        Timecop.freeze(Time.now) do
+          assert_difference 'Delayed::Job.count' do
+            @reservation.save!
+          end
 
-        assert Delayed::Job.first.run_at == 24.hours.from_now
+          assert_equal 24.hours.from_now.to_i, Delayed::Job.first.run_at.to_i
+        end
       end
 
     end
@@ -111,7 +109,8 @@ class ReservationTest < ActiveSupport::TestCase
 
       should 'not send any email if the expire method is called' do
         ReservationObserver.any_instance.expects(:after_expires).never
-        assert_raises @reservation.expire
+
+        @reservation.expire
       end
 
     end
