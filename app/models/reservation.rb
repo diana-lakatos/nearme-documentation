@@ -258,8 +258,8 @@ class Reservation < ActiveRecord::Base
 
     def validate_contiguous_blocks
       invalid_blocks = []
-      calc = PriceCalculator.new(self)
-      calc.contiguous_blocks.each do |block|
+      block_finder = ContiguousBlockFinder.new(self)
+      block_finder.contiguous_blocks.each do |block|
         if block.length < listing.minimum_booking_days
           invalid_blocks << block
         end

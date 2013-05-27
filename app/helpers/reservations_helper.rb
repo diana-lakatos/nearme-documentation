@@ -56,4 +56,35 @@ module ReservationsHelper
     query.join('%2C+')
   end
 
+  def selected_dates_summary(reservation)
+    html_string_array = dates_in_groups_for_reservation(reservation).map do |block|
+      if block.size == 1
+        period_to_string(block.first)
+      else
+        period_to_string(block.first) + ' - ' + period_to_string(block.last)
+      end
+    end
+    (html_string_array * "<br />").html_safe
+  end
+
+  def period_to_string(date)
+    date.strftime('%A, %B %e')
+  end
+
+  # Group up each of the dates into groups of real contiguous dates.
+  #
+  # i.e.
+  # [[20 Nov 2012, 21 Nov 2012, 22 Nov 2012], [5 Dec 2012], [7 Dec 2012, 8 Dec 2012]]
+  def dates_in_groups_for_reservation(reservation)
+    reservation.periods.map(&:date).sort.inject([]) { |groups, datetime| 
+      date = datetime.to_date
+      if groups.last && ((groups.last.last+1.day) == date)
+        groups.last << date
+      else
+        groups << [date]
+      end
+      groups 
+    }
+  end
+
 end

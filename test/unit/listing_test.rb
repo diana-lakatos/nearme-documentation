@@ -130,6 +130,11 @@ class ListingTest < ActiveSupport::TestCase
   end
 
   context "first available date" do
+
+    teardown do
+      Timecop.return
+    end
+
     should "return monday for friday" do
       friday = Date.today.sunday + 5.days
       Timecop.freeze(friday.to_time)

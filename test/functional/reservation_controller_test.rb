@@ -5,9 +5,7 @@ class ReservationsControllerTest < ActionController::TestCase
 include Devise::TestHelpers
 
   setup do
-    @reservation = FactoryGirl.build(:reservation_with_credit_card)
-    @reservation.periods = []
-    @reservation.add_period(Time.now.next_week.to_date)
+    @reservation = FactoryGirl.build(:reservation_with_credit_card_and_valid_period)
     @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
     @reservation.save!
   end

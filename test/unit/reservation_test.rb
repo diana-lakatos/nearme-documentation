@@ -80,9 +80,13 @@ class ReservationTest < ActiveSupport::TestCase
     context 'with an unsaved reservation' do
 
       setup do
-        @reservation = FactoryGirl.build(:reservation_with_credit_card)
-        @reservation.add_period(Date.today)
+        @reservation = FactoryGirl.build(:reservation_with_credit_card_and_valid_period)
         @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+        Timecop.freeze(@reservation.periods.first.date)
+      end
+
+      teardown do
+        Timecop.return
       end
 
       should 'create a delayed_job task to run in 24 hours time when saved' do
@@ -100,8 +104,7 @@ class ReservationTest < ActiveSupport::TestCase
     context 'with a confirmed reservation' do
 
       setup do
-        @reservation = FactoryGirl.build(:reservation_with_credit_card)
-        @reservation.add_period(Date.today)
+        @reservation = FactoryGirl.build(:reservation_with_credit_card_and_valid_period)
         @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
         @reservation.save!
         @reservation.confirm
@@ -109,8 +112,9 @@ class ReservationTest < ActiveSupport::TestCase
 
       should 'not send any email if the expire method is called' do
         ReservationObserver.any_instance.expects(:after_expires).never
-
-        @reservation.expire
+        assert_raises StateMachine::InvalidTransition do
+          @reservation.expire!
+        end
       end
 
     end
@@ -119,8 +123,7 @@ class ReservationTest < ActiveSupport::TestCase
 
   context "confirmation" do
     should "attempt to charge user card if paying by credit card" do
-      reservation = FactoryGirl.build(:reservation_with_credit_card)
-      reservation.add_period(Date.today)
+      reservation = FactoryGirl.build(:reservation_with_credit_card_and_valid_period)
       reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
       reservation.save!
 
@@ -201,24 +204,24 @@ class ReservationTest < ActiveSupport::TestCase
 
   context "payments" do
     should "set default payment status to pending" do
-      reservation = FactoryGirl.build(:reservation)
+      reservation = FactoryGirl.build(:reservation_with_valid_period)
       reservation.payment_status = nil
       reservation.save!
       assert reservation.pending?
 
-      reservation = FactoryGirl.build(:reservation)
+      reservation = FactoryGirl.build(:reservation_with_valid_period)
       reservation.payment_status = Reservation::PAYMENT_STATUSES[:unknown]
       reservation.save!
       assert reservation.pending?
 
-      reservation = FactoryGirl.build(:reservation)
+      reservation = FactoryGirl.build(:reservation_with_valid_period)
       reservation.payment_status = Reservation::PAYMENT_STATUSES[:paid]
       reservation.save!
       assert !reservation.pending?
     end
 
     should "set default payment status to paid for free reservations" do
-      reservation = FactoryGirl.build(:reservation)
+      reservation = FactoryGirl.build(:reservation_with_valid_period)
       Reservation::PriceCalculator.any_instance.stubs(:price).returns(0.to_money)
       reservation.save!
       assert reservation.free?
