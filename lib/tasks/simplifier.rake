@@ -1,13 +1,13 @@
 namespace :simplify do
 
-  desc "Remove all listing types, add three of them and set the default"
+  desc "Ensure there are only 3 location types. All existing location types should be mapped."
   task :location_types => :environment do
     new_location_type_names =["Business", "Co-working", "Public"] 
     new_location_type_names.each do |name|
       LocationType.create(:name => name) unless LocationType.find_by_name(name)
     end
-    business_ids = LocationType.where(['name IN (?)', ["Company Office", "Goverment Space", "Business Center"]]).pluck(:id)
-    coworking_ids = LocationType.where(['name IN (?)', ["Shared Office", "Coworking"]]).pluck(:id)
+    business_ids = LocationType.where(['name IN (?)', ["Other", "Shared Office", "Company Office", "Goverment Space", "Business Center"]]).pluck(:id)
+    coworking_ids = LocationType.where(['name IN (?)', ["Coworking"]]).pluck(:id)
     public_ids = LocationType.where(['name IN (?)', ["Cafe"]]).pluck(:id)
     business_location_type = LocationType.find_by_name('Business')
     coworking_location_type = LocationType.find_by_name('Co-working')
