@@ -38,7 +38,7 @@
 
               - unless selected_listing_siblings(@location, @listing).empty?
                 %h2{:class => 'other-listing-separator'}
-                  Other #{pluralize((selected_listing_siblings(@location, @listing)).count, 'listing')} at #{@location.name}
+                  Other #{pluralize((selected_listing_siblings(@location, @listing)).count, 'listing')} at #{@location.company.name}
 
             = render :partial => 'listing', :collection => (selected_listing_siblings(@location, @listing))
 
