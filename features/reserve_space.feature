@@ -6,7 +6,7 @@ Feature: A user can book at a space
 
   Background:
     Given a company exists
-      And a location exists with company: that company
+      And a location exists with company: that company, currency: "CAD"
       And a listing exists with location: that location, quantity: 10
       And a user exists
       And I am logged in as the user
