@@ -47,6 +47,8 @@ class Listing < ActiveRecord::Base
   include Search
   include AvailabilityRule::TargetHelper
 
+  PRICE_TYPES = [:hourly, :weekly, :daily, :monthly]
+
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
   delegate :address, :amenities, :currency, :formatted_address,
@@ -58,15 +60,17 @@ class Listing < ActiveRecord::Base
   delegate :to_s, to: :name
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
-    :name, :description, :daily_price, :weekly_price, :monthly_price,
-    :daily_price_cents, :weekly_price_cents, :monthly_price_cents, :availability_template_id,
-    :availability_rules_attributes, :defer_availability_rules, :free,
-    :photos_attributes, :listing_type_id, :hourly_reservations, :hourly_price, :hourly_price_cents
+    :name, :description, :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
+    :free, :photos_attributes, :listing_type_id, :hourly_reservations
 
-  monetize :daily_price_cents,   :allow_nil => true
-  monetize :weekly_price_cents,  :allow_nil => true
-  monetize :monthly_price_cents, :allow_nil => true
-  monetize :hourly_price_cents,  :allow_nil => true
+  PRICE_TYPES.each do |price|
+    # Flag each price type as a Money attribute.
+    # @see rails-money
+    monetize "#{price}_price_cents", :allow_nil => true
+
+    # Mark price fields as attr-accessible
+    attr_accessible "#{price}_price_cents", "#{price}_price"
+  end
 
   acts_as_paranoid
 
@@ -130,17 +134,15 @@ class Listing < ActiveRecord::Base
     scope.sum(:quantity)
   end
 
-  def prices
-    [daily_price, weekly_price, monthly_price]
-  end
-
   def free?
     !has_price?
   end
   alias_method :free, :free?
 
   def has_price?
-    [hourly_price_cents, daily_price_cents, weekly_price_cents, monthly_price_cents].compact.any? { |price| !price.zero? }
+    PRICE_TYPES.map { |price|
+      self["#{price}_price_cents"]
+    }.compact.any? { |price| !price.zero? }
   end
 
   def free=(free_flag)
