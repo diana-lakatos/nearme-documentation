@@ -19,8 +19,8 @@
   &.deactivate {
     @include opacity(.5);
     cursor: default !important;
-        
-    label, span{
+
+    label, span {
       cursor: default !important;
     }
   }
@@ -48,7 +48,7 @@
     display: none;
   }
 
-  span, label{
+  span, label {
     position: relative;
     display: inline-block;
     @include box-sizing(border-box);
@@ -60,7 +60,7 @@
     cursor: pointer;
   }
 
-  label{
+  label {
     z-index: 100;
     width: 34%;
     margin-top: -1px;
@@ -71,13 +71,13 @@
     background-color: #f5f5f5;
     border-color: #e6e6e6 #e6e6e6 #bfbfbf;
     text-align: center;
-    
+
     &:hover, &:focus, &:active, &.active, &.disabled, &[disabled] {
       color: #ffffff;
       background-color: #e6e6e6;
     }
 
-    &:active, &.active{
+    &:active, &.active {
       background-color: #cccccc;
     }
 
@@ -95,31 +95,31 @@
     background-color: #0088cc;
     text-align: center;
 
-    &.switch-left{
+    &.switch-left {
       @include border-top-left-radius(4px);
       @include border-bottom-left-radius(4px);
       color: #ffffff;
       background-color: #005fcc;
       border-color: #0088cc #0088cc #005580;
 
-      &:active, &.active{
+      &:active, &.active {
         background-color: #006699
       }
     }
 
-    &.switch-right{
+    &.switch-right {
       color: #333333;
       background-color: #f0f0f0;
       border-color: #ffffff #ffffff #d9d9d9;
 
-     &:hover, &:focus, &:active, &.active, &.disabled, &[disabled]{
-       color: #333333;
-       background-color: #ffffff;
-     }
-    
-     &:active, &.active{
-       background-color: #e6e6e6;
-     }
+      &:hover, &:focus, &:active, &.active, &.disabled, &[disabled] {
+        color: #333333;
+        background-color: #ffffff;
+      }
+
+      &:active, &.active {
+        background-color: #e6e6e6;
+      }
     }
   }
 }
