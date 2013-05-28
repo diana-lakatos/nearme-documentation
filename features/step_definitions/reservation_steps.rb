@@ -121,10 +121,10 @@ When /^I select to book( and review)? space for:$/ do |and_review, table|
     select_datepicker_date(bookings.first[:date])
 
     page.find('.time-picker').click
-    within '.time-wrapper' do
-      page.find(".time-start select option[value='#{bookings.first[:start_minute]}']").click
-      page.find(".time-end select option[value='#{bookings.first[:end_minute]}']").click
-    end
+    page.execute_script <<-JS
+      $('.time-start select').val("#{bookings.first[:start_minute]}").trigger('change');
+      $('.time-end select').val("#{bookings.first[:end_minute]}").trigger('change');
+    JS
   else
     # Daily booking
     start_to_book(bookings.first[:listing], bookings.map { |b| b[:date] }, bookings.first[:quantity])
@@ -190,9 +190,12 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
   within '.space-reservation-modal' do
     if reservation[:start_minute]
       # Hourly booking
-      assert page.has_content?(reservation[:date].strftime("%B %e"))
-      assert page.has_content?(reservation[:start_at].strftime("%l:%M%P"))
-      assert page.has_content?(reservation[:end_at].strftime("%l:%M%P"))
+      date = reservation[:date].strftime("%B %-e")
+      start_time = reservation[:start_at].strftime("%l:%M%P")
+      end_time   = reservation[:end_at].strftime("%l:%M%P")
+      assert page.has_content?(date), "Expected to see: #{date}"
+      assert page.has_content?(start_time), "Expected to see: #{start_time}"
+      assert page.has_content?(end_time), "Expected to see: #{end_time}"
     else
       # Daily booking
       assert page.has_content?("#{reservation[:quantity]} #{reservation[:listing].name}")
