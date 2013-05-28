@@ -1,5 +1,5 @@
-@wip
 @javascript
+@wip
 Feature: As a user of the site
   In order to promote my company
   As a user
@@ -25,6 +25,7 @@ Feature: As a user of the site
       And I submit the form
      Then Location with my details should be created
      
+  @wip
   Scenario: A user can edit existing location
     Given a location exists with company: the company
       And I am on the manage locations page
@@ -36,7 +37,6 @@ Feature: As a user of the site
      When I follow "Delete this location"
      Then Location has been deleted
 
-  @javascript
   Scenario: A user can add new listing
     Given a location exists with company: the company
       And I am on the manage locations page
@@ -45,6 +45,7 @@ Feature: As a user of the site
       And I submit the form
      Then Listing with my details should be created
 
+  @wip
   Scenario: A user can edit existing listing
     Given a location exists with company: the company
       And a listing exists with location: the location
@@ -76,4 +77,20 @@ Feature: As a user of the site
       And I submit the form
       And I click edit listing icon
      Then Listing weekly pricing should be enabled
+
+  Scenario: A user can set availability rules on a listing
+    Given a location exists with company: the company
+    And   a listing exists with location: the location
+    And   I am on the manage locations page
+    When I click edit listing icon
+    And  I select custom availability:
+        | Day | Availabile | Open Time | Close Time |
+        | 1   | Yes        | 9:00      | 17:00      |
+        | 2   | Yes        | 9:00      | 17:00      |
+    And I submit the form
+    Then the listing should have availability:
+        | Day | Availabile | Open Time | Close Time |
+        | 1   | Yes        | 9:00      | 17:00      |
+        | 2   | Yes        | 9:00      | 17:00      |
+
 
