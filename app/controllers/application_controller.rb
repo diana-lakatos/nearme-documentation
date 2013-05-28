@@ -2,7 +2,12 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   layout "application"
-  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+
+  # Much easier to debug ActiveRecord::RecordNotFound issues in dev
+  # without this.
+  unless Rails.env.development?
+    rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  end
 
   before_filter :set_tabs
 
