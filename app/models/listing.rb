@@ -1,7 +1,10 @@
 class Listing < ActiveRecord::Base
+  PRICE_PERIODS = {
+    :free => nil,
+    :day => 'day'
+  }
 
-  # Period constants for listing costs
-
+  # == Associations
   has_many :reservations,
     dependent: :destroy
 
@@ -11,102 +14,66 @@ class Listing < ActiveRecord::Base
     end
   end
 
-  PRICE_PERIODS = {
-    :free => nil,
-    :day => 'day'
-  }
-
-  MINUTES_IN_DAY = 1440
-  MINUTES_IN_WEEK = 10080
-  MINUTES_IN_MONTH = 43200
   has_many :ratings,
     as: :content,
     dependent: :destroy
 
-
   has_many :inquiries
-
-  has_one :company, through: :location
-  delegate :name, :description, to: :company, prefix: true, allow_nil: true
-  delegate :url, to: :company
-
-  belongs_to :location, inverse_of: :listings
-  belongs_to :listing_type
-  delegate :address, :amenities, :currency, :formatted_address,
-    :local_geocoding, :latitude, :longitude, :distance_from, to: :location,
-    allow_nil: true
-
-
-  delegate :creator, :creator=, to: :location
-  delegate :name, to: :creator, prefix: true
-
 
   has_many :availability_rules,
     :as => :target,
     :dependent => :destroy
 
-  before_validation :remove_disabled_prices
+  has_one :company, through: :location
+  belongs_to :location, inverse_of: :listings
+  belongs_to :listing_type
 
-  validates_presence_of :location, :name, :description, :quantity, :listing_type_id
-  validates_numericality_of :quantity
-  validates_length_of :description, :maximum => 250
-  validates_with PriceValidator
+  accepts_nested_attributes_for :availability_rules, :allow_destroy => true
+  accepts_nested_attributes_for :photos, :allow_destroy => true
 
-
-  attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
-    :name, :description, :daily_price, :weekly_price, :monthly_price,
-    :daily_price_cents, :weekly_price_cents, :monthly_price_cents, :availability_template_id, 
-    :availability_rules_attributes, :defer_availability_rules, :free,
-    :photos_attributes, :listing_type_id, :enable_daily, :enable_weekly, :enable_monthly, :enable_hourly,
-    :hourly_reservations, :hourly_price, :hourly_price_cents
-
-  attr_accessor :enable_daily, :enable_weekly, :enable_monthly, :enable_hourly
-
-  after_save :notify_user_about_change
-  after_destroy :notify_user_about_change
-
-  delegate :notify_user_about_change, :to => :location, :allow_nil => true
-  delegate :to_s, to: :name
-
-
-  monetize :daily_price_cents, :allow_nil => true
-  monetize :weekly_price_cents, :allow_nil => true
-  monetize :monthly_price_cents, :allow_nil => true
-  monetize :hourly_price_cents, :allow_nil => true
-
-
-  acts_as_paranoid
-
+  # == Scopes
   scope :featured, where(%{ (select count(*) from "photos" where content_id = "listings".id AND content_type = 'Listing') > 0  }).
     includes(:photos).order(%{ random() }).limit(5)
 
   scope :latest,   order("listings.created_at DESC")
 
+  # == Callbacks
+  before_validation :clear_irrelevant_prices
+  after_save :notify_user_about_change
+  after_destroy :notify_user_about_change
+
+  # == Validations
+  validates_presence_of :location, :name, :description, :quantity, :listing_type_id
+  validates_numericality_of :quantity
+  validates_length_of :description, :maximum => 250
+  validates_with PriceValidator
+
+  # == Helpers
   include Search
   include AvailabilityRule::TargetHelper
-  accepts_nested_attributes_for :availability_rules, :allow_destroy => true
-  accepts_nested_attributes_for :photos, :allow_destroy => true
 
-  def enable_hourly
-    @enable_hourly || price_enabled_by_default?(hourly_price)
-  end
+  delegate :name, :description, to: :company, prefix: true, allow_nil: true
+  delegate :url, to: :company
+  delegate :address, :amenities, :currency, :formatted_address,
+    :local_geocoding, :latitude, :longitude, :distance_from, to: :location,
+    allow_nil: true
+  delegate :creator, :creator=, to: :location
+  delegate :name, to: :creator, prefix: true
+  delegate :notify_user_about_change, :to => :location, :allow_nil => true
+  delegate :to_s, to: :name
 
-  def enable_daily
-    @enable_daily || price_enabled_by_default?(daily_price)
-  end
-    
-  def enable_weekly
-    @enable_weekly || price_enabled_by_default?(weekly_price)
-  end
-    
-  def enable_monthly
-    @enable_monthly || price_enabled_by_default?(monthly_price)
-  end
+  attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
+    :name, :description, :daily_price, :weekly_price, :monthly_price,
+    :daily_price_cents, :weekly_price_cents, :monthly_price_cents, :availability_template_id,
+    :availability_rules_attributes, :defer_availability_rules, :free,
+    :photos_attributes, :listing_type_id, :hourly_reservations, :hourly_price, :hourly_price_cents
 
-  def price_enabled_by_default?(price)
-    # only prices greater than 0 are enabled
-    price.to_f > 0
-  end
+  monetize :daily_price_cents,   :allow_nil => true
+  monetize :weekly_price_cents,  :allow_nil => true
+  monetize :monthly_price_cents, :allow_nil => true
+  monetize :hourly_price_cents,  :allow_nil => true
+
+  acts_as_paranoid
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
@@ -116,12 +83,6 @@ class Listing < ActiveRecord::Base
     else
       super # See: AvailabilityRule::TargetHelper#availability
     end
-  end
-
-  def remove_disabled_prices
-    self.daily_price_cents = nil if !enable_daily || daily_price.to_f.zero?
-    self.weekly_price_cents = nil if !enable_weekly || weekly_price.to_f.zero?
-    self.monthly_price_cents = nil if !enable_monthly || monthly_price.to_f.zero?
   end
 
   # Trigger clearing of all existing availability rules on save
@@ -178,11 +139,6 @@ class Listing < ActiveRecord::Base
     [daily_price, weekly_price, monthly_price]
   end
 
-  def period_prices
-    # day = 1440 minutes, week = 10080 minutes, month = 43200 minutes
-    {MINUTES_IN_DAY => daily_price, MINUTES_IN_WEEK => weekly_price, MINUTES_IN_MONTH => monthly_price}
-  end
-
   def price_period
     if free?
       PRICE_PERIODS[:free]
@@ -192,36 +148,28 @@ class Listing < ActiveRecord::Base
   end
 
   def free?
-    if persisted?
-      !has_price?
-    else
-      @marked_free
-    end
+    !has_price?
   end
   alias_method :free, :free?
 
   def has_price?
-    !(hourly_price_cents.to_f + daily_price_cents.to_f + weekly_price_cents.to_f + monthly_price_cents.to_f).zero?
+    [hourly_price_cents, daily_price_cents, weekly_price_cents, monthly_price_cents].compact.any? { |price| !price.zero? }
   end
 
-
   def free=(free_flag)
-    @marked_free = free_flag && free_flag != "0"
-    if @marked_free
-      self.hourly_price = nil
-      self.daily_price = nil
-      self.weekly_price = nil
-      self.monthly_price = nil
-    end
+    return unless [true, "1"].include?(free_flag)
+
+    self.hourly_price = nil
+    self.daily_price = nil
+    self.weekly_price = nil
+    self.monthly_price = nil
   end
 
   def rate_for_user(rating, user)
-
     raise "Cannot rate unsaved listing" if new_record?
     r = ratings.find_or_initialize_by_user_id user.id
     r.rating = rating
     r.save
-
   end
 
   def rating_for(user)
@@ -340,6 +288,17 @@ class Listing < ActiveRecord::Base
     AvailabilityRule::HourlyListingStatus.new(self, date)
   end
 
+  private
+
+  def clear_irrelevant_prices
+    if hourly_reservations?
+      self.daily_price = nil
+      self.weekly_price = nil
+      self.monthly_price = nil
+    else
+      self.hourly_price = nil
+    end
+  end
 end
 
 class NullListing

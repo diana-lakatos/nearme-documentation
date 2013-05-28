@@ -4,7 +4,7 @@ class SpaceWizardController < ApplicationController
   before_filter :find_company, :except => [:new]
   before_filter :find_location, :except => [:new]
   before_filter :find_listing, :except => [:new]
-  before_filter :convert_price_params, only: [:submit_listing]
+#  before_filter :convert_price_params, only: [:submit_listing]
 
   def new
     flash.keep(:warning)
@@ -92,16 +92,15 @@ class SpaceWizardController < ApplicationController
   end
 
   def convert_price_params
-    # method to_f removes all special characters, like hyphen. However we do not want to convert nil to 0, that's why modifier.
-    if params_hash_complete?
-      prm = params[:company][:locations_attributes]["0"][:listings_attributes]["0"]
-      {:daily_price => :enable_daily, :weekly_price => :enable_weekly, :monthly_price => :enable_monthly}.each do |period_price, enable_period|
-        if prm[period_price] && !prm[period_price].to_f.zero? && prm[enable_period] == "1"
-          prm[period_price] = prm[period_price].to_f if prm[period_price]
-        else
-          prm[period_price] = nil
-        end
-      end
+    listing_params = params[:listing]
+
+    # Sanitize listing price param values
+    %w(hourly daily weekly monthly).each do |price|
+      price_key = "#{price}_price"
+      next unless listing_params.has_key?(price_key)
+
+      value = listing_params[price_key].to_s.strip
+      listing_params[price_key] = value.present? ? value.to_f : nil
     end
   end
 

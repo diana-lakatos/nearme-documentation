@@ -68,30 +68,6 @@ class ListingTest < ActiveSupport::TestCase
 
   context "free flag and prices" do
 
-    should "not valid if free flag is false and no prices are provided" do
-      @listing.free = false
-      @listing.daily_price = nil
-      @listing.weekly_price = nil
-      @listing.monthly_price = nil
-      assert !@listing.valid?
-    end
-
-    should "not valid if free flag is nil and no prices are provided" do
-      @listing.free = nil
-      @listing.daily_price = nil
-      @listing.weekly_price = nil
-      @listing.monthly_price = nil
-      assert !@listing.valid?
-    end
-
-    should "not valid if free flag is nil and prices are 0" do
-      @listing.free = nil
-      @listing.daily_price = 0.0
-      @listing.weekly_price = 0
-      @listing.monthly_price = nil
-      assert !@listing.valid?
-    end
-
     should "valid if free flag is true and no prices are provided" do
       @listing.free = true
       @listing.daily_price = nil
