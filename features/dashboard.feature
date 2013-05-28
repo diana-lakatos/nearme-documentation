@@ -25,6 +25,7 @@ Feature: As a user of the site
       And I submit the form
      Then Location with my details should be created
      
+  @wip
   Scenario: A user can edit existing location
     Given a location exists with company: the company
       And I am on the manage locations page
@@ -44,6 +45,7 @@ Feature: As a user of the site
       And I submit the form
      Then Listing with my details should be created
 
+  @wip
   Scenario: A user can edit existing listing
     Given a location exists with company: the company
       And a listing exists with location: the location
