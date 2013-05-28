@@ -8,12 +8,12 @@ Given /^(Location|Listing) with my details should be created$/ do |model|
   end
 end
 
-Given /^(Location|Listing) should be updated$/ do |model|
-  if model=='Location'
-    location = Location.last
+Given /^#{capture_model} should be updated$/ do |model|
+  if model=='the location'
+    location = model!('location')
     assert_location_data(location)
   else
-    listing = Listing.last
+    listing = model!('listing')
     assert_listing_data(listing, true)
   end
 end
@@ -55,6 +55,11 @@ When /^I click edit listing icon$/ do
   page.find('.listing .edit-link').click
 end
 
+When /^I click delete (location|listing) link$/ do |model|
+  page.evaluate_script('window.confirm = function() { return true; }')
+  click_link "Delete this #{model}"
+end
+
 Then /^Listing (.*) pricing should be (disabled|enabled)$/ do |period, state|
   enable_period_checkbox = page.find("#listing_enable_#{period}")
   if state=='enabled'
@@ -62,14 +67,6 @@ Then /^Listing (.*) pricing should be (disabled|enabled)$/ do |period, state|
     assert_equal "15.50", page.find("#listing_#{period}_price").value
   else
     assert !enable_period_checkbox.checked?
-  end
-end
-
-Then /^(Location|Listing) has been deleted$/ do |model|
-  if model=='Location'
-  assert_nil Location.first
-  else
-  assert_nil Listing.first
   end
 end
 
