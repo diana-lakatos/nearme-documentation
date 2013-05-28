@@ -49,8 +49,6 @@ gem 'friendly_id'
 
 gem 'sass-rails'
 gem 'bootstrap-sass', '~> 2.3.0.0'
-gem "bootstrap-switch-rails"
-#gem "bootstrap-select-rails"
 gem 'chronic'
 
 gem 'ey_config'
