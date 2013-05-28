@@ -16,11 +16,12 @@ module Listings
       setup_credit_card_customer if using_credit_card?
 
       if @errors.empty? && @reservation.save
-        if reservation.listing.confirm_reservations?
-          ReservationMailer.notify_host_with_confirmation(reservation).deliver
-          ReservationMailer.notify_guest_with_confirmation(reservation).deliver
+        if @reservation.listing.confirm_reservations?
+          ReservationMailer.notify_host_with_confirmation(@reservation).deliver
+          ReservationMailer.notify_guest_with_confirmation(@reservation).deliver
         else
-          ReservationMailer.notify_host_without_confirmation(reservation).deliver
+          ReservationMailer.notify_host_without_confirmation(@reservation).deliver
+          ReservationMailer.notify_guest_of_confirmation(@reservation).deliver
         end
         event_tracker.requested_a_booking(@reservation, @location)
 

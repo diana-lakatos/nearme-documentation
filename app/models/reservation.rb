@@ -31,8 +31,33 @@ class Reservation < ActiveRecord::Base
   before_validation :set_total_cost, on: :create
   before_validation :set_currency, on: :create
   before_validation :set_default_payment_status, on: :create
-  after_create  :auto_confirm_reservation
-  after_create  :create_scheduled_expiry_task
+  after_create :auto_confirm_reservation
+
+  after_create do |reservation|
+    Delayed::Job.enqueue(ReservationExpiryJob.new(reservation.id), nil, expiry_time)
+  end
+
+
+
+  def delayed_expiry
+    if unconfirmed?
+      expire!
+      ReservationMailer.notify_guest_of_expiration(self).deliver
+      ReservationMailer.notify_host_of_expiration(self).deliver
+      event_tracker.booking_expired(self, location)
+    end
+  end
+
+  def expiry_time
+    created_at + 24.hours
+  end
+
+  handle_asychronously :delayed_expiry, run_at: Proc.new { expiry_time }
+
+  #def create_scheduled_expiry_task
+  #  Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :should_expire!, nil), run_at: expiry_time
+  #end
+
 
   acts_as_paranoid
 
@@ -187,19 +212,7 @@ class Reservation < ActiveRecord::Base
     payment_status == PAYMENT_STATUSES[:pending]
   end
 
-  def should_expire!
-    if unconfirmed?
-      expire!
-      ReservationMailer.notify_guest_of_expiration(reservation).deliver
-      ReservationMailer.notify_host_of_expiration(reservation).deliver
-      event_tracker.booking_expired(reservation, reservation.location)
-    end
-  end
-
-  def expiry_time
-    created_at + 24.hours
-  end
-
+  
   private
 
     def set_default_payment_status
@@ -226,10 +239,6 @@ class Reservation < ActiveRecord::Base
 
     def auto_confirm_reservation
       confirm! unless listing.confirm_reservations?
-    end
-  
-    def create_scheduled_expiry_task
-      Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :should_expire!, nil), run_at: expiry_time
     end
 
     def attempt_payment_capture

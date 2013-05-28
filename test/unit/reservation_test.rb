@@ -163,7 +163,6 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should 'not send any email if the expire method is called' do
-        ReservationObserver.any_instance.expects(:after_expires).never
         assert_raises @reservation.expire
       end
 

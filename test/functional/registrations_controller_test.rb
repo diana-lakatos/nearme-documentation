@@ -5,14 +5,12 @@ class RegistrationsControllerTest < ActionController::TestCase
   include Devise::TestHelpers
 
   setup do
-   @user = FactoryGirl.create(:user)
-   @request.env["devise.mapping"] = Devise.mappings[:user]
+    @user = FactoryGirl.create(:user)
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    stub_request(:get, /.*api\.mixpanel\.com.*/)
   end
 
-  should 'track sign up' do
-    @request.env['devise.mapping'] = Devise.mappings[:user]
-    #Track::User.expects(:signed_up)
-
+  should 'successfully sign up' do
     assert_difference('User.count') do
       post :create, user: { name: 'Test User', email: 'user@example.com', password: 'secret' }
     end

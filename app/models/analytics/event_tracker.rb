@@ -20,6 +20,10 @@ class Analytics::EventTracker
   include SpaceWizardEvents
   include UserEvents
 
+  def charge(user_id, total_amount_dollars)
+    @api.track_charge(user_id, total_amount_dollars)
+  end
+
   private
 
   def set(user_id, *objects)
@@ -27,11 +31,15 @@ class Analytics::EventTracker
   end
 
   def track_event(event_name, *objects)
-    @api.track(event_name, event_properties(objects).merge!(global_event_properties))
+    @api.track(event_name, serialize_event_properties(objects))
   end
 
-  def charge(user_id, total_amount_dollars)
-    @api.charge(user_id, total_amount_dollars)
+  def serialize_event_properties(objects)
+    begin
+      event_properties(objects).merge!(global_event_properties)
+    rescue
+      {}
+    end
   end
 
   def event_properties(objects)
