@@ -21,7 +21,7 @@ module LocationHelper
   end
 
   def assert_location_data(location)
-    #assert_equal 'Auckland, New Zealand', location.address
+    assert location.address.include?('Auckland') && location.address.include?('New Zealand')
     assert_equal 'Proin adipiscing nunc vehicula lacus varius dignissim.', location.description
     assert_equal 'Co-working', location.location_type.name
     assert_equal 'location@example.com', location.email
