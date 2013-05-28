@@ -1,9 +1,4 @@
 class Listing < ActiveRecord::Base
-  PRICE_PERIODS = {
-    :free => nil,
-    :day => 'day'
-  }
-
   # == Associations
   has_many :reservations,
     dependent: :destroy
@@ -137,14 +132,6 @@ class Listing < ActiveRecord::Base
 
   def prices
     [daily_price, weekly_price, monthly_price]
-  end
-
-  def price_period
-    if free?
-      PRICE_PERIODS[:free]
-    else
-      PRICE_PERIODS[:day]
-    end
   end
 
   def free?
