@@ -36,7 +36,8 @@
 //= require_tree ./lib
 //
 // Standard components
-//= require_tree ./components
+//= require_directory ./components/lib
+//= require_directory ./components
 //
 // Sections
 //= require_tree ./sections

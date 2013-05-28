@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130506044855) do
+ActiveRecord::Schema.define(:version => 20130510001643) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -101,6 +101,19 @@ ActiveRecord::Schema.define(:version => 20130506044855) do
 
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
+  create_table "guest_ratings", :force => true do |t|
+    t.integer  "reservation_id"
+    t.integer  "user_id"
+    t.float    "value"
+    t.text     "comment"
+    t.datetime "deleted_at"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "guest_ratings", ["reservation_id", "value"], :name => "index_guest_ratings_on_reservation_id_and_value"
+  add_index "guest_ratings", ["user_id", "value"], :name => "index_guest_ratings_on_user_id_and_value"
+
   create_table "industries", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -129,15 +142,18 @@ ActiveRecord::Schema.define(:version => 20130506044855) do
     t.float    "rating_average",          :default => 0.0
     t.integer  "rating_count",            :default => 0
     t.text     "availability_rules_text"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
     t.datetime "deleted_at"
     t.boolean  "confirm_reservations"
-    t.boolean  "delta",                   :default => true, :null => false
+    t.boolean  "delta",                   :default => true,  :null => false
     t.integer  "listing_type_id"
     t.integer  "daily_price_cents"
     t.integer  "weekly_price_cents"
     t.integer  "monthly_price_cents"
+    t.boolean  "hourly_reservations",     :default => false, :null => false
+    t.integer  "hourly_price_cents"
+    t.integer  "minimum_booking_minutes"
   end
 
   create_table "location_amenities", :force => true do |t|
@@ -176,7 +192,6 @@ ActiveRecord::Schema.define(:version => 20130506044855) do
     t.string   "country"
     t.string   "slug"
     t.integer  "location_type_id"
-    t.string   "name"
     t.string   "custom_page"
   end
 
@@ -211,6 +226,8 @@ ActiveRecord::Schema.define(:version => 20130506044855) do
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
     t.datetime "deleted_at"
+    t.integer  "start_minute"
+    t.integer  "end_minute"
   end
 
   create_table "reservation_seats", :force => true do |t|
@@ -320,5 +337,18 @@ ActiveRecord::Schema.define(:version => 20130506044855) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "visit_ratings", :force => true do |t|
+    t.integer  "reservation_id"
+    t.integer  "user_id"
+    t.float    "value"
+    t.text     "comment"
+    t.datetime "deleted_at"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "visit_ratings", ["reservation_id", "value"], :name => "index_visit_ratings_on_reservation_id_and_value"
+  add_index "visit_ratings", ["user_id", "value"], :name => "index_visit_ratings_on_user_id_and_value"
 
 end

@@ -14,7 +14,12 @@
 
   %h2= "#{@reservation.quantity} #{@listing.name}"
 
-  %p= selected_dates_summary(@reservation)
+  - if @listing.hourly_reservations?
+    %p
+      = hourly_summary_for_period @reservation.periods.first
+
+  - else
+    %p= selected_dates_summary(@reservation)
 
   %hr
 

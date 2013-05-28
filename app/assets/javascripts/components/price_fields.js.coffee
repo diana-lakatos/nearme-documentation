@@ -3,16 +3,22 @@
 class @PriceFields
 
   constructor: (@container) ->
-
     @enablingPriceCheckboxes = @container.find('input[data-enable-price]')
     @freeCheckbox = @container.find('input[data-free-checkbox]')
+    @inputWrapper = @container.find('.price-input-options')
 
     @bindEvents()
-
     @enablingPriceCheckboxes.trigger('change')
 
-  bindEvents: ->
+  show: ->
+    @inputWrapper.show()
+    @inputWrapper.find('input.hide-disabled:disabled').removeClass('hide-disabled').prop('disabled', false)
 
+  hide: ->
+    @inputWrapper.hide()
+    @inputWrapper.find('input:not(:disabled)').addClass('hide-disabled').prop('disabled', true)
+
+  bindEvents: ->
     @enablingPriceCheckboxes.change (event) =>
       @toggleEnablingPriceCheckbox($(event.target))
       if $(event.target).is(':checked')
@@ -28,3 +34,4 @@ class @PriceFields
 
   toggleEnablingPriceCheckbox: (element) =>
     element.siblings('input[data-price-input]').attr('disabled', !element.is(':checked'))
+

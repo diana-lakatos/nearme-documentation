@@ -1,3 +1,5 @@
+@wip
+@javascript
 Feature: As a user of the site
   In order to promote my company
   As a user
@@ -34,6 +36,7 @@ Feature: As a user of the site
      When I follow "Delete this location"
      Then Location has been deleted
 
+  @javascript
   Scenario: A user can add new listing
     Given a location exists with company: the company
       And I am on the manage locations page

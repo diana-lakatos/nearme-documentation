@@ -46,7 +46,14 @@ module ReservationsHelper
 
   def format_reservation_periods(reservation)
     reservation.periods.map do |period|
-      period.date.strftime('%e %b')
+      date = period.date.strftime('%e %b')
+      if reservation.listing.hourly_reservations?
+        start_time = minute_of_day_to_time(period.start_minute).strftime("%l:%M%P")
+        end_time = minute_of_day_to_time(period.end_minute).strftime("%l:%M%P")
+        '%s %s-%s' % [date, start_time, end_time]
+      else
+        date
+      end
     end.join(', ')
   end
 
@@ -54,6 +61,20 @@ module ReservationsHelper
     query = [location.state, location.city, location.country]
     query.reject! { |item| !item.present? || item == "Unknown" }
     query.join('%2C+')
+  end
+
+  def minute_of_day_to_time(minute)
+    hour = minute/60
+    min  = minute%60
+    Time.new(Date.today.year, Date.today.month, Date.today.day, hour, min)
+  end
+
+  def hourly_summary_for_period(period)
+    date = period.date.strftime("%B %e")
+    start_time = minute_of_day_to_time(period.start_minute).strftime("%l:%M%P")
+    end_time = minute_of_day_to_time(period.end_minute).strftime("%l:%M%P")
+
+    '%s - %s to %s (%0.2f hours)' % [date, start_time, end_time, period.hours]
   end
 
   def selected_dates_summary(reservation)

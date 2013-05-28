@@ -1,6 +1,6 @@
 # Internal display view for datepicker
-class Datepicker.View
-  asEvented.call(View.prototype)
+class Datepicker.View extends PositionedView
+  asEvented.call(@prototype)
 
   viewTemplate: '''
     <div class="datepicker-prev ico-arrow-left"></div>
@@ -35,6 +35,8 @@ class Datepicker.View
   '''
 
   defaultOptions: {
+    containerClass: 'dnm-datepicker',
+
     # Target for positioning of the popover view
     positionTarget: null,
 
@@ -51,9 +53,9 @@ class Datepicker.View
 
   constructor: (@options = {}) ->
     @options = $.extend({}, @defaultOptions, @options)
-    @positionTarget = @options.positionTarget || @options.trigger
-    @container = $('<div />').hide()
-    @container.addClass(@options.containerClass || 'dnm-datepicker')
+    @options.positionTarget ||= @options.trigger
+    super(@options)
+
     @container.html(@viewTemplate)
     @monthHeader = @container.find('.datepicker-month')
     @yearHeader  = @container.find('.datepicker-year')
@@ -69,82 +71,13 @@ class Datepicker.View
   setModel: (model) ->
     @model = model
 
-  # Render the the datepicker view by appending it to a container
-  appendTo: (selector) ->
-    $(selector).append(@container)
-
   setText: (text) ->
     @container.find('.datepicker-text').html(text)
 
-  toggle: ->
-    if @container.is(':visible')
-      @hide()
-    else
-      @show()
-
   show: ->
-    # Reset rendering position
-    @renderPosition = null
-
     # Refresh the view on the first display
-    if !@hasRendered
-      @refresh()
-
-    @container.show()
-    @reposition()
-
-  hide: ->
-    @container.hide()
-
-  reposition: ->
-    return unless @positionTarget
-
-    # Width/height of the datepicker container
-    width = @container.width()
-    height = @container.height()
-
-    # Offset of the position target reletave to the page
-    tOffset = $(@positionTarget).offset()
-
-    # Width/height of the position target
-    tWidth = $(@positionTarget).outerWidth()
-    tHeight = $(@positionTarget).outerHeight()
-
-    # Window height and scroll position
-    wHeight = $(window).height()
-    wWidth  = $(window).width()
-    sTop    = $(window).scrollTop()
-
-    # Calculate available viewport height above/below the target
-    heightAbove = tOffset.top - sTop
-    heightBelow = wHeight + sTop - tOffset.top
-
-    # Determine whether to place the datepicker above or below the target element.
-    # If there is enough window height above element to render the container, then we put it
-    # above. If there is not enough (i.e. it would be partially hidden if rendered above), then
-    # we render it below the target.
-    if @renderPosition != 'below' && (@renderPosition == 'above' || heightAbove < height)
-      top = tOffset.top + tHeight + @options.positionPadding
-      @renderPosition = 'above'
-    else
-      # Render above element
-      top = tOffset.top - height - @options.positionPadding
-      @renderPosition = 'below'
-
-    # Left position is based off the container width and the position target width/position
-    left = tOffset.left + parseInt(tWidth/2, 10) - parseInt(width/2, 10)
-
-    # Don't let it render outside of the window viewport on the right side.
-    # Also force minimum padding, and shift the position left until it fits properly.
-    rightPos = left + width
-    if rightPos > (wWidth - @options.windowRightPadding)
-      left -= (rightPos - wWidth + @options.windowRightPadding)
-
-    # Update the position of the datepicker container
-    @container.css(
-      'top': "#{top}px",
-      'left': "#{left}px"
-    )
+    @refresh() if !@hasRendered
+    super
 
   dateAdded: (date) ->
     @updateDate(date)
@@ -171,8 +104,6 @@ class Datepicker.View
     # Clicking previous/next
     @prev.on 'click', (event) => @trigger('prevClicked')
     @next.on 'click', (event) => @trigger('nextClicked')
-
-    @container.on 'click', (event) => event.stopPropagation()
 
   # Render all state again
   refresh: ->

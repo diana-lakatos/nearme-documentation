@@ -19,6 +19,7 @@ class Reservation < ActiveRecord::Base
 
   has_many :periods,
            :class_name => "ReservationPeriod",
+           :inverse_of => :reservation,
            :dependent => :destroy
 
   has_many :charges, :as => :reference, :dependent => :nullify
@@ -26,9 +27,9 @@ class Reservation < ActiveRecord::Base
   validates :periods, :length => { :minimum => 1 }
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
   validate :validate_all_dates_available, on: :create
-  validate :validate_contiguous_blocks, on: :create
+  validate :validate_booking_selection, on: :create
 
-  before_validation :set_total_cost, on: :create
+  before_create :set_total_cost
   before_validation :set_currency, on: :create
   before_validation :set_default_payment_status, on: :create
   after_create  :auto_confirm_reservation
@@ -119,8 +120,8 @@ class Reservation < ActiveRecord::Base
     periods.any? { |p| p.date <= Date.today }
   end
 
-  def add_period(date)
-    periods.build :date => date
+  def add_period(date, start_minute = nil, end_minute = nil)
+    periods.build :date => date, :start_minute => start_minute, :end_minute => end_minute
   end
 
   def booked_on?(date)
@@ -166,7 +167,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def currency
-    super.presence || listing.location.currency
+    super.presence || listing.currency
   end
 
   def free?
@@ -180,13 +181,21 @@ class Reservation < ActiveRecord::Base
   def pending?
     payment_status == PAYMENT_STATUSES[:pending]
   end
-  
+
   def should_expire!
     expire! if unconfirmed?
   end
-  
+
   def expiry_time
     created_at + 24.hours
+  end
+
+  def price_calculator
+    @price_calculator ||= if listing.hourly_reservations?
+      HourlyPriceCalculator.new(self)
+    else
+      PriceCalculator.new(self)
+    end
   end
 
   private
@@ -202,7 +211,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def calculate_total_cost
-      PriceCalculator.new(self).price.cents
+      price_calculator.price.try(:cents)
     end
 
     def set_total_cost
@@ -210,13 +219,13 @@ class Reservation < ActiveRecord::Base
     end
 
     def set_currency
-      self.currency = self.listing.location.currency
+      self.currency = listing.currency
     end
 
     def auto_confirm_reservation
       confirm! unless listing.confirm_reservations?
     end
-  
+
     def create_scheduled_expiry_task
       Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :should_expire!, nil), run_at: expiry_time
     end
@@ -243,38 +252,15 @@ class Reservation < ActiveRecord::Base
     end
 
     def validate_all_dates_available
-      invalid_dates = []
-      periods.each do |period|
-        unless listing.available_on?(period.date, quantity)
-          invalid_dates << period.date
-        end
-      end
-
+      invalid_dates = periods.reject(&:bookable?)
       if invalid_dates.any?
-        date_format = '%B %-d %Y'
-        errors.add(:base, "Unfortunately the following dates are no longer available: #{invalid_dates.map { |d| d.strftime(date_format) }.join(', ')}")
+        errors.add(:base, "Unfortunately the following bookings are no longer available: #{invalid_dates.map(&:as_formatted_string).join(', ')}")
       end
     end
 
-    def validate_contiguous_blocks
-      invalid_blocks = []
-      block_finder = ContiguousBlockFinder.new(self)
-      block_finder.contiguous_blocks.each do |block|
-        if block.length < listing.minimum_booking_days
-          invalid_blocks << block
-        end
-      end
-
-      if invalid_blocks.any?
-        date_format = '%B %-d %Y'
-        invalid_blocks_formatted = invalid_blocks.map { |block|
-          if block.length == 1
-            block[0].strftime(date_format)
-          else
-            "#{block[0].strftime(date_format)} - #{block.last.strftime(date_format)}"
-          end
-        }
-        errors.add(:base, "Unfortunately a minimum of #{listing.minimum_booking_days} consecutive bookable days are required. The following dates don't meet this requirement: #{invalid_blocks_formatted.join(', ')}")
+    def validate_booking_selection
+      unless price_calculator.valid?
+        errors.add(:base, "Booking selection does not meet requirements. A minimum of #{listing.minimum_booking_days} consecutive bookable days are required.")
       end
     end
 

@@ -156,10 +156,15 @@ class ReservationTest < ActiveSupport::TestCase
   end
 
   context "with reservation pricing" do
-    context "and a listing with some availability" do
+    context "daily priced listing" do
       setup do
         @listing = FactoryGirl.create(:listing, quantity: 10)
         @user    = FactoryGirl.create(:user)
+        @reservation = @listing.reservations.build(:user => @user)
+      end
+
+      should "have a daily pricing_calculator" do
+        assert @reservation.price_calculator.is_a?(Reservation::PriceCalculator)
       end
 
       should "set total cost after creating a new reservation" do
@@ -198,7 +203,25 @@ class ReservationTest < ActiveSupport::TestCase
           @listing.reserve!(@user, dates, quantity)
         end
       end
+    end
 
+    context "hourly priced listing" do
+      setup do
+        @listing = FactoryGirl.create(:listing, quantity: 10, hourly_reservations: true, hourly_price_cents: 100)
+        @user = FactoryGirl.create(:user)
+        @reservation = @listing.reservations.build(
+          :user => @user
+        )
+      end
+
+      should "have a hourly pricing calculator" do
+        assert @reservation.price_calculator.is_a?(Reservation::HourlyPriceCalculator)
+      end
+
+      should "set total cost based on HourlyPriceCalculator" do
+        @reservation.periods.build :date => Date.today.advance(:weeks => 1).beginning_of_week, :start_minute => 9*60, :end_minute => 12*60
+        assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents, @reservation.total_amount_cents
+      end
     end
   end
 
@@ -268,9 +291,9 @@ class ReservationTest < ActiveSupport::TestCase
         reservation = @listing.reservations.build(:user => @user, :quantity => 2)
         reservation.add_period(@monday)
         reservation.save!
-        
+
         @reservation.add_period(@monday)
-        assert !@reservation.valid? 
+        assert !@reservation.valid?
       end
     end
 
