@@ -3,9 +3,10 @@
 class @PriceFields
 
   constructor: (@container) ->
-    @enablingPriceCheckboxes = @container.find('input[data-enable-price]')
-    @freeCheckbox = @container.find('input[data-free-checkbox]')
+    @enablingPriceCheckboxes = @container.find('input[data-behavior*=enable-price]')
+    @freeCheckbox = @container.find('input[data-behavior*=toggle-free]')
     @inputWrapper = @container.find('.price-input-options')
+    @priceFields  = @container.find('input[data-type=price-input]')
 
     @bindEvents()
     @enablingPriceCheckboxes.trigger('change')
@@ -20,18 +21,18 @@ class @PriceFields
 
   bindEvents: ->
     @enablingPriceCheckboxes.change (event) =>
-      @toggleEnablingPriceCheckbox($(event.target))
-      if $(event.target).is(':checked')
-        @freeCheckbox.prop('checked', false)
-      else
-        if !@enablingPriceCheckboxes.is(':checked')
-          @freeCheckbox.prop('checked', true)
+      checkbox = $(event.target)
+      checkbox.siblings('input[data-type*=price-input]').attr('disabled', !checkbox.is(':checked'))
+
+      # Free enabled if all prices are disabled
+      @freeCheckbox.prop('checked', !@enablingPriceCheckboxes.is(':checked'))
 
     @freeCheckbox.click (event) =>
       @enablingPriceCheckboxes.prop('checked', !@freeCheckbox.is(':checked'))
       @enablingPriceCheckboxes.trigger('change')
 
+    @priceFields.on 'change', (event) =>
+      price = $(event.target)
+      price.val(price.val().replace(/[^0-9\.]/, ""))
 
-  toggleEnablingPriceCheckbox: (element) =>
-    element.siblings('input[data-price-input]').attr('disabled', !element.is(':checked'))
 
