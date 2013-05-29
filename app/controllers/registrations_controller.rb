@@ -9,8 +9,8 @@ class RegistrationsController < Devise::RegistrationsController
   before_filter :find_supported_providers, :only => [:edit, :update]
   before_filter :set_return_to, :only => [:new, :create]
   skip_before_filter :require_no_authentication, :only => [:show] , :if => lambda {|c| request.xhr? }
-  after_filter :render_or_redirect_after_create, :only => [:create]
   after_filter :rename_flash_messages, :only => [:new, :create, :edit]
+  after_filter :render_or_redirect_after_create, :only => [:create]
 
   layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
 
@@ -112,7 +112,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   def redirect_to_sign_in
       self.response_body = nil
-      flash[:error] = "Email is already in use, please log in."
       redirect_to new_user_session_url(:email => params[:user][:email])
   end
 

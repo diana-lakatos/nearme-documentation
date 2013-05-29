@@ -25,10 +25,6 @@ class SessionsController < Devise::SessionsController
     session[:user_return_to] = params[:return_to] if params[:return_to].present?
   end
 
-  def set_email
-    @email ||= params[:email]
-  end
-  
   def render_view_with_errors
     flash[:alert] = nil
     self.response_body = nil
