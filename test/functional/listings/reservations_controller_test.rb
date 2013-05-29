@@ -14,13 +14,11 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     end
 
     should "track booking modal open" do
-      #Track::Book.expects(:opened_booking_modal)
       xhr :post, :review, booking_params_for(@listing)
       assert_response 200
     end
 
     should "track booking request" do
-      #Track::Book.expects(:requested_a_booking)
       xhr :post, :create, booking_params_for(@listing)
       assert_response 200
     end

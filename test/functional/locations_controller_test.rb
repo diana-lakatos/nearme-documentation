@@ -19,7 +19,6 @@ include Devise::TestHelpers
   end
 
   test "should track location view" do
-    #Track::Search.expects(:viewed_a_location)
     get :show, id: @location.id
   end
 
