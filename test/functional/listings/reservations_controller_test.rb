@@ -10,6 +10,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       @listing = FactoryGirl.create(:listing_in_san_francisco)
       @user = FactoryGirl.create(:user)
       sign_in @user
+      @tracker = Analytics::EventTracker.any_instance
       stub_request(:get, /.*api\.mixpanel\.com.*/)
     end
 
@@ -20,6 +21,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
     should "track booking request" do
       xhr :post, :create, booking_params_for(@listing)
+      @tracker.expects(:requested_a_booking).with(assigns(:reservation), assigns(:location))
       assert_response 200
     end
 
