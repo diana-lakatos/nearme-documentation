@@ -7,7 +7,7 @@ namespace :simplify do
       LocationType.create(:name => name) unless LocationType.find_by_name(name)
     end
     business_ids = LocationType.where(['name IN (?)', ["Other", "Shared Office", "Company Office", "Goverment Space", "Business Center"]]).pluck(:id)
-    coworking_ids = LocationType.where(['name IN (?)', ["Coworking"]]).pluck(:id)
+    coworking_ids = LocationType.where(['name IN (?)', ["Coworking Space"]]).pluck(:id)
     public_ids = LocationType.where(['name IN (?)', ["Cafe"]]).pluck(:id)
     business_location_type = LocationType.find_by_name('Business')
     coworking_location_type = LocationType.find_by_name('Co-working')
