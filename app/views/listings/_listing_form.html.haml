@@ -59,7 +59,7 @@
   %div{:class => "control-group #{"error" if f.object.errors.include?(:confirm_reservations).present?}"}
     = f.label :confirm_reservations, 'Confirm guest bookings', :class => 'control-label'
     .controls
-      .switch{'data-on-label' => "ON", 'data-off-label' => "OFF"}
+      .switch{'data-on-label' => "", 'data-off-label' => ""}
         = f.check_box :confirm_reservations
 
 - if only_inputs.empty? || only_inputs.include?(:photos)

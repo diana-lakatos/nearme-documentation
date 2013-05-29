@@ -19,21 +19,20 @@
 .checkbox {
 
   .checkbox-icon-outer {
-    border: 2px solid $gray;
     border-radius: 4px;
-    height: 14px;
-    width: 14px;
+    height: 22px;
+    width: 22px;
     left: 0;
     position: absolute;
-    top: 3px;
-    background: $checkbox-radio-neutral;
+    top: 0px;
+    background: $gray3;
     @include transition(all $checkbox-radio-transition ease-in-out);
 
     .checkbox-icon-inner {
       @extend .ico-check;
       font-size: 18px;
       position: absolute;
-      top: -9px;
+      top: -4px;
       left: 2px;
       @include opacity(0);
       @include transition(all $checkbox-radio-transition ease-in-out);
@@ -43,8 +42,8 @@
   &.checked {
 
     .checkbox-icon-outer {
-      border-color: $checkbox-radio-color;
-      color: $checkbox-radio-color;
+      color: $white;
+      background: $blue;
       @include transition(all $checkbox-radio-transition ease-in-out);
 
       .checkbox-icon-inner {
@@ -66,19 +65,19 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: $gray;
+    background: $gray3;
     @include transition(all $checkbox-radio-transition ease-in-out);
 
     .radio-icon-inner {
-      width: 6px;
-      height: 6px;
+      width: 4px;
+      height: 4px;
       position: absolute;
-      left: 3px;
+      left: 50%;
+      margin-left: -2px;
       display: block;
       border-radius: 50%;
-      top: 3px;
-      border: 4px solid $checkbox-radio-neutral;
-      background: $checkbox-radio-neutral;
+      top: 50%;
+      margin-top: -2px;
       @include transition(all $checkbox-radio-transition ease-in-out);
     }
   }
@@ -86,12 +85,11 @@
   &.checked {
 
     .radio-icon-outer {
-      background: $checkbox-radio-color;
+      background: $blue;
       @include transition(all $checkbox-radio-transition ease-in-out);
 
       .radio-icon-inner {
-        border: 3px solid $checkbox-radio-neutral;
-        background: $checkbox-radio-color;
+        background: $white;
         @include transition(all $checkbox-radio-transition ease-in-out);
       }
     }
