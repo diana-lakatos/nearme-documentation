@@ -2,7 +2,12 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   layout "application"
-  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+
+  # Much easier to debug ActiveRecord::RecordNotFound issues in dev
+  # without this.
+  unless Rails.env.development?
+    rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  end
 
   before_filter :set_tabs
 
@@ -66,6 +71,10 @@ class ApplicationController < ActionController::Base
         response.status = 200
         render :json => { "redirect" => redirection_url }
         self.content_type = 'application/json'
+  end
+
+  def rename_flash_messages
+    flash[:success] = flash[:notice] if flash[:notice]
   end
 
 end

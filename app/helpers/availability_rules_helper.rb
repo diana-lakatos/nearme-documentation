@@ -1,4 +1,9 @@
 module AvailabilityRulesHelper
+
+  def availability_summary_for_rules(rules)
+    AvailabilityRule::Summary.new(rules)
+  end
+
   def availability_choices(object)
     # Whether or not the "Custom" rules option is checked. There is a case where this is forced off (defer)
     custom_checked = object.availability_template_id.blank?
@@ -38,7 +43,7 @@ module AvailabilityRulesHelper
     (0..23).each do |hour|
       [0, 15, 45].each do |minute|
         hour_for_display = hour % 12 == 0 ? 12 : hour % 12
-        options << ["#{hour_for_display}:#{'%0.2d' % minute} #{hour < 12 ? 'AM' : 'PM'}", "#{hour}:#{minute}"]
+        options << ["#{hour_for_display}:#{'%0.2d' % minute} #{hour < 12 ? 'AM' : 'PM'}", "#{hour}:#{'%0.2d' % minute}"]
       end
     end
     options

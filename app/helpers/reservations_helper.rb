@@ -13,7 +13,7 @@ module ReservationsHelper
   end
 
   def reservation_needs_payment_details?
-    @reservation.total_amount > 0 && %w(USD CAD).include?(@reservation.currency)
+    !@reservation.total_amount.zero? && %w(USD CAD).include?(@reservation.currency)
   end
 
   def reservation_total_price(reservation)
@@ -46,7 +46,14 @@ module ReservationsHelper
 
   def format_reservation_periods(reservation)
     reservation.periods.map do |period|
-      period.date.strftime('%e %b')
+      date = period.date.strftime('%e %b')
+      if reservation.listing.hourly_reservations?
+        start_time = minute_of_day_to_time(period.start_minute).strftime("%l:%M%P")
+        end_time = minute_of_day_to_time(period.end_minute).strftime("%l:%M%P")
+        '%s %s-%s' % [date, start_time, end_time]
+      else
+        date
+      end
     end.join(', ')
   end
 
@@ -54,6 +61,51 @@ module ReservationsHelper
     query = [location.state, location.city, location.country]
     query.reject! { |item| !item.present? || item == "Unknown" }
     query.join('%2C+')
+  end
+
+  def minute_of_day_to_time(minute)
+    hour = minute/60
+    min  = minute%60
+    Time.new(Date.today.year, Date.today.month, Date.today.day, hour, min)
+  end
+
+  def hourly_summary_for_period(period)
+    date = period.date.strftime("%B %e")
+    start_time = minute_of_day_to_time(period.start_minute).strftime("%l:%M%P")
+    end_time = minute_of_day_to_time(period.end_minute).strftime("%l:%M%P")
+
+    '%s - %s to %s (%0.2f hours)' % [date, start_time, end_time, period.hours]
+  end
+
+  def selected_dates_summary(reservation)
+    html_string_array = dates_in_groups_for_reservation(reservation).map do |block|
+      if block.size == 1
+        period_to_string(block.first)
+      else
+        period_to_string(block.first) + ' - ' + period_to_string(block.last)
+      end
+    end
+    (html_string_array * "<br />").html_safe
+  end
+
+  def period_to_string(date)
+    date.strftime('%A, %B %e')
+  end
+
+  # Group up each of the dates into groups of real contiguous dates.
+  #
+  # i.e.
+  # [[20 Nov 2012, 21 Nov 2012, 22 Nov 2012], [5 Dec 2012], [7 Dec 2012, 8 Dec 2012]]
+  def dates_in_groups_for_reservation(reservation)
+    reservation.periods.map(&:date).sort.inject([]) { |groups, datetime| 
+      date = datetime.to_date
+      if groups.last && ((groups.last.last+1.day) == date)
+        groups.last << date
+      else
+        groups << [date]
+      end
+      groups 
+    }
   end
 
 end

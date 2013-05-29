@@ -1,32 +1,32 @@
 require 'test_helper'
 
 class Listing::SearchTest < ActiveSupport::TestCase
-  setup do
-    @wifi     = FactoryGirl.create(:amenity, name: "Wi-Fi")
-    @listing_in_auckland = FactoryGirl.create(:listing_in_auckland)
-    @listing_in_san_fran = FactoryGirl.create(:listing_in_san_francisco)
-    @listing_in_cleveland = FactoryGirl.create(:listing_in_cleveland)
-    @listings = [ @listing_in_auckland, @listing_in_san_fran, @listing_in_cleveland ]
+  context ".find_by_search_params" do
+    context 'with no matched location' do
+      setup do
+        @params = mock(:midpoint => nil, :radius => nil)
+      end
 
-    @listings.last.location.amenities = [ @wifi ]
-    @search_area_in_san_fran = Listing::Search::Area.new(Coordinate.new(-36.858675, 174.777303), 500.0)
-    Listing.stubs(:search).returns(@listings)
-  end
-
-
-  describe ".find_by_search_params" do
-    context "when not a keyword search" do
-      should "search for only the scope" do
-        params = stub(keyword_search?: false, query: 'Address', to_scope: { a: 'b' })
-        Listing.expects(:search).with({ a: 'b' }).returns(@listings)
-        Listing.find_by_search_params(params)
+      should "return empty array" do
+        assert_equal [], Listing.find_by_search_params(@params)
       end
     end
-    context "when a keyword search" do
-      should "searches for the scope with the query" do
-        params = stub(keyword_search?: true, query: 'hooray', to_scope: { a: 'b' })
-        Listing.expects(:search).with('hooray', { a: 'b' }).returns(@listings)
-        Listing.find_by_search_params(params)
+
+    context 'should search by a midpoint' do
+      setup do
+        @midpoint = [1,2]
+        @radius = 5.0
+        @params = mock(:midpoint => @midpoint, :radius => @radius, :available_dates => [])
+      end
+
+      should "find listings by searching for locations" do
+        listing1 = FactoryGirl.create(:listing)
+        listing2 = FactoryGirl.create(:listing)
+
+        Location.expects(:near).with(@midpoint, @radius).returns([listing1.location])
+
+        results = Listing.find_by_search_params(@params)
+        assert_equal [listing1], results
       end
     end
   end

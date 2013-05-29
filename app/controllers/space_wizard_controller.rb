@@ -4,10 +4,9 @@ class SpaceWizardController < ApplicationController
   before_filter :find_company, :except => [:new]
   before_filter :find_location, :except => [:new]
   before_filter :find_listing, :except => [:new]
-  before_filter :convert_price_params, only: [:submit_listing]
 
   def new
-    flash.keep(:notice)
+    flash.keep(:warning)
     if current_user
       redirect_to space_wizard_list_url
     else
@@ -18,7 +17,9 @@ class SpaceWizardController < ApplicationController
   def list
     @company ||= @user.companies.build
     @location ||= @company.locations.build
-    @listing ||= @location.listings.build
+    @listing ||= @location.listings.build(
+      :daily_price => 50.00
+    )
   end
 
   def submit_listing
@@ -31,7 +32,8 @@ class SpaceWizardController < ApplicationController
         listing.photos << current_user.photos.find(params[:uploaded_photos])
         listing.save!
       end
-      redirect_to manage_locations_path, notice: 'Your space was listed! You can provide more details about your location and listing from this page.'
+      flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
+      redirect_to manage_locations_path
     else
       render :list
     end
@@ -85,20 +87,6 @@ class SpaceWizardController < ApplicationController
   def find_listing
     if @location && @location.listings.any?
       @listing = @location.listings.first
-    end
-  end
-
-  def convert_price_params
-    # method to_f removes all special characters, like hyphen. However we do not want to convert nil to 0, that's why modifier.
-    if params_hash_complete?
-      prm = params[:company][:locations_attributes]["0"][:listings_attributes]["0"]
-      {:daily_price => :enable_daily, :weekly_price => :enable_weekly, :monthly_price => :enable_monthly}.each do |period_price, enable_period|
-        if prm[period_price] && !prm[period_price].to_f.zero? && prm[enable_period] == "1"
-          prm[period_price] = prm[period_price].to_f if prm[period_price]
-        else
-          prm[period_price] = nil
-        end
-      end
     end
   end
 

@@ -71,6 +71,11 @@
         text-transform: uppercase;
         letter-spacing: 1px;
       }
+
+      &.label-hourly-price {
+        // Only one price field, center it.
+        margin-left: 33%;
+      }
     }
 
     .book {
@@ -90,6 +95,7 @@
       height: 0 !Important;
       background-color: $gray6;
       border-bottom: 2px solid $gray6;
+      clear: both;
     }
 
     .calendar-wrapper {
@@ -103,7 +109,7 @@
       width: 48%;
       float: left;
 
-      &.date-end {
+      &.date-end, &.time-picker {
         float: right;
         margin-right:0;
       }

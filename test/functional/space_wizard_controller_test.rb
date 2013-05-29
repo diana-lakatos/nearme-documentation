@@ -24,22 +24,6 @@ class SpaceWizardControllerTest < ActionController::TestCase
       assert_equal 24900, @listing.monthly_price_cents
     end
 
-    should "handle hyphen and other special chars" do
-      assert_difference('Listing.count', 1) do
-        post :submit_listing, get_params("10.00-32.00", "10-39", "99!@\#$%^&*()-+=\"'50")
-      end
-      @listing = Listing.last
-      assert_equal 1000, @listing.daily_price_cents
-      assert_equal 1000, @listing.weekly_price_cents
-      assert_equal 9900, @listing.monthly_price_cents
-    end
-
-    should "not raise exception if no price is provided" do
-      assert_difference('Listing.count', 1) do
-        post :submit_listing, remove_price_from_params(get_params)
-      end
-    end
-
     should "not raise exception if hash is incomplete" do
       assert_no_difference('Listing.count') do
         post :submit_listing, { "company"=> { "name"=>"International Secret Intelligence Service" } }  
@@ -71,11 +55,8 @@ class SpaceWizardControllerTest < ActionController::TestCase
                        "listing_type_id"=>"1", 
                        "quantity"=>"1", 
                        "daily_price"=>daily_price, 
-                       "enable_daily" => daily_price.nil? ? nil : "1",
                        "weekly_price"=>weekly_price, 
-                       "enable_weekly" => weekly_price.nil? ? nil : "1",
                        "monthly_price"=> monthly_price, 
-                       "enable_monthly" => monthly_price.nil? ? nil : "1",
                        "free"=>"0", 
                        "confirm_reservations"=>"0"}
                     }, 
@@ -85,9 +66,5 @@ class SpaceWizardControllerTest < ActionController::TestCase
         }
   end
 
-  def remove_price_from_params(params)
-    params["company"]["locations_attributes"]["0"]["listings_attributes"]["0"].delete(["daily_price", "weekly_price", "monthly_price"])
-    params
-  end
 end
 

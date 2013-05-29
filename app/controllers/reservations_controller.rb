@@ -6,7 +6,7 @@ class ReservationsController < ApplicationController
 
   def update
     @reservation.fire_events(current_event)
-    flash[:notice] = "You have #{@reservation.state_name} the reservation"
+    flash[allowed_events[current_event]] = "You have #{@reservation.state_name} the reservation"
     redirect_to redirection_path
   end
 
@@ -21,14 +21,14 @@ class ReservationsController < ApplicationController
   end
 
   def validate_event
-    unless allowed_events.include? current_event
+    unless allowed_events.key? current_event
       flash[:error] = "Not a valid reservation operation"
       redirect_to redirection_path
     end
   end
 
   def allowed_events
-    [:user_cancel]
+    {:user_cancel => :deleted}
   end
 
   def current_event

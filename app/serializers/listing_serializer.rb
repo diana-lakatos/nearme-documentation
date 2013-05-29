@@ -1,4 +1,8 @@
 class ListingSerializer < ApplicationSerializer
+  PRICE_PERIODS = {
+    :free => nil,
+    :day => 'day'
+  }
 
   attributes :id, :name, :description, :company_name, :company_description,
              :address, :price, :quantity, :rating
@@ -34,7 +38,7 @@ class ListingSerializer < ApplicationSerializer
 
     {
       amount:        object.daily_price.try(:to_f) || 0.0,
-      period:        object.price_period,
+      period:        price_period,
       label:         label,
       currency_code: object.daily_price.try(:currency).try(:iso_code) || 'USD'
     }
@@ -46,6 +50,16 @@ class ListingSerializer < ApplicationSerializer
       average: object.rating_average,
       count:   object.rating_count
     }
+  end
+
+  private
+
+  def price_period
+    if object.free?
+      PRICE_PERIODS[:free]
+    else
+      PRICE_PERIODS[:day]
+    end
   end
 
 end

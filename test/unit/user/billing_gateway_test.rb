@@ -3,7 +3,7 @@ require 'test_helper'
 class User::BillingGatewayTest < ActiveSupport::TestCase
   setup do
     @user = FactoryGirl.create(:user)
-    @reservation = FactoryGirl.create(:reservation)
+    @reservation = FactoryGirl.create(:reservation_with_valid_period)
     @billing_gateway = User::BillingGateway.new(@user)
   end
 
@@ -108,6 +108,20 @@ class User::BillingGatewayTest < ActiveSupport::TestCase
       should "return an instance of BillingGateway for that user" do
         gateway = @user.billing_gateway
         assert gateway.is_a?(User::BillingGateway)
+      end
+    end
+  end
+
+  context 'CardDetails' do
+    context '#to_stripe_params' do
+      should "return cvc as a string" do
+        card_details = User::BillingGateway::CardDetails.new(
+          number: "1444444444444444",
+          expiry_string: '12 / 18',
+          cvc: '032'
+        )
+
+        assert_equal '032', card_details.to_stripe_params[:cvc]
       end
     end
   end

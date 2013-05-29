@@ -30,6 +30,9 @@ class @Modal
       @load(target.attr("href"), modalClass)
       false
 
+    $('.modal-content form').live 'ajax:before', =>
+      @showLoading()
+
     $('.modal-content form').live 'ajax:success', (event, data) =>
       Modal.showContent(data)
 
@@ -64,7 +67,7 @@ class @Modal
     @overlay = $('.modal-overlay')
 
     # Bind to any element with "close" class to trigger close on the modal
-    @container.delegate ".close, .close-modal, .modal-close", 'click', (e) =>
+    @container.delegate ".close-modal, .modal-close", 'click', (e) =>
       e.preventDefault()
       @hide()
 
