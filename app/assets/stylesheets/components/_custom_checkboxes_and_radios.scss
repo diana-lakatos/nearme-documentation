@@ -128,7 +128,17 @@
     span.customSelect { 
 
       @include form-field;
+      padding-right: 40px;
       font-size: 18px;
+
+      i {
+        @extend .ico-chevron-down;
+        position: absolute;
+        right: 8px;
+        top: 10px;
+        font-size: 26px;
+        color: $gray5;
+      }
 
       &.disabled{
         @include opacity(0.5);
