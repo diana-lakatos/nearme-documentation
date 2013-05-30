@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
 
+  before_filter :require_ssl
+
   protect_from_forgery
   layout "application"
 

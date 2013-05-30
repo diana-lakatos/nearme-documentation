@@ -54,5 +54,5 @@ Then /^a new account is not created$/ do
 end
 
 Then /^a user is taken into sign in modal without page reload$/ do
-  page.first('.alert p').text.should match("please log in.")
+  page.first('.modal-content').text.should match("Log in")
 end
