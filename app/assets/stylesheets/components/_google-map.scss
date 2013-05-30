@@ -21,14 +21,14 @@
   }
 
   .google-map-popover {
-    background: $gray3; //#e6e7e8;
-    border: 1px solid #858980;
-    @include border-radius(5px);
+    background: $gray220;
+    border: 1px solid $gray160;
+    @include border-radius($border-radius-mobile);
     @include background-clip(border-box);
-    // padding: 6px;
-    color: #58595b;
+    color: $gray80;
     
     @media (max-height: 500px) {
+      
       .google-map-popover-content {
         max-height: 130px;
         overflow-y: auto;
@@ -36,15 +36,14 @@
     }
     
     h4 {
-      padding: 6px;
       display: block;
-      background: $gray6;
-      color: $gray2;
+      overflow: hidden;
+      padding: 6px;
+      background: $gray120;
+      color: $gray230;
       text-overflow: ellipsis;
       white-space: nowrap;
-      overflow: hidden;
       @include border-top-radius(3px);
-
     }
     
     .close {
@@ -54,7 +53,8 @@
       font-size: 75%;
     }
 
-    em.arrow, em.arrow-border {
+    em.arrow,
+    em.arrow-border {
       position: absolute;
       top: 100%;
       left: 50%;
@@ -62,21 +62,22 @@
 
     em.arrow {
       margin-left: -10px; // NB: Not -9px, as the map markers are not exactly symmetrical so it appears off-center
-      @include css-arrow($width: 9px, $direction: down, $color: $gray3);
+      @include css-arrow($width: 9px, $direction: down, $color: $gray220);
     }
 
     em.arrow-border {
       margin-left: -11px; // NB: Not -11px, as the map markers are not exactly symmetrical so it appears off-center
-      @include css-arrow($width: 10px, $direction: down, $color: #858980);
+      @include css-arrow($width: 10px, $direction: down, $color: $gray120);
     }
 
     #address-popover {
+      
       a {
         padding-left: 4px;
-        color: $gray5;
+        color: $gray160;
 
         &:hover {
-          color: $gray7;
+          color: $gray80;
         }
       }
     }
@@ -84,11 +85,11 @@
 }
 
 .listing-sibling {
-  border-bottom: 1px solid $gray5;
+  border-bottom: 1px solid $gray160;
 
   &:last-child {
     border: none;
-    @include border-bottom-radius(5px);
+    @include border-bottom-radius($border-radius-mobile);
   }
 
   .popover-image-container {
@@ -108,8 +109,8 @@
 
   .popover-info-container {
     float: right;
-    width: 191px;
     margin-right: 3px;
+    width: 191px;
     background: transparent;
 
     h4 {
@@ -118,19 +119,19 @@
 
       a {
         display: block;
-        text-overflow: ellipsis;
+        overflow: hidden;
         margin-left: 10px;
         max-width: 172px;
+        text-overflow: ellipsis;
         white-space: nowrap;
-        overflow: hidden;
       }  
     }
 
     span.label {
       float: right;
       margin: 5px 0 0 1px;
-      font-size: %80;
       padding: 2px 3px;
+      font-size: %80;
       letter-spacing: -1px;
     }  
   }

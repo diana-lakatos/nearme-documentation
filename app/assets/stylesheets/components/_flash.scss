@@ -12,11 +12,11 @@
   @include opacity(.8);
 
   p {
+    margin: 0px;
+    padding: 0px 49px 0px 0px;
     color: white;
     font-size: 24px;
     line-height: 60px;
-    margin: 0px;
-    padding: 0px 49px 0px 0px;
 
     span.left-icon {
       margin-right: 15px;
@@ -31,9 +31,9 @@
     position: absolute;
     top:  0;
     right: 20px;
+    color: white;
     font-size: 24px;
     line-height: 60px;
-    color: white;
     @include opacity(.6);
 
     &:hover {

@@ -51,21 +51,21 @@ section.locations-holder {
   }
 
   .edit-link{
-    color: $gray8;
+    color: $gray60;
     display: block;
 
     &:hover{
-     color: $gray7;
+     color: $gray80;
 
     }
   }
 
   .ico-edit,
   .ico-open-link {
-    color: $gray5;
+    color: $gray160;
 
     &:hover {
-      color: $gray7;
+      color: $gray80;
     }
   }
 
@@ -129,7 +129,7 @@ section.locations-holder {
       position: absolute;
       top: 13px;
       left: 10px;
-      color: $gray5;
+      color: $gray160;
     }
 
     div.map {
@@ -149,10 +149,10 @@ section.locations-holder {
     display: block;
     padding-top: 10px;
     font-size: 80%;
-    color: $gray5;
+    color: $gray160;
 
     &:hover {
-      color: $gray7;
+      color: $gray80;
     }
   }
 
@@ -177,7 +177,7 @@ section.locations-holder {
       height: 24px;
       font-size: 24px;
       margin-bottom: 0;
-      color: $gray8;
+      color: $gray60;
 
       span {
         white-space: nowrap;
@@ -220,7 +220,7 @@ section.locations-holder {
 
   .photo-item{
 
-    border-bottom: 1px dashed $gray4;
+    border-bottom: 1px dashed $gray210;
     padding-bottom: 10px;
 
     input{
@@ -274,7 +274,7 @@ section.listings {
 
     header.listing.empty{
       text-align: center;
-      color: $gray6;
+      color: $gray120;
     }
 
     @include dashboard-acc-group;
@@ -283,8 +283,8 @@ section.listings {
       margin-bottom:0;
       padding-bottom: 0;
       border-radius: 0;
-      border-left: 4px solid $gray4;
-      border-bottom: 1px solid $gray4;
+      border-left: 4px solid $gray210;
+      border-bottom: 1px solid $gray210;
 
       header {
         height: 52px;

@@ -13,10 +13,10 @@ section.locations {
     .ico-open-link {
       font-size: 14px;
       line-height: 18px;
-      color: $gray5;
+      color: $gray160;
 
       &:hover {
-        color: $gray7;
+        color: $gray80;
       }
     }
   }
@@ -32,10 +32,10 @@ section.locations {
 .tab-pane#details {
   background: $dnm_white;
   @include box-sizing(border-box);
-  @include border-bottom-radius($border-radius);
+  @include border-bottom-radius($border-radius-default);
 
   .row-fluid {
-    padding: $padding;
+    padding: $padding-default;
     @include box-sizing(border-box);
     background: $dnm_white;
   }

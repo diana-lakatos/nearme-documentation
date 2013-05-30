@@ -133,7 +133,7 @@ section.how-it-works {
   h1{
     @include adjust-font-size-to(60px);
     margin: 10px 0 0;
-    color: $gray8;
+    color: $gray60;
     font-family: $font-demi;
 
     @media (max-width: 480px) {
@@ -144,7 +144,7 @@ section.how-it-works {
   h2{
     @include adjust-font-size-to(30px);
     margin: 10px 0 20px;
-    color: lighten($gray7, 10%);
+    color: lighten($gray80, 10%);
 
     @media (min-width: 768px) and (max-width: 900px) {
       @include adjust-font-size-to(24px);
@@ -170,7 +170,7 @@ section.how-it-works {
     height: 0;
     background: none;
     border: none;
-    border-bottom: 1px dashed $gray4;
+    border-bottom: 1px dashed $gray210;
   }
 
   p {

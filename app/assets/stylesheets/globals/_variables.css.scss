@@ -10,49 +10,57 @@ $dnm_white: rgb(250,250,250);
 
 $blue:   $dnm_blue;
 $red:    $dnm_red;
-$green:  $dnm_green;
+$green:  #157A49;
 $orange:  $dnm_orange;
 $gray:   $dnm_gray;
 $light-gray: #E2E2E2;
 $dark-gray: rgb(80,80,80);
 $black:  $dnm_black;
 $white: $dnm_white;
+$pure-white: #fff;
 
-$gray1: rgb(240,240,240);
-$gray2: rgb(230,230,230);
-$gray3: rgb(220,220,220);
-$gray4: rgb(210,210,210);
-$gray5: rgb(160,160,160);
-$gray6: rgb(120,120,120);
-$gray7: rgb(80,80,80);
-$gray8: rgb(60,60,60);
-$gray9: rgb(40,40,40);
+$gray240: rgb(240,240,240);
+$gray230: rgb(230,230,230);
+$gray220: rgb(220,220,220);
+$gray210: rgb(210,210,210);
+$gray160: rgb(160,160,160);
+$gray120: rgb(120,120,120);
+$gray80: rgb(80,80,80);
+$gray60: rgb(60,60,60);
+$gray40: rgb(40,40,40);
+
+$twitter-blue: #33CCFF;
+$facebook-blue: #3B5998;
+$linkedin-blue: #4875B4;
 
 $link-color: $dnm_blue;
 $link_hover: darken($dnm_blue, 10%);
-$icon: $gray5;
-$icon-hover: $gray7;
-
-
-// Border Radius
-
-$border-radius: 12px;
-$border-radius-mobile: 6px;
+$icon: $gray160;
+$icon-hover: $gray80;
 
 
 // Padding
 
-$padding: 15px;
+$padding-default: 15px;
+$padding-medium: 12px;
+$padding-small: 8px;
+
+
+// Border Radius
+
+$border-radius-default: $padding-medium;
+$border-radius-medium: 8px;
+$border-radius-mobile: 6px;
 
 
 // Webfonts
 
-$font-light: 'Futura-regular', sans-serif;
+$font-light:   'Futura-regular', sans-serif;
 $font-regular: 'Futura-regular', sans-serif;
-$font-medium: 'Futura-medium', sans-serif;
-$font-demi: 'Futura-demi', sans-serif;
-$font-heavy: 'Futura-heavy', sans-serif;
-$font-bold: 'Futura-heavy', sans-serif;
+$font-medium:  'Futura-medium', sans-serif;
+$font-demi:    'Futura-demi', sans-serif;
+$font-heavy:   'Futura-heavy', sans-serif;
+$font-bold:    'Futura-heavy', sans-serif;
 
 
 // Z index

@@ -1,5 +1,5 @@
 body.careers {
-  background: $gray3;
+  background: $gray220;
   color: %gray6 !important;
   @include adjust-font-size-to(20px);
   line-height: 28px;
@@ -8,18 +8,18 @@ body.careers {
       @include adjust-font-size-to(50px);
       margin: 10px 0 20px;
       font-weight: 900;
-      color: $gray7;
+      color: $gray80;
     }
 
   h2 {
     @include adjust-font-size-to(40px);
     margin: 10px 0 30px;
-    color: $gray7;
+    color: $gray80;
   }
 
   h3 {
     @include adjust-font-size-to(30px);
-    color: $gray7;
+    color: $gray80;
   }
 
   img {

@@ -40,7 +40,7 @@ textarea,
 select,
 p {
   font:400 18px/28px $font-regular, sans-serif;
-  color: $gray6;
+  color: $gray120;
 
   @media (max-width: 480px) {
     @include adjust-font-size-to(16px);
@@ -59,10 +59,10 @@ h5,
 h5 a {
   font-family: $font-medium, sans-serif;
   font-weight: normal;
-  color: $gray7;
+  color: $gray80;
 
   &:hover {
-    color: $gray7;
+    color: $gray80;
   }
 }
 

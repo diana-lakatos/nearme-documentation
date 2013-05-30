@@ -1,4 +1,7 @@
+
+
 // Custom datepicker
+
 @-webkit-keyframes opacity-fadein {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -16,32 +19,38 @@
 
 .dnm-datepicker {
   position: absolute;
-  z-index: $absolute-top-z-index;
   top: 300px;
   left: 300px;
+  z-index: $absolute-top-z-index;
   width: 280px;
   background: $dnm_black;
-  @include border-radius($border-radius);
+  @include border-radius($border-radius-default);
   @include box-shadow( 0 0 40px black);
   @include background-clip(border-box);
   overflow: hidden;
 
-  .datepicker-prev, .datepicker-next {
-    float: left;
-    height: 20px;
-    width: 16px;
-    padding:10px;
-    font-size:20px;
-    line-height: 20px;
-    opacity: 40%;
-    color: $gray3;
-    cursor: pointer;
-    &:hover {
-      opacity: 100%;
-    }
+  @media only screen and (max-width: 480px) {
+    position: fixed;
+    top: 20px !important;
+    left: 20px !important;
+    right: 20px !important;
   }
 
-  .datepicker-prev {
+  .datepicker-prev, 
+  .datepicker-next {
+    float: left;
+    padding: 10px;
+    width: 16px;
+    height: 20px;
+    color: $gray220;
+    font-size:20px;
+    line-height: 20px;
+    cursor: pointer;
+    @include opacity(.4);
+    
+    &:hover {
+      @include opacity(1);
+    }
   }
 
   .datepicker-next {
@@ -50,13 +59,13 @@
 
   .datepicker-header {
     margin: 0 40px;
+    padding-bottom: $padding-small /2;
+    color: $gray240;
     text-align: center;
-    color: $gray1;
-    padding-bottom: 4px;
 
     .datepicker-month {
-      line-height: 30px;
       font-size: 20px;
+      line-height: 30px;
     }
 
     .datepicker-year {
@@ -65,73 +74,74 @@
     }
   }
 
-  .datepicker-week-header, .datepicker-days {
+  .datepicker-week-header,
+  .datepicker-days {
     overflow: hidden;
-    background: $gray1;
-    .datepicker-week-heading {
-    }
-    .datepicker-week-heading, .datepicker-day {
+    background: $gray240;
+
+    .datepicker-week-heading,
+    .datepicker-day {
       float: left;
       width: 40px;
       height: 40px;
-      line-height: 40px;
       text-align: center;
-
+      line-height: 40px;
     }
   }
 
   .datepicker-days {
-    @include border-bottom-radius($border-radius);
+    @include border-bottom-radius($border-radius-default);
     @include background-clip(border-box);
   }  
 
   .datepicker-text {
-    text-align: center;
-    border-bottom: 1px solid #cbcbcd;
-    line-height: 32px;
-    color: $dnm-black;
+    border-bottom: 1px solid $gray210;
     background-color: $dnm-black;
+    color: $dnm-black;
+    text-align: center;
+    line-height: 32px;
   }
 
   .datepicker-text-fadein {
+    background-color: $gray240;
     -webkit-animation-name: opacity-fadein;
-    -moz-animation-name: opacity-fadein;
-    animation-name: opacity-fadein;
+       -moz-animation-name: opacity-fadein;
+            animation-name: opacity-fadein;
     -webkit-animation-duration: 0.4s;
-    -moz-animation-duration: 0.4s;
-    animation-duration: 0.4s;
-    background-color: $gray1;
+       -moz-animation-duration: 0.4s;
+            animation-duration: 0.4s;
   }
 
   .datepicker-days-wrapper, .time-wrapper {
     position: relative;
-    background: $gray1;
-    @include border-bottom-radius($border-radius);
+    @include border-bottom-radius($border-radius-default);
     @include background-clip(border-box);
+    background: $gray240;
 
     .datepicker-loading {
       position: absolute;
       top: 0;
+      right: 0;
       bottom: 0;
       left: 0;
-      right: 0;
+      background: $pure-white;
       @include opacity(0.9);
-      background: #fff;
     }
   }
 
   .datepicker-days {
+    
     .datepicker-day {
-      cursor: pointer;
+      color: $gray80;
       font-weight: bold;
-      color: $gray7;
+      cursor: pointer;
 
       &.datepicker-day-dow-0 {
         clear: left;
       }
 
       &:hover {
-        background: #ecebeb;
+        background: $gray230;
       }
 
       &.datepicker-day-other-month {
@@ -139,12 +149,12 @@
       }
 
       &.active {
-        background: $dnm_green;
-        color: white;
+        background: $green;
+        color: $pure-white;
       }
 
       &.disabled {
-        color: $dnm_red;
+        color: $red;
         background: none;
       }
 
@@ -152,38 +162,38 @@
         @include opacity(0.75);
       }
 
-      // Past/historical date
-      &.closed, &.disabled.closed, &.datepicker-day-past, &.datepicker-day-past.disabled {
-        color: $gray5;
+
+      // Past dates
+
+      &.closed, 
+      &.disabled.closed, 
+      &.datepicker-day-past, 
+      &.datepicker-day-past.disabled {
+        color: $gray160;
       }
     }
   }
 }
 
 
-@media only screen and (max-width: 480px) {
-  .dnm-datepicker {
-    position: fixed;
-    top: 20px !important;
-    left: 20px !important;
-    right: 20px !important;
-  }
-}
-
 // Special style for the timepicker
+
 .time-wrapper {
   height: 160px;
   padding-top: 70px;
 
-  .time-start, .ico-arrow-right, .time-end {
+  .time-start, 
+  .ico-arrow-right, 
+  .time-end {
     float: left;
     margin-left: 15px;
     line-height: 40px;
   }
 
-  .time-start, .time-end {
-    background: #e6e6e5;
-    color: #424143;
+  .time-start, 
+  .time-end {
+    background: $gray230;
+    color: $gray60;
     @include border-radius(5px);
     border: 1px solid #767676;
     height: 40px;
@@ -216,7 +226,7 @@
       @include opacity(0);
 
       option[disabled] {
-        color: $gray4;
+        color: $gray210;
       }
     }
   }

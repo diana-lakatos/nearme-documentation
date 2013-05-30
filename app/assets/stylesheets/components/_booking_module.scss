@@ -5,13 +5,13 @@
   width: 300px;
 
   @media (max-width: $booking-module-breakpoint) {
+    @include box-sizing(content-box);
     position: relative;
     float: left;
     clear: both;
-    width: 100%;
     margin: 0 -15px -15px;
-    @include box-sizing(content-box);
     padding: 0 15px;
+    width: 100%;
 
   }
 
@@ -21,21 +21,20 @@
     .btn.disabled{
       @include opacity(0.5);
     }
+
     .btn.click-disabled{
       @include opacity(0.75);
     }
   }
 
   .booking-module {
-    position: relative;
-    $padding: 12px;
-    height: $listing-photo-height;
     @include box-sizing(border-box);
-    @include border-radius($border-radius);
-    @include background-clip(border-box);
-    background: $gray8;
-    color: $gray4;
-    padding: $padding;
+    @include border-radius($border-radius-default);
+    position: relative;
+    padding: $padding-default;
+    height: $listing-photo-height;
+    background: $gray60;    
+    color: $gray210;
     font: normal 22px/26px 'Futura-regular', sans-serif; 
 
     @media (max-width: $booking-module-breakpoint-desktop) {
@@ -43,7 +42,7 @@
     }
 
     @media (max-width: $booking-module-breakpoint) {
-      @include border-bottom-radius($border-radius);
+      @include border-bottom-radius($border-radius-default);
       margin: 0 -15px;
     }
 
@@ -53,7 +52,7 @@
       width: 30%;
       height: 34px;
       background: transparent;
-      color: $gray4;
+      color: $gray210;
       font-size: 22px;
       text-align: center;
 
@@ -64,16 +63,19 @@
       .period {
         display: block;
         clear: both;
-        font-size: 50%;
         margin-top: 4px;
-        color: $gray5;
+        color: $gray160;
         font-family: $font-bold;
+        font-size: 50%;
         text-transform: uppercase;
         letter-spacing: 1px;
       }
 
       &.label-hourly-price {
+        
+
         // Only one price field, center it.
+        
         margin-left: 33%;
       }
     }
@@ -84,32 +86,33 @@
       .btn.disabled{
         @include opacity(0.5);
       }
+
       .btn.click-disabled{
         @include opacity(0.75);
       }
     }
     
     hr {
+      clear: both;
       margin: 0 -12px 10px;
-      clear: both;
       height: 0 !Important;
-      background-color: $gray6;
-      border-bottom: 2px solid $gray6;
-      clear: both;
+      border-bottom: 2px solid $gray120;
+      background-color: $gray120;
     }
 
     .calendar-wrapper {
+      @include border-radius(8px);
       display: block;
+      float: left;
       margin: 0 0 6px;
       padding: 6px 4px 6px 6px;
-      @include border-radius(8px);
       @include box-sizing(border-box);
-      background: $gray2;
-      color: $gray6;
       width: 48%;
-      float: left;
+      background: $gray230;
+      color: $gray120;
 
-      &.date-end, &.time-picker {
+      &.date-end, 
+      &.time-picker {
         float: right;
         margin-right:0;
       }
@@ -118,16 +121,17 @@
         position: relative;
         display: inline-block;
 
-        .dates, input {
-          width: 30px;
-          height:38px;
+        .dates, 
+        input {
           display: inline-block;
-          vertical-align: middle;
+          width: 30px;
+          height: 38px;
           border: 0;
-          color: transparent;
-          background: transparent;
           border: none;
-          color: $gray6;
+          background: transparent;
+          color: transparent;
+          color: $gray120;
+          vertical-align: middle;
 
           &:focus {
             outline: none !important;
@@ -148,29 +152,29 @@
       }
 
       span.customSelect {
+        @include border-radius(8px);
         position: absolute;
-        right: 0;
         top: 0;
-        font-size: 100%;
+        right: 0;
         min-width: 32px;
         padding:0;
-        @include border-radius(8px);
         border: none;
         background: transparent;
+        font-size: 100%;
       }
 
       .customSelectInner {
         width: 100% !important;
         background: image-url('components/customselect/canvas-list-nav-item-arrow.gif') no-repeat center right;
       }
-
     }
 
     .price {
-      height: 30px;
-      line-height: 30px;
       margin-bottom: 8px;
+      height: 30px;
+      @include background-clip(border-box);       
       text-align: left;
+      line-height: 30px;
 
       span {
         float: right;

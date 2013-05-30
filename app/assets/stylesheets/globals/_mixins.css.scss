@@ -5,10 +5,10 @@
   margin: 0;
   margin-bottom: 8px;
   padding: 8px 8px 8px 8px;
-  background: $gray2;
-  border: 2px solid $gray2;
-  @include border-radius($border-radius);
-  color: $gray8;
+  background: $gray230;
+  border: 2px solid $gray230;
+  @include border-radius($border-radius-default);
+  color: $gray60;
   font-size: 22px;
   line-height: 29px;
   @include transition(border .2s ease-in, opacity .2s ease-in, color .2s ease-in);
@@ -28,9 +28,9 @@
 
 @mixin form-field-focus {
 
-  background: $gray1;
-  border: 2px solid $gray7;
-  color: $gray9;
+  background: $gray240;
+  border: 2px solid $gray80;
+  color: $gray40;
   outline: none;
 }
 

@@ -26,7 +26,7 @@ section#w-hotels {
       }
       
       .booking-module-container .booking-module {
-        @include border-radius($border-radius);
+        @include border-radius($border-radius-default);
         margin:0;
       }
     }

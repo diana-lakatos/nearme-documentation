@@ -11,11 +11,11 @@
       @include border-radius(0);
 
       &.facebook {
-        @include border-left-radius($border-radius);
+        @include border-left-radius($border-radius-default);
       }
 
       &.twitter {
-        @include border-right-radius($border-radius);
+        @include border-right-radius($border-radius-default);
       }
 
       @each $service in (twitter, facebook, linkedin) {
@@ -54,7 +54,7 @@
 
   h3.legal {
     margin: 10px 0 0 0;
-    color: $gray3;
+    color: $gray220;
     text-align: center;
   }
 

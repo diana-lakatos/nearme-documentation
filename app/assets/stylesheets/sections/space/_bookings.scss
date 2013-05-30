@@ -8,17 +8,17 @@
 }
 
 #location-tabs > li > a {
-  background-color: $gray5;
-  color: $gray2;
+  background-color: $gray160;
+  color: $gray230;
   border: none;
 }
 
 #location-tabs > li > a:hover {
-  background-color: $gray6;
+  background-color: $gray120;
 }
 
 #location-tabs > li.active > a {
-  background-color: $gray7;
+  background-color: $gray80;
 }
 
 .other-listing-separator {
@@ -225,7 +225,7 @@
   .calendar-wrapper {
     display: inline-block;
     padding: 2px 8px;
-    border: 2px solid $gray3;
+    border: 2px solid $gray220;
     border-radius: 8px;
     background: white;
   }
@@ -246,7 +246,7 @@
       font-size: 100%;
       min-width: 32px;
       padding: 2px 8px;
-      border: 2px solid $gray3;
+      border: 2px solid $gray220;
       @include border-radius(8px);
       background: white;
     }
