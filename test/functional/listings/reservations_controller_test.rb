@@ -20,8 +20,10 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     end
 
     should "track booking request" do
+      @tracker.expects(:requested_a_booking).with do |reservation, location|
+        reservation == assigns(:reservation) && location == assigns(:location)
+      end
       xhr :post, :create, booking_params_for(@listing)
-      @tracker.expects(:requested_a_booking).with(assigns(:reservation), assigns(:location))
       assert_response 200
     end
 
