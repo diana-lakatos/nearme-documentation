@@ -16,4 +16,6 @@ Devise.setup do |config|
   config.token_authentication_key = :token
   config.sign_out_via = :delete
 
+  config.http_authenticatable_on_xhr = false
+
 end
