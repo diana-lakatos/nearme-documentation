@@ -39,7 +39,7 @@ class EventTrackerTest < ActiveSupport::TestCase
         location_country: @reservation.country
       }
 
-      tracker.requested_a_booking(@reservation)
+      @tracker.requested_a_booking(@reservation)
     end
   end
 
@@ -48,13 +48,6 @@ class EventTrackerTest < ActiveSupport::TestCase
   def expect_event(event_name, params)
     @mixpanel.expects(:track_event).with do |name, options|
       event_name == name && options == params
-    end
-  end
-
-  def expect_set(user_id, params)
-    @mixpanel.expects(:set).with do |*args|
-      raise "got #{args.inspect}"
-      args == [user_id, params]
     end
   end
 
