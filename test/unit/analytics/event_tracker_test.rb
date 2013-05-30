@@ -1,6 +1,8 @@
 require 'test_helper'
+require 'helpers/search_params_test_helper'
 
 class EventTrackerTest < ActiveSupport::TestCase
+  include SearchParamsTestHelper
 
   setup do
     @user = FactoryGirl.create(:user)
@@ -11,13 +13,45 @@ class EventTrackerTest < ActiveSupport::TestCase
   context "#initialize" do
     should "assign user and #set via mixpanel" do
       @mixpanel.expects(:set).with(@user.id, {
-        name: @user.name,
-        email: @user.email,
-        phone: @user.phone,
-        job_title: @user.job_title
-      })
-
+      name: @user.name,
+      email: @user.email,
+      phone: @user.phone,
+      job_title: @user.job_title
+    })
       Analytics::EventTracker.new(@mixpanel, @user)
+    end
+  end
+
+  context 'Listings' do
+    setup do
+      @listing = FactoryGirl.create(:listing)
+    end
+
+    should 'track listing creation' do
+      expect_event 'Created a Listing', listing_properties
+      @tracker.created_a_listing(@listing)
+    end
+  end
+
+  context 'Locations' do
+    setup do
+      @location = FactoryGirl.create(:location)
+      @search = build_search_params(options_with_location)
+    end
+
+    should 'track location creation' do
+      expect_event 'Created a Location', location_properties
+      @tracker.created_a_location(@location)
+    end
+
+    should 'track location view' do
+      expect_event 'Viewed a Location', location_properties
+      @tracker.viewed_a_location(@location)
+    end
+
+    should 'track search' do
+      expect_event 'Conducted a Search', search_properties
+      @tracker.conducted_a_search(@search)
     end
   end
 
@@ -26,29 +60,137 @@ class EventTrackerTest < ActiveSupport::TestCase
       @reservation = FactoryGirl.create(:reservation)
     end
 
-    should 'track a booking request' do
-      expect_event 'Requested a Booking', {
-        booking_desks: @reservation.quantity,
-        booking_days: @reservation.total_days,
-        booking_total: @reservation.total_amount_dollars,
-        location_address: @reservation.address,
-        location_currency: @reservation.currency,
-        location_suburb: @reservation.suburb,
-        location_city: @reservation.city,
-        location_state: @reservation.state,
-        location_country: @reservation.country
-      }
+    should 'track booking modal open' do
+      expect_event 'Opened the Booking Modal', reservation_properties
+      @tracker.opened_booking_modal(@reservation)
+    end
 
+    should 'track a booking request' do
+      expect_event 'Requested a Booking', reservation_properties
       @tracker.requested_a_booking(@reservation)
+    end
+
+    should 'track a booking confirmation' do
+      expect_event 'Confirmed a Booking', reservation_properties
+      @tracker.confirmed_a_booking(@reservation)
+    end
+
+    should 'track a booking rejection' do
+      expect_event 'Rejected a Booking', reservation_properties
+      @tracker.rejected_a_booking(@reservation)
+    end
+
+    should 'track a booking cancellation with custom options' do
+      expect_event 'Cancelled a Booking', reservation_properties.merge!({ actor: 'host'})
+      @tracker.cancelled_a_booking(@reservation, { actor: 'host'})
+    end
+
+    should 'track a booking expiry' do
+      expect_event 'Booking Expired', reservation_properties
+      @tracker.booking_expired(@reservation)
+    end
+  end
+
+  context 'Space Wizard' do
+    should 'track sign up step of flow' do
+      expect_event 'Viewed List Your Space, Sign Up', {}
+      @tracker.viewed_list_your_space_sign_up
+    end
+
+    should 'track list step of flow' do
+      expect_event 'Viewed List Your Space, List', {}
+      @tracker.viewed_list_your_space_list
+    end
+  end
+
+  context 'Users' do
+    should 'track user sign up' do
+      expect_event 'Signed Up', user_properties
+      @tracker.signed_up(@user)
+    end
+
+    should 'track user log in' do
+      expect_event 'Logged In', user_properties
+      @tracker.logged_in(@user)
+    end
+
+    should 'track charge' do
+      expect_charge @user.id, '100.00'
+      @tracker.incurred_charge(@user.id, '100.00')
     end
   end
 
   private
 
-  def expect_event(event_name, params)
-    @mixpanel.expects(:track_event).with do |name, options|
-      event_name == name && options == params
-    end
+  def expect_event(event_name, properties = nil)
+    @mixpanel.expects(:track).with(event_name, properties)
   end
 
+  def expect_charge(user_id, total_amount_dollars)
+    @mixpanel.expects(:track_charge).with(user_id, total_amount_dollars)
+  end
+
+  def build_search_params(options, geocoder = fake_geocoder(true))
+    Listing::Search::Params::Web.new(options, geocoder)
+  end
+
+  def reservation_properties
+    {
+      booking_desks: @reservation.quantity,
+      booking_days: @reservation.total_days,
+      booking_total: @reservation.total_amount_dollars,
+      location_address: @reservation.location.address,
+      location_currency: @reservation.location.currency,
+      location_suburb: @reservation.location.suburb,
+      location_city: @reservation.location.city,
+      location_state: @reservation.location.state,
+      location_country: @reservation.location.country,
+      distinct_id: @user.id
+    }
+  end
+
+  def listing_properties
+    {
+      listing_name: @listing.name,
+      listing_quantity: @listing.quantity,
+      listing_confirm: @listing.confirm_reservations,
+      listing_daily_price: @listing.daily_price.try(:dollars),
+      listing_weekly_price: @listing.weekly_price.try(:dollars),
+      listing_monthly_price: @listing.monthly_price.try(:dollars),
+      distinct_id: @user.id
+    }
+  end
+
+  def location_properties
+    {
+      location_address: @location.address,
+      location_currency: @location.currency,
+      location_suburb: @location.suburb,
+      location_city: @location.city,
+      location_state: @location.state,
+      location_country: @location.country,
+      distinct_id: @user.id
+    }
+  end
+
+  def user_properties
+    {
+      name: @user.name,
+      email: @user.email,
+      phone: @user.phone,
+      job_title: @user.job_title,
+      distinct_id: @user.id
+    }
+  end
+
+  def search_properties
+    {
+      search_suburb: @search.suburb,
+      search_city: @search.city,
+      search_state: @search.state,
+      search_country: @search.country,
+      distinct_id: @user.id
+    }
+  end
 end
+

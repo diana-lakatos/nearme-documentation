@@ -7,7 +7,7 @@ class Manage::Listings::ReservationsController < ApplicationController
     if @reservation.confirm
       ReservationMailer.notify_guest_of_confirmation(@reservation).deliver
       ReservationMailer.notify_host_of_confirmation(@reservation).deliver
-      event_tracker.confirmed_a_booking(@reservation, @reservation.location)
+      event_tracker.confirmed_a_booking(@reservation)
       event_tracker.charge(@reservation.owner.id, @reservation.total_amount_dollars)
       flash[:success] = "You have confirmed the reservation!"
     else
@@ -19,7 +19,7 @@ class Manage::Listings::ReservationsController < ApplicationController
   def reject
     if @reservation.reject
       ReservationMailer.notify_guest_of_rejection(@reservation).deliver
-      event_tracker.rejected_a_booking(@reservation, @reservation.location)
+      event_tracker.rejected_a_booking(@reservation)
       flash[:deleted] = "You have rejected the reservation. Maybe next time!"
     else
       flash[:error] = "Your reservation could not be confirmed."
@@ -30,7 +30,7 @@ class Manage::Listings::ReservationsController < ApplicationController
   def host_cancel
     if @reservation.host_cancel
       ReservationMailer.notify_guest_of_cancellation(@reservation).deliver
-      event_tracker.cancelled_a_booking(@reservation, @reservation.location, { actor: 'host' })
+      event_tracker.cancelled_a_booking(@reservation, { actor: 'host' })
       event_tracker.charge(@reservation.owner.id, @reservation.total_negative_amount_dollars)
       flash[:deleted] = "You have cancelled this reservation."
     else

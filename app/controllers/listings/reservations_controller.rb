@@ -8,7 +8,7 @@ module Listings
 
     def review
       @reservation.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
-      event_tracker.opened_booking_modal(@reservation, @location)
+      event_tracker.opened_booking_modal(@reservation)
     end
 
     def create
@@ -23,7 +23,7 @@ module Listings
           ReservationMailer.notify_host_without_confirmation(@reservation).deliver
           ReservationMailer.notify_guest_of_confirmation(@reservation).deliver
         end
-        event_tracker.requested_a_booking(@reservation, @location)
+        event_tracker.requested_a_booking(@reservation)
 
         render # Successfully reserved listing
       else

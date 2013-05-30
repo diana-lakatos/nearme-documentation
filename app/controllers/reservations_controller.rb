@@ -13,7 +13,7 @@ class ReservationsController < ApplicationController
   def user_cancel
     if @reservation.user_cancel
       ReservationMailer.notify_host_of_cancellation(@reservation).deliver
-      event_tracker.cancelled_a_booking(@reservation, @reservation.location, { actor: 'guest' })
+      event_tracker.cancelled_a_booking(@reservation, { actor: 'guest' })
       event_tracker.charge(@reservation.owner.id, @reservation.total_negative_amount_dollars)
       flash[:deleted] = "You have cancelled your reservation."
     else

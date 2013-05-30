@@ -81,7 +81,13 @@ class Analytics::EventTracker
       {
         booking_desks: object.quantity,
         booking_days: object.total_days,
-        booking_total: object.total_amount_dollars
+        booking_total: object.total_amount_dollars,
+        location_address: object.location.address,
+        location_currency: object.location.currency,
+        location_suburb: object.location.suburb,
+        location_city: object.location.city,
+        location_state: object.location.state,
+        location_country: object.location.country
       }
     when User
       {
