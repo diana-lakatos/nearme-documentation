@@ -4,12 +4,24 @@ class EventTrackerTest < ActiveSupport::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
-    @mixpanel = stub()
+    @mixpanel = stub(:set => true)
     @tracker = Analytics::EventTracker.new(@mixpanel, @user)
   end
 
-  context 'Reservations' do
+  context "#initialize" do
+    should "assign user and #set via mixpanel" do
+      @mixpanel.expects(:set).with(@user.id, {
+        name: @user.name,
+        email: @user.email,
+        phone: @user.phone,
+        job_title: @user.job_title
+      })
 
+      Analytics::EventTracker.new(@mixpanel, @user)
+    end
+  end
+
+  context 'Reservations' do
     setup do
       @reservation = FactoryGirl.create(:reservation)
     end
@@ -26,15 +38,9 @@ class EventTrackerTest < ActiveSupport::TestCase
         location_state: @reservation.state,
         location_country: @reservation.country
       }
-      expect_set @user.id, {
-        name: @user.name,
-        email: @user.email,
-        phone: @user.phone,
-        job_title: @user.job_title
-      }
-      @tracker.requested_a_booking(@reservation)
-    end
 
+      tracker.requested_a_booking(@reservation)
+    end
   end
 
   private
@@ -46,8 +52,9 @@ class EventTrackerTest < ActiveSupport::TestCase
   end
 
   def expect_set(user_id, params)
-    @mixpanel.expects(:set).with do |id, options|
-      user_id = id && options == params
+    @mixpanel.expects(:set).with do |*args|
+      raise "got #{args.inspect}"
+      args == [user_id, params]
     end
   end
 
