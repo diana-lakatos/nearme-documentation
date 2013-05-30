@@ -1,0 +1,30 @@
+body { 
+  background: image-url('90s-texture.png') left top repeat; 
+  text-align: left; 
+  font-family: 'futura-pt' arial, sans-serif; 
+  padding: 0px;
+  margin: 8px 0px;
+}
+
+h1 { 
+  color:rgb(249, 90, 97);  
+  margin:10px 0 0; 
+  font-style: italic; 
+}
+
+div.dialog { 
+  margin: 0 auto; 
+  text-align: center; 
+
+  p {
+    color: black;
+  }
+}
+
+.logo { 
+  margin: 20px; 
+}
+
+#search_row{
+  margin: 0px;
+}
