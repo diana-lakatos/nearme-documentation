@@ -3,7 +3,7 @@
 // Generic styles to apply to everything
 
 body {
-  background: rgb(240,240,240);
+  background: $gray240;
 }
 
 ::selection, ::-moz-selection {
@@ -39,8 +39,10 @@ img {
   max-width:100%;
 }
 
-/* fix for google maps zoom controls */
-.map-wrapper .map-container img{
+
+// fix for google maps zoom controls
+
+.map-wrapper .map-container img {
   max-width: none;
 }
 
@@ -67,21 +69,22 @@ strong {
 
 .truncated-ellipsis {
   display: inline-block;
-  padding: 0 4px 10px;
   margin: 0 4px;
-  border-radius: 2px;
-  border-radius: 4px;
-  background: darken( $gray230, 10%);
-  letter-spacing: 1px;
-  color: $dnm_black;
-  font-size: 20px;
-  line-height: 6px;
+  padding: 0 4px 10px;
   height:6px;
+  @include border-radius($border-radius-mobile);
+  background: $gray220;
+  color: $dnm_black;
   vertical-align: middle;
   font-family: $font-bold;
+  font-size: 20px;
+  letter-spacing: 1px;
+  line-height: 6px;
 }
 
+
 // An introduction paragraph at the top of the page content
+
 .intro {
   margin: 20px 10px;
   line-height: 150%;
@@ -100,6 +103,7 @@ hr,
   border-bottom: 1px solid rgba(255,255,255,0.8);
   margin: 10px -12px 10px -12px;
 }
+
 
 // Inline rule to separate items
 //
@@ -124,15 +128,16 @@ hr,
 }
 
 .or-part {
-  display: inline-block;
-  margin: 0 0;
-  padding: 0 5px;
-  font-size: 14px;
   position: relative;
   bottom: 0px;
   left: -16px;
+  display: inline-block;
+  margin: 0 0;
+  padding: 0 5px;
   background: $dnm_white;
   color: $gray160;
+  font-size: 14px;
+
   @media (max-width: $iphone-portrait) {
     left: 0;
   }  
@@ -150,11 +155,10 @@ hr,
   position: absolute;
   top: 6px;
   right: 6px;
+  color:black;
   font-size: 1.2em;
   cursor: pointer;
-  color:black;
   @include opacity(.6);
-
 
   &:hover {
     @include opacity(1);

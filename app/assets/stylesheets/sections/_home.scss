@@ -2,8 +2,8 @@ section.public {
   
   #hero {
     margin-top: -32px;
-    height: 580px;
     width: auto;
+    height: 580px;
     background: image-url("https://s3.amazonaws.com/desksnearme.production/uploads/photos/653/hall.jpg") center center no-repeat;
     @include background-size(cover);
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='https://s3.amazonaws.com/desksnearme.production/uploads/photos/653/hall.jpg', sizingMethod='scale');
@@ -58,9 +58,9 @@ section.public {
   h1 {
     display: block;
     float: left;
-    font:400 48px/54px $font-regular, sans-serif;
-    color: $light-gray;
     margin-bottom: 10px;
+    color: $light-gray;
+    font:400 48px/54px $font-regular, sans-serif;
     @include text-shadow(black 0 0 5px, black 0 0 8px, black 0 0 10px, black 0 0 20px, black 0 0 30px);
     filter: glow(color=black,strength=3);
     -ms-filter: glow(color=black,strength=3);
@@ -73,26 +73,26 @@ section.public {
 
   .black-box {
     position: relative;
-    background: rgb(30,30,30);
     padding: 8px;
-    border-radius: 12px;
+    border-radius: $border-radius-default;
+    background: rgb(30,30,30);
     @include box-sizing(border-box);
-
   }
 
   h2 {
     float: left;
-    color: #927d70;
-    font-size: 16px;
-    font-weight: normal;
     margin: 10px 0 10px 10px;
     margin-top: 17px;
+    color: $gray120;
+    font-weight: normal;
+    font-size: 16px;
     margin-left: 10px;
 
     @media (max-width: 480px) {
       font:normal 16px/22px $font-medium, sans-serif;
     }      
   }
+
   form input[type="text"] {
     margin-bottom: 0;
 
@@ -111,9 +111,6 @@ section.public {
   }
 
   // @see listings/#listing_search
-
-  .availability-quantity {
-  }
 
   .price-range {
     width: 370px;

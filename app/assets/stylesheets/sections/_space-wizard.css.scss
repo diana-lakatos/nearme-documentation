@@ -4,6 +4,7 @@ section.space_wizard {
   #space_wizard {
 
     form.new_desks {
+      
       .currency-type {
         display: inline-block;
         margin-left: 8px;
@@ -11,10 +12,10 @@ section.space_wizard {
       }
 
       input {
-        positon: relative;
         z-index: 1;
         margin-left: -30px;
         padding-left: 30px;
+        positon: relative;
       }
 
       .fieldset.template {
@@ -25,8 +26,8 @@ section.space_wizard {
     .already-a-user {
       display: none;
     }
-
   }
+  
   .input-disabled{
     @include opacity(.4);
     filter: inherit;

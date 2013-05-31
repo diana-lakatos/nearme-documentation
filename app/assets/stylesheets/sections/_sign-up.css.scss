@@ -1,14 +1,14 @@
-
 #signup {
 
   #service_buttons {
+    
     .btn {
       $service-icons: sprite-map("sections/space-wizard/signup/service-icons/*.png");
-      font-size: 22px;
-      width: 33.3%;
-      text-align: center;
-      margin: 0;
       @include border-radius(0);
+      margin: 0;
+      width: 33.3%;
+      font-size: 22px;
+      text-align: center;
 
       &.facebook {
         @include border-left-radius($border-radius-default);
@@ -19,6 +19,7 @@
       }
 
       @each $service in (twitter, facebook, linkedin) {
+        
         i.icon-#{$service} {
           display: inline-block;
           vertical-align: text-top;
@@ -105,7 +106,10 @@
 
 
 .sign-up-modal {
+  
+
   // Fix hr's existing modal
+  
   form {
     overflow: visible;
   }

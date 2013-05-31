@@ -8,9 +8,9 @@
 }
 
 #location-tabs > li > a {
+  border: none;
   background-color: $gray160;
   color: $gray230;
-  border: none;
 }
 
 #location-tabs > li > a:hover {
@@ -25,7 +25,8 @@
   margin: 40px 0px;
 }
 
-#space, .space {
+#space, 
+.space {
 
   .listing.box {
     overflow: hidden;
@@ -59,15 +60,11 @@
     .booking-module-container {
 
       @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
+        top: $listing-header-height;
         float: right; 
         clear: both;
         width: 50%;
-        top: $listing-header-height;
       }
-
-      .booking-module {
-
-      }  
     }  
   }
 
@@ -81,25 +78,25 @@
 
   .listing-photo-container {
     position: absolute;
-    left: 0;
     top: 0;
-    height: $listing-photo-height;
-    width: $listing-photo-width;
+    left: 0;
     overflow: hidden;
+    width: $listing-photo-width;
+    height: $listing-photo-height;
 
     @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
       position: relative;
       float: left; 
       clear: both;
+      margin: -15px 0 0 -15px;
       width: 55%;
       height: $booking-module-height;
-      margin: -15px 0 0 -15px;
 
       img {
-        width: $listing-photo-width;
-        height: $listing-photo-height;
         margin: 0 auto;
         max-width: $listing-photo-width;
+        width: $listing-photo-width;
+        height: $listing-photo-height;
       }       
     }
 
@@ -107,17 +104,16 @@
       position: relative;
       float: left; 
       clear: both;
-      width: 110%;
-      height: auto;
       margin: -15px 0 0 -15px;
-     
+      width: 110%;
+      height: auto;   
     }
   }
 
   .listing-name, .listing-description {
     float: left;
-    width: 100%;
     padding: 0 300px 0 410px;
+    width: 100%;
     @include box-sizing(border-box);
 
     @media  (max-width: $booking-module-breakpoint-desktop) {
@@ -167,7 +163,10 @@
 }
 
 .space-reservation-modal {
+  
+
   // Fix hr's existing modal
+
   form {
     overflow: visible;
   }
@@ -175,19 +174,22 @@
   .summary {
     overflow: hidden;
 
-    .date, .total-label {
+    .date, 
+    .total-label {
       float: left;
       width: 30%;
     }
 
-    .bookings, .total-amount {
+    .bookings, 
+    .total-amount {
       float: left;
       width: 70%;
       text-align: right;
     }
   }
 
-  .total-label, .total-amount {
+  .total-label, 
+  .total-amount {
     font-weight: bold;
   }
 
@@ -207,12 +209,14 @@
     .control-label {
       width: auto;
     }
+
     .controls {
       margin-left: 30%;
 
       &.card-number input {
         width: 90%;
       }
+
       &.card-expires input, &.card-code input {
         width: 80px;
       }
@@ -226,8 +230,8 @@
     display: inline-block;
     padding: 2px 8px;
     border: 2px solid $gray220;
-    border-radius: 8px;
-    background: white;
+    @include border-radius($border-radius-medium);
+    background: $pure-white;
   }
 
   .quantity {
@@ -251,14 +255,9 @@
       background: white;
     }
 
-    span.customSelect.changed {
-    }
-
     .customSelectInner {
       width: 100% !important;
       background:url(components/customselect/canvas-list-nav-item-arrow.gif) no-repeat center right;
     }
-
   }
 }
-

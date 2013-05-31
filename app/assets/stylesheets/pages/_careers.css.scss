@@ -1,14 +1,14 @@
 body.careers {
+  @include adjust-font-size-to(20px);
   background: $gray220;
   color: %gray6 !important;
-  @include adjust-font-size-to(20px);
   line-height: 28px;
 
   h1 {
       @include adjust-font-size-to(50px);
       margin: 10px 0 20px;
-      font-weight: 900;
       color: $gray80;
+      font-weight: 900;
     }
 
   h2 {
