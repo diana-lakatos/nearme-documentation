@@ -65,7 +65,11 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def find_listing
-    @listing = current_user.listings.find(params[:id])
+    if current_user.admin?
+      @listing = Listing.find(params[:id])
+    else
+      @listing = current_user.listings.find(params[:id])
+    end
   end
 
 end

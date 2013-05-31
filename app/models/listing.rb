@@ -12,6 +12,7 @@ class Listing < ActiveRecord::Base
   has_many :inquiries
 
   has_many :availability_rules,
+    :order => 'day ASC',
     :as => :target,
     :dependent => :destroy
 
@@ -29,14 +30,14 @@ class Listing < ActiveRecord::Base
   scope :latest,   order("listings.created_at DESC")
 
   # == Callbacks
-  before_validation :clear_irrelevant_prices
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
 
   # == Validations
-  validates_presence_of :location, :name, :description, :quantity, :listing_type_id
+  validates_presence_of :location, :name, :quantity, :listing_type_id
+  validates_presence_of :description , :if => lambda { |listing| (listing.instance.nil? || listing.instance.is_desksnearme?) }
   validates_numericality_of :quantity
-  validates_length_of :description, :maximum => 250
+  validates_length_of :description, :maximum => 250, :if => lambda { |listing| (listing.instance.nil? || listing.instance.is_desksnearme?) }
   validates_with PriceValidator
 
   # == Helpers
@@ -51,6 +52,7 @@ class Listing < ActiveRecord::Base
     :local_geocoding, :latitude, :longitude, :distance_from, to: :location,
     allow_nil: true
   delegate :creator, :creator=, to: :location
+  delegate :instance, to: :location, :allow_nil => true
   delegate :name, to: :creator, prefix: true
   delegate :notify_user_about_change, :to => :location, :allow_nil => true
   delegate :to_s, to: :name
@@ -271,17 +273,10 @@ class Listing < ActiveRecord::Base
     AvailabilityRule::HourlyListingStatus.new(self, date)
   end
 
-  private
-
-  def clear_irrelevant_prices
-    if hourly_reservations?
-      self.daily_price = nil
-      self.weekly_price = nil
-      self.monthly_price = nil
-    else
-      self.hourly_price = nil
-    end
+  def self.xml_attributes
+    [:name, :description, :quantity, :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents]
   end
+
 end
 
 class NullListing

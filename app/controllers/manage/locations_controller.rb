@@ -1,7 +1,13 @@
 class Manage::LocationsController < Manage::BaseController
   before_filter :find_company
   before_filter :redirect_if_no_company
-  before_filter :find_location, :except => [:index, :new, :create]
+  before_filter :find_location, :except => [:index, :new, :create, :data_import]
+  before_filter :redirect_if_not_admin, :only => :data_import
+
+  def data_import
+    @locations = Instance.find_by_name('PBCenter').locations
+    render :index
+  end
 
   def index
     @locations = current_user.locations
@@ -53,7 +59,11 @@ class Manage::LocationsController < Manage::BaseController
   private
 
   def find_location
-    @location = current_user.locations.find(params[:id])
+    if current_user.admin?
+      @location = Location.find(params[:id])
+    else
+      @location = current_user.locations.find(params[:id])
+    end
   end
 
   def find_company
@@ -65,6 +75,10 @@ class Manage::LocationsController < Manage::BaseController
       flash[:warning] = "Please add your company first"
       redirect_to new_space_wizard_url
     end
+  end
+
+  def redirect_if_not_admin
+    redirect_to root_path unless current_user.admin?
   end
 
 end

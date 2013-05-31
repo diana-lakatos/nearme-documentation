@@ -4,6 +4,7 @@ FactoryGirl.define do
     password 'password'
     password_confirmation 'password'
     phone "1234567890"
+    instance
 
     sequence(:name) {|n| "User-#{n}"}
 
