@@ -11,6 +11,7 @@ include Devise::TestHelpers
     @location = FactoryGirl.create(:location_in_auckland)
     @company.locations << @location
     stub_request(:get, /.*api\.mixpanel\.com.*/)
+    @tracker = Analytics::EventTracker.any_instance
   end
 
   test "should return success status for show action if no listings" do
@@ -18,8 +19,12 @@ include Devise::TestHelpers
     assert_response :success
   end
 
-  test "should track location view" do
+  should 'track location view' do
+    @tracker.expects(:viewed_a_location).with do |location|
+      location == assigns(:location)
+    end
     get :show, id: @location.id
+    assert_response :success
   end
 
 end

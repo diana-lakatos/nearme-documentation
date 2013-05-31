@@ -8,9 +8,13 @@ class RegistrationsControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     @request.env["devise.mapping"] = Devise.mappings[:user]
     stub_request(:get, /.*api\.mixpanel\.com.*/)
+    @tracker = Analytics::EventTracker.any_instance
   end
 
-  should 'successfully sign up' do
+  should 'successfully sign up and track' do
+    @tracker.expects(:signed_up).with do |user, custom_options|
+      user == assigns(:user) && custom_options == { signed_up_via: 'other', provider: 'native' }
+    end
     assert_difference('User.count') do
       post :create, user: { name: 'Test User', email: 'user@example.com', password: 'secret' }
     end

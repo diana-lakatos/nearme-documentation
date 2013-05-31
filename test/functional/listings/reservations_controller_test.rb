@@ -15,13 +15,16 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     end
 
     should "track booking modal open" do
+      @tracker.expects(:opened_booking_modal).with do |reservation|
+        reservation == assigns(:reservation)
+      end
       xhr :post, :review, booking_params_for(@listing)
       assert_response 200
     end
 
     should "track booking request" do
-      @tracker.expects(:requested_a_booking).with do |reservation, location|
-        reservation == assigns(:reservation) && location == assigns(:location)
+      @tracker.expects(:requested_a_booking).with do |reservation|
+        reservation == assigns(:reservation)
       end
       xhr :post, :create, booking_params_for(@listing)
       assert_response 200
