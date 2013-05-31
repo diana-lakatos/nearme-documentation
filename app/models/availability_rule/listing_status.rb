@@ -14,9 +14,13 @@ class AvailabilityRule::ListingStatus
     return if date < @start_date || date > @end_date
     return unless @listing.open_on?(date)
 
-    q = @listing.quantity - booked_on(date)
-    q = 0 if q < 0
-    q
+    if @listing.hourly_reservations?
+      @listing.quantity
+    else
+      q = @listing.quantity - booked_on(date)
+      q = 0 if q < 0
+      q
+    end
   end
 
   def as_json

@@ -6,7 +6,7 @@ Feature: A user can book at a space
 
   Background:
     Given a company exists
-      And a location exists with company: that company
+      And a location exists with company: that company, currency: "CAD"
       And a listing exists with location: that location, quantity: 10
       And a user exists
       And I am logged in as the user
@@ -82,4 +82,19 @@ Feature: A user can book at a space
      Then user should have the listing reserved for 'next Monday'
       And user should have the listing reserved for 'next Tuesday'
 
+  Scenario: Hourly reserved listing can be booked
+    Given the listing is reserved hourly
+    And   the listing has an hourly price of 100.00
+    When I go to the location's page
+    And I select to book and review space for:
+      | Listing     | Date   | Quantity | Start | End   |
+      | the listing | Monday | 1        | 9:00  | 14:00 |
+    Then I should see the booking confirmation screen for:
+      | Listing     | Date   | Quantity | Start | End   |
+      | the listing | Monday | 1        | 9:00  | 14:00 |
+    And the reservation cost should show 500.00
+    When I click to confirm the booking
+    Then the user should have a reservation:
+      | Listing     | Date   | Quantity | Start | End   |
+      | the listing | Monday | 1        | 9:00  | 14:00 |
 

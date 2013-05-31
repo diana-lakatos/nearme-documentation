@@ -39,6 +39,12 @@ class MailchimpTest < ActiveSupport::TestCase
         assert u.mailchimp_synchronized?
       end
     end
+    
+    context 'with Timecop' do
+
+    teardown do
+      Timecop.return
+    end
 
     should "be able to update existing user" do
       all_users.each { |u| u.mailchimp_synchronized! }
@@ -119,6 +125,8 @@ class MailchimpTest < ActiveSupport::TestCase
         @result = MAILCHIMP.export_users
       end
       assert_equal({"add_count"=>0, "update_count"=>1, "error_count"=>0, "errors"=>[]}, @result)
+    end
+
     end
   end
 

@@ -9,6 +9,8 @@ class RegistrationsController < Devise::RegistrationsController
   before_filter :find_supported_providers, :only => [:edit, :update]
   before_filter :set_return_to, :only => [:new, :create]
   skip_before_filter :require_no_authentication, :only => [:show] , :if => lambda {|c| request.xhr? }
+  after_filter :rename_flash_messages, :only => [:new, :create, :edit]
+  after_filter :render_or_redirect_after_create, :only => [:create]
 
   layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
 
@@ -17,15 +19,12 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def create
-    if User.find_by_email(params[:user][:email])
-      set_flash_message :notice, :email_exists, :email => params[:user][:email], :link => (ActionController::Base.helpers.link_to 'Sign In', new_user_session_url(:email => params[:user][:email]), :rel => 'modal.sign-up-modal', :class => "nav-link header-second margin-right ico-login padding-right")
-    end if params[:user] && !params[:user][:email].blank?
     super
-    AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(@user.id) unless @user.new_record?
     # Clear out temporarily stored Provider authentication data if present
-
     session[:omniauth] = nil unless @user.new_record?
     flash[:redirected_from_sign_up] = true
+    AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(@user.id) unless @user.new_record?
+    @resource = resource
   end
 
   def edit
@@ -34,7 +33,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update
     if resource.update_with_password(params[resource_name])
-      set_flash_message :notice, :updated
+      set_flash_message :success, :updated
       sign_in(resource, :bypass => true)
       redirect_to :action => 'edit'
     else
@@ -58,7 +57,8 @@ class RegistrationsController < Devise::RegistrationsController
 
   def destroy_avatar
     @user = current_user
-    @user.remove_avatar!
+    @user.remove_avatar = true
+    @user.save!
     render :text => {}, :status => 200, :content_type => 'text/plain' 
   end
 
@@ -66,11 +66,11 @@ class RegistrationsController < Devise::RegistrationsController
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
-      flash[:notice] = "Thanks - your email address has been verified!"
+      flash[:success] = "Thanks - your email address has been verified!"
       redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path(@user) 
     else
       if @user.verified
-        flash[:notice] = "The email address has been already verified"
+        flash[:warning] = "The email address has been already verified"
       else
         flash[:error] = "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
       end
@@ -95,6 +95,24 @@ class RegistrationsController < Devise::RegistrationsController
 
   def set_return_to
     session[:user_return_to] = params[:return_to] if params[:return_to].present?
+  end
+
+  # if ajax call has been made from modal and user has been created, we need to tell 
+  # Modal that instead of rendering content in modal, it needs to redirect to new page
+  def render_or_redirect_after_create
+    if request.xhr? 
+      if @user.persisted?
+        render_redirect_url_as_json
+      end
+    end
+    if !@user.persisted? && params[:user] && User.find_by_email(params[:user][:email])
+      redirect_to_sign_in
+    end
+  end
+
+  def redirect_to_sign_in
+      self.response_body = nil
+      redirect_to new_user_session_url(:email => params[:user][:email])
   end
 
 end

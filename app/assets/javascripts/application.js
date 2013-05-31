@@ -36,7 +36,8 @@
 //= require_tree ./lib
 //
 // Standard components
-//= require_tree ./components
+//= require_directory ./components/lib
+//= require_directory ./components
 //
 // Sections
 //= require_tree ./sections
@@ -119,12 +120,6 @@ if($.browser.mozilla) {
     }
   });
 };
-
-$(document).on('click', 'div.alert a.close', function(e){
-  wrapper = $(this).closest('.alert');
-  wrapper.fadeOut('slow');
-  return false;
-});
 
 function doListingGoogleMaps() {
   return;

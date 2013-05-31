@@ -1,3 +1,4 @@
+@javascript
 Feature: As a user of the site
   In order to promote my company
   As a user
@@ -24,18 +25,18 @@ Feature: As a user of the site
      Then Location with my details should be created
      
   Scenario: A user can edit existing location
-    Given a location exists with company: the company
+    Given the location exists with company: the company
       And I am on the manage locations page
      When I click edit icon
       And I provide new location data
       And I submit the form
-     Then Location should be updated
+     Then the location should be updated
      When I click edit icon
-     When I follow "Delete this location"
-     Then Location has been deleted
+      And I click delete location link
+     Then the location should not exist
 
   Scenario: A user can add new listing
-    Given a location exists with company: the company
+    Given the location exists with company: the company
       And I am on the manage locations page
      When I follow "Create New Listing"
       And I fill listing form with valid details
@@ -43,16 +44,16 @@ Feature: As a user of the site
      Then Listing with my details should be created
 
   Scenario: A user can edit existing listing
-    Given a location exists with company: the company
-      And a listing exists with location: the location
+    Given the location exists with company: the company
+      And the listing exists with location: the location
       And I am on the manage locations page
      When I click edit listing icon
       And I provide new listing data
       And I submit the form
-     Then Listing should be updated
+     Then the listing should be updated
      When I click edit listing icon
-     When I follow "Delete this listing"
-     Then Listing has been deleted
+      And I click delete listing link
+     Then the listing should not exist
 
   Scenario: A user can disable existing price in listing
     Given a location exists with company: the company
@@ -73,4 +74,20 @@ Feature: As a user of the site
       And I submit the form
       And I click edit listing icon
      Then Listing weekly pricing should be enabled
+
+  Scenario: A user can set availability rules on a listing
+    Given a location exists with company: the company
+    And   a listing exists with location: the location
+    And   I am on the manage locations page
+    When I click edit listing icon
+    And  I select custom availability:
+        | Day | Availabile | Open Time | Close Time |
+        | 1   | Yes        | 9:00      | 17:00      |
+        | 2   | Yes        | 9:00      | 17:00      |
+    And I submit the form
+    Then the listing should have availability:
+        | Day | Availabile | Open Time | Close Time |
+        | 1   | Yes        | 9:00      | 17:00      |
+        | 2   | Yes        | 9:00      | 17:00      |
+
 

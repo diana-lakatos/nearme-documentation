@@ -1,4 +1,4 @@
-  Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed, reserver|
+Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed, reserver|
   lister = User.find_by_name(lister)
   reserver = User.find_by_name(reserver)
   @listing = FactoryGirl.create(:listing)
@@ -13,6 +13,18 @@ end
 
 Then /^I should see a link "(.*?)"$/ do |link|
   page.should have_content(link)
+end
+
+Given /^#{capture_model} is reserved hourly$/ do |listing_instance|
+  listing = model!(listing_instance)
+  listing.hourly_reservations = true
+  listing.save!
+end
+
+Given /^#{capture_model} has an hourly price of \$?([0-9\.]+)$/ do |listing_instance, price|
+  listing = model!(listing_instance)
+  listing.hourly_price = price
+  listing.save!
 end
 
 Given /^the listing has the following reservations:$/ do |table|
@@ -100,18 +112,49 @@ When /^the reservation expires/ do
 end
 
 When /^I select to book( and review)? space for:$/ do |and_review, table|
-  next unless table.hashes.length > 0
+  bookings = extract_reservation_options(table)
+  next if bookings.empty?
 
-  dates = table.hashes.map do |row|
-    Chronic.parse(row['Date']).to_date
+  if bookings.first[:start_minute]
+    # Hourly bookgs
+    ensure_datepicker_open('.date-start')
+    select_datepicker_date(bookings.first[:date])
+
+    page.find('.time-picker').click
+    page.execute_script <<-JS
+      $('.time-start select').val("#{bookings.first[:start_minute]}").trigger('change');
+      $('.time-end select').val("#{bookings.first[:end_minute]}").trigger('change');
+    JS
+  else
+    # Daily booking
+    start_to_book(bookings.first[:listing], bookings.map { |b| b[:date] }, bookings.first[:quantity])
   end
 
-  qty = table.hashes.first['Quantity'].to_i
-  qty = 1 if qty < 1
-
-  listing = model!(table.hashes.first['Listing'])
-  start_to_book(listing, dates, qty)
   step "I click to review the booking" if and_review
+end
+
+Then /^the user should have a reservation:$/ do |table|
+  user = model!("the user")
+  bookings = extract_reservation_options(table)
+  listing = bookings.first[:listing]
+  reservation = user.reservations.last
+
+  assert_equal listing, reservation.listing
+  bookings.each do |booking|
+    assert_equal booking[:quantity], reservation.quantity
+    period = reservation.periods.detect { |p| p.date == booking[:date] }
+    assert period, "Expected there to be a booking on #{booking[:date]} but there was none"
+
+    # Test hourly booking times if hourly reservation
+    assert_equal booking[:start_minute], period.start_minute if booking[:start_minute]
+    assert_equal booking[:end_minute], period.end_minute if booking[:end_minute]
+  end
+end
+
+Then /^the reservation cost should show \$?([0-9\.]+)$/ do |cost|
+  within '.space-reservation-modal .total-amount' do
+    assert page.has_content?(cost)
+  end
 end
 
 When /^I click to review the bookings?$/ do
@@ -141,18 +184,22 @@ end
 Then(/^I should see the booking confirmation screen for:$/) do |table|
   wait_for_ajax
 
-  # Parse the table
-  dates = table.hashes.map do |row|
-    Chronic.parse(row['Date']).to_date
-  end
-
-  qty = table.hashes.first['Quantity'].to_i
-  qty = 1 if qty < 1
-
-  listing = model!(table.hashes.first['Listing'])
+  reservation = extract_reservation_options(table).first
+  next unless reservation
 
   within '.space-reservation-modal' do
-    assert page.has_content?("#{qty} #{listing.name}")
+    if reservation[:start_minute]
+      # Hourly booking
+      date = reservation[:date].strftime("%B %-e")
+      start_time = reservation[:start_at].strftime("%l:%M%P")
+      end_time   = reservation[:end_at].strftime("%l:%M%P")
+      assert page.has_content?(date), "Expected to see: #{date}"
+      assert page.has_content?(start_time), "Expected to see: #{start_time}"
+      assert page.has_content?(end_time), "Expected to see: #{end_time}"
+    else
+      # Daily booking
+      assert page.has_content?("#{reservation[:quantity]} #{reservation[:listing].name}")
+    end
   end
 end
 
@@ -175,7 +222,7 @@ When(/^I sign up in the modal to continue booking$/) do
 end
 
 When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved for '(.+)'$/ do |user, qty, listing, date|
-  user = model!(user)
+  user = User.last
   qty = qty ? qty.to_i : 1
 
   listing = model!(listing)

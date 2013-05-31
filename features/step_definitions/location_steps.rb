@@ -36,3 +36,8 @@ end
 Then /^that location no longer exists$/ do
   expect { model!('location') }.to raise_error ActiveRecord::RecordNotFound
 end
+
+Then /^I should see highlighted #{capture_model}$/ do |listing_model|
+  listing = model!(listing_model)
+  page.should have_css(".listing.box:first-child .listing-name", :text => listing.name)
+end

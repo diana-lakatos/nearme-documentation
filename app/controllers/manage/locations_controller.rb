@@ -16,7 +16,7 @@ class Manage::LocationsController < Manage::BaseController
     @location = @company.locations.build(params[:location])
 
     if @location.save
-      flash[:notice] = "Great, your new Space has been added!"
+      flash[:success] = "Great, your new Space has been added!"
       redirect_to manage_locations_path
     else
       render :new
@@ -34,7 +34,7 @@ class Manage::LocationsController < Manage::BaseController
     @location.attributes = params[:location]
 
     if @location.save
-      flash[:context_success] = "Great, your Space has been updated!"
+      flash[:success] = "Great, your Space has been updated!"
       redirect_to manage_locations_path
     else
       render :edit
@@ -43,7 +43,7 @@ class Manage::LocationsController < Manage::BaseController
 
   def destroy
     if @location.destroy
-      flash[:notice] = "You've deleted #{@location.name}"
+      flash[:deleted] = "You've deleted #{@location.name}"
     else
       flash[:error] = "We couldn't delete #{@location.name}"
     end
@@ -62,7 +62,7 @@ class Manage::LocationsController < Manage::BaseController
 
   def redirect_if_no_company
     unless @company
-      flash[:notice] = "Please add your company first"
+      flash[:warning] = "Please add your company first"
       redirect_to new_space_wizard_url
     end
   end
