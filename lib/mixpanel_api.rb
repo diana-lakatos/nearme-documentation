@@ -22,5 +22,9 @@ class MixpanelApi
     @mixpanel.track_charge(distinct_id, amount, time, options)
   end
 
+  def register(properties)
+    @mixpanel.register(properties)
+  end
+
 end
 

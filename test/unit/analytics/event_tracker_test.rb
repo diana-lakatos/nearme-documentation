@@ -22,6 +22,13 @@ class EventTrackerTest < ActiveSupport::TestCase
     end
   end
 
+  context 'Campaign parameters' do
+    should 'register campaign parameters' do
+      @mixpanel.expects(:register).with({ utm_source: 'google', utm_campaign: 'guests' })
+      Analytics::EventTracker.new(@mixpanel, @user, { utm_source: 'google', utm_campaign: 'guests' })
+    end
+  end
+
   context 'Listings' do
     setup do
       @listing = FactoryGirl.create(:listing)

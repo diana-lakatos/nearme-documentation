@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   def event_tracker
     @event_tracker ||= begin
-      Analytics::EventTracker.new(MixpanelApi.new, current_user)
+      Analytics::EventTracker.new(MixpanelApi.new, current_user, params)
     end
   end
 

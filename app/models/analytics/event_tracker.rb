@@ -1,9 +1,10 @@
 class Analytics::EventTracker
-  attr_accessor :user
+  attr_accessor :user, :params
 
-  def initialize(api, user)
+  def initialize(api, user, params = {})
     @api = api
     self.user = user
+    self.params = params
   end
 
   def user=(user)
@@ -11,6 +12,18 @@ class Analytics::EventTracker
 
     if @user
       set(@user.id, @user)
+    end
+  end
+
+  def params=(params)
+    @params = params
+
+    if @params[:utm_source]
+      register(@params[:utm_source])
+    end
+
+    if @params[:utm_campaign]
+      register(@params[:utm_campaign])
     end
   end
 
@@ -28,6 +41,10 @@ class Analytics::EventTracker
 
   def set(user_id, *objects)
     @api.set(user_id, event_properties(objects))
+  end
+
+  def register(properties)
+    @api.register(properties)
   end
 
   def track_event(event_name, *objects)
