@@ -16,7 +16,11 @@
                 %p.em
                   %strong= link_to(reservation.listing.name, reservation.listing)
                   on
-                  %time{:datetime => reservation.date}= l(reservation.date, :format => :long)
+                  %time{:datetime => reservation.date}
+                    - if reservation.listing.hourly_reservations?
+                      = hourly_summary_for_period(reservation.periods.first) if reservation.periods.first.present?
+                    - else
+                      = l(reservation.date, :format => :long)
                   (#{reservation.state_name}#{bookings_time_to_expiry(reservation)}) 
                   %br/
                   = reservation.comment

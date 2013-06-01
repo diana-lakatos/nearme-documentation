@@ -58,6 +58,11 @@ section.locations {
         margin-top: 13px;
       }
 
+      .open-time, 
+      .close-time {
+        position: relative;
+      }
+
       .day-name, .open-time, .close-time, .closed-flag {
         float: left;
         width: 90px;

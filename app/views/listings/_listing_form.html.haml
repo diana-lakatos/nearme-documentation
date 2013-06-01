@@ -14,38 +14,46 @@
 
 - if only_inputs.empty? || only_inputs.include?(:price)
   %div{:class => "control-group #{"error" if f.object.errors.include?(:free).present?}"}
-    = f.label :daily_price, 'Price', :class => 'control-label' do
+    = f.label :daily_price, 'Price', :class => 'control-label flush-top' do
       %abbr{:title => "required"} *
       Price
 
     .controls
-      .price-inputs-wrapper.left
-        %div
-          %label.checkbox{:for => "listing_enable_daily"}
-            = f.check_box :enable_daily, class: 'enable_daily', 'data-enable-price' => true
-          %span.currency-holder
-          = f.number_field :daily_price, :as => :decimal, :label => false, :class => 'mini', :class => "price-input", 'data-price-input' => true
-          %span.periodicity /day
+      %div.price-inputs-hourly
+        %label.radio
+          = f.radio_button :hourly_reservations, true
+          Bookings are made by the hour
 
-        %div
-          %label.checkbox{:for => "listing_enable_weekly"}
-            = f.check_box :enable_weekly, class: 'enable_weekly', 'data-enable-price' => true
-          %span.currency-holder
-          = f.number_field :weekly_price, :as => :decimal, :label => false, :class => 'mini', :class => "price-input", 'data-price-input' => true
-          %span.periodicity /week
+        .price-input-options{:style => ('display: none' unless f.object.hourly_reservations?)}
+          .price-inputs-wrapper.left
+            = render 'manage/listings/price_field', :f => f, :price => "hourly", :label => "hour"
 
-        %div
-          %label.checkbox{:for => "listing_enable_monthly"}
-            = f.check_box :enable_monthly, class: 'enable_monthly', 'data-enable-price' => true
-          %span.currency-holder
-          = f.number_field :monthly_price, :as => :decimal, :label => false, :class => 'mini', :class => "price-input", 'data-price-input' => true
-          %span.periodicity /month
-      .free-price
-        .inline-rule
-        .or-part Or
-        %label.checkbox{:for => "listing_free"}
-          = f.check_box :free, 'data-free-checkbox' => true
-          Free
+          .free-price
+            .inline-rule{:style => "height: 60px;"}
+            .or-part Or
+            %label.checkbox
+              = f.check_box :free, :'data-behavior' => 'toggle-free'
+              Free
+
+
+      %div.price-inputs-daily
+        %label.radio
+          = f.radio_button :hourly_reservations, false
+          Bookings are made by the day
+
+        .price-input-options{:style => ('display: none' if f.object.hourly_reservations?)}
+          .price-inputs-wrapper.left
+            = render 'manage/listings/price_field', :f => f, :price => "daily", :label => "day"
+            = render 'manage/listings/price_field', :f => f, :price => "weekly", :label => "week"
+            = render 'manage/listings/price_field', :f => f, :price => "monthly", :label => "month"
+
+          .free-price
+            .inline-rule
+            .or-part Or
+            %label.checkbox
+              = f.check_box :free, :'data-behavior' => 'toggle-free'
+              Free
+
   - if f.object.errors.include?(:free).present?
     %p.error-block
       = 'must be free if all prices are zero'

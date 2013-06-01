@@ -1,11 +1,9 @@
 module SearchParamsTestHelper
-  def fake_geocoder(finds_result = true)
-    _search_area = !!finds_result ? search_area : false
-    stub('Geocoder', find_search_area: _search_area)
-  end
 
   def options_with_bounding_box(options={})
-    { boundingbox: { start: { lat: 10, lon: -10 } , end: { lat: 18, lon: 18 } } }.deep_merge(options)
+    options = { boundingbox: { start: { lat: 10, lon: -10 } , end: { lat: 18, lon: 18 } } }.deep_merge(options)
+    options.delete(:location)
+    options
   end
 
   def options_with_location(options={})

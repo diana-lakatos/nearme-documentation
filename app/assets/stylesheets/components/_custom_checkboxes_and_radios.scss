@@ -134,6 +134,7 @@
       i {
         @extend .ico-chevron-down;
         position: absolute;
+        z-index: 0;
         right: 8px;
         top: 10px;
         font-size: 26px;

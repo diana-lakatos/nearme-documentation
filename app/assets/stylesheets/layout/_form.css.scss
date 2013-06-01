@@ -161,7 +161,7 @@ form {
   }
 
   .hint, .help-block, .error-block {
-    padding-left: 20px;
+    padding-left: 11px;
 
     &.no-icon {
       background: none;
@@ -170,13 +170,22 @@ form {
   }
 
   .hint, .help-block {
-    background: image-url("components/form/hint.png") left top no-repeat;
     margin-top: 8px;
+
+    &:before {
+      @extend .ico-info:before;
+      @extend .ico-info;
+      padding-right: 10px;
+    }  
   }
 
   .error-block {
     color: #e83d33;
-    background: image-url("components/form/error.png") left top no-repeat;
+
+    &:before {
+      @extend .ico-warning:before;
+      padding-right: 10px;
+    }  
   }
 
   .preamble {

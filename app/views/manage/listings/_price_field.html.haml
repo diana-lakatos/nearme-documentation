@@ -1,0 +1,10 @@
+- price ||= nil
+- label ||= nil
+%div
+  %label.checkbox{:for => "enable_#{price}"}
+    = check_box_tag "enable_#{price}", "1", f.object.send("#{price}_price").present?, class: "enable_#{price}", :'data-behavior' => 'enable-price'
+  %span.currency-holder
+  = f.number_field "#{price}_price", :as => :decimal, :label => false, :class => 'mini', :class => "price-input", :'data-type' => 'price-input'
+  %span.periodicity /#{label}
+
+

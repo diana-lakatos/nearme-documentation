@@ -8,13 +8,13 @@ class Listing::Search::Params::ApiTest <  ActiveSupport::TestCase
   context "#new" do
     should "Raise SearchTypeNotSupported when created with neither query, nor bounding box" do
       assert_raise Listing::Search::SearchTypeNotSupported do
-        Listing::Search::Params::Api.new({}, fake_geocoder(false))
+        Listing::Search::Params::Api.new({})
       end
     end
   end
 
-  def build_params(options, geocoder)
-    Listing::Search::Params::Api.new(options, geocoder)
+  def build_params(options)
+    Listing::Search::Params::Api.new(options)
   end
 
 end

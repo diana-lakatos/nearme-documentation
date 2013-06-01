@@ -118,7 +118,7 @@ abbr[data-original-title] {
   @include adjust-font-size-to(16px);
 }
 
-.label-daily-price {
+.label-daily-price, .label-hourly-price {
   background: lighten($green, 16%);
 }
 

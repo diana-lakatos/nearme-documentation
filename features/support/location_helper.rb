@@ -18,19 +18,14 @@ module LocationHelper
     select "Co-working", from: "location_location_type_id"
     fill_in "location_email", with: "location@example.com"
     fill_in "location_special_notes", with: "Special terms are here"
-    select "PLN", from: "currency-select"
-    select "Amenity1", from: "location_amenity_ids"
-    select "Amenity3", from: "location_amenity_ids"
   end
 
   def assert_location_data(location)
-    assert_equal 'Auckland, New Zealand', location.address
+    assert location.address.include?('Auckland') && location.address.include?('New Zealand')
     assert_equal 'Proin adipiscing nunc vehicula lacus varius dignissim.', location.description
     assert_equal 'Co-working', location.location_type.name
     assert_equal 'location@example.com', location.email
     assert_equal 'Special terms are here', location.special_notes
-    assert_equal 'PLN', location.currency
-    assert_equal ["Amenity1", "Amenity3"], location.amenities.pluck(:name)
   end
 end
 

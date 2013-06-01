@@ -36,7 +36,8 @@
 //= require_tree ./lib
 //
 // Standard components
-//= require_tree ./components
+//= require_directory ./components/lib
+//= require_directory ./components
 //
 // Sections
 //= require_tree ./sections
@@ -84,7 +85,8 @@ window.DNM = {
 
   initializeCustomSelects: function(){
     $('select:not(.custom-select)').customSelect();
-    $('select:not(.custom-select)').siblings('.customSelect').append('<i></i>').closest('.controls').css({'position': 'relative'});
+    $('.customSelect').append('<i></i>').closest('.controls').css({'position': 'relative'});
+    $('.customSelect').siblings('select').css({'margin': '0px', 'z-index': 1 });
 
     $('.custom-select').chosen()
     $('.chzn-choices input').focus(function(){

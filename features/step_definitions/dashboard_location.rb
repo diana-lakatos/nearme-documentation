@@ -8,12 +8,12 @@ Given /^(Location|Listing) with my details should be created$/ do |model|
   end
 end
 
-Given /^(Location|Listing) should be updated$/ do |model|
-  if model=='Location'
-    location = Location.last
+Given /^#{capture_model} should be updated$/ do |model|
+  if model=='the location'
+    location = model!('location')
     assert_location_data(location)
   else
-    listing = Listing.last
+    listing = model!('listing')
     assert_listing_data(listing, true)
   end
 end
@@ -28,7 +28,7 @@ end
 
 When /^I (disable|enable) (.*) pricing$/ do |action, period|
 
-  page.find("#listing_enable_#{period}").set(action == 'disable' ? false : true)
+  page.find("#enable_#{period}").set(action == 'disable' ? false : true)
   if action=='enable'
     page.find("#listing_#{period}_price").set(15.50)
   end
@@ -44,7 +44,7 @@ When /^I provide new (location|listing) data$/ do |model|
 end
 
 When /^I submit the form$/ do
-  click_button 'Save'
+  page.find('#submit-link').click
 end
 
 When /^I click edit icon$/ do
@@ -55,8 +55,13 @@ When /^I click edit listing icon$/ do
   page.find('.listing .edit-link').click
 end
 
+When /^I click delete (location|listing) link$/ do |model|
+  page.evaluate_script('window.confirm = function() { return true; }')
+  click_link "Delete this #{model}"
+end
+
 Then /^Listing (.*) pricing should be (disabled|enabled)$/ do |period, state|
-  enable_period_checkbox = page.find("#listing_enable_#{period}")
+  enable_period_checkbox = page.find("#enable_#{period}")
   if state=='enabled'
     assert enable_period_checkbox.checked?
     assert_equal "15.50", page.find("#listing_#{period}_price").value
@@ -65,10 +70,39 @@ Then /^Listing (.*) pricing should be (disabled|enabled)$/ do |period, state|
   end
 end
 
-Then /^(Location|Listing) has been deleted$/ do |model|
-  if model=='Location'
-  assert_nil Location.first
-  else
-  assert_nil Listing.first
+When /^I select custom availability:$/ do |table|
+  choose 'availability_rules_custom'
+
+  days = availability_data_from_table(table)
+  days.each do |day, rule|
+    within ".availability-rules .day-#{day}" do
+      if rule.present?
+        page.find('.open-checkbox').set(true)
+        page.find("select[name*=open_time] option[value='#{rule[:open]}']").select_option
+        page.find("select[name*=close_time] option[value='#{rule[:close]}']").select_option
+      else
+        page.find('.open-checkbox').set(false)
+      end
+    end
   end
 end
+
+Then /^#{capture_model} should have availability:$/ do |model, table|
+  object = model!(model)
+  days = availability_data_from_table(table)
+
+  object.availability.each_day do |day, rule|
+    if days[day].present?
+      assert rule, "#{day} should have a rule"
+      oh, om = days[day][:open].split(':').map(&:to_i)
+      ch, cm = days[day][:close].split(':').map(&:to_i)
+      assert_equal oh, rule.open_hour, "#{day} should have open hour = #{oh}"
+      assert_equal om, rule.open_minute, "#{day} should have open minute = #{om}"
+      assert_equal ch, rule.close_hour, "#{day} should have close hour = #{ch}"
+      assert_equal cm, rule.close_minute, "#{day} should have close minute = #{cm}"
+    else
+      assert_nil rule, "#{day} should not be open"
+    end
+  end
+end
+
