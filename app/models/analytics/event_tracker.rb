@@ -17,13 +17,18 @@ class Analytics::EventTracker
 
   def params=(params)
     @params = params
+    register_params = {}
 
     if @params[:utm_source]
-      register(@params[:utm_source])
+      register_params.merge!({ utm_source: @params[:utm_source]})
     end
 
     if @params[:utm_campaign]
-      register(@params[:utm_campaign])
+      register_params.merge!({ utm_campaign: @params[:utm_campaign]})
+    end
+
+    unless register_params.empty?
+      register(register_params)
     end
   end
 
@@ -33,22 +38,30 @@ class Analytics::EventTracker
   include SpaceWizardEvents
   include UserEvents
 
+  private
+
+  def track_event(event_name, *objects)
+    @api.track(event_name, serialize_event_properties(objects))
+  end
+
   def charge(user_id, total_amount_dollars)
     @api.track_charge(user_id, total_amount_dollars)
   end
-
-  private
 
   def set(user_id, *objects)
     @api.set(user_id, event_properties(objects))
   end
 
-  def register(properties)
-    @api.register(properties)
+  def identify(distinct_id)
+    @api.identify(distinct_id)
   end
 
-  def track_event(event_name, *objects)
-    @api.track(event_name, serialize_event_properties(objects))
+  def alias_user(distinct_id)
+    @api.alias_user(distinct_id)
+  end
+
+  def register(properties)
+    @api.register(properties)
   end
 
   def serialize_event_properties(objects)

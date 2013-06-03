@@ -1,8 +1,7 @@
 module Analytics::UserEvents
 
   def signed_up(user, custom_options = {})
-    # We should .alias the user here so we keep events relating to their anonymous browsing (when this is merged: https://github.com/zevarito/mixpanel/pull/92).
-
+    alias_user user.id
     set user.id, user, custom_options
     track_event 'Signed Up', user, custom_options
   end

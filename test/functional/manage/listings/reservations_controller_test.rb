@@ -14,7 +14,6 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     @tracker.expects(:confirmed_a_booking).with do |reservation|
       reservation == assigns(:reservation)
     end
-    @tracker.expects(:charge)
     post :confirm, { listing_id: @reservation.listing.id, id: @reservation.id }
     assert_redirected_to manage_guests_dashboard_path
   end
@@ -32,7 +31,6 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|
       reservation == assigns(:reservation) && custom_options == { actor: 'host' }
     end
-    @tracker.expects(:charge)
     post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
     assert_redirected_to manage_guests_dashboard_path
   end

@@ -9,6 +9,7 @@ module Analytics::ReservationEvents
 
   def confirmed_a_booking(reservation, custom_options = {})
     track_event 'Confirmed a Booking', reservation, custom_options
+    charge reservation.owner.id, reservation.total_amount_dollars
   end
 
   def rejected_a_booking(reservation, custom_options = {})
@@ -17,6 +18,7 @@ module Analytics::ReservationEvents
 
   def cancelled_a_booking(reservation, custom_options = {})
     track_event 'Cancelled a Booking', reservation, custom_options
+    charge reservation.owner.id, reservation.total_negative_amount_dollars
   end
 
   def booking_expired(reservation, custom_options = {})

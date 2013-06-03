@@ -20,9 +20,7 @@ class EventTrackerTest < ActiveSupport::TestCase
     })
       Analytics::EventTracker.new(@mixpanel, @user)
     end
-  end
 
-  context 'Campaign parameters' do
     should 'register campaign parameters' do
       @mixpanel.expects(:register).with({ utm_source: 'google', utm_campaign: 'guests' })
       Analytics::EventTracker.new(@mixpanel, @user, { utm_source: 'google', utm_campaign: 'guests' })
@@ -79,6 +77,7 @@ class EventTrackerTest < ActiveSupport::TestCase
 
     should 'track a booking confirmation' do
       expect_event 'Confirmed a Booking', reservation_properties
+      expect_charge @reservation.owner.id, 50.0
       @tracker.confirmed_a_booking(@reservation)
     end
 
@@ -89,6 +88,7 @@ class EventTrackerTest < ActiveSupport::TestCase
 
     should 'track a booking cancellation with custom options' do
       expect_event 'Cancelled a Booking', reservation_properties.merge!({ actor: 'host'})
+      expect_charge @reservation.owner.id, -50.0
       @tracker.cancelled_a_booking(@reservation, { actor: 'host'})
     end
 
@@ -112,6 +112,7 @@ class EventTrackerTest < ActiveSupport::TestCase
 
   context 'Users' do
     should 'track user sign up' do
+      expect_alias @user.id
       expect_event 'Signed Up', user_properties
       @tracker.signed_up(@user)
     end
@@ -119,11 +120,6 @@ class EventTrackerTest < ActiveSupport::TestCase
     should 'track user log in' do
       expect_event 'Logged In', user_properties
       @tracker.logged_in(@user)
-    end
-
-    should 'track charge' do
-      expect_charge @user.id, '100.00'
-      @tracker.incurred_charge(@user.id, '100.00')
     end
   end
 
@@ -135,6 +131,10 @@ class EventTrackerTest < ActiveSupport::TestCase
 
   def expect_charge(user_id, total_amount_dollars)
     @mixpanel.expects(:track_charge).with(user_id, total_amount_dollars)
+  end
+
+  def expect_alias(user_id)
+    @mixpanel.expects(:alias_user).with(user_id)
   end
 
   def build_search_params(options, geocoder = fake_geocoder(true))
