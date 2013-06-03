@@ -33,11 +33,16 @@ class Reservation < ActiveRecord::Base
   before_validation :set_default_payment_status, on: :create
   after_create :auto_confirm_reservation
 
+  # TODO: Move code relating to expiry event from model to controller.
   after_create :schedule_expiry
 
   def perform_expiry!
     if unconfirmed?
       expire!
+
+      event_tracker = Analytics::EventTracker.new(MixpanelApi.new, location.creator)
+      event_tracker.booking_expired(self)
+
       ReservationMailer.notify_guest_of_expiration(self).deliver
       ReservationMailer.notify_host_of_expiration(self).deliver
     end
