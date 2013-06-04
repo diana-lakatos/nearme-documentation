@@ -23,13 +23,16 @@ class @AvailabilityRulesController
       @clearField.prop('checked', true)
     else
       @clearField.prop('checked', false)
+    @container.find('select').trigger('update')
 
   updateDayStates: ->
     @customFields.find('input[name*=destroy]').each (i, element) =>
       @updateClosedState($(element))
+    @container.find('select').trigger('update')
 
   showCustom: ->
     @customFields.find('input, select').prop('disabled', false)
+    @customFields.find('.disabled').removeClass('disabled')
     @customFields.show()
     @updateDayStates()
 

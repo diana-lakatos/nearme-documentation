@@ -22,7 +22,7 @@ class @PriceFields
   bindEvents: ->
     @enablingPriceCheckboxes.change (event) =>
       checkbox = $(event.target)
-      checkbox.siblings('input[data-type*=price-input]').attr('disabled', !checkbox.is(':checked'))
+      checkbox.parent().siblings('input[data-type*=price-input]').attr('disabled', !checkbox.is(':checked'))
 
       # Free enabled if all prices are disabled
       @freeCheckbox.prop('checked', !@enablingPriceCheckboxes.is(':checked'))
@@ -34,5 +34,3 @@ class @PriceFields
     @priceFields.on 'change', (event) =>
       price = $(event.target)
       price.val(price.val().replace(/[^0-9\.]/, ""))
-
-

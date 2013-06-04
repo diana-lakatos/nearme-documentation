@@ -2,12 +2,6 @@
   @include form-field;
 }
 
-// overwrite default width - make its width dynamic insteat of constant 
-.control-group .chzn-container-multi{
-  width: auto !important;
-  display: block !important;
-}
-
 .chzn-container-multi .chzn-choices .search-choice {
   margin: 4px 0 0 5px;
   padding: 2px 20px 6px 5px;
@@ -21,7 +15,7 @@ ul.chzn-choices.chzn-choices-active{
     @include form-field-focus;
 }
 
-  // overwrite default width - make its width dynamic instea of constant 
+  // overwrite default width - make its width dynamic instead of constant 
 .control-group .chzn-container-multi{
   width: auto !important;
   display: block !important;
