@@ -1,7 +1,7 @@
 module Analytics::UserEvents
 
-  def signed_up(user, custom_options = {})
-    alias_user user.id
+  def signed_up(user, anonymous_id, custom_options = {})
+    alias_user user.id, anonymous_id
     set user.id, user, custom_options
     track_event 'Signed Up', user, custom_options
   end

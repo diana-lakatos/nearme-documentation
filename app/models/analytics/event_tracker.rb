@@ -1,8 +1,9 @@
 class Analytics::EventTracker
   attr_accessor :user, :params
 
-  def initialize(api, user, params = {})
+  def initialize(api, user, params = {}, anonymous_id)
     @api = api
+    @anonymous_id = anonymous_id
     self.user = user
     self.params = params
   end
@@ -56,8 +57,8 @@ class Analytics::EventTracker
     @api.identify(distinct_id)
   end
 
-  def alias_user(distinct_id)
-    @api.alias_user(distinct_id)
+  def alias_user(distinct_id, previous_distinct_id)
+    @api.alias_user(distinct_id, previous_distinct_id)
   end
 
   def register(properties)
@@ -80,9 +81,13 @@ class Analytics::EventTracker
   def global_event_properties
     hash = {}
 
-    unless @user.nil?
-      hash.merge!({ distinct_id: @user.id })
+    distinct_id = unless @user.nil?
+      @user.id
+    else
+      @anonymous_id
     end
+
+    hash.merge!({ distinct_id: distinct_id })
 
     hash
   end

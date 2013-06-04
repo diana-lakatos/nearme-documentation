@@ -20,8 +20,8 @@ class MixpanelApi
     @mixpanel.append_identify(distinct_id)
   end
 
-  def alias_user(distinct_id)
-    @mixpanel.append_alias(distinct_id)
+  def alias_user(distinct_id, previous_distinct_id)
+    @mixpanel.append(distinct_id, { distinct_id: previous_distinct_id })
   end
 
   def register(properties)

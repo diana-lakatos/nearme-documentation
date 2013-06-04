@@ -4,12 +4,26 @@ class ApplicationController < ActionController::Base
   layout "application"
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
+  before_filter :generate_anonymous_id
+
   protected
 
   def event_tracker
     @event_tracker ||= begin
-      Analytics::EventTracker.new(MixpanelApi.new, current_user, params)
+      Analytics::EventTracker.new(MixpanelApi.new, current_user, params, anonymous_id)
     end
+  end
+
+  def generate_anonymous_id
+    unless cookies[:anonymous_user_id]
+      cookies.permanent[:anonymous_user_id] = SecureRandom.urlsafe_base64
+    end
+  end
+
+  def anonymous_id
+    cookies[:anonymous_user_id]
+  rescue
+   nil
   end
 
   def current_user=(user)
