@@ -6,23 +6,18 @@ class EventTrackerTest < ActiveSupport::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
-    @mixpanel = stub(:set => true)
+    @mixpanel = stub(:append_identify => true)
     @tracker = Analytics::EventTracker.new(@mixpanel, @user)
   end
 
   context "#initialize" do
-    should "assign user and #set via mixpanel" do
-      @mixpanel.expects(:set).with(@user.id, {
-      name: @user.name,
-      email: @user.email,
-      phone: @user.phone,
-      job_title: @user.job_title
-    })
+    should "assign user and #identify via mixpanel" do
+      @mixpanel.expects(:append_identify).with(@user.id)
       Analytics::EventTracker.new(@mixpanel, @user)
     end
 
     should 'register campaign parameters' do
-      @mixpanel.expects(:register).with({ utm_source: 'google', utm_campaign: 'guests' })
+      @mixpanel.expects(:append_register).with({ utm_source: 'google', utm_campaign: 'guests' })
       Analytics::EventTracker.new(@mixpanel, @user, { utm_source: 'google', utm_campaign: 'guests' })
     end
   end
@@ -112,12 +107,14 @@ class EventTrackerTest < ActiveSupport::TestCase
 
   context 'Users' do
     should 'track user sign up' do
-      expect_alias @user.id
+      expect_append_alias @user.id
+      expect_set @user.id, @user
       expect_event 'Signed Up', user_properties
       @tracker.signed_up(@user)
     end
 
     should 'track user log in' do
+      expect_set @user.id, @user
       expect_event 'Logged In', user_properties
       @tracker.logged_in(@user)
     end
@@ -133,8 +130,12 @@ class EventTrackerTest < ActiveSupport::TestCase
     @mixpanel.expects(:track_charge).with(user_id, total_amount_dollars)
   end
 
-  def expect_alias(user_id)
-    @mixpanel.expects(:alias_user).with(user_id)
+  def expect_append_alias(user_id)
+    @mixpanel.expects(:append_alias).with(user_id)
+  end
+
+  def expect_set(user_id, user)
+    @mixpanel.expects(:set).with(user_id, user)
   end
 
   def build_search_params(options, geocoder = fake_geocoder(true))

@@ -1,9 +1,8 @@
 class Analytics::EventTracker
   attr_accessor :user, :params
 
-  def initialize(api, user, params = {}, anonymous_id)
+  def initialize(api, user, params = {})
     @api = api
-    @anonymous_id = anonymous_id
     self.user = user
     self.params = params
   end
@@ -12,7 +11,7 @@ class Analytics::EventTracker
     @user = user
 
     if @user
-      set(@user.id, @user)
+      append_identify(@user.id)
     end
   end
 
@@ -29,7 +28,7 @@ class Analytics::EventTracker
     end
 
     unless register_params.empty?
-      register(register_params)
+      append_register(register_params)
     end
   end
 
@@ -41,11 +40,11 @@ class Analytics::EventTracker
 
   private
 
-  def track_event(event_name, *objects)
+  def track(event_name, *objects)
     @api.track(event_name, serialize_event_properties(objects))
   end
 
-  def charge(user_id, total_amount_dollars)
+  def track_charge(user_id, total_amount_dollars)
     @api.track_charge(user_id, total_amount_dollars)
   end
 
@@ -53,16 +52,16 @@ class Analytics::EventTracker
     @api.set(user_id, event_properties(objects))
   end
 
-  def identify(distinct_id)
-    @api.identify(distinct_id)
+  def append_identify(distinct_id)
+    @api.append_identify(distinct_id)
   end
 
-  def alias_user(distinct_id, previous_distinct_id)
-    @api.alias_user(distinct_id, previous_distinct_id)
+  def append_alias(distinct_id)
+    @api.append_alias(distinct_id)
   end
 
-  def register(properties)
-    @api.register(properties)
+  def append_register(properties)
+    @api.append_register(properties)
   end
 
   def serialize_event_properties(objects)
@@ -74,20 +73,15 @@ class Analytics::EventTracker
   end
 
   def event_properties(objects)
-    objects.map { |o| serialize_object(o)
-    }.inject(:merge)
+    objects.map { |o| serialize_object(o) }.inject(:merge)
   end
 
   def global_event_properties
     hash = {}
 
-    distinct_id = unless @user.nil?
-      @user.id
-    else
-      @anonymous_id
+    unless @user.nil?
+      hash.merge!({ distinct_id: @user.id })
     end
-
-    hash.merge!({ distinct_id: distinct_id })
 
     hash
   end

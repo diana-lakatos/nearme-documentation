@@ -25,7 +25,7 @@ class RegistrationsController < Devise::RegistrationsController
 
     # Only track the sign up if the user has actually been saved (i.e. there are no errors)
     if @user.persisted?
-      event_tracker.signed_up(@user, anonymous_id, { signed_up_via: signed_up_via, provider: provider })
+      event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: provider })
     end
 
     # Clear out temporarily stored Provider authentication data if present

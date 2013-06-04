@@ -16,15 +16,15 @@ class MixpanelApi
     @mixpanel.set(distinct_id_or_request_properties, properties, options)
   end
 
-  def identify(distinct_id)
+  def append_identify(distinct_id)
     @mixpanel.append_identify(distinct_id)
   end
 
-  def alias_user(distinct_id, previous_distinct_id)
-    @mixpanel.append(distinct_id, { distinct_id: previous_distinct_id })
+  def append_alias(distinct_id)
+    @mixpanel.append_alias(distinct_id)
   end
 
-  def register(properties)
+  def append_register(properties)
     @mixpanel.append_register(properties)
   end
 
