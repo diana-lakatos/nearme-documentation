@@ -30,7 +30,17 @@ module Listings
     end
 
     def hourly_availability_schedule
-      render :json => @listing.hourly_availability_schedule(Date.parse(params[:date])).as_json
+      date = if params[:date].present?
+        Date.parse(params[:date]) rescue nil
+      end
+
+      schedule = if date
+        @listing.hourly_availability_schedule(Date.parse(params[:date])).as_json
+      else
+        {}
+      end
+
+      render :json => schedule
     end
 
     private
