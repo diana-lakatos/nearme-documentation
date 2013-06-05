@@ -51,6 +51,19 @@ section.locations {
       margin-top: 6px;
       padding: 6px 0;
 
+      .day-name {
+        margin-top: 10px;
+      }
+
+      .closed-flag {
+        margin-top: 13px;
+      }
+
+      .open-time, 
+      .close-time {
+        position: relative;
+      }
+
       .day-name, 
       .open-time, 
       .close-time, 

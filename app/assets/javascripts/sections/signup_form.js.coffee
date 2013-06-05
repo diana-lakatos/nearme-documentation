@@ -1,18 +1,8 @@
-
-class @SignupForm
+class @SignupForm extends @ModalForm
 
   constructor: (@container) ->
     @form = @container.find('#new_user')
-    @focusInput()
-    @bindEvents()
-
-  focusInput: =>
-    if !$.browser.msie
-      if @form.find('.error-block').length > 0
-        @form.find('.error-block').eq(0).siblings('input:visible').focus()
-      else
-        @form.find('input:visible').eq(0).focus()
-      
+    super @container, @form
 
   bindEvents: ->
     @container.on 'click', '.signup-provider .close-button', (event) =>

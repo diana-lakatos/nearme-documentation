@@ -10,6 +10,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_filter :set_return_to, :only => [:new, :create]
   skip_before_filter :require_no_authentication, :only => [:show] , :if => lambda {|c| request.xhr? }
   after_filter :rename_flash_messages, :only => [:new, :create, :edit]
+  after_filter :render_or_redirect_after_create, :only => [:create]
 
   layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
 
@@ -18,15 +19,12 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def create
-    if User.find_by_email(params[:user][:email])
-      set_flash_message :warning, :email_exists, :email => params[:user][:email], :link => (ActionController::Base.helpers.link_to 'Sign In', new_user_session_url(:email => params[:user][:email]), :rel => 'modal.sign-up-modal', :class => "nav-link header-second margin-right ico-login padding-right")
-    end if params[:user] && !params[:user][:email].blank?
     super
-    AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(@user.id) unless @user.new_record?
     # Clear out temporarily stored Provider authentication data if present
-
     session[:omniauth] = nil unless @user.new_record?
     flash[:redirected_from_sign_up] = true
+    AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(@user.id) unless @user.new_record?
+    @resource = resource
   end
 
   def edit
@@ -97,6 +95,24 @@ class RegistrationsController < Devise::RegistrationsController
 
   def set_return_to
     session[:user_return_to] = params[:return_to] if params[:return_to].present?
+  end
+
+  # if ajax call has been made from modal and user has been created, we need to tell 
+  # Modal that instead of rendering content in modal, it needs to redirect to new page
+  def render_or_redirect_after_create
+    if request.xhr? 
+      if @user.persisted?
+        render_redirect_url_as_json
+      end
+    end
+    if !@user.persisted? && params[:user] && User.find_by_email(params[:user][:email])
+      redirect_to_sign_in
+    end
+  end
+
+  def redirect_to_sign_in
+      self.response_body = nil
+      redirect_to new_user_session_url(:email => params[:user][:email])
   end
 
 end

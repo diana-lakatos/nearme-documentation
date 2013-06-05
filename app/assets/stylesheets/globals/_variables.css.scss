@@ -20,11 +20,15 @@ $dark-gray: rgb(80,80,80);
 $black:  $dnm_black;
 $white: $dnm_white;
 $pure-white: #fff;
+$pure-black: #000;
 
+$gray245: rgb(245,245,245);
 $gray240: rgb(240,240,240);
 $gray230: rgb(230,230,230);
 $gray220: rgb(220,220,220);
 $gray210: rgb(210,210,210);
+$gray204: rgb(204,204,204);
+$gray190: rgb(190,190,190);
 $gray160: rgb(160,160,160);
 $gray120: rgb(120,120,120);
 $gray80: rgb(80,80,80);
@@ -40,6 +44,13 @@ $link_hover: darken($dnm_blue, 10%);
 $icon: $gray160;
 $icon-hover: $gray80;
 
+$checkbox-radio-color: $blue;
+$checkbox-radio-neutral: $gray220;
+
+// Transitions
+
+$navigation-animation-time: 0.1s;
+$checkbox-radio-transition: 0.1s;
 
 // Padding
 

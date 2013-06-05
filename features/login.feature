@@ -101,4 +101,4 @@ Feature: A user can login
     Given a user exists with email: "user@example.com"
     When an anonymous user attempts to sign up with email user@example.com
     Then a new account is not created
-     And a flash message is displayed informing them of this fact and prompting them to sign in via a 'Sign In' link
+     And a user is taken into sign in modal without page reload

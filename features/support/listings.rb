@@ -83,15 +83,15 @@ module ListingsHelpers
     fill_in "listing_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
     select "ListingType2", from: "listing_listing_type_id"
     fill_in "listing_quantity", with: "5"
-    check "listing_enable_daily"
+    check "enable_daily"
     fill_in "listing_daily_price", with: "10"
 
-    check "listing_enable_weekly"
+    check "enable_weekly"
     fill_in "listing_weekly_price", with: "60"
 
-    check "listing_enable_monthly"
+    check "enable_monthly"
     fill_in "listing_monthly_price", with: "200"
-    page.find("#listing_enable_weekly").set(true)
+    page.find("#enable_weekly").set(true)
   end
 
   def assert_listing_data(listing, update = false)

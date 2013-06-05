@@ -160,3 +160,24 @@ abbr[data-original-title] {
     display: none !important;
   }
 }
+
+.dropdown {
+  
+  .dropdown-menu {
+    @include opacity(0);
+    @include animation(fadeOut $navigation-animation-time);
+    display: block;
+    visibility: hidden;
+    @include transition(visibility 0.01s $navigation-animation-time ease-in-out);
+  }
+
+  &.open {
+
+    .dropdown-menu {
+      visibility: visible;
+      @include opacity(1);
+      @include animation(fadeIn $navigation-animation-time);
+      @include transition(visibility 0.01s 0.01s ease-in-out);
+    }
+  }
+}

@@ -28,7 +28,7 @@ end
 
 When /^I (disable|enable) (.*) pricing$/ do |action, period|
 
-  page.find("#listing_enable_#{period}").set(action == 'disable' ? false : true)
+  page.find("#enable_#{period}").set(action == 'disable' ? false : true)
   if action=='enable'
     page.find("#listing_#{period}_price").set(15.50)
   end
@@ -61,7 +61,7 @@ When /^I click delete (location|listing) link$/ do |model|
 end
 
 Then /^Listing (.*) pricing should be (disabled|enabled)$/ do |period, state|
-  enable_period_checkbox = page.find("#listing_enable_#{period}")
+  enable_period_checkbox = page.find("#enable_#{period}")
   if state=='enabled'
     assert enable_period_checkbox.checked?
     assert_equal "15.50", page.find("#listing_#{period}_price").value

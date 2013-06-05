@@ -1,3 +1,4 @@
+
 @import "compass/typography/vertical_rhythm";
 @import "compass/css3/font-face";
 
@@ -107,7 +108,6 @@ address {
     @include opacity(.7);
   }
 }
-
 
 // pnotice added for IE8 which does not display "reset password" link in modal when p element is used, it works for div though
 

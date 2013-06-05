@@ -8,17 +8,21 @@
         %header
           %h2 Log in to Desks Near Me
 
+        - if request.xhr?
+          = render 'shared/render_flash'
+
         = render 'authentications/services'
 
         .hr.divider
           %span Or
 
-        = form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
+  
+        = simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
           .email-holder.input-icon-holder
-            = f.text_field :email, :value => @email, :placeholder => "Email", :tabindex => '1'
+            = f.input :email, :label => false, :placeholder => "Email", :tabindex => '1'
             %span.ico-mail
           .password-holder.input-icon-holder
-            = f.password_field :password, :placeholder => "Password", :tabindex => '2'
+            = f.input :password, :label => false, :placeholder => "Password", :tabindex => '2'
             %span.ico-lock
 
           %div.pnotice
@@ -28,15 +32,12 @@
             = f.submit "Log In", :tabindex => '3'
 
         .text-center.already-a-user= link_to('New User?', new_user_registration_path(:return_to => params[:return_to]), :rel => "modal.sign-up-modal")      
+  
+- if request.xhr?
+  :javascript
+    Modal.setClass('sign-up-modal')
 
-
-- if @email
-  - focus_input = "#new_user #user_password"
-- else
-  - focus_input = "#new_user #user_email"
 :javascript
   $(function() {
-    if(!$.browser.msie){
-      $("#{focus_input}").focus();
-    }
+    new SigninForm($('#signup'))
   });
