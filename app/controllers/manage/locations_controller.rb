@@ -53,7 +53,7 @@ class Manage::LocationsController < Manage::BaseController
   private
 
   def find_location
-    @location = @company.locations.find(params[:id])
+    @location = current_user.locations.find(params[:id])
   end
 
   def find_company
