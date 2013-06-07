@@ -1,0 +1,118 @@
+/* ============================================================
+ * bootstrapSwitch v1.2 by Larentis Mattia @spiritualGuru
+ * http://www.larentis.eu/switch/
+ * ============================================================
+ * Licensed under the Apache License, Version 2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * ============================================================ */
+.has-switch {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  min-width: 100px;
+  @include border-radius(5px);
+  border: 1px solid;
+  text-align: left;
+  line-height: 8px;
+  cursor: pointer;
+
+  &.deactivate {
+    @include opacity(.5);
+    cursor: default !important;
+
+    label, span {
+      cursor: default !important;
+    }
+  }
+
+  > div {
+    position: relative;
+    top: 0;
+    display: inline-block;
+    width: 150%;
+
+    &.switch-animate {
+      @include transition(left 0.2s)
+    }
+
+    &.switch-off {
+      left: -50%;
+    }   
+
+    &.switch-on {
+      left: 0%;
+    }   
+  }
+
+  input[type=checkbox] {
+    display: none;
+  }
+
+  span, label {
+    position: relative;
+    display: inline-block;
+    @include box-sizing(border-box);
+    height: 100%;
+    padding-bottom: 4px;
+    padding-top: 4px;
+    font-size: 14px;
+    line-height: 20px;
+    cursor: pointer;
+  }
+
+  label {
+    z-index: 100;
+    width: 34%;
+    margin-top: -1px;
+    margin-bottom: -1px;
+    border-left: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+    color: #ffffff;
+    background-color: #f5f5f5;
+    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+    text-align: center;
+
+    &:hover, &:focus, &:active, &.active, &.disabled, &[disabled] {
+      color: #ffffff;
+      background-color: #e6e6e6;
+    }
+
+    &:active, &.active {
+      background-color: #cccccc;
+    }
+
+    i {
+      color: #000;
+      line-height: 18px;
+      pointer-events: none;
+    }
+  }
+
+  span {
+    z-index: 1;
+    width: 33%;
+    color: #ffffff;
+    background-color: #0088cc;
+    text-align: center;
+
+    &.switch-left {
+      @include border-top-left-radius(4px);
+      @include border-bottom-left-radius(4px);
+      color: #ffffff;
+      background-color: $green;
+      border-color: $green;
+      @extend .ico-check;
+    }
+
+    &.switch-right {
+      color: $white;
+      background-color: $red;
+      border-color: $red;
+      @extend .ico-close;
+
+      &:active, &.active {
+        background-color: $gray3;
+      }
+    }
+  }
+}

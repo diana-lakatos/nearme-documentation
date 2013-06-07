@@ -50,10 +50,15 @@ window.DNM = {
     this.initializeModals();
     this.initializeTooltips();
     this.initializeCustomSelects();
+    this.initializeCustomInputs();
   },
 
   initializeModals: function() {
     Modal.listen();
+  },
+
+  initializeCustomInputs: function() {
+    CustomInputs.initialize();
   },
 
   initializeComponents: function(scope) {
@@ -79,6 +84,10 @@ window.DNM = {
   },
 
   initializeCustomSelects: function(){
+    $('select:not(.custom-select)').customSelect();
+    $('.customSelect').append('<i></i>').closest('.controls').css({'position': 'relative'});
+    $('.customSelect').siblings('select').css({'margin': '0px', 'z-index': 1 });
+
     $('.custom-select').chosen()
     $('.chzn-choices input').focus(function(){
         $(this).parent().parent().addClass('chzn-choices-active')
@@ -112,14 +121,6 @@ $(document).on('click', 'a[rel=submit]', function(e) {
     return false;
   }
 });
-
-if($.browser.mozilla) {
-  $(document).on('click', 'label', function(e) {
-    if(e.currentTarget === this && e.target.nodeName !== 'INPUT') {
-      $(this.control).click();
-    }
-  });
-};
 
 function doListingGoogleMaps() {
   return;
@@ -181,6 +182,21 @@ $(function() {
       }
     });
   });
+});
+
+$(function(){
+    $.extend($.fn.disableTextSelect = function() {
+        return this.each(function(){
+            if($.browser.mozilla){//Firefox
+                $(this).css('MozUserSelect','none');
+            }else if($.browser.msie){//IE
+                $(this).bind('selectstart',function(){return false;});
+            }else{//Opera, etc.
+                $(this).mousedown(function(){return false;});
+            }
+        });
+    });
+    $('.no-select').disableTextSelect();//No text selection on elements with a class of 'noSelect'
 });
 
 String.prototype.hashCode = function(){

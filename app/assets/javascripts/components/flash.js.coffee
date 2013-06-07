@@ -1,8 +1,11 @@
 class @Flash
   constructor: (@container) ->
 
-  hide: (element) ->
-    @container.addClass('timeout')
+  hide: =>
+    if $.browser.msie
+      @container.remove()
+    else
+      @container.addClass('timeout')
 
   @initialize: (scope = $('body')) ->
     scope.on 'click', 'div[data-flash-message] .close', (event) ->
@@ -11,7 +14,7 @@ class @Flash
 
     $('div[data-flash-message]').css({"display":'none'}).delay(200).css({'display': 'block'}).addClass('appear')
     setTimeout ( ->
-      $('div[data-flash-message]').addClass('timeout')
+      new Flash($('div[data-flash-message]')).hide()
     ), 7000
 
 

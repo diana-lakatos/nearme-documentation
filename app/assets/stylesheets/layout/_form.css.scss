@@ -2,6 +2,10 @@ select {
   margin: 16px 0;
 }
 
+.controls .switch{
+  margin-top: 9px;
+}
+
 .custom-availability-rules select{
   margin: 16px 2px;
 }
@@ -15,9 +19,11 @@ input[type=radio] {
   padding-right: 4px;
 }
 
-input[type='checkbox'], 
-input[type='radio'] {
-  width: auto;
+input[type=radio],
+input[type=checkbox] {
+  position: absolute;
+  left: 0px;
+  top: 0px;
 }
 
 input[type=submit], 
@@ -32,7 +38,7 @@ input[type=tel] {
 
 
 label.radio {
-  margin-right: .4em;
+  margin-right: 1em;
 }
 
 .radio_buttons.required {
@@ -112,9 +118,6 @@ label.radio {
   .periodicity {
     margin-right: 10px;
   }
-  input[type='checkbox'] {
-    margin: 16px 0;
-  }
   .chzn-container {
     margin: 16px 0;
   }
@@ -137,16 +140,6 @@ form {
       margin-left: 24px;
       font-size: 14px;
       line-height: 22px;
-    }
-
-    label.check_boxes, label.radio_buttons {
-      margin-left: 0;
-      font-size: 18px;
-    }
-
-    .checkbox, .radio {
-      float: left;
-      margin-right: 30px;
     }
 
     .hint {
@@ -211,7 +204,7 @@ form {
     a[rel=tooltip] {
       color: $dnm_black;
       &:hover {
-        color: $dnm_gray;
+        color: $gray7;
       }
     }
   }
@@ -228,39 +221,7 @@ form {
     }
   }
 
-  // Checkbox wrapper label
-  //
-  // Usage:
-  //   <label class="checkbox"><input type="checkbox" />Label Text</label>
-  label.checkbox {
-    display: block;
-    width: auto;
-    padding-top: 6px;
-    line-height: 18px;
-    font-size: 14px;
-    overflow: hidden;
-  }
-
-  // Two-up controls
-  // i.e. Controls with side-by-side group rendering
-  .two-up {
-    label.checkbox, label.radio {
-      width: 195px;
-      float: left;
-      margin-bottom: 15px;
-
-      &:nth-last-child(1), &:nth-last-child(2) {
-        margin-bottom: 0;
-      }
-    }
-  }
-
   fieldset, .fieldset {
-    .two-up {
-      label.checkbox, label.radio {
-        width: 170px;
-      }
-    }
 
     // Prevent additional padding at bottom of fieldset
     .control-group:last-child {

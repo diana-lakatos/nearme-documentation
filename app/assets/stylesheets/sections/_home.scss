@@ -59,7 +59,7 @@ section.public {
     display: block;
     float: left;
     font:400 48px/54px $font-regular, sans-serif;
-    color: $light-gray;
+    color: $gray2;
     margin-bottom: 10px;
     @include text-shadow(black 0 0 5px, black 0 0 8px, black 0 0 10px, black 0 0 20px, black 0 0 30px);
     filter: glow(color=black,strength=3);
