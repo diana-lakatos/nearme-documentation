@@ -30,8 +30,6 @@ class Search.Controller
 
   initializeQueryField: ->
     @queryField = @form.find('input.query')
-    if @queryField.val() == ''
-      _.defer(=>@geolocateMe())
 
     @queryField.bind 'change', =>
       @fieldChanged('query', @queryField.val())
