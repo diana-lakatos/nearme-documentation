@@ -25,6 +25,8 @@ class RegistrationsController < Devise::RegistrationsController
 
     # Only track the sign up if the user has actually been saved (i.e. there are no errors)
     if @user.persisted?
+      # This user has just registered, so we
+      mixpanel.apply_user(@user, :alias => true)
       event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: provider })
     end
 
@@ -54,7 +56,7 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.avatar = params[:avatar]
     if @user.save
-      render :text => { :url => @user.avatar_url(:thumb).to_s, :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain' 
+      render :text => { :url => @user.avatar_url(:thumb).to_s, :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain'
     else
       render :text => [{:error => @user.errors.full_messages}].to_json,:content_type => 'text/plain', :status => 422
     end
@@ -63,7 +65,7 @@ class RegistrationsController < Devise::RegistrationsController
   def destroy_avatar
     @user = current_user
     @user.remove_avatar!
-    render :text => {}, :status => 200, :content_type => 'text/plain' 
+    render :text => {}, :status => 200, :content_type => 'text/plain'
   end
 
   def verify
@@ -71,7 +73,7 @@ class RegistrationsController < Devise::RegistrationsController
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
       flash[:success] = "Thanks - your email address has been verified!"
-      redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path(@user) 
+      redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path(@user)
     else
       if @user.verified
         flash[:warning] = "The email address has been already verified"

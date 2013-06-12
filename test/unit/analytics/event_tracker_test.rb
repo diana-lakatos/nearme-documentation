@@ -6,20 +6,8 @@ class EventTrackerTest < ActiveSupport::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
-    @mixpanel = stub(:append_identify => true)
-    @tracker = Analytics::EventTracker.new(@mixpanel, @user)
-  end
-
-  context "#initialize" do
-    should "assign user and #identify via mixpanel" do
-      @mixpanel.expects(:append_identify).with(@user.id)
-      Analytics::EventTracker.new(@mixpanel, @user)
-    end
-
-    should 'register campaign parameters' do
-      @mixpanel.expects(:append_register).with({ utm_source: 'google', utm_campaign: 'guests' })
-      Analytics::EventTracker.new(@mixpanel, @user, { utm_source: 'google', utm_campaign: 'guests' })
-    end
+    @mixpanel = stub() # Represents our internal MixpanelApi instance
+    @tracker = Analytics::EventTracker.new(@mixpanel)
   end
 
   context 'Listings' do
@@ -72,7 +60,8 @@ class EventTrackerTest < ActiveSupport::TestCase
 
     should 'track a booking confirmation' do
       expect_event 'Confirmed a Booking', reservation_properties
-      expect_charge @reservation.owner.id, 50.0
+      # commented out because I don't think these are semantically correct?
+      #expect_charge @reservation.owner.id, 50.0
       @tracker.confirmed_a_booking(@reservation)
     end
 
@@ -83,7 +72,8 @@ class EventTrackerTest < ActiveSupport::TestCase
 
     should 'track a booking cancellation with custom options' do
       expect_event 'Cancelled a Booking', reservation_properties.merge!({ actor: 'host'})
-      expect_charge @reservation.owner.id, -50.0
+      # commented out because I don't think these are semantically correct?
+      #expect_charge @reservation.owner.id, -50.0
       @tracker.cancelled_a_booking(@reservation, { actor: 'host'})
     end
 
@@ -107,14 +97,13 @@ class EventTrackerTest < ActiveSupport::TestCase
 
   context 'Users' do
     should 'track user sign up' do
-      expect_append_alias @user.id
-      expect_set @user.id, @user
+      expect_set_person_properties user_properties
       expect_event 'Signed Up', user_properties
       @tracker.signed_up(@user)
     end
 
     should 'track user log in' do
-      expect_set @user.id, @user
+      expect_set_person_properties user_properties
       expect_event 'Logged In', user_properties
       @tracker.logged_in(@user)
     end
@@ -134,8 +123,8 @@ class EventTrackerTest < ActiveSupport::TestCase
     @mixpanel.expects(:append_alias).with(user_id)
   end
 
-  def expect_set(user_id, user)
-    @mixpanel.expects(:set).with(user_id, user)
+  def expect_set_person_properties(user)
+    @mixpanel.expects(:set_person_properties).with(user)
   end
 
   def build_search_params(options, geocoder = fake_geocoder(true))
@@ -152,8 +141,7 @@ class EventTrackerTest < ActiveSupport::TestCase
       location_suburb: @reservation.location.suburb,
       location_city: @reservation.location.city,
       location_state: @reservation.location.state,
-      location_country: @reservation.location.country,
-      distinct_id: @user.id
+      location_country: @reservation.location.country
     }
   end
 
@@ -164,8 +152,7 @@ class EventTrackerTest < ActiveSupport::TestCase
       listing_confirm: @listing.confirm_reservations,
       listing_daily_price: @listing.daily_price.try(:dollars),
       listing_weekly_price: @listing.weekly_price.try(:dollars),
-      listing_monthly_price: @listing.monthly_price.try(:dollars),
-      distinct_id: @user.id
+      listing_monthly_price: @listing.monthly_price.try(:dollars)
     }
   end
 
@@ -176,8 +163,7 @@ class EventTrackerTest < ActiveSupport::TestCase
       location_suburb: @location.suburb,
       location_city: @location.city,
       location_state: @location.state,
-      location_country: @location.country,
-      distinct_id: @user.id
+      location_country: @location.country
     }
   end
 
@@ -186,8 +172,7 @@ class EventTrackerTest < ActiveSupport::TestCase
       name: @user.name,
       email: @user.email,
       phone: @user.phone,
-      job_title: @user.job_title,
-      distinct_id: @user.id
+      job_title: @user.job_title
     }
   end
 
@@ -196,8 +181,7 @@ class EventTrackerTest < ActiveSupport::TestCase
       search_suburb: @search.suburb,
       search_city: @search.city,
       search_state: @search.state,
-      search_country: @search.country,
-      distinct_id: @user.id
+      search_country: @search.country
     }
   end
 end

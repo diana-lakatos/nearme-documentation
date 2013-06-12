@@ -1,0 +1,16 @@
+- # We're not including Mixpanel client-side at the moment, but if/when we decide to again
+- # then we should do the following:
+
+- #   1. Include the Mixpanel API JS
+
+- #   2. Initialize the library with our API token.
+- #        mixpanel.init("#{MIXPANEL_TOKEN}")
+
+- #   3. Identify the user with our server-side identification scheme.
+- #      This will automatically handle anonymous vs logged in users.
+- #        mixpanel.identify("#{mixpanel.distinct_id}")
+
+- #   4. Assign any global properties stored in our custom cookie.
+- #      Note that the JS lib will store it's own cookie, appending
+- #      or overriting these events.
+- #        mixpanel.register(#{raw mixpanel.session_properties.to_json})

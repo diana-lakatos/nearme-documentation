@@ -1,35 +1,32 @@
+# Encapsulates the logic and attributes behind tracking specific
+# events or actions within the application.
+#
+# Builds up the event property data, and executes the tracking through
+# the underlying Mixpanel API object.
+#
+# We can later extend this to execute tracking through alternative
+# analytics backends.
+#
+# In summary, this object simply encapsulates the logic behind translating
+# actions from our domain into events & parameters in the analytics domain,
+# to make triggering and testing these events trivial from within our
+# application controllers.
+#
+# Usage:
+#
+#   tracker = Analytics::EventTracker.new(mixpanel_analytics_backend)
+#   tracker.signed_up(user)
+#   tracker.cancelled_reservation(reservation)
+#   tracker.accepted_reservation(reservation)
+#   tracker.reviewed_booking(listing)
+#   tracker.edited_listing(listing, :attributes_changed => ["price"])
+#
+# In order to test the execution of events in unit or functional tests, we simply need
+# to mock out the relevant tracker instance and assert an expectation to call the
+# relevant event method(s).
 class Analytics::EventTracker
-  attr_accessor :user, :params
-
-  def initialize(api, user, params = {})
+  def initialize(api)
     @api = api
-    self.user = user
-    self.params = params
-  end
-
-  def user=(user)
-    @user = user
-
-    if @user
-      append_identify(@user.id)
-    end
-  end
-
-  def params=(params)
-    @params = params
-    register_params = {}
-
-    if @params[:utm_source]
-      register_params.merge!({ utm_source: @params[:utm_source]})
-    end
-
-    if @params[:utm_campaign]
-      register_params.merge!({ utm_campaign: @params[:utm_campaign]})
-    end
-
-    unless register_params.empty?
-      append_register(register_params)
-    end
   end
 
   include ListingEvents
@@ -48,45 +45,28 @@ class Analytics::EventTracker
     @api.track_charge(user_id, total_amount_dollars)
   end
 
-  def set(user_id, *objects)
-    @api.set(user_id, event_properties(objects))
-  end
-
-  def append_identify(distinct_id)
-    @api.append_identify(distinct_id)
-  end
-
-  def append_alias(distinct_id)
-    @api.append_alias(distinct_id)
-  end
-
-  def append_register(properties)
-    @api.append_register(properties)
+  # Sets global properties on the person
+  def set_person_properties(*objects)
+    @api.set_person_properties event_properties(objects)
   end
 
   def serialize_event_properties(objects)
     begin
-      event_properties(objects).merge!(global_event_properties)
+      event_properties(objects)
     rescue
       {}
     end
   end
 
   def event_properties(objects)
-    objects.map { |o| serialize_object(o) }.inject(:merge)
-  end
-
-  def global_event_properties
-    hash = {}
-
-    unless @user.nil?
-      hash.merge!({ distinct_id: @user.id })
-    end
-
-    hash
+    objects.map { |o| serialize_object(o) }.inject(:merge) || {}
   end
 
   def serialize_object(object)
+    self.class.serialize_object(object)
+  end
+
+  def self.serialize_object(object)
     case object
     when Location
       {

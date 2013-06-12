@@ -4,16 +4,54 @@ class ApplicationController < ActionController::Base
   layout "application"
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
+  # We need to persist some mixpanel attributes for subsequent
+  # requests.
+  after_filter :apply_persisted_mixpanel_attributes
+
   protected
 
+  # Provides an EventTracker instance for the current request.
+  #
+  # Use this for triggering predefined events from actions via
+  # the application controllers.
   def event_tracker
     @event_tracker ||= begin
-      Analytics::EventTracker.new(MixpanelApi.new, current_user, params)
+      Analytics::EventTracker.new(mixpanel)
     end
   end
 
+  def mixpanel
+    @mixpanel ||= begin
+      # Load any persisted session properties
+      session_properties = if cookies.signed[:mixpanel_session_properties].present?
+        ActiveSupport::JSON.decode(cookies.signed[:mixpanel_session_properties]) rescue nil
+      end
+
+      # Detect an anonymous identifier, if any.
+      anonymous_identity = cookies.signed[:mixpanel_anonymous_id]
+
+      MixpanelApi.new(
+        MixpanelApi.mixpanel_instance,
+        :current_user       => current_user,
+        :anonymous_identity => anonymous_identity,
+        :session_properties => session_properties,
+        :request_params     => params
+      )
+    end
+  end
+  helper_method :mixpanel
+
+  # Stores cross-request mixpanel options.
+  #
+  # We need to load up some persisted properties to automatically assign to events
+  # as global properties.
+  def apply_persisted_mixpanel_attributes
+    cookies.signed.permanent[:mixpanel_anonymous_id] = mixpanel.anonymous_identity
+    cookies.signed.permanent[:mixpanel_session_properties] = ActiveSupport::JSON.encode(mixpanel.session_properties)
+  end
+
   def current_user=(user)
-    event_tracker.user = current_user
+    mixpanel.apply_user(user)
   end
 
   def require_ssl

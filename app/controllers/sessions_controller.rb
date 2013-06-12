@@ -2,7 +2,6 @@ class SessionsController < Devise::SessionsController
   before_filter :set_return_to
   before_filter :set_default_remember_me, :only => [:create]
   after_filter :rename_flash_messages, :only => [:new, :create, :destroy]
-  after_filter :track_logged_in, only: [:create]
   skip_before_filter :require_no_authentication, :only => [:show] , :if => lambda {|c| request.xhr? }
 
   layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
@@ -14,6 +13,11 @@ class SessionsController < Devise::SessionsController
 
   def create
     super
+
+    if current_user
+      mixpanel.apply_user(current_user)
+      event_tracker.logged_in(current_user)
+    end
   end
 
   private
@@ -24,10 +28,6 @@ class SessionsController < Devise::SessionsController
 
   def set_return_to
     session[:user_return_to] = params[:return_to] if params[:return_to].present?
-  end
-
-  def track_logged_in
-    event_tracker.logged_in(current_user)
   end
 
 end

@@ -40,7 +40,11 @@ class Reservation < ActiveRecord::Base
     if unconfirmed?
       expire!
 
-      event_tracker = Analytics::EventTracker.new(MixpanelApi.new, location.creator)
+      # FIXME: This should be moved to a background job base class, as per ApplicationController.
+      #        The event_tracker calls can be executed from the Job instance.
+      #        i.e. Essentially compose this as a 'non-http request' controller.
+      mixpanel_wrapper = MixpanelApi.new(MixpanelApi.mixpanel_instance, :current_user => owner)
+      event_tracker = Analytics::EventTracker.new(mixpanel_wrapper)
       event_tracker.booking_expired(self)
 
       ReservationMailer.notify_guest_of_expiration(self).deliver
