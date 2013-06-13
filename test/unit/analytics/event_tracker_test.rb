@@ -169,10 +169,12 @@ class EventTrackerTest < ActiveSupport::TestCase
 
   def user_properties
     {
-      name: @user.name,
+      first_name: @user.first_name,
+      last_name: @user.last_name,
       email: @user.email,
       phone: @user.phone,
-      job_title: @user.job_title
+      job_title: @user.job_title,
+      created: @user.created_at
     }
   end
 
