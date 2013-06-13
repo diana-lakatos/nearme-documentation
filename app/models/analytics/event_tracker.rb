@@ -100,10 +100,12 @@ class Analytics::EventTracker
       }
     when User
       {
-        name: object.name,
+        first_name: object.first_name,
+        last_name: object.last_name,
         email: object.email,
         phone: object.phone,
-        job_title: object.job_title
+        job_title: object.job_title,
+        created: object.created_at
       }
     when Listing::Search::Params::Web
       {
