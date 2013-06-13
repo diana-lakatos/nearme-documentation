@@ -1,54 +1,54 @@
 .box {
   position: relative;
-  $padding: 15px;
-  @include border-radius($border-radius);
-  @include background-clip(border-box);
-  @include box-sizing(border-box);
   margin-bottom: 20px;
+  padding: $padding-default;  
+  @include box-sizing(border-box);  
+  @include border-radius($border-radius-default);
+  @include background-clip(border-box);
   background: $dnm-white;
-  padding: $padding;
   line-height: 28px;
 
   header {
     display: block;
-    padding: $padding;
-    background: $gray4;
-    color: $gray7;
-    margin-top: -$padding;
-    margin-left: -$padding;
-    margin-right: -$padding;
-    margin-bottom: $padding;
-    @include border-corner-radius(top, left, $border-radius);
-    @include border-corner-radius(top, right, $border-radius);
+    margin-top: -$padding-default;
+    margin-left: -$padding-default;
+    margin-right: -$padding-default;
+    margin-bottom: $padding-default;    
+    padding: $padding-default;
+    @include border-corner-radius(top, left, $border-radius-default);
+    @include border-corner-radius(top, right, $border-radius-default);    
+    background: $gray210;
+    color: $gray80;
 
     h2 {
-      color: $gray7;
+      color: $gray80;
     }
   }
 
-  // Wizzard items
+
+  // List Your Space Flow
 
   ul.space-wizard {
-    overflow: hidden;
     display: block;
-    background: $gray2;
-    margin-top: -$padding;
-    margin-left: -$padding;
-    margin-right: -$padding;
-    margin-bottom: $padding;
-    @include border-corner-radius(top, left, $border-radius);
-    @include border-corner-radius(top, right, $border-radius);
+    overflow: hidden;
+    margin-top: -$padding-default;
+    margin-right: -$padding-default;
+    margin-bottom: $padding-default;
+    margin-left: -$padding-default;
+    @include border-corner-radius(top, left, $border-radius-default);
+    @include border-corner-radius(top, right, $border-radius-default);    
+    background: $gray230;
 
     li {
       float: left;
-      color: $gray5;
-      font-size: 22px;
-      padding: 0 14px;
-      width: 50%;
+      padding: 0 $padding-default;
       @include box-sizing(border-box);
+      width: 50%;
+      border-right: 1px solid $gray210;
+      color: $gray160;
+      font-size: 22px;
       text-align: center;
       line-height: 60px;
-      border-right: 1px solid rgb(200,200,200);
 
       &:last-child {
         border: none;
@@ -58,57 +58,62 @@
           clear: both;
           width: 100%;
           border-right: none;
-          border-bottom: 1px solid $gray1;
+          border-bottom: 1px solid $gray240;
          } 
 
       &.current {
-        background: $gray8;
-        color: $gray2;
         border: none;
+        background: $gray60;
+        color: $gray230;
       }
     }
   }
 
-  hr, .hr {
-    color: #cecfcf;
-    background: #cecfcf;
-    border-bottom: 2px solid $gray2;
+  hr, 
+  .hr {
+    margin-right: -$padding-default;
+    margin-left: -$padding-default;
     border-top: none;
-    margin-left: -$padding;
-    margin-right: -$padding;
+    border-bottom: 2px solid $gray230;
+    background: #cecfcf;
+    color: $gray210;
     text-align: center;
+
     > span {
-      display: inline-block;
-      background: rgb(250,250,250);
-      padding: 0 8px;
       position: relative;
       top: -10px;
-      color: #999999;
+      display: inline-block;
+      padding-left: $padding-small;
+      padding-right:$padding-small;
+      background: $white;
+      color: $gray160;
       font-size: 18px;
     }
   }
 
   .inner-box {
     position: relative;
-    border: 1px solid #c6c6c6;
-    @include border-radius(8px);
-    padding: 10px;
     margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid $gray210;
+    @include border-radius($border-radius-medium);
   }
 }
 
 .box-inverse {
   border: none;
+  
   header {
-    background: $gray7;
+    background: $gray80;
     color: $dnm_white;
   }
 }
 
 .box-dim {
   border: none;
+  
   header {
-    background: $gray2;
+    background: $gray230;
   }
 }
 
@@ -116,7 +121,7 @@
 .box-nav {
   overflow: hidden;
   margin: -14px -14px 14px -14px;
-  background: $gray3;
+  background: $gray220;
 
   li {
     float: left;
@@ -124,8 +129,8 @@
     a {
       display: block;
       padding: 0 10px;
+      color: $gray230;
       line-height: 40px;
-      color: $gray2;
 
       &:hover {
         color: $dnm_white;
@@ -134,15 +139,14 @@
 
     &.active {
 
-      a {
-      }
-
-      a, a:hover {
+      a, 
+      a:hover {
         background: $dnm_black;
         color: $dnm_white;
       }
 
-      &:first-child, &:first-child a {
+      &:first-child, 
+      &:first-child a {
         border-left: none;
       }
     }
@@ -150,19 +154,13 @@
     &.right-link {
       float: right;
 
-      &, a {
+      a {
+        padding-left: 22px;
         border-right: none;
         border-left: none;
-      }
-
-      a {
-        font-weight: normal;
         background: image-url("components/nav/box-return.png") left 10px no-repeat;
-        padding-left: 22px;
+        font-weight: normal;
       }
     }
-  }
-
-  li.active + li:not(.right-link) {
   }
 }

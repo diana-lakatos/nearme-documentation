@@ -1,13 +1,14 @@
-.container.fluid, .locations .container {
-	position: relative;
-	width:100%;
+.container.fluid, 
+.locations .container {
 	@include box-sizing(border-box);
+	position: relative;
 	max-width: 960px;
+	width:100%;
 
 	.one-third.column {
-		width: 33.3333%;
 		@include box-sizing(border-box);
 		margin:0;
+		width: 33.3333%;
 
 		&.padding {
 			padding: 0 20px;
@@ -24,9 +25,9 @@
 	}
 
 	.two-thirds.column {
-		width: 66.6666%;
 		@include box-sizing(border-box);
 		margin:0;
+		width: 66.6666%;
 
 		&.right {
 			float: right;

@@ -5,45 +5,45 @@
   text-align: left;
 
   .collapsed {
-    background: $gray2 image-url("https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png") 95% center no-repeat;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: $gray230 image-url("https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png") 95% center no-repeat;    
     font-size: 16px;
     line-height: 26px;
     cursor: pointer;
-    opacity:.8;
-    border-radius: 8px;
-    padding: 4px 8px;
+    @include opacity(.8);
     @include transition(opacity .15s ease-in);
 
     &:hover {
-      opacity: 1;
-      background: darken($gray2, 10%) image-url("https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png") 95% center no-repeat;
+      background: darken($gray230, 10%) image-url("https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png") 95% center no-repeat;
+      @include opacity(1);
     }
   }
 
   .expanded {
     position: absolute;
-    z-index: $absolute-top-z-index + 999;
     top: -2px;
-    left: -2px;
     right: -2px;
-    background: lighten($gray7, 60%);
-    border-radius: 8px;
+    left: -2px;
+    z-index: $absolute-top-z-index + 999;
+    border-radius: $border-radius-mobile;
+    background: lighten($dark-gray, 60%);
 
     .summary, 
     .item {
       padding: 0 8px;
-      color: #1e2222;
+      color: $black;
       font-size: 12px;
       cursor: pointer;
     }
 
     .summary {
-      border-bottom: 1px solid #d6d6d6;
-      background: lighten($gray7, 60%) image-url("https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png") 95% center no-repeat;
+      border-bottom: 1px solid $gray160;
+      background: $gray220 image-url("https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png") 95% center no-repeat;
       font-size: 16px;
       line-height: 26px;
       padding: 4px 8px;
-      border-radius: 8px;
+      border-radius: $border-radius-medium;
     }
 
     .items {
@@ -68,11 +68,10 @@
         float: none !important;
         margin: 0;
         margin-left: 22px;
-        marign-right: 0 !important;
         font-size: 12px !important;
         line-height: 18px;
+        marign-right: 0 !important;
       }
     }
   }
 }
-

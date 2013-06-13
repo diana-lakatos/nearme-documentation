@@ -1,22 +1,22 @@
 .navbar {
-  background: $dnm_black;
+  background: $black;
 
   .navbar-inner {
-    background: $dnm_black;
-    max-width: 1400px;
     @include box-sizing(border-box);
+    margin: 0 auto;
+    max-width: 1400px;
     padding: 0 0 0 20px;
     height: 60px;
-    margin: 0 auto;
+    background: $black;
 
     #logo {
       float: left;
       margin-top: 4px;
-      background: url("/assets/desks-near-me-logo.png") no-repeat;
       width: 219px;
       height: 28px;
-      text-indent: -9999px;
       border: none !important;
+      background: url("/assets/desks-near-me-logo.png") no-repeat;
+      text-indent: -9999px;
       @include transition(0,0,0);
 
       @media (max-width: 767px) {
@@ -47,12 +47,12 @@
     a.nav-link {
       display: inline-block;
       float: right;
-      color: $gray5;
+      color: $gray160;
       font-size: 20px;
       text-decoration: none;
 
       &:hover {
-        color: $gray4;
+        color: $gray210;
       }
 
       &.margin-right {
@@ -68,10 +68,10 @@
   }
 
   a.btn.btn-blue {
-    margin-top: 1px;
-    text-align: center;
     float: right;
+    margin-top: 1px;
     margin-right: 10px;
+    text-align: center;
 
     @media (max-width: 600px) {
       span {
@@ -80,60 +80,74 @@
     }
   }
 }
+
 .navbar-inverse {
+  
   ul.nav {
     float: right;
 
     li.dropdown {
+      
       @media (max-width: 767px) {
+       
        a.dropdown-toggle > span{
           display:none;
         }
 
       }
+
       ul.dropdown-menu {
-        min-width: 130px;
         left: 8px;
-        background:$dnm_black;
+        min-width: 130px;
         border: none;
+        background:$dnm_black;
+        
         @media (max-width: 767px) {
           left: -20px;
         }
+
         li {
           background:$dnm_black;
+          
           a {
             padding: 4px 8px;
+            
             &:hover{
               background:$dnm_black;
-              color: $gray3;
+              color: $gray220;
             }
           }
-          &.divider{
-            border-color: $gray7;
+
+          &.divider {
+            border-color: $gray80;
             padding: 0;
           }
         }
+
         &::after{
           border-bottom-color:$dnm_black;
         }
       }
+
       &.active {
         background: $dnm_black;
+        
         a {
           color: $dnm_white;
         }
       }
 
       a {
-        display: block;
-        font:normal 16px/22px $font-medium, sans-serif;
-        padding: 8px 14px;
         position: relative;
-        color: $gray5;
+        display: block;
+        padding: 8px 14px;
+        color: $gray160;
+        font:normal 16px/22px $font-medium, sans-serif;
 
         &:active {
-          color: $gray3;
+          color: $gray220;
         }
+
         &.nav-link {
           font-size: 20px;
         }
@@ -141,6 +155,7 @@
 
       &.dropdown.open {
         background: $dnm_black;
+        
         .dropdown-toggle {
           background: $dnm_black;
         }
@@ -156,8 +171,11 @@
 
 // Accordian nav
 // First level of elements expands out
+
 ul.nav.accordian {
+  
   > li {
+    
     > a {
       padding-right: 35px;
 
@@ -171,11 +189,11 @@ ul.nav.accordian {
 
     > ul {
       display: none;
-      border-bottom: 1px solid #155f89;
+      border-bottom: 1px solid transparent;
 
       li {
-        border-bottom: 1px solid $gray4;
-        background: $gray3;
+        border-bottom: 1px solid $gray210;
+        background: $gray220;
 
         &:first-child {
           border-top: none;
@@ -189,8 +207,8 @@ ul.nav.accordian {
         }
 
         a {
-          color: #fff;
           padding-right: 36px;
+          color: $pure-white;
 
           i {
             position: absolute;
@@ -202,6 +220,7 @@ ul.nav.accordian {
         }
 
         &:hover {
+          
           > a i {
             display: block;
             @include opacity(0.5);
@@ -209,6 +228,7 @@ ul.nav.accordian {
         }
 
         &.active {
+          
           > a i {
             display: block;
             @include opacity(1);
@@ -218,11 +238,11 @@ ul.nav.accordian {
     }
 
     &.expanded {
-      // Expanded navs have different style borders
-      border-bottom: none;
+      
 
-      > a i {
-      }
+      // Expanded navs have different style borders
+
+      border-bottom: none;
 
       > ul {
         display: block;
