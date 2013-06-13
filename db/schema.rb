@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130510001643) do
+ActiveRecord::Schema.define(:version => 20130613230110) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -333,6 +333,8 @@ ActiveRecord::Schema.define(:version => 20130510001643) do
     t.text     "biography"
     t.datetime "mailchimp_synchronized_at"
     t.boolean  "verified",                                 :default => false
+    t.integer  "mobile_country_code"
+    t.string   "mobile_number"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

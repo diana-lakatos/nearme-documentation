@@ -76,7 +76,8 @@ class User < ActiveRecord::Base
          :rememberable, :trackable, :validatable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :biography, :industry_ids
+  attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :biography, :industry_ids,
+                  :mobile_country_code, :mobile_number
 
   delegate :to_s, :to => :name
 
