@@ -60,7 +60,8 @@ gem 'mixpanel'
 
 gem 'gibbon'
 
-gem 'twilio'
+gem 'twilio-ruby'
+gem 'googl'
 
 group :staging, :production do
   gem 'newrelic_rpm'

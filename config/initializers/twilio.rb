@@ -1,6 +1,6 @@
 require 'sms_notifier'
 
-client = if Rails.env.production? || Rails.env.staging?
+client = if Rails.env.production? || Rails.env.staging? || Rails.env.development?
   Twilio::REST::Client.new("AC5b979a4ff2aa576bafd240ba3f56c3ce", "0f9a2a5a9f847b0b135a94fe2aa7f346")
 else
   # Generate a little fake client that outputs to the Rails logger

@@ -141,6 +141,14 @@ class User < ActiveRecord::Base
     name.split(' ', 2)[1]
   end
 
+  def full_mobile_number
+    ['+', mobile_country_code, mobile_number].join
+  end
+
+  def accepts_sms?
+    mobile_number.present?
+  end
+
   def avatar_changed?
     false
   end

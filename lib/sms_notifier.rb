@@ -36,6 +36,7 @@ class SmsNotifier < AbstractController::Base
   include AbstractController::AssetPaths
   include Rails.application.routes.url_helpers
 
+  helper :application, :sms_notifier
   layout false
   self.asset_host = ActionController::Base.asset_host
 
@@ -44,16 +45,34 @@ class SmsNotifier < AbstractController::Base
     :from => nil # Set the default from number
   }
 
+  default_url_options[:host] = "desksnear.me"
+
   class << self
     def method_missing(notification_name, *args)
-      new(notification_name).send(notification_name, *args)
+      new(notification_name, *args).message
     end
   end
 
-  def initialize(message_name)
+  class NullMessage
+    attr_reader :to, :from, :body
+    def initialize(*)
+    end
+
+    def deliver
+      false
+    end
+    alias_method :deliver!, :deliver
+  end
+
+  def initialize(message_name, *args)
     super()
     prepend_view_path 'app/views'
     @message_name = message_name
+    process(@message_name, *args)
+  end
+
+  def message
+    @message || NullMessage.new
   end
 
   private
@@ -63,7 +82,7 @@ class SmsNotifier < AbstractController::Base
     options = options.reverse_merge(self.class.default_params)
     options[:body] ||= render_message
 
-    Message.new(options)
+    @message = Message.new(options)
   end
 
   # Render the correct template with instance variables and
