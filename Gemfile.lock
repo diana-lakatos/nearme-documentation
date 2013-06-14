@@ -443,6 +443,9 @@ GEM
     turn (0.9.6)
       ansi
     tweet-button (0.1.0)
+    twilio (3.1.1)
+      builder (>= 2.1.2)
+      httparty (>= 0.8)
     tzinfo (0.3.37)
     uglifier (1.3.0)
       execjs (>= 0.3.0)
@@ -549,6 +552,7 @@ DEPENDENCIES
   ts-resque-delta (= 1.2.4)
   turn
   tweet-button
+  twilio
   uglifier
   unicorn
   vcr

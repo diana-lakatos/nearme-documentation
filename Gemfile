@@ -60,6 +60,8 @@ gem 'mixpanel'
 
 gem 'gibbon'
 
+gem 'twilio'
+
 group :staging, :production do
   gem 'newrelic_rpm'
 end
