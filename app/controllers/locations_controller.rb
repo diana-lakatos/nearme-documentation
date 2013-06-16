@@ -1,7 +1,6 @@
 class LocationsController < ApplicationController
 
   before_filter :authenticate_user!, :only => [:new, :create]
-  before_filter :require_ssl, :only => :show
   before_filter :find_location, :only => :show
   before_filter :redirect_for_location_custom_page, :only => :show
 

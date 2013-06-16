@@ -1,17 +1,23 @@
-/* Space Page */
+
+
+// Space Page
 @import "sections/space/calendar";
 @import "sections/space/bookings";
 @import "sections/space/photos";
 
+
 // Hero area
 
-#space, .space {
+#space, 
+.space {
+  
   h1 {
-    line-height: 40px;
     margin-bottom: 30px;
+    line-height: 40px;
   }
 
-  .box.host, .box.share {
+  .box.host, 
+  .box.share {
     position: relative;
     margin-top: 20px;
 
@@ -19,8 +25,8 @@
       position: absolute;
       top: -3px;
       right: -3px;
-      height: 69px;
       width: 69px;
+      height: 69px;
     }
 
     &.host i {
@@ -33,18 +39,20 @@
   }
 
   .box.host {
+    
     .avatar {
       float: left;
     }
 
     .name {
+      margin-left: 60px;
       font-size: 22px;
       line-height: 50px;
-      margin-left: 60px;
     }
   }
 
   .box.share {
+    
     .stButton {
       margin-right: 12px;
     }
@@ -92,18 +100,14 @@
   }
 
   .map {
+    
     .map-wrapper {
       margin-bottom: 10px;
-
-      .map-container {
-      }
-    }
-
-    address {
     }
   }
 
   .host-company {
+    
     h2 {
       font-size: 18px;
       font-weight: bold;
@@ -111,6 +115,7 @@
   }
 
   .activity-feed {
+    
     li {
       background: image-url("sections/listings/event-feed-icon.png") top left no-repeat;
       padding-left: 24px;

@@ -83,10 +83,15 @@ module ListingsHelpers
     fill_in "listing_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
     select "ListingType2", from: "listing_listing_type_id"
     fill_in "listing_quantity", with: "5"
+    check "enable_daily"
     fill_in "listing_daily_price", with: "10"
+
+    check "enable_weekly"
     fill_in "listing_weekly_price", with: "60"
+
+    check "enable_monthly"
     fill_in "listing_monthly_price", with: "200"
-    page.find("#listing_enable_weekly").set(true)
+    page.find("#enable_weekly").set(true)
   end
 
   def assert_listing_data(listing, update = false)
@@ -96,12 +101,7 @@ module ListingsHelpers
     assert_equal 5, listing.quantity
     assert_equal 1000, listing.daily_price_cents
     assert_equal 6000, listing.weekly_price_cents
-    if update
-      # the trick is that checkbox 'enable_monthly' is unchecked in update, so it should be nil!
-      assert_nil listing.monthly_price_cents
-    else
-      assert_equal 20000, listing.monthly_price_cents
-    end
+    assert_equal 20000, listing.monthly_price_cents
   end
 end
 

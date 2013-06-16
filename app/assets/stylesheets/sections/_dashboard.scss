@@ -1,13 +1,12 @@
-/*   Begin new dashboard */
-
 @mixin dashboard-acc-group {
   
   .accordion-group {
+    margin-top: 10px;
     border: none;
     border-radius: 0;
-    margin-top: 10px;
   }
 }
+
 div.availability-rules .custom-availability-rules .day .open-time,
 div.availability-rules .custom-availability-rules .day .close-time {
   width: auto;
@@ -26,19 +25,28 @@ div.availability-rules .custom-availability-rules .day .close-time {
 
 .availability-rules {
   padding-left: 2px;
-  .open-time, .close-time {
-    padding-right: 10px;
-    margin: 0;
+
+   .radio {
+
+     .icon,
+     .icon-to-fade {
+       margin-top: 4px;
+     }
+   }
+
+  .open-time, 
+  .close-time {
+    margin-right: 10px;
+    padding-right: 0px;
   }
+
 }
 
 .accordion-heading .accordion-toggle {
   padding: 15px 3px;
 }
 
-
 section.locations-holder {
-
   margin-bottom: 20px;
 
   .add-location{
@@ -51,21 +59,20 @@ section.locations-holder {
   }
 
   .edit-link{
-    color: $gray8;
+    color: $gray60;
     display: block;
 
     &:hover{
-     color: $gray7;
-
+     color: $gray80;
     }
   }
 
   .ico-edit,
   .ico-open-link {
-    color: $gray5;
+    color: $gray160;
 
     &:hover {
-      color: $gray7;
+      color: $gray80;
     }
   }
 
@@ -129,7 +136,7 @@ section.locations-holder {
       position: absolute;
       top: 13px;
       left: 10px;
-      color: $gray5;
+      color: $gray160;
     }
 
     div.map {
@@ -148,11 +155,11 @@ section.locations-holder {
   .delete {
     display: block;
     padding-top: 10px;
+    color: $gray160;
     font-size: 80%;
-    color: $gray5;
 
     &:hover {
-      color: $gray7;
+      color: $gray80;
     }
   }
 
@@ -162,11 +169,11 @@ section.locations-holder {
 
   .close {
     float: right;
-    font-size: 20px;
+    color: black;
     font-weight: bold;
+    font-size: 20px;
+    text-shadow: 0 1px 0 $pure-white;
     line-height: 20px;
-    color: #000000;
-    text-shadow: 0 1px 0 #ffffff;
     @include opacity(0.2);
   }
 
@@ -174,10 +181,10 @@ section.locations-holder {
     padding-bottom: 0;
 
     header {
-      height: 24px;
-      font-size: 24px;
       margin-bottom: 0;
-      color: $gray8;
+      height: 24px;
+      color: $gray60;
+      font-size: 24px;
 
       span {
         white-space: nowrap;
@@ -218,9 +225,8 @@ section.locations-holder {
     }
   }
 
-  .photo-item{
-
-    border-bottom: 1px dashed $gray4;
+  .photo-item {
+    border-bottom: 1px dashed $gray210;
     padding-bottom: 10px;
 
     input{
@@ -231,7 +237,6 @@ section.locations-holder {
       border-bottom: none;
       padding-bottom: 0px;
     }
-
   }
 }
 
@@ -253,7 +258,6 @@ section.listings {
         text-overflow: ellipsis;
       }
     }
-
   }
 
   .accordion {
@@ -272,9 +276,9 @@ section.listings {
       }
     }
 
-    header.listing.empty{
+    header.listing.empty {
       text-align: center;
-      color: $gray6;
+      color: $gray120;
     }
 
     @include dashboard-acc-group;
@@ -283,8 +287,8 @@ section.listings {
       margin-bottom:0;
       padding-bottom: 0;
       border-radius: 0;
-      border-left: 4px solid $gray4;
-      border-bottom: 1px solid $gray4;
+      border-left: 4px solid $gray210;
+      border-bottom: 1px solid $gray210;
 
       header {
         height: 52px;
@@ -343,7 +347,6 @@ section.listings {
   }
 }
 
-/*   End new dashboard */
 section.dashboard,
 section.companies,
 section.registrations,
@@ -355,10 +358,11 @@ section.sessions {
 .btn.facebook,
 .btn.linkedin,
 .btn.twitter {
+  
   @media (max-width: 668px) {
+    margin-bottom: .25em;
     width: 100%;
     text-align: center;
-    margin-bottom: .25em;
   }
 }
 

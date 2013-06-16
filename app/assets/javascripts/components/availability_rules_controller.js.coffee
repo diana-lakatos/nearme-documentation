@@ -23,13 +23,16 @@ class @AvailabilityRulesController
       @clearField.prop('checked', true)
     else
       @clearField.prop('checked', false)
+    @container.find('select').trigger('update')
 
   updateDayStates: ->
     @customFields.find('input[name*=destroy]').each (i, element) =>
       @updateClosedState($(element))
+    @container.find('select').trigger('update')
 
   showCustom: ->
     @customFields.find('input, select').prop('disabled', false)
+    @customFields.find('.disabled').removeClass('disabled')
     @customFields.show()
     @updateDayStates()
 
@@ -51,7 +54,10 @@ class @AvailabilityRulesController
     @selector.change (event) =>
       @updateCustomState()
 
-    # Whenever changing closed state we need to hide/show the time fields
-    @customFields.on 'change', 'input[name*=destroy]', (event) =>
-      @updateClosedState($(event.target))
+    # Whenever changing open state we need to hide/show the time fields
+    @customFields.on 'change', 'input.open-checkbox', (event) =>
+      checkbox = $(event.target)
+      day = checkbox.closest('.day')
+      destroy_checkbox = day.find('input[name*=destroy]').prop('checked', !checkbox.is(':checked'))
+      @updateClosedState(destroy_checkbox)
 

@@ -1,8 +1,8 @@
 module Listings
   class ReservationsController < ApplicationController
     before_filter :find_listing
-    before_filter :build_reservation
-    before_filter :require_login_for_reservation
+    before_filter :build_reservation, :only => [:review, :create]
+    before_filter :require_login_for_reservation, :only => [:review, :create]
 
     layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
 
@@ -31,6 +31,20 @@ module Listings
       end
     end
 
+    def hourly_availability_schedule
+      date = if params[:date].present?
+        Date.parse(params[:date]) rescue nil
+      end
+
+      schedule = if date
+        @listing.hourly_availability_schedule(Date.parse(params[:date])).as_json
+      else
+        {}
+      end
+
+      render :json => schedule
+    end
+
     private
 
     def require_login_for_reservation
@@ -54,8 +68,13 @@ module Listings
       # Assign the payment method chosen on the form to the Reservation
       @reservation.payment_method = params[:payment_method] if params[:payment_method].present?
 
+      if @listing.hourly_reservations?
+        start_minute = params[:reservation][:start_minute].try(:to_i)
+        end_minute   = params[:reservation][:end_minute].try(:to_i)
+      end
+
       params[:reservation][:dates].each do |date_str|
-        @reservation.add_period(Date.parse(date_str))
+        @reservation.add_period(Date.parse(date_str), start_minute, end_minute)
       end
 
       @reservation

@@ -1,26 +1,26 @@
 .accordion-group {
-
-	background: $dnm_white;
-	border-radius: 8px;
+  border-radius: $border-radius-default;
+  background: $dnm_white;
 
   a.accordion-toggle {
-  	background: url('//s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png') right center no-repeat;
-  	background-origin: content-box;
-  	color: black;
-  	opacity: .8;
+    background: url('//s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png') right center no-repeat;
+    background-origin: content-box;
+    color: black;
+    @include opacity(.8);
     @include transition(opacity .1s ease-in);
 
-  	&:hover {
-  		opacity: 1;
-  	}
+    &:hover {
+      @include opacity(1);
+    }
   }
 }
 
-.accordion-dim
-{
+.accordion-dim {
+
   .accordion-group {
-    background: $gray4;
     border:none;
+    background: $gray210;
+
     a.accordion-toggle {
       color: $dnm_white;
     }

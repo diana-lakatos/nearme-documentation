@@ -6,19 +6,23 @@
 
   - availability_choices(f.object).each do |template_id, label_text, options|
     .controls
-      = f.radio_button :availability_template_id, template_id, options || {}
-      = label_tag(options[:id], label_text, :class => "inline")
+      = label_tag(options[:id], :class => "inline radio") do
+        = f.radio_button :availability_template_id, template_id, options || {}
+        = label_text
 
   .controls.custom-availability-rules{:style => ('display: none' unless availability_custom?(f.object))}
-    - f.object.availability.each_day do |day, rule|
+    - availability_summary_for_rules(f.object.availability_rules).each_day do |day, rule|
       %div{:class => "day day-#{day}"}
-        = f.fields_for(:availability_rules, rule || AvailabilityRule.new(:day => day)) do |af|
-          = af.hidden_field :id, :disabled => !availability_custom?(f.object) if af.object.persisted?
-          = af.hidden_field :day, :disabled => !availability_custom?(f.object)
+        - # NB: We mark new records for destruction so that they conveniently pre-check the _destory checkbox.
+        = f.fields_for(:availability_rules, rule || AvailabilityRule.new(:day => day).tap { |r| r.mark_for_destruction }) do |af|
+          - active = availability_custom?(f.object) && !af.object.marked_for_destruction?
+          = af.hidden_field :id, :disabled => !active if af.object.persisted?
+          = af.hidden_field :day, :disabled => !active
           .day-name= af.object.day_name
-          .open-time= af.select :open_time, availability_time_options, {}, :disabled => !availability_custom?(f.object)
-          .close-time= af.select :close_time, availability_time_options, {}, :disabled => !availability_custom?(f.object)
+          .open-time= af.select :open_time, availability_time_options, {}, :disabled => !active
+          .close-time= af.select :close_time, availability_time_options, {}, :disabled => !active
           .closed-flag
-            = af.check_box :_destroy, :class => "closed", :checked => !af.object.open_time.present?, :disabled => !availability_custom?(f.object)
-            = af.label :_destroy, "Closed?", :class => "inline", :disabled => !availability_custom?(f.object)
-
+            = af.check_box :_destroy, :class => "closed checkbox", :checked => !active, :style => "display: none"
+            %label.checkbox
+              = check_box_tag "open", "1", active, :class => "open-checkbox"
+              = "Open"

@@ -1,12 +1,23 @@
 .form-horizontal {
 
   .control-group {
+    
     .free-price {
       float: left;
     }
 
+    .price-input-options {
+      overflow: hidden;
+      padding-left: 30px;
+    }
+
     .price-inputs-wrapper{
       padding-right: 20px;
+
+      label {
+        float: left;
+        top: 16px;
+      }
     }
 
     .currency-holder {
@@ -14,17 +25,16 @@
       z-index: 2; 
       margin-left: 11px;
       width: 30px;
-      text-align: right;
-      color: $gray7;       
+      color: $gray80;
+      text-align: right;       
     }
 
     .price-input {
       position: relative;
       z-index: 1;
-      padding-left: 30px;
       margin-left: -25px;
+      padding-left: 30px;
       width: 120px;
     }
-
   }
 }

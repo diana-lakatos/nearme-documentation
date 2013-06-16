@@ -29,12 +29,20 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert @user.verified
     end
 
-    should "mark user as not synchronized after verification" do
-      @user.mailchimp_synchronized!
-      Timecop.travel(Time.now.utc+10.seconds)
-      get :verify, :id => @user.id, :token => @user.email_verification_token
-      @user.reload
-      assert !@user.mailchimp_synchronized?
+    context 'with Timecop' do
+
+      teardown do
+        Timecop.return
+      end
+
+      should "mark user as not synchronized after verification" do
+        @user.mailchimp_synchronized!
+        Timecop.travel(Time.now.utc+10.seconds)
+        get :verify, :id => @user.id, :token => @user.email_verification_token
+        @user.reload
+        assert !@user.mailchimp_synchronized?
+      end
+
     end
 
     should "redirect verified user with listing to dashboard" do

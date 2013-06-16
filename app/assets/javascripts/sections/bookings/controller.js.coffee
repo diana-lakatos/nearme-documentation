@@ -3,19 +3,34 @@
 # The controller is initialize with the bookings DOM container, and an options hash including
 # JS objects representing each Listing on the Location.
 class Bookings.Controller
-  
+
   constructor: (@container, @listingData, @options = {}) ->
+    @setupDelayedMethods()
+
     @listing = new Bookings.Listing(@listingData)
 
     @bindDomElements()
     @initializeDatepicker()
+
+    if @listing.isReservedHourly()
+      @initializeTimePicker()
+
     @bindEvents()
- 
+
     @assignInitialDates()
     @updateQuantityField()
 
     if @listingData.initial_bookings and @options.showReviewBookingImmediately
       @reviewBooking()
+
+  # We need to set up delayed methods per each instance, not the prototype.
+  # Otherwise, it will debounce for any instance calling the method.
+  setupDelayedMethods: ->
+    # A deferred version of the booking status view updating, so we don't
+    # execute it multiple times in a short span of time.
+    @delayedUpdateBookingStatus = _.debounce(->
+      @updateBookingStatus()
+    , 5)
 
   # Bind to the various DOM elements managed by this controller.
   bindDomElements: ->
@@ -36,14 +51,59 @@ class Bookings.Controller
     @datepicker.bind 'datesChanged', (dates) =>
       @listing.setDates(dates)
       @delayedUpdateBookingStatus()
+      @timePicker.updateSelectableTimes() if @timePicker
 
   # Setup the datepicker for the simple booking UI
   initializeDatepicker: ->
-    @datepicker = new Bookings.Datepicker(
-      listing: @listing
-      startElement: @container.find(".calendar-wrapper.date-start")
-      endElement: @container.find(".calendar-wrapper.date-end")
+    startElement = @container.find(".calendar-wrapper.date-start")
+    endElement = @container.find(".calendar-wrapper.date-end")
+
+    if @listing.isReservedHourly()
+      @datepicker = new window.Datepicker(
+        trigger: startElement,
+
+        # Custom view to handle bookings availability display
+        view: new Bookings.Datepicker.AvailabilityView(@listing,
+          trigger: startElement,
+          text: '<div class="datepicker-text-fadein">Select date</div>'
+        ),
+
+        # Limit to a single date selected at a time
+        model: new window.Datepicker.Model.Single(
+          allowDeselection: false
+        )
+      )
+
+      @datepicker.bind 'datesChanged', (dates) =>
+        date = dates[0]
+        startElement.find('.calendar-text').text("#{DNM.util.Date.monthName(date, 3)} #{date.getDate()}")
+
+        if @datepicker.getView().isVisible()
+          @datepicker.hide()
+          @timePicker.show()
+    else
+      # Special datepicker wrapper that handles the start/end date semantics,
+      # ranges, pick/choose, etc.
+      @datepicker = new Bookings.Datepicker(
+        listing: @listing
+        startElement: startElement
+        endElement: endElement
+      )
+
+  # Sets up the time picker view controller which handles the user selecting the
+  # start/end times for the reservation.
+  initializeTimePicker: ->
+    @timePicker = new Bookings.TimePicker(
+      @listing,
+      @container.find('.time-picker'),
+      {
+        openMinute: @listing.data.earliest_open_minute,
+        closeMinute: @listing.data.latest_close_minute
+      }
     )
+
+    @timePicker.on 'change', =>
+      @updateTimesFromTimePicker()
 
   # Assign initial dates from a restored session or the default
   # start date.
@@ -59,6 +119,12 @@ class Bookings.Controller
       [@listing.firstAvailableDate]
 
     @datepicker.setDates(initialDates)
+    @datepicker.trigger 'datesChanged', initialDates
+
+  updateTimesFromTimePicker: ->
+    @listing.setTimes(@timePicker.startMinute(), @timePicker.endMinute())
+    @updateSummary()
+    @updateBookingStatus()
 
   # Trigger showing the review booking form based on selected
   # dates.
@@ -71,10 +137,7 @@ class Bookings.Controller
       type: 'POST',
       data: {
         listing_id: @listing.id,
-        reservation: {
-          dates: @listing.bookedDays(),
-          quantity: @listing.getQuantity()
-        }
+        reservation: @listing.reservationOptions()
       }
     }, 'space-reservation-modal', => @enableBookButton())
 
@@ -89,12 +152,6 @@ class Bookings.Controller
       @bookButton.removeClass('disabled')
       @bookButton.tooltip('destroy')
 
-  # A deferred version of the booking status view updating, so we don't
-  # execute it multiple times in a short span of time.
-  delayedUpdateBookingStatus: _.debounce(->
-    @updateBookingStatus()
-  , 5)
-
   disableBookButton: ->
     @bookButton.addClass('click-disabled').find('span.text').text('Booking...')
 
@@ -108,6 +165,7 @@ class Bookings.Controller
     # Reset the datepicker if the booking is no longer available
     # with the new quantity.
     @datepicker.reset() unless @listing.bookingValid()
+    @timePicker.updateSelectableTimes() if @timePicker
     @updateSummary()
 
   updateQuantityField: (qty = @listing.defaultQuantity) ->

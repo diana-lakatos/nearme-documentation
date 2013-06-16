@@ -10,7 +10,7 @@ class Listing::SerializationTest < ActiveSupport::TestCase
     should "return valid price fields" do
       json = @serializer.as_json[:listing]
       assert_equal 0, json[:price][:amount]
-      assert_equal Listing::PRICE_PERIODS[:free], json[:price][:period]
+      assert_equal ListingSerializer::PRICE_PERIODS[:free], json[:price][:period]
       assert_equal "Free", json[:price][:label]
     end
   end
@@ -24,7 +24,7 @@ class Listing::SerializationTest < ActiveSupport::TestCase
     should "return valid price fields" do
       json = @serializer.as_json[:listing]
       assert_equal 100.0, json[:price][:amount]
-      assert_equal Listing::PRICE_PERIODS[:day], json[:price][:period]
+      assert_equal ListingSerializer::PRICE_PERIODS[:day], json[:price][:period]
       assert_equal "$100.00", json[:price][:label]
     end
   end

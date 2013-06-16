@@ -1,8 +1,15 @@
 class ApplicationController < ActionController::Base
 
+  before_filter :require_ssl
+
   protect_from_forgery
   layout "application"
-  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+
+  # Much easier to debug ActiveRecord::RecordNotFound issues in dev
+  # without this.
+  unless Rails.env.development?
+    rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  end
 
   # We need to persist some mixpanel attributes for subsequent
   # requests.
@@ -100,6 +107,15 @@ class ApplicationController < ActionController::Base
 
   def not_found
     render "public/404", :status => :not_found
+  end
+
+  def render_redirect_url_as_json
+        self.response_body = nil
+        redirection_url = response.location
+        response.location = nil
+        response.status = 200
+        render :json => { "redirect" => redirection_url }
+        self.content_type = 'application/json'
   end
 
   def rename_flash_messages

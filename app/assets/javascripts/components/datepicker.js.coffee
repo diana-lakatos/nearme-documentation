@@ -38,11 +38,9 @@ class @Datepicker
     @bindEvents()
 
   bindEvents: ->
-    $('body').on 'click', (event) =>
-      if $(@options.trigger)[0] != event.target && $(@options.trigger).has(event.target).length == 0
-        @view.hide()
-
     if @options.trigger
+      @view.closeIfClickedOutside(@options.trigger) if @options.trigger
+
       $(@options.trigger).on 'click', (event) =>
         @view.toggle()
 

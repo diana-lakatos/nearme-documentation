@@ -1,3 +1,4 @@
+
 @import "compass/typography/vertical_rhythm";
 @import "compass/css3/font-face";
 
@@ -40,7 +41,7 @@ textarea,
 select,
 p {
   font:400 18px/28px $font-regular, sans-serif;
-  color: $gray6;
+  color: $gray120;
 
   @media (max-width: 480px) {
     @include adjust-font-size-to(16px);
@@ -57,18 +58,18 @@ h4,
 h4 a, 
 h5,
 h5 a {
+  color: $gray80;
   font-family: $font-medium, sans-serif;
   font-weight: normal;
-  color: $gray7;
 
   &:hover {
-    color: $gray7;
+    color: $gray80;
   }
 }
 
 h1 {
-  @include adjust-font-size-to(32px);
   margin-bottom: 20px;
+  @include adjust-font-size-to(32px);
 
   @media (max-width: 480px) {
     @include adjust-font-size-to(24px);
@@ -109,13 +110,15 @@ address {
 }
 
 // pnotice added for IE8 which does not display "reset password" link in modal when p element is used, it works for div though
-p.notice, div.pnotice {
-  font-size: 12px;
-  color: gray2;
+
+p.notice, 
+div.pnotice {
   margin: .5em 0;
+  color: gray2;
   font-weight: 600px;
-  @include opacity(.7);
+  font-size: 12px;
   filter: inherit;
+  @include opacity(.7);
   @include transition(all .1s ease-in);
 
   &:hover {

@@ -3,7 +3,7 @@ require 'test_helper'
 class User::BillingGatewayTest < ActiveSupport::TestCase
   setup do
     @user = FactoryGirl.create(:user)
-    @reservation = FactoryGirl.create(:reservation)
+    @reservation = FactoryGirl.create(:reservation_with_valid_period)
     @billing_gateway = User::BillingGateway.new(@user)
   end
 
