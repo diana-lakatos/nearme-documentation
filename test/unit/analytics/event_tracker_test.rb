@@ -127,8 +127,8 @@ class EventTrackerTest < ActiveSupport::TestCase
     @mixpanel.expects(:set_person_properties).with(user)
   end
 
-  def build_search_params(options, geocoder = fake_geocoder(true))
-    Listing::Search::Params::Web.new(options, geocoder)
+  def build_search_params(options)
+    Listing::Search::Params::Web.new(options)
   end
 
   def reservation_properties
