@@ -11,7 +11,7 @@ class Location::AddressComponentsPopulator
     raise_if_limit_reached
     if @location.formatted_address && !@location.address_components
       if (@result = get_geocoding_result)
-        @location.address_components = wrap_result_address_components
+        @location.address_components = wrap_address_components(@result.address_components)
         @location.save!
       end
     end

@@ -1,1 +1,6 @@
-MIXPANEL_TOKEN = Rails.env.production? ? 'f582797daa2cdce1a3f53dacd584d8c8' : '1116470b98f6daff9fb0e638cc24b87f'
+MIXPANEL_TOKEN = if Rails.env.production?
+  '7ffff7057407af5fe5f71701a1ab26b2'
+else
+  '897e1963583f7dde9ecac901683a9bfa'
+end
+

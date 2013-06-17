@@ -15,6 +15,15 @@ class SessionsController < Devise::SessionsController
     end
   end
 
+  def create
+    super
+
+    if current_user
+      mixpanel.apply_user(current_user)
+      event_tracker.logged_in(current_user)
+    end
+  end
+
   private
 
   def set_default_remember_me
@@ -46,3 +55,4 @@ class SessionsController < Devise::SessionsController
   end
 
 end
+

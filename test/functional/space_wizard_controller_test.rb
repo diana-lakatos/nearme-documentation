@@ -10,6 +10,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
     sign_in @user
     FactoryGirl.create(:listing_type)
     FactoryGirl.create(:location_type)
+    stub_request(:get, /.*api\.mixpanel\.com.*/)
   end
 
   context "price must be formatted" do
@@ -28,6 +29,30 @@ class SpaceWizardControllerTest < ActionController::TestCase
       assert_no_difference('Listing.count') do
         post :submit_listing, { "company"=> { "name"=>"International Secret Intelligence Service" } }  
       end
+    end
+
+  end
+
+  context 'track' do
+    setup do
+      @tracker = Analytics::EventTracker.any_instance
+    end
+
+    should "track location and listing creation" do
+      @tracker.expects(:created_a_location)
+      @tracker.expects(:created_a_listing)
+      post :submit_listing, get_params
+    end
+
+    should 'track list your space list view' do
+      @tracker.expects(:viewed_list_your_space_list)
+      get :new
+    end
+
+    should 'track list your space sign up view' do
+      sign_out @user
+      @tracker.expects(:viewed_list_your_space_sign_up)
+      get :new
     end
 
   end
