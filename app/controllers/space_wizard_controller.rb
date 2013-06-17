@@ -7,7 +7,9 @@ class SpaceWizardController < ApplicationController
 
   def new
     flash.keep(:warning)
-    if current_user
+    if current_user and current_user.listings.any?
+      redirect_to manage_locations_path
+    elsif current_user
       redirect_to space_wizard_list_url
     else
       redirect_to new_user_registration_url(:wizard => 'space', :return_to => space_wizard_list_path)
