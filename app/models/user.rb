@@ -149,13 +149,9 @@ class User < ActiveRecord::Base
   def full_mobile_number
     return unless mobile_number.present?
 
-    number = []
-    if country.try(:calling_code)
-      number << '+'
-      number << country.calling_code
-    end
-    number << mobile_number
-    number.join
+    number = mobile_number
+    number = "+#{country.calling_code}#{number.gsub(/^0/, "")}" if country.try(:calling_code)
+    number
   end
 
   def accepts_sms?

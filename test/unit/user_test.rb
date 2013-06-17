@@ -95,6 +95,26 @@ class UserTest < ActiveSupport::TestCase
     assert @user.avatar_provided?
   end
 
+  context '#full_mobile_number' do
+    setup do
+      @nz = Country.find('New Zealand')
+    end
+
+    should 'prefix with international calling code' do
+      user = User.new
+      user.country_name = @nz.name
+      user.mobile_number = '123456'
+      assert_equal '+64123456', user.full_mobile_number
+    end
+
+    should 'not include 0 prefix from base number' do
+      user = User.new
+      user.country_name = @nz.name
+      user.mobile_number = '0123456'
+      assert_equal '+64123456', user.full_mobile_number
+    end
+  end
+
   context "mailchimp" do
 
     should "not be exported without synchronize timestamp" do
