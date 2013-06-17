@@ -333,7 +333,7 @@ ActiveRecord::Schema.define(:version => 20130613230110) do
     t.text     "biography"
     t.datetime "mailchimp_synchronized_at"
     t.boolean  "verified",                                 :default => false
-    t.integer  "mobile_country_code"
+    t.string   "country_name"
     t.string   "mobile_number"
   end
 

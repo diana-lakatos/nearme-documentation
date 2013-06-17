@@ -77,7 +77,7 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :biography, :industry_ids,
-                  :mobile_country_code, :mobile_number
+                  :country_name, :mobile_number
 
   delegate :to_s, :to => :name
 
@@ -141,12 +141,25 @@ class User < ActiveRecord::Base
     name.split(' ', 2)[1]
   end
 
+  def country
+    Country.find(country_name) if country_name.present?
+  end
+
+  # Returns the mobile number with the full international calling prefix
   def full_mobile_number
-    ['+', mobile_country_code, mobile_number].join
+    return unless mobile_number.present?
+
+    number = []
+    if country.try(:calling_code)
+      number << '+'
+      number << country.calling_code
+    end
+    number << mobile_number
+    number.join
   end
 
   def accepts_sms?
-    mobile_number.present?
+    full_mobile_number.present?
   end
 
   def avatar_changed?

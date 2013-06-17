@@ -2,8 +2,14 @@
   = f.input :name, label: "Your name", placeholder: "Full name"
   = f.input :email, label: "Your email address", placeholder: "Email"
   = f.input :password, :label => "Your password", placeholder: "Password"
-  = f.input :mobile_country_code, :label => "Mobile country", :as => :select, :collection => user_mobile_country_code_options
-  = f.input :mobile_number, :label => "Mobile number"
+  = f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :input_html => { :class => "custom-select" }
+  .control-group.optional.mobile-number-field
+    = f.label :mobile_number
+    .controls
+      .country-calling-code
+        = "+#{resource.country.calling_code}" if resource.country
+      = f.text_field :mobile_number
+
   = f.association :industries, :blank => false, :input_html => { :class => 'custom-select' }
   = f.input :job_title, label: "Job title", placeholder: "Your job title"
   = f.input :biography, label: "Biography", placeholder: "Your biography"
@@ -14,4 +20,9 @@
 
   .actions
     = f.submit (resource.persisted?) ? "Save Changes" : "Sign Up Now"
+
+:javascript
+  $(function() {
+    new Users.EditForm($('#edit_user'))
+  });
 

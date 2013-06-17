@@ -3,7 +3,7 @@ module UsersHelper
     current_user && current_user.admin?
   end
 
-  def user_mobile_country_code_options
-    COUNTRY_CALLING_CODES.map { |c, cc| ["#{c} (+#{cc})", cc] }.sort_by(&:first)
+  def user_country_name_options
+    Country.all.map { |c| [c.name, c.name, {:'data-calling-code' => c.calling_code}] }.sort_by(&:first)
   end
 end
