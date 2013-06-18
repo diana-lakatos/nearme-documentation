@@ -11,6 +11,7 @@ Before do
   DatabaseCleaner.clean
   WebMock.disable_net_connect!
   GmapsFake.stub_requests
+  stub_request(:get, /.*api\.mixpanel\.com.*/)
 end
 
 def last_json

@@ -6,6 +6,10 @@ require Rails.root.join('app', 'serializers', 'reservation_serializer.rb')
 class ReservationTest < ActiveSupport::TestCase
   include ReservationsHelper
 
+  setup do
+    stub_request(:get, /.*api\.mixpanel\.com.*/)
+  end
+
   test "it has a listing" do
     @reservation = Reservation.new
     @reservation.listing = FactoryGirl.create(:listing)
@@ -27,7 +31,7 @@ class ReservationTest < ActiveSupport::TestCase
   end
 
   context 'cancelable' do
-    
+
     setup do
         @reservation = Reservation.new
         @reservation.listing = FactoryGirl.create(:always_open_listing)
@@ -68,7 +72,7 @@ class ReservationTest < ActiveSupport::TestCase
 
     should 'not be cancelable if owner canceled' do
         @reservation.confirm!
-        @reservation.owner_cancel!
+        @reservation.host_cancel!
         Rails.logger.debug @reservation.state
         assert !@reservation.cancelable
     end
@@ -95,7 +99,7 @@ class ReservationTest < ActiveSupport::TestCase
             @reservation.save!
           end
 
-          assert_equal 24.hours.from_now.to_i, Delayed::Job.first.run_at.to_i
+          assert_equal 24.hours.from_now.to_i, Delayed::Job.last.run_at.to_i
         end
       end
 
@@ -111,10 +115,8 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should 'not send any email if the expire method is called' do
-        ReservationObserver.any_instance.expects(:after_expires).never
-        assert_raises StateMachine::InvalidTransition do
-          @reservation.expire!
-        end
+        ReservationMailer.expects(:notify_guest_of_expiration).never
+        @reservation.perform_expiry!
       end
 
     end

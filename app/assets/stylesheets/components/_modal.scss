@@ -1,15 +1,15 @@
 .modal-overlay {
   position: fixed;
   top: 0;
-  left: 0;
   right: 0;
   bottom: 0;
+  left: 0;
   background: rgba(0,0,0,0.9);
-  opacity: 0;
+  @include opacity(0);
   @include transition(opacity 0.3s ease-in-out);
 
   &.visible {
-    opacity: 1;
+    @include opacity(1);
   }
 
   html.no-rgba & {
@@ -21,20 +21,19 @@
 }
 
 .modal-wrapper {
-  background: $gray1;
-  //border: 1px solid #ffffff;
-  @include border-radius($border-radius);
+  background: $gray240;
+  @include border-radius($border-radius-default);
 }
 
 .modal-container {
-  width: 600px;
   z-index: $modal-z-index;
   padding-bottom: 50px;
+  width: 600px;
   @include transition(opacity 0.5s ease-in-out);
-  opacity: 0;
+  @include opacity(0);
 
   &.visible {
-    opacity: 1;
+    @include opacity(1);
   }
 
   &.loading .modal-close {
@@ -42,13 +41,13 @@
   }
 
   @media (max-width: 767px) {
-    width: 100%;
     position: fixed;
     top: 20px;
-    left: 20px;
     right: 20px;
-    width: auto;
+    left: 20px;
     margin: 0;
+    width: 100%;
+    width: auto;
   }
 
   &.sign-up-modal {
@@ -63,14 +62,14 @@
 
       h2 {
         margin-left: -10px;
-        color: $gray2;
+        color: $gray230;
       }
 
       .hr {
         background: transparent;
 
         span {
-          color: $gray3;
+          color: $gray220;
         }  
       }
     }
@@ -84,13 +83,12 @@
 .modal-loading {
   @extend .modal-wrapper;
   height: 200px;
-  background: #f5f5f5 image-url("components/modal/loader.gif") center center no-repeat;
+  background: $gray220 image-url("components/modal/loader.gif") center center no-repeat;
 }
 
 .modal-content {
   @extend .modal-wrapper;
-  $padding: 20px;
-  padding: $padding;
+  padding: $padding-default;
   z-index: $modal-z-index + 1;
   @include transition(opacity 0.2s);
 
@@ -108,39 +106,40 @@
     @include transform(translateY(0));
   }
 
-
   header {
     display: block;
-    padding: $padding;
-    background: $gray4;
-    color: $gray7;
-    margin-top: -$padding;
-    margin-left: -$padding;
-    margin-right: -$padding;
-    margin-bottom: $padding;
-    @include border-corner-radius(top, left, $border-radius);
-    @include border-corner-radius(top, right, $border-radius);
+    margin-top: -$padding-default;
+    margin-right: -$padding-default;
+    margin-bottom: $padding-default;
+    margin-left: -$padding-default;
+    padding: $padding-default;
+    background: $gray210;
+    color: $gray80;
+    @include border-corner-radius(top, left, $border-radius-default);
+    @include border-corner-radius(top, right, $border-radius-default);
 
     h2 {
-      color: $gray7;
+      color: $gray80;
     }
   }
 
-  hr, .hr {
+  hr, 
+  .hr {
     border-bottom: 0;
-    margin-left: -$padding;
-    margin-right: -$padding;
-    margin-top: $padding;
-    margin-bottom: $padding;
+    margin-left: -$padding-default;
+    margin-right: -$padding-default;
+    margin-top: $padding-default;
+    margin-bottom: $padding-default;
     text-align: center;
   }
+
   .hr span {
-    display: inline-block;
-    background: transparent;
-    padding: 0 8px;
     position: relative;
     top: -10px;
-    color: $gray6;
+    display: inline-block;
+    padding: 0 8px;
+    background: transparent;
+    color: $gray120;
     font-weight: bold;
   }
 }
@@ -149,11 +148,11 @@
   position: absolute;
   top: 6px;
   right: 8px;
+  z-index: $modal-z-index + 3;
   width: 18px;
   height: 18px;
   color:$icon;
   font-size: 18px;
-  z-index: $modal-z-index + 3;
 
   &:hover {
     color: $icon-hover;
@@ -165,6 +164,7 @@
   width: 100%;
 }
 
+
 // Payments
 
 input#card_number {
@@ -173,8 +173,8 @@ input#card_number {
 
 .credit-card-icon {
   margin: -48px 0 18px 12px;
-  font-size: 155%;
   width: 20px;
+  font-size: 155%;
   opacity: .7;
 }
 
@@ -191,4 +191,3 @@ input#card_number {
   width: 49%;
   margin-left: 1%;   
 } 
-

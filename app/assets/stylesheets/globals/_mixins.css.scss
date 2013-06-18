@@ -1,14 +1,13 @@
 @mixin form-field {
-
-  width: 100%;
-  @include box-sizing(border-box);
   margin: 0;
   margin-bottom: 8px;
   padding: 8px 8px 8px 8px;
-  background: $gray2;
-  border: 2px solid $gray2;
-  @include border-radius($border-radius);
-  color: $gray8;
+  width: 100%;
+  @include box-sizing(border-box);
+  border: 2px solid $gray230;
+  @include border-radius($border-radius-default);  
+  background: $gray230;
+  color: $gray60;
   font-size: 22px;
   line-height: 29px;
   @include transition(border .2s ease-in, opacity .2s ease-in, color .2s ease-in);
@@ -27,10 +26,9 @@
 }
 
 @mixin form-field-focus {
-
-  background: $gray1;
-  border: 2px solid $gray7;
-  color: $gray9;
   outline: none;
+  border: 2px solid $gray80;
+  background: $gray240;
+  color: $gray40;
 }
 

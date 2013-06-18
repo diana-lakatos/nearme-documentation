@@ -1,17 +1,18 @@
-.btn, a.btn {
+.btn, 
+a.btn {
   display: inline-block;
-  text-decoration: none;
-  font-family: $font-regular, sans-serif;
-  letter-spacing: 1px;
-  color: #fff;
+  @include box-sizing(border-box);
   padding: 0 10px;
   border: none !important;
-  @include box-sizing(border-box);
+  color: $pure-white;
+  font-family: $font-regular, sans-serif;
+  text-decoration: none;
+  letter-spacing: 1px;
   @include transition(background .1s ease-in);
 
   &.full-width {
-    width: 100%;
     @include box-sizing(border-box);
+    width: 100%;
   }
 
   &.margin-bottom {
@@ -27,28 +28,29 @@
 
   &.btn-small {
     height: 30px;
+    @include border-radius($border-radius-mobile);
     line-height: 30px;
     font-size: 14px;
-    @include border-radius(6px);
   }
 
   &.btn-medium {
     height: 38px;
+    @include border-radius(8px);
     line-height: 38px;
     font-size: 18px;
-    @include border-radius(8px);
   }
 
   &.btn-large {
-    height: 50px;
-    line-height: 50px;
-    font-size: 22px;
-    @include border-radius(12px);
     padding: 0 20px;
+    height: 50px;
+    @include border-radius($border-radius-default);
+    font-size: 22px;
+    line-height: 50px;
   }
 
   &.btn-blue {
-    background: $dnm_blue;
+    background: $blue;
+    
     &:hover {
       background: lighten($dnm_blue, 10%);
     }
@@ -59,30 +61,32 @@
   }
 
   &.btn-green {
-    background: $dnm_green;
+    background: $green;
+    
     &:hover {
-      background: lighten($dnm_green, 10%);
+      background: lighten($green, 10%);
     }
 
     &:active {
-      background: darken($dnm_green, 10%);
+      background: darken($green, 10%);
     }
   }
 
   &.btn-red {
-    background: $dnm_red;
+    background: $red;
+    
     &:hover {
-      background: darken($dnm_red, 10%);
+      background: darken($red, 10%);
     }
 
     &:active {
-      background: #e93e34;
-      background: darken($dnm_red, 15%);
+      background: darken($red, 15%);
     }
   }
 
   &.btn-orange {
     background: $orange;
+    
     &:hover {
       background: lighten($orange, 10%);
     }
@@ -93,37 +97,40 @@
   }
 
 
-  &.twitter, &.facebook, &.linkedin {
+  &.twitter, 
+  &.facebook, 
+  &.linkedin {
+    
     &.connected {
-      background: $dnm_red;
+      background: $red;
 
       &:hover {
-        background: darken($dnm_red, 10%);
+        background: darken($red, 10%);
       }
     }
   }
 
   &.twitter {
-    background: #33CCFF;
+    background: $twitter-blue;
 
     &:hover {
-      background: darken(#33CCFF, 15%);
+      background: darken($twitter-blue, 15%);
     }
   }
 
   &.facebook {
-    background: #3B5998;
+    background: $facebook-blue;
 
     &:hover {
-      background: darken(#3B5998, 15%);
+      background: darken($facebook-blue, 15%);
     }
   }
 
   &.linkedin {
-    background: #4875B4;
+    background: $linkedin-blue;
 
     &:hover {
-      background: darken(#4875B4, 15%);
+      background: darken($linkedin-blue, 15%);
     }
   }
 }

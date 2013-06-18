@@ -32,7 +32,7 @@
     left: 0;
     position: absolute;
     top: 0px;
-    background: $gray3;
+    background: $gray220;
     @include transition(all $checkbox-radio-transition ease-in-out);
 
     .checkbox-icon-inner {
@@ -72,7 +72,7 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: $gray3;
+    background: $gray220;
     @include transition(all $checkbox-radio-transition ease-in-out);
 
     .radio-icon-inner {
@@ -145,7 +145,7 @@
         right: 8px;
         top: 10px;
         font-size: 26px;
-        color: $gray5;
+        color: $gray160;
       }
 
       &.disabled{

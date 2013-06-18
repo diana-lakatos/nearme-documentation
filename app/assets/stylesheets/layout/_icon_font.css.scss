@@ -1,195 +1,310 @@
+
 @include font-face("icon-font", font-files("icon-font.woff", "icon-font.otf", "icon-font.ttf", "icon-font.svg#icon-font"), "icon-font.eot");
+
 
 // Icon Font Styling 
 
 span.padding:before {
   padding-right: .4em;
 }
+
 span.padding-left {
   padding-left: .4em;
 }
+
 .ico-phone:before {
   font-size: 75%;
   padding-right: 2px;
 }
+
 .ico-twitter:before {
   font-size: 125%;
 }
+
 .ico-lock:before,
 .ico-calendar-start {
   padding-right: 4px;
 }
 
-.ico-tag:before, .ico-print:before, .ico-screen:before, .ico-filter:before, .ico-calendar-start:before, .ico-calendar-end:before, .ico-user:before, .ico-plus:before, .ico-info:before, .ico-facebook:before, .ico-check:before, .ico-bookings:before, .ico-arrow-up:before, .ico-arrow-right:before, .ico-arrow-left:before, .ico-arrow-down:before, .ico-twitter:before, .ico-sign-up:before, .ico-search:before, .ico-phone:before, .ico-marker:before, .ico-mail:before, .ico-logout:before, .ico-login:before, .ico-lock:before, .ico-location:before, .ico-linkedin:before, .ico-instagram:before, .ico-edit:before, .ico-drawer:before, .ico-dashboard:before, .ico-crosshairs:before, .ico-close:before, .ico-clock:before, .ico-calender:before, .ico-add-location:before, .ico-manage-guests:before, .ico-link:before, .ico-app-store:before, .ico-credit-card:before, .ico-trash:before, .ico-settings:before, .ico-upload-photos:before, .ico-desk:before, .ico-add-desk:before, .ico-save:before, .ico-trash-open:before, .ico-profile:before, .ico-warning:before, .ico-chevron-up:before, .ico-chevron-right:before, .ico-chevron-down:before, .ico-chevron-left:before, .ico-list:before, .ico-open-link:before {
+.ico-tag:before, 
+.ico-print:before, 
+.ico-screen:before, 
+.ico-filter:before, 
+.ico-calendar-start:before, 
+.ico-calendar-end:before, 
+.ico-user:before, 
+.ico-plus:before, 
+.ico-info:before, 
+.ico-facebook:before, 
+.ico-check:before, 
+.ico-bookings:before, 
+.ico-arrow-up:before, 
+.ico-arrow-right:before, 
+.ico-arrow-left:before, 
+.ico-arrow-down:before, 
+.ico-twitter:before, 
+.ico-sign-up:before, 
+.ico-search:before, 
+.ico-phone:before, 
+.ico-marker:before, 
+.ico-mail:before, 
+.ico-logout:before, 
+.ico-login:before, 
+.ico-lock:before, 
+.ico-location:before, 
+.ico-linkedin:before, 
+.ico-instagram:before, 
+.ico-edit:before, 
+.ico-drawer:before, 
+.ico-dashboard:before, 
+.ico-crosshairs:before, 
+.ico-close:before, 
+.ico-clock:before, 
+.ico-calender:before, 
+.ico-add-location:before, 
+.ico-manage-guests:before, 
+.ico-link:before, 
+.ico-app-store:before, 
+.ico-credit-card:before, 
+.ico-trash:before, 
+.ico-settings:before, 
+.ico-upload-photos:before, 
+.ico-desk:before, 
+.ico-add-desk:before, 
+.ico-save:before, 
+.ico-trash-open:before, 
+.ico-profile:before, 
+.ico-warning:before, 
+.ico-chevron-up:before, 
+.ico-chevron-right:before, 
+.ico-chevron-down:before, 
+.ico-chevron-left:before, 
+.ico-list:before, 
+.ico-open-link:before {
   font-family: 'icon-font';
-  speak: none;
-  font-style: normal;
   font-weight: normal;
+  font-style: normal;
   line-height: 1;
+  speak: none;
   -webkit-font-smoothing: antialiased;
 }
+
 .ico-tag:before {
   content: "\e000";
 }
+
 .ico-print:before {
   content: "\e001";
 }
+
 .ico-screen:before {
   content: "\e002";
 }
+
 .ico-filter:before {
   content: "\e003";
 }
+
 .ico-calendar-start:before {
   content: "\e004";
 }
+
 .ico-calendar-end:before {
   content: "\e005";
 }
+
 .ico-user:before {
   content: "\e006";
 }
+
 .ico-plus:before {
   content: "\e007";
 }
+
 .ico-info:before {
   content: "\e008";
 }
+
 .ico-facebook:before {
   content: "\e009";
 }
+
 .ico-check:before {
   content: "\e00a";
 }
+
 .ico-bookings:before {
   content: "\e00b";
 }
+
 .ico-arrow-up:before {
   content: "\e00c";
 }
+
 .ico-arrow-right:before {
   content: "\e00d";
 }
+
 .ico-arrow-left:before {
   content: "\e00e";
 }
+
 .ico-arrow-down:before {
   content: "\e00f";
 }
+
 .ico-twitter:before {
   content: "\e010";
 }
+
 .ico-sign-up:before {
   content: "\e011";
 }
+
 .ico-search:before {
   content: "\e012";
 }
+
 .ico-phone:before {
   content: "\e013";
 }
+
 .ico-marker:before {
   content: "\e014";
 }
+
 .ico-mail:before {
   content: "\e015";
 }
+
 .ico-logout:before {
   content: "\e016";
 }
+
 .ico-login:before {
   content: "\e017";
 }
+
 .ico-lock:before {
   content: "\e018";
 }
+
 .ico-location:before {
   content: "\e019";
 }
+
 .ico-linkedin:before {
   content: "\e01a";
 }
+
 .ico-instagram:before {
   content: "\e01b";
 }
+
 .ico-edit:before {
   content: "\e01c";
 }
+
 .ico-drawer:before {
   content: "\e01d";
 }
+
 .ico-dashboard:before {
   content: "\e01e";
 }
+
 .ico-crosshairs:before {
   content: "\e01f";
 }
+
 .ico-close:before {
   content: "\e020";
 }
+
 .ico-clock:before {
   content: "\e021";
 }
+
 .ico-calender:before {
   content: "\e022";
 }
+
 .ico-add-location:before {
   content: "\e023";
 }
+
 .ico-manage-guests:before {
   content: "\e024";
 }
+
 .ico-link:before {
   content: "\e025";
 }
+
 .ico-app-store:before {
   content: "\e026";
 }
+
 .ico-credit-card:before {
   content: "\e027";
 }
+
 .ico-trash:before {
   content: "\e028";
 }
+
 .ico-settings:before {
   content: "\e029";
 }
+
 .ico-upload-photos:before {
   content: "\e02a";
 }
+
 .ico-desk:before {
   content: "\e02b";
 }
+
 .ico-add-desk:before {
   content: "\e02c";
 }
+
 .ico-save:before {
   content: "\e02d";
 }
+
 .ico-trash-open:before {
   content: "\e02e";
 }
+
 .ico-profile:before {
   content: "\e02f";
 }
+
 .ico-warning:before {
   content: "\e030";
 }
+
 .ico-chevron-up:before {
   content: "\e031";
 }
+
 .ico-chevron-right:before {
   content: "\e032";
 }
+
 .ico-chevron-down:before {
   content: "\e033";
 }
+
 .ico-chevron-left:before {
   content: "\e034";
 }
+
 .ico-list:before {
   content: "\e035";
 }
+
 .ico-open-link:before {
   content: "\e036";
 }

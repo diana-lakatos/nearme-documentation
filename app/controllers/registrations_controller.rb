@@ -20,6 +20,14 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     super
+
+    # Only track the sign up if the user has actually been saved (i.e. there are no errors)
+    if @user.persisted?
+      # This user has just registered, so we
+      mixpanel.apply_user(@user, :alias => true)
+      event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: provider })
+    end
+
     # Clear out temporarily stored Provider authentication data if present
     session[:omniauth] = nil unless @user.new_record?
     flash[:redirected_from_sign_up] = true
@@ -49,7 +57,7 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.avatar = params[:avatar]
     if @user.save
-      render :text => { :url => @user.avatar_url(:thumb).to_s, :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain' 
+      render :text => { :url => @user.avatar_url(:thumb).to_s, :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain'
     else
       render :text => [{:error => @user.errors.full_messages}].to_json,:content_type => 'text/plain', :status => 422
     end
@@ -67,7 +75,7 @@ class RegistrationsController < Devise::RegistrationsController
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
       flash[:success] = "Thanks - your email address has been verified!"
-      redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path(@user) 
+      redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path(@user)
     else
       if @user.verified
         flash[:warning] = "The email address has been already verified"
@@ -97,6 +105,24 @@ class RegistrationsController < Devise::RegistrationsController
     session[:user_return_to] = params[:return_to] if params[:return_to].present?
   end
 
+  private
+
+  def provider
+    provider = unless session[:omniauth].nil?
+      session[:omniauth][:provider]
+    else
+      'native'
+    end
+  end
+
+  def signed_up_via
+    if !request.referrer.nil? && request.referrer.include?('return_to=%2Fspace%2Flist&wizard=space')
+      'flow'
+    else
+      'other'
+    end
+  end
+
   # if ajax call has been made from modal and user has been created, we need to tell 
   # Modal that instead of rendering content in modal, it needs to redirect to new page
   def render_or_redirect_after_create
@@ -116,3 +142,4 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
 end
+

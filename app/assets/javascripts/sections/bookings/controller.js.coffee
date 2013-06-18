@@ -5,6 +5,8 @@
 class Bookings.Controller
 
   constructor: (@container, @listingData, @options = {}) ->
+    @setupDelayedMethods()
+
     @listing = new Bookings.Listing(@listingData)
 
     @bindDomElements()
@@ -20,6 +22,15 @@ class Bookings.Controller
 
     if @listingData.initial_bookings and @options.showReviewBookingImmediately
       @reviewBooking()
+
+  # We need to set up delayed methods per each instance, not the prototype.
+  # Otherwise, it will debounce for any instance calling the method.
+  setupDelayedMethods: ->
+    # A deferred version of the booking status view updating, so we don't
+    # execute it multiple times in a short span of time.
+    @delayedUpdateBookingStatus = _.debounce(->
+      @updateBookingStatus()
+    , 5)
 
   # Bind to the various DOM elements managed by this controller.
   bindDomElements: ->
@@ -140,12 +151,6 @@ class Bookings.Controller
     else
       @bookButton.removeClass('disabled')
       @bookButton.tooltip('destroy')
-
-  # A deferred version of the booking status view updating, so we don't
-  # execute it multiple times in a short span of time.
-  delayedUpdateBookingStatus: _.debounce(->
-    @updateBookingStatus()
-  , 5)
 
   disableBookButton: ->
     @bookButton.addClass('click-disabled').find('span.text').text('Booking...')

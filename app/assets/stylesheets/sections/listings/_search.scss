@@ -20,16 +20,17 @@ section.search#content {
     top: 160px;
     right: 0;
     left: 0;
+    z-index: $map-z-index + 1;
     margin: 0 auto;
     padding: 8px;
     width: 32px;
     height: 32px;
-    background: #e6e6e6;
-    @include border-radius(8px);
-    z-index: $map-z-index + 1;
+    background: $gray230;
+    @include border-radius($border-radius-medium);
   }
   
-  .google-map-wrapper, .google-map .inner {
+  .google-map-wrapper, 
+  .google-map .inner {
     z-index: $map-z-index;
     
     @media (max-width: 480px) {
@@ -38,28 +39,27 @@ section.search#content {
   }
   
   .google-map-wrapper .cluster[title] {
-    background: rgb(186,0,13) !important; 
-    font-size: 18px !important;
-    color: #FFF !important;
-    border: 2px solid rgb(107,11,13);
-    @include border-radius(42px);
-    @include box-shadow(0px 0px 3px 1px rgba(0,0,0,0.4));
     margin-top: -10px;
     margin-left: -2px;
+    border: 2px solid rgb(107,11,13);
+    @include border-radius(42px);
+    background: rgb(186,0,13) !important;
+    color: $pure-white !important; 
+    font-size: 18px !important;
   }
   
   #results.no_results {
-     padding: 40px 0;
-     z-index: $map-z-index - 1;
-     
-     &.map {
-       position: absolute;
-       top: 110px;
-     }
+    z-index: $map-z-index - 1;
+    padding: 40px 0;
+
+    &.map {
+     position: absolute;
+     top: 110px;
+    }
   }
   
   div.google-map {
-    background: $gray2;
+    background: $gray230;
     margin: 0;
 
     &.affix {
@@ -67,6 +67,7 @@ section.search#content {
       top: 48px;
 
       @media (min-width: 1400px) {
+        
         .inner {
           width: 1360px;
         }
@@ -110,7 +111,7 @@ section.search#content {
   cursor: pointer;
   
   &:hover {
-    background-color: $gray4;
+    background-color: $gray210;
   }
 }
 
@@ -122,7 +123,9 @@ section.search#content {
 }
 
 #search_row,
+
 .black-box {
+  
   .btn-green {
     width: 100%;
     text-align: center;
@@ -136,8 +139,8 @@ section.search#content {
   .span9,
   .span3 {
     position: relative;
-    max-height: 50px;
     overflow: hidden;
+    max-height: 50px;
 
     input {
       padding: 8px 0 8px 50px;
@@ -145,15 +148,15 @@ section.search#content {
   }
   
   .geolocation, .search-icon {
+    @include transition(all .1s ease-in);
     position: absolute;
     top: 9px;
+    width: 34px;
     border: 0;
     background: transparent;
-    @include transition(all .1s ease-in);
-    font-size: 32px;
-    width: 34px;
-    cursor: pointer;
     color: $icon;
+    font-size: 32px;
+    cursor: pointer;
     
     &:hover {
       color: $icon-hover;
@@ -171,16 +174,16 @@ section.search#content {
 
 header#listing_search {
   position: fixed;
-  left: 0;
-  right: 0;
   top: 60px;
-  height: 60px;
-  max-width: none;
-  margin: 0 auto;
-  padding: 0 10px;
+  right: 0;
+  left: 0;
   z-index: $nav-z-index - 10;
-  overflow: hidden;  
-  background: $gray2;
+  overflow: hidden;
+  margin: 0 auto;
+  max-width: none;
+  padding: 0 10px;
+  height: 60px;  
+  background: $gray230;
 
   @media (max-width: $iphone-landscape) {
     height: 38px;
@@ -193,13 +196,13 @@ header#listing_search {
   }
   
   .list-map-toggle {
-    @include border-radius($border-radius);
-    background: $dnm_white;
     position: absolute;
     top: 5px;
     left: 0px;
     width: 100px;
     height: 49px;
+    @include border-radius($border-radius-default);
+    background: $dnm_white;
 
     @media (max-width: $iphone-landscape) {
       height: 28px;
@@ -210,17 +213,17 @@ header#listing_search {
     a.map,
     a.list {  
       position: absolute;
-      display: block;
       z-index: 100;
-      height:45px;
+      display: block;
       width: 45px;
-      background: $dnm_white;
-      @include border-radius($border-radius);
+      height:45px;
       border: 2px solid $dnm_white;
+      @include border-radius($border-radius-default);
+      background: $dnm_white;
+      color: $gray160;
       font-size: 24px;
-      line-height: 45px;
       text-align: center;
-      color: $gray5; 
+      line-height: 45px; 
 
       @media (max-width: $iphone-landscape) {
         height: 24px;
@@ -231,9 +234,9 @@ header#listing_search {
       }
 
       &.active {
-        background: $gray4;
-        color: $gray6;
-        border: 2px solid $gray4;
+        background: $gray210;
+        color: $gray120;
+        border: 2px solid $gray210;
       }
     }
 
@@ -257,17 +260,16 @@ header#listing_search {
     margin-top: 5px;
     
     a {
-      @include border-radius(4px);
-      text-align: center;
-      background: #ebebeb; // Needs better color
+      @include border-radius($border-radius-mobile);
+      background: $gray230;
+      color: $gray40;
+      text-align: center; 
       line-height: 49px;
-      
-      color:rgb(30,30,30);
     }
     
     a:hover {
       background: $gray;
-      color: #FFF;
+      color: $pure-white;
     }
     
     a span {
@@ -290,9 +292,9 @@ header#listing_search {
     .search-container {
       position: relative; 
       float: left;
-      width: 100%;
-      padding-left: 110px;
       @include box-sizing(border-box);
+      padding-left: 110px;
+      width: 100%;
 
       @media (min-width: 768px) {
         padding-right: 280px;
@@ -303,16 +305,16 @@ header#listing_search {
       }
 
       input[type="text"]#search {
-        display: block;
         position: relative;
+        display: block;
         float: left;
-        margin-top: 5px 0 0;         
-        background: $dnm_white;
+        margin-top: 5px 0 0;
         padding: 8px 0 8px 50px;
-        border: 2px solid #ebebeb;
+        border: 2px solid $gray230;         
+        background: $dnm_white;
   
         &:focus {
-          border: 2px solid rgb(200,200,200);
+          border: 2px solid $gray210;
         }
 
         @media (max-width: 480px) {
@@ -334,28 +336,28 @@ header#listing_search {
         left: 118px;
 
         @media (max-width: $iphone-landscape) {
+          top: 5px;
           left: 64px;
           font-size: 18px;
-          top: 5px;
         }
       }
       
       .search-icon {
-        display: block;
-        height: 34px;
-        padding: 6px 13px 0 0;
-        width: 42px;
-        @include background-image(linear-gradient(left, rgba(255,255,255,0), $dnm_white 30%, $dnm_white));
+         @include background-image(linear-gradient(left, rgba(255,255,255,0), $dnm_white 30%, $dnm_white));
+        @include opacity(1);
         top: 7px;
         right:2px;
+       display: block;
+        padding: 6px 13px 0 0;
+        width: 42px;
+        height: 34px;
+        color: $gray160;
         text-align: right;
-        @include opacity(1);
-        color: $gray5;
-        @include border-top-right-radius(12px);
-        @include border-bottom-right-radius(12px);
+        @include border-top-right-radius($border-radius-default);
+        @include border-bottom-right-radius($border-radius-default);
 
         &:hover {
-          color: $gray7;
+          color: $gray80;
         }
 
         @media (min-width: 768px) {
@@ -363,12 +365,12 @@ header#listing_search {
         }
 
         @media (max-width: $iphone-landscape) {
-          font-size: 18px;
           top: 5px;
-          height: 28px;
-          width: 28px;
-          background: transparent;
           padding: 0 6px 0 0;
+          width: 28px;
+          height: 28px;
+          background: transparent;
+          font-size: 18px;
         }        
       }
             
@@ -382,8 +384,8 @@ header#listing_search {
         .availability-date-start {
           position: relative;
           float: left;
-          width: 49%;
           margin-right: 2%;
+          width: 49%;
         }
     
         .availability-date-end {
@@ -392,13 +394,16 @@ header#listing_search {
           width: 49%;
         }
     
-        .availability-date-start, .availability-date-end {
+        .availability-date-start, 
+        .availability-date-end {
+          
           input {
             width:100%;
           }
         }
     
-        .availability-date-start, .availability-date-end {
+        .availability-date-start, 
+        .availability-date-end {
           position: relative;
     
           .calendar {
@@ -406,15 +411,14 @@ header#listing_search {
             top: 15px;
             left: 10px;
             display: block;
-            font-size: 30px;
             color: $icon;
-
+            font-size: 30px;
           }
     
           input {
+            @include box-sizing(border-box);
             padding-left: 50px;
             width:100%;
-            @include box-sizing(border-box);
             background: $dnm_white;
 
             &:focus {
@@ -434,7 +438,7 @@ header#listing_search {
         @include transition(padding .5s linear, margin .5s linear);
 
         .list-map-toggle {
-        margin-left: -110px;
+          margin-left: -110px;
         }
 
         .search-container {
@@ -457,7 +461,7 @@ section.search section#results.list {
   
   article.listing {
     position: relative;
-    border-bottom: 1px solid $gray5;
+    border-bottom: 1px solid $gray160;
 
     .span8 {
       max-height: 254px !important;
@@ -476,11 +480,11 @@ section.search section#results.list {
     }
 
     h2 {
-      margin: .25em 0;
-      text-overflow: ellipsis;
-      max-width: 100%;
-      white-space: nowrap;
       overflow: hidden;
+      margin: .25em 0;
+      max-width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
       @media( min-width: 768px) {
         @include adjust-font-size-to(32px);
@@ -497,16 +501,16 @@ section.search section#results.list {
     }
 
     a {
-      color: $gray7;
+      color: $gray80;
     }
 
     h4.location-hours {
       margin: .25em 0;
-      color: $gray5;
       padding: 0 10px 0 0;
+      color: $gray160;
 
       strong {
-        color: $gray6;
+        color: $gray120;
         margin-right: 1em;
       }
 
@@ -518,33 +522,33 @@ section.search section#results.list {
     p.listing-description {
       position: relative;
       display: block;
+      overflow: hidden;
       margin: 1em 0;
       padding: 0 20px 0 0;
-      color: darken($gray4, 10%);
-      overflow: hidden;
+      color: darken($gray210, 10%);
       text-overflow: ellipsis;
       line-height: 28px;
-
     }
 
     aside.prices {
       position: absolute;
-      z-index: 101;
       right: 10px;
       bottom: 10px;
+      z-index: 101;
 
       .label {
+        
         @media (min-width: 767px) {
           padding: 6px 6px;
-          font-size: 18px;
           font-weight: bold;
+          font-size: 18px;
           line-height: 14px;
         }
 
         @media (max-width: 320px) {
           padding: 1px 2px;
-          font-size: 10px;
           font-weight: bold;
+          font-size: 10px;
           line-height: 14px;
         }
       }
@@ -559,7 +563,7 @@ section.search section#results.list {
         left: 0;
         width: 100%;
         height: 30px;
-        @include background-image(linear-gradient(rgba(250,250,250,0), $gray1));
+        @include background-image(linear-gradient(rgba(250,250,250,0), $gray240));
       }
     }
   }
@@ -573,11 +577,9 @@ section.search section#results.list {
 
     img{
       display: inline-block;
-      vertical-align: middle;
       margin: 0px 20px 4px 0px;
+      vertical-align: middle;
     }
   }
-
-
 }
 

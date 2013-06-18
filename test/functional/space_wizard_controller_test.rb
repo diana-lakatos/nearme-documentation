@@ -10,6 +10,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
     sign_in @user
     FactoryGirl.create(:listing_type)
     FactoryGirl.create(:location_type)
+    stub_request(:get, /.*api\.mixpanel\.com.*/)
   end
 
   context "price must be formatted" do
@@ -30,6 +31,49 @@ class SpaceWizardControllerTest < ActionController::TestCase
       end
     end
 
+  end
+
+  context 'track' do
+    setup do
+      @tracker = Analytics::EventTracker.any_instance
+    end
+
+    should "track location and listing creation" do
+      @tracker.expects(:created_a_location)
+      @tracker.expects(:created_a_listing)
+      post :submit_listing, get_params
+    end
+
+    should 'track list your space list view' do
+      @tracker.expects(:viewed_list_your_space_list)
+      get :new
+    end
+
+    should 'track list your space sign up view' do
+      sign_out @user
+      @tracker.expects(:viewed_list_your_space_sign_up)
+      get :new
+    end
+
+  end
+
+  context 'GET new' do
+    should 'redirect to manage location page if has listings' do
+      create_listing
+      get :new
+      assert_redirected_to manage_locations_path
+    end
+
+    should 'redirect to space wizard list if no listings' do
+      get :new
+      assert_redirected_to space_wizard_list_url
+    end
+
+    should 'redirect to registration path if not logged in' do
+      sign_out @user
+      get :new
+      assert_redirected_to new_user_registration_url(:wizard => 'space', :return_to => space_wizard_list_path)
+    end
   end
 
   private
@@ -64,6 +108,13 @@ class SpaceWizardControllerTest < ActionController::TestCase
               }
           }
         }
+  end
+
+  def create_listing
+    @company = FactoryGirl.create(:company, :creator_id => @user.id)
+    @location = FactoryGirl.create(:location)
+    @location.listings << FactoryGirl.create(:listing)
+    @company.locations << @location
   end
 
 end

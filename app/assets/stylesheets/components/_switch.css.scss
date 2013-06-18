@@ -65,24 +65,24 @@
     width: 34%;
     margin-top: -1px;
     margin-bottom: -1px;
-    border-left: 1px solid #cccccc;
-    border-right: 1px solid #cccccc;
-    color: #ffffff;
-    background-color: #f5f5f5;
-    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+    border-left: 1px solid $gray204;
+    border-right: 1px solid $gray204;
+    color: $pure-white;
+    background-color: $gray245;
+    border-color: $gray230 $gray230 $gray190;
     text-align: center;
 
     &:hover, &:focus, &:active, &.active, &.disabled, &[disabled] {
-      color: #ffffff;
-      background-color: #e6e6e6;
+      color: $pure-white;
+      background-color: $gray230;
     }
 
     &:active, &.active {
-      background-color: #cccccc;
+      background-color: $gray204;
     }
 
     i {
-      color: #000;
+      color: $pure-black;
       line-height: 18px;
       pointer-events: none;
     }
@@ -91,14 +91,14 @@
   span {
     z-index: 1;
     width: 33%;
-    color: #ffffff;
+    color: $pure-white;
     background-color: #0088cc;
     text-align: center;
 
     &.switch-left {
       @include border-top-left-radius(4px);
       @include border-bottom-left-radius(4px);
-      color: #ffffff;
+      color: $pure-white;
       background-color: $green;
       border-color: $green;
       @extend .ico-check;
@@ -111,7 +111,7 @@
       @extend .ico-close;
 
       &:active, &.active {
-        background-color: $gray3;
+        background-color: $gray220;
       }
     }
   }
