@@ -1,4 +1,2 @@
-- if apply_analytics?
-  = javascript_include_tag 'analytics/mixpanel', 'analytics/ga', 'analytics/analytics'
-- else
-  = javascript_include_tag 'analytics/log'
+= javascript_include_tag 'analytics/ga'
+= render 'shared/mixpanel'

@@ -1,12 +1,23 @@
 class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
   before_filter :fetch_reservations
-  before_filter :fetch_reservation, :only => :update
-  before_filter :validate_event, :only => :update
+  before_filter :fetch_reservation, :only => [:user_cancel]
 
-  def update
-    @reservation.fire_events(current_event)
-    flash[allowed_events[current_event]] = "You have #{@reservation.state_name} the reservation"
+  before_filter :only => [:user_cancel] do |controller|
+    unless allowed_events.include?(controller.action_name)
+      flash[:error] = "Not a valid reservation operation."
+      redirect_to redirection_path
+    end
+  end
+
+  def user_cancel
+    if @reservation.user_cancel
+      ReservationMailer.notify_host_of_cancellation(@reservation).deliver
+      event_tracker.cancelled_a_booking(@reservation, { actor: 'guest' })
+      flash[:deleted] = "You have cancelled your reservation."
+    else
+      flash[:error] = "Your reservation could not be confirmed."
+    end
     redirect_to redirection_path
   end
 
@@ -20,15 +31,8 @@ class ReservationsController < ApplicationController
     @reservation = @reservations.find(params[:id])
   end
 
-  def validate_event
-    unless allowed_events.key? current_event
-      flash[:error] = "Not a valid reservation operation"
-      redirect_to redirection_path
-    end
-  end
-
   def allowed_events
-    {:user_cancel => :deleted}
+    ['user_cancel']
   end
 
   def current_event

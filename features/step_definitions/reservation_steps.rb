@@ -104,10 +104,10 @@ end
 When /^the reservation expires/ do
   login User.find_by_name("Keith Contractor")
   visit bookings_dashboard_path
-  
+
   reservation = User.find_by_name("Keith Contractor").reservations.first
-  reservation.expire!
-  
+  reservation.perform_expiry!
+
   visit bookings_dashboard_path
 end
 

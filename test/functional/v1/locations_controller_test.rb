@@ -32,7 +32,6 @@ class V1::LocationsControllerTest < ActionController::TestCase
     @location = Location.find(@location.id)
     assert_equal new_description, @location.description
     assert_response :success
-
   end
 
   test "destroy should be successful" do

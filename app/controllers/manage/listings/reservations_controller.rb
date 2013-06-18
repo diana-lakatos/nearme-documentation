@@ -3,9 +3,37 @@ class Manage::Listings::ReservationsController < ApplicationController
   before_filter :find_listing
   before_filter :find_reservation
 
-  def update
-    @reservation.fire_events(current_event)
-    flash[:success] = "You have #{@reservation.state_name} the reservation"
+  def confirm
+    if @reservation.confirm
+      ReservationMailer.notify_guest_of_confirmation(@reservation).deliver
+      ReservationMailer.notify_host_of_confirmation(@reservation).deliver
+      event_tracker.confirmed_a_booking(@reservation)
+      flash[:success] = "You have confirmed the reservation!"
+    else
+      flash[:error] = "Your reservation could not be confirmed."
+    end
+    redirect_to manage_guests_dashboard_url
+  end
+
+  def reject
+    if @reservation.reject
+      ReservationMailer.notify_guest_of_rejection(@reservation).deliver
+      event_tracker.rejected_a_booking(@reservation)
+      flash[:deleted] = "You have rejected the reservation. Maybe next time!"
+    else
+      flash[:error] = "Your reservation could not be confirmed."
+    end
+    redirect_to manage_guests_dashboard_url
+  end
+
+  def host_cancel
+    if @reservation.host_cancel
+      ReservationMailer.notify_guest_of_cancellation(@reservation).deliver
+      event_tracker.cancelled_a_booking(@reservation, { actor: 'host' })
+      flash[:deleted] = "You have cancelled this reservation."
+    else
+      flash[:error] = "Your reservation could not be confirmed."
+    end
     redirect_to manage_guests_dashboard_url
   end
 

@@ -37,13 +37,15 @@ class Location::GoogleGeolocationDataParser
       component = find_component_for("neighborhood") 
     end
     component
+  rescue
+    Component.new({ "long_name" => "", "types" => ""})
   end
 
   class Component
     attr_reader :long_name, :types
     def initialize(hash)
       @long_name = hash.fetch("long_name", "")
-      @types = hash.fetch("types", "").split(",")
+      @types = hash.fetch("types", "").split(",")[0]
     end
 
     def missing?
