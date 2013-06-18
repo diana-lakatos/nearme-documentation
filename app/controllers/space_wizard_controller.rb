@@ -7,7 +7,9 @@ class SpaceWizardController < ApplicationController
 
   def new
     flash.keep(:warning)
-    if current_user
+    if current_user and current_user.listings.any?
+      redirect_to manage_locations_path
+    elsif current_user
       event_tracker.viewed_list_your_space_list
       redirect_to space_wizard_list_url
     else

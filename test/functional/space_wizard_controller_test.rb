@@ -57,6 +57,25 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
   end
 
+  context 'GET new' do
+    should 'redirect to manage location page if has listings' do
+      create_listing
+      get :new
+      assert_redirected_to manage_locations_path
+    end
+
+    should 'redirect to space wizard list if no listings' do
+      get :new
+      assert_redirected_to space_wizard_list_url
+    end
+
+    should 'redirect to registration path if not logged in' do
+      sign_out @user
+      get :new
+      assert_redirected_to new_user_registration_url(:wizard => 'space', :return_to => space_wizard_list_path)
+    end
+  end
+
   private
 
   def get_params(daily_price = nil, weekly_price = nil, monthly_price = nil)
@@ -89,6 +108,13 @@ class SpaceWizardControllerTest < ActionController::TestCase
               }
           }
         }
+  end
+
+  def create_listing
+    @company = FactoryGirl.create(:company, :creator_id => @user.id)
+    @location = FactoryGirl.create(:location)
+    @location.listings << FactoryGirl.create(:listing)
+    @company.locations << @location
   end
 
 end
