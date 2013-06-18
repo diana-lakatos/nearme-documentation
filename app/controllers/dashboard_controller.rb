@@ -34,6 +34,10 @@ class DashboardController < ApplicationController
 
   def bookings
     @your_reservations = current_user.reservations.visible.to_a.sort_by(&:date)
+    unless @your_reservations.any?
+      flash[:warning] = "You haven't made any bookings yet!"
+      redirect_to search_path
+    end
   end
 
 end
