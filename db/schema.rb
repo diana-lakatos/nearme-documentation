@@ -312,7 +312,6 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["instance_id"], :name => "index_users_on_instance_id"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
 end
