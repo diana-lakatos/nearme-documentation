@@ -88,4 +88,12 @@ module ApplicationHelper
       link_to(options, html_options)
     end
   end
+
+  def class_for_flash_type(type)
+    if type == :notice
+      'success'
+    else
+      type
+    end
+  end
 end
