@@ -176,6 +176,15 @@ form {
     }
   }
 
+  .error-block {
+    color: $red;
+    background: image-url("components/form/error.png") left top no-repeat;
+  }
+
+  .preamble {
+    color: #1e2222;
+  }
+
   .hint, 
   .help-block {
     background: image-url("components/form/hint.png") left top no-repeat;
@@ -197,7 +206,7 @@ form {
     textarea, 
     ul, 
     select {
-      color: lighten($red, 40%);
+      border-color: lighten($red, 10%);
     }
   }
 

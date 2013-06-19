@@ -41,7 +41,7 @@ module AvailabilityRulesHelper
   def availability_time_options
     options = []
     (0..23).each do |hour|
-      [0, 15, 45].each do |minute|
+      [0, 15, 30, 45].each do |minute|
         hour_for_display = hour % 12 == 0 ? 12 : hour % 12
         options << ["#{hour_for_display}:#{'%0.2d' % minute} #{hour < 12 ? 'AM' : 'PM'}", "#{hour}:#{'%0.2d' % minute}"]
       end
