@@ -77,7 +77,7 @@ module AvailabilityRulesHelper
       
       day_part = day_ranges.map do |group|
         str = Date::ABBR_DAYNAMES[group.first]
-        str += "-#{Date::ABBR_DAYNAMES[group.last]}" if group.count > 1
+        str += "&ndash;#{Date::ABBR_DAYNAMES[group.last]}" if group.count > 1
         str
       end
       
@@ -87,10 +87,10 @@ module AvailabilityRulesHelper
         hour_part << "#{hour}:#{minutes}#{ordinal}"
       end
       
-      sentence.push("#{day_part.join(',')} #{hour_part.join('-')}")
+      sentence.push("#{day_part.join(',')} #{hour_part.join("&ndash;")}")
     end
     
-    sentence.to_sentence
+    sentence.to_sentence.html_safe
   end
   
 end

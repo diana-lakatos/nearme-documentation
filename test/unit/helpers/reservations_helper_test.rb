@@ -47,7 +47,7 @@ class ReservationsHelperTest < ActionView::TestCase
     end
 
     should 'group selected periods into ranges' do
-      assert_equal "Wednesday, May  1 - Friday, May  3<br />Monday, May  6 - Tuesday, May  7<br />Thursday, May  9", selected_dates_summary(@reservation)
+      assert_equal "Wednesday, May  1&ndash;Friday, May  3<br />Monday, May  6&ndash;Tuesday, May  7<br />Thursday, May  9", selected_dates_summary(@reservation)
     end
 
   end
