@@ -257,6 +257,10 @@ form {
     &:disabled {
       @include opacity(0.5);
     }
+
+    &[readonly="readonly"], &[readonly] {
+      @include opacity(0.5);
+    }
   }
 
   textarea {

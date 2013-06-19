@@ -6,9 +6,22 @@
   .control-group.optional.mobile-number-field
     = f.label :mobile_number
     .controls
-      .country-calling-code
-        = "+#{resource.country.calling_code}" if resource.country
-      = f.text_field :mobile_number
+      .phone-number-country-code-field
+        .country-calling-code
+          = "+#{resource.country.calling_code}" if resource.country
+        = f.text_field :mobile_number
+
+  .control-group.optional
+    = f.label :phone, 'Phone number', :class => 'control-label'
+    .controls
+      .phone-number-country-code-field
+        .country-calling-code
+          = "+#{resource.country.calling_code}" if resource.country
+        = f.text_field :phone
+
+      = label_tag do
+        = check_box_tag 'user_phone_same_as_mobile', '1', (resource.phone == resource.mobile_number)
+        = "Same as mobile"
 
   = f.association :industries, :blank => false, :input_html => { :class => 'custom-select' }
   = f.input :job_title, label: "Job title", placeholder: "Your job title"
