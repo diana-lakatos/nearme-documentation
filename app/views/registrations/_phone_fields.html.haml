@@ -1,0 +1,31 @@
+= f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :input_html => { :class => "custom-select" }, :required => true
+
+.control-group.optional{:class => ('error' if f.object.errors[:phone].present?)}
+  = f.label :phone, :class => 'control-label required' do
+    %abbr{:title => "required"} *
+    Phone number
+
+  .controls
+    .phone-number-country-code-field
+      .country-calling-code
+        = "+#{f.object.country.calling_code}" if f.object.country
+      = f.text_field :phone
+
+    - if f.object.errors[:phone].present?
+      .error-block= f.object.errors[:phone].to_sentence
+
+.control-group.optional.mobile-number-field{:class => ('error' if f.object.errors[:mobile_number].present?)}
+  = f.label :mobile_number
+  .controls
+    .phone-number-country-code-field
+      .country-calling-code
+        = "+#{f.object.country.calling_code}" if f.object.country
+      = f.text_field :mobile_number
+
+    = label_tag do
+      = check_box_tag 'user_mobile_same_as_phone', '1', (f.object.phone == f.object.mobile_number)
+      = "Same as phone"
+
+    - if f.object.errors[:mobile_number].present?
+      .error-block= f.object.errors[:mobile_number].to_sentence
+
