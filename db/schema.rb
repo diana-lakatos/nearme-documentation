@@ -78,11 +78,7 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.string   "url"
     t.string   "paypal_email"
     t.text     "mailing_address"
-    t.string   "external_id"
-    t.integer  "instance_id"
   end
-
-  add_index "companies", ["instance_id"], :name => "index_companies_on_instance_id"
 
   create_table "company_industries", :id => false, :force => true do |t|
     t.integer "industry_id"
@@ -119,12 +115,6 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.datetime "updated_at",        :null => false
   end
 
-  create_table "instances", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "listing_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -149,7 +139,6 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.boolean  "hourly_reservations",     :default => false, :null => false
     t.integer  "hourly_price_cents"
     t.integer  "minimum_booking_minutes"
-    t.string   "external_id"
   end
 
   create_table "location_amenities", :force => true do |t|
@@ -189,8 +178,6 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.string   "slug"
     t.integer  "location_type_id"
     t.string   "custom_page"
-    t.string   "address2"
-    t.string   "postcode"
   end
 
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
