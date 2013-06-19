@@ -15,14 +15,14 @@ class User < ActiveRecord::Base
            :dependent => :destroy
 
   has_many :companies,
-           :foreign_key => "creator_id"
+           :foreign_key => "creator_id",
+           :dependent => :destroy
 
   attr_accessible :companies_attributes
   accepts_nested_attributes_for :companies
 
   has_many :locations,
-           :through => :companies,
-           :dependent => :destroy
+           :through => :companies
 
   has_many :reservations,
            :foreign_key => :owner_id
