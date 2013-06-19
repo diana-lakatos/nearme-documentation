@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130613230110) do
+ActiveRecord::Schema.define(:version => 20130619024442) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -174,7 +174,6 @@ ActiveRecord::Schema.define(:version => 20130613230110) do
     t.string   "email"
     t.text     "description"
     t.string   "address"
-    t.string   "phone"
     t.float    "latitude"
     t.float    "longitude"
     t.text     "info"

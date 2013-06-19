@@ -2,27 +2,7 @@
   = f.input :name, label: "Your name", placeholder: "Full name"
   = f.input :email, label: "Your email address", placeholder: "Email"
   = f.input :password, :label => "Your password", placeholder: "Password"
-  = f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :input_html => { :class => "custom-select" }
-  .control-group.optional.mobile-number-field
-    = f.label :mobile_number
-    .controls
-      .phone-number-country-code-field
-        .country-calling-code
-          = "+#{resource.country.calling_code}" if resource.country
-        = f.text_field :mobile_number
-
-  .control-group.optional
-    = f.label :phone, 'Phone number', :class => 'control-label'
-    .controls
-      .phone-number-country-code-field
-        .country-calling-code
-          = "+#{resource.country.calling_code}" if resource.country
-        = f.text_field :phone
-
-      = label_tag do
-        = check_box_tag 'user_phone_same_as_mobile', '1', (resource.phone == resource.mobile_number)
-        = "Same as mobile"
-
+  = render 'registrations/phone_fields', :f => f
   = f.association :industries, :blank => false, :input_html => { :class => 'custom-select' }
   = f.input :job_title, label: "Job title", placeholder: "Your job title"
   = f.input :biography, label: "Biography", placeholder: "Your biography"
@@ -36,6 +16,6 @@
 
 :javascript
   $(function() {
-    new Users.EditForm($('#edit_user'))
+    new Users.PhoneNumberFieldsForm($('#edit_user'))
   });
 

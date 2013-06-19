@@ -1,4 +1,6 @@
-class Users.EditForm
+# Handles the behaviour of entering country+mobile+phone fields
+# Used on the user account form and the space setup wizard form.
+class Users.PhoneNumberFieldsForm
 
   constructor: (@container) ->
     @countryNameField = @container.find('#user_country_name')
@@ -9,7 +11,7 @@ class Users.EditForm
     @mobileNumberField = @container.find('#user_mobile_number')
     @phoneNumberField = @container.find('#user_phone')
 
-    @sameAsMobileField = @container.find('#user_phone_same_as_mobile')
+    @sameAsPhoneField = @container.find('#user_mobile_same_as_phone')
 
     @bindEvents()
 
@@ -20,18 +22,18 @@ class Users.EditForm
     @countryNameField.on 'change', (event) =>
       @updateCountryCallingCode()
 
-    @mobileNumberField.on 'change', (event) =>
+    @phoneNumberField.on 'change', (event) =>
       @updatePhoneNumber()
 
-    @sameAsMobileField.on 'change', (event) =>
+    @sameAsPhoneField.on 'change', (event) =>
       @updatePhoneNumber()
 
   updatePhoneNumber: ->
-    @phoneNumberField.prop('readonly', !!@isPhoneSameAsMobile())
-    @phoneNumberField.val(@mobileNumberField.val()) if @isPhoneSameAsMobile()
+    @mobileNumberField.prop('readonly', !!@isMobileSameAsPhone())
+    @mobileNumberField.val(@phoneNumberField.val()) if @isMobileSameAsPhone()
 
-  isPhoneSameAsMobile: ->
-    @sameAsMobileField.is(':checked')
+  isMobileSameAsPhone: ->
+    @sameAsPhoneField.is(':checked')
 
   updateCountryCallingCode: ->
     code = @countryNameField.find('option:selected').data('calling-code')
@@ -39,6 +41,7 @@ class Users.EditForm
       "+#{code}"
     else
       ""
+
     @callingCodeText.text(code)
     @mobileNumberField.prop('disabled', (code is ""))
     @phoneNumberField.prop('disabled', (code is ""))
