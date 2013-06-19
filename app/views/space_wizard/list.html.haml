@@ -14,7 +14,7 @@
         - content_for :currency do
           = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :currency ] }
 
-        = render :partial => 'listings/listing_form', :locals => { :f => listings_form, :listing => @listing, :photo_input_name_prefix => "company[locations_attributes][0][listings_attributes][0]", :only_inputs => [ :name, :description, :listing_type, :quantity, :price, :confirm_reservations, :photos ] }
+        = render :partial => 'listings/listing_form', :locals => { :f => listings_form, :listing => @listing, :photo_input_name_prefix => "company[locations_attributes][0][listings_attributes][0]", :only_inputs => [ :name, :description, :listing_type, :quantity, :price, :photos ] }
 
     .actions
       = f.submit 'List my Space', :disable_with => 'Creating...'
