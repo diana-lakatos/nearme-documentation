@@ -41,7 +41,7 @@ module AvailabilityRulesHelper
   def availability_time_options
     options = []
     (0..23).each do |hour|
-      [0, 15, 45].each do |minute|
+      [0, 15, 30, 45].each do |minute|
         hour_for_display = hour % 12 == 0 ? 12 : hour % 12
         options << ["#{hour_for_display}:#{'%0.2d' % minute} #{hour < 12 ? 'AM' : 'PM'}", "#{hour}:#{'%0.2d' % minute}"]
       end
@@ -77,7 +77,7 @@ module AvailabilityRulesHelper
       
       day_part = day_ranges.map do |group|
         str = Date::ABBR_DAYNAMES[group.first]
-        str += "-#{Date::ABBR_DAYNAMES[group.last]}" if group.count > 1
+        str += "&ndash;#{Date::ABBR_DAYNAMES[group.last]}" if group.count > 1
         str
       end
       
@@ -87,10 +87,10 @@ module AvailabilityRulesHelper
         hour_part << "#{hour}:#{minutes}#{ordinal}"
       end
       
-      sentence.push("#{day_part.join(',')} #{hour_part.join('-')}")
+      sentence.push("#{day_part.join(',')} #{hour_part.join("&ndash;")}")
     end
     
-    sentence.to_sentence
+    sentence.to_sentence.html_safe
   end
   
 end

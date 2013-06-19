@@ -1,9 +1,8 @@
 = simple_form_for resource, :as => resource_name, :url => url, :html => { class: "form-horizontal form-expandable" } do |f|
   = f.input :name, label: "Your name", placeholder: "Full name"
   = f.input :email, label: "Your email address", placeholder: "Email"
-  // Need to let the user enter a password if no Provider.
-  // Also need to let them change their password if they had previously used one.
   = f.input :password, :label => "Your password", placeholder: "Password"
+  = render 'registrations/phone_fields', :f => f
   = f.association :industries, :blank => false, :input_html => { :class => 'custom-select' }
   = f.input :job_title, label: "Job title", placeholder: "Your job title"
   = f.input :biography, label: "Biography", placeholder: "Your biography"
@@ -14,4 +13,9 @@
 
   .actions
     = f.submit (resource.persisted?) ? "Save Changes" : "Sign Up Now"
+
+:javascript
+  $(function() {
+    new Users.PhoneNumberFieldsForm($('#edit_user'))
+  });
 

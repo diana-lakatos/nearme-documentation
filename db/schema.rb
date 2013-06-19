@@ -159,7 +159,6 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.string   "email"
     t.text     "description"
     t.string   "address"
-    t.string   "phone"
     t.float    "latitude"
     t.float    "longitude"
     t.text     "info"
@@ -308,11 +307,11 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.text     "biography"
     t.datetime "mailchimp_synchronized_at"
     t.boolean  "verified",                                 :default => false
-    t.integer  "instance_id"
+    t.string   "country_name"
+    t.string   "mobile_number"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["instance_id"], :name => "index_users_on_instance_id"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
 end

@@ -16,8 +16,11 @@
 
         = render :partial => 'listings/listing_form', :locals => { :f => listings_form, :listing => @listing, :photo_input_name_prefix => "company[locations_attributes][0][listings_attributes][0]", :only_inputs => [ :name, :description, :listing_type, :quantity, :price, :photos ] }
 
-    .actions
-      = f.submit 'List my Space', :disable_with => 'Creating...'
+    .user-fields
+      = simple_fields_for current_user do |uf|
+        = render 'registrations/phone_fields', :f => uf
+      .actions
+        = f.submit 'List my Space', :disable_with => 'Creating...'
 
 - content_for :script do
   :javascript
@@ -25,5 +28,6 @@
       new SpaceWizardSpaceForm($('form.new_company'))
       new Dashboard.LocationController($('#list-space-flow-form'))
       new Dashboard.ListingController($('#list-space-flow-form'))
+      new Users.PhoneNumberFieldsForm($('.user-fields'))
     });
 

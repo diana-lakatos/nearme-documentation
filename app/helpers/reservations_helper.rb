@@ -48,9 +48,9 @@ module ReservationsHelper
     reservation.periods.map do |period|
       date = period.date.strftime('%e %b')
       if reservation.listing.hourly_reservations?
-        start_time = minute_of_day_to_time(period.start_minute).strftime("%l:%M%P")
-        end_time = minute_of_day_to_time(period.end_minute).strftime("%l:%M%P")
-        '%s %s-%s' % [date, start_time, end_time]
+        start_time = minute_of_day_to_time(period.start_minute).strftime("%l:%M%P").strip
+        end_time = minute_of_day_to_time(period.end_minute).strftime("%l:%M%P").strip
+        ('%s %s&ndash;%s' % [date, start_time, end_time]).html_safe
       else
         date
       end
@@ -71,10 +71,10 @@ module ReservationsHelper
 
   def hourly_summary_for_period(period)
     date = period.date.strftime("%B %e")
-    start_time = minute_of_day_to_time(period.start_minute).strftime("%l:%M%P")
-    end_time = minute_of_day_to_time(period.end_minute).strftime("%l:%M%P")
+    start_time = minute_of_day_to_time(period.start_minute).strftime("%l:%M%P").strip
+    end_time = minute_of_day_to_time(period.end_minute).strftime("%l:%M%P").strip
 
-    '%s - %s to %s (%0.2f hours)' % [date, start_time, end_time, period.hours]
+    ('%s %s&ndash;%s (%0.2f hours)' % [date, start_time, end_time, period.hours]).html_safe
   end
 
   def selected_dates_summary(reservation)
@@ -82,7 +82,7 @@ module ReservationsHelper
       if block.size == 1
         period_to_string(block.first)
       else
-        period_to_string(block.first) + ' - ' + period_to_string(block.last)
+        period_to_string(block.first) + "&ndash;" + period_to_string(block.last)
       end
     end
     (html_string_array * "<br />").html_safe
