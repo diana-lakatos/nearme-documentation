@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130619024442) do
+ActiveRecord::Schema.define(:version => 20130619044003) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -145,7 +145,7 @@ ActiveRecord::Schema.define(:version => 20130619024442) do
     t.datetime "created_at",                                 :null => false
     t.datetime "updated_at",                                 :null => false
     t.datetime "deleted_at"
-    t.boolean  "confirm_reservations"
+    t.boolean  "confirm_reservations",    :default => true,  :null => false
     t.boolean  "delta",                   :default => true,  :null => false
     t.integer  "listing_type_id"
     t.integer  "daily_price_cents"
