@@ -33,7 +33,7 @@ class AvailabilityRule < ActiveRecord::Base
   end
 
   def open_time
-    "#{open_hour}:#{open_minute}" if open_hour && open_minute
+    "#{open_hour}:#{"%02d" % open_minute}" if open_hour && open_minute
   end
 
   def open_time=(time)
@@ -41,7 +41,7 @@ class AvailabilityRule < ActiveRecord::Base
   end
 
   def close_time
-    "#{close_hour}:#{close_minute}" if close_hour && close_minute
+    "#{close_hour}:#{"%02d" % close_minute}" if close_hour && close_minute
   end
 
   def close_time=(time)

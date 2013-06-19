@@ -30,7 +30,17 @@ class SpaceWizardController < ApplicationController
     @company ||= @user.companies.build
     @company.attributes = params[:company]
 
-    if params_hash_complete? && @company.save
+    @user = current_user
+    @user.phone_and_country_required = true
+    @user.attributes = params[:user]
+
+    user_valid = @user.valid?
+    company_valid = @company.valid?
+
+    if params_hash_complete? && company_valid && user_valid
+      @company.save!
+      @user.save!
+
       if params[:uploaded_photos]
         listing = @user.first_listing
         listing.photos << current_user.photos.find(params[:uploaded_photos])

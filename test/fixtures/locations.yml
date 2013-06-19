@@ -4,7 +4,6 @@ one:
   description: "This is a *super* **cool** location."
   email: "location-1@example.com"
   address: "1234 Main St, Anytown, MD 98765, USA"
-  phone: "+1 (800) 555-1234"
   latitude: 43.36
   longitude: -116.13
   created_at: "2012-05-10 06:00:10"
