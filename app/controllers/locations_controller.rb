@@ -9,6 +9,8 @@ class LocationsController < ApplicationController
 
     # Attempt to restore a stored reservation state from the session.
     restore_initial_bookings_from_stored_reservation
+
+    event_tracker.viewed_a_location(@location, { logged_in: user_signed_in? })
   end
 
   def w_hotels
@@ -40,3 +42,4 @@ class LocationsController < ApplicationController
   end
 
 end
+

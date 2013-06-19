@@ -6,23 +6,26 @@ module Listings
 
     layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
 
-    # Review a reservation prior to confirmation. Same interface as create.
     def review
       @reservation.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
+      event_tracker.opened_booking_modal(@reservation)
     end
 
-    # Reserve bulk listings on a Location
-    #
-    # Parameters:
-    #   reservation: {
-    #     dates: ['YYYY-MM-DD', ...]
-    #     quantity: 1
-    #   }
     def create
       @errors = []
       setup_credit_card_customer if using_credit_card?
 
       if @errors.empty? && @reservation.save
+        if @reservation.listing.confirm_reservations?
+          ReservationMailer.notify_host_with_confirmation(@reservation).deliver
+          ReservationMailer.notify_guest_with_confirmation(@reservation).deliver
+          ReservationSmsNotifier.notify_host_with_confirmation(reservation).deliver
+        else
+          ReservationMailer.notify_host_without_confirmation(@reservation).deliver
+          ReservationMailer.notify_guest_of_confirmation(@reservation).deliver
+        end
+        event_tracker.requested_a_booking(@reservation)
+
         render # Successfully reserved listing
       else
         render :review
