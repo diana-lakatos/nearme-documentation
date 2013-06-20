@@ -5,7 +5,6 @@ class ListingTest < ActiveSupport::TestCase
   should belong_to(:location)
   should belong_to(:listing_type)
   should have_many(:reservations)
-  should have_many(:ratings)
 
   should validate_presence_of(:location)
   should validate_presence_of(:name)

@@ -9,10 +9,6 @@ class Listing < ActiveRecord::Base
     end
   end
 
-  has_many :ratings,
-    as: :content,
-    dependent: :destroy
-
   has_many :inquiries
 
   has_many :availability_rules,
@@ -59,8 +55,8 @@ class Listing < ActiveRecord::Base
   delegate :notify_user_about_change, :to => :location, :allow_nil => true
   delegate :to_s, to: :name
 
-  attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
-    :name, :description, :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
+  attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description, 
+    :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
     :free, :photos_attributes, :listing_type_id, :hourly_reservations
 
   PRICE_TYPES.each do |price|
@@ -152,17 +148,6 @@ class Listing < ActiveRecord::Base
     self.daily_price = nil
     self.weekly_price = nil
     self.monthly_price = nil
-  end
-
-  def rate_for_user(rating, user)
-    raise "Cannot rate unsaved listing" if new_record?
-    r = ratings.find_or_initialize_by_user_id user.id
-    r.rating = rating
-    r.save
-  end
-
-  def rating_for(user)
-    ratings.where(user_id: user.id).pluck(:rating).first
   end
 
   def desks_available?(date)
