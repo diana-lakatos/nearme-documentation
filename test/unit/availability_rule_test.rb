@@ -20,6 +20,24 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
     end
   end
 
+  context "open/close time in (H)H:MM format" do
+
+    setup do
+        @availability_rule = AvailabilityRule.new(:open_hour => 6, :open_minute => 0, :close_hour => 17, :close_minute => 0)
+    end
+
+    should 'return open time in expected format' do
+      assert_equal "6:00", @availability_rule.open_time
+    end
+
+    should 'return close time in expected format' do
+      assert_equal "17:00", @availability_rule.close_time
+    end
+
+    
+  end
+
+
   context "templates" do
     setup do
       @object = Location.new

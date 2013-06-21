@@ -2,6 +2,8 @@ When /^I begin to reset the password for that user$/ do
   visit new_user_password_path
   fill_in :user_email, with: user.email
   click_link_or_button "Reset Password"
+  current_path.should == root_path
+  page.should have_content('You will receive an email with instructions about how to reset your password in a few minutes.')
 end
 
 Then /^a password reset email should be sent to that user$/ do

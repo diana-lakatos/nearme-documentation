@@ -5,7 +5,7 @@ class Location < ActiveRecord::Base
 
   attr_accessible :address, :amenity_ids, :company_id, :description, :email,
     :info, :latitude, :local_geocoding, :longitude, :currency, 
-    :phone, :formatted_address, :availability_rules_attributes,
+    :formatted_address, :availability_rules_attributes,
     :availability_template_id, :special_notes, :listings_attributes, :suburb,
     :city, :state, :country, :street, :address_components, :location_type_id, :photos
   attr_accessor :local_geocoding # set this to true in js
@@ -34,7 +34,7 @@ class Location < ActiveRecord::Base
 
   has_many :availability_rules, :as => :target
 
-  validates_presence_of :company, :description, :address, :latitude, :longitude, :location_type_id, :currency, :phone
+  validates_presence_of :company, :description, :address, :latitude, :longitude, :location_type_id, :currency
   validates :email, email: true, allow_nil: true
   validates :currency, currency: true, allow_nil: false
   validates_length_of :description, :maximum => 250
@@ -118,7 +118,7 @@ class Location < ActiveRecord::Base
   end
 
   def phone
-    read_attribute(:phone).presence || creator.try(:phone)
+    creator.try(:phone)
   end
 
   def email
