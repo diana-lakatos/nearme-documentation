@@ -27,19 +27,22 @@ class Listing
         # If no geolocation point, then no results
         return [] unless midpoint && radius
 
-        locations = Location.near(midpoint, radius)
+        locations = Location.near(midpoint, radius, :order => :distance)
         return [] unless locations.any?
 
-        # Load listings
-        listings = Listing.where(:location_id => locations.map(&:id)).includes(:photos)
-
-        # Remove listings unavailable
-        params.available_dates.each do |date|
-          listings.reject! { |listing| listing.fully_booked_on?(date) }
+        locations.inject([]) do |filtered_listings, location| 
+          listings =  location.listings
+          params.available_dates.each do |date|
+            listings.reject! { |listing| listing.fully_booked_on?(date) }
+          end
+          listings.each do |listing|
+            listing.distance_from_search_query = location.distance if location.respond_to?(:distance)
+            filtered_listings << listing
+          end
+          filtered_listings
         end
-
-        listings
       end
+
     end
   end
 end
