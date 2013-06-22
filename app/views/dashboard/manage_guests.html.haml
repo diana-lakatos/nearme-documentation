@@ -1,44 +1,51 @@
-- title "Manage Guests (#{@guest_list.count})"
+- title "Manage Guests (#{@guest_list.reservations.size})"
 
-.row-fluid
-  .span8.offset2
+#guests.row-fluid
+  .span9.offset1
     %h1
       %span.ico-manage-guests.padding Manage Guests
     .box
-      - if @guest_list.empty?
+      - if @guest_list.scope.empty?
         - if @locations.present?
-          - @locations.each do |location|
-            %p You currently have no reservations. Promote your locations by tweeting or sharing a direct link!
-            %ul
-              %li
-                =link_to tweet_location_url(location), :ref => "mg", :class => 'btn btn-blue btn-large twitter submit' do
-                  %span.ico-twitter.padding="Share #{location.name}" 
-              %li
-                = link_to location_url(location), :class => 'btn btn-blue btn-large' do
-                  %span.ico-link.padding= "#{location.name} Link"
-              %li
-                .clearfix
-            .clearfix
+          = render 'dashboard/manage_guests/promote_locations', locations: @locations
         - else
           %p You haven't added a listing yet!
       - else
         %section#reservations.tab
-          %ul.reservations.list
-            - @guest_list.each do |reservation|
-              %li
-                %p.em
-                  %strong= reservation.owner
-                  = link_to "mailto:#{reservation.owner.email}" do
-                    %span.ico-mail.padding
-                  on
-                  %time{:datetime => reservation.date}
+          .reservations.list
+            = render 'guest_filter'
+            - @guest_list.reservations.group_by(&:location).each do |location, reservations|
+              %h2
+                %span.ico-location.entity-icon
+                %span.entity-name
+                  = location.name
+              %br
+              - reservations.each do |reservation|
+                .row-fluid.reservation
+                  .span4
+                    .avatar-container.pull-left
+                      = image_tag reservation.owner.avatar.thumb.url if reservation.owner.avatar.thumb.file
+                    %strong= reservation.owner
+                    .clearfix
+                    %br
+                    = reservation.comment
+                  .span3
+                    %strong= t :day, count: reservation.total_days
                     - if reservation.listing.hourly_reservations?
-                      = hourly_summary_for_period(reservation.periods.first) if reservation.periods.first.present?
+                      %time{:datetime => reservation.date}
+                        = hourly_summary_for_period(last_day.periods.first) if reservation.periods.first.present?
                     - else
-                      = l(reservation.date, :format => :long)
+                      (
+                      %span.reservation-dates{data: { :start => reservation.date, end: reservation.last_date } }
+                        #{reservation.date.strftime('%b %d')}–#{reservation.last_date.strftime('%b %d')}
+                      )
+                    %br
+                    .price= number_to_currency reservation.total_amount_dollars
+                  .span5
+                    .actions
+                      = render :partial => "owner_actions", :locals => {:reservation => reservation} if  current_user == location.creator
+                    #{manage_guests_time_to_expiry(reservation)}
+                %br
 
-                  (#{reservation.state_name}#{manage_guests_time_to_expiry(reservation)})
-                  %br/
-                  = reservation.comment
-                .actions
-                  = render :partial => "owner_actions", :locals => {:reservation => reservation} if current_user == reservation.listing.creator
+:javascript
+  new Dashboard.GuestsController($('#guests'))

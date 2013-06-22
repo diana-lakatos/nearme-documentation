@@ -86,7 +86,7 @@ When /^(.*) books a space for that listing$/ do |person|
   listing.reserve!(User.find_by_name(person), [next_regularly_available_day], 1)
 end
 
-When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, action|
+When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user, action|
 
   if user == "visitor"
     login User.find_by_name("Keith Contractor")
@@ -95,7 +95,9 @@ When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, 
     login User.find_by_name("Bo Jeanes")
     visit manage_guests_dashboard_path
   end
-
+  if action == 'cancel' and user == 'owner'
+    within('.guest_filter') { click_on 'Confirmed'}
+  end
   click_link_or_button action.capitalize
   page.driver.browser.switch_to.alert.accept
   wait_for_ajax
