@@ -88,14 +88,12 @@ module ReservationsHelper
     (html_string_array * "<br />").html_safe
   end
   
-  def mail_listing_dates(listing, reservation)
-    
+  def mail_listing_dates(listing, reservation)   
     if listing.hourly_reservations?
        hourly_summary_for_period(reservation.periods.first)
      else
        selected_dates_summary(reservation)
-     end
-    
+     end    
   end
  
   def period_to_string(date)
