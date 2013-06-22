@@ -1,26 +1,13 @@
 = render :layout => 'manage/layout/dashboard' do
   - if @locations.empty?
-    %span.empty
+    %li.location.empty
       You haven't created any locations yet
   - else
     - @locations.each do |location|
-      = render :layout => 'manage/layout/location_header', :locals => { :location => location, :editable => true } do
-        %section.listings
-          .accordion.listings-holder
-            - if location.listings.empty?
-              %div
-                %section.box.box-dim.listing
-                  %header.listing.empty
-                    You haven't created any listings at this location!
-            - else
-              - location.listings.each do |listing|
-                = render :partial => 'manage/layout/listing_header', :locals => { :listing => listing, :location => location, :editable => true }
-          .action
-            = link_to new_manage_location_listing_path(location), :class => "btn btn-blue btn-large add-listing" do
-              %span.ico-add-desk.padding
-                Create New Listing
-  .action
-  = link_to new_manage_location_path, :class => "btn btn-blue btn-large add-location" do
-    %span.ico-add-location.padding
-      Create New Location
-
+      = render :partial => 'location_name_with_links', :locals => { :location => location }
+      - if location.listings.empty?
+        %li.listing.empty
+          You haven't created any listings at this location!
+      - else
+        - location.listings.each do |listing|
+          = render :partial => 'manage/listings/listing_name_with_link', :locals => { :location => location, :listing => listing }
