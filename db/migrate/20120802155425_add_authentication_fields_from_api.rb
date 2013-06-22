@@ -9,7 +9,7 @@ class AddAuthenticationFieldsFromApi < ActiveRecord::Migration
     add_column :users, :confirmed_at, :datetime
     add_column :users, :deleted_at, :datetime
     add_column :users, :locked_at, :datetime
-    add_column :users, :reset_password_sent_at, :datetime
+    # add_column :users, :reset_password_sent_at, :datetime
     add_column :users, :failed_attempts, :integer, :default => 0
     add_column :users, :authentication_token, :string
     add_column :users, :avatar, :string
@@ -27,7 +27,7 @@ class AddAuthenticationFieldsFromApi < ActiveRecord::Migration
     remove_column :users, :avatar
     remove_column :users, :authentication_token
     remove_column :users, :failed_attempts
-    remove_column :users, :reset_password_sent_at
+    # remove_column :users, :reset_password_sent_at
     remove_column :users, :locked_at
     remove_column :users, :deleted_at
     remove_column :users, :confirmed_at
