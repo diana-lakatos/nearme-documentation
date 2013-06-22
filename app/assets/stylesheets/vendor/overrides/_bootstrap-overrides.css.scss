@@ -164,14 +164,12 @@ abbr[data-original-title] {
 .dropdown {
   .dropdown-menu {
     @include opacity(0);
-    display: block;
   }
 
   &.open {
     .dropdown-menu {
       @include opacity(1);
       @include animation(fadeIn $navigation-animation-time);
-      @include transition(visibility 0.01s 0.01s ease-in-out);
     }
   }
 }
