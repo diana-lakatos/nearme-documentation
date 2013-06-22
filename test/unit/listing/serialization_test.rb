@@ -41,4 +41,21 @@ class Listing::SerializationTest < ActiveSupport::TestCase
     end
   end
 
+  context 'nil rating' do
+    setup do
+      @listing = FactoryGirl.create(:listing)
+      @serializer = ListingSerializer.new(@listing)
+      @json = @serializer.as_json[:listing]
+    end
+
+    should 'get nil for rating average' do
+      assert_nil @json[:rating][:rating_average]
+    end
+
+    should 'get nil for rating count' do
+      assert_nil @json[:rating][:rating_count]
+    end
+
+  end
+
 end

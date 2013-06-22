@@ -106,6 +106,10 @@ class SpaceWizardControllerTest < ActionController::TestCase
                     }, 
                  "currency"=>"USD"}
               }
+          },
+          "user" => {
+            "country_name" => "United States",
+            "phone" => "123456789"
           }
         }
   end
