@@ -47,8 +47,8 @@ class ListingSerializer < ApplicationSerializer
   # Serialize rating
   def rating
     {
-      average: nil,
-      count:   nil
+      average: 0,
+      count:   0
     }
   end
 
