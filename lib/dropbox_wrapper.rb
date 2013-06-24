@@ -34,21 +34,15 @@ class DropboxWrapper
   end
 
   def get_files_for_path(folder_path = '/')
-    puts "Calling API to get files for #{folder_path}"
     begin
       client.ls(folder_path)
     rescue Dropbox::API::Error::NotFound
-      puts "Path does not exists: #{folder_path}"
       []
     end
   end
 
   def download(file)
     file.downlod
-  end
-
-  def account_info
-    puts client.account
   end
 
 end

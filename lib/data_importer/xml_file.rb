@@ -59,6 +59,7 @@ class DataImporter::XmlFile < DataImporter::File
         u.email = email
         u.password = password
         u.name = name
+        u.country_name = 'United States'
       end
       @company = @user.companies.find_by_external_id(external_id) || @user.companies.create do |c|
         assign_attributes(c, company_node)
@@ -73,6 +74,7 @@ class DataImporter::XmlFile < DataImporter::File
 
   def parse_locations
     @node.xpath('locations/location').each do |location_node|
+      @user.update_attribute(:phone, location_node.xpath('phone').text) if @user.phone.blank?
       @location = @company.locations.find_by_address(location_node.xpath('address').text) || @company.locations.build do |l|
         l.location_type = default_location_type
       end
@@ -82,7 +84,6 @@ class DataImporter::XmlFile < DataImporter::File
       @object = @location
       yield
       @location.save!
-
     end
   end
 
@@ -123,7 +124,7 @@ class DataImporter::XmlFile < DataImporter::File
   def download_photos_from_dropbox
     # get all images for given company that are in dropbox, find photo that best matches object.name and download it
     files_with_info = DROPBOX.get_files_for_path(File.join("PBCenter", @company.external_id)).inject({}) do |files, file|
-      if file.mime_type.include?('image')
+      if file.mime_type.try(:include?, 'image')
         file_name = File.basename(file.path)
         files[file_name] = {:remote_image_url => file.direct_url.url, :content_type => file.mime_type}
       end
@@ -133,17 +134,14 @@ class DataImporter::XmlFile < DataImporter::File
       listings = @company.locations.map { |l| l.listings }.flatten.reject { |listing| listing.photos.count > 0 }
       listing_name_file_name_pairs = StringMatcher.new(listings.map(&:name), files_with_info.keys).create_pairs
       listings.each do |listing|
-        if(listing_name_file_name_pairs[listing.name])
-        listing_name_file_name_pairs.delete(listing.name).each do |matching_photo_name|
-          listing.photos.create do |p|
-            puts "#{listing.name} has assigned photo #{matching_photo_name}"
-            direct_url = files_with_info[matching_photo_name]
-            p.remote_image_url = direct_url[:remote_image_url]
-            p.content_type = direct_url[:content_type]
+        if listing_name_file_name_pairs[listing.name]
+          listing_name_file_name_pairs.delete(listing.name).each do |matching_photo_name|
+            listing.photos.create do |p|
+              direct_url = files_with_info[matching_photo_name]
+              p.remote_image_url = direct_url[:remote_image_url]
+              p.content_type = direct_url[:content_type]
+            end
           end
-        end
-        else
-          puts "skipped #{listing.name}"
         end
       end
     end

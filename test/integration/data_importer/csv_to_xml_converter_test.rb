@@ -1,7 +1,7 @@
 require 'vcr_setup'
 require 'test_helper'
 
-class DataImporter::XmlParserTest < ActiveSupport::TestCase
+class DataImporter::CsvToXmlConverterTest < ActiveSupport::TestCase
 
   TMP_FILE_PATH = '/tmp/converted.xml'
   ALL_TMP_FILE_PATH = '/tmp/data_all.xml'

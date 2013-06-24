@@ -5,7 +5,7 @@ class Location < ActiveRecord::Base
 
   attr_accessible :address, :address2, :amenity_ids, :company_id, :description, :email,
     :info, :latitude, :local_geocoding, :longitude, :currency, 
-    :formatted_address, :availability_rules_attributes, :postcode,
+    :formatted_address, :availability_rules_attributes, :postcode, :phone,
     :availability_template_id, :special_notes, :listings_attributes, :suburb,
     :city, :state, :country, :street, :address_components, :location_type_id, :photos
   attr_accessor :local_geocoding # set this to true in js
@@ -26,6 +26,7 @@ class Location < ActiveRecord::Base
   after_destroy :notify_user_about_change
 
   delegate :notify_user_about_change, :to => :company, :allow_nil => true
+  delegate :phone, :to => :creator, :allow_nil => true
 
   has_many :listings,
     dependent:  :destroy,
@@ -119,12 +120,12 @@ class Location < ActiveRecord::Base
     company.save
   end
 
-  def phone
-    creator.try(:phone)
-  end
-
   def email
     read_attribute(:email).presence || creator.try(:email) 
+  end
+
+  def phone=(phone)
+    creator.phone = phone if creator.phone.blank? if creator
   end
 
   def self.xml_attributes
@@ -141,7 +142,7 @@ class Location < ActiveRecord::Base
 
   def fetch_coordinates
     # If we aren't locally geocoding (cukes and people with JS off)
-    if address_changed? && !(latitude_changed? || longitude_changed?)
+    if (address_changed? && !(latitude_changed? || longitude_changed?))
       geocoded = Geocoder.search(read_attribute(:address)).try(:first)
       if geocoded
         self.latitude = geocoded.coordinates[0]

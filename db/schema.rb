@@ -322,6 +322,7 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.boolean  "verified",                                 :default => false
     t.string   "country_name"
     t.string   "mobile_number"
+    t.integer  "instance_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
