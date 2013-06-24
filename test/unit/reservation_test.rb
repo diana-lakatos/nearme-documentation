@@ -84,7 +84,7 @@ class ReservationTest < ActiveSupport::TestCase
     context 'with an unsaved reservation' do
 
       setup do
-        @reservation = FactoryGirl.build(:reservation_with_credit_card_and_valid_period)
+        @reservation = FactoryGirl.build(:reservation_with_credit_card)
         @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
         Timecop.freeze(@reservation.periods.first.date)
       end
@@ -108,7 +108,7 @@ class ReservationTest < ActiveSupport::TestCase
     context 'with a confirmed reservation' do
 
       setup do
-        @reservation = FactoryGirl.build(:reservation_with_credit_card_and_valid_period)
+        @reservation = FactoryGirl.build(:reservation_with_credit_card)
         @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
         @reservation.save!
         @reservation.confirm
@@ -125,7 +125,7 @@ class ReservationTest < ActiveSupport::TestCase
 
   context "confirmation" do
     should "attempt to charge user card if paying by credit card" do
-      reservation = FactoryGirl.build(:reservation_with_credit_card_and_valid_period)
+      reservation = FactoryGirl.build(:reservation_with_credit_card)
       reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
       reservation.save!
 
@@ -229,24 +229,24 @@ class ReservationTest < ActiveSupport::TestCase
 
   context "payments" do
     should "set default payment status to pending" do
-      reservation = FactoryGirl.build(:reservation_with_valid_period)
+      reservation = FactoryGirl.build(:reservation)
       reservation.payment_status = nil
       reservation.save!
       assert reservation.pending?
 
-      reservation = FactoryGirl.build(:reservation_with_valid_period)
+      reservation = FactoryGirl.build(:reservation)
       reservation.payment_status = Reservation::PAYMENT_STATUSES[:unknown]
       reservation.save!
       assert reservation.pending?
 
-      reservation = FactoryGirl.build(:reservation_with_valid_period)
+      reservation = FactoryGirl.build(:reservation)
       reservation.payment_status = Reservation::PAYMENT_STATUSES[:paid]
       reservation.save!
       assert !reservation.pending?
     end
 
     should "set default payment status to paid for free reservations" do
-      reservation = FactoryGirl.build(:reservation_with_valid_period)
+      reservation = FactoryGirl.build(:reservation)
       Reservation::PriceCalculator.any_instance.stubs(:price).returns(0.to_money)
       reservation.save!
       assert reservation.free?

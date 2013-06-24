@@ -17,8 +17,7 @@ class AfterSignupMailerTest < ActiveSupport::TestCase
   context "version if user booked a listing" do
 
     setup do
-      @reservation = FactoryGirl.build(:reservation_with_valid_period, :owner => @user)
-      @reservation.save!
+      @reservation = FactoryGirl.create(:reservation, :owner => @user)
     end
 
     should "use proper template" do

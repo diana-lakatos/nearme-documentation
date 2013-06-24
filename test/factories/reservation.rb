@@ -6,29 +6,16 @@ FactoryGirl.define do
     payment_status 'pending'
     quantity 1
 
-    factory :reservation_with_valid_period do
-      after(:create) do |reservation|
-        make_valid_period(reservation).save!
-      end
+    before(:create) do |reservation|
+      make_valid_period(reservation).save! unless reservation.valid?
+    end
 
-      after(:build) do |reservation|
-        make_valid_period(reservation)
-      end
+    after(:build) do |reservation|
+      make_valid_period(reservation) unless reservation.valid?
     end
 
     factory :reservation_with_credit_card do
       payment_method 'credit_card'
-
-      factory :reservation_with_credit_card_and_valid_period do
-        after(:create) do |reservation|
-          make_valid_period(reservation).save!
-        end
-
-        after(:build) do |reservation|
-          make_valid_period(reservation)
-        end
-      end
-
     end
   end
 
