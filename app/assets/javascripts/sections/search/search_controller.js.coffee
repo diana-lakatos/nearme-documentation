@@ -292,7 +292,9 @@ class Search.SearchController extends Search.Controller
     params = @getSearchParams()
 
     $('.list-map-toggle a', @form).each ->
-      _params = $.extend(params, { v: (if $(this).hasClass('map') then 'map' else 'list') })
-      _url = "#{url}?#{$.param(_params)}"
+      for k, param of params
+        if param["name"] == 'v'
+          param["value"] = (if $(this).hasClass('map') then 'map' else 'list')
+      _url = "#{url}?#{$.param(params)}"
       $(this).attr('href', _url)
     

@@ -20,14 +20,16 @@ class Listing::SearchTest < ActiveSupport::TestCase
       end
 
       should "find listings by searching for locations" do
+
         listing1 = FactoryGirl.create(:listing)
         listing2 = FactoryGirl.create(:listing)
-
-        Location.expects(:near).with(@midpoint, @radius).returns([listing1.location])
+        Location.expects(:near).with(@midpoint, @radius, :order => :distance).returns([listing1.location])
 
         results = Listing.find_by_search_params(@params)
         assert_equal [listing1], results
       end
+
     end
+
   end
 end

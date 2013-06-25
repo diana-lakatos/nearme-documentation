@@ -59,6 +59,8 @@ class Listing < ActiveRecord::Base
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
     :free, :photos_attributes, :listing_type_id, :hourly_reservations
 
+  attr_accessor :distance_from_search_query
+
   PRICE_TYPES.each do |price|
     # Flag each price type as a Money attribute.
     # @see rails-money
