@@ -2,6 +2,10 @@ require 'test_helper'
 
 class LocationTest < ActiveSupport::TestCase
 
+  subject do
+    @location = FactoryGirl.create(:location)
+  end
+
   should belong_to(:company)
   should belong_to(:location_type)
   should have_many(:listings)

@@ -4,6 +4,7 @@ class Company < ActiveRecord::Base
   attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email, :industry_ids, :locations_attributes
 
   belongs_to :creator, class_name: "User"
+  belongs_to :instance
 
   has_many :locations,
            dependent: :destroy,
@@ -18,7 +19,7 @@ class Company < ActiveRecord::Base
   after_destroy :notify_user_about_change
 
   validates_presence_of :name, :industries
-  validates_length_of :description, :maximum => 250
+  validates_length_of :description, :maximum => 250, :if => lambda { |company| (company.instance.nil? || company.instance.is_desksnearme?) }
   validates :email, email: true, allow_blank: true
   validate :validate_url_format
   
@@ -28,6 +29,10 @@ class Company < ActiveRecord::Base
 
   def notify_user_about_change
     creator.try(:touch)
+  end
+
+  def self.xml_attributes
+    [:name, :description, :email]
   end
 
   private

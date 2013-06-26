@@ -26,6 +26,8 @@ gem 'money-rails'
 gem 'oauth'
 gem 'rails3_acts_as_paranoid'
 gem 'simple_form'
+gem 'nokogiri'
+gem 'amatch'
 
 # Use edge to fix validation of nested attributes: https://github.com/bcardarella/client_side_validations/pull/505
 gem 'client_side_validations', :git => "https://github.com/bcardarella/client_side_validations.git", :branch => '3-2-stable'
@@ -59,6 +61,7 @@ gem 'chameleon'
 gem 'mixpanel'
 
 gem 'gibbon'
+gem 'dropbox-api'
 
 gem 'twilio-ruby'
 gem 'googl'
