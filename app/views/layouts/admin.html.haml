@@ -1,0 +1,44 @@
+!!!
+%html
+  %head
+    %title
+      Desks Near Me - Admin
+    = csrf_meta_tag
+    %link{:href => "/favicon.ico", :rel => "shortcut icon"}/
+    = stylesheet_link_tag 'admin'
+    = javascript_include_tag :admin
+
+  %body
+    .navbar
+      .navbar-inner
+        .container
+          = link_to "Desks Near Me Admin", "#", :class => "brand"
+          .nav-collapse.collapse
+            %p.navbar-text.pull-right
+              Logged in as #{current_user.name}
+
+    .container-fluid
+      .row-fluid
+        .span3
+          .well.sidebar-nav
+            %ul.nav.nav-list
+              %li= link_to "Dashboard", admin_url
+              %li{:class => ("active" if request.url.include?(admin_users_url))}
+                = link_to "Users", admin_users_url
+              %li{:class => ("active" if request.url.include?(admin_reservations_url))}
+                = link_to "Reservations", admin_reservations_url
+
+
+        .span9
+          - flash.each do |type, message|
+            .alert{:class => "alert-#{type}"}
+              = message
+
+          = yield
+
+      %hr
+
+      %footer
+        %p
+          &copy; Company 2013
+

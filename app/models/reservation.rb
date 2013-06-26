@@ -100,6 +100,12 @@ class Reservation < ActiveRecord::Base
       uniq
   }
 
+  scope :past, lambda {
+    joins(:periods).
+      where('reservation_periods.date < ?', Date.today).
+      uniq
+  }
+
   scope :visible, lambda {
     without_state(:cancelled).upcoming
   }

@@ -1,0 +1,22 @@
+%tr
+  %td
+    %span.label{:class => "label-#{admin_reservation_state_label_class(resource)}"}
+      = resource.state
+  %td
+    %div= link_to resource.owner.name, admin_user_url(resource.owner)
+    %small= resource.owner.email
+  %td
+    %div= resource.listing.name
+    %div
+      %small= resource.listing.company.name
+    %div
+      %small= resource.listing.location.address
+    %div
+      %small= link_to resource.listing.creator.name, admin_user_url(resource.listing.creator)
+
+  %td= resource.quantity
+  %td= resource.created_at
+  %td= resource.periods.count
+  %td= resource.total_amount
+  %td= link_to "Show details", admin_reservation_url(resource), :class => 'btn'
+

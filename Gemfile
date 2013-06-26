@@ -73,6 +73,8 @@ gem 'mustachejs-rails'
 gem 'handlebars_assets'
 gem 'chosen-rails'
 
+gem 'inherited_resources'
+
 group :staging, :production do
   gem 'newrelic_rpm'
 end

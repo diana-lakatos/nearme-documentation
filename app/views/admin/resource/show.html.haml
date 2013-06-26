@@ -1,0 +1,6 @@
+%h1= resource_class.name.underscore.humanize
+
+.pull-right
+  = link_to "Edit", [:edit, :admin, resource], :class => "btn btn-default"
+
+= render 'attributes_table'
