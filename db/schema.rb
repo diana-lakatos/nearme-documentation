@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130619141440) do
+ActiveRecord::Schema.define(:version => 20130627180658) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -123,6 +123,7 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "partner_id"
   end
 
   create_table "listing_types", :force => true do |t|
@@ -193,6 +194,13 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
   end
 
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
+
+  create_table "partners", :force => true do |t|
+    t.string   "name"
+    t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
+  end
 
   create_table "photos", :force => true do |t|
     t.datetime "created_at"
@@ -320,9 +328,9 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.text     "biography"
     t.datetime "mailchimp_synchronized_at"
     t.boolean  "verified",                                 :default => false
+    t.integer  "instance_id"
     t.string   "country_name"
     t.string   "mobile_number"
-    t.integer  "instance_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
