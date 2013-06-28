@@ -174,7 +174,7 @@ class ReservationTest < ActiveSupport::TestCase
         quantity           =  5
         assert reservation = @listing.reserve!(@user, dates, quantity)
 
-        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents, reservation.total_amount_cents
+        assert_equal Reservation::PriceCalculator.new(reservation).total_price.cents, reservation.total_amount_cents
       end
 
       should "not reset total cost when saving an existing reservation" do
@@ -214,7 +214,7 @@ class ReservationTest < ActiveSupport::TestCase
 
       should "set total cost based on HourlyPriceCalculator" do
         @reservation.periods.build :date => Date.today.advance(:weeks => 1).beginning_of_week, :start_minute => 9*60, :end_minute => 12*60
-        assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents, @reservation.total_amount_cents
+        assert_equal Reservation::PriceCalculator.new(@reservation).total_price.cents, @reservation.total_amount_cents
       end
     end
   end

@@ -24,6 +24,14 @@
   %hr
 
   .summary
+    .subtotal-label Subtotal Cost:
+    .subtotal-amount= @reservation.subtotal_amount
+
+  .summary
+    .service-fee-label Service Fee:
+    .service-fee-amount= @reservation.service_fee_amount
+
+  .summary
     .total-label Total Cost:
     .total-amount= @reservation.total_amount
 

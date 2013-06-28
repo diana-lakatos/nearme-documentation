@@ -29,7 +29,7 @@ class Reservation < ActiveRecord::Base
   validate :validate_all_dates_available, on: :create
   validate :validate_booking_selection, on: :create
 
-  before_create :set_total_cost
+  before_create :set_costs
   before_validation :set_currency, on: :create
   before_validation :set_default_payment_status, on: :create
   after_create :auto_confirm_reservation
@@ -64,6 +64,8 @@ class Reservation < ActiveRecord::Base
   acts_as_paranoid
 
   monetize :total_amount_cents
+  monetize :subtotal_amount_cents
+  monetize :service_fee_amount_cents
 
   state_machine :state, :initial => :unconfirmed do
     after_transition :unconfirmed => :confirmed, :do => :attempt_payment_capture
@@ -160,14 +162,33 @@ class Reservation < ActiveRecord::Base
 
   def total_amount_cents
     if persisted?
-      subtotal_amount_cents
+      subtotal_amount_cents + service_fee_amount_cents
     else
-      calculate_total_cost
+      PriceCalculator.new(self).total_price.try(:cents)
     end
   end
 
+  def subtotal_amount_cents
+    if persisted?
+      super
+    else
+      PriceCalculator.new(self).subtotal_price.try(:cents)
+    end
+  end
+
+  def service_fee_amount_cents
+    if persisted?
+      super
+    else
+      PriceCalculator.new(self).service_fee.try(:cents)
+    end
+  end
+
+
   def total_amount_cents=(amount)
+    #Todo: Depricate this, setting total amount does not make sense anymore
     self.subtotal_amount_cents = amount
+    self.service_fee_amount_cents = 0
   end
 
   def total_amount_dollars
@@ -240,12 +261,10 @@ class Reservation < ActiveRecord::Base
       end
     end
 
-    def calculate_total_cost
-      PriceCalculator.new(self).total_price.try(:cents)
-    end
-
-    def set_total_cost
-      self.subtotal_amount_cents = calculate_total_cost
+    def set_costs
+      @price_calculator = PriceCalculator.new(self)
+      self.subtotal_amount_cents = @price_calculator.subtotal_price.try(:cents)
+      self.service_fee_amount_cents = @price_calculator.service_fee.try(:cents)
     end
 
     def set_currency
