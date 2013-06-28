@@ -228,7 +228,7 @@ class Reservation < ActiveRecord::Base
     @price_calculator ||= if listing.hourly_reservations?
       HourlyPriceCalculator.new(self)
     else
-      PriceCalculator.new(self)
+      DailyPriceCalculator.new(self)
     end
   end
 

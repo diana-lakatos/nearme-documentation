@@ -6,7 +6,7 @@
 # NB: Note that there is a corresponding JS calculation class
 #     to calculate the price client-side. If logic changes,
 #     be sure to update that as well.
-class Reservation::PriceCalculator
+class Reservation::DailyPriceCalculator
   attr_reader :reservation
 
   def initialize(reservation)

@@ -166,7 +166,7 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should "have a daily pricing_calculator" do
-        assert @reservation.price_calculator.is_a?(Reservation::PriceCalculator)
+        assert @reservation.price_calculator.is_a?(Reservation::DailyPriceCalculator)
       end
 
       should "set total cost after creating a new reservation" do
@@ -178,7 +178,7 @@ class ReservationTest < ActiveSupport::TestCase
         quantity           =  5
         assert reservation = @listing.reserve!(@user, dates, quantity)
 
-        assert_equal Reservation::PriceCalculator.new(reservation).price.cents, reservation.total_amount_cents
+        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents, reservation.total_amount_cents
       end
 
       should "not reset total cost when saving an existing reservation" do
@@ -247,7 +247,7 @@ class ReservationTest < ActiveSupport::TestCase
 
     should "set default payment status to paid for free reservations" do
       reservation = FactoryGirl.build(:reservation)
-      Reservation::PriceCalculator.any_instance.stubs(:price).returns(0.to_money)
+      Reservation::DailyPriceCalculator.any_instance.stubs(:price).returns(0.to_money)
       reservation.save!
       assert reservation.free?
       assert reservation.paid?
