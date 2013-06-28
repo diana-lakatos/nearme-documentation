@@ -165,10 +165,6 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation = @listing.reservations.build(:user => @user)
       end
 
-      should "have a daily pricing_calculator" do
-        assert @reservation.price_calculator.is_a?(Reservation::DailyPriceCalculator)
-      end
-
       should "set total cost after creating a new reservation" do
         dates              = [Date.today, Date.tomorrow, Date.today + 5, Date.today + 6].map { |d|
           d += 1 if d.wday == 6
@@ -214,10 +210,6 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation = @listing.reservations.build(
           :user => @user
         )
-      end
-
-      should "have a hourly pricing calculator" do
-        assert @reservation.price_calculator.is_a?(Reservation::HourlyPriceCalculator)
       end
 
       should "set total cost based on HourlyPriceCalculator" do

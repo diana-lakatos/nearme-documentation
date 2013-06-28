@@ -224,14 +224,6 @@ class Reservation < ActiveRecord::Base
     created_at + 24.hours
   end
 
-  def price_calculator
-    @price_calculator ||= if listing.hourly_reservations?
-      HourlyPriceCalculator.new(self)
-    else
-      DailyPriceCalculator.new(self)
-    end
-  end
-
   private
 
     def set_default_payment_status
@@ -245,7 +237,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def calculate_total_cost
-      price_calculator.price.try(:cents)
+      PriceCalculator.new(self).total_price.try(:cents)
     end
 
     def set_total_cost
@@ -293,7 +285,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def validate_booking_selection
-      unless price_calculator.valid?
+      unless PriceCalculator.new(self).valid?
         errors.add(:base, "Booking selection does not meet requirements. A minimum of #{listing.minimum_booking_days} consecutive bookable days are required.")
       end
     end
