@@ -119,6 +119,7 @@ class Reservation < ActiveRecord::Base
 
   delegate :location, to: :listing
   delegate :creator, to: :listing, :prefix => true
+  delegate :service_fee_percent, to: :listing, allow_nil: true
 
   def user=(value)
     self.owner = value
