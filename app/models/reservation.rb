@@ -160,10 +160,14 @@ class Reservation < ActiveRecord::Base
 
   def total_amount_cents
     if persisted?
-      super
+      subtotal_amount_cents
     else
       calculate_total_cost
     end
+  end
+
+  def total_amount_cents=(amount)
+    self.subtotal_amount_cents = amount
   end
 
   def total_amount_dollars
@@ -241,7 +245,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def set_total_cost
-      self.total_amount_cents = calculate_total_cost
+      self.subtotal_amount_cents = calculate_total_cost
     end
 
     def set_currency
