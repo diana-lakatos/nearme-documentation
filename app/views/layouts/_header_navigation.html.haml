@@ -11,6 +11,10 @@
         %li
           = link_to manage_guests_dashboard_path do
             %span.ico-manage-guests.padding Manage Guests
+        - if current_user.companies.any? && current_user.companies.first.id.present?
+          %li
+            = link_to edit_manage_company_path(current_user.companies.first) do
+              %span.ico-manage-guests.padding Settings
         %li.divider
         %li
           = link_to bookings_dashboard_path do
@@ -23,7 +27,7 @@
       %ul.dropdown-menu
         %li
           = link_to edit_user_registration_path do
-            %span.ico-settings.padding Settings
+            %span.ico-settings.padding Edit profile
         %li
           = link_to destroy_user_session_path, :method => :delete do
             %span.ico-logout.padding Log Out

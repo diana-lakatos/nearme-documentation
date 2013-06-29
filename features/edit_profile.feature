@@ -11,7 +11,7 @@ Feature: A user can edit their settings
     And a industry exists with name: "IT"
     And a industry exists with name: "Telecommunication"
 
-  Scenario: A user can successfully edit their settings
+  Scenario: A user can successfully edit his settings
     Given I go to the account settings page
     And I fill in "Your name" with "Keith"
     And I fill in "Job title" with "My job"
@@ -27,27 +27,6 @@ Feature: A user can edit their settings
     And I go to the account settings page
     When I select industries for user
     Then I should be connected to selected industries
-
-  Scenario: A user can select industries for company
-    Given a company exists with creator: the user
-    And I go to the account settings page
-    When I select industries for company
-    Then Company should be connected to selected industries
-
-  Scenario: A user with company will see company settings
-    Given a company exists with creator: the user
-    When I go to the account settings page
-    Then I should see company settings
-
-  Scenario: A user can update existing company
-    Given a company exists with creator: the user
-    And I go to the account settings page
-    When I update company settings
-    Then The company should be updated
-
-  Scenario: A user without company will not see company settings
-    When I go to the account settings page
-    Then I should not see company settings
 
   Scenario: A user should not be allowed to provide invalid settings
     Given I go to the account settings page
