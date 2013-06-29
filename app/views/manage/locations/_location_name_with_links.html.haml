@@ -1,7 +1,14 @@
 %li.location
   .name
-    = location.persisted? ? location.name : 'New location'
-  - if location.persisted? && params[:action] != 'new' && params[:action] != 'edit'
+    - if location.persisted? 
+      - if in_new_listing?
+        New Listing at #{location.street}
+      - else
+        = location.street 
+        = link_to '', location_path(location), :class => 'ico-open-link'
+    - else 
+      New location
+  - if in_new_or_edit?
     .links
       = link_to new_manage_location_listing_path(location), :class => 'ico-add-desk' do
         %span
@@ -9,6 +16,3 @@
       = link_to edit_manage_location_path(location), :class => 'ico-edit' do
         %span
           Edit Location
-      = link_to location_path(location), :class => 'ico-open-link' do
-        %span
-          View Location

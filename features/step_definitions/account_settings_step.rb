@@ -3,29 +3,28 @@ When /^I upload avatar$/ do
   attach_file('avatar', avatar)
 end
 
-When /^I select industries for (.*)$/ do |object|
-  if(object=='user')
+When /^I select industries for #{capture_model}$/ do |model|
+  object = model!(model)
+  if(object.class.to_s=='User')
     within('select[@id="user_industry_ids"]') do
       select "Computer Science"
       select "Telecommunication"
     end
-  elsif(object=='company')
+  elsif(object.class.to_s=='Company')
     within('select[@id="user_companies_attributes_0_industry_ids"]') do
       select "IT"
       select "Telecommunication"
     end
   end
-    within('form[@id="edit_'+object+'"]') do
-      find('input[@type="submit"]').click
-    end
+  within('form[@id="edit_'+object.class.to_s.downcase+'"]') do
+    find('input[@type="submit"]').click
+  end
 end
 
-Then /^I should be connected to selected industries$/ do
-  assert_equal ["Computer Science", "Telecommunication"], model!("the user").industries.pluck(:name)[0..1]
-end
-
-Then /^Company should be connected to selected industries$/ do
-  assert_equal ["IT", "Telecommunication"], model!("the company").industries.pluck(:name)[0..1]
+Then /^#{capture_model} should be connected to selected industries$/ do |model|
+  object = model!(model)
+  expected_industries = (object.class.to_s=='User') ? ["Computer Science", "Telecommunication"] : ["IT", "Telecommunication"]
+  assert_equal expected_industries, object.industries.pluck(:name).reject { |name| name.include?('Industry ') }
 end
 
 Then /^I should not see company settings$/ do

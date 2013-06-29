@@ -25,14 +25,14 @@ Feature: A user can edit their settings
   Scenario: A user can select industries for self
     Given a company exists with creator: the user
     And I go to the account settings page
-    When I select industries for user
-    Then I should be connected to selected industries
+    When I select industries for the user
+    Then the user should be connected to selected industries
 
   Scenario: A user can select industries for company
     Given a company exists with creator: the user
     And I go to the account settings page
-    When I select industries for company
-    Then Company should be connected to selected industries
+    When I select industries for a company
+    Then a company should be connected to selected industries
 
   Scenario: A user with company will see company settings
     Given a company exists with creator: the user

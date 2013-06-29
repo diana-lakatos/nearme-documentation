@@ -105,9 +105,17 @@ section.dashboard {
     }
   }
 
+  form {
+    margin-top: 30px;
+  }
+
+  .dashboard-save {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
 
   ul.locations {
-    margin-bottom: 50px;
 
     li.location {
       overflow: hidden;
@@ -115,10 +123,15 @@ section.dashboard {
 
       font-size: 30px;
       color: $gray80;
-      padding: 10px 0px 10px 5px;
+      margin: 35px 0px 0px 0px;
+      padding: 0px 0px 15px 0px;
 
       .name {
         float: left;
+
+        a {
+          font-size: 22px;
+        }
       }
 
       .links {
