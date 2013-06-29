@@ -14,7 +14,9 @@
             - @your_reservations.each do |reservation|
               %li{"data-date" => reservation.date}
                 %p.em
-                  %strong= link_to(reservation.listing.name, reservation.listing)
+                  = link_to reservation.listing.name, listing_reservation_path(reservation.listing, reservation) 
+                  = link_to reservation.listing do
+                    %span.ico-open-link
                   on
                   %time{:datetime => reservation.date}
                     - if reservation.listing.hourly_reservations?

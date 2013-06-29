@@ -32,6 +32,24 @@ module Listings
       end
     end
 
+    def show
+      @reservation = current_user.reservations.find(params[:id])
+    end
+
+    def export
+      @reservation = Reservation.find(params[:id])
+      respond_to do |format|
+        format.ics do
+          calendar = Icalendar::Calendar.new
+          @reservation.periods.each do |period|
+            calendar.add_event(period.to_ics)
+          end
+          calendar.publish
+          render :text => calendar.to_ical
+        end
+      end
+    end
+
     def hourly_availability_schedule
       date = if params[:date].present?
         Date.parse(params[:date]) rescue nil

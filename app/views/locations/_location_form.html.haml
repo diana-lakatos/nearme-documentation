@@ -31,7 +31,7 @@
 = f.input :description, :label => 'Location description', :placeholder => 'Describe the overall look, feel, and ambience of your location.', :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? || only_inputs.include?(:description)
 = f.association :location_type, :label => "Location type"  if only_inputs.empty? || only_inputs.include?(:location_type)
 = f.input :email, :label => 'Booking email', :placeholder => 'Your booking email' if only_inputs.empty? || only_inputs.include?(:email)
-= f.input :special_notes, :label => 'Special terms or notes ', :placeholder => 'For example, how your guests should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your guest\'s stay' if only_inputs.empty? || only_inputs.include?(:special_notes)
+= f.input :special_notes, :label => 'Guest instructions', :placeholder => 'For example, how your guests should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your guest\'s stay' if only_inputs.empty? || only_inputs.include?(:special_notes)
 = f.input :currency, :as => :currency, :label => "Currency", :default => 'USD', :input_html => { :class => 'custom-select', :id => 'currency-select' } if only_inputs.empty? || only_inputs.include?(:currency)
 - if only_inputs.empty? || only_inputs.include?(:availability_rules)
   .control-group

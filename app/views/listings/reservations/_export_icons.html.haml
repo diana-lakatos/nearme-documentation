@@ -1,0 +1,5 @@
+%h1 Export
+.export-icons
+  .export-icon
+    = link_to image_tag('ical.png'), export_listing_reservation_path(reservation.listing, reservation, :format => :ics)
+
