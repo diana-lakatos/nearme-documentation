@@ -12,7 +12,8 @@
           = link_to manage_guests_dashboard_path do
             %span.ico-manage-guests.padding Guests
     %li
-      = link_to 'My Bookings', bookings_dashboard_path, class: 'nav-link ico-bookings'
+      = link_to bookings_dashboard_path, class: 'nav-link ico-bookings dropdown-toggle' do
+        %span My Bookings
     %li.dropdown
       %a.ico-user.dropdown-toggle.nav-link{"data-toggle" => "dropdown", :href => "#"}
         %span
