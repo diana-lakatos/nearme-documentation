@@ -27,24 +27,24 @@
                       = image_tag reservation.owner.avatar.thumb.url if reservation.owner.avatar.thumb.file
                     %strong= reservation.owner
                     .clearfix
-                    %br
-                    = reservation.comment
-                  .span3
+                    #{reservation.listing.name} (x #{reservation.quantity})
+                  .span4
                     %strong= t :day, count: reservation.total_days
                     - if reservation.listing.hourly_reservations?
                       %time{:datetime => reservation.date}
                         = hourly_summary_for_period(last_day.periods.first) if reservation.periods.first.present?
                     - else
                       (
-                      %span.reservation-dates{data: { :start => reservation.date, end: reservation.last_date } }
+                      %span.disabled.reservation-dates{data: { :dates => periods_dates(reservation.periods) } }
                         #{reservation.date.strftime('%b %d')}–#{reservation.last_date.strftime('%b %d')}
                       )
                     %br
                     .price= number_to_currency reservation.total_amount_dollars
-                  .span5
+                  .span4
                     .actions
                       = render :partial => "owner_actions", :locals => {:reservation => reservation} if  current_user == location.creator
-                    #{manage_guests_time_to_expiry(reservation)}
+                    .expiry-message
+                      #{manage_guests_time_to_expiry(reservation)}.
                 %br
 
 :javascript
