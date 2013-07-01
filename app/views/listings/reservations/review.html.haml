@@ -25,15 +25,15 @@
 
   .summary
     .subtotal-label Subtotal Cost:
-    .subtotal-amount= @reservation.subtotal_amount
+    .subtotal-amount= reservation_subtotal_price(@reservation)
 
   .summary
     .service-fee-label Service Fee:
-    .service-fee-amount= @reservation.service_fee_amount
+    .service-fee-amount= reservation_service_fee(@reservation)
 
   .summary
     .total-label Total Cost:
-    .total-amount= @reservation.total_amount
+    .total-amount= reservation_total_price(@reservation)
 
   %hr
 

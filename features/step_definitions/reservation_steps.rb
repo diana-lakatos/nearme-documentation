@@ -151,7 +151,19 @@ Then /^the user should have a reservation:$/ do |table|
   end
 end
 
-Then /^the reservation cost should show \$?([0-9\.]+)$/ do |cost|
+Then /^the reservation subtotal should show \$?([0-9\.]+)$/ do |cost|
+  within '.space-reservation-modal .subtotal-amount' do
+    assert page.has_content?(cost)
+  end
+end
+
+Then /^the reservation service fee should show \$?([0-9\.]+)$/ do |cost|
+  within '.space-reservation-modal .service-fee-amount' do
+    assert page.has_content?(cost)
+  end
+end
+
+Then /^the reservation total should show \$?([0-9\.]+)$/ do |cost|
   within '.space-reservation-modal .total-amount' do
     assert page.has_content?(cost)
   end
