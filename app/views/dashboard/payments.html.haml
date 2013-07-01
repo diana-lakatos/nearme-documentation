@@ -1,0 +1,28 @@
+- title "Payments"
+
+%section#payments
+  .row-fluid
+    .span8.offset2
+      %h1
+        Payments
+      .box
+        - if @charges.empty?
+          %p No charges in the last 7 days, sorry"
+        - else
+          .charges-graph
+            .charges-total.right
+              = "#{currency_content_tag('USD', @last_week_charges.values.sum, :span, { :rel => false })} total".html_safe
+            %canvas#charge-chart
+
+          .charges-details
+            - @charges.each do |charge|
+              .clearfix.charge-line-item
+                .left
+                  = "#{currency_content_tag(charge.currency, charge.price, :span, { :rel => false })} - #{charge.reference.listing.location.name}".html_safe
+                .right
+                  = charge.created_at.strftime('%Y/%m/%d %H:%M:%S')
+
+            = will_paginate @charges
+
+- content_for :domready do
+  new ChartWrapper.Line($('#charge-chart'), #{@last_week_charges.values.map { |v| v.fractional / v.currency.subunit_to_unit }.to_json.html_safe} , #{@last_week_charges.keys.to_json.html_safe})

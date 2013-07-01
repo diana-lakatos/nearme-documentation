@@ -26,6 +26,7 @@
 //= require mustache
 //= require handlebars.runtime
 //= require chosen-jquery
+//= require chart
 //= require rails.validations
 //= require rails.validations.simple_form
 //
