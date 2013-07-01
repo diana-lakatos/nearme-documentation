@@ -1,3 +1,5 @@
+# encoding: UTF-8
+# above comment is required to display euro symbol correctly!
 require 'test_helper'
 
 class ReservationsHelperTest < ActionView::TestCase
@@ -50,5 +52,44 @@ class ReservationsHelperTest < ActionView::TestCase
       assert_equal "Wednesday, May  1&ndash;Friday, May  3<br />Monday, May  6&ndash;Tuesday, May  7<br />Thursday, May  9", selected_dates_summary(@reservation)
     end
 
+  end
+
+  context '#service fee' do
+
+    setup do
+      @reservation = FactoryGirl.build(:reservation)
+    end
+
+    should 'be free if amount is 0' do
+        stub_reservation_fees_to(0)
+        assert_equal 'Free!', reservation_total_price(@reservation)
+        assert_equal 'Free!', reservation_subtotal_price(@reservation)
+        assert_equal 'Free!', reservation_service_fee(@reservation)
+    end
+
+    should 'be free if amount is nil' do
+        stub_reservation_fees_to(nil)
+        assert_equal 'Free!', reservation_total_price(@reservation)
+        assert_equal 'Free!', reservation_subtotal_price(@reservation)
+        assert_equal 'Free!', reservation_service_fee(@reservation)
+    end
+
+    should 'be displayed correctly with currency if greater than 0' do
+        stub_reservation_fees_to(1050)
+        assert_equal '€10.50', reservation_total_price(@reservation)
+        assert_equal '€10.50', reservation_subtotal_price(@reservation)
+        assert_equal '€10.50', reservation_service_fee(@reservation)
+    end
+  end
+
+  private
+
+  def stub_reservation_fees_to(price, currency = 'EUR')
+        @reservation.stubs(:service_fee_amount).returns(Money.new(price, currency))
+        @reservation.stubs(:subtotal_amount).returns(Money.new(price, currency))
+        @reservation.stubs(:total_amount).returns(Money.new(price, currency))
+        @reservation.stubs(:service_fee_amount_cents).returns(price)
+        @reservation.stubs(:subtotal_amount_cents).returns(price)
+        @reservation.stubs(:total_amount_cents).returns(price)
   end
 end

@@ -92,7 +92,8 @@ Feature: A user can book at a space
     Then I should see the booking confirmation screen for:
       | Listing     | Date   | Quantity | Start | End   |
       | the listing | Monday | 1        | 9:00  | 14:00 |
-    And the reservation cost should show 500.00
+      # additinal 50 is default 10% service fee 
+    And the reservation cost should show 550.00
     When I click to confirm the booking
     Then the user should have a reservation:
       | Listing     | Date   | Quantity | Start | End   |
