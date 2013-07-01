@@ -8,7 +8,9 @@
           = image_tag google_maps_streetview_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name
     .span8.nested.details-container
       %h2
-        = link_to "#{listing.name}", listing
+        = link_to "#{listing.name}", listing 
+        %span.miles
+          = "(#{listing.distance_from_search_query.to_f.round(1)} miles)"
       %h4.hidden-iphone.location-hours
         %span.ico-location
           %strong

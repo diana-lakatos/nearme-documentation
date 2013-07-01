@@ -9,10 +9,10 @@
   .loading{ style: 'display: none;' }
     = image_tag "spinner.gif"
 
+= yield :loading
 - if listings.any?
   %section#results.map
     = render partial: 'search/map/listing', collection: listings
-    = yield :loading
 - else
   %section#results.no_results.map
     .span3
@@ -24,7 +24,6 @@
       %p Try a different location or a post code. Make sure the location is properly formatted and include the city and state.
       %p
         Still cant find what your looking for? Why not #{link_to "create your own listing", new_space_wizard_path}!
-    = yield :loading
 
 - content_for :domready do
   new Search.SearchController($('#listing_search form'), $("section#content.search"))

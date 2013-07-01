@@ -5,11 +5,11 @@ class ReservationsHelperTest < ActionView::TestCase
   include MoneyRails::ActionViewExtension
 
   def setup
-    @unpaid_reservation = FactoryGirl.create(:reservation_with_credit_card_and_valid_period)
+    @unpaid_reservation = FactoryGirl.create(:reservation_with_credit_card)
     @unpaid_reservation.total_amount_cents = 100_00
     @unpaid_reservation.save!
 
-    @paid_reservation = FactoryGirl.create(:reservation_with_credit_card_and_valid_period, payment_status: 'paid')
+    @paid_reservation = FactoryGirl.create(:reservation_with_credit_card, payment_status: 'paid')
     @paid_reservation.total_amount_cents = 100_00
     @paid_reservation.save!
     FactoryGirl.create(:charge, :amount => @paid_reservation.total_amount_cents, :reference => @paid_reservation)

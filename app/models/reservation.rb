@@ -118,6 +118,7 @@ class Reservation < ActiveRecord::Base
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
   delegate :location, to: :listing
+  delegate :creator, to: :listing, :prefix => true
 
   def user=(value)
     self.owner = value

@@ -45,10 +45,8 @@ class ReservationMailer < DesksNearMeMailer
   
   def notify_host_with_confirmation(reservation)
     setup_defaults(reservation)
-
     @user = @listing.creator
-    @url  = dashboard_url
-
+    @url  = manage_guests_dashboard_url(:token => @user.authentication_token)
     generate_mail("A booking requires your confirmation")
   end
 

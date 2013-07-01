@@ -58,6 +58,8 @@ GEM
       activesupport
       builder
       json
+    amatch (0.2.11)
+      tins (~> 0.3)
     animation (0.1.alpha.3)
       compass (>= 0.12.0)
       sass (>= 3.2.0.alpha.95)
@@ -134,6 +136,10 @@ GEM
       railties (~> 3.1)
       warden (~> 1.2.1)
     diff-lcs (1.1.3)
+    dropbox-api (0.3.2)
+      hashie
+      multi_json
+      oauth
     ejs (1.1.1)
     email_spec (1.4.0)
       launchy (~> 2.1)
@@ -435,6 +441,7 @@ GEM
     thor (0.17.0)
     tilt (1.3.6)
     timecop (0.3.5)
+    tins (0.8.0)
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
@@ -475,6 +482,7 @@ DEPENDENCIES
   RedCloth (~> 4.2.9)
   active_model_serializers
   airbrake
+  amatch
   animation
   bootstrap-sass (~> 2.3.0.0)
   capybara (~> 1.1.2)
@@ -492,6 +500,7 @@ DEPENDENCIES
   decent_exposure
   delayed_job_active_record
   devise
+  dropbox-api
   email_spec
   ey_config
   factory_girl_rails (>= 3.0.0)
@@ -521,6 +530,7 @@ DEPENDENCIES
   money-rails
   mustachejs-rails
   newrelic_rpm
+  nokogiri
   oauth
   omniauth
   omniauth-facebook

@@ -14,13 +14,17 @@ section.search#content {
   & + .footer-wrapper {
     display: none;
   }
+
+  .miles {
+    font-size: 14px;
+  }
   
   .loading {
-    position: absolute;
-    top: 160px;
+    position: fixed;
+    top: 50%;
     right: 0;
     left: 0;
-    z-index: $map-z-index + 1;
+    z-index: $map-z-index + 2;
     margin: 0 auto;
     padding: 8px;
     width: 32px;
@@ -28,7 +32,19 @@ section.search#content {
     background: $gray230;
     @include border-radius($border-radius-medium);
   }
-  
+
+  .screen-locker {
+    position: fixed;
+    background-color: black;
+    opacity: 0.5;
+    width: 100%;
+    z-index: $map-z-index + 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
   .google-map-wrapper, 
   .google-map .inner {
     z-index: $map-z-index;
@@ -309,7 +325,7 @@ header#listing_search {
         display: block;
         float: left;
         margin-top: 5px 0 0;
-        padding: 8px 0 8px 50px;
+        padding: 8px 50px;
         border: 2px solid $gray230;         
         background: $dnm_white;
   
@@ -347,7 +363,7 @@ header#listing_search {
         @include opacity(1);
         top: 7px;
         right:2px;
-       display: block;
+        display: block;
         padding: 6px 13px 0 0;
         width: 42px;
         height: 34px;
@@ -361,7 +377,7 @@ header#listing_search {
         }
 
         @media (min-width: 768px) {
-          right: 222px;
+          right: 282px;
         }
 
         @media (max-width: $iphone-landscape) {

@@ -10,7 +10,7 @@ class Search.SearchController extends Search.Controller
 
     @listings = {}
     @resultsContainer = => @container.find('#results')
-    @loadingContainer = => @container.find('.loading')
+    @loader = new Search.ScreenLockLoader => @container.find('.loading')
     @resultsCountContainer = $('#search_results_count')
     @processingResults = true
     @initializeMap()
@@ -151,12 +151,6 @@ class Search.SearchController extends Search.Controller
     
     @updateMapWithListingResults()
 
-  startLoading: ->
-    @loadingContainer().show()
-
-  finishLoading: ->
-    @loadingContainer().hide()
-
   showResults: (html) ->
     @resultsContainer().replaceWith(html)
     $('.pagination').hide()
@@ -239,7 +233,7 @@ class Search.SearchController extends Search.Controller
   # Trigger the search from manipulating the query.
   # Note that the behaviour semantics are different to manually moving the map.
   triggerSearchFromQuery: ->
-    @startLoading()
+    @loader.showWithoutLocker()
      # Infinite-Ajax-Scroller [ ias ] which we use disables itself when there are no more results
      # we need to reenable it when it is necessary, and only then - otherwise we will get duplicates
     if $('#reinitialize').length > 0
@@ -255,14 +249,14 @@ class Search.SearchController extends Search.Controller
 
   # Triggers a search with default UX behaviour and semantics.
   triggerSearchAndHandleResults: (callback) ->
-    @startLoading()
+    @loader.showWithoutLocker()
     @triggerSearchRequest().success (html) =>
       @processingResults = true
       @updateUrlForSearchQuery()
       @updateLinksForSearchQuery()
       @showResults(html)
+      @loader.hide()
       callback() if callback
-      @finishLoading()
       @processingResults = false
 
   # Trigger the API request for search
@@ -277,7 +271,7 @@ class Search.SearchController extends Search.Controller
 
   # Trigger automatic updating of search results
   fieldChanged: (field, value) ->
-    @startLoading()
+    @loader.show()
     @triggerSearchFromQueryAfterDelay()
 
   updateUrlForSearchQuery: ->
@@ -292,7 +286,9 @@ class Search.SearchController extends Search.Controller
     params = @getSearchParams()
 
     $('.list-map-toggle a', @form).each ->
-      _params = $.extend(params, { v: (if $(this).hasClass('map') then 'map' else 'list') })
-      _url = "#{url}?#{$.param(_params)}"
+      for k, param of params
+        if param["name"] == 'v'
+          param["value"] = (if $(this).hasClass('map') then 'map' else 'list')
+      _url = "#{url}?#{$.param(params)}"
       $(this).attr('href', _url)
     

@@ -63,6 +63,10 @@ class AvailabilityRule < ActiveRecord::Base
     close_hour*60+close_minute
   end
 
+  def self.xml_attributes
+    [:day, :open_hour, :open_minute, :close_hour, :close_minute]
+  end
+
   private
 
   def apply_default_minutes
