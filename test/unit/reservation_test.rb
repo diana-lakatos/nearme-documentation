@@ -177,6 +177,19 @@ class ReservationTest < ActiveSupport::TestCase
         assert_equal Reservation::PriceCalculator.new(reservation).total_price.cents, reservation.total_amount_cents
       end
 
+      should "set subtotal and service fee cost after creating a new reservation" do
+        dates              = [Date.today, Date.tomorrow, Date.today + 5, Date.today + 6].map { |d|
+          d += 1 if d.wday == 6
+          d += 1 if d.wday == 0
+          d
+        }
+        quantity           =  5
+        assert reservation = @listing.reserve!(@user, dates, quantity)
+
+        assert_equal Reservation::PriceCalculator.new(reservation).subtotal_price.cents, reservation.subtotal_amount_cents
+        assert_equal Reservation::PriceCalculator.new(reservation).service_fee.cents, reservation.service_fee_amount_cents
+      end
+
       should "not reset total cost when saving an existing reservation" do
         dates              = [1.week.from_now.monday]
         quantity           =  2
