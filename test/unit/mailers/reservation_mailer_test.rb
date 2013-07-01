@@ -27,7 +27,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "notify guest of rejection" do
     mail = ReservationMailer.notify_guest_of_rejection(@reservation)
 
-    assert mail.html_part.body.include?(@reservation.listing.creator.name)
+    assert mail.html_part.body.include?(@reservation.listing.name)
   end
 
   test "notify guest with confirmation" do
