@@ -6,6 +6,8 @@ BOOKING DETAILS --------
 <%= "Dates: #{format_reservation_periods(reservation)}\r\n\r\n" -%>
 <%= "Host: #{listing.creator.name} (#{listing.creator.email})\r\n\r\n" -%>
 <%= "Contact: #{listing.location.phone}\r\n\r\n" if listing.location.phone.present? -%>
+<%= "Subtotal: #{reservation_subtotal_price(reservation)}\r\n\r\n" -%>
+<%= "Service fee: #{reservation_service_fee(reservation)}\r\n\r\n" -%>
 <%= "Total: #{reservation_total_price(reservation)}\r\n\r\n" -%>
 <% if reservation.credit_card_payment? -%>
 <%= "Paid: #{reservation_paid(reservation)}\r\n\r\n" -%>

@@ -16,6 +16,22 @@ module ReservationsHelper
     !@reservation.total_amount.zero? && %w(USD CAD).include?(@reservation.currency)
   end
 
+  def reservation_subtotal_price(reservation)
+    if reservation.subtotal_amount_cents.nil?
+      "Free!"
+    else
+      humanized_money_with_cents_and_symbol(reservation.subtotal_amount_cents/100.0)
+    end
+  end
+
+  def reservation_service_fee(reservation)
+    if reservation.service_fee_amount_cents.nil?
+      "Free!"
+    else
+      humanized_money_with_cents_and_symbol(reservation.service_fee_amount_cents/100.0)
+    end
+  end
+
   def reservation_total_price(reservation)
     if reservation.total_amount_cents.nil?
       "Free!"

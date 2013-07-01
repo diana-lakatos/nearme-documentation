@@ -32,6 +32,11 @@
   <hr>
 <% end %>
 
+<strong style='display: inline-block;'>Subtotal</strong>
+<span style="float: right;"><%= reservation_subtotal_price(reservation) %></span>
+
+<strong style='display: inline-block;'>Service fee</strong>
+<span style="float: right;"><%= reservation_service_fee(reservation) %></span>
 
 <strong style='display: inline-block;'>Total</strong>
 <span style="float: right;"><%= reservation_total_price(reservation) %></span>
