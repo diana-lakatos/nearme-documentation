@@ -10,7 +10,7 @@ When /^I select industries for (.*)$/ do |object|
       select "Telecommunication"
     end
   elsif(object=='company')
-    within('select[@id="user_companies_attributes_0_industry_ids"]') do
+    within('select[@id="company_industry_ids"]') do
       select "IT"
       select "Telecommunication"
     end
@@ -25,7 +25,7 @@ Then /^I should be connected to selected industries$/ do
 end
 
 Then /^Company should be connected to selected industries$/ do
-  assert_equal ["IT", "Telecommunication"], model!("the company").industries.pluck(:name)[0..1]
+  assert_equal ["IT", "Telecommunication"], model!("the company").industries.pluck(:name).reject { |n| n.include?('Industry ') }
 end
 
 Then /^I should not see company settings$/ do
@@ -37,12 +37,12 @@ Then /^I should see company settings$/ do
 end
 
 When /^I update company settings$/ do
-  fill_in "user_companies_attributes_0_name", with: "Updated name"
-  fill_in "user_companies_attributes_0_url", with: "http://updated-url.example.com"
-  fill_in "user_companies_attributes_0_email", with: "updated@example.com"
-  fill_in "user_companies_attributes_0_description", with: "this is updated description"
-  fill_in "user_companies_attributes_0_mailing_address", with: "mail-update@example.com"
-  fill_in "user_companies_attributes_0_paypal_email", with: "paypal-update@example.com"
+  fill_in "company_name", with: "Updated name"
+  fill_in "company_url", with: "http://updated-url.example.com"
+  fill_in "company_email", with: "updated@example.com"
+  fill_in "company_description", with: "this is updated description"
+  fill_in "company_mailing_address", with: "mail-update@example.com"
+  fill_in "company_paypal_email", with: "paypal-update@example.com"
   within('form[@id="edit_company"]') do
     find('input[@type="submit"]').click
   end
