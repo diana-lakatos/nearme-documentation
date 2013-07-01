@@ -8,4 +8,4 @@
       = simple_form_for [:manage, @company], :html => { class: "form-horizontal form-expandable", :id => 'edit_company' } do |f|
         = render :partial => 'companies/company_form', :locals => { :f => f }
         .actions
-          = f.submit "Save Changes"
+          = f.submit "Save"

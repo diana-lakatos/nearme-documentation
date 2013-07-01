@@ -12,7 +12,7 @@
       = fileupload_photo resource.avatar_url(:thumb).to_s, destroy_avatar_path, :div
 
   .actions
-    = f.submit (resource.persisted?) ? "Save Changes" : "Sign Up Now"
+    = f.submit (resource.persisted?) ? "Save" : "Sign Up"
 
 :javascript
   $(function() {
