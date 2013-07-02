@@ -123,11 +123,12 @@ section.dashboard {
 
       font-size: 30px;
       color: $gray80;
-      margin: 35px 0px 0px 0px;
+      margin: 35px 0px 20px 0px;
       padding: 0px 0px 15px 0px;
 
       .name {
         float: left;
+        margin-top: 7px;
 
         a {
           font-size: 22px;
