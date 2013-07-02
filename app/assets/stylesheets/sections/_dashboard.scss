@@ -117,13 +117,22 @@ section.dashboard {
 
   ul.locations {
 
+    ul.location-and-listings {
+      margin: 0px 0px 30px 0px;
+    }
+
+    form {
+      .control-group {
+        margin-bottom: 25px;
+      }
+    }
+
     li.location {
       overflow: hidden;
       border-bottom: 1px solid $gray220;
 
       font-size: 30px;
       color: $gray80;
-      margin: 35px 0px 20px 0px;
       padding: 0px 0px 15px 0px;
 
       .name {
@@ -131,7 +140,10 @@ section.dashboard {
         margin-top: 7px;
 
         a {
-          font-size: 22px;
+          font-size: 18px;
+          color: $gray80;
+          position: relative;
+          top: -3px;
         }
       }
 
