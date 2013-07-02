@@ -1,4 +1,4 @@
-<br>
+<br class='first-br'>
 <h1>Booking Details</h1><br>
 <strong style='display: inline-block;'>Listing</strong>
 <span style="float: right;">'<%= listing.name %>' at <%= link_to(listing.location.name, location_url(listing.location)) %></span>
@@ -6,7 +6,7 @@
 <hr>
 
 <% unless listing.location.special_notes.strip.empty? %>
-  <strong style='display: inline-block;'>Guest instruction</strong>
+  <strong style='display: inline-block;'>Guest instructions</strong>
   <span style="float: right;"><%= listing.location.special_notes.strip %></span>
   <hr>
 <% end if listing.location.special_notes %>
