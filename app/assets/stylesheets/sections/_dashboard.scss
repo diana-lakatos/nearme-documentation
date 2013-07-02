@@ -1,26 +1,12 @@
-@mixin dashboard-acc-group {
-  
-  .accordion-group {
-    margin-top: 10px;
-    border: none;
-    border-radius: 0;
-  }
-}
-
 div.availability-rules .custom-availability-rules .day .open-time,
 div.availability-rules .custom-availability-rules .day .close-time {
   width: auto;
 }
 
 .dashboard-home-link {
-  
   &:hover {
    @include opacity(.7);
   }
-}
-
-.accordion.in:hover { 
-  overflow: visible;
 }
 
 .availability-rules {
@@ -40,272 +26,6 @@ div.availability-rules .custom-availability-rules .day .close-time {
     padding-right: 0px;
   }
 
-}
-
-.accordion-heading .accordion-toggle {
-  padding: 15px 3px;
-}
-
-section.locations-holder {
-  margin-bottom: 20px;
-
-  .add-location{
-    width: 100%;
-    @include opacity(.4);
-
-    &:hover {
-      @include opacity(1);
-    }
-  }
-
-  .edit-link{
-    color: $gray60;
-    display: block;
-
-    &:hover{
-     color: $gray80;
-    }
-  }
-
-  .ico-edit,
-  .ico-open-link {
-    color: $gray160;
-
-    &:hover {
-      color: $gray80;
-    }
-  }
-
-  header {
-    overflow: hidden;
-
-    .entity-icon {
-      float: left;
-      margin-right: 15px;
-    }
-
-    .entity-name {
-      display: inline-block;
-      overflow: hidden;
-    }
-
-    .location-header {
-      
-      .ico-edit {
-        position: absolute;
-        top: 14px;
-        right: 50px;
-      }
-
-      .ico-open-link {
-        position: absolute;
-        top: 11px;
-        right: 14px;
-      }      
-    }
-
-    .listing-header {
-      
-      .ico-edit {
-        position: absolute;
-        top: 2px;
-        right: 52px;
-      }
-
-      .ico-open-link {
-        position: absolute;
-        top: 0px;
-        right: 17px;
-      }      
-    }
-  }
-
-  .location-content {
-    margin-bottom: 0;
-
-    form { 
-      margin-top:20px 
-    }
-
-    div.action{
-      background: $dnm_white;
-      padding: 20px 0;
-    }
-
-    div.geolocation {
-      position: absolute;
-      top: 13px;
-      left: 10px;
-      color: $gray160;
-    }
-
-    div.map {
-
-      .map-container {
-        border-radius: 12px;
-        height: 240px;
-        clear: both;
-      }
-    }
-
-    @include dashboard-acc-group
-
-  }
-
-  .delete {
-    display: block;
-    padding-top: 10px;
-    color: $gray160;
-    font-size: 80%;
-
-    &:hover {
-      color: $gray80;
-    }
-  }
-
-  .alert {
-    @include border-radius(12px);
-  }
-
-  .close {
-    float: right;
-    color: black;
-    font-weight: bold;
-    font-size: 20px;
-    text-shadow: 0 1px 0 $pure-white;
-    line-height: 20px;
-    @include opacity(0.2);
-  }
-
-  section.box {
-    padding-bottom: 0;
-
-    header {
-      margin-bottom: 0;
-      height: 24px;
-      color: $gray60;
-      font-size: 24px;
-
-      span {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-
-      .action {
-        float: right;
-        padding: 0;
-      }
-    }
-  }
-
-  div.action {
-    
-    a.btn {
-      width: 100%;
-      text-align: center;
-      @include box-sizing(border-box);
-      @include transition(all .2s ease-in-out);
-
-      &.btn-blue.btn-large {
-        text-align: left;
-        @include opacity(.3);
-
-        &:hover {
-          @include opacity(1);
-        }
-      }
-
-      &.add-listing {
-        @include border-top-radius(0);
-      }
-
-      &.add-location {
-        margin-top: 20px;
-      }
-    }
-  }
-
-  .photo-item {
-    border-bottom: 1px dashed $gray210;
-    padding-bottom: 10px;
-
-    input{
-      margin-top: 10px;
-    }
-
-    &:last-child{
-      border-bottom: none;
-      padding-bottom: 0px;
-    }
-  }
-}
-
-section.listings {
-  
-  section.box {
-    
-    header {
-      height: 24px;
-      font-size: 20px;
-      margin-bottom: 0;
-
-      .listing-header { 
-        padding-left: 24px; 
-      }
-
-      span {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-    }
-  }
-
-  .accordion {
-    margin: auto -15px;
-
-    .accordion-inner { 
-      padding: 20px 0 0;
-    }
-
-    .listing-content {
-      
-      div.action{
-        background: $dnm_white;
-        padding: 20px 15px;
-        clear: both;
-      }
-    }
-
-    header.listing.empty {
-      text-align: center;
-      color: $gray120;
-    }
-
-    @include dashboard-acc-group;
-
-    .box {
-      margin-bottom:0;
-      padding-bottom: 0;
-      border-radius: 0;
-      border-left: 4px solid $gray210;
-      border-bottom: 1px solid $gray210;
-
-      header {
-        height: 52px;
-        line-height: 52px;
-        padding: 0 15px 0px 0px;
-        margin-bottom:0;
-        border-radius: 0;
-      }
-    }
-  }
-
-  div.action {
-    border-radius: 0;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-    margin: auto -15px;
-  }
 }
 
 .gallery {
@@ -377,10 +97,131 @@ section.sessions {
 section.dashboard {
   
   ul {
+    list-style: none;
 
     li {
-      margin-right: .5em;
+      list-style: none;
+      overflow: hidden;
+    }
+  }
 
+  form {
+    margin-top: 30px;
+  }
+
+  .dashboard-save {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+
+  ul.locations {
+
+    ul.location-and-listings {
+      margin: 0px 0px 30px 0px;
+    }
+
+    form {
+      .control-group {
+        margin-bottom: 25px;
+      }
+    }
+
+    li.location {
+      overflow: hidden;
+      border-bottom: 1px solid $gray220;
+
+      font-size: 30px;
+      color: $gray80;
+      padding: 0px 0px 15px 0px;
+
+      .name {
+        float: left;
+        margin-top: 7px;
+
+        a {
+          font-size: 18px;
+          color: $gray80;
+          position: relative;
+          top: -3px;
+        }
+      }
+
+      .links {
+        float: right;
+
+        span {
+          color: $pure-white;
+        }
+
+        a {
+          @extend .btn;
+          @extend .btn-blue;
+          @extend .btn-medium;
+          margin-right: 5px;
+
+          &:last-child {
+            margin-right: 0px;
+          }
+        }
+      }
+
+      @media (max-width: 767px) {
+        font-size: 22px;
+
+        .links span {
+          display: none;
+        }
+      }
+
+    }
+
+    li.listing{
+      padding: 10px 0px;
+      font-size: 20px;
+
+      .name { 
+        float: left;
+        color: $gray60;
+      }
+
+      a {
+        color: $gray60;
+
+        &:hover {
+          color: $gray120;
+        }
+      }
+
+      @media (max-width: 767px) {
+        font-size: 18px;
+
+        span {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .spacer {
+    margin-bottom: 20px;
+  }
+  
+  .delete {
+    float: left;
+    padding-top: 10px;
+    color: $gray160;
+    font-size: 80%;
+
+    &:hover {
+      color: $gray80;
+    }
+  }
+
+  .actions {
+
+    a {
+      width: 100%;
     }
   }
 }
