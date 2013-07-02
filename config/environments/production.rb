@@ -22,7 +22,6 @@ DesksnearMe::Application.configure do
   config.stripe_api_key = "sk_live_YJet2CBSWgQ2UeuvQiG0vKEC"
   config.stripe_public_key = "pk_live_h3zjCFhi02B4c9juuzmFOe3n"
 
-  # Minification was introducing IE bugs - turn off for now
-  #config.assets.compress = true
-  #config.assets.js_compressor = :uglifier
+  config.assets.compress = true
+  config.assets.js_compressor = :uglifier
 end
