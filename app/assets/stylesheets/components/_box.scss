@@ -5,7 +5,7 @@
   @include box-sizing(border-box);  
   @include border-radius($border-radius-default);
   @include background-clip(border-box);
-  background: $dnm-white;
+  background: $theme_white;
   line-height: 28px;
 
   header {
@@ -105,7 +105,7 @@
   
   header {
     background: $gray80;
-    color: $dnm_white;
+    color: $theme_white;
   }
 }
 
@@ -133,7 +133,7 @@
       line-height: 40px;
 
       &:hover {
-        color: $dnm_white;
+        color: $theme_white;
       }
     }
 
@@ -141,8 +141,8 @@
 
       a, 
       a:hover {
-        background: $dnm_black;
-        color: $dnm_white;
+        background: $theme_black;
+        color: $theme_white;
       }
 
       &:first-child, 

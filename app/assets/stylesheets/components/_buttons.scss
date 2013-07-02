@@ -52,11 +52,11 @@ a.btn {
     background: $blue;
     
     &:hover {
-      background: lighten($dnm_blue, 10%);
+      background: lighten($theme_blue, 10%);
     }
 
     &:active {
-      background: darken($dnm_blue, 10%);
+      background: darken($theme_blue, 10%);
     }
   }
 

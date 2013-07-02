@@ -23,7 +23,7 @@
   left: 300px;
   z-index: $absolute-top-z-index;
   width: 280px;
-  background: $dnm_black;
+  background: $theme_black;
   @include border-radius($border-radius-default);
   @include box-shadow( 0 0 40px black);
   @include background-clip(border-box);
@@ -96,8 +96,8 @@
 
   .datepicker-text {
     border-bottom: 1px solid $gray210;
-    background-color: $dnm-black;
-    color: $dnm-black;
+    background-color: $theme_black;
+    color: $theme_black;
     text-align: center;
     line-height: 32px;
   }

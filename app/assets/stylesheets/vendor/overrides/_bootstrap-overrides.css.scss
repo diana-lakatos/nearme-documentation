@@ -43,7 +43,7 @@ body {
 }
 
 a[rel="tooltip"] {
-  color: $dnm_black;
+  color: $theme_black;
 }
 
 .tooltip {
@@ -54,12 +54,12 @@ a[rel="tooltip"] {
 abbr[title] {
   cursor: auto;
   border: none;
-  color: $dnm_red;
+  color: $theme_red;
 }
 
 .accordion-group {
 
-	background: $dnm_white;
+	background: $theme_white;
 	border-radius: 12px;
 
   a.accordion-toggle {
@@ -83,7 +83,7 @@ abbr[title],
 abbr[data-original-title] {
   cursor: auto;
   border:none;
-  color: $dnm_red;
+  color: $theme_red;
 }
 
 .btn {

@@ -2,23 +2,23 @@
 
 // Colors
 
-$dnm_blue:   rgb(2,79,163);
-$dnm_red:    #e83d33;
-$dnm_orange: #FF8D00;
-$dnm_green:  #157A49;
-$dnm_gray:   #394449;
-$dnm_black:  #1e2222;
-$dnm_white: rgb(250,250,250);
+$theme_blue:   #4d8fcc;
+$theme_red:    #e83d33;
+$theme_orange: #f79239;
+$theme_green:  #8fb862;
+$theme_gray:   #394449;
+$theme_black:  #343434;
+$theme_white: rgb(250,250,250);
 
-$blue:   $dnm_blue;
-$red:    $dnm_red;
+$blue:   $theme_blue;
+$red:    $theme_red;
 $green:  #157A49;
-$orange:  $dnm_orange;
-$gray:   $dnm_gray;
+$orange:  $theme_orange;
+$gray:   $theme_gray;
 $light-gray: #E2E2E2;
 $dark-gray: rgb(80,80,80);
-$black:  $dnm_black;
-$white: $dnm_white;
+$black:  $theme_black;
+$white: $theme_white;
 $pure-white: #fff;
 $pure-black: #000;
 
@@ -39,8 +39,8 @@ $twitter-blue: #33CCFF;
 $facebook-blue: #3B5998;
 $linkedin-blue: #4875B4;
 
-$link-color: $dnm_blue;
-$link_hover: darken($dnm_blue, 10%);
+$link-color: $theme_blue;
+$link_hover: darken($theme_blue, 10%);
 $icon: $gray160;
 $icon-hover: $gray80;
 
