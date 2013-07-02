@@ -17,14 +17,14 @@ class DomainTest < ActiveSupport::TestCase
       assert_equal @desks_instance, Domain.find_instance_by_request(request)
     end
 
-    should 'return PBCenter when no subdomain is pbcenter' do
+    should 'return PBCenter when subdomain is pbcenter' do
       request = mock(:subdomain => 'pbcenter', :domain => 'desksnear.me')
       assert_equal @pbcenter_instance, Domain.find_instance_by_request(request)
     end
 
     should 'return W for whoteldesks domain even if www is before' do
       @w_instance = FactoryGirl.create(:instance, :name => 'W')
-      @w_domain = FactoryGirl.create(:domain, :name => 'whoteldesks.com', :instance => @w_instance)
+      @w_domain = FactoryGirl.create(:domain, :name => 'www.whoteldesks.com', :instance => @w_instance)
       request = mock(:subdomain => '', :domain => 'whoteldesks.com')
       assert_equal @w_instance, Domain.find_instance_by_request(request)
     end
