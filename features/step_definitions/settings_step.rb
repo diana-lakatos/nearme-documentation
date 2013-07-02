@@ -11,7 +11,7 @@ When /^I select industries for #{capture_model}$/ do |model|
       select "Telecommunication"
     end
   elsif(object.class.to_s=='Company')
-    within('select[@id="user_companies_attributes_0_industry_ids"]') do
+    within('select[@id="company_industry_ids"]') do
       select "IT"
       select "Telecommunication"
     end
@@ -36,12 +36,12 @@ Then /^I should see company settings$/ do
 end
 
 When /^I update company settings$/ do
-  fill_in "user_companies_attributes_0_name", with: "Updated name"
-  fill_in "user_companies_attributes_0_url", with: "http://updated-url.example.com"
-  fill_in "user_companies_attributes_0_email", with: "updated@example.com"
-  fill_in "user_companies_attributes_0_description", with: "this is updated description"
-  fill_in "user_companies_attributes_0_mailing_address", with: "mail-update@example.com"
-  fill_in "user_companies_attributes_0_paypal_email", with: "paypal-update@example.com"
+  fill_in "company_name", with: "Updated name"
+  fill_in "company_url", with: "http://updated-url.example.com"
+  fill_in "company_email", with: "updated@example.com"
+  fill_in "company_description", with: "this is updated description"
+  fill_in "company_mailing_address", with: "mail-update@example.com"
+  fill_in "company_paypal_email", with: "paypal-update@example.com"
   within('form[@id="edit_company"]') do
     find('input[@type="submit"]').click
   end
