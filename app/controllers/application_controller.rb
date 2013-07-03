@@ -62,7 +62,6 @@ class ApplicationController < ActionController::Base
   end
 
   def require_ssl
-    current_instance
     return if Rails.env.development? || Rails.env.test?
 
     unless request.ssl?
