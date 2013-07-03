@@ -34,12 +34,27 @@ body {
 }
 
 .navbar-fixed-top,
+.navbar-inner {
+  border-width: 0 !important;
+}
+
+.navbar-fixed-top,
 .navbar-fixed-bottom {
   position: fixed;
   right: 0;
   left: 0;
   z-index: $nav-z-index;
   margin:0 !important;
+
+}
+
+.navbar-inner,
+.navbar-fixed-top .navbar-inner,
+.navbar-static-top .navbar-inner {
+  border: 0 !important;
+  -webkit-box-shadow: 0 0 0 transparent !important;
+  -moz-box-shadow: 0 0 0 transparent !important;
+  box-shadow: 0 0 0 transparent !important;
 }
 
 a[rel="tooltip"] {

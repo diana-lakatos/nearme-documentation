@@ -5,7 +5,7 @@
 $theme_blue:   #4d8fcc;
 $theme_red:    #e83d33;
 $theme_orange: #f79239;
-$theme_green:  #8fb862;
+$theme_green:  #009e60;
 $theme_gray:   #394449;
 $theme_black:  #343434;
 $theme_white: rgb(250,250,250);
@@ -46,6 +46,18 @@ $icon-hover: $gray80;
 
 $checkbox-radio-color: $blue;
 $checkbox-radio-neutral: $gray220;
+
+// Logo
+
+$theme_name: 'sjchamber';
+$theme_path: '/assets/theme/' + $theme_name + '/';
+$theme_hero: $theme_path + 'hero.jpg';
+$theme_logo_path: $theme_path + 'logo/';
+$theme_logo_width: 342px;
+$theme_icon: $theme_logo_path + 'icon.png';
+$theme_icon2x: $theme_logo_path + 'icon@2x.png';
+$theme_logo: $theme_logo_path + 'logo.png';
+$theme_logo2x: $theme_logo_path + 'logo@2x.png';
 
 // Transitions
 
