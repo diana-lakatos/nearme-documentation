@@ -32,7 +32,11 @@ module DashboardHelper
      total_seconds = time_of_event - current_time
      hours = (total_seconds/1.hour).floor
      minutes = ((total_seconds-hours.hours)/1.minute).floor
-     '%02d:%02d' % [hours, minutes]
+     if hours < 1 and minutes < 1
+       'less than minute'
+     else
+       '%02d:%02d' % [hours, minutes]
+     end
    end
 
    def manage_guests_time_to_expiry(reservation)

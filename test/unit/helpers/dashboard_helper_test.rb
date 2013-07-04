@@ -13,11 +13,11 @@ class DashboardHelperTest < ActionView::TestCase
 
   context '#time of expiry' do
     should "displays hours minutes and seconds left properly" do
-      assert_equal '5h 45m', time_to_expiry(Time.now + 5.hours + 45.minutes + 12.seconds)
+      assert_equal '05:45', time_to_expiry(Time.now + 5.hours + 45.minutes + 12.seconds)
     end
 
     should "displays minutes and seconds without hours" do
-      assert_equal '45m', time_to_expiry(Time.now + 45.minutes + 12.seconds)
+      assert_equal '00:45', time_to_expiry(Time.now + 45.minutes + 12.seconds)
     end
 
     should "displays seconds without hours and minutes" do
