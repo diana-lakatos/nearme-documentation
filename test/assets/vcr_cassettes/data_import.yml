@@ -1,0 +1,1727 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://maps.googleapis.com/maps/api/geocode/json?address=355%20S.%20Grand%20Ave,%20Suite%202450,%20Los%20Angeles,%20CA,%2090071&language=en&sensor=false
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Mon, 24 Jun 2013 20:06:22 GMT
+      Expires:
+      - Tue, 25 Jun 2013 20:06:22 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Access-Control-Allow-Origin:
+      - ! '*'
+      Server:
+      - mafe
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: US-ASCII
+      string: ! "{\n   \"results\" : [\n      {\n         \"address_components\" :
+        [\n            {\n               \"long_name\" : \"2450\",\n               \"short_name\"
+        : \"2450\",\n               \"types\" : [ \"subpremise\" ]\n            },\n
+        \           {\n               \"long_name\" : \"355\",\n               \"short_name\"
+        : \"355\",\n               \"types\" : [ \"street_number\" ]\n            },\n
+        \           {\n               \"long_name\" : \"South Grand Avenue\",\n               \"short_name\"
+        : \"S Grand Ave\",\n               \"types\" : [ \"route\" ]\n            },\n
+        \           {\n               \"long_name\" : \"Downtown\",\n               \"short_name\"
+        : \"Downtown\",\n               \"types\" : [ \"neighborhood\", \"political\"
+        ]\n            },\n            {\n               \"long_name\" : \"Los Angeles\",\n
+        \              \"short_name\" : \"Los Angeles\",\n               \"types\"
+        : [ \"locality\", \"political\" ]\n            },\n            {\n               \"long_name\"
+        : \"Los Angeles\",\n               \"short_name\" : \"Los Angeles\",\n               \"types\"
+        : [ \"administrative_area_level_3\", \"political\" ]\n            },\n            {\n
+        \              \"long_name\" : \"Los Angeles\",\n               \"short_name\"
+        : \"Los Angeles\",\n               \"types\" : [ \"administrative_area_level_2\",
+        \"political\" ]\n            },\n            {\n               \"long_name\"
+        : \"California\",\n               \"short_name\" : \"CA\",\n               \"types\"
+        : [ \"administrative_area_level_1\", \"political\" ]\n            },\n            {\n
+        \              \"long_name\" : \"United States\",\n               \"short_name\"
+        : \"US\",\n               \"types\" : [ \"country\", \"political\" ]\n            },\n
+        \           {\n               \"long_name\" : \"90071\",\n               \"short_name\"
+        : \"90071\",\n               \"types\" : [ \"postal_code\" ]\n            }\n
+        \        ],\n         \"formatted_address\" : \"355 South Grand Avenue #2450,
+        Los Angeles, CA 90071, USA\",\n         \"geometry\" : {\n            \"location\"
+        : {\n               \"lat\" : 34.05244160,\n               \"lng\" : -118.25252830\n
+        \           },\n            \"location_type\" : \"APPROXIMATE\",\n            \"viewport\"
+        : {\n               \"northeast\" : {\n                  \"lat\" : 34.05379058029150,\n
+        \                 \"lng\" : -118.2511793197085\n               },\n               \"southwest\"
+        : {\n                  \"lat\" : 34.05109261970851,\n                  \"lng\"
+        : -118.2538772802915\n               }\n            }\n         },\n         \"partial_match\"
+        : true,\n         \"types\" : [ \"subpremise\" ]\n      }\n   ],\n   \"status\"
+        : \"OK\"\n}\n"
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:22 GMT
+- request:
+    method: get
+    uri: http://maps.googleapis.com/maps/api/geocode/json?address=520%20Broadway,%20Suite%20350,%20Santa%20Monica,%20CA,%2090401&language=en&sensor=false
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Mon, 24 Jun 2013 20:06:23 GMT
+      Expires:
+      - Tue, 25 Jun 2013 20:06:23 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Access-Control-Allow-Origin:
+      - ! '*'
+      Server:
+      - mafe
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: US-ASCII
+      string: ! "{\n   \"results\" : [\n      {\n         \"address_components\" :
+        [\n            {\n               \"long_name\" : \"350\",\n               \"short_name\"
+        : \"350\",\n               \"types\" : [ \"subpremise\" ]\n            },\n
+        \           {\n               \"long_name\" : \"520\",\n               \"short_name\"
+        : \"520\",\n               \"types\" : [ \"street_number\" ]\n            },\n
+        \           {\n               \"long_name\" : \"Broadway\",\n               \"short_name\"
+        : \"Broadway\",\n               \"types\" : [ \"route\" ]\n            },\n
+        \           {\n               \"long_name\" : \"Downtown\",\n               \"short_name\"
+        : \"Downtown\",\n               \"types\" : [ \"neighborhood\", \"political\"
+        ]\n            },\n            {\n               \"long_name\" : \"Santa Monica\",\n
+        \              \"short_name\" : \"Santa Monica\",\n               \"types\"
+        : [ \"locality\", \"political\" ]\n            },\n            {\n               \"long_name\"
+        : \"Los Angeles\",\n               \"short_name\" : \"Los Angeles\",\n               \"types\"
+        : [ \"administrative_area_level_2\", \"political\" ]\n            },\n            {\n
+        \              \"long_name\" : \"California\",\n               \"short_name\"
+        : \"CA\",\n               \"types\" : [ \"administrative_area_level_1\", \"political\"
+        ]\n            },\n            {\n               \"long_name\" : \"United
+        States\",\n               \"short_name\" : \"US\",\n               \"types\"
+        : [ \"country\", \"political\" ]\n            },\n            {\n               \"long_name\"
+        : \"90401\",\n               \"short_name\" : \"90401\",\n               \"types\"
+        : [ \"postal_code\" ]\n            }\n         ],\n         \"formatted_address\"
+        : \"520 Broadway #350, Santa Monica, CA 90401, USA\",\n         \"geometry\"
+        : {\n            \"location\" : {\n               \"lat\" : 34.01645210,\n
+        \              \"lng\" : -118.49174920\n            },\n            \"location_type\"
+        : \"APPROXIMATE\",\n            \"viewport\" : {\n               \"northeast\"
+        : {\n                  \"lat\" : 34.01780108029150,\n                  \"lng\"
+        : -118.4904002197085\n               },\n               \"southwest\" : {\n
+        \                 \"lat\" : 34.01510311970850,\n                  \"lng\"
+        : -118.4930981802915\n               }\n            }\n         },\n         \"partial_match\"
+        : true,\n         \"types\" : [ \"subpremise\" ]\n      }\n   ],\n   \"status\"
+        : \"OK\"\n}\n"
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:23 GMT
+- request:
+    method: get
+    uri: https://api.dropbox.com/1/metadata/sandbox/PBCenter/355?
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="r6crH61gZogvtmioxJfUO3Z444ywN1TpRdpjuz5NY",
+        oauth_signature="m60wJmb6Ij5GRi1heZ15QFVHH2U%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104383", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:24 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '79'
+      X-Dropbox-Request-Id:
+      - 4077bb9eae034721
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - f5a726e68f57e00aa5179bc77da8e239
+    body:
+      encoding: US-ASCII
+      string: ! '{"hash": "62885662d2298a12242cc3aa80afe85e", "revision": 394, "rev":
+        "18a11515adf", "thumb_exists": false, "bytes": 0, "modified": "Sun, 16 Jun
+        2013 18:21:22 +0000", "path": "/PBCenter/355", "is_dir": true, "icon": "folder",
+        "root": "app_folder", "contents": [{"revision": 397, "rev": "18d11515adf",
+        "thumb_exists": true, "bytes": 1783588, "modified": "Sun, 16 Jun 2013 18:21:22
+        +0000", "client_mtime": "Thu, 08 Apr 2010 00:53:48 +0000", "path": "/PBCenter/355/355-build.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "1.7 MB"}, {"revision": 396, "rev": "18c11515adf", "thumb_exists":
+        true, "bytes": 1278343, "modified": "Sun, 16 Jun 2013 18:21:22 +0000", "client_mtime":
+        "Thu, 03 Nov 2011 20:53:30 +0000", "path": "/PBCenter/355/355-ConferenceRoom.JPG",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "1.2 MB"}, {"revision": 395, "rev": "18b11515adf", "thumb_exists":
+        true, "bytes": 463267, "modified": "Sun, 16 Jun 2013 18:21:22 +0000", "client_mtime":
+        "Fri, 08 Jun 2012 21:00:40 +0000", "path": "/PBCenter/355/355-Day Office-8.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "452.4 KB"}, {"revision": 459, "rev": "1cb11515adf",
+        "thumb_exists": true, "bytes": 1297246, "modified": "Sun, 16 Jun 2013 18:21:30
+        +0000", "client_mtime": "Thu, 03 Nov 2011 21:11:42 +0000", "path": "/PBCenter/355/355-DayOffice1.JPG",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "1.2 MB"}, {"revision": 454, "rev": "1c611515adf", "thumb_exists":
+        true, "bytes": 1122398, "modified": "Sun, 16 Jun 2013 18:21:30 +0000", "client_mtime":
+        "Thu, 03 Nov 2011 21:00:32 +0000", "path": "/PBCenter/355/355-DayOffice2.JPG",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "1.1 MB"}, {"revision": 453, "rev": "1c511515adf", "thumb_exists":
+        true, "bytes": 907352, "modified": "Sun, 16 Jun 2013 18:21:30 +0000", "client_mtime":
+        "Fri, 08 Jun 2012 21:00:40 +0000", "path": "/PBCenter/355/355-KPMG Building-0.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "886.1 KB"}, {"revision": 451, "rev": "1c311515adf",
+        "thumb_exists": true, "bytes": 784554, "modified": "Sun, 16 Jun 2013 18:21:30
+        +0000", "client_mtime": "Fri, 08 Jun 2012 21:00:40 +0000", "path": "/PBCenter/355/355-Large
+        Conference Room-4.jpg", "is_dir": false, "icon": "page_white_picture", "root":
+        "dropbox", "mime_type": "image/jpeg", "size": "766.2 KB"}, {"revision": 460,
+        "rev": "1cc11515adf", "thumb_exists": true, "bytes": 1302819, "modified":
+        "Sun, 16 Jun 2013 18:21:30 +0000", "client_mtime": "Thu, 03 Nov 2011 21:05:12
+        +0000", "path": "/PBCenter/355/355-MeetingRoom.JPG", "is_dir": false, "icon":
+        "page_white_picture", "root": "dropbox", "mime_type": "image/jpeg", "size":
+        "1.2 MB"}, {"revision": 461, "rev": "1cd11515adf", "thumb_exists": true, "bytes":
+        1327002, "modified": "Sun, 16 Jun 2013 18:21:30 +0000", "client_mtime": "Thu,
+        03 Nov 2011 20:56:14 +0000", "path": "/PBCenter/355/355-Reception.JPG", "is_dir":
+        false, "icon": "page_white_picture", "root": "dropbox", "mime_type": "image/jpeg",
+        "size": "1.3 MB"}, {"revision": 463, "rev": "1cf11515adf", "thumb_exists":
+        true, "bytes": 1373779, "modified": "Sun, 16 Jun 2013 18:21:30 +0000", "client_mtime":
+        "Thu, 03 Nov 2011 21:10:10 +0000", "path": "/PBCenter/355/355-SampleOffice.JPG",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "1.3 MB"}, {"revision": 465, "rev": "1d111515adf", "thumb_exists":
+        true, "bytes": 1404628, "modified": "Sun, 16 Jun 2013 18:21:30 +0000", "client_mtime":
+        "Thu, 03 Nov 2011 21:14:36 +0000", "path": "/PBCenter/355/355-WaitingArea.JPG",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "1.3 MB"}, {"revision": 464, "rev": "1d011515adf", "thumb_exists":
+        true, "bytes": 1391189, "modified": "Sun, 16 Jun 2013 18:21:30 +0000", "client_mtime":
+        "Thu, 03 Nov 2011 21:03:02 +0000", "path": "/PBCenter/355/355-WindowDayOffice.JPG",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "1.3 MB"}], "size": "0 bytes"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:24 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/355/355-build.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="EYDKDC7fWzfgHUkeL5Eg4EpRMckLlgn6thCJH8a7qs",
+        oauth_signature="mwwQHMkYTDCxBSV2%2BeLfll%2B8jz0%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104384", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:25 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '88'
+      X-Dropbox-Request-Id:
+      - eaf9ea9d14b7f6e4
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 7dba0e22fa183d414253ceda8905486f
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/tcbolafuucfcnvf/Apps/DesksNear.Me/PBCenter/355/355-build.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:25 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:25 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/355/355-ConferenceRoom.JPG
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="5S5iq5nd3mdyEr2xFkFS8XKLFCQuVOBy647t2Y3kzM",
+        oauth_signature="HPFFtru6aADOPXu5hDQ%2FRMeETCQ%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104385", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:26 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '88'
+      X-Dropbox-Request-Id:
+      - cfce6dff915c72f0
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 2c56ccaed5c4a391fc4b6baa6efbd516
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/p4lin89l8e8ed39/Apps/DesksNear.Me/PBCenter/355/355-ConferenceRoom.JPG",
+        "expires": "Tue, 25 Jun 2013 00:06:26 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:26 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/355/355-Day%20Office-8.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="3pnk8prEYXYeHVDh3WBxzO7Y2BzUzN1DfoMFJ1TdFm0",
+        oauth_signature="hJ6I0SRyyWOXbRR0oDMH6gMZtbw%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104386", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:27 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '94'
+      X-Dropbox-Request-Id:
+      - b2cb59c166e1b842
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 20a108dd9532353b81b10a3dd311a18a
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/mcnz4n9e32hwv1c/Apps/DesksNear.Me/PBCenter/355/355-Day%20Office-8.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:27 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:27 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/355/355-DayOffice1.JPG
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="KnHKPs7k3EdpgkwpHoft6j4wsSVzczAofmICIHZYtlE",
+        oauth_signature="8tsiDg6LYHqwNrKHs4XYdLDMU0g%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104387", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:28 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '104'
+      X-Dropbox-Request-Id:
+      - f5aa32311b477f97
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 6fce1fd9138fe54971bfff3925ba7a97
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/wj8q6sfcltt8zso/Apps/DesksNear.Me/PBCenter/355/355-DayOffice1.JPG",
+        "expires": "Tue, 25 Jun 2013 00:06:28 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:28 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/355/355-DayOffice2.JPG
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="ITWtS9L824u9pqDIhryQSSPath4EeWxf1ijUVw3mYc",
+        oauth_signature="TAi0Gw17ExO9%2FPlJFALRNVNrg54%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104388", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:29 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '86'
+      X-Dropbox-Request-Id:
+      - 921a31231ff86203
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - bfe59f87611afa9cd5123588f094ff4e
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/l79ibmi279180gz/Apps/DesksNear.Me/PBCenter/355/355-DayOffice2.JPG",
+        "expires": "Tue, 25 Jun 2013 00:06:29 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:29 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/355/355-KPMG%20Building-0.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="8iGHN0wm1nTQzWnmVedRi91AN3RiKAbm8WNYLe6FSQ",
+        oauth_signature="gvIfXX3KfNJ3arvx8Z6C0BzmUlY%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104389", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:30 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '88'
+      X-Dropbox-Request-Id:
+      - 69b57f35b2f6bcd8
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 9208a83b3e73428292143043257a85c2
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/a63au5s6esmpgxh/Apps/DesksNear.Me/PBCenter/355/355-KPMG%20Building-0.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:30 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:30 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/355/355-Large%20Conference%20Room-4.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="kUQmGMDplt8yVojyJLgQqrMMUmMRcofzSXLOvJNtNk",
+        oauth_signature="60asp0INZlE77M6HmvKhVq5pLl8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104390", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:31 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '90'
+      X-Dropbox-Request-Id:
+      - cb42abb195244c11
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 9816cbe837fd00dd86c2b41eac02ed2f
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/hbt7htzdrtluqq6/Apps/DesksNear.Me/PBCenter/355/355-Large%20Conference%20Room-4.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:31 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:31 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/355/355-MeetingRoom.JPG
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="6Ufi7cbJ5kZJuqdOddfxnEJfXjm5u44gxJRlAaYfNo",
+        oauth_signature="4mAyQrSnuKUd5P8eaqBzwFgWXsA%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104391", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:32 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '100'
+      X-Dropbox-Request-Id:
+      - ca5b5347ca3a0166
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - d144d11e95f73c75fe0d157cebdb73fe
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/jjnf4w9ndzprw15/Apps/DesksNear.Me/PBCenter/355/355-MeetingRoom.JPG",
+        "expires": "Tue, 25 Jun 2013 00:06:32 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:32 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/355/355-Reception.JPG
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="KvtIzkMELFV1fIpQllVkX72vKErtH1sS1Fs3HFrZ5M",
+        oauth_signature="%2BOJlEfJRok5yBoLtMMZN1FWQPlk%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104392", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:33 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '70'
+      X-Dropbox-Request-Id:
+      - 39055707d99cc6de
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - e148eb57898b07635dd800274e3d3e5c
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/67rh625cpaslwmi/Apps/DesksNear.Me/PBCenter/355/355-Reception.JPG",
+        "expires": "Tue, 25 Jun 2013 00:06:33 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:33 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/355/355-SampleOffice.JPG
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="IHRlevqG5GbBREFpTEG56ZtE2OFxEfNz3qx7Hul8rQ",
+        oauth_signature="bifGyCRmPfOGAH%2B0eOi9hdFRqOQ%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104393", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:34 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '70'
+      X-Dropbox-Request-Id:
+      - 04a0ed7b0bd426bd
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 62bc4890a091fa31169b6e43438983cd
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/mpgt3x7o3br81v3/Apps/DesksNear.Me/PBCenter/355/355-SampleOffice.JPG",
+        "expires": "Tue, 25 Jun 2013 00:06:34 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:34 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/355/355-WaitingArea.JPG
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="2pGmLmWUxYONgDvcVqF3CBWIsysRdZ17c00Vp8fsBg",
+        oauth_signature="sG4Ss32bh1t5kCeytMA%2FEXcLri0%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104394", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:35 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '100'
+      X-Dropbox-Request-Id:
+      - fedde69d667f579c
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - bac8fd52a454d66bbc3f4e777c2e553c
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/60ay8b9qunrvxzt/Apps/DesksNear.Me/PBCenter/355/355-WaitingArea.JPG",
+        "expires": "Tue, 25 Jun 2013 00:06:35 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:35 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/355/355-WindowDayOffice.JPG
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="W94OrsbpSlTFFUWucerC2nMhcXqPikx9QuboSgnrLGk",
+        oauth_signature="HB9r%2Bj8OYYK%2BEJ%2BePdFkQ2QTuio%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104395", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:36 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '92'
+      X-Dropbox-Request-Id:
+      - f7d80411685404d0
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 528bcf939fb30aac298364549af0544b
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/wifqahtex5aamyp/Apps/DesksNear.Me/PBCenter/355/355-WindowDayOffice.JPG",
+        "expires": "Tue, 25 Jun 2013 00:06:36 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:36 GMT
+- request:
+    method: get
+    uri: http://maps.googleapis.com/maps/api/geocode/json?address=520%20Broadway,%20Suite%20350,%20Santa%20Monica,%20CA,%2090401&language=en&sensor=false
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Mon, 24 Jun 2013 20:06:36 GMT
+      Expires:
+      - Tue, 25 Jun 2013 20:06:36 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Access-Control-Allow-Origin:
+      - ! '*'
+      Server:
+      - mafe
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: US-ASCII
+      string: ! "{\n   \"results\" : [\n      {\n         \"address_components\" :
+        [\n            {\n               \"long_name\" : \"350\",\n               \"short_name\"
+        : \"350\",\n               \"types\" : [ \"subpremise\" ]\n            },\n
+        \           {\n               \"long_name\" : \"520\",\n               \"short_name\"
+        : \"520\",\n               \"types\" : [ \"street_number\" ]\n            },\n
+        \           {\n               \"long_name\" : \"Broadway\",\n               \"short_name\"
+        : \"Broadway\",\n               \"types\" : [ \"route\" ]\n            },\n
+        \           {\n               \"long_name\" : \"Downtown\",\n               \"short_name\"
+        : \"Downtown\",\n               \"types\" : [ \"neighborhood\", \"political\"
+        ]\n            },\n            {\n               \"long_name\" : \"Santa Monica\",\n
+        \              \"short_name\" : \"Santa Monica\",\n               \"types\"
+        : [ \"locality\", \"political\" ]\n            },\n            {\n               \"long_name\"
+        : \"Los Angeles\",\n               \"short_name\" : \"Los Angeles\",\n               \"types\"
+        : [ \"administrative_area_level_2\", \"political\" ]\n            },\n            {\n
+        \              \"long_name\" : \"California\",\n               \"short_name\"
+        : \"CA\",\n               \"types\" : [ \"administrative_area_level_1\", \"political\"
+        ]\n            },\n            {\n               \"long_name\" : \"United
+        States\",\n               \"short_name\" : \"US\",\n               \"types\"
+        : [ \"country\", \"political\" ]\n            },\n            {\n               \"long_name\"
+        : \"90401\",\n               \"short_name\" : \"90401\",\n               \"types\"
+        : [ \"postal_code\" ]\n            }\n         ],\n         \"formatted_address\"
+        : \"520 Broadway #350, Santa Monica, CA 90401, USA\",\n         \"geometry\"
+        : {\n            \"location\" : {\n               \"lat\" : 34.01645210,\n
+        \              \"lng\" : -118.49174920\n            },\n            \"location_type\"
+        : \"APPROXIMATE\",\n            \"viewport\" : {\n               \"northeast\"
+        : {\n                  \"lat\" : 34.01780108029150,\n                  \"lng\"
+        : -118.4904002197085\n               },\n               \"southwest\" : {\n
+        \                 \"lat\" : 34.01510311970850,\n                  \"lng\"
+        : -118.4930981802915\n               }\n            }\n         },\n         \"partial_match\"
+        : true,\n         \"types\" : [ \"subpremise\" ]\n      }\n   ],\n   \"status\"
+        : \"OK\"\n}\n"
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:36 GMT
+- request:
+    method: get
+    uri: https://api.dropbox.com/1/metadata/sandbox/PBCenter/SM1?
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="AOsRB72eQEg02lXx3uuX3npfhOpMDsEJM1lNJDs",
+        oauth_signature="rQJDlgweJL1xkUGGnhYyCLgEWjk%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104396", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:37 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '60'
+      X-Dropbox-Request-Id:
+      - 8bd000e385270651
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - c270f3c7dde75425b549e52c3c6d9dc7
+    body:
+      encoding: US-ASCII
+      string: ! '{"hash": "f739057ddaaf7cdd853467ff710b5caa", "revision": 686, "rev":
+        "2ae11515adf", "thumb_exists": false, "bytes": 0, "modified": "Sun, 16 Jun
+        2013 18:21:48 +0000", "path": "/PBCenter/SM1", "is_dir": true, "icon": "folder",
+        "root": "app_folder", "contents": [{"revision": 703, "rev": "2bf11515adf",
+        "thumb_exists": true, "bytes": 20141, "modified": "Sun, 16 Jun 2013 18:21:48
+        +0000", "client_mtime": "Thu, 17 Jan 2008 21:42:54 +0000", "path": "/PBCenter/SM1/SM1-Build2.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "19.7 KB"}, {"revision": 705, "rev": "2c111515adf",
+        "thumb_exists": true, "bytes": 20385, "modified": "Sun, 16 Jun 2013 18:21:48
+        +0000", "client_mtime": "Thu, 17 Jan 2008 21:42:54 +0000", "path": "/PBCenter/SM1/SM1-Conf1.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "19.9 KB"}, {"revision": 700, "rev": "2bc11515adf",
+        "thumb_exists": true, "bytes": 18080, "modified": "Sun, 16 Jun 2013 18:21:48
+        +0000", "client_mtime": "Thu, 17 Jan 2008 21:42:54 +0000", "path": "/PBCenter/SM1/SM1-Mtg.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "17.7 KB"}, {"revision": 745, "rev": "2e911515adf",
+        "thumb_exists": true, "bytes": 59255, "modified": "Sun, 16 Jun 2013 18:21:48
+        +0000", "client_mtime": "Tue, 21 Oct 2008 23:06:00 +0000", "path": "/PBCenter/SM1/SM1-Office1.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "57.9 KB"}, {"revision": 704, "rev": "2c011515adf",
+        "thumb_exists": true, "bytes": 20274, "modified": "Sun, 16 Jun 2013 18:21:48
+        +0000", "client_mtime": "Thu, 17 Jan 2008 21:42:54 +0000", "path": "/PBCenter/SM1/SM1-Recpt1.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "19.8 KB"}], "size": "0 bytes"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:37 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/SM1/SM1-Build2.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="UzCemAly39ibo1tfZkIS5AbOU28V0XxTYdvzot1XZQ",
+        oauth_signature="XurYXR27TNYGoZEb7MAn36aCvnE%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104397", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:38 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '99'
+      X-Dropbox-Request-Id:
+      - f46eef59ddfa11e2
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 1c862a39e0f096ff40ddd1afab32ebdd
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/uz0kesb8r8eknny/Apps/DesksNear.Me/PBCenter/SM1/SM1-Build2.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:38 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:38 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/SM1/SM1-Conf1.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="qbLx9K8RQYp1dwP6JNlawba7XyuaCyruHX2Q5Sbdw",
+        oauth_signature="A6YKEb4xExiFa%2F5NtPpch5L3YI4%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104398", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:39 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '77'
+      X-Dropbox-Request-Id:
+      - b089ff7ded5cdef1
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - f1415092add8f20294e07c9dca5f2e3c
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/9rsnehhn1l9vlqd/Apps/DesksNear.Me/PBCenter/SM1/SM1-Conf1.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:39 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:39 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/SM1/SM1-Mtg.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="LYR86bvUraY4uOU2C2dTcAtGATmgHiZp5agvhPyfU",
+        oauth_signature="t3EsFtF60wZZs9ai6g1XbGHhe%2Bg%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104399", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:40 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '70'
+      X-Dropbox-Request-Id:
+      - 1b6b8bbfd4145dc4
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - a5e3d110e7bae299ebb9860731335119
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/fk91zcxvroxnv04/Apps/DesksNear.Me/PBCenter/SM1/SM1-Mtg.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:40 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:40 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/SM1/SM1-Office1.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="FqjTyJCrJyfjVNVNuaWWggfUjB78h6aQNmSrwMGRf2U",
+        oauth_signature="DU5k2nD90m4ETThEWDrjhfp3WgM%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104400", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:41 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '100'
+      X-Dropbox-Request-Id:
+      - 3f95f4f74cb2785c
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - be0c61ba4c424f554a81af5acc4cfe6a
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/zrjtkke992067ci/Apps/DesksNear.Me/PBCenter/SM1/SM1-Office1.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:41 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:41 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/SM1/SM1-Recpt1.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="ZdyuM6dciPpSvIeaCgbPlhqJzd1IQj0shEHKuiI2Q",
+        oauth_signature="FN1AtnaN5CWavzr%2FN05cyzefgzA%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104401", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:42 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '89'
+      X-Dropbox-Request-Id:
+      - bd7cb56c9914a9d6
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 241415103fa8ba2c27922f1470326e30
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/a8peyz7yxzgbwdj/Apps/DesksNear.Me/PBCenter/SM1/SM1-Recpt1.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:42 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:42 GMT
+- request:
+    method: get
+    uri: http://maps.googleapis.com/maps/api/geocode/json?address=One%20World%20Trade%20Center,%20Suite%20800,%20Long%20Beach,%20CA,%2090802&language=en&sensor=false
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Mon, 24 Jun 2013 20:06:42 GMT
+      Expires:
+      - Tue, 25 Jun 2013 20:06:42 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Access-Control-Allow-Origin:
+      - ! '*'
+      Server:
+      - mafe
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: US-ASCII
+      string: ! "{\n   \"results\" : [\n      {\n         \"address_components\" :
+        [\n            {\n               \"long_name\" : \"800\",\n               \"short_name\"
+        : \"800\",\n               \"types\" : [ \"subpremise\" ]\n            },\n
+        \           {\n               \"long_name\" : \"1\",\n               \"short_name\"
+        : \"1\",\n               \"types\" : [ \"street_number\" ]\n            },\n
+        \           {\n               \"long_name\" : \"World Trade Center\",\n               \"short_name\"
+        : \"World Trade Center\",\n               \"types\" : [ \"route\" ]\n            },\n
+        \           {\n               \"long_name\" : \"West Gateway\",\n               \"short_name\"
+        : \"West Gateway\",\n               \"types\" : [ \"neighborhood\", \"political\"
+        ]\n            },\n            {\n               \"long_name\" : \"Downtown\",\n
+        \              \"short_name\" : \"Downtown\",\n               \"types\" :
+        [ \"sublocality\", \"political\" ]\n            },\n            {\n               \"long_name\"
+        : \"Long Beach\",\n               \"short_name\" : \"Long Beach\",\n               \"types\"
+        : [ \"locality\", \"political\" ]\n            },\n            {\n               \"long_name\"
+        : \"Long Beach-Lakewood\",\n               \"short_name\" : \"Long Beach-Lakewood\",\n
+        \              \"types\" : [ \"administrative_area_level_3\", \"political\"
+        ]\n            },\n            {\n               \"long_name\" : \"Los Angeles\",\n
+        \              \"short_name\" : \"Los Angeles\",\n               \"types\"
+        : [ \"administrative_area_level_2\", \"political\" ]\n            },\n            {\n
+        \              \"long_name\" : \"California\",\n               \"short_name\"
+        : \"CA\",\n               \"types\" : [ \"administrative_area_level_1\", \"political\"
+        ]\n            },\n            {\n               \"long_name\" : \"United
+        States\",\n               \"short_name\" : \"US\",\n               \"types\"
+        : [ \"country\", \"political\" ]\n            },\n            {\n               \"long_name\"
+        : \"90802\",\n               \"short_name\" : \"90802\",\n               \"types\"
+        : [ \"postal_code\" ]\n            }\n         ],\n         \"formatted_address\"
+        : \"1 World Trade Center #800, Long Beach, CA 90802, USA\",\n         \"geometry\"
+        : {\n            \"location\" : {\n               \"lat\" : 33.7678970,\n
+        \              \"lng\" : -118.1997640\n            },\n            \"location_type\"
+        : \"APPROXIMATE\",\n            \"viewport\" : {\n               \"northeast\"
+        : {\n                  \"lat\" : 33.76924598029149,\n                  \"lng\"
+        : -118.1984150197085\n               },\n               \"southwest\" : {\n
+        \                 \"lat\" : 33.76654801970850,\n                  \"lng\"
+        : -118.2011129802915\n               }\n            }\n         },\n         \"partial_match\"
+        : true,\n         \"types\" : [ \"subpremise\" ]\n      }\n   ],\n   \"status\"
+        : \"OK\"\n}\n"
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:42 GMT
+- request:
+    method: get
+    uri: https://api.dropbox.com/1/metadata/sandbox/PBCenter/WTC?
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="j1p4lq5zvA1KZLbnE6x3u5MvHXjmzJjZoOQPv4jeY0Y",
+        oauth_signature="2pnM07jmh%2B5o1YeaMFDAQGQ1OZg%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104403", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:43 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '51'
+      X-Dropbox-Request-Id:
+      - 06a71bc86afe808b
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 0ad3ff7155aa3024985a6ad8dd5ed972
+    body:
+      encoding: US-ASCII
+      string: ! '{"hash": "f162c94d6be17ca16e0b87b632e4ba57", "revision": 679, "rev":
+        "2a711515adf", "thumb_exists": false, "bytes": 0, "modified": "Sun, 16 Jun
+        2013 18:21:48 +0000", "path": "/PBCenter/WTC", "is_dir": true, "icon": "folder",
+        "root": "app_folder", "contents": [{"revision": 744, "rev": "2e811515adf",
+        "thumb_exists": true, "bytes": 57660, "modified": "Sun, 16 Jun 2013 18:21:48
+        +0000", "client_mtime": "Wed, 14 Oct 2009 01:12:00 +0000", "path": "/PBCenter/WTC/WTC-build.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "56.3 KB"}, {"revision": 767, "rev": "2ff11515adf",
+        "thumb_exists": true, "bytes": 181233, "modified": "Sun, 16 Jun 2013 18:21:48
+        +0000", "client_mtime": "Tue, 24 Mar 2009 21:58:02 +0000", "path": "/PBCenter/WTC/WTC-conf1.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "177 KB"}, {"revision": 763, "rev": "2fb11515adf", "thumb_exists":
+        true, "bytes": 153867, "modified": "Sun, 16 Jun 2013 18:21:48 +0000", "client_mtime":
+        "Tue, 24 Mar 2009 21:58:02 +0000", "path": "/PBCenter/WTC/WTC-kitch1.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "150.3 KB"}, {"revision": 762, "rev": "2fa11515adf",
+        "thumb_exists": true, "bytes": 147683, "modified": "Sun, 16 Jun 2013 18:21:48
+        +0000", "client_mtime": "Tue, 24 Mar 2009 21:58:02 +0000", "path": "/PBCenter/WTC/WTC-office1.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "144.2 KB"}, {"revision": 761, "rev": "2f911515adf",
+        "thumb_exists": true, "bytes": 111918, "modified": "Sun, 16 Jun 2013 18:21:48
+        +0000", "client_mtime": "Tue, 24 Mar 2009 21:58:02 +0000", "path": "/PBCenter/WTC/WTC-recpt1.jpg",
+        "is_dir": false, "icon": "page_white_picture", "root": "dropbox", "mime_type":
+        "image/jpeg", "size": "109.3 KB"}], "size": "0 bytes"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:43 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/WTC/WTC-build.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="75l3usqhmRmXwODo47SEQ8BBJrhYJx6JGJOgaXN2K9E",
+        oauth_signature="tDHsalONBgscKJoRFdfQWLX00SI%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104403", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:44 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '77'
+      X-Dropbox-Request-Id:
+      - 6728be6110e7f8b6
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - cd0ddde832a93507aab8f1f5b7e651fc
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/uhjtaucpc20yzg9/Apps/DesksNear.Me/PBCenter/WTC/WTC-build.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:44 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:44 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/WTC/WTC-conf1.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="k6cY2iwolmDxADAJeaiiam43xPrGokrfws67Fp5jTs4",
+        oauth_signature="gJD9Ii%2FAS05wAz8zOH04DXfTazo%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104404", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:45 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '83'
+      X-Dropbox-Request-Id:
+      - 8c80ee46752e3f87
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 65cd2488985f6dfcdcd20b6295926ab0
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/82efubj2dd7jtdn/Apps/DesksNear.Me/PBCenter/WTC/WTC-conf1.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:45 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:45 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/WTC/WTC-kitch1.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="X4rC1NEj1vlXhk3jjdR8sVxknVL7hfLmLPwWoaDXFOE",
+        oauth_signature="qBR1otcT5GkHfZcTWlUD6RtoLoc%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104405", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:46 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '89'
+      X-Dropbox-Request-Id:
+      - d20d3c53c1bcd731
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 6d2d5ec277c0a50562b105831aad37e8
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/9v5o53k0hj76q1f/Apps/DesksNear.Me/PBCenter/WTC/WTC-kitch1.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:46 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:46 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/WTC/WTC-office1.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="VqzByBvWKklGORML4WzKQ8ob1Jg8SNTMw0ZC6ywOk",
+        oauth_signature="CkbYvZk%2FOmUedqEyjjaR3%2FUe2W8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104406", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:47 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '97'
+      X-Dropbox-Request-Id:
+      - a12d5b373bc92744
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 4b7c249f30d36c2369f1c89ccd1d599e
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/p6t9rknlkz4jcfz/Apps/DesksNear.Me/PBCenter/WTC/WTC-office1.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:47 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:47 GMT
+- request:
+    method: post
+    uri: https://api.dropbox.com/1/media/sandbox/PBCenter/WTC/WTC-recpt1.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - OAuth gem v0.4.7
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Authorization:
+      - OAuth oauth_consumer_key="bgce8czxteo40fp", oauth_nonce="tIqcbZsZE4r21IkiGORvY8MfUFZ61ycG2qH1oKV72Y",
+        oauth_signature="ichHymcZLJq1y1EV2LeavEwI9XE%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1372104407", oauth_token="4uchsd05oy2fgxa", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 24 Jun 2013 20:06:48 GMT
+      Content-Type:
+      - text/javascript
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Server-Response-Time:
+      - '92'
+      X-Dropbox-Request-Id:
+      - 9f46eeda6d812aeb
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dropbox-Http-Protocol:
+      - None
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Requestid:
+      - 08bf4c60ee0cb68d563351224a53b5e2
+    body:
+      encoding: US-ASCII
+      string: ! '{"url": "https://dl.dropboxusercontent.com/1/view/fdswnamto7cap3f/Apps/DesksNear.Me/PBCenter/WTC/WTC-recpt1.jpg",
+        "expires": "Tue, 25 Jun 2013 00:06:48 +0000"}'
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 20:06:48 GMT
+recorded_with: VCR 2.4.0

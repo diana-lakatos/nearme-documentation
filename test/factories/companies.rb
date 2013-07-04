@@ -4,6 +4,7 @@ FactoryGirl.define do
     sequence(:email) { |n| "company-#{n}@example.com" }
     description "Aliquid eos ab quia officiis sequi."
     creator
+    instance
     url "http://google.com"
 
     before(:create) do |company|

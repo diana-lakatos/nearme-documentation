@@ -55,7 +55,12 @@ DesksnearMe::Application.routes.draw do
 
   namespace :manage do
 
+    resources :companies, :only => [:edit, :update]
+
     resources :locations do
+      collection do
+        get 'data_import'
+      end
       resources :listings
     end
 

@@ -18,7 +18,7 @@ class SearchController < ApplicationController
   end
 
   def query
-    @query ||= search.location_string
+    @query ||= search.query
   end
 
   def listings

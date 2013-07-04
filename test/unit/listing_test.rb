@@ -2,19 +2,26 @@ require 'test_helper'
 
 class ListingTest < ActiveSupport::TestCase
 
-  should belong_to(:location)
-  should belong_to(:listing_type)
-  should have_many(:reservations)
+  context 'desksnearme instance' do
+    subject do
+      @listing = FactoryGirl.create(:listing)
+    end
 
-  should validate_presence_of(:location)
-  should validate_presence_of(:name)
-  should validate_presence_of(:description)
-  should validate_presence_of(:quantity)
-  should validate_presence_of(:listing_type_id)
-  should validate_numericality_of(:quantity)
+    should belong_to(:location)
+    should belong_to(:listing_type)
+    should have_many(:reservations)
 
-  should allow_value('x' * 250).for(:description)
-  should_not allow_value('x' * 251).for(:description)
+    should validate_presence_of(:location)
+    should validate_presence_of(:name)
+    should validate_presence_of(:description)
+    should validate_presence_of(:quantity)
+    should validate_presence_of(:listing_type_id)
+    should validate_numericality_of(:quantity)
+
+    should allow_value('x' * 250).for(:description)
+    should_not allow_value('x' * 251).for(:description)
+
+  end
 
   setup do
     @listing = FactoryGirl.build(:listing)
