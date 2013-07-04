@@ -48,11 +48,11 @@ When /^I submit the form$/ do
 end
 
 When /^I click edit icon$/ do
-  page.find('.edit-link').click
+  page.find('.ico-edit').click
 end
 
 When /^I click edit listing icon$/ do
-  page.find('.listing .edit-link').click
+  page.find('.listing .ico-edit').click
 end
 
 When /^I click delete (location|listing) link$/ do |model|

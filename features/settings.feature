@@ -15,13 +15,13 @@ Feature: A user can edit their settings
     Given a company exists with creator: the user
     And I go to the settings page
     When I select industries for company
-    Then Company should be connected to selected industries
+    Then company should be connected to selected industries
 
   @javascript
   Scenario: A user with company will see settings
     Given a company exists with creator: the user
       And I am on the home page
-    When I follow "Dashboard"
+    When I follow "Manage"
     Then I should see "Settings"
 
   Scenario: A user can update existing company
@@ -33,5 +33,5 @@ Feature: A user can edit their settings
   @javascript
   Scenario: A user without company will not see settings
     Given I am on the home page
-    When I follow "Dashboard"
+    When I follow "Manage"
     Then I should not see "Settings"
