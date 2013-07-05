@@ -26,6 +26,14 @@ module Auth
       current_user.save!
     end
 
+    def email_taken?
+      if @auth_params['info']['email'].present?
+        User.exists?(email: @auth_params['info']['email'])
+      else
+        false
+      end
+    end
+
     def authenticated_user
       if user
         user
