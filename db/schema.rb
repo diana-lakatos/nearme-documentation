@@ -33,8 +33,8 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.integer  "user_id"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.datetime "deleted_at"
     t.string   "secret"
     t.string   "token"
@@ -195,8 +195,8 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
 
   create_table "photos", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "content_id"
     t.string   "image"
     t.string   "caption"
@@ -247,8 +247,8 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
   create_table "search_queries", :force => true do |t|
     t.string   "query"
     t.text     "agent"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "sessions", :force => true do |t|
@@ -287,28 +287,27 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                    :default => "",    :null => false
-    t.string   "encrypted_password",        :limit => 128, :default => "",    :null => false
-    t.string   "password_salt",                            :default => "",    :null => false
+    t.string   "email",                     :default => "",    :null => false
+    t.string   "encrypted_password",        :default => "",    :null => false
     t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                            :default => 0
+    t.integer  "sign_in_count",             :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                           :default => 0,     :null => false
+    t.integer  "bookings_count",            :default => 0,     :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "locked_at"
-    t.datetime "reset_password_sent_at"
-    t.integer  "failed_attempts",                          :default => 0
+    t.integer  "failed_attempts",           :default => 0
     t.string   "authentication_token"
     t.string   "avatar"
     t.string   "confirmation_token"
@@ -319,10 +318,10 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.string   "job_title"
     t.text     "biography"
     t.datetime "mailchimp_synchronized_at"
-    t.boolean  "verified",                                 :default => false
+    t.boolean  "verified",                  :default => false
+    t.integer  "instance_id"
     t.string   "country_name"
     t.string   "mobile_number"
-    t.integer  "instance_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
