@@ -16,10 +16,10 @@ class @CustomInputs
     $(@radio).each (index, element) =>
       $(element).prepend("<span class='radio-icon-outer'><span class='radio-icon-inner'></span></span>")
 
-    $(@checkBox).click (index, element) =>
+    $(@checkBox).change (index, element) =>
       @setupLabel()
 
-    $(@radio).click (index, element) =>
+    $(@radio).change (index, element) =>
       @setupLabel()
 
     @setupLabel()

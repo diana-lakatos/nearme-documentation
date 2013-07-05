@@ -1,4 +1,13 @@
 module DashboardHelper
+
+  def in_new_listing?
+    (params[:action] == 'new' || params[:action] == 'edit') && params[:controller].include?('listings') && params[:id].blank?
+  end
+
+  def in_new_or_edit?
+    params[:action] != 'new' && params[:action] != 'edit'
+  end
+
   def dashboard_company_nav_class(company)
     classes = []
 

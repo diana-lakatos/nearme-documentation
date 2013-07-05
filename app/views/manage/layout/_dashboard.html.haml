@@ -4,13 +4,18 @@
       = link_to manage_locations_path, :class => 'dashboard-home-link' do
         %span.ico-location.padding
           Manage Locations
-    %section.locations-holder
-      %section.locations-area
-        = yield
+    %ul.locations
+      = yield
+
+    - if params[:action] == 'index'
+      .actions
+        = link_to new_manage_location_path, :class => "btn btn-blue btn-large" do
+          %span.ico-add-location.padding
+            Create New Location
 
 - content_for :script do
   :javascript
     $(function() {
-      new Dashboard.Controller($('section.locations-holder'))
+      new Dashboard.Controller($('section.dashboard'))
     });
 
