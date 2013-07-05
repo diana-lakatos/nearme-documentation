@@ -18,7 +18,9 @@
 
 <strong style='display: inline-block;'>Dates</strong>
 <br/>
-<span style="float:right;"><%= mail_listing_dates(listing, reservation) %></span>
+<span style="float:right;">
+  <%= listing.hourly_reservations? ? hourly_summary_for_period(reservation.periods.first) : selected_dates_summary(reservation) %>
+</span>
 <br clear="both"/>
 
 <hr>
