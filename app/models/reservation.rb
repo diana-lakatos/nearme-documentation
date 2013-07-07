@@ -161,18 +161,14 @@ class Reservation < ActiveRecord::Base
   end
 
   def total_amount_cents
-    if persisted?
-      subtotal_amount_cents + service_fee_amount_cents
-    else
-      PriceCalculator.new(self).total_price.try(:cents)
-    end
+    subtotal_amount_cents + service_fee_amount_cents
   end
 
   def subtotal_amount_cents
     if persisted?
       super
     else
-      PriceCalculator.new(self).subtotal_price.try(:cents)
+      price_calculator.price.cents
     end
   end
 
@@ -180,7 +176,7 @@ class Reservation < ActiveRecord::Base
     if persisted?
       super
     else
-      PriceCalculator.new(self).service_fee.try(:cents)
+      service_fee_calculator.service_fee.cents
     end
   end
 
@@ -244,6 +240,18 @@ class Reservation < ActiveRecord::Base
 
   private
 
+    def service_fee_calculator
+      @service_fee_calculator ||= Reservation::ServiceFeeCalculator.new(self)
+    end
+
+    def price_calculator
+      @price_calculator ||= if listing.hourly_reservations?
+        HourlyPriceCalculator.new(self)
+      else
+        DailyPriceCalculator.new(self)
+      end
+    end
+
     def set_default_payment_status
       return if paid?
 
@@ -255,9 +263,8 @@ class Reservation < ActiveRecord::Base
     end
 
     def set_costs
-      @price_calculator = PriceCalculator.new(self)
-      self.subtotal_amount_cents = @price_calculator.subtotal_price.try(:cents)
-      self.service_fee_amount_cents = @price_calculator.service_fee.try(:cents)
+      self.subtotal_amount_cents = price_calculator.price.try(:cents)
+      self.service_fee_amount_cents = service_fee_calculator.service_fee.try(:cents)
     end
 
     def set_currency
@@ -301,7 +308,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def validate_booking_selection
-      unless PriceCalculator.new(self).valid?
+      unless price_calculator.valid?
         errors.add(:base, "Booking selection does not meet requirements. A minimum of #{listing.minimum_booking_days} consecutive bookable days are required.")
       end
     end
