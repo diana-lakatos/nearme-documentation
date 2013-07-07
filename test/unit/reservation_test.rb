@@ -85,7 +85,8 @@ class ReservationTest < ActiveSupport::TestCase
 
       setup do
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
-        @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+        @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+        @reservation.service_fee_amount_cents = 10_00
         Timecop.freeze(@reservation.periods.first.date)
       end
 
@@ -109,7 +110,8 @@ class ReservationTest < ActiveSupport::TestCase
 
       setup do
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
-        @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+        @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+        @reservation.service_fee_amount_cents = 10_00
         @reservation.save!
         @reservation.confirm
       end
@@ -126,7 +128,8 @@ class ReservationTest < ActiveSupport::TestCase
   context "confirmation" do
     should "attempt to charge user card if paying by credit card" do
       reservation = FactoryGirl.build(:reservation_with_credit_card)
-      reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+      reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+      reservation.service_fee_amount_cents = 10_00
       reservation.save!
 
       reservation.owner.billing_gateway.expects(:charge)
@@ -139,7 +142,8 @@ class ReservationTest < ActiveSupport::TestCase
     should "work even if the total amount is nil" do
       reservation = Reservation.new
       reservation.listing = FactoryGirl.create(:listing)
-      reservation.total_amount_cents = nil
+      reservation.subtotal_amount_cents = nil
+      reservation.service_fee_amount_cents = nil
 
       expected = { :reservation =>
         {

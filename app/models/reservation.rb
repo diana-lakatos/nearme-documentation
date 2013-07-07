@@ -184,13 +184,6 @@ class Reservation < ActiveRecord::Base
     end
   end
 
-
-  def total_amount_cents=(amount)
-    #Todo: Depricate this, setting total amount does not make sense anymore
-    self.subtotal_amount_cents = amount
-    self.service_fee_amount_cents = 0
-  end
-
   def total_amount_dollars
     total_amount_cents/100.0
   end

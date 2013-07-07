@@ -8,18 +8,20 @@ class ReservationsHelperTest < ActionView::TestCase
 
   def setup
     @unpaid_reservation = FactoryGirl.create(:reservation_with_credit_card)
-    @unpaid_reservation.total_amount_cents = 100_00
+    @unpaid_reservation.subtotal_amount_cents = 100_00
+    @unpaid_reservation.service_fee_amount_cents = 10_00
     @unpaid_reservation.save!
 
     @paid_reservation = FactoryGirl.create(:reservation_with_credit_card, payment_status: 'paid')
-    @paid_reservation.total_amount_cents = 100_00
+    @paid_reservation.subtotal_amount_cents = 100_00
+    @paid_reservation.service_fee_amount_cents = 10_00
     @paid_reservation.save!
     FactoryGirl.create(:charge, :amount => @paid_reservation.total_amount_cents, :reference => @paid_reservation)
   end
 
   context '#reservation_paid' do
     should "equal the amount paid" do
-      assert_equal '$100.00', reservation_paid(@paid_reservation)
+      assert_equal '$110.00', reservation_paid(@paid_reservation)
     end
 
     should "equal 'Pending' if pending payment" do
@@ -29,7 +31,7 @@ class ReservationsHelperTest < ActionView::TestCase
 
   context '#reservation_balance' do
     should "equal the amount remaining to be paid" do
-      assert_equal '$-100.00', reservation_balance(@unpaid_reservation)
+      assert_equal '$-110.00', reservation_balance(@unpaid_reservation)
       assert_equal '$0.00', reservation_balance(@paid_reservation)     
     end
   end
