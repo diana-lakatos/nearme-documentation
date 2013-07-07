@@ -165,19 +165,11 @@ class Reservation < ActiveRecord::Base
   end
 
   def subtotal_amount_cents
-    if persisted?
-      super
-    else
-      price_calculator.price.cents
-    end
+    super || price_calculator.price.cents
   end
 
   def service_fee_amount_cents
-    if persisted?
-      super
-    else
-      service_fee_calculator.service_fee.cents
-    end
+    super || service_fee_calculator.service_fee.cents
   end
 
   def total_amount_dollars
