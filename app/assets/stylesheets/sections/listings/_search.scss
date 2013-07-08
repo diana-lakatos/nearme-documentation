@@ -218,7 +218,7 @@ header#listing_search {
     width: 100px;
     height: 49px;
     @include border-radius($border-radius-default);
-    background: $dnm_white;
+    background: $theme_white;
 
     @media (max-width: $iphone-landscape) {
       height: 28px;
@@ -233,9 +233,9 @@ header#listing_search {
       display: block;
       width: 45px;
       height:45px;
-      border: 2px solid $dnm_white;
+      border: 2px solid $theme_white;
       @include border-radius($border-radius-default);
-      background: $dnm_white;
+      background: $theme_white;
       color: $gray160;
       font-size: 24px;
       text-align: center;
@@ -327,7 +327,7 @@ header#listing_search {
         margin-top: 5px 0 0;
         padding: 8px 50px;
         border: 2px solid $gray230;         
-        background: $dnm_white;
+        background: $theme_white;
   
         &:focus {
           border: 2px solid $gray210;
@@ -359,7 +359,7 @@ header#listing_search {
       }
       
       .search-icon {
-         @include background-image(linear-gradient(left, rgba(255,255,255,0), $dnm_white 30%, $dnm_white));
+         @include background-image(linear-gradient(left, rgba(255,255,255,0), $theme_white 30%, $theme_white));
         @include opacity(1);
         top: 7px;
         right:2px;
@@ -435,7 +435,7 @@ header#listing_search {
             @include box-sizing(border-box);
             padding-left: 50px;
             width:100%;
-            background: $dnm_white;
+            background: $theme_white;
 
             &:focus {
 

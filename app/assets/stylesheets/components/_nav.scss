@@ -12,10 +12,10 @@
     #logo {
       float: left;
       margin-top: 4px;
-      width: 219px;
+      width: $theme_logo_width;
       height: 28px;
       border: none !important;
-      background: url("/assets/desks-near-me-logo.png") no-repeat;
+      background: url($theme_logo) no-repeat;
       text-indent: -9999px;
       @include transition(0,0,0);
 
@@ -23,17 +23,17 @@
         width: 50px;
         height: 50px;
         margin: -8px 0 0;
-        background: url('/assets/desks-near-me-icon.png');
+        background: url($theme_icon);
        
       }
 
       @media (-webkit-min-device-pixel-ratio: 1.5), 
       (min-resolution: 144dpi) { 
-        background: url("/assets/desks-near-me-logo@2x.png") no-repeat;
+        background: url($theme_logo2x) no-repeat;
         background-size: 100%;
 
         @media (max-width: 767px) {
-          background: url("/assets/desks-near-me-icon@2x.png") no-repeat;
+          background: url($theme_icon2x) no-repeat;
           background-size: 100%;        
         }
       }     
@@ -100,20 +100,20 @@
         left: 8px;
         min-width: 130px;
         border: none;
-        background:$dnm_black;
+        background:$theme_black;
         
         @media (max-width: 767px) {
           left: -20px;
         }
 
         li {
-          background:$dnm_black;
+          background:$theme_black;
           
           a {
             padding: 4px 8px;
             
             &:hover{
-              background:$dnm_black;
+              background:$theme_black;
               color: $gray220;
             }
           }
@@ -125,15 +125,15 @@
         }
 
         &::after{
-          border-bottom-color:$dnm_black;
+          border-bottom-color:$theme_black;
         }
       }
 
       &.active {
-        background: $dnm_black;
+        background: $theme_black;
         
         a {
-          color: $dnm_white;
+          color: $theme_white;
         }
       }
 
@@ -154,10 +154,10 @@
       }
 
       &.dropdown.open {
-        background: $dnm_black;
+        background: $theme_black;
         
         .dropdown-toggle {
-          background: $dnm_black;
+          background: $theme_black;
         }
       }
     }
