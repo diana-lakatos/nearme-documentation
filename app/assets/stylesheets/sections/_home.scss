@@ -92,13 +92,14 @@ section.public {
       font:normal 16px/22px $font-medium, sans-serif;
     }      
   }
+  @media (max-width: 768px){
+    [class*=span]:first-child{
+      margin-bottom: 8px;
+    }
+  }
 
   form input[type="text"] {
     margin-bottom: 0;
-
-    @media (max-width: 768px) {
-      margin-bottom: 8px;
-    }
   }
   
   form {
