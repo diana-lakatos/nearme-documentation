@@ -34,9 +34,9 @@ Given /^the listing has the following reservations:$/ do |table|
   end
 end
 
-Given /^bookings for #{capture_model} do( not)? need to be confirmed$/ do |listing, require_confirmation|
+Given /^bookings for #{capture_model} do( not)? need to be confirmed$/ do |listing, do_not_require_confirmation|
   listing = model!(listing)
-  listing.confirm_reservations = require_confirmation.present?
+  listing.confirm_reservations = !do_not_require_confirmation.present?
   listing.save!
 end
 

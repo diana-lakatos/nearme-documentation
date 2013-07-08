@@ -38,7 +38,7 @@ Feature: As a user of the site
   Scenario: A user can add new listing
     Given the location exists with company: the company
       And I am on the manage locations page
-     When I follow "Create New Listing"
+     When I follow "Add Listing"
       And I fill listing form with valid details
       And I submit the form
      Then Listing with my details should be created
