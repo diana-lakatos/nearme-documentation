@@ -53,10 +53,6 @@ class Reservation < ActiveRecord::Base
     end
   end
 
-  def expiry_time
-    created_at + 24.hours
-  end
-
   def schedule_expiry
     Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :perform_expiry!, nil), run_at: expiry_time
   end
@@ -130,7 +126,11 @@ class Reservation < ActiveRecord::Base
   end
 
   def date
-    periods.first.date
+    periods.sort_by(&:date).first.date
+  end
+
+  def last_date
+    periods.sort_by(&:date).last.date
   end
 
   def cancelable?
@@ -147,6 +147,10 @@ class Reservation < ActiveRecord::Base
   # Returns whether any of the reserved dates have started
   def started?
     periods.any? { |p| p.date <= Date.today }
+  end
+
+  def archived?
+    rejected? or cancelled? or periods.all? {|p| p.date < Date.today}
   end
 
   def add_period(date, start_minute = nil, end_minute = nil)
