@@ -206,6 +206,16 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.integer  "creator_id"
   end
 
+  create_table "ratings", :force => true do |t|
+    t.integer  "content_id"
+    t.string   "content_type"
+    t.integer  "user_id"
+    t.float    "rating"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.datetime "deleted_at"
+  end
+
   create_table "reservation_periods", :force => true do |t|
     t.integer  "reservation_id"
     t.integer  "listing_id"

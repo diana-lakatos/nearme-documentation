@@ -3,7 +3,13 @@ BOOKING DETAILS --------
 <%= "Listing: '#{listing.name}' at #{listing.location.name} (#{location_url(listing.location)}).\r\n\r\n" -%>
 <%= "Special notes: #{listing.location.special_notes.strip}\r\n\r\n" if listing.location.special_notes && !listing.location.special_notes.strip.empty? -%>
 <%= "Quantity: #{reservation.quantity}\r\n\r\n" -%>
-<%= "Dates: #{format_reservation_periods(reservation)}\r\n\r\n" -%>
+<% if listing.hourly_reservations? -%>
+<%= "Dates: #{hourly_summary_for_period(reservation.periods.first)}\r\n\r\n" -%>
+<% else -%>
+<%= "Dates: \n\n#{selected_dates_summary(reservation)}\r\n\r\n" -%>
+<% end -%>
+
+
 <%= "Host: #{listing.creator.name} (#{listing.creator.email})\r\n\r\n" -%>
 <%= "Contact: #{listing.location.phone}\r\n\r\n" if listing.location.phone.present? -%>
 <%= "Total: #{reservation_total_price(reservation)}\r\n\r\n" -%>
