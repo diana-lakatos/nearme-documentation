@@ -94,8 +94,6 @@ group :development, :test do
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
   gem 'jasmine'
-  gem 'debugger'
-  gem 'pry-debugger'
 end
 
 group :development do
