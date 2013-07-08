@@ -140,3 +140,7 @@ Then  /^I should not be relogged as other user$/ do
   assert_equal edit_user_registration_path, current_path
 
 end
+
+Given /^the (.*) OAuth request with email is successful$/ do |social|
+  mock_successful_authentication_with_provider(social, {info: {email: "#{social.downcase}@example.com"}})
+end

@@ -3,31 +3,28 @@ class AuthenticationsController < ApplicationController
 
   def create
     omniauth = request.env["omniauth.auth"]
-    omniauth_params = request.env["omniauth.params"]
-
-    authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
-    if authentication
-      if current_user && current_user.id != authentication.user.id 
-        flash[:error] = "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account." if use_flash_messages?
-        redirect_to edit_user_registration_path
-      else
-        flash[:success] = "Signed in successfully." if use_flash_messages?
-        authentication.user.remember_me!
-        sign_in_and_redirect(:user, authentication.user)
-      end
+    oauth = Auth::Omni.new(omniauth)
+    if oauth.already_connected?(current_user)
+      flash[:error] = 'The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account.' if use_flash_messages?
+      redirect_to edit_user_registration_path
+    elsif oauth.email_taken?
+      flash[:error] = t('omniauth.email_taken_html', provider: omniauth['provider'].titleize,
+                        sign_in_link: view_context.link_to('sign in' ,new_user_session_path),
+                        recovery_link: view_context.link_to('recover your password' ,new_user_password_path))
+      redirect_to root_path
+    elsif oauth.authentication
+      flash[:success] = 'Signed in successfully.' if use_flash_messages?
+      oauth.remember_user!
+      sign_in_and_redirect(:user, oauth.authenticated_user)
     elsif current_user
-      current_user.authentications.create!(:provider => omniauth['provider'], :uid => omniauth['uid'])
-      current_user.use_social_provider_image(omniauth['info']['image'])
-      current_user.save!
-      flash[:success] = "Authentication successful."
+      oauth.create_authentication!(current_user)
+      flash[:success] = 'Authentication successful.'
       redirect_to edit_user_registration_url
     else
-      user = User.new
-      user.apply_omniauth(omniauth)
-      if user.save
-        flash[:success] = "Signed in successfully." if use_flash_messages?
-        user.remember_me!
-        sign_in_and_redirect(:user, user)
+      if oauth.create_user
+        flash[:success] = 'Signed in successfully.' if use_flash_messages?
+        oauth.remember_user!
+        sign_in_and_redirect(:user, oauth.authenticated_user)
       else
         session[:omniauth] = omniauth.except('extra')
         redirect_to new_user_registration_url(:wizard => wizard_id)
