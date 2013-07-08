@@ -175,12 +175,16 @@
     overflow: hidden;
 
     .date, 
+    .subtotal-label,
+    .service-fee-label,
     .total-label {
       float: left;
       width: 30%;
     }
 
     .bookings, 
+    .subtotal-amount,
+    .service-fee-amount,
     .total-amount {
       float: left;
       width: 70%;
@@ -188,6 +192,10 @@
     }
   }
 
+  .subtotal-label,
+  .subtotal-amount,
+  .service-fee-label,
+  .service-fee-amount,
   .total-label, 
   .total-amount {
     font-weight: bold;

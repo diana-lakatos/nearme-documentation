@@ -35,6 +35,9 @@ Feature: A user can book at a space
       | Listing     | Date   | Quantity |
       | the listing | Monday | 1        |
     Then I should see "This host manually confirms all bookings before payment"
+    And the reservation subtotal should show $50.00
+    And the reservation service fee should show $5.00
+    And the reservation total should show $55.00
 
   Scenario: Booking and paying by credit card
      Given I am logged in as the user
@@ -90,7 +93,9 @@ Feature: A user can book at a space
     Then I should see the booking confirmation screen for:
       | Listing     | Date   | Quantity | Start | End   |
       | the listing | Monday | 1        | 9:00  | 14:00 |
-    And the reservation cost should show 500.00
+    And the reservation subtotal should show $500.00
+    And the reservation service fee should show $50.00
+    And the reservation total should show $550.00
     When I click to confirm the booking
     Then the user should have a reservation:
       | Listing     | Date   | Quantity | Start | End   |

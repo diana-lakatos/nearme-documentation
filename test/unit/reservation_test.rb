@@ -85,7 +85,8 @@ class ReservationTest < ActiveSupport::TestCase
 
       setup do
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
-        @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+        @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+        @reservation.service_fee_amount_cents = 10_00
         Timecop.freeze(@reservation.periods.first.date)
       end
 
@@ -109,7 +110,8 @@ class ReservationTest < ActiveSupport::TestCase
 
       setup do
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
-        @reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+        @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+        @reservation.service_fee_amount_cents = 10_00
         @reservation.save!
         @reservation.confirm
       end
@@ -126,7 +128,8 @@ class ReservationTest < ActiveSupport::TestCase
   context "confirmation" do
     should "attempt to charge user card if paying by credit card" do
       reservation = FactoryGirl.build(:reservation_with_credit_card)
-      reservation.total_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+      reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+      reservation.service_fee_amount_cents = 10_00
       reservation.save!
 
       reservation.owner.billing_gateway.expects(:charge)
@@ -139,7 +142,8 @@ class ReservationTest < ActiveSupport::TestCase
     should "work even if the total amount is nil" do
       reservation = Reservation.new
       reservation.listing = FactoryGirl.create(:listing)
-      reservation.total_amount_cents = nil
+      reservation.subtotal_amount_cents = nil
+      reservation.service_fee_amount_cents = nil
 
       expected = { :reservation =>
         {
@@ -165,10 +169,6 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation = @listing.reservations.build(:user => @user)
       end
 
-      should "have a daily pricing_calculator" do
-        assert @reservation.price_calculator.is_a?(Reservation::PriceCalculator)
-      end
-
       should "set total cost after creating a new reservation" do
         dates              = [Date.today, Date.tomorrow, Date.today + 5, Date.today + 6].map { |d|
           d += 1 if d.wday == 6
@@ -178,7 +178,22 @@ class ReservationTest < ActiveSupport::TestCase
         quantity           =  5
         assert reservation = @listing.reserve!(@user, dates, quantity)
 
-        assert_equal Reservation::PriceCalculator.new(reservation).price.cents, reservation.total_amount_cents
+        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents +
+                     Reservation::ServiceFeeCalculator.new(reservation).service_fee.cents,
+                     reservation.total_amount_cents
+      end
+
+      should "set subtotal and service fee cost after creating a new reservation" do
+        dates              = [Date.today, Date.tomorrow, Date.today + 5, Date.today + 6].map { |d|
+          d += 1 if d.wday == 6
+          d += 1 if d.wday == 0
+          d
+        }
+        quantity           =  5
+        assert reservation = @listing.reserve!(@user, dates, quantity)
+
+        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents, reservation.subtotal_amount_cents
+        assert_equal Reservation::ServiceFeeCalculator.new(reservation).service_fee.cents, reservation.service_fee_amount_cents
       end
 
       should "not reset total cost when saving an existing reservation" do
@@ -216,13 +231,11 @@ class ReservationTest < ActiveSupport::TestCase
         )
       end
 
-      should "have a hourly pricing calculator" do
-        assert @reservation.price_calculator.is_a?(Reservation::HourlyPriceCalculator)
-      end
-
       should "set total cost based on HourlyPriceCalculator" do
         @reservation.periods.build :date => Date.today.advance(:weeks => 1).beginning_of_week, :start_minute => 9*60, :end_minute => 12*60
-        assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents, @reservation.total_amount_cents
+        assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents +
+                     Reservation::ServiceFeeCalculator.new(@reservation).service_fee.cents, 
+                     @reservation.total_amount_cents
       end
     end
   end
@@ -247,7 +260,7 @@ class ReservationTest < ActiveSupport::TestCase
 
     should "set default payment status to paid for free reservations" do
       reservation = FactoryGirl.build(:reservation)
-      Reservation::PriceCalculator.any_instance.stubs(:price).returns(0.to_money)
+      Reservation::DailyPriceCalculator.any_instance.stubs(:price).returns(0.to_money)
       reservation.save!
       assert reservation.free?
       assert reservation.paid?
