@@ -9,7 +9,7 @@ if Rails.env.development? || Rails.env.staging?
     object
   end
 
-  if(Location.count==0)
+  unless Location.any?
 
     coffee = FactoryGirl.create(:amenity, :name => "Coffee")
     wifi = FactoryGirl.create(:amenity, :name => "Wifi")
