@@ -27,7 +27,7 @@ if Rails.env.development? || Rails.env.staging?
     ]
 
     locations.each do |location|
-      listing =  FactoryGirl.create(:listing, :location => location)
+      FactoryGirl.create(:listing, :location => location)
     end
 
     ["Business", "Co-working", "Public"].each do |name|
