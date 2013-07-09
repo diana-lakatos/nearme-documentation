@@ -3,42 +3,47 @@ class FakeDataSeeder
   class NotEmptyDatabase < StandardError; end
 
   def go!
-    validate
+    validate!
 
     do_task "Loading data" do
       User.transaction do
 
-        coffee = FactoryGirl.build(:amenity, :name => "Coffee")
-        coffee.save!
+        amenities = do_task "Loading amenities" do
+          ["Coffee", "Wifi", "Kitchen"].map do |a|
+            FactoryGirl.build(:amenity, :name => a).tap do |resource|
+              resource.save!
+            end
+          end
 
-        wifi = FactoryGirl.build(:amenity, :name => "Wifi")
-        wifi.save!
-        kitchen = FactoryGirl.build(:amenity, :name => "Kitchen")
-        kitchen.save!
-
-        amenities = [
-            [coffee],
-            [coffee, wifi],
-            [coffee, wifi, kitchen]
-        ]
-
-        locations = [
-            FactoryGirl.build(:location_in_auckland, :amenities => amenities.sample),
-            FactoryGirl.build(:location_in_cleveland, :amenities => amenities.sample),
-            FactoryGirl.build(:location_in_san_francisco, :amenities => amenities.sample)
-        ]
-
-        locations.each do |location|
-          location.save!
-          FactoryGirl.build(:listing, :location => location).save!
         end
 
-        ["Business", "Co-working", "Public"].each do |name|
-          LocationType.new(:name => name).save!
+        location_types = do_task "Loading location types" do
+          ["Business", "Co-working", "Public"].map do |name|
+            FactoryGirl.build(:location_type, :name => name).tap do |resource|
+              resource.save!
+            end
+          end
         end
 
-        business_location = LocationType.where(:name => "Business").first
-        Location.update_all(:location_type_id => business_location)
+        locations = do_task "Loading locations" do
+          [
+            :location_in_auckland, :location_in_adelaide, :location_in_cleveland, :location_in_san_francisco, :location_in_wellington,
+            :location_ursynowska_address_components, :location_warsaw_address_components, :location_san_francisco_address_components,
+            :location_vaughan_address_components
+          ].map do |factory|
+            FactoryGirl.build(factory, :amenities => amenities.sample(2), :location_type => location_types.sample).tap do |resource|
+              resource.save!
+            end
+          end
+        end
+
+        listings = do_task "Loading listings" do
+          locations.map do |location|
+            FactoryGirl.build(:listing, :location => location).tap do |resource|
+              resource.save!
+            end
+          end
+        end
 
       end
     end
@@ -62,7 +67,7 @@ class FakeDataSeeder
       end
     end
 
-    def validate
+    def validate!
       do_task "Validating" do
         raise WrongEnvironment if wrong_env?
         raise NotEmptyDatabase if not_empty_database?
