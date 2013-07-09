@@ -6,6 +6,9 @@ class Instance < ActiveRecord::Base
   has_many :listings, :through => :locations
   has_many :users
   has_many :domains
+  belongs_to :partner
+
+  delegate :service_fee_percent, to: :partner,  allow_nil: true
 
   DEFAULT_INSTANCE_NAME = 'DesksNearMe'
 

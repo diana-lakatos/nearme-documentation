@@ -4,10 +4,10 @@ section.public {
     margin-top: -32px;
     width: auto;
     height: 580px;
-    background: image-url("https://s3.amazonaws.com/desksnearme.production/uploads/photos/653/hall.jpg") center center no-repeat;
+    background: image-url($theme_hero) center center no-repeat;
     @include background-size(cover);
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='https://s3.amazonaws.com/desksnearme.production/uploads/photos/653/hall.jpg', sizingMethod='scale');
-    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='https://s3.amazonaws.com/desksnearme.production/uploads/photos/653/hall.jpg', sizingMethod='scale')";
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=$theme_hero, sizingMethod='scale');
+    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=$theme_hero, sizingMethod='scale')";
     @include box-shadow(rgba(black, .2) 0 0 20px 20px inset); 
 
     @media (max-width: 767px) {
@@ -92,13 +92,14 @@ section.public {
       font:normal 16px/22px $font-medium, sans-serif;
     }      
   }
+  @media (max-width: 768px){
+    [class*=span]:first-child{
+      margin-bottom: 8px;
+    }
+  }
 
   form input[type="text"] {
     margin-bottom: 0;
-
-    @media (max-width: 768px) {
-      margin-bottom: 8px;
-    }
   }
   
   form {

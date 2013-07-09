@@ -23,20 +23,21 @@ Feature: A user can book at a space
   Scenario: Booking for a 'automatically confirm' listing should show relevant details
     Given bookings for the listing do not need to be confirmed
     When I go to the location's page
-    And I book space for:
+    And I select to book and review space for:
       | Listing | Date | Quantity|
       | the listing | Monday | 1 |
-    And I click to review the booking
-    Then I should see "This host manually confirms all bookings before payment"
+    Then I should not see "This host manually confirms all bookings before payment"
 
   Scenario: Booking for a non-'automatically confirm' listing should show relevant details
     Given bookings for that listing do need to be confirmed
     When I go to the location's page
-    And I book space for:
+    And I select to book and review space for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 1        |
-    And I click to review the booking
-    Then I should not see "This host manually confirms all bookings before payment"
+    Then I should see "This host manually confirms all bookings before payment"
+    And the reservation subtotal should show $50.00
+    And the reservation service fee should show $5.00
+    And the reservation total should show $55.00
 
   Scenario: Booking and paying by credit card
      Given I am logged in as the user
@@ -92,7 +93,9 @@ Feature: A user can book at a space
     Then I should see the booking confirmation screen for:
       | Listing     | Date   | Quantity | Start | End   |
       | the listing | Monday | 1        | 9:00  | 14:00 |
-    And the reservation cost should show 500.00
+    And the reservation subtotal should show $500.00
+    And the reservation service fee should show $50.00
+    And the reservation total should show $550.00
     When I click to confirm the booking
     Then the user should have a reservation:
       | Listing     | Date   | Quantity | Start | End   |

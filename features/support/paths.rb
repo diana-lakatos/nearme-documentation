@@ -17,6 +17,9 @@ module NavigationHelpers
     when /the account settings page/
       edit_user_registration_path
 
+    when /the settings page/
+      edit_manage_company_path(model!('the user'))
+
     when /the listings page/
       listings_path
 

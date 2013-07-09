@@ -47,6 +47,13 @@ Feature: A user can login
      When I sign up with Facebook
      Then I do have avatar
 
+  Scenario: User cannot sign up with OAuth if provider email already taken by another user
+    Given Existing user with Facebook email
+    And the Facebook OAuth request with email is successful
+    And I try to sign up with Facebook
+    Then I should see "email is already linked"
+    Then there should be no Facebook account
+
   Scenario: User signed up with social provider can set up his password
     Given I signed up with LinkedIn without password
      When I type in my password in edit page

@@ -37,6 +37,7 @@ Spork.prefork do
     # -- they do not yet inherit this setting
 
     # Add more helper methods to be used by all tests here...
+    include FactoryGirl::Syntax::Methods
 
     def raw_post(action, params, body)
       # The problem with doing this is that the JSON sent to the app
