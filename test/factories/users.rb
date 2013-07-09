@@ -4,7 +4,11 @@ FactoryGirl.define do
     password 'password'
     password_confirmation 'password'
     phone "1234567890"
+    mobile_number "1234567890"
+    country_name "United States"
     instance
+    job_title "Manager"
+    biography "I'm cool!"
 
     sequence(:name) {|n| "User-#{n}"}
 
