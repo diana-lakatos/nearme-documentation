@@ -72,6 +72,15 @@
           color: $gray220;
         }  
       }
+
+      // fix for IE8 sign in/sign up modal opacity issues
+      header,
+      #service_buttons a,
+      .control-group,
+      .pnotice,
+      .actions {
+        @include opacity(1);
+      }
     }
 
     .modal-loading {
