@@ -1,41 +1,83 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
+class FakeDataSeeder
+  class WrongEnvironment < StandardError; end
+  class NotEmptyDatabase < StandardError; end
 
-# Add dummy data in development
-if Rails.env.development? || Rails.env.staging?
+  def go!
+    validate
 
-  def log(object)
-    puts "== #{object.inspect}"
-    object
-  end
+    do_task "Loading data" do
+      User.transaction do
 
-  unless Location.any?
+        coffee = FactoryGirl.build(:amenity, :name => "Coffee")
+        coffee.save!
 
-    coffee = FactoryGirl.create(:amenity, :name => "Coffee")
-    wifi = FactoryGirl.create(:amenity, :name => "Wifi")
-    kitchen = FactoryGirl.create(:amenity, :name => "Kitchen")
-    amenities = [
-      [coffee],
-      [coffee, wifi],
-      [coffee, wifi, kitchen]
-    ]
+        wifi = FactoryGirl.build(:amenity, :name => "Wifi")
+        wifi.save!
+        kitchen = FactoryGirl.build(:amenity, :name => "Kitchen")
+        kitchen.save!
 
-    locations = [
-      log(FactoryGirl.create(:location_in_auckland, :amenities => amenities.sample)),
-      log(FactoryGirl.create(:location_in_cleveland, :amenities => amenities.sample)),
-      log(FactoryGirl.create(:location_in_san_francisco, :amenities => amenities.sample))
-    ]
+        amenities = [
+            [coffee],
+            [coffee, wifi],
+            [coffee, wifi, kitchen]
+        ]
 
-    locations.each do |location|
-      FactoryGirl.create(:listing, :location => location)
+        locations = [
+            FactoryGirl.build(:location_in_auckland, :amenities => amenities.sample),
+            FactoryGirl.build(:location_in_cleveland, :amenities => amenities.sample),
+            FactoryGirl.build(:location_in_san_francisco, :amenities => amenities.sample)
+        ]
+
+        locations.each do |location|
+          location.save!
+          FactoryGirl.build(:listing, :location => location).save!
+        end
+
+        ["Business", "Co-working", "Public"].each do |name|
+          LocationType.new(:name => name).save!
+        end
+
+        business_location = LocationType.where(:name => "Business").first
+        Location.update_all(:location_type_id => business_location)
+
+      end
     end
 
-    ["Business", "Co-working", "Public"].each do |name|
-      LocationType.create(:name => name)
-    end
-    business_location = LocationType.find_by_name("Business")
-    Location.update_all(:location_type_id => business_location.id)
-
   end
+
+  private
+
+    def do_task(task_name = "")
+      ActiveRecord::Migration.say_with_time(task_name) do
+        yield
+      end
+    end
+
+    def not_empty_database?
+      do_task "Checking database" do
+        # too bad we can't use this (due to records that are ):
+        # Rails.application.eager_load!
+        # ActiveRecord::Base.descendants.any? &:any?
+        [Location, User, Company].any? &:any?
+      end
+    end
+
+    def validate
+      do_task "Validating" do
+        raise WrongEnvironment if wrong_env?
+        raise NotEmptyDatabase if not_empty_database?
+      end
+    end
+
+    def wrong_env?
+      do_task "Checking environment" do
+        Rails.env.production?
+      end
+    end
 
 end
+
+FakeDataSeeder.new.go!
+
+
+
