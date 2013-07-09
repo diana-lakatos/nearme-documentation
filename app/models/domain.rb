@@ -3,6 +3,4 @@ class Domain < ActiveRecord::Base
 
   belongs_to :instance
 
-  include DomainMatcher
-
 end

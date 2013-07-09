@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130619141440) do
+ActiveRecord::Schema.define(:version => 20130707213419) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -132,6 +132,7 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "partner_id"
   end
 
   create_table "listing_types", :force => true do |t|
@@ -203,6 +204,13 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
 
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
 
+  create_table "partners", :force => true do |t|
+    t.string   "name"
+    t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
+  end
+
   create_table "photos", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -241,16 +249,17 @@ ActiveRecord::Schema.define(:version => 20130619141440) do
     t.integer  "owner_id"
     t.string   "state"
     t.string   "confirmation_email"
-    t.integer  "total_amount_cents", :default => 0
+    t.integer  "subtotal_amount_cents"
     t.string   "currency"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
+    t.datetime "created_at",                                      :null => false
+    t.datetime "updated_at",                                      :null => false
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",     :default => "manual",  :null => false
-    t.string   "payment_status",     :default => "unknown", :null => false
-    t.integer  "quantity",           :default => 1,         :null => false
+    t.string   "payment_method",           :default => "manual",  :null => false
+    t.string   "payment_status",           :default => "unknown", :null => false
+    t.integer  "quantity",                 :default => 1,         :null => false
+    t.integer  "service_fee_amount_cents"
   end
 
   create_table "search_queries", :force => true do |t|

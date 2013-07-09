@@ -62,7 +62,6 @@ class ApplicationController < ActionController::Base
   end
 
   def require_ssl
-    current_instance
     return if Rails.env.development? || Rails.env.test?
 
     unless request.ssl?
@@ -124,9 +123,9 @@ class ApplicationController < ActionController::Base
   end
 
   def current_instance
-    @instance ||= Domain.find_instance_by_request(request)
+    @current_instance ||= Instance.find_for_request(request) || Instance.default_instance
   end
-
   helper_method :current_instance
+
 end
 
