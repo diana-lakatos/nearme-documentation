@@ -21,7 +21,9 @@ class CurrencyInput < SimpleForm::Inputs::GroupedCollectionSelectInput
   end
 
   def currencies
-    @currencies ||= Money::Currency.table.values.sort_by { |c| c[:iso_code] }
+    @currencies ||= begin
+      DesksnearMe::Application.config.supported_currencies.sort_by { |c| c[:iso_code] }
+    end
   end
 
   class CurrencyGroup < Struct.new(:name, :currencies)
