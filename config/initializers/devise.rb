@@ -17,23 +17,5 @@ Devise.setup do |config|
   config.sign_out_via = :delete
 
   config.http_authenticatable_on_xhr = false
-
-  # Sets up a Warden strategy to use for authenticating an admin as
-  # another user in the system for using the website as that user.
-  config.warden do |manager|
-    manager.strategies.add(:admin_as_user) do
-      def valid?
-        Rails.logger.info session.inspect
-        admin_as_user = session[:admin_as_user] || {}
-        admin_as_user[:user_id].present? && admin_as_user[:admin_user_id].present?
-      end
-
-      def authenticate!
-        u = User.find(session[:admin_as_user][:user_id])
-        success!(u)
-      end
-    end
-
-    manager.default_strategies(:scope => :user).push :admin_as_user
-  end
 end
+

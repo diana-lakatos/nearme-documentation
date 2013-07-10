@@ -13,6 +13,10 @@ DesksnearMe::Application.routes.draw do
       member do
         post :login_as
       end
+
+      collection do
+        post :restore_session
+      end
     end
 
     resources :reservations

@@ -12,6 +12,8 @@ Feature: A admin user can login as another user
     And I am in the admin panel
     When I choose to Login As user: "Client"
     Then I should be logged in as user: "Client"
-    And I should see "Admin User, you're currently browsing the website as Client User"
-
+    And I should see "browsing the website as Client User"
+    When I follow "Return to admin"
+    Then I should be logged in as user: "Admin"
+    And I should be in the admin panel
 
