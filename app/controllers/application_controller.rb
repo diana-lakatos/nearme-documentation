@@ -122,5 +122,10 @@ class ApplicationController < ActionController::Base
     flash[:success] = flash[:notice] if flash[:notice]
   end
 
+  def current_instance
+    @current_instance ||= Instance.find_for_request(request) || Instance.default_instance
+  end
+  helper_method :current_instance
+
 end
 
