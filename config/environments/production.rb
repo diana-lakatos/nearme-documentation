@@ -27,4 +27,15 @@ DesksnearMe::Application.configure do
 
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
+
+  # Production specific app keys/secrets for social properties.
+  config.linkedin_key = "2qyp4vpjl8uh"
+  config.linkedin_secret = "PQfyGFyutsoPwcOY"
+
+  config.facebook_key = "301871243226028"
+  config.facebook_secret = "ac8bb27ccebedccc7535d0df73e60640"
+
+  config.twitter_key = "687jaGPQNpLHlK0An6zy7g"
+  config.twitter_secret = "b6WZm6oyfh1bou4Nn7ntybL2g5pK9zEaabUqMVeRU"
+
 end

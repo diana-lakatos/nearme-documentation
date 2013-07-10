@@ -238,7 +238,7 @@
     display: inline-block;
     padding: 2px 8px;
     border: 2px solid $gray220;
-    @include border-radius($border-radius-medium);
+    @include border-radius($border-radius-default);
     background: $pure-white;
   }
 
