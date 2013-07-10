@@ -1,11 +1,22 @@
 module Utils
   class FakeDataSeeder
-    class WrongEnvironment < StandardError; end
-    class NotEmptyDatabase < StandardError; end
+    class WrongEnvironmentError < StandardError; end
+    class NotEmptyDatabaseError < StandardError; end
 
     def go!
       validate!
+      load_data!
+    end
 
+    private
+
+    def do_task(task_name = "")
+      ActiveRecord::Migration.say_with_time(task_name) do
+        yield
+      end
+    end
+
+    def load_data!
       do_task "Loading data" do
         User.transaction do
 
@@ -107,14 +118,6 @@ module Utils
 
     end
 
-    private
-
-    def do_task(task_name = "")
-      ActiveRecord::Migration.say_with_time(task_name) do
-        yield
-      end
-    end
-
     def not_empty_database?
       do_task "Checking database" do
         # too bad we can't use this (due to records that are ):
@@ -126,8 +129,8 @@ module Utils
 
     def validate!
       do_task "Validating" do
-        raise WrongEnvironment if wrong_env?
-        raise NotEmptyDatabase if not_empty_database?
+        raise WrongEnvironmentError if wrong_env?
+        raise NotEmptyDatabaseError if not_empty_database?
       end
     end
 
