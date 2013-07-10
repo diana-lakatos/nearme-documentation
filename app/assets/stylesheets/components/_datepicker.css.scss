@@ -194,7 +194,7 @@
   .time-end {
     background: $gray230;
     color: $gray60;
-    @include border-radius(5px);
+    @include border-radius($border-radius-default);
     border: 1px solid #767676;
     height: 40px;
     width: 100px;

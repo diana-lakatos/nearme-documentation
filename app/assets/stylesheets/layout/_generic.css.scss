@@ -72,7 +72,7 @@ strong {
   margin: 0 4px;
   padding: 0 4px 10px;
   height:6px;
-  @include border-radius($border-radius-mobile);
+  @include border-radius($border-radius-default);
   background: $gray220;
   color: $theme_black;
   vertical-align: middle;

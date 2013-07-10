@@ -96,7 +96,7 @@
     margin-bottom: 20px;
     padding: 10px;
     border: 1px solid $gray210;
-    @include border-radius($border-radius-medium);
+    @include border-radius($border-radius-default);
   }
 }
 

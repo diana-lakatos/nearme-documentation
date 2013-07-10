@@ -30,7 +30,7 @@ section.search#content {
     width: 32px;
     height: 32px;
     background: $gray230;
-    @include border-radius($border-radius-medium);
+    @include border-radius($border-radius-default);
   }
 
   .screen-locker {
@@ -107,7 +107,7 @@ section.search#content {
       background: rgba(255,255,255,0.7);
       padding: 2px 4px;
       margin: 5px;
-      @include border-radius(4px);
+      @include border-radius($border-radius-default);
 
       label {
         font-size: 14px;
@@ -223,7 +223,7 @@ header#listing_search {
     @media (max-width: $iphone-landscape) {
       height: 28px;
       width: 54px;
-      @include border-radius($border-radius-mobile);
+      @include border-radius($border-radius-default);
     }
 
     a.map,
@@ -246,7 +246,7 @@ header#listing_search {
         width: 24px;
         font-size: 16px;
         line-height: 24px;
-        @include border-radius($border-radius-mobile);
+        @include border-radius($border-radius-default);
       }
 
       &.active {
@@ -276,7 +276,7 @@ header#listing_search {
     margin-top: 5px;
     
     a {
-      @include border-radius($border-radius-mobile);
+      @include border-radius($border-radius-default);
       background: $gray230;
       color: $gray40;
       text-align: center; 
@@ -335,7 +335,7 @@ header#listing_search {
 
         @media (max-width: 480px) {
           height: 28px;
-          @include border-radius($border-radius-mobile);
+          @include border-radius($border-radius-default);
           border: none;
           font-size: 16px;
           line-height: 24px !important;
