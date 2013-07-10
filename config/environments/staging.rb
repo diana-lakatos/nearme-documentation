@@ -10,8 +10,8 @@ DesksnearMe::Application.configure do
     :port           => '587',
     :authentication => :plain,
     :enable_starttls_auto => true,
-    :user_name      => ENV['SENDGRID_USERNAME'],
-    :password       => ENV['SENDGRID_PASSWORD'],
+    :user_name      => "admin@desksnear.me",
+    :password       => "K6c#H3UWi}%DD6vUT$9W",
     :domain         => 'desksnear.me'
   }
 
@@ -23,4 +23,11 @@ DesksnearMe::Application.configure do
 
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
+
+  # Staging specific keys/secrets for social properties.
+  config.linkedin_key = "26pmsiwpsh8a"
+  config.linkedin_secret = "M2TZrt7sF7QlIeUZ"
+
+  config.facebook_key = "491810927536381"
+  config.facebook_secret = "cce1576ac9f3c4d6998f2c9345360afe"
 end

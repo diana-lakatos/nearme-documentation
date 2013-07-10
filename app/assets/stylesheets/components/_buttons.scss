@@ -28,14 +28,14 @@ a.btn {
 
   &.btn-small {
     height: 30px;
-    @include border-radius($border-radius-mobile);
+    @include border-radius($border-radius-default);
     line-height: 30px;
     font-size: 14px;
   }
 
   &.btn-medium {
     height: 38px;
-    @include border-radius(8px);
+    @include border-radius($border-radius-default);
     line-height: 38px;
     font-size: 18px;
   }

@@ -10,7 +10,7 @@
   display: inline-block;
   overflow: hidden;
   min-width: 100px;
-  @include border-radius(5px);
+  @include border-radius($border-radius-default);
   border: 1px solid;
   text-align: left;
   line-height: 8px;
@@ -96,8 +96,8 @@
     text-align: center;
 
     &.switch-left {
-      @include border-top-left-radius(4px);
-      @include border-bottom-left-radius(4px);
+      @include border-top-left-radius($border-radius-default);
+      @include border-bottom-left-radius($border-radius-default);
       color: $pure-white;
       background-color: $green;
       border-color: $green;

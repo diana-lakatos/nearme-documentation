@@ -101,7 +101,7 @@
     }
 
     .calendar-wrapper {
-      @include border-radius(8px);
+      @include border-radius($border-radius-default);
       display: block;
       float: left;
       margin: 0 0 6px;
@@ -152,7 +152,7 @@
       }
 
       span.customSelect {
-        @include border-radius(8px);
+        @include border-radius($border-radius-default);
         position: absolute;
         top: 0;
         right: 0;

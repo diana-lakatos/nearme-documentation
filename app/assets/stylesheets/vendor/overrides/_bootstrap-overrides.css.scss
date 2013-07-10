@@ -75,7 +75,7 @@ abbr[title] {
 .accordion-group {
 
 	background: $theme_white;
-	border-radius: 12px;
+	border-radius: $border-radius-default;
 
   a.accordion-toggle {
   	background: url('https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png') right center no-repeat;

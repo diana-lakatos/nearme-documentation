@@ -57,5 +57,17 @@ module DesksnearMe
     # Override in relevant environment config
     config.stripe_api_key = "sk_test_lpr4WQXQdncpXjjX6IJx01W7"
     config.stripe_public_key = "pk_test_iCGA8nFZdILrI1UtuMOZD2aq"
+
+    # Development/Test specific keys/secrets for social properties.
+    config.linkedin_key = "4q9xfgn60bik"
+    config.linkedin_secret = "lRmKVrc0RPpfKDCV"
+
+    config.facebook_key = "432038396866156"
+    config.facebook_secret = "71af86082de1c38a3523a4c8f44aca2d"
+
+    # Production Twitter key/secret
+    # FIXME: Get development specific app setup.
+    config.twitter_key = "687jaGPQNpLHlK0An6zy7g"
+    config.twitter_secret = "b6WZm6oyfh1bou4Nn7ntybL2g5pK9zEaabUqMVeRU"
   end
 end
