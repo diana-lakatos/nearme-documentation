@@ -429,9 +429,7 @@ form {
       }
       
       &.flush-top,
-      &.currency,
-      &.boolean.optional,
-      &.radio_buttons.optional {
+      &.boolean.optional {
         margin: 0 0 20px;
 
         @media (max-width: 480px) {
