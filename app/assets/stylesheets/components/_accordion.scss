@@ -1,6 +1,6 @@
 .accordion-group {
   border-radius: $border-radius-default;
-  background: $dnm_white;
+  background: $theme_white;
 
   a.accordion-toggle {
     background: url('//s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png') right center no-repeat;
@@ -22,7 +22,7 @@
     background: $gray210;
 
     a.accordion-toggle {
-      color: $dnm_white;
+      color: $theme_white;
     }
   } 
 }

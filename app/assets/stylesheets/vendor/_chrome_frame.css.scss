@@ -1,5 +1,5 @@
 .browser-alert.chrome-frame {
-  background: $dnm_blue;
+  background: $theme_blue;
   position: fixed;
   top: 60px;
   left: 0px;
@@ -7,7 +7,7 @@
   z-index: $nav-z-index - 2;
   
   .browser-alert-inner {
-    background: $dnm_blue;
+    background: $theme_blue;
     max-width: 1400px;
     @include box-sizing(border-box);
     padding: 0 0 0 20px;
@@ -18,13 +18,13 @@
     p {
       margin: 0;
       line-height: 60px;
-      color: $dnm_white;
+      color: $theme_white;
       
       a {
-        border-bottom: 1px dotted $dnm_white;
+        border-bottom: 1px dotted $theme_white;
         
         &:link, &:visited {
-          color: $dnm_white;
+          color: $theme_white;
         }
         
         &:hover, &:visited:hover, &:active {

@@ -66,20 +66,20 @@ gem 'dropbox-api'
 gem 'twilio-ruby'
 gem 'googl'
 
+gem 'jquery-rails'
+gem 'jquery-fileupload-rails'
+gem 'rails-backbone'
+gem 'mustachejs-rails'
+gem 'handlebars_assets'
+gem 'chosen-rails'
+
 group :staging, :production do
   gem 'newrelic_rpm'
 end
 
 group :assets do
-  gem 'handlebars_assets'
-  gem 'mustachejs-rails'
-  gem 'jquery-rails'
-  gem 'chosen-rails'
-  gem 'rails-backbone'
-  gem 'jquery-fileupload-rails'
-  gem 'uglifier'
+  gem 'uglifier', "~>2.1.0"
 end
-
 
 group :development, :test, :staging do
   gem 'factory_girl_rails', '>=3.0.0'
@@ -94,8 +94,6 @@ group :development, :test do
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
   gem 'jasmine'
-  gem 'debugger'
-  gem 'pry-debugger'
 end
 
 group :development do

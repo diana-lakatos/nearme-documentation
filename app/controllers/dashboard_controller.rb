@@ -4,7 +4,7 @@ class DashboardController < ApplicationController
   def show
     if current_user.reservations.visible.any?
       redirect_to bookings_dashboard_url
-    elsif current_user.listing_reservations.upcoming.any?
+    elsif current_user.reservations.upcoming.any?
       redirect_to manage_guests_dashboard_url
     else
       redirect_to edit_user_registration_url
@@ -21,7 +21,7 @@ class DashboardController < ApplicationController
   #routes
   def manage_guests
     @locations  = current_user.try(:companies).first.try(:locations)
-    @guest_list ||= current_user.listing_reservations.upcoming
+    @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
   end
 
   def locations

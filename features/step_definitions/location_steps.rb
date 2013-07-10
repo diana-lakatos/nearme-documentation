@@ -39,5 +39,7 @@ end
 
 Then /^I should see highlighted #{capture_model}$/ do |listing_model|
   listing = model!(listing_model)
-  page.should have_css(".listing.box:first-child .listing-name", :text => listing.name)
+  within '.listings .listing:first-child' do
+    page.should have_css(".listing-name", :text => listing.name)
+  end
 end

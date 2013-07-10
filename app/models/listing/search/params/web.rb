@@ -13,7 +13,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def address_components
-    @address_components
+    @location.address_components
   end
 
   def suburb

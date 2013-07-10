@@ -7,8 +7,8 @@ FactoryGirl.define do
     instance
     url "http://google.com"
 
-    before(:create) do |company|
-      company.industries << FactoryGirl.create(:industry) if company.industries.empty?
+    after(:build) do |company|
+      company.industries = [FactoryGirl.build(:industry)] if company.industries.empty?
     end
 
     factory :company_in_auckland do

@@ -31,8 +31,8 @@
           .free-price
             .inline-rule{:style => "height: 60px;"}
             .or-part Or
-            %label.checkbox
-              = f.check_box :free, :'data-behavior' => 'toggle-free'
+            %label.checkbox{:for => 'hourly_free'}
+              = f.check_box :free, :'data-behavior' => 'toggle-free', :id => 'hourly_free'
               Free
 
 
@@ -50,8 +50,8 @@
           .free-price
             .inline-rule
             .or-part Or
-            %label.checkbox
-              = f.check_box :free, :'data-behavior' => 'toggle-free'
+            %label.checkbox{:for => 'daily_free'}
+              = f.check_box :free, :'data-behavior' => 'toggle-free', :id => 'daily_free'
               Free
 
   - if f.object.errors.include?(:free).present?

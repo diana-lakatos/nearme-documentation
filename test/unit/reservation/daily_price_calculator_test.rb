@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Reservation::PriceCalculatorTest < ActiveSupport::TestCase
+class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
   def setup
     @reservation = Reservation.new
 
@@ -16,7 +16,7 @@ class Reservation::PriceCalculatorTest < ActiveSupport::TestCase
 
     @reservation.stubs(:listing).returns(@listing)
 
-    @calculator = Reservation::PriceCalculator.new(@reservation)
+    @calculator = Reservation::DailyPriceCalculator.new(@reservation)
   end
 
   context '#price' do

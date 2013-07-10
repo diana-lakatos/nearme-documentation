@@ -61,44 +61,51 @@ class ReservationMailer < DesksNearMeMailer
     class Preview < MailView
 
       def notify_guest_of_cancellation
-        ::ReservationMailer.notify_guest_of_cancellation(Reservation.first)
+        ::ReservationMailer.notify_guest_of_cancellation(reservation)
       end
 
       def notify_guest_of_confirmation
-        ::ReservationMailer.notify_guest_of_confirmation(Reservation.first)
+        ::ReservationMailer.notify_guest_of_confirmation(reservation)
       end
 
       def notify_guest_of_expiration
-        ::ReservationMailer.notify_guest_of_expiration(Reservation.first)
+        ::ReservationMailer.notify_guest_of_expiration(reservation)
       end
 
       def notify_guest_of_rejection
-       ::ReservationMailer.notify_guest_of_rejection(Reservation.first)
+       ::ReservationMailer.notify_guest_of_rejection(reservation)
       end
 
       def notify_guest_with_confirmation
-        ::ReservationMailer.notify_guest_with_confirmation(Reservation.first)
+        ::ReservationMailer.notify_guest_with_confirmation(reservation)
       end
 
       def notify_host_of_cancellation
-        ::ReservationMailer.notify_host_of_cancellation(Reservation.first)
+        ::ReservationMailer.notify_host_of_cancellation(reservation)
       end
 
       def notify_host_of_confirmation
-        ::ReservationMailer.notify_host_of_confirmation(Reservation.first)
+        ::ReservationMailer.notify_host_of_confirmation(reservation)
       end
 
       def notify_host_of_expiration
-        ::ReservationMailer.notify_host_of_expiration(Reservation.first)
+        ::ReservationMailer.notify_host_of_expiration(reservation)
       end
 
       def notify_host_with_confirmation
-        ::ReservationMailer.notify_host_with_confirmation(Reservation.first)
+        ::ReservationMailer.notify_host_with_confirmation(reservation)
       end
 
       def notify_host_without_confirmation
-        ::ReservationMailer.notify_host_without_confirmation(Reservation.first)
+        ::ReservationMailer.notify_host_without_confirmation(reservation)
       end
+
+      private
+
+        def reservation
+          Reservation.last || FactoryGirl.create(:reservation)
+        end
+
     end
   end
 

@@ -34,16 +34,31 @@ body {
 }
 
 .navbar-fixed-top,
+.navbar-inner {
+  border-width: 0 !important;
+}
+
+.navbar-fixed-top,
 .navbar-fixed-bottom {
   position: fixed;
   right: 0;
   left: 0;
   z-index: $nav-z-index;
   margin:0 !important;
+
+}
+
+.navbar-inner,
+.navbar-fixed-top .navbar-inner,
+.navbar-static-top .navbar-inner {
+  border: 0 !important;
+  -webkit-box-shadow: 0 0 0 transparent !important;
+  -moz-box-shadow: 0 0 0 transparent !important;
+  box-shadow: 0 0 0 transparent !important;
 }
 
 a[rel="tooltip"] {
-  color: $dnm_black;
+  color: $theme_black;
 }
 
 .tooltip {
@@ -54,13 +69,13 @@ a[rel="tooltip"] {
 abbr[title] {
   cursor: auto;
   border: none;
-  color: $dnm_red;
+  color: $theme_red;
 }
 
 .accordion-group {
 
-	background: $dnm_white;
-	border-radius: 12px;
+	background: $theme_white;
+	border-radius: $border-radius-default;
 
   a.accordion-toggle {
   	background: url('https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png') right center no-repeat;
@@ -83,7 +98,7 @@ abbr[title],
 abbr[data-original-title] {
   cursor: auto;
   border:none;
-  color: $dnm_red;
+  color: $theme_red;
 }
 
 .btn {

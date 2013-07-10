@@ -1,0 +1,41 @@
+section#reservations{
+
+  .price {
+    color: $green;
+  }
+
+  .reservation-dates{
+    cursor: pointer;
+    border-bottom: 1px dashed black;
+  }
+
+  .guest_filter{
+    margin-bottom: 30px;
+
+    .button-container{
+      padding: 5px 0px;
+    }
+
+    .btn-gray.inactive{
+      border: 2px solid $light-gray !important;
+      background-color: $dnm-white;
+      .guest-count{
+        color: $gray190;
+      }
+      &:hover {
+        background: $light-gray;
+        .guest-count{
+          color: black;
+        }
+      }
+    }
+  }
+
+  .actions .btn{
+    width: 49%;
+  }
+
+  .expiry-message{
+    font-size: 0.9em;
+  }
+}

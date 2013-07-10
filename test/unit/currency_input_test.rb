@@ -4,7 +4,7 @@ class CurrencyInputTest < ActiveSupport::TestCase
 
   should "put all the currencies into the All group" do
     assert input.grouped_collection[1].name == 'All'
-    assert input.grouped_collection[1].currencies.size == Money::Currency.table.size
+    assert input.grouped_collection[1].currencies.size == DesksnearMe::Application.config.supported_currencies.size
   end
 
   should "group the currencies by priority" do
@@ -18,7 +18,7 @@ class CurrencyInputTest < ActiveSupport::TestCase
     end
 
     should "include EUR" do
-      assert input.grouped_collection[0].include?("EUR - Euro")
+      assert input.grouped_collection[0].include?("EUR - European Union Euro")
     end
 
     should "include NZD" do
@@ -30,7 +30,7 @@ class CurrencyInputTest < ActiveSupport::TestCase
     end
 
     should "include GBP" do
-      assert input.grouped_collection[0].include?("GBP - British Pound")
+      assert input.grouped_collection[0].include?("GBP - United Kingdom Sterling Pound")
     end
   end
   def input
