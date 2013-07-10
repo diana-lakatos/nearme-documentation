@@ -96,7 +96,7 @@ class @PhotoUploader
     @photoItem = @getPhotoItem(filename)
     if @photoItem.find('.progress').length == 0
       if $.browser.msie
-        @photoItem.append(@getLoadingElement('Please wait, the upload process can take a while'))
+        @photoItem.append(@getLoadingElement('Uploading...'))
         @photoItem.append('<div class="progress"><div class="bar"></div></div>')
         @photoItem.find('.progress .bar').css('width', '100%')
       else
