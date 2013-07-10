@@ -18,7 +18,7 @@ class Admin::ReservationsController < Admin::ResourceController
       super.upcoming
     when 'past'
       super.past
-    end
+    end.order('created_at desc')
   end
 end
 

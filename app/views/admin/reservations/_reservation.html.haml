@@ -3,16 +3,25 @@
     %span.label{:class => "label-#{admin_reservation_state_label_class(resource)}"}
       = resource.state
   %td
-    %div= link_to resource.owner.name, admin_user_url(resource.owner)
-    %small= resource.owner.email
+    - if resource.owner
+      %div= link_to resource.owner.name, admin_user_url(resource.owner)
+      %small= resource.owner.email
   %td
-    %div= resource.listing.name
-    %div
-      %small= resource.listing.company.name
-    %div
-      %small= resource.listing.location.address
-    %div
-      %small= link_to resource.listing.creator.name, admin_user_url(resource.listing.creator)
+    - # Some conditionals here to handle legacy/old records which are invalid.
+    - if resource.listing
+      %div= resource.listing.name
+
+      - if resource.listing.company
+        %div
+          %small= resource.listing.company.name
+
+      - if resource.listing.location
+        %div
+          %small= resource.listing.location.address
+
+      - if resource.listing.creator
+        %div
+          %small= link_to resource.listing.creator.name, admin_user_url(resource.listing.creator)
 
   %td= resource.quantity
   %td= resource.created_at
