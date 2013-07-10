@@ -16,4 +16,7 @@ DesksnearMe::Application.configure do
 
   config.assets.digest = false
 
+  config.linkedin_key = "4q9xfgn60bik"
+  config.linkedin_secret = "lRmKVrc0RPpfKDCV"
+
 end
