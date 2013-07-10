@@ -1,7 +1,85 @@
 module Utils
   class FakeDataSeeder
+
     class WrongEnvironmentError < StandardError; end
     class NotEmptyDatabaseError < StandardError; end
+
+    module Data
+      AMENITIES =
+      {
+        'Food' => [
+          'Coffee/Tea', 'Espresso', 'Fridge',
+          'Kitchen', 'Microwave', 'Refreshments',
+          'Vending Machine'
+        ],
+        'Access' => [
+          '24/7 Access', 'Eateries Nearby', 'Elevator Access',
+          'Handicap Access', 'Parking', 'Street Parking',
+          'Transport Nearby'
+        ],
+        'Rooms' => [
+          'Conference Room', 'Lounge Area', 'Lunch Room',
+          'Meeting Rooms', 'Multi-purpose Room', 'Shower Room',
+          'Yard Area'
+        ],
+        'Facilities' => [
+          'Administrative Assistant', 'Copier', 'Fax',
+          'Internet Access', 'IT Support', 'Mail Service',
+          'Monitors', 'Printer', 'Projector',
+          'Receptionist', 'Scanner', 'Telephone',
+          'Videoconferencing Facilities', 'Whiteboard'
+        ],
+        'Entertainment' => [
+          'Games',
+          'Gym',
+          'Happy Hour',
+          'Ping Pong Table',
+          'Recreational Facilities',
+          'Television'
+        ],
+        'Kids & Pets' => [
+          'Child Friendly',
+          'Childrens Playroom',
+          'Pet Friendly'
+        ]
+      }
+
+
+      INDUSTRIES =
+        [
+          "Accounting", "Airlines/Aviation", "Alternative Dispute Resolution", "Alternative Medicine",
+           "Animation", "Apparel & Fashion", "Architecture & Planning", "Arts and Crafts", "Automotive",
+           "Aviation & Aerospace", "Banking", "Biotechnology", "Broadcast Media", "Building Materials",
+           "Business Supplies and Equipment", "Capital Markets", "Chemicals", "Civic & Social Organization",
+           "Civil Engineering", "Commercial Real Estate", "Computer & Network Security", "Computer Games",
+           "Computer Hardware", "Computer Networking", "Computer Software", "Construction", "Consumer Electronics",
+           "Consumer Goods", "Consumer Services", "Cosmetics", "Dairy", "Defense & Space", "Design",
+           "Education Management", "E-Learning", "Electrical/Electronic Manufacturing", "Entertainment",
+           "Environmental Services", "Events Services", "Executive Office", "Facilities Services",
+           "Farming", "Financial Services", "Fine Art", "Fishery", "Food & Beverages", "Food Production",
+           "Fund-Raising", "Furniture", "Gambling & Casinos", "Glass, Ceramics & Concrete",
+           "Government Administration", "Government Relations", "Graphic Design", "Health, Wellness and Fitness",
+           "Higher Education", "Hospital & Health Care", "Hospitality", "Human Resources", "Import and Export",
+           "Individual & Family Services", "Industrial Automation", "Information Services", "Information Technology and Services",
+           "Insurance", "International Affairs", "International Trade and Development", "Internet", "Investment Banking",
+           "Investment Management", "Judiciary", "Law Enforcement", "Law Practice", "Legal Services", "Legislative Office",
+           "Leisure, Travel & Tourism", "Libraries", "Logistics and Supply Chain", "Luxury Goods & Jewelry", "Machinery",
+           "Management Consulting", "Maritime", "Marketing and Advertising", "Market Research", "Mechanical or Industrial Engineering",
+           "Media Production", "Medical Devices", "Medical Practice", "Mental Health Care", "Military",
+           "Mining & Metals", "Motion Pictures and Film", "Museums and Institutions", "Music", "Nanotechnology",
+           "Newspapers", "Nonprofit Organization Management", "Oil & Energy", "Online Media", "Outsourcing/Offshoring",
+           "Package/Freight Delivery", "Packaging and Containers", "Paper & Forest Products", "Performing Arts",
+           "Pharmaceuticals", "Philanthropy", "Photography", "Plastics", "Political Organization", "Primary/Secondary Education",
+           "Printing", "Professional Training & Coaching", "Program Development", "Public Policy",
+           "Public Relations and Communications", "Public Safety", "Publishing", "Railroad Manufacture", "Ranching",
+           "Real Estate", "Recreational Facilities and Services", "Religious Institutions", "Renewables & Environment",
+           "Research", "Restaurants", "Retail", "Security and Investigations", "Semiconductors", "Shipbuilding",
+           "Sporting Goods", "Sports", "Staffing and Recruiting", "Supermarkets", "Telecommunications", "Textiles",
+           "Think Tanks", "Tobacco", "Translation and Localization", "Transportation/Trucking/Railroad", "Utilities",
+           "Venture Capital & Private Equity", "Veterinary", "Warehousing", "Wholesale", "Wine and Spirits",
+           "Wireless", "Writing and Editing"
+        ]
+    end
 
     def go!
       validate!
@@ -20,8 +98,22 @@ module Utils
       do_task "Loading data" do
         User.transaction do
 
+          amenities = do_task "Loading amenities" do
+            Data::AMENITIES.each_with_index.map do |(amenity_type_name, amenity_names), index|
+              amenity_type = FactoryGirl.build(:amenity_type, :name => amenity_type_name, :position => index).tap do |resource|
+                resource.save!
+              end
+
+              amenity_names.map do |amenity_name|
+                FactoryGirl.build(:amenity, :name => amenity_name, :amenity_type => amenity_type).tap do |resource|
+                  resource.save!
+                end
+              end
+            end.flatten
+          end
+
           industries = do_task "Loading industries" do
-            ["Automotive", "Design", "Entertainment", "Fine Art", "Music"].map do |name|
+            Data::INDUSTRIES.map do |name|
               FactoryGirl.build(:industry, :name => name).tap do |resource|
                 resource.save!
               end
@@ -60,14 +152,6 @@ module Utils
               instance = instances.sample # TODO temp
               FactoryGirl.build(:company, :name => url, :email => "info@#{url}", :url => url,
                                 :instance => instance, :creator => creator, :industries => creator.industries).tap do |resource|
-                resource.save!
-              end
-            end
-          end
-
-          amenities = do_task "Loading amenities" do
-            ["Coffee", "Wifi", "Kitchen"].map do |a|
-              FactoryGirl.build(:amenity, :name => a).tap do |resource|
                 resource.save!
               end
             end
