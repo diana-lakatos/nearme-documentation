@@ -61,6 +61,11 @@ label.radio {
   .progress {
     clear: both;
   }
+
+  .animated-progress-bar {
+    height: 16px;
+    background: image-url("progress-bar.gif") 50% 0% no-repeat;
+  }
   
   .photo-item {
     margin-bottom: 20px;

@@ -97,8 +97,7 @@ class @PhotoUploader
     if @photoItem.find('.progress').length == 0
       if $.browser.msie
         @photoItem.append(@getLoadingElement('Uploading...'))
-        @photoItem.append('<div class="progress"><div class="bar"></div></div>')
-        @photoItem.find('.progress .bar').css('width', '100%')
+        @photoItem.find('.loading-icon').removeClass('loading-icon').addClass('animated-progress-bar')
       else
         @photoItem.append('<div class="progress"><div class="bar"></div></div>')
 
