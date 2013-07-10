@@ -26,9 +26,9 @@ module Auth
       current_user.save!
     end
 
-    def email_taken?
-      if @auth_params['info']['email'].present?
-        User.exists?(email: @auth_params['info']['email'])
+    def email_taken_by_other_user?(current_user)
+      if email = @auth_params['info']['email'].presence
+        current_user.try(:email) != email && User.exists?(email: @auth_params['info']['email'])
       else
         false
       end
