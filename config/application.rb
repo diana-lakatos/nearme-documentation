@@ -57,5 +57,14 @@ module DesksnearMe
     # Override in relevant environment config
     config.stripe_api_key = "sk_test_lpr4WQXQdncpXjjX6IJx01W7"
     config.stripe_public_key = "pk_test_iCGA8nFZdILrI1UtuMOZD2aq"
+
+    config.linkedin_secret = "PQfyGFyutsoPwcOY"
+    config.linkedin_key = "2qyp4vpjl8uh"
+
+    config.facebook_secret = "ac8bb27ccebedccc7535d0df73e60640"
+    config.facebook_key = "301871243226028"
+
+    config.twitter_key = "687jaGPQNpLHlK0An6zy7g"
+    config.twitter_secret = "b6WZm6oyfh1bou4Nn7ntybL2g5pK9zEaabUqMVeRU"
   end
 end
