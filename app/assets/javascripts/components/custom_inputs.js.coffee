@@ -14,8 +14,6 @@ class @CustomInputs
       try
         $(element).prepend("<span class='checkbox-icon-outer'><span class='checkbox-icon-inner'></span></span>")
       catch error
-        console.log error
-
 
     $(@radio).each (index, element) =>
       $(element).prepend("<span class='radio-icon-outer'><span class='radio-icon-inner'></span></span>")
