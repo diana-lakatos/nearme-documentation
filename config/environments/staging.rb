@@ -23,4 +23,11 @@ DesksnearMe::Application.configure do
 
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
+
+  # Staging specific keys/secrets for social properties.
+  config.linkedin_key = "26pmsiwpsh8a"
+  config.linkedin_secret = "M2TZrt7sF7QlIeUZ"
+
+  config.facebook_key = "491810927536381"
+  config.facebook_secret = "cce1576ac9f3c4d6998f2c9345360afe"
 end

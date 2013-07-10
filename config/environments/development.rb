@@ -15,8 +15,4 @@ DesksnearMe::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
 
   config.assets.digest = false
-
-  config.linkedin_key = "4q9xfgn60bik"
-  config.linkedin_secret = "lRmKVrc0RPpfKDCV"
-
 end
