@@ -198,7 +198,7 @@ GEM
       execjs (>= 1.2.9)
       sprockets (>= 2.0.3)
       tilt
-    hashie (1.2.0)
+    hashie (2.0.5)
     hike (1.2.1)
     httparty (0.11.0)
       multi_json (~> 1.0)
@@ -269,12 +269,12 @@ GEM
       jwt (~> 0.1.4)
       multi_json (~> 1.0)
       rack (~> 1.2)
-    omniauth (1.1.1)
-      hashie (~> 1.2)
+    omniauth (1.1.4)
+      hashie (>= 1.2, < 3)
       rack
     omniauth-facebook (1.4.1)
       omniauth-oauth2 (~> 1.1.0)
-    omniauth-linkedin (0.0.8)
+    omniauth-linkedin (0.1.0)
       omniauth-oauth (~> 1.0)
     omniauth-oauth (1.0.1)
       oauth
