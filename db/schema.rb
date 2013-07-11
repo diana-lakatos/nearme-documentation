@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130707213419) do
+ActiveRecord::Schema.define(:version => 20130711101955) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -235,7 +235,6 @@ ActiveRecord::Schema.define(:version => 20130707213419) do
 
   create_table "reservation_periods", :force => true do |t|
     t.integer  "reservation_id"
-    t.integer  "listing_id"
     t.date     "date"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
