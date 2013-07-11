@@ -7,7 +7,7 @@
         Payments
       .box
         - if @charges.empty?
-          %p No charges in the last 7 days, sorry
+          %p.no_data You have not received any payments in the preceding 7 day period.
         - else
           .charges-graph
             .charges-total.right
