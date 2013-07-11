@@ -31,7 +31,7 @@ class SpaceWizardController < ApplicationController
     @company.attributes = params[:company]
 
     @user = current_user
-    @user.phone_and_country_required = true
+    @user.phone_required = true
     @user.attributes = params[:user]
 
     user_valid = @user.valid?
