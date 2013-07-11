@@ -86,14 +86,16 @@ window.DNM = {
 
   initializeCustomSelects: function(){
     $('select:not(.custom-select)').customSelect();
-    $('.customSelect').append('<i></i>').closest('.controls').css({'position': 'relative'});
+    $('.customSelect').append('<i class="custom-select-dropdown-icon"></i>').closest('.controls').css({'position': 'relative'});
     $('.customSelect').siblings('select').css({'margin': '0px', 'z-index': 1 });
 
     $('.custom-select').chosen()
+    $('.chzn-container-single a.chzn-single div').hide();
+    $('.chzn-container-single').append('<i class="custom-select-dropdown-icon"></i>');
     $('.chzn-choices input').focus(function(){
-        $(this).parent().parent().addClass('chzn-choices-active')
+      $(this).parent().parent().addClass('chzn-choices-active');
     }).blur(function(){
-        $(this).parent().parent().removeClass('chzn-choices-active')
+      $(this).parent().parent().removeClass('chzn-choices-active');
     })
   },
 
