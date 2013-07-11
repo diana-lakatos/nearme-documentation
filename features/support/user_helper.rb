@@ -31,6 +31,7 @@ module UserHelper
 
   def update_current_user_information(options = {})
     visit edit_user_registration_path
+    select options[:country_name], :from => 'user_country_name' if options[:country_name]
     fill_in 'user_name', with: options[:name] if options[:name]
     fill_in 'user_email', with: options[:email] if options[:email]
     fill_in 'user_password', with: options[:password] if options[:password]

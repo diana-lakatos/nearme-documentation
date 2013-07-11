@@ -81,8 +81,8 @@ class User < ActiveRecord::Base
   #        a 'Form' object containing their own additional validations specific
   #        to their context.
   validates_presence_of :phone, :if => :phone_required
-  validates_presence_of :country_name, :on => :update
-  attr_accessor :phone_required
+  validates_presence_of :country_name, :if => lambda { phone_required || country_name_required }
+  attr_accessor :phone_required, :country_name_required
 
   #validates :avatar, :file_mime_type => {:content_type => /image/}, :if => Proc.new{|user| user.avatar.present? && user.avatar.file.present? && user.avatar.file.content_type.present? }
 

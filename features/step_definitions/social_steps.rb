@@ -63,7 +63,7 @@ When /I try to sign up with (.*)$/ do |social|
 end
 
 When /I type in my password in edit page/ do
-  update_current_user_information({:password => 'my_password'})
+  update_current_user_information({:password => 'my_password', :country_name => 'United States'})
 end
 
 Then /I should have password/ do
