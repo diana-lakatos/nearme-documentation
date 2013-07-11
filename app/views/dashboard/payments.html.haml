@@ -11,7 +11,10 @@
         - else
           .charges-graph
             .charges-total.right
-              = "#{currency_content_tag('USD', @last_week_charges.values.sum, :span, { :rel => false })} total".html_safe
+              - group_charges(@last_week_charges).each do |currency, values|
+                .total-number.left
+                  = "#{currency_content_tag(currency, values.sum { |k, v| v.amount }, :span, { :rel => false })}".html_safe
+              total
             %canvas#charge-chart
 
           .charges-details
@@ -25,4 +28,4 @@
             = will_paginate @charges
 
 - content_for :domready do
-  new ChartWrapper.Line($('#charge-chart'), #{@last_week_charges.values.map { |v| v.fractional / v.currency.subunit_to_unit }.to_json.html_safe} , #{@last_week_charges.keys.to_json.html_safe})
+  new ChartWrapper.Line($('#charge-chart'), #{values_for_chart(@last_week_charges).to_json.html_safe}, #{labels_for_chart.to_json.html_safe})

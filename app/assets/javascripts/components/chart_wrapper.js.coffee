@@ -3,6 +3,22 @@
 
 class @ChartWrapper
 
+  defaultColors: ->
+    [
+      {
+        fillColor : "rgba(220,220,220,0.5)",
+        strokeColor : "rgba(220,220,220,1)",
+        pointColor : "rgba(220,220,220,1)",
+        pointStrokeColor : "#fff",
+      },
+      {
+        fillColor : "rgba(151,187,205,0.5)",
+        strokeColor : "rgba(151,187,205,1)",
+        pointColor : "rgba(151,187,205,1)",
+        pointStrokeColor : "#fff",
+      }
+    ]
+
   constructor: (canvas, data, labels) ->
 
     @canvas = canvas
@@ -12,15 +28,7 @@ class @ChartWrapper
 
     @data = {
         labels : labels,
-        datasets : [
-            {
-                fillColor : "rgba(151,187,205,0.5)",
-                strokeColor : "rgba(151,187,205,1)",
-                pointColor : "rgba(151,187,205,1)",
-                pointStrokeColor : "#fff",
-                data : data
-            }
-        ]
+        datasets : @parseData(data)
     }
     @bindEvents()
     @refreshChart()
@@ -28,6 +36,12 @@ class @ChartWrapper
   bindEvents: ->
     $(window).resize =>
       @refreshChart()
+
+  parseData: (data) ->
+    result = []
+    for index, values of data
+      result.push $.extend({ data : values }, @defaultColors()[index])
+    result
 
   refreshChart: ->
     @setup()
