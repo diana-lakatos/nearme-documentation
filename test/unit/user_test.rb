@@ -6,13 +6,6 @@ class UserTest < ActiveSupport::TestCase
 
   should have_many(:industries)
 
-  def setup
-  end
-
-  should "exist" do
-    assert User
-  end
-
   should "have authentications" do
     @user = User.new
     @user.authentications << Authentication.new
