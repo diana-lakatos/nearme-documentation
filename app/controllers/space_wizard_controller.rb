@@ -21,9 +21,7 @@ class SpaceWizardController < ApplicationController
   def list
     @company ||= @user.companies.build
     @location ||= @company.locations.build
-    @listing ||= @location.listings.build(
-      :daily_price => 50.00
-    )
+    @listing ||= @location.listings.build
   end
 
   def submit_listing
