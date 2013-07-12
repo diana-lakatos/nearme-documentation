@@ -5,6 +5,10 @@ module UserHelper
     click_link provider.downcase
   end
 
+  def sign_in_with_provider(provider)
+    try_to_sign_up_with_provider(provider)
+  end
+
   def sign_up_with_provider(provider, email = nil)
     email ||= "#{provider.downcase}@example.com"
     try_to_sign_up_with_provider(provider)
