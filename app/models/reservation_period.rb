@@ -6,7 +6,7 @@ class ReservationPeriod < ActiveRecord::Base
 
   attr_accessible :date, :start_minute, :end_minute
 
-  delegate :listing, :to => :reservation, :allow_nil => true
+  delegate :listing, :to => :reservation
 
   # Returns the number of hours reserved on this date.
   # If no hourly time specified, it is assumed that the reservation is for all open
