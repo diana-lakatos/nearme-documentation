@@ -6,11 +6,26 @@ class UserTest < ActiveSupport::TestCase
 
   should have_many(:industries)
 
-  def setup
-  end
+  context "validations" do
+    context "when no country name provided" do
 
-  should "exist" do
-    assert User
+      context "when country name required" do
+        should "be valid" do
+          user = FactoryGirl.build(:user_without_country_name)
+          assert user.save
+        end
+      end
+
+      context "when country name not required" do
+        should "be invalid" do
+          user = FactoryGirl.create(:user_without_country_name)
+          user.country_name_required = true
+          assert_equal user.save, false
+        end
+      end
+
+    end
+
   end
 
   should "have authentications" do
