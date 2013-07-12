@@ -9,7 +9,7 @@ class ReservationPeriod < ActiveRecord::Base
   delegate :listing, :to => :reservation
 
   # Returns the number of hours reserved on this date.
-  # If no hourly time spefified, it is assumed that the reservation is for all open
+  # If no hourly time specified, it is assumed that the reservation is for all open
   # hours of that booking.
   def hours
     if start_minute && end_minute
