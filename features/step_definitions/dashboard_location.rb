@@ -27,7 +27,6 @@ When /^I fill (location|listing) form with valid details$/ do |model|
 end
 
 When /^I (disable|enable) (.*) pricing$/ do |action, period|
-
   page.find("#enable_#{period}").set(action == 'disable' ? false : true)
   if action=='enable'
     page.find("#listing_#{period}_price").set(15.50)

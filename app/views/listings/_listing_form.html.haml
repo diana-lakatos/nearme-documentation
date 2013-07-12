@@ -19,26 +19,9 @@
       Price
 
     .controls
-      %div.price-inputs-hourly
-        %label.radio
-          = f.radio_button :hourly_reservations, true
-          Bookings are made by the hour
-
-        .price-input-options{:style => ('display: none' unless f.object.hourly_reservations?)}
-          .price-inputs-wrapper.left
-            = render 'manage/listings/price_field', :f => f, :price => "hourly", :label => "hour"
-
-          .free-price
-            .inline-rule{:style => "height: 60px;"}
-            .or-part Or
-            %label.checkbox{:for => 'hourly_free'}
-              = f.check_box :free, :'data-behavior' => 'toggle-free', :id => 'hourly_free'
-              Free
-
-
       %div.price-inputs-daily
         %label.radio
-          = f.radio_button :hourly_reservations, false
+          = f.radio_button :hourly_reservations, false, :checked => f.object.hourly_reservations == false
           Bookings are made by the day
 
         .price-input-options{:style => ('display: none' if f.object.hourly_reservations?)}
@@ -53,6 +36,25 @@
             %label.checkbox{:for => 'daily_free'}
               = f.check_box :free, :'data-behavior' => 'toggle-free', :id => 'daily_free'
               Free
+
+      %div.price-inputs-hourly
+        %label.radio
+          = f.radio_button :hourly_reservations, true, :checked => f.object.hourly_reservations
+          Bookings are made by the hour
+
+        .price-input-options{:style => ('display: none' unless f.object.hourly_reservations?)}
+          .price-inputs-wrapper.left
+            = render 'manage/listings/price_field', :f => f, :price => "hourly", :label => "hour"
+
+          .free-price
+            .inline-rule{:style => "height: 60px;"}
+            .or-part Or
+            %label.checkbox{:for => 'hourly_free'}
+              = f.check_box :free, :'data-behavior' => 'toggle-free', :id => 'hourly_free'
+              Free
+
+      - if f.object.errors.include?(:hourly_reservations).present?
+        %p.error-block= f.object.errors[:hourly_reservations].first
 
   - if f.object.errors.include?(:free).present?
     %p.error-block
