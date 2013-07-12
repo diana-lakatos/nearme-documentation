@@ -161,6 +161,10 @@
         border: none;
         background: transparent;
         font-size: 100%;
+
+        i {
+          display: none;
+        }
       }
 
       .customSelectInner {
