@@ -41,6 +41,7 @@ class DashboardController < ApplicationController
   def payments
     @charges = @company.charges.successful.order('created_at DESC').paginate(:page => params[:page], :per_page => 20).includes(:reference => { :listing => :location })
     @last_week_charges = @company.charges.successful.order('created_at ASC').last_x_days(7)
+    @all_time_totals = @company.charges.all_time_totals
   end
 
   private
