@@ -1,6 +1,9 @@
 - only_inputs = [] if only_inputs.nil?
 - photo_input_name_prefix = "listing" if local_assigns[:photo_input_name_prefix].nil?
 
+- enable_inputs_daily = f.object.hourly_reservations == false
+- enable_inputs_hourly = f.object.hourly_reservations == true
+
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
 = f.input :name, :label => 'Listing name', :placeholder => 'Examples, "Shared Desks", "Meeting Room", "Private Office"' if only_inputs.empty? || only_inputs.include?(:name)
 = f.input :description, :label => 'Listing description', :input_html => { :maxlength => 250}, :placeholder => 'Describe the individual listing that will be rented' if only_inputs.empty? || only_inputs.include?(:description)
@@ -21,10 +24,10 @@
     .controls
       %div.price-inputs-daily
         %label.radio
-          = f.radio_button :hourly_reservations, false, :checked => f.object.hourly_reservations == false
+          = f.radio_button :hourly_reservations, false, :checked => enable_inputs_daily
           Bookings are made by the day
 
-        .price-input-options{:style => ('display: none' if f.object.hourly_reservations?)}
+        .price-input-options
           .price-inputs-wrapper.left
             = render 'manage/listings/price_field', :f => f, :price => "daily", :label => "day"
             = render 'manage/listings/price_field', :f => f, :price => "weekly", :label => "week"
@@ -39,10 +42,10 @@
 
       %div.price-inputs-hourly
         %label.radio
-          = f.radio_button :hourly_reservations, true, :checked => f.object.hourly_reservations
+          = f.radio_button :hourly_reservations, true, :checked => enable_inputs_hourly
           Bookings are made by the hour
 
-        .price-input-options{:style => ('display: none' unless f.object.hourly_reservations?)}
+        .price-input-options
           .price-inputs-wrapper.left
             = render 'manage/listings/price_field', :f => f, :price => "hourly", :label => "hour"
 
