@@ -4,6 +4,7 @@
   .row-fluid
     .span8.offset2
       %h1
+        %i{class: 'ico-credit-card'}
         Payments
       .box
         - if @charges.empty?
@@ -14,16 +15,23 @@
               - group_charges(@last_week_charges).each do |currency, values|
                 .total-number.left
                   = "#{currency_content_tag(currency, values.sum { |k, v| v.amount }, :span, { :rel => false })}".html_safe
-              total
+              %span{class: 'total-text'} 7 day total
             %canvas#charge-chart
 
           .charges-details
             - @charges.each do |charge|
               .clearfix.charge-line-item
                 .left
-                  = "#{currency_content_tag(charge.currency, charge.price, :span, { :rel => false })} - #{charge.reference.listing.location.name}".html_safe
+                  = "#{currency_content_tag(charge.currency, charge.price, :span, { :rel => false })}".html_safe
+                  %span{class: 'location-name'}= "#{charge.reference.listing.location.name}".html_safe
                 .right
-                  = charge.created_at.strftime('%Y/%m/%d %H:%M:%S')
+                  = charge.created_at.strftime('%Y-%m-%d')
+
+            .charges-total
+              - group_charges(@last_week_charges).each do |currency, values|
+                .total-number.left
+                  = "#{currency_content_tag(currency, values.sum { |k, v| v.amount }, :span, { :rel => false })}".html_safe
+              %span{class: 'total-text'} all time total
 
             = will_paginate @charges
 

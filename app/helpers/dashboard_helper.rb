@@ -98,6 +98,6 @@ module DashboardHelper
 
 
   def format_charge_date_for_graph(date)
-    date.to_date.strftime('%m/%d')
+    date.to_date.strftime('%b %d')
   end
 end

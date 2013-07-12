@@ -23,7 +23,9 @@ class @ChartWrapper
 
     @canvas = canvas
     @globalGraphSettings = {
-      animation : Modernizr.canvas
+      animation : Modernizr.canvas,
+      scaleFontFamily : "'Futura-regular', sans-serif",
+      scaleFontSize : 18
     }
 
     @data = {
@@ -47,14 +49,13 @@ class @ChartWrapper
     @setup()
     @draw()
 
-
-
   draw: ->
     console.log 'overwrite needed'
-    
+
   setup: ->
     @canvas.prop({
       width: @canvas.parent().width(),
-      height: 200
+      height: 250
     })
     @ctx = @canvas.get(0).getContext("2d")
+
