@@ -195,7 +195,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def successful_payment_amount
-    charges.where(:success => true).first.try(:amount) || 0.0
+    charges.successful.first.try(:amount) || 0.0
   end
 
   def balance

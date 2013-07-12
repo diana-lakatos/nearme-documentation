@@ -11,6 +11,9 @@
         %li
           = link_to manage_guests_dashboard_path do
             %span.ico-manage-guests.padding Guests
+        %li
+          = link_to payments_dashboard_path do
+            %span.ico-credit-card.padding Payments
         - if current_user.companies.any? && current_user.companies.first.id.present?
           %li
             = link_to edit_manage_company_path(current_user.companies.first) do

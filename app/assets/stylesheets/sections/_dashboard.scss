@@ -109,6 +109,11 @@ section.dashboard {
     margin-top: 30px;
   }
 
+  p.no_data {
+    text-align: center;
+    margin-top: 20px;
+  }
+
   .dashboard-save {
     margin-bottom: 30px;
     text-align: center;
@@ -224,4 +229,5 @@ section.dashboard {
       width: 100%;
     }
   }
+
 }
