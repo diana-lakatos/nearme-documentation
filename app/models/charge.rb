@@ -4,7 +4,7 @@ class Charge < ActiveRecord::Base
 
   scope :successful, where(:success => true)
   scope :last_x_days, lambda { |days_in_past| 
-    where('DATE(charges.created_at) >= ? ', Date.today - days_in_past.days)
+    where('DATE(charges.created_at) > ? ', Date.today - days_in_past.days)
   }
 
   #TODO: evaluate if we want to use this instead of dashboard_helper#group_charges

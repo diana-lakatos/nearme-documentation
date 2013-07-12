@@ -10,7 +10,7 @@ class ChargeTest < ActiveSupport::TestCase
     setup do
       5.times do |i|
         3.times do |j|
-          FactoryGirl.create(:charge, :created_at => (Date.today - i.days))
+          FactoryGirl.create(:charge, :created_at => (Time.now - i.days))
         end
       end
     end
