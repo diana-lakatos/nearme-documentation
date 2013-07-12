@@ -41,8 +41,9 @@
 
       %section#content{:class => "#{@section_name || controller_name}"}
         = render 'layouts/hero'
-        .container-fluid
-          = yield unless render_content_outside_container?
+        .container-fluid-wrapper
+          .container-fluid
+            = yield unless render_content_outside_container?
         = yield if render_content_outside_container?
 
       = render 'layouts/footer'
