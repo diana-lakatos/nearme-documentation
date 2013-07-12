@@ -20,9 +20,12 @@ class @PriceFields
     @inputWrapper.find('input:not(:disabled)').addClass('hide-disabled').prop('disabled', true)
 
   bindEvents: ->
+    @container.closest('form').on 'submit', (event) =>
+      @inputWrapper.find('input[readonly]').prop('disabled', true)
+
     @enablingPriceCheckboxes.change (event) =>
       checkbox = $(event.target)
-      checkbox.parent().siblings('input[data-type*=price-input]').attr('disabled', !checkbox.is(':checked'))
+      checkbox.parent().siblings('input[data-type*=price-input]').attr('readonly', !checkbox.is(':checked'))
 
       # Free enabled if all prices are disabled
       @freeCheckbox.prop('checked', !@enablingPriceCheckboxes.is(':checked'))
@@ -30,6 +33,20 @@ class @PriceFields
     @freeCheckbox.click (event) =>
       @enablingPriceCheckboxes.prop('checked', !@freeCheckbox.is(':checked'))
       @enablingPriceCheckboxes.trigger('change')
+
+    @priceFields.on 'click', (event) =>
+      checkbox = $(event.target).siblings('label').find('input[data-behavior*=enable-price]')
+      checkbox.prop('checked', true)
+      checkbox.trigger('change')
+      # yeah well.. otherwise IE will think that input is readable, even though we have just changed this...
+      if $.browser.msie
+        $(event.target).select()
+
+    @priceFields.on 'blur', (event) =>
+      if $(event.target).val()==''
+        checkbox = $(event.target).siblings('label').find('input[data-behavior*=enable-price]')
+        checkbox.prop('checked', false)
+        checkbox.trigger('change')
 
     @priceFields.on 'change', (event) =>
       price = $(event.target)
