@@ -83,6 +83,9 @@ module ListingsHelpers
     fill_in "listing_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
     select "ListingType2", from: "listing_listing_type_id"
     fill_in "listing_quantity", with: "5"
+
+    choose "Bookings are made by the day"
+
     check "enable_daily"
     fill_in "listing_daily_price", with: "10"
 
