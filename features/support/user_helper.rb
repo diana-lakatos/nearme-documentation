@@ -5,6 +5,10 @@ module UserHelper
     click_link provider.downcase
   end
 
+  def sign_in_with_provider(provider)
+    try_to_sign_up_with_provider(provider)
+  end
+
   def sign_up_with_provider(provider, email = nil)
     email ||= "#{provider.downcase}@example.com"
     try_to_sign_up_with_provider(provider)
@@ -31,6 +35,7 @@ module UserHelper
 
   def update_current_user_information(options = {})
     visit edit_user_registration_path
+    select options[:country_name], :from => 'user_country_name' if options[:country_name]
     fill_in 'user_name', with: options[:name] if options[:name]
     fill_in 'user_email', with: options[:email] if options[:email]
     fill_in 'user_password', with: options[:password] if options[:password]

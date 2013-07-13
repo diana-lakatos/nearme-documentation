@@ -9,6 +9,7 @@ FactoryGirl.define do
     association :listing_type
     confirm_reservations true
     daily_price_cents 5000
+    hourly_reservations false
 
     factory :always_open_listing do
       after(:create) do |listing|

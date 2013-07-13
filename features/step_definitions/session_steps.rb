@@ -28,6 +28,8 @@ end
 
 Then(/^I should be logged in as #{capture_model}$/) do |user_instance|
   user = model!(user_instance)
+
+  # NB: this covers the Admin interface as well as the public interface
   step "I should see \"#{user.first_name}\""
   step "I should see \"Log Out\""
 end

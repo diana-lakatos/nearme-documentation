@@ -80,6 +80,8 @@ GEM
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
     chameleon (0.2.3)
+    chartjs-rails (0.1)
+      railties (>= 3.1)
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
     chosen-rails (0.9.11.2)
@@ -484,6 +486,7 @@ DEPENDENCIES
   capybara (~> 1.1.2)
   carrierwave
   chameleon
+  chartjs-rails
   chosen-rails
   chronic
   client_side_validations!

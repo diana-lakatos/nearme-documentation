@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130707213419) do
+ActiveRecord::Schema.define(:version => 20130712094821) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -147,16 +147,16 @@ ActiveRecord::Schema.define(:version => 20130707213419) do
     t.text     "description"
     t.integer  "quantity",                :default => 1
     t.text     "availability_rules_text"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
     t.datetime "deleted_at"
-    t.boolean  "confirm_reservations",    :default => true,  :null => false
-    t.boolean  "delta",                   :default => true,  :null => false
+    t.boolean  "confirm_reservations",    :default => true, :null => false
+    t.boolean  "delta",                   :default => true, :null => false
     t.integer  "listing_type_id"
     t.integer  "daily_price_cents"
     t.integer  "weekly_price_cents"
     t.integer  "monthly_price_cents"
-    t.boolean  "hourly_reservations",     :default => false, :null => false
+    t.boolean  "hourly_reservations"
     t.integer  "hourly_price_cents"
     t.integer  "minimum_booking_minutes"
     t.string   "external_id"
@@ -235,7 +235,6 @@ ActiveRecord::Schema.define(:version => 20130707213419) do
 
   create_table "reservation_periods", :force => true do |t|
     t.integer  "reservation_id"
-    t.integer  "listing_id"
     t.date     "date"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false

@@ -52,6 +52,7 @@ gem 'friendly_id'
 gem 'sass-rails'
 gem 'bootstrap-sass', '~> 2.3.0.0'
 gem 'chronic'
+gem 'chartjs-rails'
 
 gem 'ey_config'
 

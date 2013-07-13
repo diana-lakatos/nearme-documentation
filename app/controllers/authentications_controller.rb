@@ -7,15 +7,15 @@ class AuthenticationsController < ApplicationController
     if oauth.already_connected?(current_user)
       flash[:error] = 'The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account.' if use_flash_messages?
       redirect_to edit_user_registration_path
+    elsif oauth.authentication
+      flash[:success] = 'Signed in successfully.' if use_flash_messages?
+      oauth.remember_user!
+      sign_in_and_redirect(:user, oauth.authenticated_user)
     elsif oauth.email_taken_by_other_user?(current_user)
       flash[:error] = t('omniauth.email_taken_html', provider: omniauth['provider'].titleize,
                         sign_in_link: view_context.link_to('sign in' ,new_user_session_path),
                         recovery_link: view_context.link_to('recover your password' ,new_user_password_path))
       redirect_to root_path
-    elsif oauth.authentication
-      flash[:success] = 'Signed in successfully.' if use_flash_messages?
-      oauth.remember_user!
-      sign_in_and_redirect(:user, oauth.authenticated_user)
     elsif current_user
       oauth.create_authentication!(current_user)
       flash[:success] = 'Authentication successful.'
