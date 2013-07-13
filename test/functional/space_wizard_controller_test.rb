@@ -95,7 +95,8 @@ class SpaceWizardControllerTest < ActionController::TestCase
                  "listings_attributes"=>
                     {"0"=>
                       {"name"=>"Desk", 
-                       "description"=>"We have a group of several shared desks available.", 
+                       "description"=>"We have a group of several shared desks available.",
+                       "hourly_reservations" => false,
                        "listing_type_id"=>"1", 
                        "quantity"=>"1", 
                        "daily_price"=>daily_price, 

@@ -26,7 +26,7 @@
 .checkbox {
 
   .checkbox-icon-outer {
-    border-radius: 4px;
+    border-radius: $border-radius-default;
     height: 22px;
     width: 22px;
     left: 0;
@@ -138,16 +138,6 @@
       padding-right: 40px;
       font-size: 18px;
 
-      i {
-        @extend .ico-chevron-down;
-        position: absolute;
-        z-index: 0;
-        right: 8px;
-        top: 10px;
-        font-size: 26px;
-        color: $gray160;
-      }
-
       &.disabled{
         @include opacity(0.5);
       }
@@ -175,4 +165,15 @@
   }
       
 }
+
+.custom-select-dropdown-icon {
+  @extend .ico-chevron-down;
+  position: absolute;
+  z-index: 0;
+  right: 8px;
+  top: 10px;
+  font-size: 26px;
+  color: $gray160;
+}
+
 

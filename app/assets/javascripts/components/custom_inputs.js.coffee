@@ -11,15 +11,17 @@ class @CustomInputs
     @radioDisabled = "disabled"
 
     $(@checkBox).each (index, element) =>
-      $(element).prepend("<span class='checkbox-icon-outer'><span class='checkbox-icon-inner'></span></span>")
+      try
+        $(element).prepend("<span class='checkbox-icon-outer'><span class='checkbox-icon-inner'></span></span>")
+      catch error
 
     $(@radio).each (index, element) =>
       $(element).prepend("<span class='radio-icon-outer'><span class='radio-icon-inner'></span></span>")
 
-    $(@checkBox).click (index, element) =>
+    $(@checkBox).change (index, element) =>
       @setupLabel()
 
-    $(@radio).click (index, element) =>
+    $(@radio).change (index, element) =>
       @setupLabel()
 
     @setupLabel()

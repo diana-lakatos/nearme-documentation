@@ -48,12 +48,15 @@ DesksnearMe::Application.routes.draw do
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
       get :bookings
+      get :payments
       get :listings
       get :manage_guests
     end
   end
 
   namespace :manage do
+
+    resources :companies, :only => [:edit, :update]
 
     resources :locations do
       collection do

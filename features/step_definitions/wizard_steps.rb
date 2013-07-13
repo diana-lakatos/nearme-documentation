@@ -14,5 +14,6 @@ When /^I fill in valid space details$/ do
   fill_in 'Listing description', with:'We have a group of several shared desks available.'
   select 'Desk', from: 'Listing type'
   fill_in 'Quantity available', with:1
+  choose "Bookings are made by the day"
   #attach_file 'company[locations_attributes][0][listings_attributes][0][photos_attributes][0][image]', "#{Rails.root}/test/assets/foobear.jpeg"
 end

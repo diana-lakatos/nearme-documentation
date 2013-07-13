@@ -10,12 +10,16 @@ class Datepicker.Model
     today: new Date(),
 
     # The initial 'selected dates' for the calendar
-    selectedDates: []
+    selectedDates: [],
+
+    # Can dates be changed?
+    immutable: false
   }
 
   constructor: (@options) ->
     @options = $.extend({}, @defaultOptions, @options)
     @currentMonth = @options.currentMonth
+    @immutable = @options.immutable
     @_included = []
     @today = @options.today
 
@@ -36,6 +40,7 @@ class Datepicker.Model
     _.sortBy(dates, (date) -> date.getTime())
 
   toggleDate: (date) ->
+    return if @immutable
     if @isSelected(date)
       @removeDate(date)
     else

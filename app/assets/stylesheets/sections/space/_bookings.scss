@@ -50,7 +50,7 @@
       left: $listing-photo-width;
       width: 100%;
       height: 40px;
-      @include background-image(linear-gradient(rgba(250,250,250,0), $dnm_white));
+      @include background-image(linear-gradient(rgba(250,250,250,0), $theme_white));
 
       @media (max-width: $booking-module-breakpoint-desktop) {
         display: none;
@@ -175,12 +175,16 @@
     overflow: hidden;
 
     .date, 
+    .subtotal-label,
+    .service-fee-label,
     .total-label {
       float: left;
       width: 30%;
     }
 
     .bookings, 
+    .subtotal-amount,
+    .service-fee-amount,
     .total-amount {
       float: left;
       width: 70%;
@@ -188,6 +192,10 @@
     }
   }
 
+  .subtotal-label,
+  .subtotal-amount,
+  .service-fee-label,
+  .service-fee-amount,
   .total-label, 
   .total-amount {
     font-weight: bold;
@@ -230,7 +238,7 @@
     display: inline-block;
     padding: 2px 8px;
     border: 2px solid $gray220;
-    @include border-radius($border-radius-medium);
+    @include border-radius($border-radius-default);
     background: $pure-white;
   }
 

@@ -35,6 +35,14 @@ Feature: A user can login
      When I sign up with LinkedIn
      Then there should be no LinkedIn account
 
+  Scenario: A not authenticated user can login via LinkedIn even if email do not match
+    Given a user: "john" exists with email: "linkedin@example.com" 
+    Given a user: "maciek" exists with email: "maciek@example.com"
+    Given the authentication_linkedin exists with user: user "maciek"
+      And the LinkedIn OAuth request with email is successful
+     When I try to sign up with LinkedIn
+     Then I should be logged in as user "maciek"
+
   Scenario: Already existing user without avatar gets facebook's picture as avatar when connected
     Given I am logged in manually
       And I do not have avatar
@@ -46,6 +54,13 @@ Feature: A user can login
     Given the Facebook OAuth request is successful
      When I sign up with Facebook
      Then I do have avatar
+
+  Scenario: User cannot sign up with OAuth if provider email already taken by another user
+    Given Existing user with Facebook email
+    And the Facebook OAuth request with email is successful
+    And I try to sign up with Facebook
+    Then I should see "email is already linked"
+    Then there should be no Facebook account
 
   Scenario: User signed up with social provider can set up his password
     Given I signed up with LinkedIn without password

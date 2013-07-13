@@ -1,7 +1,7 @@
 module Social
   module Linkedin
-    KEY    = ENV["LINKEDIN_KEY"]
-    SECRET = ENV["LINKEDIN_SECRET"]
+    KEY    = DesksnearMe::Application.config.linkedin_key
+    SECRET = DesksnearMe::Application.config.linkedin_secret
 
     def self.meta
       { name: "LinkedIn",

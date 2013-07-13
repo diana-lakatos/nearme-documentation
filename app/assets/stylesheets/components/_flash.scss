@@ -51,7 +51,7 @@
   }
 
   &.error {
-    background-color: $dnm_red;
+    background-color: $theme_red;
 
     i {
       @extend .ico-warning;
@@ -59,7 +59,7 @@
   }
 
   &.deleted {
-    background-color: $dnm_red;
+    background-color: $theme_red;
 
     i {
       @extend .ico-close;
@@ -67,7 +67,7 @@
   }
 
   &.warning {
-    background-color: $dnm_orange;
+    background-color: $theme_orange;
 
     i {
       @extend .ico-warning;

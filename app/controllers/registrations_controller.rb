@@ -40,6 +40,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def update
+    resource.country_name_required = true
     if resource.update_with_password(params[resource_name])
       set_flash_message :success, :updated
       sign_in(resource, :bypass => true)

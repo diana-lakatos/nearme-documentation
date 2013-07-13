@@ -48,7 +48,7 @@ Feature: Emails should be sent out informing parties about reservations
   @javascript
   Scenario: unconfirmed reservation gets rejected
     Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
-    When the owner rejects the reservation
+    When the owner declines the reservation
     Then a reservation rejected email should be sent to keith@example.com
 
   Scenario: unconfirmed reservation expires

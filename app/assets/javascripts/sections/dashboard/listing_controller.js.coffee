@@ -31,13 +31,13 @@ class @Dashboard.ListingController
     @dailyInput = @container.find('.price-inputs-daily').find('input[type="radio"]')
     @hourlyInput = @container.find('.price-inputs-hourly').find('input[type="radio"]')
 
+    @hideNotCheckedPriceFields()
+
     @hourlyInput.on 'change', (e) =>
       @togglePriceFields()
 
     @dailyInput.on 'change', (e) =>
       @togglePriceFields()
-
-    @togglePriceFields()
 
   togglePriceFields: ->
     if @dailyInput.is(':checked')
@@ -47,3 +47,6 @@ class @Dashboard.ListingController
       @priceFieldsHourly.show()
       @priceFieldsDaily.hide()
 
+  hideNotCheckedPriceFields: ->
+    @priceFieldsHourly.hide() unless @hourlyInput.is(':checked')
+    @priceFieldsDaily.hide() unless @dailyInput.is(':checked')

@@ -37,7 +37,7 @@
     a {
       display: block;
       margin: 40px auto;
-      color: $dnm_white;
+      color: $theme_white;
       @include opacity(.7);
       @include transition(opacity, ease-in, .1s);
 
