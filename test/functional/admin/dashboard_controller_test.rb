@@ -8,7 +8,7 @@ class Admin::DashboardControllerTest < ActionController::TestCase
       should "not display and redirect to home page" do
         get :show
         assert_response :redirect
-        assert_redirected_to root_url
+        assert_redirected_to new_user_session_url
       end
     end
   end
