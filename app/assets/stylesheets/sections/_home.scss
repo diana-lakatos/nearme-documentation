@@ -6,8 +6,8 @@ section.public {
     height: 580px;
     background: image-url($theme_hero) center center no-repeat;
     @include background-size(cover);
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=image_path($theme_hero), sizingMethod='scale');
-    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=image_path($theme_hero), sizingMethod='scale')";
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=#{image_path($theme_hero)}, sizingMethod='scale');
+    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=#{image_path($theme_hero)}, sizingMethod='scale')";
     @include box-shadow(rgba(black, .2) 0 0 20px 20px inset); 
 
     @media (max-width: 767px) {
