@@ -26,7 +26,7 @@
             %span.ico-lock
 
           %div.pnotice
-            =raw "Forgot? #{link_to('Reset your password', new_user_password_url)}"
+            =raw "Forgot? #{link_to('Reset your password', new_user_password_url(return_to: params[:return_to]), :rel => 'modal.sign-up-modal')}"
 
           .actions
             = f.submit "Log In", :tabindex => '3'
