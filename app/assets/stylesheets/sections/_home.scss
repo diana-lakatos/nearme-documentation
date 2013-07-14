@@ -96,12 +96,23 @@ section.public {
     [class*=span]:first-child{
       margin-bottom: 8px;
     }
+    .search-button-container{
+      width: 24.9%;
+      margin-left: 8px;
+    }
   }
 
   form input[type="text"] {
     margin-bottom: 0;
   }
-  
+
+  @media (min-width: 1200px){
+    .search-button-container{
+      width: 24.69%;
+      margin-left: 8px;
+    }
+  }
+
   form {
     clear: both;
 
