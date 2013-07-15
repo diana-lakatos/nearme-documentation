@@ -1,0 +1,26 @@
+- title "Bookings (#{@reservations.count})"
+
+.row-fluid
+  .span8.offset2
+    %h1
+      %span.ico-bookings.padding My Bookings
+    .box
+      - if @reservations.empty?
+        %p You currently have no bookings. Find a space near you!
+        = render :partial =>"shared/search_box"
+      - else
+        %section.reservations
+          .span12.reservation-navigation
+            .span6
+              = reservation_navigation_link('upcoming', @upcoming_reservation_count)
+            .span6
+              = reservation_navigation_link('archived', @archived_reservation_count)
+
+          - if @reservation
+            = render @reservation
+            - unless (@reservations - [@reservation]).empty?
+              %h2{:class => 'other-reservation-separator'}
+                #{pluralize((@reservations - [@reservation]).count, ' other booking')}
+
+          .reservation-list
+            = render @reservations - [@reservation]
