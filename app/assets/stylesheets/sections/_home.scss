@@ -1,14 +1,29 @@
 section.public {
-  
+
   #hero {
+    position: relative;
     margin-top: -32px;
     width: auto;
     height: 580px;
-    background: image-url($theme_hero) center center no-repeat;
     @include background-size(cover);
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=$theme_hero, sizingMethod='scale');
-    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=$theme_hero, sizingMethod='scale')";
-    @include box-shadow(rgba(black, .2) 0 0 20px 20px inset); 
+    background-image: image-url($theme_hero);
+    background-position: center center;
+
+    > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    // A gradient from left to right
+    > .hero-shadow {
+      position: absolute;
+      z-index: 1; // Behind non-positioned elements in this stacking context
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      @include background(linear-gradient(right, rgba(30,30,34,0), rgba(30,30,34,0.4) 60%, rgba(30,30,34,0.6)));
+    }
 
     @media (max-width: 767px) {
       height: 420px;
@@ -16,7 +31,7 @@ section.public {
 
     @media (max-width: 480px) {
       height: 380px;
-    }   
+    }
   }
 
   .caption a {
@@ -92,8 +107,34 @@ section.public {
       font:normal 16px/22px $font-medium, sans-serif;
     }      
   }
-  @media (max-width: 768px){
-    [class*=span]:first-child{
+
+  .input-wrapper, .button-wrapper {
+    position: relative;
+    float: left;
+    @include box-sizing(border-box);
+  }
+
+  .input-wrapper {
+    width: 75%;
+    padding-right: 8px;
+  }
+
+  .button-wrapper {
+    width: 25%;
+    a {
+      display: block;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .input-wrapper, .button-wrapper {
+      float: none;
+      display: block;
+      width: 100%;
+    }
+
+    .input-wrapper {
+      padding-right: 0;
       margin-bottom: 8px;
     }
   }
@@ -101,7 +142,7 @@ section.public {
   form input[type="text"] {
     margin-bottom: 0;
   }
-  
+
   form {
     clear: both;
 

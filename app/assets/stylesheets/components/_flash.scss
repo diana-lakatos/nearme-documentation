@@ -11,6 +11,10 @@
   width: 100%;
   @include opacity(.8);
 
+  &.static {
+    position: static;
+  }
+
   p {
     margin: 0px;
     padding: 0px 49px 0px 0px;
@@ -42,7 +46,7 @@
     }
   }
 
-  &.success {
+  &.success, &.notice {
     background-color: #00693A;
 
     i {

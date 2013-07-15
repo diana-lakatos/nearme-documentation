@@ -3,6 +3,7 @@ FactoryGirl.define do
     email { "#{name.to_s.downcase.underscore}@example.com" }
     password 'password'
     password_confirmation 'password'
+    country_name "United States"
     phone "1234567890"
     mobile_number "1234567890"
     country_name "United States"
@@ -11,6 +12,10 @@ FactoryGirl.define do
     biography "I'm cool!"
 
     sequence(:name) {|n| "User-#{n}"}
+
+    factory :user_without_country_name do
+      country_name nil
+    end
 
     factory :admin do
       admin true

@@ -1,7 +1,9 @@
-- [:success, :warning, :error, :deleted].each do |key|
+- [:notice, :success, :warning, :error, :deleted].each do |key|
   - if flash[key].present?
     %div{class: "alert #{key}", 'data-flash-message' => true}
       %p
         %i
         = flash[key].html_safe
         %a.close.ico-close.right{href: '#'}
+
+

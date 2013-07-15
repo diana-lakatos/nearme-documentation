@@ -35,6 +35,14 @@ Feature: A user can login
      When I sign up with LinkedIn
      Then there should be no LinkedIn account
 
+  Scenario: A not authenticated user can login via LinkedIn even if email do not match
+    Given a user: "john" exists with email: "linkedin@example.com" 
+    Given a user: "maciek" exists with email: "maciek@example.com"
+    Given the authentication_linkedin exists with user: user "maciek"
+      And the LinkedIn OAuth request with email is successful
+     When I try to sign up with LinkedIn
+     Then I should be logged in as user "maciek"
+
   Scenario: Already existing user without avatar gets facebook's picture as avatar when connected
     Given I am logged in manually
       And I do not have avatar

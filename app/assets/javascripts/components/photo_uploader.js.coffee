@@ -50,7 +50,7 @@ class @PhotoUploader
     data.submit()
 
   parseResult: (data) ->
-    if $.browser.msie
+    if $.browser.msie && parseInt($.browser.version) < 10
       result_to_parse = $('pre', data.result).text()
     else
       result_to_parse = data.result
@@ -73,8 +73,8 @@ class @PhotoUploader
       @progressBar.css('width', 0 + '%')
       @photoItem.html(@getLoadingElement())
 
-  getLoadingElement: ->
-    '<div class="thumbnail-processing"><div class="loading-icon"></div><div class="loading-text">Thumbnail processing...</div></div>'
+  getLoadingElement: (text = 'Thumbnail processing...' ) ->
+    '<div class="thumbnail-processing"><div class="loading-icon"></div><div class="loading-text">' + text + '</div></div>'
 
   getPhotoItem: (filename) =>
     $('.photo-item[data-filename="' + filename.hashCode() + '"]').eq(0)
@@ -95,7 +95,11 @@ class @PhotoUploader
   addProgressBar: (filename) ->
     @photoItem = @getPhotoItem(filename)
     if @photoItem.find('.progress').length == 0
-      @photoItem.append('<div class="progress"><div class="bar"></div></div>')
+      if $.browser.msie && parseInt($.browser.version) < 10
+        @photoItem.append(@getLoadingElement('Uploading...'))
+        @photoItem.find('.loading-icon').removeClass('loading-icon').addClass('animated-progress-bar')
+      else
+        @photoItem.append('<div class="progress"><div class="bar"></div></div>')
 
   multiplePhoto: =>
     @uploaded.find('ul').length > 0
@@ -127,7 +131,7 @@ class @PhotoUploader
         @photoItem.append('<input type="hidden" name="uploaded_photos[]" value="' + data.result.id + '">')
 
   getUniqueString: (data) ->
-    if $.browser.msie
+    if $.browser.msie && parseInt($.browser.version) < 10
       data.files[0].name
     else
       data.files[0].lastModifiedDate.toString()

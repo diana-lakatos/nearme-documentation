@@ -39,6 +39,7 @@ class Listing < ActiveRecord::Base
   validates_numericality_of :quantity
   validates_length_of :description, :maximum => 250, :if => lambda { |listing| (listing.instance.nil? || listing.instance.is_desksnearme?) }
   validates_with PriceValidator
+  validates :hourly_reservations, :inclusion => { :in => [true, false], :message => "must be selected" }, :allow_nil => false
 
   # == Helpers
   include Search

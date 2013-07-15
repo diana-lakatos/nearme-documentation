@@ -7,6 +7,21 @@ DesksnearMe::Application.routes.draw do
     mount AfterSignupMailer::Preview => 'mail_view/after_signup'
   end
 
+  namespace :admin do
+    match '/', :to => "dashboard#show"
+    resources :users do
+      member do
+        post :login_as
+      end
+
+      collection do
+        post :restore_session
+      end
+    end
+
+    resources :reservations
+  end
+
   resources :companies
   resources :locations, :only => [:show] do
     resources :listings, :controller => 'locations/listings'
@@ -48,6 +63,7 @@ DesksnearMe::Application.routes.draw do
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
       get :bookings
+      get :payments
       get :listings
       get :manage_guests
     end
