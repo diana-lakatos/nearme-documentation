@@ -12,8 +12,6 @@ class RegistrationsController < Devise::RegistrationsController
   after_filter :rename_flash_messages, :only => [:new, :create, :edit]
   after_filter :render_or_redirect_after_create, :only => [:create]
 
-  layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
-
   def new
     super unless already_signed_in?
   end

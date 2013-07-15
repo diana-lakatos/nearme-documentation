@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   before_filter :require_ssl
 
   protect_from_forgery
-  layout "application"
+  layout :layout_for_request_type
 
   # Much easier to debug ActiveRecord::RecordNotFound issues in dev
   # without this.
@@ -16,6 +16,18 @@ class ApplicationController < ActionController::Base
   after_filter :apply_persisted_mixpanel_attributes
 
   protected
+
+  # Returns the layout to use for the current request.
+  #
+  # By default this is 'application', except for XHR requests where
+  # we use no layout.
+  def layout_for_request_type
+    if request.xhr?
+      false
+    else
+      "application"
+    end
+  end
 
   # Provides an EventTracker instance for the current request.
   #
