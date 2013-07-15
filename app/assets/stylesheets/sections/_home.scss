@@ -1,23 +1,29 @@
 section.public {
 
-  .hero-bg {
-    z-index: -1;
-    @include background-size(cover);
-    background-image: image-url($theme_hero);
-    background-position: center center;
-    height: 640px;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
   #hero {
-    z-index: 1;
+    position: relative;
     margin-top: -32px;
     width: auto;
     height: 580px;
-    @include background(linear-gradient(right, rgba(30,30,34,0), rgba(30,30,34,0.4) 60%, rgba(30,30,34,0.6)));
+    @include background-size(cover);
+    background-image: image-url($theme_hero);
+    background-position: center center;
+
+    > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    // A gradient from left to right
+    > .hero-shadow {
+      position: absolute;
+      z-index: 1; // Behind non-positioned elements in this stacking context
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      @include background(linear-gradient(right, rgba(30,30,34,0), rgba(30,30,34,0.4) 60%, rgba(30,30,34,0.6)));
+    }
 
     @media (max-width: 767px) {
       height: 420px;
