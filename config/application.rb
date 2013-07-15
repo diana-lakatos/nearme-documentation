@@ -65,9 +65,7 @@ module DesksnearMe
     config.facebook_key = "432038396866156"
     config.facebook_secret = "71af86082de1c38a3523a4c8f44aca2d"
 
-    # Production Twitter key/secret
-    # FIXME: Get development specific app setup.
-    config.twitter_key = "687jaGPQNpLHlK0An6zy7g"
-    config.twitter_secret = "b6WZm6oyfh1bou4Nn7ntybL2g5pK9zEaabUqMVeRU"
+    config.twitter_key = "Xas2mKTWPVpqrb5FXUnDg"
+    config.twitter_secret = "nR8pjJ9YcU3eK9pKUPFBNxZuJ5oMci2M96SpZ47Ik"
   end
 end

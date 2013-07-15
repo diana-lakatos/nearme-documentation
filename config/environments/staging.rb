@@ -30,4 +30,7 @@ DesksnearMe::Application.configure do
 
   config.facebook_key = "491810927536381"
   config.facebook_secret = "cce1576ac9f3c4d6998f2c9345360afe"
+
+  config.twitter_key = "8M9qYWg2v2hjTotXg9cWw"
+  config.twitter_secret = "qnP1hPJ1kb2AaN7XTTfN3K4VT3SRN48UWe3vMNtVfEg"
 end
