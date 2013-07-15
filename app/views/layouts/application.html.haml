@@ -41,8 +41,10 @@
 
       %section#content{:class => "#{@section_name || controller_name}"}
         = render 'layouts/hero'
+        = render 'shared/admin_logged_in_as_user' if admin_as_user?
         .container-fluid
           = yield unless render_content_outside_container?
+
         = yield if render_content_outside_container?
 
       = render 'layouts/footer'

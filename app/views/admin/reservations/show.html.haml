@@ -1,0 +1,63 @@
+%h1 Reservation
+
+%table.table
+  %tr
+    %th Booker
+    %td
+      %div= link_to resource.owner.name, admin_user_url(resource.owner)
+      %small= resource.owner.email
+
+  %tr
+    %th Listing
+    %td
+      %div= resource.listing.name
+      %div
+        %small= resource.listing.company.name
+      %div
+        %small= resource.listing.location.address
+      %div
+        %small= link_to resource.listing.creator.name, admin_user_url(resource.listing.creator)
+
+  %tr
+    %th Quantity
+    %td= resource.quantity
+
+  %tr
+    %th State
+    %td
+      %span.label{:class => "label-#{admin_reservation_state_label_class(resource)}"}
+        = resource.state
+
+  %tr
+    %th Total Amount
+    %td= resource.total_amount
+
+
+%h2 Periods
+
+%table.table.table-striped
+  %tr
+    %th Date
+    %th Start Time
+    %th End Time
+
+  - resource.periods.each do |period|
+    %tr
+      %td= period.date
+      %td= minute_of_day_to_time(period.start_minute).strftime('%k:%I%p')
+      %td= minute_of_day_to_time(period.end_minute).strftime('%k:%I%p')
+
+%h2 Charges
+
+%table.table.table-striped
+  - resource.charges.each do |charge|
+    %tr
+      %td
+        = charge.amount
+        %span.label{:class => "label=#{charge.success? ? 'success' : 'danger'}"}
+          = charge.success? ? 'successful' : 'failed'
+
+      %td
+        - if !charge.success?
+          %pre
+            = charge.response
