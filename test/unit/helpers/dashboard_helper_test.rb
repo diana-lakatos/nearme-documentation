@@ -75,8 +75,8 @@ class DashboardHelperTest < ActionView::TestCase
   private
 
   def setup_charges
-    @yesterday = Time.now - 1.day
-    @three_days_ago = Time.now - 3.days
+    @yesterday = Time.now.utc - 1.day
+    @three_days_ago = Time.now.utc - 3.days
     @charge_usd1 = FactoryGirl.create(:charge, :created_at => @yesterday, :currency => 'USD', :amount => 100)
     @charge_usd1 = FactoryGirl.create(:charge, :created_at => @three_days_ago, :currency => 'USD', :amount => 150)
     @charge_usd2 = FactoryGirl.create(:charge, :created_at => @yesterday, :currency => 'USD', :amount => 200)
