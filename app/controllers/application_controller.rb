@@ -121,13 +121,32 @@ class ApplicationController < ActionController::Base
     render "public/404", :status => :not_found
   end
 
+  # Clears out the current response data and instead outputs json with
+  # a 200 OK status code in the format:
+  # { 'redirect': 'url' }
+  #
+  # Client-side AJAX handlers should handle the redirect.
+  #
+  # This is to work around browsers redirecting within the AJAX handler,
+  # where instead we want the user to do a full page reload.
+  #
+  # Assumes that the current response is a redirect.
   def render_redirect_url_as_json
-        self.response_body = nil
-        redirection_url = response.location
-        response.location = nil
-        response.status = 200
-        render :json => { "redirect" => redirection_url }
-        self.content_type = 'application/json'
+    unless response.location.present?
+      raise "No redirect url provided. Need to call redirect_to first."
+    end
+
+    redirect_json = { "redirect" => response.location }
+
+    # Clear out existing response
+    self.response_body = nil
+    response.location = nil
+
+    render(
+      :json => redirect_json,
+      :content_type => 'application/json',
+      :status => 200
+    )
   end
 
   def rename_flash_messages
