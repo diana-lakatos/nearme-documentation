@@ -1,6 +1,5 @@
 class PasswordsController < Devise::PasswordsController
   before_filter :set_return_to, :only => [:new, :create]
-  after_filter :rename_flash_messages, only: [:create]
   after_filter :render_or_redirect_after_create, only: [:create]
 
   private
@@ -16,7 +15,7 @@ class PasswordsController < Devise::PasswordsController
   end
 
   def set_return_to
-    session[:user_return_to] = params[:return_to] if params[:return_to].present?
+    session[:user_return_to] = params[:return_to].presence
   end
 
 end
