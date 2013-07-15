@@ -92,25 +92,40 @@ section.public {
       font:normal 16px/22px $font-medium, sans-serif;
     }      
   }
-  @media (max-width: 768px){
-    [class*=span]:first-child{
-      margin-bottom: 8px;
+
+  .input-wrapper, .button-wrapper {
+    position: relative;
+    float: left;
+    @include box-sizing(border-box);
+  }
+
+  .input-wrapper {
+    width: 75%;
+    padding-right: 8px;
+  }
+
+  .button-wrapper {
+    width: 25%;
+    a {
+      display: block;
     }
-    .search-button-container{
-      width: 24.9%;
-      margin-left: 8px;
+  }
+
+  @media (max-width: 480px) {
+    .input-wrapper, .button-wrapper {
+      float: none;
+      display: block;
+      width: 100%;
+    }
+
+    .input-wrapper {
+      padding-right: 0;
+      margin-bottom: 8px;
     }
   }
 
   form input[type="text"] {
     margin-bottom: 0;
-  }
-
-  @media (min-width: 1200px){
-    .search-button-container{
-      width: 24.69%;
-      margin-left: 8px;
-    }
   }
 
   form {
