@@ -24,14 +24,15 @@ module Listings
         end
         event_tracker.requested_a_booking(@reservation)
 
-        render # Successfully reserved listing
+        flash[:notice] =  "Your reservation has been made! #{@reservation.credit_card_payment? ? "<br />Your credit card will be charged when your reservation is confirmed by the host." : "" }".html_safe
+        if request.xhr? 
+          render :json => { :redirect => upcoming_reservations_path(:id => @reservation) }
+        else
+          render
+        end
       else
         render :review
       end
-    end
-
-    def show
-      @reservation = current_user.reservations.find(params[:id])
     end
 
     def export

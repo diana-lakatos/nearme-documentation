@@ -2,6 +2,7 @@ class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
   before_filter :fetch_reservations
   before_filter :fetch_reservation, :only => [:user_cancel]
+  before_filter :get_count_by_type, :only => [:index, :upcoming, :archived]
 
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
@@ -21,6 +22,21 @@ class ReservationsController < ApplicationController
     redirect_to redirection_path
   end
 
+  def index
+    redirect_to upcoming_reservations_path
+  end
+
+  def upcoming
+    @reservations = current_user.reservations.not_archived.to_a.sort_by(&:date)
+    @reservation = params[:id] ? current_user.reservations.find(params[:id]) : nil
+    render :index
+  end
+
+  def archived
+    @reservations = current_user.reservations.archived.to_a.sort_by(&:date)
+    render :index
+  end
+
   protected
 
   def fetch_reservations
@@ -29,6 +45,11 @@ class ReservationsController < ApplicationController
 
   def fetch_reservation
     @reservation = @reservations.find(params[:id])
+  end
+
+  def get_count_by_type
+    @upcoming_reservation_count = current_user.reservations.not_archived.count
+    @archived_reservation_count = current_user.reservations.archived.count
   end
 
   def allowed_events

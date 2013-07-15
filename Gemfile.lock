@@ -516,11 +516,8 @@ DEPENDENCIES
   guard-spork
   haml
   handlebars_assets
-<<<<<<< HEAD
   icalendar
-=======
   inherited_resources
->>>>>>> master
   jasmine
   jquery-fileupload-rails
   jquery-rails

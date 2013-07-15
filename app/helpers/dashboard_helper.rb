@@ -92,7 +92,7 @@ module DashboardHelper
 
   def labels_for_chart
     @labels_for_chart ||= [].tap do |arr|
-      (0..6).each { |i| arr << format_charge_date_for_graph(Date.today - i.day) }
+      (0..6).each { |i| arr << format_charge_date_for_graph(Time.zone.today - i.day) }
     end.sort
   end
 

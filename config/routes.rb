@@ -61,11 +61,15 @@ DesksnearMe::Application.routes.draw do
     member do
       post :user_cancel
     end
+    collection do
+      get :upcoming
+      get :archived
+    end
   end
 
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
-      get :bookings
+      get :bookings, :to => 'reservations#upcoming'
       get :payments
       get :listings
       get :manage_guests

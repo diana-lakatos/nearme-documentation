@@ -8,15 +8,16 @@ class ChargeTest < ActiveSupport::TestCase
   context 'last x days' do
 
     setup do
+      Charge.destroy_all
       5.times do |i|
         3.times do |j|
-          FactoryGirl.create(:charge, :created_at => (Time.now.utc - i.days))
+          FactoryGirl.create(:charge, :created_at => "#{(Time.zone.today - i.days)} 02:00:00")
         end
       end
     end
 
     should 'be able to scope to x days correctly' do
-      assert_equal 12, Charge.last_x_days(4).count
+      assert_equal 6, Charge.last_x_days(1).count
     end
     
     should 'be able to scope to x days correctly even if last charge was before end date' do

@@ -36,8 +36,8 @@ class DashboardControllerTest < ActionController::TestCase
       context 'date' do 
 
         setup do
-          @charge_created_6_days_ago = create_charge(:currency => 'USD', :amount => 100, :created_at => Time.now - 6.day)
-          @charge_created_7_days_ago = create_charge(:currency => 'USD', :amount => 100, :created_at => Time.now - 7.day)
+          @charge_created_6_days_ago = create_charge(:currency => 'USD', :amount => 100, :created_at => "#{Time.zone.today - 6.day} 01:00:00")
+          @charge_created_7_days_ago = create_charge(:currency => 'USD', :amount => 100, :created_at => "#{Time.zone.today - 7.day} 01:00:00")
         end
 
         should '@last_week_charges includes only charges not older than 6 days' do

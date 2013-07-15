@@ -49,6 +49,16 @@ module ReservationsHelper
       reservation.payment_status.titleize
     end
   end
+  
+  def reservation_status_klass(reservation)
+    if reservation.confirmed?
+      'confirmed'
+    elsif reservation.unconfirmed?
+      'unconfirmed'
+    else reservation.cancelled? || reservation.rejected? 
+       'cancelled'
+    end
+  end
 
   def reservation_balance(reservation)
     humanized_money_with_cents_and_symbol(reservation.balance/100.0)
@@ -122,6 +132,10 @@ module ReservationsHelper
       end
       groups 
     }
+  end
+
+  def reservation_navigation_link(action, count)
+    (link_to(content_tag(:span, count) + action.titleize, self.send("#{action}_reservations_path"), :class => "upcoming-reservations btn btn-full btn-gray#{action==params[:action] ? " active" : ""}")).html_safe
   end
 
 end

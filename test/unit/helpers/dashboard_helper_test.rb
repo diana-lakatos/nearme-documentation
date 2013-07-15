@@ -56,17 +56,15 @@ class DashboardHelperTest < ActionView::TestCase
       end
 
       should 'display values from today to 6 days ago in correct order' do
-        Timecop.freeze(Date.parse('2013-07-14'))
         assert_equal [
-          format_charge_date_for_graph(Date.parse('2013-07-08')),
-          format_charge_date_for_graph(Date.parse('2013-07-09')),
-          format_charge_date_for_graph(Date.parse('2013-07-10')),
-          format_charge_date_for_graph(Date.parse('2013-07-11')),
-          format_charge_date_for_graph(Date.parse('2013-07-12')),
-          format_charge_date_for_graph(Date.parse('2013-07-13')),
-          format_charge_date_for_graph(Date.parse('2013-07-14')),
+          format_charge_date_for_graph(Time.zone.today - 6.day),
+          format_charge_date_for_graph(Time.zone.today - 5.day),
+          format_charge_date_for_graph(Time.zone.today - 4.day),
+          format_charge_date_for_graph(Time.zone.today - 3.day),
+          format_charge_date_for_graph(Time.zone.today - 2.day),
+          format_charge_date_for_graph(Time.zone.today - 1.day),
+          format_charge_date_for_graph(Time.zone.today - 0.day)
         ], labels_for_chart
-        Timecop.return
       end
     end
 
@@ -75,8 +73,8 @@ class DashboardHelperTest < ActionView::TestCase
   private
 
   def setup_charges
-    @yesterday = Time.now.utc - 1.day
-    @three_days_ago = Time.now.utc - 3.days
+    @yesterday = "#{Time.zone.today - 1.day} 01:00:00"
+    @three_days_ago = "#{Time.zone.today - 3.days} 01:00:00"
     @charge_usd1 = FactoryGirl.create(:charge, :created_at => @yesterday, :currency => 'USD', :amount => 100)
     @charge_usd1 = FactoryGirl.create(:charge, :created_at => @three_days_ago, :currency => 'USD', :amount => 150)
     @charge_usd2 = FactoryGirl.create(:charge, :created_at => @yesterday, :currency => 'USD', :amount => 200)

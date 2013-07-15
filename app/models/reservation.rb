@@ -96,18 +96,22 @@ class Reservation < ActiveRecord::Base
 
   scope :upcoming, lambda {
     joins(:periods).
-      where('reservation_periods.date >= ?', Date.today).
+      where('reservation_periods.date >= ?', Time.zone.today).
       uniq
   }
 
   scope :past, lambda {
     joins(:periods).
-      where('reservation_periods.date < ?', Date.today).
+      where('reservation_periods.date < ?', Time.zone.today).
       uniq
   }
 
   scope :visible, lambda {
     without_state(:cancelled).upcoming
+  }
+
+  scope :not_archived, lambda {
+    upcoming.without_state(:cancelled, :rejected, :expired).uniq
   }
 
   scope :not_rejected_or_cancelled, lambda {
@@ -116,6 +120,10 @@ class Reservation < ActiveRecord::Base
 
   scope :cancelled, lambda {
     with_state(:cancelled)
+  }
+
+  scope :archived, lambda {
+    joins(:periods).where('reservation_periods.date < ? OR state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled']).uniq
   }
 
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
@@ -128,6 +136,10 @@ class Reservation < ActiveRecord::Base
   def user=(value)
     self.owner = value
     self.confirmation_email = value.email
+  end
+
+  def host
+    @host ||= listing.creator
   end
 
   def date=(value)
@@ -155,11 +167,11 @@ class Reservation < ActiveRecord::Base
 
   # Returns whether any of the reserved dates have started
   def started?
-    periods.any? { |p| p.date <= Date.today }
+    periods.any? { |p| p.date <= Time.zone.today }
   end
 
   def archived?
-    rejected? or cancelled? or periods.all? {|p| p.date < Date.today}
+    rejected? or cancelled? or periods.all? {|p| p.date < Time.zone.today}
   end
 
   def add_period(date, start_minute = nil, end_minute = nil)
