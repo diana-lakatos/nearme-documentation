@@ -26,7 +26,20 @@ DesksnearMe::Application.configure do
   config.stripe_api_key = "sk_live_YJet2CBSWgQ2UeuvQiG0vKEC"
   config.stripe_public_key = "pk_live_h3zjCFhi02B4c9juuzmFOe3n"
 
-  # Minification was introducing IE bugs - turn off for now
-  #config.assets.compress = true
-  #config.assets.js_compressor = :uglifier
+  # Uncomment if you precompile assets
+  # config.assets.compile = false
+
+  config.assets.compress = true
+  config.assets.js_compressor = :uglifier
+
+  # Production specific app keys/secrets for social properties.
+  config.linkedin_key = "2qyp4vpjl8uh"
+  config.linkedin_secret = "PQfyGFyutsoPwcOY"
+
+  config.facebook_key = "301871243226028"
+  config.facebook_secret = "ac8bb27ccebedccc7535d0df73e60640"
+
+  config.twitter_key = "687jaGPQNpLHlK0An6zy7g"
+  config.twitter_secret = "b6WZm6oyfh1bou4Nn7ntybL2g5pK9zEaabUqMVeRU"
+
 end

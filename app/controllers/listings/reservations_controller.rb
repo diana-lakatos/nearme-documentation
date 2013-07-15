@@ -4,8 +4,6 @@ module Listings
     before_filter :build_reservation, :only => [:review, :create]
     before_filter :require_login_for_reservation, :only => [:review, :create]
 
-    layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
-
     def review
       @reservation.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
       event_tracker.opened_booking_modal(@reservation)

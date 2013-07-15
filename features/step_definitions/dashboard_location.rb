@@ -27,7 +27,6 @@ When /^I fill (location|listing) form with valid details$/ do |model|
 end
 
 When /^I (disable|enable) (.*) pricing$/ do |action, period|
-
   page.find("#enable_#{period}").set(action == 'disable' ? false : true)
   if action=='enable'
     page.find("#listing_#{period}_price").set(15.50)
@@ -48,11 +47,11 @@ When /^I submit the form$/ do
 end
 
 When /^I click edit icon$/ do
-  page.find('.edit-link').click
+  page.find('.ico-edit').click
 end
 
 When /^I click edit listing icon$/ do
-  page.find('.listing .edit-link').click
+  page.find('.listing .ico-edit').click
 end
 
 When /^I click delete (location|listing) link$/ do |model|

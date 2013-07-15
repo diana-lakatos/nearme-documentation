@@ -1,4 +1,3 @@
-@javascript
 Feature: A user can see location details
   In order to make a reservation
   As a user

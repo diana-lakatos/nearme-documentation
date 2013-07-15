@@ -72,6 +72,25 @@
           color: $gray220;
         }  
       }
+
+      // fix for IE8 sign in/sign up modal opacity issues
+      header,
+      #service_buttons a,
+      .control-group,
+      .pnotice,
+      .actions {
+        @include opacity(1);
+      }
+
+      .pnotice {
+        a {
+          color: $theme_white;
+          @include opacity(0.7);
+          &:hover {
+            @include opacity(1);
+          }
+        }
+      }
     }
 
     .modal-loading {
@@ -141,6 +160,11 @@
     background: transparent;
     color: $gray120;
     font-weight: bold;
+  }
+
+  .intro {
+    font-weight: bold;
+    color: $dnm_white;
   }
 }
 

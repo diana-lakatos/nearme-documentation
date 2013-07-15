@@ -21,9 +21,7 @@ class SpaceWizardController < ApplicationController
   def list
     @company ||= @user.companies.build
     @location ||= @company.locations.build
-    @listing ||= @location.listings.build(
-      :daily_price => 50.00
-    )
+    @listing ||= @location.listings.build
   end
 
   def submit_listing
@@ -31,7 +29,7 @@ class SpaceWizardController < ApplicationController
     @company.attributes = params[:company]
 
     @user = current_user
-    @user.phone_and_country_required = true
+    @user.phone_required = true
     @user.attributes = params[:user]
 
     user_valid = @user.valid?

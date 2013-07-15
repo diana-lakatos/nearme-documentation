@@ -1,0 +1,40 @@
+- title "Payments"
+
+%section#payments
+  .row-fluid
+    .span8.offset2
+      %h1
+        %i{class: 'ico-credit-card'}
+        Payments
+      .box
+        - if @charges.empty?
+          %p.no_data You have not received any payments in the preceding 7 day period.
+        - else
+          .charges-graph
+            .charges-total.right
+              - group_charges(@last_week_charges).each do |currency, values|
+                .total-number.left
+                  = "#{currency_content_tag(currency, values.sum { |k, v| v.amount }, :span, { :rel => false })}".html_safe
+              %span{class: 'total-text'} 7 day total
+            %canvas#charge-chart
+
+          .charges-details
+            - @charges.each do |charge|
+              .clearfix.charge-line-item
+                .left
+                  = "#{currency_content_tag(charge.currency, charge.price, :span, { :rel => false })}".html_safe
+                  %span{class: 'location-name'}= "#{charge.reference.listing.location.name}".html_safe
+                .right
+                  = charge.created_at.strftime('%Y-%m-%d')
+
+            .charges-total
+              - @all_time_totals.each do |total|
+                - total = Money.new(total[:sum], total[:currency])
+                .total-number.left
+                  = "#{currency_content_tag(total.currency, total.amount, :span, { :rel => false })}".html_safe
+              %span{class: 'total-text'} all time total
+
+            = will_paginate @charges
+
+- content_for :domready do
+  new ChartWrapper.Line($('#charge-chart'), #{values_for_chart(@last_week_charges).to_json.html_safe}, #{labels_for_chart.to_json.html_safe})

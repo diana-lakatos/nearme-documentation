@@ -10,6 +10,15 @@ class Company < ActiveRecord::Base
            dependent: :destroy,
            inverse_of: :company
 
+  has_many :listings,
+           through: :locations
+
+  has_many :reservations,
+           through: :listings
+
+  has_many :charges,
+           through: :reservations
+
   has_many :company_industries
   has_many :industries, :through => :company_industries
 

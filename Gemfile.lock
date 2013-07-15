@@ -80,6 +80,8 @@ GEM
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
     chameleon (0.2.3)
+    chartjs-rails (0.1)
+      railties (>= 3.1)
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
     chosen-rails (0.9.11.2)
@@ -99,7 +101,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.4.0)
-    columnize (0.3.6)
     compass (0.12.2)
       chunky_png (~> 1.2)
       fssm (>= 0.2.7)
@@ -118,12 +119,6 @@ GEM
       nokogiri (>= 1.5.0)
     daemons (1.1.9)
     database_cleaner (0.9.1)
-    debugger (1.5.0)
-      columnize (>= 0.3.1)
-      debugger-linecache (~> 1.2.0)
-      debugger-ruby_core_source (~> 1.2.0)
-    debugger-linecache (1.2.0)
-    debugger-ruby_core_source (1.2.0)
     decent_exposure (2.0.1)
     delayed_job (3.0.5)
       activesupport (~> 3.0)
@@ -159,7 +154,7 @@ GEM
     faraday (0.8.4)
       multipart-post (~> 1.1)
     ffaker (1.15.0)
-    ffi (1.4.0)
+    ffi (1.9.0)
     fog (1.8.0)
       builder
       excon (~> 0.14)
@@ -205,7 +200,8 @@ GEM
       execjs (>= 1.2.9)
       sprockets (>= 2.0.3)
       tilt
-    hashie (1.2.0)
+    has_scope (0.5.1)
+    hashie (2.0.5)
     hike (1.2.1)
     httparty (0.11.0)
       multi_json (~> 1.0)
@@ -213,6 +209,9 @@ GEM
     httpauth (0.2.0)
     i18n (0.6.1)
     icalendar (1.4.1)
+    inherited_resources (1.4.0)
+      has_scope (~> 0.5.0)
+      responders (~> 0.9)
     jasmine (1.3.1)
       jasmine-core (~> 1.3.1)
       rack (~> 1.0)
@@ -245,7 +244,7 @@ GEM
       tilt
     metaclass (0.0.1)
     method_source (0.8.1)
-    mime-types (1.21)
+    mime-types (1.23)
     mini_magick (3.4)
       subexec (~> 0.2.1)
     minitest (4.3.3)
@@ -261,7 +260,7 @@ GEM
       activesupport (~> 3.0)
       money (~> 5.1.0)
       railties (~> 3.0)
-    multi_json (1.7.0)
+    multi_json (1.7.7)
     multi_xml (0.5.3)
     multipart-post (1.1.5)
     mustachejs-rails (0.7.1)
@@ -269,7 +268,7 @@ GEM
       net-ssh (>= 1.99.1)
     net-ssh (2.6.3)
     newrelic_rpm (3.5.6.55)
-    nokogiri (1.5.6)
+    nokogiri (1.5.10)
     oauth (0.4.7)
     oauth2 (0.8.0)
       faraday (~> 0.8)
@@ -277,12 +276,12 @@ GEM
       jwt (~> 0.1.4)
       multi_json (~> 1.0)
       rack (~> 1.2)
-    omniauth (1.1.1)
-      hashie (~> 1.2)
+    omniauth (1.1.4)
+      hashie (>= 1.2, < 3)
       rack
     omniauth-facebook (1.4.1)
       omniauth-oauth2 (~> 1.1.0)
-    omniauth-linkedin (0.0.8)
+    omniauth-linkedin (0.1.0)
       omniauth-oauth (~> 1.0)
     omniauth-oauth (1.0.1)
       oauth
@@ -309,9 +308,6 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
-    pry-debugger (0.2.2)
-      debugger (~> 1.3)
-      pry (~> 0.9.10)
     quiet_assets (1.0.1)
       railties (~> 3.1)
     rack (1.4.5)
@@ -361,6 +357,8 @@ GEM
     redis (3.0.2)
     redis-namespace (1.2.1)
       redis (~> 3.0.0)
+    responders (0.9.3)
+      railties (~> 3.1)
     resque (1.23.0)
       multi_json (~> 1.0)
       redis-namespace (~> 1.0)
@@ -389,7 +387,7 @@ GEM
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
-    selenium-webdriver (2.31.0)
+    selenium-webdriver (2.33.0)
       childprocess (>= 0.2.5)
       multi_json (~> 1.0)
       rubyzip
@@ -459,7 +457,7 @@ GEM
       jwt (>= 0.1.2)
       multi_json (>= 1.3.0)
     tzinfo (0.3.37)
-    uglifier (1.3.0)
+    uglifier (2.1.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
     unicorn (4.5.0)
@@ -489,6 +487,7 @@ DEPENDENCIES
   capybara (~> 1.1.2)
   carrierwave
   chameleon
+  chartjs-rails
   chosen-rails
   chronic
   client_side_validations!
@@ -497,7 +496,6 @@ DEPENDENCIES
   compass-rails
   cucumber-rails
   database_cleaner
-  debugger
   decent_exposure
   delayed_job_active_record
   devise
@@ -518,7 +516,11 @@ DEPENDENCIES
   guard-spork
   haml
   handlebars_assets
+<<<<<<< HEAD
   icalendar
+=======
+  inherited_resources
+>>>>>>> master
   jasmine
   jquery-fileupload-rails
   jquery-rails
@@ -542,7 +544,6 @@ DEPENDENCIES
   pg
   pg_search
   pickle
-  pry-debugger
   quiet_assets
   rails (= 3.2.13)
   rails-backbone
@@ -570,7 +571,7 @@ DEPENDENCIES
   turn
   tweet-button
   twilio-ruby
-  uglifier
+  uglifier (~> 2.1.0)
   unicorn
   vcr
   webmock!

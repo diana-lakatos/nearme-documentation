@@ -1,18 +1,27 @@
 - title "Reset Password"
 
-.sign-up
-  .container-fluid
-    .row-fluid
-      .span8.offset2
-        .box
-          %h2== Reset Your Password
-          %p.intro
-            Fill in your email below and we'll send you instructions to reset your password.
+.row-fluid
+  #signup
+    .span8.offset2
+      .box
+        %h2== Reset Your Password
+        %p.intro
+          Fill in your email below and we'll send you instructions to reset your password.
 
-          = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { class: "form-horizontal" }) do |f|
-            = f.input :email
+        = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name)) do |f|
+          .email-holder.input-icon-holder
+            = f.input :email, :label => false, :placeholder => "Email", :tabindex => '1'
+            %span.ico-mail
 
-            .actions
-              = f.submit "Reset Password"
+          .actions
+            = f.submit "Reset Password"
 
+- if request.xhr?
+  :javascript
+    Modal.setClass('sign-up-modal')
+
+:javascript
+  $(function() {
+    new SigninForm($('#signup'))
+  });
 

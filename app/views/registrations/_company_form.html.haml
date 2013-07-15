@@ -1,7 +1,0 @@
-= simple_form_for resource, :as => resource_name, :url => url, :html => { class: "form-horizontal form-expandable", :id => 'edit_company' } do |f|
-  = f.simple_fields_for :companies do |builder|
-
-    = render :partial => 'companies/company_form', :locals => { :f => builder }
-
-  .actions
-    = f.submit (resource.persisted?) ? "Save Changes" : "Sign Up Now"

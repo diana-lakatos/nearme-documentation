@@ -63,7 +63,7 @@ When /I try to sign up with (.*)$/ do |social|
 end
 
 When /I type in my password in edit page/ do
-  update_current_user_information({:password => 'my_password'})
+  update_current_user_information({:password => 'my_password', :country_name => 'United States'})
 end
 
 Then /I should have password/ do
@@ -139,4 +139,8 @@ Then  /^I should not be relogged as other user$/ do
   current_path = URI.parse(current_url).path
   assert_equal edit_user_registration_path, current_path
 
+end
+
+Given /^the (.*) OAuth request with email is successful$/ do |social|
+  mock_successful_authentication_with_provider(social, {info: {email: "#{social.downcase}@example.com"}})
 end

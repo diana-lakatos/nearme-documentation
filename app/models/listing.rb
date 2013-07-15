@@ -39,6 +39,7 @@ class Listing < ActiveRecord::Base
   validates_numericality_of :quantity
   validates_length_of :description, :maximum => 250, :if => lambda { |listing| (listing.instance.nil? || listing.instance.is_desksnearme?) }
   validates_with PriceValidator
+  validates :hourly_reservations, :inclusion => { :in => [true, false], :message => "must be selected" }, :allow_nil => false
 
   # == Helpers
   include Search
@@ -56,6 +57,7 @@ class Listing < ActiveRecord::Base
   delegate :name, to: :creator, prefix: true
   delegate :notify_user_about_change, :to => :location, :allow_nil => true
   delegate :to_s, to: :name
+  delegate :service_fee_percent, to: :creator, allow_nil: true
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description, 
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,

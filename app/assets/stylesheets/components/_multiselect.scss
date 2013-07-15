@@ -6,7 +6,7 @@
 
   .collapsed {
     padding: 4px 8px;
-    border-radius: 8px;
+    border-radius: $border-radius-default;
     background: $gray230 image-url("https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png") 95% center no-repeat;    
     font-size: 16px;
     line-height: 26px;
@@ -26,7 +26,7 @@
     right: -2px;
     left: -2px;
     z-index: $absolute-top-z-index + 999;
-    border-radius: $border-radius-mobile;
+    border-radius: $border-radius-default;
     background: lighten($dark-gray, 60%);
 
     .summary, 
@@ -43,7 +43,7 @@
       font-size: 16px;
       line-height: 26px;
       padding: 4px 8px;
-      border-radius: $border-radius-medium;
+      border-radius: $border-radius-default;
     }
 
     .items {
