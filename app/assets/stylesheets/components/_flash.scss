@@ -42,7 +42,7 @@
     }
   }
 
-  &.success {
+  &.success, &.notice {
     background-color: #00693A;
 
     i {
