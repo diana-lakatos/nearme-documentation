@@ -55,6 +55,7 @@ class Search.SearchController extends Search.Controller
     )
 
     @endDatepicker = new window.Datepicker(
+      trigger: @form.find('.availability-date-end'),
       view: new Search.SearchRangeDatepickerView(@startDatepicker,
         positionTarget: @form.find('.availability-date-end input'),
         text: '<div class="datepicker-text-fadein">Select an end date</div>'
@@ -75,9 +76,9 @@ class Search.SearchController extends Search.Controller
     @form.find('.availability-date-end').on 'click', (e) =>
       if @startDatepicker.getDates()[0]
         @startDatepicker.hide()
-        @endDatepicker.toggle()
       else
         @startDatepicker.show()
+        @endDatepicker.hide()
 
       e.stopPropagation()
       false
