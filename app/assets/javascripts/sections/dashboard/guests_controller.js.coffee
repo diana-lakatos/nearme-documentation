@@ -7,4 +7,5 @@ class @Dashboard.GuestsController
       datepicker = new Datepicker
         trigger: $(date)
         immutable: true
+        disablePastDates: false
       datepicker.model.setDates(dates)
