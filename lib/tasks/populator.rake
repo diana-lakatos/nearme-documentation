@@ -20,7 +20,7 @@ namespace :populate do
   desc "Populates missing amenities and ensures they belong to the right amenity type"
   task :amenities => :environment do
     i = 0
-    Utils::FakeDataSeeder::Data::AMENITIES.each do |amenity_type_name, amenities_array|
+    Utils::FakeDataSeeder::Data.amenities.each do |amenity_type_name, amenities_array|
       amenity_type = AmenityType.where(:name => amenity_type_name).first_or_create
       amenity_type.position = i
       amenity_type.save!
@@ -55,7 +55,7 @@ namespace :populate do
     Industry.delete_all
     CompanyIndustry.delete_all
 
-    Utils::FakeDataSeeder::Data::INDUSTRIES.each do |name|
+    Utils::FakeDataSeeder::Data.industries.each do |name|
       Industry.create(:name => name)
     end
   end
