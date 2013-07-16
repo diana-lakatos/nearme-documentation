@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130712094821) do
+ActiveRecord::Schema.define(:version => 20130716024739) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -223,15 +223,17 @@ ActiveRecord::Schema.define(:version => 20130712094821) do
     t.integer  "creator_id"
   end
 
-  create_table "ratings", :force => true do |t|
-    t.integer  "content_id"
-    t.string   "content_type"
-    t.integer  "user_id"
-    t.float    "rating"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-    t.datetime "deleted_at"
+  create_table "reservation_charges", :force => true do |t|
+    t.integer  "reservation_id"
+    t.integer  "subtotal_amount_cents"
+    t.integer  "service_fee_amount_cents"
+    t.datetime "paid_at"
+    t.datetime "failed_at"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
+
+  add_index "reservation_charges", ["reservation_id"], :name => "index_reservation_charges_on_reservation_id"
 
   create_table "reservation_periods", :force => true do |t|
     t.integer  "reservation_id"

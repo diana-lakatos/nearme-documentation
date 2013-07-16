@@ -44,7 +44,7 @@ module ReservationsHelper
     if reservation.free?
       humanized_money_with_cents_and_symbol(0.0)
     elsif reservation.paid?
-      humanized_money_with_cents_and_symbol(reservation.successful_payment_amount/100.0)
+      humanized_money_with_cents_and_symbol(reservation.successful_payment_amount)
     else
       reservation.payment_status.titleize
     end
