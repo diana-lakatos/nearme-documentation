@@ -6,14 +6,15 @@ class DashboardControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
-    @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
-    @location = FactoryGirl.create(:location_in_auckland)
-    @company.locations << @location
-    @listing = FactoryGirl.create(:listing, :quantity => 1000)
-    @listing.location.company.tap { |c| c.creator = @user }.save!
   end
 
   context 'GET bookings' do
+    setup do
+      @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
+      @location = FactoryGirl.create(:location_in_auckland)
+      @company.locations << @location
+    end
+
     should 'redirect if no bookings' do
       get :bookings
       assert_redirected_to search_path
@@ -21,13 +22,17 @@ class DashboardControllerTest < ActionController::TestCase
     end
 
     should 'render view if any bookings' do
-      FactoryGirl.create(:reservation_with_valid_period, owner: @user)
+      FactoryGirl.create(:reservation, owner: @user)
       get :bookings
       assert_response :success
     end
   end
 
   context '#payments' do
+    setup do
+      @listing = FactoryGirl.create(:listing, :quantity => 1000)
+      @listing.location.company.tap { |c| c.creator = @user }.save!
+    end
 
     context '#assigned variables' do
 
