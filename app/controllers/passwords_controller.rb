@@ -15,7 +15,7 @@ class PasswordsController < Devise::PasswordsController
   end
 
   def set_return_to
-    session[:user_return_to] = params[:return_to].presence
+    session[:user_return_to] = params[:return_to] if params[:return_to]
   end
 
 end
