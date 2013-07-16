@@ -5,7 +5,7 @@ class ListingSerializer < ApplicationSerializer
   }
 
   attributes :id, :name, :description, :company_name, :company_description,
-             :address, :price, :quantity, :rating
+    :address, :price, :quantity, :rating
 
   attribute :latitude,  key: :lat
   attribute :longitude, key: :lon
@@ -28,13 +28,13 @@ class ListingSerializer < ApplicationSerializer
   # Serialize price
   def price
     label = case object.daily_price
-    when nil
-      'Call'
-    when 0
-      'Free'
-    else
-      object.daily_price.format
-    end
+            when nil
+              'Call'
+            when 0
+              'Free'
+            else
+              object.daily_price.format
+            end
 
     {
       amount:        object.daily_price.try(:to_f) || 0.0,
@@ -47,8 +47,8 @@ class ListingSerializer < ApplicationSerializer
   # Serialize rating
   def rating
     {
-      average: object.rating_average,
-      count:   object.rating_count
+      average: 0,
+      count:   0
     }
   end
 

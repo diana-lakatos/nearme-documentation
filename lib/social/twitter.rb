@@ -1,7 +1,7 @@
 module Social
   module Twitter
-    KEY    = ENV["TWITTER_KEY"]
-    SECRET = ENV["TWITTER_SECRET"]
+    KEY    = DesksnearMe::Application.config.twitter_key
+    SECRET = DesksnearMe::Application.config.twitter_secret
 
     def self.meta
       { name: "Twitter",

@@ -26,7 +26,10 @@ Spork.prefork do
 
   require "json_spec/cucumber"
   require 'cucumber/rails'
-  require 'ruby-debug'
+  begin
+    require 'ruby-debug'
+  rescue LoadError
+  end
 
 
   # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In

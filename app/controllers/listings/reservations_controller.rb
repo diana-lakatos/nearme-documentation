@@ -4,8 +4,6 @@ module Listings
     before_filter :build_reservation, :only => [:review, :create]
     before_filter :require_login_for_reservation, :only => [:review, :create]
 
-    layout Proc.new { |c| if c.request.xhr? then false else 'application' end }
-
     def review
       @reservation.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
       event_tracker.opened_booking_modal(@reservation)
@@ -19,6 +17,7 @@ module Listings
         if @reservation.listing.confirm_reservations?
           ReservationMailer.notify_host_with_confirmation(@reservation).deliver
           ReservationMailer.notify_guest_with_confirmation(@reservation).deliver
+          ReservationSmsNotifier.notify_host_with_confirmation(@reservation).deliver
         else
           ReservationMailer.notify_host_without_confirmation(@reservation).deliver
           ReservationMailer.notify_guest_of_confirmation(@reservation).deliver

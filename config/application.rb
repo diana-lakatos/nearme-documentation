@@ -42,9 +42,12 @@ module DesksnearMe
     config.generators do |g|
       g.test_framework :test_unit, :fixture => false
     end
+
     # note that we *don't* want to rewite for the test env :)
     config.should_rewrite_email = Rails.env.staging? || Rails.env.development?
-    config.test_email           = ENV['DNM_TEST_EMAIL'] || "dev@desksnear.me"
+    config.test_email           = ENV['DNM_TEST_EMAIL'] || "notifications@desksnear.me"
+
+    config.action_mailer.default_url_options = { :host => 'desksnear.me' }
 
     # Access the DB or load models when precompiling assets
     config.assets.initialize_on_precompile = true
@@ -57,5 +60,15 @@ module DesksnearMe
     # Override in relevant environment config
     config.stripe_api_key = "sk_test_lpr4WQXQdncpXjjX6IJx01W7"
     config.stripe_public_key = "pk_test_iCGA8nFZdILrI1UtuMOZD2aq"
+
+    # Development/Test specific keys/secrets for social properties.
+    config.linkedin_key = "4q9xfgn60bik"
+    config.linkedin_secret = "lRmKVrc0RPpfKDCV"
+
+    config.facebook_key = "432038396866156"
+    config.facebook_secret = "71af86082de1c38a3523a4c8f44aca2d"
+
+    config.twitter_key = "Xas2mKTWPVpqrb5FXUnDg"
+    config.twitter_secret = "nR8pjJ9YcU3eK9pKUPFBNxZuJ5oMci2M96SpZ47Ik"
   end
 end

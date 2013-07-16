@@ -11,18 +11,20 @@ class User < ActiveRecord::Base
 
   acts_as_paranoid
 
+  belongs_to :instance
+
   has_many :authentications,
            :dependent => :destroy
 
   has_many :companies,
-           :foreign_key => "creator_id"
+           :foreign_key => "creator_id",
+           :dependent => :destroy
 
   attr_accessible :companies_attributes
   accepts_nested_attributes_for :companies
 
   has_many :locations,
-           :through => :companies,
-           :dependent => :destroy
+           :through => :companies
 
   has_many :reservations,
            :foreign_key => :owner_id
@@ -72,15 +74,27 @@ class User < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :password, :if => :password_required?
   validates_presence_of :email
+
+  # FIXME: This is an unideal coupling of 'required parameters' for specific forms
+  #        to the general validations on the User model.
+  #        A solution moving forward is to extract the relevant forms into
+  #        a 'Form' object containing their own additional validations specific
+  #        to their context.
+  validates_presence_of :phone, :if => :phone_required
+  validates_presence_of :country_name, :if => lambda { phone_required || country_name_required }
+  attr_accessor :phone_required, :country_name_required
+
   #validates :avatar, :file_mime_type => {:content_type => /image/}, :if => Proc.new{|user| user.avatar.present? && user.avatar.file.present? && user.avatar.file.content_type.present? }
 
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :validatable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :biography, :industry_ids
+  attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :biography, :industry_ids,
+                  :country_name, :mobile_number
 
   delegate :to_s, :to => :name
+  delegate :service_fee_percent, to: :instance, allow_nil: true
 
   # Build a new user, taking into account session information such as Provider
   # authentication.
@@ -140,6 +154,23 @@ class User < ActiveRecord::Base
 
   def last_name
     name.split(' ', 2)[1]
+  end
+
+  def country
+    Country.find(country_name) if country_name.present?
+  end
+
+  # Returns the mobile number with the full international calling prefix
+  def full_mobile_number
+    return unless mobile_number.present?
+
+    number = mobile_number
+    number = "+#{country.calling_code}#{number.gsub(/^0/, "")}" if country.try(:calling_code)
+    number
+  end
+
+  def accepts_sms?
+    full_mobile_number.present?
   end
 
   def avatar_changed?

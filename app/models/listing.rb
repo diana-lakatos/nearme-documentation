@@ -9,13 +9,10 @@ class Listing < ActiveRecord::Base
     end
   end
 
-  has_many :ratings,
-    as: :content,
-    dependent: :destroy
-
   has_many :inquiries
 
   has_many :availability_rules,
+    :order => 'day ASC',
     :as => :target,
     :dependent => :destroy
 
@@ -33,15 +30,16 @@ class Listing < ActiveRecord::Base
   scope :latest,   order("listings.created_at DESC")
 
   # == Callbacks
-  before_validation :clear_irrelevant_prices
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
 
   # == Validations
-  validates_presence_of :location, :name, :description, :quantity, :listing_type_id
+  validates_presence_of :location, :name, :quantity, :listing_type_id
+  validates_presence_of :description , :if => lambda { |listing| (listing.instance.nil? || listing.instance.is_desksnearme?) }
   validates_numericality_of :quantity
-  validates_length_of :description, :maximum => 250
+  validates_length_of :description, :maximum => 250, :if => lambda { |listing| (listing.instance.nil? || listing.instance.is_desksnearme?) }
   validates_with PriceValidator
+  validates :hourly_reservations, :inclusion => { :in => [true, false], :message => "must be selected" }, :allow_nil => false
 
   # == Helpers
   include Search
@@ -55,13 +53,17 @@ class Listing < ActiveRecord::Base
     :local_geocoding, :latitude, :longitude, :distance_from, to: :location,
     allow_nil: true
   delegate :creator, :creator=, to: :location
+  delegate :instance, to: :location, :allow_nil => true
   delegate :name, to: :creator, prefix: true
   delegate :notify_user_about_change, :to => :location, :allow_nil => true
   delegate :to_s, to: :name
+  delegate :service_fee_percent, to: :creator, allow_nil: true
 
-  attr_accessible :confirm_reservations, :location_id, :quantity, :rating_average, :rating_count,
-    :name, :description, :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
+  attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description, 
+    :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
     :free, :photos_attributes, :listing_type_id, :hourly_reservations
+
+  attr_accessor :distance_from_search_query
 
   PRICE_TYPES.each do |price|
     # Flag each price type as a Money attribute.
@@ -152,17 +154,6 @@ class Listing < ActiveRecord::Base
     self.daily_price = nil
     self.weekly_price = nil
     self.monthly_price = nil
-  end
-
-  def rate_for_user(rating, user)
-    raise "Cannot rate unsaved listing" if new_record?
-    r = ratings.find_or_initialize_by_user_id user.id
-    r.rating = rating
-    r.save
-  end
-
-  def rating_for(user)
-    ratings.where(user_id: user.id).pluck(:rating).first
   end
 
   def desks_available?(date)
@@ -286,17 +277,10 @@ class Listing < ActiveRecord::Base
     AvailabilityRule::HourlyListingStatus.new(self, date)
   end
 
-  private
-
-  def clear_irrelevant_prices
-    if hourly_reservations?
-      self.daily_price = nil
-      self.weekly_price = nil
-      self.monthly_price = nil
-    else
-      self.hourly_price = nil
-    end
+  def self.xml_attributes
+    [:name, :description, :quantity, :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents]
   end
+
 end
 
 class NullListing

@@ -7,7 +7,9 @@ class SpaceWizardController < ApplicationController
 
   def new
     flash.keep(:warning)
-    if current_user
+    if current_user and current_user.listings.any?
+      redirect_to manage_locations_path
+    elsif current_user
       event_tracker.viewed_list_your_space_list
       redirect_to space_wizard_list_url
     else
@@ -19,16 +21,24 @@ class SpaceWizardController < ApplicationController
   def list
     @company ||= @user.companies.build
     @location ||= @company.locations.build
-    @listing ||= @location.listings.build(
-      :daily_price => 50.00
-    )
+    @listing ||= @location.listings.build
   end
 
   def submit_listing
     @company ||= @user.companies.build
     @company.attributes = params[:company]
 
-    if params_hash_complete? && @company.save
+    @user = current_user
+    @user.phone_required = true
+    @user.attributes = params[:user]
+
+    user_valid = @user.valid?
+    company_valid = @company.valid?
+
+    if params_hash_complete? && company_valid && user_valid
+      @company.save!
+      @user.save!
+
       if params[:uploaded_photos]
         listing = @user.first_listing
         listing.photos << current_user.photos.find(params[:uploaded_photos])

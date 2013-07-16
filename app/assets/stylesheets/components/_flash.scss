@@ -11,6 +11,10 @@
   width: 100%;
   @include opacity(.8);
 
+  &.static {
+    position: static;
+  }
+
   p {
     margin: 0px;
     padding: 0px 49px 0px 0px;
@@ -42,7 +46,7 @@
     }
   }
 
-  &.success {
+  &.success, &.notice {
     background-color: #00693A;
 
     i {
@@ -51,7 +55,7 @@
   }
 
   &.error {
-    background-color: $dnm_red;
+    background-color: $theme_red;
 
     i {
       @extend .ico-warning;
@@ -59,7 +63,7 @@
   }
 
   &.deleted {
-    background-color: $dnm_red;
+    background-color: $theme_red;
 
     i {
       @extend .ico-close;
@@ -67,7 +71,7 @@
   }
 
   &.warning {
-    background-color: $dnm_orange;
+    background-color: $theme_orange;
 
     i {
       @extend .ico-warning;

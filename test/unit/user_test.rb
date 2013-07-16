@@ -6,11 +6,26 @@ class UserTest < ActiveSupport::TestCase
 
   should have_many(:industries)
 
-  def setup
-  end
+  context "validations" do
+    context "when no country name provided" do
 
-  should "exist" do
-    assert User
+      context "when country name required" do
+        should "be valid" do
+          user = FactoryGirl.build(:user_without_country_name)
+          assert user.save
+        end
+      end
+
+      context "when country name not required" do
+        should "be invalid" do
+          user = FactoryGirl.create(:user_without_country_name)
+          user.country_name_required = true
+          assert_equal user.save, false
+        end
+      end
+
+    end
+
   end
 
   should "have authentications" do
@@ -93,6 +108,26 @@ class UserTest < ActiveSupport::TestCase
     @user.remote_avatar_url = "http://www.example.com/image.jpg"
     @user.reload
     assert @user.avatar_provided?
+  end
+
+  context '#full_mobile_number' do
+    setup do
+      @nz = Country.find('New Zealand')
+    end
+
+    should 'prefix with international calling code' do
+      user = User.new
+      user.country_name = @nz.name
+      user.mobile_number = '123456'
+      assert_equal '+64123456', user.full_mobile_number
+    end
+
+    should 'not include 0 prefix from base number' do
+      user = User.new
+      user.country_name = @nz.name
+      user.mobile_number = '0123456'
+      assert_equal '+64123456', user.full_mobile_number
+    end
   end
 
   context "mailchimp" do

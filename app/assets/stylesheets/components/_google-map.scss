@@ -23,7 +23,7 @@
   .google-map-popover {
     background: $gray220;
     border: 1px solid $gray160;
-    @include border-radius($border-radius-mobile);
+    @include border-radius($border-radius-default);
     @include background-clip(border-box);
     color: $gray80;
     
@@ -43,7 +43,7 @@
       color: $gray230;
       text-overflow: ellipsis;
       white-space: nowrap;
-      @include border-top-radius(3px);
+      @include border-top-radius($border-radius-default);
     }
     
     .close {
@@ -89,7 +89,7 @@
 
   &:last-child {
     border: none;
-    @include border-bottom-radius($border-radius-mobile);
+    @include border-bottom-radius($border-radius-default);
   }
 
   .popover-image-container {

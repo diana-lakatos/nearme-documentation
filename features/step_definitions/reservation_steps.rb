@@ -34,9 +34,9 @@ Given /^the listing has the following reservations:$/ do |table|
   end
 end
 
-Given /^bookings for #{capture_model} do( not)? need to be confirmed$/ do |listing, require_confirmation|
+Given /^bookings for #{capture_model} do( not)? need to be confirmed$/ do |listing, do_not_require_confirmation|
   listing = model!(listing)
-  listing.confirm_reservations = require_confirmation.present?
+  listing.confirm_reservations = !do_not_require_confirmation.present?
   listing.save!
 end
 
@@ -86,7 +86,7 @@ When /^(.*) books a space for that listing$/ do |person|
   listing.reserve!(User.find_by_name(person), [next_regularly_available_day], 1)
 end
 
-When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, action|
+When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user, action|
 
   if user == "visitor"
     login User.find_by_name("Keith Contractor")
@@ -95,7 +95,9 @@ When /^the (visitor|owner) (confirm|reject|cancel)s the reservation$/ do |user, 
     login User.find_by_name("Bo Jeanes")
     visit manage_guests_dashboard_path
   end
-
+  if action == 'cancel' and user == 'owner'
+    within('.guest_filter') { click_on 'Confirmed'}
+  end
   click_link_or_button action.capitalize
   page.driver.browser.switch_to.alert.accept
   wait_for_ajax
@@ -151,7 +153,19 @@ Then /^the user should have a reservation:$/ do |table|
   end
 end
 
-Then /^the reservation cost should show \$?([0-9\.]+)$/ do |cost|
+Then /^the reservation subtotal should show \$?([0-9\.]+)$/ do |cost|
+  within '.space-reservation-modal .subtotal-amount' do
+    assert page.has_content?(cost)
+  end
+end
+
+Then /^the reservation service fee should show \$?([0-9\.]+)$/ do |cost|
+  within '.space-reservation-modal .service-fee-amount' do
+    assert page.has_content?(cost)
+  end
+end
+
+Then /^the reservation total should show \$?([0-9\.]+)$/ do |cost|
   within '.space-reservation-modal .total-amount' do
     assert page.has_content?(cost)
   end
@@ -192,7 +206,7 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
       # Hourly booking
       date = reservation[:date].strftime("%B %-e")
       start_time = reservation[:start_at].strftime("%l:%M%P")
-      end_time   = reservation[:end_at].strftime("%l:%M%P")
+      end_time   = reservation[:end_at].strftime("%l:%M%P").strip
       assert page.has_content?(date), "Expected to see: #{date}"
       assert page.has_content?(start_time), "Expected to see: #{start_time}"
       assert page.has_content?(end_time), "Expected to see: #{end_time}"

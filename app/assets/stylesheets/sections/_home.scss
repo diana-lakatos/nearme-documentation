@@ -1,14 +1,29 @@
 section.public {
-  
+
   #hero {
+    position: relative;
     margin-top: -32px;
     width: auto;
     height: 580px;
-    background: image-url("https://s3.amazonaws.com/desksnearme.production/uploads/photos/653/hall.jpg") center center no-repeat;
     @include background-size(cover);
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='https://s3.amazonaws.com/desksnearme.production/uploads/photos/653/hall.jpg', sizingMethod='scale');
-    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='https://s3.amazonaws.com/desksnearme.production/uploads/photos/653/hall.jpg', sizingMethod='scale')";
-    @include box-shadow(rgba(black, .2) 0 0 20px 20px inset); 
+    background-image: image-url($theme_hero);
+    background-position: center center;
+
+    > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    // A gradient from left to right
+    > .hero-shadow {
+      position: absolute;
+      z-index: 1; // Behind non-positioned elements in this stacking context
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      @include background(linear-gradient(right, rgba(30,30,34,0), rgba(30,30,34,0.4) 60%, rgba(30,30,34,0.6)));
+    }
 
     @media (max-width: 767px) {
       height: 420px;
@@ -16,7 +31,7 @@ section.public {
 
     @media (max-width: 480px) {
       height: 380px;
-    }   
+    }
   }
 
   .caption a {
@@ -90,17 +105,13 @@ section.public {
 
     @media (max-width: 480px) {
       font:normal 16px/22px $font-medium, sans-serif;
-    }      
+    }
   }
 
   form input[type="text"] {
     margin-bottom: 0;
-
-    @media (max-width: 768px) {
-      margin-bottom: 8px;
-    }
   }
-  
+
   form {
     clear: both;
 

@@ -7,7 +7,7 @@ body {
 }
 
 ::selection, ::-moz-selection {
-  background-color: $dnm_blue;
+  background-color: $theme_blue;
   color: white;
 }
 
@@ -25,12 +25,12 @@ a:hover {
 
 p a,
 p a:visited {
-  color: $dnm_blue;
+  color: $theme_blue;
   text-decoration: none;
   @include transition(opacity .07s ease-in, color .07s ease-in, border .07s ease-in);
 
   &:hover {
-    color: darken( $dnm_blue, 10%);
+    color: darken( $theme_blue, 10%);
     text-decoration: none;
   }
 }
@@ -72,9 +72,9 @@ strong {
   margin: 0 4px;
   padding: 0 4px 10px;
   height:6px;
-  @include border-radius($border-radius-mobile);
+  @include border-radius($border-radius-default);
   background: $gray220;
-  color: $dnm_black;
+  color: $theme_black;
   vertical-align: middle;
   font-family: $font-bold;
   font-size: 20px;
@@ -134,7 +134,7 @@ hr,
   display: inline-block;
   margin: 0 0;
   padding: 0 5px;
-  background: $dnm_white;
+  background: $theme_white;
   color: $gray160;
   font-size: 14px;
 

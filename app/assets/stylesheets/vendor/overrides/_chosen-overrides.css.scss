@@ -1,5 +1,44 @@
-.chzn-container-multi ul.chzn-choices {
+.chzn-container-multi ul.chzn-choices,
+.chzn-container-single{
   @include form-field;
+
+}
+
+.chzn-container-single {
+  margin: 0px !important;
+  padding: 0px !important;
+  width: 100% !important;
+
+  .chzn-search input {
+    width: 100% !important;
+    background-image: none !important;
+  }
+
+  a {
+    @include box-sizing(border-box);
+    height: 49px !important;
+    padding: 14px 8px 8px 8px !important;
+    border: none !important;
+    background: none !important;
+    background-image: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+
+    span {
+      font-size: 18px;
+    }
+  }
+
+}
+
+
+.chzn-drop {
+  top: 49px !important;
+  width: 100% !important;
+  border: 0px !important;
+  font-size: 18px;
+
 }
 
 .chzn-container-multi .chzn-choices .search-choice {
@@ -12,10 +51,10 @@
 }
 
 ul.chzn-choices.chzn-choices-active{
-    @include form-field-focus;
+  @include form-field-focus;
 }
 
-  // overwrite default width - make its width dynamic instead of constant 
+// overwrite default width - make its width dynamic instead of constant 
 .control-group .chzn-container-multi{
   width: auto !important;
   display: block !important;
@@ -24,6 +63,7 @@ ul.chzn-choices.chzn-choices-active{
     span, input {
       font-size: 18px;
     }
+
     &.search-field input {
       height: 100%;
       font-family: $font-regular, sans-serif;

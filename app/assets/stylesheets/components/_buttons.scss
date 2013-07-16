@@ -28,14 +28,14 @@ a.btn {
 
   &.btn-small {
     height: 30px;
-    @include border-radius($border-radius-mobile);
+    @include border-radius($border-radius-default);
     line-height: 30px;
     font-size: 14px;
   }
 
   &.btn-medium {
     height: 38px;
-    @include border-radius(8px);
+    @include border-radius($border-radius-default);
     line-height: 38px;
     font-size: 18px;
   }
@@ -48,15 +48,23 @@ a.btn {
     line-height: 50px;
   }
 
+  &.btn-full {
+    width: 100%;
+    height: 38px;
+    @include border-radius(8px);
+    line-height: 38px;
+    font-size: 18px;
+  }
+
   &.btn-blue {
     background: $blue;
     
     &:hover {
-      background: lighten($dnm_blue, 10%);
+      background: lighten($theme_blue, 10%);
     }
 
     &:active {
-      background: darken($dnm_blue, 10%);
+      background: darken($theme_blue, 10%);
     }
   }
 
@@ -74,7 +82,6 @@ a.btn {
 
   &.btn-red {
     background: $red;
-    
     &:hover {
       background: darken($red, 10%);
     }
@@ -96,6 +103,17 @@ a.btn {
     }
   }
 
+  &.btn-gray {
+    background: $light-gray;
+    color: black;
+    &:hover {
+      background: $light-gray;
+    }
+
+    &:active {
+      background: $light-gray;
+    }
+  }
 
   &.twitter, 
   &.facebook, 

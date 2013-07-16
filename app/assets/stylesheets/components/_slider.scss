@@ -2,7 +2,7 @@
   position: relative;
   margin-top: 6px;
   height: 11px;
-  @include border-radius($border-radius-medium);
+  @include border-radius($border-radius-default);
   background: lighten($dark_gray, 30%);
 
   .ui-slider-handle {
@@ -14,7 +14,7 @@
     height: 24px;
     outline: none;
     border: none !important;
-    @include border-radius($border-radius-medium);
+    @include border-radius($border-radius-default);
     background: url('https://s3.amazonaws.com/desksnearme.assets/img/ui/knob-green.png') center center no-repeat;
     @include transition(all 0s false false);    
   }
@@ -23,6 +23,6 @@
     position: absolute;
     margin-top: -1px;
     height: 12px;
-    background: darken( $dnm_green, 15%);
+    background: darken( $theme_green, 15%);
   }
 }

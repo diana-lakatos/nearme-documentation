@@ -29,7 +29,7 @@ class Reservation < ActiveRecord::Base
   validate :validate_all_dates_available, on: :create
   validate :validate_booking_selection, on: :create
 
-  before_create :set_total_cost
+  before_create :set_costs
   before_validation :set_currency, on: :create
   before_validation :set_default_payment_status, on: :create
   after_create :auto_confirm_reservation
@@ -53,10 +53,6 @@ class Reservation < ActiveRecord::Base
     end
   end
 
-  def expiry_time
-    created_at + 24.hours
-  end
-
   def schedule_expiry
     Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :perform_expiry!, nil), run_at: expiry_time
   end
@@ -64,6 +60,8 @@ class Reservation < ActiveRecord::Base
   acts_as_paranoid
 
   monetize :total_amount_cents
+  monetize :subtotal_amount_cents
+  monetize :service_fee_amount_cents
 
   state_machine :state, :initial => :unconfirmed do
     after_transition :unconfirmed => :confirmed, :do => :attempt_payment_capture
@@ -102,6 +100,12 @@ class Reservation < ActiveRecord::Base
       uniq
   }
 
+  scope :past, lambda {
+    joins(:periods).
+      where('reservation_periods.date < ?', Date.today).
+      uniq
+  }
+
   scope :visible, lambda {
     without_state(:cancelled).upcoming
   }
@@ -118,6 +122,8 @@ class Reservation < ActiveRecord::Base
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
   delegate :location, to: :listing
+  delegate :creator, to: :listing, :prefix => true
+  delegate :service_fee_percent, to: :listing, allow_nil: true
 
   def user=(value)
     self.owner = value
@@ -129,7 +135,11 @@ class Reservation < ActiveRecord::Base
   end
 
   def date
-    periods.first.date
+    periods.sort_by(&:date).first.date
+  end
+
+  def last_date
+    periods.sort_by(&:date).last.date
   end
 
   def cancelable?
@@ -148,6 +158,10 @@ class Reservation < ActiveRecord::Base
     periods.any? { |p| p.date <= Date.today }
   end
 
+  def archived?
+    rejected? or cancelled? or periods.all? {|p| p.date < Date.today}
+  end
+
   def add_period(date, start_minute = nil, end_minute = nil)
     periods.build :date => date, :start_minute => start_minute, :end_minute => end_minute
   end
@@ -157,11 +171,15 @@ class Reservation < ActiveRecord::Base
   end
 
   def total_amount_cents
-    if persisted?
-      super
-    else
-      calculate_total_cost
-    end
+    subtotal_amount_cents + service_fee_amount_cents
+  end
+
+  def subtotal_amount_cents
+    super || price_calculator.price.cents
+  end
+
+  def service_fee_amount_cents
+    super || service_fee_calculator.service_fee.cents
   end
 
   def total_amount_dollars
@@ -183,7 +201,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def successful_payment_amount
-    charges.where(:success => true).first.try(:amount) || 0.0
+    charges.successful.first.try(:amount) || 0.0
   end
 
   def balance
@@ -222,15 +240,19 @@ class Reservation < ActiveRecord::Base
     created_at + 24.hours
   end
 
-  def price_calculator
-    @price_calculator ||= if listing.hourly_reservations?
-      HourlyPriceCalculator.new(self)
-    else
-      PriceCalculator.new(self)
-    end
-  end
-
   private
+
+    def service_fee_calculator
+      @service_fee_calculator ||= Reservation::ServiceFeeCalculator.new(self)
+    end
+
+    def price_calculator
+      @price_calculator ||= if listing.hourly_reservations?
+        HourlyPriceCalculator.new(self)
+      else
+        DailyPriceCalculator.new(self)
+      end
+    end
 
     def set_default_payment_status
       return if paid?
@@ -242,12 +264,9 @@ class Reservation < ActiveRecord::Base
       end
     end
 
-    def calculate_total_cost
-      price_calculator.price.try(:cents)
-    end
-
-    def set_total_cost
-      self.total_amount_cents = calculate_total_cost
+    def set_costs
+      self.subtotal_amount_cents = price_calculator.price.try(:cents)
+      self.service_fee_amount_cents = service_fee_calculator.service_fee.try(:cents)
     end
 
     def set_currency

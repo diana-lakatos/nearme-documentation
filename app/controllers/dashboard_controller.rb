@@ -1,10 +1,12 @@
 class DashboardController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :find_company, :only => [:payments]
+  before_filter :redirect_if_no_company, :only => [:payments]
 
   def show
     if current_user.reservations.visible.any?
       redirect_to bookings_dashboard_url
-    elsif current_user.listing_reservations.upcoming.any?
+    elsif current_user.reservations.upcoming.any?
       redirect_to manage_guests_dashboard_url
     else
       redirect_to edit_user_registration_url
@@ -21,7 +23,7 @@ class DashboardController < ApplicationController
   #routes
   def manage_guests
     @locations  = current_user.try(:companies).first.try(:locations)
-    @guest_list ||= current_user.listing_reservations.upcoming
+    @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
   end
 
   def locations
@@ -37,6 +39,25 @@ class DashboardController < ApplicationController
     unless @your_reservations.any?
       flash[:warning] = "You haven't made any bookings yet!"
       redirect_to search_path
+    end
+  end
+
+  def payments
+    @charges = @company.charges.successful.order('created_at DESC').paginate(:page => params[:page], :per_page => 20).includes(:reference => { :listing => :location })
+    @last_week_charges = @company.charges.successful.order('created_at ASC').last_x_days(7)
+    @all_time_totals = @company.charges.all_time_totals
+  end
+
+  private
+
+  def find_company
+    @company = current_user.companies.first
+  end
+
+  def redirect_if_no_company
+    unless @company && @company.id
+      flash[:warning] = "Please add your company first"
+      redirect_to new_space_wizard_url
     end
   end
 

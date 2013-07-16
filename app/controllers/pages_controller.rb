@@ -20,8 +20,6 @@ class PagesController < ApplicationController
       "landing"
     when "legal"
       "application"
-    when "careers"
-      "careers"            
     else
       false
     end

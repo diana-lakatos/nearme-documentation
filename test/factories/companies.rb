@@ -4,10 +4,11 @@ FactoryGirl.define do
     sequence(:email) { |n| "company-#{n}@example.com" }
     description "Aliquid eos ab quia officiis sequi."
     creator
+    instance
     url "http://google.com"
 
-    before(:create) do |company|
-      company.industries << FactoryGirl.create(:industry) if company.industries.empty?
+    after(:build) do |company|
+      company.industries = [FactoryGirl.build(:industry)] if company.industries.empty?
     end
 
     factory :company_in_auckland do
