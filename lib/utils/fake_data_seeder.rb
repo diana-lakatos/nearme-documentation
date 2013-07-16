@@ -44,7 +44,6 @@ module Utils
         ]
       }
 
-
       INDUSTRIES =
         [
           "Accounting", "Airlines/Aviation", "Alternative Dispute Resolution", "Alternative Medicine",
@@ -79,6 +78,11 @@ module Utils
            "Venture Capital & Private Equity", "Veterinary", "Warehousing", "Wholesale", "Wine and Spirits",
            "Wireless", "Writing and Editing"
         ]
+
+      LOCATION_TYPES = ["Business", "Co-working", "Public"]
+
+      LISTING_TYPES = ["Private office", "Meeting room", "Shared desks"]
+
     end
 
     def go!
@@ -97,6 +101,8 @@ module Utils
     def load_data!
       do_task "Loading data" do
         User.transaction do
+
+          # ========================================= BASIC STUFF ====================================
 
           amenities = do_task "Loading amenities" do
             Data::AMENITIES.each_with_index.map do |(amenity_type_name, amenity_names), index|
@@ -120,8 +126,26 @@ module Utils
             end
           end
 
+          location_types = do_task "Loading location types" do
+            Data::LOCATION_TYPES.map do |name|
+              FactoryGirl.build(:location_type, :name => name).tap do |resource|
+                resource.save!
+              end
+            end
+          end
+
+          listing_types = do_task "Loading listing types" do
+            Data::LISTING_TYPES.map do |name|
+              FactoryGirl.build(:listing_type, :name => name).tap do |resource|
+                resource.save!
+              end
+            end
+          end
+
+          # ======================================= INSTANCES / PARTNERS ===================================
+
           partners = do_task "Loading partners" do
-            ["Mega desks", "Super desks", "Cool desksu"].map do |name|
+            ["Mega desks", "Super desks", "Cool desks"].map do |name|
               FactoryGirl.build(:partner, :name => name).tap do |resource|
                 resource.save!
               end
@@ -136,66 +160,50 @@ module Utils
             end
           end
 
-          users = do_task "Loading users" do
-            ["michelle", "sai"].map do |name|
+          # ================================= COMPANIES / LOCATIONS / LISTINGS ============================
+
+          # populator, snapshot?, extract methods # TODO
+
+          users = []
+          companies = do_task "Loading companies" do
+            (30.times.map { Faker::Internet.domain_name } + ["desksnear.me"]).map do |url|
               instance = instances.sample # TODO temp
-              FactoryGirl.build(:user, :name => name.capitalize, :email => "#{name}@desksnear.me",
-                                :instance => instance, :industries => industries.sample(2)).tap do |resource|
+              company_email = "#info@#{url}"
+              creator = FactoryGirl.build(:user, :name => Faker::Name.name, :email => company_email,
+                                          :instance => instance, :industries => industries.sample(2)).tap do |resource|
                 resource.save!
               end
-            end
-          end
+              users << creator
 
-          companies = do_task "Loading companies" do
-            ["megadesks.net", "superdesks.net", "cooldesks.net"].map do |url|
-              creator = users.sample
-              instance = instances.sample # TODO temp
-              FactoryGirl.build(:company, :name => url, :email => "info@#{url}", :url => url,
+              FactoryGirl.build(:company, :name => url, :email => company_email, :url => url,
                                 :instance => instance, :creator => creator, :industries => creator.industries).tap do |resource|
                 resource.save!
               end
             end
           end
 
-          location_types = do_task "Loading location types" do
-            ["Business", "Co-working", "Public"].map do |name|
-              FactoryGirl.build(:location_type, :name => name).tap do |resource|
-                resource.save!
-              end
-            end
-          end
-
-          listing_types = do_task "Loading listing types" do
-            ["Private office", "Meeting room", "Shared desks"].map do |name|
-              FactoryGirl.build(:listing_type, :name => name).tap do |resource|
-                resource.save!
-              end
-            end
-          end
-
           locations = do_task "Loading locations" do
-            [
-                :location_in_auckland, :location_in_adelaide, :location_in_cleveland, :location_in_san_francisco, :location_in_wellington,
-                :location_ursynowska_address_components, :location_warsaw_address_components, :location_san_francisco_address_components,
-                :location_vaughan_address_components
-            ].map do |factory|
+            CSV.foreach(Rails.root.join(*%w(db seeds addresses.csv)), :headers => :first_row, :return_headers => false).map do |row|
+              address, lat, lng = row[0], row[1], row[2]
               company = companies.sample
-              FactoryGirl.build(factory, :amenities => amenities.sample(2), :location_type => location_types.sample,
-                                :company => company, :email => company.email).tap do |resource|
+
+              location = FactoryGirl.build(:location, :amenities => amenities.sample(2), :location_type => location_types.sample,
+                                           :company => company, :email => company.email, :address => address,
+                                           :latitude => lat, :longitude => lng).tap do |resource|
                 resource.save!
               end
-            end
-          end
 
-          do_task "Loading listings" do
-            locations.each do |location|
               listing_types.sample(2).each do |listing_type|
-                FactoryGirl.build(:listing, :listing_type => listing_type, :name => listing_type.name, :location => location).tap do |resource|
+                name = listing_type.name # TODO
+                FactoryGirl.build(:listing, :listing_type => listing_type, :name => name, :location => location).tap do |resource|
                   resource.save!
                 end
               end
+              location
             end
           end
+
+          # =================================================================================================
 
         end
       end
