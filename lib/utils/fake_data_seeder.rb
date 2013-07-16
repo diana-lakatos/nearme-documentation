@@ -82,7 +82,7 @@ module Utils
 
           # === RESERVERATIONS ===================================
 
-          load_reservations!
+          load_reservations_for_dnm!
 
           clean_up!
         end
@@ -189,14 +189,14 @@ module Utils
         users, companies = [], []
         Data.domains.map do |url|
           instance = instances.sample # TODO temp
-          company_email = "#info@#{url}"
-          user = FactoryGirl.build(:user, :name => Faker::Name.name, :email => company_email,
-                                      :instance => instance, :industries => industries.sample(2)).tap do |resource|
+          company_email = "info@#{url}"
+          user = FactoryGirl.build(:user, :name => Faker::Name.name, :email => company_email, :biography => Faker::Lorem.paragraph,
+                                   :instance => instance, :industries => industries.sample(2)).tap do |resource|
             resource.save!
           end
           users << user
 
-          companies << FactoryGirl.build(:company, :name => url, :email => user.email, :url => url,
+          companies << FactoryGirl.build(:company, :name => url, :email => user.email, :url => url, :description => Faker::Lorem.paragraph,
                                          :instance => instance, :creator => user, :industries => user.industries).tap do |resource|
             resource.save!
           end
@@ -221,7 +221,7 @@ module Utils
 
           FactoryGirl.build(:location, :amenities => amenities.sample(2), :location_type => location_types.sample,
                                          :company => company, :email => company.email, :address => address,
-                                         :latitude => lat, :longitude => lng).tap do |resource|
+                                         :latitude => lat, :longitude => lng, :description => Faker::Lorem.paragraph).tap do |resource|
             resource.save!
           end
         end
@@ -232,41 +232,65 @@ module Utils
     def load_listings!
       @listings ||= do_task "Loading listings" do
         locations.map do |location|
-          listing_types.sample(2).each do |listing_type|
+          listing_types.sample(2).map do |listing_type|
             name = listing_type.name # TODO
-            FactoryGirl.build(:listing, :listing_type => listing_type, :name => name, :location => location).tap do |resource|
+            FactoryGirl.build(:listing, :listing_type => listing_type, :name => name,
+                              :location => location, :description => Faker::Lorem.paragraph).tap do |resource|
               resource.save!
             end
           end
-        end
+        end.flatten
       end
     end
     alias_method :listings, :load_listings!
 
-    def load_reservations!
-      @reservations ||= do_task "Loading reservations" do
-        # we load reservations only for **first** company (desksnear.me)
-        companies.first.listings.map do |listing|
-          (1.week.ago.to_date..1.week.from_now.to_date).each do |date|
-            begin
-              reservation = listing.reservations.build(
-                  :user => users.sample, # TODO
-                  :quantity => 1
-              )
-              #reservation.payment_method = "credit_card"
-              reservation.add_period(date)
-              reservation.save!
-              reservation.confirm!
-            rescue
-              # omnomnom
-            end
+    def load_reservations_for_dnm!
+      do_task "Loading reservations for DNM" do
+        company = companies.first
+        period = 1.week.ago.to_date..1.week.from_now.to_date
+
+        ## info@desksnear.me as a host
+        listing = company.listings.first
+        period.each do |date|
+          create_reservation(listing, date, {:user => users.sample, :quantity => 1})
+        end
+
+        # info@desksnear.me as a guest
+        creator = company.creator
+        period.each do |date|
+          create_reservation(listings.sample, date, {:user => creator, :quantity => 1})
+        end
+
+      end
+    end
+
+    def create_reservation(listing, date, attribs = {})
+      begin
+        reservation = listing.reservations.build(attribs)
+        reservation.add_period(date)
+        reservation.save!
+
+        if [true, false].sample
+          reservation.confirm!
+          reservation.update_attribute :payment_status, Reservation::PAYMENT_STATUSES[:paid]
+          reservation.update_attribute :payment_method, "credit_card"
+          Charge.new(
+            :amount => reservation.total_amount_cents,
+            :currency => reservation.currency,
+            :reference => reservation,
+            :success => true
+          ).tap do |charge|
+            charge.user = reservation.owner
+            charge.save!
           end
         end
+      rescue
       end
     end
 
     def clean_up!
-      Charge.update_all(:success => true)
+      puts [Charge.count, Charge.successful.count]
+      #Charge.update_all(:success => true)
     end
 
 
