@@ -176,7 +176,7 @@ class Listing < ActiveRecord::Base
   end
 
   def reserve!(reserving_user, dates, quantity)
-    reservation = reservations.build(:user => reserving_user, :quantity => quantity).tap do |reservation|
+    reservations.build(:user => reserving_user, :quantity => quantity).tap do |reservation|
       dates.each do |date|
         raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
         reservation.add_period(date)
@@ -207,14 +207,12 @@ class Listing < ActiveRecord::Base
   end
 
   def first_available_date
-    date = Date.today + 1.day
-
-    unless hourly_reservations?
-      max_date = date + 31.days
-      date = date + 1.day until availability_for(date) > 0 || date==max_date
+    (Date.today + 1.day).tap do |date|
+      unless hourly_reservations?
+        max_date = date + 31.days
+        date = date + 1.day until availability_for(date) > 0 || date==max_date
+      end
     end
-
-    date
   end
 
   # Number of minimum consecutive booking days required for this listing
