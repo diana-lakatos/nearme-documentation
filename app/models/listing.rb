@@ -207,12 +207,13 @@ class Listing < ActiveRecord::Base
   end
 
   def first_available_date
-    (Date.today + 1.day).tap do |date|
-      unless hourly_reservations?
-        max_date = date + 31.days
-        date = date + 1.day until availability_for(date) > 0 || date==max_date
-      end
+    date = Date.today + 1.day
+
+    unless hourly_reservations?
+      max_date = date + 31.days
+      date = date + 1.day until availability_for(date) > 0 || date==max_date
     end
+    date
   end
 
   # Number of minimum consecutive booking days required for this listing
