@@ -1,6 +1,6 @@
 require 'test_helper'
 require 'reservations_helper'
-require Rails.root.join('lib', 'dnm_errors.rb')
+require Rails.root.join('lib', 'dnm.rb')
 require Rails.root.join('app', 'serializers', 'reservation_serializer.rb')
 
 class ReservationTest < ActiveSupport::TestCase

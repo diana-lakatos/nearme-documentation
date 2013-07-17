@@ -165,9 +165,10 @@ class Listing < ActiveRecord::Base
   end
 
   def inquiry_from!(user, attrs = {})
-    i = inquiries.build(attrs)
-    i.inquiring_user = user
-    i.save!; i
+    inquiries.build(attrs).tap do |i|
+      i.inquiring_user = user
+      i.save!
+    end
   end
 
   def to_param
@@ -175,13 +176,9 @@ class Listing < ActiveRecord::Base
   end
 
   def reserve!(reserving_user, dates, quantity)
-    reservation = reservations.build(
-      :user => reserving_user,
-      :quantity => quantity
-    )
-
+    reservation = reservations.build(:user => reserving_user, :quantity => quantity)
     dates.each do |date|
-      raise DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
+      raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
       reservation.add_period(date)
     end
 
@@ -194,7 +191,6 @@ class Listing < ActiveRecord::Base
       ReservationMailer.notify_host_without_confirmation(reservation).deliver
       ReservationMailer.notify_guest_of_confirmation(reservation).deliver
     end
-
     reservation
   end
 
@@ -217,7 +213,6 @@ class Listing < ActiveRecord::Base
       max_date = date + 31.days
       date = date + 1.day until availability_for(date) > 0 || date==max_date
     end
-
     date
   end
 
