@@ -29,6 +29,7 @@ gem 'simple_form'
 gem 'nokogiri'
 gem 'amatch'
 gem 'icalendar'
+gem 'ffaker'
 
 # Use edge to fix validation of nested attributes: https://github.com/bcardarella/client_side_validations/pull/505
 gem 'client_side_validations', :git => "https://github.com/bcardarella/client_side_validations.git", :branch => '3-2-stable'
@@ -93,7 +94,6 @@ group :development, :test do
   gem 'thin'
   gem 'shoulda', '3.3.2'
   gem 'shoulda-let', :require => 'shoulda/let'
-  gem 'ffaker'
   gem 'factory_girl_rails', '>=3.0.0'
   gem 'email_spec'
   gem 'json_spec', '0.5.0'

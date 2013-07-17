@@ -34,6 +34,14 @@ class DashboardController < ApplicationController
     @listings = current_user.companies.first.listings.all
   end
 
+  def bookings
+    @your_reservations = current_user.reservations.visible.to_a.sort_by(&:date)
+    unless @your_reservations.any?
+      flash[:warning] = "You haven't made any bookings yet!"
+      redirect_to search_path
+    end
+  end
+
   def payments
     @charges = @company.charges.successful.order('created_at DESC').paginate(:page => params[:page], :per_page => 20).includes(:reference => { :listing => :location })
     @last_week_charges = @company.charges.successful.order('created_at ASC').last_x_days(6)

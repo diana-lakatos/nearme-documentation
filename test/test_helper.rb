@@ -59,7 +59,7 @@ Spork.prefork do
 
     def authenticate!
       @user = FactoryGirl.create(:authenticated_user)
-      request.env['Authorization'] = @user.authentication_token;
+      request.env['Authorization'] = @user.authentication_token
     end
 
     def stub_sphinx(listings_to_return)
