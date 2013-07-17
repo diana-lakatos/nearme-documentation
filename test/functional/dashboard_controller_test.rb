@@ -1,17 +1,38 @@
 require 'test_helper'
 
 class DashboardControllerTest < ActionController::TestCase
-
   include Devise::TestHelpers
 
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
-    @listing = FactoryGirl.create(:listing, :quantity => 1000)
-    @listing.location.company.tap { |c| c.creator = @user }.save!
+  end
+
+  context 'GET bookings' do
+    setup do
+      @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
+      @location = FactoryGirl.create(:location_in_auckland)
+      @company.locations << @location
+    end
+
+    should 'redirect if no bookings' do
+      get :bookings
+      assert_redirected_to search_path
+      assert_equal "You haven't made any bookings yet!", flash[:warning]
+    end
+
+    should 'render view if any bookings' do
+      FactoryGirl.create(:reservation, owner: @user)
+      get :bookings
+      assert_response :success
+    end
   end
 
   context '#payments' do
+    setup do
+      @listing = FactoryGirl.create(:listing, :quantity => 1000)
+      @listing.location.company.tap { |c| c.creator = @user }.save!
+    end
 
     context '#assigned variables' do
 
