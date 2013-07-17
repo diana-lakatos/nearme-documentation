@@ -6,7 +6,7 @@ module Controller
 
     def initialize(user)
       @user = user
-      @scope = @user.listing_reservations.includes({:listing => :location}, :periods)
+      @scope = @user.listing_reservations.includes(:listing => :location)
     end
 
     def filter(state)
