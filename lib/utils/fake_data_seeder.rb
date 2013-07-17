@@ -115,14 +115,10 @@ module Utils
     def load_amenities!
       @amenities ||= do_task "Loading amenities" do
         Data.amenities.each_with_index.map do |(amenity_type_name, amenity_names), index|
-          amenity_type = FactoryGirl.build(:amenity_type, :name => amenity_type_name, :position => index).tap do |resource|
-            resource.save!
-          end
+          amenity_type = FactoryGirl.create(:amenity_type, :name => amenity_type_name, :position => index)
 
           amenity_names.map do |amenity_name|
-            FactoryGirl.build(:amenity, :name => amenity_name, :amenity_type => amenity_type).tap do |resource|
-              resource.save!
-            end
+            FactoryGirl.create(:amenity, :name => amenity_name, :amenity_type => amenity_type)
           end
         end.flatten
       end
@@ -132,9 +128,7 @@ module Utils
     def load_industries!
       @industries ||= do_task "Loading industries" do
         Data.industries.map do |name|
-          FactoryGirl.build(:industry, :name => name).tap do |resource|
-            resource.save!
-          end
+          FactoryGirl.create(:industry, :name => name)
         end
       end
     end
@@ -143,9 +137,7 @@ module Utils
     def load_location_types!
       @location_types ||= do_task "Loading location types" do
         Data.location_types.map do |name|
-          FactoryGirl.build(:location_type, :name => name).tap do |resource|
-            resource.save!
-          end
+          FactoryGirl.create(:location_type, :name => name)
         end
       end
     end
@@ -154,9 +146,7 @@ module Utils
     def load_listing_types!
       @listing_types ||= do_task "Loading listing types" do
         Data.listing_types.map do |name|
-          FactoryGirl.build(:listing_type, :name => name).tap do |resource|
-            resource.save!
-          end
+          FactoryGirl.create(:listing_type, :name => name)
         end
       end
     end
@@ -165,9 +155,7 @@ module Utils
     def load_partners!
       @partners ||= do_task "Loading partners" do
         Data.partners.map do |name|
-          FactoryGirl.build(:partner, :name => name).tap do |resource|
-            resource.save!
-          end
+          FactoryGirl.create(:partner, :name => name)
         end
       end
     end
@@ -176,9 +164,7 @@ module Utils
     def load_instances!
       @instances ||= do_task "Loading instances" do
         Data.instances.map do |name|
-          FactoryGirl.build(:instance, :name => name).tap do |resource|
-            resource.save!
-          end
+          FactoryGirl.create(:instance, :name => name)
         end
       end
     end
@@ -190,16 +176,14 @@ module Utils
         Data.domains.map do |url|
           instance = instances.sample # TODO temp
           company_email = "info@#{url}"
-          user = FactoryGirl.build(:user, :name => Faker::Name.name, :email => company_email, :biography => Faker::Lorem.paragraph,
-                                   :instance => instance, :industries => industries.sample(2)).tap do |resource|
-            resource.save!
-          end
+          user = FactoryGirl.create(:user, :name => Faker::Name.name, :email => company_email,
+                                    :biography => Faker::Lorem.paragraph, :instance => instance,
+                                    :industries => industries.sample(2))
           users << user
 
-          companies << FactoryGirl.build(:company, :name => url, :email => user.email, :url => url, :description => Faker::Lorem.paragraph,
-                                         :instance => instance, :creator => user, :industries => user.industries).tap do |resource|
-            resource.save!
-          end
+          companies << FactoryGirl.create(:company, :name => url, :email => user.email, :url => url,
+                                          :description => Faker::Lorem.paragraph, :instance => instance,
+                                          :creator => user, :industries => user.industries)
         end
         [users, companies]
       end
@@ -219,11 +203,9 @@ module Utils
           address, lat, lng = row[0], row[1], row[2]
           company = companies.sample
 
-          FactoryGirl.build(:location, :amenities => amenities.sample(2), :location_type => location_types.sample,
-                                         :company => company, :email => company.email, :address => address,
-                                         :latitude => lat, :longitude => lng, :description => Faker::Lorem.paragraph).tap do |resource|
-            resource.save!
-          end
+          FactoryGirl.create(:location, :amenities => amenities.sample(2), :location_type => location_types.sample,
+                             :company => company, :email => company.email, :address => address,
+                             :latitude => lat, :longitude => lng, :description => Faker::Lorem.paragraph)
         end
       end
     end
@@ -234,10 +216,8 @@ module Utils
         locations.map do |location|
           listing_types.sample(2).map do |listing_type|
             name = listing_type.name # TODO
-            FactoryGirl.build(:listing, :listing_type => listing_type, :name => name,
-                              :location => location, :description => Faker::Lorem.paragraph).tap do |resource|
-              resource.save!
-            end
+            FactoryGirl.create(:listing, :listing_type => listing_type, :name => name, :location => location,
+                               :description => Faker::Lorem.paragraph)
           end
         end.flatten
       end
@@ -274,22 +254,21 @@ module Utils
           reservation.confirm!
           reservation.update_attribute :payment_status, Reservation::PAYMENT_STATUSES[:paid]
           reservation.update_attribute :payment_method, "credit_card"
-          Charge.new(
+          charge = Charge.new(
             :amount => reservation.total_amount_cents,
             :currency => reservation.currency,
             :reference => reservation,
             :success => true
-          ).tap do |charge|
-            charge.user = reservation.owner
-            charge.save!
-          end
+          )
+          charge.user = reservation.owner
+          charge.save!
         end
+        reservation
       rescue
       end
     end
 
     def clean_up!
-      puts [Charge.count, Charge.successful.count]
       #Charge.update_all(:success => true)
     end
 
