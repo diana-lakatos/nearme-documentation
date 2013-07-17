@@ -35,11 +35,12 @@ class ReservationCharge < ActiveRecord::Base
   }
 
   # === Callbacks
+  before_validation :assign_currency
   after_create :capture
 
-  # === Helpers
-  delegate :currency, :to => :reservation
+  validates :currency, presence: true
 
+  # === Helpers
   monetize :subtotal_amount_cents
   monetize :service_fee_amount_cents
   monetize :total_amount_cents
@@ -77,5 +78,9 @@ class ReservationCharge < ActiveRecord::Base
 
   def billing_gateway
     reservation.owner.billing_gateway
+  end
+
+  def assign_currency
+    self.currency ||= reservation.currency
   end
 end

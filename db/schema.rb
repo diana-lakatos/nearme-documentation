@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130716024739) do
+ActiveRecord::Schema.define(:version => 20130717030824) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -231,6 +231,7 @@ ActiveRecord::Schema.define(:version => 20130716024739) do
     t.datetime "failed_at"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
+    t.string   "currency"
   end
 
   add_index "reservation_charges", ["reservation_id"], :name => "index_reservation_charges_on_reservation_id"
