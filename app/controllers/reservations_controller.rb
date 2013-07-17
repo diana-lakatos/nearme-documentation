@@ -46,11 +46,6 @@ class ReservationsController < ApplicationController
     @reservation = @reservations.find(params[:id])
   end
 
-  def get_count_by_type
-    @upcoming_reservation_count = current_user.reservations.not_archived.count
-    @archived_reservation_count = current_user.reservations.archived.count
-  end
-
   def allowed_events
     ['user_cancel']
   end
