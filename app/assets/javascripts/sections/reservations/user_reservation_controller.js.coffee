@@ -1,4 +1,8 @@
-class @Reservation.Controller
+# Controller for handling each reservation in my bookings page
+#
+# The controller is initialized with the reservation DOM container. It's mainly for controlling google map
+# which has to be provided for each user's reservation
+class @Reservation.UserReservationController
 
   constructor: (@container, @options = {}) ->
     @mapContainer = @container.find('.map').eq(0)
@@ -50,7 +54,6 @@ class @Reservation.Controller
 
   setMapDimensions: ->
     @mapContainer.width(@mapContainer.parent().width())
-    @actionButtonHeight ||= @mapContainer.closest('.span4').find('.actions').height()
-    @mapContainer.height(@container.find('.reservation-text-information').height() - @actionButtonHeight)
+    @mapContainer.height(@container.find('.reservation-text-information').height())
     if @map
       @map.map.setCenter(@latlng)

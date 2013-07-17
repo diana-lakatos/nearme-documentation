@@ -1,8 +1,6 @@
 class ReservationPeriod
   module IcalendarEvent
 
-    extend ActiveSupport::Concern
-
     def to_ics
       event = Icalendar::Event.new
       event.start = ics_date(date, start_minute)

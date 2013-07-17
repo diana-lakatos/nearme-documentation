@@ -2,7 +2,6 @@ class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
   before_filter :fetch_reservations
   before_filter :fetch_reservation, :only => [:user_cancel]
-  before_filter :get_count_by_type, :only => [:index, :upcoming, :archived]
 
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)

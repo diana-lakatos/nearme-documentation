@@ -1,5 +1,5 @@
 .row-fluid
-  .span12.reservation-details{id: "reservation_#{reservation.id}"}
+  .span12.reservation-details{id: dom_id(reservation)}
     .span12
       .span8.reservation-text-information
         .span12
@@ -9,14 +9,13 @@
             %div
               = "#{reservation.listing.name} at #{reservation.listing.location.company.name} (x #{reservation.quantity})" 
 
-            %div{:class => "reservation-status #{reservation_status_klass(reservation)}"}
-              Status: 
+            %div{:class => "reservation-status #{reservation_status_class(reservation)}"}
               %span
-                #{reservation.state.capitalize}
                 %i
-                - if reservation.pending?
-                  %div.pending-confirmation
-                    This reservation is currently pending confirmation, and will be charged when confirmed.
+                #{reservation.state.capitalize}
+                - if reservation.pending? && reservation.credit_card_payment?
+                  = tooltip('This reservation is currently pending confirmation, and will be charged when confirmed.')
+                    
             %div
               = reservation.listing.location.special_notes
             %h2 Host
@@ -42,12 +41,12 @@
             %div
             = reservation_total_price(reservation)
             %div Includes service fee.
+            .actions
+              = render :partial => "dashboard/user_actions",  :locals => {:reservation => reservation} if current_user == reservation.owner
 
       .span4
         %div
           = render :partial => 'locations/google_map', :locals => { :location => reservation.listing.location }
-        .actions
-          = render :partial => "dashboard/user_actions",  :locals => {:reservation => reservation} if current_user == reservation.owner
 
 :javascript
-  new Reservation.Controller($("#reservation_#{reservation.id}"))
+  new Reservation.UserReservationController($("##{dom_id(reservation)}"))

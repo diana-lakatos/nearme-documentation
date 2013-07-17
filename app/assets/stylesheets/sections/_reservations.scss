@@ -40,12 +40,15 @@ section.reservations {
     font-size: 0.95em;
   }
 
-  .reservation-list .reservation-details {
-    margin-bottom: 45px;
+
+  .reservation-emphasis{
+    margin: 0px 0px 20px 0px;
+    font-size: 28px;
   }
 
   .other-reservation-separator {
-    margin: 35px 0px;
+    margin: 20px 0px;
+    font-size: 28px;
   }
 
   .reservation-navigation {
@@ -72,8 +75,6 @@ section.reservations {
 
   .reservation-details {
 
-    font-size: 0.85em;
-
     h2 {
       margin-top: 15px;
 
@@ -92,7 +93,11 @@ section.reservations {
 
     .actions .btn{ 
       margin-top: 15px;
-      width: 100%;
+      width: 140px; 
+
+      @media (max-width: 767px) {
+        margin-bottom: 15px;
+      }
     }
 
     .add-calendar a{
