@@ -1,4 +1,6 @@
 Airbrake.configure do |config|
-  config.api_key = '98f16bf2730f48efc03f479afba5e270'
-  config.development_environments = ["development", "test", "cucumber"]
+  config.api_key = 'Wh44tvzgPN/Ea/JJN/i4JQ=='
+  config.host = 'api.raygun.io'
+  config.secure = true
 end
+
