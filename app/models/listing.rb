@@ -176,22 +176,22 @@ class Listing < ActiveRecord::Base
   end
 
   def reserve!(reserving_user, dates, quantity)
-    reservations.build(:user => reserving_user, :quantity => quantity).tap do |reservation|
-      dates.each do |date|
-        raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
-        reservation.add_period(date)
-      end
-
-      reservation.save!
-
-      if reservation.listing.confirm_reservations?
-        ReservationMailer.notify_host_with_confirmation(reservation).deliver
-        ReservationMailer.notify_guest_with_confirmation(reservation).deliver
-      else
-        ReservationMailer.notify_host_without_confirmation(reservation).deliver
-        ReservationMailer.notify_guest_of_confirmation(reservation).deliver
-      end
+    reservation = reservations.build(:user => reserving_user, :quantity => quantity)
+    dates.each do |date|
+      raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
+      reservation.add_period(date)
     end
+
+    reservation.save!
+
+    if reservation.listing.confirm_reservations?
+      ReservationMailer.notify_host_with_confirmation(reservation).deliver
+      ReservationMailer.notify_guest_with_confirmation(reservation).deliver
+    else
+      ReservationMailer.notify_host_without_confirmation(reservation).deliver
+      ReservationMailer.notify_guest_of_confirmation(reservation).deliver
+    end
+    reservation
   end
 
   def dates_fully_booked
