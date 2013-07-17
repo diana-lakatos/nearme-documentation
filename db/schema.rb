@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130712094821) do
+ActiveRecord::Schema.define(:version => 20130717042412) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -130,9 +130,20 @@ ActiveRecord::Schema.define(:version => 20130712094821) do
 
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.integer  "partner_id"
+    t.string   "site_name"
+    t.string   "description"
+    t.string   "tagline"
+    t.string   "support_email"
+    t.string   "contact_email"
+    t.string   "address"
+    t.string   "phone_number"
+    t.string   "support_url"
+    t.string   "blog_url"
+    t.string   "twitter_url"
+    t.string   "facebook_url"
   end
 
   create_table "listing_types", :force => true do |t|
