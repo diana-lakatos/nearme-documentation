@@ -17,6 +17,8 @@ class Search.RangeDatePickerFilter
 
     @startInput().val(startDate)
     @endInput().val(endDate)
+    @startInput().data('value', DNM.util.Date.toId(@startDatepicker.getDates()[0]))
+    @endInput().data('value', DNM.util.Date.toId(@endDatepicker.getDates()[0]))
     @updateCallback([startDate, endDate])
 
   startDatepickerChanged: ->
