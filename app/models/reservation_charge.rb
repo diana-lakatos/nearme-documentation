@@ -21,7 +21,7 @@ class ReservationCharge < ActiveRecord::Base
   }
 
   scope :last_x_days, lambda { |days_in_past|
-    where('DATE(reservation_charges.created_at) > ? ', days_in_past.days.ago)
+    where('DATE(reservation_charges.created_at) >= ? ', days_in_past.days.ago)
   }
 
   scope :total_by_currency, -> {
