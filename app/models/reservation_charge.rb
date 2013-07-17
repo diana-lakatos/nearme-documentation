@@ -1,4 +1,6 @@
 class ReservationCharge < ActiveRecord::Base
+  acts_as_paranoid
+
   # === Associations
   belongs_to :reservation
   has_many :charge_attempts,
