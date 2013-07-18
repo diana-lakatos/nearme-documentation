@@ -39,9 +39,6 @@ DesksnearMe::Application.routes.draw do
 
   resources :listings, :only => [:index, :show] do
     resources :reservations, :only => [:create, :update, :show], :controller => "listings/reservations" do
-      member do
-        get :export
-      end
       post :review, :on => :collection
       get :hourly_availability_schedule, :on => :collection
     end
@@ -60,6 +57,7 @@ DesksnearMe::Application.routes.draw do
   resources :reservations do
     member do
       post :user_cancel
+      get :export
     end
     collection do
       get :upcoming

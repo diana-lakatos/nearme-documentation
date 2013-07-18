@@ -2,7 +2,7 @@ module Listings
   class ReservationsController < ApplicationController
     before_filter :find_listing
     before_filter :build_reservation, :only => [:review, :create]
-    before_filter :require_login_for_reservation, :only => [:review, :create]
+    before_filter :require_login_for_reservation, :only => [:review, :create, :export]
 
     def review
       @reservation.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
@@ -30,20 +30,6 @@ module Listings
         render_redirect_url_as_json if request.xhr? 
       else
         render :review
-      end
-    end
-
-    def export
-      @reservation = current_user.reservations.find(params[:id])
-      respond_to do |format|
-        format.ics do
-          calendar = Icalendar::Calendar.new
-          @reservation.periods.each do |period|
-            calendar.add_event(period.to_ics)
-          end
-          calendar.publish
-          render :text => calendar.to_ical
-        end
       end
     end
 

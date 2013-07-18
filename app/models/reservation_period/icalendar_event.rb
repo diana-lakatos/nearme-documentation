@@ -11,7 +11,7 @@ class ReservationPeriod
       event.klass = "PUBLIC"
       event.created = self.reservation.created_at
       event.last_modified = self.reservation.updated_at
-      event.uid = event.url = Rails.application.routes.url_helpers.listing_reservation_url(self.reservation.listing, self.reservation, :period => self.id)
+      event.uid = event.url = Rails.application.routes.url_helpers.reservation_url(self.reservation, :period => self.id)
       event
     end 
 
