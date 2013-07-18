@@ -99,13 +99,13 @@ class Reservation < ActiveRecord::Base
 
   scope :upcoming, lambda {
     joins(:periods).
-      where('reservation_periods.date >= ?', Date.today).
+      where('reservation_periods.date >= ?', Time.zone.today).
       uniq
   }
 
   scope :past, lambda {
     joins(:periods).
-      where('reservation_periods.date < ?', Date.today).
+      where('reservation_periods.date < ?', Time.zone.today).
       uniq
   }
 
@@ -158,11 +158,11 @@ class Reservation < ActiveRecord::Base
 
   # Returns whether any of the reserved dates have started
   def started?
-    periods.any? { |p| p.date <= Date.today }
+    periods.any? { |p| p.date <= Time.zone.today }
   end
 
   def archived?
-    rejected? or cancelled? or periods.all? {|p| p.date < Date.today}
+    rejected? or cancelled? or periods.all? {|p| p.date < Time.zone.today}
   end
 
   def add_period(date, start_minute = nil, end_minute = nil)

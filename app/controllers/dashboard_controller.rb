@@ -52,7 +52,7 @@ class DashboardController < ApplicationController
     )
 
     # Charges specifically from the last 7 days
-    @last_week_charges = @company.reservation_charges.paid.last_x_days(7).
+    @last_week_charges = @company.reservation_charges.paid.last_x_days(6).
       order('created_at ASC')
 
     # Charge total summary by currency
