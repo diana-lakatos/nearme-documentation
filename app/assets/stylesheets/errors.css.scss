@@ -7,10 +7,10 @@ body {
 } 
 
 .container-fluid {
-  display:table;
-  height:100%;
-  width:100%;
-  padding-right:0px;
+  display: table;
+  height: 100%;
+  width: 100%;
+  padding-right: 0px;
   padding-left: 0px;
 }   
 
@@ -35,19 +35,23 @@ body {
 }
 
 .row-fluid {
-  display:table-cell;
-  height:100%;
-  width:100%;
-  vertical-align:middle;
+  display: table-cell;
+  height: 100%;
+  width: 100%;
+  vertical-align: middle;
 }
 
 .centering {
-  float:none;
-  margin:0px auto;
+  float: none;
+  margin: 0px auto;
   text-align: center;
   position: relative;
   z-index: 10;
   margin-top: -38px;
+
+  &.server-error{
+    margin-top: 0px;
+  }
 
 
   @media (max-width: 480px){

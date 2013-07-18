@@ -53,23 +53,19 @@ class Manage::ListingsControllerTest < ActionController::TestCase
         sign_in @other_user
       end
 
-      context "#create" do
-
-        should "create listing" do
-          assert_raise ActiveRecord::RecordNotFound do
-            # @location belongs to @user, not signed in @other_user - @user should not get new listing
-            post :create, { :listing => FactoryGirl.attributes_for(:listing).reverse_merge!({:listing_type_id => @listing_type.id}), :location_id => @location.id}
-          end
+      should "not create listing" do
+        assert_raise ActiveRecord::RecordNotFound do
+          post :create, { :listing => FactoryGirl.attributes_for(:listing).reverse_merge!({:listing_type_id => @listing_type.id}), :location_id => @location.id}
         end
       end
 
-      should "update listing" do
+      should "not update listing" do
         assert_raise ActiveRecord::RecordNotFound do
           put :update, :id => @listing.id, :listing => { :name => 'new name' }
         end
       end
 
-      should "destroy listing" do
+      should "not destroy listing" do
         assert_raise ActiveRecord::RecordNotFound do
           delete :destroy, :id => @listing.id
         end

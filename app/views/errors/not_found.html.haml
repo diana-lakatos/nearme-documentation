@@ -7,4 +7,4 @@
     .span6.offset3.centering
       %h1 Aw, Snap!
       .description-text The page you were looking for could not be located.
-      .suggestion-text Go back to #{link_to 'desksnear.me', '/'} or #{mail_to('support@desksnear.me', 'contact us', :encode => :hex)} about a problem.
+      = render :partial => 'links', :locals => { :status_code => @status_code }

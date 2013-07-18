@@ -38,6 +38,4 @@ DesksnearMe::Application.configure do
   config.twitter_key = "687jaGPQNpLHlK0An6zy7g"
   config.twitter_secret = "b6WZm6oyfh1bou4Nn7ntybL2g5pK9zEaabUqMVeRU"
 
-  config.exceptions_app = self.routes
-
 end
