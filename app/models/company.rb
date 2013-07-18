@@ -16,7 +16,7 @@ class Company < ActiveRecord::Base
   has_many :reservations,
            through: :listings
 
-  has_many :charges,
+  has_many :reservation_charges,
            through: :reservations
 
   has_many :company_industries

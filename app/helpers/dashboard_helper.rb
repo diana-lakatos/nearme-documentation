@@ -37,7 +37,7 @@ module DashboardHelper
   end
 
   def time_to_expiry(time_of_event)
-    current_time = Time.now.utc
+    current_time = Time.zone.now
     total_seconds = time_of_event - current_time
     hours = (total_seconds/1.hour).floor
     minutes = ((total_seconds-hours.hours)/1.minute).floor
@@ -64,16 +64,15 @@ module DashboardHelper
   end
 
   def group_charges(charges)
-    @grouped_charges ||= charges.group_by do |c|
-      c.currency
-    end.tap do |charges_grouped_by_currency| 
-      charges_grouped_by_currency.each do |currency, charges_in_the_same_currency|
-        charges_grouped_by_currency[currency] = charges_in_the_same_currency.group_by do |c|
+    @grouped_charges ||= begin
+      charges_by_currency = charges.group_by(&:currency)
+      charges_by_currency.each do |currency, charges_in_the_same_currency|
+        charges_by_currency[currency] = charges_in_the_same_currency.group_by { |c|
           format_charge_date_for_graph(c.created_at)
-        end.inject({}) do |arr, (k, v)|
+        }.inject({}) do |hash, (date_format, grouped_charges)|
           # later on we might want to make sure that all prices are in the same currency
-          arr[k] = v.sum(&:price)
-        arr
+          hash[date_format] = grouped_charges.sum(&:total_amount)
+          hash
         end
       end
     end
@@ -92,12 +91,11 @@ module DashboardHelper
 
   def labels_for_chart
     @labels_for_chart ||= [].tap do |arr|
-      (0..6).each { |i| arr << format_charge_date_for_graph(Time.zone.today - i.day) }
+      (0..6).each { |i| arr << format_charge_date_for_graph(Time.zone.now - i.day) }
     end.sort
   end
 
-
-  def format_charge_date_for_graph(date)
-    date.to_date.strftime('%b %d')
+  def format_charge_date_for_graph(datetime)
+    datetime.strftime('%b %d')
   end
 end

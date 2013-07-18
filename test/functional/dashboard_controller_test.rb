@@ -38,7 +38,7 @@ class DashboardControllerTest < ActionController::TestCase
 
       context 'ownership' do
         setup do
-          @owner_charge = create_charge(:currency => 'USD', :amount => 100)
+          @owner_charge = create_charge(:amount => 100)
           @not_owner_charge = FactoryGirl.create(:charge)
         end
 
@@ -57,8 +57,8 @@ class DashboardControllerTest < ActionController::TestCase
       context 'date' do 
 
         setup do
-          @charge_created_6_days_ago = create_charge(:currency => 'USD', :amount => 100, :created_at => "#{Time.zone.today - 6.day} 01:00:00")
-          @charge_created_7_days_ago = create_charge(:currency => 'USD', :amount => 100, :created_at => "#{Time.zone.today - 7.day} 01:00:00")
+          @charge_created_6_days_ago = create_charge(:amount => 100, :created_at => Time.zone.now - 6.day)
+          @charge_created_7_days_ago = create_charge(:amount => 100, :created_at => Time.zone.now - 7.day)
         end
 
         should '@last_week_charges includes only charges not older than 6 days' do
@@ -80,8 +80,14 @@ class DashboardControllerTest < ActionController::TestCase
   private
 
   def create_charge(options = {})
-    options.reverse_merge!({:reference => FactoryGirl.create(:reservation, :listing => @listing)})
-    FactoryGirl.create(:charge, options)
+    options.reverse_merge!({:reservation => FactoryGirl.create(:reservation, :currency => 'USD', :listing => @listing)})
+    if amount = options.delete(:amount)
+      options[:subtotal_amount] = amount
+    end
+
+    options[:paid_at] ||= options[:created_at] || Time.zone.now
+
+    FactoryGirl.create(:reservation_charge, options)
   end
 
 end

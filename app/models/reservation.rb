@@ -22,7 +22,9 @@ class Reservation < ActiveRecord::Base
            :inverse_of => :reservation,
            :dependent => :destroy
 
-  has_many :charges, :as => :reference, :dependent => :nullify
+  has_many :reservation_charges,
+    inverse_of: :reservation,
+    dependent: :destroy
 
   validates :periods, :length => { :minimum => 1 }
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
@@ -62,6 +64,7 @@ class Reservation < ActiveRecord::Base
   monetize :total_amount_cents
   monetize :subtotal_amount_cents
   monetize :service_fee_amount_cents
+  monetize :successful_payment_amount_cents
 
   state_machine :state, :initial => :unconfirmed do
     after_transition :unconfirmed => :confirmed, :do => :attempt_payment_capture
@@ -212,12 +215,13 @@ class Reservation < ActiveRecord::Base
     (quantity || 0) * periods.size
   end
 
-  def successful_payment_amount
-    charges.successful.first.try(:amount) || 0.0
+  def successful_payment_amount_cents
+    reservation_charges.paid.first.try(:total_amount_cents) || 0
   end
 
+  # FIXME: This should be +balance_cents+ to conform to our conventions
   def balance
-    successful_payment_amount - total_amount_cents
+    successful_payment_amount_cents - total_amount_cents
   end
 
   def credit_card_payment?
@@ -282,7 +286,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def set_currency
-      self.currency = listing.currency
+      self.currency ||= listing.currency
     end
 
     def auto_confirm_reservation
@@ -296,22 +300,25 @@ class Reservation < ActiveRecord::Base
     def attempt_payment_capture
       return if manual_payment? || free? || paid?
 
-      billing_gateway = owner.billing_gateway
+      # Generates a ReservationCharge, which is a record of the charge incurred
+      # by the user for the reservation (or a part of it), including the
+      # gross amount and service fee components.
+      #
+      # NB: A future story is to separate out extended reservation payments
+      #     across multiple payment dates, in which case a Reservation would
+      #     have more than one ReservationCharge.
+      charge = reservation_charges.create!(
+        subtotal_amount: subtotal_amount,
+        service_fee_amount: service_fee_amount
+      )
 
-      begin
-        billing_gateway.charge(
-          amount: total_amount_cents,
-          currency: currency,
-          reference: self
-        )
-        self.payment_status = PAYMENT_STATUSES[:paid]
-      rescue User::BillingGateway::CardError
-        # TODO: Need to handle re-attempting charge, etc.
-        self.payment_status = PAYMENT_STATUSES[:failed]
+      self.payment_status = if charge.paid?
+        PAYMENT_STATUSES[:paid]
+      else
+        PAYMENT_STATUSES[:failed]
       end
 
       save!
-    rescue
     end
 
     def validate_all_dates_available
