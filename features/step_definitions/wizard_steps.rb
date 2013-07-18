@@ -1,7 +1,3 @@
-Then /^I should be at the "(.*)" step$/ do |step_name|
-  assert page.has_css?('.box > ul.space-wizard > li.current > span', :content => step_name)
-end
-
 When /^I fill in valid space details$/ do
   fill_in 'Company name', with: 'International Secret Intelligence Service'
   page.execute_script "$('select#company_industry_ids option:first').prop('selected', true);"
