@@ -112,7 +112,9 @@ group :development do
   gem 'ruby-prof'
 end
 group :test do
-  gem 'capybara', '~>1.1.2'
+  gem 'capybara', '~>2'
+  gem 'capybara-webkit'
+  gem 'capybara-screenshot'
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
   gem 'launchy'
