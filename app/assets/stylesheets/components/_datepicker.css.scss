@@ -29,7 +29,7 @@
   @include background-clip(border-box);
   overflow: hidden;
 
-  @media only screen and (max-width: 480px) {
+  @media only screen and (max-width: $iphone-landscape) {
     position: fixed;
     top: 20px !important;
     left: 20px !important;

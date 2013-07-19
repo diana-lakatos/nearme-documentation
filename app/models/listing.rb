@@ -1,4 +1,5 @@
 class Listing < ActiveRecord::Base
+  has_paper_trail
   # == Associations
   has_many :reservations,
     dependent: :destroy

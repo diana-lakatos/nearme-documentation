@@ -26,7 +26,7 @@
       = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
       = javascript_include_tag :chrome_frame
 
-    = render :partial => "layouts/analytics"
+    = render 'layouts/initializers'
 
   %body
 
@@ -49,9 +49,5 @@
 
       = render 'layouts/footer'
 
-    = render 'shared/modal'
+    = render 'layouts/scripts'
 
-    = yield :script
-
-    = javascript_tag do
-      = yield :domready
