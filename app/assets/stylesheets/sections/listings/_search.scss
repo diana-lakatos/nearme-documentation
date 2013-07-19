@@ -49,7 +49,7 @@ section.search#content {
   .google-map .inner {
     z-index: $map-z-index;
     
-    @media (max-width: 480px) {
+    @media (max-width: $iphone-landscape) {
       height: 150px;
     }
   }
@@ -98,7 +98,7 @@ section.search#content {
     .inner {
       height: 300px;
 
-      @media (max-width: 480px) {
+      @media (max-width: $iphone-landscape) {
         height: 150px;
       }
     }
@@ -175,7 +175,7 @@ section.search#content {
     }
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: $iphone-landscape) {
     .input-wrapper, .button-wrapper {
       float: none;
       display: block;
@@ -342,7 +342,7 @@ header#listing_search {
         padding-right: 280px;
       }
 
-      @media (max-width: 480px) {
+      @media (max-width: $iphone-landscape) {
         padding-left: 60px;
       }
 
@@ -359,7 +359,7 @@ header#listing_search {
           border: 2px solid $gray210;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: $iphone-landscape) {
           height: 28px;
           @include border-radius($border-radius-default);
           border: none;
@@ -474,7 +474,7 @@ header#listing_search {
       }      
     }
 
-    @media (max-width: 767px) {
+    @media (max-width: $ipad-width) {
 
       &.query-active {
         @include transition(padding .5s linear, margin .5s linear);
@@ -532,7 +532,7 @@ section.search section#results.list {
         @include adjust-font-size-to(32px);
       }
 
-      @media( max-width: 320px) {
+      @media( max-width: $iphone-portrait) {
         @include adjust-font-size-to(16px);
       }
     }
@@ -580,14 +580,14 @@ section.search section#results.list {
 
       .label {
         
-        @media (min-width: 767px) {
+        @media (min-width: $ipad-width) {
           padding: 6px 6px;
           font-weight: bold;
           font-size: 18px;
           line-height: 14px;
         }
 
-        @media (max-width: 320px) {
+        @media (max-width: $iphone-portrait) {
           padding: 1px 2px;
           font-weight: bold;
           font-size: 10px;

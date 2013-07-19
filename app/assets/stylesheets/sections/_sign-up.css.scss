@@ -78,7 +78,7 @@
   .btn.facebook, 
   .btn.linkedin {
     
-    @media (min-width: 767px) {
+    @media (min-width: $ipad-width) {
       margin-right: 2%;
     }    
   }

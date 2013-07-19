@@ -113,6 +113,7 @@ class Search.Controller
 
   getSearchParams: ->
     form_params = @form.serializeArray()
+    form_params = @replaceWithData(form_params)
     # don't polute url if this is unnecessary - ignore empty values and page
     params = []
     for k, param of form_params
@@ -135,3 +136,15 @@ class Search.Controller
 
       @setGeolocatedQuery(query, result)
       callback()
+
+  # If element has data-value attribute it will replace native value of the element
+  # Used for date range picker
+  replaceWithData: (formParams)->
+    params = []
+    for k, param of formParams
+      element = @form.find("input[name='#{param['name']}']")
+      if element.data('value')
+        params.push {name: param['name'], value: element.data('value')}
+      else
+        params.push(param)
+    params

@@ -43,7 +43,7 @@ p {
   font:400 18px/28px $font-regular, sans-serif;
   color: $gray120;
 
-  @media (max-width: 480px) {
+  @media (max-width: $iphone-landscape) {
     @include adjust-font-size-to(16px);
   }
 }
@@ -71,7 +71,7 @@ h1 {
   margin-bottom: 20px;
   @include adjust-font-size-to(32px);
 
-  @media (max-width: 480px) {
+  @media (max-width: $iphone-landscape) {
     @include adjust-font-size-to(24px);
   }  
 }
@@ -79,7 +79,7 @@ h1 {
 h2 {
   @include adjust-font-size-to(24px);
 
-  @media (max-width: 480px) {
+  @media (max-width: $iphone-landscape) {
     @include adjust-font-size-to(20px);
   }  
 }

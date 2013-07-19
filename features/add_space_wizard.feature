@@ -9,7 +9,8 @@ Feature: A user can add a space
     And a industry exists with name: "Industry"
 
   Scenario: An unregistered user starts by signing up
-    Given I go to the home page
+    Given a instance exists
+    And I go to the home page
      And  I follow "List Your Space"
      And I sign up as a user in the modal
      Then I should see "List Your First Space"
