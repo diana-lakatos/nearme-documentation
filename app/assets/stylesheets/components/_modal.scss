@@ -40,7 +40,7 @@
     display: none;
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: $ipad-width) {
     position: fixed;
     top: 20px;
     right: 20px;

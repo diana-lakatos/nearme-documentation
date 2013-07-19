@@ -5,14 +5,14 @@
         .span12
           %ul
             %li= link_to "About", "http://blog.desksnear.me/about/", target: '_blank'
-            %li.last= link_to "Support", "http://support.desksnear.me", :target => '_blank'
+            %li.last= link_to "Support", current_instance.support_url, :target => '_blank'
             %li= link_to "Legal", legal_path, :target => '_blank'
             %li= link_to "iPhone App", "https://itunes.apple.com/us/app/desks-near-me/id529634519?mt=8", :target => '_blank'
             %li= link_to "Careers", "http://blog.desksnear.me/careers/", :class => "clear-footer", :target => '_blank'
-            %li= link_to "Blog", "http://blog.desksnear.me/", :class => "clear-footer", :target => '_blank'
-            %li= link_to "Twitter", "https://twitter.com/desksnearme", :target => '_blank'
-            %li= link_to "Facebook", "https://www.facebook.com/DesksNearMe", :target => '_blank'
+            %li= link_to "Blog", current_instance.blog_url, :class => "clear-footer", :target => '_blank'
+            %li= link_to "Twitter", current_instance.twitter_url, :target => '_blank'
+            %li= link_to "Facebook", current_instance.facebook_url, :target => '_blank'
 
 
       .copyright
-        %p &copy; 2013 Desks Near Me &bull; 185 Clara St #100, San Francisco CA 94107 &bull; 1.888.998.3375
+        %p &copy; 2013 #{current_instance.site_name} &bull; #{current_instance.address} &bull; #{current_instance.phone_number}

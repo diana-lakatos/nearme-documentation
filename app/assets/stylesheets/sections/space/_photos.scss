@@ -1,11 +1,11 @@
 #details {
   height: 554px;
 
-  @media (max-width: 767px) {
+  @media (max-width: $ipad-width) {
     height:160px;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: $iphone-landscape) {
     height:100px;
   }      
 }
@@ -16,7 +16,7 @@
     width: 34%;
     margin-left: 0;
 
-    @media (max-width: 767px ) {
+    @media (max-width: $ipad-width ) {
       width: 100%;
     }
   }
@@ -28,11 +28,11 @@
       position: relative;
       z-index: 1;
 
-      @media (max-width: 767px) {
+      @media (max-width: $ipad-width) {
         height:160px !important;
       }
 
-      @media (max-width: 480px) {
+      @media (max-width: $iphone-landscape) {
         height:100px !important;
       }      
     }
@@ -64,7 +64,7 @@
         height:40px;
       }
 
-      @media (max-width: 480px) {
+      @media (max-width: $iphone-landscape) {
         margin-top:0;
         padding: 4px 20px;
         height: auto;

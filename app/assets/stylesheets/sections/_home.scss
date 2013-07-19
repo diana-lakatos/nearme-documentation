@@ -25,11 +25,11 @@ section.public {
       @include background(linear-gradient(right, rgba(30,30,34,0), rgba(30,30,34,0.4) 60%, rgba(30,30,34,0.6)));
     }
 
-    @media (max-width: 767px) {
+    @media (max-width: $ipad-width) {
       height: 420px;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: $iphone-landscape) {
       height: 380px;
     }
   }
@@ -44,11 +44,11 @@ section.public {
       color: white;
     }
 
-    @media (max-width: 767px) {
+    @media (max-width: $ipad-width) {
       top:430px;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: $iphone-landscape) {
       display: none;
     }        
   }
@@ -62,11 +62,11 @@ section.public {
 #search_row {
   margin-top: 180px;
   
-  @media (max-width: 767px) {
+  @media (max-width: $ipad-width) {
     margin-top: 100px;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: $iphone-landscape) {
     margin-top: 70px;
   }
 
@@ -81,7 +81,7 @@ section.public {
     -ms-filter: glow(color=black,strength=3);
 
 
-    @media (max-width: 320px) {
+    @media (max-width: $iphone-portrait) {
       font:normal 28px/32px $font-medium, sans-serif;
     }
   }
@@ -103,7 +103,7 @@ section.public {
     font-size: 16px;
     margin-left: 10px;
 
-    @media (max-width: 480px) {
+    @media (max-width: $iphone-landscape) {
       font:normal 16px/22px $font-medium, sans-serif;
     }
   }
@@ -144,7 +144,7 @@ section.how-it-works {
     color: $gray60;
     font-family: $font-demi;
 
-    @media (max-width: 480px) {
+    @media (max-width: $iphone-landscape) {
       @include adjust-font-size-to(42px);
     }
   }
@@ -158,7 +158,7 @@ section.how-it-works {
       @include adjust-font-size-to(24px);
     }
 
-    @media (max-width: 767px) {
+    @media (max-width: $ipad-width) {
       margin-top: 30px;
     }
   }
@@ -182,7 +182,7 @@ section.how-it-works {
   }
 
   p {
-    @media (max-width: 767px) {
+    @media (max-width: $ipad-width) {
       max-width: 300px;
       margin-left: auto;
       margin-right: auto;

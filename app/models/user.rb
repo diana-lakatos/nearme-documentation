@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  has_paper_trail
   include Gravtastic
 
   before_save :ensure_authentication_token
