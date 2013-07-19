@@ -4,12 +4,8 @@ module SearchHelper
     %w(lat lng nx ny sx sy)
   end
 
-  def search_availability_dates_start
-    params[:availability].present? && params[:availability][:dates].present? && params[:availability][:dates][:start] || ""
-  end
-
-  def search_availability_dates_end
-    params[:availability].present? && params[:availability][:dates].present? && params[:availability][:dates][:end] || ""
+  def search_availability_date(date)
+    date ? date.strftime('%b %e') : ''
   end
 
   def search_availability_quantity
