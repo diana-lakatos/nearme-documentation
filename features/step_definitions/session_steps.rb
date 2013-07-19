@@ -28,11 +28,10 @@ end
 
 Then(/^I should be logged in as #{capture_model}$/) do |user_instance|
   user = model!(user_instance)
-  begin 
-  assert_equal user.first_name, find(:css, ".nav .ico-user span").text.strip, "You expected to be logged in as #{user.first_name}, but you are #{find(:css, ".nav .ico-user span").text.strip}"
-  rescue Capybara::ElementNotFound
-    assert false, "You are not logged in at all, but you expected to be logged as #{user.first_name}"
-  end
+
+  # NB: this covers the Admin interface as well as the public interface
+  step "I should see \"#{user.first_name}\""
+  step "I should see \"Log Out\""
 end
 
 Then /^I should( not)? be redirected to the previous search page$/ do |without_redirect|

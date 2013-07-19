@@ -3,19 +3,25 @@ class ApplicationController < ActionController::Base
   before_filter :require_ssl
 
   protect_from_forgery
-  layout "application"
-
-  # Much easier to debug ActiveRecord::RecordNotFound issues in dev
-  # without this.
-  unless Rails.env.development?
-    rescue_from ActiveRecord::RecordNotFound, with: :not_found
-  end
+  layout :layout_for_request_type
 
   # We need to persist some mixpanel attributes for subsequent
   # requests.
   after_filter :apply_persisted_mixpanel_attributes
 
   protected
+
+  # Returns the layout to use for the current request.
+  #
+  # By default this is 'application', except for XHR requests where
+  # we use no layout.
+  def layout_for_request_type
+    if request.xhr?
+      false
+    else
+      "application"
+    end
+  end
 
   # Provides an EventTracker instance for the current request.
   #
@@ -105,21 +111,32 @@ class ApplicationController < ActionController::Base
     redirect_to wizard(wizard_id_or_object).url
   end
 
-  def not_found
-    render "public/404", :status => :not_found
-  end
-
+  # Clears out the current response data and instead outputs json with
+  # a 200 OK status code in the format:
+  # { 'redirect': 'url' }
+  #
+  # Client-side AJAX handlers should handle the redirect.
+  #
+  # This is to work around browsers redirecting within the AJAX handler,
+  # where instead we want the user to do a full page reload.
+  #
+  # Assumes that the current response is a redirect.
   def render_redirect_url_as_json
-        self.response_body = nil
-        redirection_url = response.location
-        response.location = nil
-        response.status = 200
-        render :json => { "redirect" => redirection_url }
-        self.content_type = 'application/json'
-  end
+    unless response.location.present?
+      raise "No redirect url provided. Need to call redirect_to first."
+    end
 
-  def rename_flash_messages
-    flash[:success] = flash[:notice] if flash[:notice]
+    redirect_json = { "redirect" => response.location }
+
+    # Clear out existing response
+    self.response_body = nil
+    response.location = nil
+
+    render(
+      :json => redirect_json,
+      :content_type => 'application/json',
+      :status => 200
+    )
   end
 
   def current_instance
@@ -127,5 +144,8 @@ class ApplicationController < ActionController::Base
   end
   helper_method :current_instance
 
+  def paper_trail_enabled_for_controller
+    devise_controller? ? false : true
+  end
 end
 

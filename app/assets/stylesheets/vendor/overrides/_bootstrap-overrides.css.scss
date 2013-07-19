@@ -14,7 +14,7 @@ body {
 
 .container-fluid {
 
-  @media (max-width: 767px) {
+  @media (max-width: $ipad-width) {
     padding: 0 20px;
   }
 
@@ -24,13 +24,10 @@ body {
     }
   }  
 
-  @media (max-width: 480px) {
+  @media (max-width: $iphone-landscape) {
     padding: 0 .75em;
   }
 
-  @media (max-width: 320px) {
-    padding: 0 .5em;
-  }
 }
 
 .navbar-fixed-top,
@@ -156,7 +153,7 @@ abbr[data-original-title] {
   filter: alpha(opacity=$opacity * 100);
 }
 
-@media (max-width: 767px) {
+@media (max-width: $ipad-width) {
   // Make all grid-sized elements block level again
   [class*="span"]:not(.nested),
   .uneditable-input[class*="span"], // Makes uneditable inputs full-width when using grid sizing
@@ -171,7 +168,7 @@ abbr[data-original-title] {
 
 .hidden-iphone {
 
-  @media (max-width:480px) {
+  @media (max-width: $iphone-landscape) {
     display: none !important;
   }
 }

@@ -2,7 +2,7 @@
   background: $theme_black;
   padding: 40px 0;
 
-  @media (max-width: 767px) {
+  @media (max-width: $ipad-width) {
     padding: 30px 0 5px;
   }
 }
@@ -15,7 +15,7 @@ footer {
     width: 12.5%;
     text-align: center;
 
-    @media (max-width:767px) {
+    @media (max-width:$ipad-width) {
       width:25%;
       padding: 0 0 25px;
       .clear-footer { 
@@ -34,7 +34,7 @@ footer {
         color: $gray210;
       }
 
-     @media (max-width:767px) {
+     @media (max-width:$ipad-width) {
         font-size: 14px;
       }  
     }
@@ -67,7 +67,7 @@ footer {
       color: $gray210;
     }
 
-    @media (max-width: 767px) {
+    @media (max-width: $ipad-width) {
       margin-top: -25px;
       padding-bottom: 20px;
     }    

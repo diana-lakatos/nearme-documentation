@@ -12,6 +12,7 @@ Before do
   WebMock.disable_net_connect!
   GmapsFake.stub_requests
   stub_request(:get, /.*api\.mixpanel\.com.*/)
+  stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
 end
 
 def last_json

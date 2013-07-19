@@ -68,10 +68,9 @@ class RegistrationsControllerTest < ActionController::TestCase
     end
 
     should "not verify user if id is incorrect" do
-      get :verify, :id => (@user.id+1), :token => @user.email_verification_token
-      @user.reload
-      assert_nil @controller.current_user
-      assert !@user.verified
+      assert_raise ActiveRecord::RecordNotFound do
+        get :verify, :id => (@user.id+1), :token => @user.email_verification_token
+      end
     end
 
     should "not verify user if token is incorrect" do

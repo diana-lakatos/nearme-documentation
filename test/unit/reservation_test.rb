@@ -1,6 +1,6 @@
 require 'test_helper'
 require 'reservations_helper'
-require Rails.root.join('lib', 'dnm_errors.rb')
+require Rails.root.join('lib', 'dnm.rb')
 require Rails.root.join('app', 'serializers', 'reservation_serializer.rb')
 
 class ReservationTest < ActiveSupport::TestCase
@@ -109,6 +109,7 @@ class ReservationTest < ActiveSupport::TestCase
     context 'with a confirmed reservation' do
 
       setup do
+        User::BillingGateway.any_instance.expects(:charge)
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
         @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
         @reservation.service_fee_amount_cents = 10_00
@@ -132,7 +133,7 @@ class ReservationTest < ActiveSupport::TestCase
       reservation.service_fee_amount_cents = 10_00
       reservation.save!
 
-      reservation.owner.billing_gateway.expects(:charge)
+      User::BillingGateway.any_instance.expects(:charge)
       reservation.confirm
       assert reservation.reload.paid?
     end

@@ -36,7 +36,8 @@
 
     a {
       display: block;
-      margin: 40px auto;
+      margin: 30px auto;
+      font-size: 22px;
       color: $theme_white;
       @include opacity(.7);
       @include transition(opacity, ease-in, .1s);
@@ -77,7 +78,7 @@
   .btn.facebook, 
   .btn.linkedin {
     
-    @media (min-width: 767px) {
+    @media (min-width: $ipad-width) {
       margin-right: 2%;
     }    
   }

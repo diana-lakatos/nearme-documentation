@@ -13,7 +13,7 @@ class Search.ScreenLockLoader
 
   hide: ->
     @containerCallback().hide()
-    @lockerElement.remove()
+    @lockerElement.remove() if @lockerElement
     @showed = false
 
   showWithoutLocker: ->

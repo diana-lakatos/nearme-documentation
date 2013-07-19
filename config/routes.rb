@@ -7,6 +7,25 @@ DesksnearMe::Application.routes.draw do
     mount AfterSignupMailer::Preview => 'mail_view/after_signup'
   end
 
+  match '/404', :to => 'errors#not_found'
+  match '/422', :to => 'errors#server_error'
+  match '/500', :to => 'errors#server_error'
+
+  namespace :admin do
+    match '/', :to => "dashboard#show"
+    resources :users do
+      member do
+        post :login_as
+      end
+
+      collection do
+        post :restore_session
+      end
+    end
+
+    resources :reservations
+  end
+
   resources :companies
   resources :locations, :only => [:show] do
     resources :listings, :controller => 'locations/listings'

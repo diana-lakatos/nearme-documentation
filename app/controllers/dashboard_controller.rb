@@ -36,12 +36,27 @@ class DashboardController < ApplicationController
 
   def bookings
     @your_reservations = current_user.reservations.visible.to_a.sort_by(&:date)
+    unless @your_reservations.any?
+      flash[:warning] = "You haven't made any bookings yet!"
+      redirect_to search_path
+    end
   end
 
   def payments
-    @charges = @company.charges.successful.order('created_at DESC').paginate(:page => params[:page], :per_page => 20).includes(:reference => { :listing => :location })
-    @last_week_charges = @company.charges.successful.order('created_at ASC').last_x_days(7)
-    @all_time_totals = @company.charges.all_time_totals
+    # All paid ReservationCharges paginated
+    @charges = @company.reservation_charges.paid.order('paid_at DESC')
+    @charges = @charges.includes(:reservation => { :listing => :location })
+    @charges = @charges.paginate(
+      :page => params[:page],
+      :per_page => 20
+    )
+
+    # Charges specifically from the last 7 days
+    @last_week_charges = @company.reservation_charges.paid.last_x_days(6).
+      order('created_at ASC')
+
+    # Charge total summary by currency
+    @all_time_totals = @company.reservation_charges.paid.total_by_currency
   end
 
   private

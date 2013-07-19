@@ -7,9 +7,11 @@ Feature: A user can reset their password
   Background:
     Given a user exists
 
-  Scenario: User requests password reset
+  Scenario: User requests password reset using modal
+    And I performed search for "Auckland"
     When I begin to reset the password for that user
-    Then a password reset email should be sent to that user
+    Then I should be redirected to the previous search page
+    And a password reset email should be sent to that user
 
   Scenario: User resets password from password reset link
     When I fill in the password reset form with a new password
