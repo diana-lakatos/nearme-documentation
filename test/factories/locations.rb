@@ -126,7 +126,8 @@ FactoryGirl.define do
         }
       }}
     end
-     factory :location_vaughan_address_components do
+
+    factory :location_vaughan_address_components do
       formatted_address "Major MacKenzie Drive, Vaughan, ON L6A, Canada"
       address_components{{
          "0"=> {

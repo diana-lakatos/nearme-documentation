@@ -22,8 +22,8 @@
             - @charges.each do |charge|
               .clearfix.charge-line-item
                 .left
-                  = "#{currency_content_tag(charge.currency, charge.price, :span, { :rel => false })}".html_safe
-                  %span{class: 'location-name'}= "#{charge.reference.listing.location.name}".html_safe
+                  = "#{currency_content_tag(charge.currency, charge.total_amount, :span, { :rel => false })}".html_safe
+                  %span{class: 'location-name'}= "#{charge.reservation.listing.location.name}".html_safe
                 .right
                   = charge.created_at.strftime('%Y-%m-%d')
 
