@@ -432,7 +432,7 @@ form {
       &.boolean.optional {
         margin: 0 0 20px;
 
-        @media (max-width: 480px) {
+        @media (max-width: $iphone-landscape) {
           margin: 7px 0 0;
         }
       }
@@ -553,7 +553,7 @@ form {
   }
 }
 
-@media screen and (max-width:480px) {
+@media screen and (max-width: $iphone-landscape) {
 
   select.currency {
     width: 100%; 

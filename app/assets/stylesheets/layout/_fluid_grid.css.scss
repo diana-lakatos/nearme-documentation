@@ -18,7 +18,7 @@
 			float: right;
 		}
 
-		@media (max-width: 767px) {
+		@media (max-width: $ipad-width) {
 			width: 100%;
 			clear: both;
 		}
@@ -33,7 +33,7 @@
 			float: right;
 		}
 
-		@media (max-width: 767px) {
+		@media (max-width: $ipad-width) {
 			width: 100%;
 			clear: both;
 		}	

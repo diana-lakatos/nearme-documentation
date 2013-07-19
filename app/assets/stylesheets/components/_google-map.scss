@@ -15,7 +15,7 @@
 
   .gmnoprint {
 
-    @media (max-width: 767px) {
+    @media (max-width: $ipad-width) {
       display: none;
     }
   }
