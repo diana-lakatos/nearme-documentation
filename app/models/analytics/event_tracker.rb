@@ -109,6 +109,7 @@ class Analytics::EventTracker
       }
     when Listing::Search::Params::Web
       {
+        search_street: object.street,
         search_suburb: object.suburb,
         search_city: object.city,
         search_state: object.state,

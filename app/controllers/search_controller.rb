@@ -7,7 +7,7 @@ class SearchController < ApplicationController
 
   def index
     render "search/#{result_view}"
-    event_tracker.conducted_a_search(@search, { result_view: result_view, result_count: result_count })
+    event_tracker.conducted_a_search(search, {search_query: query, result_view: result_view, result_count: result_count })
   end
 
   private
