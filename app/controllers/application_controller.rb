@@ -154,5 +154,8 @@ class ApplicationController < ActionController::Base
   end
   helper_method :current_instance
 
+  def paper_trail_enabled_for_controller
+    devise_controller? ? false : true
+  end
 end
 
