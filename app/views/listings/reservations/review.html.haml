@@ -2,7 +2,7 @@
   %h2 
     %span.ico-location.padding #{@location.name}
 
-= simple_form_for @listing, :url => secure_listing_reservations_url(@listing), :method => :post, :remote => true, :html => {:class => "payment form-horizontal"} do
+= simple_form_for @listing, :url => secure_listing_reservations_url(@listing), :method => :post, :remote => true, :html => {:class => "payment form-horizontal"} do |f|
   = render 'listings/reservations/fields'
 
   - if @reservation.errors.present?
@@ -46,6 +46,11 @@
       = radio_button_tag :payment_method, "manual", @reservation.manual_payment?
       = label_tag :payment_method_manual, 'I will make the payment in person upon arrival'
 
+
+    - if phone_or_country_needed?
+      %hr
+      = render 'registrations/phone_fields', :f => f
+
     #credit_card_fields{:style => "display: none"}
       %hr.divider
 
@@ -81,11 +86,25 @@
     - if @reservation.listing.confirm_reservations?
       %p.text-center
         This host manually confirms all bookings before payment.
+  - else
+    - if phone_or_country_needed?
+      = render 'registrations/phone_fields', :f => f
 
   = submit_tag 'Request Booking', :disable_with => "Booking..."
 
 :javascript
   $(function() {
-    new Bookings.ReservationModal($('form.payment'))
+    new Bookings.ReservationModal($('form.payment'));
+    new PhoneNumbers.FieldsForm(
+      $('form.payment'),
+      {
+        countrySelector : '#listing_country_name',
+        mobileSelector  : '#listing_mobile_number',
+        phoneSelector   : '#listing_phone',
+        sameAsSelector  : '#listing_mobile_same_as_phone'
+      }
+    );
+    DNM.initializeCustomSelects();
   });
+
 

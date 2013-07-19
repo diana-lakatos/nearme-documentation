@@ -38,6 +38,20 @@ class ReservationsHelperTest < ActionView::TestCase
     end
   end
 
+  context "#phone_or_country_needed?" do
+    context "phone missing" do
+      should "return true" do
+        assert phone_or_country_needed?(User.new)
+      end
+    end
+
+    context "all OK" do
+      should "return false" do
+        assert_equal phone_or_country_needed?(FactoryGirl.build_stubbed(:user)), false
+      end
+    end
+  end
+
   context '#selected_dates_summary' do
 
     setup do

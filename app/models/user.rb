@@ -136,6 +136,10 @@ class User < ActiveRecord::Base
     authentications.where(provider: provider).any?
   end
 
+  def has_phone_and_country?
+    country_name.present? && phone.present?
+  end
+
   def following?(other_user)
     relationships.find_by_followed_id(other_user.id)
   end
