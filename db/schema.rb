@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130718004233) do
+ActiveRecord::Schema.define(:version => 20130719074003) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -397,6 +397,17 @@ ActiveRecord::Schema.define(:version => 20130718004233) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["instance_id"], :name => "index_users_on_instance_id"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "versions", :force => true do |t|
+    t.string   "item_type",  :null => false
+    t.integer  "item_id",    :null => false
+    t.string   "event",      :null => false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
 
   create_table "visit_ratings", :force => true do |t|
     t.integer  "reservation_id"
