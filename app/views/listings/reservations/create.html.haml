@@ -1,8 +1,8 @@
-%h1 Book space at #{@location.name}
+%h1 Book space at #{location_name(@reservation_request)}
 
 %p Your reservation has been made!
 
-- if @reservation.credit_card_payment?
+- if @reservation_request.credit_card_payment?
   %p Your credit card will be charged when your reservation is confirmed by the host.
 
 %p.text-center

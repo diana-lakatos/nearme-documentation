@@ -1,7 +1,7 @@
-= hidden_field_tag "reservation[quantity]", @reservation.quantity
-- @reservation.periods.each do |period|
+= hidden_field_tag "reservation[quantity]", @reservation_request.quantity
+- @reservation_request.reservation_periods.each do |period|
   = hidden_field_tag "reservation[dates][]", period.date.strftime('%Y-%m-%d')
 
-= hidden_field_tag "reservation[start_minute]", @reservation.periods.first.try(:start_minute)
-= hidden_field_tag "reservation[end_minute]", @reservation.periods.first.try(:end_minute)
+= hidden_field_tag "reservation[start_minute]", @reservation_request.reservation_periods.first.try(:start_minute)
+= hidden_field_tag "reservation[end_minute]", @reservation_request.reservation_periods.first.try(:end_minute)
 

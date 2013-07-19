@@ -1,64 +1,58 @@
 %header
   %h2 
-    %span.ico-location.padding #{@location.name}
+    %span.ico-location.padding= location_name(@reservation_request)
 
-= simple_form_for @listing, :url => secure_listing_reservations_url(@listing), :method => :post, :remote => true, :html => {:class => "payment form-horizontal"} do |f|
+= simple_form_for @reservation_request, :url => @reservation_request.url, :method => :post, :remote => true, :html => {:class => "payment form-horizontal"} do |f|
   = render 'listings/reservations/fields'
 
-  - if @reservation.errors.present?
+  - if @reservation_request.errors.present?
     .flash.error
       %p Whoops! We couldn't make that reservation.
       %ul
-        - @reservation.errors[:base].each do |error|
+        - @reservation_request.errors[:base].each do |error|
           %li= error
 
-  %h2= "#{@reservation.quantity} #{@listing.name}"
+  %h2= @reservation_request.form_title
 
-  - if @listing.hourly_reservations?
+  - if @reservation_request.hourly_reservations?
     %p
-      = hourly_summary_for_period @reservation.periods.first
+      = hourly_summary_for_period @reservation_request.reservation_periods.first
 
   - else
-    %p= selected_dates_summary(@reservation)
+    %p= selected_dates_summary(@reservation_request.reservation)
 
   %hr
 
   .summary
     .subtotal-label Subtotal Cost:
-    .subtotal-amount= reservation_subtotal_price(@reservation)
+    .subtotal-amount= reservation_subtotal_price(@reservation_request.reservation)
 
   .summary
     .service-fee-label Service Fee:
-    .service-fee-amount= reservation_service_fee(@reservation)
+    .service-fee-amount= reservation_service_fee(@reservation_request.reservation)
 
   .summary
     .total-label Total Cost:
-    .total-amount= reservation_total_price(@reservation)
+    .total-amount= reservation_total_price(@reservation_request.reservation)
 
   %hr
 
-  - if reservation_needs_payment_details?
+  - if reservation_needs_payment_details?(@reservation_request.reservation)
     .control-group
-      = radio_button_tag :payment_method, "credit_card", @reservation.credit_card_payment?
+      = radio_button_tag :payment_method, "credit_card", @reservation_request.credit_card_payment?
       = label_tag :payment_method_credit_card, 'Charge my credit card once booking confirmed'
 
     .control-group
-      = radio_button_tag :payment_method, "manual", @reservation.manual_payment?
+      = radio_button_tag :payment_method, "manual", @reservation_request.manual_payment?
       = label_tag :payment_method_manual, 'I will make the payment in person upon arrival'
 
 
-    - if phone_or_country_needed?
+    - if @reservation_request.display_phone_and_country_block?
       %hr
       = render 'registrations/phone_fields', :f => f
 
     #credit_card_fields{:style => "display: none"}
       %hr.divider
-
-      - if @errors.present?
-        .flash.error
-          %ul
-            - @errors.each do |e|
-              %li= e
 
       .row-fluid.padding-bottom
         .span6
@@ -83,11 +77,11 @@
         .controls.card-code
           = text_field_tag :card_code, nil, size: 3, placeholder: 'CCV'
 
-    - if @reservation.listing.confirm_reservations?
+    - if @reservation_request.confirm_reservations?
       %p.text-center
         This host manually confirms all bookings before payment.
   - else
-    - if phone_or_country_needed?
+    - if @reservation_request.display_phone_and_country_block?
       = render 'registrations/phone_fields', :f => f
 
   = submit_tag 'Request Booking', :disable_with => "Booking..."
@@ -98,10 +92,10 @@
     new PhoneNumbers.FieldsForm(
       $('form.payment'),
       {
-        countrySelector : '#listing_country_name',
-        mobileSelector  : '#listing_mobile_number',
-        phoneSelector   : '#listing_phone',
-        sameAsSelector  : '#listing_mobile_same_as_phone'
+        countrySelector : '#reservation_request_country_name',
+        mobileSelector  : '#reservation_request_mobile_number',
+        phoneSelector   : '#reservation_request_phone',
+        sameAsSelector  : '#reservation_request_mobile_same_as_phone'
       }
     );
     DNM.initializeCustomSelects();

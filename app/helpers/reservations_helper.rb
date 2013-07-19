@@ -3,21 +3,12 @@ require 'money-rails'
 module ReservationsHelper
   include CurrencyHelper
 
-  # Return a URL with HTTPS scheme for listing reservation
-  def secure_listing_reservations_url(listing, options = {})
-    if Rails.env.production?
-      options = options.reverse_merge(:protocol => "https://")
-    end
-
-    listing_reservations_url(listing, options)
+  def location_name(reservation_request)
+    reservation_request.location.name
   end
 
-  def reservation_needs_payment_details?
-    !@reservation.total_amount.zero? && %w(USD CAD).include?(@reservation.currency)
-  end
-
-  def phone_or_country_needed?(user = current_user)
-    !user.has_phone_and_country?
+  def reservation_needs_payment_details?(reservation)
+    !reservation.total_amount.zero? && %w(USD CAD).include?(reservation.currency)
   end
 
   def reservation_subtotal_price(reservation)
