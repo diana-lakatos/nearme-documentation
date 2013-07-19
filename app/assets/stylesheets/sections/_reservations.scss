@@ -52,9 +52,10 @@ section.reservations {
   }
 
   .reservation-navigation {
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 
     a {
+      margin: 5px 0px;
       border: 2px solid $gray220 !important;
       background: $white;
 
@@ -71,6 +72,10 @@ section.reservations {
         }
       }
     }
+    
+    @media (max-width: 767px) {
+      margin-bottom: 15px;
+    }
   }
 
   .reservation-details {
@@ -80,10 +85,16 @@ section.reservations {
 
       &:first-child {
         margin-top: 0px;
+
+        @media (max-width: 767px) {
+          margin-top: 15px;
+        }
       }
 
-      @media (max-width: 767px) {
-        margin-top: 0px;
+      &.booking-header {
+        @media (max-width: 767px) {
+          margin-top: 0px;
+        }
       }
     }
 

@@ -5,28 +5,28 @@
     %h1
       %span.ico-bookings.padding My Bookings
     .box
+      %section.reservations
+        .span12.reservation-navigation
+          .span6
+            = reservation_navigation_link('upcoming')
+          .span6
+            = reservation_navigation_link('archived')
       - if @reservations.empty?
-        %p You currently have no bookings. Find a space near you!
-        = render :partial =>"shared/search_box"
+        %p You currently have no #{params[:action]} bookings. Find a space near you!
+        - if params[:action] == 'upcoming' 
+          = render :partial =>"shared/search_box"
       - else
-        %section.reservations
-          .span12.reservation-navigation
-            .span6
-              = reservation_navigation_link('upcoming')
-            .span6
-              = reservation_navigation_link('archived')
+        - if @reservation
+          %h2.reservation-emphasis
+            Your booking was requested successfully!
+          .inner-box.inner-box-filled
+            = render @reservation
+          - unless (@reservations - [@reservation]).empty?
+            %h2.other-reservation-separator
+              #{pluralize((@reservations - [@reservation]).count, ' other booking')}
 
-          - if @reservation
-            %h2.reservation-emphasis
-              Your booking was requested successfully!
-            .inner-box.inner-box-filled
-              = render @reservation
-            - unless (@reservations - [@reservation]).empty?
-              %h2.other-reservation-separator
-                #{pluralize((@reservations - [@reservation]).count, ' other booking')}
-
-          .reservation-list
-            - (@reservations - [@reservation]).each_with_index do |reservation, index|
-              = render reservation
-              - unless (@reservations - [@reservation]).size == index+1
-                .line-divider 
+        .reservation-list
+          - (@reservations - [@reservation]).each_with_index do |reservation, index|
+            = render reservation
+            - unless (@reservations - [@reservation]).size == index+1
+              .line-divider 
