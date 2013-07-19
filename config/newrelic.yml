@@ -35,5 +35,5 @@ production:
 
 staging:
   <<: *default_settings
-  monitor_mode: true
+  monitor_mode: false
   app_name: Desks Near Me (Staging)

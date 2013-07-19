@@ -1,16 +1,10 @@
 .row-fluid
   .span8.offset2
     %h1 
-      %span.ico-add-location.padding List Your Space
+      %span.ico-add-location.padding List Your First Space
 
 #space_wizard.row-fluid
   .span8.offset2
     .box
-      %ul.space-wizard
-        %li{:class => space_wizard_step_class(0, step)}
-          %span 1.  Sign Up
-        %li{:class => space_wizard_step_class(1, step)}
-          %span 2.  List Your Space
-
       = yield
 
