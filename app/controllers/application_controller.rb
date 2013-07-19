@@ -5,12 +5,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   layout :layout_for_request_type
 
-  # Much easier to debug ActiveRecord::RecordNotFound issues in dev
-  # without this.
-  unless Rails.env.development?
-    rescue_from ActiveRecord::RecordNotFound, with: :not_found
-  end
-
   # We need to persist some mixpanel attributes for subsequent
   # requests.
   after_filter :apply_persisted_mixpanel_attributes
@@ -115,10 +109,6 @@ class ApplicationController < ActionController::Base
 
   def redirect_for_wizard(wizard_id_or_object)
     redirect_to wizard(wizard_id_or_object).url
-  end
-
-  def not_found
-    render "public/404", :status => :not_found
   end
 
   # Clears out the current response data and instead outputs json with

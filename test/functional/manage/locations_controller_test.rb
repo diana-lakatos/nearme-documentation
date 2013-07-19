@@ -56,23 +56,20 @@ class Manage::LocationsControllerTest < ActionController::TestCase
         sign_in @other_user
       end
 
-      context "#create" do
-
-        should "create location" do
-          assert_no_difference('@user.locations.count') do
-            post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).reverse_merge!({:location_type_id => @location_type.id})}
-          end
+      should "not create location" do
+        assert_no_difference('@user.locations.count') do
+          post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).reverse_merge!({:location_type_id => @location_type.id})}
         end
       end
 
-      should "update location" do
-        put :update, :id => @location.id, :location => { :description => 'new description' }
-        @location.reload
-        assert_not_equal 'new description', @location.description
+      should "not update location" do
+        assert_raise ActiveRecord::RecordNotFound do
+          put :update, :id => @location.id, :location => { :description => 'new description' }
+        end
       end
 
-      should "destroy location" do
-        assert_no_difference('@user.locations.count', -1) do
+      should "not destroy location" do
+        assert_raise ActiveRecord::RecordNotFound do
           delete :destroy, :id => @location.id
         end
       end
