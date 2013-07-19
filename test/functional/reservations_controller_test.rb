@@ -62,5 +62,29 @@ class ReservationsControllerTest < ActionController::TestCase
 
   end
 
+  context 'GET bookings' do
+
+    setup do
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+      @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
+      @location = FactoryGirl.create(:location_in_auckland)
+      @company.locations << @location
+    end
+
+    should 'redirect if no bookings' do
+      get :upcoming
+      assert_redirected_to search_path
+      assert_equal "You haven't made any bookings yet!", flash[:warning]
+    end
+
+    should 'render view if any bookings' do
+      FactoryGirl.create(:reservation, owner: @user)
+      get :upcoming
+      assert_response :success
+    end
+  end
+
+
 end
 

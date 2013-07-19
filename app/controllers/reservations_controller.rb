@@ -45,8 +45,13 @@ class ReservationsController < ApplicationController
 
   def upcoming
     @reservations = current_user.reservations.not_archived.to_a.sort_by(&:date)
-    @reservation = params[:id] ? current_user.reservations.find(params[:id]) : nil
-    render :index
+    if @reservations.empty?
+      flash[:warning] = "You haven't made any bookings yet!"
+      redirect_to search_path
+    else
+      @reservation = params[:id] ? current_user.reservations.find(params[:id]) : nil
+      render :index
+    end
   end
 
   def archived

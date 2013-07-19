@@ -13,8 +13,6 @@
             = reservation_navigation_link('archived')
       - if @reservations.empty?
         %p You currently have no #{params[:action]} bookings. Find a space near you!
-        - if params[:action] == 'upcoming' 
-          = render :partial =>"shared/search_box"
       - else
         - if @reservation
           %h2.reservation-emphasis
