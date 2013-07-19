@@ -2,7 +2,7 @@
   %h2 
     %span.ico-location.padding #{@location.name}
 
-= form_tag secure_listing_reservations_url(@listing), :method => :post, :remote => true, :class => "payment form-horizontal" do
+= simple_form_for @listing, :url => secure_listing_reservations_url(@listing), :method => :post, :remote => true, :html => {:class => "payment form-horizontal"} do
   = render 'listings/reservations/fields'
 
   - if @reservation.errors.present?
