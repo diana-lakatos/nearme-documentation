@@ -35,6 +35,9 @@ module NavigationHelpers
     when /the manage locations page/
       manage_locations_path
 
+    when /the admin instances page/
+      admin_instances_path
+
     when /^#{capture_model}(?:'s)? page$/                           # eg. the forum's page
       path_to_pickle $1
 

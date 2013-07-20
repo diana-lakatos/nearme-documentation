@@ -1,5 +1,7 @@
 class Instance < ActiveRecord::Base
-  attr_accessible :name
+  attr_accessible :name, :site_name, :description, :tagline, :support_email, :contact_email,
+                  :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url,
+                  :domains_attributes
 
   has_many :companies
   has_many :locations, :through => :companies
@@ -8,6 +10,9 @@ class Instance < ActiveRecord::Base
   has_many :domains
   belongs_to :partner
 
+  validates_presence_of :name
+
+  accepts_nested_attributes_for :domains
   delegate :service_fee_percent, to: :partner,  allow_nil: true
 
   DEFAULT_INSTANCE_NAME = 'DesksNearMe'
