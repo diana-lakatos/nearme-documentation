@@ -18,6 +18,9 @@ DesksnearMe::Application.configure do
   config.i18n.fallbacks = true
   config.active_support.deprecation = :notify
 
+  Rails.application.routes.default_url_options[:host] = 'http://staging-uswest2.desksnear.me'
+  Rails.application.routes.default_url_options[:protocol] = 'https'
+
   # Uncomment if you precompile assets
   # config.assets.compile = false
 

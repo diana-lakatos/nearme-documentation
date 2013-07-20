@@ -70,5 +70,7 @@ module DesksnearMe
 
     config.twitter_key = "Xas2mKTWPVpqrb5FXUnDg"
     config.twitter_secret = "nR8pjJ9YcU3eK9pKUPFBNxZuJ5oMci2M96SpZ47Ik"
+
+    config.exceptions_app = self.routes
   end
 end

@@ -12,6 +12,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       sign_in @user
       @tracker = Analytics::EventTracker.any_instance
       stub_request(:get, /.*api\.mixpanel\.com.*/)
+      stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
     end
 
     should "track booking modal open" do

@@ -44,9 +44,19 @@ module ReservationsHelper
     if reservation.free?
       humanized_money_with_cents_and_symbol(0.0)
     elsif reservation.paid?
-      humanized_money_with_cents_and_symbol(reservation.successful_payment_amount/100.0)
+      humanized_money_with_cents_and_symbol(reservation.successful_payment_amount)
     else
       reservation.payment_status.titleize
+    end
+  end
+  
+  def reservation_status_class(reservation)
+    if reservation.confirmed?
+      'confirmed'
+    elsif reservation.unconfirmed?
+      'unconfirmed'
+    else reservation.cancelled? || reservation.rejected? 
+       'cancelled'
     end
   end
 
@@ -123,5 +133,17 @@ module ReservationsHelper
       groups 
     }
   end
+
+  def reservation_navigation_link(action)
+    (link_to(content_tag(:span, self.send("#{action}_reservation_count")) + action.titleize, self.send("#{action}_reservations_path"), :class => "upcoming-reservations btn btn-full btn-gray#{action==params[:action] ? " active" : ""}")).html_safe
+  end
+
+ def upcoming_reservation_count 
+   @upcoming_reservation_count ||= current_user.reservations.not_archived.count
+ end
+
+ def archived_reservation_count
+    @archived_reservation_count ||= current_user.reservations.archived.count
+ end
 
 end
