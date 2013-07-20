@@ -1,6 +1,7 @@
-class Bookings.ReservationModal
+class Bookings.ReservationModal extends @ModalForm
 
   constructor: (@container) ->
+    super(@container, @container)
     @bindEvents()
     @hideShowCreditCardFields()
 

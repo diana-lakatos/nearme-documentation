@@ -99,3 +99,21 @@ Feature: A user can book at a space
       | Listing     | Date   | Quantity | Start | End   |
       | the listing | Monday | 1        | 9:00  | 14:00 |
 
+  Scenario: User sees booking confirmation details after successful reservation
+    Given I am logged in as the user
+     When I book space for:
+          | Listing     | Date         | Quantity  |
+          | the listing | next Monday  | 1         |
+          | the listing | next Tuesday | 1         |
+     Then I should be redirect to bookings page
+
+  Scenario: Last bookings is highlighted
+    Given I am logged in as the user
+     When I book space for:
+          | Listing     | Date         | Quantity  |
+          | the listing | next Monday  | 1         |
+          | the listing | next Tuesday | 1         |
+     When I book space for:
+          | Listing     | Date         | Quantity  |
+          | the listing | next Wednesday  | 1      |
+     Then The second booking should be highlighted

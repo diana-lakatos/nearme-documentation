@@ -54,9 +54,8 @@ When(/^I try to book at #{capture_model} on "([^"]*)"$/) do |listing_instance, d
   visit "/listings/#{listing.to_param}/reservations/new?date=#{date}"
 end
 
-When(/^I cancel the reservation for "([^"]*)"$/) do |date|
-  date = Date.parse(date)
-  within(:css, "li[data-date='#{date}']") do
+When(/^I cancel (.*) reservation$/) do |number|
+  within(:css, "#reservation_#{number}") do
     find(:css, "input[value='Cancel']").click
   end
 end
@@ -258,7 +257,7 @@ Then /^I should see the following availability:$/ do |table|
 end
 
 Then /^I should see the following reservations in order:$/ do |table|
-  found    = all("ul.reservations li > p").map { |b| b.text.gsub(/\n\s*/,' ').strip }
+  found    = all(".dates").map { |b| b.text.gsub(/\n\s*/,' ').gsub("<br>",' ').strip }
   expected = table.raw.flatten
 
   found.should == expected
@@ -306,6 +305,16 @@ end
 
 Then /^a reservation expiration email should be sent to (.*)$/ do |email|
   last_email_for(email).subject.should include "expired"
+end
+
+Then /^I should be redirect to bookings page$/ do
+  assert_equal upcoming_reservations_path, URI.parse(current_url).path
+end
+
+Then /^The second booking should be highlighted$/ do
+  page.should_not have_css(".reservation-list #reservation_#{Reservation.last.id}")
+  page.should have_css("#reservation_#{Reservation.last.id}")
+  page.should have_css(".reservation-details", :count => 2)
 end
 
 Before('@timecop') do
