@@ -13,8 +13,8 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def get_address_component(val)
-    if location
-      location.address_components.fetch_address_component(val) rescue nil
+    if location.present?
+      location.fetch_address_component(val)
     else
       options[val.to_sym]
     end
