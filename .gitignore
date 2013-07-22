@@ -24,4 +24,7 @@ tags
 dump.rdb
 .eyrc
 .idea/*
+.rvmrc
+.ruby-version
+.ruby-gemset
 
