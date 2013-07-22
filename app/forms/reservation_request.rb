@@ -28,8 +28,13 @@ class ReservationRequest
     @cc_errors        = []
     @listing          = listing
     @user             = user
-    @reservation      = listing.reservations.build
-    @reservation.user = user
+
+    @user.phone_required = true if @user
+
+    if @listing
+      @reservation      = listing.reservations.build
+      @reservation.user = user
+    end
 
     attributes.each do |name, value|
        send("#{name}=", value) unless value.nil?
@@ -39,8 +44,10 @@ class ReservationRequest
   end
 
   def process
-    setup_credit_card_customer
-    valid? && save_reservation
+    if valid?
+      setup_credit_card_customer
+      save_reservation
+    end
   end
 
   def url
@@ -66,29 +73,29 @@ class ReservationRequest
     end
 
     def validate_phone_and_country
-      errors.add(:base, "Please complete the contact details") unless user.has_phone_and_country?
+      errors.add(:base, "Please complete the contact details") unless user.try(:has_phone_and_country?)
     end
 
     def save_reservation
       User.transaction do
-        user.phone_required = true
         user.save!
         reservation.save!
       end
-      true
     rescue ActiveRecord::RecordInvalid => error
       error.record.errors.full_messages.each { |e| errors.add(:base, e) }
       false
     end
 
     def add_periods
-      if listing.hourly_reservations?
-        start_minute = start_minute.try(:to_i)
-        end_minute   = end_minute.try(:to_i)
-      end
+      if listing
+        if listing.hourly_reservations?
+          start_minute = start_minute.try(:to_i)
+          end_minute   = end_minute.try(:to_i)
+        end
 
-      dates.each do |date_str|
-        reservation.add_period(Date.parse(date_str), start_minute, end_minute)
+        dates.each do |date_str|
+          reservation.add_period(Date.parse(date_str), start_minute, end_minute)
+        end
       end
     end
 
