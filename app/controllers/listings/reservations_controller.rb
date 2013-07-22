@@ -26,7 +26,7 @@ module Listings
 
         flash[:notice] =  "Your reservation has been made! #{@reservation.credit_card_payment? ? "Your credit card will be charged when your reservation is confirmed by the host." : "" }"
 
-        redirect_to upcoming_reservations_path(:id => @reservation)
+        redirect_to upcoming_reservations_url(:id => @reservation)
         render_redirect_url_as_json if request.xhr? 
       else
         render :review

@@ -183,6 +183,10 @@ When /^I provide reservation credit card details$/ do
   @credit_card_reservation = true
 end
 
+When /^I choose to pay manually$/ do
+  choose 'payment_method_manual'
+end
+
 When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
   wait_modal_loaded '.space-reservation-modal'
   if !credit_card && !@credit_card_reservation
