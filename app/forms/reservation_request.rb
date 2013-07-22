@@ -44,10 +44,8 @@ class ReservationRequest
   end
 
   def process
-    if valid?
-      setup_credit_card_customer
-      save_reservation
-    end
+    setup_credit_card_customer
+    valid? && save_reservation
   end
 
   def url
