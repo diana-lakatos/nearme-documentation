@@ -137,7 +137,7 @@ class Bookings.Controller
       type: 'POST',
       data: {
         listing_id: @listing.id,
-        reservation: @listing.reservationOptions()
+        reservation_request: @listing.reservationOptions()
       }
     }, 'space-reservation-modal', => @enableBookButton())
 

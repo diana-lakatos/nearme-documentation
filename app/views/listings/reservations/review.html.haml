@@ -39,12 +39,12 @@
 
   - if reservation_needs_payment_details?(@reservation_request.reservation)
     .control-group
-      = radio_button_tag :payment_method, "credit_card", @reservation_request.credit_card_payment?
-      = label_tag :payment_method_credit_card, 'Charge my credit card once booking confirmed'
+      = radio_button_tag "reservation_request[payment_method]", "credit_card", @reservation_request.credit_card_payment?
+      = label_tag :reservation_request_payment_method_credit_card, 'Charge my credit card once booking confirmed'
 
     .control-group
-      = radio_button_tag :payment_method, "manual", @reservation_request.manual_payment?
-      = label_tag :payment_method_manual, 'I will make the payment in person upon arrival'
+      = radio_button_tag "reservation_request[payment_method]", "manual", @reservation_request.manual_payment?
+      = label_tag :reservation_request_payment_method_manual, 'I will make the payment in person upon arrival'
 
 
     - if @reservation_request.display_phone_and_country_block?
@@ -63,19 +63,19 @@
       .row-fluid
         = label_tag :card_number, "Credit Card Number", :class => 'control-label', placeholder: 'Credit Card Number'
         .controls.card-number
-          = text_field_tag :card_number, nil
+          = text_field_tag "reservation_request[card_number]", nil
           .credit-card-icon
             %span.ico-credit-card
 
       .card-info.expiry
         = label_tag :card_expires, "Expires On", :class => 'control-label'
         .controls.card-expires
-          = text_field_tag :card_expires, nil, size: 4, placeholder: 'MM/YY'
+          = text_field_tag "reservation_request[card_expires]", nil, size: 4, placeholder: 'MM/YY'
 
       .card-info.security
         = label_tag :card_code, "Security Code", :class => 'control-label'
         .controls.card-code
-          = text_field_tag :card_code, nil, size: 3, placeholder: 'CCV'
+          = text_field_tag "reservation_request[card_code]", nil, size: 3, placeholder: 'CCV'
 
     - if @reservation_request.confirm_reservations?
       %p.text-center

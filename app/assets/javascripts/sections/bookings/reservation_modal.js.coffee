@@ -16,7 +16,7 @@ class Bookings.ReservationModal extends @ModalForm
 
 
   hideShowCreditCardFields: ->
-    input = $('input#payment_method_credit_card')
+    input = $('input#reservation_request_payment_method_credit_card')
     fields = $('#credit_card_fields')
 
     if input.is(':checked')
