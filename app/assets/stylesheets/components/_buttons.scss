@@ -91,6 +91,18 @@ a.btn {
     }
   }
 
+  &.btn-gray {
+    background: $gray;
+    
+    &:hover {
+      background: lighten($green, 10%);
+    }
+
+    &:active {
+      background: $white;
+    }
+  }
+
   &.btn-orange {
     background: $orange;
     

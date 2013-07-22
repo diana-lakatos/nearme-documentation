@@ -4,7 +4,7 @@ module Listings
 
     before_filter :find_listing
     before_filter :build_reservation_request, :only => [:review, :create]
-    before_filter :require_login_for_reservation, :only => [:review, :create]
+    before_filter :require_login_for_reservation, :only => [:review, :create, :export]
 
     attr_reader :listing
     def_delegators :@listing, :location
@@ -25,8 +25,12 @@ module Listings
           ReservationMailer.notify_host_without_confirmation(reservation).deliver
           ReservationMailer.notify_guest_of_confirmation(reservation).deliver
         end
+
         event_tracker.requested_a_booking(reservation)
-        render # Successfully reserved listing
+        flash[:notice] =  "Your reservation has been made! #{reservation.credit_card_payment? ? "Your credit card will be charged when your reservation is confirmed by the host." : "" }"
+
+        redirect_to upcoming_reservations_path(:id => reservation)
+        render_redirect_url_as_json if request.xhr?
       else
         render :review
       end

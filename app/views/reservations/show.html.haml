@@ -1,0 +1,9 @@
+- title "Booking at #{@reservation.listing.name}"
+
+.row-fluid
+  .span8.offset2
+    %h1
+      %span.ico-bookings.padding
+        = "Booking at #{@reservation.listing.name}"
+    .box
+      = render @reservation

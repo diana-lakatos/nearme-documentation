@@ -21,6 +21,44 @@ class ReservationsController < ApplicationController
     redirect_to redirection_path
   end
 
+  def index
+    redirect_to upcoming_reservations_path
+  end
+
+  def show
+    @reservation = current_user.reservations.find(params[:id])
+  end
+
+  def export
+    @reservation = current_user.reservations.find(params[:id])
+    respond_to do |format|
+      format.ics do
+        calendar = Icalendar::Calendar.new
+        @reservation.periods.each do |period|
+          calendar.add_event(period.to_ics)
+        end
+        calendar.publish
+        render :text => calendar.to_ical
+      end
+    end
+  end
+
+  def upcoming
+    @reservations = current_user.reservations.not_archived.to_a.sort_by(&:date)
+    if @reservations.empty?
+      flash[:warning] = "You haven't made any bookings yet!"
+      redirect_to search_path
+    else
+      @reservation = params[:id] ? current_user.reservations.find(params[:id]) : nil
+      render :index
+    end
+  end
+
+  def archived
+    @reservations = current_user.reservations.archived.to_a.sort_by(&:date)
+    render :index
+  end
+
   protected
 
   def fetch_reservations

@@ -114,12 +114,20 @@ class Reservation < ActiveRecord::Base
     without_state(:cancelled).upcoming
   }
 
+  scope :not_archived, lambda {
+    upcoming.without_state(:cancelled, :rejected, :expired).uniq
+  }
+
   scope :not_rejected_or_cancelled, lambda {
     without_state(:cancelled, :rejected)
   }
 
   scope :cancelled, lambda {
     with_state(:cancelled)
+  }
+
+  scope :archived, lambda {
+    joins(:periods).where('reservation_periods.date < ? OR state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled']).uniq
   }
 
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
@@ -132,6 +140,10 @@ class Reservation < ActiveRecord::Base
   def user=(value)
     self.owner = value
     self.confirmation_email = value.email
+  end
+
+  def host
+    @host ||= listing.creator
   end
 
   def date=(value)

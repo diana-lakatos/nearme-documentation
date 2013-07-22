@@ -54,9 +54,8 @@ When(/^I try to book at #{capture_model} on "([^"]*)"$/) do |listing_instance, d
   visit "/listings/#{listing.to_param}/reservations/new?date=#{date}"
 end
 
-When(/^I cancel the reservation for "([^"]*)"$/) do |date|
-  date = Date.parse(date)
-  within(:css, "li[data-date='#{date}']") do
+When(/^I cancel (.*) reservation$/) do |number|
+  within(:css, "#reservation_#{number}") do
     find(:css, "input[value='Cancel']").click
   end
 end
@@ -76,8 +75,7 @@ end
 When /^I book space as new user for:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
-  fill_in_user_sign_up_details
-  click_button "Sign up"
+  step 'I sign up as a user in the modal'
   store_model("user", "user", User.last)
   step "I click to confirm the booking"
 end
@@ -99,8 +97,7 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
     within('.guest_filter') { click_on 'Confirmed'}
   end
   click_link_or_button action.capitalize
-  page.driver.browser.switch_to.alert.accept
-  wait_for_ajax
+  page.driver.accept_js_confirms!
 end
 
 When /^the reservation expires/ do
@@ -133,6 +130,7 @@ When /^I select to book( and review)? space for:$/ do |and_review, table|
   end
 
   step "I click to review the booking" if and_review
+
 end
 
 Then /^the user should have a reservation:$/ do |table|
@@ -173,7 +171,6 @@ end
 
 When /^I click to review the bookings?$/ do
   click_link "Book"
-  wait_for_ajax
 end
 
 When /^I provide reservation credit card details$/ do
@@ -187,20 +184,18 @@ When /^I provide reservation credit card details$/ do
 end
 
 When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
+  wait_modal_loaded '.space-reservation-modal'
   if !credit_card && !@credit_card_reservation
     choose 'payment_method_manual'
+    page.should_not have_content('Credit Card Number')
   end
-
   click_button "Request Booking"
-  wait_for_ajax
+  page.should have_content('Your reservation has been made!')
 end
 
 Then(/^I should see the booking confirmation screen for:$/) do |table|
-  wait_for_ajax
-
   reservation = extract_reservation_options(table).first
   next unless reservation
-
   within '.space-reservation-modal' do
     if reservation[:start_minute]
       # Hourly booking
@@ -224,15 +219,8 @@ Then(/^I should be asked to sign up before making a booking$/) do
 end
 
 When(/^I log in to continue booking$/) do
-  click_link "Already a user?"
-  step "I log in as the user"
-end
-
-When(/^I sign up in the modal to continue booking$/) do
-  within '.sign-up-modal' do
-    assert page.has_content?("Sign up to Desks Near Me")
-  end
-  step "I sign up as a user in the modal"
+  click_on 'Already a user?'
+  step 'I log in as the user'
 end
 
 When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved for '(.+)'$/ do |user, qty, listing, date|
@@ -269,7 +257,7 @@ Then /^I should see the following availability:$/ do |table|
 end
 
 Then /^I should see the following reservations in order:$/ do |table|
-  found    = all("ul.reservations li > p").map { |b| b.text.gsub(/\n\s*/,' ').strip }
+  found    = all(".dates").map { |b| b.text.gsub(/\n\s*/,' ').gsub("<br>",' ').strip }
   expected = table.raw.flatten
 
   found.should == expected
@@ -317,6 +305,16 @@ end
 
 Then /^a reservation expiration email should be sent to (.*)$/ do |email|
   last_email_for(email).subject.should include "expired"
+end
+
+Then /^I should be redirect to bookings page$/ do
+  assert_equal upcoming_reservations_path, URI.parse(current_url).path
+end
+
+Then /^The second booking should be highlighted$/ do
+  page.should_not have_css(".reservation-list #reservation_#{Reservation.last.id}")
+  page.should have_css("#reservation_#{Reservation.last.id}")
+  page.should have_css(".reservation-details", :count => 2)
 end
 
 Before('@timecop') do

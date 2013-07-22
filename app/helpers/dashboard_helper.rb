@@ -37,7 +37,7 @@ module DashboardHelper
   end
 
   def time_to_expiry(time_of_event)
-    current_time = Time.now.utc
+    current_time = Time.zone.now
     total_seconds = time_of_event - current_time
     hours = (total_seconds/1.hour).floor
     minutes = ((total_seconds-hours.hours)/1.minute).floor
@@ -91,11 +91,11 @@ module DashboardHelper
 
   def labels_for_chart
     @labels_for_chart ||= [].tap do |arr|
-      (0..6).each { |i| arr << format_charge_date_for_graph(Date.today - i.day) }
+      (0..6).each { |i| arr << format_charge_date_for_graph(Time.zone.now - i.day) }
     end.sort
   end
 
-  def format_charge_date_for_graph(date)
-    date.to_date.strftime('%b %d')
+  def format_charge_date_for_graph(datetime)
+    datetime.strftime('%b %d')
   end
 end

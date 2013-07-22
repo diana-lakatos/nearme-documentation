@@ -1,0 +1,22 @@
+section.reservations{
+
+  .first-br {
+    display: none;
+  }
+
+  .export-icon{
+
+    span {
+      padding-left: 10px;
+    }
+
+    a {
+      color: $gray80;
+      font-size: 24px;
+
+      &:hover {
+        color: $gray120;
+      }
+    }
+  }
+}
