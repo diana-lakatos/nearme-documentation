@@ -40,6 +40,15 @@ Feature: A user can book at a space
     And the reservation service fee should show $5.00
     And the reservation total should show $55.00
 
+  Scenario: Paying manually should not incur a service fee
+    Given I am logged in as the user
+    When I go to the location's page
+    And I select to book and review space for:
+      | Listing | Date | Quantity|
+      | the listing | Monday | 1 |
+    When I choose to pay manually
+    Then the reservation total should show $50.00
+
   Scenario: Booking and paying by credit card
      Given I am logged in as the user
        When I book space with credit card for:
