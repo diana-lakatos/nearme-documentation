@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130719074003) do
+ActiveRecord::Schema.define(:version => 20130722144529) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -227,6 +227,15 @@ ActiveRecord::Schema.define(:version => 20130719074003) do
   end
 
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
+
+  create_table "pages", :force => true do |t|
+    t.string   "path",        :null => false
+    t.text     "content"
+    t.integer  "instance_id"
+    t.string   "hero_image"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "partners", :force => true do |t|
     t.string   "name"

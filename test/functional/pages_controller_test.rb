@@ -1,0 +1,27 @@
+require 'test_helper'
+
+class PagesControllerTest < ActionController::TestCase
+
+  include Devise::TestHelpers
+
+  context 'GET show' do
+    setup do
+      hero_image_file = File.open(Rails.root.join('test/fixtures/workplace.jpg'))
+      @page = FactoryGirl.create(:page,
+                                 content: "# Page heading \nSome text",
+                                 hero_image: hero_image_file)
+    end
+
+    should 'return a content page with hero image and markdown content' do
+      get :show, :path => @page.path
+      assert_response :success
+      assert_select "#hero img"
+      assert_select "h1", "Page heading"
+      assert_select "p", "Some text"
+    end
+
+    teardown do
+      @page.remove_hero_image!
+    end
+  end
+end
