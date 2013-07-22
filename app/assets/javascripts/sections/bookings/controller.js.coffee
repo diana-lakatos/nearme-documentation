@@ -1,6 +1,6 @@
 # Controller for handling all of the booking selection logic on a Space page
 #
-# The controller is initialize with the bookings DOM container, and an options hash including
+# The controller is initialized with the bookings DOM container, and an options hash including
 # JS objects representing each Listing on the Location.
 class Bookings.Controller
 

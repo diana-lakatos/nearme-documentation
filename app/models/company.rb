@@ -1,4 +1,5 @@
 class Company < ActiveRecord::Base
+  has_paper_trail
   URL_REGEXP = URI::regexp(%w(http https))
 
   attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email, :industry_ids, :locations_attributes

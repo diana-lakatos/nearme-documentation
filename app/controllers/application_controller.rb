@@ -5,12 +5,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   layout :layout_for_request_type
 
-  # Much easier to debug ActiveRecord::RecordNotFound issues in dev
-  # without this.
-  unless Rails.env.development?
-    rescue_from ActiveRecord::RecordNotFound, with: :not_found
-  end
-
   # We need to persist some mixpanel attributes for subsequent
   # requests.
   after_filter :apply_persisted_mixpanel_attributes
@@ -117,10 +111,6 @@ class ApplicationController < ActionController::Base
     redirect_to wizard(wizard_id_or_object).url
   end
 
-  def not_found
-    render "public/404", :status => :not_found
-  end
-
   # Clears out the current response data and instead outputs json with
   # a 200 OK status code in the format:
   # { 'redirect': 'url' }
@@ -136,12 +126,9 @@ class ApplicationController < ActionController::Base
       raise "No redirect url provided. Need to call redirect_to first."
     end
 
-    redirect_json = { "redirect" => response.location }
-
+    redirect_json = {redirect: response.location}
     # Clear out existing response
     self.response_body = nil
-    response.location = nil
-
     render(
       :json => redirect_json,
       :content_type => 'application/json',
@@ -154,5 +141,8 @@ class ApplicationController < ActionController::Base
   end
   helper_method :current_instance
 
+  def paper_trail_enabled_for_controller
+    devise_controller? ? false : true
+  end
 end
 

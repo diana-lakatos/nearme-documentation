@@ -1,0 +1,52 @@
+.row-fluid
+  .span12.reservation-details{id: dom_id(reservation)}
+    .span12
+      .span8.reservation-text-information
+        .span12
+          .span6
+            %h2.booking-header
+              Booking 
+            %div
+              = "#{reservation.listing.name} at #{reservation.listing.location.company.name} (x #{reservation.quantity})" 
+
+            %div{:class => "reservation-status #{reservation_status_class(reservation)}"}
+              %span
+                %i
+                #{reservation.state.capitalize}
+                - if reservation.pending? && reservation.credit_card_payment?
+                  = tooltip('This reservation is currently pending confirmation, and will be charged when confirmed.')
+                    
+            %div
+              = reservation.listing.location.special_notes
+            %h2 Host
+            .clearfix
+              - if reservation.host.avatar.file.present?
+                .left.host-avatar
+                  = image_tag reservation.host.avatar_url(:thumb).to_s
+              .left
+                %div 
+                  = reservation.host.name
+                %div 
+                  = reservation.listing.location.phone
+                %div 
+                  = reservation.host.email
+          .span6
+            %h2 Dates
+            .dates
+              = reservation.listing.hourly_reservations? ? hourly_summary_for_period(reservation.periods.first) : selected_dates_summary(reservation)
+            .add-calendar
+              = link_to export_reservation_path(reservation, :format => :ics), :class => 'ico-calender' do
+                %span Add to calendar
+            %h2 Total
+            %div
+            = reservation_total_price(reservation)
+            %div Includes service fee.
+            .actions
+              = render :partial => "dashboard/user_actions",  :locals => {:reservation => reservation} if current_user == reservation.owner
+
+      .span4
+        %div
+          = render :partial => 'locations/google_map', :locals => { :location => reservation.listing.location }
+
+:javascript
+  new Reservation.UserReservationController($("##{dom_id(reservation)}"))

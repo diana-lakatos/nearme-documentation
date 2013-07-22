@@ -7,6 +7,10 @@ DesksnearMe::Application.routes.draw do
     mount AfterSignupMailer::Preview => 'mail_view/after_signup'
   end
 
+  match '/404', :to => 'errors#not_found'
+  match '/422', :to => 'errors#server_error'
+  match '/500', :to => 'errors#server_error'
+
   namespace :admin do
     match '/', :to => "dashboard#show"
     resources :users do
@@ -38,7 +42,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :listings, :only => [:index, :show] do
-    resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
+    resources :reservations, :only => [:create, :update, :show], :controller => "listings/reservations" do
       post :review, :on => :collection
       get :hourly_availability_schedule, :on => :collection
     end
@@ -57,12 +61,17 @@ DesksnearMe::Application.routes.draw do
   resources :reservations do
     member do
       post :user_cancel
+      get :export
+    end
+    collection do
+      get :upcoming
+      get :archived
     end
   end
 
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
-      get :bookings
+      get :bookings, :to => 'reservations#upcoming'
       get :payments
       get :listings
       get :manage_guests

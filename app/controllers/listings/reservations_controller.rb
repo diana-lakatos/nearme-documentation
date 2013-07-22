@@ -2,7 +2,7 @@ module Listings
   class ReservationsController < ApplicationController
     before_filter :find_listing
     before_filter :build_reservation, :only => [:review, :create]
-    before_filter :require_login_for_reservation, :only => [:review, :create]
+    before_filter :require_login_for_reservation, :only => [:review, :create, :export]
 
     def review
       @reservation.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
@@ -24,7 +24,10 @@ module Listings
         end
         event_tracker.requested_a_booking(@reservation)
 
-        render # Successfully reserved listing
+        flash[:notice] =  "Your reservation has been made! #{@reservation.credit_card_payment? ? "Your credit card will be charged when your reservation is confirmed by the host." : "" }"
+
+        redirect_to upcoming_reservations_path(:id => @reservation)
+        render_redirect_url_as_json if request.xhr? 
       else
         render :review
       end

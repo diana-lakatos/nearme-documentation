@@ -28,7 +28,10 @@ gem 'rails3_acts_as_paranoid'
 gem 'simple_form'
 gem 'nokogiri'
 gem 'amatch'
+gem 'icalendar'
 gem 'ffaker'
+
+gem 'paper_trail'
 
 # Use edge to fix validation of nested attributes: https://github.com/bcardarella/client_side_validations/pull/505
 gem 'client_side_validations', :git => "https://github.com/bcardarella/client_side_validations.git", :branch => '3-2-stable'
@@ -112,7 +115,9 @@ group :development do
   gem 'ruby-prof'
 end
 group :test do
-  gem 'capybara', '~>1.1.2'
+  gem 'capybara', '~>2'
+  gem 'capybara-webkit'
+  gem 'capybara-screenshot'
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
   gem 'launchy'

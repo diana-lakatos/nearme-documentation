@@ -15,6 +15,10 @@ DesksnearMe::Application.configure do
     :domain         => 'desksnear.me'
   }
 
+  Rails.application.routes.default_url_options[:host] = 'desksnear.me'
+  Rails.application.routes.default_url_options[:protocol] = 'https'
+
+
   config.i18n.fallbacks = true
   config.active_support.deprecation = :notify
 

@@ -11,7 +11,7 @@ class GuestListTest < ActiveSupport::TestCase
       @unconfirmed_reservation =  create(:reservation, listing: @listings, state: :unconfirmed)
       @confirmed_reservation =  create(:reservation, listing: @listings, state: :confirmed)
 
-      @period = create(:reservation_period, date: 1.day.ago)
+      @period = create(:reservation_period, date: (Time.zone.today - 1.day))
       @archived_reservations =  [create(:reservation, listing: @listings, state: :cancelled),
                                  create(:reservation, listing: @listings, state: :rejected),
                                  create(:reservation, state: :confirmed, listing: @listings, periods: [@period])]

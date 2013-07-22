@@ -54,7 +54,7 @@
         border: none;
       }
 
-        @media (max-width: 480px) {
+        @media (max-width: $iphone-landscape) {
           clear: both;
           width: 100%;
           border-right: none;
@@ -89,6 +89,11 @@
       color: $gray160;
       font-size: 18px;
     }
+  } 
+
+  .line-divider {
+    margin: 25px 0px;
+    border-bottom: 1px solid $gray220;
   }
 
   .inner-box {
@@ -97,6 +102,11 @@
     padding: 10px;
     border: 1px solid $gray210;
     @include border-radius($border-radius-default);
+
+    &.inner-box-filled {
+      background: $gray240;
+      border: none;
+    }
   }
 }
 

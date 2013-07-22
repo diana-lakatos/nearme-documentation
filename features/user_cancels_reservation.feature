@@ -22,12 +22,12 @@ Feature: User Cancels Reservation
   Scenario: A user can see a list of their reservations
     When I go to the bookings page
     Then I should see the following reservations in order:
-      | Joe's Codin Garage on October 18, 2010 (unconfirmed - 24:00 to expiry) |
-      | WoughThorks on October 19, 2010 (unconfirmed - 24:00 to expiry)        |
-      | WoughThorks on October 20, 2010 (unconfirmed - 24:00 to expiry)        |
-      | Joe's Codin Garage on October 21, 2010 (unconfirmed - 24:00 to expiry) |
+      |Monday, October 18    |
+      |Tuesday, October 19   |
+      |Wednesday, October 20 |
+      |Thursday, October 21 |
 
   Scenario: A user can cancel a reservation
     Given I am on the bookings page
-    When I cancel the reservation for "19th October 2010"
+    When I cancel 2 reservation
     Then I should have a cancelled reservation on "19th October 2010"

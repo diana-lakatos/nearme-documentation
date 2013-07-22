@@ -1,11 +1,12 @@
-class Bookings.ReservationModal
+class Bookings.ReservationModal extends @ModalForm
 
   constructor: (@container) ->
+    super(@container, @container)
     @bindEvents()
     @hideShowCreditCardFields()
 
   bindEvents: ->
-    @container.find('input[name*=payment_method]').click(@hideShowCreditCardFields)
+    @container.find('input[name*=payment_method]').on 'change', @hideShowCreditCardFields
     @formatCreditCardFields()
 
   formatCreditCardFields: ->

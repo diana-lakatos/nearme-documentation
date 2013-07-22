@@ -1,26 +1,42 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Oops (500)</title>
-  <style type="text/css">
-    body { background: url('/assets/90s-texture.png') left top repeat; text-align: left; font-family: 'futura-pt' arial, sans-serif; font-size: 150%; font-weight: bold; }
-    h1 { font-size: 220%; color:rgb(249, 90, 97);  margin:10px 0 0; font-style: italic; }
-    div.dialog { padding-top: 50px; margin: 0 auto; width: 500px; text-align: center; }
-    .logo { margin: 20px; }
-    }
-  </style>
-  <script type="text/javascript" src="//use.typekit.net/nyj7syq.js"></script>
-  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-  <script type="text/javascript" src="/assets/analytics/ga.js"></script>
-</head>
+  <head>
+    <title>Oops (500)</title>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0px; padding: 0px; background: rgb(240, 240, 240); color: rgb(120, 120, 120) }
+      .container-fluid { display: table; height: 100%; width: 100%; padding-right: 0px; padding-left: 0px; }
+      .error-background { width: 86%; height: 86%; position: absolute; left: 7%; top: 7%; z-index: 1; }
+      .error-background path { fill: rgb(230, 230, 230); }
+      .row-fluid { display: table-cell; height: 100%; width: 100%; vertical-align: middle; }
+      .centering { float: none; margin: 0px auto; text-align: center; position: relative; z-index: 10;}
+      .centering h1 { font-size: 38px; color: rgb(80, 80, 80)}
+      .centering div { text-align: center; font-size: 26px; }
+      .centering div.suggestion-text { margin-top: 15px; font-size: 22px; }
+      .centering a { color: rgb(120,120,120); text-decoration: underline !important; font-weight: bold; }
+    </style>
+    <script type="text/javascript" src="//use.typekit.net/nyj7syq.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <script type="text/javascript" src="/assets/analytics/ga.js"></script>
+  </head>
 
-<body>
-  <!-- This file lives in public/404.html -->
-  <a href="/"><img class='logo'src="/assets/desksnear.me.png" /></a>
-  <div class="dialog">
-    <img src="/assets/fresh-prince.gif" />
-    <h1>Aw, snap!</h1>
-    <p>That ain't right.<br /><a href="/">Back to the home page.</a></p>
-  </div>
-</body>
+  <body>
+    <div class='error-background'>
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      width="100%" height="100%" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+        <path d="M39.238,32.2L23.246,4.499c-1.785-3.091-4.706-3.091-6.491,0L0.762,32.2c-1.785,3.092-0.325,5.62,3.245,5.62h31.986
+        C39.563,37.82,41.023,35.292,39.238,32.2z M18.05,12.058h3.872v14.636H18.05V12.058z M19.987,33.153
+        c-1.335,0-2.426-1.117-2.426-2.453c0-1.335,1.09-2.397,2.426-2.397c1.334,0,2.424,1.062,2.424,2.397
+        C22.411,32.036,21.321,33.153,19.987,33.153z"/>
+      </svg>
+    </div>
+    <div class='container-fluid'>
+      <div class='row-fluid'>
+        <div class='span6 offset3 centering'>
+          <h1>Intermittent divergent combustion instability.</h1>
+          <div class='description-text'>It looks as though we've broken something on our system. We've been notified, and will fix it as soon as possible.</div>
+          <div class='suggestion-text'>Go back to <a href='/'>desksnear.me</a> or <a href='mailto:support+500@desksnear.me'>contact us</a> about a problem.</div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
