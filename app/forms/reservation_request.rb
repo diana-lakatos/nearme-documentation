@@ -74,8 +74,7 @@ class ReservationRequest
       User.transaction do
         user.phone_required = true
         user.save!
-        reservation.save
-        reservation.dup.save!
+        reservation.save!
       end
       true
     rescue ActiveRecord::RecordInvalid => error
