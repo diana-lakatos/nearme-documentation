@@ -14,7 +14,7 @@ class GuestListTest < ActiveSupport::TestCase
       @archived_reservations =  [create(:reservation, listing: @listings, state: :cancelled),
                                  create(:reservation, listing: @listings, state: :rejected)]
 
-      Timecop.travel(Date.today - 3) do
+      Timecop.travel(Time.zone.today - 3) do
         @archived_reservations << create(:reservation, listing: @listings, state: :confirmed)
       end
 
