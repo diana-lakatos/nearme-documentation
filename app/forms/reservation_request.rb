@@ -13,7 +13,6 @@ class ReservationRequest
   attr_reader   :cc_errors
 
   def_delegators :@reservation, :payment_method, :payment_method=, :quantity, :quantity=
-  def_delegators :@reservation, :payment_method, :payment_method=, :quantity, :quantity=
   def_delegators :@reservation, :credit_card_payment?, :manual_payment?
   def_delegators :@listing,     :confirm_reservations?, :hourly_reservations?, :location
   def_delegators :@user,        :phone, :phone=, :mobile_number, :mobile_number=, :country_name, :country_name=, :country
