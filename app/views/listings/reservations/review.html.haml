@@ -49,8 +49,9 @@
 
 
     - if @reservation_request.display_phone_and_country_block?
-      %hr
-      = render 'registrations/phone_fields', :f => f
+      #phone_fields
+        %hr.divider
+        = render 'registrations/phone_fields', :f => f
 
     #credit_card_fields{:style => "display: none"}
       %hr.divider
@@ -83,7 +84,9 @@
         This host manually confirms all bookings before payment.
   - else
     - if @reservation_request.display_phone_and_country_block?
-      = render 'registrations/phone_fields', :f => f
+      #phone_fields
+        %hr.divider
+        = render 'registrations/phone_fields', :f => f
 
   = f.button :submit, 'Request Booking', disable_with: "Booking..."
 

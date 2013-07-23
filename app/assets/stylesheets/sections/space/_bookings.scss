@@ -213,22 +213,40 @@
     }
   }
 
-  form.payment .control-group {
-    .control-label {
-      width: auto;
-    }
+  form.payment {
 
-    .controls {
-      margin-left: 30%;
-
-      &.card-number input {
-        width: 90%;
-      }
-
-      &.card-expires input, &.card-code input {
-        width: 80px;
+    #phone_fields {
+      abbr {
+        display: none;
       }
     }
+
+    .control-group {
+
+      .select {
+        .required {
+          display: none;
+        }
+      }
+
+      .control-label {
+        width: auto;
+      }
+
+      .controls {
+        margin-left: 30%;
+
+        &.card-number input {
+          width: 90%;
+        }
+
+        &.card-expires input, &.card-code input {
+          width: 80px;
+        }
+      }
+    }
+
+
   }
 }
 
