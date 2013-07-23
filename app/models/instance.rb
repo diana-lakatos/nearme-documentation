@@ -12,7 +12,7 @@ class Instance < ActiveRecord::Base
 
   validates_presence_of :name
 
-  accepts_nested_attributes_for :domains
+  accepts_nested_attributes_for :domains, :reject_if => proc { |params| params[:name].blank? }
   delegate :service_fee_percent, to: :partner,  allow_nil: true
 
   DEFAULT_INSTANCE_NAME = 'DesksNearMe'
