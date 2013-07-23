@@ -1,29 +1,19 @@
 require 'test_helper'
+require 'helpers/reservation_test_support'
 
 class PaymentTransferTest < ActiveSupport::TestCase
+  include ReservationTestSupport
+
   def setup
-    @company = FactoryGirl.create(:company)
-    @location = FactoryGirl.create(:location, :company => @company)
-    @listing_1 = FactoryGirl.create(:listing, :location => @location, :daily_price => 50)
-    @listing_2 = FactoryGirl.create(:listing, :location => @location, :daily_price => 100)
-    @reservation_1 = FactoryGirl.create(:reservation_with_credit_card,
-      :listing => @listing_1
-    )
-    @reservation_2 = FactoryGirl.create(:reservation_with_credit_card,
-      :listing => @listing_1
-    )
+    @company = prepare_company_with_charged_reservations(:reservation_count => 2)
 
-    User::BillingGateway.any_instance.stubs(:charge).returns(true)
-
-    @reservation_1.confirm
-    @reservation_2.confirm
+    @reservation_1 = @company.reservations[0]
+    @reservation_2 = @company.reservations[1]
 
     @reservation_charges = [
       @reservation_1.reservation_charges.to_a,
       @reservation_2.reservation_charges.to_a
     ].flatten
-
-    assert @reservation_charges.present?, @reservation_1.inspect
   end
 
   context "creating" do
@@ -47,6 +37,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
     should "assign currency attribute" do
       @payment_transfer.reservation_charges = @reservation_charges
       @payment_transfer.save!
+      @payment_transfer.reload
 
       assert_equal @reservation_charges.first.currency,
         @payment_transfer.currency
@@ -73,15 +64,15 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
   end
 
-  context ".pending_transfer" do
+  context ".pending" do
     should "include all PaymentTransfers that haven't been transferred" do
       pt1 = @company.payment_transfers.create!
       pt2 = @company.payment_transfers.create!
       pt3 = @company.payment_transfers.create!(:transferred_at => Time.now)
 
-      assert @company.payment_transfers.pending_transfer.include?(pt1)
-      assert @company.payment_transfers.pending_transfer.include?(pt2)
-      assert !@company.payment_transfers.pending_transfer.include?(pt3)
+      assert @company.payment_transfers.pending.include?(pt1)
+      assert @company.payment_transfers.pending.include?(pt2)
+      assert !@company.payment_transfers.pending.include?(pt3)
     end
   end
 end

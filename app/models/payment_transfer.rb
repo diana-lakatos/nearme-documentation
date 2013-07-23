@@ -10,8 +10,7 @@ class PaymentTransfer < ActiveRecord::Base
     where("#{table_name}.transferred_at IS NOT NULL")
   }
 
-  after_create :assign_amounts
-  after_create :assign_currency
+  after_create :assign_amounts_and_currency
 
   validate :validate_all_charges_in_currency
 
@@ -42,10 +41,10 @@ class PaymentTransfer < ActiveRecord::Base
   private
 
   def assign_currency
-    self.currency ||= reservation_charges.first.try(:currency)
   end
 
-  def assign_amounts
+  def assign_amounts_and_currency
+    self.currency = reservation_charges.first.try(:currency)
     self.amount_cents = reservation_charges.sum(:subtotal_amount_cents)
     self.service_fee_amount_cents = reservation_charges.sum(
       :service_fee_amount_cents
