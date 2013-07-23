@@ -75,7 +75,8 @@ end
 When /^I book space as new user for:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
-  step 'I sign up as a user in the modal'
+  fill_in_user_sign_up_details
+  click_button "Sign up"
   store_model("user", "user", User.last)
   step "I click to confirm the booking"
 end
@@ -97,7 +98,8 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
     within('.guest_filter') { click_on 'Confirmed'}
   end
   click_link_or_button action.capitalize
-  page.driver.accept_js_confirms!
+  page.driver.browser.switch_to.alert.accept
+  wait_for_ajax
 end
 
 When /^the reservation expires/ do
@@ -130,7 +132,6 @@ When /^I select to book( and review)? space for:$/ do |and_review, table|
   end
 
   step "I click to review the booking" if and_review
-
 end
 
 Then /^the user should have a reservation:$/ do |table|
@@ -171,6 +172,7 @@ end
 
 When /^I click to review the bookings?$/ do
   click_link "Book"
+  wait_for_ajax
 end
 
 When /^I provide reservation credit card details$/ do
@@ -183,19 +185,25 @@ When /^I provide reservation credit card details$/ do
   @credit_card_reservation = true
 end
 
+When /^I choose to pay manually$/ do
+  choose 'payment_method_manual'
+end
+
 When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
-  wait_modal_loaded '.space-reservation-modal'
   if !credit_card && !@credit_card_reservation
     choose 'payment_method_manual'
-    page.should_not have_content('Credit Card Number')
   end
+
   click_button "Request Booking"
-  page.should have_content('Your reservation has been made!')
+  wait_for_ajax
 end
 
 Then(/^I should see the booking confirmation screen for:$/) do |table|
+  wait_for_ajax
+
   reservation = extract_reservation_options(table).first
   next unless reservation
+
   within '.space-reservation-modal' do
     if reservation[:start_minute]
       # Hourly booking
@@ -219,8 +227,15 @@ Then(/^I should be asked to sign up before making a booking$/) do
 end
 
 When(/^I log in to continue booking$/) do
-  click_on 'Already a user?'
-  step 'I log in as the user'
+  click_link "Already a user?"
+  step "I log in as the user"
+end
+
+When(/^I sign up in the modal to continue booking$/) do
+  within '.sign-up-modal' do
+    assert page.has_content?("Sign up to Desks Near Me")
+  end
+  step "I sign up as a user in the modal"
 end
 
 When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved for '(.+)'$/ do |user, qty, listing, date|
