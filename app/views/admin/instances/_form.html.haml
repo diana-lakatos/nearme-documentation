@@ -10,7 +10,9 @@
   = f.input :blog_url
   = f.input :twitter_url
   = f.input :facebook_url
+
   %h4 Domains
+  - resource.domains.build
   = f.fields_for :domains do |f_d|
     = f_d.input :name
 
