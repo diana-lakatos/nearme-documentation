@@ -1,11 +1,4 @@
-class ReservationRequest
-  extend Forwardable
-
-  extend ActiveModel::Naming
-  include ActiveModel::Conversion
-  include ActiveModel::Validations
-
-  include Routing
+class ReservationRequest < Form
 
   attr_accessor :dates, :start_minute, :end_minute
   attr_accessor :card_number, :card_expires, :card_code
@@ -36,10 +29,7 @@ class ReservationRequest
       @reservation.user = user
     end
 
-    attributes.each do |name, value|
-      send("#{name}=", value) unless value.nil?
-    end
-
+    store_attributes(attributes)
     add_periods
   end
 
@@ -131,18 +121,6 @@ class ReservationRequest
         options = options.reverse_merge(:protocol => "https://")
       end
       listing_reservations_url(listing, options)
-    end
-
-    def add_errors(errors_messages)
-      errors_messages.each { |e| errors.add(:base, e) }
-    end
-
-    def add_error(error_message)
-      add_errors([error_message])
-    end
-
-    def persisted?
-      false
     end
 
 end
