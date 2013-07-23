@@ -28,6 +28,8 @@
                 = link_to "Users", admin_users_url
               %li{:class => ("active" if request.url.include?(admin_reservations_url))}
                 = link_to "Reservations", admin_reservations_url
+              %li{:class => ("active" if request.url.include?(admin_instances_url))}
+                = link_to "Instances", admin_instances_url
 
 
         .span9
