@@ -61,9 +61,9 @@ class Company < ActiveRecord::Base
   # of the currency payments recieved by the Company.
   def schedule_payment_transfer
     transaction do
-      charges = company.reservation_charges.needs_payment_transfer
+      charges = reservation_charges.needs_payment_transfer
       charges.group_by(&:currency).each do |currency, charges|
-        company.payment_transfers.create!(
+        payment_transfers.create!(
           reservation_charges: charges
         )
       end

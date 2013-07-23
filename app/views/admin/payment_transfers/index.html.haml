@@ -1,0 +1,16 @@
+%h1= resource_class.name.underscore.humanize.pluralize
+
+.pull-right
+  = link_to "Generate New Transfers", [:generate, :admin, :payment_transfers],
+      :method => :post, :class => 'btn btn-danger'
+
+%ul.nav.nav-pills
+  %li{:class => ('active' if params[:scope] == 'pending')}
+    = link_to "Pending Transfer", admin_payment_transfers_url(:scope => 'pending')
+  %li{:class => ('active' if params[:scope] == 'transferred')}
+    = link_to "Transferred", admin_payment_transfers_url(:scope => 'transferred')
+
+= render 'list_table'
+
+= will_paginate collection
+

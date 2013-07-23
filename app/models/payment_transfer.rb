@@ -2,7 +2,7 @@ class PaymentTransfer < ActiveRecord::Base
   belongs_to :company
   has_many :reservation_charges, :dependent => :nullify
 
-  scope :pending_transfer, -> {
+  scope :pending, -> {
     where(transferred_at: nil)
   }
 
@@ -33,6 +33,10 @@ class PaymentTransfer < ActiveRecord::Base
   # Whether or not we have executed the transfer to the hosts bank account.
   def transferred?
     transferred_at.present?
+  end
+
+  def mark_transferred
+    touch(:transferred_at)
   end
 
   private

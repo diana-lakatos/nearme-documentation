@@ -24,6 +24,16 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :reservations
+    resources :companies
+    resources :payment_transfers do
+      member do
+        post :transferred
+      end
+
+      collection do
+        post :generate
+      end
+    end
   end
 
   resources :companies

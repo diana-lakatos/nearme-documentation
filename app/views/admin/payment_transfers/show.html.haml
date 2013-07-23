@@ -1,0 +1,17 @@
+%h1 Payment Transfer - #{resource.company.name}
+
+.pull-right
+%h2 Payment Advice
+%p
+  Need to add method of payment here.
+
+  = link_to "Mark Transferred", [:transferred, :admin, resource],
+      :method => :post,
+      :class => 'btn btn-default'
+
+%hr
+
+= render 'attributes_table'
+
+
+
