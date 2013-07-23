@@ -8,7 +8,7 @@ class Admin::PaymentTransfersController < Admin::ResourceController
 
   # Generate a batch of payment transfers from unpaidout reservation charges.
   def generate
-    PaymentTransferScheduler.new.perform
+    PaymentTransferSchedulerJob.new.perform
     pending_payments = collection.pending.count
     flash[:notice] = "Ran the payment transfer scheduler. There are now #{pending_payments} pending payments."
     redirect_to [:admin, :payment_transfers]
