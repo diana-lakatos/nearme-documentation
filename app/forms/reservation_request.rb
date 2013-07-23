@@ -37,7 +37,7 @@ class ReservationRequest
     end
 
     attributes.each do |name, value|
-       send("#{name}=", value) unless value.nil?
+      send("#{name}=", value) unless value.nil?
     end
 
     add_periods
@@ -67,11 +67,11 @@ class ReservationRequest
   private
 
     def validate_cc
-      errors.add(:base, cc_errors.first) unless cc_errors.empty?
+      add_errors(cc_errors) unless cc_errors.empty?
     end
 
     def validate_phone_and_country
-      errors.add(:base, "Please complete the contact details") unless user.try(:has_phone_and_country?)
+      add_error("Please complete the contact details") unless user.try(:has_phone_and_country?)
     end
 
     def save_reservation
@@ -80,7 +80,7 @@ class ReservationRequest
         reservation.save!
       end
     rescue ActiveRecord::RecordInvalid => error
-      error.record.errors.full_messages.each { |e| errors.add(:base, e) }
+      add_errors(error.record.errors.full_messages)
       false
     end
 
@@ -91,7 +91,7 @@ class ReservationRequest
           end_minute   = end_minute.try(:to_i)
         end
 
-        dates.each do |date_str|
+        (dates || []).each do |date_str|
           reservation.add_period(Date.parse(date_str), start_minute, end_minute)
         end
       end
@@ -131,6 +131,14 @@ class ReservationRequest
         options = options.reverse_merge(:protocol => "https://")
       end
       listing_reservations_url(listing, options)
+    end
+
+    def add_errors(errors_messages)
+      errors_messages.each { |e| errors.add(:base, e) }
+    end
+
+    def add_error(error_message)
+      add_errors([error_message])
     end
 
     def persisted?

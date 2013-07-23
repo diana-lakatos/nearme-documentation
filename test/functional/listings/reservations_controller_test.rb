@@ -36,7 +36,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
   def booking_params_for(listing)
     {
       "listing_id" => @listing.id,
-      "reservation" => {
+      "reservation_request" => {
         "dates" => [Chronic.parse('Monday')],
         "quantity"=>"1"
       }
