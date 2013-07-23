@@ -170,31 +170,32 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation = @listing.reservations.build(:user => @user)
       end
 
-      should "set total cost after creating a new reservation" do
+      should "set total, subtotal and service fee cost after creating a new reservation" do
         dates              = [Date.today, Date.tomorrow, Date.today + 5, Date.today + 6].map { |d|
           d += 1 if d.wday == 6
           d += 1 if d.wday == 0
           d
         }
         quantity           =  5
-        assert reservation = @listing.reserve!(@user, dates, quantity)
 
-        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents +
-                     Reservation::ServiceFeeCalculator.new(reservation).service_fee.cents,
-                     reservation.total_amount_cents
-      end
+        reservation = @listing.reservations.build(
+          user: @user,
+          quantity: quantity,
+          payment_method: 'credit_card'
+        )
 
-      should "set subtotal and service fee cost after creating a new reservation" do
-        dates              = [Date.today, Date.tomorrow, Date.today + 5, Date.today + 6].map { |d|
-          d += 1 if d.wday == 6
-          d += 1 if d.wday == 0
-          d
-        }
-        quantity           =  5
-        assert reservation = @listing.reserve!(@user, dates, quantity)
+        dates.each do |date|
+          reservation.add_period(date)
+        end
+
+        reservation.save!
 
         assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents, reservation.subtotal_amount_cents
         assert_equal Reservation::ServiceFeeCalculator.new(reservation).service_fee.cents, reservation.service_fee_amount_cents
+        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents +
+                     Reservation::ServiceFeeCalculator.new(reservation).service_fee.cents,
+                     reservation.total_amount_cents
+
       end
 
       should "not reset total cost when saving an existing reservation" do
@@ -220,6 +221,28 @@ class ReservationTest < ActiveSupport::TestCase
         assert_raises DNM::PropertyUnavailableOnDate do
           @listing.reserve!(@user, dates, quantity)
         end
+      end
+
+      should "charge a service fee to credit card paid reservations" do
+        reservation = @listing.reservations.create!(
+          user: @user,
+          date: 1.week.from_now.monday,
+          quantity: 1,
+          payment_method: 'credit_card'
+        )
+
+        assert_not_equal 0, reservation.service_fee_amount_cents
+      end
+
+      should "not charge a service fee to manual payment reservations" do
+        reservation = @listing.reservations.create!(
+          user: @user,
+          date: 1.week.from_now.monday,
+          quantity: 1,
+          payment_method: 'manual'
+        )
+
+        assert_equal 0, reservation.service_fee_amount_cents
       end
     end
 

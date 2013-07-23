@@ -17,8 +17,17 @@ class Search.Geocoder
     isValid: ->
       @result.geometry
 
+    street: ->
+      @_addressComponentOfType('route', 'political')?.long_name
+
+    suburb: ->
+      @_addressComponentOfType('sublocality', 'political')?.long_name
+
     city: ->
       @_addressComponentOfType('locality', 'political')?.long_name
+
+    state: ->
+      @_addressComponentOfType('administrative_area_level_1', 'political')?.long_name
 
     country: ->
       @_addressComponentOfType('country', 'political')?.long_name
