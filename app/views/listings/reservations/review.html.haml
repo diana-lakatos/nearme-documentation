@@ -2,7 +2,7 @@
   %h2 
     %span.ico-location.padding= location_name(@reservation_request)
 
-= simple_form_for @reservation_request, :url => @reservation_request.url, :method => :post, :remote => true, :html => {:class => "payment form-horizontal"} do |f|
+= simple_form_for @reservation_request, :url => secure_listing_reservations_url(@reservation_request.listing), :method => :post, :remote => true, :html => {:class => "payment form-horizontal"} do |f|
   = render 'listings/reservations/fields'
 
   - if @reservation_request.errors.present?
@@ -12,7 +12,7 @@
         - @reservation_request.errors[:base].each do |error|
           %li= error
 
-  %h2= @reservation_request.form_title
+  %h2= form_title(@reservation_request)
 
   - if @reservation_request.hourly_reservations?
     %p
