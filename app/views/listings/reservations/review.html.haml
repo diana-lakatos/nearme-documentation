@@ -3,7 +3,7 @@
     %span.ico-location.padding= location_name(@reservation_request)
 
 = simple_form_for @reservation_request, :url => secure_listing_reservations_url(@reservation_request.listing), :method => :post, :remote => true, :html => {:class => "payment form-horizontal"} do |f|
-  = render 'listings/reservations/fields'
+  = render 'listings/reservations/fields', :f => f
 
   - if @reservation_request.errors.present?
     .flash.error
@@ -62,21 +62,21 @@
           = image_tag 'credit-cards.png', :alt => "Visa, Mastercard, American Express, Discover"
 
       .row-fluid
-        = label_tag :card_number, "Credit Card Number", :class => 'control-label', placeholder: 'Credit Card Number'
+        = f.label :card_number, "Credit Card Number", class: 'control-label', placeholder: 'Credit Card Number'
         .controls.card-number
-          = text_field_tag "reservation_request[card_number]", nil
+          = f.input_field :card_number, required: true
           .credit-card-icon
             %span.ico-credit-card
 
       .card-info.expiry
-        = label_tag :card_expires, "Expires On", :class => 'control-label'
+        = f.label :card_expires, "Expires On", class: 'control-label'
         .controls.card-expires
-          = text_field_tag "reservation_request[card_expires]", nil, size: 4, placeholder: 'MM/YY'
+          = f.input_field :card_expires, input_html: {size: 4}, placeholder: 'MM/YY', required: true
 
       .card-info.security
-        = label_tag :card_code, "Security Code", :class => 'control-label'
+        = f.label :card_code, "Security Code", class: 'control-label'
         .controls.card-code
-          = text_field_tag "reservation_request[card_code]", nil, size: 3, placeholder: 'CCV'
+          = f.input_field :card_code, input_html: {size: 3}, placeholder: 'CCV', required: true
 
     - if @reservation_request.confirm_reservations?
       %p.text-center
@@ -85,7 +85,7 @@
     - if @reservation_request.display_phone_and_country_block?
       = render 'registrations/phone_fields', :f => f
 
-  = submit_tag 'Request Booking', :disable_with => "Booking..."
+  = f.button :submit, 'Request Booking', disable_with: "Booking..."
 
 :javascript
   $(function() {
