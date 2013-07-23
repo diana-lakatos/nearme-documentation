@@ -178,20 +178,20 @@ end
 When /^I provide reservation credit card details$/ do
   mock_billing_gateway
 
-  choose 'payment_method_credit_card'
-  fill_in 'card_number', :with => "4111111111111111"
-  fill_in 'card_expires', :with => '1218'
-  fill_in 'card_code', :with => '123'
+  choose 'reservation_request_payment_method_credit_card'
+  fill_in 'reservation_request_card_number', :with => "4111111111111111"
+  fill_in 'reservation_request_card_expires', :with => '1218'
+  fill_in 'reservation_request_card_code', :with => '123'
   @credit_card_reservation = true
 end
 
 When /^I choose to pay manually$/ do
-  choose 'payment_method_manual'
+  choose 'reservation_request_payment_method_manual'
 end
 
 When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
   if !credit_card && !@credit_card_reservation
-    choose 'payment_method_manual'
+    choose 'reservation_request_payment_method_manual'
   end
 
   click_button "Request Booking"
