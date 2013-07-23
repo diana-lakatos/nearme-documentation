@@ -5,7 +5,7 @@
       :method => :post, :class => 'btn btn-danger'
 
 %ul.nav.nav-pills
-  %li{:class => ('active' if params[:scope] == 'pending')}
+  %li{:class => ('active' if params[:scope] == 'pending' || params[:scope].blank?)}
     = link_to "Pending Transfer", admin_payment_transfers_url(:scope => 'pending')
   %li{:class => ('active' if params[:scope] == 'transferred')}
     = link_to "Transferred", admin_payment_transfers_url(:scope => 'transferred')

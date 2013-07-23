@@ -1,5 +1,4 @@
 class Admin::PaymentTransfersController < Admin::ResourceController
-  before_filter :filter_scope
 
   def transferred
     resource.mark_transferred
@@ -17,19 +16,12 @@ class Admin::PaymentTransfersController < Admin::ResourceController
 
   protected
 
-  def filter_scope
-    unless %w(pending transferred).include?(params[:scope])
-      params[:scope] = 'pending'
-    end
+  def collection_allowed_scopes
+    %w(pending transferred)
   end
 
-  def collection
-    case params[:scope]
-    when 'pending'
-      super.pending
-    when 'transferred'
-      super.transferred
-    end.order('created_at desc')
+  def collection_default_scope
+    'pending'
   end
 
 end
