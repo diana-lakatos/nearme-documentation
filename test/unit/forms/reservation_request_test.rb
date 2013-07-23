@@ -91,12 +91,6 @@ class ReservationRequestTest < ActiveSupport::TestCase
     end
   end
 
-  context "#form_title" do
-    should "return proper value" do
-      assert_equal @reservation_request.form_title, "1 blah"
-    end
-  end
-
   context "#reservation_periods" do
     should "return proper values" do
       assert_equal @reservation_request.reservation_periods.map { |rp| rp.date }, [@date]
