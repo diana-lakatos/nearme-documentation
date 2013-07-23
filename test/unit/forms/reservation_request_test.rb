@@ -129,10 +129,4 @@ class ReservationRequestTest < ActiveSupport::TestCase
     end
   end
 
-  context "#url" do
-    should "return proper url" do
-      assert_equal @reservation_request.url, "http://desksnear.me/listings/#{@listing.to_param}/reservations"
-    end
-  end
-
 end

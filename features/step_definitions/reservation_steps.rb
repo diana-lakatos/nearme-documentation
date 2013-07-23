@@ -78,6 +78,10 @@ When /^I book space as new user for:$/ do |table|
   fill_in_user_sign_up_details
   click_button "Sign up"
   store_model("user", "user", User.last)
+  wait_for_ajax
+  #select "New Zealand", :from => 'reservation_request_country_name'
+  page.execute_script "$('select#reservation_request_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
+  fill_in 'Phone number', with: '8889983375'
   step "I click to confirm the booking"
 end
 

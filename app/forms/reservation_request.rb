@@ -38,16 +38,8 @@ class ReservationRequest < Form
     valid? && save_reservation
   end
 
-  def url
-    secure_listing_reservations_url(listing)
-  end
-
   def display_phone_and_country_block?
     !user.has_phone_and_country? || user.phone_or_country_was_changed?
-  end
-
-  def form_title
-    "#{quantity} #{listing.name}"
   end
 
   def reservation_periods
@@ -77,8 +69,11 @@ class ReservationRequest < Form
     def add_periods
       if listing
         if listing.hourly_reservations?
-          start_minute = start_minute.try(:to_i)
-          end_minute   = end_minute.try(:to_i)
+          @start_minute = start_minute.try(:to_i)
+          @end_minute = end_minute.try(:to_i)
+        else
+          @start_minute = nil
+          @end_minute   = nil
         end
 
         (dates || []).each do |date_str|
@@ -113,14 +108,6 @@ class ReservationRequest < Form
 
     def using_credit_card?
       reservation.credit_card_payment?
-    end
-
-    # Return a URL with HTTPS scheme for listing reservation
-    def secure_listing_reservations_url(listing, options = {})
-      if Rails.env.production?
-        options = options.reverse_merge(:protocol => "https://")
-      end
-      listing_reservations_url(listing, options)
     end
 
 end
