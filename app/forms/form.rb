@@ -5,17 +5,11 @@ class Form
   include ActiveModel::Conversion
   include ActiveModel::Validations
 
-  include Routing
-
   def initialize(attributes)
     store_attributes(attributes)
   end
 
   def process
-    raise "NYI"
-  end
-
-  def url
     raise "NYI"
   end
 

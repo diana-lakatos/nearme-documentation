@@ -3,8 +3,21 @@ require 'money-rails'
 module ReservationsHelper
   include CurrencyHelper
 
+  # Return a URL with HTTPS scheme for listing reservation
+  def secure_listing_reservations_url(listing, options = {})
+    if Rails.env.production?
+      options = options.reverse_merge(:protocol => "https://")
+    end
+
+    listing_reservations_url(listing, options)
+  end
+
   def location_name(reservation_request)
     reservation_request.location.name
+  end
+
+  def form_title(reservation_request)
+    "#{reservation_request.quantity} #{reservation_request.listing.name}"
   end
 
   def reservation_needs_payment_details?(reservation)
