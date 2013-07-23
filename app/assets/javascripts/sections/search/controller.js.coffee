@@ -75,6 +75,7 @@ class Search.Controller
         if cityAddress != existingVal
           @queryField.val(cityAddress).data('placeholder', cityAddress)
           @fieldChanged('query', @queryField.val())
+          @setGeolocatedQuery(@queryField.val(), resultset.getBestResult())
 
   # Is the given query currently geolocated by the search
   isQueryGeolocated: (query) ->
@@ -90,7 +91,8 @@ class Search.Controller
 
   # Returns special search params based on a geolocation result (Search.Geolocator.Result), or no result.
   searchParamsFromGeolocationResult: (result) ->
-    params = { lat: null, lng: null, nx: null, ny: null, sx: null, sy: null }
+    params = { lat: null, lng: null, nx: null, ny: null, sx: null, sy: null, \
+               country: null, state: null, city: null, suburb: null, street: null }
 
     if result
       boundingBox = result.boundingBox()
@@ -100,6 +102,11 @@ class Search.Controller
       params['ny']  = @formatCoordinate(boundingBox[1])
       params['sx']  = @formatCoordinate(boundingBox[2])
       params['sy']  = @formatCoordinate(boundingBox[3])
+      params['country'] = result.country()
+      params['state']   = result.state()
+      params['city']    = result.city()
+      params['suburb']  = result.suburb()
+      params['street']  = result.street()
 
     params
 

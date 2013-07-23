@@ -32,7 +32,7 @@
                     %strong= t :day, count: reservation.total_days
                     - if reservation.listing.hourly_reservations?
                       %time{:datetime => reservation.date}
-                        = hourly_summary_for_period(last_day.periods.first) if reservation.periods.first.present?
+                        = hourly_summary_for_period(reservation.periods.first) if reservation.periods.first.present?
                     - else
                       (
                       %span.disabled.reservation-dates{data: { :dates => periods_dates(reservation.periods) } }

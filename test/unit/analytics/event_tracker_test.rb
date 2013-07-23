@@ -180,6 +180,7 @@ class EventTrackerTest < ActiveSupport::TestCase
 
   def search_properties
     {
+      search_street: @search.street,
       search_suburb: @search.suburb,
       search_city: @search.city,
       search_state: @search.state,

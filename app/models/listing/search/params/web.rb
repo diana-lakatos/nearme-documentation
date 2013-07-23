@@ -12,23 +12,31 @@ class Listing::Search::Params::Web < Listing::Search::Params
     @midpoint
   end
 
-  def address_components
-    @location.address_components
+  def get_address_component(val)
+    if location.present?
+      location.fetch_address_component(val)
+    else
+      options[val.to_sym]
+    end
+  end
+
+  def street
+    get_address_component("street")
   end
 
   def suburb
-    address_components.result_hash.fetch('suburb') rescue nil
+    get_address_component("suburb")
   end
 
   def city
-    address_components.result_hash.fetch('city') rescue nil
+    get_address_component("city")
   end
 
   def state
-    address_components.result_hash.fetch('state') rescue nil
+    get_address_component("state")
   end
 
   def country
-    address_components.result_hash.fetch('country') rescue nil
+    get_address_component("country")
   end
 end

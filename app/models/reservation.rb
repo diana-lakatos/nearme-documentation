@@ -16,7 +16,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
-    :owner_id, :periods, :state, :user, :comment, :quantity
+    :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method
 
   has_many :periods,
            :class_name => "ReservationPeriod",
@@ -283,7 +283,15 @@ class Reservation < ActiveRecord::Base
 
     def set_costs
       self.subtotal_amount_cents = price_calculator.price.try(:cents)
-      self.service_fee_amount_cents = service_fee_calculator.service_fee.try(:cents)
+      self.service_fee_amount_cents = if credit_card_payment?
+        service_fee_calculator.service_fee.try(:cents)
+      else
+        # This feels a bit hax, but the this is a specific edge case where we don't
+        # apply a service fee to manual payments at this stage. However, we still
+        # need to calculate and present the service fee as the payment type for
+        # supported listings is not confirmed until the executes the reservation.
+        0
+      end
     end
 
     def set_currency

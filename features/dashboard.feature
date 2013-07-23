@@ -22,7 +22,6 @@ Feature: As a user of the site
      When I follow "Create New Location"
       And I fill location form with valid details
       And I submit the form
-      And I should see "Great, your new Space has been added!"
      Then Location with my details should be created
      
   Scenario: A user can edit existing location
@@ -31,11 +30,9 @@ Feature: As a user of the site
      When I click edit icon
       And I provide new location data
       And I submit the form
-      And I should see "Great, your Space has been updated!"
      Then the location should be updated
      When I click edit icon
       And I click delete location link
-      And I should see "You've deleted"
      Then the location should not exist
 
   Scenario: A user can add new listing
@@ -44,7 +41,6 @@ Feature: As a user of the site
      When I follow "Add Listing"
       And I fill listing form with valid details
       And I submit the form
-      And I should see "Great, your new Desk/Room has been added!"
      Then Listing with my details should be created
 
   Scenario: A user can edit existing listing
@@ -54,11 +50,9 @@ Feature: As a user of the site
      When I click edit listing icon
       And I provide new listing data
       And I submit the form
-      And I should see "Great, your listing's details have been updated."
      Then the listing should be updated
      When I click edit listing icon
       And I click delete listing link
-      And I should see "That listing has been deleted."
      Then the listing should not exist
 
   Scenario: A user can disable existing price in listing
@@ -91,7 +85,6 @@ Feature: As a user of the site
         | 1   | Yes        | 9:00      | 17:00      |
         | 2   | Yes        | 9:00      | 17:00      |
     And I submit the form
-    And I should see "Great, your listing's details have been updated."
     Then the listing should have availability:
         | Day | Availabile | Open Time | Close Time |
         | 1   | Yes        | 9:00      | 17:00      |

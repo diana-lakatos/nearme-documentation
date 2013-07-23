@@ -24,6 +24,7 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :reservations
+    resources :instances
   end
 
   resources :companies
