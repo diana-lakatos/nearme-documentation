@@ -19,11 +19,8 @@ When /I sign up with (.*)$/ do |social|
 end
 
 When /I sign up as (.*) in the modal/ do |model|
-  wait_modal_loaded '.sign-up-modal'
-  within '.sign-up-modal' do
-    fill_in_user_sign_up_details()
-    click_on 'Sign up'
-  end
+  fill_in_user_sign_up_details()
+  click_button 'Sign up'
 end
 
 Given /I signed up with (.*) without password$/ do |social|
