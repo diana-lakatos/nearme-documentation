@@ -4,6 +4,7 @@ class Form
   extend ActiveModel::Naming
   include ActiveModel::Conversion
   include ActiveModel::Validations
+  include ActiveModel::Validations::Callbacks
 
   def initialize(attributes)
     store_attributes(attributes)

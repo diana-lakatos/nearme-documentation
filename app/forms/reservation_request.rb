@@ -9,6 +9,8 @@ class ReservationRequest < Form
   def_delegators :@listing,     :confirm_reservations?, :hourly_reservations?, :location
   def_delegators :@user,        :phone, :phone=, :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
+  before_validation :setup_credit_card_customer
+
   validates :listing,     :presence => true
   validates :reservation, :presence => true
   validates :user,        :presence => true
@@ -30,8 +32,8 @@ class ReservationRequest < Form
     add_periods
   end
 
+
   def process
-    setup_credit_card_customer
     valid? && save_reservation
   end
 
@@ -46,7 +48,7 @@ class ReservationRequest < Form
   private
 
     def validate_phone_and_country
-      add_error("Please complete the contact details", :phone) unless user.try(:has_phone_and_country?)
+      add_error("Please complete the contact details", :contact_info) unless user.try(:has_phone_and_country?)
     end
 
     def save_reservation
@@ -96,7 +98,6 @@ class ReservationRequest < Form
       rescue User::BillingGateway::BillingError => e
         add_error(e.message, :cc)
       end
-      !has_error?(:cc)
     end
 
     def using_credit_card?
