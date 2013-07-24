@@ -31,6 +31,11 @@ Spork.prefork do
   rescue LoadError
   end
 
+  require 'capybara-screenshot/cucumber'
+  Capybara::Screenshot.autosave_on_failure = false
+
+
+  Capybara.default_wait_time = 10
 
   # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
   # order to ease the transition to Capybara we set the default here. If you'd
