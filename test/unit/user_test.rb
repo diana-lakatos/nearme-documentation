@@ -130,6 +130,71 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#has_phone_and_country?" do
+    context "phone and country are present" do
+      should "return true" do
+        user = User.new
+        user.country_name = "United States"
+        user.phone = "1234"
+        assert user.has_phone_and_country?
+      end
+    end
+
+    context "phone is missing" do
+      should "return false" do
+        user = User.new
+        user.country_name = "United States"
+        assert_equal user.has_phone_and_country?, false
+      end
+    end
+
+    context "phone is missing" do
+      should "return true" do
+        user = User.new
+        user.phone = "1234"
+        assert_equal user.has_phone_and_country?, false
+      end
+    end
+  end
+
+  context "#phone_or_country_was_changed?" do
+      context "previous value was blank" do
+        context "phone was changed" do
+          should "return true" do
+            user = User.new
+            user.phone = 456
+            assert user.phone_or_country_was_changed?
+          end
+        end
+
+        context "country_name was changed" do
+          should "return true" do
+            user = User.new
+            user.country_name = "Slovenia"
+            assert user.phone_or_country_was_changed?
+          end
+        end
+      end
+
+      context "previous value wasn't blank" do
+        context "phone was changed" do
+          should "return false" do
+            user = FactoryGirl.create(:user)
+            user.phone = 456
+            assert !user.phone_or_country_was_changed?
+          end
+        end
+
+        context "country_name was changed" do
+          should "return false" do
+            user = FactoryGirl.create(:user)
+            user.country_name = "Slovenia"
+            assert !user.phone_or_country_was_changed?
+          end
+        end
+      end
+  end
+
   context "mailchimp" do
 
     should "not be exported without synchronize timestamp" do
