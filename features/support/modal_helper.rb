@@ -4,6 +4,12 @@ module ModalHelper
       opacity = page.evaluate_script("$('#{modal_selector}').css('opacity');")
     end while opacity != '1'
   end
+
+  def wait_modal_closed(modal_selector)
+    begin
+      opacity = page.evaluate_script("$('#{modal_selector}').css('opacity');")
+    end while opacity == '1'
+  end
 end
 
 World(ModalHelper)
