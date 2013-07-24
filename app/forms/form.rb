@@ -10,7 +10,7 @@ class Form
   end
 
   def process
-    raise "NYI"
+    raise "Implement in the subclass"
   end
 
   private
