@@ -4,7 +4,7 @@ class Bookings.ReservationModal extends @ModalForm
     @serviceFeeLine = @container.find('.service-fee-line')
     @totalCostLine = @container.find('.total-cost-line')
 
-    @paymentMethodCreditCard = @container.find('input#payment_method_credit_card')
+    @paymentMethodCreditCard = @container.find('input#reservation_request_payment_method_credit_card')
     @creditCardFields  = @container.find('#credit_card_fields')
     @creditCardNumber  = @container.find('#card_number')
     @creditCardExpires = @container.find('#card_expires')

@@ -77,6 +77,10 @@ When /^I book space as new user for:$/ do |table|
   step "I click to review the booking"
   step 'I sign up as a user in the modal'
   store_model("user", "user", User.last)
+  wait_for_ajax
+  #select "New Zealand", :from => 'reservation_request_country_name'
+  page.execute_script "$('select#reservation_request_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
+  fill_in 'Phone number', with: '8889983375'
   step "I click to confirm the booking"
 end
 
@@ -176,21 +180,21 @@ end
 When /^I provide reservation credit card details$/ do
   mock_billing_gateway
 
-  choose 'payment_method_credit_card'
-  fill_in 'card_number', :with => "4111111111111111"
-  fill_in 'card_expires', :with => '1218'
-  fill_in 'card_code', :with => '123'
+  choose 'reservation_request_payment_method_credit_card'
+  fill_in 'reservation_request_card_number', :with => "4111111111111111"
+  fill_in 'reservation_request_card_expires', :with => '1218'
+  fill_in 'reservation_request_card_code', :with => '123'
   @credit_card_reservation = true
 end
 
 When /^I choose to pay manually$/ do
-  choose 'payment_method_manual'
+  choose 'reservation_request_payment_method_manual'
 end
 
 When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
   wait_modal_loaded('.space-reservation-modal')
   if !credit_card && !@credit_card_reservation
-    choose 'payment_method_manual'
+    choose 'reservation_request_payment_method_manual'
     page.should_not have_content('Credit Card Number')
   end
   click_button "Request Booking"

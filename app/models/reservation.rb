@@ -27,14 +27,15 @@ class Reservation < ActiveRecord::Base
     inverse_of: :reservation,
     dependent: :destroy
 
+  validates :listing_id, :presence => true
   validates :periods, :length => { :minimum => 1 }
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
-  validate :validate_all_dates_available, on: :create
-  validate :validate_booking_selection, on: :create
+  validate :validate_all_dates_available, on: :create, :if => lambda { listing }
+  validate :validate_booking_selection, on: :create, :if => lambda { listing }
 
-  before_create :set_costs
-  before_validation :set_currency, on: :create
-  before_validation :set_default_payment_status, on: :create
+  before_create :set_costs, :if => lambda { listing }
+  before_validation :set_currency, on: :create, :if => lambda { listing }
+  before_validation :set_default_payment_status, on: :create, :if => lambda { listing }
   after_create :auto_confirm_reservation
 
   # TODO: Move code relating to expiry event from model to controller.
@@ -139,7 +140,7 @@ class Reservation < ActiveRecord::Base
 
   def user=(value)
     self.owner = value
-    self.confirmation_email = value.email
+    self.confirmation_email = value.try(:email)
   end
 
   def host
@@ -187,15 +188,15 @@ class Reservation < ActiveRecord::Base
   end
 
   def total_amount_cents
-    subtotal_amount_cents + service_fee_amount_cents
+    subtotal_amount_cents + service_fee_amount_cents rescue nil
   end
 
   def subtotal_amount_cents
-    super || price_calculator.price.cents
+    super || price_calculator.price.cents rescue nil
   end
 
   def service_fee_amount_cents
-    super || service_fee_calculator.service_fee.cents
+    super || service_fee_calculator.service_fee.cents rescue nil
   end
 
   def total_amount_dollars
@@ -234,7 +235,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def currency
-    super.presence || listing.currency
+    super.presence || listing.try(:currency)
   end
 
   def free?
@@ -295,7 +296,7 @@ class Reservation < ActiveRecord::Base
     end
 
     def set_currency
-      self.currency ||= listing.currency
+      self.currency ||= listing.try(:currency)
     end
 
     def auto_confirm_reservation

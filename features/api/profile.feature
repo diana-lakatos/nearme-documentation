@@ -11,7 +11,7 @@ Feature: Profile
         "id": 1,
         "name": "User-1",
         "email": "user_1@example.com",
-        "phone": "1234567890",
+        "phone": "18889983375",
         "avatar": {}
       }
     }
