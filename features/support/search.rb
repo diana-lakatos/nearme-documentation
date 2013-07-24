@@ -24,7 +24,7 @@ module SearchHelpers
   end
 
   def wait_until_results_are_returned
-    page.should_not have_selector('.loading', visible: true)
+    wait_until(35) { page.has_no_selector?('.loading', visible: true) }
   end
 end
 

@@ -1,0 +1,7 @@
+%h1
+  = resource.name
+  .pull-right
+    = link_to 'Edit', edit_admin_instance_path(resource), class: 'btn'
+
+= render 'attributes_table'
+= render 'domain_attributes'

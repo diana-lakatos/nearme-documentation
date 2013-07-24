@@ -1,22 +1,28 @@
 # Handles the behaviour of entering country+mobile+phone fields
-# Used on the user account form and the space setup wizard form.
-class Users.PhoneNumberFieldsForm
+# Used on the user account form, booking modal and the space setup wizard form.
+class PhoneNumbers.FieldsForm
 
-  constructor: (@container) ->
-    @countryNameField = @container.find('#user_country_name')
+  constructor: (@container, {@countrySelector, @codeSelector, @mobileSelector, @phoneSelector, @sameAsSelector} = {}) ->
+    _.defaults @,
+      container       : $('#edit_user')
+      countrySelector : '#user_country_name'
+      codeSelector    : '.country-calling-code'
+      mobileSelector  : '#user_mobile_number'
+      phoneSelector   : '#user_phone'
+      sameAsSelector  : '#user_mobile_same_as_phone'
 
-    # Phone & mobile
-    @callingCodeText = @container.find('.country-calling-code')
-
-    @mobileNumberField = @container.find('#user_mobile_number')
-    @phoneNumberField = @container.find('#user_phone')
-
-    @sameAsPhoneField = @container.find('#user_mobile_same_as_phone')
-
+    @findFields()
     @bindEvents()
 
     @updateCountryCallingCode()
     @updatePhoneNumber()
+
+  findFields: ->
+    @countryNameField  = @container.find(@countrySelector)
+    @callingCodeText   = @container.find(@codeSelector)
+    @mobileNumberField = @container.find(@mobileSelector)
+    @phoneNumberField  = @container.find(@phoneSelector)
+    @sameAsPhoneField  = @container.find(@sameAsSelector)
 
   bindEvents: ->
     @countryNameField.on 'change', (event) =>
