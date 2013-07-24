@@ -9,7 +9,7 @@ class ReservationRequest < Form
   def_delegators :@listing,     :confirm_reservations?, :hourly_reservations?, :location
   def_delegators :@user,        :phone, :phone=, :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
-  before_validation :setup_credit_card_customer
+  before_validation :setup_credit_card_customer, :if => lambda { reservation }
 
   validates :listing,     :presence => true
   validates :reservation, :presence => true
