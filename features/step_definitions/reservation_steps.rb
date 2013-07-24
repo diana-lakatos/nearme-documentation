@@ -188,12 +188,13 @@ When /^I choose to pay manually$/ do
 end
 
 When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
-  wait_modal_loaded '.space-reservation-modal'
+  wait_modal_loaded('.space-reservation-modal')
   if !credit_card && !@credit_card_reservation
     choose 'payment_method_manual'
     page.should_not have_content('Credit Card Number')
   end
   click_button "Request Booking"
+  wait_modal_closed('.space-reservation-modal')
   page.should have_content('Your reservation has been made!')
 end
 
