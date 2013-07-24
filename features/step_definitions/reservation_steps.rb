@@ -77,7 +77,7 @@ When /^I book space as new user for:$/ do |table|
   step "I click to review the booking"
   step 'I sign up as a user in the modal'
   store_model("user", "user", User.last)
-  wait_for_ajax
+  wait_modal_loaded('.space-reservation-modal')
   #select "New Zealand", :from => 'reservation_request_country_name'
   page.execute_script "$('select#reservation_request_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
   fill_in 'Phone number', with: '8889983375'
@@ -195,11 +195,9 @@ When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
   wait_modal_loaded('.space-reservation-modal')
   if !credit_card && !@credit_card_reservation
     choose 'reservation_request_payment_method_manual'
-    page.should_not have_content('Credit Card Number')
   end
   click_button "Request Booking"
   wait_modal_closed('.space-reservation-modal')
-  page.should have_content('Your reservation has been made!')
 end
 
 Then(/^I should see the booking confirmation screen for:$/) do |table|
