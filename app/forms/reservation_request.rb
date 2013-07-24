@@ -3,7 +3,6 @@ class ReservationRequest < Form
   attr_accessor :dates, :start_minute, :end_minute
   attr_accessor :card_number, :card_expires, :card_code
   attr_reader   :reservation, :listing, :location, :user
-  attr_reader   :cc_errors
 
   def_delegators :@reservation, :payment_method, :payment_method=, :quantity, :quantity=
   def_delegators :@reservation, :credit_card_payment?, :manual_payment?
@@ -14,11 +13,9 @@ class ReservationRequest < Form
   validates :reservation, :presence => true
   validates :user,        :presence => true
 
-  validate :validate_cc
   validate :validate_phone_and_country
 
   def initialize(listing, user, attributes = {})
-    @cc_errors        = []
     @listing          = listing
     @user             = user
 
@@ -48,12 +45,8 @@ class ReservationRequest < Form
 
   private
 
-    def validate_cc
-      add_errors(cc_errors) unless cc_errors.empty?
-    end
-
     def validate_phone_and_country
-      add_error("Please complete the contact details") unless user.try(:has_phone_and_country?)
+      add_error("Please complete the contact details", :phone) unless user.try(:has_phone_and_country?)
     end
 
     def save_reservation
@@ -83,7 +76,7 @@ class ReservationRequest < Form
     end
 
     def setup_credit_card_customer
-      @cc_errors = []
+      clear_errors(:cc)
       return true unless using_credit_card?
 
       begin
@@ -98,12 +91,12 @@ class ReservationRequest < Form
         if card_details.valid?
           user.billing_gateway.store_card(card_details)
         else
-          @cc_errors << "Those credit card details don't look valid"
+          add_error("Those credit card details don't look valid", :cc)
         end
       rescue User::BillingGateway::BillingError => e
-        @cc_errors << e.message
+        add_error(e.message, :cc)
       end
-      @cc_errors.empty?
+      !has_error?(:cc)
     end
 
     def using_credit_card?

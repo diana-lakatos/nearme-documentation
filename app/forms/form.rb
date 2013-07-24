@@ -15,12 +15,20 @@ class Form
 
   private
 
-  def add_errors(errors_messages)
-    errors_messages.each { |e| errors.add(:base, e) }
+  def add_errors(errors_messages, attribute = :base)
+    errors_messages.each { |e| errors.add(attribute, e) }
   end
 
-  def add_error(error_message)
-    add_errors([error_message])
+  def add_error(error_message, attribute = :base)
+    add_errors([error_message], attribute)
+  end
+
+  def clear_errors(attribute = :base)
+    errors.delete(attribute)
+  end
+
+  def has_error?(attribute = :base)
+    errors.include?(attribute)
   end
 
   def persisted?
