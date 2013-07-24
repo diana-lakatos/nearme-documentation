@@ -139,7 +139,7 @@ class Bookings.Controller
         listing_id: @listing.id,
         reservation_request: @listing.reservationOptions()
       }
-    }, 'space-reservation-modal', => @enableBookButton())
+    }, null, => @enableBookButton())
 
   # Update the view to display pricing, date selections, etc. based on
   # current selected dates.
