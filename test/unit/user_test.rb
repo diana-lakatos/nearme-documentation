@@ -204,7 +204,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "not exported with synchronize timestamp" do
       @user = FactoryGirl.create(:user)
-      @user.mailchimp_synchronized_at = Time.now.utc
+      @user.mailchimp_synchronized_at = Time.zone.now
       assert @user.mailchimp_exported?
     end
 
@@ -226,17 +226,17 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should "not be synchronized if change to user happened since last synchronize" do
-          Timecop.travel(Time.now.utc+10.seconds)
+          Timecop.travel(Time.zone.now+10.seconds)
           @user.name = 'John Smith'
           @user.save!
           assert !@user.mailchimp_synchronized?
         end
 
         should "be synchronized if multiple changes happens to user but none after last synchronize" do
-          Timecop.travel(Time.now.utc+10.seconds)
+          Timecop.travel(Time.zone.now+10.seconds)
           @user.name = 'John Smith'
           @user.save!
-          Timecop.travel(Time.now.utc+10.seconds)
+          Timecop.travel(Time.zone.now+10.seconds)
           @user.mailchimp_synchronized!
           assert @user.mailchimp_synchronized?
         end
@@ -246,7 +246,7 @@ class UserTest < ActiveSupport::TestCase
           setup do
             @company = FactoryGirl.create(:company, :creator => @user)
             @user.mailchimp_synchronized!
-            Timecop.travel(Time.now.utc+10.seconds)
+            Timecop.travel(Time.zone.now+10.seconds)
           end
 
           should "not be synchronized if change to company happened since last synchronize" do
@@ -266,7 +266,7 @@ class UserTest < ActiveSupport::TestCase
             setup do 
               @location = FactoryGirl.create(:location, :company => @company)
               @user.mailchimp_synchronized!
-              Timecop.travel(Time.now.utc+10.seconds)
+              Timecop.travel(Time.zone.now+10.seconds)
             end
 
             should "not be synchronized if change to location happened since last synchronize" do
@@ -292,7 +292,7 @@ class UserTest < ActiveSupport::TestCase
               setup do
                 @listing = FactoryGirl.create(:listing, :location => @location)
                 @user.mailchimp_synchronized!
-                Timecop.travel(Time.now.utc+10.seconds)
+                Timecop.travel(Time.zone.now+10.seconds)
               end
 
               should "not be synchronized if change to listing happened since last synchronize" do
@@ -316,7 +316,7 @@ class UserTest < ActiveSupport::TestCase
                 setup do
                   @photo = FactoryGirl.create(:photo, :content => @listing)
                   @user.mailchimp_synchronized!
-                  Timecop.travel(Time.now.utc+10.seconds)
+                  Timecop.travel(Time.zone.now+10.seconds)
                 end
 
                 should "be synchronized if change to photo happened since last synchronize" do

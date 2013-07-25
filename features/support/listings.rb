@@ -51,7 +51,7 @@ module ListingsHelpers
     if num_days = options.fetch(:number_of_days, false)
       listing.availability_rules.clear
 
-      wday = Time.now.wday
+      wday = Time.zone.today.wday
       (wday .. (wday+num_days.to_i)).each do |day|
         listing.availability_rules.create!(:day => day % 7, :open_hour => 8, :close_hour => 18)
       end

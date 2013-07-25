@@ -23,7 +23,7 @@ end
 
 When /^I search with a date range of 2 weeks$/ do
   visit search_path
-  search_for(listing.address, { start_date: Date.today, end_date: 2.weeks.from_now })
+  search_for(listing.address, { start_date: Time.zone.today, end_date: 2.weeks.from_now })
 end
 
 When /^I leave the page and hit back$/ do

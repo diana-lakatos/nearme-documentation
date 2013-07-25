@@ -49,7 +49,7 @@ class MailchimpTest < ActiveSupport::TestCase
     should "be able to update existing user" do
       all_users.each { |u| u.mailchimp_synchronized! }
       u = all_users[0]
-      Timecop.travel(Time.now.utc+10.seconds)
+      Timecop.travel(Time.zone.now+10.seconds)
       u.name = 'Updated Name'
       u.save!
       u.reload
@@ -65,7 +65,7 @@ class MailchimpTest < ActiveSupport::TestCase
 
     should "skip already synchronized users" do
       all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.now.utc+10.seconds)
+      Timecop.travel(Time.zone.now+10.seconds)
       VCR.use_cassette('mailchimp_update_user') do
         @result = MAILCHIMP.export_users end
       assert_equal({}, @result)
@@ -73,7 +73,7 @@ class MailchimpTest < ActiveSupport::TestCase
 
     should "detect that user uploaded photo since last update" do
       all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.now.utc+10.seconds)
+      Timecop.travel(Time.zone.now+10.seconds)
       create_photo(@user_with_listing_without_photo)
       VCR.use_cassette('mailchimp_update_photo_flag') do
         # in this request we test if MODPHOTO flag was updated
@@ -85,7 +85,7 @@ class MailchimpTest < ActiveSupport::TestCase
 
     should "detect that user updated price since last update" do
       all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.now.utc+10.seconds)
+      Timecop.travel(Time.zone.now+10.seconds)
       listing = @user_with_listing_with_photo.listings.first
       listing.weekly_price = 10.50
       listing.save!
@@ -100,7 +100,7 @@ class MailchimpTest < ActiveSupport::TestCase
 
     should "detect that user has been verified since last email" do
       all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.now.utc+10.seconds)
+      Timecop.travel(Time.zone.now+10.seconds)
     
       @user_without_listing.verified = true
       @user_without_listing.save!
@@ -114,7 +114,7 @@ class MailchimpTest < ActiveSupport::TestCase
 
     should "detect that user has deleted all listings since last email" do
       all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.now.utc+10.seconds)
+      Timecop.travel(Time.zone.now+10.seconds)
       @user_with_two_listings.listings.each do |listing|
         listing.destroy
       end

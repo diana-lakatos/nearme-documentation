@@ -37,7 +37,7 @@ class RegistrationsControllerTest < ActionController::TestCase
 
       should "mark user as not synchronized after verification" do
         @user.mailchimp_synchronized!
-        Timecop.travel(Time.now.utc+10.seconds)
+        Timecop.travel(Time.zone.now+10.seconds)
         get :verify, :id => @user.id, :token => @user.email_verification_token
         @user.reload
         assert !@user.mailchimp_synchronized?

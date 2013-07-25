@@ -5,7 +5,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
   setup do
     @listing = FactoryGirl.create(:listing, :name => "blah")
     @user = FactoryGirl.create(:user)
-    @date = Date.today + 1.day
+    @date = Date.tomorrow
     @attributes = {
       :dates => [@date.to_s(:db)]
     }

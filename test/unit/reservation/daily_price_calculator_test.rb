@@ -88,24 +88,24 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
 
         # We set up a set of dates with gaps that are deemed "contiguous" by our
         # custom definition.
-        @dates = [Date.today, Date.today + 2.days, Date.today + 4.days, Date.today + 8.days]
+        @dates = [Time.zone.today, Time.zone.today + 2.days, Time.zone.today + 4.days, Time.zone.today + 8.days]
         @dates.each do |date|
           @listing.stubs(:availability_for).with(date).returns(2)
           @listing.stubs(:open_on?).with(date).returns(true)
         end
 
-        @closed = [Date.today + 1.day]
+        @closed = [Time.zone.today + 1.day]
         @closed.each do |date|
           @listing.stubs(:open_on?).with(date).returns(false)
         end
 
-        @unavailable = [Date.today + 3.days]
+        @unavailable = [Time.zone.today + 3.days]
         @unavailable.each do |date|
           @listing.stubs(:open_on?).with(date).returns(true)
           @listing.stubs(:availability_for).with(date).returns(1)
         end
 
-        @listing.stubs(:open_on?).with(Date.today + 5.days).returns(false)
+        @listing.stubs(:open_on?).with(Time.zone.today + 5.days).returns(false)
 
         seed_reservation_dates(@dates)
 
@@ -152,7 +152,7 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
   def date_groups_of(count = 1, quantity = 3)
     quantity.times.map do |i|
       count.times.map do |c|
-        Date.today.advance(:months => i*count, :days => c)
+        Time.zone.today.advance(:months => i*count, :days => c)
       end
     end
   end

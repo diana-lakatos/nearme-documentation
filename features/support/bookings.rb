@@ -42,7 +42,7 @@ module Bookings
   end
 
   def ensure_datepicker_is_on_right_month(date)
-    if date > Date.today && !find(:css, '.datepicker-month', :visible => true).text.include?(Date::MONTHNAMES[date.month])
+    if date > Time.zone.today && !find(:css, '.datepicker-month', :visible => true).text.include?(Date::MONTHNAMES[date.month])
       find(:css, '.datepicker-next', :visible => true).click
     end
   end

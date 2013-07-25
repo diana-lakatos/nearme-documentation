@@ -28,7 +28,7 @@ class ReservationsControllerTest < ActionController::TestCase
       @listing = FactoryGirl.create(:listing, :name => 'ICS Listing')
       @reservation = FactoryGirl.build(:reservation_with_credit_card, :listing => @listing)
       @reservation.periods = []
-      Timecop.freeze(Time.zone.local(2013, 6, 28, 10, 5, 0).utc)
+      Timecop.freeze(Time.zone.local(2013, 6, 28, 10, 5, 0))
       @reservation.add_period(Time.zone.local(2013, 7, 1, 10, 5, 0).to_date)
       @reservation.add_period(Time.zone.local(2013, 7, 2, 10, 5, 0).to_date)
       @reservation.add_period(Time.zone.local(2013, 7, 3, 10, 5, 0).to_date)
