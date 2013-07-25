@@ -72,8 +72,7 @@ class Search.SearchController extends Search.Controller
   initializeMap: ->
     mapContainer = @container.find('#listings_map')[0]
     return unless mapContainer
-
-    @map = new Search.Map(mapContainer)
+    @map = new Search.Map(mapContainer, this)
 
     # Add our map viewport search control, which enables/disables searching on map move
     @redoSearchMapControl = new Search.RedoSearchMapControl(enabled: true)
@@ -192,7 +191,7 @@ class Search.SearchController extends Search.Controller
       @showResults(html)
       @loader.hide()
       callback() if callback
-      @processingResults = false
+      _.defer => @processingResults = false
 
   # Trigger the API request for search
   #
@@ -202,6 +201,24 @@ class Search.SearchController extends Search.Controller
       url  : @form.attr("src")
       type : 'GET',
       data : @form.serialize()
+    )
+
+  updateListings: (listings, callback) ->
+    @triggerListingsRequest(listings).success (html) =>
+      html = "<div>" + html + "</div>"
+      listing.setHtml($('article[data-id="' + listing.id() + '"]', html)) for listing in listings
+      callback() if callback
+
+  updateListing: (listing, callback) ->
+    @triggerListingsRequest([listing]).success (html) =>
+      listing.setHtml(html)
+      callback() if callback
+
+  triggerListingsRequest: (listings) =>
+    listing_ids = (listing.id() for listing in listings).toString()
+    $.ajax(
+      url  : '/search/show/' + listing_ids + '?v=map'
+      type : 'GET'
     )
 
   # Trigger automatic updating of search results

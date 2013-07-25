@@ -23,7 +23,8 @@ class Listing::SearchTest < ActiveSupport::TestCase
 
         listing1 = FactoryGirl.create(:listing)
         listing2 = FactoryGirl.create(:listing)
-        Location.expects(:near).with(@midpoint, @radius, :order => :distance).returns([listing1.location])
+        includes = stub(:includes => [listing1.location])
+        Location.expects(:near).with(@midpoint, @radius, :order => :distance).returns(includes)
 
         results = Listing.find_by_search_params(@params)
         assert_equal [listing1], results
