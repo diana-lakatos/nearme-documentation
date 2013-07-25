@@ -1,6 +1,5 @@
 module SearchHelpers
   def search_for(query, options={})
-    update_all_indexes
     fill_in "q", with: query
     if start_date = options.fetch(:start_date, false)
       select_date(".availability-date-start", start_date)
