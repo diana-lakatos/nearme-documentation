@@ -15,7 +15,6 @@ Spork.prefork do
     Spork.trap_method(Rails::Application, :eager_load!)
     Spork.trap_method(Rails::Application::RoutesReloader, :reload!)
     Spork.trap_method(Rails::Application, :reload_routes!)
-    Spork.trap_method(ThinkingSphinx::Context, :prepare)
     Rails.application.railties.all { |r| r.eager_load! }
   end
 
@@ -23,7 +22,6 @@ Spork.prefork do
 
   require 'rails/test_help'
   require 'turn'
-  require 'thinking_sphinx/test'
   require 'mocha/setup'
   require 'mocha/integration/test_unit'
   require 'webmock/test_unit'
@@ -62,17 +60,12 @@ Spork.prefork do
       request.env['Authorization'] = @user.authentication_token
     end
 
-    def stub_sphinx(listings_to_return)
-      ThinkingSphinx::Search.any_instance.stubs(:search).returns(listings_to_return)
-    end
     DatabaseCleaner.strategy = :truncation
 
     def stub_image_url(image_url)
       stub_request(:get, image_url).to_return(:status => 200, :body => File.expand_path("../assets/foobear.jpeg", __FILE__), :headers => {'Content-Type' => 'image/jpeg'})
     end
   end
-
-  ThinkingSphinx::Test.init
 
 end
 

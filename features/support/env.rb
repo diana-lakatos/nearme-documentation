@@ -20,7 +20,6 @@ Spork.prefork do
     Spork.trap_method(Rails::Application, :eager_load!)
     Spork.trap_method(Rails::Application::RoutesReloader, :reload!)
     Spork.trap_method(Rails::Application, :reload_routes!)
-    Spork.trap_method(ThinkingSphinx::Context, :prepare)
     Rails.application.railties.all { |r| r.eager_load! }
   end
 
