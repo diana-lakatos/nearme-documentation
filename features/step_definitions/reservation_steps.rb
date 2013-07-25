@@ -337,7 +337,7 @@ Then /^The second booking should be highlighted$/ do
 end
 
 Before('@timecop') do
-  Timecop.freeze Time.now
+  Timecop.freeze Time.zone.now
 end
 
 After('@timecop') do

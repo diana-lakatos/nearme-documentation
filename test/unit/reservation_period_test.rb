@@ -5,7 +5,7 @@ class ReservationPeriodTest < ActiveSupport::TestCase
     @listing = FactoryGirl.create(:listing, quantity: 2)
     @user = FactoryGirl.create(:user)
     @reservation = @listing.reservations.build(:user => @user)
-    @next_monday = Date.today.advance(:weeks => 1).beginning_of_week
+    @next_monday = Time.zone.today.advance(:weeks => 1).beginning_of_week
   end
 
   context "#bookable?" do
@@ -52,7 +52,7 @@ class ReservationPeriodTest < ActiveSupport::TestCase
 
   context "#hours" do
     should "return the amount of hours in the booking" do
-      period = @reservation.periods.build(:date => Date.today, :start_minute => 9*60, :end_minute => 18*60+15)
+      period = @reservation.periods.build(:date => Time.zone.today, :start_minute => 9*60, :end_minute => 18*60+15)
       assert_equal 9.25, period.hours
     end
   end

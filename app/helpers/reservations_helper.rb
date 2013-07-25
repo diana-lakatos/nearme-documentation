@@ -100,7 +100,7 @@ module ReservationsHelper
   def minute_of_day_to_time(minute)
     hour = minute/60
     min  = minute%60
-    Time.new(Date.today.year, Date.today.month, Date.today.day, hour, min)
+    Time.zone.local(Time.zone.today.year, Time.zone.today.month, Time.zone.today.day, hour, min)
   end
 
   def hourly_summary_for_period(period)
