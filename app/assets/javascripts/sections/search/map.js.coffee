@@ -64,10 +64,11 @@ class Search.Map
       idx = MarkerClusterer.CALCULATOR(markers, numStyles).index
       return { index: idx, text: markers.length.toString(), title: markers.length.toString() }
   
-  constructor: (@container) ->
+  constructor: (@container, controller) ->
     @initializeGoogleMap()
     @bindEvents()
     @cacheMarkers()
+    @search_controller = controller
 
   initializeGoogleMap: ->
     @googleMap = SmartGoogleMap.createMap(@container, GOOGLE_MAP_OPTIONS, { exclude: ['draggable'] })
@@ -200,23 +201,24 @@ class Search.Map
   showInfoWindowForCluster: (cluster) ->
     listings = _.map(cluster.getMarkers(), (marker) => @getListingForMarker(marker))
     listingsByLocation = _.groupBy(_.compact(listings), (listing) -> listing.location())
-    
-    html = ""
-    for location, group of listingsByLocation
-      html += group[0].popoverTitleContent()
-      html += listing.popoverContent() for listing in group
-      
-    @popover.setContent html 
-    @popover.open @googleMap, cluster.getMarkers()[0] 
+
+    @search_controller.updateListings(listings, =>
+      html = ""
+      for location, group of listingsByLocation
+        html += group[0].popoverTitleContent()
+        html += listing.popoverContent() for listing in group
+        
+      @popover.setContent html 
+      @popover.open @googleMap, cluster.getMarkers()[0])
     
     true
 
   showInfoWindowForListing: (listing) ->
     marker = @markers[listing.id()]
     return unless marker
-    
-    @popover.setContent listing.popoverTitleContent() + listing.popoverContent()
-    @popover.open(@googleMap, marker)
+    @search_controller.updateListing(listing,  =>
+      @popover.setContent listing.popoverTitleContent() + listing.popoverContent()
+      @popover.open(@googleMap, marker))
 
   cacheMarkers: ->
     # hack if css sprites cannot be used
