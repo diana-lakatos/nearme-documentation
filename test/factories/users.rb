@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :user do
-    email { "#{name.to_s.downcase.underscore}@example.com" }
+    email { "#{name.to_s.underscore.downcase.tr(' ', '_')}@example.com" }
     password 'password'
     password_confirmation 'password'
     country_name "United States"

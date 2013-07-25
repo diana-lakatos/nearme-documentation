@@ -72,5 +72,9 @@ module DesksnearMe
     config.twitter_secret = "nR8pjJ9YcU3eK9pKUPFBNxZuJ5oMci2M96SpZ47Ik"
 
     config.exceptions_app = self.routes
+
+    config.to_prepare do
+       DeviseController.respond_to :html, :json
+    end
   end
 end
