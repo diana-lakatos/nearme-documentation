@@ -68,8 +68,10 @@ end
 When /^I book space( with credit card)? for:$/ do |with_credit_card, table|
   step "I select to book space for:", table
   step "I click to review the booking"
-  step "I provide reservation credit card details" if with_credit_card
-  step "I click to confirm the booking"
+  work_in_modal do
+    step "I provide reservation credit card details" if with_credit_card
+    step "I click to confirm the booking"
+  end
 end
 
 When /^I book space as new user for:$/ do |table|
@@ -189,6 +191,7 @@ When /^I provide reservation credit card details$/ do
 end
 
 When /^I choose to pay manually$/ do
+  wait_modal_loaded
   choose 'reservation_request_payment_method_manual'
 end
 
