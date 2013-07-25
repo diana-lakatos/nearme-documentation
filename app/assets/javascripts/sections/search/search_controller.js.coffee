@@ -191,7 +191,7 @@ class Search.SearchController extends Search.Controller
       @showResults(html)
       @loader.hide()
       callback() if callback
-      @processingResults = false
+      _.defer => @processingResults = false
 
   # Trigger the API request for search
   #
