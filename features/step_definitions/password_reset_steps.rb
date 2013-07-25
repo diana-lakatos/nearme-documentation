@@ -1,11 +1,12 @@
 When /^I begin to reset the password for that user$/ do
   click_on 'Log In'
-  wait_modal_loaded '.sign-up-modal'
-  click_on 'Reset your password'
-  page.should have_content('Fill in your email below')
-  find('#user_email').set(user.email)
-  click_on 'Reset Password'
-  page.should have_content('You will receive an email with instructions about how to reset your password in a few minutes.')
+  work_in_modal do
+    click_on 'Reset your password'
+    page.should have_content('Fill in your email below')
+    find('#user_email').set(user.email)
+    click_on 'Reset Password'
+    page.should have_content('You will receive an email with instructions about how to reset your password in a few minutes.')
+  end
 end
 
 Then /^a password reset email should be sent to that user$/ do

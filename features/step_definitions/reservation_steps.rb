@@ -77,11 +77,12 @@ When /^I book space as new user for:$/ do |table|
   step "I click to review the booking"
   step 'I sign up as a user in the modal'
   store_model("user", "user", User.last)
-  wait_modal_loaded('.space-reservation-modal')
-  #select "New Zealand", :from => 'reservation_request_country_name'
-  page.execute_script "$('select#reservation_request_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
-  fill_in 'Phone number', with: '8889983375'
-  step "I click to confirm the booking"
+  work_in_modal do
+    #select "New Zealand", :from => 'reservation_request_country_name'
+    page.execute_script "$('select#reservation_request_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
+    fill_in 'Phone number', with: '8889983375'
+    step "I click to confirm the booking"
+  end
 end
 
 When /^(.*) books a space for that listing$/ do |person|
@@ -192,12 +193,12 @@ When /^I choose to pay manually$/ do
 end
 
 When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
-  wait_modal_loaded('.space-reservation-modal')
-  if !credit_card && !@credit_card_reservation
-    choose 'reservation_request_payment_method_manual'
+  work_in_modal do
+    if !credit_card && !@credit_card_reservation
+      choose 'reservation_request_payment_method_manual'
+    end
+    click_button "Request Booking"
   end
-  click_button "Request Booking"
-  wait_modal_closed('.space-reservation-modal')
 end
 
 Then(/^I should see the booking confirmation screen for:$/) do |table|
