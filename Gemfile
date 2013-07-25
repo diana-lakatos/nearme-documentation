@@ -9,7 +9,7 @@ gem 'airbrake'
 gem 'active_model_serializers'
 gem 'carrierwave'
 gem 'decent_exposure'
-gem 'devise'
+gem 'devise', "~> 2.2"
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'omniauth-openid'

@@ -65,7 +65,7 @@ GEM
       sass (>= 3.2.0.alpha.95)
     ansi (1.4.3)
     arel (3.0.2)
-    bcrypt-ruby (3.0.1)
+    bcrypt-ruby (3.1.1)
     bootstrap-sass (2.3.0.0)
       sass (~> 3.2)
     builder (3.0.4)
@@ -125,7 +125,7 @@ GEM
     delayed_job_active_record (0.4.1)
       activerecord (>= 2.1.0, < 4)
       delayed_job (~> 3.0)
-    devise (2.1.2)
+    devise (2.2.4)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
       railties (~> 3.1)
@@ -470,7 +470,7 @@ GEM
     vcr (2.4.0)
     vegas (0.1.11)
       rack (>= 1.0.0)
-    warden (1.2.1)
+    warden (1.2.3)
       rack (>= 1.0)
     websocket (1.0.7)
     will_paginate (3.0.3)
@@ -501,7 +501,7 @@ DEPENDENCIES
   database_cleaner
   decent_exposure
   delayed_job_active_record
-  devise
+  devise (~> 2.2)
   dropbox-api
   email_spec
   ey_config
