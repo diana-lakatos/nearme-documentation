@@ -85,10 +85,11 @@ end
 
 Then /^I (do not )?see a search result for the ([^\$].*) listing$/ do |negative, city|
   listing = instance_variable_get("@listing_in_#{city.downcase.gsub(' ', '_')}")
+  binding.pry
   if negative
-    page.should have_no_content(listing.name)
+    page.should have_no_selector('article[data-name="' + listing.name + '"]')
   else
-    page.should have_content(listing.name)
+    page.should have_selector('article[data-name="' + listing.name + '"]')
   end
 end
 
