@@ -1,8 +1,11 @@
 When /^I begin to reset the password for that user$/ do
   click_on 'Log In'
-  click_on 'Reset your password'
-  find('#user_email').set(user.email)
-  click_link_or_button "Reset Password"
+  work_in_modal do
+    click_on 'Reset your password'
+    page.should have_content('Fill in your email below')
+    find('#user_email').set(user.email)
+    click_on 'Reset Password'
+  end
   page.should have_content('You will receive an email with instructions about how to reset your password in a few minutes.')
 end
 
@@ -20,6 +23,7 @@ When /^I fill in the password reset form with a new password$/ do
   fill_in "Password", with: "N3wP4$$word"
   fill_in "Confirm Password", with: "N3wP4$$word"
   click_link_or_button "Change Password"
+  page.should have_content('Your password was changed successfully. You are now signed in.')
 end
 
 Then /^that users password should be changed$/ do
