@@ -28,9 +28,9 @@ class MixpanelApiTest < ActiveSupport::TestCase
     end
 
     should 'register campaign parameters as session properties' do
-      mixpanel = MixpanelApi.new(@mixpanel, :request_params => { utm_source: 'google', utm_campaign: 'guests' })
-      assert_equal 'google', mixpanel.session_properties[:utm_source]
-      assert_equal 'guests', mixpanel.session_properties[:utm_campaign]
+      mixpanel = MixpanelApi.new(@mixpanel, :request_params => { source: 'google', campaign: 'guests' })
+      assert_equal 'google', mixpanel.session_properties[:source]
+      assert_equal 'guests', mixpanel.session_properties[:campaign]
     end
   end
 
@@ -62,8 +62,8 @@ class MixpanelApiTest < ActiveSupport::TestCase
     should "apply session properties" do
       name = 'Test Event'
       properties = { 'TestProp' => 'value' }
-      wrapper = MixpanelApi.new(@mixpanel, :request_params => { :utm_source => "google" })
-      expected_properties = properties.merge(:distinct_id => wrapper.distinct_id, :utm_source => "google").stringify_keys
+      wrapper = MixpanelApi.new(@mixpanel, :request_params => { :source => "google" })
+      expected_properties = properties.merge(:distinct_id => wrapper.distinct_id, :source => "google").stringify_keys
       @mixpanel.expects(:track).with { |_event_name, _properties, _options|
         _event_name == name && _properties.stringify_keys == expected_properties
       }
