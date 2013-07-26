@@ -1,9 +1,7 @@
 # encoding: utf-8
-class PhotoUploader < CarrierWave::Uploader::Base
+class PhotoUploader < BaseImageUploader
   SPACE_FULL_IMAGE_W = 895
   SPACE_FULL_IMAGE_H = 554
-
-  include CarrierWave::MiniMagick
 
   def store_dir
     "uploads/photos/#{model.id}/"
@@ -44,10 +42,6 @@ class PhotoUploader < CarrierWave::Uploader::Base
       img.auto_orient
       img
     end
-  end
-
-  def extension_white_list
-    %w(jpg jpeg gif png)
   end
 
   def default_url

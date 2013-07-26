@@ -12,7 +12,7 @@ class PagesController < ApplicationController
   end
 
   def show
-    @page = current_instance.pages.find_by_path(params[:path])
+    @page = current_instance.pages.find_by_path!(params[:path])
   end
 
   private
