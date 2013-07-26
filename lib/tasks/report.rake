@@ -256,35 +256,6 @@ namespace :report do
     puts "Listings exported to #{path}."
   end
 
-  #### SEARCH QUERIES
-
-  desc "Export search query data."
-  task :search_queries => :environment do
-
-    search_queries = SearchQuery.all
-    path = "tmp/csv_data/search_queries_#{Time.now.strftime('%Y-%m-%d')}.csv"
-
-    CSV.open(path, File::WRONLY|File::CREAT|File::EXCL) do |csv|
-
-      csv << [
-        "query",
-        "agent",
-        "created_at"
-      ]
-
-      search_queries.each do |search_query|
-        csv << [
-          search_query.query,
-          search_query.agent,
-          search_query.created_at.strftime('%Y-%m-%d')
-        ]
-      end
-
-    end
-
-    puts "Listings exported to #{path}."
-  end
-
   #### Locations without listings
 
   desc "Export locations with no associated listings"
