@@ -5,7 +5,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
   setup do
     @listing = FactoryGirl.create(:listing, :name => "blah")
     @user = FactoryGirl.create(:user)
-    @date = Date.tomorrow
+    @date = Time.zone.now.advance(:weeks => 1).beginning_of_week.to_date
     @attributes = {
       :dates => [@date.to_s(:db)]
     }
@@ -67,7 +67,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
     context "valid" do
       context "no problems with saving reservation" do
         should "return true" do
-          assert @reservation_request.process
+          assert @reservation_request.process, @reservation_request.reservation.errors.inspect
         end
       end
 
