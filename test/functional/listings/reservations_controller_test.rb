@@ -31,11 +31,28 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       assert_response 200
     end
 
+
+    context "#twilio" do
+
+      context 'sending sms fails' do
+
+        should 'rescue from errors' do
+          SmsNotifier::Message.any_instance.stubs(:deliver).raises(Twilio::REST::RequestError, "The 'To' number +16665554444 is not a valid phone number")
+          assert_nothing_raised Twilio::REST::RequestError do
+            xhr :post, :create, booking_params_for(@listing)
+          end
+        end
+
+      end
+
+    end
+
   end
+
 
   def booking_params_for(listing)
     {
-      "listing_id" => @listing.id,
+      "listing_id" => listing.id,
       "reservation_request" => {
         "dates" => [Chronic.parse('Monday')],
         "quantity"=>"1"

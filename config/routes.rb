@@ -2,6 +2,7 @@ DesksnearMe::Application.routes.draw do
 
   if Rails.env.development?
     mount ReservationMailer::Preview => 'mail_view/reservations'
+    mount UserMailer::Preview => 'mail_view/users'
     mount InquiryMailer::Preview => 'mail_view/inquiries'
     mount ListingMailer::Preview => 'mail_view/listings'
     mount AfterSignupMailer::Preview => 'mail_view/after_signup'

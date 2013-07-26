@@ -20,7 +20,11 @@ module Listings
         if @reservation_request.confirm_reservations?
           ReservationMailer.notify_host_with_confirmation(reservation).deliver
           ReservationMailer.notify_guest_with_confirmation(reservation).deliver
-          ReservationSmsNotifier.notify_host_with_confirmation(reservation).deliver
+          begin
+            ReservationSmsNotifier.notify_host_with_confirmation(reservation).deliver
+          rescue Twilio::REST::RequestError
+            Delayed::Job.enqueue Delayed::PerformableMethod.new(reservation.host, :notify_about_wrong_phone_number, nil)
+          end
         else
           ReservationMailer.notify_host_without_confirmation(reservation).deliver
           ReservationMailer.notify_guest_of_confirmation(reservation).deliver
@@ -38,14 +42,14 @@ module Listings
 
     def hourly_availability_schedule
       date = if params[:date].present?
-        Date.parse(params[:date]) rescue nil
-      end
+               Date.parse(params[:date]) rescue nil
+             end
 
       schedule = if date
-        listing.hourly_availability_schedule(Date.parse(params[:date])).as_json
-      else
-        {}
-      end
+                   listing.hourly_availability_schedule(Date.parse(params[:date])).as_json
+                 else
+                   {}
+                 end
 
       render :json => schedule
     end
