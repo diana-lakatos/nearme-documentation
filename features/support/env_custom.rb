@@ -26,9 +26,3 @@ require 'webmock/rspec'
 World(WebMock::API, WebMock::Matchers)
 WebMock.disable_net_connect!(:allow_localhost => true)
 OmniAuth.config.test_mode = true
-
-require 'cucumber/thinking_sphinx/external_world'
-Cucumber::ThinkingSphinx::ExternalWorld.new
-
-# these need to be off for Sphinx (http://freelancing-god.github.com/ts/en/testing.html#cucumber)
-Cucumber::Rails::World.use_transactional_fixtures = false

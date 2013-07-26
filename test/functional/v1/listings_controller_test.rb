@@ -5,9 +5,6 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
 
   setup do
-    # stub out sphinx
-    stub_sphinx([FactoryGirl.build(:listing)])
-
     @listing = FactoryGirl.create(:listing)
   end
 
@@ -59,10 +56,8 @@ class V1::ListingsControllerTest < ActionController::TestCase
   # Search
 
   test "should search" do
-    ThinkingSphinx::Test.start
     raw_post :search, {}, valid_search_params.to_json
     assert_response :success
-    ThinkingSphinx::Test.stop
   end
 
   test "search should raise when boundingbox is missing" do
@@ -75,12 +70,10 @@ class V1::ListingsControllerTest < ActionController::TestCase
   # Query
 
   test "should query" do
-    ThinkingSphinx::Test.start
     WebMock.disable_net_connect!
     GmapsFake.stub_requests
     raw_post :query, {}, valid_query_params.to_json
     assert_response :success
-    ThinkingSphinx::Test.stop
   end
 
   test "query should raise when boundingbox is missing" do
