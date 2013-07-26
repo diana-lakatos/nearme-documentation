@@ -1,5 +1,6 @@
 # encoding: utf-8
-class AvatarUploader < BaseImageUploader
+class AvatarUploader < CarrierWave::Uploader::Base
+  include CarrierWave::MiniMagick
 
   def store_dir
     "media/#{model.class.to_s.underscore}/#{model.id}/#{mounted_as}"
@@ -21,6 +22,10 @@ class AvatarUploader < BaseImageUploader
 
   version :large do
     process :resize_to_fill => [1280, 960]
+  end
+
+  def default_url
+    "http://placehold.it/100x100"
   end
 
   def auto_orient
