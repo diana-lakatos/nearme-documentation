@@ -228,6 +228,15 @@ ActiveRecord::Schema.define(:version => 20130725173943) do
 
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
 
+  create_table "pages", :force => true do |t|
+    t.string   "path",        :null => false
+    t.text     "content"
+    t.integer  "instance_id"
+    t.string   "hero_image"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "partners", :force => true do |t|
     t.string   "name"
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0

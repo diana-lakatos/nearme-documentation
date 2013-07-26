@@ -24,6 +24,17 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :reservations
+    resources :companies
+    resources :payment_transfers do
+      member do
+        post :transferred
+      end
+
+      collection do
+        post :generate
+      end
+    end
+
     resources :instances
   end
 
@@ -187,6 +198,7 @@ DesksnearMe::Application.routes.draw do
     get 'organizations', to: 'organizations#index'
   end
 
+  match "/pages/:path", to: 'pages#show', as: :pages
   match "/legal", to: 'pages#legal'
   match "/host-sign-up", to: 'pages#host_signup_1'
   match "/host-sign-up-2", to: 'pages#host_signup_2'
@@ -195,5 +207,6 @@ DesksnearMe::Application.routes.draw do
   match "/W-hotels-desks-near-me", to: 'locations#w_hotels'
   match "/careers", to: 'pages#careers'
   match "/support" => redirect("https://desksnearme.desk.com")
+  match "/about" => redirect("/pages/about")
 
 end

@@ -1,0 +1,8 @@
+= content_for :hero do
+  = image_tag(@page.hero_image.url) if @page.hero_image.present?
+
+.row-fluid
+  .span8.offset2
+
+    :markdown
+      #{@page.content}
