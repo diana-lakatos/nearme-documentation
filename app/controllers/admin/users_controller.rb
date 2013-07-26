@@ -26,17 +26,11 @@ class Admin::UsersController < Admin::ResourceController
     end
   end
 
-  private
+  protected
 
-  def collection
-    search = params[:search]
-
-    if search.present?
-      escaped_search = ActiveRecord::Base.connection.quote_like_string(search)
-      end_of_association_chain.where("name ILIKE :s OR email ILIKE :s", :s => "#{escaped_search}%").paginate(:page => params[:page])
-    else
-      super
-    end
+  def collection_search_fields
+    %w(name email)
   end
+
 end
 

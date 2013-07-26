@@ -24,6 +24,14 @@ class ReservationCharge < ActiveRecord::Base
     where('DATE(reservation_charges.created_at) >= ? ', days_in_past.days.ago)
   }
 
+  scope :needs_payment_transfer, -> {
+    paid.where(payment_transfer_id: nil)
+  }
+
+  scope :needs_payment_transfer, -> {
+    paid.where(payment_transfer_id: nil)
+  }
+
   scope :total_by_currency, -> {
     paid.joins(:reservation).
       group('reservations.currency').
