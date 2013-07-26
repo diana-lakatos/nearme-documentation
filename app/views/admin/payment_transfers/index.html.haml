@@ -1,9 +1,5 @@
 %h1= resource_class.name.underscore.humanize.pluralize
 
-.pull-right
-  = link_to "Generate New Transfers", [:generate, :admin, :payment_transfers],
-      :method => :post, :class => 'btn btn-danger'
-
 %ul.nav.nav-pills
   %li{:class => ('active' if params[:scope] == 'pending' || params[:scope].blank?)}
     = link_to "Pending Transfer", admin_payment_transfers_url(:scope => 'pending')

@@ -1,13 +1,31 @@
 %h1 Payment Transfer - #{resource.company.name}
 
-.pull-right
-%h2 Payment Advice
-%p
-  Need to add method of payment here.
+- if resource.transferred?
+  %p
+    This payout has been marked as transferred to the Company.
 
+- else
   = link_to "Mark Transferred", [:transferred, :admin, resource],
       :method => :post,
       :class => 'btn btn-default'
+
+%hr
+
+.payment-advice
+  %h2 Payment Advice
+
+  %div
+    %strong Amount due
+    = resource.amount.format with_currency: true
+
+  %div
+    %strong Paypal Email:
+    = resource.company.paypal_email
+
+  %div
+    %strong Mailing Address
+    %p
+      = resource.company.mailing_address
 
 %hr
 
