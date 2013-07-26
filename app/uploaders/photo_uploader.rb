@@ -44,7 +44,4 @@ class PhotoUploader < BaseImageUploader
     end
   end
 
-  def default_url
-    "http://placehold.it/100x100"
-  end
 end
