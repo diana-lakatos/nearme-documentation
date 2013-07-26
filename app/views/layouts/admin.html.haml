@@ -32,6 +32,8 @@
                 = link_to "Companies", admin_companies_url
               %li{:class => ("active" if request.url.include?(admin_payment_transfers_url))}
                 = link_to "Payment Transfers", admin_payment_transfers_url
+              %li{:class => ("active" if request.url.include?(admin_instances_url))}
+                = link_to "Instances", admin_instances_url
 
         .span9
           - flash.each do |type, message|

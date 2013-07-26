@@ -12,7 +12,7 @@
 = yield :loading
 - if listings.any?
   %section#results.map
-    = render partial: 'search/map/listing', collection: listings
+    = render partial: 'search/map/marker', collection: listings, as: :listing
 - else
   %section#results.no_results.map
     .span3

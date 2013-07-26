@@ -213,23 +213,82 @@
     }
   }
 
-  form.payment .control-group {
-    .control-label {
-      width: auto;
-    }
-
-    .controls {
-      margin-left: 30%;
-
-      &.card-number input {
-        width: 90%;
+  .flash {
+    &.error {
+      p {
+        font-size: 1.1em;
       }
-
-      &.card-expires input, &.card-code input {
-        width: 80px;
-      }
+      color: $red;
+      padding-bottom: 0.5em;
     }
   }
+
+  form.payment {
+
+    .control-group {
+
+      .select {
+        .required {
+          display: none;
+        }
+      }
+
+      .control-label {
+        width: auto;
+      }
+
+      .controls {
+        margin-left: 30%;
+
+        &.card-number input {
+          width: 90%;
+        }
+
+        &.card-expires input, &.card-code input {
+          width: 80px;
+        }
+      }
+    }
+
+  }
+
+  #credit_card_fields, .phone_fields {
+    .column {
+      float: left;
+      width: 49%;
+
+      &.left {
+        margin-right: 1%;
+      }
+
+      &.right {
+        margin-left: 1%;
+      }
+    }
+
+  }
+
+  #credit_card_fields {
+    input#card_number {
+      padding-left: 50px;
+    }
+
+    .credit-card-icon {
+      margin: -48px 0 18px 12px;
+      width: 20px;
+      font-size: 155%;
+      opacity: .7;
+    }
+  }
+
+  .phone_fields {
+
+    .controls {
+      margin-left: 0 !important;
+    }
+
+  }
+
 }
 
 .quick-book {

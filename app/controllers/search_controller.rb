@@ -10,6 +10,11 @@ class SearchController < ApplicationController
     event_tracker.conducted_a_search(search, { search_query: query, result_view: result_view, result_count: result_count })
   end
 
+  def show
+    @listings = Listing.find(params[:id].split(','))
+    render partial: "search/#{result_view}/listing", collection: listings, as: :listing
+  end
+
   private
 
   def search

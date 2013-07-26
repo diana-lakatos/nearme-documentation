@@ -12,8 +12,16 @@ module ReservationsHelper
     listing_reservations_url(listing, options)
   end
 
-  def reservation_needs_payment_details?
-    !@reservation.total_amount.zero? && %w(USD CAD).include?(@reservation.currency)
+  def location_name(reservation_request)
+    reservation_request.location.name
+  end
+
+  def form_title(reservation_request)
+    "#{reservation_request.quantity} #{reservation_request.listing.name}"
+  end
+
+  def reservation_needs_payment_details?(reservation)
+    !reservation.total_amount.zero? && %w(USD CAD).include?(reservation.currency)
   end
 
   def reservation_subtotal_price(reservation)
@@ -92,7 +100,7 @@ module ReservationsHelper
   def minute_of_day_to_time(minute)
     hour = minute/60
     min  = minute%60
-    Time.new(Date.today.year, Date.today.month, Date.today.day, hour, min)
+    Time.zone.local(Time.zone.today.year, Time.zone.today.month, Time.zone.today.day, hour, min)
   end
 
   def hourly_summary_for_period(period)
