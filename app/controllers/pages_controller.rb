@@ -11,6 +11,10 @@ class PagesController < ApplicationController
   def host_signup_3
   end
 
+  def show
+    @page = current_instance.pages.find_by_path!(params[:path])
+  end
+
   private
 
   # Layout per action
@@ -18,7 +22,7 @@ class PagesController < ApplicationController
     case action_name
     when "host_signup"
       "landing"
-    when "legal"
+    when "legal", "show"
       "application"
     else
       false
