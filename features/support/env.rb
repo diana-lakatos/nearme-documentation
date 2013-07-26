@@ -20,7 +20,6 @@ Spork.prefork do
     Spork.trap_method(Rails::Application, :eager_load!)
     Spork.trap_method(Rails::Application::RoutesReloader, :reload!)
     Spork.trap_method(Rails::Application, :reload_routes!)
-    Spork.trap_method(ThinkingSphinx::Context, :prepare)
     Rails.application.railties.all { |r| r.eager_load! }
   end
 
@@ -31,12 +30,17 @@ Spork.prefork do
   rescue LoadError
   end
 
+  require 'capybara-screenshot/cucumber'
+  Capybara::Screenshot.autosave_on_failure = false
+
+
+  Capybara.default_wait_time = 10
 
   # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
   # order to ease the transition to Capybara we set the default here. If you'd
   # prefer to use XPath just remove this line and adjust any selectors in your
   # steps to use the XPath syntax.
-  Capybara.default_selector = :css
+  Capybara.javascript_driver = :webkit
 
   # By default, any exception happening in your Rails application will bubble up
   # to Cucumber so that your scenario will fail. This is a different from how 

@@ -7,15 +7,11 @@ Feature: A user can search for a listing
   Background:
     Given I am on the home page
 
-  Scenario: A user searches for nothing
+  Scenario: A user searches for invalid places
     When I search for ""
     Then I should see "No results found"
-
-  Scenario: A user searches for something silly
     When I search for "bung"
     Then I should see "No results found"
-
-  Scenario: A user searches for something which yields no results
     When I search for "darwin"
     Then I should see "No results found"
 
@@ -25,6 +21,7 @@ Feature: A user can search for a listing
     When I search for "Auckland"
     And I view the results in the map view
     Then I see the listings on a map
+    And I view the results in the list view
     And I see a search result for the Auckland listing
     And I do not see a search result for the Cleveland listing
 

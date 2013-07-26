@@ -214,7 +214,7 @@ module Utils
     def load_listings!
       @listings ||= do_task "Loading listings" do
         locations.map do |location|
-          listing_types.sample(2).map do |listing_type|
+          listing_types.sample(rand(1..3)).map do |listing_type|
             name = listing_type.name # TODO
             FactoryGirl.create(:listing, :listing_type => listing_type, :name => name, :location => location,
                                :description => Faker::Lorem.paragraph.truncate(200))

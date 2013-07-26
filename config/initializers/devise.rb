@@ -17,5 +17,7 @@ Devise.setup do |config|
   config.sign_out_via = :delete
 
   config.http_authenticatable_on_xhr = false
+
+  config.password_length = 6..128
 end
 

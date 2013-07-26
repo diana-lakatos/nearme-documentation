@@ -121,33 +121,33 @@ class ListingTest < ActiveSupport::TestCase
     end
 
     should "return monday for friday" do
-      friday = Date.today.sunday + 5.days
-      Timecop.freeze(friday.to_time)
+      friday = Time.zone.today.sunday + 5.days
+      Timecop.freeze(friday.beginning_of_day)
       assert_equal friday+3.day, @listing.first_available_date
     end
 
     should "return monday for saturday" do
-      saturday = Date.today.sunday + 6.days
-      Timecop.freeze(saturday.to_time)
+      saturday = Time.zone.today.sunday + 6.days
+      Timecop.freeze(saturday.beginning_of_day)
       assert_equal saturday+2.day, @listing.first_available_date
     end
 
     should "return monday for sunday" do
-      sunday = Date.today.sunday
-      Timecop.freeze(sunday.to_time)
+      sunday = Time.zone.today.sunday
+      Timecop.freeze(sunday.beginning_of_day)
       assert_equal sunday+1.day, @listing.first_available_date
     end
 
     should "return tuesday for monday" do
-      tuesday = Date.today.sunday + 2
-      Timecop.freeze(tuesday.to_time)
+      tuesday = Time.zone.today.sunday + 2
+      Timecop.freeze(tuesday.beginning_of_day)
       assert_equal tuesday+1.day, @listing.first_available_date
     end
 
     should "return monday for tuesday if the whole week is booked" do
       @listing.save!
-      tuesday = Date.today.sunday + 2
-      Timecop.freeze(tuesday.to_time)
+      tuesday = Time.zone.today.sunday + 2
+      Timecop.freeze(tuesday.beginning_of_day)
       dates = [tuesday]
       4.times do |i|
         dates << tuesday + i.day
@@ -160,8 +160,8 @@ class ListingTest < ActiveSupport::TestCase
     should "return thursday for tuesday if there is one desk left" do
       @listing.quantity = 2
       @listing.save!
-      tuesday = Date.today.sunday + 2
-      Timecop.freeze(tuesday.to_time)
+      tuesday = Time.zone.today.sunday + 2
+      Timecop.freeze(tuesday.beginning_of_day)
       # book all seats on wednesday
       @listing.reserve!(FactoryGirl.build(:user), [tuesday+1.day], 2)
       # leave one seat free on thursday

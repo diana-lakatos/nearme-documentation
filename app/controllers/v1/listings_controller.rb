@@ -227,8 +227,8 @@ class V1::ListingsController < V1::BaseController
 
     list = dates.map { |date|
 
-      timestamp_start = date.to_time(:utc)
-      timestamp_end = timestamp_start + 1.day - 1
+      timestamp_start = date.beginning_of_day
+      timestamp_end = timestamp_start.tomorrow - 1
 
       {
         start_at: timestamp_start,

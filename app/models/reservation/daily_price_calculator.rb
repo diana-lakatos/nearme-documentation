@@ -17,9 +17,9 @@ class Reservation::DailyPriceCalculator
   # Returns the total price for the listing and it's chosen
   # periods. Returns nil if the selection is unbookable
   def price
-    contiguous_blocks.map { |block|
-      price_for_days(block.size) * @reservation.quantity
-    }.sum.to_money
+    contiguous_blocks.map do |block|
+      price_for_days(block.size) * @reservation.quantity rescue 0.0
+    end.sum.to_money
   end
 
   # Returns true if the selection of dates are valid in terms of the pricing
@@ -27,7 +27,7 @@ class Reservation::DailyPriceCalculator
   # not be bookable (i.e. 1 day is unbookable for a listing that requires
   # minimum of 5 days).
   def valid?
-    !contiguous_blocks.empty? && contiguous_blocks.all? { |block|
+    listing && !contiguous_blocks.empty? && contiguous_blocks.all? { |block|
       block.length >= listing.minimum_booking_days
     }
   end
@@ -36,18 +36,20 @@ class Reservation::DailyPriceCalculator
 
   # Price for contiguous days in as a Money object
   def price_for_days(days)
-    prices = listing.prices_by_days
+    prices = listing.try(:prices_by_days)
 
-    # Determine the matching block size and price
-    block_size = prices.keys.sort.inject { |largest_block, block_days|
-      largest_block = block_days if days >= block_days
-      largest_block
-    }
-    price = prices[block_size]
+    if prices
+      # Determine the matching block size and price
+      block_size = prices.keys.sort.inject { |largest_block, block_days|
+        largest_block = block_days if days >= block_days
+        largest_block
+      }
+      price = prices[block_size]
 
-    # Our pricing logic per block is the block price
-    # plus a pro-rated cost for each additional day used
-    (((days/block_size.to_f) * price.cents).round / 100.0).to_money
+      # Our pricing logic per block is the block price
+      # plus a pro-rated cost for each additional day used
+      (((days/block_size.to_f) * price.cents).round / 100.0).to_money
+    end
   end
 
   def listing

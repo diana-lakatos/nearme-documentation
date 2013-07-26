@@ -1,6 +1,5 @@
 module SearchHelpers
   def search_for(query, options={})
-    update_all_indexes
     fill_in "q", with: query
     if start_date = options.fetch(:start_date, false)
       select_date(".availability-date-start", start_date)
@@ -24,7 +23,7 @@ module SearchHelpers
   end
 
   def wait_until_results_are_returned
-    wait_until(35) { page.has_no_selector?('.loading', visible: true) }
+    page.should_not have_selector('.loading', visible: true)
   end
 end
 

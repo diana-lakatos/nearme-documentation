@@ -23,7 +23,7 @@
       = f.text_field :mobile_number
 
     = label_tag do
-      = check_box_tag 'user_mobile_same_as_phone', '1', (f.object.phone == f.object.mobile_number)
+      = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number)
       = "Same as phone"
 
     - if f.object.errors[:mobile_number].present?

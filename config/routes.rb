@@ -108,6 +108,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   match "/search", :to => "search#index", :as => :search
+  match "/search/show/:id", :to => "search#show"
 
   resources :authentications do
     collection do

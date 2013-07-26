@@ -27,7 +27,7 @@ class Listing
         # If no geolocation point, then no results
         return [] unless midpoint && radius
 
-        locations = Location.near(midpoint, radius, :order => :distance)
+        locations = Location.near(midpoint, radius, :order => :distance).includes(:listings)
         return [] unless locations.any?
 
         locations.inject([]) do |filtered_listings, location| 

@@ -126,12 +126,9 @@ class ApplicationController < ActionController::Base
       raise "No redirect url provided. Need to call redirect_to first."
     end
 
-    redirect_json = { "redirect" => response.location }
-
+    redirect_json = {redirect: response.location}
     # Clear out existing response
     self.response_body = nil
-    response.location = nil
-
     render(
       :json => redirect_json,
       :content_type => 'application/json',

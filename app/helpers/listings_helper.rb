@@ -8,7 +8,7 @@ module ListingsHelper
     first_date = listing.first_available_date
 
     # Daily open/quantity availability data for datepickers
-    availability = listing.availability_status_between(Date.today, Date.today.advance(:years => 1))
+    availability = listing.availability_status_between(Time.zone.today, Time.zone.today.advance(:years => 1))
 
     # Initial hourly availability schedule data for hourly reservations
     hourly_availability = {
