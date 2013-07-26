@@ -20,6 +20,8 @@ class Company < ActiveRecord::Base
   has_many :reservation_charges,
            through: :reservations
 
+  has_many :payment_transfers
+
   has_many :company_industries
   has_many :industries, :through => :company_industries
 
@@ -32,7 +34,17 @@ class Company < ActiveRecord::Base
   validates_length_of :description, :maximum => 250, :if => lambda { |company| (company.instance.nil? || company.instance.is_desksnearme?) }
   validates :email, email: true, allow_blank: true
   validate :validate_url_format
-  
+
+  # Returns the companies in need of recieving a payment transfer for
+  # outstanding payments we've received on their behalf.
+  #
+  # NB: Will probably need to optimize this at some point
+  scope :needs_payment_transfer, -> {
+    joins(:reservation_charges).merge(
+      ReservationCharge.needs_payment_transfer
+    ).uniq
+  }
+
   acts_as_paranoid
 
   accepts_nested_attributes_for :locations
@@ -43,6 +55,19 @@ class Company < ActiveRecord::Base
 
   def self.xml_attributes
     [:name, :description, :email]
+  end
+
+  # Schedules a new payment transfer for current outstanding payments for each
+  # of the currency payments recieved by the Company.
+  def schedule_payment_transfer
+    transaction do
+      charges = reservation_charges.needs_payment_transfer
+      charges.group_by(&:currency).each do |currency, charges|
+        payment_transfers.create!(
+          reservation_charges: charges
+        )
+      end
+    end
   end
 
   private

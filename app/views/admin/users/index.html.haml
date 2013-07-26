@@ -1,11 +1,7 @@
 %h1= resource_class.name.underscore.humanize.pluralize
 
-
 .pull-left
-  = form_tag '', :method => :get, :class => 'form-search' do
-    = text_field_tag 'search', params[:search], :class => 'search-query', :placeholder => "Type a name or email address"
-    = submit_tag 'Search', :class => 'btn'
-
+  = render 'search_form'
 
 %table.table.table-striped
   - collection.each do |resource|

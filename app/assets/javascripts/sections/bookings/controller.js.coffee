@@ -1,6 +1,6 @@
 # Controller for handling all of the booking selection logic on a Space page
 #
-# The controller is initialize with the bookings DOM container, and an options hash including
+# The controller is initialized with the bookings DOM container, and an options hash including
 # JS objects representing each Listing on the Location.
 class Bookings.Controller
 
@@ -137,9 +137,9 @@ class Bookings.Controller
       type: 'POST',
       data: {
         listing_id: @listing.id,
-        reservation: @listing.reservationOptions()
+        reservation_request: @listing.reservationOptions()
       }
-    }, 'space-reservation-modal', => @enableBookButton())
+    }, null, => @enableBookButton())
 
   # Update the view to display pricing, date selections, etc. based on
   # current selected dates.

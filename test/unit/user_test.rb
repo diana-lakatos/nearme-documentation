@@ -9,18 +9,17 @@ class UserTest < ActiveSupport::TestCase
   context "validations" do
     context "when no country name provided" do
 
-      context "when country name required" do
+      context "when country name not required" do
         should "be valid" do
           user = FactoryGirl.build(:user_without_country_name)
-          assert user.save
+          assert user.valid?
         end
       end
 
-      context "when country name not required" do
+      context "when country name required" do
         should "be invalid" do
-          user = FactoryGirl.create(:user_without_country_name)
-          user.country_name_required = true
-          assert_equal user.save, false
+          user = FactoryGirl.build(:user_without_country_name, :country_name_required => true)
+          assert_equal user.valid?, false
         end
       end
 
@@ -130,6 +129,71 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#has_phone_and_country?" do
+    context "phone and country are present" do
+      should "return true" do
+        user = User.new
+        user.country_name = "United States"
+        user.phone = "1234"
+        assert user.has_phone_and_country?
+      end
+    end
+
+    context "phone is missing" do
+      should "return false" do
+        user = User.new
+        user.country_name = "United States"
+        assert_equal user.has_phone_and_country?, false
+      end
+    end
+
+    context "phone is missing" do
+      should "return true" do
+        user = User.new
+        user.phone = "1234"
+        assert_equal user.has_phone_and_country?, false
+      end
+    end
+  end
+
+  context "#phone_or_country_was_changed?" do
+      context "previous value was blank" do
+        context "phone was changed" do
+          should "return true" do
+            user = User.new
+            user.phone = 456
+            assert user.phone_or_country_was_changed?
+          end
+        end
+
+        context "country_name was changed" do
+          should "return true" do
+            user = User.new
+            user.country_name = "Slovenia"
+            assert user.phone_or_country_was_changed?
+          end
+        end
+      end
+
+      context "previous value wasn't blank" do
+        context "phone was changed" do
+          should "return false" do
+            user = FactoryGirl.create(:user)
+            user.phone = 456
+            assert !user.phone_or_country_was_changed?
+          end
+        end
+
+        context "country_name was changed" do
+          should "return false" do
+            user = FactoryGirl.create(:user)
+            user.country_name = "Slovenia"
+            assert !user.phone_or_country_was_changed?
+          end
+        end
+      end
+  end
+
   context "mailchimp" do
 
     should "not be exported without synchronize timestamp" do
@@ -139,7 +203,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "not exported with synchronize timestamp" do
       @user = FactoryGirl.create(:user)
-      @user.mailchimp_synchronized_at = Time.now.utc
+      @user.mailchimp_synchronized_at = Time.zone.now
       assert @user.mailchimp_exported?
     end
 
@@ -161,17 +225,17 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should "not be synchronized if change to user happened since last synchronize" do
-          Timecop.travel(Time.now.utc+10.seconds)
+          Timecop.travel(Time.zone.now+10.seconds)
           @user.name = 'John Smith'
           @user.save!
           assert !@user.mailchimp_synchronized?
         end
 
         should "be synchronized if multiple changes happens to user but none after last synchronize" do
-          Timecop.travel(Time.now.utc+10.seconds)
+          Timecop.travel(Time.zone.now+10.seconds)
           @user.name = 'John Smith'
           @user.save!
-          Timecop.travel(Time.now.utc+10.seconds)
+          Timecop.travel(Time.zone.now+10.seconds)
           @user.mailchimp_synchronized!
           assert @user.mailchimp_synchronized?
         end
@@ -181,7 +245,7 @@ class UserTest < ActiveSupport::TestCase
           setup do
             @company = FactoryGirl.create(:company, :creator => @user)
             @user.mailchimp_synchronized!
-            Timecop.travel(Time.now.utc+10.seconds)
+            Timecop.travel(Time.zone.now+10.seconds)
           end
 
           should "not be synchronized if change to company happened since last synchronize" do
@@ -201,7 +265,7 @@ class UserTest < ActiveSupport::TestCase
             setup do 
               @location = FactoryGirl.create(:location, :company => @company)
               @user.mailchimp_synchronized!
-              Timecop.travel(Time.now.utc+10.seconds)
+              Timecop.travel(Time.zone.now+10.seconds)
             end
 
             should "not be synchronized if change to location happened since last synchronize" do
@@ -227,7 +291,7 @@ class UserTest < ActiveSupport::TestCase
               setup do
                 @listing = FactoryGirl.create(:listing, :location => @location)
                 @user.mailchimp_synchronized!
-                Timecop.travel(Time.now.utc+10.seconds)
+                Timecop.travel(Time.zone.now+10.seconds)
               end
 
               should "not be synchronized if change to listing happened since last synchronize" do
@@ -251,7 +315,7 @@ class UserTest < ActiveSupport::TestCase
                 setup do
                   @photo = FactoryGirl.create(:photo, :content => @listing)
                   @user.mailchimp_synchronized!
-                  Timecop.travel(Time.now.utc+10.seconds)
+                  Timecop.travel(Time.zone.now+10.seconds)
                 end
 
                 should "be synchronized if change to photo happened since last synchronize" do

@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :reservation do
     association :user
     association :listing
-    date { Date.today }
+    date { Time.zone.today }
     payment_status 'pending'
     quantity 1
     state 'unconfirmed'
@@ -26,6 +26,6 @@ private
 
 def make_valid_period(reservation)
   reservation.periods = []
-  reservation.add_period(Time.now.next_week.to_date)
+  reservation.add_period(Time.zone.now.next_week.to_date)
   reservation
 end

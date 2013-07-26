@@ -114,7 +114,7 @@ class MixpanelApi
   def extract_properties_from_params(params)
     return unless params
 
-    [:utm_source, :utm_campaign].each do |param|
+    [:source, :campaign].each do |param|
       @session_properties[param] = params[param] if params[param]
     end
   end

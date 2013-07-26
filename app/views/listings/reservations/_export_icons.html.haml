@@ -1,0 +1,6 @@
+%h1 Export
+.export-icons
+  .export-icon
+    = link_to export_listing_reservation_path(reservation.listing, reservation, :format => :ics), :class => 'ico-calender' do
+      %span iCal / Outlook
+

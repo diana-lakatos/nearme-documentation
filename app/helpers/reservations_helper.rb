@@ -12,8 +12,16 @@ module ReservationsHelper
     listing_reservations_url(listing, options)
   end
 
-  def reservation_needs_payment_details?
-    !@reservation.total_amount.zero? && %w(USD CAD).include?(@reservation.currency)
+  def location_name(reservation_request)
+    reservation_request.location.name
+  end
+
+  def form_title(reservation_request)
+    "#{reservation_request.quantity} #{reservation_request.listing.name}"
+  end
+
+  def reservation_needs_payment_details?(reservation)
+    !reservation.total_amount.zero? && %w(USD CAD).include?(reservation.currency)
   end
 
   def reservation_subtotal_price(reservation)
@@ -49,6 +57,16 @@ module ReservationsHelper
       reservation.payment_status.titleize
     end
   end
+  
+  def reservation_status_class(reservation)
+    if reservation.confirmed?
+      'confirmed'
+    elsif reservation.unconfirmed?
+      'unconfirmed'
+    else reservation.cancelled? || reservation.rejected? 
+       'cancelled'
+    end
+  end
 
   def reservation_balance(reservation)
     humanized_money_with_cents_and_symbol(reservation.balance/100.0)
@@ -82,7 +100,7 @@ module ReservationsHelper
   def minute_of_day_to_time(minute)
     hour = minute/60
     min  = minute%60
-    Time.new(Date.today.year, Date.today.month, Date.today.day, hour, min)
+    Time.zone.local(Time.zone.today.year, Time.zone.today.month, Time.zone.today.day, hour, min)
   end
 
   def hourly_summary_for_period(period)
@@ -123,5 +141,17 @@ module ReservationsHelper
       groups 
     }
   end
+
+  def reservation_navigation_link(action)
+    (link_to(content_tag(:span, self.send("#{action}_reservation_count")) + action.titleize, self.send("#{action}_reservations_path"), :class => "upcoming-reservations btn btn-full btn-gray#{action==params[:action] ? " active" : ""}")).html_safe
+  end
+
+ def upcoming_reservation_count 
+   @upcoming_reservation_count ||= current_user.reservations.not_archived.count
+ end
+
+ def archived_reservation_count
+    @archived_reservation_count ||= current_user.reservations.archived.count
+ end
 
 end

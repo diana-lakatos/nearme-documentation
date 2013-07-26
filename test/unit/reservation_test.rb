@@ -36,7 +36,7 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation = Reservation.new
         @reservation.listing = FactoryGirl.create(:always_open_listing)
         @reservation.owner = FactoryGirl.create(:user)
-        @reservation.add_period(Date.today.next_week+1)
+        @reservation.add_period(Time.zone.today.next_week+1)
         @reservation.save!
     end
 
@@ -50,8 +50,8 @@ class ReservationTest < ActiveSupport::TestCase
     end
 
     should 'not be cancelable if at least one period is for past' do
-        @reservation.add_period((Date.today+2.day))
-        @reservation.add_period((Date.today-2.day))
+        @reservation.add_period((Time.zone.today+2.day))
+        @reservation.add_period((Time.zone.today-2.day))
         assert !@reservation.cancelable
     end
 
@@ -95,7 +95,7 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should 'create a delayed_job task to run in 24 hours time when saved' do
-        Timecop.freeze(Time.now) do
+        Timecop.freeze(Time.zone.now) do
           assert_difference 'Delayed::Job.count' do
             @reservation.save!
           end
@@ -170,31 +170,32 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation = @listing.reservations.build(:user => @user)
       end
 
-      should "set total cost after creating a new reservation" do
-        dates              = [Date.today, Date.tomorrow, Date.today + 5, Date.today + 6].map { |d|
+      should "set total, subtotal and service fee cost after creating a new reservation" do
+        dates              = [Time.zone.today, Date.tomorrow, Time.zone.today + 5, Time.zone.today + 6].map { |d|
           d += 1 if d.wday == 6
           d += 1 if d.wday == 0
           d
         }
         quantity           =  5
-        assert reservation = @listing.reserve!(@user, dates, quantity)
 
-        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents +
-                     Reservation::ServiceFeeCalculator.new(reservation).service_fee.cents,
-                     reservation.total_amount_cents
-      end
+        reservation = @listing.reservations.build(
+          user: @user,
+          quantity: quantity,
+          payment_method: 'credit_card'
+        )
 
-      should "set subtotal and service fee cost after creating a new reservation" do
-        dates              = [Date.today, Date.tomorrow, Date.today + 5, Date.today + 6].map { |d|
-          d += 1 if d.wday == 6
-          d += 1 if d.wday == 0
-          d
-        }
-        quantity           =  5
-        assert reservation = @listing.reserve!(@user, dates, quantity)
+        dates.each do |date|
+          reservation.add_period(date)
+        end
+
+        reservation.save!
 
         assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents, reservation.subtotal_amount_cents
         assert_equal Reservation::ServiceFeeCalculator.new(reservation).service_fee.cents, reservation.service_fee_amount_cents
+        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents +
+                     Reservation::ServiceFeeCalculator.new(reservation).service_fee.cents,
+                     reservation.total_amount_cents
+
       end
 
       should "not reset total cost when saving an existing reservation" do
@@ -212,7 +213,7 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should "raise an exception if we try to reserve more desks than are available" do
-        dates    = [Date.today]
+        dates    = [Time.zone.today]
         quantity = 11
 
         assert quantity > @listing.availability_for(dates.first)
@@ -220,6 +221,28 @@ class ReservationTest < ActiveSupport::TestCase
         assert_raises DNM::PropertyUnavailableOnDate do
           @listing.reserve!(@user, dates, quantity)
         end
+      end
+
+      should "charge a service fee to credit card paid reservations" do
+        reservation = @listing.reservations.create!(
+          user: @user,
+          date: 1.week.from_now.monday,
+          quantity: 1,
+          payment_method: 'credit_card'
+        )
+
+        assert_not_equal 0, reservation.service_fee_amount_cents
+      end
+
+      should "not charge a service fee to manual payment reservations" do
+        reservation = @listing.reservations.create!(
+          user: @user,
+          date: 1.week.from_now.monday,
+          quantity: 1,
+          payment_method: 'manual'
+        )
+
+        assert_equal 0, reservation.service_fee_amount_cents
       end
     end
 
@@ -233,7 +256,7 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should "set total cost based on HourlyPriceCalculator" do
-        @reservation.periods.build :date => Date.today.advance(:weeks => 1).beginning_of_week, :start_minute => 9*60, :end_minute => 12*60
+        @reservation.periods.build :date => Time.zone.today.advance(:weeks => 1).beginning_of_week, :start_minute => 9*60, :end_minute => 12*60
         assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents +
                      Reservation::ServiceFeeCalculator.new(@reservation).service_fee.cents, 
                      @reservation.total_amount_cents
@@ -279,8 +302,8 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation = Reservation.new(:user => @user, :quantity => 1)
       @reservation.listing = @listing
 
-      @sunday = Date.today.end_of_week
-      @monday = Date.today.next_week.beginning_of_week
+      @sunday = Time.zone.today.end_of_week
+      @monday = Time.zone.today.next_week.beginning_of_week
     end
 
     context 'date availability' do

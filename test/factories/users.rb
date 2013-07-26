@@ -1,11 +1,11 @@
 FactoryGirl.define do
   factory :user do
-    email { "#{name.to_s.downcase.underscore}@example.com" }
+    email { "#{name.to_s.underscore.downcase.tr(' ', '_')}@example.com" }
     password 'password'
     password_confirmation 'password'
     country_name "United States"
-    phone "1234567890"
-    mobile_number "1234567890"
+    phone "18889983375"
+    mobile_number "18889983375"
     instance
     job_title "Manager"
     biography "I'm cool!"

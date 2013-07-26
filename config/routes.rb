@@ -24,6 +24,18 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :reservations
+    resources :companies
+    resources :payment_transfers do
+      member do
+        post :transferred
+      end
+
+      collection do
+        post :generate
+      end
+    end
+
+    resources :instances
   end
 
   resources :companies
@@ -42,7 +54,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :listings, :only => [:index, :show] do
-    resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
+    resources :reservations, :only => [:create, :update, :show], :controller => "listings/reservations" do
       post :review, :on => :collection
       get :hourly_availability_schedule, :on => :collection
     end
@@ -61,12 +73,17 @@ DesksnearMe::Application.routes.draw do
   resources :reservations do
     member do
       post :user_cancel
+      get :export
+    end
+    collection do
+      get :upcoming
+      get :archived
     end
   end
 
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
-      get :bookings
+      get :bookings, :to => 'reservations#upcoming'
       get :payments
       get :listings
       get :manage_guests
@@ -102,6 +119,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   match "/search", :to => "search#index", :as => :search
+  match "/search/show/:id", :to => "search#show"
 
   resources :authentications do
     collection do
@@ -180,6 +198,7 @@ DesksnearMe::Application.routes.draw do
     get 'organizations', to: 'organizations#index'
   end
 
+  match "/pages/:path", to: 'pages#show', as: :pages
   match "/legal", to: 'pages#legal'
   match "/host-sign-up", to: 'pages#host_signup_1'
   match "/host-sign-up-2", to: 'pages#host_signup_2'
@@ -188,5 +207,6 @@ DesksnearMe::Application.routes.draw do
   match "/W-hotels-desks-near-me", to: 'locations#w_hotels'
   match "/careers", to: 'pages#careers'
   match "/support" => redirect("https://desksnearme.desk.com")
+  match "/about" => redirect("/pages/about")
 
 end

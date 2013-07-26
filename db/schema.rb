@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130719074003) do
+ActiveRecord::Schema.define(:version => 20130725173943) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -228,6 +228,15 @@ ActiveRecord::Schema.define(:version => 20130719074003) do
 
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
 
+  create_table "pages", :force => true do |t|
+    t.string   "path",        :null => false
+    t.text     "content"
+    t.integer  "instance_id"
+    t.string   "hero_image"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "partners", :force => true do |t|
     t.string   "name"
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
@@ -311,13 +320,6 @@ ActiveRecord::Schema.define(:version => 20130719074003) do
     t.string   "payment_status",           :default => "unknown", :null => false
     t.integer  "quantity",                 :default => 1,         :null => false
     t.integer  "service_fee_amount_cents"
-  end
-
-  create_table "search_queries", :force => true do |t|
-    t.string   "query"
-    t.text     "agent"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "sessions", :force => true do |t|

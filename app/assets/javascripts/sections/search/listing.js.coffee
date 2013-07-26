@@ -29,6 +29,10 @@ class Search.Listing
       @_element = $(element)
       @bindEvents()
 
+  setHtml: (html) ->
+    @_element.replaceWith(html)
+    @setElement(html)
+
   bindEvents: ->
   
   element: ->

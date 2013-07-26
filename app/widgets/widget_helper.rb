@@ -15,7 +15,7 @@ class WidgetHelper
     # So if total count for today 30.04.2013 is 100 , and 80 was the total count until the previous week [ 23.04.2013 ],
     # we will obtain: 100% * (100-80)/80 = 100% * 20/80 = 25%. Which is correct - since last week, we got +25% <objects>
     # If we used created_at >= instead of <, the calculation would be 100% * (100-20)/20 = 400% and this is wrong
-    @object.count(:conditions => ["created_at < ?", (Time.now-TIME_LIMIT.days).utc])
+    @object.count(:conditions => ["created_at < ?", (Time.zone.now - TIME_LIMIT.days)])
   end
 
   def get_line_data
@@ -25,7 +25,6 @@ class WidgetHelper
       :y_axis => [],
       :colour => "989898"
     }
-    current_count = 0
     for days_ago in 1..TIME_LIMIT
       date = get_date_for_days_ago(TIME_LIMIT - days_ago)
       @result_hash[:items] << get_count_until_date(date)
@@ -36,11 +35,11 @@ class WidgetHelper
   end
 
   def get_date_for_days_ago(days_ago)
-    (Time.now-days_ago.days).utc.to_date
+    Time.zone.today - days_ago.days
   end
 
   def get_count_until_date(date)
-    @object.count(:conditions => ["created_at < ?", date+1.day])
+    @object.count(:conditions => ["created_at < ?", date.tomorrow])
   end
 
 end

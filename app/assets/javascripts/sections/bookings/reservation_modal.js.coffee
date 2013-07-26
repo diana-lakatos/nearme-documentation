@@ -1,25 +1,41 @@
-class Bookings.ReservationModal
+class Bookings.ReservationModal extends @ModalForm
 
   constructor: (@container) ->
-    @bindEvents()
+    @serviceFeeLine = @container.find('.service-fee-line')
+    @totalCostLine = @container.find('.total-cost-line')
+
+    @paymentMethodCreditCard = @container.find('input#reservation_request_payment_method_credit_card')
+    @creditCardFields  = @container.find('#credit_card_fields')
+    @creditCardNumber  = @container.find('#card_number')
+    @creditCardExpires = @container.find('#card_expires')
+    @creditCardCode    = @container.find('#card_code')
+
+    super(@container, @container)
     @hideShowCreditCardFields()
 
   bindEvents: ->
-    @container.find('input[name*=payment_method]').click(@hideShowCreditCardFields)
+    @container.find('input[name*=payment_method]').on 'change', =>
+      @hideShowCreditCardFields()
+      @toggleServiceFee()
+
     @formatCreditCardFields()
 
   formatCreditCardFields: ->
-    $('#card_number').payment('formatCardNumber')
-    $('#card_expires').payment('formatCardExpiry')
-    $('#card_code').payment('formatCardCVC')
-
+    @creditCardNumber.payment('formatCardNumber')
+    @creditCardExpires.payment('formatCardExpiry')
+    @creditCardCode.payment('formatCardCVC')
 
   hideShowCreditCardFields: ->
-    input = $('input#payment_method_credit_card')
-    fields = $('#credit_card_fields')
-
-    if input.is(':checked')
-      fields.show()
+    if @paymentMethodCreditCard.is(':checked')
+      @creditCardFields.show()
     else
-      fields.hide()
+      @creditCardFields.hide()
+
+  toggleServiceFee: ->
+    if @paymentMethodCreditCard.is(':checked')
+      @serviceFeeLine.show()
+      @totalCostLine.find('.total-amount').text(@totalCostLine.data('total'))
+    else
+      @serviceFeeLine.hide()
+      @totalCostLine.find('.total-amount').text(@totalCostLine.data('subtotal'))
 

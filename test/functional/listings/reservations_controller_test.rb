@@ -17,7 +17,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
     should "track booking modal open" do
       @tracker.expects(:opened_booking_modal).with do |reservation|
-        reservation == assigns(:reservation)
+        reservation == assigns(:reservation_request).reservation
       end
       xhr :post, :review, booking_params_for(@listing)
       assert_response 200
@@ -25,7 +25,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
     should "track booking request" do
       @tracker.expects(:requested_a_booking).with do |reservation|
-        reservation == assigns(:reservation)
+        reservation == assigns(:reservation_request).reservation
       end
       xhr :post, :create, booking_params_for(@listing)
       assert_response 200
@@ -36,7 +36,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
   def booking_params_for(listing)
     {
       "listing_id" => @listing.id,
-      "reservation" => {
+      "reservation_request" => {
         "dates" => [Chronic.parse('Monday')],
         "quantity"=>"1"
       }

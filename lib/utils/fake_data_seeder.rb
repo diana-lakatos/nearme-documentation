@@ -177,12 +177,12 @@ module Utils
           instance = instances.sample # TODO temp
           company_email = "info@#{url}"
           user = FactoryGirl.create(:user, :name => Faker::Name.name, :email => company_email,
-                                    :biography => Faker::Lorem.paragraph, :instance => instance,
+                                    :biography => Faker::Lorem.paragraph.truncate(200), :instance => instance,
                                     :industries => industries.sample(2))
           users << user
 
           companies << FactoryGirl.create(:company, :name => url, :email => user.email, :url => url,
-                                          :description => Faker::Lorem.paragraph, :instance => instance,
+                                          :description => Faker::Lorem.paragraph.truncate(200), :instance => instance,
                                           :creator => user, :industries => user.industries)
         end
         [users, companies]
@@ -205,7 +205,7 @@ module Utils
 
           FactoryGirl.create(:location, :amenities => amenities.sample(2), :location_type => location_types.sample,
                              :company => company, :email => company.email, :address => address,
-                             :latitude => lat, :longitude => lng, :description => Faker::Lorem.paragraph)
+                             :latitude => lat, :longitude => lng, :description => Faker::Lorem.paragraph.truncate(200))
         end
       end
     end
@@ -214,10 +214,10 @@ module Utils
     def load_listings!
       @listings ||= do_task "Loading listings" do
         locations.map do |location|
-          listing_types.sample(2).map do |listing_type|
+          listing_types.sample(rand(1..3)).map do |listing_type|
             name = listing_type.name # TODO
             FactoryGirl.create(:listing, :listing_type => listing_type, :name => name, :location => location,
-                               :description => Faker::Lorem.paragraph)
+                               :description => Faker::Lorem.paragraph.truncate(200))
           end
         end.flatten
       end

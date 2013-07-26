@@ -16,7 +16,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
-    :owner_id, :periods, :state, :user, :comment, :quantity
+    :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method
 
   has_many :periods,
            :class_name => "ReservationPeriod",
@@ -27,14 +27,15 @@ class Reservation < ActiveRecord::Base
     inverse_of: :reservation,
     dependent: :destroy
 
+  validates :listing_id, :presence => true
   validates :periods, :length => { :minimum => 1 }
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
-  validate :validate_all_dates_available, on: :create
-  validate :validate_booking_selection, on: :create
+  validate :validate_all_dates_available, on: :create, :if => lambda { listing }
+  validate :validate_booking_selection, on: :create, :if => lambda { listing }
 
-  before_create :set_costs
-  before_validation :set_currency, on: :create
-  before_validation :set_default_payment_status, on: :create
+  before_create :set_costs, :if => lambda { listing }
+  before_validation :set_currency, on: :create, :if => lambda { listing }
+  before_validation :set_default_payment_status, on: :create, :if => lambda { listing }
   after_create :auto_confirm_reservation
 
   # TODO: Move code relating to expiry event from model to controller.
@@ -114,12 +115,20 @@ class Reservation < ActiveRecord::Base
     without_state(:cancelled).upcoming
   }
 
+  scope :not_archived, lambda {
+    upcoming.without_state(:cancelled, :rejected, :expired).uniq
+  }
+
   scope :not_rejected_or_cancelled, lambda {
     without_state(:cancelled, :rejected)
   }
 
   scope :cancelled, lambda {
     with_state(:cancelled)
+  }
+
+  scope :archived, lambda {
+    joins(:periods).where('reservation_periods.date < ? OR state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled']).uniq
   }
 
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
@@ -131,7 +140,11 @@ class Reservation < ActiveRecord::Base
 
   def user=(value)
     self.owner = value
-    self.confirmation_email = value.email
+    self.confirmation_email = value.try(:email)
+  end
+
+  def host
+    @host ||= listing.creator
   end
 
   def date=(value)
@@ -175,15 +188,15 @@ class Reservation < ActiveRecord::Base
   end
 
   def total_amount_cents
-    subtotal_amount_cents + service_fee_amount_cents
+    subtotal_amount_cents + service_fee_amount_cents rescue nil
   end
 
   def subtotal_amount_cents
-    super || price_calculator.price.cents
+    super || price_calculator.price.cents rescue nil
   end
 
   def service_fee_amount_cents
-    super || service_fee_calculator.service_fee.cents
+    super || service_fee_calculator.service_fee.cents rescue nil
   end
 
   def total_amount_dollars
@@ -222,7 +235,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def currency
-    super.presence || listing.currency
+    super.presence || listing.try(:currency)
   end
 
   def free?
@@ -271,11 +284,19 @@ class Reservation < ActiveRecord::Base
 
     def set_costs
       self.subtotal_amount_cents = price_calculator.price.try(:cents)
-      self.service_fee_amount_cents = service_fee_calculator.service_fee.try(:cents)
+      self.service_fee_amount_cents = if credit_card_payment?
+        service_fee_calculator.service_fee.try(:cents)
+      else
+        # This feels a bit hax, but the this is a specific edge case where we don't
+        # apply a service fee to manual payments at this stage. However, we still
+        # need to calculate and present the service fee as the payment type for
+        # supported listings is not confirmed until the executes the reservation.
+        0
+      end
     end
 
     def set_currency
-      self.currency ||= listing.currency
+      self.currency ||= listing.try(:currency)
     end
 
     def auto_confirm_reservation

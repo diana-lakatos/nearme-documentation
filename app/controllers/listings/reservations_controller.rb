@@ -1,30 +1,36 @@
 module Listings
   class ReservationsController < ApplicationController
+    extend Forwardable
+
     before_filter :find_listing
-    before_filter :build_reservation, :only => [:review, :create]
-    before_filter :require_login_for_reservation, :only => [:review, :create]
+    before_filter :build_reservation_request, :only => [:review, :create]
+    before_filter :require_login_for_reservation, :only => [:review, :create, :export]
+
+    attr_reader :listing
+    def_delegators :@listing, :location
+    def_delegators :@reservation_request, :reservation
 
     def review
-      @reservation.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
-      event_tracker.opened_booking_modal(@reservation)
+      @reservation_request.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
+      event_tracker.opened_booking_modal(reservation)
     end
 
     def create
-      @errors = []
-      setup_credit_card_customer if using_credit_card?
-
-      if @errors.empty? && @reservation.save
-        if @reservation.listing.confirm_reservations?
-          ReservationMailer.notify_host_with_confirmation(@reservation).deliver
-          ReservationMailer.notify_guest_with_confirmation(@reservation).deliver
-          ReservationSmsNotifier.notify_host_with_confirmation(@reservation).deliver
+      if @reservation_request.process
+        if @reservation_request.confirm_reservations?
+          ReservationMailer.notify_host_with_confirmation(reservation).deliver
+          ReservationMailer.notify_guest_with_confirmation(reservation).deliver
+          ReservationSmsNotifier.notify_host_with_confirmation(reservation).deliver
         else
-          ReservationMailer.notify_host_without_confirmation(@reservation).deliver
-          ReservationMailer.notify_guest_of_confirmation(@reservation).deliver
+          ReservationMailer.notify_host_without_confirmation(reservation).deliver
+          ReservationMailer.notify_guest_of_confirmation(reservation).deliver
         end
-        event_tracker.requested_a_booking(@reservation)
 
-        render # Successfully reserved listing
+        event_tracker.requested_a_booking(reservation)
+        flash[:notice] =  "Your reservation has been made! #{reservation.credit_card_payment? ? "Your credit card will be charged when your reservation is confirmed by the host." : "" }"
+
+        redirect_to upcoming_reservations_path(:id => reservation)
+        render_redirect_url_as_json if request.xhr?
       else
         render :review
       end
@@ -36,7 +42,7 @@ module Listings
       end
 
       schedule = if date
-        @listing.hourly_availability_schedule(Date.parse(params[:date])).as_json
+        listing.hourly_availability_schedule(Date.parse(params[:date])).as_json
       else
         {}
       end
@@ -50,62 +56,39 @@ module Listings
       unless current_user
         # Persist the reservation request so that when we return it will be restored.
         store_reservation_request
-        redirect_to new_user_registration_path(:return_to => location_url(@listing.location, :restore_reservations => true))
+        redirect_to new_user_registration_path(:return_to => location_url(listing.location, :restore_reservations => true))
       end
     end
 
     def find_listing
       @listing = Listing.find(params[:listing_id])
-      @location = @listing.location
     end
 
-    def build_reservation
-      @reservation = @listing.reservations.build
-      @reservation.user = current_user if current_user
-      @reservation.quantity = params[:reservation][:quantity]
+    def build_reservation_request
+      params[:reservation_request] ||= {}
 
-      # Assign the payment method chosen on the form to the Reservation
-      @reservation.payment_method = params[:payment_method] if params[:payment_method].present?
-
-      if @listing.hourly_reservations?
-        start_minute = params[:reservation][:start_minute].try(:to_i)
-        end_minute   = params[:reservation][:end_minute].try(:to_i)
-      end
-
-      params[:reservation][:dates].each do |date_str|
-        @reservation.add_period(Date.parse(date_str), start_minute, end_minute)
-      end
-
-      @reservation
-    end
-
-    def using_credit_card?
-      @reservation.credit_card_payment?
-    end
-
-    def setup_credit_card_customer
-      begin
-        params[:card_expires] = params[:card_expires].to_s.strip
-        card_details = User::BillingGateway::CardDetails.new(
-          number: params[:card_number].to_s,
-          expiry_month: params[:card_expires].to_s[0,2],
-          expiry_year: params[:card_expires].to_s[-2,2],
-          cvc: params[:card_code].to_s
-        )
-
-        if card_details.valid?
-          current_user.billing_gateway.store_card(card_details)
-        else
-          @errors << "Those credit card details don't look valid"
-        end
-      rescue User::BillingGateway::BillingError => e
-        @errors << e.message
-      end
+      @reservation_request = ReservationRequest.new(
+        listing,
+        current_user,
+        {
+          :payment_method => params[:reservation_request][:payment_method],
+          :quantity       => params[:reservation_request][:quantity],
+          :dates          => params[:reservation_request][:dates],
+          :start_minute   => params[:reservation_request][:start_minute],
+          :end_minute     => params[:reservation_request][:end_minute],
+          :card_expires   => params[:reservation_request][:card_expires],
+          :card_code      => params[:reservation_request][:card_code],
+          :card_number    => params[:reservation_request][:card_number],
+          :country_name   => params[:reservation_request][:country_name],
+          :phone          => params[:reservation_request][:phone],
+          :mobile_number  => params[:reservation_request][:mobile_number]
+        }
+      )
     end
 
     # Store the reservation request in the session so that it can be restored when returning to the listings controller.
     def store_reservation_request
-      session[:stored_reservation_location_id] = @listing.location.id
+      session[:stored_reservation_location_id] = listing.location.id
 
       # Marshals the booking request parameters into a better structured hash format for transmission and
       # future assignment to the Bookings JS controller.
@@ -113,11 +96,12 @@ module Listings
       # Returns a Hash of listing id's to hash of date & quantity values.
       #  { '123' => { 'date' => '2012-08-10', 'quantity => '1' }, ... }
       session[:stored_reservation_bookings] = {
-        @listing.id => {
-          :quantity => @reservation.quantity,
-          :dates => @reservation.periods.map(&:date).map { |date| date.strftime('%Y-%m-%d') }
+        listing.id => {
+          :quantity => reservation.quantity,
+          :dates => reservation.periods.map(&:date).map { |date| date.strftime('%Y-%m-%d') }
         }
       }
     end
+
   end
 end

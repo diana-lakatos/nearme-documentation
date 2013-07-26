@@ -9,7 +9,7 @@ gem 'airbrake'
 gem 'active_model_serializers'
 gem 'carrierwave'
 gem 'decent_exposure'
-gem 'devise'
+gem 'devise', "~> 2.2"
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'omniauth-openid'
@@ -28,6 +28,7 @@ gem 'rails3_acts_as_paranoid'
 gem 'simple_form'
 gem 'nokogiri'
 gem 'amatch'
+gem 'icalendar'
 gem 'ffaker'
 
 gem 'paper_trail'
@@ -40,8 +41,6 @@ gem 'state_machine'
 gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'tweet-button'
 gem 'will_paginate'
-gem 'thinking-sphinx', '2.0.14', :require => 'thinking_sphinx'
-gem 'ts-resque-delta', '1.2.4'
 gem 'resque'
 gem "compass-rails"
 # when we upgrade compass, we should change it into animate - actually they plan to add this to compass by default
@@ -114,7 +113,9 @@ group :development do
   gem 'ruby-prof'
 end
 group :test do
-  gem 'capybara', '~>1.1.2'
+  gem 'capybara', '~>2'
+  gem 'capybara-webkit'
+  gem 'capybara-screenshot'
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
   gem 'launchy'

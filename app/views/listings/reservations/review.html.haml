@@ -1,91 +1,111 @@
-%header
-  %h2 
-    %span.ico-location.padding #{@location.name}
+.space-reservation-modal
+  %header
+    %h2
+      %span.ico-location.padding= location_name(@reservation_request)
 
-= form_tag secure_listing_reservations_url(@listing), :method => :post, :remote => true, :class => "payment form-horizontal" do
-  = render 'listings/reservations/fields'
+  = simple_form_for @reservation_request, :url => secure_listing_reservations_url(@reservation_request.listing), :method => :post, :remote => true, :html => {:class => "payment form-horizontal"} do |f|
+    = render 'listings/reservations/fields', :f => f
 
-  - if @reservation.errors.present?
-    .flash.error
-      %p Whoops! We couldn't make that reservation.
-      %ul
-        - @reservation.errors[:base].each do |error|
-          %li= error
+    - if @reservation_request.errors.present?
+      .flash.error
+        %p.text-center Whoops! We couldn't make that reservation.
+        %ul
+          - @reservation_request.errors[:base].each do |error|
+            %li= error
 
-  %h2= "#{@reservation.quantity} #{@listing.name}"
+    %h2= form_title(@reservation_request)
 
-  - if @listing.hourly_reservations?
-    %p
-      = hourly_summary_for_period @reservation.periods.first
+    - if @reservation_request.hourly_reservations?
+      %p
+        = hourly_summary_for_period @reservation_request.reservation_periods.first
 
-  - else
-    %p= selected_dates_summary(@reservation)
+    - else
+      %p= selected_dates_summary(@reservation_request.reservation)
 
-  %hr
+    %hr
 
-  .summary
-    .subtotal-label Subtotal Cost:
-    .subtotal-amount= reservation_subtotal_price(@reservation)
+    .summary.subtotal-cost-line
+      .subtotal-label Subtotal Cost:
+      .subtotal-amount= reservation_subtotal_price(@reservation_request.reservation)
 
-  .summary
-    .service-fee-label Service Fee:
-    .service-fee-amount= reservation_service_fee(@reservation)
+    .summary.service-fee-line
+      .service-fee-label Service Fee:
+      .service-fee-amount= reservation_service_fee(@reservation_request.reservation)
 
-  .summary
-    .total-label Total Cost:
-    .total-amount= reservation_total_price(@reservation)
+    .summary.total-cost-line{ 'data-total' => reservation_total_price(@reservation_request.reservation),
+                              'data-subtotal' => reservation_subtotal_price(@reservation_request.reservation) }
+      .total-label Total Cost:
+      .total-amount= reservation_total_price(@reservation_request.reservation)
 
-  %hr
+    %hr
 
-  - if reservation_needs_payment_details?
-    .control-group
-      = radio_button_tag :payment_method, "credit_card", @reservation.credit_card_payment?
-      = label_tag :payment_method_credit_card, 'Charge my credit card once booking confirmed'
+    - if reservation_needs_payment_details?(@reservation_request.reservation)
+      .control-group
+        = radio_button_tag "reservation_request[payment_method]", "credit_card", @reservation_request.credit_card_payment?
+        = label_tag :reservation_request_payment_method_credit_card, 'Charge my credit card once booking confirmed'
 
-    .control-group
-      = radio_button_tag :payment_method, "manual", @reservation.manual_payment?
-      = label_tag :payment_method_manual, 'I will make the payment in person upon arrival'
+      .control-group
+        = radio_button_tag "reservation_request[payment_method]", "manual", @reservation_request.manual_payment?
+        = label_tag :reservation_request_payment_method_manual, 'I will make the payment in person upon arrival'
 
-    #credit_card_fields{:style => "display: none"}
-      %hr.divider
 
-      - if @errors.present?
-        .flash.error
-          %ul
-            - @errors.each do |e|
-              %li= e
+      - if @reservation_request.display_phone_and_country_block?
+        = render 'phone_fields', :f => f
 
-      .row-fluid.padding-bottom
-        .span6
-          .ico-lock.padding Submit a secure payment.
-        .span6
-          = image_tag 'credit-cards.png', :alt => "Visa, Mastercard, American Express, Discover"
+      #credit_card_fields{:style => "display: none"}
+        %hr.divider
 
-      .row-fluid
-        = label_tag :card_number, "Credit Card Number", :class => 'control-label', placeholder: 'Credit Card Number'
-        .controls.card-number
-          = text_field_tag :card_number, nil
-          .credit-card-icon
-            %span.ico-credit-card
+        - if @reservation_request.errors[:cc].present?
+          .flash.error
+            %ul
+              - @reservation_request.errors[:cc].each do |e|
+                %li= e
 
-      .card-info.expiry
-        = label_tag :card_expires, "Expires On", :class => 'control-label'
-        .controls.card-expires
-          = text_field_tag :card_expires, nil, size: 4, placeholder: 'MM/YY'
+        .row-fluid.padding-bottom
+          .span6
+            .ico-lock.padding Submit a secure payment.
+          .span6
+            = image_tag 'credit-cards.png', :alt => "Visa, Mastercard, American Express, Discover"
 
-      .card-info.security
-        = label_tag :card_code, "Security Code", :class => 'control-label'
-        .controls.card-code
-          = text_field_tag :card_code, nil, size: 3, placeholder: 'CCV'
+        .row-fluid
+          = f.label :card_number, "Credit Card Number", class: 'control-label', placeholder: 'Credit Card Number'
+          .controls.card-number
+            = f.input_field :card_number, required: true
+            .credit-card-icon
+              %span.ico-credit-card
 
-    - if @reservation.listing.confirm_reservations?
-      %p.text-center
-        This host manually confirms all bookings before payment.
+        .card-info.expiry.column.left
+          = f.label :card_expires, "Expires On", class: 'control-label'
+          .controls.card-expires
+            = f.input_field :card_expires, input_html: {size: 4}, placeholder: 'MM/YY', required: true
 
-  = submit_tag 'Request Booking', :disable_with => "Booking..."
+        .card-info.security.column.right
+          = f.label :card_code, "Security Code", class: 'control-label'
+          .controls.card-code
+            = f.input_field :card_code, input_html: {size: 3}, placeholder: 'CCV', required: true
 
-:javascript
-  $(function() {
-    new Bookings.ReservationModal($('form.payment'))
-  });
+      - if @reservation_request.confirm_reservations?
+        %p.text-center
+          This host manually confirms all bookings before payment.
+    - else
+      - if @reservation_request.display_phone_and_country_block?
+        = render 'phone_fields', :f => f
+
+    = f.button :submit, 'Request Booking', disable_with: "Booking..."
+
+  :javascript
+    $(function() {
+      new Bookings.ReservationModal($('form.payment'));
+      new PhoneNumbers.FieldsForm(
+        $('form.payment'),
+        {
+          countrySelector : '#reservation_request_country_name',
+          mobileSelector  : '#reservation_request_mobile_number',
+          phoneSelector   : '#reservation_request_phone',
+          sameAsSelector  : '#reservation_request_mobile_same_as_phone'
+        }
+      );
+      DNM.initializeCustomSelects();
+    });
+
 
