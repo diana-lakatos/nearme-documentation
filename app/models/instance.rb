@@ -8,6 +8,7 @@ class Instance < ActiveRecord::Base
   has_many :listings, :through => :locations
   has_many :users
   has_many :domains
+  has_many :pages
   belongs_to :partner
 
   validates_presence_of :name
