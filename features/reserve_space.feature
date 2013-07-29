@@ -14,10 +14,10 @@ Feature: A user can book at a space
     Given I am logged in as the user
       When I book space for:
           | Listing     | Date         | Quantity  |
-          | the listing | next Monday  | 1         |
-          | the listing | next Tuesday | 1         |
-     Then the user should have the listing reserved for 'next Monday'
-      And the user should have the listing reserved for 'next Tuesday'
+          | the listing | next week Monday  | 1         |
+          | the listing | next week Tuesday | 1         |
+     Then the user should have the listing reserved for 'next week Monday'
+      And the user should have the listing reserved for 'next week Tuesday'
 
   Scenario: Booking for a 'automatically confirm' listing should show relevant details
     Given bookings for the listing do not need to be confirmed
@@ -84,10 +84,10 @@ Feature: A user can book at a space
   Scenario: Not logged in user is prompted to log in during booking flow
      When I book space as new user for:
           | Listing     | Date         | Quantity  |
-          | the listing | next Monday  | 1         |
-          | the listing | next Tuesday | 1         |
-     Then user should have the listing reserved for 'next Monday'
-      And user should have the listing reserved for 'next Tuesday'
+          | the listing | next week Monday  | 1         |
+          | the listing | next week Tuesday | 1         |
+     Then user should have the listing reserved for 'next week Monday'
+      And user should have the listing reserved for 'next week Tuesday'
 
   Scenario: Hourly reserved listing can be booked
     Given the listing is reserved hourly
@@ -112,16 +112,16 @@ Feature: A user can book at a space
     Given I am logged in as the user
      When I book space for:
           | Listing     | Date         | Quantity  |
-          | the listing | next Monday  | 1         |
-          | the listing | next Tuesday | 1         |
+          | the listing | next week Monday  | 1         |
+          | the listing | next week Tuesday | 1         |
      Then I should be redirect to bookings page
 
   Scenario: Last bookings is highlighted
     Given I am logged in as the user
      When I book space for:
           | Listing     | Date         | Quantity  |
-          | the listing | next Monday  | 1         |
-          | the listing | next Tuesday | 1         |
+          | the listing | next week Monday  | 1         |
+          | the listing | next week Tuesday | 1         |
      When I book space for:
           | Listing     | Date         | Quantity  |
           | the listing | next Wednesday  | 1      |
