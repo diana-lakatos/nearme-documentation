@@ -77,6 +77,7 @@ gem 'handlebars_assets'
 gem 'chosen-rails'
 
 gem 'inherited_resources'
+gem "historyjs-rails"
 
 group :staging, :production do
   gem 'newrelic_rpm'

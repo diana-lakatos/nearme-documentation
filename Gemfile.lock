@@ -209,6 +209,8 @@ GEM
     has_scope (0.5.1)
     hashie (2.0.5)
     hike (1.2.1)
+    historyjs-rails (1.0.1)
+      railties (>= 3.0)
     httparty (0.11.0)
       multi_json (~> 1.0)
       multi_xml (>= 0.5.2)
@@ -516,6 +518,7 @@ DEPENDENCIES
   guard-spork
   haml
   handlebars_assets
+  historyjs-rails
   icalendar
   inherited_resources
   jasmine

@@ -6,6 +6,18 @@
 class Search.SearchController extends Search.Controller
   constructor: (form, @container) ->
     super(form)
+    # for IE <= 9 - the real q sits after !#, but outdated q from url is used. So we check if
+    # the real q is equal to the q from url [ for which the page has been loaded and results shown ]
+    # and if so, redirect to the proper url. Alternative would be to just make AJAX call and replace page,
+    # but not sure how it will work with infinite page scroll etc... this is simple and Just Works ;)
+    if History.getState() && !window.history?.replaceState
+      for k, param of History.getState().data
+        if param["name"] == 'q'
+          if param.value != DNM.util.Url.getParameterByName('q')
+            document.location = History.getState().url
+
+
+
     @initializeDateRangeField()
 
     @listings = {}
@@ -227,11 +239,10 @@ class Search.SearchController extends Search.Controller
     @triggerSearchFromQueryAfterDelay()
 
   updateUrlForSearchQuery: ->
-    if window.history?.replaceState
-      url = document.location.href.replace(/\?.*$/, "")
-      params = @getSearchParams()
-      url = "#{url}?#{$.param(params)}"
-      history.replaceState(params, "Search Results", url)
+    url = document.location.href.replace(/\?.*$/, "")
+    params = @getSearchParams()
+    url = "?#{$.param(params)}"
+    History.replaceState(params, "Search Results", decodeURIComponent(url))
 
   updateLinksForSearchQuery: ->
     url = document.location.href.replace(/\?.*$/, "")
