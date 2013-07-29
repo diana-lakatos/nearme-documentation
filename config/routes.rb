@@ -62,7 +62,7 @@ DesksnearMe::Application.routes.draw do
 
   match '/auth/:provider/callback' => 'authentications#create'
   match "/auth/failure", to: "authentications#failure"
-  devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' } 
+  devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
   devise_scope :user do
     put "users/avatar", :to => "registrations#avatar", :as => "avatar"
     get "users/", :to => "registrations#new"
@@ -199,7 +199,6 @@ DesksnearMe::Application.routes.draw do
   end
 
   match "/pages/:path", to: 'pages#show', as: :pages
-  match "/legal", to: 'pages#legal'
   match "/host-sign-up", to: 'pages#host_signup_1'
   match "/host-sign-up-2", to: 'pages#host_signup_2'
   match "/host-sign-up-3", to: 'pages#host_signup_3'
@@ -208,5 +207,6 @@ DesksnearMe::Application.routes.draw do
   match "/careers", to: 'pages#careers'
   match "/support" => redirect("https://desksnearme.desk.com")
   match "/about" => redirect("/pages/about")
+  match "/legal" => redirect("/pages/legal")
 
 end

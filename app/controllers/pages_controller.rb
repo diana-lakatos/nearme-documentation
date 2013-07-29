@@ -22,7 +22,7 @@ class PagesController < ApplicationController
     case action_name
     when "host_signup"
       "landing"
-    when "legal", "show"
+    when "show"
       "application"
     else
       false
