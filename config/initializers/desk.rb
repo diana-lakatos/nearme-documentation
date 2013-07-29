@@ -1,5 +1,3 @@
-require 'sms_notifier'
-
 if Rails.env.production?
   Desk.configure do |config|
     config.support_email = "support@desksnear.me"
@@ -47,4 +45,3 @@ else
   end
 
 end
-
