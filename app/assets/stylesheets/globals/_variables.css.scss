@@ -1,5 +1,3 @@
-
-
 // Colors
 
 $dnm_blue:   rgb(2,79,163);
@@ -18,13 +16,13 @@ $sjcc_gray:   #394449;
 $sjcc_black:  #343434;
 $sjcc_white: rgb(250,250,250);
 
-$theme_blue:   $dnm_blue;
-$theme_red:    $dnm_red;
-$theme_orange: $dnm_orange;
-$theme_green:  $dnm_green;
-$theme_gray:   $dnm_gray;
-$theme_black:  $dnm_black;
-$theme_white:  $dnm_white;
+$theme_blue:   $dnm_blue !default;
+$theme_red:    $dnm_red !default;
+$theme_orange: $dnm_orange !default;
+$theme_green:  $dnm_green !default;
+$theme_gray:   $dnm_gray !default;
+$theme_black:  $dnm_black !default;
+$theme_white:  $dnm_white !default;
 
 $blue:   $theme_blue;
 $red:    $theme_red;
@@ -66,15 +64,13 @@ $checkbox-radio-neutral: $gray220;
 // Logo
 
 $theme_name: 'desksnearme';
-$theme_logo_width: 219px;
+$theme_logo_width: 219px !default;
 
-$theme_path: '/assets/theme/' + $theme_name + '/';
-$theme_hero: $theme_path + 'hero.jpg';
-$theme_logo_path: $theme_path + 'logo/';
-$theme_icon: $theme_logo_path + 'icon.png';
-$theme_icon2x: $theme_logo_path + 'icon@2x.png';
-$theme_logo: $theme_logo_path + 'logo.png';
-$theme_logo2x: $theme_logo_path + 'logo@2x.png';
+$theme_hero: "/assets/theme/#{$theme_name}/hero.jpg" !default;
+$theme_icon: "/assets/theme/#{$theme_name}/logo/icon.png" !default;
+$theme_icon2x: "/assets/theme/#{$theme_name}/logo/icon@2x.png" !default;
+$theme_logo: "/assets/theme/#{$theme_name}/logo/logo.png" !default;
+$theme_logo2x: "/assets/theme/#{$theme_name}/logo/logo@2x.png" !default;
 
 // Transitions
 
