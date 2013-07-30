@@ -11,9 +11,9 @@ Feature: A user can add a space
   Scenario: An unregistered user starts by signing up
     Given a instance exists
     And I go to the home page
-     And  I follow "List Your Space"
+     And I follow "List Your Desk"
      And I sign up as a user in the modal
-     Then I should see "List Your First Space"
+     Then I should see "List Your First Desk"
      When I fill in valid space details
      And I press "List my Space"
      Then I should see "Your space was listed!"

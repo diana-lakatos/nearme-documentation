@@ -20,7 +20,7 @@
       = simple_fields_for current_user do |uf|
         = render 'registrations/phone_fields', :f => uf
       .actions
-        = f.submit 'List my Space', :disable_with => 'Creating...'
+        = f.submit "List my #{current_instance.bookable_noun}", :disable_with => 'Creating...'
 
 - content_for :script do
   :javascript
