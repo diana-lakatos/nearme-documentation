@@ -204,7 +204,8 @@ class User < ActiveRecord::Base
 
   def send_welcome_email
     unless new_record?
-      AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(id)
+      # Delete this! This is formally removed in a separte PR
+      #AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(id)
     end
   end
 
