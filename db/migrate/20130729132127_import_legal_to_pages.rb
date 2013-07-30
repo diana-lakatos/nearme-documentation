@@ -1,5 +1,13 @@
 # encoding: utf-8
 class ImportLegalToPages < ActiveRecord::Migration
+
+  class Instance < ActiveRecord::Base
+  end
+
+  class Page < ActiveRecord::Base
+    belongs_to :instance
+  end
+
   def up
     content = <<-MARKDOWN
 # Privacy Policy
