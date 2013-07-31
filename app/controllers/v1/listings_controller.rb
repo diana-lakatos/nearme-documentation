@@ -97,7 +97,7 @@ class V1::ListingsController < V1::BaseController
     listing = Listing.find(params[:id])
     message = json_params["query"]
     users.each do |user|
-      ListingMailer.share(listing, user["email"], user["name"], current_user, message).deliver!
+      ListingMailer.share(current_instance, listing, user["email"], user["name"], current_user, message).deliver!
     end
 
     head :no_content
