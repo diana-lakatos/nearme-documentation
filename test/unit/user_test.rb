@@ -193,44 +193,49 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    context 'mobile_number_updated?' do
+    context 'full_mobile_number_updated?' do
 
       should 'be true if mobile phone was updated' do
         user = FactoryGirl.create(:user)
         user.mobile_number = "31232132"
-        assert user.mobile_number_updated?
+        assert user.full_mobile_number_updated?
       end
 
       should 'be true if country was updated' do
         user = FactoryGirl.create(:user)
         user.country_name = "Poland"
-        assert user.mobile_number_updated?
+        assert user.full_mobile_number_updated?
       end
 
       should 'be false if phone was updated' do
         user = FactoryGirl.create(:user)
         user.phone = "31232132"
-        assert !user.mobile_number_updated?
+        assert !user.full_mobile_number_updated?
       end
 
     end
 
     context "update_notified_mobile_number_flag" do
 
-      should "be false if phone or country has changed" do
-        user = FactoryGirl.create(:user)
-        user.notified_about_mobile_number_issue = true
-        user.stubs(:mobile_number_updated?).returns(true)
-        user.save!
-        assert !user.notified_about_mobile_number_issue
+      setup do
+        @user = FactoryGirl.create(:user)
+        @user.notified_about_mobile_number_issue_at = Time.zone.now
       end
 
-      should "be true if mobile_number or country has not been changed" do
-        user = FactoryGirl.create(:user)
-        user.notified_about_mobile_number_issue = true
-        user.stubs(:mobile_number_updated?).returns(false)
-        user.save!
-        assert user.notified_about_mobile_number_issue
+      should "be false if phone or country has changed" do
+        @user.stubs(:full_mobile_number_updated?).returns(true)
+        @user.save!
+        assert_nil @user.notified_about_mobile_number_issue_at
+      end
+
+      should "not update timestamp when saved" do
+        Timecop.freeze(Time.zone.now)
+        @user.stubs(:full_mobile_number_updated?).returns(false)
+        notified_at = Time.zone.now - 5.days
+        @user.notified_about_mobile_number_issue_at = notified_at
+        @user.save!
+        assert_equal notified_at, @user.notified_about_mobile_number_issue_at
+        Timecop.return
       end
     end
   end
@@ -255,6 +260,12 @@ class UserTest < ActiveSupport::TestCase
         @user.notify_about_wrong_phone_number
       end
       assert_equal 1, ActionMailer::Base.deliveries.select { |mail| mail.subject.include?("text message") }.size
+    end
+
+    should 'update timestamp of notification' do
+      Timecop.freeze(Time.zone.now)
+      @user.notify_about_wrong_phone_number
+      assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a
     end
 
   end

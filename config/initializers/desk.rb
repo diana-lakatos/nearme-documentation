@@ -8,16 +8,8 @@ if Rails.env.production?
     config.oauth_token_secret = "dZ3djyXZITc8jQgYgZSMuRJofYKkabRtphKHOQbC"
   end
 
-  class IssueLogger
-
-    def log_issue(subject, customer_email, body)
-      Desk.create_interaction(:interaction_subject => subject, :customer_email => customer_email, :interaction_body => body)
-    end
-
-  end
-
-# 14-day trial since 2013-07-29 ;-) replace with a logger later?
-elsif Rails.env.development? || Rails.env.staging?
+  # 14-day trial since 2013-07-29 ;-) replace with a logger later?
+elsif Rails.env.staging?
   Desk.configure do |config|
     config.support_email = "maciej@desksnear.me"
     config.subdomain = "anamaweb"
@@ -26,21 +18,31 @@ elsif Rails.env.development? || Rails.env.staging?
     config.oauth_token = "Bia2FWlxCeDibWfBuU6B"
     config.oauth_token_secret = "hJYdFEOP3zAO0BM6uW5ps6NTZGti84Cy7AFBp8ac"
   end
+end
 
-  class IssueLogger
+class IssueLogger
 
-    def self.log_issue(subject, customer_email, body)
+  def self.log_issue(subject, customer_email, body)
+    if self.in_debug_mode?
+      Rails.logger.info "IssueLogger.log_issue: #{{:subject => subject, :customer_email => customer_email, :body => body}.inspect}"
+    else
       Desk.create_interaction(:interaction_subject => subject, :customer_email => customer_email, :interaction_body => body)
     end
-
   end
 
-else
+  def self.in_debug_mode?
+    !(Rails.env.staging? || Rails.env.production?)
+  end
 
-  class IssueLogger
+end
 
-    def self.log_issue(*args)
-      Rails.logger.info "IssueLogger.log_issue: #{args.inspect}"
+class BackgroundIssueLogger < IssueLogger
+
+  def self.log_issue(*args)
+    if self.in_debug_mode?
+      super
+    else
+      IssueLogger.delay.log_issue(*args)
     end
   end
 
