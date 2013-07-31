@@ -6,18 +6,7 @@
 class Search.SearchController extends Search.Controller
   constructor: (form, @container) ->
     super(form)
-    # for IE <= 9 - the real q sits after !#, but outdated q from url is used. So we check if
-    # the real q is equal to the q from url [ for which the page has been loaded and results shown ]
-    # and if so, redirect to the proper url. Alternative would be to just make AJAX call and replace page,
-    # but not sure how it will work with infinite page scroll etc... this is simple and Just Works ;)
-    if History.getState() && !window.history?.replaceState
-      for k, param of History.getState().data
-        if param["name"] == 'q'
-          if param.value != DNM.util.Url.getParameterByName('q')
-            document.location = History.getState().url
-
-
-
+    @redirectIfNecessary()
     @initializeDateRangeField()
 
     @listings = {}
@@ -53,6 +42,20 @@ class Search.SearchController extends Search.Controller
         return unless @redoSearchMapControl.isEnabled()
       
         @triggerSearchWithBoundsAfterDelay()
+
+  # for browsers without native html 5 support for history [ mainly IE lte 9 ] the url looks like:
+  # /search?q=OLDQUERY#search?q=NEWQUERY. Initially, results are loaded for OLDQUERY.
+  # This methods checks, if OLDQUERY == NEWQUERY, and if not, it redirect to the url after # 
+  # [ which is stored in History.getState() and contains NEWQUERY ].
+  # Updating the form instead of redirecting could be a little bit better, 
+  # but there are issues with updating google maps view etc. - remember to check it if you update the code
+  redirectIfNecessary: ->
+    if History.getState() && !window.history?.replaceState
+      for k, param of History.getState().data
+        if param.name == 'q'
+          if param.value != DNM.util.Url.getParameterByName('q')
+            document.location = History.getState().url
+
   
   initializeDateRangeField: ->
     @rangeDatePicker = new Search.RangeDatePickerFilter(
@@ -241,8 +244,10 @@ class Search.SearchController extends Search.Controller
   updateUrlForSearchQuery: ->
     url = document.location.href.replace(/\?.*$/, "")
     params = @getSearchParams()
-    url = "?#{$.param(params)}"
-    History.replaceState(params, "Search Results", decodeURIComponent(url))
+    # we need to decodeURIComponent, otherwise accents will not be handled correctly. Remove decodeURICompoent if we switch back
+    # to window.history.replaceState, but it's *absolutely mandatory* in this case. Removing it now will lead to infiite redirection in IE lte 9
+    url = decodeURIComponent("?#{$.param(params)}")
+    History.replaceState(params, "Search Results", url)
 
   updateLinksForSearchQuery: ->
     url = document.location.href.replace(/\?.*$/, "")
