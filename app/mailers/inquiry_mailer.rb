@@ -21,11 +21,11 @@ class InquiryMailer < DesksNearMeMailer
     class Preview < MailView
 
       def inquiring_user_notification
-        ::InquiryMailer.inquiring_user_notification(@instance, Inquiry.first)
+        ::InquiryMailer.inquiring_user_notification(Instance.first, Inquiry.first)
       end
 
       def listing_creator_notification
-        ::InquiryMailer.listing_creator_notification(@instance, Inquiry.first)
+        ::InquiryMailer.listing_creator_notification(Instance.first, Inquiry.first)
       end
 
     end
