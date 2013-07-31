@@ -52,4 +52,8 @@ module ListingsHelper
     @siblings ||= location.listings - [listing]
   end
 
+  # TODO: replace with real placeholder image
+  def space_listing_placeholder_url(options = {})
+    "http://placehold.it/#{options[:width]}x#{options[:height]}"
+  end
 end
