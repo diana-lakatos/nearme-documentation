@@ -4,7 +4,6 @@ class User < ActiveRecord::Base
 
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
-  after_create :send_welcome_email
 
   # Includes billing gateway helper method and sets up billing charge association
   include BillingGateway::UserHelper
@@ -220,12 +219,6 @@ class User < ActiveRecord::Base
 
   def first_listing
     companies.first.locations.first.listings.first
-  end
-
-  def send_welcome_email
-    unless new_record?
-      AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(id)
-    end
   end
 
   def has_listing_without_price?

@@ -1,8 +1,0 @@
-%article.listing
-  .details
-    - photo = listing.photos.first
-    .grid_1.alpha
-      = link_to image_tag(photo.medium.url, :title => listing.description, :alt => listing.name), listing
-    .grid_6.omega
-      %h2.tk-ratio-display= link_to listing.name, listing
-      %p= listing_inline_description(listing, 70)
