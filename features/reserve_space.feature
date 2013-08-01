@@ -49,6 +49,13 @@ Feature: A user can book at a space
     When I choose to pay manually
     Then the reservation total should show $50.00
 
+  Scenario: Free booking should show 'Free' in place of rates and $0.00 for the total
+    Given I am logged in as the user
+    And a location exists with company: that company, currency: "CAD"
+    And a listing exists with location: that location, quantity: 10, daily_price_cents: 0
+    When I go to the location's page
+    Then I should see a free booking module
+
   Scenario: Booking and paying by credit card
      Given I am logged in as the user
        When I book space with credit card for:
