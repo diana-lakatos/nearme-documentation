@@ -144,6 +144,8 @@ namespace :report do
       ]
 
       locations.each do |location|
+        next if ENV['WITHOUT_PHOTO'] and location.photos.any?
+
         csv << [
           location.created_at > (Time.now - 7.days) ? 1 : 0,
           (location.creator.name if location.creator),
@@ -198,6 +200,8 @@ namespace :report do
       ]
 
       listings.each do |listing|
+        next if ENV['WITHOUT_PHOTO'] and listing.photos.any?
+
         csv << [
           listing.created_at > (Time.now - 7.days) ? 1 : 0,
           listing.creator.name,
