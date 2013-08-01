@@ -78,6 +78,8 @@ gem 'chosen-rails'
 
 gem 'inherited_resources'
 
+gem 'desk'
+
 group :staging, :production do
   gem 'newrelic_rpm'
 end
