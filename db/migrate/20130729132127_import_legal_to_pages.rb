@@ -5,7 +5,6 @@ class ImportLegalToPages < ActiveRecord::Migration
   end
 
   class Page < ActiveRecord::Base
-    belongs_to :instance
   end
 
   def up
@@ -177,7 +176,7 @@ If you have any questions regarding these Terms or your use of the Site, please 
 
     instance = Instance.where(name: 'DesksNearMe').first
 
-    Page.create(instance: instance,
+    Page.create(instance_id: instance.id,
                 content: content,
                 path: 'legal')
   end
