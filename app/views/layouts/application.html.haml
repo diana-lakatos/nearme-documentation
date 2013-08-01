@@ -2,7 +2,7 @@
 %html
   %head
     %title
-      Desks Near Me - #{show_title? ? yield(:title) : "Find office space. Rent office space. Get to work."}
+      #{show_title? ? yield(:title) : "Find office space. Rent office space. Get to work."} | #{ content_for?(:instance_meta_title) ? yield(:instance_meta_title) : current_instance.meta_title}
     %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}
     %meta{:content => "Desks Near Me connects individuals and teams with office space across the globe, and provides a platform for businesses to list spare space.", :name => "description"}/
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/

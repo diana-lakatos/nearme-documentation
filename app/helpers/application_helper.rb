@@ -12,6 +12,10 @@ module ApplicationHelper
     @show_title = show_title
   end
 
+  def instance_meta_title(name)
+    content_for(:instance_meta_title) { h(name.to_s) }
+  end
+
   def legacy(is_legacy = true)
     @is_legacy = is_legacy
   end
