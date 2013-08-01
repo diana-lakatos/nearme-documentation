@@ -17,11 +17,17 @@ module EmailHelpers
     end
   end
 
+  def emails_for(email)
+    ActionMailer::Base.deliveries.select { |m| m.to.include?(email) }
+  end
+
+
   def last_email_for(email)
-    last_email = mailbox_for(email).last
+    last_email = emails_for(email).last
     last_email.should_not be_nil, "No emails sent to #{email}, expected an email"
     last_email
   end
+
 end
 
 World(EmailHelpers)
