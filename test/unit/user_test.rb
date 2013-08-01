@@ -157,42 +157,119 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context "#phone_or_country_was_changed?" do
-      context "previous value was blank" do
-        context "phone was changed" do
-          should "return true" do
-            user = User.new
-            user.phone = 456
-            assert user.phone_or_country_was_changed?
-          end
-        end
-
-        context "country_name was changed" do
-          should "return true" do
-            user = User.new
-            user.country_name = "Slovenia"
-            assert user.phone_or_country_was_changed?
-          end
+    context "previous value was blank" do
+      context "phone was changed" do
+        should "return true" do
+          user = User.new
+          user.phone = 456
+          assert user.phone_or_country_was_changed?
         end
       end
 
-      context "previous value wasn't blank" do
-        context "phone was changed" do
-          should "return false" do
-            user = FactoryGirl.create(:user)
-            user.phone = 456
-            assert !user.phone_or_country_was_changed?
-          end
-        end
-
-        context "country_name was changed" do
-          should "return false" do
-            user = FactoryGirl.create(:user)
-            user.country_name = "Slovenia"
-            assert !user.phone_or_country_was_changed?
-          end
+      context "country_name was changed" do
+        should "return true" do
+          user = User.new
+          user.country_name = "Slovenia"
+          assert user.phone_or_country_was_changed?
         end
       end
+    end
+
+    context "previous value wasn't blank" do
+      context "phone was changed" do
+        should "return false" do
+          user = FactoryGirl.create(:user)
+          user.phone = 456
+          assert !user.phone_or_country_was_changed?
+        end
+      end
+
+      context "country_name was changed" do
+        should "return false" do
+          user = FactoryGirl.create(:user)
+          user.country_name = "Slovenia"
+          assert !user.phone_or_country_was_changed?
+        end
+      end
+    end
+
+    context 'full_mobile_number_updated?' do
+
+      should 'be true if mobile phone was updated' do
+        user = FactoryGirl.create(:user)
+        user.mobile_number = "31232132"
+        assert user.full_mobile_number_updated?
+      end
+
+      should 'be true if country was updated' do
+        user = FactoryGirl.create(:user)
+        user.country_name = "Poland"
+        assert user.full_mobile_number_updated?
+      end
+
+      should 'be false if phone was updated' do
+        user = FactoryGirl.create(:user)
+        user.phone = "31232132"
+        assert !user.full_mobile_number_updated?
+      end
+
+    end
+
+    context "update_notified_mobile_number_flag" do
+
+      setup do
+        @user = FactoryGirl.create(:user)
+        @user.notified_about_mobile_number_issue_at = Time.zone.now
+      end
+
+      should "be false if phone or country has changed" do
+        @user.stubs(:full_mobile_number_updated?).returns(true)
+        @user.save!
+        assert_nil @user.notified_about_mobile_number_issue_at
+      end
+
+      should "not update timestamp when saved" do
+        Timecop.freeze(Time.zone.now)
+        @user.stubs(:full_mobile_number_updated?).returns(false)
+        notified_at = Time.zone.now - 5.days
+        @user.notified_about_mobile_number_issue_at = notified_at
+        @user.save!
+        assert_equal notified_at, @user.notified_about_mobile_number_issue_at
+        Timecop.return
+      end
+    end
   end
+
+  context "notify about invalid mobile phone" do
+
+    setup do
+      @user = FactoryGirl.create(:user)
+    end
+
+    should 'notify user about invalid phone via email' do
+      @user.notify_about_wrong_phone_number
+      sent_mail = ActionMailer::Base.deliveries.last
+      assert_equal [@user.email], sent_mail.to
+      assert_equal ['support@desksnear.me'], sent_mail.from
+      assert sent_mail.body.encoded.include?('+118889983375'), "Body did not include expected phone number +118889983375"
+      assert sent_mail.body.encoded.include?('<a href="http://desksnear.me/users/edit">here to access your settings.</a>'), "Body did not include expected link to edit profile"
+    end
+
+    should 'not spam user' do
+      5.times do 
+        @user.notify_about_wrong_phone_number
+      end
+      assert_equal 1, ActionMailer::Base.deliveries.select { |mail| mail.subject.include?("text message") }.size
+    end
+
+    should 'update timestamp of notification' do
+      Timecop.freeze(Time.zone.now)
+      @user.notify_about_wrong_phone_number
+      assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a
+    end
+
+  end
+
 
   context "mailchimp" do
 

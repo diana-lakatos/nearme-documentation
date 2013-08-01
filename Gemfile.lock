@@ -131,6 +131,16 @@ GEM
     delayed_job_active_record (0.4.1)
       activerecord (>= 2.1.0, < 4)
       delayed_job (~> 3.0)
+    desk (0.3.3)
+      faraday (~> 0.8.0)
+      faraday_middleware (~> 0.9.0)
+      hashie (~> 1.2.0)
+      json (~> 1.7)
+      multi_json (~> 1.6)
+      multi_xml (~> 0.5)
+      pony (~> 1.1)
+      rash (~> 0.3.1)
+      simple_oauth (~> 0.1.4)
     devise (2.2.4)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -159,6 +169,8 @@ GEM
       railties (>= 3.0.0)
     faraday (0.8.4)
       multipart-post (~> 1.1)
+    faraday_middleware (0.9.0)
+      faraday (>= 0.7.4, < 0.9)
     ffaker (1.15.0)
     ffi (1.9.0)
     fog (1.8.0)
@@ -207,8 +219,10 @@ GEM
       sprockets (>= 2.0.3)
       tilt
     has_scope (0.5.1)
-    hashie (2.0.5)
+    hashie (1.2.0)
     hike (1.2.1)
+    historyjs-rails (1.0.1)
+      railties (>= 3.0)
     httparty (0.11.0)
       multi_json (~> 1.0)
       multi_xml (>= 0.5.2)
@@ -240,6 +254,7 @@ GEM
     kgio (2.8.0)
     launchy (2.1.2)
       addressable (~> 2.3)
+    le (2.1.9)
     listen (0.7.2)
     lumberjack (1.0.2)
     mail (2.5.3)
@@ -314,6 +329,8 @@ GEM
       cucumber (>= 0.8)
       rake
     polyglot (0.3.3)
+    pony (1.5)
+      mail (> 2.0)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -360,6 +377,8 @@ GEM
       thor (>= 0.14.6, < 2.0)
     raindrops (0.10.0)
     rake (10.0.3)
+    rash (0.3.2)
+      hashie (~> 1.2.0)
     rb-fsevent (0.9.3)
     rdiscount (1.6.8)
     rdoc (3.12.2)
@@ -413,6 +432,7 @@ GEM
     simple_form (2.0.4)
       actionpack (~> 3.0)
       activemodel (~> 3.0)
+    simple_oauth (0.1.9)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
@@ -498,6 +518,7 @@ DEPENDENCIES
   database_cleaner
   decent_exposure
   delayed_job_active_record
+  desk
   devise (~> 2.2)
   dropbox-api
   email_spec
@@ -516,6 +537,7 @@ DEPENDENCIES
   guard-spork
   haml
   handlebars_assets
+  historyjs-rails
   icalendar
   inherited_resources
   jasmine
@@ -523,6 +545,7 @@ DEPENDENCIES
   jquery-rails
   json_spec (= 0.5.0)
   launchy
+  le
   mail_view
   mini_magick
   minitest

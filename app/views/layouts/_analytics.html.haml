@@ -1,4 +1,4 @@
 = javascript_include_tag 'analytics/ga'
-= javascript_include_tag 'analytics/inspectlet'
+= javascript_include_tag 'analytics/inspectlet' if Rails.env.production?
 
 = render 'shared/mixpanel'

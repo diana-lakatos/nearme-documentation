@@ -20,12 +20,12 @@
       = f.input :password, :label => false, placeholder: "Password", :input_html => { :tabindex => '3' }
       %span.ico-lock
 
-    %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", legal_path, :target => '_blank'}.
+    %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", pages_path('legal'), :target => '_blank'}.
 
     .actions
       = f.submit 'Sign up', :class => 'desksnearme submit', :disable_with => "Signing up...", :tabindex => '4'
 
-.text-center.already-a-user= link_to('Already a user?', new_user_session_path(:return_to => params[:return_to]), :rel => "modal.sign-up-modal")      
+.text-center.already-a-user= link_to('Already a user?', new_user_session_path(:return_to => params[:return_to]), :rel => "modal.sign-up-modal")
 
 - if user_auth_provider
   .signup-provider

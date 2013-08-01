@@ -114,19 +114,6 @@ ActiveRecord::Schema.define(:version => 20130729223727) do
 
   add_index "domains", ["instance_id"], :name => "index_domains_on_instance_id"
 
-  create_table "guest_ratings", :force => true do |t|
-    t.integer  "reservation_id"
-    t.integer  "user_id"
-    t.float    "value"
-    t.text     "comment"
-    t.datetime "deleted_at"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "guest_ratings", ["reservation_id", "value"], :name => "index_guest_ratings_on_reservation_id_and_value"
-  add_index "guest_ratings", ["user_id", "value"], :name => "index_guest_ratings_on_user_id_and_value"
-
   create_table "industries", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -157,7 +144,6 @@ ActiveRecord::Schema.define(:version => 20130729223727) do
     t.string   "blog_url"
     t.string   "twitter_url"
     t.string   "facebook_url"
-    t.string   "title_tag"
     t.string   "bookable_noun", :default => "Desk"
   end
 
@@ -278,9 +264,9 @@ ActiveRecord::Schema.define(:version => 20130729223727) do
     t.datetime "failed_at"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
-    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
+    t.integer  "payment_transfer_id"
   end
 
   add_index "reservation_charges", ["payment_transfer_id"], :name => "index_reservation_charges_on_payment_transfer_id"
@@ -360,13 +346,13 @@ ActiveRecord::Schema.define(:version => 20130729223727) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                    :default => "",    :null => false
-    t.string   "encrypted_password",        :limit => 128, :default => "",    :null => false
-    t.string   "password_salt",                            :default => "",    :null => false
+    t.string   "email",                                                :default => "",    :null => false
+    t.string   "encrypted_password",                    :limit => 128, :default => "",    :null => false
+    t.string   "password_salt",                                        :default => "",    :null => false
     t.string   "reset_password_token"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                            :default => 0
+    t.integer  "sign_in_count",                                        :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -375,13 +361,13 @@ ActiveRecord::Schema.define(:version => 20130729223727) do
     t.datetime "updated_at"
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                           :default => 0,     :null => false
+    t.integer  "bookings_count",                                       :default => 0,     :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "locked_at"
     t.datetime "reset_password_sent_at"
-    t.integer  "failed_attempts",                          :default => 0
+    t.integer  "failed_attempts",                                      :default => 0
     t.string   "authentication_token"
     t.string   "avatar"
     t.string   "confirmation_token"
@@ -392,10 +378,11 @@ ActiveRecord::Schema.define(:version => 20130729223727) do
     t.string   "job_title"
     t.text     "biography"
     t.datetime "mailchimp_synchronized_at"
-    t.boolean  "verified",                                 :default => false
+    t.boolean  "verified",                                             :default => false
     t.string   "country_name"
     t.string   "mobile_number"
     t.integer  "instance_id"
+    t.datetime "notified_about_mobile_number_issue_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
@@ -412,18 +399,5 @@ ActiveRecord::Schema.define(:version => 20130729223727) do
   end
 
   add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
-
-  create_table "visit_ratings", :force => true do |t|
-    t.integer  "reservation_id"
-    t.integer  "user_id"
-    t.float    "value"
-    t.text     "comment"
-    t.datetime "deleted_at"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "visit_ratings", ["reservation_id", "value"], :name => "index_visit_ratings_on_reservation_id_and_value"
-  add_index "visit_ratings", ["user_id", "value"], :name => "index_visit_ratings_on_user_id_and_value"
 
 end
