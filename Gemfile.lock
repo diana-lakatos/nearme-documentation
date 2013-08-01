@@ -240,6 +240,7 @@ GEM
     kgio (2.8.0)
     launchy (2.1.2)
       addressable (~> 2.3)
+    le (2.1.9)
     listen (0.7.2)
     lumberjack (1.0.2)
     mail (2.5.3)
@@ -523,6 +524,7 @@ DEPENDENCIES
   jquery-rails
   json_spec (= 0.5.0)
   launchy
+  le
   mail_view
   mini_magick
   minitest
