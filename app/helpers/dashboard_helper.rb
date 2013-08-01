@@ -90,9 +90,9 @@ module DashboardHelper
   end
 
   def labels_for_chart
-    @labels_for_chart ||= [].tap do |arr|
-      (0..6).each { |i| arr << format_charge_date_for_graph(Time.zone.now - i.day) }
-    end.sort
+    @labels_for_chart ||= (0..6).to_a.reverse.map { |i|
+      format_charge_date_for_graph(Time.zone.now - i.day)
+    }
   end
 
   def format_charge_date_for_graph(datetime)
