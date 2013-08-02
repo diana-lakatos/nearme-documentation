@@ -4,6 +4,7 @@ FactoryGirl.define do
     name 'DesksNearMe'
     site_name 'Desks Near Me'
     tagline 'Find a space to work'
+    meta_title 'Desks Near Me'
     support_email 'support@desksnear.me'
     contact_email 'support@desksnear.me'
     address '185 Clara St #100, San Francisco CA 94107'
