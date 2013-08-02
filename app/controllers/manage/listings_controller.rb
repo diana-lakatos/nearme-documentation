@@ -37,9 +37,7 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def update
-    @listing.attributes = params[:listing]
-
-    if @listing.save
+    if @listing.update_attributes params[:listing]
       flash[:success] = "Great, your listing's details have been updated."
       redirect_to manage_locations_path
     else

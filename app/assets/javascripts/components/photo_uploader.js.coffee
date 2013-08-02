@@ -13,14 +13,17 @@ class @PhotoUploader
 
   constructor : (container) ->
     @container = container
+    @sortable = container.find('#sortable-photos')
     @fileInput = container.find('.browse-file').eq(0)
     @photos = container.find('.photo-item a')
     @uploaded = container.find('.uploaded').eq(0)
+
     @init()
   
   init : ->
     @listenToDeletePhoto()
     @initializeFileUploader()
+    @initializeSortable()
 
   listenToDeletePhoto: ->
     @uploaded.on 'click', '.delete-photo', (event) ->
@@ -44,6 +47,14 @@ class @PhotoUploader
           data.result = @parseResult(data)
           @progress(data)
     }
+
+  initializeSortable: ->
+    @sortable.sortable
+      stop: =>
+        for index, el of @sortable.sortable('toArray')[1..] # first element is hidden, don't count it
+          $("##{el}").find('.order-position').val(index)
+      placeholder: 'photo-placeholder',
+    @sortable.disableSelection();
 
   add: (data) =>
     @setPhotoItem(@getUniqueString(data))
@@ -81,8 +92,8 @@ class @PhotoUploader
 
   setPhotoItem: (filename) =>
     if @multiplePhoto()
-      @photoItem = $('<li class="photo-item"></li>')
-      @uploaded.find('ul').append(@photoItem)
+      @photoItem = $('<div class="photo-item"></div>')
+      @sortable.append(@photoItem)
     else
       if @singlePhotoExists()
         @photoItem = @uploaded.find('.photo-item').eq(0)
@@ -102,7 +113,7 @@ class @PhotoUploader
         @photoItem.append('<div class="progress"><div class="bar"></div></div>')
 
   multiplePhoto: =>
-    @uploaded.find('ul').length > 0
+    @sortable.length > 0
 
   singlePhotoExists: =>
     @uploaded.find('img').length > 0
@@ -126,9 +137,17 @@ class @PhotoUploader
         name_prefix = input.attr('name') + '[' + data_number + ']'
         input.attr('name', name_prefix + '[caption]')
         @photoItem.append(input)
-        @photoItem.append('<input type="hidden" name="' + name_prefix + '[id]" value="' + data.result.id + '">')
+        @photoItem.attr('id', "photo-#{data.result.id}")
+        hidden = $('<input>').attr('type', 'hidden')
+        hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(data.result.id)
+        hidden_position = hidden.clone().attr('name', "#{name_prefix}[position]").val(@getLastPosition()).addClass('order-position')
+        @photoItem.append(hidden_id)
+        @photoItem.append(hidden_position)
       else
         @photoItem.append('<input type="hidden" name="uploaded_photos[]" value="' + data.result.id + '">')
+
+  getLastPosition: ->
+    @sortable.find('.photo-item:not(.hidden)').length
 
   getUniqueString: (data) ->
     if $.browser.msie && parseInt($.browser.version) < 10

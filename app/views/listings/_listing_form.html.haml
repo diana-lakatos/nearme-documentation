@@ -76,19 +76,29 @@
         = f.check_box :confirm_reservations
 
 - if only_inputs.empty? || only_inputs.include?(:photos)
-  = file_upload_input_with_label('Photos', manage_photos_path('size' => 'thumb'), "#{photo_input_name_prefix}[photos_attributes][0][image]", "Upload Photos") do
+  = file_upload_input_with_label('Photos',
+                                  manage_photos_path('size' => 'medium'),
+                                  "#{photo_input_name_prefix}[photos_attributes][0][image]",
+                                   "Upload Photos") do
     - if listing && listing.persisted?
-      %li.hidden.photo-item
+      %div.hidden.photo-item
         = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes]", nil, :placeholder => 'Enter Photo Caption...', :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
       - i = 0
       - # existing listing - we want to display only photos that belong to this listing
       - listing.photos.each do |photo|
-        = get_fileupload_photo_html(photo.image_url(:space_listing), destroy_space_wizard_photo_path(:id => photo.id), :li, ((text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{i}][caption]", photo.caption, :placeholder => 'Enter Photo Caption...', 'data-number' => i) + (hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{i}][id]", photo.id )) )
+        = get_fileupload_photo_html(photo.image_url(:medium),
+                                    destroy_space_wizard_photo_path(:id => photo.id),
+                                    :div,
+                                    id: photo.id) do
+          = text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{i}][caption]", photo.caption, :placeholder => 'Enter Photo Caption...', 'data-number' => i
+          = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{i}][id]", photo.id
+          = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{i}][position]", photo.position, class: 'order-position'
+
         - i += 1
     - else
       - # new listing - if user uploaded photos and reloaded the page, we want to display all photos that do not belong to anything so far
-      - current_user.photos.select { |p| p.content.nil? && p.content_type=='Listing' }.each do |photo|
-        = fileupload_photo_with_input(photo.image_url(:thumb), destroy_space_wizard_photo_path(:id => photo.id), photo.id)
+      - current_user.photos.no_content.for_listing.each do |photo|
+        = fileupload_photo_with_input(photo.image_url(:medium), destroy_space_wizard_photo_path(:id => photo.id), photo.id)
 
 .hidden
   - Money::Currency.table.values.each do |c|

@@ -25,16 +25,20 @@ module FileuploadHelper
     get_fileupload_photo_html(photo_url, destroy_photo_path, html_tag)
   end
 
-  def get_fileupload_photo_html(photo_url, destroy_photo_path, html_tag = :li, content = '', options = {}, &block)
-    content_tag(html_tag, 
+  def get_fileupload_photo_html(photo_url, destroy_photo_path, html_tag = :li, options = {}, &block)
+    id = options[:id] ? "photo-#{options[:id]}" : ''
+    content = capture(&block).html_safe if block_given?
+    content_tag(html_tag,
       image_tag(photo_url) + 
       link_to(content_tag(:span, '', :class=> 'ico-trash'), '' , {"data-url" => destroy_photo_path, :class => 'delete-photo delete-photo-thumb'}) +
-      content.html_safe,
-    :class => 'photo-item')
+      content,
+    :class => 'photo-item', id: id)
   end
 
   def fileupload_photo_with_input(photo_url, destroy_photo_path, input_value, input_name = 'uploaded_photos[]',  html_tag = :li, options = {}, &block)
-    get_fileupload_photo_html(photo_url, destroy_photo_path, html_tag, "<input name='#{input_name}' value='#{input_value}' type='hidden'>", &block)
+    get_fileupload_photo_html(photo_url, destroy_photo_path, html_tag) do
+      "<input name='#{input_name}' value='#{input_value}' type='hidden'>".html_safe
+    end
   end
   
   
@@ -45,7 +49,7 @@ module FileuploadHelper
       if options["no-multiple"]
         capture(&block)
       else
-        content_tag(:ul, capture(&block))
+        content_tag(:div, capture(&block), id: 'sortable-photos', 'data-url' => options[:update_url])
       end
     else
       if options["no-multiple"]
