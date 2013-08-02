@@ -2,7 +2,7 @@
   .name
     - if location.persisted? 
       - if in_new_listing?
-        New Listing at #{location.street}
+        New #{current_instance.bookable_noun} at #{location.street}
       - else
         = location.street 
         = link_to '', location_path(location), :class => 'ico-open-link'
@@ -12,7 +12,7 @@
     .links
       = link_to new_manage_location_listing_path(location), :class => 'ico-add-desk' do
         %span
-          Add Listing
+          Add #{current_instance.bookable_noun}
       = link_to edit_manage_location_path(location), :class => 'ico-edit' do
         %span
           Edit Location

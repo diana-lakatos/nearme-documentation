@@ -40,12 +40,19 @@ class ApplicationController < ActionController::Base
         ActiveSupport::JSON.decode(cookies.signed[:mixpanel_session_properties]) rescue nil
       end
 
+      # Gather information about requests
+      request_details = {
+        :current_instance_id => current_instance.try(:id),
+        :current_host => request.try(:host)
+      }
+
       # Detect an anonymous identifier, if any.
       anonymous_identity = cookies.signed[:mixpanel_anonymous_id]
 
       MixpanelApi.new(
         MixpanelApi.mixpanel_instance,
         :current_user       => current_user,
+        :request_details    => request_details,
         :anonymous_identity => anonymous_identity,
         :session_properties => session_properties,
         :request_params     => params
@@ -144,5 +151,10 @@ class ApplicationController < ActionController::Base
   def paper_trail_enabled_for_controller
     devise_controller? ? false : true
   end
+
+  def handle_invalid_mobile_number(user)
+    Delayed::Job.enqueue Delayed::PerformableMethod.new(user, :notify_about_wrong_phone_number, nil)
+  end
+
 end
 

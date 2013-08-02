@@ -54,7 +54,7 @@ class DashboardHelperTest < ActionView::TestCase
       end
 
       should 'populate values array with 0 even if no charge has been made' do
-        assert_equal [[0, 0, 0, 1.5, 0, 3, 0], [0, 0, 0, 3.5, 0, 7, 0]],
+        assert_equal [[0, 0, 0, 1.5, 0, 3.0, 0], [0, 0, 0, 3.5, 0, 7.0, 0]],
           values_for_chart(ReservationCharge.all)
       end
 

@@ -21,6 +21,7 @@ gem 'geocoder'
 gem 'gravtastic'
 gem 'sass'
 gem 'haml'
+gem 'le'
 gem 'mini_magick'
 gem 'money-rails'
 gem 'oauth'
@@ -77,6 +78,9 @@ gem 'handlebars_assets'
 gem 'chosen-rails'
 
 gem 'inherited_resources'
+gem "historyjs-rails"
+
+gem 'desk'
 
 group :staging, :production do
   gem 'newrelic_rpm'
