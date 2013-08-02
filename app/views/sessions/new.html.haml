@@ -29,7 +29,7 @@
             =raw "Forgot? #{link_to('Reset your password', new_user_password_url(return_to: params[:return_to]), :rel => 'modal.sign-up-modal')}"
 
           .actions
-            = f.submit "Log In", :input_html => { :tabindex => '3' }
+            = f.submit "Log In", :tabindex => '3'
 
         .text-center.already-a-user= link_to('New User?', new_user_registration_path(:return_to => params[:return_to]), :rel => "modal.sign-up-modal")      
   
