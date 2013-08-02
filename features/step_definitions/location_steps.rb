@@ -43,3 +43,8 @@ Then /^I should see highlighted #{capture_model}$/ do |listing_model|
     page.should have_css(".listing-name", :text => listing.name)
   end
 end
+
+Then /^I should see other listings near "(.*)"$/ do |address|
+  page.should have_content("Displaying other listings near #{address}")
+  assert_equal search_path(:q => address), "#{URI.parse(current_url).path}?#{URI.parse(current_url).query}"
+end

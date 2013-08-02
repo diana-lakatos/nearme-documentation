@@ -31,7 +31,13 @@ class LocationsController < ApplicationController
   end
 
   def find_location
-    @location = Location.find(params[:id])
+    begin
+      @location = Location.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      @deleted_location = Location.only_deleted.find(params[:id])
+      flash[:warning] =  "This listing has been removed. Displaying other listings near #{@deleted_location.address}."
+      redirect_to search_path(:q => @deleted_location.address)
+    end
   end
 
   def redirect_for_location_custom_page

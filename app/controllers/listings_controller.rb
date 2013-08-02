@@ -6,13 +6,19 @@ class ListingsController < ApplicationController
   end
 
   def show
-    @listing = Listing.find(params[:id])
     redirect_to location_url(@listing.location, :listing_id => params[:id])
   end
 
   protected
 
   def find_listing
-    @listing = Listing.find(params[:id])
+    begin
+      @listing = Listing.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      @deleted_listing = Listing.only_deleted.find(params[:id])
+      @location = Location.with_deleted.find(@deleted_listing.location_id)
+      flash[:warning] =  "This listing has been removed. Displaying other listings near #{@location.address}."
+      redirect_to search_path(:q => @location.address)
+    end
   end
 end

@@ -37,6 +37,18 @@ module NavigationHelpers
 
     when /the admin instances page/
       admin_instances_path
+ 
+    when /^#{capture_model} page which belong to deleted location$/   # eg. deleted listing page
+      obj = model($1)
+      deleted = obj.location.destroy
+      raise "Destroy failed for #{$1}" unless deleted
+      send("#{obj.class.name.downcase}_path", obj)
+
+    when /^deleted #{capture_model} page$/   # eg. deleted listing page
+      obj = model($1)
+      deleted = obj.destroy
+      raise "Destroy failed for #{$1}" unless deleted
+      send("#{obj.class.name.downcase}_path", obj)
 
     when /^#{capture_model}(?:'s)? page$/                           # eg. the forum's page
       path_to_pickle $1
