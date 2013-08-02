@@ -55,7 +55,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :listings, :only => [:index, :show] do
-    resources :reservations, :only => [:create, :update, :show], :controller => "listings/reservations" do
+    resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
       post :review, :on => :collection
       get :hourly_availability_schedule, :on => :collection
     end
