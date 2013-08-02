@@ -5,8 +5,9 @@ class AfterSignupMailer < DesksNearMeMailer
   layout false
 
 
-  def help_offer(user_id)
+  def help_offer(instance, user_id)
     @user = User.find(user_id)
+    @instance = instance
     @sent_by = 'Michelle R'
 
     mail to:      @user.email,
@@ -21,19 +22,22 @@ class AfterSignupMailer < DesksNearMeMailer
 
       def help_offer_with_listing
         @user = User.all.detect { |u| !u.listings.empty?  }
-        ::AfterSignupMailer.help_offer(@user)
+        @instance = Instance.first
+        ::AfterSignupMailer.help_offer(@instance, @user)
       end
 
       def help_offer_with_booking
         @user = User.all.detect { |u| !u.reservations.empty? && u.listings.empty? }
+        @instance = Instance.first
         raise "No user with booking and without listing" unless @user
-        ::AfterSignupMailer.help_offer(@user)
+        ::AfterSignupMailer.help_offer(@instance, @user)
       end
 
       def help_offer_without_listing_and_booking
         @user = User.all.detect { |u| u.listings.empty? && u.reservations.empty? }
+        @instance = Instance.first
         raise "No user without listing and without reservation" unless @user
-        ::AfterSignupMailer.help_offer(@user)
+        ::AfterSignupMailer.help_offer(@instance, @user)
       end
 
     end

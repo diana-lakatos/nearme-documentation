@@ -21,4 +21,7 @@ DesksnearMe::Application.configure do
   config.assets.digest = false
 
   config.exceptions_app = nil
+
+  # Call Delayed Job methods immediatly instead of moving to background queue
+  Delayed::Worker.delay_jobs = false
 end

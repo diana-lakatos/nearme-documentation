@@ -13,6 +13,7 @@ FactoryGirl.define do
     blog_url 'http://blog.desksnear.me/'
     twitter_url 'https://twitter.com/desksnearme'
     facebook_url 'https://www.facebook.com/DesksNearMe'
+    bookable_noun 'Desk'
     partner
     after :build do |instance|
       instance.domains << build(:domain, name: instance.name.parameterize.underscore)

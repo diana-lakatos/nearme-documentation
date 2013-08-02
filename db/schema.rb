@@ -130,8 +130,8 @@ ActiveRecord::Schema.define(:version => 20130801205126) do
 
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
     t.integer  "partner_id"
     t.string   "site_name"
     t.string   "description"
@@ -144,7 +144,11 @@ ActiveRecord::Schema.define(:version => 20130801205126) do
     t.string   "blog_url"
     t.string   "twitter_url"
     t.string   "facebook_url"
+<<<<<<< HEAD
+    t.string   "bookable_noun", :default => "Desk"
+=======
     t.string   "meta_title"
+>>>>>>> master
   end
 
   create_table "listing_types", :force => true do |t|

@@ -1,5 +1,5 @@
 - locations.each do |location|
-  %p You currently have no reservations. Promote your locations by tweeting or sharing a direct link!
+  %p You currently have no reservations. Promote your #{current_instance.bookable_noun.pluralize} by tweeting or sharing a direct link!
   %ul
     %li
       =link_to tweet_location_url(location), :ref => "mg", :class => 'btn btn-blue btn-large twitter submit' do
