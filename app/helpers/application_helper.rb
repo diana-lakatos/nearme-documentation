@@ -12,8 +12,13 @@ module ApplicationHelper
     @show_title = show_title
   end
 
-  def instance_meta_title(name)
-    content_for(:instance_meta_title) { h(name.to_s) }
+  def meta_title(name)
+    content_for(:meta_title) { h(name.to_s) }
+  end
+
+  def title_tag
+    (show_title? ? content_for(:title) : "Find office space. Rent office space. Get to work.") + " | " +
+    (content_for?(:meta_title) ? content_for(:meta_title) : current_instance.meta_title)
   end
 
   def legacy(is_legacy = true)
