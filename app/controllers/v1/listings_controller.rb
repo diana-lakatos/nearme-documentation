@@ -21,8 +21,7 @@ class V1::ListingsController < V1::BaseController
 
   def create
     @listing = Listing.create(params[:listing])
-    @listing.location_id = params["location_id"]
-    if @listing.save
+    if @listing.with_photo_validation.save
       render :json => {:success => true, :id => @listing.id}
     else
       logger.info("ERRORS:#{@listing.errors.full_messages}")
@@ -36,7 +35,7 @@ class V1::ListingsController < V1::BaseController
     end
     @listing.attributes = params[:listing]
 
-    if @listing.save
+    if @listing.with_photo_validation.save
       render :json => @listing, :root => false, :serializer => ListingWebSerializer
     else
       render :json => { :errors => @listing.errors.full_messages }, :status => 422

@@ -1,7 +1,9 @@
 module FileuploadHelper
+  include FormHelper
 
   def file_upload_input(url, name, text='Photos', options = {}, &block)
     uploaded_content = get_uploaded_content(options, &block)
+    error_message = options.delete(:error)
     content_tag(:div, 
       content_tag(:div, uploaded_content, :class => 'uploaded') +
       content_tag(:label, 
@@ -9,12 +11,14 @@ module FileuploadHelper
           content_tag(:span, '', :class => "ico-upload-photos padding") +
           content_tag(:span, text),
         :class => "btn btn-blue btn-medium upload-photos fileinput-button") +
-        "<input class='browse-file' #{"multiple" unless options["no-multiple"]} type='file' name='#{name}' data-url='#{url}'>".html_safe,
+        "<input class='browse-file' #{"multiple" unless options["no-multiple"]} type='file' name='#{name}' data-url='#{url}'>".html_safe +
+        error_message_tag(error_message),
       :class => 'action'),
     :class => 'fileupload')
   end
 
   def file_upload_input_with_label(label, url, name, text='Photos', options = {}, &block)
+    label = required_field + label if options.delete(:required)
     content_tag(:div, 
       "<label class='text optional control-label' for='#{name}'>#{label}</label>".html_safe +
       content_tag(:div, file_upload_input(url, name, text, options, &block), :class => 'controls'), 
@@ -40,6 +44,11 @@ module FileuploadHelper
   
 
   private
+
+  def error_message_tag(text)
+    content_tag(:p, text, :class => 'error-block').html_safe if text
+  end
+
   def get_uploaded_content(options, &block)
     if block_given?
       if options["no-multiple"]
