@@ -23,9 +23,13 @@ class MixpanelApi
   # triggered events.
   attr_reader :session_properties
 
+  # Hash of additional request information that are applied globally to any
+  # triggered events.
+  attr_reader :request_details
+
   # Creates a new mixpanel API interface instance
-  def self.mixpanel_instance
-    Mixpanel::Tracker.new(MIXPANEL_TOKEN)
+  def self.mixpanel_instance(options = {})
+    Mixpanel::Tracker.new(MIXPANEL_TOKEN, options)
   end
 
   # Initialize a mixpanel wrapper.
@@ -33,6 +37,7 @@ class MixpanelApi
   # mixpanel - The basic mixpanel API object
   # options  - A set of additional options relevant to our setup
   #            current_user - The current user object, if the user is logged in.
+  #            request_details - Hash with important tracking information like Id of Instance that was used, request host
   #            anonymous_identity - The current anonymous identifier, if any.
   #            session_properties - Hash of persisted global properties to apply to
   #                                 all events.
@@ -42,6 +47,7 @@ class MixpanelApi
     @current_user = options[:current_user]
     @anonymous_identity = options[:anonymous_identity] || (generate_anonymous_identity unless @current_user)
     @session_properties = (options[:session_properties] || {}).with_indifferent_access
+    @request_details = (options[:request_details] || {}).with_indifferent_access
 
     extract_properties_from_params(options[:request_params])
   end
@@ -67,8 +73,9 @@ class MixpanelApi
       :distinct_id => distinct_id
     )
 
-    # Assign any global session properties
+    # Assign any global properties
     properties.reverse_merge!(session_properties)
+    properties.reverse_merge!(request_details)
 
     # Trigger tracking the event
     @mixpanel.track(event_name, properties, options)

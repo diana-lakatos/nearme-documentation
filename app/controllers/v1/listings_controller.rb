@@ -86,8 +86,8 @@ class V1::ListingsController < V1::BaseController
     @message = json_params["query"]
 
     inquiry = listing.inquiry_from!(current_user, message: @message)
-    InquiryMailer.inquiring_user_notification(inquiry).deliver!
-    InquiryMailer.listing_creator_notification(inquiry).deliver!
+    InquiryMailer.inquiring_user_notification(current_instance, inquiry).deliver!
+    InquiryMailer.listing_creator_notification(current_instance, inquiry).deliver!
 
     head :no_content
   end
@@ -97,7 +97,7 @@ class V1::ListingsController < V1::BaseController
     listing = Listing.find(params[:id])
     message = json_params["query"]
     users.each do |user|
-      ListingMailer.share(listing, user["email"], user["name"], current_user, message).deliver!
+      ListingMailer.share(current_instance, listing, user["email"], user["name"], current_user, message).deliver!
     end
 
     head :no_content

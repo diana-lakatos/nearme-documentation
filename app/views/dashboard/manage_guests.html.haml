@@ -9,7 +9,7 @@
         - if @locations.present?
           = render 'dashboard/manage_guests/promote_locations', locations: @locations
         - else
-          %p You haven't added a listing yet!
+          %p You haven't added a #{current_instance.bookable_noun} yet!
       - else
         %section#reservations.tab
           .reservations.list

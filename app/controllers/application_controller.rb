@@ -40,12 +40,26 @@ class ApplicationController < ActionController::Base
         ActiveSupport::JSON.decode(cookies.signed[:mixpanel_session_properties]) rescue nil
       end
 
+      # Gather information about requests
+      request_details = {
+        :current_instance_id => current_instance.try(:id),
+        :current_host => request.try(:host)
+      }
+
+      env = {
+        'REMOTE_ADDR' => request.env['REMOTE_ADDR'],
+        'HTTP_X_FORWARDED_FOR' => request.env['HTTP_X_FORWARDED_FOR'],
+        'rack.session' => request.env['rack.session'],
+        'mixpanel_events' => request.env['mixpanel_events']
+      }
+
       # Detect an anonymous identifier, if any.
       anonymous_identity = cookies.signed[:mixpanel_anonymous_id]
 
       MixpanelApi.new(
-        MixpanelApi.mixpanel_instance,
+        MixpanelApi.mixpanel_instance({:env => env}),
         :current_user       => current_user,
+        :request_details    => request_details,
         :anonymous_identity => anonymous_identity,
         :session_properties => session_properties,
         :request_params     => params
