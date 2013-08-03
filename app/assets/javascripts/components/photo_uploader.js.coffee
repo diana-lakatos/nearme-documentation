@@ -26,12 +26,14 @@ class @PhotoUploader
     @initializeSortable()
 
   listenToDeletePhoto: ->
-    @uploaded.on 'click', '.delete-photo', (event) ->
+    self = this
+    @uploaded.on 'click', '.delete-photo',  ->
       url = $(this).attr("data-url")
       link = $(this)
       if confirm("Are you sure you want to delete this Photo?")
         $.post link.attr("data-url"), { _method: 'delete' }, ->
           link.closest(".photo-item").remove()
+          self.reorderSortableList()
       return false
 
   initializeFileUploader : =>
@@ -51,8 +53,7 @@ class @PhotoUploader
   initializeSortable: ->
     @sortable.sortable
       stop: =>
-        for index, el of @sortable.sortable('toArray')[1..] # first element is hidden, don't count it
-          $("##{el}").find('.order-position').val(index)
+        @reorderSortableList()
       placeholder: 'photo-placeholder',
     @sortable.disableSelection();
 
@@ -84,11 +85,11 @@ class @PhotoUploader
       @progressBar.css('width', 0 + '%')
       @photoItem.html(@getLoadingElement())
 
-  getLoadingElement: (text = 'Thumbnail processing...' ) ->
+  getLoadingElement: (text = 'Processing...' ) ->
     '<div class="thumbnail-processing"><div class="loading-icon"></div><div class="loading-text">' + text + '</div></div>'
 
   getPhotoItem: (filename) =>
-    $('.photo-item[data-filename="' + filename.hashCode() + '"]').eq(0)
+    $('.photo-item[data-filename="' + filename.hashCode() + '"]:last')
 
   setPhotoItem: (filename) =>
     if @multiplePhoto()
@@ -129,6 +130,7 @@ class @PhotoUploader
     if @multiplePhoto()
       if @container.find('#photo-item-input-template').length > 0
         input = @container.find('#photo-item-input-template').clone()
+        @photoItem.append($('<span>').addClass('photo-position').text(@getLastPosition()))
         input.attr('disabled', false)
         input.attr('type', 'text')
         last_input = @container.find('input[data-number]').eq(-1)
@@ -140,7 +142,7 @@ class @PhotoUploader
         @photoItem.attr('id', "photo-#{data.result.id}")
         hidden = $('<input>').attr('type', 'hidden')
         hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(data.result.id)
-        hidden_position = hidden.clone().attr('name', "#{name_prefix}[position]").val(@getLastPosition()).addClass('order-position')
+        hidden_position = hidden.clone().attr('name', "#{name_prefix}[position]").val(@getLastPosition()).addClass('photo-position-input')
         @photoItem.append(hidden_id)
         @photoItem.append(hidden_position)
       else
@@ -148,6 +150,12 @@ class @PhotoUploader
 
   getLastPosition: ->
     @sortable.find('.photo-item:not(.hidden)').length
+
+  reorderSortableList: ->
+    for index, el of @sortable.sortable('toArray')[1..] # first element is hidden, don't count it
+      $("##{el}").find('.photo-position-input').val(index)
+      $("##{el}").find('.photo-position').text(parseInt(index) + 1)
+
 
   getUniqueString: (data) ->
     if $.browser.msie && parseInt($.browser.version) < 10

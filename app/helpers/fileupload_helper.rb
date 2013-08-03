@@ -27,10 +27,12 @@ module FileuploadHelper
 
   def get_fileupload_photo_html(photo_url, destroy_photo_path, html_tag = :li, options = {}, &block)
     id = options[:id] ? "photo-#{options[:id]}" : ''
+    index = options[:index] ? options[:index] + 1 : ''
     content = capture(&block).html_safe if block_given?
     content_tag(html_tag,
       image_tag(photo_url) + 
       link_to(content_tag(:span, '', :class=> 'ico-trash'), '' , {"data-url" => destroy_photo_path, :class => 'delete-photo delete-photo-thumb'}) +
+      content_tag(:span, index, :class=> 'photo-position') +
       content,
     :class => 'photo-item', id: id)
   end
