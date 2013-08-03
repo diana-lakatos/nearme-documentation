@@ -54,6 +54,6 @@ module ListingsHelper
 
   # TODO: replace with real placeholder image
   def space_listing_placeholder_url(options = {})
-    "http://placehold.it/#{options[:width]}x#{options[:height]}"
+    "http://placehold.it/#{options[:width]}x#{options[:height]}&text=Photos+Unavailable"
   end
 end
