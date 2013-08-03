@@ -27,7 +27,6 @@ class PagesControllerTest < ActionController::TestCase
       end
     end
 
-
     context 'a wrong path' do
       setup do
         @page = FactoryGirl.create(:page,
@@ -39,8 +38,6 @@ class PagesControllerTest < ActionController::TestCase
           get :show, :path => 'wrong-path'
         end
       end
-
     end
-
   end
 end

@@ -1,5 +1,5 @@
 = render :layout => 'wizard_layout', :locals => { :step => 1 } do
-  - title "List your space"
+  - title "List your #{current_instance.bookable_noun}"
 
   = simple_form_for @company, :url => space_wizard_list_url, :validate => false, :html => { :class => "form-horizontal new_company", :multipart => true, :id => 'list-space-flow-form' } do |f|
 
@@ -20,7 +20,7 @@
       = simple_fields_for current_user do |uf|
         = render 'registrations/phone_fields', :f => uf
       .actions
-        = f.submit 'List my Space', :disable_with => 'Creating...'
+        = f.submit "List my #{current_instance.bookable_noun}", :disable_with => 'Creating...'
 
 - content_for :script do
   :javascript

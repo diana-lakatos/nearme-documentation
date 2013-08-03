@@ -41,7 +41,7 @@ Feature: As a user of the site
   Scenario: A user can add new listing
     Given the location exists with company: the company
       And I am on the manage locations page
-     When I follow "Add Listing"
+     When I follow "Add Desk"
       And I fill listing form with valid details
       And I submit the form
       And I should see "Great, your new Desk/Room has been added!"

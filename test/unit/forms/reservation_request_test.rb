@@ -5,7 +5,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
   setup do
     @listing = FactoryGirl.create(:listing, :name => "blah")
     @user = FactoryGirl.create(:user)
-    @date = Time.zone.now.advance(:weeks => 1).beginning_of_week.to_date
+    @date = @listing.first_available_date
     @attributes = {
       :dates => [@date.to_s(:db)]
     }

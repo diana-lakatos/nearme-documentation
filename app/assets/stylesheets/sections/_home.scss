@@ -77,8 +77,8 @@ section.public {
     color: $light-gray;
     font:400 48px/54px $font-regular, sans-serif;
     @include text-shadow(black 0 0 5px, black 0 0 8px, black 0 0 10px, black 0 0 20px, black 0 0 30px);
-    filter: glow(color=#000000,strength=3);
-    -ms-filter: glow(color=#000000,strength=3);
+    filter: glow(color='#{ie-hex-str(#000000)}',strength=3);
+    -ms-filter: glow(color='#{ie-hex-str(#000000)}',strength=3);
 
 
     @media (max-width: $iphone-portrait) {

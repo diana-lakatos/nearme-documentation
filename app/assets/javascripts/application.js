@@ -19,6 +19,7 @@
 //= require ./vendor/jquery.ias
 //= require ./vendor/markerclusterer
 //= require jquery-fileupload/basic
+//= require history_jquery
 //= require underscore
 //= require backbone
 //= require backbone_rails_sync

@@ -10,7 +10,7 @@
           = render :partial => 'location_name_with_links', :locals => { :location => location }
           - if location.listings.empty?
             %li.listing.empty
-              You haven't created any listings at this location!
+              You haven't created any #{current_instance.bookable_noun.pluralize} at this location!
           - else
             - location.listings.each do |listing|
               = render :partial => 'manage/listings/listing_name_with_link', :locals => { :location => location, :listing => listing }

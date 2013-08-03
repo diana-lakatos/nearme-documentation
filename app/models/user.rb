@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include Gravtastic
 
   before_save :ensure_authentication_token
-  after_create :send_welcome_email
+  before_save :update_notified_mobile_number_flag
 
   # Includes billing gateway helper method and sets up billing charge association
   include BillingGateway::UserHelper
@@ -145,6 +145,25 @@ class User < ActiveRecord::Base
     (phone_changed? && phone_was.blank?) || (country_name_changed? && country_name_was.blank?)
   end
 
+  def full_mobile_number_updated?
+    mobile_number_changed? || country_name_changed?
+  end
+
+  def update_notified_mobile_number_flag
+    self.notified_about_mobile_number_issue_at = nil if full_mobile_number_updated?
+    # necessary hack, http://apidock.com/rails/ActiveRecord/RecordNotSaved
+    nil
+  end
+
+  def notify_about_wrong_phone_number
+    unless notified_about_mobile_number_issue_at
+      UserMailer.notify_about_wrong_phone_number(self).deliver
+      update_attribute(:notified_about_mobile_number_issue_at, Time.zone.now)
+      IssueLogger.log_issue("[auto] invalid mobile number", email, "#{name} (#{id}) was asked to update his mobile number #{full_mobile_number}")
+    end
+  end
+
+
   def following?(other_user)
     relationships.find_by_followed_id(other_user.id)
   end
@@ -200,12 +219,6 @@ class User < ActiveRecord::Base
 
   def first_listing
     companies.first.locations.first.listings.first
-  end
-
-  def send_welcome_email
-    unless new_record?
-      AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(id)
-    end
   end
 
   def has_listing_without_price?
