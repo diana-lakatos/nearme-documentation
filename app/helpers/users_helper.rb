@@ -8,7 +8,7 @@ module UsersHelper
   end
 
   def admin_as_user?
-    session[:admin_as_user].present?
+    session[:admin_as_user].present? && current_user
   end
 
   def original_admin_user
