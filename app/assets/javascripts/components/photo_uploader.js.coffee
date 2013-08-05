@@ -44,6 +44,7 @@ class @PhotoUploader
         done:  (e, data) =>
           data.result = @parseResult(data)
           @done(data)
+          @reorderSortableList()
         ,
         progress: (e, data) =>
           data.result = @parseResult(data)
@@ -158,7 +159,8 @@ class @PhotoUploader
 
 
   getUniqueString: (data) ->
-    if $.browser.msie && parseInt($.browser.version) < 10
-      data.files[0].name
-    else
+    if((navigator.platform.indexOf("iPhone") != -1) || (navigator.platform.indexOf("iPod") != -1))
       data.files[0].lastModifiedDate.toString()
+    else
+      data.files[0].name
+
