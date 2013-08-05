@@ -53,6 +53,7 @@ class ReservationMailer < DesksNearMeMailer
   def notify_host_without_confirmation(reservation)
     setup_defaults(reservation)
     @user = @listing.creator
+    @url  = manage_guests_dashboard_url(:token => @user.authentication_token)
     @reserver = reservation.owner.name
     generate_mail("A guest has made a booking")
   end

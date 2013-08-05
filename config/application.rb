@@ -72,5 +72,14 @@ module DesksnearMe
     config.twitter_secret = "nR8pjJ9YcU3eK9pKUPFBNxZuJ5oMci2M96SpZ47Ik"
 
     config.exceptions_app = self.routes
+
+    config.middleware.insert_before(Rack::Lock, Rack::Rewrite) do
+      r301 %r{/workplaces/?$},             '/search'
+      r301 %r{/workplaces/(.*)},           '/listings/$1'
+      r301 '/about',                       '/pages/about'
+      r301 '/legal',                       '/pages/legal'
+      r301 %r{/apple-touch-icon(.*)?.png}, '/apple-touch-icon-precomposed.png'
+      r302 '/support',                     'https://desksnearme.desk.com'
+    end
   end
 end
