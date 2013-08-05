@@ -137,24 +137,10 @@ class Listing < ActiveRecord::Base
     scope.sum(:quantity)
   end
 
-  def free?
-    !has_price?
-  end
-  alias_method :free, :free?
-
   def has_price?
     PRICE_TYPES.map { |price|
       self["#{price}_price_cents"]
     }.compact.any? { |price| !price.zero? }
-  end
-
-  def free=(free_flag)
-    return unless [true, "1"].include?(free_flag)
-
-    self.hourly_price = nil
-    self.daily_price = nil
-    self.weekly_price = nil
-    self.monthly_price = nil
   end
 
   def desks_available?(date)
