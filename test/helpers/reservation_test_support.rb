@@ -13,10 +13,12 @@ module ReservationTestSupport
   def prepare_charged_reservations_for_listing(listing, count = 1)
     User::BillingGateway.any_instance.stubs(:charge).returns(true)
 
+    date = Time.zone.now.advance(:weeks => 1).beginning_of_week.to_date
     reservations = []
     count.times do |i|
       reservations << FactoryGirl.create(:reservation_with_credit_card,
-        :listing => listing
+        :listing => listing,
+        :date => date + i
       )
     end
     reservations.each(&:confirm)

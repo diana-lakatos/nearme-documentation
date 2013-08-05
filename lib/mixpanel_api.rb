@@ -28,8 +28,8 @@ class MixpanelApi
   attr_reader :request_details
 
   # Creates a new mixpanel API interface instance
-  def self.mixpanel_instance
-    Mixpanel::Tracker.new(MIXPANEL_TOKEN)
+  def self.mixpanel_instance(options = {})
+    Mixpanel::Tracker.new(MIXPANEL_TOKEN, options)
   end
 
   # Initialize a mixpanel wrapper.
