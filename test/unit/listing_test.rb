@@ -31,9 +31,11 @@ class ListingTest < ActiveSupport::TestCase
     @listing = FactoryGirl.build(:listing)
   end
 
-  context "#with_photo_validation" do
+  context "#needs_photo_validation!" do
     subject do
-      @listing = FactoryGirl.build_stubbed(:listing).with_photo_validation
+      @listing = FactoryGirl.build_stubbed(:listing)
+      @listing.needs_photo_validation!
+      @listing
     end
 
     should_not allow_value([]).for(:photos)

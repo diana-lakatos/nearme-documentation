@@ -20,8 +20,9 @@ class V1::ListingsController < V1::BaseController
   end
 
   def create
-    @listing = Listing.create(params[:listing])
-    if @listing.with_photo_validation.save
+    @listing = Listing.new(params[:listing])
+    @listing.needs_photo_validation!
+    if @listing.save
       render :json => {:success => true, :id => @listing.id}
     else
       logger.info("ERRORS:#{@listing.errors.full_messages}")
@@ -33,9 +34,10 @@ class V1::ListingsController < V1::BaseController
     if params[:listing][:photos_attributes] == nil
       params[:listing].delete :photos_attributes
     end
-    @listing.attributes = params[:listing]
+    @listing.assign_attributes(params[:listing])
+    @listing.needs_photo_validation!
 
-    if @listing.with_photo_validation.save
+    if @listing.save
       render :json => @listing, :root => false, :serializer => ListingWebSerializer
     else
       render :json => { :errors => @listing.errors.full_messages }, :status => 422

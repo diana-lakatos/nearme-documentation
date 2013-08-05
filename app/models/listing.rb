@@ -274,8 +274,8 @@ class Listing < ActiveRecord::Base
     AvailabilityRule::HourlyListingStatus.new(self, date)
   end
 
-  def with_photo_validation
-    self.tap {|listing| listing.validate_photos = true}
+  def needs_photo_validation!
+    self.validate_photos = true
   end
 
   def self.xml_attributes
