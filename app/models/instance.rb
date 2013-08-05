@@ -11,6 +11,7 @@ class Instance < ActiveRecord::Base
   has_many :users
   has_many :domains
   has_many :pages
+  has_many :email_templates
   belongs_to :partner
 
   validates_presence_of :name
