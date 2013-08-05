@@ -17,6 +17,9 @@ class Search.Geocoder
     isValid: ->
       @result.geometry
 
+    postcode: ->
+      @_addressComponentOfType('postal_code', 'political')?.long_name
+
     street: ->
       @_addressComponentOfType('route', 'political')?.long_name
 

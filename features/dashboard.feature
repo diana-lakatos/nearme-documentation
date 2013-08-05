@@ -7,6 +7,7 @@ Feature: As a user of the site
   Background:
     Given a user exists
       And I am logged in as the user
+      And an instance exists
       And a company exists with creator: the user
       And a location_type exists with name: "Business"
       And a location_type exists with name: "Co-working"
@@ -57,7 +58,7 @@ Feature: As a user of the site
       And I should see "Great, your listing's details have been updated."
      Then the listing should be updated
      When I click edit listing icon
-      And I click delete listing link
+      And I click delete bookable noun link
       And I should see "That listing has been deleted."
      Then the listing should not exist
 
