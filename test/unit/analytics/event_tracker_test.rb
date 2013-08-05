@@ -141,7 +141,8 @@ class EventTrackerTest < ActiveSupport::TestCase
       location_suburb: @reservation.location.suburb,
       location_city: @reservation.location.city,
       location_state: @reservation.location.state,
-      location_country: @reservation.location.country
+      location_country: @reservation.location.country,
+      location_postcode: @reservation.location.postcode
     }
   end
 
@@ -163,7 +164,8 @@ class EventTrackerTest < ActiveSupport::TestCase
       location_suburb: @location.suburb,
       location_city: @location.city,
       location_state: @location.state,
-      location_country: @location.country
+      location_country: @location.country,
+      location_postcode: @location.postcode
     }
   end
 
@@ -184,7 +186,8 @@ class EventTrackerTest < ActiveSupport::TestCase
       search_suburb: @search.suburb,
       search_city: @search.city,
       search_state: @search.state,
-      search_country: @search.country
+      search_country: @search.country,
+      search_postcode: @search.postcode
     }
   end
 end

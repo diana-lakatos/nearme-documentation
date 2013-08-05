@@ -75,7 +75,8 @@ class Analytics::EventTracker
         location_suburb: object.suburb,
         location_city: object.city,
         location_state: object.state,
-        location_country: object.country
+        location_country: object.country,
+        location_postcode: object.postcode
       }
     when Listing
       {
@@ -96,7 +97,8 @@ class Analytics::EventTracker
         location_suburb: object.location.suburb,
         location_city: object.location.city,
         location_state: object.location.state,
-        location_country: object.location.country
+        location_country: object.location.country,
+        location_postcode: object.location.postcode
       }
     when User
       {
@@ -113,7 +115,8 @@ class Analytics::EventTracker
         search_suburb: object.suburb,
         search_city: object.city,
         search_state: object.state,
-        search_country: object.country
+        search_country: object.country,
+        search_postcode: object.postcode
       }
     when Hash
       object
