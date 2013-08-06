@@ -73,7 +73,7 @@ module DesksnearMe
 
     config.exceptions_app = self.routes
 
-    # custom rewrites specified in lib/rack/legacy_redirect_handler.rb
-    config.middleware.insert_before(Rack::Lock, "Rack::LegacyRedirectHandler")
+    # custom rewrites specified in lib/legacy_redirect_handler.rb
+    config.middleware.insert_before(Rack::Lock, "LegacyRedirectHandler")
   end
 end
