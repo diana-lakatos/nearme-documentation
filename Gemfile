@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.13'
+gem 'rails', '3.2.14'
 gem 'pg'
 gem 'pg_search'
 
@@ -33,6 +33,8 @@ gem 'icalendar'
 gem 'ffaker'
 
 gem 'paper_trail'
+
+gem 'rack-rewrite', :require => 'rack/rewrite'
 
 # Use edge to fix validation of nested attributes: https://github.com/bcardarella/client_side_validations/pull/505
 gem 'client_side_validations', :git => "https://github.com/bcardarella/client_side_validations.git", :branch => '3-2-stable'

@@ -206,8 +206,4 @@ DesksnearMe::Application.routes.draw do
   match "/w-hotels-desks-near-me", to: 'locations#w_hotels', as: :w_hotels_location
   match "/W-hotels-desks-near-me", to: 'locations#w_hotels'
   match "/careers", to: 'pages#careers'
-  match "/support" => redirect("https://desksnearme.desk.com")
-  match "/about" => redirect("/pages/about")
-  match "/legal" => redirect("/pages/legal")
-
 end
