@@ -4,7 +4,7 @@ class Listing < ActiveRecord::Base
   has_many :reservations,
     dependent: :destroy
 
-  has_many :photos,  as: :content, dependent: :destroy do
+  has_many :photos,  as: :content do
     def thumb
       (first || build).thumb
     end
