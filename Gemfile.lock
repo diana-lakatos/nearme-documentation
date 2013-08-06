@@ -13,13 +13,6 @@ GIT
     spork-minitest (1.0.0.beta2)
       spork
 
-GIT
-  remote: https://github.com/bcardarella/client_side_validations.git
-  revision: 75d0dad8e4d49ba16c25e511b6514ea1408d2423
-  branch: 3-2-stable
-  specs:
-    client_side_validations (3.2.5)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -94,9 +87,6 @@ GEM
       sass-rails (>= 3.2)
     chronic (0.8.0)
     chunky_png (1.2.6)
-    client_side_validations-simple_form (2.0.1)
-      client_side_validations (~> 3.2.0)
-      simple_form (~> 2.0.3)
     coderay (1.0.9)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -510,8 +500,6 @@ DEPENDENCIES
   chartjs-rails
   chosen-rails
   chronic
-  client_side_validations!
-  client_side_validations-simple_form
   coffee-rails
   compass-rails
   cucumber-rails
