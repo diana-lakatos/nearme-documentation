@@ -81,7 +81,7 @@
       "#{photo_input_name_prefix}[photos_attributes][0][image]",
       "Upload Photos",
       :required => true,
-      :error => f.object.errors.include?(:photos).present? ? "upload at least one photo" : nil) do
+      :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
     - if listing && listing.persisted?
       %li.hidden.photo-item
         = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes]", nil, :placeholder => 'Enter Photo Caption...', :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
