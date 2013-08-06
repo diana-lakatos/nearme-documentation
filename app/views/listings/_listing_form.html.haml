@@ -25,36 +25,41 @@
       %div.price-inputs-daily
         %label.radio
           = f.radio_button :hourly_reservations, false, :checked => enable_inputs_daily
-          Bookings are made by the day
+          Daily
 
         .price-input-options
           .price-inputs-wrapper.left
-            = render 'manage/listings/price_field', :f => f, :price => "daily", :label => "day"
-            = render 'manage/listings/price_field', :f => f, :price => "weekly", :label => "week"
-            = render 'manage/listings/price_field', :f => f, :price => "monthly", :label => "month"
+            = render 'manage/listings/price_field', :f => f, :price => "daily", :label => "day", :include_checkbox => true
+            = render 'manage/listings/price_field', :f => f, :price => "weekly", :label => "week", :include_checkbox => true
+            = render 'manage/listings/price_field', :f => f, :price => "monthly", :label => "month", :include_checkbox => true
 
-          .free-price
-            .inline-rule
-            .or-part Or
-            %label.checkbox{:for => 'daily_free'}
-              = f.check_box :free, :'data-behavior' => 'toggle-free', :id => 'daily_free'
-              Free
+          / .free-price
+          /   .inline-rule
+          /   .or-part Or
+          /   %label.checkbox{:for => 'daily_free'}
+          /     = f.check_box :free, :'data-behavior' => 'toggle-free', :id => 'daily_free'
+          /     Free
 
       %div.price-inputs-hourly
         %label.radio
           = f.radio_button :hourly_reservations, true, :checked => enable_inputs_hourly
-          Bookings are made by the hour
+          Hourly
 
         .price-input-options
           .price-inputs-wrapper.left
             = render 'manage/listings/price_field', :f => f, :price => "hourly", :label => "hour"
 
-          .free-price
-            .inline-rule{:style => "height: 60px;"}
-            .or-part Or
-            %label.checkbox{:for => 'hourly_free'}
-              = f.check_box :free, :'data-behavior' => 'toggle-free', :id => 'hourly_free'
-              Free
+          / .free-price
+          /   .inline-rule{:style => "height: 60px;"}
+          /   .or-part Or
+          /   %label.checkbox{:for => 'hourly_free'}
+          /     = f.check_box :free, :'data-behavior' => 'toggle-free', :id => 'hourly_free'
+          /     Free
+
+      %div.price-inputs-free
+        %label.radio
+          = f.radio_button :hourly_reservations, false
+          Free
 
       - if f.object.errors.include?(:hourly_reservations).present?
         %p.error-block= f.object.errors[:hourly_reservations].first
