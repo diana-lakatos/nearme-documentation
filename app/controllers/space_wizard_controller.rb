@@ -32,14 +32,16 @@ class SpaceWizardController < ApplicationController
     @user.phone_required = true
     @user.attributes = params[:user]
 
+    @listing = @user.first_listing
+    @listing.try(:needs_photo_validation!)
+
     if params[:uploaded_photos]
-      listing = @user.first_listing
-      listing.photos << current_user.photos.find(params[:uploaded_photos])
+      @listing.photos << current_user.photos.find(params[:uploaded_photos])
     end
 
     user_valid = @user.valid?
     company_valid = @company.valid?
-    listing_valid = @user.first_listing.with_photo_validation.valid? rescue false
+    listing_valid = @listing.try(:valid?)
 
     if params_hash_complete? && company_valid && user_valid && listing_valid
       @company.save!

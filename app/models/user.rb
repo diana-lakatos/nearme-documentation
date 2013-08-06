@@ -218,7 +218,7 @@ class User < ActiveRecord::Base
   end
 
   def first_listing
-    companies.first.locations.first.listings.first
+    companies.first.locations.first.listings.first rescue nil
   end
 
   def has_listing_without_price?
