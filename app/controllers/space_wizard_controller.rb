@@ -25,38 +25,33 @@ class SpaceWizardController < ApplicationController
   end
 
   def submit_listing
-    @company ||= @user.companies.build
-    @company.attributes = params[:company]
-
-    @user = current_user
     @user.phone_required = true
-    @user.attributes = params[:user]
+    @user.assign_attributes(params[:user])
 
-    @listing = @user.first_listing
-    @listing.try(:needs_photo_validation!)
+    @company ||= @user.companies.build
+    @company.assign_attributes(params[:company])
+
+    @location = @company.locations.first_or_initialize
+
+    @listing = @location.listings.first_or_initialize
+    @listing.photo_required = true
 
     if params[:uploaded_photos]
       @listing.photos << current_user.photos.find(params[:uploaded_photos])
     end
 
-    user_valid = @user.valid?
-    company_valid = @company.valid?
-    listing_valid = @listing.try(:valid?)
-
-    if params_hash_complete? && company_valid && user_valid && listing_valid
-      @company.save!
+    if @user.valid? and @company.valid?
       @user.save!
+      @company.save!
 
-
-      event_tracker.created_a_location(@user.locations.first, { via: 'wizard' })
-      event_tracker.created_a_listing(@user.first_listing, { via: 'wizard' })
+      event_tracker.created_a_location(@location, { via: 'wizard' })
+      event_tracker.created_a_listing(@listing, { via: 'wizard' })
 
       flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
       redirect_to manage_locations_path
     else
       render :list
     end
-
   end
 
   def submit_photo
@@ -108,11 +103,4 @@ class SpaceWizardController < ApplicationController
       @listing = @location.listings.first
     end
   end
-
-  def params_hash_complete?
-    params[:company] && 
-    params[:company][:locations_attributes] &&
-    params[:company][:locations_attributes]["0"][:listings_attributes] 
-  end
-
 end

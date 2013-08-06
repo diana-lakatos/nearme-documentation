@@ -31,10 +31,10 @@ class ListingTest < ActiveSupport::TestCase
     @listing = FactoryGirl.build(:listing)
   end
 
-  context "#needs_photo_validation!" do
+  context "#photo_required" do
     subject do
       @listing = FactoryGirl.build_stubbed(:listing)
-      @listing.needs_photo_validation!
+      @listing.photo_required = true
       @listing
     end
 

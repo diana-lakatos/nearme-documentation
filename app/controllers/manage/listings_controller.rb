@@ -16,7 +16,7 @@ class Manage::ListingsController < Manage::BaseController
 
   def create
     @listing = @location.listings.build(params[:listing])
-    @listing.needs_photo_validation!
+    @listing.photo_required = true
 
     if params[:uploaded_photos]
       @listing.photos << current_user.photos.find(params[:uploaded_photos])
@@ -38,8 +38,8 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def update
-    @listing.attributes = params[:listing]
-    @listing.needs_photo_validation!
+    @listing.assign_attributes(params[:listing])
+    @listing.photo_required = true
 
     if @listing.save
       flash[:success] = "Great, your listing's details have been updated."

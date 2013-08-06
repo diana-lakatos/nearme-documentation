@@ -21,7 +21,7 @@ class V1::ListingsController < V1::BaseController
 
   def create
     @listing = Listing.new(params[:listing])
-    @listing.needs_photo_validation!
+    @listing.photo_required
     if @listing.save
       render :json => {:success => true, :id => @listing.id}
     else
@@ -35,7 +35,7 @@ class V1::ListingsController < V1::BaseController
       params[:listing].delete :photos_attributes
     end
     @listing.assign_attributes(params[:listing])
-    @listing.needs_photo_validation!
+    @listing.photo_required = true
 
     if @listing.save
       render :json => @listing, :root => false, :serializer => ListingWebSerializer
