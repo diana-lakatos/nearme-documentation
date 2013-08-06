@@ -31,18 +31,11 @@ module FileuploadHelper
     content = capture(&block).html_safe if block_given?
     content_tag(html_tag,
       image_tag(photo_url) + 
-      link_to(content_tag(:span, '', :class=> 'ico-trash'), '' , {"data-url" => destroy_photo_path, :class => 'delete-photo delete-photo-thumb'}) +
-      content_tag(:span, index, :class=> 'photo-position') +
+      link_to('Delete', '' , {"data-url" => destroy_photo_path, :class => 'badge badge-inverse delete-photo delete-photo-thumb'}) +
+      content_tag(:span, index, :class=> 'badge badge-inverse photo-position') +
       content,
     :class => 'photo-item', id: id)
   end
-
-  def fileupload_photo_with_input(photo_url, destroy_photo_path, input_value, input_name = 'uploaded_photos[]',  html_tag = :li, options = {}, &block)
-    get_fileupload_photo_html(photo_url, destroy_photo_path, html_tag) do
-      "<input name='#{input_name}' value='#{input_value}' type='hidden'>".html_safe
-    end
-  end
-  
   
 
   private

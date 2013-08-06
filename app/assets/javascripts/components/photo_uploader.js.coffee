@@ -124,38 +124,38 @@ class @PhotoUploader
     @uploaded.find('img').attr('src', data.result.url)
 
   addImg: (data) =>
-    href = $('<a data-url="' + data.result.destroy_url + '" class="delete-photo delete-photo-thumb"><span class="ico-trash"></span></a>')
+    href = $('<a data-url="' + data.result.destroy_url + '" class="badge badge-inverse delete-photo delete-photo-thumb">Delete</span></a>')
     @photoItem = @getPhotoItem(@getUniqueString(data))
     @photoItem.html('<img src="' + data.result.url + '">')
     @photoItem.append(href)
     if @multiplePhoto()
-      if @container.find('#photo-item-input-template').length > 0
-        input = @container.find('#photo-item-input-template').clone()
-        @photoItem.append($('<span>').addClass('photo-position').text(@getLastPosition()))
-        input.attr('disabled', false)
-        input.attr('type', 'text')
-        last_input = @container.find('input[data-number]').eq(-1)
-        data_number = parseInt(last_input.attr('data-number')) + 1
-        input.attr('data-number', data_number)
-        name_prefix = input.attr('name') + '[' + data_number + ']'
-        input.attr('name', name_prefix + '[caption]')
-        @photoItem.append(input)
-        @photoItem.attr('id', "photo-#{data.result.id}")
-        hidden = $('<input>').attr('type', 'hidden')
-        hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(data.result.id)
-        hidden_position = hidden.clone().attr('name', "#{name_prefix}[position]").val(@getLastPosition()).addClass('photo-position-input')
-        @photoItem.append(hidden_id)
-        @photoItem.append(hidden_position)
-      else
-        @photoItem.append('<input type="hidden" name="uploaded_photos[]" value="' + data.result.id + '">')
+      @photoItem.append($('<span>').addClass('photo-position badge badge-inverse').text(@getLastPosition()))
+      hidden = $('<input>').attr('type', 'hidden')
+      hidden_position = hidden.clone().attr('name', "#{name_prefix}[position]").val(@getLastPosition()).addClass('photo-position-input')
+      @photoItem.attr('id', "photo-#{data.result.id}")
+      @photoItem.append(hidden_position)
+      input = @container.find('#photo-item-input-template').clone()
+      input.attr('disabled', false)
+      input.attr('type', 'text')
+      last_input = @container.find('input[data-number]').eq(-1)
+      data_number = parseInt(last_input.attr('data-number')) + 1
+      input.attr('data-number', data_number)
+      name_prefix = input.attr('name') + '[' + data_number + ']'
+      input.attr('name', name_prefix + '[caption]')
+      @photoItem.append(input)
+      hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(data.result.id)
+      @photoItem.append(hidden_id)
 
   getLastPosition: ->
     @sortable.find('.photo-item:not(.hidden)').length
 
   reorderSortableList: ->
-    for index, el of @sortable.sortable('toArray')[1..] # first element is hidden, don't count it
-      $("##{el}").find('.photo-position-input').val(index)
-      $("##{el}").find('.photo-position').text(parseInt(index) + 1)
+    i = 0
+    for index, el of @sortable.sortable('toArray')
+      if el != '' and $("##{el}.photo-item:not(.hidden)").length > 0
+        $("##{el}").find('.photo-position-input').val(i)
+        $("##{el}").find('.photo-position').text(parseInt(i) + 1)
+        i++
 
 
   getUniqueString: (data) ->

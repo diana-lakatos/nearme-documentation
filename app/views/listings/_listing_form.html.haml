@@ -1,6 +1,5 @@
 - only_inputs = [] if only_inputs.nil?
 - photo_input_name_prefix = "listing" if local_assigns[:photo_input_name_prefix].nil?
-
 - enable_inputs_daily = f.object.hourly_reservations == false
 - enable_inputs_hourly = f.object.hourly_reservations == true
 
@@ -83,25 +82,17 @@
                                   manage_photos_path('size' => 'medium'),
                                   "#{photo_input_name_prefix}[photos_attributes][0][image]",
                                    "Upload Photos") do
-    - if listing && listing.persisted?
-      %div.hidden.photo-item
-        = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes]", nil, :placeholder => 'Enter Caption...', :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
-      - i = 0
-      - # existing listing - we want to display only photos that belong to this listing
-      - listing.photos.each_with_index do |photo, index|
-        = get_fileupload_photo_html(photo.image_url(:medium),
-                                    destroy_space_wizard_photo_path(:id => photo.id),
-                                    :div,
-                                    id: photo.id, index: index) do
-          = text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{i}][caption]", photo.caption, :placeholder => 'Enter Caption...', 'data-number' => i
-          = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{i}][id]", photo.id
-          = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{i}][position]", photo.position, class: 'photo-position-input'
-
-        - i += 1
-    - else
-      - # new listing - if user uploaded photos and reloaded the page, we want to display all photos that do not belong to anything so far
-      - current_user.photos.no_content.for_listing.each do |photo|
-        = fileupload_photo_with_input(photo.image_url(:medium), destroy_space_wizard_photo_path(:id => photo.id), photo.id)
+    = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes]", nil, :placeholder => 'Enter Caption...', :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
+    %div.hidden.photo-item
+    - # existing listing - we want to display only photos that belong to this listing
+    - photos.each_with_index do |photo, index|
+      = get_fileupload_photo_html(photo.image_url(:medium),
+                                  destroy_space_wizard_photo_path(:id => photo.id),
+                                  :div,
+                                  id: photo.id, index: index) do
+        = text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{index}][caption]", photo.caption, :placeholder => 'Enter Caption...', 'data-number' => index
+        = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{index}][id]", photo.id
+        = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{index}][position]", photo.position, class: 'photo-position-input'
 
 .hidden
   - Money::Currency.table.values.each do |c|

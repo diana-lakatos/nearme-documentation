@@ -84,7 +84,7 @@ label.radio {
     border: 1px dashed $black;
 
     .photo-position {
-      margin-left: -138px;
+      margin: 6px 0 0 -138px;
       position: absolute;
     }
 
@@ -93,10 +93,10 @@ label.radio {
     }
 
     .delete-photo {
+      background-color: #024fa3;
       position: absolute;
-      margin: 0px 0 0 45px;
+      margin: 6px 0 0 -61px;
       cursor: pointer;
-      @include adjust-font-size-to(24px);
       @include text-shadow(black 0 0 5px);
       color: white;
       @include opacity(.5);
@@ -104,10 +104,6 @@ label.radio {
       &:hover {
         @include opacity(1);
       }
-    }
-
-    .delete-photo-thumb {
-      margin: -10px 0 0 -25px;
     }
 
     input {
