@@ -1,5 +1,5 @@
 module Rack
-  class CustomRewrite < Rack::Rewrite
+  class LegacyRedirectHandler < Rack::Rewrite
     def initialize(app)
       @app = app
       @rule_set = RuleSet.new
