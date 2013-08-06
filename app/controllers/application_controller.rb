@@ -163,13 +163,5 @@ class ApplicationController < ActionController::Base
     Delayed::Job.enqueue Delayed::PerformableMethod.new(user, :notify_about_wrong_phone_number, nil)
   end
 
-  def uploaded_photos
-    if params[:uploaded_photos]
-      ids = params[:uploaded_photos].map { |ph| ph[:id] }
-    else
-      []
-    end
-  end
-
 end
 
