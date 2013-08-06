@@ -22,6 +22,7 @@ FactoryGirl.define do
     factory :free_listing do
       after(:create) do |listing|
         listing.daily_price_cents = 0
+        listing.free = true
       end
     end
 
