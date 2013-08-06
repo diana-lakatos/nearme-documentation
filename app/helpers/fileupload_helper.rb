@@ -2,19 +2,14 @@ module FileuploadHelper
   include FormHelper
 
   def file_upload_input(url, name, text='Photos', options = {}, &block)
-    uploaded_content = get_uploaded_content(options, &block)
-    error_message = options.delete(:error)
-    content_tag(:div, 
-      content_tag(:div, uploaded_content, :class => 'uploaded') +
-      content_tag(:label, 
-        content_tag(:span, 
-          content_tag(:span, '', :class => "ico-upload-photos padding") +
-          content_tag(:span, text),
-        :class => "btn btn-blue btn-medium upload-photos fileinput-button") +
-        "<input class='browse-file' #{"multiple" unless options["no-multiple"]} type='file' name='#{name}' data-url='#{url}'>".html_safe +
-        error_message_tag(error_message),
-      :class => 'action'),
-    :class => 'fileupload')
+    render(partial: 'shared/file_upload_input', locals: {
+      :uploaded_content => get_uploaded_content(options, &block),
+      :error_message => options.delete(:error),
+      :multiple => options["no-multiple"] ? false : true,
+      :url => url,
+      :name => name,
+      :text => text
+    }).to_s
   end
 
   def file_upload_input_with_label(label, url, name, text='Photos', options = {}, &block)
