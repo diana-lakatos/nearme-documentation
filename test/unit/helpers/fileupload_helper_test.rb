@@ -16,7 +16,7 @@ class FileuploadHelperTest < ActionView::TestCase
     context "with error option" do
       should "include error message" do
         error_message = "upload photo please"
-        error_block_tag = "<p class=\"error-block\">#{error_message}</p>"
+        error_block_tag = "<p class='error-block'>#{error_message}</p>"
         output = file_upload_input_with_label('Photos', 'test', 'name', 'Photos', :required => true, :error => error_message)
 
         assert_match(/#{Regexp.escape(error_block_tag)}/, output)

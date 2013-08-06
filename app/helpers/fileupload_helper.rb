@@ -2,13 +2,13 @@ module FileuploadHelper
   include FormHelper
 
   def file_upload_input(url, name, text='Photos', options = {}, &block)
-    render(partial: 'shared/file_upload_input', locals: {
-      :uploaded_content => get_uploaded_content(options, &block),
-      :error_message => options.delete(:error),
-      :multiple => options["no-multiple"] ? false : true,
-      :url => url,
-      :name => name,
-      :text => text
+    render(partial: 'shared/components/file_upload_input', locals: {
+      uploaded_content: get_uploaded_content(options, &block),
+      error_message: options.delete(:error),
+      multiple: options["no-multiple"] ? false : true,
+      url: url,
+      name: name,
+      text: text
     }).to_s
   end
 
@@ -39,10 +39,6 @@ module FileuploadHelper
   
 
   private
-
-  def error_message_tag(text)
-    content_tag(:p, text, :class => 'error-block').html_safe if text
-  end
 
   def get_uploaded_content(options, &block)
     if block_given?
