@@ -36,4 +36,10 @@ DesksnearMe::Application.configure do
 
   config.twitter_key = "8M9qYWg2v2hjTotXg9cWw"
   config.twitter_secret = "qnP1hPJ1kb2AaN7XTTfN3K4VT3SRN48UWe3vMNtVfEg"
+
+  # Protect this environment with a simple Basic authentication dialog
+  config.middleware.insert_before(Rack::Lock, "Rack::Auth::Basic") do |username, password|
+    username == 'desksnearme' && password == 'sharethem'
+  end
+
 end
