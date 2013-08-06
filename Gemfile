@@ -5,7 +5,7 @@ gem 'pg'
 gem 'pg_search'
 
 gem "RedCloth", "~> 4.2.9", :require => "redcloth"
-gem 'airbrake'
+gem 'raygun4ruby'
 gem 'active_model_serializers'
 gem 'carrierwave'
 gem 'decent_exposure'
