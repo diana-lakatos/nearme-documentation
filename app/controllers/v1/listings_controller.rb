@@ -34,7 +34,7 @@ class V1::ListingsController < V1::BaseController
     if params[:listing][:photos_attributes] == nil
       params[:listing].delete :photos_attributes
     end
-    @listing.assign_attributes(params[:listing])
+    @listing.attributes = params[:listing]
     @listing.photo_required = true
 
     if @listing.save

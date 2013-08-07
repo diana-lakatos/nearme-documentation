@@ -26,10 +26,10 @@ class SpaceWizardController < ApplicationController
 
   def submit_listing
     @user.phone_required = true
-    @user.assign_attributes(params[:user])
+    @user.attributes = params[:user]
 
     @company ||= @user.companies.build
-    @company.assign_attributes(params[:company])
+    @company.attributes = params[:company]
 
     @location = @company.locations.first_or_initialize
 

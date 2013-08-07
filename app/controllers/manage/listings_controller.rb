@@ -38,7 +38,7 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def update
-    @listing.assign_attributes(params[:listing])
+    @listing.attributes = params[:listing]
     @listing.photo_required = true
 
     if @listing.save
