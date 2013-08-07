@@ -77,8 +77,9 @@
       }
       
       &.label-free-price {
-        // Only one price field, center it.
-        margin-left: 33%;
+        // Center 'Free' text
+        width:100%;
+        text-align:center;
       }
     }
 
