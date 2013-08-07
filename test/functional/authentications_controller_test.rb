@@ -14,6 +14,10 @@ class AuthenticationsControllerTest < ActionController::TestCase
 
   test "authentication can be deleted if user has password set" do
     create_signed_in_user_with_authentication
+    stub_mixpanel
+    @tracker.expects(:disconnected_social_provider).once.with do |user, custom_options|
+      user == @user && custom_options == { provider: @user.authentications.first.provider }
+    end
     assert_difference('@user.authentications.count', -1) do
       delete :destroy, id: @user.authentications.first.id
     end
@@ -22,6 +26,10 @@ class AuthenticationsControllerTest < ActionController::TestCase
   test "authentication can be deleted if user has no  password but more than one authentications" do
     create_signed_in_user_with_authentication
     add_authentication("twitter", "abc123")
+    stub_mixpanel
+    @tracker.expects(:disconnected_social_provider).once.with do |user, custom_options|
+      user == @user && custom_options == { provider: @user.authentications.first.provider }
+    end
     assert_difference('@user.authentications.count', -1) do
       delete :destroy, id: @user.authentications.first.id
     end
@@ -29,6 +37,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
 
   test "authentication cannot be deleted if user has no password and one authentication" do
     create_no_password_signed_in_user_and_authentication
+    assert_log_not_triggered(:disconnected_social_provider)
     assert_no_difference('@user.authentications.count') do
       delete :destroy, id: @user.authentications.first.id
     end
@@ -49,45 +58,74 @@ class AuthenticationsControllerTest < ActionController::TestCase
       @other_user = FactoryGirl.create(:user)
       add_authentication(@provider, @uid, @other_user)
       sign_in @user
-      post :create
+      assert_no_difference('User.count') do
+        assert_no_difference('Authentication.count') do
+          post :create
+        end
+      end
       assert flash[:error].include?('already connected to other user')
     end
 
-    should "successfully sign in" do
+    should "successfully sign in and log" do
       add_authentication(@provider, @uid, @user)
-      sign_in @user
-      post :create
+      stub_mixpanel
+      @tracker.expects(:logged_in).once.with do |user, custom_options|
+        user == @user && custom_options == { provider: @provider }
+      end
+      assert_no_difference('User.count') do
+        assert_no_difference('Authentication.count') do
+          post :create
+        end
+      end
       assert flash[:success].include?('Signed in successfully')
     end
 
-    should "successfully create new authentication" do
+    should "successfully create new authentication and log" do
       sign_in @user
-      post :create
+      stub_mixpanel
+      @tracker.expects(:connected_social_provider).once.with do |user, custom_options|
+        user == @user && custom_options == { provider: @provider }
+      end
+      assert_no_difference('User.count') do
+        assert_difference('Authentication.count') do
+          post :create
+        end
+      end
       assert_equal 'Authentication successful.', flash[:success]
     end
 
     should "fail due to incorrect email" do
       FactoryGirl.create(:user, :email => @email)
       sign_in @user
-      post :create
+      assert_no_difference('User.count') do
+        assert_no_difference('Authentication.count') do
+          post :create
+        end
+      end
       assert flash[:error].include?('Your Linkedin email is already linked to an account')
     end
 
-    should "should successfully sign up and log this fact" do
-      stub_request(:get, /.*api\.mixpanel\.com.*/)
-      @tracker = Analytics::EventTracker.any_instance
-      @tracker.expects(:signed_up).with do |user, custom_options|
+    should "should successfully sign up and log"  do
+      stub_mixpanel
+      @tracker.expects(:signed_up).once.with do |user, custom_options|
         user == assigns(:oauth).authenticated_user && custom_options == { signed_up_via: 'other', provider: @provider }
       end
+      @tracker.expects(:connected_social_provider).once.with do |user, custom_options|
+        user == assigns(:oauth).authenticated_user && custom_options == {  provider: @provider }
+      end
       assert_difference('User.count') do
-        post :create
+        assert_difference('Authentication.count') do
+          post :create
+        end
       end
     end
 
     should "redirect to fill missing information if cannot create user" do
       request.env['omniauth.auth'] = { 'provider' => @provider, 'uid' => @uid, 'info' => { } }
       assert_no_difference('User.count') do
-        post :create
+        assert_no_difference('Authentication.count') do
+          post :create
+        end
       end
       assert_redirected_to new_user_registration_url
     end

@@ -32,6 +32,7 @@ class AuthenticationsController < ApplicationController
     @authentication = current_user.authentications.find(params[:id])
     if @authentication.can_be_deleted?
       @authentication.destroy
+      log_disconnect_social_provider
       flash[:deleted] = "Successfully disconnected your #{@authentication.provider_name}"
     else
       flash[:warning] = "We are unable to disconnect your account from #{@authentication.provider_name}. Make sure you have at least one other account linked so you can log in!"
@@ -82,6 +83,7 @@ class AuthenticationsController < ApplicationController
   def signed_in_successfully
     flash[:success] = 'Signed in successfully.' if use_flash_messages?
     @oauth.remember_user!
+    log_logged_in
     sign_in_and_redirect(:user, @oauth.authenticated_user)
   end
 
@@ -94,13 +96,15 @@ class AuthenticationsController < ApplicationController
 
   def new_authentication_for_existing_user
     @oauth.create_authentication!(current_user)
+    log_connect_social_provider
     flash[:success] = 'Authentication successful.'
     redirect_to edit_user_registration_url
   end
 
   def new_user_created_successfully
     @oauth.authenticated_user
-    event_tracker.signed_up(@oauth.authenticated_user, { signed_up_via: 'other', provider: @omniauth['provider'] })
+    log_sign_up
+    log_connect_social_provider
     @oauth.remember_user!
     flash[:success] = 'Signed in successfully.' if use_flash_messages?
     sign_in_and_redirect(:user, @oauth.authenticated_user)
@@ -110,5 +114,26 @@ class AuthenticationsController < ApplicationController
     session[:omniauth] = @omniauth.except('extra')
     redirect_to new_user_registration_url(:wizard => wizard_id)
   end
+
+  def log_sign_up
+    mixpanel.apply_user(@oauth.authenticated_user, :alias => true)
+    event_tracker.signed_up(@oauth.authenticated_user, { signed_up_via: 'other', provider: @oauth.provider })
+  end
+
+  def log_logged_in
+    mixpanel.apply_user(@oauth.authenticated_user)
+    event_tracker.logged_in(@oauth.authenticated_user, { provider: @oauth.provider } )
+  end
+
+  def log_connect_social_provider
+    mixpanel.apply_user(@oauth.authenticated_user)
+    event_tracker.connected_social_provider(@oauth.authenticated_user, { provider: @oauth.provider } )
+  end
+
+  def log_disconnect_social_provider
+    mixpanel.apply_user(@authentication.user)
+    event_tracker.disconnected_social_provider(@authentication.user, { provider: @authentication.provider } )
+  end
+
 
 end
