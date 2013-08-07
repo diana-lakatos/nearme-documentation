@@ -31,6 +31,7 @@ class Listing < ActiveRecord::Base
   scope :latest,   order("listings.created_at DESC")
 
   # == Callbacks
+  before_validation :null_price_if_marked_free
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
 
@@ -141,6 +142,16 @@ class Listing < ActiveRecord::Base
     PRICE_TYPES.map { |price|
       self["#{price}_price_cents"]
     }.compact.any? { |price| !price.zero? }
+  end
+
+  def null_price_if_marked_free
+    null_price! if free?
+  end
+
+  def null_price!
+    PRICE_TYPES.map { |price|
+      self.send "#{price}_price_cents=", nil
+    }
   end
 
   def desks_available?(date)
