@@ -1,6 +1,6 @@
 .clearfix
-  %h1 Listings
-  %p Listing by most recently created. Hover over a day to see how many desks are available.
+  %h1 #{current_instance.bookable_noun.pluralize}
+  %p Ordered by most recently created. Hover over a day to see how many #{current_instance.bookable_noun.pluralize} are available.
 
 %section.list
   = render @listings

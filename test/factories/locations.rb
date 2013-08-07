@@ -82,6 +82,11 @@ FactoryGirl.define do
             "long_name"=>"Poland",
             "short_name"=>"PL",
             "types"=>["country","political"]
+          },
+          "7"=>{
+            "long_name"=>"02-690",
+            "short_name"=>"02-690",
+            "types"=>["postal_code"]
           }
         }
       end

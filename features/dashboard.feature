@@ -7,6 +7,7 @@ Feature: As a user of the site
   Background:
     Given a user exists
       And I am logged in as the user
+      And an instance exists
       And a company exists with creator: the user
       And a location_type exists with name: "Business"
       And a location_type exists with name: "Co-working"
@@ -41,7 +42,7 @@ Feature: As a user of the site
   Scenario: A user can add new listing
     Given the location exists with company: the company
       And I am on the manage locations page
-     When I follow "Add Listing"
+     When I follow "Add Desk"
       And I fill listing form with valid details
       And I submit the form
       And I should see "Great, your new Desk/Room has been added!"
@@ -57,7 +58,7 @@ Feature: As a user of the site
       And I should see "Great, your listing's details have been updated."
      Then the listing should be updated
      When I click edit listing icon
-      And I click delete listing link
+      And I click delete bookable noun link
       And I should see "That listing has been deleted."
      Then the listing should not exist
 

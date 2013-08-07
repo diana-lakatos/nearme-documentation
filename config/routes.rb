@@ -2,6 +2,7 @@ DesksnearMe::Application.routes.draw do
 
   if Rails.env.development?
     mount ReservationMailer::Preview => 'mail_view/reservations'
+    mount UserMailer::Preview => 'mail_view/users'
     mount InquiryMailer::Preview => 'mail_view/inquiries'
     mount ListingMailer::Preview => 'mail_view/listings'
     mount AfterSignupMailer::Preview => 'mail_view/after_signup'
@@ -54,7 +55,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :listings, :only => [:index, :show] do
-    resources :reservations, :only => [:create, :update, :show], :controller => "listings/reservations" do
+    resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
       post :review, :on => :collection
       get :hourly_availability_schedule, :on => :collection
     end
@@ -62,7 +63,7 @@ DesksnearMe::Application.routes.draw do
 
   match '/auth/:provider/callback' => 'authentications#create'
   match "/auth/failure", to: "authentications#failure"
-  devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' } 
+  devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
   devise_scope :user do
     put "users/avatar", :to => "registrations#avatar", :as => "avatar"
     get "users/", :to => "registrations#new"
@@ -199,14 +200,10 @@ DesksnearMe::Application.routes.draw do
   end
 
   match "/pages/:path", to: 'pages#show', as: :pages
-  match "/legal", to: 'pages#legal'
   match "/host-sign-up", to: 'pages#host_signup_1'
   match "/host-sign-up-2", to: 'pages#host_signup_2'
   match "/host-sign-up-3", to: 'pages#host_signup_3'
   match "/w-hotels-desks-near-me", to: 'locations#w_hotels', as: :w_hotels_location
   match "/W-hotels-desks-near-me", to: 'locations#w_hotels'
   match "/careers", to: 'pages#careers'
-  match "/support" => redirect("https://desksnearme.desk.com")
-  match "/about" => redirect("/pages/about")
-
 end

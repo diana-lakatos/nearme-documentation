@@ -1,6 +1,6 @@
 Dear <%= @name %>,
 
-<%= @sharer.name %> has shared a listing with you!
+<%= @sharer.name %> has shared a <%=@instance.bookable_noun%> with you!
 
 <%= link_to "View #{@listing.name} on Desks Near Me", location_url(@listing.location) %>.
 

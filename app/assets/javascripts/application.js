@@ -19,6 +19,7 @@
 //= require ./vendor/jquery.ias
 //= require ./vendor/markerclusterer
 //= require jquery-fileupload/basic
+//= require history_jquery
 //= require underscore
 //= require backbone
 //= require backbone_rails_sync
@@ -27,8 +28,6 @@
 //= require handlebars.runtime
 //= require chosen-jquery
 //= require chart
-//= require rails.validations
-//= require rails.validations.simple_form
 //
 //
 //= require_self

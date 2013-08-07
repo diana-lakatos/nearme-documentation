@@ -92,7 +92,9 @@ class Search.Controller
   # Returns special search params based on a geolocation result (Search.Geolocator.Result), or no result.
   searchParamsFromGeolocationResult: (result) ->
     params = { lat: null, lng: null, nx: null, ny: null, sx: null, sy: null, \
-               country: null, state: null, city: null, suburb: null, street: null }
+               country: null, state: null, city: null, suburb: null, street: null,
+               postcode: null
+    }
 
     if result
       boundingBox = result.boundingBox()
@@ -107,6 +109,7 @@ class Search.Controller
       params['city']    = result.city()
       params['suburb']  = result.suburb()
       params['street']  = result.street()
+      params['postcode']  = result.postcode()
 
     params
 

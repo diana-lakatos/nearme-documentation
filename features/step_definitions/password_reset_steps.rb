@@ -10,8 +10,7 @@ When /^I begin to reset the password for that user$/ do
 end
 
 Then /^a password reset email should be sent to that user$/ do
-  reset_email = mailbox_for(user.email).last
-  reset_email.should_not be_nil, "No email sent to #{user.email}, expected an email!"
+  reset_email = last_email_for(user.email)
   reset_email.subject.should include "Reset password"
   reset_email.body.should include edit_user_password_path(:reset_password_token => user.reset_password_token)
 end

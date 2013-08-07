@@ -20,7 +20,15 @@ module Listings
         if @reservation_request.confirm_reservations?
           ReservationMailer.notify_host_with_confirmation(reservation).deliver
           ReservationMailer.notify_guest_with_confirmation(reservation).deliver
-          ReservationSmsNotifier.notify_host_with_confirmation(reservation).deliver
+          begin
+            ReservationSmsNotifier.notify_host_with_confirmation(reservation).deliver
+          rescue Twilio::REST::RequestError => e
+            if e.message.include?('is not a valid phone number')
+              handle_invalid_mobile_number(reservation.host)
+            else
+              BackgroundIssueLogger.log_issue("[auto] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{reservation.id}, guest #{current_user.name} (#{current_user.id}). #{$!.inspect}")
+            end
+          end
         else
           ReservationMailer.notify_host_without_confirmation(reservation).deliver
           ReservationMailer.notify_guest_of_confirmation(reservation).deliver

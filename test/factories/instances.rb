@@ -4,6 +4,7 @@ FactoryGirl.define do
     name 'DesksNearMe'
     site_name 'Desks Near Me'
     tagline 'Find a space to work'
+    meta_title 'Desks Near Me'
     support_email 'support@desksnear.me'
     contact_email 'support@desksnear.me'
     address '185 Clara St #100, San Francisco CA 94107'
@@ -12,6 +13,7 @@ FactoryGirl.define do
     blog_url 'http://blog.desksnear.me/'
     twitter_url 'https://twitter.com/desksnearme'
     facebook_url 'https://www.facebook.com/DesksNearMe'
+    bookable_noun 'Desk'
     partner
     after :build do |instance|
       instance.domains << build(:domain, name: instance.name.parameterize.underscore)
