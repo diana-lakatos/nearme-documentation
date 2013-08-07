@@ -1,8 +1,12 @@
 - only_inputs = [] if only_inputs.nil?
 - photo_input_name_prefix = "listing" if local_assigns[:photo_input_name_prefix].nil?
 
-- enable_inputs_daily = f.object.hourly_reservations == false
-- enable_inputs_hourly = f.object.hourly_reservations == true
+- if f.object.free?
+  - enable_inputs_daily, enable_inputs_hourly, enable_inputs_free = false, false, true
+- elsif f.object.hourly_reservations
+  - enable_inputs_daily, enable_inputs_hourly, enable_inputs_free = false, true, false
+- else
+  - enable_inputs_daily, enable_inputs_hourly, enable_inputs_free = true, false, false
 
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
 = f.input :name, :label => "#{current_instance.bookable_noun} name", :placeholder => 'Examples, "Shared Desks", "Meeting Room", "Private Office"' if only_inputs.empty? || only_inputs.include?(:name)
@@ -58,7 +62,7 @@
 
       %div.price-inputs-free
         %label.radio
-          = f.radio_button :hourly_reservations, false
+          = f.radio_button :hourly_reservations, "free", :checked => enable_inputs_free
           Free
 
       - if f.object.errors.include?(:hourly_reservations).present?
