@@ -28,8 +28,6 @@
 //= require handlebars.runtime
 //= require chosen-jquery
 //= require chart
-//= require rails.validations
-//= require rails.validations.simple_form
 //
 //
 //= require_self
