@@ -40,7 +40,10 @@ class SpaceWizardController < ApplicationController
       @listing.photos << current_user.photos.find(params[:uploaded_photos])
     end
 
-    if @user.valid? and @company.valid?
+    user_valid    = @user.valid?
+    company_valid = @company.valid?
+
+    if user_valid and company_valid
       @user.save!
       @company.save!
 
