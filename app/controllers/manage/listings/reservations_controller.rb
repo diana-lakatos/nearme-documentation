@@ -15,8 +15,15 @@ class Manage::Listings::ReservationsController < ApplicationController
     redirect_to manage_guests_dashboard_url
   end
 
+  def rejection_form
+  end
+
   def reject
     if @reservation.reject
+      if rejection_reason.present?
+        @reservation.update_attribute :rejection_reason, rejection_reason
+        ReservationIssueLogger.rejected_with_reason @reservation, current_user
+      end
       ReservationMailer.notify_guest_of_rejection(@reservation).deliver
       event_tracker.rejected_a_booking(@reservation)
       flash[:deleted] = "You have rejected the reservation. Maybe next time!"
@@ -24,6 +31,7 @@ class Manage::Listings::ReservationsController < ApplicationController
       flash[:error] = "Your reservation could not be confirmed."
     end
     redirect_to manage_guests_dashboard_url
+    render_redirect_url_as_json if request.xhr?
   end
 
   def host_cancel
@@ -49,6 +57,10 @@ class Manage::Listings::ReservationsController < ApplicationController
 
   def current_event
     params[:event].downcase.to_sym
+  end
+
+  def rejection_reason
+    params[:reservation][:rejection_reason] if params[:reservation] and params[:reservation][:rejection_reason]
   end
 end
 

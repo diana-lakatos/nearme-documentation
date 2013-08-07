@@ -18,4 +18,10 @@ Feature: As a user of the site
       And I should see "Annex Red House"
       And I should not see "Second location"
 
+  Scenario: User rejects reservation
+    Given a reservation exists with listing: the listing
+    Given I am on the manage guests dashboard page
+    And I reject reservation with reason
+    Then I should see "You have rejected the reservation. Maybe next time!"
+
 
