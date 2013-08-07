@@ -85,6 +85,7 @@ class @PhotoUploader
     if progress == 100
       @progressBar.css('width', 0 + '%')
       @photoItem.html(@getLoadingElement())
+      @photoItem.removeClass('hidden')
 
   getLoadingElement: (text = 'Processing...' ) ->
     '<div class="thumbnail-processing"><div class="loading-icon"></div><div class="loading-text">' + text + '</div></div>'
@@ -94,7 +95,7 @@ class @PhotoUploader
 
   setPhotoItem: (filename) =>
     if @multiplePhoto()
-      @photoItem = $('<div class="photo-item"></div>')
+      @photoItem = $('<div class="photo-item hidden"></div>')
       @sortable.append(@photoItem)
     else
       if @singlePhotoExists()
