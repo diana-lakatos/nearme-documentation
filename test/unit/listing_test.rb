@@ -65,6 +65,7 @@ class ListingTest < ActiveSupport::TestCase
       @listing.daily_price = nil
       @listing.monthly_price = nil
       @listing.weekly_price = nil
+      @listing.free = true
       assert_equal({ 1 => 0 }, @listing.prices_by_days)
     end
 
