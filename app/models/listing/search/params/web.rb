@@ -39,4 +39,8 @@ class Listing::Search::Params::Web < Listing::Search::Params
   def country
     get_address_component("country")
   end
+
+  def postcode
+    get_address_component("postcode")
+  end
 end

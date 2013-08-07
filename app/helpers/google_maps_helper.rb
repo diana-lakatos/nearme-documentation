@@ -1,12 +1,4 @@
 module GoogleMapsHelper
-  def google_maps_streetview_url(options = {})
-    params = google_maps_params(options.merge(
-      :location_type => :location
-    ))
-
-    google_maps_api_url('streetview', params)
-  end
-
   def google_maps_road_map_url(options = {})
     params = google_maps_params(options.merge(
       :location_type => :center,

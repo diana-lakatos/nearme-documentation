@@ -144,15 +144,16 @@ class LocationTest < ActiveSupport::TestCase
     context 'creates address components for new record' do
 
       should "store address components" do
-        assert_equal(7, @location.address_components.count)
+        assert_equal(8, @location.address_components.count)
       end
 
-      should "be able to get city, suburb, state and country" do
+      should "be able to get city, suburb, state, country and postal code" do
         assert_equal 'Ursynowska', @location.street
         assert_equal 'Warsaw', @location.city
         assert_equal 'Mokotow', @location.suburb
         assert_equal 'Masovian Voivodeship', @location.state
         assert_equal 'Poland', @location.country
+        assert_equal '02-690', @location.postcode
       end
 
       should "ignore missing fields and store the one present" do

@@ -4,7 +4,7 @@ class Location < ActiveRecord::Base
   friendly_id :formatted_address, use: :slugged
 
   attr_accessible :address, :address2, :amenity_ids, :company_id, :description, :email,
-    :info, :latitude, :local_geocoding, :longitude, :currency, 
+    :info, :latitude, :local_geocoding, :longitude, :currency,
     :formatted_address, :availability_rules_attributes, :postcode, :phone,
     :availability_template_id, :special_notes, :listings_attributes, :suburb,
     :city, :state, :country, :street, :address_components, :location_type_id, :photos
@@ -96,6 +96,10 @@ class Location < ActiveRecord::Base
     super.presence || "Unknown"
   end
 
+  def postcode
+    super.presence || "Unknown"
+  end
+
   def address
     read_attribute(:formatted_address).presence || read_attribute(:address)
   end
@@ -108,6 +112,7 @@ class Location < ActiveRecord::Base
       self.street = data_parser.fetch_address_component("street")
       self.country = data_parser.fetch_address_component("country")
       self.state = data_parser.fetch_address_component("state")
+      self.postcode = data_parser.fetch_address_component("postcode")
     end
   end
 

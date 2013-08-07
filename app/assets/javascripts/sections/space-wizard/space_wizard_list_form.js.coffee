@@ -44,23 +44,6 @@ class @SpaceWizardSpaceForm
       if $(event.target).closest('#company_industry_ids').length == 0
         $(event.target).closest('.control-group').next().removeClass('input-disabled').find(':input').removeAttr('disabled').focus()
 
-    ClientSideValidations.callbacks.element.pass = (element, callback, eventData) =>
-      callback()
-      @successfulValidationHandler(element)
-
-    ClientSideValidations.callbacks.element.fail = (element, message, callback, eventData) =>
-      callback()
-      element.focus()
-      element.parent().effect('shake', { easing: 'linear' })
-
-    ClientSideValidations.callbacks.form.fail = (form, eventData) ->
-      form.closest('.error-block').parent().ScrollTo()
-
-    ClientSideValidations.callbacks.form.before = (form, eventData) =>
-      if @container.find('> .control-group :input:disabled').length > 0
-        if @container.find('> .control-group').eq(@input_number).find(':input').eq(0).val() != ''
-          @container.find('> .control-group').eq(@input_number+1).removeClass('input-disabled').find(':input').removeAttr('disabled')
-
   successfulValidationHandler: (element) =>
     index = element.closest('.control-group').index()
     if @allValid()
