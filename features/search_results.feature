@@ -6,6 +6,7 @@ Feature: A user can see search results
 
   Background:
     Given I am on the home page
+      Then I open my debugger
       And a listing in Auckland exists
 
   Scenario: Shows $0 only for day if all prices are 0

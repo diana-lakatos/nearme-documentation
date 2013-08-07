@@ -52,7 +52,7 @@ Feature: A user can book at a space
   Scenario: Free booking should show 'Free' in place of rates and $0.00 for the total
     Given I am logged in as the user
     And a location exists with company: that company, currency: "CAD"
-    And a listing exists with location: that location, quantity: 10, daily_price_cents: 0
+    And a listing exists with location: that location, quantity: 10, daily_price_cents: nil, free: true
     When I go to the location's page
     Then I should see a free booking module
 
