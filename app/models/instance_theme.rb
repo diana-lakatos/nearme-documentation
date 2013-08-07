@@ -4,8 +4,8 @@ class InstanceTheme < ActiveRecord::Base
     attr_accessible "color_#{color}"
   end
 
-  attr_accessible :name, :theme_icon_image, :theme_icon_retina_image,
-    :theme_logo_image, :theme_logo_retina_image, :theme_hero_image, :skip_compilation
+  attr_accessible :name, :icon_image, :icon_retina_image,
+    :logo_image, :logo_retina_image, :hero_image, :skip_compilation
 
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
