@@ -9,17 +9,17 @@
     .span8.nested.details-container
       %h2
         = link_to "#{listing.name}", listing 
-        %span.miles
-          = "(#{listing.distance_from_search_query.to_f.round(1)} miles)"
       %h4.hidden-iphone.location-hours
-        %span.ico-location
-          %strong
-            = listing.location.company.name
+        %span
           = pretty_availability_sentence(listing.availability)
       %p.hidden-phone.listing-description
         = listing.description
       %aside.prices
         = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
+        %span.ico-location
+          = listing.location.company.name
+        %span.miles
+          = "#{listing.distance_from_search_query.to_f.round(1)} miles"
       .bottom-fade
 - # We may want to move this, but I've put it here for simplicities sake and as an example for now.
 :javascript
