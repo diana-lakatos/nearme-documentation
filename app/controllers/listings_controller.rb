@@ -1,5 +1,6 @@
 class ListingsController < ApplicationController
   before_filter :find_listing, :only => [:show]
+  before_filter :redirect_if_listing_deleted, :only => [:show]
 
   def index
     @listings = Listing.latest.paginate :page => params[:page]
@@ -12,13 +13,13 @@ class ListingsController < ApplicationController
   protected
 
   def find_listing
-    begin
-      @listing = Listing.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      @deleted_listing = Listing.only_deleted.find(params[:id])
-      @location = Location.with_deleted.find(@deleted_listing.location_id)
-      flash[:warning] =  "This listing has been removed. Displaying other listings near #{@location.address}."
-      redirect_to search_path(:q => @location.address)
+    @listing = Listing.with_deleted.find(params[:id])
+  end
+
+  def redirect_if_listing_deleted
+    if @listing.deleted?
+      flash[:warning] = "This listing has been removed. Displaying other listings near #{@listing.address}."
+      redirect_to search_path(:q => @listing.address)
     end
   end
 end
