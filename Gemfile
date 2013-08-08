@@ -5,7 +5,7 @@ gem 'pg'
 gem 'pg_search'
 
 gem "RedCloth", "~> 4.2.9", :require => "redcloth"
-gem 'airbrake'
+gem 'raygun4ruby'
 gem 'active_model_serializers'
 gem 'carrierwave'
 gem 'decent_exposure'
@@ -36,10 +36,6 @@ gem 'paper_trail'
 
 gem 'rack-rewrite', :require => 'rack/rewrite'
 
-# Use edge to fix validation of nested attributes: https://github.com/bcardarella/client_side_validations/pull/505
-gem 'client_side_validations', :git => "https://github.com/bcardarella/client_side_validations.git", :branch => '3-2-stable'
-
-gem 'client_side_validations-simple_form'
 gem 'state_machine'
 gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 gem 'tweet-button'

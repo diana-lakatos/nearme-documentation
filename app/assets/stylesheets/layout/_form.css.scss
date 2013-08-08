@@ -42,9 +42,18 @@ label.radio {
   margin-top: 17px;
 }
 
+.form-horizontal {
+  .control-group {
+    &.control-fileupload {
+      margin-bottom: 25px;
+    }
+  }
+}
+
 .fileupload {
 
    input.browse-file {
+     display: block;
      height: 0px;
      width: 0px;
      margin: 0px;
@@ -52,6 +61,7 @@ label.radio {
    }
 
   .fileinput-button {
+    margin-bottom: 8px;
     text-align: center;
     cursor: pointer;
   }

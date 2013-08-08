@@ -37,7 +37,7 @@ module ListingsHelpers
 
   def create_listing_in(city)
     instance_variable_set "@listing_in_#{city.downcase.gsub(' ', '_')}",
-      FactoryGirl.create("listing_in_#{city.downcase.gsub(' ', '_')}")
+      FactoryGirl.create("listing_in_#{city.downcase.gsub(' ', '_')}", :photos => [FactoryGirl.create(:photo)])
   end
 
   def build_listing_in(city, options={})
@@ -59,11 +59,11 @@ module ListingsHelpers
   end
 
   def build_fully_booked_listing
-    FactoryGirl.create(:fully_booked_listing)
+    FactoryGirl.create(:fully_booked_listing, :photos_count => 1)
   end
 
   def build_listing_which_is_closed_on_weekends
-    FactoryGirl.create(:listing_in_cleveland)
+    FactoryGirl.create(:listing_in_cleveland, :photos_count => 1)
   end
 
   def date_before_listing_is_fully_booked
@@ -79,6 +79,9 @@ module ListingsHelpers
   end
 
   def fill_listing_form
+    image = File.join(Rails.root, *%w[features fixtures photos], "intern chair.jpg")
+    attach_hidden_file("listing[photos_attributes][0][image]", image)
+
     fill_in "listing_name", with: "My Name"
     fill_in "listing_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
     select "ListingType2", from: "listing_listing_type_id"

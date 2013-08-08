@@ -1,0 +1,15 @@
+.fileupload
+  .uploaded
+    = uploaded_content
+  %label.action
+    %span.btn.btn-blue.btn-medium.upload-photos.fileinput-button
+      %span.ico-upload-photos.padding
+        %span
+          = text
+    -if multiple
+      %input.browse-file{"data-url" => url, :multiple => "multiple", :name => name, :type => "file"}/
+    - else
+      %input.browse-file{"data-url" => url, :name => name, :type => "file"}/
+    - if error_message
+      %p.error-block= error_message
+

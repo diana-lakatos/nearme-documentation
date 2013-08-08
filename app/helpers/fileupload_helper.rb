@@ -1,20 +1,19 @@
 module FileuploadHelper
+  include FormHelper
 
   def file_upload_input(url, name, text='Photos', options = {}, &block)
-    uploaded_content = get_uploaded_content(options, &block)
-    content_tag(:div, 
-      content_tag(:div, uploaded_content, :class => 'uploaded') +
-      content_tag(:label, 
-        content_tag(:span, 
-          content_tag(:span, '', :class => "ico-upload-photos padding") +
-          content_tag(:span, text),
-        :class => "btn btn-blue btn-medium upload-photos fileinput-button") +
-        "<input class='browse-file' #{"multiple" unless options["no-multiple"]} type='file' name='#{name}' data-url='#{url}'>".html_safe,
-      :class => 'action'),
-    :class => 'fileupload')
+    render(partial: 'shared/components/file_upload_input', locals: {
+      uploaded_content: get_uploaded_content(options, &block),
+      error_message: options.delete(:error),
+      multiple: options["no-multiple"] ? false : true,
+      url: url,
+      name: name,
+      text: text
+    }).to_s
   end
 
   def file_upload_input_with_label(label, url, name, text='Photos', options = {}, &block)
+    label = required_field + label if options.delete(:required)
     content_tag(:div, 
       "<label class='text optional control-label' for='#{name}'>#{label}</label>".html_safe +
       content_tag(:div, file_upload_input(url, name, text, options, &block), :class => 'controls'), 
@@ -39,6 +38,7 @@ module FileuploadHelper
   
 
   private
+
   def get_uploaded_content(options, &block)
     if block_given?
       if options["no-multiple"]

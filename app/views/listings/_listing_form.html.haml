@@ -1,5 +1,6 @@
 - only_inputs = [] if only_inputs.nil?
 - photo_input_name_prefix = "listing" if local_assigns[:photo_input_name_prefix].nil?
+
 - enable_inputs_daily = f.object.hourly_reservations == false
 - enable_inputs_hourly = f.object.hourly_reservations == true
 
@@ -78,7 +79,9 @@
   = file_upload_input_with_label('Photos',
                                   manage_photos_path('size' => 'space_listing'),
                                   "#{photo_input_name_prefix}[photos_attributes][0][image]",
-                                   "Browse") do
+                                  "Browse",
+                                  :required => true,
+                                  :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
     - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
     .hidden.thumbnail-processing
       .loading-icon

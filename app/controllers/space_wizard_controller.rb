@@ -26,23 +26,27 @@ class SpaceWizardController < ApplicationController
   end
 
   def submit_listing
-    @company ||= @user.companies.build
-    @company.attributes = params[:company]
-
-    @user = current_user
     @user.phone_required = true
     @user.attributes = params[:user]
 
+    @company ||= @user.companies.build
+    @company.attributes = params[:company]
+
+    @location = @company.locations.first_or_initialize
+    @listing = @location.listings.first_or_initialize
+    @listing.photo_required = true
+    
     if @user.save
-      event_tracker.created_a_location(@user.locations.first, { via: 'wizard' })
-      event_tracker.created_a_listing(@user.first_listing, { via: 'wizard' })
+      event_tracker.created_a_location(@location, { via: 'wizard' })
+      event_tracker.created_a_listing(@listing, { via: 'wizard' })
 
       flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
       redirect_to manage_locations_path
     else
-      @photos = @user.first_listing ? @user.first_listing.photos : current_user.photos
+      @photos = @listing.photos
       render :list
     end
+
   end
 
   def submit_photo
@@ -93,12 +97,6 @@ class SpaceWizardController < ApplicationController
     if @location && @location.listings.any?
       @listing = @location.listings.first
     end
-  end
-
-  def params_hash_complete?
-    params[:company] && 
-    params[:company][:locations_attributes] &&
-    params[:company][:locations_attributes]["0"][:listings_attributes] 
   end
 
 end

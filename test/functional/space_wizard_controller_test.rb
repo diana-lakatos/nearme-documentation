@@ -103,7 +103,8 @@ class SpaceWizardControllerTest < ActionController::TestCase
                        "weekly_price"=>weekly_price, 
                        "monthly_price"=> monthly_price, 
                        "free"=>"0", 
-                       "confirm_reservations"=>"0"}
+                       "confirm_reservations"=>"0",
+                       "photos_attributes" => [FactoryGirl.attributes_for(:photo)]}
                     }, 
                  "currency"=>"USD"}
               }
