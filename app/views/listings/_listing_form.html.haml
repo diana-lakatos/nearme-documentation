@@ -78,7 +78,7 @@
   = file_upload_input_with_label('Photos',
                                   manage_photos_path('size' => 'space_listing'),
                                   "#{photo_input_name_prefix}[photos_attributes][0][image]",
-                                   "Upload Photos") do
+                                   "Browse") do
     - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
     .hidden.thumbnail-processing
       .loading-icon

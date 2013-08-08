@@ -52,7 +52,6 @@ label.radio {
    }
 
   .fileinput-button {
-    display: block;
     text-align: center;
     cursor: pointer;
   }
@@ -95,14 +94,14 @@ label.radio {
     }
 
     .delete-photo {
-      background-color: #024fa3;
+      background-color: $blue;
       position: absolute;
       margin: 6px 0 0 -61px;
       cursor: pointer;
       color: white;
 
       &:hover {
-        background-color: #0367d5;
+        background: lighten($theme_blue, 10%);
       }
     }
 

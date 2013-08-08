@@ -33,20 +33,15 @@ class SpaceWizardController < ApplicationController
     @user.phone_required = true
     @user.attributes = params[:user]
 
-    ActiveRecord::Base.transaction do
-      begin
-        raise 'Params are not complete!' unless params_hash_complete?
-        @company.save!
-        @user.save!
-        event_tracker.created_a_location(@user.locations.first, { via: 'wizard' })
-        event_tracker.created_a_listing(@user.first_listing, { via: 'wizard' })
+    if @user.save
+      event_tracker.created_a_location(@user.locations.first, { via: 'wizard' })
+      event_tracker.created_a_listing(@user.first_listing, { via: 'wizard' })
 
-        flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
-        redirect_to manage_locations_path
-      rescue
-        @photos = @user.first_listing ? @user.first_listing.photos : current_user.photos
-        render :list
-      end
+      flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
+      redirect_to manage_locations_path
+    else
+      @photos = @user.first_listing ? @user.first_listing.photos : current_user.photos
+      render :list
     end
   end
 
