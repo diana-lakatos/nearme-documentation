@@ -561,8 +561,8 @@ DEPENDENCIES
   rails-backbone
   rails-erd
   rails3_acts_as_paranoid
-  raygun4ruby
   ranked-model
+  raygun4ruby
   rb-fsevent
   rdiscount
   resque

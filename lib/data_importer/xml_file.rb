@@ -97,6 +97,7 @@ class DataImporter::XmlFile < DataImporter::File
       @listing.hourly_reservations = true
       @node = listing_node
       @object = @listing
+      @listing.photo_not_required = true
       yield
       if @location.persisted?
         @listing.save!
