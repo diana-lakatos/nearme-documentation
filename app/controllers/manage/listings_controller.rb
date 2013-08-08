@@ -16,12 +16,13 @@ class Manage::ListingsController < Manage::BaseController
 
   def create
     @listing = @location.listings.build(params[:listing])
+    @listing.photo_required = true
+
+    if params[:uploaded_photos]
+      @listing.photos << current_user.photos.find(params[:uploaded_photos])
+    end
 
     if @listing.save
-      if params[:uploaded_photos]
-        @listing.photos << current_user.photos.find(params[:uploaded_photos])
-        @listing.save!
-      end
       flash[:success] = "Great, your new Desk/Room has been added!"
       redirect_to manage_locations_path
     else
@@ -38,6 +39,7 @@ class Manage::ListingsController < Manage::BaseController
 
   def update
     @listing.attributes = params[:listing]
+    @listing.photo_required = true
 
     if @listing.save
       flash[:success] = "Great, your listing's details have been updated."
