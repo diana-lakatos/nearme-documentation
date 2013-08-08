@@ -21,7 +21,7 @@ module Auth
     end
 
     def create_authentication!(current_user)
-      current_user.authentications.create!(:provider => @auth_params['provider'], :uid => @auth_params['uid'])
+      current_user.authentications.create!(:provider => provider, :uid => uid)
       current_user.use_social_provider_image(@auth_params['info']['image'])
       current_user.save!
     end
@@ -45,8 +45,19 @@ module Auth
     end
 
     def authentication
-      @authentication ||= Authentication.find_by_provider_and_uid(@auth_params['provider'],
-                                                                  @auth_params['uid'])
+      @authentication ||= Authentication.find_by_provider_and_uid(provider, uid)
+    end
+
+    def provider
+      if @auth_params
+        @auth_params['provider']
+      else
+        "native"
+      end
+    end
+
+    def uid
+      @auth_params['uid']
     end
 
   end
