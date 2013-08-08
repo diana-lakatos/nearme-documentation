@@ -168,11 +168,15 @@ class Search.SearchController extends Search.Controller
       nx: @formatCoordinate(bounds[0]),
       ny: @formatCoordinate(bounds[1]),
       sx: @formatCoordinate(bounds[2]),
-      sy: @formatCoordinate(bounds[3])
+      sy: @formatCoordinate(bounds[3]),
+      ignore_search_event: 1
     )
 
     @triggerSearchAndHandleResults =>
       @plotListingResultsWithinBounds()
+      @assignFormParams(
+        ignore_search_event: 1
+      )
 
   # Provide a debounced method to trigger the search after a period of constant state
   triggerSearchWithBoundsAfterDelay: _.debounce(->
@@ -182,6 +186,10 @@ class Search.SearchController extends Search.Controller
   # Trigger the search from manipulating the query.
   # Note that the behaviour semantics are different to manually moving the map.
   triggerSearchFromQuery: ->
+    # we want to log any new search query
+    @assignFormParams(
+      ignore_search_event: 0
+    )
     @loader.showWithoutLocker()
      # Infinite-Ajax-Scroller [ ias ] which we use disables itself when there are no more results
      # we need to reenable it when it is necessary, and only then - otherwise we will get duplicates
@@ -257,6 +265,6 @@ class Search.SearchController extends Search.Controller
       for k, param of params
         if param["name"] == 'v'
           param["value"] = (if $(this).hasClass('map') then 'map' else 'list')
-      _url = "#{url}?#{$.param(params)}"
+      _url = "#{url}?#{$.param(params)}&ignore_search_event=1"
       $(this).attr('href', _url)
     
