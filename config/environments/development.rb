@@ -21,5 +21,4 @@ DesksnearMe::Application.configure do
   config.assets.digest = false
 
   config.exceptions_app = nil
-
 end
