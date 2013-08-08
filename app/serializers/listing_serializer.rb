@@ -27,10 +27,7 @@ class ListingSerializer < ApplicationSerializer
 
   # Serialize price
   def price
-    label = case object.daily_price
-            when nil
-              'Call'
-            when 0
+    label = if object.free?
               'Free'
             else
               object.daily_price.format
