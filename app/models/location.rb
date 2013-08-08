@@ -43,8 +43,8 @@ class Location < ActiveRecord::Base
   validates_length_of :description, :maximum => 250, :if => lambda { |location| (location.instance.nil? || location.instance.is_desksnearme?) }
 
   before_validation :fetch_coordinates
+  before_validation :parse_address_components
   before_save :assign_default_availability_rules
-  before_save :parse_address_components
 
   acts_as_paranoid
 
