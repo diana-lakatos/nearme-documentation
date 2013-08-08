@@ -29,6 +29,8 @@ class ListingSerializer < ApplicationSerializer
   def price
     label = if object.free?
               'Free'
+            elsif object.daily_price == nil
+              'Call'
             else
               object.daily_price.format
             end
