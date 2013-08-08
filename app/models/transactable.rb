@@ -32,15 +32,15 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :photos, :allow_destroy => true
 
   # == Scopes
-  scope :featured, where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
-    includes(:photos).order(%{ random() }).limit(5)
-  scope :draft,    where('transactables.draft IS NOT NULL')
-  scope :active,   where('transactables.draft IS NULL')
-  scope :latest,   order("transactables.created_at DESC")
-  scope :visible,  where(:enabled => true)
-  scope :searchable, active.visible
-  scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
-  scope :filtered_by_price_types,  lambda { |price_types| where(price_types.map{|pt| "(properties->'#{pt}_price_cents') IS NOT NULL"}.join(' OR  ')) if price_types }
+  scope :featured, -> {where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
+    includes(:photos).order(%{ random() }).limit(5) }
+  scope :draft,    -> { where('transactables.draft IS NOT NULL') }
+  scope :active,   -> { where('transactables.draft IS NULL') }
+  scope :latest,   -> { order("transactables.created_at DESC") }
+  scope :visible,  -> { where(:enabled => true) }
+  scope :searchable, -> { active.visible }
+  scope :filtered_by_listing_types_ids,  -> listing_types_ids { where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
+  scope :filtered_by_price_types,  -> price_types { where(price_types.map{|pt| "(properties->'#{pt}_price_cents') IS NOT NULL"}.join(' OR  ')) if price_types }
 
   # == Callbacks
   before_validation :set_activated_at
@@ -67,7 +67,7 @@ class Transactable < ActiveRecord::Base
 
   PRICE_TYPES = [:hourly, :weekly, :daily, :monthly]
 
-  serialize :properties, ActiveRecord::Coders::Hstore
+  store_accessor :properties
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company

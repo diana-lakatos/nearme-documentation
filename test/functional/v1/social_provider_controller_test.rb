@@ -5,7 +5,7 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create(:user)
     @user.ensure_authentication_token!
-    @request.env['Authorization'] = @user.authentication_token
+    @request.headers['Authorization'] = @user.authentication_token
   end
 
   test "raise DNM::Unauthorized when the uid exists for another user" do

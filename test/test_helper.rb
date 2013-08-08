@@ -1,15 +1,11 @@
-require 'rubygems'
 ENV["RAILS_ENV"] ||= "test"
 
-require 'rails/application'
-
 require File.expand_path('../../config/environment', __FILE__)
-
 require 'rails/test_help'
 require 'turn'
 require 'mocha/setup'
-require 'mocha/integration/test_unit'
-require 'webmock/test_unit'
+require 'mocha/mini_test'
+require 'webmock/minitest'
 
 require Rails.root.join('test', 'helpers', 'stub_helper.rb')
 
@@ -21,10 +17,12 @@ CarrierWave.configure do |config|
   config.enable_processing = false
 end
 
-class ActiveSupport::TestCase
-  # Add more helper methods to be used by all tests here...
+ActiveSupport::TestCase.class_eval do
+  ActiveRecord::Migration.check_pending!
+
   include FactoryGirl::Syntax::Methods
   include StubHelper
+
   setup :setup_platform_context
 
   def setup_platform_context
@@ -90,7 +88,7 @@ class ActiveSupport::TestCase
 
   def authenticate!
     @user = FactoryGirl.create(:authenticated_user)
-    request.env['Authorization'] = @user.authentication_token
+    request.headers['Authorization'] = @user.authentication_token
   end
 
   def assert_log_triggered(*args)
@@ -123,14 +121,18 @@ class ActiveSupport::TestCase
 
 end
 
-class ActionController::TestCase
+ActionDispatch::IntegrationTest.class_eval do
+  include Rails.application.routes.url_helpers
+end
 
+ActionController::TestCase.class_eval do
+  include Rails.application.routes.url_helpers
   include Devise::TestHelpers
-  setup :setup_platform_context
 
-  def setup_platform_context
-    FactoryGirl.create(:default_instance)
-    PlatformContext.current = PlatformContext.new
+  setup :return_default_host
+
+  def return_default_host
+    request.host =  "example.com"
   end
 
   def self.logged_in(factory = :admin, &block)
@@ -158,6 +160,5 @@ class ActionController::TestCase
   end
 end
 
-FactoryGirl.reload
 DatabaseCleaner.clean
 Utils::EnLocalesSeeder.new.go!

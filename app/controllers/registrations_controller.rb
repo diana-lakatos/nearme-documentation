@@ -1,5 +1,6 @@
 class RegistrationsController < Devise::RegistrationsController
 
+  before_action :configure_permitted_parameters, only: :create
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:update_password, :set_password]
   skip_before_filter :filter_out_token, :only => [:verify, :unsubscribe]
   before_filter :force_ssl, :only => [:new]
@@ -263,5 +264,10 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:name, :email, :password, :password_confirmation)}
+  end
 end
 

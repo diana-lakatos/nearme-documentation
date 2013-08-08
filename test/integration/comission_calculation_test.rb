@@ -35,8 +35,9 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
   private
 
   def create_logged_in_user
-    post_via_redirect '/users', :user => { :name => 'John Doe', :email => 'user@example.com', :password => 'password' }
-    post_via_redirect '/users/sign_in', :user => { :email => 'user@example.com', :password => 'password' }
+    # TODO post_via_redirect '/users', :user => { :name => 'John Doe', :email => 'user@example.com', :password => 'password' }
+    user = FactoryGirl.create(:user)
+    post_via_redirect '/users/sign_in', :user => { :email => user.email, :password => user.password }
   end
 
   def stub_what_has_to_be_stubbed
