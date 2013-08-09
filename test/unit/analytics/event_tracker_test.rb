@@ -107,6 +107,18 @@ class EventTrackerTest < ActiveSupport::TestCase
       expect_event 'Logged In', user_properties
       @tracker.logged_in(@user)
     end
+
+    should 'track user social provider connection' do
+      expect_set_person_properties user_properties
+      expect_event 'Connected Social Provider', user_properties
+      @tracker.connected_social_provider(@user)
+    end
+
+    should 'track user social provider disconnection' do
+      expect_set_person_properties user_properties
+      expect_event 'Disconnected Social Provider', user_properties
+      @tracker.disconnected_social_provider(@user)
+    end
   end
 
   private

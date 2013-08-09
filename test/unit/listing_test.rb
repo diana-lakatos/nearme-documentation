@@ -3,9 +3,7 @@ require 'test_helper'
 class ListingTest < ActiveSupport::TestCase
 
   context 'desksnearme instance' do
-    subject do
-      @listing = FactoryGirl.create(:listing)
-    end
+    subject { Listing.new }
 
     should belong_to(:location)
     should belong_to(:listing_type)
@@ -24,10 +22,22 @@ class ListingTest < ActiveSupport::TestCase
     should allow_value('x' * 250).for(:description)
     should_not allow_value('x' * 251).for(:description)
 
+    should_not allow_value([]).for(:photos)
   end
 
   setup do
     @listing = FactoryGirl.build(:listing)
+  end
+
+  context "#photo_not_required" do
+    subject do
+      @listing = FactoryGirl.build_stubbed(:listing)
+      @listing.photo_not_required = true
+      @listing
+    end
+
+    should allow_value([]).for(:photos)
+    should allow_value([FactoryGirl.create(:photo)]).for(:photos)
   end
 
   context "#prices_by_days" do
