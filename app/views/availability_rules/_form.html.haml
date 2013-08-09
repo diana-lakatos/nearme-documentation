@@ -11,8 +11,9 @@
         = label_text
 
   .controls.custom-availability-rules{:style => ('display: none' unless availability_custom?(f.object))}
+
     - availability_summary_for_rules(f.object.availability_rules).each_day do |day, rule|
-      %div{:class => "day day-#{day}"}
+      %div{:class => "day day-#{day} control-group #{'error' if f.object.errors.any? { |e| e.to_s == "availability_rules.day_#{day}" }}"}
         - # NB: We mark new records for destruction so that they conveniently pre-check the _destory checkbox.
         = f.fields_for(:availability_rules, rule || AvailabilityRule.new(:day => day).tap { |r| r.mark_for_destruction }) do |af|
           - active = availability_custom?(f.object) && !af.object.marked_for_destruction?
@@ -26,3 +27,7 @@
             %label.checkbox
               = check_box_tag "open", "1", active, :class => "open-checkbox"
               = "Open"
+      - if f.object.errors.any? { |e| e.to_s == "availability_rules.day_#{day}" } 
+        .error-block
+          = f.object.errors["availability_rules.day_#{day}".to_sym][0]
+

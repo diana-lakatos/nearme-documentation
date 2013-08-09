@@ -40,6 +40,7 @@ class Manage::ListingsController < Manage::BaseController
       flash[:success] = "Great, your listing's details have been updated."
       redirect_to manage_locations_path
     else
+      @photos = @listing.photos
       render :edit
     end
   end

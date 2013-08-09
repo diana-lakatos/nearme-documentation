@@ -36,9 +36,9 @@ class Listing < ActiveRecord::Base
 
   # == Validations
   validates_presence_of :location, :name, :quantity, :listing_type_id
-  validates_presence_of :description , :if => lambda { |listing| (listing.instance.nil? || listing.instance.is_desksnearme?) }
+  validates_presence_of :description
   validates_numericality_of :quantity, greater_than: 0
-  validates_length_of :description, :maximum => 250, :if => lambda { |listing| (listing.instance.nil? || listing.instance.is_desksnearme?) }
+  validates_length_of :description, :maximum => 250
   validates_with PriceValidator
   validates :hourly_reservations, :inclusion => { :in => [true, false], :message => "must be selected" }, :allow_nil => false
   validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
