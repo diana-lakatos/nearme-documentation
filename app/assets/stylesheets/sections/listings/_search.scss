@@ -23,13 +23,13 @@ section.search#content {
       float: left;
       margin: 0.5em 0 0 0;
 	  font-size: 16px;
-	  line-height: 16px;
+  line-height: 16px;
     }
     
     @media(max-width: $iphone-landscape) {
       margin: 0.25em 0 0 0;
-	  font-size: 12px;
-	  line-height: 14px;
+  font-size: 12px;
+  line-height: 14px;
     }
     
   }
@@ -274,7 +274,6 @@ header#listing_search {
       display: block;
       width: 96px;
       height:45px;
-      //border: 2px solid $theme_white;
       @include border-radius($border-radius-default);
       background: rgba($dnm_blue, 0.5);
       color: $dnm_white;
@@ -293,17 +292,16 @@ header#listing_search {
       
         
       &:hover {
-	    background: rgba($dnm_blue, 0.75);
+        background: rgba($dnm_blue, 0.75);
       }
 
       &.active {
         background: $dnm_blue;
         color: $dnm_white;
-        //border: 2px solid $gray210;
       }
       
         &.active:hover {
-	      background: $dnm_blue;
+          background: $dnm_blue;
         }
     }
 
@@ -314,8 +312,8 @@ header#listing_search {
       border-bottom-left-radius: 0;
       
       .ico-marker:before {
-	    position: relative;
-	    left: -5px;
+        position: relative;
+        left: -5px;
       }
 
       @media (max-width: $iphone-landscape) {
@@ -431,7 +429,7 @@ header#listing_search {
       }
       
       .search-icon {
-         @include background-image(linear-gradient(left, rgba(255,255,255,0), $theme_white 30%, $theme_white));
+        @include background-image(linear-gradient(left, rgba(255,255,255,0), $theme_white 30%, $theme_white));
         @include opacity(1);
         top: 7px;
         right:2px;
@@ -587,7 +585,7 @@ section.search section#results.list {
       }
       
       a {
-	    color: $dnm_blue;
+        color: $dnm_blue;
       }
       
     }
@@ -598,7 +596,7 @@ section.search section#results.list {
       text-overflow: ellipsis;
       
       @media(max-width: $ipad-width) {
-	      padding-right: 10%;
+      padding-right: 10%;
       }
     }
 
@@ -618,7 +616,7 @@ section.search section#results.list {
       
       @media (max-width: $ipad-width) {
         margin: -0.4em 0 0.4em 0;
-	    font-size: 14px;
+        font-size: 14px;
       }
 
       @media (max-width: 614px) {
@@ -637,7 +635,6 @@ section.search section#results.list {
       line-height: 28px;
     }
 
-
     .label {
       padding: 0;
       margin: 0;
@@ -645,21 +642,21 @@ section.search section#results.list {
       color: $gray40;
       font-size: 18px;
       line-height: 24px;
-      font-weight: bold;
+      font-family: $font-bold;
+      font-weight: normal;
+      
+      &.label-weekly-price {
+        color: $gray80;
+      }
+      
+      &.label-monthly-price {
+        color: $gray120;
+      }
 
       @media (max-width: $iphone-portrait) {
         font-size: 10px;
         line-height: 14px;
       }
-      
-    }
-      
-    .label.label-weekly-price {
-      color: $gray80;
-    }
-      
-    .label.label-monthly-price {
-	  color: $gray120;
     }
 
     aside.prices {
@@ -672,18 +669,22 @@ section.search section#results.list {
       width: 25%;
       
       .label {
-	    display: block;
-	    
-	    @media (max-width: $ipad-width) {
-	      display: inline;
-	      float: left;
-	      margin: 0 10px 0 0;
-	      font: 18px/18px "Futura-medium", sans-serif;
-	    }
-	    
-	    @media (max-width: $iphone-portrait) {
-	      font: 12px/14px "Futura-medium", sans-serif;
-	    }
+        display: block;
+    
+        @media (max-width: $ipad-width) {
+          display: inline;
+          float: left;
+          margin: 0 10px 0 0;
+          font-size: 18px;
+          line-height: 18px;
+          font-family: $font-medium;
+        }
+    
+        @media (max-width: $iphone-portrait) {
+          font-size: 12px;
+          line-height: 14px;
+          font-family: $font-medium;
+        }
       }
       
       .ico-location {
@@ -691,32 +692,37 @@ section.search section#results.list {
         display: block;
         overflow: hidden;
         color: $gray80;
+        font-family: $font-bold;
         white-space: nowrap;
         text-overflow: ellipsis;
-	    
-	    @media (max-width: 768px) {
-	      margin: 0;
-	      display: none;
-		}
-	    
-	    @media (max-width: $ipad-width) {
-	      clear: left;
-	      margin: 0.5em 20px 0 0;
-	      display: inline;
-	      float: left;
-	      font: normal normal normal 16px/16px "Futura-medium", sans-serif;
-		}
-	    
-	    @media (max-width: $iphone-landscape) {
-	      margin: 0.25em 20px 0 0;
-	      font: normal normal normal 12px/14px "Futura-medium", sans-serif;
-		}
-		
-	  }
-	  
-	  .more {
-		color: rgb(255,255,255);
-	  }
+    
+        @media (max-width: 768px) {
+          margin: 0;
+          display: none;
+        }
+    
+        @media (max-width: $ipad-width) {
+          clear: left;
+          margin: 0.5em 20px 0 0;
+          display: inline;
+          float: left;
+          font-size: 16px;
+          line-height: 16px;
+          font-family: $font-medium;
+        }
+    
+        @media (max-width: $iphone-landscape) {
+          margin: 0.25em 20px 0 0;
+          font-size: 12px;
+          line-height: 14px;
+          font-family: $font-medium;
+        }
+
+      }
+  
+      .more {
+        color: rgb(255,255,255);
+      }
 
       @media (max-width: $ipad-width) {
         position: absolute;
