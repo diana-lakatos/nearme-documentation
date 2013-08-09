@@ -23,7 +23,7 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
   context "open/close time in (H)H:MM format" do
 
     setup do
-        @availability_rule = AvailabilityRule.new(:open_hour => 6, :open_minute => 0, :close_hour => 17, :close_minute => 0)
+      @availability_rule = AvailabilityRule.new(:open_hour => 6, :open_minute => 0, :close_hour => 17, :close_minute => 0)
     end
 
     should 'return open time in expected format' do
@@ -34,7 +34,43 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
       assert_equal "17:00", @availability_rule.close_time
     end
 
-    
+  end
+
+  context "floor_total_opening_time_in_hours" do
+
+    should 'return floor how many hours during the day the status is "open"' do
+      @availability_rule = AvailabilityRule.new(:open_hour => 9, :open_minute => 0, :close_hour => 17, :close_minute => 45)
+      assert_equal 8, @availability_rule.floor_total_opening_time_in_hours
+    end
+
+    should 'return total opening time in hours distinguishing between AM and PM' do
+      @availability_rule = AvailabilityRule.new(:open_hour => 0, :open_minute => 0, :close_hour => 23, :close_minute => 45)
+      assert_equal 23, @availability_rule.floor_total_opening_time_in_hours
+    end
+
+    should 'return 0 when is opened for less than 1 hour' do
+      @availability_rule = AvailabilityRule.new(:open_hour => 0, :open_minute => 0, :close_hour => 0, :close_minute => 45)
+      assert_equal 0, @availability_rule.floor_total_opening_time_in_hours
+    end
+
+  end
+
+  context 'validation' do
+
+    should 'not be valid if close hour happens before open hour' do
+      @availability_rule = AvailabilityRule.new(:day => 1, :open_hour => 17, :open_minute => 0, :close_hour => 9, :close_minute => 0)
+      assert !@availability_rule.valid?
+    end
+
+    should 'not be valid if not opened for at least 1 hour' do
+      @availability_rule = AvailabilityRule.new(:day => 1, :open_hour => 0, :open_minute => 0, :close_hour => 0, :close_minute => 45)
+      assert !@availability_rule.valid?
+    end
+
+    should 'be valid if opened for at least 1 hour' do
+      @availability_rule = AvailabilityRule.new(:day => 1, :open_hour => 0, :open_minute => 0, :close_hour => 1, :close_minute => 0)
+      assert @availability_rule.valid?
+    end
   end
 
 
