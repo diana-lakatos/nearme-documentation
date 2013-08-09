@@ -1,0 +1,31 @@
+#credit_card_fields
+  %hr.divider
+
+  - if @reservation_request.errors[:cc].present?
+    .flash.error
+      %ul
+        - @reservation_request.errors[:cc].each do |e|
+          %li= e
+
+  .row-fluid.padding-bottom
+    .span6
+      .ico-lock.padding Submit a secure payment.
+    .span6
+      = image_tag 'credit-cards.png', :alt => "Visa, Mastercard, American Express, Discover"
+
+  .row-fluid
+    = f.label :card_number, "Credit Card Number", class: 'control-label', placeholder: 'Credit Card Number'
+    .controls.card-number
+      = f.input_field :card_number, required: true
+      .credit-card-icon
+        %span.ico-credit-card
+
+  .card-info.expiry.column.left
+    = f.label :card_expires, "Expires On", class: 'control-label'
+    .controls.card-expires
+      = f.input_field :card_expires, input_html: {size: 4}, placeholder: 'MM/YY', required: true
+
+  .card-info.security.column.right
+    = f.label :card_code, "Security Code", class: 'control-label'
+    .controls.card-code
+      = f.input_field :card_code, input_html: {size: 3}, placeholder: 'CCV', required: true

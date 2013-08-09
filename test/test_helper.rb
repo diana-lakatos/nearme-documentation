@@ -77,6 +77,11 @@ Spork.prefork do
       @tracker = Analytics::EventTracker.any_instance
     end
 
+    def stub_billing_gateway
+      User::BillingGateway.any_instance.stubs(:charge).returns(true)
+      User::BillingGateway.any_instance.stubs(:store_card).returns(true)
+    end
+
     DatabaseCleaner.strategy = :truncation
 
     def stub_image_url(image_url)

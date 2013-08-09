@@ -11,7 +11,6 @@ module Listings
     def_delegators :@reservation_request, :reservation
 
     def review
-      @reservation_request.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
       event_tracker.opened_booking_modal(reservation)
     end
 
@@ -79,7 +78,6 @@ module Listings
         listing,
         current_user,
         {
-          :payment_method => params[:reservation_request][:payment_method],
           :quantity       => params[:reservation_request][:quantity],
           :dates          => params[:reservation_request][:dates],
           :start_minute   => params[:reservation_request][:start_minute],

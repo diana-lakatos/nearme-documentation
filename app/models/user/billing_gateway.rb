@@ -10,6 +10,8 @@ class User::BillingGateway
   # Invalid parameters provided with request
   InvalidRequestError = Class.new(BillingError)
 
+  SUPPORTED_CURRENCIES = %w(USD CAD)
+
   # User helper to add associations on the user data object
   module UserHelper
     extend ActiveSupport::Concern
@@ -135,6 +137,10 @@ class User::BillingGateway
     raise CardError, e
   rescue Stripe::StripeError => e
     raise BillingError, e
+  end
+
+  def self.payment_supported?(location)
+    SUPPORTED_CURRENCIES.include? location.currency
   end
 
   protected
