@@ -17,7 +17,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
     should "handle nil and empty prices" do
       assert_difference('Listing.count', 1) do
-        post :submit_listing, get_params(nil, "", "249.00")
+        post :submit_listing, get_params(nil, "", "249.00", "0")
       end
       @listing = Listing.last
       assert_nil @listing.daily_price
@@ -104,7 +104,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
   private
 
-  def get_params(daily_price = nil, weekly_price = nil, monthly_price = nil)
+  def get_params(daily_price = nil, weekly_price = nil, monthly_price = nil, free = "1")
     {"company"=>
      {
        "name"=>"International Secret Intelligence Service", 
@@ -128,7 +128,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
           "daily_price"=>daily_price, 
           "weekly_price"=>weekly_price, 
           "monthly_price"=> monthly_price, 
-          "free"=>"0", 
+          "free"=>free, 
           "confirm_reservations"=>"0",
           "photos_attributes" => [FactoryGirl.attributes_for(:photo)]}
         }, 

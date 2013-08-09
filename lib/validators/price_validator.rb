@@ -1,6 +1,8 @@
 class PriceValidator < ActiveModel::Validator
   def validate(record)
-    unless record.free? || (record.hourly_price_cents.to_f + record.daily_price_cents.to_f + record.weekly_price_cents.to_f + record.monthly_price_cents.to_f > 0)
+    if record.free? && record.has_price?
+      record.errors.add("free", :free)
+    elsif !record.free? && !record.has_price?
       record.errors.add("free", :free)
     end
   end
