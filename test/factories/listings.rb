@@ -12,11 +12,11 @@ FactoryGirl.define do
     hourly_reservations false
 
     ignore do
-      photos_count 0
+      photos_count 1
     end
 
-    after(:create) do |listing, evaluator|
-      FactoryGirl.create_list(:photo, evaluator.photos_count, content: listing)
+    after(:build) do |listing, evaluator|
+      listing.photos = FactoryGirl.create_list(:photo, evaluator.photos_count, content: nil)
     end
 
     factory :always_open_listing do
