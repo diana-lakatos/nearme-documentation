@@ -4,16 +4,13 @@
   #signup
     .span8.offset2
       .box
-        %h2== Rejection reason
-        %p.intro
-          You can provide rejection reason
-
+        %br
         = simple_form_for(@reservation, :url => reject_manage_listing_reservation_path(@listing, @reservation)) do |f|
           .input-icon-holder
-            = f.input :rejection_reason, :label => false, :placeholder => "Rejection reason", :tabindex => '1'
-
+            = f.input :rejection_reason, :placeholder => "Optionally, provide a reason.", :label => false, :tabindex => '1'
+          %br
           .actions
-            = f.submit "Reject"
+            = f.submit "Decline"
 
 - if request.xhr?
   :javascript
