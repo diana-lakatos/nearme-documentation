@@ -19,11 +19,8 @@ class Manage::Listings::ReservationsController < ApplicationController
   end
 
   def reject
-    if @reservation.reject
-      if rejection_reason.present?
-        @reservation.update_attribute :rejection_reason, rejection_reason
-        ReservationIssueLogger.rejected_with_reason @reservation, current_user
-      end
+    if @reservation.reject(rejection_reason)
+      ReservationIssueLogger.rejected_with_reason @reservation, current_user if rejection_reason.present?
       ReservationMailer.notify_guest_of_rejection(@reservation).deliver
       event_tracker.rejected_a_booking(@reservation)
       flash[:deleted] = "You have rejected the reservation. Maybe next time!"
