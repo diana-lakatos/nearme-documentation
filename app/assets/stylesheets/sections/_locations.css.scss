@@ -1,6 +1,5 @@
 section.locations {
-  min-height: 800px;
-  
+
   h1 {
     margin: -10px 0 20px;
 
@@ -23,7 +22,7 @@ section.locations {
 
   .span4.pull-left {
     margin-left: 0;
-    
+
     @media (min-width: 768px) {
       width: 34%;
     }
@@ -45,7 +44,7 @@ section.locations {
 .availability-rules {
 
   .custom-availability-rules {
-    
+
     .day {
       overflow: hidden;
       margin-top: 6px;
@@ -59,14 +58,14 @@ section.locations {
         margin-top: 13px;
       }
 
-      .open-time, 
+      .open-time,
       .close-time {
         position: relative;
       }
 
-      .day-name, 
-      .open-time, 
-      .close-time, 
+      .day-name,
+      .open-time,
+      .close-time,
       .closed-flag {
         float: left;
         width: 90px;
@@ -78,7 +77,7 @@ section.locations {
       }
 
       @media (max-width: $iphone-landscape) {
-        
+
         .day-name {
           clear: both;
           width: 100%;
