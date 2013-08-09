@@ -22,7 +22,7 @@ class RegistrationsController < Devise::RegistrationsController
     if @user.persisted?
       # This user has just registered, so we
       mixpanel.apply_user(@user, :alias => true)
-      event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: provider })
+      event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
     end
 
     # Clear out temporarily stored Provider authentication data if present
@@ -104,14 +104,6 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   private
-
-  def provider
-    provider = unless session[:omniauth].nil?
-      session[:omniauth][:provider]
-    else
-      'native'
-    end
-  end
 
   def signed_up_via
     if !request.referrer.nil? && request.referrer.include?('return_to=%2Fspace%2Flist&wizard=space')

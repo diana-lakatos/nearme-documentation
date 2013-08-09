@@ -218,7 +218,9 @@ class User < ActiveRecord::Base
   end
 
   def first_listing
-    companies.first.locations.first.listings.first
+    if companies.first and companies.first.locations.first
+      companies.first.locations.first.listings.first
+    end
   end
 
   def has_listing_without_price?

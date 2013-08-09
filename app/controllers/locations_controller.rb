@@ -2,6 +2,7 @@ class LocationsController < ApplicationController
 
   before_filter :authenticate_user!, :only => [:new, :create]
   before_filter :find_location, :only => :show
+  before_filter :redirect_if_location_deleted, :only => :show
   before_filter :redirect_for_location_custom_page, :only => :show
 
   def show
@@ -31,7 +32,14 @@ class LocationsController < ApplicationController
   end
 
   def find_location
-    @location = Location.find(params[:id])
+    @location = Location.with_deleted.find(params[:id])
+  end
+
+  def redirect_if_location_deleted
+    if @location.deleted?
+      flash[:warning] =  "This listing has been removed. Displaying other listings near #{@location.address}."
+      redirect_to search_path(:q => @location.address)
+    end
   end
 
   def redirect_for_location_custom_page

@@ -5,7 +5,7 @@ Feature: A user can see location details
 
   Background:
     Given a company exists
-      And a location exists with company: that company
+      And a location exists with company: that company, address: "Adelaide"
       And a listing: "Big room" exists with location: that location, name: "Big room", quantity: 10
 
   Scenario: Selected listing is highlighted
@@ -13,3 +13,21 @@ Feature: A user can see location details
      When I am on the listing "Small room" page
      Then I should see highlighted listing: "Small room" 
       And I should see "Big room"
+
+  Scenario: User is redirected to search page if he tries to access deleted listing
+    Given a listing: "Small room" exists with location: that location, name: "Small room", quantity: 10
+      And a listing: "Small Room" is deleted
+     When I am on deleted listing "Small room" page
+     Then I should see other listings near "Adelaide"
+
+  Scenario: User is redirected to search page if he tries to access deleted listing, which location is also deleted
+    Given a listing: "Small room" exists with location: that location, name: "Small room", quantity: 10
+      And a listing: "Small Room" is deleted
+     When I am on listing "Small room" page which belong to deleted location
+     Then I should see other listings near "Adelaide"
+
+  Scenario: User is redirected to search page if he tries to access deleted location
+    Given a location is deleted
+     When I am on deleted location page
+     Then I should see other listings near "Adelaide"
+      And I should not see "Big Room"

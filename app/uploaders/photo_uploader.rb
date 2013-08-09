@@ -30,7 +30,7 @@ class PhotoUploader < BaseImageUploader
   end
 
   version :space_listing do
-    process :resize_to_fill => [410, 254]
+    process :resize_to_fill => [180, 113]
   end
 
   version :golden do

@@ -191,7 +191,7 @@ class Search.Map
     [ne.lat(), ne.lng(), sw.lat(), sw.lng()]
     
   getListingForMarker: (marker) ->
-    listing_id = null 
+    listing_id = null
     for idx, _marker of @markers
       if _marker is marker
         listing_id = idx
@@ -208,7 +208,7 @@ class Search.Map
         html += group[0].popoverTitleContent()
         html += listing.popoverContent() for listing in group
         
-      @popover.setContent html 
+      @popover.setContent html
       @popover.open @googleMap, cluster.getMarkers()[0])
     
     true

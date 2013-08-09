@@ -21,6 +21,13 @@
       = f.hidden_field :latitude
       = f.hidden_field :longitude
       = f.hidden_field :formatted_address 
+      = f.hidden_field :street
+      = f.hidden_field :suburb 
+      = f.hidden_field :city 
+      = f.hidden_field :state
+      = f.hidden_field :country
+      = f.hidden_field :postcode
+
       #address-component-wrapper.hidden
         #address-component-template
           - # we need this input to avoid hardcoding 'name' parameter for dynamically inserted inputs for address_components
