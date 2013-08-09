@@ -44,15 +44,41 @@ class SpaceWizardControllerTest < ActionController::TestCase
       post :submit_listing, get_params
     end
 
-    should 'track list your space list view' do
-      @tracker.expects(:viewed_list_your_space_list)
+    should 'track clicked list your bookable when logged in' do
+      @tracker.expects(:clicked_list_your_bookable)
       get :new
     end
 
-    should 'track list your space sign up view' do
+    should 'track clicked list your bookable when not logged in' do
       sign_out @user
-      @tracker.expects(:viewed_list_your_space_sign_up)
+      @tracker.expects(:clicked_list_your_bookable)
       get :new
+    end
+
+
+    should 'track viewed list your bookable' do
+      @tracker.expects(:viewed_list_your_bookable)
+      get :list
+    end
+
+    context '#user has already bookable' do
+
+      setup do
+        @listing = FactoryGirl.create(:listing)
+        @listing.company.tap { |c| c.creator = @user }.save!
+      end
+
+      should 'not track clicked list your bookable if user already has bookable ' do
+        @tracker.expects(:clicked_list_your_bookable).never
+        get :new
+      end
+
+      should 'not track viewed list your bookable if user already has bookable ' do
+        @tracker.expects(:viewed_list_your_bookable).never
+        get :list
+
+      end
+
     end
 
   end
@@ -79,41 +105,41 @@ class SpaceWizardControllerTest < ActionController::TestCase
   private
 
   def get_params(daily_price = nil, weekly_price = nil, monthly_price = nil)
-        {"company"=>
-          {
-            "name"=>"International Secret Intelligence Service", 
-            "industry_ids"=>["#{@industry.id}"], 
-            "locations_attributes"=>
-              {"0"=>
-                {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.", 
-                 "address"=>"usa", 
-                 "local_geocoding"=>"10", 
-                 "latitude"=>"5", 
-                 "longitude"=>"8", 
-                 "formatted_address"=>"formatted usa", 
-                 "location_type_id"=>"1", 
-                 "listings_attributes"=>
-                    {"0"=>
-                      {"name"=>"Desk", 
-                       "description"=>"We have a group of several shared desks available.",
-                       "hourly_reservations" => false,
-                       "listing_type_id"=>"1", 
-                       "quantity"=>"1", 
-                       "daily_price"=>daily_price, 
-                       "weekly_price"=>weekly_price, 
-                       "monthly_price"=> monthly_price, 
-                       "free"=>"0", 
-                       "confirm_reservations"=>"0",
-                       "photos_attributes" => [FactoryGirl.attributes_for(:photo)]}
-                    }, 
-                 "currency"=>"USD"}
-              }
-          },
-          "user" => {
-            "country_name" => "United States",
-            "phone" => "123456789"
-          }
-        }
+    {"company"=>
+     {
+       "name"=>"International Secret Intelligence Service", 
+       "industry_ids"=>["#{@industry.id}"], 
+       "locations_attributes"=>
+       {"0"=>
+        {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.", 
+         "address"=>"usa", 
+         "local_geocoding"=>"10", 
+         "latitude"=>"5", 
+         "longitude"=>"8", 
+         "formatted_address"=>"formatted usa", 
+         "location_type_id"=>"1", 
+         "listings_attributes"=>
+        {"0"=>
+         {"name"=>"Desk", 
+          "description"=>"We have a group of several shared desks available.",
+          "hourly_reservations" => false,
+          "listing_type_id"=>"1", 
+          "quantity"=>"1", 
+          "daily_price"=>daily_price, 
+          "weekly_price"=>weekly_price, 
+          "monthly_price"=> monthly_price, 
+          "free"=>"0", 
+          "confirm_reservations"=>"0",
+          "photos_attributes" => [FactoryGirl.attributes_for(:photo)]}
+        }, 
+        "currency"=>"USD"}
+       }
+     },
+     "user" => {
+       "country_name" => "United States",
+       "phone" => "123456789"
+     }
+    }
   end
 
   def create_listing
