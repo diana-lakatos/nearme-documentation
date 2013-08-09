@@ -14,5 +14,5 @@ When /^I fill in valid space details$/ do
 
   image = File.join(Rails.root, *%w[features fixtures photos], "intern chair.jpg")
   attach_hidden_file('company[locations_attributes][0][listings_attributes][0][photos_attributes][0][image]', image)
-  page.should_not have_content('Thumbnail processing...')
+  page.should_not have_content('Processing...')
 end

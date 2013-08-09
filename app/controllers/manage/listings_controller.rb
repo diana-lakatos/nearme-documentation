@@ -8,6 +8,7 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def new
+    @photos = current_user.photos
     @listing = @location.listings.build(
       :daily_price_cents => 50_00,
       :availability_template_id => AvailabilityRule.default_template.id
@@ -16,11 +17,6 @@ class Manage::ListingsController < Manage::BaseController
 
   def create
     @listing = @location.listings.build(params[:listing])
-    @listing.photo_required = true
-
-    if params[:uploaded_photos]
-      @listing.photos << current_user.photos.find(params[:uploaded_photos])
-    end
 
     if @listing.save
       flash[:success] = "Great, your new Desk/Room has been added!"
@@ -35,13 +31,12 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def edit
+    @photos = @listing.photos
   end
 
   def update
-    @listing.attributes = params[:listing]
-    @listing.photo_required = true
 
-    if @listing.save
+    if @listing.update_attributes params[:listing]
       flash[:success] = "Great, your listing's details have been updated."
       redirect_to manage_locations_path
     else

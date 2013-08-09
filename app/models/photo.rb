@@ -1,10 +1,15 @@
 class Photo < ActiveRecord::Base
 
+  include RankedModel
+  ranks :position, with_same: [:content_id, :content_type]
+
   attr_accessible :creator_id, :content_id, :content_type, :caption, :image, :position
   belongs_to :content, :polymorphic => true
   belongs_to :creator, class_name: "User"
 
-
+  default_scope -> { rank(:position) }
+  scope :no_content, -> { where content_id: nil }
+  scope :for_listing, -> { where content_type: 'Listing' }
 
   acts_as_paranoid
 

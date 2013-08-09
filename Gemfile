@@ -78,6 +78,8 @@ gem 'chosen-rails'
 gem 'inherited_resources'
 gem "historyjs-rails"
 
+gem 'ranked-model'
+
 gem 'desk'
 
 group :staging, :production do

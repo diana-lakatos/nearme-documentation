@@ -174,7 +174,7 @@ class MailchimpTest < ActiveSupport::TestCase
     end
 
     def create_listing(user)
-      FactoryGirl.create(:listing, :location => user.companies.first.locations.first)
+      FactoryGirl.create(:listing, :location => user.companies.first.locations.first, :photo_not_required => true, :photos_count => 0)
       user
     end
 

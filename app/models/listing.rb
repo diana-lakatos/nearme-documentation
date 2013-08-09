@@ -42,7 +42,7 @@ class Listing < ActiveRecord::Base
   validates_length_of :description, :maximum => 250, :if => lambda { |listing| (listing.instance.nil? || listing.instance.is_desksnearme?) }
   validates_with PriceValidator
   validates :hourly_reservations, :inclusion => { :in => [true, false], :message => "must be selected" }, :allow_nil => false
-  validates :photos, :length => { :minimum => 1 }, :if => :photo_required
+  validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
 
   # == Helpers
   include Search
@@ -64,7 +64,7 @@ class Listing < ActiveRecord::Base
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
     :free, :photos_attributes, :listing_type_id, :hourly_reservations
 
-  attr_accessor :distance_from_search_query, :photo_required
+  attr_accessor :distance_from_search_query, :photo_not_required
 
   PRICE_TYPES.each do |price|
     # Flag each price type as a Money attribute.
