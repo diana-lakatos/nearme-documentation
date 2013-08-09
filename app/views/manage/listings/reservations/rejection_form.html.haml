@@ -10,7 +10,7 @@
             = f.input :rejection_reason, :placeholder => "Optionally, provide a reason.", :label => false, :tabindex => '1'
           %br
           .actions
-            = f.submit "Decline"
+            = f.submit "Decline", id: 'submit-decline'
 
 - if request.xhr?
   :javascript

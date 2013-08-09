@@ -8,6 +8,7 @@ When(/^I reject reservation with reason$/) do
   click_on 'Decline'
   work_in_modal do
     fill_in 'reservation_rejection_reason', with: 'User has invalid details!'
-    click_on 'Reject'
+    click_on 'submit-decline'
   end
 end
+
