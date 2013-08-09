@@ -84,14 +84,14 @@ class EventTrackerTest < ActiveSupport::TestCase
   end
 
   context 'Space Wizard' do
-    should 'track sign up step of flow' do
-      expect_event 'Viewed List Your Space, Sign Up', {}
-      @tracker.viewed_list_your_space_sign_up
+    should 'track click list your bookable' do
+      expect_event 'Clicked List your Bookable', {}
+      @tracker.clicked_list_your_bookable
     end
 
-    should 'track list step of flow' do
-      expect_event 'Viewed List Your Space, List', {}
-      @tracker.viewed_list_your_space_list
+    should 'track view list your bookable' do
+      expect_event 'Viewed List Your First Bookable', {}
+      @tracker.viewed_list_your_bookable
     end
   end
 

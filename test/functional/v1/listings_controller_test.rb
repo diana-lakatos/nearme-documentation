@@ -21,6 +21,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
         description: 'nice listing',
         listing_type_id: 1,
         hourly_reservations: true,
+        hourly_price_cents: 1000,
         quantity: 10
       },
       format: 'json'

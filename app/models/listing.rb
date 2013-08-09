@@ -4,7 +4,7 @@ class Listing < ActiveRecord::Base
   has_many :reservations,
     dependent: :destroy
 
-  has_many :photos,  as: :content, dependent: :destroy do
+  has_many :photos,  as: :content do
     def thumb
       (first || build).thumb
     end
@@ -31,6 +31,7 @@ class Listing < ActiveRecord::Base
   scope :latest,   order("listings.created_at DESC")
 
   # == Callbacks
+  before_validation :null_price_if_marked_free
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
 
@@ -136,24 +137,20 @@ class Listing < ActiveRecord::Base
     scope.sum(:quantity)
   end
 
-  def free?
-    !has_price?
-  end
-  alias_method :free, :free?
-
   def has_price?
     PRICE_TYPES.map { |price|
       self["#{price}_price_cents"]
     }.compact.any? { |price| !price.zero? }
   end
 
-  def free=(free_flag)
-    return unless [true, "1"].include?(free_flag)
+  def null_price_if_marked_free
+    null_price! if free?
+  end
 
-    self.hourly_price = nil
-    self.daily_price = nil
-    self.weekly_price = nil
-    self.monthly_price = nil
+  def null_price!
+    PRICE_TYPES.map { |price|
+      self.send "#{price}_price_cents=", nil
+    }
   end
 
   def desks_available?(date)

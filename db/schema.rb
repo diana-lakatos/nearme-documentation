@@ -160,11 +160,11 @@ ActiveRecord::Schema.define(:version => 20130807041210) do
     t.text     "description"
     t.integer  "quantity",                :default => 1
     t.text     "availability_rules_text"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
     t.datetime "deleted_at"
-    t.boolean  "confirm_reservations",    :default => true, :null => false
-    t.boolean  "delta",                   :default => true, :null => false
+    t.boolean  "confirm_reservations",    :default => true,  :null => false
+    t.boolean  "delta",                   :default => true,  :null => false
     t.integer  "listing_type_id"
     t.integer  "daily_price_cents"
     t.integer  "weekly_price_cents"
@@ -173,6 +173,7 @@ ActiveRecord::Schema.define(:version => 20130807041210) do
     t.integer  "hourly_price_cents"
     t.integer  "minimum_booking_minutes"
     t.string   "external_id"
+    t.boolean  "free",                    :default => false
   end
 
   create_table "location_amenities", :force => true do |t|

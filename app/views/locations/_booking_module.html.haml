@@ -1,6 +1,9 @@
 .booking-module-container{:class => (listing.hourly_reservations? ? 'booking-hourly' : 'booking-daily')}
   .booking-module
-    - if listing.hourly_reservations?
+    - if listing.free?
+      %span.label.label-free-price
+        Free
+    - elsif listing.hourly_reservations?
       - unless listing.hourly_price.to_f.zero?
         %span.label.label-hourly-price
           = "#{money_without_cents_and_with_symbol(listing.hourly_price)}"
