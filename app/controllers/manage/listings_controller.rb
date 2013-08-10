@@ -8,11 +8,11 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def new
-    @photos = current_user.photos
     @listing = @location.listings.build(
       :daily_price_cents => 50_00,
       :availability_template_id => AvailabilityRule.default_template.id
     )
+
   end
 
   def create
@@ -22,6 +22,7 @@ class Manage::ListingsController < Manage::BaseController
       flash[:success] = "Great, your new Desk/Room has been added!"
       redirect_to manage_locations_path
     else
+      @photos = @listing.photos
       render :new
     end
   end
