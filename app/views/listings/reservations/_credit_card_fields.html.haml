@@ -1,6 +1,4 @@
 #credit_card_fields
-  %hr.divider
-
   - if @reservation_request.errors[:cc].present?
     .flash.error
       %ul
@@ -15,10 +13,9 @@
 
   .row-fluid
     = f.label :card_number, "Credit Card Number", class: 'control-label', placeholder: 'Credit Card Number'
-    .controls.card-number
+    .controls.card-number.input-icon-holder
       = f.input_field :card_number, required: true
-      .credit-card-icon
-        %span.ico-credit-card
+      %span.ico-credit-card
 
   .card-info.expiry.column.left
     = f.label :card_expires, "Expires On", class: 'control-label'
