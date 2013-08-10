@@ -2,8 +2,6 @@ require 'test_helper'
 
 class Admin::PagesControllerTest < ActionController::TestCase
 
-  include Devise::TestHelpers
-
   logged_in do
     context "No pages" do
 

@@ -86,6 +86,8 @@ Spork.prefork do
 
   class ActionController::TestCase
 
+    include Devise::TestHelpers
+
     def self.logged_in(factory = :admin, &block)
 
       context "logged in as {factory}" do

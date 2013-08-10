@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
-  include Devise::TestHelpers
 
   setup do
     @reservation = FactoryGirl.create(:reservation_with_credit_card)
