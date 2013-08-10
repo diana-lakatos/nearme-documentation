@@ -20,7 +20,6 @@ class SpaceWizardController < ApplicationController
     @company ||= @user.companies.build
     @location ||= @company.locations.build
     @listing ||= @location.listings.build
-    @photos = current_user.photos
     event_tracker.viewed_list_your_bookable
   end
 
@@ -38,7 +37,7 @@ class SpaceWizardController < ApplicationController
       flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
       redirect_to manage_locations_path
     else
-      @photos = @user.first_listing ? @user.first_listing.photos : current_user.photos
+      @photos = @user.first_listing ? @user.first_listing.photos : nil
       render :list
     end
 
