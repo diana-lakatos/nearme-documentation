@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130802205316) do
+ActiveRecord::Schema.define(:version => 20130807041210) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -113,19 +113,6 @@ ActiveRecord::Schema.define(:version => 20130802205316) do
   end
 
   add_index "domains", ["instance_id"], :name => "index_domains_on_instance_id"
-
-  create_table "guest_ratings", :force => true do |t|
-    t.integer  "reservation_id"
-    t.integer  "user_id"
-    t.float    "value"
-    t.text     "comment"
-    t.datetime "deleted_at"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "guest_ratings", ["reservation_id", "value"], :name => "index_guest_ratings_on_reservation_id_and_value"
-  add_index "guest_ratings", ["user_id", "value"], :name => "index_guest_ratings_on_user_id_and_value"
 
   create_table "industries", :force => true do |t|
     t.string   "name"
@@ -279,9 +266,9 @@ ActiveRecord::Schema.define(:version => 20130802205316) do
     t.datetime "failed_at"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
-    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
+    t.integer  "payment_transfer_id"
   end
 
   add_index "reservation_charges", ["payment_transfer_id"], :name => "index_reservation_charges_on_payment_transfer_id"
@@ -323,6 +310,7 @@ ActiveRecord::Schema.define(:version => 20130802205316) do
     t.string   "payment_status",           :default => "unknown", :null => false
     t.integer  "quantity",                 :default => 1,         :null => false
     t.integer  "service_fee_amount_cents"
+    t.string   "rejection_reason"
   end
 
   create_table "sessions", :force => true do |t|
@@ -414,18 +402,5 @@ ActiveRecord::Schema.define(:version => 20130802205316) do
   end
 
   add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
-
-  create_table "visit_ratings", :force => true do |t|
-    t.integer  "reservation_id"
-    t.integer  "user_id"
-    t.float    "value"
-    t.text     "comment"
-    t.datetime "deleted_at"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "visit_ratings", ["reservation_id", "value"], :name => "index_visit_ratings_on_reservation_id_and_value"
-  add_index "visit_ratings", ["user_id", "value"], :name => "index_visit_ratings_on_user_id_and_value"
 
 end
