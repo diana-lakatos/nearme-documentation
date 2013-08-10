@@ -72,5 +72,8 @@ module DesksnearMe
     config.twitter_secret = "nR8pjJ9YcU3eK9pKUPFBNxZuJ5oMci2M96SpZ47Ik"
 
     config.exceptions_app = self.routes
+
+    # custom rewrites specified in lib/legacy_redirect_handler.rb
+    config.middleware.insert_before(Rack::Lock, "LegacyRedirectHandler")
   end
 end

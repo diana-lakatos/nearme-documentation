@@ -29,7 +29,7 @@ def run_job(name, &blk)
   rescue
     puts "#{Time.now} | Encountered error"
     puts $!.inspect
-    Airbrake.notify($!)
+    Raygun.track_exception($!)
   end
   puts "#{Time.now} | Done"
 end

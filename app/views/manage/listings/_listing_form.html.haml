@@ -1,11 +1,11 @@
 = render :layout => 'manage/layout/dashboard' do
   = render :partial => 'manage/locations/location_name_with_links', :locals => { :location => location }
   = render :partial => 'manage/listings/listing_name_with_link', :locals => { :location => location, :listing => listing }
-  = render :partial => 'listing', :locals => {:listing => listing, :location => location}
+  = render :partial => 'listing', :locals => {:listing => listing, :location => location, photos: photos}
   - if listing.persisted?
     = link_to manage_location_listing_path(@location, @listing), :method => :delete, :confirm => 'Are you sure?', :class => "delete delete-listing" do
       %span.ico-trash.padding
-        Delete this listing
+        Delete this #{current_instance.bookable_noun}
 
   .actions
     = link_to '#', :class => 'btn btn-green btn-large dashboard-save', :id => 'submit-link', :disable_with => 'Submiting...' do

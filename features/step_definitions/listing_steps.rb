@@ -5,6 +5,7 @@ Given /^a listing( with nil prices)? in (.*) exists( with that amenity)?$/ do |n
     listing.daily_price = nil
     listing.weekly_price = nil
     listing.monthly_price = nil
+    listing.free = true if !listing.has_price?
     listing.save!
   end
   listing.location.amenities << model!("amenity") if amenity

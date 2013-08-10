@@ -5,7 +5,7 @@
         - if listing.photos.first
           = image_tag listing.photos.first.url(:space_listing), :title => listing.name, :alt => listing.name
         - else
-          = image_tag google_maps_streetview_url(:height => 254, :width => 410, :latitude => listing.latitude, :longitude => listing.longitude), :title => listing.name, :alt => listing.name
+          = image_tag space_listing_placeholder_url(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
     .span8.nested.details-container
       %h2
         = link_to "#{listing.name}", listing 

@@ -88,6 +88,7 @@ class MailchimpTest < ActiveSupport::TestCase
       Timecop.travel(Time.zone.now+10.seconds)
       listing = @user_with_listing_with_photo.listings.first
       listing.weekly_price = 10.50
+      listing.free = false
       listing.save!
       assert !@user_with_listing_with_photo.has_listing_without_price?
       VCR.use_cassette('mailchimp_update_price_flag') do
@@ -145,6 +146,7 @@ class MailchimpTest < ActiveSupport::TestCase
       listing.daily_price = nil
       listing.weekly_price = nil
       listing.monthly_price = nil
+      listing.free = true
       listing.save!
       @user_with_listing_with_photo.reload
     end
@@ -172,7 +174,7 @@ class MailchimpTest < ActiveSupport::TestCase
     end
 
     def create_listing(user)
-      FactoryGirl.create(:listing, :location => user.companies.first.locations.first)
+      FactoryGirl.create(:listing, :location => user.companies.first.locations.first, :photo_not_required => true, :photos_count => 0)
       user
     end
 

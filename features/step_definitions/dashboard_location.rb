@@ -54,9 +54,14 @@ When /^I click edit listing icon$/ do
   page.find('.listing .ico-edit').click
 end
 
-When /^I click delete (location|listing) link$/ do |model|
+When /^I click delete location link$/ do
   page.evaluate_script('window.confirm = function() { return true; }')
-  click_link "Delete this #{model}"
+  click_link "Delete this location"
+end
+
+When /^I click delete bookable noun link$/ do
+  page.evaluate_script('window.confirm = function() { return true; }')
+  click_link "Delete this #{model!("instance").bookable_noun}"
 end
 
 Then /^Listing (.*) pricing should be (disabled|enabled)$/ do |period, state|

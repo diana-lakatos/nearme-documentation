@@ -60,6 +60,23 @@ Spork.prefork do
       request.env['Authorization'] = @user.authentication_token
     end
 
+    def assert_log_triggered(*args)
+      stub_mixpanel
+      @tracker.expects(event).with do
+        yield(*args)
+      end
+    end
+
+    def assert_log_not_triggered(event)
+      stub_mixpanel
+      @tracker.expects(event).never
+    end
+
+    def stub_mixpanel
+      stub_request(:get, /.*api\.mixpanel\.com.*/)
+      @tracker = Analytics::EventTracker.any_instance
+    end
+
     DatabaseCleaner.strategy = :truncation
 
     def stub_image_url(image_url)

@@ -8,6 +8,7 @@ class Location::GoogleGeolocationDataParser
     "locality"  =>  "city",
     "sublocality" => "suburb",
     "administrative_area_level_1" => "state",
+    "postal_code" => "postcode"
   }
 
 

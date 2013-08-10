@@ -1,12 +1,11 @@
 section.space_wizard {
-  min-height: 800px;
-  
+
   #space_wizard {
-  
+
   	margin: 0 0 40px 0;
 
     form.new_desks {
-      
+
       .currency-type {
         display: inline-block;
         margin-left: 8px;
@@ -29,7 +28,7 @@ section.space_wizard {
       display: none;
     }
   }
-  
+
   .input-disabled{
     @include opacity(.4);
     filter: inherit;

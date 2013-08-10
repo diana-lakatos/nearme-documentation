@@ -5,7 +5,6 @@ class @Space.Controller
     @photosContainer = $('.photos-container')
     @mapContainer    = $('.map')
     @googleMapElementWrapper = @mapContainer.find('.map-container')
-    @panoramaContainer = $('#panorama')
     @photosTab = $('#photos')
     @detailsTab = $('#details')
 
@@ -70,22 +69,6 @@ class @Space.Controller
       shape: GoogleMapMarker.getMarkerOptions().default.shape
     })
 
-    if @panoramaContainer.length > 0
-      panoramaOptions = {
-        position: latlng,
-        addressControl: false,
-        linksControl: false,
-        panControl: false,
-        zoomControlOptions: {
-          style: google.maps.ZoomControlStyle.SMALL
-        },
-        enableCloseButton: false,
-        visible:true
-      }
-      @panorama = new google.maps.StreetViewPanorama(document.getElementById(@panoramaContainer.attr('id')), panoramaOptions)
-      @map.map.setStreetView(@panorama)
-
-
     @map.markers.push marker
 
     @popover = new GoogleMapPopover({'boxStyle': { 'width': '190px' }, 'pixelOffset': new google.maps.Size(-95, -40) })
@@ -128,11 +111,6 @@ class @Space.Controller
     # 0.65755 was set based on trials and errors approach. Since photo is about 70% of full width, the remaining 30% is google map, I tried to make the same proportions
         ratio: (aspectRatioH/aspectRatioW)*0.65755
       )
-    
-    else
-        @panoramaContainer.height(@googleMapElementWrapper.height())
-        google.maps.event.trigger(@panorama, 'resize')
-        google.maps.event.trigger(@panorama, 'zoom_changed')
 
   listenToTabs: ->
     if @constrainer

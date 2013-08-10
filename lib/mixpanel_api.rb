@@ -28,8 +28,8 @@ class MixpanelApi
   attr_reader :request_details
 
   # Creates a new mixpanel API interface instance
-  def self.mixpanel_instance
-    Mixpanel::Tracker.new(MIXPANEL_TOKEN)
+  def self.mixpanel_instance(options = {})
+    Mixpanel::Tracker.new(MIXPANEL_TOKEN, options)
   end
 
   # Initialize a mixpanel wrapper.
@@ -78,8 +78,24 @@ class MixpanelApi
     properties.reverse_merge!(request_details)
 
     # Trigger tracking the event
-    @mixpanel.track(event_name, properties, options)
-    Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
+    unless should_not_track_employees? && current_user_is_desksnearme_employee?
+      @mixpanel.track(event_name, properties, options)
+      Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
+    else
+      Rails.logger.info "Not tracked mixpanel event (current user is employee): #{event_name}, #{properties}, #{options}"
+    end
+  end
+
+  def current_user_is_desksnearme_employee?
+    @current_user && (@current_user.email.include?('@desksnear.me') || @current_user.email.include?('@perchard.com')  || email_belongs_to_employee?(@current_user.email))
+  end
+
+  def should_not_track_employees?
+    Rails.env.production?
+  end
+
+  def email_belongs_to_employee?(email)
+    %w(krajek6@gmail.com krajek6@o2.pl josef.simanek@gmail.com mmitchell@uflavor.com patrikjira@gmail.com pllanoc@gmail.com piotr@gega.io).include?(email)
   end
 
   # Sets global Person properties on the current tracked session.

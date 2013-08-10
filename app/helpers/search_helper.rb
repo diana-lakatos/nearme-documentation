@@ -1,7 +1,7 @@
 module SearchHelper
   # Special geolocation fields for the search form(s)
   def search_geofields
-    %w(lat lng nx ny sx sy country state city suburb street)
+    %w(lat lng nx ny sx sy country state city suburb street postcode)
   end
 
   def search_availability_date(date)

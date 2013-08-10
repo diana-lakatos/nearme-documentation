@@ -7,6 +7,7 @@ Feature: As a user of the site
   Background:
     Given a user exists
       And I am logged in as the user
+      And an instance exists
       And a company exists with creator: the user
       And a location_type exists with name: "Business"
       And a location_type exists with name: "Co-working"
@@ -57,13 +58,13 @@ Feature: As a user of the site
       And I should see "Great, your listing's details have been updated."
      Then the listing should be updated
      When I click edit listing icon
-      And I click delete listing link
+      And I click delete bookable noun link
       And I should see "That listing has been deleted."
      Then the listing should not exist
 
   Scenario: A user can disable existing price in listing
     Given a location exists with company: the company
-      And a listing exists with location: the location, daily_price_cents: 1000
+      And a listing exists with location: the location, daily_price_cents: 1000, photos_count: 1
       And I am on the manage locations page
      When I click edit listing icon
       And I disable daily pricing
@@ -73,7 +74,7 @@ Feature: As a user of the site
 
   Scenario: A user can enable new pricing in listing
     Given a location exists with company: the company
-      And a listing exists with location: the location, daily_price_cents: 1000
+      And a listing exists with location: the location, daily_price_cents: 1000, photos_count: 1
       And I am on the manage locations page
      When I click edit listing icon
       And I enable weekly pricing
@@ -83,7 +84,7 @@ Feature: As a user of the site
 
   Scenario: A user can set availability rules on a listing
     Given a location exists with company: the company
-    And   a listing exists with location: the location
+    And   a listing exists with location: the location, photos_count: 1
     And   I am on the manage locations page
     When I click edit listing icon
     And  I select custom availability:
