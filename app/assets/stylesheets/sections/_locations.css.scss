@@ -50,6 +50,14 @@ section.locations {
       margin-top: 6px;
       padding: 6px 0;
 
+      &.error {
+        padding: 6px 0px 10px 0px;
+      }
+
+      &.control-group {
+        margin-bottom: 0px;
+      }
+
       .day-name {
         margin-top: 10px;
       }

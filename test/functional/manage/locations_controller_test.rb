@@ -40,6 +40,28 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       assert_redirected_to manage_locations_path
     end
 
+    should "should use default template if custom availability rules were not checked" do
+      put :update, :id => @location.id, :location => {
+        :availability_template_id=>"custom", 
+        :availability_rules_attributes=>availability_rules_params
+      }
+      @location.reload
+      assert_equal 5, @location.availability_rules.count
+    end
+
+    should "require availability rule to be opened for at least 1 hour" do
+      put :update, :id => @location.id, :location => {
+        :availability_template_id=>"custom", 
+        :availability_rules_attributes=> { 
+          "0" => { "day" => "1", "open_hour" => '9', "close_hour" => '9' } 
+        }
+
+      }
+      @location = assigns(:location)
+      assert !@location.valid?
+      assert @location.errors.any? { |e| e.to_s == 'availability_rules.day_1' }
+    end
+
     should "destroy location" do
       assert_difference('@user.locations.count', -1) do
         delete :destroy, :id => @location.id
@@ -73,6 +95,15 @@ class Manage::LocationsControllerTest < ActionController::TestCase
           delete :destroy, :id => @location.id
         end
       end
+    end
+  end
+
+  private 
+
+  def availability_rules_params
+    @location.availability_rules.each.with_index.inject([]) do |arr, (a, index)|
+      arr[index] = { "id" => a.id, "day" => a.day, "_destroy" => "1" }
+      arr
     end
   end
 

@@ -31,7 +31,7 @@ class Company < ActiveRecord::Base
   after_destroy :notify_user_about_change
 
   validates_presence_of :name, :industries
-  validates_length_of :description, :maximum => 250, :if => lambda { |company| (company.instance.nil? || company.instance.is_desksnearme?) }
+  validates_length_of :description, :maximum => 250
   validates :email, email: true, allow_blank: true
   validate :validate_url_format
 
