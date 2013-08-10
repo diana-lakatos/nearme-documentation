@@ -18,10 +18,10 @@ module ApplicationHelper
 
   def title_tag
     (show_title? ? content_for(:title) : "Find office space. Rent office space. Get to work.") + 
-      (meta_title ? " | " + meta_title : '')
+      (additional_meta_title ? " | " + additional_meta_title : '')
   end
 
-  def meta_title
+  def additional_meta_title
     content_for?(:meta_title) ? content_for(:meta_title) : current_instance.meta_title
   end
 
