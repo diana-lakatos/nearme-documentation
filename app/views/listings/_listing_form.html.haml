@@ -88,6 +88,7 @@
       - @photos.each_with_index do |photo, index|
         = get_fileupload_photo_html(photo.image_url(:medium),
                                     destroy_space_wizard_photo_path(:id => photo.id),
+                                    resize_form_manage_photo_path(photo),
                                     :div,
                                     id: photo.id, index: index) do
           = text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{index}][caption]", photo.caption, :placeholder => 'Enter Caption...', 'data-number' => index

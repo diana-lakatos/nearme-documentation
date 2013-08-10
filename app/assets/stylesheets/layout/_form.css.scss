@@ -50,6 +50,30 @@ label.radio {
   }
 }
 
+.photo-action {
+  background-color: $blue;
+  position: absolute;
+  cursor: pointer;
+  color: white;
+
+  &:hover {
+    background: lighten($theme_blue, 10%);
+  }
+}
+
+.delete-photo {
+  margin: 6px 0 0 -61px;
+}
+
+.resize-photo {
+  margin: 30px 0 0 -105px;
+}
+
+.rotate-photo {
+  z-index: 602;
+  margin: 22px 0px 0 517px;
+}
+
 .single-photo {
 
   .fileupload {
@@ -134,17 +158,10 @@ label.radio {
       position: absolute;
     }
 
-
-    .delete-photo {
-      background-color: $blue;
-      position: absolute;
-      margin: 6px 0 0 -61px;
-      cursor: pointer;
-      color: white;
-
-      &:hover {
-        background: lighten($theme_blue, 10%);
-      }
+    img {
+      margin: 0 auto;
+      width: 180px;
+      height: 113px;
     }
 
     input {

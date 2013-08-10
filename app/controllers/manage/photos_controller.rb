@@ -12,11 +12,35 @@ class Manage::PhotosController < ApplicationController
       render :text => {
         :id => @photo.id, 
         :url => @photo.image_url(get_image_url).to_s,
-        :destroy_url => destroy_space_wizard_photo_path(:id => @photo.id) 
+        :destroy_url => destroy_space_wizard_photo_path(@photo),
+        :resize_url =>  resize_form_manage_photo_path(@photo)
       }.to_json, 
       :content_type => 'text/plain' 
     else
       render :text => [{:error => @photo.errors.full_messages}], :content_type => 'text/plain', :status => 422
+    end
+  end
+
+  def resize_form
+    @photo = current_user.photos.find(params[:id])
+    if request.xhr?
+      render partial: 'resize_form'
+    end
+  end
+
+  def resize
+    @photo = current_user.photos.find(params[:id])
+    if params[:rotate]
+      @photo.image.rotate(params[:rotate][:angle])
+    end
+    if params[:crop]
+      @photo.image.crop(params[:crop])
+    end
+    if @photo.save
+      @photo.recreate_versions!
+      render json: {hide: true}
+    else
+      render partial: 'resize_form'
     end
   end
 
