@@ -10,12 +10,15 @@ class Search.Controller
 
   initializeAutocomplete: ->
     @autocomplete = new google.maps.places.Autocomplete(@queryField[0], {})
+    @submit_form = false
     google.maps.event.addListener @autocomplete, 'place_changed', =>
       place = Search.Geocoder.wrapResult @autocomplete.getPlace()
       place = null unless place.isValid()
 
       @setGeolocatedQuery(@queryField.val(), place)
       @fieldChanged('query', @queryField.val())
+      if @submit_form
+        @form.submit()
 
   initializeGeocoder: ->
     @geocoder = new Search.Geocoder()
