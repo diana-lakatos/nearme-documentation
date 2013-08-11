@@ -39,15 +39,36 @@ class @PhotoUploader
   initializeFileUploader : =>
     @fileInput.fileupload {
         add: (e, data) =>
-          @add(data)
+          # data.context will contain markup for image, that will be accessible in every other method like progress, done
+          # to easily update the right container with appriopriate info [ i.e info that uploaded has been finished and inserting image preview]
+          if @multiplePhoto()
+            data.context = $('<div class="photo-item hidden"></div>').appendTo(@sortable)
+          else
+            if @singlePhotoExists()
+              data.context = @uploaded.find('.photo-item').eq(0)
+            else
+              data.context = $('<div class="photo-item hidden"></div>').appendTo(@uploaded)
+              
+          if data.context.find('.progress').length == 0
+            if $.browser.msie && parseInt($.browser.version) < 10
+              data.context.removeClass('hidden')
+              data.context.append(@getLoadingElement('Uploading...'))
+              data.context.find('.loading-icon').removeClass('loading-icon').addClass('animated-progress-bar')
+            else
+              data.context.append('<div class="progress"><div class="bar"></div></div>')
+          data.submit()
         ,
+
         done:  (e, data) =>
-          data.result = @parseResult(data)
-          @done(data)
+          if @singlePhotoExists() && !@multiplePhoto()
+            @replaceExistingImg(data)
+          else
+            @addImg(data)
+          @fileInput = @container.find('.browse-file').eq(0)
+          @initializeFileUploader()
           @reorderSortableList()
         ,
         progress: (e, data) =>
-          data.result = @parseResult(data)
           @progress(data)
     }
 
@@ -56,64 +77,19 @@ class @PhotoUploader
       stop: =>
         @reorderSortableList()
       placeholder: 'photo-placeholder',
-    @sortable.disableSelection();
-
-  add: (data) =>
-    @setPhotoItem(@getUniqueString(data))
-    data.submit()
-
-  parseResult: (data) ->
-    if $.browser.msie && parseInt($.browser.version) < 10
-      result_to_parse = $('pre', data.result).text()
-    else
-      result_to_parse = data.result
-    jQuery.parseJSON(result_to_parse)
-
-  done: (data) =>
-    if @singlePhotoExists() && !@multiplePhoto()
-      @replaceExistingImg(data)
-    else
-      @addImg(data)
-    @fileInput = @container.find('.browse-file').eq(0)
-    @initializeFileUploader()
+    @sortable.disableSelection()
 
   progress: (data) =>
     progress = parseInt(data.loaded / data.total * 100, 10)
-    @photoItem = @getPhotoItem(@getUniqueString(data))
-    @progressBar = @photoItem.find('.progress .bar').eq(0)
+    @progressBar = data.context.find('.progress .bar').eq(0)
     @progressBar.css('width', progress + '%')
-    if progress == 100
+    if progress >= 99
       @progressBar.css('width', 0 + '%')
-      @photoItem.html(@getLoadingElement())
-      @photoItem.removeClass('hidden')
+      data.context.html(@getLoadingElement())
+      data.context.removeClass('hidden')
 
   getLoadingElement: (text = 'Processing...' ) ->
     '<div class="thumbnail-processing"><div class="loading-icon"></div><div class="loading-text">' + text + '</div></div>'
-
-  getPhotoItem: (filename) =>
-    $('.photo-item[data-filename="' + filename.hashCode() + '"]:last')
-
-  setPhotoItem: (filename) =>
-    if @multiplePhoto()
-      @photoItem = $('<div class="photo-item hidden"></div>')
-      @sortable.append(@photoItem)
-    else
-      if @singlePhotoExists()
-        @photoItem = @uploaded.find('.photo-item').eq(0)
-      else
-        @photoItem = $('<div class="photo-item"></div>')
-        @uploaded.append(@photoItem)
-    @photoItem.attr("data-filename", filename.hashCode())
-    @addProgressBar(filename)
-
-  addProgressBar: (filename) ->
-    @photoItem = @getPhotoItem(filename)
-    if @photoItem.find('.progress').length == 0
-      if $.browser.msie && parseInt($.browser.version) < 10
-        @photoItem.append(@getLoadingElement('Uploading...'))
-        @photoItem.find('.loading-icon').removeClass('loading-icon').addClass('animated-progress-bar')
-      else
-        @photoItem.append('<div class="progress"><div class="bar"></div></div>')
 
   multiplePhoto: =>
     @sortable.length > 0
@@ -125,16 +101,19 @@ class @PhotoUploader
     @uploaded.find('img').attr('src', data.result.url)
 
   addImg: (data) =>
+    result = jQuery.parseJSON(data.result)
+    if !result
+      result = jQuery.parseJSON($('pre', data.result).text())
+    data.result = result
     href = $('<a data-url="' + data.result.destroy_url + '" class="badge badge-inverse delete-photo delete-photo-thumb">Delete</span></a>')
-    @photoItem = @getPhotoItem(@getUniqueString(data))
-    @photoItem.html('<img src="' + data.result.url + '">')
-    @photoItem.append(href)
+    data.context.html('<img src="' + data.result.url + '">')
+    data.context.append(href)
     if @multiplePhoto()
-      @photoItem.append($('<span>').addClass('photo-position badge badge-inverse').text(@getLastPosition()))
+      data.context.append($('<span>').addClass('photo-position badge badge-inverse').text(@getLastPosition()))
       hidden = $('<input>').attr('type', 'hidden')
       hidden_position = hidden.clone().attr('name', "#{name_prefix}[position]").val(@getLastPosition()).addClass('photo-position-input')
-      @photoItem.attr('id', "photo-#{data.result.id}")
-      @photoItem.append(hidden_position)
+      data.context.attr('id', "photo-#{data.result.id}")
+      data.context.append(hidden_position)
       input = @container.find('#photo-item-input-template').clone()
       input.attr('disabled', false)
       input.attr('type', 'text')
@@ -143,25 +122,17 @@ class @PhotoUploader
       input.attr('data-number', data_number)
       name_prefix = input.attr('name') + '[' + data_number + ']'
       input.attr('name', name_prefix + '[caption]')
-      @photoItem.append(input)
+      data.context.append(input)
       hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(data.result.id)
-      @photoItem.append(hidden_id)
+      data.context.append(hidden_id)
 
   getLastPosition: ->
-    @sortable.find('.photo-item:not(.hidden)').length
+    @sortable.find('.photo-item').length
 
   reorderSortableList: ->
     i = 0
     for index, el of @sortable.sortable('toArray')
-      if el != '' and $("##{el}.photo-item:not(.hidden)").length > 0
+      if el != '' and $("##{el}.photo-item").length > 0
         $("##{el}").find('.photo-position-input').val(i)
         $("##{el}").find('.photo-position').text(parseInt(i) + 1)
         i++
-
-
-  getUniqueString: (data) ->
-    if((navigator.platform.indexOf("iPhone") != -1) || (navigator.platform.indexOf("iPod") != -1))
-      data.files[0].lastModifiedDate.toString()
-    else
-      data.files[0].name
-
