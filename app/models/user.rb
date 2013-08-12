@@ -95,7 +95,6 @@ class User < ActiveRecord::Base
                   :country_name, :mobile_number
 
   delegate :to_s, :to => :name
-  delegate :service_fee_percent, to: :instance, allow_nil: true
 
   # Build a new user, taking into account session information such as Provider
   # authentication.
