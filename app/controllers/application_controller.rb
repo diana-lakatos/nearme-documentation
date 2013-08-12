@@ -73,6 +73,7 @@ class ApplicationController < ActionController::Base
   # We need to load up some persisted properties to automatically assign to events
   # as global properties.
   def apply_persisted_mixpanel_attributes
+    cookies.signed.permanent[:referer] = referer if cookies.signed[:mixpanel_anonymous_id].blank?
     cookies.signed.permanent[:mixpanel_anonymous_id] = mixpanel.anonymous_identity
     cookies.signed.permanent[:mixpanel_session_properties] = ActiveSupport::JSON.encode(mixpanel.session_properties)
   end
@@ -161,6 +162,14 @@ class ApplicationController < ActionController::Base
 
   def handle_invalid_mobile_number(user)
     Delayed::Job.enqueue Delayed::PerformableMethod.new(user, :notify_about_wrong_phone_number, nil)
+  end
+
+  def referer
+    if params[:source] && params[:campaign]
+      "(source=#{params[:source]}&campaign=#{params[:campaign]})"
+    else
+      request.referer
+    end
   end
 
 end

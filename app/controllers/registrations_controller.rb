@@ -23,6 +23,7 @@ class RegistrationsController < Devise::RegistrationsController
       # This user has just registered, so we
       mixpanel.apply_user(@user, :alias => true)
       event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
+      @user.update_column(:referer, cookies.signed[:referer])
     end
 
     # Clear out temporarily stored Provider authentication data if present
