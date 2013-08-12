@@ -2,8 +2,6 @@ require 'test_helper'
 
 class RegistrationsControllerTest < ActionController::TestCase
 
-  include Devise::TestHelpers
-
   setup do
     @user = FactoryGirl.create(:user)
     @request.env["devise.mapping"] = Devise.mappings[:user]

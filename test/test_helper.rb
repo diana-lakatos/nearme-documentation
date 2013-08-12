@@ -84,6 +84,25 @@ Spork.prefork do
     end
   end
 
+  class ActionController::TestCase
+
+    include Devise::TestHelpers
+
+    def self.logged_in(factory = :admin, &block)
+
+      context "logged in as {factory}" do
+
+        setup do
+          @user = FactoryGirl.create(factory)
+          sign_in @user
+        end
+
+        merge_block(&block) if block_given?
+      end
+
+    end
+  end
+
 end
 
 Spork.each_run do

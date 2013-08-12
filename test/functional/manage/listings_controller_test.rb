@@ -2,8 +2,6 @@ require 'test_helper'
 
 class Manage::ListingsControllerTest < ActionController::TestCase
 
-  include Devise::TestHelpers
-
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
