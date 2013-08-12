@@ -112,14 +112,6 @@
     }
   }
 
-  .checkbox {
-
-    .checkbox-icon-outer {
-      border-color: $red;
-      color: $red;
-    }
-  }
-
 }
 
 .switch .has-switch span.switch-primary,
@@ -157,6 +149,15 @@
   &.error {
 
     .controls {
+
+      span.customSelect{
+        border-color: #e58984;
+      }
+    }
+
+
+    .open-time, 
+    .close-time {
 
       span.customSelect{
         border-color: #e58984;

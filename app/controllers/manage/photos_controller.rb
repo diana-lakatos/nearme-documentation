@@ -11,7 +11,7 @@ class Manage::PhotosController < ApplicationController
     if @photo.save
       render :text => {
         :id => @photo.id, 
-        :url => @photo.image_url(params[:size] ? params[:size].to_sym : :thumb).to_s, 
+        :url => @photo.image_url(get_image_url).to_s,
         :destroy_url => destroy_space_wizard_photo_path(:id => @photo.id) 
       }.to_json, 
       :content_type => 'text/plain' 
@@ -51,6 +51,14 @@ class Manage::PhotosController < ApplicationController
       raise 'Unknown path to photos_attributes' unless @content_type
     end
     @image = @param[:photos_attributes]["0"][:image]
+  end
+
+  def get_image_url
+    if params[:size] and @photo.image.versions.keys.map(&:to_s).include? params[:size]
+      params[:size].to_sym
+    else
+      :thumb
+    end
   end
 
 end

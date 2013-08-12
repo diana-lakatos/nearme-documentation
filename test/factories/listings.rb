@@ -11,6 +11,14 @@ FactoryGirl.define do
     daily_price_cents 5000
     hourly_reservations false
 
+    ignore do
+      photos_count 1
+    end
+
+    after(:build) do |listing, evaluator|
+      listing.photos = FactoryGirl.create_list(:photo, evaluator.photos_count, content: nil)
+    end
+
     factory :always_open_listing do
       after(:create) do |listing|
         listing.availability.each_day do |dow, rule|
@@ -22,6 +30,7 @@ FactoryGirl.define do
     factory :free_listing do
       after(:create) do |listing|
         listing.daily_price_cents = 0
+        listing.free = true
       end
     end
 

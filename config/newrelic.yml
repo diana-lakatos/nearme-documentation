@@ -34,6 +34,23 @@ production:
   monitor_mode: true
 
 staging:
-  <<: *default_settings
-  monitor_mode: false
+  license_key: '3b6a804ef6f75377d8663c01528800e6525a0e0f'
   app_name: Desks Near Me (Staging)
+  monitor_mode: true
+  developer_mode: false
+  log_level: info
+  ssl: false
+  audit_log:
+    enabled: false
+  capture_params: false
+  transaction_tracer:
+    enabled: true
+    transaction_threshold: apdex_f
+    record_sql: obfuscated
+    stack_trace_threshold: 0.500
+    explain_enabled: true
+    explain_threshold: 0.5
+  error_collector:
+    enabled: true
+    capture_source: true    
+    ignore_errors: ActionController::RoutingError

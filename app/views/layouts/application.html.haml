@@ -34,23 +34,24 @@
   %body
 
     = render 'shared/render_flash'
-    .dnm-page
-      .container-fluid
-        .navbar.navbar-inverse.navbar-fixed-top
-          .navbar-inner.nav-links
-            = link_to "Desks Near Me", root_url, :id => "logo"
-            #header_links.links-container.pull-right
-              = render "layouts/header_navigation"
-
-      %section#content{:class => "#{@section_name || controller_name}"}
-        = render 'layouts/hero'
-        = render 'shared/admin_logged_in_as_user' if admin_as_user?
+    .content-wrapper
+      .dnm-page
         .container-fluid
-          = yield unless render_content_outside_container?
+          .navbar.navbar-inverse.navbar-fixed-top
+            .navbar-inner.nav-links
+              = link_to "Desks Near Me", root_url, :id => "logo"
+              #header_links.links-container.pull-right
+                = render "layouts/header_navigation"
 
-        = yield if render_content_outside_container?
+        %section#content{:class => "#{@section_name || controller_name}"}
+          = render 'layouts/hero'
+          = render 'shared/admin_logged_in_as_user' if admin_as_user?
+          .container-fluid
+            = yield unless render_content_outside_container?
 
-      = render 'layouts/footer'
+          = yield if render_content_outside_container?
+      .footer-push
+    = render 'layouts/footer'
 
     = render 'layouts/scripts'
 

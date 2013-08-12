@@ -21,16 +21,16 @@ class PhotoUploader < BaseImageUploader
     process :resize_to_fill => [1280, 960]
   end
 
+  version :space_listing do
+    process :resize_to_fill => [410, 254]
+  end
+
   version :hero do
     process :resize_to_fill => [960, 350]
   end
 
   version :hero_preview do
     process :resize_to_fill => [100, 70]
-  end
-
-  version :space_listing do
-    process :resize_to_fill => [410, 254]
   end
 
   version :golden do

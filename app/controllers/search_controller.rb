@@ -7,7 +7,10 @@ class SearchController < ApplicationController
 
   def index
     render "search/#{result_view}"
-    event_tracker.conducted_a_search(search, { search_query: query, result_view: result_view, result_count: result_count })
+    if should_log_conducted_search?
+      event_tracker.conducted_a_search(search, { search_query: query, result_view: result_view, result_count: result_count })
+    end
+    remember_search_query
   end
 
   def show
@@ -53,8 +56,34 @@ class SearchController < ApplicationController
     if result_view == 'list'
       @listings.total_entries
     else
-     @listings.size
+      @listings.size
     end
   end
+
+  def should_log_conducted_search?
+    first_result_page? && ignore_search_event_flag_false? && !repeated_search? && params[:q]
+  end
+
+  def first_result_page?
+    !params[:page] || params[:page].to_i==1
+  end
+
+  def ignore_search_event_flag_false?
+    params[:ignore_search_event].nil? || params[:ignore_search_event].to_i.zero?
+  end
+
+  def remember_search_query
+    if params[:q]
+      cookies[:last_search_query] = {
+        :value => params[:q],
+        :expires => (Time.zone.now + 1.hour),
+      }
+    end
+  end
+
+  def repeated_search?
+    params[:q] && params[:q] == cookies[:last_search_query]
+  end
+
 
 end

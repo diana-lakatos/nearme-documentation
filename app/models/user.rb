@@ -95,7 +95,6 @@ class User < ActiveRecord::Base
                   :country_name, :mobile_number
 
   delegate :to_s, :to => :name
-  delegate :service_fee_percent, to: :instance, allow_nil: true
 
   # Build a new user, taking into account session information such as Provider
   # authentication.
@@ -218,7 +217,9 @@ class User < ActiveRecord::Base
   end
 
   def first_listing
-    companies.first.locations.first.listings.first
+    if companies.first and companies.first.locations.first
+      companies.first.locations.first.listings.first
+    end
   end
 
   def has_listing_without_price?

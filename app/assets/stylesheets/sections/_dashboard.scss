@@ -20,7 +20,7 @@ div.availability-rules .custom-availability-rules .day .close-time {
      }
    }
 
-  .open-time, 
+  .open-time,
   .close-time {
     margin-right: 10px;
     padding-right: 0px;
@@ -67,18 +67,10 @@ div.availability-rules .custom-availability-rules .day .close-time {
   }
 }
 
-section.dashboard,
-section.companies,
-section.registrations,
-section.sessions {
-  min-height: 800px;
-}
-
-
 .btn.facebook,
 .btn.linkedin,
 .btn.twitter {
-  
+
   @media (max-width: 668px) {
     margin-bottom: .25em;
     width: 100%;
@@ -95,7 +87,7 @@ section.sessions {
 }
 
 section.dashboard {
-  
+
   ul {
     list-style: none;
 
@@ -185,7 +177,7 @@ section.dashboard {
       padding: 10px 0px;
       font-size: 20px;
 
-      .name { 
+      .name {
         float: left;
         color: $gray60;
       }
@@ -211,7 +203,7 @@ section.dashboard {
   .spacer {
     margin-bottom: 20px;
   }
-  
+
   .delete {
     float: left;
     padding-top: 10px;

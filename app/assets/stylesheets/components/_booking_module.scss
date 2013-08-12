@@ -72,11 +72,14 @@
       }
 
       &.label-hourly-price {
-        
-
         // Only one price field, center it.
-        
         margin-left: 33%;
+      }
+      
+      &.label-free-price {
+        // Center 'Free' text
+        width:100%;
+        text-align:center;
       }
     }
 

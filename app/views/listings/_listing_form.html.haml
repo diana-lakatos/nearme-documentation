@@ -6,7 +6,7 @@
 
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
 = f.input :name, :label => "#{current_instance.bookable_noun} name", :placeholder => 'Examples, "Shared Desks", "Meeting Room", "Private Office"' if only_inputs.empty? || only_inputs.include?(:name)
-= f.input :description, :required => current_instance.is_desksnearme?, :label => "#{current_instance.bookable_noun} description", :input_html => { :maxlength => 250}, :placeholder => 'Describe the individual listing that will be rented' if only_inputs.empty? || only_inputs.include?(:description)
+= f.input :description, :label => "#{current_instance.bookable_noun} description", :input_html => { :maxlength => 250}, :placeholder => 'Describe the individual listing that will be rented' if only_inputs.empty? || only_inputs.include?(:description)
 = f.association :listing_type, :label => "#{current_instance.bookable_noun} type", :input_html => { :class => 'selectpicker' } if only_inputs.empty? || only_inputs.include?(:listing_type)
 = f.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" } if only_inputs.empty? || only_inputs.include?(:quantity)
 
@@ -76,19 +76,25 @@
         = f.check_box :confirm_reservations
 
 - if only_inputs.empty? || only_inputs.include?(:photos)
-  = file_upload_input_with_label('Photos', manage_photos_path('size' => 'thumb'), "#{photo_input_name_prefix}[photos_attributes][0][image]", "Upload Photos") do
-    - if listing && listing.persisted?
-      %li.hidden.photo-item
-        = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes]", nil, :placeholder => 'Enter Photo Caption...', :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
-      - i = 0
-      - # existing listing - we want to display only photos that belong to this listing
-      - listing.photos.each do |photo|
-        = get_fileupload_photo_html(photo.image_url(:space_listing), destroy_space_wizard_photo_path(:id => photo.id), :li, ((text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{i}][caption]", photo.caption, :placeholder => 'Enter Photo Caption...', 'data-number' => i) + (hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{i}][id]", photo.id )) )
-        - i += 1
-    - else
-      - # new listing - if user uploaded photos and reloaded the page, we want to display all photos that do not belong to anything so far
-      - current_user.photos.select { |p| p.content.nil? && p.content_type=='Listing' }.each do |photo|
-        = fileupload_photo_with_input(photo.image_url(:thumb), destroy_space_wizard_photo_path(:id => photo.id), photo.id)
+  = file_upload_input_with_label('Photos',
+                                  manage_photos_path('size' => 'space_listing'),
+                                  "#{photo_input_name_prefix}[photos_attributes][0][image]",
+                                  "Browse",
+                                  :required => true,
+                                  :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
+    - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
+    .hidden.thumbnail-processing
+      .loading-icon
+    = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes]", nil, :placeholder => 'Enter Caption...', :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
+    - unless @photos.nil?
+      - @photos.each_with_index do |photo, index|
+        = get_fileupload_photo_html(photo.image_url(:space_listing),
+                                    destroy_space_wizard_photo_path(:id => photo.id),
+                                    :div,
+                                    id: photo.id, index: index) do
+          = text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{index}][caption]", photo.caption, :placeholder => 'Enter Caption...', 'data-number' => index
+          = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{index}][id]", photo.id
+          = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{index}][position]", photo.position, class: 'photo-position-input'
 
 .hidden
   - Money::Currency.table.values.each do |c|

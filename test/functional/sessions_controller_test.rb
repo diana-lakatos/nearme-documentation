@@ -12,8 +12,8 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   should 'successfully sign up and track' do
-    @tracker.expects(:logged_in).with do |user|
-      user == @user
+    @tracker.expects(:logged_in).with do |user, custom_options|
+      user == @user && custom_options == { provider: 'native' }
     end
     post :create, user: { email: @user.email, password: @user.password }
   end

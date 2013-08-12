@@ -4,7 +4,7 @@ class Listing < ActiveRecord::Base
   has_many :reservations,
     dependent: :destroy
 
-  has_many :photos,  as: :content, dependent: :destroy do
+  has_many :photos,  as: :content do
     def thumb
       (first || build).thumb
     end
@@ -18,7 +18,7 @@ class Listing < ActiveRecord::Base
     :dependent => :destroy
 
   has_one :company, through: :location
-  belongs_to :location, inverse_of: :listings
+  belongs_to :location, inverse_of: :listings, with_deleted: true
   belongs_to :listing_type
 
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
@@ -31,16 +31,18 @@ class Listing < ActiveRecord::Base
   scope :latest,   order("listings.created_at DESC")
 
   # == Callbacks
+  before_validation :null_price_if_marked_free
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
 
   # == Validations
   validates_presence_of :location, :name, :quantity, :listing_type_id
-  validates_presence_of :description , :if => lambda { |listing| (listing.instance.nil? || listing.instance.is_desksnearme?) }
+  validates_presence_of :description
   validates_numericality_of :quantity, greater_than: 0
-  validates_length_of :description, :maximum => 250, :if => lambda { |listing| (listing.instance.nil? || listing.instance.is_desksnearme?) }
+  validates_length_of :description, :maximum => 250
   validates_with PriceValidator
   validates :hourly_reservations, :inclusion => { :in => [true, false], :message => "must be selected" }, :allow_nil => false
+  validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
 
   # == Helpers
   include Search
@@ -50,21 +52,19 @@ class Listing < ActiveRecord::Base
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
-  delegate :address, :amenities, :currency, :formatted_address,
-    :local_geocoding, :latitude, :longitude, :distance_from, to: :location,
+  delegate :instance, :amenities, :currency, :formatted_address, :notify_user_about_change,
+    :local_geocoding, :latitude, :longitude, :distance_from, :address, to: :location,
     allow_nil: true
   delegate :creator, :creator=, to: :location
-  delegate :instance, to: :location, :allow_nil => true
   delegate :name, to: :creator, prefix: true
-  delegate :notify_user_about_change, :to => :location, :allow_nil => true
+  delegate :service_fee_percent, to: :location, allow_nil: true
   delegate :to_s, to: :name
-  delegate :service_fee_percent, to: :creator, allow_nil: true
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description, 
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
     :free, :photos_attributes, :listing_type_id, :hourly_reservations
 
-  attr_accessor :distance_from_search_query
+  attr_accessor :distance_from_search_query, :photo_not_required
 
   PRICE_TYPES.each do |price|
     # Flag each price type as a Money attribute.
@@ -137,24 +137,20 @@ class Listing < ActiveRecord::Base
     scope.sum(:quantity)
   end
 
-  def free?
-    !has_price?
-  end
-  alias_method :free, :free?
-
   def has_price?
     PRICE_TYPES.map { |price|
       self["#{price}_price_cents"]
     }.compact.any? { |price| !price.zero? }
   end
 
-  def free=(free_flag)
-    return unless [true, "1"].include?(free_flag)
+  def null_price_if_marked_free
+    null_price! if free?
+  end
 
-    self.hourly_price = nil
-    self.daily_price = nil
-    self.weekly_price = nil
-    self.monthly_price = nil
+  def null_price!
+    PRICE_TYPES.map { |price|
+      self.send "#{price}_price_cents=", nil
+    }
   end
 
   def desks_available?(date)
@@ -219,13 +215,15 @@ class Listing < ActiveRecord::Base
 
   # Number of minimum consecutive booking days required for this listing
   def minimum_booking_days
-    if free? || hourly_reservations? || daily_price_cents.to_i > 0
+    if free? || hourly_reservations? || daily_price_cents.to_i > 0 || (daily_price_cents.to_i + weekly_price_cents.to_i + monthly_price_cents.to_i).zero?
       1
     else
       multiple = if weekly_price_cents.to_i > 0
         1
       elsif monthly_price_cents.to_i > 0
         4
+      else
+        1
       end
 
       booking_days_per_week*multiple
