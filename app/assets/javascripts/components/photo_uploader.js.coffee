@@ -42,20 +42,20 @@ class @PhotoUploader
           # data.context will contain markup for image, that will be accessible in every other method like progress, done
           # to easily update the right container with appriopriate info [ i.e info that uploaded has been finished and inserting image preview]
           if @multiplePhoto()
-            data.context = $('<div class="photo-item hidden"></div>').appendTo(@sortable)
+            data.context = $('<div class="photo-item"></div>').appendTo(@sortable)
           else
             if @singlePhotoExists()
               data.context = @uploaded.find('.photo-item').eq(0)
             else
-              data.context = $('<div class="photo-item hidden"></div>').appendTo(@uploaded)
+              data.context = $('<div class="photo-item"></div>').appendTo(@uploaded)
               
           if data.context.find('.progress').length == 0
             if $.browser.msie && parseInt($.browser.version) < 10
-              data.context.removeClass('hidden')
               data.context.append(@getLoadingElement('Uploading...'))
               data.context.find('.loading-icon').removeClass('loading-icon').addClass('animated-progress-bar')
             else
-              data.context.append('<div class="progress"><div class="bar"></div></div>')
+              data.context.append(@getLoadingElement("Uploading...<div class='progress'><div class='bar'></div></div>"))
+              data.context.find('.loading-icon').css('visibility': 'hidden')
           data.submit()
         ,
 
@@ -67,6 +67,7 @@ class @PhotoUploader
           @fileInput = @container.find('.browse-file').eq(0)
           @initializeFileUploader()
           @reorderSortableList()
+
         ,
         progress: (e, data) =>
           @progress(data)
@@ -86,7 +87,6 @@ class @PhotoUploader
     if progress >= 99
       @progressBar.css('width', 0 + '%')
       data.context.html(@getLoadingElement())
-      data.context.removeClass('hidden')
 
   getLoadingElement: (text = 'Processing...' ) ->
     '<div class="thumbnail-processing"><div class="loading-icon"></div><div class="loading-text">' + text + '</div></div>'
