@@ -3,13 +3,6 @@ class @PhotoUploader
   @initialize: (scope = $('body')) ->
     $('.fileupload', scope).each (index, element) =>
       new PhotoUploader($(element))
-    @enableInputFieldInFirefox()
-
-  @enableInputFieldInFirefox: ->
-    if $.browser.mozilla
-      $('.fileupload').on 'click', 'label', (e) ->
-        if e.currentTarget == this && e.target.nodeName != 'INPUT'
-          $(this.control).click()
 
   constructor : (container) ->
     @container = container
