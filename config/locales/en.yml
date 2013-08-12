@@ -9,3 +9,6 @@ en:
   day:
     one: "1 day"
     other: "%{count} days"
+  desk:
+    reservation_rejected_body: "%{user} rejected reservation with reason: %{reason}"
+    reservation_rejected_title: "[auto] User have rejected reservation"
