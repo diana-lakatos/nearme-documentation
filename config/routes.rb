@@ -206,4 +206,8 @@ DesksnearMe::Application.routes.draw do
   match "/w-hotels-desks-near-me", to: 'locations#w_hotels', as: :w_hotels_location
   match "/W-hotels-desks-near-me", to: 'locations#w_hotels'
   match "/careers", to: 'pages#careers'
+  match "/landing-page", to: 'locations#landing_page'
+  match "/accounting", to: 'locations#vertical-accounting'
+  match "/law", to: 'locations#vertical-law'
+  match "/hairdressing", to: 'locations#vertical-hairdressing'
 end

@@ -1,0 +1,197 @@
+section#vendor-accounting {
+
+  h1 {
+    position: absolute;
+    bottom: 10%;
+    left: 0;
+    width: 100%;
+    color: $dnm_white;	
+    font-size: 60px;
+    font-family: "Futura-heavy", sans-serif;
+    text-align: center;
+    
+    @media(max-width: $ipad-width) {
+	  font-size: 40px;
+    }
+  }
+
+  h2 {
+	font-size: 30px;
+  }
+    
+  h3 {
+    float: left;
+    width: 80%;
+    margin: 50px 10% 20px 10%;
+    color: $gray40;
+    font-size: 40px;
+    font-family: "Futura-regular", sans-serif;
+    text-align: center;
+	  
+    @media(max-width: 1024px) {
+	  margin: 30px 10% 10px 10%;
+      font-size: 30px;
+	}
+	  
+    @media(max-width: 768px) {
+	  width: 90%;
+	  margin: 30px 5% 10px 5%;
+      font-size: 24px;
+    }
+  }
+  
+  p {
+    font-size: 24px;
+    
+    @media(max-width: $ipad-width) {
+	  font-size: 18px;
+    }
+  }
+
+  .row-fluid {
+  
+    .header-image {
+      margin: -30px 0 0 0;
+      overflow: hidden;
+      position: relative;
+      height: 500px;
+      
+      img {
+	    position: absolute;
+	    top: 50%;
+	    margin: -250px 0 0 0;
+	    width: 100%;
+	    
+	    @media(max-width: 1024px) {
+	      margin: -150px 0 0 0;
+	    }
+	    
+	    @media(max-width: $ipad-width) {
+	      margin: -100px 0 0 0;
+	    }
+	    
+	    @media(max-width: $iphone-landscape) {
+	      position: relative;
+	      top: 0;
+	      margin: 0;
+	    }
+	    
+      }
+      
+      .hero-gradient {
+	    position: absolute;
+	    top: 0;
+	    right: 0;
+	    bottom: 0;
+	    left: 0;
+	    background: $dnm_green;
+	    opacity: 0.65;
+      }
+      
+      .mark {
+	    width: 260px;
+	    height: 260px;
+	    position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    margin: -130px 0 0 -130px;
+	    background: url('images/landing-page/logo-landing_page.png') no-repeat center center;
+      }
+      
+      @media(max-width: 1024px) {
+	    height: 300px;
+      }
+      
+      @media(max-width: $ipad-width) {
+	    height: 200px;
+      }
+      
+      @media(max-width: $iphone-landscape) {
+        overflow: hidden;
+	    height: auto;
+      }
+      
+    }
+  }
+  
+  .message-photos {
+    width: 80%;
+    margin: 0 10%; 
+    
+    @media(max-width: $ipad-width) {
+      width: 90%;
+	  margin: 0 5%;
+    }
+    
+    .message {
+	  width: 30%;
+	  
+	  @media(max-width: 1024px) {
+		width: 45%;  
+	  }
+	  
+	  @media(max-width: 768px) {
+		width: 100%;
+	  }
+	  
+    }
+    
+    .photo {
+	  width: 60%;
+	  
+	  @media(max-width: 1024px) {
+		width: 50%; 
+	  }
+	  
+	  @media(max-width: 768px) {
+		width: 100%;
+	  }
+	}
+	  
+	  .photo.left {
+		float: left;
+	    margin: 0 10% 0 0;
+	    
+	    @media(max-width: 1024px) {
+	      margin: 0 5% 0 0;
+	    }
+	    
+	    @media(max-width: $ipad-width) {
+		  margin: 0;
+	    }
+	  }
+	  
+	  .photo.right {
+		float: right;
+	    margin: 0 0 0 10%;
+	    
+	    @media(max-width: 1024px) {
+	      margin: 0 0 0 5%;
+	    }
+	    
+	    @media(max-width: $ipad-width) {
+		  margin: 0;
+	    }
+	  }
+	  
+    
+  }
+  
+  .calltoaction {
+	max-width: 1360px;
+	
+	.row-fluid {
+	  width: 80%;
+	  margin: 0 10% 50px 10%;
+	  padding: 0 0 50px 0;
+	  background: lighten($dnm_green, 50%);
+	  text-align: center;
+	  
+	  @media(max-width: $ipad-width) {
+		width: 90%;
+		margin: 0 5% 30px 5%;
+	  }
+	}
+  }
+  
+}

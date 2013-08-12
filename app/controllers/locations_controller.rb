@@ -15,10 +15,30 @@ class LocationsController < ApplicationController
   end
 
   def w_hotels
-    @location = Location.find_by_custom_page("w_hotels")
+    @location = Location.first
     @listing = @location.listings.first
     
     restore_initial_bookings_from_stored_reservation
+  end
+
+  def landing_page
+    @location = Location.first
+    @listing = @location.listings.first
+  end
+
+  def accounting
+    @location = Location.first
+    @listing = @location.listings.first
+  end
+
+  def law
+    @location = Location.first
+    @listing = @location.listings.first
+  end
+
+  def hairdressing
+    @location = Location.first
+    @listing = @location.listings.first
   end
 
   private
