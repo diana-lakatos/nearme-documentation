@@ -191,7 +191,7 @@ class EventTrackerTest < ActiveSupport::TestCase
     {
       first_name: @user.first_name,
       last_name: @user.last_name,
-      industries: @user.industries.to_json(:only => [:name, :id]),
+      industries: @user.industries.map(&:name),
       email: @user.email,
       phone: @user.phone,
       job_title: @user.job_title,

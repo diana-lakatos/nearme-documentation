@@ -107,7 +107,7 @@ class Analytics::EventTracker
         email: object.email,
         phone: object.phone,
         job_title: object.job_title,
-        industries: object.industries.to_json(:only => [:name, :id]),
+        industries: object.industries.map(&:name),
         created: object.created_at
       }
     when Listing::Search::Params::Web
