@@ -107,7 +107,6 @@ group :test do
   gem 'capybara-screenshot'
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
-  gem 'launchy'
   gem 'minitest'
   gem 'mocha', :require => false
   gem 'pickle'
