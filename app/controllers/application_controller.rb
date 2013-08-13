@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
   # requests.
   after_filter :apply_persisted_mixpanel_attributes
   before_filter :first_time_visited?
+  before_filter :store_referal_info
+
 
   protected
 
@@ -74,7 +76,6 @@ class ApplicationController < ActionController::Base
   # We need to load up some persisted properties to automatically assign to events
   # as global properties.
   def apply_persisted_mixpanel_attributes
-
     cookies.signed.permanent[:mixpanel_anonymous_id] = mixpanel.anonymous_identity
     cookies.signed.permanent[:mixpanel_session_properties] = ActiveSupport::JSON.encode(mixpanel.session_properties)
     event_tracker.visited_for_the_first_time if first_time_visited?
@@ -168,6 +169,16 @@ class ApplicationController < ActionController::Base
 
   def handle_invalid_mobile_number(user)
     Delayed::Job.enqueue Delayed::PerformableMethod.new(user, :notify_about_wrong_phone_number, nil)
+  end
+
+  def store_referal_info
+    if first_time_visited?
+      cookies.signed.permanent[:referer] = request.referer
+      if params[:source] && params[:campaign]
+        cookies.signed.permanent[:source] = params[:source]
+        cookies.signed.permanent[:campaign] = params[:campaign]
+      end
+    end
   end
 
 end

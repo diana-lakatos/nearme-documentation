@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130807041210) do
+ActiveRecord::Schema.define(:version => 20130813122339) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -406,6 +406,9 @@ ActiveRecord::Schema.define(:version => 20130807041210) do
     t.string   "mobile_number"
     t.integer  "instance_id"
     t.datetime "notified_about_mobile_number_issue_at"
+    t.string   "referer"
+    t.string   "source"
+    t.string   "campaign"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
