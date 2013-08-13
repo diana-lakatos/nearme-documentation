@@ -2,7 +2,6 @@ module ApplicationHelper
 
   include FormHelper
   include TooltipHelper
-  include TweetButton
   include CurrencyHelper
   include FileuploadHelper
   include SharingHelper

@@ -2,8 +2,6 @@ require 'test_helper'
 
 class RegistrationsControllerTest < ActionController::TestCase
 
-  include Devise::TestHelpers
-
   setup do
     @user = FactoryGirl.create(:user)
     @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -11,12 +9,23 @@ class RegistrationsControllerTest < ActionController::TestCase
     @tracker = Analytics::EventTracker.any_instance
   end
 
-  should 'successfully sign up and track' do
-    @tracker.expects(:signed_up).with do |user, custom_options|
-      user == assigns(:user) && custom_options == { signed_up_via: 'other', provider: 'native' }
+  context 'actions' do
+
+    should 'successfully sign up and track' do
+      @tracker.expects(:signed_up).with do |user, custom_options|
+        user == assigns(:user) && custom_options == { signed_up_via: 'other', provider: 'native' }
+      end
+      assert_difference('User.count') do
+        post :create, user: user_attributes
+      end
     end
-    assert_difference('User.count') do
-      post :create, user: user_attributes
+
+    should 'successfully update' do
+      sign_in @user
+      @industry = FactoryGirl.create(:industry)
+      @industry2 = FactoryGirl.create(:industry)
+      @tracker.expects(:updated_profile).once
+      put :update, :id => @user, user: { :industry_ids => [@industry.id, @industry2.id] }
     end
   end
 

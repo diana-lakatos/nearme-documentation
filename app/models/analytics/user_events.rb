@@ -5,6 +5,10 @@ module Analytics::UserEvents
     track 'Signed Up', user, custom_options
   end
 
+  def updated_profile(user, custom_options = {})
+    set_person_properties user, custom_options
+  end
+
   def logged_in(user, custom_options = {})
     set_person_properties user, custom_options
     track 'Logged In', user, custom_options

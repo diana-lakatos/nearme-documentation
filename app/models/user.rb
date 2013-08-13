@@ -1,14 +1,11 @@
 class User < ActiveRecord::Base
   has_paper_trail
-  include Gravtastic
 
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
 
   # Includes billing gateway helper method and sets up billing charge association
   include BillingGateway::UserHelper
-
-  is_gravtastic!
 
   acts_as_paranoid
 
@@ -95,7 +92,6 @@ class User < ActiveRecord::Base
                   :country_name, :mobile_number
 
   delegate :to_s, :to => :name
-  delegate :service_fee_percent, to: :instance, allow_nil: true
 
   # Build a new user, taking into account session information such as Provider
   # authentication.

@@ -128,10 +128,30 @@ ActiveRecord::Schema.define(:version => 20130812121642) do
     t.datetime "updated_at",        :null => false
   end
 
+  create_table "instance_themes", :force => true do |t|
+    t.integer  "instance_id"
+    t.string   "name"
+    t.string   "compiled_stylesheet"
+    t.string   "icon_image"
+    t.string   "icon_retina_image"
+    t.string   "logo_image"
+    t.string   "logo_retina_image"
+    t.string   "hero_image"
+    t.string   "color_blue"
+    t.string   "color_red"
+    t.string   "color_orange"
+    t.string   "color_green"
+    t.string   "color_gray"
+    t.string   "color_black"
+    t.string   "color_white"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.integer  "partner_id"
     t.string   "site_name"
     t.string   "description"

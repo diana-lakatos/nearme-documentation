@@ -1,0 +1,21 @@
+%h1= resource_class.name.underscore.humanize
+
+.pull-right
+  = link_to "Edit", [:edit, :admin, resource], :class => "btn btn-default"
+
+%table.table
+  %tr
+    %th= "Path"
+    %td= link_to(resource.path, pages_path(resource.path))
+  %tr
+    %th= "Content"
+    %td
+      :markdown
+        #{resource.content}
+  %tr
+    %th= "Instance"
+    %td= resource.instance.try(:name)
+  %tr
+    %th= "Hero image"
+    %td
+      = image_tag(resource.hero_image.url) if resource.hero_image.present?

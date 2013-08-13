@@ -29,6 +29,7 @@ class SpaceWizardController < ApplicationController
 
     @company ||= @user.companies.build
     @company.attributes = params[:company]
+    @company.instance = current_instance
 
     if @user.save
       event_tracker.created_a_location(@location, { via: 'wizard' })
