@@ -88,7 +88,6 @@ group :development, :test do
   gem 'shoulda', '3.3.2'
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
-  gem 'jasmine'
 end
 
 group :development do
