@@ -84,7 +84,7 @@ end
 
 group :development, :test do
   gem 'thin'
-  gem 'shoulda', '3.3.2'
+  gem 'shoulda'
   gem 'email_spec'
   gem 'json_spec'
 end
