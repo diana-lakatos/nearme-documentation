@@ -92,27 +92,51 @@ class RegistrationsControllerTest < ActionController::TestCase
 
   end
 
-  context 'referer' do
+  context 'referer and source=&campaign=' do
 
-    should 'be stored in cookie and users column, if source and campaign params provided' do
-      get :new, source: 'xxx', campaign: 'yyy'
-      assert_equal '(source=xxx&campaign=yyy)', cookies.signed[:referer]
-
-      post :create, user: user_attributes
-      user = User.find_by_email('user@example.com')
-      assert_equal '(source=xxx&campaign=yyy)', user.referer
+    setup do
+      ApplicationController.class_eval do
+        def first_time_visited?; @first_time_visited = cookies.count.zero?; end
+      end
     end
 
-    should 'be stored in cookie and users column, if requests referer exists' do
-      @request.env['HTTP_REFERER'] = 'http://example.com/'
-      get :new
-      assert_equal 'http://example.com/', cookies.signed[:referer]
+    context 'on first visit' do
+      should 'be stored in both cookie and db' do
+        @request.env['HTTP_REFERER'] = 'http://example.com/'
+        get :new, source: 'xxx', campaign: 'yyy'
+        assert_equal 'xxx', cookies.signed[:source]
+        assert_equal 'yyy', cookies.signed[:campaign]
+        assert_equal 'http://example.com/', cookies.signed[:referer]
 
-      post :create, user: user_attributes
-      user = User.find_by_email('user@example.com')
-      assert_equal 'http://example.com/', user.referer
+        post :create, user: user_attributes
+        user = User.find_by_email('user@example.com')
+        assert_equal 'xxx', user.source
+        assert_equal 'yyy', user.campaign
+        assert_equal 'http://example.com/', user.referer
+      end
     end
 
+    context 'on repeated visits' do
+      should 'be stored only on first visit' do
+        @request.env['HTTP_REFERER'] = 'http://example.com/'
+        get :new
+        assert_nil cookies.signed[:source]
+        assert_nil cookies.signed[:campaign]
+        assert_equal 'http://example.com/', cookies.signed[:referer]
+
+        @request.env['HTTP_REFERER'] = 'http://homepage.com/'
+        get :new, source: 'xxx', campaign: 'yyy'
+        assert_nil cookies.signed[:source]
+        assert_nil cookies.signed[:campaign]
+        assert_equal 'http://example.com/', cookies.signed[:referer]
+
+        post :create, user: user_attributes
+        user = User.find_by_email('user@example.com')
+        assert_nil user.source
+        assert_nil user.campaign
+        assert_equal 'http://example.com/', user.referer
+      end
+    end
   end
 
   private
