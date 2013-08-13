@@ -97,7 +97,6 @@ end
 group :development do
   gem 'quiet_assets'
   gem 'mail_view'
-  gem 'sextant'
   gem 'guard-minitest', :require => false
   gem 'guard-spork', :require => false
   gem 'guard-cucumber', :require => false
