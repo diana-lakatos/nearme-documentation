@@ -28,6 +28,12 @@ Spork.prefork do
 
   Turn.config.format = :dot
 
+  # Disable carrierwave processing in tests
+  # It can be enabled on a per-test basis as needed.
+  CarrierWave.configure do |config|
+    config.enable_processing = false
+  end
+
   class ActiveSupport::TestCase
     # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
     #
@@ -36,6 +42,13 @@ Spork.prefork do
 
     # Add more helper methods to be used by all tests here...
     include FactoryGirl::Syntax::Methods
+
+    def with_carrier_wave_processing(&blk)
+      before, CarrierWave::Uploader::Base.enable_processing = CarrierWave::Uploader::Base.enable_processing, true
+      yield
+    ensure
+      CarrierWave::Uploader::Base.enable_processing = before
+    end
 
     def raw_post(action, params, body)
       # The problem with doing this is that the JSON sent to the app
