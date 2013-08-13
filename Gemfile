@@ -108,7 +108,6 @@ group :test do
   gem 'minitest'
   gem 'mocha', :require => false
   gem 'pickle'
-  gem 'simplecov', :require => false
   gem 'timecop'
   gem 'turn'
   gem 'webmock', :git => 'git://github.com/bblimke/webmock'
