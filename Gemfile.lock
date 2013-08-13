@@ -307,9 +307,6 @@ GEM
       activerecord (~> 3.0)
       railties (~> 3.0)
     pg (0.14.1)
-    pg_search (0.5.7)
-      activerecord (>= 3)
-      activesupport (>= 3)
     pickle (0.4.11)
       cucumber (>= 0.8)
       rake
@@ -546,7 +543,6 @@ DEPENDENCIES
   omniauth-twitter
   paper_trail
   pg
-  pg_search
   pickle
   quiet_assets
   rack-rewrite
