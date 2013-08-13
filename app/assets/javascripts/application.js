@@ -22,7 +22,6 @@
 //= require history_jquery
 //= require underscore
 //= require mustache
-//= require handlebars.runtime
 //= require chosen-jquery
 //= require chart
 //
