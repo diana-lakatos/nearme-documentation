@@ -10,7 +10,7 @@ When /^I fill in valid space details$/ do
   fill_in "#{model!("instance").bookable_noun} description", with:'We have a group of several shared desks available.'
   select 'Desk', from: "#{model!("instance").bookable_noun} type"
   fill_in 'Quantity available', with:1
-  choose "Bookings are made by the day"
+  choose "Free"
 
   image = File.join(Rails.root, *%w[features fixtures photos], "intern chair.jpg")
   attach_hidden_file('company[locations_attributes][0][listings_attributes][0][photos_attributes][0][image]', image)

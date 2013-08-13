@@ -28,8 +28,8 @@
     .controls
       %div.price-inputs-daily
         %label.radio
-          = f.radio_button :hourly_reservations, false, :checked => enable_inputs_daily
-          Daily
+          = f.radio_button :pricing_type, "daily", :checked => enable_inputs_daily
+          Daily, weekly, or monthly
 
         .price-input-options
           .price-inputs-wrapper.left
@@ -37,36 +37,25 @@
             = render 'manage/listings/price_field', :f => f, :price => "weekly", :label => "week", :include_checkbox => true
             = render 'manage/listings/price_field', :f => f, :price => "monthly", :label => "month", :include_checkbox => true
 
-          / .free-price
-          /   .inline-rule
-          /   .or-part Or
-          /   %label.checkbox{:for => 'daily_free'}
-          /     = f.check_box :free, :'data-behavior' => 'toggle-free', :id => 'daily_free'
-          /     Free
-
       %div.price-inputs-hourly
         %label.radio
-          = f.radio_button :hourly_reservations, true, :checked => enable_inputs_hourly
+          = f.radio_button :pricing_type, "hourly", :checked => enable_inputs_hourly
           Hourly
 
         .price-input-options
           .price-inputs-wrapper.left
             = render 'manage/listings/price_field', :f => f, :price => "hourly", :label => "hour"
 
-          / .free-price
-          /   .inline-rule{:style => "height: 60px;"}
-          /   .or-part Or
-          /   %label.checkbox{:for => 'hourly_free'}
-          /     = f.check_box :free, :'data-behavior' => 'toggle-free', :id => 'hourly_free'
-          /     Free
+      - if f.object.errors.include?(:hourly_reservations).present?
+        %p.error-block= f.object.errors[:hourly_reservations].first
 
       %div.price-inputs-free
         %label.radio
-          = f.radio_button :hourly_reservations, "free", :checked => enable_inputs_free
+          = f.radio_button :pricing_type, "free", :checked => enable_inputs_free
           Free
 
-      - if f.object.errors.include?(:hourly_reservations).present?
-        %p.error-block= f.object.errors[:hourly_reservations].first
+      - if f.object.errors.include?(:pricing_type).present?
+        %p.error-block= f.object.errors[:pricing_type].first
 
   - if f.object.errors.include?(:free).present?
     %p.error-block

@@ -87,7 +87,7 @@ module ListingsHelpers
     select "ListingType2", from: "listing_listing_type_id"
     fill_in "listing_quantity", with: "5"
 
-    choose "Bookings are made by the day"
+    choose "Daily, weekly, or monthly"
 
     check "enable_daily"
     fill_in "listing_daily_price", with: "10"
