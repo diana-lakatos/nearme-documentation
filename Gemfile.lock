@@ -526,7 +526,6 @@ DEPENDENCIES
   mustachejs-rails
   newrelic_rpm
   nokogiri
-  oauth
   omniauth
   omniauth-facebook
   omniauth-linkedin
