@@ -181,7 +181,6 @@ GEM
     googl (0.6.0)
       httparty (>= 0.6.1)
       json (>= 1.4.6)
-    gravtastic (3.2.6)
     guard (1.6.2)
       listen (>= 0.6.0)
       lumberjack (>= 1.0.2)
@@ -507,7 +506,6 @@ DEPENDENCIES
   geocoder
   gibbon
   googl
-  gravtastic
   guard-cucumber
   guard-minitest
   guard-spork
