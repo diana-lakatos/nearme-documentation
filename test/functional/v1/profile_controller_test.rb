@@ -39,13 +39,17 @@ class V1::ProfileControllerTest < ActionController::TestCase
 
 
   test "should add avatar image to current user object when data of content type image/jpeg is posted to the method" do
-    raw_post :upload_avatar, {:filename => "avatar.jpg"}, IO.read('test/fixtures/listing.jpg')
-    assert_response :success
+    with_carrier_wave_processing do
+      raw_post :upload_avatar, {:filename => "avatar.jpg"}, IO.read('test/fixtures/listing.jpg')
+      assert_response :success
+    end
   end
 
   test "should fail when data of content type other than image/jpeg is posted to the method" do
-    raw_post :upload_avatar, {:filename => "avatar.jpg"}, IO.read('test/fixtures/avatar.txt')
-    assert_response :unprocessable_entity
+    with_carrier_wave_processing do
+      raw_post :upload_avatar, {:filename => "avatar.jpg"}, IO.read('test/fixtures/avatar.txt')
+      assert_response :unprocessable_entity
+    end
   end
 
   test "should remove avatar image and clear column" do

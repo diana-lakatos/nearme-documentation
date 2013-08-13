@@ -2,8 +2,6 @@ require 'test_helper'
 
 class RegistrationsControllerTest < ActionController::TestCase
 
-  include Devise::TestHelpers
-
   setup do
     @user = FactoryGirl.create(:user)
     @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -11,12 +9,23 @@ class RegistrationsControllerTest < ActionController::TestCase
     @tracker = Analytics::EventTracker.any_instance
   end
 
-  should 'successfully sign up and track' do
-    @tracker.expects(:signed_up).with do |user, custom_options|
-      user == assigns(:user) && custom_options == { signed_up_via: 'other', provider: 'native' }
+  context 'actions' do
+
+    should 'successfully sign up and track' do
+      @tracker.expects(:signed_up).with do |user, custom_options|
+        user == assigns(:user) && custom_options == { signed_up_via: 'other', provider: 'native' }
+      end
+      assert_difference('User.count') do
+        post :create, user: user_attributes
+      end
     end
-    assert_difference('User.count') do
-      post :create, user: { name: 'Test User', email: 'user@example.com', password: 'secret' }
+
+    should 'successfully update' do
+      sign_in @user
+      @industry = FactoryGirl.create(:industry)
+      @industry2 = FactoryGirl.create(:industry)
+      @tracker.expects(:updated_profile).once
+      put :update, :id => @user, user: { :industry_ids => [@industry.id, @industry2.id] }
     end
   end
 
@@ -81,5 +90,57 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_redirected_to root_path
     end
 
+  end
+
+  context 'referer and source=&campaign=' do
+
+    setup do
+      ApplicationController.class_eval do
+        def first_time_visited?; @first_time_visited = cookies.count.zero?; end
+      end
+    end
+
+    context 'on first visit' do
+      should 'be stored in both cookie and db' do
+        @request.env['HTTP_REFERER'] = 'http://example.com/'
+        get :new, source: 'xxx', campaign: 'yyy'
+        assert_equal 'xxx', cookies.signed[:source]
+        assert_equal 'yyy', cookies.signed[:campaign]
+        assert_equal 'http://example.com/', cookies.signed[:referer]
+
+        post :create, user: user_attributes
+        user = User.find_by_email('user@example.com')
+        assert_equal 'xxx', user.source
+        assert_equal 'yyy', user.campaign
+        assert_equal 'http://example.com/', user.referer
+      end
+    end
+
+    context 'on repeated visits' do
+      should 'be stored only on first visit' do
+        @request.env['HTTP_REFERER'] = 'http://example.com/'
+        get :new
+        assert_nil cookies.signed[:source]
+        assert_nil cookies.signed[:campaign]
+        assert_equal 'http://example.com/', cookies.signed[:referer]
+
+        @request.env['HTTP_REFERER'] = 'http://homepage.com/'
+        get :new, source: 'xxx', campaign: 'yyy'
+        assert_nil cookies.signed[:source]
+        assert_nil cookies.signed[:campaign]
+        assert_equal 'http://example.com/', cookies.signed[:referer]
+
+        post :create, user: user_attributes
+        user = User.find_by_email('user@example.com')
+        assert_nil user.source
+        assert_nil user.campaign
+        assert_equal 'http://example.com/', user.referer
+      end
+    end
+  end
+
+  private
+  def user_attributes
+    { name: 'Test User', email: 'user@example.com', password: 'secret' }
   end
 end

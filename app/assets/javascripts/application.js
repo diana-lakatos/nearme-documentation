@@ -20,12 +20,7 @@
 //= require ./vendor/markerclusterer
 //= require jquery-fileupload/basic
 //= require history_jquery
-//= require underscore
-//= require backbone
-//= require backbone_rails_sync
-//= require backbone_datalink
-//= require mustache
-//= require handlebars.runtime
+//= require ./vendor/underscore
 //= require chosen-jquery
 //= require chart
 //

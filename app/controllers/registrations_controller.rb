@@ -23,6 +23,9 @@ class RegistrationsController < Devise::RegistrationsController
       # This user has just registered, so we
       mixpanel.apply_user(@user, :alias => true)
       event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
+      User.where(id: @user.id).update_all({referer: cookies.signed[:referer],
+                                           source: cookies.signed[:source],
+                                           campaign: cookies.signed[:campaign]})
     end
 
     # Clear out temporarily stored Provider authentication data if present
@@ -41,6 +44,7 @@ class RegistrationsController < Devise::RegistrationsController
     if resource.update_with_password(params[resource_name])
       set_flash_message :success, :updated
       sign_in(resource, :bypass => true)
+      event_tracker.updated_profile(@user)
       redirect_to :action => 'edit'
     else
       render :edit

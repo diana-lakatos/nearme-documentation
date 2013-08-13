@@ -56,7 +56,7 @@ class Listing < ActiveRecord::Base
     allow_nil: true
   delegate :creator, :creator=, to: :location
   delegate :name, to: :creator, prefix: true
-  delegate :service_fee_percent, to: :creator, allow_nil: true
+  delegate :service_fee_percent, to: :location, allow_nil: true
   delegate :to_s, to: :name
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description, 

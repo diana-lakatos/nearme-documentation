@@ -374,4 +374,13 @@ class ReservationTest < ActiveSupport::TestCase
 
     end
   end
+
+  context '#reject' do
+    subject { FactoryGirl.create(:reservation) }
+    should 'set reason and update status' do
+      assert_equal subject.reject('Reason'), true
+      assert_equal subject.reload.rejection_reason, 'Reason'
+      assert_equal subject.state, 'rejected'
+    end
+  end
 end

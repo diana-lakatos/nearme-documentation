@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class DashboardControllerTest < ActionController::TestCase
-  include Devise::TestHelpers
 
   setup do
     @user = FactoryGirl.create(:user)
