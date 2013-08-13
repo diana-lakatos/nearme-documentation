@@ -20,8 +20,7 @@
 //= require ./vendor/markerclusterer
 //= require jquery-fileupload/basic
 //= require history_jquery
-//= require underscore
-//= require mustache
+//= require ./vendor/underscore
 //= require chosen-jquery
 //= require chart
 //

@@ -62,7 +62,6 @@ gem 'googl'
 
 gem 'jquery-rails'
 gem 'jquery-fileupload-rails'
-gem 'mustachejs-rails'
 gem 'chosen-rails'
 
 gem 'inherited_resources'

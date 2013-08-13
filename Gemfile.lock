@@ -260,7 +260,6 @@ GEM
     multi_test (0.0.2)
     multi_xml (0.5.3)
     multipart-post (1.1.5)
-    mustachejs-rails (0.7.1)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-ssh (2.6.3)
@@ -506,7 +505,6 @@ DEPENDENCIES
   mixpanel
   mocha
   money-rails
-  mustachejs-rails
   newrelic_rpm
   nokogiri
   omniauth
