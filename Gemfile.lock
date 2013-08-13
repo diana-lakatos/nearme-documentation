@@ -432,8 +432,6 @@ GEM
       rest-client (~> 1.4)
     subexec (0.2.2)
     terminal-table (1.4.5)
-    texticle (2.0.3)
-      activerecord (~> 3.0)
     thin (1.5.0)
       daemons (>= 1.0.9)
       eventmachine (>= 0.12.6)
@@ -554,7 +552,6 @@ DEPENDENCIES
   spork-minitest!
   state_machine
   stripe
-  texticle (~> 2.0)
   thin
   timecop
   turn
