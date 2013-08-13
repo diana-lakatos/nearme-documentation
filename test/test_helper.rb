@@ -103,6 +103,12 @@ Spork.prefork do
     end
   end
 
+  class ApplicationController
+    def first_time_visited?
+      false
+    end
+  end
+
 end
 
 Spork.each_run do

@@ -35,6 +35,10 @@ class Analytics::EventTracker
   include SpaceWizardEvents
   include UserEvents
 
+  def visited_for_the_first_time
+    track 'Visited for the first time', {}
+  end
+
   private
 
   def track(event_name, *objects)
