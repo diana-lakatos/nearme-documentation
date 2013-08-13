@@ -6,7 +6,6 @@ gem 'pg'
 gem 'raygun4ruby'
 gem 'active_model_serializers'
 gem 'carrierwave'
-gem 'decent_exposure'
 gem 'devise', "~> 2.2"
 gem 'omniauth'
 gem 'omniauth-twitter'
