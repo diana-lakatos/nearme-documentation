@@ -105,7 +105,6 @@ group :development, :test do
 end
 
 group :development do
-  gem "rails-erd"
   gem 'quiet_assets'
   gem 'mail_view'
   gem 'sextant'
