@@ -61,7 +61,7 @@ class Listing < ActiveRecord::Base
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description, 
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
-    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :pricing_type
+    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type
 
   attr_accessor :distance_from_search_query, :photo_not_required
 
@@ -142,30 +142,30 @@ class Listing < ActiveRecord::Base
     }.compact.any? { |price| !price.zero? }
   end
 
-  def pricing_type=(pricing_type)
-    case pricing_type
-      when "daily"
-        self.free = false
-        self.hourly_reservations = false
-      when "hourly"
-        self.free = false
-        self.hourly_reservations = true
-      when "free"
-        self.null_price!
-        self.free = true
-        self.hourly_reservations = false
-      else
-        errors.add(:pricing_type, 'no pricing type set')
-      end
+  def price_type=(price_type)
+    case price_type.to_sym
+    when PRICE_TYPES[2] #Daily
+      self.free = false
+      self.hourly_reservations = false
+    when PRICE_TYPES[0] #Hourly
+      self.free = false
+      self.hourly_reservations = true
+    when :free
+      self.null_price!
+      self.free = true
+      self.hourly_reservations = false
+    else
+      errors.add(:price_type, 'no pricing type set')
+    end
   end
 
-  def pricing_type
+  def price_type
     if free?
-      "free"
+      :free
     elsif hourly_reservations?
-      "hourly"
+      PRICE_TYPES[0] #Hourly
     else
-      "daily"
+      PRICE_TYPES[2] #Daily
     end
       
   end

@@ -28,7 +28,7 @@
     .controls
       %div.price-inputs-daily
         %label.radio
-          = f.radio_button :pricing_type, "daily", :checked => enable_inputs_daily
+          = f.radio_button :price_type, "daily", :checked => enable_inputs_daily
           Daily, weekly, or monthly
 
         .price-input-options
@@ -39,7 +39,7 @@
 
       %div.price-inputs-hourly
         %label.radio
-          = f.radio_button :pricing_type, "hourly", :checked => enable_inputs_hourly
+          = f.radio_button :price_type, "hourly", :checked => enable_inputs_hourly
           Hourly
 
         .price-input-options
@@ -51,11 +51,11 @@
 
       %div.price-inputs-free
         %label.radio
-          = f.radio_button :pricing_type, "free", :checked => enable_inputs_free
+          = f.radio_button :price_type, "free", :checked => enable_inputs_free
           Free
 
-      - if f.object.errors.include?(:pricing_type).present?
-        %p.error-block= f.object.errors[:pricing_type].first
+      - if f.object.errors.include?(:price_type).present?
+        %p.error-block= f.object.errors[:price_type].first
 
   - if f.object.errors.include?(:free).present?
     %p.error-block

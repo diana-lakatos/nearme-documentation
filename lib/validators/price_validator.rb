@@ -9,7 +9,7 @@ class PriceValidator < ActiveModel::Validator
 
     #Make sure a free listing does not have the hourly listing bool set
     if record.free? && record.hourly_reservations?
-      record.errors.add(:pricing_type, "listing cannot be free and have an hourly rate")
+      record.errors.add(:price_type, "listing cannot be free and have an hourly rate")
     end
   end
 end

@@ -75,7 +75,7 @@ Then /^Listing (.*) pricing should be (disabled|enabled)$/ do |period, state|
 end
 
 Then /^pricing should be free$/ do
-  page.find("#listing_pricing_type_free").checked?
+  page.find("#listing_price_type_free").checked?
 end
 
 When /^I select custom availability:$/ do |table|
