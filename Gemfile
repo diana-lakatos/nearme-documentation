@@ -31,7 +31,6 @@ gem 'paper_trail'
 gem 'rack-rewrite', :require => 'rack/rewrite'
 
 gem 'state_machine'
-gem 'tweet-button'
 gem 'will_paginate'
 gem 'resque'
 gem "compass-rails"

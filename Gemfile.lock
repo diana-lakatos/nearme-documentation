@@ -445,7 +445,6 @@ GEM
       polyglot (>= 0.3.1)
     turn (0.9.6)
       ansi
-    tweet-button (0.1.0)
     twilio-ruby (3.9.0)
       builder (>= 2.1.2)
       jwt (>= 0.1.2)
@@ -555,7 +554,6 @@ DEPENDENCIES
   thin
   timecop
   turn
-  tweet-button
   twilio-ruby
   uglifier (~> 2.1.0)
   unicorn
