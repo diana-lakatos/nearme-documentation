@@ -3,7 +3,6 @@ source 'http://rubygems.org'
 gem 'rails', '3.2.14'
 gem 'pg'
 
-gem "RedCloth", "~> 4.2.9", :require => "redcloth"
 gem 'raygun4ruby'
 gem 'active_model_serializers'
 gem 'carrierwave'
