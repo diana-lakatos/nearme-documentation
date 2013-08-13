@@ -9,7 +9,6 @@ gem 'carrierwave'
 gem 'devise', "~> 2.2"
 gem 'omniauth'
 gem 'omniauth-twitter'
-gem 'omniauth-openid'
 gem 'omniauth-facebook'
 gem 'omniauth-linkedin'
 gem 'fog'
