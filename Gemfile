@@ -62,7 +62,6 @@ gem 'googl'
 
 gem 'jquery-rails'
 gem 'jquery-fileupload-rails'
-gem 'rails-backbone'
 gem 'mustachejs-rails'
 gem 'handlebars_assets'
 gem 'chosen-rails'

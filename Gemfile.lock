@@ -135,7 +135,6 @@ GEM
       hashie
       multi_json
       oauth
-    ejs (1.1.1)
     email_spec (1.4.0)
       launchy (~> 2.1)
       mail (~> 2.2)
@@ -335,11 +334,6 @@ GEM
       activesupport (= 3.2.14)
       bundler (~> 1.0)
       railties (= 3.2.14)
-    rails-backbone (0.9.10)
-      coffee-script (~> 2.2.0)
-      ejs (~> 1.1.1)
-      jquery-rails (~> 2.1.3)
-      railties (>= 3.1.0)
     rails3_acts_as_paranoid (0.2.4)
       activerecord (~> 3.2)
     railties (3.2.14)
@@ -531,7 +525,6 @@ DEPENDENCIES
   quiet_assets
   rack-rewrite
   rails (= 3.2.14)
-  rails-backbone
   rails3_acts_as_paranoid
   ranked-model
   raygun4ruby
