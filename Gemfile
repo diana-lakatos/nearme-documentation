@@ -110,7 +110,7 @@ group :test do
   gem 'pickle'
   gem 'timecop'
   gem 'turn'
-  gem 'webmock', :git => 'git://github.com/bblimke/webmock'
+  gem 'webmock'
   gem 'simplecov', :require => false
   gem 'vcr'
 end

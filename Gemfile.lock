@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/bblimke/webmock
-  revision: e2c2e278f5ee8db7e9e6f40822ad24cd783ae91b
-  specs:
-    webmock (1.9.0)
-      addressable (>= 2.2.7)
-      crack (>= 0.1.7)
-
-GIT
   remote: https://github.com/Slashek/spork-minitest.git
   revision: 2979d438702cfd089debf6b610b6a736b4c5322d
   specs:
@@ -45,7 +37,7 @@ GEM
     activesupport (3.2.14)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
-    addressable (2.3.3)
+    addressable (2.3.5)
     amatch (0.2.11)
       tins (~> 0.3)
     animation (0.1.alpha.3)
@@ -96,7 +88,8 @@ GEM
       sass (~> 3.1)
     compass-rails (1.0.3)
       compass (>= 0.12.2, < 0.14)
-    crack (0.3.1)
+    crack (0.4.1)
+      safe_yaml (~> 0.9.0)
     cucumber (1.3.5)
       builder (>= 2.1.2)
       diff-lcs (>= 1.1.3)
@@ -363,6 +356,7 @@ GEM
     rspec-mocks (2.14.3)
     ruby-hmac (0.4.0)
     ruby-prof (0.12.2)
+    safe_yaml (0.9.5)
     sass (3.2.3)
     sass-rails (3.2.5)
       railties (~> 3.2.0)
@@ -429,6 +423,9 @@ GEM
       rack (>= 1.0.0)
     warden (1.2.3)
       rack (>= 1.0)
+    webmock (1.13.0)
+      addressable (>= 2.2.7)
+      crack (>= 0.3.2)
     will_paginate (3.0.3)
     xpath (2.0.0)
       nokogiri (~> 1.3)
@@ -517,5 +514,5 @@ DEPENDENCIES
   uglifier (~> 2.1.0)
   unicorn
   vcr
-  webmock!
+  webmock
   will_paginate
