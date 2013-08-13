@@ -21,22 +21,22 @@ class LocationsController < ApplicationController
     restore_initial_bookings_from_stored_reservation
   end
 
-  def landing_page
+  def vertical_accounting
     @location = Location.first
     @listing = @location.listings.first
   end
 
-  def accounting
+  def vertical_design
     @location = Location.first
     @listing = @location.listings.first
   end
 
-  def law
+  def vertical_law
     @location = Location.first
     @listing = @location.listings.first
   end
 
-  def hairdressing
+  def vertical_hairdressing
     @location = Location.first
     @listing = @location.listings.first
   end
