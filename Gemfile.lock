@@ -413,8 +413,6 @@ GEM
       shoulda-context (~> 1.0.1)
       shoulda-matchers (~> 1.4.1)
     shoulda-context (1.0.2)
-    shoulda-let (0.0.4)
-      shoulda
     shoulda-matchers (1.4.1)
       activesupport (>= 3.0.0)
     simple_form (2.0.4)
@@ -565,7 +563,6 @@ DEPENDENCIES
   sass-rails
   sextant
   shoulda (= 3.3.2)
-  shoulda-let
   simple_form
   simplecov
   spork-minitest!

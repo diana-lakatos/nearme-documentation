@@ -97,7 +97,6 @@ end
 group :development, :test do
   gem 'thin'
   gem 'shoulda', '3.3.2'
-  gem 'shoulda-let', :require => 'shoulda/let'
   gem 'factory_girl_rails', '>=3.0.0'
   gem 'email_spec'
   gem 'json_spec', '0.5.0'
