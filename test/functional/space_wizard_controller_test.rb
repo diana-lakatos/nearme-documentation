@@ -2,8 +2,6 @@ require 'test_helper'
 
 class SpaceWizardControllerTest < ActionController::TestCase
 
-  include Devise::TestHelpers
-
   setup do
     @user = FactoryGirl.create(:user)
     @industry = FactoryGirl.create(:industry)

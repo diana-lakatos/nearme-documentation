@@ -17,7 +17,7 @@
 #   tracker = Analytics::EventTracker.new(mixpanel_analytics_backend)
 #   tracker.signed_up(user)
 #   tracker.cancelled_reservation(reservation)
-#   tracker.accepted_reservation(reservation)
+#   tracker.accepted_reservation(reservation),
 #   tracker.reviewed_booking(listing)
 #   tracker.edited_listing(listing, :attributes_changed => ["price"])
 #
@@ -111,6 +111,7 @@ class Analytics::EventTracker
         email: object.email,
         phone: object.phone,
         job_title: object.job_title,
+        industries: object.industries.map(&:name),
         created: object.created_at
       }
     when Listing::Search::Params::Web
