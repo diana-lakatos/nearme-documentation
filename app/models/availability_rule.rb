@@ -11,7 +11,10 @@ class AvailabilityRule < ActiveRecord::Base
   validates :open_minute, :inclusion => 0..59
   validates :close_minute, :inclusion => 0..59
   validates_each :day do |record, attr, value|
-    if record.floor_total_opening_time_in_hours < 1
+    total_opening_time = record.floor_total_opening_time_in_hours
+    if total_opening_time < 0
+      record.errors["day_#{value}"] << "The opening hour must occur before the closing hour."
+    elsif total_opening_time < 1 
       record.errors["day_#{value}"] << "must be opened for at least 1 hour"
     end
   end

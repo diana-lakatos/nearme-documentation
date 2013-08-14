@@ -37,6 +37,7 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :instances
+    resources :pages
   end
 
   resources :companies
@@ -112,7 +113,8 @@ DesksnearMe::Application.routes.draw do
       resources :reservations, :controller => 'listings/reservations' do
         member do
           post :confirm
-          post :reject
+          put :reject
+          get :rejection_form
           post :host_cancel
         end
       end

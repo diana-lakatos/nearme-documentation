@@ -31,7 +31,7 @@ class Datepicker.View extends PositionedView
   '''
 
   dayTemplate: '''
-    <div class="{{klass}}" data-year="{{year}}" data-month="{{month}}" data-day="{{day}}">{{day}}</div>
+    <div class="<%= klass %>" data-year="<%= year %>" data-month="<%= month %>" data-day="<%= day %>"><%= day %></div>
   '''
 
   defaultOptions: {
@@ -178,5 +178,5 @@ class Datepicker.View extends PositionedView
     klass.join ' '
 
   _render: (template, args) ->
-    Mustache.render(template, args)
+    _.template(template, args)
 

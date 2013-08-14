@@ -2,8 +2,6 @@ require 'test_helper'
 
 class AuthenticationsControllerTest < ActionController::TestCase
 
-  include Devise::TestHelpers
-
   setup do
     @password = "password123"
   end

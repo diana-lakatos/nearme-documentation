@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class SearchControllerTest < ActionController::TestCase
-  include Devise::TestHelpers
 
   context 'conduct search' do
 

@@ -31,7 +31,6 @@ class Listing < ActiveRecord::Base
   scope :latest,   order("listings.created_at DESC")
 
   # == Callbacks
-  before_validation :null_price_if_marked_free
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
 
@@ -57,12 +56,12 @@ class Listing < ActiveRecord::Base
     allow_nil: true
   delegate :creator, :creator=, to: :location
   delegate :name, to: :creator, prefix: true
-  delegate :service_fee_percent, to: :creator, allow_nil: true
+  delegate :service_fee_percent, to: :location, allow_nil: true
   delegate :to_s, to: :name
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description, 
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
-    :free, :photos_attributes, :listing_type_id, :hourly_reservations
+    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type
 
   attr_accessor :distance_from_search_query, :photo_not_required
 
@@ -143,8 +142,32 @@ class Listing < ActiveRecord::Base
     }.compact.any? { |price| !price.zero? }
   end
 
-  def null_price_if_marked_free
-    null_price! if free?
+  def price_type=(price_type)
+    case price_type.to_sym
+    when PRICE_TYPES[2] #Daily
+      self.free = false
+      self.hourly_reservations = false
+    when PRICE_TYPES[0] #Hourly
+      self.free = false
+      self.hourly_reservations = true
+    when :free
+      self.null_price!
+      self.free = true
+      self.hourly_reservations = false
+    else
+      errors.add(:price_type, 'no pricing type set')
+    end
+  end
+
+  def price_type
+    if free?
+      :free
+    elsif hourly_reservations?
+      PRICE_TYPES[0] #Hourly
+    else
+      PRICE_TYPES[2] #Daily
+    end
+      
   end
 
   def null_price!

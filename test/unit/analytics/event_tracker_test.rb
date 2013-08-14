@@ -108,6 +108,12 @@ class EventTrackerTest < ActiveSupport::TestCase
       @tracker.logged_in(@user)
     end
 
+    should 'set new proprties after updating profile' do
+      expect_set_person_properties user_properties
+      @mixpanel.expects(:track).never
+      @tracker.updated_profile(@user)
+    end
+
     should 'track user social provider connection' do
       expect_set_person_properties user_properties
       expect_event 'Connected Social Provider', user_properties
@@ -185,6 +191,7 @@ class EventTrackerTest < ActiveSupport::TestCase
     {
       first_name: @user.first_name,
       last_name: @user.last_name,
+      industries: @user.industries.map(&:name),
       email: @user.email,
       phone: @user.phone,
       job_title: @user.job_title,

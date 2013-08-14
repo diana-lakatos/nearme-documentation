@@ -98,8 +98,8 @@ class ListingTest < ActiveSupport::TestCase
     end
 
     should "valid if free flag is false and at daily price is greater than zero" do
-      @listing.free = true
-      @listing.daily_price = 1.0
+      @listing.free = false
+      @listing.daily_price = 1
       @listing.weekly_price = nil
       @listing.monthly_price = nil
       @listing.save
@@ -107,21 +107,28 @@ class ListingTest < ActiveSupport::TestCase
     end
 
     should "valid if free flag is false and at weekly price is greater than zero" do
-      @listing.free = true
+      @listing.free = false
       @listing.daily_price = 0
-      @listing.weekly_price = 1.0
+      @listing.weekly_price = 1
       @listing.monthly_price = nil
       @listing.save
       assert @listing.valid?
     end
 
     should "valid if free flag is false and at monthly price is greater than zero" do
-      @listing.free = true
+      @listing.free = false
       @listing.daily_price = 0
       @listing.weekly_price = 0
       @listing.monthly_price = 5
       @listing.save
       assert @listing.valid?
+    end
+
+    should "be invalid if free flag is true and the hourly_reservations flag is true" do
+      @listing.free = true
+      @listing.hourly_reservations = true
+      @listing.save
+      assert !@listing.valid?
     end
   end
 

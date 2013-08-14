@@ -1,1 +1,1 @@
-Utils::FakeDataSeeder.new.go!
+Utils::FakeDataSeeder.new.go! unless ENV['RAILS_ENV'] == 'test'

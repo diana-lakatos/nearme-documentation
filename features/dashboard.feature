@@ -68,9 +68,10 @@ Feature: As a user of the site
       And I am on the manage locations page
      When I click edit listing icon
       And I disable daily pricing
+      And I choose "Free"
       And I submit the form
       And I click edit listing icon
-     Then Listing daily pricing should be disabled
+     Then pricing should be free
 
   Scenario: A user can enable new pricing in listing
     Given a location exists with company: the company
