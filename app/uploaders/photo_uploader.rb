@@ -26,14 +26,6 @@ class PhotoUploader < BaseImageUploader
     process :resize_to_fill => [410, 254]
   end
 
-  version :hero, :if => :should_generate_versions? do
-    process :resize_to_fill => [960, 350]
-  end
-
-  version :hero_preview, :if => :should_generate_versions? do
-    process :resize_to_fill => [100, 70]
-  end
-
   version :golden, :if => :should_generate_versions? do
     process :resize_to_fill => [SPACE_FULL_IMAGE_W, SPACE_FULL_IMAGE_H]
   end
