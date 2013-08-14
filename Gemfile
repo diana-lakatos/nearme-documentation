@@ -5,7 +5,7 @@ gem 'pg'
 
 gem 'raygun4ruby'
 gem 'active_model_serializers'
-gem 'carrierwave', '~> 0.8'
+gem 'carrierwave'
 gem 'devise', "~> 2.2"
 gem 'omniauth'
 gem 'omniauth-twitter'
@@ -69,10 +69,6 @@ gem "historyjs-rails"
 gem 'ranked-model'
 
 gem 'desk'
-
-group :staging do
-  gem 'newrelic-carrierwave', :git => 'https://github.com/tehprofessor/newrelic-carrierwave'
-end
 
 group :staging, :production do
   gem 'newrelic_rpm'

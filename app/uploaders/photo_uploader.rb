@@ -44,4 +44,5 @@ class PhotoUploader < BaseImageUploader
     end
   end
 
+  include NewrelicCarrierwaveTracker
 end

@@ -21,9 +21,8 @@ common: &default_settings
     ignore_errors: ActionController::RoutingError
 
 development:
-  <<: *default_settings
+  developer_mode: true
   monitor_mode: false
-  developer_mode: false
 
 test:
   <<: *default_settings
