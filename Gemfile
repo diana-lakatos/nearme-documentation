@@ -5,7 +5,7 @@ gem 'pg'
 
 gem 'raygun4ruby'
 gem 'active_model_serializers'
-gem 'carrierwave'
+gem 'carrierwave', '~> 0.8'
 gem 'devise', "~> 2.2"
 gem 'omniauth'
 gem 'omniauth-twitter'
