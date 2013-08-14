@@ -73,18 +73,22 @@ section#landing-page {
       
       &#header-accounting {
 	    background: url(landing-page/hero-accounting.jpg) no-repeat center center;
+        background-size: cover;
       }
       
       &#header-law {
 	    background: url(landing-page/hero-law.jpg) no-repeat center center;
+        background-size: cover;
       }
       
       &#header-hairdressing {
 	    background: url(landing-page/hero-hairdressing.jpg) no-repeat center center;
+        background-size: cover;
       }
       
       &#header-design {
 	    background: url(landing-page/hero-agency.jpg) no-repeat center center;
+        background-size: cover;
       }
 	    
 	  @media(max-width: 768px) {
