@@ -6,4 +6,12 @@ module LayoutHelper
   def render_content_outside_container!
     @render_content_outside_container = true
   end
+
+  def no_header_links?
+    @no_header
+  end
+
+  def no_header_links!
+    @no_header = true
+  end
 end
