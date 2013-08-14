@@ -202,9 +202,6 @@ DesksnearMe::Application.routes.draw do
   end
 
   match "/pages/:path", to: 'pages#show', as: :pages
-  match "/host-sign-up", to: 'pages#host_signup_1'
-  match "/host-sign-up-2", to: 'pages#host_signup_2'
-  match "/host-sign-up-3", to: 'pages#host_signup_3'
   match "/w-hotels-desks-near-me", to: 'locations#w_hotels', as: :w_hotels_location
   match "/W-hotels-desks-near-me", to: 'locations#w_hotels'
   match "/careers", to: 'pages#careers'
