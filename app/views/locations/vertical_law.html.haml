@@ -9,5 +9,6 @@
         %h1 Add your extra legal office or conference room here.
         .row-fluid
           %h2 When you list with DesksNear.Me you are connecting with thousands of trusted legal professionals looking for your space.
-          %a{:title => 'List your desk', :href => '#', :class => 'btn btn-large btn-red'} List your desk
+          = link_to new_space_wizard_url, :class => 'btn btn-large btn-red', :title => 'List your desk' do
+            List your desk
         = image_tag "landing-page/logo-landing_page.png"

@@ -21,26 +21,6 @@ class LocationsController < ApplicationController
     restore_initial_bookings_from_stored_reservation
   end
 
-  def vertical_accounting
-    @location = Location.first
-    @listing = @location.listings.first
-  end
-
-  def vertical_design
-    @location = Location.first
-    @listing = @location.listings.first
-  end
-
-  def vertical_law
-    @location = Location.first
-    @listing = @location.listings.first
-  end
-
-  def vertical_hairdressing
-    @location = Location.first
-    @listing = @location.listings.first
-  end
-
   private
 
   # Assigns the initial bookings to send to the JS controller from stored reservation request prior
