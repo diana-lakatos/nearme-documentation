@@ -78,12 +78,16 @@ class MixpanelApi
     properties.reverse_merge!(request_details)
 
     # Trigger tracking the event
-    unless should_not_track_employees? && current_user_is_desksnearme_employee?
+    if should_track_in_mixpanel?
       @mixpanel.track(event_name, properties, options)
       Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
     else
       Rails.logger.info "Not tracked mixpanel event (current user is employee): #{event_name}, #{properties}, #{options}"
     end
+  end
+
+  def should_track_in_mixpanel?
+    !(should_not_track_employees? && current_user_is_desksnearme_employee?)
   end
 
   def current_user_is_desksnearme_employee?
