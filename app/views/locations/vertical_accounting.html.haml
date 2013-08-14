@@ -11,6 +11,10 @@
     %h1 Add your spare accounting office and desk space.
     .row-fluid
       %h2 Connect with thousands of trusted accounting professionals looking for your space.
-      = link_to new_space_wizard_url, :class => 'btn btn-large btn-orange', :title => 'List your desk' do
-        List your desk
+      - if !user_signed_in?
+        = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => 'btn btn-large btn-orange', :title => 'List your desk' do
+          List your desk
+      - else
+        = link_to new_space_wizard_url, :class => 'btn btn-large btn-orange', :title => 'List your desk' do
+          List your desk
     = image_tag "landing-page/logo-landing_page.png"
