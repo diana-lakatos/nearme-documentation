@@ -2,8 +2,8 @@
   .row-fluid
     .span4.nested.photo-container
       = link_to listing do
-        - if listing.photos.first
-          = image_tag listing.photos.first.url(:space_listing), :title => listing.name, :alt => listing.name
+        - if photo = listing.photos.ready.first
+          = image_tag photo.url(:space_listing), :title => listing.name, :alt => listing.name
         - else
           = image_tag space_listing_placeholder_url(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
     .span8.nested.details-container
