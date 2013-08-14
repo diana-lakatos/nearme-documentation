@@ -70,6 +70,10 @@ gem 'ranked-model'
 
 gem 'desk'
 
+group :staging do
+  gem 'newrelic-carrierwave', :git => 'https://github.com/tehprofessor/newrelic-carrierwave'
+end
+
 group :staging, :production do
   gem 'newrelic_rpm'
 end
