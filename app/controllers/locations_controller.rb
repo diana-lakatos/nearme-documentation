@@ -15,7 +15,7 @@ class LocationsController < ApplicationController
   end
 
   def w_hotels
-    @location = Location.first
+    @location = Location.find_by_custom_page("w_hotels")
     @listing = @location.listings.first
     
     restore_initial_bookings_from_stored_reservation
