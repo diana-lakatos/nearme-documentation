@@ -11,7 +11,7 @@
   .container-fluid.calltoaction
     %h1 Add your spare design desks and creative space.
     .row-fluid
-      %h2 Connecting with thousands of trusted web design professionals looking for your space.
+      %h2 Connecting you with thousands of trusted web design professionals looking for your space.
       - if !user_signed_in?
         = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => 'btn btn-large btn-blue', :title => 'List your desk' do
           List your desk
@@ -19,3 +19,4 @@
         = link_to new_space_wizard_url, :class => 'btn btn-large btn-blue', :title => 'List your desk' do
           List your desk
     = image_tag "landing-page/logo-landing_page.png"
+
