@@ -75,7 +75,7 @@
 
 - if only_inputs.empty? || only_inputs.include?(:photos)
   = file_upload_input_with_label('Photos',
-                                  manage_photos_path('size' => 'space_listing'),
+                                  manage_photos_path('size' => 'medium'),
                                   "#{photo_input_name_prefix}[photos_attributes][0][image]",
                                   "Browse",
                                   :required => true,
@@ -86,7 +86,7 @@
     = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes]", nil, :placeholder => 'Enter Caption...', :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
     - unless @photos.nil?
       - @photos.each_with_index do |photo, index|
-        = get_fileupload_photo_html(photo.image_url(:space_listing),
+        = get_fileupload_photo_html(photo.image_url(:medium),
                                     destroy_space_wizard_photo_path(:id => photo.id),
                                     :div,
                                     id: photo.id, index: index) do
