@@ -19,31 +19,3 @@ elsif Rails.env.staging?
     config.oauth_token_secret = "hJYdFEOP3zAO0BM6uW5ps6NTZGti84Cy7AFBp8ac"
   end
 end
-
-class IssueLogger
-
-  def self.log_issue(subject, customer_email, body)
-    if self.in_debug_mode?
-      Rails.logger.info "IssueLogger.log_issue: #{{:subject => subject, :customer_email => customer_email, :body => body}.inspect}"
-    else
-      Desk.create_interaction(:interaction_subject => subject, :customer_email => customer_email, :interaction_body => body)
-    end
-  end
-
-  def self.in_debug_mode?
-    !(Rails.env.staging? || Rails.env.production?)
-  end
-
-end
-
-class BackgroundIssueLogger < IssueLogger
-
-  def self.log_issue(*args)
-    if self.in_debug_mode?
-      super
-    else
-      IssueLogger.delay.log_issue(*args)
-    end
-  end
-
-end

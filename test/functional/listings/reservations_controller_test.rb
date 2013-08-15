@@ -2,8 +2,6 @@ require 'test_helper'
 
 class Listings::ReservationsControllerTest < ActionController::TestCase
 
-  include Devise::TestHelpers
-
   context "making a booking" do
 
     setup do

@@ -2,8 +2,6 @@ require 'test_helper'
 
 class PagesControllerTest < ActionController::TestCase
 
-  include Devise::TestHelpers
-
   context 'GET show' do
     context 'a full page' do
       setup do

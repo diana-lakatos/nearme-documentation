@@ -78,8 +78,28 @@ class MixpanelApi
     properties.reverse_merge!(request_details)
 
     # Trigger tracking the event
-    @mixpanel.track(event_name, properties, options)
-    Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
+    if should_track_in_mixpanel?
+      @mixpanel.track(event_name, properties, options)
+      Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
+    else
+      Rails.logger.info "Not tracked mixpanel event (current user is employee): #{event_name}, #{properties}, #{options}"
+    end
+  end
+
+  def should_track_in_mixpanel?
+    !(should_not_track_employees? && current_user_is_desksnearme_employee?)
+  end
+
+  def current_user_is_desksnearme_employee?
+    @current_user && (@current_user.email.include?('@desksnear.me') || @current_user.email.include?('@perchard.com')  || email_belongs_to_employee?(@current_user.email))
+  end
+
+  def should_not_track_employees?
+    Rails.env.production?
+  end
+
+  def email_belongs_to_employee?(email)
+    %w(krajek6@gmail.com krajek6@o2.pl josef.simanek@gmail.com mmitchell@uflavor.com patrikjira@gmail.com pllanoc@gmail.com piotr@gega.io).include?(email)
   end
 
   # Sets global Person properties on the current tracked session.

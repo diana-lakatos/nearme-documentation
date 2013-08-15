@@ -104,7 +104,11 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
   if action == 'cancel' and user == 'owner'
     within('.guest_filter') { click_on 'Confirmed'}
   end
-  click_link_or_button action.capitalize
+  if action == 'decline'
+    step 'I reject reservation with reason'
+  else
+    click_link_or_button action.capitalize
+  end
   page.driver.accept_js_confirms!
 end
 

@@ -170,6 +170,11 @@ class Reservation < ActiveRecord::Base
   end
   alias_method :cancelable, :cancelable?
 
+  def reject(reason = nil)
+    self.rejection_reason = reason if reason
+    fire_state_event :reject
+  end
+
   # Returns whether any of the reserved dates have started
   def started?
     periods.any? { |p| p.date <= Time.zone.today }

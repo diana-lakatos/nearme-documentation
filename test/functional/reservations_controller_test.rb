@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ReservationsControllerTest < ActionController::TestCase
-  include Devise::TestHelpers
 
   context '#event_tracker' do
 

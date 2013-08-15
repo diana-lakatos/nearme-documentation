@@ -1,0 +1,16 @@
+- render_content_outside_container!
+- meta_title "Design Desks Near Me"
+- content_for :meta do
+  %meta{:content => "Design Agency office, Creative Space, web designer office space, digital", :name => "keywords"}/
+
+%section#landing-page
+  .row-fluid.landing-page-background
+    .span12.header-image#header-design
+      .hero-color#color-design
+  .container-fluid.calltoaction
+    %h1 Add your spare design desks and creative space.
+    .row-fluid
+      %h2 Connecting you with thousands of trusted web design professionals looking for your space.
+      = link_to new_space_wizard_url, :class => 'btn btn-large btn-blue', :title => 'List your desk' do
+        List your desk
+    = image_tag "landing-page/logo-landing_page.png"

@@ -10,6 +10,14 @@ class AvailabilityRule < ActiveRecord::Base
   validates :close_hour, :inclusion => 0..23
   validates :open_minute, :inclusion => 0..59
   validates :close_minute, :inclusion => 0..59
+  validates_each :day do |record, attr, value|
+    total_opening_time = record.floor_total_opening_time_in_hours
+    if total_opening_time < 0
+      record.errors["day_#{value}"] << "The opening hour must occur before the closing hour."
+    elsif total_opening_time < 1 
+      record.errors["day_#{value}"] << "must be opened for at least 1 hour"
+    end
+  end
 
   # === Callbacks
   before_validation :apply_default_minutes
@@ -61,6 +69,14 @@ class AvailabilityRule < ActiveRecord::Base
 
   def day_close_minute
     close_hour*60+close_minute
+  end
+
+  def floor_total_opening_time_in_hours
+    (close_time_minus_open_time_in_minutes/60).floor
+  end
+
+  def close_time_minus_open_time_in_minutes
+    ((self.close_hour*60 + self.close_minute) - (self.open_hour*60 + self.open_minute))
   end
 
   def self.xml_attributes

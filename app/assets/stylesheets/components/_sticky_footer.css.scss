@@ -1,0 +1,28 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.content-wrapper {
+  min-height: 100%;
+  height: auto;
+
+  .dnm-page {
+    padding-top: 90px;
+  }
+
+  .footer-push {
+    height: $footer_height;
+  }
+}
+
+.footer-wrapper {
+  margin-top: -$footer_height;
+  padding: 0;
+  height: $footer_height;
+
+  .container-fluid {
+    padding-top: 40px;
+  }
+}

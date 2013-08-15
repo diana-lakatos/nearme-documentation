@@ -1,5 +1,6 @@
 class SpaceWizardController < ApplicationController
 
+  before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :find_user, :except => [:new]
   before_filter :find_company, :except => [:new]
   before_filter :find_location, :except => [:new]
@@ -7,13 +8,10 @@ class SpaceWizardController < ApplicationController
 
   def new
     flash.keep(:warning)
-    if current_user and current_user.listings.any?
-      redirect_to manage_locations_path
-    elsif current_user
-      event_tracker.viewed_list_your_space_list
+    event_tracker.clicked_list_your_bookable
+    if current_user
       redirect_to space_wizard_list_url
     else
-      event_tracker.viewed_list_your_space_sign_up
       redirect_to new_user_registration_url(:wizard => 'space', :return_to => space_wizard_list_path)
     end
   end
@@ -22,7 +20,7 @@ class SpaceWizardController < ApplicationController
     @company ||= @user.companies.build
     @location ||= @company.locations.build
     @listing ||= @location.listings.build
-    @photos = current_user.photos
+    event_tracker.viewed_list_your_bookable
   end
 
   def submit_listing
@@ -31,7 +29,8 @@ class SpaceWizardController < ApplicationController
 
     @company ||= @user.companies.build
     @company.attributes = params[:company]
-    
+    @company.instance = current_instance
+
     if @user.save
       event_tracker.created_a_location(@location, { via: 'wizard' })
       event_tracker.created_a_listing(@listing, { via: 'wizard' })
@@ -39,7 +38,7 @@ class SpaceWizardController < ApplicationController
       flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
       redirect_to manage_locations_path
     else
-      @photos = @user.first_listing ? @user.first_listing.photos : current_user.photos
+      @photos = @user.first_listing ? @user.first_listing.photos : nil
       render :list
     end
 
@@ -71,28 +70,23 @@ class SpaceWizardController < ApplicationController
 
   def find_user
     @user = current_user
-
-    unless @user
-      redirect_to new_space_wizard_url
-    end
+    redirect_to new_space_wizard_url unless @user
   end
 
   def find_company
-    if current_user.companies.any?
-      @company = current_user.companies.first
-    end
+    @company = current_user.companies.first if current_user.companies.any?
   end
 
   def find_location
-    if @company && @company.locations.any?
-      @location = @company.locations.first
-    end
+    @location = @company.locations.first if @company && @company.locations.any?
   end
 
   def find_listing
-    if @location && @location.listings.any?
-      @listing = @location.listings.first
-    end
+    @listing = @location.listings.first if @location && @location.listings.any?
+  end
+
+  def redirect_to_dashboard_if_user_has_listings
+    redirect_to manage_locations_path if current_user && current_user.listings.any?
   end
 
 end

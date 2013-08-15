@@ -1,7 +1,15 @@
 class PriceValidator < ActiveModel::Validator
   def validate(record)
-    unless record.free? || (record.hourly_price_cents.to_f + record.daily_price_cents.to_f + record.weekly_price_cents.to_f + record.monthly_price_cents.to_f > 0)
+    # Make sure free listing does not have price and vice-versa
+    if record.free? && record.has_price?
       record.errors.add("free", :free)
+    elsif !record.free? && !record.has_price?
+      record.errors.add("free", :free)
+    end
+
+    #Make sure a free listing does not have the hourly listing bool set
+    if record.free? && record.hourly_reservations?
+      record.errors.add(:price_type, "listing cannot be free and have an hourly rate")
     end
   end
 end

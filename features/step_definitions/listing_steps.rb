@@ -5,6 +5,7 @@ Given /^a listing( with nil prices)? in (.*) exists( with that amenity)?$/ do |n
     listing.daily_price = nil
     listing.weekly_price = nil
     listing.monthly_price = nil
+    listing.free = true if !listing.has_price?
     listing.save!
   end
   listing.location.amenities << model!("amenity") if amenity
@@ -129,6 +130,3 @@ Then /^I should see the following listings in order:$/ do |table|
   end
 end
 
-Then /^I should see the creators gravatar/ do
-  page.should have_css(".host .avatar")
-end

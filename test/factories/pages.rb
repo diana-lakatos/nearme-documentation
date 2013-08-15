@@ -2,7 +2,8 @@ FactoryGirl.define do
 
   factory :page do
     sequence(:path) { |n| "page-#{n}" }
-    instance { Instance.default_instance || FactoryGirl.create(:instance) }
+    content { Faker::Lorem.paragraph }
+    instance_id { (Instance.default_instance || FactoryGirl.create(:instance)).id }
   end
 
 end
