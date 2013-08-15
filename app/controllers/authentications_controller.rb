@@ -83,6 +83,7 @@ class AuthenticationsController < ApplicationController
   def signed_in_successfully
     flash[:success] = 'Signed in successfully.' if use_flash_messages?
     @oauth.remember_user!
+    log_logged_in
     sign_in_and_redirect(:user, @oauth.authenticated_user)
   end
 
