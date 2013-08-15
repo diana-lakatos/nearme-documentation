@@ -20,7 +20,7 @@
   = hidden_field_tag '', listing.location.currency, :id => 'currency-select'
 
 - if only_inputs.empty? || only_inputs.include?(:price)
-  %div{:class => "control-group #{"error" if f.object.errors.include?(:free).present?}"}
+  %div{:class => "control-group #{"error" if f.object.errors.include?(:free).present?}"}"}
     = f.label :daily_price, 'Price', :class => 'control-label flush-top' do
       %abbr{:title => "required"} *
       Price
