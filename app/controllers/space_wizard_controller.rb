@@ -20,6 +20,7 @@ class SpaceWizardController < ApplicationController
     @company ||= @user.companies.build
     @location ||= @company.locations.build
     @listing ||= @location.listings.build
+    @country = request.location ? request.location.country : "United States"
     event_tracker.viewed_list_your_bookable
   end
 

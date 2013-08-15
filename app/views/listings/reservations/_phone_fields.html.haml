@@ -12,7 +12,7 @@
   .row-fluid
     = f.label :country_name, "Country", class: 'control-label', placeholder: 'Credit Card Number'
     .controls.country-name
-      = f.input :country_name, :label => false, :as => :select, :collection => user_country_name_options, :input_html => { :class => "custom-select" }
+      = f.input :country_name, :label => false, :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), :input_html => { :class => "custom-select" }
 
   .phone-number.column.left
     = f.label :phone, :class => 'control-label' do
