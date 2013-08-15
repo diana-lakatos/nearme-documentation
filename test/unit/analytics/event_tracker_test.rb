@@ -171,7 +171,8 @@ class EventTrackerTest < ActiveSupport::TestCase
       listing_confirm: @listing.confirm_reservations,
       listing_daily_price: @listing.daily_price.try(:dollars),
       listing_weekly_price: @listing.weekly_price.try(:dollars),
-      listing_monthly_price: @listing.monthly_price.try(:dollars)
+      listing_monthly_price: @listing.monthly_price.try(:dollars),
+      listing_url: "http://example.com/listings/#{@listing.to_param}"
     }
   end
 
@@ -183,7 +184,8 @@ class EventTrackerTest < ActiveSupport::TestCase
       location_city: @location.city,
       location_state: @location.state,
       location_country: @location.country,
-      location_postcode: @location.postcode
+      location_postcode: @location.postcode,
+      location_url: "http://example.com/locations/#{@location.id}"
     }
   end
 
