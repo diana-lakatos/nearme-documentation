@@ -7,7 +7,7 @@ class ReservationTest < ActiveSupport::TestCase
   include ReservationsHelper
 
   setup do
-    stub_request(:get, /.*api\.mixpanel\.com.*/)
+    stub_mixpanel
   end
 
   test "it has a listing" do

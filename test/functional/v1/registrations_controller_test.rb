@@ -3,8 +3,7 @@ require 'test_helper'
 class V1::RegistrationsControllerTest < ActionController::TestCase
 
   setup do
-    stub_request(:get, /.*api\.mixpanel\.com.*/)
-    @tracker = Analytics::EventTracker.any_instance
+    stub_mixpanel
   end
 
   test "successfull sign up and track" do

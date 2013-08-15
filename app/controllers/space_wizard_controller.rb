@@ -8,7 +8,7 @@ class SpaceWizardController < ApplicationController
 
   def new
     flash.keep(:warning)
-    event_tracker.clicked_list_your_bookable
+    event_tracker.clicked_list_your_bookable({source: request.referer ? URI(request.referer).path : "direct"})
     if current_user
       redirect_to space_wizard_list_url
     else
@@ -32,7 +32,9 @@ class SpaceWizardController < ApplicationController
     @company.instance = current_instance
 
     if @user.save
-      event_tracker.created_a_location(@location, { via: 'wizard' })
+      @location = @user.locations.first
+      @listing = @user.listings.first
+      event_tracker.created_a_location(@location , { via: 'wizard' })
       event_tracker.created_a_listing(@listing, { via: 'wizard' })
 
       flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'

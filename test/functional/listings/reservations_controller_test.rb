@@ -8,8 +8,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       @listing = FactoryGirl.create(:listing_in_san_francisco)
       @user = FactoryGirl.create(:user)
       sign_in @user
-      @tracker = Analytics::EventTracker.any_instance
-      stub_request(:get, /.*api\.mixpanel\.com.*/)
+      stub_mixpanel
       stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
     end
 
