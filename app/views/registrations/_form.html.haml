@@ -2,7 +2,7 @@
   = f.input :name, label: "Full name"
   = f.input :email, label: "Email"
   = render("registrations/networks", :supported_providers => @supported_providers) if resource.persisted?
-  = render 'registrations/phone_fields', :f => f
+  = render :partial => 'registrations/phone_fields', :locals => { :f => f, :country => country }
   = f.association :industries, :blank => false, :input_html => { :class => 'custom-select' }
   = f.input :job_title, label: "Job title"
   = f.input :biography, label: "Biography"
