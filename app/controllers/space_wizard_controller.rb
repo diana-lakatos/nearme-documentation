@@ -8,7 +8,7 @@ class SpaceWizardController < ApplicationController
 
   def new
     flash.keep(:warning)
-    event_tracker.clicked_list_your_bookable
+    event_tracker.clicked_list_your_bookable({source: request.referer ? URI(request.referer).path : "direct"})
     if current_user
       redirect_to space_wizard_list_url
     else
