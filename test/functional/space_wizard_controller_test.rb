@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'vcr_setup'
 
 class SpaceWizardControllerTest < ActionController::TestCase
 
@@ -29,6 +30,28 @@ class SpaceWizardControllerTest < ActionController::TestCase
       end
     end
 
+  end
+
+  context "geo-located default country" do
+    
+    should "be set to Greece" do
+      VCR.use_cassette "freegeoip_greece" do
+        # Set request ip to an ip address in Greece
+        @request.env['REMOTE_ADDR'] = '2.87.255.255'
+        get :list
+        assert assigns(:country) == "Greece"
+      end
+    end
+
+    should "be set to Brazil" do
+      VCR.use_cassette "freegeoip_brazil" do
+        # Set request ip to an ip address in Brazil
+        @request.env['REMOTE_ADDR'] = '139.82.255.255'
+        get :list
+        assert assigns(:country) == "Brazil"
+      end
+    end
+    
   end
 
   context 'track' do
