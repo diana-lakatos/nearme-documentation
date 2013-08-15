@@ -12,6 +12,7 @@ module Listings
 
     def review
       @reservation_request.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
+      @country = request.location ? request.location.country : nil
       event_tracker.opened_booking_modal(reservation)
     end
 
