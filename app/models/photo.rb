@@ -30,8 +30,11 @@ class Photo < ActiveRecord::Base
 
   AVAILABLE_CONTENT = ['Listing', 'Location']
 
-  before_create :disable_processing # Handle processing after saving the image
   after_commit :enqueue_processing, on: :create
+
+  def should_generate_versions?
+    self.persisted?
+  end
 
   def generate_versions
     image.recreate_versions!
@@ -45,14 +48,13 @@ class Photo < ActiveRecord::Base
     image.send(method, *args, &block)
   end
 
-  private
-
-  # We disable processing so that CarrierWave doesn't generate and upload
-  # our specified versions.
-  def disable_processing
-    image.enable_processing = false
-    true
+  # hack, after adding recreate_versions! for some reason you can't access file via photo.url(:version) anymore!
+  # however, I have noticed that photo.<version> works as expected
+  def url(version)
+    send(version)
   end
+
+  private
 
   # We enqueue a processing job for after we've created and saved the photo.
   # This enables us to control when the processing ocurrs.

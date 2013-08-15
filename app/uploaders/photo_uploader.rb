@@ -9,31 +9,32 @@ class PhotoUploader < BaseImageUploader
 
   process :auto_orient
 
-  version :thumb do
+  version :thumb, :if => :should_generate_versions? do
     process :resize_to_fill => [96, 96]
   end
 
+  # it's not a mistake that we don't have :if condition here - we want to be able to display img preview ASAP
   version :medium do
     process :resize_to_fill => [144, 89]
   end
 
-  version :large do
+  version :large, :if => :should_generate_versions? do
     process :resize_to_fill => [1280, 960]
   end
 
-  version :space_listing do
+  version :space_listing, :if => :should_generate_versions? do
     process :resize_to_fill => [410, 254]
   end
 
-  version :hero do
+  version :hero, :if => :should_generate_versions? do
     process :resize_to_fill => [960, 350]
   end
 
-  version :hero_preview do
+  version :hero_preview, :if => :should_generate_versions? do
     process :resize_to_fill => [100, 70]
   end
 
-  version :golden do
+  version :golden, :if => :should_generate_versions? do
     process :resize_to_fill => [SPACE_FULL_IMAGE_W, SPACE_FULL_IMAGE_H]
   end
 
@@ -45,4 +46,11 @@ class PhotoUploader < BaseImageUploader
   end
 
   include NewrelicCarrierwaveTracker
+
+  private
+
+  def should_generate_versions?(*args)
+    model.should_generate_versions?
+  end
+
 end
