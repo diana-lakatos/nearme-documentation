@@ -4,10 +4,9 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
 
   setup do
     @reservation = FactoryGirl.create(:reservation_with_credit_card)
-    stub_request(:get, /.*api\.mixpanel\.com.*/)
     @user = @reservation.listing.creator
     sign_in @user
-    @tracker = Analytics::EventTracker.any_instance
+    stub_mixpanel
     User::BillingGateway.any_instance.stubs(:charge)
   end
 
