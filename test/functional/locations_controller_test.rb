@@ -8,8 +8,7 @@ class LocationsControllerTest < ActionController::TestCase
     @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
     @location = FactoryGirl.create(:location_in_auckland)
     @company.locations << @location
-    stub_request(:get, /.*api\.mixpanel\.com.*/)
-    @tracker = Analytics::EventTracker.any_instance
+    stub_mixpanel
   end
 
   test "should return success status for show action if no listings" do
