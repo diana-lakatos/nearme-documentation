@@ -80,7 +80,8 @@ class Analytics::EventTracker
         location_city: object.city,
         location_state: object.state,
         location_country: object.country,
-        location_postcode: object.postcode
+        location_postcode: object.postcode,
+        location_url: Rails.application.routes.url_helpers.location_url(object)
       }
     when Listing
       {
@@ -89,7 +90,8 @@ class Analytics::EventTracker
         listing_confirm: object.confirm_reservations,
         listing_daily_price: object.daily_price.try(:dollars),
         listing_weekly_price: object.weekly_price.try(:dollars),
-        listing_monthly_price: object.monthly_price.try(:dollars)
+        listing_monthly_price: object.monthly_price.try(:dollars),
+        listing_url: Rails.application.routes.url_helpers.listing_url(object)
       }
     when Reservation
       {
