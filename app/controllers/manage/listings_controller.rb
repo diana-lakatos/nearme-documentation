@@ -20,6 +20,7 @@ class Manage::ListingsController < Manage::BaseController
 
     if @listing.save
       flash[:success] = "Great, your new Desk/Room has been added!"
+      event_tracker.created_a_listing(@listing, { via: 'dashboard' })
       redirect_to manage_locations_path
     else
       @photos = @listing.photos

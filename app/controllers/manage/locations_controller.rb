@@ -17,6 +17,7 @@ class Manage::LocationsController < Manage::BaseController
 
     if @location.save
       flash[:success] = "Great, your new Space has been added!"
+      event_tracker.created_a_location(@location , { via: 'dashboard' })
       redirect_to manage_locations_path
     else
       render :new
