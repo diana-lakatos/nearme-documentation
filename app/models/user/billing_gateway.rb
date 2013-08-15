@@ -7,7 +7,7 @@ class User::BillingGateway
   # Invalid/declined card during a charge
   class CardError < BillingError
     attr_reader :param
-    def initialize(message, param)
+    def initialize(message = nil, param = nil)
       super(message)
       @param = param
     end
@@ -100,7 +100,8 @@ class User::BillingGateway
   rescue Stripe::InvalidRequestError => e
     raise InvalidRequestError, e
   rescue Stripe::CardError => e
-    raise CardError.new(e.to_s, e.param)
+    message = e.message.gsub(/\(Status .*\)/, '')
+    raise CardError.new(message, e.param)
   rescue Stripe::StripeError => e
     raise BillingError, e
   end

@@ -105,9 +105,8 @@ class ReservationRequest < Form
           add_error("Those credit card details don't look valid", :cc)
         end
       rescue User::BillingGateway::CardError => e
-        message = e.message.gsub(/\(Status .*\)/, '')
         field = e.param ? e.param : :cc
-        add_error(message, field)
+        add_error(e.message, field)
       rescue User::BillingGateway::BillingError => e
         add_error(e.message, :cc)
       end
