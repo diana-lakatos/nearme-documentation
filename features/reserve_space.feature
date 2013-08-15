@@ -59,7 +59,7 @@ Feature: A user can book at a space
 
   Scenario: Booking and paying by credit card
      Given I am logged in as the user
-       When I book space with credit card for:
+       When I book space for:
         | Listing     | Date   | Quantity |
         | the listing | Monday | 1        |
        Then I should see "credit card will be charged when your reservation is confirmed"
