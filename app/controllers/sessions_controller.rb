@@ -2,7 +2,7 @@ class SessionsController < Devise::SessionsController
   before_filter :set_return_to
   before_filter :set_default_remember_me, :only => [:create]
   skip_before_filter :require_no_authentication, :only => [:show] , :if => lambda {|c| request.xhr? }
-  after_filter :render_or_redirect_after_create, :only => [:create]
+  after_filter :render_or_redirect_after_create, :only => [:create] 
 
   def new
     super unless already_signed_in?
@@ -16,7 +16,7 @@ class SessionsController < Devise::SessionsController
     super
 
     if current_user
-      mixpanel.apply_user(current_user)
+      mixpanel.apply_user(current_user, :alias => true)
       event_tracker.logged_in(current_user, provider: Auth::Omni.new(session[:omniauth]).provider)
     end
   end
