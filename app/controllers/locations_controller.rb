@@ -6,12 +6,18 @@ class LocationsController < ApplicationController
   before_filter :redirect_for_location_custom_page, :only => :show
 
   def show
-    @listing = @location.listings.find(params[:listing_id]) if params[:listing_id]
+    if params[:listing_id] or @location.listings.empty?
+      # If listing_id given or location doesn't have any listings
+      @listing = @location.listings.find(params[:listing_id]) if params[:listing_id]
 
-    # Attempt to restore a stored reservation state from the session.
-    restore_initial_bookings_from_stored_reservation
-
-    event_tracker.viewed_a_location(@location, { logged_in: user_signed_in? })
+      # Attempt to restore a stored reservation state from the session.
+      restore_initial_bookings_from_stored_reservation
+  
+      event_tracker.viewed_a_location(@location, { logged_in: user_signed_in? }) 
+    else
+      # Redirect to location with first listing
+      redirect_to(url_for(params.merge(listing_id: @location.listings.first)))
+    end 
   end
 
   def w_hotels
