@@ -8,9 +8,10 @@
   = f.input :biography, label: "Biography"
   = f.input :password, :label => (resource.persisted? ? "Change password" : "Password" )
 
-  = file_upload_input_with_label('Profile Photo', avatar_path, "avatar", "Upload Photo", {"no-multiple" => true}) do
-    - if resource.avatar.file.present?
-      = fileupload_photo resource.avatar_url(:thumb).to_s, destroy_avatar_path, :div
+  .single-photo
+    = file_upload_input_with_label('Profile Photo', avatar_path, "avatar", "Upload Photo", {"no-multiple" => true}) do
+      - if resource.avatar.file.present?
+        = fileupload_photo resource.avatar_url(:medium).to_s, destroy_avatar_path, :div
 
 
   .actions

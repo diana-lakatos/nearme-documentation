@@ -26,7 +26,8 @@ class @PhotoUploader
       if confirm("Are you sure you want to delete this Photo?")
         $.post link.attr("data-url"), { _method: 'delete' }, ->
           link.closest(".photo-item").remove()
-          self.reorderSortableList()
+          if @multiplePhoto()
+            self.reorderSortableList()
       return false
 
   initializeFileUploader : =>
@@ -53,13 +54,11 @@ class @PhotoUploader
         ,
 
         done:  (e, data) =>
-          if @singlePhotoExists() && !@multiplePhoto()
-            @replaceExistingImg(data)
-          else
-            @addImg(data)
+          @addImg(data)
           @fileInput = @container.find('.browse-file').eq(0)
           @initializeFileUploader()
-          @reorderSortableList()
+          if @multiplePhoto()
+            @reorderSortableList()
 
         ,
         progress: (e, data) =>

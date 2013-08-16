@@ -60,7 +60,7 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.avatar = params[:avatar]
     if @user.save
-      render :text => { :url => @user.avatar_url(:thumb).to_s, :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain'
+      render :text => { :url => @user.avatar_url(:medium).to_s, :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain'
     else
       render :text => [{:error => @user.errors.full_messages}].to_json,:content_type => 'text/plain', :status => 422
     end

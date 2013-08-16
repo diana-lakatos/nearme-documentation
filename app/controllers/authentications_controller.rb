@@ -121,17 +121,15 @@ class AuthenticationsController < ApplicationController
   end
 
   def log_logged_in
-    mixpanel.apply_user(@oauth.authenticated_user)
+    mixpanel.apply_user(@oauth.authenticated_user, :alias => true)
     event_tracker.logged_in(@oauth.authenticated_user, { provider: @oauth.provider } )
   end
 
   def log_connect_social_provider
-    mixpanel.apply_user(@oauth.authenticated_user)
     event_tracker.connected_social_provider(@oauth.authenticated_user, { provider: @oauth.provider } )
   end
 
   def log_disconnect_social_provider
-    mixpanel.apply_user(@authentication.user)
     event_tracker.disconnected_social_provider(@authentication.user, { provider: @authentication.provider } )
   end
 
