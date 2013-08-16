@@ -20,10 +20,6 @@ module ReservationsHelper
     "#{reservation_request.quantity} #{reservation_request.listing.name}"
   end
 
-  def reservation_needs_payment_details?(reservation)
-    !reservation.total_amount.zero? && %w(USD CAD).include?(reservation.currency)
-  end
-
   def reservation_subtotal_price(reservation)
     if reservation.subtotal_amount.to_f.zero?
       "Free!"

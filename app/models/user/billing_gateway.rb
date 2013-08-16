@@ -5,10 +5,18 @@ class User::BillingGateway
   BillingError = Class.new(StandardError)
 
   # Invalid/declined card during a charge
-  CardError = Class.new(BillingError)
+  class CardError < BillingError
+    attr_reader :param
+    def initialize(message = nil, param = nil)
+      super(message)
+      @param = param
+    end
+  end
 
   # Invalid parameters provided with request
   InvalidRequestError = Class.new(BillingError)
+
+  SUPPORTED_CURRENCIES = %w(USD CAD)
 
   # User helper to add associations on the user data object
   module UserHelper
@@ -91,6 +99,9 @@ class User::BillingGateway
     end
   rescue Stripe::InvalidRequestError => e
     raise InvalidRequestError, e
+  rescue Stripe::CardError => e
+    message = e.message.gsub(/\(Status .*\)/, '')
+    raise CardError.new(message, e.param)
   rescue Stripe::StripeError => e
     raise BillingError, e
   end
@@ -135,6 +146,10 @@ class User::BillingGateway
     raise CardError, e
   rescue Stripe::StripeError => e
     raise BillingError, e
+  end
+
+  def self.payment_supported?(location)
+    SUPPORTED_CURRENCIES.include? location.currency
   end
 
   protected
