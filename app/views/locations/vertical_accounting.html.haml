@@ -1,4 +1,5 @@
 - render_content_outside_container!
+- no_header_links! unless user_signed_in?
 - meta_title "Accounting Desks Near Me"
 - content_for :meta do
   %meta{:content => "accounting firm, AICPA, The American Accounting Association, National Society of Accountants: NSA, CPA resources, professional associations for accountants, Accounting Office Space, Certified Practicing accountants", :name => "keywords"}/
@@ -11,6 +12,10 @@
     %h1 Add your spare accounting office and desk space.
     .row-fluid
       %h2 Connect with thousands of trusted accounting professionals looking for your space.
-      = link_to new_space_wizard_url, :class => 'btn btn-large btn-orange', :title => 'List your desk' do
-        List your desk
+      - if !user_signed_in?
+        = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => 'btn btn-large btn-orange', :title => 'List your desk' do
+          List your desk
+      - else
+        = link_to new_space_wizard_url, :class => 'btn btn-large btn-orange', :title => 'List your desk' do
+          List your desk
     = image_tag "landing-page/logo-landing_page.png"
