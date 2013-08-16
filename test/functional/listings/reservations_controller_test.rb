@@ -10,6 +10,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       sign_in @user
       stub_mixpanel
       stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
+      stub_billing_gateway
     end
 
     should "track booking modal open" do
@@ -62,10 +63,13 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
   def booking_params_for(listing)
     {
-      "listing_id" => listing.id,
-      "reservation_request" => {
-        "dates" => [Chronic.parse('Monday')],
-        "quantity"=>"1"
+      listing_id: listing.id,
+      reservation_request: {
+          dates: [Chronic.parse('Monday')],
+          quantity: "1",
+          card_number: 4111111111111111,
+          card_expires: 1.year.from_now.strftime("%m/%y"),
+          card_code: '111'
       }
     }
   end

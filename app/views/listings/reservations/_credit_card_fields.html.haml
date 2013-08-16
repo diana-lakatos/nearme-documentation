@@ -1,0 +1,42 @@
+#credit_card_fields
+  - if @reservation_request.errors[:cc].present?
+    .flash.error
+      %ul
+        - @reservation_request.errors[:cc].each do |e|
+          %li= e
+
+  .row-fluid.padding-bottom
+    .span6
+      .ico-lock.padding Submit a secure payment.
+    .span6
+      = image_tag 'credit-cards.png', :alt => "Visa, Mastercard, American Express, Discover"
+
+  .row-fluid{class: "#{"error" if f.object.errors.include?(:number).present?}"}
+    = f.label :card_number, "Credit Card Number", class: 'control-label', placeholder: 'Credit Card Number'
+    .controls.card-number.input-icon-holder
+      = f.input_field :card_number, required: true
+      %span.ico-credit-card
+    - if f.object.errors[:number].present?
+      %p.error-block
+        = f.object.errors[:number].first
+
+  .card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:exp_month).present? or f.object.errors.include?(:exp_year).present?}"}
+    = f.label :card_expires, "Expires On", class: 'control-label'
+    .controls.card-expires
+      = f.input_field :card_expires, input_html: {size: 4}, placeholder: 'MM/YY', required: true
+    - if f.object.errors[:exp_month].present?
+      %p.error-block
+        = f.object.errors[:exp_month].first
+    - if f.object.errors[:exp_year].present?
+      %p.error-block
+        = f.object.errors[:exp_year].first
+
+  .card-info.security.column.right{class: "#{"error" if f.object.errors.include?(:cvc).present?}"}
+    = f.label :card_code, "Security Code", class: 'control-label'
+    .controls.card-code
+      = f.input_field :card_code, input_html: {size: 3}, placeholder: 'CCV', required: true
+    - if f.object.errors[:cvc].present?
+      %p.error-block
+        = f.object.errors[:cvc].first
+
+  .clearfix

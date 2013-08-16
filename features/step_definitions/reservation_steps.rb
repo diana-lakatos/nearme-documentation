@@ -65,11 +65,11 @@ Then /^I should have a cancelled reservation on "([^"]*)"$/ do |date|
 end
 
 
-When /^I book space( with credit card)? for:$/ do |with_credit_card, table|
+When /^I book space for:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
   work_in_modal do
-    step "I provide reservation credit card details" if with_credit_card
+    step "I provide reservation credit card details"
     step "I click to confirm the booking"
   end
 end
@@ -83,8 +83,9 @@ When /^I book space as new user for:$/ do |table|
     #select "New Zealand", :from => 'reservation_request_country_name'
     page.execute_script "$('select#reservation_request_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
     fill_in 'Phone number', with: '8889983375'
-    step "I click to confirm the booking"
+    step "I provide reservation credit card details"
   end
+  step "I click to confirm the booking"
 end
 
 When /^(.*) books a space for that listing$/ do |person|
@@ -187,25 +188,17 @@ end
 When /^I provide reservation credit card details$/ do
   mock_billing_gateway
 
-  choose 'reservation_request_payment_method_credit_card'
   fill_in 'reservation_request_card_number', :with => "4111111111111111"
   fill_in 'reservation_request_card_expires', :with => '1218'
   fill_in 'reservation_request_card_code', :with => '123'
   @credit_card_reservation = true
 end
 
-When /^I choose to pay manually$/ do
-  wait_modal_loaded
-  choose 'reservation_request_payment_method_manual'
-end
-
-When /^I click to confirm the bookings?( with credit card)?$/ do |credit_card|
+When /^I click to confirm the booking$/ do
   work_in_modal do
-    if !credit_card && !@credit_card_reservation
-      choose 'reservation_request_payment_method_manual'
-    end
     click_button "Request Booking"
   end
+  page.should have_content('Your reservation has been made!')
 end
 
 Then(/^I should see the booking confirmation screen for:$/) do |table|

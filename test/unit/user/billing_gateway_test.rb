@@ -126,6 +126,20 @@ class User::BillingGatewayTest < ActiveSupport::TestCase
     end
   end
 
+  context '#payment_supported?' do
+    should 'accept USD and CAD' do
+      location = create(:location, currency: 'USD')
+      assert User::BillingGateway.payment_supported? location
+      location.currency = 'CAD'
+      assert User::BillingGateway.payment_supported? location
+    end
+
+    should 'deny otherwise' do
+      location = create(:location, currency: 'RUB')
+      refute User::BillingGateway.payment_supported? location
+    end
+  end
+
   protected
 
   # Return an exception that will be caught as a Stripe::CardError
