@@ -159,7 +159,7 @@ class LocationTest < ActiveSupport::TestCase
       should "ignore missing fields and store the one present" do
         @location = FactoryGirl.create(:location_warsaw_address_components)
         assert_equal 'Warsaw', @location.city
-        assert_equal 'Unknown', @location.suburb
+        assert_equal nil, @location.suburb
       end
 
     end
@@ -168,7 +168,7 @@ class LocationTest < ActiveSupport::TestCase
       @location.address_components = { 0 => { "does" => "not", "exist" => ", but", "should" => "work"} }
       @location.save!
       @location.reload
-      assert_equal 'Unknown', @location.city
+      assert_equal nil, @location.city
     end
 
     should "should update all address components fields based on address_components" do
@@ -178,7 +178,7 @@ class LocationTest < ActiveSupport::TestCase
       assert_equal "San Francisco", @location.city
       assert_equal "California", @location.state
       assert_equal "United States", @location.country
-      assert_equal "Unknown", @location.suburb
+      assert_equal nil, @location.suburb
       assert_equal "San Francisco", @location.street # this is first part of address
     end
   end
