@@ -85,6 +85,12 @@ Spork.prefork do
     end
   end
 
+  After '@photo' do
+    CarrierWave.configure do |config|
+      config.enable_processing = false
+    end
+  end
+
   def last_json
     page.source
   end
