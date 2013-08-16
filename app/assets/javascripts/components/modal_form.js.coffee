@@ -1,6 +1,6 @@
 class @ModalForm
 
-  constructor: (@container, @form) ->
+  constructor: (@container, @form = @container) ->
     if !$.browser.msie
       @focusInput()
     @bindEvents()

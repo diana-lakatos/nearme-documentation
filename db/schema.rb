@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130807041210) do
+ActiveRecord::Schema.define(:version => 20130814232811) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -128,10 +128,30 @@ ActiveRecord::Schema.define(:version => 20130807041210) do
     t.datetime "updated_at",        :null => false
   end
 
+  create_table "instance_themes", :force => true do |t|
+    t.integer  "instance_id"
+    t.string   "name"
+    t.string   "compiled_stylesheet"
+    t.string   "icon_image"
+    t.string   "icon_retina_image"
+    t.string   "logo_image"
+    t.string   "logo_retina_image"
+    t.string   "hero_image"
+    t.string   "color_blue"
+    t.string   "color_red"
+    t.string   "color_orange"
+    t.string   "color_green"
+    t.string   "color_gray"
+    t.string   "color_black"
+    t.string   "color_white"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.integer  "partner_id"
     t.string   "site_name"
     t.string   "description"
@@ -256,6 +276,7 @@ ActiveRecord::Schema.define(:version => 20130807041210) do
     t.integer  "position"
     t.datetime "deleted_at"
     t.integer  "creator_id"
+    t.boolean  "versions_generated", :default => false, :null => false
   end
 
   create_table "reservation_charges", :force => true do |t|
@@ -386,6 +407,9 @@ ActiveRecord::Schema.define(:version => 20130807041210) do
     t.string   "mobile_number"
     t.integer  "instance_id"
     t.datetime "notified_about_mobile_number_issue_at"
+    t.string   "referer"
+    t.string   "source"
+    t.string   "campaign"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

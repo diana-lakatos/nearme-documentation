@@ -9,6 +9,6 @@
               method: :post
 
 - if reservation.can_reject?
-  = link_to 'Decline', reject_manage_listing_reservation_path(reservation.listing, reservation),
-              confirm: 'Do you really want to reject this reservation?', :class => "btn btn-red btn-medium ico-close",
-              method: :post
+  = link_to 'Decline', rejection_form_manage_listing_reservation_path(reservation.listing, reservation),
+              rel: 'modal.sign-up-modal',
+              :class => "btn btn-red btn-medium ico-close"

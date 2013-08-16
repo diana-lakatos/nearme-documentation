@@ -10,11 +10,13 @@ class Photo < ActiveRecord::Base
   default_scope -> { rank(:position) }
   scope :no_content, -> { where content_id: nil }
   scope :for_listing, -> { where content_type: 'Listing' }
+  scope :ready, -> { where(versions_generated: true) }
 
   acts_as_paranoid
 
   after_create :notify_user_about_change
   after_destroy :notify_user_about_change
+
   # Don't delete the photo from s3
   skip_callback :destroy, :after, :remove_image!
 
@@ -28,10 +30,36 @@ class Photo < ActiveRecord::Base
 
   AVAILABLE_CONTENT = ['Listing', 'Location']
 
+  after_commit :enqueue_processing, on: :create
+
+  def should_generate_versions?
+    self.persisted?
+  end
+
+  def generate_versions
+    image.recreate_versions!
+    self.versions_generated = true
+    save!
+  end
+
   def method_missing(method, *args, &block)
     super(method, *args, &block)
   rescue NoMethodError
     image.send(method, *args, &block)
+  end
+
+  # hack, after adding recreate_versions! for some reason you can't access file via photo.url(:version) anymore!
+  # however, I have noticed that photo.<version> works as expected
+  def url(version)
+    send(version)
+  end
+
+  private
+
+  # We enqueue a processing job for after we've created and saved the photo.
+  # This enables us to control when the processing ocurrs.
+  def enqueue_processing
+    PhotoImageProcessJob.perform(id)
   end
 
 end

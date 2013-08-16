@@ -50,15 +50,52 @@ label.radio {
   }
 }
 
+.single-photo {
+
+  .fileupload {
+
+    .uploaded {
+      overflow: hidden;
+    }
+
+    .photo-item {
+      float: left;
+    }
+
+    .thumbnail-processing {
+      width: 144px;
+      height: 44px;
+      padding-top: 100px;
+    }
+
+    img {
+      float: left;
+    }
+
+    .action {
+      clear: both;
+    }
+  }
+}
 .fileupload {
 
-   input.browse-file {
-     display: block;
-     height: 0px;
-     width: 0px;
-     margin: 0px;
-     padding: 0px;
-   }
+  .ui-sortable {
+
+    img {
+      margin: 0 auto;
+      width: 180px;
+      height: 113px;
+    }
+
+  }
+
+  input.browse-file {
+    display: block;
+    height: 0px;
+    width: 0px;
+    margin: 0px;
+    padding: 0px;
+  }
 
   .fileinput-button {
     margin-bottom: 8px;
@@ -84,7 +121,7 @@ label.radio {
     display: inline-block;
   }
 
-  .photo-item:not(.hidden) {
+  .photo-item {
     margin-bottom: 20px;
     margin-right: 20px;
     overflow: hidden;
@@ -97,11 +134,6 @@ label.radio {
       position: absolute;
     }
 
-    img {
-      margin: 0 auto;
-      width: 180px;
-      height: 113px;
-    }
 
     .delete-photo {
       background-color: $blue;
@@ -127,7 +159,11 @@ label.radio {
     width: 180px;
     height: 56px;
     text-align: center;
-    padding-top: 114px;
+    padding-top: 109px;
+    // hack only for chrome...
+    @media screen and (-webkit-min-device-pixel-ratio:0) { 
+      padding-top: 114px;
+    }
 
     .loading-icon {
       width: 100%;
@@ -136,7 +172,16 @@ label.radio {
     }
 
     .loading-text {
-      padding-top: 5px;
+      padding-top: 2px;
+      position: relative;
+
+      .progress {
+        position: absolute;
+        top: 8px;
+        left: 0px;
+        width: 100%;
+      }
+
     }
   }
 }
@@ -229,17 +274,19 @@ form {
     }  
   }
 
-  .control-group.error {
+  .card-info.error, .row-fluid.error, control-group.error {
     
 
     // ul is for chosen
-
-    input, 
-    textarea, 
-    ul, 
-    select {
-      border-color: lighten($red, 10%);
+    .controls {
+      input,
+      textarea,
+      ul,
+      select {
+        border-color: lighten($red, 10%);
+      }
     }
+
   }
 
   label {

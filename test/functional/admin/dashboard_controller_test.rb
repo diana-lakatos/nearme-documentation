@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Admin::DashboardControllerTest < ActionController::TestCase
-  include Devise::TestHelpers
 
   context 'anonymous user' do
     context 'GET show' do

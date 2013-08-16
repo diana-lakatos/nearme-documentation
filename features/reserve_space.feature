@@ -41,12 +41,13 @@ Feature: A user can book at a space
     And the reservation total should show $55.00
 
   Scenario: Paying manually should not incur a service fee
-    Given I am logged in as the user
+    Given a location exists with company: that company, currency: "RUB"
+    And a listing exists with location: that location, quantity: 10
+    And I am logged in as the user
     When I go to the location's page
     And I select to book and review space for:
       | Listing | Date | Quantity|
       | the listing | Monday | 1 |
-    When I choose to pay manually
     Then the reservation total should show $50.00
 
   Scenario: Free booking should show 'Free' in place of rates and $0.00 for the total
@@ -58,7 +59,7 @@ Feature: A user can book at a space
 
   Scenario: Booking and paying by credit card
      Given I am logged in as the user
-       When I book space with credit card for:
+       When I book space for:
         | Listing     | Date   | Quantity |
         | the listing | Monday | 1        |
        Then I should see "credit card will be charged when your reservation is confirmed"
@@ -110,6 +111,7 @@ Feature: A user can book at a space
     And the reservation subtotal should show $500.00
     And the reservation service fee should show $50.00
     And the reservation total should show $550.00
+    And I provide reservation credit card details
     When I click to confirm the booking
     Then the user should have a reservation:
       | Listing     | Date   | Quantity | Start | End   |

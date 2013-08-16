@@ -30,10 +30,12 @@ class Company < ActiveRecord::Base
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
 
-  validates_presence_of :name, :industries
+  validates_presence_of :name, :industries, :instance
   validates_length_of :description, :maximum => 250
   validates :email, email: true, allow_blank: true
   validate :validate_url_format
+
+  delegate :service_fee_percent, to: :instance, allow_nil: true
 
   # Returns the companies in need of recieving a payment transfer for
   # outstanding payments we've received on their behalf.

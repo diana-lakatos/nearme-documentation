@@ -2,8 +2,6 @@ require 'test_helper'
 
 class Manage::LocationsControllerTest < ActionController::TestCase
 
-  include Devise::TestHelpers
-
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
@@ -19,7 +17,11 @@ class Manage::LocationsControllerTest < ActionController::TestCase
 
   context "#create" do
 
-    should "create location" do
+    should "create location and log" do
+      stub_mixpanel
+      @tracker.expects(:created_a_location).with do |location, custom_options|
+        location == assigns(:location) && custom_options == { via: 'dashboard' }
+      end
       assert_difference('@user.locations.count') do
         post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).reverse_merge!({:location_type_id => @location_type.id})}
       end
@@ -79,6 +81,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       end
 
       should "not create location" do
+        stub_mixpanel
         assert_no_difference('@user.locations.count') do
           post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).reverse_merge!({:location_type_id => @location_type.id})}
         end

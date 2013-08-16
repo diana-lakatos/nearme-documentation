@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/bblimke/webmock
-  revision: e2c2e278f5ee8db7e9e6f40822ad24cd783ae91b
-  specs:
-    webmock (1.9.0)
-      addressable (>= 2.2.7)
-      crack (>= 0.1.7)
-
-GIT
   remote: https://github.com/Slashek/spork-minitest.git
   revision: 2979d438702cfd089debf6b610b6a736b4c5322d
   specs:
@@ -16,7 +8,6 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
-    RedCloth (4.2.9)
     actionmailer (3.2.14)
       actionpack (= 3.2.14)
       mail (~> 2.5.4)
@@ -46,7 +37,7 @@ GEM
     activesupport (3.2.14)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
-    addressable (2.3.3)
+    addressable (2.3.5)
     amatch (0.2.11)
       tins (~> 0.3)
     animation (0.1.alpha.3)
@@ -69,9 +60,10 @@ GEM
     capybara-webkit (1.0.0)
       capybara (~> 2.0, >= 2.0.2)
       json
-    carrierwave (0.7.1)
+    carrierwave (0.9.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
+      json (>= 1.7)
     chameleon (0.2.3)
     chartjs-rails (0.1)
       railties (>= 3.1)
@@ -97,13 +89,13 @@ GEM
       sass (~> 3.1)
     compass-rails (1.0.3)
       compass (>= 0.12.2, < 0.14)
-    crack (0.3.1)
-    cucumber (1.3.5)
+    crack (0.4.1)
+      safe_yaml (~> 0.9.0)
+    cucumber (1.2.5)
       builder (>= 2.1.2)
       diff-lcs (>= 1.1.3)
-      gherkin (~> 2.12.0)
-      multi_json (~> 1.7.5)
-      multi_test (>= 0.0.2)
+      gherkin (~> 2.11.7)
+      multi_json (~> 1.3)
     cucumber-rails (1.3.1)
       capybara (>= 1.1.2)
       cucumber (>= 1.2.0)
@@ -111,7 +103,6 @@ GEM
       rails (~> 3.0)
     daemons (1.1.9)
     database_cleaner (0.9.1)
-    decent_exposure (2.0.1)
     delayed_job (3.0.5)
       activesupport (~> 3.0)
     delayed_job_active_record (0.4.1)
@@ -132,19 +123,18 @@ GEM
       orm_adapter (~> 0.1)
       railties (~> 3.1)
       warden (~> 1.2.1)
-    diff-lcs (1.1.3)
+    diff-lcs (1.2.4)
     dropbox-api (0.3.2)
       hashie
       multi_json
       oauth
-    ejs (1.1.1)
     email_spec (1.4.0)
       launchy (~> 2.1)
       mail (~> 2.2)
     erubis (2.7.0)
     escape (0.0.4)
     eventmachine (1.0.0)
-    excon (0.16.10)
+    excon (0.25.3)
     execjs (1.4.0)
       multi_json (~> 1.0)
     ey_config (0.0.6)
@@ -169,13 +159,11 @@ GEM
       net-ssh (>= 2.1.3)
       nokogiri (~> 1.5.0)
       ruby-hmac
-    foreman (0.60.2)
-      thor (>= 0.13.6)
     formatador (0.2.4)
     friendly_id (4.0.9)
     fssm (0.2.9)
     geocoder (1.1.5)
-    gherkin (2.12.0)
+    gherkin (2.11.8)
       multi_json (~> 1.3)
     gibbon (0.4.6)
       httparty
@@ -183,7 +171,6 @@ GEM
     googl (0.6.0)
       httparty (>= 0.6.1)
       json (>= 1.4.6)
-    gravtastic (3.2.6)
     guard (1.6.2)
       listen (>= 0.6.0)
       lumberjack (>= 1.0.2)
@@ -200,10 +187,6 @@ GEM
       guard (>= 1.1)
       spork (>= 0.8.4)
     haml (3.1.7)
-    handlebars_assets (0.12.0)
-      execjs (>= 1.2.9)
-      sprockets (>= 2.0.3)
-      tilt
     has_scope (0.5.1)
     hashie (1.2.0)
     hike (1.2.3)
@@ -218,12 +201,6 @@ GEM
     inherited_resources (1.4.0)
       has_scope (~> 0.5.0)
       responders (~> 0.9)
-    jasmine (1.3.1)
-      jasmine-core (~> 1.3.1)
-      rack (~> 1.0)
-      rspec (>= 1.3.1)
-      selenium-webdriver (>= 0.1.3)
-    jasmine-core (1.3.1)
     journey (1.0.4)
     jquery-fileupload-rails (0.4.1)
       actionpack (>= 3.1)
@@ -232,8 +209,8 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.8.0)
-    json_spec (0.5.0)
-      json (~> 1.0)
+    json_spec (1.1.1)
+      multi_json (~> 1.0)
       rspec (~> 2.0)
     jwt (0.1.5)
       multi_json (>= 1.0)
@@ -266,11 +243,9 @@ GEM
       activesupport (~> 3.0)
       money (~> 5.1.0)
       railties (~> 3.0)
-    multi_json (1.7.8)
-    multi_test (0.0.2)
+    multi_json (1.7.9)
     multi_xml (0.5.3)
     multipart-post (1.1.5)
-    mustachejs-rails (0.7.1)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-ssh (2.6.3)
@@ -296,9 +271,6 @@ GEM
     omniauth-oauth2 (1.1.1)
       oauth2 (~> 0.8.0)
       omniauth (~> 1.0)
-    omniauth-openid (1.0.1)
-      omniauth (~> 1.0)
-      rack-openid (~> 1.3.1)
     omniauth-twitter (0.0.14)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
@@ -307,9 +279,6 @@ GEM
       activerecord (~> 3.0)
       railties (~> 3.0)
     pg (0.14.1)
-    pg_search (0.5.7)
-      activerecord (>= 3)
-      activesupport (>= 3)
     pickle (0.4.11)
       cucumber (>= 0.8)
       rake
@@ -325,9 +294,6 @@ GEM
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
-    rack-openid (1.3.1)
-      rack (>= 1.1.0)
-      ruby-openid (>= 2.1.8)
     rack-protection (1.3.2)
       rack
     rack-rewrite (1.3.3)
@@ -343,15 +309,6 @@ GEM
       activesupport (= 3.2.14)
       bundler (~> 1.0)
       railties (= 3.2.14)
-    rails-backbone (0.9.10)
-      coffee-script (~> 2.2.0)
-      ejs (~> 1.1.1)
-      jquery-rails (~> 2.1.3)
-      railties (>= 3.1.0)
-    rails-erd (0.4.5)
-      activerecord (~> 3.0)
-      activesupport (~> 3.0)
-      ruby-graphviz (~> 0.9.18)
     rails3_acts_as_paranoid (0.2.4)
       activerecord (~> 3.2)
     railties (3.2.14)
@@ -388,39 +345,27 @@ GEM
       vegas (~> 0.1.2)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rspec (2.12.0)
-      rspec-core (~> 2.12.0)
-      rspec-expectations (~> 2.12.0)
-      rspec-mocks (~> 2.12.0)
-    rspec-core (2.12.2)
-    rspec-expectations (2.12.1)
-      diff-lcs (~> 1.1.3)
-    rspec-mocks (2.12.0)
-    ruby-graphviz (0.9.21)
+    rspec (2.14.1)
+      rspec-core (~> 2.14.0)
+      rspec-expectations (~> 2.14.0)
+      rspec-mocks (~> 2.14.0)
+    rspec-core (2.14.4)
+    rspec-expectations (2.14.1)
+      diff-lcs (>= 1.1.3, < 2.0)
+    rspec-mocks (2.14.3)
     ruby-hmac (0.4.0)
-    ruby-openid (2.2.2)
     ruby-prof (0.12.2)
-    rubyzip (0.9.9)
+    safe_yaml (0.9.5)
     sass (3.2.3)
     sass-rails (3.2.5)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
-    selenium-webdriver (2.33.0)
-      childprocess (>= 0.2.5)
-      multi_json (~> 1.0)
-      rubyzip
-      websocket (~> 1.0.4)
-    sextant (0.2.3)
-      activesupport (>= 3.2)
-      rails (>= 3.2)
-    shoulda (3.3.2)
-      shoulda-context (~> 1.0.1)
-      shoulda-matchers (~> 1.4.1)
-    shoulda-context (1.0.2)
-    shoulda-let (0.0.4)
-      shoulda
-    shoulda-matchers (1.4.1)
+    shoulda (3.5.0)
+      shoulda-context (~> 1.0, >= 1.0.1)
+      shoulda-matchers (>= 1.4.1, < 3.0)
+    shoulda-context (1.1.4)
+    shoulda-matchers (2.2.0)
       activesupport (>= 3.0.0)
     simple_form (2.0.4)
       actionpack (~> 3.0)
@@ -447,8 +392,6 @@ GEM
       rest-client (~> 1.4)
     subexec (0.2.2)
     terminal-table (1.4.5)
-    texticle (2.0.3)
-      activerecord (~> 3.0)
     thin (1.5.0)
       daemons (>= 1.0.9)
       eventmachine (>= 0.12.6)
@@ -462,7 +405,6 @@ GEM
       polyglot (>= 0.3.1)
     turn (0.9.6)
       ansi
-    tweet-button (0.1.0)
     twilio-ruby (3.9.0)
       builder (>= 2.1.2)
       jwt (>= 0.1.2)
@@ -480,7 +422,9 @@ GEM
       rack (>= 1.0.0)
     warden (1.2.3)
       rack (>= 1.0)
-    websocket (1.0.7)
+    webmock (1.13.0)
+      addressable (>= 2.2.7)
+      crack (>= 0.3.2)
     will_paginate (3.0.3)
     xpath (2.0.0)
       nokogiri (~> 1.3)
@@ -489,7 +433,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  RedCloth (~> 4.2.9)
   active_model_serializers
   amatch
   animation
@@ -504,9 +447,9 @@ DEPENDENCIES
   chronic
   coffee-rails
   compass-rails
+  cucumber (~> 1.2.5)
   cucumber-rails
   database_cleaner
-  decent_exposure
   delayed_job_active_record
   desk
   devise (~> 2.2)
@@ -516,25 +459,20 @@ DEPENDENCIES
   factory_girl_rails (>= 3.0.0)
   ffaker
   fog
-  foreman
   friendly_id
   geocoder
   gibbon
   googl
-  gravtastic
   guard-cucumber
   guard-minitest
   guard-spork
   haml
-  handlebars_assets
   historyjs-rails
   icalendar
   inherited_resources
-  jasmine
   jquery-fileupload-rails
   jquery-rails
-  json_spec (= 0.5.0)
-  launchy
+  json_spec
   le
   mail_view
   mini_magick
@@ -542,24 +480,18 @@ DEPENDENCIES
   mixpanel
   mocha
   money-rails
-  mustachejs-rails
   newrelic_rpm
   nokogiri
-  oauth
   omniauth
   omniauth-facebook
   omniauth-linkedin
-  omniauth-openid
   omniauth-twitter
   paper_trail
   pg
-  pg_search
   pickle
   quiet_assets
   rack-rewrite
   rails (= 3.2.14)
-  rails-backbone
-  rails-erd
   rails3_acts_as_paranoid
   ranked-model
   raygun4ruby
@@ -569,22 +501,18 @@ DEPENDENCIES
   ruby-prof
   sass
   sass-rails
-  sextant
-  shoulda (= 3.3.2)
-  shoulda-let
+  shoulda
   simple_form
   simplecov
   spork-minitest!
   state_machine
   stripe
-  texticle (~> 2.0)
   thin
   timecop
   turn
-  tweet-button
   twilio-ruby
   uglifier (~> 2.1.0)
   unicorn
   vcr
-  webmock!
+  webmock
   will_paginate

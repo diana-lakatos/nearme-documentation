@@ -17,7 +17,7 @@
 #   tracker = Analytics::EventTracker.new(mixpanel_analytics_backend)
 #   tracker.signed_up(user)
 #   tracker.cancelled_reservation(reservation)
-#   tracker.accepted_reservation(reservation)
+#   tracker.accepted_reservation(reservation),
 #   tracker.reviewed_booking(listing)
 #   tracker.edited_listing(listing, :attributes_changed => ["price"])
 #
@@ -34,6 +34,10 @@ class Analytics::EventTracker
   include ReservationEvents
   include SpaceWizardEvents
   include UserEvents
+
+  def visited_for_the_first_time
+    track 'Visited for the first time', {}
+  end
 
   private
 
@@ -76,7 +80,8 @@ class Analytics::EventTracker
         location_city: object.city,
         location_state: object.state,
         location_country: object.country,
-        location_postcode: object.postcode
+        location_postcode: object.postcode,
+        location_url: Rails.application.routes.url_helpers.location_url(object)
       }
     when Listing
       {
@@ -85,7 +90,8 @@ class Analytics::EventTracker
         listing_confirm: object.confirm_reservations,
         listing_daily_price: object.daily_price.try(:dollars),
         listing_weekly_price: object.weekly_price.try(:dollars),
-        listing_monthly_price: object.monthly_price.try(:dollars)
+        listing_monthly_price: object.monthly_price.try(:dollars),
+        listing_url: Rails.application.routes.url_helpers.listing_url(object)
       }
     when Reservation
       {
@@ -107,6 +113,7 @@ class Analytics::EventTracker
         email: object.email,
         phone: object.phone,
         job_title: object.job_title,
+        industries: object.industries.map(&:name),
         created: object.created_at
       }
     when Listing::Search::Params::Web

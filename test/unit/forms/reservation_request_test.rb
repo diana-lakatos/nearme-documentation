@@ -7,8 +7,12 @@ class ReservationRequestTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
     @date = @listing.first_available_date
     @attributes = {
-      :dates => [@date.to_s(:db)]
+      :dates => [@date.to_s(:db)],
+      :card_number => 4111111111111111,
+      :card_expires => 1.year.from_now.strftime("%m/%y"),
+      :card_code => '111'
     }
+    stub_billing_gateway
     @reservation_request = ReservationRequest.new(@listing, @user, @attributes)
   end
 
@@ -27,6 +31,18 @@ class ReservationRequestTest < ActiveSupport::TestCase
 
     should "add periods" do
       assert !@reservation_request.reservation_periods.empty?
+    end
+
+    context 'determine payment method' do
+      should 'set credit card' do
+        User::BillingGateway.stubs(:payment_supported?).returns(true)
+        assert_equal @reservation_request.payment_method, Reservation::PAYMENT_METHODS[:credit_card]
+      end
+
+      should 'set manual' do
+        User::BillingGateway.stubs(:payment_supported?).returns(false)
+        assert_equal @reservation_request.payment_method, Reservation::PAYMENT_METHODS[:manual]
+      end
     end
   end
 

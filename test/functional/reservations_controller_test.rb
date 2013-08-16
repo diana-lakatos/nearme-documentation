@@ -1,15 +1,13 @@
 require 'test_helper'
 
 class ReservationsControllerTest < ActionController::TestCase
-  include Devise::TestHelpers
 
   context '#event_tracker' do
 
     setup do
       @reservation = FactoryGirl.create(:reservation_with_credit_card)
-      stub_request(:get, /.*api\.mixpanel\.com.*/)
       sign_in @reservation.owner
-      @tracker = Analytics::EventTracker.any_instance
+      stub_mixpanel
     end
 
     should "track and redirect a host to the My Bookings page when they cancel a booking" do

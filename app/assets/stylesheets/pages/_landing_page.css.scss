@@ -1,0 +1,173 @@
+section#landing-page {
+
+  h1 {
+    width: 60%;
+    margin: 0 20%;
+    color: $dnm_white;	
+    font-size: 45px;
+    font-family: $font-heavy, sans-serif;
+    text-align: center;
+    
+    @media(max-width: 1024px) {
+	  font-size: 34px;
+    }
+    
+    @media(max-width: $ipad-width) {
+      width: 90%;
+      margin: 0 5%;
+	  font-size: 30px;
+    }
+  }
+    
+  h2 {
+    width: 80%;
+    margin: 20px 10%;
+    color: $gray80;
+    font-size: 24px;
+    font-family: $font-regular;
+    text-align: center;
+	  
+    @media(max-width: 1024px) {
+	  margin: 10px 10%;
+      font-size: 18px;
+	}
+	  
+    @media(max-width: 768px) {
+	  width: 90%;
+	  margin: 10px 5%;
+      font-size: 18px;
+    }
+  }
+    
+  h3 {
+    width: 80%;
+    margin: 20px 10% 20px 10%;
+    color: $gray80;
+    font-size: 24px;
+    font-family: $font-regular;
+    text-align: center;
+	  
+    @media(max-width: 1024px) {
+	  margin: 15px 10% 10px 10%;
+      font-size: 18px;
+	}
+	  
+    @media(max-width: 768px) {
+	  width: 90%;
+	  margin: 10px 5% 10px 5%;
+      font-size: 18px;
+    }
+  }
+
+  .landing-page-background { 
+    
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    z-index: -1;
+  
+    .header-image {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+      background-size: cover;
+      
+      &#header-accounting {
+	    background: url(landing-page/hero-accounting.jpg) no-repeat center center;
+        background-size: cover;
+      }
+      
+      &#header-law {
+	    background: url(landing-page/hero-law.jpg) no-repeat center center;
+        background-size: cover;
+      }
+      
+      &#header-hairdressing {
+	    background: url(landing-page/hero-hairdressing.jpg) no-repeat center center;
+        background-size: cover;
+      }
+      
+      &#header-design {
+	    background: url(landing-page/hero-agency.jpg) no-repeat center center;
+        background-size: cover;
+      }
+	    
+	  @media(max-width: 768px) {	  }
+	    
+	  @media(max-width: $iphone-landscape) {
+	    min-height: auto;
+	  }
+      
+      .hero-color {
+	    position: absolute;
+	    top: 0;
+	    right: 0;
+	    bottom: 0;
+	    left: 0;
+	    z-index: -1;
+	    
+	    &#color-accounting {
+		  background: rgba($dnm_green, 0.75);
+	    }
+	    
+	    &#color-law {
+		  background: rgba($dnm_blue, 0.75);
+	    }
+	    
+	    &#color-hairdressing {
+		  background: rgba($dnm_red, 0.75);
+	    }
+	    
+	    &#color-design {
+		  background: rgba(darken($dnm_orange, 5%), 0.75);
+	    }
+      }
+      
+    }
+  }
+  
+  .calltoaction {
+    padding: 100px 0 50px 0;
+	max-width: 1360px;
+	z-index: 2;
+	
+	img {
+	  position: relative;
+	  left: 50%;
+	  margin: 0 0 30px -100px;
+      width: 200px;
+      height: auto;
+      text-align: center;
+      
+      @media (max-width: 1024px) {
+	    margin: 0 0 10px -80px;
+	    width: 160px;
+      }
+	}
+	
+	.row-fluid {
+	  width: 50%;
+	  margin: 30px 25% 20px 25%;
+	  padding: 0 0 20px 0;
+	  background: rgba($dnm_white, 0.8);
+	  text-align: center;
+	  
+	  @media(max-width: $ipad-width) {
+		width: 90%;
+		margin: 30px 5% 20px 5%;
+	  }
+	}
+	
+	@media(max-width: $ipad-width) {
+      padding: 50px 0 30px 0;
+	}
+	
+  }
+  
+}

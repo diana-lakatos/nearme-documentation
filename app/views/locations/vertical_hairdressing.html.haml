@@ -1,0 +1,21 @@
+- render_content_outside_container!
+- no_header_links! unless user_signed_in?
+- meta_title "Hairdressing Space Near Me"
+- content_for :meta do
+  %meta{:content => "haircutters, salons for sale, salon styling stations, booth rental, hair salon stations, opening a salon, beauty salon for sale, hair salon for sale, salons for rent, hair salon station, hair salon for rent, beauty salon for rent, hair salon booth, booth station, hair dressing salon for rent", :name => "keywords"}/
+
+%section#landing-page
+  .row-fluid.landing-page-background
+    .span12.header-image#header-hairdressing
+      .hero-color#color-hairdressing
+  .container-fluid.calltoaction
+    %h1 Add your spare hair salon station.
+    .row-fluid
+      %h2 Hair dressers unite! Connect with thousands of professional hair dressers when you list your stylist station on Desks Near Me.
+      - if !user_signed_in?
+        = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => 'btn btn-large btn-green', :title => 'List your desk' do
+          List your extra station
+      - else
+        = link_to new_space_wizard_url, :class => 'btn btn-large btn-green', :title => 'List your desk' do
+          List your extra station
+    = image_tag "landing-page/logo-landing_page.png"

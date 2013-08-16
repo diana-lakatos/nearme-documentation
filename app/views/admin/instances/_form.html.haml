@@ -17,5 +17,17 @@
   = f.fields_for :domains do |f_d|
     = f_d.input :name
 
+  %h4 Custom Theme
+  = f.fields_for :theme, (resource.theme || InstanceTheme.new) do |ff|
+    = ff.input :name
+    = ff.input :logo_image
+    = ff.input :logo_retina_image
+    = ff.input :icon_image
+    = ff.input :icon_retina_image
+    = ff.input :hero_image
+
+    - InstanceTheme::COLORS.each do |color|
+      = ff.input "color_#{color}"
+
   .form-actions
     = f.button :submit

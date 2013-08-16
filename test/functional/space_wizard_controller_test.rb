@@ -2,15 +2,13 @@ require 'test_helper'
 
 class SpaceWizardControllerTest < ActionController::TestCase
 
-  include Devise::TestHelpers
-
   setup do
     @user = FactoryGirl.create(:user)
     @industry = FactoryGirl.create(:industry)
     sign_in @user
     FactoryGirl.create(:listing_type)
     FactoryGirl.create(:location_type)
-    stub_request(:get, /.*api\.mixpanel\.com.*/)
+    stub_mixpanel
   end
 
   context "price must be formatted" do
@@ -39,8 +37,12 @@ class SpaceWizardControllerTest < ActionController::TestCase
     end
 
     should "track location and listing creation" do
-      @tracker.expects(:created_a_location)
-      @tracker.expects(:created_a_listing)
+      @tracker.expects(:created_a_location).with do |location, custom_options|
+        location == assigns(:location) && custom_options == { via: 'wizard' }
+      end
+      @tracker.expects(:created_a_listing).with do |listing, custom_options|
+        listing == assigns(:listing) && custom_options == { via: 'wizard' }
+      end
       post :submit_listing, get_params
     end
 

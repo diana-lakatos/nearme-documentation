@@ -108,6 +108,12 @@ class EventTrackerTest < ActiveSupport::TestCase
       @tracker.logged_in(@user)
     end
 
+    should 'set new proprties after updating profile' do
+      expect_set_person_properties user_properties
+      @mixpanel.expects(:track).never
+      @tracker.updated_profile(@user)
+    end
+
     should 'track user social provider connection' do
       expect_set_person_properties user_properties
       expect_event 'Connected Social Provider', user_properties
@@ -165,7 +171,8 @@ class EventTrackerTest < ActiveSupport::TestCase
       listing_confirm: @listing.confirm_reservations,
       listing_daily_price: @listing.daily_price.try(:dollars),
       listing_weekly_price: @listing.weekly_price.try(:dollars),
-      listing_monthly_price: @listing.monthly_price.try(:dollars)
+      listing_monthly_price: @listing.monthly_price.try(:dollars),
+      listing_url: "http://example.com/listings/#{@listing.to_param}"
     }
   end
 
@@ -177,7 +184,8 @@ class EventTrackerTest < ActiveSupport::TestCase
       location_city: @location.city,
       location_state: @location.state,
       location_country: @location.country,
-      location_postcode: @location.postcode
+      location_postcode: @location.postcode,
+      location_url: "http://example.com/locations/#{@location.id}"
     }
   end
 
@@ -185,6 +193,7 @@ class EventTrackerTest < ActiveSupport::TestCase
     {
       first_name: @user.first_name,
       last_name: @user.last_name,
+      industries: @user.industries.map(&:name),
       email: @user.email,
       phone: @user.phone,
       job_title: @user.job_title,

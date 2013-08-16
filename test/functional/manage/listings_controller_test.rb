@@ -2,8 +2,6 @@ require 'test_helper'
 
 class Manage::ListingsControllerTest < ActionController::TestCase
 
-  include Devise::TestHelpers
-
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
@@ -15,7 +13,11 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
   context "#create" do
 
-    should "create listing" do
+    should "create listing and log" do
+      stub_mixpanel
+      @tracker.expects(:created_a_listing).with do |listing, custom_options|
+        listing == assigns(:listing) && custom_options == { via: 'dashboard' }
+      end
       assert_difference('@location2.listings.count') do
         post :create, {
           :listing => FactoryGirl.attributes_for(:listing).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 }),

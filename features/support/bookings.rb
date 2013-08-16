@@ -1,6 +1,6 @@
 module Bookings
   def start_to_book(listing, dates, qty = 1)
-    visit location_path listing.location
+    visit location_path(listing.location, :listing_id => listing)
     select qty.to_s, :from => "quantity"
     add_dates(dates)
   end
@@ -24,6 +24,9 @@ module Bookings
         select_datepicker_date(date)
       end
 
+      # Close the datepicker
+      find(:css, ".calendar-wrapper.date-end").click
+    else
       # Close the datepicker
       find(:css, ".calendar-wrapper.date-end").click
     end

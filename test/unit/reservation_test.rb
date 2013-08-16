@@ -7,7 +7,7 @@ class ReservationTest < ActiveSupport::TestCase
   include ReservationsHelper
 
   setup do
-    stub_request(:get, /.*api\.mixpanel\.com.*/)
+    stub_mixpanel
   end
 
   test "it has a listing" do
@@ -372,6 +372,15 @@ class ReservationTest < ActiveSupport::TestCase
         assert @reservation.valid?
       end
 
+    end
+  end
+
+  context '#reject' do
+    subject { FactoryGirl.create(:reservation) }
+    should 'set reason and update status' do
+      assert_equal subject.reject('Reason'), true
+      assert_equal subject.reload.rejection_reason, 'Reason'
+      assert_equal subject.state, 'rejected'
     end
   end
 end

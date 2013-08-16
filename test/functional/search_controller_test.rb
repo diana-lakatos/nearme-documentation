@@ -1,14 +1,12 @@
 require 'test_helper'
 
 class SearchControllerTest < ActionController::TestCase
-  include Devise::TestHelpers
 
   context 'conduct search' do
 
     setup do
-      stub_request(:get, /.*api\.mixpanel\.com.*/)
       stub_request(:get, /.*maps\.googleapis\.com.*/)
-      @tracker = Analytics::EventTracker.any_instance
+      stub_mixpanel
       FactoryGirl.create(:instance) unless Instance.first
     end
 

@@ -1,13 +1,12 @@
 require 'test_helper'
 
 class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
-  include Devise::TestHelpers
 
   setup do
     @reservation = FactoryGirl.create(:reservation_with_credit_card)
-    stub_request(:get, /.*api\.mixpanel\.com.*/)
-    sign_in @reservation.listing.creator
-    @tracker = Analytics::EventTracker.any_instance
+    @user = @reservation.listing.creator
+    sign_in @user
+    stub_mixpanel
     User::BillingGateway.any_instance.stubs(:charge)
   end
 
@@ -34,6 +33,14 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     end
     post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
     assert_redirected_to manage_guests_dashboard_path
+  end
+
+  context 'PUT #reject' do
+    should 'set rejection reason' do
+      ReservationIssueLogger.expects(:rejected_with_reason).with(@reservation, @user)
+      put :reject, { listing_id: @reservation.listing.id, id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
+      assert_equal @reservation.reload.rejection_reason, 'Dont like him'
+    end
   end
 
 end

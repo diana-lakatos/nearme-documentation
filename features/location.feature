@@ -31,3 +31,10 @@ Feature: A user can see location details
      When I am on deleted location page
      Then I should see other listings near "Adelaide"
       And I should not see "Big Room"
+
+  Scenario: User is redirected to location with first listing if no listing given
+    Given a listing: "Small room" exists with location: that location, name: "Small room", quantity: 10
+    When I go to the location page
+    Then I should be on the location page
+    And I should have the following query string:
+      | listing_id | 1-big-room |
