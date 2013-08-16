@@ -40,6 +40,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
         @request.env['REMOTE_ADDR'] = '2.87.255.255'
         get :list
         assert assigns(:country) == "Greece"
+        assert_select 'option[value="Greece"][selected="selected"]', 1
       end
     end
 
@@ -49,6 +50,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
         @request.env['REMOTE_ADDR'] = '139.82.255.255'
         get :list
         assert assigns(:country) == "Brazil"
+        assert_select 'option[value="Brazil"][selected="selected"]', 1
       end
     end
     
