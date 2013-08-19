@@ -57,7 +57,7 @@
       %p.text-center
         You will make the payment in person upon arrival
       - if @reservation_request.display_phone_and_country_block?
-        = render 'phone_fields', :f => f
+        = render :partial => 'phone_fields', :locals => { :f => f, :country => @country }
 
     = f.button :submit, 'Request Booking', disable_with: "Booking..."
 

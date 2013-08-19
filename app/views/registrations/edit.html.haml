@@ -6,7 +6,7 @@
       %span.ico-edit.padding Edit Profile
     .box
       %p
-      = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name) }
+      = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name),  :country => @country }
 
 :javascript
   $(function() {

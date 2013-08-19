@@ -1,0 +1,38 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://freegeoip.net/json/2.87.255.255
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.1.19
+      Date:
+      - Thu, 15 Aug 2013 19:09:04 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '181'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - ! '*'
+    body:
+      encoding: US-ASCII
+      string: ! '{"ip":"2.87.255.255","country_code":"GR","country_name":"Greece","region_code":"","region_name":"","city":"","zipcode":"","latitude":39,"longitude":22,"metro_code":"","areacode":""}'
+    http_version: 
+  recorded_at: Thu, 15 Aug 2013 19:09:03 GMT
+recorded_with: VCR 2.4.0

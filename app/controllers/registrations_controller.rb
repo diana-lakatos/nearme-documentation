@@ -36,6 +36,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def edit
+    @country = current_user.country_name
     super
   end
 
