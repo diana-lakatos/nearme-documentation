@@ -1,4 +1,10 @@
+// Google analytics
 = javascript_include_tag 'analytics/ga'
+
+// Inspectlet
+:javascript
+  window.__insp = window.__insp || [];
 = javascript_include_tag 'analytics/inspectlet' if Rails.env.production?
 
+// Mixpanel
 = render 'shared/mixpanel'

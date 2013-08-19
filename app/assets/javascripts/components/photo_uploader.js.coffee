@@ -17,6 +17,7 @@ class @PhotoUploader
     @listenToDeletePhoto()
     @initializeFileUploader()
     @initializeSortable()
+    __insp.push(['tagSession', "first_listing_form_visit"]);
 
   listenToDeletePhoto: ->
     self = this
@@ -64,6 +65,9 @@ class @PhotoUploader
         progress: (e, data) =>
           @progress(data)
     }
+
+    @fileInput.on 'click', ->
+      __insp.push(['tagSession', "photo_upload_clicked"]);
 
   initializeSortable: ->
     @sortable.sortable
