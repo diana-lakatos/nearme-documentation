@@ -103,6 +103,20 @@
       background: darken(#3B5998, 15%);
     }  
   }  
+  
+  &.decline {
+	margin: 100px 0 0 0;
+	
+	.box {
+      
+      h2 {
+        margin: 0 0 20px 0;
+      }
+      
+	}
+	
+  }
+  
 }
 
 
