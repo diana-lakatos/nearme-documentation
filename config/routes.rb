@@ -6,6 +6,7 @@ DesksnearMe::Application.routes.draw do
     mount InquiryMailer::Preview => 'mail_view/inquiries'
     mount ListingMailer::Preview => 'mail_view/listings'
     mount AfterSignupMailer::Preview => 'mail_view/after_signup'
+    mount RatingMailer::Preview => 'mail_view/ratings'
   end
 
   match '/404', :to => 'errors#not_found'
@@ -59,7 +60,12 @@ DesksnearMe::Application.routes.draw do
     resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
       post :review, :on => :collection
       get :hourly_availability_schedule, :on => :collection
-    end
+     end
+  end
+
+  resources :reservations, :only => [] do
+    resources :guest_ratings, :only => [:new, :create], :controller => 'ratings'
+    resources :host_ratings, :only => [:new, :create], :controller => 'ratings'
   end
 
   match '/auth/:provider/callback' => 'authentications#create'

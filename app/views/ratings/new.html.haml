@@ -1,0 +1,11 @@
+- title "Rate booking at #{@reservation.listing.name}"
+
+.row-fluid
+  .span8.offset2
+    %h1
+      %span.ico-edit.padding Rate booking at #{@reservation.listing.name}
+    .box
+      = render :partial => "form"
+    .box
+      %section.reservations
+        = render @reservation

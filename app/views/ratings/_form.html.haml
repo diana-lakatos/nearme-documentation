@@ -1,0 +1,21 @@
+= simple_form_for [@reservation, @rating] do |f|
+  .errors
+    = f.error :value
+    = f.error :author_id
+  .span5
+    = f.label "How did you like #{@reservation.listing.name}:"
+    .thumbs
+      = image_tag('sections/rating/thumb-up.png', data: {value: '1'}, id: 'thumbs-up')
+      = image_tag('sections/rating/thumb-down.png', data: {value: '0'}, id: 'thumbs-down')
+      = f.hidden_field :value
+  .span6
+    = f.label :comment, "Comment"
+    = f.text_area :comment
+
+  .actions
+    = f.submit "Submit rating"
+
+:javascript
+  $(function() {
+    new RatingForm()
+  });

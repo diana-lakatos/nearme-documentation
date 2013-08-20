@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130814232811) do
+ActiveRecord::Schema.define(:version => 20130817154817) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -150,8 +150,8 @@ ActiveRecord::Schema.define(:version => 20130814232811) do
 
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
     t.integer  "partner_id"
     t.string   "site_name"
     t.string   "description"
@@ -277,6 +277,17 @@ ActiveRecord::Schema.define(:version => 20130814232811) do
     t.datetime "deleted_at"
     t.integer  "creator_id"
     t.boolean  "versions_generated", :default => false, :null => false
+  end
+
+  create_table "ratings", :force => true do |t|
+    t.integer  "author_id",      :null => false
+    t.integer  "subject_id"
+    t.integer  "reservation_id"
+    t.integer  "value"
+    t.text     "comment"
+    t.string   "type",           :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "reservation_charges", :force => true do |t|
@@ -410,6 +421,10 @@ ActiveRecord::Schema.define(:version => 20130814232811) do
     t.string   "referer"
     t.string   "source"
     t.string   "campaign"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
