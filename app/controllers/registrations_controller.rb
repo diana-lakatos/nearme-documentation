@@ -126,9 +126,6 @@ class RegistrationsController < Devise::RegistrationsController
         render_redirect_url_as_json
       end
     end
-    if !@user.persisted? && params[:user] && User.find_by_email(params[:user][:email])
-      redirect_to_sign_in
-    end
   end
 
   def redirect_to_sign_in

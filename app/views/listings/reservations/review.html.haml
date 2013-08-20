@@ -53,7 +53,7 @@
       - if @reservation_request.confirm_reservations?
         %p.text-center
           This host manually confirms all bookings before payment.
-    - else
+    - elsif @reservation_request.manual_payment?
       %p.text-center
         You will make the payment in person upon arrival
       - if @reservation_request.display_phone_and_country_block?
