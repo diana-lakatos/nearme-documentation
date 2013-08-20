@@ -7,6 +7,11 @@ class PhotoUploader < BaseImageUploader
     "uploads/photos/#{model.id}/"
   end
 
+  def filename
+    # Limit the file name to 120 characters
+    "#{File.basename(original_filename, ".*").slice(0,120)}.#{file.extension}"
+  end
+
   process :auto_orient
 
   version :thumb, :if => :should_generate_versions? do
