@@ -16,6 +16,8 @@ class @Bookings.PriceCalculator
     prices = @listing.pricesByDays
     pricesDays = _.keys(prices)
 
+    return 0 if pricesDays.length == 0
+
     block_size = _.inject pricesDays, (largestBlock, blockDays) ->
       largestBlock = blockDays if days >= blockDays
       largestBlock
