@@ -9,7 +9,7 @@ class PhotoUploader < BaseImageUploader
 
   def filename
     # Limit the file name to 120 characters
-    "#{File.basename(original_filename, ".*").slice(0,120)}.#{file.extension}"
+    "#{File.basename(original_filename, ".*").slice(0,120)}.#{file.extension}" if original_filename.present?
   end
 
   process :auto_orient
