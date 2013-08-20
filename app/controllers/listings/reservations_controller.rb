@@ -11,6 +11,7 @@ module Listings
     def_delegators :@reservation_request, :reservation
 
     def review
+      @country = request.location ? request.location.country : nil
       event_tracker.opened_booking_modal(reservation)
     end
 

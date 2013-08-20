@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130814232811) do
+ActiveRecord::Schema.define(:version => 20130819222648) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -150,8 +150,8 @@ ActiveRecord::Schema.define(:version => 20130814232811) do
 
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
     t.integer  "partner_id"
     t.string   "site_name"
     t.string   "description"
@@ -407,7 +407,7 @@ ActiveRecord::Schema.define(:version => 20130814232811) do
     t.string   "mobile_number"
     t.integer  "instance_id"
     t.datetime "notified_about_mobile_number_issue_at"
-    t.string   "referer"
+    t.text     "referer"
     t.string   "source"
     t.string   "campaign"
   end

@@ -2,7 +2,8 @@
   .name
     - if location.persisted? 
       - if in_new_listing?
-        New #{current_instance.bookable_noun} at #{location.street}
+        New #{current_instance.bookable_noun}
+        = "at #{location.street}" if location.street.present?
       - else
         = location.street 
         = link_to '', location_path(location), :class => 'ico-open-link'

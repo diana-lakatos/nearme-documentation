@@ -23,7 +23,7 @@
 
     .user-fields
       = simple_fields_for current_user do |uf|
-        = render 'registrations/phone_fields', :f => uf
+        = render 'registrations/phone_fields', :f => uf, :locals => { :country => @country }
       .actions
         = f.submit "List my #{current_instance.bookable_noun}", :disable_with => 'Creating...'
 

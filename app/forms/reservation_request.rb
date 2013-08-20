@@ -47,7 +47,9 @@ class ReservationRequest < Form
   end
 
   def payment_method
-    @payment_method = if User::BillingGateway.payment_supported?(@reservation)
+    @payment_method = if @reservation.listing.free?
+                        Reservation::PAYMENT_METHODS[:free]
+                      elsif User::BillingGateway.payment_supported?(@reservation)
                         Reservation::PAYMENT_METHODS[:credit_card]
                       else
                         Reservation::PAYMENT_METHODS[:manual]

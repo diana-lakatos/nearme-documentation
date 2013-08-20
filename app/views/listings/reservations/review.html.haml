@@ -53,11 +53,11 @@
       - if @reservation_request.confirm_reservations?
         %p.text-center
           This host manually confirms all bookings before payment.
-    - else
+    - elsif @reservation_request.manual_payment?
       %p.text-center
         You will make the payment in person upon arrival
       - if @reservation_request.display_phone_and_country_block?
-        = render 'phone_fields', :f => f
+        = render :partial => 'phone_fields', :locals => { :f => f, :country => @country }
 
     = f.button :submit, 'Request Booking', disable_with: "Booking..."
 
@@ -74,4 +74,5 @@
         }
       );
       DNM.initializeCustomSelects();
+      __insp.push(['tagSession', "booking_modal_opened"]);
     });

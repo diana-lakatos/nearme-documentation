@@ -7,7 +7,7 @@ class @Bookings.TimePicker
     @disabledStartTimes = []
     @disabledEndTimes = []
 
-    @openMinute = options.openMinute or 9*60
+    @openMinute = if options.openMinute? then options.openMinute else 9*60
     @closeMinute = options.closeMinute or 18*60
 
     @view = new View(positionTarget: @container)

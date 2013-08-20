@@ -36,6 +36,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def edit
+    @country = current_user.country_name
     super
   end
 
@@ -124,9 +125,6 @@ class RegistrationsController < Devise::RegistrationsController
       if @user.persisted?
         render_redirect_url_as_json
       end
-    end
-    if !@user.persisted? && params[:user] && User.find_by_email(params[:user][:email])
-      redirect_to_sign_in
     end
   end
 

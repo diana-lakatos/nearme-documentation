@@ -1,10 +1,11 @@
 - title "Reset Password"
 
 .row-fluid
-  #signup
+  #signup.decline
     .span8.offset2
       .box
         %br
+        %h2 Are you sure you want to decline?
         = simple_form_for(@reservation, :url => reject_manage_listing_reservation_path(@listing, @reservation)) do |f|
           .input-icon-holder
             = f.input :rejection_reason, :placeholder => "Optionally, provide a reason.", :label => false, :tabindex => '1'
