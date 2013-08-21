@@ -1,0 +1,9 @@
+<%= t('rating_mailer.request_host_rating.text',
+      listing_name: @listing.name,
+      location_name: @location.name) %>
+
+<%= t('rating_mailer.request_host_rating.leave_rating') %>:
+<%= link_to t('rating_mailer.request_host_rating.link_to_rating',
+              listing_name: @listing.name,
+              location_name: @location.name),
+            new_reservation_host_rating_url(@reservation.id) %>

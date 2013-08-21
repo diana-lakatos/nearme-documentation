@@ -1,0 +1,18 @@
+section.host_ratings, section.guest_ratings {
+  .errors {
+    padding-left: 20px;
+  }
+
+  .thumbs {
+    margin: 15px 0 0 50px;
+
+    img {
+      cursor: pointer;
+      margin: 10px 10px 10px 10px;
+
+      &.inactive {
+        width: 20px;
+      }
+    }
+  }
+}

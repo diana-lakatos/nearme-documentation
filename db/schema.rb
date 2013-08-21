@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130819222648) do
+ActiveRecord::Schema.define(:version => 20130821140722) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -113,6 +113,26 @@ ActiveRecord::Schema.define(:version => 20130819222648) do
   end
 
   add_index "domains", ["instance_id"], :name => "index_domains_on_instance_id"
+
+  create_table "guest_ratings", :force => true do |t|
+    t.integer  "author_id",      :null => false
+    t.integer  "subject_id"
+    t.integer  "reservation_id"
+    t.integer  "value"
+    t.text     "comment"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  create_table "host_ratings", :force => true do |t|
+    t.integer  "author_id",      :null => false
+    t.integer  "subject_id"
+    t.integer  "reservation_id"
+    t.integer  "value"
+    t.text     "comment"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
 
   create_table "industries", :force => true do |t|
     t.string   "name"
@@ -410,6 +430,10 @@ ActiveRecord::Schema.define(:version => 20130819222648) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
