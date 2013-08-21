@@ -14,18 +14,14 @@
 - elsif !@located
   %section#results.no_results
     = yield :loading
-    .span3
-      = image_tag "marker_missing.png"
-    .span9
+    .span8.offset2.text-center
       %br/
       %br/
       %h1.tk-adelle.fat Searching...
 - else
   %section#results.no_results
     = yield :loading
-    .span3
-      = image_tag "marker_missing.png"
-    .span9
+    .span8.offset2.text-center
       %br/
       %br/
       %h1.tk-adelle.fat No results found
