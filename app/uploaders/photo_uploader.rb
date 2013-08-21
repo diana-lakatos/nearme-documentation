@@ -8,7 +8,11 @@ class PhotoUploader < BaseImageUploader
   end
 
   def filename
-    "#{secure_token}.#{file.extension}" if original_filename.present?
+    if model.versions_generated?
+      original_filename if original_filename.present?
+    else
+      "#{secure_token}.#{file.extension}" if original_filename.present?
+    end
   end
 
   process :auto_orient
@@ -46,7 +50,6 @@ class PhotoUploader < BaseImageUploader
   protected
 
   def secure_token
-    puts 'gen'
     var = :"@#{mounted_as}_secure_token"
     model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.uuid)
   end
