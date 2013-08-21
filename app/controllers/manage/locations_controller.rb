@@ -18,6 +18,7 @@ class Manage::LocationsController < Manage::BaseController
     if @location.save
       flash[:success] = "Great, your new Space has been added!"
       event_tracker.created_a_location(@location , { via: 'dashboard' })
+      event_tracker.updated_profile_information(current_user)
       redirect_to manage_locations_path
     else
       render :new
@@ -44,6 +45,7 @@ class Manage::LocationsController < Manage::BaseController
 
   def destroy
     if @location.destroy
+      event_tracker.updated_profile_information(current_user)
       flash[:deleted] = "You've deleted #{@location.name}"
     else
       flash[:error] = "We couldn't delete #{@location.name}"
