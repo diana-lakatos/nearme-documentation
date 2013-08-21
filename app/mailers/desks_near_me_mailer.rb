@@ -1,7 +1,13 @@
+require 'mail_view'
+
 class DesksNearMeMailer < ActionMailer::Base
+  append_view_path EmailResolver.instance
+
   include ActionView::Helpers::TextHelper
   helper :listings, :reservations
-  default from: "support@desksnear.me"
-  default reply_to: "support@desksnear.me"
-  layout 'mailer'
+
+  def mail(headers = {}, &block)
+    lookup_context.class.register_detail(:instance) { nil }
+    super
+  end
 end

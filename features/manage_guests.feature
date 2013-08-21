@@ -1,3 +1,4 @@
+@emails
 Feature: As a user of the site
   In order for them to manage guests
   As a user

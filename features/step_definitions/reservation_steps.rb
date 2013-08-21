@@ -284,35 +284,35 @@ Then /^I should not see availability for dates:$/ do |table|
 end
 
 Then /^a confirm reservation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A booking requires your confirmation"
+  last_email_for(email).subject.should include "with confirmation"
 end
 
 Then /^a reservation awaiting confirmation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A booking you made is pending confirmation"
+  last_email_for(email).subject.should include "with confirmation"
 end
 
 Then /^a reservation confirmed email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A booking you made has been confirmed"
+  last_email_for(email).subject.should include "of confirmation"
 end
 
 Then /^a reservation cancelled email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A guest has cancelled a booking"
+  last_email_for(email).subject.should include "of cancellation"
 end
 
 Then /^a reservation cancelled by owner email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match "A booking you made has been cancelled by the owner"
+  last_email_for(email).subject.should match "of cancellation"
 end
 
 Then /^a reservation rejected email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match "A booking you made has been rejected"
+  last_email_for(email).subject.should match "of rejection"
 end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A guest has made a booking"
+  last_email_for(email).subject.should include "without confirmation"
 end
 
 Then /^a reservation expiration email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "expired"
+  last_email_for(email).subject.should include "of expiration"
 end
 
 Then /^I should be redirect to bookings page$/ do

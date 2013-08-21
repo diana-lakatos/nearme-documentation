@@ -278,6 +278,10 @@ class Reservation < ActiveRecord::Base
     created_at + 24.hours
   end
 
+  def to_liquid
+    ReservationDrop.new(self)
+  end
+
   private
 
     def service_fee_calculator

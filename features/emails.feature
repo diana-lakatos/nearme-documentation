@@ -1,3 +1,4 @@
+@reservation_emails
 Feature: Emails should be sent out informing parties about reservations
   In order to know or change the status of a reservation
   As a user or listing owner

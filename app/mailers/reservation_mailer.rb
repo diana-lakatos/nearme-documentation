@@ -1,53 +1,52 @@
 class ReservationMailer < DesksNearMeMailer
-
   def notify_guest_of_cancellation(reservation)
     setup_defaults(reservation)
-    generate_mail("A booking you made has been cancelled by the owner")
+    generate_mail
   end
 
   def notify_guest_of_confirmation(reservation)
     setup_defaults(reservation)
-    generate_mail("A booking you made has been confirmed")
+    generate_mail
   end
 
   def notify_guest_of_rejection(reservation)
     setup_defaults(reservation)
-    generate_mail("A booking you made has been rejected")
+    generate_mail
   end
 
   def notify_guest_with_confirmation(reservation)
     setup_defaults(reservation)
-    generate_mail("A booking you made is pending confirmation")
+    generate_mail
   end
 
   def notify_host_of_cancellation(reservation)
     setup_defaults(reservation)
     @user = @listing.creator
-    generate_mail("A guest has cancelled a booking")
+    generate_mail
   end
 
   def notify_host_of_confirmation(reservation)
     setup_defaults(reservation)
     @user = @listing.creator
-    generate_mail("You have confirmed a booking")
+    generate_mail
   end
   
   def notify_guest_of_expiration(reservation)
     setup_defaults(reservation)
-    generate_mail("A booking you made has expired")
+    generate_mail
   end
   
   def notify_host_of_expiration(reservation)
     setup_defaults(reservation)
     @user = @listing.creator
-    generate_mail("A booking for one of your listings has expired")
+    generate_mail
   end
   
   def notify_host_with_confirmation(reservation)
     setup_defaults(reservation)
     @user = @listing.creator
     @url  = manage_guests_dashboard_url(:token => @user.authentication_token)
-    generate_mail("A booking requires your confirmation")
+    generate_mail
   end
 
   def notify_host_without_confirmation(reservation)
@@ -55,7 +54,7 @@ class ReservationMailer < DesksNearMeMailer
     @user = @listing.creator
     @url  = manage_guests_dashboard_url(:token => @user.authentication_token)
     @reserver = reservation.owner.name
-    generate_mail("A guest has made a booking")
+    generate_mail
   end
 
   if defined? MailView
@@ -111,15 +110,28 @@ class ReservationMailer < DesksNearMeMailer
   end
 
   private
-    def setup_defaults(reservation)
-      @reservation  = reservation
-      @listing      = reservation.listing
-      @user         = reservation.owner
-    end
 
-    def generate_mail(subject)
-      mail :subject => "[Desks Near Me] #{subject}",
-           :to      => @user.email,
-           :bcc     => "notifications@desksnear.me"
-    end
+  def setup_defaults(reservation)
+    @reservation  = reservation
+    @listing      = reservation.listing
+    @user         = reservation.owner
+  end
+
+  def generate_mail
+    current_instance = @listing.instance
+
+    self.class.layout 'mailer', instance: current_instance
+
+    mailer = current_instance.find_mailer_for(self)
+
+    mail(:subject => mailer.subject,
+         :to      => @user.email,
+         :bcc     => mailer.bcc,
+         :from    => mailer.from,
+         :reply_to=> mailer.reply_to,
+         :content_type => "multipart/alternative") do |format|
+           format.html { render view_context.action_name, instance: current_instance }
+           format.text { render view_context.action_name, instance: current_instance }
+         end
+  end
 end

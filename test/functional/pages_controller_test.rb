@@ -5,10 +5,9 @@ class PagesControllerTest < ActionController::TestCase
   context 'GET show' do
     context 'a full page' do
       setup do
-        hero_image_file = File.open(Rails.root.join('test/fixtures/workplace.jpg'))
+        Page.any_instance.stubs(:hero_image).returns(stub({:present? => true, :url => 'url'}))
         @page = FactoryGirl.create(:page,
-                                   content: "# Page heading \nSome text",
-                                   hero_image: hero_image_file)
+                                   content: "# Page heading \nSome text")
       end
 
       should 'return a content page with hero image and markdown content' do

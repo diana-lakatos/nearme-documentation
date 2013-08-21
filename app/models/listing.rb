@@ -292,6 +292,10 @@ class Listing < ActiveRecord::Base
     AvailabilityRule::HourlyListingStatus.new(self, date)
   end
 
+  def to_liquid
+    ListingDrop.new(self)
+  end
+
   def self.xml_attributes
     [:name, :description, :quantity, :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents]
   end

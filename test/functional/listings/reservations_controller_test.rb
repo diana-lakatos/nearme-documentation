@@ -22,6 +22,9 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     end
 
     should "track booking request" do
+      ReservationMailer.expects(:notify_host_with_confirmation).returns(stub(deliver: true)).once
+      ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).once
+
       @tracker.expects(:requested_a_booking).with do |reservation|
         reservation == assigns(:reservation_request).reservation
       end
@@ -41,6 +44,9 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       context 'sending sms fails' do
 
         should 'raise invalid phone number exception if message indicates so' do
+          ReservationMailer.expects(:notify_host_with_confirmation).returns(stub(deliver: true)).once
+          ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).once
+
           BackgroundIssueLogger.expects(:log_issue).never
           @controller.class.any_instance.expects(:handle_invalid_mobile_number).once
           SmsNotifier::Message.any_instance.stubs(:deliver).raises(Twilio::REST::RequestError, "The 'To' number +16665554444 is not a valid phone number")
@@ -51,6 +57,9 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
         end
 
         should 'log twilio exceptions that have unknown message' do
+          ReservationMailer.expects(:notify_host_with_confirmation).returns(stub(deliver: true)).once
+          ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).once
+
           @controller.class.any_instance.expects(:handle_invalid_mobile_number).never
           SmsNotifier::Message.any_instance.stubs(:deliver).raises(Twilio::REST::RequestError, "Some other error")
           BackgroundIssueLogger.expects(:log_issue).once

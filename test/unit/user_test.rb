@@ -284,22 +284,33 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'notify user about invalid phone via email' do
+      details = {
+        bcc: "bcc@test.com",
+        from: "from@test.com",
+        reply_to: "reply_to@test.com",
+        subject: "Test subject"
+      }
+      PrepareEmail.for('user_mailer/notify_about_wrong_phone_number', details)
+      PrepareEmail.for('layouts/mailer')
+
       @user.notify_about_wrong_phone_number
       sent_mail = ActionMailer::Base.deliveries.last
       assert_equal [@user.email], sent_mail.to
-      assert_equal ['support@desksnear.me'], sent_mail.from
-      assert sent_mail.body.encoded.include?('+118889983375'), "Body did not include expected phone number +118889983375"
-      assert sent_mail.body.encoded.include?('<a href="http://desksnear.me/users/edit">here to access your settings.</a>'), "Body did not include expected link to edit profile"
+      assert_equal [details[:from]], sent_mail.from
+
+      assert sent_mail.html_part.body.encoded.include?('+118889983375'), "Body did not include expected phone number +118889983375"
+      assert sent_mail.html_part.body.encoded.include?("<a href=\"http://example.com/users/edit\">here to access your settings</a>"), "Body did not include expected link to edit profile"
     end
 
     should 'not spam user' do
+      UserMailer.expects(:notify_about_wrong_phone_number).returns(stub(deliver: true)).once
       5.times do 
         @user.notify_about_wrong_phone_number
       end
-      assert_equal 1, ActionMailer::Base.deliveries.select { |mail| mail.subject.include?("text message") }.size
     end
 
     should 'update timestamp of notification' do
+      UserMailer.expects(:notify_about_wrong_phone_number).returns(stub(deliver: true)).once
       Timecop.freeze(Time.zone.now)
       @user.notify_about_wrong_phone_number
       assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a

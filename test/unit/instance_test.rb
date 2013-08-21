@@ -33,4 +33,19 @@ class InstanceTest < ActiveSupport::TestCase
 
   end
 
+  context "#find_mailer_for" do
+    should 'find valid mailer' do
+      @instance = Instance.default_instance || FactoryGirl.create(:instance)
+      PrepareEmail.for('listing_mailer/share')
+      fake_context = stub(action_name: 'share', lookup_context: stub(prefixes: ["listing_mailer"]))
+      assert_kind_of EmailTemplate, @instance.find_mailer_for(fake_context)
+    end
+
+    should 'raise for invalid mailer' do
+      @instance = Instance.default_instance || FactoryGirl.create(:instance)
+      fake_context = stub(action_name: 'share', lookup_context: stub(prefixes: ["listing_mailer"]))
+      assert_raise(RuntimeError) { @instance.find_mailer_for(fake_context) }
+    end
+  end
+
 end

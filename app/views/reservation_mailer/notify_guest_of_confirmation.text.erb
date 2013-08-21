@@ -1,5 +1,0 @@
-Your booking for '<%= @listing.name %>' at <%= link_to(@listing.location.name, location_url(@listing.location)) %> has been confirmed.
-
-<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation, :host => true } -%>
-
-You can <%= link_to 'review your travel plans on the Dashboard', bookings_dashboard_url %>.

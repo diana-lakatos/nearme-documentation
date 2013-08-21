@@ -1,5 +1,0 @@
-<p><%= @reservation.owner %>'s booking at your location has expired because it was not confirmed within 24 hours.</p>
-
-<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %>
-
-<p>To help us improve the product, please <%= link_to 'let us know why this booking expired', 'http://desksnearme.wufoo.com/forms/one-of-your-reservations-expired/' %>.</p>

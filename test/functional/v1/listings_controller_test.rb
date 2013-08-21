@@ -94,6 +94,9 @@ class V1::ListingsControllerTest < ActionController::TestCase
   context "when successful" do
     setup do
       authenticate!
+      ReservationMailer.expects(:notify_host_with_confirmation).returns(stub(deliver: true)).once
+      ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).once
+
       raw_post :reservation, { id: @listing.id }, valid_reservation_params.to_json
       @reservation = Listing.find_by_id(@listing.id).reservations.first
     end
@@ -156,15 +159,15 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
   test "should accept inquiry" do
     authenticate!
-
     listing         = Listing.find(@listing.id)
     listing.creator = FactoryGirl.create(:user)
     listing.save
 
+    InquiryMailer.expects(:inquiring_user_notification).returns(stub(deliver!: true)).once
+    InquiryMailer.expects(:listing_creator_notification).returns(stub(deliver!: true)).once
+
     assert_difference "listing.inquiries.count", 1 do
-      assert_difference "ActionMailer::Base.deliveries.count", 2 do
-        raw_post :inquiry, {id: @listing.id}, '{ "message": "hello" }'
-      end
+      raw_post :inquiry, {id: @listing.id}, '{ "message": "hello" }'
     end
     assert_response :no_content
   end

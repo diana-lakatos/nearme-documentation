@@ -2,10 +2,10 @@
 
 FactoryGirl.define do
   factory :email_template do
-    association :instance
-    type "test_type"
-    subject "MyString"
-    from "text@example.com"
-    body "MyText"
+    html_body "html body"
+    text_body "text body"
+    path "weird/path"
+    partial false
+    instance { Instance.default_instance || FactoryGirl.create(:instance) }
   end
 end

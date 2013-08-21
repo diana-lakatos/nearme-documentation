@@ -31,7 +31,7 @@ class RegistrationsController < Devise::RegistrationsController
     # Clear out temporarily stored Provider authentication data if present
     session[:omniauth] = nil unless @user.new_record?
     flash[:redirected_from_sign_up] = true
-    AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(current_instance, @user.id) unless @user.new_record?
+    AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(@user.id) unless @user.new_record?
     @resource = resource
   end
 

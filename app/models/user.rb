@@ -263,5 +263,8 @@ class User < ActiveRecord::Base
     end
   end
 
+  def to_liquid
+    UserDrop.new(self)
+  end
 end
 

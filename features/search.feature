@@ -1,4 +1,4 @@
-@javascript
+@javascript @emails
 Feature: A user can search for a listing
   In order to make a reservation on a listing
   As a user
