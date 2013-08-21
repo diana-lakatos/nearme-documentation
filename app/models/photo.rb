@@ -37,7 +37,7 @@ class Photo < ActiveRecord::Base
   end
 
   def generate_versions
-    image.recreate_versions!
+    image.recreate_versions! :thumb, :large, :space_listing, :golden
     self.versions_generated = true
     save!
   end

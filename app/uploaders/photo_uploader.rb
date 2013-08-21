@@ -8,8 +8,7 @@ class PhotoUploader < BaseImageUploader
   end
 
   def filename
-    # Limit the file name to 120 characters
-    "#{File.basename(original_filename, ".*").slice(0,120)}.#{file.extension}" if original_filename.present?
+    "#{secure_token}.#{file.extension}" if original_filename.present?
   end
 
   process :auto_orient
@@ -43,6 +42,14 @@ class PhotoUploader < BaseImageUploader
   end
 
   include NewrelicCarrierwaveTracker
+
+  protected
+
+  def secure_token
+    puts 'gen'
+    var = :"@#{mounted_as}_secure_token"
+    model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.uuid)
+  end
 
   private
 
