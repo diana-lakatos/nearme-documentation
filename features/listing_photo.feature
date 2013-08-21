@@ -1,5 +1,5 @@
 @javascript @photo
-Feature: User can manipulate photos for lisitng
+Feature: User can manipulate photos for listing
 
   Background:
     Given a user exists

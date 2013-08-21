@@ -80,15 +80,11 @@ Spork.prefork do
   #
 
   Before '@photo' do
-    CarrierWave.configure do |config|
-      config.enable_processing = true
-    end
+    PhotoUploader.enable_processing = true
   end
 
-  After '@photo' do
-    CarrierWave.configure do |config|
-      config.enable_processing = false
-    end
+  Before '~@photo' do
+    PhotoUploader.enable_processing = false
   end
 
   World(CarrierWave::Test::Matchers)
