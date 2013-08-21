@@ -29,6 +29,8 @@ module Listings
               BackgroundIssueLogger.log_issue("[auto] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{reservation.id}, guest #{current_user.name} (#{current_user.id}). #{$!.inspect}")
             end
           end
+          event_tracker.updated_profile_information(reservation.owner)
+          event_tracker.updated_profile_information(reservation.host)
         else
           ReservationMailer.notify_host_without_confirmation(reservation).deliver
           ReservationMailer.notify_guest_of_confirmation(reservation).deliver

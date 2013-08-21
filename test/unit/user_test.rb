@@ -27,6 +27,43 @@ class UserTest < ActiveSupport::TestCase
 
   end
 
+  context 'reservations' do
+    setup do
+    end
+
+    should 'find rejected reservations' do
+      @user = FactoryGirl.create(:user, :reservations => [
+        FactoryGirl.create(:reservation, :state => 'unconfirmed'),
+        FactoryGirl.create(:reservation, :state => 'rejected') 
+      ])
+      assert_equal 1, @user.rejected_reservations.count
+    end
+
+    should 'find confirmed reservations' do
+      @user = FactoryGirl.create(:user, :reservations => [
+        FactoryGirl.create(:reservation, :state => 'unconfirmed'),
+        FactoryGirl.create(:reservation, :state => 'confirmed') 
+      ])
+      assert_equal 1, @user.confirmed_reservations.count
+    end
+
+    should 'find expired reservations' do
+      @user = FactoryGirl.create(:user, :reservations => [
+        FactoryGirl.create(:reservation, :state => 'unconfirmed'),
+        FactoryGirl.create(:reservation, :state => 'expired') 
+      ])
+      assert_equal 1, @user.expired_reservations.count
+    end
+
+    should 'find cancelled reservations' do
+      @user = FactoryGirl.create(:user, :reservations => [
+        FactoryGirl.create(:reservation, :state => 'unconfirmed'),
+        FactoryGirl.create(:reservation, :state => 'cancelled') 
+      ])
+      assert_equal 1, @user.cancelled_reservations.count
+    end
+  end
+
   should "have authentications" do
     @user = User.new
     @user.authentications << Authentication.new
