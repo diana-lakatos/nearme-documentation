@@ -128,10 +128,5 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def redirect_to_sign_in
-      self.response_body = nil
-      redirect_to new_user_session_url(:email => params[:user][:email])
-  end
-
 end
 

@@ -17,7 +17,7 @@ class @PhotoUploader
     @listenToDeletePhoto()
     @initializeFileUploader()
     @initializeSortable()
-    __insp.push(['tagSession', "first_listing_form_visit"]);
+    __insp.push(['tagSession', "first_listing_form_visit"])
 
   listenToDeletePhoto: ->
     self = this
@@ -25,9 +25,9 @@ class @PhotoUploader
       url = $(this).attr("data-url")
       link = $(this)
       if confirm("Are you sure you want to delete this Photo?")
-        $.post link.attr("data-url"), { _method: 'delete' }, ->
+        $.post link.attr("data-url"), { _method: 'delete' }, =>
           link.closest(".photo-item").remove()
-          if @multiplePhoto()
+          if self.multiplePhoto()
             self.reorderSortableList()
       return false
 
@@ -67,14 +67,15 @@ class @PhotoUploader
     }
 
     @fileInput.on 'click', ->
-      __insp.push(['tagSession', "photo_upload_clicked"]);
+      __insp.push(['tagSession', "photo_upload_clicked"])
 
   initializeSortable: ->
     @sortable.sortable
       stop: =>
         @reorderSortableList()
-      placeholder: 'photo-placeholder',
-    @sortable.disableSelection()
+      placeholder: 'photo-placeholder'
+      cancel: 'input'
+    @sortable.find('*').not('input').disableSelection()
 
   progress: (data) =>
     progress = parseInt(data.loaded / data.total * 100, 10)
