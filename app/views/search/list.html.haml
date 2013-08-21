@@ -11,6 +11,15 @@
     = render partial: 'search/list/listing', collection: listings
     = will_paginate listings
     = yield :loading
+- elsif !@located
+  %section#results.no_results
+    = yield :loading
+    .span3
+      = image_tag "marker_missing.png"
+    .span9
+      %br/
+      %br/
+      %h1.tk-adelle.fat Searching...
 - else
   %section#results.no_results
     = yield :loading

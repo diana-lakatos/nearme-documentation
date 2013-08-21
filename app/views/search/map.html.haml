@@ -13,6 +13,15 @@
 - if listings.any?
   %section#results.map
     = render partial: 'search/map/marker', collection: listings, as: :listing
+- elsif !@located
+  %section#results.no_results
+    = yield :loading
+    .span3
+      = image_tag "marker_missing.png"
+    .span9
+      %br/
+      %br/
+      %h1.tk-adelle.fat Searching...
 - else
   %section#results.no_results.map
     .span3
