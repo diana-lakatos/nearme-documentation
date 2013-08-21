@@ -197,7 +197,6 @@ GEM
       multi_xml (>= 0.5.2)
     httpauth (0.2.0)
     i18n (0.6.4)
-    icalendar (1.4.1)
     inherited_resources (1.4.0)
       has_scope (~> 0.5.0)
       responders (~> 0.9)
@@ -345,6 +344,7 @@ GEM
       vegas (~> 0.1.2)
     rest-client (1.6.7)
       mime-types (>= 1.16)
+    ri_cal (0.8.8)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -468,7 +468,6 @@ DEPENDENCIES
   guard-spork
   haml
   historyjs-rails
-  icalendar
   inherited_resources
   jquery-fileupload-rails
   jquery-rails
@@ -498,6 +497,7 @@ DEPENDENCIES
   rb-fsevent
   rdiscount
   resque
+  ri_cal
   ruby-prof
   sass
   sass-rails
