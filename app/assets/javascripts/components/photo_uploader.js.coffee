@@ -107,10 +107,6 @@ class @PhotoUploader
     data.context.append(href)
     if @multiplePhoto()
       data.context.append($('<span>').addClass('photo-position badge badge-inverse').text(@getLastPosition()))
-      hidden = $('<input>').attr('type', 'hidden')
-      hidden_position = hidden.clone().attr('name', "#{name_prefix}[position]").val(@getLastPosition()).addClass('photo-position-input')
-      data.context.attr('id', "photo-#{data.result.id}")
-      data.context.append(hidden_position)
       input = @container.find('#photo-item-input-template').clone()
       input.attr('disabled', false)
       input.attr('type', 'text')
@@ -120,6 +116,10 @@ class @PhotoUploader
       name_prefix = input.attr('name') + '[' + data_number + ']'
       input.attr('name', name_prefix + '[caption]')
       data.context.append(input)
+      hidden = $('<input>').attr('type', 'hidden')
+      hidden_position = hidden.clone().attr('name', "#{name_prefix}[position]").val(@getLastPosition()).addClass('photo-position-input')
+      data.context.attr('id', "photo-#{data.result.id}")
+      data.context.append(hidden_position)
       hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(data.result.id)
       data.context.append(hidden_id)
 
