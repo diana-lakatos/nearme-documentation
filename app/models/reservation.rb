@@ -43,7 +43,7 @@ class Reservation < ActiveRecord::Base
   after_create :schedule_expiry
 
   def perform_expiry!
-    if unconfirmed?
+    if unconfirmed? && !deleted?
       expire!
 
       # FIXME: This should be moved to a background job base class, as per ApplicationController.
