@@ -55,9 +55,7 @@ end
 
 When(/^I should see cropped photo$/) do
   page.find('img')['src'].should_not == @image_src
-  cropped_image = Photo.last.image
-  cropped_image.width.should == 200
-  cropped_image.height.should == 125
+  Photo.last.image.adjusted.should have_dimensions(200, 125)
 end
 
 Then(/^I rotate image$/) do
@@ -69,7 +67,5 @@ end
 
 When(/^I should see rotated photo$/) do
   page.find('img')['src'].should_not == @image_src
-  rotated_image = Photo.last.image
-  rotated_image.width.should == @image_height
-  rotated_image.height.should == @image_width
+  Photo.last.image.adjusted.should have_dimensions(@image_height, @image_width)
 end

@@ -30,14 +30,7 @@ class Manage::PhotosController < ApplicationController
 
   def resize
     @photo = current_user.photos.find(params[:id])
-    if params[:rotate]
-      @photo.image.rotate(params[:rotate][:angle])
-    end
-    if params[:crop]
-      @photo.image.crop(params[:crop])
-    end
-    if @photo.save
-      @photo.recreate_versions!
+    if @photo.apply_adjustments(params)
       render json: {hide: true}
     else
       render partial: 'resize_form'

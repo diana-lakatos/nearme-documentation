@@ -12,22 +12,8 @@ class BaseImageUploader < BaseUploader
     "http://placehold.it/100x100"
   end
 
-  def crop(crop_params)
-    manipulate! do |img|
-      img.crop parse_crop_params(crop_params)
-      img
-    end
-  end
-
-  def rotate(angle)
-    manipulate! do |img|
-      img.rotate angle
-      img
-    end
-  end
-
   def image
-    @image ||= MiniMagick::Image.open( model.send(mounted_as).path )
+    @image ||= MiniMagick::Image.open(current_path)
   end
 
   def width
@@ -38,9 +24,4 @@ class BaseImageUploader < BaseUploader
     image[:height]
   end
 
-  private
-
-  def parse_crop_params(params)
-    "#{params[:w].to_i}x#{params[:h].to_i}+#{params[:x].to_i}+#{params[:y].to_i}"
-  end
 end

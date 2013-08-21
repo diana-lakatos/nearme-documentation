@@ -9,7 +9,9 @@
         = simple_form_for(@photo, url: resize_manage_photo_path(@photo)) do |f|
           %a.badge.rotate-photo.photo-action{href: '#'}
             %i.icon-repeat.icon-white
-          = image_tag url_with_hash(@photo.image_url(:large)), id: 'photo_crop', data: {w: @photo.image.width, h: @photo.image.height}
+          = image_tag @photo.image_url, id: 'photo_crop',
+              data: {original_w: @photo.image.width, original_h: @photo.image.height, rotate: @photo.rotation_angle,
+                     w: @photo.crop_w, h: @photo.crop_h, x: @photo.crop_x, y: @photo.crop_y}
 
           .actions
             = f.submit 'Process'

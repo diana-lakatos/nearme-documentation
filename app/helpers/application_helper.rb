@@ -101,8 +101,4 @@ module ApplicationHelper
     end
   end
 
-  # Adds current time to the url. Used for example to reload image if loading via ajax
-  def url_with_hash(url)
-    "#{url}?#{Time.now.to_i}"
-  end
 end

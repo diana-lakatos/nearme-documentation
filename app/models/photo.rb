@@ -4,6 +4,7 @@ class Photo < ActiveRecord::Base
   ranks :position, with_same: [:content_id, :content_type]
 
   attr_accessible :creator_id, :content_id, :content_type, :caption, :image, :position
+
   belongs_to :content, :polymorphic => true
   belongs_to :creator, class_name: "User"
 
@@ -30,16 +31,31 @@ class Photo < ActiveRecord::Base
 
   AVAILABLE_CONTENT = ['Listing', 'Location']
 
-  after_commit :enqueue_processing, on: :create
+  after_commit :enqueue_processing, unless: :versions_generated
 
   def should_generate_versions?
-    self.persisted?
+    persisted? and not versions_generated
   end
 
   def generate_versions
     image.recreate_versions!
     self.versions_generated = true
     save!
+  end
+
+  def apply_adjustments(adjustments)
+    self.crop_params = adjustments[:crop] if adjustments[:crop]
+    self.rotation_angle = adjustments[:rotate].to_i
+    self.recreate_versions! # only medium and adjusted versions will be created because versions_generated is true
+    self.versions_generated = false
+    save!
+  end
+
+  def crop_params=(crop_params)
+    self.crop_x = crop_params[:x].to_i
+    self.crop_y = crop_params[:y].to_i
+    self.crop_w = crop_params[:w].to_i
+    self.crop_h = crop_params[:h].to_i
   end
 
   def method_missing(method, *args, &block)
