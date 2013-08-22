@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130819222648) do
+ActiveRecord::Schema.define(:version => 20130821014437) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -277,6 +277,11 @@ ActiveRecord::Schema.define(:version => 20130819222648) do
     t.datetime "deleted_at"
     t.integer  "creator_id"
     t.boolean  "versions_generated", :default => false, :null => false
+    t.integer  "crop_x"
+    t.integer  "crop_y"
+    t.integer  "crop_h"
+    t.integer  "crop_w"
+    t.integer  "rotation_angle"
   end
 
   create_table "reservation_charges", :force => true do |t|
