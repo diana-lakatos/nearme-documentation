@@ -28,6 +28,7 @@ class @PhotoUploader
     @listenToDeletePhoto()
     @initializeFileUploader()
     @initializeSortable()
+    __insp.push(['tagSession', "first_listing_form_visit"]);
 
   listenToDeletePhoto: ->
     self = this
@@ -76,6 +77,9 @@ class @PhotoUploader
           @progress(data)
     }
 
+    @fileInput.on 'click', ->
+      __insp.push(['tagSession', "photo_upload_clicked"]);
+
   initializeSortable: ->
     @sortable.sortable
       stop: =>
@@ -115,13 +119,12 @@ class @PhotoUploader
     data.context.append(cropLink)
     if @multiplePhoto()
       data.context.append($('<span>').addClass('photo-position badge badge-inverse').text(@getLastPosition()))
-      hidden = $('<input>').attr('type', 'hidden')
+      hidden = $('<input type="hidden">')
       hidden_position = hidden.clone().attr('name', "#{name_prefix}[position]").val(@getLastPosition()).addClass('photo-position-input')
       data.context.attr('id', "photo-#{data.result.id}")
       data.context.append(hidden_position)
-      input = @container.find('#photo-item-input-template').clone()
-      input.attr('disabled', false)
-      input.attr('type', 'text')
+      template_input = @container.find('#photo-item-input-template')
+      input = $("<input type='text'>").attr('name', template_input.attr('name')).attr('placeholder', template_input.attr('placeholder')).attr('data-number', template_input.attr('data-number'))
       last_input = @container.find('input[data-number]').eq(-1)
       data_number = parseInt(last_input.attr('data-number')) + 1
       input.attr('data-number', data_number)

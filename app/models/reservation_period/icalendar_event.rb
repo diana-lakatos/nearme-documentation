@@ -6,7 +6,7 @@ class ReservationPeriod
       event.start = ics_date(date, start_minute)
       event.end = ics_date(date, end_minute)
       event.summary = self.reservation.listing.name
-      event.description = self.reservation.location.street  + " - " + self.reservation.listing.name
+      event.description = [self.reservation.location.street, self.reservation.listing.name].compact.join(" - ")
       event.location = self.reservation.listing.location.address
       event.klass = "PUBLIC"
       event.created = self.reservation.created_at

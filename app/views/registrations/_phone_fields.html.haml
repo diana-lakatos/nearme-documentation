@@ -1,4 +1,4 @@
-= f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :input_html => { :class => "custom-select" }, :required => true
+= f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), :input_html => { :class => "custom-select" }, :required => true, include_blank: true
 
 .control-group.optional{:class => ('error' if f.object.errors[:phone].present?)}
   = f.label :phone, :class => 'control-label required' do

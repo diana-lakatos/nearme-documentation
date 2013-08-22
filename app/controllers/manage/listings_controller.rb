@@ -21,6 +21,7 @@ class Manage::ListingsController < Manage::BaseController
     if @listing.save
       flash[:success] = "Great, your new Desk/Room has been added!"
       event_tracker.created_a_listing(@listing, { via: 'dashboard' })
+      event_tracker.updated_profile_information(current_user)
       redirect_to manage_locations_path
     else
       @photos = @listing.photos
@@ -49,7 +50,7 @@ class Manage::ListingsController < Manage::BaseController
 
   def destroy
     @listing.destroy
-
+    event_tracker.updated_profile_information(current_user)
     flash[:deleted] = "That listing has been deleted."
     redirect_to manage_locations_path
   end

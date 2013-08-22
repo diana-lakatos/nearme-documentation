@@ -2,7 +2,8 @@ class Reservation < ActiveRecord::Base
   has_paper_trail
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',
-    :manual      => 'manual'
+    :manual      => 'manual',
+    :free        => 'free'
   }
 
   PAYMENT_STATUSES = {
@@ -42,7 +43,7 @@ class Reservation < ActiveRecord::Base
   after_create :schedule_expiry
 
   def perform_expiry!
-    if unconfirmed?
+    if unconfirmed? && !deleted?
       expire!
 
       # FIXME: This should be moved to a background job base class, as per ApplicationController.
@@ -51,6 +52,8 @@ class Reservation < ActiveRecord::Base
       mixpanel_wrapper = MixpanelApi.new(MixpanelApi.mixpanel_instance, :current_user => owner)
       event_tracker = Analytics::EventTracker.new(mixpanel_wrapper)
       event_tracker.booking_expired(self)
+      event_tracker.updated_profile_information(self.owner)
+      event_tracker.updated_profile_information(self.host)
 
       ReservationMailer.notify_guest_of_expiration(self).deliver
       ReservationMailer.notify_host_of_expiration(self).deliver
@@ -125,6 +128,18 @@ class Reservation < ActiveRecord::Base
 
   scope :cancelled, lambda {
     with_state(:cancelled)
+  }
+
+  scope :confirmed, lambda {
+    with_state(:confirmed)
+  }
+
+  scope :rejected, lambda {
+    with_state(:rejected)
+  }
+
+  scope :expired, lambda {
+    with_state(:expired)
   }
 
   scope :archived, lambda {

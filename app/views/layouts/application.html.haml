@@ -41,7 +41,7 @@
             .navbar-inner.nav-links
               = link_to "Desks Near Me", root_url, :id => "logo"
               #header_links.links-container.pull-right
-                = render "layouts/header_navigation"
+                = render "layouts/header_navigation" unless no_header_links?
 
         %section#content{:class => "#{@section_name || controller_name}"}
           = render 'layouts/hero'
@@ -52,6 +52,5 @@
           = yield if render_content_outside_container?
       .footer-push
     = render 'layouts/footer'
-
     = render 'layouts/scripts'
-
+    = render 'layouts/final'

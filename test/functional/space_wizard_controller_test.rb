@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'vcr_setup'
 
 class SpaceWizardControllerTest < ActionController::TestCase
 
@@ -31,6 +32,30 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
   end
 
+  context "geo-located default country" do
+    
+    should "be set to Greece" do
+      VCR.use_cassette "freegeoip_greece" do
+        # Set request ip to an ip address in Greece
+        @request.env['REMOTE_ADDR'] = '2.87.255.255'
+        get :list
+        assert assigns(:country) == "Greece"
+        assert_select 'option[value="Greece"][selected="selected"]', 1
+      end
+    end
+
+    should "be set to Brazil" do
+      VCR.use_cassette "freegeoip_brazil" do
+        # Set request ip to an ip address in Brazil
+        @request.env['REMOTE_ADDR'] = '139.82.255.255'
+        get :list
+        assert assigns(:country) == "Brazil"
+        assert_select 'option[value="Brazil"][selected="selected"]', 1
+      end
+    end
+    
+  end
+
   context 'track' do
     setup do
       @tracker = Analytics::EventTracker.any_instance
@@ -42,6 +67,9 @@ class SpaceWizardControllerTest < ActionController::TestCase
       end
       @tracker.expects(:created_a_listing).with do |listing, custom_options|
         listing == assigns(:listing) && custom_options == { via: 'wizard' }
+      end
+      @tracker.expects(:updated_profile_information).with do |user|
+        user == @user
       end
       post :submit_listing, get_params
     end

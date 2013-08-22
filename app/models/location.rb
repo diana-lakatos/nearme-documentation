@@ -66,7 +66,7 @@ class Location < ActiveRecord::Base
   end
 
   def name
-    "#{company.name} @ #{street}"
+    [company.name, street].compact.join(" @ ")
   end
 
   def admin?(user)
@@ -82,23 +82,23 @@ class Location < ActiveRecord::Base
   end
 
   def suburb
-    super.presence || "Unknown"
+    super.presence
   end
 
   def city
-    super.presence || "Unknown"
+    super.presence
   end
 
   def state
-    super.presence || "Unknown"
+    super.presence
   end
 
   def country
-    super.presence || "Unknown"
+    super.presence
   end
 
   def postcode
-    super.presence || "Unknown"
+    super.presence
   end
 
   def address

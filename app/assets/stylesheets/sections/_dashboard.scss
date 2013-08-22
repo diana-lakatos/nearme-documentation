@@ -95,6 +95,19 @@ section.dashboard {
       list-style: none;
       overflow: hidden;
     }
+    
+    &.sharelocation {
+      display: block;
+      margin: 0 0 20px 0;
+      overflow: auto;
+      
+      li {
+        display: inline-block;
+        float: left;
+        margin: 0 1% 10px 0;
+      }
+    }
+    
   }
 
   form {

@@ -11,7 +11,7 @@ module Listings
     def_delegators :@reservation_request, :reservation
 
     def review
-      @reservation_request.payment_method = Reservation::PAYMENT_METHODS[:credit_card]
+      @country = request.location ? request.location.country : nil
       event_tracker.opened_booking_modal(reservation)
     end
 
@@ -29,6 +29,8 @@ module Listings
               BackgroundIssueLogger.log_issue("[auto] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{reservation.id}, guest #{current_user.name} (#{current_user.id}). #{$!.inspect}")
             end
           end
+          event_tracker.updated_profile_information(reservation.owner)
+          event_tracker.updated_profile_information(reservation.host)
         else
           ReservationMailer.notify_host_without_confirmation(reservation).deliver
           ReservationMailer.notify_guest_of_confirmation(reservation).deliver
@@ -79,7 +81,6 @@ module Listings
         listing,
         current_user,
         {
-          :payment_method => params[:reservation_request][:payment_method],
           :quantity       => params[:reservation_request][:quantity],
           :dates          => params[:reservation_request][:dates],
           :start_minute   => params[:reservation_request][:start_minute],

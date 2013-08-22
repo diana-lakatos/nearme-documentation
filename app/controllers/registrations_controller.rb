@@ -36,6 +36,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def edit
+    @country = current_user.country_name
     super
   end
 
@@ -44,7 +45,7 @@ class RegistrationsController < Devise::RegistrationsController
     if resource.update_with_password(params[resource_name])
       set_flash_message :success, :updated
       sign_in(resource, :bypass => true)
-      event_tracker.updated_profile(@user)
+      event_tracker.updated_profile_information(@user)
       redirect_to :action => 'edit'
     else
       render :edit
@@ -124,9 +125,6 @@ class RegistrationsController < Devise::RegistrationsController
       if @user.persisted?
         render_redirect_url_as_json
       end
-    end
-    if !@user.persisted? && params[:user] && User.find_by_email(params[:user][:email])
-      redirect_to_sign_in
     end
   end
 

@@ -115,8 +115,8 @@ Feature: A user can login
      Then I am correctly signed in
       And I should see an indication I've just signed in
 
-  Scenario: A user is prompted to log in if tries to sign up with existing email
+  Scenario: A user is not signed up if tries to sign up with existing email
     Given a user exists with email: "user@example.com"
     When an anonymous user attempts to sign up with email user@example.com
     Then a new account is not created
-     And a user is taken into sign in modal without page reload
+     And I should see "Sign up to Desks Near Me"

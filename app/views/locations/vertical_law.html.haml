@@ -1,4 +1,5 @@
 - render_content_outside_container!
+- no_header_links! unless user_signed_in?
 - meta_title "Legal Desks Near Me"
 - content_for :meta do
   %meta{:content => "law firm, attorneys, war room, legal firm, attorney office space, member of the bar association, National Lawyers Association, National Trial Lawyers, Lawyers", :name => "keywords"}/
@@ -11,6 +12,10 @@
     %h1 Add your extra legal office or conference room here.
     .row-fluid
       %h2 When you list with DesksNear.Me you are connecting with thousands of trusted legal professionals looking for your space.
-      = link_to new_space_wizard_url, :class => 'btn btn-large btn-red', :title => 'List your desk' do
-        List your desk
+      - if !user_signed_in?
+        = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => 'btn btn-large btn-red', :title => 'List your desk' do
+          List your desk
+      - else
+        = link_to new_space_wizard_url, :class => 'btn btn-large btn-red', :title => 'List your desk' do
+          List your desk
     = image_tag "landing-page/logo-landing_page.png"

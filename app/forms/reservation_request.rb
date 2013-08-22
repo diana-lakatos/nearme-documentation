@@ -4,12 +4,12 @@ class ReservationRequest < Form
   attr_accessor :card_number, :card_expires, :card_code
   attr_reader   :reservation, :listing, :location, :user
 
-  def_delegators :@reservation, :payment_method, :payment_method=, :quantity, :quantity=
+  def_delegators :@reservation, :quantity, :quantity=
   def_delegators :@reservation, :credit_card_payment?, :manual_payment?
   def_delegators :@listing,     :confirm_reservations?, :hourly_reservations?, :location
   def_delegators :@user,        :phone, :phone=, :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
-  before_validation :setup_credit_card_customer, :if => lambda { reservation }
+  before_validation :setup_credit_card_customer, :if => lambda { reservation and user }
 
   validates :listing,     :presence => true
   validates :reservation, :presence => true
@@ -25,6 +25,7 @@ class ReservationRequest < Form
 
     if @listing
       @reservation      = listing.reservations.build
+      @reservation.payment_method = payment_method
       @reservation.user = user
     end
 
@@ -43,6 +44,16 @@ class ReservationRequest < Form
 
   def reservation_periods
     reservation.periods
+  end
+
+  def payment_method
+    @payment_method = if @reservation.listing.free?
+                        Reservation::PAYMENT_METHODS[:free]
+                      elsif User::BillingGateway.payment_supported?(@reservation)
+                        Reservation::PAYMENT_METHODS[:credit_card]
+                      else
+                        Reservation::PAYMENT_METHODS[:manual]
+                      end
   end
 
   private
@@ -95,6 +106,9 @@ class ReservationRequest < Form
         else
           add_error("Those credit card details don't look valid", :cc)
         end
+      rescue User::BillingGateway::CardError => e
+        field = e.param ? e.param : :cc
+        add_error(e.message, field)
       rescue User::BillingGateway::BillingError => e
         add_error(e.message, :cc)
       end

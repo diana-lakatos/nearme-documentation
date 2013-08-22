@@ -114,7 +114,14 @@ class Analytics::EventTracker
         phone: object.phone,
         job_title: object.job_title,
         industries: object.industries.map(&:name),
-        created: object.created_at
+        created: object.created_at,
+        location_number: object.locations.count,
+        listing_number: object.listings.count,
+        bookings_total: object.reservations.count,
+        bookings_confirmed: object.confirmed_reservations.count,
+        bookings_rejected: object.rejected_reservations.count,
+        bookings_expired: object.expired_reservations.count,
+        bookings_cancelled: object.cancelled_reservations.count
       }
     when Listing::Search::Params::Web
       {

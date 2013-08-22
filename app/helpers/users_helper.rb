@@ -7,6 +7,10 @@ module UsersHelper
     Country.all.map { |c| [c.name, c.name, {:'data-calling-code' => c.calling_code}] }.sort_by(&:first)
   end
 
+  def user_country_default(country)
+    Country.find(country) ? country : nil
+  end
+
   def admin_as_user?
     session[:admin_as_user].present? && current_user
   end

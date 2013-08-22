@@ -7,6 +7,14 @@ class PhotoUploader < BaseImageUploader
     "uploads/photos/#{model.id}/"
   end
 
+  def filename
+    if model.versions_generated?
+      original_filename if original_filename.present?
+    else
+      "#{secure_token}.#{file.extension}" if original_filename.present?
+    end
+  end
+
   process :auto_orient
 
   version :adjusted do
@@ -43,6 +51,13 @@ class PhotoUploader < BaseImageUploader
   end
 
   include NewrelicCarrierwaveTracker
+
+  protected
+
+  def secure_token
+    var = :"@#{mounted_as}_secure_token"
+    model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.uuid)
+  end
 
   private
 

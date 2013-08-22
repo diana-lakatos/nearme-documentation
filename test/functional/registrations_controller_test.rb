@@ -23,7 +23,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       sign_in @user
       @industry = FactoryGirl.create(:industry)
       @industry2 = FactoryGirl.create(:industry)
-      @tracker.expects(:updated_profile).once
+      @tracker.expects(:updated_profile_information).once
       put :update, :id => @user, user: { :industry_ids => [@industry.id, @industry2.id] }
     end
   end
