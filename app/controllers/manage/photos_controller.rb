@@ -13,7 +13,7 @@ class Manage::PhotosController < ApplicationController
         :id => @photo.id, 
         :url => @photo.image_url(get_image_url).to_s,
         :destroy_url => destroy_space_wizard_photo_path(@photo),
-        :resize_url =>  resize_form_manage_photo_path(@photo)
+        :resize_url =>  edit_manage_photo_path(@photo)
       }.to_json, 
       :content_type => 'text/plain' 
     else
@@ -21,16 +21,16 @@ class Manage::PhotosController < ApplicationController
     end
   end
 
-  def resize_form
+  def edit
     @photo = current_user.photos.find(params[:id])
     if request.xhr?
       render partial: 'resize_form'
     end
   end
 
-  def resize
+  def update
     @photo = current_user.photos.find(params[:id])
-    if @photo.apply_adjustments(params)
+    if @photo.update_attributes(params[:photo])
       render json: {hide: true}
     else
       render partial: 'resize_form'

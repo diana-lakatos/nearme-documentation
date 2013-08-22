@@ -3,7 +3,7 @@ class Photo < ActiveRecord::Base
   include RankedModel
   ranks :position, with_same: [:content_id, :content_type]
 
-  attr_accessible :creator_id, :content_id, :content_type, :caption, :image, :position
+  attr_accessible :creator_id, :content_id, :content_type, :caption, :image, :position, :crop_params, :rotation_angle
 
   belongs_to :content, :polymorphic => true
   belongs_to :creator, class_name: "User"
@@ -15,7 +15,9 @@ class Photo < ActiveRecord::Base
 
   acts_as_paranoid
 
+  before_create :save_dimensions
   after_create :notify_user_about_change
+  before_update :recreate_adjusted, if: :adjusted?
   after_destroy :notify_user_about_change
 
   # Don't delete the photo from s3
@@ -53,27 +55,24 @@ class Photo < ActiveRecord::Base
   # Executes generating the image versions and flags the Photo accordingly.
   def generate_versions
     should_create_versions!
-    image.recreate_versions!
+    image.recreate_versions! #we should call it without args, see https://github.com/carrierwaveuploader/carrierwave/issues/1164
     self.versions_generated = true
     save!(validate: false)
   end
 
-  def apply_adjustments(adjustments)
-    return true unless adjustments[:crop] or adjustments[:rotate]
-    self.crop_params = adjustments[:crop] if adjustments[:crop]
-    self.rotation_angle = adjustments[:rotate]
-
-    # Regenerate any relevant versions that need to be handled immediately
-    self.recreate_versions!
-
-    # Reset the 'versions generated' state so that the various versions of this
-    # image can be re-generated based on the modifications.
-    self.versions_generated = false
-    save!
+  def crop_params=(crop_params)
+    %w(x y w h).map { |param| send("crop_#{param}=", crop_params[param]) }
+    @crop_params_changed = true
   end
 
-  def crop_params=(crop_params)
-    %w(x y w h).each { |param| send("crop_#{param}=", crop_params[param]) }
+  def adjusted?
+    @crop_params_changed or rotation_angle_changed?
+  end
+
+  def recreate_adjusted
+    self.recreate_versions! # Regenerate any relevant versions that need to be handled immediately
+    self.versions_generated = false # other versions adjustments will be performed in background
+    true
   end
 
   def method_missing(method, *args, &block)
@@ -94,6 +93,11 @@ class Photo < ActiveRecord::Base
   # This enables us to control when the processing ocurrs.
   def enqueue_processing
     PhotoImageProcessJob.perform(id)
+  end
+
+  def save_dimensions
+    self.width = image.width
+    self.height = image.height
   end
 
 end

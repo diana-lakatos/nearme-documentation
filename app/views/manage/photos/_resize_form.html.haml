@@ -6,7 +6,7 @@
       .box
         %h2== Crop And Resize Photo
         %p.intro
-        = simple_form_for(@photo, url: resize_manage_photo_path(@photo), html: { data: { 'photo-id' => @photo.id } }) do |f|
+        = simple_form_for([:manage, @photo], html: { data: { 'photo-id' => @photo.id } }) do |f|
           %a.badge.rotate-photo.photo-action{href: '#'}
             %i.icon-repeat.icon-white
           = image_tag @photo.image_url, id: 'photo_crop',

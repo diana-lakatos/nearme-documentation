@@ -47,9 +47,9 @@ class @CropAndRotateForm extends @ModalForm
     [@image.data('x'), @image.data('y'), @image.data('x') + @image.data('w'), @image.data('y') + @image.data('h')]
 
   getData: ->
-    data = {}
+    data = {photo: {}, _method: 'put'}
     if @angle != 0
-      data['rotate'] = @angle
+      data['photo']['rotation_angle'] = @angle
     if @crop != null
-      data['crop'] = @crop
+      data['photo']['crop_params'] = @crop
     data
