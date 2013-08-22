@@ -25,6 +25,12 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       @tracker.expects(:requested_a_booking).with do |reservation|
         reservation == assigns(:reservation_request).reservation
       end
+      @tracker.expects(:updated_profile_information).with do |user|
+        user == assigns(:reservation_request).reservation.owner
+      end
+      @tracker.expects(:updated_profile_information).with do |user|
+        user == assigns(:reservation_request).reservation.host
+      end
       xhr :post, :create, booking_params_for(@listing)
       assert_response 200
     end
