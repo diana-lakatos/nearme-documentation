@@ -22,6 +22,9 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       @tracker.expects(:created_a_location).with do |location, custom_options|
         location == assigns(:location) && custom_options == { via: 'dashboard' }
       end
+      @tracker.expects(:updated_profile_information).with do |user|
+        user == @user
+      end
       assert_difference('@user.locations.count') do
         post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).reverse_merge!({:location_type_id => @location_type.id})}
       end
@@ -65,6 +68,10 @@ class Manage::LocationsControllerTest < ActionController::TestCase
     end
 
     should "destroy location" do
+      stub_mixpanel
+      @tracker.expects(:updated_profile_information).with do |user|
+        user == @user
+      end
       assert_difference('@user.locations.count', -1) do
         delete :destroy, :id => @location.id
       end

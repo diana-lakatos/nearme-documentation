@@ -73,7 +73,8 @@ class @Space.Controller
 
     @popover = new GoogleMapPopover({'boxStyle': { 'width': '190px' }, 'pixelOffset': new google.maps.Size(-95, -40) })
     @popover.setContent @mapContainer.find('address').html()
-    @popover.open(@map.map, marker)
+    if ($.browser.msie && parseInt($.browser.version) > 9)
+      @popover.open(@map.map, marker)
 
     google.maps.event.addListener marker, 'click', =>
       @popover.open(@map.map, marker)

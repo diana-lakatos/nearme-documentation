@@ -116,6 +116,18 @@ class User < ActiveRecord::Base
     reservations.cancelled
   end
 
+  def rejected_reservations
+    reservations.rejected
+  end
+
+  def expired_reservations
+    reservations.expired
+  end
+
+  def confirmed_reservations
+    reservations.confirmed
+  end
+
   # Whether to validate the presence of a password
   def password_required?
     # We're changing/setting password, or new user and there are no Provider authentications

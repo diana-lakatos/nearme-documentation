@@ -14,6 +14,12 @@ class ReservationsControllerTest < ActionController::TestCase
       @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|
         reservation == assigns(:reservation) && custom_options == { actor: 'guest' }
       end
+      @tracker.expects(:updated_profile_information).with do |user|
+        user == assigns(:reservation).owner
+      end
+      @tracker.expects(:updated_profile_information).with do |user|
+        user == assigns(:reservation).host
+      end
       post :user_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
       assert_redirected_to bookings_dashboard_path
     end

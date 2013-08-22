@@ -38,6 +38,7 @@ class SpaceWizardController < ApplicationController
       event_tracker.created_a_location(@location , { via: 'wizard' })
       event_tracker.created_a_listing(@listing, { via: 'wizard' })
 
+      event_tracker.updated_profile_information(@user)
       flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
       redirect_to manage_locations_path
     else
