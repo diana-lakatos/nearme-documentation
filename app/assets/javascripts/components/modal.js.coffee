@@ -26,7 +26,6 @@ class @Modal
       e.preventDefault()
       target = $(e.currentTarget)
       modalClass = matches[1] if matches = target.attr("rel").match(/modal\.([^\s]+)/)
-      Modal.currentData = target.data()
       @load(target.attr("href"), modalClass)
       false
 

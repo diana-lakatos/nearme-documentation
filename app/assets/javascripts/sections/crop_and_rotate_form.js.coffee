@@ -34,9 +34,10 @@ class @CropAndRotateForm extends @ModalForm
 
 
   updateModalOnSubmit: =>
+    photoId = @form.data('photo-id')
     @form.submit =>
       Modal.load { type: "POST", url: @form.attr("action"), data: @getData()}, null, ()->
-        PhotoUploader.updateImages([Modal.currentData.id])
+        PhotoUploader.updateImages(["photo-#{photoId}"])
       false
 
   imageCropped: ->
