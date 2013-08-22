@@ -27,6 +27,39 @@ section.space_wizard {
     .already-a-user {
       display: none;
     }
+  
+  .actions {
+    background: $dnm_black;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 10px 0;
+    z-index: 2;
+    text-align: center;
+
+    .centerbuttons {
+      display: inline-block;
+      width: 50%;
+
+      .listmydesk, .saveasdraft {
+        float: left;
+        margin: 0 0.5%;
+        width: 48%;
+      }
+
+      @media(max-width: $ipad-width) {
+        width: 100%;
+      }
+
+    }
+
+    @media(max-width: 1024px) {
+      padding: 10px 0 40px 0;
+    }
+
+  }
+
   }
 
   .input-disabled{

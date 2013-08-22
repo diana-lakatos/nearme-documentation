@@ -25,7 +25,9 @@
       = simple_fields_for current_user do |uf|
         = render 'registrations/phone_fields', :f => uf, :locals => { :country => @country }
       .actions
-        = f.submit "List my #{current_instance.bookable_noun}", :disable_with => 'Creating...'
+        .centerbuttons
+          = f.submit "List my #{current_instance.bookable_noun}", :name => "commit", :disable_with => 'Creating...', :class => "listmydesk btn-medium"
+          = f.submit "Save as draft", :name => "save_as_draft", :disable_with => 'Saving...', :class => "saveasdraft btn-gray btn-medium"
 
 - content_for :script do
   :javascript
