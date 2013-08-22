@@ -15,7 +15,7 @@
 </p>
 
 <p>
-  Start building awareness of your <%=@instance.bookable_noun%> by <%= link_to "Tweeting about your location", tweet_location_url(@user.listings.first.location) %> or adding <%= link_to "a link", location_url(@user.listings.first.location) %> to your email signature or company website.
+Start building awareness of your <%=@instance.bookable_noun%> by <%= link_to "Tweeting about your location", tweet_location_url(@user.listings.first.location) %> or adding <%= link_to "a link", location_url(@user.listings.first.location, :listing_id => @user.listings.first) %> to your email signature or company website.
 </p>
 
 <%= render 'footer' %>
