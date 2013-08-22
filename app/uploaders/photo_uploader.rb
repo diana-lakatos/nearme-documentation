@@ -22,13 +22,13 @@ class PhotoUploader < BaseImageUploader
     process :apply_crop
   end
 
-  version :thumb, :from_version => :adjusted, :if => :should_generate_versions? do
-    process :resize_to_fill => [96, 96]
-  end
-
   # it's not a mistake that we don't have :if condition here - we want to be able to display img preview ASAP
   version :medium, :from_version => :adjusted do
     process :resize_to_fill => [144, 89]
+  end
+
+  version :thumb, :from_version => :adjusted, :if => :should_generate_versions? do
+    process :resize_to_fill => [96, 96]
   end
 
   version :large, :from_version => :adjusted, :if => :should_generate_versions? do
