@@ -38,24 +38,22 @@ class Photo < ActiveRecord::Base
   end
 
   def generate_versions
-    self.versions_generated = true
     image.recreate_versions! :thumb, :large, :space_listing, :golden
+    self.versions_generated = true
     save!
   end
 
   def apply_adjustments(adjustments)
+    return true unless adjustments[:crop] or adjustments[:rotate]
     self.crop_params = adjustments[:crop] if adjustments[:crop]
-    self.rotation_angle = adjustments[:rotate].to_i
+    self.rotation_angle = adjustments[:rotate]
     self.recreate_versions! # only medium and adjusted versions will be created because versions_generated is true
     self.versions_generated = false
     save!
   end
 
   def crop_params=(crop_params)
-    self.crop_x = crop_params[:x].to_i
-    self.crop_y = crop_params[:y].to_i
-    self.crop_w = crop_params[:w].to_i
-    self.crop_h = crop_params[:h].to_i
+    %w(x y w h).each { |param| send("crop_#{param}=", crop_params[param]) }
   end
 
   def method_missing(method, *args, &block)

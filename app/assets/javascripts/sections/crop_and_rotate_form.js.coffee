@@ -40,7 +40,7 @@ class @CropAndRotateForm extends @ModalForm
       false
 
   imageCropped: ->
-    @image.data('w')? and @image.data('h')? and @image.data('x') and @image.data('y')
+    @image.data('w')? and @image.data('h')? and @image.data('x')? and @image.data('y')?
 
   imageCropCoords: ->
     [@image.data('x'), @image.data('y'), @image.data('x') + @image.data('w'), @image.data('y') + @image.data('h')]

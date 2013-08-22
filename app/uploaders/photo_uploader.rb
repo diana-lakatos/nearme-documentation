@@ -8,8 +8,8 @@ class PhotoUploader < BaseImageUploader
   end
 
   def filename
-    if model.versions_generated?
-      original_filename if original_filename.present?
+    if model.read_attribute(mounted_as).present?
+      model.read_attribute(mounted_as) if original_filename.present?
     else
       "#{secure_token}.#{file.extension}" if original_filename.present?
     end
