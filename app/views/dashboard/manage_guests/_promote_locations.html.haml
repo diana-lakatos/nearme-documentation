@@ -1,12 +1,27 @@
 - locations.each do |location|
+  %h2 #{location.name}
   %p You currently have no reservations. Promote your #{current_instance.bookable_noun.pluralize} by tweeting or sharing a direct link!
-  %ul
+  %ul.sharelocation
     %li
-      =link_to tweet_location_url(location), :ref => "mg", :class => 'btn btn-blue btn-large twitter submit' do
-        %span.ico-twitter.padding="Share #{location.name}"
+      =link_to tweet_location_url(location), :ref => "mg", :class => 'btn btn-blue btn-medium twitter submit', :onclick => 'return popitup(this.href)' do
+        %span.ico-twitter.padding="Twitter"
     %li
-      = link_to location_url(location), :class => 'btn btn-blue btn-large' do
+      =link_to "https://www.facebook.com/sharer/sharer.php?u=#{location_url(location)}", :ref => "mg", :class => 'btn btn-blue btn-medium facebook submit', :onclick => 'return popitup(this.href)' do
+        %span.ico-facebook.padding="Facebook"
+    %li
+      =link_to "http://www.linkedin.com/shareArticle?mini=true&url=#{location_url(location)}&title=#{location.name}&summary=#{location.description}&source=DesksNear.Me", :ref => "mg", :class => 'btn btn-blue btn-medium linkedin submit', :onclick => 'return popitup(this.href)' do
+        %span.ico-linkedin.padding="LinkedIn"
+    %li
+      = link_to location_url(location), :class => 'btn btn-blue btn-medium' do
         %span.ico-link.padding= "#{location.name} Link"
     %li
       .clearfix
   .clearfix
+
+- content_for :script do
+  :javascript
+    function popitup(url) {
+      newwindow=window.open(url,'name','height=440,width=600');
+      if (window.focus) {newwindow.focus()}
+      return false;
+    }

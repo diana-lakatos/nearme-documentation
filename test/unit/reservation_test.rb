@@ -30,6 +30,33 @@ class ReservationTest < ActiveSupport::TestCase
     assert @reservation.periods
   end
 
+  context 'scopes' do
+
+    setup do
+      FactoryGirl.create(:reservation, :state => 'unconfirmed')
+    end
+
+    should 'find rejected reservations' do
+      FactoryGirl.create(:reservation, :state => 'rejected') 
+      assert_equal 1, Reservation.rejected.count
+    end
+
+    should 'find confirmed reservations' do
+      FactoryGirl.create(:reservation, :state => 'confirmed') 
+      assert_equal 1, Reservation.confirmed.count
+    end
+
+    should 'find expired reservations' do
+      FactoryGirl.create(:reservation, :state => 'expired') 
+      assert_equal 1, Reservation.expired.count
+    end
+
+    should 'find cancelled reservations' do
+      FactoryGirl.create(:reservation, :state => 'cancelled') 
+      assert_equal 1, Reservation.cancelled.count
+    end
+  end
+
   context 'cancelable' do
 
     setup do

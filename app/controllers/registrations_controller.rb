@@ -45,7 +45,7 @@ class RegistrationsController < Devise::RegistrationsController
     if resource.update_with_password(params[resource_name])
       set_flash_message :success, :updated
       sign_in(resource, :bypass => true)
-      event_tracker.updated_profile(@user)
+      event_tracker.updated_profile_information(@user)
       redirect_to :action => 'edit'
     else
       render :edit

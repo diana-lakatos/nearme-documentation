@@ -111,7 +111,7 @@ class EventTrackerTest < ActiveSupport::TestCase
     should 'set new proprties after updating profile' do
       expect_set_person_properties user_properties
       @mixpanel.expects(:track).never
-      @tracker.updated_profile(@user)
+      @tracker.updated_profile_information(@user)
     end
 
     should 'track user social provider connection' do
@@ -197,7 +197,14 @@ class EventTrackerTest < ActiveSupport::TestCase
       email: @user.email,
       phone: @user.phone,
       job_title: @user.job_title,
-      created: @user.created_at
+      created: @user.created_at,
+      location_number: @user.locations.count,
+      listing_number: @user.listings.count,
+      bookings_total: @user.reservations.count,
+      bookings_confirmed: @user.confirmed_reservations.count,
+      bookings_rejected: @user.rejected_reservations.count,
+      bookings_expired: @user.expired_reservations.count,
+      bookings_cancelled: @user.cancelled_reservations.count
     }
   end
 

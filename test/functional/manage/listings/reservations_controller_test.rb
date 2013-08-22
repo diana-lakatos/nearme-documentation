@@ -14,6 +14,12 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     @tracker.expects(:confirmed_a_booking).with do |reservation|
       reservation == assigns(:reservation)
     end
+    @tracker.expects(:updated_profile_information).with do |user|
+      user == assigns(:reservation).owner
+    end
+    @tracker.expects(:updated_profile_information).with do |user|
+      user == assigns(:reservation).host
+    end
     post :confirm, { listing_id: @reservation.listing.id, id: @reservation.id }
     assert_redirected_to manage_guests_dashboard_path
   end
@@ -21,6 +27,12 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
   should "track and redirect a host to the Manage Guests page when they reject a booking" do
     @tracker.expects(:rejected_a_booking).with do |reservation|
       reservation == assigns(:reservation)
+    end
+    @tracker.expects(:updated_profile_information).with do |user|
+      user == assigns(:reservation).owner
+    end
+    @tracker.expects(:updated_profile_information).with do |user|
+      user == assigns(:reservation).host
     end
     post :reject, { listing_id: @reservation.listing.id, id: @reservation.id }
     assert_redirected_to manage_guests_dashboard_path
@@ -30,6 +42,12 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     @reservation.confirm # Must be confirmed before can be cancelled
     @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|
       reservation == assigns(:reservation) && custom_options == { actor: 'host' }
+    end
+    @tracker.expects(:updated_profile_information).with do |user|
+      user == assigns(:reservation).owner
+    end
+    @tracker.expects(:updated_profile_information).with do |user|
+      user == assigns(:reservation).host
     end
     post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
     assert_redirected_to manage_guests_dashboard_path
