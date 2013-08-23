@@ -1,7 +1,7 @@
 <br class='first-br'>
 <h1>Booking Details</h1><br>
 <strong style='display: inline-block;'>Listing</strong>
-<span style="float: right;">'<%= listing.name %>' at <%= link_to(listing.location.name, location_url(listing.location)) %></span>
+<span style="float: right;">'<%= listing.name %>' at <%= link_to(listing.location.name, location_url(listing.location, :listing_id => listing)) %></span>
 
 <hr>
 
