@@ -35,6 +35,10 @@ module NavigationHelpers
     when /the manage locations page/
       manage_locations_path
 
+    when /the manage listing page/
+      listing = model!('the listing')
+      edit_manage_location_listing_path(listing.location, listing)
+
     when /the admin instances page/
       admin_instances_path
  
