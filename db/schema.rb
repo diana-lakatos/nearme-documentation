@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130822080608) do
+ActiveRecord::Schema.define(:version => 20130823110000) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -377,9 +377,9 @@ ActiveRecord::Schema.define(:version => 20130822080608) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                                :default => "",    :null => false
-    t.string   "encrypted_password",                    :limit => 128, :default => "",    :null => false
-    t.string   "password_salt",                                        :default => "",    :null => false
+    t.string   "email",                                                :default => "", :null => false
+    t.string   "encrypted_password",                    :limit => 128, :default => "", :null => false
+    t.string   "password_salt",                                        :default => "", :null => false
     t.string   "reset_password_token"
     t.string   "remember_token"
     t.datetime "remember_created_at"
@@ -392,7 +392,7 @@ ActiveRecord::Schema.define(:version => 20130822080608) do
     t.datetime "updated_at"
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                                       :default => 0,     :null => false
+    t.integer  "bookings_count",                                       :default => 0,  :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
@@ -409,7 +409,6 @@ ActiveRecord::Schema.define(:version => 20130822080608) do
     t.string   "job_title"
     t.text     "biography"
     t.datetime "mailchimp_synchronized_at"
-    t.boolean  "verified",                                             :default => false
     t.string   "country_name"
     t.string   "mobile_number"
     t.integer  "instance_id"
@@ -417,6 +416,7 @@ ActiveRecord::Schema.define(:version => 20130822080608) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
+    t.datetime "verified_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

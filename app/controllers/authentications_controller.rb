@@ -18,7 +18,7 @@ class AuthenticationsController < ApplicationController
       new_authentication_for_existing_user
     # There is no authentication in our system, and the user is not logged in. Hence, we create a new user and then new authentication
     else
-      if @oauth.create_user
+      if @oauth.create_user(current_instance)
         # User and authentication created successfully. User is now logged in
         new_user_created_successfully
       else
