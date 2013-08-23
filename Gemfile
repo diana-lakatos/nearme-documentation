@@ -22,7 +22,7 @@ gem 'rails3_acts_as_paranoid'
 gem 'simple_form'
 gem 'nokogiri'
 gem 'amatch'
-gem 'icalendar'
+gem 'ri_cal'
 gem 'ffaker'
 
 gem 'paper_trail'
