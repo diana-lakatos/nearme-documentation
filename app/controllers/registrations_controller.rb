@@ -32,8 +32,10 @@ class RegistrationsController < Devise::RegistrationsController
     session[:omniauth] = nil unless @user.new_record?
     flash[:redirected_from_sign_up] = true
     if @user.persisted?
+      @user.instance = current_instance
+      @user.save!
       AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(current_instance, @user.id)
-      UserMailer.email_verification(current_instance, @user).deliver
+      UserMailer.email_verification(@user).deliver
     end
     @resource = resource
   end

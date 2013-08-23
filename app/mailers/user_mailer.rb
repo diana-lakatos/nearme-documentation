@@ -14,25 +14,23 @@ class UserMailer < DesksNearMeMailer
       subject: "[Desks Near Me] We couldn't send you text message"
   end
 
-  def email_verification(instance, user_id)
-
-    @user = User.where('users.verified_at is null AND id = ?', user_id).first
-    @instance = instance
-
-    mail to: @user.email, subject: "Email verification" if @user
+  def email_verification(user)
+    @user = user
+    unless @user.verified_at
+      mail to: @user.email, 
+        subject: "Email verification"
+    end
   end
 
   if defined? MailView
     class Preview < MailView
 
       def notify_about_wrong_phone_number
-        @user = User.where('mobile_number is not null').first
-        ::UserMailer.notify_about_wrong_phone_number(@user)
+        ::UserMailer.notify_about_wrong_phone_number(User.where('mobile_number is not null').first)
       end
 
       def email_verification
-        @user = User.where('users.verified_at is null').first
-        ::UserMailer.email_verification(Instance.default_instance, @user)
+        ::UserMailer.email_verification(User.where('users.verified_at is null').first)
       end
 
     end
