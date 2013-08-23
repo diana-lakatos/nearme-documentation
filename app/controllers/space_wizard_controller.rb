@@ -20,13 +20,13 @@ class SpaceWizardController < ApplicationController
     @company ||= @user.companies.build
     @location ||= @company.locations.build
     @listing ||= @location.listings.build
-    @country = request.location ? request.location.country : nil
+    @country =  @user.country_name.present? ? @user.country_name : (request.location ? request.location.country : nil)
     event_tracker.viewed_list_your_bookable
   end
 
   def submit_listing
     @user.phone_required = true
-    params[:user][:companies_attributes]["0"][:current_instance_id] = current_instance.id.to_s
+    params[:user][:companies_attributes]["0"][:instance_id] = current_instance.id.to_s
     @user.attributes = params[:user]
 
     if @user.save
@@ -47,7 +47,7 @@ class SpaceWizardController < ApplicationController
 
   def submit_photo
     @photo = Photo.new
-    @photo.image = params[:company][:locations_attributes]["0"][:listings_attributes]["0"][:photos_attributes]["0"][:image]
+    @photo.image = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:photos_attributes]["0"][:image]
     @photo.content_type = 'Listing'
     @photo.creator_id = current_user.id
     if @photo.save

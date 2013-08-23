@@ -18,7 +18,7 @@
           = render 'listings/listing_form',
                    :f => listings_form,
                    :listing => @listing,
-                   :photo_input_name_prefix => "company[locations_attributes][0][listings_attributes][0]",
+                   :photo_input_name_prefix => "[user][companies_attributes][0][locations_attributes][0][listings_attributes][0]",
                    :only_inputs => [ :name, :description, :listing_type, :quantity, :price, :photos ],
                    photos: @photos
 
