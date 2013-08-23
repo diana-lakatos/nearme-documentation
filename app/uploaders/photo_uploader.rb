@@ -8,8 +8,8 @@ class PhotoUploader < BaseImageUploader
   end
 
   def filename
-    if model.versions_generated?
-      original_filename if original_filename.present?
+    if model.read_attribute(mounted_as).present?
+      model.read_attribute(mounted_as) if original_filename.present?
     else
       "#{secure_token}.#{file.extension}" if original_filename.present?
     end
@@ -17,24 +17,29 @@ class PhotoUploader < BaseImageUploader
 
   process :auto_orient
 
-  version :thumb, :if => :should_generate_versions? do
-    process :resize_to_fill => [96, 96]
+  version :adjusted do
+    process :apply_rotate
+    process :apply_crop
   end
 
   # it's not a mistake that we don't have :if condition here - we want to be able to display img preview ASAP
-  version :medium do
+  version :medium, :from_version => :adjusted do
     process :resize_to_fill => [144, 89]
   end
 
-  version :large, :if => :should_generate_versions? do
+  version :thumb, :from_version => :adjusted, :if => :should_generate_versions? do
+    process :resize_to_fill => [96, 96]
+  end
+
+  version :large, :from_version => :adjusted, :if => :should_generate_versions? do
     process :resize_to_fill => [1280, 960]
   end
 
-  version :space_listing, :if => :should_generate_versions? do
+  version :space_listing, :from_version => :adjusted, :if => :should_generate_versions? do
     process :resize_to_fill => [410, 254]
   end
 
-  version :golden, :if => :should_generate_versions? do
+  version :golden, :from_version => :adjusted, :if => :should_generate_versions? do
     process :resize_to_fill => [SPACE_FULL_IMAGE_W, SPACE_FULL_IMAGE_H]
   end
 
@@ -60,4 +65,20 @@ class PhotoUploader < BaseImageUploader
     model.should_generate_versions?
   end
 
+  def apply_crop
+    return if [model.crop_x, model.crop_y, model.crop_w, model.crop_h].any? &:nil?
+
+    manipulate! do |img|
+      img.crop "#{model.crop_w.to_s}x#{model.crop_h.to_s}+#{model.crop_x.to_s}+#{model.crop_y.to_s}"
+      img
+    end
+  end
+
+  def apply_rotate
+    return unless model.rotation_angle
+    manipulate! do |img|
+      img.rotate model.rotation_angle.to_s
+      img
+    end
+  end
 end
