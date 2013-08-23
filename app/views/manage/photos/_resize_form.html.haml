@@ -1,0 +1,26 @@
+- title "Crop And Resize Photo"
+
+.row-fluid
+  #signup
+    .span8.offset2
+      .box
+        %h2== Crop And Resize Photo
+        %p.intro
+        = simple_form_for([:manage, @photo], html: { data: { 'photo-id' => @photo.id } }) do |f|
+          %a.badge.rotate-photo.photo-action{href: '#'}
+            %i.icon-repeat.icon-white
+          = image_tag @photo.image_url, id: 'photo_crop',
+              data: {original_w: @photo.width, original_h: @photo.height, rotate: @photo.rotation_angle,
+                     w: @photo.crop_w, h: @photo.crop_h, x: @photo.crop_x, y: @photo.crop_y}
+
+          .actions
+            = f.submit 'Process'
+
+- if request.xhr?
+  :javascript
+    Modal.setClass('sign-up-modal')
+
+:javascript
+  $(function() {
+    new CropAndRotateForm($('#signup'))
+  });

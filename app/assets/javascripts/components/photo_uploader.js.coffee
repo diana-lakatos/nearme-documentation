@@ -1,8 +1,19 @@
 class @PhotoUploader
 
+  @uploaders = []
+
   @initialize: (scope = $('body')) ->
     $('.fileupload', scope).each (index, element) =>
-      new PhotoUploader($(element))
+      @uploaders.push new PhotoUploader($(element))
+
+  # Update images to reload them when images were changed via e.g. ajax request.
+  @updateImages: (ids = [])->
+    for uploader in @uploaders
+      for id in ids
+        image = uploader.container.find("##{id}").find('img')
+        continue unless image.length > 0
+        image_src = image.attr('src')
+        image.attr('src', image_src + '?' + (new Date()).getTime())
 
   constructor : (container) ->
     @container = container
@@ -101,9 +112,11 @@ class @PhotoUploader
     if !result
       result = jQuery.parseJSON($('pre', data.result).text())
     data.result = result
-    href = $('<a data-url="' + data.result.destroy_url + '" class="badge badge-inverse delete-photo delete-photo-thumb">Delete</span></a>')
+    deleteLink = $('<a data-url="' + data.result.destroy_url + '" class="badge delete-photo delete-photo-thumb photo-action">Delete</a>')
+    cropLink = $('<a href="' + data.result.resize_url + '" rel="modal.sign-up-modal"  data-id="photo-' + data.result.id + '" class="badge resize-photo photo-action">Rotate & Crop</a>')
     data.context.html('<img src="' + data.result.url + '">')
-    data.context.append(href)
+    data.context.append(deleteLink)
+    data.context.append(cropLink)
     if @multiplePhoto()
       data.context.append($('<span>').addClass('photo-position badge badge-inverse').text(@getLastPosition()))
       hidden = $('<input type="hidden">')

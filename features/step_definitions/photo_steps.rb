@@ -37,3 +37,35 @@ When /^I add the following photos to the listing:$/ do |table|
   end
 end
 
+Then(/^I crop image$/) do
+  work_in_modal do
+    crop_photo(200, 125)
+    click_on 'Process'
+  end
+end
+
+When(/^I open rotate and crop modal$/) do
+  within '.photo-item' do
+    @image_src = page.find('img')['src']
+    @image_width = Photo.last.image.width
+    @image_height = Photo.last.image.height
+    click_on 'Rotate & Crop'
+  end
+end
+
+When(/^I should see cropped photo$/) do
+  page.find('img')['src'].should_not == @image_src
+  Photo.last.image.adjusted.should have_dimensions(200, 125)
+end
+
+Then(/^I rotate image$/) do
+  work_in_modal do
+    find('.rotate-photo').click
+    click_on 'Process'
+  end
+end
+
+When(/^I should see rotated photo$/) do
+  page.find('img')['src'].should_not == @image_src
+  Photo.last.image.adjusted.should have_dimensions(@image_height, @image_width)
+end

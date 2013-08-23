@@ -47,7 +47,7 @@ GEM
     ansi (1.4.3)
     arel (3.0.2)
     bcrypt-ruby (3.1.1)
-    bootstrap-sass (2.3.0.0)
+    bootstrap-sass (2.3.1.3)
       sass (~> 3.2)
     builder (3.0.4)
     capybara (2.1.0)
@@ -64,7 +64,6 @@ GEM
     carrierwave (0.9.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
-      json (>= 1.7)
     chameleon (0.2.3)
     chartjs-rails (0.1)
       railties (>= 3.1)
@@ -443,7 +442,7 @@ DEPENDENCIES
   active_model_serializers
   amatch
   animation
-  bootstrap-sass (~> 2.3.0.0)
+  bootstrap-sass (~> 2.3.1.0)
   capybara (~> 2)
   capybara-screenshot
   capybara-webkit

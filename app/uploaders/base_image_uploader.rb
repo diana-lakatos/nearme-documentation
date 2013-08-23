@@ -11,4 +11,17 @@ class BaseImageUploader < BaseUploader
   def default_url
     "http://placehold.it/100x100"
   end
+
+  def image
+    @image ||= MiniMagick::Image.open(current_path)
+  end
+
+  def width
+    image[:width]
+  end
+
+  def height
+    image[:height]
+  end
+
 end

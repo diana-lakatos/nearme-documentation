@@ -297,6 +297,13 @@ ActiveRecord::Schema.define(:version => 20130823113647) do
     t.datetime "deleted_at"
     t.integer  "creator_id"
     t.boolean  "versions_generated", :default => false, :null => false
+    t.integer  "crop_x"
+    t.integer  "crop_y"
+    t.integer  "crop_h"
+    t.integer  "crop_w"
+    t.integer  "rotation_angle"
+    t.integer  "width"
+    t.integer  "height"
   end
 
   create_table "reservation_charges", :force => true do |t|
