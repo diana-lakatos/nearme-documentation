@@ -16,7 +16,8 @@ FactoryGirl.define do
     end
 
     after(:build) do |listing, evaluator|
-      listing.photos = FactoryGirl.create_list(:photo, evaluator.photos_count, content: nil)
+      listing.photos = FactoryGirl.create_list(:photo, evaluator.photos_count,
+                                               content: nil, creator: listing.location.creator )
     end
 
     factory :always_open_listing do

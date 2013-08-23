@@ -6,9 +6,10 @@ module Auth
       @auth_params = auth_params
     end
 
-    def create_user
+    def create_user(curr_instance)
       user = User.new
       user.apply_omniauth(@auth_params)
+      user.instance = curr_instance
       user.save
     end
 

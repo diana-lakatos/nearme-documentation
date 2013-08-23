@@ -18,6 +18,9 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       @tracker.expects(:created_a_listing).with do |listing, custom_options|
         listing == assigns(:listing) && custom_options == { via: 'dashboard' }
       end
+      @tracker.expects(:updated_profile_information).with do |user|
+        user == @user
+      end
       assert_difference('@location2.listings.count') do
         post :create, {
           :listing => FactoryGirl.attributes_for(:listing).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 }),
@@ -42,6 +45,10 @@ class Manage::ListingsControllerTest < ActionController::TestCase
     end
 
     should "destroy listing" do
+      stub_mixpanel
+      @tracker.expects(:updated_profile_information).with do |user|
+        user == @user
+      end
       assert_difference('@user.listings.count', -1) do
         delete :destroy, :id => @listing.id
       end

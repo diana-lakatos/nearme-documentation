@@ -29,6 +29,8 @@ module Listings
               BackgroundIssueLogger.log_issue("[auto] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{reservation.id}, guest #{current_user.name} (#{current_user.id}). #{$!.inspect}")
             end
           end
+          event_tracker.updated_profile_information(reservation.owner)
+          event_tracker.updated_profile_information(reservation.host)
         else
           ReservationMailer.notify_host_without_confirmation(reservation).deliver
           ReservationMailer.notify_guest_of_confirmation(reservation).deliver
@@ -64,7 +66,7 @@ module Listings
       unless current_user
         # Persist the reservation request so that when we return it will be restored.
         store_reservation_request
-        redirect_to new_user_registration_path(:return_to => location_url(listing.location, :restore_reservations => true))
+        redirect_to new_user_registration_path(:return_to => location_listing_url(listing.location, listing, :restore_reservations => true))
       end
     end
 

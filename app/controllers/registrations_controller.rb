@@ -31,7 +31,12 @@ class RegistrationsController < Devise::RegistrationsController
     # Clear out temporarily stored Provider authentication data if present
     session[:omniauth] = nil unless @user.new_record?
     flash[:redirected_from_sign_up] = true
-    AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(current_instance, @user.id) unless @user.new_record?
+    if @user.persisted?
+      @user.instance = current_instance
+      @user.save!
+      AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(current_instance, @user.id)
+      UserMailer.email_verification(@user).deliver
+    end
     @resource = resource
   end
 
@@ -45,7 +50,7 @@ class RegistrationsController < Devise::RegistrationsController
     if resource.update_with_password(params[resource_name])
       set_flash_message :success, :updated
       sign_in(resource, :bypass => true)
-      event_tracker.updated_profile(@user)
+      event_tracker.updated_profile_information(@user)
       redirect_to :action => 'edit'
     else
       render :edit
@@ -78,9 +83,9 @@ class RegistrationsController < Devise::RegistrationsController
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
       flash[:success] = "Thanks - your email address has been verified!"
-      redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path(@user)
+      redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path
     else
-      if @user.verified
+      if @user.verified_at
         flash[:warning] = "The email address has been already verified"
       else
         flash[:error] = "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
@@ -126,11 +131,6 @@ class RegistrationsController < Devise::RegistrationsController
         render_redirect_url_as_json
       end
     end
-  end
-
-  def redirect_to_sign_in
-      self.response_body = nil
-      redirect_to new_user_session_url(:email => params[:user][:email])
   end
 
 end

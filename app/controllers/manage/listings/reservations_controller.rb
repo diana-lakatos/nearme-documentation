@@ -8,6 +8,8 @@ class Manage::Listings::ReservationsController < ApplicationController
       ReservationMailer.notify_guest_of_confirmation(@reservation).deliver
       ReservationMailer.notify_host_of_confirmation(@reservation).deliver
       event_tracker.confirmed_a_booking(@reservation)
+      event_tracker.updated_profile_information(@reservation.owner)
+      event_tracker.updated_profile_information(@reservation.host)
       flash[:success] = "You have confirmed the reservation!"
     else
       flash[:error] = "Your reservation could not be confirmed."
@@ -23,6 +25,8 @@ class Manage::Listings::ReservationsController < ApplicationController
       ReservationIssueLogger.rejected_with_reason @reservation, current_user if rejection_reason.present?
       ReservationMailer.notify_guest_of_rejection(@reservation).deliver
       event_tracker.rejected_a_booking(@reservation)
+      event_tracker.updated_profile_information(@reservation.owner)
+      event_tracker.updated_profile_information(@reservation.host)
       flash[:deleted] = "You have rejected the reservation. Maybe next time!"
     else
       flash[:error] = "Your reservation could not be confirmed."
@@ -35,6 +39,8 @@ class Manage::Listings::ReservationsController < ApplicationController
     if @reservation.host_cancel
       ReservationMailer.notify_guest_of_cancellation(@reservation).deliver
       event_tracker.cancelled_a_booking(@reservation, { actor: 'host' })
+      event_tracker.updated_profile_information(@reservation.owner)
+      event_tracker.updated_profile_information(@reservation.host)
       flash[:deleted] = "You have cancelled this reservation."
     else
       flash[:error] = "Your reservation could not be confirmed."

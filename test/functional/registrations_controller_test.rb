@@ -17,13 +17,14 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_difference('User.count') do
         post :create, user: user_attributes
       end
+
     end
 
     should 'successfully update' do
       sign_in @user
       @industry = FactoryGirl.create(:industry)
       @industry2 = FactoryGirl.create(:industry)
-      @tracker.expects(:updated_profile).once
+      @tracker.expects(:updated_profile_information).once
       put :update, :id => @user, user: { :industry_ids => [@industry.id, @industry2.id] }
     end
   end
@@ -34,7 +35,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       get :verify, :id => @user.id, :token => @user.email_verification_token
       @user.reload
       @controller.current_user.id == @user.id
-      assert @user.verified
+      assert @user.verified_at
     end
 
     context 'with Timecop' do
@@ -63,16 +64,16 @@ class RegistrationsControllerTest < ActionController::TestCase
 
     should "redirect verified user without listing to settings" do
       get :verify, :id => @user.id, :token => @user.email_verification_token
-      assert_redirected_to edit_user_registration_path(@user)
+      assert_redirected_to edit_user_registration_path
     end
 
     should "handle situation when user is verified" do
-      @user.verified = true
+      @user.verified_at = Time.zone.now
       @user.save!
       get :verify, :id => @user.id, :token => @user.email_verification_token
       @user.reload
       assert_nil @controller.current_user
-      assert @user.verified
+      assert @user.verified_at
     end
 
     should "not verify user if id is incorrect" do
@@ -85,7 +86,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       get :verify, :id => @user.id, :token => @user.email_verification_token+"incorrect"
       @user.reload
       assert_nil @controller.current_user
-      assert !@user.verified
+      assert !@user.verified_at
       assert_redirected_to root_path
     end
 

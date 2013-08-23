@@ -113,6 +113,18 @@ class User < ActiveRecord::Base
     reservations.cancelled
   end
 
+  def rejected_reservations
+    reservations.rejected
+  end
+
+  def expired_reservations
+    reservations.expired
+  end
+
+  def confirmed_reservations
+    reservations.confirmed
+  end
+
   # Whether to validate the presence of a password
   def password_required?
     # We're changing/setting password, or new user and there are no Provider authentications
@@ -242,8 +254,8 @@ class User < ActiveRecord::Base
   end
 
   def verify_email_with_token(token)
-    if token.present? && self.email_verification_token == token && !self.verified
-      self.verified = true
+    if token.present? && self.email_verification_token == token && !self.verified_at
+      self.verified_at = Time.zone.now
       self.save(:validate => false)
       true
     else

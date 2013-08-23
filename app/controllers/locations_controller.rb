@@ -11,18 +11,12 @@ class LocationsController < ApplicationController
       flash[:warning] = "There aren't any listings at that location. Check out some other spaces!"
       redirect_to search_path 
     else
-      if params[:listing_id] 
-        # If listing_id given 
-        @listing = @location.listings.find(params[:listing_id]) if params[:listing_id]
-
-        # Attempt to restore a stored reservation state from the session.
-        restore_initial_bookings_from_stored_reservation
-    
-        event_tracker.viewed_a_location(@location, { logged_in: user_signed_in? }) 
+      if params[:listing_id]
+        redirect_to location_listing_path(@location, params[:listing_id])
       else
         # Redirect to location with first listing
-        redirect_to(url_for(params.merge(listing_id: @location.listings.first)))
-      end 
+        redirect_to location_listing_path(@location, @location.listings.first)
+      end
     end
   end
 

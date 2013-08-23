@@ -14,6 +14,12 @@ class ReservationsControllerTest < ActionController::TestCase
       @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|
         reservation == assigns(:reservation) && custom_options == { actor: 'guest' }
       end
+      @tracker.expects(:updated_profile_information).with do |user|
+        user == assigns(:reservation).owner
+      end
+      @tracker.expects(:updated_profile_information).with do |user|
+        user == assigns(:reservation).host
+      end
       post :user_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
       assert_redirected_to bookings_dashboard_path
     end
@@ -39,18 +45,46 @@ class ReservationsControllerTest < ActionController::TestCase
       get :export, :format => :ics, :listing_id => @reservation.listing.id, :id => @reservation.id
       assert_response :success
       assert_equal "text/calendar", response.content_type
-      expected_result = ["BEGIN:VCALENDAR", "VERSION:2.0", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
-                         "PRODID:iCalendar-Ruby", "BEGIN:VEVENT", "CREATED:100500", "DESCRIPTION:42 Wallaby Way - ICS Listing",
-                         "DTEND:20130701T170000", "DTSTART:20130701T090000", "CLASS:PUBLIC",
-                         "LAST-MODIFIED:100500", "LOCATION:42 Wallaby Way", "SEQUENCE:0", "SUMMARY:ICS Listing",
-                         "UID:http://example.com/reservations/1/export.ics", "URL:http://example.com/reservations/1/export.ics",
-                         "END:VEVENT", "BEGIN:VEVENT", "CREATED:100500", "DESCRIPTION:42 Wallaby Way - ICS Listing", "DTEND:20130702T170000",
-                         "DTSTART:20130702T090000", "CLASS:PUBLIC", "LAST-MODIFIED:100500", "LOCATION:42 Wallaby Way",
-                         "SEQUENCE:0", "SUMMARY:ICS Listing", "UID:http://example.com/reservations/1/export.ics", "URL:http://example.com/reservations/1/export.ics",
-                         "END:VEVENT", "BEGIN:VEVENT", "CREATED:100500", "DESCRIPTION:42 Wallaby Way - ICS Listing", "DTEND:20130703T170000",
-                         "DTSTART:20130703T090000", "CLASS:PUBLIC", "LAST-MODIFIED:100500", "LOCATION:42 Wallaby Way",
-                         "SEQUENCE:0", "SUMMARY:ICS Listing", "UID:http://example.com/reservations/1/export.ics", "URL:http://example.com/reservations/1/export.ics",
-                         "END:VEVENT", "END:VCALENDAR"]
+      expected_result = ["BEGIN:VCALENDAR",
+                         "PRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN",
+                         "CALSCALE:GREGORIAN",
+                         "VERSION:2.0",
+                         "X-WR-CALNAME::Desks Near Me",
+                         "X-WR-RELCALID::#{@reservation.owner.id}",
+                         "BEGIN:VEVENT",
+                         "CREATED;VALUE=DATE-TIME:20130628T100500Z",
+                         "DTEND;VALUE=DATE-TIME:20130701T170000",
+                         "DTSTART;VALUE=DATE-TIME:20130701T090000",
+                         "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
+                         "UID:#{@reservation.id}_2013-07-01",
+                         "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
+                         "URL:http://example.com/reservations/1/export.ics",
+                         "SUMMARY:ICS Listing",
+                         "LOCATION:42 Wallaby Way",
+                         "END:VEVENT",
+                         "BEGIN:VEVENT",
+                         "CREATED;VALUE=DATE-TIME:20130628T100500Z",
+                         "DTEND;VALUE=DATE-TIME:20130702T170000",
+                         "DTSTART;VALUE=DATE-TIME:20130702T090000",
+                         "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
+                         "UID:#{@reservation.id}_2013-07-02",
+                         "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
+                         "URL:http://example.com/reservations/1/export.ics",
+                         "SUMMARY:ICS Listing",
+                         "LOCATION:42 Wallaby Way",
+                         "END:VEVENT",
+                         "BEGIN:VEVENT",
+                         "CREATED;VALUE=DATE-TIME:20130628T100500Z",
+                         "DTEND;VALUE=DATE-TIME:20130703T170000",
+                         "DTSTART;VALUE=DATE-TIME:20130703T090000",
+                         "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
+                         "UID:#{@reservation.id}_2013-07-03",
+                         "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
+                         "URL:http://example.com/reservations/1/export.ics",
+                         "SUMMARY:ICS Listing",
+                         "LOCATION:42 Wallaby Way",
+                         "END:VEVENT",
+                         "END:VCALENDAR"]
       assert_equal expected_result, response.body.split("\r\n").reject { |el| el.include?('DTSTAMP') }
     end
 
