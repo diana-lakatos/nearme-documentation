@@ -229,10 +229,8 @@ class Listing < ActiveRecord::Base
   def first_available_date
     date = Date.tomorrow
 
-    unless hourly_reservations?
-      max_date = date + 31.days
-      date = date + 1.day until availability_for(date) > 0 || date==max_date
-    end
+    max_date = date + 31.days
+    date = date + 1.day until availability_for(date) > 0 || date==max_date
     date
   end
 

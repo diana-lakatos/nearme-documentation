@@ -6,8 +6,9 @@ class LocationsControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     sign_in @user
     @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
-    @location = FactoryGirl.create(:location_in_auckland) 
-    @company.locations << @location
+    @location = FactoryGirl.create(:location_in_auckland, :company => @company) 
+    @listing = FactoryGirl.create(:listing, :location => @location)
+    @second_listing = FactoryGirl.create(:listing, :location => @location)
     stub_mixpanel
   end
 
@@ -16,15 +17,16 @@ class LocationsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
-  should 'track location view' do
-    @listing = FactoryGirl.create(:listing)
-    @location.listings << @listing
-    @location.save!
-    @tracker.expects(:viewed_a_location).with do |location|
-      location == assigns(:location)
-    end
-    get :show, id: @location.id, listing_id: @listing
-    assert_response :success
+  should 'redirect legacy urls to current paths' do
+    get :show, id: @location.id, listing_id: @second_listing
+    assert_response :redirect
+    assert_redirected_to location_listing_path(@location, @second_listing)
+  end
+
+  should 'redirect to first listing if none provided' do
+    get :show, id: @location.id
+    assert_response :redirect
+    assert_redirected_to location_listing_path(@location, @listing)
   end
 
 end

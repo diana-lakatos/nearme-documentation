@@ -1,6 +1,6 @@
 BOOKING DETAILS --------
 
-<%= "Listing: '#{listing.name}' at #{listing.location.name} (#{location_url(listing.location)}).\r\n\r\n" -%>
+<%= "Listing: '#{listing.name}' at #{listing.location.name} (#{location_url(listing.location, :listing_id => listing)}).\r\n\r\n" -%>
 <%= "Guest instructions: #{listing.location.special_notes.strip}\r\n\r\n" if listing.location.special_notes && !listing.location.special_notes.strip.empty? -%>
 <%= "Quantity: #{reservation.quantity}\r\n\r\n" -%>
 <% if listing.hourly_reservations? -%>

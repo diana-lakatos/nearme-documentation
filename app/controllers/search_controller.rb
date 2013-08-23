@@ -6,6 +6,7 @@ class SearchController < ApplicationController
   SEARCH_RESULT_VIEWS = %w(list map)
 
   def index
+    @located = params[:lat] && params[:lng] ? true : false
     render "search/#{result_view}"
     if should_log_conducted_search?
       event_tracker.conducted_a_search(search, { search_query: query, result_view: result_view, result_count: result_count })

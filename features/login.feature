@@ -3,6 +3,9 @@ Feature: A user can login
   As a user
   I want to login
 
+  Background:
+    Given the instance exists
+
   Scenario: A user can login with Twitter
     Given the Twitter OAuth request is successful
     When I sign up with Twitter
