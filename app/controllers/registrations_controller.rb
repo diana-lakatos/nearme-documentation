@@ -31,7 +31,10 @@ class RegistrationsController < Devise::RegistrationsController
     # Clear out temporarily stored Provider authentication data if present
     session[:omniauth] = nil unless @user.new_record?
     flash[:redirected_from_sign_up] = true
-    AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(current_instance, @user.id) unless @user.new_record?
+    if @user.persisted?
+      AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(current_instance, @user.id)
+      UserMailer.email_verification(current_instance, @user).deliver
+    end
     @resource = resource
   end
 
@@ -78,9 +81,9 @@ class RegistrationsController < Devise::RegistrationsController
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
       flash[:success] = "Thanks - your email address has been verified!"
-      redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path(@user)
+      redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path
     else
-      if @user.verified
+      if @user.verified_at
         flash[:warning] = "The email address has been already verified"
       else
         flash[:error] = "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
