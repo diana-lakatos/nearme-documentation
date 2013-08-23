@@ -26,11 +26,8 @@ class SpaceWizardController < ApplicationController
 
   def submit_listing
     @user.phone_required = true
+    params[:user][:companies_attributes]["0"][:current_instance_id] = current_instance.id.to_s
     @user.attributes = params[:user]
-
-    @company ||= @user.companies.build
-    @company.attributes = params[:company]
-    @company.instance = current_instance
 
     if @user.save
       @location = @user.locations.first
