@@ -1,3 +1,6 @@
+require Rails.root.join 'test/helpers/stub_helper'
+include StubHelper
+
 Given /^I am (host|guest) of a past reservation$/ do |kind|
   @reservation = create_model('past_reservation')
   @user = if kind == 'guest'
@@ -9,10 +12,10 @@ Given /^I am (host|guest) of a past reservation$/ do |kind|
 end
 
 Given(/^I receive an email request for (host|guest) rating$/) do |kind|
-  time = mock()
-  time.expects(:hour).returns(12)
-  Location.any_instance.stubs(:local_time).returns(time)
+  stub_local_time_to_return_hour(Location.any_instance, 12)
+
   RatingReminderJob.new(Date.today.to_s).perform
+
   assert_equal 2, ActionMailer::Base.deliveries.size
   @request_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@user.email] }
   assert_match /\[DesksNearMe\] Rate your #{kind} at Listing \d+/, @request_email.subject

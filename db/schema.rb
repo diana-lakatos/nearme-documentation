@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130821140722) do
+ActiveRecord::Schema.define(:version => 20130823113647) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -352,6 +352,8 @@ ActiveRecord::Schema.define(:version => 20130821140722) do
     t.integer  "quantity",                 :default => 1,         :null => false
     t.integer  "service_fee_amount_cents"
     t.string   "rejection_reason"
+    t.datetime "request_guest_rating_email_sent_at"
+    t.datetime "request_host_rating_email_sent_at"
   end
 
   create_table "sessions", :force => true do |t|
