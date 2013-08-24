@@ -100,7 +100,6 @@ class ReservationTest < ActiveSupport::TestCase
     should 'not be cancelable if owner canceled' do
         @reservation.confirm!
         @reservation.host_cancel!
-        Rails.logger.debug @reservation.state
         assert !@reservation.cancelable
     end
 

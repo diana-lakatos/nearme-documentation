@@ -1,0 +1,26 @@
+- if GOOGLE_ANALYTICS_SETTINGS[:tracking_code].present?
+  :javascript
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    // in the feature there will be userId, so we will use mixpanel's ananymous_id approach. We should not overwrite clientId now - it is for tracking devices, not users 
+    // see https://developers.google.com/analytics/devguides/collection/analyticsjs/
+    ga('create', "#{GOOGLE_ANALYTICS_SETTINGS[:tracking_code]}");
+    ga('send', 'pageview');
+
+  // we want to track events like sign up etc. We could just insert new input with name 'google_analytics_id' to every form
+  // however there could be some difficulties with omni_auth sign up. So I decided to use this approach instead. Also, we need to access
+  // google_analytics_id in Reservation.model, and soon we will need it in a backgrond process, so if we can - we persist it in the db
+
+  :javascript
+    $(document).ready(function() {
+      // we want to update google_analytics_id ASAP for existing users
+      ga(function(tracker) {
+        // we don't need to make this call if it won't change anything.
+        if("#{current_user.try(:google_analytics_id) ? current_user.google_analytics_id : cookies.signed[:google_analytics_id]}" != tracker.get('clientId')){
+          $.post("#{store_google_analytics_url}", { id: tracker.get('clientId') });
+        } 
+      });
+    });

@@ -1,0 +1,19 @@
+production:
+  endpoint: "http://www.google-analytics.com/collect"
+  version: 1
+  tracking_code: UA-19145250-4
+  website: desksnear.me
+  options: {}
+staging:
+  endpoint: "http://www.google-analytics.com/collect"
+  version: 1
+  tracking_code: UA-19145250-2
+  website: staging-uswest2.desksnear.me
+  options: {}
+development:
+  endpoint: "http://www.google-analytics.com/collect"
+  version: 1
+  tracking_code: UA-19145250-3
+  # edit /etc/hosts ? : )
+  website: development-desksnearme.com
+  options: {}
