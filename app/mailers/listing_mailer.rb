@@ -1,7 +1,7 @@
 class ListingMailer < DesksNearMeMailer
 
   def share(instance, listing, email, name, sharer, message=nil)
-    @instance, @listing, @email, @name, @sharer, @message = instance, listing, email, name, sharer, message
+    @instance, @listing, @email, @name, @sharer, @message = instance, listing.reload, email, name, sharer, message
     mail :to => "#{name} <#{email}>", :reply_to => "#{sharer.name} <#{sharer.email}>",
       :subject => "#{sharer.name} has shared a listing with you on Desks Near Me"
   end

@@ -1,14 +1,14 @@
 %article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
   .row-fluid
     .span4.nested.photo-container
-      = link_to listing do
+      = link_to location_listing_path(listing.location, listing) do
         - if photo = listing.photos.ready.first
           = image_tag photo.url(:space_listing), :title => listing.name, :alt => listing.name
         - else
           = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
     .span8.nested.details-container
       %h2
-        = link_to "#{listing.name}", listing 
+        = link_to "#{listing.name}", location_listing_path(listing.location, listing)
       %h4.hidden-iphone.location-hours
         %span
           = pretty_availability_sentence(listing.availability)

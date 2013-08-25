@@ -187,5 +187,21 @@ class ListingTest < ActiveSupport::TestCase
       # the soonest day should be the one with at least one seat free
       assert_equal tuesday+2.day, @listing.first_available_date
     end
+
+    should "return wednesday for monday if hourly reservation and custom availability template" do
+      @listing.hourly_reservations = true
+      @listing.hourly_price_cents = 5000
+      @listing.availability_template_id = nil
+
+      @listing.availability_rules.destroy_all
+      @listing.save!
+
+      @listing.availability_rules.create!({:day => 3, :open_hour => 9, :close_hour => 16, :open_minute => 0, :close_minute => 0})
+
+      monday = Time.zone.today.sunday + 1
+      Timecop.freeze(monday.beginning_of_day)
+
+      assert_equal monday+2.day, @listing.first_available_date
+    end
   end
 end

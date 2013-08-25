@@ -36,7 +36,7 @@
               = reservation.listing.hourly_reservations? ? hourly_summary_for_period(reservation.periods.first) : selected_dates_summary(reservation)
             .add-calendar
               = link_to export_reservation_path(reservation, :format => :ics), :class => 'ico-calender' do
-                %span Add to calendar
+                %span Add to iCal
             %h2 Total
             %div
             = reservation_total_price(reservation)

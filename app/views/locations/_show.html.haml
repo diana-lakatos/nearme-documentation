@@ -1,0 +1,58 @@
+- title @location.name
+
+- content_for :hero do
+  .container-fluid
+    %h1
+      #{@location.name}
+
+      - if @location.url.present?
+        = link_to @location.url, :target => :_blank do
+          %div.ico-open-link
+
+%h2 More about the location
+
+%ul.nav.nav-tabs#location-tabs
+  %li.active
+    %a{:href=>"#photos",  'data-toggle' => "tab"}
+      Photos & Map
+  %li
+    %a{:href=>"#details",  'data-toggle' => "tab"}
+      Info
+
+.tab-content
+  .tab-pane.active#photos
+    = render 'locations/photos'
+  .tab-pane#details
+    = render 'locations/info'
+
+%article#space
+
+  .clearfix
+    .row-fluid.padding-row
+      - if (selected_listing_siblings(@location, @listing)).count > 0
+        .span12
+          %section.bookings.quick-book
+            .listings
+              %h2{:class => 'other-listing-separator'}
+                #{pluralize((selected_listing_siblings(@location, @listing)).count, ' other listing')} at this location
+
+              = render :partial => 'locations/listing', :collection => (selected_listing_siblings(@location, @listing))
+
+
+- content_for :script do
+  :javascript
+    // Initialize the ui controller
+    $(function() {
+      new Space.Controller(
+        $('article.space, article#space'),
+        {
+          bookings: {
+            listings: #{raw location_listings_json},
+
+            // Have we returned from setting up a session. If there are bookings, the JS controller
+            // will trigger showing the booking confirmation modal.
+            returnedFromSession: #{@initial_bookings.present? ? 'true' : 'false'}
+          }
+        });
+      });
+

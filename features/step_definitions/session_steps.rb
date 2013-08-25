@@ -60,3 +60,7 @@ Then /^a user is taken into sign in modal without page reload$/ do
   page.first('h2').text.should match("Log in to Desks Near Me")
   page.first('h2').text.should_not match("Sign up to Desks Near Me")
 end
+
+Then /^I should get verification email$/ do
+  last_email_for(User.last.email).subject.should include "Email verification"
+end

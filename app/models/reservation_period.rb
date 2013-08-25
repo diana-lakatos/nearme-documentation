@@ -8,8 +8,6 @@ class ReservationPeriod < ActiveRecord::Base
 
   delegate :listing, :to => :reservation
 
-  include IcalendarEvent
-
   # Returns the number of hours reserved on this date.
   # If no hourly time specified, it is assumed that the reservation is for all open
   # hours of that booking.
