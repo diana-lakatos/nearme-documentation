@@ -1,4 +1,4 @@
-Your request to book '<%= @listing.name %>' at <%= link_to(@listing.location.name, location_url(@listing.location)) %> has been sent to the host.
+Your request to book '<%= @listing.name %>' at <%= link_to(@listing.location.name, location_url(@listing.location, :listing_id => @listing)) %> has been sent to the host.
 
 Bookings at this workspace require confirmation. Hosts have 24 hours to confirm, but most reply sooner.
 

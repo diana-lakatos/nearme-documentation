@@ -28,7 +28,7 @@ class @PhotoUploader
     @listenToDeletePhoto()
     @initializeFileUploader()
     @initializeSortable()
-    __insp.push(['tagSession', "first_listing_form_visit"]);
+    __insp.push(['tagSession', "first_listing_form_visit"])
 
   listenToDeletePhoto: ->
     self = this
@@ -36,9 +36,9 @@ class @PhotoUploader
       url = $(this).attr("data-url")
       link = $(this)
       if confirm("Are you sure you want to delete this Photo?")
-        $.post link.attr("data-url"), { _method: 'delete' }, ->
+        $.post link.attr("data-url"), { _method: 'delete' }, =>
           link.closest(".photo-item").remove()
-          if @multiplePhoto()
+          if self.multiplePhoto()
             self.reorderSortableList()
       return false
 
@@ -78,14 +78,15 @@ class @PhotoUploader
     }
 
     @fileInput.on 'click', ->
-      __insp.push(['tagSession', "photo_upload_clicked"]);
+      __insp.push(['tagSession', "photo_upload_clicked"])
 
   initializeSortable: ->
     @sortable.sortable
       stop: =>
         @reorderSortableList()
-      placeholder: 'photo-placeholder',
-    @sortable.disableSelection()
+      placeholder: 'photo-placeholder'
+      cancel: 'input'
+    @sortable.find('*').not('input').disableSelection()
 
   progress: (data) =>
     progress = parseInt(data.loaded / data.total * 100, 10)
@@ -119,10 +120,6 @@ class @PhotoUploader
     data.context.append(cropLink)
     if @multiplePhoto()
       data.context.append($('<span>').addClass('photo-position badge badge-inverse').text(@getLastPosition()))
-      hidden = $('<input type="hidden">')
-      hidden_position = hidden.clone().attr('name', "#{name_prefix}[position]").val(@getLastPosition()).addClass('photo-position-input')
-      data.context.attr('id', "photo-#{data.result.id}")
-      data.context.append(hidden_position)
       template_input = @container.find('#photo-item-input-template')
       input = $("<input type='text'>").attr('name', template_input.attr('name')).attr('placeholder', template_input.attr('placeholder')).attr('data-number', template_input.attr('data-number'))
       last_input = @container.find('input[data-number]').eq(-1)
@@ -131,6 +128,10 @@ class @PhotoUploader
       name_prefix = input.attr('name') + '[' + data_number + ']'
       input.attr('name', name_prefix + '[caption]')
       data.context.append(input)
+      hidden = $('<input type="hidden">')
+      hidden_position = hidden.clone().attr('name', "#{name_prefix}[position]").val(@getLastPosition()).addClass('photo-position-input')
+      data.context.attr('id', "photo-#{data.result.id}")
+      data.context.append(hidden_position)
       hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(data.result.id)
       data.context.append(hidden_id)
 

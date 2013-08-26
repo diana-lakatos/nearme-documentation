@@ -103,7 +103,7 @@ class MailchimpTest < ActiveSupport::TestCase
       all_users.each { |u| u.mailchimp_synchronized! }
       Timecop.travel(Time.zone.now+10.seconds)
     
-      @user_without_listing.verified = true
+      @user_without_listing.verified_at = Time.zone.now
       @user_without_listing.save!
       VCR.use_cassette('mailchimp_update_verify_flag') do
         # in this request we test if MODVERIFY flag was updated

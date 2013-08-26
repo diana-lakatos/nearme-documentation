@@ -66,7 +66,7 @@ module Listings
       unless current_user
         # Persist the reservation request so that when we return it will be restored.
         store_reservation_request
-        redirect_to new_user_registration_path(:return_to => location_url(listing.location, :restore_reservations => true))
+        redirect_to new_user_registration_path(:return_to => location_listing_url(listing.location, listing, :restore_reservations => true))
       end
     end
 

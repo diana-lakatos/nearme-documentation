@@ -35,12 +35,30 @@ class ReservationsController < ApplicationController
     @reservation = current_user.reservations.find(params[:id])
     respond_to do |format|
       format.ics do
-        calendar = Icalendar::Calendar.new
-        @reservation.periods.each do |period|
-          calendar.add_event(period.to_ics)
+
+        calendar = RiCal.Calendar do |cal|
+          cal.add_x_property 'X-WR-CALNAME', 'Desks Near Me' 
+          cal.add_x_property 'X-WR-RELCALID', "#{current_user.id}"
+          @reservation.periods.each do |period|
+            cal.event do |event|
+              event.description = @reservation.listing.description
+              event.summary = @reservation.listing.name
+              event.uid = "#{@reservation.id}_#{period.date.to_s}"
+              hour = period.start_minute/60.floor
+              minute = period.start_minute - (hour * 60)
+              event.dtstart = period.date.strftime("%Y%m%dT") + "#{"%02d" % hour}#{"%02d" % minute}00"
+              hour = period.end_minute/60.floor
+              minute = period.end_minute - (hour * 60)
+              event.dtend = period.date.strftime("%Y%m%dT") + "#{"%02d" % hour}#{"%02d" % minute}00"
+              event.created = @reservation.created_at
+              event.last_modified = @reservation.updated_at
+              event.location = @reservation.listing.address
+              event.url = Rails.application.routes.url_helpers.reservation_url(@reservation)
+            end
+          end
         end
-        calendar.publish
-        render :text => calendar.to_ical
+        
+        render :text => calendar.to_s.gsub("\n", "\r\n")
       end
     end
   end

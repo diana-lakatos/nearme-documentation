@@ -11,18 +11,22 @@
     = render partial: 'search/list/listing', collection: listings
     = will_paginate listings
     = yield :loading
+- elsif !@located
+  %section#results.no_results
+    = yield :loading
+    .text-center
+      %br/
+      %br/
+      %h1.tk-adelle.fat Searching...
 - else
   %section#results.no_results
     = yield :loading
-    .span3
-      = image_tag "marker_missing.png"
-    .span9
+    .text-center
       %br/
       %br/
       %h1.tk-adelle.fat No results found
       %p Try a different location or a post code. Make sure the location is properly formatted and include the city and state.
-      %p
-        Still cant find what your looking for? Why not #{link_to "create your own #{current_instance.bookable_noun}", new_space_wizard_path}!
+      %p Still cant find what your looking for? Why not #{link_to "create your own #{current_instance.bookable_noun}", new_space_wizard_path}!
 
 - content_for :domready do
   new Search.SearchController($('#listing_search form'), $("section#content.search"))

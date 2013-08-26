@@ -8,6 +8,6 @@ class IssueLogger
   end
 
   def self.in_debug_mode?
-    !(Rails.env.staging? || Rails.env.production?)
+    !Rails.env.production?
   end
 end
