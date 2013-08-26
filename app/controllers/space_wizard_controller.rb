@@ -35,20 +35,15 @@ class SpaceWizardController < ApplicationController
       @user.save(:validate => false)
       flash[:success] = 'Your draft has been saved!'
       redirect_to :list
+    elsif @user.save
+      track_new_space_event
+      flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
+      redirect_to manage_locations_path
     else
-      if @user.save
-        track_new_space_event
-        flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
-        redirect_to manage_locations_path
-      else
-        @photos = @user.first_listing ? @user.first_listing.photos : nil
-        flash[:error] = 'Please complete all fields! Alternatively, you can Save a Draft for later.'
-        render :list
-      end
+      @photos = @user.first_listing ? @user.first_listing.photos : nil
+      flash[:error] = 'Please complete all fields! Alternatively, you can Save a Draft for later.'
+      render :list
     end
-
-
-
   end
 
   def submit_photo
