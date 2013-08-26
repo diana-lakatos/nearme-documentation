@@ -51,6 +51,7 @@ gem 'ey_config'
 gem 'unicorn'
 gem 'chameleon'
 
+gem 'useragent'
 gem 'mixpanel'
 
 gem 'rest-client'

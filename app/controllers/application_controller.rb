@@ -11,7 +11,6 @@ class ApplicationController < ActionController::Base
   before_filter :first_time_visited?
   before_filter :store_referal_info
 
-
   protected
 
   # Returns the layout to use for the current request.
@@ -91,8 +90,23 @@ class ApplicationController < ActionController::Base
   end
 
   def analytics_apply_user(user, with_alias = true)
+    store_user_browser_details(user)
     mixpanel.apply_user(user, :alias => with_alias)
     google_analytics.apply_user(user)
+  end
+
+  def store_user_browser_details(user)
+    if user
+      user_agent = UserAgent.parse(request.user_agent)
+      if user_agent
+        user.browser = user_agent.browser if user_agent.browser
+        user.browser_version = user_agent.version.to_s if user_agent.version
+        user.platform = user_agent.platform if user_agent.platform
+        user.save! if user.changed?
+      end
+    end
+  rescue Exception => ex
+    Rails.logger.error "Storing user #{user.try(:id)} browser details #{user_agent} failed: #{ex}"
   end
 
   def current_user=(user)

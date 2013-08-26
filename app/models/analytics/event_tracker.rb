@@ -130,7 +130,10 @@ class Analytics::EventTracker
         bookings_rejected: object.rejected_reservations.count,
         bookings_expired: object.expired_reservations.count,
         bookings_cancelled: object.cancelled_reservations.count,
-        google_analytics_id: object.google_analytics_id
+        google_analytics_id: object.google_analytics_id,
+        browser: object.browser,
+        browser_version: object.browser_version,
+        platform: object.platform,
       }
     when Listing::Search::Params::Web
       {
