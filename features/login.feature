@@ -115,6 +115,10 @@ Feature: A user can login
      Then I am correctly signed in
       And I should see an indication I've just signed in
 
+  Scenario: A newly signed up user should get verification email 
+     When I manually sign up with valid credentials
+     Then I should get verification email
+
   Scenario: A user is not signed up if tries to sign up with existing email
     Given a user exists with email: "user@example.com"
     When an anonymous user attempts to sign up with email user@example.com
