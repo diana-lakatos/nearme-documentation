@@ -14,6 +14,7 @@ class GuestRatingsController < ApplicationController
     @rating.subject = @reservation.owner
     @rating.author = current_user
     if @rating.save
+      event_tracker.submitted_a_rating(current_user, { positive: @rating.positive? })
       flash[:notice] = 'Rating was successfully stored. Thank you for sharing!'
       redirect_to root_path
     else

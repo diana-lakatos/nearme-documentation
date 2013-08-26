@@ -23,6 +23,13 @@ module Rating
     validates_presence_of :value, message: "You must vote for thumbs up or thumbs down."
     validates_numericality_of :value, greater_than_or_equal_to: 0, less_than_or_equal_to: 1
 
+    scope :positive, where(value: 1)
+    scope :negative, where(value: 0)
+
+    def positive?
+      self.value == 1
+    end
+
     private
     def update_cache_for_subject
       scope = self.class.where(subject_id: subject_id)

@@ -121,7 +121,11 @@ class Analytics::EventTracker
         bookings_confirmed: object.confirmed_reservations.count,
         bookings_rejected: object.rejected_reservations.count,
         bookings_expired: object.expired_reservations.count,
-        bookings_cancelled: object.cancelled_reservations.count
+        bookings_cancelled: object.cancelled_reservations.count,
+        positive_host_ratings_count: object.host_ratings.positive.count,
+        negative_host_ratings_count: object.host_ratings.negative.count,
+        positive_guest_ratings_count: object.guest_ratings.positive.count,
+        negative_guest_ratings_count: object.guest_ratings.negative.count
       }
     when Listing::Search::Params::Web
       {
