@@ -59,9 +59,9 @@ class Listing < ActiveRecord::Base
   delegate :service_fee_percent, to: :location, allow_nil: true
   delegate :to_s, to: :name
 
-  attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description, :draft,
+  attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description,
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
-    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type, :updated_at
+    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type, :draft
 
   attr_accessor :distance_from_search_query, :photo_not_required
 

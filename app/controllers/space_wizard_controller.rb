@@ -102,8 +102,10 @@ class SpaceWizardController < ApplicationController
   end
 
   def track_new_space_event
-    event_tracker.created_a_location(@user.locations.first , { via: 'wizard' })
-    event_tracker.created_a_listing(@user.listings.first, { via: 'wizard' })
+    @location = @user.locations.first
+    @listing = @user.listings.first
+    event_tracker.created_a_location(@location , { via: 'wizard' })
+    event_tracker.created_a_listing(@listing, { via: 'wizard' })
     event_tracker.updated_profile_information(@user)
   end
 
