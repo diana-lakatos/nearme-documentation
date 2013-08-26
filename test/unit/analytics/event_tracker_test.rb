@@ -204,7 +204,11 @@ class EventTrackerTest < ActiveSupport::TestCase
       bookings_confirmed: @user.confirmed_reservations.count,
       bookings_rejected: @user.rejected_reservations.count,
       bookings_expired: @user.expired_reservations.count,
-      bookings_cancelled: @user.cancelled_reservations.count
+      bookings_cancelled: @user.cancelled_reservations.count,
+      positive_host_ratings_count: @user.host_ratings.positive.count,
+      negative_host_ratings_count: @user.host_ratings.negative.count,
+      positive_guest_ratings_count: @user.guest_ratings.positive.count,
+      negative_guest_ratings_count: @user.guest_ratings.negative.count
     }
   end
 
