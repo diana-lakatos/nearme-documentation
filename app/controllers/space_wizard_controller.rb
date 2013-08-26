@@ -1,6 +1,6 @@
 class SpaceWizardController < ApplicationController
 
-  before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
+  # before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :find_user, :except => [:new]
   before_filter :find_company, :except => [:new, :submit_listing]
   before_filter :find_location, :except => [:new, :submit_listing]
@@ -21,7 +21,8 @@ class SpaceWizardController < ApplicationController
     @location ||= @company.locations.build
     @listing ||= @location.listings.build
     @country =  @user.country_name.present? ? @user.country_name : (request.location ? request.location.country : nil)
-    @photos = @user.first_listing ? @user.first_listing.photos : nil
+    @photos = @user.photos || nil
+    binding.pry
     event_tracker.viewed_list_your_bookable
   end
 
@@ -53,6 +54,7 @@ class SpaceWizardController < ApplicationController
         flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
         redirect_to manage_locations_path
       else
+        @photos = @user.first_listing ? @user.first_listing.photos : nil
         flash[:error] = 'Please complete all fields! Alternatively, you can Save a Draft for later.'
         render :list
       end
