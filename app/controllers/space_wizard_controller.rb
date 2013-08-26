@@ -20,21 +20,16 @@ class SpaceWizardController < ApplicationController
     @company ||= @user.companies.build
     @location ||= @company.locations.build
     @listing ||= @location.listings.build
-    @country =  @user.country_name.present? ? @user.country_name : (request.location ? request.location.country : nil)
-    @photos = @user.photos || nil
+    @country =  get_user_country
+    @photos = @user.photos.where("content_type = 'Listing'") || nil
     event_tracker.viewed_list_your_bookable
   end
 
   def submit_listing
     @user.phone_required = true
-    begin
-      params[:user][:companies_attributes]["0"][:instance_id] = current_instance.id.to_s
-      params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:draft] = params[:save_as_draft] ? Time.zone.now : nil
-    rescue
-      nil
-    end
+    params[:user][:companies_attributes]["0"][:instance_id] = current_instance.id.to_s
+    set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.attributes = params[:user]
-
     if params[:save_as_draft]
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.save(:validate => false)
@@ -107,6 +102,18 @@ class SpaceWizardController < ApplicationController
     event_tracker.created_a_location(@location , { via: 'wizard' })
     event_tracker.created_a_listing(@listing, { via: 'wizard' })
     event_tracker.updated_profile_information(@user)
+  end
+
+  def set_listing_draft_timestamp(timestamp)
+    begin
+      params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:draft] = timestamp
+    rescue
+      nil
+    end
+  end
+
+  def get_user_country
+    @user.country_name.present? ? @user.country_name : (request.location ? request.location.country : nil)
   end
 
 end
