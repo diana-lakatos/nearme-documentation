@@ -43,6 +43,6 @@
 - if !user_signed_in?
   = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => "btn btn-blue btn-medium ico-add-location" do
     %span.padding-left List Your #{current_instance.bookable_noun}
-- elsif current_user.companies.empty?
+- elsif current_user.listings.empty?
   = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location" do
     %span.padding-left List Your #{current_instance.bookable_noun}

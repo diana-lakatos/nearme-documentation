@@ -1,6 +1,6 @@
 class SpaceWizardController < ApplicationController
 
-  # before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
+  before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :find_user, :except => [:new]
   before_filter :find_company, :except => [:new, :submit_listing]
   before_filter :find_location, :except => [:new, :submit_listing]
@@ -22,7 +22,6 @@ class SpaceWizardController < ApplicationController
     @listing ||= @location.listings.build
     @country =  @user.country_name.present? ? @user.country_name : (request.location ? request.location.country : nil)
     @photos = @user.photos || nil
-    binding.pry
     event_tracker.viewed_list_your_bookable
   end
 
@@ -30,27 +29,20 @@ class SpaceWizardController < ApplicationController
     @user.phone_required = true
     begin
       params[:user][:companies_attributes]["0"][:instance_id] = current_instance.id.to_s
-      # 'Touch' the deepest nested model so all validations are run.
-      params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:updated_at] = Time.zone.now
+      params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:draft] = params[:save_as_draft] ? Time.zone.now : nil
     rescue
       nil
     end
     @user.attributes = params[:user]
 
     if params[:save_as_draft]
-      # Send .valid? message to object to trigger callbacks
-      @user.valid?
+      @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.save(:validate => false)
       flash[:success] = 'Your draft has been saved!'
       redirect_to :list
     else
       if @user.save
-        @location = @user.locations.first
-        @listing = @user.listings.first
-        event_tracker.created_a_location(@location , { via: 'wizard' })
-        event_tracker.created_a_listing(@listing, { via: 'wizard' })
-
-        event_tracker.updated_profile_information(@user)
+        track_new_space_event
         flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
         redirect_to manage_locations_path
       else
@@ -107,6 +99,12 @@ class SpaceWizardController < ApplicationController
 
   def redirect_to_dashboard_if_user_has_listings
     redirect_to manage_locations_path if current_user && current_user.listings.any?
+  end
+
+  def track_new_space_event
+    event_tracker.created_a_location(@user.locations.first , { via: 'wizard' })
+    event_tracker.created_a_listing(@user.listings.first, { via: 'wizard' })
+    event_tracker.updated_profile_information(@user)
   end
 
 end
