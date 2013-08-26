@@ -4,13 +4,10 @@ class @RatingForm
     @bindEvents()
 
   bindEvents: ->
-    $('.thumbs img').click (event) =>
+    $('.arrows span').click (event) =>
       event.preventDefault()
-      $clicked_thumb = $(event.target)
-      $container = $clicked_thumb.closest('.thumbs')
-      $thumbs = $container.find('img')
-      $hidden_field = $container.find('input[type=hidden]')
+      $clicked_arrow = $(event.target)
+      $hidden_field = $clicked_arrow.parent().find('input[type=hidden]')
 
-      $hidden_field.val($clicked_thumb.data('value'))
-      $thumbs.removeClass('active').addClass('inactive')
-      $clicked_thumb.removeClass('inactive').addClass('active')
+      $hidden_field.val($clicked_arrow.data('value'))
+      $hidden_field.closest('form').submit()

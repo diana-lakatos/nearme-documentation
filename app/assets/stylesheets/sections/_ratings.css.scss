@@ -1,18 +1,36 @@
 section.host_ratings, section.guest_ratings {
-  .errors {
-    padding-left: 20px;
+  .ratings {
+    overflow: hidden;
   }
 
-  .thumbs {
-    margin: 15px 0 0 50px;
+  .errors {
+    p {
+      margin: 10px 0;
+    }
+  }
 
-    img {
+  .arrows {
+    margin: 5px 0 0 10px;
+
+    span {
       cursor: pointer;
-      margin: 10px 10px 10px 10px;
+      font-size: 3.6em;
+      float: left;
+      clear:left;
 
-      &.inactive {
-        width: 20px;
+      &.ico-arrow-up {
+        margin-bottom: 10px;
+        color: $dnm_green;
+      }
+      &.ico-arrow-down {
+        color: $dnm_red;
       }
     }
   }
+
+  textarea {
+    height: 150px;
+    width: 400px;
+  }
+
 }

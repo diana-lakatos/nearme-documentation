@@ -1,10 +1,10 @@
-- title "Rate booking at #{@reservation.listing.name}"
+- title "Rate your Experience"
 
 .row-fluid
   .span8.offset2
     %h1
-      %span.ico-edit.padding Rate booking at #{@reservation.listing.name}
-    .box
+      %span.ico-edit.padding Rate your Experience
+    .box.ratings
       = render :partial => "ratings/form"
     .box
       %section.reservations

@@ -23,9 +23,8 @@ end
 
 When(/^I submit a (host|guest) rating with thumb up and a comment$/) do |kind|
   visit "/reservations/#{@reservation.id}/#{kind}_ratings/new"
-  find('#thumbs-up').click
-  fill_in 'Comment', with: Faker::Lorem.sentence
-  click_button('Submit rating')
+  fill_in "#{kind}_rating_comment", with: Faker::Lorem.sentence
+  find('.arrows .ico-arrow-up').click
 end
 
 Then(/^I should be redirected to mainpage$/) do
