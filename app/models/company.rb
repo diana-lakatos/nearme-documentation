@@ -4,7 +4,7 @@ class Company < ActiveRecord::Base
 
   attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email, :industry_ids, :locations_attributes, :instance_id
 
-  belongs_to :creator, class_name: "User"
+  belongs_to :creator, class_name: "User", inverse_of: :companies
   belongs_to :instance
 
   has_many :locations,

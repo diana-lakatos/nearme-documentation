@@ -61,7 +61,7 @@ class Listing < ActiveRecord::Base
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description, 
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
-    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type
+    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type, :updated_at
 
   attr_accessor :distance_from_search_query, :photo_not_required
 

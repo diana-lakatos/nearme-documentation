@@ -1,10 +1,10 @@
 class SpaceWizardController < ApplicationController
 
-  before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
+  # before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :find_user, :except => [:new]
-  before_filter :find_company, :except => [:new]
-  before_filter :find_location, :except => [:new]
-  before_filter :find_listing, :except => [:new]
+  before_filter :find_company, :except => [:new, :submit_listing]
+  before_filter :find_location, :except => [:new, :submit_listing]
+  before_filter :find_listing, :except => [:new, :submit_listing]
 
   def new
     flash.keep(:warning)
@@ -21,27 +21,40 @@ class SpaceWizardController < ApplicationController
     @location ||= @company.locations.build
     @listing ||= @location.listings.build
     @country =  @user.country_name.present? ? @user.country_name : (request.location ? request.location.country : nil)
+    @photos = @user.first_listing ? @user.first_listing.photos : nil
     event_tracker.viewed_list_your_bookable
   end
 
   def submit_listing
     @user.phone_required = true
     params[:user][:companies_attributes]["0"][:instance_id] = current_instance.id.to_s
+    # The next line is a hack to make sure everything through the deepest nested model is validated.
+    params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:updated_at] = Time.zone.now
     @user.attributes = params[:user]
 
-    if @user.save
-      @location = @user.locations.first
-      @listing = @user.listings.first
-      event_tracker.created_a_location(@location , { via: 'wizard' })
-      event_tracker.created_a_listing(@listing, { via: 'wizard' })
+    binding.pry
 
-      event_tracker.updated_profile_information(@user)
-      flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
-      redirect_to manage_locations_path
+    if params[:save_as_draft]
+      @user.save(:validate => false)
+      flash[:success] = 'Your draft has been saved!'
+      redirect_to :list
     else
-      @photos = @user.first_listing ? @user.first_listing.photos : nil
-      render :list
+      if @user.save
+        @location = @user.locations.first
+        @listing = @user.listings.first
+        event_tracker.created_a_location(@location , { via: 'wizard' })
+        event_tracker.created_a_listing(@listing, { via: 'wizard' })
+
+        event_tracker.updated_profile_information(@user)
+        flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
+        redirect_to manage_locations_path
+      else
+        flash[:error] = 'Please complete all fields! Alternatively, you can Save a Draft for later.'
+        render :list
+      end
     end
+
+
 
   end
 
