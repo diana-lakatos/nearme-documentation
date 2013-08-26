@@ -1,6 +1,6 @@
 class SpaceWizardController < ApplicationController
 
-  # before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
+  before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :find_user, :except => [:new]
   before_filter :find_company, :except => [:new, :submit_listing]
   before_filter :find_location, :except => [:new, :submit_listing]
@@ -27,14 +27,18 @@ class SpaceWizardController < ApplicationController
 
   def submit_listing
     @user.phone_required = true
-    params[:user][:companies_attributes]["0"][:instance_id] = current_instance.id.to_s
-    # The next line is a hack to make sure everything through the deepest nested model is validated.
-    params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:updated_at] = Time.zone.now
+    begin
+      params[:user][:companies_attributes]["0"][:instance_id] = current_instance.id.to_s
+      # 'Touch' the deepest nested model so all validations are run.
+      params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:updated_at] = Time.zone.now
+    rescue
+      nil
+    end
     @user.attributes = params[:user]
 
-    binding.pry
-
     if params[:save_as_draft]
+      # Send .valid? message to object to trigger callbacks
+      @user.valid?
       @user.save(:validate => false)
       flash[:success] = 'Your draft has been saved!'
       redirect_to :list
