@@ -81,7 +81,7 @@ window.DNM = {
   },
 
   initializeCustomSelects: function(){
-    $('select:not(.custom-select)').customSelect();
+    $('select').not('.time-wrapper select, .custom-select').customSelect();
     $('.customSelect').append('<i class="custom-select-dropdown-icon"></i>').closest('.controls').css({'position': 'relative'});
     $('.customSelect').siblings('select').css({'margin': '0px', 'z-index': 1 });
 
