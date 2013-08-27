@@ -220,7 +220,10 @@ class EventTrackerTest < ActiveSupport::TestCase
       bookings_rejected: @user.rejected_reservations.count,
       bookings_expired: @user.expired_reservations.count,
       bookings_cancelled: @user.cancelled_reservations.count,
-      google_analytics_id: @user.google_analytics_id
+      google_analytics_id: @user.google_analytics_id,
+      browser: @user.browser,
+      browser_version: @user.browser_version,
+      platform: @user.platform
     }
   end
 

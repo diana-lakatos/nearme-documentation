@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130826132337) do
+ActiveRecord::Schema.define(:version => 20130826134842) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -418,6 +418,9 @@ ActiveRecord::Schema.define(:version => 20130826132337) do
     t.string   "campaign"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
+    t.string   "browser"
+    t.string   "browser_version"
+    t.string   "platform"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
