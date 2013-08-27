@@ -12,6 +12,8 @@
   - if current_user
     :javascript
       mixpanel.name_tag(#{raw current_user.name.to_json});
-      mixpanel.people.set({
-        $ip: #{raw request.remote_ip.to_json}
-      });
+      olark('api.visitor.getDetails', function(details){
+        mixpanel.people.set({
+          $ip: details.ip
+        });
+      })
