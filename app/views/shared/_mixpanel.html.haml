@@ -5,7 +5,7 @@
 - if should_track_analytics?
   - # Initialize mixpanel
   :javascript
-    mixpanel.init("#{MIXPANEL_TOKEN}");
+    mixpanel.init("#{MIXPANEL_SETTINGS[:token]}");
     mixpanel.identify("#{self.mixpanel.distinct_id}");
     mixpanel.register(#{raw self.mixpanel.session_properties.to_json});
 
