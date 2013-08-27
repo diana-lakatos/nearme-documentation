@@ -1,6 +1,1 @@
-GOOGLE_ANALYTICS_SETTINGS = HashWithIndifferentAccess.new
-
-config = YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env]
-if config
-  GOOGLE_ANALYTICS_SETTINGS.update(config)
-end
+GOOGLE_ANALYTICS_SETTINGS = (YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env] || {}).with_indifferent_access

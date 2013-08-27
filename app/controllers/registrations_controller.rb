@@ -23,7 +23,7 @@ class RegistrationsController < Devise::RegistrationsController
       User.where(id: @user.id).update_all({referer: cookies.signed[:referer],
                                            source: cookies.signed[:source],
                                            campaign: cookies.signed[:campaign]})
-      @user.google_analytics_id = cookies.signed[:google_analytics_id]
+      update_analytics_google_id(@user)
       @user.instance = current_instance
       @user.save!
       analytics_apply_user(@user)

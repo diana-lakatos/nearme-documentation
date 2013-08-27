@@ -46,7 +46,7 @@ class AnalyticWrapper::GoogleAnalyticsApi
   end
 
   def endpoint_url
-    GOOGLE_ANALYTICS_SETTINGS[:endpoint]
+    "http://www.google-analytics.com/collect"
   end
 
   def tracking_code
@@ -54,7 +54,8 @@ class AnalyticWrapper::GoogleAnalyticsApi
   end
 
   def version
-    GOOGLE_ANALYTICS_SETTINGS[:version]
+    # google analytics API version
+    1
   end
 
 end

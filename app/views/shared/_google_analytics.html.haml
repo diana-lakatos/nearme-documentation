@@ -19,7 +19,7 @@
       // we want to update google_analytics_id ASAP for existing users
       ga(function(tracker) {
         // we don't need to make this call if it won't change anything.
-        if("#{current_user.try(:google_analytics_id) ? current_user.google_analytics_id : cookies.signed[:google_analytics_id]}" != tracker.get('clientId')){
+        if("#{user_google_analytics_id}" != tracker.get('clientId')){
           $.post("#{store_google_analytics_url}", { id: tracker.get('clientId') });
         } 
       });
