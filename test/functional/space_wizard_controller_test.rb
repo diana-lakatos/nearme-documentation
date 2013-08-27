@@ -78,6 +78,11 @@ class SpaceWizardControllerTest < ActionController::TestCase
       post :submit_listing, get_params
     end
 
+    should "track draft creation" do
+      @tracker.expects(:saved_a_draft)
+      post :submit_listing, get_params.merge({"save_as_draft"=>"Save as draft"})
+    end
+
     should 'track clicked list your bookable when logged in' do
       @tracker.expects(:clicked_list_your_bookable)
       get :new
