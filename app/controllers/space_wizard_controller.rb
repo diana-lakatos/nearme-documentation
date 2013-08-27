@@ -42,7 +42,7 @@ class SpaceWizardController < ApplicationController
       redirect_to manage_locations_path
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
-      flash[:error] = 'Please complete all fields! Alternatively, you can Save a Draft for later.'
+      flash.now[:error] = 'Please complete all fields! Alternatively, you can Save a Draft for later.'
       render :list
     end
   end
