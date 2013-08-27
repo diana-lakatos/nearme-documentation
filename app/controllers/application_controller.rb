@@ -11,7 +11,6 @@ class ApplicationController < ActionController::Base
   before_filter :first_time_visited?
   before_filter :store_referal_info
 
-
   protected
 
   # Returns the layout to use for the current request.
@@ -32,7 +31,7 @@ class ApplicationController < ActionController::Base
   # the application controllers.
   def event_tracker
     @event_tracker ||= begin
-      Analytics::EventTracker.new(mixpanel)
+      Analytics::EventTracker.new(mixpanel, google_analytics)
     end
   end
 
@@ -52,8 +51,8 @@ class ApplicationController < ActionController::Base
       # Detect an anonymous identifier, if any.
       anonymous_identity = cookies.signed[:mixpanel_anonymous_id]
 
-      MixpanelApi.new(
-        MixpanelApi.mixpanel_instance(),
+      AnalyticWrapper::MixpanelApi.new(
+        AnalyticWrapper::MixpanelApi.mixpanel_instance(),
         :current_user       => current_user,
         :request_details    => request_details,
         :anonymous_identity => anonymous_identity,
@@ -63,6 +62,11 @@ class ApplicationController < ActionController::Base
     end
   end
   helper_method :mixpanel
+
+  def google_analytics
+    @google_analytics ||= AnalyticWrapper::GoogleAnalyticsApi.new(current_user)
+  end
+  helper_method :google_analytics
 
   # Stores cross-request mixpanel options.
   #
@@ -78,8 +82,28 @@ class ApplicationController < ActionController::Base
     @first_time_visited ||= cookies.count.zero?
   end
 
+  def analytics_apply_user(user, with_alias = true)
+    store_user_browser_details(user)
+    mixpanel.apply_user(user, :alias => with_alias)
+    google_analytics.apply_user(user)
+  end
+
+  def store_user_browser_details(user)
+    if user
+      user_agent = UserAgent.parse(request.user_agent)
+      if user_agent
+        user.browser = user_agent.browser if user_agent.browser
+        user.browser_version = user_agent.version.to_s if user_agent.version
+        user.platform = user_agent.platform if user_agent.platform
+        user.save! if user.changed?
+      end
+    end
+  rescue Exception => ex
+    Rails.logger.error "Storing user #{user.try(:id)} browser details #{user_agent} failed: #{ex}"
+  end
+
   def current_user=(user)
-    mixpanel.apply_user(user)
+    analytics_apply_user(user)
   end
 
   def require_ssl
@@ -173,6 +197,24 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  def update_analytics_google_id(user)
+    if user
+      if user.google_analytics_id != cookies[:google_analytics_id] && cookies[:google_analytics_id].present?
+        user.update_attribute(:google_analytics_id, cookies[:google_analytics_id]) 
+      end
+    end
+  end
+
+  def should_track_analytics?
+    mixpanel.should_track?
+  end
+  helper_method :should_track_analytics?
+
+  def user_google_analytics_id
+    current_user.try(:google_analytics_id) ? current_user.google_analytics_id : cookies.signed[:google_analytics_id]
+  end
+  helper_method :user_google_analytics_id
 
 end
 

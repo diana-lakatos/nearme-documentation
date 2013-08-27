@@ -16,7 +16,8 @@ class SessionsController < Devise::SessionsController
     super
 
     if current_user
-      mixpanel.apply_user(current_user, :alias => true)
+      update_analytics_google_id(current_user)
+      analytics_apply_user(current_user)
       event_tracker.logged_in(current_user, provider: Auth::Omni.new(session[:omniauth]).provider)
     end
   end
