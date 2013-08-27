@@ -496,6 +496,7 @@ DEPENDENCIES
   rb-fsevent
   rdiscount
   resque
+  rest-client
   ri_cal
   ruby-prof
   sass

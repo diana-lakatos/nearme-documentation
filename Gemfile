@@ -53,6 +53,8 @@ gem 'chameleon'
 
 gem 'mixpanel'
 
+gem 'rest-client'
+
 gem 'gibbon'
 gem 'dropbox-api'
 
