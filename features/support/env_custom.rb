@@ -26,10 +26,16 @@ Before('@emails') do
   ReservationMailer.stubs(:notify_guest_of_confirmation).returns(stub(deliver: true))
   ReservationMailer.stubs(:notify_guest_of_rejection).returns(stub(deliver: true))
   ReservationMailer.stubs(:notify_host_of_cancellation).returns(stub(deliver: true))
+  UserMailer.stubs(:email_verification).returns(stub(deliver: true))
 end
 
 Before('@listing_emails') do
   PrepareEmail.for('listing_mailer/share',  {from: 'from@test.com'})
+  PrepareEmail.for('layouts/mailer')
+end
+
+Before('@login_emails') do
+  PrepareEmail.for('user_mailer/email_verification',  {from: 'from@test.com'})
   PrepareEmail.for('layouts/mailer')
 end
 

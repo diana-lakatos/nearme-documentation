@@ -47,4 +47,12 @@ class UserDrop < Liquid::Drop
   def full_mobile_number
     @user.full_mobile_number
   end
+
+  def verify_user_url
+    Rails.application.routes.url_helpers.verify_user_url(@user.id, @user.email_verification_token)
+  end
+
+  def instance_name
+    @user.instance.name
+  end
 end

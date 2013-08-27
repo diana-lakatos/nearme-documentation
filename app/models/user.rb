@@ -254,8 +254,8 @@ class User < ActiveRecord::Base
   end
 
   def verify_email_with_token(token)
-    if token.present? && self.email_verification_token == token && !self.verified
-      self.verified = true
+    if token.present? && self.email_verification_token == token && !self.verified_at
+      self.verified_at = Time.zone.now
       self.save(:validate => false)
       true
     else

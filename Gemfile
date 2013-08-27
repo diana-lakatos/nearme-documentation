@@ -23,7 +23,7 @@ gem 'rails3_acts_as_paranoid'
 gem 'simple_form'
 gem 'nokogiri'
 gem 'amatch'
-gem 'icalendar'
+gem 'ri_cal'
 gem 'ffaker'
 
 gem 'paper_trail'
@@ -43,7 +43,7 @@ gem 'stripe'
 gem 'friendly_id'
 
 gem 'sass-rails'
-gem 'bootstrap-sass', '~> 2.3.0.0'
+gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'chronic'
 gem 'chartjs-rails'
 

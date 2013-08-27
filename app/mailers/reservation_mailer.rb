@@ -113,7 +113,7 @@ class ReservationMailer < DesksNearMeMailer
 
   def setup_defaults(reservation)
     @reservation  = reservation
-    @listing      = reservation.listing
+    @listing      = reservation.listing.reload
     @user         = reservation.owner
   end
 

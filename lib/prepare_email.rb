@@ -113,6 +113,10 @@ class PrepareEmail
       reply_to: 'support@desksnear.me',
       subject: "[Desks Near Me] We couldn't send you text message"
     },
+    'user_mailer/email_verification' => {
+      from: 'support@desksnear.me',
+      subject: "Email verification"
+    },
 
   }
 end

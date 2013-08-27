@@ -26,7 +26,6 @@ class @Modal
       e.preventDefault()
       target = $(e.currentTarget)
       modalClass = matches[1] if matches = target.attr("rel").match(/modal\.([^\s]+)/)
-
       @load(target.attr("href"), modalClass)
       false
 
@@ -150,6 +149,9 @@ class @Modal
     request.success (data) =>
       if data.redirect
         document.location = data.redirect
+      else if data.hide
+        @content.html('')
+        @hide()
       else
         @showContent(data)
 

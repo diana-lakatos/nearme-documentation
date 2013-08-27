@@ -79,6 +79,16 @@ Spork.prefork do
   #   end
   #
 
+  Before '@photo' do
+    PhotoUploader.enable_processing = true
+  end
+
+  Before '~@photo' do
+    PhotoUploader.enable_processing = false
+  end
+
+  World(CarrierWave::Test::Matchers)
+
   def last_json
     page.source
   end

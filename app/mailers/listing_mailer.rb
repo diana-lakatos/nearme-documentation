@@ -7,7 +7,7 @@ class ListingMailer < DesksNearMeMailer
     @sharer = sharer
     @message = message
     @instance = listing.instance
-    
+
     mailer = @instance.find_mailer_for(self)
 
     mail :to => "#{name} <#{email}>", :reply_to => "#{sharer.name} <#{sharer.email}>",

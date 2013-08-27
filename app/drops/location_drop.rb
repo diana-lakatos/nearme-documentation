@@ -11,7 +11,7 @@ class LocationDrop < Liquid::Drop
   end
 
   def url
-    Rails.application.routes.url_helpers.location_url(@location)
+    Rails.application.routes.url_helpers.location_url(@location, listing_id: @location.listings.first)
   end
 
   def tweet_url

@@ -102,7 +102,7 @@ class Mailchimp
 
   def is_verified_after_last_email?(user)
     if @existing_users.key?(user.email)
-      (user.verified && (@existing_users[user.email]['verified']=='0')) ? 1 : 0
+      (user.verified_at && (@existing_users[user.email]['verified']=='0')) ? 1 : 0
     else
       ''
     end

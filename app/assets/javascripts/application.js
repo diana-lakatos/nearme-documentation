@@ -15,6 +15,8 @@
 //= require ./vendor/detect-mobile-browser
 //= require ./vendor/infobox
 //= require ./vendor/jquery.scrollto
+//= require ./vendor/jquery.Jcrop
+//= require ./vendor/jQueryRotate
 //= require ./vendor/placeholder
 //= require ./vendor/jquery.ias
 //= require ./vendor/markerclusterer

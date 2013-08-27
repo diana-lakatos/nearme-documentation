@@ -12,7 +12,7 @@
                   = photo.caption
         - else
           .item{:class => ("active")}
-            = image_tag space_listing_placeholder_url(:height => 554, :width => 895), :title => @location.name, :alt => @location.name
+            = image_tag space_listing_placeholder_path(:height => 554, :width => 895), :title => @location.name, :alt => @location.name
 
       - if @location.photos.ready.size > 1
         = link_to "", ".carousel", :class => "carousel-control left ico-chevron-left", 'data-slide' => 'prev'
@@ -21,5 +21,5 @@
 
 
   .pull-left{:class => "span4" }
-    = render :partial => 'google_map', :locals => { :location => @location }
+    = render :partial => 'locations/google_map', :locals => { :location => @location }
 

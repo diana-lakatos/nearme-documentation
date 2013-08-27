@@ -8,7 +8,7 @@
         - if listing.photos.ready.any?
           = image_tag listing.photos.first.url(:space_listing)
         - else
-          = image_tag space_listing_placeholder_url(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
+          = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
 
   %h2.listing-name
     = listing.name
@@ -17,6 +17,6 @@
 
   .bottom-fade
 
-  = render 'booking_module', listing: listing
+  = render 'locations/booking_module', listing: listing
   .clearfix
 
