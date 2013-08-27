@@ -88,7 +88,7 @@ class SpaceWizardController < ApplicationController
   end
 
   def redirect_to_dashboard_if_user_has_listings
-    redirect_to manage_locations_path if current_user && current_user.listings.any?
+    redirect_to manage_locations_path if current_user && current_user.listings.active.any?
   end
 
   def track_new_space_event

@@ -6,16 +6,16 @@ class LocationsController < ApplicationController
   before_filter :redirect_for_location_custom_page, :only => :show
 
   def show
-    if @location.listings.empty?
+    if @location.listings.active.empty?
       # If location doesn't have any listings, redirects to search page with notice
       flash[:warning] = "There aren't any listings at that location. Check out some other spaces!"
       redirect_to search_path 
     else
-      if params[:listing_id]
+      if @location.listings.active.find(params[:listing_id])
         redirect_to location_listing_path(@location, params[:listing_id])
       else
         # Redirect to location with first listing
-        redirect_to location_listing_path(@location, @location.listings.first)
+        redirect_to location_listing_path(@location, @location.listings.active.first)
       end
     end
   end

@@ -27,7 +27,8 @@ class Listing < ActiveRecord::Base
   # == Scopes
   scope :featured, where(%{ (select count(*) from "photos" where content_id = "listings".id AND content_type = 'Listing') > 0  }).
     includes(:photos).order(%{ random() }).limit(5)
-
+  scope :draft, where('listings.draft IS NOT NULL')
+  scope :active, where('listings.draft IS NULL')
   scope :latest,   order("listings.created_at DESC")
 
   # == Callbacks
