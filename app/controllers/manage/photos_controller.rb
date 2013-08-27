@@ -64,6 +64,7 @@ class Manage::PhotosController < ApplicationController
         @param = params[content.downcase.to_sym]
         if @param
           @content_type = content
+          @content_id = @param[:id]
           @content = @param[:id].present? ? current_user.send(content.pluralize.downcase.to_sym).find(@param[:id]) : nil
           break
         end
