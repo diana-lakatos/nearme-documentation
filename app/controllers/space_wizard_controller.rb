@@ -33,6 +33,7 @@ class SpaceWizardController < ApplicationController
     if params[:save_as_draft]
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.save(:validate => false)
+      track_saved_draft_event
       flash[:success] = 'Your draft has been saved!'
       redirect_to :list
     elsif @user.save
@@ -89,6 +90,10 @@ class SpaceWizardController < ApplicationController
 
   def redirect_to_dashboard_if_user_has_listings
     redirect_to manage_locations_path if current_user && current_user.listings.active.any?
+  end
+
+  def track_saved_draft_event
+    event_tracker.saved_a_draft
   end
 
   def track_new_space_event
