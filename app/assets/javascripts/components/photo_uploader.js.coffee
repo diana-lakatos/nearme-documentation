@@ -134,6 +134,8 @@ class @PhotoUploader
       data.context.append(hidden_position)
       hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(data.result.id)
       data.context.append(hidden_id)
+      hidden_content_id = hidden.clone().attr('name', "#{name_prefix}[content_id]").val(data.result.content_id)
+      data.context.append(hidden_content_id)
 
   getLastPosition: ->
     @sortable.find('.photo-item').length

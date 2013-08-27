@@ -21,7 +21,7 @@ class SpaceWizardController < ApplicationController
     @location ||= @company.locations.build
     @listing ||= @location.listings.build
     @country =  get_user_country
-    @photos = @user.photos.where("content_type = 'Listing'") || nil
+    @photos = @user.photos.where("content_type = 'Listing' AND content_id IS NOT NULL") || nil
     event_tracker.viewed_list_your_bookable
   end
 
