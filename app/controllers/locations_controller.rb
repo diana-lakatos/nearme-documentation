@@ -11,7 +11,7 @@ class LocationsController < ApplicationController
       flash[:warning] = "There aren't any listings at that location. Check out some other spaces!"
       redirect_to search_path 
     else
-      if @location.listings.active.find(params[:listing_id])
+      if @location.listings.active.find_by_id(params[:listing_id])
         redirect_to location_listing_path(@location, params[:listing_id])
       else
         # Redirect to location with first listing
