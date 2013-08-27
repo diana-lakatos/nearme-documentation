@@ -137,7 +137,7 @@ DesksnearMe::Application.routes.draw do
     put "/list" => "space_wizard#submit_listing"
     post "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo"
     put "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo"
-    delete "/photo" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
+    delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
   end
 
   root :to => "public#index"
