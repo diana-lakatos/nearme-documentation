@@ -53,7 +53,7 @@ class SpaceWizardController < ApplicationController
     @photo.content_type = 'Listing'
     @photo.creator_id = current_user.id
     if @photo.save
-      render :text => {:id => @photo.id, :url => @photo.image_url(:thumb).to_s, :destroy_url => destroy_space_wizard_photo_path(:id => @photo.id) }.to_json, :content_type => 'text/plain' 
+      render :text => {:id => @photo.id, :url => @photo.image_url(:thumb).to_s, :destroy_url => destroy_space_wizard_photo_path(@photo) }.to_json, :content_type => 'text/plain' 
     else
       render :text => [{:error => @photo.errors.full_messages}], :content_type => 'text/plain', :status => 422
     end

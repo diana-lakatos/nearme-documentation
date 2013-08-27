@@ -418,6 +418,10 @@ ActiveRecord::Schema.define(:version => 20130826163426) do
     t.string   "source"
     t.string   "campaign"
     t.datetime "verified_at"
+    t.string   "google_analytics_id"
+    t.string   "browser"
+    t.string   "browser_version"
+    t.string   "platform"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

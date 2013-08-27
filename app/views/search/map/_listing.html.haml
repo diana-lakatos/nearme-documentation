@@ -10,7 +10,7 @@
           - if listing.photos.first
             = image_tag listing.photos.first.url(:medium), :title => listing.name, :alt => listing.name
           - else
-            = image_tag space_listing_placeholder_url(:height => 89, :width => 144), :title => listing.name, :alt => listing.name
+            = image_tag space_listing_placeholder_path(:height => 89, :width => 144), :title => listing.name, :alt => listing.name
       .popover-info-container
         %h4= link_to "#{listing.name}", location_listing_path(listing.location, listing)
         = render :partial => 'search/shared/price_information', :locals => { :listing => listing }

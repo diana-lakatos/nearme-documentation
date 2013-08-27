@@ -67,6 +67,7 @@ DesksnearMe::Application.routes.draw do
   devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
   devise_scope :user do
     put "users/avatar", :to => "registrations#avatar", :as => "avatar"
+    post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
     get "users/", :to => "registrations#new"
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
@@ -137,7 +138,7 @@ DesksnearMe::Application.routes.draw do
     put "/list" => "space_wizard#submit_listing"
     post "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo"
     put "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo"
-    delete "/photo" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
+    delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
   end
 
   root :to => "public#index"

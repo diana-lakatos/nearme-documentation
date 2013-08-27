@@ -4,7 +4,7 @@
       - if listing.photos.first
         = image_tag listing.photos.first.url(:space_listing), :title => listing.name, :alt => listing.name
       - else
-        = image_tag space_listing_placeholder_url(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
+        = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
     - if listing.daily_price
       %span.label.label-success
         = "#{money_without_cents_and_with_symbol(listing.daily_price)}/day"
@@ -22,7 +22,7 @@
         - if listing.photos.first
           = image_tag listing.photos.first.url(:medium), :title => listing.name, :alt => listing.name
         - else
-          = image_tag space_listing_placeholder_url(:height => 114, :width => 144), :title => listing.name, :alt => listing.name
+          = image_tag space_listing_placeholder_path(:height => 114, :width => 144), :title => listing.name, :alt => listing.name
     .popover-info-container
       %h3= link_to "#{listing.name}", listing
       %address

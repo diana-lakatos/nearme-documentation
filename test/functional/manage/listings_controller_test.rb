@@ -56,6 +56,26 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       assert_redirected_to manage_locations_path
     end
 
+    context 'with reservation' do
+      setup do
+        stub_mixpanel
+        @reservation1 = FactoryGirl.create(:reservation, :listing => @listing)
+        @reservation2 = FactoryGirl.create(:reservation, :listing => @listing)
+      end
+
+      should 'notify guest about reservation expiration when listing is deleted' do
+        assert_difference('ActionMailer::Base.deliveries.count', 4) do
+          delete :destroy, :id => @listing.id
+        end
+      end
+
+      should 'mark reservations as expired' do
+        delete :destroy, :id => @listing.id
+        assert_equal 'expired', @reservation1.reload.state 
+        assert_equal 'expired', @reservation2.reload.state
+      end
+    end
+
     context "someone else tries to manage our listing" do
 
       setup do
