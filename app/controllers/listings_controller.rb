@@ -1,5 +1,5 @@
 class ListingsController < ApplicationController
-  before_filter :sanitize_page_param, :only => [:index]
+  before_filter :redirect_if_invalid_page_param, :only => [:index]
   before_filter :find_listing, :only => [:show]
 
   def index
@@ -12,8 +12,8 @@ class ListingsController < ApplicationController
 
   protected
 
-  def sanitize_page_param
-    if params[:page] && params[:page].to_i == 0
+  def redirect_if_invalid_page_param
+    if params[:page] && params[:page].to_i.zero?
       redirect_to listings_path(:page =>1), :flash => { :warning => "Requested page does not exist, showing first page." }
     end
   end
