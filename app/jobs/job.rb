@@ -29,17 +29,26 @@
 #       how it does that.
 class Job
   def self.perform(*args)
-    # By default all jobs perform asynchronously except in Development and Test
-    # environments.
-    if Rails.env.development? || Rails.env.test?
-      new(*args).perform
+    if run_in_background?
+      perform_async(*args)
     else
-      perform_async *args
+      new(*args).perform
     end
   end
 
   def self.perform_async(*args)
-    Delayed::Job.enqueue new(*args)
+    instance = new(*args)
+    Delayed::Job.enqueue instance, instance.delayed_job_options
+  end
+
+  def delayed_job_options
+    { :run_at => Time.zone.now }
+  end
+
+  def self.run_in_background?
+    # By default all jobs perform asynchronously except in Development and Test
+    # environments.
+    !(Rails.env.development? || Rails.env.test?)
   end
 end
 

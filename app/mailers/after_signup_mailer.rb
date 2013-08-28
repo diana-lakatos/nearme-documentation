@@ -53,4 +53,13 @@ class AfterSignupMailer < DesksNearMeMailer
     end
   end
 
+  def self.run_at(method)
+    case method
+    when :help_offer
+      1.hour.from_now
+    else
+      nil
+    end
+  end
+
 end
