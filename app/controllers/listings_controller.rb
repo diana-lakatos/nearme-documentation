@@ -15,6 +15,9 @@ class ListingsController < ApplicationController
   def redirect_if_invalid_page_param
     if params[:page] && params[:page].to_i.zero?
       redirect_to listings_path(:page =>1), :flash => { :warning => "Requested page does not exist, showing first page." }
+    elsif params[:page]
+      # needed to cover scenario like '12string', but we don't want to change nil to 0
+      params[:page] = params[:page].to_i 
     end
   end
 
