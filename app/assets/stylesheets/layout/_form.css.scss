@@ -272,6 +272,7 @@ form {
 
   .error-block {
     color: $red;
+    text-align: left;
     background: image-url("components/form/error.png") left top no-repeat;
   }
 
@@ -291,7 +292,7 @@ form {
     }  
   }
 
-  .card-info.error, .row-fluid.error, control-group.error {
+  .card-info.error, .row-fluid.error, .control-group.error {
     
 
     // ul is for chosen

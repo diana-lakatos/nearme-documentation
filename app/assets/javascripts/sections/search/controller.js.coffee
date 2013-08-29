@@ -117,7 +117,7 @@ class Search.Controller
     params
 
   formatCoordinate: (coord) ->
-    coord.toFixed(5)
+    coord.toFixed(5) if coord?
 
   assignFormParams: (paramsHash) ->
     # Write params to search form
