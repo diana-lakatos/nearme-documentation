@@ -11,7 +11,7 @@ class V1::RegistrationsController < V1::BaseController
     @user.password = json_params["password"]
 
     if @user.save
-      mixpanel.apply_user(@user, :alias => true)
+      analytics_apply_user(@user)
       event_tracker.signed_up(@user, { signed_up_via: 'api', provider: 'native'})
       render json: @user
     else

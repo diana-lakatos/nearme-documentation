@@ -25,8 +25,9 @@
 # to mock out the relevant tracker instance and assert an expectation to call the
 # relevant event method(s).
 class Analytics::EventTracker
-  def initialize(api)
-    @api = api
+  def initialize(mixpanel_api, google_analytics_api)
+    @mixpanel_api = mixpanel_api
+    @google_analytics_api = google_analytics_api
   end
 
   include ListingEvents
@@ -42,16 +43,23 @@ class Analytics::EventTracker
   private
 
   def track(event_name, *objects)
-    @api.track(event_name, serialize_event_properties(objects))
+    
+    @mixpanel_api.track(event_name, serialize_event_properties(objects))
+    # we want to set Category based on the name of the module which called the .track method
+    # caller[0] is something like /project/path/app/models/analytics/location_events.rb:12:in `conducted_a_search' 
+    # so after splitting by / and taking last element we get location_events.rb:12:in `conducted_a_search', after 
+    # splitting again by . we get location_events which we just need to humanize. Works until there is no "/" in method name :)
+    category_name = caller[0].split('/').last.split('.')[0].humanize
+    @google_analytics_api.track(category_name, event_name)
   end
 
   def track_charge(user_id, total_amount_dollars)
-    @api.track_charge(user_id, total_amount_dollars)
+    @mixpanel_api.track_charge(user_id, total_amount_dollars)
   end
 
   # Sets global properties on the person
   def set_person_properties(*objects)
-    @api.set_person_properties event_properties(objects)
+    @mixpanel_api.set_person_properties event_properties(objects)
   end
 
   def serialize_event_properties(objects)
@@ -121,7 +129,11 @@ class Analytics::EventTracker
         bookings_confirmed: object.confirmed_reservations.count,
         bookings_rejected: object.rejected_reservations.count,
         bookings_expired: object.expired_reservations.count,
-        bookings_cancelled: object.cancelled_reservations.count
+        bookings_cancelled: object.cancelled_reservations.count,
+        google_analytics_id: object.google_analytics_id,
+        browser: object.browser,
+        browser_version: object.browser_version,
+        platform: object.platform,
       }
     when Listing::Search::Params::Web
       {

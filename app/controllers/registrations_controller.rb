@@ -20,23 +20,21 @@ class RegistrationsController < Devise::RegistrationsController
 
     # Only track the sign up if the user has actually been saved (i.e. there are no errors)
     if @user.persisted?
-      # This user has just registered, so we
-      mixpanel.apply_user(@user, :alias => true)
-      event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
       User.where(id: @user.id).update_all({referer: cookies.signed[:referer],
                                            source: cookies.signed[:source],
                                            campaign: cookies.signed[:campaign]})
+      update_analytics_google_id(@user)
+      @user.instance = current_instance
+      @user.save!
+      analytics_apply_user(@user)
+      event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
+      AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(current_instance, @user.id)
+      UserMailer.email_verification(@user).deliver
     end
 
     # Clear out temporarily stored Provider authentication data if present
     session[:omniauth] = nil unless @user.new_record?
     flash[:redirected_from_sign_up] = true
-    if @user.persisted?
-      @user.instance = current_instance
-      @user.save!
-      AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(current_instance, @user.id)
-      UserMailer.email_verification(@user).deliver
-    end
     @resource = resource
   end
 
@@ -92,6 +90,12 @@ class RegistrationsController < Devise::RegistrationsController
       end
       redirect_to root_path
     end
+  end
+
+  def store_google_analytics_id
+    cookies[:google_analytics_id] = params[:id]
+    update_analytics_google_id(current_user)
+    render :nothing => true
   end
 
   protected

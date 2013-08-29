@@ -9,7 +9,7 @@ class BaseImageUploader < BaseUploader
 
   # Offers a placeholder while image is not uploaded yet
   def default_url
-    "http://placehold.it/100x100"
+    Placeholder.new(height: 100, width: 100).path
   end
 
   def image
