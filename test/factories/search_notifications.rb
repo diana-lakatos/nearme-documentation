@@ -5,6 +5,7 @@ FactoryGirl.define do
     query 'San Francisco'
     latitude 1.5
     longitude 1.5
+    email 'test@test.com'
 
     trait :with_user do
       user
