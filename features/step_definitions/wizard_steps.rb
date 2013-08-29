@@ -11,7 +11,7 @@ When /^I fill in valid space details$/ do
   select 'Desk', from: "#{model!("instance").bookable_noun} type"
   fill_in 'Quantity available', with:1
   choose "Free"
-
+  
   image = File.join(Rails.root, *%w[features fixtures photos], "intern chair.jpg")
   attach_hidden_file('[user][companies_attributes][0][locations_attributes][0][listings_attributes][0][photos_attributes][0][image]', image)
   page.should_not have_content('Processing...')
