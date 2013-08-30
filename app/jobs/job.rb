@@ -53,7 +53,7 @@ class Job
   def self.run_in_background?
     # By default all jobs perform asynchronously except in Development and Test
     # environments.
-    !(Rails.env.test?)
+    !(Rails.env.development? || Rails.env.test?)
   end
 
   def self.get_performing_time(when_perform)
