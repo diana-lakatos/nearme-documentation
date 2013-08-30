@@ -1,5 +1,4 @@
 Booking from <%= @subject.name %> for '<%= @listing.name %>' at <%= @location.name %> ended yesterday.
 
 Leave a rating and maybe a comment on how this booking went by clicking the following link:
-<%= link_to "Rate your guest #{@subject.name} at #{@location.name}",
-            new_reservation_guest_rating_url(@reservation.id) %>
+<%= guest_rating_reservation_url(@reservation.id) %>

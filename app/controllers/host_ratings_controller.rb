@@ -13,9 +13,10 @@ class HostRatingsController < ApplicationController
     @rating.subject = @reservation.listing.location.creator
     @rating.author = current_user
     if @rating.save
-      event_tracker.submitted_a_rating(current_user, { positive: @rating.positive? })
-      flash[:notice] = 'Rating was successfully stored. Thank you for sharing!'
+      event_tracker.submitted_a_rating(current_user, {positive: @rating.positive?})
+      flash[:notice] = 'Thanks, your rating was submitted successfully!'
       redirect_to root_path
+      render_redirect_url_as_json if request.xhr?
     else
       render :template => 'ratings/new'
     end

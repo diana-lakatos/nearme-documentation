@@ -21,14 +21,16 @@ Given(/^I receive an email request for (host|guest) rating$/) do |kind|
   assert_match /\[DesksNearMe\] Rate your #{kind} at Listing \d+/, @request_email.subject
 end
 
-When(/^I submit a (host|guest) rating with thumb up and a comment$/) do |kind|
-  visit "/reservations/#{@reservation.id}/#{kind}_ratings/new"
-  fill_in "#{kind}_rating_comment", with: Faker::Lorem.sentence
-  find('.arrows .ico-arrow-up').click
+When(/^I submit a (host|guest) rating with comment and (good|bad) rating$/) do |kind, rating|
+  work_in_modal do
+    visit "/reservations/#{@reservation.id}/#{kind}_ratings/new"
+    fill_in "#{kind}_rating_comment", with: Faker::Lorem.sentence
+    click_button(rating.capitalize)
+  end
 end
 
 Then(/^I should be redirected to mainpage$/) do
-  page.should have_content('Rating was successfully stored. Thank you for sharing!')
+  page.should have_content('Thanks, your rating was submitted successfully!')
 end
 
 Then(/^guests rating should be recalculated$/) do

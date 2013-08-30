@@ -1,36 +1,22 @@
-section.host_ratings, section.guest_ratings {
-  .ratings {
-    overflow: hidden;
-  }
-
+section.ratings {
   .errors {
     p {
       margin: 10px 0;
     }
   }
 
-  .arrows {
-    margin: 5px 0 0 10px;
-
-    span {
+  #rating-form {
+    button {
       cursor: pointer;
-      font-size: 3.6em;
-      float: left;
-      clear:left;
+      width: 49%;
 
-      &.ico-arrow-up {
-        margin-bottom: 10px;
-        color: $dnm_green;
-      }
-      &.ico-arrow-down {
-        color: $dnm_red;
+      &.btn-green {
+        margin-right: 2%;
       }
     }
-  }
 
-  textarea {
-    height: 150px;
-    width: 400px;
+    textarea {
+      height: 200px;
+    }
   }
-
 }

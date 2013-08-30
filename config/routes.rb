@@ -82,6 +82,8 @@ DesksnearMe::Application.routes.draw do
     member do
       post :user_cancel
       get :export
+      get :guest_rating
+      get :host_rating
     end
     collection do
       get :upcoming
