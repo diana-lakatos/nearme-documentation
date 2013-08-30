@@ -5,6 +5,7 @@ class SpaceWizardController < ApplicationController
   before_filter :find_company, :except => [:new, :submit_listing]
   before_filter :find_location, :except => [:new, :submit_listing]
   before_filter :find_listing, :except => [:new, :submit_listing]
+  before_filter :find_user_country, :only => [:list, :submit_listing]
 
   def new
     flash.keep(:warning)
@@ -20,7 +21,6 @@ class SpaceWizardController < ApplicationController
     @company ||= @user.companies.build
     @location ||= @company.locations.build
     @listing ||= @location.listings.build
-    @country =  get_user_country
     @photos = @user.photos.where("content_type = 'Listing' AND content_id IS NOT NULL") || nil
     event_tracker.viewed_list_your_bookable
   end
@@ -112,8 +112,14 @@ class SpaceWizardController < ApplicationController
     end
   end
 
-  def get_user_country
-    @user.country_name.present? ? @user.country_name : (request.location ? request.location.country : nil)
+  def find_user_country
+    @country = if params[:user] && params[:user][:country_name]
+      params[:user][:country_name]
+    elsif @user.country_name.present?
+      @user.country_name
+    elsif request.location
+      request.location.country
+    end
   end
 
 end
