@@ -23,9 +23,9 @@ class ListingsControllerTest < ActionController::TestCase
         assert_redirected_to listings_path(:page => 1)
       end
 
-      should 'show correct page if page param is mixed integer and string' do
+      should 'redirect if page param is mixed integer and string' do
         get :index, :page => '12this is string'
-        assert :success
+        assert_redirected_to listings_path(:page => 1)
       end
     end
 
