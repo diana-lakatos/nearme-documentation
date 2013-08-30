@@ -18,7 +18,7 @@ class AuthenticationsController < ApplicationController
       new_authentication_for_existing_user
     # There is no authentication in our system, and the user is not logged in. Hence, we create a new user and then new authentication
     else
-      if @oauth.create_user(current_instance)
+      if @oauth.create_user(current_instance, cookies[:google_analytics_id])
         # User and authentication created successfully. User is now logged in
         new_user_created_successfully
       else
@@ -83,6 +83,7 @@ class AuthenticationsController < ApplicationController
   def signed_in_successfully
     flash[:success] = 'Signed in successfully.' if use_flash_messages?
     @oauth.remember_user!
+    update_analytics_google_id(@oauth.authenticated_user)
     log_logged_in
     sign_in_and_redirect(:user, @oauth.authenticated_user)
   end
@@ -116,12 +117,12 @@ class AuthenticationsController < ApplicationController
   end
 
   def log_sign_up
-    mixpanel.apply_user(@oauth.authenticated_user, :alias => true)
+    analytics_apply_user(@oauth.authenticated_user)
     event_tracker.signed_up(@oauth.authenticated_user, { signed_up_via: 'other', provider: @oauth.provider })
   end
 
   def log_logged_in
-    mixpanel.apply_user(@oauth.authenticated_user, :alias => true)
+    analytics_apply_user(@oauth.authenticated_user)
     event_tracker.logged_in(@oauth.authenticated_user, { provider: @oauth.provider } )
   end
 

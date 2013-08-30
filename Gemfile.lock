@@ -423,6 +423,7 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
+    useragent (0.6.0)
     vcr (2.4.0)
     vegas (0.1.11)
       rack (>= 1.0.0)
@@ -504,6 +505,7 @@ DEPENDENCIES
   rb-fsevent
   rdiscount
   resque
+  rest-client
   ri_cal
   ruby-prof
   sass
@@ -520,6 +522,7 @@ DEPENDENCIES
   twilio-ruby
   uglifier (~> 2.1.0)
   unicorn
+  useragent
   vcr
   webmock
   will_paginate

@@ -7,12 +7,14 @@ class EventTrackerTest < ActiveSupport::TestCase
   setup do
     @user = FactoryGirl.create(:user)
     @mixpanel = stub() # Represents our internal MixpanelApi instance
-    @tracker = Analytics::EventTracker.new(@mixpanel)
+    @google_analytics = stub()
+    @tracker = Analytics::EventTracker.new(@mixpanel, @google_analytics)
   end
 
   context 'Listings' do
     setup do
       @listing = FactoryGirl.create(:listing)
+      @category = "Listing events"
     end
 
     should 'track listing creation' do
@@ -25,6 +27,7 @@ class EventTrackerTest < ActiveSupport::TestCase
     setup do
       @location = FactoryGirl.create(:location)
       @search = build_search_params(options_with_location)
+      @category = "Location events"
     end
 
     should 'track location creation' do
@@ -46,6 +49,7 @@ class EventTrackerTest < ActiveSupport::TestCase
   context 'Reservations' do
     setup do
       @reservation = FactoryGirl.create(:reservation)
+      @category = "Reservation events"
     end
 
     should 'track booking modal open' do
@@ -84,6 +88,11 @@ class EventTrackerTest < ActiveSupport::TestCase
   end
 
   context 'Space Wizard' do
+
+    setup do
+      @category = "Space wizard events"
+    end
+
     should 'track click list your bookable' do
       expect_event 'Clicked List your Bookable', {}
       @tracker.clicked_list_your_bookable
@@ -96,6 +105,11 @@ class EventTrackerTest < ActiveSupport::TestCase
   end
 
   context 'Users' do
+
+    setup do
+      @category = "User events"
+    end
+
     should 'track user sign up' do
       expect_set_person_properties user_properties
       expect_event 'Signed Up', user_properties
@@ -131,6 +145,7 @@ class EventTrackerTest < ActiveSupport::TestCase
 
   def expect_event(event_name, properties = nil)
     @mixpanel.expects(:track).with(event_name, properties)
+    @google_analytics.expects(:track).with(@category, event_name)
   end
 
   def expect_charge(user_id, total_amount_dollars)
@@ -205,6 +220,10 @@ class EventTrackerTest < ActiveSupport::TestCase
       bookings_rejected: @user.rejected_reservations.count,
       bookings_expired: @user.expired_reservations.count,
       bookings_cancelled: @user.cancelled_reservations.count,
+      google_analytics_id: @user.google_analytics_id,
+      browser: @user.browser,
+      browser_version: @user.browser_version,
+      platform: @user.platform,
       positive_host_ratings_count: @user.host_ratings.positive.count,
       negative_host_ratings_count: @user.host_ratings.negative.count,
       positive_guest_ratings_count: @user.guest_ratings.positive.count,
