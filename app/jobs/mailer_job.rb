@@ -11,57 +11,24 @@
 #
 # Example Usage:
 #
-# we want to send notification for hosts that they need to confirm new reservation.
-# This is how we do this:
+# There are two possiblies. We can use Job::MailerJobSyntaxEnhancer to invoke like this:
 #
-# MailerJob.perform(ReservationMailer, :notify_host_with_confirmation, @reservation)
+#  ReservationMailer.enqueue.notify_host_with_confirmation(@reservation)
 #
-# Note:
+# or just do
 #
-# If we want to send email after specific time, the mailer class should define *CLASS* method run_at, which returns datetime [ or nil ]
-# before which email should not be sent. Example:
+#   MailerJob.perform(ReservationMailer, :notify_host_with_confirmation, @reservation)
 #
-# class AfterSignupEmail
-# 
-#   def help_offer(user)
-#     mail to: user.email
-#   end
+# If we want to send email at some point in the future, we do
 #
-#   protected
+#   ReservationMailer.enqueue_later(5.hours.from_now).notify_host_with_confirmation(@reservation)
 #
-#   # please note self.run_at ! this has to be class method, not instance!!!
-#   def self.run_at
-#     Time.zone.now + 1.hour
-#   end
-# end
+#  or
 #
-# this method will guarantee, that email will not be sent before certain datetime. Usage is the same:
+#   MailerJob.perform_later(5.hours.from_now, ReservationMailer, :notify_host_with_confirmation, @reservation)
 #
-# MailerJob.perform(AfterSignupMailer, :help_offer, @user)
-#
-# If we have many methods in Mailer class, and we want to specify emails that should be sent later, we can do
-#
-# Class AfterSignupEmail
-#
-#   def help_offer(user)
-#     mail to: user.email
-#   end
-#
-#   def other_email(user)
-#     mail to: user.email
-#   end
-#   
-#   protected
-#
-#   def self.run_at(method)
-#     case method
-#     when :help_offer
-#       1.hour.from_now
-#     else
-#       nil
-#     end
-#   end
-# end
+#   the first argument must be either ActiveSupport::TimeWithZone or Fixnum (number of seconds, for example 5.hours). 
+#   Please note that using Time.now instead of Time.zone.now will raise error
 
 class MailerJob < Job
   def initialize(mailer_class, mailer_method, *args)
@@ -74,17 +41,4 @@ class MailerJob < Job
     @mailer_class.send(@mailer_method, *@args).deliver
   end
 
-  def delayed_job_options
-    if @mailer_class.respond_to?(:run_at, true)
-      # try to send method as parameter. If it didn't work, try to invoke the method without additional argument
-      run_at = begin
-         @mailer_class.send(:run_at, @mailer_method)
-       rescue
-         @mailer_class.send(:run_at)
-       end
-      run_at ? { :run_at => run_at } : super
-    else
-      super
-    end
-  end
 end

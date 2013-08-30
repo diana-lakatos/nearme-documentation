@@ -28,8 +28,8 @@ class RegistrationsController < Devise::RegistrationsController
       @user.save!
       analytics_apply_user(@user)
       event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
-      MailerJob.perform(AfterSignupMailer, :help_offer, current_instance, @user.id)
-      MailerJob.perform(UserMailer, :email_verification, @user)
+      AfterSignupMailer.enqueue_later(1.hour).help_offer(current_instance, @user.id)
+      UserMailer.enqueue.email_verification(@user)
     end
 
     # Clear out temporarily stored Provider authentication data if present
