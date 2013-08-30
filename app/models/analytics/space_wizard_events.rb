@@ -8,5 +8,9 @@ module Analytics::SpaceWizardEvents
     track "Viewed List Your First Bookable"
   end
 
+  def saved_a_draft
+    track "Saved a draft"
+  end
+
 end
 
