@@ -52,7 +52,10 @@ gem 'ey_config'
 gem 'unicorn'
 gem 'chameleon'
 
+gem 'useragent'
 gem 'mixpanel'
+
+gem 'rest-client'
 
 gem 'gibbon'
 gem 'dropbox-api'

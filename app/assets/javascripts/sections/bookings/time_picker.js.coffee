@@ -170,13 +170,13 @@ class @Bookings.TimePicker
       <div class="time-wrapper">
         <div class="time-start">
           <span><label></label><i class="ico-chevron-down"></i></span>
-          <select/>
+          <select />
         </div>
         <span class="ico-arrow-right">
         </span>
         <div class="time-end">
           <span><label></label><i class="ico-chevron-down"></i></span>
-          <select/>
+          <select />
         </div>
 
         <div class="datepicker-loading" style="display: none"></div>

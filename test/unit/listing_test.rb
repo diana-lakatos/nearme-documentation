@@ -22,23 +22,23 @@ class ListingTest < ActiveSupport::TestCase
     should allow_value('x' * 250).for(:description)
     should_not allow_value('x' * 251).for(:description)
 
-    should_not allow_value([]).for(:photos)
+    should allow_value([]).for(:photos)
   end
 
   setup do
     @listing = FactoryGirl.build(:listing)
   end
 
-  context "#photo_not_required" do
-    subject do
-      @listing = FactoryGirl.build_stubbed(:listing)
-      @listing.photo_not_required = true
-      @listing
-    end
+  # context "#photo_not_required" do
+  #   subject do
+  #     @listing = FactoryGirl.build_stubbed(:listing)
+  #     @listing.photo_not_required = true
+  #     @listing
+  #   end
 
-    should allow_value([]).for(:photos)
-    should allow_value([FactoryGirl.create(:photo)]).for(:photos)
-  end
+  #   should allow_value([]).for(:photos)
+  #   should allow_value([FactoryGirl.create(:photo)]).for(:photos)
+  # end
 
   context "#prices_by_days" do
     setup do

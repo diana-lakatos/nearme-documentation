@@ -1,0 +1,10 @@
+production:
+  tracking_code: UA-19145250-4
+  website: desksnear.me
+staging:
+  tracking_code: UA-19145250-2
+  website: staging-uswest2.desksnear.me
+development:
+  tracking_code: UA-19145250-3
+  # edit /etc/hosts ? : )
+  website: development-desksnearme.com

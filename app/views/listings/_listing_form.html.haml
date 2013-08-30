@@ -78,7 +78,7 @@
                                   manage_photos_path('size' => 'medium'),
                                   "#{photo_input_name_prefix}[photos_attributes][0][image]",
                                   "Browse",
-                                  :required => true,
+                                  :required => false,
                                   :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
     - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
     .hidden.thumbnail-processing

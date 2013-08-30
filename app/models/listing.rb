@@ -41,7 +41,8 @@ class Listing < ActiveRecord::Base
   validates_length_of :description, :maximum => 250
   validates_with PriceValidator
   validates :hourly_reservations, :inclusion => { :in => [true, false], :message => "must be selected" }, :allow_nil => false
-  validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
+  # TODO allow when fileuploader will be fixed (and in _listing_form also)
+  # validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
 
   # == Helpers
   include Search
