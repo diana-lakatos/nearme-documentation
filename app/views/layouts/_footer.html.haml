@@ -2,17 +2,28 @@
   .container-fluid
     %footer
       .row-fluid
-        .span12
-          %ul
+        .span9
+          %ul.links
             %li= link_to "About", pages_path('about'), target: '_blank'
-            %li.last= link_to "Support", current_instance.support_url, :target => '_blank'
-            %li= link_to "Legal", pages_path('legal'), :target => '_blank'
-            %li= link_to "iPhone App", "https://itunes.apple.com/us/app/desks-near-me/id529634519?mt=8", :target => '_blank'
             %li= link_to "Careers", "http://blog.desksnear.me/careers/", :class => "clear-footer", :target => '_blank'
-            %li= link_to "Blog", current_instance.blog_url, :class => "clear-footer", :target => '_blank'
-            %li= link_to "Twitter", current_instance.twitter_url, :target => '_blank'
-            %li= link_to "Facebook", current_instance.facebook_url, :target => '_blank'
+            %li.last= link_to "Support", current_instance.support_url, :target => '_blank'
+            %li= link_to "iPhone App", "https://itunes.apple.com/us/app/desks-near-me/id529634519?mt=8", :target => '_blank'
+        .span3
+          %ul.icons
+            %li= link_to "", current_instance.blog_url, :class => "ico-rss", :target => '_blank'
+            %li= link_to "", current_instance.twitter_url, :class => "ico-twitter", :target => '_blank'
+            %li= link_to "", current_instance.facebook_url, :class => "ico-facebook-full", :target => '_blank'
 
+      .gap
+      .row-fluid
+        .span9
+          .copyright
+            %span &copy; 2013 #{current_instance.site_name}
+            %span #{current_instance.address}
+            %span #{current_instance.phone_number}
+            %span= link_to "Legal", pages_path('legal'), :target => '_blank'
+      .row-fluid
+        .span3#mixpanel
+          %a{:href => "https://mixpanel.com/f/partner"}
+            %img{:alt => "Mobile Analytics", :src => "https://cdn.mxpnl.com/site_media/images/partner/badge_blue.png"}/
 
-      .copyright
-        %p &copy; 2013 #{current_instance.site_name} &bull; #{current_instance.address} &bull; #{current_instance.phone_number}
