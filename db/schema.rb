@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130826134842) do
+ActiveRecord::Schema.define(:version => 20130826163426) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -194,6 +194,7 @@ ActiveRecord::Schema.define(:version => 20130826134842) do
     t.integer  "minimum_booking_minutes"
     t.string   "external_id"
     t.boolean  "free",                    :default => false
+    t.datetime "draft"
   end
 
   create_table "location_amenities", :force => true do |t|

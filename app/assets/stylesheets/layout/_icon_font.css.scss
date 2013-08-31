@@ -80,8 +80,10 @@ span.padding-left {
 .ico-chevron-down:before, 
 .ico-chevron-left:before, 
 .ico-list:before, 
-.ico-open-link:before {
-  font-family: 'icon-font';
+.ico-open-link:before,
+.ico-rss:before,
+.ico-facebook-full:before {
+  font-family: 'icon-font' !important;
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -307,4 +309,12 @@ span.padding-left {
 
 .ico-open-link:before {
   content: "\e036";
+}
+
+.ico-rss:before {
+  content: "\e037";
+}
+
+.ico-facebook-full:before {
+  content: "\e038";
 }

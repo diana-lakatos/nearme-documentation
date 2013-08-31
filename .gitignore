@@ -8,7 +8,6 @@ public/association
 public/user
 db/sphinx
 config/*.sphinx.conf
-config/ey.yml
 config/redis.yml
 config/database.yml
 log

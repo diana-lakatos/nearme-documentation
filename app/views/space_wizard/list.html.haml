@@ -1,31 +1,35 @@
+- no_footer!
+- no_listing_buttons!
 = render :layout => 'wizard_layout', :locals => { :step => 1 } do
   - title "List your #{current_instance.bookable_noun}"
 
-  = simple_form_for @company, :url => space_wizard_list_url, :validate => false, :html => { :class => "form-horizontal new_company", :multipart => true, :id => 'list-space-flow-form' } do |f|
+  = simple_form_for @user, :url => space_wizard_list_url, :validate => false, :html => { :class => "form-horizontal new_company", :multipart => true, :id => 'list-space-flow-form' } do |f|
 
-    = render :partial => 'companies/company_form', :locals => { :f => f, :company => @company, :only_inputs => [ :name, :industries ] }
+    = f.simple_fields_for :companies, @company do |companies_form|
+      = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => @company, :only_inputs => [ :name, :industries ] }
 
-    = f.simple_fields_for :locations, @location do |locations_form|
+      = companies_form.simple_fields_for :locations, @location do |locations_form|
 
-      = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :description, :address, :location_type, :phone ] }
+        = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :description, :address, :location_type, :phone ] }
 
-      = locations_form.simple_fields_for :listings, @listing do |listings_form|
+        = locations_form.simple_fields_for :listings, @listing do |listings_form|
 
-        - content_for :currency do
-          = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :currency ] }
+          - content_for :currency do
+            = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :currency ] }
 
-        = render 'listings/listing_form',
-                 :f => listings_form,
-                 :listing => @listing,
-                 :photo_input_name_prefix => "company[locations_attributes][0][listings_attributes][0]",
-                 :only_inputs => [ :name, :description, :listing_type, :quantity, :price, :photos ],
-                 photos: @photos
+          = render 'listings/listing_form',
+                   :f => listings_form,
+                   :listing => @listing,
+                   :photo_input_name_prefix => "[user][companies_attributes][0][locations_attributes][0][listings_attributes][0]",
+                   :only_inputs => [ :name, :description, :listing_type, :quantity, :price, :photos ],
+                   photos: @photos
 
     .user-fields
-      = simple_fields_for current_user do |uf|
-        = render 'registrations/phone_fields', :f => uf, :locals => { :country => @country }
+      = render 'registrations/phone_fields', :f => f, :locals => { :country => @country }
       .actions
-        = f.submit "List my #{current_instance.bookable_noun}", :disable_with => 'Creating...'
+        .centerbuttons
+          = f.submit "List my #{current_instance.bookable_noun}", :name => "commit", :disable_with => 'Creating...', :class => "listmydesk btn-medium"
+          = f.submit "Save as draft", :name => "save_as_draft", :disable_with => 'Saving...', :class => "saveasdraft btn-gray btn-medium"
 
 - content_for :script do
   :javascript

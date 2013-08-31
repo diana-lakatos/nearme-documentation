@@ -7,10 +7,12 @@ class Manage::PhotosController < ApplicationController
     @photo.image = @image
     @photo.content = @content
     @photo.content_type = @content_type
+    @photo.content_id = @content_id
     @photo.creator_id = current_user.id
     if @photo.save
       render :text => {
         :id => @photo.id, 
+        :content_id => @photo.content_id,
         :url => @photo.image_url(get_image_url).to_s,
         :destroy_url => destroy_space_wizard_photo_path(@photo),
         :resize_url =>  edit_manage_photo_path(@photo)
@@ -51,9 +53,10 @@ class Manage::PhotosController < ApplicationController
 
   def get_proper_hash
     # we came from list your space flow
-    if params[:company]
-      @param = params[:company][:locations_attributes]["0"][:listings_attributes]["0"]
+    if params[:user]
+      @param = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
       @content_type = 'Listing'
+      @content_id = @param[:id]
       @content = nil
     # we came from dashboard
     else 
@@ -61,6 +64,7 @@ class Manage::PhotosController < ApplicationController
         @param = params[content.downcase.to_sym]
         if @param
           @content_type = content
+          @content_id = @param[:id]
           @content = @param[:id].present? ? current_user.send(content.pluralize.downcase.to_sym).find(@param[:id]) : nil
           break
         end
