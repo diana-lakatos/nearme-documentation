@@ -37,8 +37,8 @@ module Listings
         end
 
         event_tracker.requested_a_booking(reservation)
-        flash[:notice] =  "Your reservation has been made! #{reservation.credit_card_payment? ? "Your credit card will be charged when your reservation is confirmed by the host." : "" }"
-
+        card_message = reservation.credit_card_payment? ? t('reservations.credit_card_will_be_charged') : ''
+        flash[:notice] = t('reservations.reservation_made', message: card_message)
         redirect_to upcoming_reservations_path(:id => reservation)
         render_redirect_url_as_json if request.xhr?
       else

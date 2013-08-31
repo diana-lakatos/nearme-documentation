@@ -1,18 +1,49 @@
-# Sample localization file for English. Add more files in this directory for other locales.
-# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 en:
-  errors:
-    messages:
-      wrong_content_type: "is the wrong content type"
-      free: "must be free if no prices are provided"
-  activerecord:
-    errors:
-      messages:
-        taken: "That email address is associated with an existing account."
-  day:
-    one: "1 day"
-    other: "%{count} days"
-  desk:
-    reservation_rejected_body: "%{user} rejected reservation with reason: %{reason}"
-    reservation_rejected_title: "[auto] User have rejected reservation"
+  payments:
+    marked_transferred: "Marked payment transfer as transferred"
+  authentications:
+    disconnected: "Successfully disconnected your %{provider_name}"
+    unable_to_disconnect: "We are unable to disconnect your account from %{provider_name}. Make sure you have at least one other account linked so you can log in!"
+    couldnt_authenticate: "We are sorry, but we could not authenticate you for the following reason: '%{reason}'. Please try again."
+    already_connected_to_other_user: "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account."
+    signed_in_successfully: "Signed in successfully."
+    authentication_successful: "Authentication successful."
+  dashboard:
+    add_your_company: "Please add your company first"
+    no_bookings: "You haven't made any bookings yet!"
+  locations:
+    no_listings: "There aren't any listings at that location. Check out some other spaces!"
+    listing_removed: "This listing has been removed. Displaying other listings near %{address}."
+  registrations:
+    address_verified: "Thanks - your email address has been verified!"
+    address_already_verified: "The email address has been already verified"
+    address_not_verified: "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+  reservations:
+    invalid_operation:  "Not a valid reservation operation."
+    reservation_cancelled: "You have cancelled your reservation."
+    reservation_not_confirmed: "Your reservation could not be confirmed."
+    reservation_made: "Your reservation has been made! %{message}"
+    credit_card_will_be_charged: "Your credit card will be charged when your reservation is confirmed by the host."
+  space_wizard:
+    draft_saved: "Your draft has been saved!"
+    space_listed: "Your space was listed! You can provide more details about your location and listing from this page."
+    complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
+  listings:
+    listing_inactive: "This listing is inactive. Displaying other listings near %{address}."
+  manage:
+    compaines:
+      company_updated: "Great, your company's details have been updated."
+    listings:
+      desk_added: "Great, your new Desk/Room has been added!"
+      listing_updated: "Great, your listing's details have been updated."
+      listing_deleted: "That listing has been deleted."
+    locations:
+      space_added: "Great, your new Space has been added!"
+      space_updated: "Great, your Space has been updated!"
+      space_deleted: "You've deleted %{name}"
+      space_not_deleted: "We couldn't delete %{name}"
+    reservations:
+      reservation_confirmed: "You have confirmed the reservation!"
+      reservation_not_confirmed: "Your reservation could not be confirmed."
+      reservation_rejected: "You have rejected the reservation. Maybe next time!"
+      reservation_cancelled: "You have cancelled this reservation."
