@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
 
   has_many :companies,
            :foreign_key => "creator_id",
+           :inverse_of => :creator,
            :dependent => :destroy
 
   attr_accessible :companies_attributes
@@ -71,7 +72,7 @@ class User < ActiveRecord::Base
 
   validates_presence_of :name
   validates_presence_of :password, :if => :password_required?
-  validates_presence_of :email
+  validates :email, email: true
 
   # FIXME: This is an unideal coupling of 'required parameters' for specific forms
   #        to the general validations on the User model.

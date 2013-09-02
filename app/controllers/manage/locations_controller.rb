@@ -1,4 +1,5 @@
 class Manage::LocationsController < Manage::BaseController
+  before_filter :redirect_if_draft_listing
   before_filter :find_company
   before_filter :redirect_if_no_company
   before_filter :find_location, :except => [:index, :new, :create, :data_import]
@@ -54,6 +55,10 @@ class Manage::LocationsController < Manage::BaseController
   end
 
   private
+
+  def redirect_if_draft_listing
+    redirect_to new_space_wizard_url if current_user.listings.draft.any?
+  end
 
   def find_location
     @location = current_user.locations.find(params[:id])
