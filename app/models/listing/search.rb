@@ -31,7 +31,7 @@ class Listing
         return [] unless locations.any?
 
         locations.inject([]) do |filtered_listings, location| 
-          listings =  location.listings
+          listings =  location.listings.active
           params.available_dates.each do |date|
             listings.reject! { |listing| listing.fully_booked_on?(date) }
           end

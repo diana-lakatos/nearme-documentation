@@ -27,7 +27,8 @@ class Listing < ActiveRecord::Base
   # == Scopes
   scope :featured, where(%{ (select count(*) from "photos" where content_id = "listings".id AND content_type = 'Listing') > 0  }).
     includes(:photos).order(%{ random() }).limit(5)
-
+  scope :draft, where('listings.draft IS NOT NULL')
+  scope :active, where('listings.draft IS NULL')
   scope :latest,   order("listings.created_at DESC")
 
   # == Callbacks
@@ -41,7 +42,8 @@ class Listing < ActiveRecord::Base
   validates_length_of :description, :maximum => 250
   validates_with PriceValidator
   validates :hourly_reservations, :inclusion => { :in => [true, false], :message => "must be selected" }, :allow_nil => false
-  validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
+  # TODO allow when fileuploader will be fixed (and in _listing_form also)
+  # validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
 
   # == Helpers
   include Search
@@ -59,9 +61,9 @@ class Listing < ActiveRecord::Base
   delegate :service_fee_percent, to: :location, allow_nil: true
   delegate :to_s, to: :name
 
-  attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description, 
+  attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description,
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
-    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type
+    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type, :draft
 
   attr_accessor :distance_from_search_query, :photo_not_required
 

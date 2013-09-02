@@ -2,9 +2,9 @@ class Company < ActiveRecord::Base
   has_paper_trail
   URL_REGEXP = URI::regexp(%w(http https))
 
-  attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email, :industry_ids, :locations_attributes
+  attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email, :industry_ids, :locations_attributes, :instance_id
 
-  belongs_to :creator, class_name: "User"
+  belongs_to :creator, class_name: "User", inverse_of: :companies
   belongs_to :instance
 
   has_many :locations,
@@ -30,7 +30,7 @@ class Company < ActiveRecord::Base
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
 
-  validates_presence_of :name, :industries, :instance
+  validates_presence_of :name, :industries, :instance_id
   validates_length_of :description, :maximum => 250
   validates :email, email: true, allow_blank: true
   validate :validate_url_format

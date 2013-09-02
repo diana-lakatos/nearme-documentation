@@ -16,7 +16,7 @@ class V1::ListingsController < V1::BaseController
   rescue_from ActiveRecord::RecordNotFound, with: :listing_not_found
 
   def list
-    @listings = current_user.company(params[:location_id]).listings.select('id,name')
+    @listings = current_user.company(params[:location_id]).listings.active.select('id,name')
   end
 
   def create
@@ -51,7 +51,7 @@ class V1::ListingsController < V1::BaseController
   end
 
   def show
-    render :json => Listing.find(params[:id])
+    render :json => Listing.active.find(params[:id])
   end
 
   # FIXME: same code in search/query? Can they be the same API endpoint?

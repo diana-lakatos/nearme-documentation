@@ -7,13 +7,56 @@
   }
 }
 
+#habla_window_div #habla_sizebutton_a.habla_button {
+  display: none;
+}
+
+#habla_window_div #habla_oplink_a {
+  display: block;
+  font-size: 18px;
+  text-align: center;
+  font-family: $font-medium;
+}
+
+#habla_window_div #habla_panel_div {
+  font-family: $font-regular;
+}
+
 footer {
+
+
+  .gap {
+    padding-top: 26px;
+  }
+
   line-height: 18px;
+
+  #mixpanel {
+    a {
+      float: left;
+    }
+  }
+
+  ul {
+    &.icons {
+      li {
+        padding: 0 0 0 15px;
+        float: right;
+        a:before {
+          font-size: 27px;
+        }
+        @media (max-width:$ipad-width) {
+          padding: 0;
+          width: 33%;
+        }
+      }
+    }
+  }
 
   li {
     float:left;
-    width: 12.5%;
     text-align: center;
+    padding-right: 25px;
 
     @media (max-width:$ipad-width) {
       width:25%;
@@ -23,41 +66,41 @@ footer {
       }
     }
 
-    a, a:visited {
-      color: $gray120;
-      text-decoration: none;
-      font-size: 16px;
-      text-align: center;
-      font-family: $font-medium;
+  }
 
-      &:hover {
-        color: $gray210;
-      }
+  a, a:visited {
+    color: $gray120;
+    text-decoration: none;
+    text-align: center;
+    font-family: $font-medium;
 
-     @media (max-width:$ipad-width) {
-        font-size: 14px;
-      }  
+    &:hover {
+      color: $gray210;
     }
 
-    &:first-child a {
-      padding-left: 0;
-    }
+   @media (max-width:$ipad-width) {
+      font-size: 14px;
+    }  
+  }
 
-    &.last a {
-      background: 0;
-    }
+  &:first-child a {
+    padding-left: 0;
+  }
 
-    &.active a {
-      color: $gray120;
-      &:hover {
-        color: lighten($gray120, 10%);
-      }
+  &.last a {
+    background: 0;
+  }
+
+  &.active a {
+    color: $gray120;
+    &:hover {
+      color: lighten($gray120, 10%);
     }
   }
 
-  .copyright p {
-    font-size: 10px;
-    padding: 30px 0 0;
+  .copyright span {
+    font-size: 12px;
+    padding: 15px 15px 0 0;
     margin: 0 auto;
     text-align: center;
     color: $gray120;
