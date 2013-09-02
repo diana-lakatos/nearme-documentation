@@ -2,7 +2,7 @@ class Manage::LocationsController < Manage::BaseController
   before_filter :redirect_if_draft_listing
   before_filter :find_company
   before_filter :redirect_if_no_company
-  before_filter :find_location, :except => [:index, :new, :create, :data_import]
+  before_filter :find_location, :except => [:index, :new, :create]
 
   def index
     @locations = current_user.locations
