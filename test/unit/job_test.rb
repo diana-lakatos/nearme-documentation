@@ -2,6 +2,28 @@ require 'test_helper'
 
 class JobTest < ActiveSupport::TestCase
 
+  class SampleMailer < DesksNearMeMailer
+
+    def send_email
+
+    end
+  end
+
+  context 'enqueue' do
+
+    should 'add enqueue method to mailers that invokes MailerJob with proper arguments' do
+      MailerJob.expects(:perform).with(SampleMailer, :send_email)
+      SampleMailer.enqueue.send_email
+    end
+
+    should 'understand tim with zone as argument' do
+      @time = Time.zone.now + 5.hours
+      MailerJob.expects(:perform_later).with(@time, SampleMailer, :send_email)
+      SampleMailer.enqueue_later(@time).send_email
+    end
+
+  end
+
   context '#get_performing_time' do
     setup do
       Timecop.freeze(Time.zone.now)
