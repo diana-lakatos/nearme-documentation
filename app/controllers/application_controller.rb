@@ -206,11 +206,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def should_track_analytics?
-    mixpanel.should_track?
-  end
-  helper_method :should_track_analytics?
-
   def user_google_analytics_id
     current_user.try(:google_analytics_id) ? current_user.google_analytics_id : cookies.signed[:google_analytics_id]
   end
