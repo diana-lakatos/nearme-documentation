@@ -5,6 +5,7 @@ require 'email_spec/cucumber'
 require 'factory_girl'
 require "json_spec/cucumber"
 require 'helpers/gmaps_fake'
+require 'helpers/prepare_email'
 
 DatabaseCleaner.strategy = :truncation
 
@@ -18,31 +19,32 @@ Before do
 end
 
 Before('@emails') do
-  ReservationMailer.stubs(:notify_host_with_confirmation).returns(stub(deliver: true))
-  ReservationMailer.stubs(:notify_guest_with_confirmation).returns(stub(deliver: true))
-  ReservationMailer.stubs(:notify_host_without_confirmation).returns(stub(deliver: true))
-  ReservationMailer.stubs(:notify_guest_without_confirmation).returns(stub(deliver: true))
-  ReservationMailer.stubs(:notify_host_of_confirmation).returns(stub(deliver: true))
-  ReservationMailer.stubs(:notify_guest_of_confirmation).returns(stub(deliver: true))
-  ReservationMailer.stubs(:notify_guest_of_rejection).returns(stub(deliver: true))
-  ReservationMailer.stubs(:notify_host_of_cancellation).returns(stub(deliver: true))
-  UserMailer.stubs(:email_verification).returns(stub(deliver: true))
+  mailer_stub = stub(deliver: true)
+  ReservationMailer.stubs(:notify_host_with_confirmation).returns(mailer_stub)
+  ReservationMailer.stubs(:notify_guest_with_confirmation).returns(mailer_stub)
+  ReservationMailer.stubs(:notify_host_without_confirmation).returns(mailer_stub)
+  ReservationMailer.stubs(:notify_guest_without_confirmation).returns(mailer_stub)
+  ReservationMailer.stubs(:notify_host_of_confirmation).returns(mailer_stub)
+  ReservationMailer.stubs(:notify_guest_of_confirmation).returns(mailer_stub)
+  ReservationMailer.stubs(:notify_guest_of_rejection).returns(mailer_stub)
+  ReservationMailer.stubs(:notify_host_of_cancellation).returns(mailer_stub)
+  UserMailer.stubs(:email_verification).returns(mailer_stub)
 end
 
 Before('@listing_emails') do
-  PrepareEmail.for('listing_mailer/share',  {from: 'from@test.com'})
-  PrepareEmail.for('layouts/mailer')
+  PrepareEmail.for('listing_mailer/share')
+  prepare_layout_mailer
 end
 
 Before('@login_emails') do
-  PrepareEmail.for('user_mailer/email_verification',  {from: 'from@test.com'})
-  PrepareEmail.for('layouts/mailer')
+  PrepareEmail.for('user_mailer/email_verification')
+  prepare_layout_mailer
 end
 
 Before('@inquiry_emails') do
-  PrepareEmail.for('inquiry_mailer/inquiring_user_notification',  {from: 'from@test.com'})
-  PrepareEmail.for('inquiry_mailer/listing_creator_notification', {from: 'from@test.com'})
-  PrepareEmail.for('layouts/mailer')
+  PrepareEmail.for('inquiry_mailer/inquiring_user_notification')
+  PrepareEmail.for('inquiry_mailer/listing_creator_notification')
+  prepare_layout_mailer
 end
 
 Before('@reservation_emails') do
@@ -58,8 +60,12 @@ Before('@reservation_emails') do
     'notify_host_with_confirmation',
     'notify_host_without_confirmation'
   ].each do |template|
-    PrepareEmail.for('reservation_mailer/'+template, {from: 'from@test.com'})
+    PrepareEmail.for("reservation_mailer/#{template}")
   end
+  prepare_layout_mailer
+end
+
+def prepare_layout_mailer
   PrepareEmail.for('layouts/mailer')
 end
 

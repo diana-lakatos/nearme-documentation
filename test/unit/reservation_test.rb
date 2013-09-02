@@ -225,8 +225,8 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should "not reset total cost when saving an existing reservation" do
-        ReservationMailer.expects(:notify_host_with_confirmation).returns(stub(deliver: true)).at_least_once
-        ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).at_least_once
+        ReservationMailer.expects(:notify_host_with_confirmation).returns(mailer_stub).at_least_once
+        ReservationMailer.expects(:notify_guest_with_confirmation).returns(mailer_stub).at_least_once
 
         dates              = [1.week.from_now.monday]
         quantity           =  2

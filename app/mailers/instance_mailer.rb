@@ -1,6 +1,6 @@
 require 'mail_view'
 
-class DesksNearMeMailer < ActionMailer::Base
+class InstanceMailer < ActionMailer::Base
   append_view_path EmailResolver.instance
 
   include ActionView::Helpers::TextHelper

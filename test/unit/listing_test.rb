@@ -163,8 +163,8 @@ class ListingTest < ActiveSupport::TestCase
     end
 
     should "return monday for tuesday if the whole week is booked" do
-      ReservationMailer.expects(:notify_host_with_confirmation).returns(stub(deliver: true)).once
-      ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).once
+      ReservationMailer.expects(:notify_host_with_confirmation).returns(mailer_stub).once
+      ReservationMailer.expects(:notify_guest_with_confirmation).returns(mailer_stub).once
 
       @listing.save!
       tuesday = Time.zone.today.sunday + 2
@@ -179,8 +179,8 @@ class ListingTest < ActiveSupport::TestCase
     end
 
     should "return thursday for tuesday if there is one desk left" do
-      ReservationMailer.expects(:notify_host_with_confirmation).returns(stub(deliver: true)).twice
-      ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).twice
+      ReservationMailer.expects(:notify_host_with_confirmation).returns(mailer_stub).twice
+      ReservationMailer.expects(:notify_guest_with_confirmation).returns(mailer_stub).twice
 
       @listing.quantity = 2
       @listing.save!

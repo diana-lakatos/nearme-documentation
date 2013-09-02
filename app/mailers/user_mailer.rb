@@ -1,4 +1,4 @@
-class UserMailer < DesksNearMeMailer
+class UserMailer < InstanceMailer
 
   helper SharingHelper
 

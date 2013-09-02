@@ -25,6 +25,7 @@ Spork.prefork do
   require 'mocha/setup'
   require 'mocha/integration/test_unit'
   require 'webmock/test_unit'
+  require 'helpers/prepare_email'
 
   Turn.config.format = :dot
 
@@ -88,6 +89,10 @@ Spork.prefork do
     def stub_mixpanel
       stub_request(:get, /.*api\.mixpanel\.com.*/)
       @tracker = Analytics::EventTracker.any_instance
+    end
+
+    def mailer_stub
+      stub(deliver: true)
     end
 
     def stub_billing_gateway

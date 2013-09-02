@@ -1,4 +1,4 @@
-class ListingMailer < DesksNearMeMailer
+class ListingMailer < InstanceMailer
 
   def share(listing, email, name, sharer, message=nil)
     @listing = listing

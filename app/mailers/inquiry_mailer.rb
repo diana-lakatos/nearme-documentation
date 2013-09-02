@@ -1,4 +1,4 @@
-class InquiryMailer < DesksNearMeMailer
+class InquiryMailer < InstanceMailer
 
   def inquiring_user_notification(inquiry)
     @inquiry = inquiry

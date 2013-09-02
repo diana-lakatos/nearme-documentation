@@ -1,4 +1,4 @@
-class ReservationMailer < DesksNearMeMailer
+class ReservationMailer < InstanceMailer
   def notify_guest_of_cancellation(reservation)
     setup_defaults(reservation)
     generate_mail

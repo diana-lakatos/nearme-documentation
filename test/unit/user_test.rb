@@ -303,14 +303,14 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'not spam user' do
-      UserMailer.expects(:notify_about_wrong_phone_number).returns(stub(deliver: true)).once
+      UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
       5.times do 
         @user.notify_about_wrong_phone_number
       end
     end
 
     should 'update timestamp of notification' do
-      UserMailer.expects(:notify_about_wrong_phone_number).returns(stub(deliver: true)).once
+      UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
       Timecop.freeze(Time.zone.now)
       @user.notify_about_wrong_phone_number
       assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a

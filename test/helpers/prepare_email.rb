@@ -8,6 +8,7 @@ class PrepareEmail
   end
 
   def self.for(virtual_path, attributes = {})
+    attributes = attributes.reverse_merge!(from: 'from@test.com')
     prefix, name = virtual_path.split('/')
 
     html_path = Rails.root.join('test', 'assets', 'mail_views', prefix, "#{name}.html.liquid")

@@ -2,6 +2,8 @@ namespace :import do
 
   desc "import DesksNearMe liquid mailers"
   task :mailers => :environment do
+    require Rails.root.join('test', 'helpers', 'prepare_email')
+    EmailTemplate.destroy_all
     PrepareEmail.import_legacy
   end
 
