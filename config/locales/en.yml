@@ -16,3 +16,11 @@ en:
   desk:
     reservation_rejected_body: "%{user} rejected reservation with reason: %{reason}"
     reservation_rejected_title: "[auto] User have rejected reservation"
+  search:
+    list:
+      address_could_not_be_found: "The address you entered couldn't be found, please try another search query."
+  search_notifications:
+    form:
+      try_another_search_or_subscribe: "Try another search query, or subscribe below to be notified via email when a desk is added at this location."
+      try_another_search_or_enter_email: "Try another search query, or enter your email address below to be notified when a desk is added at this location."
+    you_will_be_notified: "You will be notified when a desk is added at this location."

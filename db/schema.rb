@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130826163426) do
+ActiveRecord::Schema.define(:version => 20130829005231) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -340,6 +340,17 @@ ActiveRecord::Schema.define(:version => 20130826163426) do
     t.integer  "quantity",                 :default => 1,         :null => false
     t.integer  "service_fee_amount_cents"
     t.string   "rejection_reason"
+  end
+
+  create_table "search_notifications", :force => true do |t|
+    t.string   "email"
+    t.integer  "user_id"
+    t.string   "query"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.boolean  "notified",   :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   create_table "sessions", :force => true do |t|
