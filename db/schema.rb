@@ -194,6 +194,7 @@ ActiveRecord::Schema.define(:version => 20130829005231) do
     t.integer  "minimum_booking_minutes"
     t.string   "external_id"
     t.boolean  "free",                    :default => false
+    t.datetime "draft"
   end
 
   create_table "location_amenities", :force => true do |t|

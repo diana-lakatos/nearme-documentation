@@ -14,4 +14,20 @@ module LayoutHelper
   def no_header_links!
     @no_header = true
   end
+
+  def no_footer?
+    @no_footer
+  end
+
+  def no_footer!
+    @no_footer = true
+  end
+
+  def no_listing_buttons?
+    @no_listing_buttons
+  end
+
+  def no_listing_buttons!
+    @no_listing_buttons = true
+  end
 end

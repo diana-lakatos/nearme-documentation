@@ -3,7 +3,7 @@ class BackgroundIssueLogger < IssueLogger
     if self.in_debug_mode?
       super
     else
-      delay.log_issue(*args)
+      delay.perform_log_issue(*args)
     end
   end
 end
