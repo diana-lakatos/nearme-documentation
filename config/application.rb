@@ -52,6 +52,9 @@ module DesksnearMe
     # Access the DB or load models when precompiling assets
     config.assets.initialize_on_precompile = true
 
+    # Add fonts stylesheet to the precompile array
+    config.assets.precompile += ['fonts.css']
+
     # Enable the asset pipeline
     config.assets.enabled = true
     config.assets.digest = true
