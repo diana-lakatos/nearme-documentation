@@ -57,12 +57,14 @@ class Job
   end
 
   def self.get_performing_time(when_perform)
-    performing_time = case when_perform.class.to_s
-      when "Fixnum"
+    performing_time = case when_perform
+      when ActiveSupport::Duration
         Time.zone.now + when_perform
-      when "ActiveSupport::TimeWithZone"
+      when Fixnum
+        Time.zone.now + when_perform
+      when ActiveSupport::TimeWithZone
         when_perform
-      when "Time"
+      when Time
         raise "Job.perform_later: use TimeWithZone (i.e. Time.zone.now instead of Time.now etc)"
       else
         raise "Job.perform_later: Unknown first argument, must be number of seconds or time with zone - was #{when_perform} (#{when_perform.class})"

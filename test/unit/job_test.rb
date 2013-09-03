@@ -29,8 +29,12 @@ class JobTest < ActiveSupport::TestCase
       Timecop.freeze(Time.zone.now)
     end
 
-    should 'accept number of seconds as argument' do
+    should 'accept activesupport::duration as argument' do
       assert_equal Time.zone.now + 1.hour, Job.get_performing_time(1.hour)
+    end
+
+    should 'accept number of seconds as argument' do
+      assert_equal Time.zone.now + 1.hour, Job.get_performing_time(3600)
     end
 
     should 'accept time' do
