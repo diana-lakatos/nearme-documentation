@@ -13,7 +13,7 @@ module SearchHelpers
       page.execute_script("$('#listing_search form').submit()")
       wait_until_results_are_returned
     else
-      click_link_or_button "Search"
+      page.execute_script("$('#listing_search').unbind('submit').submit()")
     end
   end
 
