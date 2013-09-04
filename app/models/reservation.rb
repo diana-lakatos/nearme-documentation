@@ -17,7 +17,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
-    :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method
+    :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
 
   has_many :periods,
            :class_name => "ReservationPeriod",

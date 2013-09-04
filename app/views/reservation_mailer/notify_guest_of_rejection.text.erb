@@ -1,5 +1,5 @@
-The booking that you made on <%= @reservation.created_at.strftime("%A, %e %B") %> for '<%= @listing.name %>' at <%= link_to(@listing.location.name, location_url(@listing.location, :listing_id => @listing)) %> was declined by the host.
+The booking that you made on <%= @reservation.created_at.strftime("%A, %e %B") %> for '<%= @listing.name %>' at <%= link_to(@listing.location.name, location_url(@listing.location, :listing_id => @listing)) %> was declined by the host for the following reason:
 
-I'm sure it's not personal - they were probably just busy that day.
+<%= @reservation.rejection_reason %>
 
 Don't worry - <%= link_to 'find other locations near you', search_url %>!
