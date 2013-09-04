@@ -1,8 +1,8 @@
-class @ChartWrapper.Line extends @ChartWrapper
+class @ChartWrapper.Bar extends @ChartWrapper
 
   constructor: (canvas, data, labels, titles = []) ->
     super(canvas, data, labels, titles)
 
   draw: ->
-    new Chart(@ctx).Line(@data, @globalGraphSettings)
+    new Chart(@ctx).Bar(@data, @globalGraphSettings)
 

@@ -53,6 +53,7 @@ gem 'chameleon'
 
 gem 'useragent'
 gem 'mixpanel'
+gem 'mixpanel_client'
 
 gem 'rest-client'
 

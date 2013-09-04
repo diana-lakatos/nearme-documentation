@@ -1,5 +1,6 @@
 #= require_self
 #= require ./chart/line
+#= require ./chart/bar
 
 class @ChartWrapper
 
@@ -19,7 +20,7 @@ class @ChartWrapper
       }
     ]
 
-  constructor: (canvas, data, labels) ->
+  constructor: (canvas, data, labels, titles) ->
 
     @canvas = canvas
     @globalGraphSettings = {
@@ -27,12 +28,15 @@ class @ChartWrapper
       scaleFontFamily : "'Futura-regular', sans-serif",
       scaleFontSize : 18
     }
+    @titles = titles
 
     @data = {
         labels : labels,
         datasets : @parseData(data)
     }
     @bindEvents()
+    if @titles.length > 0
+      @drawLegend()
     @refreshChart()
 
   bindEvents: ->
@@ -43,6 +47,8 @@ class @ChartWrapper
     result = []
     for index, values of data
       result.push $.extend({ data : values }, @defaultColors()[index])
+      if @titles[index]
+        result[index]['title'] = @titles[index]
     result
 
   refreshChart: ->
@@ -59,3 +65,9 @@ class @ChartWrapper
     })
     @ctx = @canvas.get(0).getContext("2d")
 
+  drawLegend: ->
+      legend = $('<div class="legend"></div>')
+      @canvas.parent().append(legend)
+      for dataset in @data.datasets
+        title = $("<span class='title' style='border-color: #{dataset.strokeColor};border-style: solid;'>#{dataset.title}</span>")
+        legend.append(title)

@@ -1,4 +1,4 @@
-- if GOOGLE_ANALYTICS_SETTINGS[:tracking_code].present?
+- if DesksnearMe::Application.config.google_analytics[:tracking_code].present?
   :javascript
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -7,7 +7,7 @@
 
     // in the feature there will be userId, so we will use mixpanel's ananymous_id approach. We should not overwrite clientId now - it is for tracking devices, not users 
     // see https://developers.google.com/analytics/devguides/collection/analyticsjs/
-    ga('create', "#{GOOGLE_ANALYTICS_SETTINGS[:tracking_code]}");
+    ga('create', "#{DesksnearMe::Application.config.google_analytics[:tracking_code]}");
     ga('send', 'pageview');
 
   // we want to track events like sign up etc. We could just insert new input with name 'google_analytics_id' to every form
