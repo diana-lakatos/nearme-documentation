@@ -4,7 +4,7 @@
 
 - # Initialize mixpanel
 :javascript
-  mixpanel.init("#{MIXPANEL_TOKEN}");
+  mixpanel.init("#{DesksnearMe::Application.config.mixpanel[:token]}");
   mixpanel.identify("#{self.mixpanel.distinct_id}");
   mixpanel.register(#{raw self.mixpanel.session_properties.to_json});
 

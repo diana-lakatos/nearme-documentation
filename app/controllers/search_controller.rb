@@ -1,12 +1,12 @@
 require "will_paginate/array"
 class SearchController < ApplicationController
 
-  helper_method :search, :query, :listings, :result_view
+  helper_method :search, :query, :listings, :result_view, :search_notification
 
   SEARCH_RESULT_VIEWS = %w(list map)
 
   def index
-    @located = params[:lat] && params[:lng] ? true : false
+    @located = (params[:lat].present? and params[:lng].present?)
     render "search/#{result_view}"
     if should_log_conducted_search?
       event_tracker.conducted_a_search(search, { search_query: query, result_view: result_view, result_count: result_count })
@@ -86,5 +86,7 @@ class SearchController < ApplicationController
     params[:q] && params[:q] == cookies[:last_search_query]
   end
 
-
+  def search_notification
+    @search_notification ||= SearchNotification.new(query: params[:q], latitude: params[:lat], longitude: params[:lng])
+  end
 end
