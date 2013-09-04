@@ -5,6 +5,13 @@ class @PhotoUploader
   @initialize: (scope = $('body')) ->
     $('.fileupload', scope).each (index, element) =>
       @uploaders.push new PhotoUploader($(element))
+    @enableInputFieldInFirefox()
+
+  @enableInputFieldInFirefox: ->
+    if $.browser.mozilla && parseInt($.browser.version) < 22
+      $('.fileupload').on 'click', 'label', (e) ->
+        if e.currentTarget == this && e.target.nodeName != 'INPUT'
+          $(this.control).click()
 
   # Update images to reload them when images were changed via e.g. ajax request.
   @updateImages: (ids = [])->
