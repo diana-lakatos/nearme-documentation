@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130829005231) do
+ActiveRecord::Schema.define(:version => 20130903165717) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -285,6 +285,7 @@ ActiveRecord::Schema.define(:version => 20130829005231) do
     t.integer  "rotation_angle"
     t.integer  "width"
     t.integer  "height"
+    t.string   "filepicker_url"
   end
 
   create_table "reservation_charges", :force => true do |t|

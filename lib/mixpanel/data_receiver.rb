@@ -1,7 +1,7 @@
 class Mixpanel::DataReceiver
 
   def initialize
-    @mixpanel = Mixpanel::Client.new(MIXPANEL_SETTINGS)
+    @mixpanel = Mixpanel::Client.new(DesksnearMe::Application.config.mixpanel)
   end
   
   def get_funnels
