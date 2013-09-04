@@ -1,4 +1,16 @@
 en:
+  errors:
+    messages:
+      wrong_content_type: "is the wrong content type"
+      free: "must be free if no prices are provided"
+  activerecord:
+    errors:
+      messages:
+        taken: "That email address is associated with an existing account."
+  day:
+    one: "1 day"
+    other: "%{count} days"
+
   payments:
     marked_transferred: "Marked payment transfer as transferred"
   authentications:
