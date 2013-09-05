@@ -33,10 +33,9 @@ class ReservationCharge < ActiveRecord::Base
   }
 
   scope :total_by_currency, -> {
-    paid.joins(:reservation).
-      group('reservations.currency').
+    paid.group('reservation_charges.currency').
       select('
-        reservations.currency,
+        reservation_charges.currency,
         SUM(
           reservation_charges.subtotal_amount_cents
           + reservation_charges.service_fee_amount_cents
