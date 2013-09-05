@@ -31,7 +31,7 @@
     @include box-sizing(border-box);
     @include border-radius($border-radius-default);
     position: relative;
-    padding: $padding-default;
+    padding: ($padding-default - 2);
     height: $listing-photo-height;
     background: $gray60;    
     color: $gray210;

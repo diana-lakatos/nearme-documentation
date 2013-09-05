@@ -14,6 +14,15 @@ module Auth
       user.save
     end
 
+    def apply_avatar_if_empty
+      user = authenticated_user
+      if @auth_params['info']['image'] && !user.avatar.any_url_exists?
+        user.remote_avatar_url = @auth_params['info']['image'] 
+        user.avatar_versions_generated_at = Time.zone.now
+        user.save!
+      end
+    end
+
     def remember_user!
       authenticated_user.remember_me!
     end

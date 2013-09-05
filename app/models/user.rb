@@ -70,7 +70,7 @@ class User < ActiveRecord::Base
       where("mailchimp_synchronized_at IS NULL OR mailchimp_synchronized_at < updated_at")
   }
 
-  mount_uploader :avatar, AvatarUploader
+  mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
 
 
   validates_presence_of :name
@@ -92,8 +92,8 @@ class User < ActiveRecord::Base
          :rememberable, :trackable, :validatable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :biography, :industry_ids,
-                  :country_name, :mobile_number
+  attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
+    :biography, :industry_ids, :country_name, :mobile_number
 
   delegate :to_s, :to => :name
 
@@ -222,11 +222,10 @@ class User < ActiveRecord::Base
   end
 
   def use_social_provider_image(url)
-    self.remote_avatar_url = url unless avatar_provided?
-  end
-
-  def avatar_provided?
-    return AvatarUploader.new.to_s != self.avatar.to_s
+    unless avatar.any_url_exists?
+      self.avatar_versions_generated_at = Time.zone.now
+      self.remote_avatar_url = url 
+    end
   end
 
   def first_listing

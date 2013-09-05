@@ -29,8 +29,9 @@ module OmniauthHelper
     OmniAuth.config.mock_auth[provider.downcase.to_sym] = OmniAuth::AuthHash.new(options)
   end
 
-  def stub_image_url
-    stub_request(:get, @image_url).to_return(:status => 200, :body => get_asset_image_path, :headers => {'Content-Type' => 'image/jpeg'})
+  def stub_image_url(image_url = nil)
+    image_url ||= @image_url
+    stub_request(:get, image_url).to_return(:status => 200, :body => get_asset_image_path, :headers => {'Content-Type' => 'image/jpeg'})
   end
 
   def get_asset_image_path

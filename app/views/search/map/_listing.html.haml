@@ -8,7 +8,7 @@
       .popover-image-container
         = link_to location_listing_path(listing.location, listing) do
           - if listing.photos.first
-            = image_tag listing.photos.first.url(:medium), :title => listing.name, :alt => listing.name
+            = image_tag photo_thumbnail_url(listing.photos.first), :title => listing.name, :alt => listing.name
           - else
             = image_tag space_listing_placeholder_path(:height => 89, :width => 144), :title => listing.name, :alt => listing.name
       .popover-info-container

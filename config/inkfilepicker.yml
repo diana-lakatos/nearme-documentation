@@ -1,0 +1,8 @@
+production:
+  api_key: Aa3nkZSQUOBA1ZLhddsvwz
+staging:
+  api_key: ApbpJFe6R8StV3LmYpxZ1z
+development:
+  api_key: AFWbvclyPQ4WjIIrem35wz
+test:
+  api_key: AFWbvclyPQ4WjIIrem35wz

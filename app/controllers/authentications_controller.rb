@@ -85,6 +85,7 @@ class AuthenticationsController < ApplicationController
   def signed_in_successfully
     flash[:success] = t('authentications.signed_in_successfully') if use_flash_messages?
     @oauth.remember_user!
+    @oauth.apply_avatar_if_empty
     update_analytics_google_id(@oauth.authenticated_user)
     log_logged_in
     sign_in_and_redirect(:user, @oauth.authenticated_user)

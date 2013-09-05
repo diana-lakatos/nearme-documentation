@@ -298,7 +298,6 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.integer  "position"
     t.datetime "deleted_at"
     t.integer  "creator_id"
-    t.boolean  "versions_generated", :default => false, :null => false
     t.integer  "crop_x"
     t.integer  "crop_y"
     t.integer  "crop_h"
@@ -306,6 +305,9 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.integer  "rotation_angle"
     t.integer  "width"
     t.integer  "height"
+    t.text     "image_transformation_data"
+    t.string   "image_original_url"
+    t.datetime "image_versions_generated_at"
   end
 
   create_table "reservation_charges", :force => true do |t|
@@ -451,15 +453,18 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
-    t.float    "guest_rating_average"
-    t.integer  "guest_rating_count"
-    t.float    "host_rating_average"
-    t.integer  "host_rating_count"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
     t.string   "browser"
     t.string   "browser_version"
     t.string   "platform"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
+    t.text     "avatar_transformation_data"
+    t.string   "avatar_original_url"
+    t.datetime "avatar_versions_generated_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

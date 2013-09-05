@@ -10,14 +10,16 @@ Feature: User can manipulate photos for listing
     And I am on the manage listing page
 
   Scenario: User can crop image
-    And I open rotate and crop modal
-    Then I crop image
-    And I should see cropped photo
+    Given I open rotate and crop modal
+     When I crop image
+     Then I should see "Your changes will be applied"
+      And I should see cropped photo
 
   Scenario: User can rotate image
-    And I open rotate and crop modal
-    Then I rotate image
-    And I should see rotated photo
+    Given I open rotate and crop modal
+     When I rotate image
+     Then I should see "Your changes will be applied"
+      And I should see rotated photo
 
 
 

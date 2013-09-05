@@ -45,13 +45,6 @@ class V1::ProfileControllerTest < ActionController::TestCase
     end
   end
 
-  test "should fail when data of content type other than image/jpeg is posted to the method" do
-    with_carrier_wave_processing do
-      raw_post :upload_avatar, {:filename => "avatar.jpg"}, IO.read('test/fixtures/avatar.txt')
-      assert_response :unprocessable_entity
-    end
-  end
-
   test "should remove avatar image and clear column" do
     @user.avatar = File.open("test/fixtures/avatar.jpg")
     @user.save!

@@ -2,6 +2,16 @@
 class PhotoUploader < BaseImageUploader
   SPACE_FULL_IMAGE_W = 895
   SPACE_FULL_IMAGE_H = 554
+  THUMBNAIL_DIMENSIONS = { 
+    :thumb => { :width => 96, :height => 96 },
+    :medium => { :width => 144, :height => 89 },
+    :large => { :width => 1280, :height => 960 },
+    :space_listing => { :width => 410, :height => 254 },
+    :golden => { :width => SPACE_FULL_IMAGE_W, :height => SPACE_FULL_IMAGE_H },
+  }
+  ASPECT_RATIO = 16.0/10.0
+  include CarrierWave::InkFilePicker
+  include CarrierWave::TransformableImage
 
   def store_dir
     "uploads/photos/#{model.id}/"
@@ -15,42 +25,44 @@ class PhotoUploader < BaseImageUploader
     end
   end
 
-  process :auto_orient
-
-  version :adjusted do
-    process :apply_rotate
+  version :transformed do
     process :apply_crop
+    process :apply_rotate
   end
 
-  # it's not a mistake that we don't have :if condition here - we want to be able to display img preview ASAP
-  version :medium, :from_version => :adjusted do
-    process :resize_to_fill => [144, 89]
+  version :thumb, :from_version => :transformed do
+    process :resize_to_fill => [THUMBNAIL_DIMENSIONS[:thumb][:width], THUMBNAIL_DIMENSIONS[:thumb][:height]]
   end
 
-  version :thumb, :from_version => :adjusted, :if => :all_versions? do
-    process :resize_to_fill => [96, 96]
+  version :medium, :from_version => :transformed do
+    process :resize_to_fill => [THUMBNAIL_DIMENSIONS[:medium][:width], THUMBNAIL_DIMENSIONS[:medium][:height]]
   end
 
-  version :large, :from_version => :adjusted, :if => :all_versions? do
-    process :resize_to_fill => [1280, 960]
+  version :large, :from_version => :transformed do
+    process :resize_to_fill => [THUMBNAIL_DIMENSIONS[:large][:width], THUMBNAIL_DIMENSIONS[:large][:height]]
   end
 
-  version :space_listing, :from_version => :adjusted, :if => :all_versions? do
-    process :resize_to_fill => [410, 254]
+  version :space_listing, :from_version => :transformed do
+    process :resize_to_fill => [THUMBNAIL_DIMENSIONS[:space_listing][:width], THUMBNAIL_DIMENSIONS[:space_listing][:height]]
   end
 
-  version :golden, :from_version => :adjusted, :if => :all_versions? do
-    process :resize_to_fill => [SPACE_FULL_IMAGE_W, SPACE_FULL_IMAGE_H]
-  end
-
-  def auto_orient
-    manipulate! do |img|
-      img.auto_orient
-      img
-    end
+  version :golden, :from_version => :transformed do
+    process :resize_to_fill => [THUMBNAIL_DIMENSIONS[:golden][:width], THUMBNAIL_DIMENSIONS[:golden][:height]]
   end
 
   include NewrelicCarrierwaveTracker
+
+  def stored_transformation_data
+    model.image_transformation_data
+  end
+
+  def stored_original_url
+    model.image_original_url
+  end
+
+  def stored_versions_generated
+    model.image_versions_generated_at
+  end
 
   protected
 
@@ -59,26 +71,4 @@ class PhotoUploader < BaseImageUploader
     model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.uuid)
   end
 
-  private
-
-  def all_versions?(*args)
-    model.all_versions?
-  end
-
-  def apply_crop
-    return if [model.crop_x, model.crop_y, model.crop_w, model.crop_h].any? &:nil?
-
-    manipulate! do |img|
-      img.crop "#{model.crop_w.to_s}x#{model.crop_h.to_s}+#{model.crop_x.to_s}+#{model.crop_y.to_s}"
-      img
-    end
-  end
-
-  def apply_rotate
-    return unless model.rotation_angle
-    manipulate! do |img|
-      img.rotate model.rotation_angle.to_s
-      img
-    end
-  end
 end

@@ -47,18 +47,6 @@ class SpaceWizardController < ApplicationController
     end
   end
 
-  def submit_photo
-    @photo = Photo.new
-    @photo.image = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:photos_attributes]["0"][:image]
-    @photo.content_type = 'Listing'
-    @photo.creator_id = current_user.id
-    if @photo.save
-      render :text => {:id => @photo.id, :url => @photo.image_url(:thumb).to_s, :destroy_url => destroy_space_wizard_photo_path(@photo) }.to_json, :content_type => 'text/plain' 
-    else
-      render :text => [{:error => @photo.errors.full_messages}], :content_type => 'text/plain', :status => 422
-    end
-  end
-
   def destroy_photo
     @photo = current_user.photos.find(params[:id])
     if @photo.destroy
