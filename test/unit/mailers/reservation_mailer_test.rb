@@ -55,7 +55,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
     assert_equal %w(support@desksnear.me), mail.from
     assert_equal %w(support@desksnear.me), mail.reply_to
     assert_equal [@reservation.owner.email], mail.to
-    assert_equal "[Desks Near Me] A booking you made has been rejected", mail.subject
+    assert_equal "[Desks Near Me] A booking you made has been declined", mail.subject
     assert_equal %w(notifications@desksnear.me), mail.bcc
   end
 

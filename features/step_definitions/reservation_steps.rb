@@ -304,7 +304,9 @@ Then /^a reservation cancelled by owner email should be sent to (.*)$/ do |email
 end
 
 Then /^a reservation rejected email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match "A booking you made has been rejected"
+  last_email_for(email).subject.should match "A booking you made has been declined"
+  last_email_for(email).html_part.body.should include 'The only room available is the studio meeting room.'
+  last_email_for(email).text_part.body.should include 'The only room available is the studio meeting room.'
 end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|
