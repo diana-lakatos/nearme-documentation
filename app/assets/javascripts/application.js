@@ -19,6 +19,7 @@
 //= require ./vendor/jQueryRotate
 //= require ./vendor/placeholder
 //= require ./vendor/jquery.ias
+//= require ./vendor/ZeroClipboard
 //= require ./vendor/markerclusterer
 //= require jquery-fileupload/basic
 //= require history_jquery
@@ -63,6 +64,7 @@ window.DNM = {
     Flash.initialize(scope);
     Accordian.initialize(scope);
     PhotoUploader.initialize(scope);
+    Clipboard.initialize(scope);
   },
 
   initializeAjaxCSRF: function() {

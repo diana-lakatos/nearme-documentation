@@ -46,7 +46,7 @@ end
 
 When(/^I open rotate and crop modal$/) do
   within '.photo-item' do
-    @image_src = page.find('img')['src']
+    @image_src = page.find('div.photo-item img')['src']
     @image_width = Photo.last.image.width
     @image_height = Photo.last.image.height
     click_on 'Rotate & Crop'
@@ -54,7 +54,7 @@ When(/^I open rotate and crop modal$/) do
 end
 
 When(/^I should see cropped photo$/) do
-  page.find('img')['src'].should_not == @image_src
+  page.find('div.photo-item img')['src'].should_not == @image_src
   Photo.last.image.adjusted.should have_dimensions(200, 125)
 end
 
@@ -66,6 +66,6 @@ Then(/^I rotate image$/) do
 end
 
 When(/^I should see rotated photo$/) do
-  page.find('img')['src'].should_not == @image_src
+  page.find('div.photo-item img')['src'].should_not == @image_src
   Photo.last.image.adjusted.should have_dimensions(@image_height, @image_width)
 end

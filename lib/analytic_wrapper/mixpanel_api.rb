@@ -30,7 +30,7 @@ class AnalyticWrapper::MixpanelApi
 
   # Creates a new mixpanel API interface instance
   def self.mixpanel_instance(options = {})
-    Mixpanel::Tracker.new(MIXPANEL_TOKEN, options)
+    Mixpanel::Tracker.new(DesksnearMe::Application.config.mixpanel[:token], options)
   end
 
   # Initialize a mixpanel wrapper.

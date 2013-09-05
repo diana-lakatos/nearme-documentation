@@ -17,6 +17,13 @@ class @SpaceWizardSpaceForm
     #@unlockInput()
     #comment the next line to disable control group disable
 
+    # This form has two submit buttons, this code stops rails unobtrusive js
+    # from triggering both diasable_with text swaps.
+    $(".new_company :submit").click ->
+      buttons = $(".new_company :submit").not($(this))
+      buttons.removeAttr "data-disable-with"
+      buttons.attr "disabled", true
+
   unlockInput: (with_focus = true) ->
     if @input_number < @input_length
       input = @container.find('> .control-group').eq(@input_number).removeClass('input-disabled').find(':input').removeAttr("disabled").eq(0)

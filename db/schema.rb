@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130826134842) do
+ActiveRecord::Schema.define(:version => 20130903165717) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -214,6 +214,7 @@ ActiveRecord::Schema.define(:version => 20130826134842) do
     t.integer  "minimum_booking_minutes"
     t.string   "external_id"
     t.boolean  "free",                    :default => false
+    t.datetime "draft"
   end
 
   create_table "location_amenities", :force => true do |t|
@@ -304,6 +305,7 @@ ActiveRecord::Schema.define(:version => 20130826134842) do
     t.integer  "rotation_angle"
     t.integer  "width"
     t.integer  "height"
+    t.string   "filepicker_url"
   end
 
   create_table "reservation_charges", :force => true do |t|
@@ -361,6 +363,17 @@ ActiveRecord::Schema.define(:version => 20130826134842) do
     t.string   "rejection_reason"
     t.datetime "request_guest_rating_email_sent_at"
     t.datetime "request_host_rating_email_sent_at"
+  end
+
+  create_table "search_notifications", :force => true do |t|
+    t.string   "email"
+    t.integer  "user_id"
+    t.string   "query"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.boolean  "notified",   :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   create_table "sessions", :force => true do |t|

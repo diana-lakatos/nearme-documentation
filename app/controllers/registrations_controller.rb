@@ -28,8 +28,8 @@ class RegistrationsController < Devise::RegistrationsController
       @user.save!
       analytics_apply_user(@user)
       event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
-      AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(current_instance, @user.id)
-      UserMailer.email_verification(@user).deliver
+      AfterSignupMailer.enqueue_later(1.hour).help_offer(current_instance, @user.id)
+      UserMailer.enqueue.email_verification(@user)
     end
 
     # Clear out temporarily stored Provider authentication data if present
@@ -80,13 +80,13 @@ class RegistrationsController < Devise::RegistrationsController
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
-      flash[:success] = "Thanks - your email address has been verified!"
+      flash[:success] = t('registrations.address_verified')
       redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path
     else
       if @user.verified_at
-        flash[:warning] = "The email address has been already verified"
+        flash[:warning] = t('registrations.address_already_verified')
       else
-        flash[:error] = "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+        flash[:error] = t('registrations.address_not_verified')
       end
       redirect_to root_path
     end

@@ -26,14 +26,18 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
     should "not raise exception if hash is incomplete" do
       assert_no_difference('Listing.count') do
-        post :submit_listing, { "company"=> { "name"=>"International Secret Intelligence Service" } }  
+        post :submit_listing, { "user" => {"companies_attributes" => {"0"=> { "name"=>"International Secret Intelligence Service" }}}}
       end
     end
 
   end
 
   context "geo-located default country" do
-    
+    setup do
+      @user.country_name = nil
+      @user.save!
+    end
+
     should "be set to Greece" do
       VCR.use_cassette "freegeoip_greece" do
         # Set request ip to an ip address in Greece
@@ -72,6 +76,11 @@ class SpaceWizardControllerTest < ActionController::TestCase
         user == @user
       end
       post :submit_listing, get_params
+    end
+
+    should "track draft creation" do
+      @tracker.expects(:saved_a_draft)
+      post :submit_listing, get_params.merge({"save_as_draft"=>"Save as draft"})
     end
 
     should 'track clicked list your bookable when logged in' do
@@ -135,10 +144,13 @@ class SpaceWizardControllerTest < ActionController::TestCase
   private
 
   def get_params(daily_price = nil, weekly_price = nil, monthly_price = nil, free = "1")
-    {"company"=>
+    {"user" =>
+    {"companies_attributes"=>
+     {"0" =>
      {
        "name"=>"International Secret Intelligence Service", 
-       "industry_ids"=>["#{@industry.id}"], 
+       "industry_ids"=>["#{@industry.id}"],
+       "instance_id"=>"#{@user.instance_id}",
        "locations_attributes"=>
        {"0"=>
         {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.", 
@@ -165,11 +177,11 @@ class SpaceWizardControllerTest < ActionController::TestCase
         "currency"=>"USD"}
        }
      },
-     "user" => {
-       "country_name" => "United States",
-       "phone" => "123456789"
-     }
+     },
+     "country_name" => "United States",
+     "phone" => "123456789"
     }
+   }
   end
 
   def create_listing

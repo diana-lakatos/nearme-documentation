@@ -5,17 +5,13 @@
     .google-map
       #listings_map.inner
 
-- content_for :loading do
-  .loading{ style: 'display: none;' }
-    = image_tag "spinner.gif"
-
-= yield :loading
+= render 'shared/loading_spinner'
 - if listings.any?
   %section#results.map
     = render partial: 'search/map/marker', collection: listings, as: :listing
 - elsif !@located
   %section#results.no_results
-    = yield :loading
+    = render 'shared/loading_spinner'
     .text-center
       %br/
       %br/

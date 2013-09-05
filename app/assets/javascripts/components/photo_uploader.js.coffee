@@ -5,6 +5,13 @@ class @PhotoUploader
   @initialize: (scope = $('body')) ->
     $('.fileupload', scope).each (index, element) =>
       @uploaders.push new PhotoUploader($(element))
+    @enableInputFieldInFirefox()
+
+  @enableInputFieldInFirefox: ->
+    if $.browser.mozilla && parseInt($.browser.version) < 22
+      $('.fileupload').on 'click', 'label', (e) ->
+        if e.currentTarget == this && e.target.nodeName != 'INPUT'
+          $(this.control).click()
 
   # Update images to reload them when images were changed via e.g. ajax request.
   @updateImages: (ids = [])->
@@ -134,6 +141,8 @@ class @PhotoUploader
       data.context.append(hidden_position)
       hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(data.result.id)
       data.context.append(hidden_id)
+      hidden_content_id = hidden.clone().attr('name', "#{name_prefix}[content_id]").val(data.result.content_id)
+      data.context.append(hidden_content_id)
 
   getLastPosition: ->
     @sortable.find('.photo-item').length

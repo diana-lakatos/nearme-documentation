@@ -21,6 +21,7 @@ module DesksnearMe
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
     config.assets.paths           << %(#{Rails.root}/app/assets/fonts)
+    config.assets.paths           << %(#{Rails.root}/app/assets/swfs)
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -52,6 +53,9 @@ module DesksnearMe
     # Access the DB or load models when precompiling assets
     config.assets.initialize_on_precompile = true
 
+    # Add fonts stylesheet to the precompile array
+    config.assets.precompile += ['fonts.css']
+
     # Enable the asset pipeline
     config.assets.enabled = true
     config.assets.digest = true
@@ -75,5 +79,8 @@ module DesksnearMe
 
     # custom rewrites specified in lib/legacy_redirect_handler.rb
     config.middleware.insert_before(Rack::Lock, "LegacyRedirectHandler")
+
+    config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access
+    config.google_analytics = (YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env] || {}).with_indifferent_access
   end
 end

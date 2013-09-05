@@ -1,6 +1,6 @@
 class Locations::ListingsController < ApplicationController
   before_filter :find_listing, :only => [:show]
-  before_filter :redirect_if_listing_deleted, :only => [:show]
+  before_filter :redirect_if_listing_inactive, :only => [:show]
 
   def show
     # Attempt to restore a stored reservation state from the session.
@@ -24,9 +24,9 @@ class Locations::ListingsController < ApplicationController
     @location = @listing.location
   end
 
-  def redirect_if_listing_deleted
-    if @listing.deleted?
-      flash[:warning] = "This listing has been removed. Displaying other listings near #{@listing.address}."
+  def redirect_if_listing_inactive
+    if @listing.deleted? || @listing.draft?
+      flash[:warning] = t('listings.listing_inactive', address: @listing.address)
       redirect_to search_path(:q => @listing.address)
     end
   end

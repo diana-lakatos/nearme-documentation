@@ -76,9 +76,12 @@ class Search.Controller
 
         existingVal = @queryField.val()
         if cityAddress != existingVal
+          # two cached variables are used in Search.HomeController in form.submit handler
+          @cached_geolocate_me_result_set = resultset.getBestResult()
+          @cached_geolocate_me_city_address = cityAddress
           @queryField.val(cityAddress).data('placeholder', cityAddress)
           @fieldChanged('query', @queryField.val())
-          @setGeolocatedQuery(@queryField.val(), resultset.getBestResult())
+          @setGeolocatedQuery(@queryField.val(), @cached_geolocate_me_result_set)
 
   # Is the given query currently geolocated by the search
   isQueryGeolocated: (query) ->
@@ -117,7 +120,7 @@ class Search.Controller
     params
 
   formatCoordinate: (coord) ->
-    coord.toFixed(5)
+    coord.toFixed(5) if coord?
 
   assignFormParams: (paramsHash) ->
     # Write params to search form

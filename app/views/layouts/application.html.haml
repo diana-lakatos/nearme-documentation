@@ -13,6 +13,7 @@
     = tag :meta, :name => "stripe-key", :content => stripe_public_key
     %link{:href => "/favicon.ico", :rel => "shortcut icon"}/
 
+    = stylesheet_link_tag "fonts"
     = stylesheet_link_tag instance_theme_stylesheet_url(current_instance)
 
     = javascript_include_tag "https://js.stripe.com/v1/"
@@ -51,5 +52,5 @@
 
           = yield if render_content_outside_container?
       .footer-push
-    = render 'layouts/footer'
+    = render 'layouts/footer' unless no_footer?
     = render 'layouts/scripts'

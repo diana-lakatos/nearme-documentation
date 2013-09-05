@@ -1,5 +1,41 @@
+@import "compass/typography/vertical_rhythm";
+@import "compass/css3/font-face";
 
-@include font-face("icon-font", font-files("icon-font.woff", "icon-font.otf", "icon-font.ttf", "icon-font.svg#icon-font"), "icon-font.eot");
+@include font-face('Futura-regular', 
+  font-files(
+    'futura-regular-web.woff', woff,
+    'futura-regular-web.ttf', ttf,
+    'futura-regular-web.svg', svg),
+    'futura-regular-web.eot');
+
+@include font-face('Futura-medium', 
+  font-files(
+    'futura-medium-web.woff', woff,
+    'futura-medium-web.ttf', ttf,
+    'futura-medium-web.svg', svg),
+    'futura-medium-web.eot');
+
+@include font-face('Futura-demi', 
+  font-files(
+    'futura-demi-web.woff', woff,
+    'futura-demi-web.ttf', ttf,
+    'futura-demi-web.svg', svg),
+    'futura-demi-web.eot');
+
+@include font-face('Futura-heavy', 
+  font-files(
+    'futura-heavy-web.woff', woff,
+    'futura-heavy-web.ttf', ttf,
+    'futura-heavy-web.svg', svg),
+    'futura-heavy-web.eot');
+
+@include font-face("icon-font",
+  font-files(
+    "icon-font.woff",
+    "icon-font.otf",
+    "icon-font.ttf",
+    "icon-font.svg#icon-font"),
+    "icon-font.eot");
 
 
 // Icon Font Styling 
@@ -80,8 +116,10 @@ span.padding-left {
 .ico-chevron-down:before, 
 .ico-chevron-left:before, 
 .ico-list:before, 
-.ico-open-link:before {
-  font-family: 'icon-font';
+.ico-open-link:before,
+.ico-rss:before,
+.ico-facebook-full:before {
+  font-family: 'icon-font' !important;
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -307,4 +345,12 @@ span.padding-left {
 
 .ico-open-link:before {
   content: "\e036";
+}
+
+.ico-rss:before {
+  content: "\e037";
+}
+
+.ico-facebook-full:before {
+  content: "\e038";
 }

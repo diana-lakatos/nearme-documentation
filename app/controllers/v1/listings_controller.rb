@@ -16,7 +16,7 @@ class V1::ListingsController < V1::BaseController
   rescue_from ActiveRecord::RecordNotFound, with: :listing_not_found
 
   def list
-    @listings = current_user.company(params[:location_id]).listings.select('id,name')
+    @listings = current_user.company(params[:location_id]).listings.active.select('id,name')
   end
 
   def create
@@ -51,7 +51,7 @@ class V1::ListingsController < V1::BaseController
   end
 
   def show
-    render :json => Listing.find(params[:id])
+    render :json => Listing.active.find(params[:id])
   end
 
   # FIXME: same code in search/query? Can they be the same API endpoint?
@@ -85,8 +85,8 @@ class V1::ListingsController < V1::BaseController
     @message = json_params["query"]
 
     inquiry = listing.inquiry_from!(current_user, message: @message)
-    InquiryMailer.inquiring_user_notification(current_instance, inquiry).deliver!
-    InquiryMailer.listing_creator_notification(current_instance, inquiry).deliver!
+    InquiryMailer.enqueue.inquiring_user_notification(current_instance, inquiry)
+    InquiryMailer.enqueue.listing_creator_notification(current_instance, inquiry)
 
     head :no_content
   end
@@ -96,7 +96,7 @@ class V1::ListingsController < V1::BaseController
     listing = Listing.find(params[:id])
     message = json_params["query"]
     users.each do |user|
-      ListingMailer.share(current_instance, listing, user["email"], user["name"], current_user, message).deliver!
+      ListingMailer.enqueue.share(current_instance, listing, user["email"], user["name"], current_user, message)
     end
 
     head :no_content

@@ -133,6 +133,8 @@ DesksnearMe::Application.routes.draw do
   match "/search", :to => "search#index", :as => :search
   match "/search/show/:id", :to => "search#show"
 
+  resources :search_notifications, only: [:create]
+
   resources :authentications do
     collection do
       post :clear # Clear authentications stored in session
