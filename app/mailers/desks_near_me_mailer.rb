@@ -1,5 +1,5 @@
 class DesksNearMeMailer < ActionMailer::Base
-  include Job::MailerJobSyntaxEnhancer
+  extend Job::SyntaxEnhancer
   include ActionView::Helpers::TextHelper
   helper :listings, :reservations
   default from: "support@desksnear.me"

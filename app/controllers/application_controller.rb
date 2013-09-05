@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   # the application controllers.
   def event_tracker
     @event_tracker ||= begin
-      Analytics::EventTracker.new(mixpanel, google_analytics)
+      Analytics::EventTracker.new(mixpanel, google_analytics).enqueue
     end
   end
 
