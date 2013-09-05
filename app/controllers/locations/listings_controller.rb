@@ -26,7 +26,7 @@ class Locations::ListingsController < ApplicationController
 
   def redirect_if_listing_inactive
     if @listing.deleted? || @listing.draft?
-      flash[:warning] = "This listing is inactive. Displaying other listings near #{@listing.address}."
+      flash[:warning] = t('listings.listing_inactive', address: @listing.address)
       redirect_to search_path(:q => @listing.address)
     end
   end

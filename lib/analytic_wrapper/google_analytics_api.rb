@@ -26,7 +26,7 @@ class AnalyticWrapper::GoogleAnalyticsApi
         Rails.logger.info "Tracked google_analytics event #{params.inspect}"
         return true
       rescue  RestClient::Exception => rex
-        Rails.logger.info "error tracking google_analytics event #{params.inspect}"
+        Rails.logger.info "error tracking google_analytics event #{params.inspect}: #{rex}"
         return false
       end
     else
@@ -50,7 +50,7 @@ class AnalyticWrapper::GoogleAnalyticsApi
   end
 
   def tracking_code
-    GOOGLE_ANALYTICS_SETTINGS[:tracking_code]
+    DesksnearMe::Application.config.google_analytics[:tracking_code]
   end
 
   def version

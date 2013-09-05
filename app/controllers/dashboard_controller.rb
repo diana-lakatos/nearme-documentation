@@ -15,7 +15,7 @@ class DashboardController < ApplicationController
 
   def index
     if current_user.companies.blank?
-      flash[:warning] = "Please add your company first"
+      flash[:warning] = t('dashboard.add_your_company')
       redirect_to new_space_wizard_url
     end
   end
@@ -37,7 +37,7 @@ class DashboardController < ApplicationController
   def bookings
     @your_reservations = current_user.reservations.visible.to_a.sort_by(&:date)
     unless @your_reservations.any?
-      flash[:warning] = "You haven't made any bookings yet!"
+      flash[:warning] = t('dashboard.no_bookings')
       redirect_to search_path
     end
   end
@@ -67,7 +67,7 @@ class DashboardController < ApplicationController
 
   def redirect_if_no_company
     unless @company && @company.id
-      flash[:warning] = "Please add your company first"
+      flash[:warning] = t('dashboard.add_your_company')
       redirect_to new_space_wizard_url
     end
   end

@@ -1,0 +1,19 @@
+class @Clipboard
+  @initialize: (scope = $('body')) ->
+    ZeroClipboard.setDefaults(
+      moviePath: '<%= asset_path('vendor/ZeroClipboard.swf') %>'
+      hoverClass: 'hover'
+    )
+    clip = new ZeroClipboard($('[data-clipboard-text]'))
+    clip.on('complete', (client, args) ->
+      $this = $(this)
+      $this.tooltip(
+        trigger: 'manual'
+        title: 'Copied!'
+      )
+      $this.tooltip('show')
+      setTimeout( ->
+        $this.tooltip('hide')
+      , 5000)
+    )
+

@@ -2,6 +2,7 @@ section.listings {
 
   h1 {
     margin: -10px 0 20px;
+    float: left;
 
     a {
       display: inline-block;
@@ -25,6 +26,28 @@ section.listings {
 
     @media (min-width: 768px) {
       width: 34%;
+    }
+  }
+
+  ul.icons {
+    float: right;
+    li {
+      font-size: 1em;
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      margin-left: 10px;
+      a {
+        display: block;
+        color: $gray160;
+        &:hover, &.hover {
+          color: $gray80;
+          @include transition(none);
+        }
+      }
+    }
+    @media (max-width: $ipad-width) {
+      float: left;
     }
   }
 }

@@ -9,6 +9,13 @@
         = link_to @location.url, :target => :_blank do
           %div.ico-open-link
 
+    %ul.icons
+      %li= share_to_twitter(location_listing_url(@location, @listing))
+      %li= share_to_facebook(location_listing_url(@location, @listing))
+      %li= share_to_linkedin(location_listing_url(@location, @listing))
+      %li= share_to_mail(@location.name, location_listing_url(@location, @listing))
+      %li= share_to_clipboard(location_listing_url(@location, @listing))
+
 %h2 More about the location
 
 %ul.nav.nav-tabs#location-tabs
