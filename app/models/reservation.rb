@@ -50,7 +50,7 @@ class Reservation < ActiveRecord::Base
       #        The event_tracker calls can be executed from the Job instance.
       #        i.e. Essentially compose this as a 'non-http request' controller.
       mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, :current_user => owner)
-      event_tracker = Analytics::EventTracker.new(mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(owner.google_analytics_id))
+      event_tracker = Analytics::EventTracker.new(mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(owner))
       event_tracker.booking_expired(self)
       event_tracker.updated_profile_information(self.owner)
       event_tracker.updated_profile_information(self.host)
