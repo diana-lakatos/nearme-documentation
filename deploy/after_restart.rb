@@ -6,3 +6,6 @@ end
 
 # Must restart utilities that require the environment
 sudo "monit -g dj_#{config.app} restart all"
+
+# Recompile the css for each instance's theme
+run "bundle exec rake reprocess:css"
