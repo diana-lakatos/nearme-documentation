@@ -4,7 +4,7 @@ module Listings
 
     before_filter :find_listing
     before_filter :build_reservation_request, :only => [:review, :create]
-    before_filter :require_login_for_reservation, :only => [:review, :create, :export]
+    before_filter :require_login_for_reservation, :only => [:review, :create]
 
     attr_reader :listing
     def_delegators :@listing, :location

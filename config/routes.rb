@@ -40,15 +40,8 @@ DesksnearMe::Application.routes.draw do
     resources :pages
   end
 
-  resources :companies
   resources :locations, :only => [:show] do
     resources :listings, :controller => 'locations/listings'
-
-    member do
-      get :host
-      get :networking
-    end
-
     collection do
       get :populate_address_components_form
       post :populate_address_components
@@ -73,7 +66,7 @@ DesksnearMe::Application.routes.draw do
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
   end
 
-  resources :reservations do
+  resources :reservations, :except => [:update, :destroy] do
     member do
       post :user_cancel
       get :export
@@ -98,9 +91,6 @@ DesksnearMe::Application.routes.draw do
     resources :companies, :only => [:edit, :update]
 
     resources :locations do
-      collection do
-        get 'data_import'
-      end
       resources :listings
     end
 
@@ -127,7 +117,7 @@ DesksnearMe::Application.routes.draw do
 
   resources :search_notifications, only: [:create]
 
-  resources :authentications do
+  resources :authentications, :only => [:create, :destroy] do
     collection do
       post :clear # Clear authentications stored in session
     end
