@@ -25,6 +25,8 @@
 # to mock out the relevant tracker instance and assert an expectation to call the
 # relevant event method(s).
 class Analytics::EventTracker
+  include Job::SyntaxEnhancer
+
   def initialize(mixpanel_api, google_analytics_api)
     @mixpanel_api = mixpanel_api
     @google_analytics_api = google_analytics_api

@@ -16,7 +16,7 @@ class JobTest < ActiveSupport::TestCase
       SampleMailer.enqueue.send_email
     end
 
-    should 'understand tim with zone as argument' do
+    should 'understand time with zone as argument' do
       @time = Time.zone.now + 5.hours
       MailerJob.expects(:perform_later).with(@time, SampleMailer, :send_email)
       SampleMailer.enqueue_later(@time).send_email
@@ -37,7 +37,7 @@ class JobTest < ActiveSupport::TestCase
       assert_equal Time.zone.now + 1.hour, Job.get_performing_time(3600)
     end
 
-    should 'accept time' do
+    should 'accept time with zone' do
       assert_equal Time.zone.now + 1.hour, Job.get_performing_time(1.hour.from_now)
     end
 

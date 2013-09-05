@@ -1,9 +1,8 @@
 # The purpose of this class is to add .enqueue method to all Mailers
-# so we can use syntax Mailer.enqueue(:send_method) instead of MailerJob.perform(Mailer, :send_method)
-module Job::MailerJobSyntaxEnhancer
+# so we can use syntax Mailer.enqueue.send_method instead of MailerJob.perform(Mailer, send_method)
+module Job::SyntaxEnhancer
   extend ActiveSupport::Concern
 
-  module ClassMethods
     def enqueue(*args)
       Proxy.new(self, job_class)
     end
@@ -15,9 +14,12 @@ module Job::MailerJobSyntaxEnhancer
     private
 
     def job_class
-      @job_class ||= (name.match(/Mailer$/) ? "MailerJob" : "#{name}Job").constantize
+      if self.class.to_s === 'Class'
+        (name.match(/Mailer$/) ? "MailerJob" : "#{name}Job").constantize
+      else
+        "#{self.class.name}Job".constantize
+      end
     end
-  end
 
   class Proxy
     def initialize(klass, job_class)
