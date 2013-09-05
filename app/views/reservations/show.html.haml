@@ -7,3 +7,9 @@
         = "Booking at #{@reservation.listing.name}"
     .box
       = render @reservation
+
+- content_for :domready do
+  - if params[:action] == 'host_rating'
+    Modal.load('#{new_reservation_host_rating_path(@reservation.id)}')
+  - elsif params[:action] == 'guest_rating'
+    Modal.load('#{new_reservation_guest_rating_path(@reservation.id)}')

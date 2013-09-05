@@ -1,0 +1,18 @@
+= simple_form_for [@reservation, @rating], html: {id: 'rating-form'} do |f|
+  - if @rating.errors.present?
+    .errors
+      = f.error :value
+      = f.error :author_id
+
+  = f.text_area :comment, placeholder: 'Comments (optional)'
+  = button_tag class: "btn btn-medium btn-green", data: {value: '1'} do
+    %span.padding.ico-check Good
+  = button_tag class: "btn btn-medium btn-red", data: {value: '0'} do
+    %span.padding.ico-close Bad
+  = f.hidden_field :value
+
+
+:javascript
+  $(function() {
+    new RatingForm($('#rating-form'))
+  });

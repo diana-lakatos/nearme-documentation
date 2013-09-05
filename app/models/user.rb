@@ -56,6 +56,9 @@ class User < ActiveRecord::Base
            :through => :reverse_relationships,
            :source => :follower
 
+  has_many :host_ratings, class_name: 'HostRating', foreign_key: 'subject_id'
+  has_many :guest_ratings, class_name: 'GuestRating', foreign_key: 'subject_id'
+
   has_many :user_industries
   has_many :industries, :through => :user_industries
 

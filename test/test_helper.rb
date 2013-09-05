@@ -26,6 +26,8 @@ Spork.prefork do
   require 'mocha/integration/test_unit'
   require 'webmock/test_unit'
 
+  require 'helpers/stub_helper'
+
   Turn.config.format = :dot
 
   # Disable carrierwave processing in tests
@@ -42,6 +44,7 @@ Spork.prefork do
 
     # Add more helper methods to be used by all tests here...
     include FactoryGirl::Syntax::Methods
+    include StubHelper
 
     def with_carrier_wave_processing(&blk)
       before, CarrierWave::Uploader::Base.enable_processing = CarrierWave::Uploader::Base.enable_processing, true
@@ -85,21 +88,8 @@ Spork.prefork do
       @tracker.expects(event).never
     end
 
-    def stub_mixpanel
-      stub_request(:get, /.*api\.mixpanel\.com.*/)
-      @tracker = Analytics::EventTracker.any_instance
-    end
-
-    def stub_billing_gateway
-      User::BillingGateway.any_instance.stubs(:charge).returns(true)
-      User::BillingGateway.any_instance.stubs(:store_card).returns(true)
-    end
-
     DatabaseCleaner.strategy = :truncation
 
-    def stub_image_url(image_url)
-      stub_request(:get, image_url).to_return(:status => 200, :body => File.expand_path("../assets/foobear.jpeg", __FILE__), :headers => {'Content-Type' => 'image/jpeg'})
-    end
   end
 
   class ActionController::TestCase

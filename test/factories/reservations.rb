@@ -18,6 +18,15 @@ FactoryGirl.define do
     factory :reservation_with_credit_card do
       payment_method 'credit_card'
     end
+
+    factory :past_reservation do
+      after(:create) do |reservation|
+        reservation.periods.reverse.each_with_index do |period, i|
+          period.date = Date.yesterday - i.days
+          period.save!
+        end
+      end
+    end
   end
 
 end

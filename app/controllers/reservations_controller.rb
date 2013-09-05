@@ -2,6 +2,8 @@ class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
   before_filter :fetch_reservations
   before_filter :fetch_reservation, :only => [:user_cancel]
+  before_filter :fetch_current_user_reservation, :only => [:show, :export, :guest_rating, :host_rating]
+  before_filter :redirect_if_rating_already_exists, :only => [:guest_rating, :host_rating]
 
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
@@ -28,14 +30,11 @@ class ReservationsController < ApplicationController
   end
 
   def show
-    @reservation = current_user.reservations.find(params[:id])
   end
 
   def export
-    @reservation = current_user.reservations.find(params[:id])
     respond_to do |format|
       format.ics do
-
         calendar = RiCal.Calendar do |cal|
           cal.add_x_property 'X-WR-CALNAME', 'Desks Near Me' 
           cal.add_x_property 'X-WR-RELCALID', "#{current_user.id}"
@@ -79,6 +78,14 @@ class ReservationsController < ApplicationController
     render :index
   end
 
+  def guest_rating
+    render :show
+  end
+
+  def host_rating
+    render :show
+  end
+
   protected
 
   def fetch_reservations
@@ -87,6 +94,10 @@ class ReservationsController < ApplicationController
 
   def fetch_reservation
     @reservation = @reservations.find(params[:id])
+  end
+
+  def fetch_current_user_reservation
+    @reservation = current_user.reservations.find(params[:id])
   end
 
   def allowed_events
@@ -102,6 +113,14 @@ class ReservationsController < ApplicationController
       bookings_dashboard_path
     else
       manage_guests_dashboard_path
+    end
+  end
+
+  def redirect_if_rating_already_exists
+    klass = params[:action].classify.constantize
+    if klass.where(reservation_id: @reservation.id, author_id: current_user.id).exists?
+      flash[:notice] = "Rating for this booking has already been submitted."
+      redirect_to root_path
     end
   end
 
