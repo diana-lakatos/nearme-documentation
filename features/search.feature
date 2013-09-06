@@ -54,7 +54,7 @@ Feature: A user can search for a listing
     When I search for "New Zealand"
     Then I should see "No results found"
     And I fill form with email field for subscribing on notification
-    Then I should see "You will be notified when a desk is added at this location."
+    Then I should see /You will be notified when a desk is added at this location./
     And search notification created with "New Zealand"
 
   Scenario: Subscribing on notification about new listings if no listings found for valid location
@@ -64,6 +64,6 @@ Feature: A user can search for a listing
     When I search for "New Zealand"
     Then I should see "No results found"
     And I fill form for subscribing on notification
-    Then I should see "You will be notified when a desk is added at this location."
+    Then I should see /You will be notified when a desk is added at this location./
     And search notification created with "New Zealand" for user
 
