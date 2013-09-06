@@ -90,39 +90,6 @@ class AnalyticWrapper::MixpanelApiTest < ActiveSupport::TestCase
 
       wrapper.track(name, properties)
     end
-
-    context '#desksnearme employee' do
-
-      setup do
-        AnalyticWrapper::MixpanelApi.any_instance.stubs(:should_not_track_employees?).returns(true)
-      end
-
-      should 'not track if current user has email *@desksnear.me' do 
-        mixpanel = AnalyticWrapper::MixpanelApi.new(@mixpanel)
-        @mixpanel.expects(:alias).once
-        @mixpanel.expects(:track).never
-        mixpanel.apply_user(FactoryGirl.create(:user, email: 'maciej@desksnear.me') , :alias => true)
-        mixpanel.track('Event', {})
-      end
-
-      should 'not track if current user has email *@parchard.com' do 
-        mixpanel = AnalyticWrapper::MixpanelApi.new(@mixpanel)
-        @mixpanel.expects(:alias).once
-        @mixpanel.expects(:track).never
-        mixpanel.apply_user(FactoryGirl.create(:user, email: 'sai+213123@perchard.com') , :alias => true)
-        mixpanel.track('Event', {})
-      end
-
-      should "not track if current user's email belongs to employee" do 
-        mixpanel = AnalyticWrapper::MixpanelApi.new(@mixpanel)
-        @mixpanel.expects(:alias).once
-        @mixpanel.expects(:track).never
-        mixpanel.apply_user(FactoryGirl.create(:user, email: 'krajek6@gmail.com') , :alias => true)
-        mixpanel.track('Event', {})
-      end
-
-    end
-
   end
 
   context '#apply_user' do
@@ -153,6 +120,4 @@ class AnalyticWrapper::MixpanelApiTest < ActiveSupport::TestCase
       AnalyticWrapper::MixpanelApi.new(@mixpanel, :current_user => user).set_person_properties(properties)
     end
   end
-
-
 end

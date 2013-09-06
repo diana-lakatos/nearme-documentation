@@ -114,6 +114,26 @@ ActiveRecord::Schema.define(:version => 20130903165717) do
 
   add_index "domains", ["instance_id"], :name => "index_domains_on_instance_id"
 
+  create_table "guest_ratings", :force => true do |t|
+    t.integer  "author_id",      :null => false
+    t.integer  "subject_id"
+    t.integer  "reservation_id"
+    t.integer  "value"
+    t.text     "comment"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  create_table "host_ratings", :force => true do |t|
+    t.integer  "author_id",      :null => false
+    t.integer  "subject_id"
+    t.integer  "reservation_id"
+    t.integer  "value"
+    t.text     "comment"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
   create_table "industries", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -341,6 +361,8 @@ ActiveRecord::Schema.define(:version => 20130903165717) do
     t.integer  "quantity",                 :default => 1,         :null => false
     t.integer  "service_fee_amount_cents"
     t.string   "rejection_reason"
+    t.datetime "request_guest_rating_email_sent_at"
+    t.datetime "request_host_rating_email_sent_at"
   end
 
   create_table "search_notifications", :force => true do |t|
@@ -429,6 +451,10 @@ ActiveRecord::Schema.define(:version => 20130903165717) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
     t.string   "browser"

@@ -25,6 +25,8 @@
 # to mock out the relevant tracker instance and assert an expectation to call the
 # relevant event method(s).
 class Analytics::EventTracker
+  include Job::SyntaxEnhancer
+
   def initialize(mixpanel_api, google_analytics_api)
     @mixpanel_api = mixpanel_api
     @google_analytics_api = google_analytics_api
@@ -134,6 +136,10 @@ class Analytics::EventTracker
         browser: object.browser,
         browser_version: object.browser_version,
         platform: object.platform,
+        positive_host_ratings_count: object.host_ratings.positive.count,
+        negative_host_ratings_count: object.host_ratings.negative.count,
+        positive_guest_ratings_count: object.guest_ratings.positive.count,
+        negative_guest_ratings_count: object.guest_ratings.negative.count
       }
     when Listing::Search::Params::Web
       {

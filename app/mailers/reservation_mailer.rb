@@ -12,7 +12,7 @@ class ReservationMailer < DesksNearMeMailer
 
   def notify_guest_of_rejection(reservation)
     setup_defaults(reservation)
-    generate_mail("A booking you made has been rejected")
+    generate_mail("A booking you made has been declined")
   end
 
   def notify_guest_with_confirmation(reservation)

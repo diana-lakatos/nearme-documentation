@@ -1,0 +1,22 @@
+section.ratings {
+  .errors {
+    p {
+      margin: 10px 0;
+    }
+  }
+
+  #rating-form {
+    button {
+      cursor: pointer;
+      width: 49%;
+
+      &.btn-green {
+        margin-right: 2%;
+      }
+    }
+
+    textarea {
+      height: 200px;
+    }
+  }
+}

@@ -4,7 +4,8 @@
   .clearfix
     .row-fluid.padding-row
       .span12
-        .listings
-          = render 'locations/listing', :listing => @listing
+        %section.bookings.quick-book
+          .listings
+            = render 'locations/listing', :listing => @listing
 
 = render 'locations/show'

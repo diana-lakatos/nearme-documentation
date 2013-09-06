@@ -36,7 +36,6 @@
     @include transition(all $checkbox-radio-transition ease-in-out);
 
     .checkbox-icon-inner {
-      @extend .ico-check;
       font-size: 18px;
       position: absolute;
       top: -4px;

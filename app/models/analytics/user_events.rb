@@ -24,5 +24,10 @@ module Analytics::UserEvents
     track 'Disconnected Social Provider', user, custom_options
   end
 
+  def submitted_a_rating(user, custom_options = {})
+    set_person_properties user, custom_options
+    track 'Submitted a rating', user, custom_options
+  end
+
 end
 

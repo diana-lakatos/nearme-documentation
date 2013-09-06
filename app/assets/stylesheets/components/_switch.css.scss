@@ -101,14 +101,12 @@
       color: $pure-white;
       background-color: $green;
       border-color: $green;
-      @extend .ico-check;
     }
 
     &.switch-right {
       color: $white;
       background-color: $red;
       border-color: $red;
-      @extend .ico-close;
 
       &:active, &.active {
         background-color: $gray220;

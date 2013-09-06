@@ -2,6 +2,7 @@
 namespace :cron do
   desc "Run hourly scheduled jobs"
   task :hourly => [:environment] do
+    RatingReminderJob.new(Time.zone.today).perform
   end
 
   desc "Run daily scheduled jobs"
