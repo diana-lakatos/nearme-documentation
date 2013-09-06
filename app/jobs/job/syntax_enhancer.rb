@@ -1,25 +1,31 @@
 # The purpose of this class is to add .enqueue method to all Mailers
 # so we can use syntax Mailer.enqueue.send_method instead of MailerJob.perform(Mailer, send_method)
 module Job::SyntaxEnhancer
-  extend ActiveSupport::Concern
 
-    def enqueue(*args)
-      Proxy.new(self, job_class)
-    end
+  def self.included(base)
+    base.send(:attr_accessor, :job_class)
+  end
 
-    def enqueue_later(when_perform, *args)
-      DelayedProxy.new(self, job_class, when_perform)
-    end
+  def self.extended(base)
+    base.class_attribute :job_class
+    # the <base.name>Job class might not be defined, that's why string
+    base.send(:job_class=, "#{base.name}Job")
+  end
 
-    private
+  def enqueue(*args)
+    Proxy.new(self, get_job_class)
+  end
 
-    def job_class
-      if self.class.to_s === 'Class'
-        (name.match(/Mailer$/) ? "MailerJob" : "#{name}Job").constantize
-      else
-        "#{self.class.name}Job".constantize
-      end
-    end
+  def enqueue_later(when_perform, *args)
+    DelayedProxy.new(self, get_job_class, when_perform)
+  end
+
+  private
+
+  def get_job_class
+    # .to_s on job_class makes it possible to pass both string and class
+    (job_class ? job_class.to_s : "#{self.class.name}Job").constantize
+  end
 
   class Proxy
     def initialize(klass, job_class)
