@@ -37,6 +37,19 @@
     "icon-font.svg#icon-font"),
     "icon-font.eot");
 
+// Icons used in forms
+
+.checkbox-icon-inner {
+  @extend .ico-check;
+}
+
+.switch-left {
+  @extend .ico-check;
+}
+
+.switch-right {
+  @extend .ico-close;
+}
 
 // Icon Font Styling 
 
