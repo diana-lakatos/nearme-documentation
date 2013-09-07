@@ -51,6 +51,7 @@
             = yield unless render_content_outside_container?
 
           = yield if render_content_outside_container?
-      .footer-push
+      - unless no_footer?
+        .footer-push
     = render 'layouts/footer' unless no_footer?
     = render 'layouts/scripts'
