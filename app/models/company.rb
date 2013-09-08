@@ -72,6 +72,10 @@ class Company < ActiveRecord::Base
     end
   end
 
+  def has_payment_method?
+    paypal_email.present? || mailing_address.present?
+  end
+
   private
 
   def add_default_url_scheme

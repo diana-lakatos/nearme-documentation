@@ -91,6 +91,7 @@ DesksnearMe::Application.routes.draw do
       get :payments
       get :listings
       get :manage_guests
+      get :transfers
     end
   end
 

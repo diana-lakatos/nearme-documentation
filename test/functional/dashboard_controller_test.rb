@@ -19,17 +19,17 @@ class DashboardControllerTest < ActionController::TestCase
       context 'ownership' do
         setup do
           @owner_charge = create_charge(:amount => 100)
-          @not_owner_charge = FactoryGirl.create(:charge)
+          @not_owner_charge = FactoryGirl.create(:reservation_charge)
         end
 
         should '@last_week_charges ignores charges that do not belong to signed in user' do
           get :payments
-          assert_equal [@owner_charge], assigns(:last_week_charges)
+          assert_equal [@owner_charge], assigns(:last_week_reservation_charges)
         end
 
         should '@charges ignores charges that do not belong to signed in user' do
           get :payments
-          assert_equal [@owner_charge], assigns(:charges)
+          assert_equal [@owner_charge], assigns(:reservation_charges)
         end
 
       end
@@ -43,12 +43,12 @@ class DashboardControllerTest < ActionController::TestCase
 
         should '@last_week_charges includes only charges not older than 6 days' do
           get :payments
-          assert_equal [@charge_created_6_days_ago], assigns(:last_week_charges)
+          assert_equal [@charge_created_6_days_ago], assigns(:last_week_reservation_charges)
         end
 
         should '@charges includes all charges that belong to a user' do
           get :payments
-          assert_equal [@charge_created_6_days_ago, @charge_created_7_days_ago], assigns(:charges)
+          assert_equal [@charge_created_6_days_ago, @charge_created_7_days_ago], assigns(:reservation_charges)
         end
 
       end
