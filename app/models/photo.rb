@@ -20,6 +20,11 @@ class Photo < ActiveRecord::Base
   before_update :recreate_adjusted, if: :adjusted?
   after_destroy :notify_user_about_change
 
+  # We handle processing of image versions if the 'versions_generated' flag is
+  # false. This is the case on initial upload, or when adjustments are applied
+  # by the User.
+  after_commit :enqueue_processing, unless: :versions_generated
+
   # Don't delete the photo from s3
   skip_callback :destroy, :after, :remove_image!
 
@@ -33,28 +38,26 @@ class Photo < ActiveRecord::Base
 
   AVAILABLE_CONTENT = ['Listing', 'Location']
 
-  # We handle processing of image versions if the 'versions_generated' flag is
-  # false. This is the case on initial upload, or when adjustments are applied
-  # by the User.
-  after_commit :enqueue_processing, unless: :versions_generated
-
   # The PhotoUploader tests the Photo for this predicate to determine whether
-  # it should execute version generation for some versions.
+  # it should execute version generation for some versions. By default, this
+  # should be true so that the Uploader can generate URLs for all versions.
   #
-  # This should be the case when versions are ready to be regenerated, but not
-  # in the case of a request/response cycle so that we can handle the generation
-  # in the background.
-  def should_create_versions!
-    @should_create_versions = true
+  # See `defer_versions!` for disabling version generation in request/response
+  # lifecycle.
+  def all_versions?
+    !@defer_versions
   end
 
-  def should_generate_versions?
-    @should_create_versions
+  # `defer_versions!` should be called when an image has just been created, to
+  # prevent the full set of versions being generated in the request/repsonse
+  # cycle.
+  def defer_versions!(defer = true)
+    @defer_versions = defer
   end
 
   # Executes generating the image versions and flags the Photo accordingly.
   def generate_versions
-    should_create_versions!
+    defer_versions!(false)
     image.recreate_versions! #we should call it without args, see https://github.com/carrierwaveuploader/carrierwave/issues/1164
     self.versions_generated = true
     save!(validate: false)
@@ -70,6 +73,7 @@ class Photo < ActiveRecord::Base
   end
 
   def recreate_adjusted
+    defer_versions!
     self.recreate_versions! # Regenerate any relevant versions that need to be handled immediately
     self.versions_generated = false # other versions adjustments will be performed in background
     true

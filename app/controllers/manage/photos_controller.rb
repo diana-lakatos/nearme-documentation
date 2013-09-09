@@ -4,6 +4,7 @@ class Manage::PhotosController < ApplicationController
 
   def create
     @photo = Photo.new
+    @photo.defer_versions! # Limit inline version generating
     @photo.image = @image
     @photo.content = @content
     @photo.content_type = @content_type
