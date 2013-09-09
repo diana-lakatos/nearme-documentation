@@ -1,4 +1,4 @@
-class InquiryDrop < Liquid::Drop
+class InquiryDrop < BaseDrop
   def initialize(inquiry)
     @inquiry = inquiry
   end

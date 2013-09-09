@@ -1,4 +1,4 @@
-class ReservationDrop < Liquid::Drop
+class ReservationDrop < BaseDrop
   include ReservationsHelper
 
   def initialize(reservation)
@@ -46,7 +46,7 @@ class ReservationDrop < Liquid::Drop
   end
 
   def search_url
-    Rails.application.routes.url_helpers.search_url(q: location_query_string(@reservation.listing.location))
+    routes.search_url(q: location_query_string(@reservation.listing.location))
   end
 
   def created_at

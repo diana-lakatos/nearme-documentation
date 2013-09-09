@@ -1,4 +1,4 @@
-class ListingDrop < Liquid::Drop
+class ListingDrop < BaseDrop
   def initialize(listing)
     @listing = listing
   end
@@ -12,19 +12,19 @@ class ListingDrop < Liquid::Drop
   end
 
   def dashboard_url
-    Rails.application.routes.url_helpers.dashboard_url
+    routes.dashboard_url
   end
 
   def manage_guests_dashboard_url
-    Rails.application.routes.url_helpers.manage_guests_dashboard_url(:token => @listing.creator.authentication_token)
+    routes.manage_guests_dashboard_url(:token => @listing.creator.authentication_token)
   end
 
   def search_url
-    Rails.application.routes.url_helpers.search_url
+    routes.search_url
   end
 
   def bookings_dashboard_url
-    Rails.application.routes.url_helpers.bookings_dashboard_url
+    routes.bookings_dashboard_url
   end
 
   def hourly_reservations?

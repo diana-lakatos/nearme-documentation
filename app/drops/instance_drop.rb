@@ -1,4 +1,4 @@
-class InstanceDrop < Liquid::Drop
+class InstanceDrop < BaseDrop
   def initialize(instance)
     @instance = instance
   end

@@ -1,4 +1,4 @@
-class UserDrop < Liquid::Drop
+class UserDrop < BaseDrop
   def initialize(user)
     @user = user
   end
@@ -16,7 +16,7 @@ class UserDrop < Liquid::Drop
   end
 
   def search_url
-    Rails.application.routes.url_helpers.search_url
+    routes.search_url
   end
 
   def reservation_city?
@@ -37,11 +37,11 @@ class UserDrop < Liquid::Drop
   end
 
   def manage_locations_url
-    Rails.application.routes.url_helpers.manage_location_url
+    routes.manage_location_url
   end
 
   def edit_user_registration_url
-    Rails.application.routes.url_helpers.edit_user_registration_url
+   routes.edit_user_registration_url
   end
 
   def full_mobile_number
@@ -49,7 +49,7 @@ class UserDrop < Liquid::Drop
   end
 
   def verify_user_url
-    Rails.application.routes.url_helpers.verify_user_url(@user.id, @user.email_verification_token)
+    routes.verify_user_url(@user.id, @user.email_verification_token)
   end
 
   def instance_name
