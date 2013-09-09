@@ -10,35 +10,20 @@ class LiquidView
                           ignore_missing_templates flash _params logger before_filter_chain_aborted headers )
   PROTECTED_INSTANCE_VARIABLES = %w( @_request @controller @_first_render @_memoized__pick_template @view_paths 
                                      @helpers @assigns_added @template @_render_stack @template_format @assigns )
-  
+
   def self.call(template)
-    if template.respond_to?(:source)
-      "LiquidView.new(self).render(#{template.source.inspect}, local_assigns)"
-    else
-      "LiquidView.new(self).render(template, local_assigns)"
-    end
+    "LiquidView.new(self).render(#{template.source.inspect}, local_assigns)"
   end
 
   def initialize(view)
     @view = view
   end
-  
-  def render(template, local_assigns = nil)
+
+  def render(source, local_assigns = {})
     @view.controller.headers["Content-Type"] ||= 'text/html; charset=utf-8'
-    
-    # Rails 2.2 Template has source, but not locals
-    if template.respond_to?(:source) && !template.respond_to?(:locals)
-      assigns = (@view.instance_variables - PROTECTED_INSTANCE_VARIABLES).inject({}) do |hash, ivar|
-                  hash[ivar[1..-1]] = @view.instance_variable_get(ivar)
-                  hash
-                end
-    else
-      assigns = @view.assigns.reject{ |k,v| PROTECTED_ASSIGNS.include?(k) }
-    end
-    
-    source = template.respond_to?(:source) ? template.source : template
-    local_assigns = (template.respond_to?(:locals) ? template.locals : local_assigns) || {}
-    
+
+    assigns = @view.assigns.reject{ |k,v| PROTECTED_ASSIGNS.include?(k) }
+
     if content_for_layout = @view.instance_variable_get("@content_for_layout")
       assigns['content_for_layout'] = content_for_layout
     elsif @view.content_for?(:layout)
@@ -89,5 +74,4 @@ class LiquidView
 
     tags
   end
-
 end
