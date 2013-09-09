@@ -159,7 +159,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def host
-    @host ||= listing.creator
+    @host ||= listing_including_deleted.creator
   end
 
   def date=(value)
@@ -276,6 +276,11 @@ class Reservation < ActiveRecord::Base
 
   def expiry_time
     created_at + 24.hours
+  end
+
+  # Get listing even if deleted
+  def listing_including_deleted
+    Listing.with_deleted.find(self.listing_id)
   end
 
   private

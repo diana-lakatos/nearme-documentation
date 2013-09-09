@@ -7,7 +7,7 @@
             %h2.booking-header
               Booking 
             %div
-              = "#{reservation.listing.name} at #{reservation.listing.location.company.name} (x #{reservation.quantity})" 
+              = "#{reservation.listing_including_deleted.name} at #{reservation.listing_including_deleted.location.company.name} (x #{reservation.quantity})" 
 
             %div{:class => "reservation-status #{reservation_status_class(reservation)}"}
               %span
@@ -17,7 +17,7 @@
                   = tooltip('This reservation is currently pending confirmation, and will be charged when confirmed.')
                     
             %div
-              = reservation.listing.location.special_notes
+              = reservation.listing_including_deleted.location.special_notes
             %h2 Host
             .clearfix
               - if reservation.host.avatar.file.present?
@@ -27,13 +27,13 @@
                 %div 
                   = reservation.host.name
                 %div 
-                  = reservation.listing.location.phone
+                  = reservation.listing_including_deleted.location.phone
                 %div 
                   = reservation.host.email
           .span6
             %h2 Dates
             .dates
-              = reservation.listing.hourly_reservations? ? hourly_summary_for_period(reservation.periods.first) : selected_dates_summary(reservation)
+              = reservation.listing_including_deleted.hourly_reservations? ? hourly_summary_for_period(reservation.periods.first) : selected_dates_summary(reservation)
             .add-calendar
               = link_to export_reservation_path(reservation, :format => :ics), :class => 'ico-calender' do
                 %span Add to iCal
@@ -46,7 +46,7 @@
 
       .span4
         %div
-          = render :partial => 'locations/google_map', :locals => { :location => reservation.listing.location }
+          = render :partial => 'locations/google_map', :locals => { :location => reservation.listing_including_deleted.location }
 
 :javascript
   new Reservation.UserReservationController($("##{dom_id(reservation)}"))
