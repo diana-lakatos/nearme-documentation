@@ -1,4 +1,6 @@
 class ReservationMailer < InstanceMailer
+  layout 'mailer'
+
   def notify_guest_of_cancellation(reservation)
     setup_defaults(reservation)
     generate_mail
@@ -120,18 +122,7 @@ class ReservationMailer < InstanceMailer
   def generate_mail
     current_instance = @listing.instance
 
-    self.class.layout 'mailer', instance: current_instance
-
-    mailer = current_instance.find_mailer_for(self)
-
-    mail(:subject => mailer.subject,
-         :to      => @user.email,
-         :bcc     => mailer.bcc,
-         :from    => mailer.from,
-         :reply_to=> mailer.reply_to,
-         :content_type => "multipart/alternative") do |format|
-           format.html { render view_context.action_name, instance: current_instance }
-           format.text { render view_context.action_name, instance: current_instance }
-         end
+    mail(to: @user.email,
+         instance: current_instance)
   end
 end

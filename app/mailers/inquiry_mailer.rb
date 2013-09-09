@@ -1,34 +1,27 @@
 class InquiryMailer < InstanceMailer
+  layout 'mailer'
 
   def inquiring_user_notification(inquiry)
     @inquiry = inquiry
     current_instance = @inquiry.instance
-    self.class.layout 'mailer', instance: current_instance
 
-    mailer = current_instance.find_mailer_for(self)
+    mailer = find_mailer(instance: current_instance)
 
-    mail to:      inquiry.inquiring_user.full_email,
-         from:     mailer.from,
-         subject: mailer.liquid_subject('inquiry' => @inquiry) do |format|
-           format.html { render view_context.action_name, instance: current_instance }
-           format.text { render view_context.action_name, instance: current_instance }
-         end
+    mail(to: inquiry.inquiring_user.full_email,
+         subject: mailer.liquid_subject('inquiry' => @inquiry),
+         instance: current_instance)
   end
 
   def listing_creator_notification(inquiry)
     @inquiry = inquiry
     current_instance = @inquiry.instance
-    self.class.layout 'mailer', instance: current_instance
 
-    mailer = current_instance.find_mailer_for(self)
+    mailer = find_mailer(instance: current_instance)
 
-    mail to:       inquiry.listing.creator.full_email,
-         from:     mailer.from,
+    mail(to: inquiry.listing.creator.full_email,
          subject: mailer.liquid_subject('inquiry' => @inquiry),
-         reply_to: inquiry.inquiring_user.full_email do |format|
-           format.html { render view_context.action_name, instance: current_instance }
-           format.text { render view_context.action_name, instance: current_instance }
-         end
+         reply_to: inquiry.inquiring_user.full_email,
+         instance: current_instance)
   end
 
   if defined? MailView
@@ -41,8 +34,6 @@ class InquiryMailer < InstanceMailer
       def listing_creator_notification
         ::InquiryMailer.listing_creator_notification(Inquiry.first)
       end
-
     end
   end
-
 end

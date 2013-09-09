@@ -26,21 +26,6 @@ class Instance < ActiveRecord::Base
     self.name == DEFAULT_INSTANCE_NAME
   end
 
-  def find_mailer_for(view_context, options = {})
-    default_options = { template: view_context.action_name }
-    options = default_options.merge!(options)
-
-    details = {instance: self, handlers: [:liquid], formats: [:html, :text]}
-    template_name = options[:template]
-    template_prefix = view_context.lookup_context.prefixes.first
-
-    template = EmailResolver.instance.find_mailers(template_name, template_prefix, false, details).first
-
-    raise "Can't find mailer for #{template_prefix}/#{template_name}!" if template.nil?
-
-    return template
-  end
-
   def to_liquid
     InstanceDrop.new(self)
   end

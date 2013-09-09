@@ -1,4 +1,5 @@
 class ListingMailer < InstanceMailer
+  layout 'mailer'
 
   def share(listing, email, name, sharer, message=nil)
     @listing = listing
@@ -8,14 +9,8 @@ class ListingMailer < InstanceMailer
     @message = message
     @instance = listing.instance
 
-    mailer = @instance.find_mailer_for(self)
-
-    mail :to => "#{name} <#{email}>", :reply_to => "#{sharer.name} <#{sharer.email}>",
-      :from => mailer.from,
-      :subject => mailer.subject do |format|
-      format.html { render view_context.action_name, instance: @instance }
-      format.text { render view_context.action_name, instance: @instance }
-    end
+    mail(to: "#{name} <#{email}>", :reply_to => "#{sharer.name} <#{sharer.email}>",
+         instance: @instance)
   end
 
   if defined? MailView

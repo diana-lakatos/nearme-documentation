@@ -12,19 +12,9 @@ class AfterSignupMailer < InstanceMailer
 
     @sent_by = 'Michelle R'
 
-    template = choose_template
-
-    mailer = @instance.find_mailer_for(self, template: choose_template)
-
-    mail to:    @user.email,
-      bcc:      mailer.bcc,
-      reply_to: mailer.reply_to,
-      from:     mailer.from,
-      reply_to: mailer.reply_to,
-      subject:  mailer.subject do |format| # "Welcome to DesksNear.me" do |format|
-        format.html { render choose_template, instance: @instance }
-        format.text { render choose_template, instance: @instance }
-      end
+    mail(to: @user.email,
+         template_name: choose_template,
+         instance: @instance)
   end
 
   if defined? MailView
