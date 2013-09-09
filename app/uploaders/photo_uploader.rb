@@ -27,19 +27,19 @@ class PhotoUploader < BaseImageUploader
     process :resize_to_fill => [144, 89]
   end
 
-  version :thumb, :from_version => :adjusted, :if => :should_generate_versions? do
+  version :thumb, :from_version => :adjusted, :if => :all_versions? do
     process :resize_to_fill => [96, 96]
   end
 
-  version :large, :from_version => :adjusted, :if => :should_generate_versions? do
+  version :large, :from_version => :adjusted, :if => :all_versions? do
     process :resize_to_fill => [1280, 960]
   end
 
-  version :space_listing, :from_version => :adjusted, :if => :should_generate_versions? do
+  version :space_listing, :from_version => :adjusted, :if => :all_versions? do
     process :resize_to_fill => [410, 254]
   end
 
-  version :golden, :from_version => :adjusted, :if => :should_generate_versions? do
+  version :golden, :from_version => :adjusted, :if => :all_versions? do
     process :resize_to_fill => [SPACE_FULL_IMAGE_W, SPACE_FULL_IMAGE_H]
   end
 
@@ -61,8 +61,8 @@ class PhotoUploader < BaseImageUploader
 
   private
 
-  def should_generate_versions?(*args)
-    model.should_generate_versions?
+  def all_versions?(*args)
+    model.all_versions?
   end
 
   def apply_crop
