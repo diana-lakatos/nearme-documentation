@@ -38,7 +38,7 @@ class DashboardController < ApplicationController
     # Charge total summary by currency
     @all_time_totals = @company.reservation_charges.paid.total_by_currency
 
-    @weekly_chart = WeeklyChartDecorator.new(@last_week_reservation_charges)
+    @weekly_chart = WeeklyChartDecorator.decorate(@last_week_reservation_charges)
   end
 
   def transfers
@@ -48,12 +48,12 @@ class DashboardController < ApplicationController
 
     # PaymentTransfers specifically from the last 7 days
     @last_week_payment_transfers = @company.
-                                      payment_transfers.
-                                      transferred.
-                                      last_x_days(6).
-                                      order('created_at ASC')
+                                    payment_transfers.
+                                    transferred.
+                                    last_x_days(6).
+                                    order('created_at ASC')
 
-    @weekly_chart = WeeklyChartDecorator.new(@last_week_payment_transfers)
+    @weekly_chart = WeeklyChartDecorator.decorate(@last_week_payment_transfers)
   end
 
   private

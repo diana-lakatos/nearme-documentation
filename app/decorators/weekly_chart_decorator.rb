@@ -1,10 +1,7 @@
-class WeeklyChartDecorator
-
-  attr_accessor :grouped
+class WeeklyChartDecorator < Draper::CollectionDecorator
 
   def initialize(collection)
-    @collection = collection
-    @grouped = group_collection
+    super(collection, with: WeeklyChartItemDecorator)
   end
 
   def labels
@@ -21,31 +18,24 @@ class WeeklyChartDecorator
 
   def sums_by_currency
     hash = {}
-    @collection.group_by(&:currency).each do |currency, currency_values|
+    decorated_collection.group_by(&:currency).each do |currency, currency_values|
       hash[currency] = currency_values.sum(&:amount)
     end
     hash
   end
 
   private
-  def group_collection
-    hash = {}
-    @collection.group_by(&:currency).each do |currency, currency_values|
-      hash[currency] = currency_values.group_by{|v| formatted_date(v.created_at) }
+  def grouped
+    @grouped ||= begin
+      hash = {}
+      decorated_collection.group_by(&:currency).each do |currency, currency_values|
+        hash[currency] = currency_values.group_by{|v| v.formatted_date }
 
-      hash[currency].each do |date, date_values|
-        hash[currency][date] = date_values.sum(&:"#{sum_by}")
+        hash[currency].each do |date, date_values|
+          hash[currency][date] = date_values.sum(&:sum_by)
+        end
       end
-    end
-    hash
-  end
-
-  def sum_by
-    case @collection.table.name
-    when 'reservation_charges'
-      :total_amount
-    when 'payment_transfers'
-      :amount
+      hash
     end
   end
 
