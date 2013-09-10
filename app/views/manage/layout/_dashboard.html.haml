@@ -1,18 +1,23 @@
 .row-fluid
   .span8.offset2
-    %h1
-      = link_to manage_locations_path, :class => 'dashboard-home-link' do
-        %span.ico-location.padding
-          Manage Locations
-    .box
-      %ul.locations
-        = yield
-
+    .span8
+      %h1
+        = link_to manage_locations_path, :class => 'dashboard-home-link' do
+          %span.ico-location.padding
+            Manage Locations
+    .span3.offset1
       - if params[:action] == 'index'
-        .actions
-          = link_to new_manage_location_path, :class => "btn btn-blue btn-large" do
-            %span.ico-add-location.padding
-              Create New Location
+        .actions.right
+          = link_to new_manage_location_path, :class => "btn btn-blue btn-medium" do
+            %span.ico-plus
+              New Location
+
+.row-fluid
+  .span8.offset2
+    %ul.locations
+      = yield
+
+      
 
 - content_for :script do
   :javascript

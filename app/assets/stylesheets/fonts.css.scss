@@ -131,7 +131,8 @@ span.padding-left {
 .ico-list:before, 
 .ico-open-link:before,
 .ico-rss:before,
-.ico-facebook-full:before {
+.ico-facebook-full:before,
+.ico-eye:before {
   font-family: 'icon-font' !important;
   font-weight: normal;
   font-style: normal;
@@ -366,4 +367,8 @@ span.padding-left {
 
 .ico-facebook-full:before {
   content: "\e038";
+}
+
+.ico-eye:before {
+  content: "\e039";
 }

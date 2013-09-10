@@ -6,14 +6,13 @@
         = "at #{location.street}" if location.street.present?
       - else
         = location.street 
-        = link_to '', location_path(location), :class => 'ico-open-link'
     - else 
       New location
   - if in_new_or_edit?
-    .links
-      = link_to new_manage_location_listing_path(location), :class => 'ico-add-desk' do
+    .links 
+      = link_to location_path(location), :class => 'ico-eye btn btn-gray-darker' do
         %span
-          Add #{current_instance.bookable_noun}
-      = link_to edit_manage_location_path(location), :class => 'ico-edit' do
+          View Location
+      = link_to edit_manage_location_path(location), :class => 'ico-edit btn btn-gray-darker' do
         %span
           Edit Location
