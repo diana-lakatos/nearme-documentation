@@ -8,6 +8,8 @@ class @Dashboard.ListingController
     @currencySelect = @container.find('#currency-select')
     @currencyHolders = @container.find('.currency-holder')
 
+    @enableSwitch = @container.find('#listing_enabled').parent().parent()
+
     @initializePriceFields()
     @bindEvents()
     @updateCurrency()
@@ -20,6 +22,13 @@ class @Dashboard.ListingController
     @submitLink.on 'click',  =>
       @container.submit()
       false
+
+    @enableSwitch.on 'switch-change', (e, data) =>
+      value = data.value
+      if value
+        @container.find('label[for=listing_enabled]').text 'Enabled'
+      else
+        @container.find('label[for=listing_enabled]').text 'Disabled'  
 
   updateCurrency: () =>
       @currencyHolders.html($('#currency_'+ @currencySelect.val()).text())
