@@ -11,11 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(:version => 20130829005231) do
-=======
 ActiveRecord::Schema.define(:version => 20130909182922) do
->>>>>>> 0431014... Host can enable/disable a listing.
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
