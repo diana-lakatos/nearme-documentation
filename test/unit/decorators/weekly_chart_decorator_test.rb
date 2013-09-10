@@ -3,7 +3,7 @@ require 'test_helper'
 class WeeklyChartDecoratorTest < ActionView::TestCase
 
   setup do
-    Timecop.travel(Date.new(2013, 1, 1))
+    Timecop.travel(Time.zone.parse('2013-01-01'))
   end
 
   context 'a blank PaymentTransfer collection decorated with WeeklyChartDecorator' do
@@ -21,7 +21,7 @@ class WeeklyChartDecoratorTest < ActionView::TestCase
     end
 
     should 'display dates in label' do
-      expected_dates = ['Dec 25', 'Dec 26', 'Dec 27', 'Dec 28', 'Dec 29', 'Dec 30', 'Dec 31']
+      expected_dates = ['Dec 26', 'Dec 27', 'Dec 28', 'Dec 29', 'Dec 30', 'Dec 31', 'Jan 01']
       assert_equal expected_dates, @weekly_chart.labels
     end
 
