@@ -13,7 +13,7 @@ class Reservation < ActiveRecord::Base
     :unknown => 'unknown'
   }
 
-  belongs_to :listing
+  belongs_to :listing, :with_deleted => true
   belongs_to :owner, :class_name => "User"
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
@@ -159,7 +159,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def host
-    @host ||= listing_including_deleted.creator
+    @host ||= listing.creator
   end
 
   def date=(value)
@@ -276,11 +276,6 @@ class Reservation < ActiveRecord::Base
 
   def expiry_time
     created_at + 24.hours
-  end
-
-  # Get listing even if deleted
-  def listing_including_deleted
-    Listing.with_deleted.find(self.listing_id)
   end
 
   private
