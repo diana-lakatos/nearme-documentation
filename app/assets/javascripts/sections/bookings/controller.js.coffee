@@ -118,8 +118,8 @@ class Bookings.Controller
     else
       [@listing.firstAvailableDate]
 
-    @datepicker.setDates(initialDates)
     @datepicker.trigger 'datesChanged', initialDates
+    @datepicker.setDates(initialDates)
 
   updateTimesFromTimePicker: ->
     @listing.setTimes(@timePicker.startMinute(), @timePicker.endMinute())
