@@ -13,7 +13,7 @@ class Reservation < ActiveRecord::Base
     :unknown => 'unknown'
   }
 
-  belongs_to :listing
+  belongs_to :listing, :with_deleted => true
   belongs_to :owner, :class_name => "User"
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,

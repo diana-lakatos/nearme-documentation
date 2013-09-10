@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130903165717) do
+ActiveRecord::Schema.define(:version => 20130829005231) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -305,7 +305,6 @@ ActiveRecord::Schema.define(:version => 20130903165717) do
     t.integer  "rotation_angle"
     t.integer  "width"
     t.integer  "height"
-    t.string   "filepicker_url"
   end
 
   create_table "reservation_charges", :force => true do |t|
@@ -351,14 +350,14 @@ ActiveRecord::Schema.define(:version => 20130903165717) do
     t.string   "confirmation_email"
     t.integer  "subtotal_amount_cents"
     t.string   "currency"
-    t.datetime "created_at",                                      :null => false
-    t.datetime "updated_at",                                      :null => false
+    t.datetime "created_at",                                                :null => false
+    t.datetime "updated_at",                                                :null => false
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",           :default => "manual",  :null => false
-    t.string   "payment_status",           :default => "unknown", :null => false
-    t.integer  "quantity",                 :default => 1,         :null => false
+    t.string   "payment_method",                     :default => "manual",  :null => false
+    t.string   "payment_status",                     :default => "unknown", :null => false
+    t.integer  "quantity",                           :default => 1,         :null => false
     t.integer  "service_fee_amount_cents"
     t.string   "rejection_reason"
     t.datetime "request_guest_rating_email_sent_at"
