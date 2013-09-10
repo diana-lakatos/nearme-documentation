@@ -4,17 +4,8 @@ class AfterSignupMailerTest < ActiveSupport::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
-    @subject = "Test subject"
-    @from = "micheller@desksnear.me"
-
-    details = {
-      from: @from,
-      subject: @subject
-    }
-    PrepareEmail.for('after_signup_mailer/user_with_listing', details)
-    PrepareEmail.for('after_signup_mailer/user_without_listing_and_booking', details)
-    PrepareEmail.for('after_signup_mailer/user_with_booking', details)
-    PrepareEmail.for('layouts/mailer')
+    @subject = "Welcome to DesksNear.me"
+    @from = @user.instance.contact_email
   end
 
   test "help offer works ok" do

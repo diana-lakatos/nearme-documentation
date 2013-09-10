@@ -1,4 +1,4 @@
-@timecop @emails
+@timecop
 Feature: User Cancels Reservation
   In order to not hang out with rad dudes
   As a user

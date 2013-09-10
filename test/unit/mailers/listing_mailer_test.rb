@@ -5,14 +5,7 @@ class ListingTest < ActiveSupport::TestCase
   setup do
     @listing = FactoryGirl.create(:listing)
     @user = FactoryGirl.create(:user)
-    @subject = "Test subject"
-
-    details = {
-      subject: @subject
-    }
-
-    PrepareEmail.for('listing_mailer/share', details)
-    PrepareEmail.for('layouts/mailer', details)
+    @subject = "#{@user.name} has shared a listing with you on Desks Near Me"
   end
 
   test "#share" do
@@ -29,6 +22,7 @@ class ListingTest < ActiveSupport::TestCase
   test "#share without message" do
     mail = ListingMailer.share(@listing, 'jimmy@test.com', 'Jimmy Falcon', @user)
 
+    assert_equal @subject, mail.subject
     assert mail.html_part.body.include?(@user.name)
     refute mail.html_part.body.include?('They also wanted to say:')
 

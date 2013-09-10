@@ -30,6 +30,12 @@ class Instance < ActiveRecord::Base
     InstanceDrop.new(self)
   end
 
+  def default_mailer
+    EmailTemplate.new(bcc: contact_email,
+                      from: contact_email,
+                      reply_to: contact_email)
+  end
+
   def self.default_instance
     self.where(name: DEFAULT_INSTANCE_NAME).first
   end

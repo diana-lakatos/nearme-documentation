@@ -5,34 +5,21 @@ class UserMailerTest < ActiveSupport::TestCase
   include Rails.application.routes.url_helpers
   setup do
     @user = FactoryGirl.create(:user)
-
-    @details = {
-      bcc: "bcc@test.com",
-      from: "from@test.com",
-      reply_to: "reply_to@test.com",
-      subject: "Test subject"
-    }
-
   end
 
   test "#notify_about_wrong_phone_number" do
-    PrepareEmail.for('user_mailer/notify_about_wrong_phone_number', @details)
-
     mail = UserMailer.notify_about_wrong_phone_number(@user)
+    subject = "[Desks Near Me] We couldn't send you text message"
 
     assert mail.html_part.body.include?(@user.name)
     assert mail.html_part.body.include?(@user.full_mobile_number)
 
     assert_equal [@user.email], mail.to
-    assert_equal @details[:subject], mail.subject
-    assert_equal [@details[:from]], mail.from
-    assert_equal [@details[:reply_to]], mail.reply_to
-    assert_equal [@details[:bcc]], mail.bcc
+    assert_equal subject, mail.subject
   end
 
   context "#email_verification" do
     setup do
-      PrepareEmail.for('user_mailer/email_verification', @details)
       @mail = UserMailer.email_verification(@user)
     end
 
@@ -42,6 +29,11 @@ class UserMailerTest < ActiveSupport::TestCase
 
     should "email has instance name" do
       assert @mail.html_part.body.include?(@user.instance.name)
+    end
+
+    should "email has subject" do
+      subject = 'Email verification'
+      assert_equal subject, @mail.subject
     end
 
     should "email won't be sent to verified user" do

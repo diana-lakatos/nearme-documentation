@@ -5,10 +5,8 @@ class InquiryMailer < InstanceMailer
     @inquiry = inquiry
     current_instance = @inquiry.instance
 
-    mailer = find_mailer(instance: current_instance)
-
     mail(to: inquiry.inquiring_user.full_email,
-         subject: mailer.liquid_subject('inquiry' => @inquiry),
+         subject: "We've passed on your inquiry about #{inquiry.listing.name}",
          instance: current_instance)
   end
 
@@ -16,10 +14,8 @@ class InquiryMailer < InstanceMailer
     @inquiry = inquiry
     current_instance = @inquiry.instance
 
-    mailer = find_mailer(instance: current_instance)
-
     mail(to: inquiry.listing.creator.full_email,
-         subject: mailer.liquid_subject('inquiry' => @inquiry),
+         subject: "New enquiry from #{inquiry.inquiring_user.name} about #{inquiry.listing.name}",
          reply_to: inquiry.inquiring_user.full_email,
          instance: current_instance)
   end

@@ -14,7 +14,8 @@ class AfterSignupMailer < InstanceMailer
 
     mail(to: @user.email,
          template_name: choose_template,
-         instance: @instance)
+         instance: @instance,
+         subject: "Welcome to DesksNear.me")
   end
 
   if defined? MailView

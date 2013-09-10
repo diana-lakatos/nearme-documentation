@@ -1,7 +1,7 @@
 require 'mail_view'
 
 class InstanceMailer < ActionMailer::Base
-  append_view_path EmailResolver.instance
+  prepend_view_path EmailResolver.instance
 
   include ActionView::Helpers::TextHelper
   helper :listings, :reservations
@@ -11,12 +11,13 @@ class InstanceMailer < ActionMailer::Base
 
     instance = options.delete(:instance)
     template = options.delete(:template_name) || view_context.action_name
-    mailer = options.delete(:mailer) || find_mailer(template: template, instance: instance)
+    mailer = options.delete(:mailer) || find_mailer(template: template, instance: instance) || instance.default_mailer
+    subject  = mailer.subject || options.delete(:subject)
 
     self.class.layout _layout, instance: instance
 
     super(options.reverse_merge!(
-      :subject => mailer.subject,
+      :subject => subject,
       :bcc     => mailer.bcc,
       :from    => mailer.from,
       :reply_to=> mailer.reply_to,
@@ -38,8 +39,6 @@ class InstanceMailer < ActionMailer::Base
     template_prefix = view_context.lookup_context.prefixes.first
 
     template = EmailResolver.instance.find_mailers(template_name, template_prefix, false, details).first
-
-    raise "Can't find mailer for #{template_prefix}/#{template_name}!" if template.nil?
 
     return template
   end

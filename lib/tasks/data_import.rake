@@ -1,12 +1,4 @@
 namespace :import do
-
-  desc "import DesksNearMe liquid mailers"
-  task :mailers => :environment do
-    require Rails.root.join('test', 'helpers', 'prepare_email')
-    EmailTemplate.destroy_all
-    PrepareEmail.import_legacy
-  end
-
   desc "import data from xml file"
   task :xml => :environment do
     @xml_file = DataImporter::XmlFile.new(Rails.root.join('test', 'assets', 'data_importer', 'data.xml'))

@@ -102,7 +102,7 @@ class PrepareEmail
     'reservation_mailer/notify_host_with_confirmation' => {
       from: 'support@desksnear.me',
       reply_to: 'support@desksnear.me',
-      subject: 'A booking requires your confirmation"'
+      subject: 'A booking requires your confirmation'
     },
     'reservation_mailer/notify_host_without_confirmation' => {
       from: 'support@desksnear.me',

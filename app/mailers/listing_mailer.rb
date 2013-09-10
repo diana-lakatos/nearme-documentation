@@ -9,7 +9,9 @@ class ListingMailer < InstanceMailer
     @message = message
     @instance = listing.instance
 
-    mail(to: "#{name} <#{email}>", :reply_to => "#{sharer.name} <#{sharer.email}>",
+    mail(to: "#{name} <#{email}>",
+         reply_to: "#{sharer.name} <#{sharer.email}>",
+         subject: "#{sharer.name} has shared a listing with you on Desks Near Me",
          instance: @instance)
   end
 

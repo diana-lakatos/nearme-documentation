@@ -5,13 +5,17 @@ class UserMailer < InstanceMailer
 
   def notify_about_wrong_phone_number(user)
     @user = user
-    mail(to: @user.email, instance: @user.instance)
+    mail(to: @user.email,
+         subject: "[Desks Near Me] We couldn't send you text message",
+         instance: @user.instance)
   end
 
   def email_verification(user)
     return unless user.verified_at.nil?
     @user = user
-    mail(to: @user.email, instance: @user.instance)
+    mail(to: @user.email,
+         subject: 'Email verification',
+         instance: @user.instance)
   end
 
   if defined? MailView
