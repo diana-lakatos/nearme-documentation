@@ -8,6 +8,14 @@
 - else
   - enable_inputs_daily, enable_inputs_hourly, enable_inputs_free = true, false, false
 
+
+.listing-enabled-container 
+  %div{:class => "control-group"}
+    = f.label :enabled, f.object.enabled? ? 'Enabled' : 'Disabled', :class => 'control-label'
+    .controls
+      .switch{'data-on-label' => "", 'data-off-label' => ""}
+        = f.check_box :enabled
+
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
 = f.input :name, :label => "#{current_instance.bookable_noun} name", :placeholder => 'Examples, "Shared Desks", "Meeting Room", "Private Office"' if only_inputs.empty? || only_inputs.include?(:name)
 = f.input :description, :label => "#{current_instance.bookable_noun} description", :input_html => { :maxlength => 250}, :placeholder => 'Describe the individual listing that will be rented' if only_inputs.empty? || only_inputs.include?(:description)
