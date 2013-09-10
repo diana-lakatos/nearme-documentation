@@ -61,7 +61,7 @@ en:
       reservation_cancelled: "You have cancelled this reservation."
   desk:
     reservation_rejected_body: "%{user} declined reservation with reason: %{reason}"
-    reservation_rejected_title: "User has declined reservation"
+    reservation_rejected_title: "[internal] User has declined reservation"
   search:
     list:
       address_could_not_be_found: "The address you entered couldn't be found, please try another search query."

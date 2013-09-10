@@ -26,7 +26,7 @@ module Listings
             if e.message.include?('is not a valid phone number')
               handle_invalid_mobile_number(reservation.host)
             else
-              BackgroundIssueLogger.log_issue("[auto] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{reservation.id}, guest #{current_user.name} (#{current_user.id}). #{$!.inspect}")
+              BackgroundIssueLogger.log_issue("[internal] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{reservation.id}, guest #{current_user.name} (#{current_user.id}). #{$!.inspect}")
             end
           end
           event_tracker.updated_profile_information(reservation.owner)
