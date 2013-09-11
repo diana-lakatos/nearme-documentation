@@ -133,14 +133,6 @@ section.dashboard {
 
     & > li {
       padding-bottom: 15px;
-
-      .box {
-        padding-bottom: 0.4em;
-
-        header {
-          margin-bottom: 0.4em;
-        }
-      }
     }
 
     form {
@@ -200,7 +192,7 @@ section.dashboard {
       font-size: 20px;
       @include border-radius($border-radius-default);
       border: 1px solid $light-gray; 
-      margin-top: 0.4em;
+      margin-top: 10px;
 
       &.edit-location {
         border: none;
