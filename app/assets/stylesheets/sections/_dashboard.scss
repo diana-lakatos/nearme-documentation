@@ -133,6 +133,14 @@ section.dashboard {
 
     & > li {
       padding-bottom: 15px;
+
+      .box {
+        padding-bottom: 0.4em;
+
+        header {
+          margin-bottom: 0.4em;
+        }
+      }
     }
 
     form {
@@ -157,7 +165,7 @@ section.dashboard {
           position: relative;
           top: -3px;
         }
-      }
+      } 
 
       .links {
         float: right;
@@ -193,7 +201,7 @@ section.dashboard {
       font-size: 20px;
       @include border-radius($border-radius-default);
       border: 1px solid $light-gray; 
-      margin-bottom: 0.4em;
+      margin-top: 0.4em;
 
       .name {
         float: left;
@@ -202,6 +210,7 @@ section.dashboard {
 
       a {
         color: $gray60;
+        font-size: 18px;
 
         &:hover {
           color: $gray120;
@@ -213,6 +222,20 @@ section.dashboard {
 
         span {
           display: none;
+        }
+      }
+    }
+
+    li.new-location {
+      padding: 0px;
+      margin: 0px;
+      border: none;
+
+      a {
+        color: $pure-white;
+
+        &:hover {
+          color: $pure-white;
         }
       }
     }
@@ -240,4 +263,8 @@ section.dashboard {
     }
   }
 
+}
+
+h1.manage-locations-home-link {
+  line-height: 1.7em;
 }
