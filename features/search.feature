@@ -67,3 +67,8 @@ Feature: A user can search for a listing
     Then I should see /You will be notified when a desk is added at this location./
     And search notification created with "New Zealand" for user
 
+  Scenario: A user searches for disabled listing
+    Given a disabled listing in Auckland exists
+    When I search for "Auckland"
+    Then I should see "No results found"
+

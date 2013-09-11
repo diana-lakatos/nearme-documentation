@@ -9,3 +9,7 @@ end
 Given /^#{capture_model} is deleted$/ do |model|
   # dummy step to make feature scenario more readable :)
 end
+
+Given /^#{capture_model} is disabled/ do |model|
+  # dummy step to make feature scenario more readable :)
+end

@@ -42,6 +42,7 @@ en:
     complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
   listings:
     listing_inactive: "This listing is inactive. Displaying other listings near %{address}."
+    listing_disabled: "This listing has been temporarily disabled by the owner. Check out some others near you!"
   manage:
     compaines:
       company_updated: "Great, your company's details have been updated."
@@ -60,8 +61,8 @@ en:
       reservation_rejected: "You have rejected the reservation. Maybe next time!"
       reservation_cancelled: "You have cancelled this reservation."
   desk:
-    reservation_rejected_body: "%{user} rejected reservation with reason: %{reason}"
-    reservation_rejected_title: "[auto] User have rejected reservation"
+    reservation_rejected_body: "%{user} declined reservation with reason: %{reason}"
+    reservation_rejected_title: "[internal] User has declined reservation"
   search:
     list:
       address_could_not_be_found: "The address you entered couldn't be found, please try another search query."
