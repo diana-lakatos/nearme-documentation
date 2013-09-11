@@ -29,5 +29,10 @@ class Locations::ListingsController < ApplicationController
       flash[:warning] = t('listings.listing_inactive', address: @listing.address)
       redirect_to search_path(:q => @listing.address)
     end
+
+    unless @listing.enabled?
+      flash[:warning] = t('listings.listing_disabled')
+      redirect_to search_path(:q => @listing.address)
+    end
   end
 end

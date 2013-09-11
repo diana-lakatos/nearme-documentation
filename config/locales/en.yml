@@ -42,6 +42,7 @@ en:
     complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
   listings:
     listing_inactive: "This listing is inactive. Displaying other listings near %{address}."
+    listing_disabled: "This listing has been temporarily disabled by the owner. Check out some others near you!"
   manage:
     compaines:
       company_updated: "Great, your company's details have been updated."

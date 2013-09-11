@@ -16,7 +16,7 @@ class V1::ListingsController < V1::BaseController
   rescue_from ActiveRecord::RecordNotFound, with: :listing_not_found
 
   def list
-    @listings = current_user.company(params[:location_id]).listings.active.select('id,name')
+    @listings = current_user.company(params[:location_id]).listings.active.visible.select('id,name')
   end
 
   def create
