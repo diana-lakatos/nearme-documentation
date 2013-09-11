@@ -197,11 +197,14 @@ section.dashboard {
     }
 
     li.listing{
-      padding: 5px 15px 5px 20px;
       font-size: 20px;
       @include border-radius($border-radius-default);
       border: 1px solid $light-gray; 
       margin-top: 0.4em;
+
+      &.edit-location {
+        border: none;
+      }
 
       .name {
         float: left;
@@ -211,9 +214,11 @@ section.dashboard {
       a {
         color: $gray60;
         font-size: 18px;
+        display: block;
+        padding: 5px 15px 5px 20px;
 
         &:hover {
-          color: $gray120;
+          background-color: $light-gray;
         }
       }
 
@@ -233,9 +238,11 @@ section.dashboard {
 
       a {
         color: $pure-white;
+        padding: 0 10px;
 
         &:hover {
           color: $pure-white;
+          background-color: $blue;
         }
       }
     }

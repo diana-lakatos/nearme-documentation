@@ -14,8 +14,9 @@
 
 .row-fluid
   .span8.offset2
-    %ul.locations
-      = yield
+    %div{:class => (params[:action] == 'index') ? '' : 'box'}
+      %ul.locations
+        = yield
 
       
 

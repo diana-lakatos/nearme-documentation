@@ -18,6 +18,6 @@
               - location.listings.each do |listing|
                 = render :partial => 'manage/listings/listing_name_with_link', :locals => { :location => location, :listing => listing }
             %li.listing
-              = link_to new_manage_location_listing_path(location), :class => 'ico-plus right' do
+              = link_to new_manage_location_listing_path(location), :class => 'ico-plus text-right' do
                 %span
                   Add #{current_instance.bookable_noun}
