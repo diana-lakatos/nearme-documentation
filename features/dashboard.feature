@@ -2,7 +2,7 @@
 Feature: As a user of the site
   In order to promote my company
   As a user
-  I want to manage my locaations
+  I want to manage my locations
 
   Background:
     Given a user exists

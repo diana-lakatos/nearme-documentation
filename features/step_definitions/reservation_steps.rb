@@ -3,6 +3,7 @@ Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed
   reserver = User.find_by_name(reserver)
   @listing = FactoryGirl.create(:listing)
   @listing.creator = lister
+  @listing.company.add_creator_to_company_users
   reservation = @listing.reserve!(reserver, [next_regularly_available_day], 1)
   unless confirmed != " "
     reservation.confirm!

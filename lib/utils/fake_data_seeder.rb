@@ -181,9 +181,13 @@ module Utils
                                     :industries => industries.sample(2))
           users << user
 
-          companies << FactoryGirl.create(:company, :name => url, :email => user.email, :url => url,
+          company = FactoryGirl.create(:company, :name => url, :email => user.email, :url => url,
                                           :description => Faker::Lorem.paragraph.truncate(200), :instance => instance,
                                           :creator => user, :industries => user.industries)
+
+          company.users << user
+
+          companies << company
         end
         [users, companies]
       end

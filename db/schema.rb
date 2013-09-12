@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130909182922) do
+ActiveRecord::Schema.define(:version => 20130912081304) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -88,6 +88,16 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.integer "industry_id"
     t.integer "company_id"
   end
+
+  create_table "company_users", :id => false, :force => true do |t|
+    t.integer  "company_id"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "company_users", ["company_id"], :name => "index_company_users_on_company_id"
+  add_index "company_users", ["user_id"], :name => "index_company_users_on_user_id"
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0

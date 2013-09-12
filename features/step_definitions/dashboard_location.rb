@@ -47,7 +47,7 @@ When /^I submit the form$/ do
 end
 
 When /^I click edit icon$/ do
-  page.find('.ico-edit').click
+  page.find('section.dashboard .ico-edit').click
 end
 
 When /^I click edit listing icon$/ do
