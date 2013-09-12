@@ -127,6 +127,24 @@ a.btn {
     }
   }
 
+  &.btn-gray-darker {
+    background: $gray210;
+    color: $gray80;
+    border: 1px solid $light-gray !important;
+    
+    span {
+      color: $gray80; 
+    }
+
+    &:hover {
+      background: lighten($gray210, 10%);
+    }
+
+    &:active {
+      background: darken($gray210, 10%);
+    }
+  }
+
   &.twitter, 
   &.facebook, 
   &.linkedin {
