@@ -8,8 +8,8 @@
         .actions.right
           %ul.locations
             %li.listing.new-location
-              = link_to new_manage_location_path, :class => "btn btn-blue btn-medium ico-plus" do
-                %span
+              = link_to new_manage_location_path, :class => "btn btn-blue btn-medium ico-add-location" do
+                %span.padding-left
                   New Location
 
 .row-fluid
@@ -17,8 +17,6 @@
     %div{:class => (params[:action] == 'index') ? '' : 'box'}
       %ul.locations
         = yield
-
-      
 
 - content_for :script do
   :javascript

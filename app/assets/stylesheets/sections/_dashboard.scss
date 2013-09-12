@@ -231,10 +231,10 @@ section.dashboard {
       a {
         color: $pure-white;
         padding: 0 10px;
+        background: $blue;
 
         &:hover {
-          color: $pure-white;
-          background-color: $blue;
+          background: lighten($theme_blue, 10%);
         }
       }
     }
