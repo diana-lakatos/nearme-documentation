@@ -54,11 +54,15 @@ Then /^that listing is( not)? included in the search results$/ do |not_included|
 end
 
 When(/^I fill form (with email field )?for subscribing on notification$/) do |with_email|
-  page.should have_css('#search-notification')
+  page.find('#search-notification')
   if with_email
     fill_in 'Email', with: 'test@test.com'
   end
   click_on 'Subscribe'
+end
+
+Then /^I should see a notification for my subscription$/ do
+  page.find('.alert').should have_content("You will be notified when a desk is added at this location.")
 end
 
 When(/^search notification created with "([^"]*)"( for user)?$/) do |query, for_user|
