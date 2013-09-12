@@ -28,10 +28,6 @@ class ReservationCharge < ActiveRecord::Base
     paid.where(payment_transfer_id: nil)
   }
 
-  scope :needs_payment_transfer, -> {
-    paid.where(payment_transfer_id: nil)
-  }
-
   scope :total_by_currency, -> {
     paid.group('reservation_charges.currency').
       select('
