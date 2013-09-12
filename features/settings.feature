@@ -5,7 +5,6 @@ Feature: A user can edit their settings
 
   Background:
     Given a user exists
-    And the date is "13th October 2010"
     And I am logged in as the user
     And a industry exists with name: "Computer Science"
     And a industry exists with name: "IT"
@@ -20,7 +19,7 @@ Feature: A user can edit their settings
   @javascript
   Scenario: A user with company will see settings
     Given a company exists with creator: the user
-      And I am on the home page
+    And I am on the home page
     When I follow "Manage"
     Then I should see "Settings"
 

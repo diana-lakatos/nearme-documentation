@@ -5,7 +5,6 @@ Feature: A user can edit their settings
 
   Background:
     Given a user exists
-    And the date is "13th October 2010"
     And I am logged in as the user
     And a industry exists with name: "Computer Science"
     And a industry exists with name: "IT"
