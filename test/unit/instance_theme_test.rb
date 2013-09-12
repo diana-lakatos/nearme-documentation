@@ -24,7 +24,7 @@ class InstanceThemeTest < ActiveSupport::TestCase
     end
 
     should "trigger compilation of the theme after changing relevant fields" do
-      @instance_theme.color_red = 'red'
+      @instance_theme.color_red = '#ff0000'
 
       CompileInstanceThemeJob.expects(:perform).with(@instance_theme)
       @instance_theme.save!
