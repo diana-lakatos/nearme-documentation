@@ -21,6 +21,11 @@ class InstanceTheme < ActiveRecord::Base
   # Precompile the theme, unless we're saving the compiled stylesheet.
   after_save :recompile_theme, :if => :theme_changed?
 
+  # Validations
+  COLORS.each do |color|
+    validates "color_#{color}".to_sym, :hex_color => true, :allow_blank => true
+  end
+  
   # If true, will skip compiling the theme when saving
   attr_accessor :skip_compilation
 
