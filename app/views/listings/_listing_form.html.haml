@@ -83,8 +83,9 @@
 
 - if only_inputs.empty? || only_inputs.include?(:photos)
   = file_upload_input_with_label('Photos',
-                                  manage_photos_path('size' => 'medium'),
                                   "#{photo_input_name_prefix}[photos_attributes][0][image]",
+                                  manage_photos_path,
+                                  Photo.new.image.thumbnail_dimensions[:medium],
                                   "Browse",
                                   :required => false,
                                   :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
@@ -93,15 +94,15 @@
       .loading-icon
     = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes]", nil, :placeholder => 'Enter Caption...', :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
     - unless @photos.nil?
-      - @photos.each_with_index do |photo, index|
+      - @photos.each_with_index do |photo|
         = get_fileupload_photo_html(photo.image_url(:medium),
                                     destroy_space_wizard_photo_path(:id => photo.id),
                                     edit_manage_photo_path(photo),
                                     :div,
-                                    id: photo.id, index: index) do
-          = text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{index}][caption]", photo.caption, :placeholder => 'Enter Caption...', 'data-number' => index
-          = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{index}][id]", photo.id
-          = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{index}][position]", photo.position, class: 'photo-position-input'
+                                    id: photo.id) do
+          = text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => 'Enter Caption...'
+          = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][id]", photo.id
+          = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
 
 .hidden
   - Money::Currency.table.values.each do |c|

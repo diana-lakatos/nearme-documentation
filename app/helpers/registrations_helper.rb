@@ -20,14 +20,12 @@ module RegistrationsHelper
         class_for_links += ' provider-not-disconnectable'
       end
       link_to authentication_path(authentication), :method => :delete , :class => class_for_links do
-        "<span class='padding ico-#{provider.downcase}'>".html_safe +
-        "Disconnect"
+        content_tag(:span, "Disconnect", :class => "padding ico-#{provider.downcase}")
       end
     else
       # user is not connected to this social provider yet - no authentication in the database
       link_to provider_auth_url(provider.downcase), :class => class_for_links do
-        "<span class='padding ico-#{provider.downcase}'>".html_safe +
-        "Connect"
+        content_tag(:span, 'Connect', :class => "padding ico-#{provider.downcase}")
       end
     end
   end
