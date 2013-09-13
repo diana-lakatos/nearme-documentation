@@ -4,22 +4,24 @@ module CarrierWave::InkFilePicker
   included do
     before(:remove, :clear)
 
+    # Ensure that, after removing the image data, we also clear any of the
+    # related attributes on the model.
     def clear
       CarrierWave::SourceProcessing::Processor.new(model, mounted_as).clear
     end
 
     # checking if something has been already uploaded - true even if versions are not generated yet
     def any_url_exists?
-      source_url || self.present?
+      source_url || exists?
     end
 
     # checking if something is ready for showing - false if versions are not generated yet and no original_url has been provided
     def any_url_ready?
-      source_url || self.exists?
+      source_url || exists?
     end
 
     def exists?
-      versions_generated? && self.present?
+      versions_generated?
     end
 
     def current_url(version = nil, *args)

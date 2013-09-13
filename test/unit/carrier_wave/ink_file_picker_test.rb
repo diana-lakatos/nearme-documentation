@@ -38,7 +38,7 @@ class CarrierWave::InkFilePickerTest < ActiveSupport::TestCase
       context 'without inkfilepicker url' do
 
         should 'not have avatar url' do
-          assert_nil @user.avatar_url
+          assert_equal @user.avatar.default_url, @user.avatar_url
         end
 
         should 'know that avatar does not exist' do

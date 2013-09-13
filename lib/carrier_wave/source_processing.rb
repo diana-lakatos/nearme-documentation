@@ -23,12 +23,12 @@ module CarrierWave
       # recreate carrier wave versions based on external url
       # we want to re-download image only if external url has changed
       def generate_versions
-        if @model.send(@field).exists?
+        if versions_generated? || !source_url
           # external url has not changed, meaning we can just recreate verions
           @model.send(@field).recreate_versions!
         else
           # external url has changed, re-download!
-          @model.send("remote_#{@field}_url=", @model["#{@field}_original_url"])
+          @model.send("remote_#{@field}_url=", source_url)
         end
 
         @model["#{@field}_versions_generated_at"] = Time.zone.now
@@ -42,6 +42,16 @@ module CarrierWave
         %w(original_url versions_generated_at transformation_data).each do |f|
           @model.send("#{@field}_#{f}=", nil)
         end
+      end
+
+      private
+
+      def source_url
+        @model["#{@field}_original_url"]
+      end
+
+      def versions_generated?
+        @model["#{@field}_versions_generated_at"].present?
       end
     end
 
