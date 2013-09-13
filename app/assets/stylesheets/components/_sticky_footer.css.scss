@@ -18,6 +18,7 @@ html, body {
 }
 
 .footer-wrapper {
+  margin-top: -$footer-height;
   padding: 0;
   height: $footer-height;
 
@@ -26,12 +27,10 @@ html, body {
   }
 
   @media (max-width: $iphone-landscape) {
-    margin-top: -$footer-height;
     height: $footer-height + 50;
   }
 
   @media (max-width: $ipad-width) {
-    margin-top: -$footer-height;
     height: $footer-height + 50;
   }
 }

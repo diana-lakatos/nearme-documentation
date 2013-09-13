@@ -8,6 +8,9 @@ class @Dashboard.ListingController
     @currencySelect = @container.find('#currency-select')
     @currencyHolders = @container.find('.currency-holder')
 
+    @enableSwitch = @container.find('#listing_enabled').parent().parent()
+    @enableAjaxUpdate = true
+
     @initializePriceFields()
     @bindEvents()
     @updateCurrency()
@@ -20,6 +23,23 @@ class @Dashboard.ListingController
     @submitLink.on 'click',  =>
       @container.submit()
       false
+
+    @enableSwitch.on 'switch-change', (e, data) =>
+      value = data.value
+      if @enableAjaxUpdate
+        $.ajax
+          url: @container.attr("action")
+          type: 'PUT'
+          data:
+            listing:
+              enabled: value
+          dataType: 'JSON'
+          error: (jq, textStatus, err) =>
+            @enableAjaxUpdate = false
+            @enableSwitch.find('#listing_enabled').siblings('label').trigger('mousedown').trigger('mouseup').trigger('click')
+      else
+        @enableAjaxUpdate = true
+
 
   updateCurrency: () =>
       @currencyHolders.html($('#currency_'+ @currencySelect.val()).text())

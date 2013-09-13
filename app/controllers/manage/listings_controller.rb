@@ -39,12 +39,23 @@ class Manage::ListingsController < Manage::BaseController
 
   def update
 
-    if @listing.update_attributes params[:listing]
-      flash[:success] = t('manage.listings.listing_updated')
-      redirect_to manage_locations_path
-    else
-      @photos = @listing.photos
-      render :edit
+    respond_to do |format|
+      format.html {
+        if @listing.update_attributes params[:listing]
+          flash[:success] = t('manage.listings.listing_updated')
+          redirect_to manage_locations_path
+        else
+          @photos = @listing.photos
+          render :edit
+        end
+      }
+      format.json {
+        if @listing.update_attributes params[:listing]
+          render :json => { :success => true }
+        else
+          render :json => { :errors => @listing.errors.full_messages }, :status => 422
+        end
+      }
     end
   end
 

@@ -49,7 +49,7 @@ module ListingsHelper
   end
 
   def selected_listing_siblings(location, listing)
-    @siblings ||= location.listings - [listing]
+    @siblings ||= location.listings.visible - [listing]
   end
 
   def space_listing_placeholder_path(options = {})
