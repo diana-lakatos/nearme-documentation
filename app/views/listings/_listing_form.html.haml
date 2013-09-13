@@ -11,8 +11,8 @@
 
 .listing-enabled-container 
   %div{:class => "control-group"}
-    = f.label :enabled, 'Enabled?', :class => 'control-label'
-    .controls
+    = f.label :enabled, 'Enabled?'
+    .switch-wrapper
       .switch{'data-on-label' => "", 'data-off-label' => ""}
         = f.check_box :enabled
 
