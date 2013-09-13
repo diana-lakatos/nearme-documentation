@@ -42,18 +42,16 @@ footer {
 
   ul {
     &.icons {
-      @media (max-width:$ipad-width) {
-        padding: 0 90px 0 90px;
-      }
+        @media (max-width:$ipad-width) {
+          width: 126px;
+          margin: 0 auto;
+        }
       li {
         padding: 0 0 0 15px;
+        width: 27px;
         float: right;
         a:before {
           font-size: 27px;
-        }
-        @media (max-width:$ipad-width) {
-          padding: 0;
-          width: 33%;
         }
       }
     }
