@@ -1,4 +1,5 @@
 class BaseUploader < CarrierWave::Uploader::Base
+  include CarrierWave::MiniMagick
   # Define the dimensions for versions of the uploader in a class attribute
   # that can be accessed by parts of the Uploader stack.
   class_attribute :dimensions

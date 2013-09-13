@@ -1,6 +1,4 @@
 class BaseImageUploader < BaseUploader
-  include CarrierWave::MiniMagick
-
   process :auto_orient
 
   def auto_orient
