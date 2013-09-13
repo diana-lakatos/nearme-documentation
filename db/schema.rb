@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130909182922) do
+ActiveRecord::Schema.define(:version => 20130912225706) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -172,7 +172,6 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.string   "name"
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
-    t.integer  "partner_id"
     t.string   "site_name"
     t.string   "description"
     t.string   "tagline"
@@ -186,6 +185,7 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.string   "facebook_url"
     t.string   "bookable_noun", :default => "Desk"
     t.string   "meta_title"
+    t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
   end
 
   create_table "listing_types", :force => true do |t|
@@ -267,13 +267,6 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.string   "hero_image"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-  end
-
-  create_table "partners", :force => true do |t|
-    t.string   "name"
-    t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
-    t.datetime "created_at",                                                         :null => false
-    t.datetime "updated_at",                                                         :null => false
   end
 
   create_table "payment_transfers", :force => true do |t|
