@@ -16,7 +16,7 @@
             %span.ico-credit-card.padding Payments
         %li
           = link_to transfers_dashboard_path do
-            %span.ico-open-link.padding Transfers
+            %span.ico-transfers.padding Transfers
         - if current_user.companies.any? && current_user.companies.first.id.present?
           %li
             = link_to edit_manage_company_path(current_user.companies.first) do

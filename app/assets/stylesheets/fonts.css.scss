@@ -132,7 +132,8 @@ span.padding-left {
 .ico-open-link:before,
 .ico-rss:before,
 .ico-facebook-full:before,
-.ico-eye:before {
+.ico-eye:before,
+.ico-transfers:before {
   font-family: 'icon-font' !important;
   font-weight: normal;
   font-style: normal;
@@ -371,4 +372,8 @@ span.padding-left {
 
 .ico-eye:before {
   content: "\e039";
+}
+
+.ico-transfers:before {
+  content: "\e03a";
 }
