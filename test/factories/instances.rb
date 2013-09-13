@@ -15,8 +15,13 @@ FactoryGirl.define do
     facebook_url 'https://www.facebook.com/DesksNearMe'
     bookable_noun 'Desk'
     service_fee_percent '10.00'
-    after :build do |instance|
-      instance.domains << build(:domain, name: instance.name.parameterize.underscore)
+
+    after(:build) do |instance|
+      instance.domains << (Domain.where(:name => Domain::DEFAULT_DOMAIN_NAME).first.presence || FactoryGirl.create(:domain, :name => Domain::DEFAULT_DOMAIN_NAME)) if instance.domains.empty?
+    end
+
+    after(:create) do |instance|
+      instance.domains << (Domain.where(:name => Domain::DEFAULT_DOMAIN_NAME).first.presence || FactoryGirl.create(:domain, :name => Domain::DEFAULT_DOMAIN_NAME)) if instance.domains.empty?
     end
   end
 end

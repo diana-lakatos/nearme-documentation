@@ -174,8 +174,21 @@ class ApplicationController < ActionController::Base
     )
   end
 
+  def detect_domain
+    @current_domain = Domain.find_for_request(request)
+    if @current_domain.white_label_company?
+      @current_white_label_company = @current_domain.target
+      @current_instance = @current_white_label_company.instance
+    elsif @current_domain.instance?
+      @current_instance = @current_domain.target
+    else
+      raise "Invalid domain target #{@current_domain}"
+    end
+  end
+
   def current_instance
-    @current_instance ||= Instance.find_for_request(request) || Instance.default_instance
+    detect_domain unless @current_instance
+    @current_instance
   end
   helper_method :current_instance
 
