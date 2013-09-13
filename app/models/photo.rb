@@ -27,6 +27,7 @@ class Photo < ActiveRecord::Base
   validates :content_type, :presence => true
   validates_length_of :caption, :maximum => 120, :allow_blank => true
 
+  extend CarrierWave::SourceProcessing
   mount_uploader :image, PhotoUploader, :use_inkfilepicker => true
 
   AVAILABLE_CONTENT = ['Listing', 'Location']

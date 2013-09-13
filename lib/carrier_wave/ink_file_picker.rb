@@ -2,48 +2,53 @@ module CarrierWave::InkFilePicker
   extend ActiveSupport::Concern
 
   included do
+    before(:remove, :clear)
 
-    def thumbnail_dimensions
-      self.class::THUMBNAIL_DIMENSIONS
+    def clear
+      CarrierWave::SourceProcessing::Processor.new(model, mounted_as).clear
     end
 
     # checking if something has been already uploaded - true even if versions are not generated yet
     def any_url_exists?
-      self.present? || stored_original_url
+      source_url || self.present?
     end
 
     # checking if something is ready for showing - false if versions are not generated yet and no original_url has been provided
     def any_url_ready?
-      self.exists? || stored_original_url
+      source_url || self.exists?
     end
 
     def exists?
-      self.present? && stored_versions_generated
+      versions_generated? && self.present?
     end
 
-    def current_url(*args)
-      if exists? || !stored_original_url
+    def current_url(version = nil, *args)
+      if exists? || !source_url
+        args.unshift(version) if version
         self.url(*args)
-      else
-        get_original_url(*args)
+      elsif source_url
+        #  see https://developers.inkfilepicker.com/docs/web/#convert
+        if version && dimensions[version]
+          source_url + "/convert?" + { :w => dimensions[version][:width], :h => dimensions[version][:height], :fit => 'crop' }.to_query
+        else
+          source_url
+        end
       end
     end
 
-    def get_original_url(version = nil, *args)
-      return nil unless stored_original_url
-      #  see https://developers.inkfilepicker.com/docs/web/#convert
-      if version && thumbnail_dimensions[version]
-        stored_original_url + "/convert?" + { :w => thumbnail_dimensions[version][:width], :h => thumbnail_dimensions[version][:height], :fit => 'crop' }.to_query
-      else
-        stored_original_url
-      end
+    def source_url
+      model["#{mounted_as}_original_url"].presence
+    end
+
+    def versions_generated?
+      model["#{mounted_as}_versions_generated_at"].present?
     end
 
     def original_dimensions
       if exists?
         [width, height]
-      else
-        FastImage.size(get_original_url)
+      elsif url = current_url
+        FastImage.size(url)
       end
     end
   end

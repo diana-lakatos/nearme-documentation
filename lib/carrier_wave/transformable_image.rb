@@ -1,4 +1,12 @@
 module CarrierWave::TransformableImage
+  extend ActiveSupport::Concern
+
+  included do
+    version :transformed do
+      process :apply_crop
+      process :apply_rotate
+    end
+  end
 
   def aspect_ratio 
     self.class::ASPECT_RATIO
@@ -24,19 +32,20 @@ module CarrierWave::TransformableImage
   end
 
   def transformation_crop
-    transformation_data && transformation_data[:crop] ?  transformation_data[:crop] : {}
+    transformation_data[:crop] || {}
   end
 
   def transformation_rotate
-    transformation_data && transformation_data[:rotate] ?  transformation_data[:rotate].to_i : 0
+    transformation_data[:rotate].try(:to_i) || 0
   end
 
   def transformation_data
-    if stored_transformation_data
-      (String === stored_transformation_data ? YAML.load(stored_transformation_data) : stored_transformation_data)
+    case data = model["#{mounted_as}_transformation_data"]
+    when String
+      YAML.load(data)
     else
-      {}
-    end
+      data
+    end || {}
   end
 
   def image
