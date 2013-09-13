@@ -110,7 +110,9 @@ class UserTest < ActiveSupport::TestCase
 
   should "not have avatar if user did not upload it" do
     @user = FactoryGirl.create(:user)
-    @user.avatar_versions_generated_at = Time.zone.now
+    @user.remove_avatar!
+    @user.save!
+
     assert !@user.avatar.any_url_exists?
   end
 
