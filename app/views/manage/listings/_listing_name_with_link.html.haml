@@ -3,7 +3,7 @@
     - if params[:action] != 'new' && params[:action] != 'edit'
       = link_to edit_manage_location_listing_path(location, listing) do
         = listing.name
-        %span.ico-edit.right
+        %span.ico-edit.right.no-hide
           %span.padding-left
             Edit #{current_instance.bookable_noun}
     - else
