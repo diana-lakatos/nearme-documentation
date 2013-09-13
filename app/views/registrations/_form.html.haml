@@ -9,7 +9,7 @@
   = f.input :password, :label => (resource.persisted? ? "Change password" : "Password" )
   .single-photo
     = file_upload_input_with_label('Profile Photo', "avatar", avatar_path, current_user.avatar.thumbnail_dimensions[:medium], "Upload Photo", {"no-multiple" => true}) do
-      - if resource.avatar.any_url_ready?
+      - if resource.avatar.any_url_exists?
         = fileupload_photo(resource.avatar_url(:medium), 
           destroy_avatar_path, 
           edit_avatar_path,

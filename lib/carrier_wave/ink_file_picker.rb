@@ -10,13 +10,7 @@ module CarrierWave::InkFilePicker
       CarrierWave::SourceProcessing::Processor.new(model, mounted_as).clear
     end
 
-    # checking if something has been already uploaded - true even if versions are not generated yet
     def any_url_exists?
-      source_url || exists?
-    end
-
-    # checking if something is ready for showing - false if versions are not generated yet and no original_url has been provided
-    def any_url_ready?
       source_url || exists?
     end
 

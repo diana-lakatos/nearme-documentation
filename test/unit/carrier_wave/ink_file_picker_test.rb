@@ -95,10 +95,6 @@ class CarrierWave::InkFilePickerTest < ActiveSupport::TestCase
             assert_equal @user.avatar_original_url + "/convert?fit=crop&h=144&w=144", @user.avatar_url(:medium)
           end
 
-          should 'know that avatar is ready to be displayed' do
-            assert @user.avatar.any_url_ready?
-          end
-
         end
       end
 
@@ -126,9 +122,6 @@ class CarrierWave::InkFilePickerTest < ActiveSupport::TestCase
           assert @user.avatar.any_url_exists?
         end
 
-        should 'know that avatar is ready to be shown' do
-          assert @user.avatar.any_url_ready?
-        end
       end
 
     end
