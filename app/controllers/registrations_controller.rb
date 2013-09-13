@@ -65,7 +65,7 @@ class RegistrationsController < Devise::RegistrationsController
     if @user.save
       render :text => { :url => @user.avatar_url(:medium), 
                         :resize_url =>  edit_avatar_path,
-                        :thumbnail_dimensions => @user.avatar.thumbnail_dimensions,
+                        :thumbnail_dimensions => @user.avatar.thumbnail_dimensions[:medium],
                         :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain'
     else
       render :text => [{:error => @user.errors.full_messages}].to_json,:content_type => 'text/plain', :status => 422

@@ -71,9 +71,13 @@ label.radio {
   right: 10px;
 }
 
+#crop-form {
+  position: relative;
+}
+
 .rotate-photo {
   z-index: 602;
-  margin: 22px 0px 0 517px;
+  right: 0px;
 }
 
 .single-photo {

@@ -13,7 +13,7 @@ class Manage::PhotosController < ApplicationController
       render :text => {
         :id => @photo.id, 
         :content_id => @photo.content_id,
-        :thumbnail_dimensions => @photo.image.thumbnail_dimensions,
+        :thumbnail_dimensions => @photo.image.thumbnail_dimensions[:medium],
         :url => @photo.image_url(:medium),
         :destroy_url => destroy_space_wizard_photo_path(@photo),
         :resize_url =>  edit_manage_photo_path(@photo)
