@@ -7,7 +7,7 @@ class FileuploadHelperTest < ActionView::TestCase
     context "with required option" do
       should "include asterisk" do
         abbr_tag = "<abbr title='required'>*</abbr>"
-        output = file_upload_input_with_label('Photos', 'test', 'name', 'Photos', :required => true)
+        output = file_upload_input_with_label('Photos', 'test', 'name', {:width => 10, :height => 10}, 'Photos', :required => true)
 
         assert_match(/#{Regexp.escape(abbr_tag)}/, output)
       end
@@ -17,7 +17,7 @@ class FileuploadHelperTest < ActionView::TestCase
       should "include error message" do
         error_message = "upload photo please"
         error_block_tag = "<p class='error-block'>#{error_message}</p>"
-        output = file_upload_input_with_label('Photos', 'test', 'name', 'Photos', :required => true, :error => error_message)
+        output = file_upload_input_with_label('Photos', 'test', 'name', { :width => 10, :height => 10}, 'Photos', :required => true, :error => error_message)
 
         assert_match(/#{Regexp.escape(error_block_tag)}/, output)
       end

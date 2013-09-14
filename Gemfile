@@ -47,6 +47,8 @@ gem 'sass-rails'
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'chronic'
 gem 'chartjs-rails'
+gem 'jcrop-rails'
+gem 'fastimage'
 
 gem 'ey_config'
 
@@ -75,6 +77,7 @@ gem "historyjs-rails"
 gem 'ranked-model'
 
 gem 'desk'
+gem 'filepicker-rails'
 
 group :staging, :production do
   gem 'newrelic_rpm'

@@ -108,42 +108,28 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "Hulk Hogan <hulk@desksnear.me>", @user.full_email
   end
 
-  should "have avatar if user did not upload it" do
+  should "not have avatar if user did not upload it" do
     @user = FactoryGirl.create(:user)
-    assert_equal false, @user.avatar_provided?
+    @user.remove_avatar!
+    @user.save!
+
+    assert !@user.avatar.any_url_exists?
   end
 
   should "have avatar if user uploaded it" do
     @user = FactoryGirl.build(:user)
     @user.avatar = File.open(File.expand_path("../../assets/foobear.jpeg", __FILE__))
+    @user.avatar_versions_generated_at = Time.zone.now
     @user.save!
-    assert @user.avatar_provided?
+    assert @user.avatar.any_url_exists?
   end
 
   should "save user even when avatar image does not have extension" do
     @user = FactoryGirl.build(:user)
     @user.avatar = File.open(File.expand_path("../../assets/image_no_extension", __FILE__))
+    @user.avatar_versions_generated_at = Time.zone.now
     @user.save!
-    assert @user.avatar_provided?
-  end
-
-  should "save avatar from remote url" do
-    stub_image_url("http://www.example.com/image.jpg")
-    @user = FactoryGirl.create(:user)
-    @user.remote_avatar_url = "http://www.example.com/image.jpg"
-    begin
-      @user.save!
-    rescue
-    end
-    assert @user.avatar_provided?
-  end
-
-  should "not save afatar from remote url if save is not invoked" do
-    stub_image_url("http://www.example.com/image.jpg")
-    @user = FactoryGirl.create(:user)
-    @user.remote_avatar_url = "http://www.example.com/image.jpg"
-    @user.reload
-    assert @user.avatar_provided?
+    assert @user.avatar.any_url_exists?
   end
 
   context '#full_mobile_number' do

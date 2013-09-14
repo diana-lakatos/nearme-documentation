@@ -11,9 +11,7 @@ When /^I fill in valid space details$/ do
   select 'Desk', from: "#{model!("instance").bookable_noun} type"
   fill_in 'Quantity available', with:1
   choose "Free"
-  
-  image = File.join(Rails.root, *%w[features fixtures photos], "intern chair.jpg")
-  attach_hidden_file('[user][companies_attributes][0][locations_attributes][0][listings_attributes][0][photos_attributes][0][image]', image)
+  attach_file_via_uploader
   page.should_not have_content('Processing...')
 end
 
@@ -21,8 +19,6 @@ When /^I partially fill in space details$/ do
   fill_in 'Company name', with: 'International Secret Intelligence Service'
   fill_in 'Location description', with: 'Our historic 11-story Southern Pacific Building, also known as "The Landmark", was completed in 1916. We are in the 172 m Spear Tower.'
   fill_in "#{model!("instance").bookable_noun} name", with:'Desk'
-
-  image = File.join(Rails.root, *%w[features fixtures photos], "intern chair.jpg")
-  attach_hidden_file('[user][companies_attributes][0][locations_attributes][0][listings_attributes][0][photos_attributes][0][image]', image)
+  attach_file_via_uploader
   page.should_not have_content('Processing...')
 end

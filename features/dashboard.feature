@@ -98,5 +98,3 @@ Feature: As a user of the site
         | Day | Availabile | Open Time | Close Time |
         | 1   | Yes        | 9:00      | 17:00      |
         | 2   | Yes        | 9:00      | 17:00      |
-
-

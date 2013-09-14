@@ -62,16 +62,22 @@ label.radio {
 }
 
 .delete-photo {
-  margin: 6px 0 0 -61px;
+  top: 6px;
+  right: 10px;
 }
 
 .resize-photo {
-  margin: 30px 0 0 -105px;
+  top: 30px;
+  right: 10px;
+}
+
+#crop-form {
+  position: relative;
 }
 
 .rotate-photo {
   z-index: 602;
-  margin: 22px 0px 0 517px;
+  right: 0px;
 }
 
 .single-photo {
@@ -146,6 +152,7 @@ label.radio {
   }
 
   .photo-item {
+    position: relative;
     margin-bottom: 20px;
     margin-right: 20px;
     overflow: hidden;
@@ -160,8 +167,6 @@ label.radio {
 
     img {
       margin: 0 auto;
-      width: 180px;
-      height: 113px;
     }
 
     input {

@@ -154,8 +154,12 @@ GEM
       multipart-post (~> 1.1)
     faraday_middleware (0.9.0)
       faraday (>= 0.7.4, < 0.9)
+    fastimage (1.5.0)
     ffaker (1.15.0)
     ffi (1.9.0)
+    filepicker-rails (0.1)
+      multi_json (~> 1.6)
+      railties (>= 3.1.0, < 5.0)
     fog (1.8.0)
       builder
       excon (~> 0.14)
@@ -207,6 +211,9 @@ GEM
     inherited_resources (1.4.0)
       has_scope (~> 0.5.0)
       responders (~> 0.9)
+    jcrop-rails (1.0.3)
+      railties (~> 3.0)
+      thor (~> 0.14)
     journey (1.0.4)
     jquery-fileupload-rails (0.4.1)
       actionpack (>= 3.1)
@@ -478,7 +485,9 @@ DEPENDENCIES
   email_spec
   ey_config
   factory_girl_rails (>= 3.0.0)
+  fastimage
   ffaker
+  filepicker-rails
   fog
   friendly_id
   geocoder
@@ -490,6 +499,7 @@ DEPENDENCIES
   haml
   historyjs-rails
   inherited_resources
+  jcrop-rails
   jquery-fileupload-rails
   jquery-rails
   json_spec

@@ -65,7 +65,9 @@ DesksnearMe::Application.routes.draw do
   match "/auth/failure", to: "authentications#failure"
   devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
   devise_scope :user do
-    put "users/avatar", :to => "registrations#avatar", :as => "avatar"
+    post "users/avatar", :to => "registrations#avatar", :as => "avatar"
+    get "users/edit_avatar", :to => "registrations#edit_avatar", :as => "edit_avatar"
+    put "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar"
     post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
     get "users/", :to => "registrations#new"
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
@@ -103,11 +105,7 @@ DesksnearMe::Application.routes.draw do
       resources :listings
     end
 
-    resources :photos, :only => [:create, :destroy, :edit, :update] do
-      collection do
-        put '', :to => :create # it's a dirty hack for photo uploader, in edit listing/location it uses PUT instead of POST.. put '' matches manage/photos
-      end
-    end
+    resources :photos, :only => [:create, :destroy, :edit, :update]
 
     resources :listings do
       resources :reservations, :controller => 'listings/reservations' do

@@ -133,9 +133,9 @@ end
 Then /^I do (not )?have avatar$/ do |without_avatar|
   user = User.last
   if without_avatar
-    assert !user.avatar_provided?
+    assert !user.avatar.any_url_exists?
   else
-    assert user.avatar_provided?
+    assert user.avatar.any_url_exists?
   end
 end
 

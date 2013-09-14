@@ -1,0 +1,5 @@
+= filepicker_js_include_tag
+= javascript_include_tag "//api.filepicker.io/v1/filepicker_debug.js" if Rails.env.development? || Rails.env.test?
+:javascript
+  filepicker.setKey("#{DesksnearMe::Application.config.filepicker_rails.api_key}");
+  filepicker.debug_mode = #{Rails.env.test?}

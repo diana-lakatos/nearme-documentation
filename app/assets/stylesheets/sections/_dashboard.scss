@@ -209,6 +209,10 @@ section.dashboard {
         display: block;
         padding: 5px 15px 5px 20px;
 
+        .no-hide {
+          display: inline;
+        }
+
         &:hover {
           background-color: $light-gray;
         }

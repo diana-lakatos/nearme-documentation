@@ -38,7 +38,6 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def update
-
     respond_to do |format|
       format.html {
         if @listing.update_attributes params[:listing]
