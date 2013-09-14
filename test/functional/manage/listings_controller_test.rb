@@ -34,7 +34,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
   context "with listing" do
 
     setup do
-      @listing = FactoryGirl.create(:listing, :location => @location, :photos_count => 1)
+      @listing = FactoryGirl.create(:listing, :location => @location, :photos_count => 1, :quantity => 2)
     end
 
     should "update listing" do
