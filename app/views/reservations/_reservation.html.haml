@@ -11,7 +11,7 @@
 
             %div{:class => "reservation-status #{reservation_status_class(reservation)}"}
               %span
-                %i
+                %i{:class => reservation_status_icon(reservation)}
                 #{reservation.state.capitalize}
                 - if reservation.pending? && reservation.credit_card_payment?
                   = tooltip('This reservation is currently pending confirmation, and will be charged when confirmed.')
