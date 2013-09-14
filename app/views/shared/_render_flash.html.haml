@@ -2,7 +2,7 @@
   - if flash[key].present?
     %div{class: "alert #{key}", 'data-flash-message' => true}
       %p
-        %i
+        %i{ :class => ico_for_flash(key)}
         = flash[key].html_safe
         %a.close.ico-close.right{href: '#'}
 
