@@ -14,11 +14,12 @@ class @Photo.Uploader
     @fileInput.on 'click', (event) =>
       __insp.push(['tagSession', "photo_upload_clicked"])
       event.preventDefault()
+      options = { debug: filepicker.debug_mode, extensions: ['.jpg', '.jpeg', '.gif', '.png']}
       if @photoCollection.multiplePhoto()
-        filepicker.pickMultiple { debug: filepicker.debug_mode }, (inkBlobs) =>
+        filepicker.pickMultiple options, (inkBlobs) =>
           @createPhotos(inkBlobs)
       else
-        filepicker.pick { debug: filepicker.debug_mode }, (inkBlob) =>
+        filepicker.pick options, (inkBlob) =>
           @createPhoto(inkBlob)
         
   createPhotos: (inkBlobs) ->
