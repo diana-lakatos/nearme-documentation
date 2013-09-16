@@ -62,8 +62,7 @@ class @Modal
     @container = $('.modal-container')
     @content = @container.find('.modal-content')
     @loading = @container.find('.modal-loading')
-    @bodyContainer = $('body')
-    @modalContainer = $('.modal-container')
+    @bodyContainer = $('.dnm-page-body')
     @overlay = $('.modal-overlay')
 
     # Bind to any element with "close" class to trigger close on the modal
@@ -173,14 +172,12 @@ class @Modal
     return if @_bodyIsFixed()
     @_scrollTopWas = $(window).scrollTop()
     @bodyContainer.addClass('modal-body-wrapper').css('margin-top': "-#{@_scrollTopWas}px")
-    @modalContainer.css('margin-top': "#{@_scrollTopWas}px")
     $(window).scrollTop(0)
 
   # Reverse the 'fixing' of the primary page content
   _unfixBody: ->
     return unless @_bodyIsFixed()
     @bodyContainer.removeClass('modal-body-wrapper').css('margin-top': 'auto')
-    @modalContainer.css('margin-top': "auto")
     $(window).scrollTop(@_scrollTopWas)
 
   # Get the instance of the Modal object
