@@ -20,7 +20,8 @@ class EmailTemplate < ActiveRecord::Base
   end
 
   def liquid_subject(locals = {})
+    return if self.subject.to_s.empty?
     template = Liquid::Template.parse(self.subject)
-    template.render(locals)
+    template.render(locals.stringify_keys!)
   end
 end

@@ -12,11 +12,12 @@ class InstanceMailer < ActionMailer::Base
     instance = options.delete(:instance)
     template = options.delete(:template_name) || view_context.action_name
     mailer = options.delete(:mailer) || find_mailer(template: template, instance: instance) || instance.default_mailer
-    subject  = mailer.subject || options.delete(:subject)
+    subject_locals = options.delete(:subject_locals)
+    subject  = mailer.liquid_subject(subject_locals) || options.delete(:subject)
 
     self.class.layout _layout, instance: instance
 
-    super(options.reverse_merge!(
+    super(options.merge!(
       :subject => subject,
       :bcc     => mailer.bcc,
       :from    => mailer.from,
