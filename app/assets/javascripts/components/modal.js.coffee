@@ -62,7 +62,7 @@ class @Modal
     @container = $('.modal-container')
     @content = @container.find('.modal-content')
     @loading = @container.find('.modal-loading')
-    @bodyContainer = $('.dnm-page')
+    @bodyContainer = $('.dnm-page-body')
     @overlay = $('.modal-overlay')
 
     # Bind to any element with "close" class to trigger close on the modal
