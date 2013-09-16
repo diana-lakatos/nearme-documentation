@@ -70,6 +70,7 @@ gem 'googl'
 gem 'jquery-rails'
 gem 'jquery-fileupload-rails'
 gem 'chosen-rails'
+gem 'spectrum-rails'
 
 gem 'inherited_resources'
 gem "historyjs-rails"

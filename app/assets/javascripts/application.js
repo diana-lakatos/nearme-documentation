@@ -26,6 +26,7 @@
 //= require chosen-jquery
 //= require chart
 //= require jcrop
+//= require spectrum
 //
 //
 //= require_self

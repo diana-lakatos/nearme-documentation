@@ -4,8 +4,17 @@
   .span8.offset2
     %h1
       %span.ico-settings.padding Settings
-    .box
-      = simple_form_for [:manage, @company], :html => { class: "form-horizontal form-expandable", :id => 'edit_company' } do |f|
+    = simple_form_for [:manage, @company], :html => {multipart: true, class: "form-horizontal form-expandable", :id => 'edit_company' } do |f|
+      %h2 1. Company Settings
+      %br
+      .box
         = render :partial => 'companies/company_form', :locals => { :f => f }
+      %h2 2. White Label Settings
+      %br
+      .box
+        = f.simple_fields_for :domain, f.object.domain || Domain.new do |domain_form|
+          = domain_form.input :name, :label => "Your Domain", :placeholder => 'example.com', :required => true
+        = f.simple_fields_for :theme, (f.object.theme || Theme.new) do |theme_form|
+          = render :partial => 'themes/theme', :locals => { :f => theme_form }
         .actions
           = f.submit "Save"

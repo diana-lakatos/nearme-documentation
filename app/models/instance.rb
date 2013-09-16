@@ -3,7 +3,7 @@ class Instance < ActiveRecord::Base
                   :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, :meta_title,
                   :domains_attributes, :theme_attributes, :service_fee_percent
 
-  has_one :theme, class_name: 'InstanceTheme', dependent: :destroy
+  has_one :theme, :as => :owner, dependent: :destroy
 
   has_many :companies
   has_many :locations, :through => :companies

@@ -1,22 +1,23 @@
-class InstanceTheme < ActiveRecord::Base
+class Theme < ActiveRecord::Base
   COLORS = %w(blue red orange green gray black white)
   COLORS.each do |color|
     attr_accessible "color_#{color}"
   end
 
   attr_accessible :name, :icon_image, :icon_retina_image,
-    :logo_image, :logo_retina_image, :hero_image, :skip_compilation
+    :logo_image, :logo_retina_image, :hero_image, :skip_compilation,
+    :owner, :owner_id, :owner_type
 
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
-  belongs_to :instance
+  belongs_to :owner, :polymorphic => true
 
-  mount_uploader :icon_image, InstanceThemeImageUploader
-  mount_uploader :icon_retina_image, InstanceThemeImageUploader
-  mount_uploader :logo_image, InstanceThemeImageUploader
-  mount_uploader :logo_retina_image, InstanceThemeImageUploader
-  mount_uploader :hero_image, InstanceThemeImageUploader
-  mount_uploader :compiled_stylesheet, InstanceThemeStylesheetUploader
+  mount_uploader :icon_image, ThemeImageUploader
+  mount_uploader :icon_retina_image, ThemeImageUploader
+  mount_uploader :logo_image, ThemeImageUploader
+  mount_uploader :logo_retina_image, ThemeImageUploader
+  mount_uploader :hero_image, ThemeImageUploader
+  mount_uploader :compiled_stylesheet, ThemeStylesheetUploader
 
   # Precompile the theme, unless we're saving the compiled stylesheet.
   after_save :recompile_theme, :if => :theme_changed?
@@ -30,7 +31,7 @@ class InstanceTheme < ActiveRecord::Base
   attr_accessor :skip_compilation
 
   def recompile_theme
-    CompileInstanceThemeJob.perform(self) unless skip_compilation
+    CompileThemeJob.perform(self) unless skip_compilation
   end
 
   # Checks if any of options that impact the theme stylesheet have been changed.

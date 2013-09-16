@@ -174,27 +174,37 @@ class ApplicationController < ActionController::Base
     )
   end
 
-  def detect_domain
-    @current_domain = Domain.find_for_request(request)
-    if @current_domain
-      if @current_domain.white_label_company?
-        @current_white_label_company = @current_domain.target
-        @current_instance = @current_white_label_company.instance
-      elsif @current_domain.instance?
-        @current_instance = @current_domain.target
+  def current_domain
+    @current_domain = Domain.find_for_request(request).tap do |domain|
+      if domain
+        if domain.white_label_company?
+          @current_white_label_company = domain.target
+          @current_instance = @current_white_label_company.instance
+          @current_theme = @current_white_label_company.target.theme
+        elsif domain.instance?
+          @current_instance = domain.target
+        else
+          raise "Invalid domain target #{domain}"
+        end
       else
-        raise "Invalid domain target #{@current_domain}"
+        @current_instance = Instance.default_instance
       end
-    else
-      @current_instance = Instance.default_instance
+      @current_theme = @current_instance.theme unless @current_theme
     end
   end
+  helper_method :current_domain
 
   def current_instance
-    detect_domain unless @current_instance
+    current_domain unless @current_instance
     @current_instance
   end
   helper_method :current_instance
+
+  def current_theme
+    current_domain unless @current_instance
+    @current_theme
+  end
+  helper_method :current_theme
 
   def paper_trail_enabled_for_controller
     devise_controller? ? false : true

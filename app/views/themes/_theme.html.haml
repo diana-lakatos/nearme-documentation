@@ -1,0 +1,23 @@
+= f.input :name,:label => 'Theme Name', :required => true
+= built_in_upload_input_with_label('Logo Image (219x28)', (f.file_field :logo_image)) do
+  - if f.object.persisted?
+    = built_in_fileupload_photo(f.object.logo_image_url, destroy_image_manage_theme_path(f.object, :name => 'logo_image'), [219, 28])
+
+= built_in_upload_input_with_label('Logo Retina Image (219x28)', (f.file_field :logo_retina_image)) do
+  - if f.object.persisted?
+    = built_in_fileupload_photo(f.object.logo_retina_image_url, destroy_image_manage_theme_path(f.object, :name => 'logo_retina_image'), [219, 28])
+
+= built_in_upload_input_with_label('Icon Image (50x50)', (f.file_field :icon_image)) do
+  - if f.object.persisted?
+    = built_in_fileupload_photo(f.object.icon_image_url, destroy_image_manage_theme_path(f.object, :name => 'icon_image'), [50, 50])
+
+= built_in_upload_input_with_label('Icon Retina Image (50x50)', (f.file_field :icon_retina_image)) do
+  - if f.object.persisted?
+    = built_in_fileupload_photo(f.object.icon_retina_image_url, destroy_image_manage_theme_path(f.object, :name => 'icon_retina_image'), [50, 50])
+
+= built_in_upload_input_with_label('hero_image', (f.file_field :hero_image)) do
+  - if f.object.persisted?
+    = built_in_fileupload_photo(f.object.hero_image_url, destroy_image_manage_theme_path(f.object, :name => 'hero_image'), [144, 89])
+
+- Theme::COLORS.each do |color|
+  = f.input "color_#{color}", :input_html => { :type => :color }
