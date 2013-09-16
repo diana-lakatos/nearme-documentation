@@ -64,6 +64,16 @@ module ReservationsHelper
     end
   end
 
+  def reservation_status_icon(reservation)
+    if reservation.confirmed?
+      'ico-check'
+    elsif reservation.unconfirmed?
+      'ico-warning'
+    else reservation.cancelled? || reservation.rejected? 
+       'ico-close'
+    end
+  end
+
   def reservation_balance(reservation)
     humanized_money_with_cents_and_symbol(reservation.balance/100.0)
   end
