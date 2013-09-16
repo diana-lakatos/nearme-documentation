@@ -58,9 +58,10 @@ class UserTest < ActiveSupport::TestCase
     should 'find cancelled reservations' do
       @user = FactoryGirl.create(:user, :reservations => [
         FactoryGirl.create(:reservation, :state => 'unconfirmed'),
-        FactoryGirl.create(:reservation, :state => 'cancelled') 
+        FactoryGirl.create(:reservation, :state => 'cancelled_by_guest'),
+        FactoryGirl.create(:reservation, :state => 'cancelled_by_host')
       ])
-      assert_equal 1, @user.cancelled_reservations.count
+      assert_equal 2, @user.cancelled_reservations.count
     end
   end
 
