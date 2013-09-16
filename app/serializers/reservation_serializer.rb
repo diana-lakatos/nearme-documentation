@@ -11,10 +11,11 @@ class ReservationSerializer < ApplicationSerializer
 
   # Return reservation states as expected by the mobile application
   RESERVATION_STATES = {
-    unconfirmed:  'pending',
-    confirmed:    'confirmed',
-    rejected:     'rejected',
-    cancelled:    'canceled'
+    unconfirmed: 'pending',
+    confirmed: 'confirmed',
+    rejected: 'rejected',
+    cancelled_by_guest: 'canceled',
+    cancelled_by_host:  'canceled'
   }
 
   def state
