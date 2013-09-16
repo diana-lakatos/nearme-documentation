@@ -764,3 +764,21 @@ section.search section#results.list {
   }
 }
 
+form.search-notification-form {
+  .control-group:not(.hidden) {
+    margin: 0 auto;
+    width: 285px;
+    display: inline-block;
+  }
+  input[type=text], input[type=email] {
+    font-size: 18px;
+    font-weight: normal;
+    height: 50px;
+  }
+  input[type=submit] {
+    width: inherit;
+    margin-left: 5px;
+    vertical-align: top;
+  }
+}
+

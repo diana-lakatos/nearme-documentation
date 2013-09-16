@@ -4,7 +4,7 @@ class Manage::PhotosController < ApplicationController
 
   def create
     @photo = Photo.new
-    @photo.image = @image
+    @photo.image_original_url = @image_url
     @photo.content = @content
     @photo.content_type = @content_type
     @photo.content_id = @content_id
@@ -13,7 +13,8 @@ class Manage::PhotosController < ApplicationController
       render :text => {
         :id => @photo.id, 
         :content_id => @photo.content_id,
-        :url => @photo.image_url(get_image_url).to_s,
+        :thumbnail_dimensions => @photo.image.thumbnail_dimensions[:medium],
+        :url => @photo.image_url(:medium),
         :destroy_url => destroy_space_wizard_photo_path(@photo),
         :resize_url =>  edit_manage_photo_path(@photo)
       }.to_json, 
@@ -26,16 +27,17 @@ class Manage::PhotosController < ApplicationController
   def edit
     @photo = current_user.photos.find(params[:id])
     if request.xhr?
-      render partial: 'resize_form'
+      render partial: 'resize_form', :locals => { :form_url => manage_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url }
     end
   end
 
   def update
     @photo = current_user.photos.find(params[:id])
-    if @photo.update_attributes(params[:photo])
-      render json: {hide: true}
+    @photo.image_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
+    if @photo.save
+      render partial: 'manage/photos/resize_succeeded'
     else
-      render partial: 'resize_form'
+      render partial: 'resize_form', :locals => { :form_url => manage_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url }
     end
   end
 
@@ -71,15 +73,7 @@ class Manage::PhotosController < ApplicationController
       end
       raise 'Unknown path to photos_attributes' unless @content_type
     end
-    @image = @param[:photos_attributes]["0"][:image]
-  end
-
-  def get_image_url
-    if params[:size] and @photo.image.versions.keys.map(&:to_s).include? params[:size]
-      params[:size].to_sym
-    else
-      :thumb
-    end
+    @image_url = @param[:photos_attributes]["0"][:image]
   end
 
 end

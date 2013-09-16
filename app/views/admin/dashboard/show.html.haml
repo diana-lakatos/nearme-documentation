@@ -1,9 +1,17 @@
 .hero-unit
   %h1 Welcome to the Admin
 
-  %p
-    This is a work in progress, we can add features to the Admin dashboard as needed.
+- @funnels.each do |funnel|
 
-%p
-  In future, we can put any interesting dashboard lists or stats here...
-
+  %h2 #{funnel.name} #{funnel.dates}
+  %p.clearfix 
+    - if funnel.data_loaded?
+      %canvas{id: funnel.dom_id}
+      :javascript
+        new ChartWrapper.Bar(
+          $('##{funnel.dom_id}'), 
+          #{funnel.chart_values}, 
+          #{funnel.chart_labels}, 
+          #{funnel.chart_legend})
+    - else
+      No data

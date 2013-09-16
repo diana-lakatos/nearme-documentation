@@ -1,0 +1,13 @@
+- if current_user
+  = t '.try_another_search_or_subscribe'
+- else
+  = t '.try_another_search_or_enter_email'
+= simple_form_for search_notification, html: { class: 'search-notification-form' } do |f|
+  = f.input :email, :label => false, :placeholder => "Email" unless current_user
+  = f.input :query, as: :hidden
+  = f.input :latitude, as: :hidden
+  = f.input :longitude, as: :hidden
+  = f.submit 'Subscribe', class: 'btn-blue'
+
+:javascript
+  new Search.SearchNotificationController($('#search-notification'))

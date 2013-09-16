@@ -140,6 +140,14 @@ class Location < ActiveRecord::Base
     LocationDrop.new(self)
   end
 
+  def timezone
+    NearestTimeZone.to(latitude, longitude)
+  end
+
+  def local_time
+    Time.now.in_time_zone(timezone)
+  end
+
   def self.xml_attributes
     [:address, :address2, :formatted_address, :city, :street, :state, :postcode, :email, :phone, :description, :special_notes, :currency]
   end
@@ -170,7 +178,4 @@ class Location < ActiveRecord::Base
       end
     end
   end
-
-
-
 end

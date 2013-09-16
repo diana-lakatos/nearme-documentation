@@ -21,4 +21,6 @@ DesksnearMe::Application.configure do
   config.assets.digest = false
 
   config.exceptions_app = nil
+
+  config.filepicker_rails.api_key = "AFWbvclyPQ4WjIIrem35wz"
 end

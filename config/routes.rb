@@ -6,6 +6,7 @@ DesksnearMe::Application.routes.draw do
     mount InquiryMailer::Preview => 'mail_view/inquiries'
     mount ListingMailer::Preview => 'mail_view/listings'
     mount AfterSignupMailer::Preview => 'mail_view/after_signup'
+    mount RatingMailer::Preview => 'mail_view/ratings'
   end
 
   match '/404', :to => 'errors#not_found'
@@ -40,15 +41,8 @@ DesksnearMe::Application.routes.draw do
     resources :pages
   end
 
-  resources :companies
   resources :locations, :only => [:show] do
     resources :listings, :controller => 'locations/listings'
-
-    member do
-      get :host
-      get :networking
-    end
-
     collection do
       get :populate_address_components_form
       post :populate_address_components
@@ -59,24 +53,33 @@ DesksnearMe::Application.routes.draw do
     resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
       post :review, :on => :collection
       get :hourly_availability_schedule, :on => :collection
-    end
+     end
+  end
+
+  resources :reservations, :only => [] do
+    resources :guest_ratings, :only => [:new, :create]
+    resources :host_ratings, :only => [:new, :create]
   end
 
   match '/auth/:provider/callback' => 'authentications#create'
   match "/auth/failure", to: "authentications#failure"
   devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
   devise_scope :user do
-    put "users/avatar", :to => "registrations#avatar", :as => "avatar"
+    post "users/avatar", :to => "registrations#avatar", :as => "avatar"
+    get "users/edit_avatar", :to => "registrations#edit_avatar", :as => "edit_avatar"
+    put "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar"
     post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
     get "users/", :to => "registrations#new"
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
   end
 
-  resources :reservations do
+  resources :reservations, :except => [:update, :destroy] do
     member do
       post :user_cancel
       get :export
+      get :guest_rating
+      get :host_rating
     end
     collection do
       get :upcoming
@@ -98,17 +101,10 @@ DesksnearMe::Application.routes.draw do
     resources :companies, :only => [:edit, :update]
 
     resources :locations do
-      collection do
-        get 'data_import'
-      end
       resources :listings
     end
 
-    resources :photos, :only => [:create, :destroy, :edit, :update] do
-      collection do
-        put '', :to => :create # it's a dirty hack for photo uploader, in edit listing/location it uses PUT instead of POST.. put '' matches manage/photos
-      end
-    end
+    resources :photos, :only => [:create, :destroy, :edit, :update]
 
     resources :listings do
       resources :reservations, :controller => 'listings/reservations' do
@@ -125,7 +121,9 @@ DesksnearMe::Application.routes.draw do
   match "/search", :to => "search#index", :as => :search
   match "/search/show/:id", :to => "search#show"
 
-  resources :authentications do
+  resources :search_notifications, only: [:create]
+
+  resources :authentications, :only => [:create, :destroy] do
     collection do
       post :clear # Clear authentications stored in session
     end

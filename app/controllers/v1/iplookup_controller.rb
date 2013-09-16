@@ -11,21 +11,21 @@ class V1::IplookupController < V1::BaseController
       ip: request.remote_ip,
       boundingbox: {
         start: {
-          latitude:  request.location.latitude  - 0.25,
-          longitude: request.location.longitude - 0.25
+          latitude:  request.location.try(:latitude).to_f  - 0.25,
+          longitude: request.location.try(:longitude).to_f - 0.25
         },
         :end => {
-          latitude:  request.location.latitude  + 0.25,
-          longitude: request.location.longitude + 0.25
+          latitude:  request.location.try(:latitude).to_f  + 0.25,
+          longitude: request.location.try(:longitude).to_f + 0.25
         }
       },
       location: {
-        name:      "#{request.location.city}, #{request.location.state_code}",
-        city:      request.location.city,
-        region:    request.location.state,
-        country:   request.location.country_code,
-        latitude:  request.location.latitude,
-        longitude: request.location.longitude
+        name:      "#{request.location.try(:city)}, #{request.location.try(:state_code)}",
+        city:      request.location.try(:city),
+        region:    request.location.try(:state),
+        country:   request.location.try(:country_code),
+        latitude:  request.location.try(:latitude),
+        longitude: request.location.try(:longitude)
       }
     }
   end

@@ -12,5 +12,9 @@ module Analytics::LocationEvents
     track 'Conducted a Search', search, custom_options
   end
 
+  def subscribed_for_search_notification(search_notification, custom_options= {})
+    track 'Subscribed for a search notification', search_notification, custom_options
+  end
+
 end
 

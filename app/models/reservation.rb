@@ -13,11 +13,11 @@ class Reservation < ActiveRecord::Base
     :unknown => 'unknown'
   }
 
-  belongs_to :listing
+  belongs_to :listing, :with_deleted => true
   belongs_to :owner, :class_name => "User"
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
-    :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method
+    :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
 
   has_many :periods,
            :class_name => "ReservationPeriod",
@@ -50,13 +50,13 @@ class Reservation < ActiveRecord::Base
       #        The event_tracker calls can be executed from the Job instance.
       #        i.e. Essentially compose this as a 'non-http request' controller.
       mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, :current_user => owner)
-      event_tracker = Analytics::EventTracker.new(mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(owner.google_analytics_id))
+      event_tracker = Analytics::EventTracker.new(mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(owner))
       event_tracker.booking_expired(self)
       event_tracker.updated_profile_information(self.owner)
       event_tracker.updated_profile_information(self.host)
 
-      ReservationMailer.notify_guest_of_expiration(self).deliver
-      ReservationMailer.notify_host_of_expiration(self).deliver
+      ReservationMailer.notify_guest_of_expiration(self.id).deliver
+      ReservationMailer.notify_host_of_expiration(self.id).deliver
     end
   end
 

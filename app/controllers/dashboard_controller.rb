@@ -13,33 +13,14 @@ class DashboardController < ApplicationController
     end
   end
 
-  def index
-    if current_user.companies.blank?
-      flash[:warning] = "Please add your company first"
-      redirect_to new_space_wizard_url
-    end
-  end
-
   #routes
   def manage_guests
     @locations  = current_user.try(:companies).first.try(:locations)
     @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
   end
 
-  def locations
-    @locations ||= current_user.companies.first.locations.all
-  end
-
   def listings
     @listings = current_user.companies.first.listings.all
-  end
-
-  def bookings
-    @your_reservations = current_user.reservations.visible.to_a.sort_by(&:date)
-    unless @your_reservations.any?
-      flash[:warning] = "You haven't made any bookings yet!"
-      redirect_to search_path
-    end
   end
 
   def payments
@@ -67,7 +48,7 @@ class DashboardController < ApplicationController
 
   def redirect_if_no_company
     unless @company && @company.id
-      flash[:warning] = "Please add your company first"
+      flash[:warning] = t('dashboard.add_your_company')
       redirect_to new_space_wizard_url
     end
   end

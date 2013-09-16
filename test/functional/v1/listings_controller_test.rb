@@ -163,9 +163,6 @@ class V1::ListingsControllerTest < ActionController::TestCase
     listing.creator = FactoryGirl.create(:user)
     listing.save
 
-    InquiryMailer.expects(:inquiring_user_notification).returns(stub(deliver!: true)).once
-    InquiryMailer.expects(:listing_creator_notification).returns(stub(deliver!: true)).once
-
     assert_difference "listing.inquiries.count", 1 do
       raw_post :inquiry, {id: @listing.id}, '{ "message": "hello" }'
     end

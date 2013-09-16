@@ -27,6 +27,8 @@ Spork.prefork do
   require 'webmock/test_unit'
   require 'helpers/prepare_email'
 
+  require 'helpers/stub_helper'
+
   Turn.config.format = :dot
 
   # Disable carrierwave processing in tests
@@ -43,6 +45,7 @@ Spork.prefork do
 
     # Add more helper methods to be used by all tests here...
     include FactoryGirl::Syntax::Methods
+    include StubHelper
 
     def with_carrier_wave_processing(&blk)
       before, CarrierWave::Uploader::Base.enable_processing = CarrierWave::Uploader::Base.enable_processing, true
@@ -102,9 +105,6 @@ Spork.prefork do
 
     DatabaseCleaner.strategy = :truncation
 
-    def stub_image_url(image_url)
-      stub_request(:get, image_url).to_return(:status => 200, :body => File.expand_path("../assets/foobear.jpeg", __FILE__), :headers => {'Content-Type' => 'image/jpeg'})
-    end
   end
 
   class ActionController::TestCase

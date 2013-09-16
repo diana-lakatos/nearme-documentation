@@ -1,5 +1,9 @@
 The booking that you made on {{ reservation.created_at }} for '{{ listing.name }}' at {{ listing.location.name }} ({{ listing.location.url }}) was declined by the host.
 
-I'm sure it's not personal - they were probably just busy that day.
+{% if @reservation.has_rejection_reason %}
+  Reason: {{ reservation.rejection_reason }}
+{% else %}
+  I'm sure it's not personal - they were probably just busy that day.
+{% endif %}
 
 Don't worry - find other locations near you ({{ listing.search_url }})!

@@ -1,5 +1,5 @@
 # coding: utf-8
-Given /^a listing( with nil prices)? in (.*) exists( with that amenity)?$/ do |nil_prices, city, amenity|
+Given /^a( disabled)? listing( with nil prices)? in (.*) exists( with that amenity)?$/ do |disabled, nil_prices, city, amenity|
   listing = create_listing_in(city)
   if nil_prices
     listing.daily_price = nil
@@ -8,9 +8,12 @@ Given /^a listing( with nil prices)? in (.*) exists( with that amenity)?$/ do |n
     listing.free = true if !listing.has_price?
     listing.save!
   end
+  if disabled
+    listing.enabled = false
+    listing.save!
+  end
   listing.location.amenities << model!("amenity") if amenity
 end
-
 
 Given /^there are listings which are unavailable$/ do
   4.times { build_fully_booked_listing }

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130826163426) do
+ActiveRecord::Schema.define(:version => 20130909182922) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -33,8 +33,8 @@ ActiveRecord::Schema.define(:version => 20130826163426) do
     t.integer  "user_id"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.datetime "deleted_at"
     t.string   "secret"
     t.string   "token"
@@ -133,17 +133,24 @@ ActiveRecord::Schema.define(:version => 20130826163426) do
   add_index "email_templates", ["path", "partial", "instance_id"], :name => "index_email_templates_on_path_and_partial_and_instance_id"
 
   create_table "guest_ratings", :force => true do |t|
+    t.integer  "author_id",      :null => false
+    t.integer  "subject_id"
     t.integer  "reservation_id"
-    t.integer  "user_id"
-    t.float    "value"
+    t.integer  "value"
     t.text     "comment"
-    t.datetime "deleted_at"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
   end
 
-  add_index "guest_ratings", ["reservation_id", "value"], :name => "index_guest_ratings_on_reservation_id_and_value"
-  add_index "guest_ratings", ["user_id", "value"], :name => "index_guest_ratings_on_user_id_and_value"
+  create_table "host_ratings", :force => true do |t|
+    t.integer  "author_id",      :null => false
+    t.integer  "subject_id"
+    t.integer  "reservation_id"
+    t.integer  "value"
+    t.text     "comment"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
 
   create_table "industries", :force => true do |t|
     t.string   "name"
@@ -226,6 +233,7 @@ ActiveRecord::Schema.define(:version => 20130826163426) do
     t.string   "external_id"
     t.boolean  "free",                    :default => false
     t.datetime "draft"
+    t.boolean  "enabled",                 :default => true
   end
 
   create_table "location_amenities", :force => true do |t|
@@ -299,8 +307,8 @@ ActiveRecord::Schema.define(:version => 20130826163426) do
   add_index "payment_transfers", ["company_id"], :name => "index_payment_transfers_on_company_id"
 
   create_table "photos", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
     t.integer  "content_id"
     t.string   "image"
     t.string   "caption"
@@ -308,7 +316,6 @@ ActiveRecord::Schema.define(:version => 20130826163426) do
     t.integer  "position"
     t.datetime "deleted_at"
     t.integer  "creator_id"
-    t.boolean  "versions_generated", :default => false, :null => false
     t.integer  "crop_x"
     t.integer  "crop_y"
     t.integer  "crop_h"
@@ -316,6 +323,9 @@ ActiveRecord::Schema.define(:version => 20130826163426) do
     t.integer  "rotation_angle"
     t.integer  "width"
     t.integer  "height"
+    t.text     "image_transformation_data"
+    t.string   "image_original_url"
+    t.datetime "image_versions_generated_at"
   end
 
   create_table "reservation_charges", :force => true do |t|
@@ -361,16 +371,29 @@ ActiveRecord::Schema.define(:version => 20130826163426) do
     t.string   "confirmation_email"
     t.integer  "subtotal_amount_cents"
     t.string   "currency"
-    t.datetime "created_at",                                      :null => false
-    t.datetime "updated_at",                                      :null => false
+    t.datetime "created_at",                                                :null => false
+    t.datetime "updated_at",                                                :null => false
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",           :default => "manual",  :null => false
-    t.string   "payment_status",           :default => "unknown", :null => false
-    t.integer  "quantity",                 :default => 1,         :null => false
+    t.string   "payment_method",                     :default => "manual",  :null => false
+    t.string   "payment_status",                     :default => "unknown", :null => false
+    t.integer  "quantity",                           :default => 1,         :null => false
     t.integer  "service_fee_amount_cents"
     t.string   "rejection_reason"
+    t.datetime "request_guest_rating_email_sent_at"
+    t.datetime "request_host_rating_email_sent_at"
+  end
+
+  create_table "search_notifications", :force => true do |t|
+    t.string   "email"
+    t.integer  "user_id"
+    t.string   "query"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.boolean  "notified",   :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   create_table "sessions", :force => true do |t|
@@ -409,28 +432,27 @@ ActiveRecord::Schema.define(:version => 20130826163426) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                                :default => "", :null => false
-    t.string   "encrypted_password",                    :limit => 128, :default => "", :null => false
-    t.string   "password_salt",                                        :default => "", :null => false
+    t.string   "email",                                 :default => "", :null => false
+    t.string   "encrypted_password",                    :default => "", :null => false
     t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                                        :default => 0
+    t.integer  "sign_in_count",                         :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                            :null => false
+    t.datetime "updated_at",                                            :null => false
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                                       :default => 0,  :null => false
+    t.integer  "bookings_count",                        :default => 0,  :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "locked_at"
-    t.datetime "reset_password_sent_at"
-    t.integer  "failed_attempts",                                      :default => 0
+    t.integer  "failed_attempts",                       :default => 0
     t.string   "authentication_token"
     t.string   "avatar"
     t.string   "confirmation_token"
@@ -441,18 +463,25 @@ ActiveRecord::Schema.define(:version => 20130826163426) do
     t.string   "job_title"
     t.text     "biography"
     t.datetime "mailchimp_synchronized_at"
+    t.integer  "instance_id"
     t.string   "country_name"
     t.string   "mobile_number"
-    t.integer  "instance_id"
     t.datetime "notified_about_mobile_number_issue_at"
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
     t.string   "browser"
     t.string   "browser_version"
     t.string   "platform"
+    t.text     "avatar_transformation_data"
+    t.string   "avatar_original_url"
+    t.datetime "avatar_versions_generated_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
@@ -469,18 +498,5 @@ ActiveRecord::Schema.define(:version => 20130826163426) do
   end
 
   add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
-
-  create_table "visit_ratings", :force => true do |t|
-    t.integer  "reservation_id"
-    t.integer  "user_id"
-    t.float    "value"
-    t.text     "comment"
-    t.datetime "deleted_at"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "visit_ratings", ["reservation_id", "value"], :name => "index_visit_ratings_on_reservation_id_and_value"
-  add_index "visit_ratings", ["user_id", "value"], :name => "index_visit_ratings_on_user_id_and_value"
 
 end

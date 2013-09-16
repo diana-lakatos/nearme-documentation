@@ -2,7 +2,7 @@ class Manage::LocationsController < Manage::BaseController
   before_filter :redirect_if_draft_listing
   before_filter :find_company
   before_filter :redirect_if_no_company
-  before_filter :find_location, :except => [:index, :new, :create, :data_import]
+  before_filter :find_location, :except => [:index, :new, :create]
 
   def index
     @locations = current_user.locations
@@ -17,7 +17,7 @@ class Manage::LocationsController < Manage::BaseController
     @location = @company.locations.build(params[:location])
 
     if @location.save
-      flash[:success] = "Great, your new Space has been added!"
+      flash[:success] = t('manage.locations.space_added')
       event_tracker.created_a_location(@location , { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
       redirect_to manage_locations_path
@@ -37,7 +37,7 @@ class Manage::LocationsController < Manage::BaseController
     @location.attributes = params[:location]
 
     if @location.save
-      flash[:success] = "Great, your Space has been updated!"
+      flash[:success] = t('manage.locations.space_updated')
       redirect_to manage_locations_path
     else
       render :edit
@@ -47,9 +47,9 @@ class Manage::LocationsController < Manage::BaseController
   def destroy
     if @location.destroy
       event_tracker.updated_profile_information(current_user)
-      flash[:deleted] = "You've deleted #{@location.name}"
+      flash[:deleted] = t('manage.locations.space_deleted', name: @location.name)
     else
-      flash[:error] = "We couldn't delete #{@location.name}"
+      flash[:error] = t('manage.locations.space_not_deleted', name: @location.name)
     end
     redirect_to manage_locations_path
   end
@@ -70,7 +70,7 @@ class Manage::LocationsController < Manage::BaseController
 
   def redirect_if_no_company
     unless @company
-      flash[:warning] = "Please add your company first"
+      flash[:warning] = t('dashboard.add_your_company')
       redirect_to new_space_wizard_url
     end
   end

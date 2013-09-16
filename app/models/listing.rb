@@ -27,9 +27,11 @@ class Listing < ActiveRecord::Base
   # == Scopes
   scope :featured, where(%{ (select count(*) from "photos" where content_id = "listings".id AND content_type = 'Listing') > 0  }).
     includes(:photos).order(%{ random() }).limit(5)
-  scope :draft, where('listings.draft IS NOT NULL')
-  scope :active, where('listings.draft IS NULL')
+  scope :draft,    where('listings.draft IS NOT NULL')
+  scope :active,   where('listings.draft IS NULL')
   scope :latest,   order("listings.created_at DESC")
+  scope :visible,  where(:enabled => true)
+  
 
   # == Callbacks
   after_save :notify_user_about_change
@@ -43,7 +45,7 @@ class Listing < ActiveRecord::Base
   validates_with PriceValidator
   validates :hourly_reservations, :inclusion => { :in => [true, false], :message => "must be selected" }, :allow_nil => false
   # TODO allow when fileuploader will be fixed (and in _listing_form also)
-  # validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
+  #validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
 
   # == Helpers
   include Search
@@ -63,7 +65,7 @@ class Listing < ActiveRecord::Base
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description,
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
-    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type, :draft
+    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type, :draft, :enabled
 
   attr_accessor :distance_from_search_query, :photo_not_required
 
@@ -207,11 +209,11 @@ class Listing < ActiveRecord::Base
     reservation.save!
 
     if reservation.listing.confirm_reservations?
-      ReservationMailer.notify_host_with_confirmation(reservation).deliver
-      ReservationMailer.notify_guest_with_confirmation(reservation).deliver
+      ReservationMailer.notify_host_with_confirmation(reservation.id).deliver
+      ReservationMailer.notify_guest_with_confirmation(reservation.id).deliver
     else
-      ReservationMailer.notify_host_without_confirmation(reservation).deliver
-      ReservationMailer.notify_guest_of_confirmation(reservation).deliver
+      ReservationMailer.notify_host_without_confirmation(reservation.id).deliver
+      ReservationMailer.notify_guest_of_confirmation(reservation.id).deliver
     end
     reservation
   end

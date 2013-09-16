@@ -223,7 +223,11 @@ class EventTrackerTest < ActiveSupport::TestCase
       google_analytics_id: @user.google_analytics_id,
       browser: @user.browser,
       browser_version: @user.browser_version,
-      platform: @user.platform
+      platform: @user.platform,
+      positive_host_ratings_count: @user.host_ratings.positive.count,
+      negative_host_ratings_count: @user.host_ratings.negative.count,
+      positive_guest_ratings_count: @user.guest_ratings.positive.count,
+      negative_guest_ratings_count: @user.guest_ratings.negative.count
     }
   end
 

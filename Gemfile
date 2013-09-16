@@ -14,6 +14,7 @@ gem 'omniauth-facebook'
 gem 'omniauth-linkedin'
 gem 'fog'
 gem 'geocoder'
+gem 'nearest_time_zone'
 gem 'sass'
 gem 'haml'
 gem 'le'
@@ -46,6 +47,8 @@ gem 'sass-rails'
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'chronic'
 gem 'chartjs-rails'
+gem 'jcrop-rails'
+gem 'fastimage'
 
 gem 'ey_config'
 
@@ -54,6 +57,7 @@ gem 'chameleon'
 
 gem 'useragent'
 gem 'mixpanel'
+gem 'mixpanel_client'
 
 gem 'rest-client'
 
@@ -73,6 +77,7 @@ gem "historyjs-rails"
 gem 'ranked-model'
 
 gem 'desk'
+gem 'filepicker-rails'
 
 group :staging, :production do
   gem 'newrelic_rpm'

@@ -56,6 +56,9 @@ class User < ActiveRecord::Base
            :through => :reverse_relationships,
            :source => :follower
 
+  has_many :host_ratings, class_name: 'HostRating', foreign_key: 'subject_id'
+  has_many :guest_ratings, class_name: 'GuestRating', foreign_key: 'subject_id'
+
   has_many :user_industries
   has_many :industries, :through => :user_industries
 
@@ -67,7 +70,8 @@ class User < ActiveRecord::Base
       where("mailchimp_synchronized_at IS NULL OR mailchimp_synchronized_at < updated_at")
   }
 
-  mount_uploader :avatar, AvatarUploader
+  extend CarrierWave::SourceProcessing
+  mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
 
 
   validates_presence_of :name
@@ -89,8 +93,8 @@ class User < ActiveRecord::Base
          :rememberable, :trackable, :validatable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :biography, :industry_ids,
-                  :country_name, :mobile_number
+  attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
+    :biography, :industry_ids, :country_name, :mobile_number
 
   delegate :to_s, :to => :name
 
@@ -166,9 +170,9 @@ class User < ActiveRecord::Base
 
   def notify_about_wrong_phone_number
     unless notified_about_mobile_number_issue_at
-      UserMailer.notify_about_wrong_phone_number(self).deliver
+      UserMailer.notify_about_wrong_phone_number(self.id).deliver
       update_attribute(:notified_about_mobile_number_issue_at, Time.zone.now)
-      IssueLogger.log_issue("[auto] invalid mobile number", email, "#{name} (#{id}) was asked to update his mobile number #{full_mobile_number}")
+      IssueLogger.log_issue("[internal] invalid mobile number", email, "#{name} (#{id}) was asked to update his mobile number #{full_mobile_number}")
     end
   end
 
@@ -219,11 +223,10 @@ class User < ActiveRecord::Base
   end
 
   def use_social_provider_image(url)
-    self.remote_avatar_url = url unless avatar_provided?
-  end
-
-  def avatar_provided?
-    return AvatarUploader.new.to_s != self.avatar.to_s
+    unless avatar.any_url_exists?
+      self.avatar_versions_generated_at = Time.zone.now
+      self.remote_avatar_url = url 
+    end
   end
 
   def first_listing

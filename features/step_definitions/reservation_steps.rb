@@ -165,19 +165,19 @@ end
 
 Then /^the reservation subtotal should show \$?([0-9\.]+)$/ do |cost|
   within '.space-reservation-modal .subtotal-amount' do
-    assert page.has_content?(cost)
+    assert page.body.should have_content(cost)
   end
 end
 
 Then /^the reservation service fee should show \$?([0-9\.]+)$/ do |cost|
   within '.space-reservation-modal .service-fee-amount' do
-    assert page.has_content?(cost)
+    assert page.body.should have_content(cost)
   end
 end
 
 Then /^the reservation total should show \$?([0-9\.]+)$/ do |cost|
   within '.space-reservation-modal .total-amount' do
-    assert page.has_content?(cost)
+    assert page.body.should have_content(cost)
   end
 end
 
@@ -304,7 +304,9 @@ Then /^a reservation cancelled by owner email should be sent to (.*)$/ do |email
 end
 
 Then /^a reservation rejected email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match "A booking you made has been rejected"
+  last_email_for(email).subject.should match "A booking you made has been declined"
+  last_email_for(email).html_part.body.should include 'The only room available is the studio meeting room.'
+  last_email_for(email).text_part.body.should include 'The only room available is the studio meeting room.'
 end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|

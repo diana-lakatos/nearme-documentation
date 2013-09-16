@@ -5,11 +5,12 @@ class UserMailerTest < ActiveSupport::TestCase
   include Rails.application.routes.url_helpers
   setup do
     @user = FactoryGirl.create(:user)
+    @instance = Instance.first || FactoryGirl.create(:instance)
   end
 
   test "#notify_about_wrong_phone_number" do
     mail = UserMailer.notify_about_wrong_phone_number(@user)
-    subject = "[Desks Near Me] We couldn't send you text message"
+    subject = "[#{@instance.name}] We couldn't send you text message"
 
     assert mail.html_part.body.include?(@user.name)
     assert mail.html_part.body.include?(@user.full_mobile_number)

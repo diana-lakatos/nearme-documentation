@@ -128,7 +128,11 @@ section.dashboard {
   ul.locations {
 
     ul.location-and-listings {
-      margin: 0px 0px 30px 0px;
+      margin: 0px;
+    }
+
+    & > li {
+      padding-bottom: 15px;
     }
 
     form {
@@ -139,11 +143,9 @@ section.dashboard {
 
     li.location {
       overflow: hidden;
-      border-bottom: 1px solid $gray220;
 
       font-size: 30px;
       color: $gray80;
-      padding: 0px 0px 15px 0px;
 
       .name {
         float: left;
@@ -155,7 +157,7 @@ section.dashboard {
           position: relative;
           top: -3px;
         }
-      }
+      } 
 
       .links {
         float: right;
@@ -187,8 +189,14 @@ section.dashboard {
     }
 
     li.listing{
-      padding: 10px 0px;
       font-size: 20px;
+      @include border-radius($border-radius-default);
+      border: 1px solid $light-gray; 
+      margin-top: 10px;
+
+      &.edit-location {
+        border: none;
+      }
 
       .name {
         float: left;
@@ -197,9 +205,16 @@ section.dashboard {
 
       a {
         color: $gray60;
+        font-size: 18px;
+        display: block;
+        padding: 5px 15px 5px 20px;
+
+        .no-hide {
+          display: inline;
+        }
 
         &:hover {
-          color: $gray120;
+          background-color: $light-gray;
         }
       }
 
@@ -208,6 +223,22 @@ section.dashboard {
 
         span {
           display: none;
+        }
+      }
+    }
+
+    li.new-location {
+      padding: 0px;
+      margin: 0px;
+      border: none;
+
+      a {
+        color: $pure-white;
+        padding: 0 10px;
+        background: $blue;
+
+        &:hover {
+          background: lighten($theme_blue, 10%);
         }
       }
     }
@@ -235,4 +266,8 @@ section.dashboard {
     }
   }
 
+}
+
+h1.manage-locations-home-link {
+  line-height: 1.7em;
 }

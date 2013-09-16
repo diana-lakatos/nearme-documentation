@@ -15,16 +15,17 @@
 //= require ./vendor/detect-mobile-browser
 //= require ./vendor/infobox
 //= require ./vendor/jquery.scrollto
-//= require ./vendor/jquery.Jcrop
 //= require ./vendor/jQueryRotate
 //= require ./vendor/placeholder
 //= require ./vendor/jquery.ias
+//= require ./vendor/ZeroClipboard
 //= require ./vendor/markerclusterer
 //= require jquery-fileupload/basic
 //= require history_jquery
 //= require ./vendor/underscore
 //= require chosen-jquery
 //= require chart
+//= require jcrop
 //
 //
 //= require_self
@@ -62,7 +63,8 @@ window.DNM = {
     Multiselect.initialize(scope);
     Flash.initialize(scope);
     Accordian.initialize(scope);
-    PhotoUploader.initialize(scope);
+    Clipboard.initialize(scope);
+    Photo.Initializer.initialize(scope);
   },
 
   initializeAjaxCSRF: function() {

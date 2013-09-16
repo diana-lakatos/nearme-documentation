@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   # the application controllers.
   def event_tracker
     @event_tracker ||= begin
-      Analytics::EventTracker.new(mixpanel, google_analytics)
+      Analytics::EventTracker.new(mixpanel, google_analytics).enqueue
     end
   end
 
@@ -205,11 +205,6 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-
-  def should_track_analytics?
-    mixpanel.should_track?
-  end
-  helper_method :should_track_analytics?
 
   def user_google_analytics_id
     current_user.try(:google_analytics_id) ? current_user.google_analytics_id : cookies.signed[:google_analytics_id]

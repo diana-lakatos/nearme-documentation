@@ -7,7 +7,7 @@ class Manage::CompaniesController < Manage::BaseController
   def update
     @company = current_user.companies.find(params[:id])
     if @company.update_attributes(params[:company])
-      flash[:success] = "Great, your company's details have been updated."
+      flash[:success] = t('manage.compaines.company_updated')
       redirect_to edit_manage_company_path(@company.id)
     else
       render :edit

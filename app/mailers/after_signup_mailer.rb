@@ -4,11 +4,11 @@ class AfterSignupMailer < InstanceMailer
 
   layout false
 
-  def help_offer(user_id)
+  def help_offer(instance_id, user_id)
     @user = User.find(user_id)
 
     @location = @user.locations.first
-    @instance = @user.instance
+    @instance = Instance.find(instance_id)
 
     @sent_by = 'Michelle R'
 

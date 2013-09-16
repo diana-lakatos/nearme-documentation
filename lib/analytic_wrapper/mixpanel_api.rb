@@ -10,7 +10,6 @@
 # attributes (i.e. anonymous_identity, session_properties) which should
 # be passed back a new instance of this wrapper on subsequent requests.
 class AnalyticWrapper::MixpanelApi
-  include AnalyticWrapper
   # The user form whom the current session represents.
   # This will be used for the mixpanel id.
   attr_reader :current_user
@@ -30,7 +29,7 @@ class AnalyticWrapper::MixpanelApi
 
   # Creates a new mixpanel API interface instance
   def self.mixpanel_instance(options = {})
-    Mixpanel::Tracker.new(MIXPANEL_TOKEN, options)
+    Mixpanel::Tracker.new(DesksnearMe::Application.config.mixpanel[:token], options)
   end
 
   # Initialize a mixpanel wrapper.
@@ -79,12 +78,8 @@ class AnalyticWrapper::MixpanelApi
     properties.reverse_merge!(request_details)
 
     # Trigger tracking the event
-    if should_track?
-      @mixpanel.track(event_name, properties, options)
-      Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
-    else
-      Rails.logger.info "Not tracked mixpanel event (current user is employee): #{event_name}, #{properties}, #{options}"
-    end
+    @mixpanel.track(event_name, properties, options)
+    Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
   end
 
   # Sets global Person properties on the current tracked session.

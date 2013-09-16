@@ -1,17 +1,17 @@
 class ListingMailer < InstanceMailer
   layout 'mailer'
 
-  def share(listing, email, name, sharer, message=nil)
-    @listing = listing
+  def share(instance_id, listing_id, email, name, sharer_id, message=nil)
+    @listing = Listing.find(listing_id)
     @email = email
     @name = name
-    @sharer = sharer
+    @sharer = User.find(sharer_id)
     @message = message
-    @instance = listing.instance
+    @instance = Instance.find(instance_id)
 
     mail(to: "#{name} <#{email}>",
-         reply_to: "#{sharer.name} <#{sharer.email}>",
-         subject: "#{sharer.name} has shared a listing with you on Desks Near Me",
+         reply_to: "#{@sharer.name} <#{@sharer.email}>",
+         subject: "#{@sharer.name} has shared a listing with you on Desks Near Me",
          instance: @instance)
   end
 

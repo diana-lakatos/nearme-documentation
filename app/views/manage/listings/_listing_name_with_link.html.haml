@@ -1,8 +1,11 @@
 - if listing.persisted?
-  %li.listing
-    .name
-      = listing.name
+  %li.listing{:class => (params[:action] != 'new' && params[:action] != 'edit') ? '' : 'edit-location'} 
     - if params[:action] != 'new' && params[:action] != 'edit'
-      = link_to edit_manage_location_listing_path(location, listing), :class => 'ico-edit right' do
-        %span
-          Edit #{current_instance.bookable_noun}
+      = link_to edit_manage_location_listing_path(location, listing) do
+        = listing.name
+        %span.ico-edit.right.no-hide
+          %span.padding-left
+            Edit #{current_instance.bookable_noun}
+    - else
+      .name
+        = listing.name

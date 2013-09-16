@@ -4,7 +4,7 @@ module Listings
 
     before_filter :find_listing
     before_filter :build_reservation_request, :only => [:review, :create]
-    before_filter :require_login_for_reservation, :only => [:review, :create, :export]
+    before_filter :require_login_for_reservation, :only => [:review, :create]
 
     attr_reader :listing
     def_delegators :@listing, :location
@@ -18,27 +18,27 @@ module Listings
     def create
       if @reservation_request.process
         if @reservation_request.confirm_reservations?
-          ReservationMailer.notify_host_with_confirmation(reservation).deliver
-          ReservationMailer.notify_guest_with_confirmation(reservation).deliver
+          ReservationMailer.enqueue.notify_host_with_confirmation(reservation.id)
+          ReservationMailer.enqueue.notify_guest_with_confirmation(reservation.id)
           begin
             ReservationSmsNotifier.notify_host_with_confirmation(reservation).deliver
           rescue Twilio::REST::RequestError => e
             if e.message.include?('is not a valid phone number')
               handle_invalid_mobile_number(reservation.host)
             else
-              BackgroundIssueLogger.log_issue("[auto] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{reservation.id}, guest #{current_user.name} (#{current_user.id}). #{$!.inspect}")
+              BackgroundIssueLogger.log_issue("[internal] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{reservation.id}, guest #{current_user.name} (#{current_user.id}). #{$!.inspect}")
             end
           end
           event_tracker.updated_profile_information(reservation.owner)
           event_tracker.updated_profile_information(reservation.host)
         else
-          ReservationMailer.notify_host_without_confirmation(reservation).deliver
-          ReservationMailer.notify_guest_of_confirmation(reservation).deliver
+          ReservationMailer.enqueue.notify_host_without_confirmation(reservation.id)
+          ReservationMailer.enqueue.notify_guest_of_confirmation(reservation.id)
         end
 
         event_tracker.requested_a_booking(reservation)
-        flash[:notice] =  "Your reservation has been made! #{reservation.credit_card_payment? ? "Your credit card will be charged when your reservation is confirmed by the host." : "" }"
-
+        card_message = reservation.credit_card_payment? ? t('reservations.credit_card_will_be_charged') : ''
+        flash[:notice] = t('reservations.reservation_made', message: card_message)
         redirect_to upcoming_reservations_path(:id => reservation)
         render_redirect_url_as_json if request.xhr?
       else

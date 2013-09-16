@@ -28,8 +28,8 @@ class RegistrationsController < Devise::RegistrationsController
       @user.save!
       analytics_apply_user(@user)
       event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
-      AfterSignupMailer.delay({:run_at => 60.minutes.from_now}).help_offer(current_instance, @user.id)
-      UserMailer.email_verification(@user).deliver
+      AfterSignupMailer.enqueue_later(1.hour).help_offer(current_instance.id, @user.id)
+      UserMailer.enqueue.email_verification(@user.id)
     end
 
     # Clear out temporarily stored Provider authentication data if present
@@ -61,17 +61,36 @@ class RegistrationsController < Devise::RegistrationsController
 
   def avatar
     @user = current_user
-    @user.avatar = params[:avatar]
+    @user.avatar_original_url = params[:avatar]
     if @user.save
-      render :text => { :url => @user.avatar_url(:medium).to_s, :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain'
+      render :text => { :url => @user.avatar_url(:medium), 
+                        :resize_url =>  edit_avatar_path,
+                        :thumbnail_dimensions => @user.avatar.thumbnail_dimensions[:medium],
+                        :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain'
     else
       render :text => [{:error => @user.errors.full_messages}].to_json,:content_type => 'text/plain', :status => 422
     end
   end
 
+  def edit_avatar
+    if request.xhr?
+      render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url }
+    end
+  end
+
+  def update_avatar
+    @user = current_user
+    @user.avatar_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
+    if @user.save
+      render partial: 'manage/photos/resize_succeeded'
+    else
+      render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url }
+    end
+  end
+
   def destroy_avatar
     @user = current_user
-    @user.remove_avatar = true
+    @user.remove_avatar!
     @user.save!
     render :text => {}, :status => 200, :content_type => 'text/plain' 
   end
@@ -80,13 +99,13 @@ class RegistrationsController < Devise::RegistrationsController
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
-      flash[:success] = "Thanks - your email address has been verified!"
+      flash[:success] = t('registrations.address_verified')
       redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path
     else
       if @user.verified_at
-        flash[:warning] = "The email address has been already verified"
+        flash[:warning] = t('registrations.address_already_verified')
       else
-        flash[:error] = "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+        flash[:error] = t('registrations.address_not_verified')
       end
       redirect_to root_path
     end

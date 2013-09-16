@@ -20,7 +20,7 @@ Feature: As a user of the site
 
   Scenario: A user can add new location
     Given I am on the manage locations page
-     When I follow "Create New Location"
+     When I follow "New Location"
       And I fill location form with valid details
       And I submit the form
       And I should see "Great, your new Space has been added!"
@@ -98,5 +98,3 @@ Feature: As a user of the site
         | Day | Availabile | Open Time | Close Time |
         | 1   | Yes        | 9:00      | 17:00      |
         | 2   | Yes        | 9:00      | 17:00      |
-
-

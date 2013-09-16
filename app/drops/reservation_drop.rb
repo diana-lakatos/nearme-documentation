@@ -45,8 +45,20 @@ class ReservationDrop < BaseDrop
     reservation_balance(@reservation)
   end
 
+  def has_rejection_reason
+    !@reservation.rejection_reason.to_s.empty?
+  end
+
+  def rejection_reason
+    @reservation.rejection_reason
+  end
+
   def search_url
     routes.search_url(q: location_query_string(@reservation.listing.location))
+  end
+
+  def guest_rating_reservation_url
+    routes.guest_rating_reservation_url(@reservation.id)
   end
 
   def created_at

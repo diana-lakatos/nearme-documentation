@@ -52,3 +52,25 @@ Then /^that listing is( not)? included in the search results$/ do |not_included|
     page.should have_content listing.name
   end
 end
+
+When(/^I fill form (with email field )?for subscribing on notification$/) do |with_email|
+  page.find('#search-notification')
+  if with_email
+    fill_in 'Email', with: 'test@test.com'
+  end
+  click_on 'Subscribe'
+end
+
+Then /^I should see a notification for my subscription$/ do
+  page.find('.alert').should have_content("You will be notified when a desk is added at this location.")
+end
+
+When(/^search notification created with "([^"]*)"( for user)?$/) do |query, for_user|
+  last_notification = SearchNotification.last
+  last_notification.query.should == query
+  if for_user
+    last_notification.user.should == model!('the user')
+  else
+    last_notification.email.should == 'test@test.com'
+  end
+end

@@ -138,6 +138,35 @@ class RegistrationsControllerTest < ActionController::TestCase
         assert_equal 'http://example.com/', user.referer
       end
     end
+
+    context 'avatar' do 
+
+      should 'store transformation data and rotate' do
+        sign_in @user
+        stub_image_url("http://www.example.com/image.jpg")
+        post :update_avatar, { :crop => { :w => 1, :h => 2, :x => 10, :y => 20 }, :rotate => 90 } 
+        @user = assigns(:user)
+        assert_not_nil @user.avatar_transformation_data
+        assert_equal ({ 'w' => '1', 'h' => '2', 'x' => '10', 'y' => '20' }), @user.avatar_transformation_data[:crop]
+        assert_equal "90", @user.avatar_transformation_data[:rotate]
+      end
+
+      should 'delete everything related to avatar when destroying avatar' do
+        sign_in @user
+        @user.avatar_transformation_data = { :crop => { :w => 1 } }
+        @user.avatar_versions_generated_at = Time.zone.now
+        @user.avatar_original_url = "example.jpg"
+        @user.save!
+        delete :destroy_avatar, { :crop => { :w => 1, :h => 2, :x => 10, :y => 20 }, :rotate => 90 } 
+        @user = assigns(:user)
+        assert_nil @user.avatar_transformation_data
+        assert_nil @user.avatar_versions_generated_at
+        assert_nil @user.avatar_original_url
+        assert !@user.avatar.any_url_exists?
+
+      end
+    end
+
   end
 
   private

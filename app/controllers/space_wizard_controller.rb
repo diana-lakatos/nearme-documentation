@@ -34,28 +34,16 @@ class SpaceWizardController < ApplicationController
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.save(:validate => false)
       track_saved_draft_event
-      flash[:success] = 'Your draft has been saved!'
+      flash[:success] = t('space_wizard.draft_saved')
       redirect_to :list
     elsif @user.save
       track_new_space_event
-      flash[:success] = 'Your space was listed! You can provide more details about your location and listing from this page.'
+      flash[:success] = t('space_wizard.space_listed')
       redirect_to manage_locations_path
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
-      flash.now[:error] = 'Please complete all fields! Alternatively, you can Save a Draft for later.'
+      flash.now[:error] = t('space_wizard.complete_fields')
       render :list
-    end
-  end
-
-  def submit_photo
-    @photo = Photo.new
-    @photo.image = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:photos_attributes]["0"][:image]
-    @photo.content_type = 'Listing'
-    @photo.creator_id = current_user.id
-    if @photo.save
-      render :text => {:id => @photo.id, :url => @photo.image_url(:thumb).to_s, :destroy_url => destroy_space_wizard_photo_path(@photo) }.to_json, :content_type => 'text/plain' 
-    else
-      render :text => [{:error => @photo.errors.full_messages}], :content_type => 'text/plain', :status => 422
     end
   end
 

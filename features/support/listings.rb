@@ -79,9 +79,7 @@ module ListingsHelpers
   end
 
   def fill_listing_form
-    image = File.join(Rails.root, *%w[features fixtures photos], "intern chair.jpg")
-    attach_hidden_file("listing[photos_attributes][0][image]", image)
-
+    attach_file_via_uploader
     fill_in "listing_name", with: "My Name"
     fill_in "listing_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
     select "ListingType2", from: "listing_listing_type_id"

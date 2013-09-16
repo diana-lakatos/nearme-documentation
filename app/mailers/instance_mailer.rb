@@ -2,9 +2,11 @@ require 'mail_view'
 
 class InstanceMailer < ActionMailer::Base
   prepend_view_path EmailResolver.instance
-
+  extend Job::SyntaxEnhancer
   include ActionView::Helpers::TextHelper
   helper :listings, :reservations
+
+  self.job_class = MailerJob
 
   def mail(options = {})
     lookup_context.class.register_detail(:instance) { nil }
@@ -29,6 +31,11 @@ class InstanceMailer < ActionMailer::Base
   end
 
   private
+
+  def instance_prefix(text, instance)
+    text.prepend "[#{instance.name}] " if instance
+    text
+  end
 
   def find_mailer(options = {})
     instance = options.delete(:instance)
