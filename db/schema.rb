@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130909182922) do
+ActiveRecord::Schema.define(:version => 20130912081304) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -84,10 +84,20 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
 
   add_index "companies", ["instance_id"], :name => "index_companies_on_instance_id"
 
-  create_table "company_industries", :force => true do |t|
+  create_table "company_industries", :id => false, :force => true do |t|
     t.integer "industry_id"
     t.integer "company_id"
   end
+
+  create_table "company_users", :id => false, :force => true do |t|
+    t.integer  "company_id"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "company_users", ["company_id"], :name => "index_company_users_on_company_id"
+  add_index "company_users", ["user_id"], :name => "index_company_users_on_user_id"
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -318,9 +328,9 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.datetime "failed_at"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
-    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
+    t.integer  "payment_transfer_id"
   end
 
   add_index "reservation_charges", ["payment_transfer_id"], :name => "index_reservation_charges_on_payment_transfer_id"
@@ -396,7 +406,7 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.datetime "updated_at",  :null => false
   end
 
-  create_table "user_industries", :force => true do |t|
+  create_table "user_industries", :id => false, :force => true do |t|
     t.integer "industry_id"
     t.integer "user_id"
   end
@@ -453,15 +463,15 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
     t.string   "browser"
     t.string   "browser_version"
     t.string   "platform"
-    t.float    "guest_rating_average"
-    t.integer  "guest_rating_count"
-    t.float    "host_rating_average"
-    t.integer  "host_rating_count"
     t.text     "avatar_transformation_data"
     t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"
@@ -481,18 +491,5 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
   end
 
   add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
-
-  create_table "visit_ratings", :force => true do |t|
-    t.integer  "reservation_id"
-    t.integer  "user_id"
-    t.float    "value"
-    t.text     "comment"
-    t.datetime "deleted_at"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "visit_ratings", ["reservation_id", "value"], :name => "index_visit_ratings_on_reservation_id_and_value"
-  add_index "visit_ratings", ["user_id", "value"], :name => "index_visit_ratings_on_user_id_and_value"
 
 end
