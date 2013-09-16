@@ -14,7 +14,7 @@ FactoryGirl.define do
     twitter_url 'https://twitter.com/desksnearme'
     facebook_url 'https://www.facebook.com/DesksNearMe'
     bookable_noun 'Desk'
-    partner
+    service_fee_percent '10.00'
     after :build do |instance|
       instance.domains << build(:domain, name: instance.name.parameterize.underscore)
     end
