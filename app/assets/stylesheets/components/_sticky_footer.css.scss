@@ -4,6 +4,12 @@ html, body {
   height: 100%;
 }
 
+.dnm-page-body {
+  position: relative;
+  min-height: 100%;
+  height: auto;
+}
+
 .content-wrapper {
   min-height: 100%;
   height: auto;
@@ -13,7 +19,7 @@ html, body {
   }
 
   .footer-push {
-    height: $footer-height;
+    height: $footer-height+60;
   }
 }
 
@@ -21,6 +27,10 @@ html, body {
   margin-top: -$footer-height;
   padding: 0;
   height: $footer-height;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 
   .container-fluid {
     padding-top: 40px;
