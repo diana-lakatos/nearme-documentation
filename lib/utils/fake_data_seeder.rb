@@ -33,10 +33,6 @@ module Utils
         @instances ||= load_yaml("instances.yml")
       end
 
-      def self.partners
-        @partners ||= load_yaml("partners.yml")
-      end
-
       private
 
         def self.load_yaml(collection)
@@ -69,9 +65,8 @@ module Utils
           load_location_types!
           load_listing_types!
 
-          # === INSTANCES / PARTNERS =============================
+          # === INSTANCES ========================================
 
-          load_partners!
           load_instances!
 
           # === COMPANIES / LOCATIONS / LISTINGS =================
@@ -95,7 +90,7 @@ module Utils
         # too bad we can't use this (due to records that are ):
         # Rails.application.eager_load!
         # ActiveRecord::Base.descendants.any? &:any?
-        [Location, User, Company, Partner, Instance].any? &:any?
+        [Location, User, Company, Instance].any? &:any?
       end
     end
 
@@ -151,15 +146,6 @@ module Utils
       end
     end
     alias_method :listing_types, :load_listing_types!
-
-    def load_partners!
-      @partners ||= do_task "Loading partners" do
-        Data.partners.map do |name|
-          FactoryGirl.create(:partner, :name => name)
-        end
-      end
-    end
-    alias_method :partners, :load_partners!
 
     def load_instances!
       @instances ||= do_task "Loading instances" do

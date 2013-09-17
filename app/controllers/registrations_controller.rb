@@ -61,17 +61,36 @@ class RegistrationsController < Devise::RegistrationsController
 
   def avatar
     @user = current_user
-    @user.avatar = params[:avatar]
+    @user.avatar_original_url = params[:avatar]
     if @user.save
-      render :text => { :url => @user.avatar_url(:medium).to_s, :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain'
+      render :text => { :url => @user.avatar_url(:medium), 
+                        :resize_url =>  edit_avatar_path,
+                        :thumbnail_dimensions => @user.avatar.thumbnail_dimensions[:medium],
+                        :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain'
     else
       render :text => [{:error => @user.errors.full_messages}].to_json,:content_type => 'text/plain', :status => 422
     end
   end
 
+  def edit_avatar
+    if request.xhr?
+      render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url }
+    end
+  end
+
+  def update_avatar
+    @user = current_user
+    @user.avatar_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
+    if @user.save
+      render partial: 'manage/photos/resize_succeeded'
+    else
+      render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url }
+    end
+  end
+
   def destroy_avatar
     @user = current_user
-    @user.remove_avatar = true
+    @user.remove_avatar!
     @user.save!
     render :text => {}, :status => 200, :content_type => 'text/plain' 
   end

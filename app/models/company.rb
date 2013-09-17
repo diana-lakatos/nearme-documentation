@@ -7,7 +7,7 @@ class Company < ActiveRecord::Base
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance
 
-  has_many :company_users
+  has_many :company_users, dependent: :destroy
   has_many :users, :through => :company_users
 
   has_many :locations,

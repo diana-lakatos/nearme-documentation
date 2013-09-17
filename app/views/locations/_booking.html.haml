@@ -2,7 +2,7 @@
   .images
     - if listing.photos.any?
       .image{:style => "margin-right: 15px;"}
-        = image_tag listing.photos.first.url(:space_listing)
+        = image_tag listing.photos.first.image_url(:space_listing)
 
   %h3.listing-name
     = listing.name

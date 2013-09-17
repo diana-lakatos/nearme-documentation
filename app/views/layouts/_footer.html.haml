@@ -18,11 +18,11 @@
       .row-fluid
         .span9
           .copyright
-            %span &copy; 2013 #{current_instance.site_name}
             %span #{current_instance.address}
             %span #{current_instance.phone_number}
+            %br
+            %span &copy; 2013 #{current_instance.site_name}
             %span= link_to "Legal", pages_path('legal'), :target => '_blank'
-      .row-fluid
         .span3#mixpanel
           %a{:href => "https://mixpanel.com/f/partner"}
             %img{:alt => "Mobile Analytics", :src => "https://cdn.mxpnl.com/site_media/images/partner/badge_blue.png"}/

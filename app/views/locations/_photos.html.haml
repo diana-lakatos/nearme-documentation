@@ -3,10 +3,10 @@
   .span8.photos-container
     .carousel.slide
       .carousel-inner
-        - if @location.photos.ready.any?
-          - @location.photos.ready.each_with_index do |photo, index|
+        - if @location.photos.any?
+          - @location.photos.each_with_index do |photo, index|
             .item{:class => ("active" if index == 0)}
-              = image_tag photo.url(:golden)
+              = image_tag photo.image_url(:golden), :alt => photo.content.name
               - if photo.caption.present?
                 .carousel-caption.ico-info
                   = photo.caption
@@ -14,7 +14,7 @@
           .item{:class => ("active")}
             = image_tag space_listing_placeholder_path(:height => 554, :width => 895), :title => @location.name, :alt => @location.name
 
-      - if @location.photos.ready.size > 1
+      - if @location.photos.size > 1
         = link_to "", ".carousel", :class => "carousel-control left ico-chevron-left", 'data-slide' => 'prev'
         = link_to "", ".carousel", :class => "carousel-control right ico-chevron-right", 'data-slide' => 'next'
 

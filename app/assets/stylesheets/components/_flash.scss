@@ -48,34 +48,18 @@
 
   &.success, &.notice {
     background-color: #00693A;
-
-    i {
-      @extend .ico-check;
-    }
   }
 
   &.error {
     background-color: $theme_red;
-
-    i {
-      @extend .ico-warning;
-    }
   }
 
   &.deleted {
     background-color: $theme_red;
-
-    i {
-      @extend .ico-close;
-    }
   }
 
   &.warning {
     background-color: $theme_orange;
-
-    i {
-      @extend .ico-warning;
-    }
   }
 
   &.appear{

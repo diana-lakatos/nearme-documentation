@@ -11,7 +11,7 @@ module StubHelper
   end
 
   def stub_image_url(image_url)
-    stub_request(:get, image_url).to_return(:status => 200, :body => File.expand_path("../assets/foobear.jpeg", __FILE__), :headers => {'Content-Type' => 'image/jpeg'})
+    stub_request(:get, image_url).to_return(:status => 200, :body => Rails.root.join("test", "assets", "foobear.jpeg"), :headers => {'Content-Type' => 'image/jpeg'})
   end
 
   def stub_local_time_to_return_hour(target, hour)

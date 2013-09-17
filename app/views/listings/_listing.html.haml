@@ -2,7 +2,7 @@
   .row-fluid
     = link_to listing do
       - if listing.photos.first
-        = image_tag listing.photos.first.url(:space_listing), :title => listing.name, :alt => listing.name
+        = image_tag listing.photos.first.image_url(:space_listing), :title => listing.name, :alt => listing.name
       - else
         = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
     - if listing.daily_price
@@ -20,7 +20,7 @@
     .popover-image-container
       = link_to listing do
         - if listing.photos.first
-          = image_tag listing.photos.first.url(:medium), :title => listing.name, :alt => listing.name
+          = image_tag listing.photos.first.image_url(:medium), :title => listing.name, :alt => listing.name
         - else
           = image_tag space_listing_placeholder_path(:height => 114, :width => 144), :title => listing.name, :alt => listing.name
     .popover-info-container

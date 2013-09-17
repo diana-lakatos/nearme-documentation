@@ -54,7 +54,7 @@ Then /^that listing is( not)? included in the search results$/ do |not_included|
 end
 
 When(/^I fill form (with email field )?for subscribing on notification$/) do |with_email|
-  page.find('#search-notification')
+  page.should have_css('#search-notification')
   if with_email
     fill_in 'Email', with: 'test@test.com'
   end

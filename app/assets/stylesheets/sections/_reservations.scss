@@ -122,17 +122,14 @@ section.reservations {
     .reservation-status {
 
       &.confirmed i {
-        @extend .ico-check;
         color: $green;
       }
 
       &.unconfirmed i {
-        @extend .ico-warning;
         color: $orange;
       }
 
       &.cancelled i {
-        @extend .ico-close;
         color: $red;
       }
     }
