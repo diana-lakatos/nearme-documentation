@@ -21,7 +21,7 @@ class RatingMailer < DesksNearMeMailer
     @reservation = reservation
     @listing = @reservation.listing
     @location = @listing.location
-    @instance = Instance.default_instance
+    @instance = @listing.instance
 
     mail to: @author.email,
          subject: subject("Rate your #{@kind} at #{@listing.name}"),

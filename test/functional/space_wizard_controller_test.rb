@@ -151,7 +151,6 @@ class SpaceWizardControllerTest < ActionController::TestCase
      {
        "name"=>"International Secret Intelligence Service", 
        "industry_ids"=>["#{@industry.id}"],
-       "instance_id"=>"#{@user.instance_id}",
        "locations_attributes"=>
        {"0"=>
         {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.", 
