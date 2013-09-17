@@ -12,7 +12,7 @@ module Listings
 
     def review
       @country = request.location ? request.location.country : nil
-      event_tracker.opened_booking_modal(reservation)
+      event_tracker.opened_booking_modal(Analytics::EventTracker.serialize_object(reservation))
     end
 
     def create
