@@ -45,8 +45,8 @@
     = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => "btn btn-blue btn-medium ico-add-location" do
       %span.padding-left List Your #{current_instance.bookable_noun}
   - elsif current_user.listings.draft.any?
-    = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location" do
+    = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location user-signed-in" do
       %span.padding-left Complete Your Listing
   - elsif current_user.listings.active.empty?
-    = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location" do
+    = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location user-signed-in" do
       %span.padding-left List Your #{current_instance.bookable_noun}
