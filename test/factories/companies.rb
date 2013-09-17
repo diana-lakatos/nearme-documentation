@@ -11,6 +11,10 @@ FactoryGirl.define do
       company.industries = [FactoryGirl.build(:industry)] if company.industries.empty?
     end
 
+    after(:create) do |company|
+      company.users = [company.creator] if company.creator.present?
+    end
+
     factory :company_in_auckland do
       name "Company in Auckland"
     end

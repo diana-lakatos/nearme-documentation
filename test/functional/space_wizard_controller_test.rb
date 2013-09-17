@@ -105,6 +105,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
       setup do
         @listing = FactoryGirl.create(:listing)
         @listing.company.tap { |c| c.creator = @user }.save!
+        @listing.company.add_creator_to_company_users
       end
 
       should 'not track clicked list your bookable if user already has bookable ' do

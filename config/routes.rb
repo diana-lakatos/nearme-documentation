@@ -99,7 +99,9 @@ DesksnearMe::Application.routes.draw do
 
   namespace :manage do
 
-    resources :companies, :only => [:edit, :update]
+    resources :companies, :only => [:edit, :update, :show]
+
+    resources :users, :except => [:edit, :update]
 
     resources :locations do
       resources :listings
