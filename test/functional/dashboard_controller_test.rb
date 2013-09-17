@@ -18,18 +18,18 @@ class DashboardControllerTest < ActionController::TestCase
 
       context 'ownership' do
         setup do
-          @owner_charge = create_charge(:amount => 100)
-          @not_owner_charge = FactoryGirl.create(:charge)
+          @owner_charge = create_reservation_charge(:amount => 100)
+          @not_owner_charge = FactoryGirl.create(:reservation_charge)
         end
 
-        should '@last_week_charges ignores charges that do not belong to signed in user' do
+        should '@last_week_reservation_charges ignores charges that do not belong to signed in user' do
           get :payments
-          assert_equal [@owner_charge], assigns(:last_week_charges)
+          assert_equal [@owner_charge], assigns(:last_week_reservation_charges)
         end
 
-        should '@charges ignores charges that do not belong to signed in user' do
+        should '@reservation_charges ignores charges that do not belong to signed in user' do
           get :payments
-          assert_equal [@owner_charge], assigns(:charges)
+          assert_equal [@owner_charge], assigns(:reservation_charges)
         end
 
       end
@@ -37,18 +37,18 @@ class DashboardControllerTest < ActionController::TestCase
       context 'date' do 
 
         setup do
-          @charge_created_6_days_ago = create_charge(:amount => 100, :created_at => Time.zone.now - 6.day)
-          @charge_created_7_days_ago = create_charge(:amount => 100, :created_at => Time.zone.now - 7.day)
+          @charge_created_6_days_ago = create_reservation_charge(amount: 100, created_at: Time.zone.now - 6.days)
+          @charge_created_7_days_ago = create_reservation_charge(amount: 100, created_at: Time.zone.now - 7.days)
         end
 
         should '@last_week_charges includes only charges not older than 6 days' do
           get :payments
-          assert_equal [@charge_created_6_days_ago], assigns(:last_week_charges)
+          assert_equal [@charge_created_6_days_ago], assigns(:last_week_reservation_charges)
         end
 
         should '@charges includes all charges that belong to a user' do
           get :payments
-          assert_equal [@charge_created_6_days_ago, @charge_created_7_days_ago], assigns(:charges)
+          assert_equal [@charge_created_6_days_ago, @charge_created_7_days_ago], assigns(:reservation_charges)
         end
 
       end
@@ -59,7 +59,7 @@ class DashboardControllerTest < ActionController::TestCase
 
   private
 
-  def create_charge(options = {})
+  def create_reservation_charge(options = {})
     options.reverse_merge!({:reservation => FactoryGirl.create(:reservation, :currency => 'USD', :listing => @listing)})
     if amount = options.delete(:amount)
       options[:subtotal_amount] = amount

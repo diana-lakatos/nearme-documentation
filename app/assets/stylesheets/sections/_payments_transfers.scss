@@ -1,0 +1,58 @@
+section#payments, section#transfers {
+
+  .weekly-chart {
+    margin-bottom: 20px;
+    padding: 20px 0;
+    border: 1px solid $gray230;
+    @include border-radius($default-border-radius);
+
+    .total {
+      padding-right: 20px;
+    }
+  }
+
+  .total-number {
+    padding: 0px 10px 0px 0px;
+  }
+
+  .total-text {
+    color: $gray190;
+  }
+
+}
+
+section#payments {
+
+  .reservation-charges-details {
+
+    .reservation-charge-line-item {
+      padding-bottom: 20px;
+
+      .location-name {
+        margin-left: 10px;
+        color: $gray190;
+      }
+    }
+  }
+}
+
+section#transfers {
+
+  .table {
+    width: 100%;
+  }
+
+  .warning {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid $gray230;
+    text-align: center;
+    @include border-radius($default-border-radius);
+
+    i {
+      position: relative;
+      top: 3px;
+      padding-right: 10px;
+    }
+  }
+}

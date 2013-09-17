@@ -63,39 +63,4 @@ module DashboardHelper
     periods.map(&:date).map{ |date| date.to_s(:db) }
   end
 
-  def group_charges(charges)
-    @grouped_charges ||= begin
-      charges_by_currency = charges.group_by(&:currency)
-      charges_by_currency.each do |currency, charges_in_the_same_currency|
-        charges_by_currency[currency] = charges_in_the_same_currency.group_by { |c|
-          format_charge_date_for_graph(c.created_at)
-        }.inject({}) do |hash, (date_format, grouped_charges)|
-          # later on we might want to make sure that all prices are in the same currency
-          hash[date_format] = grouped_charges.sum(&:total_amount)
-          hash
-        end
-      end
-    end
-  end
-
-  def values_for_chart(charges)
-    grouped_values = group_charges(charges)
-    grouped_values.inject([]) do |all_values, (currency, charges_by_date)|
-      all_values << labels_for_chart.inject([]) do |values, date|
-      values << (charges_by_date[date].to_f.zero? ? 0 : charges_by_date[date].amount )
-      values
-      end
-      all_values
-    end
-  end
-
-  def labels_for_chart
-    @labels_for_chart ||= (0..6).to_a.reverse.map { |i|
-      format_charge_date_for_graph(Time.zone.now - i.day)
-    }
-  end
-
-  def format_charge_date_for_graph(datetime)
-    datetime.strftime('%b %d')
-  end
 end
