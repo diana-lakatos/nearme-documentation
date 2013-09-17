@@ -1,7 +1,7 @@
 class Instance < ActiveRecord::Base
   attr_accessible :name, :site_name, :description, :tagline, :support_email, :contact_email,
                   :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, :meta_title,
-                  :domains_attributes, :theme_attributes
+                  :domains_attributes, :theme_attributes, :service_fee_percent
 
   has_one :theme, class_name: 'InstanceTheme', dependent: :destroy
 
@@ -11,13 +11,11 @@ class Instance < ActiveRecord::Base
   has_many :users
   has_many :domains
   has_many :pages
-  belongs_to :partner
 
   validates_presence_of :name
 
   accepts_nested_attributes_for :domains, :reject_if => proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params[:name].blank? }
-  delegate :service_fee_percent, to: :partner,  allow_nil: true
 
   DEFAULT_INSTANCE_NAME = 'DesksNearMe'
 
