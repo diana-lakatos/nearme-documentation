@@ -5,8 +5,11 @@ en:
       free: "must be free if no prices are provided"
   activerecord:
     errors:
-      messages:
-        taken: "That email address is associated with an existing account."
+      models:
+        user:
+          attributes:
+            email:
+              taken: "That email address is associated with an existing account."
   day:
     one: "1 day"
     other: "%{count} days"
