@@ -49,7 +49,7 @@ module CarrierWave::TransformableImage
   end
 
   def image
-    @image ||= MiniMagick::Image.open(current_path)
+    @image ||= MiniMagick::Image.open(url)
   end
 
   def width
