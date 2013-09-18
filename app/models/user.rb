@@ -14,10 +14,13 @@ class User < ActiveRecord::Base
   has_many :authentications,
            :dependent => :destroy
 
-  has_many :companies,
+  has_many :company_users, dependent: :destroy
+  has_many :companies, :through => :company_users, :order => "company_users.created_at ASC"
+
+  has_many :created_companies,
+           :class_name => "Company",
            :foreign_key => "creator_id",
-           :inverse_of => :creator,
-           :dependent => :destroy
+           :inverse_of => :creator
 
   attr_accessible :companies_attributes
   accepts_nested_attributes_for :companies

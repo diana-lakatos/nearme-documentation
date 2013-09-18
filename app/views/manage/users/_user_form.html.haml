@@ -1,0 +1,28 @@
+- title "Add user"
+
+.row-fluid
+  #signup
+    .span8.offset2
+      .box
+        %h2 Add user to #{@company.name} 
+
+        - if request.xhr?
+          = render 'shared/render_flash'
+
+        %p.intro
+        = simple_form_for([:manage, @user]) do |f|
+          .email-holder.input-icon-holder
+            = f.input :email, :label => false, :placeholder => "Email", :input_html => { :tabindex => '2' }
+            %span.ico-mail 
+          %br
+          .actions
+            = f.submit 'Add', id: 'submit-link'
+
+- if request.xhr?
+  :javascript
+    Modal.setClass('sign-up-modal')
+
+:javascript
+  $(function() {
+    new SigninForm($('#signup'))
+  });

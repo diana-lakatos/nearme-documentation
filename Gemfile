@@ -26,6 +26,7 @@ gem 'nokogiri'
 gem 'amatch'
 gem 'ri_cal'
 gem 'ffaker'
+gem 'draper'
 
 gem 'paper_trail'
 

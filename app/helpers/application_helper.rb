@@ -101,4 +101,20 @@ module ApplicationHelper
     end
   end
 
+  def ico_for_flash(key)
+    Rails.logger.debug "checking flash: #{key}"
+    case key.to_s
+    when 'notice' 
+      "ico-check"
+    when 'success'
+      "ico-check"
+    when 'error' 
+      "ico-warning"
+    when 'warning'
+      "ico-warning"
+    when
+      "ico-close"
+    end
+  end
+
 end

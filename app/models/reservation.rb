@@ -83,11 +83,11 @@ class Reservation < ActiveRecord::Base
     end
 
     event :host_cancel do
-      transition :confirmed => :cancelled
+      transition :confirmed => :cancelled_by_host
     end
 
     event :user_cancel do
-      transition [:unconfirmed, :confirmed] => :cancelled
+      transition [:unconfirmed, :confirmed] => :cancelled_by_guest
     end
 
     event :expire do
@@ -115,19 +115,19 @@ class Reservation < ActiveRecord::Base
   }
 
   scope :visible, lambda {
-    without_state(:cancelled).upcoming
+    without_state(:cancelled_by_guest, :cancelled_by_host).upcoming
   }
 
   scope :not_archived, lambda {
-    upcoming.without_state(:cancelled, :rejected, :expired).uniq
+    upcoming.without_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired).uniq
   }
 
   scope :not_rejected_or_cancelled, lambda {
-    without_state(:cancelled, :rejected)
+    without_state(:cancelled_by_guest, :cancelled_by_host, :rejected)
   }
 
   scope :cancelled, lambda {
-    with_state(:cancelled)
+    with_state(:cancelled_by_guest, :cancelled_by_host)
   }
 
   scope :confirmed, lambda {
@@ -143,7 +143,7 @@ class Reservation < ActiveRecord::Base
   }
 
   scope :archived, lambda {
-    joins(:periods).where('reservation_periods.date < ? OR state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled']).uniq
+    joins(:periods).where('reservation_periods.date < ? OR state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq
   }
 
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
@@ -197,6 +197,10 @@ class Reservation < ActiveRecord::Base
 
   def archived?
     rejected? or cancelled? or periods.all? {|p| p.date < Time.zone.today}
+  end
+
+  def cancelled?
+    cancelled_by_host? || cancelled_by_guest?
   end
 
   def add_period(date, start_minute = nil, end_minute = nil)

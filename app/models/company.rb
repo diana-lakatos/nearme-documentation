@@ -4,8 +4,11 @@ class Company < ActiveRecord::Base
 
   attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email, :industry_ids, :locations_attributes, :instance_id
 
-  belongs_to :creator, class_name: "User", inverse_of: :companies
+  belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance
+
+  has_many :company_users, dependent: :destroy
+  has_many :users, :through => :company_users
 
   has_many :locations,
            dependent: :destroy,
@@ -55,6 +58,12 @@ class Company < ActiveRecord::Base
     creator.try(:touch)
   end
 
+  def add_creator_to_company_users
+    unless users.include?(creator)
+      users << creator 
+    end
+  end
+
   def self.xml_attributes
     [:name, :description, :email]
   end
@@ -70,6 +79,10 @@ class Company < ActiveRecord::Base
         )
       end
     end
+  end
+
+  def has_payment_method?
+    paypal_email.present? || mailing_address.present?
   end
 
   private

@@ -1,0 +1,39 @@
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  filter: alpha(opacity=$opacity * 100);
+}
+
+.navbar-inverse {
+  ul.nav {
+    li {
+      a {
+        &:hover {
+          @include opacity(1);
+        }
+      }
+    }
+  }
+}
+
+.phone-number-country-code-field {
+  @include opacity(1);
+}
+
+@import "globals/_variables";
+
+.input-icon-holder {
+  @include opacity(1);
+
+  span {
+    @include opacity(1);
+    background: $gray230;
+  }
+
+  input {
+    &:focus {
+      + span {
+        background: $gray240;
+      }
+    }
+  }
+}

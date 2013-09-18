@@ -1,0 +1,20 @@
+.row-fluid
+  .span8.offset2
+    %h1.manage-locations-home-link
+      = link_to manage_users_path, :class => 'dashboard-home-link' do
+        %span.ico-user.padding
+          Manage Users
+
+.row-fluid
+  .span8.offset2
+    %div{:class => (params[:action] == 'index') ? '' : 'box'}
+      %ul.locations
+        = yield
+
+      
+
+- content_for :script do
+  :javascript
+    $(function() {
+      new Dashboard.Controller($('section.dashboard'))
+    });

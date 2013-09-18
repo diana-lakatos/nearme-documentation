@@ -78,6 +78,15 @@
         display: none;
       }
     }
+
+    &.user-signed-in {
+
+      @media (max-width: 900px) {
+        span {
+          display: none;
+        }
+      }
+    }
   }
 }
 

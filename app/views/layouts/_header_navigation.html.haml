@@ -8,12 +8,19 @@
         %li
           = link_to manage_locations_path do
             %span.ico-location.padding Locations
+        - if current_user.companies.any? && current_user.companies.first.id.present?
+          %li
+            = link_to manage_users_path do
+              %span.ico-user.padding Users
         %li
           = link_to manage_guests_dashboard_path do
             %span.ico-manage-guests.padding Guests
         %li
           = link_to payments_dashboard_path do
             %span.ico-credit-card.padding Payments
+        %li
+          = link_to transfers_dashboard_path do
+            %span.ico-transfers.padding Transfers
         - if current_user.companies.any? && current_user.companies.first.id.present?
           %li
             = link_to edit_manage_company_path(current_user.companies.first) do
@@ -45,8 +52,8 @@
     = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => "btn btn-blue btn-medium ico-add-location" do
       %span.padding-left List Your #{current_instance.bookable_noun}
   - elsif current_user.listings.draft.any?
-    = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location" do
+    = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location user-signed-in" do
       %span.padding-left Complete Your Listing
   - elsif current_user.listings.active.empty?
-    = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location" do
+    = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location user-signed-in" do
       %span.padding-left List Your #{current_instance.bookable_noun}

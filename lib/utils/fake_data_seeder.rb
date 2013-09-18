@@ -33,10 +33,6 @@ module Utils
         @instances ||= load_yaml("instances.yml")
       end
 
-      def self.partners
-        @partners ||= load_yaml("partners.yml")
-      end
-
       private
 
         def self.load_yaml(collection)
@@ -69,9 +65,8 @@ module Utils
           load_location_types!
           load_listing_types!
 
-          # === INSTANCES / PARTNERS =============================
+          # === INSTANCES ========================================
 
-          load_partners!
           load_instances!
 
           # === COMPANIES / LOCATIONS / LISTINGS =================
@@ -95,7 +90,7 @@ module Utils
         # too bad we can't use this (due to records that are ):
         # Rails.application.eager_load!
         # ActiveRecord::Base.descendants.any? &:any?
-        [Location, User, Company, Partner, Instance].any? &:any?
+        [Location, User, Company, Instance].any? &:any?
       end
     end
 
@@ -152,15 +147,6 @@ module Utils
     end
     alias_method :listing_types, :load_listing_types!
 
-    def load_partners!
-      @partners ||= do_task "Loading partners" do
-        Data.partners.map do |name|
-          FactoryGirl.create(:partner, :name => name)
-        end
-      end
-    end
-    alias_method :partners, :load_partners!
-
     def load_instances!
       @instances ||= do_task "Loading instances" do
         Data.instances.map do |name|
@@ -181,9 +167,13 @@ module Utils
                                     :industries => industries.sample(2))
           users << user
 
-          companies << FactoryGirl.create(:company, :name => url, :email => user.email, :url => url,
+          company = FactoryGirl.create(:company, :name => url, :email => user.email, :url => url,
                                           :description => Faker::Lorem.paragraph.truncate(200), :instance => instance,
                                           :creator => user, :industries => user.industries)
+
+          company.users << user
+
+          companies << company
         end
         [users, companies]
       end

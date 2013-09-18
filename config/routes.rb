@@ -93,12 +93,15 @@ DesksnearMe::Application.routes.draw do
       get :payments
       get :listings
       get :manage_guests
+      get :transfers
     end
   end
 
   namespace :manage do
 
-    resources :companies, :only => [:edit, :update]
+    resources :companies, :only => [:edit, :update, :show]
+
+    resources :users, :except => [:edit, :update]
 
     resources :locations do
       resources :listings

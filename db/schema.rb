@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130909182922) do
+ActiveRecord::Schema.define(:version => 20130917081902) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -88,6 +88,17 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.integer "industry_id"
     t.integer "company_id"
   end
+
+  create_table "company_users", :force => true do |t|
+    t.integer  "company_id"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.datetime "deleted_at"
+  end
+
+  add_index "company_users", ["company_id"], :name => "index_company_users_on_company_id"
+  add_index "company_users", ["user_id"], :name => "index_company_users_on_user_id"
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -188,9 +199,8 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
 
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
-    t.integer  "partner_id"
+    t.datetime "created_at",                                                            :null => false
+    t.datetime "updated_at",                                                            :null => false
     t.string   "site_name"
     t.string   "description"
     t.string   "tagline"
@@ -202,8 +212,9 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.string   "blog_url"
     t.string   "twitter_url"
     t.string   "facebook_url"
-    t.string   "bookable_noun", :default => "Desk"
+    t.string   "bookable_noun",                                     :default => "Desk"
     t.string   "meta_title"
+    t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
   end
 
   create_table "listing_types", :force => true do |t|
@@ -287,13 +298,6 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.datetime "updated_at",  :null => false
   end
 
-  create_table "partners", :force => true do |t|
-    t.string   "name"
-    t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
-    t.datetime "created_at",                                                         :null => false
-    t.datetime "updated_at",                                                         :null => false
-  end
-
   create_table "payment_transfers", :force => true do |t|
     t.integer  "company_id"
     t.datetime "transferred_at"
@@ -336,9 +340,9 @@ ActiveRecord::Schema.define(:version => 20130909182922) do
     t.datetime "failed_at"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
-    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
+    t.integer  "payment_transfer_id"
   end
 
   add_index "reservation_charges", ["payment_transfer_id"], :name => "index_reservation_charges_on_payment_transfer_id"

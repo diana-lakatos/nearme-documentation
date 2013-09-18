@@ -15,7 +15,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
     should "track booking modal open" do
       @tracker.expects(:opened_booking_modal).with do |reservation|
-        reservation == assigns(:reservation_request).reservation
+        reservation == object_hash_for(assigns(:reservation_request).reservation)
       end
       xhr :post, :review, booking_params_for(@listing)
       assert_response 200
@@ -86,6 +86,21 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
           card_expires: 1.year.from_now.strftime("%m/%y"),
           card_code: '111'
       }
+    }
+  end
+
+  def object_hash_for(reservation)
+    {
+      booking_desks: reservation.quantity,
+      booking_days: reservation.total_days,
+      booking_total: reservation.total_amount_dollars,
+      location_address: reservation.location.address,
+      location_currency: reservation.location.currency,
+      location_suburb: reservation.location.suburb,
+      location_city: reservation.location.city,
+      location_state: reservation.location.state,
+      location_country: reservation.location.country,
+      location_postcode: reservation.location.postcode
     }
   end
 

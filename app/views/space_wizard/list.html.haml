@@ -38,7 +38,7 @@
         = render 'registrations/phone_fields', :f => f, :locals => { :country => @country }
       .actions
         .centerbuttons
-          = f.submit "List my #{current_instance.bookable_noun}", :name => "commit", :disable_with => 'Creating...', :class => "listmydesk btn-medium"
+          = f.submit "Submit", :name => "commit", :disable_with => 'Creating...', :class => "listmydesk btn-medium"
           = f.submit "Save as draft", :name => "save_as_draft", :disable_with => 'Saving...', :class => "saveasdraft btn-gray btn-medium"
 
 - content_for :script do

@@ -2,8 +2,6 @@ require 'test_helper'
 
 class InstanceTest < ActiveSupport::TestCase
 
-  should belong_to(:partner)
-
   context '#find_instance_by_request' do
 
     setup do
