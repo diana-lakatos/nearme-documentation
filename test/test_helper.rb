@@ -25,7 +25,6 @@ Spork.prefork do
   require 'mocha/setup'
   require 'mocha/integration/test_unit'
   require 'webmock/test_unit'
-  require 'helpers/prepare_email'
 
   require 'helpers/stub_helper'
 

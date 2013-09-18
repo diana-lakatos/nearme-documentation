@@ -5,7 +5,6 @@ require 'email_spec/cucumber'
 require 'factory_girl'
 require "json_spec/cucumber"
 require 'helpers/gmaps_fake'
-require 'helpers/prepare_email'
 
 DatabaseCleaner.strategy = :truncation
 
