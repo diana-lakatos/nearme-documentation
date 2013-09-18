@@ -41,10 +41,18 @@ module CarrierWave::InkFilePicker
     end
 
     def original_dimensions
-      if exists?
-        [width, height]
-      elsif url = current_url
-        FastImage.size(url)
+      # if we have cached dimensions - just display them
+      if model["#{mounted_as}_original_width"] && model["#{mounted_as}_original_height"]
+        [model["#{mounted_as}_original_width"], model["#{mounted_as}_original_height"]]
+      else
+        # old images do not have cached dimensions - get them and cache ad-hoc
+        tmp_img = MiniMagick::Image.open(current_url[0] == '/' ? Rails.root.join('public', current_url[1..-1]) : current_url)
+        unless model["#{mounted_as}_original_width"] && model["#{mounted_as}_original_height"]
+          model.send("#{mounted_as}_original_width=", tmp_img[:width])
+          model.send("#{mounted_as}_original_height=", tmp_img[:height])
+          model.save!
+        end
+        [tmp_img[:width], tmp_img[:height]]
       end
     end
   end
