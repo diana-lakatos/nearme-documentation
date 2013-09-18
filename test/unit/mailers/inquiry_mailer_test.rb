@@ -14,6 +14,7 @@ class InquiryMailerTest < ActiveSupport::TestCase
 
     assert_equal subject, mail.subject
     assert mail.subject.include?(@inquiry.listing.name)
+    assert mail.reply_to[0].include?(@inquiry.inquiring_user.email)
     assert mail.html_part.body.include?(@inquiry.listing.creator.name)
   end
 

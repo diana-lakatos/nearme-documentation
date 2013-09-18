@@ -16,6 +16,7 @@ class InstanceMailer < ActionMailer::Base
     mailer = options.delete(:mailer) || find_mailer(template: template, instance: instance) || instance.default_mailer
     subject_locals = options.delete(:subject_locals)
     subject  = mailer.liquid_subject(subject_locals) || options.delete(:subject)
+    reply_to = options.delete(:reply_to) || mailer.reply_to
 
     self.class.layout _layout, instance: instance
 
@@ -23,7 +24,7 @@ class InstanceMailer < ActionMailer::Base
       :subject => subject,
       :bcc     => mailer.bcc,
       :from    => mailer.from,
-      :reply_to=> mailer.reply_to,
+      :reply_to=> reply_to,
       :content_type => "multipart/alternative")) do |format|
         format.html { render template, instance: instance }
         format.text { render template, instance: instance }

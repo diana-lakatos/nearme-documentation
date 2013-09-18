@@ -61,6 +61,10 @@ class ReservationDrop < BaseDrop
     routes.guest_rating_reservation_url(@reservation.id)
   end
 
+  def host_rating_reservation_url
+    routes.host_rating_reservation_url(@reservation.id)
+  end
+
   def created_at
     @reservation.created_at.strftime("%A,%e %B")
   end

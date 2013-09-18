@@ -18,24 +18,34 @@ class InstanceMailerTest < ActiveSupport::TestCase
   context "email template exists in db" do
     setup do 
       FactoryGirl.create(:email_template, path: 'instance_mailer/test_mailer',
-                         subject: 'Test {{interpolation}}', instance: @instance)
+                         subject: 'Test {{interpolation}}', instance: @instance,
+                         reply_to: 'reply@me.com')
+      @mail = InstanceMailer.test_mailer(@instance)
     end
 
     should "will liquify subject" do
-      mail = InstanceMailer.test_mailer(@instance)
+      assert_equal "Test magic", @mail.subject
+    end
 
-      assert_equal "Test magic", mail.subject
+    should "assign email template assigns" do
+      assert_equal ["reply@me.com"], @mail.reply_to
     end
   end
 
   context "email template doesn't exists in db" do
-    should "will keep original interpolated subject" do
+    setup do
       handler = ActionView::Template.registered_template_handler('liquid')
       fake_template = ActionView::Template.new('source', 'identifier', handler, {})
       ActionView::PathSet.any_instance.stubs(:find_all).returns([fake_template])
-      mail = InstanceMailer.test_mailer(@instance)
+      @mail = InstanceMailer.test_mailer(@instance)
+    end
 
-      assert_equal "Hello magic", mail.subject
+    should "will keep original interpolated subject" do
+      assert_equal "Hello magic", @mail.subject
+    end
+
+    should "will keep default reply_to email" do
+      assert_equal [@instance.contact_email], @mail.reply_to
     end
   end
 

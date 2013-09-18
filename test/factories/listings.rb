@@ -12,7 +12,7 @@ FactoryGirl.define do
     hourly_reservations false
 
     ignore do
-      photos_count 1
+      photos_count 0
     end
 
     after(:build) do |listing, evaluator|

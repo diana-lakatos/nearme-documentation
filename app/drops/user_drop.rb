@@ -37,7 +37,7 @@ class UserDrop < BaseDrop
   end
 
   def manage_locations_url
-    routes.manage_location_url
+    routes.manage_locations_url
   end
 
   def edit_user_registration_url
