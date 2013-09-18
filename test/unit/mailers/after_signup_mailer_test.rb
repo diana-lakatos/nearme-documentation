@@ -30,7 +30,8 @@ class AfterSignupMailerTest < ActiveSupport::TestCase
   end
 
   test "version if user added a listing" do
-    @listing = FactoryGirl.create(:listing, :creator => @user)
+    @listing = FactoryGirl.create(:listing)
+    @user = @listing.creator
     mail = AfterSignupMailer.help_offer(@instance, @user.id)
     assert mail.html_part.body.include?("Thanks for listing your #{@instance.bookable_noun} with Desks Near Me!")
     assert !mail.html_part.body.include?("The Desks Near Me Team")
