@@ -11,12 +11,8 @@
             %ul.location-and-listings
               = render :partial => 'location_name_with_links', :locals => { :location => location }
           %ul.location-and-listings
-            - if location.listings.empty?
-              %li.listing.empty
-                You haven't created any #{current_instance.bookable_noun.pluralize} at this location!
-            - else
-              - location.listings.each do |listing|
-                = render :partial => 'manage/listings/listing_name_with_link', :locals => { :location => location, :listing => listing }
+            - location.listings.each do |listing|
+              = render :partial => 'manage/listings/listing_name_with_link', :locals => { :location => location, :listing => listing }
             %li.listing
               = link_to new_manage_location_listing_path(location), :class => 'ico-add-desk text-right' do
                 %span.padding-left
