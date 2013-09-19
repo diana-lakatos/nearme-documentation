@@ -34,8 +34,9 @@ Feature: A user can edit their settings
     Given a company exists with creator: the user
     And I go to the settings page
     When I enable white label settings
-     And I update company white label settings
-    Then The company white label settings should be updated
+    When I update company white label settings
+    Then I should see "Great, your company's details have been updated"
+     And The company white label settings should be updated
 
   @javascript
   Scenario: A user without company will not see settings
