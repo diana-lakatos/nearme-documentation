@@ -1,3 +1,7 @@
+Given(/^one instance exists$/) do
+  Instance.first || FactoryGirl.create(:instance)
+end
+
 Then(/^I should see instances list$/) do
   Instance.all.each do |instance|
     page.should have_content(instance.name)
