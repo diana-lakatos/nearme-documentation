@@ -12,13 +12,6 @@ class DomainTest < ActiveSupport::TestCase
     @example_domain = FactoryGirl.create(:domain, :name => 'example.com', :target => @company, :target_type => 'Company')
   end
 
-  context '#default' do
-    should 'know what is default' do
-      assert_equal "desksnear.me", Domain.default_domain.name
-    end
-
-  end
-
   context 'find_for_request' do
 
     setup do
@@ -35,11 +28,6 @@ class DomainTest < ActiveSupport::TestCase
       assert_equal @desks_near_me_domain, Domain.find_for_request(@request)
     end
 
-    should 'return default domain name if nothing else can be found' do
-      @request.stubs(:host).returns('doesnt.exist.com')
-      Domain.expects(:default_domain)
-      Domain.find_for_request(@request)
-    end
   end
 
   context 'target' do

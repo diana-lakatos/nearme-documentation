@@ -17,11 +17,11 @@ FactoryGirl.define do
     service_fee_percent '10.00'
 
     after(:build) do |instance|
-      instance.domains << (Domain.where(:name => Domain::DEFAULT_DOMAIN_NAME).first.presence || FactoryGirl.create(:domain, :name => Domain::DEFAULT_DOMAIN_NAME)) if instance.domains.empty?
+      instance.domains << FactoryGirl.create(:domain) if instance.domains.empty?
     end
 
     after(:create) do |instance|
-      instance.domains << (Domain.where(:name => Domain::DEFAULT_DOMAIN_NAME).first.presence || FactoryGirl.create(:domain, :name => Domain::DEFAULT_DOMAIN_NAME)) if instance.domains.empty?
+      instance.domains << FactoryGirl.create(:domain) if instance.domains.empty?
     end
   end
 end
