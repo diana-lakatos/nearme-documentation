@@ -9,8 +9,6 @@ class User < ActiveRecord::Base
 
   acts_as_paranoid
 
-  belongs_to :instance
-
   has_many :authentications,
            :dependent => :destroy
 

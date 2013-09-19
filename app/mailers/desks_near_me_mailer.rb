@@ -13,4 +13,5 @@ class DesksNearMeMailer < ActionMailer::Base
     text.prepend "[#{@instance.name}] " if @instance
     text
   end
+
 end
