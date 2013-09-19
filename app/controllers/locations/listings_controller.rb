@@ -6,6 +6,9 @@ class Locations::ListingsController < ApplicationController
     # Attempt to restore a stored reservation state from the session.
     restore_initial_bookings_from_stored_reservation
 
+    # Store location visit
+    impressionist(@location, message: "Listing: #{@listing.id}")
+
     event_tracker.viewed_a_location(@location, { logged_in: user_signed_in? }) 
   end
 

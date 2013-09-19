@@ -146,6 +146,10 @@ class Reservation < ActiveRecord::Base
     joins(:periods).where('reservation_periods.date < ? OR state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq
   }
 
+  scope :last_x_days, lambda { |days_in_past|
+    where('DATE(reservations.created_at) >= ? ', days_in_past.days.ago)
+  }
+
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 

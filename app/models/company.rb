@@ -28,6 +28,10 @@ class Company < ActiveRecord::Base
   has_many :company_industries
   has_many :industries, :through => :company_industries
 
+  has_many :locations_impressions,
+           :source => :impressions,
+           through: :locations
+
   before_validation :add_default_url_scheme
 
   after_save :notify_user_about_change

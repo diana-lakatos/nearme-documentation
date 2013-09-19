@@ -56,6 +56,8 @@ class Location < ActiveRecord::Base
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :listings
 
+  is_impressionable
+
   delegate :url, :to => :company
   delegate :service_fee_percent, to: :company, allow_nil: true
 
