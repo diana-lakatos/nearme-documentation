@@ -6,7 +6,6 @@ FactoryGirl.define do
     country_name "United States"
     phone "18889983375"
     mobile_number "18889983375"
-    instance
     job_title "Manager"
     biography "I'm cool!"
 

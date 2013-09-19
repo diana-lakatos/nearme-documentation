@@ -10,6 +10,8 @@ module CarrierWave
       def url_was_changed
         @model["#{@field}_versions_generated_at"] = nil
         @model["#{@field}_transformation_data"] = nil
+        @model["#{@field}_original_width"] = nil
+        @model["#{@field}_original_height"] = nil
       end
 
       # if external url has changed, we want to remove any transformations done to previous image. %column%_versions_generated_at is used
@@ -29,8 +31,10 @@ module CarrierWave
         else
           # external url has changed, re-download!
           @model.send("remote_#{@field}_url=", source_url)
+          dimensions = @model.send(@field).original_dimensions
+          @model.send("#{@field}_original_width=", dimensions[0])
+          @model.send("#{@field}_original_height=", dimensions[1])
         end
-
         @model["#{@field}_versions_generated_at"] = Time.zone.now
         @model.save!(:valdiate => false)
       end
@@ -39,7 +43,7 @@ module CarrierWave
       def clear
         @model.send("remove_#{@field}=", true)
 
-        %w(original_url versions_generated_at transformation_data).each do |f|
+        %w(original_url versions_generated_at transformation_data original_width original_height).each do |f|
           @model.send("#{@field}_#{f}=", nil)
         end
       end

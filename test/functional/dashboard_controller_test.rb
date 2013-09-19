@@ -12,6 +12,7 @@ class DashboardControllerTest < ActionController::TestCase
     setup do
       @listing = FactoryGirl.create(:listing, :quantity => 1000)
       @listing.location.company.tap { |c| c.creator = @user }.save!
+      @listing.location.company.add_creator_to_company_users
     end
 
     context '#assigned variables' do

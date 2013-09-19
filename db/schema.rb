@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130912225706) do
+ActiveRecord::Schema.define(:version => 20130918195757) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -84,10 +84,21 @@ ActiveRecord::Schema.define(:version => 20130912225706) do
 
   add_index "companies", ["instance_id"], :name => "index_companies_on_instance_id"
 
-  create_table "company_industries", :force => true do |t|
+  create_table "company_industries", :id => false, :force => true do |t|
     t.integer "industry_id"
     t.integer "company_id"
   end
+
+  create_table "company_users", :force => true do |t|
+    t.integer  "company_id"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.datetime "deleted_at"
+  end
+
+  add_index "company_users", ["company_id"], :name => "index_company_users_on_company_id"
+  add_index "company_users", ["user_id"], :name => "index_company_users_on_user_id"
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -107,12 +118,10 @@ ActiveRecord::Schema.define(:version => 20130912225706) do
 
   create_table "domains", :force => true do |t|
     t.string   "name"
-    t.integer  "instance_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "instance_id"
   end
-
-  add_index "domains", ["instance_id"], :name => "index_domains_on_instance_id"
 
   create_table "guest_ratings", :force => true do |t|
     t.integer  "author_id",      :null => false
@@ -149,7 +158,6 @@ ActiveRecord::Schema.define(:version => 20130912225706) do
   end
 
   create_table "instance_themes", :force => true do |t|
-    t.integer  "instance_id"
     t.string   "name"
     t.string   "compiled_stylesheet"
     t.string   "icon_image"
@@ -166,12 +174,13 @@ ActiveRecord::Schema.define(:version => 20130912225706) do
     t.string   "color_white"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
+    t.integer  "instance_id"
   end
 
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",                                                            :null => false
+    t.datetime "updated_at",                                                            :null => false
     t.string   "site_name"
     t.string   "description"
     t.string   "tagline"
@@ -183,7 +192,7 @@ ActiveRecord::Schema.define(:version => 20130912225706) do
     t.string   "blog_url"
     t.string   "twitter_url"
     t.string   "facebook_url"
-    t.string   "bookable_noun", :default => "Desk"
+    t.string   "bookable_noun",                                     :default => "Desk"
     t.string   "meta_title"
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
   end
@@ -301,6 +310,8 @@ ActiveRecord::Schema.define(:version => 20130912225706) do
     t.text     "image_transformation_data"
     t.string   "image_original_url"
     t.datetime "image_versions_generated_at"
+    t.integer  "image_original_height"
+    t.integer  "image_original_width"
   end
 
   create_table "reservation_charges", :force => true do |t|
@@ -311,9 +322,9 @@ ActiveRecord::Schema.define(:version => 20130912225706) do
     t.datetime "failed_at"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
-    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
+    t.integer  "payment_transfer_id"
   end
 
   add_index "reservation_charges", ["payment_transfer_id"], :name => "index_reservation_charges_on_payment_transfer_id"
@@ -389,7 +400,7 @@ ActiveRecord::Schema.define(:version => 20130912225706) do
     t.datetime "updated_at",  :null => false
   end
 
-  create_table "user_industries", :force => true do |t|
+  create_table "user_industries", :id => false, :force => true do |t|
     t.integer "industry_id"
     t.integer "user_id"
   end
@@ -441,7 +452,6 @@ ActiveRecord::Schema.define(:version => 20130912225706) do
     t.datetime "mailchimp_synchronized_at"
     t.string   "country_name"
     t.string   "mobile_number"
-    t.integer  "instance_id"
     t.datetime "notified_about_mobile_number_issue_at"
     t.text     "referer"
     t.string   "source"
@@ -458,10 +468,11 @@ ActiveRecord::Schema.define(:version => 20130912225706) do
     t.text     "avatar_transformation_data"
     t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"
+    t.integer  "avatar_original_height"
+    t.integer  "avatar_original_width"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["instance_id"], :name => "index_users_on_instance_id"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
   create_table "versions", :force => true do |t|
@@ -474,18 +485,5 @@ ActiveRecord::Schema.define(:version => 20130912225706) do
   end
 
   add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
-
-  create_table "visit_ratings", :force => true do |t|
-    t.integer  "reservation_id"
-    t.integer  "user_id"
-    t.float    "value"
-    t.text     "comment"
-    t.datetime "deleted_at"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "visit_ratings", ["reservation_id", "value"], :name => "index_visit_ratings_on_reservation_id_and_value"
-  add_index "visit_ratings", ["user_id", "value"], :name => "index_visit_ratings_on_user_id_and_value"
 
 end

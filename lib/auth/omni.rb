@@ -6,10 +6,9 @@ module Auth
       @auth_params = auth_params
     end
 
-    def create_user(curr_instance, google_analytics_id)
+    def create_user(google_analytics_id)
       user = User.new
       user.apply_omniauth(@auth_params)
-      user.instance = curr_instance
       user.google_analytics_id = google_analytics_id
       user.save
     end

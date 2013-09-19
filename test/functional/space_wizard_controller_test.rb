@@ -105,6 +105,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
       setup do
         @listing = FactoryGirl.create(:listing)
         @listing.company.tap { |c| c.creator = @user }.save!
+        @listing.company.add_creator_to_company_users
       end
 
       should 'not track clicked list your bookable if user already has bookable ' do
@@ -150,7 +151,6 @@ class SpaceWizardControllerTest < ActionController::TestCase
      {
        "name"=>"International Secret Intelligence Service", 
        "industry_ids"=>["#{@industry.id}"],
-       "instance_id"=>"#{@user.instance_id}",
        "locations_attributes"=>
        {"0"=>
         {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.", 

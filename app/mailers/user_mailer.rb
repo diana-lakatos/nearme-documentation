@@ -14,8 +14,10 @@ class UserMailer < DesksNearMeMailer
       subject: "[Desks Near Me] We couldn't send you text message"
   end
 
-  def email_verification(user)
+  def email_verification(user, instance)
     @user = user
+    @instance = instance
+
     unless @user.verified_at
       mail to: @user.email, 
         subject: "Email verification"
@@ -30,7 +32,7 @@ class UserMailer < DesksNearMeMailer
       end
 
       def email_verification
-        ::UserMailer.email_verification(User.where('users.verified_at is null').first)
+        ::UserMailer.email_verification(User.where('users.verified_at is null').first, Instance.default_instance)
       end
 
     end

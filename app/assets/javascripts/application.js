@@ -49,6 +49,7 @@ window.DNM = {
     this.initializeTooltips();
     this.initializeCustomSelects();
     this.initializeCustomInputs();
+    this.initializeBrowsersSpecificCode();
   },
 
   initializeModals: function() {
@@ -95,6 +96,21 @@ window.DNM = {
     }).blur(function(){
       $(this).parent().parent().removeClass('chzn-choices-active');
     })
+  },
+
+  initializeBrowsersSpecificCode: function() {
+    this.fixInputIconBackgroundTransparency();  // fix icon in input transparency in IE8 
+  },
+
+  fixInputIconBackgroundTransparency: function() {
+    if ($.browser.msie  && parseInt($.browser.version, 10) === 8) {
+      $('.input-icon-holder input').live("focus", function() {
+        $(this).parents('.input-icon-holder').eq(0).find('span').eq(0).css('background', '#f0f0f0');
+      })
+      $('.input-icon-holder input').live("blur", function() {
+        $(this).parents('.input-icon-holder').eq(0).find('span').eq(0).css('background', '#e6e6e6');
+      });
+    }
   },
 
   isMobile: function() {
