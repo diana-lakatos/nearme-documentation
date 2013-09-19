@@ -48,7 +48,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
           ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).once
 
           BackgroundIssueLogger.expects(:log_issue).never
-          @controller.class.any_instance.expects(:handle_invalid_mobile_number).once
+          User.any_instance.expects(:notify_about_wrong_phone_number).once
           SmsNotifier::Message.any_instance.stubs(:deliver).raises(Twilio::REST::RequestError, "The 'To' number +16665554444 is not a valid phone number")
           assert_nothing_raised do 
             xhr :post, :create, booking_params_for(@listing)

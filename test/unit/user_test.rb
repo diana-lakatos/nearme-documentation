@@ -125,12 +125,11 @@ class UserTest < ActiveSupport::TestCase
     assert @user.avatar.any_url_exists?
   end
 
-  should "save user even when avatar image does not have extension" do
+  should "do not save avatar if image does not have extension" do
     @user = FactoryGirl.build(:user)
     @user.avatar = File.open(File.expand_path("../../assets/image_no_extension", __FILE__))
     @user.avatar_versions_generated_at = Time.zone.now
-    @user.save!
-    assert @user.avatar.any_url_exists?
+    assert !@user.save
   end
 
   context '#full_mobile_number' do
@@ -268,10 +267,11 @@ class UserTest < ActiveSupport::TestCase
 
     setup do
       @user = FactoryGirl.create(:user)
+      @instance = Instance.first || FactoryGirl.create(:instance)
     end
 
     should 'notify user about invalid phone via email' do
-      @user.notify_about_wrong_phone_number
+      @user.notify_about_wrong_phone_number(@instance)
       sent_mail = ActionMailer::Base.deliveries.last
       assert_equal [@user.email], sent_mail.to
 
@@ -282,14 +282,14 @@ class UserTest < ActiveSupport::TestCase
     should 'not spam user' do
       UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
       5.times do 
-        @user.notify_about_wrong_phone_number
+        @user.notify_about_wrong_phone_number(@instance)
       end
     end
 
     should 'update timestamp of notification' do
       UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
       Timecop.freeze(Time.zone.now)
-      @user.notify_about_wrong_phone_number
+      @user.notify_about_wrong_phone_number(@instance)
       assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a
     end
 

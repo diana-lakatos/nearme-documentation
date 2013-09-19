@@ -24,12 +24,10 @@ class RegistrationsController < Devise::RegistrationsController
                                            source: cookies.signed[:source],
                                            campaign: cookies.signed[:campaign]})
       update_analytics_google_id(@user)
-      @user.instance = current_instance
-      @user.save!
       analytics_apply_user(@user)
       event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
       AfterSignupMailer.enqueue_later(1.hour).help_offer(current_instance, @user)
-      UserMailer.enqueue.email_verification(@user)
+      UserMailer.enqueue.email_verification(@user, current_instance)
     end
 
     # Clear out temporarily stored Provider authentication data if present

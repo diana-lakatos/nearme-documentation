@@ -51,8 +51,4 @@ class UserDrop < BaseDrop
   def verify_user_url
     routes.verify_user_url(@user.id, @user.email_verification_token)
   end
-
-  def instance_name
-    @user.instance.name
-  end
 end

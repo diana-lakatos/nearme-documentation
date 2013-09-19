@@ -40,12 +40,5 @@ module CarrierWave::InkFilePicker
       model["#{mounted_as}_versions_generated_at"].present?
     end
 
-    def original_dimensions
-      if exists?
-        [width, height]
-      elsif url = current_url
-        FastImage.size(url)
-      end
-    end
   end
 end

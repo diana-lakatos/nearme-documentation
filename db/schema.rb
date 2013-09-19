@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130917081902) do
+ActiveRecord::Schema.define(:version => 20130918195757) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -330,6 +330,8 @@ ActiveRecord::Schema.define(:version => 20130917081902) do
     t.text     "image_transformation_data"
     t.string   "image_original_url"
     t.datetime "image_versions_generated_at"
+    t.integer  "image_original_height"
+    t.integer  "image_original_width"
   end
 
   create_table "reservation_charges", :force => true do |t|
@@ -340,9 +342,9 @@ ActiveRecord::Schema.define(:version => 20130917081902) do
     t.datetime "failed_at"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
+    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
-    t.integer  "payment_transfer_id"
   end
 
   add_index "reservation_charges", ["payment_transfer_id"], :name => "index_reservation_charges_on_payment_transfer_id"
@@ -467,7 +469,6 @@ ActiveRecord::Schema.define(:version => 20130917081902) do
     t.string   "job_title"
     t.text     "biography"
     t.datetime "mailchimp_synchronized_at"
-    t.integer  "instance_id"
     t.string   "country_name"
     t.string   "mobile_number"
     t.datetime "notified_about_mobile_number_issue_at"
@@ -486,10 +487,11 @@ ActiveRecord::Schema.define(:version => 20130917081902) do
     t.text     "avatar_transformation_data"
     t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"
+    t.integer  "avatar_original_height"
+    t.integer  "avatar_original_width"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["instance_id"], :name => "index_users_on_instance_id"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
   create_table "versions", :force => true do |t|

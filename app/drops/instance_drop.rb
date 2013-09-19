@@ -3,6 +3,10 @@ class InstanceDrop < BaseDrop
     @instance = instance
   end
 
+  def name
+    @instance.name
+  end
+
   def bookable_noun
     @instance.bookable_noun
   end

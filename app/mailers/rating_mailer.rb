@@ -21,7 +21,7 @@ class RatingMailer < InstanceMailer
     @reservation = reservation
     @listing = @reservation.listing
     @location = @listing.location
-    @instance = @location.instance
+    @instance = @listing.instance
 
     mail to: @author.email,
          subject: instance_prefix("Rate your #{@kind} at #{@listing.name}", @instance),

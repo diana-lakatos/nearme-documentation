@@ -48,16 +48,4 @@ module CarrierWave::TransformableImage
     end || {}
   end
 
-  def image
-    @image ||= MiniMagick::Image.open(current_path)
-  end
-
-  def width
-    image[:width]
-  end
-
-  def height
-    image[:height]
-  end
-
 end
