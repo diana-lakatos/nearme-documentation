@@ -6,16 +6,18 @@ Then(/^I crop image$/) do
 end
 
 When(/^I open rotate and crop modal$/) do
+  @photo = Photo.last
+  @photo.image_original_width = MiniMagick::Image.open(Photo.last.image.current_path)[:width]
+  @photo.image_original_height = MiniMagick::Image.open(Photo.last.image.current_path)[:height]
+  @photo.save!
   within '.photo-item' do
-    @image_width = Photo.last.image.width
-    @image_height = Photo.last.image.height
     click_on 'Rotate & Crop'
   end
 end
 
 When(/^I should see cropped photo$/) do
-  assert_equal 125, Photo.last.image.transformed.height
-  assert_equal 200, Photo.last.image.transformed.width
+  assert_equal 200, MiniMagick::Image.open(Photo.last.image.transformed.current_path)[:width]
+  assert_equal 125, MiniMagick::Image.open(Photo.last.image.transformed.current_path)[:height]
 end
 
 Then(/^I rotate image$/) do
@@ -26,5 +28,6 @@ Then(/^I rotate image$/) do
 end
 
 When(/^I should see rotated photo$/) do
-  Photo.last.image.transformed.should have_dimensions(@image_height, @image_width)
+  assert_equal @photo.image_original_height, MiniMagick::Image.open(Photo.last.image.transformed.current_path)[:width]
+  assert_equal @photo.image_original_width, MiniMagick::Image.open(Photo.last.image.transformed.current_path)[:height]
 end

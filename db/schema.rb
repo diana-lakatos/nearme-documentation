@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130917081902) do
+ActiveRecord::Schema.define(:version => 20130918195757) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -118,12 +118,10 @@ ActiveRecord::Schema.define(:version => 20130917081902) do
 
   create_table "domains", :force => true do |t|
     t.string   "name"
-    t.integer  "instance_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "instance_id"
   end
-
-  add_index "domains", ["instance_id"], :name => "index_domains_on_instance_id"
 
   create_table "guest_ratings", :force => true do |t|
     t.integer  "author_id",      :null => false
@@ -160,7 +158,6 @@ ActiveRecord::Schema.define(:version => 20130917081902) do
   end
 
   create_table "instance_themes", :force => true do |t|
-    t.integer  "instance_id"
     t.string   "name"
     t.string   "compiled_stylesheet"
     t.string   "icon_image"
@@ -177,6 +174,7 @@ ActiveRecord::Schema.define(:version => 20130917081902) do
     t.string   "color_white"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
+    t.integer  "instance_id"
   end
 
   create_table "instances", :force => true do |t|
@@ -312,6 +310,8 @@ ActiveRecord::Schema.define(:version => 20130917081902) do
     t.text     "image_transformation_data"
     t.string   "image_original_url"
     t.datetime "image_versions_generated_at"
+    t.integer  "image_original_height"
+    t.integer  "image_original_width"
   end
 
   create_table "reservation_charges", :force => true do |t|
@@ -456,18 +456,20 @@ ActiveRecord::Schema.define(:version => 20130917081902) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
-    t.float    "guest_rating_average"
-    t.integer  "guest_rating_count"
-    t.float    "host_rating_average"
-    t.integer  "host_rating_count"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
     t.string   "browser"
     t.string   "browser_version"
     t.string   "platform"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
     t.text     "avatar_transformation_data"
     t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"
+    t.integer  "avatar_original_height"
+    t.integer  "avatar_original_width"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
