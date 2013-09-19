@@ -1,5 +1,5 @@
 # encoding: utf-8
-class AvatarUploader < BaseUploader
+class AvatarUploader < BaseImageUploader
   include CarrierWave::InkFilePicker
   include CarrierWave::TransformableImage
 
@@ -10,9 +10,6 @@ class AvatarUploader < BaseUploader
   }
 
   ASPECT_RATIO = 1
-
-
-  process :auto_orient
 
   def store_dir
     "media/#{model.class.to_s.underscore}/#{model.id}/#{mounted_as}"
@@ -28,17 +25,6 @@ class AvatarUploader < BaseUploader
 
   version :large, :from_version => :transformed do
     process :resize_to_fill => [dimensions[:large][:width], dimensions[:large][:height]]
-  end
-
-  def default_url
-    Placeholder.new(height: 100, width: 100).path
-  end
-
-  def auto_orient
-    manipulate! do |img|
-      img.auto_orient
-      img
-    end
   end
 
 end
