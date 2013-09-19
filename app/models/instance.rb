@@ -9,7 +9,7 @@ class Instance < ActiveRecord::Base
   has_many :locations, :through => :companies
   has_many :listings, :through => :locations
   has_many :users
-  has_many :domains
+  has_many :domains, :as => :target
   has_many :pages
 
   validates_presence_of :name
@@ -25,11 +25,6 @@ class Instance < ActiveRecord::Base
 
   def self.default_instance
     @default_instance ||= self.find_by_name(DEFAULT_INSTANCE_NAME)
-  end
-
-  def self.find_for_request(request)
-    host = request.host.gsub(/^www\./, "")
-    joins(:domains).where('domains.name LIKE ?', host).first
   end
 
 end

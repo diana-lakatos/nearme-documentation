@@ -56,3 +56,15 @@ Then /^The company should be updated$/ do
   assert_equal "mail-update@example.com", company.mailing_address
   assert_equal "paypal-update@example.com", company.paypal_email
 end
+
+When /^I update company domain name$/ do
+  fill_in "company_domain_attributes_name", with: "domain.lvh.me"
+  within('form[@id="edit_company"]') do
+    find('input[@type="submit"]').click
+  end
+end
+
+Then /^The company domain name should be updated$/ do
+  company = model!("the company")
+  assert_equal "domain.lvh.me", company.domain.name
+end

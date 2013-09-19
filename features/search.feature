@@ -5,7 +5,6 @@ Feature: A user can search for a listing
   I want to search for a listing
 
   Background:
-    Given the instance exists
     And I am on the home page
 
   Scenario: A user searches for invalid places
