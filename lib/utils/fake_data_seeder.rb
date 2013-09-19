@@ -160,15 +160,14 @@ module Utils
       @users_and_companies ||= do_task "Loading users and companies" do
         users, companies = [], []
         Data.domains.map do |url|
-          instance = instances.sample # TODO temp
           company_email = "info@#{url}"
           user = FactoryGirl.create(:user, :name => Faker::Name.name, :email => company_email,
-                                    :biography => Faker::Lorem.paragraph.truncate(200), :instance => instance,
+                                    :biography => Faker::Lorem.paragraph.truncate(200),
                                     :industries => industries.sample(2))
           users << user
 
           company = FactoryGirl.create(:company, :name => url, :email => user.email, :url => url,
-                                          :description => Faker::Lorem.paragraph.truncate(200), :instance => instance,
+                                          :description => Faker::Lorem.paragraph.truncate(200),
                                           :creator => user, :industries => user.industries)
 
           company.users << user
