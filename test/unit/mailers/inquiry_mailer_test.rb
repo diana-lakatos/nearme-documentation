@@ -9,7 +9,7 @@ class InquiryMailerTest < ActiveSupport::TestCase
   end
 
   test "listing creator notification works ok" do
-    mail = InquiryMailer.listing_creator_notification(@instance.id, @inquiry.id)
+    mail = InquiryMailer.listing_creator_notification(@instance, @inquiry)
     subject = "New enquiry from #{@inquiry.inquiring_user.name} about #{@inquiry.listing.name}"
 
     assert_equal subject, mail.subject
@@ -19,7 +19,7 @@ class InquiryMailerTest < ActiveSupport::TestCase
   end
 
   test "inquiring user notification works ok" do
-    mail = InquiryMailer.inquiring_user_notification(@instance.id, @inquiry.id)
+    mail = InquiryMailer.inquiring_user_notification(@instance, @inquiry)
     subject =  "We've passed on your inquiry about #{@inquiry.listing.name}"
 
     assert_equal subject, mail.subject

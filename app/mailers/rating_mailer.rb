@@ -1,19 +1,17 @@
 class RatingMailer < InstanceMailer
 
-  def request_guest_rating(reservation_id)
-    reservation = Reservation.find(reservation_id)
+  def request_guest_rating(reservation)
     @subject = reservation.owner
-    @author = reservation.listing_creator
-    @kind = 'guest'
+    @author  = reservation.listing_creator
+    @kind    = 'guest'
 
     request_rating(reservation)
   end
 
-  def request_host_rating(reservation_id)
-    reservation = Reservation.find(reservation_id)
+  def request_host_rating(reservation)
     @subject = reservation.listing_creator
-    @author = reservation.owner
-    @kind = 'host'
+    @author  = reservation.owner
+    @kind    = 'host'
 
     request_rating(reservation)
   end

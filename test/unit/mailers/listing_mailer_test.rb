@@ -10,7 +10,7 @@ class ListingTest < ActiveSupport::TestCase
   end
 
   test "#share" do
-    mail = ListingMailer.share(@instance.id, @listing.id, 'jimmy@test.com', 'Jimmy Falcon', @user.id, 'Check this out!')
+    mail = ListingMailer.share(@instance, @listing, 'jimmy@test.com', 'Jimmy Falcon', @user, 'Check this out!')
 
     assert_equal @subject, mail.subject
     assert mail.html_part.body.include?(@user.name)
@@ -21,7 +21,7 @@ class ListingTest < ActiveSupport::TestCase
   end
 
   test "#share without message" do
-    mail = ListingMailer.share(@instance.id, @listing.id, 'jimmy@test.com', 'Jimmy Falcon', @user.id)
+    mail = ListingMailer.share(@instance, @listing, 'jimmy@test.com', 'Jimmy Falcon', @user)
 
     assert_equal @subject, mail.subject
     assert mail.html_part.body.include?(@user.name)

@@ -173,7 +173,7 @@ class User < ActiveRecord::Base
 
   def notify_about_wrong_phone_number
     unless notified_about_mobile_number_issue_at
-      UserMailer.notify_about_wrong_phone_number(self.id).deliver
+      UserMailer.notify_about_wrong_phone_number(self).deliver
       update_attribute(:notified_about_mobile_number_issue_at, Time.zone.now)
       IssueLogger.log_issue("[internal] invalid mobile number", email, "#{name} (#{id}) was asked to update his mobile number #{full_mobile_number}")
     end

@@ -18,8 +18,8 @@ module Listings
     def create
       if @reservation_request.process
         if @reservation_request.confirm_reservations?
-          ReservationMailer.enqueue.notify_host_with_confirmation(reservation.id)
-          ReservationMailer.enqueue.notify_guest_with_confirmation(reservation.id)
+          ReservationMailer.enqueue.notify_host_with_confirmation(reservation)
+          ReservationMailer.enqueue.notify_guest_with_confirmation(reservation)
           begin
             ReservationSmsNotifier.notify_host_with_confirmation(reservation).deliver
           rescue Twilio::REST::RequestError => e
@@ -32,8 +32,8 @@ module Listings
           event_tracker.updated_profile_information(reservation.owner)
           event_tracker.updated_profile_information(reservation.host)
         else
-          ReservationMailer.enqueue.notify_host_without_confirmation(reservation.id)
-          ReservationMailer.enqueue.notify_guest_of_confirmation(reservation.id)
+          ReservationMailer.enqueue.notify_host_without_confirmation(reservation)
+          ReservationMailer.enqueue.notify_guest_of_confirmation(reservation)
         end
 
         event_tracker.requested_a_booking(reservation)

@@ -13,12 +13,12 @@ class RatingReminderJob < Job
     end
     reservations.each do |reservation|
       if reservation.request_guest_rating_email_sent_at.blank?
-        RatingMailer.request_guest_rating(reservation.id).deliver
+        RatingMailer.request_guest_rating(reservation).deliver
         reservation.update_column(:request_guest_rating_email_sent_at, Time.zone.now)
       end
 
       if reservation.request_host_rating_email_sent_at.blank?
-        RatingMailer.request_host_rating(reservation.id).deliver
+        RatingMailer.request_host_rating(reservation).deliver
         reservation.update_column(:request_host_rating_email_sent_at, Time.zone.now)
       end
     end

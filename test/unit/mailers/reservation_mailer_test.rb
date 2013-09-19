@@ -15,7 +15,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   end
 
   test "#notify_guest_of_cancellation" do
-    mail = ReservationMailer.notify_guest_of_cancellation(@reservation.id)
+    mail = ReservationMailer.notify_guest_of_cancellation(@reservation)
     subject = "[#{@instance.name}] A booking you made has been cancelled by the owner"
 
     assert mail.html_part.body.include?(@reservation.listing.creator.name)
@@ -26,7 +26,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   end
 
   test "#notify_guest_of_confirmation" do
-    mail = ReservationMailer.notify_guest_of_confirmation(@reservation.id)
+    mail = ReservationMailer.notify_guest_of_confirmation(@reservation)
 
     assert mail.html_part.body.include?(@reservation.listing.creator.name)
     assert mail.html_part.body.include?(@expected_dates)
@@ -35,7 +35,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   end
 
   test "#notify_guest_of_expiration" do
-    mail = ReservationMailer.notify_guest_of_expiration(@reservation.id)
+    mail = ReservationMailer.notify_guest_of_expiration(@reservation)
 
     assert mail.html_part.body.include?(@reservation.listing.creator.name)
     assert mail.html_part.body.include?(@expected_dates)
@@ -44,7 +44,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   end
 
   test "#notify_guest_of_rejection" do
-    mail = ReservationMailer.notify_guest_of_rejection(@reservation.id)
+    mail = ReservationMailer.notify_guest_of_rejection(@reservation)
 
     assert mail.html_part.body.include?(@reservation.listing.name)
 
@@ -54,7 +54,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   end
 
   test "#notify_guest_with_confirmation" do
-    mail = ReservationMailer.notify_guest_with_confirmation(@reservation.id)
+    mail = ReservationMailer.notify_guest_with_confirmation(@reservation)
 
     assert mail.html_part.body.include?(@reservation.listing.creator.name)
     assert mail.html_part.body.include?(@expected_dates)
@@ -63,7 +63,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   end
 
   test "#notify_host_of_cancellation" do
-    mail = ReservationMailer.notify_host_of_cancellation(@reservation.id)
+    mail = ReservationMailer.notify_host_of_cancellation(@reservation)
 
     assert mail.html_part.body.include?(@reservation.listing.creator.name)
     assert mail.html_part.body.include?(@expected_dates)
@@ -72,7 +72,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   end
 
   test "#notify_host_of_confirmation" do
-    mail = ReservationMailer.notify_host_of_confirmation(@reservation.id)
+    mail = ReservationMailer.notify_host_of_confirmation(@reservation)
 
     assert mail.html_part.body.include?(@reservation.listing.creator.name)
     assert mail.html_part.body.include?(@expected_dates)
@@ -81,7 +81,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   end
 
   test "#notify_host_of_expiration" do
-    mail = ReservationMailer.notify_host_of_expiration(@reservation.id)
+    mail = ReservationMailer.notify_host_of_expiration(@reservation)
 
     assert mail.html_part.body.include?(@reservation.listing.creator.name)
     assert mail.html_part.body.include?(@expected_dates)
@@ -90,7 +90,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   end
 
   test "#notify_host_with_confirmation" do
-    mail = ReservationMailer.notify_host_with_confirmation(@reservation.id)
+    mail = ReservationMailer.notify_host_with_confirmation(@reservation)
 
     assert mail.html_part.body.include?( manage_guests_dashboard_path(:token => @reservation.listing_creator.authentication_token) )
     assert mail.html_part.body.include?(@reservation.listing.creator.name)
@@ -100,7 +100,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   end
 
   test "#notify_host_without_confirmation" do
-    mail = ReservationMailer.notify_host_without_confirmation(@reservation.id)
+    mail = ReservationMailer.notify_host_without_confirmation(@reservation)
 
     assert mail.html_part.body.include?(@reservation.listing.creator.name)
     assert mail.html_part.body.include?(@expected_dates)

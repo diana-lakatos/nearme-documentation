@@ -209,11 +209,11 @@ class Listing < ActiveRecord::Base
     reservation.save!
 
     if reservation.listing.confirm_reservations?
-      ReservationMailer.notify_host_with_confirmation(reservation.id).deliver
-      ReservationMailer.notify_guest_with_confirmation(reservation.id).deliver
+      ReservationMailer.notify_host_with_confirmation(reservation).deliver
+      ReservationMailer.notify_guest_with_confirmation(reservation).deliver
     else
-      ReservationMailer.notify_host_without_confirmation(reservation.id).deliver
-      ReservationMailer.notify_guest_of_confirmation(reservation.id).deliver
+      ReservationMailer.notify_host_without_confirmation(reservation).deliver
+      ReservationMailer.notify_guest_of_confirmation(reservation).deliver
     end
     reservation
   end

@@ -55,8 +55,8 @@ class Reservation < ActiveRecord::Base
       event_tracker.updated_profile_information(self.owner)
       event_tracker.updated_profile_information(self.host)
 
-      ReservationMailer.notify_guest_of_expiration(self.id).deliver
-      ReservationMailer.notify_host_of_expiration(self.id).deliver
+      ReservationMailer.notify_guest_of_expiration(self).deliver
+      ReservationMailer.notify_host_of_expiration(self).deliver
     end
   end
 

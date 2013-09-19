@@ -3,15 +3,15 @@ class UserMailer < InstanceMailer
 
   layout false
 
-  def notify_about_wrong_phone_number(user_id)
-    @user = User.find(user_id)
+  def notify_about_wrong_phone_number(user)
+    @user = user
     mail(to: @user.email,
          subject: instance_prefix("We couldn't send you text message", @user.instance),
          instance: @user.instance)
   end
 
-  def email_verification(user_id)
-    user = User.find(user_id)
+  def email_verification(user)
+    user = user
     return unless user.verified_at.nil?
     @user = user
     mail(to: @user.email,
