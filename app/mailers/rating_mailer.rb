@@ -21,7 +21,7 @@ class RatingMailer < DesksNearMeMailer
     @reservation = reservation
     @listing = @reservation.listing
     @location = @listing.location
-    @instance = @listing.instance
+    @theme = @listing.company.white_label_enabled ? @listing.company.theme : @listing.instance.theme
 
     mail to: @author.email,
          subject: subject("Rate your #{@kind} at #{@listing.name}"),

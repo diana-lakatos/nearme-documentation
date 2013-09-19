@@ -13,7 +13,9 @@ Before do
   GmapsFake.stub_requests
   stub_request(:get, /.*api\.mixpanel\.com.*/)
   stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
-  store_model("instance", nil, FactoryGirl.create(:instance))
+  instance = FactoryGirl.create(:instance)
+  store_model("instance", nil, instance)
+  store_model("theme", nil, instance.theme)
 end
 
 def last_json

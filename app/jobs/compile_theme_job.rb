@@ -1,5 +1,5 @@
 # Job that handles precompiling and storing the theme stylesheet for a given
-# Instance.
+# owner.
 class CompileThemeJob < Job
   def initialize(theme)
     @theme = theme

@@ -29,11 +29,13 @@ Feature: A user can edit their settings
     When I update company settings
     Then The company should be updated
 
-  Scenario: A user can add domain name
+  @javascript
+  Scenario: A user can update white label settings
     Given a company exists with creator: the user
     And I go to the settings page
-    When I update company domain name
-    Then The company domain name should be updated
+    When I enable white label settings
+    When I update company white label settings
+    Then The company white label settings should be updated
 
   @javascript
   Scenario: A user without company will not see settings

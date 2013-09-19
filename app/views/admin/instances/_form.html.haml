@@ -1,16 +1,5 @@
 = simple_form_for [:admin, resource], :html => { :multipart => true, :class => "form-horizontal" } do |f|
   = f.input :name
-  = f.input :site_name
-  = f.input :meta_title
-  = f.input :description
-  = f.input :tagline
-  = f.input :support_email
-  = f.input :contact_email
-  = f.input :phone_number
-  = f.input :support_url
-  = f.input :blog_url
-  = f.input :twitter_url
-  = f.input :facebook_url
 
   %h4 Domains
   - resource.domains.build unless resource.domains.any?
@@ -18,13 +7,24 @@
     = f_d.input :name
 
   %h4 Custom Theme
-  = f.fields_for :theme, (resource.theme || Theme.new) do |ff|
+  = f.fields_for :theme, (resource.theme.presence || resource.build_theme) do |ff|
     = ff.input :name
     = ff.input :logo_image
     = ff.input :logo_retina_image
     = ff.input :icon_image
     = ff.input :icon_retina_image
     = ff.input :hero_image
+    = ff.input :site_name
+    = ff.input :meta_title
+    = ff.input :description
+    = ff.input :tagline
+    = ff.input :support_email
+    = ff.input :contact_email
+    = ff.input :phone_number
+    = ff.input :support_url
+    = ff.input :blog_url
+    = ff.input :twitter_url
+    = ff.input :facebook_url
 
     - Theme::COLORS.each do |color|
       = ff.input "color_#{color}"

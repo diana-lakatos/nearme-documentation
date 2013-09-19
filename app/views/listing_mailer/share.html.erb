@@ -1,6 +1,6 @@
 <p>Dear <%= @name %>,</p>
 
-<p><%= @sharer.name %> has shared a <%=@instance.bookable_noun%> with you!</p>
+<p><%= @sharer.name %> has shared a <%=@theme.bookable_noun%> with you!</p>
 
 <p><%= link_to "View #{@listing.name} on Desks Near Me", location_url(@listing.location, :listing_id => @listing) %>.</p>
 

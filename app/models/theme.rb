@@ -1,12 +1,15 @@
 class Theme < ActiveRecord::Base
   COLORS = %w(blue red orange green gray black white)
+  COLORS_DEFAULT_VALUES = %w(#024fa3 #e83d33 #FF8D00 #157A49 #394449 #1e2222 #fafafa)
   COLORS.each do |color|
     attr_accessible "color_#{color}"
   end
 
   attr_accessible :name, :icon_image, :icon_retina_image,
     :logo_image, :logo_retina_image, :hero_image, :skip_compilation,
-    :owner, :owner_id, :owner_type
+    :owner, :owner_id, :owner_type, :site_name, :description, :tagline, :support_email, 
+    :contact_email, :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, 
+    :meta_title, :bookable_noun
 
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
@@ -21,6 +24,7 @@ class Theme < ActiveRecord::Base
 
   # Precompile the theme, unless we're saving the compiled stylesheet.
   after_save :recompile_theme, :if => :theme_changed?
+  validates_presence_of :name, :bookable_noun
 
   # Validations
   COLORS.each do |color|

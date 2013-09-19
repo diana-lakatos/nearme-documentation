@@ -10,6 +10,7 @@ class RenameInstanceThemesToThemes < ActiveRecord::Migration
         owner_id = instance_id
     SQL
     remove_column :themes, :instance_id
+    add_column :companies, :white_label_enabled, :boolean, :default => false
   end
 
   def down
@@ -24,5 +25,6 @@ class RenameInstanceThemesToThemes < ActiveRecord::Migration
     SQL
     remove_column :instance_themes, :owner_id
     remove_column :instance_themes, :owner_type
+    remove_column :companies, :white_label_enabled
   end
 end

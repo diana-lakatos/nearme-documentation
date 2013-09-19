@@ -1,7 +1,5 @@
 class Instance < ActiveRecord::Base
-  attr_accessible :name, :site_name, :description, :tagline, :support_email, :contact_email,
-                  :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, :meta_title,
-                  :domains_attributes, :theme_attributes, :service_fee_percent
+  attr_accessible :name, :domains_attributes, :theme_attributes, :service_fee_percent
 
   has_one :theme, :as => :owner, dependent: :destroy
 

@@ -1,11 +1,11 @@
 <p>Hi <%= @user.first_name %>,</p>
 
 <p>
-  Welcome to Desks Near Me, and congratulations on your first booked <%=@instance.bookable_noun%>!  
+  Welcome to Desks Near Me, and congratulations on your first booked <%=@theme.bookable_noun%>!  
 </p>
 
 <p>
-  That’s great that you just booked your first <%=@instance.bookable_noun%> in <%= @user.reservations.first.listing.location.city.present? ? @user.reservations.first.listing.location.city : @user.reservations.first.listing.location.name %>. 
+  That’s great that you just booked your first <%=@theme.bookable_noun%> in <%= @user.reservations.first.listing.location.city.present? ? @user.reservations.first.listing.location.city : @user.reservations.first.listing.location.name %>. 
 </p>
 
 <p>
@@ -19,12 +19,12 @@
 
 
 <p>
-  You can <%= link_to "search and book here", search_url %> to find your next <%=@instance.bookable_noun%> for the day, week or month.
+  You can <%= link_to "search and book here", search_url %> to find your next <%=@theme.bookable_noun%> for the day, week or month.
 </p>
 
 
 <p>
-  Maybe you have an extra <%=@instance.bookable_noun%> too? It's FREE (seriously) to add your <%=@instance.bookable_noun%> and start making money. Simply <%= link_to "login here to add your #{@instance.bookable_noun}", new_user_session_url(:return_to => space_wizard_list_path)  %>.
+  Maybe you have an extra <%=@theme.bookable_noun%> too? It's FREE (seriously) to add your <%=@theme.bookable_noun%> and start making money. Simply <%= link_to "login here to add your #{@theme.bookable_noun}", new_user_session_url(:return_to => space_wizard_list_path)  %>.
 </p>
 
 

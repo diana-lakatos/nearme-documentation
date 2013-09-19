@@ -175,24 +175,33 @@ class ApplicationController < ActionController::Base
   end
 
   def current_domain
-    @current_domain = Domain.find_for_request(request).tap do |domain|
-      if domain
-        if domain.white_label_company?
-          @current_white_label_company = domain.target
-          @current_instance = @current_white_label_company.instance
-          @current_theme = @current_white_label_company.target.theme
-        elsif domain.instance?
-          @current_instance = domain.target
-        else
-          raise "Invalid domain target #{domain}"
-        end
-      else
-        @current_instance = Instance.default_instance
-      end
-      @current_theme = @current_instance.theme unless @current_theme
+    @current_domain ||= Domain.find_for_request(request).tap do |domain|
+      domain ? initialize_white_label_settings_for_domain(domain) : default_white_label_settings
     end
   end
   helper_method :current_domain
+
+  def default_white_label_settings
+    @current_instance = Instance.default_instance
+    @current_theme = @current_instance.theme
+  end
+  
+  def initialize_white_label_settings_for_domain(domain)
+    if domain.white_label_company?
+      if domain.target.white_label_enabled
+        @current_white_label_company = domain.target
+        @current_instance = @current_white_label_company.instance
+        @current_theme = domain.target.theme
+      else
+        default_white_label_settings
+      end
+    elsif domain.instance?
+      @current_theme = domain.target.theme
+      @current_instance = domain.target
+    else
+      raise "Invalid domain target #{domain}"
+    end
+  end
 
   def current_instance
     current_domain unless @current_instance

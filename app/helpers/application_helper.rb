@@ -21,7 +21,7 @@ module ApplicationHelper
   end
 
   def additional_meta_title
-    content_for?(:meta_title) ? content_for(:meta_title) : current_instance.meta_title
+    content_for?(:meta_title) ? content_for(:meta_title) : current_theme.meta_title
   end
 
   def legacy(is_legacy = true)
