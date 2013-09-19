@@ -7,7 +7,6 @@ Feature: As a user of the site
   Background:
     Given a user exists
       And I am logged in as the user
-      And an instance exists
       And a company exists with creator: the user
       And a location_type exists with name: "Business"
       And a location_type exists with name: "Co-working"

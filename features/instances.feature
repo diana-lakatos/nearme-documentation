@@ -5,16 +5,16 @@ Background:
   And I log in as admin
 
 Scenario: Admin user creates new instance
-  And I am on the admin instances page
+  Given I am on the admin instances page
   And I follow "New Instance"
   When I fill instance form with valid details
   And I press "Create Instance"
   Then I should see created instance show page
 
 Scenario: Admin user edits instance
-  And I am on the admin instances page
+  Given I am on the admin instances page
   Then I should see instances list
-  And I follow "Edit"
+   And I edit instance
   When I fill instance form with valid details
   And I press "Update Instance"
   Then I should see updated instance show page

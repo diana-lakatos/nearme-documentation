@@ -9,8 +9,7 @@ Feature: A user can add a space
     And a industry exists with name: "Industry"
 
   Scenario: An unregistered user starts by signing up
-    Given a instance exists
-    And I go to the home page
+    Given I go to the home page
      And I follow "List Your" bookable noun
      And I sign up as a user in the modal
      Then I should see "List Your First" bookable noun
@@ -19,8 +18,7 @@ Feature: A user can add a space
      Then I should see "Your space was listed!"
 
   Scenario: An unregistered user starts a draft, comes back to it, and saves it
-    Given a instance exists
-    And I go to the home page
+    Given I go to the home page
      And I follow "List Your" bookable noun
      And I sign up as a user in the modal
      Then I should see "List Your First" bookable noun
@@ -34,8 +32,7 @@ Feature: A user can add a space
      Then I should see "Your space was listed!"  
 
   Scenario: A draft listing does not show up in search
-    Given a instance exists
-    And I go to the home page
+    Given I go to the home page
      And I follow "List Your" bookable noun
      And I sign up as a user in the modal
      Then I should see "List Your First" bookable noun

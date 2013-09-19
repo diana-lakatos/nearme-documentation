@@ -29,6 +29,12 @@ Feature: A user can edit their settings
     When I update company settings
     Then The company should be updated
 
+  Scenario: A user can add domain name
+    Given a company exists with creator: the user
+    And I go to the settings page
+    When I update company domain name
+    Then The company domain name should be updated
+
   @javascript
   Scenario: A user without company will not see settings
     Given I am on the home page
