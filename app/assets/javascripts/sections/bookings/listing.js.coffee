@@ -88,7 +88,7 @@ class @Bookings.Listing
     @endMinute = end
 
   minutesBooked: ->
-    return 0 unless @startMinute and @endMinute
+    return 0 unless @startMinute? and @endMinute?
     @endMinute - @startMinute
 
   # Check the selected dates are valid with the quantity
