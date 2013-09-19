@@ -75,7 +75,6 @@ class ApplicationController < ActionController::Base
   def apply_persisted_mixpanel_attributes
     cookies.signed.permanent[:mixpanel_anonymous_id] = mixpanel.anonymous_identity
     cookies.signed.permanent[:mixpanel_session_properties] = ActiveSupport::JSON.encode(mixpanel.session_properties)
-    event_tracker.visited_for_the_first_time if first_time_visited?
   end
 
   def first_time_visited?
