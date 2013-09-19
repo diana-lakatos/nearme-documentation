@@ -34,7 +34,7 @@ Feature: A user can edit their settings
     Given a company exists with creator: the user
     And I go to the settings page
     When I enable white label settings
-    When I update company white label settings
+     And I update company white label settings
     Then The company white label settings should be updated
 
   @javascript

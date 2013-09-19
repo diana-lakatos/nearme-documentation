@@ -67,8 +67,6 @@ end
 
 When /^I update company white label settings$/ do
   fill_in "company_domain_attributes_name", with: "domain.lvh.me"
-  fill_in "company_theme_attributes_name", with: "Custom theme"
-  fill_in "company_theme_attributes_bookable_noun", with: "My Desks"
   within(:css, 'form[id=edit_company] div[data-white-label-settings-container]') do
     find(:css, 'input[type=submit]').click
   end
@@ -77,5 +75,4 @@ end
 Then /^The company white label settings should be updated$/ do
   company = model!("the company")
   assert_equal "domain.lvh.me", company.domain.name
-  assert_equal "Custom theme", company.theme.name
 end

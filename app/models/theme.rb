@@ -23,8 +23,8 @@ class Theme < ActiveRecord::Base
   mount_uploader :compiled_stylesheet, ThemeStylesheetUploader
 
   # Precompile the theme, unless we're saving the compiled stylesheet.
+  before_validation :set_default_values
   after_save :recompile_theme, :if => :theme_changed?
-  validates_presence_of :name, :bookable_noun
 
   # Validations
   COLORS.each do |color|
@@ -33,6 +33,10 @@ class Theme < ActiveRecord::Base
   
   # If true, will skip compiling the theme when saving
   attr_accessor :skip_compilation
+
+  def set_default_values
+    self.bookable_noun = 'Desk' unless bookable_noun
+  end
 
   def recompile_theme
     CompileThemeJob.perform(self) unless skip_compilation
