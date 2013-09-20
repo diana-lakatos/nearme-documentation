@@ -48,17 +48,5 @@ module CarrierWave::TransformableImage
     end || {}
   end
 
-  def image
-    @image ||= MiniMagick::Image.open(url)
-  end
-
-  def width
-    image[:width]
-  end
-
-  def height
-    image[:height]
-  end
-
 end
 
