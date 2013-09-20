@@ -1,3 +1,4 @@
+@emails
 Feature: User creates reservation
 
   Scenario: Creating a reservation that requires confirmation by the listing owner

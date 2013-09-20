@@ -1,7 +1,7 @@
 FactoryGirl.define do
 
   factory :instance do
-    name 'DesksNearMe'
+    name Instance::DEFAULT_INSTANCE_NAME
     site_name 'Desks Near Me'
     tagline 'Find a space to work'
     meta_title 'Desks Near Me'

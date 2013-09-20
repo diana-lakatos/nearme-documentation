@@ -10,6 +10,8 @@ class Location < ActiveRecord::Base
     :city, :state, :country, :street, :address_components, :location_type_id, :photos
   attr_accessor :local_geocoding # set this to true in js
 
+  liquid_methods :name
+
   serialize :address_components, JSON
 
   geocoded_by :address
@@ -55,6 +57,8 @@ class Location < ActiveRecord::Base
   include AvailabilityRule::TargetHelper
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :listings
+
+  is_impressionable
 
   delegate :url, :to => :company
   delegate :service_fee_percent, to: :company, allow_nil: true
@@ -134,6 +138,10 @@ class Location < ActiveRecord::Base
     creator.phone = phone if creator.phone.blank? if creator
   end
 
+  def to_liquid
+    LocationDrop.new(self)
+  end
+
   def timezone
     NearestTimeZone.to(latitude, longitude)
   end
@@ -172,7 +180,4 @@ class Location < ActiveRecord::Base
       end
     end
   end
-
-
-
 end

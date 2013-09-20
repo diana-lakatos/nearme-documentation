@@ -1,0 +1,9 @@
+Dear {{ name }},
+
+{{ sharer.name }} has shared a {{ instance.bookable_noun }} with you!
+
+View {{ listing.name }} on Desks Near Me ({{ listing.location.url }}).
+{% if message %}
+They also wanted to say:
+
+"{{ message }}"{% endif %}

@@ -4,6 +4,7 @@ gem 'rails', '3.2.14'
 gem 'pg'
 
 gem 'raygun4ruby'
+gem "liquid"
 gem 'active_model_serializers'
 gem 'carrierwave'
 gem 'devise', "~> 2.2"
@@ -75,6 +76,8 @@ gem 'inherited_resources'
 gem "historyjs-rails"
 
 gem 'ranked-model'
+
+gem 'impressionist'
 
 gem 'desk'
 gem 'filepicker-rails'

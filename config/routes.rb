@@ -90,7 +90,7 @@ DesksnearMe::Application.routes.draw do
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
       get :bookings, :to => 'reservations#upcoming'
-      get :payments
+      get :analytics
       get :listings
       get :manage_guests
       get :transfers

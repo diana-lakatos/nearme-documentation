@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130919172823) do
+ActiveRecord::Schema.define(:version => 20130918195757) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -33,8 +33,8 @@ ActiveRecord::Schema.define(:version => 20130919172823) do
     t.integer  "user_id"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.datetime "deleted_at"
     t.string   "secret"
     t.string   "token"
@@ -72,15 +72,14 @@ ActiveRecord::Schema.define(:version => 20130919172823) do
     t.string   "name"
     t.string   "email"
     t.text     "description"
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.datetime "deleted_at"
     t.string   "url"
     t.string   "paypal_email"
     t.text     "mailing_address"
     t.string   "external_id"
     t.integer  "instance_id"
-    t.boolean  "white_label_enabled", :default => false
   end
 
   add_index "companies", ["instance_id"], :name => "index_companies_on_instance_id"
@@ -119,11 +118,32 @@ ActiveRecord::Schema.define(:version => 20130919172823) do
 
   create_table "domains", :force => true do |t|
     t.string   "name"
+    t.integer  "instance_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "target_id"
     t.string   "target_type"
   end
+
+  add_index "domains", ["instance_id"], :name => "index_domains_on_instance_id"
+
+  create_table "email_templates", :force => true do |t|
+    t.integer  "instance_id"
+    t.text     "html_body"
+    t.text     "text_body"
+    t.string   "path"
+    t.string   "from"
+    t.string   "to"
+    t.string   "bcc"
+    t.string   "reply_to"
+    t.string   "subject"
+    t.boolean  "partial",     :default => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
+
+  add_index "email_templates", ["instance_id"], :name => "index_email_templates_on_instance_id"
+  add_index "email_templates", ["path", "partial", "instance_id"], :name => "index_email_templates_on_path_and_partial_and_instance_id"
 
   create_table "guest_ratings", :force => true do |t|
     t.integer  "author_id",      :null => false
@@ -145,6 +165,31 @@ ActiveRecord::Schema.define(:version => 20130919172823) do
     t.datetime "updated_at",     :null => false
   end
 
+  create_table "impressions", :force => true do |t|
+    t.string   "impressionable_type"
+    t.integer  "impressionable_id"
+    t.integer  "user_id"
+    t.string   "controller_name"
+    t.string   "action_name"
+    t.string   "view_name"
+    t.string   "request_hash"
+    t.string   "ip_address"
+    t.string   "session_hash"
+    t.text     "message"
+    t.text     "referrer"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "impressions", ["controller_name", "action_name", "ip_address"], :name => "controlleraction_ip_index"
+  add_index "impressions", ["controller_name", "action_name", "request_hash"], :name => "controlleraction_request_index"
+  add_index "impressions", ["controller_name", "action_name", "session_hash"], :name => "controlleraction_session_index"
+  add_index "impressions", ["impressionable_type", "impressionable_id", "ip_address"], :name => "poly_ip_index"
+  add_index "impressions", ["impressionable_type", "impressionable_id", "request_hash"], :name => "poly_request_index"
+  add_index "impressions", ["impressionable_type", "impressionable_id", "session_hash"], :name => "poly_session_index"
+  add_index "impressions", ["impressionable_type", "message", "impressionable_id"], :name => "impressionable_type_message_index"
+  add_index "impressions", ["user_id"], :name => "index_impressions_on_user_id"
+
   create_table "industries", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -159,10 +204,43 @@ ActiveRecord::Schema.define(:version => 20130919172823) do
     t.datetime "updated_at",        :null => false
   end
 
+  create_table "instance_themes", :force => true do |t|
+    t.integer  "instance_id"
+    t.string   "name"
+    t.string   "compiled_stylesheet"
+    t.string   "icon_image"
+    t.string   "icon_retina_image"
+    t.string   "logo_image"
+    t.string   "logo_retina_image"
+    t.string   "hero_image"
+    t.string   "color_blue"
+    t.string   "color_red"
+    t.string   "color_orange"
+    t.string   "color_green"
+    t.string   "color_gray"
+    t.string   "color_black"
+    t.string   "color_white"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                                                         :null => false
-    t.datetime "updated_at",                                                         :null => false
+    t.datetime "created_at",                                                            :null => false
+    t.datetime "updated_at",                                                            :null => false
+    t.string   "site_name"
+    t.string   "description"
+    t.string   "tagline"
+    t.string   "support_email"
+    t.string   "contact_email"
+    t.string   "address"
+    t.string   "phone_number"
+    t.string   "support_url"
+    t.string   "blog_url"
+    t.string   "twitter_url"
+    t.string   "facebook_url"
+    t.string   "bookable_noun",                                     :default => "Desk"
+    t.string   "meta_title"
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
   end
 
@@ -260,8 +338,8 @@ ActiveRecord::Schema.define(:version => 20130919172823) do
   add_index "payment_transfers", ["company_id"], :name => "index_payment_transfers_on_company_id"
 
   create_table "photos", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
     t.integer  "content_id"
     t.string   "image"
     t.string   "caption"
@@ -291,9 +369,9 @@ ActiveRecord::Schema.define(:version => 20130919172823) do
     t.datetime "failed_at"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
+    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
-    t.integer  "payment_transfer_id"
   end
 
   add_index "reservation_charges", ["payment_transfer_id"], :name => "index_reservation_charges_on_payment_transfer_id"
@@ -361,40 +439,6 @@ ActiveRecord::Schema.define(:version => 20130919172823) do
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
-  create_table "themes", :force => true do |t|
-    t.string   "name"
-    t.string   "compiled_stylesheet"
-    t.string   "icon_image"
-    t.string   "icon_retina_image"
-    t.string   "logo_image"
-    t.string   "logo_retina_image"
-    t.string   "hero_image"
-    t.string   "color_blue"
-    t.string   "color_red"
-    t.string   "color_orange"
-    t.string   "color_green"
-    t.string   "color_gray"
-    t.string   "color_black"
-    t.string   "color_white"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
-    t.integer  "owner_id"
-    t.string   "owner_type"
-    t.string   "site_name"
-    t.string   "description"
-    t.string   "tagline"
-    t.string   "support_email"
-    t.string   "contact_email"
-    t.string   "address"
-    t.string   "meta_title"
-    t.string   "phone_number"
-    t.string   "support_url"
-    t.string   "blog_url"
-    t.string   "twitter_url"
-    t.string   "facebook_url"
-    t.string   "bookable_noun"
-  end
-
   create_table "unit_prices", :force => true do |t|
     t.integer  "listing_id"
     t.integer  "price_cents"
@@ -421,28 +465,27 @@ ActiveRecord::Schema.define(:version => 20130919172823) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                                :default => "", :null => false
-    t.string   "encrypted_password",                    :limit => 128, :default => "", :null => false
-    t.string   "password_salt",                                        :default => "", :null => false
+    t.string   "email",                                 :default => "", :null => false
+    t.string   "encrypted_password",                    :default => "", :null => false
     t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                                        :default => 0
+    t.integer  "sign_in_count",                         :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                            :null => false
+    t.datetime "updated_at",                                            :null => false
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                                       :default => 0,  :null => false
+    t.integer  "bookings_count",                        :default => 0,  :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "locked_at"
-    t.datetime "reset_password_sent_at"
-    t.integer  "failed_attempts",                                      :default => 0
+    t.integer  "failed_attempts",                       :default => 0
     t.string   "authentication_token"
     t.string   "avatar"
     t.string   "confirmation_token"
@@ -459,15 +502,15 @@ ActiveRecord::Schema.define(:version => 20130919172823) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
     t.string   "browser"
     t.string   "browser_version"
     t.string   "platform"
-    t.float    "guest_rating_average"
-    t.integer  "guest_rating_count"
-    t.float    "host_rating_average"
-    t.integer  "host_rating_count"
     t.text     "avatar_transformation_data"
     t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class JobTest < ActiveSupport::TestCase
 
-  class SampleMailer < DesksNearMeMailer
+  class SampleMailer < InstanceMailer
 
     def send_email
 
