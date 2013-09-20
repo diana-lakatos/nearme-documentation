@@ -5,13 +5,14 @@ Feature: A user can search for a listing
   I want to search for a listing
 
   Background:
-    Given the instance exists
     And I am on the home page
 
   Scenario: A user searches for invalid places
     When I search for ""
     Then I should see "No results found"
-    Then I should see "The address you entered couldn't be found"
+    And I should see "The address you entered couldn't be found"
+
+  Scenario: A user searches for invalid place
     When I search for "bung"
     Then I should see "No results found"
 
@@ -51,8 +52,9 @@ Feature: A user can search for a listing
     Then all the listings are included in the search results
 
   Scenario: Subscribing on notification about new listings if no listings found for valid location.
-    When I search for "New Zealand"
+    When I search for located "New Zealand"
     Then I should see "No results found"
+    And I should see "Try another search query, or enter your email address below to be notified when a desk is added at this location."
     And I fill form with email field for subscribing on notification
     Then I should see a notification for my subscription
     And search notification created with "New Zealand"
@@ -61,7 +63,7 @@ Feature: A user can search for a listing
             for registered user.
     Given the user exists
     And I log in as a user
-    When I search for "New Zealand"
+    When I search for located "New Zealand"
     Then I should see "No results found"
     And I fill form for subscribing on notification
     Then I should see a notification for my subscription

@@ -9,6 +9,10 @@ When(/^I fill instance form with valid details$/) do
   fill_in 'instance_domains_attributes_0_name', with: 'dnm.local'
 end
 
+When(/^I edit instance$/) do
+  all(:css, '.table tr .btn').last.click
+end
+
 Then(/^I should see created instance show page$/) do
   page.should have_content('Instance was successfully created.')
   page.should have_content('Test instance')

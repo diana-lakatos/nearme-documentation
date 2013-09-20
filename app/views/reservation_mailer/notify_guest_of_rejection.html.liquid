@@ -1,0 +1,9 @@
+<p>The booking that you made on {{ reservation.created_at }} for '{{ listing.name }}' at <a href="{{ listing.location.url }}">{{ listing.location.name }}</a> was declined by the host.</p>
+
+{% if @reservation.has_rejection_reason %}
+  <p> <strong>Reason:</strong> {{ reservation.rejection_reason }}</p>
+{% else %}
+  <p>I'm sure it's not personal - they were probably just busy that day.</p>
+{% endif %}
+
+<p>Don't worry - <a href="{{ listing.search_url }}">find other locations near you</a>!</p>

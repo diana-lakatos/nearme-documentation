@@ -1,0 +1,8 @@
+<p>
+  Booking from {{ subject.name }} for '{{ listing.name }}' at {{ location.name }} ended yesterday.
+</p>
+
+<p>
+  Leave a rating and maybe a comment on how this booking went by clicking the following link:
+  <a href="{{ reservation.guest_rating_reservation_url }}">Rate your guest {{subject.name}} at {{location.name}}</a>
+</p>

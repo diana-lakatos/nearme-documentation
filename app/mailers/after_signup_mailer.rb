@@ -1,20 +1,21 @@
-class AfterSignupMailer < DesksNearMeMailer
+class AfterSignupMailer < InstanceMailer
 
   helper SharingHelper
 
   layout false
 
+  def help_offer(instance, user)
+    @user = user
 
-  def help_offer(instance, user_id)
-    @user = User.find(user_id)
+    @location = @user.locations.first
     @instance = instance
+
     @sent_by = 'Michelle R'
 
-    mail to:      @user.email,
-      from: "micheller@desksnear.me",
-      reply_to: "micheller@desksnear.me",
-      subject: "Welcome to DesksNear.me",
-      template_name: choose_template
+    mail(to: @user.email,
+         template_name: choose_template,
+         instance: @instance,
+         subject: "Welcome to DesksNear.me")
   end
 
   if defined? MailView
@@ -22,22 +23,19 @@ class AfterSignupMailer < DesksNearMeMailer
 
       def help_offer_with_listing
         @user = User.all.detect { |u| !u.listings.empty?  }
-        @instance = Instance.first
-        ::AfterSignupMailer.help_offer(@instance, @user)
+        ::AfterSignupMailer.help_offer(Instance.first, @user)
       end
 
       def help_offer_with_booking
         @user = User.all.detect { |u| !u.reservations.empty? && u.listings.empty? }
-        @instance = Instance.first
         raise "No user with booking and without listing" unless @user
-        ::AfterSignupMailer.help_offer(@instance, @user)
+        ::AfterSignupMailer.help_offer(Instance.first, @user)
       end
 
       def help_offer_without_listing_and_booking
         @user = User.all.detect { |u| u.listings.empty? && u.reservations.empty? }
-        @instance = Instance.first
         raise "No user without listing and without reservation" unless @user
-        ::AfterSignupMailer.help_offer(@instance, @user)
+        ::AfterSignupMailer.help_offer(Instance.first, @user)
       end
 
     end

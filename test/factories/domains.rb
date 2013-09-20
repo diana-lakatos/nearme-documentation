@@ -1,5 +1,6 @@
 FactoryGirl.define do
   factory :domain do
-    name "DesksNearMe"
+    sequence(:name) {|n| "desksnear#{n}.me" }
+    target_type "Instance"
   end
 end

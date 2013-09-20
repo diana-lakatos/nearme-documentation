@@ -13,6 +13,20 @@ class BaseUploader < CarrierWave::Uploader::Base
     dimensions
   end
 
+  def original_dimensions
+    if model["#{mounted_as}_original_width"] && model["#{mounted_as}_original_height"]
+      [model["#{mounted_as}_original_width"], model["#{mounted_as}_original_height"]]
+    else
+      img = image
+      [img[:width], img[:height]]
+    end
+  end
+
+  def image
+    # we don't want to assign this to variable, becuase there are issues with serialization in versions_regeneration_job
+   MiniMagick::Image.open(current_url[0] == '/' ? Rails.root.join('public', current_url[1..-1]) : current_url)
+  end
+
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir

@@ -75,7 +75,6 @@ class ApplicationController < ActionController::Base
   def apply_persisted_mixpanel_attributes
     cookies.signed.permanent[:mixpanel_anonymous_id] = mixpanel.anonymous_identity
     cookies.signed.permanent[:mixpanel_session_properties] = ActiveSupport::JSON.encode(mixpanel.session_properties)
-    event_tracker.visited_for_the_first_time if first_time_visited?
   end
 
   def first_time_visited?
@@ -175,17 +174,30 @@ class ApplicationController < ActionController::Base
     )
   end
 
+  def detect_domain
+    @current_domain = Domain.find_for_request(request)
+    if @current_domain
+      if @current_domain.white_label_company?
+        @current_white_label_company = @current_domain.target
+        @current_instance = @current_white_label_company.instance
+      elsif @current_domain.instance?
+        @current_instance = @current_domain.target
+      else
+        raise "Invalid domain target #{@current_domain}"
+      end
+    else
+      @current_instance = Instance.default_instance
+    end
+  end
+
   def current_instance
-    @current_instance ||= Instance.find_for_request(request) || Instance.default_instance
+    detect_domain unless @current_instance
+    @current_instance
   end
   helper_method :current_instance
 
   def paper_trail_enabled_for_controller
     devise_controller? ? false : true
-  end
-
-  def handle_invalid_mobile_number(user)
-    Delayed::Job.enqueue Delayed::PerformableMethod.new(user, :notify_about_wrong_phone_number, nil)
   end
 
   def store_referal_info

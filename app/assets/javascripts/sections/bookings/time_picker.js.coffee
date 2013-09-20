@@ -126,7 +126,8 @@ class @Bookings.TimePicker
       select.find("option[value=#{minute}]").prop('disabled', true)
 
   disableEndTimesFromStartTime: ->
-    if start = @startMinute()
+    start = @startMinute()
+    if start?
       # We disable all times before or at the current start time
       before = (min for min in @allMinutes when min <= start)
 
@@ -145,7 +146,7 @@ class @Bookings.TimePicker
 
     # If we don't have a valid end time now, assign a default based on the next
     # available end time.
-    if !@endMinute()
+    if !@endMinute() 
       usable = @endTime.find("option:not(:disabled)")[0]
       @endTime.val(usable.value).trigger 'change' if usable
 

@@ -10,24 +10,6 @@ Feature: A user can book at a space
       And a listing exists with location: that location, quantity: 10
       And a user exists
 
-  Scenario: A logged in user can book a listing
-    Given I am logged in as the user
-      When I book space for:
-          | Listing     | Date         | Quantity  |
-          | the listing | next week Monday  | 1         |
-          | the listing | next week Tuesday | 1         |
-     Then the user should have the listing reserved for 'next week Monday'
-      And the user should have the listing reserved for 'next week Tuesday'
-
-  Scenario: Booking for a 'automatically confirm' listing should show relevant details
-    Given bookings for the listing do not need to be confirmed
-    And I am logged in as the user
-    When I go to the location's page
-    And I select to book and review space for:
-      | Listing | Date | Quantity|
-      | the listing | Monday | 1 |
-    Then I should not see "This host manually confirms all bookings before payment"
-
   Scenario: Booking for a non-'automatically confirm' listing should show relevant details
     Given bookings for that listing do need to be confirmed
     And I am logged in as the user
@@ -135,3 +117,21 @@ Feature: A user can book at a space
           | Listing     | Date         | Quantity  |
           | the listing | next Wednesday  | 1      |
      Then The second booking should be highlighted
+
+  Scenario: A logged in user can book a listing
+    Given I am logged in as the user
+      When I book space for:
+          | Listing     | Date         | Quantity  |
+          | the listing | next week Monday  | 1         |
+          | the listing | next week Tuesday | 1         |
+     Then the user should have the listing reserved for 'next week Monday'
+      And the user should have the listing reserved for 'next week Tuesday'
+
+  Scenario: Booking for a 'automatically confirm' listing should show relevant details
+    Given bookings for the listing do not need to be confirmed
+    And I am logged in as the user
+    When I go to the location's page
+    And I select to book and review space for:
+      | Listing | Date | Quantity|
+      | the listing | Monday | 1 |
+    Then I should not see "This host manually confirms all bookings before payment"

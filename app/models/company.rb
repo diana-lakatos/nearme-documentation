@@ -2,7 +2,8 @@ class Company < ActiveRecord::Base
   has_paper_trail
   URL_REGEXP = URI::regexp(%w(http https))
 
-  attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email, :industry_ids, :locations_attributes, :instance_id
+  attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email, :industry_ids, 
+    :locations_attributes, :domain_attributes, :instance_id
 
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance
@@ -32,6 +33,8 @@ class Company < ActiveRecord::Base
            :source => :impressions,
            through: :locations
 
+  has_one :domain, :as => :target
+
   before_validation :add_default_url_scheme
 
   after_save :notify_user_about_change
@@ -56,6 +59,7 @@ class Company < ActiveRecord::Base
 
   acts_as_paranoid
 
+  accepts_nested_attributes_for :domain, :reject_if => proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :locations
 
   def notify_user_about_change
