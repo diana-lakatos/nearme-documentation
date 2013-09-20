@@ -77,6 +77,8 @@ gem "historyjs-rails"
 
 gem 'ranked-model'
 
+gem 'impressionist'
+
 gem 'desk'
 gem 'filepicker-rails'
 

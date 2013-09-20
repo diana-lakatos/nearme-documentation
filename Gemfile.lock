@@ -207,7 +207,11 @@ GEM
       multi_json (~> 1.0)
       multi_xml (>= 0.5.2)
     httpauth (0.2.0)
+    httpclient (2.3.4.1)
     i18n (0.6.5)
+    impressionist (1.4.0)
+      httpclient (~> 2.2)
+      nokogiri (~> 1.5)
     inherited_resources (1.4.0)
       has_scope (~> 0.5.0)
       responders (~> 0.9)
@@ -499,6 +503,7 @@ DEPENDENCIES
   guard-spork
   haml
   historyjs-rails
+  impressionist
   inherited_resources
   jcrop-rails
   jquery-fileupload-rails
