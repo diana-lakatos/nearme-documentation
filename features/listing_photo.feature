@@ -6,7 +6,7 @@ Feature: User can manipulate photos for listing
     And I am logged in as the user
     And a company exists with creator: the user
     And a location exists with company: the company, creator: the user, street: "Rad Annex House"
-    And a listing exists with location: the location, creator: the user
+    And a listing exists with location: the location, creator: the user, photos_count: 1
     And I am on the manage listing page
 
   Scenario: User can crop image

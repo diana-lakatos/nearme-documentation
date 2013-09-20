@@ -35,6 +35,6 @@ class Instance < ActiveRecord::Base
   end
 
   def self.default_instance
-    @default_instance ||= self.find_by_name(DEFAULT_INSTANCE_NAME)
+    self.find_by_name(DEFAULT_INSTANCE_NAME)
   end
 end

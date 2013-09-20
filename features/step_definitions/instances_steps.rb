@@ -1,7 +1,3 @@
-Given(/^one instance exists$/) do
-  Instance.first || FactoryGirl.create(:instance)
-end
-
 Then(/^I should see instances list$/) do
   Instance.all.each do |instance|
     page.should have_content(instance.name)
@@ -14,7 +10,7 @@ When(/^I fill instance form with valid details$/) do
 end
 
 When(/^I edit instance$/) do
-  find(:css, '.table tr:last-child .btn').click
+  all(:css, '.table tr .btn').last.click
 end
 
 Then(/^I should see created instance show page$/) do

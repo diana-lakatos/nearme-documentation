@@ -7,9 +7,10 @@ class ReservationMailerTest < ActiveSupport::TestCase
   setup do
     @user = FactoryGirl.create(:user)
     @reservation = FactoryGirl.build(:reservation, user: @user)
-    @instance = Instance.first || FactoryGirl.create(:instance)
     @reservation.periods = [ReservationPeriod.new(:date => Date.parse("2012/12/12")), ReservationPeriod.new(:date => Date.parse("2012/12/13"))]
     @reservation.save!
+
+    @instance = @reservation.listing.instance
 
     @expected_dates = "Wednesday, December 12&ndash;Thursday, December 13"
   end
