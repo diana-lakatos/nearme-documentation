@@ -164,6 +164,7 @@ ActiveRecord::Schema.define(:version => 20130919172823) do
     t.datetime "created_at",                                                         :null => false
     t.datetime "updated_at",                                                         :null => false
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
+    t.string   "bookable_noun"
   end
 
   create_table "listing_types", :force => true do |t|
@@ -392,7 +393,6 @@ ActiveRecord::Schema.define(:version => 20130919172823) do
     t.string   "blog_url"
     t.string   "twitter_url"
     t.string   "facebook_url"
-    t.string   "bookable_noun"
   end
 
   create_table "unit_prices", :force => true do |t|

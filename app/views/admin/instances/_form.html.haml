@@ -1,5 +1,6 @@
 = simple_form_for [:admin, resource], :html => { :multipart => true, :class => "form-horizontal" } do |f|
   = f.input :name
+  = f.input :bookable_noun
 
   %h4 Domains
   - resource.domains.build unless resource.domains.any?

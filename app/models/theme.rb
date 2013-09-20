@@ -9,11 +9,12 @@ class Theme < ActiveRecord::Base
     :logo_image, :logo_retina_image, :hero_image, :skip_compilation,
     :owner, :owner_id, :owner_type, :site_name, :description, :tagline, :support_email, 
     :contact_email, :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, 
-    :meta_title, :bookable_noun
+    :meta_title
 
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
   belongs_to :owner, :polymorphic => true
+  delegate :bookable_noun, :to => :instance
 
   mount_uploader :icon_image, ThemeImageUploader
   mount_uploader :icon_retina_image, ThemeImageUploader
@@ -23,7 +24,6 @@ class Theme < ActiveRecord::Base
   mount_uploader :compiled_stylesheet, ThemeStylesheetUploader
 
   # Precompile the theme, unless we're saving the compiled stylesheet.
-  before_validation :set_default_values
   after_save :recompile_theme, :if => :theme_changed?
 
   # Validations
@@ -33,10 +33,6 @@ class Theme < ActiveRecord::Base
   
   # If true, will skip compiling the theme when saving
   attr_accessor :skip_compilation
-
-  def set_default_values
-    self.bookable_noun = 'Desk' unless bookable_noun
-  end
 
   def recompile_theme
     CompileThemeJob.perform(self) unless skip_compilation
@@ -58,6 +54,15 @@ class Theme < ActiveRecord::Base
       self.skip_compilation = before
     end
     self
+  end
+
+  def instance
+    @instance ||= case owner
+      when Instance
+        owner
+      when Company
+        owner.instance
+    end
   end
 
 end

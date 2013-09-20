@@ -2,6 +2,7 @@ FactoryGirl.define do
 
   factory :instance do
     name 'DesksNearMe'
+    bookable_noun 'Desk'
     association :theme
     service_fee_percent '10.00'
 

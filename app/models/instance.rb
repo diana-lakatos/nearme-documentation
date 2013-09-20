@@ -1,5 +1,5 @@
 class Instance < ActiveRecord::Base
-  attr_accessible :name, :domains_attributes, :theme_attributes, :service_fee_percent
+  attr_accessible :name, :domains_attributes, :theme_attributes, :service_fee_percent, :bookable_noun
 
   has_one :theme, :as => :owner, dependent: :destroy
 

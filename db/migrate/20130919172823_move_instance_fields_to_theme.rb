@@ -2,21 +2,21 @@ class MoveInstanceFieldsToTheme < ActiveRecord::Migration
 
   class Instance < ActiveRecord::Base
     attr_accessible :name, :site_name, :description, :tagline, :support_email, :contact_email,
-                  :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, :meta_title, :bookable_noun
+                  :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, :meta_title
 
     has_one :theme, :as => :owner
   end
 
   class Theme < ActiveRecord::Base
     attr_accessible :name, :site_name, :description, :tagline, :support_email, :contact_email,
-                  :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, :meta_title, :bookable_noun
+                  :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, :meta_title
 
     belongs_to :owner, :polymorphic => true
   end
 
   def up
     columns = [:site_name, :description, :tagline, :support_email, :contact_email, :address, :meta_title,
-               :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, :bookable_noun]
+               :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url]
     change_table :themes do |t|
       t.string *columns
     end
@@ -39,7 +39,7 @@ class MoveInstanceFieldsToTheme < ActiveRecord::Migration
 
   def down
     columns = [:site_name, :description, :tagline, :support_email, :contact_email, :address, :meta_title,
-               :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, :bookable_noun]
+               :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url]
     change_table :instances do |t|
       t.string *columns
     end
