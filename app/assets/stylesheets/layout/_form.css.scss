@@ -678,4 +678,14 @@ form {
     color: $icon;
   }
 }
+
+.mobile-fixed-position-fix { 
+  .navbar, #space_wizard .actions { 
+    position: absolute !important; 
+  }
+
+  .navbar {
+    top: 0;
+  }
+}
   

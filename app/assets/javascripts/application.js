@@ -100,6 +100,7 @@ window.DNM = {
 
   initializeBrowsersSpecificCode: function() {
     this.fixInputIconBackgroundTransparency();  // fix icon in input transparency in IE8 
+    this.fixMobileFixedPositionAfterInputFocus(); 
   },
 
   fixInputIconBackgroundTransparency: function() {
@@ -113,12 +114,30 @@ window.DNM = {
     }
   },
 
+  fixMobileFixedPositionAfterInputFocus: function() {
+    if (this.isiOS()) { 
+      jQuery('input, select, textarea').on('focus', function(e) { 
+          $('body').addClass('mobile-fixed-position-fix'); 
+      }).on('blur', function(e) { 
+        $('body').removeClass('mobile-fixed-position-fix'); 
+
+        setTimeout(function() {
+          $(window).scrollTop($(window).scrollTop() + 1);
+        }, 100);
+      }); 
+    }
+  },
+
   isMobile: function() {
     return $.browser.mobile;
   },
 
   isDesktop: function() {
     return !this.isMobile();
+  },
+
+  isiOS: function() {
+    return navigator.userAgent.match(/(iPod|iPhone|iPad)/);
   }
 }
 
