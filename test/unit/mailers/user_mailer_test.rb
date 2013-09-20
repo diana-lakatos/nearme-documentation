@@ -2,6 +2,7 @@ require 'test_helper'
 
 class UserMailerTest < ActiveSupport::TestCase
 
+  include Rails.application.routes.url_helpers
   setup do
     @user = FactoryGirl.create(:user)
     @instance = FactoryGirl.create(:instance)

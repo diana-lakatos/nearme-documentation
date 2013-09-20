@@ -88,6 +88,20 @@ Spork.prefork do
       @tracker.expects(event).never
     end
 
+    def stub_mixpanel
+      stub_request(:get, /.*api\.mixpanel\.com.*/)
+      @tracker = Analytics::EventTracker.any_instance
+    end
+
+    def mailer_stub
+      stub(deliver: true)
+    end
+
+    def stub_billing_gateway
+      User::BillingGateway.any_instance.stubs(:charge).returns(true)
+      User::BillingGateway.any_instance.stubs(:store_card).returns(true)
+    end
+
     DatabaseCleaner.strategy = :truncation
 
   end

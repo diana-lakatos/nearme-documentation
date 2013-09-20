@@ -1,0 +1,16 @@
+<p>
+  Hi {{ user.name }}! We tried to send you a text message, but it seems your mobile number is not quite right.
+</p>
+
+<p>
+  This is the number we tried: {{ user.full_mobile_number }}.
+</p>
+
+<p>
+  Update your mobile number by clicking <a href="{{ user.edit_user_registration_url }}">here to access your settings</a>.
+</p>
+
+<p>
+  Thanks,<br />
+  The Desks Near Me team.
+</p>

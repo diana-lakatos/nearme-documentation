@@ -1,3 +1,4 @@
+@listing_emails
 Feature: User shares listing
 
   Scenario: Success

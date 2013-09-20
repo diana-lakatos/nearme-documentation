@@ -1,0 +1,75 @@
+<p>{{ reservation.owner.name }}'s booking at your location has expired because it was not confirmed within 24 hours.</p>
+
+<br class='first-br'>
+<h1>Booking Details</h1><br>
+<strong style='display: inline-block;'>Listing</strong>
+<span style="float: right;">'{{ listing.name }}' at <a href="{{ listing.location.url }}">{{ listing.location.name }}</a></span>
+
+<hr>
+
+{% if listing.location.special_notes? %}
+  <strong style='display: inline-block;'>Guest instructions</strong>
+  <span style="float: right;">{{ listing.location.special_notes }}</span>
+  <hr>
+{% endif %}
+
+<strong style='display: inline-block;'>Quantity</strong>
+<span style="float: right;">{{ reservation.quantity }}</span>
+
+<hr>
+
+<strong style='display: inline-block;'>Dates</strong>
+<br/>
+<span style="float:right;">
+  {% if listing.hourly_reservations? %}
+    {{ reservation.hourly_summary }}
+  {% else %}
+    {{ reservation.dates_summary }}
+  {% endif %}
+</span>
+<br clear="both"/>
+
+<hr>
+
+<strong style='display: inline-block;'>Host</strong>
+<span style="float: right;"><a href="mailto:{{ listing.creator.email }}">{{ listing.creator.name }}</a></span>
+
+<hr>
+
+{% if listing.location.phone? %}
+  <strong style='display: inline-block;'>Contact</strong>
+  <span style="float: right;">{{ listing.location.phone }}</span>
+  <hr>
+{% endif %}
+
+<strong style='display: inline-block;'>Subtotal</strong>
+<span style="float: right;">{{ reservation.subtotal_price }}</span>
+<div class='clearfix'></div>
+
+<strong style='display: inline-block;'>Service fee</strong>
+<span style="float: right;">{{ reservation.service_fee }}</span>
+<div class='clearfix'></div>
+
+<strong style='display: inline-block;'>Total</strong>
+<span style="float: right;">{{ reservation.total_price }}</span>
+
+<hr>
+
+{% if reservation.credit_card_payment? %}
+  <strong style='display: inline-block;'>Paid</strong>
+  <span style="float: right;">{{ reservation.paid }}</span>
+  <hr/>
+
+  <strong style='display: inline-block;'>Balance</strong>
+  <span style="float: right;">{{ reservation.balance }}</span>
+  <hr/>
+
+  {% if reservation.pending? %}
+    <span style="float: right;">This reservation is currently pending confirmation, and will be charged when confirmed.</span>
+  {% endif %}
+
+{% endif %}
+
+<br>
+
+<p>To help us improve the product, please <a href="http://desksnearme.wufoo.com/forms/one-of-your-reservations-expired/">let us know why this booking expired</a></p>

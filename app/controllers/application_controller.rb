@@ -200,10 +200,6 @@ class ApplicationController < ActionController::Base
     devise_controller? ? false : true
   end
 
-  def handle_invalid_mobile_number(user)
-    Delayed::Job.enqueue Delayed::PerformableMethod.new(user, :notify_about_wrong_phone_number, nil)
-  end
-
   def store_referal_info
     if first_time_visited?
       cookies.signed.permanent[:referer] = request.referer

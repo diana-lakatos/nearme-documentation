@@ -118,11 +118,32 @@ ActiveRecord::Schema.define(:version => 20130918195757) do
 
   create_table "domains", :force => true do |t|
     t.string   "name"
+    t.integer  "instance_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "target_id"
     t.string   "target_type"
   end
+
+  add_index "domains", ["instance_id"], :name => "index_domains_on_instance_id"
+
+  create_table "email_templates", :force => true do |t|
+    t.integer  "instance_id"
+    t.text     "html_body"
+    t.text     "text_body"
+    t.string   "path"
+    t.string   "from"
+    t.string   "to"
+    t.string   "bcc"
+    t.string   "reply_to"
+    t.string   "subject"
+    t.boolean  "partial",     :default => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
+
+  add_index "email_templates", ["instance_id"], :name => "index_email_templates_on_instance_id"
+  add_index "email_templates", ["path", "partial", "instance_id"], :name => "index_email_templates_on_path_and_partial_and_instance_id"
 
   create_table "guest_ratings", :force => true do |t|
     t.integer  "author_id",      :null => false

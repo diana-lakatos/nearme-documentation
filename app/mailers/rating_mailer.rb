@@ -1,17 +1,17 @@
-class RatingMailer < DesksNearMeMailer
+class RatingMailer < InstanceMailer
 
   def request_guest_rating(reservation)
     @subject = reservation.owner
-    @author = reservation.listing_creator
-    @kind = 'guest'
+    @author  = reservation.listing_creator
+    @kind    = 'guest'
 
     request_rating(reservation)
   end
 
   def request_host_rating(reservation)
     @subject = reservation.listing_creator
-    @author = reservation.owner
-    @kind = 'host'
+    @author  = reservation.owner
+    @kind    = 'host'
 
     request_rating(reservation)
   end
@@ -24,8 +24,9 @@ class RatingMailer < DesksNearMeMailer
     @instance = @listing.instance
 
     mail to: @author.email,
-         subject: subject("Rate your #{@kind} at #{@listing.name}"),
-         template_name: "request_#{@kind}_rating"
+         subject: instance_prefix("Rate your #{@kind} at #{@listing.name}", @instance),
+         template_name: "request_#{@kind}_rating",
+         instance: @instance
   end
 
   if defined? MailView

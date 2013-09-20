@@ -11,6 +11,7 @@ class Instance < ActiveRecord::Base
   has_many :users
   has_many :domains, :as => :target
   has_many :pages
+  has_many :email_templates
 
   validates_presence_of :name
 
@@ -23,8 +24,17 @@ class Instance < ActiveRecord::Base
     self.name == DEFAULT_INSTANCE_NAME
   end
 
-  def self.default_instance
-    @default_instance ||= self.find_by_name(DEFAULT_INSTANCE_NAME)
+  def to_liquid
+    InstanceDrop.new(self)
   end
 
+  def default_mailer
+    EmailTemplate.new(bcc: contact_email,
+                      from: contact_email,
+                      reply_to: contact_email)
+  end
+
+  def self.default_instance
+    self.find_by_name(DEFAULT_INSTANCE_NAME)
+  end
 end
