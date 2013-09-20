@@ -1,4 +1,6 @@
 class InstanceTheme < ActiveRecord::Base
+  has_paper_trail
+
   COLORS = %w(blue red orange green gray black white)
   COLORS.each do |color|
     attr_accessible "color_#{color}"
