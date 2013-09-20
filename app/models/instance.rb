@@ -25,4 +25,8 @@ class Instance < ActiveRecord::Base
     @default_instance ||= self.find_by_name(DEFAULT_INSTANCE_NAME)
   end
 
+  def white_label_enabled?
+    true
+  end
+
 end

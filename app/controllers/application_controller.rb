@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   after_filter :apply_persisted_mixpanel_attributes
   before_filter :first_time_visited?
   before_filter :store_referal_info
+  before_filter :prepare_request_context
 
   protected
 
@@ -24,6 +25,41 @@ class ApplicationController < ActionController::Base
       "application"
     end
   end
+
+  def prepare_request_context
+    load_domain
+    if @current_domain && @current_domain.white_label_enabled?
+      if @current_domain.white_label_company?
+        load_company_context
+      elsif @current_domain.instance?
+        load_instance_context
+      end
+    else
+      load_default_context
+    end
+  end
+
+  def load_domain
+    @current_domain ||= Domain.find_for_request(request)
+  end
+
+  def load_company_context
+    @current_white_label_company = @current_domain.target
+    @current_instance = @current_white_label_company.instance
+    @current_theme = @current_domain.target.theme
+  end
+
+  def load_instance_context
+    @current_instance = @current_domain.target
+    @current_theme = @current_instance.theme
+  end
+
+  def load_default_context
+    @current_instance = Instance.default_instance
+    @current_theme = @current_instance.theme
+  end
+  attr_accessor :current_instance, :current_theme
+  helper_method :current_instance, :current_theme
 
   # Provides an EventTracker instance for the current request.
   #
@@ -173,47 +209,6 @@ class ApplicationController < ActionController::Base
       :status => 200
     )
   end
-
-  def current_domain
-    @current_domain ||= Domain.find_for_request(request).tap do |domain|
-      domain ? initialize_white_label_settings_for_domain(domain) : default_white_label_settings
-    end
-  end
-  helper_method :current_domain
-
-  def default_white_label_settings
-    @current_instance = Instance.default_instance
-    @current_theme = @current_instance.theme
-  end
-  
-  def initialize_white_label_settings_for_domain(domain)
-    if domain.white_label_company?
-      if domain.target.white_label_enabled
-        @current_white_label_company = domain.target
-        @current_instance = @current_white_label_company.instance
-        @current_theme = domain.target.theme
-      else
-        default_white_label_settings
-      end
-    elsif domain.instance?
-      @current_theme = domain.target.theme
-      @current_instance = domain.target
-    else
-      raise "Invalid domain target #{domain}"
-    end
-  end
-
-  def current_instance
-    current_domain unless @current_instance
-    @current_instance
-  end
-  helper_method :current_instance
-
-  def current_theme
-    current_domain unless @current_instance
-    @current_theme
-  end
-  helper_method :current_theme
 
   def paper_trail_enabled_for_controller
     devise_controller? ? false : true

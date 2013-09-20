@@ -2,13 +2,58 @@ require 'test_helper'
 
 class ApplicationControllerTest < ActionController::TestCase
 
-  context '#current_instance' do
+  context '#prepare_request_context' do
 
-    should 'trigger find_domain' do
-      @controller.expects(:current_domain).once
-      @controller.send(:current_instance)
+    setup do
+      FactoryGirl.create(:instance, :name => Instance::DEFAULT_INSTANCE_NAME, :theme => FactoryGirl.create(:theme))
+      @example_instance_domain = FactoryGirl.create(:domain, :name => 'instance.example.com', :target => FactoryGirl.create(:instance, :name => 'Example Instance', :theme => FactoryGirl.create(:theme)))
+      @example_instance = @example_instance_domain.target
+
+      @example_company_domain = FactoryGirl.create(:domain, :name => 'company.example.com', :target => FactoryGirl.create(:company, :theme => FactoryGirl.create(:theme), :instance => FactoryGirl.create(:instance, :name => 'Company Instance')))
+      @example_company = @example_company_domain.target
     end
 
+    should 'default instance if domain is unknown' do
+      @controller.stubs(:request).returns(mock(:host => 'something.weird.example.com'))
+      @controller.send(:prepare_request_context)
+      assert_equal Instance.default_instance, @controller.send(:current_instance)
+      assert_equal Instance.default_instance.theme, @controller.send(:current_theme)
+    end
+
+    should 'default instance if domain is desksnear.me' do
+      @controller.stubs(:request).returns(mock(:host => 'desksnear.me'))
+      @controller.send(:prepare_request_context)
+      assert_equal Instance.default_instance, @controller.send(:current_instance)
+      assert_equal Instance.default_instance.theme, @controller.send(:current_theme)
+    end
+
+    should 'instance linked to domain that matches request.host' do
+      @controller.stubs(:request).returns(mock(:host => @example_instance_domain.name))
+      @controller.send(:prepare_request_context)
+      assert_equal @example_instance, @controller.send(:current_instance)
+      assert_equal @example_instance.theme, @controller.send(:current_theme)
+    end
+
+    context 'company white label' do
+
+      setup do
+        @controller.stubs(:request).returns(mock(:host => @example_company_domain.name))
+      end
+
+      should 'company linked to domain that matches request.host has white label enabled' do
+        @example_company.update_attribute(:white_label_enabled, true)
+        @controller.send(:prepare_request_context)
+        assert_equal @example_company.instance, @controller.send(:current_instance)
+        assert_equal @example_company.theme, @controller.send(:current_theme)
+      end
+
+      should 'default instance if company linked to domain that matches request.host has white label disabled' do
+        @example_company.update_attribute(:white_label_enabled, false)
+        @controller.send(:prepare_request_context)
+        assert_equal Instance.default_instance, @controller.send(:current_instance)
+        assert_equal Instance.default_instance.theme, @controller.send(:current_theme)
+      end
+    end
   end
 
 end

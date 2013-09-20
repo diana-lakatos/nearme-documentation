@@ -91,6 +91,10 @@ class Company < ActiveRecord::Base
     paypal_email.present? || mailing_address.present?
   end
 
+  def white_label_enabled?
+    white_label_enabled
+  end
+
   private
 
   def add_default_url_scheme

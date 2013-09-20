@@ -22,4 +22,24 @@ class CompanyTest < ActiveSupport::TestCase
     @company.reload
     assert @company.valid?
   end
+
+  context 'white label settings' do
+    setup do
+      @company = FactoryGirl.create(:company)
+      @company.theme = FactoryGirl.create(:theme)
+      @company.domain = FactoryGirl.create(:domain)
+      @company.save!
+    end
+    should 'know when white label settings are enabled' do
+      @company.update_attribute(:white_label_enabled, true)
+      assert @company.white_label_enabled?
+      assert @company.domain.white_label_enabled?
+    end
+
+    should 'know when white label settings are disabled' do
+      @company.update_attribute(:white_label_enabled, false)
+      assert !@company.white_label_enabled?
+      assert !@company.domain.white_label_enabled?
+    end
+  end
 end

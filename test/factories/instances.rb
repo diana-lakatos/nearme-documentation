@@ -6,12 +6,12 @@ FactoryGirl.define do
     service_fee_percent '10.00'
 
     after(:build) do |instance|
-      instance.domains << FactoryGirl.create(:domain) if instance.domains.empty?
+      FactoryGirl.build(:domain, :target => instance) if instance.domains.empty?
       instance.theme = FactoryGirl.create(:theme) unless instance.theme
     end
 
     after(:create) do |instance|
-      instance.domains << FactoryGirl.create(:domain) if instance.domains.empty?
+      FactoryGirl.create(:domain, :target => instance) if instance.domains.empty?
       instance.theme = FactoryGirl.create(:theme) unless instance.theme
       instance.save!
     end
