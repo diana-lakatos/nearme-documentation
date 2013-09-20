@@ -2,6 +2,7 @@ class AddCurrencyToCharges < ActiveRecord::Migration
   def up
     add_column :charges, :currency, :string
 
+    # FIXME: doesn't work
     # execute <<-SQL
     #   UPDATE reservation_charges
     #   INNER JOIN
