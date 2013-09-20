@@ -7,7 +7,7 @@ class Locations::ListingsController < ApplicationController
     restore_initial_bookings_from_stored_reservation
 
     # Store location visit
-    impressionist(@location, message: "Listing: #{@listing.id}")
+    @location.track_impression(request.remote_ip)
 
     event_tracker.viewed_a_location(@location, { logged_in: user_signed_in? }) 
   end
