@@ -129,7 +129,7 @@ class UserTest < ActiveSupport::TestCase
     @user = FactoryGirl.build(:user)
     @user.avatar = File.open(File.expand_path("../../assets/image_no_extension", __FILE__))
     @user.avatar_versions_generated_at = Time.zone.now
-    assert !@user.save
+    assert @user.save
   end
 
   context '#full_mobile_number' do

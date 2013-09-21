@@ -1,7 +1,19 @@
 # encoding: utf-8
-class AvatarUploader < BaseImageUploader
+class AvatarUploader < BaseUploader
+  # note that we cannot change BaseUploader to BaseImageUploader
+  # because of validation - avatars downloaded from social providers like
+  # linkedin do not have extension
   include CarrierWave::InkFilePicker
   include CarrierWave::TransformableImage
+
+  process :auto_orient
+
+  def auto_orient
+    manipulate! do |img|
+      img.auto_orient
+      img
+    end
+  end
 
   self.dimensions = {
     :thumb => { :width => 96, :height => 96 },
@@ -27,4 +39,7 @@ class AvatarUploader < BaseImageUploader
     process :resize_to_fill => [dimensions[:large][:width], dimensions[:large][:height]]
   end
 
+  def default_url
+    Placeholder.new(height: 100, width: 100).path
+  end
 end
