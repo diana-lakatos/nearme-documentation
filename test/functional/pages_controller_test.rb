@@ -4,17 +4,12 @@ class PagesControllerTest < ActionController::TestCase
 
   context 'GET show' do
 
-    setup do
-      @instance = Instance.first.presence || FactoryGirl.create(:instance)
-      @controller.stubs(:current_instance).returns(@instance)
-    end
-
     context 'a full page' do
       setup do
         hero_image_file = File.open(Rails.root.join('test/fixtures/workplace.jpg'))
         @page = FactoryGirl.create(:page,
                                    content: "# Page heading \nSome text",
-                                   instance: @instance,
+                                   instance: Instance.default_instance,
                                    hero_image: hero_image_file)
       end
 
@@ -35,7 +30,7 @@ class PagesControllerTest < ActionController::TestCase
     context 'a wrong path' do
       setup do
         @page = FactoryGirl.create(:page,
-                                   instance: @instance,
+                                   instance: Instance.default_instance,
                                    content: "# Page heading \nSome text")
       end
 

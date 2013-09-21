@@ -1,20 +1,14 @@
 FactoryGirl.define do
 
   factory :instance do
-    name 'DesksNearMe'
+    # please note that default factory should be loaded via fixtures/instances.yml !
+    sequence(:name) {|n| Instance.default_instance ? "desks near me #{n}" : 'DesksNearMe'}
     bookable_noun 'Desk'
-    association :theme
     service_fee_percent '10.00'
 
-    after(:build) do |instance|
-      FactoryGirl.build(:domain, :target => instance) if instance.domains.empty?
-      instance.theme = FactoryGirl.create(:theme) unless instance.theme
-    end
-
     after(:create) do |instance|
-      FactoryGirl.create(:domain, :target => instance) if instance.domains.empty?
-      instance.theme = FactoryGirl.create(:theme) unless instance.theme
-      instance.save!
+      instance.theme = Theme.create(:skip_compilation => true) unless instance.theme
     end
   end
+
 end

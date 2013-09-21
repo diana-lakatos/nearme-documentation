@@ -57,11 +57,15 @@ class Theme < ActiveRecord::Base
   end
 
   def instance
-    @instance ||= case owner
-      when Instance
+    @instance ||= begin
+      case owner_type
+      when "Instance"
         owner
-      when Company
+      when "Company"
         owner.instance
+      else
+        raise "Unknown owner #{owner_type}"
+      end
     end
   end
 

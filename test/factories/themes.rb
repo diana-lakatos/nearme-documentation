@@ -13,6 +13,8 @@ FactoryGirl.define do
     blog_url 'http://blog.desksnear.me/'
     twitter_url 'https://twitter.com/desksnearme'
     facebook_url 'https://www.facebook.com/DesksNearMe'
+    owner_id { (Instance.default_instance.presence || FactoryGirl.create(:instance)).id }
+    owner_type "Instance"
     skip_compilation true
   end
 end

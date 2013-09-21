@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   after_filter :apply_persisted_mixpanel_attributes
   before_filter :first_time_visited?
   before_filter :store_referal_info
-  before_filter :prepare_request_context
+  before_filter :load_request_context
 
   protected
 
@@ -26,37 +26,21 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def prepare_request_context
-    load_domain
+  def load_request_context
+    @current_domain = Domain.find_for_request(request)
     if @current_domain && @current_domain.white_label_enabled?
       if @current_domain.white_label_company?
-        load_company_context
+        @current_white_label_company = @current_domain.target
+        @current_instance = @current_white_label_company.instance
+        @current_theme = @current_domain.target.theme
       elsif @current_domain.instance?
-        load_instance_context
+        @current_instance = @current_domain.target
+        @current_theme = @current_instance.theme
       end
     else
-      load_default_context
+      @current_instance = Instance.default_instance
+      @current_theme = @current_instance.theme
     end
-  end
-
-  def load_domain
-    @current_domain ||= Domain.find_for_request(request)
-  end
-
-  def load_company_context
-    @current_white_label_company = @current_domain.target
-    @current_instance = @current_white_label_company.instance
-    @current_theme = @current_domain.target.theme
-  end
-
-  def load_instance_context
-    @current_instance = @current_domain.target
-    @current_theme = @current_instance.theme
-  end
-
-  def load_default_context
-    @current_instance = Instance.default_instance
-    @current_theme = @current_instance.theme
   end
   attr_accessor :current_instance, :current_theme
   helper_method :current_instance, :current_theme

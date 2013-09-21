@@ -10,7 +10,7 @@ class DesksNearMeMailer < ActionMailer::Base
 
   private
   def subject(text)
-    text.prepend "[#{@theme.name}] " if @theme
+    text.prepend "[#{@theme.instance.name}] " if @theme
     text
   end
 
