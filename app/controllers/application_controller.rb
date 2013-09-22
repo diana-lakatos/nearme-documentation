@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include Controller::Scopes
 
   before_filter :require_ssl
 

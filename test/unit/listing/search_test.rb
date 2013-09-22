@@ -19,7 +19,7 @@ class Listing::SearchTest < ActiveSupport::TestCase
         @params = mock(:midpoint => @midpoint, :radius => @radius, :available_dates => [])
       end
 
-      should "find listings by searching for locations" do
+      should "find listings by all companies by searching for locations" do
 
         listing1 = FactoryGirl.create(:listing)
         listing2 = FactoryGirl.create(:listing)
@@ -27,6 +27,22 @@ class Listing::SearchTest < ActiveSupport::TestCase
         Location.expects(:near).with(@midpoint, @radius, :order => :distance).returns(includes)
 
         results = Listing.find_by_search_params(@params)
+        assert_equal [listing1], results
+      end
+
+      should "scope to white_label_company if passed" do
+        white_label_company = FactoryGirl.create(:company)
+        white_label_location = FactoryGirl.create(:location, company: white_label_company)
+        
+        listing1 = FactoryGirl.create(:listing, location: white_label_location)
+        listing2 = FactoryGirl.create(:listing)
+        
+        scope = mock()
+        includes = stub(:includes => [white_label_location])
+        scope.expects(:near).with(@midpoint, @radius, :order => :distance).returns(includes)
+        white_label_company.expects(:locations).returns(scope)
+
+        results = Listing.find_by_search_params(@params, LocationPolicy.scope(white_label_company))
         assert_equal [listing1], results
       end
 

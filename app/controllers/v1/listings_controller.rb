@@ -54,15 +54,13 @@ class V1::ListingsController < V1::BaseController
     render :json => Listing.active.find(params[:id])
   end
 
-  # FIXME: same code in search/query? Can they be the same API endpoint?
   def search
-    listings = Listing.search_from_api(json_params.merge(user: current_user))
+    listings = Listing.search_from_api(json_params.merge(user: current_user), scoped_locations)
     render :json => listings
   end
 
   def query
-    listings = Listing.search_from_api(json_params.merge(user: current_user))
-    render :json => listings
+    search
   end
 
   # Create a new reservation
@@ -107,7 +105,6 @@ class V1::ListingsController < V1::BaseController
     patrons = User.patron_of(listing)
     render json: formatted_patrons(listing, patrons)
   end
-
 
   # Return the user's connections associated with the listing
   def connections
