@@ -31,7 +31,7 @@ class Company < ActiveRecord::Base
 
   has_many :locations_impressions,
            :source => :impressions,
-           through: :locations
+           :through => :locations
 
   has_one :domain, :as => :target
 

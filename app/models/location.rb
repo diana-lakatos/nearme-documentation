@@ -3,6 +3,8 @@ class Location < ActiveRecord::Base
   extend FriendlyId
   friendly_id :formatted_address, use: :slugged
 
+  include Impressionable
+
   attr_accessible :address, :address2, :amenity_ids, :company_id, :description, :email,
     :info, :latitude, :local_geocoding, :longitude, :currency,
     :formatted_address, :availability_rules_attributes, :postcode, :phone,
@@ -38,6 +40,8 @@ class Location < ActiveRecord::Base
 
   has_many :availability_rules, :order => 'day ASC', :as => :target
 
+  has_many :impressions, :as => :impressionable, :dependent => :destroy
+
   validates_presence_of :company, :address, :latitude, :longitude, :location_type_id, :currency
   validates_presence_of :description 
   validates :email, email: true, allow_nil: true
@@ -57,8 +61,6 @@ class Location < ActiveRecord::Base
   include AvailabilityRule::TargetHelper
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :listings
-
-  is_impressionable
 
   delegate :url, :to => :company
   delegate :service_fee_percent, to: :company, allow_nil: true
