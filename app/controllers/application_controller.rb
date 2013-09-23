@@ -32,8 +32,7 @@ class ApplicationController < ActionController::Base
   # the application controllers.
   def event_tracker
     @event_tracker ||= begin
-      @original_event_tracker = Analytics::EventTracker.new(mixpanel, google_analytics)
-      @original_event_tracker.enqueue
+      Analytics::EventTracker.new(mixpanel, google_analytics)
     end
   end
 
@@ -226,16 +225,16 @@ class ApplicationController < ActionController::Base
   helper_method :user_google_analytics_id
 
   def store_triggered_events
-    if @original_event_tracker
+    if @event_tracker
       session[:triggered_events] ||= []
-      session[:triggered_events] += @original_event_tracker.enqueued_methods
+      session[:triggered_events] += @event_tracker.triggered_taggable_methods
     end
   end
 
   def get_and_clear_stored_events
-    AnalyticWrapper::Inspectlet.tags(session[:triggered_events]).tap do 
-      session[:triggered_events] = nil
-    end
+    events = session[:triggered_events]
+    session[:triggered_events] = nil
+    events
   end
   helper_method :get_and_clear_stored_events
 

@@ -14,18 +14,14 @@ class AnalyticWrapper::GoogleAnalyticsApi
     @current_user = user
   end
 
-  # Tracks event in google analytics. Should be moved to background.
+  # Tracks event in google analytics
   def track(category, action)
     if tracking_code.present?
       params = get_params(category, action)
       begin
         # documentation says that the request should be post, but actually must be get. not a mistake - tested!
-        RestClient.get(endpoint_url, params: params, timeout: 4, open_timeout: 4)
+        GoogleAnalyticsApiJob.perform(RestClient, :get, endpoint_url, params: params, timeout: 4, open_timeout: 4)
         Rails.logger.info "Tracked google_analytics event #{params.inspect}"
-        return true
-      rescue  RestClient::Exception => rex
-        Rails.logger.info "error tracking google_analytics event #{params.inspect}: #{rex}"
-        return false
       end
     else
       Rails.logger.debug "dummy track google analtyics event #{params.inspect}"

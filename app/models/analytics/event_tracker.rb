@@ -25,11 +25,12 @@
 # to mock out the relevant tracker instance and assert an expectation to call the
 # relevant event method(s).
 class Analytics::EventTracker
-  include Job::SyntaxEnhancer
+  attr_accessor :triggered_taggable_methods
 
   def initialize(mixpanel_api, google_analytics_api)
     @mixpanel_api = mixpanel_api
     @google_analytics_api = google_analytics_api
+    @triggered_taggable_methods = []
   end
 
   include ListingEvents
@@ -42,11 +43,11 @@ class Analytics::EventTracker
   private
 
   def track(event_name, *objects)
-    
     @mixpanel_api.track(event_name, serialize_event_properties(objects))
     stack_trace_parser = StackTraceParser.new(caller[0])
-    category_name = stack_trace_parser.humanized_file_name
-    @google_analytics_api.track(category_name, event_name)
+    @google_analytics_api.track(stack_trace_parser.humanized_file_name, event_name)
+    triggered_event = stack_trace_parser.humanized_method_name
+    @triggered_taggable_methods << triggered_event if AnalyticWrapper::Inspectlet.taggable?(triggered_event)
   end
 
   def track_charge(user_id, total_amount_dollars)

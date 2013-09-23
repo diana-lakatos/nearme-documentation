@@ -11,23 +11,24 @@ class EventTrackerTest < ActiveSupport::TestCase
     @tracker = Analytics::EventTracker.new(@mixpanel, @google_analytics)
   end
 
-  context 'store tracked events' do
+  context 'store taggable tracked events' do
 
     setup do 
       @category = "User events"
       expect_set_person_properties user_properties
       expect_event 'Logged In', user_properties
-      @tracker.enqueue.logged_in(@user)
+      @tracker.logged_in(@user)
     end
+
     should 'be able to store single method' do
-      assert_equal ['logged_in'], @tracker.enqueued_methods
+      assert_equal ['Logged in'], @tracker.triggered_taggable_methods
     end
 
     should 'be able to store multiple methods' do
       expect_set_person_properties user_properties
       expect_event 'Signed Up', user_properties
-      @tracker.enqueue.signed_up(@user)
-      assert_equal ['logged_in', 'signed_up'], @tracker.enqueued_methods
+      @tracker.signed_up(@user)
+      assert_equal ['Logged in', 'Signed up'], @tracker.triggered_taggable_methods
     end
     
   end
