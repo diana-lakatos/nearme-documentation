@@ -1,10 +1,17 @@
 = simple_form_for resource, :as => resource_name, :url => url, :html => { class: "form-horizontal form-expandable" } do |f|
   = f.input :name, label: "Full name"
   = f.input :email, label: "Email"
+  = f.input :facebook_url, label: "Facebook URL", as: :string
+  = f.input :twitter_url, label: "Twitter URL", as: :string
+  = f.input :linkedin_url, label: "LinkedIn URL", as: :string
+  = f.input :instagram_url, label: "Instagram URL", as: :string
   = render("registrations/networks", :supported_providers => @supported_providers) if resource.persisted?
   = render :partial => 'registrations/phone_fields', :locals => { :f => f, :country => country }
+  = f.input :current_location, label: "Current location", as: :string
+  = f.input :company_name, label: "Company name", as: :string
   = f.association :industries, :blank => false, :input_html => { :class => 'custom-select' }
-  = f.input :job_title, label: "Job title"
+  = f.input :job_title, label: "Job title", as: :string
+  = f.input :skills_and_interests, label: "Skills and interests"
   = f.input :biography, label: "Biography"
   = f.input :password, :label => (resource.persisted? ? "Change password" : "Password" )
   .single-photo
@@ -23,4 +30,3 @@
   $(function() {
     new PhoneNumbers.FieldsForm()
   });
-

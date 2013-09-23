@@ -1,0 +1,27 @@
+.registrations-show
+  .row-fluid  
+    .span8.offset2
+      %ul.no-bullets.right.icons
+        - if @user.instagram_url.present?
+          %li= link_to "", @user.instagram_url, :class => "ico-instagram", :target => '_blank'
+        - if @user.linkedin_url.present?
+          %li= link_to "", @user.linkedin_url, :class => "ico-linkedin", :target => '_blank'
+        - if @user.twitter_url.present?
+          %li= link_to "", @user.twitter_url, :class => "ico-twitter", :target => '_blank'
+        - if @user.facebook_url.present?
+          %li= link_to "", @user.facebook_url, :class => "ico-facebook-full", :target => '_blank'
+      %h1 
+        %span.ico-user.padding
+          = @user.name
+      .box.clearfix
+        .span4.avatar
+          = image_tag @user.avatar.url(:big)
+        .span8.info
+          %h2
+            = @user.job_title_and_company_name
+          %h4= @user.current_location_and_industry
+          %p= @user.biography
+          - if @user.skills_and_interests
+            %h4 Skills & Interests
+            %p= @user.skills_and_interests
+          
