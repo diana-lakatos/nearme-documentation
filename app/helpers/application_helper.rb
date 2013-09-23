@@ -112,7 +112,7 @@ module ApplicationHelper
       "ico-warning"
     when 'warning'
       "ico-warning"
-    when
+    when 'deleted'
       "ico-close"
     end
   end
