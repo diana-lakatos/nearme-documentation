@@ -1,5 +1,3 @@
-require 'mail_view'
-
 class InstanceMailer < ActionMailer::Base
   prepend_view_path EmailResolver.instance
   extend Job::SyntaxEnhancer
