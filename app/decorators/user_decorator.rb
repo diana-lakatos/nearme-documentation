@@ -3,15 +3,15 @@ class UserDecorator < Draper::Decorator
 
   def job_title_and_company_name
     result = []
-    result << job_title
-    result << company_name
+    result << job_title if job_title.present?
+    result << company_name if company_name.present?
     result.join(" at ")
   end
 
   def current_location_and_industry
     result = []
-    result << current_location
-    result << industries.map(&:name).join(", ")
+    result << current_location if current_location.present?
+    result << industries.map(&:name).join(", ") if industries.present?
     result.join(" | ")
   end
 
