@@ -11,6 +11,27 @@ class EventTrackerTest < ActiveSupport::TestCase
     @tracker = Analytics::EventTracker.new(@mixpanel, @google_analytics)
   end
 
+  context 'store tracked events' do
+
+    setup do 
+      @category = "User events"
+      expect_set_person_properties user_properties
+      expect_event 'Logged In', user_properties
+      @tracker.enqueue.logged_in(@user)
+    end
+    should 'be able to store single method' do
+      assert_equal ['logged_in'], @tracker.enqueued_methods
+    end
+
+    should 'be able to store multiple methods' do
+      expect_set_person_properties user_properties
+      expect_event 'Signed Up', user_properties
+      @tracker.enqueue.signed_up(@user)
+      assert_equal ['logged_in', 'signed_up'], @tracker.enqueued_methods
+    end
+    
+  end
+
   context 'Listings' do
     setup do
       @listing = FactoryGirl.create(:listing)

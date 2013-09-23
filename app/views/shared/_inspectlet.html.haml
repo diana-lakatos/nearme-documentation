@@ -1,0 +1,9 @@
+:javascript
+  window.__insp = window.__insp || [];
+- if Rails.env.production?
+  :javascript
+    = javascript_include_tag 'analytics/inspectlet'
+    var tags = #{get_and_clear_stored_events}
+    for(i = 0; i < tags.length; i++){
+      __insp.push(['tagSession', tags[i]])
+    }

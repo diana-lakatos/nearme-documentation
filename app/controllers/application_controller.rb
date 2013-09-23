@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   # We need to persist some mixpanel attributes for subsequent
   # requests.
   after_filter :apply_persisted_mixpanel_attributes
+  after_filter :store_triggered_events
   before_filter :first_time_visited?
   before_filter :store_referal_info
 
@@ -31,7 +32,8 @@ class ApplicationController < ActionController::Base
   # the application controllers.
   def event_tracker
     @event_tracker ||= begin
-      Analytics::EventTracker.new(mixpanel, google_analytics).enqueue
+      @original_event_tracker = Analytics::EventTracker.new(mixpanel, google_analytics)
+      @original_event_tracker.enqueue
     end
   end
 
@@ -222,6 +224,20 @@ class ApplicationController < ActionController::Base
     current_user.try(:google_analytics_id) ? current_user.google_analytics_id : cookies.signed[:google_analytics_id]
   end
   helper_method :user_google_analytics_id
+
+  def store_triggered_events
+    if @original_event_tracker
+      session[:triggered_events] ||= []
+      session[:triggered_events] += @original_event_tracker.enqueued_methods
+    end
+  end
+
+  def get_and_clear_stored_events
+    AnalyticWrapper::Inspectlet.tags(session[:triggered_events]).tap do 
+      session[:triggered_events] = nil
+    end
+  end
+  helper_method :get_and_clear_stored_events
 
 end
 

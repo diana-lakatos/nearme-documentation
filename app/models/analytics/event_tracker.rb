@@ -44,11 +44,8 @@ class Analytics::EventTracker
   def track(event_name, *objects)
     
     @mixpanel_api.track(event_name, serialize_event_properties(objects))
-    # we want to set Category based on the name of the module which called the .track method
-    # caller[0] is something like /project/path/app/models/analytics/location_events.rb:12:in `conducted_a_search' 
-    # so after splitting by / and taking last element we get location_events.rb:12:in `conducted_a_search', after 
-    # splitting again by . we get location_events which we just need to humanize. Works until there is no "/" in method name :)
-    category_name = caller[0].split('/').last.split('.')[0].humanize
+    stack_trace_parser = StackTraceParser.new(caller[0])
+    category_name = stack_trace_parser.humanized_file_name
     @google_analytics_api.track(category_name, event_name)
   end
 

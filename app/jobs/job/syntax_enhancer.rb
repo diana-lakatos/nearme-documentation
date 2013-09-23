@@ -4,6 +4,7 @@ module Job::SyntaxEnhancer
 
   def self.included(base)
     base.send(:attr_accessor, :job_class)
+    base.send(:attr_accessor, :enqueued_methods)
   end
 
   def self.extended(base)
@@ -34,6 +35,10 @@ module Job::SyntaxEnhancer
     end
 
     def method_missing(method, *args)
+      if @klass.respond_to?(:enqueued_methods)
+        @klass.enqueued_methods ||= []
+        @klass.enqueued_methods << method.to_s
+      end
       @job_class.perform(@klass, method, *args)
     end
   end
