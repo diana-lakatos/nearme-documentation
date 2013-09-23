@@ -59,7 +59,7 @@ class AvailabilityRule < ActiveRecord::Base
   # Returns whether or not this availability rule is 'open' at a given hour & minute
   def open_at?(hour, minute)
     after_opening = hour > open_hour || open_hour == hour && minute >= open_minute
-    before_closing = hour < close_hour || close_hour == hour && minute < close_minute
+    before_closing = hour < close_hour || close_hour == hour && minute <= close_minute
     after_opening && before_closing
   end
 
