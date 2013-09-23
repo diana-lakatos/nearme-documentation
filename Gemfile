@@ -109,7 +109,9 @@ group :development do
   gem 'rb-fsevent', :require => RUBY_PLATFORM.include?('darwin') && 'rb-fsevent'
   gem 'ruby-prof'
 end
+
 group :test do
+  gem 'codeclimate-test-reporter', :require => false
   gem 'capybara', '~>2'
   gem 'capybara-webkit'
   gem 'capybara-screenshot'
