@@ -35,5 +35,9 @@ FactoryGirl.define do
       name "Company in Wellington"
     end
 
+    factory :company_with_paypal_email do
+      paypal_email { email }
+    end
+
   end
 end

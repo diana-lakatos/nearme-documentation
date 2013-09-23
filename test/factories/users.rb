@@ -27,6 +27,11 @@ FactoryGirl.define do
       sequence(:name) {|n| "Authenticated-User-#{n}"}
       authentication_token "EZASABC123UANDME"
     end
+
+    factory :demo_user do
+      avatar { fixture_file_upload(Rails.root.join('test', 'fixtures', 'avatar.jpg'), 'image/jpeg') }
+      avatar_versions_generated_at Time.zone.now
+    end
   end
 
 end
