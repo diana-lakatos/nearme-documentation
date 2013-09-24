@@ -5,6 +5,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
+    @instance = FactoryGirl.create(:instance)
     @industry = FactoryGirl.create(:industry)
     sign_in @user
     FactoryGirl.create(:listing_type)

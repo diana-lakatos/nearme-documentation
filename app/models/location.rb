@@ -3,12 +3,16 @@ class Location < ActiveRecord::Base
   extend FriendlyId
   friendly_id :formatted_address, use: :slugged
 
+  include Impressionable
+
   attr_accessible :address, :address2, :amenity_ids, :company_id, :description, :email,
     :info, :latitude, :local_geocoding, :longitude, :currency,
     :formatted_address, :availability_rules_attributes, :postcode, :phone,
     :availability_template_id, :special_notes, :listings_attributes, :suburb,
     :city, :state, :country, :street, :address_components, :location_type_id, :photos
   attr_accessor :local_geocoding # set this to true in js
+
+  liquid_methods :name
 
   serialize :address_components, JSON
 
@@ -35,6 +39,8 @@ class Location < ActiveRecord::Base
   has_many :photos, :through => :listings
 
   has_many :availability_rules, :order => 'day ASC', :as => :target
+
+  has_many :impressions, :as => :impressionable, :dependent => :destroy
 
   validates_presence_of :company, :address, :latitude, :longitude, :location_type_id, :currency
   validates_presence_of :description 
@@ -134,6 +140,10 @@ class Location < ActiveRecord::Base
     creator.phone = phone if creator.phone.blank? if creator
   end
 
+  def to_liquid
+    LocationDrop.new(self)
+  end
+
   def timezone
     NearestTimeZone.to(latitude, longitude)
   end
@@ -172,7 +182,4 @@ class Location < ActiveRecord::Base
       end
     end
   end
-
-
-
 end

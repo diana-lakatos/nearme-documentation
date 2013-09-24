@@ -1,3 +1,4 @@
+@inquiry_emails
 Feature: User Inquires about Listing
 
   Scenario: Sending an inquiry

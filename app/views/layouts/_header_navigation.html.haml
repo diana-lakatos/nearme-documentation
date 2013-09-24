@@ -16,11 +16,11 @@
           = link_to manage_guests_dashboard_path do
             %span.ico-manage-guests.padding Guests
         %li
-          = link_to payments_dashboard_path do
-            %span.ico-credit-card.padding Payments
-        %li
           = link_to transfers_dashboard_path do
             %span.ico-transfers.padding Transfers
+        %li
+          = link_to analytics_dashboard_path do
+            %span.ico-bar-chart.padding Analytics
         - if current_user.companies.any? && current_user.companies.first.id.present?
           %li
             = link_to edit_manage_company_path(current_user.companies.first) do

@@ -32,6 +32,10 @@ class Company < ActiveRecord::Base
   has_one :domain, :as => :target, :dependent => :destroy
   has_one :theme, :as => :owner, :dependent => :destroy
 
+  has_many :locations_impressions,
+           :source => :impressions,
+           :through => :locations
+
   before_validation :add_default_url_scheme
 
   after_save :notify_user_about_change

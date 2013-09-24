@@ -35,7 +35,7 @@
     "icon-font.otf",
     "icon-font.ttf",
     "icon-font.svg#icomoon"),
-    "icon-font.eot", 'normal', 'text-rendering: optimizeLegibility; unicode-range: U+21-5a');
+    "icon-font.eot", 'normal', 'text-rendering: optimizeLegibility; unicode-range: U+21-5c');
 
 // Icons used in forms
 
@@ -133,7 +133,8 @@ span.padding-left {
 .ico-rss:before,
 .ico-facebook-full:before,
 .ico-eye:before,
-.ico-transfers:before {
+.ico-transfers:before,
+.ico-bar-chart:before {
   font-family: 'icon-font' !important;
   font-weight: normal;
   font-style: normal;
@@ -375,5 +376,9 @@ span.padding-left {
 }
 
 .ico-transfers:before {
-  content: "\5b";
+   content: "\5b";
+}
+
+.ico-bar-chart:before {
+  content: "\5c";
 }

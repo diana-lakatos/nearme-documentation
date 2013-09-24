@@ -11,6 +11,8 @@ class ReservationsControllerTest < ActionController::TestCase
     end
 
     should "track and redirect a host to the My Bookings page when they cancel a booking" do
+      ReservationMailer.expects(:notify_host_of_cancellation).returns(stub(deliver: true))
+
       @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|
         reservation == assigns(:reservation) && custom_options == { actor: 'guest' }
       end
@@ -20,6 +22,7 @@ class ReservationsControllerTest < ActionController::TestCase
       @tracker.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
+
       post :user_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
       assert_redirected_to bookings_dashboard_path
     end

@@ -1,0 +1,53 @@
+<p>Hi {{ user.first_name }},</p>
+
+<p>
+  Welcome to Desks Near Me, and congratulations on your first booked {{ instance.bookable_noun }}!  
+</p>
+
+<p>
+  That’s great that you just booked your first {{ instance.bookable_noun }} in {{ user.reservation_name }}.
+</p>
+
+<p>
+  Here are a few tips to highlight some of our best features that our guests love.
+</p>
+
+
+<p>
+  Search for other spaces while you are on the go! <a href="https://itunes.apple.com/us/app/desks-near-me/id529634519?mt=8">Download our iPhone app</a>.
+</p>
+
+
+<p>
+  You can <a href="{{ user.search_url }}">search and book here</a> to find your next {{ instance.bookable_noun }} for the day, week or month.
+</p>
+
+
+<p>
+  Maybe you have an extra {{ instance.bookable_noun }} too? It's FREE (seriously) to add your {{ instance.bookable_noun }} and start making money. Simply <a href="{{ user.space_wizard_list_path }}">login here to add your {{ instance.bookable_noun }}</a>.
+</p>
+
+
+{% if user.reservation_city? %}
+<p>
+  <a href="http://www.wunderground.com/cgi-bin/findweather/getForecast?query={{ user.reservation_city }}">Check the weather in {{ user.reservation_city}}</a>.
+</p>
+{% endif %}
+
+<p>
+  If you have any questions, feedback, or just want to drop me a note, just hit reply to this email and I'll be sure to get back to you. 
+</p>
+
+<p>
+You can also find answers to frequently asked questions on our <a href="http://support.desksnear.me">support page</a>; and if you can’t find an answer to your question there, you can contact Customer Support (who are real people) on 1.888.998.DESK.
+</p>
+
+<p>
+  Cheers, 
+</p>
+
+<p>
+  Michelle Regner<br />
+  CEO<br />
+  Desks Near Me
+</p>

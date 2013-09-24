@@ -64,12 +64,15 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       end
 
       should 'notify guest about reservation expiration when listing is deleted' do
-        assert_difference('ActionMailer::Base.deliveries.count', 4) do
-          delete :destroy, :id => @listing.id
-        end
+        ReservationMailer.expects(:notify_guest_of_expiration).returns(stub(deliver: true)).twice
+        ReservationMailer.expects(:notify_host_of_expiration).returns(stub(deliver: true)).twice
+        delete :destroy, :id => @listing.id
       end
 
       should 'mark reservations as expired' do
+        ReservationMailer.stubs(:notify_guest_of_expiration).returns(stub(deliver: true))
+        ReservationMailer.stubs(:notify_host_of_expiration).returns(stub(deliver: true))
+
         delete :destroy, :id => @listing.id
         assert_equal 'expired', @reservation1.reload.state 
         assert_equal 'expired', @reservation2.reload.state

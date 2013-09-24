@@ -1,20 +1,21 @@
-class AfterSignupMailer < DesksNearMeMailer
+class AfterSignupMailer < InstanceMailer
 
   helper SharingHelper
 
   layout false
 
-
-  def help_offer(theme, user_id)
-    @user = User.find(user_id)
+  def help_offer(theme, user)
+    @user = user
     @theme = theme
+    @instance = theme.instance
+    @location = @user.locations.first
+
     @sent_by = 'Michelle R'
 
-    mail to:      @user.email,
-      from: "micheller@desksnear.me",
-      reply_to: "micheller@desksnear.me",
-      subject: "Welcome to DesksNear.me",
-      template_name: choose_template
+    mail(to: @user.email,
+         template_name: choose_template,
+         theme: @theme,
+         subject: "Welcome to DesksNear.me")
   end
 
   if defined? MailView

@@ -1,5 +1,0 @@
-<p><%= @reservation.owner %> has cancelled their booking for '<%= @listing.name %>' at <%= link_to(@listing.location.name, location_url(@listing.location, :listing_id => @listing)) %>.</p>
-
-<%= render :partial => "shared/mailers/booking_details", :locals => { :listing => @listing, :reservation => @reservation } %>
-
-<p>This is simply to notify you of this cancellation - no action is required.</p>

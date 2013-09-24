@@ -9,6 +9,7 @@ class LocationsController < ApplicationController
     if @location.listings.active.empty?
       # If location doesn't have any listings, redirects to search page with notice
       flash[:warning] = t('locations.no_listings')
+      @location.track_impression(request.remote_ip)
       redirect_to search_path 
     else
       if @location.listings.active.find_by_id(params[:listing_id])

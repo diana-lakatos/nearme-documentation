@@ -24,7 +24,7 @@ module Listings
             ReservationSmsNotifier.notify_host_with_confirmation(reservation).deliver
           rescue Twilio::REST::RequestError => e
             if e.message.include?('is not a valid phone number')
-              handle_invalid_mobile_number(reservation.host)
+              reservation.host.notify_about_wrong_phone_number(current_instance)
             else
               BackgroundIssueLogger.log_issue("[internal] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{reservation.id}, guest #{current_user.name} (#{current_user.id}). #{$!.inspect}")
             end
