@@ -299,7 +299,7 @@ header#listing_search {
 
     a.map {
       top: 0;
-      left: 98px;
+      left: 100px;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
 
@@ -309,16 +309,15 @@ header#listing_search {
       }
 
       @media (max-width: $iphone-landscape) {
-        left: 72px;
-        width: 66px;
+        left: 54px;
+        width: 50px;
       }
     }
 
     a.list {
       top: 0;
       left: 0px;
-      padding: 0 0 0 10px;
-      width: 86px;
+      width: 96px;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
 
@@ -328,7 +327,7 @@ header#listing_search {
       } 
 
       @media (max-width: $iphone-landscape) {
-        width: 60px;
+        width: 50px;
       }
     }
   }
@@ -375,7 +374,7 @@ header#listing_search {
       width: 100%;
 
       @media (max-width: $iphone-landscape) {
-        padding-left: 146px;
+        padding-left: 110px;
       }
 
       input[type="text"]#search {
@@ -411,7 +410,7 @@ header#listing_search {
 
         @media (max-width: $iphone-landscape) {
           top: 5px;
-          left: 150px;
+          left: 114px;
           font-size: 18px;
         }
       }
