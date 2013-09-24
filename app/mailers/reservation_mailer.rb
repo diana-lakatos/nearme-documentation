@@ -120,10 +120,10 @@ class ReservationMailer < InstanceMailer
   end
 
   def generate_mail(subject)
-    instance = @listing.instance
+    theme = @listing.instance.theme
 
     mail(to: @user.email,
-         instance: instance,
-         subject: instance_prefix(subject, instance))
+         theme: theme,
+         subject: instance_prefix(subject, @listing.instance))
   end
 end

@@ -5,14 +5,14 @@
     .row-fluid
       #search_row.span10.offset1    
         .wood-box.row-fluid
-          %h1= current_instance.tagline
+          %h1= current_theme.tagline
 
         = render :partial => "shared/search_box"
 
 %section.how-it-works
   .row-fluid.padding-row
     %h1
-      List Your #{current_instance.bookable_noun}
+      List Your #{current_theme.bookable_noun}
 
   .row-fluid
     .span4

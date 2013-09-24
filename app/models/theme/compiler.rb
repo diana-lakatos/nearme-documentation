@@ -1,5 +1,5 @@
 # Compiles our custom instance theme stylesheets, etc.
-class InstanceTheme::Compiler
+class Theme::Compiler
   def initialize(theme)
     @theme = theme
   end
@@ -7,7 +7,7 @@ class InstanceTheme::Compiler
   # Generates the new stylesheet assets and updates the theme data accordingly.
   def generate_and_update_assets
     begin
-      tempfile = Tempfile.new("InstanceThemeStylesheet#{@theme.id}")
+      tempfile = Tempfile.new("ThemeStylesheet#{@theme.id}")
       tempfile.write render_stylesheet
 
       @theme.compiled_stylesheet = {
@@ -30,11 +30,11 @@ class InstanceTheme::Compiler
   def render_stylesheet
     # Load the dynamic css template contents
     css_template_path = Rails.root.join(
-      'app', 'assets', 'stylesheets', 'dynamic', 'instance.scss.erb'
+      'app', 'assets', 'stylesheets', 'dynamic', 'theme.scss.erb'
     )
     css_template_content = File.read(css_template_path)
 
-    # Render the ERB component of the template, which outputs instance specific
+    # Render the ERB component of the template, which outputs owner specific
     # SCSS.
     css_content = ERB.new(css_template_content).result(
       ERBBinding.new(@theme).get_binding

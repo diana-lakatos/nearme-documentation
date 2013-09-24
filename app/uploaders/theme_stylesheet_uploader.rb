@@ -1,4 +1,4 @@
-class InstanceThemeStylesheetUploader < BaseUploader
+class ThemeStylesheetUploader < BaseUploader
   # TODO: Add propper caching headers to uploaded file
 
   def extension_white_list

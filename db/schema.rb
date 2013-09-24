@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130920172931) do
+ActiveRecord::Schema.define(:version => 20130923202352) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -72,14 +72,15 @@ ActiveRecord::Schema.define(:version => 20130920172931) do
     t.string   "name"
     t.string   "email"
     t.text     "description"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.datetime "deleted_at"
     t.string   "url"
     t.string   "paypal_email"
     t.text     "mailing_address"
     t.string   "external_id"
     t.integer  "instance_id"
+    t.boolean  "white_label_enabled", :default => false
   end
 
   add_index "companies", ["instance_id"], :name => "index_companies_on_instance_id"
@@ -118,14 +119,16 @@ ActiveRecord::Schema.define(:version => 20130920172931) do
 
   create_table "domains", :force => true do |t|
     t.string   "name"
+    t.integer  "instance_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "target_id"
     t.string   "target_type"
   end
 
+  add_index "domains", ["instance_id"], :name => "index_domains_on_instance_id"
+
   create_table "email_templates", :force => true do |t|
-    t.integer  "instance_id"
     t.text     "html_body"
     t.text     "text_body"
     t.string   "path"
@@ -134,13 +137,13 @@ ActiveRecord::Schema.define(:version => 20130920172931) do
     t.string   "bcc"
     t.string   "reply_to"
     t.string   "subject"
-    t.boolean  "partial",     :default => false
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.boolean  "partial",    :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.integer  "theme_id"
   end
 
-  add_index "email_templates", ["instance_id"], :name => "index_email_templates_on_instance_id"
-  add_index "email_templates", ["path", "partial", "instance_id"], :name => "index_email_templates_on_path_and_partial_and_instance_id"
+  add_index "email_templates", ["theme_id"], :name => "index_email_templates_on_theme_id"
 
   create_table "guest_ratings", :force => true do |t|
     t.integer  "author_id",      :null => false
@@ -186,43 +189,11 @@ ActiveRecord::Schema.define(:version => 20130920172931) do
     t.datetime "updated_at",        :null => false
   end
 
-  create_table "instance_themes", :force => true do |t|
-    t.integer  "instance_id"
-    t.string   "name"
-    t.string   "compiled_stylesheet"
-    t.string   "icon_image"
-    t.string   "icon_retina_image"
-    t.string   "logo_image"
-    t.string   "logo_retina_image"
-    t.string   "hero_image"
-    t.string   "color_blue"
-    t.string   "color_red"
-    t.string   "color_orange"
-    t.string   "color_green"
-    t.string   "color_gray"
-    t.string   "color_black"
-    t.string   "color_white"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
-  end
-
   create_table "instances", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",                                                            :null => false
     t.datetime "updated_at",                                                            :null => false
-    t.string   "site_name"
-    t.string   "description"
-    t.string   "tagline"
-    t.string   "support_email"
-    t.string   "contact_email"
-    t.string   "address"
-    t.string   "phone_number"
-    t.string   "support_url"
-    t.string   "blog_url"
-    t.string   "twitter_url"
-    t.string   "facebook_url"
     t.string   "bookable_noun",                                     :default => "Desk"
-    t.string   "meta_title"
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
   end
 
@@ -420,6 +391,39 @@ ActiveRecord::Schema.define(:version => 20130920172931) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "themes", :force => true do |t|
+    t.string   "name"
+    t.string   "compiled_stylesheet"
+    t.string   "icon_image"
+    t.string   "icon_retina_image"
+    t.string   "logo_image"
+    t.string   "logo_retina_image"
+    t.string   "hero_image"
+    t.string   "color_blue"
+    t.string   "color_red"
+    t.string   "color_orange"
+    t.string   "color_green"
+    t.string   "color_gray"
+    t.string   "color_black"
+    t.string   "color_white"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.string   "site_name"
+    t.string   "description"
+    t.string   "tagline"
+    t.string   "support_email"
+    t.string   "contact_email"
+    t.string   "address"
+    t.string   "meta_title"
+    t.string   "phone_number"
+    t.string   "support_url"
+    t.string   "blog_url"
+    t.string   "twitter_url"
+    t.string   "facebook_url"
+  end
 
   create_table "unit_prices", :force => true do |t|
     t.integer  "listing_id"

@@ -10,7 +10,8 @@ class ReservationMailerTest < ActiveSupport::TestCase
     @reservation.periods = [ReservationPeriod.new(:date => Date.parse("2012/12/12")), ReservationPeriod.new(:date => Date.parse("2012/12/13"))]
     @reservation.save!
 
-    @instance = @reservation.listing.instance
+    @instance = Instance.default_instance
+    @theme = @instance.theme
 
     @expected_dates = "Wednesday, December 12&ndash;Thursday, December 13"
   end
@@ -51,7 +52,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
 
     assert_equal [@reservation.owner.email], mail.to
     assert_equal "[#{@instance.name}] A booking you made has been declined", mail.subject
-    assert_equal [@instance.support_email], mail.bcc
+    assert_equal [@theme.support_email], mail.bcc
   end
 
   test "#notify_guest_with_confirmation" do

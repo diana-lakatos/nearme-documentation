@@ -26,7 +26,7 @@ Spork.prefork do
   require 'mocha/integration/test_unit'
   require 'webmock/test_unit'
 
-  require 'helpers/stub_helper'
+  require Rails.root.join('test', 'helpers', 'stub_helper.rb')
 
   Turn.config.format = :dot
 
@@ -37,11 +37,6 @@ Spork.prefork do
   end
 
   class ActiveSupport::TestCase
-    # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
-    #
-    # Note: You'll currently still have to declare fixtures explicitly in integration tests
-    # -- they do not yet inherit this setting
-
     # Add more helper methods to be used by all tests here...
     include FactoryGirl::Syntax::Methods
     include StubHelper
@@ -138,6 +133,7 @@ Spork.each_run do
   if ENV['DRB']
     require 'simplecov'
   end
+  # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
   class ActionController::TestCase
     fixtures :all
   end

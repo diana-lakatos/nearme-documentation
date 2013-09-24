@@ -1,6 +1,7 @@
 one:
   id: 1
   creator_id: 1
+  instance: one
   name: "Supert Cool Company"
   description: "This is a *super* **cool** company."
   email: "company-1@example.com"

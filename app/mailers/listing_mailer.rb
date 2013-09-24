@@ -1,18 +1,19 @@
 class ListingMailer < InstanceMailer
   layout 'mailer'
 
-  def share(instance, listing, email, name, sharer, message=nil)
+  def share(theme, listing, email, name, sharer, message=nil)
     @listing = listing
     @email = email
     @name = name
     @sharer = sharer
     @message = message
-    @instance = instance
+    @theme = theme
+    @instance = @theme.instance
 
     mail(to: "#{name} <#{email}>",
          reply_to: "#{@sharer.name} <#{@sharer.email}>",
          subject: "#{@sharer.name} has shared a listing with you on Desks Near Me",
-         instance: @instance)
+         theme: @theme)
   end
 
   if defined? MailView
@@ -20,8 +21,8 @@ class ListingMailer < InstanceMailer
       def share
         FactoryGirl.create(:user) unless User.first
         FactoryGirl.create(:listing) unless Listing.first
-        FactoryGirl.create(:instance) unless Instance.first
-        ::ListingMailer.share(Instance.first, Listing.first, User.first.email, User.first.name, User.last, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+        FactoryGirl.create(:theme) unless Theme.first
+        ::ListingMailer.share(Theme.first, Listing.first, User.first.email, User.first.name, User.last, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
       end
     end
   end
