@@ -49,7 +49,7 @@
     %span.padding-left Sign Up
 
 - unless no_listing_buttons?
-  - if search_scope.user_can_add_listing?
+  - if !user_signed_in? && search_scope.user_can_add_listing?
     = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => "btn btn-blue btn-medium ico-add-location" do
       %span.padding-left List Your #{current_instance.bookable_noun}
   - elsif current_user && current_user.listings.draft.any?
