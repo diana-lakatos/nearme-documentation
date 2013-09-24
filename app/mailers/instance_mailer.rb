@@ -18,15 +18,24 @@ class InstanceMailer < ActionMailer::Base
 
     self.class.layout _layout, theme: theme
 
-    super(options.merge!(
+    mixed = super(options.merge!(
       :subject => subject,
       :bcc     => mailer.bcc,
       :from    => mailer.from,
-      :reply_to=> reply_to,
-      :content_type => "multipart/alternative")) do |format|
+      :reply_to=> reply_to)) do |format|
         format.html { render template, theme: theme }
         format.text { render template, theme: theme }
       end
+
+    mixed.add_part(
+      Mail::Part.new do
+        content_type 'multipart/alternative'
+        mixed.parts.reverse!.delete_if {|p| add_part p }
+      end
+    )
+
+    mixed.content_type 'multipart/mixed'
+    mixed.header['content-type'].parameters[:boundary] = mixed.body.boundary
   end
 
   private
