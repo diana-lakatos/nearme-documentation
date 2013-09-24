@@ -4,13 +4,13 @@ class EmailResolver < ActionView::Resolver
   include Singleton
 
   def find_mailers(name, prefix, partial, details)
-    return [] unless details[:instance]
+    return [] unless details[:theme]
     return [] unless details[:handlers].include?(:liquid)
 
     conditions = {
       path:        normalize_path(name, prefix),
       partial:     partial || false,
-      instance_id: details[:instance]
+      theme_id: details[:theme]
     }
     EmailTemplate.where(conditions)
   end

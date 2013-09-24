@@ -2,7 +2,7 @@ require 'test_helper'
 
 class EmailTemplateTest < ActiveSupport::TestCase
 
-  should belong_to(:instance)
+  should belong_to(:theme)
 
   context "#liquid_subject" do
     should "return liquified subject" do

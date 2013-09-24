@@ -61,7 +61,7 @@ end
 
 When /^I click delete bookable noun link$/ do
   page.evaluate_script('window.confirm = function() { return true; }')
-  click_link "Delete this #{Instance.first.bookable_noun}"
+  click_link "Delete this #{model!('theme').bookable_noun}"
 end
 
 Then /^Listing (.*) pricing should be (disabled|enabled)$/ do |period, state|

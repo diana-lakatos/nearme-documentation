@@ -2,7 +2,6 @@ class Manage::CompaniesController < Manage::BaseController
 
   def edit
     @company = current_user.companies.find(params[:id])
-    @company.build_domain unless @company.domain
   end
 
   def update

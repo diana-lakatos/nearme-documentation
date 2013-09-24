@@ -2,25 +2,26 @@ require 'test_helper'
 
 class InstanceMailerTest < ActiveSupport::TestCase
   InstanceMailer.class_eval do
-    def test_mailer(instance)
+    def test_mailer(theme)
       @interpolation = "magic"
       mail(to: "test@example.com",
            subject: "Hello #@interpolation",
-           instance: instance,
+           theme: theme,
            subject_locals: {'interpolation' => @interpolation})
     end
   end
 
   setup do
-    @instance = Instance.first || FactoryGirl.create(:instance)
+    @instance = Instance.default_instance
+    @theme = @instance.theme
   end
   
   context "email template exists in db" do
     setup do 
       FactoryGirl.create(:email_template, path: 'instance_mailer/test_mailer',
-                         subject: 'Test {{interpolation}}', instance: @instance,
+                         subject: 'Test {{interpolation}}', theme: @theme,
                          reply_to: 'reply@me.com')
-      @mail = InstanceMailer.test_mailer(@instance)
+      @mail = InstanceMailer.test_mailer(@theme)
     end
 
     should "will liquify subject" do
@@ -37,7 +38,7 @@ class InstanceMailerTest < ActiveSupport::TestCase
       handler = ActionView::Template.registered_template_handler('liquid')
       fake_template = ActionView::Template.new('source', 'identifier', handler, {})
       ActionView::PathSet.any_instance.stubs(:find_all).returns([fake_template])
-      @mail = InstanceMailer.test_mailer(@instance)
+      @mail = InstanceMailer.test_mailer(@theme)
     end
 
     should "will keep original interpolated subject" do
@@ -45,7 +46,7 @@ class InstanceMailerTest < ActiveSupport::TestCase
     end
 
     should "will keep default reply_to email" do
-      assert_equal [@instance.contact_email], @mail.reply_to
+      assert_equal [@theme.contact_email], @mail.reply_to
     end
   end
 

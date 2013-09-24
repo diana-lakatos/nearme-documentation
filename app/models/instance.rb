@@ -1,9 +1,7 @@
 class Instance < ActiveRecord::Base
-  attr_accessible :name, :site_name, :description, :tagline, :support_email, :contact_email,
-                  :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, :meta_title,
-                  :domains_attributes, :theme_attributes, :service_fee_percent
+  attr_accessible :name, :domains_attributes, :theme_attributes, :service_fee_percent, :bookable_noun
 
-  has_one :theme, class_name: 'InstanceTheme', dependent: :destroy
+  has_one :theme, :as => :owner, dependent: :destroy
 
   has_many :companies
   has_many :locations, :through => :companies
@@ -28,10 +26,8 @@ class Instance < ActiveRecord::Base
     InstanceDrop.new(self)
   end
 
-  def default_mailer
-    EmailTemplate.new(bcc: contact_email,
-                      from: contact_email,
-                      reply_to: contact_email)
+  def white_label_enabled?
+    true
   end
 
   def self.default_instance

@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   after_filter :apply_persisted_mixpanel_attributes
   before_filter :first_time_visited?
   before_filter :store_referal_info
+  before_filter :load_request_context
 
   protected
 
@@ -24,6 +25,25 @@ class ApplicationController < ActionController::Base
       "application"
     end
   end
+
+  def load_request_context
+    @current_domain = Domain.find_for_request(request)
+    if @current_domain && @current_domain.white_label_enabled?
+      if @current_domain.white_label_company?
+        @current_white_label_company = @current_domain.target
+        @current_instance = @current_white_label_company.instance
+        @current_theme = @current_domain.target.theme
+      elsif @current_domain.instance?
+        @current_instance = @current_domain.target
+        @current_theme = @current_instance.theme
+      end
+    else
+      @current_instance = Instance.default_instance
+      @current_theme = @current_instance.theme
+    end
+  end
+  attr_accessor :current_instance, :current_theme
+  helper_method :current_instance, :current_theme
 
   # Provides an EventTracker instance for the current request.
   #
@@ -173,28 +193,6 @@ class ApplicationController < ActionController::Base
       :status => 200
     )
   end
-
-  def detect_domain
-    @current_domain = Domain.find_for_request(request)
-    if @current_domain
-      if @current_domain.white_label_company?
-        @current_white_label_company = @current_domain.target
-        @current_instance = @current_white_label_company.instance
-      elsif @current_domain.instance?
-        @current_instance = @current_domain.target
-      else
-        raise "Invalid domain target #{@current_domain}"
-      end
-    else
-      @current_instance = Instance.default_instance
-    end
-  end
-
-  def current_instance
-    detect_domain unless @current_instance
-    @current_instance
-  end
-  helper_method :current_instance
 
   def paper_trail_enabled_for_controller
     devise_controller? ? false : true
