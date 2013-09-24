@@ -17,6 +17,7 @@ Before do
   instance = FactoryGirl.create(:instance)
   store_model("instance", nil, instance)
   store_model("theme", nil, instance.theme)
+  FactoryGirl.create(:instance)
 end
 
 def last_json
