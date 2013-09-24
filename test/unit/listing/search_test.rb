@@ -42,7 +42,7 @@ class Listing::SearchTest < ActiveSupport::TestCase
         scope.expects(:near).with(@midpoint, @radius, :order => :distance).returns(includes)
         white_label_company.expects(:locations).returns(scope)
 
-        results = Listing.find_by_search_params(@params, LocationPolicy.scope(white_label_company))
+        results = Listing.find_by_search_params(@params, Listing::SearchScope.new(white_label_company: white_label_company))
         assert_equal [listing1], results
       end
 

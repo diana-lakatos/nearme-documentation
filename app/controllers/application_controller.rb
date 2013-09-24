@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  include Controller::Scopes
 
   before_filter :require_ssl
 
@@ -223,6 +222,12 @@ class ApplicationController < ActionController::Base
     current_user.try(:google_analytics_id) ? current_user.google_analytics_id : cookies.signed[:google_analytics_id]
   end
   helper_method :user_google_analytics_id
+
+  def search_scope
+    @search_scope ||= Listing::SearchScope.new(white_label_company: @current_white_label_company,
+                                               user: current_user)
+  end
+  helper_method :search_scope
 
 end
 

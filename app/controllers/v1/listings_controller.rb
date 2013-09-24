@@ -55,7 +55,7 @@ class V1::ListingsController < V1::BaseController
   end
 
   def search
-    listings = Listing.search_from_api(json_params.merge(user: current_user), scoped_locations)
+    listings = Listing.search_from_api(json_params.merge(user: current_user), search_scope)
     render :json => listings
   end
 
