@@ -4,8 +4,10 @@ class RegistrationsControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
+    @instance = FactoryGirl.create(:instance)
     @request.env["devise.mapping"] = Devise.mappings[:user]
     stub_mixpanel
+    UserMailer.stubs(:email_verification).returns(stub(deliver: true))
   end
 
   context 'actions' do

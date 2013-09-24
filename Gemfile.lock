@@ -75,6 +75,8 @@ GEM
       sass-rails (>= 3.2)
     chronic (0.8.0)
     chunky_png (1.2.6)
+    codeclimate-test-reporter (0.0.8)
+      simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.0.9)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -232,6 +234,7 @@ GEM
     launchy (2.1.2)
       addressable (~> 2.3)
     le (2.1.9)
+    liquid (2.5.0)
     listen (0.7.2)
     lumberjack (1.0.2)
     mail (2.5.4)
@@ -474,6 +477,7 @@ DEPENDENCIES
   chartjs-rails
   chosen-rails
   chronic
+  codeclimate-test-reporter
   coffee-rails
   compass-rails
   cucumber (~> 1.2.5)
@@ -506,6 +510,7 @@ DEPENDENCIES
   jquery-rails
   json_spec
   le
+  liquid
   mail_view
   mini_magick
   minitest

@@ -49,3 +49,4 @@ module CarrierWave::TransformableImage
   end
 
 end
+

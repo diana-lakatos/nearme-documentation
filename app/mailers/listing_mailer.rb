@@ -1,9 +1,19 @@
-class ListingMailer < DesksNearMeMailer
+class ListingMailer < InstanceMailer
+  layout 'mailer'
 
   def share(theme, listing, email, name, sharer, message=nil)
-    @theme, @listing, @email, @name, @sharer, @message = theme, listing.reload, email, name, sharer, message
-    mail :to => "#{name} <#{email}>", :reply_to => "#{sharer.name} <#{sharer.email}>",
-      :subject => "#{sharer.name} has shared a listing with you on Desks Near Me"
+    @listing = listing
+    @email = email
+    @name = name
+    @sharer = sharer
+    @message = message
+    @theme = theme
+    @instance = @theme.instance
+
+    mail(to: "#{name} <#{email}>",
+         reply_to: "#{@sharer.name} <#{@sharer.email}>",
+         subject: "#{@sharer.name} has shared a listing with you on Desks Near Me",
+         theme: @theme)
   end
 
   if defined? MailView

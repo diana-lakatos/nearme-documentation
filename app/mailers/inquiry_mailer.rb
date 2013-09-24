@@ -1,20 +1,23 @@
-class InquiryMailer < DesksNearMeMailer
+class InquiryMailer < InstanceMailer
+  layout 'mailer'
 
   def inquiring_user_notification(theme, inquiry)
-    @inquiry = inquiry
     @theme = theme
+    @inquiry = inquiry
 
-    mail to:      inquiry.inquiring_user.full_email,
-         subject: "We've passed on your inquiry about #{inquiry.listing.name}"
+    mail(to: @inquiry.inquiring_user.full_email,
+         subject: "We've passed on your inquiry about #{@inquiry.listing.name}",
+         theme: theme)
   end
 
   def listing_creator_notification(theme, inquiry)
-    @inquiry = inquiry
     @theme = theme
+    @inquiry = inquiry
 
-    mail to:       inquiry.listing.creator.full_email,
-         subject:  "New enquiry from #{inquiry.inquiring_user.name} about #{inquiry.listing.name}",
-         reply_to: inquiry.inquiring_user.full_email
+    mail(to: @inquiry.listing.creator.full_email,
+         subject: "New enquiry from #{@inquiry.inquiring_user.name} about #{@inquiry.listing.name}",
+         reply_to: @inquiry.inquiring_user.full_email,
+         theme: theme)
   end
 
   if defined? MailView
@@ -27,8 +30,6 @@ class InquiryMailer < DesksNearMeMailer
       def listing_creator_notification
         ::InquiryMailer.listing_creator_notification(Theme.first, Inquiry.first)
       end
-
     end
   end
-
 end

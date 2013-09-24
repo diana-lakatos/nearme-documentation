@@ -2,6 +2,11 @@ When /^I search for "([^"]*)"$/ do |text|
   search_for(text)
 end
 
+When /^I search for located "([^"]*)"$/ do |text|
+  SearchController.any_instance.stubs(:params).returns({:lat => 1, :lng => 1, :q => text})
+  search_for(text)
+end
+
 When /^I search without setting a date range$/ do
   visit search_path
   search_for(latest_listing.address)
@@ -56,7 +61,7 @@ end
 When(/^I fill form (with email field )?for subscribing on notification$/) do |with_email|
   page.should have_css('#search-notification')
   if with_email
-    fill_in 'Email', with: 'test@test.com'
+    fill_in 'search_notification_email', with: 'test@test.com'
   end
   click_on 'Subscribe'
 end

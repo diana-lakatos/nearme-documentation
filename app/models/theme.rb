@@ -38,6 +38,12 @@ class Theme < ActiveRecord::Base
     CompileThemeJob.perform(self) unless skip_compilation
   end
 
+  def default_mailer
+    EmailTemplate.new(bcc: contact_email,
+                      from: contact_email,
+                      reply_to: contact_email)
+  end
+
   # Checks if any of options that impact the theme stylesheet have been changed.
   def theme_changed?
     attrs = attributes.keys - %w(updated_at compiled_stylesheet name)

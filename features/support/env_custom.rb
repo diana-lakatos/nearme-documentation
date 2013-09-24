@@ -7,6 +7,7 @@ require "json_spec/cucumber"
 require 'helpers/gmaps_fake'
 
 DatabaseCleaner.strategy = :truncation
+
 Before do
   DatabaseCleaner.clean
   WebMock.disable_net_connect!
@@ -16,6 +17,7 @@ Before do
   instance = FactoryGirl.create(:instance)
   store_model("instance", nil, instance)
   store_model("theme", nil, instance.theme)
+  FactoryGirl.create(:instance)
 end
 
 def last_json
