@@ -2,9 +2,9 @@ require 'test_helper'
 
 class Listing::SearchScopeTest < ActiveSupport::TestCase
 
-  context 'if white label company' do
+  context 'with white label company' do
     setup do
-      @company = FactoryGirl.create(:company)
+      @company = FactoryGirl.create(:white_label_company)
     end
 
     context 'with locations existing' do

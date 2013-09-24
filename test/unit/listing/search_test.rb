@@ -31,7 +31,7 @@ class Listing::SearchTest < ActiveSupport::TestCase
       end
 
       should "scope to white_label_company if passed" do
-        white_label_company = FactoryGirl.create(:company)
+        white_label_company = FactoryGirl.create(:white_label_company)
         white_label_location = FactoryGirl.create(:location, company: white_label_company)
         
         listing1 = FactoryGirl.create(:listing, location: white_label_location)

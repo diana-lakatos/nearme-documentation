@@ -35,5 +35,8 @@ FactoryGirl.define do
       name "Company in Wellington"
     end
 
+    factory :white_label_company do
+      white_label_enabled true
+    end
   end
 end
