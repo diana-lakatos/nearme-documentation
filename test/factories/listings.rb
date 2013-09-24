@@ -106,5 +106,14 @@ FactoryGirl.define do
       association(:location, factory: :location_in_wellington)
     end
 
+    factory :demo_listing do
+      daily_price_cents { 5000 + (100 * rand(50)).to_i }
+
+      after(:create) do |listing, evaluator|
+        listing.photos = FactoryGirl.create_list(:demo_photo, 2, content: nil, creator: listing.location.creator )
+        listing.save!
+      end
+    end
+
   end
 end

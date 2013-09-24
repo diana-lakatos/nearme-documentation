@@ -29,7 +29,7 @@ FactoryGirl.define do
     end
 
     factory :demo_user do
-      avatar { fixture_file_upload(Rails.root.join('test', 'fixtures', 'avatar.jpg'), 'image/jpeg') }
+      avatar { fixture_file_upload(Dir.glob(Rails.root.join('db', 'seeds', 'demo', 'assets', 'avatars', '*')).sample, 'image/jpeg') }
       avatar_versions_generated_at Time.zone.now
     end
   end

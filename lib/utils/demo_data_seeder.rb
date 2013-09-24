@@ -21,7 +21,7 @@ module Utils
       end
 
       def self.listing_types
-        @listing_types ||= load_yaml("listing_types.yml")
+        @listing_types ||= load_demo_yaml("listing_types.yml")
       end
 
       def self.domains
@@ -140,7 +140,7 @@ module Utils
     def load_users_and_companies!
       @users_and_companies ||= do_task "Loading users and companies" do
         users, companies = [], []
-        Data.domains.map do |url|
+        Data.domains.each_with_index.map do |url, index|
           company_email = "info@#{url}"
           user = FactoryGirl.create(:demo_user, :name => Faker::Name.name, :email => company_email,
                                     :biography => Faker::Lorem.paragraph.truncate(200),
@@ -149,13 +149,15 @@ module Utils
 
           @user ||= user
 
-          company = FactoryGirl.create(:company_with_paypal_email, :name => url, :email => user.email, :url => url,
-                                          :description => Faker::Lorem.paragraph.truncate(200),
-                                          :creator => user, :industries => user.industries)
-
-          company.users << user
-
-          companies << company
+          if index <= 3
+            company = FactoryGirl.create(:company_with_paypal_email, :name => url, :email => user.email, :url => url,
+                                            :description => Faker::Lorem.paragraph.truncate(200),
+                                            :creator => user, :industries => user.industries)
+            company.users << user unless company.users.include?(user)
+            companies << company
+          elsif index <= 5
+            companies.first.users << user
+          end
         end
         [users, companies]
       end
@@ -173,7 +175,7 @@ module Utils
       @locations ||= do_task "Loading locations" do
         Data.addresses.map do |row|
           address, lat, lng = row[0], row[1], row[2]
-          company = address.include?('Los Angeles') ? companies.first : companies.second
+          company = address.include?('Los Angeles') ? companies.first : (companies - [companies.first]).sample
 
           FactoryGirl.create(:location, :amenities => amenities.sample(2), :location_type => location_types.sample,
                              :company => company, :email => company.email, :address => address,
@@ -185,10 +187,10 @@ module Utils
 
     def load_listings!
       @listings ||= do_task "Loading listings" do
-        locations.map do |location|
+        @locations.map do |location|
           listing_types.sample(rand(1..3)).map do |listing_type|
             name = "#{listing_type.name} #{Faker::Company.name}"
-            FactoryGirl.create(:listing, :listing_type => listing_type, :name => name, :location => location,
+            FactoryGirl.create(:demo_listing, :listing_type => listing_type, :name => name, :location => location,
                                :description => Faker::Lorem.paragraph.truncate(200))
           end
         end.flatten
@@ -221,33 +223,50 @@ module Utils
         period = 1.week.ago.to_date..1.week.from_now.to_date
 
         ## info@desksnear.me as a host
-        listing = company.listings.first
-        period.each do |date|
-          Timecop.freeze(date) do
-            reservation_date = listing.first_available_date
-            create_reservation(listing, reservation_date, {:user => users.sample, :quantity => 1, :currency => 'USD'})
+        [[2.days.from_now.to_date, 2], [1.week.from_now.to_date, 4], [8.days.ago.to_date, 6]].each_with_index do |initial_date, date_index|
+          date = initial_date.first
+          initial_date.second.times do |index|
+            listing = company.listings.sample
+            Timecop.freeze(date + 1.day) do
+              date = listing.first_available_date
+            end
+            Timecop.freeze(date) do
+              (date_index == 1 ? 2 : 1).times do
+                create_reservation(listing, date, date_index > 0, {:user => (users - [@user]).sample, :quantity => 1, :currency => 'USD'})
+                listing = company.listings.sample
+              end
+            end
           end
         end
 
         # info@desksnear.me as a guest
-        creator = company.creator
-        period.each do |date|
-          Timecop.freeze(date) do
-            reservation_date = listing.first_available_date
-            create_reservation(listings.sample, reservation_date, {:user => creator, :quantity => 1, :currency => 'USD'})
+        creator = company.creator 
+        [1.week.ago.to_date, 1.day.from_now.to_date].each do |initial_date|
+          date = initial_date
+          2.times do |index|
+            begin
+              other_company = (companies - [company]).sample
+            end while other_company.locations.empty?
+            listing = other_company.listings.sample
+            Timecop.freeze(date + 1.day) do
+              date = listing.first_available_date
+            end
+            Timecop.freeze(date) do
+              reservation_date = listing.first_available_date
+              create_reservation(listing, reservation_date, index.zero?, {:user => creator, :quantity => 1, :currency => 'USD'})
+            end
           end
         end
-
       end
     end
 
-    def create_reservation(listing, date, attribs = {})
+    def create_reservation(listing, date, confirmed, attribs = {})
       begin
         reservation = listing.reservations.build(attribs)
         reservation.add_period(date)
         reservation.save!
 
-        if [true, false].sample
+        if confirmed
           reservation.confirm!
           reservation.update_attribute :payment_status, Reservation::PAYMENT_STATUSES[:paid]
           reservation.update_attribute :payment_method, "credit_card"
