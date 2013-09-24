@@ -374,10 +374,6 @@ header#listing_search {
       padding-left: 202px;
       width: 100%;
 
-      @media (min-width: 768px) {
-        padding-right: 280px;
-      }
-
       @media (max-width: $iphone-landscape) {
         padding-left: 146px;
       }
@@ -438,10 +434,6 @@ header#listing_search {
           color: $gray80;
         }
 
-        @media (min-width: 768px) {
-          right: 282px;
-        }
-
         @media (max-width: $iphone-landscape) {
           top: 5px;
           padding: 0 6px 0 0;
@@ -451,63 +443,6 @@ header#listing_search {
           font-size: 18px;
         }        
       }
-
-      .calendar-container {
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        width: 275px;
-        font-size: 14px;
-
-        .availability-date-start {
-          position: relative;
-          float: left;
-          margin-right: 2%;
-          width: 49%;
-        }
-
-        .availability-date-end {
-          position: relative;
-          float: left;
-          width: 49%;
-        }
-
-        .availability-date-start, 
-        .availability-date-end {
-
-          input {
-            width:100%;
-          }
-        }
-
-        .availability-date-start, 
-        .availability-date-end {
-          position: relative;
-
-          .calendar {
-            position: absolute;
-            top: 15px;
-            left: 10px;
-            display: block;
-            color: $icon;
-            font-size: 30px;
-          }
-
-          input {
-            @include box-sizing(border-box);
-            padding-left: 50px;
-            width:100%;
-            background: $theme_white;
-
-            &:focus {
-
-              + .calendar {
-                color: $icon-hover;
-              }
-            }    
-          }
-        }
-      }      
     }
 
     @media (max-width: $ipad-width) {

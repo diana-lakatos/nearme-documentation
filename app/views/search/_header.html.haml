@@ -20,16 +20,3 @@
                 %span.ico-crosshairs
               .search-icon
                 %span.ico-search                
-            .calendar-container.hidden-phone
-              .three.columns.availability-date-start
-                = text_field_tag "availability[dates][start]", search_availability_date(search.available_dates.first),
-                    :autocomplete => "off", :placeholder => "Start", :readonly => true,
-                    data: { value: search.available_dates.first }
-                .calendar
-                  %span.ico-calendar-start
-              .three.columns.availability-date-end
-                = text_field_tag "availability[dates][end]", search_availability_date(search.available_dates.last),
-                   :autocomplete => "off", :placeholder => "End", :readonly => true,
-                   data: { value: search.available_dates.last }
-                .calendar
-                  %span.ico-calendar-end
