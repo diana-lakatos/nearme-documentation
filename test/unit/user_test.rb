@@ -125,11 +125,11 @@ class UserTest < ActiveSupport::TestCase
     assert @user.avatar.any_url_exists?
   end
 
-  should "do not save avatar if image does not have extension" do
+  should "allow to download image from linkedin which do not have extension" do
     @user = FactoryGirl.build(:user)
     @user.avatar = File.open(File.expand_path("../../assets/image_no_extension", __FILE__))
     @user.avatar_versions_generated_at = Time.zone.now
-    assert !@user.save
+    assert @user.save
   end
 
   context '#full_mobile_number' do

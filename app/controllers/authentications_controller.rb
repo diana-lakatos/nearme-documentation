@@ -7,10 +7,9 @@ class AuthenticationsController < ApplicationController
     if @oauth.already_connected?(current_user)
       already_connected_to_other_user
     # Usual scenario - user already used social provider to log in to our system, everything in db is already set up
-    elsif @oauth.authentication
+    elsif !current_user && @oauth.authentication
       signed_in_successfully
-      # It should not be possible anymore to hit this error. If user authenticated with email A, then changed it to email B, and someone else
-      # created a new user for email A, then this error would be raised. We shouldn't reach it though, because the previous 'if' is true
+    # Email is already taken - don't allow to steal account
     elsif @oauth.email_taken_by_other_user?(current_user)
       user_changed_email_and_someone_else_picked_it
     # There is no authentication in our system, but user is logged in - we just add authentications to his account
@@ -85,7 +84,6 @@ class AuthenticationsController < ApplicationController
   def signed_in_successfully
     flash[:success] = t('authentications.signed_in_successfully') if use_flash_messages?
     @oauth.remember_user!
-    @oauth.apply_avatar_if_empty
     update_analytics_google_id(@oauth.authenticated_user)
     log_logged_in
     sign_in_and_redirect(:user, @oauth.authenticated_user)
@@ -100,6 +98,7 @@ class AuthenticationsController < ApplicationController
 
   def new_authentication_for_existing_user
     @oauth.create_authentication!(current_user)
+    @oauth.apply_avatar_if_empty
     log_connect_social_provider
     flash[:success] = t('authentications.authentication_successful')
     redirect_to edit_user_registration_url

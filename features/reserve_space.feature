@@ -99,6 +99,20 @@ Feature: A user can book at a space
       | Listing     | Date   | Quantity | Start | End   |
       | the listing | Monday | 1        | 9:00  | 14:00 |
 
+  Scenario: Hourly reserved listing can be booked for full day
+    Given the listing is reserved hourly
+    And   the listing has an hourly price of 100.00
+    And I am logged in as the user
+    When I go to the location's page
+    And I select to book and review space for:
+      | Listing     | Date   | Quantity | Start | End   |
+      | the listing | Monday | 1        | 9:00  | 17:00 |
+    And I provide reservation credit card details
+    And I click to confirm the booking
+    Then the user should have a reservation:
+      | Listing     | Date   | Quantity | Start | End   |
+      | the listing | Monday | 1        | 9:00  | 17:00 |
+
   Scenario: User sees booking confirmation details after successful reservation
     Given I am logged in as the user
      When I book space for:

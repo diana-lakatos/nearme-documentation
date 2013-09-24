@@ -23,7 +23,35 @@ section#payments, section#transfers {
 
 section#payments {
 
+  select {
+    &.analytics-mode {
+      width: auto !important;
+    }
+  }
+
   .reservation-charges-details {
+
+    table {
+      width: 100%;
+
+      tbody { 
+
+        & > tr:nth-child(2n+1) > td, & > tr:nth-child(2n+1) > th {
+          background: $gray245;
+        }
+
+        tr {
+
+          &:hover {
+
+            td {
+              background: $light-gray;
+            }
+
+          }
+        }
+      }
+    }
 
     .reservation-charge-line-item {
       padding-bottom: 20px;
