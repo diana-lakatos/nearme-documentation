@@ -11,12 +11,9 @@ class Listing
     def locations
       @locations ||= begin
         if white_label_company.try(:white_label_enabled?)
-          Location.joins(:company).
-            where(:"locations.company_id" => white_label_company.id).
-            where(companies: {listings_public: white_label_company.listings_public})
+          Location.where(:"locations.company_id" => white_label_company.id)
         else
-          Location.joins(:company).
-            where(companies: {listings_public: true})
+          Location.joins(:company).where(companies: {listings_public: true})
         end
       end
     end

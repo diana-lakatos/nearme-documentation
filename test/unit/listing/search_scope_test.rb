@@ -11,7 +11,7 @@ class Listing::SearchScopeTest < ActiveSupport::TestCase
 
       setup do
         @location = FactoryGirl.create(:location, company: @company)
-        @another_location = FactoryGirl.create(:location)
+        @another_company_location = FactoryGirl.create(:location)
       end
 
       should 'scope to locations of this company' do
@@ -29,15 +29,21 @@ class Listing::SearchScopeTest < ActiveSupport::TestCase
           @company.update_column(:listings_public, false)
         end
 
-        should 'scope to private locations if a company' do
+        should 'see all locations of white label company' do
+          @another_location = FactoryGirl.create(:location, company: @company)
           @search_scope = Listing::SearchScope.new(white_label_company: @company)
-          assert_equal [@location], @search_scope.locations
+
+          assert @search_scope.locations.include?(@location)
+          assert @search_scope.locations.include?(@another_location)
+          refute @search_scope.locations.include?(@another_company_location)
+          assert_equal 2, @search_scope.locations.size
         end
 
         should 'scope to public locations only' do
           @search_scope = Listing::SearchScope.new
           refute @search_scope.locations.include?(@location)
-          assert @search_scope.locations.include?(@another_location)
+          refute @search_scope.locations.include?(@another_location)
+          assert @search_scope.locations.include?(@another_company_location)
         end
 
       end
