@@ -1,7 +1,8 @@
 $map-z-index: $nav-z-index - 20;
 
+/*** Map View ***/
 section.search#content {
-  padding-top: 30px;
+  margin-top: -30px;
 
   @media (max-width: $iphone-landscape) {
     padding-top: 8px;
@@ -94,7 +95,7 @@ section.search#content {
     .search-map-redo-search-control {
       background: rgba(255,255,255,0.7);
       padding: 2px 4px;
-      margin: 5px;
+      margin: 91px 31px 5px 5px;
       @include border-radius($border-radius-default);
 
       label {
@@ -110,6 +111,8 @@ section.search#content {
   }
 }
 
+/*** End Map View ***/
+
 .google-map-popover-content .listing-sibling {
   overflow: hidden;
   cursor: pointer;
@@ -120,14 +123,12 @@ section.search#content {
 }
 
 .listing-map-popover-content {
-
   .ico-close {
     font-size: 50%;
   }
 }
 
 #search_row,
-
 .black-box {
 
   .btn-green {
@@ -201,7 +202,6 @@ section.search#content {
 
   .search-icon {
     color: $theme_white;
-    right: 17px;
 
     &:hover {
       color: $icon;
@@ -211,16 +211,18 @@ section.search#content {
 
 header#listing_search {
   position: fixed;
-  top: 60px;
+  top: 86px;
   right: 0;
   left: 0;
   z-index: $nav-z-index - 10;
   overflow: hidden;
   margin: 0 auto;
   max-width: none;
-  padding: 0 10px;
-  height: 60px;  
+  padding: 0 5px;
+  margin: 0 30px;
+  height: 55px;  
   background: $gray230;
+  @include border-radius($border-radius-default);
 
   @media (max-width: $iphone-landscape) {
     height: 38px;
@@ -229,7 +231,7 @@ header#listing_search {
   .header-inner {
     position: relative;
     max-width: 1360px;
-    margin: 0 auto;
+    margin: -2px auto;
   }
 
   .list-map-toggle {
@@ -238,8 +240,8 @@ header#listing_search {
     left: 0px;
     width: 100px;
     height: 49px;
-    @include border-radius($border-radius-default);
     background: transparent;
+    @include border-radius($border-radius-default);
 
     @media (max-width: $iphone-landscape) {
       height: 28px;
@@ -358,8 +360,8 @@ header#listing_search {
       position: relative; 
       float: left;
       @include box-sizing(border-box);
-      padding-left: 202px;
-      padding-right: 50px;
+      padding-left: 199px;
+      padding-right: 48px;
       width: 100%;
 
       @media (max-width: $iphone-landscape) {
@@ -408,7 +410,7 @@ header#listing_search {
         @include box-sizing(border-box);
         @include opacity(1);
         top: 7px;
-        right:2px;
+        right: 0px;
         display: block;
         padding: 6px 13px 0 0;
         width: 45px;
@@ -453,8 +455,9 @@ header#listing_search {
   }  
 }
 
-/*** Listing ***/
+/*** Listing View ***/
 section.search section#results.list {
+  margin-top: 80px;
 
   article.listing {
     @include box-sizing(border-box);
@@ -536,7 +539,7 @@ section.search section#results.list {
     }
   }
 }
-/*** End Listing ***/
+/*** End Listing View ***/
 
 .ias_loader {
 
