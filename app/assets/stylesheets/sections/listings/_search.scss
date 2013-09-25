@@ -506,13 +506,12 @@ section.search section#results.list {
 
     .photo {
       @include box-sizing(border-box);
-
+      z-index: -1;
     }
 
     .info {
       @include box-sizing(border-box);
       position: absolute;
-      z-index: $nav-z-index;
       bottom: 0;
       left: 0;
       width: 100%;
