@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130925095553) do
+ActiveRecord::Schema.define(:version => 20130925224723) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(:version => 20130925095553) do
     t.boolean  "listings_public",     :default => true
   end
 
-  add_index "companies", ["instance_id"], :name => "index_companies_on_instance_id"
+  add_index "companies", ["instance_id", "listings_public"], :name => "index_companies_on_instance_id_and_listings_public"
 
   create_table "company_industries", :id => false, :force => true do |t|
     t.integer "industry_id"
@@ -268,6 +268,7 @@ ActiveRecord::Schema.define(:version => 20130925095553) do
     t.string   "postcode"
   end
 
+  add_index "locations", ["company_id"], :name => "index_locations_on_company_id"
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
 
   create_table "pages", :force => true do |t|
