@@ -1,16 +1,13 @@
 - # For now, a listing is either reserved hourly or daily.
-- if listing.hourly_reservations?
-  - unless listing.hourly_price.to_f.zero?
-    %span.label.label-hourly-price
-      = "#{money_without_cents_and_with_symbol(listing.hourly_price)}/hour"
-- else
-  - unless listing.daily_price.to_f.zero?
-    %span.label.label-daily-price
-      = "#{money_without_cents_and_with_symbol(listing.daily_price)}/day"
-  - unless listing.weekly_price.to_f.zero?
-    %span.label.label-weekly-price
-      = "#{money_without_cents_and_with_symbol(listing.weekly_price)}/wk"
-  - unless listing.monthly_price.to_f.zero?
-    %span.label.label-monthly-price
-      = "#{money_without_cents_and_with_symbol(listing.monthly_price)}/mo"
-
+- if listing.hourly_reservations? && !listing.hourly_price.to_f.zero?
+  %span.label
+    = "From #{money_without_cents_and_with_symbol(listing.hourly_price)}/hour"
+- elsif !listing.daily_price.to_f.zero?
+  %span
+    = "From #{money_without_cents_and_with_symbol(listing.daily_price)}/day"
+- elsif !listing.weekly_price.to_f.zero?
+  %span.label
+    = "From #{money_without_cents_and_with_symbol(listing.weekly_price)}/week"
+- elsif !listing.monthly_price.to_f.zero?
+  %span.label
+    = "From #{money_without_cents_and_with_symbol(listing.monthly_price)}/month"

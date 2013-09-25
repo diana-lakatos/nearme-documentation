@@ -1,34 +1,17 @@
 %article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
-  .row-fluid
-    .span4.nested.photo-container
-      = link_to location_listing_path(listing.location, listing) do
-        - if photo = listing.photos.first
-          = image_tag photo.image_url(:space_listing), :title => listing.name, :alt => listing.name
-        - else
-          = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
-    .span8.nested.details-container
-      %h2
-        = link_to "#{listing.name}", location_listing_path(listing.location, listing)
-      %h4.hidden-iphone.location-hours
-        %span
-          = pretty_availability_sentence(listing.availability)
-      %p.hidden-phone.listing-description
-        = listing.description
-      %aside.prices
-        = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
-        %span.ico-location
-          = listing.location.company.name
-        %span.miles
-          = "#{listing.distance_from_search_query.to_f.round(1)} miles"
-      .bottom-fade
-- # We may want to move this, but I've put it here for simplicities sake and as an example for now.
-:javascript
-  $(function() {
-    new HeightConstrainer(
-      $('article.listing[data-id=#{listing.id}] .details-container'),
-      $('article.listing[data-id=#{listing.id}] .photo-container'),
-      {
-        ratio: 254/410
-      }
-    )
-  })
+  .heading
+    %h3.name
+      = link_to "#{listing.name}", location_listing_path(listing.location, listing)
+    .company
+      = listing.location.company.name
+  .photo
+    = link_to location_listing_path(listing.location, listing) do
+      - if photo = listing.photos.first
+        = image_tag photo.image_url(:space_listing), :title => listing.name, :alt => listing.name
+      - else
+        = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
+  .info
+    .miles
+      = "#{listing.distance_from_search_query.to_f.round(1)} miles"
+    .price
+      = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
