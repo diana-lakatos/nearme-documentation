@@ -12,6 +12,20 @@ module FileuploadHelper
     }).to_s
   end
 
+  def built_in_upload_input(input, &block)
+    render(partial: 'shared/components/built_in_upload_input', locals: {
+      uploaded_content: get_uploaded_content({ "no-multiple" => true }, &block),
+      input: input,
+    }).to_s
+  end
+
+  def built_in_upload_input_with_label(label, input, &block)
+    content_tag(:div, 
+      "<label class='text optional control-label'>#{label}</label>".html_safe +
+      content_tag(:div, built_in_upload_input(input, &block), :class => 'controls'), 
+    :class => "control-group text optional")
+  end
+
   def file_upload_input_with_label(label, name, url, thumbnail_sizes, text='Photos', options = {}, &block)
     label = required_field + label if options.delete(:required)
     content_tag(:div, 
@@ -22,6 +36,12 @@ module FileuploadHelper
 
   def fileupload_photo(photo_url, destroy_photo_path, resize_photo_path, html_tag = :li)
     get_fileupload_photo_html(photo_url, destroy_photo_path, resize_photo_path, html_tag)
+  end
+
+  def built_in_fileupload_photo(photo_url, destroy_photo_path, dimensions = [96, 96])
+    if photo_url
+      content_tag(:div, image_tag(photo_url, :width => dimensions[0], :height => dimensions[1]) + delete_photo_link(destroy_photo_path), :class => 'photo-item')
+    end
   end
 
   def get_fileupload_photo_html(photo_url, destroy_photo_path, resize_photo_path, html_tag = :li, options = {}, &block)

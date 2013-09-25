@@ -7,7 +7,6 @@ class SearchControllerTest < ActionController::TestCase
     setup do
       stub_request(:get, /.*maps\.googleapis\.com.*/)
       stub_mixpanel
-      FactoryGirl.create(:instance) unless Instance.first
     end
 
     should "not track search for empty query" do

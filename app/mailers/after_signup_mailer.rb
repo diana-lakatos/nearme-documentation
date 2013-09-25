@@ -4,17 +4,17 @@ class AfterSignupMailer < InstanceMailer
 
   layout false
 
-  def help_offer(instance, user)
+  def help_offer(theme, user)
     @user = user
-
+    @theme = theme
+    @instance = theme.instance
     @location = @user.locations.first
-    @instance = instance
 
     @sent_by = 'Michelle R'
 
     mail(to: @user.email,
          template_name: choose_template,
-         instance: @instance,
+         theme: @theme,
          subject: "Welcome to DesksNear.me")
   end
 
@@ -23,19 +23,22 @@ class AfterSignupMailer < InstanceMailer
 
       def help_offer_with_listing
         @user = User.all.detect { |u| !u.listings.empty?  }
-        ::AfterSignupMailer.help_offer(Instance.first, @user)
+        @theme = Theme.first
+        ::AfterSignupMailer.help_offer(@theme, @user)
       end
 
       def help_offer_with_booking
         @user = User.all.detect { |u| !u.reservations.empty? && u.listings.empty? }
+        @theme = Theme.first
         raise "No user with booking and without listing" unless @user
-        ::AfterSignupMailer.help_offer(Instance.first, @user)
+        ::AfterSignupMailer.help_offer(@theme, @user)
       end
 
       def help_offer_without_listing_and_booking
         @user = User.all.detect { |u| u.listings.empty? && u.reservations.empty? }
+        @theme = Theme.first
         raise "No user without listing and without reservation" unless @user
-        ::AfterSignupMailer.help_offer(Instance.first, @user)
+        ::AfterSignupMailer.help_offer(@theme, @user)
       end
 
     end

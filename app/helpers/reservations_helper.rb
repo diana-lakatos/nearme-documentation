@@ -59,7 +59,7 @@ module ReservationsHelper
       'confirmed'
     elsif reservation.unconfirmed?
       'unconfirmed'
-    else reservation.cancelled? || reservation.rejected? 
+    elsif reservation.cancelled? || reservation.rejected? 
        'cancelled'
     end
   end
@@ -69,7 +69,7 @@ module ReservationsHelper
       'ico-check'
     elsif reservation.unconfirmed?
       'ico-warning'
-    else reservation.cancelled? || reservation.rejected? 
+    elsif reservation.cancelled? || reservation.rejected? 
        'ico-close'
     end
   end

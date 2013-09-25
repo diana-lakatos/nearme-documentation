@@ -12,10 +12,12 @@ Before do
   DatabaseCleaner.clean
   WebMock.disable_net_connect!
   GmapsFake.stub_requests
-  FactoryGirl.create(:instance)
   stub_request(:get, /.*api\.mixpanel\.com.*/)
   stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
-  store_model("instance", nil, FactoryGirl.create(:instance))
+  instance = FactoryGirl.create(:instance)
+  store_model("instance", nil, instance)
+  store_model("theme", nil, instance.theme)
+  FactoryGirl.create(:instance)
 end
 
 def last_json

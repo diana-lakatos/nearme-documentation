@@ -38,4 +38,9 @@ class @Photo.Uploader
     # need to add data-name-prefix to fileinput, because this won't work for avatar 
     if $('#listing_id')
       params["#{$('#listing_id').attr('name')}"] = $('#listing_id').val()
+    # If photos are being added to an existing draft space, we need the draft
+    # listng_id in order to associate the photos to it
+    listing_id = $('#user_companies_attributes_0_locations_attributes_0_listings_attributes_0_id')
+    if listing_id.length > 0
+      params["#{listing_id.attr('name')}"] = listing_id.val()
     params

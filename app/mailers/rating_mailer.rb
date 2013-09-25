@@ -21,12 +21,13 @@ class RatingMailer < InstanceMailer
     @reservation = reservation
     @listing = @reservation.listing
     @location = @listing.location
-    @instance = @listing.instance
+    @theme = @listing.company.white_label_enabled ? @listing.company.theme : @listing.instance.theme
+    @instance = @theme.instance
 
     mail to: @author.email,
          subject: instance_prefix("Rate your #{@kind} at #{@listing.name}", @instance),
          template_name: "request_#{@kind}_rating",
-         instance: @instance
+         theme: @theme
   end
 
   if defined? MailView

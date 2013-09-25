@@ -25,6 +25,9 @@ module CarrierWave
       # recreate carrier wave versions based on external url
       # we want to re-download image only if external url has changed
       def generate_versions
+        # return if there is no persisted AR object (e.g. photo was deleted before crop job ran)
+        return unless @model.persisted?
+        
         if versions_generated? || !source_url
           # external url has not changed, meaning we can just recreate verions
           @model.send(@field).recreate_versions!

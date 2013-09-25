@@ -6,6 +6,7 @@ class Domain < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
   validates_presence_of :target_type
+  delegate :white_label_enabled?, :to => :target
 
   def self.find_for_request(request)
     host = request.host.gsub(/^www\./, "")

@@ -137,7 +137,7 @@ class DashboardControllerTest < ActionController::TestCase
   end
 
   def create_location_visit
-    @listing.location.impressions.create!
+    @listing.location.track_impression
   end
 
 end
