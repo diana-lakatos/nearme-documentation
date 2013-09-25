@@ -30,22 +30,6 @@ class Listing::SearchTest < ActiveSupport::TestCase
         assert_equal [listing1], results
       end
 
-      should "scope to white_label_company if passed" do
-        white_label_company = FactoryGirl.create(:white_label_company)
-        white_label_location = FactoryGirl.create(:location, company: white_label_company)
-        
-        listing1 = FactoryGirl.create(:listing, location: white_label_location)
-        listing2 = FactoryGirl.create(:listing)
-        
-        scope = mock()
-        includes = stub(:includes => [white_label_location])
-        scope.expects(:near).with(@midpoint, @radius, :order => :distance).returns(includes)
-        white_label_company.expects(:locations).returns(scope)
-
-        results = Listing.find_by_search_params(@params, Listing::SearchScope.new(white_label_company: white_label_company))
-        assert_equal [listing1], results
-      end
-
     end
 
   end

@@ -24,6 +24,24 @@ class Listing::SearchScopeTest < ActiveSupport::TestCase
         assert_equal Location.all, @search_scope.locations
       end
 
+      context 'with listings private' do
+        setup do
+          @company.update_column(:listings_public, false)
+        end
+
+        should 'scope to private locations if a company' do
+          @search_scope = Listing::SearchScope.new(white_label_company: @company)
+          assert_equal [@location], @search_scope.locations
+        end
+
+        should 'scope to public locations only' do
+          @search_scope = Listing::SearchScope.new
+          refute @search_scope.locations.include?(@location)
+          assert @search_scope.locations.include?(@another_location)
+        end
+
+      end
+
     end
 
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130923202352) do
+ActiveRecord::Schema.define(:version => 20130925095553) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(:version => 20130923202352) do
     t.string   "external_id"
     t.integer  "instance_id"
     t.boolean  "white_label_enabled", :default => false
+    t.boolean  "listings_public",     :default => true
   end
 
   add_index "companies", ["instance_id"], :name => "index_companies_on_instance_id"
