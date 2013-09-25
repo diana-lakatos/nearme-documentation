@@ -116,4 +116,12 @@ module ApplicationHelper
     end
   end
 
+  def user_can_add_listing?(white_label_company = nil, user = nil)
+    # if this is not white label, user can always add listing
+    return true if white_label_company.blank?
+    return true unless white_label_company.white_label_enabled?
+    # if this is white label, only its users should be able to add listing
+    user.present? && user.companies.include?(white_label_company)
+  end
+
 end

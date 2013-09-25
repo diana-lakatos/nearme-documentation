@@ -26,29 +26,6 @@ class Listing::SearchScopeTest < ActiveSupport::TestCase
 
     end
 
-    context 'with user associated to company' do
-
-      setup do
-        @user = FactoryGirl.create(:user, companies: [@company])
-        @another_user = FactoryGirl.create(:user)
-      end
-
-      should 'allow that user_can_add_listing? when there is no white label white_label_company' do
-        @search_scope = Listing::SearchScope.new
-        assert @search_scope.user_can_add_listing?
-      end
-
-      should 'not allow that user_can_add_listing? when user doesnt belong to white label company' do
-        @search_scope = Listing::SearchScope.new(white_label_company: @company, user: @another_user)
-        refute @search_scope.user_can_add_listing?
-      end
-
-      should 'allow that user_can_add_listing? when user belongs to white label company' do
-        @search_scope = Listing::SearchScope.new(white_label_company: @company, user: @user)
-        assert @search_scope.user_can_add_listing?
-      end
-    end
-
   end
 
 end
