@@ -1,17 +1,17 @@
-%article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
-  .heading
-    %h3.name
-      = link_to "#{listing.name}", location_listing_path(listing.location, listing)
-    .company
-      = listing.location.company.name
-  .photo
-    = link_to location_listing_path(listing.location, listing) do
+= link_to location_listing_path(listing.location, listing) do
+  %article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
+    .heading
+      %h3.name
+        = listing.name
+      .company
+        = listing.location.company.name
+    .photo
       - if photo = listing.photos.first
         = image_tag photo.image_url(:space_listing), :title => listing.name, :alt => listing.name
       - else
         = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
-  .info
-    .miles
-      = "#{listing.distance_from_search_query.to_f.round(1)} miles"
-    .price
-      = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
+    .info
+      .miles
+        = "#{listing.distance_from_search_query.to_f.round(1)} miles"
+      .price
+        = render :partial => 'search/shared/price_information', :locals => { :listing => listing }

@@ -452,6 +452,7 @@ header#listing_search {
 
 /*** Listing ***/
 section.search section#results.list {
+
   article.listing {
     @include box-sizing(border-box);
     display: inline-block;
@@ -491,6 +492,10 @@ section.search section#results.list {
       text-overflow: ellipsis;
       padding-top: 8px;
       padding-left: 10px;
+
+      .company {
+        color: $gray160;
+      }
     }
 
     .photo {
