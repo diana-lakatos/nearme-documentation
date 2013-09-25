@@ -3,7 +3,7 @@ class Company < ActiveRecord::Base
   URL_REGEXP = URI::regexp(%w(http https))
 
   attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email, :industry_ids, 
-    :locations_attributes, :domain_attributes, :theme_attributes, :instance_id, :white_label_enabled
+    :locations_attributes, :domain_attributes, :theme_attributes, :instance_id, :white_label_enabled, :listings_public
 
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance

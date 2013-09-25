@@ -62,7 +62,7 @@ Then /^The company should be updated$/ do
 end
 
 When /^I enable white label settings$/ do
-  page.find(:css, 'div[data-white-label-settings-container] .switch label').click 
+  first(:css, 'div[data-white-label-settings-container] .switch label').click 
 end
 
 When /^I update company white label settings$/ do

@@ -8,7 +8,7 @@ class Listing::SearchTest < ActiveSupport::TestCase
       end
 
       should "return empty array" do
-        assert_equal [], Listing.find_by_search_params(@params)
+        assert_equal [], Listing.find_by_search_params(@params, Listing::SearchScope.new(FactoryGirl.create(:instance)))
       end
     end
 
@@ -20,33 +20,20 @@ class Listing::SearchTest < ActiveSupport::TestCase
       end
 
       should "find listings by all companies by searching for locations" do
-
-        listing1 = FactoryGirl.create(:listing)
-        listing2 = FactoryGirl.create(:listing)
+        instance = FactoryGirl.create(:instance)
+        company1 = FactoryGirl.create(:company, instance: instance)
+        company2 = FactoryGirl.create(:company, instance: instance)
+        location1 = FactoryGirl.create(:location, company: company1)
+        location2 = FactoryGirl.create(:location, company: company2)
+        listing1 = FactoryGirl.create(:listing, location: location1)
+        listing2 = FactoryGirl.create(:listing, location: location2)
         includes = stub(:includes => [listing1.location])
         Location.expects(:near).with(@midpoint, @radius, :order => :distance).returns(includes)
 
-        results = Listing.find_by_search_params(@params)
-        assert_equal [listing1], results
-      end
-
-      should "scope to white_label_company if passed" do
-        white_label_company = FactoryGirl.create(:white_label_company)
-        white_label_location = FactoryGirl.create(:location, company: white_label_company)
-        
-        listing1 = FactoryGirl.create(:listing, location: white_label_location)
-        listing2 = FactoryGirl.create(:listing)
-        
-        scope = mock()
-        includes = stub(:includes => [white_label_location])
-        scope.expects(:near).with(@midpoint, @radius, :order => :distance).returns(includes)
-        white_label_company.expects(:locations).returns(scope)
-
-        results = Listing.find_by_search_params(@params, Listing::SearchScope.new(white_label_company: white_label_company))
+        results = Listing.find_by_search_params(@params, Listing::SearchScope.new(instance))
         assert_equal [listing1], results
       end
 
     end
-
   end
 end
