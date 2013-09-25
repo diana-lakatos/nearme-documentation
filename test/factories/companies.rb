@@ -4,8 +4,8 @@ FactoryGirl.define do
     sequence(:email) { |n| "company-#{n}@example.com" }
     description "Aliquid eos ab quia officiis sequi."
     creator
-    instance { Instance.default_instance || FactoryGirl.create(:instance) }
     url "http://google.com"
+    instance_id { (Instance.default_instance.presence || FactoryGirl.create(:instance)).id }
 
     after(:build) do |company|
       company.industries = [FactoryGirl.build(:industry)] if company.industries.empty?
@@ -39,5 +39,9 @@ FactoryGirl.define do
       paypal_email { email }
     end
 
+    factory :white_label_company do
+      white_label_enabled true
+    end
   end
 end
+

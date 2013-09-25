@@ -18,9 +18,9 @@
           = f.check_box :enabled
 
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
-= f.input :name, :label => "#{current_instance.bookable_noun} name", :placeholder => 'Examples, "Shared Desks", "Meeting Room", "Private Office"' if only_inputs.empty? || only_inputs.include?(:name)
-= f.input :description, :label => "#{current_instance.bookable_noun} description", :input_html => { :maxlength => 250}, :placeholder => 'Describe the individual listing that will be rented' if only_inputs.empty? || only_inputs.include?(:description)
-= f.association :listing_type, :label => "#{current_instance.bookable_noun} type", :input_html => { :class => 'selectpicker' } if only_inputs.empty? || only_inputs.include?(:listing_type)
+= f.input :name, :label => "#{current_theme.bookable_noun} name", :placeholder => 'Examples, "Shared Desks", "Meeting Room", "Private Office"' if only_inputs.empty? || only_inputs.include?(:name)
+= f.input :description, :label => "#{current_theme.bookable_noun} description", :input_html => { :maxlength => 250}, :placeholder => 'Describe the individual listing that will be rented' if only_inputs.empty? || only_inputs.include?(:description)
+= f.association :listing_type, :label => "#{current_theme.bookable_noun} type", :input_html => { :class => 'selectpicker' } if only_inputs.empty? || only_inputs.include?(:listing_type)
 = f.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" } if only_inputs.empty? || only_inputs.include?(:quantity)
 
 - if content_for? :currency

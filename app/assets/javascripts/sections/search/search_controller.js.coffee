@@ -212,6 +212,7 @@ class Search.SearchController extends Search.Controller
       @updateUrlForSearchQuery()
       @updateLinksForSearchQuery()
       @showResults(html)
+      window.scrollTo(0, 0) if !@map
       @loader.hide()
       callback() if callback
       _.defer => @processingResults = false

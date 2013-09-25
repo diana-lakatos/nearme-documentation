@@ -1,6 +1,6 @@
 - locations.each do |location|
   %h2 #{location.name}
-  %p You currently have no reservations. Promote your #{current_instance.bookable_noun.pluralize} by tweeting or sharing a direct link!
+  %p You currently have no reservations. Promote your #{current_theme.bookable_noun.pluralize} by tweeting or sharing a direct link!
   %ul.sharelocation
     %li
       =link_to tweet_location_url(location_url(location)), :ref => "mg", :class => 'btn btn-blue btn-medium twitter submit', :onclick => 'return popitup(this.href)' do

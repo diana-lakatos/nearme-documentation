@@ -5,12 +5,12 @@ class Listing
 
     module ClassMethods
 
-      def search_from_api(params, geocoder = nil)
-        find_by_search_params(Params::Api.new(params))
+      def search_from_api(params, search_scope)
+        find_by_search_params(Params::Api.new(params), search_scope)
       end
 
-      def search_from_web(params)
-        find_by_search_params(Params::Web.new(params))
+      def search_from_web(params, search_scope)
+        find_by_search_params(Params::Web.new(params), search_scope)
       end
 
       # Takes a search parameters object and returns matching Listing results.
@@ -20,14 +20,14 @@ class Listing
       #           midpoint        - an array of two lat/lng points.
       #           radius          - a float representing the radius of the search
       #           available_dates - list of Date objects to filter the results for availability
-      def find_by_search_params(params)
+      def find_by_search_params(params, search_scope = SearchScope.new)
         midpoint = params.midpoint
         radius   = params.radius
 
         # If no geolocation point, then no results
         return [] unless midpoint && radius
 
-        locations = Location.near(midpoint, radius, :order => :distance).includes(:listings)
+        locations = search_scope.locations.near(midpoint, radius, :order => :distance).includes(:listings)
         return [] unless locations.any?
 
         locations.inject([]) do |filtered_listings, location| 
@@ -42,7 +42,6 @@ class Listing
           filtered_listings
         end
       end
-
     end
   end
 end

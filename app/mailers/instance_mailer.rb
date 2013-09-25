@@ -7,24 +7,24 @@ class InstanceMailer < ActionMailer::Base
   self.job_class = MailerJob
 
   def mail(options = {})
-    lookup_context.class.register_detail(:instance) { nil }
+    lookup_context.class.register_detail(:theme) { nil }
 
-    instance = options.delete(:instance)
+    theme = options.delete(:theme)
     template = options.delete(:template_name) || view_context.action_name
-    mailer = options.delete(:mailer) || find_mailer(template: template, instance: instance) || instance.default_mailer
+    mailer = options.delete(:mailer) || find_mailer(template: template, theme: theme) || theme.default_mailer
     subject_locals = options.delete(:subject_locals)
     subject  = mailer.liquid_subject(subject_locals) || options.delete(:subject)
     reply_to = options.delete(:reply_to) || mailer.reply_to
 
-    self.class.layout _layout, instance: instance
+    self.class.layout _layout, theme: theme
 
     mixed = super(options.merge!(
       :subject => subject,
       :bcc     => mailer.bcc,
       :from    => mailer.from,
       :reply_to=> reply_to)) do |format|
-        format.html { render template, instance: instance }
-        format.text { render template, instance: instance }
+        format.html { render template, theme: theme }
+        format.text { render template, theme: theme }
       end
 
     mixed.add_part(
@@ -46,11 +46,11 @@ class InstanceMailer < ActionMailer::Base
   end
 
   def find_mailer(options = {})
-    instance = options.delete(:instance)
+    theme = options.delete(:theme)
     default_options = { template: view_context.action_name }
     options = default_options.merge!(options)
 
-    details = {instance: instance, handlers: [:liquid], formats: [:html, :text]}
+    details = {theme: theme, handlers: [:liquid], formats: [:html, :text]}
     template_name = options[:template]
     template_prefix = view_context.lookup_context.prefixes.first
 

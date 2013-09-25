@@ -16,11 +16,11 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
       assert_equal 1, @company_1.payment_transfers.count
       assert_equal 1, @company_2.payment_transfers.count
 
-      assert_equal @company_1.reservation_charges,
-        @company_1.payment_transfers[0].reservation_charges
+      assert_equal @company_1.reservation_charges.sort,
+        @company_1.payment_transfers[0].reservation_charges.sort
 
-      assert_equal @company_2.reservation_charges,
-        @company_2.payment_transfers[0].reservation_charges
+      assert_equal @company_2.reservation_charges.sort,
+        @company_2.payment_transfers[0].reservation_charges.sort
     end
 
     should "only include successfully paid reservation charges" do

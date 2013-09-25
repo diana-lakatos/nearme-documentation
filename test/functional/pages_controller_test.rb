@@ -4,17 +4,12 @@ class PagesControllerTest < ActionController::TestCase
 
   context 'GET show' do
 
-    setup do
-      @instance = Instance.first.presence || FactoryGirl.create(:instance)
-      @controller.stubs(:current_instance).returns(@instance)
-    end
-
     context 'a full page' do
       setup do
         Page.any_instance.stubs(:hero_image).returns(stub({:present? => true, :url => 'url'}))
         @page = FactoryGirl.create(:page,
                                    content: "# Page heading \nSome text",
-                                   instance: @instance)
+                                   instance: Instance.default_instance)
       end
 
       should 'return a content page with hero image and markdown content' do
@@ -30,7 +25,7 @@ class PagesControllerTest < ActionController::TestCase
     context 'a wrong path' do
       setup do
         @page = FactoryGirl.create(:page,
-                                   instance: @instance,
+                                   instance: Instance.default_instance,
                                    content: "# Page heading \nSome text")
       end
 

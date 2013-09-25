@@ -1,24 +1,24 @@
 require 'test_helper'
 
-class InstanceThemeTest < ActiveSupport::TestCase
+class ThemeTest < ActiveSupport::TestCase
   def setup
     @instance = FactoryGirl.create(:instance)
   end
 
   context 'creating' do
     should "trigger a compilation of the theme" do
-      theme = InstanceTheme.new
-      theme.instance = @instance
+      theme = Theme.new
+      theme.owner = @instance
 
-      CompileInstanceThemeJob.expects(:perform).with(theme)
+      CompileThemeJob.expects(:perform).with(theme)
       theme.save!
     end
   end
 
   context 'updating' do
     setup do
-      @instance_theme = InstanceTheme.new.skipping_compilation do |theme|
-        theme.instance = @instance
+      @instance_theme = Theme.new.skipping_compilation do |theme|
+        theme.owner = @instance
         theme.save!
       end
     end
@@ -26,12 +26,12 @@ class InstanceThemeTest < ActiveSupport::TestCase
     should "trigger compilation of the theme after changing relevant fields" do
       @instance_theme.color_red = '#ff0000'
 
-      CompileInstanceThemeJob.expects(:perform).with(@instance_theme)
+      CompileThemeJob.expects(:perform).with(@instance_theme)
       @instance_theme.save!
     end
 
     should "not trigger compilation if no relevant fields changed" do
-      CompileInstanceThemeJob.expects(:perform).never
+      CompileThemeJob.expects(:perform).never
       @instance_theme.save!
     end
   end
