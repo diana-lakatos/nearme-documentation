@@ -13,7 +13,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
     @instance = Instance.default_instance
     @theme = @instance.theme
 
-    @expected_dates = "Wednesday, December 12&ndash;Thursday, December 13"
+    @expected_dates = "12 Dec&ndash;13 Dec"
   end
 
   test "#notify_guest_of_cancellation" do

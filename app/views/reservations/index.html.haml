@@ -1,30 +1,34 @@
 - title "Bookings (#{@reservations.count})"
 
-.row-fluid
-  .span8.offset2
-    %h1
-      %span.ico-bookings.padding My Bookings
-    .box
-      %section.reservations
-        .span12.reservation-navigation
-          .span6
-            = reservation_navigation_link('upcoming')
-          .span6
-            = reservation_navigation_link('archived')
-      - if @reservations.empty?
-        %p You currently have no #{params[:action]} bookings. Find a space near you!
-      - else
-        - if @reservation
-          %h2.reservation-emphasis
-            Your booking was requested successfully!
-          .inner-box.inner-box-filled
-            = render @reservation
-          - unless (@reservations - [@reservation]).empty?
-            %h2.other-reservation-separator
-              #{pluralize((@reservations - [@reservation]).count, ' other booking')}
+%section#reservations
+  .row-fluid
+    .span8.offset2
+      %h1
+        %span.ico-bookings.padding My Bookings
+      .box
+        %header
+          .links
+            %ul
+              %li
+                = reservation_navigation_link('upcoming')
+              %li
+                = reservation_navigation_link('archived')
 
-        .reservation-list
-          - (@reservations - [@reservation]).each_with_index do |reservation, index|
-            = render reservation
-            - unless (@reservations - [@reservation]).size == index+1
-              .line-divider 
+        - if @reservations.empty?
+          %p You currently have no #{params[:action]} bookings. Find a space near you!
+        - else
+          - if @reservation
+            %h2.reservation-emphasis
+              Your booking was requested successfully!
+            .inner-box.inner-box-filled
+              = render @reservation
+            - unless (@reservations - [@reservation]).empty?
+              %h2.other-reservation-separator
+                #{pluralize((@reservations - [@reservation]).count, ' other booking')}
+
+          .reservation-list
+            %ul
+              - (@reservations - [@reservation]).each_with_index do |reservation, index|
+                %li
+                  = render reservation
+
