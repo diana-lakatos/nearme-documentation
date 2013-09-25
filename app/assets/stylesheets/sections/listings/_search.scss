@@ -182,23 +182,30 @@ section.search#content {
     position: absolute;
     top: 9px;
     width: 34px;
+    line-height: 35px;
     border: 0;
     background: transparent;
-    color: $icon;
-    font-size: 32px;
+    font-size: 20px;
     cursor: pointer;
+
+  }
+
+  .geolocation {
+    color: $icon;
+    left: 10px;
 
     &:hover {
       color: $icon-hover;
     }
   }
 
-  .geolocation {
-    left: 10px;
-  }
-
   .search-icon {
+    color: $theme_white;
     right: 17px;
+
+    &:hover {
+      color: $icon;
+    }
   }  
 }
 
@@ -352,6 +359,7 @@ header#listing_search {
       float: left;
       @include box-sizing(border-box);
       padding-left: 202px;
+      padding-right: 50px;
       width: 100%;
 
       @media (max-width: $iphone-landscape) {
@@ -397,22 +405,17 @@ header#listing_search {
       }
 
       .search-icon {
-        @include background-image(linear-gradient(left, rgba(255,255,255,0), $theme_white 30%, $theme_white));
+        @include box-sizing(border-box);
         @include opacity(1);
         top: 7px;
         right:2px;
         display: block;
         padding: 6px 13px 0 0;
-        width: 42px;
-        height: 34px;
-        color: $gray160;
+        width: 45px;
+        height: 45px;
+        background-color: $theme_green;
         text-align: right;
-        @include border-top-right-radius($border-radius-default);
-        @include border-bottom-right-radius($border-radius-default);
-
-        &:hover {
-          color: $gray80;
-        }
+        @include border-radius($border-radius-default);
 
         @media (max-width: $iphone-landscape) {
           top: 5px;
