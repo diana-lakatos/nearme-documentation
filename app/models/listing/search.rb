@@ -20,7 +20,7 @@ class Listing
       #           midpoint        - an array of two lat/lng points.
       #           radius          - a float representing the radius of the search
       #           available_dates - list of Date objects to filter the results for availability
-      def find_by_search_params(params, search_scope = SearchScope.new)
+      def find_by_search_params(params, search_scope)
         midpoint = params.midpoint
         radius   = params.radius
 
