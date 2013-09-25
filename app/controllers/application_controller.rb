@@ -221,5 +221,11 @@ class ApplicationController < ActionController::Base
   end
   helper_method :user_google_analytics_id
 
+  def search_scope
+    @search_scope ||= Listing::SearchScope.new(white_label_company: @current_white_label_company,
+                                               user: current_user)
+  end
+  helper_method :search_scope
+
 end
 
