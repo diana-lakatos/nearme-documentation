@@ -21,9 +21,13 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       @tracker.expects(:updated_profile_information).with do |user|
         user == @user
       end
+      
+      attributes = FactoryGirl.attributes_for(:listing).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 })
+      attributes.delete(:photo_not_required)
+
       assert_difference('@location2.listings.count') do
         post :create, {
-          :listing => FactoryGirl.attributes_for(:listing).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 }),
+          :listing => attributes,
           :location_id => @location2.id
         }
       end
