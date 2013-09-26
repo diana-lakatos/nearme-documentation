@@ -1,16 +1,14 @@
-.guest_filter.row-fluid
-  .span4.button-container
-    %a.btn.btn-full.btn-gray{href: manage_guests_dashboard_path(state: 'unconfirmed'),
-    class: guest_filter_class(@guest_list, 'unconfirmed')}
-      %span.guest-count= @guest_list.unconfirmed.size
-      Unconfirmed
-  .span4.button-container
-    %a.btn.btn-full.btn-gray{href: manage_guests_dashboard_path(state: 'confirmed'),
-     class: guest_filter_class(@guest_list, 'confirmed')}
-      %span.guest-count= @guest_list.confirmed.size
-      Confirmed
-  .span4.button-container
-    %a.btn.btn-full.btn-gray{href: manage_guests_dashboard_path(state: 'archived'),
-     class: guest_filter_class(@guest_list, 'archived')}
-      %span.guest-count= @guest_list.archived.size
-      Archived
+.links
+  %ul
+    %li
+      %a.btn.btn-medium.upcoming-reservations{href: manage_guests_dashboard_path(state: 'unconfirmed'),
+      class: guest_filter_class(@guest_list, 'unconfirmed')}
+        %span Unconfirmed
+    %li
+      %a.btn.btn-medium.upcoming-reservations{href: manage_guests_dashboard_path(state: 'confirmed'),
+       class: guest_filter_class(@guest_list, 'confirmed')}
+        %span Confirmed
+    %li
+      %a.btn.btn-medium.upcoming-reservations{href: manage_guests_dashboard_path(state: 'archived'),
+       class: guest_filter_class(@guest_list, 'archived')}
+        %span Archived

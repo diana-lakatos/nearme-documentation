@@ -1,14 +1,12 @@
 - if reservation.can_host_cancel?
-  = link_to 'Cancel', host_cancel_manage_listing_reservation_path(reservation.listing, reservation),
-              confirm: 'Do you really want to cancel this reservation?', :class => "btn btn-red btn-medium",
-              method: :post
+  = form_for reservation, method: :post, url: host_cancel_manage_listing_reservation_path(reservation.listing, reservation) do |f|
+    = f.submit "Cancel", :confirm => "Do you really want to cancel this reservation?", :class => "btn btn-small btn-gray reservation-action"
 
 - if reservation.can_confirm?
-  = link_to 'Confirm', confirm_manage_listing_reservation_path(reservation.listing, reservation),
-              confirm: 'Do you want to confirm this reservation?', :class => "btn btn-green btn-medium ico-check",
-              method: :post
+  = form_for reservation, method: :post, url: confirm_manage_listing_reservation_path(reservation.listing, reservation) do |f|
+    = f.submit "Confirm", :confirm => "Do you want to confirm this reservation?", :class => "btn btn-small btn-green reservation-action"
 
 - if reservation.can_reject?
   = link_to 'Decline', rejection_form_manage_listing_reservation_path(reservation.listing, reservation),
               rel: 'modal.sign-up-modal',
-              :class => "btn btn-red btn-medium ico-close"
+              :class => "btn btn-gray btn-small reservation-action"

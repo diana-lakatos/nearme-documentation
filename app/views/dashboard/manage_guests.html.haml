@@ -1,51 +1,53 @@
 - title "Manage Guests (#{@guest_list.reservations.size})"
 
-#guests.row-fluid
-  .span9.offset1
-    %h1
-      %span.ico-manage-guests.padding Manage Guests
-    .box
-      - if @guest_list.scope.empty?
-        - if @locations.present?
-          = render 'dashboard/manage_guests/promote_locations', locations: @locations
-        - else
-          %p You haven't added a #{current_theme.bookable_noun} yet!
-      - else
-        %section#reservations.tab
-          .reservations.list
-            = render 'guest_filter'
-            - @guest_list.reservations.group_by(&:location).each do |location, reservations|
-              %h2
-                %span.ico-location.entity-icon
-                %span.entity-name
-                  = location.name
-              %br
-              - reservations.each do |reservation|
-                .row-fluid.reservation
-                  .span4
-                    .avatar-container.pull-left
-                      = image_tag reservation.owner.avatar.thumb.url if reservation.owner.avatar.thumb.file
-                    %strong= reservation.owner
-                    .clearfix
-                    #{reservation.listing.name} (x #{reservation.quantity})
-                  .span4
-                    %strong= t :day, count: reservation.total_days
-                    - if reservation.listing.hourly_reservations?
-                      %time{:datetime => reservation.date}
-                        = hourly_summary_for_period(reservation.periods.first) if reservation.periods.first.present?
-                    - else
-                      (
-                      %span.disabled.reservation-dates{data: { :dates => periods_dates(reservation.periods) } }
-                        #{reservation.date.strftime('%b %d')}–#{reservation.last_date.strftime('%b %d')}
-                      )
+#guests
+  %section#reservations
+    .row-fluid
+      .span8.offset2
+        %h1
+          %span.ico-manage-guests.padding Manage Guests
+        .box
+          - if @guest_list.scope.empty?
+            - if @locations.present?
+              = render 'dashboard/manage_guests/promote_locations', locations: @locations
+            - else
+              %p You haven't added a #{current_theme.bookable_noun} yet!
+          - else
+            %header
+              = render 'guest_filter'
+            .reservation-list
+              %ul
+                - @guest_list.reservations.group_by(&:location).each do |location, reservations|
+                  - reservations.each do |reservation|
+                    %li
+                      = render 'reservation', reservation: reservation, location: location
+
+                  - if false
+                    .row-fluid.reservation
+                      .span4
+                        .avatar-container.pull-left
+                          = image_tag reservation.owner.avatar.thumb.url if reservation.owner.avatar.thumb.file
+                        %strong= reservation.owner
+                        .clearfix
+                        #{reservation.listing.name} (x #{reservation.quantity})
+                      .span4
+                        %strong= t :day, count: reservation.total_days
+                        - if reservation.listing.hourly_reservations?
+                          %time{:datetime => reservation.date}
+                            = hourly_summary_for_period(reservation.periods.first) if reservation.periods.first.present?
+                        - else
+                          (
+                          %span.disabled.reservation-dates{data: { :dates => periods_dates(reservation.periods) } }
+                            #{reservation.date.strftime('%b %d')}–#{reservation.last_date.strftime('%b %d')}
+                          )
+                        %br
+                        .price= number_to_currency reservation.total_amount_dollars
+                      .span4
+                        .actions
+                          = render :partial => "owner_actions", :locals => {:reservation => reservation} if  current_user == location.creator
+                        .expiry-message
+                          #{manage_guests_time_to_expiry(reservation)}.
                     %br
-                    .price= number_to_currency reservation.total_amount_dollars
-                  .span4
-                    .actions
-                      = render :partial => "owner_actions", :locals => {:reservation => reservation} if  current_user == location.creator
-                    .expiry-message
-                      #{manage_guests_time_to_expiry(reservation)}.
-                %br
 
 :javascript
   new Dashboard.GuestsController($('#guests'))

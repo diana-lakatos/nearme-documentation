@@ -160,4 +160,9 @@ module ReservationsHelper
     @archived_reservation_count ||= current_user.reservations.archived.count
  end
 
+ def manage_guests_action_column_class(reservation)
+   buttons_cnt = (reservation.can_host_cancel? ? 1 : 0) + (reservation.can_confirm? ? 1 : 0) + (reservation.can_reject? ? 1 : 0) 
+   "split-#{buttons_cnt}"
+ end
+
 end

@@ -22,10 +22,10 @@ Feature: User Cancels Reservation
   Scenario: A user can see a list of their reservations
     When I go to the bookings page
     Then I should see the following reservations in order:
-      |18 Oct|
-      |19 Oct|
-      |20 Oct|
-      |21 Oct|
+      |18 Oct–18 Oct|
+      |19 Oct–19 Oct|
+      |20 Oct–20 Oct|
+      |21 Oct–21 Oct|
 
   Scenario: A user can cancel a reservation
     Given I am on the bookings page
