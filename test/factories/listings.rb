@@ -13,7 +13,7 @@ FactoryGirl.define do
 
     photo_not_required true
     ignore do
-      photos_count 0
+      photos_count 1
     end
 
     after(:build) do |listing, evaluator|
