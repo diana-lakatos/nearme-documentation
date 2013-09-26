@@ -461,7 +461,7 @@ section.search section#results.list {
 
   article.listing {
     @include box-sizing(border-box);
-    display: inline-block;
+    float: left;
     position: relative;
     margin-top: 25px;
     background: $gray230;
@@ -475,19 +475,19 @@ section.search section#results.list {
     }
 
     @media (min-width: $iphone-landscape) and (max-width: $ipad-width) {
-      width: 46.5%;
+      width: 46.9%;
       margin-left: 1.5%;
       margin-right: 1.5%; 
     }
 
     @media (min-width: $ipad-width) and (max-width: $default-width) {
-      width: 29.5%;
+      width: 29.9%;
       margin-left: 1.5%;
       margin-right: 1.5%; 
     }
 
     @media (min-width: $default-width) {
-      width: 22.5%;
+      width: 22.9%;
       margin-left: 1%;
       margin-right: 1%; 
     }

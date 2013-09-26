@@ -1,5 +1,5 @@
-= link_to location_listing_path(listing.location, listing) do
-  %article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
+%article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
+  = link_to location_listing_path(listing.location, listing) do
     .heading
       %h3.name
         = listing.name
