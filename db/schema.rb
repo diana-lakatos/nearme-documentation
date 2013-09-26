@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130925224723) do
+ActiveRecord::Schema.define(:version => 20130926025441) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -41,6 +41,8 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.text     "info"
   end
 
+  add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
+
   create_table "availability_rules", :force => true do |t|
     t.string   "target_type"
     t.integer  "target_id"
@@ -67,6 +69,8 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.string   "currency"
   end
 
+  add_index "charges", ["reference_id", "reference_type"], :name => "index_charges_on_reference_id_and_reference_type"
+
   create_table "companies", :force => true do |t|
     t.integer  "creator_id"
     t.string   "name"
@@ -84,12 +88,15 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.boolean  "listings_public",     :default => true
   end
 
+  add_index "companies", ["creator_id"], :name => "index_companies_on_creator_id"
   add_index "companies", ["instance_id", "listings_public"], :name => "index_companies_on_instance_id_and_listings_public"
 
   create_table "company_industries", :id => false, :force => true do |t|
     t.integer "industry_id"
     t.integer "company_id"
   end
+
+  add_index "company_industries", ["industry_id", "company_id"], :name => "index_company_industries_on_industry_id_and_company_id"
 
   create_table "company_users", :force => true do |t|
     t.integer  "company_id"
@@ -128,6 +135,7 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
   end
 
   add_index "domains", ["instance_id"], :name => "index_domains_on_instance_id"
+  add_index "domains", ["target_id", "target_type"], :name => "index_domains_on_target_id_and_target_type"
 
   create_table "email_templates", :force => true do |t|
     t.text     "html_body"
@@ -156,6 +164,10 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.datetime "updated_at",     :null => false
   end
 
+  add_index "guest_ratings", ["author_id"], :name => "index_guest_ratings_on_author_id"
+  add_index "guest_ratings", ["reservation_id"], :name => "index_guest_ratings_on_reservation_id"
+  add_index "guest_ratings", ["subject_id"], :name => "index_guest_ratings_on_subject_id"
+
   create_table "host_ratings", :force => true do |t|
     t.integer  "author_id",      :null => false
     t.integer  "subject_id"
@@ -165,6 +177,10 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
   end
+
+  add_index "host_ratings", ["author_id"], :name => "index_host_ratings_on_author_id"
+  add_index "host_ratings", ["reservation_id"], :name => "index_host_ratings_on_reservation_id"
+  add_index "host_ratings", ["subject_id"], :name => "index_host_ratings_on_subject_id"
 
   create_table "impressions", :force => true do |t|
     t.integer  "impressionable_id"
@@ -189,6 +205,9 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
+
+  add_index "inquiries", ["inquiring_user_id"], :name => "index_inquiries_on_inquiring_user_id"
+  add_index "inquiries", ["listing_id"], :name => "index_inquiries_on_listing_id"
 
   create_table "instances", :force => true do |t|
     t.string   "name"
@@ -228,12 +247,18 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.boolean  "enabled",                 :default => true
   end
 
+  add_index "listings", ["listing_type_id"], :name => "index_listings_on_listing_type_id"
+  add_index "listings", ["location_id"], :name => "index_listings_on_location_id"
+
   create_table "location_amenities", :force => true do |t|
     t.integer  "amenity_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "location_id"
   end
+
+  add_index "location_amenities", ["amenity_id"], :name => "index_location_amenities_on_amenity_id"
+  add_index "location_amenities", ["location_id"], :name => "index_location_amenities_on_location_id"
 
   create_table "location_types", :force => true do |t|
     t.string   "name"
@@ -269,6 +294,7 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
   end
 
   add_index "locations", ["company_id"], :name => "index_locations_on_company_id"
+  add_index "locations", ["location_type_id"], :name => "index_locations_on_location_type_id"
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
 
   create_table "pages", :force => true do |t|
@@ -279,6 +305,8 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
+
+  add_index "pages", ["instance_id"], :name => "index_pages_on_instance_id"
 
   create_table "payment_transfers", :force => true do |t|
     t.integer  "company_id"
@@ -316,6 +344,9 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.integer  "image_original_width"
   end
 
+  add_index "photos", ["content_id", "content_type"], :name => "index_photos_on_content_id_and_content_type"
+  add_index "photos", ["creator_id"], :name => "index_photos_on_creator_id"
+
   create_table "reservation_charges", :force => true do |t|
     t.integer  "reservation_id"
     t.integer  "subtotal_amount_cents"
@@ -342,6 +373,8 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.integer  "end_minute"
   end
 
+  add_index "reservation_periods", ["reservation_id"], :name => "index_reservation_periods_on_reservation_id"
+
   create_table "reservation_seats", :force => true do |t|
     t.integer  "reservation_period_id"
     t.integer  "user_id"
@@ -351,6 +384,9 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.datetime "updated_at",            :null => false
     t.datetime "deleted_at"
   end
+
+  add_index "reservation_seats", ["reservation_period_id"], :name => "index_reservation_seats_on_reservation_period_id"
+  add_index "reservation_seats", ["user_id"], :name => "index_reservation_seats_on_user_id"
 
   create_table "reservations", :force => true do |t|
     t.integer  "listing_id"
@@ -373,6 +409,9 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.datetime "request_host_rating_email_sent_at"
   end
 
+  add_index "reservations", ["listing_id"], :name => "index_reservations_on_listing_id"
+  add_index "reservations", ["owner_id"], :name => "index_reservations_on_owner_id"
+
   create_table "search_notifications", :force => true do |t|
     t.string   "email"
     t.integer  "user_id"
@@ -383,6 +422,8 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
   end
+
+  add_index "search_notifications", ["user_id"], :name => "index_search_notifications_on_user_id"
 
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
@@ -427,6 +468,8 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.string   "facebook_url"
   end
 
+  add_index "themes", ["owner_id", "owner_type"], :name => "index_themes_on_owner_id_and_owner_type"
+
   create_table "unit_prices", :force => true do |t|
     t.integer  "listing_id"
     t.integer  "price_cents"
@@ -435,10 +478,14 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.datetime "updated_at",  :null => false
   end
 
+  add_index "unit_prices", ["listing_id"], :name => "index_unit_prices_on_listing_id"
+
   create_table "user_industries", :id => false, :force => true do |t|
     t.integer "industry_id"
     t.integer "user_id"
   end
+
+  add_index "user_industries", ["industry_id", "user_id"], :name => "index_user_industries_on_industry_id_and_user_id"
 
   create_table "user_relationships", :force => true do |t|
     t.integer  "follower_id"
