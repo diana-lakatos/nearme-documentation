@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   # We need to persist some mixpanel attributes for subsequent
   # requests.
   after_filter :apply_persisted_mixpanel_attributes
-  after_filter :store_triggered_events
+  after_filter :store_inspectlet_taggable_events
   before_filter :first_time_visited?
   before_filter :store_referal_info
   before_filter :load_request_context
@@ -222,19 +222,19 @@ class ApplicationController < ActionController::Base
   end
   helper_method :user_google_analytics_id
 
-  def store_triggered_events
+  def store_inspectlet_taggable_events
     if @event_tracker
-      session[:triggered_events] ||= []
-      session[:triggered_events] += @event_tracker.triggered_taggable_methods
+      session[:triggered_inspectlet_taggable_events] ||= []
+      session[:triggered_inspectlet_taggable_events] += @event_tracker.triggered_inspectlet_taggable_methods
     end
   end
 
-  def get_and_clear_stored_events
-    events = session[:triggered_events]
-    session[:triggered_events] = nil
+  def get_and_clear_stored_inspectlet_taggable_events
+    events = session[:triggered_inspectlet_taggable_events] || []
+    session[:triggered_inspectlet_taggable_events] = nil
     events
   end
-  helper_method :get_and_clear_stored_events
+  helper_method :get_and_clear_stored_inspectlet_taggable_events
 
   def search_scope
     @search_scope ||= Listing::SearchScope.new(white_label_company: @current_white_label_company,

@@ -19,8 +19,7 @@ class AnalyticWrapper::GoogleAnalyticsApi
     if tracking_code.present?
       params = get_params(category, action)
       begin
-        # documentation says that the request should be post, but actually must be get. not a mistake - tested!
-        GoogleAnalyticsApiJob.perform(RestClient, :get, endpoint_url, params: params, timeout: 4, open_timeout: 4)
+        GoogleAnalyticsApiJob.perform(params)
         Rails.logger.info "Tracked google_analytics event #{params.inspect}"
       end
     else
@@ -37,10 +36,6 @@ class AnalyticWrapper::GoogleAnalyticsApi
       ec: category,
       ea: action
     }
-  end
-
-  def endpoint_url
-    "http://www.google-analytics.com/collect"
   end
 
   def tracking_code

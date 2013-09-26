@@ -1,12 +1,11 @@
 class GoogleAnalyticsApiJob < Job
-  def initialize(http_caller, method, *args)
-    @http_caller = http_caller
-    @method = method
-    @args = args
+  def initialize(parameters)
+    @parameters = parameters
   end
 
   def perform
-    @http_caller.send(@method, *@args)
+    # documentation says that the request should be post, but actually must be get. not a mistake - tested!
+    RestClient.get("http://www.google-analytics.com/collect", params: @parameters, timeout: 4, open_timeout: 4)
   end
 
 end
