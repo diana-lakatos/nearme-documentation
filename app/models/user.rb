@@ -132,7 +132,7 @@ class User < ActiveRecord::Base
   end
 
   def name
-    self[:name].split.map(&:capitalize).join(' ')
+    self[:name].to_s.split.collect{|w| w[0] = w[0].capitalize; w}.join(' ')
   end
 
   def first_name

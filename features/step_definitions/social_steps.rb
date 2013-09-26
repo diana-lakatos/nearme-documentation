@@ -121,7 +121,7 @@ end
 
 Then /I am correctly signed in/ do
   user = User.find_by_email('valid@example.com')
-  assert_equal "I am user", user.name
+  assert_equal "I Am User", user.name
 end
 
 Then /I am remembered/ do
