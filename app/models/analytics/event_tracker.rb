@@ -25,11 +25,12 @@
 # to mock out the relevant tracker instance and assert an expectation to call the
 # relevant event method(s).
 class Analytics::EventTracker
-  include Job::SyntaxEnhancer
+  attr_accessor :triggered_inspectlet_taggable_methods
 
   def initialize(mixpanel_api, google_analytics_api)
     @mixpanel_api = mixpanel_api
     @google_analytics_api = google_analytics_api
+    @triggered_inspectlet_taggable_methods = []
   end
 
   include ListingEvents
@@ -42,14 +43,11 @@ class Analytics::EventTracker
   private
 
   def track(event_name, *objects)
-    
     @mixpanel_api.track(event_name, serialize_event_properties(objects))
-    # we want to set Category based on the name of the module which called the .track method
-    # caller[0] is something like /project/path/app/models/analytics/location_events.rb:12:in `conducted_a_search' 
-    # so after splitting by / and taking last element we get location_events.rb:12:in `conducted_a_search', after 
-    # splitting again by . we get location_events which we just need to humanize. Works until there is no "/" in method name :)
-    category_name = caller[0].split('/').last.split('.')[0].humanize
-    @google_analytics_api.track(category_name, event_name)
+    stack_trace_parser = StackTraceParser.new(caller[0])
+    @google_analytics_api.track(stack_trace_parser.humanized_file_name, event_name)
+    triggered_event = stack_trace_parser.humanized_method_name
+    @triggered_inspectlet_taggable_methods << triggered_event if AnalyticWrapper::Inspectlet.taggable?(triggered_event)
   end
 
   def track_charge(user_id, total_amount_dollars)

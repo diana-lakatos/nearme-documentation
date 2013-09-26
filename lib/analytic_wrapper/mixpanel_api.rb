@@ -78,7 +78,7 @@ class AnalyticWrapper::MixpanelApi
     properties.reverse_merge!(request_details)
 
     # Trigger tracking the event
-    @mixpanel.track(event_name, properties, options)
+    MixpanelApiJob.perform(@mixpanel, :track, event_name, properties, options)
     Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
   end
 
