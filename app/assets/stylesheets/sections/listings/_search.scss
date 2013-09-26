@@ -106,7 +106,6 @@ section.search#content {
     }
   }
 }
-
 /*** End Map View ***/
 
 .google-map-popover-content .listing-sibling {
@@ -187,14 +186,13 @@ section.search#content {
 header#listing_search {
   position: fixed;
   top: 86px;
-  right: 0;
-  left: 0;
+  right: 30px;
+  left: 30px;
   z-index: $nav-z-index - 10;
   overflow: hidden;
-  margin: 0 auto;
-  max-width: none;
+  max-width: 1360px;
   padding: 0 5px;
-  margin: 0 30px;
+  margin: 0 auto;
   height: 55px;  
   background: $gray230;
   @include border-radius($border-radius-default);
@@ -539,6 +537,7 @@ section.search section#results.list {
 }
 /*** End Listing View ***/
 
+/*** Infinite Scroll ***/
 .ias_loader {
 
   h1{
@@ -552,6 +551,7 @@ section.search section#results.list {
     }
   }
 }
+/*** End Infinite Scroll ***/
 
 form.search-notification-form {
   .control-group:not(.hidden) {
