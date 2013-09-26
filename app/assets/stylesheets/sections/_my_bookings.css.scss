@@ -76,6 +76,10 @@ section#reservations {
         a {
           text-decoration: underline !important;
           color: $gray80;
+
+          &:hover {
+            color: $gray210;
+          }
         }
 
         .reservation-details {
@@ -87,6 +91,10 @@ section#reservations {
               width: 100%;
               text-align: left;
               margin-top: 0px;
+
+              &:hover {
+                background: $gray210;
+              }
             }
           }
         }
