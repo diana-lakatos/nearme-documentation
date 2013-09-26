@@ -19,7 +19,7 @@
               = hourly_summary_for_period(reservation.periods.first) 
           - else
             %a.dates{href: '#', data: { :dates => periods_dates(reservation.periods) } }
-              = selected_dates_summary(reservation)
+              #{reservation.date.strftime('%b %d')}–#{reservation.last_date.strftime('%b %d')}
           .clearfix
           %span
             = link_to export_reservation_path(reservation, :format => :ics) do
