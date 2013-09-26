@@ -1,7 +1,7 @@
 namespace :reprocess do
   desc "Reprocess all of the instance's themes"
   task :css => :environment do
-    InstanceTheme.find_each do |i|
+    Theme.find_each do |i|
       begin
         i.recompile_theme
         puts "Reprocessed Instance Theme ##{i.id} CSS successfully"
