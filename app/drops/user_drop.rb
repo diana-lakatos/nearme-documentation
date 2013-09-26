@@ -7,6 +7,10 @@ class UserDrop < BaseDrop
     @user.name
   end
 
+  def first_name
+    @user.first_name
+  end
+
   def email
     @user.email
   end

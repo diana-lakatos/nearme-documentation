@@ -1,12 +1,19 @@
 <p>
-  Hi {{ user.name }}, thanks for signing up to {{ instance.name }}!
+Hi {{ user.first_name }},
 </p>
 
 <p>
-  Please verify your email by clicking this link: <a href="{{ user.verify_user_url }}">verification link</a>.
+  Thanks for signing up to {{ instance.name }}!
 </p>
 
 <p>
-  Thanks,<br />
+  Please <a href="{{ user.verify_user_url }}">click here to verify your email</a>.
+</p>
+
+<p>
+  Thanks,
+</p>
+
+<p>
   The Desks Near Me team.
 </p>

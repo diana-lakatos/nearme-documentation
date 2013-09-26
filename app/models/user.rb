@@ -131,6 +131,14 @@ class User < ActiveRecord::Base
     reservations.confirmed
   end
 
+  def name
+    self[:name].split.map(&:capitalize).join(' ')
+  end
+
+  def first_name
+    name.split[0...-1].join(' ').presence || name
+  end
+
   # Whether to validate the presence of a password
   def password_required?
     # We're changing/setting password, or new user and there are no Provider authentications
