@@ -345,7 +345,7 @@ header#listing_search {
         display: block;
         float: left;
         margin-top: 5px 0 0;
-        padding: 8px 50px;
+        padding: 8px 5px 8px 45px;
         border: 2px solid $gray230;         
         background: $theme_white;
 
@@ -429,7 +429,7 @@ header#listing_search {
         @include transition(padding .5s linear, margin .5s linear);
 
         .list-map-toggle {
-          margin-left: -150px;
+          margin-left: -250px;
         }
 
         .search-container {
