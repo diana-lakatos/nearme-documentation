@@ -14,14 +14,13 @@
         %span.ico-user.padding
           = @user.name
       .box.clearfix
-        .span4.avatar
-          = image_tag @user.avatar.url(:big)
-        .span8.info
-          %h2
-            = @user.job_title_and_company_name
+        - if @user.avatar.file.present?
+          .span4.avatar
+            = image_tag @user.avatar.url(:big)
+        .info{class: @user.avatar.file.present? ? 'span8' : 'span12'}
+          %h2= @user.job_title_and_company_name
           %h4= @user.current_location_and_industry
           %p= @user.biography
-          - if @user.skills_and_interests
+          - if @user.skills_and_interests.present?
             %h4 Skills & Interests
             %p= @user.skills_and_interests
-          

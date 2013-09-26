@@ -9,13 +9,19 @@
   .info {
     border: 1px solid $gray230;
     @include border-radius($border-radius-default);
-    padding: $padding-small $padding-default;
+    padding: $padding-default;
 
+    h2 {
+      margin-bottom: $padding-default;
+    }
     h4 {
       color: $gray160;
+      margin-bottom: $padding-default;
     }
+
     p {
       color: $gray60;
+      margin-bottom: $padding-default;
     }
   }
 
