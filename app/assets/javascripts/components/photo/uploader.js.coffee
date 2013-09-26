@@ -17,7 +17,10 @@ class @Photo.Uploader
       options = { debug: filepicker.debug_mode, extensions: ['.jpg', '.jpeg', '.gif', '.png']}
       if @photoCollection.multiplePhoto()
         filepicker.pickMultiple options, (inkBlobs) =>
-          @createPhotos(inkBlobs)
+          if Object.prototype.toString.call( inkBlobs ) == '[object Array]'
+            @createPhotos(inkBlobs)
+          else
+            @createPhoto(inkBlobs)
       else
         filepicker.pick options, (inkBlob) =>
           @createPhoto(inkBlob)
