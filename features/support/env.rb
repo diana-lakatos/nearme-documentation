@@ -2,6 +2,7 @@ require 'rubygems'
 require 'spork'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
+require 'codeclimate-test-reporter'
 
 Spork.prefork do
   unless ENV['DRB']
@@ -16,6 +17,8 @@ Spork.prefork do
   # newer version of cucumber-rails. Consider adding your own code to a new file 
   # instead of editing this one. Cucumber will automatically load all features/**/*.rb
   # files.
+  CodeClimate::TestReporter.start
+
   if Spork.using_spork?
     Spork.trap_method(Rails::Application, :eager_load!)
     Spork.trap_method(Rails::Application::RoutesReloader, :reload!)

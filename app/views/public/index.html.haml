@@ -5,53 +5,54 @@
     .row-fluid
       #search_row.span10.offset1    
         .wood-box.row-fluid
-          %h1= current_instance.tagline
+          %h1= current_theme.tagline
 
         = render :partial => "shared/search_box"
 
-%section.how-it-works
-  .row-fluid.padding-row
-    %h1
-      List Your #{current_instance.bookable_noun}
+-# TODO: should be extracted to theme instead of hiding conditionally
+- if current_instance.is_desksnearme?
+  %section.how-it-works
+    .row-fluid.padding-row
+      %h1
+        List Your #{current_theme.bookable_noun}
 
-  .row-fluid
-    .span4
-      %h2 Expand Your Network
-      = image_tag("illustrations/handshake.png")  
-      %p Match the right people to your space based on complementary skills, communities, and interests.
-    .span4
-      %h2 Reduce Overhead
-      = image_tag("illustrations/dollar.png")
-      %p Generate extra revenue by renting desk and office space that’s not being used.
-    .span4
-      %h2 Security &amp; Convenience
-      = image_tag("illustrations/lock.png")
-      %p Do business with trusted professionals quickly and easily using our secure dashboard.
-  .row-fluid
-    = link_to new_space_wizard_url, :class => "btn btn-blue btn-large" do
-      %span.ico-add-location.padding List Now
-  %hr
-  .row-fluid
-    %h1
-      Find a Workspace
+    .row-fluid
+      .span4
+        %h2 Expand Your Network
+        = image_tag("illustrations/handshake.png")  
+        %p Match the right people to your space based on complementary skills, communities, and interests.
+      .span4
+        %h2 Reduce Overhead
+        = image_tag("illustrations/dollar.png")
+        %p Generate extra revenue by renting desk and office space that’s not being used.
+      .span4
+        %h2 Security &amp; Convenience
+        = image_tag("illustrations/lock.png")
+        %p Do business with trusted professionals quickly and easily using our secure dashboard.
+    .row-fluid
+      = link_to new_space_wizard_url, :class => "btn btn-blue btn-large" do
+        %span.ico-add-location.padding List Now
+    %hr
+      .row-fluid
+        %h1 Find a Workspace
 
-  .row-fluid
-    .span4
-      %h2 Where You Need It
-      = image_tag("illustrations/world.png")
-      %p Choose from thousands of spaces around the world. 
-    .span4
-      %h2 When You Need It
-      = image_tag("illustrations/calendar.png")
-      %p Daily, weekly, or monthly – you decide the length of your stay.
-    .span4
-      %h2 How You Need It
-      = image_tag("illustrations/desks.png")
-      %p Find private desks, shared office spaces, meeting rooms, and more.
+    .row-fluid
+      .span4
+        %h2 Where You Need It
+        = image_tag("illustrations/world.png")
+        %p Choose from thousands of spaces around the world. 
+      .span4
+        %h2 When You Need It
+        = image_tag("illustrations/calendar.png")
+        %p Daily, weekly, or monthly – you decide the length of your stay.
+      .span4
+        %h2 How You Need It
+        = image_tag("illustrations/desks.png")
+        %p Find private desks, shared office spaces, meeting rooms, and more.
 
-  .row-fluid.padding-bottom  
-    = link_to search_path, :class => "btn btn-green btn-large" do
-      %span.ico-search.padding Search Now
+    .row-fluid.padding-bottom  
+      = link_to search_path, :class => "btn btn-green btn-large" do
+        %span.ico-search.padding Search Now
 
 - content_for :domready do
   new Search.HomeController($('#listing_search'))

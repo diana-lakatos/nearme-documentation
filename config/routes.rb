@@ -103,6 +103,11 @@ DesksnearMe::Application.routes.draw do
     resources :companies, :only => [:edit, :update, :show]
 
     resources :users, :except => [:edit, :update]
+    resources :themes, :only => [] do
+      member do
+        delete :destroy_image
+      end
+    end
 
     resources :locations do
       resources :listings

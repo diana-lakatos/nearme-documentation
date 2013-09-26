@@ -14,11 +14,11 @@ end
 Given(/^I receive an email request for (host|guest) rating$/) do |kind|
   stub_local_time_to_return_hour(Location.any_instance, 12)
 
-  RatingReminderJob.new(Date.today.to_s).perform
+  RatingReminderJob.new(Date.current.to_s).perform
 
   assert_equal 2, ActionMailer::Base.deliveries.size
   @request_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@user.email] }
-  assert_match /\[DesksNearMe\] Rate your #{kind} at Listing \d+/, @request_email.subject
+  assert_match /\[#{model!('instance').name}\] Rate your #{kind} at Listing \d+/, @request_email.subject
 end
 
 When(/^I submit a (host|guest) rating with comment and (good|bad) rating$/) do |kind, rating|

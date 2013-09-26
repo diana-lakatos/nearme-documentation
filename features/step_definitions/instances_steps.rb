@@ -10,7 +10,7 @@ When(/^I fill instance form with valid details$/) do
 end
 
 When(/^I edit instance$/) do
-  all(:css, '.table tr .btn').last.click
+  all(:css, '.table tr .btn').first.click
 end
 
 Then(/^I should see created instance show page$/) do

@@ -1,0 +1,45 @@
+// Specifies owner specific CSS rules.
+//
+// We will iterate on this approach over time, and the longer term plan is to
+// have a fully customisable templating environment.
+
+// Specify owner-specific values for variables which are defaults in
+// globals/variables
+
+<%=
+  {
+    theme_hero: theme.hero_image.url,
+    theme_icon: theme.icon_image.url,
+    theme_icon2x: theme.icon_retina_image.url,
+    theme_logo: theme.logo_image.url,
+    theme_logo2x: theme.logo_retina_image.url
+  }.map do |variable, value|
+    next unless value.present?
+
+    <<-SCSS
+      $#{variable}: '#{value}';
+    SCSS
+  end.join
+%>
+
+<%=
+  {
+    theme_blue: theme.color_blue,
+    theme_red: theme.color_red,
+    theme_orange: theme.color_orange,
+    theme_green: theme.color_green,
+    theme_gray: theme.color_gray,
+    theme_black: theme.color_black,
+    theme_white: theme.color_white
+  }.map do |variable, color|
+    next unless color.present?
+
+    <<-SCSS
+      $#{variable}: #{color};
+    SCSS
+  end.join
+%>
+
+// Render the application css with the above configuration
+@import "application";
+

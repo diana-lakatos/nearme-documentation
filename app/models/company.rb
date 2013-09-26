@@ -3,7 +3,7 @@ class Company < ActiveRecord::Base
   URL_REGEXP = URI::regexp(%w(http https))
 
   attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email, :industry_ids, 
-    :locations_attributes, :domain_attributes, :instance_id
+    :locations_attributes, :domain_attributes, :theme_attributes, :instance_id, :white_label_enabled, :listings_public
 
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance
@@ -29,11 +29,12 @@ class Company < ActiveRecord::Base
   has_many :company_industries
   has_many :industries, :through => :company_industries
 
+  has_one :domain, :as => :target, :dependent => :destroy
+  has_one :theme, :as => :owner, :dependent => :destroy
+
   has_many :locations_impressions,
            :source => :impressions,
            :through => :locations
-
-  has_one :domain, :as => :target
 
   before_validation :add_default_url_scheme
 
@@ -59,7 +60,8 @@ class Company < ActiveRecord::Base
 
   acts_as_paranoid
 
-  accepts_nested_attributes_for :domain, :reject_if => proc { |params| params[:name].blank? }
+  accepts_nested_attributes_for :domain, :reject_if => proc { |params| params.delete(:white_label_enabled).to_f.zero? }
+  accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :locations
 
   def notify_user_about_change

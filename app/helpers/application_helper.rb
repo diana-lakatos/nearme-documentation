@@ -21,7 +21,7 @@ module ApplicationHelper
   end
 
   def additional_meta_title
-    content_for?(:meta_title) ? content_for(:meta_title) : current_instance.meta_title
+    content_for?(:meta_title) ? content_for(:meta_title) : current_theme.meta_title
   end
 
   def legacy(is_legacy = true)
@@ -102,7 +102,6 @@ module ApplicationHelper
   end
 
   def ico_for_flash(key)
-    Rails.logger.debug "checking flash: #{key}"
     case key.to_s
     when 'notice' 
       "ico-check"
@@ -115,6 +114,14 @@ module ApplicationHelper
     when 'deleted'
       "ico-close"
     end
+  end
+
+  def user_can_add_listing?(white_label_company = nil, user = nil)
+    # if this is not white label, user can always add listing
+    return true if white_label_company.blank?
+    return true unless white_label_company.white_label_enabled?
+    # if this is white label, only its users should be able to add listing
+    user.present? && user.companies.include?(white_label_company)
   end
 
 end

@@ -10,14 +10,16 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
       assert @availability_rule.open_at?(6, 15)
       assert @availability_rule.open_at?(6, 50)
       assert @availability_rule.open_at?(12, 0)
-      assert @availability_rule.open_at?(17, 14)
+      assert @availability_rule.open_at?(17, 15), "AvailabilityRule must be opened at the time of closing"
     end
 
     should "return false during times closed" do
-      assert !@availability_rule.open_at?(17, 15)
-      assert !@availability_rule.open_at?(20, 0)
       assert !@availability_rule.open_at?(5, 0)
+      assert !@availability_rule.open_at?(6, 14)
+      assert !@availability_rule.open_at?(17, 16)
+      assert !@availability_rule.open_at?(20, 0)
     end
+
   end
 
   context "open/close time in (H)H:MM format" do
@@ -97,13 +99,12 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
       end
 
       should "have correct availability" do
-        assert @object.availability.open_on?(:day => 1, :hour => 9)
-        assert @object.availability.open_on?(:day => 1, :hour => 16, :minute => 59)
-        assert @object.availability.open_on?(:day => 2, :hour => 9)
-        assert @object.availability.open_on?(:day => 3, :hour => 9)
-        assert @object.availability.open_on?(:day => 4, :hour => 9)
-        assert @object.availability.open_on?(:day => 5, :hour => 9)
-        assert !@object.availability.open_on?(:day => 5, :hour => 17)
+        1.upto(5) do |i|
+          assert !@object.availability.open_on?(:day => i, :hour => 8, :minute => 59)
+          assert @object.availability.open_on?(:day => i, :hour => 9)
+          assert @object.availability.open_on?(:day => i, :hour => 17)
+          assert !@object.availability.open_on?(:day => i, :hour => 17, :minute => 1)
+        end
         assert !@object.availability.open_on?(:day => 6, :hour => 9)
         assert !@object.availability.open_on?(:day => 0, :hour => 9)
         assert_equal 'M-F9-5', @object.availability_template_id

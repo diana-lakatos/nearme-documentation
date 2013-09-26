@@ -7,17 +7,18 @@ class UserMailer < InstanceMailer
     @user = user
     mail(to: @user.email,
          subject:  instance_prefix("We couldn't send you text message", instance),
-         instance: instance)
+         theme: instance.theme)
   end
 
-  def email_verification(user, instance)
+  def email_verification(user, theme)
     @user = user
-    @instance = instance
+    @theme = theme
+    @instance = @theme.instance
 
     unless @user.verified_at
       mail to: @user.email, 
            subject: "Email verification",
-           instance: instance
+           theme: @theme
     end
   end
 
@@ -29,7 +30,7 @@ class UserMailer < InstanceMailer
       end
 
       def email_verification
-        ::UserMailer.email_verification(User.where('users.verified_at is null').first, Instance.default_instance)
+        ::UserMailer.email_verification(User.where('users.verified_at is null').first, Theme.first)
       end
 
     end

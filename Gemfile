@@ -71,6 +71,7 @@ gem 'googl'
 gem 'jquery-rails'
 gem 'jquery-fileupload-rails'
 gem 'chosen-rails'
+gem 'spectrum-rails'
 
 gem 'inherited_resources'
 gem "historyjs-rails"
@@ -109,7 +110,9 @@ group :development do
   gem 'rb-fsevent', :require => RUBY_PLATFORM.include?('darwin') && 'rb-fsevent'
   gem 'ruby-prof'
 end
+
 group :test do
+  gem 'codeclimate-test-reporter', :require => false
   gem 'capybara', '~>2'
   gem 'capybara-webkit'
   gem 'capybara-screenshot'

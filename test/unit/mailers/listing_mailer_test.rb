@@ -5,12 +5,13 @@ class ListingTest < ActiveSupport::TestCase
   setup do
     @listing = FactoryGirl.create(:listing)
     @user = FactoryGirl.create(:user)
-    @instance = Instance.first || FactoryGirl.create(:instance)
+    @instance = Instance.default_instance
+    @theme = @instance.theme
     @subject = "#{@user.name} has shared a listing with you on Desks Near Me"
   end
 
   test "#share" do
-    mail = ListingMailer.share(@instance, @listing, 'jimmy@test.com', 'Jimmy Falcon', @user, 'Check this out!')
+    mail = ListingMailer.share(@theme, @listing, 'jimmy@test.com', 'Jimmy Falcon', @user, 'Check this out!')
 
     assert_equal @subject, mail.subject
     assert mail.html_part.body.include?(@user.name)
@@ -21,7 +22,7 @@ class ListingTest < ActiveSupport::TestCase
   end
 
   test "#share without message" do
-    mail = ListingMailer.share(@instance, @listing, 'jimmy@test.com', 'Jimmy Falcon', @user)
+    mail = ListingMailer.share(@theme, @listing, 'jimmy@test.com', 'Jimmy Falcon', @user)
 
     assert_equal @subject, mail.subject
     assert mail.html_part.body.include?(@user.name)

@@ -5,25 +5,29 @@ end
 
 When /^I select industries for #{capture_model}$/ do |model|
   object = model!(model)
-  if(object.class.to_s=='User')
+  if(User === object)
     within('select[@id="user_industry_ids"]') do
       select "Computer Science"
       select "Telecommunication"
     end
-  elsif(object.class.to_s=='Company')
+  elsif(Company === object)
     within('select[@id="company_industry_ids"]') do
       select "IT"
       select "Telecommunication"
     end
   end
   within('form[@id="edit_'+object.class.to_s.downcase+'"]') do
-    find('input[@type="submit"]').click
+    if Company === object
+      find('div[@data-white-label-settings-container] input[@type="submit"]').click
+    else
+      find('input[@type="submit"]').click
+    end
   end
 end
 
 Then /^#{capture_model} should be connected to selected industries$/ do |model|
   object = model!(model)
-  expected_industries = (object.class.to_s=='User') ? ["Computer Science", "Telecommunication"] : ["IT", "Telecommunication"]
+  expected_industries = (User === object) ? ["Computer Science", "Telecommunication"] : ["IT", "Telecommunication"]
   assert_equal expected_industries, object.industries.pluck(:name).reject { |name| name.include?('Industry ') }
 end
 
@@ -42,7 +46,7 @@ When /^I update company settings$/ do
   fill_in "company_description", with: "this is updated description"
   fill_in "company_mailing_address", with: "mail-update@example.com"
   fill_in "company_paypal_email", with: "paypal-update@example.com"
-  within('form[@id="edit_company"]') do
+  within('form[@id="edit_company"] div[data-white-label-settings-container]') do
     find('input[@type="submit"]').click
   end
 end
@@ -57,14 +61,18 @@ Then /^The company should be updated$/ do
   assert_equal "paypal-update@example.com", company.paypal_email
 end
 
-When /^I update company domain name$/ do
+When /^I enable white label settings$/ do
+  first(:css, 'div[data-white-label-settings-container] .switch label').click 
+end
+
+When /^I update company white label settings$/ do
   fill_in "company_domain_attributes_name", with: "domain.lvh.me"
-  within('form[@id="edit_company"]') do
-    find('input[@type="submit"]').click
+  within(:css, 'form[id=edit_company] div[data-white-label-settings-container]') do
+    find(:css, 'input[type=submit]').click
   end
 end
 
-Then /^The company domain name should be updated$/ do
+Then /^The company white label settings should be updated$/ do
   company = model!("the company")
   assert_equal "domain.lvh.me", company.domain.name
 end

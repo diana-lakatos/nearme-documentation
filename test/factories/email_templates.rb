@@ -6,6 +6,6 @@ FactoryGirl.define do
     text_body "text body"
     path "weird/path"
     partial false
-    instance { Instance.default_instance || FactoryGirl.create(:instance) }
+    theme { Instance.default_instance.theme }
   end
 end

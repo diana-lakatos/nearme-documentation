@@ -54,15 +54,13 @@ class V1::ListingsController < V1::BaseController
     render :json => Listing.active.find(params[:id])
   end
 
-  # FIXME: same code in search/query? Can they be the same API endpoint?
   def search
-    listings = Listing.search_from_api(json_params.merge(user: current_user))
+    listings = Listing.search_from_api(json_params.merge(user: current_user), search_scope)
     render :json => listings
   end
 
   def query
-    listings = Listing.search_from_api(json_params.merge(user: current_user))
-    render :json => listings
+    search
   end
 
   # Create a new reservation
@@ -85,8 +83,8 @@ class V1::ListingsController < V1::BaseController
     @message = json_params["query"]
 
     inquiry = listing.inquiry_from!(current_user, message: @message)
-    InquiryMailer.enqueue.inquiring_user_notification(current_instance, inquiry)
-    InquiryMailer.enqueue.listing_creator_notification(current_instance, inquiry)
+    InquiryMailer.enqueue.inquiring_user_notification(current_theme, inquiry)
+    InquiryMailer.enqueue.listing_creator_notification(current_theme, inquiry)
 
     head :no_content
   end
@@ -96,7 +94,7 @@ class V1::ListingsController < V1::BaseController
     listing = Listing.find(params[:id])
     message = json_params["query"]
     users.each do |user|
-      ListingMailer.enqueue.share(current_instance, listing, user["email"], user["name"], current_user, message)
+      ListingMailer.enqueue.share(current_theme, listing, user["email"], user["name"], current_user, message)
     end
 
     head :no_content
@@ -107,7 +105,6 @@ class V1::ListingsController < V1::BaseController
     patrons = User.patron_of(listing)
     render json: formatted_patrons(listing, patrons)
   end
-
 
   # Return the user's connections associated with the listing
   def connections
