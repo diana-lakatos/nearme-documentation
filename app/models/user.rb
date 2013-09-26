@@ -1,6 +1,9 @@
 class User < ActiveRecord::Base
   has_paper_trail
 
+  extend FriendlyId
+  friendly_id :name, use: :slugged
+
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
 
@@ -74,7 +77,6 @@ class User < ActiveRecord::Base
   extend CarrierWave::SourceProcessing
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
 
-
   validates_presence_of :name
   validates_presence_of :password, :if => :password_required?
   validates :email, email: true
@@ -88,14 +90,18 @@ class User < ActiveRecord::Base
   validates_presence_of :country_name, :if => lambda { phone_required || country_name_required }
   attr_accessor :phone_required, :country_name_required
 
-  #validates :avatar, :file_mime_type => {:content_type => /image/}, :if => Proc.new{|user| user.avatar.present? && user.avatar.file.present? && user.avatar.file.content_type.present? }
+  validates :current_location, length: {maximum: 50}
+  validates :company_name, length: {maximum: 50}
+  validates :job_title, length: {maximum: 50}
+  validates :skills_and_interests, length: {maximum: 150}
+  validates :biography, length: {maximum: 250}
 
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :validatable, :token_authenticatable
 
-  # Setup accessible (or protected) attributes for your model
   attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
-    :biography, :industry_ids, :country_name, :mobile_number
+    :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url, 
+    :current_location, :company_name, :skills_and_interests
 
   delegate :to_s, :to => :name
 
@@ -113,7 +119,6 @@ class User < ActiveRecord::Base
     use_social_provider_image(omniauth['info']['image']) if omniauth['info']['image']
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
   end
-
 
   def cancelled_reservations
     reservations.cancelled
@@ -176,7 +181,6 @@ class User < ActiveRecord::Base
       IssueLogger.log_issue("[internal] invalid mobile number", email, "#{name} (#{id}) was asked to update his mobile number #{full_mobile_number}")
     end
   end
-
 
   def following?(other_user)
     relationships.find_by_followed_id(other_user.id)
@@ -271,5 +275,10 @@ class User < ActiveRecord::Base
   def to_liquid
     UserDrop.new(self)
   end
+
+  def to_param
+    id
+  end
+
 end
 

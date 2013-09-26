@@ -504,10 +504,19 @@ ActiveRecord::Schema.define(:version => 20130925224723) do
     t.datetime "avatar_versions_generated_at"
     t.integer  "avatar_original_height"
     t.integer  "avatar_original_width"
+    t.text     "current_location"
+    t.text     "company_name"
+    t.text     "skills_and_interests"
+    t.text     "facebook_url"
+    t.text     "twitter_url"
+    t.text     "linkedin_url"
+    t.text     "instagram_url"
+    t.string   "slug"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["slug"], :name => "index_users_on_slug", :unique => true
 
   create_table "versions", :force => true do |t|
     t.string   "item_type",  :null => false

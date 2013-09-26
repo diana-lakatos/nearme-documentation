@@ -29,6 +29,18 @@ class RegistrationsControllerTest < ActionController::TestCase
       @tracker.expects(:updated_profile_information).once
       put :update, :id => @user, user: { :industry_ids => [@industry.id, @industry2.id] }
     end
+
+    should 'show profile' do
+      sign_in @user
+
+      get :show, :id => @user.slug
+
+      assert_response 200
+      assert_select "h1", @user.name
+      assert_select ".info h2", "Manager at DesksNearMe"
+      assert_select ".info h4", "Prague"
+      assert_select ".info h4", "Skills & Interests"
+    end
   end
 
   context "verify" do
