@@ -4,10 +4,6 @@ $map-z-index: $nav-z-index - 20;
 section.search#content {
   margin-top: -30px;
 
-  @media (max-width: $iphone-landscape) {
-    padding-top: 8px;
-  }
-
   .loading {
     position: fixed;
     top: 50%;
