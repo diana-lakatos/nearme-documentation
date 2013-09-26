@@ -5,10 +5,10 @@
         %span Manage
         %b.caret
       %ul.dropdown-menu
-        %li
         - if user_can_add_listing?(@current_white_label_domain, current_user)
-          = link_to manage_locations_path do
-            %span.ico-location.padding Locations
+          %li
+            = link_to manage_locations_path do
+              %span.ico-location.padding Locations
         - if current_user.companies.any? && current_user.companies.first.id.present?
           %li
             = link_to manage_users_path do

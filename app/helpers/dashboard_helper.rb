@@ -44,7 +44,11 @@ module DashboardHelper
     if hours < 1 and minutes < 1
       'less than minute'
     else
-      '%02d:%02d' % [hours, minutes]
+      if hours < 1
+        '%d minutes' % [minutes]
+      else
+        '%d hours, %d minutes' % [hours, minutes]
+      end
     end
   end
 
@@ -96,5 +100,13 @@ module DashboardHelper
 
   def format_date_for_graph(datetime)
     datetime.strftime('%b %d')
+  end
+
+  def my_booking_status_info(reservation)
+    if reservation.state == 'unconfirmed'
+      tooltip("Pending confirmation from host. Booking will expire in #{time_to_expiry(reservation.expiry_time)}.", "<span class='tooltip-spacer'>i</span>".html_safe, {:class => reservation_status_icon(reservation)}, nil)
+    else
+      content_tag(:i, '', :class => reservation_status_icon(reservation))
+    end
   end
 end
