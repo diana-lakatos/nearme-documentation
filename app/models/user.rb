@@ -275,5 +275,10 @@ class User < ActiveRecord::Base
   def to_liquid
     UserDrop.new(self)
   end
+
+  def to_param
+    id
+  end
+
 end
 
