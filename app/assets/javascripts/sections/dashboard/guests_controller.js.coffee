@@ -1,7 +1,7 @@
 class @Dashboard.GuestsController
 
   constructor: (@container)->
-    @dates = @container.find('a.dates')
+    @dates = @container.find('a[data-dates]')
     @dates.each (idx, date)=>
       dates = $.each $(date).data('dates'), (_, d) -> new Date(d)
       datepicker = new Datepicker
