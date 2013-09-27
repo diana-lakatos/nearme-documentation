@@ -20,7 +20,7 @@
               = hourly_summary_for_period(reservation.periods.first) 
           - else
             %a.dates{href: '#', data: { :dates => periods_dates(reservation.periods) } }
-              #{reservation.date.strftime('%b %d')}–#{reservation.last_date.strftime('%b %d')}
+              = reservation_short_dates(reservation)
           .clearfix
           %span
             = pluralize(reservation.total_days, 'day')

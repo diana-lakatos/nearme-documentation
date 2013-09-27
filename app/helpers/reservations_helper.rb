@@ -165,4 +165,11 @@ module ReservationsHelper
    "split-#{buttons_cnt}"
  end
 
+ def reservation_short_dates(reservation)
+   first_date = reservation.date.strftime('%d %b') 
+   last_date = reservation.last_date.strftime('%d %b')
+
+   first_date == last_date ? first_date : "#{first_date}-#{last_date}"
+ end
+
 end
