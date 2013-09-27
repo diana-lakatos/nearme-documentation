@@ -22,32 +22,5 @@
                     %li
                       = render 'reservation', reservation: reservation, location: location
 
-                  - if false
-                    .row-fluid.reservation
-                      .span4
-                        .avatar-container.pull-left
-                          = image_tag reservation.owner.avatar.thumb.url if reservation.owner.avatar.thumb.file
-                        %strong= reservation.owner
-                        .clearfix
-                        #{reservation.listing.name} (x #{reservation.quantity})
-                      .span4
-                        %strong= t :day, count: reservation.total_days
-                        - if reservation.listing.hourly_reservations?
-                          %time{:datetime => reservation.date}
-                            = hourly_summary_for_period(reservation.periods.first) if reservation.periods.first.present?
-                        - else
-                          (
-                          %span.disabled.reservation-dates{data: { :dates => periods_dates(reservation.periods) } }
-                            #{reservation.date.strftime('%b %d')}–#{reservation.last_date.strftime('%b %d')}
-                          )
-                        %br
-                        .price= number_to_currency reservation.total_amount_dollars
-                      .span4
-                        .actions
-                          = render :partial => "owner_actions", :locals => {:reservation => reservation} if  current_user == location.creator
-                        .expiry-message
-                          #{manage_guests_time_to_expiry(reservation)}.
-                    %br
-
 :javascript
   new Dashboard.GuestsController($('#guests'))

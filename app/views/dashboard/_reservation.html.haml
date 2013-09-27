@@ -6,7 +6,7 @@
           = manage_booking_status_info(reservation) 
       .span12.reservation-information
         %div{:class => reservation.archived? ? 'span6' : 'span5'}
-          = link_to reservation.owner, profile_path(reservation.owner)
+          = link_to reservation.owner, profile_path(reservation.owner.slug)
           %br
           %span.location
             = link_to reservation.listing.name, location_listing_path(location, reservation.listing) 
