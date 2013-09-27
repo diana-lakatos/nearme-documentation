@@ -240,6 +240,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def belongs_to_theme?(theme)
+    self.companies.include? theme.owner
+  end
+
   def has_listing_without_price?
     listings.any?(&:free?)
   end
