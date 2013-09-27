@@ -31,7 +31,7 @@ class Listing < ActiveRecord::Base
   scope :active,   where('listings.draft IS NULL')
   scope :latest,   order("listings.created_at DESC")
   scope :visible,  where(:enabled => true)
-  
+  scope :searchable, active.visible
 
   # == Callbacks
   after_save :notify_user_about_change
