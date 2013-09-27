@@ -91,7 +91,7 @@ section.search#content {
     .search-map-redo-search-control {
       background: rgba(255,255,255,0.7);
       padding: 2px 4px;
-      margin: 91px 31px 5px 5px;
+      margin-left: 12px;
       @include border-radius($border-radius-default);
 
       label {
