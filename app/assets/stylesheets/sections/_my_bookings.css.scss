@@ -138,6 +138,8 @@ section#reservations {
             padding-top: 15px;
           }
 
+          
+
           span.ico-download {
             margin-left: 3px;
           }
@@ -156,6 +158,18 @@ section#reservations {
                 span {
                   color: $gray80;
                 }
+              }
+            }
+          }
+
+        span.address {
+            a {
+              color: $gray160;
+              text-decoration: underline !important;
+
+              &:hover {
+                text-decoration: none;
+                color: $gray210;
               }
             }
           }
