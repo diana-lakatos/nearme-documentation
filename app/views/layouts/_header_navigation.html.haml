@@ -5,7 +5,7 @@
         %span Manage
         %b.caret
       %ul.dropdown-menu
-        - if user_can_add_listing?(@current_white_label_domain, current_user)
+        - if user_can_add_listing?(@current_white_label_company, current_user)
           %li
             = link_to manage_locations_path do
               %span.ico-location.padding Locations
@@ -48,14 +48,13 @@
   = link_to new_user_registration_url(get_return_to_url), :rel => 'modal.sign-up-modal', :class => "nav-link header-first margin-right ico-sign-up padding-right" do
     %span.padding-left Sign Up
 
-- unless no_listing_buttons?
-  - if current_theme.is_desksnearme? || ( user_signed_in? && current_user.belongs_to_theme?(current_theme) )
-    - if !user_signed_in? && user_can_add_listing?(@current_white_label_domain, current_user)
-      = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => "btn btn-blue btn-medium ico-add-location" do
-        %span.padding-left List Your #{current_theme.bookable_noun}
-    - elsif current_user && current_user.listings.draft.any?
-      = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location user-signed-in" do
-        %span.padding-left Complete Your Listing
-    - elsif current_user && current_user.listings.active.empty?
-      = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location user-signed-in" do
-        %span.padding-left List Your #{current_theme.bookable_noun}
+- unless no_listing_buttons? || !user_can_add_listing?(@current_white_label_company, current_user)
+  - if !user_signed_in?
+    = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => "btn btn-blue btn-medium ico-add-location" do
+      %span.padding-left List Your #{current_theme.bookable_noun}
+  - elsif current_user && current_user.listings.draft.any?
+    = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location user-signed-in" do
+      %span.padding-left Complete Your Listing
+  - elsif current_user && current_user.listings.active.empty?
+    = link_to new_space_wizard_url, :class => "btn btn-blue btn-medium ico-add-location user-signed-in" do
+      %span.padding-left List Your #{current_theme.bookable_noun}
