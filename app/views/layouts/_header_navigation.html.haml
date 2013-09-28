@@ -1,31 +1,31 @@
 - if user_signed_in?
   %ul.nav
-    %li.dropdown
-      %a.ico-dashboard.dropdown-toggle.nav-link{"data-toggle" => "dropdown", :href => "#"}
-        %span Manage
-        %b.caret
-      %ul.dropdown-menu
-        - if user_can_add_listing?(@current_white_label_domain, current_user)
+    - if user_can_add_listing?(@current_white_label_company, current_user)
+      %li.dropdown
+        %a.ico-dashboard.dropdown-toggle.nav-link{"data-toggle" => "dropdown", :href => "#"}
+          %span Manage
+          %b.caret
+        %ul.dropdown-menu
           %li
             = link_to manage_locations_path do
               %span.ico-location.padding Locations
-        - if current_user.companies.any? && current_user.companies.first.id.present?
+          - if current_user.companies.any? && current_user.companies.first.id.present?
+            %li
+              = link_to manage_users_path do
+                %span.ico-user.padding Users
           %li
-            = link_to manage_users_path do
-              %span.ico-user.padding Users
-        %li
-          = link_to manage_guests_dashboard_path do
-            %span.ico-manage-guests.padding Guests
-        %li
-          = link_to transfers_dashboard_path do
-            %span.ico-transfers.padding Transfers
-        %li
-          = link_to analytics_dashboard_path do
-            %span.ico-bar-chart.padding Analytics
-        - if current_user.companies.any? && current_user.companies.first.id.present?
+            = link_to manage_guests_dashboard_path do
+              %span.ico-manage-guests.padding Guests
           %li
-            = link_to edit_manage_company_path(current_user.companies.first) do
-              %span.ico-settings.padding Settings
+            = link_to transfers_dashboard_path do
+              %span.ico-transfers.padding Transfers
+          %li
+            = link_to analytics_dashboard_path do
+              %span.ico-bar-chart.padding Analytics
+          - if current_user.companies.any? && current_user.companies.first.id.present?
+            %li
+              = link_to edit_manage_company_path(current_user.companies.first) do
+                %span.ico-settings.padding Settings
     %li
       = link_to bookings_dashboard_path, class: 'nav-link ico-bookings dropdown-toggle' do
         %span My Bookings
@@ -48,8 +48,8 @@
   = link_to new_user_registration_url(get_return_to_url), :rel => 'modal.sign-up-modal', :class => "nav-link header-first margin-right ico-sign-up padding-right" do
     %span.padding-left Sign Up
 
-- unless no_listing_buttons?
-  - if !user_signed_in? && user_can_add_listing?(@current_white_label_domain, current_user)
+- unless no_listing_buttons? || !user_can_add_listing?(@current_white_label_company, current_user)
+  - if !user_signed_in?
     = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => "btn btn-blue btn-medium ico-add-location" do
       %span.padding-left List Your #{current_theme.bookable_noun}
   - elsif current_user && current_user.listings.draft.any?
