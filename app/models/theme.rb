@@ -62,6 +62,10 @@ class Theme < ActiveRecord::Base
     self
   end
 
+  def is_desksnearme?
+    self.id == 1
+  end
+
   def instance
     @instance ||= begin
       case owner_type
