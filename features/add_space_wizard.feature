@@ -47,5 +47,5 @@ Feature: A user can add a space
      Then I should see "Your space was listed!"
      Then I go to the home page
      When I search for "USA"
-     Then I should see "We have a group of several shared desks available."
+     Then I should see "International"
      
