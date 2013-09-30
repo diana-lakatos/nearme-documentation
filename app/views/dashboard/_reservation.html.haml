@@ -8,8 +8,7 @@
         %div{:class => reservation.archived? ? 'span6' : 'span5'}
           = link_to reservation.owner, profile_path(reservation.owner.slug)
           %br
-          %span.location
-            = link_to reservation.listing.name, location_listing_path(reservation.listing.location, reservation.listing) 
+          %span.address= link_to reservation.listing.name, location_listing_path(reservation.listing.location, reservation.listing) 
         .span2
           = reservation_total_price(reservation)
           %br

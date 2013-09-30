@@ -164,6 +164,9 @@ DesksnearMe::Application.routes.draw do
 
     get  'iplookup',  :to => 'iplookup#index'
 
+    resources :guest_ratings, :only => [:create]
+    resources :host_ratings, :only => [:create]
+
     resources :locations do
       collection do
         get 'list'

@@ -1,11 +1,11 @@
 .booking-module-container{:class => (listing.hourly_reservations? ? 'booking-hourly' : 'booking-daily')}
   .booking-module
     - if listing.free?
-      %span.label.label-free-price
+      %span.label
         Free
     - elsif listing.hourly_reservations?
       - unless listing.hourly_price.to_f.zero?
-        %span.label.label-hourly-price
+        %span.label
           = "#{money_without_cents_and_with_symbol(listing.hourly_price)}"
           %span.period   Hour
       - else
@@ -14,7 +14,7 @@
           %span.period   N/A
     - else
       - unless listing.daily_price.to_f.zero?
-        %span.label.label-daily-price
+        %span.label
           = "#{money_without_cents_and_with_symbol(listing.daily_price)}"
           %span.period   Day
       - else
@@ -22,7 +22,7 @@
           Price
           %span.period   N/A
       - unless listing.weekly_price.to_f.zero?
-        %span.label.label-weekly-price
+        %span.label
           = "#{money_without_cents_and_with_symbol(listing.weekly_price)}"
           %span.period   Week
       - else
@@ -30,7 +30,7 @@
           Price
           %span.period   N/A
       - unless listing.monthly_price.to_f.zero?
-        %span.label.label-monthly-price
+        %span.label
           = "#{money_without_cents_and_with_symbol(listing.monthly_price)}"
           %span.period   Month
       - else

@@ -204,13 +204,14 @@ section#reservations {
             }
           }
 
-          span.location {
 
+          span.address {
             a {
-              text-decoration: underline !important;
               color: $gray160;
+              text-decoration: underline !important;
 
-              &:hover{
+              &:hover {
+                text-decoration: none !important;
                 color: $gray210;
               }
             }
