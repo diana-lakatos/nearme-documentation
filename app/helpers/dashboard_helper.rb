@@ -60,7 +60,7 @@ module DashboardHelper
   end
 
   def guest_filter_class(guest_list, filter)
-    'inactive' unless guest_list.state == filter
+    guest_list.state == filter ? 'btn-gray active' : 'btn-gray-darker'
   end
 
   def periods_dates(periods)
@@ -105,6 +105,14 @@ module DashboardHelper
   def my_booking_status_info(reservation)
     if reservation.state == 'unconfirmed'
       tooltip("Pending confirmation from host. Booking will expire in #{time_to_expiry(reservation.expiry_time)}.", "<span class='tooltip-spacer'>i</span>".html_safe, {:class => reservation_status_icon(reservation)}, nil)
+    else
+      content_tag(:i, '', :class => reservation_status_icon(reservation))
+    end
+  end
+
+  def manage_booking_status_info(reservation)
+    if reservation.state == 'unconfirmed'
+      tooltip("You must confirm this booking within #{time_to_expiry(reservation.expiry_time)} or it will expire.", "<span class='tooltip-spacer'>i</span>".html_safe, {:class => reservation_status_icon(reservation)}, nil)
     else
       content_tag(:i, '', :class => reservation_status_icon(reservation))
     end
