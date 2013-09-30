@@ -52,9 +52,27 @@ section#reservations {
         margin-left: 5px;
         margin-right: 5px;
 
-        a.upcoming-reservations {
-          span {
-            margin: 0 15px;
+        a {
+          width: 150px;
+
+          &.upcoming-reservations {
+            span {
+              margin: 0 15px;
+            }
+          }
+        }
+      }
+
+      @media (max-width: $ipad-width) {
+        li {
+          display: block;
+
+          a {
+            width: 100%;
+          }
+
+          &:not(:last-child) {
+            margin-bottom: 5px;
           }
         }
       }
@@ -77,6 +95,7 @@ section#reservations {
         color: $gray80;
         font-family: $font-medium; 
 
+
         a {
           text-decoration: underline !important;
           color: $gray80;
@@ -90,14 +109,27 @@ section#reservations {
 
           .actions {
 
-            input {
+            input, a {
               @include border-radius($border-radius-right);
               width: 100%;
               text-align: left;
               margin-top: 0px;
+              margin-bottom: 0px !important; 
+            }
 
+            input:not(.btn-green) {
               &:hover {
                 background: $gray210;
+              }
+            }
+
+            a {
+              padding: 0 22px;
+              text-decoration: none !important;
+
+              &:hover {
+                color: $gray80;
+                background: $gray190;
               }
             }
           }
@@ -124,6 +156,10 @@ section#reservations {
 
             a {
               text-decoration: none !important;
+
+              &:hover {
+                color: $gray80; 
+              }
             } 
           }
         }
@@ -138,7 +174,13 @@ section#reservations {
             padding-top: 15px;
           }
 
-          
+          @media (max-width: $ipad-width) {
+            & > .split-2 {
+              .actions {
+                padding-top: 15px;
+              }
+            }
+          }
 
           span.ico-download {
             margin-left: 3px;
@@ -162,15 +204,24 @@ section#reservations {
             }
           }
 
-        span.address {
+
+          span.address {
             a {
               color: $gray160;
               text-decoration: underline !important;
 
               &:hover {
-                text-decoration: none;
+                text-decoration: none !important;
                 color: $gray210;
               }
+            }
+          }
+
+          .split-2 {
+            padding-top: 0px;
+
+            .reservation-action:nth-of-type(1) {
+              margin-bottom: 5px !important;
             }
           }
         }

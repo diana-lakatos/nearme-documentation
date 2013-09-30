@@ -103,7 +103,7 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
     visit manage_guests_dashboard_path
   end
   if action == 'cancel' and user == 'owner'
-    within('.guest_filter') { click_on 'Confirmed'}
+    within('#reservations header') { click_on 'Confirmed'}
   end
   if action == 'decline'
     step 'I reject reservation with reason'
