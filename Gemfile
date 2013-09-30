@@ -87,7 +87,6 @@ end
 
 group :assets do
   gem 'uglifier', "~>2.1.0"
-  gem 'asset_sync'
 end
 
 group :development, :test, :staging do

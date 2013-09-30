@@ -26,9 +26,7 @@ DesksnearMe::Application.configure do
 
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
-
-  config.action_controller.asset_host = "//s3.amazonaws.com/desksnearme.staging-prod-copy"
-  config.assets.prefix = "/assets"
+  config.action_controller.asset_host = "staging-uswest2.desksnear.me"
 
   # Staging specific keys/secrets for social properties.
   config.linkedin_key = "26pmsiwpsh8a"
