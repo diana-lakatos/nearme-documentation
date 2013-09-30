@@ -32,6 +32,9 @@ DesksnearMe::Application.configure do
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
 
+  config.action_controller.asset_host = "//s3.amazonaws.com/desksnearme.production"
+  config.assets.prefix = "/assets"
+
   # Production specific app keys/secrets for social properties.
   config.linkedin_key = "2qyp4vpjl8uh"
   config.linkedin_secret = "PQfyGFyutsoPwcOY"
