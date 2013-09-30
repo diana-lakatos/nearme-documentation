@@ -69,14 +69,14 @@ a.btn {
   }
 
   &.btn-green {
-    background: $green;
+    background: $theme_green;
     
     &:hover {
-      background: lighten($green, 10%);
+      background: lighten($theme_green, 10%);
     }
 
     &:active {
-      background: darken($green, 10%);
+      background: darken($theme_green, 10%);
     }
   }
 

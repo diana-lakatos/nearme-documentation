@@ -129,18 +129,6 @@ abbr[data-original-title] {
   @include adjust-font-size-to(16px);
 }
 
-.label-daily-price, .label-hourly-price {
-  background: lighten($green, 16%);
-}
-
-.label-weekly-price {
-  background: lighten($green, 8%);
-}
-
-.label-monthly-price {
-  background: $green;
-}
-
 .nav-tabs > li > a {
   @include border-top-radius($border-radius-default / 2);
 

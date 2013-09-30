@@ -68,7 +68,7 @@ module ReservationsHelper
     if reservation.confirmed?
       'ico-check'
     elsif reservation.unconfirmed?
-      'ico-warning'
+      'ico-pending'
     elsif reservation.cancelled? || reservation.rejected? 
        'ico-close'
     end
@@ -129,7 +129,7 @@ module ReservationsHelper
   end
 
   def period_to_string(date)
-    date.strftime('%A, %B %e')
+    date.strftime('%d %b')
   end
 
   # Group up each of the dates into groups of real contiguous dates.
@@ -149,7 +149,7 @@ module ReservationsHelper
   end
 
   def reservation_navigation_link(action)
-    (link_to(content_tag(:span, self.send("#{action}_reservation_count")) + action.titleize, self.send("#{action}_reservations_path"), :class => "upcoming-reservations btn btn-full btn-gray#{action==params[:action] ? " active" : ""}")).html_safe
+    (link_to(content_tag(:span, action.titleize), self.send("#{action}_reservations_path"), :class => "upcoming-reservations btn btn-medium btn-gray#{action==params[:action] ? " active" : "-darker"}")).html_safe
   end
 
  def upcoming_reservation_count 
@@ -158,6 +158,18 @@ module ReservationsHelper
 
  def archived_reservation_count
     @archived_reservation_count ||= current_user.reservations.archived.count
+ end
+
+ def manage_guests_action_column_class(reservation)
+   buttons_cnt = (reservation.can_host_cancel? ? 1 : 0) + (reservation.can_confirm? ? 1 : 0) + (reservation.can_reject? ? 1 : 0) 
+   "split-#{buttons_cnt}"
+ end
+
+ def reservation_short_dates(reservation)
+   first_date = reservation.date.strftime('%d %b') 
+   last_date = reservation.last_date.strftime('%d %b')
+
+   first_date == last_date ? first_date : "#{first_date}-#{last_date}"
  end
 
 end

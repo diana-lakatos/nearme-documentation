@@ -2,15 +2,14 @@
 
 // there are two analytics - one in open beta. To not lose anything, we will leave the old one alone and create a new production environment.
 // this is also the recommended approach. Once everything will be working, we can remove the old way of tracking via ga.js script in favor of analytics.js
+
 // the old way via ga.js
 = javascript_include_tag 'analytics/ga' if Rails.env.production?
 // the new way via analytics.js
 = render 'shared/google_analytics'
 
 // Inspectlet
-:javascript
-  window.__insp = window.__insp || [];
-= javascript_include_tag 'analytics/inspectlet' if Rails.env.production?
+= render 'shared/inspectlet'
 
 // Mixpanel
 = render 'shared/mixpanel'

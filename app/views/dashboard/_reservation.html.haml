@@ -1,0 +1,33 @@
+.row-fluid
+  .span12.reservation-details
+    .span12.reservation-text-information
+      .reservation-status
+        .icon-container
+          = manage_booking_status_info(reservation) 
+      .span12.reservation-information
+        %div{:class => reservation.archived? ? 'span6' : 'span5'}
+          = link_to reservation.owner, profile_path(reservation.owner.slug)
+          %br
+          %span.address= link_to reservation.listing.name, location_listing_path(reservation.listing.location, reservation.listing) 
+        .span2
+          = reservation_total_price(reservation)
+          %br
+          %span= reservation.state.capitalize
+        %div{:class => reservation.archived? ? 'span3' : 'span2'}
+          - if reservation.listing.hourly_reservations?
+            .dates
+              = hourly_summary_for_period(reservation.periods.first) 
+          - else
+            %a.dates{href: '#', data: { :dates => periods_dates(reservation.periods) } }
+              = reservation_short_dates(reservation)
+          .clearfix
+          %span
+            = pluralize(reservation.total_days, 'day')
+        .span1
+          = reservation.quantity
+          %span.ico-user
+        - unless reservation.archived?
+          .span2{:class => manage_guests_action_column_class(reservation)}
+            .actions
+              = render :partial => "owner_actions", :locals => {:reservation => reservation} if  current_user == reservation.listing.location.creator
+

@@ -1,4 +1,4 @@
 - unless reservation.archived?
   = form_for reservation, method: :post, url: user_cancel_reservation_path(reservation) do |f|
-    = f.submit "Cancel", :confirm => "Do you really want to cancel this reservation?", :class => "btn btn-small btn-red"
+    = f.submit "Cancel", :confirm => "Do you really want to cancel this reservation?", :class => "btn btn-small btn-gray"
 

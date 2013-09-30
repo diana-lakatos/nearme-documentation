@@ -103,7 +103,7 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
     visit manage_guests_dashboard_path
   end
   if action == 'cancel' and user == 'owner'
-    within('.guest_filter') { click_on 'Confirmed'}
+    within('#reservations header') { click_on 'Confirmed'}
   end
   if action == 'decline'
     step 'I reject reservation with reason'
@@ -323,7 +323,7 @@ Then /^I should be redirect to bookings page$/ do
 end
 
 Then /^The second booking should be highlighted$/ do
-  page.should_not have_css(".reservation-list #reservation_#{Reservation.last.id}")
+  page.should have_css(".reservation-list.just-booked #reservation_#{Reservation.last.id}")
   page.should have_css("#reservation_#{Reservation.last.id}")
   page.should have_css(".reservation-details", :count => 2)
 end

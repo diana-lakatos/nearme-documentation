@@ -8,6 +8,9 @@ FactoryGirl.define do
     mobile_number "18889983375"
     job_title "Manager"
     biography "I'm cool!"
+    current_location "Prague"
+    company_name "DesksNearMe"
+    skills_and_interests { Faker::Lorem.sentences(2) }
 
     sequence(:name) {|n| "User-#{n}"}
 

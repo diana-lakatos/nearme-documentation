@@ -1,0 +1,75 @@
+.registrations-show {
+  
+  .avatar {
+    img {
+      @include border-radius($border-radius-default);
+    }
+  }
+
+  .info {
+    border: 1px solid $gray230;
+    @include border-radius($border-radius-default);
+    padding: $padding-default;
+
+    h2 {
+      margin-bottom: $padding-default;
+    }
+    h4 {
+      color: $gray160;
+      margin-bottom: $padding-default;
+    }
+
+    p {
+      color: $gray60;
+      margin-bottom: $padding-default;
+    }
+  }
+
+  .icons {
+    li {
+      float: right;
+      margin-left: 2 * $padding-medium;
+      
+      a {
+        font-size: 27px;
+        color: $theme_gray;
+
+        &.ico-facebook-full:hover {
+          color: $facebook-blue;
+        }
+
+        &.ico-twitter:hover {
+          color: $twitter-blue;
+        }
+
+        &.ico-linkedin:hover {
+          color: $linkedin-blue;
+        }
+
+        &.ico-instagram:hover {
+          color: $instagram-brown;
+        }
+      }
+    }
+  }
+}
+
+.phone-number-country-code-field {
+  position: relative;
+
+  .country-calling-code {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding: 10px;
+    line-height: 29px;
+    width: 40px;
+    text-align: right;
+  }
+
+  input {
+    padding-left: 60px !important;
+  }
+}
+
