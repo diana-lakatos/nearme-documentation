@@ -9,7 +9,7 @@
           = link_to reservation.owner, profile_path(reservation.owner.slug)
           %br
           %span.location
-            = link_to reservation.listing.name, location_listing_path(location, reservation.listing) 
+            = link_to reservation.listing.name, location_listing_path(reservation.listing.location, reservation.listing) 
         .span2
           = reservation_total_price(reservation)
           %br
@@ -30,5 +30,5 @@
         - unless reservation.archived?
           .span2{:class => manage_guests_action_column_class(reservation)}
             .actions
-              = render :partial => "owner_actions", :locals => {:reservation => reservation} if  current_user == location.creator
+              = render :partial => "owner_actions", :locals => {:reservation => reservation} if  current_user == reservation.listing.location.creator
 

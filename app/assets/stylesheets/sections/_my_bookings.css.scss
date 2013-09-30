@@ -52,9 +52,27 @@ section#reservations {
         margin-left: 5px;
         margin-right: 5px;
 
-        a.upcoming-reservations {
-          span {
-            margin: 0 15px;
+        a {
+          width: 150px;
+
+          &.upcoming-reservations {
+            span {
+              margin: 0 15px;
+            }
+          }
+        }
+      }
+
+      @media (max-width: $ipad-width) {
+        li {
+          display: block;
+
+          a {
+            width: 100%;
+          }
+
+          &:not(:last-child) {
+            margin-bottom: 5px;
           }
         }
       }
@@ -77,6 +95,7 @@ section#reservations {
         color: $gray80;
         font-family: $font-medium; 
 
+
         a {
           text-decoration: underline !important;
           color: $gray80;
@@ -98,7 +117,7 @@ section#reservations {
               margin-bottom: 0px !important; 
             }
 
-            input {
+            input:not(.btn-green) {
               &:hover {
                 background: $gray210;
               }
@@ -137,6 +156,10 @@ section#reservations {
 
             a {
               text-decoration: none !important;
+
+              &:hover {
+                color: $gray80; 
+              }
             } 
           }
         }
@@ -149,6 +172,14 @@ section#reservations {
 
           & > div {
             padding-top: 15px;
+          }
+
+          @media (max-width: $ipad-width) {
+            & > .split-2 {
+              .actions {
+                padding-top: 15px;
+              }
+            }
           }
 
           span.ico-download {
