@@ -83,7 +83,12 @@ module DashboardHelper
   end
 
   def visits_labels_for_chart(visits)
-    group_visits(visits).keys.map{|impression_date| format_date_for_graph(Date.strptime(impression_date))}
+    impression_dates = group_visits(visits).keys
+    if impression_dates.size > 10
+      Array.new(impression_dates.size, '')
+    else
+      impression_dates.map{|impression_date| format_date_for_graph(Date.strptime(impression_date))}
+    end
   end
 
   def group_reservations(reservations)
@@ -95,7 +100,12 @@ module DashboardHelper
   end
 
   def reservations_labels_for_chart(reservations)
-    group_reservations(reservations).keys.map{|reservation_date| format_date_for_graph(reservation_date)}
+    dates = group_reservations(reservations).keys
+    if dates.size > 10
+      Array.new(dates.size, '')
+    else
+      dates.map{|reservation_date| format_date_for_graph(reservation_date)}
+    end
   end
 
   def format_date_for_graph(datetime)
