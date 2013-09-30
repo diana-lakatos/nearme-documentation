@@ -10,7 +10,7 @@
         = render :partial => "shared/search_box"
 
 -# TODO: should be extracted to theme instead of hiding conditionally
-- if current_instance.is_desksnearme?
+- if current_theme.is_desksnearme?
   %section.how-it-works
     .row-fluid.padding-row
       %h1

@@ -323,7 +323,7 @@ Then /^I should be redirect to bookings page$/ do
 end
 
 Then /^The second booking should be highlighted$/ do
-  page.should_not have_css(".reservation-list #reservation_#{Reservation.last.id}")
+  page.should have_css(".reservation-list.just-booked #reservation_#{Reservation.last.id}")
   page.should have_css("#reservation_#{Reservation.last.id}")
   page.should have_css(".reservation-details", :count => 2)
 end

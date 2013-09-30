@@ -1,9 +1,9 @@
 .black-box.row-fluid
   %form#listing_search.home_search{:action => search_path, :method => "get"}
     .input-wrapper
-      %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
       .geolocation.no-bookings
         %span.ico-crosshairs
+      %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => "", :class => "query"}
     .button-wrapper
       %a.btn.btn-green.btn-large{ "data-disable-with" => "Searching...", :rel => "submit", :href => "" }
         %span.ico-search

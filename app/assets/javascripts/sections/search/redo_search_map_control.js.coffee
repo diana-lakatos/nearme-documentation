@@ -29,7 +29,7 @@ class Search.RedoSearchMapControl
     !@isEnabled()
 
   setMap: (googleMap) ->
-    googleMap.controls[google.maps.ControlPosition.TOP_RIGHT].push(@getContainer());
+    googleMap.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(@getContainer());
 
   getContainer: ->
     @controlDiv[0]

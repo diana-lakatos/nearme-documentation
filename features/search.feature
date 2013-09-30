@@ -35,16 +35,6 @@ Feature: A user can search for a listing
      Then I see a search result for the Auckland listing
       And I do not see a search result for the Adelaide listing
 
-  Scenario: Searching for a listing which is fully booked
-    Given a listing which is fully booked
-    When I search with a date range covering the date it is fully booked
-    Then that listing is not included in the search results
-
-  Scenario: Searching for a listing which is closed on the weekends
-    Given a listing which is closed on the weekend
-    When I search with a date range of 2 weeks
-    Then that listing is included in the search results
-
   Scenario: Searching without setting a date range
     Given there are listings which are unavailable
     And there are listings which are available

@@ -7,8 +7,8 @@ class Theme < ActiveRecord::Base
 
   attr_accessible :name, :icon_image, :icon_retina_image,
     :logo_image, :logo_retina_image, :hero_image, :skip_compilation,
-    :owner, :owner_id, :owner_type, :site_name, :description, :tagline, :support_email, 
-    :contact_email, :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, 
+    :owner, :owner_id, :owner_type, :site_name, :description, :tagline, :address, :support_email,
+    :contact_email, :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url,
     :meta_title
 
   # TODO: We may want the ability to have multiple themes, and draft states,
@@ -60,6 +60,10 @@ class Theme < ActiveRecord::Base
       self.skip_compilation = before
     end
     self
+  end
+
+  def is_desksnearme?
+    self.id == 1
   end
 
   def instance

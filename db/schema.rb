@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130923202352) do
+ActiveRecord::Schema.define(:version => 20130925224723) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -81,9 +81,10 @@ ActiveRecord::Schema.define(:version => 20130923202352) do
     t.string   "external_id"
     t.integer  "instance_id"
     t.boolean  "white_label_enabled", :default => false
+    t.boolean  "listings_public",     :default => true
   end
 
-  add_index "companies", ["instance_id"], :name => "index_companies_on_instance_id"
+  add_index "companies", ["instance_id", "listings_public"], :name => "index_companies_on_instance_id_and_listings_public"
 
   create_table "company_industries", :id => false, :force => true do |t|
     t.integer "industry_id"
@@ -267,6 +268,7 @@ ActiveRecord::Schema.define(:version => 20130923202352) do
     t.string   "postcode"
   end
 
+  add_index "locations", ["company_id"], :name => "index_locations_on_company_id"
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
 
   create_table "pages", :force => true do |t|
@@ -502,10 +504,19 @@ ActiveRecord::Schema.define(:version => 20130923202352) do
     t.datetime "avatar_versions_generated_at"
     t.integer  "avatar_original_height"
     t.integer  "avatar_original_width"
+    t.text     "current_location"
+    t.text     "company_name"
+    t.text     "skills_and_interests"
+    t.text     "facebook_url"
+    t.text     "twitter_url"
+    t.text     "linkedin_url"
+    t.text     "instagram_url"
+    t.string   "slug"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["slug"], :name => "index_users_on_slug", :unique => true
 
   create_table "versions", :force => true do |t|
     t.string   "item_type",  :null => false

@@ -2,16 +2,13 @@ class Listing
   class SearchScope
 
     attr_accessor :filters, :search_params
-    def initialize(options = {})
+    def initialize(instance, options = {})
+      @instance = instance
       @options = options
-      initialize_scope
-    end
-
-    def initialize_scope
-      if @options[:white_label_company].try(:white_label_enabled?)
-        @current_scope = @options[:white_label_company].locations 
+      @current_scope = if @options[:white_label_company].try(:white_label_enabled?)
+        Location.where(:"locations.company_id" => white_label_company.id)
       else
-        @current_scope = Location.scoped
+        Location.joins(:company).where(companies: { listings_public: true, instance_id: @instance.id })
       end
     end
 

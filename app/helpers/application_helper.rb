@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   def title_tag
-    (show_title? ? content_for(:title) : "Find office space. Rent office space. Get to work.") + 
+    (show_title? ? content_for(:title) : (current_theme.tagline || "Find office space. Rent office space. Get to work.")) +
       (additional_meta_title ? " | " + additional_meta_title : '')
   end
 
