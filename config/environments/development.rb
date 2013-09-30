@@ -6,6 +6,7 @@ DesksnearMe::Application.configure do
 
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
+  config.reload_classes_only_on_change = false 
 
   config.action_mailer.raise_delivery_errors = false
 
