@@ -190,7 +190,7 @@ label.radio {
     .loading-icon {
       width: 100%;
       height: 16px;
-      background: url(/assets/ajax-loader.gif) no-repeat center;
+      background: image-url("ajax-loader.gif") no-repeat center;
     }
 
     .loading-text {
