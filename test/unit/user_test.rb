@@ -27,10 +27,22 @@ class UserTest < ActiveSupport::TestCase
 
   end
 
-  context 'reservations' do
+  context 'name' do
     setup do
+      @user = FactoryGirl.create(:user, name: 'jimmy falcon')
     end
 
+    should 'have capitalized name' do
+      assert_equal "Jimmy Falcon", @user.name
+    end
+
+    should 'have capitalized first name' do
+      assert_equal 'Jimmy', @user.first_name
+    end
+
+  end
+
+  context 'reservations' do
     should 'find rejected reservations' do
       @user = FactoryGirl.create(:user, :reservations => [
         FactoryGirl.create(:reservation, :state => 'unconfirmed'),
