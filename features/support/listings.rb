@@ -24,8 +24,6 @@ module ListingsHelpers
     click_link_or_button("Create Listing")
   end
 
-
-
   def set_hidden_field id, value
     page.execute_script("$('##{id}').val('#{value}')")
   end

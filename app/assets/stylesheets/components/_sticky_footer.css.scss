@@ -16,6 +16,10 @@ html, body {
 
   .dnm-page {
     padding-top: 90px;
+
+    &.with-sub-navbar {
+      padding-top: 59px;
+    }
   }
 
   .footer-push {

@@ -20,8 +20,8 @@ Feature: A user can edit their settings
   Scenario: A user with company will see settings
     Given a company exists with creator: the user
     And I am on the home page
-    When I follow "Manage"
-    Then I should see "Settings"
+    When I follow "Manage Desks"
+    Then I should see "Company"
 
   Scenario: A user can update existing company
     Given a company exists with creator: the user
@@ -32,14 +32,14 @@ Feature: A user can edit their settings
   @javascript
   Scenario: A user can update white label settings
     Given a company exists with creator: the user
-    And I go to the settings page
+    And I go to the white label settings page
     When I enable white label settings
     When I update company white label settings
-    Then I should see "Great, your company's details have been updated"
+    Then I should see "Great, white-label details have been updated"
      And The company white label settings should be updated
 
   @javascript
   Scenario: A user without company will not see settings
     Given I am on the home page
-    When I follow "Manage"
-    Then I should not see "Settings"
+    When I follow "Manage Desks"
+    Then There should not be menu option "Company"

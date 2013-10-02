@@ -74,7 +74,7 @@ class Search.SearchController extends Search.Controller
       triggerPageThreshold: 99,
       history: false,
       thresholdMargin: -90,
-      loader: '<h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1>',
+      loader: '<div class="row-fluid span12"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div>',
       onRenderComplete: (items) ->
         # when there are no more resuls, add special div element which tells us, that we need to reinitialize ias - it disables itself on the last page...
         if !$('#results .pagination .next_page').attr('href')

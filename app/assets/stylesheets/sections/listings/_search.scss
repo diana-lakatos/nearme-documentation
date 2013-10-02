@@ -405,17 +405,13 @@ header#listing_search {
         top: 7px;
         right: 0px;
         display: block;
-        padding: 6px 13px 0 0;
+        padding: 7px 11px 0 0;
         width: 45px;
         height: 45px;
         color: $theme_white;
-        background-color: $theme_green;
         text-align: right;
         @include border-radius($border-radius-default);
 
-        &:hover {
-          color: $icon;
-        }
 
         @media (max-width: $iphone-landscape) {
           top: 5px;
@@ -488,9 +484,6 @@ section.search section#results.list {
 
     .heading {
       @include box-sizing(border-box);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       padding-top: 8px;
       padding-left: 10px;
       height: 74px;
@@ -498,11 +491,22 @@ section.search section#results.list {
       .company {
         color: $gray160;
       }
+
+      .company,
+      .name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     .photo {
       @include box-sizing(border-box);
       z-index: -1;
+
+      img {
+        width: 100%;
+      }
     }
 
     .info {
@@ -541,7 +545,7 @@ section.search section#results.list {
 
   h1{
     text-align: center;
-    margin: 15px 0px;
+    margin: 35px 0px;
 
     img{
       display: inline-block;

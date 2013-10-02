@@ -17,11 +17,7 @@ When /^I select industries for #{capture_model}$/ do |model|
     end
   end
   within('form[@id="edit_'+object.class.to_s.downcase+'"]') do
-    if Company === object
-      find('div[@data-white-label-settings-container] input[@type="submit"]').click
-    else
-      find('input[@type="submit"]').click
-    end
+    find('input[@type="submit"]').click
   end
 end
 
@@ -46,7 +42,7 @@ When /^I update company settings$/ do
   fill_in "company_description", with: "this is updated description"
   fill_in "company_mailing_address", with: "mail-update@example.com"
   fill_in "company_paypal_email", with: "paypal-update@example.com"
-  within('form[@id="edit_company"] div[data-white-label-settings-container]') do
+  within('form[@id="edit_company"]') do
     find('input[@type="submit"]').click
   end
 end
@@ -70,6 +66,10 @@ When /^I update company white label settings$/ do
   within(:css, 'form[id=edit_company] div[data-white-label-settings-container]') do
     find(:css, 'input[type=submit]').click
   end
+end
+
+When /^There should not be menu option "(.*)"$/ do |option_name|
+  assert !page.has_css?('div.manage-nav ul.nav li a span', :text => option_name)
 end
 
 Then /^The company white label settings should be updated$/ do

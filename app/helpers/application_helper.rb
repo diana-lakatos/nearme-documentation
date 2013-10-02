@@ -124,4 +124,8 @@ module ApplicationHelper
     user.present? && user.companies.include?(white_label_company)
   end
 
+  def show_manage_navigation(active_tab = :locations)
+    content_for :manage_navbar, render(:partial => 'shared/manage_navigation', :locals => {:active_tab => active_tab})
+  end
+
 end
