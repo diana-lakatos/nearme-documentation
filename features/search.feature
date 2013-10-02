@@ -26,6 +26,36 @@ Feature: A user can search for a listing
     And I see a search result for the Auckland listing
     And I do not see a search result for the Cleveland listing
 
+  Scenario: A user filters results by listing types
+    Given a first listing in Auckland exists
+    And a second listing in Auckland exists
+    And both listings in Auckland belongs to different desk type
+    When I search for "Adelaide"
+    Then I do not see a search result for the Auckland listing
+    When I filter by Desk Types
+    When I search for "Auckland"
+   Then I see a search result that satisfies filter
+
+  Scenario: A user filters results by location types
+    Given a first listing in Auckland exists
+    And a second listing in Auckland exists
+    And both listings in Auckland belongs to different location type
+    When I search for "Adelaide"
+    Then I do not see a search result for the Auckland listing
+    When I filter by Location Types
+    When I search for "Auckland"
+   Then I see a search result that satisfies filter
+
+  Scenario: A user filters results by company industries
+    Given a first listing in Auckland exists
+    And a second listing in Auckland exists
+    And both listings in Auckland belongs to different industry
+    When I search for "Adelaide"
+    Then I do not see a search result for the Auckland listing
+    When I filter by Industries
+    When I search for "Auckland"
+   Then I see a search result that satisfies filter
+
   Scenario: Returning to the search results shows the previous results
     Given a listing in Auckland exists
       And a listing in Adelaide exists

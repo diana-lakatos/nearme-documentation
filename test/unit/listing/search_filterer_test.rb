@@ -67,17 +67,17 @@ class Listing::SearchScopeTest < ActiveSupport::TestCase
     context '#desk type' do
 
       should 'find listings that have specified desk' do
-        @filters.merge!({ :listing_type_ids => [@public_listing_type.id, @private_listing_type.id] })
+        @filters.merge!({ :listing_types_ids => [@public_listing_type.id, @private_listing_type.id] })
         assert_equal [@public_listing, @private_listing].sort, Listing::SearchFilterer.new(@search_scope, @filters).find_listings.sort
       end
 
       should 'return empty array if none listing is satisfying conditions' do
-        @filters.merge!({ :listing_type_ids => [FactoryGirl.create(:listing_type).id] })
+        @filters.merge!({ :listing_types_ids => [FactoryGirl.create(:listing_type).id] })
         assert_equal [], Listing::SearchFilterer.new(@search_scope, @filters).find_listings
       end
 
       should 'find listings that belong to certain location type and listing type' do
-        @filters.merge!({:location_types_ids => [@public_location_type.id], :listing_type_ids => [@office_listing_type.id] })
+        @filters.merge!({:location_types_ids => [@public_location_type.id], :listing_types_ids => [@office_listing_type.id] })
         assert_equal [@public_office_listing], Listing::SearchFilterer.new(@search_scope, @filters).find_listings
       end
 

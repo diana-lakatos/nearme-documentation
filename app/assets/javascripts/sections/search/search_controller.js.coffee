@@ -13,6 +13,7 @@ class Search.SearchController extends Search.Controller
     @resultsContainer = => @container.find('#results')
     @loader = new Search.ScreenLockLoader => @container.find('.loading')
     @resultsCountContainer = $('#search_results_count')
+    @filters = $('a[data-search-filter]')
     @processingResults = true
     @initializeMap()
     @bindEvents()
@@ -25,6 +26,23 @@ class Search.SearchController extends Search.Controller
       event.preventDefault()
       @triggerSearchFromQuery()
     
+    @filters.on 'click', (event) ->
+      # allow to hide when the same element is clicked
+      if $(this).parent().find('ul').is(':visible')
+        _this.hideFilters()
+      else
+        _this.hideFilters()
+        $(this).parent().find('ul').toggle()
+        $(this).parent().toggleClass('active')
+      false
+
+  hideFilters: ->
+    for filter in @filters
+      $(filter).parent().find('ul').hide()
+      $(filter).parent().removeClass('active')
+
+
+
     @searchField = @form.find('#search')
     
     @searchField.on 'focus', => $(@form).addClass('query-active')

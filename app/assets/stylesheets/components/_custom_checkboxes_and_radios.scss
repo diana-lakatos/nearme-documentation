@@ -43,7 +43,22 @@
       @include opacity(0);
       @include transition(all $checkbox-radio-transition ease-in-out);
     }
+
   }
+
+  &.small-checkbox {
+
+    .checkbox-icon-outer {
+      height: 16px;
+      width: 16px;
+      top: 5px;
+
+      .checkbox-icon-inner {
+        font-size: 12px;
+      }
+    }
+  }
+
 
   &.checked {
 

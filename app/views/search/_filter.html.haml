@@ -1,0 +1,11 @@
+.search-filter
+  = link_to '#', :class => header_name.underscore.tr(" ","_"),  :'data-search-filter' => true  do
+    %h3 
+      %span.ico-chevron-down
+      = header_name
+  %ul
+    - options.each do |option|
+      %li
+        %label.checkbox.small-checkbox
+          %input{:type => 'checkbox', :name => input_name, :value => option[0], :checked => selected_values.include?(option[0])}
+          #{option[1]}

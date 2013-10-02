@@ -16,7 +16,7 @@ class Listing
     def find_listings
       filtered_locations.includes(:listings).inject([]) do |filtered_listings, location| 
         @listings = location.listings.searchable
-        @listings = @listings.filtered_by_listing_type_ids(@filters[:listing_type_ids]) if @filters[:listing_type_ids]
+        @listings = @listings.filtered_by_listing_types_ids(@filters[:listing_types_ids]) if @filters[:listing_types_ids]
         @listings.each do |listing|
           listing.distance_from_search_query = location.distance if location.respond_to?(:distance)
           filtered_listings << listing

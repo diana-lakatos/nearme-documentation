@@ -23,7 +23,7 @@ class Listing::SearchScopeTest < ActiveSupport::TestCase
 
     should 'include only public locations' do
       @private_location = FactoryGirl.create(:location, company: FactoryGirl.create(:company, :listings_public => false))
-      assert_equal [@another_location, @location], Listing::SearchScope.scope(@instance)
+      assert_equal (@instance.locations.all - [@private_location]), Listing::SearchScope.scope(@instance)
     end
 
 end
