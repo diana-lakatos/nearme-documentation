@@ -5,7 +5,6 @@ class EmailTemplate < ActiveRecord::Base
   attr_accessible :handler, :html_body, :text_body, :path, :partial, :subject, :to, :from, :bcc, :reply_to, :subject
 
   validates :html_body, :text_body, :path, :theme_id, presence: true
-  validates :from, email: true
 
   after_save do
     EmailResolver.instance.clear_cache
