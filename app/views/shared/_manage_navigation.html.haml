@@ -1,0 +1,27 @@
+.row-fluid
+  .span8.offset2.manage-nav
+    .navbar
+      .navbar-inner.nav-links
+        %ul.nav
+          %li
+            = link_to manage_locations_path, :class => (active_tab == :locations) ? 'active' : '' do
+              %span Locations 
+          %li
+            = link_to manage_guests_dashboard_path, :class => (active_tab == :guests) ? 'active' : '' do
+              %span Guests
+          %li
+            = link_to analytics_dashboard_path, :class => (active_tab == :analytics) ? 'active' : '' do
+              %span Analytics
+          %li
+            = link_to transfers_dashboard_path, :class => (active_tab == :transfers) ? 'active' : '' do
+              %span Transfers      
+          - if current_user.companies.any? && current_user.companies.first.id.present?
+            %li
+              = link_to edit_manage_company_path(current_user.companies.first), :class => (active_tab == :company) ? 'active' : '' do
+                %span Company
+            %li
+              = link_to manage_users_path, :class => (active_tab == :users) ? 'active' : '' do
+                %span Users 
+            %li
+              = link_to edit_manage_white_label_path(current_user.companies.first), :class => (active_tab == :white_label) ? 'active' : '' do
+                %span White-label
