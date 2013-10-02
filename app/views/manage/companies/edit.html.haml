@@ -1,40 +1,16 @@
-- title "Settings"
+- title "Company"
+
+= show_manage_navigation(:company)
 
 .row-fluid
   .span8.offset2
     %h1
-      %span.ico-settings.padding Settings
+      %span.ico-settings.padding Company
     = simple_form_for [:manage, @company], :html => {multipart: true, class: "form-horizontal form-expandable", :id => 'edit_company' } do |f|
-      %h2 1. Company Settings
+      %h2 Company Settings
       %br
       .box
         = render :partial => 'companies/company_form', :locals => { :f => f }
-        .actions
-          = f.submit "Save"
-      %h2 2. White Label Settings
-      %br
-      .box{'data-white-label-settings-container' => true}
-
-        .control-group
-          = f.label :white_label_enabled, 'Enabled', :class => 'control-label'
-          .controls
-            .switch{'data-on-label' => "", 'data-off-label' => ""}
-              = f.check_box :white_label_enabled, 'data-white-label-enabler' => true
-
-        = f.simple_fields_for :domain, f.object.domain || Domain.new do |domain_form|
-          = domain_form.check_box :white_label_enabled, :checked => f.object.white_label_enabled, 'data-white-label-settings' => true, :class => 'hidden'
-          = domain_form.input :name, :label => "Your Domain", :placeholder => 'example.com', :required => true
-
-        = f.simple_fields_for :theme, (f.object.theme || Theme.new) do |theme_form|
-          = theme_form.check_box :white_label_enabled, :checked => f.object.white_label_enabled, 'data-white-label-settings' => true, :class => 'hidden'
-          = render :partial => 'themes/theme', :locals => { :f => theme_form }
-
-        .control-group
-          = f.label :listings_public, 'Listings public', :class => 'control-label'
-          .controls
-            .switch{'data-on-label' => "", 'data-off-label' => ""}
-              = f.check_box :listings_public
-
         .actions
           = f.submit "Save"
 

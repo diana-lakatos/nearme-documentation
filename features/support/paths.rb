@@ -20,6 +20,9 @@ module NavigationHelpers
     when /the settings page/
       edit_manage_company_path(model!('the user'))
 
+    when /the white label settings page/
+      edit_manage_white_label_path(model!('the user'))
+
     when /the listings page/
       listings_path
 

@@ -1,5 +1,7 @@
 - title "Manage Guests (#{@guest_list.reservations.size})"
 
+= show_manage_navigation(:guests)
+
 #guests
   %section#reservations
     .row-fluid
@@ -17,6 +19,7 @@
                 - @guest_list.reservations.each do |reservation|
                   %li
                     = render 'reservation', reservation: reservation
+
 
 :javascript
   new Dashboard.GuestsController($('#guests'))
