@@ -150,7 +150,6 @@ DesksnearMe::Application.routes.draw do
     delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
   end
 
-  root :to => "locations#vertical_hairdressing", :constraints => { :subdomain => 'rent-salon-space' }
   root :to => "public#index"
 
   namespace :v1, :defaults => { :format => 'json' } do
@@ -221,6 +220,6 @@ DesksnearMe::Application.routes.draw do
   match "/careers", to: 'pages#careers'
   match "/rent-accounting-desks", to: 'locations#vertical_accounting'
   match "/rent-legal-desks", to: 'locations#vertical_law'
-  match "/rent-hairdressing-booth-stations", to: 'locations#vertical_hairdressing'
+  match "/rent-hairdressing-booth-stations", to: redirect(subdomain: 'rent-salon-space', path: '/')
   match "/rent-design-desks", to: 'locations#vertical_design'
 end
