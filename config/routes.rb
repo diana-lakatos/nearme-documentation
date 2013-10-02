@@ -150,6 +150,7 @@ DesksnearMe::Application.routes.draw do
     delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
   end
 
+  root :to => "locations#vertical_hairdressing", :constraints => { :subdomain => 'rent-salon-space' }
   root :to => "public#index"
 
   namespace :v1, :defaults => { :format => 'json' } do
