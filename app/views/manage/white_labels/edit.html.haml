@@ -5,10 +5,8 @@
 .row-fluid
   .span8.offset2
     %h1
-      %span.ico-settings.padding Company
+      %span.ico-settings.padding White-label Settings
     = simple_form_for @company, :url => manage_white_label_path(@company), :html => {multipart: true, class: "form-horizontal form-expandable", :id => 'edit_company' } do |f|
-      %h2 White Label Settings
-      %br
       .box{'data-white-label-settings-container' => true}
 
         .control-group
