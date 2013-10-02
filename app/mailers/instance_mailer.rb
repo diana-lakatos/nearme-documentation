@@ -12,6 +12,8 @@ class InstanceMailer < ActionMailer::Base
     theme = options.delete(:theme)
     template = options.delete(:template_name) || view_context.action_name
     mailer = options.delete(:mailer) || find_mailer(template: template, theme: theme) || theme.default_mailer
+    bcc = options.delete(:bcc), mailer.bcc
+    from = options.delete(:from), mailer.from
     subject_locals = options.delete(:subject_locals)
     subject  = mailer.liquid_subject(subject_locals) || options.delete(:subject)
     reply_to = options.delete(:reply_to) || mailer.reply_to
@@ -20,8 +22,8 @@ class InstanceMailer < ActionMailer::Base
 
     mixed = super(options.merge!(
       :subject => subject,
-      :bcc     => mailer.bcc,
-      :from    => mailer.from,
+      :bcc     => bcc,
+      :from    => from,
       :reply_to=> reply_to)) do |format|
         format.html { render template, theme: theme }
         format.text { render template, theme: theme }
