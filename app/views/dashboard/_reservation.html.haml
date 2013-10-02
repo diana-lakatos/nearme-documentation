@@ -1,14 +1,14 @@
 .row-fluid
-  .span12.reservation-details{id: dom_id(reservation)}
+  .span12.reservation-details
     .span12.reservation-text-information
       .reservation-status
         .icon-container
-          = my_booking_status_info(reservation) 
+          = manage_booking_status_info(reservation) 
       .span12.reservation-information
         %div{:class => reservation.archived? ? 'span6' : 'span5'}
-          = link_to reservation.listing.name, location_listing_path(reservation.listing.location, reservation.listing)
+          = link_to reservation.owner, profile_path(reservation.owner.slug)
           %br
-          %span.address= link_to reservation.listing.location.address, "http://maps.apple.com/?q=#{reservation.listing.location.address}", target: '_blank'
+          %span.address= link_to reservation.listing.name, location_listing_path(reservation.listing.location, reservation.listing) 
         .span2
           = reservation_total_price(reservation)
           %br
@@ -22,17 +22,12 @@
               = reservation_short_dates(reservation)
           .clearfix
           %span
-            = link_to export_reservation_path(reservation, :format => :ics) do
-              %span Add to iCal
-              %span.ico-download
+            = pluralize(reservation.total_days, 'day')
         .span1
           = reservation.quantity
           %span.ico-user
         - unless reservation.archived?
-          .span2
+          .span2{:class => manage_guests_action_column_class(reservation)}
             .actions
-              = render :partial => "dashboard/user_actions",  :locals => {:reservation => reservation} if current_user == reservation.owner
-
-:javascript
-  new Reservation.UserReservationController($("##{dom_id(reservation)}"))
+              = render :partial => "owner_actions", :locals => {:reservation => reservation} if  current_user == reservation.listing.location.creator
 
