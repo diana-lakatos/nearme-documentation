@@ -40,8 +40,7 @@ class Theme < ActiveRecord::Base
   end
 
   def default_mailer
-    EmailTemplate.new(bcc: contact_email,
-                      from: contact_email,
+    EmailTemplate.new(from: contact_email,
                       reply_to: contact_email)
   end
 
