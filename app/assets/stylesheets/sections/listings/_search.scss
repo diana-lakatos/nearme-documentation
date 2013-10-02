@@ -488,9 +488,6 @@ section.search section#results.list {
 
     .heading {
       @include box-sizing(border-box);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       padding-top: 8px;
       padding-left: 10px;
       height: 74px;
@@ -498,11 +495,22 @@ section.search section#results.list {
       .company {
         color: $gray160;
       }
+
+      .company,
+      .name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     .photo {
       @include box-sizing(border-box);
       z-index: -1;
+
+      img {
+        width: 100%;
+      }
     }
 
     .info {
