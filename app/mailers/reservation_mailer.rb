@@ -124,6 +124,7 @@ class ReservationMailer < InstanceMailer
 
     mail(to: @user.email,
          theme: theme,
+         bcc: theme.contact_email,
          subject: instance_prefix(subject, @listing.instance))
   end
 end

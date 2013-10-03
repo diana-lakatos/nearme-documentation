@@ -7,6 +7,8 @@ class InstanceMailerTest < ActiveSupport::TestCase
       mail(to: "test@example.com",
            subject: "Hello #@interpolation",
            theme: theme,
+           bcc: "bcc@example.com",
+           from: 'from@example.com',
            subject_locals: {'interpolation' => @interpolation})
     end
   end
@@ -20,7 +22,8 @@ class InstanceMailerTest < ActiveSupport::TestCase
     setup do 
       FactoryGirl.create(:email_template, path: 'instance_mailer/test_mailer',
                          subject: 'Test {{interpolation}}', theme: @theme,
-                         reply_to: 'reply@me.com')
+                         reply_to: 'reply@me.com',
+                         bcc: 'test@example.com')
       @mail = InstanceMailer.test_mailer(@theme)
     end
 
@@ -30,6 +33,8 @@ class InstanceMailerTest < ActiveSupport::TestCase
 
     should "assign email template assigns" do
       assert_equal ["reply@me.com"], @mail.reply_to
+      assert_equal ["bcc@example.com"], @mail.bcc
+      assert_equal ["from@example.com"], @mail.from
     end
   end
 

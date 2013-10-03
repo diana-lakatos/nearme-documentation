@@ -18,7 +18,7 @@
               %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => query, :class => "query", :autocomplete => "off"}
               .geolocation
                 %span.ico-crosshairs
-            .search-icon
+            .search-icon.btn.btn-green
               %span.ico-search
             .search-filters
               = render :partial => 'search/filter', :locals => { :header_name => 'Location Types', :selected_values => params[:location_types_ids] || [], :input_name => 'location_types_ids[]', :options => LocationType.all.map { |lt| [lt.id, lt.name] } }

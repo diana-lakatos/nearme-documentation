@@ -11,8 +11,9 @@ FactoryGirl.define do
     daily_price_cents 5000
     hourly_reservations false
 
+    photo_not_required true
     ignore do
-      photos_count 0
+      photos_count 1
     end
 
     after(:build) do |listing, evaluator|

@@ -1,4 +1,5 @@
 class Theme < ActiveRecord::Base
+  DEFAULT_EMAIL = 'support@desksnear.me'
   COLORS = %w(blue red orange green gray black white)
   COLORS_DEFAULT_VALUES = %w(#024fa3 #e83d33 #FF8D00 #157A49 #394449 #1e2222 #fafafa)
   COLORS.each do |color|
@@ -39,9 +40,12 @@ class Theme < ActiveRecord::Base
   end
 
   def default_mailer
-    EmailTemplate.new(bcc: contact_email,
-                      from: contact_email,
+    EmailTemplate.new(from: contact_email,
                       reply_to: contact_email)
+  end
+
+  def contact_email
+    read_attribute(:contact_email) || DEFAULT_EMAIL
   end
 
   # Checks if any of options that impact the theme stylesheet have been changed.

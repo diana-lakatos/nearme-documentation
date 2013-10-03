@@ -36,13 +36,15 @@
     .dnm-page-body
       = render 'shared/render_flash'
       .content-wrapper
-        .dnm-page
+        .dnm-page{:class => content_for?(:manage_navbar) ? 'with-sub-navbar' : ''}
           .container-fluid
             .navbar.navbar-inverse.navbar-fixed-top
               .navbar-inner.nav-links
                 = link_to "Desks Near Me", root_url, :id => "logo"
                 #header_links.links-container.pull-right
                   = render "layouts/header_navigation" unless no_header_links?
+            - unless no_header_links?
+              = yield :manage_navbar
 
           %section#content{:class => "#{@section_name || controller_name}"}
             = render 'layouts/hero'
