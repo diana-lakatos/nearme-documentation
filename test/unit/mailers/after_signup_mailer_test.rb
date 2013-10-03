@@ -15,7 +15,7 @@ class AfterSignupMailerTest < ActiveSupport::TestCase
 
     assert_equal @subject, mail.subject
     assert mail.html_part.body.include?(@name)
-    assert_equal [@from], mail.from
+    assert_equal ["micheller@desksnear.me"], mail.from
     assert mail.html_part.body.include?("Welcome to Desks Near Me!")
   end
 
