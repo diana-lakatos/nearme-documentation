@@ -12,8 +12,8 @@ class InstanceMailer < ActionMailer::Base
     theme = options.delete(:theme)
     template = options.delete(:template_name) || view_context.action_name
     mailer = options.delete(:mailer) || find_mailer(template: template, theme: theme) || theme.default_mailer
-    bcc = options.delete(:bcc), mailer.bcc
-    from = options.delete(:from), mailer.from
+    bcc = options.delete(:bcc) || mailer.bcc
+    from = options.delete(:from) || mailer.from
     subject_locals = options.delete(:subject_locals)
     subject  = mailer.liquid_subject(subject_locals) || options.delete(:subject)
     reply_to = options.delete(:reply_to) || mailer.reply_to
