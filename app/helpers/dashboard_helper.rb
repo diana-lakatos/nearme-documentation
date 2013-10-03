@@ -5,7 +5,7 @@ module DashboardHelper
   end
 
   def in_new_or_edit?
-    params[:action] != 'new' && params[:action] != 'edit'
+    ['new', 'create', 'edit', 'update'].include?(params[:action])
   end
 
   def dashboard_company_nav_class(company)
