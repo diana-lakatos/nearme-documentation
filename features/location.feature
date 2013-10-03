@@ -35,7 +35,7 @@ Feature: A user can see location details
   Scenario: User is redirected to location with first listing if no listing given
     Given a listing: "Small room" exists with location: that location, name: "Small room", quantity: 10
     When I go to the location page
-    Then I should be on the location listing: "Big room" page
+    Then I should be redirected to the first listing page
 
   Scenario: User is redirected to search page if he tries to access disabled listing
     Given a listing: "Small room" exists with location: that location, name: "Small room", quantity: 10, enabled: false
