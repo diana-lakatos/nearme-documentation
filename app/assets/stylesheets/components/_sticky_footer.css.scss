@@ -24,6 +24,10 @@ html, body {
 
   .footer-push {
     height: $footer-height+60;
+
+    &.white-label-footer-push {
+      height: $footer-height;
+    }
   }
 }
 

@@ -54,6 +54,6 @@
 
             = yield if render_content_outside_container?
         - unless no_footer?
-          .footer-push
+          .footer-push{:class => "#{'white-label-footer-push' if current_theme.owner_type == 'Company' || !current_instance.is_desksnearme?}"}
       = render 'layouts/footer' unless no_footer?
     = render 'layouts/scripts'
