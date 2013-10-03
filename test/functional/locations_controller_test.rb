@@ -26,7 +26,7 @@ class LocationsControllerTest < ActionController::TestCase
   should 'redirect to first listing if none provided' do
     get :show, id: @location.id
     assert_response :redirect
-    assert_redirected_to location_listing_path(@location, @listing)
+    assert_redirected_to location_listing_path(@location, @location.listings.first)
   end
 
 end

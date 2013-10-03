@@ -220,6 +220,6 @@ DesksnearMe::Application.routes.draw do
   match "/careers", to: 'pages#careers'
   match "/rent-accounting-desks", to: 'locations#vertical_accounting'
   match "/rent-legal-desks", to: 'locations#vertical_law'
-  match "/rent-hairdressing-booth-stations", to: 'locations#vertical_hairdressing'
+  match "/rent-hairdressing-booth-stations", to: redirect(subdomain: 'rent-salon-space', path: '/')
   match "/rent-design-desks", to: 'locations#vertical_design'
 end
