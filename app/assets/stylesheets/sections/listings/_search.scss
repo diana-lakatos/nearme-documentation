@@ -351,7 +351,7 @@ header#listing_search {
       float: left;
       @include box-sizing(border-box);
       padding-left: 199px;
-      padding-right: 458px;
+      padding-right: 449px;
       width: 100%;
 
       @media (max-width: $search-bar-breakpoint-desktop) {
@@ -427,7 +427,7 @@ header#listing_search {
       .search-icon {
         @include box-sizing(border-box);
         top: 7px;
-        right: 410px;
+        right: 401px;
         display: block;
         padding: 7px 11px 0 0;
         width: 45px;
@@ -478,7 +478,7 @@ header#listing_search {
   .search-filters {
     position: absolute;
     font-size: 0.9em;
-    width: 406px;
+    width: 397px;
     right: 0px;
     top: 7px;
 
@@ -503,19 +503,19 @@ header#listing_search {
         position: absolute;
         z-index: $map-z-index+1;
         right: 0px;
-        top: 40px;
-        box-sizing: border-box;
-        border: 2px solid $theme_white;
+        top: 30px;
+        border: 1px solid $theme_white;
         border-radius: $default-border-radius;
-        padding: 7px 8px 7px 8px;
         overflow-y: scroll;
         background: $theme_white;
         max-height: 200px;
         min-width: 100%;
+        padding: 7px 0px;
 
         li { 
           overflow: hidden;
           white-space: nowrap;
+          padding: 0px 8px;
         }
 
         label {

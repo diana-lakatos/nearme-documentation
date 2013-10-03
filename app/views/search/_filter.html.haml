@@ -7,5 +7,5 @@
     - options.each do |option|
       %li
         %label.checkbox.small-checkbox
-          %input{:type => 'checkbox', :name => input_name, :value => option[0], :checked => selected_values.include?(option[0])}
+          %input{:type => 'checkbox', :name => input_name, :value => option[0], :checked => selected_values.include?(option[0].to_s)}
           #{option[1]}

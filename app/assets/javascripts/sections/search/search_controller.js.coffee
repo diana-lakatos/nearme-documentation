@@ -36,15 +36,7 @@ class Search.SearchController extends Search.Controller
         $(this).parent().toggleClass('active')
       false
 
-  hideFilters: ->
-    for filter in @filters
-      $(filter).parent().find('ul').hide()
-      $(filter).parent().removeClass('active')
-
-
-
     @searchField = @form.find('#search')
-    
     @searchField.on 'focus', => $(@form).addClass('query-active')
     @searchField.on 'blur', => $(@form).removeClass('query-active')
     
@@ -60,6 +52,11 @@ class Search.SearchController extends Search.Controller
         return unless @redoSearchMapControl.isEnabled()
       
         @triggerSearchWithBoundsAfterDelay()
+
+  hideFilters: ->
+    for filter in @filters
+      $(filter).parent().find('ul').hide()
+      $(filter).parent().removeClass('active')
 
   # for browsers without native html 5 support for history [ mainly IE lte 9 ] the url looks like:
   # /search?q=OLDQUERY#search?q=NEWQUERY. Initially, results are loaded for OLDQUERY.
@@ -238,7 +235,7 @@ class Search.SearchController extends Search.Controller
   # Returns a jQuery Promise object which can be bound to execute response semantics.
   triggerSearchRequest: ->
     $.ajax(
-      url  : @form.attr("src")
+      url  : @form.attr("action")
       type : 'GET',
       data : @form.serialize()
     )
