@@ -351,7 +351,7 @@ header#listing_search {
       float: left;
       @include box-sizing(border-box);
       padding-left: 199px;
-      padding-right: 449px;
+      padding-right: 451px;
       width: 100%;
 
       @media (max-width: $search-bar-breakpoint-desktop) {
@@ -427,7 +427,7 @@ header#listing_search {
       .search-icon {
         @include box-sizing(border-box);
         top: 7px;
-        right: 401px;
+        right: 403px;
         display: block;
         padding: 7px 11px 0 0;
         width: 45px;
@@ -478,7 +478,7 @@ header#listing_search {
   .search-filters {
     position: absolute;
     top: 7px;
-    width: 397px;
+    width: 399px;
     right: 0px;
     font-size: 0.9em;
 
