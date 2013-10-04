@@ -126,7 +126,7 @@ class LocationTest < ActiveSupport::TestCase
     end
 
     should "not be valid if cannot geolocate" do
-        stub_request(:get, "http://maps.googleapis.com/maps/api/geocode/json?address=this%20does%20not%20exists%20at%20all&language=en&sensor=false").to_return(:status => 200, :body => "{}", :headers => {})
+      stub_request(:get, "http://maps.googleapis.com/maps/api/geocode/json?address=this%20does%20not%20exists%20at%20all&language=en&sensor=false").to_return(:status => 200, :body => "{}", :headers => {})
       @location.address = "this does not exists at all"
       @location.save
       assert @location.errors.include?(:latitude)
@@ -182,4 +182,5 @@ class LocationTest < ActiveSupport::TestCase
       assert_equal "San Francisco", @location.street # this is first part of address
     end
   end
+
 end

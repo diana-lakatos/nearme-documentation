@@ -57,6 +57,19 @@ section.search#content {
       position: absolute;
       top: 110px;
     }
+
+    @media (max-width: $search-bar-breakpoint-desktop) {
+      margin-top: 40px;
+    }
+
+    @media (max-width: $iphone-landscape) {
+      margin-top: 30px;
+    }
+
+    @media (max-width: $iphone-portrait) {
+      margin-top: 100px;
+    }
+
   }
 
   div.google-map {
@@ -189,17 +202,14 @@ header#listing_search {
   right: 30px;
   left: 30px;
   z-index: $nav-z-index - 10;
-  overflow: hidden;
   max-width: 1314px;
-  padding: 0 5px;
+  padding: 0px 5px 5px 5px;
   margin: 0 auto;
-  height: 55px;  
   background: $gray230;
   @include border-radius($border-radius-default);
 
   @media (max-width: $iphone-landscape) {
     padding-top: 2px;
-    height: 36px;
   }
 
   .header-inner {
@@ -329,6 +339,11 @@ header#listing_search {
     input {
       margin-top: 5px;
       margin-bottom: 0px;
+
+      @media (max-width: $ipad-width) {
+        margin-top: 0px;
+      }
+
     }
 
     .search-container {
@@ -336,9 +351,13 @@ header#listing_search {
       float: left;
       @include box-sizing(border-box);
       padding-left: 199px;
-      padding-right: 48px;
+      padding-right: 449px;
       width: 100%;
 
+      @media (max-width: $search-bar-breakpoint-desktop) {
+        padding-right: 48px;
+      }
+      
       @media (max-width: $iphone-landscape) {
         padding-left: 108px;
         padding-right: 32px;
@@ -363,8 +382,9 @@ header#listing_search {
           border: none;
           font-size: 16px;
           line-height: 24px !important;
-          margin: 5px 0 0;
-          padding: 0 0 0 24px;
+          margin-top: 0px;
+          margin-bottom: 3px;
+          padding: 0 0 0 29px;
         }        
       }
     }
@@ -394,8 +414,12 @@ header#listing_search {
           color: $icon-hover;
         }
 
+        @media (max-width: $ipad-width) {
+          top: 9px;
+        }
+
         @media (max-width: $iphone-landscape) {
-          top: 3px;
+          top: -2px;
           left: 114px;
         }
       }
@@ -403,7 +427,7 @@ header#listing_search {
       .search-icon {
         @include box-sizing(border-box);
         top: 7px;
-        right: 0px;
+        right: 401px;
         display: block;
         padding: 7px 11px 0 0;
         width: 45px;
@@ -412,6 +436,10 @@ header#listing_search {
         text-align: right;
         @include border-radius($border-radius-default);
 
+
+        @media (max-width: $search-bar-breakpoint-desktop) {
+          right: 0px;
+        }
 
         @media (max-width: $iphone-landscape) {
           top: 5px;
@@ -446,6 +474,100 @@ header#listing_search {
       } 
     }         
   }  
+
+  .search-filters {
+    position: absolute;
+    top: 7px;
+    width: 397px;
+    right: 0px;
+    font-size: 0.9em;
+
+    .search-filter {
+      position: relative;
+      float: left;
+      margin-right: 4px;
+      padding: 8px 8px;
+      border: 1px solid $theme_white;
+      border-radius: $default-border-radius;
+
+      &:last-child {
+        margin-right: 0px;
+      }
+
+      a {
+        display: block;
+      }
+
+      ul {
+        display: none;
+        position: absolute;
+        z-index: $map-z-index+1;
+        right: 0px;
+        top: 30px;
+        overflow-y: scroll;
+        padding: 7px 0px;
+        max-height: 200px;
+        min-width: 100%;
+        border: 1px solid $theme_white;
+        border-radius: $default-border-radius;
+        background: $theme_white;
+
+        li { 
+          overflow: hidden;
+          padding: 0px 8px;
+          white-space: nowrap;
+        }
+
+        label {
+          float: left;
+          margin: 0px;
+          padding-left: 0px 0px 0px 39px;
+        }
+
+        @media (max-width: $iphone-portrait) {
+          top: 25px;
+        }
+      }
+
+      &.filter-margin {
+        margin: 0px 5px;
+      }
+
+      &.active {
+        background: $theme_white;
+      }
+
+      @media (max-width: $iphone-portrait) {
+        @include box-sizing(border-box);
+        clear: both;
+        margin-right: 0px;
+        width: 100%;
+      }
+    }
+
+    h3 span{
+
+      font-size: 0.8em;
+      padding-right: 8px;
+    }
+
+    @media (max-width: $search-bar-breakpoint-desktop) {
+      position: relative;
+      top: 0px;
+      right: 0px;
+      margin-top: 5px;
+    }
+
+    @media (max-width: $iphone-portrait) {
+      @include box-sizing(border-box);
+      width: 100%;
+    }
+  }
+
+  @media (max-width: $iphone-landscape) {
+    position: absolute;
+  }
+
 }
 
 /*** Listing View ***/
@@ -537,6 +659,20 @@ section.search section#results.list {
       }
     }
   }
+
+  @media (max-width: $search-bar-breakpoint-desktop) {
+    margin-top: 125px;
+  }
+
+  @media (max-width: $iphone-landscape) {
+    margin-top: 100px;
+  }
+
+  @media (max-width: $iphone-portrait) {
+    margin-top: 180px;
+  }
+
+
 }
 /*** End Listing View ***/
 

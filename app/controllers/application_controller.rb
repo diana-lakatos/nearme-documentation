@@ -237,12 +237,8 @@ class ApplicationController < ActionController::Base
   helper_method :get_and_clear_stored_inspectlet_taggable_events
 
   def search_scope
-    @search_scope ||= Listing::SearchScope.new(current_instance,
-      white_label_company: @current_white_label_company,
-      user: current_user
-    )
+    @search_scope ||= Listing::SearchScope.scope(current_instance, {white_label_company: @current_white_label_company})
   end
   helper_method :search_scope
-
 end
 

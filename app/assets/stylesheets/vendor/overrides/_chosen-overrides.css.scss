@@ -1,7 +1,7 @@
 .chzn-container-multi ul.chzn-choices,
 .chzn-container-single{
   @include form-field;
-
+  padding-right: 40px;
 }
 
 .chzn-container-single {

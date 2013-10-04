@@ -31,7 +31,8 @@ class Listing < ActiveRecord::Base
   scope :active,   where('listings.draft IS NULL')
   scope :latest,   order("listings.created_at DESC")
   scope :visible,  where(:enabled => true)
-  
+  scope :searchable, active.visible
+  scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where('listings.listing_type_id IN (?)', listing_types_ids) }
 
   # == Callbacks
   after_save :notify_user_about_change

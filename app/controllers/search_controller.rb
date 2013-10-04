@@ -9,7 +9,7 @@ class SearchController < ApplicationController
     @located = (params[:lat].present? and params[:lng].present?)
     render "search/#{result_view}"
     if should_log_conducted_search?
-      event_tracker.conducted_a_search(search, { search_query: query, result_view: result_view, result_count: result_count })
+      event_tracker.conducted_a_search(search, { search_query: query, result_view: result_view, result_count: result_count, filters: filters })
     end
     remember_search_query
   end
@@ -29,12 +29,22 @@ class SearchController < ApplicationController
     @query ||= search.query
   end
 
+  def filters
+    { 
+      :listing_types => params[:listing_types_ids].try(:map) { |lt| ListingType.find(lt).name },
+      :location_types => params[:location_types_ids].try(:map)  { |lt| LocationType.find(lt).name },
+      :industries => params[:industries_ids].try(:map) { |i| Industry.find(i).name }
+    }
+  end
+
   def listings
     @listings ||=  get_listings
   end
 
   def get_listings
-    collection = Listing.find_by_search_params(search, search_scope)
+    params_object = Listing::Search::Params::Web.new(params)
+    search_params = params.merge({:midpoint => params_object.midpoint, :radius => params_object.radius, :available_dates => params_object.available_dates})
+    collection = Listing::SearchFetcher.new(search_scope, search_params).listings
     params[:page] ||= 1
     if result_view == 'list'
       collection = WillPaginate::Collection.create(params[:page], 20, collection.count) do |pager|
@@ -76,14 +86,24 @@ class SearchController < ApplicationController
   def remember_search_query
     if params[:q]
       cookies[:last_search_query] = {
-        :value => params[:q],
+        :value => search_query_values,
         :expires => (Time.zone.now + 1.hour),
       }
     end
   end
 
+  def search_query_values
+    { 
+      :q => params[:q],
+      :listing_types_ids => params[:listing_types_ids],
+      :location_types_ids => params[:location_types_ids],
+      :industries_ids => params[:industries_ids]
+    }
+
+  end
+
   def repeated_search?
-    params[:q] && params[:q] == cookies[:last_search_query]
+    params[:q] && search_query_values.to_s == cookies[:last_search_query].try(:to_s)
   end
 
   def search_notification
