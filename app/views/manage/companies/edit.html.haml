@@ -4,8 +4,6 @@
 
 .row-fluid
   .span8.offset2
-    %h1
-      %span.ico-settings.padding Company
     = simple_form_for [:manage, @company], :html => {multipart: true, class: "form-horizontal form-expandable", :id => 'edit_company' } do |f|
       .box
         = render :partial => 'companies/company_form', :locals => { :f => f }
