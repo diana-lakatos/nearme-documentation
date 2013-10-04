@@ -51,6 +51,7 @@ window.DNM = {
     this.initializeCustomSelects();
     this.initializeCustomInputs();
     this.initializeBrowsersSpecificCode();
+    this.centerSearchBoxOnHomePage();
   },
 
   initializeModals: function() {
@@ -103,6 +104,15 @@ window.DNM = {
   initializeBrowsersSpecificCode: function() {
     this.fixInputIconBackgroundTransparency();  // fix icon in input transparency in IE8 
     this.fixMobileFixedPositionAfterInputFocus(); 
+  },
+
+  centerSearchBoxOnHomePage: function() {
+    if($('.white-label-main-page').length > 0){
+      centerSearchBox();
+      window.addEventListener('resize', function(event){
+        centerSearchBox();
+      });
+    }
   },
 
   fixInputIconBackgroundTransparency: function() {
@@ -236,6 +246,14 @@ $(function(){
     });
     $('.no-select').disableTextSelect();//No text selection on elements with a class of 'noSelect'
 });
+
+function centerSearchBox(){
+  navbar_height = $('.navbar-fixed-top').height();
+  image_height = $('.dnm-page').height();
+  search_height = $('#search_row').height()
+  wood_box_height = $('.wood-box').height()
+  $('#search_row').css('margin-top', (image_height)/2 - search_height/2 + navbar_height/2 - wood_box_height/2 + 'px');
+}
 
 String.prototype.hashCode = function(){
     var hash = 0, i, char;
