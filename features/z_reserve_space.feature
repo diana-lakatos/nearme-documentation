@@ -141,6 +141,7 @@ Feature: A user can book at a space
      Then the user should have the listing reserved for 'next week Monday'
       And the user should have the listing reserved for 'next week Tuesday'
 
+  @borked
   Scenario: Booking for a 'automatically confirm' listing should show relevant details
     Given bookings for the listing do not need to be confirmed
     And I am logged in as the user

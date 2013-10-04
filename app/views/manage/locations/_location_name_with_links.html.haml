@@ -8,7 +8,7 @@
         = location.street 
     - else 
       New location
-  - if in_new_or_edit?
+  - if !in_new_listing? && !in_new_or_edit?
     .links 
       = link_to location_path(location), :class => 'ico-eye btn btn-gray-darker' do
         %span.padding-left
