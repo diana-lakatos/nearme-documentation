@@ -33,7 +33,7 @@
     = render 'layouts/initializers'
 
   %body
-    .dnm-page-body
+    .dnm-page-body{:class => "#{'white-label-main-page' if root_white_label_page?}"}
       = render 'shared/render_flash'
       .content-wrapper
         .dnm-page{:class => content_for?(:manage_navbar) ? 'with-sub-navbar' : ''}
@@ -54,6 +54,6 @@
 
             = yield if render_content_outside_container?
         - unless no_footer?
-          .footer-push{:class => "#{'white-label-footer-push' if current_theme.owner_type == 'Company' || !current_instance.is_desksnearme?}"}
+          .footer-push
       = render 'layouts/footer' unless no_footer?
     = render 'layouts/scripts'
