@@ -1,5 +1,5 @@
 class Listing
-  class SearchFilterer
+  class SearchFetcher
 
     # params_object - Object wrapping search options
     #          Needs to respond to:
@@ -13,16 +13,17 @@ class Listing
       @filters = filters
     end
 
-    def find_listings
-      filtered_locations.includes(:listings).inject([]) do |filtered_listings, location| 
+    def listings
+      filtered_listings = []
+      filtered_locations.includes(:listings).each do |location| 
         @listings = location.listings.searchable
         @listings = @listings.filtered_by_listing_types_ids(@filters[:listing_types_ids]) if @filters[:listing_types_ids]
         @listings.each do |listing|
           listing.distance_from_search_query = location.distance if location.respond_to?(:distance)
           filtered_listings << listing
         end
-        filtered_listings
       end
+      filtered_listings
     end
 
     private 
@@ -35,15 +36,13 @@ class Listing
         @search_scope = @search_scope.none
       end
       @search_scope
-    rescue
-      @search_scope = @search_scope.none
-      @search_scope
     end
 
     def reject_unavailable_listings
+      return if @filters[:available_dates].blank?
       @filters[:available_dates].each do |date|
         @listings.reject! { |listing| listing.fully_booked_on?(date) }
-      end if @filters[:available_dates]
+      end 
     end 
 
   end
