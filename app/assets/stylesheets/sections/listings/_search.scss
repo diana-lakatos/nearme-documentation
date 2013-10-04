@@ -477,18 +477,18 @@ header#listing_search {
 
   .search-filters {
     position: absolute;
-    font-size: 0.9em;
+    top: 7px;
     width: 397px;
     right: 0px;
-    top: 7px;
+    font-size: 0.9em;
 
     .search-filter {
+      position: relative;
       float: left;
+      margin-right: 4px;
+      padding: 8px 8px;
       border: 1px solid $theme_white;
       border-radius: $default-border-radius;
-      padding: 8px 8px;
-      margin-right: 4px;
-      position: relative;
 
       &:last-child {
         margin-right: 0px;
@@ -504,18 +504,18 @@ header#listing_search {
         z-index: $map-z-index+1;
         right: 0px;
         top: 30px;
-        border: 1px solid $theme_white;
-        border-radius: $default-border-radius;
         overflow-y: scroll;
-        background: $theme_white;
+        padding: 7px 0px;
         max-height: 200px;
         min-width: 100%;
-        padding: 7px 0px;
+        border: 1px solid $theme_white;
+        border-radius: $default-border-radius;
+        background: $theme_white;
 
         li { 
           overflow: hidden;
-          white-space: nowrap;
           padding: 0px 8px;
+          white-space: nowrap;
         }
 
         label {
@@ -539,9 +539,9 @@ header#listing_search {
 
       @media (max-width: $iphone-portrait) {
         @include box-sizing(border-box);
-        width: 100%;
-        margin-right: 0px;
         clear: both;
+        margin-right: 0px;
+        width: 100%;
       }
     }
 
