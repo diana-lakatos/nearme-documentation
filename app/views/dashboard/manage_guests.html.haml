@@ -6,8 +6,6 @@
   %section#reservations
     .row-fluid
       .span8.offset2
-        %h1
-          %span.ico-manage-guests.padding Guests
         .box
           - if @guest_list.scope.empty?
             = render 'dashboard/manage_guests/promote_locations', locations: @locations
