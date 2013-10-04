@@ -14,6 +14,7 @@ namespace :instance do
       unless c.id == main_company.id
         main_company.industries += c.industries
         main_company.users += c.users
+        main_company.payment_transfers += c.payment_transfers
         main_company.creator = c.users.first unless main_company.creator
         c.locations.each do |l|
           l.company = main_company
