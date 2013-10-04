@@ -5,8 +5,7 @@ class @Space.Controller
     @photosContainer = $('.photos-container')
     @mapContainer    = $('.map')
     @googleMapElementWrapper = @mapContainer.find('.map-container')
-    @photosTab = $('#photos')
-    @detailsTab = $('#details')
+    @siblingListingsCarousel = @container.find('#listing-siblings-container')
 
     @setupCollapse()
     @setupCarousel()
@@ -14,6 +13,7 @@ class @Space.Controller
     @setupPhotos()
     @setupBookings()
     @_bindEvents()
+    @adjustBookingModulePosition()
 
   _bindEvents: ->
     @container.on 'click', '[data-behavior=scrollToBook]', (event) =>
@@ -21,6 +21,24 @@ class @Space.Controller
       $('html, body').animate({
         scrollTop: $(".bookings").offset().top - 20
       }, 300)
+
+    $(window).resize => 
+      @adjustBookingModulePosition()
+
+    @siblingListingsCarousel.on 'slid.bs.carousel', =>
+      currentSlide = @siblingListingsCarousel.find('.item.active').eq(0)
+      @container.find('.other-listings header p').text(currentSlide.data('listing-name'))
+
+
+
+  adjustBookingModulePosition: ->
+    # 610 - booking module breakpoint
+    if $(window).width() <= 610
+      # move booking module below photos gallery and add some padding
+      @container.find('.listings').addClass('padding-row').appendTo(@container.find('article.photos'))
+    else
+      @container.find('.listings').removeClass('padding-row').appendTo(@container.find('article.booking'))
+
 
   setupPhotos: ->
     @photos = new Space.PhotosController($('.space-hero-photos'))
@@ -79,68 +97,13 @@ class @Space.Controller
     google.maps.event.addListener marker, 'click', =>
       @popover.open(@map.map, marker)
 
-    @setupMapHeightConstraintToPhotosSection()
-    @listenToTabs()
-
-  # TODO: There's potentially a better way to do this, by constraining the dimensions via a
-  #       defined aspect ratio for the the map and the photos and using a dom wrapper to maintain that
-  #       aspect ratio (%'age padding with abs. positioned inner container).
-  #       At some point we can look into that but this works for now.
-  setupMapHeightConstraintToPhotosSection: ->
-
-    @constrainer = null
-    if @photosContainer.find('.item').length > 0
-      return unless @map
-      # We use a known aspect ratio to determine the dynamic height because:
-      #   a) If the image hasn't loaded yet we won't have the height
-      #   b) Likewise if the image won't load (error, etc.) we wouldn't otherwise get a relevant height
-      aspectRatioW = parseInt(@mapAndPhotosContainer.attr('data-photo-aspect-w'))
-      aspectRatioH = parseInt(@mapAndPhotosContainer.attr('data-photo-aspect-h'))
-
-
-      @constrainer = new HeightConstrainer(
-        @googleMapElementWrapper,
-        @photosContainer,
-        ratio: aspectRatioH/aspectRatioW
-      )
-
-    # when we resize browser, height of google map is being adjusted based on photo's width. However, when we are in #details tab, we need to disable those calculations,
-    # because height is calculated wrongly for hidden elements. We need to reproduce the behaviour of the height adjustment also for #details tab, and this is what this code does
-      details_constrainer = new HeightConstrainer(
-        @detailsTab,
-        @detailsTab,
-    # 0.65755 was set based on trials and errors approach. Since photo is about 70% of full width, the remaining 30% is google map, I tried to make the same proportions
-        ratio: (aspectRatioH/aspectRatioW)*0.65755
-      )
-
-  listenToTabs: ->
-    if @constrainer
-    # we do not want to listen to this event when there is no constrainer - height will not be updated via CSS @media, because of hardcoded style='height: XX' 
-      $("a[href=##{@detailsTab.attr('id')}]").on 'show', =>
-        @adjustDetailsHeightToPhotosHeight()
-
-    # we want this to be listen always to avoid issue with rendering google map after toggling from invisible to visible
-    $("a[href=##{@photosTab.attr('id')}]").on 'shown', =>
-      if @constrainer
-        # we need to not only resize map, but also update height of it - which is constrainer job
-        @constrainer.constrain()
-      google.maps.event.trigger(@map.map, 'resize')
-      google.maps.event.trigger(@map.map, 'zoom_changed')
-      @map.map.setCenter(@map.initialCenter)
-
-  adjustDetailsHeightToPhotosHeight: ->
-    # it would be great to use outerHeight, but it won't work ;-) need to be adjusted if detail
-    #
-    padding_top = parseInt(@detailsTab.css('padding-top'))
-    padding_bottom = parseInt(@detailsTab.css('padding-bottom'))
-    base_height = @photosTab.height() - parseInt(@photosTab.css('padding-bottom')) - parseInt(@photosTab.css('padding-top'))
-    @detailsTab.height(base_height-padding_top-padding_bottom)
 
   setupCarousel: ->
     carouselContainer = $(".carousel")
     return unless carouselContainer.length > 0
     carouselContainer.carousel({
       pills: false,
+      wrap: true,
       interval: 10000
     })
 

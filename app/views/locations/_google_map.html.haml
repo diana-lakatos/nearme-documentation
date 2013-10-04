@@ -1,6 +1,10 @@
 .map
   .map-wrapper.google-map
     .map-container
+  .bottom-heading
+    = link_to "http://maps.apple.com/?daddr=#{location.address}&saddr=#{request.location.try(:address)}" do
+      = location.address
+      %span.ico-chevron-right.pull-right
 
   %address{"data-lat" => location.latitude, "data-lng" => location.longitude, :class => 'hidden'}
     #address-popover

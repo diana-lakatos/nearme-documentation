@@ -55,4 +55,9 @@ module ListingsHelper
   def space_listing_placeholder_path(options = {})
     Placeholder.new(height: options[:height], width: options[:width]).path
   end
+
+  def availability_rule_open_close_time(availability_rule)
+    [availability_rule.open_time ? Time.parse(availability_rule.open_time).strftime('%H:%M%P') : nil, 
+      availability_rule.close_time ? Time.parse(availability_rule.close_time).strftime('%H:%M%P') : nil].compact.join '-'
+  end
 end

@@ -1,11 +1,4 @@
 - legacy false
 
-%article.space
-  .clearfix
-    .row-fluid.padding-row
-      .span12
-        %section.bookings.quick-book
-          .listings
-            = render 'locations/listing', :listing => @listing
+= render 'locations/listings/show'
 
-= render 'locations/show'
