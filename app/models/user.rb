@@ -285,7 +285,7 @@ class User < ActiveRecord::Base
   end
 
   def to_param
-    id
+    caller[0].include?('friendly_id') ? super : id
   end
 
 end
