@@ -13,6 +13,8 @@ class Search.SearchController extends Search.Controller
     @resultsContainer = => @container.find('#results')
     @loader = new Search.ScreenLockLoader => @container.find('.loading')
     @resultsCountContainer = $('#search_results_count')
+    @filters = $('a[data-search-filter]')
+    @filters_container = $('div[data-search-filters-container]')
     @processingResults = true
     @initializeMap()
     @bindEvents()
@@ -21,12 +23,28 @@ class Search.SearchController extends Search.Controller
     setTimeout((=> @processingResults = false), 1000)
 
   bindEvents: ->
+
+
     @form.bind 'submit', (event) =>
       event.preventDefault()
       @triggerSearchFromQuery()
     
+    @closeFilterIfClickedOutside()
+
+    @filters.on 'click', (event) ->
+      # allow to hide already opened element
+      if $(this).parent().find('ul').is(':visible')
+        _this.hideFilters()
+      else
+        _this.hideFilters()
+        $(this).parent().find('ul').toggle()
+        $(this).parent().toggleClass('active')
+      false
+
+    @filters_container.on 'click', 'input[type=checkbox]', =>
+      @fieldChanged()
+
     @searchField = @form.find('#search')
-    
     @searchField.on 'focus', => $(@form).addClass('query-active')
     @searchField.on 'blur', => $(@form).removeClass('query-active')
     
@@ -43,6 +61,15 @@ class Search.SearchController extends Search.Controller
       
         @triggerSearchWithBoundsAfterDelay()
 
+  hideFilters: ->
+    for filter in @filters
+      $(filter).parent().find('ul').hide()
+      $(filter).parent().removeClass('active')
+
+  closeFilterIfClickedOutside: ->
+    $('body').on 'click', (event) =>
+      if $(@filters_container).has(event.target).length == 0
+        @hideFilters()
   # for browsers without native html 5 support for history [ mainly IE lte 9 ] the url looks like:
   # /search?q=OLDQUERY#search?q=NEWQUERY. Initially, results are loaded for OLDQUERY.
   # This methods checks, if OLDQUERY == NEWQUERY, and if not, it redirect to the url after # 
@@ -220,7 +247,7 @@ class Search.SearchController extends Search.Controller
   # Returns a jQuery Promise object which can be bound to execute response semantics.
   triggerSearchRequest: ->
     $.ajax(
-      url  : @form.attr("src")
+      url  : @form.attr("action")
       type : 'GET',
       data : @form.serialize()
     )

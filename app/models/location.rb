@@ -52,6 +52,10 @@ class Location < ActiveRecord::Base
   before_validation :parse_address_components
   before_save :assign_default_availability_rules
 
+  scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where('locations.location_type_id IN (?)', location_types_ids) }
+  scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company => :company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
+  scope :none, where(:id => nil)
+
   acts_as_paranoid
 
   # Useful for storing the full geo info for an address, like time zone

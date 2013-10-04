@@ -30,6 +30,14 @@ Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and that amenit
   listing.location.amenities << model!("amenity") if amenity
 end
 
+Given /^a first listing in (.*) exists$/ do |city|
+  @first_listing = create_listing_in(city)
+end
+
+Given /^a second listing in (.*) exists$/ do |city|
+  @second_listing = create_listing_in(city)
+end
+
 Given /^a listing which is fully booked$/ do
   @listing = build_fully_booked_listing
 end
