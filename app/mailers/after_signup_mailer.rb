@@ -1,8 +1,9 @@
 class AfterSignupMailer < InstanceMailer
 
   helper SharingHelper
-
   layout false
+
+  PERSONABLE_EMAIL = "micheller@desksnear.me"
 
   def help_offer(theme, user)
     @user = user
@@ -13,6 +14,7 @@ class AfterSignupMailer < InstanceMailer
     @sent_by = 'Michelle R'
 
     mail(to: @user.email,
+         from: PERSONABLE_EMAIL,
          template_name: choose_template,
          theme: @theme,
          subject: "Welcome to DesksNear.me")

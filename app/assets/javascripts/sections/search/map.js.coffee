@@ -54,11 +54,12 @@ class Search.Map
   GOOGLE_MAP_OPTIONS.clusterer =
     maxZoom: GOOGLE_MAP_OPTIONS.maxZoom + 1
     averageCenter: true
+    minimumClusterSize: 1
     styles:
       [
-        { width: 28, height: 28, url: 'assets/images/transparent.png' },
-        { width: 32, height: 32, url: 'assets/images/transparent.png' },
-        { width: 42, height: 42, url: 'assets/images/transparent.png' }
+        { width: 22, height: 22, url: 'assets/images/transparent.png' },
+        { width: 26, height: 26, url: 'assets/images/transparent.png' },
+        { width: 36, height: 36, url: 'assets/images/transparent.png' }
       ]
     calculator: (markers, numStyles) ->
       idx = MarkerClusterer.CALCULATOR(markers, numStyles).index
@@ -98,6 +99,10 @@ class Search.Map
       @popover.close()
       @trigger 'click'
     
+    @clusterer.addListener 'mouseover', (cluster)=>
+      return if cluster.markers_.length > 1 && @googleMap.getZoom() != GOOGLE_MAP_OPTIONS.maxZoom
+      _.defer => @showInfoWindowForCluster(cluster) # Clashes with map.click on some devices, need to add small delay to show
+
     @clusterer.addListener 'click', (cluster)=>
       return if @googleMap.getZoom() < GOOGLE_MAP_OPTIONS.maxZoom
       _.defer => @showInfoWindowForCluster(cluster) # Clashes with map.click on some devices, need to add small delay to show
@@ -170,7 +175,7 @@ class Search.Map
     marker.setVisible(true)
 
     # Bind the event for showing the info details on click
-    google.maps.event.addListener marker, 'click', =>
+    google.maps.event.addListener marker, 'mouseover', =>
       @showInfoWindowForListing(listing)
 
   fitBounds: (bounds) ->

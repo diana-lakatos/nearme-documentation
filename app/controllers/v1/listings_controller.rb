@@ -82,7 +82,7 @@ class V1::ListingsController < V1::BaseController
 
   def inquiry
     listing = Listing.find(params[:id])
-    @message = json_params["query"]
+    @message = json_params["message"]
 
     inquiry = listing.inquiry_from!(current_user, message: @message)
     InquiryMailer.enqueue.inquiring_user_notification(current_theme, inquiry)
