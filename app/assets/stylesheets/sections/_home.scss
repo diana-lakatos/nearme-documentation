@@ -8,6 +8,7 @@ section.public {
     @include background-size(cover);
     background-image: image-url($theme_hero);
     background-position: center center;
+    background-repeat: no-repeat;
 
     > * {
       position: relative;
@@ -32,6 +33,7 @@ section.public {
     @media (max-width: $iphone-landscape) {
       height: 380px;
     }
+
   }
 
   .caption a {
@@ -189,3 +191,50 @@ section.how-it-works {
     }
   }
 }  
+
+.white-label-main-page {
+  height: 100%;
+  min-height: 100%;
+  
+  .content-wrapper {
+    height: 100%;
+    width: 100%;
+    min-height: 100%;
+  }
+
+  .dnm-page {
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+    padding-top: 0px;
+    box-sizing: border-box;
+
+    > .container-fluid:before, > .container-fluid:after {
+      display: block !important;
+    }
+
+    #content {
+      height: 100%;
+      min-height: 100%;
+      width: 100%;
+
+      #hero {
+        margin: 0px;
+        height: 100% !important;
+        width: 100%;
+
+      }
+    }
+  }
+
+  .footer-push {
+    display: none;
+  }
+
+  .footer-wrapper {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    margin-top: 0px;
+  }
+}
