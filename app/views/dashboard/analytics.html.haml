@@ -12,8 +12,7 @@
               = select_tag :analytics_mode, options_for_select([['Revenue', 'revenue'], ['Bookings', 'bookings'], ['Location Views', 'location_views']], @analytics_mode), :class => 'analytics-mode'
         .clearfix
         .chart
-          = render :partial => "dashboard/analytics_#{@analytics_mode}", :locals => { :reservation_charges => @reservation_charges, :last_week_reservation_charges => @last_week_reservation_charges, :all_time_totals => @all_time_totals, :visits => @visits, :last_month_visits => @last_month_visits, :reservations => @reservations, :last_week_reservations => @last_week_reservations, :weekly_chart => @weekly_chart }
-
+          = render :partial => "dashboard/analytics_#{@analytics_mode}"
 
 - content_for :script do
   :javascript

@@ -93,7 +93,6 @@ class DashboardController < ApplicationController
     @last_week_reservations = @company.reservations.last_x_days(6).order('created_at ASC')
   end
 
-
   def prepare_data_for_analytics_location_views
     @visits = @company.locations_impressions.select('COUNT(impressions.*) AS impressions_count, DATE(impressions.created_at) AS impression_date').group('impression_date')
 

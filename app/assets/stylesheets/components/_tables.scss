@@ -1,0 +1,41 @@
+.table-simple {
+  width: 100%;
+  color: $gray120;
+
+  th, td {
+    padding: $padding-small 0;
+  }
+
+  th {
+    font-weight: bolder;
+  }
+
+  tbody { 
+    td {
+      border-top: 1px solid $gray220;
+    }
+
+    .total-row td {
+      padding-top: $padding-default;
+      font-weight: bolder;
+    }
+  }
+}
+
+.table-with-stripes {
+
+  tbody {
+
+    & > tr:nth-child(2n+1) > td, & > tr:nth-child(2n+1) > th {
+      background: $gray245;
+    }
+
+    tr {
+      &:hover {
+        td {
+          background: $light-gray;
+        }
+      }
+    }
+  }
+}
