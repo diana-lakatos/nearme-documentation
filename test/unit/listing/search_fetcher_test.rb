@@ -3,8 +3,6 @@ require 'test_helper'
 class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
   setup do
-    @search_scope = Location.scoped
-
     @public_location_type = FactoryGirl.create(:location_type, :name => 'public')
     @private_location_type = FactoryGirl.create(:location_type, :name => 'private')
 
@@ -21,6 +19,7 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
     @private_office_listing = FactoryGirl.create(:listing, :listing_type => @office_listing_type, :location => @private_location)
 
     @filters = { :midpoint => [7, 7], :radius => 1000 }
+    @search_scope = Location.where(:id => [@public_location.id, @private_location.id]).scoped
   end
 
   context '#geolocation' do
@@ -30,14 +29,14 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
       assert_equal [@public_listing, @public_office_listing].sort, Listing::SearchFetcher.new(@search_scope, @filters).listings.sort
     end
 
-    should 'return no results if midpoint is missing' do
+    should 'return all locations if midpoint is missing' do
       @filters = { :midpoint => nil, :radius => 2 }
-      assert_equal [], Listing::SearchFetcher.new(@search_scope, @filters).listings
+      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing], Listing::SearchFetcher.new(@search_scope, @filters).listings.sort
     end
 
-    should 'return no results if radius is missing' do
+    should 'return all locations if radius is missing' do
       @filters = { :midpoint => [1, 3], :radius => nil }
-      assert_equal [], Listing::SearchFetcher.new(@search_scope, @filters).listings
+      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing], Listing::SearchFetcher.new(@search_scope, @filters).listings.sort
     end
   end
 
@@ -103,6 +102,8 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
         @listing1 = FactoryGirl.create(:listing, :location => @location1)
         @listing2 = FactoryGirl.create(:listing, :location => @location2)
+
+        @search_scope = Location.where(:id => [@location1, @location2]).scoped
       end
 
       should 'filter by single company industries' do
