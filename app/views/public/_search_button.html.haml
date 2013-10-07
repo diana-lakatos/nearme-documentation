@@ -1,0 +1,10 @@
+#search_row.span6.offset3
+  .row-fluid
+    %h1.tagline
+      = current_theme.tagline
+  .black-box.row-fluid
+    %form#listing_search.home_search{:action => search_path, :method => "get"}
+      .no-text-search
+        %a.btn.btn-green.btn-large{ "data-disable-with" => "Searching...", :rel => "submit", :href => "" }
+          %span.ico-search
+          Search

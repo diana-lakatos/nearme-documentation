@@ -146,6 +146,13 @@ section.search#content {
   }
 }
 
+#search_row {
+  .tagline{
+    float: none;
+    text-align: center;
+  }
+}
+
 
 /*** Home Page Search ***/
 #listing_search {
@@ -171,6 +178,11 @@ section.search#content {
       top: 12px;
       left: 18px;
     }
+  }
+
+  .no-text-search {
+    width: 100%;
+    height: 50px;
   }
 
   .button-wrapper {
