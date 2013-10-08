@@ -178,10 +178,18 @@ section.dashboard {
         }
       }
 
-      @media (max-width: $ipad-width) {
-        font-size: 22px;
+      .links span.icon {
+        vertical-align: top;
+      }
 
-        .links span {
+      @media (max-width: $ipad-width + 1) {
+        .links span.text {
+          display: none;
+        }
+      }
+
+      @media (min-width: $ipad-width) {
+        .links span.icon {
           display: none;
         }
       }
@@ -193,6 +201,7 @@ section.dashboard {
       @include border-radius($border-radius-default);
       border: 1px solid $light-gray; 
       margin-top: 10px;
+      height: 38px;
 
       &.edit-location {
         border: none;
@@ -218,10 +227,18 @@ section.dashboard {
         }
       }
 
-      @media (max-width: $ipad-width) {
-        font-size: 18px;
+      .links {
+        float: right;
+      }
 
-        span {
+      @media (max-width: $ipad-width + 1) {
+        .links span.text {
+          display: none;
+        }
+      }
+
+      @media (min-width: $ipad-width) {
+        .links span.icon {
           display: none;
         }
       }
@@ -229,8 +246,12 @@ section.dashboard {
 
     li.new-location {
       padding: 0px;
-      margin: 0px;
+      margin: 0 0 25px 0;
       border: none;
+
+      .links .icon {
+        vertical-align: top;
+      }
 
       a {
         color: $pure-white;

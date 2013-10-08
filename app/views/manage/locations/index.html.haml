@@ -14,6 +14,8 @@
             - location.listings.each do |listing|
               = render :partial => 'manage/listings/listing_name_with_link', :locals => { :location => location, :listing => listing }
             %li.listing
-              = link_to new_manage_location_listing_path(location), :class => 'ico-add-desk text-right' do
-                %span.padding-left
-                  Add #{current_theme.bookable_noun}
+              .links
+                = link_to new_manage_location_listing_path(location), :class => 'text-right' do
+                  %span.icon.ico-add-desk
+                  %span.text
+                    Add #{current_theme.bookable_noun}

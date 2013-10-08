@@ -10,9 +10,11 @@
       New location
   - if !in_new_listing? && !in_new_or_edit?
     .links 
-      = link_to location_path(location), :class => 'ico-eye btn btn-gray-darker' do
-        %span.padding-left
+      = link_to location_path(location), :class => 'btn btn-gray-darker' do
+        %span.icon.ico-eye
+        %span.text
           View Location
-      = link_to edit_manage_location_path(location), :class => 'ico-edit btn btn-gray-darker' do
-        %span.padding-left
+      = link_to edit_manage_location_path(location), :class => 'btn btn-gray-darker' do
+        %span.icon.ico-edit
+        %span.text
           Edit Location
