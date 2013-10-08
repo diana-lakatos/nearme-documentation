@@ -10,6 +10,8 @@
         - @users.each do |user|
           = render :partial => 'manage/users/user_name_with_link', :locals => { :user => user, :company => @company }
         %li.listing
-          = link_to new_manage_user_path, :rel => 'modal.company-user-modal', :class => 'ico-plus text-right' do
-            %span
-              Add user
+          = link_to new_manage_user_path, :rel => 'modal.company-user-modal', :class => 'text-right' do
+            .links
+              %span.icon.ico-plus
+              %span.text
+                Add user

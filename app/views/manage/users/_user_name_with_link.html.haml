@@ -2,6 +2,7 @@
   = link_to manage_user_path(user), :method => :delete, :confirm => "Are you sure?" do
     = user.name
     = "<#{user.email}>"
-    %span.ico-close.right
-      Remove user
-
+    .links
+      %span.icon.ico-close
+      %span.text
+        Remove user
