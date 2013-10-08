@@ -44,6 +44,8 @@ Feature: A user can book at a space
        When I book space for:
         | Listing     | Date   | Quantity |
         | the listing | Monday | 1        |
+       When I follow "Manage Booking"
+       Then I should be redirected to bookings page
        Then I should see "credit card will be charged when your reservation is confirmed"
        And the user should have a billing profile
 
@@ -119,7 +121,7 @@ Feature: A user can book at a space
           | Listing     | Date         | Quantity  |
           | the listing | next week Monday  | 1         |
           | the listing | next week Tuesday | 1         |
-     Then I should be redirect to bookings page
+     Then I should be offered with sharing options
 
   Scenario: Last bookings is highlighted
     Given I am logged in as the user
@@ -130,6 +132,9 @@ Feature: A user can book at a space
      When I book space for:
           | Listing     | Date         | Quantity  |
           | the listing | next Wednesday  | 1      |
+     Then I should be offered with sharing options
+     When I follow "Manage Booking"
+     Then I should be redirected to bookings page
      Then The second booking should be highlighted
 
   Scenario: A logged in user can book a listing
