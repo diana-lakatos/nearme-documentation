@@ -1,7 +1,7 @@
 - if listing.persisted? && !in_new_or_edit?
   %li.listing{:class => (params[:action] != 'new' && params[:action] != 'edit') ? '' : 'edit-location'} 
     - if params[:action] != 'new' && params[:action] != 'edit' && params[:action] != 'update'
-      = link_to edit_manage_location_listing_path(location, listing) do
+      = link_to edit_manage_location_listing_path(location, listing), :class => "edit" do
         = listing.name
         .links
           %span.icon.ico-edit
