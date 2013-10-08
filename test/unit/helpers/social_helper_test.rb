@@ -19,7 +19,7 @@ class SocialHelperTest < ActionView::TestCase
 
   test "#share_to_linkedin" do
     result = share_to_linkedin(@url)
-    expected = %{<a href="#" class="ico-linkedin" onclick="window.open('//www.linkedin.com/cws/share?url='+encodeURIComponent('#@url'), 'linkedin-share-dialog', 'width=626,height=260'); return false;"></a>}
+    expected = %{<a href="#" class="ico-linkedin" onclick="window.open('//www.linkedin.com/shareArticle?url='+encodeURIComponent('#@url'), 'linkedin-share-dialog', 'width=626,height=260'); return false;"></a>}
     assert_equal expected, result
   end
 
