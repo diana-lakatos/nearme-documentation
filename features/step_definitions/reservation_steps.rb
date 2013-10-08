@@ -65,7 +65,6 @@ Then /^I should have a cancelled reservation on "([^"]*)"$/ do |date|
   user.cancelled_reservations.collect { |r| Chronic.parse(r.date) }.should include Chronic.parse(date)
 end
 
-
 When /^I book space for:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
@@ -199,7 +198,7 @@ When /^I click to confirm the booking$/ do
   work_in_modal do
     click_button "Request Booking"
   end
-  page.should have_content('Your reservation has been made!')
+  page.should have_content('Your booking was Successful!')
 end
 
 Then(/^I should see the booking confirmation screen for:$/) do |table|
@@ -318,14 +317,23 @@ Then /^a reservation expiration email should be sent to (.*)$/ do |email|
   last_email_for(email).subject.should include "expired"
 end
 
-Then /^I should be redirect to bookings page$/ do
-  assert_equal upcoming_reservations_path, URI.parse(current_url).path
+Then /^I should be redirected to bookings page$/ do
+  page.should have_content('Your reservation has been made!')
+  assert_includes URI.parse(current_url).path, upcoming_reservations_path
 end
 
 Then /^The second booking should be highlighted$/ do
   page.should have_css(".reservation-list.just-booked #reservation_#{Reservation.last.id}")
   page.should have_css("#reservation_#{Reservation.last.id}")
   page.should have_css(".reservation-details", :count => 2)
+end
+
+Then /^I should be offered with sharing options$/ do
+  work_in_modal do
+    page.should have_content('Share your travel plans')
+    page.should have_content('Add to Calendar')
+    page.should have_content('Manage Booking')
+  end
 end
 
 Before('@timecop') do
