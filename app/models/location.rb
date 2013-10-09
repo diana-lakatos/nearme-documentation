@@ -23,6 +23,8 @@ class Location < ActiveRecord::Base
 
   belongs_to :company, inverse_of: :locations
   belongs_to :location_type
+  belongs_to :contact_person, class_name: "User"
+
   delegate :creator, :to => :company, :allow_nil => true
   delegate :instance, :to => :company, :allow_nil => true
 
@@ -129,6 +131,10 @@ class Location < ActiveRecord::Base
 
   def description
     read_attribute(:description).presence || (listings.first || NullListing.new).description
+  end
+
+  def contact_person
+    super.presence || creator
   end
 
   def creator=(creator)

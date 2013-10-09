@@ -75,7 +75,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(@expected_dates)
 
     assert_equal [@reservation.listing.creator.email], mail.to
-    assert_equal [@theme.support_email], mail.bcc
+    assert_equal [@theme.support_email, @reservation.listing.location.email], mail.bcc
   end
 
   test "#notify_host_of_confirmation" do
@@ -85,7 +85,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(@expected_dates)
 
     assert_equal [@reservation.listing.creator.email], mail.to
-    assert_equal [@theme.support_email], mail.bcc
+    assert_equal [@theme.support_email, @reservation.listing.location.email], mail.bcc
   end
 
   test "#notify_host_of_expiration" do
@@ -95,7 +95,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(@expected_dates)
 
     assert_equal [@reservation.listing.creator.email], mail.to
-    assert_equal [@theme.support_email], mail.bcc
+    assert_equal [@theme.support_email, @reservation.listing.location.email], mail.bcc
   end
 
   test "#notify_host_with_confirmation" do
@@ -106,9 +106,8 @@ class ReservationMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(@expected_dates)
 
     assert_equal [@reservation.listing.creator.email], mail.to
-    assert_equal [@theme.support_email], mail.bcc
+    assert_equal [@theme.support_email, @reservation.listing.location.email], mail.bcc
   end
-
   test "#notify_host_without_confirmation" do
     mail = ReservationMailer.notify_host_without_confirmation(@reservation)
 
@@ -116,7 +115,16 @@ class ReservationMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(@expected_dates)
 
     assert_equal [@reservation.listing.creator.email], mail.to
-    assert_equal [@theme.support_email], mail.bcc
+    assert_equal [@theme.support_email, @reservation.listing.location.email], mail.bcc
+  end
+
+  test "send to contact person if exists" do
+    @reservation.listing.location.update_attribute(:contact_person_id, FactoryGirl.create(:user, :email => 'maciek@example.com').id)
+    ['notify_host_of_cancellation', 'notify_host_of_confirmation', 'notify_host_of_expiration',
+     'notify_host_with_confirmation', 'notify_host_without_confirmation'].each do |method|
+      mail = ReservationMailer.send(method, @reservation)
+      assert_equal ['maciek@example.com'], mail.to, "Expected maciek@example.com, got #{mail.to} for #{method}"
+    end
   end
 end
 
