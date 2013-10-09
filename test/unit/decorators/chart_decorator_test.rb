@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class WeeklyChartDecoratorTest < ActionView::TestCase
+class ChartDecoratorTest < ActionView::TestCase
 
   setup do
     Timecop.travel(Time.zone.parse('2013-01-01'))
@@ -9,20 +9,20 @@ class WeeklyChartDecoratorTest < ActionView::TestCase
   context 'a blank PaymentTransfer collection decorated with WeeklyChartDecorator' do
 
     setup do
-      @weekly_chart = WeeklyChartDecorator.decorate(PaymentTransfer.all)
+      @chart = ChartDecorator.decorate(PaymentTransfer.all)
     end
 
-    should 'return empty array for each day and each currency' do
-      assert @weekly_chart.values.blank?
+    should 'return zeros for each day' do
+      assert_equal [[0, 0, 0, 0, 0, 0, 0]], @chart.values
     end
 
     should 'return empty array of sums for each currency' do
-      assert @weekly_chart.sums_by_currency.blank?
+      assert @chart.totals_by_currency.blank?
     end
 
     should 'display dates in label' do
       expected_dates = ['Dec 26', 'Dec 27', 'Dec 28', 'Dec 29', 'Dec 30', 'Dec 31', 'Jan 01']
-      assert_equal expected_dates, @weekly_chart.labels
+      assert_equal expected_dates, @chart.labels
     end
 
   end
@@ -31,18 +31,17 @@ class WeeklyChartDecoratorTest < ActionView::TestCase
 
     setup do
       @last_week_reservation_charges = build_reservation_charges
-      @weekly_chart = WeeklyChartDecorator.decorate(@last_week_reservation_charges)
+      @chart = ChartDecorator.decorate(@last_week_reservation_charges)
     end
 
     should 'return array of sums for each day and each currency' do
-      expected_daily_sums = [[11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 64.0],
-                             [11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 99.0]]
-      assert_equal expected_daily_sums, @weekly_chart.values
+      expected_daily_sums = [[22, 22, 22, 22, 22, 22, 163]]
+      assert_equal expected_daily_sums, @chart.values
     end
 
     should 'return array of sums for each currency' do
-      expected_sums_by_currency = {'USD' => Money.new(13000, 'USD'), 'CAD' => Money.new(16500, 'CAD')}
-      assert_equal expected_sums_by_currency, @weekly_chart.sums_by_currency
+      expected_totals_by_currency = {'USD' => Money.new(13000, 'USD'), 'CAD' => Money.new(16500, 'CAD')}
+      assert_equal expected_totals_by_currency, @chart.totals_by_currency
     end
 
   end

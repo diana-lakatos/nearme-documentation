@@ -9,13 +9,13 @@
         - if @last_week_payment_transfers.empty?
           %p.no_data No transfers have been made in the preceding 7 day period.
         - else
-          .weekly-chart
+          .chart
             .total.right
-              - @weekly_chart.sums_by_currency.each do |currency, sum|
+              - @chart.totals_by_currency.each do |currency, sum|
                 .total-number.left
                   = "#{currency_content_tag(currency, sum, :span, { :rel => false })}".html_safe
               %span{class: 'total-text'} 7 day total
-            %canvas#weekly-chart
+            %canvas#chart
 
         - unless @company.has_payment_method?
           %p.warning 
@@ -45,4 +45,4 @@
           = will_paginate @payment_transfers
 
 - content_for :domready do
-  new ChartWrapper.Line($('#weekly-chart'), #{@weekly_chart.values.to_json.html_safe}, #{@weekly_chart.labels.to_json.html_safe})
+  new ChartWrapper.Line($('#chart'), #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe})

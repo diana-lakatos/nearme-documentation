@@ -19,3 +19,6 @@
     $(function() {
       new Dashboard.AnalyticsController($('#payments'))
     });
+
+- content_for :domready do
+  new ChartWrapper.Line($('#chart'), #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe})

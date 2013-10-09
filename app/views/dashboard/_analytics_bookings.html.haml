@@ -6,10 +6,9 @@
       .total.right
         .total-number.left
           %span.total
-            = @last_week_reservations.count
-            bookings
+            = "#{@last_week_reservations.count} bookings"
         %span.total-text 7 day total
-      %canvas#reservations-chart
+      %canvas#chart
 
     %table.table.table-simple
       %thead
@@ -20,6 +19,3 @@
         %tr
           %td= reservation_date
           %td= date_reservations.size
-
-- content_for :domready do
-  new ChartWrapper.Line($('#reservations-chart'), #{reservations_for_chart(@last_week_reservations).to_json.html_safe}, #{reservations_labels_for_chart(@last_week_reservations).to_json.html_safe})
