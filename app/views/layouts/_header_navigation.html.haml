@@ -18,7 +18,7 @@
           %span List Your #{current_theme.bookable_noun}
 
   - if user_signed_in? 
-    - if user_can_add_listing?(@current_white_label_company, current_user)
+    - if user_can_add_listing?(@current_white_label_company, current_user) && current_user.listings.active.any?
       %li
         = link_to manage_locations_path, class: 'nav-link dropdown-toggle' do
           %span Manage #{current_theme.bookable_noun.pluralize}

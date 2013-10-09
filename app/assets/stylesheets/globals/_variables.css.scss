@@ -88,7 +88,8 @@ $padding-small: 8px;
 // Border Radius
 
 $border-radius-default: 5px;
-$border-radius-right: 5px 0 0 5px;
+$border-radius-right: 0 5px 5px 0;
+$border-radius-left: 5px 0 0 5px;
 $border-radius-bottom: 0 0 5px 5px;
 
 
@@ -116,9 +117,10 @@ $iphone-portrait: 320px;
 $iphone-landscape: 480px;
 $ipad-width: 767px;
 $default-width: 980px;
-$booking-module-breakpoint: 580px;
-$booking-module-breakpoint-desktop: 900px;
 $search-bar-breakpoint-desktop: 1150px;
+$booking-module-breakpoint: 610px;
+$booking-module-breakpoint-size: 1200px;
+$booking-module-breakpoint-desktop: 1000px;
 
 
 // Booking Module
@@ -136,3 +138,8 @@ $footer-height: 192px;
 // IE support
 
 $legacy-support-for-ie8: true;
+
+// Photos
+
+$space-full-image-width: 895px;
+$space-full-image-height: 554px;

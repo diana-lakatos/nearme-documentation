@@ -304,6 +304,10 @@ class Listing < ActiveRecord::Base
     [:name, :description, :quantity, :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents]
   end
 
+  def name_with_address
+    [name, location.street].compact.join(" at ")
+  end
+
 end
 
 class NullListing

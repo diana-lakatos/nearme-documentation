@@ -2,6 +2,6 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require ./vendor/modernizr
-//= require chart
+//= require ./vendor/Chart
 //= require components/chart_wrapper
 
