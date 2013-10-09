@@ -1,10 +1,3 @@
 .padding-row
 .availabilities
-  - 1.upto(7).map{|wday| wday % 7}.each do |day|
-    .row-fluid
-      .span6= Date::DAYNAMES[day]
-      .span6.text-right
-        - if availability_rule = listing.availability_rules.where(:day => day).first || listing.location.availability_rules.where(:day => day).first
-          = availability_rule_open_close_time(availability_rule)
-        - else
-          Closed
+  = pretty_availability_sentence(listing.availability)

@@ -27,7 +27,7 @@ class @Space.Controller
 
     @siblingListingsCarousel.on 'slid.bs.carousel', =>
       currentSlide = @siblingListingsCarousel.find('.item.active').eq(0)
-      @container.find('.other-listings header p').text(currentSlide.data('listing-name'))
+      @container.find('.other-listings header p a').text(currentSlide.data('listing-name')).attr('href', currentSlide.data('listing-url'))
 
 
 
@@ -60,10 +60,7 @@ class @Space.Controller
       location.attr("data-lat"), location.attr("data-lng")
     )
 
-    if @photosContainer.length > 0
-      mapTypeId = google.maps.MapTypeId.ROADMAP
-    else
-      mapTypeId = google.maps.MapTypeId.SATELLITE
+    mapTypeId = google.maps.MapTypeId.ROADMAP
 
     @map = { map: null, markers: [] }
     @map.initialCenter = latlng

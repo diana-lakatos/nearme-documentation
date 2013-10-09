@@ -23,6 +23,31 @@ section.listings {
     font-size: 110%;
   }
 
+  .ask-a-question {
+
+    span {
+
+      &.ico-mail {
+        display: none;
+      }
+
+      @media (min-width: $booking-module-breakpoint) and (max-width: $ipad-width) {
+        display: none;
+
+        &.ico-mail {
+          display: inline;
+        }
+      }
+    }
+  }
+
+  .span9 {
+
+    @media (max-width: $booking-module-breakpoint - 1) {
+      width: 100%;
+    }
+  }
+
   .amenities-container {
     padding-top: 15px;
     border-bottom: 1px solid $gray210;
@@ -82,6 +107,28 @@ section.listings {
     }
   }
 
+  #fullscreen-gallery {
+    background: rgba(0, 0, 0, 1);
+
+    .carousel {
+      .item {
+        img {
+          max-height: 90%;
+        }
+
+        .info {
+          position: static;
+          background: none;
+
+          .caption {
+            position: static !important;
+            padding-top: 20px;
+          }
+        }
+      }
+    }
+  }
+
 
   .other-listings {
     @include box-sizing(border-box);
@@ -99,6 +146,10 @@ section.listings {
       p {
         font-size: 85%;
         margin-bottom: 0;
+
+        a {
+          color: $gray80;
+        }
       }
     }
   }
@@ -121,18 +172,25 @@ section.listings {
     }
 
     .bottom-heading {
+      position: relative;
       @include box-sizing(border-box);
       padding: 0 15px;
       min-height: 35px;
 
       a {
         display: block;
-        width: 100%;
         color: $gray120;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding-right: 25px;
+      }
 
-        span {
-          font-size: 70%;
-        }
+      span {
+        position: absolute;
+        right: 15px;
+        top: 0;
+        font-size: 70%;
       }
     }
   }

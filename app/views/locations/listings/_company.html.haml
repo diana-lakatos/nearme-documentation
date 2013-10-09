@@ -2,7 +2,7 @@
   %h2
     = location.company.name
     - if location.company.url.present?
-      = link_to location.company.url do
+      = link_to location.company.url, target: '_blank' do
         %span.ico-open-link
 
   %p= location.company.description

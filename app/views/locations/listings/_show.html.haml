@@ -4,10 +4,12 @@
   %article#space
     .container-fluid
       .row-fluid.padding-row
-        .span9
+        .span9.nested
           %h1 #{@listing.name_with_address}
         .span3
-          = mail_to "support+#{@location.id}-#{@listing.id}@desksnear.me", 'Ask a question', :class => "btn btn-blue btn-medium pull-right"
+          = link_to "mailto:support+#{@location.id}-#{@listing.id}@desksnear.me", :class => "btn btn-blue btn-medium pull-right ask-a-question" do
+            %span Ask a question
+            %span.ico-mail
 
       .container-row
         .two-thirds.column.left
@@ -15,7 +17,7 @@
 
           .padding-row
           %article.listing
-            %h2= @listing.name
+            %h2 The #{@listing.listing_type.name}
             %p= @listing.description
 
           = render 'locations/listings/location', location: @location 

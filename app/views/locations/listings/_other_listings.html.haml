@@ -4,7 +4,7 @@
     %header
       %h3 Other listings at this location
       %p{:'data-sibling-listing-name' => selected_listing_siblings(location, listing).first.name}
-        = selected_listing_siblings(location, listing).first.name
+        = link_to selected_listing_siblings(location, listing).first.name, location_listing_path(location, selected_listing_siblings(location, listing).first)
     .listing-photos
       #listing-siblings-container.carousel.slide
         %ol.carousel-indicators
@@ -13,8 +13,9 @@
         .carousel-inner
           - selected_listing_siblings(location, listing).each_with_index do |listing, index|
             - if photo = listing.photos.first
-              .item{:class => ("active" if index == 0), :data => {:'listing-name' => listing.name}}
-                = image_tag photo.image_url(:golden), :alt => photo.content.name
+              .item{:class => ("active" if index == 0), :data => {:'listing-name' => listing.name, :'listing-url' => location_listing_path(listing.location, listing)}}
+                = link_to location_listing_path(listing.location, listing) do 
+                  = image_tag photo.image_url(:golden), :alt => photo.content.name
                 .info
                   .caption
                     = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
