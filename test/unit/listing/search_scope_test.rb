@@ -7,23 +7,36 @@ class Listing::SearchScopeTest < ActiveSupport::TestCase
     @company = FactoryGirl.create(:white_label_company)
   end
 
+  setup do
+    @location = FactoryGirl.create(:location, company: @company)
+    @another_location = FactoryGirl.create(:location)
+  end
+
+
+  should 'scope to locations of this company' do
+    assert_equal [@location], Listing::SearchScope.scope(@instance, white_label_company: @company)
+  end
+
+  context 'instance' do
+
     setup do
-      @location = FactoryGirl.create(:location, company: @company)
-      @another_location = FactoryGirl.create(:location)
+      @other_instance = FactoryGirl.create(:instance, :name => 'other name')
+      @other_company = FactoryGirl.create(:company, :instance => @other_instance)
+      @other_location = FactoryGirl.create(:location, :company => @other_company)
     end
 
-
-    should 'scope to locations of this company' do
-      assert_equal [@location], Listing::SearchScope.scope(@instance, white_label_company: @company)
+    should 'find all locations not matter what instance for default_instance' do
+      assert_equal Location.all.sort, Listing::SearchScope.scope(@instance).sort
     end
 
-    should 'scope to all instance locations' do
-      assert_equal @instance.locations, Listing::SearchScope.scope(@instance)
+    should 'find locations scoped to instance if it is not default' do 
+      assert_equal @other_instance.locations, Listing::SearchScope.scope(@other_instance)
     end
+  end
 
-    should 'include only public locations' do
-      @private_location = FactoryGirl.create(:location, company: FactoryGirl.create(:company, :listings_public => false))
-      assert_equal (@instance.locations.all - [@private_location]), Listing::SearchScope.scope(@instance)
-    end
+  should 'include only public locations' do
+    @private_location = FactoryGirl.create(:location, company: FactoryGirl.create(:company, :listings_public => false))
+    assert_equal (Location.all - [@private_location]).sort, Listing::SearchScope.scope(@instance).sort
+  end
 
 end

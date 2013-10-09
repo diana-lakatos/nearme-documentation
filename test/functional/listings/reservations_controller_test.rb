@@ -53,7 +53,8 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
           assert_nothing_raised do 
             xhr :post, :create, booking_params_for(@listing)
           end
-          assert @response.body.include?('redirect'), "Expected json object with redirect, got #{@response.body}"
+          assert @response.body.include?('Your booking was Successful!')
+          refute @response.body.include?('redirect')
         end
 
         should 'log twilio exceptions that have unknown message' do
@@ -66,7 +67,8 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
           assert_nothing_raised do 
             xhr :post, :create, booking_params_for(@listing)
           end
-          assert @response.body.include?('redirect'), "Expected json object with redirect, got #{@response.body}"
+          assert @response.body.include?('Your booking was Successful!')
+          refute @response.body.include?('redirect')
         end
 
       end
