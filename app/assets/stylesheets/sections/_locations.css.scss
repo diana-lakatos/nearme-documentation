@@ -25,6 +25,12 @@ section.listings {
 
   .ask-a-question {
 
+    @media (max-width: $booking-module-breakpoint - 1) {
+      float: none;
+      width: 100%;
+      text-align: center;
+    }
+
     span {
 
       &.ico-mail {
