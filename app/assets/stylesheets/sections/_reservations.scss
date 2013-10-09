@@ -149,3 +149,62 @@ section.reservations {
     }
   }
 }
+
+.modal-content .reservations-create {
+
+  .icons {
+    padding: $padding-default;
+    
+    h3 {
+      margin: $padding-default 0;
+      text-align: center;
+    }
+
+    ul {
+      width: 100%;
+      margin: 2 * $padding-default auto;
+      padding: 0;
+      text-align: center;
+
+      li {
+        display: inline;
+        margin: 0;
+        padding: 0 $padding-default;
+
+        a {
+          font-size: 34px;
+          color: $gray80;
+
+          &.ico-facebook-full:hover {
+            color: $facebook-blue;
+          }
+
+          &.ico-twitter:hover {
+            color: $twitter-blue;
+          }
+
+          &.ico-linkedin:hover {
+            color: $linkedin-blue;
+          }
+        }
+      }
+    }
+  }
+
+  .buttons {
+    a {
+      width: 48%;
+      text-align: center;
+      cursor: pointer;
+
+      &.btn-white {
+        border: 1px solid $gray220!important;
+        color: $theme_gray;
+      }
+
+      &.btn-green {
+        margin-left: 3%;
+      }
+    }
+  }
+}
