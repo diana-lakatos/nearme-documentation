@@ -2,14 +2,16 @@ class Manage::LocationsController < Manage::BaseController
   before_filter :redirect_if_draft_listing
   before_filter :find_company
   before_filter :redirect_if_no_company
+  before_filter :set_locations_scope
   before_filter :find_location, :except => [:index, :new, :create]
 
   def index
-    @locations = current_user.locations
+    @locations = @locations_scope.all
   end
 
   def new
     @location = @company.locations.build
+    @location.administrator_id = current_user.id if current_user.is_location_administrator? 
     AvailabilityRule.default_template.apply(@location)
   end
 
@@ -61,7 +63,7 @@ class Manage::LocationsController < Manage::BaseController
   end
 
   def find_location
-    @location = current_user.locations.find(params[:id])
+    @location = @locations_scope.find(params[:id])
   end
 
   def find_company

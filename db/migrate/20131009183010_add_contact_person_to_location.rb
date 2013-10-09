@@ -1,11 +1,11 @@
 class AddContactPersonToLocation < ActiveRecord::Migration
   
   def up
-    add_column :locations, :contact_person_id, :integer
-    add_index :locations, :contact_person_id
+    add_column :locations, :administrator_id, :integer
+    add_index :locations, :administrator_id
   end
 
   def down
-    remove_column :locations, :contact_person_id
+    remove_column :locations, :administrator_id
   end
 end

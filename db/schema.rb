@@ -289,7 +289,7 @@ ActiveRecord::Schema.define(:version => 20130926025441) do
     t.string   "custom_page"
     t.string   "address2"
     t.string   "postcode"
-    t.integer  "contact_person_id"
+    t.integer  "administrator_id"
   end
 
   add_index "locations", ["company_id"], :name => "index_locations_on_company_id"
