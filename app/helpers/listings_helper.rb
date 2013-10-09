@@ -48,8 +48,8 @@ module ListingsHelper
     }
   end
 
-  def selected_listing_siblings(location, listing)
-    @siblings ||= location.listings.visible - [listing]
+  def selected_listing_siblings(location, listing, user = current_user)
+    @siblings ||= ((user and user.companies.first == location.company) ? location.listings.active : location.listings.visible)  - [listing]
   end
 
   def space_listing_placeholder_path(options = {})
