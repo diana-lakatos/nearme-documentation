@@ -29,4 +29,4 @@
       = will_paginate reservation_charges
 
 - content_for :domready do
-  new ChartWrapper.Line($('#weekly-chart'), #{weekly_chart.values.to_json.html_safe}, #{weekly_chart.labels.to_json.html_safe})
+  new ChartWrapper.Line($('#weekly-chart'), #{weekly_chart.values.to_json.html_safe}, #{weekly_chart.labels.to_json.html_safe}, null, true)

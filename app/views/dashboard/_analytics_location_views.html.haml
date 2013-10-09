@@ -23,4 +23,4 @@
     = will_paginate visits, :params => { :analytics_mode => 'location_views' }
 
 - content_for :domready do
-  new ChartWrapper.Line($('#visits-chart'), #{visits_for_chart(last_month_visits).to_json.html_safe}, #{visits_labels_for_chart(last_month_visits).to_json.html_safe})
+  new ChartWrapper.Line($('#visits-chart'), #{visits_for_chart(last_month_visits).to_json.html_safe}, #{visits_labels_for_chart(last_month_visits).to_json.html_safe}, null, true)

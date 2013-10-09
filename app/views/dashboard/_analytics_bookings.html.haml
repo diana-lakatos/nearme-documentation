@@ -23,4 +23,4 @@
 
 
 - content_for :domready do
-  new ChartWrapper.Line($('#reservations-chart'), #{reservations_for_chart(last_week_reservations).to_json.html_safe}, #{reservations_labels_for_chart(last_week_reservations).to_json.html_safe})
+  new ChartWrapper.Line($('#reservations-chart'), #{reservations_for_chart(last_week_reservations).to_json.html_safe}, #{reservations_labels_for_chart(last_week_reservations).to_json.html_safe}, null, true)

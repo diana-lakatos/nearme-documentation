@@ -24,7 +24,7 @@
 //= require history_jquery
 //= require ./vendor/underscore
 //= require chosen-jquery
-//= require chart
+//= require ./vendor/Chart
 //= require jcrop
 //= require spectrum
 //
