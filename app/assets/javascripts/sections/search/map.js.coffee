@@ -81,7 +81,9 @@ class Search.Map
     # need to toggle scroll wheel because of overflow: auto
     @popover.on 'closed', =>
       @googleMap.setOptions({scrollwheel: true})
+      $(@container).removeClass('popover-opened')
     @popover.on 'opened', =>
+      $(@container).addClass('popover-opened')
       @googleMap.setOptions({scrollwheel: false})
 
     @resetMapMarkers()
