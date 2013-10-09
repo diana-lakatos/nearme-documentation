@@ -55,4 +55,5 @@ module ListingsHelper
   def space_listing_placeholder_path(options = {})
     Placeholder.new(height: options[:height], width: options[:width]).path
   end
+
 end
