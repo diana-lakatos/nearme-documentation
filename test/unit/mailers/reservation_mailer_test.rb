@@ -119,7 +119,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   end
 
   test "send to contact person if exists" do
-    @reservation.listing.location.update_attribute(:contact_person_id, FactoryGirl.create(:user, :email => 'maciek@example.com').id)
+    @reservation.listing.location.update_attribute(:administrator_id, FactoryGirl.create(:user, :email => 'maciek@example.com').id)
     ['notify_host_of_cancellation', 'notify_host_of_confirmation', 'notify_host_of_expiration',
      'notify_host_with_confirmation', 'notify_host_without_confirmation'].each do |method|
       mail = ReservationMailer.send(method, @reservation)

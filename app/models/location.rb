@@ -135,7 +135,7 @@ class Location < ActiveRecord::Base
     read_attribute(:description).presence || (listings.first || NullListing.new).description
   end
 
-  def contact_person
+  def administrator
     super.presence || creator
   end
 

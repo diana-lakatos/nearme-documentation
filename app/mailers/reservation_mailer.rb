@@ -23,14 +23,14 @@ class ReservationMailer < InstanceMailer
 
   def notify_host_of_cancellation(reservation)
     setup_defaults(reservation)
-    @user = @listing.contact_person
+    @user = @listing.administrator
     set_bcc_email
     generate_mail('A guest has cancelled a booking')
   end
 
   def notify_host_of_confirmation(reservation)
     setup_defaults(reservation)
-    @user = @listing.contact_person
+    @user = @listing.administrator
     set_bcc_email
     generate_mail('You have confirmed a booking')
   end
@@ -42,14 +42,14 @@ class ReservationMailer < InstanceMailer
   
   def notify_host_of_expiration(reservation)
     setup_defaults(reservation)
-    @user = @listing.contact_person
+    @user = @listing.administrator
     set_bcc_email
     generate_mail('A booking for one of your listings has expired')
   end
   
   def notify_host_with_confirmation(reservation)
     setup_defaults(reservation)
-    @user = @listing.contact_person
+    @user = @listing.administrator
     set_bcc_email
     @url  = manage_guests_dashboard_url(:token => @user.authentication_token)
     generate_mail('A booking requires your confirmation')
@@ -57,7 +57,7 @@ class ReservationMailer < InstanceMailer
 
   def notify_host_without_confirmation(reservation)
     setup_defaults(reservation)
-    @user = @listing.contact_person
+    @user = @listing.administrator
     set_bcc_email
     @url  = manage_guests_dashboard_url(:token => @user.authentication_token)
     @reserver = @reservation.owner.name
@@ -122,7 +122,7 @@ class ReservationMailer < InstanceMailer
     @reservation  = reservation
     @listing      = @reservation.listing.reload
     @user         = @reservation.owner
-    @host = @reservation.listing.contact_person
+    @host = @reservation.listing.administrator
     @theme = @listing.instance.theme
   end
 
@@ -136,7 +136,7 @@ class ReservationMailer < InstanceMailer
   end
 
   def set_bcc_email
-    @bcc = [@theme.contact_email, @listing.location.email].uniq if @listing.location.email != @listing.contact_person.email
+    @bcc = [@theme.contact_email, @listing.location.email].uniq if @listing.location.email != @listing.administrator.email
   end
 
 end
