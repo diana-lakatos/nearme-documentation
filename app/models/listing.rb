@@ -59,6 +59,7 @@ class Listing < ActiveRecord::Base
     :local_geocoding, :latitude, :longitude, :distance_from, :address, to: :location,
     allow_nil: true
   delegate :creator, :creator=, to: :location
+  delegate :administrator, :to => :location, :allow_nil => true
   delegate :name, to: :creator, prefix: true
   delegate :service_fee_percent, to: :location, allow_nil: true
   delegate :to_s, to: :name

@@ -1,5 +1,6 @@
 class Manage::ListingsController < Manage::BaseController
 
+  before_filter :set_locations_scope
   before_filter :find_listing, :except => [:index, :new, :create]
   before_filter :find_location
 
@@ -74,12 +75,12 @@ class Manage::ListingsController < Manage::BaseController
     @location = if @listing
                   @listing.location
                 else
-                  current_user.locations.find(params[:location_id])
+                  @locations_scope.find(params[:location_id])
                 end
   end
 
   def find_listing
-    @listing = current_user.listings.find(params[:id])
+    @listing = Listing.where('listings.id = ? AND location_id IN (?)', params[:id].to_i, @locations_scope.pluck(:id)).first
   end
 
 end
