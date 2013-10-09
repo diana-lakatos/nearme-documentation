@@ -24,33 +24,31 @@
     background: $gray220;
     border: 1px solid $gray160;
     @include border-radius($border-radius-default);
-    @include background-clip(border-box);
     color: $gray80;
-    
-    @media (max-height: 500px) {
-      
-      .google-map-popover-content {
-        max-height: 130px;
-        overflow-y: auto;
-      }
-    }
-    
+
     h4 {
       display: block;
       overflow: hidden;
-      padding: 6px;
-      background: $gray120;
-      color: $gray230;
+      background: $theme_black;
+      color: $theme_white;
       text-overflow: ellipsis;
       white-space: nowrap;
+      padding: 15px 20px 0px 20px
+
+    }
+
+    h4:first-child {
       @include border-top-radius($border-radius-default);
+      padding: 15px 42px 0px 20px
     }
     
     .close {
       position: absolute;
-      top: 0px;
-      right: 3px;
-      font-size: 75%;
+      z-index: 1;
+      top: 23px;
+      right: 17px;
+      font-size: 19px;
+      color: $theme_white;
     }
 
     em.arrow,
@@ -84,56 +82,87 @@
   }
 }
 
-.listing-sibling {
-  border-bottom: 1px solid $gray160;
+.google-map-popover-content {
+  overflow-y: auto;
+  max-height: 292px;
+  @include border-bottom-radius($border-radius-default);
 
-  &:last-child {
-    border: none;
-    @include border-bottom-radius($border-radius-default);
+  h4.location-title, 
+  .listing-sibling, 
+  .popover-image-container,
+  .popover-image-container img {
+    height: 65px;
+    box-sizing: border-box;
   }
 
-  .popover-image-container {
-    float: left;
-    width: 94px;
-    height: 58px;
+  h4.location-title {
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 
-    a {
-      display: block; 
+    .location-name {
+      font-size: 20px;
+    }
+
+    .location-address {
+      color: $gray100;
+    }
+  }
+
+  .listing-sibling {
+    position: relative;
+    z-index: 2;
+    border-bottom: 1px solid $gray160;
+    color: $gray100;
+
+    &:last-child {
+      border: none;
+      @include border-bottom-radius($border-radius-default);
+    }
+
+    .popover-image-container {
       float: left;
-    }
-
-    img {
-      max-width: 100%;
-    }
-  }
-
-  .popover-info-container {
-    float: right;
-    margin-right: 3px;
-    width: 191px;
-    background: transparent;
-
-    h4 {
-      padding: 0;
-      background: transparent;
+      overflow: hidden;
 
       a {
-        display: block;
-        overflow: hidden;
-        margin-left: 10px;
-        max-width: 172px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }  
+        display: block; 
+        float: left;
+      }
+
+      img {
+        max-width: 100%;
+      }
     }
 
-    span.label {
-      float: right;
-      margin: 5px 0 0 1px;
-      padding: 2px 3px;
-      font-size: %80;
-      letter-spacing: -1px;
-    }  
-  }
-}
+    .popover-info-container {
+      box-sizing: border-box;
+      float: left;
+      height: 100%;
+      width: 223px;
+      padding: 15px 20px 0px 20px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      background: transparent;
 
+      h4 {
+        padding: 0;
+        background: transparent;
+
+        a {
+          display: block;
+          overflow: hidden;
+          font-size: 20px;
+        }  
+      }
+
+      span.label {
+        float: right;
+        margin: 5px 0 0 1px;
+        padding: 2px 3px;
+        font-size: %80;
+        letter-spacing: -1px;
+      }  
+    }
+  }
+
+}

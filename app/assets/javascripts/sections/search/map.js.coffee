@@ -74,8 +74,15 @@ class Search.Map
   initializeGoogleMap: ->
     @googleMap = SmartGoogleMap.createMap(@container, GOOGLE_MAP_OPTIONS, { exclude: ['draggable'] })
     @clusterer = new MarkerClusterer(@googleMap, [], GOOGLE_MAP_OPTIONS.clusterer)
+
     # Info window pops over and contains details for each marker/listing
     @popover = new GoogleMapPopover()
+
+    # need to toggle scroll wheel because of overflow: auto
+    @popover.on 'closed', =>
+      @googleMap.setOptions({scrollwheel: true})
+    @popover.on 'opened', =>
+      @googleMap.setOptions({scrollwheel: false})
 
     @resetMapMarkers()
 
@@ -204,6 +211,7 @@ class Search.Map
     return @listings[listing_id]
 
   showInfoWindowForCluster: (cluster) ->
+    
     listings = _.map(cluster.getMarkers(), (marker) => @getListingForMarker(marker))
     listingsByLocation = _.groupBy(_.compact(listings), (listing) -> listing.location())
 

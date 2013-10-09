@@ -1,8 +1,12 @@
 %article.listing{ data: { id: listing.id, name: listing.name, latitude: listing.latitude, longitude: listing.longitude, location: listing.location_id } }
   .listing-location-title
-    %h4
-      %span.ico-location
-      = listing.location.name
+    %h4.location-title
+      %span.location-name
+        = listing.location.company.name
+      %br
+      %span.location-address
+        = listing.location.street
+
   .listing-map-popover-content{:style => "display: none"}
     .listing-sibling{'data-link' => location_listing_path(listing.location, listing)}
       .popover-image-container
