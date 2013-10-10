@@ -81,8 +81,9 @@ class User < ActiveRecord::Base
 
   scope :without, lambda { |user| 
     where('users.id <> ?', user.id)
-      .order('users.email ASC')
   }
+
+  scope :ordered_by_email, order('users.email ASC') 
 
 
   extend CarrierWave::SourceProcessing

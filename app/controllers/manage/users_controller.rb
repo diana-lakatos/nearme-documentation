@@ -3,7 +3,7 @@ class Manage::UsersController < Manage::BaseController
   before_filter :redirect_if_no_company
 
   def index
-    @users = @company.users.without(current_user)
+    @users = @company.users.without(current_user).ordered_by_email
   end
 
   def new
