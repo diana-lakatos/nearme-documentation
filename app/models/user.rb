@@ -23,6 +23,11 @@ class User < ActiveRecord::Base
            :foreign_key => "creator_id",
            :inverse_of => :creator
 
+  has_many :administered_locations,
+           :class_name => "Location",
+           :foreign_key => "administrator_id",
+           :inverse_of => :administrator
+
   attr_accessible :companies_attributes
   accepts_nested_attributes_for :companies
 
@@ -286,6 +291,10 @@ class User < ActiveRecord::Base
 
   def to_param
     caller[0].include?('friendly_id') ? super : id
+  end
+
+  def is_location_administrator?
+    administered_locations.size > 0
   end
 
 end

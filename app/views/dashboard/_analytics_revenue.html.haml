@@ -1,32 +1,33 @@
 .box
-  - if reservation_charges.empty?
+  - if @reservation_charges.empty?
     %p.no_data You have not received any payments in the preceding 7 day period.
   - else
-    .weekly-chart
+    .chart
       .total.right
-        - weekly_chart.sums_by_currency.each do |currency, sum|
+        - @chart.totals_by_currency.each do |currency, sum|
           .total-number.left
             = "#{currency_content_tag(currency, sum, :span, { :rel => false })}".html_safe
         %span{class: 'total-text'} 7 day total
-      %canvas#weekly-chart
+      %canvas#chart
 
-    .reservation-charges-details
-      - reservation_charges.each do |reservation_charge|
-        .clearfix.reservation-charge-line-item
-          .left
-            = "#{currency_content_tag(reservation_charge.currency, reservation_charge.total_amount, :span, { :rel => false })}".html_safe
-            %span{class: 'location-name'}= "#{reservation_charge.reservation.listing.location.name}".html_safe
-          .right
-            = reservation_charge.created_at.strftime('%Y-%m-%d')
+    %table.table.table-simple
+      %thead
+        %tr
+          %th Amount
+          %th Location
+          %th Date
+      %tbody
+        - @reservation_charges.each do |reservation_charge|
+          %tr
+            %td= currency_content_tag(reservation_charge.currency, reservation_charge.total_amount, :span, { :rel => false }).html_safe
+            %td= reservation_charge.reservation.listing.location.name
+            %td= reservation_charge.created_at.strftime('%Y-%m-%d')
 
-      .reservation-charges-total
-        - all_time_totals.each do |total|
+        - @all_time_totals.each do |total|
           - total = Money.new(total[:sum], total[:currency])
-          .total-number.left
-            = "#{currency_content_tag(total.currency, total.amount, :span, { :rel => false })}".html_safe
-        %span{class: 'total-text'} all time total
+          %tr.total-row
+            %td= currency_content_tag(total.currency, total.amount, :span, { :rel => false }).html_safe
+            %td all time total
+            %td
 
-      = will_paginate reservation_charges
-
-- content_for :domready do
-  new ChartWrapper.Line($('#weekly-chart'), #{weekly_chart.values.to_json.html_safe}, #{weekly_chart.labels.to_json.html_safe}, null, true)
+      = will_paginate @reservation_charges

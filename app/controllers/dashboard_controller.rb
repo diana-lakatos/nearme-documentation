@@ -47,7 +47,7 @@ class DashboardController < ApplicationController
                                     last_x_days(6).
                                     order('created_at ASC')
 
-    @weekly_chart = WeeklyChartDecorator.decorate(@last_week_payment_transfers)
+    @chart = ChartDecorator.decorate(@last_week_payment_transfers)
   end
 
   private
@@ -79,7 +79,7 @@ class DashboardController < ApplicationController
     # Charge total summary by currency
     @all_time_totals = @company.reservation_charges.paid.total_by_currency
 
-    @weekly_chart = WeeklyChartDecorator.decorate(@last_week_reservation_charges)
+    @chart = ChartDecorator.decorate(@last_week_reservation_charges)
   end
 
   def prepare_data_for_analytics_bookings
@@ -91,8 +91,9 @@ class DashboardController < ApplicationController
     )
 
     @last_week_reservations = @company.reservations.last_x_days(6).order('created_at ASC')
-  end
 
+    @chart = ChartDecorator.decorate(@last_week_reservations)
+  end
 
   def prepare_data_for_analytics_location_views
     @visits = @company.locations_impressions.select('COUNT(impressions.*) AS impressions_count, DATE(impressions.created_at) AS impression_date').group('impression_date')
@@ -106,6 +107,8 @@ class DashboardController < ApplicationController
       :per_page => 30,
       :total_entries => @company.locations_impressions.group('DATE(impressions.created_at)').count.size 
     )
+
+    @chart = ChartDecorator.decorate(@last_month_visits)
   end
 
 end

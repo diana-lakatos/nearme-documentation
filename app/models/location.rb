@@ -9,7 +9,8 @@ class Location < ActiveRecord::Base
     :info, :latitude, :local_geocoding, :longitude, :currency,
     :formatted_address, :availability_rules_attributes, :postcode, :phone,
     :availability_template_id, :special_notes, :listings_attributes, :suburb,
-    :city, :state, :country, :street, :address_components, :location_type_id, :photos
+    :city, :state, :country, :street, :address_components, :location_type_id, :photos,
+    :administrator_id
   attr_accessor :local_geocoding # set this to true in js
 
   liquid_methods :name
@@ -23,7 +24,10 @@ class Location < ActiveRecord::Base
 
   belongs_to :company, inverse_of: :locations
   belongs_to :location_type
+  belongs_to :administrator, class_name: "User", :inverse_of => :administered_locations
+
   delegate :creator, :to => :company, :allow_nil => true
+  delegate :company_users, :to => :company, :allow_nil => true
   delegate :instance, :to => :company, :allow_nil => true
 
   after_save :notify_user_about_change
@@ -129,6 +133,10 @@ class Location < ActiveRecord::Base
 
   def description
     read_attribute(:description).presence || (listings.first || NullListing.new).description
+  end
+
+  def administrator
+    super.presence || creator
   end
 
   def creator=(creator)
