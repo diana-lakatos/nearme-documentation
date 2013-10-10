@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130926025441) do
+ActiveRecord::Schema.define(:version => 20131009183010) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -292,6 +292,7 @@ ActiveRecord::Schema.define(:version => 20130926025441) do
     t.integer  "administrator_id"
   end
 
+  add_index "locations", ["administrator_id"], :name => "index_locations_on_administrator_id"
   add_index "locations", ["company_id"], :name => "index_locations_on_company_id"
   add_index "locations", ["location_type_id"], :name => "index_locations_on_location_type_id"
   add_index "locations", ["slug"], :name => "index_locations_on_slug"

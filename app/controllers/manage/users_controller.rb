@@ -30,9 +30,14 @@ class Manage::UsersController < Manage::BaseController
 
   def destroy
     @user = User.find(params[:id])
-    @company.users -= [@user]
 
-    flash[:deleted] = t('manage.users.user_deleted', name: @user.name, company_name: @company.name)
+    if @user == current_user
+      # user cannot remove themselves
+      flash[:warning] = t('manage.users.user_cannot_remove_himself')
+    else
+      @company.users -= [@user]
+      flash[:deleted] = t('manage.users.user_deleted', name: @user.name, company_name: @company.name)
+    end
     redirect_to manage_users_path
   end
 

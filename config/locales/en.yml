@@ -71,6 +71,7 @@ en:
       user_added: "You've added %{name} to %{company_name}"
       user_does_not_exists: "A user does not exist with the specified email address."
       user_cannot_be_invited: "This user couldn't be invited as they are already associated with a company."
+      user_cannot_remove_himself: "You cannot remove yourself from company users list."
   desk:
     reservation_rejected_body: "%{user} declined reservation with reason: %{reason}"
     reservation_rejected_title: "[internal] User has declined reservation"
