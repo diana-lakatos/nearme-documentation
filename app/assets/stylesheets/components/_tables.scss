@@ -1,0 +1,30 @@
+.table-simple {
+  width: 100%;
+  color: $gray120;
+
+  th, td {
+    padding: $padding-small 0;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  tbody { 
+
+    tr:hover {
+      td {
+        background: $light-gray;
+      }
+    }
+
+    td {
+      border-top: 1px solid $gray220;
+    }
+
+    .total-row td {
+      padding-top: $padding-default;
+      font-weight: bold;
+    }
+  }
+}
