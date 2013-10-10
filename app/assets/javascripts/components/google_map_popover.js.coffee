@@ -43,6 +43,12 @@ class @GoogleMapPopover
   setContent: (content) ->
     @infoBox.setContent @wrapContent(content)
 
+  setError: (content) ->
+    @infoBox.setContent @wrapContent("<div class='popover-error'><span class=''>#{content}</span></div>")
+
+  markAsBeingLoaded: ->
+    @infoBox.setContent @wrapContent('<div class="popover-loading"><img src="' + $('.loading').find('img').attr('src') + '"><br /><span>Loading...</span></div>')
+
   getDefaultOptions: ->
     $.extend {}, @defaultOptions, {
       pixelOffset: new google.maps.Size(-144, -40)

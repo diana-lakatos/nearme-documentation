@@ -2,47 +2,6 @@
 class Search.Map
   asEvented.call(Map.prototype)
 
-  # Custom marker definitions
-  # Generated from: http://powerhut.co.uk/googlemaps/custom_markers.php
-  MARKERS =
-    hover:
-      icon:
-        url: '/assets/google-maps/marker-images/hover-2x.png'
-        size: new google.maps.Size(20,29)
-        origin: new google.maps.Point(0,0)
-        anchor: new google.maps.Point(10,29)
-        scaledSize: new google.maps.Size(20,29)
-      image: new google.maps.MarkerImage(
-        '/assets/google-maps/marker-images/hover-2x.png',
-        new google.maps.Size(40,57),
-        new google.maps.Point(0,0),
-        new google.maps.Point(10,29),
-        new google.maps.Size(20,29)
-      )
-
-      shape:
-        coord: [14,0,15,1,16,2,17,3,18,4,18,5,19,6,19,7,19,8,19,9,19,10,19,11,19,12,19,13,18,14,18,15,17,16,17,17,16,18,16,19,15,20,14,21,14,22,13,23,13,24,12,25,11,26,11,27,8,27,7,26,7,25,6,24,6,23,5,22,4,21,4,20,3,19,3,18,2,17,2,16,1,15,0,14,0,13,0,12,0,11,0,10,0,9,0,8,0,7,0,6,0,5,1,4,1,3,2,2,3,1,5,0,14,0],
-        type: 'poly'
-
-    default:
-      icon:
-        url: '/assets/google-maps/marker-images/default-2x.png'
-        size: new google.maps.Size(40,57)
-        origin: new google.maps.Point(0,0)
-        anchor: new google.maps.Point(10,29)
-        scaledSize: new google.maps.Size(20,29)
-      image: new google.maps.MarkerImage(
-        '/assets/google-maps/marker-images/default-2x.png',
-        new google.maps.Size(40,57),
-        new google.maps.Point(0,0),
-        new google.maps.Point(10,29),
-        new google.maps.Size(20,29)
-      )
-
-      shape:
-        coord: [14,0,15,1,16,2,17,3,18,4,18,5,19,6,19,7,19,8,19,9,19,10,19,11,19,12,19,13,18,14,18,15,17,16,17,17,16,18,16,19,15,20,14,21,14,22,13,23,13,24,12,25,11,26,11,27,8,27,7,26,7,25,6,24,6,23,5,22,4,21,4,20,3,19,3,18,2,17,2,16,1,15,0,14,0,13,0,12,0,11,0,10,0,9,0,8,0,7,0,6,0,5,1,4,1,3,2,2,3,1,5,0,14,0]
-        type: 'poly'
-  
   GOOGLE_MAP_OPTIONS =
     zoom: 8,
     minZoom: 4,
@@ -68,7 +27,8 @@ class Search.Map
   constructor: (@container, controller) ->
     @initializeGoogleMap()
     @bindEvents()
-    @cacheMarkers()
+    @loading = false
+    @current_position = { getPosition: -> {} }
     @search_controller = controller
 
   initializeGoogleMap: ->
@@ -79,12 +39,15 @@ class Search.Map
     @popover = new GoogleMapPopover()
 
     # need to toggle scroll wheel because of overflow: auto
+    # need to remember which cluster has been open to prevent re-opening the same one
     @popover.on 'closed', =>
       @googleMap.setOptions({scrollwheel: true})
       $(@container).removeClass('popover-opened')
+      @current_position = {}
     @popover.on 'opened', =>
       $(@container).addClass('popover-opened')
       @googleMap.setOptions({scrollwheel: false})
+      @current_position = @current_cluster_position
 
     @resetMapMarkers()
 
@@ -109,7 +72,6 @@ class Search.Map
       @trigger 'click'
     
     @clusterer.addListener 'mouseover', (cluster)=>
-      return if cluster.markers_.length > 1 && @googleMap.getZoom() != GOOGLE_MAP_OPTIONS.maxZoom
       _.defer => @showInfoWindowForCluster(cluster) # Clashes with map.click on some devices, need to add small delay to show
 
     @clusterer.addListener 'click', (cluster)=>
@@ -172,7 +134,6 @@ class Search.Map
       map:      @googleMap,
       title:    listing.name(),
       visible:  false,
-      icon: MARKERS.default.icon,
       shadow: null,
       shape: GoogleMapMarker.getMarkerOptions().default.shape
     )
@@ -182,10 +143,6 @@ class Search.Map
     @clusterer.addMarker(marker)
     
     marker.setVisible(true)
-
-    # Bind the event for showing the info details on click
-    google.maps.event.addListener marker, 'mouseover', =>
-      @showInfoWindowForListing(listing)
 
   fitBounds: (bounds) ->
     @googleMap.fitBounds(bounds || @bounds)
@@ -214,17 +171,29 @@ class Search.Map
 
   showInfoWindowForCluster: (cluster) ->
     
-    listings = _.map(cluster.getMarkers(), (marker) => @getListingForMarker(marker))
-    listingsByLocation = _.groupBy(_.compact(listings), (listing) -> listing.location())
-
-    @search_controller.updateListings(listings, =>
-      html = ""
-      for location, group of listingsByLocation
-        html += group[0].popoverTitleContent()
-        html += listing.popoverContent() for listing in group
-        
-      @popover.setContent html
-      @popover.open @googleMap, cluster.getMarkers()[0])
+    if !@loading && @current_position != cluster.center_
+      @current_cluster_position = cluster.center_
+      if cluster.getMarkers().length > 100
+        @popover.setError('Maximum listings per marker is 100. Click the marker to zoom in.')
+      else
+        @loading = true
+        @popover.markAsBeingLoaded()
+        listings = _.map(cluster.getMarkers(), (marker) => @getListingForMarker(marker))
+        listingsByLocation = _.groupBy(_.compact(listings), (listing) -> listing.location())
+        _.defer =>
+          @search_controller.updateListings(listings, =>
+            html = ""
+            for location, group of listingsByLocation
+              html += group[0].popoverTitleContent()
+              html += listing.popoverContent() for listing in group
+              
+            @popover.setContent html
+            @loading = false
+          , =>
+            @popover.setError "An error occured retrieving listings, please try again."
+            @loading = false
+          )
+      @popover.open @googleMap, { getPosition: -> cluster.center_ }
     
     true
 
@@ -235,10 +204,6 @@ class Search.Map
       @popover.setContent listing.popoverTitleContent() + listing.popoverContent()
       @popover.open(@googleMap, marker))
 
-  cacheMarkers: ->
-    # hack if css sprites cannot be used
-    $('body').append("<div style='display:none;'><img src='/assets/google-maps/marker-images/hover-2x.png' /><img src='/assets/google-maps/marker-images/default-2x.png' /></div>")
-  
   show: ->
     $(@container).show()
     

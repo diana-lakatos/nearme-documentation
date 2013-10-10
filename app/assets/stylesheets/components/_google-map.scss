@@ -34,6 +34,8 @@
     color: $gray80;
 
     h4 {
+      position: relative;
+      z-index: 2;
       display: block;
       overflow: hidden;
       background: $theme_black;
@@ -45,6 +47,7 @@
     }
 
     h4:first-child {
+      z-index: 1;
       @include border-top-radius($border-radius-default);
       padding: 15px 42px 0px 20px
     }
@@ -52,8 +55,9 @@
     .close {
       position: absolute;
       z-index: 1;
-      top: 23px;
-      right: 17px;
+      top: 17px;
+      right: 12px;
+      @include adjust-font-size-to(19px);
       font-size: 19px;
       color: $theme_white;
     }
@@ -109,6 +113,7 @@
     text-overflow: ellipsis;
 
     .location-name {
+      @include adjust-font-size-to(20px);
       font-size: 20px;
     }
 
@@ -131,6 +136,7 @@
     .popover-image-container {
       float: left;
       overflow: hidden;
+      width: 65px;
 
       a {
         display: block; 
@@ -145,21 +151,24 @@
     .popover-info-container {
       @include box-sizing(border-box);
       float: left;
-      width: 223px;
-      padding: 15px 20px 0px 20px;
+      width: 100%;
+      margin-left: -65px;
+      padding: 8px 10px 0px 75px;
       white-space: nowrap;
       text-overflow: ellipsis;
       background: transparent;
+      overflow: hidden;
+      color: $gray100;
 
       h4 {
+        display: block;
         padding: 0;
         background: transparent;
-
-        a {
-          display: block;
-          overflow: hidden;
-          font-size: 20px;
-        }  
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      color: $gray100;
+        @include adjust-font-size-to(20px);
+        font-size: 20px;
       }
 
       span.label {
@@ -170,6 +179,27 @@
         letter-spacing: -1px;
       }  
     }
+
+    &:hover {
+      background: $gray240;
+    }
   }
 
+
+  .popover-loading {
+    text-align: center;
+    padding-top: 20px;
+    width: auto;
+  }
+
+  .popover-error {
+    text-align: center;
+    padding: 20px;
+    
+    span {
+      font-size: 18px;
+    }
+
+
+  }
 }

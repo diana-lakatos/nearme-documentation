@@ -15,7 +15,7 @@
             = image_tag photo.image_url(:thumb), :title => listing.name, :alt => listing.name
           - else
             = image_tag space_listing_placeholder_path(:height => 89, :width => 144), :title => listing.name, :alt => listing.name
-      .popover-info-container
-        %h4= link_to "#{listing.name}", location_listing_path(listing.location, listing)
+      = link_to location_listing_path(listing.location, listing), :class => 'popover-info-container' do
+        %h4= listing.name
         = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
 

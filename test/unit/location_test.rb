@@ -7,7 +7,7 @@ class LocationTest < ActiveSupport::TestCase
   end
 
   should belong_to(:company)
-  should belong_to(:contact_person)
+  should belong_to(:administrator)
   should belong_to(:location_type)
   should have_many(:listings)
 
