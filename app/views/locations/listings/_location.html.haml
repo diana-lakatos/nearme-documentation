@@ -1,0 +1,11 @@
+%article.location
+  %h2 The location
+  %p= location.description
+  - if location.amenities.any?
+    %h3 Amenities
+    .amenities-container
+      - location.amenities.order('name ASC').in_groups_of(4).each do |amenity_group|
+        .row-fluid.amenities-row
+          - amenity_group.compact.each do |amenity|
+            .span3= amenity.name
+    .clearfix

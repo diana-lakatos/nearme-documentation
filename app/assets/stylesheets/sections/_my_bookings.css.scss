@@ -110,7 +110,7 @@ section#reservations {
           .actions {
 
             input, a {
-              @include border-radius($border-radius-right);
+              @include border-radius($border-radius-left);
               width: 100%;
               text-align: left;
               margin-top: 0px;

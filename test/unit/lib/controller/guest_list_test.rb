@@ -11,9 +11,9 @@ class GuestListTest < ActiveSupport::TestCase
       @unconfirmed_reservation =  create(:reservation, listing: @listings, state: :unconfirmed)
       @confirmed_reservation =  create(:reservation, listing: @listings, state: :confirmed)
 
-      @archived_reservations =  []
+      @archived_reservations = []
       Timecop.travel(1.week.ago) do
-      @archived_reservations =  [create(:reservation, listing: @listings, state: :cancelled_by_guest),
+        @archived_reservations =  [create(:reservation, listing: @listings, state: :cancelled_by_guest),
                                  create(:reservation, listing: @listings, state: :cancelled_by_host),
                                  create(:reservation, listing: @listings, state: :rejected)]
       end
