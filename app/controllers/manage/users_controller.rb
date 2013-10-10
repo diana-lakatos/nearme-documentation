@@ -3,7 +3,7 @@ class Manage::UsersController < Manage::BaseController
   before_filter :redirect_if_no_company
 
   def index
-    @users = @company.users.where('users.id <> ?', current_user.id).order('email ASC')
+    @users = @company.users.without(current_user)
   end
 
   def new
@@ -29,15 +29,10 @@ class Manage::UsersController < Manage::BaseController
   end
 
   def destroy
-    @user = User.find(params[:id])
+    @user = @company.users.without(current_user).find(params[:id]) rescue nil
 
-    if @user == current_user
-      # user cannot remove themselves
-      flash[:warning] = t('manage.users.user_cannot_remove_himself')
-    else
-      @company.users -= [@user]
-      flash[:deleted] = t('manage.users.user_deleted', name: @user.name, company_name: @company.name)
-    end
+    @company.users -= [@user]
+    flash[:deleted] = t('manage.users.user_deleted', name: @user.try(:name), company_name: @company.name)
     redirect_to manage_users_path
   end
 

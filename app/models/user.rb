@@ -79,6 +79,12 @@ class User < ActiveRecord::Base
       where("mailchimp_synchronized_at IS NULL OR mailchimp_synchronized_at < updated_at")
   }
 
+  scope :without, lambda { |user| 
+    where('users.id <> ?', user.id)
+      .order('users.email ASC')
+  }
+
+
   extend CarrierWave::SourceProcessing
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
 
