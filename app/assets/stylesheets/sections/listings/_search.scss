@@ -121,21 +121,6 @@ section.search#content {
 }
 /*** End Map View ***/
 
-.google-map-popover-content .listing-sibling {
-  overflow: hidden;
-  cursor: pointer;
-
-  &:hover {
-    background-color: $gray210;
-  }
-}
-
-.listing-map-popover-content {
-  .ico-close {
-    font-size: 50%;
-  }
-}
-
 #search_row,
 .black-box {
 
