@@ -65,6 +65,14 @@ class Manage::UsersControllerTest < ActionController::TestCase
 
         assert_redirected_to manage_users_path
       end
+
+      should "creator cannot destroy himself" do
+        assert_no_difference('@company.users.count') do
+          delete :destroy, :id => @creator.id
+        end
+
+        assert_redirected_to manage_users_path
+      end 
     end
   end
 
