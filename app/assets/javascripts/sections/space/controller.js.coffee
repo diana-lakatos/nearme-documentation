@@ -6,6 +6,8 @@ class @Space.Controller
     @mapContainer    = $('.map')
     @googleMapElementWrapper = @mapContainer.find('.map-container')
     @siblingListingsCarousel = @container.find('#listing-siblings-container')
+    @fullScreenGallery = @container.find('#photos-container-enlarged')
+    @fullScreenGalleryTrigger = @container.find('button[data-gallery-enlarge]') 
 
     @setupCollapse()
     @setupCarousel()
@@ -14,6 +16,7 @@ class @Space.Controller
     @setupBookings()
     @_bindEvents()
     @adjustBookingModulePosition()
+    @adjustFullGalleryHeight()
 
   _bindEvents: ->
     @container.on 'click', '[data-behavior=scrollToBook]', (event) =>
@@ -24,12 +27,16 @@ class @Space.Controller
 
     $(window).resize => 
       @adjustBookingModulePosition()
+      @adjustFullGalleryHeight()
 
     @siblingListingsCarousel.on 'slid.bs.carousel', =>
       currentSlide = @siblingListingsCarousel.find('.item.active').eq(0)
       @container.find('.other-listings header p a').text(currentSlide.data('listing-name')).attr('href', currentSlide.data('listing-url'))
 
-
+    @fullScreenGalleryTrigger.on 'click', =>
+      setTimeout ( =>
+        @adjustFullGalleryHeight()
+      ), 1200
 
   adjustBookingModulePosition: ->
     # 610 - booking module breakpoint
@@ -39,6 +46,13 @@ class @Space.Controller
     else
       @container.find('.listings').removeClass('padding-row').appendTo(@container.find('article.booking'))
 
+  adjustFullGalleryHeight: ->
+    @fullScreenGallery.find('.item img').removeClass('smaller-size')
+    if @fullScreenGallery.find('.item.active img').height() >= $(window).height()
+      @fullScreenGallery.height($(window).height()) 
+      @fullScreenGallery.find('.item img').addClass('smaller-size')
+    else
+      @fullScreenGallery.height('auto') 
 
   setupPhotos: ->
     @photos = new Space.PhotosController($('.space-hero-photos'))
