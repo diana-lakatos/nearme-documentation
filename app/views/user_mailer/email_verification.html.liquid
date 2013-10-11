@@ -1,19 +1,9 @@
-<p>
-Hi {{ user.first_name }},
+<h1 style='{{ css.h1 }}'>
+Welcome to {{ instance.name }}, {{ user.first_name }}!
+</h1>
+
+<p style="font-size: 16px !important; color: #505050; padding-top: 10px; padding-bottom: 25px;">
+Please, click the big button bellow to activate your account and get started.
 </p>
 
-<p>
-  Thanks for signing up to {{ instance.name }}!
-</p>
-
-<p>
-  Please <a href="{{ user.verify_user_url }}">click here to verify your email</a>.
-</p>
-
-<p>
-  Thanks,
-</p>
-
-<p>
-  The Desks Near Me team.
-</p>
+<a class="btn" href="{{ user.verify_user_url }}" style="{{ css.btn }}">Activate account and login</a>
