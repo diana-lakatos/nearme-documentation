@@ -36,4 +36,16 @@ namespace :instance do
       location.save!(:validate => false)
     end
   end
+
+  desc 'change all pb centers users passwords'
+  task :set_all_pbcenters_users_password => :environment do
+    instance = Instance.find_by_name('PB Centers')
+    instance.companies.each do |company|
+      company.users.each do |user|
+        puts "Setting password for #{user.full_email}"
+        user.password = user.password_confirmation = 'PBCd3sks'
+        user.save!(:validate => false)
+      end
+    end
+  end
 end
