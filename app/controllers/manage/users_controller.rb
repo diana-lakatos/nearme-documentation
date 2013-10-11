@@ -3,7 +3,7 @@ class Manage::UsersController < Manage::BaseController
   before_filter :redirect_if_no_company
 
   def index
-    @users = @company.users.order('email ASC')
+    @users = @company.users.without(current_user).ordered_by_email
   end
 
   def new
@@ -29,10 +29,10 @@ class Manage::UsersController < Manage::BaseController
   end
 
   def destroy
-    @user = User.find(params[:id])
-    @company.users -= [@user]
+    @user = @company.users.without(current_user).find(params[:id]) rescue nil
 
-    flash[:deleted] = t('manage.users.user_deleted', name: @user.name, company_name: @company.name)
+    @company.users -= [@user]
+    flash[:deleted] = t('manage.users.user_deleted', name: @user.try(:name), company_name: @company.name)
     redirect_to manage_users_path
   end
 
