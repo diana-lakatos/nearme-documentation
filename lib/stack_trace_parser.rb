@@ -18,7 +18,11 @@ class StackTraceParser
   end
 
   def humanized_method_name
-    @path_to_parse.split('in `').last.split("'")[0].humanize
+    method_name.humanize
+  end
+
+  def method_name
+    @path_to_parse.split('in `').last.split("'")[0]
   end
 
 end

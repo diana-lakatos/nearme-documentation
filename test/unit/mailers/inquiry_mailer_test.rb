@@ -22,7 +22,6 @@ class InquiryMailerTest < ActiveSupport::TestCase
   test "inquiring user notification works ok" do
     mail = InquiryMailer.inquiring_user_notification(@theme, @inquiry)
     subject =  "We've passed on your inquiry about #{@inquiry.listing.name}"
-
     assert_equal subject, mail.subject
     assert mail.html_part.body.include?(@inquiry.inquiring_user.name)
   end
