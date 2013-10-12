@@ -12,5 +12,6 @@
       - location.company.industries.order('name ASC').in_groups_of(4).each do |industry_group|
         .row-fluid.amenities-row
           - industry_group.compact.each do |industry|
-            .span3= industry.name
+            .span3{title: industry.name}
+              = industry.name
     .clearfix
