@@ -37,14 +37,18 @@ class ApplicationController < ActionController::Base
       elsif @current_domain.instance?
         @current_instance = @current_domain.target
         @current_theme = @current_instance.theme
+      elsif @current_domain.partner?
+        @current_partner = @current_domain.target
+        @current_instance = @current_partner.instance 
+        @current_theme = @current_partner.theme.presence
       end
     else
       @current_instance = Instance.default_instance
       @current_theme = @current_instance.theme
     end
   end
-  attr_accessor :current_instance, :current_theme
-  helper_method :current_instance, :current_theme
+  attr_accessor :current_instance, :current_theme, :current_partner
+  helper_method :current_instance, :current_theme, :current_partner
 
   # Provides an EventTracker instance for the current request.
   #

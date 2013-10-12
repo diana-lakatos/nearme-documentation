@@ -8,6 +8,9 @@ class ApplicationControllerTest < ActionController::TestCase
       @example_instance_domain = FactoryGirl.create(:domain, :name => 'instance.example.com', :target => FactoryGirl.create(:instance, :name => 'Example Instance', :theme => FactoryGirl.create(:theme)))
       @example_instance = @example_instance_domain.target
 
+      @example_partner_domain = FactoryGirl.create(:domain, :name => 'partner.example.com', :target => FactoryGirl.create(:partner, :name => 'Example Partner', :theme => FactoryGirl.create(:theme)))
+      @example_partner = @example_partner_domain.target
+
       @example_company_domain = FactoryGirl.create(:domain, :name => 'company.example.com', :target => FactoryGirl.create(:company, :theme => FactoryGirl.create(:theme), :instance => FactoryGirl.create(:instance, :name => 'Company Instance')))
       @example_company = @example_company_domain.target
     end
@@ -52,6 +55,21 @@ class ApplicationControllerTest < ActionController::TestCase
         assert_equal Instance.default_instance, @controller.send(:current_instance)
         assert_equal Instance.default_instance.theme, @controller.send(:current_theme)
       end
+    end
+
+    context 'partner' do
+
+      setup do
+        @controller.stubs(:request).returns(mock(:host => @example_partner_domain.name))
+      end
+
+      should 'find current partner' do
+        @controller.send(:load_request_context)
+        assert_equal @example_partner, @controller.send(:current_partner)
+        assert_equal @example_partner.theme, @controller.send(:current_theme)
+        assert_equal @example_partner.instance, @controller.send(:current_instance)
+      end
+
     end
   end
 

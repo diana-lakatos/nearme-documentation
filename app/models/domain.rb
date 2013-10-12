@@ -21,4 +21,8 @@ class Domain < ActiveRecord::Base
     "Instance" == target_type
   end
 
+  def partner?
+    "Partner" == target_type
+  end
+
 end
