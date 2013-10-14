@@ -12,11 +12,15 @@ class InstanceMailer < ActionMailer::Base
     theme = options.delete(:theme)
     template = options.delete(:template_name) || view_context.action_name
     mailer = options.delete(:mailer) || find_mailer(template: template, theme: theme) || theme.default_mailer
+    to = options[:to]
     bcc = options.delete(:bcc) || mailer.bcc
     from = options.delete(:from) || mailer.from
     subject_locals = options.delete(:subject_locals)
     subject  = mailer.liquid_subject(subject_locals) || options.delete(:subject)
     reply_to = options.delete(:reply_to) || mailer.reply_to
+    user  = User.find_by_email(to.kind_of?(Array) ? to.first : to)
+    email_method = StackTraceParser.new(caller[0]).humanized_method_name
+    custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge({template: template, campaign: email_method})
 
     self.class.layout _layout, theme: theme
 
@@ -25,7 +29,7 @@ class InstanceMailer < ActionMailer::Base
       :bcc     => bcc,
       :from    => from,
       :reply_to=> reply_to)) do |format|
-        format.html { render template, theme: theme }
+        format.html { render(template, theme: theme) + get_tracking_code(user, theme, custom_tracking_options) }
         format.text { render template, theme: theme }
       end
 
@@ -59,5 +63,15 @@ class InstanceMailer < ActionMailer::Base
     template = EmailResolver.instance.find_mailers(template_name, template_prefix, false, details).first
 
     return template
+  end
+
+  def get_tracking_code(user, theme, custom_tracking_options)
+    @mixpanel_wrapper ||= AnalyticWrapper::MixpanelApi.new(
+      AnalyticWrapper::MixpanelApi.mixpanel_instance(),
+      :current_user       => user,
+      :request_details    => { :current_instance_id => theme.instance.id }
+    )
+    @event_tracker ||= Analytics::EventTracker.new(@mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(user))
+    @event_tracker.pixel_track_url("Email Opened", custom_tracking_options)
   end
 end
