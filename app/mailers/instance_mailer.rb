@@ -3,11 +3,6 @@ class InstanceMailer < ActionMailer::Base
   extend Job::SyntaxEnhancer
   include ActionView::Helpers::TextHelper
   helper :listings, :reservations
-  include AbstractController::Callbacks
-
-  before_filter do 
-    @css = MailerCss.new 
-  end
 
   self.job_class = MailerJob
 

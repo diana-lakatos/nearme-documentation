@@ -288,7 +288,7 @@ class UserTest < ActiveSupport::TestCase
       assert_equal [@user.email], sent_mail.to
 
       assert sent_mail.html_part.body.encoded.include?('+118889983375'), "Body did not include expected phone number +118889983375"
-      assert sent_mail.html_part.body.encoded.include?("<a href=\"http://example.com/users/edit\">here to access your settings</a>"), "Body did not include expected link to edit profile"
+      assert sent_mail.html_part.body.encoded =~ /<a href="http:\/\/example.com\/users\/edit" style=".+">here to access your settings<\/a>/, "Body did not include expected link to edit profile"
     end
 
     should 'not spam user' do

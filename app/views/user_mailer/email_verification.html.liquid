@@ -1,9 +1,9 @@
-<h1 style='{{ css.h1 }}'>
+<h1>
 Welcome to {{ instance.name }}, {{ user.first_name }}!
 </h1>
 
-<p style="font-size: 16px !important; color: #505050; padding-top: 10px; padding-bottom: 25px;">
+<p class="first-paragraph">
 Please, click the big button bellow to activate your account and get started.
 </p>
 
-<a class="btn" href="{{ user.verify_user_url }}" style="{{ css.btn }}">Activate account and login</a>
+<a class="btn" href="{{ user.verify_user_url }}">Activate account and login</a>
