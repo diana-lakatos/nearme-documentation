@@ -617,6 +617,45 @@ section.search section#results.list {
       }
     }
 
+    .photo-container {
+      position: relative;
+    }
+
+    .listing-google-map-wrapper {
+      position: absolute;
+      z-index: 5;
+      display: none;
+      top: 0px;
+      left: 0px;
+      width: 100%; 
+      height: 100%;
+
+      a {
+        position: absolute;
+        z-index: 2;
+        top: 5px;
+        right: 10px;
+      }
+
+      .listing-google-map {
+        width: 100%; 
+        height: 100%;
+
+        img {
+          max-width: none;
+        }
+
+        .google-map-popover {
+
+          .close {
+            top: 0px;
+            right: 10px;
+            color: $theme_black;
+          }
+        }
+      }
+    }
+
     .info {
       @include box-sizing(border-box);
       position: absolute;
