@@ -26,28 +26,8 @@ class Partner < ActiveRecord::Base
   end
 
   def build_theme_from_instance
-    theme_attributes = instance.try(:theme).try(:attributes) || {}
-    theme = build_theme
-    if theme_attributes
-      ['id', 'name', 'compiled_stylesheet', 'owner_id', 'owner_type', 'created_at', 'updated_at'].each do |forbidden_attribute|
-        theme_attributes.delete(forbidden_attribute)
-      end
-      theme_attributes.keys.each do |attribute|
-        if attribute.include?('_image')
-          url = instance.theme.send("#{attribute}_url")
-          if url[0] == "/"
-            Rails.logger.debug "local file storage not supported"
-          else
-            theme.send("remote_#{attribute}_url=", url)
-          end if url
-          theme_attributes.delete(attribute)
-        end
-      end
-
-      theme.attributes = theme_attributes
-      theme
-    end
-
+    self.theme = instance.theme.build_clone
+    self.theme
   end
 
   def white_label_enabled?

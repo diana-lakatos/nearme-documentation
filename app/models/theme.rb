@@ -86,5 +86,25 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def build_clone
+    current_attributes = attributes
+    cloned_theme = Theme.new
+    ['id', 'name', 'compiled_stylesheet', 'owner_id', 'owner_type', 'created_at', 'updated_at'].each do |forbidden_attribute|
+      current_attributes.delete(forbidden_attribute)
+    end
+    current_attributes.keys.each do |attribute|
+      if attribute.include?('_image')
+        url = self.send("#{attribute}_url")
+        if url[0] == "/"
+          Rails.logger.debug "local file storage not supported"
+        else
+          cloned_theme.send("remote_#{attribute}_url=", url)
+        end if url
+        current_attributes.delete(attribute)
+      end
+    end
+    cloned_theme.attributes = current_attributes
+    cloned_theme
+  end
 end
 
