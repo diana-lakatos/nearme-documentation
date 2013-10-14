@@ -5,30 +5,11 @@
   %h4 Domains
   - resource.domains.build unless resource.domains.any?
   = f.fields_for :domains do |f_d|
-    = f_d.input :name
+    = render :partial => 'admin/domains/form', :locals => { :f => f_d }
 
   %h4 Custom Theme
   = f.fields_for :theme, (resource.theme.presence || resource.build_theme) do |ff|
-    = ff.input :name
-    = ff.input :logo_image
-    = ff.input :logo_retina_image
-    = ff.input :icon_image
-    = ff.input :icon_retina_image
-    = ff.input :hero_image
-    = ff.input :site_name
-    = ff.input :meta_title
-    = ff.input :description
-    = ff.input :tagline
-    = ff.input :support_email
-    = ff.input :contact_email
-    = ff.input :phone_number
-    = ff.input :support_url
-    = ff.input :blog_url
-    = ff.input :twitter_url
-    = ff.input :facebook_url
-
-    - Theme::COLORS.each do |color|
-      = ff.input "color_#{color}"
+    = render :partial => 'admin/themes/form', :locals => { :f => ff }
 
   .form-actions
     = f.button :submit
