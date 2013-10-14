@@ -4,25 +4,6 @@
   display: none;
 }
 
-.popover-image-container {
-  float: left;
-  width: 94px;
-  
-  &, 
-  img {
-    height: 58px;
-  }
-  
-  img {
-    max-width: none;
-  }
-  
-  a {
-    display: block; 
-    float: left;
-  }
-}
-
 .listing-enabled-container {
   position: relative;
 

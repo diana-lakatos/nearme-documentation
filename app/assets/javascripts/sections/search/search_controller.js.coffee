@@ -252,11 +252,13 @@ class Search.SearchController extends Search.Controller
       data : @form.serialize()
     )
 
-  updateListings: (listings, callback) ->
+  updateListings: (listings, callback, error_callback = ->) ->
     @triggerListingsRequest(listings).success (html) =>
       html = "<div>" + html + "</div>"
       listing.setHtml($('article[data-id="' + listing.id() + '"]', html)) for listing in listings
       callback() if callback
+    .error () =>
+      error_callback() if error_callback
 
   updateListing: (listing, callback) ->
     @triggerListingsRequest([listing]).success (html) =>
