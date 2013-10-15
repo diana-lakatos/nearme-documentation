@@ -7,5 +7,6 @@
       - location.amenities.order('name ASC').in_groups_of(4).each do |amenity_group|
         .row-fluid.amenities-row
           - amenity_group.compact.each do |amenity|
-            .span3= amenity.name
+            .span3{title: amenity.name}
+              = amenity.name
     .clearfix
