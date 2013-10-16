@@ -71,14 +71,14 @@ span.padding-left {
 }
 
 .ico-lock:before,
-.ico-calendar-start {
+.ico-calender-start {
   padding-right: 4px;
 }
 
 
 .ico-filter:before, 
-.ico-calendar-start:before, 
-.ico-calendar-end:before, 
+.ico-calender-start:before, 
+.ico-calender-end:before, 
 .ico-user:before, 
 .ico-plus:before, 
 .ico-info:before, 
@@ -135,7 +135,8 @@ span.padding-left {
 .ico-bar-chart:before,
 .ico-download:before,
 .ico-pending:before,
-.ico-menu:before {
+.ico-menu:before,
+.ico-enlarge:before {
   font-family: 'icon-font' !important;
   font-weight: normal;
   font-style: normal;
@@ -324,4 +325,7 @@ span.padding-left {
 }
 .ico-download:before {
 	content: "\5c";
+}
+.ico-enlarge:before {
+	content: "\5d";
 }

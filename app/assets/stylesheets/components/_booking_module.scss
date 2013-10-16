@@ -1,18 +1,9 @@
 .booking-module-container {
-  position: absolute; 
-  top: 0;
-  right: 0;
-  width: 300px;
+  position: static;
+  width: auto;
 
-  @media (max-width: $booking-module-breakpoint) {
-    @include box-sizing(content-box);
-    position: relative;
-    float: left;
-    clear: both;
-    margin: 0 -15px -15px;
-    padding: 0 15px;
-    width: 100%;
-
+  @media (min-width: $booking-module-breakpoint + 1) {
+    margin-left: 15px;
   }
 
   .book {
@@ -31,30 +22,38 @@
     @include box-sizing(border-box);
     @include border-radius($border-radius-default);
     position: relative;
-    padding: ($padding-default - 2);
-    height: $listing-photo-height;
+    padding: ($padding-default + 7);
+    height: $space-full-image-height;
     background: $gray60;    
     color: $gray210;
-    font: normal 22px/26px 'Futura-regular', sans-serif; 
+    font: normal 32px/36px 'Futura-regular', sans-serif; 
 
-    @media (max-width: $booking-module-breakpoint-desktop) {
-      @include border-radius(0);
+    @media (max-width: $booking-module-breakpoint-size) {
+      height: 450px;
+      padding: ($padding-default - 3);
+      font: normal 26px/30px 'Futura-regular', sans-serif;
     }
 
-    @media (max-width: $booking-module-breakpoint) {
-      @include border-bottom-radius($border-radius-default);
-      margin: 0 -15px;
+    @media (max-width: $iphone-portrait - 1) {
+      font: normal 22px/28px 'Futura-regular', sans-serif; 
     }
 
     .label {
       display: block;
       float: left;
       width: 30%;
-      height: 34px;
+      height: 40px;
+      line-height: 40px;
       background: transparent;
       color: $gray210;
-      font-size: 22px;
+      font-size: 30px;
       text-align: center;
+
+      @media (max-width: $booking-module-breakpoint-size) {
+        font-size: 100%;
+        height: 30px;
+        line-height: 30px;
+      } 
 
       &.unavailable {
         @include opacity(.1);
@@ -69,6 +68,10 @@
         font-size: 50%;
         text-transform: uppercase;
         letter-spacing: 1px;
+
+        @media (max-width: $iphone-portrait - 1) {
+          font-size: 45%;
+        }
       }
 
       &.label-hourly-price {
@@ -78,8 +81,17 @@
       
       &.label-free-price {
         // Center 'Free' text
-        width:100%;
+        width: 100%;
         text-align:center;
+      }
+
+      @media (max-width: $iphone-portrait - 1) {
+        padding: 0;
+        margin: 0;
+
+        .period {
+          font-family: $font-regular;
+        }
       }
     }
 
@@ -95,24 +107,24 @@
       }
     }
     
-    hr {
-      clear: both;
-      margin: 0 -12px 10px;
-      height: 0 !Important;
-      border-bottom: 2px solid $gray120;
-      background-color: $gray120;
-    }
-
     .calendar-wrapper {
       @include border-radius($border-radius-default);
       display: block;
       float: left;
-      margin: 0 0 6px;
-      padding: 6px 4px 6px 6px;
+      margin: 80px 0 0 0;
+      padding: 0;
       @include box-sizing(border-box);
       width: 48%;
       background: $gray230;
-      color: $gray120;
+      color: $gray80;
+      height: 70px;
+      line-height: 70px;
+      padding-left: 10px;
+      white-space: nowrap;
+
+      @media (max-width: $booking-module-breakpoint-size) {
+        margin: 60px 0 0 0;
+      }  
 
       &.date-end, 
       &.time-picker {
@@ -120,9 +132,36 @@
         margin-right:0;
       }
 
+      &.date-end {
+        padding-left: 18px;
+      }
+
+      .time {
+        font-size: 90%;
+      }
+
+      @media (max-width: $ipad-width) {
+        padding-left: 10px !important;
+
+        &.time-picker {
+          font-size: 85%;
+        }
+      }
+
+      @media (max-width: $booking-module-breakpoint) {
+        &.time-picker {
+          font-size: 100%;
+        }
+      }
+
+      @media (max-width: $iphone-portrait - 1) { 
+        padding-left: 0px !important;
+      }
+
+
       .calendar {
         position: relative;
-        display: inline-block;
+        display: inline-block; 
 
         .dates, 
         input {
@@ -140,6 +179,20 @@
             outline: none !important;
           }
         }
+
+        @media (max-width: $iphone-portrait - 1) { 
+          display: block;
+
+          .ico-calender-end, .ico-calender-start {
+            display: none;
+          }
+
+          .calendar-text {
+            width: 100%;
+            display: block;
+            text-align: center;
+          }
+        }
       }    
     }
 
@@ -147,11 +200,22 @@
       position: relative;
       display: block;
       clear: both;
-      height: 42px;
-      line-height: 42px;
+      height: 135px;
+      line-height: 150px;
+
+      @media (max-width: $booking-module-breakpoint-size) {
+        height: 95px;
+        line-height: 115px;
+      }
 
       .resource {
         text-transform: capitalize;
+      }
+
+      select {
+        display: inline-block;
+        right: 0;
+        width: 70px;
       }
 
       span.customSelect {
@@ -166,22 +230,22 @@
         font-size: 100%;
 
         i {
-          display: none;
+          top: 0;
         }
-      }
-
-      .customSelectInner {
-        width: 100% !important;
-        background: image-url('components/customselect/canvas-list-nav-item-arrow.gif') no-repeat center right;
       }
     }
 
     .price {
       margin-bottom: 8px;
-      height: 30px;
+      height: 90px;
       @include background-clip(border-box);       
       text-align: left;
-      line-height: 30px;
+      line-height: 50px;
+
+      @media (max-width: $booking-module-breakpoint-size) {
+        height: 75px;
+        line-height: 60px;
+      }
 
       span {
         float: right;
@@ -191,8 +255,17 @@
     a.btn.btn-large {
       display: block;
       clear: both;
-      width:100%;
-      text-align:center;
+      width: 100%;
+      text-align: center;
+      height: 80px;
+      line-height: 80px;
+      font-size: 120%;
+
+      @media (max-width: $booking-module-breakpoint-size) {
+        height: 70px;
+        line-height: 70px;
+        margin-top: 20px;
+      }
     }
   }
 }

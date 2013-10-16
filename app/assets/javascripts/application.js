@@ -24,7 +24,7 @@
 //= require history_jquery
 //= require ./vendor/underscore
 //= require chosen-jquery
-//= require chart
+//= require ./vendor/Chart
 //= require jcrop
 //= require spectrum
 //
@@ -40,6 +40,8 @@
 //
 // Sections
 //= require_tree ./sections
+//
+//= require ./vendor/bootstrap-modal-fullscreen
 
 window.DNM = {
   UI: {},
@@ -265,3 +267,9 @@ String.prototype.hashCode = function(){
     }
     return hash;
 };
+
+(function($) {
+  $.fn.hasScrollBar = function() {
+    return this.get(0).scrollHeight > this.height();
+  }
+})(jQuery);

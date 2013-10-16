@@ -23,6 +23,11 @@ class User < ActiveRecord::Base
            :foreign_key => "creator_id",
            :inverse_of => :creator
 
+  has_many :administered_locations,
+           :class_name => "Location",
+           :foreign_key => "administrator_id",
+           :inverse_of => :administrator
+
   attr_accessible :companies_attributes
   accepts_nested_attributes_for :companies
 
@@ -73,6 +78,13 @@ class User < ActiveRecord::Base
   scope :needs_mailchimp_update, -> {
       where("mailchimp_synchronized_at IS NULL OR mailchimp_synchronized_at < updated_at")
   }
+
+  scope :without, lambda { |user| 
+    where('users.id <> ?', user.id)
+  }
+
+  scope :ordered_by_email, order('users.email ASC') 
+
 
   extend CarrierWave::SourceProcessing
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
@@ -286,6 +298,10 @@ class User < ActiveRecord::Base
 
   def to_param
     caller[0].include?('friendly_id') ? super : id
+  end
+
+  def is_location_administrator?
+    administered_locations.size > 0
   end
 
 end

@@ -59,6 +59,7 @@ class Listing < ActiveRecord::Base
     :local_geocoding, :latitude, :longitude, :distance_from, :address, to: :location,
     allow_nil: true
   delegate :creator, :creator=, to: :location
+  delegate :administrator, :to => :location, :allow_nil => true
   delegate :name, to: :creator, prefix: true
   delegate :service_fee_percent, to: :location, allow_nil: true
   delegate :to_s, to: :name
@@ -302,6 +303,10 @@ class Listing < ActiveRecord::Base
 
   def self.xml_attributes
     [:name, :description, :quantity, :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents]
+  end
+
+  def name_with_address
+    [name, location.street].compact.join(" at ")
   end
 
 end

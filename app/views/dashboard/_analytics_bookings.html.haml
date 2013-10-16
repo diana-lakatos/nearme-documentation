@@ -1,26 +1,21 @@
 .box
-  - if reservations.total_entries.zero?
+  - if @reservations.total_entries.zero?
     %p.no_data Your locations haven't got any reservations yet.
   - else
     .weekly-chart
       .total.right
         .total-number.left
           %span.total
-            = last_week_reservations.count
-            bookings
-        %span{class: 'total-text'} 7 day total
-      %canvas#reservations-chart
+            = "#{@last_week_reservations.count} bookings"
+        %span.total-text 7 day total
+      %canvas#chart
 
-
-    .reservation-charges-details
-      %table
-        - reservations.group_by{|reservation| reservation.created_at.to_date}.each_pair do |reservation_date, date_reservations|
-          %tr
-            %td
-              = reservation_date
-            %td
-              = date_reservations.size
-
-
-- content_for :domready do
-  new ChartWrapper.Line($('#reservations-chart'), #{reservations_for_chart(last_week_reservations).to_json.html_safe}, #{reservations_labels_for_chart(last_week_reservations).to_json.html_safe})
+    %table.table.table-simple
+      %thead
+        %tr
+          %th Date
+          %th Bookings
+      - @reservations.group_by{|reservation| reservation.created_at.to_date}.each_pair do |reservation_date, date_reservations|
+        %tr
+          %td= reservation_date
+          %td= date_reservations.size

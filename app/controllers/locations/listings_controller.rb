@@ -33,7 +33,7 @@ class Locations::ListingsController < ApplicationController
       redirect_to search_path(:q => @listing.address)
     end
 
-    unless @listing.enabled?
+    if !@listing.enabled? && (!user_signed_in? || !@listing.company.company_users.where(user_id: current_user.id).any?)
       flash[:warning] = t('listings.listing_disabled')
       redirect_to search_path(:q => @listing.address)
     end

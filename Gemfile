@@ -47,7 +47,6 @@ gem 'friendly_id'
 gem 'sass-rails'
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'chronic'
-gem 'chartjs-rails'
 gem 'jcrop-rails'
 gem 'fastimage'
 
