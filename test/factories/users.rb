@@ -10,7 +10,7 @@ FactoryGirl.define do
     biography "I'm cool!"
     current_location "Prague"
     company_name "DesksNearMe"
-    skills_and_interests { Faker::Lorem.sentences(2) }
+    skills_and_interests { "I'm skilled boss." }
 
     sequence(:name) {|n| "User-#{n}"}
 

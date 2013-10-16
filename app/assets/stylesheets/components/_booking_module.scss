@@ -34,6 +34,10 @@
       font: normal 26px/30px 'Futura-regular', sans-serif;
     }
 
+    @media (max-width: $iphone-portrait - 1) {
+      font: normal 22px/28px 'Futura-regular', sans-serif; 
+    }
+
     .label {
       display: block;
       float: left;
@@ -49,7 +53,7 @@
         font-size: 100%;
         height: 30px;
         line-height: 30px;
-      }
+      } 
 
       &.unavailable {
         @include opacity(.1);
@@ -64,6 +68,10 @@
         font-size: 50%;
         text-transform: uppercase;
         letter-spacing: 1px;
+
+        @media (max-width: $iphone-portrait - 1) {
+          font-size: 45%;
+        }
       }
 
       &.label-hourly-price {
@@ -75,6 +83,15 @@
         // Center 'Free' text
         width: 100%;
         text-align:center;
+      }
+
+      @media (max-width: $iphone-portrait - 1) {
+        padding: 0;
+        margin: 0;
+
+        .period {
+          font-family: $font-regular;
+        }
       }
     }
 
@@ -137,6 +154,10 @@
         }
       }
 
+      @media (max-width: $iphone-portrait - 1) { 
+        padding-left: 0px !important;
+      }
+
 
       .calendar {
         position: relative;
@@ -156,6 +177,20 @@
 
           &:focus {
             outline: none !important;
+          }
+        }
+
+        @media (max-width: $iphone-portrait - 1) { 
+          display: block;
+
+          .ico-calender-end, .ico-calender-start {
+            display: none;
+          }
+
+          .calendar-text {
+            width: 100%;
+            display: block;
+            text-align: center;
           }
         }
       }    

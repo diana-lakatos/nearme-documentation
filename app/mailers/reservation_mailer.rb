@@ -129,6 +129,8 @@ class ReservationMailer < InstanceMailer
   def generate_mail(subject)
     @bcc ||= @theme.contact_email
 
+    @bcc = Array.wrap(@bcc) - [Theme::DEFAULT_EMAIL] if (Rails.env.development? || Rails.env.staging?)
+
     mail(to: @user.email,
          theme: @theme,
          bcc: @bcc,

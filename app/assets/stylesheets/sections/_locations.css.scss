@@ -66,6 +66,8 @@ section.listings {
         white-space: nowrap;
         line-height: 60px;
         height: 60px;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
 
       @media (max-width: $booking-module-breakpoint-desktop) {

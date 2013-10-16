@@ -36,6 +36,15 @@ class InstanceMailerTest < ActiveSupport::TestCase
       assert_equal ["bcc@example.com"], @mail.bcc
       assert_equal ["from@example.com"], @mail.from
     end
+
+    should "handle pixel based event tracking correctly" do
+      Analytics::EventTracker.any_instance.expects(:pixel_track_url).with do |event_name, custom_options|
+        event_name == 'Email Opened' && custom_options[:campaign] == "Test mailer" && custom_options[:template] == 'test_mailer'
+      end.returns('http://api.mixpanel.com/track/?data=somedata')
+      mail = InstanceMailer.test_mailer(@theme)
+      assert mail.html_part.body.include?("http://api.mixpanel.com/track/?data=somedata"), "Tracking code not included in #{mail.html_part.body}"
+    end
+
   end
 
   context "email template doesn't exists in db" do
