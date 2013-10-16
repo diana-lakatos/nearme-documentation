@@ -610,6 +610,7 @@ section.search section#results.list {
     .photo {
       @include box-sizing(border-box);
       z-index: -1;
+      padding-right: 1px;
 
       img {
         width: 100%;
@@ -640,6 +641,7 @@ section.search section#results.list {
       .listing-google-map {
         width: 100%; 
         height: 100%;
+        padding-right: 1px;
 
         img {
           max-width: none;

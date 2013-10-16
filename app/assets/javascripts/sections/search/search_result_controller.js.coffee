@@ -14,7 +14,6 @@ class Search.SearchResultController
       result.find(@googleMapContainerWrapperClass).show()
       google.maps.event.trigger(map, "resize")
       map.setCenter(map.marker.getPosition())
-
     else
       result.find('.photo-container').bind 'mouseenter', (event) =>
         result.find(@googleMapContainerWrapperClass).show()
@@ -28,7 +27,7 @@ class Search.SearchResultController
       mapContainer = result.find(@googleMapContainerClass).eq(0)
       # .get(0) is to get antive dom element instead of jquery object, otherwise error will be raised
       map = SmartGoogleMap.createMap(mapContainer.get(0), {
-        zoom: 16,
+        zoom: 14,
         zoomControl: true,
         mapTypeControl: false,
         streetViewControl: false,
