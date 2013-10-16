@@ -5,13 +5,12 @@ class AfterSignupMailerTest < ActiveSupport::TestCase
   setup do
     @subject = "Welcome to DesksNear.me"
     @user = FactoryGirl.create(:user)
-    @instance = Instance.default_instance
-    @theme = @instance.theme
-    @from = @theme.contact_email
+    @request_context = Controller::RequestContext.new
+    @from = @request_context.contact_email
   end
 
   test "help offer works ok" do
-    mail = AfterSignupMailer.help_offer(@theme, @user)
+    mail = AfterSignupMailer.help_offer(@request_context, @user)
 
     assert_equal @subject, mail.subject
     assert mail.html_part.body.include?(@name)
@@ -26,8 +25,8 @@ class AfterSignupMailerTest < ActiveSupport::TestCase
     end
 
     should "use proper template" do
-      mail = AfterSignupMailer.help_offer(@theme, @user)
-      assert mail.html_part.body.include?("and congratulations on your first booked #{@theme.bookable_noun}!")
+      mail = AfterSignupMailer.help_offer(@request_context, @user)
+      assert mail.html_part.body.include?("and congratulations on your first booked #{@request_context.bookable_noun}!"), "and congratulations on your first booked #{@request_context.bookable_noun}! was not found in\n#{mail.html_part.body}"
       assert !mail.html_part.body.include?("The Desks Near Me Team")
     end
 
@@ -36,14 +35,14 @@ class AfterSignupMailerTest < ActiveSupport::TestCase
   test "version if user added a listing" do
     @listing = FactoryGirl.create(:listing)
     @user = @listing.creator
-    mail = AfterSignupMailer.help_offer(@theme, @user)
-    assert mail.html_part.body.include?("Thanks for listing your #{@theme.bookable_noun} with Desks Near Me!")
+    mail = AfterSignupMailer.help_offer(@request_context, @user)
+    assert mail.html_part.body.include?("Thanks for listing your #{@request_context.bookable_noun} with Desks Near Me!")
     assert !mail.html_part.body.include?("The Desks Near Me Team")
   end
 
   test "version if user neither booked a listing nor added a listing" do
-    mail = AfterSignupMailer.help_offer(@theme, @user)
-    assert mail.html_part.body.include?("I saw that you signed up but haven't added a #{@theme.bookable_noun} for rent")
+    mail = AfterSignupMailer.help_offer(@request_context, @user)
+    assert mail.html_part.body.include?("I saw that you signed up but haven't added a #{@request_context.bookable_noun} for rent")
     assert !mail.html_part.body.include?("The Desks Near Me Team")
   end
 

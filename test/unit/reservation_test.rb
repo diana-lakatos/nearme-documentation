@@ -107,32 +107,7 @@ class ReservationTest < ActiveSupport::TestCase
   end
 
   context 'expiration' do
-
-    context 'with an unsaved reservation' do
-
-      setup do
-        @reservation = FactoryGirl.build(:reservation_with_credit_card)
-        @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
-        @reservation.service_fee_amount_cents = 10_00
-        Timecop.freeze(@reservation.periods.first.date)
-      end
-
-      teardown do
-        Timecop.return
-      end
-
-      should 'create a delayed_job task to run in 24 hours time when saved' do
-        Timecop.freeze(Time.zone.now) do
-          assert_difference 'Delayed::Job.count' do
-            @reservation.save!
-          end
-
-          assert_equal 24.hours.from_now.to_i, Delayed::Job.last.run_at.to_i
-        end
-      end
-
-    end
-
+ 
     context 'with a confirmed reservation' do
 
       setup do
@@ -146,7 +121,7 @@ class ReservationTest < ActiveSupport::TestCase
 
       should 'not send any email if the expire method is called' do
         ReservationMailer.expects(:notify_guest_of_expiration).never
-        @reservation.perform_expiry!
+        @reservation.perform_expiry!(Controller::RequestContext.new)
       end
 
     end
@@ -231,7 +206,7 @@ class ReservationTest < ActiveSupport::TestCase
 
         dates              = [1.week.from_now.monday]
         quantity           =  2
-        assert reservation = @listing.reserve!(@user, dates, quantity)
+        assert reservation = @listing.reserve!(Controller::RequestContext.new, @user, dates, quantity)
 
         assert_not_nil reservation.total_amount_cents
 
@@ -249,7 +224,7 @@ class ReservationTest < ActiveSupport::TestCase
         assert quantity > @listing.availability_for(dates.first)
 
         assert_raises DNM::PropertyUnavailableOnDate do
-          @listing.reserve!(@user, dates, quantity)
+          @listing.reserve!(Controller::RequestContext.new, @user, dates, quantity)
         end
       end
 

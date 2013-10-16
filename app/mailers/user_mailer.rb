@@ -3,22 +3,21 @@ class UserMailer < InstanceMailer
 
   layout 'mailer' 
 
-  def notify_about_wrong_phone_number(user, instance)
+  def notify_about_wrong_phone_number(request_context, user)
     @user = user
     mail(to: @user.email,
-         subject:  instance_prefix("We couldn't send you text message", instance),
-         theme: instance.theme)
+         subject:  instance_prefix("We couldn't send you text message", request_context),
+         request_context: request_context)
   end
 
-  def email_verification(user, theme)
+  def email_verification(request_context, user)
     @user = user
-    @theme = theme
-    @instance = @theme.instance
+    @request_context = request_context
 
     unless @user.verified_at
       mail to: @user.email, 
            subject: "Email verification",
-           theme: @theme
+           request_context: request_context
     end
   end
 
@@ -26,11 +25,11 @@ class UserMailer < InstanceMailer
     class Preview < MailView
 
       def notify_about_wrong_phone_number
-        ::UserMailer.notify_about_wrong_phone_number(User.where('mobile_number is not null').first, Instance.default_instance)
+        ::UserMailer.notify_about_wrong_phone_number(Controller::RequestContext.new, User.where('mobile_number is not null').first)
       end
 
       def email_verification
-        ::UserMailer.email_verification(User.where('users.verified_at is null').first, Theme.first)
+        ::UserMailer.email_verification(Controller::RequestContext.new, User.where('users.verified_at is null').first)
       end
 
     end

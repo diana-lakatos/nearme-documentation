@@ -279,11 +279,11 @@ class UserTest < ActiveSupport::TestCase
 
     setup do
       @user = FactoryGirl.create(:user)
-      @instance = Instance.first || FactoryGirl.create(:instance)
+      @request_context = Controller::RequestContext.new
     end
 
     should 'notify user about invalid phone via email' do
-      @user.notify_about_wrong_phone_number(@instance)
+      @user.notify_about_wrong_phone_number(@request_context)
       sent_mail = ActionMailer::Base.deliveries.last
       assert_equal [@user.email], sent_mail.to
 
@@ -294,14 +294,14 @@ class UserTest < ActiveSupport::TestCase
     should 'not spam user' do
       UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
       5.times do 
-        @user.notify_about_wrong_phone_number(@instance)
+        @user.notify_about_wrong_phone_number(@request_context)
       end
     end
 
     should 'update timestamp of notification' do
       UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
       Timecop.freeze(Time.zone.now)
-      @user.notify_about_wrong_phone_number(@instance)
+      @user.notify_about_wrong_phone_number(@request_context)
       assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a
     end
 

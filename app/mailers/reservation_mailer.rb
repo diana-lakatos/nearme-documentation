@@ -1,62 +1,62 @@
 class ReservationMailer < InstanceMailer
   layout 'mailer'
 
-  def notify_guest_of_cancellation(reservation)
-    setup_defaults(reservation)
+  def notify_guest_of_cancellation(request_context, reservation)
+    setup_defaults(request_context, reservation)
     generate_mail('A booking you made has been cancelled by the owner')
   end
 
-  def notify_guest_of_confirmation(reservation)
-    setup_defaults(reservation)
+  def notify_guest_of_confirmation(request_context, reservation)
+    setup_defaults(request_context, reservation)
     generate_mail('A booking you made has been confirmed')
   end
 
-  def notify_guest_of_rejection(reservation)
-    setup_defaults(reservation)
+  def notify_guest_of_rejection(request_context, reservation)
+    setup_defaults(request_context, reservation)
     generate_mail("A booking you made has been declined")
   end
 
-  def notify_guest_with_confirmation(reservation)
-    setup_defaults(reservation)
+  def notify_guest_with_confirmation(request_context, reservation)
+    setup_defaults(request_context, reservation)
     generate_mail('A booking you made is pending confirmation')
   end
 
-  def notify_host_of_cancellation(reservation)
-    setup_defaults(reservation)
+  def notify_host_of_cancellation(request_context, reservation)
+    setup_defaults(request_context, reservation)
     @user = @listing.administrator
     set_bcc_email
     generate_mail('A guest has cancelled a booking')
   end
 
-  def notify_host_of_confirmation(reservation)
-    setup_defaults(reservation)
+  def notify_host_of_confirmation(request_context, reservation)
+    setup_defaults(request_context, reservation)
     @user = @listing.administrator
     set_bcc_email
     generate_mail('You have confirmed a booking')
   end
 
-  def notify_guest_of_expiration(reservation)
-    setup_defaults(reservation)
+  def notify_guest_of_expiration(request_context, reservation)
+    setup_defaults(request_context, reservation)
     generate_mail('A booking you made has expired')
   end
   
-  def notify_host_of_expiration(reservation)
-    setup_defaults(reservation)
+  def notify_host_of_expiration(request_context, reservation)
+    setup_defaults(request_context, reservation)
     @user = @listing.administrator
     set_bcc_email
     generate_mail('A booking for one of your listings has expired')
   end
   
-  def notify_host_with_confirmation(reservation)
-    setup_defaults(reservation)
+  def notify_host_with_confirmation(request_context, reservation)
+    setup_defaults(request_context, reservation)
     @user = @listing.administrator
     set_bcc_email
     @url  = manage_guests_dashboard_url(:token => @user.authentication_token)
     generate_mail('A booking requires your confirmation')
   end
 
-  def notify_host_without_confirmation(reservation)
-    setup_defaults(reservation)
+  def notify_host_without_confirmation(request_context, reservation)
+    setup_defaults(request_context, reservation)
     @user = @listing.administrator
     set_bcc_email
     @url  = manage_guests_dashboard_url(:token => @user.authentication_token)
@@ -68,43 +68,43 @@ class ReservationMailer < InstanceMailer
     class Preview < MailView
 
       def notify_guest_of_cancellation
-        ::ReservationMailer.notify_guest_of_cancellation(reservation)
+        ::ReservationMailer.notify_guest_of_cancellation(Controller::RequestContext.new, reservation)
       end
 
       def notify_guest_of_confirmation
-        ::ReservationMailer.notify_guest_of_confirmation(reservation)
+        ::ReservationMailer.notify_guest_of_confirmation(Controller::RequestContext.new, reservation)
       end
 
       def notify_guest_of_expiration
-        ::ReservationMailer.notify_guest_of_expiration(reservation)
+        ::ReservationMailer.notify_guest_of_expiration(Controller::RequestContext.new, reservation)
       end
 
       def notify_guest_of_rejection
-       ::ReservationMailer.notify_guest_of_rejection(reservation)
+       ::ReservationMailer.notify_guest_of_rejection(Controller::RequestContext.new, reservation)
       end
 
       def notify_guest_with_confirmation
-        ::ReservationMailer.notify_guest_with_confirmation(reservation)
+        ::ReservationMailer.notify_guest_with_confirmation(Controller::RequestContext.new, reservation)
       end
 
       def notify_host_of_cancellation
-        ::ReservationMailer.notify_host_of_cancellation(reservation)
+        ::ReservationMailer.notify_host_of_cancellation(Controller::RequestContext.new, reservation)
       end
 
       def notify_host_of_confirmation
-        ::ReservationMailer.notify_host_of_confirmation(reservation)
+        ::ReservationMailer.notify_host_of_confirmation(Controller::RequestContext.new, reservation)
       end
 
       def notify_host_of_expiration
-        ::ReservationMailer.notify_host_of_expiration(reservation)
+        ::ReservationMailer.notify_host_of_expiration(Controller::RequestContext.new, reservation)
       end
 
       def notify_host_with_confirmation
-        ::ReservationMailer.notify_host_with_confirmation(reservation)
+        ::ReservationMailer.notify_host_with_confirmation(Controller::RequestContext.new, reservation)
       end
 
       def notify_host_without_confirmation
-        ::ReservationMailer.notify_host_without_confirmation(reservation)
+        ::ReservationMailer.notify_host_without_confirmation(Controller::RequestContext.new, reservation)
       end
 
       private
@@ -118,27 +118,27 @@ class ReservationMailer < InstanceMailer
 
   private
 
-  def setup_defaults(reservation)
+  def setup_defaults(request_context, reservation)
     @reservation  = reservation
     @listing      = @reservation.listing.reload
     @user         = @reservation.owner
     @host = @reservation.listing.administrator
-    @theme = @listing.instance.theme
+    @request_context = request_context
   end
 
   def generate_mail(subject)
-    @bcc ||= @theme.contact_email
+    @bcc ||= @request_context.contact_email
 
     @bcc = Array.wrap(@bcc) - [Theme::DEFAULT_EMAIL] if (Rails.env.development? || Rails.env.staging?)
 
     mail(to: @user.email,
-         theme: @theme,
+         request_context: @request_context,
          bcc: @bcc,
-         subject: instance_prefix(subject, @listing.instance))
+         subject: instance_prefix(subject, @request_context))
   end
 
   def set_bcc_email
-    @bcc = [@theme.contact_email, @listing.location.email].uniq if @listing.location.email != @listing.administrator.email
+    @bcc = [@request_context.contact_email, @listing.location.email].uniq if @listing.location.email != @listing.administrator.email
   end
 
 end

@@ -9,7 +9,8 @@ class InstanceMailer < ActionMailer::Base
   def mail(options = {})
     lookup_context.class.register_detail(:theme) { nil }
 
-    theme = options.delete(:theme)
+    request_context = options.delete(:request_context)
+    theme = request_context.theme
     template = options.delete(:template_name) || view_context.action_name
     mailer = options.delete(:mailer) || find_mailer(template: template, theme: theme) || theme.default_mailer
     to = options[:to]
@@ -46,8 +47,8 @@ class InstanceMailer < ActionMailer::Base
 
   private
 
-  def instance_prefix(text, instance)
-    text.prepend "[#{instance.name}] " if instance
+  def instance_prefix(text, request_context)
+    text.prepend "[#{request_context.name}] "
     text
   end
 

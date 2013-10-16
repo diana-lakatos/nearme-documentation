@@ -16,4 +16,4 @@
             %li.listing
               = link_to new_manage_location_listing_path(location), :class => 'ico-add-desk text-right' do
                 %span.padding-left
-                  Add #{current_theme.bookable_noun}
+                  Add #{request_context.bookable_noun}

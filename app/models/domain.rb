@@ -8,11 +8,6 @@ class Domain < ActiveRecord::Base
   validates_presence_of :target_type
   delegate :white_label_enabled?, :to => :target
 
-  def self.find_for_request(request)
-    host = request.host.gsub(/^www\./, "")
-    where(:name => host).first
-  end
-
   def white_label_company?
     "Company" == target_type
   end

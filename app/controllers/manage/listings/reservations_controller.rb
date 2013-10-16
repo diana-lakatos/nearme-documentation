@@ -5,8 +5,8 @@ class Manage::Listings::ReservationsController < ApplicationController
 
   def confirm
     if @reservation.confirm
-      ReservationMailer.enqueue.notify_guest_of_confirmation(@reservation)
-      ReservationMailer.enqueue.notify_host_of_confirmation(@reservation)
+      ReservationMailer.enqueue.notify_guest_of_confirmation(request_context, @reservation)
+      ReservationMailer.enqueue.notify_host_of_confirmation(request_context, @reservation)
       event_tracker.confirmed_a_booking(@reservation)
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
@@ -23,7 +23,7 @@ class Manage::Listings::ReservationsController < ApplicationController
   def reject
     if @reservation.reject(rejection_reason)
       ReservationIssueLogger.rejected_with_reason @reservation, current_user if rejection_reason.present?
-      ReservationMailer.enqueue.notify_guest_of_rejection(@reservation)
+      ReservationMailer.enqueue.notify_guest_of_rejection(request_context, @reservation)
       event_tracker.rejected_a_booking(@reservation)
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
@@ -37,7 +37,7 @@ class Manage::Listings::ReservationsController < ApplicationController
 
   def host_cancel
     if @reservation.host_cancel
-      ReservationMailer.enqueue.notify_guest_of_cancellation(@reservation)
+      ReservationMailer.enqueue.notify_guest_of_cancellation(request_context, @reservation)
       event_tracker.cancelled_a_booking(@reservation, { actor: 'host' })
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)

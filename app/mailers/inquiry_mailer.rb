@@ -1,23 +1,23 @@
 class InquiryMailer < InstanceMailer
   layout 'mailer'
 
-  def inquiring_user_notification(theme, inquiry)
-    @theme = theme
+  def inquiring_user_notification(request_context, inquiry)
+    @request_context = request_context
     @inquiry = inquiry
 
     mail(to: @inquiry.inquiring_user.full_email,
          subject: "We've passed on your inquiry about #{@inquiry.listing.name}",
-         theme: theme)
+         request_context: request_context)
   end
 
-  def listing_creator_notification(theme, inquiry)
-    @theme = theme
+  def listing_creator_notification(request_context, inquiry)
+    @request_context = request_context
     @inquiry = inquiry
 
     mail(to: @inquiry.listing.creator.full_email,
          subject: "New enquiry from #{@inquiry.inquiring_user.name} about #{@inquiry.listing.name}",
          reply_to: @inquiry.inquiring_user.full_email,
-         theme: theme)
+         request_context: request_context)
   end
 
   if defined? MailView
@@ -27,7 +27,7 @@ class InquiryMailer < InstanceMailer
         inquiry_from_db = Inquiry.first
         inquiry = inquiry_from_db || FactoryGirl.create(:inquiry, inquiring_user: User.first, listing: Listing.first)
 
-        mailer = ::InquiryMailer.inquiring_user_notification(Theme.first, inquiry)
+        mailer = ::InquiryMailer.inquiring_user_notification(Controller::RequestContext.new, inquiry)
 
         inquiry.destroy unless inquiry_from_db
         mailer
@@ -37,7 +37,7 @@ class InquiryMailer < InstanceMailer
         inquiry_from_db = Inquiry.first
         inquiry = inquiry_from_db || FactoryGirl.create(:inquiry, inquiring_user: User.first, listing: Listing.first)
 
-        mailer = ::InquiryMailer.listing_creator_notification(Theme.first, inquiry)
+        mailer = ::InquiryMailer.listing_creator_notification(Controller::RequestContext.new, inquiry)
 
         inquiry.destroy unless inquiry_from_db
         mailer

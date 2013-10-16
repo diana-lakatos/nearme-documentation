@@ -1,6 +1,6 @@
 <p>Dear {{ inquiry.listing_creator_name }},</p>
 
-<p>{{ inquiry.inquiring_user_name }} has asked a question about your {{ instance.bookable_noun}}, {{ inquiry.listing.name }} on Desks Near Me:</p>
+<p>{{ inquiry.inquiring_user_name }} has asked a question about your {{ request_context.bookable_noun}}, {{ inquiry.listing.name }} on Desks Near Me:</p>
 
 <pre>{{ inquiry.message }}</pre>
 

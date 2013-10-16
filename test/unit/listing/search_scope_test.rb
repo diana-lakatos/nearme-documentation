@@ -3,18 +3,16 @@ require 'test_helper'
 class Listing::SearchScopeTest < ActiveSupport::TestCase
 
   setup do
-    @instance = Instance.default_instance
+    @request_context = Controller::RequestContext.new
     @company = FactoryGirl.create(:white_label_company)
-  end
-
-  setup do
     @location = FactoryGirl.create(:location, company: @company)
     @another_location = FactoryGirl.create(:location)
   end
 
 
   should 'scope to locations of this company' do
-    assert_equal [@location], Listing::SearchScope.scope(@instance, white_label_company: @company)
+    @request_context.stubs(:white_label_company).returns(@company)
+    assert_equal [@location], Listing::SearchScope.scope(@request_context)
   end
 
   context 'instance' do
@@ -26,17 +24,18 @@ class Listing::SearchScopeTest < ActiveSupport::TestCase
     end
 
     should 'find all locations not matter what instance for default_instance' do
-      assert_equal Location.all.sort, Listing::SearchScope.scope(@instance).sort
+      assert_equal Location.all.sort, Listing::SearchScope.scope(@request_context).sort
     end
 
     should 'find locations scoped to instance if it is not default' do 
-      assert_equal @other_instance.locations, Listing::SearchScope.scope(@other_instance)
+      @request_context.stubs(:instance).returns(@other_instance)
+      assert_equal @other_instance.locations, Listing::SearchScope.scope(@request_context)
     end
   end
 
   should 'include only public locations' do
     @private_location = FactoryGirl.create(:location, company: FactoryGirl.create(:company, :listings_public => false))
-    assert_equal (Location.all - [@private_location]).sort, Listing::SearchScope.scope(@instance).sort
+    assert_equal (Location.all - [@private_location]).sort, Listing::SearchScope.scope(@request_context).sort
   end
 
 end
