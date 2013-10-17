@@ -5,6 +5,7 @@ class Theme < ActiveRecord::Base
   COLORS.each do |color|
     attr_accessible "color_#{color}"
   end
+  DEFAULT_THEME_PAGES = %w(about legal)
 
   attr_accessible :name, :icon_image, :icon_retina_image,
     :logo_image, :logo_retina_image, :hero_image, :skip_compilation,
@@ -56,6 +57,10 @@ class Theme < ActiveRecord::Base
     attrs.any? { |attr|
       send("#{attr}_changed?")
     }
+  end
+
+  def to_liquid
+    ThemeDrop.new(self)
   end
 
   def skipping_compilation(&blk)

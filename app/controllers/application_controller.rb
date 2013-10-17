@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   before_filter :first_time_visited?
   before_filter :store_referal_info
   before_filter :load_request_context
+  before_filter :footer_prepend_view_path
 
   protected
 
@@ -45,8 +46,16 @@ class ApplicationController < ActionController::Base
     else
       @current_instance = Instance.default_instance
       @current_theme = @current_instance.theme
-    end
+    end   
   end
+
+  def footer_prepend_view_path
+    footer_resolver_instance = FooterResolver.instance
+    footer_resolver_instance.theme = @current_theme
+
+    prepend_view_path footer_resolver_instance
+  end
+
   attr_accessor :current_instance, :current_theme, :current_partner
   helper_method :current_instance, :current_theme, :current_partner
 
