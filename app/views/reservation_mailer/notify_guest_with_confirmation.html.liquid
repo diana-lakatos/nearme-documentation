@@ -1,77 +1,86 @@
-<p>Your request to book '{{ listing.name }}' at <a href="{{ listing.location.url }}"> {{listing.location.name}}</a> has been sent to the host.<p>
+<p>Your request to book '{{ listing.name }}' at <a href="{{ listing.location.url }}"> {{listing.location.name}}</a> has been sent to the host.</p>
 
 <p>Bookings at this workspace require confirmation. Hosts have 24 hours to confirm, but most reply sooner.</p>
 
-<br class='first-br'>
-<h1>Booking Details</h1><br>
-<strong style='display: inline-block;'>Listing</strong>
-<span style="float: right;">'{{ listing.name }}' at <a href="{{ listing.location.url }}">{{ listing.location.name }}</a></span>
+<div class="booking-details">
 
-<hr>
+  <h2>Booking Details</h2>
 
-{% if listing.location.special_notes? %}
-  <strong style='display: inline-block;'>Guest instructions</strong>
-  <span style="float: right;">{{ listing.location.special_notes }}</span>
-  <hr>
-{% endif %}
+  <div class="row">
+    <strong style='display: inline-block;'>Listing</strong>
+    <span style="float: right;"><a href="{{ listing.location.url }}">{{ listing.name }}</a>
+  </div>
 
-<strong style='display: inline-block;'>Quantity</strong>
-<span style="float: right;">{{ reservation.quantity }}</span>
-
-<hr>
-
-<strong style='display: inline-block;'>Dates</strong>
-<br/>
-<span style="float:right;">
-  {% if listing.hourly_reservations? %}
-    {{ reservation.hourly_summary }}
-  {% else %}
-    {{ reservation.dates_summary }}
-  {% endif %}
-</span>
-<br clear="both"/>
-
-<hr>
-
-<strong style='display: inline-block;'>Host</strong>
-<span style="float: right;"><a href="mailto:{{ host.email }}">{{ host.name }}</a></span>
-
-<hr>
-
-{% if listing.location.phone? %}
-  <strong style='display: inline-block;'>Contact</strong>
-  <span style="float: right;">{{ listing.location.phone }}</span>
-  <hr>
-{% endif %}
-
-<strong style='display: inline-block;'>Subtotal</strong>
-<span style="float: right;">{{ reservation.subtotal_price }}</span>
-<div class='clearfix'></div>
-
-<strong style='display: inline-block;'>Service fee</strong>
-<span style="float: right;">{{ reservation.service_fee }}</span>
-<div class='clearfix'></div>
-
-<strong style='display: inline-block;'>Total</strong>
-<span style="float: right;">{{ reservation.total_price }}</span>
-
-<hr>
-
-{% if reservation.credit_card_payment? %}
-  <strong style='display: inline-block;'>Paid</strong>
-  <span style="float: right;">{{ reservation.paid }}</span>
-  <hr/>
-
-  <strong style='display: inline-block;'>Balance</strong>
-  <span style="float: right;">{{ reservation.balance }}</span>
-  <hr/>
-
-  {% if reservation.pending? %}
-    <span style="float: right;">This reservation is currently pending confirmation, and will be charged when confirmed.</span>
+  {% if listing.location.special_notes? %}
+    <div class="row">
+      <strong style='display: inline-block;'>Guest instructions</strong>
+      <span style="float: right;">{{ listing.location.special_notes }}</span>
+    </div>
   {% endif %}
 
-{% endif %}
+  <div class="row">
+    <strong style='display: inline-block;'>Quantity</strong>
+    <span style="float: right;">{{ reservation.quantity }}</span>
+  </div>
 
-<br>
+
+  <div class="row">
+    <strong style='display: inline-block;'>Dates</strong>
+    <span style="float:right;">
+      {% if listing.hourly_reservations? %}
+        {{ reservation.hourly_summary }}
+      {% else %}
+        {{ reservation.dates_summary }}
+      {% endif %}
+    </span>
+  </div>
+
+  <div class="row">
+    <strong style='display: inline-block;'>Host</strong>
+    <span style="float: right;"><a href="mailto:{{ host.email }}">{{ host.name }}</a></span>
+  </div>
+
+  {% if listing.location.phone? %}
+    <div class="row">
+      <strong style='display: inline-block;'>Contact</strong>
+      <span style="float: right;">{{ listing.location.phone }}</span>
+    </div>
+  {% endif %}
+
+  <div class="row">
+    <strong style='display: inline-block;'>Subtotal</strong>
+    <span style="float: right;">{{ reservation.subtotal_price }}</span>
+  </div>
+
+  <div class="row">
+    <strong style='display: inline-block;'>Service fee</strong>
+    <span style="float: right;">{{ reservation.service_fee }}</span>
+  </div>
+
+  <div class="row">
+    <strong style='display: inline-block;'>Total</strong>
+    <span style="float: right;">{{ reservation.total_price }}</span>
+  </div>
+
+  {% if reservation.credit_card_payment? %}
+    <div class="row">
+      <strong style='display: inline-block;'>Paid</strong>
+      <span style="float: right;">{{ reservation.paid }}</span>
+    </div>
+
+    <div class="row">
+      <strong style='display: inline-block;'>Balance</strong>
+      <span style="float: right;">{{ reservation.balance }}</span>
+    </div>
+
+    {% if reservation.pending? %}
+      <div class="row">
+        <span style="float: right;">This reservation is currently pending confirmation, and will be charged when confirmed.</span>
+      </div>
+    {% endif %}
+
+  {% endif %}
+
+</div>
 
 <p>You can <a href="{{ listing.bookings_dashboard_url }}">review your travel plans on the Dashboard</a>.</p>
