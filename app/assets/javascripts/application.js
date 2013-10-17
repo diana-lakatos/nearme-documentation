@@ -50,7 +50,7 @@ window.DNM = {
     this.initializeComponents();
     this.initializeModals();
     this.initializeTooltips();
-    this.initializeCustomSelects();
+    this.initializeCustomSelects($('body'));
     this.initializeCustomInputs();
     this.initializeBrowsersSpecificCode();
     this.centerSearchBoxOnHomePage();
@@ -88,15 +88,15 @@ window.DNM = {
     $('[rel=tooltip]').tooltip()
   },
 
-  initializeCustomSelects: function(){
-    $('select').not('.time-wrapper select, .custom-select').customSelect();
-    $('.customSelect').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>').closest('.controls').css({'position': 'relative'});
-    $('.customSelect').siblings('select').css({'margin': '0px', 'z-index': 1 });
+  initializeCustomSelects: function(container){
+    container.find('select').not('.time-wrapper select, .custom-select').customSelect();
+    container.find('.customSelect').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>').closest('.controls').css({'position': 'relative'});
+    container.find('.customSelect').siblings('select').css({'margin': '0px', 'z-index': 1 });
 
-    $('.custom-select').chosen()
-    $('.chzn-container-single a.chzn-single div').hide();
-    $('.chzn-container-single, .chzn-container-multi').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>');
-    $('.chzn-choices input').focus(function(){
+    container.find('.custom-select').chosen()
+    container.find('.chzn-container-single a.chzn-single div').hide();
+    container.find('.chzn-container-single, .chzn-container-multi').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>');
+    container.find('.chzn-choices input').focus(function(){
       $(this).parent().parent().addClass('chzn-choices-active');
     }).blur(function(){
       $(this).parent().parent().removeClass('chzn-choices-active');
