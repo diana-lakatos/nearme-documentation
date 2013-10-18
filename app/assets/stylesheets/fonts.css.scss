@@ -136,7 +136,8 @@ span.padding-left {
 .ico-download:before,
 .ico-pending:before,
 .ico-menu:before,
-.ico-enlarge:before {
+.ico-enlarge:before,
+.ico-time:before {
   font-family: 'icon-font' !important;
   font-weight: normal;
   font-style: normal;
@@ -328,4 +329,7 @@ span.padding-left {
 }
 .ico-enlarge:before {
 	content: "\5d";
+}
+.ico-time:before {
+	content: "\5e";
 }
