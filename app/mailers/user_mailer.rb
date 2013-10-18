@@ -1,7 +1,7 @@
 class UserMailer < InstanceMailer
   helper SharingHelper
 
-  layout false
+  layout 'mailer' 
 
   def notify_about_wrong_phone_number(user, instance)
     @user = user

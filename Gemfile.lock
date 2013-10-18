@@ -8,12 +8,12 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
-    actionmailer (3.2.14)
-      actionpack (= 3.2.14)
+    actionmailer (3.2.15)
+      actionpack (= 3.2.15)
       mail (~> 2.5.4)
-    actionpack (3.2.14)
-      activemodel (= 3.2.14)
-      activesupport (= 3.2.14)
+    actionpack (3.2.15)
+      activemodel (= 3.2.15)
+      activesupport (= 3.2.15)
       builder (~> 3.0.0)
       erubis (~> 2.7.0)
       journey (~> 1.0.4)
@@ -23,18 +23,18 @@ GEM
       sprockets (~> 2.2.1)
     active_model_serializers (0.6.0)
       activemodel (>= 3.0)
-    activemodel (3.2.14)
-      activesupport (= 3.2.14)
+    activemodel (3.2.15)
+      activesupport (= 3.2.15)
       builder (~> 3.0.0)
-    activerecord (3.2.14)
-      activemodel (= 3.2.14)
-      activesupport (= 3.2.14)
+    activerecord (3.2.15)
+      activemodel (= 3.2.15)
+      activesupport (= 3.2.15)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
-    activeresource (3.2.14)
-      activemodel (= 3.2.14)
-      activesupport (= 3.2.14)
-    activesupport (3.2.14)
+    activeresource (3.2.15)
+      activemodel (= 3.2.15)
+      activesupport (= 3.2.15)
+    activesupport (3.2.15)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     addressable (2.3.5)
@@ -65,8 +65,6 @@ GEM
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
     chameleon (0.2.3)
-    chartjs-rails (0.1)
-      railties (>= 3.1)
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
     chosen-rails (0.9.11.2)
@@ -93,6 +91,8 @@ GEM
       compass (>= 0.12.2, < 0.14)
     crack (0.4.1)
       safe_yaml (~> 0.9.0)
+    css_parser (1.3.5)
+      addressable
     cucumber (1.2.5)
       builder (>= 2.1.2)
       diff-lcs (>= 1.1.3)
@@ -205,6 +205,8 @@ GEM
     hike (1.2.3)
     historyjs-rails (1.0.1)
       railties (>= 3.0)
+    hpricot (0.8.6)
+    htmlentities (4.3.1)
     httparty (0.11.0)
       multi_json (~> 1.0)
       multi_xml (>= 0.5.2)
@@ -240,11 +242,11 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    mail_view (1.0.3)
+    mail_view (2.0.1)
       tilt
     metaclass (0.0.1)
     method_source (0.8.1)
-    mime-types (1.23)
+    mime-types (1.25)
     mini_magick (3.4)
       subexec (~> 0.2.1)
     minitest (4.3.3)
@@ -263,7 +265,7 @@ GEM
       activesupport (>= 3.0)
       money (~> 5.1.0)
       railties (>= 3.0)
-    multi_json (1.7.9)
+    multi_json (1.8.2)
     multi_xml (0.5.3)
     multipart-post (1.1.5)
     nearest_time_zone (0.0.2)
@@ -309,6 +311,12 @@ GEM
     polyglot (0.3.3)
     pony (1.5)
       mail (> 2.0)
+    premailer (1.7.3)
+      css_parser (>= 1.1.9)
+      htmlentities (>= 4.0.0)
+    premailer-rails (1.4.0)
+      premailer (~> 1.7)
+      rails (>= 3)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -325,19 +333,19 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
-    rails (3.2.14)
-      actionmailer (= 3.2.14)
-      actionpack (= 3.2.14)
-      activerecord (= 3.2.14)
-      activeresource (= 3.2.14)
-      activesupport (= 3.2.14)
+    rails (3.2.15)
+      actionmailer (= 3.2.15)
+      actionpack (= 3.2.15)
+      activerecord (= 3.2.15)
+      activeresource (= 3.2.15)
+      activesupport (= 3.2.15)
       bundler (~> 1.0)
-      railties (= 3.2.14)
+      railties (= 3.2.15)
     rails3_acts_as_paranoid (0.2.4)
       activerecord (~> 3.2)
-    railties (3.2.14)
-      actionpack (= 3.2.14)
-      activesupport (= 3.2.14)
+    railties (3.2.15)
+      actionpack (= 3.2.15)
+      activesupport (= 3.2.15)
       rack-ssl (~> 1.3.2)
       rake (>= 0.8.7)
       rdoc (~> 3.4)
@@ -429,7 +437,7 @@ GEM
     tilt (1.4.1)
     timecop (0.3.5)
     tins (0.8.0)
-    treetop (1.4.14)
+    treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
     turn (0.9.6)
@@ -440,7 +448,7 @@ GEM
       multi_json (>= 1.3.0)
     typhoeus (0.5.4)
       ethon (~> 0.5.7)
-    tzinfo (0.3.37)
+    tzinfo (0.3.38)
     uglifier (2.1.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
@@ -474,7 +482,6 @@ DEPENDENCIES
   capybara-webkit
   carrierwave
   chameleon
-  chartjs-rails
   chosen-rails
   chronic
   codeclimate-test-reporter
@@ -504,6 +511,7 @@ DEPENDENCIES
   guard-spork
   haml
   historyjs-rails
+  hpricot
   inherited_resources
   jcrop-rails
   jquery-fileupload-rails
@@ -511,7 +519,7 @@ DEPENDENCIES
   json_spec
   le
   liquid
-  mail_view
+  mail_view (~> 2)
   mini_magick
   minitest
   mixpanel
@@ -528,9 +536,10 @@ DEPENDENCIES
   paper_trail
   pg
   pickle
+  premailer-rails
   quiet_assets
   rack-rewrite
-  rails (= 3.2.14)
+  rails (= 3.2.15)
   rails3_acts_as_paranoid
   ranked-model
   raygun4ruby

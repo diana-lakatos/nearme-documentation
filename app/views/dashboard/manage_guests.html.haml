@@ -13,10 +13,14 @@
             %header
               = render 'guest_filter'
             .reservation-list
-              %ul
-                - @guest_list.reservations.each do |reservation|
-                  %li
-                    = render 'reservation', reservation: reservation
+              - if @guest_list.reservations.empty?
+                .no-reservations
+                  = no_reservations_info_for_state(@guest_list.state)
+              - else
+                %ul
+                  - @guest_list.reservations.each do |reservation|
+                    %li
+                      = render 'reservation', reservation: reservation
 
 
 :javascript

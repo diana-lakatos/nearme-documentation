@@ -11,17 +11,13 @@ class GuestListTest < ActiveSupport::TestCase
       @unconfirmed_reservation =  create(:reservation, listing: @listings, state: :unconfirmed)
       @confirmed_reservation =  create(:reservation, listing: @listings, state: :confirmed)
 
-      @archived_reservations =  []
-      Timecop.travel(1.week.ago) do
-      @archived_reservations =  [create(:reservation, listing: @listings, state: :cancelled_by_guest),
-                                 create(:reservation, listing: @listings, state: :cancelled_by_host),
-                                 create(:reservation, listing: @listings, state: :rejected)]
-      end
+      @archived_reservations = []
+      Timecop.travel(7.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :cancelled_by_guest) }
+      Timecop.travel(8.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :cancelled_by_host) }
+      Timecop.travel(9.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :rejected) }
 
-      (3..5).each do |i|
-        Timecop.travel(Time.zone.today - i) do
-          @archived_reservations << create(:reservation, listing: @listings, state: :confirmed)
-        end
+      (10..12).each do |i|
+        Timecop.travel(i.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :confirmed) }
       end
 
       @guest_list = Controller::GuestList.new(@user)
@@ -37,7 +33,7 @@ class GuestListTest < ActiveSupport::TestCase
     end
 
     should 'filter archived reservation for user' do
-      assert_equal @archived_reservations.sort_by(&:date), @guest_list.filter('archived').reservations
+      assert_equal @archived_reservations.sort_by(&:date).reverse, @guest_list.filter('archived').reservations
     end
   end
 

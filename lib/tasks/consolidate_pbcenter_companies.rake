@@ -28,4 +28,24 @@ namespace :instance do
     main_company.users = main_company.users.uniq
   end
 
+  desc 'add adminsitrator for pb centers locations' 
+  task :set_administrators => :environment do
+    instance = Instance.find_by_name('PB Centers')
+    instance.locations.each do |location|
+      location.administrator_id = User.find_by_email(location.email).id
+      location.save!(:validate => false)
+    end
+  end
+
+  desc 'change all pb centers users passwords'
+  task :set_all_pbcenters_users_password => :environment do
+    instance = Instance.find_by_name('PB Centers')
+    instance.companies.each do |company|
+      company.users.each do |user|
+        puts "Setting password for #{user.full_email}"
+        user.password = user.password_confirmation = 'PBCd3sks'
+        user.save!(:validate => false)
+      end
+    end
+  end
 end

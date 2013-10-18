@@ -8,12 +8,6 @@ Feature: A user can see location details
       And a location exists with company: that company, address: "Adelaide"
       And a listing: "Big room" exists with location: that location, name: "Big room", quantity: 10
 
-  Scenario: Selected listing is highlighted
-    Given a listing: "Small room" exists with location: that location, name: "Small room", quantity: 10
-     When I am on the listing "Small room" page
-     Then I should see highlighted listing: "Small room" 
-      And I should see "Big room"
-
   Scenario: User is redirected to search page if he tries to access deleted listing
     Given a listing: "Small room" exists with location: that location, name: "Small room", quantity: 10
       And a listing: "Small Room" is deleted

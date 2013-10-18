@@ -1,0 +1,17 @@
+%article.company
+  %h2
+    = location.company.name
+    - if location.company.url.present?
+      = link_to location.company.url, target: '_blank' do
+        %span.ico-open-link
+
+  %p= location.company.description
+  - if location.company.industries.any?
+    %h3 Industries
+    .amenities-container
+      - location.company.industries.order('name ASC').in_groups_of(4).each do |industry_group|
+        .row-fluid.amenities-row
+          - industry_group.compact.each do |industry|
+            .span3{title: industry.name}
+              = industry.name
+    .clearfix

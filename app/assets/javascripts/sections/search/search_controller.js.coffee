@@ -103,6 +103,9 @@ class Search.SearchController extends Search.Controller
       thresholdMargin: -90,
       loader: '<div class="row-fluid span12"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div>',
       onRenderComplete: (items) ->
+        for item in items
+          Search.SearchResultController.handleResult($(item))
+
         # when there are no more resuls, add special div element which tells us, that we need to reinitialize ias - it disables itself on the last page...
         if !$('#results .pagination .next_page').attr('href')
           $('#results').append('<div id="reinitialize"></div>')
@@ -252,11 +255,13 @@ class Search.SearchController extends Search.Controller
       data : @form.serialize()
     )
 
-  updateListings: (listings, callback) ->
+  updateListings: (listings, callback, error_callback = ->) ->
     @triggerListingsRequest(listings).success (html) =>
       html = "<div>" + html + "</div>"
       listing.setHtml($('article[data-id="' + listing.id() + '"]', html)) for listing in listings
       callback() if callback
+    .error () =>
+      error_callback() if error_callback
 
   updateListing: (listing, callback) ->
     @triggerListingsRequest([listing]).success (html) =>

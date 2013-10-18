@@ -14,7 +14,6 @@ class @GoogleMapPopover
         <div class="google-map-popover-content"></div>
         <em class="arrow-border"></em>
         <em class="arrow"></em>
-        <a href="" class="close ico-close"></a>
       </div>
     """
 
@@ -31,6 +30,7 @@ class @GoogleMapPopover
       infoBoxClearance: new google.maps.Size(1, 1)
     )
 
+
   close: ->
     @infoBox.close()
     @trigger 'closed'
@@ -43,22 +43,32 @@ class @GoogleMapPopover
   setContent: (content) ->
     @infoBox.setContent @wrapContent(content)
 
+  setError: (content) ->
+    @infoBox.setContent @wrapContent("<div class='popover-error'><span class=''>#{content}</span></div>")
+
+  markAsBeingLoaded: ->
+    @infoBox.setContent @wrapContent('<div class="popover-loading"><img src="' + $('.loading').find('img').attr('src') + '"><br /><span>Loading...</span></div>')
+
   getDefaultOptions: ->
     $.extend {}, @defaultOptions, {
       pixelOffset: new google.maps.Size(-144, -40)
     }
 
   wrapContent: (content) ->
-    wrapper = $(@options.contentWrapper)
-
     # We need to wrap the close button click to close
-    wrapper.find('.close').on 'click', (event) =>
-      event.preventDefault()
-      @close()
 
+    wrapper = $(@options.contentWrapper)
     wrapper.find('.google-map-popover-content').html(content)
 
     wrapper.find('.listing-sibling').on 'click', (event) ->
       location.href = $(@).attr('data-link')
-
+    wrapper.find('h4.location-title:first-child').append('<a href="" class="close ico-close"></a>')
+    wrapper.find('.close').on 'click', (event) =>
+      event.preventDefault()
+      @close()
+    if wrapper.find('.google-map-popover-content').length > 0
+      if wrapper.find('.google-map-popover-content').hasScrollBar()
+        $(".#{@options.boxClass}").addClass('with-scrollbar')
+      else
+        $(".#{@options.boxClass}").removeClass('with-scrollbar')
     wrapper[0]

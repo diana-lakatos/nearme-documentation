@@ -66,52 +66,7 @@ module DashboardHelper
   def periods_dates(periods)
     periods.map(&:date).map{ |date| date.to_s(:db) }
   end
-
-  def group_visits(visits)
-    @grouped_visits ||= begin
-      values = {}
-      visits.map do |visit|
-        values[visit.impression_date] ||= 0
-        values[visit.impression_date] += visit.impressions_count.to_i
-      end
-      values
-    end
-  end
-
-  def visits_for_chart(visits)
-    [group_visits(visits).values]
-  end
-
-  def visits_labels_for_chart(visits)
-    impression_dates = group_visits(visits).keys
-    if impression_dates.size > 10
-      Array.new(impression_dates.size, '')
-    else
-      impression_dates.map{|impression_date| format_date_for_graph(Date.strptime(impression_date))}
-    end
-  end
-
-  def group_reservations(reservations)
-    @grouped_reservations ||= reservations.group_by{|reservation| reservation.created_at.to_date}
-  end
-
-  def reservations_for_chart(reservations)
-    [group_reservations(reservations).values.map(&:size)]
-  end
-
-  def reservations_labels_for_chart(reservations)
-    dates = group_reservations(reservations).keys
-    if dates.size > 10
-      Array.new(dates.size, '')
-    else
-      dates.map{|reservation_date| format_date_for_graph(reservation_date)}
-    end
-  end
-
-  def format_date_for_graph(datetime)
-    datetime.strftime('%b %d')
-  end
-
+  
   def my_booking_status_info(reservation)
     if reservation.state == 'unconfirmed'
       tooltip("Pending confirmation from host. Booking will expire in #{time_to_expiry(reservation.expiry_time)}.", "<span class='tooltip-spacer'>i</span>".html_safe, {:class => reservation_status_icon(reservation)}, nil)
@@ -125,6 +80,17 @@ module DashboardHelper
       tooltip("You must confirm this booking within #{time_to_expiry(reservation.expiry_time)} or it will expire.", "<span class='tooltip-spacer'>i</span>".html_safe, {:class => reservation_status_icon(reservation)}, nil)
     else
       content_tag(:i, '', :class => reservation_status_icon(reservation))
+    end
+  end
+
+  def no_reservations_info_for_state(state)
+    case state.to_s
+    when 'unconfirmed'
+      'You have no unconfirmed reservations. Have a nice day!'
+    when 'confirmed'
+      "You haven't confirmed any reservations yet."
+    when 'archived'
+      "You don't have any archived reservations."
     end
   end
 end

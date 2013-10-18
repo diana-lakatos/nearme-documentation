@@ -3,11 +3,7 @@
 - content_for :hero do
   .container-fluid
     .row-fluid
-      #search_row.span10.offset1    
-        .wood-box.row-fluid
-          %h1= current_theme.tagline
-
-        = render :partial => "shared/search_box"
+      = render :partial => "search_#{ current_theme.is_desksnearme? ? 'box' : 'button' }"
 
 -# TODO: should be extracted to theme instead of hiding conditionally
 - if current_theme.is_desksnearme?

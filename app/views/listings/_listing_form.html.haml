@@ -11,7 +11,7 @@
 
 - if only_inputs.empty? || only_inputs.include?(:enabled)
   .listing-enabled-container 
-    %div{:class => "control-group"}
+    .control-group
       = f.label :enabled, 'Enabled?'
       .switch-wrapper
         .switch{'data-on-label' => "", 'data-off-label' => ""}

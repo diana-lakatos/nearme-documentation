@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.14'
+gem 'rails', '3.2.15'
 gem 'pg'
 
 gem 'raygun4ruby'
@@ -23,6 +23,7 @@ gem 'money-rails'
 gem 'rails3_acts_as_paranoid'
 gem 'simple_form'
 gem 'nokogiri'
+gem 'hpricot'
 gem 'amatch'
 gem 'ri_cal'
 gem 'ffaker'
@@ -47,7 +48,6 @@ gem 'friendly_id'
 gem 'sass-rails'
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'chronic'
-gem 'chartjs-rails'
 gem 'jcrop-rails'
 gem 'fastimage'
 
@@ -81,6 +81,8 @@ gem 'ranked-model'
 gem 'desk'
 gem 'filepicker-rails'
 
+gem 'premailer-rails'
+
 group :staging, :production do
   gem 'newrelic_rpm'
 end
@@ -102,7 +104,7 @@ end
 
 group :development do
   gem 'quiet_assets'
-  gem 'mail_view'
+  gem 'mail_view', '~>2'
   gem 'guard-minitest', :require => false
   gem 'guard-spork', :require => false
   gem 'guard-cucumber', :require => false

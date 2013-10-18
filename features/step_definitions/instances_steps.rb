@@ -9,6 +9,10 @@ When(/^I fill instance form with valid details$/) do
   fill_in 'instance_domains_attributes_0_name', with: 'dnm.local'
 end
 
+When(/^I browse instance$/) do
+  all(:css, '.table tr a').first.click
+end
+
 When(/^I edit instance$/) do
   all(:css, '.table tr .btn').first.click
 end
