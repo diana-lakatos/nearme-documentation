@@ -85,6 +85,13 @@ section#reservations {
       background-color: $pure-white;
     }
 
+    .no-reservations {
+      border: 0;
+      text-align: center;
+      padding: 20px 0;
+      margin: 0;
+    }
+
     ul {
 
       li {
@@ -93,8 +100,7 @@ section#reservations {
         border: 1px solid $light-gray; 
         margin-top: 10px;
         color: $gray80;
-        font-family: $font-medium; 
-
+        font-family: $font-medium;  
 
         a {
           text-decoration: underline !important;
