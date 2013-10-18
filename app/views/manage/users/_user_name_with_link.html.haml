@@ -1,8 +1,8 @@
 %li.listing 
   = link_to manage_user_path(user), :method => :delete, :confirm => "Are you sure?" do
-    = user.name
-    = "<#{user.email}>"
     .links
       %span.icon.ico-close
       %span.text
         Remove user
+    = user.name
+    = "<#{user.email}>"
