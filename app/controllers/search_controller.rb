@@ -9,7 +9,6 @@ class SearchController < ApplicationController
     @located = (params[:lat].present? and params[:lng].present?)
     render "search/#{result_view}"
     if should_log_conducted_search?
-      binding.pry
       event_tracker.conducted_a_search(search, { search_query: query, result_view: result_view, result_count: result_count}.merge(filters))
     end
     remember_search_query
