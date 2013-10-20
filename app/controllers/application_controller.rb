@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
   end
 
   def request_context
-    @request_context ||= Controller::RequestContext.new(request)
+    @request_context ||= Controller::RequestContext.new(request.host)
   end
   helper_method :request_context
 

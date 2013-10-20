@@ -5,8 +5,8 @@ class Controller::RequestContext
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :to => :theme
   delegate :bookable_noun, :name, :pages, :is_desksnearme?, :to => :instance
 
-  def initialize(request = nil)
-    fetch_domain(request)
+  def initialize(request_host = '')
+    fetch_domain(request_host)
     if @domain && @domain.white_label_enabled?
       if @domain.white_label_company?
         @white_label_company = @domain.target
@@ -40,13 +40,8 @@ class Controller::RequestContext
 
   private
 
-  def fetch_domain(request)
-    if String === request
-      host = request
-    else
-      host = request.try(:host).try(:gsub, /^www\./, "")
-    end
-    @domain ||= Domain.where(:name => host).first
+  def fetch_domain(request_host)
+    @domain ||= Domain.where(:name => request_host.try(:gsub, /^www\./, "")).first
   end
   
 end
