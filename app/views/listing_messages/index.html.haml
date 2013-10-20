@@ -1,0 +1,13 @@
+.row-fluid  
+  .span8.offset2
+    %h1 Messages
+
+    .box
+      = render "header"
+
+      - if @threaded_listing_messages.blank?
+        %center
+          No new messages!
+      - else
+      - @threaded_listing_messages.each do |array_key, listing_messages|
+        = render 'listing_message', listing_message: listing_messages.last.decorate

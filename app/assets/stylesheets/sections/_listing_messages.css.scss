@@ -1,0 +1,126 @@
+#new_listing_message #textarea {
+    height: 150px;
+}
+
+.listing_messages-show {
+  #new_listing_message {
+    textarea {
+      height: 52px;
+    }
+
+    .span10 { 
+      margin-left: 0;
+    }
+  
+  }
+}
+
+.listing_message, .listing-message-for-show {
+
+  a {
+    text-decoration: underline!important;
+  }
+
+  p {
+    margin-bottom: $padding-small;
+  }
+}
+
+.listing_messages {
+
+  .box {
+    background-color: $sjcc_white;
+  }
+
+  .listing-message {
+    margin-left: 0;
+    margin-bottom: $padding-default;
+    padding: 2 * $padding-default 0;
+    border: 1px solid $light-gray;
+    @include border-radius($border-radius-default);
+
+    &.unread {
+      background: $pure-white;
+    }
+
+    .name {
+      margin-left: $padding-default;
+
+      a {
+        color: $gray80;
+      }
+    }
+
+    .date {
+      margin-left: $padding-default;
+      color: $gray160;
+      font-size: 14px;
+    }
+
+    .body {
+      a {
+        color: $gray80; 
+      }
+    }
+
+    .link-to-listing a {
+      color: $gray160;
+      font-size: 14px;
+    }
+
+    .actions {
+
+      a {
+
+        margin-top: 0px;
+        margin-bottom: 0px !important; 
+        padding: $padding-small 22px;
+        width: 100%;
+        text-decoration: none !important;
+        text-align: left;
+        @include border-radius($border-radius-left);
+
+        &:hover {
+          background: $gray190;
+        }
+      }
+    }
+  }
+}
+
+.listing-message-for-show {
+
+  margin-bottom: $padding-default;
+
+  a {
+    text-decoration: underline!important;
+  }
+
+  .name {
+    a {
+      color: $gray80;
+    }
+  }
+
+  .date {
+    color: $gray160;
+    font-size: 14px;
+  }
+
+  .body {
+    padding: $padding-small;
+    border: 1px solid $light-gray;
+    color: $gray80; 
+    @include border-radius($border-radius-default);
+  }
+
+  &.unread .body {
+    background: $pure-white;
+  }
+
+  .foreign-message-info {
+
+    text-align:right;
+
+  }
+}

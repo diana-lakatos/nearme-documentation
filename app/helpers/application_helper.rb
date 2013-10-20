@@ -138,4 +138,19 @@ module ApplicationHelper
     "#{controller_class} #{action_class}"
   end
 
+  def distance_of_time_in_words_or_date(datetime)
+    today = Date.current
+
+    if datetime.to_date == today
+      datetime.strftime("%l:%M%P")
+    elsif datetime.to_date == today.yesterday
+      'Yesterday'
+    elsif datetime > (today - 7.days)
+      datetime.strftime("%A")
+    else
+      datetime.strftime("%Y-%m-%d")
+    end
+
+  end
+
 end

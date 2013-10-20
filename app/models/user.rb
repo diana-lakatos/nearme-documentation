@@ -28,6 +28,11 @@ class User < ActiveRecord::Base
            :foreign_key => "administrator_id",
            :inverse_of => :administrator
 
+  has_many :administered_listings,
+           :class_name => "Listing",
+           :through => :administered_locations,
+           :source => :listings
+
   attr_accessible :companies_attributes
   accepts_nested_attributes_for :companies
 
@@ -36,6 +41,7 @@ class User < ActiveRecord::Base
 
   has_many :reservations,
            :foreign_key => :owner_id
+
 
   has_many :listings,
            :through => :locations
@@ -302,6 +308,32 @@ class User < ActiveRecord::Base
 
   def is_location_administrator?
     administered_locations.size > 0
+  end
+
+  def listings_with_messages
+    listings.with_listing_messages + administered_listings.with_listing_messages
+  end
+
+  def listing_messages
+    ListingMessage.where('owner_id = ? OR listing_id IN(?)', id, listings_with_messages.map(&:id)).order('created_at asc')
+  end
+
+  def threaded_listing_messages
+    @threaded_listing_messages ||= listing_messages.group_by{|listing_message|
+      [listing_message.owner_id, listing_message.listing_id]
+    }.sort_by{|key, listing_messages| listing_messages.last.created_at }.reverse
+  end
+
+  def unread_listing_messages
+    threaded_listing_messages.select do |key, listing_messages|
+      listing_messages.detect{|lm| lm.unread_for?(self) }.present?
+    end
+  end
+
+  def archived_listing_messages
+    threaded_listing_messages.select do |key, listing_messages|
+      listing_messages.all?(&:archived?)
+    end
   end
 
 end

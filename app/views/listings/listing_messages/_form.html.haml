@@ -1,0 +1,6 @@
+= simple_form_for listing_message, url: listing_listing_messages_path(@listing) do |f|
+
+  = f.text_area :body
+  = f.hidden_field :replying_to_id
+
+  = f.submit "Send", class: "btn btn-large btn-green"

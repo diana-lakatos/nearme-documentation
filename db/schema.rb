@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131012162538) do
+ActiveRecord::Schema.define(:version => 20131020161039) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -214,6 +214,20 @@ ActiveRecord::Schema.define(:version => 20131012162538) do
     t.string   "bookable_noun",                                     :default => "Desk"
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
   end
+
+  create_table "listing_messages", :force => true do |t|
+    t.integer  "owner_id"
+    t.integer  "author_id",                     :null => false
+    t.integer  "listing_id"
+    t.text     "body"
+    t.boolean  "read",       :default => false
+    t.boolean  "archived_for_owner",   :default => false
+    t.boolean  "archived_for_listing",   :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  add_index "listing_messages", ["listing_id"], :name => "index_listing_messages_on_listing_id"
 
   create_table "listing_types", :force => true do |t|
     t.string   "name"

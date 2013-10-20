@@ -244,5 +244,11 @@ class ApplicationController < ActionController::Base
     @search_scope ||= Listing::SearchScope.scope(current_instance, {white_label_company: @current_white_label_company})
   end
   helper_method :search_scope
+
+  def decorated_current_user
+    @decorated_current_user ||= current_user.decorate
+  end
+  helper_method :decorated_current_user
+
 end
 

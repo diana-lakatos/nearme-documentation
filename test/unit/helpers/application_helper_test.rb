@@ -33,4 +33,33 @@ class ApplicationHelperTest < ActionView::TestCase
     end
   end
 
+  context 'distance_of_time_in_words_or_date' do
+    setup do
+      @now = Time.local(2013, 1, 1, 12, 0, 0)
+      Timecop.travel(@now)
+    end
+
+    should 'return hour and time' do
+      assert_equal '10:00am', distance_of_time_in_words_or_date(@now - 2.hours)
+    end
+
+    should 'return Yesterday' do
+      assert_equal 'Yesterday', distance_of_time_in_words_or_date(@now - 1.day)
+    end
+
+    should 'return week day' do
+      assert_equal 'Friday', distance_of_time_in_words_or_date(@now - 4.days)
+    end
+
+    should 'return date' do
+      puts @now.inspect
+      assert_equal '2013-12-18', distance_of_time_in_words_or_date(@now - 14.days)
+    end
+
+    teardown do
+      Timecop.return
+    end
+
+  end
+
 end

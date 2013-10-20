@@ -7,7 +7,7 @@
         .span9.nested
           %h1 #{@listing.name_with_address}
         .span3
-          = link_to "mailto:support+#{@location.id}-#{@listing.id}@desksnear.me", :class => "btn btn-blue btn-medium pull-right ask-a-question" do
+          = link_to new_listing_listing_message_path(@listing), :class => "btn btn-blue btn-medium pull-right ask-a-question", rel: 'modal' do
             %span Ask a question
             %span.ico-mail
 

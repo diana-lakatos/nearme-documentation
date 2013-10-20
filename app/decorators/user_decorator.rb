@@ -15,4 +15,9 @@ class UserDecorator < Draper::Decorator
     result.join(" | ")
   end
 
+  def unread_messages_count
+    unread_count = unread_listing_messages.size
+    unread_count > 0 ? "(#{unread_count})" : ""
+  end
+
 end

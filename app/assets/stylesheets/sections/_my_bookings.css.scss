@@ -24,58 +24,9 @@ section.reservations{
 section#reservations {
 
   ul {
-
     li {
       list-style: none outside none;
       overflow: hidden;
-      display: block;
-    }
-  }
-
-  .box {
-
-    header {
-      padding: 8px;
-    }
-  }
-
-  .links {
-    width: 100%;
-    text-align: center;
-
-    ul {
-      margin: 0px auto;
-
-      li {
-        display: inline-block;
-        text-align: center;
-        margin-left: 5px;
-        margin-right: 5px;
-
-        a {
-          width: 150px;
-
-          &.upcoming-reservations {
-            span {
-              margin: 0 15px;
-            }
-          }
-        }
-      }
-
-      @media (max-width: $ipad-width) {
-        li {
-          display: block;
-
-          a {
-            width: 100%;
-          }
-
-          &:not(:last-child) {
-            margin-bottom: 5px;
-          }
-        }
-      }
     }
   }
 

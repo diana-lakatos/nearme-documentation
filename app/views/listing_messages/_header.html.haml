@@ -1,0 +1,9 @@
+%header
+  .button-links
+    %ul
+      %li
+        = listing_message_navigation_link :index do
+          %span= "Inbox #{decorated_current_user.unread_messages_count}"
+      %li
+        = listing_message_navigation_link :archived do
+          %span Archived

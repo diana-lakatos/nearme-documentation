@@ -58,7 +58,17 @@ DesksnearMe::Application.routes.draw do
         get :booking_successful
       end
       get :hourly_availability_schedule, :on => :collection
-     end
+    end
+
+    resources :listing_messages, :controller => "listings/listing_messages" do
+      put :archive
+    end
+  end
+
+  resources :listing_messages, only: [:index] do 
+    collection do 
+      get :archived
+    end
   end
 
   resources :reservations, :only => [] do

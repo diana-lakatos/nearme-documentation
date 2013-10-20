@@ -1,0 +1,10 @@
+.row-fluid
+  .span12
+    %header
+      %h2
+        Send a message to
+        = link_to @listing.name
+
+    = simple_form_for @listing_message, url: listing_listing_messages_path(@listing) do |f|
+      = f.text_area :body
+      = f.submit "Send", class: "btn btn-large btn-green"
