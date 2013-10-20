@@ -71,6 +71,8 @@ module ReservationsHelper
       'ico-pending'
     elsif reservation.cancelled? || reservation.rejected? 
        'ico-close'
+    elsif reservation.expired?
+      'ico-time'
     end
   end
 

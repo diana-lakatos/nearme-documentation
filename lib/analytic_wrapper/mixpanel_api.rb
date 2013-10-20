@@ -82,6 +82,20 @@ class AnalyticWrapper::MixpanelApi
     Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
   end
 
+  def pixel_track_url(event_name, properties, options = {})
+    properties = properties.reverse_merge(
+      :distinct_id => distinct_id
+    )
+
+    # Assign any global properties
+    properties.reverse_merge!(session_properties)
+    properties.reverse_merge!(request_details)
+
+    
+    Rails.logger.info "Pixel based tracking mixpanel event: #{event_name}, #{properties}, #{options}"
+    "<img src='#{@mixpanel.tracking_pixel(event_name, properties, options)}' width='1' height='1'>"
+  end
+
   # Sets global Person properties on the current tracked session.
   def set_person_properties(properties)
     @mixpanel.set(distinct_id, properties)

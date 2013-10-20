@@ -163,12 +163,19 @@ class EventTrackerTest < ActiveSupport::TestCase
     end
   end
 
+  should 'trigger mixpanel method to get pixel based tracking url' do
+    event_name = 'Some event'
+    properties = { some: 'event' }
+    @mixpanel.expects(:pixel_track_url).with(event_name, properties)
+    @tracker.pixel_track_url(event_name, properties)
+  end
   private
 
   def expect_event(event_name, properties = nil)
     @mixpanel.expects(:track).with(event_name, properties)
     @google_analytics.expects(:track).with(@category, event_name)
   end
+
 
   def expect_charge(user_id, total_amount_dollars)
     @mixpanel.expects(:track_charge).with(user_id, total_amount_dollars)

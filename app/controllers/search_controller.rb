@@ -9,7 +9,7 @@ class SearchController < ApplicationController
     @located = (params[:lat].present? and params[:lng].present?)
     render "search/#{result_view}"
     if should_log_conducted_search?
-      event_tracker.conducted_a_search(search, { search_query: query, result_view: result_view, result_count: result_count, filters: filters })
+      event_tracker.conducted_a_search(search, { search_query: query, result_view: result_view, result_count: result_count}.merge(filters))
     end
     remember_search_query
   end
@@ -30,11 +30,11 @@ class SearchController < ApplicationController
   end
 
   def filters
-    { 
-      :listing_types => params[:listing_types_ids].try(:map) { |lt| ListingType.find(lt).name },
-      :location_types => params[:location_types_ids].try(:map)  { |lt| LocationType.find(lt).name },
-      :industries => params[:industries_ids].try(:map) { |i| Industry.find(i).name }
-    }
+    search_filters = {}
+    search_filters[:listing_type_filter] = params[:listing_types_ids].map { |lt| ListingType.find(lt).name } if params[:listing_types_ids]
+    search_filters[:location_type_filter] = params[:location_types_ids].map { |lt| LocationType.find(lt).name } if params[:location_types_ids]
+    search_filters[:industry_filter] = params[:industries_ids].map { |i| Industry.find(i).name } if params[:industries_ids]
+    search_filters
   end
 
   def listings

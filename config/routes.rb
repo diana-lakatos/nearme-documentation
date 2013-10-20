@@ -37,7 +37,9 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
-    resources :instances
+    resources :instances do
+      resources :partners
+    end
     resources :pages
   end
 

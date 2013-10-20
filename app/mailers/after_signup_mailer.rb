@@ -30,17 +30,36 @@ class AfterSignupMailer < InstanceMailer
       end
 
       def help_offer_with_booking
-        @user = User.all.detect { |u| !u.reservations.empty? && u.listings.empty? }
+        user_from_db = User.all.detect { |u| !u.reservations.empty? && u.listings.empty? }
         @theme = Theme.first
-        raise "No user with booking and without listing" unless @user
-        ::AfterSignupMailer.help_offer(@theme, @user)
+
+        unless user_from_db
+          @user = FactoryGirl.create(:user, email: "test_user_#{rand(100)}@example.com")
+          @reservation = FactoryGirl.create(:reservation, currency: 'USD', listing: Listing.first, user: @user)
+          @reservation.user = @user
+        else
+          @user = user_from_db
+        end
+        mailer = ::AfterSignupMailer.help_offer(@theme, @user)
+
+        unless user_from_db
+          @user.destroy!
+          @reservation.destroy!
+        end
+
+        mailer
       end
 
       def help_offer_without_listing_and_booking
-        @user = User.all.detect { |u| u.listings.empty? && u.reservations.empty? }
+        user_from_db = User.all.detect { |u| u.listings.empty? && u.reservations.empty? }
         @theme = Theme.first
-        raise "No user without listing and without reservation" unless @user
-        ::AfterSignupMailer.help_offer(@theme, @user)
+        @user = user_from_db || FactoryGirl.create(:user, email: "test_user_#{rand(100)}@example.com")
+
+        mailer = ::AfterSignupMailer.help_offer(@theme, @user)
+
+        @user.destroy! unless user_from_db
+
+        mailer
       end
 
     end
