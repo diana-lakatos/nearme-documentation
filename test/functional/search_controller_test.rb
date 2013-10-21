@@ -32,11 +32,9 @@ class SearchControllerTest < ActionController::TestCase
         search_query: 'adelaide', 
         result_view: 'list', 
         result_count: 0, 
-        filters: {
-          :listing_types => [@listing_type.name], 
-          :location_types => [@location_type.name], 
-          :industries => [@industry.name]
-        }
+        listing_type_filter: [@listing_type.name], 
+        location_type_filter: [@location_type.name], 
+        industry_filter: [@industry.name]
       }
       @tracker.expects(:conducted_a_search).with do |search, custom_options|
         expected_custom_options == custom_options

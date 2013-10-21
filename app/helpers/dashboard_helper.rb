@@ -82,4 +82,15 @@ module DashboardHelper
       content_tag(:i, '', :class => reservation_status_icon(reservation))
     end
   end
+
+  def no_reservations_info_for_state(state)
+    case state.to_s
+    when 'unconfirmed'
+      'You have no unconfirmed reservations. Have a nice day!'
+    when 'confirmed'
+      "You haven't confirmed any reservations yet."
+    when 'archived'
+      "You don't have any archived reservations."
+    end
+  end
 end

@@ -22,6 +22,9 @@ Feature: As a user of the site
     Given a reservation exists with listing: the listing
     Given I am on the manage guests dashboard page
     And I reject reservation with reason
-    Then I should see "You have rejected the reservation. Maybe next time!"
+    Then I should see "You have rejected the reservation. Maybe next time!" 
 
-
+  Scenario: A user will see information about no reservation
+    Given a reservation exists with listing: the listing, state: "confirmed"
+    Given I am on the manage guests dashboard page
+    Then I should see "You have no unconfirmed reservations. Have a nice day!"
