@@ -43,7 +43,6 @@ class @Photo.Collection
         @reorderSortableList()
       placeholder: 'photo-placeholder'
       cancel: 'input'
-    @sortable.find('*').not('input').disableSelection()
 
   multiplePhoto: =>
     @sortable.length > 0
