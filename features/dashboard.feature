@@ -28,12 +28,12 @@ Feature: As a user of the site
   Scenario: A user can edit existing location
     Given the location exists with company: the company
       And I am on the manage locations page
-     When I click edit icon
+     When I click edit location icon
       And I provide new location data
       And I submit the form
       And I should see "Great, your Space has been updated!"
      Then the location should be updated
-     When I click edit icon
+     When I click edit location icon
       And I click delete location link
       And I should see "You've deleted"
      Then the location should not exist
