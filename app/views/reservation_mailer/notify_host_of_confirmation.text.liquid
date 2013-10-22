@@ -1,39 +1,5 @@
-Thank you for confirming {{ reservation.owner.name }}'s booking for '{{ listing.name }}' at {{ listing.location.name }} ({{ listing.location.url }}).
+Thanks, {{ user.first_name }}!
 
-BOOKING DETAILS --------
+Thanks for confirming {{ reservation.owner.name_pluralize }} booking for '{{ listing.name }}' at {{ listing.street }}. You can manage guest bookings via the Dashboard {{ listing.manage_guests_dashboard_url }}.
 
-Listing: '{{listing.name}}' at {{listing.location.name}} ({{listing.location.url}}).
-{% if listing.location.special_notes? %}
-Guest instructions: {{ listing.location.special_notes }}
-{% endif %}
-Quantity: {{reservation.quantity}}
-{% if listing.hourly_reservations? %}
-  Dates:
-
-{{ reservation.hourly_summary }}
-{% else %}
-Dates:
-
-{{ reservation.dates_summary }}
-{% endif %}
-
-
-Host: {{ host.name }} ({{host.email}})
-
-{% if listing.location.phone? %}Contact: {{listing.location.phone}}{% endif %}
-
-Subtotal: {{ reservation.subtotal_price }}
-
-Service fee: {{ reservation.service_fee }}
-
-Total: {{ reservation.total_price }}
-{% if reservation.credit_card_payment? %}
-Paid: {{ reservation.paid }}
-Balance: {{ reservation.balance }}
-{% if reservation.pendind? %}
-This reservation is currently pending confirmation, and will be charged when confirmed.
-{% endif %}
-{% endif %}
-------------------------
-
-You can review your travel plans on the Dashboard ({{ listing.bookings_dashboard_url }}).
+If you need help, send an email to happydesk@desksnear.me or contact us at or 555-888-DESK (3375).

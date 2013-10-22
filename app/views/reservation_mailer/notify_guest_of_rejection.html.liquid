@@ -1,9 +1,9 @@
-<p>The booking that you made on {{ reservation.created_at }} for '{{ listing.name }}' at <a href="{{ listing.location.url }}">{{ listing.location.name }}</a> was declined by the host.</p>
+<h2>{{ user.first_name }}, your booking has been declined</h2>
 
-{% if @reservation.has_rejection_reason %}
-  <p> <strong>Reason:</strong> {{ reservation.rejection_reason }}</p>
-{% else %}
-  <p>I'm sure it's not personal - they were probably just busy that day.</p>
-{% endif %}
+<p>Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }} has been declined by the host. But we have you covered! Here are some alternatives, similar to the listing you tried to book:</p>
 
-<p>Don't worry - <a href="{{ listing.search_url }}">find other locations near you</a>!</p>
+{% include 'reservation_mailer/listings_in_near_html' %}
+
+<a class="btn" href="{{ listing.search_url }}">Search More Desks</a>
+
+<p>We're always happy to help! If you have any questions about your booking, please send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or contact us at or 555-888-DESK (3375).</p>

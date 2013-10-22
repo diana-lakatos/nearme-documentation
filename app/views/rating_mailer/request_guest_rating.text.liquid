@@ -1,4 +1,9 @@
-Booking from {{ subject.name }} for '{{ listing.name }}' at {{ location.name }} ended yesterday.
+How was it, {{ reservation.owner.first_name }}?
 
-Leave a rating and maybe a comment on how this booking went by clicking the following link:
-{{ reservation.guest_rating_url }}
+We can't wait to hear about your experience at '{{ listing.name }}', {{ listing.street }}.
+
+Your opinion is very important and it will help other guest to find great desks. Take a moment and give us your feedback!
+
+Write a Review: {{ reservation.guest_rating_reservation_url }}
+
+If you'd prefer to talk to us directly, please send an email to happydesk@desksnear.me or call us on 555-888-DESK (3375) - we love to talk with our guests.

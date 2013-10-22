@@ -175,6 +175,49 @@ class EventTrackerTest < ActiveSupport::TestCase
     end
   end
 
+  context 'Mailer' do
+
+    setup do
+      @category = "Mailer events"
+      @location = FactoryGirl.create(:location)
+      @listing = FactoryGirl.create(:listing) 
+    end
+
+    should 'track find a desk clicked' do
+      expect_set_person_properties user_properties
+      expect_event 'Find a desk clicked in post_action/sign_up_welcome mail', user_properties
+      @tracker.mailer_find_a_desk_clicked(@user)
+    end
+
+    should 'track list your desk clicked' do
+      expect_set_person_properties user_properties
+      expect_event 'List your desk clicked in mail', user_properties
+      @tracker.mailer_list_your_desk_clicked(@user)
+    end
+
+    should 'track mailer social share' do
+      expect_event 'Social share in mailer', location_properties
+      @tracker.mailer_social_share(@location)
+    end
+
+    should 'track view your booking clicked' do
+      expect_set_person_properties user_properties
+      expect_event 'View your booking clicked in reservation_mailer/notify_guest_with_confirmation mail', user_properties
+      @tracker.mailer_view_your_booking_clicked(@user)
+    end
+
+    should 'track upload photos now clicked' do
+      expect_event 'Upload photos now clicked in mailer', listing_properties
+      @tracker.mailer_upload_photos_now_clicked(@listing)
+    end
+
+    should 'track manage desks clicked' do
+      expect_set_person_properties user_properties
+      expect_event 'Manage desks clicked in mail', user_properties
+      @tracker.mailer_manage_desks_clicked(@user)
+    end
+  end
+
   should 'trigger mixpanel method to get pixel based tracking url' do
     event_name = 'Some event'
     properties = { some: 'event' }

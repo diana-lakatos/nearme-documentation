@@ -1,0 +1,11 @@
+<h2>Change of plans, {{ user.first_name }}!</h2>
+
+<p>The booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }} has been cancelled by the host.</p>
+
+<p>No worries! Here you have some alternatives similar to the desks you were looking for:</p>
+
+{% include 'reservation_mailer/listings_in_near_html' %}
+
+<a class="btn" href="{{ listing.search_url }}">Search More Desks</a>
+
+<p>We're always happy to help! Just send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or call us on 555-888-DESK (3375).</p>

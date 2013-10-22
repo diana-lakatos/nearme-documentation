@@ -1,34 +1,24 @@
-<p>{{ reservation.owner.name }} has made a booking for '{{ listing.name }}' at <a href="{{ listing.location.url }}">{{ listing.location.name }}</a>.</p>
+<h2>Good news, {{ user.first_name }}!</h2>
+
+<p>
+Your listing, '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }}, was just booked!
+</p>
 
 <div class="booking-details">
 
-  <h2>Booking Details</h2>
-
   <div class="row">
-    <strong style='display: inline-block;'>Listing</strong>
-    <span style="float: right;"><a href="{{ listing.location.url }}">{{ listing.name }}</a>
+    <strong style='display: inline-block;'>Who</strong>
+    <span style="float: right;"><a href="{{ reservation.owner.user_profile_url }}">{{ reservation.owner.first_name }}</a></span>
   </div>
 
   <div class="row">
-    <strong style='display: inline-block;'>Listing</strong>
-    <span style="float: right;">'{{ listing.name }}' at <a href="{{ listing.location.url }}">{{ listing.location.name }}</a></span>
-  </div>
-
-  {% if listing.location.special_notes? %}
-    <div class="row">
-      <strong style='display: inline-block;'>Guest instructions</strong>
-      <span style="float: right;">{{ listing.location.special_notes }}</span>
-    </div>
-  {% endif %}
-
-  <div class="row">
-    <strong style='display: inline-block;'>Quantity</strong>
-    <span style="float: right;">{{ reservation.quantity }}</span>
+    <strong style='display: inline-block;'>What</strong>
+    <span style="float: right;"><a href="{{ listing.listing_url }}">{{ listing.name }}</a> x {{ reservation.quantity }}</span>
   </div>
 
   <div class="row">
-    <strong style='display: inline-block;'>Dates</strong>
-    <span style="float:right;">
+    <strong style='display: inline-block;'>When</strong>
+    <span style="float: right;">
       {% if listing.hourly_reservations? %}
         {{ reservation.hourly_summary }}
       {% else %}
@@ -38,53 +28,16 @@
   </div>
 
   <div class="row">
-    <strong style='display: inline-block;'>Host</strong>
-    <span style="float: right;"><a href="mailto:{{ host.email }}">{{ host.name }}</a></span>
-  </div>
-
-  {% if listing.location.phone? %}
-    <div class="row">
-      <strong style='display: inline-block;'>Contact</strong>
-      <span style="float: right;">{{ listing.location.phone }}</span>
-    </div>
-  {% endif %}
-
-  <div class="row">
-    <strong style='display: inline-block;'>Subtotal</strong>
-    <span style="float: right;">{{ reservation.subtotal_price }}</span>
-  </div>
-
-  <div class="row">
-    <strong style='display: inline-block;'>Service fee</strong>
-    <span style="float: right;">{{ reservation.service_fee }}</span>
-  </div>
-
-  <div class="row">
     <strong style='display: inline-block;'>Total</strong>
     <span style="float: right;">{{ reservation.total_price }}</span>
   </div>
 
-  {% if reservation.credit_card_payment? %}
-    <div class="row">
-      <strong style='display: inline-block;'>Paid</strong>
-      <span style="float: right;">{{ reservation.paid }}</span>
-    </div>
-
-    <div class="row">
-      <strong style='display: inline-block;'>Balance</strong>
-      <span style="float: right;">{{ reservation.balance }}</span>
-    </div>
-
-    {% if reservation.pending? %}
-      <div class="row">
-        <span style="float: right;">This reservation is currently pending confirmation, and will be charged when confirmed.</span>
-      </div>
-    {% endif %}
-
-  {% endif %}
-
 </div>
 
-<p>The guest has been notified that confirmation is required from you.</p>
+<p>Exciting, right? Please, confirm the booking and let's get the guest set up!</p>
 
-<p>Please confirm or decline their booking <a href="{{ listing.manage_guests_dashboard_url }}">via the Dashboard</a>.</p>
+<a class="btn" href="{{ reservation.reservation_confirm_url }}">Confirm Booking</a>
+
+<p>Not ready for guests? You can manage your bookings <a href="{{ listing.manage_guests_dashboard_url }}">here</a>.</p>
+
+<p>If you need help, send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or contact us at or 555-888-DESK (3375).</p>

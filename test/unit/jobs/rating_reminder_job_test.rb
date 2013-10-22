@@ -21,11 +21,10 @@ class RatingReminderJobTest < ActiveSupport::TestCase
       assert_equal 2, ActionMailer::Base.deliveries.size
 
       @host_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@host.email] }
-      assert_match(/\[DesksNearMe\] Rate your guest at Listing \d+/, @host_email.subject)
+      assert_match /\[DesksNearMe\] How was your experience at 'Listing \d+'/, @host_email.subject
 
       @guest_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@guest.email] }
-      assert_match(/\[DesksNearMe\] Rate your host at Listing \d+/, @guest_email.subject)
-
+      assert_match /\[DesksNearMe\] How was your experience at 'Listing \d+'/, @guest_email.subject
     end
 
     should 'not send any reminders while its not noon in local time zone this hour' do

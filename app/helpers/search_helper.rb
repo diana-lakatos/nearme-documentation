@@ -24,4 +24,16 @@ module SearchHelper
     params[:price].present? && params[:price][:max] || PriceRange::MAX_SEARCHABLE_PRICE
   end
 
+  def price_information(listing)
+    if listing.hourly_reservations? && !listing.hourly_price.to_f.zero?
+      "From #{money_without_cents_and_with_symbol(listing.hourly_price)} / hour"
+    elsif !listing.daily_price.to_f.zero?
+      "From #{money_without_cents_and_with_symbol(listing.daily_price)} / day"
+    elsif !listing.weekly_price.to_f.zero?
+      "From #{money_without_cents_and_with_symbol(listing.weekly_price)} / week"
+    elsif !listing.monthly_price.to_f.zero?
+      "From #{money_without_cents_and_with_symbol(listing.monthly_price)} / month"
+    end
+  end
+
 end

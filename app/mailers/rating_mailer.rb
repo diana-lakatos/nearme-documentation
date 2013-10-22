@@ -1,4 +1,5 @@
 class RatingMailer < InstanceMailer
+  layout 'mailer'
 
   def request_guest_rating(reservation)
     @subject = reservation.owner
@@ -25,7 +26,7 @@ class RatingMailer < InstanceMailer
     @platform_context = PlatformContext.new(@listing.company.white_label_enabled ? @listing.company.domain.try(:name) : @listing.instance.domains.first.try(:name))
 
     mail to: @author.email,
-         subject: instance_prefix("Rate your #{@kind} at #{@listing.name}", @platform_context.decorate),
+         subject: instance_prefix("How was your experience at '#{@listing.name}'?", @platform_context.decorate),
          template_name: "request_#{@kind}_rating",
          platform_context: @platform_context
 
@@ -35,11 +36,11 @@ class RatingMailer < InstanceMailer
     class Preview < MailView
 
       def request_guest_rating
-        ::RatingMailer.request_guest_rating(PlatformContext.new, Reservation.last)
+        ::RatingMailer.request_guest_rating(Reservation.last)
       end
 
       def request_host_rating
-        ::RatingMailer.request_host_rating(PlatformContext.new, Reservation.last)
+        ::RatingMailer.request_host_rating(Reservation.last)
       end
     end
   end

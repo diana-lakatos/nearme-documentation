@@ -121,7 +121,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
     :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url, 
-    :current_location, :company_name, :skills_and_interests
+    :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude
 
   delegate :to_s, :to => :name
 
@@ -329,5 +329,27 @@ class User < ActiveRecord::Base
     ListingMessage.where('owner_id = ? OR listing_id IN(?)', id, listings_with_messages.map(&:id)).order('created_at asc')
   end
 
-end
+  def listings_in_near(results_size = 3, radius_in_km = 100)
+    if last_geolocated_location_latitude.to_f > 0 and last_geolocated_location_longitude.to_f > 0
+      locations_in_near = Location.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
+    else
+      locations_in_near = Location.near(current_location, radius_in_km, units: :km, order: :distance)
+    end
+    
+    locations_in_near = Location if locations_in_near.count.zero?
 
+    listings = []
+    locations_in_near.includes(:listings).each do |location|
+      listings += location.listings.searchable.limit((listings.size - results_size).abs)
+      return listings if listings.size >= results_size
+    end
+
+    listings
+  end
+
+  def administered_locations_pageviews_7_day_total
+    scoped_locations = (self == self.companies.first.creator) ? self.companies.first.locations : administered_locations
+    Impression.where('impressionable_type = ? AND impressionable_id IN (?) AND DATE(impressions.created_at) >= ?', 'Location', scoped_locations.pluck(:id), Date.current - 7.days).count
+  end
+
+end

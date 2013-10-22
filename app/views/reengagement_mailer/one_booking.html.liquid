@@ -1,0 +1,11 @@
+<h2>Hey, {{ user.first_name }}!</h2>
+
+<p>We hope you enjoyed your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }} on {{ reservation.start_date }}.</p>
+
+<p>We thought you might be interested in some other desks in your area. Come back to Desks Near Me and find a cool desk to get your work done!</p>
+
+{% include 'reservation_mailer/listings_in_near_html' %}
+
+<a class="btn" href="{{ listing.search_url_with_tracking }}">Search More Desks</a>
+
+<p>Not looking for a desk? <a href="{{ user.space_wizard_list_url_with_tracking }}">List your space</a>.</p>

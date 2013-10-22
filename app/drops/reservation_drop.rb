@@ -72,4 +72,12 @@ class ReservationDrop < BaseDrop
   def owner
     @reservation.owner
   end
+
+  def reservation_confirm_url
+    routes.confirm_manage_listing_reservation_url(@reservation.listing, @reservation, :token => @reservation.listing.creator.authentication_token)
+  end 
+
+  def start_date
+    @reservation.date.strftime('%b %e')
+  end
 end
