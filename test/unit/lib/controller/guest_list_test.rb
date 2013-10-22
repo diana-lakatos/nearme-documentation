@@ -4,6 +4,7 @@ class GuestListTest < ActiveSupport::TestCase
 
   context '#filter' do
     setup do
+      Timecop.travel(Time.local(2013, 10, 21, 12, 0, 0))
       @user = create(:user)
       @company = create(:company, creator: @user)
       @location = create(:location, company: @company)
@@ -21,6 +22,10 @@ class GuestListTest < ActiveSupport::TestCase
       end
 
       @guest_list = Controller::GuestList.new(@user)
+    end
+
+    teardown do
+      Timecop.return
     end
 
     should 'filter unconfirmed reservation for user' do
