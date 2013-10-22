@@ -2,7 +2,7 @@
   .map-wrapper.google-map
     .map-container
   .bottom-heading
-    = link_to "http://maps.apple.com/?daddr=#{location.address}&saddr=#{request.location.try(:address)}", target: '_blank' do
+    = link_to google_maps_route_url(to: location.address, from: ""), data: {destination: location.address, lat: location.latitude, long: location.longitude, routelink: true}, target: '_blank' do
       = location.address
     %span.ico-chevron-right.pull-right
 
@@ -11,3 +11,10 @@
       = location_format_address(location.address)
       = link_to "https://maps.google.com/maps?q=#{location.address}", target: '_blank' do
         %span.ico-open-link.padding
+
+- content_for :script do
+  :javascript
+    $(function() {
+      new RouteLink($('[data-routelink]'));
+    });
+
