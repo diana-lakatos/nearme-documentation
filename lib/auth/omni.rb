@@ -16,7 +16,9 @@ module Auth
     def apply_avatar_if_empty
       user = authenticated_user
       if @auth_params['info']['image'] && !user.avatar.any_url_exists?
-        user.remote_avatar_url = @auth_params['info']['image'] 
+        remote_image_url = @auth_params['info']['image']
+        remote_image_url += "?width=500" if remote_image_url.include?('graph.facebook.com')
+        user.remote_avatar_url = remote_image_url
         user.avatar_versions_generated_at = Time.zone.now
         user.save!
       end
