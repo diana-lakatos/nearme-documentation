@@ -150,7 +150,10 @@ module ApplicationHelper
     else
       datetime.strftime("%Y-%m-%d")
     end
+  end
 
+  def render_olark?
+    not current_page?(controller: 'locations/listings', action: 'show')
   end
 
 end

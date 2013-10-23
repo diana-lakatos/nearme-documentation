@@ -24,7 +24,7 @@ Feature: As a user of the site
     When I follow "Add user"
     And I fill in "user_email" with "existing_user@example.com"
     And I submit the form 
-    And I click remove user link
+    And I click remove user "existing_user"
     Then I should not see "existing_user@example.com" 
 
   Scenario: A user cannot add already added company user

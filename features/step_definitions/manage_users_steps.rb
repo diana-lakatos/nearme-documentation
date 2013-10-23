@@ -1,6 +1,6 @@
-When /^I click remove user link$/ do
+When /^I click remove user "([^"]*)"$/ do |name|
   page.evaluate_script('window.confirm = function() { return true; }')
-  click_link "Remove user", :match => :first
+  click_link name
 end
 
 When /^I fill in user email$/ do

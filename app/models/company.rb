@@ -2,11 +2,14 @@ class Company < ActiveRecord::Base
   has_paper_trail
   URL_REGEXP = URI::regexp(%w(http https))
 
-  attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name, :mailing_address, :paypal_email, :industry_ids, 
-    :locations_attributes, :domain_attributes, :theme_attributes, :instance_id, :white_label_enabled, :listings_public
+  attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name,
+    :mailing_address, :paypal_email, :industry_ids, :locations_attributes,
+    :domain_attributes, :theme_attributes, :instance_id, :white_label_enabled,
+    :listings_public, :partner_id
 
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance
+  belongs_to :partner
 
   has_many :company_users, dependent: :destroy
   has_many :users, :through => :company_users
