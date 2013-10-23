@@ -313,8 +313,9 @@ ActiveRecord::Schema.define(:version => 20131018142922) do
   create_table "partners", :force => true do |t|
     t.string   "name"
     t.integer  "instance_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
+    t.string   "search_scope_option", :default => "no_scoping"
   end
 
   create_table "payment_transfers", :force => true do |t|
