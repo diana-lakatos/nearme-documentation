@@ -1,7 +1,7 @@
 #search_row.span6.offset3
   .row-fluid
     %h1.tagline
-      = current_theme.tagline
+      = request_context.tagline
   .black-box.row-fluid
     %form#listing_search.home_search{:action => search_path, :method => "get"}
       .no-text-search
