@@ -7,14 +7,12 @@ Feature: Emails should be sent out informing parties about reservations
     Given a user: "Keith Contractor" exists with name: "Keith Contractor", email: "keith@example.com"
     And a user: "Bo Jeanes" exists with name: "Bo Jeanes", email: "bo@example.com"
 
-  @javascript
   Scenario: reservation confirmations required (no comment)
     Given Bo Jeanes does require confirmation for his listing
     When Keith Contractor books a space for that listing
     Then a confirm reservation email should be sent to bo@example.com
     And a reservation awaiting confirmation email should be sent to keith@example.com
 
-  @javascript
   Scenario: reservation confirmations not required
     Given Bo Jeanes does not require confirmation for his listing
     When Keith Contractor books a space for that listing
