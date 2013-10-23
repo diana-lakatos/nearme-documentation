@@ -138,4 +138,8 @@ module ApplicationHelper
     "#{controller_class} #{action_class}"
   end
 
+  def render_olark?
+    not current_page?(controller: 'locations/listings', action: 'show')
+  end
+
 end
