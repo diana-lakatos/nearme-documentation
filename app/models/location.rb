@@ -139,6 +139,10 @@ class Location < ActiveRecord::Base
     super.presence || creator
   end
 
+  def is_user_admin?(user)
+    self.company.users.admins.where(id: user.id, admin: true).exists?
+  end
+
   def creator=(creator)
     company.creator = creator
     company.save
