@@ -1,13 +1,138 @@
 require 'test_helper'
 
 class SearchControllerTest < ActionController::TestCase
+  setup do
+    stub_request(:get, /.*maps\.googleapis\.com.*/)
+    stub_mixpanel
+  end
+
+  def assert_nothing_found
+    assert_select 'h1', 1, 'No results found'
+    assert_select 'p', 1, "The address you entered couldn't be found"
+  end
+
+  def assert_location_in_result(location)
+    location.listings.each do |listing|
+      assert_select 'article[data-id=?]', listing.id, count: 1
+    end
+  end
+
+  def refute_location_in_result(location)
+    location.listings.each do |listing|
+      assert_select 'article[data-id=?]', listing.id, count: 0
+    end
+  end
+
+  context 'search integration' do
+    setup do
+      Location.destroy_all
+    end
+
+    context 'for disabled listing' do
+      should 'exclude disabled listing' do
+        location = @auckland = FactoryGirl.create(:location_in_auckland)
+        location.listings.each do |listing|
+          listing.update_attribute(:enabled, false)
+        end
+
+        get :index, q: 'Auckland'
+        assert_nothing_found
+      end
+    end
+
+    context 'for invalid place' do
+      should 'find nothing for empty query' do
+        get :index, q: ''
+        assert_nothing_found
+      end
+
+      should 'find nothing for invalid query' do
+        get :index, q: 'bung'
+        assert_nothing_found
+      end
+    end
+
+    context 'for unavailable listings' do
+      should 'display also unavailable listings' do
+        unavaliable_location = FactoryGirl.create(:fully_booked_listing_in_cleveland).location
+        available_location = FactoryGirl.create(:listing_in_cleveland).location
+
+        get :index, q: 'Cleveland'
+
+        assert_location_in_result(unavaliable_location) 
+        assert_location_in_result(available_location)
+      end
+    end
+
+    context 'for existing location' do
+      context 'with industry filter' do
+        should 'filter only filtered locations' do
+          filtered_industry = FactoryGirl.create(:industry)
+          another_industry = FactoryGirl.create(:industry)
+          filtered_auckland = FactoryGirl.create(:company, industries: [filtered_industry], locations: [FactoryGirl.create(:location_in_auckland)]).locations.first
+          another_auckland = FactoryGirl.create(:company, industries: [another_industry], locations: [FactoryGirl.create(:location_in_auckland)]).locations.first
+
+          get :index, { :q => 'Auckland', :industries_ids => [filtered_industry.id] }
+
+          assert_location_in_result(filtered_auckland) 
+          refute_location_in_result(another_auckland) 
+        end
+      end
+
+      context 'with location type filter' do
+        should 'filter only filtered locations' do
+          filtered_location_type = FactoryGirl.create(:location_type)
+          another_location_type = FactoryGirl.create(:location_type)
+          filtered_auckland = FactoryGirl.create(:location_in_auckland, location_type: filtered_location_type)
+          another_auckland = FactoryGirl.create(:location_in_auckland, location_type: another_location_type)
+
+          get :index, { :q => 'Auckland', :location_types_ids => [filtered_location_type.id] }
+
+          assert_location_in_result(filtered_auckland) 
+          refute_location_in_result(another_auckland) 
+        end
+      end
+
+      context 'with listing type filter' do
+        should 'filter only filtered locations' do
+          filtered_listing_type = FactoryGirl.create(:listing_type)
+          another_listing_type = FactoryGirl.create(:listing_type)
+          filtered_auckland = FactoryGirl.create(:listing_in_auckland, listing_type: filtered_listing_type).location
+          another_auckland = FactoryGirl.create(:listing_in_auckland, listing_type: another_listing_type).location
+
+          get :index, { :q => 'Auckland', :listing_types_ids => [filtered_listing_type.id] }
+
+          assert_location_in_result(filtered_auckland) 
+          refute_location_in_result(another_auckland) 
+        end
+      end
+
+      context 'without filter' do
+        context 'show only valid locations' do
+          setup do
+            @auckland = FactoryGirl.create(:location_in_auckland)
+            @adelaide = FactoryGirl.create(:location_in_adelaide)
+            get :index, q: 'Adelaide'
+          end
+
+          should 'in map view' do
+            get :index, q: 'Adelaide', v: 'map'
+            assert_location_in_result(@adelaide) 
+            refute_location_in_result(@auckland) 
+          end
+
+          should 'in list view' do
+            get :index, q: 'Adelaide', v: 'list'
+            assert_location_in_result(@adelaide) 
+            refute_location_in_result(@auckland) 
+          end
+        end
+      end
+    end
+  end
 
   context 'conduct search' do
 
-    setup do
-      stub_request(:get, /.*maps\.googleapis\.com.*/)
-      stub_mixpanel
-    end
 
     should "not track search for empty query" do
       @tracker.expects(:conducted_a_search).never

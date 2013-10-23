@@ -15,41 +15,6 @@ Given /^a( disabled)? listing( with nil prices)? in (.*) exists( with that ameni
   listing.location.amenities << model!("amenity") if amenity
 end
 
-Given /^there are listings which are unavailable$/ do
-  4.times { build_fully_booked_listing }
-end
-
-Given /^there are listings which are available$/ do
-  4.times { build_listing_which_is_closed_on_weekends }
-end
-
-Given /^a listing in (.*) exists with a price of \$(\d+)\.(\d+)( and that amenity)?$/ do |city, dollars, cents, amenity|
-  listing = create_listing_in(city)
-
-  listing.price_cents = (dollars.to_i * 100) + cents.to_i
-  listing.location.amenities << model!("amenity") if amenity
-end
-
-Given /^a first listing in (.*) exists$/ do |city|
-  @first_listing = create_listing_in(city)
-end
-
-Given /^a second listing in (.*) exists$/ do |city|
-  @second_listing = create_listing_in(city)
-end
-
-Given /^a listing which is fully booked$/ do
-  @listing = build_fully_booked_listing
-end
-
-Given /^a listing which is closed on the weekend$/ do
-  @listing = build_listing_which_is_closed_on_weekends
-end
-
-Given /^a listing in (.*) exists with (\d+) desks? available for the next (\d+) days$/ do |city, desks, num_days|
-  build_listing_in_city(city, desks: desks, number_of_days: num_days)
-end
-
 Given /^a listed location( without (amenities))?$/ do |_,_|
   @listing = FactoryGirl.create(:listing)
 end
