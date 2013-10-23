@@ -1,6 +1,8 @@
 class Partner < ActiveRecord::Base
 
-  attr_accessible :name, :instance_id, :domain_attributes, :theme_attributes
+  AVAILABLE_SEARCH_SCOPE_OPTIONS = {'No scoping' => 'no_scoping', 'All associated listings' => 'all_associated_listings'}
+
+  attr_accessible :name, :instance_id, :domain_attributes, :theme_attributes, :search_scope_option
   belongs_to :instance
   has_one :domain, :as => :target, :dependent => :destroy
   has_one :theme, :as => :owner, :dependent => :destroy
@@ -32,6 +34,10 @@ class Partner < ActiveRecord::Base
 
   def white_label_enabled?
     true
+  end
+
+  def search_scope_option
+    super.try(:inquiry)
   end
 end
 
