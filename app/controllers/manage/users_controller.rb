@@ -29,10 +29,14 @@ class Manage::UsersController < Manage::BaseController
   end
 
   def destroy
-    @user = @company.users.without(current_user).find(params[:id]) rescue nil
-
-    @company.users -= [@user]
-    flash[:deleted] = t('manage.users.user_deleted', name: @user.try(:name), company_name: @company.name)
+    if current_user.id == params[:id].to_i
+      flash[:warning] = t('manage.users.user_cant_delete_self')
+    elsif @user = @company.users.without(current_user).where(id: params[:id]).first
+      @company.users -= [@user]
+      flash[:deleted] = t('manage.users.user_deleted', name: @user.try(:name), company_name: @company.name)
+    else
+      flash[:warning] = t('manage.users.user_is_not_in_company')
+    end
     redirect_to manage_users_path
   end
 
