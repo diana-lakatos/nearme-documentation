@@ -31,16 +31,9 @@ namespace :reprocess do
 
     users.each do |user|
       begin
-        puts "Processing User##{user.id}"
         authentication = user.authentications.detect{|a| a.provider == 'facebook'}
-        url = if authentication.token
-                info = Social::Facebook.get_user_info(authentication.token)
-                info[1]['image']
-              end
-        url ||= "http://graph.facebook.com/#{authentication.uid}/picture"
-        url += '?width=500'
-        puts "Url: #{url}"
-
+        url = "http://graph.facebook.com/#{authentication.uid}/picture?width=500"
+        puts "Processing User##{user.id} from url: #{url}"
         user.remote_avatar_url = url
         user.save!
         puts "Reprocessed User##{user.id} successfully"
