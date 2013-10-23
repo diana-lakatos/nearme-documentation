@@ -129,7 +129,9 @@ class User < ActiveRecord::Base
     self.name = omniauth['info']['name'] if name.blank?
     self.email = omniauth['info']['email'] if email.blank?
     use_social_provider_image(omniauth['info']['image']) if omniauth['info']['image']
-    authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
+    authentications.build(:provider => omniauth['provider'],
+                          :uid => omniauth['uid'],
+                          :info => omniauth['info'])
   end
 
   def cancelled_reservations
@@ -250,7 +252,8 @@ class User < ActiveRecord::Base
   def use_social_provider_image(url)
     unless avatar.any_url_exists?
       self.avatar_versions_generated_at = Time.zone.now
-      self.remote_avatar_url = url 
+      url += "?width=500" if url && url.include?('graph.facebook.com')
+      self.remote_avatar_url = url
     end
   end
 
