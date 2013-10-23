@@ -5,10 +5,6 @@ class MovePagesFromInstanceToTheme < ActiveRecord::Migration
     belongs_to :instance
   end
 
-  class Instance < ActiveRecord::Base
-    has_one :theme, :as => :owner
-  end
-
   class Theme < ActiveRecord::Base
     belongs_to :owner, :polymorphic => true
   end
@@ -18,7 +14,8 @@ class MovePagesFromInstanceToTheme < ActiveRecord::Migration
     add_index :pages, :theme_id
 
     Page.all.each do |p|
-      p.theme_id = Instance.find(p.instance_id).try(:owner_id) rescue nil
+      # Page Theme is the Theme of the Instance that owns the Page
+      p.theme_id = Theme.where(owner_type: 'Instance', owner_id: p.instance_id).first.try(:id)
       p.save
     end
 

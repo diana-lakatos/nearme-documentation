@@ -1,23 +1,23 @@
 class PageResolver < ActionView::FileSystemResolver
 
-  attr_accessor :theme
-  attr_accessor :page_path
-
-  def initialize(path, pattern = nil, theme = nil, page_path = nil)
-    super(path, pattern)
-    @theme = theme
-    @page_path = page_path
-  end
-
-
   def find_templates(name, prefix, partial, details)
-    @page = theme.pages.find_by_path(@page_path)
+    return [] unless details[:page_path]
+    @page = details[:theme].first.pages.find_by_path(details[:page_path].first)
 
     # Display default page
-    if !@page && Theme::DEFAULT_THEME_PAGES.include?(@page_path)
-      super(@page_path, prefix, partial, details)
+    if !@page && Theme::DEFAULT_THEME_PAGES.include?(details[:page_path].first)
+      super(details[:page_path].first, prefix, partial, details)
     else
       super
     end
   end
+
+  # We are not using standard ruby Singleton because constructor of ActionView::FileSystemResolver needs initialization arguments 
+  @@instance = PageResolver.new('app/views')
+ 
+  def self.instance
+    return @@instance
+  end
+
+  private_class_method :new
 end

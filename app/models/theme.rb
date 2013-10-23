@@ -17,7 +17,7 @@ class Theme < ActiveRecord::Base
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
   belongs_to :owner, :polymorphic => true
-  has_many :pages
+  has_many :pages, :dependent => :destroy
   delegate :bookable_noun, :to => :instance
 
   mount_uploader :icon_image, ThemeImageUploader

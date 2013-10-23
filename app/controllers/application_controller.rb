@@ -254,4 +254,3 @@ class ApplicationController < ActionController::Base
   end
   helper_method :search_scope
 end
-
