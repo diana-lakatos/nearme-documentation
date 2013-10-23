@@ -37,8 +37,7 @@ class Partner < ActiveRecord::Base
   end
 
   def search_scope_option
-    value = super
-    value.inquiry if value
+    super.try(:inquiry)
   end
 end
 
