@@ -3,16 +3,15 @@
 .row-fluid
   .span8.offset2
     %h1.manage-locations-home-link
-      = link_to manage_locations_path, :class => 'dashboard-home-link' do
-        %span.ico-location.padding
-          Locations
       - if params[:action] == 'index'
         .actions.right
           %ul.locations
             %li.listing.new-location
-              = link_to new_manage_location_path, :class => "btn btn-blue btn-medium ico-add-location" do
-                %span.padding-left
-                  New Location
+              .links
+                = link_to new_manage_location_path, :class => "btn btn-blue btn-medium" do
+                  %span.icon.ico-add-location
+                  %span.text
+                    New Location
 
 .row-fluid
   .span8.offset2

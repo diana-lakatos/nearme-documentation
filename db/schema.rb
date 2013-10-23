@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131012162538) do
+ActiveRecord::Schema.define(:version => 20131018142922) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -86,10 +86,12 @@ ActiveRecord::Schema.define(:version => 20131012162538) do
     t.integer  "instance_id"
     t.boolean  "white_label_enabled", :default => false
     t.boolean  "listings_public",     :default => true
+    t.integer  "partner_id"
   end
 
   add_index "companies", ["creator_id"], :name => "index_companies_on_creator_id"
   add_index "companies", ["instance_id", "listings_public"], :name => "index_companies_on_instance_id_and_listings_public"
+  add_index "companies", ["partner_id"], :name => "index_companies_on_partner_id"
 
   create_table "company_industries", :id => false, :force => true do |t|
     t.integer "industry_id"

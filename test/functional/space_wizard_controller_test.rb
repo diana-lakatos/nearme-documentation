@@ -10,7 +10,19 @@ class SpaceWizardControllerTest < ActionController::TestCase
     sign_in @user
     FactoryGirl.create(:listing_type)
     FactoryGirl.create(:location_type)
+    @partner = FactoryGirl.create(:partner)
     stub_mixpanel
+  end
+
+  context 'scopes current partner for new company' do
+    should 'match partner_id' do
+      @controller.stubs(:current_partner).returns(@partner)
+      assert_difference('Listing.count', 1) do
+        post :submit_listing, get_params
+      end
+      @company = Company.last
+      assert_equal @partner.id, @company.partner_id
+    end
   end
 
   context "price must be formatted" do

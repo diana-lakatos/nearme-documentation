@@ -158,6 +158,10 @@
         padding-left: 0px !important;
       }
 
+      @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-calendar-icons) {
+        padding-left: 0px !important;
+      }
+
 
       .calendar {
         position: relative;
@@ -181,6 +185,20 @@
         }
 
         @media (max-width: $iphone-portrait - 1) { 
+          display: block;
+
+          .ico-calender-end, .ico-calender-start {
+            display: none;
+          }
+
+          .calendar-text {
+            width: 100%;
+            display: block;
+            text-align: center;
+          }
+        }
+
+        @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-calendar-icons) {
           display: block;
 
           .ico-calender-end, .ico-calender-start {
@@ -269,4 +287,3 @@
     }
   }
 }
-
