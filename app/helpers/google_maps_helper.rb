@@ -31,6 +31,11 @@ module GoogleMapsHelper
     params
   end
 
+  def google_maps_route_url(options = {})
+    options.stringify_keys!
+    "//maps.google.com/?daddr=#{options['to']}&saddr=#{options['from']}"
+  end
+
   def google_maps_api_url(endpoint, params = {})
     "http#{'s' if request.ssl?}://maps.googleapis.com/maps/api/#{endpoint}?#{params.to_query}"
   end
