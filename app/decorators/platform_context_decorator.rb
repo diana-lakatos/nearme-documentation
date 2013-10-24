@@ -1,0 +1,28 @@
+class PlatformContextDecorator
+
+  delegate :white_label_company, :instance, :theme, :partner, :white_label_company_user?, :to => :platform_context
+
+  delegate :contact_email, :tagline, :support_url, :blog_url, :twitter_url, :facebook_url, :address,
+    :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :to => :theme
+
+  delegate :bookable_noun, :name, :pages, :is_desksnearme?, :to => :instance
+
+  def initialize(platform_context)
+    @platform_context = platform_context
+  end
+
+  def compiled_stylesheet_url
+    compiled_stylesheet.present? ? compiled_stylesheet.url : nil
+  end
+
+  def to_liquid
+    self
+  end
+
+  private
+
+  def platform_context
+    @platform_context
+  end
+
+end
