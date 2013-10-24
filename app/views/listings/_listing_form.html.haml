@@ -83,6 +83,10 @@
         = f.check_box :confirm_reservations
 
 - if only_inputs.empty? || only_inputs.include?(:photos)
+  .loading{:style => "display: none"}
+    = image_tag "spinner.gif"
+    %br/
+    .span Waiting for finishing processing photos
   = file_upload_input_with_label('Photos',
                                   "#{photo_input_name_prefix}[photos_attributes][0][image]",
                                   manage_photos_path,

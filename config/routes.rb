@@ -139,6 +139,8 @@ DesksnearMe::Application.routes.draw do
 
   resources :search_notifications, only: [:create]
 
+  resource :event_tracker, only: [:create], :controller => 'event_tracker'
+
   resources :authentications, :only => [:create, :destroy] do
     collection do
       post :clear # Clear authentications stored in session
