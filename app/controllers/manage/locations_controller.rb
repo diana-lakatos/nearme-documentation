@@ -19,7 +19,7 @@ class Manage::LocationsController < Manage::BaseController
     @location = @company.locations.build(params[:location])
 
     if @location.save
-      flash[:success] = t('manage.locations.space_added')
+      flash[:success] = t('flash_messages.manage.locations.space_added')
       event_tracker.created_a_location(@location , { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
       redirect_to manage_locations_path
@@ -39,7 +39,7 @@ class Manage::LocationsController < Manage::BaseController
     @location.attributes = params[:location]
 
     if @location.save
-      flash[:success] = t('manage.locations.space_updated')
+      flash[:success] = t('flash_messages.manage.locations.space_updated')
       redirect_to manage_locations_path
     else
       render :edit
@@ -49,9 +49,9 @@ class Manage::LocationsController < Manage::BaseController
   def destroy
     if @location.destroy
       event_tracker.updated_profile_information(current_user)
-      flash[:deleted] = t('manage.locations.space_deleted', name: @location.name)
+      flash[:deleted] = t('flash_messages.manage.locations.space_deleted', name: @location.name)
     else
-      flash[:error] = t('manage.locations.space_not_deleted', name: @location.name)
+      flash[:error] = t('flash_messages.manage.locations.space_not_deleted', name: @location.name)
     end
     redirect_to manage_locations_path
   end
@@ -72,7 +72,7 @@ class Manage::LocationsController < Manage::BaseController
 
   def redirect_if_no_company
     unless @company
-      flash[:warning] = t('dashboard.add_your_company')
+      flash[:warning] = t('flash_messages.dashboard.add_your_company')
       redirect_to new_space_wizard_url
     end
   end
