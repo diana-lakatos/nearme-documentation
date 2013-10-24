@@ -178,6 +178,7 @@ section.dashboard {
           @extend .btn-blue;
           @extend .btn-medium;
           margin-right: 5px;
+          overflow: hidden;
 
           &:last-child {
             margin-right: 0px;
