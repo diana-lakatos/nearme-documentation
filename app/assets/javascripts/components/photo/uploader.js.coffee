@@ -6,6 +6,7 @@ class @Photo.Uploader
     @photoCollection = new Photo.Collection(container)
     @loader = new Search.ScreenLockLoader => $('.loading')
     @processingPhotos = 0
+    @formIsSubmitting = false
     @init()
   
   init: ->
@@ -14,6 +15,7 @@ class @Photo.Uploader
 
   bindEvents: () ->
     @container.parents('form').on 'submit', =>
+      @formIsSubmitting = true
       if @processingPhotos > 0
         @loader.show()
         __insp.push(['tagSession', "photo_not_processed_before_submit"])
@@ -21,7 +23,7 @@ class @Photo.Uploader
         false
 
     $(window).on 'unload', =>
-      if @processingPhotos > 0
+      if @formIsSubmitting and @processingPhotos > 0
         __insp.push(['tagSession', "user_closed_browser_photo_not_processed_before_submit"])
         @triggerMixpanelUserClosedBrowserPhotoNotProcessedBeforeSubmitEvent()
 

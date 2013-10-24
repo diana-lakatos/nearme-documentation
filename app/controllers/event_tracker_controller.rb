@@ -6,7 +6,7 @@ class EventTrackerController < ApplicationController
   layout false
 
   def create
-    event_tracker.public_send(params[:event], current_user, params[:event_options] || {}) if EventTrackerController::AVAILABLE_EVENTS.include?(params[:event]) 
+    event_tracker.public_send(params[:event], current_user, params[:event_options]) if AVAILABLE_EVENTS.include?(params[:event]) 
 
     render nothing: true
   end
