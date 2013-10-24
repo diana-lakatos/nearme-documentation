@@ -7,7 +7,11 @@
 
       - if @threaded_listing_messages.blank?
         %center
-          No new messages!
+          - if params[:action] == 'index'
+            No new messages!
+          - if params[:action] == 'archived'
+            No archived messages
+
       - else
       - @threaded_listing_messages.each do |array_key, listing_messages|
         = render 'listing_message', listing_message: listing_messages.last.decorate
