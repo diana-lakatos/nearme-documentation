@@ -10,9 +10,9 @@ class Manage::Listings::ReservationsController < ApplicationController
       event_tracker.confirmed_a_booking(@reservation)
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
-      flash[:success] = t('manage.reservations.reservation_confirmed')
+      flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
     else
-      flash[:error] = t('manage.reservations.reservation_not_confirmed')
+      flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
     redirect_to manage_guests_dashboard_url
   end
@@ -27,9 +27,9 @@ class Manage::Listings::ReservationsController < ApplicationController
       event_tracker.rejected_a_booking(@reservation)
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
-      flash[:deleted] = t('manage.reservations.reservation_rejected')
+      flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')
     else
-      flash[:error] = t('manage.reservations.reservation_not_confirmed')
+      flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
     redirect_to manage_guests_dashboard_url
     render_redirect_url_as_json if request.xhr?
@@ -41,9 +41,9 @@ class Manage::Listings::ReservationsController < ApplicationController
       event_tracker.cancelled_a_booking(@reservation, { actor: 'host' })
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
-      flash[:deleted] = t('manage.reservations.reservation_cancelled')
+      flash[:deleted] = t('flash_messages.manage.reservations.reservation_cancelled')
     else
-      flash[:error] = t('manage.reservations.reservation_not_confirmed')
+      flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
     redirect_to manage_guests_dashboard_url
   end

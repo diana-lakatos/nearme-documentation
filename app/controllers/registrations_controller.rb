@@ -100,13 +100,13 @@ class RegistrationsController < Devise::RegistrationsController
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
-      flash[:success] = t('registrations.address_verified')
+      flash[:success] = t('flash_messages.registrations.address_verified')
       redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path
     else
       if @user.verified_at
-        flash[:warning] = t('registrations.address_already_verified')
+        flash[:warning] = t('flash_messages.registrations.address_already_verified')
       else
-        flash[:error] = t('registrations.address_not_verified')
+        flash[:error] = t('flash_messages.registrations.address_not_verified')
       end
       redirect_to root_path
     end

@@ -7,7 +7,7 @@ class ReservationsController < ApplicationController
 
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
-      flash[:error] = t('reservations.invalid_operation')
+      flash[:error] = t('flash_messages.reservations.invalid_operation')
       redirect_to redirection_path
     end
   end
@@ -18,9 +18,9 @@ class ReservationsController < ApplicationController
       event_tracker.cancelled_a_booking(@reservation, { actor: 'guest' })
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
-      flash[:deleted] = t('reservations.reservation_cancelled')
+      flash[:deleted] = t('flash_messages.reservations.reservation_cancelled')
     else
-      flash[:error] = t('reservations.reservation_not_confirmed')
+      flash[:error] = t('flash_messages.reservations.reservation_not_confirmed')
     end
     redirect_to redirection_path
   end
@@ -65,7 +65,7 @@ class ReservationsController < ApplicationController
   def upcoming
     @reservations = current_user.reservations.not_archived.to_a.sort_by(&:date)
     if @reservations.empty?
-      flash[:warning] = t('dashboard.no_bookings')
+      flash[:warning] = t('flash_messages.dashboard.no_bookings')
       redirect_to search_path
     else
       @reservation = params[:id] ? current_user.reservations.find(params[:id]) : nil

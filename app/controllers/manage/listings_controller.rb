@@ -20,7 +20,7 @@ class Manage::ListingsController < Manage::BaseController
     @listing = @location.listings.build(params[:listing])
 
     if @listing.save
-      flash[:success] = t('manage.listings.desk_added')
+      flash[:success] = t('flash_messages.manage.listings.desk_added')
       event_tracker.created_a_listing(@listing, { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
       redirect_to manage_locations_path
@@ -42,7 +42,7 @@ class Manage::ListingsController < Manage::BaseController
     respond_to do |format|
       format.html {
         if @listing.update_attributes params[:listing]
-          flash[:success] = t('manage.listings.listing_updated')
+          flash[:success] = t('flash_messages.manage.listings.listing_updated')
           redirect_to manage_locations_path
         else
           @photos = @listing.photos
@@ -65,7 +65,7 @@ class Manage::ListingsController < Manage::BaseController
     end
     @listing.destroy
     event_tracker.updated_profile_information(current_user)
-    flash[:deleted] = t('manage.listings.listing_deleted')
+    flash[:deleted] = t('flash_messages.manage.listings.listing_deleted')
     redirect_to manage_locations_path
   end
 
