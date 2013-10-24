@@ -112,5 +112,9 @@ class Theme < ActiveRecord::Base
     cloned_theme.attributes = current_attributes
     cloned_theme
   end
+
+  def pages_with_fallbacks
+    (Theme::DEFAULT_THEME_PAGES.map{|page| Page.new(path: page.capitalize, slug: page)} + self.pages).uniq{|page| page.path}
+  end
 end
 

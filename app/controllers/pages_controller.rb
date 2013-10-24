@@ -1,6 +1,7 @@
 class PagesController < ApplicationController
 
-  before_filter :page_prepend_view_path
+  before_filter :register_page_path_as_lookup_context_detail
+  prepend_view_path PageResolver.instance
 
   layout :resolve_layout
 
@@ -17,10 +18,8 @@ class PagesController < ApplicationController
 
   private
 
-  def page_prepend_view_path
-    lookup_context.class.register_detail(:theme) { nil }
-    lookup_context.class.register_detail(:page_path) { nil }
-    prepend_view_path PageResolver.instance
+  def register_page_path_as_lookup_context_detail
+    register_lookup_context_detail(:page_path)
   end
 
   # Layout per action

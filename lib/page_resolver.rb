@@ -1,4 +1,11 @@
+require 'singleton'
+
 class PageResolver < ActionView::FileSystemResolver
+  include Singleton
+
+  def initialize
+    super('app/views')
+  end
 
   def find_templates(name, prefix, partial, details)
     return [] unless details[:page_path]
@@ -11,13 +18,4 @@ class PageResolver < ActionView::FileSystemResolver
       super
     end
   end
-
-  # We are not using standard ruby Singleton because constructor of ActionView::FileSystemResolver needs initialization arguments 
-  @@instance = PageResolver.new('app/views')
- 
-  def self.instance
-    return @@instance
-  end
-
-  private_class_method :new
 end

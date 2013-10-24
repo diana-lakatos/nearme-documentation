@@ -5,7 +5,6 @@ class FooterResolverTest < ActiveSupport::TestCase
 
   def setup
     @resolver = FooterResolver.instance
-    @resolver.theme = Theme.first
     @theme = Instance.default_instance.theme
     @details  = {:formats => [:html], :locale => [:en], :handlers => [:erb, :liquid], :theme => @theme }
   end

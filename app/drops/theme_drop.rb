@@ -33,7 +33,7 @@ class ThemeDrop < BaseDrop
   end
 
   def pages
-    (Theme::DEFAULT_THEME_PAGES.map{|page| Page.new(path: page.capitalize, slug: page)} + @theme.pages).uniq{|page| page.path}
+    @theme.pages_with_fallbacks
   end
 
   def support_url

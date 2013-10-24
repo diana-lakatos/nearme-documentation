@@ -12,7 +12,8 @@ class ApplicationController < ActionController::Base
   before_filter :first_time_visited?
   before_filter :store_referal_info
   before_filter :load_request_context
-  before_filter :footer_prepend_view_path
+  before_filter :register_theme_as_lookup_context_detail
+  prepend_view_path FooterResolver.instance
 
   protected
 
@@ -49,12 +50,6 @@ class ApplicationController < ActionController::Base
     end   
   end
 
-  def footer_prepend_view_path
-    footer_resolver_instance = FooterResolver.instance
-    footer_resolver_instance.theme = @current_theme
-
-    prepend_view_path footer_resolver_instance
-  end
 
   attr_accessor :current_instance, :current_theme, :current_partner
   helper_method :current_instance, :current_theme, :current_partner
@@ -253,4 +248,12 @@ class ApplicationController < ActionController::Base
     @search_scope ||= Listing::SearchScope.scope(current_instance, {white_label_company: @current_white_label_company, partner: current_partner})
   end
   helper_method :search_scope
+
+  def register_lookup_context_detail(detail_name)
+    lookup_context.class.register_detail(detail_name.to_sym) { nil }
+  end
+
+  def register_theme_as_lookup_context_detail
+    register_lookup_context_detail(:theme)
+  end
 end
