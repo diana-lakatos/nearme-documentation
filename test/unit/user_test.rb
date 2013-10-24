@@ -6,6 +6,21 @@ class UserTest < ActiveSupport::TestCase
 
   should have_many(:industries)
 
+  context "#without" do
+    should "handle single user" do
+      user = FactoryGirl.create(:user)
+      count = User.count
+      assert_equal count - 1, User.without(user).count
+    end
+
+    should "handle collection" do
+      3.times { FactoryGirl.create(:user) }
+      users = User.first(2)
+      count = User.count
+
+      assert_equal count - 2, User.without(users).count
+    end
+  end
   context "validations" do
     context "when no country name provided" do
 

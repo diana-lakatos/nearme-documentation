@@ -85,8 +85,10 @@ class User < ActiveRecord::Base
       where("mailchimp_synchronized_at IS NULL OR mailchimp_synchronized_at < updated_at")
   }
 
-  scope :without, lambda { |user| 
-    where('users.id <> ?', user.id)
+  scope :without, lambda { |users|
+    # TODO: handle AR collections with pluck
+    users_ids = Array.wrap(users).collect(&:id)
+    where(arel_table[:id].not_in(users_ids))
   }
 
   scope :ordered_by_email, order('users.email ASC') 
@@ -216,6 +218,20 @@ class User < ActiveRecord::Base
 
   def follow!(other_user)
     relationships.create!(followed_id: other_user.id)
+  end
+
+  def add_friend(user)
+    self.follow!(user)
+    user.follow!(self)
+  end
+
+  def find_new_friends(users)
+    excluded_users = self.friends << self
+    User.without(excluded_users)
+  end
+
+  def friends
+    self.followed_users
   end
 
   def full_email
