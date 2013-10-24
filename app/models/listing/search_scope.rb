@@ -7,6 +7,7 @@ class Listing
       else
         search_scope = Location.joins(:company).where(companies: { listings_public: true })
         search_scope = search_scope.where(companies: { instance_id: instance.id }) unless instance.is_desksnearme?
+        search_scope = search_scope.where(companies: { partner_id: options[:partner].id }) if options[:partner] && options[:partner].search_scope_option.all_associated_listings?
         search_scope
       end
     end

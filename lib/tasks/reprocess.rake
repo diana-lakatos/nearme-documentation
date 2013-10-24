@@ -22,4 +22,24 @@ namespace :reprocess do
       end
     end
   end
+
+  desc "Refetch avatars from facebook"
+  task :refetch_avatars_from_facebook => :environment do
+    users = User.joins(:authentications).where("authentications.provider" => "facebook")
+    users = users.where('avatar IS NOT NULL').readonly(false)
+    users = users.select{|u| u.avatar.file && u.avatar.file.size < 10000 rescue nil}.compact
+
+    users.each do |user|
+      begin
+        authentication = user.authentications.detect{|a| a.provider == 'facebook'}
+        url = "http://graph.facebook.com/#{authentication.uid}/picture?width=500"
+        puts "Processing User##{user.id} from url: #{url}"
+        user.remote_avatar_url = url
+        user.save!
+        puts "Reprocessed User##{user.id} successfully"
+      rescue
+        puts "Reprocessing User##{user.id} failed: #{$!.inspect}"
+      end
+    end
+  end
 end

@@ -46,12 +46,12 @@ When /^I submit the form$/ do
   page.find('#submit-link').click
 end
 
-When /^I click edit icon$/ do
-  page.find('section.dashboard .ico-edit').click
+When /^I click edit location icon$/ do
+  page.find('.location .edit').click
 end
 
 When /^I click edit listing icon$/ do
-  page.find('.listing .ico-edit').click
+  page.find('.listing .edit').click
 end
 
 When /^I click delete location link$/ do

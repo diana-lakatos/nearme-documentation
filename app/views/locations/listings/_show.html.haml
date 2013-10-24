@@ -17,7 +17,11 @@
 
           .padding-row
           %article.listing
-            %h2 The #{@listing.listing_type.name}
+            %h2
+              = "The #{@listing.listing_type.name}"
+              - if user_can_edit_location?(current_user, @location)
+                = link_to edit_manage_listing_path(@listing) do
+                  %span.ico-edit
             %p= @listing.description
 
           = render 'locations/listings/location', location: @location 
