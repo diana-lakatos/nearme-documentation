@@ -8,7 +8,7 @@ class LocationsController < ApplicationController
   def show
     if @location.listings.active.empty?
       # If location doesn't have any listings, redirects to search page with notice
-      flash[:warning] = t('locations.no_listings')
+      flash[:warning] = t('flash_messages.locations.no_listings')
       @location.track_impression(request.remote_ip)
       redirect_to search_path 
     else
@@ -44,7 +44,7 @@ class LocationsController < ApplicationController
 
   def redirect_if_location_deleted
     if @location.deleted?
-      flash[:warning] = t('locations.listing_removed', address: @location.address)
+      flash[:warning] = t('flash_messages.locations.listing_removed', address: @location.address)
       redirect_to search_path(:q => @location.address)
     end
   end
