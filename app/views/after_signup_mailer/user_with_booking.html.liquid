@@ -1,11 +1,11 @@
 <p>Hi {{ user.first_name }},</p>
 
 <p>
-  Welcome to Desks Near Me, and congratulations on your first booked {{ request_context.bookable_noun }}!  
+  Welcome to Desks Near Me, and congratulations on your first booked {{ platform_context_decorator.bookable_noun }}!  
 </p>
 
 <p>
-  That’s great that you just booked your first {{ request_context.bookable_noun }} in {{ user.reservation_name }}.
+  That’s great that you just booked your first {{ platform_context_decorator.bookable_noun }} in {{ user.reservation_name }}.
 </p>
 
 <p>
@@ -19,12 +19,12 @@
 
 
 <p>
-  You can <a href="{{ user.search_url }}">search and book here</a> to find your next {{ request_context.bookable_noun }} for the day, week or month.
+  You can <a href="{{ user.search_url }}">search and book here</a> to find your next {{ platform_context_decorator.bookable_noun }} for the day, week or month.
 </p>
 
 
 <p>
-  Maybe you have an extra {{ request_context.bookable_noun }} too? It's FREE (seriously) to add your {{ request_context.bookable_noun }} and start making money. Simply <a href="{{ user.space_wizard_list_path }}">login here to add your {{ request_context.bookable_noun }}</a>.
+  Maybe you have an extra {{ platform_context_decorator.bookable_noun }} too? It's FREE (seriously) to add your {{ platform_context_decorator.bookable_noun }} and start making money. Simply <a href="{{ user.space_wizard_list_path }}">login here to add your {{ platform_context_decorator.bookable_noun }}</a>.
 </p>
 
 

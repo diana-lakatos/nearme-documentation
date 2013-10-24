@@ -1,7 +1,7 @@
 - if locations.present?
   - locations.each do |location|
     %h2 #{location.name}
-    %p You currently have no reservations. Promote your #{request_context.bookable_noun.pluralize} by tweeting or sharing a direct link!
+    %p You currently have no reservations. Promote your #{platform_context_decorator.bookable_noun.pluralize} by tweeting or sharing a direct link!
     %ul.sharelocation
       %li
         =link_to tweet_location_url(location_url(location)), :ref => "mg", :class => 'btn btn-blue btn-medium twitter submit', :onclick => 'return popitup(this.href)' do
@@ -28,4 +28,4 @@
       }
 
 - else
-  %p You haven't added a #{request_context.bookable_noun} yet!
+  %p You haven't added a #{platform_context_decorator.bookable_noun} yet!

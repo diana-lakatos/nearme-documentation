@@ -26,10 +26,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def request_context
-    @request_context ||= Controller::RequestContext.new(request.host)
+  def platform_context
+    @platform_context ||= PlatformContext.new(request.host)
   end
-  helper_method :request_context
+
+  def platform_context_decorator
+    @platform_context_decorator ||= platform_context.decorate
+  end
+  helper_method :platform_context_decorator
 
   # Provides an EventTracker instance for the current request.
   #
@@ -50,7 +54,7 @@ class ApplicationController < ActionController::Base
 
       # Gather information about requests
       request_details = {
-        :current_instance_id => request_context.instance.id,
+        :current_instance_id => platform_context.instance.id,
         :current_host => request.try(:host)
       }
 
@@ -222,7 +226,7 @@ class ApplicationController < ActionController::Base
   helper_method :get_and_clear_stored_inspectlet_taggable_events
 
   def search_scope
-    @search_scope ||= Listing::SearchScope.scope(request_context)
+    @search_scope ||= Listing::SearchScope.scope(platform_context)
   end
   helper_method :search_scope
 end

@@ -4,5 +4,5 @@
 = f.input :url, :label => "Website", :placeholder => "www.mycompany.com" if (only_inputs.empty? || only_inputs.include?(:url))
 = f.input :email, :label => "Company email", :placeholder => "yourname@example.com" if (only_inputs.empty? || only_inputs.include?(:email))
 = f.input :description, :label => "Description", :placeholder => "Give a brief description of your company", :input_html => { :maxlength => 250} if (only_inputs.empty? || only_inputs.include?(:description))
-= f.input :mailing_address, :label => tooltip("Checks for revenue accrued by your #{request_context.bookable_noun.pluralize} will be sent to this address. Find out more about payments in the Support Center.", "Mailing address") if (only_inputs.empty? || only_inputs.include?(:mailing_address))
+= f.input :mailing_address, :label => tooltip("Checks for revenue accrued by your #{platform_context_decorator.bookable_noun.pluralize} will be sent to this address. Find out more about payments in the Support Center.", "Mailing address") if (only_inputs.empty? || only_inputs.include?(:mailing_address))
 = f.input :paypal_email, :label => tooltip("If you specify a PayPal email, we will make a PayPal transfer instead of sending checks.", "PayPal email") if (only_inputs.empty? || only_inputs.include?(:paypal_email))

@@ -173,7 +173,7 @@ class ListingTest < ActiveSupport::TestCase
       4.times do |i|
         dates << tuesday + i.day
       end
-      @listing.reserve!(Controller::RequestContext.new, FactoryGirl.build(:user), dates, 1)
+      @listing.reserve!(PlatformContext.new, FactoryGirl.build(:user), dates, 1)
       # wednesday, thursday, friday = 3, saturday, sunday = 2 -> monday is sixth day
       assert_equal tuesday+6.day, @listing.first_available_date
     end
@@ -187,9 +187,9 @@ class ListingTest < ActiveSupport::TestCase
       tuesday = Time.zone.today.sunday + 2
       Timecop.freeze(tuesday.beginning_of_day)
       # book all seats on wednesday 
-      @listing.reserve!(Controller::RequestContext.new, FactoryGirl.build(:user), [tuesday+1.day], 2)
+      @listing.reserve!(PlatformContext.new, FactoryGirl.build(:user), [tuesday+1.day], 2)
       # leave one seat free on thursday
-      @listing.reserve!(Controller::RequestContext.new, FactoryGirl.build(:user), [tuesday+2.day], 1)
+      @listing.reserve!(PlatformContext.new, FactoryGirl.build(:user), [tuesday+2.day], 1)
       # the soonest day should be the one with at least one seat free
       assert_equal tuesday+2.day, @listing.first_available_date
     end

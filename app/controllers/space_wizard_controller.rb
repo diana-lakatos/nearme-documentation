@@ -27,9 +27,9 @@ class SpaceWizardController < ApplicationController
 
   def submit_listing
     @user.phone_required = true
-    params[:user][:companies_attributes]["0"][:instance_id] = request_context.instance.id.to_s
+    params[:user][:companies_attributes]["0"][:instance_id] = platform_context.instance.id.to_s
     params[:user][:companies_attributes]["0"][:creator_id] = current_user.id.to_s
-    params[:user][:companies_attributes]["0"][:partner_id] = request_context.partner.try(:id).to_s
+    params[:user][:companies_attributes]["0"][:partner_id] = platform_context.partner.try(:id).to_s
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.attributes = params[:user]
     if params[:save_as_draft]

@@ -4,12 +4,12 @@ class InquiryMailerTest < ActiveSupport::TestCase
 
   setup do
     @inquiry = FactoryGirl.create(:inquiry)
-    @request_context = Controller::RequestContext.new
+    @platform_context = PlatformContext.new
     @subject = "We've passed on your inquiry about {{inquiry.listing.name}}"
   end
 
   test "listing creator notification works ok" do
-    mail = InquiryMailer.listing_creator_notification(@request_context, @inquiry)
+    mail = InquiryMailer.listing_creator_notification(@platform_context, @inquiry)
     subject = "New enquiry from #{@inquiry.inquiring_user.name} about #{@inquiry.listing.name}"
 
     assert_equal subject, mail.subject
@@ -19,7 +19,7 @@ class InquiryMailerTest < ActiveSupport::TestCase
   end
 
   test "inquiring user notification works ok" do
-    mail = InquiryMailer.inquiring_user_notification(@request_context, @inquiry)
+    mail = InquiryMailer.inquiring_user_notification(@platform_context, @inquiry)
     subject =  "We've passed on your inquiry about #{@inquiry.listing.name}"
     assert_equal subject, mail.subject
     assert mail.html_part.body.include?(@inquiry.inquiring_user.name)

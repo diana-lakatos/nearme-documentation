@@ -61,7 +61,7 @@ class Manage::ListingsController < Manage::BaseController
 
   def destroy
     @listing.reservations.each do |r|
-      r.perform_expiry!(request_context)
+      r.perform_expiry!(platform_context)
     end
     @listing.destroy
     event_tracker.updated_profile_information(current_user)

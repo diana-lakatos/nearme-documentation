@@ -5,9 +5,9 @@ class AfterSignupMailer < InstanceMailer
 
   PERSONABLE_EMAIL = "micheller@desksnear.me"
 
-  def help_offer(request_context, user)
+  def help_offer(platform_context, user)
     @user = user
-    @request_context = request_context
+    @platform_context = platform_context
     @location = @user.locations.first
 
     @sent_by = 'Michelle R'
@@ -15,7 +15,7 @@ class AfterSignupMailer < InstanceMailer
     mail(to: @user.email,
          from: PERSONABLE_EMAIL,
          template_name: choose_template,
-         request_context: @request_context,
+         platform_context: @platform_context,
          subject: "Welcome to DesksNear.me")
   end
 
@@ -24,7 +24,7 @@ class AfterSignupMailer < InstanceMailer
 
       def help_offer_with_listing
         @user = User.all.detect { |u| !u.listings.empty?  }
-        ::AfterSignupMailer.help_offer(Controller::RequestContext.new, @user)
+        ::AfterSignupMailer.help_offer(PlatformContext.new, @user)
       end
 
       def help_offer_with_booking
@@ -37,7 +37,7 @@ class AfterSignupMailer < InstanceMailer
         else
           @user = user_from_db
         end
-        mailer = ::AfterSignupMailer.help_offer(Controller::RequestContext.new, @user)
+        mailer = ::AfterSignupMailer.help_offer(PlatformContext.new, @user)
 
         unless user_from_db
           @user.destroy!
@@ -51,7 +51,7 @@ class AfterSignupMailer < InstanceMailer
         user_from_db = User.all.detect { |u| u.listings.empty? && u.reservations.empty? }
         @user = user_from_db || FactoryGirl.create(:user, email: "test_user_#{rand(100)}@example.com")
 
-        mailer = ::AfterSignupMailer.help_offer(Controller::RequestContext.new, @user)
+        mailer = ::AfterSignupMailer.help_offer(PlatformContext.new, @user)
 
         @user.destroy! unless user_from_db
 

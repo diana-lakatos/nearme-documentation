@@ -121,7 +121,7 @@ class ReservationTest < ActiveSupport::TestCase
 
       should 'not send any email if the expire method is called' do
         ReservationMailer.expects(:notify_guest_of_expiration).never
-        @reservation.perform_expiry!(Controller::RequestContext.new)
+        @reservation.perform_expiry!(PlatformContext.new)
       end
 
     end
@@ -206,7 +206,7 @@ class ReservationTest < ActiveSupport::TestCase
 
         dates              = [1.week.from_now.monday]
         quantity           =  2
-        assert reservation = @listing.reserve!(Controller::RequestContext.new, @user, dates, quantity)
+        assert reservation = @listing.reserve!(PlatformContext.new, @user, dates, quantity)
 
         assert_not_nil reservation.total_amount_cents
 
@@ -224,7 +224,7 @@ class ReservationTest < ActiveSupport::TestCase
         assert quantity > @listing.availability_for(dates.first)
 
         assert_raises DNM::PropertyUnavailableOnDate do
-          @listing.reserve!(Controller::RequestContext.new, @user, dates, quantity)
+          @listing.reserve!(PlatformContext.new, @user, dates, quantity)
         end
       end
 

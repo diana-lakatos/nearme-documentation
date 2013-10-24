@@ -86,7 +86,7 @@ FactoryGirl.define do
         after(:create) do |listing|
           user = FactoryGirl.create(:user)
           dates = (4.days.from_now.to_date..10.days.from_now.to_date).reject { |d| listing.availability_for(d) == 0 }.to_a
-          listing.reserve!(Controller::RequestContext.new, user, dates, listing.quantity)
+          listing.reserve!(PlatformContext.new, user, dates, listing.quantity)
         end
       end
     end

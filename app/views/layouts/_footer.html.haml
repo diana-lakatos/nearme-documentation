@@ -4,27 +4,27 @@
       .row-fluid
         .span9
           %ul.links
-            - if request_context.is_desksnearme?
+            - if platform_context_decorator.is_desksnearme?
               %li= link_to "About", pages_path('about'), target: '_blank'
               %li= link_to "Careers", "http://blog.desksnear.me/careers/", :class => "clear-footer", :target => '_blank'
-            %li.last= link_to "Support", request_context.support_url, :target => '_blank'
-            - if request_context.is_desksnearme?
+            %li.last= link_to "Support", platform_context_decorator.support_url, :target => '_blank'
+            - if platform_context_decorator.is_desksnearme?
               %li= link_to "iPhone App", "https://itunes.apple.com/us/app/desks-near-me/id529634519?mt=8", :target => '_blank'
         .span3
           %ul.icons
-            %li= link_to "", request_context.blog_url, :class => "ico-rss", :target => '_blank'
-            %li= link_to "", request_context.twitter_url, :class => "ico-twitter", :target => '_blank'
-            %li= link_to "", request_context.facebook_url, :class => "ico-facebook-full", :target => '_blank'
+            %li= link_to "", platform_context_decorator.blog_url, :class => "ico-rss", :target => '_blank'
+            %li= link_to "", platform_context_decorator.twitter_url, :class => "ico-twitter", :target => '_blank'
+            %li= link_to "", platform_context_decorator.facebook_url, :class => "ico-facebook-full", :target => '_blank'
 
       .gap
       .row-fluid
         .span9
           .copyright
-            %span #{request_context.address}
-            %span #{request_context.phone_number}
+            %span #{platform_context_decorator.address}
+            %span #{platform_context_decorator.phone_number}
             %br
-            %span &copy; 2013 #{request_context.site_name}
-            - if request_context.is_desksnearme?
+            %span &copy; 2013 #{platform_context_decorator.site_name}
+            - if platform_context_decorator.is_desksnearme?
               %span= link_to "Legal", pages_path('legal'), :target => '_blank'
         .span3#mixpanel
           %a{:href => "https://mixpanel.com/f/partner"}

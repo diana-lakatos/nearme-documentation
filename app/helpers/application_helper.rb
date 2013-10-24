@@ -12,7 +12,7 @@ module ApplicationHelper
   end
 
   def root_white_label_page?
-    request.path == '/' && (request_context.white_label_company || !request_context.is_desksnearme?)
+    request.path == '/' && (platform_context_decorator.white_label_company || !platform_context_decorator.is_desksnearme?)
   end
 
   def meta_title(name)
@@ -20,12 +20,12 @@ module ApplicationHelper
   end
 
   def title_tag
-    (show_title? ? content_for(:title) : (request_context.tagline.presence || "Find office space. Rent office space. Get to work.")) +
+    (show_title? ? content_for(:title) : (platform_context_decorator.tagline.presence || "Find office space. Rent office space. Get to work.")) +
       (additional_meta_title.presence ? " | " + additional_meta_title : '')
   end
 
   def additional_meta_title
-    content_for?(:meta_title) ? content_for(:meta_title) : request_context.meta_title
+    content_for?(:meta_title) ? content_for(:meta_title) : platform_context_decorator.meta_title
   end
 
   def legacy(is_legacy = true)

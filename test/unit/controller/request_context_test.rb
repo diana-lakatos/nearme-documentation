@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Controller::RequestContextTest < ActiveSupport::TestCase
+class PlatformContextTest < ActiveSupport::TestCase
 
   context 'find_for_request' do
 
@@ -12,12 +12,12 @@ class Controller::RequestContextTest < ActiveSupport::TestCase
     end
 
     should 'be able to find by host name' do
-      rq = Controller::RequestContext.new('desksnearme.com')
+      rq = PlatformContext.new('desksnearme.com')
       assert_equal @desks_near_me_domain, rq.domain
     end
 
     should 'be able to bypass www in host name' do
-      rq = Controller::RequestContext.new('www.desksnearme.com')
+      rq = PlatformContext.new('www.desksnearme.com')
       assert_equal @desks_near_me_domain, rq.domain
     end
 
@@ -37,20 +37,20 @@ class Controller::RequestContextTest < ActiveSupport::TestCase
     end
 
     should 'default instance if domain is unknown' do
-      rq = Controller::RequestContext.new('something.weird.example.com')
+      rq = PlatformContext.new('something.weird.example.com')
       assert_equal Instance.default_instance, rq.instance
       assert_equal Instance.default_instance.theme, rq.theme
     end
 
     should 'default instance if domain is desksnear.me' do
-      rq = Controller::RequestContext.new('desksnear.me')
+      rq = PlatformContext.new('desksnear.me')
       assert_equal Instance.default_instance, rq.instance
       assert_equal Instance.default_instance.theme, rq.theme
     end
 
     should 'instance linked to domain that matches request.host' do
       host = @example_instance_domain.name
-      rq = Controller::RequestContext.new(host)
+      rq = PlatformContext.new(host)
       assert_equal @example_instance, rq.instance
       assert_equal @example_instance.theme, rq.theme
     end
@@ -63,14 +63,14 @@ class Controller::RequestContextTest < ActiveSupport::TestCase
 
       should 'company linked to domain that matches request.host has white label enabled' do
         @example_company.update_attribute(:white_label_enabled, true)
-        rq = Controller::RequestContext.new(@host)
+        rq = PlatformContext.new(@host)
         assert_equal @example_company.instance, rq.instance
         assert_equal @example_company.theme, rq.theme
       end
 
       should 'default instance if company linked to domain that matches request.host has white label disabled' do
         @example_company.update_attribute(:white_label_enabled, false)
-        rq = Controller::RequestContext.new(@host)
+        rq = PlatformContext.new(@host)
         assert_equal Instance.default_instance, rq.instance
         assert_equal Instance.default_instance.theme, rq.theme
       end
@@ -83,7 +83,7 @@ class Controller::RequestContextTest < ActiveSupport::TestCase
       end
 
       should 'find current partner' do
-        rq = Controller::RequestContext.new(@host)
+        rq = PlatformContext.new(@host)
         assert_equal @example_partner, rq.partner
         assert_equal @example_partner.theme, rq.theme
         assert_equal @example_partner.instance, rq.instance
@@ -95,27 +95,27 @@ class Controller::RequestContextTest < ActiveSupport::TestCase
   context 'white_label_company_user?' do
 
     setup do
-      @request_context = Controller::RequestContext.new
+      @platform_context = PlatformContext.new
       @company = FactoryGirl.create(:white_label_company)
       @user = FactoryGirl.create(:user, companies: [@company])
       @another_user = FactoryGirl.create(:user)
     end
 
     should 'be a white label company user if nowhite_label_company' do
-      assert @request_context.white_label_company_user?(@user)
+      assert @platform_context.white_label_company_user?(@user)
     end
 
     context 'with white label' do
       setup do
-        @request_context.expects(:white_label_company).returns(@company).at_least_once
+        @platform_context.expects(:white_label_company).returns(@company).at_least_once
       end
 
       should 'not be whie label company user if he does not belong white label company' do
-        assert !@request_context.white_label_company_user?(@another_user)
+        assert !@platform_context.white_label_company_user?(@another_user)
       end
 
       should 'be whie label company user if he belongs to white label company' do
-        assert @request_context.white_label_company_user?(@user)
+        assert @platform_context.white_label_company_user?(@user)
       end
     end
 

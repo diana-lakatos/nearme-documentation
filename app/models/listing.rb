@@ -200,7 +200,7 @@ class Listing < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
-  def reserve!(request_context, reserving_user, dates, quantity)
+  def reserve!(platform_context, reserving_user, dates, quantity)
     reservation = reservations.build(:user => reserving_user, :quantity => quantity)
     dates.each do |date|
       raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
@@ -210,11 +210,11 @@ class Listing < ActiveRecord::Base
     reservation.save!
 
     if reservation.listing.confirm_reservations?
-      ReservationMailer.notify_host_with_confirmation(request_context, reservation).deliver
-      ReservationMailer.notify_guest_with_confirmation(request_context, reservation).deliver
+      ReservationMailer.notify_host_with_confirmation(platform_context, reservation).deliver
+      ReservationMailer.notify_guest_with_confirmation(platform_context, reservation).deliver
     else
-      ReservationMailer.notify_host_without_confirmation(request_context, reservation).deliver
-      ReservationMailer.notify_guest_of_confirmation(request_context, reservation).deliver
+      ReservationMailer.notify_host_without_confirmation(platform_context, reservation).deliver
+      ReservationMailer.notify_guest_of_confirmation(platform_context, reservation).deliver
     end
     reservation
   end
