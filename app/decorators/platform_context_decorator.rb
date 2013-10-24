@@ -16,7 +16,7 @@ class PlatformContextDecorator
   end
 
   def to_liquid
-    self
+    @platform_context_drop ||= PlatformContextDrop.new(self)
   end
 
   private

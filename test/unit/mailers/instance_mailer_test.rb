@@ -60,7 +60,7 @@ class InstanceMailerTest < ActiveSupport::TestCase
     end
 
     should "will keep default reply_to email" do
-      assert_equal [@platform_context.contact_email], @mail.reply_to
+      assert_equal [@platform_context.decorate.contact_email], @mail.reply_to
     end
   end
 
@@ -74,3 +74,4 @@ class InstanceMailerTest < ActiveSupport::TestCase
     end
   end
 end
+

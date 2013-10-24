@@ -7,7 +7,7 @@ class AfterSignupMailer < InstanceMailer
 
   def help_offer(platform_context, user)
     @user = user
-    @platform_context = platform_context
+    @platform_context_decorator = platform_context.decorate
     @location = @user.locations.first
 
     @sent_by = 'Michelle R'
@@ -15,7 +15,7 @@ class AfterSignupMailer < InstanceMailer
     mail(to: @user.email,
          from: PERSONABLE_EMAIL,
          template_name: choose_template,
-         platform_context: @platform_context,
+         platform_context: platform_context,
          subject: "Welcome to DesksNear.me")
   end
 

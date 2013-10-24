@@ -2,7 +2,7 @@ class InquiryMailer < InstanceMailer
   layout 'mailer'
 
   def inquiring_user_notification(platform_context, inquiry)
-    @platform_context = platform_context
+    @platform_context_decorator = platform_context.decorate
     @inquiry = inquiry
 
     mail(to: @inquiry.inquiring_user.full_email,
@@ -11,7 +11,7 @@ class InquiryMailer < InstanceMailer
   end
 
   def listing_creator_notification(platform_context, inquiry)
-    @platform_context = platform_context
+    @platform_context_decorator = platform_context.decorate
     @inquiry = inquiry
 
     mail(to: @inquiry.listing.creator.full_email,

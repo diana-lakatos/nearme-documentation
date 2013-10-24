@@ -15,7 +15,7 @@ class UserMailerTest < ActiveSupport::TestCase
 
   test "email has instance name" do
     mail = UserMailer.email_verification(@platform_context, @user)
-    assert mail.html_part.body.include?(@platform_context.name), "#{@platform_context.name} not included in:\n#{mail.html_part.body}"
+    assert mail.html_part.body.include?(@platform_context.decorate.name), "#{@platform_context.decorate.name} not included in:\n#{mail.html_part.body}"
   end
 
   test "email won't be sent to verified user" do

@@ -10,7 +10,6 @@ class InstanceMailer < ActionMailer::Base
     lookup_context.class.register_detail(:theme) { nil }
 
     platform_context = options.delete(:platform_context)
-    @platform_context_decorator = platform_context.decorate
     theme = platform_context.theme
     template = options.delete(:template_name) || view_context.action_name
     mailer = options.delete(:mailer) || find_mailer(template: template, theme: theme) || theme.default_mailer

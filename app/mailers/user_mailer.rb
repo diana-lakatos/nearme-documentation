@@ -6,7 +6,7 @@ class UserMailer < InstanceMailer
   def notify_about_wrong_phone_number(platform_context, user)
     @user = user
     mail(to: @user.email,
-         subject:  instance_prefix("We couldn't send you text message", platform_context),
+         subject:  instance_prefix("We couldn't send you text message", platform_context.decorate),
          platform_context: platform_context)
   end
 
