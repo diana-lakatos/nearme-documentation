@@ -318,23 +318,5 @@ class User < ActiveRecord::Base
     ListingMessage.where('owner_id = ? OR listing_id IN(?)', id, listings_with_messages.map(&:id)).order('created_at asc')
   end
 
-  def threaded_listing_messages
-    @threaded_listing_messages ||= listing_messages.group_by{|listing_message|
-      [listing_message.owner_id, listing_message.listing_id]
-    }.sort_by{|key, listing_messages| listing_messages.last.created_at }.reverse
-  end
-
-  def unread_listing_messages
-    threaded_listing_messages.select do |key, listing_messages|
-      listing_messages.detect{|lm| lm.unread_for?(self) }.present?
-    end
-  end
-
-  def archived_listing_messages
-    threaded_listing_messages.select do |key, listing_messages|
-      listing_messages.all?(&:archived?)
-    end
-  end
-
 end
 

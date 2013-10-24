@@ -16,8 +16,12 @@ class UserDecorator < Draper::Decorator
   end
 
   def unread_messages_count
-    unread_count = unread_listing_messages.size
+    unread_count = listing_messages_decorator.inbox.unread.fetch.size
     unread_count > 0 ? "(#{unread_count})" : ""
   end
 
+  private
+  def listing_messages_decorator
+    @listing_messages_decorator ||= ListingMessagesDecorator.new(listing_messages, object)
+  end
 end
