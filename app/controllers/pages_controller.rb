@@ -1,7 +1,7 @@
 class PagesController < ApplicationController
 
-  before_filter :register_page_path_as_lookup_context_detail
   prepend_view_path PageResolver.instance
+  before_filter :register_page_path_as_lookup_context_detail
 
   layout :resolve_layout
 

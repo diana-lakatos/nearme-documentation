@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
 
+  prepend_view_path FooterResolver.instance
   before_filter :require_ssl
 
   protect_from_forgery
@@ -13,7 +14,6 @@ class ApplicationController < ActionController::Base
   before_filter :store_referal_info
   before_filter :load_request_context
   before_filter :register_theme_as_lookup_context_detail
-  prepend_view_path FooterResolver.instance
 
   protected
 
