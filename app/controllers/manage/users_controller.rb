@@ -15,14 +15,14 @@ class Manage::UsersController < Manage::BaseController
   def create
     @user = User.where(:email => params[:user][:email]).first
     if !@user
-      flash.now[:warning] = t('manage.users.user_does_not_exists')
+      flash.now[:warning] = t('flash_messages.manage.users.user_does_not_exists')
       new
     elsif @user.companies.any?
-      flash.now[:warning] = t('manage.users.user_cannot_be_invited')
+      flash.now[:warning] = t('flash_messages.manage.users.user_cannot_be_invited')
       new
     else
       @company.users << @user
-      flash[:success] = t('manage.users.user_added', name: @user.name, company_name: @company.name)
+      flash[:success] = t('flash_messages.manage.users.user_added', name: @user.name, company_name: @company.name)
       redirect_to manage_users_url
       render_redirect_url_as_json if request.xhr?
     end
@@ -32,7 +32,7 @@ class Manage::UsersController < Manage::BaseController
     @user = @company.users.without(current_user).find(params[:id]) rescue nil
 
     @company.users -= [@user]
-    flash[:deleted] = t('manage.users.user_deleted', name: @user.try(:name), company_name: @company.name)
+    flash[:deleted] = t('flash_messages.manage.users.user_deleted', name: @user.try(:name), company_name: @company.name)
     redirect_to manage_users_path
   end
 
@@ -44,7 +44,7 @@ class Manage::UsersController < Manage::BaseController
 
   def redirect_if_no_company
     unless @company
-      flash[:warning] = t('dashboard.add_your_company')
+      flash[:warning] = t('flash_messages.dashboard.add_your_company')
       redirect_to new_space_wizard_url
     end
   end

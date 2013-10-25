@@ -36,15 +36,15 @@ class SpaceWizardController < ApplicationController
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.save(:validate => false)
       track_saved_draft_event
-      flash[:success] = t('space_wizard.draft_saved')
+      flash[:success] = t('flash_messages.space_wizard.draft_saved')
       redirect_to :list
     elsif @user.save
       track_new_space_event
-      flash[:success] = t('space_wizard.space_listed')
+      flash[:success] = t('flash_messages.space_wizard.space_listed')
       redirect_to manage_locations_path
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
-      flash.now[:error] = t('space_wizard.complete_fields')
+      flash.now[:error] = t('flash_messages.space_wizard.complete_fields')
       render :list
     end
   end

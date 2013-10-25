@@ -33,10 +33,10 @@ class AuthenticationsController < ApplicationController
     if @authentication.can_be_deleted?
       @authentication.destroy
       log_disconnect_social_provider
-      flash[:deleted] = t('authentications.disconnected', 
+      flash[:deleted] = t('flash_messages.authentications.disconnected', 
         provider_name: @authentication.provider_name)
     else
-      flash[:warning] = t('authentications.unable_to_disconnect', 
+      flash[:warning] = t('flash_messages.authentications.unable_to_disconnect', 
         provider_name: @authentication.provider_name)
     end
     redirect_to edit_user_registration_url
@@ -49,7 +49,7 @@ class AuthenticationsController < ApplicationController
   end
 
   def failure
-    flash[:error] = t('authentications.couldnt_authenticate', reason: params[:message].presence || "Unknown")
+    flash[:error] = t('flash_messages.authentications.couldnt_authenticate', reason: params[:message].presence || "Unknown")
     redirect_to new_user_session_url
   end
 
@@ -73,12 +73,12 @@ class AuthenticationsController < ApplicationController
   end
 
   def already_connected_to_other_user
-    flash[:error] = t('authentications.already_connected_to_other_user') if use_flash_messages?
+    flash[:error] = t('flash_messages.authentications.already_connected_to_other_user') if use_flash_messages?
     redirect_to edit_user_registration_path
   end
 
   def signed_in_successfully
-    flash[:success] = t('authentications.signed_in_successfully') if use_flash_messages?
+    flash[:success] = t('flash_messages.authentications.signed_in_successfully') if use_flash_messages?
     @oauth.remember_user!
     update_analytics_google_id(@oauth.authenticated_user)
     log_logged_in
@@ -96,7 +96,7 @@ class AuthenticationsController < ApplicationController
     @oauth.create_authentication!(current_user)
     @oauth.apply_avatar_if_empty
     log_connect_social_provider
-    flash[:success] = t('authentications.authentication_successful')
+    flash[:success] = t('flash_messages.authentications.authentication_successful')
     redirect_to edit_user_registration_url
   end
 
@@ -105,7 +105,7 @@ class AuthenticationsController < ApplicationController
     log_sign_up
     log_connect_social_provider
     @oauth.remember_user!
-    flash[:success] = t('authentications.signed_in_successfully') if use_flash_messages?
+    flash[:success] = t('flash_messages.authentications.signed_in_successfully') if use_flash_messages?
     sign_in_and_redirect(:user, @oauth.authenticated_user)
   end
 

@@ -58,7 +58,7 @@ class DashboardController < ApplicationController
 
   def redirect_if_no_company
     unless @company && @company.id
-      flash[:warning] = t('dashboard.add_your_company')
+      flash[:warning] = t('flash_messages.dashboard.add_your_company')
       redirect_to new_space_wizard_url
     end
   end
