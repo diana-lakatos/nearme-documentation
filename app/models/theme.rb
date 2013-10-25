@@ -5,6 +5,7 @@ class Theme < ActiveRecord::Base
   COLORS.each do |color|
     attr_accessible "color_#{color}"
   end
+  DEFAULT_THEME_PAGES = %w(about legal)
 
   attr_accessible :name, :icon_image, :icon_retina_image,
     :logo_image, :logo_retina_image, :hero_image, :skip_compilation,
@@ -16,6 +17,7 @@ class Theme < ActiveRecord::Base
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
   belongs_to :owner, :polymorphic => true
+  has_many :pages, :dependent => :destroy
   delegate :bookable_noun, :to => :instance
 
   mount_uploader :icon_image, ThemeImageUploader
@@ -55,6 +57,10 @@ class Theme < ActiveRecord::Base
     attrs.any? { |attr|
       send("#{attr}_changed?")
     }
+  end
+
+  def to_liquid
+    ThemeDrop.new(self)
   end
 
   def skipping_compilation(&blk)
@@ -105,6 +111,10 @@ class Theme < ActiveRecord::Base
     end
     cloned_theme.attributes = current_attributes
     cloned_theme
+  end
+
+  def pages_with_fallbacks
+    (Theme::DEFAULT_THEME_PAGES.map{|page| Page.new(path: page.capitalize, slug: page)} + self.pages).uniq{|page| page.path}
   end
 end
 
