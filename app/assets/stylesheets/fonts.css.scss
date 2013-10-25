@@ -137,7 +137,8 @@ span.padding-left {
 .ico-pending:before,
 .ico-menu:before,
 .ico-enlarge:before,
-.ico-time:before {
+.ico-time:before,
+.ico-google-plus {
   font-family: 'icon-font' !important;
   font-weight: normal;
   font-style: normal;
@@ -332,4 +333,7 @@ span.padding-left {
 }
 .ico-time:before {
 	content: "\5e";
+}
+.ico-google-plus:before {
+  content: "\5f";
 }

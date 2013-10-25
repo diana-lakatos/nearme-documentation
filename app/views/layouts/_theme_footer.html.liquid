@@ -14,11 +14,12 @@
       </ul>
     </div>
 
-    <div class="span9">
+    <div class="span3">
       <ul class="icons">
-        <li><a href="{{ current_theme.blog_url }}" class="ico-rss" target="_blank"></a></li>
-        <li><a href="{{ current_theme.twitter_url }}" class="ico-twitter" target="_blank"></a></li>
-        <li><a href="{{ current_theme.facebook_url }}" class="ico-facebook-full" target="_blank"></a></li>
+        {% if current_theme.blog_url != '' %}<li><a href="{{ current_theme.blog_url }}" class="ico-rss" target="_blank"></a></li>{% endif %}
+        {% if current_theme.gplus_url != '' %}<li><a href="{{ current_theme.gplus_url }}" class="ico-google-plus" rel="publisher" target="_blank"></a></li>{% endif %}
+        {% if current_theme.twitter_url != '' %}<li><a href="{{ current_theme.twitter_url }}" class="ico-twitter" target="_blank"></a></li>{% endif %}
+        {% if current_theme.facebook_url != '' %}<li><a href="{{ current_theme.facebook_url }}" class="ico-facebook-full" target="_blank"></a></li>{% endif %}
       </ul>
     </div>
   </div>

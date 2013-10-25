@@ -12,7 +12,7 @@ class Theme < ActiveRecord::Base
     :owner, :owner_id, :owner_type, :site_name, :description, :tagline, :address, :support_email,
     :contact_email, :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url,
     :meta_title, :remote_logo_image_url, :remote_logo_retina_image_url, :remote_icon_image_url,
-    :remote_hero_image_url, :remote_icon_retina_image_url
+    :remote_hero_image_url, :remote_icon_retina_image_url, :gplus_url
 
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
