@@ -1,0 +1,12 @@
+.padding-row
+.administrator
+  = image_tag administrator.avatar.url(:big)
+  .info
+    %span.name= administrator.name
+    %span.title= administrator.job_title
+  .buttons
+    = link_to profile_path(administrator), :class => 'btn btn-gray-dark btn-medium view' do
+      %span.text View profile
+    = link_to "mailto:support+#{@location.id}-#{@listing.id}@desksnear.me", :class => "btn btn-blue btn-medium ask" do
+      %span.text Contact host
+  .clearfix

@@ -6,10 +6,6 @@
       .row-fluid.padding-row
         .span9.nested
           %h1 #{@listing.name_with_address}
-        .span3
-          = link_to "mailto:support+#{@location.id}-#{@listing.id}@desksnear.me", :class => "btn btn-blue btn-medium pull-right ask-a-question" do
-            %span Ask a question
-            %span.ico-mail
 
       .container-row
         .two-thirds.column.left
@@ -35,6 +31,8 @@
           = render 'locations/google_map', location: @location 
 
           = render 'locations/listings/availabilities', listing: @listing
+
+          = render 'locations/listings/administrator', administrator: @listing.administrator
 
           = render 'locations/listings/other_listings', location: @location, listing: @listing
                 
