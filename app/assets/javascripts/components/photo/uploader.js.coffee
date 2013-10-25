@@ -22,6 +22,10 @@ class @Photo.Uploader
         @triggerMixpanelPhotoNotProcessedBeforeSubmitEvent()
         false
 
+    $(window).on 'beforeunload', =>
+      if @formIsSubmitting and @processingPhotos > 0
+        "Are you sure that you want to close this page? You will lose your listing. Remember, you can always save a draft and come back later to continue!"
+
     $(window).on 'unload', =>
       if @formIsSubmitting and @processingPhotos > 0
         __insp.push(['tagSession', "user_closed_browser_photo_not_processed_before_submit"])

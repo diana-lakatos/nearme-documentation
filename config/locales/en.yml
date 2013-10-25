@@ -18,6 +18,9 @@ en:
     compaines:
       theme_image_deleted: "That image has been deleted."
       theme_image_not_deleted: "We couldn't delete that image."
+    listings:
+      photos:
+        waiting_for_photo_processing: "Waiting for photo processing to finish"
   desk:
     reservation_rejected_body: "%{user} declined reservation with reason: %{reason}"
     reservation_rejected_title: "[internal] User has declined reservation"

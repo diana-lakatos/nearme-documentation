@@ -86,7 +86,7 @@
   .loading{:style => "display: none"}
     = image_tag "spinner.gif"
     %br/
-    .span Waiting for finishing processing photos
+    .span= t('manage.listings.photos.waiting_for_photo_processing')
   = file_upload_input_with_label('Photos',
                                   "#{photo_input_name_prefix}[photos_attributes][0][image]",
                                   manage_photos_path,
