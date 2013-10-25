@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
 
+  prepend_view_path FooterResolver.instance
   before_filter :require_ssl
 
   protect_from_forgery
@@ -12,6 +13,7 @@ class ApplicationController < ActionController::Base
   before_filter :first_time_visited?
   before_filter :store_referal_info
   before_filter :load_request_context
+  before_filter :register_theme_as_lookup_context_detail
 
   protected
 
@@ -45,8 +47,10 @@ class ApplicationController < ActionController::Base
     else
       @current_instance = Instance.default_instance
       @current_theme = @current_instance.theme
-    end
+    end   
   end
+
+
   attr_accessor :current_instance, :current_theme, :current_partner
   helper_method :current_instance, :current_theme, :current_partner
 
@@ -244,5 +248,12 @@ class ApplicationController < ActionController::Base
     @search_scope ||= Listing::SearchScope.scope(current_instance, {white_label_company: @current_white_label_company, partner: current_partner})
   end
   helper_method :search_scope
-end
 
+  def register_lookup_context_detail(detail_name)
+    lookup_context.class.register_detail(detail_name.to_sym) { nil }
+  end
+
+  def register_theme_as_lookup_context_detail
+    register_lookup_context_detail(:theme)
+  end
+end

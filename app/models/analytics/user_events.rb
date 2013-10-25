@@ -29,5 +29,14 @@ module Analytics::UserEvents
     track 'Submitted a rating', user, custom_options
   end
 
+  def photo_not_processed_before_submit(user, custom_options = {})
+    set_person_properties user, custom_options
+    track 'Photo not processed before form submit', user, custom_options 
+  end
+
+  def user_closed_browser_photo_not_processed_before_submit(user, custom_options = {})
+    set_person_properties user, custom_options
+    track 'User closed browser window when photo not processed before form submit', user, custom_options 
+  end
 end
 

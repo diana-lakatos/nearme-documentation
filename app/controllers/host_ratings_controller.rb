@@ -14,7 +14,7 @@ class HostRatingsController < ApplicationController
     @rating.author = current_user
     if @rating.save
       event_tracker.submitted_a_rating(current_user, {positive: @rating.positive?})
-      flash[:notice] = 'Thanks, your rating was submitted successfully!'
+      flash[:notice] = t('flash_messages.host_rating.submitted_successfully')
       redirect_to root_path
       render_redirect_url_as_json if request.xhr?
     else
