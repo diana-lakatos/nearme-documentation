@@ -1,7 +1,8 @@
 class Listings::ListingMessagesController < ApplicationController
 
-  before_filter :authenticate_user!
   before_filter :find_listing
+  before_filter :redirect_to_login, only: [:new]
+  before_filter :authenticate_user!, except: [:new]
 
   def new
     @listing_message = @listing.listing_messages.new
@@ -58,6 +59,12 @@ class Listings::ListingMessagesController < ApplicationController
       @listing_message.previous_in_thread.owner
     end
     @listing_message.decorate
+  end
+
+  def redirect_to_login
+    return if user_signed_in?
+    session[:user_return_to] = ask_a_question_location_listing_url(@listing.location, @listing)
+    redirect_to new_user_session_path
   end
 
 end

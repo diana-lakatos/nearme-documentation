@@ -1,6 +1,7 @@
 class Locations::ListingsController < ApplicationController
-  before_filter :find_listing, :only => [:show]
-  before_filter :redirect_if_listing_inactive, :only => [:show]
+  before_filter :find_listing, :only => [:show, :ask_a_question]
+  before_filter :redirect_if_listing_inactive, :only => [:show, :ask_a_question]
+  before_filter :authenticate_user!, only: [:ask_a_question]
 
   def show
     # Attempt to restore a stored reservation state from the session.
@@ -10,6 +11,10 @@ class Locations::ListingsController < ApplicationController
     @location.track_impression(request.remote_ip)
 
     event_tracker.viewed_a_location(@location, { logged_in: user_signed_in? }) 
+  end
+
+  def ask_a_question
+    render :show
   end
 
   protected

@@ -55,3 +55,6 @@
         });
       });
 
+- content_for :domready do
+  - if params[:action] == 'ask_a_question'
+    Modal.load('#{new_listing_listing_message_path(@listing)}')

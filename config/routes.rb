@@ -44,7 +44,12 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :locations, :only => [:show] do
-    resources :listings, :controller => 'locations/listings'
+    resources :listings, :controller => 'locations/listings' do
+      member do
+        get :ask_a_question
+      end
+    end
+
     collection do
       get :populate_address_components_form
       post :populate_address_components
