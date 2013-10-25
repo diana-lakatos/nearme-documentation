@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
 
+  prepend_view_path FooterResolver.instance
   before_filter :require_ssl
 
   protect_from_forgery
@@ -12,6 +13,7 @@ class ApplicationController < ActionController::Base
   before_filter :first_time_visited?
   before_filter :store_referal_info
   before_filter :platform_context
+  before_filter :register_platform_context_as_lookup_context_detail
 
   protected
 
@@ -225,5 +227,12 @@ class ApplicationController < ActionController::Base
     @search_scope ||= Listing::SearchScope.scope(platform_context)
   end
   helper_method :search_scope
-end
 
+  def register_lookup_context_detail(detail_name)
+    lookup_context.class.register_detail(detail_name.to_sym) { nil }
+  end
+
+  def register_platform_context_as_lookup_context_detail
+    register_lookup_context_detail(:platform_context)
+  end
+end

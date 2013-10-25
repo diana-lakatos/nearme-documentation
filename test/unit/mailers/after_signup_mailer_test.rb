@@ -1,5 +1,5 @@
 require 'test_helper'
-
+ 
 class AfterSignupMailerTest < ActiveSupport::TestCase
 
   setup do

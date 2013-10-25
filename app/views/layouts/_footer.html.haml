@@ -1,32 +1,3 @@
 .footer-wrapper
   .container-fluid
-    %footer
-      .row-fluid
-        .span9
-          %ul.links
-            - if platform_context.is_desksnearme?
-              %li= link_to "About", pages_path('about'), target: '_blank'
-              %li= link_to "Careers", "http://blog.desksnear.me/careers/", :class => "clear-footer", :target => '_blank'
-            %li.last= link_to "Support", platform_context.support_url, :target => '_blank'
-            - if platform_context.is_desksnearme?
-              %li= link_to "iPhone App", "https://itunes.apple.com/us/app/desks-near-me/id529634519?mt=8", :target => '_blank'
-        .span3
-          %ul.icons
-            %li= link_to "", platform_context.blog_url, :class => "ico-rss", :target => '_blank'
-            %li= link_to "", platform_context.twitter_url, :class => "ico-twitter", :target => '_blank'
-            %li= link_to "", platform_context.facebook_url, :class => "ico-facebook-full", :target => '_blank'
-
-      .gap
-      .row-fluid
-        .span9
-          .copyright
-            %span #{platform_context.address}
-            %span #{platform_context.phone_number}
-            %br
-            %span &copy; 2013 #{platform_context.site_name}
-            - if platform_context.is_desksnearme?
-              %span= link_to "Legal", pages_path('legal'), :target => '_blank'
-        .span3#mixpanel
-          %a{:href => "https://mixpanel.com/f/partner"}
-            %img{:alt => "Mobile Analytics", :src => "https://cdn.mxpnl.com/site_media/images/partner/badge_blue.png"}/
-
+    = render 'layouts/theme_footer', platform_context: platform_context

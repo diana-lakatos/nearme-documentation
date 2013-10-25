@@ -4,6 +4,12 @@ class CreatePages < ActiveRecord::Migration
     attr_accessor :original_filename, :content_type
   end
 
+  class Page < ActiveRecord::Base
+    belongs_to :instance
+
+    attr_accessor :slug
+  end
+
   def up
     create_table :pages do |t|
       t.string :path, null: false

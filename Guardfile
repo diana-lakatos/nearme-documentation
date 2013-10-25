@@ -21,6 +21,7 @@ guard 'minitest', all_on_start: false, test_folders: ['test/unit', 'test/functio
   watch(%r|^app/models/(.*)\.rb|)      { |m| "test/unit/#{m[1]}_test.rb" }
   watch(%r|^app/helpers/(.*)\.rb|)     { |m| "test/helpers/#{m[1]}_test.rb" }
   watch(%r|^app/controllers/(.*)\.rb|) { |m| "test/functional/#{m[1]}_test.rb" }
+  watch(%r|^app/mailers/(.*)\.rb|)     { |m| "test/unit/mailers/#{m[1]}_test.rb" }
 end
 
 guard 'cucumber', :all_on_start => false, :all_after_pass => false, :cli => "--drb" do

@@ -1,0 +1,44 @@
+<footer>
+  <div class="row-fluid">
+    <div class="span9">
+      <ul class="links">
+        {% for page in platform_context.pages %}
+          <li><a href="{{ page.page_url }}">{{ page.title }}</a></li>
+        {% endfor %}
+        <li class="last"><a href="{{ platform_context.support_url }}" target="_blank">Support</a></li>
+
+        {% if platform_context.is_desksnearme? %}
+          <li class="clear-footer"><a href="http://blog.desksnear.me/careers/" target="_blank">Careers</a></li>
+          <li><a href="https://itunes.apple.com/us/app/desks-near-me/id529634519?mt=8" target="_blank">iPhone App</a></li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <div class="span9">
+      <ul class="icons">
+        <li><a href="{{ platform_context.blog_url }}" class="ico-rss" target="_blank"></a></li>
+        <li><a href="{{ platform_context.twitter_url }}" class="ico-twitter" target="_blank"></a></li>
+        <li><a href="{{ platform_context.facebook_url }}" class="ico-facebook-full" target="_blank"></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="gap">
+    <div class="row-fluid">
+      <div class="span9">
+        <div class="copyright">
+          <span>{{ platform_context.address }}</span>
+          <span>{{ platform_context.phone_number }}</span>
+          <br />
+          <span> &copy; 2013 {{ platform_context.site_name }}</span> 
+        </div>
+      </div>
+
+      <div id="mixpanel" class="span3">
+        <a href="https://mixpanel.com/f/partner">
+          <img alt="Mobile Analytics" src="https://cdn.mxpnl.com/site_media/images/partner/badge_blue.png" />
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>

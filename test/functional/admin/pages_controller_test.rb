@@ -21,7 +21,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
         assert_redirected_to admin_page_path(page)
         assert_equal attributes_for_page['path'], page.path
         assert_equal attributes_for_page['content'], page.content
-        assert_equal Instance.default_instance.id, page.instance_id
+        assert_equal Instance.default_instance.theme.id, page.theme_id
       end
 
     end
@@ -45,7 +45,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
         assert_redirected_to admin_page_path(@page)
         assert_equal @attributes_for_page['path'], @page.path
         assert_equal @attributes_for_page['content'], @page.content
-        assert_equal Instance.default_instance.id, @page.instance_id
+        assert_equal Instance.default_instance.theme.id, @page.theme_id
       end
 
       should "destroy page" do
@@ -61,7 +61,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
 
   private
   def attributes_for_page
-    @attributes_for_page ||= FactoryGirl.build(:page).attributes.slice('path', 'content', 'instance_id')
+    @attributes_for_page ||= FactoryGirl.build(:page).attributes.slice('path', 'content', 'theme_id')
   end
 
 end
