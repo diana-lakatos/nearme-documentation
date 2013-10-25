@@ -72,7 +72,7 @@ class Analytics::EventTracker
   end
 
   def event_properties(objects)
-    objects.map { |o| serialize_object(o) }.inject(:merge) || {}
+    objects.compact.map { |o| serialize_object(o) }.inject(:merge) || {}
   end
 
   def serialize_object(object)
