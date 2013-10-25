@@ -86,5 +86,6 @@ module DesksnearMe
     config.filepicker_rails.api_key = YAML.load_file(Rails.root.join("config", "inkfilepicker.yml"))[Rails.env]["api_key"]
 
     config.perform_mixpanel_requests = true
+    config.perform_google_analytics_requests = true
   end
 end
