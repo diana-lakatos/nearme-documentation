@@ -90,7 +90,113 @@ section.listings {
     }
   }
 
-  article.listing, article.location, article.company {
+  .administrator {
+    position: relative;
+    background: $gray60;
+    @include box-sizing(border-box);
+    @include border-radius($border-radius-default);
+
+    img {
+      float: left;
+      width: 50%;
+      min-height: 145px;
+      @include border-corner-radius(top, left, $border-radius-default);
+      @include border-corner-radius(bottom, left, $border-radius-default);
+    }
+
+    .info {
+
+      float: left;
+      padding: 15px;
+      width: 50%;
+      height: 50%;
+      @include box-sizing(border-box);
+
+      span.name {
+        display: block;
+        color: $gray210;
+        font-size: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      span.title {
+        display: block;
+        height: 2.4em;
+        color: $gray160;
+        font-size: 16px;
+        line-height: 1.2em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .buttons {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      width: 50%;
+      margin-bottom: 15px;
+      padding-left: 15px;
+      padding-right: 15px;
+      @include box-sizing(border-box);
+
+      a.btn {
+        width: 100%;
+        height: 42px;
+        line-height: 42px;
+        font-size: 18px;
+        text-align: center;
+        white-space: nowrap;
+        @include border-radius($border-radius-default);
+      }
+
+      a.btn.ask {
+        margin-top: 8px;
+      }
+
+    }
+
+    @media (min-width: $host-card-breakpoint-tiny) and (max-width: $host-card-breakpoint-small),
+      (min-width: $host-card-breakpoint-medium) and (max-width: $host-card-breakpoint-large) {
+
+      .info {
+        padding: 8px;
+
+        span.name {
+          height: 22px;
+          font-size: 18px;
+          line-height: 22px;
+        }
+
+        span.title {
+          height: 2.4em;
+          font-size: 14px;
+          line-height: 1.2em;
+        }
+      }
+
+      .buttons {
+        margin-bottom: 8px;
+        padding-left: 8px;
+        padding-right: 8px;
+
+        a.btn {
+          height: 30px;
+          line-height: 30px;
+          font-size: 14px;
+        }
+      }
+    }
+
+    @media (min-width: $booking-module-breakpoint + 1) {
+      margin-left: 15px;
+    }
+
+  }
+
+  article.listing, article.location, article.company, article.administrator {
     max-width: $space-full-image-width; 
   }
 
