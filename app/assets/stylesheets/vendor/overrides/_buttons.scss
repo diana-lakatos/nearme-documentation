@@ -115,7 +115,7 @@ a.btn {
     }
   }
 
-  &.btn-gray {
+  &.btn-light-gray {
     background: $light-gray;
     color: black;
     &:hover {
@@ -124,6 +124,24 @@ a.btn {
 
     &:active {
       background: $pure-white;
+    }
+  }
+
+  &.btn-gray-dark {
+    background: $gray60;
+    color: $gray120;
+    border: 1px solid $gray120 !important;
+    
+    span {
+      color: $gray120; 
+    }
+
+    &:hover {
+      background: lighten($gray60, 10%);
+    }
+
+    &:active {
+      background: darken($gray60, 10%);
     }
   }
 
