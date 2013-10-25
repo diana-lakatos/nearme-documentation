@@ -112,11 +112,14 @@ module ReservationsHelper
   end
 
   def hourly_summary_for_period(period)
-    date = period.date.strftime("%B %e")
-    start_time = minute_of_day_to_time(period.start_minute).strftime("%l:%M%P").strip
+    start_time = minute_of_day_to_time(period.start_minute).strftime("%l:%M").strip
     end_time = minute_of_day_to_time(period.end_minute).strftime("%l:%M%P").strip
+    start_time_suffix = minute_of_day_to_time(period.start_minute).strftime("%P").strip
+    end_time_suffix = minute_of_day_to_time(period.end_minute).strftime("%P").strip
 
-    ('%s %s&ndash;%s (%0.2f hours)' % [date, start_time, end_time, period.hours]).html_safe
+    start_time += start_time_suffix unless start_time_suffix == end_time_suffix
+
+    ('%s&ndash;%s<br />(%0.2f hours)' % [start_time, end_time, period.hours]).html_safe
   end
 
   def selected_dates_summary(reservation)
@@ -132,6 +135,10 @@ module ReservationsHelper
 
   def period_to_string(date)
     date.strftime('%d %b')
+  end
+
+  def reservation_date(period)
+    period.date.strftime("%B %e")
   end
 
   # Group up each of the dates into groups of real contiguous dates.
