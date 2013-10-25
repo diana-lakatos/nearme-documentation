@@ -5,15 +5,19 @@ class ThemeDrop < BaseDrop
   end
 
   def blog_url
-    @theme.blog_url
+    @theme.blog_url.to_s
+  end
+
+  def gplus_url
+    @theme.gplus_url.to_s
   end
 
   def twitter_url
-    @theme.twitter_url
+    @theme.twitter_url.to_s
   end
 
   def facebook_url
-    @theme.facebook_url
+    @theme.facebook_url.to_s
   end
 
   def is_desksnearme?
