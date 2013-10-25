@@ -3,14 +3,14 @@
 - content_for :hero do
   .container-fluid
     .row-fluid
-      = render :partial => "search_#{ platform_context_decorator.is_desksnearme? ? 'box' : 'button' }"
+      = render :partial => "search_#{ platform_context.is_desksnearme? ? 'box' : 'button' }"
 
 -# TODO: should be extracted to theme instead of hiding conditionally
-- if platform_context_decorator.is_desksnearme?
+- if platform_context.is_desksnearme?
   %section.how-it-works
     .row-fluid.padding-row
       %h1
-        List Your #{platform_context_decorator.bookable_noun}
+        List Your #{platform_context.bookable_noun}
 
     .row-fluid
       .span4

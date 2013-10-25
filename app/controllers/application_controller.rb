@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   after_filter :store_inspectlet_taggable_events
   before_filter :first_time_visited?
   before_filter :store_referal_info
+  before_filter :platform_context
 
   protected
 
@@ -29,11 +30,6 @@ class ApplicationController < ActionController::Base
   def platform_context
     @platform_context ||= PlatformContext.new(request.host)
   end
-
-  def platform_context_decorator
-    @platform_context_decorator ||= platform_context.decorate
-  end
-  helper_method :platform_context_decorator
 
   # Provides an EventTracker instance for the current request.
   #

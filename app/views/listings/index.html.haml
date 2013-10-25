@@ -1,6 +1,6 @@
 .clearfix
-  %h1 #{platform_context_decorator.bookable_noun.pluralize}
-  %p Ordered by most recently created. Hover over a day to see how many #{platform_context_decorator.bookable_noun.pluralize} are available.
+  %h1 #{platform_context.bookable_noun.pluralize}
+  %p Ordered by most recently created. Hover over a day to see how many #{platform_context.bookable_noun.pluralize} are available.
 
 %section.list
   = render @listings

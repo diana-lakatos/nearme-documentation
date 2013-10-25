@@ -6,13 +6,17 @@ module ApplicationHelper
   include FileuploadHelper
   include SharingHelper
 
+  def platform_context
+    @platform_context_view ||= @platform_context.decorate
+  end
+
   def title(page_title, show_title = true)
     content_for(:title) { h(page_title.to_s) }
     @show_title = show_title
   end
 
   def root_white_label_page?
-    request.path == '/' && (platform_context_decorator.white_label_company || !platform_context_decorator.is_desksnearme?)
+    request.path == '/' && (platform_context.white_label_company || !platform_context.is_desksnearme?)
   end
 
   def meta_title(name)
@@ -20,12 +24,12 @@ module ApplicationHelper
   end
 
   def title_tag
-    (show_title? ? content_for(:title) : (platform_context_decorator.tagline.presence || "Find office space. Rent office space. Get to work.")) +
+    (show_title? ? content_for(:title) : (platform_context.tagline.presence || "Find office space. Rent office space. Get to work.")) +
       (additional_meta_title.presence ? " | " + additional_meta_title : '')
   end
 
   def additional_meta_title
-    content_for?(:meta_title) ? content_for(:meta_title) : platform_context_decorator.meta_title
+    content_for?(:meta_title) ? content_for(:meta_title) : platform_context.meta_title
   end
 
   def legacy(is_legacy = true)

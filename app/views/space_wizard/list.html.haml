@@ -1,7 +1,7 @@
 - no_footer!
 - no_listing_buttons!
 = render :layout => 'wizard_layout', :locals => { :step => 1 } do
-  - title "List your #{platform_context_decorator.bookable_noun}"
+  - title "List your #{platform_context.bookable_noun}"
 
   = simple_form_for @user, :url => space_wizard_list_url, :validate => false, :html => { :class => "form-horizontal new_company", :multipart => true, :id => 'list-space-flow-form' } do |f|
 
