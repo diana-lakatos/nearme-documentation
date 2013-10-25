@@ -13,7 +13,7 @@ class PagesController < ApplicationController
               raise e unless Theme::DEFAULT_THEME_PAGES.include?(params[:path])
             end
 
-    render :show, platform_context: platform_context.decorate, page_path: params[:path]
+    render :show, platform_context: [platform_context.decorate], page_path: params[:path]
   end
 
 
