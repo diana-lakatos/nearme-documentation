@@ -59,7 +59,7 @@ class AnalyticWrapper::MixpanelApi
     # If we're currently an anonymous identity, we need to alias that
     # to the user user.
     if options[:alias] && anonymous_identity
-      @mixpanel.alias(distinct_id, { :distinct_id => anonymous_identity })
+      @mixpanel.alias(distinct_id, { :distinct_id => anonymous_identity }) if DesksnearMe::Application.config.perform_mixpanel_requests
       Rails.logger.info "Aliased mixpanel user: #{anonymous_identity} is now #{distinct_id}"
     end
 
@@ -78,7 +78,7 @@ class AnalyticWrapper::MixpanelApi
     properties.reverse_merge!(request_details)
 
     # Trigger tracking the event
-    MixpanelApiJob.perform(@mixpanel, :track, event_name, properties, options)
+    MixpanelApiJob.perform(@mixpanel, :track, event_name, properties, options) if DesksnearMe::Application.config.perform_mixpanel_requests
     Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
   end
 
@@ -98,14 +98,14 @@ class AnalyticWrapper::MixpanelApi
 
   # Sets global Person properties on the current tracked session.
   def set_person_properties(properties)
-    @mixpanel.set(distinct_id, properties)
+    @mixpanel.set(distinct_id, properties) if DesksnearMe::Application.config.perform_mixpanel_requests
     Rails.logger.info "Set mixpanel person properties: #{distinct_id}, #{properties}"
   end
 
   # Track a charge against the user in the current session, incurring the
   # specified revenue for us.
   def charge(amout, time = nil, options = {})
-    @mixpanel.track_charge(distinct_id, amount, time, options)
+    @mixpanel.track_charge(distinct_id, amount, time, options) if DesksnearMe::Application.config.perform_mixpanel_requests
   end
 
   # Track a charge against a specified user.
@@ -114,7 +114,7 @@ class AnalyticWrapper::MixpanelApi
   # may be applied to other users as a result of actions performed by
   # others. See +charge+ to track a charge against the current user.
   def track_charge_against_user(user, amount, time = nil, options = {})
-    @mixpanel.track_charge(user.id, amount, time, options)
+    @mixpanel.track_charge(user.id, amount, time, options) if DesksnearMe::Application.config.perform_mixpanel_requests
   end
 
   # Returns the distinct ID for the user of the current session.
@@ -141,4 +141,3 @@ class AnalyticWrapper::MixpanelApi
   end
 
 end
-
