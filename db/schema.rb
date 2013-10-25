@@ -154,6 +154,18 @@ ActiveRecord::Schema.define(:version => 20131018142922) do
 
   add_index "email_templates", ["theme_id"], :name => "index_email_templates_on_theme_id"
 
+  create_table "footer_templates", :force => true do |t|
+    t.text     "body"
+    t.string   "path"
+    t.boolean  "partial"
+    t.integer  "theme_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "footer_templates", ["path", "partial", "theme_id"], :name => "index_footer_templates_on_path_and_partial_and_theme_id"
+  add_index "footer_templates", ["theme_id"], :name => "index_footer_templates_on_theme_id"
+
   create_table "guest_ratings", :force => true do |t|
     t.integer  "author_id",      :null => false
     t.integer  "subject_id"
@@ -300,15 +312,16 @@ ActiveRecord::Schema.define(:version => 20131018142922) do
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
 
   create_table "pages", :force => true do |t|
-    t.string   "path",        :null => false
+    t.string   "path",       :null => false
     t.text     "content"
-    t.integer  "instance_id"
     t.string   "hero_image"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "theme_id"
+    t.string   "slug"
   end
 
-  add_index "pages", ["instance_id"], :name => "index_pages_on_instance_id"
+  add_index "pages", ["theme_id"], :name => "index_pages_on_theme_id"
 
   create_table "partners", :force => true do |t|
     t.string   "name"

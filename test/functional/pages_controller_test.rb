@@ -9,7 +9,7 @@ class PagesControllerTest < ActionController::TestCase
         Page.any_instance.stubs(:hero_image).returns(stub({:present? => true, :url => 'url'}))
         @page = FactoryGirl.create(:page,
                                    content: "# Page heading \nSome text",
-                                   instance: Instance.default_instance)
+                                   theme: Instance.default_instance.theme)
       end
 
       should 'return a content page with hero image and markdown content' do
@@ -25,7 +25,7 @@ class PagesControllerTest < ActionController::TestCase
     context 'a wrong path' do
       setup do
         @page = FactoryGirl.create(:page,
-                                   instance: Instance.default_instance,
+                                   theme: Instance.default_instance.theme,
                                    content: "# Page heading \nSome text")
       end
 
