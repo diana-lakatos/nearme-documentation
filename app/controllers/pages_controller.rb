@@ -6,13 +6,14 @@ class PagesController < ApplicationController
   layout :resolve_layout
 
   def show
+    @page = platform_context.theme.pages.find_by_path!(params[:path])
     @page = begin
-              current_theme.pages.find_by_path!(params[:path]) 
+              platform_context.theme.pages.find_by_path!(params[:path]) 
             rescue ActiveRecord::RecordNotFound => e
               raise e unless Theme::DEFAULT_THEME_PAGES.include?(params[:path])
             end
 
-    render :show, theme: current_theme, page_path: params[:path]
+    render :show, platform_context: [platform_context.decorate], page_path: params[:path]
   end
 
 

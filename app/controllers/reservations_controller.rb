@@ -14,7 +14,7 @@ class ReservationsController < ApplicationController
 
   def user_cancel
     if @reservation.user_cancel
-      ReservationMailer.enqueue.notify_host_of_cancellation(@reservation)
+      ReservationMailer.enqueue.notify_host_of_cancellation(platform_context, @reservation)
       event_tracker.cancelled_a_booking(@reservation, { actor: 'guest' })
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)

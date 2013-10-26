@@ -5,8 +5,7 @@ class FooterResolverTest < ActiveSupport::TestCase
 
   def setup
     @resolver = FooterResolver.instance
-    @theme = Instance.default_instance.theme
-    @details  = {:formats => [:html], :locale => [:en], :handlers => [:erb, :liquid], :theme => @theme }
+    @details  = {:formats => [:html], :locale => [:en], :handlers => [:erb, :liquid], :platform_context => PlatformContext.new }
   end
 
   test "doesn't resolve a view for undefined path" do

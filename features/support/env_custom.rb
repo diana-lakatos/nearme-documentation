@@ -15,6 +15,8 @@ Before do
   stub_request(:get, /.*api\.mixpanel\.com.*/)
   stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
   instance = FactoryGirl.create(:instance)
+  instance.domains = [FactoryGirl.create(:domain)]
+  instance.save!
   store_model("instance", nil, instance)
   store_model("theme", nil, instance.theme)
   FactoryGirl.create(:instance)
