@@ -7,7 +7,7 @@ class PagesController < ApplicationController
 
   def show
     @page = begin
-              current_theme.pages.find_by_path!(params[:path]) 
+              current_theme.pages.find_by_slug!(params[:path]) 
             rescue ActiveRecord::RecordNotFound => e
               raise e unless Theme::DEFAULT_THEME_PAGES.include?(params[:path])
             end
