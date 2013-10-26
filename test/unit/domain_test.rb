@@ -9,26 +9,8 @@ class DomainTest < ActiveSupport::TestCase
   def setup
     @desks_near_me_domain = FactoryGirl.create(:domain, :name => 'desksnearme.com', :target => FactoryGirl.create(:instance))
     @company = FactoryGirl.create(:company)
-    @example_domain = FactoryGirl.create(:domain, :name => 'example.com', :target => @company, :target_type => 'Company')
+    @example_domain = FactoryGirl.create(:domain, :name => 'company.example.com', :target => @company, :target_type => 'Company')
     @partner_domain = FactoryGirl.create(:domain, :name => 'partner.example.com', :target => FactoryGirl.create(:partner), :target_type => 'Partner')
-  end
-
-  context 'find_for_request' do
-
-    setup do
-      @request = mock()
-    end
-
-    should 'be able to find by host name' do
-      @request.stubs(:host).returns('desksnearme.com')
-      assert_equal @desks_near_me_domain, Domain.find_for_request(@request)
-    end
-
-    should 'be able to bypass www in host name' do
-      @request.stubs(:host).returns('www.desksnearme.com')
-      assert_equal @desks_near_me_domain, Domain.find_for_request(@request)
-    end
-
   end
 
   context 'target' do

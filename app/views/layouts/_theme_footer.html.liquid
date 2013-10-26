@@ -2,12 +2,12 @@
   <div class="row-fluid">
     <div class="span9">
       <ul class="links">
-        {% for page in current_theme.pages %}
+        {% for page in platform_context.pages %}
           <li><a href="{{ page.page_url }}">{{ page.title }}</a></li>
         {% endfor %}
-        <li class="last"><a href="{{ current_theme.support_url }}" target="_blank">Support</a></li>
+        <li class="last"><a href="{{ platform_context.support_url }}" target="_blank">Support</a></li>
 
-        {% if current_theme.is_desksnearme? %}
+        {% if platform_context.is_desksnearme? %}
           <li class="clear-footer"><a href="http://blog.desksnear.me/careers/" target="_blank">Careers</a></li>
           <li><a href="https://itunes.apple.com/us/app/desks-near-me/id529634519?mt=8" target="_blank">iPhone App</a></li>
         {% endif %}
@@ -16,10 +16,10 @@
 
     <div class="span3">
       <ul class="icons">
-        {% if current_theme.blog_url != '' %}<li><a href="{{ current_theme.blog_url }}" class="ico-rss" target="_blank"></a></li>{% endif %}
-        {% if current_theme.gplus_url != '' %}<li><a href="{{ current_theme.gplus_url }}" class="ico-google-plus" rel="publisher" target="_blank"></a></li>{% endif %}
-        {% if current_theme.twitter_url != '' %}<li><a href="{{ current_theme.twitter_url }}" class="ico-twitter" target="_blank"></a></li>{% endif %}
-        {% if current_theme.facebook_url != '' %}<li><a href="{{ current_theme.facebook_url }}" class="ico-facebook-full" target="_blank"></a></li>{% endif %}
+        {% if platform_context.blog_url != '' %}<li><a href="{{ platform_context.blog_url }}" class="ico-rss" target="_blank"></a></li>{% endif %}
+        {% if platform_context.gplus_url != '' %}<li><a href="{{ platform_context.gplus_url }}" class="ico-google-plus" rel="publisher" target="_blank"></a></li>{% endif %}
+        {% if platform_context.twitter_url != '' %}<li><a href="{{ platform_context.twitter_url }}" class="ico-twitter" target="_blank"></a></li>{% endif %}
+        {% if platform_context.facebook_url != '' %}<li><a href="{{ platform_context.facebook_url }}" class="ico-facebook-full" target="_blank"></a></li>{% endif %}
       </ul>
     </div>
   </div>
@@ -28,10 +28,10 @@
     <div class="row-fluid">
       <div class="span9">
         <div class="copyright">
-          <span>{{ current_theme.address }}</span>
-          <span>{{ current_theme.phone_number }}</span>
+          <span>{{ platform_context.address }}</span>
+          <span>{{ platform_context.phone_number }}</span>
           <br />
-          <span> &copy; 2013 {{ current_theme.site_name }}</span> 
+          <span> &copy; 2013 {{ platform_context.site_name }}</span> 
         </div>
       </div>
 

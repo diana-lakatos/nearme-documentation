@@ -38,6 +38,20 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       assert_response 200
     end
 
+    context 'schedule expiry' do
+
+      should 'create a delayed_job task to run in 24 hours time when saved' do
+        Timecop.freeze(Time.zone.now) do
+          assert_difference 'Delayed::Job.count' do
+            xhr :post, :create, booking_params_for(@listing)
+          end
+
+          assert_equal 24.hours.from_now.to_i, Delayed::Job.last.run_at.to_i
+        end
+      end
+
+    end
+
 
     context "#twilio" do
 
@@ -82,11 +96,11 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     {
       listing_id: listing.id,
       reservation_request: {
-          dates: [Chronic.parse('Monday')],
-          quantity: "1",
-          card_number: 4111111111111111,
-          card_expires: 1.year.from_now.strftime("%m/%y"),
-          card_code: '111'
+        dates: [Chronic.parse('Monday')],
+        quantity: "1",
+        card_number: 4111111111111111,
+        card_expires: 1.year.from_now.strftime("%m/%y"),
+        card_code: '111'
       }
     }
   end

@@ -6,13 +6,17 @@ module ApplicationHelper
   include FileuploadHelper
   include SharingHelper
 
+  def platform_context
+    @platform_context_view ||= @platform_context.decorate
+  end
+
   def title(page_title, show_title = true)
     content_for(:title) { h(page_title.to_s) }
     @show_title = show_title
   end
 
   def root_white_label_page?
-    request.path == '/' && (current_theme.owner_type == 'Company' || !current_instance.is_desksnearme?)
+    request.path == '/' && (platform_context.white_label_company || !platform_context.is_desksnearme?)
   end
 
   def meta_title(name)
@@ -20,12 +24,12 @@ module ApplicationHelper
   end
 
   def title_tag
-    (show_title? ? content_for(:title) : (current_theme.tagline || "Find office space. Rent office space. Get to work.")) +
-      (additional_meta_title ? " | " + additional_meta_title : '')
+    (show_title? ? content_for(:title) : (platform_context.tagline.presence || "Find office space. Rent office space. Get to work.")) +
+      (additional_meta_title.presence ? " | " + additional_meta_title : '')
   end
 
   def additional_meta_title
-    content_for?(:meta_title) ? content_for(:meta_title) : current_theme.meta_title
+    content_for?(:meta_title) ? content_for(:meta_title) : platform_context.meta_title
   end
 
   def legacy(is_legacy = true)
@@ -118,14 +122,6 @@ module ApplicationHelper
     when 'deleted'
       "ico-close"
     end
-  end
-
-  def user_can_add_listing?(white_label_company = nil, user = nil)
-    # if this is not white label, user can always add listing
-    return true if white_label_company.blank?
-    return true unless white_label_company.white_label_enabled?
-    # if this is white label, only its users should be able to add listing
-    user.present? && user.companies.include?(white_label_company)
   end
 
   def show_manage_navigation(active_tab = :locations)

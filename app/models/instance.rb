@@ -23,10 +23,6 @@ class Instance < ActiveRecord::Base
     self.name == DEFAULT_INSTANCE_NAME
   end
 
-  def to_liquid
-    InstanceDrop.new(self)
-  end
-
   def white_label_enabled?
     true
   end

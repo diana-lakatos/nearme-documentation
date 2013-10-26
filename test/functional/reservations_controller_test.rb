@@ -41,10 +41,10 @@ class ReservationsControllerTest < ActionController::TestCase
       @reservation.add_period(Time.zone.local(2013, 7, 3, 10, 5, 0).to_date)
       @reservation.save!
       sign_in @reservation.owner
-      Rails.application.routes.url_helpers.stubs(:reservation_url).returns("http://example.com/reservations/1/export.ics")
     end
 
     should 'be exportable to .ics format' do
+      url = bookings_dashboard_url(id: @reservation.id)
       get :export, :format => :ics, :listing_id => @reservation.listing.id, :id => @reservation.id
       assert_response :success
       assert_equal "text/calendar", response.content_type
@@ -61,7 +61,7 @@ class ReservationsControllerTest < ActionController::TestCase
                          "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
                          "UID:#{@reservation.id}_2013-07-01",
                          "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
-                         "URL:http://example.com/reservations/1/export.ics",
+                         "URL:#{url}",
                          "SUMMARY:ICS Listing",
                          "LOCATION:42 Wallaby Way",
                          "END:VEVENT",
@@ -72,7 +72,7 @@ class ReservationsControllerTest < ActionController::TestCase
                          "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
                          "UID:#{@reservation.id}_2013-07-02",
                          "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
-                         "URL:http://example.com/reservations/1/export.ics",
+                         "URL:#{url}",
                          "SUMMARY:ICS Listing",
                          "LOCATION:42 Wallaby Way",
                          "END:VEVENT",
@@ -83,7 +83,7 @@ class ReservationsControllerTest < ActionController::TestCase
                          "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
                          "UID:#{@reservation.id}_2013-07-03",
                          "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
-                         "URL:http://example.com/reservations/1/export.ics",
+                         "URL:#{url}",
                          "SUMMARY:ICS Listing",
                          "LOCATION:42 Wallaby Way",
                          "END:VEVENT",
