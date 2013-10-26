@@ -2,7 +2,7 @@ class Admin::PaymentTransfersController < Admin::ResourceController
 
   def transferred
     resource.mark_transferred
-    flash[:notice] = t('payments.marked_transferred')
+    flash[:notice] = t('flash_messages.payments.marked_transferred')
     redirect_to [:admin, :payment_transfers]
   end
 

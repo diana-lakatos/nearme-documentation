@@ -46,6 +46,7 @@ section#reservations {
     ul {
 
       li {
+        overflow: visible;
         font-size: 16px;
         @include border-radius($border-radius-default);
         border: 1px solid $light-gray; 
@@ -141,6 +142,18 @@ section#reservations {
 
           span.ico-download {
             margin-left: 3px;
+          }
+
+          .dates {
+            color: $gray160;
+            font-family: $font-regular;
+
+            a.hours {
+              &:hover {
+                text-decoration: none !important;
+              }
+              color: $gray160 !important;
+            }
           }
 
           span:not(.ico-user) {

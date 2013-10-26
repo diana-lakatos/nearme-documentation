@@ -1,5 +1,5 @@
 class Authentication < ActiveRecord::Base
-  attr_accessible :user_id, :provider, :uid
+  attr_accessible :user_id, :provider, :uid, :info
   belongs_to :user
 
   validates :provider, :uid, presence: true
@@ -11,11 +11,7 @@ class Authentication < ActiveRecord::Base
   AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter" ]
 
   def provider_name
-    if provider == 'open_id'
-      "OpenID"
-    else
-      provider.titleize
-    end
+    provider.titleize
   end
 
   def self.available_providers
