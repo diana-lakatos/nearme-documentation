@@ -2,7 +2,8 @@
   %li.listing{:class => (params[:action] != 'new' && params[:action] != 'edit') ? '' : 'edit-location'} 
     - if params[:action] != 'new' && params[:action] != 'edit' && params[:action] != 'update'
       = link_to edit_manage_location_listing_path(location, listing), :class => "edit" do
-        = listing.name
+        .bar-text
+          = listing.name
         .links
           %span.icon.ico-edit
           %span.text

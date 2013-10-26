@@ -256,9 +256,6 @@ section.dashboard {
         font-size: 18px;
         display: block;
         padding: 5px 15px 5px 20px;
-        overflow: auto;
-        white-space: nowrap;
-        text-overflow: ellipsis;
 
         .no-hide {
           display: inline;
@@ -272,6 +269,14 @@ section.dashboard {
       .links {
         float: right;
         margin-left: 12px;
+      }
+
+      .bar-text {
+        float: left;
+        width: 70%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
 
       @media (max-width: $ipad-width + 1) {
