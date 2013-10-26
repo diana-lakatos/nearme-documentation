@@ -2,7 +2,7 @@ class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
   before_filter :fetch_reservations
   before_filter :fetch_reservation, :only => [:user_cancel]
-  before_filter :fetch_current_user_reservation, :only => [:show, :export, :guest_rating, :host_rating]
+  before_filter :fetch_current_user_reservation, :only => [:export, :guest_rating, :host_rating]
   before_filter :redirect_if_rating_already_exists, :only => [:guest_rating, :host_rating]
 
   before_filter :only => [:user_cancel] do |controller|
@@ -29,9 +29,6 @@ class ReservationsController < ApplicationController
     redirect_to upcoming_reservations_path
   end
 
-  def show
-  end
-
   def export
     respond_to do |format|
       format.ics do
@@ -52,7 +49,7 @@ class ReservationsController < ApplicationController
               event.created = @reservation.created_at
               event.last_modified = @reservation.updated_at
               event.location = @reservation.listing.address
-              event.url = Rails.application.routes.url_helpers.reservation_url(@reservation)
+              event.url = bookings_dashboard_url(id: @reservation.id)
             end
           end
         end
