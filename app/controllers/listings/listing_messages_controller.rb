@@ -13,7 +13,7 @@ class Listings::ListingMessagesController < ApplicationController
     @listing_message = @listing.listing_messages.new(params[:listing_message])
     setup_listing_message
     if @listing_message.save
-      flash[:notice] = 'Your message was sent!'
+      flash[:notice] = t('flash_messages.listing_messages.message_sent')
       redirect_to listing_messages_path
       render_redirect_url_as_json if request.xhr?
     else
@@ -41,7 +41,7 @@ class Listings::ListingMessagesController < ApplicationController
     column = @listing_message.archived_column_for(current_user)
     ListingMessage.update_all({column => true},
                               {owner_id: @listing_message.owner_id, listing_id: @listing.id})
-    flash[:notice] = "Your message was archived!"
+    flash[:notice] = t('flash_messages.listing_messages.message_archived')
     redirect_to listing_messages_path
   end
 

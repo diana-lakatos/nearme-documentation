@@ -94,3 +94,6 @@ en:
     listings:
       listing_inactive: "This listing is inactive. Displaying other listings near %{address}."
       listing_disabled: "This listing has been temporarily disabled by the owner. Check out some others near you!"
+    listing_messages:
+      message_sent: "Your message was sent!"
+      message_archived: "Your message was archived!"
