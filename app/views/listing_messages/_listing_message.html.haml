@@ -1,13 +1,13 @@
 - listing = listing_message.listing
 - author = listing_message.author
 .row-fluid
-  .span12.listing-message{class: listing_message.css_class }
+  .span12.listing-message{class: listing_message.css_class(current_user) }
     .span3
       %p.name= link_to author.first_name, profile_path(author.slug)
       %p.date= distance_of_time_in_words_or_date(listing_message.created_at)
 
     .span7
-      %p.body= link_to truncate(listing_message.body, length: 50), listing_listing_message_path(listing, listing_message), title: listing_message.body
+      %p.body= link_to truncate(listing_message.body, length: 60), listing_listing_message_path(listing, listing_message), title: listing_message.body
       %p.link-to-listing
         = link_to listing.name, location_listing_path(listing.location, listing)
 

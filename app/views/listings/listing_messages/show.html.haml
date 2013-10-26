@@ -10,7 +10,7 @@
           = f.hidden_field :replying_to_id
           .span10
             = f.text_area :body
-          .span2
+          .span2.clearfix
             = f.submit "Send", class: "btn btn-large btn-green"
 
       - @listing_messages.each do |listing_message|

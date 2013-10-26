@@ -11,31 +11,37 @@
     .span10 { 
       margin-left: 0;
     }
+
+    .span2 {
+      margin-left: $padding-default;
+      width: 15%;
+    }
   
-  }
-}
-
-.listing_message, .listing-message-for-show {
-
-  a {
-    text-decoration: underline!important;
-  }
-
-  p {
-    margin-bottom: $padding-small;
   }
 }
 
 .listing_messages {
 
+  .listing-message, .listing-message-for-show {
+
+    a {
+      text-decoration: underline!important;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
   .box {
+    padding-bottom: 0;
     background-color: $sjcc_white;
   }
 
   .listing-message {
     margin-left: 0;
     margin-bottom: $padding-default;
-    padding: 2 * $padding-default 0;
+    padding: 2 * $padding-small 0;
     border: 1px solid $light-gray;
     @include border-radius($border-radius-default);
 
@@ -70,10 +76,11 @@
 
     .actions {
 
-      a {
+      padding-left: $padding-default;
+      margin-top: $padding-small;
+      margin-bottom: $padding-small;
 
-        margin-top: 0px;
-        margin-bottom: 0px !important; 
+      a {
         padding: $padding-small 22px;
         width: 100%;
         text-decoration: none !important;
@@ -108,19 +115,29 @@
   }
 
   .body {
-    padding: $padding-small;
+    padding: 20px;
     border: 1px solid $light-gray;
     color: $gray80; 
     @include border-radius($border-radius-default);
   }
 
-  &.unread .body {
-    background: $pure-white;
+  &.foreign-message {
+    .body {
+      background: $pure-white;
+    }
+    .info {
+      text-align:right;
+    }
   }
 
-  .foreign-message-info {
+}
 
-    text-align:right;
-
+@media (max-width: $ipad-width) {
+  .listing_messages {
+    .listing-message {
+      p {
+        margin-left: $padding-default;
+      }
+    }
   }
 }
