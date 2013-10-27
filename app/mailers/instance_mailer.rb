@@ -29,7 +29,7 @@ class InstanceMailer < ActionMailer::Base
       :bcc     => bcc,
       :from    => from,
       :reply_to=> reply_to)) do |format|
-        format.html { render(template, platform_context: platform_context.decorate) + get_tracking_code(user, platform_context, custom_tracking_options) }
+        format.html { render(template, platform_context: platform_context.decorate) + get_tracking_code(user, platform_context, custom_tracking_options).html_safe }
         format.text { render template, platform_context: platform_context.decorate }
       end
 
