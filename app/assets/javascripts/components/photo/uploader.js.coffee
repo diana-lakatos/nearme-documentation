@@ -4,10 +4,39 @@ class @Photo.Uploader
     @container = container
     @fileInput = container.find('.browse-file').eq(0)
     @photoCollection = new Photo.Collection(container)
+    @loader = new Search.ScreenLockLoader => $('.loading')
+    @processingPhotos = 0
+    @formIsSubmitting = false
     @init()
   
   init: ->
     @initializeFileUploader()
+    @bindEvents()
+
+  bindEvents: () ->
+    @container.parents('form').on 'submit', =>
+      @formIsSubmitting = true
+      if @processingPhotos > 0
+        @loader.show()
+        __insp.push(['tagSession', "photo_not_processed_before_submit"])
+        @triggerMixpanelPhotoNotProcessedBeforeSubmitEvent()
+        false
+
+    $(window).on 'beforeunload', =>
+      if @formIsSubmitting and @processingPhotos > 0
+        "Are you sure that you want to close this page? You will lose your listing. Remember, you can always save a draft and come back later to continue!"
+
+    $(window).on 'unload', =>
+      if @formIsSubmitting and @processingPhotos > 0
+        __insp.push(['tagSession', "user_closed_browser_photo_not_processed_before_submit"])
+        @triggerMixpanelUserClosedBrowserPhotoNotProcessedBeforeSubmitEvent()
+
+
+  triggerMixpanelPhotoNotProcessedBeforeSubmitEvent: () ->
+    $.post '/event_tracker', event: "photo_not_processed_before_submit" 
+  
+  triggerMixpanelUserClosedBrowserPhotoNotProcessedBeforeSubmitEvent: () ->
+    $.post '/event_tracker', event: "user_closed_browser_photo_not_processed_before_submit" 
 
   initializeFileUploader : =>
 
@@ -30,9 +59,13 @@ class @Photo.Uploader
       @createPhoto(inkBlob)
 
   createPhoto: (inkBlob) ->
+    @processingPhotos += 1
     photo_index = @photoCollection.add()
     $.post(@fileInput.attr('data-url'), @getParamsForCreatePhotoRequest(inkBlob), (data) =>
       @photoCollection.update(photo_index, data)
+      @processingPhotos -= 1
+      if @processingPhotos == 0
+        @loader.hide()
     )
 
   getParamsForCreatePhotoRequest: (inkBlob) ->

@@ -5,10 +5,9 @@ class AfterSignupMailer < InstanceMailer
 
   PERSONABLE_EMAIL = "micheller@desksnear.me"
 
-  def help_offer(theme, user)
+  def help_offer(platform_context, user)
     @user = user
-    @theme = theme
-    @instance = theme.instance
+    @platform_context_decorator = platform_context.decorate
     @location = @user.locations.first
 
     @sent_by = 'Michelle R'
@@ -16,7 +15,7 @@ class AfterSignupMailer < InstanceMailer
     mail(to: @user.email,
          from: PERSONABLE_EMAIL,
          template_name: choose_template,
-         theme: @theme,
+         platform_context: platform_context,
          subject: "Welcome to DesksNear.me")
   end
 
@@ -25,13 +24,11 @@ class AfterSignupMailer < InstanceMailer
 
       def help_offer_with_listing
         @user = User.all.detect { |u| !u.listings.empty?  }
-        @theme = Theme.first
-        ::AfterSignupMailer.help_offer(@theme, @user)
+        ::AfterSignupMailer.help_offer(PlatformContext.new, @user)
       end
 
       def help_offer_with_booking
         user_from_db = User.all.detect { |u| !u.reservations.empty? && u.listings.empty? }
-        @theme = Theme.first
 
         unless user_from_db
           @user = FactoryGirl.create(:user, email: "test_user_#{rand(100)}@example.com")
@@ -40,7 +37,7 @@ class AfterSignupMailer < InstanceMailer
         else
           @user = user_from_db
         end
-        mailer = ::AfterSignupMailer.help_offer(@theme, @user)
+        mailer = ::AfterSignupMailer.help_offer(PlatformContext.new, @user)
 
         unless user_from_db
           @user.destroy!
@@ -52,10 +49,9 @@ class AfterSignupMailer < InstanceMailer
 
       def help_offer_without_listing_and_booking
         user_from_db = User.all.detect { |u| u.listings.empty? && u.reservations.empty? }
-        @theme = Theme.first
         @user = user_from_db || FactoryGirl.create(:user, email: "test_user_#{rand(100)}@example.com")
 
-        mailer = ::AfterSignupMailer.help_offer(@theme, @user)
+        mailer = ::AfterSignupMailer.help_offer(PlatformContext.new, @user)
 
         @user.destroy! unless user_from_db
 

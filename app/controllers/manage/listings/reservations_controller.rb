@@ -5,14 +5,14 @@ class Manage::Listings::ReservationsController < ApplicationController
 
   def confirm
     if @reservation.confirm
-      ReservationMailer.enqueue.notify_guest_of_confirmation(@reservation)
-      ReservationMailer.enqueue.notify_host_of_confirmation(@reservation)
+      ReservationMailer.enqueue.notify_guest_of_confirmation(platform_context, @reservation)
+      ReservationMailer.enqueue.notify_host_of_confirmation(platform_context, @reservation)
       event_tracker.confirmed_a_booking(@reservation)
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
-      flash[:success] = t('manage.reservations.reservation_confirmed')
+      flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
     else
-      flash[:error] = t('manage.reservations.reservation_not_confirmed')
+      flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
     redirect_to manage_guests_dashboard_url
   end
@@ -23,13 +23,13 @@ class Manage::Listings::ReservationsController < ApplicationController
   def reject
     if @reservation.reject(rejection_reason)
       ReservationIssueLogger.rejected_with_reason @reservation, current_user if rejection_reason.present?
-      ReservationMailer.enqueue.notify_guest_of_rejection(@reservation)
+      ReservationMailer.enqueue.notify_guest_of_rejection(platform_context, @reservation)
       event_tracker.rejected_a_booking(@reservation)
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
-      flash[:deleted] = t('manage.reservations.reservation_rejected')
+      flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')
     else
-      flash[:error] = t('manage.reservations.reservation_not_confirmed')
+      flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
     redirect_to manage_guests_dashboard_url
     render_redirect_url_as_json if request.xhr?
@@ -37,13 +37,13 @@ class Manage::Listings::ReservationsController < ApplicationController
 
   def host_cancel
     if @reservation.host_cancel
-      ReservationMailer.enqueue.notify_guest_of_cancellation(@reservation)
+      ReservationMailer.enqueue.notify_guest_of_cancellation(platform_context, @reservation)
       event_tracker.cancelled_a_booking(@reservation, { actor: 'host' })
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
-      flash[:deleted] = t('manage.reservations.reservation_cancelled')
+      flash[:deleted] = t('flash_messages.manage.reservations.reservation_cancelled')
     else
-      flash[:error] = t('manage.reservations.reservation_not_confirmed')
+      flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
     redirect_to manage_guests_dashboard_url
   end

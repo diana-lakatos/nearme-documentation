@@ -80,7 +80,7 @@ DesksnearMe::Application.routes.draw do
     get "users/:id", :to => "registrations#show", :as => "profile"
   end
 
-  resources :reservations, :except => [:update, :destroy] do
+  resources :reservations, :except => [:update, :destroy, :show] do
     member do
       post :user_cancel
       get :export
@@ -138,6 +138,8 @@ DesksnearMe::Application.routes.draw do
   match "/search/show/:id", :to => "search#show"
 
   resources :search_notifications, only: [:create]
+
+  resource :event_tracker, only: [:create], :controller => 'event_tracker'
 
   resources :authentications, :only => [:create, :destroy] do
     collection do

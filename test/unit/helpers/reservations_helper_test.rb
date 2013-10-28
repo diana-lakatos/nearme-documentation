@@ -21,6 +21,23 @@ class ReservationsHelperTest < ActionView::TestCase
     @paid_reservation.confirm
   end
 
+  context '#hourly_summary_for_period_without_date' do
+    setup do
+      @date = Date.parse('9.1.1990')
+    end
+
+    should 'use suffix in start time when it is different for start and end time' do
+      period = stub(:date => Date.parse('9.1.1990'), :start_minute => 660, :end_minute => 780, :hours => 2)
+      assert_equal '11:00am&ndash;1:00pm<br />(2.00 hours)', hourly_summary_for_period_without_date(period)
+    end
+
+    should 'not use suffix in start time when it is same for start and end time' do
+      period = stub(:date => Date.parse('9.1.1990'), :start_minute => 720, :end_minute => 780, :hours => 1)
+
+      assert_equal '12:00&ndash;1:00pm<br />(1.00 hours)', hourly_summary_for_period_without_date(period)
+    end
+  end
+
   context '#reservation_paid' do
     should "equal the amount paid" do
       assert_equal '$110.00', reservation_paid(@paid_reservation)

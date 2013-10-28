@@ -218,7 +218,7 @@ class SearchControllerTest < ActionController::TestCase
 
     setup do
       @partner = FactoryGirl.create(:partner)
-      @controller.stubs(:current_partner).returns(@partner)
+      PlatformContext.any_instance.stubs(:partner).returns(@partner)
       stub_request(:get, /.*maps\.googleapis\.com.*/)
       stub_mixpanel
     end

@@ -14,65 +14,13 @@ en:
     one: "1 day"
     other: "%{count} days"
 
-  payments:
-    marked_transferred: "Marked payment transfer as transferred"
-  authentications:
-    disconnected: "Successfully disconnected your %{provider_name}"
-    unable_to_disconnect: "We are unable to disconnect your account from %{provider_name}. Make sure you have at least one other account linked so you can log in!"
-    couldnt_authenticate: "We are sorry, but we could not authenticate you for the following reason: '%{reason}'. Please try again."
-    already_connected_to_other_user: "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account."
-    signed_in_successfully: "Signed in successfully."
-    authentication_successful: "Authentication successful."
-  dashboard:
-    add_your_company: "Please add your company first"
-    no_bookings: "You haven't made any bookings yet!"
-  locations:
-    no_listings: "There aren't any listings at that location. Check out some other spaces!"
-    listing_removed: "This listing has been removed. Displaying other listings near %{address}."
-  registrations:
-    address_verified: "Thanks - your email address has been verified!"
-    address_already_verified: "The email address has been already verified"
-    address_not_verified: "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
-  reservations:
-    invalid_operation:  "Not a valid reservation operation."
-    reservation_cancelled: "You have cancelled your reservation."
-    reservation_not_confirmed: "Your reservation could not be confirmed."
-    reservation_made: "Your reservation has been made! %{message}"
-    credit_card_will_be_charged: "Your credit card will be charged when your reservation is confirmed by the host."
-  space_wizard:
-    draft_saved: "Your draft has been saved!"
-    space_listed: "Your space was listed! You can provide more details about your location and listing from this page."
-    complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
-  listings:
-    listing_inactive: "This listing is inactive. Displaying other listings near %{address}."
-    listing_disabled: "This listing has been temporarily disabled by the owner. Check out some others near you!"
   manage:
-    compaines:
-      company_updated: "Great, your company's details have been updated."
-      white_label_updated: "Great, white-label details have been updated."
+    companies:
       theme_image_deleted: "That image has been deleted."
       theme_image_not_deleted: "We couldn't delete that image."
     listings:
-      desk_added: "Great, your new Desk/Room has been added!"
-      listing_updated: "Great, your listing's details have been updated."
-      listing_deleted: "That listing has been deleted."
-    locations:
-      space_added: "Great, your new Space has been added!"
-      space_updated: "Great, your Space has been updated!"
-      space_deleted: "You've deleted %{name}"
-      space_not_deleted: "We couldn't delete %{name}"
-    reservations:
-      reservation_confirmed: "You have confirmed the reservation!"
-      reservation_not_confirmed: "Your reservation could not be confirmed."
-      reservation_rejected: "You have rejected the reservation. Maybe next time!"
-      reservation_cancelled: "You have cancelled this reservation."
-    users:
-      user_deleted: "You've removed %{name} from %{company_name}"
-      user_added: "You've added %{name} to %{company_name}"
-      user_does_not_exists: "A user does not exist with the specified email address."
-      user_cannot_be_invited: "This user couldn't be invited as they are already associated with a company."
-      user_cant_delete_self: "You can't delete self."
-      user_is_not_in_company: "You can't delete user which is not in your company."
+      photos:
+        waiting_for_photo_processing: "Waiting for photo processing to finish"
   desk:
     reservation_rejected_body: "%{user} declined reservation with reason: %{reason}"
     reservation_rejected_title: "[internal] User has declined reservation"
@@ -83,4 +31,68 @@ en:
     form:
       try_another_search_or_subscribe: "Try another search query, or subscribe below to be notified via email when a desk is added at this location."
       try_another_search_or_enter_email: "Try another search query, or enter your email address below to be notified when a desk is added at this location."
-    you_will_be_notified: "You will be notified when a desk is added at this location."
+  flash_messages:
+    guest_rating:
+      submitted_successfully: "Thanks, your rating was submitted successfully!"
+    host_rating:
+      submitted_successfully: "Thanks, your rating was submitted successfully!"
+    space_wizard:
+      complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
+      draft_saved: "Your draft has been saved!"
+      space_listed: "Your space was listed! You can provide more details about your location and listing from this page."
+    reservations:
+      invalid_operation:  "Not a valid reservation operation."
+      reservation_cancelled: "You have cancelled your reservation."
+      reservation_not_confirmed: "Your reservation could not be confirmed."
+      reservation_made: "Your reservation has been made! %{message}"
+      credit_card_will_be_charged: "Your credit card will be charged when your reservation is confirmed by the host."
+    dashboard:
+      no_bookings: "You haven't made any bookings yet!"
+      add_your_company: "Please add your company first"
+    authentications:
+      disconnected: "Successfully disconnected your %{provider_name}"
+      unable_to_disconnect: "We are unable to disconnect your account from %{provider_name}. Make sure you have at least one other account linked so you can log in!"
+      couldnt_authenticate: "We are sorry, but we could not authenticate you for the following reason: '%{reason}'. Please try again."
+      already_connected_to_other_user: "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account."
+      signed_in_successfully: "Signed in successfully."
+      authentication_successful: "Authentication successful."
+    registrations:
+      address_verified: "Thanks - your email address has been verified!"
+      address_already_verified: "The email address has been already verified"
+      address_not_verified: "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+    locations:
+      no_listings: "There aren't any listings at that location. Check out some other spaces!"
+      listing_removed: "This listing has been removed. Displaying other listings near %{address}."
+    manage:
+      users:
+        user_deleted: "You've removed %{name} from %{company_name}"
+        user_added: "You've added %{name} to %{company_name}"
+        user_does_not_exists: "A user does not exist with the specified email address."
+        user_cannot_be_invited: "This user couldn't be invited as they are already associated with a company."
+        user_cant_delete_self: "You can't delete self."
+        user_is_not_in_company: "You can't delete user which is not in your company."
+      companies:
+        white_label_updated: "Great, white-label details have been updated."
+        company_updated: "Great, your company's details have been updated."
+      locations:
+        add_your_company: "Please add your company first"
+        space_added: "Great, your new Space has been added!"
+        space_updated: "Great, your Space has been updated!"
+        space_deleted: "You've deleted %{name}"
+        space_not_deleted: "We couldn't delete %{name}"
+      reservations:
+        reservation_confirmed: "You have confirmed the reservation!"
+        reservation_not_confirmed: "Your reservation could not be confirmed."
+        reservation_rejected: "You have rejected the reservation. Maybe next time!"
+        reservation_cancelled: "You have cancelled this reservation."
+      listings:
+        desk_added: "Great, your new Desk/Room has been added!"
+        listing_updated: "Great, your listing's details have been updated."
+        listing_deleted: "That listing has been deleted."
+    payments:
+      marked_transferred: "Marked payment transfer as transferred"
+    search_notifications:
+      you_will_be_notified: "You will be notified when a desk is added at this location."
+    listings:
+      listing_inactive: "This listing is inactive. Displaying other listings near %{address}."
+      listing_disabled: "This listing has been temporarily disabled by the owner. Check out some others near you!"

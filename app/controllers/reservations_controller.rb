@@ -2,34 +2,31 @@ class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
   before_filter :fetch_reservations
   before_filter :fetch_reservation, :only => [:user_cancel]
-  before_filter :fetch_current_user_reservation, :only => [:show, :export, :guest_rating, :host_rating]
+  before_filter :fetch_current_user_reservation, :only => [:export, :guest_rating, :host_rating]
   before_filter :redirect_if_rating_already_exists, :only => [:guest_rating, :host_rating]
 
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
-      flash[:error] = t('reservations.invalid_operation')
+      flash[:error] = t('flash_messages.reservations.invalid_operation')
       redirect_to redirection_path
     end
   end
 
   def user_cancel
     if @reservation.user_cancel
-      ReservationMailer.enqueue.notify_host_of_cancellation(@reservation)
+      ReservationMailer.enqueue.notify_host_of_cancellation(platform_context, @reservation)
       event_tracker.cancelled_a_booking(@reservation, { actor: 'guest' })
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
-      flash[:deleted] = t('reservations.reservation_cancelled')
+      flash[:deleted] = t('flash_messages.reservations.reservation_cancelled')
     else
-      flash[:error] = t('reservations.reservation_not_confirmed')
+      flash[:error] = t('flash_messages.reservations.reservation_not_confirmed')
     end
     redirect_to redirection_path
   end
 
   def index
     redirect_to upcoming_reservations_path
-  end
-
-  def show
   end
 
   def export
@@ -52,7 +49,7 @@ class ReservationsController < ApplicationController
               event.created = @reservation.created_at
               event.last_modified = @reservation.updated_at
               event.location = @reservation.listing.address
-              event.url = Rails.application.routes.url_helpers.reservation_url(@reservation)
+              event.url = bookings_dashboard_url(id: @reservation.id)
             end
           end
         end
@@ -65,7 +62,7 @@ class ReservationsController < ApplicationController
   def upcoming
     @reservations = current_user.reservations.not_archived.to_a.sort_by(&:date)
     if @reservations.empty?
-      flash[:warning] = t('dashboard.no_bookings')
+      flash[:warning] = t('flash_messages.dashboard.no_bookings')
       redirect_to search_path
     else
       @reservation = params[:id] ? current_user.reservations.find(params[:id]) : nil

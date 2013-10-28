@@ -25,8 +25,8 @@ class RegistrationsController < Devise::RegistrationsController
       update_analytics_google_id(@user)
       analytics_apply_user(@user)
       event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
-      AfterSignupMailer.enqueue_later(1.hour).help_offer(current_theme, @user)
-      UserMailer.enqueue.email_verification(@user, current_theme)
+      AfterSignupMailer.enqueue_later(1.hour).help_offer(platform_context, @user)
+      UserMailer.enqueue.email_verification(platform_context, @user)
     end
 
     # Clear out temporarily stored Provider authentication data if present
@@ -100,13 +100,13 @@ class RegistrationsController < Devise::RegistrationsController
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
-      flash[:success] = t('registrations.address_verified')
+      flash[:success] = t('flash_messages.registrations.address_verified')
       redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path
     else
       if @user.verified_at
-        flash[:warning] = t('registrations.address_already_verified')
+        flash[:warning] = t('flash_messages.registrations.address_already_verified')
       else
-        flash[:error] = t('registrations.address_not_verified')
+        flash[:error] = t('flash_messages.registrations.address_not_verified')
       end
       redirect_to root_path
     end
