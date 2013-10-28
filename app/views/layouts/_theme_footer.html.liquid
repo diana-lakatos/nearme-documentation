@@ -1,7 +1,7 @@
 <footer>
   <div class="row-fluid">
     <div class="span9">
-      <ul class="links">
+      <ul class="links clearfix">
         {% for page in platform_context.pages %}
           <li><a href="{{ page.page_url }}">{{ page.title }}</a></li>
         {% endfor %}
@@ -14,13 +14,15 @@
       </ul>
     </div>
 
-    <div class="span3">
-      <ul class="icons">
+    <div class="span3 clearfix">
+      <div class="social-wrapper">
+        <ul class="icons clearfix">
         {% if platform_context.blog_url != '' %}<li><a href="{{ platform_context.blog_url }}" class="ico-rss" target="_blank"></a></li>{% endif %}
         {% if platform_context.gplus_url != '' %}<li><a href="{{ platform_context.gplus_url }}" class="ico-google-plus" rel="publisher" target="_blank"></a></li>{% endif %}
         {% if platform_context.twitter_url != '' %}<li><a href="{{ platform_context.twitter_url }}" class="ico-twitter" target="_blank"></a></li>{% endif %}
         {% if platform_context.facebook_url != '' %}<li><a href="{{ platform_context.facebook_url }}" class="ico-facebook-full" target="_blank"></a></li>{% endif %}
-      </ul>
+        </ul>
+      </div>
     </div>
   </div>
 
