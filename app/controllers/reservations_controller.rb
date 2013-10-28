@@ -2,7 +2,7 @@ class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
   before_filter :fetch_reservations
   before_filter :fetch_reservation, :only => [:user_cancel]
-  before_filter :fetch_current_user_reservation, :only => [:show, :export, :guest_rating, :host_rating]
+  before_filter :fetch_current_user_reservation, :only => [:export, :guest_rating, :host_rating]
   before_filter :redirect_if_rating_already_exists, :only => [:guest_rating, :host_rating]
 
   before_filter :only => [:user_cancel] do |controller|
@@ -14,7 +14,7 @@ class ReservationsController < ApplicationController
 
   def user_cancel
     if @reservation.user_cancel
-      ReservationMailer.enqueue.notify_host_of_cancellation(@reservation)
+      ReservationMailer.enqueue.notify_host_of_cancellation(platform_context, @reservation)
       event_tracker.cancelled_a_booking(@reservation, { actor: 'guest' })
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
@@ -27,9 +27,6 @@ class ReservationsController < ApplicationController
 
   def index
     redirect_to upcoming_reservations_path
-  end
-
-  def show
   end
 
   def export
@@ -52,7 +49,7 @@ class ReservationsController < ApplicationController
               event.created = @reservation.created_at
               event.last_modified = @reservation.updated_at
               event.location = @reservation.listing.address
-              event.url = Rails.application.routes.url_helpers.reservation_url(@reservation)
+              event.url = bookings_dashboard_url(id: @reservation.id)
             end
           end
         end

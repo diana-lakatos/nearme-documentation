@@ -1,9 +1,3 @@
-Then(/^I should see partners list$/) do
-  Partner.all.each do |partner|
-    page.should have_content(partner.name)
-  end
-end
-
 Given(/^#{capture_model} has theme with images$/) do |model|
   @instance = model!(model)
   @theme = @instance.theme

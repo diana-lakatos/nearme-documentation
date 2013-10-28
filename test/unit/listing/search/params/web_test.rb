@@ -1,5 +1,6 @@
 require 'test_helper'
 require 'helpers/search_params_test_helper'
+
 class Listing::Search::Params::WebTest <  ActiveSupport::TestCase
   include SearchParamsTestHelper
 
