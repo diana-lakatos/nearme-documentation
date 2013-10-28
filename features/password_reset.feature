@@ -1,4 +1,3 @@
-@javascript
 Feature: A user can reset their password
   In order to login if they forget their password
   As a user

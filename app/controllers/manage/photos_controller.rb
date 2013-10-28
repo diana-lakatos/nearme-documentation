@@ -1,4 +1,4 @@
-class Manage::PhotosController < ApplicationController
+class Manage::PhotosController < Manage::BaseController
 
   before_filter :get_proper_hash, :only => [:create]
 

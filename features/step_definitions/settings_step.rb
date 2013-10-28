@@ -27,14 +27,6 @@ Then /^#{capture_model} should be connected to selected industries$/ do |model|
   assert_equal expected_industries, object.industries.pluck(:name).reject { |name| name.include?('Industry ') }
 end
 
-Then /^I should not see company settings$/ do
-  assert !page.has_selector?('#edit_company')
-end
-
-Then /^I should see company settings$/ do
-  assert page.has_selector?('#edit_company')
-end
-
 When /^I update company settings$/ do
   fill_in "company_name", with: "Updated name"
   fill_in "company_url", with: "http://updated-url.example.com"
@@ -66,10 +58,6 @@ When /^I update company white label settings$/ do
   within(:css, 'form[id=edit_company] div[data-white-label-settings-container]') do
     find(:css, 'input[type=submit]').click
   end
-end
-
-When /^There should not be menu option "(.*)"$/ do |option_name|
-  assert !page.has_css?('div.manage-nav ul.nav li a span', :text => option_name)
 end
 
 Then /^The company white label settings should be updated$/ do

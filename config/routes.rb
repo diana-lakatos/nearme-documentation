@@ -80,7 +80,7 @@ DesksnearMe::Application.routes.draw do
     get "users/:id", :to => "registrations#show", :as => "profile"
   end
 
-  resources :reservations, :except => [:update, :destroy] do
+  resources :reservations, :except => [:update, :destroy, :show] do
     member do
       post :user_cancel
       get :export

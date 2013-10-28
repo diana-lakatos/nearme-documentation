@@ -3,11 +3,11 @@
     %a.ico-menu.nav-link{:href => "#"}
 
 %ul.nav.main-menu
-  - unless no_listing_buttons? || !user_can_add_listing?(@current_white_label_company, current_user)
+  - unless no_listing_buttons? || !platform_context.white_label_company_user?(current_user)
     - if !user_signed_in?
       %li
         = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => "nav-link btn btn-blue btn-medium" do
-          %span List Your #{current_theme.bookable_noun}
+          %span List Your #{platform_context.bookable_noun}
     - elsif current_user && current_user.listings.draft.any?
       %li
         = link_to new_space_wizard_url, :class => "nav-link btn btn-blue btn-medium" do
@@ -15,13 +15,13 @@
     - elsif current_user && current_user.listings.active.empty?
       %li
         = link_to new_space_wizard_url, :class => "nav-link btn btn-blue btn-medium" do
-          %span List Your #{current_theme.bookable_noun}
+          %span List Your #{platform_context.bookable_noun}
 
   - if user_signed_in? 
-    - if user_can_add_listing?(@current_white_label_company, current_user) && current_user.listings.active.any?
+    - if platform_context.white_label_company_user?(current_user) && current_user.listings.active.any?
       %li
         = link_to manage_locations_path, class: 'nav-link dropdown-toggle' do
-          %span Manage #{current_theme.bookable_noun.pluralize}
+          %span Manage #{platform_context.bookable_noun.pluralize}
     %li
       = link_to bookings_dashboard_path, class: 'nav-link dropdown-toggle' do
         %span My Bookings

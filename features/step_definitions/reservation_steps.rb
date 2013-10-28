@@ -4,16 +4,12 @@ Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed
   @listing = FactoryGirl.create(:listing)
   @listing.creator = lister
   @listing.company.add_creator_to_company_users
-  reservation = @listing.reserve!(reserver, [next_regularly_available_day], 1)
+  reservation = @listing.reserve!(PlatformContext.new, reserver, [next_regularly_available_day], 1)
   unless confirmed != " "
     reservation.confirm!
     reservation.save
   end
 
-end
-
-Then /^I should see a link "(.*?)"$/ do |link|
-  page.should have_content(link)
 end
 
 Given /^#{capture_model} is reserved hourly$/ do |listing_instance|
@@ -28,31 +24,10 @@ Given /^#{capture_model} has an hourly price of \$?([0-9\.]+)$/ do |listing_inst
   listing.save!
 end
 
-Given /^the listing has the following reservations:$/ do |table|
-  table.hashes.each do |row|
-    num = row["Number of Reservations"].to_i
-    step "#{num} reservations exist with listing: the listing, date: \"#{row['Date']}\""
-  end
-end
-
 Given /^bookings for #{capture_model} do( not)? need to be confirmed$/ do |listing, do_not_require_confirmation|
   listing = model!(listing)
   listing.confirm_reservations = !do_not_require_confirmation.present?
   listing.save!
-end
-
-When(/^I follow the reservation link for "([^"]*)"$/) do |date|
-  date = Date.parse(date)
-  find(:css, ".calendar .d-#{date.strftime('%Y-%m-%d')}").click
-  find(:css, ".booked-day.d-#{date.strftime('%Y-%m-%d')}").click
-  fill_in 'booked-day-qty', :with => '1'
-  click_link "Review and book now"
-end
-
-When(/^I try to book at #{capture_model} on "([^"]*)"$/) do |listing_instance, date|
-  listing = model!(listing_instance)
-  date = Date.parse(date)
-  visit "/listings/#{listing.to_param}/reservations/new?date=#{date}"
 end
 
 When(/^I cancel (.*) reservation$/) do |number|
@@ -89,7 +64,7 @@ When /^I book space as new user for:$/ do |table|
 end
 
 When /^(.*) books a space for that listing$/ do |person|
-  listing.reserve!(User.find_by_name(person), [next_regularly_available_day], 1)
+  listing.reserve!(PlatformContext.new, User.find_by_name(person), [next_regularly_available_day], 1)
 end
 
 When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user, action|
@@ -117,7 +92,7 @@ When /^the reservation expires/ do
   visit bookings_dashboard_path
 
   reservation = User.find_by_name("Keith Contractor").reservations.first
-  reservation.perform_expiry!
+  reservation.perform_expiry!(PlatformContext.new)
 
   visit bookings_dashboard_path
 end
@@ -243,44 +218,11 @@ When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved f
   }, "Unable to find a reservation for #{listing.name} on #{date}"
 end
 
-Then (/^I should not see the reservation link for "([^"]*)"$/) do |date|
-  date = Date.parse(date)
-  page.should_not have_xpath("//time[@datetime='#{date}']/../details/a")
-end
-
-Then /^I should see the following availability:$/ do |table|
-  actual_availability = all("table.reservations td.day").inject({}) do |hash, cell|
-    hash.tap do |hash|
-      within(:xpath, cell.path) do
-        date       = find("time")["datetime"]
-        available  = find(".details").text.strip
-        hash[date] = available
-      end
-    end
-  end
-
-  table.hashes.each do |date, available|
-    actual_availability[date].should == available
-  end
-end
-
 Then /^I should see the following reservations in order:$/ do |table|
   found    = all(".dates").map { |b| b.text.gsub(/\n\s*/,' ').gsub("<br>",' ').strip }
   expected = table.raw.flatten
 
   found.should == expected
-end
-
-Then /^I should see availability for dates:$/ do |table|
-  dates = all("table.reservations td.day time").map {|t| t["datetime"]}
-  dates.should == table.raw.flatten
-end
-
-Then /^I should not see availability for dates:$/ do |table|
-  dates = all("table.reservations td.day time").map {|t| t["datetime"]}
-  table.raw.flatten.each do |date|
-    dates.should_not include(date)
-  end
 end
 
 Then /^a confirm reservation email should be sent to (.*)$/ do |email|
