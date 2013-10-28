@@ -22,14 +22,15 @@ class MoveInstanceFieldsToTheme < ActiveRecord::Migration
     end
 
     Instance.all.each do |i|
-      t = i.theme ? i.theme : i.build_theme
-      t.owner_type = 'Instance'
-      t.name = i.name unless t.name
-      columns.each do |col|
-        t.send("#{col}=", i.send(col))
+      t = i.theme
+      if t
+        t.owner_type = 'Instance'
+        t.name = i.name unless t.name
+        columns.each do |col|
+          t.send("#{col}=", i.send(col))
+        end
+        t.save!(:validate => false)
       end
-      t.save!(:validate => false)
-      
     end
 
     change_table :instances do |i|
