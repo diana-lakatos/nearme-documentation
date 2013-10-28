@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
 
+  prepend_view_path FooterResolver.instance
   before_filter :require_ssl
 
   protect_from_forgery
@@ -11,7 +12,8 @@ class ApplicationController < ActionController::Base
   after_filter :store_inspectlet_taggable_events
   before_filter :first_time_visited?
   before_filter :store_referal_info
-  before_filter :load_request_context
+  before_filter :platform_context
+  before_filter :register_platform_context_as_lookup_context_detail
 
   protected
 
@@ -27,28 +29,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def load_request_context
-    @current_domain = Domain.find_for_request(request)
-    if @current_domain && @current_domain.white_label_enabled?
-      if @current_domain.white_label_company?
-        @current_white_label_company = @current_domain.target
-        @current_instance = @current_white_label_company.instance
-        @current_theme = @current_domain.target.theme
-      elsif @current_domain.instance?
-        @current_instance = @current_domain.target
-        @current_theme = @current_instance.theme
-      elsif @current_domain.partner?
-        @current_partner = @current_domain.target
-        @current_instance = @current_partner.instance 
-        @current_theme = @current_partner.theme.presence
-      end
-    else
-      @current_instance = Instance.default_instance
-      @current_theme = @current_instance.theme
-    end
+  def platform_context
+    @platform_context ||= PlatformContext.new(request.host)
   end
-  attr_accessor :current_instance, :current_theme, :current_partner
-  helper_method :current_instance, :current_theme, :current_partner
 
   # Provides an EventTracker instance for the current request.
   #
@@ -69,7 +52,7 @@ class ApplicationController < ActionController::Base
 
       # Gather information about requests
       request_details = {
-        :current_instance_id => current_instance.try(:id),
+        :current_instance_id => platform_context.instance.id,
         :current_host => request.try(:host)
       }
 
@@ -241,8 +224,15 @@ class ApplicationController < ActionController::Base
   helper_method :get_and_clear_stored_inspectlet_taggable_events
 
   def search_scope
-    @search_scope ||= Listing::SearchScope.scope(current_instance, {white_label_company: @current_white_label_company, partner: current_partner})
+    @search_scope ||= Listing::SearchScope.scope(platform_context)
   end
   helper_method :search_scope
-end
 
+  def register_lookup_context_detail(detail_name)
+    lookup_context.class.register_detail(detail_name.to_sym) { nil }
+  end
+
+  def register_platform_context_as_lookup_context_detail
+    register_lookup_context_detail(:platform_context)
+  end
+end

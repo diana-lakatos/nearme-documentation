@@ -40,7 +40,7 @@ class LiquidView
 
     filters = filters_from_controller(controller)
 
-    liquid.render(assigns, :filters => filters, :registers => {:action_view => @view, :controller => @view.controller})
+    liquid.render(assigns, :filters => filters, :registers => {:action_view => @view, :controller => @view.controller}).html_safe
   end
 
   def compilable?

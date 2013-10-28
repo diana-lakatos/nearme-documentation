@@ -18,13 +18,15 @@ module Listings
     def create
       if @reservation_request.process
         if @reservation_request.confirm_reservations?
-          ReservationMailer.enqueue.notify_host_with_confirmation(reservation)
-          ReservationMailer.enqueue.notify_guest_with_confirmation(reservation)
+
+          reservation.schedule_expiry(platform_context)
+          ReservationMailer.enqueue.notify_host_with_confirmation(platform_context, reservation)
+          ReservationMailer.enqueue.notify_guest_with_confirmation(platform_context, reservation)
           begin
             ReservationSmsNotifier.notify_host_with_confirmation(reservation).deliver
           rescue Twilio::REST::RequestError => e
             if e.message.include?('is not a valid phone number')
-              reservation.host.notify_about_wrong_phone_number(current_instance)
+              reservation.host.notify_about_wrong_phone_number(platform_context)
             else
               BackgroundIssueLogger.log_issue("[internal] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{reservation.id}, guest #{current_user.name} (#{current_user.id}). #{$!.inspect}")
             end
@@ -32,8 +34,8 @@ module Listings
           event_tracker.updated_profile_information(reservation.owner)
           event_tracker.updated_profile_information(reservation.host)
         else
-          ReservationMailer.enqueue.notify_host_without_confirmation(reservation)
-          ReservationMailer.enqueue.notify_guest_of_confirmation(reservation)
+          ReservationMailer.enqueue.notify_host_without_confirmation(platform_context, reservation)
+          ReservationMailer.enqueue.notify_guest_of_confirmation(platform_context, reservation)
         end
 
         event_tracker.requested_a_booking(reservation)

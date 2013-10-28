@@ -161,6 +161,18 @@ class EventTrackerTest < ActiveSupport::TestCase
       expect_event 'Disconnected Social Provider', user_properties
       @tracker.disconnected_social_provider(@user)
     end
+
+    should 'track photo not processed before submit' do
+      expect_set_person_properties user_properties
+      expect_event 'Photo not processed before form submit', user_properties
+      @tracker.photo_not_processed_before_submit(@user)
+    end
+
+    should 'track user closed browser photo not processed before submit' do
+      expect_set_person_properties user_properties
+      expect_event 'User closed browser window when photo not processed before form submit', user_properties
+      @tracker.user_closed_browser_photo_not_processed_before_submit(@user)
+    end
   end
 
   should 'trigger mixpanel method to get pixel based tracking url' do

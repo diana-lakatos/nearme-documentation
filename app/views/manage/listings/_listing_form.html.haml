@@ -5,7 +5,7 @@
   - if listing.persisted?
     = link_to manage_location_listing_path(@location, @listing), :method => :delete, :confirm => 'Are you sure?', :class => "delete delete-listing" do
       %span.ico-trash.padding
-        Delete this #{current_theme.bookable_noun}
+        Delete this #{platform_context.bookable_noun}
 
   .actions
     = link_to '#', :class => 'btn btn-green btn-large dashboard-save', :id => 'submit-link', :disable_with => 'Submiting...' do

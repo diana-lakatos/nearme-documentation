@@ -4,7 +4,7 @@ Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed
   @listing = FactoryGirl.create(:listing)
   @listing.creator = lister
   @listing.company.add_creator_to_company_users
-  reservation = @listing.reserve!(reserver, [next_regularly_available_day], 1)
+  reservation = @listing.reserve!(PlatformContext.new, reserver, [next_regularly_available_day], 1)
   unless confirmed != " "
     reservation.confirm!
     reservation.save
@@ -89,7 +89,7 @@ When /^I book space as new user for:$/ do |table|
 end
 
 When /^(.*) books a space for that listing$/ do |person|
-  listing.reserve!(User.find_by_name(person), [next_regularly_available_day], 1)
+  listing.reserve!(PlatformContext.new, User.find_by_name(person), [next_regularly_available_day], 1)
 end
 
 When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user, action|
@@ -117,7 +117,7 @@ When /^the reservation expires/ do
   visit bookings_dashboard_path
 
   reservation = User.find_by_name("Keith Contractor").reservations.first
-  reservation.perform_expiry!
+  reservation.perform_expiry!(PlatformContext.new)
 
   visit bookings_dashboard_path
 end
