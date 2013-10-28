@@ -39,10 +39,7 @@ class Reservation < ActiveRecord::Base
   before_validation :set_default_payment_status, on: :create, :if => lambda { listing }
   after_create :auto_confirm_reservation
 
-  # TODO: Move code relating to expiry event from model to controller.
-  after_create :schedule_expiry
-
-  def perform_expiry!
+  def perform_expiry!(platform_context)
     if unconfirmed? && !deleted?
       expire!
 
@@ -55,13 +52,13 @@ class Reservation < ActiveRecord::Base
       event_tracker.updated_profile_information(self.owner)
       event_tracker.updated_profile_information(self.host)
 
-      ReservationMailer.notify_guest_of_expiration(self).deliver
-      ReservationMailer.notify_host_of_expiration(self).deliver
+      ReservationMailer.notify_guest_of_expiration(platform_context, self).deliver
+      ReservationMailer.notify_host_of_expiration(platform_context, self).deliver
     end
   end
 
-  def schedule_expiry
-    Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :perform_expiry!, nil), run_at: expiry_time
+  def schedule_expiry(platform_context)
+    Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :perform_expiry!, platform_context), run_at: expiry_time
   end
 
   acts_as_paranoid

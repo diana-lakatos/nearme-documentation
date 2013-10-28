@@ -9,7 +9,7 @@ class PageResolver < ActionView::FileSystemResolver
 
   def find_templates(name, prefix, partial, details)
     return [] unless details[:page_path]
-    @page = details[:theme].first.pages.find_by_slug(details[:page_path].first)
+    @page = details[:platform_context].first.theme.pages.find_by_slug(details[:page_path].first)
 
     # Display default page
     if !@page && Theme::DEFAULT_THEME_PAGES.include?(details[:page_path].first)

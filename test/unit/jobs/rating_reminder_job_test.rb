@@ -17,7 +17,6 @@ class RatingReminderJobTest < ActiveSupport::TestCase
     should 'send reminder to both guest and host' do
       stub_local_time_to_return_hour(Location.any_instance, 12)
       RatingReminderJob.new(Date.current.to_s).perform
-
       assert_equal 2, ActionMailer::Base.deliveries.size
 
       @host_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@host.email] }
