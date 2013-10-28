@@ -92,6 +92,10 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def is_company_theme?
+    owner_type == 'Company'
+  end
+
   def build_clone
     current_attributes = attributes
     cloned_theme = Theme.new
