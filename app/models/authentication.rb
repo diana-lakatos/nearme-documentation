@@ -8,7 +8,13 @@ class Authentication < ActiveRecord::Base
 
   serialize :info, Hash
 
+  delegate :connections, to: :connection
+
   AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter" ]
+
+  def connection
+    @connection ||= "Authentication::#{provider_name.capitalize}Provider".constantize.new(self)
+  end
 
   def provider_name
     provider.titleize
