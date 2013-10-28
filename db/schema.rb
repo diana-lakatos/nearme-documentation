@@ -229,6 +229,20 @@ ActiveRecord::Schema.define(:version => 20131025093911) do
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
   end
 
+  create_table "listing_messages", :force => true do |t|
+    t.integer  "owner_id"
+    t.integer  "author_id",                     :null => false
+    t.integer  "listing_id"
+    t.text     "body"
+    t.boolean  "read",       :default => false
+    t.boolean  "archived_for_owner",   :default => false
+    t.boolean  "archived_for_listing",   :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  add_index "listing_messages", ["listing_id"], :name => "index_listing_messages_on_listing_id"
+
   create_table "listing_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false

@@ -82,7 +82,7 @@ module ApplicationHelper
   end
 
   def get_return_to_url
-     in_signed_in_or_sign_up? ? {} : {:return_to => "#{request.protocol}#{request.host_with_port}#{request.fullpath}"}
+    in_signed_in_or_sign_up? ? {} : {:return_to => "#{request.protocol}#{request.host_with_port}#{request.fullpath}"}
   end
 
   def in_signed_in_or_sign_up?
@@ -132,6 +132,20 @@ module ApplicationHelper
     controller_class = @section_name || controller_name
     action_class = "#{controller_class}-#{params[:action]}"
     "#{controller_class} #{action_class}"
+  end
+
+  def distance_of_time_in_words_or_date(datetime)
+    today = Date.current
+
+    if datetime.to_date == today
+      datetime.strftime("%l:%M%P")
+    elsif datetime.to_date == today.yesterday
+      'Yesterday'
+    elsif datetime > (today - 7.days)
+      datetime.strftime("%A")
+    else
+      datetime.strftime("%Y-%m-%d")
+    end
   end
 
   def render_olark?

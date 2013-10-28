@@ -44,7 +44,12 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :locations, :only => [:show] do
-    resources :listings, :controller => 'locations/listings'
+    resources :listings, :controller => 'locations/listings' do
+      member do
+        get :ask_a_question
+      end
+    end
+
     collection do
       get :populate_address_components_form
       post :populate_address_components
@@ -58,7 +63,17 @@ DesksnearMe::Application.routes.draw do
         get :booking_successful
       end
       get :hourly_availability_schedule, :on => :collection
-     end
+    end
+
+    resources :listing_messages, :controller => "listings/listing_messages" do
+      put :archive
+    end
+  end
+
+  resources :listing_messages, only: [:index] do 
+    collection do 
+      get :archived
+    end
   end
 
   resources :reservations, :only => [] do

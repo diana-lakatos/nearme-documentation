@@ -15,6 +15,11 @@ class ApplicationController < ActionController::Base
   before_filter :platform_context
   before_filter :register_platform_context_as_lookup_context_detail
 
+
+  def current_user
+    super.try(:decorate)
+  end
+
   protected
 
   # Returns the layout to use for the current request.

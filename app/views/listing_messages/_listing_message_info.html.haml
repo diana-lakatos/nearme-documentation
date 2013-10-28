@@ -1,0 +1,3 @@
+.span2
+  %p.name= link_to author.first_name, profile_path(author.slug)
+  %p.date= distance_of_time_in_words_or_date(listing_message.created_at)

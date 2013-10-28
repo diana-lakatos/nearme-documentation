@@ -18,7 +18,7 @@ class Locations::ListingsControllerTest < ActionController::TestCase
 
   context 'edit links' do
     should 'be visible for location admins' do
-      user = FactoryGirl.create(:user, admin: true, companies: [@location.company])
+      user = FactoryGirl.create(:user, admin: true, companies: [@location.company]).decorate
       Locations::ListingsController.any_instance.stubs(:current_user).returns(user)
       get :show, location_id: @location.id, id: @listing
       assert_select 'a[href=?]', edit_manage_listing_path(@listing), count: 1
@@ -26,7 +26,7 @@ class Locations::ListingsControllerTest < ActionController::TestCase
     end
 
     should 'be hidden for customers' do
-      user = FactoryGirl.create(:user)
+      user = FactoryGirl.create(:user).decorate
       Locations::ListingsController.any_instance.stubs(:current_user).returns(user)
       get :show, location_id: @location.id, id: @listing
       assert_select 'a[href=?]', edit_manage_listing_path(@listing), count: 0

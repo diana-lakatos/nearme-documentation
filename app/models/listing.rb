@@ -17,6 +17,8 @@ class Listing < ActiveRecord::Base
     :as => :target,
     :dependent => :destroy
 
+  has_many :listing_messages
+
   has_one :company, through: :location
   belongs_to :location, inverse_of: :listings, with_deleted: true
   belongs_to :listing_type
@@ -33,6 +35,9 @@ class Listing < ActiveRecord::Base
   scope :visible,  where(:enabled => true)
   scope :searchable, active.visible
   scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where('listings.listing_type_id IN (?)', listing_types_ids) }
+  
+  scope :with_listing_messages, joins(:listing_messages).
+        group('listings.id HAVING count(listing_messages.id) > 0')
 
   # == Callbacks
   after_save :notify_user_about_change
