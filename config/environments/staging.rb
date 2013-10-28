@@ -45,7 +45,6 @@ DesksnearMe::Application.configure do
     username == 'desksnearme' && password == 'sharethem'
   end
 
-  # Don't perform mixpanel and google analytics requests for staging
-  config.perform_mixpanel_requests = false
+  # Don't perform google analytics requests for staging
   config.perform_google_analytics_requests = false
 end
