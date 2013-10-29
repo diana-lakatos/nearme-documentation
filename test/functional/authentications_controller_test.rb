@@ -48,13 +48,14 @@ class AuthenticationsControllerTest < ActionController::TestCase
       @provider = 'linkedin'
       @uid = '123456'
       @email = 'test@example.com'
+      @token = 'abcd'
       @user = FactoryGirl.create(:user)
       request.env['omniauth.auth'] = {
         'provider' => @provider,
         'uid' => @uid,
         'info' => { 'email' => @email, 'name' => 'maciek' },
         'credentials' => {
-          'token' => 'abcd',
+          'token' => @token,
           'expires_at' => 123456789
         }
       }
@@ -98,6 +99,8 @@ class AuthenticationsControllerTest < ActionController::TestCase
         end
       end
       assert_equal 'Authentication successful.', flash[:success]
+
+      assert_equal @token, @user.authentications.last.token
     end
 
     should "fail due to incorrect email" do

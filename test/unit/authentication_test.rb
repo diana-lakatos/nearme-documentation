@@ -16,6 +16,25 @@ class AuthenticationTest < ActiveSupport::TestCase
                       :user_id  => @user.id }
   end
 
+  context 'social connection' do
+    class Authentication::DesksnearmeProvider
+      def initialize(params)
+      end
+    end
+
+    should 'call provider' do
+      auth = Authentication.new(@valid_params)
+      Authentication::DesksnearmeProvider.expects(:new).with(auth)
+      auth.social_connection
+    end
+
+    should 'delegate connections' do
+      auth = Authentication.new(@valid_params)
+      Authentication::DesksnearmeProvider.any_instance.expects(:connections).returns(true)
+      assert auth.connections
+    end
+  end
+
   should "has a hash for info" do
     auth = Authentication.new(@valid_params)
     auth.info["thing"] = "stuff"

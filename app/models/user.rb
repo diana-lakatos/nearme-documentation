@@ -88,7 +88,11 @@ class User < ActiveRecord::Base
   scope :without, lambda { |users|
     # TODO: handle AR collections with pluck
     users_ids = Array.wrap(users).collect(&:id)
-    where(arel_table[:id].not_in(users_ids))
+    if users_ids.any?
+      where(arel_table[:id].not_in(users_ids))
+    else
+      scoped
+    end
   }
 
   scope :ordered_by_email, order('users.email ASC') 
