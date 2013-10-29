@@ -44,7 +44,4 @@ DesksnearMe::Application.configure do
   config.middleware.insert_before(Rack::Lock, "Rack::Auth::Basic") do |username, password|
     username == 'desksnearme' && password == 'sharethem'
   end
-
-  # Don't perform google analytics requests for staging
-  config.perform_google_analytics_requests = false
 end
