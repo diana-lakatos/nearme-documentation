@@ -2,6 +2,10 @@
   background: $theme_black;
   padding: 40px 0;
 
+  .container-fluid {
+    background: $theme_black;
+  }
+
   @media (max-width: $ipad-width) {
     padding: 30px 0 5px;
   }
@@ -40,18 +44,42 @@ footer {
     }
   }
 
-  ul {
-    &.icons {
-        @media (max-width:$ipad-width) {
-          width: 126px;
-          margin: 0 auto;
-        }
-      li {
-        padding: 0 0 0 15px;
-        width: 27px;
+  .social-wrapper {
+    @media (max-width:$ipad-width) {
+      position: relative;
+      overflow: hidden;
+      float: right;
+      width: 100%;
+
+      ul.icons {
+        clear: right;
         float: right;
-        a:before {
-          font-size: 27px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        right: 50%;
+      }
+
+      li {
+        left: 50%;
+        display: block;
+        position: relative;
+      }
+    }
+
+    ul {
+      &.icons {
+        li {
+          &:first-child {
+            padding-right: 0;
+          }
+          padding: 0 15px 0 0;
+          width: 27px;
+          float: right;
+          a:before {
+            font-size: 27px;
+          }
         }
       }
     }

@@ -115,10 +115,6 @@ Then /there should be no (.*) account$/ do |social|
   assert_nil Authentication.find_by_provider(social.downcase)
 end
 
-Then /there should be (Twitter|Facebook|LinkedIn) account$/ do |social|
-  assert_not_nil Authentication.find_by_provider(social.downcase)
-end
-
 Then /I am correctly signed in/ do
   user = User.find_by_email('valid@example.com')
   assert_equal "I Am User", user.name

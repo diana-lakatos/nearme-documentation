@@ -7,55 +7,6 @@ Feature: A user can search for a listing
   Background:
     And I am on the home page
 
-  Scenario: A user searches for invalid places
-    When I search for ""
-    Then I should see "No results found"
-    And I should see "The address you entered couldn't be found"
-
-  Scenario: A user searches for invalid place
-    When I search for "bung"
-    Then I should see "No results found"
-
-  Scenario: A user searches for a location
-    Given a listing in Cleveland exists
-    And a listing in Auckland exists
-    When I search for "Auckland"
-    And I view the results in the map view
-    Then I see the listings on a map
-    And I view the results in the list view
-    And I see a search result for the Auckland listing
-    And I do not see a search result for the Cleveland listing
-
-  Scenario: A user filters results by listing types
-    Given a first listing in Auckland exists
-    And a second listing in Auckland exists
-    And both listings in Auckland belongs to different desk type
-    When I search for "Adelaide"
-    Then I do not see a search result for the Auckland listing
-    When I filter by Desk Types
-    When I search for "Auckland"
-   Then I see a search result that satisfies filter
-
-  Scenario: A user filters results by location types
-    Given a first listing in Auckland exists
-    And a second listing in Auckland exists
-    And both listings in Auckland belongs to different location type
-    When I search for "Adelaide"
-    Then I do not see a search result for the Auckland listing
-    When I filter by Location Types
-    When I search for "Auckland"
-   Then I see a search result that satisfies filter
-
-  Scenario: A user filters results by company industries
-    Given a first listing in Auckland exists
-    And a second listing in Auckland exists
-    And both listings in Auckland belongs to different industry
-    When I search for "Adelaide"
-    Then I do not see a search result for the Auckland listing
-    When I filter by Industries
-    When I search for "Auckland"
-   Then I see a search result that satisfies filter
-
   Scenario: Returning to the search results shows the previous results
     Given a listing in Auckland exists
       And a listing in Adelaide exists
@@ -64,12 +15,6 @@ Feature: A user can search for a listing
       And I leave the page and hit back
      Then I see a search result for the Auckland listing
       And I do not see a search result for the Adelaide listing
-
-  Scenario: Searching without setting a date range
-    Given there are listings which are unavailable
-    And there are listings which are available
-    When I search without setting a date range
-    Then all the listings are included in the search results
 
   Scenario: Subscribing on notification about new listings if no listings found for valid location.
     When I search for located "New Zealand"
@@ -88,9 +33,3 @@ Feature: A user can search for a listing
     And I fill form for subscribing on notification
     Then I should see a notification for my subscription
     And search notification created with "New Zealand" for user
-
-  Scenario: A user searches for disabled listing
-    Given a disabled listing in Auckland exists
-    When I search for "Auckland"
-    Then I should see "No results found"
-

@@ -114,7 +114,7 @@ class Theme < ActiveRecord::Base
   end
 
   def pages_with_fallbacks
-    (Theme::DEFAULT_THEME_PAGES.map{|page| Page.new(path: page.capitalize, slug: page)} + self.pages).uniq{|page| page.path}
+    (Theme::DEFAULT_THEME_PAGES.map{|page| Page.new(path: page.capitalize, slug: page)} + self.pages).uniq{|page| page.slug || page.path}
   end
 end
 

@@ -26,6 +26,9 @@
       = link_to bookings_dashboard_path, class: 'nav-link dropdown-toggle' do
         %span My Bookings
     %li
+      = link_to listing_messages_path, class: 'nav-link' do
+        %span Messages #{current_user.unread_messages_count}
+    %li
       = link_to edit_user_registration_path, class: 'nav-link dropdown-toggle' do
         %span Edit Profile
     %li

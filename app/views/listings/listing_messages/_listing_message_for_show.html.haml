@@ -1,0 +1,17 @@
+- listing = listing_message.listing
+- author = listing_message.author
+.row-fluid
+  .span12.listing-message-for-show{class: listing_message.css_class(current_user) }
+
+    - if author != current_user
+      .span2.info
+        %p.name= link_to author.first_name, profile_path(author.slug)
+        %p.date= distance_of_time_in_words_or_date(listing_message.created_at)
+
+    .span10
+      %p.body= listing_message.body
+
+    - if author == current_user
+      .span2.info
+        %p.name= link_to author.first_name, profile_path(author.slug)
+        %p.date= distance_of_time_in_words_or_date(listing_message.created_at)

@@ -18,14 +18,6 @@ Then /^I should be logged out$/ do
   step "I should see \"Log In\""
 end
 
-Given (/^I am not logged in as #{capture_model}$/) do |user_instance|
-  if page.has_content?("Log Out")
-    user = model!(user_instance)
-    click_link user.first_name
-    click_link "Log Out"
-  end
-end
-
 Then(/^I should be logged in as #{capture_model}$/) do |user_instance|
   user = model!(user_instance)
 
@@ -43,22 +35,12 @@ Then /^I should( not)? be redirected to the previous search page$/ do |without_r
   end
 end
 
-Then /^#{capture_model} should have password "([^"]*)"$/ do |user_instance, password|
-  user = model!(user_instance)
-  user.valid_password?(password).should be_true
-end
-
 Then /^I should see an indication I've just signed in$/ do
   step 'I should see "You have signed up successfully."'
 end
 
 Then /^a new account is not created$/ do
   assert_equal 1, User.count
-end
-
-Then /^a user is taken into sign in modal without page reload$/ do
-  page.first('h2').text.should match("Log in to Desks Near Me")
-  page.first('h2').text.should_not match("Sign up to Desks Near Me")
 end
 
 Then /^I should get verification email$/ do

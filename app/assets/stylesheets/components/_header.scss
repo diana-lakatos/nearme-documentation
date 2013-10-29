@@ -1,0 +1,38 @@
+.box header {
+
+  padding: $padding-small;
+
+  .button-links {
+    width: 100%;
+    text-align: center;
+
+    ul {
+      margin: 0px auto;
+
+      li {
+        display: inline-block;
+        margin-left: 5px;
+        margin-right: 5px;
+        text-align: center;
+
+        a {
+          width: 150px;
+        }
+      }
+
+      @media (max-width: $ipad-width) {
+        li {
+          display: block;
+
+          a {
+            width: 100%;
+          }
+
+          &:not(:last-child) {
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+  }
+}
