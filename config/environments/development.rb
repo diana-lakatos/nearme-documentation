@@ -24,4 +24,8 @@ DesksnearMe::Application.configure do
   config.exceptions_app = nil
 
   config.filepicker_rails.api_key = "AFWbvclyPQ4WjIIrem35wz"
+
+  # Don't perform mixpanel and google analytics requests for development
+  config.perform_mixpanel_requests = false
+  config.perform_google_analytics_requests = false
 end

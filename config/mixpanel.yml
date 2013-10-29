@@ -3,7 +3,7 @@ production:
   api_secret: 2a92d51306759b5ab31df92e9d9fc7cc
   token: 7ffff7057407af5fe5f71701a1ab26b2
 staging:
- # we want to present data from production on staging
+  # staging has separate mixpanel account
   api_key: 2f186c65143dc19922e88a39b0d09c91
   api_secret: 68a51642fcaaf6447851cd1f0ac31122
   token: 7536d92b0802661ebeef7519900d03d7

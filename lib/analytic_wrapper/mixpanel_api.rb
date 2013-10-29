@@ -141,4 +141,3 @@ class AnalyticWrapper::MixpanelApi
   end
 
 end
-

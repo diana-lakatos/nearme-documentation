@@ -44,5 +44,4 @@ DesksnearMe::Application.configure do
   config.middleware.insert_before(Rack::Lock, "Rack::Auth::Basic") do |username, password|
     username == 'desksnearme' && password == 'sharethem'
   end
-
 end
