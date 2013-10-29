@@ -12,4 +12,4 @@
 = render 'shared/inspectlet'
 
 // Mixpanel
-= render 'shared/mixpanel'
+= render 'shared/mixpanel' if DesksnearMe::Application.config.perform_mixpanel_requests
