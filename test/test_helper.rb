@@ -133,14 +133,16 @@ Spork.each_run do
   if ENV['DRB']
     require 'simplecov'
   end
-  # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
+
   class ActionController::TestCase
-    fixtures :all
+    setup :global_setup
+
+    def global_setup
+      FactoryGirl.create(:theme)
+    end
   end
-  class ActiveSupport::TestCase
-    fixtures :all
-  end
+
   FactoryGirl.reload
   DatabaseCleaner.clean
-
 end
+

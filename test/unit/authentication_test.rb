@@ -2,9 +2,12 @@ require 'test_helper'
 
 class AuthenticationTest < ActiveSupport::TestCase
   setup do
+    @user = FactoryGirl.build(:user, password: nil)
+    @user.save!(validate: false)
+
     @valid_params = { :provider => "desksnearme",
                       :uid      => "123456789",
-                      :user_id  => 16 }
+                      :user_id  => @user.id }
   end
 
   test "is valid with valid params" do

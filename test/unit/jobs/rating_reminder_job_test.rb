@@ -9,6 +9,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
   context "With yesterday ending reservation" do
 
     setup do
+      FactoryGirl.create(:domain)
       @reservation = FactoryGirl.create(:past_reservation)
       @guest = @reservation.owner
       @host = @reservation.listing.location.creator
@@ -20,10 +21,10 @@ class RatingReminderJobTest < ActiveSupport::TestCase
       assert_equal 2, ActionMailer::Base.deliveries.size
 
       @host_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@host.email] }
-      assert_match /\[DesksNearMe\] Rate your guest at Listing \d+/, @host_email.subject
+      assert_match(/\[DesksNearMe\] Rate your guest at Listing \d+/, @host_email.subject)
 
       @guest_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@guest.email] }
-      assert_match /\[DesksNearMe\] Rate your host at Listing \d+/, @guest_email.subject
+      assert_match(/\[DesksNearMe\] Rate your host at Listing \d+/, @guest_email.subject)
 
     end
 
