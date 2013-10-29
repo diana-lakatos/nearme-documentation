@@ -113,6 +113,7 @@ class UserTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
     @user.authentications.find_or_create_by_provider("exists").tap do |a|
       a.uid = @user.id
+      a.token = "abcd"
     end.save!
     assert @user.linked_to?("exists")
   end

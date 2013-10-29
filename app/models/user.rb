@@ -136,10 +136,16 @@ class User < ActiveRecord::Base
   def apply_omniauth(omniauth)
     self.name = omniauth['info']['name'] if name.blank?
     self.email = omniauth['info']['email'] if email.blank?
+    expires_at = omniauth['credentials'] && omniauth['credentials']['expires_at'] ? Time.at(omniauth['credentials']['expires_at']) : nil
+    token = omniauth['credentials'] && omniauth['credentials']['token']
+    secret = omniauth['credentials'] && omniauth['credentials']['secret']
     use_social_provider_image(omniauth['info']['image']) if omniauth['info']['image']
     authentications.build(:provider => omniauth['provider'],
                           :uid => omniauth['uid'],
-                          :info => omniauth['info'])
+                          :info => omniauth['info'],
+                          :token => token,
+                          :secret => secret,
+                          :token_expires_at => expires_at)
   end
 
   def cancelled_reservations

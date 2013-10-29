@@ -31,7 +31,11 @@ module Auth
     end
 
     def create_authentication!(current_user)
-      current_user.authentications.create!(:provider => provider, :uid => uid)
+      current_user.authentications.create!(:provider => provider,
+                                           :uid => uid,
+                                           :token => token,
+                                           :secret => secret,
+                                           :token_expires_at => expires_at)
       current_user.use_social_provider_image(@auth_params['info']['image'])
       current_user.save!
     end
@@ -70,5 +74,16 @@ module Auth
       @auth_params['uid']
     end
 
+    def token
+      @auth_params['credentials']['token']
+    end
+
+    def secret
+      @auth_params['credentials']['secret']
+    end
+
+    def expires_at
+      @auth_params['credentials']['expires_at'] ? Time.at(@auth_params['credentials']['expires_at']) : nil
+    end
   end
 end

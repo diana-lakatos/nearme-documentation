@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(:version => 20131030082002) do
     t.string   "secret"
     t.string   "token"
     t.text     "info"
+    t.datetime "token_expires_at"
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"

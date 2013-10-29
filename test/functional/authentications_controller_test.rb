@@ -49,7 +49,15 @@ class AuthenticationsControllerTest < ActionController::TestCase
       @uid = '123456'
       @email = 'test@example.com'
       @user = FactoryGirl.create(:user)
-      request.env['omniauth.auth'] = { 'provider' => @provider, 'uid' => @uid, 'info' => { 'email' => @email, 'name' => 'maciek' } }
+      request.env['omniauth.auth'] = {
+        'provider' => @provider,
+        'uid' => @uid,
+        'info' => { 'email' => @email, 'name' => 'maciek' },
+        'credentials' => {
+          'token' => 'abcd',
+          'expires_at' => 123456789
+        }
+      }
     end
 
     should "redirect with message if already connected" do
@@ -103,17 +111,27 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert flash[:error].include?('Your Linkedin email is already linked to an account')
     end
 
-    should "should successfully sign up and log"  do
-      stub_mixpanel
-      @tracker.expects(:signed_up).once.with do |user, custom_options|
-        user == assigns(:oauth).authenticated_user && custom_options == { signed_up_via: 'other', provider: @provider }
+    context "should successfully sign up and log"  do
+      setup do
+        stub_mixpanel
       end
-      @tracker.expects(:connected_social_provider).once.with do |user, custom_options|
-        user == assigns(:oauth).authenticated_user && custom_options == {  provider: @provider }
+
+      should "is tracked via mixpanel" do
+        @tracker.expects(:signed_up).once.with do |user, custom_options|
+          user == assigns(:oauth).authenticated_user && custom_options == { signed_up_via: 'other', provider: @provider }
+        end
+        @tracker.expects(:connected_social_provider).once.with do |user, custom_options|
+          user == assigns(:oauth).authenticated_user && custom_options == {  provider: @provider }
+        end
+
+        post :create
       end
-      assert_difference('User.count') do
-        assert_difference('Authentication.count') do
-          post :create
+
+      should 'create user with auth.' do
+        assert_difference('User.count') do
+          assert_difference('Authentication.count') do
+            post :create
+          end
         end
       end
     end
@@ -136,6 +154,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
     user ||= @user
     auth = user.authentications.find_or_create_by_provider(provider)
     auth.uid = uid
+    auth.token = "token"
     auth.save!
   end
 

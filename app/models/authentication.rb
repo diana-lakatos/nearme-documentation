@@ -1,19 +1,19 @@
 class Authentication < ActiveRecord::Base
-  attr_accessible :user_id, :provider, :uid, :info
+  attr_accessible :user_id, :provider, :uid, :info, :token, :secret, :token_expires_at
   belongs_to :user
 
-  validates :provider, :uid, presence: true
+  validates :provider, :uid, :token, presence: true
   validates :provider, uniqueness: { scope: :user_id }
   validates :uid,      uniqueness: { scope: :provider }
 
   serialize :info, Hash
 
-  delegate :connections, to: :connection
+  delegate :connections, to: :social_connection
 
   AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter" ]
 
-  def connection
-    @connection ||= "Authentication::#{provider_name.capitalize}Provider".constantize.new(self)
+  def social_connection
+    @social_connection ||= "Authentication::#{provider_name.capitalize}Provider".constantize.new(self)
   end
 
   def provider_name
