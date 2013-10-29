@@ -60,11 +60,11 @@ class ReservationsController < ApplicationController
   end
 
   def upcoming
-    @reservations = current_user.reservations.not_archived.to_a.sort_by(&:date)
-    if @reservations.empty?
+    if current_user.reservations.empty?
       flash[:warning] = t('flash_messages.dashboard.no_bookings')
       redirect_to search_path
     else
+      @reservations = current_user.reservations.not_archived.to_a.sort_by(&:date)
       @reservation = params[:id] ? current_user.reservations.find(params[:id]) : nil
       render :index
     end

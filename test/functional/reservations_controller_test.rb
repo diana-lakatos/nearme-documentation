@@ -113,10 +113,18 @@ class ReservationsControllerTest < ActionController::TestCase
       assert_equal "You haven't made any bookings yet!", flash[:warning]
     end
 
-    should 'render view if any bookings' do
-      FactoryGirl.create(:reservation, owner: @user)
-      get :upcoming
-      assert_response :success
+    context 'render view' do
+      should 'if any upcoming bookings' do
+        FactoryGirl.create(:reservation, owner: @user)
+        get :upcoming
+        assert_response :success
+      end
+
+      should 'if any archived bookings' do
+        FactoryGirl.create(:past_reservation, owner: @user)
+        get :upcoming
+        assert_response :success
+      end
     end
   end
 
