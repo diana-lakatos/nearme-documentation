@@ -34,8 +34,10 @@ namespace :reprocess do
         authentication = user.authentications.detect{|a| a.provider == 'facebook'}
         url = "http://graph.facebook.com/#{authentication.uid}/picture?width=500"
         puts "Processing User##{user.id} from url: #{url}"
-        user.remote_avatar_url = url
-        user.save!
+        user.update_column(:avatar_original_url, url)
+        user.reload
+        CarrierWave::SourceProcessing::Processor.new(user, 'avatar').generate_versions
+        user.update_column(:avatar_original_url, nil)
         puts "Reprocessed User##{user.id} successfully"
       rescue
         puts "Reprocessing User##{user.id} failed: #{$!.inspect}"
