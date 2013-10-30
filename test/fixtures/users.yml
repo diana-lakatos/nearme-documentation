@@ -1,9 +1,0 @@
-one:
-  id: 16
-  name: "Blaze Smith"
-  email: "christina.parisian@reillybartell.info"
-  created_at: "2012-05-10 06:00:10"
-  updated_at: "2012-05-10 06:00:10"
-  authentication_token: "AnEgyvTr1qXWHsV4EBcr"
-  country_name: "United States"
-

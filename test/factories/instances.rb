@@ -1,7 +1,6 @@
 FactoryGirl.define do
 
   factory :instance do
-    # please note that default factory should be loaded via fixtures/instances.yml !
     sequence(:name) {|n| Instance.default_instance ? "desks near me #{n}" : 'DesksNearMe'}
     bookable_noun 'Desk'
     service_fee_percent '10.00'

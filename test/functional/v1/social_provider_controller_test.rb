@@ -3,7 +3,7 @@ require 'test_helper'
 class V1::SocialProviderControllerTest < ActionController::TestCase
 
   setup do
-    @user    = users(:one)
+    @user = FactoryGirl.create(:user)
     @user.ensure_authentication_token!
     @request.env['Authorization'] = @user.authentication_token
   end

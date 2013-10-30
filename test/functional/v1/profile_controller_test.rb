@@ -3,7 +3,7 @@ require 'test_helper'
 class V1::ProfileControllerTest < ActionController::TestCase
 
   setup do
-    @user = users(:one)
+    @user = FactoryGirl.create(:user)
     @user.ensure_authentication_token!
     @request.env['Authorization'] = @user.authentication_token
   end
@@ -15,7 +15,7 @@ class V1::ProfileControllerTest < ActionController::TestCase
 
   context "#update" do
     should "update profile" do
-      raw_put :update, {:id => users(:one).id}, '{"name": "Alvina Q. DuBuque"}'
+      raw_put :update, {:id => @user.id}, '{"name": "Alvina Q. DuBuque"}'
       assert_response :success
 
       @user.reload
@@ -24,12 +24,12 @@ class V1::ProfileControllerTest < ActionController::TestCase
 
     should "not raise when no name is included" do
       assert_nothing_raised do
-        raw_put :update, {:id => users(:one).id}, '{"phone": "1 234 56890"}'
+        raw_put :update, {:id => @user.id}, '{"phone": "1 234 56890"}'
       end
     end
 
     should "update phone" do
-      raw_put :update, {:id => users(:one).id}, '{ "name": "John Doe", "phone": "+1 (800) 555-1234"}'
+      raw_put :update, {:id => @user.id}, '{ "name": "John Doe", "phone": "+1 (800) 555-1234"}'
       assert_response :success
 
       @user.reload
