@@ -97,6 +97,9 @@ class User < ActiveRecord::Base
 
   scope :ordered_by_email, order('users.email ASC') 
 
+  scope :visited_listing, ->(listing) {
+    joins(:reservations).merge(Reservation.confirmed.past.for_listing(listing))
+  }
 
   extend CarrierWave::SourceProcessing
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
@@ -243,6 +246,10 @@ class User < ActiveRecord::Base
 
   def friends
     self.followed_users
+  end
+
+  def friends=(users)
+    Array.wrap(users).each {|u| self.add_friend(u) }
   end
 
   def full_email

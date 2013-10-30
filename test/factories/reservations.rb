@@ -23,6 +23,15 @@ FactoryGirl.define do
       association(:listing, factory: :listing_in_san_francisco_address_components) 
     end
 
+    factory :future_reservation do
+      after(:create) do |reservation|
+        reservation.periods.reverse.each_with_index do |period, i|
+          period.date = Date.tomorrow + i.days
+          period.save!
+        end
+      end
+    end
+
     factory :past_reservation do
       after(:create) do |reservation|
         reservation.periods.reverse.each_with_index do |period, i|
