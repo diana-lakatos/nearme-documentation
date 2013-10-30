@@ -5,9 +5,9 @@ class V1::AuthenticationsControllerTest < ActionController::TestCase
   PASSWORD = "password123"
 
   setup do
-    @user = users(:one)
-    @user.password = PASSWORD
-    @user.save
+    @user = FactoryGirl.build(:user)
+    @user.password = @user.password_confirmation = PASSWORD
+    @user.save!
   end
 
   ##

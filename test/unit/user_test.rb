@@ -95,15 +95,15 @@ class UserTest < ActiveSupport::TestCase
   end
 
   should "know what authentication providers it is linked to" do
-    @user = User.find(16)
+    @user = FactoryGirl.create(:user)
     @user.authentications.find_or_create_by_provider("exists").tap do |a|
-      a.uid = 16
+      a.uid = @user.id
     end.save!
     assert @user.linked_to?("exists")
   end
 
   should "know what authentication providers it isn't linked to" do
-    @user = User.find(16)
+    @user = FactoryGirl.create(:user)
     refute @user.linked_to?("doesntexist")
   end
 
