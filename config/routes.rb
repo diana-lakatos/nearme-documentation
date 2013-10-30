@@ -80,6 +80,8 @@ DesksnearMe::Application.routes.draw do
     resources :guest_ratings, :only => [:new, :create]
     resources :host_ratings, :only => [:new, :create]
   end
+  match '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
+  match '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
 
   match '/auth/:provider/callback' => 'authentications#create'
   match "/auth/failure", to: "authentications#failure"
@@ -99,8 +101,6 @@ DesksnearMe::Application.routes.draw do
     member do
       post :user_cancel
       get :export
-      get :guest_rating
-      get :host_rating
     end
     collection do
       get :upcoming

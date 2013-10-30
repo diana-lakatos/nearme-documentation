@@ -58,11 +58,11 @@ class ReservationDrop < BaseDrop
   end
 
   def guest_rating_reservation_url
-    routes.guest_rating_reservation_url(@reservation.id)
+    routes.guest_rating_url(@reservation.id)
   end
 
   def host_rating_reservation_url
-    routes.host_rating_reservation_url(@reservation.id)
+    routes.host_rating_url(@reservation.id)
   end
 
   def created_at

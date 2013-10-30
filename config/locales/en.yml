@@ -36,8 +36,10 @@ en:
   flash_messages:
     guest_rating:
       submitted_successfully: "Thanks, your rating was submitted successfully!"
+      already_exists: "Rating for this booking has already been submitted."
     host_rating:
       submitted_successfully: "Thanks, your rating was submitted successfully!"
+      already_exists: "Rating for this booking has already been submitted."
     space_wizard:
       complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
       draft_saved: "Your draft has been saved!"
