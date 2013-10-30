@@ -236,9 +236,9 @@ class User < ActiveRecord::Base
     user.follow!(self)
   end
 
-  def find_new_friends(users)
-    excluded_users = self.friends << self
-    User.without(excluded_users)
+  def find_new_friends!
+    friend_finder = User::FriendFinder.new(self, authentications.with_valid_token)
+    friend_finder.find_friends!
   end
 
   def friends

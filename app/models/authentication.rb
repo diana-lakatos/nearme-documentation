@@ -8,7 +8,10 @@ class Authentication < ActiveRecord::Base
 
   serialize :info, Hash
 
-  delegate :connections, to: :social_connection
+  delegate :new_connections, to: :social_connection
+
+  scope :with_valid_token,   -> {where(arel_table[:token_expires_at].gt(Time.now).or(arel_table[:token_expires_at].eq(nil)))}
+  scope :with_invalid_token, -> {where(arel_table[:token_expires_at].ltqe(Time.now))}
 
   AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter" ]
 

@@ -13,7 +13,9 @@ class Authentication::BaseProvider
   end
 
   def provider
-    raise NotImplementedError
+    provider = self.class.to_s.demodulize.split('Provider')[0].downcase
+    raise NotImplementedError if provider == 'base'
+    provider
   end
 
   def friend_ids
