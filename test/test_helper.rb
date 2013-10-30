@@ -135,9 +135,9 @@ Spork.each_run do
   end
 
   class ActionController::TestCase
-    setup :global_setup
+    setup :setup_platform_context
 
-    def global_setup
+    def setup_platform_context
       FactoryGirl.create(:theme)
     end
   end
