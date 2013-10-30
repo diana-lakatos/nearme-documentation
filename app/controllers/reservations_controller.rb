@@ -2,8 +2,7 @@ class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
   before_filter :fetch_reservations
   before_filter :fetch_reservation, :only => [:user_cancel]
-  before_filter :fetch_current_user_reservation, :only => [:export, :guest_rating, :host_rating]
-  before_filter :redirect_if_rating_already_exists, :only => [:guest_rating, :host_rating]
+  before_filter :fetch_current_user_reservation, :only => [:export, :host_rating]
 
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
@@ -75,12 +74,15 @@ class ReservationsController < ApplicationController
     render :index
   end
 
-  def guest_rating
-    render :show
-  end
-
   def host_rating
-    render :show
+    existing_host_rating = HostRating.where(reservation_id: @reservation.id,
+                                            author_id: current_user.id)
+    if existing_host_rating.blank?
+      upcoming
+    else
+      flash[:notice] = t('flash_messages.host_rating.already_exists')
+      redirect_to root_path
+    end
   end
 
   protected
@@ -110,14 +112,6 @@ class ReservationsController < ApplicationController
       bookings_dashboard_path
     else
       manage_guests_dashboard_path
-    end
-  end
-
-  def redirect_if_rating_already_exists
-    klass = params[:action].classify.constantize
-    if klass.where(reservation_id: @reservation.id, author_id: current_user.id).exists?
-      flash[:notice] = "Rating for this booking has already been submitted."
-      redirect_to root_path
     end
   end
 
