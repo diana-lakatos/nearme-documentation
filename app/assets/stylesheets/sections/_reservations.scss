@@ -40,10 +40,14 @@ section.reservations {
     font-size: 0.95em;
   }
 
-
   .reservation-emphasis{
     margin: 0px 0px 20px 0px;
     font-size: 20px;
+  }
+
+  p.no-data {
+    text-align: center;
+    margin: 40px 0 25px 0;
   }
 
   .other-reservation-separator {

@@ -15,7 +15,7 @@
                 = reservation_navigation_link('archived')
 
         - if @reservations.empty?
-          %p You currently have no #{params[:action]} bookings. Find a space near you!
+          %p.no-data= t('reservations.no_bookings_html', type: params[:action])
         - else
           - if @reservation
             %h2.reservation-emphasis
