@@ -53,21 +53,18 @@ class ReservationsController < ApplicationController
             end
           end
         end
-        
+
         render :text => calendar.to_s.gsub("\n", "\r\n")
       end
     end
   end
 
   def upcoming
-    if current_user.reservations.empty?
-      flash[:warning] = t('flash_messages.dashboard.no_bookings')
-      redirect_to search_path
-    else
+    unless current_user.reservations.empty?
       @reservations = current_user.reservations.not_archived.to_a.sort_by(&:date)
       @reservation = params[:id] ? current_user.reservations.find(params[:id]) : nil
-      render :index
     end
+    render :index
   end
 
   def archived

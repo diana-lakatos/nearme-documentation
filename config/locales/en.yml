@@ -31,6 +31,8 @@ en:
     form:
       try_another_search_or_subscribe: "Try another search query, or subscribe below to be notified via email when a desk is added at this location."
       try_another_search_or_enter_email: "Try another search query, or enter your email address below to be notified when a desk is added at this location."
+  reservations:
+    no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find a space near you!</a>"
   flash_messages:
     guest_rating:
       submitted_successfully: "Thanks, your rating was submitted successfully!"
