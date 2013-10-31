@@ -56,4 +56,17 @@ module ListingsHelper
     Placeholder.new(height: options[:height], width: options[:width]).path
   end
 
+  def connections_text_for(listing, current_user)
+    friends = current_user.friends.visited_listing(listing).uniq.collect do |user|
+      "#{user.name} worked here"
+    end
+    hosts = current_user.friends.admins_of_listing(listing).uniq.collect do |user|
+      "#{user.name} is the host"
+    end
+    [friends, hosts].flatten.join('<br />').html_safe
+  end
+
+  def connections_count_for(listing, current_user)
+    current_user.friends.visited_listing(listing).uniq.count + current_user.friends.admins_of_listing(listing).uniq.count
+  end
 end

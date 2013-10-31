@@ -112,7 +112,6 @@ class SearchControllerTest < ActionController::TestCase
           setup do
             @auckland = FactoryGirl.create(:location_in_auckland)
             @adelaide = FactoryGirl.create(:location_in_adelaide)
-            get :index, q: 'Adelaide'
           end
 
           should 'in map view' do
@@ -121,10 +120,28 @@ class SearchControllerTest < ActionController::TestCase
             refute_location_in_result(@auckland) 
           end
 
-          should 'in list view' do
-            get :index, q: 'Adelaide', v: 'list'
-            assert_location_in_result(@adelaide) 
-            refute_location_in_result(@auckland) 
+          context 'in list view' do
+
+            should 'show results' do
+              get :index, q: 'Adelaide', v: 'list'
+              assert_location_in_result(@adelaide) 
+              refute_location_in_result(@auckland) 
+            end
+
+            should 'show connections' do
+              me = FactoryGirl.create(:user)
+              friend = FactoryGirl.create(:user)
+              me.friends << friend
+
+              FactoryGirl.create(:past_reservation, listing: FactoryGirl.create(:listing, location: @adelaide), user: friend, state: 'confirmed')
+              @controller.stubs(:current_user).returns(me)
+              me.stubs(:unread_messages_count).returns(0)
+
+              get :index, q: 'Adelaide', v: 'list'
+
+              assert_location_in_result(@adelaide) 
+              assert_select '[title=?]', "#{friend.name} worked here"
+            end
           end
         end
       end

@@ -148,6 +148,11 @@ class Listing < ActiveRecord::Base
     scope.sum(:quantity)
   end
 
+  def has_connections_for?(user)
+    return false unless user
+    (user.friends.visited_listing(self).to_a.count + user.friends.admins_of_listing(self).count) > 0
+  end
+
   def has_price?
     PRICE_TYPES.map { |price|
       self["#{price}_price_cents"]

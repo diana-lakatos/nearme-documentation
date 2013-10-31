@@ -3,8 +3,13 @@
     .heading
       %h3.name
         = listing.name
-      .company
-        = listing.location.company.name
+      .company.row-fluid
+        .span10
+          = listing.location.company.name
+        -if listing.has_connections_for?(current_user)
+          .span2.connections{:rel => 'tooltip', :title => connections_text_for(listing, current_user)}
+            %span.ico-group
+            = connections_count_for(listing, current_user)
   .photo-container{:class => "#{'without-photos' unless listing.photos.any?}"}
     .photo
       - if photo = listing.photos.first
