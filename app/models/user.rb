@@ -101,6 +101,10 @@ class User < ActiveRecord::Base
     joins(:reservations).merge(Reservation.confirmed.past.for_listing(listing))
   }
 
+  scope :admins_of_listing, ->(listing) {
+    admins.joins(:companies => {:locations => :listings}).where(:listings => {:id => listing.id})
+  }
+
   extend CarrierWave::SourceProcessing
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
 
