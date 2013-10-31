@@ -71,7 +71,6 @@
 
     a.nav-link {
       display: inline-block;
-      float: right;
       color: $gray160;
       font-size: 20px;
       text-decoration: none;
@@ -136,10 +135,6 @@
             a {
               float: left;
             }
-
-            a:not(.btn) {
-              padding-left: 0px;
-            }
           }
         }
       }
@@ -173,8 +168,6 @@
           background:$theme_black;
 
           a {
-            padding: 4px 8px;
-            
             &:hover{
               background:$theme_black;
               color: $gray220;
