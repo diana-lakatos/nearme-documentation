@@ -23,6 +23,7 @@
       %a.nav-link.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
         %span= current_user.first_name
         %span.ico-chevron-down
+      %br  
       %ul.dropdown-menu
         - if platform_context.white_label_company_user?(current_user) && current_user.listings.active.any?
           %li

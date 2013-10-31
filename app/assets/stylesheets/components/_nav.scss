@@ -164,6 +164,11 @@
         border: none;
         background: $theme_black;
 
+        @media (max-width: $ipad-width) {
+          position: relative;
+          margin-left: 15px;
+        }
+
         li {
           background:$theme_black;
 
