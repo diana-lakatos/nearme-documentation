@@ -10,7 +10,7 @@
 
     #logo {
       float: left;
-      margin-top: 4px;
+      margin-top: 14px;
       width: $theme_logo_width;
       height: 28px;
       background: image-url($theme_logo) no-repeat;
@@ -28,76 +28,117 @@
       #logo {
         height: 50px;
         width: $theme_icon_width;
-        margin-top: -10px;
+        margin-top: 2px;
         background: image-url($theme_icon) no-repeat;
       }
     }
   }
 
+  .divider-vertical {
+    margin: 0px;
+    height: 60px;
+  }
+
   .nav-links {
     line-height: 60px;
 
-    .dropdown-menu {
-      min-width: 130px;
-    }
+    li {
+      height: 60px;
 
-    a.nav-link {
-      position: relative;
-      display: inline-block;
-      padding: 18px 20px;
-      color: $gray160;
-      font:normal 16px/22px $font-regular, sans-serif;
-      font-size: 20px;
-
-      span.icon {
-        display: none;
-      }
-
-      @media (max-width: $ipad-width) {
-          span.text { display: none; }
-          span.icon { display: inherit; }
-      }
-
-      span.count {
-        margin-left: 8px;
-        background: $gray160;
-        @include border-radius(0.7em);
-        color: $theme_black;
+      a.nav-link {
+        position: relative;
         display: inline-block;
-        line-height: 1.3em;
-        font-size: 14px;
-        text-align: center;
-        width: 1.3em;
-      }
+        padding: 18px 20px;
+        color: $gray160;
+        font:normal 16px/22px $font-regular, sans-serif;
+        font-size: 20px;
 
-      &:hover {
-        color: $gray210;
-      }
+        span.icon {
+          display: none;
+        }
 
-     .ico-chevron-down {
-          padding-left: 8px;
+        @media (max-width: $ipad-width) {
+            span.text { display: none; }
+            span.icon { display: inherit; }
+        }
+
+        span.count {
+          margin-left: 8px;
+          background: $gray160;
+          @include border-radius(0.7em);
+          color: $theme_black;
+          display: inline-block;
+          line-height: 1.3em;
           font-size: 14px;
-      }
+          text-align: center;
+          width: 1.3em;
+        }
 
-      &.btn-blue {
-        height: 60px;
-        margin: 0px;
-        color: $pure-white;
-        @include border-radius(0);
+        .ico-chevron-down {
+            padding-left: 8px;
+            font-size: 14px;
+        }
 
-        &:hover {
-          background: lighten($theme_blue, 10%);
+        .ico-mail {
+
+        }
+
+        .ico-user {
+
+        }
+
+        &.btn-blue {
+          height: 60px;
+          margin: 0px;
+          color: $pure-white;
+          @include border-radius(0);
+
+          &:hover {
+            background: lighten($theme_blue, 10%);
+          }
         }
       }
+
+      .dropdown-menu {
+        min-width: 130px;
+        margin: 0 0 0 -2px;
+        padding-top: 0px;
+        border-radius: 0px;
+        @include border-corner-radius(top, left, 0);
+        @include border-corner-radius(top, right, 0);
+        @include border-corner-radius(bottom, left, $border-radius-default);
+        @include border-corner-radius(bottom, right, $border-radius-default); 
+
+        li {
+          height: 40px;
+          line-height: 40px;
+
+          a.nav-link {
+            padding: 8px 20px;
+          }
+        }
+
+        /* Remove bootstrap dropdown arrow */
+        &:before,
+        &:after {
+          border: none !important;
+          content: none !important;
+        }
+      }
+
     }
   }
 }
 
-/* Below is only for applying colors to the inverted theme.  Don't
-   put other styles in here, use the navbar block above this one. */
+/* Below is only for applying colors and borders to the inverted theme.
+   Don't put other styles in here, use the navbar block above this one. */
 
 .navbar-inverse {
-
+  background: $black;
+  border-bottom: $black;
+  border-bottom-width: 1px !important;
+  border-bottom-style: solid;
+  
   .navbar-inner {
     background: $black;
   }
@@ -137,6 +178,9 @@
           color: $gray220;
         }
 
+        &:hover {
+          color: $gray210;
+        }
       }
 
       &.dropdown.open {

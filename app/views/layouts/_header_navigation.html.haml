@@ -18,8 +18,9 @@
 
   - if user_signed_in?
 
+    %li.divider-vertical
     %li.dropdown
-      %a.nav-link.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
+      %a.nav-link.dropdown-toggle.user-dropdown{"data-toggle" => "dropdown", href: "#"}
         %span.text= current_user.first_name
         %span.icon.ico-user
         %span.ico-chevron-down
@@ -39,6 +40,7 @@
           = link_to destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name } do
             %span Log Out
 
+    %li.divider-vertical
     %li
       = link_to listing_messages_path, class: 'nav-link' do
         %span.text Messages
@@ -47,9 +49,11 @@
           %span.count #{current_user.unread_messages_count}
 
   - else
+    %li.divider-vertical
     %li
       = link_to new_user_registration_url(get_return_to_url), :rel => 'modal.sign-up-modal', :class => "nav-link header-first" do
         %span Sign Up
+    %li.divider-vertical
     %li
       = link_to new_user_session_url(get_return_to_url), :rel => 'modal.sign-up-modal', :class => "nav-link header-second" do
         %span Log In
