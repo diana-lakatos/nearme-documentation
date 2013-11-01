@@ -131,7 +131,7 @@ class SearchControllerTest < ActionController::TestCase
             should 'show connections' do
               me = FactoryGirl.create(:user)
               friend = FactoryGirl.create(:user)
-              me.friends << friend
+              me.add_friend(friend)
 
               FactoryGirl.create(:past_reservation, listing: FactoryGirl.create(:listing, location: @adelaide), user: friend, state: 'confirmed')
               @controller.stubs(:current_user).returns(me)

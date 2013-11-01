@@ -63,10 +63,15 @@ module ListingsHelper
     hosts = current_user.friends.admins_of_listing(listing).uniq.collect do |user|
       "#{user.name} is the host"
     end
-    [friends, hosts].flatten.join('<br />').html_safe
+    host_friends = current_user.friends_know_host_of(listing).uniq.collect do |user|
+      "#{user.name} knows the host"
+    end
+    [friends, hosts, host_friends].flatten.join('<br />').html_safe
   end
 
   def connections_count_for(listing, current_user)
-    current_user.friends.visited_listing(listing).uniq.count + current_user.friends.admins_of_listing(listing).uniq.count
+    current_user.friends.visited_listing(listing).uniq.count +
+      current_user.friends.admins_of_listing(listing).uniq.count +
+      current_user.friends_know_host_of(listing).uniq.count
   end
 end

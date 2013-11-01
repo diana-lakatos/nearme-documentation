@@ -237,11 +237,15 @@ class User < ActiveRecord::Base
     relationships.create!(followed_id: other_user.id)
   end
 
-  def add_friend(user)
-    return if self.friends.exists?(user)
-    self.follow!(user)
-    user.follow!(self)
+  def add_friend(*users)
+    Array.wrap(users).each do |user|
+      next if self.friends.exists?(user)
+      user.follow!(self)
+      self.follow!(user)
+    end
   end
+  alias_method :add_friends, :add_friend 
+
 
   def find_new_friends!
     friend_finder = User::FriendFinder.new(self, authentications.with_valid_token)
@@ -250,6 +254,11 @@ class User < ActiveRecord::Base
 
   def friends
     self.followed_users
+  end
+
+  def friends_know_host_of(listing)
+    admins = listing.company.users.admins
+    self.friends.joins(:followers).where(:user_relationships => {:follower_id => admins.pluck(:id)}).uniq
   end
 
   def friends=(users)

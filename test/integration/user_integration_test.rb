@@ -7,7 +7,7 @@ class UserIntegrationTest < ActiveSupport::TestCase
       @me = FactoryGirl.create(:user)
       FactoryGirl.create(:reservation, state: 'confirmed')
 
-      4.times { @me.friends << FactoryGirl.create(:user) }
+      4.times { @me.add_friend(FactoryGirl.create(:user)) }
 
       friends_with_visit = @me.friends.first(2)
       @me.friends.last.reservations << FactoryGirl.create(:future_reservation, state: 'confirmed', date: Date.tomorrow)
@@ -25,9 +25,26 @@ class UserIntegrationTest < ActiveSupport::TestCase
       @listing.company.users << friend2 = FactoryGirl.create(:user, admin: true)
       @listing.company.users << friend3 = FactoryGirl.create(:user, admin: false)
       friend4 = FactoryGirl.create(:user)
-      @me.friends << [friend1, friend2, friend3, friend4]
+      @me.add_friends(friend1, friend2, friend3, friend4)
 
       assert_equal [friend1, friend2].sort, @me.friends.admins_of_listing(@listing).sort
+    end
+  end
+
+  context 'know_host_of' do
+    should 'find users knows host' do
+      @me = FactoryGirl.create(:user)
+      2.times { @me.add_friend(FactoryGirl.create(:user))}
+      @friend = FactoryGirl.create(:user, admin: true)
+
+      @me.add_friend(@friend)
+
+      @listing = FactoryGirl.create(:listing)
+      @listing.company.users << owner = FactoryGirl.create(:user, admin: true)
+
+      @friend.add_friend(owner)
+
+      assert_equal [@friend], @me.friends_know_host_of(@listing)
     end
   end
 end
