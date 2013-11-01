@@ -1,29 +1,29 @@
-%ul.nav
-  %li.menu-trigger
-    %a.ico-menu.nav-link{:href => "#"}
-
 %ul.nav.main-menu
   - unless no_listing_buttons? || !platform_context.white_label_company_user?(current_user)
     - if !user_signed_in?
       %li
         = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => "nav-link btn btn-blue btn-medium" do
-          %span List Your #{platform_context.bookable_noun}
+          %span.text List Your #{platform_context.bookable_noun}
+          %span.icon.ico-plus
     - elsif current_user && current_user.listings.draft.any?
       %li
         = link_to new_space_wizard_url, :class => "nav-link btn btn-blue btn-medium" do
-          %span Complete Your Listing
+          %span.text Complete Your Listing
+          %span.icon.ico-plus
     - elsif current_user && current_user.listings.active.empty?
       %li
-        = link_to new_space_wizard_url, :class => "nav-link" do
-          %span List Your #{platform_context.bookable_noun}
+        = link_to new_space_wizard_url, :class => "nav-link btn btn-blue btn-medium" do
+          %span.text List Your #{platform_context.bookable_noun}
+          %span.icon.ico-plus
 
   - if user_signed_in?
 
     %li.dropdown
       %a.nav-link.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
-        %span= current_user.first_name
+        %span.text= current_user.first_name
+        %span.icon.ico-user
         %span.ico-chevron-down
-      %br  
+      .clearfix
       %ul.dropdown-menu
         - if platform_context.white_label_company_user?(current_user) && current_user.listings.active.any?
           %li
@@ -41,8 +41,10 @@
 
     %li
       = link_to listing_messages_path, class: 'nav-link' do
-        %span Messages
-        %span.count #{current_user.unread_messages_count}
+        %span.text Messages
+        %span.icon.ico-mail
+        -if current_user.unread_messages_count.present?
+          %span.count #{current_user.unread_messages_count}
 
   - else
     %li
@@ -50,9 +52,4 @@
         %span Sign Up
     %li
       = link_to new_user_session_url(get_return_to_url), :rel => 'modal.sign-up-modal', :class => "nav-link header-second" do
-        %span Log In 
-
-.menu-divider.hidden
-  .line-1
-  .line-2
-  .line-3
+        %span Log In
