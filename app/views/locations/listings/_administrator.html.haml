@@ -7,6 +7,7 @@
   .buttons
     = link_to profile_path(administrator), :class => 'btn btn-gray-dark btn-medium view' do
       %span.text View profile
-    = link_to "mailto:support+#{@location.id}-#{@listing.id}@desksnear.me", :class => "btn btn-blue btn-medium ask" do
+    = link_to new_listing_listing_message_path(@listing), :class => "btn btn-blue btn-medium ask", :rel => "modal" do
       %span.text Contact host
   .clearfix
+
