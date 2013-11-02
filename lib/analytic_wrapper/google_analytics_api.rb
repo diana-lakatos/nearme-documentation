@@ -19,7 +19,7 @@ class AnalyticWrapper::GoogleAnalyticsApi
     if tracking_code.present?
       params = get_params(category, action)
       begin
-        GoogleAnalyticsApiJob.perform(params)
+        GoogleAnalyticsApiJob.perform(params) if DesksnearMe::Application.config.perform_google_analytics_requests
         Rails.logger.info "Tracked google_analytics event #{params.inspect}"
       end
     else

@@ -2,8 +2,7 @@ class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
   before_filter :fetch_reservations
   before_filter :fetch_reservation, :only => [:user_cancel]
-  before_filter :fetch_current_user_reservation, :only => [:show, :export, :guest_rating, :host_rating]
-  before_filter :redirect_if_rating_already_exists, :only => [:guest_rating, :host_rating]
+  before_filter :fetch_current_user_reservation, :only => [:export, :host_rating]
 
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
@@ -14,7 +13,7 @@ class ReservationsController < ApplicationController
 
   def user_cancel
     if @reservation.user_cancel
-      ReservationMailer.enqueue.notify_host_of_cancellation(@reservation)
+      ReservationMailer.enqueue.notify_host_of_cancellation(platform_context, @reservation)
       event_tracker.cancelled_a_booking(@reservation, { actor: 'guest' })
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
@@ -27,9 +26,6 @@ class ReservationsController < ApplicationController
 
   def index
     redirect_to upcoming_reservations_path
-  end
-
-  def show
   end
 
   def export
@@ -52,25 +48,22 @@ class ReservationsController < ApplicationController
               event.created = @reservation.created_at
               event.last_modified = @reservation.updated_at
               event.location = @reservation.listing.address
-              event.url = Rails.application.routes.url_helpers.reservation_url(@reservation)
+              event.url = bookings_dashboard_url(id: @reservation.id)
             end
           end
         end
-        
+
         render :text => calendar.to_s.gsub("\n", "\r\n")
       end
     end
   end
 
   def upcoming
-    @reservations = current_user.reservations.not_archived.to_a.sort_by(&:date)
-    if @reservations.empty?
-      flash[:warning] = t('flash_messages.dashboard.no_bookings')
-      redirect_to search_path
-    else
+    unless current_user.reservations.empty?
+      @reservations = current_user.reservations.not_archived.to_a.sort_by(&:date)
       @reservation = params[:id] ? current_user.reservations.find(params[:id]) : nil
-      render :index
     end
+    render :index
   end
 
   def archived
@@ -78,12 +71,15 @@ class ReservationsController < ApplicationController
     render :index
   end
 
-  def guest_rating
-    render :show
-  end
-
   def host_rating
-    render :show
+    existing_host_rating = HostRating.where(reservation_id: @reservation.id,
+                                            author_id: current_user.id)
+    if existing_host_rating.blank?
+      upcoming
+    else
+      flash[:notice] = t('flash_messages.host_rating.already_exists')
+      redirect_to root_path
+    end
   end
 
   protected
@@ -113,14 +109,6 @@ class ReservationsController < ApplicationController
       bookings_dashboard_path
     else
       manage_guests_dashboard_path
-    end
-  end
-
-  def redirect_if_rating_already_exists
-    klass = params[:action].classify.constantize
-    if klass.where(reservation_id: @reservation.id, author_id: current_user.id).exists?
-      flash[:notice] = "Rating for this booking has already been submitted."
-      redirect_to root_path
     end
   end
 

@@ -4,14 +4,14 @@ class FooterResolver < DbViewResolver
   include Singleton
 
   def find_templates(name, prefix, partial, details) 
-    return [] unless details[:theme]
+    return [] unless details[:platform_context]
     return [] unless name == 'theme_footer'
     return [] unless details[:handlers].include?(:liquid)
 
     conditions = {
       path:        normalize_path(name, prefix),
       partial:     partial || false,
-      theme_id:    details[:theme]
+      theme_id:    details[:platform_context].theme.id
     }
 
     FooterTemplate.where(conditions).map do |record|

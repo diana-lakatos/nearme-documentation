@@ -95,15 +95,15 @@ class UserTest < ActiveSupport::TestCase
   end
 
   should "know what authentication providers it is linked to" do
-    @user = User.find(16)
+    @user = FactoryGirl.create(:user)
     @user.authentications.find_or_create_by_provider("exists").tap do |a|
-      a.uid = 16
+      a.uid = @user.id
     end.save!
     assert @user.linked_to?("exists")
   end
 
   should "know what authentication providers it isn't linked to" do
-    @user = User.find(16)
+    @user = FactoryGirl.create(:user)
     refute @user.linked_to?("doesntexist")
   end
 
@@ -279,11 +279,11 @@ class UserTest < ActiveSupport::TestCase
 
     setup do
       @user = FactoryGirl.create(:user)
-      @instance = Instance.first || FactoryGirl.create(:instance)
+      @platform_context = PlatformContext.new
     end
 
     should 'notify user about invalid phone via email' do
-      @user.notify_about_wrong_phone_number(@instance)
+      @user.notify_about_wrong_phone_number(@platform_context)
       sent_mail = ActionMailer::Base.deliveries.last
       assert_equal [@user.email], sent_mail.to
 
@@ -294,14 +294,14 @@ class UserTest < ActiveSupport::TestCase
     should 'not spam user' do
       UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
       5.times do 
-        @user.notify_about_wrong_phone_number(@instance)
+        @user.notify_about_wrong_phone_number(@platform_context)
       end
     end
 
     should 'update timestamp of notification' do
       UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
       Timecop.freeze(Time.zone.now)
-      @user.notify_about_wrong_phone_number(@instance)
+      @user.notify_about_wrong_phone_number(@platform_context)
       assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a
     end
 

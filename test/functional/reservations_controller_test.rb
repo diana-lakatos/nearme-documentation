@@ -41,10 +41,10 @@ class ReservationsControllerTest < ActionController::TestCase
       @reservation.add_period(Time.zone.local(2013, 7, 3, 10, 5, 0).to_date)
       @reservation.save!
       sign_in @reservation.owner
-      Rails.application.routes.url_helpers.stubs(:reservation_url).returns("http://example.com/reservations/1/export.ics")
     end
 
     should 'be exportable to .ics format' do
+      url = bookings_dashboard_url(id: @reservation.id)
       get :export, :format => :ics, :listing_id => @reservation.listing.id, :id => @reservation.id
       assert_response :success
       assert_equal "text/calendar", response.content_type
@@ -61,7 +61,7 @@ class ReservationsControllerTest < ActionController::TestCase
                          "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
                          "UID:#{@reservation.id}_2013-07-01",
                          "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
-                         "URL:http://example.com/reservations/1/export.ics",
+                         "URL:#{url}",
                          "SUMMARY:ICS Listing",
                          "LOCATION:42 Wallaby Way",
                          "END:VEVENT",
@@ -72,7 +72,7 @@ class ReservationsControllerTest < ActionController::TestCase
                          "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
                          "UID:#{@reservation.id}_2013-07-02",
                          "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
-                         "URL:http://example.com/reservations/1/export.ics",
+                         "URL:#{url}",
                          "SUMMARY:ICS Listing",
                          "LOCATION:42 Wallaby Way",
                          "END:VEVENT",
@@ -83,7 +83,7 @@ class ReservationsControllerTest < ActionController::TestCase
                          "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
                          "UID:#{@reservation.id}_2013-07-03",
                          "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
-                         "URL:http://example.com/reservations/1/export.ics",
+                         "URL:#{url}",
                          "SUMMARY:ICS Listing",
                          "LOCATION:42 Wallaby Way",
                          "END:VEVENT",
@@ -107,16 +107,24 @@ class ReservationsControllerTest < ActionController::TestCase
       @company.locations << @location
     end
 
-    should 'redirect if no bookings' do
-      get :upcoming
-      assert_redirected_to search_path
-      assert_equal "You haven't made any bookings yet!", flash[:warning]
-    end
+    context 'render view' do
+      should 'if no bookings' do
+        get :upcoming
+        assert_response :success
+        assert_select ".box .no-data", "You don't have any upcoming bookings. Find a space near you!"
+      end
 
-    should 'render view if any bookings' do
-      FactoryGirl.create(:reservation, owner: @user)
-      get :upcoming
-      assert_response :success
+      should 'if any upcoming bookings' do
+        FactoryGirl.create(:reservation, owner: @user)
+        get :upcoming
+        assert_response :success
+      end
+
+      should 'if any archived bookings' do
+        FactoryGirl.create(:past_reservation, owner: @user)
+        get :upcoming
+        assert_response :success
+      end
     end
   end
 

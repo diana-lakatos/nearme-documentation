@@ -44,7 +44,12 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :locations, :only => [:show] do
-    resources :listings, :controller => 'locations/listings'
+    resources :listings, :controller => 'locations/listings' do
+      member do
+        get :ask_a_question
+      end
+    end
+
     collection do
       get :populate_address_components_form
       post :populate_address_components
@@ -58,13 +63,25 @@ DesksnearMe::Application.routes.draw do
         get :booking_successful
       end
       get :hourly_availability_schedule, :on => :collection
-     end
+    end
+
+    resources :listing_messages, :controller => "listings/listing_messages" do
+      put :archive
+    end
+  end
+
+  resources :listing_messages, only: [:index] do 
+    collection do 
+      get :archived
+    end
   end
 
   resources :reservations, :only => [] do
     resources :guest_ratings, :only => [:new, :create]
     resources :host_ratings, :only => [:new, :create]
   end
+  match '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
+  match '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
 
   match '/auth/:provider/callback' => 'authentications#create'
   match "/auth/failure", to: "authentications#failure"
@@ -80,12 +97,10 @@ DesksnearMe::Application.routes.draw do
     get "users/:id", :to => "registrations#show", :as => "profile"
   end
 
-  resources :reservations, :except => [:update, :destroy] do
+  resources :reservations, :except => [:update, :destroy, :show] do
     member do
       post :user_cancel
       get :export
-      get :guest_rating
-      get :host_rating
     end
     collection do
       get :upcoming

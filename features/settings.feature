@@ -16,7 +16,6 @@ Feature: A user can edit their settings
     When I select industries for company
     Then company should be connected to selected industries
 
-  @javascript
   Scenario: A user with listing will see settings
     Given a company exists with creator: the user
     Given a location exists with company: the company
@@ -40,14 +39,12 @@ Feature: A user can edit their settings
     Then I should see "Great, white-label details have been updated"
      And The company white label settings should be updated
 
-  @javascript
   Scenario: A user without listing will not see settings
     Given a company exists with creator: the user
       And a location exists with company: the company
       And I am on the home page
     Then I should not see "Manage Desks"
 
-  @javascript
   Scenario: A user with one inactive listing will not see settings
     Given a company exists with creator: the user
       And a location exists with company: the company

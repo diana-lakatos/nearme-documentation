@@ -16,7 +16,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
   context 'scopes current partner for new company' do
     should 'match partner_id' do
-      @controller.stubs(:current_partner).returns(@partner)
+      PlatformContext.any_instance.stubs(:partner).returns(@partner)
       assert_difference('Listing.count', 1) do
         post :submit_listing, get_params
       end

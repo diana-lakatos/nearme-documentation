@@ -31,11 +31,15 @@ en:
     form:
       try_another_search_or_subscribe: "Try another search query, or subscribe below to be notified via email when a desk is added at this location."
       try_another_search_or_enter_email: "Try another search query, or enter your email address below to be notified when a desk is added at this location."
+  reservations:
+    no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find a space near you!</a>"
   flash_messages:
     guest_rating:
       submitted_successfully: "Thanks, your rating was submitted successfully!"
+      already_exists: "Rating for this booking has already been submitted."
     host_rating:
       submitted_successfully: "Thanks, your rating was submitted successfully!"
+      already_exists: "Rating for this booking has already been submitted."
     space_wizard:
       complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
       draft_saved: "Your draft has been saved!"
@@ -69,6 +73,8 @@ en:
         user_added: "You've added %{name} to %{company_name}"
         user_does_not_exists: "A user does not exist with the specified email address."
         user_cannot_be_invited: "This user couldn't be invited as they are already associated with a company."
+        user_cant_delete_self: "You can't delete self."
+        user_is_not_in_company: "You can't delete user which is not in your company."
       companies:
         white_label_updated: "Great, white-label details have been updated."
         company_updated: "Great, your company's details have been updated."
@@ -94,3 +100,6 @@ en:
     listings:
       listing_inactive: "This listing is inactive. Displaying other listings near %{address}."
       listing_disabled: "This listing has been temporarily disabled by the owner. Check out some others near you!"
+    listing_messages:
+      message_sent: "Your message was sent!"
+      message_archived: "Your message was archived!"

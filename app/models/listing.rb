@@ -17,6 +17,8 @@ class Listing < ActiveRecord::Base
     :as => :target,
     :dependent => :destroy
 
+  has_many :listing_messages
+
   has_one :company, through: :location
   belongs_to :location, inverse_of: :listings, with_deleted: true
   belongs_to :listing_type
@@ -33,6 +35,9 @@ class Listing < ActiveRecord::Base
   scope :visible,  where(:enabled => true)
   scope :searchable, active.visible
   scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where('listings.listing_type_id IN (?)', listing_types_ids) }
+  
+  scope :with_listing_messages, joins(:listing_messages).
+        group('listings.id HAVING count(listing_messages.id) > 0')
 
   # == Callbacks
   after_save :notify_user_about_change
@@ -200,7 +205,7 @@ class Listing < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
-  def reserve!(reserving_user, dates, quantity)
+  def reserve!(platform_context, reserving_user, dates, quantity)
     reservation = reservations.build(:user => reserving_user, :quantity => quantity)
     dates.each do |date|
       raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
@@ -210,11 +215,11 @@ class Listing < ActiveRecord::Base
     reservation.save!
 
     if reservation.listing.confirm_reservations?
-      ReservationMailer.notify_host_with_confirmation(reservation).deliver
-      ReservationMailer.notify_guest_with_confirmation(reservation).deliver
+      ReservationMailer.notify_host_with_confirmation(platform_context, reservation).deliver
+      ReservationMailer.notify_guest_with_confirmation(platform_context, reservation).deliver
     else
-      ReservationMailer.notify_host_without_confirmation(reservation).deliver
-      ReservationMailer.notify_guest_of_confirmation(reservation).deliver
+      ReservationMailer.notify_host_without_confirmation(platform_context, reservation).deliver
+      ReservationMailer.notify_guest_of_confirmation(platform_context, reservation).deliver
     end
     reservation
   end

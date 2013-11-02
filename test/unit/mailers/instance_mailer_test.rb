@@ -2,11 +2,11 @@ require 'test_helper'
 
 class InstanceMailerTest < ActiveSupport::TestCase
   InstanceMailer.class_eval do
-    def test_mailer(theme)
+    def test_mailer(platform_context)
       @interpolation = "magic"
       mail(to: "test@example.com",
            subject: "Hello #@interpolation",
-           theme: theme,
+           platform_context: platform_context,
            bcc: "bcc@example.com",
            from: 'from@example.com',
            subject_locals: {'interpolation' => @interpolation})
@@ -14,17 +14,17 @@ class InstanceMailerTest < ActiveSupport::TestCase
   end
 
   setup do
-    @instance = Instance.default_instance
-    @theme = @instance.theme
+    @platform_context = PlatformContext.new
   end
   
   context "email template exists in db" do
     setup do 
       FactoryGirl.create(:email_template, path: 'instance_mailer/test_mailer',
-                         subject: 'Test {{interpolation}}', theme: @theme,
+                         subject: 'Test {{interpolation}}', 
+                         theme: @platform_context.theme,
                          reply_to: 'reply@me.com',
                          bcc: 'test@example.com')
-      @mail = InstanceMailer.test_mailer(@theme)
+      @mail = InstanceMailer.test_mailer(@platform_context)
     end
 
     should "will liquify subject" do
@@ -41,7 +41,7 @@ class InstanceMailerTest < ActiveSupport::TestCase
       Analytics::EventTracker.any_instance.expects(:pixel_track_url).with do |event_name, custom_options|
         event_name == 'Email Opened' && custom_options[:campaign] == "Test mailer" && custom_options[:template] == 'test_mailer'
       end.returns('http://api.mixpanel.com/track/?data=somedata')
-      mail = InstanceMailer.test_mailer(@theme)
+      mail = InstanceMailer.test_mailer(@platform_context)
       assert mail.html_part.body.include?("http://api.mixpanel.com/track/?data=somedata"), "Tracking code not included in #{mail.html_part.body}"
     end
 
@@ -52,7 +52,7 @@ class InstanceMailerTest < ActiveSupport::TestCase
       handler = ActionView::Template.registered_template_handler('liquid')
       fake_template = ActionView::Template.new('source', 'identifier', handler, {})
       ActionView::PathSet.any_instance.stubs(:find_all).returns([fake_template])
-      @mail = InstanceMailer.test_mailer(@theme)
+      @mail = InstanceMailer.test_mailer(@platform_context)
     end
 
     should "will keep original interpolated subject" do
@@ -60,7 +60,7 @@ class InstanceMailerTest < ActiveSupport::TestCase
     end
 
     should "will keep default reply_to email" do
-      assert_equal [@theme.contact_email], @mail.reply_to
+      assert_equal [@platform_context.decorate.contact_email], @mail.reply_to
     end
   end
 
@@ -74,3 +74,4 @@ class InstanceMailerTest < ActiveSupport::TestCase
     end
   end
 end
+

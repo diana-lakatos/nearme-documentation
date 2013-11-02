@@ -28,6 +28,8 @@ DesksnearMe::Application.configure do
   config.assets.js_compressor = :uglifier
   config.action_controller.asset_host = "//staging-uswest2.desksnear.me"
 
+  config.test_email = "notifications-staging@desksnear.me"
+
   # Staging specific keys/secrets for social properties.
   config.linkedin_key = "26pmsiwpsh8a"
   config.linkedin_secret = "M2TZrt7sF7QlIeUZ"
@@ -42,5 +44,4 @@ DesksnearMe::Application.configure do
   config.middleware.insert_before(Rack::Lock, "Rack::Auth::Basic") do |username, password|
     username == 'desksnearme' && password == 'sharethem'
   end
-
 end

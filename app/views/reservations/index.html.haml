@@ -7,7 +7,7 @@
         %span.ico-bookings.padding My Bookings
       .box
         %header
-          .links
+          .button-links
             %ul
               %li
                 = reservation_navigation_link('upcoming')
@@ -15,7 +15,7 @@
                 = reservation_navigation_link('archived')
 
         - if @reservations.empty?
-          %p You currently have no #{params[:action]} bookings. Find a space near you!
+          %p.no-data= t('reservations.no_bookings_html', type: params[:action])
         - else
           - if @reservation
             %h2.reservation-emphasis
@@ -34,3 +34,4 @@
                 %li
                   = render reservation
 
+= render 'ratings/rating_modal'

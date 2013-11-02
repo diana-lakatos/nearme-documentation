@@ -39,7 +39,12 @@ module CarrierWave
           @model.send("#{@field}_original_height=", dimensions[1])
         end
         @model["#{@field}_versions_generated_at"] = Time.zone.now
-        @model.save!(:valdiate => false)
+
+        begin
+          @model.save!(:valdiate => false)
+        rescue ::ActiveRecord::RecordNotFound => e
+          @model.class.with_deleted.find @model.id # check for paranoid deletetion, throw if not found
+        end
       end
 
       # to not forget about any column, this helper method sets all relevant columns to nil and remove image

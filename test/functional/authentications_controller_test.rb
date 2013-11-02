@@ -144,9 +144,9 @@ class AuthenticationsControllerTest < ActionController::TestCase
   end
 
   def create_signed_in_user_with_authentication(with_password = true)
-    @user = users(:one)
-    @user.password = @password if with_password
-    @user.save!
+    @user = FactoryGirl.build(:user, password: nil, password_confirmation: nil)
+    @user.password = @user.password_confirmation = @password if with_password
+    @user.save!(validate: false)
     sign_in @user
     add_authentication("facebook", "123456")
     @user.authentications.each do |auth|
