@@ -260,7 +260,13 @@ class User < ActiveRecord::Base
   def use_social_provider_image(url)
     unless avatar.any_url_exists?
       self.avatar_versions_generated_at = Time.zone.now
-      url += "?width=500" if url && url.include?('graph.facebook.com')
+
+      # Mega hax to get the right size image from facebook
+      if url && url.include?('graph.facebook.com')
+        component = url =~ /\?/ ? '&' : '?'
+        url += "#{component}width=500"
+      end
+
       self.remote_avatar_url = url
     end
   end
