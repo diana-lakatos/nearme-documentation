@@ -28,6 +28,9 @@
           = render 'locations/listings/booking', listing: @listing
 
           .padding-row
+          = render 'locations/listings/social_buttons', listing: @listing
+
+          .padding-row
           = render 'locations/google_map', location: @location 
 
           = render 'locations/listings/availabilities', listing: @listing

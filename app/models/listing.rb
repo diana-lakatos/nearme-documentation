@@ -62,7 +62,7 @@ class Listing < ActiveRecord::Base
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
   delegate :instance, :amenities, :currency, :formatted_address, :notify_user_about_change,
-    :local_geocoding, :latitude, :longitude, :distance_from, :address, to: :location,
+    :local_geocoding, :latitude, :longitude, :distance_from, :address, :postcode, to: :location,
     allow_nil: true
   delegate :creator, :creator=, to: :location
   delegate :administrator, :to => :location, :allow_nil => true
