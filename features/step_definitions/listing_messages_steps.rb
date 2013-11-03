@@ -1,7 +1,7 @@
 Given /^I ask a question about a listing$/ do
   @listing = model('listing')
   visit listing_path(@listing.location, @listing)
-  click_link 'Ask a question'
+  click_link 'Contact host'
   work_in_modal do
     fill_in 'listing_message_body', with: "Short one"
     click_button 'Send'
