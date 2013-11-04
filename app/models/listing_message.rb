@@ -42,6 +42,14 @@ class ListingMessage < ActiveRecord::Base
     owner == author
   end
 
+  def send_notification(platform_context)
+    if message_from_guest?
+      ListingMessagingMailer.enqueue.email_message_from_guest(platform_context, self)
+    else
+      ListingMessagingMailer.enqueue.email_message_from_host(platform_context, self)
+    end
+  end
+
   private
 
   def kind_for(user)
