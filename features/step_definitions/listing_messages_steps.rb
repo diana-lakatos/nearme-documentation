@@ -1,5 +1,6 @@
 Given /^I ask a question about a listing$/ do
   @listing = model('listing')
+  @user = model('user')
   visit listing_path(@listing.location, @listing)
   click_link 'Contact host'
   work_in_modal do
@@ -57,4 +58,12 @@ Then /^I should be able to read, answer and archive this question$/ do
   click_link('Archived')
   page.should_not have_content 'Short one'
   page.should have_content 'This is answer'
+end
+
+Then /^this listings creator should get email with notification$/ do
+  last_email_for(@listing.creator.email).subject.should include "You received a message!"
+end
+
+Then /^question owner should get email with notification$/ do
+  last_email_for(@user.email).subject.should include "You received a message!"
 end

@@ -13,6 +13,7 @@ class Listings::ListingMessagesController < ApplicationController
     @listing_message = @listing.listing_messages.new(params[:listing_message])
     setup_listing_message
     if @listing_message.save
+      @listing_message.message_from_guest? ? ListingMessagingMailer.enqueue.email_message_from_guest(platform_context, @listing_message) : ListingMessagingMailer.enqueue.email_message_from_host(platform_context, @listing_message)
       flash[:notice] = t('flash_messages.listing_messages.message_sent')
       redirect_to listing_messages_path
       render_redirect_url_as_json if request.xhr?

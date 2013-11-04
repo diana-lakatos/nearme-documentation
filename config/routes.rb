@@ -7,6 +7,7 @@ DesksnearMe::Application.routes.draw do
     mount ListingMailer::Preview => 'mail_view/listings'
     mount AfterSignupMailer::Preview => 'mail_view/after_signup'
     mount RatingMailer::Preview => 'mail_view/ratings'
+    mount ListingMessagingMailer::Preview => 'mail_view/listing_messaging'
   end
 
   match '/404', :to => 'errors#not_found'

@@ -34,6 +34,14 @@ class ListingMessage < ActiveRecord::Base
     send archived_column_for(user)
   end
 
+  def to_liquid
+    ListingMessageDrop.new(self)
+  end
+
+  def message_from_guest?
+    owner == author
+  end
+
   private
 
   def kind_for(user)
