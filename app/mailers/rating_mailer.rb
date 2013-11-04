@@ -26,10 +26,10 @@ class RatingMailer < InstanceMailer
              else
                @listing.instance.domains.first
              end
-    @platform_context = PlatformContext.new(domain.try(:name))
+    @platform_context = PlatformContext.new(domain.try(:name)).decorate
 
     mail to: @author.email,
-         subject: instance_prefix("Rate your #{@kind} at #{@listing.name}", @platform_context.decorate),
+         subject: instance_prefix("Rate your #{@kind} at #{@listing.name}", @platform_context),
          template_name: "request_#{@kind}_rating",
          platform_context: @platform_context
 
