@@ -2,7 +2,7 @@
 
 <p>Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }} has been declined by the host. But we have you covered! Here are some alternatives, similar to the listing you tried to book:</p>
 
-{% include 'reservation_mailer/listings_in_near_html' %}
+{% include 'reservation_mailer/listings_in_near.html' %}
 
 <a class="btn" href="{{ listing.search_url }}">Search More Desks</a>
 

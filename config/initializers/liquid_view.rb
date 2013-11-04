@@ -1,6 +1,4 @@
 require 'liquid_view'
+require 'liquid_blank_file_system'
 
 ActionView::Template.register_template_handler :liquid, LiquidView
-
-template_path = Rails.root.join('app/views')
-Liquid::Template.file_system = Liquid::LocalFileSystem.new(template_path) 

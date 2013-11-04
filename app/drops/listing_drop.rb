@@ -48,6 +48,10 @@ class ListingDrop < BaseDrop
     routes.bookings_dashboard_url(track_email_event: true)
   end
 
+  def bookings_dashboard_url_with_token
+    routes.bookings_dashboard_url(token: @listing.creator.authentication_token)
+  end
+
   def hourly_reservations?
     @listing.hourly_reservations?
   end
@@ -77,7 +81,7 @@ class ListingDrop < BaseDrop
   end
 
   def manage_listing_url_with_tracking
-    routes.edit_manage_location_listing_url(@listing.location, @listing, track_email_event: true)
+    routes.edit_manage_location_listing_url(@listing.location, @listing, track_email_event: true, token: @listing.creator.authentication_token)
   end
 
   def last_booked_days

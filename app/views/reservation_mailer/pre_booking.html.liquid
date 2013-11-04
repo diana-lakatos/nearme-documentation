@@ -1,4 +1,4 @@
-<h2>Your booking at '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' commences tomorrow</h2>
+<h2>Your booking commences tomorrow!</h2>
 
 <p>It's almost time to work at '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>', {{ listing.street }}. Before your booking, you might like to:</p>
 
@@ -6,7 +6,7 @@
   <li><a href="{{ listing.location.google_map_url }}">Get directions</a></li>
   <li><a href="{{ listing.location.nearby_eateries_url }}">Find nearby eateries</a></li>
   <li><a href="{{ listing.location.weather_url }}">Check tomorrow's weather</a></li>
-  <li><a href="{{ listing.bookings_dashboard_url }}">Manage your booking</a></li>
+  <li><a href="{{ listing.bookings_dashboard_url_with_token }}">Manage your booking</a></li>
 </ul>
 
 <p></p>
