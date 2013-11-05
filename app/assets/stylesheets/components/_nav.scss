@@ -57,6 +57,23 @@
           display: none;
         }
 
+        span.ico-plus {
+          margin-top: -1px;
+          font-size: 25px;
+        }
+
+        span.ico-user {
+          margin-top: -4px;
+          vertical-align: -3px;
+          font-size: 30px;
+        }
+
+        span.ico-mail {
+          margin-top: -5px;
+          vertical-align: -9px;
+          font-size: 35px;
+        }
+
         @media (max-width: $ipad-width) {
             span.text { display: none; }
             span.icon { display: inherit; }
