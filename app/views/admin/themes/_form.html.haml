@@ -1,25 +1,53 @@
-= f.input :name, :label => 'Name (blank to ignore rest of the fields)'
-- %w(logo_image logo_retina_image icon_image icon_retina_image hero_image).each do |image_attr|
-  .control-group
-    = f.label image_attr
-    .controls
-      = f.file_field image_attr
-      - if f.object.send("remote_#{image_attr}_url")
-        <br />Or copy from instance's theme:<br />
-        = f.text_field "remote_#{image_attr}_url" 
-= f.input :site_name
-= f.input :meta_title
-= f.input :description
-= f.input :tagline
-= f.input :support_email
-= f.input :contact_email
-= f.input :phone_number
-= f.input :support_url
-= f.input :blog_url
-= f.input :gplus_url
-= f.input :twitter_url
-= f.input :facebook_url
+%fieldset
+  %legend Title &amp; Description
+  = f.input :name, :label => 'Name (blank to ignore rest of the fields)'
+  = f.input :site_name
+  = f.input :tagline
+  = f.input :meta_title
+  = f.input :description, :label => 'Meta description'
+  %p
+    = f.button :submit, 'Save'
+  %br/
 
-- Theme::COLORS.each do |color|
-  = f.input "color_#{color}"
+  %legend Brand
+  
+  - %w(logo_image logo_retina_image icon_image icon_retina_image hero_image).each do |image_attr|
+    .control-group
+      = f.label image_attr
+      .controls
+        = f.file_field image_attr
+        - if f.object.send("remote_#{image_attr}_url")
+          <br />Or copy from instance's theme:<br />
+          = f.text_field "remote_#{image_attr}_url" 
+
+  %p
+    = f.button :submit, 'Save'
+  %br/
+
+  %legend Contact &amp; Support
+  = f.input :phone_number
+  = f.input :contact_email
+  = f.input :support_email
+  = f.input :support_url
+  %p
+    = f.button :submit, 'Save'
+  %br/
+
+  %legend Social Properties
+  = f.input :blog_url
+  = f.input :facebook_url
+  = f.input :twitter_url
+  = f.input :gplus_url
+  %p
+    = f.button :submit, 'Save'
+  %br/
+
+  %legend Colors
+  - Theme::COLORS.each do |color|
+    = f.input "color_#{color}", :wrapper => :prepend do
+      %span.add-on #
+      = f.input_field "color_#{color}"
+  %p
+    = f.button :submit, 'Save'
+  %br/
 
