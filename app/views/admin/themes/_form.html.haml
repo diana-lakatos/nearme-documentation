@@ -11,9 +11,9 @@
 
   %legend Brand
   
-  - Theme::IMAGES_WITH_LABELS.each_pair do |image_attr, image_attr_label|
+  - %w(logo_image logo_retina_image icon_image icon_retina_image hero_image).each do |image_attr|
     .control-group
-      = f.label image_attr, :label => image_attr_label
+      = f.label image_attr
       .controls
         = f.file_field image_attr
         - if f.object.send("remote_#{image_attr}_url")

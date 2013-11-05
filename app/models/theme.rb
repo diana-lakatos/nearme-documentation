@@ -6,8 +6,6 @@ class Theme < ActiveRecord::Base
     attr_accessible "color_#{color}"
   end
   DEFAULT_THEME_PAGES = %w(about legal)
-  IMAGES_WITH_LABELS = {logo_image: 'Logo (219 x 28px)', logo_retina_image: 'Logo Retina (538 x 56px)',
-    icon_image: 'Icon (50 x 50px)', icon_retina_image: 'Icon (100 x 100px)', hero_image: 'Hero image'}
 
   attr_accessible :name, :icon_image, :icon_retina_image,
     :logo_image, :logo_retina_image, :hero_image, :skip_compilation,
