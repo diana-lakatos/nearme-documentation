@@ -38,6 +38,9 @@ class @Space.Controller
         @adjustFullGalleryHeight()
       ), 1200
 
+    @container.on 'click', '.amenities-header a', (event) =>
+      @toggleAmenities(event)
+
   adjustBookingModulePosition: ->
     # 610 - booking module breakpoint
     if $(window).width() <= 610
@@ -124,4 +127,9 @@ class @Space.Controller
     collapseContainer.on('show hide', -> $(this).css('height', 'auto') )
     collapseContainer.collapse({ parent: true, toggle: true })
 
-
+  toggleAmenities: (event) ->
+    amenities_header = $(event.target).closest('.amenities-header')
+    amenities_block = amenities_header.closest('.amenities-block')
+    amenities_header.find('a span').toggleClass('ico-chevron-right').toggleClass('ico-chevron-down')
+    amenities_block.find('.amenities-container').toggleClass('amenities-shown')
+    false

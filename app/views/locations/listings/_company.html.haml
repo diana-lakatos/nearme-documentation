@@ -7,11 +7,16 @@
 
   %p= location.company.description
   - if location.company.industries.any?
-    %h3 Industries
-    .amenities-container
-      - location.company.industries.order('name ASC').in_groups_of(4).each do |industry_group|
-        .row-fluid.amenities-row
-          - industry_group.compact.each do |industry|
-            .span3{title: industry.name}
-              = industry.name
+    .amenities-block
+      .amenities-header
+        %h3 Industries
+        %a{href: '#industries'}
+          %h3 Industries
+          %span.ico-chevron-right
+      .amenities-container
+        - location.company.industries.order('name ASC').in_groups_of(4).each do |industry_group|
+          .row-fluid.amenities-row
+            - industry_group.compact.each do |industry|
+              .span3{title: industry.name}
+                = industry.name
     .clearfix
