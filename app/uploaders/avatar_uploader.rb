@@ -45,6 +45,8 @@ class AvatarUploader < BaseUploader
   end
 
   def default_url
-    Placeholder.new(height: 100, width: 100).path
+    current_version = version_name ? version_name : :big
+    Placeholder.new(height: self.dimensions[current_version][:height],
+                    width:  self.dimensions[current_version][:width]).path
   end
 end
