@@ -48,7 +48,7 @@ class UserDrop < BaseDrop
   end
 
   def space_wizard_list_url_with_tracking
-    routes.new_user_session_url(:return_to => routes.space_wizard_list_path(track_email_event: true))
+    routes.space_wizard_list_url(token: @user.authentication_token, track_email_event: true)
   end
 
   def manage_locations_url
@@ -57,6 +57,10 @@ class UserDrop < BaseDrop
 
   def manage_locations_url_with_tracking
     routes.manage_locations_url(track_email_event: true)
+  end
+
+  def manage_locations_url_with_tracking_and_token
+    routes.manage_locations_url(token: @user.authentication_token, track_email_event: true)
   end
 
   def edit_user_registration_url(with_token = false)
