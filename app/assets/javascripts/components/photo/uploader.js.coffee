@@ -61,12 +61,15 @@ class @Photo.Uploader
   createPhoto: (inkBlob) ->
     @processingPhotos += 1
     photo_index = @photoCollection.add()
-    $.post(@fileInput.attr('data-url'), @getParamsForCreatePhotoRequest(inkBlob), (data) =>
-      @photoCollection.update(photo_index, data)
-      @processingPhotos -= 1
-      if @processingPhotos == 0
-        @loader.hide()
-    )
+    # Timeout is to prevent stoping animated GIF to animate when AJAX call is in progress
+    setTimeout =>
+      $.post(@fileInput.attr('data-url'), @getParamsForCreatePhotoRequest(inkBlob), (data) =>
+        @photoCollection.update(photo_index, data)
+        @processingPhotos -= 1
+        if @processingPhotos == 0
+          @loader.hide()
+      )
+    , 100
 
   getParamsForCreatePhotoRequest: (inkBlob) ->
     params = {}
