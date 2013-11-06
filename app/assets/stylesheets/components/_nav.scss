@@ -96,14 +96,6 @@
             font-size: 14px;
         }
 
-        .ico-mail {
-
-        }
-
-        .ico-user {
-
-        }
-
         &.btn-blue {
           height: 60px;
           margin: 0px;
@@ -222,10 +214,11 @@
     margin-bottom: 25px;
 
     .navbar-inner {
-      padding: 0;
-      background: $gray240; 
-      filter: none;
       height: 50px;
+      padding: 0;
+      background: $gray240;
+      line-height: 40px;
+      filter: none;
 
       @media (max-width: $ipad-width) {
         height: auto;
@@ -261,7 +254,6 @@
           padding: 5px 0 0;
           color: $gray160;
           font-size: 18px;
-          //display: inline-block;
           white-space: nowrap;
 
           &:hover, &.active {
