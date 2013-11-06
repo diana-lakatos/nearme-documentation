@@ -1,0 +1,28 @@
+%h2 Revenue
+.box
+  - if @last_month_revenue.inject(0) { |sum, revenue| sum += revenue.total_amount.to_f; sum }.zero?
+    %p.no_data No revenue yet.
+  - else
+    .chart
+      %canvas#revenue_chart
+
+%h2 Bookings
+.box
+  - if @last_month_bookings.count.zero?
+    %p.no_data No bookings yet.
+  - else
+    .chart
+      %canvas#bookings_chart
+
+%h2 Listings
+.box
+  - if @last_month_listings.inject(0) { |sum, listing| sum += listing.listings_count.to_f; sum }.zero?
+    %p.no_data Your listings haven't been visited yet.
+  - else
+    .chart
+      %canvas#listings_chart
+
+%script
+  new ChartWrapper.Line($('#revenue_chart'), #{@revenue_chart.values.to_json.html_safe}, #{@revenue_chart.labels.to_json.html_safe})
+  new ChartWrapper.Line($('#bookings_chart'), #{@bookings_chart.values.to_json.html_safe}, #{@bookings_chart.labels.to_json.html_safe})
+  new ChartWrapper.Line($('#listings_chart'), #{@listings_chart.values.to_json.html_safe}, #{@listings_chart.labels.to_json.html_safe})
