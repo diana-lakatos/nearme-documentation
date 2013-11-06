@@ -9,20 +9,22 @@ class Admin::UsersController < Admin::ResourceController
     # logged in as the user.
     session[:admin_as_user] = {
       :user_id => resource.id,
-      :admin_user_id => admin_user.id
+      :admin_user_id => admin_user.id,
+      :redirect_back_to => request.referer
     }
 
     sign_in(resource)
-    redirect_to root_url
+    redirect_to params[:return_to] || root_url
   end
 
   def restore_session
     if session[:admin_as_user].present?
       client_user = current_user
       admin_user = User.find(session[:admin_as_user][:admin_user_id])
+      redirect_url = session[:admin_as_user][:redirect_back_to] || admin_user_url(client_user)
       sign_out # clears session
       sign_in(admin_user)
-      redirect_to admin_user_url(client_user)
+      redirect_to redirect_url
     end
   end
 

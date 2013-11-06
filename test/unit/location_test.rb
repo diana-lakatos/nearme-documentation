@@ -183,21 +183,4 @@ class LocationTest < ActiveSupport::TestCase
       assert_equal "San Francisco", @location.street # this is first part of address
     end
   end
-
-  context '#is_user_admin?' do
-    should "be valid for location company admins" do
-      user = FactoryGirl.create(:user, admin: true, companies: [@location.company])
-      assert @location.is_user_admin?(user)
-    end
-
-    should "be invalid for location company users" do
-      user = FactoryGirl.create(:user, admin: false, companies: [@location.company])
-      refute @location.is_user_admin?(user)
-    end
-
-    should "be invalid for foreign users" do
-      user = FactoryGirl.create(:user)
-      refute @location.is_user_admin?(user)
-    end
-  end
 end

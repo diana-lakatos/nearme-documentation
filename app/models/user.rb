@@ -89,8 +89,6 @@ class User < ActiveRecord::Base
     where('users.id <> ?', user.id)
   }
 
-  scope :admins, lambda { where(admin: true) }
-
   scope :ordered_by_email, order('users.email ASC') 
 
 
