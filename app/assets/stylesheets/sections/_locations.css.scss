@@ -123,10 +123,6 @@ section.listings {
 
       @media (max-width: $booking-module-breakpoint) {
         display: none;
-
-        &.amenities-shown {
-          display: block;
-        }
       }
     }
 
@@ -136,6 +132,16 @@ section.listings {
       background: $gray240;
       border: 1px solid $gray210;
       padding: 12px;
+
+      &.amenities-shown {
+        padding-bottom: 0;
+
+        .amenities-container {
+          display: block;
+          margin-bottom: 0;
+          border-bottom: 0;
+        }
+      }
     }
   }
 

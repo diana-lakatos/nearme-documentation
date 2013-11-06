@@ -131,5 +131,5 @@ class @Space.Controller
     amenities_header = $(event.target).closest('.amenities-header')
     amenities_block = amenities_header.closest('.amenities-block')
     amenities_header.find('a span').toggleClass('ico-chevron-right').toggleClass('ico-chevron-down')
-    amenities_block.find('.amenities-container').toggleClass('amenities-shown')
+    amenities_block.toggleClass('amenities-shown')
     false
