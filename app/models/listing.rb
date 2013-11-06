@@ -40,6 +40,7 @@ class Listing < ActiveRecord::Base
         group('listings.id HAVING count(listing_messages.id) > 0')
 
   # == Callbacks
+  before_save :set_activated_at
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
 
@@ -71,7 +72,8 @@ class Listing < ActiveRecord::Base
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description,
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
-    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type, :draft, :enabled
+    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type, :draft, :enabled,
+    :last_request_photos_sent_at, :activated_at
 
   attr_accessor :distance_from_search_query, :photo_not_required
 
@@ -314,6 +316,17 @@ class Listing < ActiveRecord::Base
     [name, location.street].compact.join(" at ")
   end
 
+  def last_booked_days
+    last_reservation = reservations.order('created_at DESC').first
+    last_reservation ? ((Time.current.to_f - last_reservation.created_at.to_f) / 1.day.to_f).round : nil
+  end
+
+  private
+  def set_activated_at
+    if enabled_changed?
+      self.activated_at = enabled ? Time.current : nil
+    end
+  end
 end
 
 class NullListing

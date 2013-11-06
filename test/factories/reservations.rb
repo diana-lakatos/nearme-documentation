@@ -19,6 +19,10 @@ FactoryGirl.define do
       payment_method 'credit_card'
     end
 
+    factory :reservation_in_san_francisco do
+      association(:listing, factory: :listing_in_san_francisco_address_components) 
+    end
+
     factory :past_reservation do
       after(:create) do |reservation|
         reservation.periods.reverse.each_with_index do |period, i|

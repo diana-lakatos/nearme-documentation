@@ -1,4 +1,11 @@
-Your booking for '{{ listing.name }}' at {{ location.name }} ended yesterday.
+How was {{ reservation.owner.first_name }}, your recent guest?
 
-Leave a rating and maybe a comment on how this booking went by clicking the following link:
-{{ reservation.host_rating_url }}
+We would love to hear about your experience hosting {{ reservation.owner.first_name }} at '{{ listing.name }}', {{ listing.street }} for the booking commencing {{ reservation.start_date }}.
+
+Your opinion is very important and it will help us ensure that our guests are a good fit for you and your space.
+
+Please take a moment to give us your feedback!
+
+Write a Review: {{ reservation.host_rating_reservation_url }}
+
+If you'd prefer to talk to us directly, please send an email to happydesk@desksnear.me or call us on 555-888-DESK (3375) - we love to talk with our hosts.

@@ -1,50 +1,69 @@
 class ReservationMailer < InstanceMailer
   layout 'mailer'
 
-  def notify_guest_of_cancellation(platform_context, reservation)
+  def notify_guest_of_cancellation_by_host(platform_context, reservation)
     setup_defaults(platform_context, reservation)
-    generate_mail('A booking you made has been cancelled by the owner')
+    generate_mail("Your booking for '#{reservation.listing.name}' at #{reservation.location.street} was cancelled by the host")
+  end
+
+  def notify_guest_of_cancellation_by_guest(platform_context, reservation)
+    setup_defaults(platform_context, reservation)
+    generate_mail('You just cancelled a booking')
   end
 
   def notify_guest_of_confirmation(platform_context, reservation)
     setup_defaults(platform_context, reservation)
-    generate_mail('A booking you made has been confirmed')
+    generate_mail("#{reservation.owner.first_name}, your booking has been confirmed")
   end
 
   def notify_guest_of_rejection(platform_context, reservation)
     setup_defaults(platform_context, reservation)
-    generate_mail("A booking you made has been declined")
+    generate_mail("Can we help, #{reservation.owner.first_name}?")
   end
 
   def notify_guest_with_confirmation(platform_context, reservation)
     setup_defaults(platform_context, reservation)
-    generate_mail('A booking you made is pending confirmation')
+    generate_mail("#{reservation.owner.first_name}, your booking is pending confirmation")
   end
 
-  def notify_host_of_cancellation(platform_context, reservation)
+  def notify_host_of_cancellation_by_guest(platform_context, reservation)
     setup_defaults(platform_context, reservation)
     @user = @listing.administrator
     set_bcc_email
-    generate_mail('A guest has cancelled a booking')
+    generate_mail("#{reservation.owner.first_name.pluralize} cancelled a booking for '#{reservation.listing.name}' at #{reservation.location.street}")
+  end
+
+  def notify_host_of_cancellation_by_host(platform_context, reservation)
+    setup_defaults(platform_context, reservation)
+    @user = @listing.administrator
+    set_bcc_email
+    generate_mail("You just declined a booking")
   end
 
   def notify_host_of_confirmation(platform_context, reservation)
     setup_defaults(platform_context, reservation)
     @user = @listing.administrator
     set_bcc_email
-    generate_mail('You have confirmed a booking')
+    generate_mail('Thanks for confirming!')
   end
 
-  def notify_guest_of_expiration(platform_context, reservation)
-    setup_defaults(platform_context, reservation)
-    generate_mail('A booking you made has expired')
+  def notify_guest_of_expiration(platform_context,reservation)
+    setup_defaults(platform_context,reservation)
+    generate_mail("Your booking for '#{reservation.listing.name}' at #{reservation.location.street} has expired")
   end
   
   def notify_host_of_expiration(platform_context, reservation)
     setup_defaults(platform_context, reservation)
     @user = @listing.administrator
     set_bcc_email
-    generate_mail('A booking for one of your listings has expired')
+    generate_mail('A booking at one of your listings has expired')
+  end
+
+  def notify_host_of_rejection(platform_context, reservation)
+    setup_defaults(platform_context, reservation)
+    @user = @listing.administrator
+    set_bcc_email
+    generate_mail("Can we help, #{@user.first_name}?")
   end
   
   def notify_host_with_confirmation(platform_context, reservation)
@@ -52,7 +71,7 @@ class ReservationMailer < InstanceMailer
     @user = @listing.administrator
     set_bcc_email
     @url  = manage_guests_dashboard_url(:token => @user.authentication_token)
-    generate_mail('A booking requires your confirmation')
+    generate_mail("#{reservation.owner.first_name} just booked your space!")
   end
 
   def notify_host_without_confirmation(platform_context, reservation)
@@ -61,14 +80,23 @@ class ReservationMailer < InstanceMailer
     set_bcc_email
     @url  = manage_guests_dashboard_url(:token => @user.authentication_token)
     @reserver = @reservation.owner.name
-    generate_mail('A guest has made a booking')
+    generate_mail("#{reservation.owner.first_name} just booked your space!")
+  end
+
+  def pre_booking(platform_context, reservation)
+    setup_defaults(platform_context, reservation)
+    generate_mail("#{reservation.owner.first_name}, your booking is tomorrow!")
   end
 
   if defined? MailView
     class Preview < MailView
 
-      def notify_guest_of_cancellation
-        ::ReservationMailer.notify_guest_of_cancellation(PlatformContext.new, reservation)
+      def notify_guest_of_cancellation_by_host
+        ::ReservationMailer.notify_guest_of_cancellation_by_host(PlatformContext.new, reservation)
+      end
+
+      def notify_guest_of_cancellation_by_guest
+        ::ReservationMailer.notify_guest_of_cancellation_by_guest(PlatformContext.new, reservation)
       end
 
       def notify_guest_of_confirmation
@@ -87,12 +115,20 @@ class ReservationMailer < InstanceMailer
         ::ReservationMailer.notify_guest_with_confirmation(PlatformContext.new, reservation)
       end
 
-      def notify_host_of_cancellation
-        ::ReservationMailer.notify_host_of_cancellation(PlatformContext.new, reservation)
+      def notify_host_of_cancellation_by_guest
+        ::ReservationMailer.notify_host_of_cancellation_by_guest(PlatformContext.new, reservation)
+      end
+
+      def notify_host_of_cancellation_by_host
+        ::ReservationMailer.notify_host_of_cancellation_by_host(PlatformContext.new, reservation)
       end
 
       def notify_host_of_confirmation
         ::ReservationMailer.notify_host_of_confirmation(PlatformContext.new, reservation)
+      end
+
+      def notify_host_of_rejection
+       ::ReservationMailer.notify_host_of_rejection(PlatformContext.new, reservation)
       end
 
       def notify_host_of_expiration
@@ -107,10 +143,14 @@ class ReservationMailer < InstanceMailer
         ::ReservationMailer.notify_host_without_confirmation(PlatformContext.new, reservation)
       end
 
+      def pre_booking
+        ::ReservationMailer.pre_booking(PlatformContext.new, reservation)
+      end
+
       private
 
         def reservation
-          Reservation.last || FactoryGirl.create(:reservation)
+          Reservation.last || FactoryGirl.create(:reservation_in_san_francisco)
         end
 
     end

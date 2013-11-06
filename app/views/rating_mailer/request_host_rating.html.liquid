@@ -1,8 +1,13 @@
-<p>
-  Your booking for '{{ listing.name }}' at {{ location.name }} ended yesterday.
-</p>
+<h2>How was {{ reservation.owner.first_name }}, your recent guest?</h2>
 
 <p>
-  Leave a rating and maybe a comment on how this booking went by clicking the following link:
-  <a href="{{ reservation.host_rating_url }}">Rate '{{ listing.name }}' visit at {{location.name }}</a>
+We would love to hear about your experience hosting <a href="{{ reservation.owner.user_profile_url }}">{{ reservation.owner.first_name }}</a> at '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>', {{ listing.street }} for the booking commencing {{ reservation.start_date }}.
 </p>
+
+<p>Your opinion is very important and it will help us ensure that our guests are a good fit for you and your space.</p>
+
+<p>Please take a moment to give us your feedback!</p>
+
+<a class="btn" href="{{ reservation.host_rating_reservation_url }}">Write a Review</a>
+
+<p>If you'd prefer to talk to us directly, please send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or call us on 555-888-DESK (3375) - we love to talk with our hosts.</p>

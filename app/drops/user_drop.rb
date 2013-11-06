@@ -15,12 +15,20 @@ class UserDrop < BaseDrop
     @user.email
   end
 
-  def first_name
-    @user.first_name
+  def name_pluralize
+    name.pluralize
+  end
+
+  def first_name_pluralize
+    first_name.pluralize
   end
 
   def search_url
     routes.search_url
+  end
+
+  def search_url_with_tracking
+    routes.search_url(track_email_event: true)
   end
 
   def reservation_city?
@@ -36,16 +44,35 @@ class UserDrop < BaseDrop
   end
 
   def space_wizard_list_path
-    h = Rails.application.routes.url_helpers
-    h.new_user_session_url(:return_to => h.space_wizard_list_path)
+    routes.new_user_session_url(:return_to => routes.space_wizard_list_path)
+  end
+
+  def space_wizard_list_url_with_tracking
+    routes.space_wizard_list_url(token: @user.authentication_token, track_email_event: true)
   end
 
   def manage_locations_url
     routes.manage_locations_url
   end
 
-  def edit_user_registration_url
-   routes.edit_user_registration_url
+  def manage_locations_url_with_tracking
+    routes.manage_locations_url(track_email_event: true)
+  end
+
+  def manage_locations_url_with_tracking_and_token
+    routes.manage_locations_url(token: @user.authentication_token, track_email_event: true)
+  end
+
+  def edit_user_registration_url(with_token = false)
+    routes.edit_user_registration_url(:token => @user.authentication_token)
+  end
+
+  def edit_user_registration_url_with_token
+    routes.edit_user_registration_url(:token => @user.authentication_token)
+  end
+
+  def user_profile_url
+    routes.profile_path(@user.slug)
   end
 
   def full_mobile_number
@@ -54,5 +81,13 @@ class UserDrop < BaseDrop
 
   def verify_user_url
     routes.verify_user_url(@user.id, @user.email_verification_token)
+  end
+
+  def listings_in_near
+    @user.listings_in_near
+  end
+
+  def administered_locations_pageviews_7_day_total
+    @user.administered_locations_pageviews_7_day_total
   end
 end

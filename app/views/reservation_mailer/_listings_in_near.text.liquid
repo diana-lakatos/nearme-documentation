@@ -1,0 +1,5 @@
+{% for listing_in_near in user.listings_in_near %}
+'{{ listing_in_near.name }}' at {{ listing_in_near.street }} ({{ listing_in_near.listing_url }})
+{{ listing_in_near.from_money_period }}
+
+{% endfor %}

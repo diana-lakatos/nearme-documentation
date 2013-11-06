@@ -99,6 +99,15 @@ FactoryGirl.define do
       association(:location, factory: :location_in_san_francisco)
     end
 
+
+    factory :listing_in_san_francisco_address_components do
+      sequence(:name) do |n|
+        "Listing in San Francisco #{n}"
+      end
+
+      association(:location, factory: :location_san_francisco_address_components)
+    end
+
     factory :listing_in_wellington do
       sequence(:name) do |n|
         "Listing in Wellington #{n}"

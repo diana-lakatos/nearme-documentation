@@ -13,7 +13,8 @@ class ReservationsController < ApplicationController
 
   def user_cancel
     if @reservation.user_cancel
-      ReservationMailer.enqueue.notify_host_of_cancellation(platform_context, @reservation)
+      ReservationMailer.enqueue.notify_host_of_cancellation_by_guest(platform_context, @reservation)
+      ReservationMailer.enqueue.notify_guest_of_cancellation_by_guest(platform_context, @reservation)
       event_tracker.cancelled_a_booking(@reservation, { actor: 'guest' })
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
@@ -63,6 +64,8 @@ class ReservationsController < ApplicationController
       @reservations = current_user.reservations.not_archived.to_a.sort_by(&:date)
       @reservation = params[:id] ? current_user.reservations.find(params[:id]) : nil
     end
+
+    event_tracker.mailer_view_your_booking_clicked(current_user) if params[:track_email_event]
     render :index
   end
 

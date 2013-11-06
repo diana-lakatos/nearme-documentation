@@ -61,7 +61,7 @@ en:
       signed_in_successfully: "Signed in successfully."
       authentication_successful: "Authentication successful."
     registrations:
-      address_verified: "Thanks - your email address has been verified!"
+      address_verified: "Perfect, your email has been confirmed. Thanks!"
       address_already_verified: "The email address has been already verified"
       address_not_verified: "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
     locations:
