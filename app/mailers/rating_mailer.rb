@@ -22,8 +22,12 @@ class RatingMailer < InstanceMailer
     @reservation = reservation
     @listing = @reservation.listing
     @location = @listing.location
-    # that is hack to get the right platform_context based on reservation's listing. I will let Patrik refactor this :-)
-    @platform_context = PlatformContext.new(@listing.company.white_label_enabled ? @listing.company.domain.try(:name) : @listing.instance.domains.first.try(:name))
+    domain = if @listing.company.white_label_enabled?
+               @listing.company.domain
+             else
+               @listing.instance.domains.first
+             end
+    @platform_context = PlatformContext.new(domain.try(:name))
 
     mail to: @author.email,
          subject: instance_prefix("How was your experience at '#{@listing.name}'?", @platform_context.decorate),
