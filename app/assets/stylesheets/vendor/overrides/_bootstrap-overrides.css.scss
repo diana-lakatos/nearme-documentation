@@ -160,16 +160,3 @@ abbr[data-original-title] {
     display: none !important;
   }
 }
-
-.dropdown {
-  .dropdown-menu {
-    @include opacity(0);
-  }
-
-  &.open {
-    .dropdown-menu {
-      @include opacity(1);
-      @include animation(fadeIn $navigation-animation-time);
-    }
-  }
-}
