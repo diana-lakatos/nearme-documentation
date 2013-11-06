@@ -8,6 +8,7 @@ class @Space.Controller
     @siblingListingsCarousel = @container.find('#listing-siblings-container')
     @fullScreenGallery = @container.find('#photos-container-enlarged')
     @fullScreenGalleryTrigger = @container.find('button[data-gallery-enlarge]') 
+    @fullScreenGalleryContainer = @container.find('#fullscreen-gallery')
 
     @setupCollapse()
     @setupCarousel()
@@ -37,6 +38,30 @@ class @Space.Controller
       setTimeout ( =>
         @adjustFullGalleryHeight()
       ), 1200
+
+    @fullScreenGalleryContainer.on "show", (e) =>
+      @loadFullGalleryPhotos()
+
+
+  loadFullGalleryPhotos: ->
+    @fullScreenGalleryContainer.find(".loading").show()
+    carousel = $(this).find(".carousel").hide()
+    deferreds = []
+    imgs = @fullScreenGalleryContainer.find(".carousel .item", this).find("img")
+
+    # loop over each img
+    imgs.each ->
+      self = $(this)
+      datasrc = self.attr("data-src")
+      if datasrc
+        d = $.Deferred()
+        self.one("load", d.resolve).attr("src", datasrc).attr "data-src", ""
+        deferreds.push d.promise()
+
+    $.when.apply($, deferreds).done =>
+      @fullScreenGalleryContainer.find(".loading").hide()
+      carousel.fadeIn 1000
+
 
   adjustBookingModulePosition: ->
     # 610 - booking module breakpoint

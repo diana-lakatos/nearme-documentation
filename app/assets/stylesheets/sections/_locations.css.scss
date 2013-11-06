@@ -225,6 +225,17 @@ section.listings {
   #fullscreen-gallery {
     background: rgba(0, 0, 0, 1);
 
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 11;
+      width: 54px;
+      height: 55px;
+      margin-top: -27px;
+      margin-left: -27px;
+    }
+
     .carousel {
 
       .carousel-inner {
