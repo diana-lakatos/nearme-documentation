@@ -1,4 +1,5 @@
-= render :partial => 'shared/og_meta', :locals => { :listing => listing }
+- content_for :meta do
+  = render :partial => 'shared/og_meta', :locals => { :listing => listing }
 .social-buttons-wrapper
   .social-buttons
 

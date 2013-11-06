@@ -1,11 +1,11 @@
-- content_for :meta do
-  %meta{:property=>"og:title", :content => listing.name }
-  %meta{:property=>"og:description", :content => listing.description }
-  %meta{:property=>"og:type", :content => 'place' }
-  %meta{:property=>"place:location:latitude", :content => listing.latitude }
-  %meta{:property=>"place:location:longitude", :content => listing.longitude }
-  %meta{:property=>"place:location:longitude", :content => listing.longitude }
-  %meta{:property=>"og:site_name", :content => platform_context.name }
-  %meta{:property=>"og:url", :content => request.original_url }
-  - if listing.photos.any?
-    %meta{:property=>"og:image", :content => listing.photos.first.image_url(:large) } 
+- url ||= request.original_url
+%meta{:property=>"og:title", :content => listing.name }
+%meta{:property=>"og:description", :content => listing.description }
+%meta{:property=>"og:type", :content => "place" }
+%meta{:property=>"place:location:latitude", :content => listing.latitude }
+%meta{:property=>"place:location:longitude", :content => listing.longitude }
+%meta{:property=>"place:location:longitude", :content => listing.longitude }
+%meta{:property=>"og:site_name", :content => platform_context.name }
+%meta{:property=>"og:url", :content => url }
+- if listing.photos.any?
+  %meta{:property=>"og:image", :content => listing.photos.first.image_url(:large) } 
