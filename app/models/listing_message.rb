@@ -50,6 +50,10 @@ class ListingMessage < ActiveRecord::Base
     end
   end
 
+  def recipient
+    message_from_guest? ? listing.administrator : owner
+  end
+
   private
 
   def kind_for(user)

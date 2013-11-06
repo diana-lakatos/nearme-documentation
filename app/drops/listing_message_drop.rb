@@ -4,7 +4,7 @@ class ListingMessageDrop < BaseDrop
   end
 
   def url
-    routes.listing_listing_message_url(@listing_message.listing, @listing_message)
+    routes.listing_listing_message_url(@listing_message.listing, @listing_message, :token => @listing_message.recipient.authentication_token)
   end
 
   def owner_first_name
