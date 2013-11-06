@@ -1,8 +1,9 @@
-<p>
-  Booking from {{ subject.name }} for '{{ listing.name }}' at {{ location.name }} ended yesterday.
-</p>
+<h2>How was it, {{ reservation.owner.first_name }}?</h2>
 
-<p>
-  Leave a rating and maybe a comment on how this booking went by clicking the following link:
-  <a href="{{ reservation.guest_rating_url }}">Rate your guest {{subject.name}} at {{location.name}}</a>
-</p>
+<p>We can't wait to hear about your experience at '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>', {{ listing.street }}.</p>
+
+<p>Your opinion is very important and it will help other guest to find great desks. Take a moment and give us your feedback!</p>
+
+<a class="btn" href="{{ reservation.guest_rating_reservation_url }}">Write a Review</a>
+
+<p>If you'd prefer to talk to us directly, please send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or call us on 555-888-DESK (3375) - we love to talk with our guests.</p>

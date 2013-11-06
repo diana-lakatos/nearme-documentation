@@ -1,0 +1,11 @@
+Hey, {{ user.first_name }}!
+
+We hope you enjoyed your booking for '{{ listing.name }}' at {{ listing.street }} on {{ reservation.start_date }}.
+
+We thought you might be interested in some other desks in your area. Come back to Desks Near Me and find a cool desk to get your work done!
+
+{% include 'reservation_mailer/listings_in_near.text' %}
+Search More Desks: {{ listing.search_url_with_tracking }}
+
+Not looking for a desk? 
+List your space: {{ user.space_wizard_list_url_with_tracking }}

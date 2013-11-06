@@ -44,5 +44,6 @@ Then /^a new account is not created$/ do
 end
 
 Then /^I should get verification email$/ do
-  last_email_for(User.last.email).subject.should include "Email verification"
+  user = User.last
+  last_email_for(user.email).subject.should =~ Regexp.new("#{user.first_name}, please verify your .+ email")
 end

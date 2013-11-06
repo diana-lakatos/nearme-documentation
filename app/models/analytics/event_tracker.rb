@@ -38,6 +38,7 @@ class Analytics::EventTracker
   include ReservationEvents
   include SpaceWizardEvents
   include UserEvents
+  include MailerEvents
 
 
   def pixel_track_url(event_name, properties)

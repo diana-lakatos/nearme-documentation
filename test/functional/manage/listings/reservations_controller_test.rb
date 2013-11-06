@@ -44,7 +44,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
   end
 
   should "track and redirect a host to the Manage Guests page when they cancel a booking" do
-    ReservationMailer.expects(:notify_guest_of_cancellation).returns(stub(deliver: true)).once
+    ReservationMailer.expects(:notify_guest_of_cancellation_by_host).returns(stub(deliver: true)).once
 
     @reservation.confirm # Must be confirmed before can be cancelled
     @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|

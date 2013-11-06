@@ -13,7 +13,7 @@ end
 
 Then /^I should see this question in my inbox marked as read$/ do
   visit listing_messages_path
-  page.should_not have_content('Messages (1)')
+  page.should_not have_css('.count')
   page.should_not have_content('Inbox (1)')
   page.should have_content('Messages')
   page.should have_content('Inbox')
@@ -31,7 +31,7 @@ end
 
 Then /^I should see this question in my inbox marked as unread$/ do
   visit listing_messages_path
-  page.should have_content('Messages (1)')
+  find('.count').should have_content('1')
   page.should have_content('Inbox (1)')
   page.should have_content model('user').first_name
   page.should have_content @listing.name

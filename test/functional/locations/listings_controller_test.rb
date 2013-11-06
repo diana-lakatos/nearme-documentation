@@ -17,27 +17,32 @@ class Locations::ListingsControllerTest < ActionController::TestCase
   end
 
   context 'edit links' do
-    should 'be visible for location admins' do
-      user = FactoryGirl.create(:user, admin: true, companies: [@location.company]).decorate
+    setup do
+      @edit_listing_url = login_as_admin_user_path(@location.creator, :return_to => edit_manage_listing_path(@listing))
+      @edit_location_url = login_as_admin_user_path(@location.creator, :return_to => edit_manage_location_path(@location))
+    end
+
+    should 'be visible for admins' do
+      user = FactoryGirl.create(:user, admin: true).decorate
       Locations::ListingsController.any_instance.stubs(:current_user).returns(user)
       get :show, location_id: @location.id, id: @listing
-      assert_select 'a[href=?]', edit_manage_listing_path(@listing), count: 1
-      assert_select 'a[href=?]', edit_manage_location_path(@location), count: 1
+      assert_select 'a[href=?]', @edit_listing_url, count: 1
+      assert_select 'a[href=?]', @edit_location_url, count: 1
     end
 
     should 'be hidden for customers' do
       user = FactoryGirl.create(:user).decorate
       Locations::ListingsController.any_instance.stubs(:current_user).returns(user)
       get :show, location_id: @location.id, id: @listing
-      assert_select 'a[href=?]', edit_manage_listing_path(@listing), count: 0
-      assert_select 'a[href=?]', edit_manage_location_path(@location), count: 0
+      assert_select 'a[href=?]', @edit_listing_url, count: 0
+      assert_select 'a[href=?]', @edit_location_url, count: 0
     end
 
     should 'be hidden for anonymous users' do
       Locations::ListingsController.any_instance.stubs(:current_user).returns(nil)
       get :show, location_id: @location.id, id: @listing
-      assert_select 'a[href=?]', edit_manage_listing_path(@listing), count: 0
-      assert_select 'a[href=?]', edit_manage_location_path(@location), count: 0
+      assert_select 'a[href=?]', @edit_listing_url, count: 0
+      assert_select 'a[href=?]', @edit_location_url, count: 0
     end
   end
 end

@@ -38,6 +38,15 @@ module Listings
           ReservationMailer.enqueue.notify_guest_of_confirmation(platform_context, reservation)
         end
 
+        pre_booking_sending_date = (reservation.date - 1.day).to_time_in_current_zone + 17.hours # send day before at 5pm
+        if pre_booking_sending_date < Time.current.beginning_of_day
+          ReservationPreBookingJob.perform_later(pre_booking_sending_date, platform_context, reservation)  
+        end
+
+        if current_user.reservations.count == 1
+          ReengagementOneBookingJob.perform_later(reservation.last_date.to_time_in_current_zone + 7.days, platform_context, reservation)  
+        end
+        
         event_tracker.requested_a_booking(reservation)
         card_message = reservation.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
         flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)

@@ -2,7 +2,7 @@
 .alert.static.warning
   %p
     %i
-      Currently browsing the website as #{current_user.name}
-      = link_to "Return to admin", restore_session_admin_users_path,
+      Currently browsing the website as #{current_user.name}.
+      = link_to "Return back.", restore_session_admin_users_path,
           :method => :post
 

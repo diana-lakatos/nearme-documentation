@@ -1,0 +1,11 @@
+<h2>Pssst, {{ user.first_name }}!</h2>
+
+<p>{{ user.administered_locations_pageviews_7_day_total }} people have looked at your listings over the past 7 days!</p>
+
+<p>Add more information or upload additional photos to make your space look even better! Guests won't resist...</p>
+
+<a class="btn" href="{{ user.manage_locations_url_with_tracking_and_token }}">Manage Desks</a>
+
+<p>Spread the word to increase bookings! The best listings will be featured in our newsletter.</p>
+
+{% include 'reservation_mailer/social_links.html' %}

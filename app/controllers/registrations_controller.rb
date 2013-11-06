@@ -25,8 +25,9 @@ class RegistrationsController < Devise::RegistrationsController
       update_analytics_google_id(@user)
       analytics_apply_user(@user)
       event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
-      AfterSignupMailer.enqueue_later(1.hour).help_offer(platform_context, @user)
-      UserMailer.enqueue.email_verification(platform_context, @user)
+      PostActionMailer.enqueue_later(30.minutes).sign_up_welcome(platform_context, @user)
+      ReengagementNoBookingsJob.perform_later(72.hours.from_now, platform_context, @user)
+      PostActionMailer.enqueue.sign_up_verify(platform_context, @user)
     end
 
     # Clear out temporarily stored Provider authentication data if present
@@ -115,6 +116,16 @@ class RegistrationsController < Devise::RegistrationsController
   def store_google_analytics_id
     cookies[:google_analytics_id] = params[:id]
     update_analytics_google_id(current_user)
+    render :nothing => true
+  end
+
+  def store_geolocated_location
+    if user_signed_in? && params[:longitude] && params[:latitude] 
+      @user = current_user
+      @user.last_geolocated_location_longitude = params[:longitude]
+      @user.last_geolocated_location_latitude = params[:latitude]
+      @user.save
+    end
     render :nothing => true
   end
 

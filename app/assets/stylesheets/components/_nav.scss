@@ -1,24 +1,20 @@
 .navbar {
-  background: $black;
 
   .navbar-inner {
+    background: $black;
     @include box-sizing(border-box);
     margin: 0 auto;
     max-width: 1400px;
     padding: 0 0 0 20px;
     height: 60px;
-    background: $black;
 
     #logo {
       float: left;
-      margin-top: 4px;
+      margin-top: 14px;
       width: $theme_logo_width;
       height: 28px;
-      border: none !important;
       background: image-url($theme_logo) no-repeat;
       text-indent: -9999px;
-      @include transition(0,0,0);
-
 
       @media (-webkit-min-device-pixel-ratio: 1.5), 
       (min-resolution: 144dpi) { 
@@ -27,167 +23,147 @@
       }     
     }
 
-    .menu-divider {
-      display: none;
-      padding-top: 48px;
-
-      .line-1 {
-        border-bottom: 1px solid #111;
-      }
-
-      .line-2 {
-        border-bottom: 1px solid #222;
-      }
-
-      .line-3 {
-        border-bottom: 1px solid #444;
-      }
-
-      @media (max-width: $ipad-width) {
-        display: block;
-      }
-    }
-
     @media (max-width: $ipad-width) {
 
-      padding-left: 0px;
-
       #logo {
-        margin-left: 20px;
+        height: 50px;
+        width: $theme_icon_width;
+        margin-top: 2px;
+        background: image-url($theme_icon) no-repeat;
       }
     }
+  }
+
+  .divider-vertical {
+    margin: 0px;
+    height: 60px;
   }
 
   .nav-links {
-    padding-top: 10px;
-    line-height: 40px;
+    line-height: 60px;
 
-    @media (max-width: $ipad-width) {
+    li {
+      height: 60px;
 
-      .pull-right {
-        float: none;
-      }
-    }
+      a.nav-link {
+        position: relative;
+        display: inline-block;
+        padding: 18px 20px;
+        color: $gray160;
+        font:normal 16px/22px $font-regular, sans-serif;
+        font-size: 20px;
 
-    a.nav-link {
-      display: inline-block;
-      float: right;
-      color: $gray160;
-      font-size: 20px;
-      text-decoration: none;
-
-      &:hover {
-        color: $gray210;
-      }
-
-      &.margin-right {
-        margin-right: 30px;
-      }
-    }
-  }
-
-  a.btn.btn-blue {
-    float: right;
-    margin-top: 1px;
-    margin-right: 15px;
-    text-align: center;
-    color: $pure-white;
-    font-size: 20px;
-
-    &:hover {
-      background: lighten($theme_blue, 10%);
-      color: $pure-white;
-    }
-
-    &.user-signed-in {
-
-      @media (max-width: 900px) {
-        span {
+        span.icon {
           display: none;
         }
+
+        span.ico-plus {
+          margin-top: -1px;
+          font-size: 25px;
+        }
+
+        span.ico-user {
+          margin-top: -4px;
+          vertical-align: -3px;
+          font-size: 30px;
+        }
+
+        span.ico-mail {
+          margin-top: -5px;
+          vertical-align: -9px;
+          font-size: 35px;
+        }
+
+        @media (max-width: $ipad-width) {
+            span.text { display: none; }
+            span.icon { display: inherit; }
+        }
+
+        span.count {
+          margin-left: 8px;
+          background: $gray160;
+          @include border-radius(0.7em);
+          color: $theme_black;
+          display: inline-block;
+          line-height: 1.3em;
+          font-size: 14px;
+          text-align: center;
+          width: 1.3em;
+        }
+
+        .ico-chevron-down {
+            padding-left: 8px;
+            font-size: 14px;
+        }
+
+        &.btn-blue {
+          height: 60px;
+          margin: 0px;
+          color: $pure-white;
+          @include border-radius(0);
+
+          &:hover {
+            background: lighten($theme_blue, 10%);
+          }
+        }
       }
+
+      .dropdown-menu {
+        min-width: 130px;
+        margin: 0 0 0 -2px;
+        padding-top: 0px;
+        border-radius: 0px;
+        @include border-corner-radius(top, left, 0);
+        @include border-corner-radius(top, right, 0);
+        @include border-corner-radius(bottom, left, $border-radius-default);
+        @include border-corner-radius(bottom, right, $border-radius-default); 
+
+        li {
+          height: 40px;
+          line-height: 40px;
+
+          a.nav-link {
+            padding: 8px 20px;
+          }
+        }
+
+        /* Remove bootstrap dropdown arrow */
+        &:before,
+        &:after {
+          border: none !important;
+          content: none !important;
+        }
+      }
+
     }
   }
 }
 
+/* Below is only for applying colors and borders to the inverted theme.
+   Don't put other styles in here, use the navbar block above this one. */
+
 .navbar-inverse {
+  background: $black;
+  border-bottom: $black;
+  border-bottom-width: 1px !important;
+  border-bottom-style: solid;
   
+  .navbar-inner {
+    background: $black;
+  }
+
   ul.nav {
-    float: right;
-
-    &.main-menu {
-
-      @media (max-width: $ipad-width) {
-        display: none; 
-
-        &.open {
-
-          display: block !important;
-          padding: 15px 0 10px 0;
-          margin: 0px;
-          width: 100%;
-
-          > li {
-            display: block;
-            float: left;
-            width: 100%;
-            margin-left: 20px;
-
-            a {
-              float: left;
-            }
-
-            a:not(.btn) {
-              padding-left: 0px;
-            }
-          }
-        }
-      }
-    }
-
     li {
-      
-      @media (max-width: $ipad-width) {
-
-        &.menu-trigger {
-          display: block !important;
-        }
-      }
-
 
       ul.dropdown-menu {
-        left: 8px;
-        min-width: 130px;
-        border: none;
-        background:$theme_black;
-        
-        @media (max-width: $ipad-width) {
-          left: -37px;
-
-          &:before {
-            left: 56px;
-          }
-
-          &:after {
-            left: 55px;
-          }
-        }
+        background: $theme_black;
 
         li {
           background:$theme_black;
 
-          a {
-            padding: 4px 8px;
-            
-            &:hover{
+          a:hover{
               background:$theme_black;
               color: $gray220;
-            }
-          }
-
-          &.divider {
-            border-color: $gray80;
-            padding: 0;
           }
         }
 
@@ -205,28 +181,14 @@
       }
 
       a {
-        position: relative;
-        display: block;
-        padding: 8px 20px;
-        color: $gray160;
-        font:normal 16px/22px $font-regular, sans-serif;
+        color: $gray80;
 
         &:active {
           color: $gray220;
         }
 
-        &.nav-link {
-          font-size: 20px;
-        }
-      }
-
-      &.menu-trigger {
-        display: none;
-
-        a {
-          font-size: 30px;
-          padding-top: 4px;
-          color: $pure-white;
+        &:hover {
+          color: $gray210;
         }
       }
 
@@ -240,10 +202,7 @@
     }
   }
 }
-
-.dropdown-menu .divider {
-  margin: 2px 0;
-}
+/* end */
 
 .manage-nav {
 
@@ -255,10 +214,11 @@
     margin-bottom: 25px;
 
     .navbar-inner {
-      padding: 0;
-      background: $gray240; 
-      filter: none;
       height: 50px;
+      padding: 0;
+      background: $gray240;
+      line-height: 40px;
+      filter: none;
 
       @media (max-width: $ipad-width) {
         height: auto;
@@ -294,96 +254,12 @@
           padding: 5px 0 0;
           color: $gray160;
           font-size: 18px;
-          //display: inline-block;
           white-space: nowrap;
 
           &:hover, &.active {
             color: $gray80;
           }
         }
-      }
-    }
-  }
-}
-
-
-// Accordian nav
-// First level of elements expands out
-
-ul.nav.accordian {
-  
-  > li {
-    
-    > a {
-      padding-right: 35px;
-
-      i {
-        position: absolute;
-        right: 12px;
-        width: 16px;
-        height: 17px;
-      }
-    }
-
-    > ul {
-      display: none;
-      border-bottom: 1px solid transparent;
-
-      li {
-        border-bottom: 1px solid $gray210;
-        background: $gray220;
-
-        &:first-child {
-          border-top: none;
-        }
-
-        &:last-child {
-          border-bottom: none;
-        }
-
-        &:first-child:last-child {
-        }
-
-        a {
-          padding-right: 36px;
-          color: $pure-white;
-
-          i {
-            position: absolute;
-            top: 8px;
-            right: 12px;
-            width: 13px;
-            height: 23px;
-          }
-        }
-
-        &:hover {
-          
-          > a i {
-            display: block;
-            @include opacity(0.5);
-          }
-        }
-
-        &.active {
-          
-          > a i {
-            display: block;
-            @include opacity(1);
-          }
-        }
-      }
-    }
-
-    &.expanded {
-      
-
-      // Expanded navs have different style borders
-
-      border-bottom: none;
-
-      > ul {
-        display: block;
       }
     }
   }
