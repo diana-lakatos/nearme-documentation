@@ -1,8 +1,8 @@
 %article.location
   %h2
     The location
-    - if user_can_edit_location?(current_user, location)
-      = link_to edit_manage_location_path(location) do
+    - if current_user.try(:admin)
+      = link_to login_as_admin_user_path(location.creator, :return_to => edit_manage_location_path(location)), :method => :post, :confirm => "This will log you out and re-log you in as location creator" do
         %span.ico-edit
   %p= location.description
   - if location.amenities.any?
