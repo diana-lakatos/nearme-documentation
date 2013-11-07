@@ -1,0 +1,48 @@
+!!!
+%html
+  %head
+    %title
+      #{platform_context.name} - Instance Admin
+    = csrf_meta_tag
+    %link{:href => "/favicon.ico", :rel => "shortcut icon"}/
+    = stylesheet_link_tag 'instance_admin'
+    = javascript_include_tag :instance_admin
+
+  %body
+    .container
+      .navbar.navbar-inverse
+        .navbar-inner
+          .container
+            = link_to platform_context.name, instance_admin_url, :class => "brand"
+            .nav-collapse.collapse.navbar-inverse-collapse
+              %ul.nav.pull-right
+                %li{:class => ("active" if request.url.include?(instance_admin_url))}
+                  = link_to "Analytics", instance_admin_url
+                %li{:class => ("active" if request.url.include?('#'))}
+                  = link_to "Settings", instance_admin_url
+                %li{:class => ("active" if request.url.include?('#'))}
+                  = link_to "Theme", instance_admin_url
+                %li{:class => ("active" if request.url.include?('#'))}
+                  = link_to "Inventory", instance_admin_url
+                %li{:class => ("active" if request.url.include?('#'))}
+                  = link_to "Transfers", instance_admin_url
+                %li{:class => ("active" if request.url.include?('#'))}
+                  = link_to "Partners", instance_admin_url
+                %li{:class => ("active" if request.url.include?('#'))}
+                  = link_to "Users", instance_admin_url
+                %li= link_to "Log Out", destroy_user_session_url, :method => :delete, :data => {:user => current_user.first_name }
+
+      .row-fluid
+        .span12
+          - flash.each do |type, message|
+            .alert{:class => "alert-#{type}"}
+              = message
+
+          = yield
+
+      %hr
+
+      %footer
+        %p
+          &copy; #{platform_context.name} 2013
+
