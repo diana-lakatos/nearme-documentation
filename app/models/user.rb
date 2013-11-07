@@ -77,6 +77,9 @@ class User < ActiveRecord::Base
   has_many :user_industries
   has_many :industries, :through => :user_industries
 
+  belongs_to :partner
+  belongs_to :instance
+
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
   }
@@ -119,7 +122,8 @@ class User < ActiveRecord::Base
 
   attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
     :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url, 
-    :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude
+    :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
+    :partner_id, :instance_id
 
   delegate :to_s, :to => :name
 
@@ -348,6 +352,12 @@ class User < ActiveRecord::Base
   def administered_locations_pageviews_7_day_total
     scoped_locations = (!companies.count.zero? && self == self.companies.first.creator) ? self.companies.first.locations : administered_locations
     Impression.where('impressionable_type = ? AND impressionable_id IN (?) AND DATE(impressions.created_at) >= ?', 'Location', scoped_locations.pluck(:id), Date.current - 7.days).count
+  end
+
+  def set_platform_context(platform_context)
+    self.instance_id = platform_context.instance.id
+    self.partner_id = platform_context.partner.try(:id)
+    self.save
   end
 
 end
