@@ -1,0 +1,24 @@
+#instance_admin_roles
+  %legend
+    Roles
+  %table.table.table-striped
+    %thead
+      - permissions = %w(Analytics Settings Theme Inventories Transfers Partners Users)
+      %tr
+        %th Name
+        - permissions.each do |p|
+          %th 
+            = p
+    %tbody
+      - instance_admin_roles.each do |instance_admin_role|
+        %tr.instance-admins-table
+          %td 
+            = instance_admin_role.name
+          - permissions.each do |p|
+            %td 
+              = check_box_tag "instance_admin_role[permission_#{p.downcase}]", true, instance_admin_role.send("permission_#{p.downcase}"), { :disabled => instance_admin_role.instance_id.nil?, :'data-role-id' => instance_admin_role.id, :id => "permission_#{p.downcase}_#{instance_admin_role.id}", :'data-permission-checkbox' => "permission_#{p.downcase}" }
+          %td
+            - if instance_admin_role.instance_id.present?
+              = link_to "Delete", instance_admin_users_instance_admin_role_path(instance_admin_role), :method => :delete, :class => "btn btn-danger", :confirm => 'Are you sure?'
+
+

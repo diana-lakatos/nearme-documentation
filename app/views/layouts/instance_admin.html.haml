@@ -46,3 +46,6 @@
         %p
           &copy; #{platform_context.name} 2013
 
+    = yield :script
+    = javascript_tag do
+      = yield :domready

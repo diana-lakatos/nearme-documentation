@@ -1,5 +1,7 @@
 class RegistrationsController < Devise::RegistrationsController
 
+  skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:update_password, :set_password]
+
   # NB: Devise calls User.new_with_session when building the new User resource.
   # We use this to apply any Provider based authentications to the user record.
   # This is trigged via Devise::RegistrationsController#build_resource
@@ -9,6 +11,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_filter :find_supported_providers, :only => [:edit, :update]
   before_filter :set_return_to, :only => [:new, :create]
   after_filter :render_or_redirect_after_create, :only => [:create]
+  before_filter :redirect_to_edit_profile_if_password_set, :only => [:set_password]
 
   def new
     super unless already_signed_in?
@@ -98,6 +101,22 @@ class RegistrationsController < Devise::RegistrationsController
     render :text => {}, :status => 200, :content_type => 'text/plain' 
   end
 
+  def set_password
+    @user = current_user
+  end
+
+  def update_password
+    @user = current_user
+    @user.password = params[:user][:password]
+    @user.skip_password = false
+    if @user.save 
+      flash[:success] = t('flash_messages.registrations.password_set')
+      redirect_to edit_user_registration_path(:token => @user.authentication_token)
+    else
+      render :set_password
+    end
+  end
+
   def verify
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
@@ -147,7 +166,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def set_return_to
     session[:user_return_to] = params[:return_to] if params[:return_to].present?
-  end
+  end 
 
   private
 
@@ -166,6 +185,14 @@ class RegistrationsController < Devise::RegistrationsController
       if @user.persisted?
         render_redirect_url_as_json
       end
+    end
+  end
+
+  def redirect_to_edit_profile_if_password_set
+    if current_user
+      redirect_to edit_user_registration_path unless set_password_necessary?
+    else
+      redirect_to new_user_session_path
     end
   end
 

@@ -1,0 +1,22 @@
+%form#instance_admins_form
+  %legend
+    Users
+  %table.table.table-striped
+    %thead
+      %tr
+        %th Users
+        %th Role
+        %th 
+    %tbody
+      - platform_context.instance.instance_admins.each do |instance_admin|
+        %tr.instance-admins-table
+          %td 
+            = instance_admin.name
+          %td 
+            - if instance_admin.instance_owner
+              Instance Owner
+            -else
+              = select_tag :instance_admin_role_id, options_from_collection_for_select(instance_admin_roles, "id", "name", instance_admin.instance_admin_role.id), :'data-role-select' => true, :'data-instance-admin-id' => instance_admin.id
+          %td 
+            - unless instance_admin.instance_owner
+              = link_to "Delete", instance_admin_users_instance_admin_path(instance_admin), :method => :delete, :class => "btn btn-danger", :confirm => 'Are you sure?'
