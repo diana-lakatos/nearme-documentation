@@ -4,6 +4,10 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
   end
 
   def friend_ids
-    @friend_ids = connection.connections.all.collect(&:id)
+    begin
+      @friend_ids ||= connection.connections.all.collect(&:id)
+    rescue LinkedIn::Errors::AccessDeniedError
+      raise ::Authentication::InvalidToken
+    end
   end
 end

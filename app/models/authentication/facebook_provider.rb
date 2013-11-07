@@ -4,6 +4,10 @@ class Authentication::FacebookProvider < Authentication::BaseProvider
   end
 
   def friend_ids
-    @friend_ids = connection.get_connections("me", "friends").collect{ |f| f["id"].to_s }
+    begin
+      @friend_ids ||= connection.get_connections("me", "friends").collect{ |f| f["id"].to_s }
+    rescue Koala::Facebook::AuthenticationError
+      raise ::Authentication::InvalidToken
+    end
   end
 end

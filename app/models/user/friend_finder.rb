@@ -9,7 +9,11 @@ class User::FriendFinder
   def find_friends!
     new_friends = []
     authentications.each do |authentication|
-      authentication.new_connections.each{|u| new_friends << u }
+      begin
+        authentication.new_connections.each{|u| new_friends << u }
+      rescue ::Authentication::InvalidToken
+        authentication.expire_token!
+      end
     end
 
     new_friends.each do |new_friend|

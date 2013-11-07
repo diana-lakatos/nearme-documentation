@@ -4,6 +4,10 @@ class Authentication::TwitterProvider < Authentication::BaseProvider
   end
 
   def friend_ids
-    @friend_ids = connection.friends.all.collect{ |f| f.attrs[:id_str] }
+    begin
+      @friend_ids ||= connection.friends.all.collect{ |f| f.attrs[:id_str] }
+    rescue Twitter::Error::Unauthorized
+      raise ::Authentication::InvalidToken
+    end
   end
 end
