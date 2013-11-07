@@ -52,7 +52,7 @@ DesksnearMe::Application.routes.draw do
     resources :inventories, :only => [:index]
     resources :partners, :only => [:index]
     resources :settings, :only => [:index]
-    resources :themes, :only => [:index]
+    resource :theme, :only => [:show, :update], :controller => 'theme'
     resources :transfers, :only => [:index]
     resources :users, :only => [:index]
   end
