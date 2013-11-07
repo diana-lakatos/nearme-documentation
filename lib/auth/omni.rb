@@ -35,9 +35,21 @@ module Auth
                                            :uid => uid,
                                            :token => token,
                                            :secret => secret,
-                                           :token_expires_at => expires_at)
+                                           :token_expires_at => expires_at,
+                                           :token_expires => expires_at ? true : false,
+                                           :token_expired => false)
+
       current_user.use_social_provider_image(@auth_params['info']['image'])
       current_user.save!
+    end
+
+    def update_token_info
+      authentication.token_expires = expires_at ? true : false
+      authentication.token_expired = false
+      authentication.token_expires_at = expires_at
+      authentication.token = token
+      authentication.secret = secret
+      authentication.save!
     end
 
     def email_taken_by_other_user?(current_user)
@@ -75,15 +87,15 @@ module Auth
     end
 
     def token
-      @auth_params['credentials']['token']
+      @auth_params['credentials']['token'] rescue nil
     end
 
     def secret
-      @auth_params['credentials']['secret']
+      @auth_params['credentials']['secret'] rescue nil
     end
 
     def expires_at
-      @auth_params['credentials']['expires_at'] ? Time.at(@auth_params['credentials']['expires_at']) : nil
+      Time.at(@auth_params['credentials']['expires_at']) rescue nil
     end
   end
 end

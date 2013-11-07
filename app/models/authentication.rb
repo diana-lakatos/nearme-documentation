@@ -1,5 +1,7 @@
 class Authentication < ActiveRecord::Base
-  attr_accessible :user_id, :provider, :uid, :info, :token, :secret, :token_expires_at
+  attr_accessible :user_id, :provider, :uid, :info, :token, :secret,
+    :token_expires_at, :token_expires, :token_expired
+
   belongs_to :user
 
   validates :provider, :uid, :token, presence: true

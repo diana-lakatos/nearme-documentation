@@ -49,6 +49,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
       @uid = '123456'
       @email = 'test@example.com'
       @token = 'abcd'
+      @secret = 'dcba'
       @user = FactoryGirl.create(:user)
       request.env['omniauth.auth'] = {
         'provider' => @provider,
@@ -56,6 +57,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
         'info' => { 'email' => @email, 'name' => 'maciek' },
         'credentials' => {
           'token' => @token,
+          'secret' => @secret,
           'expires_at' => 123456789
         }
       }
@@ -101,6 +103,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert_equal 'Authentication successful.', flash[:success]
 
       assert_equal @token, @user.authentications.last.token
+      assert_equal @secret, @user.authentications.last.secret
     end
 
     should "fail due to incorrect email" do
@@ -136,6 +139,9 @@ class AuthenticationsControllerTest < ActionController::TestCase
             post :create
           end
         end
+
+        assert_equal @token, User.last.authentications.last.token
+        assert_equal @secret, User.last.authentications.last.secret
       end
     end
 
@@ -149,6 +155,28 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert_redirected_to new_user_registration_url
     end
 
+    context 'token params after login' do
+      setup do
+        add_authentication(@provider, @uid, @user)
+        stub_mixpanel
+      end
+
+      should 'change token_expires_at to date expires day' do
+        time = request.env['omniauth.auth']['credentials']['expires_at'] = (Time.now + 60.days).to_i
+        post :create
+        auth = Authentication.last
+        assert auth.token_expires?, 'auth token is not marked as expirable'
+        assert_equal time, auth.token_expires_at.to_i, "auth token should expire in #{time}"
+      end
+
+      should 'change expires to false for non-expiring token' do
+        request.env['omniauth.auth']['credentials'].delete('expires_at')
+        post :create
+        auth = Authentication.last
+        refute auth.token_expires?, 'auth token is marked as expirable'
+        assert_nil auth.token_expires_at, 'auth token has expires_at time'
+      end
+    end
   end
 
   private
