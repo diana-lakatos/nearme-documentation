@@ -17,17 +17,16 @@ class UserIntegrationTest < ActiveSupport::TestCase
     end
   end
 
-  context 'admins_of_listing' do
+  context 'hosts_of_listing' do
     should 'find host of listing in friends' do
       @me = FactoryGirl.create(:user)
       @listing = FactoryGirl.create(:listing)
-      @listing.company.users << friend1 = FactoryGirl.create(:user, admin: true)
-      @listing.company.users << friend2 = FactoryGirl.create(:user, admin: true)
-      @listing.company.users << friend3 = FactoryGirl.create(:user, admin: false)
-      friend4 = FactoryGirl.create(:user)
-      @me.add_friends(friend1, friend2, friend3, friend4)
+      @listing.location.administrator = friend1 = FactoryGirl.create(:user)
+      @listing.save!
+      friend2 = FactoryGirl.create(:user)
+      @me.add_friends(friend1, friend2)
 
-      assert_equal [friend1, friend2].sort, @me.friends.admins_of_listing(@listing).sort
+      assert_equal [friend1].sort, @me.friends.hosts_of_listing(@listing).sort
     end
   end
 
@@ -35,12 +34,12 @@ class UserIntegrationTest < ActiveSupport::TestCase
     should 'find users knows host' do
       @me = FactoryGirl.create(:user)
       2.times { @me.add_friend(FactoryGirl.create(:user))}
-      @friend = FactoryGirl.create(:user, admin: true)
+      @friend = FactoryGirl.create(:user)
 
       @me.add_friend(@friend)
 
       @listing = FactoryGirl.create(:listing)
-      @listing.company.users << owner = FactoryGirl.create(:user, admin: true)
+      @listing.company.users << owner = FactoryGirl.create(:user)
 
       @friend.add_friend(owner)
 

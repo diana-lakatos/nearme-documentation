@@ -150,7 +150,7 @@ class Listing < ActiveRecord::Base
 
   def has_connections_for?(user)
     return false unless user
-    (user.friends.visited_listing(self).to_a.count + user.friends.admins_of_listing(self).count + user.friends_know_host_of(self).count) > 0
+    (user.friends.visited_listing(self).to_a.count + user.friends.hosts_of_listing(self).count + user.friends_know_host_of(self).count) > 0
   end
 
   def has_price?

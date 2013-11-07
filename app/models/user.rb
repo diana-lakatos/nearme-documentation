@@ -101,8 +101,8 @@ class User < ActiveRecord::Base
     joins(:reservations).merge(Reservation.confirmed.past.for_listing(listing))
   }
 
-  scope :admins_of_listing, ->(listing) {
-    admins.joins(:companies => {:locations => :listings}).where(:listings => {:id => listing.id})
+  scope :hosts_of_listing, ->(listing) {
+    where(:id => listing.administrator.id)
   }
 
   extend CarrierWave::SourceProcessing
@@ -257,8 +257,8 @@ class User < ActiveRecord::Base
   end
 
   def friends_know_host_of(listing)
-    admins = listing.company.users.admins
-    self.friends.joins(:followers).where(:user_relationships => {:follower_id => admins.pluck(:id)}).uniq
+    hosts = listing.company.users
+    self.friends.joins(:followers).where(:user_relationships => {:follower_id => hosts.pluck(:id)}).uniq
   end
 
   def friends=(users)
