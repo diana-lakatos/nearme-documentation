@@ -7,6 +7,7 @@ DesksnearMe::Application.routes.draw do
     mount InquiryMailer::Preview => 'mail_view/inquiries'
     mount ListingMailer::Preview => 'mail_view/listings'
     mount RatingMailer::Preview => 'mail_view/ratings'
+    mount ListingMessagingMailer::Preview => 'mail_view/listing_messaging'
     mount ReengagementMailer::Preview => 'mail_view/reengagement'
     mount RecurringMailer::Preview => 'mail_view/recurring'
   end

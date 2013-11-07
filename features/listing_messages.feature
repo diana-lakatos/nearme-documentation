@@ -12,6 +12,8 @@ Archivation is done separatedly for owner and listing admin/creator.
     Given I am logged in as the user
     And I ask a question about a listing
     Then I should see this question in my inbox marked as read
+    And this listings creator should get email with notification
     When I log in as this listings creator
     Then I should see this question in my inbox marked as unread
     And I should be able to read, answer and archive this question
+    And question owner should get email with notification
