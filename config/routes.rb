@@ -46,6 +46,17 @@ DesksnearMe::Application.routes.draw do
     resources :pages
   end
 
+  namespace :instance_admin do
+    match '/', :to => "base#index"
+    resources :analytics, :only => [:index]
+    resources :inventories, :only => [:index]
+    resources :partners, :only => [:index]
+    resources :settings, :only => [:index]
+    resources :themes, :only => [:index]
+    resources :transfers, :only => [:index]
+    resources :users, :only => [:index]
+  end
+
   resources :locations, :only => [:show] do
     resources :listings, :controller => 'locations/listings' do
       member do

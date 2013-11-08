@@ -1,0 +1,14 @@
+@import "compass";
+@import "bootstrap";
+@import "components/charts";
+
+body {
+  margin-top: 20px;
+}
+
+fieldset {
+
+  legend + div.control-group {
+    margin-top: 0 !important;
+  }
+}
