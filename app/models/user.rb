@@ -251,8 +251,7 @@ class User < ActiveRecord::Base
   end
 
   def friends_know_host_of(listing)
-    hosts = listing.company.users
-    self.friends.joins(:followers).where(:user_relationships => {:follower_id => hosts.pluck(:id)}).uniq
+    self.friends.joins(:followers).where(:user_relationships => {:follower_id => listing.administrator.id}).without(self).uniq
   end
 
   def friends=(users)

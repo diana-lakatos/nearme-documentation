@@ -39,9 +39,10 @@ class UserIntegrationTest < ActiveSupport::TestCase
       @me.add_friend(@friend)
 
       @listing = FactoryGirl.create(:listing)
-      @listing.company.users << owner = FactoryGirl.create(:user)
+      @listing.location.administrator = host = FactoryGirl.create(:user)
+      @listing.save!
 
-      @friend.add_friend(owner)
+      @friend.add_friend(host)
 
       assert_equal [@friend], @me.friends_know_host_of(@listing)
     end
