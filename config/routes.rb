@@ -1,15 +1,15 @@
 DesksnearMe::Application.routes.draw do
 
-  if Rails.env.development?
-    mount ReservationMailer::Preview => 'mail_view/reservations'
-    mount UserMailer::Preview => 'mail_view/users'
-    mount PostActionMailer::Preview => 'mail_view/post_action'
-    mount InquiryMailer::Preview => 'mail_view/inquiries'
-    mount ListingMailer::Preview => 'mail_view/listings'
-    mount RatingMailer::Preview => 'mail_view/ratings'
-    mount ListingMessagingMailer::Preview => 'mail_view/listing_messaging'
-    mount ReengagementMailer::Preview => 'mail_view/reengagement'
-    mount RecurringMailer::Preview => 'mail_view/recurring'
+  if defined? MailView
+    mount ReservationMailerPreview => 'mail_view/reservations'
+    mount UserMailerPreview => 'mail_view/users'
+    mount PostActionMailerPreview => 'mail_view/post_action'
+    mount InquiryMailerPreview => 'mail_view/inquiries'
+    mount ListingMailerPreview => 'mail_view/listings'
+    mount RatingMailerPreview => 'mail_view/ratings'
+    mount ListingMessagingMailerPreview => 'mail_view/listing_messaging'
+    mount ReengagementMailerPreview => 'mail_view/reengagement'
+    mount RecurringMailerPreview => 'mail_view/recurring'
   end
 
   match '/404', :to => 'errors#not_found'

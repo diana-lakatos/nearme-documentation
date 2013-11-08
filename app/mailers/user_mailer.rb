@@ -12,14 +12,4 @@ class UserMailer < InstanceMailer
          platform_context: @platform_context)
   end
 
-  if defined? MailView
-    class Preview < MailView
-
-      def notify_about_wrong_phone_number
-        ::UserMailer.notify_about_wrong_phone_number(PlatformContext.new, User.where('mobile_number is not null').first)
-      end
-
-    end
-  end
-
 end
