@@ -1,8 +1,7 @@
 class ChartDecorator < Draper::CollectionDecorator
 
-  LABELS_MAX_COUNT = 10
-
-  def initialize(collection, show_period = :last_7_days)
+  def initialize(collection, show_period = :last_7_days, options = {})
+    @options = options.reverse_merge({ :labels_max_count => 10 })
     @show_period = show_period
     super(collection, with: ChartItemDecorator)
   end
@@ -10,7 +9,7 @@ class ChartDecorator < Draper::CollectionDecorator
   def labels
     # Because of the width of chart, we have to limit size of labels to about 10.
     # If there are more labels to be shown, we just dont show these labels and show just empty strings instead.
-    if dates.size <= LABELS_MAX_COUNT
+    if dates.size <= @options[:labels_max_count]
       dates
     else
       Array.new(dates.size, '')
@@ -21,6 +20,8 @@ class ChartDecorator < Draper::CollectionDecorator
     @dates ||= case @show_period
     when :last_7_days
       6.downto(0).map { |i| (Time.zone.now - i.day).strftime('%b %d') }
+    when :last_30_days
+      30.downto(0).map { |i| (Time.zone.now - i.day).strftime('%b %d') }
     else
       grouped_by_date.keys.sort
     end

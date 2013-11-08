@@ -5,6 +5,12 @@ class Instance < ActiveRecord::Base
 
   has_many :companies
   has_many :locations, :through => :companies
+  has_many :locations_impressions,
+           :through => :companies
+  has_many :reservations,
+           :through => :companies
+  has_many :reservation_charges,
+           :through => :companies
   has_many :listings, :through => :locations
   has_many :domains, :as => :target
   has_many :partners
