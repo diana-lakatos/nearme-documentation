@@ -1,5 +1,5 @@
 class Instance < ActiveRecord::Base
-  attr_accessible :name, :domains_attributes, :theme_attributes, :service_fee_percent, :bookable_noun
+  attr_accessible :name, :domains_attributes, :theme_attributes, :service_fee_percent, :bookable_noun, :lessor, :lessee
 
   has_one :theme, :as => :owner, dependent: :destroy
 
@@ -7,11 +7,13 @@ class Instance < ActiveRecord::Base
   has_many :locations, :through => :companies
   has_many :locations_impressions,
            :through => :companies
+  has_many :location_types
   has_many :reservations,
            :through => :companies
   has_many :reservation_charges,
            :through => :companies
   has_many :listings, :through => :locations
+  has_many :listing_types
   has_many :domains, :as => :target
   has_many :partners
   has_many :instance_admins

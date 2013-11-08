@@ -1,5 +1,5 @@
 class PlatformContextDrop < BaseDrop
-  delegate :name, :bookable_noun, :pages, :platform_context, :is_desksnearme, :blog_url, :twitter_url,
+  delegate :name, :bookable_noun, :pages, :platform_context, :is_desksnearme, :blog_url, :twitter_url, :lessor, :lessee,
     :facebook_url, :address, :phone_number, :gplus_url, :site_name, :support_url, :to => :platform_context_decorator
 
   def initialize(platform_context_decorator)
