@@ -1,0 +1,8 @@
+- # See InstanceAdmin::InventoriesController which sets this up.
+.alert.static.warning
+  %p
+    %i
+      Currently browsing the website as #{current_user.name}.
+      = link_to "Return back.", restore_session_instance_admin_inventories_path,
+          :method => :post
+

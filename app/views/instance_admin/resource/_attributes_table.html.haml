@@ -1,0 +1,6 @@
+%table.table
+  - admin_resource_form_attributes(resource).each do |attr|
+    %tr
+      %th= attr
+      %td= resource.send(attr)
+
