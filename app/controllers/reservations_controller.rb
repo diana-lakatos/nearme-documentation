@@ -32,29 +32,7 @@ class ReservationsController < ApplicationController
   def export
     respond_to do |format|
       format.ics do
-        calendar = RiCal.Calendar do |cal|
-          cal.add_x_property 'X-WR-CALNAME', 'Desks Near Me' 
-          cal.add_x_property 'X-WR-RELCALID', "#{current_user.id}"
-          @reservation.periods.each do |period|
-            cal.event do |event|
-              event.description = @reservation.listing.description
-              event.summary = @reservation.listing.name
-              event.uid = "#{@reservation.id}_#{period.date.to_s}"
-              hour = period.start_minute/60.floor
-              minute = period.start_minute - (hour * 60)
-              event.dtstart = period.date.strftime("%Y%m%dT") + "#{"%02d" % hour}#{"%02d" % minute}00"
-              hour = period.end_minute/60.floor
-              minute = period.end_minute - (hour * 60)
-              event.dtend = period.date.strftime("%Y%m%dT") + "#{"%02d" % hour}#{"%02d" % minute}00"
-              event.created = @reservation.created_at
-              event.last_modified = @reservation.updated_at
-              event.location = @reservation.listing.address
-              event.url = bookings_dashboard_url(id: @reservation.id)
-            end
-          end
-        end
-
-        render :text => calendar.to_s.gsub("\n", "\r\n")
+        render :text => ReservationIcsBuilder.new(@reservation, current_user).to_s
       end
     end
   end

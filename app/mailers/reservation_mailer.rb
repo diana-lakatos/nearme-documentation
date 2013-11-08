@@ -14,6 +14,7 @@ class ReservationMailer < InstanceMailer
   def notify_guest_of_confirmation(platform_context, reservation)
     setup_defaults(platform_context, reservation)
     generate_mail("#{reservation.owner.first_name}, your booking has been confirmed")
+    attachments['booking.ics'] = {:mime_type => 'text/calendar', :content => ReservationIcsBuilder.new(reservation, reservation.owner).to_s }
   end
 
   def notify_guest_of_rejection(platform_context, reservation)
