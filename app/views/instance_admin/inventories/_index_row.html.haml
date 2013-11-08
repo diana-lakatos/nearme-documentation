@@ -1,0 +1,7 @@
+%tr
+  %td= link_to resource.name, instance_admin_inventory_url(resource)
+  %td= resource.email
+  %td
+    = link_to "Login As", login_as_instance_admin_inventory_path(resource), :class => "btn btn-default", :method => :post, :confirm => "This will log you out and re-log you in as this user"
+
+
