@@ -88,5 +88,8 @@ module DesksnearMe
 
     config.perform_mixpanel_requests = true
     config.perform_google_analytics_requests = true
+
+    # Find friends after create
+    config.find_friends_after_create = true
   end
 end

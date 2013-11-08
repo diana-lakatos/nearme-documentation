@@ -21,6 +21,8 @@ class Authentication < ActiveRecord::Base
   }
   scope :with_invalid_token, -> {where(arel_table[:token_expires_at].ltqe(Time.now).or(arel_table[:token_expired].eq(true)))}
 
+  after_create :find_friends, if: -> { DesksnearMe::Application.config.find_friends_after_create }
+
   AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter" ]
 
   def social_connection
@@ -42,5 +44,11 @@ class Authentication < ActiveRecord::Base
 
   def expire_token!
     self.update_attribute(:token_expired, true)
+  end
+
+  private
+
+  def find_friends
+    FindFriendsJob.new(self).perform
   end
 end

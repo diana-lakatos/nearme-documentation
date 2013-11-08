@@ -29,4 +29,6 @@ DesksnearMe::Application.configure do
   config.perform_mixpanel_requests = false
   config.perform_google_analytics_requests = false
 
+  # Find friends after create
+  config.find_friends_after_create = false
 end
