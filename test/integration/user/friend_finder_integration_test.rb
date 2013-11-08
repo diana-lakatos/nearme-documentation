@@ -29,11 +29,11 @@ class User::FriendFinderIntegrationTest < ActiveSupport::TestCase
       Authentication::FacebookProvider.any_instance.stubs(:friend_ids).returns(friend_ids)
 
       assert_difference('@me.friends.count', 3) do
-        @me.find_new_friends!
+        User::FriendFinder.new(@me, @auth).find_friends!
       end 
 
       assert_difference('@me.friends.count', 0) do
-        @me.find_new_friends!
+        User::FriendFinder.new(@me, @auth).find_friends!
       end 
     end
 
@@ -42,7 +42,7 @@ class User::FriendFinderIntegrationTest < ActiveSupport::TestCase
       connection_stub.expects(:get_connections).raises(Koala::Facebook::AuthenticationError.new({}, ''))
       Authentication::FacebookProvider.any_instance.expects(:connection).returns(connection_stub)
       refute @auth.token_expired?
-      @me.find_new_friends!
+      User::FriendFinder.new(@me, @auth).find_friends!
       assert @auth.reload.token_expired?
     end
   end

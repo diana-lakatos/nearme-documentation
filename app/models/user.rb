@@ -246,12 +246,6 @@ class User < ActiveRecord::Base
   end
   alias_method :add_friends, :add_friend 
 
-
-  def find_new_friends!
-    friend_finder = User::FriendFinder.new(self, authentications.with_valid_token)
-    friend_finder.find_friends!
-  end
-
   def friends
     self.followed_users
   end

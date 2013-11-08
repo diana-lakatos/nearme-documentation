@@ -3,7 +3,7 @@ class User::FriendFinder
 
   def initialize(user, authentications)
     self.user = user
-    self.authentications = authentications
+    self.authentications = Array.wrap(authentications)
   end
 
   def find_friends!
@@ -13,11 +13,13 @@ class User::FriendFinder
         authentication.new_connections.each{|u| new_friends << u }
       rescue ::Authentication::InvalidToken
         authentication.expire_token!
+        return false
       end
     end
 
     new_friends.each do |new_friend|
       user.add_friend(new_friend)
     end
+    return true
   end
 end
