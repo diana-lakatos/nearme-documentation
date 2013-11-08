@@ -45,7 +45,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
   context 'authentication flow' do
 
     setup do
-      @provider = 'linkedin'
+      @provider = 'twitter'
       @uid = '123456'
       @email = 'test@example.com'
       @token = 'abcd'
@@ -114,7 +114,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
           post :create
         end
       end
-      assert flash[:error].include?('Your Linkedin email is already linked to an account')
+      assert flash[:error].include?('Your Twitter email is already linked to an account')
     end
 
     context "should successfully sign up and log"  do
