@@ -95,7 +95,12 @@ module Auth
     end
 
     def expires_at
-      Time.at(@auth_params['credentials']['expires_at']) rescue nil
+      # FIXME: https://github.com/decioferreira/omniauth-linkedin-oauth2/issues/10
+      if provider == 'linkedin'
+        Time.now + 60.days
+      else
+        Time.at(@auth_params['credentials']['expires_at']) rescue nil
+      end
     end
   end
 end
