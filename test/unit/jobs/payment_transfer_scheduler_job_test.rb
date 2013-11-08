@@ -5,6 +5,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
   include ReservationTestSupport
 
   def setup
+    stub_mixpanel
     @company_1 = prepare_company_with_charged_reservations(:reservation_count => 2)
     @company_2 = prepare_company_with_charged_reservations(:reservation_count => 2)
   end

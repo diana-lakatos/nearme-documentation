@@ -1,0 +1,20 @@
+<h2>Great job, {{ user.first_name }}!</h2>
+
+<p>Your new listing rocks!</p>
+
+<div class="booking-details" style="position: relative;">
+  <div class="column-left">
+    <a href="{{ listing.listing_url }}"><img src="{{ listing.photo_url }}" alt="{{ listing.name }}" border="0" width="250" /></a>
+  </div>
+  <div class="column-right">
+    <h3><a href="{{ listing.listing_url }}">{{ listing.name }}</a></h3>
+    <p>{{ listing.description }}</p>
+    <p>{{ listing.availability }}</p>
+    <p class="no-padding"><a class="btn" href="{{ listing.listing_url }}">See full listing</a></p>
+  </div>
+  <div style="clear: both;"></div>
+</div>
+
+<p>Spread the word and get your first guests!</p>
+
+{% include 'reservation_mailer/social_links.html' %}

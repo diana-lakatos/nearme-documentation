@@ -7,6 +7,7 @@ class ReservationsHelperTest < ActionView::TestCase
   include MoneyRails::ActionViewExtension
 
   def setup
+    stub_mixpanel
     @unpaid_reservation = FactoryGirl.create(:reservation_with_credit_card)
     @unpaid_reservation.subtotal_amount_cents = 100_00
     @unpaid_reservation.service_fee_amount_cents = 10_00

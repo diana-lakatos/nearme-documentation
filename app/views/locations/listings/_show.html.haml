@@ -15,8 +15,8 @@
           %article.listing
             %h2
               = "The #{@listing.listing_type.name}"
-              - if user_can_edit_location?(current_user, @location)
-                = link_to edit_manage_listing_path(@listing) do
+              - if current_user.try(:admin)
+                = link_to login_as_admin_user_path(@location.creator, :return_to => edit_manage_listing_path(@listing)), :method => :post, :confirm => "This will log you out and re-log you in as listing creator" do
                   %span.ico-edit
             %p= @listing.description
 
@@ -28,6 +28,9 @@
           = render 'locations/listings/booking', listing: @listing
 
           .padding-row
+          = render 'locations/listings/social_buttons', listing: @listing
+
+          .padding-row
           = render 'locations/google_map', location: @location 
 
           = render 'locations/listings/availabilities', listing: @listing
@@ -35,9 +38,9 @@
           = render 'locations/listings/administrator', administrator: @listing.administrator
 
           = render 'locations/listings/other_listings', location: @location, listing: @listing
-                
-           
-.clearfix.padding-row 
+
+
+.clearfix.padding-row
 
 
 - content_for :script do

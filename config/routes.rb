@@ -3,10 +3,13 @@ DesksnearMe::Application.routes.draw do
   if Rails.env.development?
     mount ReservationMailer::Preview => 'mail_view/reservations'
     mount UserMailer::Preview => 'mail_view/users'
+    mount PostActionMailer::Preview => 'mail_view/post_action'
     mount InquiryMailer::Preview => 'mail_view/inquiries'
     mount ListingMailer::Preview => 'mail_view/listings'
-    mount AfterSignupMailer::Preview => 'mail_view/after_signup'
     mount RatingMailer::Preview => 'mail_view/ratings'
+    mount ListingMessagingMailer::Preview => 'mail_view/listing_messaging'
+    mount ReengagementMailer::Preview => 'mail_view/reengagement'
+    mount RecurringMailer::Preview => 'mail_view/recurring'
   end
 
   match '/404', :to => 'errors#not_found'
@@ -43,12 +46,25 @@ DesksnearMe::Application.routes.draw do
     resources :pages
   end
 
+  namespace :instance_admin do
+    match '/', :to => "base#index"
+    resources :analytics, :only => [:index]
+    resources :inventories, :only => [:index]
+    resources :partners, :only => [:index]
+    resources :settings, :only => [:index]
+    resources :themes, :only => [:index]
+    resources :transfers, :only => [:index]
+    resources :users, :only => [:index]
+  end
+
   resources :locations, :only => [:show] do
     resources :listings, :controller => 'locations/listings' do
       member do
         get :ask_a_question
       end
     end
+
+    resource :social_share, :only => [:new], :controller => 'locations/social_share'
 
     collection do
       get :populate_address_components_form
@@ -91,6 +107,7 @@ DesksnearMe::Application.routes.draw do
     get "users/edit_avatar", :to => "registrations#edit_avatar", :as => "edit_avatar"
     put "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar"
     post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
+    post "users/store_geolocated_location", :to => "registrations#store_geolocated_location", :as => "store_geolocated_location"
     get "users/", :to => "registrations#new"
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
@@ -141,6 +158,7 @@ DesksnearMe::Application.routes.draw do
       resources :reservations, :controller => 'listings/reservations' do
         member do
           post :confirm
+          get :confirm
           put :reject
           get :rejection_form
           post :host_cancel

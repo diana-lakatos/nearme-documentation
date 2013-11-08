@@ -8,11 +8,21 @@ namespace :cron do
   end
 
   desc "Run daily scheduled jobs"
-  task :daily => [:environment] do
+  task :daily => [:environment] do 
+    run_job "Send Share mails" do
+      RecurringMailerShareJob.new.perform
+    end
+
+    run_job "Send Request photos mails" do
+      RecurringMailerRequestPhotosJob.new.perform
+    end
   end
 
   desc "Run weekly scheduled jobs"
   task :weekly => [:environment] do
+    run_job "Send Analytics mails" do
+      RecurringMailerAnalyticsJob.new.perform
+    end
   end
 
   desc "Run monthly scheduled jobs"

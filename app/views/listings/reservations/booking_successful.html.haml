@@ -1,3 +1,5 @@
+#open_graph_content.hidden
+  = render :partial => 'shared/og_meta', :locals => { :listing => @reservation_request.reservation.listing, :url => location_listing_path(@reservation_request.reservation.listing.location, @reservation_request.reservation.listing) }
 %div{class: section_class}
   %header
     %h2
@@ -18,6 +20,8 @@
 
 :javascript
   $(function() {
-    $('.modal-close').hide()
+    $('.modal-close').hide();
+    $('head').eq(0).append($('#open_graph_content').html());
+    $('#open_graph_content').remove();
   });
 

@@ -1,41 +1,7 @@
-Your request to book '{{ listing.name }}' at {{ listing.location.name:}} ({{ listing.location.url }})</a> has been sent to the host.
+Almost there, {{ user.first_name }}!
 
-Bookings at this workspace require confirmation. Hosts have 24 hours to confirm, but most reply sooner.
+Your booking for '{{ listing.name }}' at {{ listing.street }} is waiting for confirmation from the host! We'll get back to you as soon as the host confirms the booking. Hosts have 24 hours to confirm, but most reply sooner.
 
-BOOKING DETAILS --------
+View Your Booking {{ listing.bookings_dashboard_url_with_tracking_and_token }}
 
-Listing: '{{listing.name}}' at {{listing.location.name}} ({{listing.location.url}}).
-{% if listing.location.special_notes? %}
-Guest instructions: {{ listing.location.special_notes }}
-{% endif %}
-Quantity: {{reservation.quantity}}
-{% if listing.hourly_reservations? %}
-  Dates:
-
-{{ reservation.hourly_summary }}
-{% else %}
-Dates:
-
-{{ reservation.dates_summary }}
-{% endif %}
-
-
-Host: {{ host.name }} ({{host.email}})
-
-{% if listing.location.phone? %}Contact: {{listing.location.phone}}{% endif %}
-
-Subtotal: {{ reservation.subtotal_price }}
-
-Service fee: {{ reservation.service_fee }}
-
-Total: {{ reservation.total_price }}
-{% if reservation.credit_card_payment? %}
-Paid: {{ reservation.paid }}
-Balance: {{ reservation.balance }}
-{% if reservation.pendind? %}
-This reservation is currently pending confirmation, and will be charged when confirmed.
-{% endif %}
-{% endif %}
-------------------------
-
-You can review your travel plans on the Dashboard ({{ listing.bookings_dashboard_url }}).
+In the meantime, we're happy to help! If you have any questions about your booking, please send an email to happydesk@desksnear.me or contact us at or 555-888-DESK (3375).

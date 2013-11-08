@@ -42,6 +42,9 @@ class @Space.Controller
     @fullScreenGalleryContainer.on "show", (e) =>
       @loadFullGalleryPhotos()
 
+    @container.on 'click', '.amenities-header a', (event) =>
+      @toggleAmenities(event)
+
 
   loadFullGalleryPhotos: ->
     @fullScreenGalleryContainer.find(".loading").show()
@@ -149,4 +152,9 @@ class @Space.Controller
     collapseContainer.on('show hide', -> $(this).css('height', 'auto') )
     collapseContainer.collapse({ parent: true, toggle: true })
 
-
+  toggleAmenities: (event) ->
+    amenities_header = $(event.target).closest('.amenities-header')
+    amenities_block = amenities_header.closest('.amenities-block')
+    amenities_header.find('a span').toggleClass('ico-chevron-right').toggleClass('ico-chevron-down')
+    amenities_block.toggleClass('amenities-shown')
+    false

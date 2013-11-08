@@ -29,5 +29,4 @@
         - unless reservation.archived?
           .span2{:class => manage_guests_action_column_class(reservation)}
             .actions
-              = render :partial => "owner_actions", :locals => {:reservation => reservation} if  current_user == reservation.listing.location.creator
-
+              = render :partial => "owner_actions", :locals => {:reservation => reservation}
