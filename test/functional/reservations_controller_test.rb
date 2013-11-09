@@ -11,7 +11,7 @@ class ReservationsControllerTest < ActionController::TestCase
     end
 
     should "track and redirect a host to the My Bookings page when they cancel a booking" do
-      ReservationMailer.expects(:notify_host_of_cancellation).returns(stub(deliver: true))
+      ReservationMailer.expects(:notify_host_of_cancellation_by_guest).returns(stub(deliver: true))
 
       @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|
         reservation == assigns(:reservation) && custom_options == { actor: 'guest' }
@@ -44,7 +44,7 @@ class ReservationsControllerTest < ActionController::TestCase
     end
 
     should 'be exportable to .ics format' do
-      url = bookings_dashboard_url(id: @reservation.id)
+      url = bookings_dashboard_url(id: @reservation.id, host: Rails.application.routes.default_url_options[:host])
       get :export, :format => :ics, :listing_id => @reservation.listing.id, :id => @reservation.id
       assert_response :success
       assert_equal "text/calendar", response.content_type

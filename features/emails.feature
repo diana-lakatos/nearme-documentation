@@ -30,12 +30,14 @@ Feature: Emails should be sent out informing parties about reservations
     Given Bo Jeanes has a confirmed reservation for Keith Contractor
     When the visitor cancels the reservation
     Then a reservation cancelled email should be sent to bo@example.com
+    Then a reservation email of cancellation by visitor should be sent to keith@example.com
 
   @javascript
   Scenario: confirmed then cancelled by owner
     Given Bo Jeanes has a confirmed reservation for Keith Contractor
     When the owner cancels the reservation
     Then a reservation cancelled by owner email should be sent to keith@example.com
+    Then a reservation email of cancellation by owner should be sent to bo@example.com
 
   @javascript
   Scenario: unconfirmed reservation gets cancelled by visitor
@@ -48,6 +50,7 @@ Feature: Emails should be sent out informing parties about reservations
     Given Bo Jeanes has an unconfirmed reservation for Keith Contractor
     When the owner declines the reservation
     Then a reservation rejected email should be sent to keith@example.com
+    Then a reservation email of rejection should be sent to bo@example.com
 
   Scenario: unconfirmed reservation expires
     Given Bo Jeanes has an unconfirmed reservation for Keith Contractor

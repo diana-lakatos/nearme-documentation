@@ -25,6 +25,7 @@
       = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'
       = javascript_include_tag "//explorercanvas.googlecode.com/svn/trunk/excanvas.js"
       = javascript_include_tag 'vendor/jquery.backgroundSize.min.js'
+      = javascript_include_tag 'vendor/respond.min.js'
       = stylesheet_link_tag 'browser_specific/ie8'
     /[if lt IE 8]
       = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
@@ -49,6 +50,7 @@
           %section#content{class: section_class}
             = render 'layouts/hero'
             = render 'shared/admin_logged_in_as_user' if admin_as_user?
+            = render 'shared/instance_admin_logged_in_as_user' if instance_admin_as_user?
             .container-fluid
               = yield unless render_content_outside_container?
 

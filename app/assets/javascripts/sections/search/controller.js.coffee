@@ -82,6 +82,10 @@ class Search.Controller
           @queryField.val(cityAddress).data('placeholder', cityAddress)
           @fieldChanged('query', @queryField.val())
           @setGeolocatedQuery(@queryField.val(), @cached_geolocate_me_result_set)
+          @storeUserLocation(position)
+
+  storeUserLocation: (position) ->
+    $.post('/users/store_geolocated_location', { longitude: position.coords.longitude, latitude: position.coords.latitude })
 
   # Is the given query currently geolocated by the search
   isQueryGeolocated: (query) ->

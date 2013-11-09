@@ -7,6 +7,7 @@ class Manage::LocationsController < Manage::BaseController
 
   def index
     @locations = @locations_scope.all
+    event_tracker.mailer_manage_desks_clicked(current_user) if params[:track_email_event]
   end
 
   def new

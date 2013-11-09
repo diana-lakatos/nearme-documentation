@@ -5,11 +5,13 @@ class InstanceMailer < ActionMailer::Base
   helper :listings, :reservations
 
   self.job_class = MailerJob
+  attr_accessor :platform_context
 
   def mail(options = {})
     lookup_context.class.register_detail(:platform_context) { nil }
 
     platform_context = options.delete(:platform_context)
+    self.platform_context = platform_context.decorate
     template = options.delete(:template_name) || view_context.action_name
     mailer = options.delete(:mailer) || find_mailer(template: template, platform_context: platform_context) || platform_context.theme.default_mailer
     to = options[:to]

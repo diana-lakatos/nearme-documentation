@@ -1,0 +1,12 @@
+%h1= resource.name
+
+.pull-right
+  = link_to "Login As", login_as_instance_admin_inventory_url(resource), :method => :post, :class => "btn"
+
+%ul.nav.nav-tabs
+  %li.active= link_to "Attributes", "#attributes", :'data-toggle' => "tab"
+
+.tab-content
+  .tab-pane.active#attributes
+    = render 'attributes_table'
+

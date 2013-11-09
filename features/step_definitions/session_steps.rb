@@ -21,7 +21,7 @@ end
 Then(/^I should be logged in as #{capture_model}$/) do |user_instance|
   user = model!(user_instance)
 
-  # NB: this covers the Admin interface as well as the public interface
+  # NB: this covers the Admin interface as well as the public interface and the instance admin interface
   page.should have_xpath("//a[contains(@data-user, \"#{user.first_name}\")]")
   step "I should see \"Log Out\""
 end
@@ -44,5 +44,6 @@ Then /^a new account is not created$/ do
 end
 
 Then /^I should get verification email$/ do
-  last_email_for(User.last.email).subject.should include "Email verification"
+  user = User.last
+  last_email_for(user.email).subject.should =~ Regexp.new("#{user.first_name}, please verify your .+ email")
 end

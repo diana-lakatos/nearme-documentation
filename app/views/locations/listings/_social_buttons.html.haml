@@ -1,0 +1,38 @@
+- content_for :meta do
+  = render :partial => 'shared/og_meta', :locals => { :listing => listing, :url => location_listing_url(listing.location, listing) }
+.social-buttons-wrapper
+  .facebook
+    .fb-like{:'data-href' => location_listing_url(listing.location, listing), :'data-colorscheme' => "light", :'data-layout' => "button_count", :'data-action' => "like", :'data-show-faces' => "false", :'data-send' => "false"}
+    #fb-root
+    :javascript
+      (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=#{Social::Facebook::KEY}";
+      fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+  .social-buttons
+
+    .twitter
+      = link_to "Tweet", "https://twitter.com/share", :class => "twitter-share-button", :'data-text' => listing.name, :'data-url' => location_listing_url(listing.location, listing)
+      %script
+        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+
+    .linkedin
+      %script{:src => "//platform.linkedin.com/in.js", :type => "text/javascript", :lang => 'en_US'}
+      %script{:type => "IN/Share", :'data-counter' => "right", :'data-url' => location_listing_url(listing.location, listing)}
+
+    .google-plus
+      .g-plusone{:'data-size' => "medium", :'data-href' => location_listing_url(listing.location, listing)}
+      :javascript
+        window.___gcfg = {
+          parsetags: 'onload'
+        };
+        (function() {
+          var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+          po.src = 'https://apis.google.com/js/plusone.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+          })();
+  .clearfix

@@ -13,7 +13,8 @@ class ReservationsController < ApplicationController
 
   def user_cancel
     if @reservation.user_cancel
-      ReservationMailer.enqueue.notify_host_of_cancellation(platform_context, @reservation)
+      ReservationMailer.enqueue.notify_host_of_cancellation_by_guest(platform_context, @reservation)
+      ReservationMailer.enqueue.notify_guest_of_cancellation_by_guest(platform_context, @reservation)
       event_tracker.cancelled_a_booking(@reservation, { actor: 'guest' })
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
@@ -31,29 +32,7 @@ class ReservationsController < ApplicationController
   def export
     respond_to do |format|
       format.ics do
-        calendar = RiCal.Calendar do |cal|
-          cal.add_x_property 'X-WR-CALNAME', 'Desks Near Me' 
-          cal.add_x_property 'X-WR-RELCALID', "#{current_user.id}"
-          @reservation.periods.each do |period|
-            cal.event do |event|
-              event.description = @reservation.listing.description
-              event.summary = @reservation.listing.name
-              event.uid = "#{@reservation.id}_#{period.date.to_s}"
-              hour = period.start_minute/60.floor
-              minute = period.start_minute - (hour * 60)
-              event.dtstart = period.date.strftime("%Y%m%dT") + "#{"%02d" % hour}#{"%02d" % minute}00"
-              hour = period.end_minute/60.floor
-              minute = period.end_minute - (hour * 60)
-              event.dtend = period.date.strftime("%Y%m%dT") + "#{"%02d" % hour}#{"%02d" % minute}00"
-              event.created = @reservation.created_at
-              event.last_modified = @reservation.updated_at
-              event.location = @reservation.listing.address
-              event.url = bookings_dashboard_url(id: @reservation.id)
-            end
-          end
-        end
-
-        render :text => calendar.to_s.gsub("\n", "\r\n")
+        render :text => ReservationIcsBuilder.new(@reservation, current_user).to_s
       end
     end
   end
@@ -63,6 +42,8 @@ class ReservationsController < ApplicationController
       @reservations = current_user.reservations.not_archived.to_a.sort_by(&:date)
       @reservation = params[:id] ? current_user.reservations.find(params[:id]) : nil
     end
+
+    event_tracker.mailer_view_your_booking_clicked(current_user) if params[:track_email_event]
     render :index
   end
 

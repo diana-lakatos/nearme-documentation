@@ -11,7 +11,7 @@ class UserDecoratorTest < ActionView::TestCase
     end
 
     should 'creator should have well formatted 1 message' do
-      assert_equal '(1)', @listing_creator.unread_messages_count
+      assert_equal '1', @listing_creator.unread_messages_count
     end
 
     should 'author should have well formatted no messages' do

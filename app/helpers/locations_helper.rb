@@ -31,9 +31,4 @@ module LocationsHelper
       )
     end
   end
-
-  def user_can_edit_location?(user, location)
-    return false unless user
-    location.is_user_admin?(user)
-  end
 end

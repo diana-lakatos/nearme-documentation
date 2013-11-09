@@ -5,12 +5,15 @@ class Instance < ActiveRecord::Base
 
   has_many :companies
   has_many :locations, :through => :companies
+  has_many :locations_impressions,
+           :through => :companies
+  has_many :reservations,
+           :through => :companies
+  has_many :reservation_charges,
+           :through => :companies
   has_many :listings, :through => :locations
-  has_many :users
   has_many :domains, :as => :target
   has_many :partners
-  has_many :pages
-  has_many :email_templates
 
   validates_presence_of :name
 

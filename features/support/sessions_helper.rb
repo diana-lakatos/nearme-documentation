@@ -24,6 +24,7 @@ module SessionsHelper
 
   def log_out
     visit root_path
+    find('.user-dropdown').click
     click_link 'Log Out'
   end
 end

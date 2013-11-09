@@ -70,7 +70,6 @@ window.DNM = {
     Accordian.initialize(scope);
     Clipboard.initialize(scope);
     Photo.Initializer.initialize(scope);
-    NavigationBar.initialize(scope);
   },
 
   initializeAjaxCSRF: function() {

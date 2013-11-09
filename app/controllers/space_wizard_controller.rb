@@ -23,6 +23,7 @@ class SpaceWizardController < ApplicationController
     @listing ||= @location.listings.build
     @photos = @user.photos.where("content_type = 'Listing' AND content_id IS NOT NULL") || nil
     event_tracker.viewed_list_your_bookable
+    event_tracker.mailer_list_your_desk_clicked(current_user) if params[:track_email_event]
   end
 
   def submit_listing
@@ -36,10 +37,12 @@ class SpaceWizardController < ApplicationController
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.save(:validate => false)
       track_saved_draft_event
+      PostActionMailer.enqueue_later(24.hours).list_draft(platform_context, @user)
       flash[:success] = t('flash_messages.space_wizard.draft_saved')
       redirect_to :list
     elsif @user.save
       track_new_space_event
+      PostActionMailer.enqueue.list(platform_context, @user)
       flash[:success] = t('flash_messages.space_wizard.space_listed')
       redirect_to manage_locations_path
     else

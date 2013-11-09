@@ -38,10 +38,15 @@ class Analytics::EventTracker
   include ReservationEvents
   include SpaceWizardEvents
   include UserEvents
+  include MailerEvents
 
 
   def pixel_track_url(event_name, properties)
     @mixpanel_api.pixel_track_url(event_name, properties)
+  end
+
+  def track_charge(amount)
+    @mixpanel_api.track_charge(amount)
   end
 
   private
@@ -52,10 +57,6 @@ class Analytics::EventTracker
     @google_analytics_api.track(stack_trace_parser.humanized_file_name, event_name)
     triggered_event = stack_trace_parser.humanized_method_name
     @triggered_inspectlet_taggable_methods << triggered_event if AnalyticWrapper::Inspectlet.taggable?(triggered_event)
-  end
-
-  def track_charge(user_id, total_amount_dollars)
-    @mixpanel_api.track_charge(user_id, total_amount_dollars)
   end
 
   # Sets global properties on the person

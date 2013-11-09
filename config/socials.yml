@@ -1,0 +1,20 @@
+production:
+  api_key: 6f0599fe13af5109e86193a9fc82b44d
+  api_secret: 2a92d51306759b5ab31df92e9d9fc7cc
+  token: 7ffff7057407af5fe5f71701a1ab26b2
+staging:
+  # staging has separate mixpanel account
+  api_key: 2f186c65143dc19922e88a39b0d09c91
+  api_secret: 68a51642fcaaf6447851cd1f0ac31122
+  token: 7536d92b0802661ebeef7519900d03d7
+development:
+ # let's display production data on development as well, assuming it is free. Change if proven otherwise
+  api_key: 6f0599fe13af5109e86193a9fc82b44d
+  api_secret: 2a92d51306759b5ab31df92e9d9fc7cc
+test:
+  # staging for test though
+  api_key: ba9fc03226f910833c955b95c870e2b2
+  api_secret: 90a2aaa1b72f45bdaff5771f243d8c11
+  token: 897e1963583f7dde9ecac901683a9bfa
+
+

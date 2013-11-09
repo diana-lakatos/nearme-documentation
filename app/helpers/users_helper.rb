@@ -15,7 +15,15 @@ module UsersHelper
     session[:admin_as_user].present? && current_user
   end
 
+  def instance_admin_as_user?
+    session[:instance_admin_as_user].present? && current_user
+  end
+
   def original_admin_user
     @original_admin_user ||= User.find(session[:admin_as_user][:admin_user_id])
+  end
+
+  def original_instance_admin_user
+    @original_instance_admin_user ||= User.find(session[:instance_admin_as_user][:admin_user_id])
   end
 end

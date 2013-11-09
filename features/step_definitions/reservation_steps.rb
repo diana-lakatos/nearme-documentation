@@ -226,33 +226,47 @@ Then /^I should see the following reservations in order:$/ do |table|
 end
 
 Then /^a confirm reservation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A booking requires your confirmation"
+  last_email_for(email).subject.should include "just booked your space!"
 end
 
 Then /^a reservation awaiting confirmation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A booking you made is pending confirmation"
+  last_email_for(email).subject.should include "your booking is pending confirmation"
 end
 
 Then /^a reservation confirmed email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A booking you made has been confirmed"
+  last_email_for(email).subject.should include "your booking has been confirmed"
 end
 
 Then /^a reservation cancelled email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A guest has cancelled a booking"
+  last_email_for(email).subject.should =~ Regexp.new(".+ cancelled a booking for '.+' at .+")
+end
+
+Then /^a reservation email of cancellation by visitor should be sent to (.*)$/ do |email|
+  last_email_for(email).subject.should include "You just cancelled a booking"
 end
 
 Then /^a reservation cancelled by owner email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match "A booking you made has been cancelled by the owner"
+  last_email_for(email).subject.should =~ Regexp.new("Your booking for '.+' at .+ was cancelled by the host")
+end
+
+Then /^a reservation email of cancellation by owner should be sent to (.*)$/ do |email|
+  last_email_for(email).subject.should match "You just declined a booking"
+end
+
+Then /^a reservation email of rejection should be sent to (.*)$/ do |email|
+  last_email_for(email).subject.should match "Can we help"
+  last_email_for(email).html_part.body.should include 'We noticed that you declined'
+  last_email_for(email).text_part.body.should include 'We noticed that you declined'
 end
 
 Then /^a reservation rejected email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match "A booking you made has been declined"
-  last_email_for(email).html_part.body.should include 'The only room available is the studio meeting room.'
-  last_email_for(email).text_part.body.should include 'The only room available is the studio meeting room.'
+  last_email_for(email).subject.should match "Can we help"
+  last_email_for(email).html_part.body.should include 'has been declined by the host'
+  last_email_for(email).text_part.body.should include 'has been declined by the host'
 end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "A guest has made a booking"
+  last_email_for(email).subject.should include "just booked your space!"
 end
 
 Then /^a reservation expiration email should be sent to (.*)$/ do |email|

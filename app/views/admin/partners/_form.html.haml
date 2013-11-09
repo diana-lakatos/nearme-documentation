@@ -1,4 +1,4 @@
-= simple_form_for [:admin, resource.instance, resource], :html => { :multipart => true, :class => "form-horizontal" } do |f|
+= simple_form_for [:admin, resource.instance, resource], :html => { :multipart => true} do |f|
   = f.input :name
   = f.input :search_scope_option, :collection => Partner::AVAILABLE_SEARCH_SCOPE_OPTIONS, :prompt => false
 

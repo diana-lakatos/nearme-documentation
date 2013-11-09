@@ -70,6 +70,9 @@ class ReservationCharge < ActiveRecord::Base
     )
 
     touch(:paid_at)
+    mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, :current_user => reservation.owner)
+    event_tracker = Analytics::EventTracker.new(mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(reservation.owner))
+    event_tracker.track_charge(service_fee_amount_cents/100)
   rescue User::BillingGateway::CardError
     # Needs to be retried at a later time...
     touch(:failed_at)
