@@ -1,5 +1,6 @@
 class Theme < ActiveRecord::Base
   DEFAULT_EMAIL = 'support@desksnear.me'
+  DEFAULT_PHONE_NUMBER = '1.888.998.3375'
   COLORS = %w(blue red orange green gray black white)
   COLORS_DEFAULT_VALUES = %w(#024fa3 #e83d33 #FF8D00 #157A49 #394449 #1e2222 #fafafa)
   COLORS.each do |color|
@@ -49,6 +50,10 @@ class Theme < ActiveRecord::Base
 
   def contact_email
     read_attribute(:contact_email) || DEFAULT_EMAIL
+  end
+
+  def phone_number
+    read_attribute(:phone_number) || DEFAULT_PHONE_NUMBER
   end
 
   # Checks if any of options that impact the theme stylesheet have been changed.
