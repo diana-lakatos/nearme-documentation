@@ -16,7 +16,7 @@ class RecurringMailer < InstanceMailer
     @listing = listing
     @user = @listing.administrator
     @platform_context = PlatformContext.new
-    @bcc = (@user == @listing.creator) ? [] : @listing.creator
+    @bcc = (@user == @listing.creator) ? [] : @listing.creator.email
 
     mail to: @user.email, 
            bcc: @bcc,
@@ -28,7 +28,7 @@ class RecurringMailer < InstanceMailer
     @listing = listing
     @user = @listing.administrator
     @platform_context = PlatformContext.new
-    @bcc = (@user == @listing.creator) ? [] : @listing.creator
+    @bcc = (@user == @listing.creator) ? [] : @listing.creator.email
 
     mail to: @user.email, 
            bcc: @bcc,
