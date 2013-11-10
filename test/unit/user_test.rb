@@ -278,6 +278,7 @@ class UserTest < ActiveSupport::TestCase
   context "notify about invalid mobile phone" do
 
     setup do
+      FactoryGirl.create(:instance)
       @user = FactoryGirl.create(:user)
       @platform_context = PlatformContext.new
     end
@@ -287,7 +288,7 @@ class UserTest < ActiveSupport::TestCase
       sent_mail = ActionMailer::Base.deliveries.last
       assert_equal [@user.email], sent_mail.to
 
-      assert sent_mail.html_part.body.encoded.include?('555-888-DESK'), "Body did not include expected phone number 555-888-DESK"
+      assert sent_mail.html_part.body.encoded.include?('1.888.998.3375'), "Body did not include expected phone number 1.888.998.3375"
       assert sent_mail.html_part.body.encoded =~ /<a class="btn" href="http:\/\/example.com\/users\/edit\?token=.+" style=".+">Go to My account<\/a>/, "Body did not include expected link to edit profile"
     end
 
