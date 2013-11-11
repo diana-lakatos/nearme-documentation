@@ -1,5 +1,5 @@
 #open_graph_content.hidden
-  = render :partial => 'shared/og_meta', :locals => { :listing => @reservation_request.reservation.listing, :url => location_listing_url(@reservation_request.reservation.listing.location, @reservation_request.reservation.listing) }
+  = render :partial => 'shared/og_meta', :locals => { :listing => @reservation.listing, :url => location_listing_url(@reservation.listing.location, @reservation.listing) }
 %div{class: section_class}
   %header
     %h2
