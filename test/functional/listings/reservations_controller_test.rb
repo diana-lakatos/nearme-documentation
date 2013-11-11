@@ -13,11 +13,11 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       stub_billing_gateway
     end
 
-    should "track booking modal open" do
+    should "track booking review open" do
       @tracker.expects(:opened_booking_modal).with do |reservation|
         reservation == object_hash_for(assigns(:reservation_request).reservation)
       end
-      xhr :post, :review, booking_params_for(@listing)
+      post :review, booking_params_for(@listing)
       assert_response 200
     end
 
@@ -34,8 +34,10 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       @tracker.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation_request).reservation.host
       end
-      xhr :post, :create, booking_params_for(@listing)
-      assert_response 200
+      assert_difference 'Reservation.count' do
+        post :create, booking_params_for(@listing)
+      end
+      assert_response :redirect
     end
 
     context 'schedule expiry' do
@@ -43,7 +45,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       should 'create a delayed_job task to run in 24 hours time when saved' do
         Timecop.freeze(Time.zone.now) do
           assert_difference 'Delayed::Job.count' do
-            xhr :post, :create, booking_params_for(@listing)
+            post :create, booking_params_for(@listing)
           end
 
           assert_equal 24.hours.from_now.to_i, Delayed::Job.last.run_at.to_i
@@ -51,7 +53,6 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       end
 
     end
-
 
     context "#twilio" do
 
@@ -65,10 +66,10 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
           User.any_instance.expects(:notify_about_wrong_phone_number).once
           SmsNotifier::Message.any_instance.stubs(:deliver).raises(Twilio::REST::RequestError, "The 'To' number +16665554444 is not a valid phone number")
           assert_nothing_raised do 
-            xhr :post, :create, booking_params_for(@listing)
+            post :create, booking_params_for(@listing)
           end
-          assert @response.body.include?('Your booking was Successful!')
-          refute @response.body.include?('redirect')
+          assert @response.body.include?('redirect')
+          assert_redirected_to booking_successful_reservation_path(Reservation.last)
         end
 
         should 'log twilio exceptions that have unknown message' do
@@ -79,10 +80,10 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
           SmsNotifier::Message.any_instance.stubs(:deliver).raises(Twilio::REST::RequestError, "Some other error")
           BackgroundIssueLogger.expects(:log_issue).once
           assert_nothing_raised do 
-            xhr :post, :create, booking_params_for(@listing)
+            post :create, booking_params_for(@listing)
           end
-          assert @response.body.include?('Your booking was Successful!')
-          refute @response.body.include?('redirect')
+          assert @response.body.include?('redirect')
+          assert_redirected_to booking_successful_reservation_path(Reservation.last)
         end
 
       end
@@ -90,7 +91,6 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     end
 
   end
-
 
   def booking_params_for(listing)
     {
@@ -121,4 +121,3 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
   end
 
 end
-

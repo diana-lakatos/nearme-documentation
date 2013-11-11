@@ -19,7 +19,11 @@
 <strong style='display: inline-block;'>Dates</strong>
 <br/>
 <span style="float:right;">
-  <%= listing.hourly_reservations? ? hourly_summary_for_period(reservation.periods.first) : selected_dates_summary(reservation) %>
+  <% if listing.hourly_reservations? %>
+    <%= reservation.hourly_summary_for_first_period %>
+  <% else %>
+    <%= reservation.selected_dates_summary %>
+  <% end %>
 </span>
 <br clear="both"/>
 
@@ -37,25 +41,25 @@
 <% end %>
 
 <strong style='display: inline-block;'>Subtotal</strong>
-<span style="float: right;"><%= reservation_subtotal_price(reservation) %></span>
+<span style="float: right;"><%= reservation.subtotal_price %></span>
 <div class='clearfix'></div>
 
 <strong style='display: inline-block;'>Service fee</strong>
-<span style="float: right;"><%= reservation_service_fee(reservation) %></span>
+<span style="float: right;"><%= reservation.service_fee %></span>
 <div class='clearfix'></div>
 
 <strong style='display: inline-block;'>Total</strong>
-<span style="float: right;"><%= reservation_total_price(reservation) %></span>
+<span style="float: right;"><%= reservation.total_price %></span>
 
 <hr>
 
 <% if reservation.credit_card_payment? %>
   <strong style='display: inline-block;'>Paid</strong>
-  <span style="float: right;"><%= reservation_paid(reservation) %></span>
+  <span style="float: right;"><%= reservation.paid %></span>
   <hr/>
 
   <strong style='display: inline-block;'>Balance</strong>
-  <span style="float: right;"><%= reservation_balance(reservation) %></span>
+  <span style="float: right;"><%= reservation.balance %></span>
   <hr/>
 
   <% if reservation.pending? %>

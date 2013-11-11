@@ -43,10 +43,8 @@ end
 When /^I book space for:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
-  work_in_modal do
-    step "I provide reservation credit card details"
-    step "I click to confirm the booking"
-  end
+  step "I provide reservation credit card details"
+  step "I click to confirm the booking"
 end
 
 When /^I book space as new user for:$/ do |table|
@@ -54,12 +52,10 @@ When /^I book space as new user for:$/ do |table|
   step "I click to review the booking"
   step 'I sign up as a user in the modal'
   store_model("user", "user", User.last)
-  work_in_modal do
-    #select "New Zealand", :from => 'reservation_request_country_name'
-    page.execute_script "$('select#reservation_request_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
-    fill_in 'Phone number', with: '8889983375'
-    step "I provide reservation credit card details"
-  end
+  #select "New Zealand", :from => 'reservation_request_country_name'
+  page.execute_script "$('select#reservation_request_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
+  fill_in 'Phone number', with: '8889983375'
+  step "I provide reservation credit card details"
   step "I click to confirm the booking"
 end
 
@@ -139,25 +135,25 @@ Then /^the user should have a reservation:$/ do |table|
 end
 
 Then /^the reservation subtotal should show \$?([0-9\.]+)$/ do |cost|
-  within '.space-reservation-modal .subtotal-amount' do
+  within '.reservations-review .subtotal-amount' do
     assert page.body.should have_content(cost)
   end
 end
 
 Then /^the reservation service fee should show \$?([0-9\.]+)$/ do |cost|
-  within '.space-reservation-modal .service-fee-amount' do
+  within '.reservations-review .service-fee-amount' do
     assert page.body.should have_content(cost)
   end
 end
 
 Then /^the reservation total should show \$?([0-9\.]+)$/ do |cost|
-  within '.space-reservation-modal .total-amount' do
+  within '.reservations-review .total-amount' do
     assert page.body.should have_content(cost)
   end
 end
 
 When /^I click to review the bookings?$/ do
-  click_link "Book"
+  click_button "Book"
 end
 
 When /^I provide reservation credit card details$/ do
@@ -170,17 +166,16 @@ When /^I provide reservation credit card details$/ do
 end
 
 When /^I click to confirm the booking$/ do
-  work_in_modal do
-    click_button "Request Booking"
-  end
+  click_button "Request Booking"
   page.should have_content('Your booking was Successful!')
 end
 
 Then(/^I should see the booking confirmation screen for:$/) do |table|
   reservation = extract_reservation_options(table).first
   next unless reservation
-  within '.space-reservation-modal' do
+  within '.reservations-review' do
     if reservation[:start_minute]
+      save_and_open_page
       # Hourly booking
       date = reservation[:date].strftime("%B %-e")
       start_time = reservation[:start_at].strftime("%l:%M%P")
@@ -275,7 +270,7 @@ end
 
 Then /^I should be redirected to bookings page$/ do
   page.should have_content('Your reservation has been made!')
-  assert_includes URI.parse(current_url).path, upcoming_reservations_path
+  assert_includes URI.parse(current_url).path, booking_successful_reservation_path(Reservation.last)
 end
 
 Then /^The second booking should be highlighted$/ do

@@ -679,6 +679,29 @@ form {
   }
 }
 
+.input-icon-holder-right {
+  position: relative;
+  width: 100%;
+
+  input {
+    padding-right: 32px !important;
+
+    &:focus {
+      
+      + span {
+        color: $icon-hover !important;
+      }
+    }
+  }
+
+  span {
+    position: absolute;
+    top: 11px;
+    right: 8px;
+    color: $icon;
+  }
+}
+
 .mobile-fixed-position-fix { 
   .navbar, #space_wizard .actions { 
     position: absolute !important; 

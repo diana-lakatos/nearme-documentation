@@ -1,7 +1,7 @@
 class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
   before_filter :fetch_reservations
-  before_filter :fetch_reservation, :only => [:user_cancel]
+  before_filter :fetch_reservation, :only => [:user_cancel, :booking_succesful]
   before_filter :fetch_current_user_reservation, :only => [:export, :host_rating]
 
   before_filter :only => [:user_cancel] do |controller|
@@ -61,6 +61,10 @@ class ReservationsController < ApplicationController
       flash[:notice] = t('flash_messages.host_rating.already_exists')
       redirect_to root_path
     end
+  end
+
+  def booking_successful
+    upcoming
   end
 
   protected

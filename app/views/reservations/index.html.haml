@@ -23,7 +23,7 @@
             .reservation-list.just-booked
               %ul
                 %li
-                  = render @reservation
+                  = render @reservation.decorate
             - unless (@reservations - [@reservation]).empty?
               %h2.other-reservation-separator
                 #{pluralize((@reservations - [@reservation]).count, ' other booking')}
@@ -32,6 +32,7 @@
             %ul
               - (@reservations - [@reservation]).each_with_index do |reservation, index|
                 %li
-                  = render reservation
+                  = render reservation.decorate
 
 = render 'ratings/rating_modal'
+= render 'listings/reservations/booking_successful_modal'

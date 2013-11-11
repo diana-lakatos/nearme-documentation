@@ -7,7 +7,7 @@ class ReservationRequest < Form
   def_delegators :@reservation, :quantity, :quantity=
   def_delegators :@reservation, :credit_card_payment?, :manual_payment?
   def_delegators :@listing,     :confirm_reservations?, :hourly_reservations?, :location
-  def_delegators :@user,        :phone, :phone=, :mobile_number, :mobile_number=, :country_name, :country_name=, :country
+  def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
   before_validation :setup_credit_card_customer, :if => lambda { reservation and user and user.valid?}
 
@@ -18,21 +18,34 @@ class ReservationRequest < Form
   validate :validate_phone_and_country
 
   def initialize(listing, user, attributes = {})
-    @listing          = listing
-    @user             = user
+    @listing = listing
+    @user = user
 
     @user.phone_required = true if @user
 
     if @listing
-      @reservation      = listing.reservations.build
+      @reservation = listing.reservations.build
       @reservation.payment_method = payment_method
       @reservation.user = user
+      @reservation = @reservation.decorate
     end
 
     store_attributes(attributes)
-    add_periods
-  end
+    
+    if @listing
+      if @listing.hourly_reservations?
+        @start_minute = start_minute.try(:to_i)
+        @end_minute = end_minute.try(:to_i)
+      else
+        @start_minute = nil
+        @end_minute   = nil
+      end
 
+      (dates || []).each do |date_string|
+        @reservation.add_period(Date.parse(date_string), start_minute, end_minute)
+      end
+    end
+  end
 
   def process
     valid? && save_reservation
@@ -70,22 +83,6 @@ class ReservationRequest < Form
     rescue ActiveRecord::RecordInvalid => error
       add_errors(error.record.errors.full_messages)
       false
-    end
-
-    def add_periods
-      if listing
-        if listing.hourly_reservations?
-          @start_minute = start_minute.try(:to_i)
-          @end_minute = end_minute.try(:to_i)
-        else
-          @start_minute = nil
-          @end_minute   = nil
-        end
-
-        (dates || []).each do |date_str|
-          reservation.add_period(Date.parse(date_str), start_minute, end_minute)
-        end
-      end
     end
 
     def setup_credit_card_customer

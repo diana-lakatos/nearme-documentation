@@ -38,10 +38,11 @@ class Bookings.Controller
     @quantityResourceElement = @container.find('.quantity .resource')
     @totalElement = @container.find('.total')
     @daysElement = @container.find('.total-days')
-    @bookButton = @container.find('[data-behavior=showReviewBookingListing]')
+    @bookButton = @container.find('[data-behavior=reviewBooking]')
+    @bookForm = @bookButton.closest('form')
 
   bindEvents: ->
-    @bookButton.on 'click', (event) =>
+    @bookForm.on 'submit', (event) =>
       event.preventDefault()
       @reviewBooking()
 
@@ -126,21 +127,6 @@ class Bookings.Controller
     @updateSummary()
     @updateBookingStatus()
 
-  # Trigger showing the review booking form based on selected
-  # dates.
-  reviewBooking: (callback = -> ) ->
-    return unless @listing.isBooked()
-
-    @disableBookButton()
-    Modal.load({
-      url: @listingData.review_url,
-      type: 'POST',
-      data: {
-        listing_id: @listing.id,
-        reservation_request: @listing.reservationOptions()
-      }
-    }, null, => @enableBookButton())
-
   # Update the view to display pricing, date selections, etc. based on
   # current selected dates.
   updateBookingStatus: ->
@@ -154,9 +140,6 @@ class Bookings.Controller
 
   disableBookButton: ->
     @bookButton.addClass('click-disabled').find('span.text').text('Booking...')
-
-  enableBookButton: ->
-    $('.click-disabled').removeClass('click-disabled').find('span.text').text('Book')
 
   quantityWasChanged: ->
     @listing.setDefaultQuantity(parseInt(@quantityField.val(), 10))
@@ -179,4 +162,16 @@ class Bookings.Controller
   updateSummary: ->
     @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
 
+  reviewBooking: ->
+    return unless @listing.isBooked()
+    @disableBookButton()
 
+    dates = @listing.reservationOptions().dates
+    quantity = @listing.reservationOptions().quantity
+    @bookForm.find('[type=hidden][data-kind=reservationOptions]').remove()
+    @bookForm.append($('<input type="hidden" name="listing_id" value="' + @listing.id + '" data-kind="reservationOptions" />'))
+    @bookForm.append($('<input type="hidden" name="reservation_request[quantity]" value="' + quantity + '" data-kind="reservationOptions" />'))
+    $.each dates, (i, date) =>
+      @bookForm.append($('<input type="hidden" name="reservation_request[dates][]" value="' + date + '" data-kind="reservationOptions" />'))
+
+    @bookForm.unbind('submit').submit()
