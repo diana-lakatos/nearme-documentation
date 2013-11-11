@@ -256,5 +256,18 @@ section.reservations {
     .credit-card {
       margin-top: $padding-default;
     }
+
+    .flash {
+      &.error {
+        p {
+          text-align:center;
+          color: $red;
+          font-size: 1.1em;
+        }
+
+        color: $red;
+        padding-bottom: 0.5em;
+      }
+    }
   }
 }
