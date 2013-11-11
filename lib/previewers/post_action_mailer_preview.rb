@@ -19,7 +19,7 @@ class PostActionMailerPreview < MailView
   private
 
   def user_with_listing
-    User.all.select{|u| !u.listings.count.zero?}.sample || FactoryGirl.create(:listing).user
+    @user ||= (User.all.select{|u| !u.listings.count.zero?}.sample || FactoryGirl.create(:listing).user)
   end
 
 end
