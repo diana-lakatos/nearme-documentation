@@ -4,6 +4,6 @@
 Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }} is waiting for confirmation from the host! We'll get back to you as soon as the host confirms the booking. Hosts have 24 hours to confirm, but most reply sooner.
 </p>
 
-<a class="btn" href="{{ listing.bookings_dashboard_url_with_tracking_and_token }}">View Your Booking</a>
+<a class="btn" href="{{ user.bookings_dashboard_url_with_tracking_and_token }}">View Your Booking</a>
 
 <p>In the meantime, we're happy to help! If you have any questions about your booking, please send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or contact us at {{ platform_context.phone_number }}.</p>

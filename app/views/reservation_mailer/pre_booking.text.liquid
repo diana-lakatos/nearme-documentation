@@ -5,6 +5,6 @@ It's almost time to work at '{{ listing.name }}', {{ listing.street }}. Before y
 Get directions: {{ listing.location.google_map_url }}
 Find nearby eateries: {{ listing.location.nearby_eateries_url }}
 Check tomorrow's weather: {{ listing.location.weather_url }}
-Manage your booking: {{ listing.bookings_dashboard_url_with_token }}
+Manage your booking: {{ user.bookings_dashboard_url_with_token }}
 
 We're always happy to help! If you have any questions about your booking, please send an email to happydesk@desksnear.me or contact us at {{ platform_context.phone_number }}.
