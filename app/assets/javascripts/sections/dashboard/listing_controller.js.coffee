@@ -27,12 +27,14 @@ class @Dashboard.ListingController
     @enableSwitch.on 'switch-change', (e, data) =>
       value = data.value
       if @enableAjaxUpdate
+        url = @container.attr("action")
+        if value
+          url += '/enable'
+        else
+          url += '/disable'
         $.ajax
-          url: @container.attr("action")
-          type: 'PUT'
-          data:
-            listing:
-              enabled: value
+          url: url
+          type: 'GET'
           dataType: 'JSON'
           error: (jq, textStatus, err) =>
             @enableAjaxUpdate = false
