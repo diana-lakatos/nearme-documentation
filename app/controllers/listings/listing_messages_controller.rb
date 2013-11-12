@@ -19,7 +19,7 @@ class Listings::ListingMessagesController < ApplicationController
       redirect_to listing_messages_path
       render_redirect_url_as_json if request.xhr?
     else
-      render :new
+      render :template => 'listings/listing_messages/new'
     end
   end
 
