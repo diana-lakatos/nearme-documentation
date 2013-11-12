@@ -9,7 +9,7 @@
     %h3 Share your travel plans
     %ul.no-bullets
       - url = location_listing_url(@listing.location, @listing)
-      - text = "I just made a booking at #{@listing.name}"
+      - text = "I just booked a #workspace at #{@listing.name} via @DesksNearMe. Find a desk near you!"
       %li= share_to_facebook(url, 'facebook-full')
       %li= share_to_twitter(url, text)
       %li= share_to_linkedin(url, text)
