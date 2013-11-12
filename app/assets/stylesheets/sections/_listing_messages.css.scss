@@ -2,13 +2,14 @@
     height: 150px;
 }
 
-.listing_messages-show {
+.listing_messages {
+
   #new_listing_message {
     textarea {
       height: 52px;
     }
 
-    .span10 { 
+    .span10, .span12 { 
       margin-left: 0;
     }
 
@@ -16,11 +17,7 @@
       margin-left: $padding-default;
       width: 15%;
     }
-  
   }
-}
-
-.listing_messages {
 
   .listing-message, .listing-message-for-show {
 
