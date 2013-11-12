@@ -29,7 +29,7 @@ class ListingDrop < BaseDrop
   end
 
   def manage_guests_dashboard_url
-    routes.manage_guests_dashboard_url(:token => @listing.creator.authentication_token)
+    routes.manage_guests_dashboard_url(:token => @listing.administrator.authentication_token)
   end
 
   def search_url
@@ -49,11 +49,11 @@ class ListingDrop < BaseDrop
   end
 
   def bookings_dashboard_url_with_token
-    routes.bookings_dashboard_url(token: @listing.creator.authentication_token)
+    routes.bookings_dashboard_url(token: @listing.administrator.authentication_token)
   end
 
   def bookings_dashboard_url_with_tracking_and_token
-    routes.bookings_dashboard_url(token: @listing.creator.authentication_token, track_email_event: true)
+    routes.bookings_dashboard_url(token: @listing.administrator.authentication_token, track_email_event: true)
   end
 
   def hourly_reservations?
@@ -85,7 +85,7 @@ class ListingDrop < BaseDrop
   end
 
   def manage_listing_url_with_tracking
-    routes.edit_manage_location_listing_url(@listing.location, @listing, track_email_event: true, token: @listing.creator.authentication_token)
+    routes.edit_manage_location_listing_url(@listing.location, @listing, track_email_event: true, token: @listing.administrator.authentication_token)
   end
 
   def last_booked_days
