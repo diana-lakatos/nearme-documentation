@@ -86,13 +86,8 @@ class User < ActiveRecord::Base
   }
 
   scope :without, lambda { |users|
-    # TODO: handle AR collections with pluck
-    users_ids = Array.wrap(users).collect(&:id)
-    if users_ids.any?
-      where(arel_table[:id].not_in(users_ids))
-    else
-      scoped
-    end
+    users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
+    users_ids.any? ? where(arel_table[:id].not_in(users_ids)) : scoped
   }
 
   scope :ordered_by_email, order('users.email ASC') 
@@ -252,10 +247,6 @@ class User < ActiveRecord::Base
 
   def friends
     self.followed_users
-  end
-
-  def friends=(users)
-    Array.wrap(users).each {|u| self.add_friend(u) }
   end
 
   def full_email
