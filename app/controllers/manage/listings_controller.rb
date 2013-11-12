@@ -52,7 +52,8 @@ class Manage::ListingsController < Manage::BaseController
         end
       }
       format.json {
-        if @listing.update_attributes params[:listing]
+        @listing.attributes = params[:listing]
+        if @listing.save(:validate => false)
           render :json => { :success => true }
         else
           render :json => { :errors => @listing.errors.full_messages }, :status => 422
