@@ -98,11 +98,15 @@ class User < ActiveRecord::Base
   scope :ordered_by_email, order('users.email ASC') 
 
   scope :visited_listing, ->(listing) {
-    joins(:reservations).merge(Reservation.confirmed.past.for_listing(listing))
+    joins(:reservations).merge(Reservation.confirmed.past.for_listing(listing)).uniq
   }
 
   scope :hosts_of_listing, ->(listing) {
-    where(:id => listing.administrator.id)
+    where(:id => listing.administrator.id).uniq
+  }
+
+  scope :know_host_of, ->(listing) {
+    joins(:followers).where(:user_relationships => {:follower_id => listing.administrator.id}).uniq
   }
 
   extend CarrierWave::SourceProcessing
@@ -248,10 +252,6 @@ class User < ActiveRecord::Base
 
   def friends
     self.followed_users
-  end
-
-  def friends_know_host_of(listing)
-    self.friends.joins(:followers).where(:user_relationships => {:follower_id => listing.administrator.id}).without(self).uniq
   end
 
   def friends=(users)

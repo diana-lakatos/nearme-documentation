@@ -44,7 +44,7 @@ class UserIntegrationTest < ActiveSupport::TestCase
 
       @friend.add_friend(host)
 
-      assert_equal [@friend], @me.friends_know_host_of(@listing)
+      assert_equal [@friend], @me.friends.know_host_of(@listing)
     end
   end
 end

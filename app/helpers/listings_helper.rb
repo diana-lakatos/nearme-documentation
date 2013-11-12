@@ -56,22 +56,28 @@ module ListingsHelper
     Placeholder.new(height: options[:height], width: options[:width]).path
   end
 
-  def connections_text_for(listing, current_user)
-    friends = current_user.friends.visited_listing(listing).uniq.collect do |user|
-      "#{user.name} worked here"
-    end
-    hosts = current_user.friends.hosts_of_listing(listing).uniq.collect do |user|
-      "#{user.name} is the host"
-    end
-    host_friends = current_user.friends_know_host_of(listing).uniq.collect do |user|
-      "#{user.name} knows the host"
-    end
-    [friends, hosts, host_friends].flatten.join('<br />').html_safe
+  def connection_tooltip_for(listing, current_user)
+    connections_for(listing, current_user).join('<br />').html_safe
   end
 
-  def connections_count_for(listing, current_user)
-    current_user.friends.visited_listing(listing).uniq.count +
-      current_user.friends.hosts_of_listing(listing).uniq.count +
-      current_user.friends_know_host_of(listing).uniq.count
+  def connection_count_for(listing, current_user)
+    connections_for(listing, current_user).count
   end
+
+  private
+
+  def connections_for(listing, current_user)
+    return [] unless current_user
+    friends = current_user.friends.visited_listing(listing).collect do |user|
+      "#{user.name} worked here"
+    end
+    hosts = current_user.friends.hosts_of_listing(listing).collect do |user|
+      "#{user.name} is the host"
+    end
+    host_friends = current_user.friends.know_host_of(listing).collect do |user|
+      "#{user.name} knows the host"
+    end
+    [friends, hosts, host_friends].flatten
+  end
+
 end
