@@ -243,6 +243,7 @@ class ApplicationController < ActionController::Base
   end
 
   def log_out_if_token_exists
+    return if params[:controller] == 'sessions'
     if current_user && params[:token].present?
       Rails.logger.info "#{current_user.email} is being logged out due to token param"
       sign_out current_user
