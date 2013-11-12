@@ -15,5 +15,12 @@ class SessionsControllerTest < ActionController::TestCase
     post :create, user: { email: @user.email, password: @user.password }
   end
 
+  should 'be automatically remembered' do
+    post :create, user: { email: @user.email, password: @user.password }
+    @user.reload
+    assert @user.remember_token
+    assert_equal Time.zone.today, @user.remember_created_at.to_date
+  end
+
 end
 

@@ -120,12 +120,6 @@ Then /I am correctly signed in/ do
   assert_equal "I Am User", user.name
 end
 
-Then /I am remembered/ do
-  user = User.find_by_email('valid@example.com')
-  assert_equal Time.zone.today, user.remember_created_at.to_date
-  assert_equal 20, user.remember_token.length
-end
-
 Then /^I do (not )?have avatar$/ do |without_avatar|
   user = User.last
   if without_avatar

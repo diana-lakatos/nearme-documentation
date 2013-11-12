@@ -321,6 +321,16 @@ class Listing < ActiveRecord::Base
     last_reservation ? ((Time.current.to_f - last_reservation.created_at.to_f) / 1.day.to_f).round : nil
   end
 
+  def disable!
+    self.enabled = false
+    self.save(validate: false)
+  end
+
+  def enable!
+    self.enabled = true
+    self.save(validate: false)
+  end
+
   private
   def set_activated_at
     if enabled_changed?
