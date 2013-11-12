@@ -14,7 +14,6 @@ class Listings::ListingMessagesController < ApplicationController
     setup_listing_message
     if @listing_message.save
       @listing_message.send_notification(platform_context)
-      
       flash[:notice] = t('flash_messages.listing_messages.message_sent')
       redirect_to listing_messages_path
       render_redirect_url_as_json if request.xhr?
