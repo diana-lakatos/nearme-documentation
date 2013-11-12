@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131107061714) do
+ActiveRecord::Schema.define(:version => 20131112062003) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -603,8 +603,10 @@ ActiveRecord::Schema.define(:version => 20131107061714) do
     t.float    "last_geolocated_location_latitude"
     t.integer  "partner_id"
     t.integer  "instance_id"
+    t.integer  "domain_id"
   end
 
+  add_index "users", ["domain_id"], :name => "index_users_on_domain_id"
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["instance_id"], :name => "index_users_on_instance_id"
   add_index "users", ["partner_id"], :name => "index_users_on_partner_id"

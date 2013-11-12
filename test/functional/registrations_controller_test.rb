@@ -185,15 +185,18 @@ class RegistrationsControllerTest < ActionController::TestCase
   context 'scopes current partner' do
 
     setup do
+      @domain = FactoryGirl.create(:domain)
       @partner = FactoryGirl.create(:partner)
     end
 
     should 'match partner_id and instance_id' do
       PlatformContext.any_instance.stubs(:partner).returns(@partner)
+      PlatformContext.any_instance.stubs(:domain).returns(@domain)
       PlatformContext.any_instance.stubs(:instance).returns(@instance)
       post :create, user: user_attributes
       user = User.find_by_email('user@example.com')
       assert_equal @partner.id, user.partner_id
+      assert_equal @domain.id, user.domain_id
       assert_equal @instance.id, user.instance_id
     end
 
