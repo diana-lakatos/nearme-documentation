@@ -14,7 +14,7 @@
   .row-fluid{class: "#{"error" if f.object.errors.include?(:number).present?}"}
     = f.label :card_number, "Credit Card Number", class: 'control-label', placeholder: 'Credit Card Number'
     .controls.card-number.input-icon-holder
-      = f.input_field :card_number, required: true, class: 'inspectletIgnore'
+      = f.input_field :card_number, required: true, class: 'sessioncamexclude'
       %span.ico-credit-card
     - if f.object.errors[:number].present?
       %p.error-block
@@ -23,7 +23,7 @@
   .card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:exp_month).present? or f.object.errors.include?(:exp_year).present?}"}
     = f.label :card_expires, "Expires On", class: 'control-label'
     .controls.card-expires
-      = f.input_field :card_expires, input_html: {size: 4}, placeholder: 'MM/YY', required: true, class: 'inspectletIgnore'
+      = f.input_field :card_expires, input_html: {size: 4}, placeholder: 'MM/YY', required: true, class: 'sessioncamexclude'
     - if f.object.errors[:exp_month].present?
       %p.error-block
         = f.object.errors[:exp_month].first
@@ -34,7 +34,7 @@
   .card-info.security.column.right{class: "#{"error" if f.object.errors.include?(:cvc).present?}"}
     = f.label :card_code, "Security Code", class: 'control-label'
     .controls.card-code
-      = f.input_field :card_code, input_html: {size: 3}, placeholder: 'CCV', required: true, class: 'inspectletIgnore'
+      = f.input_field :card_code, input_html: {size: 3}, placeholder: 'CCV', required: true, class: 'sessioncamexclude'
     - if f.object.errors[:cvc].present?
       %p.error-block
         = f.object.errors[:cvc].first
