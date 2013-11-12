@@ -105,6 +105,17 @@ class Manage::LocationsControllerTest < ActionController::TestCase
           delete :destroy, :id => @location.id
         end
       end
+
+      should 'be relogged if he uses token' do
+          get :edit, :id => @location.id, :token => @location.creator.authentication_token
+          assert_response :success
+      end
+
+      should 'be prompted login form if he uses wrong token' do
+          get :edit, :id => @location.id, :token => 'this one is certainly wrong one'
+          assert_response :redirect
+          assert_redirected_to new_user_session_path
+      end
     end
   end
 

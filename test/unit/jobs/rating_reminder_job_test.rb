@@ -21,7 +21,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
       assert_equal 2, ActionMailer::Base.deliveries.size
 
       @host_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@host.email] }
-      assert_match /\[DesksNearMe\] How was your experience at 'Listing \d+'/, @host_email.subject
+      assert_match /\[DesksNearMe\] How was your experience hosting User-\d+/, @host_email.subject
 
       @guest_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@guest.email] }
       assert_match /\[DesksNearMe\] How was your experience at 'Listing \d+'/, @guest_email.subject

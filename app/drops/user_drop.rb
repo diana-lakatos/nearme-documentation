@@ -72,7 +72,7 @@ class UserDrop < BaseDrop
   end
 
   def user_profile_url
-    routes.profile_path(@user.slug)
+    routes.profile_url(@user.slug)
   end
 
   def full_mobile_number
