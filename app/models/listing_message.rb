@@ -6,9 +6,10 @@ class ListingMessage < ActiveRecord::Base
   belongs_to :owner, class_name: 'User' # guest that started conversation
   belongs_to :listing
 
-  validate :author_id, presence: true
-  validate :owner_id, presence: true
-  validate :body, presence: true
+  validates_presence_of :author_id
+  validates_presence_of :owner_id
+  validates_presence_of :body, message: "Message can't be blank."
+  validates_length_of :body, maximum: 2000, message: "Message cannot have more than 2000 characters."
 
   def previous_in_thread
     ListingMessage.find(replying_to_id)
