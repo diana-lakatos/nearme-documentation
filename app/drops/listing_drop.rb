@@ -40,22 +40,6 @@ class ListingDrop < BaseDrop
     routes.search_url(track_email_event: true)
   end
 
-  def bookings_dashboard_url
-    routes.bookings_dashboard_url
-  end
-
-  def bookings_dashboard_url_with_tracking
-    routes.bookings_dashboard_url(track_email_event: true)
-  end
-
-  def bookings_dashboard_url_with_token
-    routes.bookings_dashboard_url(token: @listing.administrator.authentication_token)
-  end
-
-  def bookings_dashboard_url_with_tracking_and_token
-    routes.bookings_dashboard_url(token: @listing.administrator.authentication_token, track_email_event: true)
-  end
-
   def hourly_reservations?
     @listing.hourly_reservations?
   end

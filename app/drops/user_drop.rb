@@ -90,4 +90,20 @@ class UserDrop < BaseDrop
   def administered_locations_pageviews_7_day_total
     @user.administered_locations_pageviews_7_day_total
   end
+
+  def bookings_dashboard_url
+    routes.bookings_dashboard_url
+  end
+
+  def bookings_dashboard_url_with_tracking
+    routes.bookings_dashboard_url(track_email_event: true)
+  end
+
+  def bookings_dashboard_url_with_token
+    routes.bookings_dashboard_url(token: @user.authentication_token)
+  end
+
+  def bookings_dashboard_url_with_tracking_and_token
+    routes.bookings_dashboard_url(token: @user.authentication_token, track_email_event: true)
+  end
 end
