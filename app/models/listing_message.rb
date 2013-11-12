@@ -14,8 +14,7 @@ class ListingMessage < ActiveRecord::Base
   def self.find_for_thread(listing, listing_message)
     ListingMessage.where(listing_id: listing.id).
       where(owner_id: listing_message.owner_id).
-      order('created_at desc').
-      map(&:decorate)
+      order('created_at desc')
   end
 
   def previous_in_thread
