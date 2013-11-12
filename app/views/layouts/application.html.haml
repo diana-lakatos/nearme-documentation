@@ -26,6 +26,10 @@
       = javascript_include_tag "//explorercanvas.googlecode.com/svn/trunk/excanvas.js"
       = javascript_include_tag 'vendor/jquery.backgroundSize.min.js'
       = javascript_include_tag 'vendor/respond.min.js'
+      - unless CarrierWave::Uploader::Base.asset_host.nil?
+        = tag('link', {href: "#{CarrierWave::Uploader::Base.asset_host}/respond-proxy/respond-proxy.html", id: 'respond-proxy', rel: 'respond-proxy'})
+        = tag('link', {href: image_path('respond.proxy.gif'), id: 'respond-redirect', rel: 'respond-redirect'})
+        = javascript_include_tag(javascript_path('vendor/respond.proxy.js'))
       = stylesheet_link_tag 'browser_specific/ie8'
     /[if lt IE 8]
       = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
