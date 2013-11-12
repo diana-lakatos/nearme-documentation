@@ -1,6 +1,6 @@
 class Placeholder
 
-  IN_FILESYSTEM = ['100x100', '410x254', '144x114', '895x554', '144x89']
+  IN_FILESYSTEM = ['100x100', '410x254', '144x114', '895x554', '144x89', '279x279']
 
   def initialize(options = {})
     @height = options[:height]
