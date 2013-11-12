@@ -1,0 +1,8 @@
+.pull-left
+  = render 'search_form'
+
+%table.table.table-striped
+  - collection.each do |resource|
+    = render 'index_row', :resource => resource
+
+= will_paginate collection

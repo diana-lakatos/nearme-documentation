@@ -21,7 +21,7 @@ class @ChartWrapper
     ]
 
   constructor: (canvas, data, labels, titles) ->
-
+    return if canvas.length == 0
     @canvas = canvas
     @globalGraphSettings = {
       animation : Modernizr.canvas,

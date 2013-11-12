@@ -65,6 +65,10 @@ class ReservationDrop < BaseDrop
     routes.host_rating_url(@reservation.id, token: @reservation.listing.administrator.authentication_token)
   end
 
+  def export_to_ical_url
+    routes.export_reservation_url(@reservation, format: :ics, token: @reservation.owner.authentication_token)
+  end
+
   def created_at
     @reservation.created_at.strftime("%A,%e %B")
   end

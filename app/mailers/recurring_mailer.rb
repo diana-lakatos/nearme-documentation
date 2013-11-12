@@ -16,7 +16,7 @@ class RecurringMailer < InstanceMailer
     @listing = listing
     @user = @listing.administrator
     @platform_context = PlatformContext.new
-    @bcc = (@user == @listing.creator) ? [] : @listing.creator
+    @bcc = (@user == @listing.creator) ? [] : @listing.creator.email
 
     mail to: @user.email, 
            bcc: @bcc,
@@ -28,30 +28,12 @@ class RecurringMailer < InstanceMailer
     @listing = listing
     @user = @listing.administrator
     @platform_context = PlatformContext.new
-    @bcc = (@user == @listing.creator) ? [] : @listing.creator
+    @bcc = (@user == @listing.creator) ? [] : @listing.creator.email
 
     mail to: @user.email, 
            bcc: @bcc,
            subject: "Share your listing '#{@listing.name}' at #{@listing.location.street } and increase bookings!",
            platform_context: @platform_context
-  end
-
-
-  if defined? MailView
-    class Preview < MailView
-
-      def analytics
-        ::RecurringMailer.analytics(Company.first, User.all.select{|u| !u.companies.count.zero?}.first)
-      end
-
-      def request_photos
-        ::RecurringMailer.request_photos(Listing.first)
-      end
-
-      def share
-        ::RecurringMailer.share(Reservation.first.listing)
-      end
-    end
   end
 
 end

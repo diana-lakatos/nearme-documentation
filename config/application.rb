@@ -15,6 +15,7 @@ module DesksnearMe
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/inputs #{config.root}/forms #{config.root}/drops)
     config.autoload_paths += Dir["#{config.root}/lib", "#{config.root}/lib/**/"]
+    config.autoload_paths -= Dir["#{config.root}/lib/previewers/"] unless defined? MailView
 
     config.eager_load_paths += ["#{Rails.root}/lib}"]
     config.eager_load_paths += ["#{Rails.root}/drop}"]

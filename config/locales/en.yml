@@ -103,6 +103,9 @@ en:
     listing_messages:
       message_sent: "Your message was sent!"
       message_archived: "Your message was archived!"
+    instance_admin:
+      theme:
+        theme_updated_successfully: 'Theme updated.'
 
   simple_form:
     labels:
