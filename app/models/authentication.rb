@@ -49,6 +49,6 @@ class Authentication < ActiveRecord::Base
   private
 
   def find_friends
-    FindFriendsJob.new(self).perform
+    FindFriendsJob.perform(self)
   end
 end
