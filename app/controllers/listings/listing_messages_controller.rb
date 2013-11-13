@@ -21,8 +21,7 @@ class Listings::ListingMessagesController < ApplicationController
       if request.xhr?
         render :template => 'listings/listing_messages/new'
       else
-        @listing_messages = ListingMessage.for_thread(@listing, @listing_message).by_created
-        @listing_messages = @listing_messages.map(&:decorate)
+        @listing_messages = ListingMessage.for_thread(@listing, @listing_message).by_created.decorate
         render :show
       end
     end
@@ -32,8 +31,7 @@ class Listings::ListingMessagesController < ApplicationController
     @show_listing_message = @listing.listing_messages.find(params[:id])
     @listing_message = @listing.listing_messages.new(replying_to_id: @show_listing_message.id)
 
-    @listing_messages = ListingMessage.for_thread(@listing, @show_listing_message).by_created
-    @listing_messages = @listing_messages.map(&:decorate)
+    @listing_messages = ListingMessage.for_thread(@listing, @show_listing_message).by_created.decorate
 
     to_mark_as_read = @listing_messages.select{|m| m.unread_for?(current_user)}
     ListingMessage.update_all({read: true},
