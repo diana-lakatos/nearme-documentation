@@ -18,7 +18,7 @@ class @Photo.Uploader
       @formIsSubmitting = true
       if @processingPhotos > 0
         @loader.show()
-        __insp.push(['tagSession', "photo_not_processed_before_submit"])
+        sessioncamConfiguration.customDataObjects.push( { key: "event", value: "photo_not_processed_before_submit" } )
         @triggerMixpanelPhotoNotProcessedBeforeSubmitEvent()
         false
 
@@ -28,7 +28,7 @@ class @Photo.Uploader
 
     $(window).on 'unload', =>
       if @formIsSubmitting and @processingPhotos > 0
-        __insp.push(['tagSession', "user_closed_browser_photo_not_processed_before_submit"])
+        sessioncamConfiguration.customDataObjects.push( { key: "event", value: "user_closed_browser_photo_not_processed_before_submit" } )
         @triggerMixpanelUserClosedBrowserPhotoNotProcessedBeforeSubmitEvent()
 
 
@@ -41,7 +41,7 @@ class @Photo.Uploader
   initializeFileUploader : =>
 
     @fileInput.on 'click', (event) =>
-      __insp.push(['tagSession', "photo_upload_clicked"])
+      sessioncamConfiguration.customDataObjects.push( { key: "event", value: "photo_upload_clicked" } )
       event.preventDefault()
       options = { debug: filepicker.debug_mode, extensions: ['.jpg', '.jpeg', '.gif', '.png']}
       if @photoCollection.multiplePhoto()
