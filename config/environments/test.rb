@@ -15,7 +15,5 @@ DesksnearMe::Application.configure do
   # Set Stripe config to no config setup for Tests
   config.stripe_api_key = nil
   config.stripe_public_key = nil
-
-  # Find friends after create
-  config.find_friends_after_create = false
+  config.perform_social_jobs = false
 end

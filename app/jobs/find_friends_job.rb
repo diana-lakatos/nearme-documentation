@@ -6,6 +6,8 @@ class FindFriendsJob < Job
   end
 
   def perform
-    User::FriendFinder.new(@user, @authentication).find_friends!
+    if DesksnearMe::Application.config.perform_social_jobs
+      User::FriendFinder.new(@user, @authentication).find_friends!
+    end
   end
 end
