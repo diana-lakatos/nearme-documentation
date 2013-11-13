@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   before_filter :store_referal_info
   before_filter :platform_context
   before_filter :register_platform_context_as_lookup_context_detail
-  before_filter :domain_validation
+  before_filter :redirect_if_domain_not_configured
 
 
   def current_user
@@ -251,7 +251,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def domain_validation
+  def redirect_if_domain_not_configured
     if !platform_context.domain.present? &&
       !Domain.is_root_domain?(request.host_with_port)
       redirect_to domain_not_configured_path

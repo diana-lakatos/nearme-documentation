@@ -1,6 +1,6 @@
 class ErrorsController < ApplicationController
 
-  skip_before_filter :domain_validation
+  skip_before_filter :redirect_if_domain_not_configured
   before_filter :get_status_code
   layout 'errors'
 
