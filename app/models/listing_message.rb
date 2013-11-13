@@ -16,7 +16,6 @@ class ListingMessage < ActiveRecord::Base
 
   scope :by_created, -> {order('created_at desc')}
 
-
   def previous_in_thread
     ListingMessage.find(replying_to_id)
   end
