@@ -134,7 +134,7 @@ Spork.each_run do
     require 'simplecov'
   end
 
-  class ActionController::TestCase
+  class ActiveSupport::TestCase
     setup :setup_platform_context
 
     def setup_platform_context
