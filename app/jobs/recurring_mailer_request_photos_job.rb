@@ -18,8 +18,7 @@ class RecurringMailerRequestPhotosJob < Job
         listing_activated_days.to_i >= 7
         @sent_to_users << listing.administrator.id
         RecurringMailer.enqueue.request_photos(listing)
-        listing.last_request_photos_sent_at = Time.current
-        listing.save
+        listing.touch(:last_request_photos_sent_at)
       end
     end
   end
