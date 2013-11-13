@@ -3,7 +3,9 @@ module Auth
     attr_accessor :user
 
     def initialize(auth_params)
-      @auth_params = auth_params
+      @auth_params = auth_params || {}
+      @auth_params['info'] ||= {}
+      @auth_params['credentials'] ||= {}
     end
 
     def create_user(google_analytics_id)
@@ -75,11 +77,7 @@ module Auth
     end
 
     def provider
-      if @auth_params
-        @auth_params['provider']
-      else
-        "native"
-      end
+      @auth_params['provider'] || 'native'
     end
 
     def uid
@@ -87,11 +85,11 @@ module Auth
     end
 
     def token
-      @auth_params['credentials']['token'] rescue nil
+      @auth_params['credentials']['token']
     end
 
     def secret
-      @auth_params['credentials']['secret'] rescue nil
+      @auth_params['credentials']['secret']
     end
 
     def expires_at
