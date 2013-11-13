@@ -87,11 +87,6 @@ Feature: A user can login
      When I sign in with valid credentials
      Then I am correctly signed in
 
-  Scenario: A user is automatically remembered
-    Given a user exists with email: "valid@example.com", password: "password", name: "I am user"
-     When I sign in with valid credentials
-     Then I am remembered
-
   Scenario: A user is redirected to the page accessed prior to login page after successful logging in
     Given a user exists with email: "valid@example.com", password: "password", name: "I am user"
       And a listing in Auckland exists

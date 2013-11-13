@@ -155,7 +155,12 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :locations do
-      resources :listings
+      resources :listings do
+        member do
+          get :enable
+          get :disable
+        end
+      end
     end
 
     resources :photos, :only => [:create, :destroy, :edit, :update]

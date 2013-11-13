@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
 
   prepend_view_path FooterResolver.instance
   before_filter :require_ssl
+  before_filter :log_out_if_token_exists
 
   protect_from_forgery
   layout :layout_for_request_type
@@ -239,5 +240,13 @@ class ApplicationController < ActionController::Base
 
   def register_platform_context_as_lookup_context_detail
     register_lookup_context_detail(:platform_context)
+  end
+
+  def log_out_if_token_exists
+    return if params[:controller] == 'sessions'
+    if current_user && params[:token].present?
+      Rails.logger.info "#{current_user.email} is being logged out due to token param"
+      sign_out current_user
+    end
   end
 end
