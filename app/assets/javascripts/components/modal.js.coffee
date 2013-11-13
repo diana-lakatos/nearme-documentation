@@ -91,10 +91,6 @@ class @Modal
     @content.show()
     if content
       @content.html(content)
-      # because jquery strips script tags when doing .html(some_html_with_script_tags),
-      # we need to eval them manually after dom update
-      $(content).filter('script').each ->
-        $.globalEval(this.text || this.textContent || this.innerHTML || '')
 
     # We need to ensure there has been a reflow displaying the target element
     # before applying the class with the animation transitions
