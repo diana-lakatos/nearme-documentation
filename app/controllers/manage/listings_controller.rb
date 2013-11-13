@@ -98,7 +98,6 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def find_listing
-    @listing = Listing.where('listings.id = ? AND location_id IN (?)', params[:id].to_i, @locations_scope.pluck(:id)).first
+    @listing = Listing.where(location_id: @locations_scope.pluck(:id)).find(params[:id])
   end
-
 end
