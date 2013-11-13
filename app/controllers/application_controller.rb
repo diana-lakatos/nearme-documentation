@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
   before_filter :store_referal_info
   before_filter :platform_context
   before_filter :register_platform_context_as_lookup_context_detail
+  before_filter :domain_validation
 
 
   def current_user
@@ -247,6 +248,13 @@ class ApplicationController < ActionController::Base
     if current_user && params[:token].present?
       Rails.logger.info "#{current_user.email} is being logged out due to token param"
       sign_out current_user
+    end
+  end
+
+  def domain_validation
+    if !platform_context.domain.present? &&
+      !Domain.is_root_domain?(request.host_with_port)
+      redirect_to domain_not_configured_path
     end
   end
 end
