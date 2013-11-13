@@ -23,7 +23,7 @@ class Locations::SocialShareController < ApplicationController
     when 'linkedin'
       "http://www.linkedin.com/shareArticle?mini=true&url=#{location_url(@location)}&title=#{URI::escape(@location.name )}&summary=#{URI::escape(@location.description)}&source=DesksNear.Me"
     else
-      :back
+      location_path(@location)
     end
   end
 end
