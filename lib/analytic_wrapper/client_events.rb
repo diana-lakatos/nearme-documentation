@@ -1,6 +1,6 @@
-# Contains methods related to Inspectlet.
+# Contains methods related to client side events.
 #
-class AnalyticWrapper::Inspectlet
+class AnalyticWrapper::ClientEvents
 
   TAGGABLE_EVENTS = ['Requested a booking', 'Created a location',
   'Created a listing', 'Saved a draft', 'Signed up', 'Logged in' ]
