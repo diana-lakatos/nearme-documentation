@@ -26,10 +26,4 @@ class Domain < ActiveRecord::Base
     "Partner" == target_type
   end
 
-  def self.is_root_domain?(domain_name)
-    root_domains = [Regexp.escape(Rails.application.routes.default_url_options[:host])]
-    root_domains += ['test\.host', '127\.0\.0\.1:.*', 'example\.org'] if Rails.env.test?
-    domain_name =~ Regexp.new("^(www\.)?(#{root_domains.join('|')})$", true)
-  end
-
 end

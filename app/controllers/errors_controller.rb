@@ -1,6 +1,6 @@
 class ErrorsController < ApplicationController
 
-  skip_before_filter :redirect_if_domain_not_configured
+  skip_before_filter :redirect_if_domain_not_valid
   before_filter :get_status_code
   layout 'errors'
 
