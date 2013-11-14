@@ -38,6 +38,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def edit
     @country = current_user.country_name
+    event_tracker.mailer_view_go_to_account_clicked(current_user) if params[:track_email_event]
     super
   end
 
@@ -101,6 +102,7 @@ class RegistrationsController < Devise::RegistrationsController
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
+      event_tracker.mailer_activate_account_clicked(@user) if params[:track_email_event]
       flash[:success] = t('flash_messages.registrations.address_verified')
       redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path
     else

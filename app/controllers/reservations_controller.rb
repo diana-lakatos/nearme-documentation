@@ -55,6 +55,12 @@ class ReservationsController < ApplicationController
   def host_rating
     existing_host_rating = HostRating.where(reservation_id: @reservation.id,
                                             author_id: current_user.id)
+
+    if params[:track_email_event]
+      event_tracker.mailer_host_write_a_review_clicked(@reservation)
+      params[:track_email_event] = nil
+    end
+
     if existing_host_rating.blank?
       upcoming
     else

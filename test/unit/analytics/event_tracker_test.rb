@@ -181,6 +181,7 @@ class EventTrackerTest < ActiveSupport::TestCase
       @category = "Mailer events"
       @location = FactoryGirl.create(:location)
       @listing = FactoryGirl.create(:listing) 
+      @reservation = FactoryGirl.create(:reservation)
     end
 
     should 'track find a desk clicked' do
@@ -215,6 +216,45 @@ class EventTrackerTest < ActiveSupport::TestCase
       expect_set_person_properties user_properties
       expect_event 'Manage desks clicked in mail', user_properties
       @tracker.mailer_manage_desks_clicked(@user)
+    end
+
+    should 'track go to my account clicked' do
+      expect_set_person_properties user_properties
+      expect_event 'Go to My Account clicked in mail', user_properties
+      @tracker.mailer_view_go_to_account_clicked(@user)
+    end
+
+    should 'track confirm booking clicked' do
+      expect_event 'Confirm Booking clicked in mail', reservation_properties
+      @tracker.mailer_confirm_booking_clicked(@reservation)
+    end
+
+    should 'track manage guests clicked' do
+      expect_set_person_properties user_properties
+      expect_event 'Manage Guests clicked in mail', user_properties
+      @tracker.mailer_manage_guests_clicked(@user)
+    end
+
+    should 'track activate account and login clicked' do
+      expect_set_person_properties user_properties
+      expect_event 'Activate account and login clicked in mail', user_properties
+      @tracker.mailer_activate_account_clicked(@user)
+    end
+
+    should 'track write a review clicked - guest' do
+      expect_event 'Write a review clicked in mail - guest', reservation_properties
+      @tracker.mailer_guest_write_a_review_clicked(@reservation)
+    end
+
+    should 'track write a review clicked - host' do
+      expect_event 'Write a review clicked in mail - host', reservation_properties
+      @tracker.mailer_host_write_a_review_clicked(@reservation)
+    end
+
+    should 'track read the message clicked' do
+      expect_set_person_properties user_properties
+      expect_event 'Read the message clicked in mail', user_properties
+      @tracker.mailer_read_the_message_clicked(@user)
     end
   end
 

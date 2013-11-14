@@ -28,5 +28,37 @@ module Analytics::MailerEvents
     track 'Manage desks clicked in mail', user, custom_options
   end
 
+  def mailer_view_go_to_account_clicked(user, custom_options = {})
+    set_person_properties user, custom_options
+    track 'Go to My Account clicked in mail', user, custom_options
+  end
+
+  def mailer_confirm_booking_clicked(reservation, custom_options = {})
+    track 'Confirm Booking clicked in mail', reservation, custom_options
+  end
+
+  def mailer_manage_guests_clicked(user, custom_options = {})
+    set_person_properties user, custom_options
+    track 'Manage Guests clicked in mail', user, custom_options
+  end
+
+  def mailer_activate_account_clicked(user, custom_options = {})
+    set_person_properties user, custom_options
+    track 'Activate account and login clicked in mail', user, custom_options
+  end
+
+  def mailer_guest_write_a_review_clicked(reservation, custom_options = {})
+    track 'Write a review clicked in mail - guest', reservation, custom_options
+  end
+
+  def mailer_host_write_a_review_clicked(reservation, custom_options = {})
+    track 'Write a review clicked in mail - host', reservation, custom_options
+  end
+
+  def mailer_read_the_message_clicked(user, custom_options = {})
+    set_person_properties user, custom_options
+    track 'Read the message clicked in mail', user, custom_options
+  end
+
 end
 

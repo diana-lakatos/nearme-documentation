@@ -16,6 +16,7 @@ class DashboardController < ApplicationController
   def manage_guests
     @locations  = current_user.try(:companies).first.try(:locations)
     @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
+    event_tracker.mailer_manage_guests_clicked(current_user) if params[:track_email_event]
   end
 
   def listings
@@ -54,6 +55,12 @@ class DashboardController < ApplicationController
     @reservation = current_user.listing_reservations.find(params[:id])
     existing_guest_rating = GuestRating.where(reservation_id: @reservation.id,
                                               author_id: current_user.id)
+
+    if params[:track_email_event]
+      event_tracker.mailer_guest_write_a_review_clicked(@reservation)
+      params[:track_email_event] = nil
+    end
+
     if existing_guest_rating.blank?
       manage_guests
       render :manage_guests

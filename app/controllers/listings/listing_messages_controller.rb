@@ -36,6 +36,8 @@ class Listings::ListingMessagesController < ApplicationController
     to_mark_as_read = @listing_messages.select{|m| m.unread_for?(current_user)}
     ListingMessage.update_all({read: true},
                               {id: to_mark_as_read.map(&:id)})
+
+    event_tracker.mailer_read_the_message_clicked(current_user) if params[:track_email_event]
   end
 
   def archive
