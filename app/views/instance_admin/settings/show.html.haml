@@ -1,0 +1,60 @@
+= simple_nested_form_for @instance, :url => instance_admin_settings_path, :html => { :multipart => true } do |f|
+
+  %fieldset
+    %legend Basic Configuration
+    = f.input :name, required: false
+    = f.input :service_fee_percent, label: 'Service Fee (%)'
+    %p
+      = f.button :submit, 'Save', class: 'btn btn-success'
+    %br
+
+  %fieldset
+    %legend Nomenclature
+    = f.input :bookable_noun, label: 'Bookable Noun (e.g. Desk)'
+    = f.input :lessor, label: 'Lessor (e.g. Host)'
+    = f.input :lessee, label: 'Lessee (e.g. Guest)'
+    %p
+      = f.button :submit, 'Save', class: 'btn btn-success'
+    %br
+
+  %fieldset
+    %legend Domain Names
+    %table#domains.table.table-borderless.table-condensed
+      = f.fields_for :domains, wrapper: false do |f|
+        %tr.fields
+          %td= f.input :name, label: false
+          %td.small= f.link_to_remove "Delete", class: 'btn btn-danger pull-right'
+    
+    %p
+      = f.link_to_add "Add domain name", :domains, :data => { :target => "#domains" }, class: 'btn'
+    %p
+      = f.button :submit, 'Save', class: 'btn btn-success'
+    %br
+
+  %fieldset
+    %legend Location Types
+    %table#location-types.table.table-borderless.table-condensed
+      = f.fields_for :location_types, wrapper: false do |f|
+        %tr.fields
+          %td= f.input :name, label: false
+          %td.small= f.link_to_remove "Delete", class: 'btn btn-danger pull-right'
+
+    %p
+      = f.link_to_add "Add location type", :location_types, :data => { :target => "#location-types" }, class: 'btn'
+    %p
+      = f.button :submit, 'Save', class: 'btn btn-success'
+    %br
+
+  %fieldset
+    %legend Listing Types
+    %table#listing-types.table.table-borderless.table-condensed
+      = f.fields_for :listing_types, wrapper: false  do |f|
+        %tr.fields
+          %td= f.input :name, label: false
+          %td.small= f.link_to_remove "Delete", class: 'btn btn-danger pull-right'
+
+    %p
+      = f.link_to_add "Add listing type", :listing_types, :data => { :target => "#listing-types" }, class: 'btn'
+    %p
+      = f.button :submit, 'Save', class: 'btn btn-success'
+    %br

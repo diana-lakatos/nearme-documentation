@@ -1,5 +1,6 @@
 class Instance < ActiveRecord::Base
-  attr_accessible :name, :domains_attributes, :theme_attributes, :service_fee_percent, :bookable_noun, :lessor, :lessee
+  attr_accessible :name, :domains_attributes, :theme_attributes, :location_types_attributes, :listing_types_attributes,
+                  :service_fee_percent, :bookable_noun, :lessor, :lessee
 
   has_one :theme, :as => :owner, dependent: :destroy
 
@@ -21,8 +22,10 @@ class Instance < ActiveRecord::Base
 
   validates_presence_of :name
 
-  accepts_nested_attributes_for :domains, :reject_if => proc { |params| params[:name].blank? }
+  accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params[:name].blank? }
+  accepts_nested_attributes_for :location_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
+  accepts_nested_attributes_for :listing_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
 
   DEFAULT_INSTANCE_NAME = 'DesksNearMe'
 

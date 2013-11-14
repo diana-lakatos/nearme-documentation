@@ -6,3 +6,4 @@
 //= require ./vendor/Chart
 //= require components/chart_wrapper
 //= require_tree ./instance_admin/sections
+//= require jquery_nested_form
