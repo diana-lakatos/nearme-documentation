@@ -1,5 +1,6 @@
 class ErrorsController < ApplicationController
 
+  skip_before_filter :redirect_if_domain_not_configured
   before_filter :get_status_code
   layout 'errors'
 
@@ -18,6 +19,10 @@ class ErrorsController < ApplicationController
       # just in case things are so bad that we cannot display anything at all
       render file: "#{Rails.root}/public/500.html", layout: false, status: @status_code
     end
+  end
+
+  def domain_not_configured
+    render :template => 'errors/domain_not_configured', :status => 404, :formats => [:html]
   end
 
   private

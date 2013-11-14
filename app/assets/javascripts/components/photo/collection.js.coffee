@@ -17,7 +17,7 @@ class @Photo.Collection
     if @multiplePhoto()
       @initializeSortable()
       @reorderSortableList()
-    __insp.push(['tagSession', "first_listing_form_visit"])
+    sessioncamConfiguration.customDataObjects.push( { key: "event", value: "first_listing_form_visit" } )
 
 
   add: ->

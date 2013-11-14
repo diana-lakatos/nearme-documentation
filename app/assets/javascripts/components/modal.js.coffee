@@ -89,7 +89,8 @@ class @Modal
     @loading.hide()
     @content.html("") if content
     @content.show()
-    @content.html(content) if content
+    if content
+      @content.html(content)
 
     # We need to ensure there has been a reflow displaying the target element
     # before applying the class with the animation transitions
@@ -146,6 +147,7 @@ class @Modal
     @showLoading()
 
     request = $.ajax(ajaxOptions)
+    
     request.success (data) =>
       if data.redirect
         document.location = data.redirect
@@ -154,6 +156,7 @@ class @Modal
         @hide()
       else
         @showContent(data)
+        @callback() if @callback
 
   # Position the modal on the page.
   positionModal: ->

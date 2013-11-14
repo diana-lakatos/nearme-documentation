@@ -34,5 +34,13 @@ class DomainTest < ActiveSupport::TestCase
     end
   end
 
+  context 'validation' do
+    should 'not be able to set desksnear.me' do
+      @desksnearme_domain = FactoryGirl.build(:domain, :name => 'desksnear.me', :target => FactoryGirl.create(:instance))
+      assert @desksnearme_domain.invalid?
+      assert @desksnearme_domain.errors[:name].join.include?("This domain is not available")
+    end
+  end
+
 end
 

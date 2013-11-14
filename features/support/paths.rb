@@ -44,6 +44,9 @@ module NavigationHelpers
 
     when /the admin instances page/
       admin_instances_path
+
+    when /the not configured domain page/
+      'http://test.example.info'
  
     when /^#{capture_model} page which belong to deleted location$/   # eg. deleted listing page
       obj = model($1)

@@ -15,6 +15,7 @@ DesksnearMe::Application.routes.draw do
   match '/404', :to => 'errors#not_found'
   match '/422', :to => 'errors#server_error'
   match '/500', :to => 'errors#server_error'
+  match '/domain-not-configured', :to => 'errors#domain_not_configured', :as => 'domain_not_configured'
 
   namespace :admin do
     match '/', :to => "dashboard#show"

@@ -25,12 +25,12 @@
 # to mock out the relevant tracker instance and assert an expectation to call the
 # relevant event method(s).
 class Analytics::EventTracker
-  attr_accessor :triggered_inspectlet_taggable_methods
+  attr_accessor :triggered_client_taggable_methods
 
   def initialize(mixpanel_api, google_analytics_api)
     @mixpanel_api = mixpanel_api
     @google_analytics_api = google_analytics_api
-    @triggered_inspectlet_taggable_methods = []
+    @triggered_client_taggable_methods = []
   end
 
   include ListingEvents
@@ -56,7 +56,7 @@ class Analytics::EventTracker
     stack_trace_parser = StackTraceParser.new(caller[0])
     @google_analytics_api.track(stack_trace_parser.humanized_file_name, event_name)
     triggered_event = stack_trace_parser.humanized_method_name
-    @triggered_inspectlet_taggable_methods << triggered_event if AnalyticWrapper::Inspectlet.taggable?(triggered_event)
+    @triggered_client_taggable_methods << triggered_event if AnalyticWrapper::ClientEvents.taggable?(triggered_event)
   end
 
   # Sets global properties on the person

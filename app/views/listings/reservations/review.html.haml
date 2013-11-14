@@ -83,5 +83,5 @@
         sameAsSelector  : '#reservation_request_mobile_same_as_phone'
       }
     );
-    __insp.push(['tagSession', "booking_review_opened"]);
+    window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
   });
