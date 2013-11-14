@@ -221,6 +221,16 @@ section.reservations {
       margin-bottom: $padding-default;
     }
 
+    p {
+      color: #b8b8b8;
+    }
+
+    hr {
+      color: #e6e6e6;
+      background-color: #e6e6e6;
+      border-color: #e6e6e6;
+    }
+
     .selected-dates-summary {
       margin: $padding-default 0;
 
@@ -231,7 +241,11 @@ section.reservations {
     }
 
     .order-summary {
-      border-bottom: 1px solid $line-gray;
+      border-bottom: 1px solid #e6e6e6;
+
+      .summary-line {
+        border-color: #e6e6e6;
+      }
     }
 
     .contact-information {
@@ -242,7 +256,7 @@ section.reservations {
 
     .submit-secure-payment {
       padding: $padding-default;
-      border: 1px solid $line-gray;
+      border: 1px solid #e6e6e6;
       @include border-radius($border-radius-default);
 
       .text {
