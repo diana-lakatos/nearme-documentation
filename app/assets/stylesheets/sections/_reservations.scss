@@ -262,6 +262,13 @@ section.reservations {
       .text {
         margin-top: 6px;
       }
+
+      @media (max-width: $ipad-width) {
+        .text { 
+          margin-bottom: 15px;
+        }
+      }
+
       .credit-cards-images {
         float: right;
       }
