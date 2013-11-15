@@ -64,7 +64,7 @@
           = render 'credit_card_fields', :f => f
 
           - if @reservation_request.confirm_reservations?
-            %p This host manually confirms all bookings. Your card will not be charged until the booking is confirmed.
+            %p.confirm-reservations This host manually confirms all bookings. Your card will not be charged until the booking is confirmed.
 
         - elsif @reservation_request.manual_payment?
           %p You will make the payment in person upon arrival
