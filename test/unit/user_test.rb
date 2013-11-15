@@ -144,6 +144,13 @@ class UserTest < ActiveSupport::TestCase
     assert @user.save
   end
 
+  should "have mailer unsubscriptions" do
+    @user = FactoryGirl.create(:user)
+    @user.unsubscribe('recurring_mailer/analytics')
+
+    assert @user.unsubscribed?('recurring_mailer/analytics')
+  end
+
   context '#full_mobile_number' do
     setup do
       @nz = Country.find('New Zealand')

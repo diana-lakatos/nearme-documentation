@@ -41,6 +41,15 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_select ".info h4", "Prague"
       assert_select ".info h4", "Skills & Interests"
     end
+
+    should 'successfully unsubscribe' do
+      verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
+      signature = verifier.generate("recurring_mailer/analytics")
+
+      get :unsubscribe, :token => @user.authentication_token, :signature => signature
+      assert @user.unsubscribed?("recurring_mailer/analytics")
+      assert_redirected_to root_path
+    end
   end
 
   context "verify" do

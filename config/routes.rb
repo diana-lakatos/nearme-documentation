@@ -116,6 +116,7 @@ DesksnearMe::Application.routes.draw do
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
     get "users/:id", :to => "registrations#show", :as => "profile"
+    get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
   end
 
   resources :reservations, :except => [:update, :destroy, :show] do

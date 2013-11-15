@@ -3,7 +3,7 @@ class RatingMailer < InstanceMailer
 
   def request_guest_rating(reservation)
     @who_is_rating      = 'host'
-    @author  = reservation.listing_creator
+    @user  = reservation.listing_creator
 
     @who_is_rated       = 'guest'
     @subject = reservation.owner
@@ -14,7 +14,7 @@ class RatingMailer < InstanceMailer
 
   def request_host_rating(reservation)
     @who_is_rating    = 'guest'
-    @author  = reservation.owner
+    @user  = reservation.owner
 
     @who_is_rated     = 'host'
     @subject = reservation.listing_creator
@@ -35,7 +35,7 @@ class RatingMailer < InstanceMailer
              end
     @platform_context = PlatformContext.new(domain.try(:name))
 
-    mail to: @author.email,
+    mail to: @user.email,
          subject: instance_prefix(@subject, @platform_context.decorate),
          template_name: "request_rating_of_#{@who_is_rated}_from_#{@who_is_rating}",
          platform_context: @platform_context

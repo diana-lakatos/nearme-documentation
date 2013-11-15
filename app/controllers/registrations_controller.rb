@@ -129,6 +129,18 @@ class RegistrationsController < Devise::RegistrationsController
     render :nothing => true
   end
 
+  def unsubscribe
+    verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
+    begin
+      mailer_name = verifier.verify(params[:signature])
+      current_user.unsubscribe(mailer_name) unless current_user.unsubscribed?(mailer_name)
+    rescue ActiveSupport::MessageVerifier::InvalidSignature
+    end
+
+    flash[:success] = t('flash_messages.registrations.unsubscribed_successfully')
+    redirect_to root_path
+  end
+
   protected
 
   def is_navigational_format?
