@@ -10,7 +10,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
 
     setup do
       FactoryGirl.create(:domain)
-      @reservation = FactoryGirl.create(:past_reservation)
+      @reservation = FactoryGirl.create(:past_reservation, state: 'confirmed')
       @guest = @reservation.owner
       @host = @reservation.listing.location.creator
     end
@@ -58,6 +58,21 @@ class RatingReminderJobTest < ActiveSupport::TestCase
     end
 
     should 'not send any reminders while reservation was already notified' do
+      stub_local_time_to_return_hour(Location.any_instance, 12)
+      RatingReminderJob.new(Date.current.to_s).perform
+
+      assert_equal 0, ActionMailer::Base.deliveries.size
+    end
+
+  end
+
+  context "With an already expired reservation" do
+
+    setup do
+      @reservation = FactoryGirl.create(:past_reservation, state: 'expired')
+    end
+
+    should 'not send any reminders to expired reservations' do
       stub_local_time_to_return_hour(Location.any_instance, 12)
       RatingReminderJob.new(Date.current.to_s).perform
 
