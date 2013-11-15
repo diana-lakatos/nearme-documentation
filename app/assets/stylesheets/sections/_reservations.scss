@@ -283,6 +283,11 @@ section.reservations {
       margin-top: $padding-default;
 
       .card-number {
+
+        #reservation_request_card_number {
+          padding-right: 40px!important;
+        }
+
         @mixin placeholder_with_icons($padding-top: 3px, $font-size: 10px, $letter-spacing: 3px) {
           padding-top: $padding-top;
           color: $gray190;
@@ -290,7 +295,6 @@ section.reservations {
           font-size: $font-size;
           letter-spacing: $letter-spacing;
         }
-
         ::-webkit-input-placeholder { /* WebKit browsers */
           @include placeholder_with_icons;
         }
@@ -303,6 +307,9 @@ section.reservations {
         :-ms-input-placeholder { /* Internet Explorer 10+ */
           @include placeholder_with_icons;
         }
+      }
+      .ico-credit-card:before {
+        font-size: 30px;
       }
     }
 
