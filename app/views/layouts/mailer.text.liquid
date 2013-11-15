@@ -2,7 +2,7 @@
 
 Sent with love
 {% if footer_type == 'transactional' %}
-You are receiving this email because you signed up to Desks Near Me using the email address {{ user.email }}
+You are receiving this email because you signed up to {{ platform_context.name }} using the email address {{ user.email }}
 {% elsif footer_type == 'non-transactional' %}
 Don't want to receive these updates? Unsubscribe: {{ unsubscribe_link }}
 {% endif %}
