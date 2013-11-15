@@ -281,6 +281,29 @@ section.reservations {
 
     .credit-card {
       margin-top: $padding-default;
+
+      .card-number {
+        @mixin placeholder_with_icons($padding-top: 3px, $font-size: 10px, $letter-spacing: 3px) {
+          padding-top: $padding-top;
+          color: $gray190;
+          font-family: 'icon-font';
+          font-size: $font-size;
+          letter-spacing: $letter-spacing;
+        }
+
+        ::-webkit-input-placeholder { /* WebKit browsers */
+          @include placeholder_with_icons;
+        }
+        :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+          @include placeholder_with_icons;
+        }
+        ::-moz-placeholder { /* Mozilla Firefox 19+ */
+          @include placeholder_with_icons;
+        }
+        :-ms-input-placeholder { /* Internet Explorer 10+ */
+          @include placeholder_with_icons;
+        }
+      }
     }
 
     .flash {
