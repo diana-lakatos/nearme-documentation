@@ -10,7 +10,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
 
     setup do
       FactoryGirl.create(:domain)
-      @reservation = FactoryGirl.create(:past_reservation, state: 'confirmed')
+      @reservation = FactoryGirl.create(:past_reservation)
       @guest = @reservation.owner
       @host = @reservation.listing.location.creator
     end

@@ -24,6 +24,8 @@ FactoryGirl.define do
     end
 
     factory :past_reservation do
+      state 'confirmed'
+
       after(:create) do |reservation|
         reservation.periods.reverse.each_with_index do |period, i|
           period.date = Date.yesterday - i.days
