@@ -9,16 +9,9 @@ class InstanceAdmin::SettingsControllerTest < ActionController::TestCase
       sign_in @user
     end
 
-    should 'check if user is authorized for the right controller' do
-      InstanceAdmin::Authorizer.any_instance.stubs(:instance_admin?).returns(true)
-      InstanceAdmin::Authorizer.any_instance.expects(:authorized?).with do |controller|
-        controller == InstanceAdmin::SettingsController
-      end.returns(true)
-      get :index
-    end
-
     should 'end with success if user is authorized to view settings' do
       InstanceAdmin::Authorizer.any_instance.stubs(:instance_admin?).returns(true)
+      InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).at_least_once.returns(false)
       InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with(InstanceAdmin::SettingsController).returns(true)
       get :index
       assert_response :success

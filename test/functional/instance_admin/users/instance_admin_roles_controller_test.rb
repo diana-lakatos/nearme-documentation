@@ -9,18 +9,6 @@ class InstanceAdmin::Users::InstanceAdminRolesControllerTest < ActionController:
     InstanceAdmin.create(:user_id => @user.id, :instance_id => Instance.default_instance.id)
   end
 
-  context 'authorization' do
-
-    should 'get correct permitting name' do
-      InstanceAdmin::Authorizer.any_instance.stubs(:instance_admin?).returns(true)
-      InstanceAdmin::Authorizer.any_instance.expects(:authorized?).with do |controller|
-        controller == InstanceAdmin::UsersController
-      end.returns(:true)
-      post :create
-    end
-
-  end
-
   context 'crud' do
     setup do
       InstanceAdmin::Authorizer.any_instance.stubs(:instance_admin?).returns(true)

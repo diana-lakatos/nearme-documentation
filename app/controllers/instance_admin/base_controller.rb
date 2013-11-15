@@ -11,11 +11,11 @@ class InstanceAdmin::BaseController < ApplicationController
   private
 
   def authorize_user!
-    authorizer = InstanceAdmin::Authorizer.new(current_user, platform_context)
-    if !(authorizer.instance_admin?)
+    @authorizer ||= InstanceAdmin::Authorizer.new(current_user, platform_context)
+    if !(@authorizer.instance_admin?)
       redirect_to root_path
-    elsif !authorizer.authorized?(permitting_controller_class)
-      if authorizer.authorized?(InstanceAdmin::AnalyticsController)
+    elsif !@authorizer.authorized?(permitting_controller_class)
+      if @authorizer.authorized?(InstanceAdmin::AnalyticsController)
         flash[:warning] = 'Sorry, you do not have permission to view chosen page!'
         redirect_to instance_admin_path
       else

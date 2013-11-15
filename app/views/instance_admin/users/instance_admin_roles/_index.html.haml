@@ -16,7 +16,9 @@
             = instance_admin_role.name
           - permissions.each do |p|
             %td 
-              = check_box_tag "instance_admin_role[permission_#{p.downcase}]", true, instance_admin_role.send("permission_#{p.downcase}"), { :disabled => instance_admin_role.instance_id.nil?, :'data-role-id' => instance_admin_role.id, :id => "permission_#{p.downcase}_#{instance_admin_role.id}", :'data-permission-checkbox' => "permission_#{p.downcase}" }
+              = check_box_tag "instance_admin_role[permission_#{p.downcase}]", true, instance_admin_role.send("permission_#{p.downcase}"), { :disabled => instance_admin_role.instance_id.nil?, :'data-role-id' => instance_admin_role.id, :id => "permission_#{p.downcase}_#{instance_admin_role.id}", :'data-permission-checkbox' => "permission_#{p.downcase}", :class => 'pull-left' }
+              .loading{:'data-loading' => true}
+                = image_tag('spinner_mini.gif')
           %td
             - if instance_admin_role.instance_id.present?
               = link_to "Delete", instance_admin_users_instance_admin_role_path(instance_admin_role), :method => :delete, :class => "btn btn-danger", :confirm => 'Are you sure?'

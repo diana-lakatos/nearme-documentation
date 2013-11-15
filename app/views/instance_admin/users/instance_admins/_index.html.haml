@@ -16,7 +16,9 @@
             - if instance_admin.instance_owner
               Instance Owner
             -else
-              = select_tag :instance_admin_role_id, options_from_collection_for_select(instance_admin_roles, "id", "name", instance_admin.instance_admin_role.id), :'data-role-select' => true, :'data-instance-admin-id' => instance_admin.id
+              = select_tag :instance_admin_role_id, options_from_collection_for_select(instance_admin_roles, "id", "name", instance_admin.instance_admin_role.id), :'data-role-select' => true, :'data-instance-admin-id' => instance_admin.id, :class => 'pull-left'
+              .loading{:'data-loading' => true}
+                = image_tag('spinner_mini.gif')
           %td 
             - unless instance_admin.instance_owner
               = link_to "Delete", instance_admin_users_instance_admin_path(instance_admin), :method => :delete, :class => "btn btn-danger", :confirm => 'Are you sure?'

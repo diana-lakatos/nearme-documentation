@@ -23,4 +23,18 @@ fieldset {
   select {
     margin: 0px;
   }
+
+  .loading {
+    float: left;
+    margin-left: 12px;
+    display: none;
+  }
+}
+
+#instance_admins_form {
+  .loading {
+    float: left;
+    margin-left: 12px;
+    display: none;
+  }
 }

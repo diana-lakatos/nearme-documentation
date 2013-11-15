@@ -16,20 +16,27 @@
             = link_to platform_context.name, instance_admin_url, :class => "brand"
             .nav-collapse.collapse.navbar-inverse-collapse
               %ul.nav.pull-right
-                %li{:class => ("active" if request.url.include?(instance_admin_analytics_url))}
-                  = link_to "Analytics", instance_admin_analytics_url
-                %li{:class => ("active" if request.url.include?(instance_admin_settings_url))}
-                  = link_to "Settings", instance_admin_settings_url
-                %li{:class => ("active" if request.url.include?(instance_admin_theme_url))}
-                  = link_to "Theme", instance_admin_theme_url
-                %li{:class => ("active" if request.url.include?(instance_admin_inventories_url))}
-                  = link_to "Inventory", instance_admin_inventories_url
-                %li{:class => ("active" if request.url.include?(instance_admin_transfers_url))}
-                  = link_to "Transfers", instance_admin_transfers_url
-                %li{:class => ("active" if request.url.include?(instance_admin_partners_url))}
-                  = link_to "Partners", instance_admin_partners_url
-                %li{:class => ("active" if request.url.include?(instance_admin_users_url))}
-                  = link_to "Users", instance_admin_users_url
+                - if @authorizer.authorized?(InstanceAdmin::AnalyticsController)
+                  %li{:class => ("active" if request.url.include?(instance_admin_analytics_url))}
+                    = link_to "Analytics", instance_admin_analytics_url
+                - if @authorizer.authorized?(InstanceAdmin::SettingsController)
+                  %li{:class => ("active" if request.url.include?(instance_admin_settings_url))}
+                    = link_to "Settings", instance_admin_settings_url
+                - if @authorizer.authorized?(InstanceAdmin::ThemeController)
+                  %li{:class => ("active" if request.url.include?(instance_admin_theme_url))}
+                    = link_to "Theme", instance_admin_theme_url
+                - if @authorizer.authorized?(InstanceAdmin::InventoriesController)
+                  %li{:class => ("active" if request.url.include?(instance_admin_inventories_url))}
+                    = link_to "Inventory", instance_admin_inventories_url
+                - if @authorizer.authorized?(InstanceAdmin::TransfersController)
+                  %li{:class => ("active" if request.url.include?(instance_admin_transfers_url))}
+                    = link_to "Transfers", instance_admin_transfers_url
+                - if @authorizer.authorized?(InstanceAdmin::PartnersController)
+                  %li{:class => ("active" if request.url.include?(instance_admin_partners_url))}
+                    = link_to "Partners", instance_admin_partners_url
+                - if @authorizer.authorized?(InstanceAdmin::UsersController)
+                  %li{:class => ("active" if request.url.include?(instance_admin_users_url))}
+                    = link_to "Users", instance_admin_users_url
                 %li= link_to "Log Out", destroy_user_session_url, :method => :delete, :data => {:user => current_user.first_name }
 
       .row-fluid
