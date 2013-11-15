@@ -260,17 +260,22 @@ section.reservations {
       @include border-radius($border-radius-default);
 
       .text {
-        margin-top: 6px;
+        line-height: 44px;
+      }
+
+      .credit-card-images {
+        text-align: right;
+        line-height: 18px;
       }
 
       @media (max-width: $ipad-width) {
-        .text { 
+        .text {
+          line-height: inherit;
           margin-bottom: 15px;
         }
-      }
-
-      .credit-cards-images {
-        float: right;
+        .credit-card-images {
+          text-align: left;
+        }
       }
     }
 

@@ -6,11 +6,12 @@
           %li= e
 
   .padding-bottom.submit-secure-payment
-    .span7
-      .ico-lock.padding.text Submit a secure payment.
-    .span4.credit-cards-images
-      = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
-    .clearfix
+    .row-fluid
+      .span5.text
+        .ico-lock Submit a secure payment.
+      .span7.credit-card-images
+        = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
+      .clearfix
 
   .padding-bottom.credit-card{class: "#{"error" if f.object.errors.include?(:number).present?}"}
     .span6
