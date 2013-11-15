@@ -7,7 +7,7 @@ class Partner < ActiveRecord::Base
   has_one :domain, :as => :target, :dependent => :destroy
   has_one :theme, :as => :owner, :dependent => :destroy
 
-  accepts_nested_attributes_for :domain
+  accepts_nested_attributes_for :domain, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params[:name].blank? }
 
   validates_presence_of :name, :instance_id
