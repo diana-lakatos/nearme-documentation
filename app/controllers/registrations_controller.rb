@@ -22,6 +22,7 @@ class RegistrationsController < Devise::RegistrationsController
       User.where(id: @user.id).update_all({referer: cookies.signed[:referer],
                                            source: cookies.signed[:source],
                                            campaign: cookies.signed[:campaign]})
+      @user.set_platform_context(platform_context)
       update_analytics_google_id(@user)
       analytics_apply_user(@user)
       event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
