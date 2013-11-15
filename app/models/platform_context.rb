@@ -43,7 +43,7 @@ class PlatformContext
   end
 
   def is_root_domain?
-    root_domains = [Regexp.escape(remove_port_from_hostname(Rails.application.routes.default_url_options[:host]))]
+    root_domains = [Regexp.escape(remove_port_from_hostname(Rails.application.routes.default_url_options[:host])), '0\.0\.0\.0']
     root_domains += ['test\.host', '127\.0\.0\.1', 'example\.org'] if Rails.env.test?
     @request_host =~ Regexp.new("^(#{root_domains.join('|')})$", true)
   end
