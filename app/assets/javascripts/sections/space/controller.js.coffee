@@ -26,7 +26,7 @@ class @Space.Controller
         scrollTop: $(".bookings").offset().top - 20
       }, 300)
 
-    $(window).resize => 
+    $(window).resize =>
       @adjustBookingModulePosition()
       @adjustFullGalleryHeight()
 

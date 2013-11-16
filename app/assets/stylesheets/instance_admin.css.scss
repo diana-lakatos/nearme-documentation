@@ -11,4 +11,30 @@ fieldset {
   legend + div.control-group {
     margin-top: 0 !important;
   }
+
+  .error-block {
+    color: #b94a48;
+  }
+}
+
+.instance-admins-table td {
+  vertical-align: middle;
+
+  select {
+    margin: 0px;
+  }
+
+  .loading {
+    float: left;
+    margin-left: 12px;
+    display: none;
+  }
+}
+
+#instance_admins_form {
+  .loading {
+    float: left;
+    margin-left: 12px;
+    display: none;
+  }
 }

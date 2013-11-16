@@ -64,6 +64,7 @@ en:
       address_verified: "Perfect, your email has been confirmed. Thanks!"
       address_already_verified: "The email address has been already verified"
       address_not_verified: "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+      password_set: "Perfect, you can now use your password to log in!"
     locations:
       no_listings: "There aren't any listings at that location. Check out some other spaces!"
       listing_removed: "This listing has been removed. Displaying other listings near %{address}."
@@ -106,6 +107,10 @@ en:
     instance_admin:
       theme:
         theme_updated_successfully: 'Theme updated.'
+      users:
+        instance_admin_roles:
+          role_added: "Great, new role has been added!"
+          role_deleted: "That role has been deleted"
 
   simple_form:
     labels:

@@ -1,5 +1,7 @@
 class AuthenticationsController < ApplicationController
 
+  skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:create]
+
   def create
     @omniauth = request.env["omniauth.auth"]
     @oauth = Auth::Omni.new(@omniauth)
