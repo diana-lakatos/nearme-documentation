@@ -83,6 +83,8 @@ gem 'filepicker-rails'
 
 gem 'premailer-rails'
 
+gem 'addressable'
+
 group :staging, :production do
   gem 'newrelic_rpm'
 end

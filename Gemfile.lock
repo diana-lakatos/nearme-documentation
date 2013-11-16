@@ -474,6 +474,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  addressable
   amatch
   animation
   bootstrap-sass (~> 2.3.1.0)
