@@ -79,6 +79,10 @@
             span.icon { display: inherit; }
         }
 
+        @media (max-width: $navbar-mobile-narrow-links) {
+          padding: 18px 15px;
+        }
+
         span.count {
           margin-left: 8px;
           background: $gray160;

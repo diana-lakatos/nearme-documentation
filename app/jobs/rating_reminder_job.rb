@@ -6,8 +6,8 @@ class RatingReminderJob < Job
   end
 
   def perform
-    reservations = Reservation.joins(:periods).where('reservation_periods.date = ?', @date)
-    reservations = reservations.where("request_guest_rating_email_sent_at IS NULL OR request_guest_rating_email_sent_at IS NULL")
+    reservations = Reservation.joins(:periods).confirmed.where('reservation_periods.date = ?', @date)
+    reservations = reservations.where("request_guest_rating_email_sent_at IS NULL OR request_host_rating_email_sent_at IS NULL")
     reservations = reservations.select do |reservation|
       reservation.last_date >= @date && reservation.location.local_time.hour == 12
     end

@@ -13,7 +13,6 @@
       = f.text_area :body
       = f.submit "Send", class: "btn btn-large btn-green"
 
-:javascript
-  $(function() {
-    new ModalForm($('#new_listing_message'))
-  });
+%script{:type => 'text/javascript'}
+  :plain
+    new ModalForm($('#new_listing_message'));

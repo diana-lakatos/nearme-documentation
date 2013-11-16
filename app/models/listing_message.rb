@@ -11,6 +11,11 @@ class ListingMessage < ActiveRecord::Base
   validates_presence_of :body, message: "Message can't be blank."
   validates_length_of :body, maximum: 2000, message: "Message cannot have more than 2000 characters."
 
+  scope :for_thread, ->(listing, listing_message) { where(listing_id: listing.id, 
+                                                    owner_id: listing_message.owner_id) }
+
+  scope :by_created, -> {order('created_at desc')}
+
   def previous_in_thread
     ListingMessage.find(replying_to_id)
   end

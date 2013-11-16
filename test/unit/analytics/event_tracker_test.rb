@@ -21,14 +21,14 @@ class EventTrackerTest < ActiveSupport::TestCase
     end
 
     should 'be able to store single method' do
-      assert_equal ['Logged in'], @tracker.triggered_inspectlet_taggable_methods
+      assert_equal ['Logged in'], @tracker.triggered_client_taggable_methods
     end
 
     should 'be able to store multiple methods' do
       expect_set_person_properties user_properties
       expect_event 'Signed Up', user_properties
       @tracker.signed_up(@user)
-      assert_equal ['Logged in', 'Signed up'], @tracker.triggered_inspectlet_taggable_methods
+      assert_equal ['Logged in', 'Signed up'], @tracker.triggered_client_taggable_methods
     end
     
   end

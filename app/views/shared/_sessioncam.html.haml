@@ -1,0 +1,18 @@
+- if Rails.env.production?
+  :javascript
+    window.sessioncamConfiguration = new Object();
+    window.sessioncamConfiguration.SessionCamHostname = 'https://desksnear.me'
+    
+    // Iterate through the server side events and pass them to sessioncam
+    window.sessioncamConfiguration.customDataObjects = window.sessioncamConfiguration.customDataObjects || [];
+    var tags = #{get_and_clear_stored_client_taggable_events}
+    for(i = 0; i < tags.length; i++){
+      window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: tags[i] } );
+    }
+
+  = javascript_include_tag 'analytics/sessioncam'
+
+- else
+  :javascript
+    window.sessioncamConfiguration = new Object();
+    window.sessioncamConfiguration.customDataObjects = window.sessioncamConfiguration.customDataObjects || [];

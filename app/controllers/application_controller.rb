@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   prepend_view_path FooterResolver.instance
   before_filter :require_ssl
   before_filter :log_out_if_token_exists
+  before_filter :redirect_to_set_password_unless_unnecessary
 
   protect_from_forgery
   layout :layout_for_request_type
@@ -10,11 +11,12 @@ class ApplicationController < ActionController::Base
   # We need to persist some mixpanel attributes for subsequent
   # requests.
   after_filter :apply_persisted_mixpanel_attributes
-  after_filter :store_inspectlet_taggable_events
+  after_filter :store_client_taggable_events
   before_filter :first_time_visited?
   before_filter :store_referal_info
   before_filter :platform_context
   before_filter :register_platform_context_as_lookup_context_detail
+  before_filter :redirect_if_domain_not_valid
 
 
   def current_user
@@ -215,19 +217,19 @@ class ApplicationController < ActionController::Base
   end
   helper_method :user_google_analytics_id
 
-  def store_inspectlet_taggable_events
+  def store_client_taggable_events
     if @event_tracker
-      session[:triggered_inspectlet_taggable_events] ||= []
-      session[:triggered_inspectlet_taggable_events] += @event_tracker.triggered_inspectlet_taggable_methods
+      session[:triggered_client_taggable_events] ||= []
+      session[:triggered_client_taggable_events] += @event_tracker.triggered_client_taggable_methods
     end
   end
 
-  def get_and_clear_stored_inspectlet_taggable_events
-    events = session[:triggered_inspectlet_taggable_events] || []
-    session[:triggered_inspectlet_taggable_events] = nil
+  def get_and_clear_stored_client_taggable_events
+    events = session[:triggered_client_taggable_events] || []
+    session[:triggered_client_taggable_events] = nil
     events
   end
-  helper_method :get_and_clear_stored_inspectlet_taggable_events
+  helper_method :get_and_clear_stored_client_taggable_events
 
   def search_scope
     @search_scope ||= Listing::SearchScope.scope(platform_context)
@@ -248,5 +250,18 @@ class ApplicationController < ActionController::Base
       Rails.logger.info "#{current_user.email} is being logged out due to token param"
       sign_out current_user
     end
+  end
+
+  def redirect_if_domain_not_valid
+    redirect_to domain_not_configured_path unless platform_context.valid_domain?
+  end
+
+  def redirect_to_set_password_unless_unnecessary
+    redirect_to set_password_path if set_password_necessary?
+  end
+
+  def set_password_necessary?
+    return false unless current_user
+    current_user.encrypted_password.blank? && current_user.authentications.empty?
   end
 end

@@ -120,12 +120,6 @@ Spork.prefork do
     end
   end
 
-  class ApplicationController
-    def first_time_visited?
-      false
-    end
-  end
-
 end
 
 Spork.each_run do
@@ -134,7 +128,7 @@ Spork.each_run do
     require 'simplecov'
   end
 
-  class ActionController::TestCase
+  class ActiveSupport::TestCase
     setup :setup_platform_context
 
     def setup_platform_context

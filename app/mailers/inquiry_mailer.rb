@@ -14,7 +14,7 @@ class InquiryMailer < InstanceMailer
     @platform_context_decorator = platform_context.decorate
     @inquiry = inquiry
 
-    mail(to: @inquiry.listing.creator.full_email,
+    mail(to: @inquiry.listing.administrator.full_email,
          subject: "New enquiry from #{@inquiry.inquiring_user.name} about #{@inquiry.listing.name}",
          reply_to: @inquiry.inquiring_user.full_email,
          platform_context: platform_context)
