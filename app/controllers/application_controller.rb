@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   prepend_view_path FooterResolver.instance
   before_filter :require_ssl
   before_filter :log_out_if_token_exists
+  before_filter :redirect_to_set_password_unless_unnecessary
 
   protect_from_forgery
   layout :layout_for_request_type
@@ -15,7 +16,7 @@ class ApplicationController < ActionController::Base
   before_filter :store_referal_info
   before_filter :platform_context
   before_filter :register_platform_context_as_lookup_context_detail
-  before_filter :redirect_if_domain_not_configured
+  before_filter :redirect_if_domain_not_valid
 
 
   def current_user
@@ -251,10 +252,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def redirect_if_domain_not_configured
-    if !platform_context.domain.present? &&
-      !Domain.is_root_domain?(request.host_with_port)
-      redirect_to domain_not_configured_path
-    end
+  def redirect_if_domain_not_valid
+    redirect_to domain_not_configured_path unless platform_context.valid_domain?
+  end
+
+  def redirect_to_set_password_unless_unnecessary
+    redirect_to set_password_path if set_password_necessary?
+  end
+
+  def set_password_necessary?
+    return false unless current_user
+    current_user.encrypted_password.blank? && current_user.authentications.empty?
   end
 end

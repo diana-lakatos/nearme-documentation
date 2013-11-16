@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131030082002) do
+ActiveRecord::Schema.define(:version => 20131112062003) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -220,6 +220,35 @@ ActiveRecord::Schema.define(:version => 20131030082002) do
 
   add_index "inquiries", ["inquiring_user_id"], :name => "index_inquiries_on_inquiring_user_id"
   add_index "inquiries", ["listing_id"], :name => "index_inquiries_on_listing_id"
+
+  create_table "instance_admin_roles", :force => true do |t|
+    t.string   "name"
+    t.integer  "instance_id"
+    t.boolean  "permission_settings",    :default => false
+    t.boolean  "permission_theme",       :default => false
+    t.boolean  "permission_transfers",   :default => false
+    t.boolean  "permission_inventories", :default => false
+    t.boolean  "permission_partners",    :default => false
+    t.boolean  "permission_users",       :default => false
+    t.boolean  "permission_analytics",   :default => true
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+  end
+
+  add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"
+
+  create_table "instance_admins", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "instance_id"
+    t.integer  "instance_admin_role_id"
+    t.boolean  "instance_owner",         :default => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+  end
+
+  add_index "instance_admins", ["instance_admin_role_id"], :name => "index_instance_admins_on_instance_admin_role_id"
+  add_index "instance_admins", ["instance_id"], :name => "index_instance_admins_on_instance_id"
+  add_index "instance_admins", ["user_id"], :name => "index_instance_admins_on_user_id"
 
   create_table "instances", :force => true do |t|
     t.string   "name"
@@ -601,9 +630,15 @@ ActiveRecord::Schema.define(:version => 20131030082002) do
     t.string   "slug"
     t.float    "last_geolocated_location_longitude"
     t.float    "last_geolocated_location_latitude"
+    t.integer  "partner_id"
+    t.integer  "instance_id"
+    t.integer  "domain_id"
   end
 
+  add_index "users", ["domain_id"], :name => "index_users_on_domain_id"
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users", ["instance_id"], :name => "index_users_on_instance_id"
+  add_index "users", ["partner_id"], :name => "index_users_on_partner_id"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["slug"], :name => "index_users_on_slug", :unique => true
 

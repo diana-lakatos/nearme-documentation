@@ -14,6 +14,8 @@ class Instance < ActiveRecord::Base
   has_many :listings, :through => :locations
   has_many :domains, :as => :target
   has_many :partners
+  has_many :instance_admins
+  has_many :instance_admin_roles
 
   validates_presence_of :name
 
