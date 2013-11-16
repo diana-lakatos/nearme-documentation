@@ -29,11 +29,13 @@ class PagesControllerTest < ActionController::TestCase
                                    content: "# Page heading \nSome text")
       end
 
-      should 'raise standard exception' do
+      should 'raise standard exception and store it in session' do
         assert_raises ActiveRecord::RecordNotFound do
           get :show, :path => 'wrong-path'
         end
+        assert_equal({ :instance_page_not_found => 'wrong-path' }, session[:not_found])
       end
+
     end
   end
 end

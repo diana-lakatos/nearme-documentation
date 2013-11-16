@@ -9,6 +9,7 @@ class PagesController < ApplicationController
     @page = begin
               platform_context.theme.pages.find_by_slug!(params[:path]) 
             rescue ActiveRecord::RecordNotFound => e
+              session[:not_found] = { :instance_page_not_found => params[:path] }
               raise e unless Theme::DEFAULT_THEME_PAGES.include?(params[:path])
             end
 

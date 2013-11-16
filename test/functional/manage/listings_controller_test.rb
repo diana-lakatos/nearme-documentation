@@ -96,18 +96,28 @@ class Manage::ListingsControllerTest < ActionController::TestCase
         assert_raise ActiveRecord::RecordNotFound do
           post :create, { :listing => FactoryGirl.attributes_for(:listing).reverse_merge!({:listing_type_id => @listing_type.id}), :location_id => @location.id}
         end
+        assert_equal({ :manage_listing_no_permission => nil}, session[:not_found])
+      end
+
+      should 'handle lack of permission to edit properly' do
+        assert_raise ActiveRecord::RecordNotFound do
+          get :edit, :id => @listing.id
+        end
+        assert_equal({ :manage_listing_no_permission => nil}, session[:not_found])
       end
 
       should "not update listing" do
         assert_raise ActiveRecord::RecordNotFound do
           put :update, :id => @listing.id, :listing => { :name => 'new name' }
         end
+        assert_equal({ :manage_listing_no_permission => nil}, session[:not_found])
       end
 
       should "not destroy listing" do
         assert_raise ActiveRecord::RecordNotFound do
           delete :destroy, :id => @listing.id
         end
+        assert_equal({ :manage_listing_no_permission => nil}, session[:not_found])
       end
     end
   end

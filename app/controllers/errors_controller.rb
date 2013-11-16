@@ -5,8 +5,19 @@ class ErrorsController < ApplicationController
   layout 'errors'
 
   def not_found
+    error = session[:not_found]
+    error_type = error.try(:keys).try(:first)
     begin
-      render :template => 'errors/not_found', :status => 404, :formats => [:html]
+      case error_type
+      when :instance_page_not_found
+        @path = error[error_type]
+        render :template => 'errors/instance_page_not_found', :status => 404, :formats => [:html]
+      when :manage_listing_no_permission, :manage_location_no_permission
+        @object_name = (error_type == :manage_listing_no_permission ? 'listing' : 'location' )
+        render :template => 'errors/manage_listing_or_location_no_permission', :status => 404, :formats => [:html]
+      when nil
+        render :template => 'errors/not_found', :status => 404, :formats => [:html]
+      end
     rescue
       server_error
     end
