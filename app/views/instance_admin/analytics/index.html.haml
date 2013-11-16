@@ -22,7 +22,7 @@
     .chart
       %canvas#listings_chart
 
-%script
-  new ChartWrapper.Line($('#revenue_chart'), #{@revenue_chart.values.to_json.html_safe}, #{@revenue_chart.labels.to_json.html_safe})
-  new ChartWrapper.Line($('#bookings_chart'), #{@bookings_chart.values.to_json.html_safe}, #{@bookings_chart.labels.to_json.html_safe})
-  new ChartWrapper.Line($('#listings_chart'), #{@listings_chart.values.to_json.html_safe}, #{@listings_chart.labels.to_json.html_safe})
+:javascript
+    new ChartWrapper.Line($('#revenue_chart'), #{@revenue_chart.values.to_json.html_safe}, #{@revenue_chart.labels.to_json.html_safe})
+    new ChartWrapper.Line($('#bookings_chart'), #{@bookings_chart.values.to_json.html_safe}, #{@bookings_chart.labels.to_json.html_safe})
+    new ChartWrapper.Line($('#listings_chart'), #{@listings_chart.values.to_json.html_safe}, #{@listings_chart.labels.to_json.html_safe})

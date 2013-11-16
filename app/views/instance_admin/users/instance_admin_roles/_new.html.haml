@@ -1,0 +1,6 @@
+= simple_form_for [:instance_admin, :users, @instance_admin_role ||= InstanceAdminRole.new] do |f|
+  %fieldset
+    %legend
+      Create New Role
+    = f.input :name, :label => 'Name'
+    = f.submit "Create", :class => 'btn btn-success'

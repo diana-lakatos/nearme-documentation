@@ -33,7 +33,12 @@ class User < ActiveRecord::Base
            :through => :administered_locations,
            :source => :listings
 
+  has_many :instance_admins,
+           :foreign_key => "user_id",
+           :dependent => :destroy
+
   attr_accessible :companies_attributes
+  attr_accessor :skip_password
   accepts_nested_attributes_for :companies
 
   has_many :locations,
@@ -173,6 +178,9 @@ class User < ActiveRecord::Base
 
   # Whether to validate the presence of a password
   def password_required?
+    # we want to enforce skipping password for instance_admin/users#create
+    return false if self.skip_password == true
+    return true if self.skip_password == false
     # We're changing/setting password, or new user and there are no Provider authentications
     !password.blank? || (new_record? && authentications.empty?)
   end

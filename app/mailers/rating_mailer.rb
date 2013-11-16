@@ -3,7 +3,7 @@ class RatingMailer < InstanceMailer
 
   def request_guest_rating(reservation)
     @who_is_rating      = 'host'
-    @user  = reservation.listing_creator
+    @author  = reservation.listing_administrator
 
     @who_is_rated       = 'guest'
     @subject = reservation.owner
@@ -17,7 +17,7 @@ class RatingMailer < InstanceMailer
     @user  = reservation.owner
 
     @who_is_rated     = 'host'
-    @subject = reservation.listing_creator
+    @subject = reservation.listing_administrator
 
     @subject = "How was your experience at '#{reservation.listing.name}'?"
     request_rating(reservation)

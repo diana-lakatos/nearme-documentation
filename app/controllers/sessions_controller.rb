@@ -1,6 +1,6 @@
 class SessionsController < Devise::SessionsController
+  skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:destroy]
   before_filter :set_return_to
-  before_filter :set_default_remember_me, :only => [:create]
   skip_before_filter :require_no_authentication, :only => [:show] , :if => lambda {|c| request.xhr? }
   after_filter :render_or_redirect_after_create, :only => [:create] 
 
@@ -16,6 +16,7 @@ class SessionsController < Devise::SessionsController
     super
 
     if current_user
+      current_user.remember_me!
       update_analytics_google_id(current_user)
       analytics_apply_user(current_user)
       event_tracker.logged_in(current_user, provider: Auth::Omni.new(session[:omniauth]).provider)
@@ -23,10 +24,6 @@ class SessionsController < Devise::SessionsController
   end
 
   private
-
-  def set_default_remember_me
-    params[:user][:remember_me] = true if params[:user]
-  end
 
   def set_return_to
     session[:user_return_to] = params[:return_to] if params[:return_to].present?

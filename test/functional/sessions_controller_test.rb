@@ -22,5 +22,11 @@ class SessionsControllerTest < ActionController::TestCase
     assert_equal Time.zone.today, @user.remember_created_at.to_date
   end
 
+  should 'be able to log out if no password set' do
+    sign_in @user
+    delete :destroy
+    assert_equal 'Signed out successfully.', flash[:notice] 
+  end
+
 end
 
