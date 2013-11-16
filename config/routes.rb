@@ -57,7 +57,15 @@ DesksnearMe::Application.routes.draw do
     resources :partners, :only => [:index]
     resources :settings, :only => [:index]
     resource :theme, :only => [:show, :update], :controller => 'theme'
-    resources :transfers, :only => [:index]
+    resources :transfers do
+      member do
+        post :transferred
+      end
+
+      collection do
+        post :generate
+      end
+    end
     resources :users, :only => [:index, :create]
 
     namespace :users do
