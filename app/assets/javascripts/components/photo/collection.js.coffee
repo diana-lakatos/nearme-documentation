@@ -59,8 +59,9 @@ class @Photo.Collection
       link = $(e.target)
       url = link.attr("data-url")
       if confirm("Are you sure you want to delete this Photo?")
+        photo = link.closest(".photo-item").html('<div class="thumbnail-processing"><div class="loading-icon"></div><div class="loading-text">Deleting...</div></div>')
         $.post link.attr("data-url"), { _method: 'delete' }, =>
-          link.closest(".photo-item").remove()
+          photo.remove()
           @initial_photo = @initial_photo - 1
           @processingPhotos -= 1
           if @processingPhotos == 0

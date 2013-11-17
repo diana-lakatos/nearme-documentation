@@ -92,6 +92,21 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert_equal 'Authentication successful.', flash[:success]
     end
 
+    should "successfully create new authentication as alternative to setting password" do
+      @user = FactoryGirl.create(:user_without_password)
+      sign_in @user
+      stub_mixpanel
+      @tracker.expects(:connected_social_provider).once.with do |user, custom_options|
+        user == @user && custom_options == { provider: @provider }
+      end
+      assert_no_difference('User.count') do
+        assert_difference('Authentication.count') do
+          post :create
+        end
+      end
+      assert_equal 'Authentication successful.', flash[:success]
+    end
+
     should "fail due to incorrect email" do
       FactoryGirl.create(:user, :email => @email)
       sign_in @user

@@ -1,1 +1,9 @@
-Users
+= render 'instance_admin/users/instance_admins/index'
+= render 'instance_admin/users/instance_admins/new'
+= render 'instance_admin/users/new'
+= render 'instance_admin/users/instance_admin_roles/index'
+= render 'instance_admin/users/instance_admin_roles/new'
+
+- content_for :domready do
+  new Users.InstanceAdmins.Controller($('#instance_admins_form'))
+  new Users.InstanceAdminRoles.Controller($('#instance_admin_roles'))

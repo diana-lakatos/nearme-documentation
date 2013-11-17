@@ -28,6 +28,17 @@ class PostActionMailer < InstanceMailer
          subject: "#{@user.first_name }, welcome to #{@platform_context_decorator.name }!")
   end
 
+  def created_by_instance_admin(platform_context, new_user, creator)
+    @new_user = new_user
+    @platform_context = platform_context
+    @platform_context_decorator = @platform_context.decorate
+    @creator = creator
+
+    mail(to: @new_user.email,
+         platform_context: @platform_context,
+         subject: "#{@new_user.first_name }, you were invited to #{@platform_context_decorator.name } by #{@creator.name}!")
+  end
+
   def list_draft(platform_context, user)
     @user = user
     @platform_context = platform_context

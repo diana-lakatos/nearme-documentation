@@ -1,6 +1,7 @@
 class @Bookings.TimePicker
   asEvented.call @prototype
   BOOKING_STEP = 15
+  DEFAULT_STEPS = 4
 
   constructor: (@listing, @container, options = {}) ->
     @allMinutes = []
@@ -72,7 +73,10 @@ class @Bookings.TimePicker
     @startTime.html(_.difference(options, [_.last(options)]).join("\n"))
 
     # End time is all but the first start time
-    @endTime.html(_.difference(options, [options[0]]).join("\n"))
+    steps = _.difference(options, [options[0]])
+    # Add the selected attribute to the nth element in the array
+    steps[DEFAULT_STEPS-1] = $('<div>').append($(steps[DEFAULT_STEPS-1]).attr('selected', 'selected')).html();
+    @endTime.html(steps.join("\n"))
 
     @view.startTimeDidChange()
     @view.endTimeDidChange()
