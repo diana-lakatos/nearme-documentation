@@ -89,5 +89,9 @@ module DesksnearMe
     config.perform_mixpanel_requests = true
     config.perform_google_analytics_requests = true
     config.perform_social_jobs = true
+
+    config.action_dispatch.rescue_responses.merge!('InstancePageNotFound' => :not_found)
+    config.action_dispatch.rescue_responses.merge!('Manage::ListingNotFound' => :not_found)
+    config.action_dispatch.rescue_responses.merge!('Manage::LocationNotFound' => :not_found)
   end
 end

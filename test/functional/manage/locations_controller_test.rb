@@ -95,24 +95,21 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       end
 
       should 'handle lack of permission to edit properly' do
-        assert_raise ActiveRecord::RecordNotFound do
+        assert_raise Manage::LocationNotFound do
           get :edit, :id => @location.id
         end
-        assert_equal({ :manage_location_no_permission => nil}, session[:not_found])
       end
 
       should "not update location" do
-        assert_raise ActiveRecord::RecordNotFound do
+        assert_raise Manage::LocationNotFound do
           put :update, :id => @location.id, :location => { :description => 'new description' }
         end
-        assert_equal({ :manage_location_no_permission => nil}, session[:not_found])
       end
 
       should "not destroy location" do
-        assert_raise ActiveRecord::RecordNotFound do
+        assert_raise Manage::LocationNotFound do
           delete :destroy, :id => @location.id
         end
-        assert_equal({ :manage_location_no_permission => nil}, session[:not_found])
       end
 
       should 'be relogged if he uses token' do

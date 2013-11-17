@@ -17,3 +17,6 @@ class Manage::BaseController < ApplicationController
   end
 
 end
+
+class Manage::ListingNotFound < ActiveRecord::RecordNotFound; end
+class Manage::LocationNotFound < ActiveRecord::RecordNotFound; end

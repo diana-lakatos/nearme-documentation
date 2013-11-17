@@ -96,18 +96,16 @@ class Manage::ListingsController < Manage::BaseController
                   else
                     @locations_scope.find(params[:location_id])
                   end
-    rescue ActiveRecord::RecordNotFound => e
-      session[:not_found] = { :manage_listing_no_permission => nil }
-      raise e
+    rescue ActiveRecord::RecordNotFound
+      raise Manage::LocationNotFound
     end
   end
 
   def find_listing
     begin 
       @listing = Listing.where(location_id: @locations_scope.pluck(:id)).find(params[:id])
-    rescue ActiveRecord::RecordNotFound => e
-      session[:not_found] = { :manage_listing_no_permission => nil }
-      raise e
+    rescue ActiveRecord::RecordNotFound
+      raise Manage::ListingNotFound
     end
   end
 end

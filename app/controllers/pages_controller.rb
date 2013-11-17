@@ -8,9 +8,8 @@ class PagesController < ApplicationController
   def show
     @page = begin
               platform_context.theme.pages.find_by_slug!(params[:path]) 
-            rescue ActiveRecord::RecordNotFound => e
-              session[:not_found] = { :instance_page_not_found => params[:path] }
-              raise e unless Theme::DEFAULT_THEME_PAGES.include?(params[:path])
+            rescue ActiveRecord::RecordNotFound
+              raise InstancePageNotFound unless Theme::DEFAULT_THEME_PAGES.include?(params[:path])
             end
 
     render :show, platform_context: [platform_context.decorate], page_path: params[:path]
@@ -36,3 +35,4 @@ class PagesController < ApplicationController
   end
 end
 
+class InstancePageNotFound < ActiveRecord::RecordNotFound; end

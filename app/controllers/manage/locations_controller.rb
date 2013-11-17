@@ -66,9 +66,8 @@ class Manage::LocationsController < Manage::BaseController
   def find_location
     begin
       @location = @locations_scope.find(params[:id])
-    rescue ActiveRecord::RecordNotFound => e
-      session[:not_found] = { :manage_location_no_permission => nil }
-      raise e
+    rescue ActiveRecord::RecordNotFound
+      raise Manage::LocationNotFound
     end
   end
 
