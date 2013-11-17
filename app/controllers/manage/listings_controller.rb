@@ -52,12 +52,28 @@ class Manage::ListingsController < Manage::BaseController
         end
       }
       format.json {
-        if @listing.update_attributes params[:listing]
+        if @listing.update_attributes(params[:listing])
           render :json => { :success => true }
         else
           render :json => { :errors => @listing.errors.full_messages }, :status => 422
         end
       }
+    end
+  end
+
+  def enable
+    if @listing.enable!
+      render :json => { :success => true }
+    else
+      render :json => { :errors => @listing.errors.full_messages }, :status => 422
+    end
+  end
+
+  def disable
+    if @listing.disable!
+      render :json => { :success => true }
+    else
+      render :json => { :errors => @listing.errors.full_messages }, :status => 422
     end
   end
 
@@ -82,7 +98,6 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def find_listing
-    @listing = Listing.where('listings.id = ? AND location_id IN (?)', params[:id].to_i, @locations_scope.pluck(:id)).first
+    @listing = Listing.where(location_id: @locations_scope.pluck(:id)).find(params[:id])
   end
-
 end

@@ -1,0 +1,7 @@
+= simple_form_for [:instance_admin, @user ||= User.new] do |f|
+  %fieldset
+    %legend
+      Create new user
+    = f.input :name, :label => 'Full Name'
+    = f.input :email, :label => 'Email', :required => true
+    = f.submit "Create", :class => 'btn btn-success'

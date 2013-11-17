@@ -74,5 +74,5 @@
         }
       );
       DNM.initializeCustomSelects($('.space-reservation-modal'));
-      __insp.push(['tagSession', "booking_modal_opened"]);
+      window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
     });

@@ -7,14 +7,17 @@ class @Photo.Collection
     @initial_length = @sortable.find('.photo-item').length
     @position = 1
     @photos = []
+    @loader = new Search.ScreenLockLoader => $('.loading')
+    @processingPhotos = 0
     @init()
 
   init: ->
     @listenToDeletePhoto()
+    @listenToFormSubmit()
     if @multiplePhoto()
       @initializeSortable()
       @reorderSortableList()
-    __insp.push(['tagSession', "first_listing_form_visit"])
+    sessioncamConfiguration.customDataObjects.push( { key: "event", value: "first_listing_form_visit" } )
 
 
   add: ->
@@ -52,15 +55,28 @@ class @Photo.Collection
 
   listenToDeletePhoto: ->
     @uploaded.on 'click', '.delete-photo', (e) =>
+      @processingPhotos += 1
       link = $(e.target)
       url = link.attr("data-url")
       if confirm("Are you sure you want to delete this Photo?")
+        photo = link.closest(".photo-item").html('<div class="thumbnail-processing"><div class="loading-icon"></div><div class="loading-text">Deleting...</div></div>')
         $.post link.attr("data-url"), { _method: 'delete' }, =>
-          link.closest(".photo-item").remove()
+          photo.remove()
           @initial_photo = @initial_photo - 1
+          @processingPhotos -= 1
+          if @processingPhotos == 0
+            @loader.hide()
           if @multiplePhoto()
             @reorderSortableList()
       return false
+
+
+  listenToFormSubmit: ->
+    @container.parents('form').on 'submit', =>
+      if @processingPhotos > 0
+        @loader.show()
+        false
+
 
   reorderSortableList: ->
     i = 0

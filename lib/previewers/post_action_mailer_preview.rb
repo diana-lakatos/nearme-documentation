@@ -12,6 +12,10 @@ class PostActionMailerPreview < MailView
     ::PostActionMailer.list_draft(PlatformContext.new, user_with_listing)
   end
 
+  def created_by_instance_admin
+    ::PostActionMailer.created_by_instance_admin(PlatformContext.new, new_user_without_password, User.first)
+  end
+
   def list
     ::PostActionMailer.list(PlatformContext.new, user_with_listing)
   end
@@ -19,7 +23,14 @@ class PostActionMailerPreview < MailView
   private
 
   def user_with_listing
-    User.all.select{|u| !u.listings.count.zero?}.sample || FactoryGirl.create(:listing).user
+    @user ||= (User.all.select{|u| !u.listings.count.zero?}.sample || FactoryGirl.create(:listing).user)
+  end
+  
+  def new_user_without_password
+    @u ||= User.where(:email => 'nopassworddoe@example.com').first.presence || User.new(:name => 'John no password Doe', :email => 'nopassworddoe@example.com')
+    @u.save!(:validate => false) if @u.new_record?
+    @u
+
   end
 
 end

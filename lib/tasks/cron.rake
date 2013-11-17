@@ -13,9 +13,9 @@ namespace :cron do
       RecurringMailerShareJob.new.perform
     end
 
-    run_job "Send Request photos mails" do
-      RecurringMailerRequestPhotosJob.new.perform
-    end
+    #run_job "Send Request photos mails" do
+    #  RecurringMailerRequestPhotosJob.new.perform
+    #end
   end
 
   desc "Run weekly scheduled jobs"

@@ -53,16 +53,19 @@ class SpaceWizardController < ApplicationController
   end
 
   def destroy_photo
-    @photo = current_user.photos.find(params[:id])
-    if @photo.destroy
+    @photo = Photo.find(params[:id])
+    if is_photo_admin?(@photo, current_user) && @photo.destroy
       render :text => { success: true, id: @photo.id }, :content_type => 'text/plain'
     else
       render :text => { :errors => @photo.errors.full_messages }, :status => 422, :content_type => 'text/plain'
     end
   end
 
-
   private
+
+  def is_photo_admin?(photo, user)
+    photo.creator == user || photo.content.try('administrator') == user
+  end
 
   def find_user
     @user = current_user

@@ -6,6 +6,12 @@ class Domain < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
   validates_presence_of :target_type
+  validates_each :name do |record, attr, value|
+    if value =~ /^(www\.)?desksnear\.me$/i
+      record.errors[:name] << "This domain is not available."
+    end
+  end
+
   delegate :white_label_enabled?, :to => :target
 
   def white_label_company?

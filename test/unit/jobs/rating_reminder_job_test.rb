@@ -21,7 +21,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
       assert_equal 2, ActionMailer::Base.deliveries.size
 
       @host_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@host.email] }
-      assert_match /\[DesksNearMe\] How was your experience at 'Listing \d+'/, @host_email.subject
+      assert_match /\[DesksNearMe\] How was your experience hosting User-\d+/, @host_email.subject
 
       @guest_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@guest.email] }
       assert_match /\[DesksNearMe\] How was your experience at 'Listing \d+'/, @guest_email.subject
@@ -58,6 +58,21 @@ class RatingReminderJobTest < ActiveSupport::TestCase
     end
 
     should 'not send any reminders while reservation was already notified' do
+      stub_local_time_to_return_hour(Location.any_instance, 12)
+      RatingReminderJob.new(Date.current.to_s).perform
+
+      assert_equal 0, ActionMailer::Base.deliveries.size
+    end
+
+  end
+
+  context "With an already expired reservation" do
+
+    setup do
+      @reservation = FactoryGirl.create(:past_reservation, state: 'expired')
+    end
+
+    should 'not send any reminders to expired reservations' do
       stub_local_time_to_return_hour(Location.any_instance, 12)
       RatingReminderJob.new(Date.current.to_s).perform
 

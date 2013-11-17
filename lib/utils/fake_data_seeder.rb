@@ -5,6 +5,11 @@ module Utils
     class NotEmptyDatabaseError < StandardError; end
 
     module Data
+
+      def self.instance_admin_roles
+        @instance_admin_roles ||= load_yaml("instance_admin_roles.yml")
+      end
+
       def self.amenities
         @amenities ||= load_yaml("amenities.yml")
       end
@@ -60,6 +65,7 @@ module Utils
 
           # === BASIC STUFF ======================================
 
+          load_instance_admin_roles!
           load_amenities!
           load_industries!
           load_location_types!
@@ -106,6 +112,15 @@ module Utils
         Rails.env.production?
       end
     end
+
+    def load_instance_admin_roles!
+      @instance_admin_roles ||= do_task "Loading roles" do
+        Data.instance_admin_roles.each_with_index.map do |(name), index|
+          FactoryGirl.create("instance_admin_role_#{name.downcase}")
+        end
+      end
+    end
+    alias_method :instance_admin_roles, :load_instance_admin_roles!
 
     def load_amenities!
       @amenities ||= do_task "Loading amenities" do

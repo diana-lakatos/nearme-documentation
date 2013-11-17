@@ -14,24 +14,24 @@ class Listings::ListingMessagesController < ApplicationController
     setup_listing_message
     if @listing_message.save
       @listing_message.send_notification(platform_context)
-      
       flash[:notice] = t('flash_messages.listing_messages.message_sent')
       redirect_to listing_messages_path
       render_redirect_url_as_json if request.xhr?
     else
-      render :new
+      if request.xhr?
+        render :template => 'listings/listing_messages/new'
+      else
+        @listing_messages = ListingMessage.for_thread(@listing, @listing_message).by_created.decorate
+        render :show
+      end
     end
   end
 
   def show
-    @listing_message = @listing.listing_messages.find(params[:id])
-    @new_listing_message = @listing.listing_messages.new(replying_to_id: @listing_message.id)
+    @show_listing_message = @listing.listing_messages.find(params[:id])
+    @listing_message = @listing.listing_messages.new(replying_to_id: @show_listing_message.id)
 
-    @listing_messages = ListingMessage.where(listing_id: @listing.id).
-      where(owner_id: @listing_message.owner_id).
-      order('created_at desc')
-
-    @listing_messages = @listing_messages.map(&:decorate)
+    @listing_messages = ListingMessage.for_thread(@listing, @show_listing_message).by_created.decorate
 
     to_mark_as_read = @listing_messages.select{|m| m.unread_for?(current_user)}
     ListingMessage.update_all({read: true},

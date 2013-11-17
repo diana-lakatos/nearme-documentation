@@ -31,6 +31,7 @@ class Reservation < ActiveRecord::Base
   validates :listing_id, :presence => true
   validates :periods, :length => { :minimum => 1 }
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
+  validates :owner, :presence => true
   validate :validate_all_dates_available, on: :create, :if => lambda { listing }
   validate :validate_booking_selection, on: :create, :if => lambda { listing }
 
@@ -155,7 +156,7 @@ class Reservation < ActiveRecord::Base
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
   delegate :location, to: :listing
-  delegate :creator, to: :listing, :prefix => true
+  delegate :creator, :administrator, to: :listing, prefix: true
   delegate :service_fee_percent, to: :listing, allow_nil: true
 
   def user=(value)

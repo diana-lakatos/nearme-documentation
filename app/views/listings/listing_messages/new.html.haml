@@ -6,5 +6,13 @@
         = link_to @listing.name
 
     = simple_form_for @listing_message, url: listing_listing_messages_path(@listing) do |f|
+      - if @listing_message.errors.present?
+        .errors
+          = f.error :body
+
       = f.text_area :body
       = f.submit "Send", class: "btn btn-large btn-green"
+
+%script{:type => 'text/javascript'}
+  :plain
+    new ModalForm($('#new_listing_message'));

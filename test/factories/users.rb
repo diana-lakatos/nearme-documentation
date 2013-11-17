@@ -1,5 +1,6 @@
 FactoryGirl.define do
   factory :user do
+    sequence(:name) {|n| "User-#{n}"}
     email { "#{name.to_s.underscore.downcase.tr(' ', '_')}@example.com" }
     password 'password'
     password_confirmation 'password'
@@ -11,9 +12,6 @@ FactoryGirl.define do
     current_location "Prague"
     company_name "DesksNearMe"
     skills_and_interests { "I'm skilled boss." }
-
-    sequence(:name) {|n| "User-#{n}"}
-
     factory :user_without_country_name do
       country_name nil
     end
@@ -35,6 +33,16 @@ FactoryGirl.define do
       avatar { fixture_file_upload(Dir.glob(Rails.root.join('db', 'seeds', 'demo', 'assets', 'avatars', '*')).sample, 'image/jpeg') }
       avatar_versions_generated_at Time.zone.now
     end
+
+    factory :user_without_password do
+
+      after(:create) do |u|
+        u.encrypted_password = ''
+        u.save!(:validate => false)
+      end
+
+    end
   end
+
 
 end
