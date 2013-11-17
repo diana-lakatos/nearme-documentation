@@ -3,31 +3,32 @@ class RatingMailer < InstanceMailer
 
   def request_guest_rating(reservation)
     @who_is_rating      = 'host'
-    @author  = reservation.listing_administrator
+    user = reservation.listing_administrator
 
     @who_is_rated       = 'guest'
     @subject = reservation.owner
 
     @subject = "How was your experience hosting #{reservation.owner.first_name}?"
-    request_rating(reservation)
+    request_rating(reservation, user)
   end
 
   def request_host_rating(reservation)
     @who_is_rating    = 'guest'
-    @user  = reservation.owner
+    user  = reservation.owner
 
     @who_is_rated     = 'host'
     @subject = reservation.listing_administrator
 
     @subject = "How was your experience at '#{reservation.listing.name}'?"
-    request_rating(reservation)
+    request_rating(reservation, user)
   end
 
   private
-  def request_rating(reservation)
+  def request_rating(reservation, user)
     @reservation = reservation
     @listing = @reservation.listing
     @location = @listing.location
+    @user = user
     domain = if @listing.company.white_label_enabled?
                @listing.company.domain
              else
