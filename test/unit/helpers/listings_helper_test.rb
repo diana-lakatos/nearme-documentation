@@ -15,25 +15,10 @@ class ListingsHelperTest < ActionView::TestCase
     end
   end
 
-  context '#connection_*_for' do
-    setup do
-      @listing = stub
-      @current_user = stub
-      expects(:connections_for).with(@listing, @current_user).returns(['con1', 'con2']).once
-    end
-
-    context '#connection_count_for' do
-      should 'return connections count' do
-        count = connection_count_for(@listing, @current_user)
-        assert_equal 2, count
-      end
-    end
-
-    context '#connection_tooltip_for' do
-      should 'return joined arrray of connections' do
-        tooltip = connection_tooltip_for(@listing, @current_user)
-        assert_equal 'con1<br />con2', tooltip
-      end
+  context '#connection_tooltip_for' do
+    should 'return joined arrray of connections' do
+      tooltip = connection_tooltip_for(['con1', 'con2'])
+      assert_equal 'con1<br />con2', tooltip
     end
   end
 end

@@ -22,6 +22,11 @@ namespace :demo do
         @me.add_friend(know_host.last)
       }
       know_host.each {|f| f.add_friend(host)}
+
+      # 1 mutual friend worked here
+      mutual_friend = FactoryGirl.create(:user, name: 'Jimmy\'s mutual friend')
+      @me.friends.first.add_friend(mutual_friend)
+      FactoryGirl.create(:past_reservation, state: 'confirmed', listing: @listing, user:mutual_friend)
     end
 
 

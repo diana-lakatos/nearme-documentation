@@ -56,17 +56,17 @@ module ListingsHelper
     Placeholder.new(height: options[:height], width: options[:width]).path
   end
 
-  def connection_tooltip_for(listing, current_user)
-    connections_for(listing, current_user).join('<br />').html_safe
+  def connection_tooltip_for(connections)
+    connections.join('<br />').html_safe
   end
 
-  def connection_count_for(listing, current_user)
-    connections_for(listing, current_user).count
+  def connections_for(listing, current_user)
+    find_connections_for(listing, current_user)
   end
 
   private
 
-  def connections_for(listing, current_user)
+  def find_connections_for(listing, current_user)
     return [] unless current_user
     friends = current_user.friends.visited_listing(listing).collect do |user|
       "#{user.name} worked here"
@@ -77,7 +77,11 @@ module ListingsHelper
     host_friends = current_user.friends.know_host_of(listing).collect do |user|
       "#{user.name} knows the host"
     end
-    [friends, hosts, host_friends].flatten
+    mutual_visitors = current_user.mutual_friends.visited_listing(listing).collect do |user|
+      next unless user.mutual_friendship_source
+      "#{user.mutual_friendship_source.name} knows #{user.name} who worked here"
+    end
+    [friends, hosts, host_friends, mutual_visitors].flatten
   end
 
 end

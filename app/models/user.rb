@@ -113,6 +113,14 @@ class User < ActiveRecord::Base
     joins(:followers).where(:user_relationships => {:follower_id => listing.administrator.id}).uniq
   }
 
+  scope :mutual_friends_of, ->(user) {
+    joins(:followers).where(:user_relationships => {:follower_id => user.friends.pluck(:id)}).without(user).with_mutual_friendship_source
+  }
+
+  scope :with_mutual_friendship_source, -> {
+    joins(:followers).select('"users".*, "user_relationships"."follower_id" AS mutual_friendship_source')
+  }
+
   extend CarrierWave::SourceProcessing
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
 
@@ -260,6 +268,14 @@ class User < ActiveRecord::Base
 
   def friends
     self.followed_users
+  end
+
+  def mutual_friendship_source
+    self.class.find_by_id(self[:mutual_friendship_source].to_i) if self[:mutual_friendship_source]
+  end
+
+  def mutual_friends
+    self.class.mutual_friends_of(self)
   end
 
   def full_email

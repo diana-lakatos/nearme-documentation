@@ -37,10 +37,13 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context 'social scopes' do
+    setup do
+        @me = FactoryGirl.create(:user)
+        @listing = FactoryGirl.create(:listing)
+    end
+
     context 'visited_listing' do
       should 'find only users with confirmed past reservation for listing in friends' do
-        @listing = FactoryGirl.create(:listing)
-        @me = FactoryGirl.create(:user)
         FactoryGirl.create(:reservation, state: 'confirmed')
 
         4.times { @me.add_friend(FactoryGirl.create(:user)) }
@@ -55,8 +58,6 @@ class UserTest < ActiveSupport::TestCase
 
     context 'hosts_of_listing' do
       should 'find host of listing in friends' do
-        @me = FactoryGirl.create(:user)
-        @listing = FactoryGirl.create(:listing)
         @listing.location.administrator = friend1 = FactoryGirl.create(:user)
         @listing.save!
         friend2 = FactoryGirl.create(:user)
@@ -68,7 +69,6 @@ class UserTest < ActiveSupport::TestCase
 
     context 'know_host_of' do
       should 'find users knows host' do
-        @me = FactoryGirl.create(:user)
         2.times { @me.add_friend(FactoryGirl.create(:user))}
         @friend = FactoryGirl.create(:user)
 
@@ -81,6 +81,23 @@ class UserTest < ActiveSupport::TestCase
         @friend.add_friend(host)
 
         assert_equal [@friend], @me.friends.know_host_of(@listing)
+      end
+    end
+
+    context 'mutual_friends_of' do
+      should 'find users with friend that visited listing' do
+        @friend = FactoryGirl.create(:user)
+        @me.add_friend(@friend)
+        mutual_friends = []
+        4.times { mutual_friends << FactoryGirl.create(:user); @friend.add_friend(mutual_friends.last) }
+
+        mutual_friends_with_visit = @friend.friends.without(@me).first(2)
+        @friend.friends.last.reservations << FactoryGirl.create(:future_reservation, state: 'confirmed', date: Date.tomorrow)
+        mutual_friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, state: 'confirmed', listing: @listing, user:f)}
+
+        result = User.mutual_friends_of(@me).visited_listing(@listing)
+        assert_equal mutual_friends_with_visit.sort, result.sort
+        assert_equal [@friend], result.collect(&:mutual_friendship_source).uniq
       end
     end
   end

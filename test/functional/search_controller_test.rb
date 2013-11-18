@@ -128,19 +128,31 @@ class SearchControllerTest < ActionController::TestCase
               refute_location_in_result(@auckland) 
             end
 
-            should 'show connections' do
-              me = FactoryGirl.create(:user)
-              friend = FactoryGirl.create(:user)
-              me.add_friend(friend)
+            context 'connections' do
+              setup do
+                @me = FactoryGirl.create(:user)
+                @friend = FactoryGirl.create(:user)
+                @me.add_friend(@friend)
 
-              FactoryGirl.create(:past_reservation, listing: FactoryGirl.create(:listing, location: @adelaide), user: friend, state: 'confirmed')
-              @controller.stubs(:current_user).returns(me)
-              me.stubs(:unread_messages_count).returns(0)
+                FactoryGirl.create(:past_reservation, listing: FactoryGirl.create(:listing, location: @adelaide), user: @friend, state: 'confirmed')
+              end
 
-              get :index, q: 'Adelaide', v: 'list'
+              should 'are shown for logged user' do
+                sign_in(@me)
+                @me.stubs(:unread_messages_count).returns(0)
 
-              assert_location_in_result(@adelaide) 
-              assert_select '[title=?]', "#{friend.name} worked here"
+                get :index, q: 'Adelaide', v: 'list'
+
+                assert_select '[title=?]', "#{@friend.name} worked here"
+              end
+
+              should 'are hidden for guests' do
+                sign_out(@me)
+
+                get :index, q: 'Adelaide', v: 'list'
+
+                assert_select '[title=?]', "#{@friend.name} worked here", 0
+              end
             end
           end
         end
