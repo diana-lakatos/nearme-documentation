@@ -37,17 +37,17 @@
         .order-summary
           .summary-line
             .summary-line-label Subtotal
-            .summary-line-value= @reservation.subtotal_price
+            .summary-line-value.subtotal-amount= @reservation.subtotal_price
             .clearfix
 
           .summary-line
             .summary-line-label Service fee
-            .summary-line-value= @reservation.service_fee
+            .summary-line-value.service-fee-amount= @reservation.service_fee
             .clearfix
 
           .summary-line
             .summary-line-label Total
-            .summary-line-value= @reservation.total_price
+            .summary-line-value.total-amount= @reservation.total_price
             .clearfix
 
         - if @reservation_request.display_phone_and_country_block?

@@ -54,7 +54,7 @@ When /^I book space as new user for:$/ do |table|
   store_model("user", "user", User.last)
   #select "New Zealand", :from => 'reservation_request_country_name'
   page.execute_script "$('select#reservation_request_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
-  fill_in 'Phone number', with: '8889983375'
+  fill_in 'Mobile number', with: '8889983375'
   step "I provide reservation credit card details"
   step "I click to confirm the booking"
 end
@@ -135,7 +135,7 @@ Then /^the user should have a reservation:$/ do |table|
 end
 
 Then /^the reservation subtotal should show \$?([0-9\.]+)$/ do |cost|
-  within '.reservations-review .subtotal-amount' do
+  within '.order-summary .subtotal-amount' do
     assert page.body.should have_content(cost)
   end
 end
