@@ -7,5 +7,5 @@
     %tr
       %th Name
   %tbody
-    - @instance.partners.each do |partner|
+    - platform_context.instance.partners.each do |partner|
       = render 'index_row', partner: partner
