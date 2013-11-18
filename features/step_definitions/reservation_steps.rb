@@ -158,7 +158,6 @@ end
 
 When /^I provide reservation credit card details$/ do
   mock_billing_gateway
-
   fill_in 'reservation_request_card_number', :with => "4111111111111111"
   fill_in 'reservation_request_card_expires', :with => '1218'
   fill_in 'reservation_request_card_code', :with => '123'
@@ -173,21 +172,20 @@ end
 Then(/^I should see the booking confirmation screen for:$/) do |table|
   reservation = extract_reservation_options(table).first
   next unless reservation
-  within '.reservations-review' do
-    if reservation[:start_minute]
-      save_and_open_page
-      # Hourly booking
-      date = reservation[:date].strftime("%B %-e")
-      start_time = reservation[:start_at].strftime("%l:%M%P")
-      end_time   = reservation[:end_at].strftime("%l:%M%P").strip
-      assert page.has_content?(date), "Expected to see: #{date}"
-      assert page.has_content?(start_time), "Expected to see: #{start_time}"
-      assert page.has_content?(end_time), "Expected to see: #{end_time}"
-    else
-      # Daily booking
-      assert page.has_content?("#{reservation[:quantity]} #{reservation[:listing].name}")
-    end
+
+  if reservation[:start_minute]
+    # Hourly booking
+    date = reservation[:date].strftime("%B %-e")
+    start_time = reservation[:start_at].strftime("%l:%M%P")
+    end_time   = reservation[:end_at].strftime("%l:%M%P").strip
+    assert page.has_content?(date), "Expected to see: #{date}"
+    assert page.has_content?(start_time), "Expected to see: #{start_time}"
+    assert page.has_content?(end_time), "Expected to see: #{end_time}"
+  else
+    # Daily booking
+    assert page.has_content?("#{reservation[:listing].name}")
   end
+  
 end
 
 Then(/^I should be asked to sign up before making a booking$/) do

@@ -40,6 +40,9 @@ class Bookings.Controller
     @daysElement = @container.find('.total-days')
     @bookButton = @container.find('[data-behavior=reviewBooking]')
     @bookForm = @bookButton.closest('form')
+    @registrationUrl = @bookButton.data('registration-url')
+    @storeReservationRequestUrl = @bookButton.data('store-reservation-request-url')
+    @userSignedIn = @bookButton.data('user-signed-in')
 
   bindEvents: ->
     @bookForm.on 'submit', (event) =>
@@ -168,10 +171,20 @@ class Bookings.Controller
 
     dates = @listing.reservationOptions().dates
     quantity = @listing.reservationOptions().quantity
-    @bookForm.find('[type=hidden][data-kind=reservationOptions]').remove()
-    @bookForm.append($('<input type="hidden" name="listing_id" value="' + @listing.id + '" data-kind="reservationOptions" />'))
-    @bookForm.append($('<input type="hidden" name="reservation_request[quantity]" value="' + quantity + '" data-kind="reservationOptions" />'))
-    $.each dates, (i, date) =>
-      @bookForm.append($('<input type="hidden" name="reservation_request[dates][]" value="' + date + '" data-kind="reservationOptions" />'))
 
-    @bookForm.unbind('submit').submit()
+    if @userSignedIn
+      @bookForm.find('[type=hidden][data-kind=reservationOptions]').remove()
+      @bookForm.append($('<input type="hidden" name="listing_id" value="' + @listing.id + '" data-kind="reservationOptions" />'))
+      @bookForm.append($('<input type="hidden" name="reservation_request[quantity]" value="' + quantity + '" data-kind="reservationOptions" />'))
+      $.each dates, (i, date) =>
+        @bookForm.append($('<input type="hidden" name="reservation_request[dates][]" value="' + date + '" data-kind="reservationOptions" />'))
+      @bookForm.unbind('submit').submit()
+    else
+      request_data = {
+        reservation_request: {
+          dates: dates,
+          quantity: quantity
+        }
+      }
+      $.post @storeReservationRequestUrl, request_data, (data) =>
+        Modal.load(@registrationUrl)

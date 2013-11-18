@@ -85,6 +85,7 @@ DesksnearMe::Application.routes.draw do
     resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
       collection do
         post :review
+        post :store_reservation_request
       end
       member do
         get :booking_successful

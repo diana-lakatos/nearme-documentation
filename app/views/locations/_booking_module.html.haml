@@ -59,8 +59,10 @@
       %span #{currency_content_tag(@location.currency, 0.00, :span, { :rel => false })}
 
     .book
+      - registration_url = new_user_registration_path(return_to: location_listing_url(@listing.location, @listing, restore_reservations: true))
+      - store_reservation_request_url = store_reservation_request_listing_reservations_path(@listing)
       = form_for :reservation_request, :url => review_listing_reservations_path(listing) do |f|
-        = f.submit 'Book', :id =>"book-#{listing.id}", :class => "btn btn-green btn-large", :rel => "tooltip", :'data-original-title' => "Please select days first", :'data-behavior' => 'reviewBooking', :'data-listing-id' => listing.id
+        = f.submit 'Book', :id =>"book-#{listing.id}", :class => "btn btn-green btn-large", :rel => "tooltip", :'data-original-title' => "Please select days first", :'data-behavior' => 'reviewBooking', :'data-listing-id' => listing.id, :'data-registration-url' => registration_url, :'data-store-reservation-request-url' => store_reservation_request_url, :'data-user-signed-in' => user_signed_in?
 
   .clearfix
 

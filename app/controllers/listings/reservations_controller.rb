@@ -2,7 +2,7 @@ class Listings::ReservationsController < ApplicationController
 
   before_filter :find_listing
   before_filter :find_reservation, only: [:booking_successful]
-  before_filter :build_reservation_request, :only => [:review, :create]
+  before_filter :build_reservation_request, :only => [:review, :create, :store_reservation_request]
   before_filter :require_login_for_reservation, :only => [:review, :create]
 
   def review
@@ -64,6 +64,24 @@ class Listings::ReservationsController < ApplicationController
     render :json => schedule.presence || {}
   end
 
+  # Store the reservation request in the session so that it can be restored when returning to the listings controller.
+  def store_reservation_request
+    session[:stored_reservation_location_id] = @listing.location.id
+
+    # Marshals the booking request parameters into a better structured hash format for transmission and
+    # future assignment to the Bookings JS controller.
+    #
+    # Returns a Hash of listing id's to hash of date & quantity values.
+    #  { '123' => { 'date' => '2012-08-10', 'quantity => '1' }, ... }
+    session[:stored_reservation_bookings] = {
+      @listing.id => {
+        :quantity => @reservation_request.reservation.quantity,
+        :dates => @reservation_request.reservation.periods.map { |period| period.date.strftime('%Y-%m-%d') }
+      }
+    }
+    head 200 if params[:action] == 'store_reservation_request'
+  end
+
   private
 
   def require_login_for_reservation
@@ -96,27 +114,9 @@ class Listings::ReservationsController < ApplicationController
         :card_code      => attributes[:card_code],
         :card_number    => attributes[:card_number],
         :country_name   => attributes[:country_name],
-        :phone          => attributes[:phone],
         :mobile_number  => attributes[:mobile_number]
       }
     )
-  end
-
-  # Store the reservation request in the session so that it can be restored when returning to the listings controller.
-  def store_reservation_request
-    session[:stored_reservation_location_id] = @listing.location.id
-
-    # Marshals the booking request parameters into a better structured hash format for transmission and
-    # future assignment to the Bookings JS controller.
-    #
-    # Returns a Hash of listing id's to hash of date & quantity values.
-    #  { '123' => { 'date' => '2012-08-10', 'quantity => '1' }, ... }
-    session[:stored_reservation_bookings] = {
-      @listing.id => {
-        :quantity => @reservation_request.reservation.quantity,
-        :dates => @reservation_request.reservation.periods.map { |period| period.date.strftime('%Y-%m-%d') }
-      }
-    }
   end
 
 end
