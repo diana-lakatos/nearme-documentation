@@ -160,5 +160,18 @@ class ReservationMailerTest < ActiveSupport::TestCase
       assert_equal ['maciek@example.com'], mail.to, "Expected maciek@example.com, got #{mail.to} for #{method}"
     end
   end
+
+  test "has transactional email footer" do
+    @reservation.listing.location.update_attribute(:administrator_id, FactoryGirl.create(:user, :email => 'maciek@example.com').id)
+    ['notify_host_of_cancellation_by_guest', 'notify_host_of_cancellation_by_host', 'notify_host_of_confirmation', 'notify_host_of_expiration', 'notify_host_of_rejection', 'notify_host_with_confirmation', 'notify_host_without_confirmation'].each do |method|
+      mail = ReservationMailer.send(method, @platform_context, @reservation)
+      assert mail.html_part.body.include?("You are receiving this email because you signed up to #{@platform_context.decorate.name} using the email address #{@reservation.listing.administrator.email}")
+    end
+
+    ['notify_guest_of_cancellation_by_host', 'notify_guest_of_cancellation_by_guest', 'notify_guest_of_confirmation', 'notify_guest_of_rejection', 'notify_guest_with_confirmation', 'notify_guest_of_expiration', 'pre_booking'].each do |method|
+      mail = ReservationMailer.send(method, @platform_context, @reservation)
+      assert mail.html_part.body.include?("You are receiving this email because you signed up to #{@platform_context.decorate.name} using the email address #{@reservation.owner.email}")
+    end
+  end
 end
 

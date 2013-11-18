@@ -44,4 +44,18 @@ class RecurringMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?("Share your listing on Facebook, Twitter, and LinkedIn, and start seeing guests book your space.")
     assert mail.html_part.body.include?(@listing.name)
   end
+
+  test "analytics has non-transactional email footer" do
+    mail = RecurringMailer.analytics(@company, @company.creator)
+    assert mail.html_part.body.include?("Don't want to receive these updates?")
+  end
+
+  test "request_photos and share has non-transactional email footer" do
+    @reservation = FactoryGirl.create(:past_reservation)
+    @listing = @reservation.listing
+    ['request_photos', 'share'].each do |method|
+      mail = RecurringMailer.send(method, @listing)
+      assert mail.html_part.body.include?("Don't want to receive these updates?")
+    end
+  end
 end

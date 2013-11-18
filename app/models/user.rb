@@ -82,6 +82,8 @@ class User < ActiveRecord::Base
   has_many :user_industries
   has_many :industries, :through => :user_industries
 
+  has_many :mailer_unsubscriptions
+
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -361,6 +363,14 @@ class User < ActiveRecord::Base
   def administered_locations_pageviews_7_day_total
     scoped_locations = (!companies.count.zero? && self == self.companies.first.creator) ? self.companies.first.locations : administered_locations
     Impression.where('impressionable_type = ? AND impressionable_id IN (?) AND DATE(impressions.created_at) >= ?', 'Location', scoped_locations.pluck(:id), Date.current - 7.days).count
+  end
+
+  def unsubscribe(mailer_name)
+    mailer_unsubscriptions.create(mailer: mailer_name)
+  end
+
+  def unsubscribed?(mailer_name)
+    mailer_unsubscriptions.where(mailer: mailer_name).any?
   end
 
   def set_platform_context(platform_context)

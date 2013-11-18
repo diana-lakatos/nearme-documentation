@@ -64,6 +64,7 @@ en:
       address_verified: "Perfect, your email has been confirmed. Thanks!"
       address_already_verified: "The email address has been already verified"
       address_not_verified: "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+      unsubscribed_successfully: "You have been successfully unsubscribed."
       password_set: "Perfect, you can now use your password to log in!"
     locations:
       no_listings: "There aren't any listings at that location. Check out some other spaces!"

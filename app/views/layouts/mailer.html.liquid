@@ -241,6 +241,10 @@
     .footer table tr td span {
       font-size: 16px !important
     }
+
+    .footer a {
+      color: #B3B3B3 !important;
+    }
  
 
     /* ------------------------------------------- 
@@ -340,9 +344,12 @@
                         <center>
                           Sent with <span>&hearts;</span>
                         </center>
-                        <center>
-                          To unsubscribe from these mailings, please reply to this email with subject 'Unsubscribe'
-                        </center>
+                        {% if footer_type == 'transactional' %}
+                          <center>You are receiving this email because you signed up to {{ platform_context.name }} using the email address {{ user.email }}</center>
+                        {% elsif footer_type == 'non-transactional' %}
+                          <center>Don't want to receive these updates? <a href="{{ unsubscribe_link }}">Unsubscribe</a></center>
+                        {% endif %}
+                        <center>{{ platform_context.address }}</center>
                       </td>
                     </tr>
                   </table>
