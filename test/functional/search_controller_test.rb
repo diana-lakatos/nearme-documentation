@@ -143,6 +143,7 @@ class SearchControllerTest < ActionController::TestCase
 
                 get :index, q: 'Adelaide', v: 'list'
 
+                assert_select '.connections[rel=?]', 'tooltip', 1
                 assert_select '[title=?]', "#{@friend.name} worked here"
               end
 
@@ -151,7 +152,7 @@ class SearchControllerTest < ActionController::TestCase
 
                 get :index, q: 'Adelaide', v: 'list'
 
-                assert_select '[title=?]', "#{@friend.name} worked here", 0
+                assert_select '.connections[rel=?]', 'tooltip', 0
               end
             end
           end
