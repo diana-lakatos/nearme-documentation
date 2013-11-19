@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131112062003) do
+ActiveRecord::Schema.define(:version => 20131115080314) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -33,12 +33,15 @@ ActiveRecord::Schema.define(:version => 20131112062003) do
     t.integer  "user_id"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.datetime "deleted_at"
     t.string   "secret"
     t.string   "token"
     t.text     "info"
+    t.datetime "token_expires_at"
+    t.boolean  "token_expired",    :default => true
+    t.boolean  "token_expires",    :default => true
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
@@ -355,6 +358,16 @@ ActiveRecord::Schema.define(:version => 20131112062003) do
   add_index "locations", ["company_id"], :name => "index_locations_on_company_id"
   add_index "locations", ["location_type_id"], :name => "index_locations_on_location_type_id"
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
+
+  create_table "mailer_unsubscriptions", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "mailer"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "mailer_unsubscriptions", ["user_id", "mailer"], :name => "index_mailer_unsubscriptions_on_user_id_and_mailer", :unique => true
+  add_index "mailer_unsubscriptions", ["user_id"], :name => "index_mailer_unsubscriptions_on_user_id"
 
   create_table "pages", :force => true do |t|
     t.string   "path",       :null => false

@@ -6,6 +6,102 @@ class UserTest < ActiveSupport::TestCase
 
   should have_many(:industries)
 
+  context "#without" do
+    should "handle single user" do
+      user = FactoryGirl.create(:user)
+      count = User.count
+      assert_equal count - 1, User.without(user).count
+    end
+
+    should "handle collection" do
+      3.times { FactoryGirl.create(:user) }
+      users = User.first(2)
+      count = User.count
+
+      assert_equal count - 2, User.without(users).count
+    end
+  end
+
+  context '#add_friend' do
+    setup do
+      @jimmy = FactoryGirl.create(:user)
+      @joe = FactoryGirl.create(:user)
+    end
+
+    should 'creates two way relationship' do
+      @jimmy.add_friend(@joe)
+
+      assert_equal [@joe], @jimmy.friends
+      assert_equal [@jimmy], @joe.friends
+    end
+  end
+
+  context 'social scopes' do
+    setup do
+        @me = FactoryGirl.create(:user)
+        @listing = FactoryGirl.create(:listing)
+    end
+
+    context 'visited_listing' do
+      should 'find only users with confirmed past reservation for listing in friends' do
+        FactoryGirl.create(:reservation, state: 'confirmed')
+
+        4.times { @me.add_friend(FactoryGirl.create(:user)) }
+
+        friends_with_visit = @me.friends.first(2)
+        @me.friends.last.reservations << FactoryGirl.create(:future_reservation, state: 'confirmed', date: Date.tomorrow)
+        friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, state: 'confirmed', listing: @listing, user:f)}
+
+        assert_equal friends_with_visit.sort, @me.friends.visited_listing(@listing).to_a.sort
+      end
+    end
+
+    context 'hosts_of_listing' do
+      should 'find host of listing in friends' do
+        @listing.location.administrator = friend1 = FactoryGirl.create(:user)
+        @listing.save!
+        friend2 = FactoryGirl.create(:user)
+        @me.add_friends(friend1, friend2)
+
+        assert_equal [friend1].sort, @me.friends.hosts_of_listing(@listing).sort
+      end
+    end
+
+    context 'know_host_of' do
+      should 'find users knows host' do
+        2.times { @me.add_friend(FactoryGirl.create(:user))}
+        @friend = FactoryGirl.create(:user)
+
+        @me.add_friend(@friend)
+
+        @listing = FactoryGirl.create(:listing)
+        @listing.location.administrator = host = FactoryGirl.create(:user)
+        @listing.save!
+
+        @friend.add_friend(host)
+
+        assert_equal [@friend], @me.friends.know_host_of(@listing)
+      end
+    end
+
+    context 'mutual_friends_of' do
+      should 'find users with friend that visited listing' do
+        @friend = FactoryGirl.create(:user)
+        @me.add_friend(@friend)
+        mutual_friends = []
+        4.times { mutual_friends << FactoryGirl.create(:user); @friend.add_friend(mutual_friends.last) }
+
+        mutual_friends_with_visit = @friend.friends.without(@me).first(2)
+        @friend.friends.last.reservations << FactoryGirl.create(:future_reservation, state: 'confirmed', date: Date.tomorrow)
+        mutual_friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, state: 'confirmed', listing: @listing, user:f)}
+
+        result = User.mutual_friends_of(@me).visited_listing(@listing)
+        assert_equal mutual_friends_with_visit.sort, result.sort
+        assert_equal [@friend], result.collect(&:mutual_friendship_source).uniq
+      end
+    end
+  end
+
   context "validations" do
     context "when no country name provided" do
 
@@ -98,6 +194,7 @@ class UserTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
     @user.authentications.find_or_create_by_provider("exists").tap do |a|
       a.uid = @user.id
+      a.token = "abcd"
     end.save!
     assert @user.linked_to?("exists")
   end
@@ -142,6 +239,13 @@ class UserTest < ActiveSupport::TestCase
     @user.avatar = File.open(File.expand_path("../../assets/image_no_extension", __FILE__))
     @user.avatar_versions_generated_at = Time.zone.now
     assert @user.save
+  end
+
+  should "have mailer unsubscriptions" do
+    @user = FactoryGirl.create(:user)
+    @user.unsubscribe('recurring_mailer/analytics')
+
+    assert @user.unsubscribed?('recurring_mailer/analytics')
   end
 
   context '#full_mobile_number' do

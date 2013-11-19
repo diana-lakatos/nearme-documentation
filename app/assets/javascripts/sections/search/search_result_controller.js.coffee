@@ -8,6 +8,7 @@ class Search.SearchResultController
   @handleResult: (result) ->
     map = @initializeGoogleMap(result)
     @bindMapToResult(map, result)
+    @bindToolTip(result)
 
   @bindMapToResult: (map, result) ->
     if result.find('.photo-container.without-photos').length > 0
@@ -22,6 +23,9 @@ class Search.SearchResultController
 
       result.find('.photo-container').bind 'mouseleave', (event) =>
         $(event.target).closest('article.listing').find(@googleMapContainerWrapperClass).hide()
+
+  @bindToolTip: (result) ->
+      result.find('.connections').tooltip(html: true, placement: 'top')
 
   @initializeGoogleMap: (result) ->
       mapContainer = result.find(@googleMapContainerClass).eq(0)

@@ -5,7 +5,7 @@ class InstanceMailer < ActionMailer::Base
   helper :listings, :reservations
 
   self.job_class = MailerJob
-  attr_accessor :platform_context
+  attr_accessor :platform_context, :email_method
 
   def mail(options = {})
     lookup_context.class.register_detail(:platform_context) { nil }
@@ -21,8 +21,10 @@ class InstanceMailer < ActionMailer::Base
     subject  = mailer.liquid_subject(subject_locals) || options.delete(:subject)
     reply_to = options.delete(:reply_to) || mailer.reply_to
     user  = User.find_by_email(to.kind_of?(Array) ? to.first : to)
-    email_method = StackTraceParser.new(caller[0]).humanized_method_name
-    custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge({template: template, campaign: email_method})
+    self.email_method = StackTraceParser.new(caller[0])
+    custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge({template: template, campaign: self.email_method.humanized_method_name})
+
+    setup_footer
 
     self.class.layout _layout, platform_context: platform_context
 
@@ -75,5 +77,20 @@ class InstanceMailer < ActionMailer::Base
     )
     @event_tracker ||= Analytics::EventTracker.new(@mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(user))
     @event_tracker.pixel_track_url("Email Opened", custom_tracking_options)
+  end
+
+  def setup_footer
+    case self.class.name
+    when 'PostActionMailer', 'InstanceAdminMailer', 'UserMailer', 'ReservationMailer', 'RatingMailer'
+      @footer_type ='transactional'
+    when 'RecurringMailer', 'ReengagementMailer'
+      @unsubscribe_link = unsubscribe_url(signature: generate_signature, token: @user.authentication_token)
+      @footer_type = 'non-transactional'
+    end
+  end
+
+  def generate_signature
+    verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
+    verifier.generate("#{self.class.name.underscore}/#{self.email_method.method_name.underscore}")
   end
 end

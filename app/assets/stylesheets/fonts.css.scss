@@ -32,7 +32,6 @@
 @include font-face("icon-font",
   font-files(
     "icon-font.woff",
-    "icon-font.otf",
     "icon-font.ttf",
     "icon-font.svg#icon-font"),
     "icon-font.eot", 'normal', 'text-rendering: optimizeLegibility;');
@@ -139,6 +138,7 @@ span.padding-left {
 .ico-enlarge:before,
 .ico-time:before,
 .ico-google-plus,
+.ico-group,
 .ico-bullet:before {
   font-family: 'icon-font' !important;
   font-weight: normal;
@@ -338,6 +338,9 @@ span.padding-left {
 .ico-google-plus:before {
   content: "\5f";
 }
-.ico-bullet:before {
+.ico-group:before {
   content: "\60";
+}
+.ico-bullet:before {
+  content: "\61";
 }

@@ -1,14 +1,31 @@
 class Authentication < ActiveRecord::Base
-  attr_accessible :user_id, :provider, :uid, :info
+  class InvalidToken < Exception; end;
+
+  attr_accessible :user_id, :provider, :uid, :info, :token, :secret,
+    :token_expires_at, :token_expires, :token_expired
+
   belongs_to :user
 
-  validates :provider, :uid, presence: true
+  validates :provider, :uid, :token, presence: true
   validates :provider, uniqueness: { scope: :user_id }
   validates :uid,      uniqueness: { scope: :provider }
 
   serialize :info, Hash
 
+  delegate :new_connections, to: :social_connection
+
+  scope :with_valid_token, -> {
+    where('authentications.token_expires_at > ? OR authentications.token_expires_at IN NULL').
+    where(token_expired: false)
+  }
+
+  after_create :find_friends
+
   AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter" ]
+
+  def social_connection
+    @social_connection ||= "Authentication::#{provider_name.capitalize}Provider".constantize.new(self)
+  end
 
   def provider_name
     provider.titleize
@@ -21,5 +38,15 @@ class Authentication < ActiveRecord::Base
   def can_be_deleted?
     # we can delete authentication if user has other option to log in, i.e. has set password or other authentications
     user.has_password? || user.authentications.size > 1
+  end
+
+  def expire_token!
+    self.update_attribute(:token_expired, true)
+  end
+
+  private
+
+  def find_friends
+    FindFriendsJob.perform(self)
   end
 end

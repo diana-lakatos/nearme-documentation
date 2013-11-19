@@ -3,7 +3,9 @@ module Auth
     attr_accessor :user
 
     def initialize(auth_params)
-      @auth_params = auth_params
+      @auth_params = auth_params || {}
+      @auth_params['info'] ||= {}
+      @auth_params['credentials'] ||= {}
     end
 
     def create_user(google_analytics_id)
@@ -16,9 +18,7 @@ module Auth
     def apply_avatar_if_empty
       user = authenticated_user
       if @auth_params['info']['image'] && !user.avatar.any_url_exists?
-        remote_image_url = @auth_params['info']['image']
-        remote_image_url += "?width=500" if remote_image_url.include?('graph.facebook.com')
-        user.remote_avatar_url = remote_image_url
+        user.remote_avatar_url = @auth_params['info']['image']
         user.avatar_versions_generated_at = Time.zone.now
         user.save!
       end
@@ -33,9 +33,25 @@ module Auth
     end
 
     def create_authentication!(current_user)
-      current_user.authentications.create!(:provider => provider, :uid => uid)
+      current_user.authentications.create!(:provider => provider,
+                                           :uid => uid,
+                                           :token => token,
+                                           :secret => secret,
+                                           :token_expires_at => expires_at,
+                                           :token_expires => expires_at ? true : false,
+                                           :token_expired => false)
+
       current_user.use_social_provider_image(@auth_params['info']['image'])
       current_user.save!
+    end
+
+    def update_token_info
+      authentication.token_expires = expires_at ? true : false
+      authentication.token_expired = false
+      authentication.token_expires_at = expires_at
+      authentication.token = token
+      authentication.secret = secret
+      authentication.save!
     end
 
     def email_taken_by_other_user?(current_user)
@@ -61,16 +77,28 @@ module Auth
     end
 
     def provider
-      if @auth_params
-        @auth_params['provider']
-      else
-        "native"
-      end
+      @auth_params['provider'] || 'native'
     end
 
     def uid
       @auth_params['uid']
     end
 
+    def token
+      @auth_params['credentials']['token']
+    end
+
+    def secret
+      @auth_params['credentials']['secret']
+    end
+
+    def expires_at
+      # FIXME: https://github.com/decioferreira/omniauth-linkedin-oauth2/issues/10
+      if provider == 'linkedin'
+        Time.now + 60.days
+      else
+        Time.at(@auth_params['credentials']['expires_at']) rescue nil
+      end
+    end
   end
 end

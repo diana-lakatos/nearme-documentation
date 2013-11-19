@@ -32,4 +32,15 @@ class ReengagementMailerTest < ActiveSupport::TestCase
     assert_equal [@user.email], mail.to
     assert_equal subject, mail.subject
   end
+
+  test "no_bookings has non-transactional email footer" do
+    mail = ReengagementMailer.no_bookings(@platform_context, @user)
+    assert mail.html_part.body.include?("Don't want to receive these updates?")
+  end
+
+  test "one_booking has non-transactional email footer" do
+    @reservation = FactoryGirl.build(:reservation, user: @user)
+    mail = ReengagementMailer.one_booking(@platform_context, @reservation)
+    assert mail.html_part.body.include?("Don't want to receive these updates?")
+  end
 end

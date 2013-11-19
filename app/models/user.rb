@@ -82,6 +82,8 @@ class User < ActiveRecord::Base
   has_many :user_industries
   has_many :industries, :through => :user_industries
 
+  has_many :mailer_unsubscriptions
+
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -94,12 +96,32 @@ class User < ActiveRecord::Base
       where("mailchimp_synchronized_at IS NULL OR mailchimp_synchronized_at < updated_at")
   }
 
-  scope :without, lambda { |user| 
-    where('users.id <> ?', user.id)
+  scope :without, lambda { |users|
+    users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
+    users_ids.any? ? where('users.id NOT IN (?)', users_ids) : scoped
   }
 
   scope :ordered_by_email, order('users.email ASC') 
 
+  scope :visited_listing, ->(listing) {
+    joins(:reservations).merge(Reservation.confirmed.past.for_listing(listing)).uniq
+  }
+
+  scope :hosts_of_listing, ->(listing) {
+    where(:id => listing.administrator.id).uniq
+  }
+
+  scope :know_host_of, ->(listing) {
+    joins(:followers).where(:user_relationships => {:follower_id => listing.administrator.id}).uniq
+  }
+
+  scope :mutual_friends_of, ->(user) {
+    joins(:followers).where(:user_relationships => {:follower_id => user.friends.pluck(:id)}).without(user).with_mutual_friendship_source
+  }
+
+  scope :with_mutual_friendship_source, -> {
+    joins(:followers).select('"users".*, "user_relationships"."follower_id" AS mutual_friendship_source')
+  }
 
   extend CarrierWave::SourceProcessing
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
@@ -144,10 +166,16 @@ class User < ActiveRecord::Base
   def apply_omniauth(omniauth)
     self.name = omniauth['info']['name'] if name.blank?
     self.email = omniauth['info']['email'] if email.blank?
+    expires_at = omniauth['credentials'] && omniauth['credentials']['expires_at'] ? Time.at(omniauth['credentials']['expires_at']) : nil
+    token = omniauth['credentials'] && omniauth['credentials']['token']
+    secret = omniauth['credentials'] && omniauth['credentials']['secret']
     use_social_provider_image(omniauth['info']['image']) if omniauth['info']['image']
     authentications.build(:provider => omniauth['provider'],
                           :uid => omniauth['uid'],
-                          :info => omniauth['info'])
+                          :info => omniauth['info'],
+                          :token => token,
+                          :secret => secret,
+                          :token_expires_at => expires_at)
   end
 
   def cancelled_reservations
@@ -231,6 +259,27 @@ class User < ActiveRecord::Base
     relationships.create!(followed_id: other_user.id)
   end
 
+  def add_friend(*users)
+    Array.wrap(users).each do |user|
+      next if self.friends.exists?(user)
+      user.follow!(self)
+      self.follow!(user)
+    end
+  end
+  alias_method :add_friends, :add_friend 
+
+  def friends
+    self.followed_users.without(self)
+  end
+
+  def mutual_friendship_source
+    self.class.find_by_id(self[:mutual_friendship_source].to_i) if self[:mutual_friendship_source]
+  end
+
+  def mutual_friends
+    self.class.without(self).mutual_friends_of(self)
+  end
+
   def full_email
     "#{name} <#{email}>"
   end
@@ -271,13 +320,6 @@ class User < ActiveRecord::Base
   def use_social_provider_image(url)
     unless avatar.any_url_exists?
       self.avatar_versions_generated_at = Time.zone.now
-
-      # Mega hax to get the right size image from facebook
-      if url && url.include?('graph.facebook.com')
-        component = url =~ /\?/ ? '&' : '?'
-        url += "#{component}width=500"
-      end
-
       self.remote_avatar_url = url
     end
   end
@@ -361,6 +403,14 @@ class User < ActiveRecord::Base
   def administered_locations_pageviews_7_day_total
     scoped_locations = (!companies.count.zero? && self == self.companies.first.creator) ? self.companies.first.locations : administered_locations
     Impression.where('impressionable_type = ? AND impressionable_id IN (?) AND DATE(impressions.created_at) >= ?', 'Location', scoped_locations.pluck(:id), Date.current - 7.days).count
+  end
+
+  def unsubscribe(mailer_name)
+    mailer_unsubscriptions.create(mailer: mailer_name)
+  end
+
+  def unsubscribed?(mailer_name)
+    mailer_unsubscriptions.where(mailer: mailer_name).any?
   end
 
   def set_platform_context(platform_context)

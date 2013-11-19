@@ -3,6 +3,7 @@
   %head
     %title
       #{platform_context.name} - Instance Admin
+    %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
     = csrf_meta_tag
     %link{:href => "/favicon.ico", :rel => "shortcut icon"}/
     = stylesheet_link_tag 'instance_admin'

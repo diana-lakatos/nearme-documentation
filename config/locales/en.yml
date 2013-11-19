@@ -27,6 +27,9 @@ en:
   search:
     list:
       address_could_not_be_found: "The address you entered couldn't be found, please try another search query."
+      additional_social_connections:
+        one: 'Plus one more connection'
+        other: 'Plus %{count} more connections'
   search_notifications:
     form:
       try_another_search_or_subscribe: "Try another search query, or subscribe below to be notified via email when a desk is added at this location."
@@ -64,6 +67,7 @@ en:
       address_verified: "Perfect, your email has been confirmed. Thanks!"
       address_already_verified: "The email address has been already verified"
       address_not_verified: "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
+      unsubscribed_successfully: "You have been successfully unsubscribed."
       password_set: "Perfect, you can now use your password to log in!"
     locations:
       no_listings: "There aren't any listings at that location. Check out some other spaces!"

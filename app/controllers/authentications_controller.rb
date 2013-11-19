@@ -82,6 +82,7 @@ class AuthenticationsController < ApplicationController
   def signed_in_successfully
     flash[:success] = t('flash_messages.authentications.signed_in_successfully') if use_flash_messages?
     @oauth.remember_user!
+    @oauth.update_token_info
     update_analytics_google_id(@oauth.authenticated_user)
     log_logged_in
     sign_in_and_redirect(:user, @oauth.authenticated_user)
@@ -107,6 +108,7 @@ class AuthenticationsController < ApplicationController
     log_sign_up
     log_connect_social_provider
     @oauth.remember_user!
+    @oauth.update_token_info
     flash[:success] = t('flash_messages.authentications.signed_in_successfully') if use_flash_messages?
     sign_in_and_redirect(:user, @oauth.authenticated_user)
   end
