@@ -33,12 +33,15 @@ ActiveRecord::Schema.define(:version => 20131115080314) do
     t.integer  "user_id"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.datetime "deleted_at"
     t.string   "secret"
     t.string   "token"
     t.text     "info"
+    t.datetime "token_expires_at"
+    t.boolean  "token_expired",    :default => true
+    t.boolean  "token_expires",    :default => true
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"

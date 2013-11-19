@@ -34,6 +34,7 @@ class V1::AuthenticationsControllerTest < ActionController::TestCase
   test "social should authenticate valid social credentials" do
     @user.authentications.find_or_create_by_provider("facebook").tap do |a|
       a.uid = "123456"
+      a.token = "123456"
     end.save!
 
     Social::Facebook.stubs(:get_user_info).returns(["123456", {"name" => @user.name}])

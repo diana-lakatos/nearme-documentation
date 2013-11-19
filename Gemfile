@@ -8,10 +8,16 @@ gem "liquid"
 gem 'active_model_serializers'
 gem 'carrierwave'
 gem 'devise', "~> 2.2"
+
 gem 'omniauth'
 gem 'omniauth-twitter'
-gem 'omniauth-facebook'
-gem 'omniauth-linkedin'
+gem 'omniauth-facebook', github: 'mkdynamic/omniauth-facebook'
+gem 'omniauth-linkedin-oauth2'
+
+gem 'koala', '~> 1.7.0rc1' # facebook Graph API
+gem 'linkedin-oauth2'
+gem 'twitter'
+
 gem 'fog'
 gem 'geocoder'
 gem 'nearest_time_zone'

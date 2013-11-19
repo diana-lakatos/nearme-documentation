@@ -112,7 +112,6 @@ class SearchControllerTest < ActionController::TestCase
           setup do
             @auckland = FactoryGirl.create(:location_in_auckland)
             @adelaide = FactoryGirl.create(:location_in_adelaide)
-            get :index, q: 'Adelaide'
           end
 
           should 'in map view' do
@@ -121,10 +120,41 @@ class SearchControllerTest < ActionController::TestCase
             refute_location_in_result(@auckland) 
           end
 
-          should 'in list view' do
-            get :index, q: 'Adelaide', v: 'list'
-            assert_location_in_result(@adelaide) 
-            refute_location_in_result(@auckland) 
+          context 'in list view' do
+
+            should 'show results' do
+              get :index, q: 'Adelaide', v: 'list'
+              assert_location_in_result(@adelaide) 
+              refute_location_in_result(@auckland) 
+            end
+
+            context 'connections' do
+              setup do
+                @me = FactoryGirl.create(:user)
+                @friend = FactoryGirl.create(:user)
+                @me.add_friend(@friend)
+
+                FactoryGirl.create(:past_reservation, listing: FactoryGirl.create(:listing, location: @adelaide), user: @friend, state: 'confirmed')
+              end
+
+              should 'are shown for logged user' do
+                sign_in(@me)
+                @me.stubs(:unread_messages_count).returns(0)
+
+                get :index, q: 'Adelaide', v: 'list'
+
+                assert_select '.connections[rel=?]', 'tooltip', 1
+                assert_select '[title=?]', "#{@friend.name} worked here"
+              end
+
+              should 'are hidden for guests' do
+                sign_out(@me)
+
+                get :index, q: 'Adelaide', v: 'list'
+
+                assert_select '.connections[rel=?]', 'tooltip', 0
+              end
+            end
           end
         end
       end

@@ -150,6 +150,8 @@ class Reservation < ActiveRecord::Base
     where('DATE(reservations.created_at) >= ? ', days_in_past.days.ago)
   }
 
+  scope :for_listing, ->(listing) {where(:listing_id => listing.id)}
+
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
