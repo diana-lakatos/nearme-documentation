@@ -25,7 +25,7 @@ class Search.SearchResultController
         $(event.target).closest('article.listing').find(@googleMapContainerWrapperClass).hide()
 
   @bindToolTip: (result) ->
-      result.find('.connections').tooltip(html: true)
+      result.find('.connections').tooltip(html: true, placement: 'top')
 
   @initializeGoogleMap: (result) ->
       mapContainer = result.find(@googleMapContainerClass).eq(0)

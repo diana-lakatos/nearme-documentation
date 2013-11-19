@@ -267,7 +267,7 @@ class User < ActiveRecord::Base
   alias_method :add_friends, :add_friend 
 
   def friends
-    self.followed_users
+    self.followed_users.without(self)
   end
 
   def mutual_friendship_source
@@ -275,7 +275,7 @@ class User < ActiveRecord::Base
   end
 
   def mutual_friends
-    self.class.mutual_friends_of(self)
+    self.class.without(self).mutual_friends_of(self)
   end
 
   def full_email

@@ -20,5 +20,12 @@ class ListingsHelperTest < ActionView::TestCase
       tooltip = connection_tooltip_for(['con1', 'con2'])
       assert_equal 'con1<br />con2', tooltip
     end
+
+    should 'return only limited count with text' do
+      cons = ['con1', 'con2', 'con3', 'con4', 'con5', 'con6']
+      tooltip = connection_tooltip_for(cons)
+      expected = 'con1<br />con2<br />con3<br />con4<br />con5<br />Plus one more connection'
+      assert_equal expected, tooltip
+    end
   end
 end

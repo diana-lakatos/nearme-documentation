@@ -27,6 +27,9 @@ en:
   search:
     list:
       address_could_not_be_found: "The address you entered couldn't be found, please try another search query."
+      additional_social_connections:
+        one: 'Plus one more connection'
+        other: 'Plus %{count} more connections'
   search_notifications:
     form:
       try_another_search_or_subscribe: "Try another search query, or subscribe below to be notified via email when a desk is added at this location."
