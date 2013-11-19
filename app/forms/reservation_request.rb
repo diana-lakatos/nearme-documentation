@@ -21,8 +21,6 @@ class ReservationRequest < Form
     @listing = listing
     @user = user
 
-    @user.phone_required = true if @user
-
     if @listing
       @reservation = listing.reservations.build
       @reservation.payment_method = payment_method
@@ -31,6 +29,11 @@ class ReservationRequest < Form
     end
 
     store_attributes(attributes)
+
+    if @user
+      @user.phone_required = true
+      @user.phone = @user.mobile_number
+    end
     
     if @listing
       if @listing.hourly_reservations?
@@ -72,7 +75,11 @@ class ReservationRequest < Form
   private
 
     def validate_phone_and_country
-      add_error("Please complete the contact details", :contact_info) unless user.try(:has_phone_and_country?)
+      add_error("Please complete the contact details", :contact_info) unless user_has_mobile_phone_and_country?
+    end
+
+    def user_has_mobile_phone_and_country?
+      user && user.country_name.present? && user.mobile_number.present?
     end
 
     def save_reservation
