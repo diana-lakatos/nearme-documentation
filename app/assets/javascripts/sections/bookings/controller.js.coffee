@@ -176,6 +176,9 @@ class Bookings.Controller
       @bookForm.find('[type=hidden][data-kind=reservationOptions]').remove()
       @bookForm.append($('<input type="hidden" name="listing_id" value="' + @listing.id + '" data-kind="reservationOptions" />'))
       @bookForm.append($('<input type="hidden" name="reservation_request[quantity]" value="' + quantity + '" data-kind="reservationOptions" />'))
+      if @listing.isReservedHourly()
+        @bookForm.append($('<input type="hidden" name="reservation_request[start_minute]" value="' + @listing.reservationOptions().start_minute + '" data-kind="reservationOptions" />'))
+        @bookForm.append($('<input type="hidden" name="reservation_request[end_minute]" value="' + @listing.reservationOptions().end_minute + '" data-kind="reservationOptions" />'))
       $.each dates, (i, date) =>
         @bookForm.append($('<input type="hidden" name="reservation_request[dates][]" value="' + date + '" data-kind="reservationOptions" />'))
       @bookForm.unbind('submit').submit()
