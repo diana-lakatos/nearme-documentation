@@ -3,8 +3,10 @@ require 'test_helper'
 class PostActionMailerTest < ActiveSupport::TestCase
 
   include Rails.application.routes.url_helpers
+
   setup do
     @user = FactoryGirl.create(:user)
+    FactoryGirl.create(:instance)
     @platform_context = PlatformContext.new
   end
 
@@ -34,6 +36,19 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?("We are excited to welcome you to #{@platform_context.decorate.name}")
   end
 
+  test "created_by_instance_admin works ok" do
+    @new_user = FactoryGirl.create(:user)
+    @creator = FactoryGirl.create(:user)
+    @platform_context = PlatformContext.new
+    mail = PostActionMailer.created_by_instance_admin(@platform_context, @new_user , @creator)
+    subject = "#{@new_user.first_name }, you were invited to #{@platform_context.instance.name } by #{@creator.name}!"
+    assert_equal subject, mail.subject
+    assert mail.html_part.body.include?("Welcome, #{@new_user.first_name}"), "Could not find 'Welcome, #{@new_user.first_name}' in #{mail.html_part.body}"
+    assert mail.html_part.body.include?("You have been invited by #{@creator.name} to join #{@platform_context.instance.name}!"), "Could not find 'ou have been invited by #{@creator.name} to join #{@platform_context.instance.name}!' in #{mail.html_part.body}"
+    assert mail.html_part.body.include?(@new_user.authentication_token), "Could not find User's authentication token in the email"
+    refute mail.html_part.body.include?(@creator.authentication_token), "Authentication token is included in the email, which is sent the new user - new user should not have access to creator's account!"
+  end
+
   test "list_draft works ok" do
     mail = PostActionMailer.list_draft(@platform_context, @user)
     subject = "You're almost ready for your first guests!"
@@ -52,5 +67,12 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(@user.first_name)
     assert_equal [@user.email], mail.to
     assert mail.html_part.body.include?("Your new listing rocks!")
+  end
+
+  test "has transactional email footer" do
+    ['sign_up_verify', 'sign_up_welcome', 'list_draft', 'list'].each do |method|
+      mail = PostActionMailer.send(method, @platform_context, @user)
+      assert mail.html_part.body.include?("You are receiving this email because you signed up to #{@platform_context.decorate.name} using the email address #{@user.email}")
+    end
   end
 end

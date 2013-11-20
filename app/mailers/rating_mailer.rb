@@ -3,31 +3,32 @@ class RatingMailer < InstanceMailer
 
   def request_guest_rating(reservation)
     @who_is_rating      = 'host'
-    @author  = reservation.listing_creator
+    user = reservation.listing_administrator
 
     @who_is_rated       = 'guest'
     @subject = reservation.owner
 
     @subject = "How was your experience hosting #{reservation.owner.first_name}?"
-    request_rating(reservation)
+    request_rating(reservation, user)
   end
 
   def request_host_rating(reservation)
     @who_is_rating    = 'guest'
-    @author  = reservation.owner
+    user  = reservation.owner
 
     @who_is_rated     = 'host'
-    @subject = reservation.listing_creator
+    @subject = reservation.listing_administrator
 
     @subject = "How was your experience at '#{reservation.listing.name}'?"
-    request_rating(reservation)
+    request_rating(reservation, user)
   end
 
   private
-  def request_rating(reservation)
+  def request_rating(reservation, user)
     @reservation = reservation
     @listing = @reservation.listing
     @location = @listing.location
+    @user = user
     domain = if @listing.company.white_label_enabled?
                @listing.company.domain
              else
@@ -35,7 +36,7 @@ class RatingMailer < InstanceMailer
              end
     @platform_context = PlatformContext.new(domain.try(:name))
 
-    mail to: @author.email,
+    mail to: @user.email,
          subject: instance_prefix(@subject, @platform_context.decorate),
          template_name: "request_rating_of_#{@who_is_rated}_from_#{@who_is_rating}",
          platform_context: @platform_context

@@ -1,0 +1,9 @@
+= simple_form_for [:instance_admin, :users, InstanceAdmin.new] do |f|
+  %fieldset
+    %legend
+      Add User to Instance
+    .control-group
+      %label Email
+      .controls
+        = text_field_tag :email
+    = f.submit "Add", :class => 'btn btn-success'

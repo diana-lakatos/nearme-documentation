@@ -79,6 +79,10 @@ class UserDrop < BaseDrop
     routes.profile_url(@user.slug)
   end
 
+  def set_password_url_with_token
+    routes.set_password_url(:token => @user.authentication_token)
+  end
+
   def full_mobile_number
     @user.full_mobile_number
   end

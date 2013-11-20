@@ -33,6 +33,16 @@ FactoryGirl.define do
       avatar { fixture_file_upload(Dir.glob(Rails.root.join('db', 'seeds', 'demo', 'assets', 'avatars', '*')).sample, 'image/jpeg') }
       avatar_versions_generated_at Time.zone.now
     end
+
+    factory :user_without_password do
+
+      after(:create) do |u|
+        u.encrypted_password = ''
+        u.save!(:validate => false)
+      end
+
+    end
   end
+
 
 end

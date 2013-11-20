@@ -13,15 +13,19 @@ namespace :cron do
       RecurringMailerShareJob.new.perform
     end
 
-    run_job "Send Request photos mails" do
-      RecurringMailerRequestPhotosJob.new.perform
-    end
+    #run_job "Send Request photos mails" do
+    #  RecurringMailerRequestPhotosJob.new.perform
+    #end
   end
 
   desc "Run weekly scheduled jobs"
   task :weekly => [:environment] do
     run_job "Send Analytics mails" do
       RecurringMailerAnalyticsJob.new.perform
+    end
+
+    run_job "Find new social connections" do
+      PrepareFriendFindersJob.new.perform
     end
   end
 

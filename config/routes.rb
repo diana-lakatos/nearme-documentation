@@ -58,7 +58,12 @@ DesksnearMe::Application.routes.draw do
     resources :settings, :only => [:index]
     resource :theme, :only => [:show, :update], :controller => 'theme'
     resources :transfers, :only => [:index]
-    resources :users, :only => [:index]
+    resources :users, :only => [:index, :create]
+
+    namespace :users do
+      resources :instance_admins, :only => [:create, :update, :destroy, :index]
+      resources :instance_admin_roles, :only => [:create, :update, :destroy, :index]
+    end
   end
 
   resources :locations, :only => [:show] do
@@ -110,12 +115,15 @@ DesksnearMe::Application.routes.draw do
     post "users/avatar", :to => "registrations#avatar", :as => "avatar"
     get "users/edit_avatar", :to => "registrations#edit_avatar", :as => "edit_avatar"
     put "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar"
+    get "users/set_password", :to => "registrations#set_password", :as => "set_password"
+    put "users/update_password", :to => "registrations#update_password", :as => "update_password"
     post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
     post "users/store_geolocated_location", :to => "registrations#store_geolocated_location", :as => "store_geolocated_location"
     get "users/", :to => "registrations#new"
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
     get "users/:id", :to => "registrations#show", :as => "profile"
+    get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
   end
 
   resources :reservations, :except => [:update, :destroy, :show] do

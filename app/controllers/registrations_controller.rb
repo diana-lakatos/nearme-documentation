@@ -1,5 +1,7 @@
 class RegistrationsController < Devise::RegistrationsController
 
+  skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:update_password, :set_password]
+
   # NB: Devise calls User.new_with_session when building the new User resource.
   # We use this to apply any Provider based authentications to the user record.
   # This is trigged via Devise::RegistrationsController#build_resource
@@ -9,6 +11,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_filter :find_supported_providers, :only => [:edit, :update]
   before_filter :set_return_to, :only => [:new, :create]
   after_filter :render_or_redirect_after_create, :only => [:create]
+  before_filter :redirect_to_edit_profile_if_password_set, :only => [:set_password]
 
   def new
     super unless already_signed_in?
@@ -22,6 +25,7 @@ class RegistrationsController < Devise::RegistrationsController
       User.where(id: @user.id).update_all({referer: cookies.signed[:referer],
                                            source: cookies.signed[:source],
                                            campaign: cookies.signed[:campaign]})
+      @user.set_platform_context(platform_context)
       update_analytics_google_id(@user)
       analytics_apply_user(@user)
       event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
@@ -98,6 +102,22 @@ class RegistrationsController < Devise::RegistrationsController
     render :text => {}, :status => 200, :content_type => 'text/plain' 
   end
 
+  def set_password
+    @user = current_user
+  end
+
+  def update_password
+    @user = current_user
+    @user.password = params[:user][:password]
+    @user.skip_password = false
+    if @user.save 
+      flash[:success] = t('flash_messages.registrations.password_set')
+      redirect_to edit_user_registration_path(:token => @user.authentication_token)
+    else
+      render :set_password
+    end
+  end
+
   def verify
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
@@ -131,6 +151,18 @@ class RegistrationsController < Devise::RegistrationsController
     render :nothing => true
   end
 
+  def unsubscribe
+    verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
+    begin
+      mailer_name = verifier.verify(params[:signature])
+      current_user.unsubscribe(mailer_name) unless current_user.unsubscribed?(mailer_name)
+    rescue ActiveSupport::MessageVerifier::InvalidSignature
+    end
+
+    flash[:success] = t('flash_messages.registrations.unsubscribed_successfully')
+    redirect_to root_path
+  end
+
   protected
 
   def is_navigational_format?
@@ -148,7 +180,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def set_return_to
     session[:user_return_to] = params[:return_to] if params[:return_to].present?
-  end
+  end 
 
   private
 
@@ -167,6 +199,14 @@ class RegistrationsController < Devise::RegistrationsController
       if @user.persisted?
         render_redirect_url_as_json
       end
+    end
+  end
+
+  def redirect_to_edit_profile_if_password_set
+    if current_user
+      redirect_to edit_user_registration_path unless set_password_necessary?
+    else
+      redirect_to new_user_session_path
     end
   end
 
