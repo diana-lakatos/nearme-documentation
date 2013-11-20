@@ -41,7 +41,6 @@ gem 'rack-rewrite', :require => 'rack/rewrite'
 
 gem 'state_machine'
 gem 'will_paginate'
-gem 'resque'
 gem "compass-rails"
 # when we upgrade compass, we should change it into animate - actually they plan to add this to compass by default
 gem 'animation'
@@ -55,7 +54,6 @@ gem 'sass-rails'
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'chronic'
 gem 'jcrop-rails'
-gem 'fastimage'
 
 gem 'ey_config'
 
@@ -101,22 +99,10 @@ group :development, :test, :staging do
   gem 'factory_girl_rails', '>=3.0.0'
 end
 
-group :development, :test do
-  gem 'thin'
-  gem 'shoulda'
-  gem 'email_spec'
-  gem 'json_spec'
-end
-
 group :development do
   gem 'quiet_assets'
+  gem 'thin'
   gem 'mail_view', '~>2'
-  gem 'guard-minitest', :require => false
-  gem 'guard-spork', :require => false
-  gem 'guard-cucumber', :require => false
-  gem 'spork-minitest', :git => 'https://github.com/Slashek/spork-minitest.git', :require => false
-  gem 'rb-fsevent', :require => RUBY_PLATFORM.include?('darwin') && 'rb-fsevent'
-  gem 'ruby-prof'
 end
 
 group :test do
@@ -127,6 +113,8 @@ group :test do
   gem 'cucumber-rails', :require => false
   gem 'cucumber', '~> 1.2.5'
   gem 'database_cleaner'
+  gem 'email_spec'
+  gem 'json_spec'
   gem 'minitest'
   gem 'mocha', :require => false
   gem 'pickle'
@@ -134,5 +122,6 @@ group :test do
   gem 'turn'
   gem 'webmock'
   gem 'simplecov', :require => false
+  gem 'shoulda'
   gem 'vcr'
 end
