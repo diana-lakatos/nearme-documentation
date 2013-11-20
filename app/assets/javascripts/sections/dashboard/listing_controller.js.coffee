@@ -25,22 +25,24 @@ class @Dashboard.ListingController
       false
 
     @enableSwitch.on 'switch-change', (e, data) =>
-      value = data.value
-      if @enableAjaxUpdate
-        url = @container.attr("action")
-        if value
-          url += '/enable'
+      enabled_should_be_changed_by_ajax = @enableSwitch.data('ajax-updateable')
+      if enabled_should_be_changed_by_ajax?
+        value = data.value
+        if @enableAjaxUpdate
+          url = @container.attr("action")
+          if value
+            url += '/enable'
+          else
+            url += '/disable'
+          $.ajax
+            url: url
+            type: 'GET'
+            dataType: 'JSON'
+            error: (jq, textStatus, err) =>
+              @enableAjaxUpdate = false
+              @enableSwitch.find('#listing_enabled').siblings('label').trigger('mousedown').trigger('mouseup').trigger('click')
         else
-          url += '/disable'
-        $.ajax
-          url: url
-          type: 'GET'
-          dataType: 'JSON'
-          error: (jq, textStatus, err) =>
-            @enableAjaxUpdate = false
-            @enableSwitch.find('#listing_enabled').siblings('label').trigger('mousedown').trigger('mouseup').trigger('click')
-      else
-        @enableAjaxUpdate = true
+          @enableAjaxUpdate = true
 
 
   updateCurrency: () =>
