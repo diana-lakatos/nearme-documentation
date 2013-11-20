@@ -23,9 +23,9 @@ class ReservationDecorator < Draper::Decorator
     items.join(separator).html_safe
   end
 
-  def hourly_summary_for_first_period
+  def hourly_summary_for_first_period(show_date = true)
     reservation_period = periods.first.decorate
-    reservation_period.hourly_summary
+    reservation_period.hourly_summary(show_date)
   end
 
   def subtotal_price
@@ -95,20 +95,21 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def manage_guests_action_column_class
-    buttons_count = (can_host_cancel? ? 1 : 0) + (can_confirm? ? 1 : 0) + (can_reject? ? 1 : 0)
+    buttons_count = [can_host_cancel?, can_confirm?, can_reject?].count(true)
     "split-#{buttons_count}"
   end
 
   def short_dates
-    first = date.strftime('%d %b')
-    last = last_date.strftime('%d %b')
+    first = date.strftime('%-e %b')
+    last = last_date.strftime('%-e %b')
 
     first == last ? first : "#{first}-#{last}"
   end
 
   def format_reservation_periods
     periods.map do |period|
-      date = period.date.strftime('%e %b')
+      period = period.decorate
+      date = period.date.strftime('%-e %b')
       if listing.hourly_reservations?
         start_time = period.start_minute_of_day_to_time.strftime("%l:%M%P").strip
         end_time = period.end_minute_of_day_to_time.strftime("%l:%M%P").strip
@@ -135,7 +136,7 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def period_to_string(date)
-    date.strftime('%A, %B %e')
+    date.strftime('%A, %B %-e')
   end
 
 end
