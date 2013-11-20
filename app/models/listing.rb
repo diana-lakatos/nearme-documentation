@@ -263,10 +263,6 @@ class Listing < ActiveRecord::Base
     end
   end
 
-  def minumum_booking_minutes
-    (super || 60) if hourly_reservations?
-  end
-
   def booking_days_per_week
     availability.days_open.length
   end
@@ -280,19 +276,6 @@ class Listing < ActiveRecord::Base
       Hash[
         [[1, daily_price], [block_size, weekly_price], [4*block_size, monthly_price]]
       ].reject { |size, price| !price || price.zero? }
-    end
-  end
-
-  def price_schedule
-    if hourly_reservations?
-      {
-        :hourly => {
-          1 => hourly_price,
-          :minimum_minutes => minimum_booking_minutes
-        }
-      }
-    else
-      { :daily => prices_by_days }
     end
   end
 
