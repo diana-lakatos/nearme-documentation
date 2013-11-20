@@ -30,7 +30,7 @@ class PagesControllerTest < ActionController::TestCase
       end
 
       should 'raise standard exception and store it in session' do
-        assert_raises InstancePageNotFound do
+        assert_raises DNM::InstancePageNotFound do
           get :show, :path => 'wrong-path'
         end
       end

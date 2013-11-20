@@ -98,4 +98,10 @@ module DNM
     end
   end
 
+  module Manage
+    class ListingNotFound < ActiveRecord::RecordNotFound; end
+    class LocationNotFound < ActiveRecord::RecordNotFound; end
+  end
+  class InstancePageNotFound < ActiveRecord::RecordNotFound; end
+
 end

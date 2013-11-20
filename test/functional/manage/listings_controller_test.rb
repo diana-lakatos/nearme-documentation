@@ -93,25 +93,25 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       end
 
       should "not create listing" do
-        assert_raise Manage::LocationNotFound do
+        assert_raise DNM::Manage::LocationNotFound do
           post :create, { :listing => FactoryGirl.attributes_for(:listing).reverse_merge!({:listing_type_id => @listing_type.id}), :location_id => @location.id}
         end
       end
 
       should 'handle lack of permission to edit properly' do
-        assert_raise Manage::ListingNotFound do
+        assert_raise DNM::Manage::ListingNotFound do
           get :edit, :id => @listing.id
         end
       end
 
       should "not update listing" do
-        assert_raise Manage::ListingNotFound do
+        assert_raise DNM::Manage::ListingNotFound do
           put :update, :id => @listing.id, :listing => { :name => 'new name' }
         end
       end
 
       should "not destroy listing" do
-        assert_raise Manage::ListingNotFound do
+        assert_raise DNM::Manage::ListingNotFound do
           delete :destroy, :id => @listing.id
         end
       end

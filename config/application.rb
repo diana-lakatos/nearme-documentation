@@ -90,8 +90,8 @@ module DesksnearMe
     config.perform_google_analytics_requests = true
     config.perform_social_jobs = true
 
-    config.action_dispatch.rescue_responses.merge!('InstancePageNotFound' => :not_found)
-    config.action_dispatch.rescue_responses.merge!('Manage::ListingNotFound' => :not_found)
-    config.action_dispatch.rescue_responses.merge!('Manage::LocationNotFound' => :not_found)
+    config.action_dispatch.rescue_responses.merge!('DNM::InstancePageNotFound' => :not_found)
+    config.action_dispatch.rescue_responses.merge!('DNM::Manage::ListingNotFound' => :not_found)
+    config.action_dispatch.rescue_responses.merge!('DNM::Manage::LocationNotFound' => :not_found)
   end
 end
