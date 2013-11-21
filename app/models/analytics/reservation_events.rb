@@ -1,7 +1,7 @@
 module Analytics::ReservationEvents
 
-  def opened_booking_modal(reservation, custom_options = {})
-    track 'Opened the Booking Modal', reservation, custom_options
+  def reviewed_a_booking(reservation, custom_options = {})
+    track 'Reviewed a Booking', reservation, custom_options
   end
 
   def requested_a_booking(reservation, custom_options = {})
