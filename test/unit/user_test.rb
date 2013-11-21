@@ -638,6 +638,15 @@ class UserTest < ActiveSupport::TestCase
 
     end
 
+    should 'nullify administrator_id if user is administrator' do
+      @user = FactoryGirl.create(:user)
+      @location = FactoryGirl.create(:location, :creator => FactoryGirl.create(:user), :administrator => @user)
+      CompanyUser.create(:user_id => @user.id, :company_id => @location.company.id)
+      assert @location.administrator_id = @user.id
+      @user.destroy
+      assert_nil @location.reload.administrator_id
+    end
+
   end
 
 end

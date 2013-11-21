@@ -432,6 +432,9 @@ class User < ActiveRecord::Base
         company.save!
       end
     end
+    self.administered_locations.each do |location|
+      location.update_attribute(:administrator_id, nil) if location.administrator_id == self.id
+    end
   end
 
 end
