@@ -46,16 +46,10 @@ class RecurringMailerTest < ActiveSupport::TestCase
   end
 
   test "analytics has non-transactional email footer" do
-    mail = RecurringMailer.analytics(@company, @company.creator)
-    assert mail.html_part.body.include?("Don't want to receive these updates?")
+    assert RecurringMailer.non_transactional?
   end
 
   test "request_photos and share has non-transactional email footer" do
-    @reservation = FactoryGirl.create(:past_reservation)
-    @listing = @reservation.listing
-    ['request_photos', 'share'].each do |method|
-      mail = RecurringMailer.send(method, @listing)
-      assert mail.html_part.body.include?("Don't want to receive these updates?")
-    end
+    assert RecurringMailer.non_transactional?
   end
 end

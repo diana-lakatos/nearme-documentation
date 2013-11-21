@@ -341,15 +341,8 @@
                   <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
                     <tr>
                       <td>
-                        <center>
-                          Sent with <span>&hearts;</span>
-                        </center>
-                        {% if footer_type == 'transactional' %}
-                          <center>You are receiving this email because you signed up to {{ platform_context.name }} using the email address {{ user.email }}</center>
-                        {% elsif footer_type == 'non-transactional' %}
-                          <center>Don't want to receive these updates? <a href="{{ unsubscribe_link }}">Unsubscribe</a></center>
-                        {% endif %}
-                        <center>{{ platform_context.address }}</center>
+                        {% capture footer_path %}{{ 'shared/mailers/' | append:footer_type | append:'_footer.html' }}{% endcapture %}
+                        {% include footer_path %}
                       </td>
                     </tr>
                   </table>

@@ -70,9 +70,6 @@ class PostActionMailerTest < ActiveSupport::TestCase
   end
 
   test "has transactional email footer" do
-    ['sign_up_verify', 'sign_up_welcome', 'list_draft', 'list'].each do |method|
-      mail = PostActionMailer.send(method, @platform_context, @user)
-      assert mail.html_part.body.include?("You are receiving this email because you signed up to #{@platform_context.decorate.name} using the email address #{@user.email}")
-    end
+    assert PostActionMailer.transactional?
   end
 end

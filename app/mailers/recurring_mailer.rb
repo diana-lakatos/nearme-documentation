@@ -32,4 +32,8 @@ class RecurringMailer < InstanceMailer
            platform_context: @platform_context
   end
 
+  def mail_type
+    DNM::MAIL_TYPES::NON_TRANSACTIONAL
+  end
+
 end
