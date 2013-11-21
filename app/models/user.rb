@@ -148,7 +148,7 @@ class User < ActiveRecord::Base
   validates :biography, length: {maximum: 250}
 
   devise :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :validatable, :token_authenticatable
+         :rememberable, :trackable, :validatable, :token_authenticatable, :temporary_token_authenticatable
 
   attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
     :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url, 
