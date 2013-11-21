@@ -7,7 +7,7 @@ class ReservationDecoratorTest < ActionView::TestCase
   context 'A decorated reservation in a fixed date' do
 
     setup do
-      @time = Time.new(2014, 1, 1).in_time_zone
+      @time = DateTime.new(2014, 1, 1).in_time_zone
       Timecop.travel(@time)
       @reservation = FactoryGirl.build(:reservation, date: @time.next_week.to_date).decorate
     end
@@ -129,7 +129,7 @@ class ReservationDecoratorTest < ActionView::TestCase
   context 'A hourly reservation' do
     setup do
       stub_mixpanel
-      @time = Time.new(2014, 1, 1).in_time_zone
+      @time = DateTime.new(2014, 1, 1).in_time_zone
       Timecop.travel(@time)
       listing = FactoryGirl.create(:listing, hourly_reservations: true)
       @reservation = FactoryGirl.build(:reservation,
@@ -139,7 +139,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should 'return hourly_summary_for_first_period with date and default hours' do
-      assert_equal 'December 31 9:00am&ndash;5:00pm (8.00 hours)', @reservation.hourly_summary_for_first_period(true)
+      assert_equal 'January 1 9:00am&ndash;5:00pm (8.00 hours)', @reservation.hourly_summary_for_first_period(true)
     end
 
     should 'return hourly_summary_for_first_period without date and with special hours' do
@@ -150,7 +150,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should 'format_reservation_periods' do
-      assert_equal '31 Dec 9:00am&ndash;5:00pm', @reservation.format_reservation_periods
+      assert_equal '1 Jan 9:00am&ndash;5:00pm', @reservation.format_reservation_periods
     end
 
     teardown do

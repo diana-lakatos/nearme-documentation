@@ -10,7 +10,7 @@ class ReservationPeriodDecorator < Draper::Decorator
     start_time += start_time_suffix unless start_time_suffix == end_time_suffix
 
     if show_date
-      formatted_date = date.strftime("%B %e")
+      formatted_date = date.strftime("%B %-e")
       ('%s %s&ndash;%s (%0.2f hours)' % [formatted_date, start_time, end_time, hours]).html_safe
     else
       ('%s&ndash;%s<br />(%0.2f hours)' % [start_time, end_time, hours]).html_safe
