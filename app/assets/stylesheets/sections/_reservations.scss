@@ -263,10 +263,7 @@ section.reservations {
     }
 
     .submit-secure-payment {
-      padding: $padding-default;
-      border: 1px solid #e6e6e6;
-      @include border-radius($border-radius-default);
-
+      border-bottom: 1px solid #e6e6e6;
       .text {
         line-height: 40px;
       }
@@ -288,6 +285,8 @@ section.reservations {
     }
 
     .credit-card-fields {
+      border: 1px solid #e6e6e6;
+      padding: $padding-default;
 
       input {
         font-size: 18px;
