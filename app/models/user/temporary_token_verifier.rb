@@ -17,7 +17,7 @@ class User::TemporaryTokenVerifier
   # the expires_at date has passed.
   #
   # Returns String
-  def generate(expires_at = 1.week.from_now)
+  def generate(expires_at = 48.hours.from_now)
     verifier.generate([@user.id, expires_at.to_i].join('|'))
   end
 

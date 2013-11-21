@@ -437,4 +437,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Returns a temporary token to be used as the login token parameter
+  # in URLs to automatically log the user in.
+  def temporary_token(expires_at = 48.hours.from_now)
+    User::TemporaryTokenVerifier.new(self).generate(expires_at)
+  end
+
 end
