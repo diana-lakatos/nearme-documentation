@@ -10,16 +10,17 @@
           %br
           %span.address= link_to reservation.listing.location.address, "http://maps.apple.com/?q=#{reservation.listing.location.address}", target: '_blank'
         .span2
-          = reservation_total_price(reservation)
+          = reservation.total_price
           %br
           %span= reservation.state.capitalize
         %div{:class => reservation.archived? ? 'span3' : 'span2'}
           - if reservation.listing.hourly_reservations?
-            %a.dates{href: '#', 'data-reservation-hours' => hourly_summary_for_period_without_date(reservation.periods.first)}
-              = reservation_short_dates(reservation)
+            - reservation_period = reservation.periods.first.decorate
+            %a.dates{href: '#', 'data-reservation-hours' => reservation_period.hourly_summary(true)}
+              = reservation.short_dates
           - else
-            %a.dates{href: '#', data: { :dates => periods_dates(reservation.periods) } }
-              = reservation_short_dates(reservation)
+            %a.dates{href: '#', data: { :dates => reservation.dates } }
+              = reservation.short_dates
           .clearfix
           %span
             = link_to export_reservation_path(reservation, :format => :ics) do

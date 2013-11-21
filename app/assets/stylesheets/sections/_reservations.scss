@@ -1,7 +1,7 @@
 section#reservations,
 section.reservations {
 
-    .price {
+  .price {
       color: $green;
   }
 
@@ -154,7 +154,7 @@ section.reservations {
   }
 }
 
-.modal-content .reservations-create {
+.modal-content .reservations-booking_successful {
 
   .icons {
     padding: $padding-default;
@@ -208,6 +208,144 @@ section.reservations {
 
       &.btn-green {
         margin-left: 3%;
+      }
+    }
+  }
+}
+
+.reservations-review, .reservations-create {
+  .box {
+
+    h1 {
+      margin-bottom: $padding-small;
+    }
+
+    h2 {
+      margin-top: 2*$padding-default;
+      margin-bottom: $padding-default;
+    }
+
+    p {
+      color: #b8b8b8;
+    }
+
+    hr {
+      color: #e6e6e6;
+      background-color: #e6e6e6;
+      border-color: #e6e6e6;
+    }
+
+    .selected-dates-summary {
+      margin: $padding-default 0;
+
+      p {
+        margin: $padding-default 0;
+        color: $gray120;
+      }
+    }
+
+    .order-summary {
+      border-bottom: 1px solid #e6e6e6;
+
+      .summary-line {
+        border-color: #e6e6e6;
+      }
+    }
+
+    .contact-information-fields {
+      .controls {
+        margin-left: 0;
+      }
+
+      input {
+        font-size: 18px;
+      }
+    }
+
+    .submit-secure-payment {
+      border-bottom: 1px solid #e6e6e6;
+      .text {
+        line-height: 40px;
+      }
+
+      .credit-card-images {
+        text-align: right;
+        line-height: 18px;
+      }
+
+      @media (max-width: $ipad-width) {
+        .text {
+          line-height: inherit;
+          margin-bottom: 15px;
+        }
+        .credit-card-images {
+          text-align: left;
+        }
+      }
+    }
+
+    .credit-card-fields {
+      border: 1px solid #e6e6e6;
+      padding: $padding-default;
+
+      input {
+        font-size: 18px;
+      }
+
+      .credit-card {
+        margin-top: $padding-default;
+
+        .card-number {
+
+          #reservation_request_card_number {
+            padding-right: 40px!important;
+          }
+
+          @mixin placeholder_with_icons($padding-top: 3px, $font-size: 10px, $letter-spacing: 3px) {
+            padding-top: $padding-top;
+            color: $gray190;
+            font-family: 'icon-font';
+            font-size: $font-size;
+            letter-spacing: $letter-spacing;
+          }
+          ::-webkit-input-placeholder { /* WebKit browsers */
+            @include placeholder_with_icons;
+          }
+          :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+            @include placeholder_with_icons;
+          }
+          ::-moz-placeholder { /* Mozilla Firefox 19+ */
+            @include placeholder_with_icons;
+          }
+          :-ms-input-placeholder { /* Internet Explorer 10+ */
+            @include placeholder_with_icons;
+          }
+        }
+        .ico-credit-card:before {
+          font-size: 30px;
+        }
+      }
+    }
+
+    .confirm-reservations {
+      margin: $padding-default 0 2*$padding-default 0;
+    }
+
+    .btn {
+      height: 60px;
+      font-size: 24px;
+    }
+
+    .flash {
+      &.error {
+        p {
+          text-align:center;
+          color: $red;
+          font-size: 1.1em;
+        }
+
+        color: $red;
+        padding-bottom: 0.5em;
       }
     }
   }

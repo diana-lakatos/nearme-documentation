@@ -44,8 +44,8 @@
   - resource.periods.each do |period|
     %tr
       %td= period.date
-      %td= minute_of_day_to_time(period.start_minute).strftime('%k:%I%p')
-      %td= minute_of_day_to_time(period.end_minute).strftime('%k:%I%p')
+      %td= period.minute_of_day_to_time(period.start_minute).strftime('%k:%I%p')
+      %td= period.minute_of_day_to_time(period.end_minute).strftime('%k:%I%p')
 
 %h2 Charges
 

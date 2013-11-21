@@ -128,10 +128,12 @@ module ApplicationHelper
     content_for :manage_navbar, render(:partial => 'shared/manage_navigation', :locals => {:active_tab => active_tab})
   end
 
-  def section_class
-    controller_class = @section_name || controller_name
-    action_class = "#{controller_class}-#{params[:action]}"
-    "#{controller_class} #{action_class}"
+  def section_class(section_name = nil)
+    [
+      section_name, 
+      controller_name, 
+      "#{controller_name}-#{params[:action]}"
+    ].compact.join(' ')
   end
 
   def distance_of_time_in_words_or_date(datetime)

@@ -2,7 +2,7 @@ class ReservationDrop < BaseDrop
   include ReservationsHelper
 
   def initialize(reservation)
-    @reservation = reservation
+    @reservation = reservation.decorate
   end
 
   def quantity
@@ -10,23 +10,23 @@ class ReservationDrop < BaseDrop
   end
 
   def hourly_summary
-    hourly_summary_for_period(@reservation.periods.first)
+    @reservation.hourly_summary_for_first_period
   end
 
   def dates_summary
-    selected_dates_summary(@reservation)
+    @reservation.selected_dates_summary
   end
 
   def subtotal_price
-    reservation_subtotal_price(@reservation)
+    @reservation.subtotal_price
   end
 
   def service_fee
-    reservation_service_fee(@reservation)
+    @reservation.service_fee
   end
 
   def total_price
-    reservation_total_price(@reservation)
+    @reservation.total_price
   end
 
   def pending?
@@ -38,11 +38,11 @@ class ReservationDrop < BaseDrop
   end
 
   def paid
-    reservation_paid(@reservation)
+    @reservation.paid
   end
 
   def balance
-    reservation_balance(@reservation)
+    @reservation.formatted_balance
   end
 
   def has_rejection_reason

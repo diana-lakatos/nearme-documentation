@@ -1,5 +1,5 @@
 #open_graph_content.hidden
-  = render :partial => 'shared/og_meta', :locals => { :listing => @reservation_request.reservation.listing, :url => location_listing_url(@reservation_request.reservation.listing.location, @reservation_request.reservation.listing) }
+  = render :partial => 'shared/og_meta', :locals => { :listing => @reservation.listing, :url => location_listing_url(@reservation.listing.location, @reservation.listing) }
 %div{class: section_class}
   %header
     %h2
@@ -15,8 +15,8 @@
       %li= share_to_linkedin(url, text)
 
   .buttons
-    = link_to "Add to Calendar", export_reservation_path(@reservation_request.reservation, :format => :ics), class: "btn btn-large btn-white"
-    = link_to "Manage Booking", upcoming_reservations_path(id: @reservation_request.reservation.id), class: "btn btn-large btn-green"
+    = link_to "Add to Calendar", export_reservation_path(@reservation, :format => :ics), class: "btn btn-large btn-white"
+    = link_to "Manage Booking", "#", class: "btn btn-large btn-green modal-close-manually"
 
 :javascript
   $(function() {
@@ -24,4 +24,3 @@
     $('head').eq(0).append($('#open_graph_content').html());
     $('#open_graph_content').remove();
   });
-

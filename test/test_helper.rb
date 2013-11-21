@@ -48,6 +48,11 @@ Spork.prefork do
       CarrierWave::Uploader::Base.enable_processing = before
     end
 
+    def assert_contains(expected, object, message = nil)
+      message ||= "Expected #{expected.inspect} to be included in #{object.inspect}"
+      assert object.to_s.include?(expected), message
+    end
+
     def raw_post(action, params, body)
       # The problem with doing this is that the JSON sent to the app
       # is that Rails will parse and put the JSON payload into params.

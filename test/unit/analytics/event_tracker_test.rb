@@ -75,8 +75,8 @@ class EventTrackerTest < ActiveSupport::TestCase
     end
 
     should 'track booking modal open' do
-      expect_event 'Opened the Booking Modal', reservation_properties
-      @tracker.opened_booking_modal(@reservation)
+      expect_event 'Reviewed a Booking', reservation_properties
+      @tracker.reviewed_a_booking(@reservation)
     end
 
     should 'track a booking request' do
