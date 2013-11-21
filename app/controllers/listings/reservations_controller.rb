@@ -7,7 +7,7 @@ class Listings::ReservationsController < ApplicationController
 
   def review
     @country = request.location.try(:country)
-    event_tracker.opened_booking_modal(Analytics::EventTracker.serialize_object(@reservation_request.reservation))
+    event_tracker.reviewed_a_booking(@reservation_request.reservation)
   end
 
   def create
