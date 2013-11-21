@@ -10,16 +10,16 @@
           %br
           %span.address= link_to reservation.listing.name, location_listing_path(reservation.listing.location, reservation.listing) 
         .span2
-          = reservation_total_price(reservation)
+          = reservation.total_price
           %br
           %span= reservation.state.capitalize
         %div{:class => reservation.archived? ? 'span3' : 'span2'}
           - if reservation.listing.hourly_reservations?
-            %a.dates{href: '#', 'data-reservation-hours' => hourly_summary_for_period_without_date(reservation.periods.first)}
-              = reservation_short_dates(reservation)
+            %a.dates{href: '#', 'data-reservation-hours' => reservation_period.hourly_summary(true)}
+              = reservation.short_dates
           - else
-            %a.dates{href: '#', data: { :dates => periods_dates(reservation.periods) } }
-              = reservation_short_dates(reservation)
+            %a.dates{href: '#', data: { :dates => reservation.dates } }
+              = reservation.short_dates
           .clearfix
           %span
             = pluralize(reservation.total_days, 'day')
@@ -27,6 +27,6 @@
           = reservation.quantity
           %span.ico-user
         - unless reservation.archived?
-          .span2{:class => manage_guests_action_column_class(reservation)}
+          .span2{:class => reservation.manage_guests_action_column_class}
             .actions
               = render :partial => "owner_actions", :locals => {:reservation => reservation}

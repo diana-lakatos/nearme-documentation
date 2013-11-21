@@ -60,6 +60,19 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       assert_redirected_to manage_locations_path
     end
 
+    should "track event from email" do
+      stub_mixpanel
+      @tracker.expects(:link_within_email_clicked).with do |user, custom_options|
+        user == @user &&
+        custom_options[:url] == '/manage/locations/:location_id/listings/:id/edit' &&
+        custom_options[:mailer] == 'recurring_mailer/request_photos'
+      end
+
+      verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
+
+      get :edit, :id => @listing.id, :location_id => @location.id, :track_email_event => true, :email_signature => verifier.generate('recurring_mailer/request_photos')
+    end
+
     context 'with reservation' do
       setup do
         stub_mixpanel
@@ -93,19 +106,25 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       end
 
       should "not create listing" do
-        assert_raise ActiveRecord::RecordNotFound do
+        assert_raise Location::NotFound do
           post :create, { :listing => FactoryGirl.attributes_for(:listing).reverse_merge!({:listing_type_id => @listing_type.id}), :location_id => @location.id}
         end
       end
 
+      should 'handle lack of permission to edit properly' do
+        assert_raise Listing::NotFound do
+          get :edit, :id => @listing.id
+        end
+      end
+
       should "not update listing" do
-        assert_raise ActiveRecord::RecordNotFound do
+        assert_raise Listing::NotFound do
           put :update, :id => @listing.id, :listing => { :name => 'new name' }
         end
       end
 
       should "not destroy listing" do
-        assert_raise ActiveRecord::RecordNotFound do
+        assert_raise Listing::NotFound do
           delete :destroy, :id => @listing.id
         end
       end

@@ -4,7 +4,7 @@
 
 <p>Add more information or upload additional photos to make your space look even better! Bookings with photos are booked 10x more than those without.</p>
 
-<a class="btn" href="{{ user.manage_locations_url_with_tracking_and_token }}">Manage Desks</a>
+<a class="btn" href="{{ user.manage_locations_url_with_tracking_and_token | append:signature_for_tracking }}">Manage Desks</a>
 
 <p>Spread the word to increase bookings! The best listings will be featured in our newsletter.</p>
 

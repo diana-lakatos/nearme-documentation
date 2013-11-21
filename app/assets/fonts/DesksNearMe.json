@@ -1,7 +1,7 @@
 {
 	"metadata": {
-		"name": "DesksNearMe 1",
-		"lastOpened": 1383159481170,
+		"name": "DesksNearMe",
+		"lastOpened": 1384867409415,
 		"created": 1381083457739
 	},
 	"iconSets": [
@@ -533,7 +533,7 @@
 					"prevSize": 32,
 					"code": 95,
 					"name": "uniF000",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -542,7 +542,7 @@
 					"prevSize": 32,
 					"code": 33,
 					"name": "uni21",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -551,7 +551,7 @@
 					"prevSize": 32,
 					"code": 34,
 					"name": "uni22",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -560,7 +560,7 @@
 					"prevSize": 32,
 					"code": 35,
 					"name": "uni23",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -569,7 +569,7 @@
 					"prevSize": 32,
 					"code": 36,
 					"name": "uni24",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -578,7 +578,7 @@
 					"prevSize": 32,
 					"code": 37,
 					"name": "uni25",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -587,7 +587,7 @@
 					"prevSize": 32,
 					"code": 38,
 					"name": "uni26",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -596,7 +596,7 @@
 					"prevSize": 32,
 					"code": 39,
 					"name": "uni27",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -605,7 +605,7 @@
 					"prevSize": 32,
 					"code": 40,
 					"name": "uni28",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -614,7 +614,7 @@
 					"prevSize": 32,
 					"code": 41,
 					"name": "uni29",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -623,7 +623,7 @@
 					"prevSize": 32,
 					"code": 42,
 					"name": "uni2A",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -632,7 +632,7 @@
 					"prevSize": 32,
 					"code": 43,
 					"name": "uni2B",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -641,7 +641,7 @@
 					"prevSize": 32,
 					"code": 44,
 					"name": "uni2C",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -650,7 +650,7 @@
 					"prevSize": 32,
 					"code": 45,
 					"name": "uni2D",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -659,7 +659,7 @@
 					"prevSize": 32,
 					"code": 46,
 					"name": "uni2E",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -668,7 +668,7 @@
 					"prevSize": 32,
 					"code": 47,
 					"name": "uni2F",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -677,7 +677,7 @@
 					"prevSize": 32,
 					"code": 48,
 					"name": "uni30",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -686,7 +686,7 @@
 					"prevSize": 32,
 					"code": 49,
 					"name": "uni31",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -695,7 +695,7 @@
 					"prevSize": 32,
 					"code": 50,
 					"name": "uni32",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -704,7 +704,7 @@
 					"prevSize": 32,
 					"code": 51,
 					"name": "uni33",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -713,7 +713,7 @@
 					"prevSize": 32,
 					"code": 52,
 					"name": "uni34",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -722,7 +722,7 @@
 					"prevSize": 32,
 					"code": 53,
 					"name": "uni35",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -731,7 +731,7 @@
 					"prevSize": 32,
 					"code": 54,
 					"name": "uni36",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -740,7 +740,7 @@
 					"prevSize": 32,
 					"code": 55,
 					"name": "uni37",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -749,7 +749,7 @@
 					"prevSize": 32,
 					"code": 56,
 					"name": "uni38",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -758,7 +758,7 @@
 					"prevSize": 32,
 					"code": 57,
 					"name": "uni39",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -767,7 +767,7 @@
 					"prevSize": 32,
 					"code": 58,
 					"name": "uni3A",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -776,7 +776,7 @@
 					"prevSize": 32,
 					"code": 59,
 					"name": "uni3B",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -785,7 +785,7 @@
 					"prevSize": 32,
 					"code": 60,
 					"name": "uni3C",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -794,7 +794,7 @@
 					"prevSize": 32,
 					"code": 61,
 					"name": "uni3D",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -803,7 +803,7 @@
 					"prevSize": 32,
 					"code": 62,
 					"name": "uni3E",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -812,7 +812,7 @@
 					"prevSize": 32,
 					"code": 63,
 					"name": "uni3F",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -821,7 +821,7 @@
 					"prevSize": 32,
 					"code": 64,
 					"name": "uni40",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -830,7 +830,7 @@
 					"prevSize": 32,
 					"code": 65,
 					"name": "uni41",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -839,7 +839,7 @@
 					"prevSize": 32,
 					"code": 66,
 					"name": "uni42",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -848,7 +848,7 @@
 					"prevSize": 32,
 					"code": 67,
 					"name": "uni43",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -857,7 +857,7 @@
 					"prevSize": 32,
 					"code": 68,
 					"name": "uni44",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -866,7 +866,7 @@
 					"prevSize": 32,
 					"code": 69,
 					"name": "uni45",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -875,7 +875,7 @@
 					"prevSize": 32,
 					"code": 70,
 					"name": "uni46",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -884,7 +884,7 @@
 					"prevSize": 32,
 					"code": 71,
 					"name": "uni47",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -893,7 +893,7 @@
 					"prevSize": 32,
 					"code": 72,
 					"name": "uni48",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -902,7 +902,7 @@
 					"prevSize": 32,
 					"code": 73,
 					"name": "uni49",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -911,7 +911,7 @@
 					"prevSize": 32,
 					"code": 74,
 					"name": "uni4A",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -920,7 +920,7 @@
 					"prevSize": 32,
 					"code": 75,
 					"name": "uni4B",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -929,7 +929,7 @@
 					"prevSize": 32,
 					"code": 76,
 					"name": "uni4C",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -938,7 +938,7 @@
 					"prevSize": 32,
 					"code": 77,
 					"name": "uni4D",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -947,7 +947,7 @@
 					"prevSize": 32,
 					"code": 78,
 					"name": "uni4E",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -956,7 +956,7 @@
 					"prevSize": 32,
 					"code": 79,
 					"name": "uni4F",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -965,7 +965,7 @@
 					"prevSize": 32,
 					"code": 80,
 					"name": "uni50",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -974,7 +974,7 @@
 					"prevSize": 32,
 					"code": 81,
 					"name": "uni51",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -983,7 +983,7 @@
 					"prevSize": 32,
 					"code": 82,
 					"name": "uni52",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -992,7 +992,7 @@
 					"prevSize": 32,
 					"code": 83,
 					"name": "uni53",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -1001,7 +1001,7 @@
 					"prevSize": 32,
 					"code": 84,
 					"name": "uni54",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -1010,7 +1010,7 @@
 					"prevSize": 32,
 					"code": 85,
 					"name": "uni55",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -1019,7 +1019,7 @@
 					"prevSize": 32,
 					"code": 86,
 					"name": "uni56",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -1028,7 +1028,7 @@
 					"prevSize": 32,
 					"code": 87,
 					"name": "uni57",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -1037,7 +1037,7 @@
 					"prevSize": 32,
 					"code": 88,
 					"name": "uni58",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -1046,7 +1046,7 @@
 					"prevSize": 32,
 					"code": 89,
 					"name": "uni59",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -1055,7 +1055,7 @@
 					"prevSize": 32,
 					"code": 90,
 					"name": "uni5A",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -1064,7 +1064,7 @@
 					"prevSize": 32,
 					"code": 91,
 					"name": "uni5B",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -1073,7 +1073,7 @@
 					"prevSize": 32,
 					"code": 92,
 					"name": "uni5C",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				},
 				{
@@ -1082,7 +1082,7 @@
 					"prevSize": 32,
 					"code": 93,
 					"name": "uni5D",
-					"tempChar": "",
+					"tempChar": "",
 					"ligatures": ""
 				}
 			]
@@ -6683,8 +6683,13 @@
 					"id": 244
 				},
 				{
-					"order": 0,
-					"id": 245
+					"order": 65,
+					"id": 245,
+					"prevSize": 28,
+					"code": 97,
+					"name": "circle",
+					"tempChar": "",
+					"ligatures": ""
 				},
 				{
 					"order": 0,

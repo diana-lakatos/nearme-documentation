@@ -138,7 +138,8 @@ span.padding-left {
 .ico-enlarge:before,
 .ico-time:before,
 .ico-google-plus,
-.ico-group {
+.ico-group,
+.ico-bullet:before {
   font-family: 'icon-font' !important;
   font-weight: normal;
   font-style: normal;
@@ -339,4 +340,7 @@ span.padding-left {
 }
 .ico-group:before {
   content: "\60";
+}
+.ico-bullet:before {
+  content: "\61";
 }

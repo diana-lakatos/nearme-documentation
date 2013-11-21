@@ -6,6 +6,6 @@
 
 {% include 'reservation_mailer/listings_in_near.html' %}
 
-<a class="btn" href="{{ listing.search_url_with_tracking }}">Search More Desks</a>
+<a class="btn" href="{{ listing.search_url_with_tracking | append:signature_for_tracking  }}">Search More Desks</a>
 
-<p>Not looking for a desk? <a href="{{ user.space_wizard_list_url_with_tracking }}">List your space</a>.</p>
+<p>Not looking for a desk? <a href="{{ user.space_wizard_list_url_with_tracking | append:signature_for_tracking  }}">List your space</a>.</p>

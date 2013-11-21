@@ -3,4 +3,4 @@
 <p>You have been invited by {{ creator.name }} to join {{ platform_context.name }}! </p>
 <p>The e-mail that was used as an username is {{ new_user.email }}, you can set the password manually by clicking the big blue button below.</p>
 
-<a class="btn" href="{{ new_user.set_password_url_with_token }}">Set your password</a>
+<a class="btn" href="{{ new_user.set_password_url_with_token_and_tracking | append:signature_for_tracking }}">Set your password</a>

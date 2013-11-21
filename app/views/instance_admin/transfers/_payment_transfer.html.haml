@@ -1,0 +1,13 @@
+%tr
+  %td
+    %span.label{:class => "label-#{instance_admin_transfer_state_label_class(resource)}"}
+      = resource.transferred? ? 'Paid' : 'Pending'
+  %td= resource.company.name
+  %td= resource.reservation_charges.count
+  %td= resource.created_at
+  %td= resource.transferred_at
+  %td= resource.service_fee_amount.format with_currency: true
+  %td= resource.amount.format with_currency: true
+  %td= link_to "Show details", [:admin, resource], :class => 'btn'
+
+

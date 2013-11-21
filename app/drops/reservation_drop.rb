@@ -2,7 +2,7 @@ class ReservationDrop < BaseDrop
   include ReservationsHelper
 
   def initialize(reservation)
-    @reservation = reservation
+    @reservation = reservation.decorate
   end
 
   def quantity
@@ -10,23 +10,23 @@ class ReservationDrop < BaseDrop
   end
 
   def hourly_summary
-    hourly_summary_for_period(@reservation.periods.first)
+    @reservation.hourly_summary_for_first_period
   end
 
   def dates_summary
-    selected_dates_summary(@reservation)
+    @reservation.selected_dates_summary
   end
 
   def subtotal_price
-    reservation_subtotal_price(@reservation)
+    @reservation.subtotal_price
   end
 
   def service_fee
-    reservation_service_fee(@reservation)
+    @reservation.service_fee
   end
 
   def total_price
-    reservation_total_price(@reservation)
+    @reservation.total_price
   end
 
   def pending?
@@ -38,11 +38,11 @@ class ReservationDrop < BaseDrop
   end
 
   def paid
-    reservation_paid(@reservation)
+    @reservation.paid
   end
 
   def balance
-    reservation_balance(@reservation)
+    @reservation.formatted_balance
   end
 
   def has_rejection_reason
@@ -61,8 +61,16 @@ class ReservationDrop < BaseDrop
     routes.guest_rating_url(@reservation.id, token: @reservation.listing.administrator.authentication_token)
   end
 
+  def guest_rating_reservation_url_with_tracking
+    routes.guest_rating_url(@reservation.id, token: @reservation.listing.administrator.authentication_token, track_email_event: true)
+  end
+
   def host_rating_reservation_url
     routes.host_rating_url(@reservation.id, token: @reservation.owner.authentication_token)
+  end
+
+  def host_rating_reservation_url_with_tracking
+    routes.host_rating_url(@reservation.id, token: @reservation.owner.authentication_token, track_email_event: true)
   end
 
   def export_to_ical_url
@@ -80,6 +88,10 @@ class ReservationDrop < BaseDrop
   def reservation_confirm_url
     routes.confirm_manage_listing_reservation_url(@reservation.listing, @reservation, :token => @reservation.listing.administrator.authentication_token)
   end 
+
+  def reservation_confirm_url_with_tracking
+    routes.confirm_manage_listing_reservation_url(@reservation.listing, @reservation, :token => @reservation.listing.administrator.authentication_token, :track_email_event => true)
+  end
 
   def start_date
     @reservation.date.strftime('%b %e')

@@ -3,4 +3,4 @@ Welcome, {{ new_user.first_name }}!
 You have been invited by {{ creator.name }} to join {{ platform_context.name }}!
 The e-mail that was used as an username is {{ new_user.email }}, you can set the password manually by clicking the big blue button below
 
-Set your password at {{ new_user.set_password_url_with_token }}
+Set your password at {{ new_user.set_password_url_with_token_and_tracking | append:signature_for_tracking }}

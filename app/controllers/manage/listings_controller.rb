@@ -37,7 +37,7 @@ class Manage::ListingsController < Manage::BaseController
   def edit
     @photos = @listing.photos
 
-    event_tracker.mailer_upload_photos_now_clicked(@listing) if params[:track_email_event]
+    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def update
@@ -90,14 +90,22 @@ class Manage::ListingsController < Manage::BaseController
   private
 
   def find_location
-    @location = if @listing
-                  @listing.location
-                else
-                  @locations_scope.find(params[:location_id])
-                end
+    begin 
+      @location = if @listing
+                    @listing.location
+                  else
+                    @locations_scope.find(params[:location_id])
+                  end
+    rescue ActiveRecord::RecordNotFound
+      raise Location::NotFound
+    end
   end
 
   def find_listing
-    @listing = Listing.where(location_id: @locations_scope.pluck(:id)).find(params[:id])
+    begin 
+      @listing = Listing.where(location_id: @locations_scope.pluck(:id)).find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      raise Listing::NotFound
+    end
   end
 end

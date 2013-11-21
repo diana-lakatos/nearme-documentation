@@ -17,7 +17,7 @@ Total: {{ reservation.total_price }}
 
 Exciting, right? You can manage this booking from the Dashboard.
 
-Manage Guests: {{ listing.manage_guests_dashboard_url }}
+Manage Guests: {{ listing.manage_guests_dashboard_url_with_tracking | append:signature_for_tracking }}
 
 If you need help, send an email to happydesk@desksnear.me or contact us at {{ platform_context.phone_number }}.
 

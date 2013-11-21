@@ -68,18 +68,20 @@ module DashboardHelper
   end
   
   def my_booking_status_info(reservation)
+    reservation = reservation.decorate
     if reservation.state == 'unconfirmed'
-      tooltip("Pending confirmation from host. Booking will expire in #{time_to_expiry(reservation.expiry_time)}.", "<span class='tooltip-spacer'>i</span>".html_safe, {:class => reservation_status_icon(reservation)}, nil)
+      tooltip("Pending confirmation from host. Booking will expire in #{time_to_expiry(reservation.expiry_time)}.", "<span class='tooltip-spacer'>i</span>".html_safe, {:class => reservation.status_icon}, nil)
     else
-      content_tag(:i, '', :class => reservation_status_icon(reservation))
+      content_tag(:i, '', :class => reservation.status_icon)
     end
   end
 
   def manage_booking_status_info(reservation)
+    reservation = reservation.decorate
     if reservation.state == 'unconfirmed'
-      tooltip("You must confirm this booking within #{time_to_expiry(reservation.expiry_time)} or it will expire.", "<span class='tooltip-spacer'>i</span>".html_safe, {:class => reservation_status_icon(reservation)}, nil)
+      tooltip("You must confirm this booking within #{time_to_expiry(reservation.expiry_time)} or it will expire.", "<span class='tooltip-spacer'>i</span>".html_safe, {:class => reservation.status_icon}, nil)
     else
-      content_tag(:i, '', :class => reservation_status_icon(reservation))
+      content_tag(:i, '', :class => reservation.status_icon)
     end
   end
 

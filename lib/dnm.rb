@@ -98,4 +98,7 @@ module DNM
     end
   end
 
+  module Manage
+  end
+
 end
