@@ -9,7 +9,7 @@ class PagesController < ApplicationController
     @page = begin
               platform_context.theme.pages.find_by_slug!(params[:path]) 
             rescue ActiveRecord::RecordNotFound
-              raise DNM::InstancePageNotFound unless Theme::DEFAULT_THEME_PAGES.include?(params[:path])
+              raise Page::NotFound unless Theme::DEFAULT_THEME_PAGES.include?(params[:path])
             end
 
     render :show, platform_context: [platform_context.decorate], page_path: params[:path]

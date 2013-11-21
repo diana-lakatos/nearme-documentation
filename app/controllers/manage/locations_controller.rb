@@ -67,7 +67,7 @@ class Manage::LocationsController < Manage::BaseController
     begin
       @location = @locations_scope.find(params[:id])
     rescue ActiveRecord::RecordNotFound
-      raise DNM::Manage::LocationNotFound
+      raise Location::NotFound
     end
   end
 

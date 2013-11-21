@@ -1,4 +1,5 @@
 class Listing < ActiveRecord::Base
+  class NotFound < ActiveRecord::RecordNotFound; end
   has_paper_trail
   # == Associations
   has_many :reservations,

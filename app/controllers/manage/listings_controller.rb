@@ -97,7 +97,7 @@ class Manage::ListingsController < Manage::BaseController
                     @locations_scope.find(params[:location_id])
                   end
     rescue ActiveRecord::RecordNotFound
-      raise DNM::Manage::LocationNotFound
+      raise Location::NotFound
     end
   end
 
@@ -105,7 +105,7 @@ class Manage::ListingsController < Manage::BaseController
     begin 
       @listing = Listing.where(location_id: @locations_scope.pluck(:id)).find(params[:id])
     rescue ActiveRecord::RecordNotFound
-      raise DNM::Manage::ListingNotFound
+      raise Listing::NotFound
     end
   end
 end

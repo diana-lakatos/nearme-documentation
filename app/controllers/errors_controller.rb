@@ -7,12 +7,12 @@ class ErrorsController < ApplicationController
   def not_found
     begin
       case env["action_dispatch.exception"].class.name
-      when "DNM::InstancePageNotFound"
+      when "Page::NotFound"
         render :template => 'errors/instance_page_not_found', :status => 404, :formats => [:html]
-      when "DNM::Manage::ListingNotFound"
+      when "Listing::NotFound"
         @object_name = "listing"
         render :template => 'errors/manage_listing_or_location_no_permission', :status => 404, :formats => [:html]
-      when "DNM::Manage::LocationNotFound"
+      when "Location::NotFound"
         @object_name = "location"
         render :template => 'errors/manage_listing_or_location_no_permission', :status => 404, :formats => [:html]
       else
