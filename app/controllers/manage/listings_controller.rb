@@ -37,7 +37,7 @@ class Manage::ListingsController < Manage::BaseController
   def edit
     @photos = @listing.photos
 
-    event_tracker.mailer_upload_photos_now_clicked(@listing) if params[:track_email_event]
+    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def update

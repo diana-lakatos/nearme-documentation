@@ -23,7 +23,7 @@ class SpaceWizardController < ApplicationController
     @listing ||= @location.listings.build
     @photos = @user.photos.where("content_type = 'Listing' AND content_id IS NOT NULL") || nil
     event_tracker.viewed_list_your_bookable
-    event_tracker.mailer_list_your_desk_clicked(current_user) if params[:track_email_event]
+    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def submit_listing

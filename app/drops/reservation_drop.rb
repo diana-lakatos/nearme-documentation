@@ -61,8 +61,16 @@ class ReservationDrop < BaseDrop
     routes.guest_rating_url(@reservation.id, token: @reservation.listing.administrator.authentication_token)
   end
 
+  def guest_rating_reservation_url_with_tracking
+    routes.guest_rating_url(@reservation.id, token: @reservation.listing.administrator.authentication_token, track_email_event: true)
+  end
+
   def host_rating_reservation_url
     routes.host_rating_url(@reservation.id, token: @reservation.owner.authentication_token)
+  end
+
+  def host_rating_reservation_url_with_tracking
+    routes.host_rating_url(@reservation.id, token: @reservation.owner.authentication_token, track_email_event: true)
   end
 
   def export_to_ical_url
@@ -80,6 +88,10 @@ class ReservationDrop < BaseDrop
   def reservation_confirm_url
     routes.confirm_manage_listing_reservation_url(@reservation.listing, @reservation, :token => @reservation.listing.administrator.authentication_token)
   end 
+
+  def reservation_confirm_url_with_tracking
+    routes.confirm_manage_listing_reservation_url(@reservation.listing, @reservation, :token => @reservation.listing.administrator.authentication_token, :track_email_event => true)
+  end
 
   def start_date
     @reservation.date.strftime('%b %e')
