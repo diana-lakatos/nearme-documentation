@@ -88,6 +88,8 @@ class User < ActiveRecord::Base
   belongs_to :instance
   belongs_to :domain
 
+  after_destroy :cleanup
+
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
   }
@@ -418,6 +420,18 @@ class User < ActiveRecord::Base
     self.domain_id = platform_context.domain.try(:id)
     self.partner_id = platform_context.partner.try(:id)
     self.save
+  end
+
+  def cleanup
+    self.created_companies.each do |company|
+      if company.company_users.count.zero?
+        company.destroy
+      # this might not be needed, but just in case...
+      elsif company.creator == self
+        company.creator = company.company_users.first.user
+        company.save!
+      end
+    end
   end
 
 end

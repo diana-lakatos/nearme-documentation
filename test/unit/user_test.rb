@@ -38,8 +38,8 @@ class UserTest < ActiveSupport::TestCase
 
   context 'social scopes' do
     setup do
-        @me = FactoryGirl.create(:user)
-        @listing = FactoryGirl.create(:listing)
+      @me = FactoryGirl.create(:user)
+      @listing = FactoryGirl.create(:listing)
     end
 
     context 'visited_listing' do
@@ -582,6 +582,58 @@ class UserTest < ActiveSupport::TestCase
       should "be false if location has many listing, and at least one is without price" do
         FactoryGirl.create(:listing, :location => @location, :daily_price_cents => nil, :weekly_price_cents => nil, :monthly_price_cents => nil, :free => true)
         assert @user.has_listing_without_price?
+      end
+
+    end
+
+  end
+
+  context 'no orphaned childs' do
+
+    context 'user is the only owner of company' do
+
+      should 'destroy company' do
+        @listing = FactoryGirl.create(:listing)
+        @location = @listing.location
+        @company = @location.company
+        @company.add_creator_to_company_users
+        @company.save!
+        @listing.creator.destroy
+        assert @listing.reload.deleted?
+        assert @location.reload.deleted?
+        assert @company.reload.deleted?
+      end
+
+    end
+
+    context 'company has multiple administrators' do
+
+      setup do
+        @listing = FactoryGirl.create(:listing)
+        @user = @listing.creator
+        @company = @listing.company
+        @company.add_creator_to_company_users
+        @company.save!
+        @new_user = FactoryGirl.create(:user)
+        CompanyUser.create(:user_id => @new_user.id, :company_id => @listing.company.id)
+      end
+
+      should 'not delete company and assign new creator' do
+        @listing.creator.destroy
+        @listing.reload
+        assert_equal @new_user, @listing.creator
+        refute @listing.deleted?
+        refute @listing.location.deleted?
+        refute @listing.location.company.deleted?
+      end
+
+      should 'not destroy company' do
+        @new_user.destroy
+        @listing.reload
+        assert_equal @user, @listing.reload.creator
+        refute @listing.deleted?
+        refute @listing.location.deleted?
+        refute @listing.location.company.deleted?
       end
 
     end
