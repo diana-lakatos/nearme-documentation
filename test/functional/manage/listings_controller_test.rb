@@ -60,6 +60,19 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       assert_redirected_to manage_locations_path
     end
 
+    should "track event from email" do
+      stub_mixpanel
+      @tracker.expects(:link_witin_email_clicked).with do |user, custom_options|
+        user == @user &&
+        custom_options[:url] == '/manage/locations/:location_id/listings/:id/edit' &&
+        custom_options[:mailer] == 'recurring_mailer/request_photos'
+      end
+
+      verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
+
+      get :edit, :id => @listing.id, :location_id => @location.id, :track_email_event => true, :email_signature => verifier.generate('recurring_mailer/request_photos')
+    end
+
     context 'with reservation' do
       setup do
         stub_mixpanel
