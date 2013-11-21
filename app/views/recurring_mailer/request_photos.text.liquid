@@ -2,6 +2,6 @@ Make a great first impression, {{ user.first_name }}!
 
 Your listing, '{{ listing.name }}' at {{ listing.street }}, needs some pictures! Listings with photos have 10x chances of getting rented. Choose great pictures of your space and give potential guests a good first impression.
 
-Upload Photos Now: {{ listing.manage_listing_url_with_tracking }} 
+Upload Photos Now: {{ listing.manage_listing_url_with_tracking | append:signature_for_tracking }}
 
 No pics? We are here to help! Request a professional photographer for free. Send us an email at happydesk@desksnear.me or contact us at {{ platform_context.phone_number }} to schedule your shooting session, today!

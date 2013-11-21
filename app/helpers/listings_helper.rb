@@ -56,4 +56,40 @@ module ListingsHelper
     Placeholder.new(height: options[:height], width: options[:width]).path
   end
 
+  def connection_tooltip_for(connections, size = 5)
+    difference = connections.size - size
+    connections = connections.first(5)
+    connections << t('search.list.additional_social_connections', count: difference) if difference > 0
+    connections.join('<br />').html_safe
+  end
+
+  def connections_for(listing, current_user)
+    find_connections_for(listing, current_user)
+  end
+
+  private
+
+  def find_connections_for(listing, current_user)
+    return [] if current_user.nil? || current_user.friends.count.zero?
+
+    friends = current_user.friends.visited_listing(listing).collect do |user|
+      "#{user.name} worked here";
+    end
+
+    hosts = current_user.friends.hosts_of_listing(listing).collect do |user|
+      "#{user.name} is the host"
+    end
+
+    host_friends = current_user.friends.know_host_of(listing).collect do |user|
+      "#{user.name} knows the host"
+    end
+
+    mutual_visitors = current_user.mutual_friends.visited_listing(listing).collect do |user|
+      next unless user.mutual_friendship_source
+      "#{user.mutual_friendship_source.name} knows #{user.name} who worked here"
+    end
+
+    [friends, hosts, host_friends, mutual_visitors].flatten
+  end
+
 end

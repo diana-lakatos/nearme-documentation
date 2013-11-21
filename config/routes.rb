@@ -54,10 +54,18 @@ DesksnearMe::Application.routes.draw do
       post :login_as, on: :member
       post :restore_session, on: :collection
     end
-    resources :partners, :only => [:index]
+    resources :partners
     resources :settings, :only => [:index]
     resource :theme, :only => [:show, :update], :controller => 'theme'
-    resources :transfers, :only => [:index]
+    resources :transfers do
+      member do
+        post :transferred
+      end
+
+      collection do
+        post :generate
+      end
+    end
     resources :users, :only => [:index, :create]
 
     namespace :users do
@@ -83,8 +91,11 @@ DesksnearMe::Application.routes.draw do
 
   resources :listings, :only => [:index, :show] do
     resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
-      collection do 
+      collection do
         post :review
+        post :store_reservation_request
+      end
+      member do
         get :booking_successful
       end
       get :hourly_availability_schedule, :on => :collection
@@ -130,6 +141,7 @@ DesksnearMe::Application.routes.draw do
     member do
       post :user_cancel
       get :export
+      get :booking_successful
     end
     collection do
       get :upcoming

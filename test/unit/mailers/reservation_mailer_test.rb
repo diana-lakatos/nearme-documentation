@@ -11,16 +11,15 @@ class ReservationMailerTest < ActiveSupport::TestCase
     @reservation.save!
 
     @platform_context = PlatformContext.new
-    @expected_dates = "12 Dec&ndash;13 Dec"
+    @expected_dates = "Wednesday, December 12 &ndash; Thursday, December 13"
   end
 
   test "#notify_guest_of_cancellation_by_host" do
     mail = ReservationMailer.notify_guest_of_cancellation_by_host(@platform_context, @reservation)
     subject = "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.listing.name}' at #{@reservation.location.street} was cancelled by the host"
 
-    assert mail.html_part.body.include?(@reservation.owner.first_name)
-    assert mail.html_part.body.include?(@reservation.listing.name)
-
+    assert_contains @reservation.owner.first_name, mail.html_part.body
+    assert_contains @reservation.listing.name, mail.html_part.body
     assert_equal [@reservation.owner.email], mail.to
     assert_equal subject, mail.subject
     assert_equal [@platform_context.decorate.support_email], mail.bcc
@@ -30,8 +29,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
     mail = ReservationMailer.notify_guest_of_cancellation_by_guest(@platform_context, @reservation)
     subject = "[#{@platform_context.decorate.name}] You just cancelled a booking"
 
-    assert mail.html_part.body.include?(@reservation.owner.first_name)
-
+    assert_contains @reservation.owner.first_name, mail.html_part.body
     assert_equal [@reservation.owner.email], mail.to
     assert_equal subject, mail.subject
     assert_equal [@platform_context.decorate.support_email], mail.bcc
@@ -40,8 +38,8 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "#notify_guest_of_confirmation" do
     mail = ReservationMailer.notify_guest_of_confirmation(@platform_context, @reservation)
 
-    assert mail.html_part.body.include?(@reservation.listing.creator.name)
-    assert mail.html_part.body.include?(@expected_dates)
+    assert_contains @reservation.listing.creator.name, mail.html_part.body
+    assert_contains @expected_dates, mail.html_part.body
 
     assert_equal [@reservation.owner.email], mail.to
     assert_equal [@platform_context.decorate.support_email], mail.bcc
@@ -50,8 +48,8 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "#notify_guest_of_expiration" do
     mail = ReservationMailer.notify_guest_of_expiration(@platform_context, @reservation)
 
-    assert mail.html_part.body.include?(@reservation.owner.first_name)
-    assert mail.html_part.body.include?(@reservation.listing.name)
+    assert_contains @reservation.owner.first_name, mail.html_part.body
+    assert_contains @reservation.listing.name, mail.html_part.body
 
     assert_equal [@reservation.owner.email], mail.to
     assert_equal [@platform_context.decorate.support_email], mail.bcc
@@ -60,7 +58,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "#notify_guest_of_rejection" do
     mail = ReservationMailer.notify_guest_of_rejection(@platform_context, @reservation)
 
-    assert mail.html_part.body.include?(@reservation.listing.name)
+    assert_contains @reservation.listing.name, mail.html_part.body
 
     assert_equal [@reservation.owner.email], mail.to
     assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.owner.first_name}?", mail.subject
@@ -70,7 +68,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "#notify_host_of_rejection" do
     mail = ReservationMailer.notify_host_of_rejection(@platform_context, @reservation)
 
-    assert mail.html_part.body.include?(@reservation.listing.name)
+    assert_contains @reservation.listing.name, mail.html_part.body
 
     assert_equal [@reservation.listing.administrator.email], mail.to
     assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.listing.administrator.first_name}?", mail.subject
@@ -80,8 +78,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "#notify_guest_with_confirmation" do
     mail = ReservationMailer.notify_guest_with_confirmation(@platform_context, @reservation)
 
-    assert mail.html_part.body.include?(@reservation.listing.name)
-
+    assert_contains @reservation.listing.name, mail.html_part.body
     assert_equal [@reservation.owner.email], mail.to
     assert_equal [@platform_context.decorate.support_email], mail.bcc
   end
@@ -89,8 +86,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "#notify_host_of_cancellation_by_guest" do
     mail = ReservationMailer.notify_host_of_cancellation_by_guest(@platform_context, @reservation)
 
-    assert mail.html_part.body.include?(@reservation.listing.creator.name)
-
+    assert_contains @reservation.listing.creator.name, mail.html_part.body
     assert_equal [@reservation.listing.creator.email], mail.to
     assert_equal [@platform_context.decorate.support_email, @reservation.listing.location.email], mail.bcc
   end
@@ -98,8 +94,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "#notify_host_of_cancellation_by_host" do
     mail = ReservationMailer.notify_host_of_cancellation_by_host(@platform_context, @reservation)
 
-    assert mail.html_part.body.include?(@reservation.listing.administrator.first_name)
-
+    assert_contains @reservation.listing.administrator.first_name, mail.html_part.body
     assert_equal [@reservation.listing.administrator.email], mail.to
     assert_equal [@platform_context.decorate.support_email, @reservation.listing.location.email], mail.bcc
   end
@@ -107,8 +102,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "#notify_host_of_confirmation" do
     mail = ReservationMailer.notify_host_of_confirmation(@platform_context, @reservation)
 
-    assert mail.html_part.body.include?(@reservation.listing.creator.name)
-
+    assert_contains @reservation.listing.creator.name, mail.html_part.body
     assert_equal [@reservation.listing.creator.email], mail.to
     assert_equal [@platform_context.decorate.support_email, @reservation.listing.location.email], mail.bcc
   end
@@ -116,8 +110,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "#notify_host_of_expiration" do
     mail = ReservationMailer.notify_host_of_expiration(@platform_context, @reservation)
 
-    assert mail.html_part.body.include?(@reservation.listing.creator.name)
-
+    assert_contains @reservation.listing.creator.name, mail.html_part.body
     assert_equal [@reservation.listing.creator.email], mail.to
     assert_equal [@platform_context.decorate.support_email, @reservation.listing.location.email], mail.bcc
   end
@@ -125,9 +118,9 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "#notify_host_with_confirmation" do
     mail = ReservationMailer.notify_host_with_confirmation(@platform_context, @reservation)
 
-    assert mail.html_part.body.include?( manage_guests_dashboard_path(:token => @reservation.listing_creator.authentication_token) )
-    assert mail.html_part.body.include?(@reservation.listing.creator.name)
-    assert mail.html_part.body.include?(@expected_dates)
+    assert_contains manage_guests_dashboard_path(:token => @reservation.listing_creator.authentication_token), mail.html_part.body
+    assert_contains @reservation.listing.creator.name, mail.html_part.body
+    assert_contains @expected_dates, mail.html_part.body
 
     assert_equal [@reservation.listing.creator.email], mail.to
     assert_equal [@platform_context.decorate.support_email, @reservation.listing.location.email], mail.bcc
@@ -136,9 +129,8 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "#notify_host_without_confirmation" do
     mail = ReservationMailer.notify_host_without_confirmation(@platform_context, @reservation)
 
-    assert mail.html_part.body.include?(@reservation.listing.creator.name)
-    assert mail.html_part.body.include?(@expected_dates)
-
+    assert_contains @reservation.listing.creator.name, mail.html_part.body
+    assert_contains @expected_dates, mail.html_part.body
     assert_equal [@reservation.listing.creator.email], mail.to
     assert_equal [@platform_context.decorate.support_email, @reservation.listing.location.email], mail.bcc
   end
@@ -146,8 +138,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
   test "#pre_booking" do
     mail = ReservationMailer.pre_booking(@platform_context, @reservation)
 
-    assert mail.html_part.body.include?(@reservation.listing.name)
-
+    assert_contains @reservation.listing.name, mail.html_part.body
     assert_equal [@reservation.owner.email], mail.to
     assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your booking is tomorrow!", mail.subject
     assert_equal [@platform_context.decorate.support_email], mail.bcc
