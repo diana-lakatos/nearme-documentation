@@ -43,7 +43,7 @@ class ReservationsController < ApplicationController
       @reservation = params[:id] ? current_user.reservations.find(params[:id]) : nil
     end
 
-    event_tracker.mailer_view_your_booking_clicked(current_user) if params[:track_email_event]
+    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     render :index
   end
 
@@ -57,7 +57,7 @@ class ReservationsController < ApplicationController
                                             author_id: current_user.id)
 
     if params[:track_email_event]
-      event_tracker.mailer_host_write_a_review_clicked(@reservation)
+      event_tracker.track_event_within_email(current_user, request)
       params[:track_email_event] = nil
     end
 

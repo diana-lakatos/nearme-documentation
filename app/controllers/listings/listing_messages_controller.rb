@@ -37,7 +37,7 @@ class Listings::ListingMessagesController < ApplicationController
     ListingMessage.update_all({read: true},
                               {id: to_mark_as_read.map(&:id)})
 
-    event_tracker.mailer_read_the_message_clicked(current_user) if params[:track_email_event]
+    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def archive

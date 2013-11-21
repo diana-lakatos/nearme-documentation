@@ -4,6 +4,6 @@
 
 <p>Your opinion is very important and it will help other guest to find great desks. Take a moment and give us your feedback!</p>
 
-<a class="btn" href="{{ reservation.host_rating_reservation_url_with_tracking }}">Write a Review</a>
+<a class="btn" href="{{ reservation.host_rating_reservation_url_with_tracking | append:signature_for_tracking }}">Write a Review</a>
 
 <p>If you'd prefer to talk to us directly, please send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or call us on {{ platform_context.phone_number }} - we love to talk with our guests.</p>

@@ -66,6 +66,11 @@ class EventTrackerTest < ActiveSupport::TestCase
       expect_event 'Conducted a Search', search_properties
       @tracker.conducted_a_search(@search)
     end
+
+    should 'track shared location via social media' do
+      expect_event 'Shared location via social media', location_properties.merge!({ provider: 'facebook', source: 'email' })
+      @tracker.shared_location_via_social_media(@location, { provider: 'facebook', source: 'email' })
+    end
   end
 
   context 'Reservations' do
@@ -179,83 +184,13 @@ class EventTrackerTest < ActiveSupport::TestCase
 
     setup do
       @category = "Mailer events"
-      @location = FactoryGirl.create(:location)
-      @listing = FactoryGirl.create(:listing) 
-      @reservation = FactoryGirl.create(:reservation)
     end
 
     should 'track find a desk clicked' do
-      expect_set_person_properties user_properties
-      expect_event 'Find a desk clicked in post_action/sign_up_welcome mail', user_properties
-      @tracker.mailer_find_a_desk_clicked(@user)
+      expect_event 'Clicked link within email', user_properties.merge!({ url: '/manage/locations', mailer: 'recurring_mailer/analytics' })
+      @tracker.link_witin_email_clicked(@user, { url: '/manage/locations', mailer: 'recurring_mailer/analytics' })
     end
 
-    should 'track list your desk clicked' do
-      expect_set_person_properties user_properties
-      expect_event 'List your desk clicked in mail', user_properties
-      @tracker.mailer_list_your_desk_clicked(@user)
-    end
-
-    should 'track mailer social share' do
-      expect_event 'Social share in mailer', location_properties
-      @tracker.mailer_social_share(@location)
-    end
-
-    should 'track view your booking clicked' do
-      expect_set_person_properties user_properties
-      expect_event 'View your booking clicked in reservation_mailer/notify_guest_with_confirmation mail', user_properties
-      @tracker.mailer_view_your_booking_clicked(@user)
-    end
-
-    should 'track upload photos now clicked' do
-      expect_event 'Upload photos now clicked in mailer', listing_properties
-      @tracker.mailer_upload_photos_now_clicked(@listing)
-    end
-
-    should 'track manage desks clicked' do
-      expect_set_person_properties user_properties
-      expect_event 'Manage desks clicked in mail', user_properties
-      @tracker.mailer_manage_desks_clicked(@user)
-    end
-
-    should 'track go to my account clicked' do
-      expect_set_person_properties user_properties
-      expect_event 'Go to My Account clicked in mail', user_properties
-      @tracker.mailer_view_go_to_account_clicked(@user)
-    end
-
-    should 'track confirm booking clicked' do
-      expect_event 'Confirm Booking clicked in mail', reservation_properties
-      @tracker.mailer_confirm_booking_clicked(@reservation)
-    end
-
-    should 'track manage guests clicked' do
-      expect_set_person_properties user_properties
-      expect_event 'Manage Guests clicked in mail', user_properties
-      @tracker.mailer_manage_guests_clicked(@user)
-    end
-
-    should 'track activate account and login clicked' do
-      expect_set_person_properties user_properties
-      expect_event 'Activate account and login clicked in mail', user_properties
-      @tracker.mailer_activate_account_clicked(@user)
-    end
-
-    should 'track write a review clicked - guest' do
-      expect_event 'Write a review clicked in mail - guest', reservation_properties
-      @tracker.mailer_guest_write_a_review_clicked(@reservation)
-    end
-
-    should 'track write a review clicked - host' do
-      expect_event 'Write a review clicked in mail - host', reservation_properties
-      @tracker.mailer_host_write_a_review_clicked(@reservation)
-    end
-
-    should 'track read the message clicked' do
-      expect_set_person_properties user_properties
-      expect_event 'Read the message clicked in mail', user_properties
-      @tracker.mailer_read_the_message_clicked(@user)
-    end
   end
 
   should 'trigger mixpanel method to get pixel based tracking url' do
@@ -264,6 +199,7 @@ class EventTrackerTest < ActiveSupport::TestCase
     @mixpanel.expects(:pixel_track_url).with(event_name, properties)
     @tracker.pixel_track_url(event_name, properties)
   end
+
   private
 
   def expect_event(event_name, properties = nil)

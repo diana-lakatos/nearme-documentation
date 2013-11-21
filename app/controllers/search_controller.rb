@@ -12,7 +12,7 @@ class SearchController < ApplicationController
       event_tracker.conducted_a_search(search, { search_query: query, result_view: result_view, result_count: result_count}.merge(filters))
     end
 
-    event_tracker.mailer_find_a_desk_clicked(current_user) if params[:track_email_event]
+    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
 
     remember_search_query
   end

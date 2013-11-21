@@ -83,6 +83,10 @@ class UserDrop < BaseDrop
     routes.set_password_url(:token => @user.authentication_token)
   end
 
+  def set_password_url_with_token_and_tracking
+    routes.set_password_url(:token => @user.authentication_token, :track_email_event => true)
+  end
+
   def full_mobile_number
     @user.full_mobile_number
   end

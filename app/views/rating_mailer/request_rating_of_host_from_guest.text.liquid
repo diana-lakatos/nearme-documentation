@@ -4,6 +4,6 @@ We can't wait to hear about your experience at '{{ listing.name }}', {{ listing.
 
 Your opinion is very important and it will help other guest to find great desks. Take a moment and give us your feedback!
 
-Write a Review: {{ reservation.host_rating_reservation_url_with_tracking }}
+Write a Review: {{ reservation.host_rating_reservation_url_with_tracking | append:signature_for_tracking }}
 
 If you'd prefer to talk to us directly, please send an email to happydesk@desksnear.me or call us on {{ platform_context.phone_number }} - we love to talk with our guests.

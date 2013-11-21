@@ -2,4 +2,4 @@ You received a message!
 
 {{ listing_message.author_first_name }} sent you a message about one of their listings on {{ platform_context.name }}.
 
-Log in and read the message: {{ listing_message.url_with_tracking }}
+Log in and read the message: {{ listing_message.url_with_tracking | append:signature_for_tracking }}

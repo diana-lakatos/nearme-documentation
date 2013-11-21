@@ -10,7 +10,7 @@ class Manage::Listings::ReservationsController < ApplicationController
       event_tracker.confirmed_a_booking(@reservation)
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
-      event_tracker.mailer_confirm_booking_clicked(@reservation) if params[:track_email_event]
+      event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
       flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')

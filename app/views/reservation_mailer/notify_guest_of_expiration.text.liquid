@@ -5,6 +5,6 @@ Your booking for '{{ listing.name }}' at {{ listing.street }} has expired becaus
 But we got you covered! Here you have some alternatives similar to the desks you were looking for:
 
 {% include 'reservation_mailer/listings_in_near.text' %}
-Search More Desks: {{ listing.search_url_with_tracking }}
+Search More Desks: {{ listing.search_url_with_tracking | append:signature_for_tracking }}
 
 We're always happy to help! Just send an email to happydesk@desksnear.me or call us on {{ platform_context.phone_number }}.

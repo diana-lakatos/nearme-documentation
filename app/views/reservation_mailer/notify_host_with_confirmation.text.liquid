@@ -17,7 +17,7 @@ Total: {{ reservation.total_price }}
 
 Exciting, right? Please, confirm the booking and let's get the guest set up!
 
-Confirm Booking {{ reservation.reservation_confirm_url_with_tracking }}
+Confirm Booking {{ reservation.reservation_confirm_url_with_tracking | append:signature_for_tracking }}
 
 Not ready for guests? You can manage your bookings here: {{ listing.manage_guests_dashboard_url }}
 

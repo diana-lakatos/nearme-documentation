@@ -36,7 +36,7 @@ Your listing, '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' at {{
 
 <p>Exciting, right? Please, confirm the booking and let's get the guest set up!</p>
 
-<a class="btn" href="{{ reservation.reservation_confirm_url_with_tracking }}">Confirm Booking</a>
+<a class="btn" href="{{ reservation.reservation_confirm_url_with_tracking | append:signature_for_tracking }}">Confirm Booking</a>
 
 <p>Not ready for guests? You can manage your bookings <a href="{{ listing.manage_guests_dashboard_url }}">here</a>.</p>
 

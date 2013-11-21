@@ -6,7 +6,7 @@ Having the correct contact information is vital so you can receive our text mess
 
 Please update your contact information in your personal account.
 
-{{ user.edit_user_registration_url_with_token_and_tracking }}
+{{ user.edit_user_registration_url_with_token_and_tracking | append:signature_for_tracking }}
 
 If you prefer, you can talk with us directly; just send an email to happydesk@desksnear.me or call us on {{ platform_context.phone_number }}.
 
