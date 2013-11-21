@@ -1,4 +1,5 @@
 class Page < ActiveRecord::Base
+  class NotFound < ActiveRecord::RecordNotFound; end
   extend FriendlyId
   friendly_id :path, use: :slugged
 

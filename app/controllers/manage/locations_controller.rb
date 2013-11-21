@@ -64,7 +64,11 @@ class Manage::LocationsController < Manage::BaseController
   end
 
   def find_location
-    @location = @locations_scope.find(params[:id])
+    begin
+      @location = @locations_scope.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      raise Location::NotFound
+    end
   end
 
   def find_company
