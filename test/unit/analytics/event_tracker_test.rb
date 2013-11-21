@@ -188,7 +188,7 @@ class EventTrackerTest < ActiveSupport::TestCase
 
     should 'track find a desk clicked' do
       expect_event 'Clicked link within email', user_properties.merge!({ url: '/manage/locations', mailer: 'recurring_mailer/analytics' })
-      @tracker.link_witin_email_clicked(@user, { url: '/manage/locations', mailer: 'recurring_mailer/analytics' })
+      @tracker.link_within_email_clicked(@user, { url: '/manage/locations', mailer: 'recurring_mailer/analytics' })
     end
 
   end

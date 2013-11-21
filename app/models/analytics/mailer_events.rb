@@ -5,13 +5,13 @@ module Analytics::MailerEvents
     verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
     begin
       mailer_name = verifier.verify(request.params[:email_signature])
-      link_witin_email_clicked(user, { url: path_spec, mailer: mailer_name })
+      link_within_email_clicked(user, { url: path_spec, mailer: mailer_name })
     rescue ActiveSupport::MessageVerifier::InvalidSignature => ex
       Rails.logger.error "Wrong email tracking signature: #{ex}"
     end
   end
 
-  def link_witin_email_clicked(user, custom_options = {})
+  def link_within_email_clicked(user, custom_options = {})
     track 'Clicked link within email', user, custom_options
   end
 

@@ -62,7 +62,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
     should "track event from email" do
       stub_mixpanel
-      @tracker.expects(:link_witin_email_clicked).with do |user, custom_options|
+      @tracker.expects(:link_within_email_clicked).with do |user, custom_options|
         user == @user &&
         custom_options[:url] == '/manage/locations/:location_id/listings/:id/edit' &&
         custom_options[:mailer] == 'recurring_mailer/request_photos'
