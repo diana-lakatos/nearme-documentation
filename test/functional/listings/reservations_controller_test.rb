@@ -14,8 +14,8 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     end
 
     should "track booking review open" do
-      @tracker.expects(:opened_booking_modal).with do |reservation|
-        reservation == object_hash_for(assigns(:reservation_request).reservation)
+      @tracker.expects(:reviewed_a_booking).with do |reservation|
+        reservation == assigns(:reservation_request).reservation.decorate
       end
       post :review, booking_params_for(@listing)
       assert_response 200

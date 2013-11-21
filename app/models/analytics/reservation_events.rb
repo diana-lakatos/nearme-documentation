@@ -1,7 +1,7 @@
 module Analytics::ReservationEvents
 
   def reviewed_a_booking(reservation, custom_options = {})
-    track 'Reviewed a booking', reservation, custom_options
+    track 'Reviewed a Booking', reservation, custom_options
   end
 
   def requested_a_booking(reservation, custom_options = {})
