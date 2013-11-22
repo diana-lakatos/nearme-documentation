@@ -52,6 +52,7 @@ class Listings::ReservationsController < ApplicationController
     end
   end
 
+  # Renders booking successful modal
   def booking_successful
   end
 

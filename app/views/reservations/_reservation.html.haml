@@ -3,7 +3,7 @@
     .span12.reservation-text-information
       .reservation-status
         .icon-container
-          = my_booking_status_info(reservation) 
+          = reservation.my_booking_status_info
       .span12.reservation-information
         %div{:class => reservation.archived? ? 'span6' : 'span5'}
           = link_to reservation.listing.name, location_listing_path(reservation.listing.location, reservation.listing)
