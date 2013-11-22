@@ -104,6 +104,7 @@ class ReservationsControllerTest < ActionController::TestCase
       sign_in @user
       @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
       @location = FactoryGirl.create(:location_in_auckland)
+      @listing = FactoryGirl.create(:listing, location: @location)
       @company.locations << @location
     end
 
@@ -116,18 +117,57 @@ class ReservationsControllerTest < ActionController::TestCase
 
       should 'if any upcoming bookings' do
         FactoryGirl.create(:reservation, owner: @user)
+
         get :upcoming
         assert_response :success
+        assert_select ".reservation-details", 1
       end
 
       should 'if any archived bookings' do
         FactoryGirl.create(:past_reservation, owner: @user)
-        get :upcoming
+
+        get :archived
         assert_response :success
+        assert_select ".reservation-details", 1
+      end
+
+      context 'render only instance bookings' do
+        setup do
+          @related_instance = FactoryGirl.create(:instance)
+          PlatformContext.any_instance.stubs(:instance).returns(@related_instance)
+
+          @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
+          @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
+          @related_listing = FactoryGirl.create(:listing, location: @related_location)
+        end
+
+        should 'if no bookings for related instance' do
+          FactoryGirl.create(:reservation, owner: @user)
+
+          get :upcoming
+          assert_response :success
+          assert_select ".box .no-data", "You don't have any upcoming bookings. Find a space near you!"
+        end
+
+        should 'if any upcoming bookings for related instance' do
+          FactoryGirl.create(:reservation, owner: @user, listing: @listing)
+          FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
+
+          get :upcoming
+          assert_response :success
+          assert_select ".reservation-details", 1
+        end
+
+        should 'if any archived bookings for related instance' do
+          FactoryGirl.create(:past_reservation, owner: @user, listing: @listing)
+          FactoryGirl.create(:past_reservation, owner: @user, listing: @related_listing)
+
+          get :archived
+          assert_response :success
+          assert_select ".reservation-details", 1
+        end
       end
     end
   end
-
-
 end
 
