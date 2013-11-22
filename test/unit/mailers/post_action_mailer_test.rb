@@ -5,6 +5,7 @@ class PostActionMailerTest < ActiveSupport::TestCase
   include Rails.application.routes.url_helpers
 
   setup do
+    stub_mixpanel
     @user = FactoryGirl.create(:user)
     FactoryGirl.create(:instance)
     @platform_context = PlatformContext.new

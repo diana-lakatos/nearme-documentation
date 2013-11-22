@@ -4,6 +4,7 @@ class ListingMessagingMailerTest < ActiveSupport::TestCase
 
   include Rails.application.routes.url_helpers
   setup do
+    stub_mixpanel
     @listing_message = FactoryGirl.create(:listing_message)
     @user = FactoryGirl.create(:user)
     @listing_message.owner = @user

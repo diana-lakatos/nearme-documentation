@@ -4,6 +4,7 @@ class ReengagementMailerTest < ActiveSupport::TestCase
 
   include Rails.application.routes.url_helpers
   setup do
+    stub_mixpanel
     @user = FactoryGirl.create(:user)
     @platform_context = PlatformContext.new
   end
