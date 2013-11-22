@@ -1,7 +1,5 @@
 .box header {
 
-  padding: $padding-small;
-
   .button-links {
     width: 100%;
     text-align: center;
@@ -10,7 +8,7 @@
       margin: 0px auto;
 
       li {
-        display: inline-block;
+        display: inline;
         margin-left: 5px;
         margin-right: 5px;
         text-align: center;
