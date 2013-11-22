@@ -61,7 +61,13 @@
     .book
       - registration_url = new_user_registration_path(return_to: location_listing_url(@listing.location, @listing, restore_reservations: true))
       - store_reservation_request_url = store_reservation_request_listing_reservations_path(@listing)
-      = form_for :reservation_request, :url => review_listing_reservations_path(listing) do |f|
+      = form_for :reservation_request, :url => review_listing_reservations_path(listing) do f|
+        = hidden_field_tag :listing_id, @listing.id
+        = f.hidden_field :quantity
+        = f.hidden_field :dates
+        = f.hidden_field :start_minute
+        = f.hidden_field :end_minute
+
         = f.submit 'Book', :id =>"book-#{listing.id}", :class => "btn btn-green btn-large", :rel => "tooltip", :'data-original-title' => "Please select days first", :'data-behavior' => 'reviewBooking', :'data-listing-id' => listing.id, :'data-registration-url' => registration_url, :'data-store-reservation-request-url' => store_reservation_request_url, :'data-user-signed-in' => user_signed_in?
 
   .clearfix
