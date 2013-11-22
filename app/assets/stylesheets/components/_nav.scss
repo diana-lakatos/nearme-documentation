@@ -13,6 +13,7 @@
       width: $theme_logo_width;
       height: 60px;
       background: image-url($theme_logo) no-repeat;
+      background-position: left;
       text-indent: -9999px;
 
       @media (-webkit-min-device-pixel-ratio: 1.5), 
