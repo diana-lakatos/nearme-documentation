@@ -136,6 +136,8 @@ DesksnearMe::Application.routes.draw do
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
     get "users/:id", :to => "registrations#show", :as => "profile"
     get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
+
+    put "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip"
   end
 
   resources :reservations, :except => [:update, :destroy, :show] do
