@@ -180,6 +180,10 @@ section#reservations {
             text-overflow: ellipsis;
             white-space: nowrap;
 
+            &.ical {
+              display: inline;
+            }
+
             a {
               text-decoration: none !important;
 
