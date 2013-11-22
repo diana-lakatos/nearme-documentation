@@ -27,6 +27,16 @@ section#reservations {
     li {
       list-style: none outside none;
       overflow: hidden;
+
+      a {
+        width: 141px;
+      }
+
+      @media (max-width: $ipad-width) {
+        a {
+          width: 100%;
+        }
+      }
     }
   }
 
@@ -66,6 +76,11 @@ section#reservations {
         .reservation-details {
 
           .actions {
+
+            .reservation-action {
+              padding: 0px;
+              text-align: center;
+            }
 
             input, a {
               @include border-radius($border-radius-left);
@@ -157,9 +172,13 @@ section#reservations {
           }
 
           span:not(.ico-user) {
+            display: block;
             color: $gray160;
+            overflow: hidden;
             font-family: $font-regular;
             font-size: 14px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
 
             a {
               text-decoration: none !important;
