@@ -29,7 +29,6 @@ class Location < ActiveRecord::Base
 
   delegate :creator, :to => :company, :allow_nil => true
   delegate :company_users, :to => :company, :allow_nil => true
-  delegate :instance, :to => :company, :allow_nil => true
 
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
@@ -40,6 +39,8 @@ class Location < ActiveRecord::Base
   has_many :listings,
     dependent:  :destroy,
     inverse_of: :location
+
+  has_one :instance, through: :company
 
   has_many :photos, :through => :listings
 
@@ -60,6 +61,7 @@ class Location < ActiveRecord::Base
   scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where('locations.location_type_id IN (?)', location_types_ids) }
   scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company => :company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
   scope :none, where(:id => nil)
+  scope :for_instance, ->(instance) { joins(:instance).includes(:instance).where(:'instances.id' => instance.id) }
 
   acts_as_paranoid
 
