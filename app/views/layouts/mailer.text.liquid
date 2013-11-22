@@ -1,5 +1,5 @@
 {{ content_for_layout }}
 
-{% capture footer_path %}{{ 'shared/mailers/' | append:footer_type | append:'_footer.text' }}{% endcapture %}
+{% capture footer_path %}{{ 'shared/mailers/' | append:mail_type | append:'_footer.text' }}{% endcapture %}
 {% include footer_path %}
 

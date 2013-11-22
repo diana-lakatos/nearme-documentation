@@ -3,6 +3,8 @@
   filter: alpha(opacity=$opacity * 100);
 }
 
+@import "globals/_variables";
+
 .navbar-inverse {
   ul.nav {
     li {
@@ -13,13 +15,15 @@
       }
     }
   }
+
+  ul.dropdown-menu {
+    border-color: $theme_black !important;
+  }
 }
 
 .phone-number-country-code-field {
   @include opacity(1);
 }
-
-@import "globals/_variables";
 
 .input-icon-holder {
   @include opacity(1);

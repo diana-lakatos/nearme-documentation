@@ -32,6 +32,10 @@ class ListingDrop < BaseDrop
     routes.manage_guests_dashboard_url(:token => @listing.administrator.authentication_token)
   end
 
+  def manage_guests_dashboard_url_with_tracking
+    routes.manage_guests_dashboard_url(:token => @listing.administrator.authentication_token, :track_email_event => true)
+  end
+
   def search_url
     routes.search_url
   end

@@ -32,5 +32,4 @@ class InstanceAdmin::BaseController < ApplicationController
     @instance_admin_roles ||= ([InstanceAdminRole.administrator_role, InstanceAdminRole.default_role] + platform_context.instance.instance_admin_roles).compact
   end
   helper_method :instance_admin_roles
-
 end

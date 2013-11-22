@@ -104,4 +104,7 @@ module DNM
     NON_TRANSACTIONAL = 'non_transactional'
   end
 
+  module Manage
+  end
+
 end

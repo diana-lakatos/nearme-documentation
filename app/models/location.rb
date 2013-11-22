@@ -1,4 +1,5 @@
 class Location < ActiveRecord::Base
+  class NotFound < ActiveRecord::RecordNotFound; end
   has_paper_trail
   extend FriendlyId
   friendly_id :formatted_address, use: :slugged

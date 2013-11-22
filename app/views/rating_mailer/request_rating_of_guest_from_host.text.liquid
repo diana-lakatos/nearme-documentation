@@ -6,6 +6,6 @@ Your opinion is very important and it will help us ensure that our guests are a 
 
 Please take a moment to give us your feedback!
 
-Write a Review: {{ reservation.guest_rating_reservation_url }}
+Write a Review: {{ reservation.guest_rating_reservation_url_with_tracking | append:signature_for_tracking }}
 
 If you'd prefer to talk to us directly, please send an email to happydesk@desksnear.me or call us on {{ platform_context.phone_number }} - we love to talk with our hosts.

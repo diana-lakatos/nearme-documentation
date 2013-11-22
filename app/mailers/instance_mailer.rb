@@ -22,10 +22,13 @@ class InstanceMailer < ActionMailer::Base
     reply_to = options.delete(:reply_to) || mailer.reply_to
     user  = User.find_by_email(to.kind_of?(Array) ? to.first : to)
     self.email_method = StackTraceParser.new(caller[0])
+    self.email_method = StackTraceParser.new(caller[1]) if ['generate_mail', 'request_rating'].include?(self.email_method.method_name)
     custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge({template: template, campaign: self.email_method.humanized_method_name})
 
     @mail_type = mail_type
-    @unsubscribe_link = unsubscribe_url(signature: generate_signature, token: @user.authentication_token) if non_transactional?
+    @mailer_signature = generate_signature
+    @unsubscribe_link = unsubscribe_url(signature: @mailer_signature, token: @user.authentication_token) if non_transactional?
+    @signature_for_tracking = "&email_signature=#{@mailer_signature}"
 
     self.class.layout _layout, platform_context: platform_context
 
