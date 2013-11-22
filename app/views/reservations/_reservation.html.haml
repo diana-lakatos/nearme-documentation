@@ -23,9 +23,10 @@
               = reservation.short_dates
           .clearfix
           %span
-            = link_to export_reservation_path(reservation, :format => :ics) do
-              %span Add to iCal
-              %span.ico-download
+            - unless reservation.unconfirmed?
+              = link_to export_reservation_path(reservation, :format => :ics) do
+                %span Add to iCal
+                %span.ico-download
         .span1
           = reservation.quantity
           %span.ico-user

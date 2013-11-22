@@ -128,7 +128,7 @@ class ReservationDecorator < Draper::Decorator
 
       tooltip(tooltip_text, link_text, {class: status_icon}, nil)
     else
-      "<i class='#{status_icon}'></span>".html_safe
+      "<i class='#{status_icon}'></i>".html_safe
     end
   end
 
@@ -139,7 +139,7 @@ class ReservationDecorator < Draper::Decorator
 
       tooltip(tooltip_text, link_text, {class: status_icon}, nil)
     else
-      "<i class='#{status_icon}'></span>".html_safe
+      "<i class='#{status_icon}'></i>".html_safe
     end
   end
 
