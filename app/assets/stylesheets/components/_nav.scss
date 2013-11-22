@@ -37,6 +37,9 @@
   .divider-vertical {
     margin: 0px;
     height: 60px;
+    border: 0;
+    width: 1px;
+    background: $theme_lighter_black;
   }
 
   .nav-links {
@@ -114,7 +117,7 @@
 
       .dropdown-menu {
         min-width: 130px;
-        margin: 0 0 0 -2px;
+        margin: 0 0 0 -1px;
         padding-top: 0px;
         border-radius: 0px;
         @include border-corner-radius(top, left, 0);
@@ -161,6 +164,7 @@
 
       ul.dropdown-menu {
         background: $theme_black;
+        border-color: $theme_lighter_black;
 
         li {
           background:$theme_black;
