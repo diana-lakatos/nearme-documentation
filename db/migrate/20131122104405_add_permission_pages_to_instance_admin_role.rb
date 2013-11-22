@@ -4,7 +4,7 @@ class AddPermissionPagesToInstanceAdminRole < ActiveRecord::Migration
   end
 
   def change
-    add_column :instance_admin_roles, :permission_pages, :boolean, :default => true
+    add_column :instance_admin_roles, :permission_pages, :boolean, :default => false
 
     administrator_role = InstanceAdminRole.find_by_name 'Administrator'
     if administrator_role

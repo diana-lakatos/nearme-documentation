@@ -236,7 +236,7 @@ ActiveRecord::Schema.define(:version => 20131122104405) do
     t.boolean  "permission_analytics",   :default => true
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
-    t.boolean  "permission_pages",       :default => true
+    t.boolean  "permission_pages",       :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"
