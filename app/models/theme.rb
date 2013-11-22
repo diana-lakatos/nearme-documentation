@@ -6,7 +6,6 @@ class Theme < ActiveRecord::Base
   COLORS.each do |color|
     attr_accessible "color_#{color}"
   end
-  DEFAULT_THEME_PAGES = %w(about legal)
 
   attr_accessible :name, :icon_image, :icon_retina_image,
     :logo_image, :logo_retina_image, :hero_image, :skip_compilation,
@@ -120,10 +119,6 @@ class Theme < ActiveRecord::Base
     end
     cloned_theme.attributes = current_attributes
     cloned_theme
-  end
-
-  def pages_with_fallbacks
-    (Theme::DEFAULT_THEME_PAGES.map{|page| Page.new(path: page.capitalize, slug: page)} + self.pages).uniq{|page| page.slug || page.path}
   end
 
   def hex_color(color)

@@ -20,7 +20,7 @@
                 %ul
                   - @guest_list.reservations.each do |reservation|
                     %li
-                      = render 'reservation', reservation: reservation.decorate
+                      = render 'reservation', reservation: reservation
 
 
 :javascript

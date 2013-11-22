@@ -8,11 +8,16 @@
   mixpanel.identify("#{self.mixpanel.distinct_id}");
   mixpanel.register(#{raw self.mixpanel.session_properties.to_json});
 
-- if current_user
-  :javascript
-    mixpanel.name_tag(#{raw current_user.name.to_json});
-    olark('api.visitor.getDetails', function(details){
-      mixpanel.people.set({
-        $ip: details.ip
-      });
-    })
+
+:javascript
+  var find_correct_ip = function(details){
+    $.ajax({url: '#{store_correct_ip_path}', type: 'PUT', data: { ip: details.ip }});
+  }
+  var set_ip_in_mixpanel = function(details){
+    mixpanel.name_tag(#{raw current_user.try(:name).try(:to_json)});
+    mixpanel.people.set({ $ip: details.ip });
+  }
+  olark('api.visitor.getDetails', function(details){
+    #{"find_correct_ip(details);" if session[:current_ip].nil?}
+    #{"set_ip_in_mixpanel(details);" if current_user}
+  })

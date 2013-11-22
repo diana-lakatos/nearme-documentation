@@ -271,4 +271,17 @@ class ApplicationController < ActionController::Base
     uri.query_values = parameters
     uri.to_s
   end
+
+  def current_ip
+    session[:current_ip] ? session[:current_ip] : request.remote_ip
+  end
+
+  def find_current_country
+    if current_ip && current_ip != '127.0.0.1'
+      @country = Geocoder.search(current_ip).first.country
+    else
+      @country = 'United States'
+    end
+  end
+
 end

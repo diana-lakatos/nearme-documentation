@@ -74,6 +74,16 @@ class InstanceAdmin::AuthorizerTest < ActiveSupport::TestCase
       assert !@authorizer.authorized?(InstanceAdmin::ThemeController)
     end
 
+    should 'know if user has permission to pages controller' do
+      @role.update_attribute(:permission_pages, true)
+      assert @authorizer.authorized?(InstanceAdmin::PagesController)
+    end
+
+    should 'know if user does not have permission to pages controller' do
+      @role.update_attribute(:permission_pages, false)
+      assert !@authorizer.authorized?(InstanceAdmin::PagesController)
+    end
+
     should 'know if user has permission to partners controller' do
       @role.update_attribute(:permission_partners, true)
       assert @authorizer.authorized?(InstanceAdmin::PartnersController)

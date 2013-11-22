@@ -26,6 +26,9 @@
                 - if @authorizer.authorized?(InstanceAdmin::ThemeController)
                   %li{:class => ("active" if request.url.include?(instance_admin_theme_url))}
                     = link_to "Theme", instance_admin_theme_url
+                - if @authorizer.authorized?(InstanceAdmin::PagesController)
+                  %li{:class => ("active" if request.url.include?(instance_admin_pages_url))}
+                    = link_to "Pages", instance_admin_pages_url
                 - if @authorizer.authorized?(InstanceAdmin::InventoriesController)
                   %li{:class => ("active" if request.url.include?(instance_admin_inventories_url))}
                     = link_to "Inventory", instance_admin_inventories_url
