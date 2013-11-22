@@ -38,3 +38,10 @@ fieldset {
     display: none;
   }
 }
+
+textarea {
+
+  &.wide {
+    width: 700px;
+  }
+}

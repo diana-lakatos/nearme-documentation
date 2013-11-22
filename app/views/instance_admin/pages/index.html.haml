@@ -1,0 +1,16 @@
+%h1 Pages
+
+%br/
+= link_to 'New page', new_instance_admin_page_path, class: 'btn'
+%br/
+%br/
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Name
+      %th Path
+      %th
+  %tbody
+    - platform_context.theme.pages.each do |page|
+      = render 'index_row', page: page

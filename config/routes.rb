@@ -67,6 +67,7 @@ DesksnearMe::Application.routes.draw do
       end
     end
     resources :users, :only => [:index, :create]
+    resources :pages
 
     namespace :users do
       resources :instance_admins, :only => [:create, :update, :destroy, :index]
