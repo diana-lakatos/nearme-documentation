@@ -37,7 +37,10 @@
       = f.fields_for :location_types, wrapper: false do |f|
         %tr.fields
           %td= f.input :name, label: false
-          %td.small= f.link_to_remove "Delete", class: 'btn btn-danger pull-right'
+          - if f.object.locations.count == 0
+            %td.small= f.link_to_remove "Delete", class: 'btn btn-danger pull-right'
+          - else
+            %td.pull-right= "(in use by #{f.object.locations.count} locations)"
 
     %p
       = f.link_to_add "Add location type", :location_types, :data => { :target => "#location-types" }, class: 'btn'
@@ -51,7 +54,10 @@
       = f.fields_for :listing_types, wrapper: false  do |f|
         %tr.fields
           %td= f.input :name, label: false
-          %td.small= f.link_to_remove "Delete", class: 'btn btn-danger pull-right'
+          - if f.object.listings.count == 0
+            %td.small= f.link_to_remove "Delete", class: 'btn btn-danger pull-right'
+          - else
+            %td.pull-right= "(in use by #{f.object.listings.count} listings)"
 
     %p
       = f.link_to_add "Add listing type", :listing_types, :data => { :target => "#listing-types" }, class: 'btn'
