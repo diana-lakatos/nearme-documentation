@@ -15,6 +15,8 @@ class Reservation < ActiveRecord::Base
 
   belongs_to :listing, :with_deleted => true
   belongs_to :owner, :class_name => "User"
+  has_one :company, through: :listing
+  has_one :instance, through: :company
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
     :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
@@ -39,6 +41,8 @@ class Reservation < ActiveRecord::Base
   before_validation :set_currency, on: :create, :if => lambda { listing }
   before_validation :set_default_payment_status, on: :create, :if => lambda { listing }
   after_create :auto_confirm_reservation
+
+  scope :for_instance, ->(instance) { includes(:instance).where(:'instances.id' => instance.id) }
 
   def perform_expiry!(platform_context)
     if unconfirmed? && !deleted?
@@ -143,7 +147,7 @@ class Reservation < ActiveRecord::Base
   }
 
   scope :archived, lambda {
-    joins(:periods).where('reservation_periods.date < ? OR state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq
+    joins(:periods).where('reservation_periods.date < ? OR reservations.state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq
   }
 
   scope :last_x_days, lambda { |days_in_past|

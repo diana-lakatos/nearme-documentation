@@ -1,6 +1,7 @@
 module TooltipHelper
 
   include FormHelper
+  include ActionView::Helpers::TagHelper
 
   def tooltip(tooltip_text, link_text = "", options = {}, image = "components/form/hint.png")
     options[:rel] = "tooltip"

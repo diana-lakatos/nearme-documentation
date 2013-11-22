@@ -38,3 +38,20 @@ fieldset {
     display: none;
   }
 }
+
+textarea {
+
+  &.wide {
+    width: 700px;
+  }
+}
+
+table {
+  &.sortable {
+    tbody {
+      tr {
+        cursor: move;
+      }
+    }
+  }
+}

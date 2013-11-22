@@ -44,7 +44,8 @@ class ReservationRequest < Form
         @end_minute   = nil
       end
 
-      (dates || []).each do |date_string|
+      @dates = @dates.split(',') if @dates.is_a?(String)
+      @dates.each do |date_string|
         @reservation.add_period(Date.parse(date_string), start_minute, end_minute)
       end
     end
