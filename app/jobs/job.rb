@@ -69,7 +69,6 @@ class Job
       else
         raise "Job.perform_later: Unknown first argument, must be number of seconds or time with zone - was #{when_perform} (#{when_perform.class})"
     end
-    raise "Job.perform_later: makes no sense to perform later and giving argument 1 as past" if performing_time < Time.zone.now
     performing_time
   end
 end
