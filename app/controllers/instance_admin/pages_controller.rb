@@ -6,4 +6,13 @@ class InstanceAdmin::PagesController < InstanceAdmin::ResourceController
     create!
   end
 
+  def update
+    update! do |format|
+      format.html
+      format.json do
+        render :nothing => true
+      end
+    end
+  end
+
 end
