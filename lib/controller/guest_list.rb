@@ -4,9 +4,9 @@ module Controller
 
     DEFAULT_STATE = 'unconfirmed'
 
-    def initialize(user)
+    def initialize(user, platform_context)
       @user = user
-      @scope = @user.listing_reservations.includes(:listing => :location)
+      @scope = @user.listing_reservations.for_instance(platform_context.instance).includes(:listing => :location)
     end
 
     def filter(state)
@@ -28,7 +28,7 @@ module Controller
     end
 
     def archived
-      @scope.select &:archived?
+      @scope.select(&:archived?)
     end
 
     private

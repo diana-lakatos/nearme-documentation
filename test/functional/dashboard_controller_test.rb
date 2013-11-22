@@ -123,6 +123,44 @@ class DashboardControllerTest < ActionController::TestCase
 
   end
 
+  context '#manage_guests' do
+    setup do
+      @unrelated_listing = FactoryGirl.create(:listing)
+      @related_instance = FactoryGirl.create(:instance)
+      PlatformContext.any_instance.stubs(:instance).returns(@related_instance)
+      @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
+      @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
+      @related_listing = FactoryGirl.create(:listing, location: @related_location)
+    end
+
+    context 'is scoped to current instance' do
+      should 'show related guests' do
+        FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
+
+        get :manage_guests
+        assert_response :success
+        assert_select ".reservation-details", 1
+      end
+
+      should 'show related locations when no related guests' do
+        FactoryGirl.create(:reservation, owner: @user, listing: @unrelated_listing)
+
+
+        get :manage_guests
+        assert_response :success
+        assert_select ".reservation-details", 0
+        assert_select "h2", @related_location.name
+      end
+      should 'not show unrelated guests' do
+        FactoryGirl.create(:reservation, owner: @user, listing: @unrelated_listing)
+
+        get :manage_guests
+        assert_response :success
+        assert_select ".reservation-details", 0
+      end
+    end
+  end
+
   private
 
   def create_reservation_charge(options = {})
