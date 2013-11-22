@@ -14,7 +14,6 @@ class UserMailerTest < ActiveSupport::TestCase
   end
 
   test "has transactional email footer" do
-    mail = UserMailer.notify_about_wrong_phone_number(@platform_context, @user)
-    assert mail.html_part.body.include?("You are receiving this email because you signed up to #{@platform_context.decorate.name} using the email address #{@user.email}")
+    assert UserMailer.transactional?
   end
 end

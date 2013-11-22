@@ -23,7 +23,12 @@ class RatingMailer < InstanceMailer
     request_rating(reservation, user)
   end
 
+  def mail_type
+    DNM::MAIL_TYPES::TRANSACTIONAL
+  end
+
   private
+
   def request_rating(reservation, user)
     @reservation = reservation
     @listing = @reservation.listing

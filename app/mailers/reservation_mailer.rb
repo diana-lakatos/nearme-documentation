@@ -89,6 +89,10 @@ class ReservationMailer < InstanceMailer
     generate_mail("#{reservation.owner.first_name}, your booking is tomorrow!")
   end
 
+  def mail_type
+    DNM::MAIL_TYPES::TRANSACTIONAL
+  end
+
   private
 
   def setup_defaults(platform_context, reservation)

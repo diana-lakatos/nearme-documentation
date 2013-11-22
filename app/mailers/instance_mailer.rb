@@ -25,9 +25,10 @@ class InstanceMailer < ActionMailer::Base
     self.email_method = StackTraceParser.new(caller[1]) if ['generate_mail', 'request_rating'].include?(self.email_method.method_name)
     custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge({template: template, campaign: self.email_method.humanized_method_name})
 
+    @mail_type = mail_type
     @mailer_signature = generate_signature
+    @unsubscribe_link = unsubscribe_url(signature: @mailer_signature, token: @user.authentication_token) if non_transactional?
     @signature_for_tracking = "&email_signature=#{@mailer_signature}"
-    setup_footer
 
     self.class.layout _layout, platform_context: platform_context
 
@@ -49,6 +50,18 @@ class InstanceMailer < ActionMailer::Base
 
     mixed.content_type 'multipart/mixed'
     mixed.header['content-type'].parameters[:boundary] = mixed.body.boundary
+  end
+
+  def mail_type
+    DNM::MAIL_TYPES::BULK
+  end
+
+  def transactional?
+    mail_type == DNM::MAIL_TYPES::TRANSACTIONAL
+  end
+
+  def non_transactional?
+    mail_type == DNM::MAIL_TYPES::NON_TRANSACTIONAL
   end
 
   private
@@ -80,16 +93,6 @@ class InstanceMailer < ActionMailer::Base
     )
     @event_tracker ||= Analytics::EventTracker.new(@mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(user))
     @event_tracker.pixel_track_url("Email Opened", custom_tracking_options)
-  end
-
-  def setup_footer
-    case self.class.name
-    when 'PostActionMailer', 'InstanceAdminMailer', 'UserMailer', 'ReservationMailer', 'RatingMailer'
-      @footer_type ='transactional'
-    when 'RecurringMailer', 'ReengagementMailer'
-      @unsubscribe_link = unsubscribe_url(signature: @mailer_signature, token: @user.authentication_token)
-      @footer_type = 'non-transactional'
-    end
   end
 
   def generate_signature

@@ -4,14 +4,14 @@ class RecurringMailerAnalyticsJobTest < ActiveSupport::TestCase
   setup do
     FactoryGirl.create(:listing, 
                        :activated_at => 28.days.ago)
-    ActionMailer::Base.deliveries.clear
   end
 
   should 'not be sent to user who unsubscribed previously' do
     listing = Listing.last
     user = listing.administrator
     user.unsubscribe('recurring_mailer/analytics')
-    RecurringMailerAnalyticsJob.perform
-    assert_equal ActionMailer::Base.deliveries.size, 0
+    assert_no_difference 'ActionMailer::Base.deliveries.size' do
+     RecurringMailerAnalyticsJob.perform
+    end
   end
 end
