@@ -87,8 +87,7 @@ class InstanceMailer < ActionMailer::Base
   end
 
   def get_tracking_code(platform_context, custom_tracking_options)
-    event_tracker.pixel_track_url("Email Opened", custom_tracking_options) + 
-      event_tracker.pixel_track_url("Email", custom_tracking_options.merge({:opened => true}))
+    event_tracker.pixel_track_url("Email Opened", custom_tracking_options)
   end
 
   def event_tracker
@@ -102,7 +101,7 @@ class InstanceMailer < ActionMailer::Base
   end
 
   def track_sending_email(custom_tracking_options)
-    event_tracker.email(custom_tracking_options.merge(:opened => false))
+    event_tracker.email_sent(custom_tracking_options)
   end
 
   def generate_signature

@@ -191,9 +191,9 @@ class EventTrackerTest < ActiveSupport::TestCase
       @tracker.link_within_email_clicked(@user, { url: '/manage/locations', mailer: 'recurring_mailer/analytics' })
     end
 
-    should 'track email' do
-      expect_event 'Email', { :opened => false }
-      @tracker.email({ :opened => false })
+    should 'track email sent' do
+      expect_event 'Email Sent', {}
+      @tracker.email_sent({})
     end
 
   end
