@@ -115,6 +115,8 @@ en:
         instance_admin_roles:
           role_added: "Great, new role has been added!"
           role_deleted: "That role has been deleted"
+      settings:
+        settings_updated_successfully: 'Settings updated.'
 
   simple_form:
     labels:

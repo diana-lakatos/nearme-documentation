@@ -260,6 +260,8 @@ ActiveRecord::Schema.define(:version => 20131122162155) do
     t.datetime "updated_at",                                                            :null => false
     t.string   "bookable_noun",                                     :default => "Desk"
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
+    t.string   "lessor"
+    t.string   "lessee"
   end
 
   create_table "listing_messages", :force => true do |t|
@@ -280,7 +282,10 @@ ActiveRecord::Schema.define(:version => 20131122162155) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "instance_id"
   end
+
+  add_index "listing_types", ["instance_id"], :name => "index_listing_types_on_instance_id"
 
   create_table "listings", :force => true do |t|
     t.integer  "location_id"
@@ -325,7 +330,10 @@ ActiveRecord::Schema.define(:version => 20131122162155) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "instance_id"
   end
+
+  add_index "location_types", ["instance_id"], :name => "index_location_types_on_instance_id"
 
   create_table "locations", :force => true do |t|
     t.integer  "company_id"

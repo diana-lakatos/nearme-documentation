@@ -19,6 +19,8 @@ class Theme < ActiveRecord::Base
   belongs_to :owner, :polymorphic => true
   has_many :pages, :dependent => :destroy
   delegate :bookable_noun, :to => :instance
+  delegate :lessor, :to => :instance
+  delegate :lessee, :to => :instance
 
   mount_uploader :icon_image, ThemeImageUploader
   mount_uploader :icon_retina_image, ThemeImageUploader

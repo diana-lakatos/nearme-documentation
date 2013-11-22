@@ -54,8 +54,9 @@ DesksnearMe::Application.routes.draw do
       post :login_as, on: :member
       post :restore_session, on: :collection
     end
+
     resources :partners
-    resources :settings, :only => [:index]
+    resource :settings, :only => [:show, :update], :controller => 'settings'
     resource :theme, :only => [:show, :update], :controller => 'theme'
     resources :transfers do
       member do

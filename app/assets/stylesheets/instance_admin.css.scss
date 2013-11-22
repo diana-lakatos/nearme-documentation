@@ -37,6 +37,17 @@ fieldset {
     margin-left: 12px;
     display: none;
   }
+
+  table {
+    .small {
+      width: 75px;
+    }
+  }
+}
+
+.table-borderless td,
+.table-borderless th {
+    border: 0;
 }
 
 textarea {
