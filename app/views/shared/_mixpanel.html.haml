@@ -14,7 +14,7 @@
     $.ajax({url: '#{store_correct_ip_path}', type: 'PUT', data: { ip: details.ip }});
   }
   var set_ip_in_mixpanel = function(details){
-    mixpanel.name_tag(#{raw current_user.name.to_json});
+    mixpanel.name_tag(#{raw current_user.try(:name).try(:to_json)});
     mixpanel.people.set({ $ip: details.ip });
   }
   olark('api.visitor.getDetails', function(details){
