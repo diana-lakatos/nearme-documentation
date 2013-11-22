@@ -1,4 +1,3 @@
-
 Devise.setup do |config|
   config.mailer_sender = "support@desksnear.me"
 
@@ -24,7 +23,4 @@ Devise.setup do |config|
 
   # Setup our custom expiring URL token authentication strategy
   require 'temporary_token_authenticatable'
-
-
 end
-

@@ -11,7 +11,7 @@ class User::TemporaryTokenVerifier
     @user = user
   end
 
-  # Generates an expiring, multi-user login token for the user.
+  # Generates an expiring, multi-use login token for the user.
   #
   # Calls to find_user_for_token with this token will match the User until
   # the expires_at date has passed.
@@ -68,7 +68,6 @@ class User::TemporaryTokenVerifier
   rescue ArgumentError, TypeError
     [nil, nil]
   end
-
 
   # Return a MessageVerifier for generating and verifying message integrity
   def verifier
