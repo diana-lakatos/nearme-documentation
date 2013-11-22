@@ -191,6 +191,11 @@ class EventTrackerTest < ActiveSupport::TestCase
       @tracker.link_within_email_clicked(@user, { url: '/manage/locations', mailer: 'recurring_mailer/analytics' })
     end
 
+    should 'track email' do
+      expect_event 'Email', { :opened => false }
+      @tracker.email({ :opened => false })
+    end
+
   end
 
   should 'trigger mixpanel method to get pixel based tracking url' do

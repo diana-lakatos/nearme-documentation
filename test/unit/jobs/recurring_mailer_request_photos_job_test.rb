@@ -18,6 +18,7 @@ class RecurringMailerRequestPhotosJobTest < ActiveSupport::TestCase
 
   context 'will touch last_request_photos timestamp' do
     should 'for invalid listing' do
+      stub_mixpanel
       listing = Listing.last
       refute listing.valid?
       RecurringMailerRequestPhotosJob.perform

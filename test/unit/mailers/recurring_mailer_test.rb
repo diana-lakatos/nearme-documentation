@@ -4,6 +4,7 @@ class RecurringMailerTest < ActiveSupport::TestCase
 
   include Rails.application.routes.url_helpers
   setup do
+    stub_mixpanel
     @company = FactoryGirl.create(:company)
     @platform_context = PlatformContext.new
   end

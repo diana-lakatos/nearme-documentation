@@ -93,6 +93,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
   context "when successful" do
     setup do
+      stub_mixpanel
       authenticate!
       ReservationMailer.expects(:notify_host_with_confirmation).returns(stub(deliver: true)).once
       ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).once
@@ -158,6 +159,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   # Inquiry
 
   test "should accept inquiry" do
+    stub_mixpanel
     authenticate!
     listing         = Listing.find(@listing.id)
     listing.creator = FactoryGirl.create(:user)
