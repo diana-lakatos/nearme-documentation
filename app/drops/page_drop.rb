@@ -9,6 +9,6 @@ class PageDrop < BaseDrop
   end
 
   def page_url
-    routes.pages_url(@page)
+    routes.pages_path(@page)
   end
 end
