@@ -1,6 +1,6 @@
 = simple_form_for [:instance_admin, resource], :html => { :multipart => true } do |f|
-  = f.input :path
-  = f.input :content, width: 50
+  = f.input :path, :placeholder => 'Page title'
+  = f.input :content, :input_html => { :class => 'wide' }
   = f.input :hero_image
   = link_to(resource.hero_image.filename, resource.hero_image.url) if resource.hero_image.present?
 
