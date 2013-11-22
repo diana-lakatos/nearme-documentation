@@ -22,6 +22,7 @@ $theme_orange: $dnm_orange !default;
 $theme_green:  $dnm_green !default;
 $theme_gray:   $dnm_gray !default;
 $theme_black:  $dnm_black !default;
+$theme_lighter_black: lighten($theme_black, 5%);
 $theme_white:  $dnm_white !default;
 
 $blue:   $theme_blue;
