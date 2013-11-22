@@ -27,11 +27,21 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
   context "price must be formatted" do
 
+    should "ignore invalid characters in price" do
+      assert_difference('Listing.count', 1) do
+        post :submit_listing, get_params("249.31-300.00", '!@#$%^&*()_+=_:;"[]}{\,<.>/?`~', 'i am not valid price I guess', "0")
+      end
+      @listing = assigns(:listing)
+      assert_equal 24931, @listing.daily_price_cents
+      assert_equal 0, @listing.weekly_price_cents
+      assert_equal 0, @listing.monthly_price_cents
+    end
+
     should "handle nil and empty prices" do
       assert_difference('Listing.count', 1) do
         post :submit_listing, get_params(nil, "", "249.00", "0")
       end
-      @listing = Listing.last
+      @listing = assigns(:listing)
       assert_nil @listing.daily_price
       assert_nil @listing.weekly_price
       assert_equal 24900, @listing.monthly_price_cents
@@ -42,6 +52,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
         post :submit_listing, { "user" => {"companies_attributes" => {"0"=> { "name"=>"International Secret Intelligence Service" }}}}
       end
     end
+
 
   end
 
@@ -70,7 +81,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
         assert_select 'option[value="Brazil"][selected="selected"]', 1
       end
     end
-    
+
   end
 
   context 'track' do
@@ -159,42 +170,42 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
   def get_params(daily_price = nil, weekly_price = nil, monthly_price = nil, free = "1")
     {"user" =>
-    {"companies_attributes"=>
-     {"0" =>
-     {
-       "name"=>"International Secret Intelligence Service", 
-       "industry_ids"=>["#{@industry.id}"],
-       "locations_attributes"=>
-       {"0"=>
-        {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.", 
-         "address"=>"usa", 
-         "local_geocoding"=>"10", 
-         "latitude"=>"5", 
-         "longitude"=>"8", 
-         "formatted_address"=>"formatted usa", 
-         "location_type_id"=>"1", 
-         "listings_attributes"=>
-        {"0"=>
-         {"name"=>"Desk", 
-          "description"=>"We have a group of several shared desks available.",
-          "hourly_reservations" => false,
-          "listing_type_id"=>"1", 
-          "quantity"=>"1", 
-          "daily_price"=>daily_price, 
-          "weekly_price"=>weekly_price, 
-          "monthly_price"=> monthly_price, 
-          "free"=>free, 
-          "confirm_reservations"=>"0",
-          "photos_attributes" => [FactoryGirl.attributes_for(:photo)]}
-        }, 
-        "currency"=>"USD"}
-       }
-     },
-     },
-     "country_name" => "United States",
-     "phone" => "123456789"
+     {"companies_attributes"=>
+      {"0" =>
+       {
+         "name"=>"International Secret Intelligence Service", 
+         "industry_ids"=>["#{@industry.id}"],
+         "locations_attributes"=>
+         {"0"=>
+          {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.", 
+           "address"=>"usa", 
+           "local_geocoding"=>"10", 
+           "latitude"=>"5", 
+           "longitude"=>"8", 
+           "formatted_address"=>"formatted usa", 
+           "location_type_id"=>"1", 
+           "listings_attributes"=>
+          {"0"=>
+           {"name"=>"Desk", 
+            "description"=>"We have a group of several shared desks available.",
+            "hourly_reservations" => false,
+            "listing_type_id"=>"1", 
+            "quantity"=>"1", 
+            "daily_price"=>daily_price, 
+            "weekly_price"=>weekly_price, 
+            "monthly_price"=> monthly_price, 
+            "free"=>free, 
+            "confirm_reservations"=>"0",
+            "photos_attributes" => [FactoryGirl.attributes_for(:photo)]}
+          }, 
+          "currency"=>"USD"}
+         }
+       },
+      },
+      "country_name" => "United States",
+      "phone" => "123456789"
+     }
     }
-   }
   end
 
   def create_listing
