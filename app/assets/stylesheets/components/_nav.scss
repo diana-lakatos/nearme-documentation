@@ -10,9 +10,8 @@
 
     #logo {
       float: left;
-      margin-top: 14px;
       width: $theme_logo_width;
-      height: 28px;
+      height: 60px;
       background: image-url($theme_logo) no-repeat;
       text-indent: -9999px;
 
@@ -26,9 +25,8 @@
     @media (max-width: $ipad-width) {
 
       #logo {
-        height: 50px;
+        height: 60px;
         width: $theme_icon_width;
-        margin-top: 2px;
         background: image-url($theme_icon) no-repeat;
       }
     }
