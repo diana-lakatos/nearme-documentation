@@ -279,9 +279,8 @@ class ApplicationController < ActionController::Base
   def find_current_country
     if current_ip && current_ip != '127.0.0.1'
       @country = Geocoder.search(current_ip).first.try(:country)
-    else
-      @country = 'United States'
     end
+    @country ||= 'United States'
   end
 
 end
