@@ -1,5 +1,6 @@
 class ReservationDecorator < Draper::Decorator
   include CurrencyHelper
+  include TooltipHelper
 
   delegate_all
 
@@ -120,7 +121,45 @@ class ReservationDecorator < Draper::Decorator
     end.join(', ')
   end
 
+  def my_booking_status_info
+    if state == 'unconfirmed'
+      tooltip_text = "Pending confirmation from host. Booking will expire in #{time_to_expiry(expiry_time)}."
+      link_text = "<span class='tooltip-spacer'>i</span>".html_safe
+
+      tooltip(tooltip_text, link_text, {class: status_icon}, nil)
+    else
+      "<i class='#{status_icon}'></span>".html_safe
+    end
+  end
+
+  def manage_booking_status_info
+    if state == 'unconfirmed'
+      tooltip_text = "You must confirm this booking within #{time_to_expiry(expiry_time)} or it will expire."
+      link_text = "<span class='tooltip-spacer'>i</span>".html_safe
+
+      tooltip(tooltip_text, link_text, {class: status_icon}, nil)
+    else
+      "<i class='#{status_icon}'></span>".html_safe
+    end
+  end
+
   private
+
+  def time_to_expiry(time_of_event)
+    current_time = Time.zone.now
+    total_seconds = time_of_event - current_time
+    hours = (total_seconds/1.hour).floor
+    minutes = ((total_seconds-hours.hours)/1.minute).floor
+    if hours < 1 and minutes < 1
+      'less than minute'
+    else
+      if hours < 1
+        '%d minutes' % [minutes]
+      else
+        '%d hours, %d minutes' % [hours, minutes]
+      end
+    end
+  end
 
   # [[20 Nov 2012, 21 Nov 2012, 22 Nov 2012], [5 Dec 2012], [7 Dec 2012, 8 Dec 2012]]
   def dates_in_groups
