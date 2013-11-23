@@ -2,11 +2,10 @@ class Theme < ActiveRecord::Base
   DEFAULT_EMAIL = 'support@desksnear.me'
   DEFAULT_PHONE_NUMBER = '1.888.998.3375'
   COLORS = %w(blue red orange green gray black white)
-  COLORS_DEFAULT_VALUES = %w(#024fa3 #e83d33 #FF8D00 #157A49 #394449 #1e2222 #fafafa)
+  COLORS_DEFAULT_VALUES = %w(024fa3 e83d33 FF8D00 157A49 394449 1e2222 fafafa)
   COLORS.each do |color|
     attr_accessible "color_#{color}"
   end
-  DEFAULT_THEME_PAGES = %w(about legal)
 
   attr_accessible :name, :icon_image, :icon_retina_image,
     :logo_image, :logo_retina_image, :hero_image, :skip_compilation,
@@ -20,6 +19,8 @@ class Theme < ActiveRecord::Base
   belongs_to :owner, :polymorphic => true
   has_many :pages, :dependent => :destroy
   delegate :bookable_noun, :to => :instance
+  delegate :lessor, :to => :instance
+  delegate :lessee, :to => :instance
 
   mount_uploader :icon_image, ThemeImageUploader
   mount_uploader :icon_retina_image, ThemeImageUploader
@@ -122,8 +123,11 @@ class Theme < ActiveRecord::Base
     cloned_theme
   end
 
-  def pages_with_fallbacks
-    (Theme::DEFAULT_THEME_PAGES.map{|page| Page.new(path: page.capitalize, slug: page)} + self.pages).uniq{|page| page.slug || page.path}
+  def hex_color(color)
+    raise ArgumentError unless COLORS.include?(color.to_s)
+    value = send(:"color_#{color}")
+    return "" if value.to_s.empty?
+    "#" + value
   end
 end
 

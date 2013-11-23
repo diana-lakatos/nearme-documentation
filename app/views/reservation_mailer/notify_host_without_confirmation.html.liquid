@@ -36,7 +36,7 @@ Your listing, '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' at {{
 
 <p>Exciting, right? You can manage this booking from the Dashboard.</p>
 
-<a class="btn" href="{{ listing.manage_guests_dashboard_url }}">Manage Guests</a>
+<a class="btn" href="{{ listing.manage_guests_dashboard_url_with_tracking | append:signature_for_tracking }}">Manage Guests</a>
 
 <p>If you need help, send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or contact us at {{ platform_context.phone_number }}.</p>
 

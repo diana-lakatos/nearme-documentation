@@ -8,6 +8,7 @@ FactoryGirl.define do
     permission_analytics true
     permission_settings false
     permission_theme false
+    permission_pages false
     permission_transfers false
     permission_inventories false
     permission_partners false
@@ -19,6 +20,7 @@ FactoryGirl.define do
       permission_analytics true
       permission_settings false
       permission_theme false
+      permission_pages false
       permission_transfers false
       permission_inventories false
       permission_partners false
@@ -30,6 +32,7 @@ FactoryGirl.define do
       instance_id nil
       permission_settings true
       permission_theme true
+      permission_pages true
       permission_transfers true
       permission_inventories true
       permission_partners true

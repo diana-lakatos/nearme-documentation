@@ -1,0 +1,6 @@
+%h1
+  = @page.path
+  .pull-right
+    = link_to 'Edit', edit_instance_admin_page_path(@page), class: 'btn'
+
+= render 'admin/resource/attributes_table'

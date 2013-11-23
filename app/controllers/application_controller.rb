@@ -136,11 +136,11 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    stored_url_for(resource)
+    url_without_authentication_token(stored_url_for(resource))
   end
 
   def after_sign_up_path_for(resource)
-    stored_url_for(resource)
+    url_without_authentication_token(stored_url_for(resource))
   end
 
   def already_signed_in?
@@ -245,7 +245,6 @@ class ApplicationController < ActionController::Base
   end
 
   def log_out_if_token_exists
-    return if params[:controller] == 'sessions'
     if current_user && params[:token].present?
       Rails.logger.info "#{current_user.email} is being logged out due to token param"
       sign_out current_user
@@ -264,4 +263,24 @@ class ApplicationController < ActionController::Base
     return false unless current_user
     current_user.encrypted_password.blank? && current_user.authentications.empty?
   end
+
+  def url_without_authentication_token(url)
+    uri = Addressable::URI.parse(url)
+    parameters = uri.query_values
+    parameters.try(:delete, 'token')
+    uri.query_values = parameters
+    uri.to_s
+  end
+
+  def current_ip
+    session[:current_ip] ? session[:current_ip] : request.remote_ip
+  end
+
+  def find_current_country
+    if current_ip && current_ip != '127.0.0.1'
+      @country = Geocoder.search(current_ip).first.try(:country)
+    end
+    @country ||= 'United States'
+  end
+
 end

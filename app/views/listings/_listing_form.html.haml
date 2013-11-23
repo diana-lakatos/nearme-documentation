@@ -14,7 +14,7 @@
     .control-group
       = f.label :enabled, 'Enabled?'
       .switch-wrapper
-        .switch{'data-on-label' => "", 'data-off-label' => ""}
+        .switch{'data-on-label' => "", 'data-off-label' => "", 'data-ajax-updateable' => f.object.persisted?}
           = f.check_box :enabled
 
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)

@@ -8,12 +8,13 @@ class Manage::BaseController < ApplicationController
     @section_name = 'dashboard'
   end
 
-  def set_locations_scope
-    if current_user.is_location_administrator? 
-      @locations_scope = current_user.administered_locations
-    else
-      @locations_scope = current_user.locations
+  def locations_scope
+    @locations_scope ||= begin
+      if current_user.is_location_administrator?
+        current_user.administered_locations.for_instance(platform_context.instance)
+      else
+        current_user.locations.for_instance(platform_context.instance)
+      end
     end
   end
-
 end

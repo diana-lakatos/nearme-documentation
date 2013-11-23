@@ -3,6 +3,7 @@ require 'test_helper'
 class ListingTest < ActiveSupport::TestCase
 
   setup do
+    stub_mixpanel
     @listing = FactoryGirl.create(:listing)
     @user = FactoryGirl.create(:user)
     @platform_context = PlatformContext.new

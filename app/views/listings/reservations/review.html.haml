@@ -1,78 +1,85 @@
-.space-reservation-modal
-  %header
-    %h2
-      %span.ico-location.padding= location_name(@reservation_request)
+- @reservation = @reservation_request.reservation
 
-  = simple_form_for @reservation_request, :url => secure_listing_reservations_url(@reservation_request.listing), :method => :post, :remote => true, :html => {:class => "payment form-horizontal"} do |f|
-    = render 'listings/reservations/fields', :f => f
+.row-fluid
+  .span8.offset2
+    %h1= "Review your booking at #{@reservation_request.listing.name}"
+    %p= @reservation_request.location.address
 
-    - if @reservation_request.errors.present?
-      .flash.error
-        %p.text-center Whoops! We couldn't make that reservation.
-        %ul
-          - @reservation_request.errors[:base].each do |error|
-            %li= error
+    .box
+      %h2
+        = @reservation_request.reservation.days_in_words
 
-    %h2= form_title(@reservation_request)
+      = simple_form_for @reservation_request, :url => secure_listing_url(@reservation_request.listing), :method => :post, :html => {:class => "payment form-horizontal"} do |f|
+        = render 'listings/reservations/fields', :f => f
 
-    - if @reservation_request.hourly_reservations?
-      %p
-        = hourly_summary_for_period @reservation_request.reservation_periods.first
+        - if @reservation_request.errors.present?
+          .flash.error
+            %p Whoops! We couldn't make that reservation.
+            %ul
+              - @reservation_request.errors[:base].each do |error|
+                %li= error
 
-    - else
-      %p= selected_dates_summary(@reservation_request.reservation)
+        - if @reservation_request.hourly_reservations?
+          %p
+            = @reservation.hourly_summary_for_first_period
 
-    %hr
-
-    .summary.subtotal-cost-line
-      .subtotal-label Subtotal Cost:
-      .subtotal-amount= reservation_subtotal_price(@reservation_request.reservation)
-
-    - if @reservation_request.credit_card_payment?
-      .summary.service-fee-line
-        .service-fee-label Service Fee:
-        .service-fee-amount= reservation_service_fee(@reservation_request.reservation)
-
-    .summary.total-cost-line
-      .total-label Total Cost:
-      .total-amount
-        - if @reservation_request.credit_card_payment?
-          = reservation_total_price(@reservation_request.reservation)
         - else
-          = reservation_subtotal_price(@reservation_request.reservation)
-    %hr
+          .selected-dates-summary
+            %hr.thin
+            = @reservation.selected_dates_summary("<hr class='thin' />")
 
-    - if @reservation_request.credit_card_payment?
+        %hr.thin
 
-      - if @reservation_request.display_phone_and_country_block?
-        = render 'phone_fields', :f => f
+        %h2 Order Summary
 
-      - if @reservation_request.credit_card_payment?
-        = render 'credit_card_fields', :f => f
+        .order-summary
+          .summary-line
+            .summary-line-label Subtotal
+            .summary-line-value.subtotal-amount= @reservation.subtotal_price
+            .clearfix
 
-      - if @reservation_request.confirm_reservations?
-        %p.text-center
-          This host manually confirms all bookings before payment.
-    - elsif @reservation_request.manual_payment?
-      %p.text-center
-        You will make the payment in person upon arrival
-      - if @reservation_request.display_phone_and_country_block?
-        = render :partial => 'phone_fields', :locals => { :f => f, :country => @country }
+          .summary-line
+            .summary-line-label Service fee
+            .summary-line-value.service-fee-amount= @reservation.service_fee
+            .clearfix
 
-    = f.button :submit, 'Request Booking', disable_with: "Booking..."
+          .summary-line
+            .summary-line-label Total
+            .summary-line-value.total-amount= @reservation.total_price
+            .clearfix
 
-  :javascript
-    $(function() {
-      new Bookings.ReservationModal($('form.payment'));
-      new PhoneNumbers.FieldsForm(
-        $('form.payment'),
-        {
-          countrySelector : '#reservation_request_country_name',
-          mobileSelector  : '#reservation_request_mobile_number',
-          phoneSelector   : '#reservation_request_phone',
-          sameAsSelector  : '#reservation_request_mobile_same_as_phone'
-        }
-      );
-      DNM.initializeCustomSelects($('.space-reservation-modal'));
-      window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
-    });
+        - if @reservation_request.display_phone_and_country_block?
+
+          %h2 Contact Information
+
+          = render 'contact_information_fields', :f => f
+
+
+        - if @reservation_request.credit_card_payment?
+
+          %h2 Payment
+
+          = render 'credit_card_fields', :f => f
+
+          - if @reservation_request.confirm_reservations?
+            %p.confirm-reservations This host manually confirms all bookings. Your card will not be charged until the booking is confirmed.
+
+        - elsif @reservation_request.manual_payment?
+          %p You will make the payment in person upon arrival
+
+        = f.button :submit, 'Request Booking', disable_with: "Booking..."
+
+:javascript
+  $(function() {
+    new Bookings.ReservationRequestFormController($('form.payment'));
+    new PhoneNumbers.FieldsForm(
+      $('form.payment'),
+      {
+        countrySelector : '#reservation_request_country_name',
+        mobileSelector  : '#reservation_request_mobile_number',
+        phoneSelector   : '#reservation_request_phone',
+        sameAsSelector  : '#reservation_request_mobile_same_as_phone'
+      }
+    );
+    window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
+  });

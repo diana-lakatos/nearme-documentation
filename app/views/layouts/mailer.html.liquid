@@ -241,6 +241,10 @@
     .footer table tr td span {
       font-size: 16px !important
     }
+
+    .footer a {
+      color: #B3B3B3 !important;
+    }
  
 
     /* ------------------------------------------- 
@@ -337,12 +341,8 @@
                   <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
                     <tr>
                       <td>
-                        <center>
-                          Sent with <span>&hearts;</span>
-                        </center>
-                        <center>
-                          To unsubscribe from these mailings, please reply to this email with subject 'Unsubscribe'
-                        </center>
+                        {% capture footer_path %}{{ 'shared/mailers/' | append:mail_type | append:'_footer.html' }}{% endcapture %}
+                        {% include footer_path %}
                       </td>
                     </tr>
                   </table>

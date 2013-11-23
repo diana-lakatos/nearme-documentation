@@ -6,7 +6,7 @@ module OmniauthHelper
   end
 
   def create_user_for_provider(provider)
-    @authentication = FactoryGirl.create(:authentication, {:uid => "123545", :provider => provider.downcase})
+    @authentication = FactoryGirl.create(:authentication, {:uid => "123545", :provider => provider.downcase, :token => 'abcd'})
     @authentication.user
   end
 
@@ -15,6 +15,9 @@ module OmniauthHelper
     options = options.reverse_merge(
       :provider => provider.downcase,
       :uid => '123545',
+      :credentials => {
+        :token => 'abcd'
+      },
       :info => {
         # those parameters need to correspond to information needed in app/helpers/authentications_helper
         :name => "#{provider} name",

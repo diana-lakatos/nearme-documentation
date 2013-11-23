@@ -1,12 +1,13 @@
 module SessionsHelper
 
   def login(user)
-    auth = user.authentications.find_or_initialize_by_provider('twitter')
+    auth = user.authentications.find_or_initialize_by_provider_and_token('twitter')
     if auth.new_record?
       auth.uid = FactoryGirl.attributes_for(:authentication)[:uid]
-      auth.save!
+      auth.token = FactoryGirl.attributes_for(:authentication)[:token]
     end
-    OmniAuth.config.add_mock(:twitter, {:uid => auth.uid})
+    auth.save!
+    OmniAuth.config.add_mock(:twitter, {:uid => auth.uid, :credentials => {:token => auth.token}})
     visit "/auth/twitter"
   end
 

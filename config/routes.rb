@@ -54,11 +54,21 @@ DesksnearMe::Application.routes.draw do
       post :login_as, on: :member
       post :restore_session, on: :collection
     end
-    resources :partners, :only => [:index]
-    resources :settings, :only => [:index]
+
+    resources :partners
+    resource :settings, :only => [:show, :update], :controller => 'settings'
     resource :theme, :only => [:show, :update], :controller => 'theme'
-    resources :transfers, :only => [:index]
+    resources :transfers do
+      member do
+        post :transferred
+      end
+
+      collection do
+        post :generate
+      end
+    end
     resources :users, :only => [:index, :create]
+    resources :pages
 
     namespace :users do
       resources :instance_admins, :only => [:create, :update, :destroy, :index]
@@ -83,8 +93,11 @@ DesksnearMe::Application.routes.draw do
 
   resources :listings, :only => [:index, :show] do
     resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
-      collection do 
+      collection do
         post :review
+        post :store_reservation_request
+      end
+      member do
         get :booking_successful
       end
       get :hourly_availability_schedule, :on => :collection
@@ -123,12 +136,16 @@ DesksnearMe::Application.routes.draw do
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
     get "users/:id", :to => "registrations#show", :as => "profile"
+    get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
+
+    put "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip"
   end
 
   resources :reservations, :except => [:update, :destroy, :show] do
     member do
       post :user_cancel
       get :export
+      get :booking_successful
     end
     collection do
       get :upcoming

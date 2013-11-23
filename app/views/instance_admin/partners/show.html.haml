@@ -1,0 +1,8 @@
+%h1
+  = @partner.name
+  .pull-right
+    = link_to 'Edit', edit_instance_admin_partner_path(@partner), class: 'btn'
+
+= render 'admin/resource/attributes_table'
+= render :partial => 'admin/domains/attributes', :locals => { :domains => [@partner.domain] } if @partner.domain
+= render :partial => 'admin/themes/attributes', :locals => { :theme => @partner.theme } if @partner.has_theme?

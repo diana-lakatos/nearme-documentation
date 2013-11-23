@@ -2,4 +2,4 @@ Welcome to {{ user.first_name }}!
 
 Please, click the big button below to activate your account and get started! 
 
-{{ user.verify_user_url }}
+{{ user.verify_user_url | append:signature_for_tracking }}

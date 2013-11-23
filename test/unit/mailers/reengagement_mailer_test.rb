@@ -4,6 +4,7 @@ class ReengagementMailerTest < ActiveSupport::TestCase
 
   include Rails.application.routes.url_helpers
   setup do
+    stub_mixpanel
     @user = FactoryGirl.create(:user)
     @platform_context = PlatformContext.new
   end
@@ -31,5 +32,13 @@ class ReengagementMailerTest < ActiveSupport::TestCase
 
     assert_equal [@user.email], mail.to
     assert_equal subject, mail.subject
+  end
+
+  test "no_bookings has non-transactional email footer" do
+    assert ReengagementMailer.non_transactional?
+  end
+
+  test "one_booking has non-transactional email footer" do
+    assert ReengagementMailer.non_transactional?
   end
 end

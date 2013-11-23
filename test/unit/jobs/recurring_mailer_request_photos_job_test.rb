@@ -8,8 +8,17 @@ class RecurringMailerRequestPhotosJobTest < ActiveSupport::TestCase
                        :activated_at => 28.days.ago)
   end
 
+  should 'not be sent to user who unsubscribed previously' do
+    listing = Listing.last
+    user = listing.administrator
+    user.unsubscribe('recurring_mailer/request_photos')
+    RecurringMailerRequestPhotosJob.perform
+    assert_equal listing.last_request_photos_sent_at, listing.reload.last_request_photos_sent_at
+  end
+
   context 'will touch last_request_photos timestamp' do
     should 'for invalid listing' do
+      stub_mixpanel
       listing = Listing.last
       refute listing.valid?
       RecurringMailerRequestPhotosJob.perform

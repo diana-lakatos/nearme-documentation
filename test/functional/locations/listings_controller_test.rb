@@ -8,12 +8,26 @@ class Locations::ListingsControllerTest < ActionController::TestCase
     stub_mixpanel
   end
 
-  should 'show track viewed_a_location event' do
-    @tracker.expects(:viewed_a_location).with do |location|
-      location == assigns(:location)
+
+  context 'show action' do
+    should 'track viewed_a_location event' do
+      @tracker.expects(:viewed_a_location).with do |location|
+        location == assigns(:location)
+      end
+      get :show, location_id: @location.id, id: @listing
     end
-    get :show, location_id: @location.id, id: @listing
-    assert_response :success
+
+    should 'render show action' do
+      get :show, location_id: @location.id, id: @listing
+      assert_response :success
+    end
+
+    should 'redirect if listing is inactive' do
+      @listing.update_attributes(draft: Time.now, enabled: false)
+      @listing.destroy
+      get :show, location_id: @location.id, id: @listing
+      assert_redirected_to(search_path(q: @listing.address))
+    end
   end
 
   context 'edit links' do

@@ -24,13 +24,13 @@
 
 <%=
   {
-    theme_blue: theme.color_blue,
-    theme_red: theme.color_red,
-    theme_orange: theme.color_orange,
-    theme_green: theme.color_green,
-    theme_gray: theme.color_gray,
-    theme_black: theme.color_black,
-    theme_white: theme.color_white
+    theme_blue: theme.hex_color(:blue),
+    theme_red: theme.hex_color(:red),
+    theme_orange: theme.hex_color(:orange),
+    theme_green: theme.hex_color(:green),
+    theme_gray: theme.hex_color(:gray),
+    theme_black: theme.hex_color(:black),
+    theme_white: theme.hex_color(:white)
   }.map do |variable, color|
     next unless color.present?
 

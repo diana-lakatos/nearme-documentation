@@ -578,10 +578,14 @@ section.search section#results.list {
     margin-top: 25px;
     background: $gray230;
     @include border-radius($border-radius-default);
-    overflow: hidden;
     width: 22.9%;
     margin-left: 1%;
     margin-right: 1%; 
+
+    .tooltip-inner {
+      text-align: left;
+      max-width: none;
+    }
 
     @media (max-width: $iphone-landscape) {
       width: 100%;

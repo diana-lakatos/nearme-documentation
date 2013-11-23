@@ -1,0 +1,11 @@
+= simple_form_for [:instance_admin, @partner], :html => { :multipart => true} do |f|
+  = f.input :name
+  = f.input :search_scope_option, :collection => Partner::AVAILABLE_SEARCH_SCOPE_OPTIONS, :prompt => false
+
+  %h4 Domain Name
+  = f.fields_for :domain, f.object.domain || f.object.build_domain do |f|
+    = render :partial => 'admin/domains/form', :locals => { :f => f }
+
+  %h4 Custom Theme
+  = f.fields_for :theme, f.object.has_theme? ? f.object.theme : f.object.build_theme, :html => { :multipart => true } do |f|
+    = render :partial => 'admin/themes/form', :locals => { :f => f } 
