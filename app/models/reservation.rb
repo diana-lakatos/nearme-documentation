@@ -42,8 +42,6 @@ class Reservation < ActiveRecord::Base
   before_validation :set_default_payment_status, on: :create, :if => lambda { listing }
   after_create :auto_confirm_reservation
 
-  scope :for_instance, ->(instance) { includes(:instance).where(:'instances.id' => instance.id) }
-
   def perform_expiry!(platform_context)
     if unconfirmed? && !deleted?
       expire!
@@ -155,6 +153,9 @@ class Reservation < ActiveRecord::Base
   }
 
   scope :for_listing, ->(listing) {where(:listing_id => listing.id)}
+
+  scope :for_instance, ->(instance) { includes(:instance).joins(:instance).where(:'instances.id' => instance.id) }
+
 
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
