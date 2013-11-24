@@ -104,9 +104,9 @@ class AnalyticWrapper::MixpanelApi
 
   # Track a charge against the user in the current session, incurring the
   # specified revenue for us.
-  def track_charge(amount, time = nil, options = {})
-    MixpanelApiJob.perform(@mixpanel, :track_charge, distinct_id, amount, time, options)
-    Rails.logger.info "Tracked charge: #{distinct_id}, #{amount}, #{time}, #{options}"
+  def track_charge(amount)
+    MixpanelApiJob.perform(@mixpanel, :track_charge, distinct_id, amount)
+    Rails.logger.info "Tracked charge: user #{distinct_id}, amount: #{amount}$"
   end
 
   # Returns the distinct ID for the user of the current session.
