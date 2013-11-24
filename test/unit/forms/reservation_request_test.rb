@@ -17,8 +17,8 @@ class ReservationRequestTest < ActiveSupport::TestCase
   end
 
   context "#initialize" do
-    should "build reservation" do
-      assert_equal @reservation_request.reservation.class, Reservation
+    should "build decorated reservation" do
+      assert @reservation_request.reservation.is_a?(ReservationDecorator)
     end
 
     should "set user" do

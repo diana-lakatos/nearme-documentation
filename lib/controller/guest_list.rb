@@ -15,7 +15,7 @@ module Controller
       else
         @state = DEFAULT_STATE
       end
-      @reservations = send(@state.to_sym).sort_by(&:date).reverse
+      @reservations = send(@state.to_sym).sort_by(&:date).reverse.map(&:decorate)
       self
     end
 

@@ -258,6 +258,7 @@ GEM
       andand
       kdtree
       require_all
+    nested_form (0.3.2)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-ssh (2.6.3)
@@ -438,6 +439,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  addressable
   amatch
   animation
   bootstrap-sass (~> 2.3.1.0)
@@ -489,6 +491,7 @@ DEPENDENCIES
   mocha
   money-rails
   nearest_time_zone
+  nested_form
   newrelic_rpm
   nokogiri
   omniauth

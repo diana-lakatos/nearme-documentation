@@ -26,6 +26,21 @@
   }
 
 
+  .summary-line {
+    padding: $padding-default 0;
+    width: 100%;
+    border-top: 1px solid $line-gray;
+
+    .summary-line-label {
+      float: left;
+   
+    }
+    .summary-line-value {
+      float: right;
+    }
+
+  }
+
   // List Your Space Flow
 
   ul.space-wizard {
@@ -75,7 +90,7 @@
     margin-left: -$padding-default;
     border-top: none;
     border-bottom: 2px solid $gray230;
-    background: #cecfcf;
+    background: $line-gray;
     color: $gray210;
     text-align: center;
 
@@ -88,6 +103,12 @@
       background: $white;
       color: $gray160;
       font-size: 18px;
+    }
+
+    &.thin {
+      margin-right: 0;
+      margin-left: 0;
+      border-bottom: 0;
     }
   } 
 

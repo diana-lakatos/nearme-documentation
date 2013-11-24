@@ -17,7 +17,7 @@ Feature: A user can book at a space
     And I select to book and review space for:
       | Listing     | Date   | Quantity |
       | the listing | Monday | 1        |
-    Then I should see "This host manually confirms all bookings before payment"
+    Then I should see "This host manually confirms all bookings."
     And the reservation subtotal should show $50.00
     And the reservation service fee should show $5.00
     And the reservation total should show $55.00

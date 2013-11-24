@@ -22,6 +22,7 @@ $theme_orange: $dnm_orange !default;
 $theme_green:  $dnm_green !default;
 $theme_gray:   $dnm_gray !default;
 $theme_black:  $dnm_black !default;
+$theme_lighter_black: lighten($theme_black, 5%);
 $theme_white:  $dnm_white !default;
 
 $blue:   $theme_blue;
@@ -30,6 +31,7 @@ $green:  #157A49;
 $orange:  $theme_orange;
 $gray:   $theme_gray;
 $light-gray: #E2E2E2;
+$line-gray: #cecfcf;
 $dark-gray: rgb(80,80,80);
 $black:  $theme_black;
 $white: $theme_white;
@@ -66,8 +68,8 @@ $checkbox-radio-neutral: $gray220;
 // Logo
 
 $theme_name: 'desksnearme';
-$theme_logo_width: 219px !default;
-$theme_icon_width: 50px !default;
+$theme_logo_width: 240px !default;
+$theme_icon_width: 60px !default;
 
 $theme_hero: "/assets/theme/#{$theme_name}/hero.jpg" !default;
 $theme_icon: "/assets/theme/#{$theme_name}/logo/icon.png" !default;

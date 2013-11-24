@@ -6,5 +6,6 @@ module Admin::PaymentTransfersHelper
       'default'
     end
   end
+  alias_method :instance_admin_transfer_state_label_class, :admin_payment_transfer_state_label_class
 end
 

@@ -58,4 +58,8 @@ class PostActionMailer < InstanceMailer
            platform_context: @platform_context
   end
 
+  def mail_type
+    DNM::MAIL_TYPES::TRANSACTIONAL
+  end
+
 end

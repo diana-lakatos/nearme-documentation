@@ -28,6 +28,7 @@ gem 'mini_magick'
 gem 'money-rails'
 gem 'rails3_acts_as_paranoid'
 gem 'simple_form'
+gem 'nested_form'
 gem 'nokogiri'
 gem 'hpricot'
 gem 'amatch'
@@ -86,6 +87,8 @@ gem 'desk'
 gem 'filepicker-rails'
 
 gem 'premailer-rails'
+
+gem 'addressable'
 
 group :staging, :production do
   gem 'newrelic_rpm'

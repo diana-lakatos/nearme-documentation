@@ -42,6 +42,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def edit
     @country = current_user.country_name
+    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     super
   end
 
@@ -103,6 +104,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def set_password
     @user = current_user
+    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def update_password
@@ -121,6 +123,7 @@ class RegistrationsController < Devise::RegistrationsController
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
+      event_tracker.track_event_within_email(@user, request) if params[:track_email_event]
       flash[:success] = t('flash_messages.registrations.address_verified')
       redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path
     else

@@ -71,6 +71,10 @@ class UserDrop < BaseDrop
     routes.edit_user_registration_url(:token => @user.authentication_token)
   end
 
+  def edit_user_registration_url_with_token_and_tracking
+    routes.edit_user_registration_url(:token => @user.authentication_token, :track_email_event => true)
+  end
+
   def user_profile_url
     routes.profile_url(@user.slug)
   end
@@ -79,12 +83,16 @@ class UserDrop < BaseDrop
     routes.set_password_url(:token => @user.authentication_token)
   end
 
+  def set_password_url_with_token_and_tracking
+    routes.set_password_url(:token => @user.authentication_token, :track_email_event => true)
+  end
+
   def full_mobile_number
     @user.full_mobile_number
   end
 
   def verify_user_url
-    routes.verify_user_url(@user.id, @user.email_verification_token)
+    routes.verify_user_url(@user.id, @user.email_verification_token, :track_email_event => true)
   end
 
   def listings_in_near

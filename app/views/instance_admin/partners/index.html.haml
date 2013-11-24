@@ -1,1 +1,11 @@
-Partners
+%h1 Partners
+
+= link_to 'New Partner', new_instance_admin_partner_path, class: 'btn'
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Name
+  %tbody
+    - platform_context.instance.partners.each do |partner|
+      = render 'index_row', partner: partner

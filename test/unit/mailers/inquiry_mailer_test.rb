@@ -3,6 +3,7 @@ require 'test_helper'
 class InquiryMailerTest < ActiveSupport::TestCase
 
   setup do
+    stub_mixpanel
     @inquiry = FactoryGirl.create(:inquiry)
     @platform_context = PlatformContext.new
     @subject = "We've passed on your inquiry about {{inquiry.listing.name}}"
