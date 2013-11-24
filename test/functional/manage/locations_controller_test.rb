@@ -38,6 +38,59 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       @location = FactoryGirl.create(:location_in_auckland, :company => @company)
     end
 
+    context 'CRUD' do
+      setup do
+        stub_mixpanel
+        @related_instance = FactoryGirl.create(:instance)
+        PlatformContext.any_instance.stubs(:instance).returns(@related_instance)
+
+        @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
+        @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
+        @related_listing = FactoryGirl.create(:listing, location: @related_location)
+      end
+
+      context '#edit' do
+        should 'allow show edit form for related location' do
+          get :edit, :id => @related_location.id
+          assert_response :success
+        end
+
+        should 'not allow show edit form for unrelated location' do
+          assert_raises(Location::NotFound) { get :edit, :id => @location.id }
+        end
+      end
+
+      context '#update' do
+        should 'allow update for related location' do
+          put :update, :id => @related_location.id, :location => { :description => 'new description' }
+          @related_location.reload
+          assert_equal 'new description', @related_location.description
+          assert_redirected_to manage_locations_path
+        end
+
+        should 'not allow update for unrelated location' do
+          assert_raises(Location::NotFound) do
+            put :update, :id => @location.id, :location => { :description => 'new description' }
+          end
+        end
+      end
+
+      context '#destroy' do
+        should 'allow destroy for related location' do
+          assert_difference('Location.count', -1) do
+            delete :destroy, :id => @related_location.id
+          end
+          assert_redirected_to manage_locations_path
+        end
+
+        should 'not allow destroy for unrelated location' do
+          assert_no_difference('Location.count') do
+            assert_raises(Location::NotFound) { delete :destroy, :id => @location.id }
+          end
+        end
+      end
+    end
+
     should "update location" do
       put :update, :id => @location.id, :location => { :description => 'new description' }
       @location.reload

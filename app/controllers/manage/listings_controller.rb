@@ -1,6 +1,4 @@
 class Manage::ListingsController < Manage::BaseController
-
-  before_filter :set_locations_scope
   before_filter :find_listing, :except => [:index, :new, :create]
   before_filter :find_location
 
@@ -94,7 +92,7 @@ class Manage::ListingsController < Manage::BaseController
       @location = if @listing
                     @listing.location
                   else
-                    @locations_scope.find(params[:location_id])
+                    locations_scope.find(params[:location_id])
                   end
     rescue ActiveRecord::RecordNotFound
       raise Location::NotFound
@@ -103,7 +101,7 @@ class Manage::ListingsController < Manage::BaseController
 
   def find_listing
     begin 
-      @listing = Listing.where(location_id: @locations_scope.pluck(:id)).find(params[:id])
+      @listing = Listing.where(location_id: locations_scope.pluck(:id)).find(params[:id])
     rescue ActiveRecord::RecordNotFound
       raise Listing::NotFound
     end

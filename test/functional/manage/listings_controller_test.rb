@@ -41,6 +41,59 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       @listing = FactoryGirl.create(:listing, :location => @location, :photos_count => 1, :quantity => 2)
     end
 
+    context 'CRUD' do
+      setup do
+        stub_mixpanel
+        @related_instance = FactoryGirl.create(:instance)
+        PlatformContext.any_instance.stubs(:instance).returns(@related_instance)
+
+        @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
+        @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
+        @related_listing = FactoryGirl.create(:listing, location: @related_location)
+      end
+
+      context "#edit" do
+        should 'allow show edit form for related listing' do
+          get :edit, :id => @related_listing.id, :location_id => @related_location.id
+          assert_response :success
+        end
+
+        should 'not allow show edit form for unrelated listing' do
+          assert_raises(Listing::NotFound) { get :edit, :id => @listing.id, :location_id => @location.id }
+        end
+      end
+
+      context "#update" do
+        should 'allow update for related listing' do
+          put :update, :id => @related_listing.id, :listing => { :name => 'new name' }
+          @related_listing.reload
+          assert_equal 'new name', @related_listing.name
+          assert_redirected_to manage_locations_path
+        end
+
+        should 'not allow update for unrelated listing' do
+          assert_raises(Listing::NotFound) { put :update, :id => @listing.id, :listing => { :name => 'new name' } }
+          @listing.reload
+          refute_equal 'new name', @related_listing.name
+        end
+      end
+
+      context "#destroy" do
+        should 'allow destroy for related listing' do
+          assert_difference('Listing.count', -1) do
+            delete :destroy, :id => @related_listing.id
+          end
+          assert_redirected_to manage_locations_path
+        end
+
+        should 'not allow destroy for unrelated listing' do
+          assert_no_difference('Listing.count') do
+            assert_raises(Listing::NotFound) { delete :destroy, :id => @listing.id }
+          end
+        end
+      end
+    end
+
     should "update listing" do
       put :update, :id => @listing.id, :listing => { :name => 'new name' }
       @listing.reload

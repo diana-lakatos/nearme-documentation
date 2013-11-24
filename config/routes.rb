@@ -54,8 +54,9 @@ DesksnearMe::Application.routes.draw do
       post :login_as, on: :member
       post :restore_session, on: :collection
     end
+
     resources :partners
-    resources :settings, :only => [:index]
+    resource :settings, :only => [:show, :update], :controller => 'settings'
     resource :theme, :only => [:show, :update], :controller => 'theme'
     resources :transfers do
       member do
@@ -67,6 +68,7 @@ DesksnearMe::Application.routes.draw do
       end
     end
     resources :users, :only => [:index, :create]
+    resources :pages
 
     namespace :users do
       resources :instance_admins, :only => [:create, :update, :destroy, :index]
@@ -135,6 +137,8 @@ DesksnearMe::Application.routes.draw do
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
     get "users/:id", :to => "registrations#show", :as => "profile"
     get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
+
+    put "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip"
   end
 
   resources :reservations, :except => [:update, :destroy, :show] do

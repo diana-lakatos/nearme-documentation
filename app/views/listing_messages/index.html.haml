@@ -6,11 +6,10 @@
       = render "header"
 
       - if @threaded_listing_messages.blank?
-        %center
-          - if params[:action] == 'index'
-            No new messages!
-          - if params[:action] == 'archived'
-            No archived messages
+        - if params[:action] == 'index'
+          %p.no-data No new messages!
+        - if params[:action] == 'archived'
+          %p.no-data No archived messages
 
       - else
       - @threaded_listing_messages.each do |array_key, listing_messages|

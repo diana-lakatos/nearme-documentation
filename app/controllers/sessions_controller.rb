@@ -23,6 +23,11 @@ class SessionsController < Devise::SessionsController
     end
   end
 
+  def store_correct_ip
+    session[:current_ip] = params[:ip]
+    render :nothing => true
+  end
+
   private
 
   def set_return_to

@@ -2,11 +2,10 @@ class Manage::LocationsController < Manage::BaseController
   before_filter :redirect_if_draft_listing
   before_filter :find_company
   before_filter :redirect_if_no_company
-  before_filter :set_locations_scope
   before_filter :find_location, :except => [:index, :new, :create]
 
   def index
-    @locations = @locations_scope.all
+    @locations = locations_scope.all
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
@@ -65,7 +64,7 @@ class Manage::LocationsController < Manage::BaseController
 
   def find_location
     begin
-      @location = @locations_scope.find(params[:id])
+      @location = locations_scope.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       raise Location::NotFound
     end

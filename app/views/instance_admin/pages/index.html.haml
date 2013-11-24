@@ -1,0 +1,23 @@
+%h1 Pages
+
+%br/
+= link_to 'New page', new_instance_admin_page_path, class: 'btn'
+%br/
+%br/
+
+%table#pages.table.table-striped.sortable
+  %thead
+    %tr
+      %th Name
+      %th Path
+      %th
+  %tbody
+    - platform_context.theme.pages.each_with_index do |page|
+      = render 'index_row', page: page
+
+
+- content_for :script do
+  :javascript
+    $(function() {
+      new InstanceAdmin.PagesController($('table#pages'));
+    });

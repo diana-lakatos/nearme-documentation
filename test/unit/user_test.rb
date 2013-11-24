@@ -382,6 +382,7 @@ class UserTest < ActiveSupport::TestCase
   context "notify about invalid mobile phone" do
 
     setup do
+      stub_mixpanel
       FactoryGirl.create(:instance)
       @user = FactoryGirl.create(:user)
       @platform_context = PlatformContext.new

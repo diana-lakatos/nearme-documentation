@@ -37,7 +37,7 @@ class ThemeDrop < BaseDrop
   end
 
   def pages
-    @theme.pages_with_fallbacks
+    @theme.pages
   end
 
   def support_url

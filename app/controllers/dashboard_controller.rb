@@ -14,8 +14,12 @@ class DashboardController < ApplicationController
   end
 
   def manage_guests
-    @locations  = current_user.try(:companies).first.try(:locations)
-    @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
+    if current_user.companies.any?
+      @locations  = current_user.companies.first.locations.for_instance(platform_context.instance)
+    else
+      @locations = []
+    end
+    @guest_list = Controller::GuestList.new(current_user, platform_context).filter(params[:state])
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 

@@ -4,9 +4,9 @@ class Listings::ReservationsController < ApplicationController
   before_filter :find_reservation, only: [:booking_successful]
   before_filter :build_reservation_request, :only => [:review, :create, :store_reservation_request]
   before_filter :require_login_for_reservation, :only => [:review, :create]
+  before_filter :find_current_country, :only => [:review]
 
   def review
-    @country = request.location.try(:country)
     event_tracker.reviewed_a_booking(@reservation_request.reservation)
   end
 
@@ -52,6 +52,7 @@ class Listings::ReservationsController < ApplicationController
     end
   end
 
+  # Renders booking successful modal
   def booking_successful
   end
 
@@ -118,5 +119,5 @@ class Listings::ReservationsController < ApplicationController
       }
     )
   end
-
+  
 end

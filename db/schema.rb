@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131118214910) do
+ActiveRecord::Schema.define(:version => 20131122162155) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -236,6 +236,7 @@ ActiveRecord::Schema.define(:version => 20131118214910) do
     t.boolean  "permission_analytics",   :default => true
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
+    t.boolean  "permission_pages",       :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"
@@ -259,6 +260,8 @@ ActiveRecord::Schema.define(:version => 20131118214910) do
     t.datetime "updated_at",                                                            :null => false
     t.string   "bookable_noun",                                     :default => "Desk"
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
+    t.string   "lessor"
+    t.string   "lessee"
   end
 
   create_table "listing_messages", :force => true do |t|
@@ -279,7 +282,10 @@ ActiveRecord::Schema.define(:version => 20131118214910) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "instance_id"
   end
+
+  add_index "listing_types", ["instance_id"], :name => "index_listing_types_on_instance_id"
 
   create_table "listings", :force => true do |t|
     t.integer  "location_id"
@@ -305,7 +311,6 @@ ActiveRecord::Schema.define(:version => 20131118214910) do
     t.boolean  "enabled",                     :default => true
     t.datetime "last_request_photos_sent_at"
     t.datetime "activated_at"
-    t.text     "deal_details"
   end
 
   add_index "listings", ["listing_type_id"], :name => "index_listings_on_listing_type_id"
@@ -325,7 +330,10 @@ ActiveRecord::Schema.define(:version => 20131118214910) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "instance_id"
   end
+
+  add_index "location_types", ["instance_id"], :name => "index_location_types_on_instance_id"
 
   create_table "locations", :force => true do |t|
     t.integer  "company_id"
@@ -378,6 +386,7 @@ ActiveRecord::Schema.define(:version => 20131118214910) do
     t.datetime "updated_at", :null => false
     t.integer  "theme_id"
     t.string   "slug"
+    t.integer  "position"
   end
 
   add_index "pages", ["theme_id"], :name => "index_pages_on_theme_id"

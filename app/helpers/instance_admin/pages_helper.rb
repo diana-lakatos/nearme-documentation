@@ -1,0 +1,2 @@
+module InstanceAdmin::PagesHelper
+end

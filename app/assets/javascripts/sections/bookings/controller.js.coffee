@@ -169,25 +169,14 @@ class Bookings.Controller
     return unless @listing.isBooked()
     @disableBookButton()
 
-    dates = @listing.reservationOptions().dates
-    quantity = @listing.reservationOptions().quantity
+    @bookForm.find('[name="reservation_request[quantity]"]').val(@listing.reservationOptions().quantity)
+    @bookForm.find('[name="reservation_request[dates]"]').val(@listing.reservationOptions().dates)
+    if @listing.isReservedHourly()
+      @bookForm.find('[name="reservation_request[start_minute]"]').val(@listing.reservationOptions().start_minute)
+      @bookForm.find('[name="reservation_request[end_minute]"]').val(@listing.reservationOptions().end_minute)
 
     if @userSignedIn
-      @bookForm.find('[type=hidden][data-kind=reservationOptions]').remove()
-      @bookForm.append($('<input type="hidden" name="listing_id" value="' + @listing.id + '" data-kind="reservationOptions" />'))
-      @bookForm.append($('<input type="hidden" name="reservation_request[quantity]" value="' + quantity + '" data-kind="reservationOptions" />'))
-      if @listing.isReservedHourly()
-        @bookForm.append($('<input type="hidden" name="reservation_request[start_minute]" value="' + @listing.reservationOptions().start_minute + '" data-kind="reservationOptions" />'))
-        @bookForm.append($('<input type="hidden" name="reservation_request[end_minute]" value="' + @listing.reservationOptions().end_minute + '" data-kind="reservationOptions" />'))
-      $.each dates, (i, date) =>
-        @bookForm.append($('<input type="hidden" name="reservation_request[dates][]" value="' + date + '" data-kind="reservationOptions" />'))
-      @bookForm.unbind('submit').submit()
+       @bookForm.unbind('submit').submit()
     else
-      request_data = {
-        reservation_request: {
-          dates: dates,
-          quantity: quantity
-        }
-      }
-      $.post @storeReservationRequestUrl, request_data, (data) =>
+      $.post @storeReservationRequestUrl, @bookForm.serialize(), (data) =>
         Modal.load(@registrationUrl)

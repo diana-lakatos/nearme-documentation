@@ -28,6 +28,18 @@ class ReservationDecoratorTest < ActionView::TestCase
       assert_equal '6 Jan', @reservation.format_reservation_periods
     end
 
+    should 'displays hours minutes and seconds left properly' do
+      assert_equal '5 hours, 45 minutes', @reservation.send(:time_to_expiry, Time.zone.now + 5.hours + 45.minutes + 12.seconds)
+    end
+
+    should 'displays minutes and seconds without hours' do
+      assert_equal '45 minutes', @reservation.send(:time_to_expiry, (Time.zone.now + 45.minutes + 12.seconds))
+    end
+
+    should 'displays seconds without hours and minutes' do
+      assert_equal 'less than minute', @reservation.send(:time_to_expiry, (Time.zone.now + 12.seconds))
+    end
+
     context 'with periods with duration tru two weeks' do
 
       setup do

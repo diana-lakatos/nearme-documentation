@@ -15,6 +15,8 @@ class Reservation < ActiveRecord::Base
 
   belongs_to :listing, :with_deleted => true
   belongs_to :owner, :class_name => "User"
+  has_one :company, through: :listing
+  has_one :instance, through: :company
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
     :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
@@ -71,8 +73,6 @@ class Reservation < ActiveRecord::Base
 
   state_machine :state, :initial => :unconfirmed do
     after_transition :unconfirmed => :confirmed, :do => :attempt_payment_capture
-    after_transition :confirmed => :cancelled_by_host, :do => :track_charge_cancellation
-    after_transition :confirmed => :cancelled_by_guest, :do => :track_charge_cancellation
 
     event :confirm do
       transition :unconfirmed => :confirmed
@@ -143,7 +143,7 @@ class Reservation < ActiveRecord::Base
   }
 
   scope :archived, lambda {
-    joins(:periods).where('reservation_periods.date < ? OR state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq
+    joins(:periods).where('reservation_periods.date < ? OR reservations.state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq
   }
 
   scope :last_x_days, lambda { |days_in_past|
@@ -151,6 +151,9 @@ class Reservation < ActiveRecord::Base
   }
 
   scope :for_listing, ->(listing) {where(:listing_id => listing.id)}
+
+  scope :for_instance, ->(instance) { includes(:instance).joins(:instance).where(:'instances.id' => instance.id) }
+
 
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
@@ -290,12 +293,6 @@ class Reservation < ActiveRecord::Base
 
   def to_liquid
     ReservationDrop.new(self)
-  end
-
-  def track_charge_cancellation
-    mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, :current_user => self.owner)
-    event_tracker = Analytics::EventTracker.new(mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(self.owner))
-    event_tracker.track_charge(-1 * service_fee_amount_cents/100)
   end
 
   private

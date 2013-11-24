@@ -6,6 +6,7 @@ class SpaceWizardController < ApplicationController
   before_filter :find_location, :except => [:new, :submit_listing]
   before_filter :find_listing, :except => [:new, :submit_listing]
   before_filter :find_user_country, :only => [:list, :submit_listing]
+  before_filter :sanitize_price_parameters, :only => [:submit_listing]
 
   def new
     flash.keep(:warning)
@@ -115,6 +116,16 @@ class SpaceWizardController < ApplicationController
       @user.country_name
     elsif request.location
       request.location.country
+    end
+  end
+
+  def sanitize_price_parameters
+    begin
+      params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"].select { |k, v| k.include?('_price') }.each do |k, v|
+        params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][k] = v.to_f unless v.blank?
+      end
+    rescue
+      # no need to do anything
     end
   end
 

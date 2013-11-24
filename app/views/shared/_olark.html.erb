@@ -20,7 +20,7 @@ olark.identify('<%=OLARK_API_KEY%>');
 <% if user_signed_in? %>
 	<%= render 'shared/olark_user_data' %>
 <% end %>
-<% unless render_olark? %>
+<% if not render_olark? or not platform_context.instance.is_desksnearme? %>
   olark('api.box.hide');
 <% end %>
 /*]]>*/</script>
