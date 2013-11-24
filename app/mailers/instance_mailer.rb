@@ -87,7 +87,7 @@ class InstanceMailer < ActionMailer::Base
     when 'PostActionMailer', 'InstanceAdminMailer', 'UserMailer', 'ReservationMailer', 'RatingMailer'
       @footer_type ='transactional'
     when 'RecurringMailer', 'ReengagementMailer'
-      @unsubscribe_link = unsubscribe_url(signature: @mailer_signature, token: @user.authentication_token)
+      @unsubscribe_link = unsubscribe_url(signature: @mailer_signature, token: @user.temporary_token)
       @footer_type = 'non-transactional'
     end
   end

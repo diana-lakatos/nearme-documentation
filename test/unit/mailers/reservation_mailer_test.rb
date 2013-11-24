@@ -116,14 +116,20 @@ class ReservationMailerTest < ActiveSupport::TestCase
   end
 
   test "#notify_host_with_confirmation" do
-    mail = ReservationMailer.notify_host_with_confirmation(@platform_context, @reservation)
+    # We freeze time for this test since we're asserting the presence of
+    # a temporary login token. We rely on semantics that for any given expiry
+    # time, two tokens are the same for the same user. This is somewhat of
+    # a hack.
+    Time.freeze do
+      mail = ReservationMailer.notify_host_with_confirmation(@platform_context, @reservation)
 
-    assert_contains manage_guests_dashboard_path(:token => @reservation.listing_creator.authentication_token), mail.html_part.body
-    assert_contains @reservation.listing.creator.name, mail.html_part.body
-    assert_contains @expected_dates, mail.html_part.body
+      assert_contains manage_guests_dashboard_path(:token => @reservation.listing_creator.temporary_token), mail.html_part.body
+      assert_contains @reservation.listing.creator.name, mail.html_part.body
+      assert_contains @expected_dates, mail.html_part.body
 
-    assert_equal [@reservation.listing.creator.email], mail.to
-    assert_equal [@platform_context.decorate.support_email, @reservation.listing.location.email], mail.bcc
+      assert_equal [@reservation.listing.creator.email], mail.to
+      assert_equal [@platform_context.decorate.support_email, @reservation.listing.location.email], mail.bcc
+    end
   end
 
   test "#notify_host_without_confirmation" do
