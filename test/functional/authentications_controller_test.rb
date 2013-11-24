@@ -45,11 +45,22 @@ class AuthenticationsControllerTest < ActionController::TestCase
   context 'authentication flow' do
 
     setup do
-      @provider = 'linkedin'
+      @provider = 'twitter'
       @uid = '123456'
       @email = 'test@example.com'
+      @token = 'abcd'
+      @secret = 'dcba'
       @user = FactoryGirl.create(:user)
-      request.env['omniauth.auth'] = { 'provider' => @provider, 'uid' => @uid, 'info' => { 'email' => @email, 'name' => 'maciek' } }
+      request.env['omniauth.auth'] = {
+        'provider' => @provider,
+        'uid' => @uid,
+        'info' => { 'email' => @email, 'name' => 'maciek' },
+        'credentials' => {
+          'token' => @token,
+          'secret' => @secret,
+          'expires_at' => 123456789
+        }
+      }
     end
 
     should "redirect with message if already connected" do
@@ -90,6 +101,9 @@ class AuthenticationsControllerTest < ActionController::TestCase
         end
       end
       assert_equal 'Authentication successful.', flash[:success]
+
+      assert_equal @token, @user.authentications.last.token
+      assert_equal @secret, @user.authentications.last.secret
     end
 
     should "successfully create new authentication as alternative to setting password" do
@@ -115,21 +129,34 @@ class AuthenticationsControllerTest < ActionController::TestCase
           post :create
         end
       end
-      assert flash[:error].include?('Your Linkedin email is already linked to an account')
+      assert flash[:error].include?('Your Twitter email is already linked to an account')
     end
 
-    should "should successfully sign up and log"  do
-      stub_mixpanel
-      @tracker.expects(:signed_up).once.with do |user, custom_options|
-        user == assigns(:oauth).authenticated_user && custom_options == { signed_up_via: 'other', provider: @provider }
+    context "should successfully sign up and log"  do
+      setup do
+        stub_mixpanel
       end
-      @tracker.expects(:connected_social_provider).once.with do |user, custom_options|
-        user == assigns(:oauth).authenticated_user && custom_options == {  provider: @provider }
-      end
-      assert_difference('User.count') do
-        assert_difference('Authentication.count') do
-          post :create
+
+      should "is tracked via mixpanel" do
+        @tracker.expects(:signed_up).once.with do |user, custom_options|
+          user == assigns(:oauth).authenticated_user && custom_options == { signed_up_via: 'other', provider: @provider }
         end
+        @tracker.expects(:connected_social_provider).once.with do |user, custom_options|
+          user == assigns(:oauth).authenticated_user && custom_options == {  provider: @provider }
+        end
+
+        post :create
+      end
+
+      should 'create user with auth.' do
+        assert_difference('User.count') do
+          assert_difference('Authentication.count') do
+            post :create
+          end
+        end
+
+        assert_equal @token, User.last.authentications.last.token
+        assert_equal @secret, User.last.authentications.last.secret
       end
     end
 
@@ -143,6 +170,28 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert_redirected_to new_user_registration_url
     end
 
+    context 'token params after login' do
+      setup do
+        add_authentication(@provider, @uid, @user)
+        stub_mixpanel
+      end
+
+      should 'change token_expires_at to date expires day' do
+        time = request.env['omniauth.auth']['credentials']['expires_at'] = (Time.now + 60.days).to_i
+        post :create
+        auth = Authentication.last
+        assert auth.token_expires?, 'auth token is not marked as expirable'
+        assert_equal time, auth.token_expires_at.to_i, "auth token should expire in #{time}"
+      end
+
+      should 'change expires to false for non-expiring token' do
+        request.env['omniauth.auth']['credentials'].delete('expires_at')
+        post :create
+        auth = Authentication.last
+        refute auth.token_expires?, 'auth token is marked as expirable'
+        assert_nil auth.token_expires_at, 'auth token has expires_at time'
+      end
+    end
   end
 
   private
@@ -151,6 +200,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
     user ||= @user
     auth = user.authentications.find_or_create_by_provider(provider)
     auth.uid = uid
+    auth.token = "token"
     auth.save!
   end
 

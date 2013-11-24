@@ -4,6 +4,7 @@ class RecurringMailerTest < ActiveSupport::TestCase
 
   include Rails.application.routes.url_helpers
   setup do
+    stub_mixpanel
     @company = FactoryGirl.create(:company)
     @platform_context = PlatformContext.new
   end
@@ -43,5 +44,13 @@ class RecurringMailerTest < ActiveSupport::TestCase
     assert_equal [@user.email], mail.to
     assert mail.html_part.body.include?("Share your listing on Facebook, Twitter, and LinkedIn, and start seeing guests book your space.")
     assert mail.html_part.body.include?(@listing.name)
+  end
+
+  test "analytics has non-transactional email footer" do
+    assert RecurringMailer.non_transactional?
+  end
+
+  test "request_photos and share has non-transactional email footer" do
+    assert RecurringMailer.non_transactional?
   end
 end

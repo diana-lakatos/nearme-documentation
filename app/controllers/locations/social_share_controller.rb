@@ -2,7 +2,7 @@ class Locations::SocialShareController < ApplicationController
   before_filter :find_location
 
   def new
-    event_tracker.mailer_social_share(@location, {provider: params[:provider]}) if params[:track_email_event] && params[:provider]
+    event_tracker.shared_location_via_social_media(@location, { provider: params[:provider], source: 'email' }) if params[:track_email_event] && params[:provider]
 
     redirect_to social_share_redirection_url
   end

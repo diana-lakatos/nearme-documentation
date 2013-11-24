@@ -1,13 +1,25 @@
 class ErrorsController < ApplicationController
 
   skip_before_filter :redirect_if_domain_not_valid
-  before_filter :get_status_code
+  before_filter :find_exception
   layout 'errors'
 
   def not_found
     begin
-      render :template => 'errors/not_found', :status => 404, :formats => [:html]
-    rescue
+      case env["action_dispatch.exception"].class.name
+      when "Page::NotFound"
+        render :template => 'errors/instance_page_not_found', :status => 404, :formats => [:html]
+      when "Listing::NotFound"
+        @object_name = "listing"
+        render :template => 'errors/manage_listing_or_location_no_permission', :status => 404, :formats => [:html]
+      when "Location::NotFound"
+        @object_name = "location"
+        render :template => 'errors/manage_listing_or_location_no_permission', :status => 404, :formats => [:html]
+      else
+        render :template => 'errors/not_found', :status => 404, :formats => [:html]
+      end
+    rescue Exception => e
+      Rails.logger.error "error while rendering not found: #{e}"
       server_error
     end
   end
@@ -27,7 +39,8 @@ class ErrorsController < ApplicationController
 
   private
 
-  def get_status_code
+  def find_exception
     @status_code = ActionDispatch::ExceptionWrapper.new(env, env["action_dispatch.exception"]).status_code
   end
+
 end

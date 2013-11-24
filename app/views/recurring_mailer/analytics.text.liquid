@@ -4,7 +4,7 @@ Pssst, {{ user.first_name }}!
 
 Add more information or upload additional photos to make your space look even better! Bookings with photos are booked 10x more than those without.
 
-Manage Desks: {{ user.manage_locations_url_with_tracking_and_token }} 
+Manage Desks: {{ user.manage_locations_url_with_tracking_and_token | append:signature_for_tracking }} 
 
 Spread the word to increase bookings! The best listings will be featured in our newsletter.
 

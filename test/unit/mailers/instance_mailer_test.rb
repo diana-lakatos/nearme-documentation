@@ -14,6 +14,7 @@ class InstanceMailerTest < ActiveSupport::TestCase
   end
 
   setup do
+    stub_mixpanel
     @platform_context = PlatformContext.new
   end
   
@@ -40,9 +41,10 @@ class InstanceMailerTest < ActiveSupport::TestCase
     should "handle pixel based event tracking correctly" do
       Analytics::EventTracker.any_instance.expects(:pixel_track_url).with do |event_name, custom_options|
         event_name == 'Email Opened' && custom_options[:campaign] == "Test mailer" && custom_options[:template] == 'test_mailer'
-      end.returns('http://api.mixpanel.com/track/?data=somedata')
+      end.returns('http://api.mixpanel.com/track/?data=emailopenedevent')
+      Analytics::EventTracker.any_instance.expects(:track).with('Email Sent',  { :template => 'test_mailer', :campaign => 'Test mailer'})
       mail = InstanceMailer.test_mailer(@platform_context)
-      assert mail.html_part.body.include?("http://api.mixpanel.com/track/?data=somedata"), "Tracking code not included in #{mail.html_part.body}"
+      assert mail.html_part.body.include?("http://api.mixpanel.com/track/?data=emailopenedevent"), "Tracking code for Email Opened not included in #{mail.html_part.body}"
     end
 
   end

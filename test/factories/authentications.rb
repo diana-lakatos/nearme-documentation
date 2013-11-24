@@ -3,6 +3,7 @@ FactoryGirl.define do
     association :user
     provider 'twitter'
     sequence(:uid) { |n| "uid #{n}" }
+    sequence(:token) { |n| "token#{n}" }
 
     factory :authentication_linkedin do
       provider "linkedin"

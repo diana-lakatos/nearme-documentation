@@ -5,6 +5,7 @@ class PostActionMailerTest < ActiveSupport::TestCase
   include Rails.application.routes.url_helpers
 
   setup do
+    stub_mixpanel
     @user = FactoryGirl.create(:user)
     FactoryGirl.create(:instance)
     @platform_context = PlatformContext.new
@@ -67,5 +68,9 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(@user.first_name)
     assert_equal [@user.email], mail.to
     assert mail.html_part.body.include?("Your new listing rocks!")
+  end
+
+  test "has transactional email footer" do
+    assert PostActionMailer.transactional?
   end
 end

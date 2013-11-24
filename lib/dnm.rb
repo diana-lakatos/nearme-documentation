@@ -98,4 +98,13 @@ module DNM
     end
   end
 
+  module MAIL_TYPES
+    BULK = 'bulk'
+    TRANSACTIONAL = 'transactional'
+    NON_TRANSACTIONAL = 'non_transactional'
+  end
+
+  module Manage
+  end
+
 end

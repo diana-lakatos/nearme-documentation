@@ -23,6 +23,10 @@ namespace :cron do
     run_job "Send Analytics mails" do
       RecurringMailerAnalyticsJob.new.perform
     end
+
+    run_job "Find new social connections" do
+      PrepareFriendFindersJob.new.perform
+    end
   end
 
   desc "Run monthly scheduled jobs"

@@ -15,6 +15,8 @@ class Reservation < ActiveRecord::Base
 
   belongs_to :listing, :with_deleted => true
   belongs_to :owner, :class_name => "User"
+  has_one :company, through: :listing
+  has_one :instance, through: :company
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
     :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
@@ -143,12 +145,17 @@ class Reservation < ActiveRecord::Base
   }
 
   scope :archived, lambda {
-    joins(:periods).where('reservation_periods.date < ? OR state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq
+    joins(:periods).where('reservation_periods.date < ? OR reservations.state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq
   }
 
   scope :last_x_days, lambda { |days_in_past|
     where('DATE(reservations.created_at) >= ? ', days_in_past.days.ago)
   }
+
+  scope :for_listing, ->(listing) {where(:listing_id => listing.id)}
+
+  scope :for_instance, ->(instance) { includes(:instance).joins(:instance).where(:'instances.id' => instance.id) }
+
 
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true

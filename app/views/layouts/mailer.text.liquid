@@ -1,6 +1,5 @@
 {{ content_for_layout }}
 
-Sent with love
-
-To unsubscribe from these mailings, please reply to this email with subject 'Unsubscribe'
+{% capture footer_path %}{{ 'shared/mailers/' | append:mail_type | append:'_footer.text' }}{% endcapture %}
+{% include footer_path %}
 

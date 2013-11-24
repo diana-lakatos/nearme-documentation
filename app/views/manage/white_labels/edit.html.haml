@@ -10,7 +10,7 @@
         .control-group
           = f.label :white_label_enabled, 'Enabled', :class => 'control-label'
           .controls
-            .switch{'data-on-label' => "", 'data-off-label' => ""}
+            .switch{'data-on-label' => "", 'data-off-label' => "", 'data-ajax-updateable' => true}
               = f.check_box :white_label_enabled, 'data-white-label-enabler' => true
 
         = f.simple_fields_for :domain, f.object.domain || Domain.new do |domain_form|

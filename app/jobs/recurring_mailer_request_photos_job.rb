@@ -7,6 +7,7 @@ class RecurringMailerRequestPhotosJob < Job
 
   def perform
     Listing.searchable.includes(:photos).each do |listing|
+      next if listing.administrator.unsubscribed?('recurring_mailer/request_photos')
       next if @sent_to_users.include?(listing.administrator.id)
       next if listing.photos.count > 1
 

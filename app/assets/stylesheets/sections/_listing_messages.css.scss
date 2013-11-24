@@ -2,7 +2,11 @@
     height: 150px;
 }
 
-.listing_messages {
+section.listing_messages {
+  p.no-data {
+    text-align: center;
+    margin: 40px 0 25px 0;
+  }
 
   #new_listing_message {
     textarea {
@@ -28,11 +32,6 @@
     p {
       margin-bottom: 0;
     }
-  }
-
-  .box {
-    padding-bottom: 0;
-    background-color: $sjcc_white;
   }
 
   .listing-message {
