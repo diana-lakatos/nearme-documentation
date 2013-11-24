@@ -50,6 +50,13 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
     end
   end
 
+  context 'using legacy authentication_token' do
+    should "fallback to that login method" do
+      get url_with_login_token(@user.authentication_token)
+      assert_logged_in_as @user
+    end
+  end
+
   private
 
   def assert_logged_in_as(user)
@@ -61,6 +68,6 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
   end
 
   def url_with_login_token(token)
-    "/?_tx=#{token}"
+    "/?#{TemporaryTokenAuthenticatable::PARAMETER_NAME}=#{token}"
   end
 end
