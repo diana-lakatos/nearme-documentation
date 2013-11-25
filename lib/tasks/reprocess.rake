@@ -61,6 +61,7 @@ namespace :reprocess do
             current_theme_color[0] = ''
             updated_theme_color = current_theme_color
             theme.send("color_#{color}=".to_sym, updated_theme_color)
+            theme.save!
 
             puts "Updated to #{updated_theme_color}."
           else
