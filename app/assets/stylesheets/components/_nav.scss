@@ -162,6 +162,7 @@
         background: $theme_black;
         border-top: 0;
         border-color: $theme_lighter_black;
+        @include box-shadow(none);
 
         li {
           background:$theme_black;
