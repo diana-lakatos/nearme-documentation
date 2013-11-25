@@ -4,4 +4,6 @@ Raygun.setup do |config|
   else
     config.api_key = '3VN6sPnvwRlTfwDmwhRFIA=='
   end
+
+  config.ignore << [Listing::NotFound, Location::NotFound, Page::NotFound]
 end
