@@ -15,36 +15,21 @@ class AnalyticWrapper::GoogleAnalyticsApi
   end
 
   # Tracks event in google analytics
-  def track(category, action)
-    if tracking_code.present?
-      params = get_params(category, action)
-      begin
-        GoogleAnalyticsApiJob.perform(params) if DesksnearMe::Application.config.perform_google_analytics_requests
-        Rails.logger.info "Tracked google_analytics event #{params.inspect}"
-      end
-    else
-      Rails.logger.debug "dummy track google analtyics event #{params.inspect}"
-    end
+  def track(*args)
+    initiazle_trackable_object(AnalyticWrapper::GoogleAnalyticsApi::Event, *args).track
   end
 
-  def get_params(category, action)
-    {
-      v: version,
-      tid: tracking_code,
-      cid: @current_user.try(:google_analytics_id) ? @current_user.google_analytics_id : '555',
-      t: "event",
-      ec: category,
-      ea: action
-    }
+  def track_charge(*args)
+    initiazle_trackable_object(AnalyticWrapper::GoogleAnalyticsApi::Transaction, *args).track
+    initiazle_trackable_object(AnalyticWrapper::GoogleAnalyticsApi::Item, *args).track
   end
 
-  def tracking_code
-    DesksnearMe::Application.config.google_analytics[:tracking_code]
-  end
+  private
 
-  def version
-    # google analytics API version
-    1
+  def initiazle_trackable_object(object_class, *args)
+    object = object_class.new(*args)
+    object.user_google_analytics_id = (@current_user.try(:google_analytics_id) ? @current_user.google_analytics_id : '555')
+    object
   end
 
 end
