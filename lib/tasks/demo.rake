@@ -30,6 +30,14 @@ namespace :demo do
     end
 
 
+    desc "Create second instance for info@desksnear.me user"
+    task :second_instance => [:environment] do
+      instance = FactoryGirl.create(:instance, name: 'Custom instance')
+      user = User.find_by_email('info@desksnear.me') || FactoryGirl.create(:user, email: 'info@desksnear.me')
+      instance_owner = FactoryGirl.create(:instance_admin, :user_id => user.id, :instance_id => instance.id)
+      instance.domains.create(name: ENV['DOMAIN'] || 'instance.dev')
+    end
+
     desc "Create database with demo data"
     task :setup => ["db:create", "db:schema:load", :environment, "demo:db:seed"]
 
