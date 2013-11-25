@@ -148,7 +148,7 @@ class User < ActiveRecord::Base
   validates :biography, length: {maximum: 250}
 
   devise :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :validatable, :token_authenticatable
+         :rememberable, :trackable, :validatable, :token_authenticatable, :temporary_token_authenticatable
 
   attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
     :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url, 
@@ -435,6 +435,12 @@ class User < ActiveRecord::Base
     self.administered_locations.each do |location|
       location.update_attribute(:administrator_id, nil) if location.administrator_id == self.id
     end
+  end
+
+  # Returns a temporary token to be used as the login token parameter
+  # in URLs to automatically log the user in.
+  def temporary_token(expires_at = 48.hours.from_now)
+    User::TemporaryTokenVerifier.new(self).generate(expires_at)
   end
 
 end

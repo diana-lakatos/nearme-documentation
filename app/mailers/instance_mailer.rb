@@ -27,7 +27,7 @@ class InstanceMailer < ActionMailer::Base
 
     @mail_type = mail_type
     @mailer_signature = generate_signature
-    @unsubscribe_link = unsubscribe_url(signature: @mailer_signature, token: @user.authentication_token) if non_transactional?
+    @unsubscribe_link = unsubscribe_url(signature: @mailer_signature, token: @user.temporary_token) if non_transactional?
     @signature_for_tracking = "&email_signature=#{@mailer_signature}"
 
     track_sending_email(custom_tracking_options)
