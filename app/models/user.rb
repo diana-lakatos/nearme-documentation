@@ -404,6 +404,7 @@ class User < ActiveRecord::Base
 
   def administered_locations_pageviews_7_day_total
     scoped_locations = (!companies.count.zero? && self == self.companies.first.creator) ? self.companies.first.locations : administered_locations
+    scoped_locations = scoped_locations.with_searchable_listings
     Impression.where('impressionable_type = ? AND impressionable_id IN (?) AND DATE(impressions.created_at) >= ?', 'Location', scoped_locations.pluck(:id), Date.current - 7.days).count
   end
 

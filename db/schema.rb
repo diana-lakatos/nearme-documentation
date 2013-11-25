@@ -280,8 +280,8 @@ ActiveRecord::Schema.define(:version => 20131125060557) do
 
   create_table "listing_types", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "instance_id"
   end
 
@@ -328,8 +328,8 @@ ActiveRecord::Schema.define(:version => 20131125060557) do
 
   create_table "location_types", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "instance_id"
   end
 
