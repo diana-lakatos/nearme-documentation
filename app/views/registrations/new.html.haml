@@ -1,5 +1,5 @@
 - legacy false
-- title "Sign up to Desks Near Me"
+- title "Sign up to #{platform_context.name}"
 
 #signup
   - if registration_wizard
@@ -11,7 +11,9 @@
       .span8.offset2
         .box
           %header
-            %h2== Sign up to Desks Near Me
+            %h2
+              Sign up to
+              = platform_context.name
 
           = render 'registrations/signup_form'
 
