@@ -44,34 +44,4 @@ namespace :reprocess do
       end
     end
   end
-
-  desc "Remove leading hash from theme colors"
-  task :remove_theme_color_hash => :environment do
-    colors = ['blue','red','orange','green','gray','black','white']
-
-    Theme.find_each do |theme|
-      begin
-        puts "Processing Instance Theme ##{theme.id}..."
-
-        colors.each do |color|
-          current_theme_color = theme.send("color_#{color}".to_sym)
-          puts "Updating #{current_theme_color}..."
-
-          unless current_theme_color.nil? || current_theme_color[0] != '#'
-            current_theme_color[0] = ''
-            updated_theme_color = current_theme_color
-            theme.send("color_#{color}=".to_sym, updated_theme_color)
-            theme.save!
-
-            puts "Updated to #{updated_theme_color}."
-          else
-            puts "Update not required."
-          end
-        end
-      rescue
-        puts "Processing Instance Theme ##{theme.id} failed: #{$!.inspect}"
-      end
-    end
-  end
-
 end
