@@ -6,28 +6,12 @@ require Rails.root.join('app', 'serializers', 'reservation_serializer.rb')
 class ReservationTest < ActiveSupport::TestCase
   include ReservationsHelper
 
+  should belong_to(:listing)
+  should belong_to(:owner)
+  should have_many(:periods)
+
   setup do
     stub_mixpanel
-  end
-
-  test "it has a listing" do
-    @reservation = Reservation.new
-    @reservation.listing = FactoryGirl.create(:listing)
-
-    assert @reservation.listing
-  end
-
-  test "it has an owner" do
-    @reservation = Reservation.new
-    @reservation.owner = User.new
-
-    assert @reservation.owner
-  end
-
-  test "it has periods" do
-    @reservation = Reservation.new
-
-    assert @reservation.periods
   end
 
   context 'scopes' do

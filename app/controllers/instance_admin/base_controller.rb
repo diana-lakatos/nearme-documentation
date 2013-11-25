@@ -1,5 +1,5 @@
 class InstanceAdmin::BaseController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :auth_user!
   before_filter :authorize_user!
 
   def index
@@ -9,6 +9,13 @@ class InstanceAdmin::BaseController < ApplicationController
   layout 'instance_admin'
 
   private
+
+  def auth_user!
+    unless user_signed_in?
+      session[:user_return_to] = request.path
+      redirect_to instance_admin_login_path
+    end
+  end
 
   def authorize_user!
     @authorizer ||= InstanceAdmin::Authorizer.new(current_user, platform_context)

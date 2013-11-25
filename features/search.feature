@@ -19,7 +19,7 @@ Feature: A user can search for a listing
   Scenario: Subscribing on notification about new listings if no listings found for valid location.
     When I search for located "New Zealand"
     Then I should see "No results found"
-    And I should see "Try another search query, or enter your email address below to be notified when a desk is added at this location."
+    And I should see "Try another search query, or enter your email address below to be notified when a Desk is added at this location."
     And I fill form with email field for subscribing on notification
     Then I should see a notification for my subscription
     And search notification created with "New Zealand"

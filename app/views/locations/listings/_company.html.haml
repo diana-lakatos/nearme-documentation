@@ -6,7 +6,7 @@
         %span.ico-open-link
 
   %p= location.company.description
-  - if location.company.industries.any?
+  - if location.company.industries.any? && platform_context.is_desksnearme?
     .amenities-block
       .amenities-header
         %h3 Industries
