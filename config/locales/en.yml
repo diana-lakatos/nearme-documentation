@@ -32,8 +32,8 @@ en:
         other: 'Plus %{count} more connections'
   search_notifications:
     form:
-      try_another_search_or_subscribe: "Try another search query, or subscribe below to be notified via email when a desk is added at this location."
-      try_another_search_or_enter_email: "Try another search query, or enter your email address below to be notified when a desk is added at this location."
+      try_another_search_or_subscribe: "Try another search query, or subscribe below to be notified via email when a %{bookable_noun} is added at this location."
+      try_another_search_or_enter_email: "Try another search query, or enter your email address below to be notified when a %{bookable_noun} is added at this location."
   reservations:
     no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find a space near you!</a>"
   flash_messages:
@@ -95,13 +95,13 @@ en:
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         reservation_cancelled: "You have cancelled this reservation."
       listings:
-        desk_added: "Great, your new Desk/Room has been added!"
+        desk_added: "Great, your new %{bookable_noun} has been added!"
         listing_updated: "Great, your listing's details have been updated."
         listing_deleted: "That listing has been deleted."
     payments:
       marked_transferred: "Marked payment transfer as transferred"
     search_notifications:
-      you_will_be_notified: "You will be notified when a desk is added at this location."
+      you_will_be_notified: "You will be notified when a %{bookable_noun} is added at this location."
     listings:
       listing_inactive: "This listing is inactive. Displaying other listings near %{address}."
       listing_disabled: "This listing has been temporarily disabled by the owner. Check out some others near you!"
