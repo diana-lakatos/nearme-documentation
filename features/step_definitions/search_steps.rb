@@ -30,7 +30,7 @@ When(/^I fill form (with email field )?for subscribing on notification$/) do |wi
 end
 
 Then /^I should see a notification for my subscription$/ do
-  page.find('.alert').should have_content("You will be notified when a desk is added at this location.")
+  page.find('.alert').should have_content("You will be notified when a Desk is added at this location.")
 end
 
 When(/^search notification created with "([^"]*)"( for user)?$/) do |query, for_user|

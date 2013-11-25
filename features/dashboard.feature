@@ -44,7 +44,7 @@ Feature: As a user of the site
      When I follow "Add Desk"
       And I fill listing form with valid details
       And I submit the form
-      And I should see "Great, your new Desk/Room has been added!"
+      And I should see "Great, your new Desk has been added!"
      Then Listing with my details should be created
 
   Scenario: A user can edit existing listing

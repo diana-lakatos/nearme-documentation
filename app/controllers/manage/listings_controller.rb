@@ -18,7 +18,7 @@ class Manage::ListingsController < Manage::BaseController
     @listing = @location.listings.build(params[:listing])
 
     if @listing.save
-      flash[:success] = t('flash_messages.manage.listings.desk_added')
+      flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: platform_context.decorate.bookable_noun)
       event_tracker.created_a_listing(@listing, { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
       redirect_to manage_locations_path
