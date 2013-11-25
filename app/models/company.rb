@@ -44,7 +44,8 @@ class Company < ActiveRecord::Base
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
 
-  validates_presence_of :name, :industries, :instance_id
+  validates_presence_of :name, :instance_id
+  validates_presence_of :industries, :if => proc { |c| c.instance.present? && c.instance.is_desksnearme? }
   validates_length_of :description, :maximum => 250
   validates :email, email: true, allow_blank: true
   validate :validate_url_format

@@ -563,6 +563,15 @@ header#listing_search {
       @include box-sizing(border-box);
       width: 100%;
     }
+
+    &.two-filters {
+
+      .search-filter {
+        @media (min-width: $search-bar-breakpoint-desktop) {
+          padding-right: 65px;
+        }
+      }
+    }
   }
 
   @media (max-width: $iphone-landscape) {
