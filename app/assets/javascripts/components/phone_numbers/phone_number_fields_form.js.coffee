@@ -9,7 +9,7 @@ class PhoneNumbers.FieldsForm
       codeSelector    : '.country-calling-code'
       mobileSelector  : '#user_mobile_number'
       phoneSelector   : '#user_phone'
-      sameAsSelector  : '#user_mobile_same_as_phone'
+      sameAsSelector  : '#user_decorator_mobile_same_as_phone'
 
     @findFields()
     @bindEvents()

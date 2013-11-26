@@ -1,6 +1,6 @@
 class Instance < ActiveRecord::Base
   attr_accessible :name, :domains_attributes, :theme_attributes, :location_types_attributes, :listing_types_attributes,
-                  :service_fee_percent, :bookable_noun, :lessor, :lessee
+                  :service_fee_percent, :bookable_noun, :lessor, :lessee, :amenity_types_attributes
 
   has_one :theme, :as => :owner, dependent: :destroy
 
@@ -9,6 +9,9 @@ class Instance < ActiveRecord::Base
   has_many :locations_impressions,
            :through => :companies
   has_many :location_types
+  has_many :amenity_types
+  has_many :amenities,
+           :through => :amenity_types
   has_many :reservations,
            :through => :companies
   has_many :reservation_charges,
@@ -26,6 +29,7 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :location_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :listing_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
+  accepts_nested_attributes_for :amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
 
   DEFAULT_INSTANCE_NAME = 'DesksNearMe'
 

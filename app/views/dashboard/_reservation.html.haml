@@ -18,7 +18,7 @@
             %a.dates{href: '#', 'data-reservation-hours' => reservation_period.hourly_summary(true)}
               = reservation.short_dates
           - else
-            %a.dates{href: '#', data: { :dates => reservation.dates } }
+            %a.dates{href: '#', data: { :dates => reservation.dates_to_array } }
               = reservation.short_dates
           .clearfix
           %span

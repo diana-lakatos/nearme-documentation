@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131125060557) do
+ActiveRecord::Schema.define(:version => 20131126104624) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -25,9 +25,12 @@ ActiveRecord::Schema.define(:version => 20131125060557) do
   create_table "amenity_types", :force => true do |t|
     t.string   "name"
     t.integer  "position"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "instance_id"
   end
+
+  add_index "amenity_types", ["instance_id"], :name => "index_amenity_types_on_instance_id"
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"

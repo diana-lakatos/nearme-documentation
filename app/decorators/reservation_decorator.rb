@@ -95,6 +95,12 @@ class ReservationDecorator < Draper::Decorator
     end.to_sentence
   end
 
+  def dates_to_array
+    periods.map do |period|
+      "#{period.date.strftime('%Y-%m-%d')}"
+    end
+  end
+
   def manage_guests_action_column_class
     buttons_count = [can_host_cancel?, can_confirm?, can_reject?].count(true)
     "split-#{buttons_count}"
