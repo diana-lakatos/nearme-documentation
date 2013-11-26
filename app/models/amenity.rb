@@ -1,12 +1,14 @@
 class Amenity < ActiveRecord::Base
-  attr_accessible :name
+  attr_accessible :name, :amenity_type_id
 
-  has_many :listings, through: :listing_amenities
-  has_many :listing_amenities
+  has_many :locations, through: :location_amenities
+  has_many :location_amenities, dependent: :destroy
   
   belongs_to :amenity_type
 
   validates_presence_of :name
+
+  default_scope order: "amenities.name ASC"
 
   def category
     self[:category] || 'Other'
