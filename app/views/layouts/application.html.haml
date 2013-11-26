@@ -5,7 +5,7 @@
       = title_tag
     %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
     %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}
-    %meta{:content => platform_context.description || "Desks Near Me connects individuals and teams with office space across the globe, and provides a platform for businesses to list spare space.", :name => "description"}/
+    %meta{:content => platform_context.description || "#{platform_context.name} connects individuals and teams with office space across the globe, and provides a platform for businesses to list spare space.", :name => "description"}/
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
     %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
@@ -47,7 +47,7 @@
           .container-fluid
             .navbar.navbar-inverse.navbar-fixed-top
               .navbar-inner.nav-links
-                = link_to "Desks Near Me", root_url, :id => "logo"
+                = link_to platform_context.name, root_url, :id => "logo"
                 #header_links.links-container.pull-right
                   = render "layouts/header_navigation" unless no_header_links?
             - unless no_header_links?

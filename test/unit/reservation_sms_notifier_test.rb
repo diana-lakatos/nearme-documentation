@@ -13,7 +13,7 @@ class ReservationSmsNotifierTest < ActiveSupport::TestCase
     should "render with the reservation" do
       sms = ReservationSmsNotifier.notify_host_with_confirmation(@reservation)
       assert_equal @listing_owner.full_mobile_number, sms.to
-      assert sms.body =~ /You have received a booking request on Desks Near Me/
+      assert sms.body =~ Regexp.new("You have received a booking request on #{@reservation.listing.company.instance.name}")
       assert sms.body =~ /Please confirm or decline from your dashboard:/
       assert sms.body =~ /http:\/\/goo.gl/
     end

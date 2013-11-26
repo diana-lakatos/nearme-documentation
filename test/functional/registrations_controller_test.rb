@@ -46,7 +46,9 @@ class RegistrationsControllerTest < ActionController::TestCase
       verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
       signature = verifier.generate("recurring_mailer/analytics")
 
-      get :unsubscribe, :token => @user.authentication_token, :signature => signature
+      assert_difference('ActionMailer::Base.deliveries.size', 1) do
+        get :unsubscribe, :token => @user.authentication_token, :signature => signature
+      end
       assert @user.unsubscribed?("recurring_mailer/analytics")
       assert_redirected_to root_path
     end

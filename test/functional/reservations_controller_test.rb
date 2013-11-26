@@ -52,7 +52,7 @@ class ReservationsControllerTest < ActionController::TestCase
                          "PRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN",
                          "CALSCALE:GREGORIAN",
                          "VERSION:2.0",
-                         "X-WR-CALNAME::Desks Near Me",
+                         "X-WR-CALNAME::#{@reservation.listing.company.instance.name}",
                          "X-WR-RELCALID::#{@reservation.owner.id}",
                          "BEGIN:VEVENT",
                          "CREATED;VALUE=DATE-TIME:20130628T100500Z",

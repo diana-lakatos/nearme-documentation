@@ -16,7 +16,7 @@ class ReservationIcsBuilder
 
   def build
     @calendar ||= RiCal.Calendar do |cal|
-      cal.add_x_property 'X-WR-CALNAME', 'Desks Near Me' 
+      cal.add_x_property 'X-WR-CALNAME', @reservation.listing.company.instance.name
       cal.add_x_property 'X-WR-RELCALID', "#{@user.id}"
       @reservation.periods.each do |period|
         cal.event do |event|

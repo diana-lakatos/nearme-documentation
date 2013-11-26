@@ -77,6 +77,17 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?("Your new listing rocks!")
   end
 
+  test "unsubscription works ok" do
+    mailer_name = 'recurring_mailer/request_photos'
+    mail = PostActionMailer.unsubscription(@platform_context, @user, mailer_name)
+    subject = "Successfully unsubscribed"
+
+    assert_equal subject, mail.subject
+    assert mail.html_part.body.include?(@user.first_name)
+    assert_equal [@user.email], mail.to
+    assert mail.html_part.body.include?(mailer_name.split('/').last.humanize)
+  end
+
   test "has transactional email footer" do
     assert PostActionMailer.transactional?
   end
