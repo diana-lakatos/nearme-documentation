@@ -15,7 +15,7 @@
                 = reservation_navigation_link('archived')
 
         - if @reservations.empty?
-          %p.no-data= t('reservations.no_bookings_html', type: params[:action])
+          %p.no-data= t('reservations.no_bookings_html', type: params[:action], bookable_noun: platform_context.bookable_noun)
         - else
           - if @reservation
             %h2.reservation-emphasis
