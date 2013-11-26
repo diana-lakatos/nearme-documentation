@@ -83,7 +83,7 @@ class PostActionMailerTest < ActiveSupport::TestCase
     subject = "Successfully unsubscribed"
 
     assert_equal subject, mail.subject
-    assert mail.html_part.body.include?(@user.first_name)
+    assert mail.html_part.body.include?(subject)
     assert_equal [@user.email], mail.to
     assert mail.html_part.body.include?(mailer_name.split('/').last.humanize)
   end
