@@ -87,3 +87,30 @@ section#login {
     color: #404040;
   }
 }
+
+section#amenities {
+  table#amenity-types {
+
+    tr:nth-child(1) {
+      td {
+        border-top: 0;
+      }
+    }
+
+    td {
+      input {
+        margin: 4px 0;
+      }
+
+      .control-group {
+        margin: 0;
+      }
+    }
+
+    table.amenities {
+      td {
+        background-color: #f9f9f9;
+      }
+    }
+  }
+}
