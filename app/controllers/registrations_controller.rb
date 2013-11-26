@@ -157,7 +157,10 @@ class RegistrationsController < Devise::RegistrationsController
       verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
       begin
         mailer_name = verifier.verify(params[:signature])
-        current_user.unsubscribe(mailer_name) unless current_user.unsubscribed?(mailer_name)
+        unless current_user.unsubscribed?(mailer_name)
+          current_user.unsubscribe(mailer_name)
+          PostActionMailer.enqueue.unsubscription(platform_context, current_user, mailer_name)
+        end
       rescue ActiveSupport::MessageVerifier::InvalidSignature
       end
 
