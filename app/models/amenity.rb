@@ -8,8 +8,6 @@ class Amenity < ActiveRecord::Base
 
   validates_presence_of :name
 
-  default_scope order: "amenities.name ASC"
-
   def category
     self[:category] || 'Other'
   end

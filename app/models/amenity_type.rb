@@ -5,7 +5,7 @@ class AmenityType < ActiveRecord::Base
   validates :name, :uniqueness => { scope: :instance_id }
 
   belongs_to :instance
-  has_many :amenities
+  has_many :amenities, order: 'amenities.name ASC'
   has_many :locations,
     :through => :amenities
 
