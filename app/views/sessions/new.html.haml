@@ -6,7 +6,9 @@
     .span8.offset2
       .box
         %header
-          %h2 Log in to Desks Near Me
+          %h2
+            Log in to
+            = platform_context.name
 
         - if request.xhr?
           = render 'shared/render_flash'

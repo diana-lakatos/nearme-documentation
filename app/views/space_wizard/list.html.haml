@@ -21,7 +21,10 @@
 
           - content_for :currency do
             = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :currency ] }
-          %h2 3. Please tell us about the desk you're listing
+          %h2
+            3. Please tell us about the
+            #{platform_context.bookable_noun}
+            you're listing
           %br
           .box
             = render 'listings/listing_form',
