@@ -53,8 +53,18 @@ class PostActionMailer < InstanceMailer
     @listing = @user.listings.first
     @platform_context = platform_context
 
-    mail to: @user.email, 
+    mail to: @user.email,
            subject: "#{@user.first_name}, your new listing looks amazing!",
+           platform_context: @platform_context
+  end
+
+  def unsubscription(platform_context, user, mailer_name)
+    @user = user
+    @mailer_name = mailer_name.split('/').last.humanize
+    @platform_context = platform_context
+
+    mail to: @user.email,
+           subject: "Successfully unsubscribed",
            platform_context: @platform_context
   end
 

@@ -20,6 +20,10 @@ class PostActionMailerPreview < MailView
     ::PostActionMailer.list(PlatformContext.new, user_with_listing)
   end
 
+  def unsubscription
+    ::PostActionMailer.unsubscription(PlatformContext.new, User.last, 'recurring_mailer/request_photos')
+  end
+
   private
 
   def user_with_listing
