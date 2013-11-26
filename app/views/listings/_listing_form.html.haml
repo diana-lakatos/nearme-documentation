@@ -20,7 +20,7 @@
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
 = f.input :name, :label => "#{platform_context.bookable_noun} name" if only_inputs.empty? || only_inputs.include?(:name)
 = f.input :description, :label => "#{platform_context.bookable_noun} description", :input_html => { :maxlength => 250} if only_inputs.empty? || only_inputs.include?(:description)
-= f.association :listing_type, :label => "#{platform_context.bookable_noun} type", :input_html => { :class => 'selectpicker' } if only_inputs.empty? || only_inputs.include?(:listing_type)
+= f.association :listing_type, :label => "#{platform_context.bookable_noun} type", :collection => platform_context.instance.listing_types, :input_html => { :class => 'selectpicker' } if only_inputs.empty? || only_inputs.include?(:listing_type)
 = f.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" } if only_inputs.empty? || only_inputs.include?(:quantity)
 
 - if content_for? :currency
