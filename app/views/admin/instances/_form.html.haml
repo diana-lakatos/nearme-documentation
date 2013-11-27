@@ -13,5 +13,11 @@
   = f.fields_for :theme, (resource.theme.presence || resource.build_theme) do |ff|
     = render :partial => 'admin/themes/form', :locals => { :f => ff }
 
+  - if defined?(@user)
+    %h4 Instance Admin
+    = simple_fields_for @user do |f_user|
+      = f_user.input :name
+      = f_user.input :email, required: true
+
   .form-actions
     = f.button :submit

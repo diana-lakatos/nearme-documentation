@@ -7,7 +7,7 @@ class PostActionMailerTest < ActiveSupport::TestCase
   setup do
     stub_mixpanel
     @user = FactoryGirl.create(:user)
-    FactoryGirl.create(:instance)
+    @instance = FactoryGirl.create(:instance)
     @platform_context = PlatformContext.new
   end
 
@@ -86,6 +86,17 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(subject)
     assert_equal [@user.email], mail.to
     assert mail.html_part.body.include?(mailer_name.split('/').last.humanize)
+  end
+
+  test "instance_created works ok" do
+    mail = PostActionMailer.instance_created(@platform_context, @instance, @user, 'password')
+    subject = "Instance created"
+
+    assert_equal subject, mail.subject
+    assert_equal [@user.email], mail.to
+    assert mail.html_part.body.include?("Password: password")
+    assert mail.html_part.body.include?("Email: #{@user.email}")
+    assert mail.html_part.body.include?("Your instance, #{@instance.name}")
   end
 
   test "has transactional email footer" do

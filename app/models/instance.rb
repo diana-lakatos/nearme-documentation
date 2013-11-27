@@ -44,4 +44,8 @@ class Instance < ActiveRecord::Base
   def self.default_instance
     self.find_by_name(DEFAULT_INSTANCE_NAME)
   end
+
+  def to_liquid
+    InstanceDrop.new(self)
+  end
 end
