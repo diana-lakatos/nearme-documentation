@@ -26,6 +26,20 @@ section.public {
       @include background(linear-gradient(right, rgba(30,30,34,0), rgba(30,30,34,0.4) 60%, rgba(30,30,34,0.6)));
     }
 
+    .call-to-action {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 5px;
+      text-align: center;
+
+      a {
+        color: $light-gray;
+        font:400 20px/24px $font-regular, sans-serif;
+        @include text-shadow(black 0 0 1px, black 0 0 1px, black 0 0 1px, black 0 0 1px, black 0 0 1px);
+      }
+    }
+
     @media (max-width: $ipad-width) {
       height: 420px;
     }

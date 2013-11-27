@@ -6,7 +6,7 @@
   = f.input :meta_title
   = f.input :description, :label => 'Meta description'
   %p
-    = f.button :submit, 'Save'
+    = f.button :submit, 'Save', class: 'btn btn-success'
   %br/
 
   %legend Brand
@@ -21,7 +21,7 @@
           = f.text_field "remote_#{image_attr}_url" 
 
   %p
-    = f.button :submit, 'Save'
+    = f.button :submit, 'Save', class: 'btn btn-success'
   %br/
 
   %legend Contact &amp; Support
@@ -30,7 +30,7 @@
   = f.input :support_email
   = f.input :support_url
   %p
-    = f.button :submit, 'Save'
+    = f.button :submit, 'Save', class: 'btn btn-success'
   %br/
 
   %legend Social Properties
@@ -39,7 +39,7 @@
   = f.input :twitter_url
   = f.input :gplus_url
   %p
-    = f.button :submit, 'Save'
+    = f.button :submit, 'Save', class: 'btn btn-success'
   %br/
 
   %legend Colors
@@ -48,6 +48,13 @@
       %span.add-on #
       = f.input_field "color_#{color}"
   %p
-    = f.button :submit, 'Save'
+    = f.button :submit, 'Save', class: 'btn btn-success'
+  %br/
+
+  %legend Homepage
+  = f.input :homepage_content, :input_html => { :class => 'wide' }
+  = f.input :call_to_action, :placeholder => 'Find out more'
+  %p
+    = f.button :submit, 'Save', class: 'btn btn-success'
   %br/
 

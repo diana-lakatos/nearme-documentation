@@ -3,6 +3,11 @@ class Admin::ReservationsController < Admin::ResourceController
   def index
   end
 
+  def show
+    @periods =  ReservationPeriodDecorator.decorate_collection(resource.periods)
+    show!
+  end 
+
   private
 
   def collection_allowed_scopes

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131126104624) do
+ActiveRecord::Schema.define(:version => 20131127104329) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -266,6 +266,16 @@ ActiveRecord::Schema.define(:version => 20131126104624) do
     t.string   "lessor"
     t.string   "lessee"
   end
+
+  create_table "listing_amenities", :force => true do |t|
+    t.integer  "listing_id"
+    t.integer  "amenity_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "listing_amenities", ["amenity_id"], :name => "index_listing_amenities_on_amenity_id"
+  add_index "listing_amenities", ["listing_id"], :name => "index_listing_amenities_on_listing_id"
 
   create_table "listing_messages", :force => true do |t|
     t.integer  "owner_id"
@@ -561,6 +571,8 @@ ActiveRecord::Schema.define(:version => 20131126104624) do
     t.string   "twitter_url"
     t.string   "facebook_url"
     t.string   "gplus_url"
+    t.text     "homepage_content"
+    t.string   "call_to_action"
   end
 
   add_index "themes", ["owner_id", "owner_type"], :name => "index_themes_on_owner_id_and_owner_type"

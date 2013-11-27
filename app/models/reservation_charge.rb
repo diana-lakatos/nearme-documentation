@@ -7,6 +7,7 @@ class ReservationCharge < ActiveRecord::Base
     :class_name => 'Charge',
     :as => :reference,
     :dependent => :nullify
+  has_one :instance, through: :reservation
 
   # === Scopes
   # These payments have been attempted but failed during the charge attempt.
@@ -38,6 +39,8 @@ class ReservationCharge < ActiveRecord::Base
         )
       ')
   }
+
+  scope :for_instance, ->(instance) { joins(:instance).where(:'instances.id' => instance.id) }
 
   # === Callbacks
   before_validation :assign_currency

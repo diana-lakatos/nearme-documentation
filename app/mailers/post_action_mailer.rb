@@ -68,6 +68,17 @@ class PostActionMailer < InstanceMailer
            platform_context: @platform_context
   end
 
+  def instance_created(platform_context, instance, user, user_password)
+    @user = user
+    @user_password = user_password
+    @instance = instance
+    @platform_context = platform_context
+
+    mail to: @user.email,
+           subject: "Instance created",
+           platform_context: @platform_context
+  end
+
   def mail_type
     DNM::MAIL_TYPES::TRANSACTIONAL
   end

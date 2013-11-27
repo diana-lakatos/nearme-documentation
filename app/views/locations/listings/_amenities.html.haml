@@ -1,0 +1,13 @@
+- if amenities_owner.amenities.any?
+  .amenities-block
+    .amenities-header
+      %a{href: '#amenities'}
+        %h3 Amenities
+        %span.ico-chevron-right
+    .amenities-container
+      - amenities_owner.amenities.order('name ASC').in_groups_of(4).each do |amenity_group|
+        .row-fluid.amenities-row
+          - amenity_group.compact.each do |amenity|
+            .span3{title: amenity.name}
+              = amenity.name
+  .clearfix

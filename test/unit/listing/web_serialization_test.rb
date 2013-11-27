@@ -52,6 +52,10 @@ class Listing::WebSerializationTest < ActiveSupport::TestCase
       assert_equal 7, @json[:availability_rules_attributes].count
     end
 
+    should "have amenity_ids" do
+      assert @json[:amenity_ids].empty?
+    end
+
   end
 
  end

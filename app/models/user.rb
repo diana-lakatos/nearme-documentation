@@ -223,6 +223,13 @@ class User < ActiveRecord::Base
     update_attributes(attrs)
   end
 
+  def generate_random_password!
+    chars = ("a".."z").to_a + ("A".."Z").to_a + ("0".."9").to_a
+    random_pass = ''
+    1.upto(8) { |i| random_pass << chars[rand(chars.size-1)] }
+    self.password = random_pass
+  end
+
   def linked_to?(provider)
     authentications.where(provider: provider).any?
   end

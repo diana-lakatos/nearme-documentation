@@ -60,8 +60,10 @@
             .container-fluid
               = yield unless render_content_outside_container?
 
+            = render 'layouts/footer' unless no_footer?
+
             = yield if render_content_outside_container?
         - unless no_footer?
           .footer-push
-      = render 'layouts/footer' unless no_footer?
+
     = render 'layouts/scripts'
