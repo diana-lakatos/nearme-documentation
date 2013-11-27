@@ -571,6 +571,8 @@ ActiveRecord::Schema.define(:version => 20131127104329) do
     t.string   "twitter_url"
     t.string   "facebook_url"
     t.string   "gplus_url"
+    t.text     "homepage_content"
+    t.string   "call_to_action"
   end
 
   add_index "themes", ["owner_id", "owner_type"], :name => "index_themes_on_owner_id_and_owner_type"

@@ -19,7 +19,7 @@ class Manage::LocationsController < Manage::BaseController
     @location = @company.locations.build(params[:location])
 
     if @location.save
-      flash[:success] = t('flash_messages.manage.locations.space_added')
+      flash[:success] = t('flash_messages.manage.locations.space_added', bookable_noun: platform_context.decorate.bookable_noun)
       event_tracker.created_a_location(@location , { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
       redirect_to manage_locations_path
@@ -39,7 +39,7 @@ class Manage::LocationsController < Manage::BaseController
     @location.attributes = params[:location]
 
     if @location.save
-      flash[:success] = t('flash_messages.manage.locations.space_updated')
+      flash[:success] = t('flash_messages.manage.locations.space_updated', bookable_noun: platform_context.decorate.bookable_noun)
       redirect_to manage_locations_path
     else
       render :edit
