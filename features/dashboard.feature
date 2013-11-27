@@ -22,7 +22,7 @@ Feature: As a user of the site
      When I follow "New Location"
       And I fill location form with valid details
       And I submit the form
-      And I should see "Great, your new Space has been added!"
+      And I should see "Great, your new Desk has been added!"
      Then Location with my details should be created
      
   Scenario: A user can edit existing location
@@ -31,7 +31,7 @@ Feature: As a user of the site
      When I click edit location icon
       And I provide new location data
       And I submit the form
-      And I should see "Great, your Space has been updated!"
+      And I should see "Great, your Desk has been updated!"
      Then the location should be updated
      When I click edit location icon
       And I click delete location link

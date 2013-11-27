@@ -15,7 +15,7 @@ Feature: A user can add a space
      Then I should see "List Your First" bookable noun
      When I fill in valid space details
      And I press "Submit"
-     Then I should see "Your space was listed!"
+     Then I should see "Your Desk was listed!"
 
   Scenario: An unregistered user starts a draft, comes back to it, and saves it
     Given I go to the home page
@@ -29,7 +29,7 @@ Feature: A user can add a space
      Then I should see "Your draft has been saved!"
      And I fill in valid space details
      And I press "Submit"
-     Then I should see "Your space was listed!"  
+     Then I should see "Your Desk was listed!"  
 
   Scenario: A draft listing does not show up in search
     Given I go to the home page
@@ -44,7 +44,7 @@ Feature: A user can add a space
      And I follow "Complete Your Listing"
      And I fill in valid space details
      And I press "Submit"
-     Then I should see "Your space was listed!"
+     Then I should see "Your Desk was listed!"
      Then I go to the home page
      When I search for "USA"
      Then I should see "International"
