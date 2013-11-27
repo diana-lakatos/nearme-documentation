@@ -24,6 +24,10 @@ class PostActionMailerPreview < MailView
     ::PostActionMailer.unsubscription(PlatformContext.new, User.last, 'recurring_mailer/request_photos')
   end
 
+  def instance_created
+    ::PostActionMailer.instance_created(PlatformContext.new, Instance.default_instance, User.last, 'password')
+  end
+
   private
 
   def user_with_listing
