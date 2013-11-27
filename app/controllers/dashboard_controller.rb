@@ -89,7 +89,7 @@ class DashboardController < ApplicationController
 
   def prepare_data_for_analytics_revenue
     # All paid ReservationCharges paginated
-    @reservation_charges = @company.reservation_charges.paid.order('paid_at DESC')
+    @reservation_charges = @company.reservation_charges.for_instance(platform_context.instance).paid.order('reservation_charges.paid_at DESC')
     @reservation_charges = @reservation_charges.includes(:reservation => { :listing => :location })
     @reservation_charges = @reservation_charges.paginate(
       :page => params[:page],
@@ -97,30 +97,30 @@ class DashboardController < ApplicationController
     )
 
     # Charges specifically from the last 7 days
-    @last_week_reservation_charges = @company.reservation_charges.paid.last_x_days(6).
-      order('created_at ASC')
+    @last_week_reservation_charges = @company.reservation_charges.for_instance(platform_context.instance).paid.last_x_days(6).
+      order('reservation_charges.created_at ASC')
 
     # Charge total summary by currency
-    @all_time_totals = @company.reservation_charges.paid.total_by_currency
+    @all_time_totals = @company.reservation_charges.for_instance(platform_context.instance).total_by_currency
 
     @chart = ChartDecorator.decorate(@last_week_reservation_charges)
   end
 
   def prepare_data_for_analytics_bookings
     # All company reservations paginated
-    @reservations = @company.reservations.order('created_at DESC')
+    @reservations = @company.reservations.for_instance(platform_context.instance).order('reservations.created_at DESC')
     @reservations = @reservations.paginate(
       :page => params[:page],
       :per_page => 20
     )
 
-    @last_week_reservations = @company.reservations.last_x_days(6).order('created_at ASC')
+    @last_week_reservations = @company.reservations.for_instance(platform_context.instance).last_x_days(6).order('reservations.created_at ASC')
 
     @chart = ChartDecorator.decorate(@last_week_reservations)
   end
 
   def prepare_data_for_analytics_location_views
-    @visits = @company.locations_impressions.select('COUNT(impressions.*) AS impressions_count, DATE(impressions.created_at) AS impression_date').group('impression_date')
+    @visits = @company.locations_impressions.for_instance(platform_context.instance).select('COUNT(impressions.*) AS impressions_count, DATE(impressions.created_at) AS impression_date').group('impression_date')
 
     # Visits form last 30 days
     @last_month_visits = @visits.where('DATE(impressions.created_at) >= ?', Date.current - 30.days).order('impression_date ASC')
@@ -129,7 +129,7 @@ class DashboardController < ApplicationController
     @visits = @visits.order('DATE(impressions.created_at) DESC').paginate(
       :page => params[:page],
       :per_page => 30,
-      :total_entries => @company.locations_impressions.group('DATE(impressions.created_at)').count.size 
+      :total_entries => @company.locations_impressions.for_instance(platform_context.instance).group('DATE(impressions.created_at)').count.size
     )
 
     @chart = ChartDecorator.decorate(@last_month_visits)
