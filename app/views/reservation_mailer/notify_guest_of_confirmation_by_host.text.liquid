@@ -1,4 +1,4 @@
-Your booking for '{{ listing.name }}' at {{ listing.location.name:}} ({{ listing.location.url }})</a>  has been cancelled by the host.
+Your booking for '{{ listing.name }}' at {{ listing.location.name:}} ({{ listing.location.url }})</a>  has been cancelled by the {{ platform_context.lessor }}.
 
 BOOKING DETAILS --------
 
@@ -18,7 +18,7 @@ Dates:
 {% endif %}
 
 
-Host: {{ host.name }} ({{host.email}})
+{{ platform_context.lessor }}: {{ host.name }} ({{host.email}})
 
 {% if listing.location.phone? %}Contact: {{listing.location.phone}}{% endif %}
 

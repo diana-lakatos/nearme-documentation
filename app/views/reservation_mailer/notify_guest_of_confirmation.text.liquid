@@ -2,7 +2,7 @@ You got it, {{ user.first_name }}!
 
 Your booking for '{{ listing.name }}' at {{ listing.street }} has been confirmed! Here it is:
 
-Host: {{ listing.administrator.first_name }}
+{{ platform_context.lessor.capitalize }}: {{ listing.administrator.first_name }}
 
 What: {{ listing.name }} x {{ reservation.quantity }}
 
