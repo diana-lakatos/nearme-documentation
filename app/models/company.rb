@@ -37,7 +37,12 @@ class Company < ActiveRecord::Base
 
   has_many :locations_impressions,
            :source => :impressions,
-           :through => :locations
+           :through => :locations do
+             def for_instance(instance)
+               location_ids = proxy_association.owner.locations.for_instance(instance).pluck(:id)
+               where(:impressionable_id => location_ids)
+             end
+           end
 
   before_validation :add_default_url_scheme
 

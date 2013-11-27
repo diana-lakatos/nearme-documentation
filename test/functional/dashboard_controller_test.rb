@@ -35,6 +35,20 @@ class DashboardControllerTest < ActionController::TestCase
             assert_equal [@owner_charge], assigns(:reservation_charges)
           end
 
+          should '@all_time_totals ' do
+            get :analytics
+            assert_equal 1, assigns(:all_time_totals).length
+          end
+
+          should 'be scoped to current instance' do
+            second_instance = FactoryGirl.create(:instance)
+            PlatformContext.any_instance.stubs(:instance).returns(second_instance)
+
+            get :analytics
+            assert_equal [], assigns(:reservation_charges)
+            assert_equal [], assigns(:last_week_reservation_charges)
+            assert_equal [], assigns(:all_time_totals)
+          end
         end
 
         context 'date' do 
@@ -79,6 +93,13 @@ class DashboardControllerTest < ActionController::TestCase
           assert_equal [@reservation], assigns(:reservations)
         end
 
+        should 'be scoped to current instance' do
+          second_instance = FactoryGirl.create(:instance)
+          PlatformContext.any_instance.stubs(:instance).returns(second_instance)
+
+          get :analytics, :analytics_mode => 'bookings'
+          assert_equal [], assigns(:reservations)
+        end
       end
 
       context 'date' do 
@@ -90,6 +111,14 @@ class DashboardControllerTest < ActionController::TestCase
         should '@last_week_reservations includes only reservations not older than 6 days' do
           get :analytics, :analytics_mode => 'bookings'
           assert_equal [@reservation_created_6_days_ago], assigns(:last_week_reservations)
+        end
+
+        should '@last_week is scoped to current instance' do
+          second_instance = FactoryGirl.create(:instance)
+          PlatformContext.any_instance.stubs(:instance).returns(second_instance)
+
+          get :analytics, :analytics_mode => 'bookings'
+          assert_equal [], assigns(:last_week_reservations)
         end
 
       end
@@ -115,8 +144,16 @@ class DashboardControllerTest < ActionController::TestCase
         should '@last_month_visits has one visit from today' do
           get :analytics, :analytics_mode => 'location_views'
           assert_equal Date.current, Date.strptime(assigns(:last_month_visits).first.impression_date)
+          assert_equal 1, assigns(:visits).size
         end
 
+        should '@last_month_visits has no visits from today in second instance' do
+          second_instance = FactoryGirl.create(:instance)
+          PlatformContext.any_instance.stubs(:instance).returns(second_instance)
+          get :analytics, :analytics_mode => 'location_views'
+          assert_equal [], assigns(:last_month_visits)
+          assert_equal [], assigns(:visits)
+        end
       end
 
     end
