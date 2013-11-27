@@ -15,10 +15,6 @@ module ApplicationHelper
     @show_title = show_title
   end
 
-  def root_white_label_page?
-    request.path == '/' && (platform_context.white_label_company || !platform_context.is_desksnearme?)
-  end
-
   def meta_title(name)
     content_for(:meta_title) { h(name.to_s) }
   end
