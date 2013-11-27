@@ -39,7 +39,7 @@
 = f.association :location_type, :label => "Location type", :collection => platform_context.instance.location_types if only_inputs.empty? || only_inputs.include?(:location_type)
 = f.input :email, :label => 'Booking email', :placeholder => 'Your booking email' if only_inputs.empty? || only_inputs.include?(:email)
 = f.association :administrator, :label => 'Administrator', :collection => f.object.company_users.includes(:user).order('users.name').map(&:user), :label_method => 'name', :value_method => 'id', :input_html => { :'data-placeholder' => 'Choose a user', :class => 'custom-select' }, :include_blank => 'Default' if only_inputs.empty? || only_inputs.include?(:administrator)
-= f.input :special_notes, :label => 'Guest instructions', :placeholder => 'For example, how your guests should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your guest\'s stay' if only_inputs.empty? || only_inputs.include?(:special_notes)
+= f.input :special_notes, :label => "#{platform_context.lessee.capitalize} instructions", :placeholder => "For example, how your #{platform_context.lessee.pluralize} should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your #{platform_context.lessee}'s stay" if only_inputs.empty? || only_inputs.include?(:special_notes)
 = f.input :currency, :as => :currency, :label => "Currency", :default => 'USD', :input_html => { :class => 'custom-select', :id => 'currency-select' } if only_inputs.empty? || only_inputs.include?(:currency)
 - if only_inputs.empty? || only_inputs.include?(:availability_rules)
   .control-group

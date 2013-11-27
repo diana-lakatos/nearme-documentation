@@ -1,10 +1,10 @@
-<h2>How was {{ reservation.owner.first_name }}, your recent guest?</h2>
+<h2>How was {{ reservation.owner.first_name }}, your recent {{ platform_context.lessee }}?</h2>
 
 <p>
 We would love to hear about your experience hosting <a href="{{ reservation.owner.user_profile_url }}">{{ reservation.owner.first_name }}</a> at '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>', {{ listing.street }} for the booking commencing {{ reservation.start_date }}.
 </p>
 
-<p>Your opinion is very important and it will help us ensure that our guests are a good fit for you and your space.</p>
+<p>Your opinion is very important and it will help us ensure that our {{ platform_context.lessee.pluralize }} are a good fit for you and your space.</p>
 
 <p>Please take a moment to give us your feedback!</p>
 

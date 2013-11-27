@@ -1,8 +1,8 @@
-How was {{ reservation.owner.first_name }}, your recent guest?
+How was {{ reservation.owner.first_name }}, your recent {{ platform_context.lessee }}?
 
 We would love to hear about your experience hosting {{ reservation.owner.first_name }} at '{{ listing.name }}', {{ listing.street }} for the booking commencing {{ reservation.start_date }}.
 
-Your opinion is very important and it will help us ensure that our guests are a good fit for you and your space.
+Your opinion is very important and it will help us ensure that our {{ platform_context.lessee.pluralize }} are a good fit for you and your space.
 
 Please take a moment to give us your feedback!
 

@@ -34,10 +34,10 @@ Your listing, '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' at {{
 
 </div>
 
-<p>Exciting, right? Please, confirm the booking and let's get the guest set up!</p>
+<p>Exciting, right? Please, confirm the booking and let's get the {{ platform_context.lessee }} set up!</p>
 
 <a class="btn" href="{{ reservation.reservation_confirm_url_with_tracking | append:signature_for_tracking }}">Confirm Booking</a>
 
-<p>Not ready for guests? You can manage your bookings <a href="{{ listing.manage_guests_dashboard_url }}">here</a>.</p>
+<p>Not ready for {{ platform_context.lessee.pluralize }}? You can manage your bookings <a href="{{ listing.manage_guests_dashboard_url }}">here</a>.</p>
 
 <p>If you need help, send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or contact us at {{ platform_context.phone_number }}.</p>

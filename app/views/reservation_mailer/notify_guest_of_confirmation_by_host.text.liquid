@@ -4,7 +4,7 @@ BOOKING DETAILS --------
 
 Listing: '{{listing.name}}' at {{listing.location.name}} ({{listing.location.url}}).
 {% if listing.location.special_notes? %}
-Guest instructions: {{ listing.location.special_notes }}
+{{ platform_context.lessee.capitalize }} instructions: {{ listing.location.special_notes }}
 {% endif %}
 Quantity: {{reservation.quantity}}
 {% if listing.hourly_reservations? %}
