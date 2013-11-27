@@ -37,7 +37,8 @@
 
           = render 'locations/listings/availabilities', listing: @listing
 
-          = render 'locations/listings/administrator', administrator: @listing.administrator
+          -if @listing.administrator
+            = render 'locations/listings/administrator', administrator: @listing.administrator
 
           = render 'locations/listings/other_listings', location: @location, listing: @listing
 
