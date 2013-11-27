@@ -1,11 +1,12 @@
 class GoogleAnalyticsApiJob < Job
-  def initialize(object)
-    @object = object
+  def initialize(endpoint, params)
+    @endpoint = endpoint
+    @params = params
   end
 
   def perform
     # documentation says that the request should be post, but actually must be get. not a mistake - tested!
-    RestClient.get(@object.class::ENDPOINT, params: @object.params, timeout: 4, open_timeout: 4) if DesksnearMe::Application.config.perform_google_analytics_requests
+    RestClient.get(@endpoint, params: @params, timeout: 4, open_timeout: 4) if DesksnearMe::Application.config.perform_google_analytics_requests
   end
 
 end

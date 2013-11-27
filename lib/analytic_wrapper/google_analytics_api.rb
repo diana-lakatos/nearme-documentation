@@ -16,20 +16,50 @@ class AnalyticWrapper::GoogleAnalyticsApi
 
   # Tracks event in google analytics
   def track(*args)
-    initiazle_trackable_object(AnalyticWrapper::GoogleAnalyticsApi::Event, *args).track
+    params = default_params.merge(AnalyticWrapper::GoogleAnalyticsSerializer::Event.new(*args).serialize)
+    if tracking_code.present?
+      GoogleAnalyticsApiJob.perform(endpoint, params)
+      Rails.logger.info "google analtyics track: #{params.inspect}"
+    else
+      Rails.logger.info "dummy google analtyics track: #{params.inspect}"
+    end
   end
 
   def track_charge(*args)
-    initiazle_trackable_object(AnalyticWrapper::GoogleAnalyticsApi::Transaction, *args).track
-    initiazle_trackable_object(AnalyticWrapper::GoogleAnalyticsApi::Item, *args).track
+    item_params = default_params.merge(AnalyticWrapper::GoogleAnalyticsSerializer::Item.new(*args).serialize)
+    transaction_params = default_params.merge(AnalyticWrapper::GoogleAnalyticsSerializer::Transaction.new(*args).serialize)
+    if tracking_code.present?
+      GoogleAnalyticsApiJob.perform(endpoint, transaction_params)
+      GoogleAnalyticsApiJob.perform(endpoint, item_params)
+      Rails.logger.info "google analtyics track_charge transaction: #{transaction_params.inspect}"
+      Rails.logger.info "google analtyics track_charge item: #{item_params.inspect}"
+    else
+      Rails.logger.info "dummy google analtyics track_charge transaction: #{transaction_params.inspect}"
+      Rails.logger.info "dummy google analtyics track_charge item: #{item_params.inspect}"
+    end
   end
 
   private
 
-  def initiazle_trackable_object(object_class, *args)
-    object = object_class.new(*args)
-    object.user_google_analytics_id = (@current_user.try(:google_analytics_id) ? @current_user.google_analytics_id : '555')
-    object
+  def endpoint 
+    "http://www.google-analytics.com/collect" 
+  end
+
+  def tracking_code
+    DesksnearMe::Application.config.google_analytics[:tracking_code]
+  end
+
+  def version
+    # google analytics API version
+    1
+  end
+
+  def default_params
+    { 
+      v: version,
+      tid: tracking_code,
+      cid: (@current_user.try(:google_analytics_id) ? @current_user.google_analytics_id : '555')
+    }
   end
 
 end

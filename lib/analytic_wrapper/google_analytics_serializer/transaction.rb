@@ -1,8 +1,7 @@
-# Class that represents Transaction that will be tracked in Google Analytics. 
-#
-# see https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide#ecom
-class AnalyticWrapper::GoogleAnalyticsApi::Transaction
-  include AnalyticWrapper::GoogleAnalyticsApi::Trackable
+# Class to extract params to track transaction in google analytics
+
+# see https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
+class AnalyticWrapper::GoogleAnalyticsSerializer::Transaction
 
   def initialize(serialized_objects)
     @transaction_id = serialized_objects[:reservation_charge_id]
@@ -10,7 +9,7 @@ class AnalyticWrapper::GoogleAnalyticsApi::Transaction
     @revenue = serialized_objects[:amount]
   end
 
-  def customized_params
+  def serialize
     {
       t: "transaction",
       ti: @transaction_id,

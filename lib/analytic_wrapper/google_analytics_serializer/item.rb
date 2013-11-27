@@ -1,9 +1,7 @@
-# Class that represents Item that will be tracked in Google Analytics. 
-# Item belongs to Transaction in Google Analytics [ transaction has many items ]
-#
-# see https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide#ecom
-class AnalyticWrapper::GoogleAnalyticsApi::Item
-  include AnalyticWrapper::GoogleAnalyticsApi::Trackable
+# Class to extract params to track Item in google analytics
+
+# see https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
+class AnalyticWrapper::GoogleAnalyticsSerializer::Item
 
   def initialize(serialized_objects)
     @transaction_id = serialized_objects[:reservation_charge_id]
@@ -12,7 +10,7 @@ class AnalyticWrapper::GoogleAnalyticsApi::Item
     @category = serialized_objects[:instance_name]
   end
 
-  def customized_params
+  def serialize
     {
       t: 'item',
       ti: @transaction_id,

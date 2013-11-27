@@ -1,15 +1,14 @@
-# Class that represents Event that will be tracked in Google Analytics
+# Class to extract params to track Event in google analytics
 
 # see https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
-class AnalyticWrapper::GoogleAnalyticsApi::Event
-  include AnalyticWrapper::GoogleAnalyticsApi::Trackable
+class AnalyticWrapper::GoogleAnalyticsSerializer::Event
 
   def initialize(category, action)
     @category = category
     @action = action
   end
 
-  def customized_params
+  def serialize
     {
       t: "event",
       ec: @category,
