@@ -44,7 +44,7 @@ class SpaceWizardController < ApplicationController
     elsif @user.save
       track_new_space_event
       PostActionMailer.enqueue.list(platform_context, @user)
-      flash[:success] = t('flash_messages.space_wizard.space_listed')
+      flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: platform_context.decorate.bookable_noun)
       redirect_to manage_locations_path
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
