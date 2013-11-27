@@ -1,6 +1,6 @@
 class SpaceWizardController < ApplicationController
 
-  before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
+  #before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :find_user, :except => [:new]
   before_filter :find_company, :except => [:new, :submit_listing]
   before_filter :find_location, :except => [:new, :submit_listing]
@@ -20,6 +20,7 @@ class SpaceWizardController < ApplicationController
 
   def list
     @company ||= @user.companies.build
+    @company.name = current_user.name if platform_context.instance.skip_company? && !@company.persisted?
     @location ||= @company.locations.build
     @listing ||= @location.listings.build
     @photos = @user.photos.where("content_type = 'Listing' AND content_id IS NOT NULL") || nil

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131127104329) do
+ActiveRecord::Schema.define(:version => 20131127162031) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -265,6 +265,7 @@ ActiveRecord::Schema.define(:version => 20131127104329) do
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
     t.string   "lessor"
     t.string   "lessee"
+    t.boolean  "skip_company",                                      :default => false
   end
 
   create_table "listing_amenities", :force => true do |t|

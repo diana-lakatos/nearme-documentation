@@ -1,6 +1,6 @@
 class Instance < ActiveRecord::Base
   attr_accessible :name, :domains_attributes, :theme_attributes, :location_types_attributes, :listing_types_attributes,
-                  :service_fee_percent, :bookable_noun, :lessor, :lessee, :amenity_types_attributes
+                  :service_fee_percent, :bookable_noun, :lessor, :lessee, :amenity_types_attributes, :skip_company
 
   has_one :theme, :as => :owner, dependent: :destroy
 
