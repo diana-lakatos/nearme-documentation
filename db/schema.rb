@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131126104624) do
+ActiveRecord::Schema.define(:version => 20131127062138) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -561,6 +561,8 @@ ActiveRecord::Schema.define(:version => 20131126104624) do
     t.string   "twitter_url"
     t.string   "facebook_url"
     t.string   "gplus_url"
+    t.text     "homepage_content"
+    t.string   "call_to_action"
   end
 
   add_index "themes", ["owner_id", "owner_type"], :name => "index_themes_on_owner_id_and_owner_type"
