@@ -108,7 +108,7 @@ window.DNM = {
   },
 
   centerSearchBoxOnHomePage: function() {
-    if($('.white-label-main-page').length > 0){
+    if($('.main-page').length > 0){
       centerSearchBox();
       window.addEventListener('resize', function(event){
         centerSearchBox();
