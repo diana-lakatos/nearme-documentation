@@ -1,6 +1,6 @@
 class SpaceWizardController < ApplicationController
 
-  #before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
+  before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :find_user, :except => [:new]
   before_filter :find_company, :except => [:new, :submit_listing]
   before_filter :find_location, :except => [:new, :submit_listing]
@@ -20,7 +20,6 @@ class SpaceWizardController < ApplicationController
 
   def list
     @company ||= @user.companies.build
-    @company.name = current_user.name if platform_context.instance.skip_company? && !@company.persisted?
     @location ||= @company.locations.build
     @listing ||= @location.listings.build
     @photos = @user.photos.where("content_type = 'Listing' AND content_id IS NOT NULL") || nil
@@ -33,6 +32,8 @@ class SpaceWizardController < ApplicationController
     params[:user][:companies_attributes]["0"][:instance_id] = platform_context.instance.id.to_s
     params[:user][:companies_attributes]["0"][:creator_id] = current_user.id.to_s
     params[:user][:companies_attributes]["0"][:partner_id] = platform_context.partner.try(:id).to_s
+    params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
+
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.attributes = params[:user]
     if params[:save_as_draft]

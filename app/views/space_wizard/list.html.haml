@@ -15,7 +15,10 @@
           = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => @company, :only_inputs => [ :name, :industries ] }
 
       = companies_form.simple_fields_for :locations, @location do |locations_form|
-        %h2 Where is your desk located?
+        %h2
+          Where is your
+          #{platform_context.bookable_noun}
+          located?
         %br
         .box
           = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :description, :address, :location_type, :phone ] }
