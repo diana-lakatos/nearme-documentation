@@ -40,7 +40,7 @@
     = render 'layouts/initializers'
 
   %body
-    .dnm-page-body{:class => "#{'white-label-main-page' if root_white_label_page?}"}
+    .dnm-page-body{:class => 'main-page'}
       = render 'shared/render_flash'
       .content-wrapper
         .dnm-page{:class => content_for?(:manage_navbar) ? 'with-sub-navbar' : ''}
