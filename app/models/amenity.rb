@@ -3,6 +3,9 @@ class Amenity < ActiveRecord::Base
 
   has_many :locations, through: :location_amenities
   has_many :location_amenities, dependent: :destroy
+
+  has_many :listings, through: :listing_amenities
+  has_many :listing_amenities, dependent: :destroy
   
   belongs_to :amenity_type
 
