@@ -45,6 +45,14 @@ class Instance < ActiveRecord::Base
     self.find_by_name(DEFAULT_INSTANCE_NAME)
   end
 
+  def lessor
+    super.presence || "host"
+  end
+
+  def lessee
+    super.presence || "guest"
+  end
+
   def to_liquid
     InstanceDrop.new(self)
   end
