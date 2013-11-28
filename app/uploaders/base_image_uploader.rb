@@ -10,7 +10,7 @@ class BaseImageUploader < BaseUploader
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_white_list
-    %w(jpg jpeg png gif)
+    %w(jpg jpeg png gif ico)
   end
 
   # Offers a placeholder while image is not uploaded yet
