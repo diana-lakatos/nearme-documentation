@@ -20,6 +20,14 @@ class PlatformContextDecorator
     @platform_context_drop ||= PlatformContextDrop.new(self)
   end
 
+  def lessors
+    lessor.pluralize
+  end
+
+  def lessees
+    lessee.pluralize
+  end
+
   private
 
   def platform_context

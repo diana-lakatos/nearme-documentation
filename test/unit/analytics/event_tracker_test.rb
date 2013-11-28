@@ -11,7 +11,28 @@ class EventTrackerTest < ActiveSupport::TestCase
     @tracker = Analytics::EventTracker.new(@mixpanel, @google_analytics)
   end
 
-  context 'store taggable tracked events' do
+  context 'track_charge' do
+    setup do
+      @listing = FactoryGirl.create(:listing, :daily_price => 89.39)
+      @reservation = FactoryGirl.create(:reservation_with_credit_card, :listing => @listing)
+      @reservation.reservation_charges = [FactoryGirl.create(:reservation_charge)]
+      @reservation.save!
+    end
+
+    should 'invoke tracking charge with correct arguments' do
+      # FIXME: test TrackChargeSerializer in dedicated unit test
+      @mixpanel.expects(:track_charge).with(8.94)
+      @google_analytics.expects(:track_charge).with({
+        amount: @reservation.service_fee_amount.to_f,
+        reservation_charge_id: @reservation.reservation_charges.paid.first.id,
+        instance_name: @reservation.instance.name,
+        listing_name: @reservation.listing.name,
+      })
+      @tracker.track_charge(@reservation)
+    end
+  end
+
+  context 'store relevant invoked events' do
 
     setup do 
       @category = "User events"
@@ -229,6 +250,7 @@ class EventTrackerTest < ActiveSupport::TestCase
     Listing::Search::Params::Web.new(options)
   end
 
+  # FIXME: test all valid cases for TrackSerializer in dedicated unit test
   def reservation_properties
     {
       booking_desks: @reservation.quantity,

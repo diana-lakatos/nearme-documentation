@@ -166,6 +166,21 @@ class SpaceWizardControllerTest < ActionController::TestCase
     end
   end
 
+  context 'with skip_company' do
+    should 'create listing when location skip_company is set to true' do
+      @instance_with_skip_company = FactoryGirl.create(:instance, skip_company: true)
+      PlatformContext.any_instance.stubs(:instance).returns(@instance_with_skip_company)
+
+      params_without_company_name = get_params
+      params_without_company_name['user']['companies_attributes']['0'].delete('name')
+      params_without_company_name['user']['companies_attributes']['0'].delete('industry_ids')
+
+      assert_difference('Listing.count', 1) do
+        post :submit_listing, params_without_company_name
+      end
+    end
+  end
+
   private
 
   def get_params(daily_price = nil, weekly_price = nil, monthly_price = nil, free = "1")

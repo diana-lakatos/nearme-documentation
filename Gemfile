@@ -90,6 +90,8 @@ gem 'premailer-rails'
 
 gem 'addressable'
 
+gem 'timecop'
+
 group :staging, :production do
   gem 'newrelic_rpm'
 end
@@ -121,7 +123,6 @@ group :test do
   gem 'minitest'
   gem 'mocha', :require => false
   gem 'pickle'
-  gem 'timecop'
   gem 'turn'
   gem 'webmock'
   gem 'simplecov', :require => false
