@@ -277,6 +277,7 @@ ActiveRecord::Schema.define(:version => 20131128111007) do
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
     t.string   "lessor"
     t.string   "lessee"
+    t.text     "pricing_options"
     t.boolean  "skip_company",                                      :default => false
   end
 
