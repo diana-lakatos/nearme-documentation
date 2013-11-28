@@ -4,6 +4,12 @@
     %legend Basic Configuration
     = f.input :name, required: false
     = f.input :service_fee_percent, label: 'Service Fee (%)'
+    .control-group
+      = f.label :skip_company
+      .switch-wrapper
+        .switch{'data-on-label' => "", 'data-off-label' => ""}
+          = f.check_box :skip_company
+
     %p
       = f.button :submit, 'Save', class: 'btn btn-success'
     %br

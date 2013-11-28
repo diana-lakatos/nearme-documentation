@@ -11,7 +11,7 @@ class ReservationChargeTrackerJobTest < ActiveSupport::TestCase
 
   should 'perform tracking of confirmed reservation' do
     @reservation.confirm!
-    Analytics::EventTracker.any_instance.expects(:track_charge).with(8.94)
+    Analytics::EventTracker.any_instance.expects(:track_charge).with(@reservation)
     ReservationChargeTrackerJob.perform(@reservation.id)
   end
 
