@@ -10,6 +10,10 @@ en:
           attributes:
             email:
               taken: "That email address is associated with an existing account."
+        instance:
+          attributes:
+            pricing_options:
+              must_be_selected: "At least one of the pricing options must be selected."
   day:
     one: "1 day"
     other: "%{count} days"

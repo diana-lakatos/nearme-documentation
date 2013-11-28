@@ -1,6 +1,6 @@
 class Instance < ActiveRecord::Base
   attr_accessible :name, :domains_attributes, :theme_attributes, :location_types_attributes, :listing_types_attributes,
-                  :service_fee_percent, :bookable_noun, :lessor, :lessee, :amenity_types_attributes
+                  :service_fee_percent, :bookable_noun, :lessor, :lessee, :amenity_types_attributes, :pricing_options
 
   has_one :theme, :as => :owner, dependent: :destroy
 
@@ -23,7 +23,12 @@ class Instance < ActiveRecord::Base
   has_many :instance_admins
   has_many :instance_admin_roles
 
+  serialize :pricing_options, Hash
+
   validates_presence_of :name
+  validates :pricing_options, presence: { message: :must_be_selected }
+
+  after_initialize :set_all_pricing_options
 
   accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params[:name].blank? }
@@ -32,6 +37,7 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
 
   DEFAULT_INSTANCE_NAME = 'DesksNearMe'
+  PRICING_OPTIONS = %w(free hourly daily weekly monthly)
 
   def is_desksnearme?
     self.name == DEFAULT_INSTANCE_NAME
@@ -55,5 +61,12 @@ class Instance < ActiveRecord::Base
 
   def to_liquid
     InstanceDrop.new(self)
+  end
+
+  private
+
+  def set_all_pricing_options
+    return if (!new_record? || !self.pricing_options.empty?)
+    self.pricing_options = Hash[Instance::PRICING_OPTIONS.map{|po| [po, '1']}]
   end
 end
