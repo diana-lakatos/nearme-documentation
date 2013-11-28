@@ -1,6 +1,9 @@
 @import "compass";
 @import "bootstrap";
+@import "globals/*";
 @import "components/charts";
+@import "components/switch";
+@import "fonts";
 
 body {
   margin-top: 20px;
@@ -89,7 +92,7 @@ section#login {
 }
 
 section#amenities {
-  table#amenity-types {
+  table#listing-amenity-types, table#location-amenity-types  {
 
     tr:nth-child(1) {
       td {

@@ -4,6 +4,12 @@
     %legend Basic Configuration
     = f.input :name, required: false
     = f.input :service_fee_percent, label: 'Service Fee (%)'
+    .control-group
+      = f.label :skip_company
+      .switch-wrapper
+        .switch{'data-on-label' => "", 'data-off-label' => ""}
+          = f.check_box :skip_company
+
     %p
       = f.button :submit, 'Save', class: 'btn btn-success'
     %br
@@ -66,33 +72,7 @@
     %br
 
   %section#amenities
-    %fieldset
-      %legend Amenity Types
-      %table#amenity-types.table.table-condensed
-        = f.fields_for :amenity_types, wrapper: false  do |f_at|
-          %tr.fields
-            %td
-              %h4 Amenity type
-              = f_at.input :name, label: false
-              %h5 Amenities
-              %table.table.amenities{id: "amenities-#{f_at.object.id}", width: '100%'}
-                = f_at.fields_for :amenities, wrapper: false do |fa|
-                  %tr.fields
-                    %td
-                      = fa.input :name, label: false
-                    - if fa.object.locations.count == 0
-                      %td= fa.link_to_remove "Delete", class: 'btn btn-danger'
-                    - else
-                      %td= "(in use by #{fa.object.locations.count} locations)"
-              %p= f_at.link_to_add "Add amenity", :amenities, :model_object => Amenity.new, :data => { :target => "#amenities-#{f_at.object.id}" }, class: 'btn'
+    = render 'instance_admin/settings/amenities', type: 'location', f: f
 
-            - if f_at.object.locations.count == 0
-              %td= f_at.link_to_remove "Delete", class: 'btn btn-danger'
-            - else
-              %td
+    = render 'instance_admin/settings/amenities', type: 'listing', f: f
 
-      %p
-        = f.link_to_add "Add amenity type", :amenity_types, :model_object => AmenityType.build_with_amenity, :data => { :target => "#amenity-types" }, class: 'btn'
-      %p
-        = f.button :submit, 'Save', class: 'btn btn-success'
-      %br

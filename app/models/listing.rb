@@ -24,8 +24,8 @@ class Listing < ActiveRecord::Base
   belongs_to :location, inverse_of: :listings, with_deleted: true
   belongs_to :listing_type
 
-  has_many :amenities, through: :listing_amenities
-  has_many :listing_amenities
+  has_many :amenity_holders, as: :holder
+  has_many :amenities, through: :amenity_holders
 
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :photos, :allow_destroy => true

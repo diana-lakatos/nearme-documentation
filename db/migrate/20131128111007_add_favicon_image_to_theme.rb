@@ -4,7 +4,7 @@ class AddFaviconImageToTheme < ActiveRecord::Migration
     add_column :themes, :favicon_image, :string
 
     instance = Instance.where(name: 'DesksNearMe').first
-    theme = instance.theme
+    theme = instance ? instance.theme : nil
 
     if theme
       io = File.open(File.join(Rails.root, "public", "favicon.ico"), 'rb')
