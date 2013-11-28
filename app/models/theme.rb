@@ -59,7 +59,7 @@ class Theme < ActiveRecord::Base
 
   # Checks if any of options that impact the theme stylesheet have been changed.
   def theme_changed?
-    attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action)
+    attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action address)
     attrs.any? { |attr|
       send("#{attr}_changed?")
     }
