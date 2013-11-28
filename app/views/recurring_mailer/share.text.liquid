@@ -2,7 +2,7 @@ Spread the word, {{ user.first_name }}!
 
 Your listing '{{ listing.name }}' at {{ listing.street }} hasn't been booked in {{ listing.last_booked_days }} days.
 
-Listings shared online are getting rented faster than ones that aren't! Share your listing on Facebook, Twitter, and LinkedIn, and start seeing {{ platform_context.lessee.pluralize }} book your space.
+Listings shared online are getting rented faster than ones that aren't! Share your listing on Facebook, Twitter, and LinkedIn, and start seeing {{ platform_context.lessees }} book your space.
 
 {% include 'reservation_mailer/social_links.text' %}
 

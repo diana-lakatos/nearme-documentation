@@ -2,10 +2,10 @@ How was {{ reservation.owner.first_name }}, your recent {{ platform_context.less
 
 We would love to hear about your experience hosting {{ reservation.owner.first_name }} at '{{ listing.name }}', {{ listing.street }} for the booking commencing {{ reservation.start_date }}.
 
-Your opinion is very important and it will help us ensure that our {{ platform_context.lessee.pluralize }} are a good fit for you and your space.
+Your opinion is very important and it will help us ensure that our {{ platform_context.lessees }} are a good fit for you and your space.
 
 Please take a moment to give us your feedback!
 
 Write a Review: {{ reservation.guest_rating_reservation_url_with_tracking | append:signature_for_tracking }}
 
-If you'd prefer to talk to us directly, please send an email to happydesk@desksnear.me or call us on {{ platform_context.phone_number }} - we love to talk with our {{platform_context.lessor.pluralize}}.
+If you'd prefer to talk to us directly, please send an email to happydesk@desksnear.me or call us on {{ platform_context.phone_number }} - we love to talk with our {{platform_context.lessors}}.

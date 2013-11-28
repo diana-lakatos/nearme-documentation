@@ -11,7 +11,7 @@
 
   {% if listing.location.special_notes? %}
     <div class="row">
-      <strong style='display: inline-block;'>{{ platform_context.lessee.capitalize }} instructions</strong>
+      <strong style='display: inline-block;'>{{ platform_context.lessee | capitalize }} instructions</strong>
       <span style="float: right;">{{ listing.location.special_notes }}</span>
     </div>
   {% endif %}
@@ -33,7 +33,7 @@
   </div>
 
   <div class="row">
-    <strong style='display: inline-block;'>{{ platform_context.lessor.capitalize }}</strong>
+    <strong style='display: inline-block;'>{{ platform_context.lessor | capitalize }}</strong>
     <span style="float: right;"><a href="mailto:{{ host.email }}">{{ host.name }}</a></span>
   </div>
 
