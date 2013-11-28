@@ -6,13 +6,19 @@
   = simple_form_for @user, :url => space_wizard_list_url, :validate => false, :html => { :class => "form-horizontal new_company", :multipart => true, :id => 'list-space-flow-form' } do |f|
 
     = f.simple_fields_for :companies, @company do |companies_form|
-      %h2 1. Tell us a little about your company
-      %br
-      .box
-        = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => @company, :only_inputs => [ :name, :industries ] }
+      - if platform_context.instance.skip_company?
+        = companies_form.hidden_field :name
+      - else
+        %h2 Tell us a little about your company
+        %br
+        .box
+          = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => @company, :only_inputs => [ :name, :industries ] }
 
       = companies_form.simple_fields_for :locations, @location do |locations_form|
-        %h2 2. Where is your desk located?
+        %h2
+          Where is your
+          #{platform_context.bookable_noun}
+          located?
         %br
         .box
           = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :description, :address, :location_type, :phone ] }
@@ -22,7 +28,7 @@
           - content_for :currency do
             = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => @location, :only_inputs => [ :currency ] }
           %h2
-            3. Please tell us about the
+            Please tell us about the
             #{platform_context.bookable_noun}
             you're listing
           %br
@@ -35,7 +41,7 @@
                      photos: @photos
 
     .user-fields
-      %h2 4. And finally, your contact information
+      %h2 And finally, your contact information
       %br
       .box
         = render 'registrations/phone_fields', :f => f, :locals => { :country => @country }

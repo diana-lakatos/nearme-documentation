@@ -20,8 +20,8 @@ class Location < ActiveRecord::Base
 
   geocoded_by :address
 
-  has_many :amenities, through: :location_amenities
-  has_many :location_amenities
+  has_many :amenity_holders, as: :holder
+  has_many :amenities, through: :amenity_holders
 
   belongs_to :company, inverse_of: :locations
   belongs_to :location_type

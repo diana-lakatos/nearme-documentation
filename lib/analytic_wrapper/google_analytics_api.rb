@@ -15,27 +15,34 @@ class AnalyticWrapper::GoogleAnalyticsApi
   end
 
   # Tracks event in google analytics
-  def track(category, action)
+  def track(*args)
+    params = default_params.merge(AnalyticWrapper::GoogleAnalyticsSerializer::Event.new(*args).serialize)
     if tracking_code.present?
-      params = get_params(category, action)
-      begin
-        GoogleAnalyticsApiJob.perform(params) if DesksnearMe::Application.config.perform_google_analytics_requests
-        Rails.logger.info "Tracked google_analytics event #{params.inspect}"
-      end
+      GoogleAnalyticsApiJob.perform(endpoint, params)
+      Rails.logger.info "google analtyics track: #{params.inspect}"
     else
-      Rails.logger.debug "dummy track google analtyics event #{params.inspect}"
+      Rails.logger.info "dummy google analtyics track: #{params.inspect}"
     end
   end
 
-  def get_params(category, action)
-    {
-      v: version,
-      tid: tracking_code,
-      cid: @current_user.try(:google_analytics_id) ? @current_user.google_analytics_id : '555',
-      t: "event",
-      ec: category,
-      ea: action
-    }
+  def track_charge(*args)
+    item_params = default_params.merge(AnalyticWrapper::GoogleAnalyticsSerializer::Item.new(*args).serialize)
+    transaction_params = default_params.merge(AnalyticWrapper::GoogleAnalyticsSerializer::Transaction.new(*args).serialize)
+    if tracking_code.present?
+      GoogleAnalyticsApiJob.perform(endpoint, transaction_params)
+      GoogleAnalyticsApiJob.perform(endpoint, item_params)
+      Rails.logger.info "google analtyics track_charge transaction: #{transaction_params.inspect}"
+      Rails.logger.info "google analtyics track_charge item: #{item_params.inspect}"
+    else
+      Rails.logger.info "dummy google analtyics track_charge transaction: #{transaction_params.inspect}"
+      Rails.logger.info "dummy google analtyics track_charge item: #{item_params.inspect}"
+    end
+  end
+
+  private
+
+  def endpoint 
+    "http://www.google-analytics.com/collect" 
   end
 
   def tracking_code
@@ -45,6 +52,14 @@ class AnalyticWrapper::GoogleAnalyticsApi
   def version
     # google analytics API version
     1
+  end
+
+  def default_params
+    { 
+      v: version,
+      tid: tracking_code,
+      cid: (@current_user.try(:google_analytics_id) ? @current_user.google_analytics_id : '555')
+    }
   end
 
 end

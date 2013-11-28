@@ -2,7 +2,7 @@ Given /^I ask a question about a listing$/ do
   @listing = model('listing')
   @user = model('user')
   visit listing_path(@listing.location, @listing)
-  click_link 'Contact host'
+  click_link "Contact #{@listing.location.company.instance.lessor.capitalize}"
   work_in_modal do
     fill_in 'listing_message_body', with: "Short one"
     click_button 'Send'

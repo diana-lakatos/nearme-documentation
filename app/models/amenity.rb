@@ -1,13 +1,10 @@
 class Amenity < ActiveRecord::Base
   attr_accessible :name, :amenity_type_id
 
-  has_many :locations, through: :location_amenities
-  has_many :location_amenities, dependent: :destroy
-
-  has_many :listings, through: :listing_amenities
-  has_many :listing_amenities, dependent: :destroy
-  
   belongs_to :amenity_type
+  has_many :amenity_holders, dependent: :destroy
+  has_many :listings, through: :amenity_holders, source: :holder, source_type: 'Listing'
+  has_many :locations, through: :amenity_holders, source: :holder, source_type: 'Location'
 
   validates_presence_of :name
 

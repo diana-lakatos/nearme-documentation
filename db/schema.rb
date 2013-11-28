@@ -22,12 +22,24 @@ ActiveRecord::Schema.define(:version => 20131128123526) do
 
   add_index "amenities", ["amenity_type_id"], :name => "index_amenities_on_amenity_type_id"
 
+  create_table "amenity_holders", :force => true do |t|
+    t.integer  "amenity_id"
+    t.integer  "holder_id"
+    t.string   "holder_type"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "amenity_holders", ["amenity_id"], :name => "index_amenity_holders_on_amenity_id"
+  add_index "amenity_holders", ["holder_id", "holder_type"], :name => "index_amenity_holders_on_holder_id_and_holder_type"
+
   create_table "amenity_types", :force => true do |t|
     t.string   "name"
     t.integer  "position"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "instance_id"
+    t.string   "type"
   end
 
   add_index "amenity_types", ["instance_id"], :name => "index_amenity_types_on_instance_id"
@@ -266,17 +278,8 @@ ActiveRecord::Schema.define(:version => 20131128123526) do
     t.string   "lessor"
     t.string   "lessee"
     t.text     "pricing_options"
+    t.boolean  "skip_company",                                      :default => false
   end
-
-  create_table "listing_amenities", :force => true do |t|
-    t.integer  "listing_id"
-    t.integer  "amenity_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "listing_amenities", ["amenity_id"], :name => "index_listing_amenities_on_amenity_id"
-  add_index "listing_amenities", ["listing_id"], :name => "index_listing_amenities_on_listing_id"
 
   create_table "listing_messages", :force => true do |t|
     t.integer  "owner_id"
@@ -329,16 +332,6 @@ ActiveRecord::Schema.define(:version => 20131128123526) do
 
   add_index "listings", ["listing_type_id"], :name => "index_listings_on_listing_type_id"
   add_index "listings", ["location_id"], :name => "index_listings_on_location_id"
-
-  create_table "location_amenities", :force => true do |t|
-    t.integer  "amenity_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-    t.integer  "location_id"
-  end
-
-  add_index "location_amenities", ["amenity_id"], :name => "index_location_amenities_on_amenity_id"
-  add_index "location_amenities", ["location_id"], :name => "index_location_amenities_on_location_id"
 
   create_table "location_types", :force => true do |t|
     t.string   "name"
