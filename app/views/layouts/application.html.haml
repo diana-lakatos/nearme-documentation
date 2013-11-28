@@ -13,7 +13,7 @@
     = yield(:meta)
     = csrf_meta_tag
     = tag :meta, :name => "stripe-key", :content => stripe_public_key
-    %link{:href => "/favicon.ico", :rel => "shortcut icon"}/
+    = render 'layouts/favicon'
 
     = stylesheet_link_tag "fonts"
     = stylesheet_link_tag platform_context.compiled_stylesheet_url || 'application'
