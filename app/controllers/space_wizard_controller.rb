@@ -32,6 +32,8 @@ class SpaceWizardController < ApplicationController
     params[:user][:companies_attributes]["0"][:instance_id] = platform_context.instance.id.to_s
     params[:user][:companies_attributes]["0"][:creator_id] = current_user.id.to_s
     params[:user][:companies_attributes]["0"][:partner_id] = platform_context.partner.try(:id).to_s
+    params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
+
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.attributes = params[:user]
     if params[:save_as_draft]
