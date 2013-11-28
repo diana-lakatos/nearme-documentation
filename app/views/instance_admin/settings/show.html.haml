@@ -38,6 +38,20 @@
     %br
 
   %fieldset
+    %legend Pricing Options
+    .control-group
+      .controls
+        = f.error :pricing_options
+        - Instance::PRICING_OPTIONS.each do |pricing_option|
+          %label.checkbox
+            = check_box_tag "instance[pricing_options][#{pricing_option}]", '1', f.object.pricing_options[pricing_option].to_s == '1'
+            #{pricing_option}
+
+    %p
+      = f.button :submit, 'Save', class: 'btn btn-success'
+    %br
+
+  %fieldset
     %legend Location Types
     %table#location-types.table.table-borderless.table-condensed
       = f.fields_for :location_types, wrapper: false do |f|
