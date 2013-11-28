@@ -1,6 +1,9 @@
 @import "compass";
 @import "bootstrap";
+@import "globals/*";
 @import "components/charts";
+@import "components/switch";
+@import "fonts";
 
 body {
   margin-top: 20px;
