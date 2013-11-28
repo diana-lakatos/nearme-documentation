@@ -92,7 +92,7 @@ section#login {
 }
 
 section#amenities {
-  table#amenity-types {
+  table#listing-amenity-types, table#location-amenity-types  {
 
     tr:nth-child(1) {
       td {
