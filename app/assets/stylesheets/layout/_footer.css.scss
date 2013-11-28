@@ -85,19 +85,24 @@ footer {
     }
   }
 
-  li {
-    float:left;
-    text-align: center;
-    padding-right: 25px;
+  ul {
+    list-style: none !important;
+    margin: 0 0 12px 0px !important;
 
-    @media (max-width:$ipad-width) {
-      width:25%;
-      padding: 0 0 25px;
-      .clear-footer { 
-        clear: left;
+    li {
+      float:left;
+      text-align: center;
+      padding-right: 25px;
+
+      @media (max-width:$ipad-width) {
+        width:25%;
+        padding: 0 0 25px;
+        .clear-footer {
+          clear: left;
+        }
       }
-    }
 
+    }
   }
 
   a, a:visited {
