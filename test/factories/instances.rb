@@ -3,6 +3,8 @@ FactoryGirl.define do
   factory :instance do
     sequence(:name) {|n| Instance.default_instance ? "desks near me #{n}" : 'DesksNearMe'}
     bookable_noun 'Desk'
+    lessor 'host'
+    lessee 'guest'
     service_fee_percent '10.00'
 
     after(:create) do |instance|

@@ -42,7 +42,7 @@ class RecurringMailerTest < ActiveSupport::TestCase
     assert_equal subject, mail.subject
     assert mail.html_part.body.include?(@user.first_name)
     assert_equal [@user.email], mail.to
-    assert mail.html_part.body.include?("Share your listing on Facebook, Twitter, and LinkedIn, and start seeing guests book your space.")
+    assert mail.html_part.body.include?("Share your listing on Facebook, Twitter, and LinkedIn, and start seeing #{@platform_context.decorate.lessees} book your space.")
     assert mail.html_part.body.include?(@listing.name)
   end
 

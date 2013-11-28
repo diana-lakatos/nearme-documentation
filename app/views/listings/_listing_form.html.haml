@@ -78,7 +78,7 @@
 
 - if only_inputs.empty? || only_inputs.include?(:confirm_reservations)
   %div{:class => "control-group #{"error" if f.object.errors.include?(:confirm_reservations).present?}"}
-    = f.label :confirm_reservations, 'Confirm guest bookings', :class => 'control-label'
+    = f.label :confirm_reservations, "Confirm #{platform_context.lessee} bookings", :class => 'control-label'
     .controls
       .switch{'data-on-label' => "", 'data-off-label' => ""}
         = f.check_box :confirm_reservations
