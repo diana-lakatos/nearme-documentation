@@ -5,8 +5,8 @@ class Listing
 
     def initialize(search_scope, filters = {})
       @search_scope = search_scope
-      @midpoint = filters.delete(:midpoint)
-      @radius = filters.delete(:radius)
+      @midpoint = filters.fetch(:midpoint)
+      @radius = filters.fetch(:radius)
       @filters = filters
     end
 
