@@ -1,7 +1,10 @@
 %h1= resource_class.name.underscore.humanize.pluralize
 
-%p= "Transfers are generated automatically at the start of every month for
-  outstanding charges we've recieved on behalf of #{platform_context.lessor.pluralize}."
+%p
+  Transfers are generated automatically at the start of every month for
+  outstanding charges we've recieved on behalf of
+  = succeed '.' do
+    #{platform_context.lessor.pluralize}
 
 %p
   The next month's batch will be generated at about:
