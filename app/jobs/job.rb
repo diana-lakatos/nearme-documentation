@@ -40,7 +40,7 @@ class Job
     if run_in_background?
       Delayed::Job.enqueue new(*args), :run_at => get_performing_time(when_perform)
     else
-      # this is completely unnecessary, but still we want this to be invoked to catch errors in tests
+      # invoking get_perfming_time is unnecessary, but we want to catch errors in this method in test environment
       get_performing_time(when_perform)
       new(*args).perform
     end

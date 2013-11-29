@@ -7,7 +7,7 @@ class Theme < ActiveRecord::Base
     attr_accessible "color_#{color}"
   end
 
-  attr_accessible :name, :icon_image, :icon_retina_image,
+  attr_accessible :name, :icon_image, :icon_retina_image, :favicon_image,
     :logo_image, :logo_retina_image, :hero_image, :skip_compilation,
     :owner, :owner_id, :owner_type, :site_name, :description, :tagline, :address, :support_email,
     :contact_email, :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url,
@@ -24,6 +24,7 @@ class Theme < ActiveRecord::Base
 
   mount_uploader :icon_image, ThemeImageUploader
   mount_uploader :icon_retina_image, ThemeImageUploader
+  mount_uploader :favicon_image, ThemeImageUploader
   mount_uploader :logo_image, ThemeImageUploader
   mount_uploader :logo_retina_image, ThemeImageUploader
   mount_uploader :hero_image, ThemeImageUploader
@@ -59,7 +60,7 @@ class Theme < ActiveRecord::Base
 
   # Checks if any of options that impact the theme stylesheet have been changed.
   def theme_changed?
-    attrs = attributes.keys - %w(updated_at compiled_stylesheet name)
+    attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action address)
     attrs.any? { |attr|
       send("#{attr}_changed?")
     }

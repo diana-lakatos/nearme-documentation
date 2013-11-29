@@ -15,7 +15,7 @@ module Analytics::MailerEvents
     track 'Clicked link within email', user, custom_options
   end
 
-  def email_sent(custom_options)
+  def email_sent(custom_options = {})
     track 'Email Sent', custom_options
   end
 

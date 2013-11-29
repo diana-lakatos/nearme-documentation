@@ -17,17 +17,17 @@ List Your Desk
 <div class='row-fluid'>
 <div class='span4'>
 <h2>Expand Your Network</h2>
-<img alt="Handshake" src="/assets/illustrations/handshake-f7e5ffe8f1ec74fd39f902f1620d0e2b.png" />
+<img alt="Handshake" src="/assets/illustrations/handshake.png" />
 <p>Match the right people to your space based on complementary skills, communities, and interests.</p>
 </div>
 <div class='span4'>
 <h2>Reduce Overhead</h2>
-<img alt="Dollar" src="/assets/illustrations/dollar-052eaee26375396c31f9a5f08fb60671.png" />
+<img alt="Dollar" src="/assets/illustrations/dollar.png" />
 <p>Generate extra revenue by renting desk and office space that’s not being used.</p>
 </div>
 <div class='span4'>
 <h2>Security &amp; Convenience</h2>
-<img alt="Lock" src="/assets/illustrations/lock-268b76e75728aba4d4e2c84723e571a3.png" />
+<img alt="Lock" src="/assets/illustrations/lock.png" />
 <p>Do business with trusted professionals quickly and easily using our secure dashboard.</p>
 </div>
 </div>
@@ -42,17 +42,17 @@ List Your Desk
 <div class='row-fluid'>
 <div class='span4'>
 <h2>Where You Need It</h2>
-<img alt="World" src="/assets/illustrations/world-bcf48a0b0b46ff7129c3ba1198001d4c.png" />
+<img alt="World" src="/assets/illustrations/world.png" />
 <p>Choose from thousands of spaces around the world. </p>
 </div>
 <div class='span4'>
 <h2>When You Need It</h2>
-<img alt="Calendar" src="/assets/illustrations/calendar-92fc407a975e3d963d0e460b088a968a.png" />
+<img alt="Calendar" src="/assets/illustrations/calendar.png" />
 <p>Daily, weekly, or monthly – you decide the length of your stay.</p>
 </div>
 <div class='span4'>
 <h2>How You Need It</h2>
-<img alt="Desks" src="/assets/illustrations/desks-2d84d4573c8d027edcac112b708f6c35.png" />
+<img alt="Desks" src="/assets/illustrations/desks.png" />
 <p>Find private desks, shared office spaces, meeting rooms, and more.</p>
 </div>
 </div>
