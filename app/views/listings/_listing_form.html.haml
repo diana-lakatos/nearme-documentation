@@ -22,7 +22,8 @@
 = f.input :description, :label => "#{platform_context.bookable_noun} description", :input_html => { :maxlength => 250} if only_inputs.empty? || only_inputs.include?(:description)
 = f.association :listing_type, :label => "#{platform_context.bookable_noun} type", :collection => platform_context.instance.listing_types, :input_html => { :class => 'selectpicker' } if only_inputs.empty? || only_inputs.include?(:listing_type)
 = f.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" } if only_inputs.empty? || only_inputs.include?(:quantity)
-= f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
+- unless platform_context.instance.listing_amenity_types.count.zero?
+  = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
 
 - if content_for? :currency
   = yield(:currency)
