@@ -38,6 +38,10 @@ module Utils
         @instances ||= load_yaml("instances.yml")
       end
 
+      def self.top_cities
+        @top_cities ||= load_yaml("top_cities.yml")
+      end
+
       private
 
         def self.load_yaml(collection)

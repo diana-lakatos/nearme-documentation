@@ -60,7 +60,7 @@ class Theme < ActiveRecord::Base
 
   # Checks if any of options that impact the theme stylesheet have been changed.
   def theme_changed?
-    attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action address)
+    attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action address favicon_image)
     attrs.any? { |attr|
       send("#{attr}_changed?")
     }
@@ -129,6 +129,10 @@ class Theme < ActiveRecord::Base
     value = send(:"color_#{color}")
     return "" if value.to_s.empty?
     "#" + value
+  end
+
+  def favicon_image_changed?
+    attributes[:favicon_image] ? super : false
   end
 end
 
