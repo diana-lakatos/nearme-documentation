@@ -14,7 +14,7 @@ Before do
   GmapsFake.stub_requests
   stub_request(:get, /.*api\.mixpanel\.com.*/)
   stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
-  instance = FactoryGirl.create(:instance)
+  instance = FactoryGirl.create(:default_instance)
   instance.domains = [FactoryGirl.create(:domain)]
   instance.save!
   store_model("instance", nil, instance)

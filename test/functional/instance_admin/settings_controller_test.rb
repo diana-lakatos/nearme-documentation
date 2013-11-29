@@ -22,12 +22,11 @@ class InstanceAdmin::SettingsControllerTest < ActionController::TestCase
       InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with(InstanceAdmin::AnalyticsController).returns(true)
       InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with(InstanceAdmin::SettingsController).returns(false)
       get :show
-      assert_redirected_to instance_admin_path
+      assert_redirected_to instance_admin_analytics_path
     end
 
     should 'not end up in infinite loop if user has no access to analytics' do
-      InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with(InstanceAdmin::AnalyticsController).returns(false)
-      InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with(InstanceAdmin::SettingsController).returns(false)
+      InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).returns(false)
       get :show
       assert_redirected_to root_path
     end

@@ -6,9 +6,8 @@ class ListingTest < ActiveSupport::TestCase
     stub_mixpanel
     @listing = FactoryGirl.create(:listing)
     @user = FactoryGirl.create(:user)
-    @instance = FactoryGirl.create(:instance, name: 'DesksNearMe')
     @platform_context = PlatformContext.new
-    @platform_context.stubs(:instance).returns(@instance)
+    @platform_context.stubs(:instance).returns(Instance.default_instance)
     @subject = "#{@user.name} has shared a listing with you on #{@platform_context.decorate.name}"
   end
 

@@ -14,7 +14,7 @@ FactoryGirl.define do
     gplus_url 'https://plus.google.com/115917701892962526160/'
     twitter_url 'https://twitter.com/desksnearme'
     facebook_url 'https://www.facebook.com/DesksNearMe'
-    owner_id { (Instance.default_instance.presence || FactoryGirl.create(:instance)).id }
+    owner_id { (Instance.default_instance || FactoryGirl.create(:default_instance)) }
     owner_type "Instance"
     skip_compilation true
   end
