@@ -1,6 +1,8 @@
 class InstanceAdmin::InventoriesController < InstanceAdmin::ResourceController
   defaults :resource_class => User, :collection_name => 'users', :instance_name => 'user', :route_prefix => 'instance_admin'
 
+  skip_before_filter :authorize_user!, :only => [:restore_session]
+
   def index
   end
 
