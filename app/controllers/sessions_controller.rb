@@ -1,9 +1,10 @@
 class SessionsController < Devise::SessionsController
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:destroy]
+  before_filter :clear_return_to, :only => [:new]
   before_filter :set_return_to
   skip_before_filter :require_no_authentication, :only => [:show] , :if => lambda {|c| request.xhr? }
   after_filter :render_or_redirect_after_create, :only => [:create] 
-  before_filter :set_layout
+  layout :resolve_layout
 
   def new
     super unless already_signed_in?
@@ -35,9 +36,17 @@ class SessionsController < Devise::SessionsController
     session[:user_return_to] = params[:return_to] if params[:return_to].present?
   end
 
-  def set_layout
-    if login_from_instance_admin?
-      self.class.layout 'instance_admin'
+  def clear_return_to
+    session[:user_return_to] = nil if login_from_instance_admin? && request.referrer && !request.referrer.include?('instance_admin')
+  end
+
+  def resolve_layout
+    if request.xhr?
+      false
+    elsif login_from_instance_admin?
+      'instance_admin'
+    else
+      'application'
     end
   end
 
