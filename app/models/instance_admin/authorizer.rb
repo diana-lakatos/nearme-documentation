@@ -1,4 +1,6 @@
 class InstanceAdmin::Authorizer
+
+  PERMISSIONS = %w(Analytics Settings Theme Pages Inventories Transfers Partners Users)
   
   def initialize(user, platform_context)
     @user = user
@@ -11,9 +13,16 @@ class InstanceAdmin::Authorizer
 
   def authorized?(controller)
     if controller.to_s == "InstanceAdmin::BaseController"
-      controller = "InstanceAdmin::AnalyticsController"
+      controller = "InstanceAdmin::#{first_permission_have_access_to.camelize}Controller"
     end
     instance_admin_role.send(convert_controller_class_to_db_column(controller))
+  end
+
+  def first_permission_have_access_to
+    PERMISSIONS.each do |permission|
+      return permission.downcase if authorized?("InstanceAdmin::#{permission}Controller".constantize)
+    end
+    nil
   end
 
   private

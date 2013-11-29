@@ -125,4 +125,20 @@ class InstanceAdmin::AuthorizerTest < ActiveSupport::TestCase
     end
   end
 
+  context 'first_permission_have_access_to' do
+    setup do
+      @role = FactoryGirl.create(:instance_admin_role)
+      @role.update_attribute(:permission_analytics, false)
+      @role.update_attribute(:permission_transfers, true)
+      @role.update_attribute(:permission_partners, true)
+      @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => @instance.id)
+      @instance_admin.update_attribute(:instance_owner, false)
+      @instance_admin.update_attribute(:instance_admin_role_id, @role.id)
+    end
+
+    should 'return first permission/page user has access to' do
+      assert_equal @authorizer.first_permission_have_access_to, 'transfers'
+    end
+  end
+
 end

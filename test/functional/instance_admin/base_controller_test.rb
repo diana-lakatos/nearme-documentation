@@ -35,8 +35,8 @@ class InstanceAdmin::BaseControllerTest < ActionController::TestCase
       end
 
       should 'redirect to root path is user is not authorized to view base controller' do
-        InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with(InstanceAdmin::BaseController).returns(false)
-        InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with(InstanceAdmin::AnalyticsController).returns(false)
+        InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).returns(false)
+        InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).returns(false)
         get :index
         assert_redirected_to root_path
       end

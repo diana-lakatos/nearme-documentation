@@ -3,7 +3,8 @@ class InstanceAdmin::BaseController < ApplicationController
   before_filter :authorize_user!
 
   def index
-    redirect_to instance_admin_analytics_path
+    first_permission_have_access_to = @authorizer.first_permission_have_access_to
+    redirect_to url_for([:instance_admin, first_permission_have_access_to])
   end
 
   layout 'instance_admin'
@@ -22,9 +23,10 @@ class InstanceAdmin::BaseController < ApplicationController
     if !(@authorizer.instance_admin?)
       redirect_to root_path
     elsif !@authorizer.authorized?(permitting_controller_class)
-      if @authorizer.authorized?(InstanceAdmin::AnalyticsController)
+      first_permission_have_access_to = @authorizer.first_permission_have_access_to
+      if first_permission_have_access_to
         flash[:warning] = 'Sorry, you do not have permission to view chosen page!'
-        redirect_to instance_admin_path
+        redirect_to url_for([:instance_admin, first_permission_have_access_to])
       else
         redirect_to root_path
       end
