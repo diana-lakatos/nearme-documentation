@@ -31,10 +31,8 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :listing_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
 
-  DEFAULT_INSTANCE_NAME = 'DesksNearMe'
-
   def is_desksnearme?
-    self.name == DEFAULT_INSTANCE_NAME
+    self.default_instance?
   end
 
   def white_label_enabled?
@@ -42,7 +40,7 @@ class Instance < ActiveRecord::Base
   end
 
   def self.default_instance
-    self.find_by_name(DEFAULT_INSTANCE_NAME)
+    self.find_by_default_instance(true)
   end
 
   def to_liquid

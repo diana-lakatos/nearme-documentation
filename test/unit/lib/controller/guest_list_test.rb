@@ -21,7 +21,7 @@ class GuestListTest < ActiveSupport::TestCase
         Timecop.travel(i.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :confirmed) }
       end
 
-      platform_context = stub(:instance => Instance.first)
+      platform_context = stub(:instance => Instance.default_instance)
       @guest_list = Controller::GuestList.new(@user, platform_context)
     end
 
