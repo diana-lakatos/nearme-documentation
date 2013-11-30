@@ -1,6 +1,8 @@
 class Listing
   class SearchFetcher
 
+    TOP_CITIES = ['san francisco', 'london', 'new york', 'los angeles', 'chicago']
+
     def initialize(search_scope, filters = {})
       @search_scope = search_scope
       @midpoint = filters.delete(:midpoint)
@@ -10,7 +12,7 @@ class Listing
 
     def listings
       filtered_listings = []
-      filtered_locations.includes(:listings).each do |location| 
+      filtered_locations.includes(:listings).each do |location|
         @listings = location.listings.searchable
         @listings = @listings.filtered_by_listing_types_ids(@filters[:listing_types_ids]) if @filters[:listing_types_ids]
         @listings.each do |listing|
@@ -18,6 +20,12 @@ class Listing
           filtered_listings << listing
         end
       end
+
+      # Order in top cities
+      if !@filters[:query].blank? && TOP_CITIES.any?{|city| @filters[:query].downcase.include?(city)}
+        filtered_listings = filtered_listings.sort_by(&:rank).reverse
+      end
+
       filtered_listings
     end
 
