@@ -60,4 +60,17 @@ namespace :populate do
     end
   end
 
+  desc "Populates top results in top cities"
+  task :top_cities => :environment do
+    Utils::FakeDataSeeder::Data.top_cities.each do |city_name, city|
+      city.reverse.each_with_index do |listing_id, index|
+        listing = Listing.find_by_id(listing_id)
+        if listing
+          puts "#{listing.id} > #{index+1}"
+          listing.update_attribute(:rank, index+1)
+        end
+      end
+    end
+  end
+
 end

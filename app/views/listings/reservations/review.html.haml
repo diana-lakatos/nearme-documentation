@@ -2,8 +2,10 @@
 
 .row-fluid
   .span8.offset2
-    %h1= "Review your booking at #{@reservation_request.listing.name}"
-    %p= @reservation_request.location.address
+    .header
+      %h1 Review your booking
+      %p.location-name= @reservation_request.listing.name
+      %p.location-address= @reservation_request.location.address
 
     .box
       %h2

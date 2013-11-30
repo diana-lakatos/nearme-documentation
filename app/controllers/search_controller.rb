@@ -46,7 +46,7 @@ class SearchController < ApplicationController
 
   def get_listings
     params_object = Listing::Search::Params::Web.new(params)
-    search_params = params.merge({:midpoint => params_object.midpoint, :radius => params_object.radius, :available_dates => params_object.available_dates})
+    search_params = params.merge({:midpoint => params_object.midpoint, :radius => params_object.radius, :available_dates => params_object.available_dates, :query => params_object.query})
     collection = Listing::SearchFetcher.new(search_scope, search_params).listings
     params[:page] ||= 1
     if result_view == 'list'
