@@ -160,11 +160,13 @@ class RegistrationsController < Devise::RegistrationsController
         unless current_user.unsubscribed?(mailer_name)
           current_user.unsubscribe(mailer_name)
           PostActionMailer.enqueue.unsubscription(platform_context, current_user, mailer_name)
+          flash[:success] = t('flash_messages.registrations.unsubscribed_successfully')
+        else
+          flash[:warning] = t('flash_messages.registrations.already_unsubscribed')
         end
       rescue ActiveSupport::MessageVerifier::InvalidSignature
       end
 
-      flash[:success] = t('flash_messages.registrations.unsubscribed_successfully')
       redirect_to root_path
     else
       session[:user_return_to] = request.path
