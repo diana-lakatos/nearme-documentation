@@ -40,10 +40,11 @@
             .summary-line-value.subtotal-amount= @reservation.subtotal_price
             .clearfix
 
-          .summary-line
-            .summary-line-label Service fee
-            .summary-line-value.service-fee-amount= @reservation.service_fee
-            .clearfix
+          - unless @reservation.no_service_fee?
+            .summary-line
+              .summary-line-label Service fee
+              .summary-line-value.service-fee-amount= @reservation.service_fee
+              .clearfix
 
           .summary-line
             .summary-line-label Total

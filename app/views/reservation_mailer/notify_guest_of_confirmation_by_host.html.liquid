@@ -50,10 +50,12 @@
     <span style="float: right;">{{ reservation.subtotal_price }}</span>
   </div>
 
-  <div class="row">
-    <strong style='display: inline-block;'>Service fee</strong>
-    <span style="float: right;">{{ reservation.service_fee }}</span>
-  </div>
+  {% unless @reservation.no_service_fee? %}
+    <div class="row">
+      <strong style='display: inline-block;'>Service fee</strong>
+      <span style="float: right;">{{ reservation.service_fee }}</span>
+    </div>
+  {% endif %}
 
   <div class="row">
     <strong style='display: inline-block;'>Total</strong>

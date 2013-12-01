@@ -275,6 +275,10 @@ class Reservation < ActiveRecord::Base
     total_amount <= 0
   end
 
+  def no_service_fee?
+    service_fee_amount.to_f.zero?
+  end
+
   def paid?
     payment_status == PAYMENT_STATUSES[:paid]
   end
