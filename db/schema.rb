@@ -455,11 +455,12 @@ ActiveRecord::Schema.define(:version => 20131202143625) do
     t.integer  "service_fee_amount_guest_cents"
     t.datetime "paid_at"
     t.datetime "failed_at"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.string   "currency"
     t.datetime "deleted_at"
     t.integer  "payment_transfer_id"
+    t.integer  "service_fee_amount_host_cents",  :default => 0, :null => false
   end
 
   add_index "reservation_charges", ["payment_transfer_id"], :name => "index_reservation_charges_on_payment_transfer_id"
@@ -509,6 +510,7 @@ ActiveRecord::Schema.define(:version => 20131202143625) do
     t.string   "rejection_reason"
     t.datetime "request_guest_rating_email_sent_at"
     t.datetime "request_host_rating_email_sent_at"
+    t.integer  "service_fee_amount_host_cents",      :default => 0,         :null => false
   end
 
   add_index "reservations", ["listing_id"], :name => "index_reservations_on_listing_id"

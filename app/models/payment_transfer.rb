@@ -25,12 +25,13 @@ class PaymentTransfer < ActiveRecord::Base
   # to the end user. The service fee is our cut of the revenue.
   monetize :amount_cents
   monetize :service_fee_amount_guest_cents
+  monetize :service_fee_amount_host_cents
   monetize :gross_amount_cents
 
   # This is the gross amount of revenue received from the charges included in
   # this payout - including the service fees recieved.
   def gross_amount_cents
-    amount_cents + service_fee_amount_guest_cents
+    amount_cents + service_fee_amount_guest_cents + service_fee_amount_host_cents
   end
 
   # Whether or not we have executed the transfer to the hosts bank account.
@@ -49,7 +50,10 @@ class PaymentTransfer < ActiveRecord::Base
 
   def assign_amounts_and_currency
     self.currency = reservation_charges.first.try(:currency)
-    self.amount_cents = reservation_charges.sum(:subtotal_amount_cents)
+    self.service_fee_amount_host_cents = reservation_charges.sum(
+      :service_fee_amount_host_cents
+    )
+    self.amount_cents = reservation_charges.sum(:subtotal_amount_cents) - self.service_fee_amount_host_cents
     self.service_fee_amount_guest_cents = reservation_charges.sum(
       :service_fee_amount_guest_cents
     )

@@ -76,6 +76,7 @@ class Location < ActiveRecord::Base
 
   delegate :url, :to => :company
   delegate :service_fee_guest_percent, to: :company, allow_nil: true
+  delegate :service_fee_host_percent, to: :company, allow_nil: true
 
   def distance_from(other_latitude, other_longitude)
     Geocoder::Calculations.distance_between([ latitude,       longitude ],

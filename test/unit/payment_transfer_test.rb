@@ -27,6 +27,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
         :reservation => @reservation_1,
         :subtotal_amount => 10,
         :service_fee_amount_guest => 1,
+        :service_fee_amount_host => 2,
         :currency => 'NZD'
       )
 
@@ -48,11 +49,13 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @payment_transfer.reservation_charges = @reservation_charges
       @payment_transfer.save!
 
-      assert_equal @reservation_charges.map(&:subtotal_amount).sum,
+      assert_equal @reservation_charges.map(&:subtotal_amount).sum - @reservation_charges.map(&:service_fee_amount_host).sum,
         @payment_transfer.amount
 
       assert_equal @reservation_charges.map(&:service_fee_amount_guest).sum,
         @payment_transfer.service_fee_amount_guest
+      assert_equal @reservation_charges.map(&:service_fee_amount_host).sum,
+        @payment_transfer.service_fee_amount_host
     end
   end
 
@@ -61,7 +64,8 @@ class PaymentTransferTest < ActiveSupport::TestCase
       pt = PaymentTransfer.new
       pt.amount_cents = 50_00
       pt.service_fee_amount_guest_cents = 10_00
-      assert_equal 60_00, pt.gross_amount_cents
+      pt.service_fee_amount_host_cents = 15_00
+      assert_equal 75_00, pt.gross_amount_cents
     end
   end
 

@@ -11,8 +11,9 @@ class RenameServiceFeePercent < ActiveRecord::Migration
 
 
     add_column :instances, :service_fee_host_percent, :decimal, :precision => 5, :scale => 2, :default => 0
+    add_column :reservation_charges, :service_fee_amount_host_cents, :integer, :null => false, :default => 0
     add_column :payment_transfers, :service_fee_amount_host_cents, :integer, :null => false, :default => 0
-    Instance.update_all('service_fee_host_percent = 10')
+    add_column :reservations, :service_fee_amount_host_cents, :integer, :null => false, :default => 0
   end
 
   def down
@@ -23,5 +24,7 @@ class RenameServiceFeePercent < ActiveRecord::Migration
 
     remove_column :instances, :service_fee_host_percent
     remove_column :payment_transfers, :service_fee_amount_host_cents
+    remove_column :reservation_charges, :service_fee_amount_host_cents
+    remove_column :reservations, :service_fee_amount_host_cents
   end
 end

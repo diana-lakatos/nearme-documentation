@@ -51,6 +51,7 @@ class ReservationCharge < ActiveRecord::Base
   # === Helpers
   monetize :subtotal_amount_cents
   monetize :service_fee_amount_guest_cents
+  monetize :service_fee_amount_host_cents
   monetize :total_amount_cents
 
   def total_amount_cents
