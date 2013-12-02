@@ -17,6 +17,7 @@ class ApplicationController < ActionController::Base
   before_filter :platform_context
   before_filter :register_platform_context_as_lookup_context_detail
   before_filter :redirect_if_domain_not_valid
+  before_filter :set_raygun_custom_data
 
 
   def current_user
@@ -281,6 +282,19 @@ class ApplicationController < ActionController::Base
       @country = Geocoder.search(current_ip).first.try(:country)
     end
     @country ||= 'United States'
+  end
+
+  def set_raygun_custom_data
+    return if (Rails.env.development? || Rails.env.test?)
+    Raygun.configuration.silence_reporting = false
+    begin
+      Raygun.configuration.custom_data = {
+        platform_context: @platform_context.to_h,
+        request_params: params
+      }
+    rescue => e
+      Rails.logger.debug "Error when preparing Raygun custom_params: #{e}"
+    end
   end
 
 end
