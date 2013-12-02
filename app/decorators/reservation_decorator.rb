@@ -37,11 +37,11 @@ class ReservationDecorator < Draper::Decorator
     end
   end
 
-  def service_fee
-    if service_fee_amount.to_f.zero?
+  def service_fee_guest
+    if service_fee_amount_guest.to_f.zero?
       "Free!"
     else
-      humanized_money_with_cents_and_symbol(service_fee_amount)
+      humanized_money_with_cents_and_symbol(service_fee_amount_guest)
     end
   end
 

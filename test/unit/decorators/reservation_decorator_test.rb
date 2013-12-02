@@ -72,7 +72,7 @@ class ReservationDecoratorTest < ActionView::TestCase
       stub_mixpanel
       @reservation = FactoryGirl.build(:reservation_with_credit_card,
                                        subtotal_amount: 0,
-                                       service_fee_amount: 0).decorate
+                                       service_fee_amount_guest: 0).decorate
     end
 
     should 'return that its free' do
@@ -84,7 +84,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should 'return its service_fee' do
-      assert_equal 'Free!', @reservation.service_fee
+      assert_equal 'Free!', @reservation.service_fee_guest
     end
 
     should 'return its total_price' do
@@ -101,7 +101,7 @@ class ReservationDecoratorTest < ActionView::TestCase
       stub_mixpanel
       @reservation = FactoryGirl.build(:reservation_with_credit_card,
                                        subtotal_amount_cents: 500_00,
-                                       service_fee_amount_cents: 50_00).decorate
+                                       service_fee_amount_guest_cents: 50_00).decorate
     end
 
     should 'return that its pending' do
@@ -124,7 +124,7 @@ class ReservationDecoratorTest < ActionView::TestCase
       end
 
       should 'return its service_fee' do
-        assert_equal '$5.00', @reservation.service_fee
+        assert_equal '$5.00', @reservation.service_fee_guest
       end
 
       should 'return its total_price' do
@@ -146,7 +146,7 @@ class ReservationDecoratorTest < ActionView::TestCase
       listing = FactoryGirl.create(:listing, hourly_reservations: true)
       @reservation = FactoryGirl.build(:reservation,
                                        subtotal_amount_cents: 500_00,
-                                       service_fee_amount_cents: 50_00,
+                                       service_fee_amount_guest_cents: 50_00,
                                        listing: listing).decorate
     end
 

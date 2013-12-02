@@ -15,13 +15,13 @@ class Reservation::ServiceFeeCalculatorTest < ActiveSupport::TestCase
 
   context 'service fee' do
     should "have correct fee for individual date" do
-      @listing.stubs(:service_fee_percent).returns(BigDecimal(10))
-      assert_equal 12_00, @service_fee_calculator.service_fee.cents
+      @listing.stubs(:service_fee_guest_percent).returns(BigDecimal(10))
+      assert_equal 12_00, @service_fee_calculator.service_fee_guest.cents
     end
 
     should "return 0 for nil service_fee_percent" do
-      @listing.stubs(:service_fee_percent).returns(nil)
-      assert_equal 0, @service_fee_calculator.service_fee.cents
+      @listing.stubs(:service_fee_guest_percent).returns(nil)
+      assert_equal 0, @service_fee_calculator.service_fee_guest.cents
     end
   end
 

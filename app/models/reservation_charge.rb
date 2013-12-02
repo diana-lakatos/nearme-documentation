@@ -35,7 +35,7 @@ class ReservationCharge < ActiveRecord::Base
         reservation_charges.currency,
         SUM(
           reservation_charges.subtotal_amount_cents
-          + reservation_charges.service_fee_amount_cents
+          + reservation_charges.service_fee_amount_guest_cents
         )
       ')
   }
@@ -50,11 +50,11 @@ class ReservationCharge < ActiveRecord::Base
 
   # === Helpers
   monetize :subtotal_amount_cents
-  monetize :service_fee_amount_cents
+  monetize :service_fee_amount_guest_cents
   monetize :total_amount_cents
 
   def total_amount_cents
-    subtotal_amount_cents + service_fee_amount_cents
+    subtotal_amount_cents + service_fee_amount_guest_cents
   end
 
   def amount

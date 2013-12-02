@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131129144913) do
+ActiveRecord::Schema.define(:version => 20131202143625) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -271,15 +271,16 @@ ActiveRecord::Schema.define(:version => 20131129144913) do
 
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                                                            :null => false
-    t.datetime "updated_at",                                                            :null => false
-    t.string   "bookable_noun",                                     :default => "Desk"
-    t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
+    t.datetime "created_at",                                                                  :null => false
+    t.datetime "updated_at",                                                                  :null => false
+    t.string   "bookable_noun",                                           :default => "Desk"
+    t.decimal  "service_fee_guest_percent", :precision => 5, :scale => 2, :default => 0.0
     t.string   "lessor"
     t.string   "lessee"
-    t.boolean  "default_instance",                                  :default => false
-    t.boolean  "skip_company",                                      :default => false
+    t.boolean  "skip_company",                                            :default => false
+    t.boolean  "default_instance",                                        :default => false
     t.text     "pricing_options"
+    t.decimal  "service_fee_host_percent",  :precision => 5, :scale => 2, :default => 0.0
   end
 
   create_table "listing_messages", :force => true do |t|
@@ -412,10 +413,11 @@ ActiveRecord::Schema.define(:version => 20131129144913) do
     t.integer  "company_id"
     t.datetime "transferred_at"
     t.string   "currency"
-    t.integer  "amount_cents",             :default => 0, :null => false
-    t.integer  "service_fee_amount_cents", :default => 0, :null => false
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
+    t.integer  "amount_cents",                   :default => 0, :null => false
+    t.integer  "service_fee_amount_guest_cents", :default => 0, :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
+    t.integer  "service_fee_amount_host_cents",  :default => 0, :null => false
   end
 
   add_index "payment_transfers", ["company_id"], :name => "index_payment_transfers_on_company_id"
@@ -450,11 +452,11 @@ ActiveRecord::Schema.define(:version => 20131129144913) do
   create_table "reservation_charges", :force => true do |t|
     t.integer  "reservation_id"
     t.integer  "subtotal_amount_cents"
-    t.integer  "service_fee_amount_cents"
+    t.integer  "service_fee_amount_guest_cents"
     t.datetime "paid_at"
     t.datetime "failed_at"
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.string   "currency"
     t.datetime "deleted_at"
     t.integer  "payment_transfer_id"
@@ -503,7 +505,7 @@ ActiveRecord::Schema.define(:version => 20131129144913) do
     t.string   "payment_method",                     :default => "manual",  :null => false
     t.string   "payment_status",                     :default => "unknown", :null => false
     t.integer  "quantity",                           :default => 1,         :null => false
-    t.integer  "service_fee_amount_cents"
+    t.integer  "service_fee_amount_guest_cents"
     t.string   "rejection_reason"
     t.datetime "request_guest_rating_email_sent_at"
     t.datetime "request_host_rating_email_sent_at"

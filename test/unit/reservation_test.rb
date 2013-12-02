@@ -98,7 +98,7 @@ class ReservationTest < ActiveSupport::TestCase
         User::BillingGateway.any_instance.expects(:charge)
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
         @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
-        @reservation.service_fee_amount_cents = 10_00
+        @reservation.service_fee_amount_guest_cents = 10_00
         @reservation.save!
         @reservation.confirm
       end
@@ -116,7 +116,7 @@ class ReservationTest < ActiveSupport::TestCase
     should "attempt to charge user card if paying by credit card" do
       reservation = FactoryGirl.build(:reservation_with_credit_card)
       reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
-      reservation.service_fee_amount_cents = 10_00
+      reservation.service_fee_amount_guest_cents = 10_00
       reservation.save!
 
       User::BillingGateway.any_instance.expects(:charge)
@@ -130,7 +130,7 @@ class ReservationTest < ActiveSupport::TestCase
       reservation = Reservation.new
       reservation.listing = FactoryGirl.create(:listing)
       reservation.subtotal_amount_cents = nil
-      reservation.service_fee_amount_cents = nil
+      reservation.service_fee_amount_guest_cents = nil
 
       expected = { :reservation =>
         {
@@ -177,9 +177,9 @@ class ReservationTest < ActiveSupport::TestCase
         reservation.save!
 
         assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents, reservation.subtotal_amount_cents
-        assert_equal Reservation::ServiceFeeCalculator.new(reservation).service_fee.cents, reservation.service_fee_amount_cents
+        assert_equal Reservation::ServiceFeeCalculator.new(reservation).service_fee_guest.cents, reservation.service_fee_amount_guest_cents
         assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents +
-                     Reservation::ServiceFeeCalculator.new(reservation).service_fee.cents,
+                     Reservation::ServiceFeeCalculator.new(reservation).service_fee_guest.cents,
                      reservation.total_amount_cents
 
       end
@@ -220,7 +220,7 @@ class ReservationTest < ActiveSupport::TestCase
           payment_method: 'credit_card'
         )
 
-        assert_not_equal 0, reservation.service_fee_amount_cents
+        assert_not_equal 0, reservation.service_fee_amount_guest_cents
       end
 
       should "not charge a service fee to manual payment reservations" do
@@ -231,7 +231,7 @@ class ReservationTest < ActiveSupport::TestCase
           payment_method: 'manual'
         )
 
-        assert_equal 0, reservation.service_fee_amount_cents
+        assert_equal 0, reservation.service_fee_amount_guest_cents
       end
     end
 
@@ -247,7 +247,7 @@ class ReservationTest < ActiveSupport::TestCase
       should "set total cost based on HourlyPriceCalculator" do
         @reservation.periods.build :date => Time.zone.today.advance(:weeks => 1).beginning_of_week, :start_minute => 9*60, :end_minute => 12*60
         assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents +
-                     Reservation::ServiceFeeCalculator.new(@reservation).service_fee.cents, 
+                     Reservation::ServiceFeeCalculator.new(@reservation).service_fee_guest.cents, 
                      @reservation.total_amount_cents
       end
     end

@@ -16,7 +16,7 @@ class ReservationChargeTest < ActiveSupport::TestCase
     @expectation.once
     @reservation.reservation_charges.create!(
       subtotal_amount: 105.24,
-      service_fee_amount: 23.18
+      service_fee_amount_guest: 23.18
     )
   end
 
@@ -25,7 +25,7 @@ class ReservationChargeTest < ActiveSupport::TestCase
     @expectation.never
     @reservation.reservation_charges.create!(
       subtotal_amount: 105.24,
-      service_fee_amount: 23.18
+      service_fee_amount_guest: 23.18
     )
   end
 end
