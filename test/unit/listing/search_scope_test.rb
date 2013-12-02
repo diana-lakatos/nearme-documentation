@@ -23,10 +23,6 @@ class Listing::SearchScopeTest < ActiveSupport::TestCase
       @other_location = FactoryGirl.create(:location, :company => @other_company)
     end
 
-    should 'find all locations not matter what instance for default_instance' do
-      assert_equal Location.all.sort, Listing::SearchScope.scope(@platform_context).sort
-    end
-
     should 'find locations scoped to instance if it is not default' do 
       @platform_context.stubs(:instance).returns(@other_instance)
       assert_equal @other_instance.locations, Listing::SearchScope.scope(@platform_context)
