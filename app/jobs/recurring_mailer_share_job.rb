@@ -7,6 +7,7 @@ class RecurringMailerShareJob < Job
 
   def perform
     Listing.searchable.each do |listing|
+      next unless listing.administrator
       next if listing.administrator.unsubscribed?('recurring_mailer/share')
       next if @sent_to_users.include?(listing.administrator.id)
 
