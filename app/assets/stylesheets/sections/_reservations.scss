@@ -344,6 +344,18 @@ section.reservations {
           font-size: 30px;
         }
       }
+
+      .card-info.expiry {
+
+        @media (min-width: $ipad-width) and (max-width: $host-card-breakpoint-small) {
+          label {
+            text-overflow: clip;
+            white-space: nowrap;
+            width: 70px;
+            overflow: hidden;
+          }
+        }
+      }
     }
 
     .confirm-reservations {
