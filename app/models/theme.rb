@@ -22,6 +22,8 @@ class Theme < ActiveRecord::Base
   delegate :lessor, :to => :instance
   delegate :lessee, :to => :instance
 
+  validates :contact_email, email_rfc_822: true, allow_nil: true
+
   mount_uploader :icon_image, ThemeImageUploader
   mount_uploader :icon_retina_image, ThemeImageUploader
   mount_uploader :favicon_image, ThemeImageUploader
@@ -60,7 +62,7 @@ class Theme < ActiveRecord::Base
 
   # Checks if any of options that impact the theme stylesheet have been changed.
   def theme_changed?
-    attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action address favicon_image)
+    attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action address favicon_image contact_email)
     attrs.any? { |attr|
       send("#{attr}_changed?")
     }
