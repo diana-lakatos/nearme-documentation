@@ -24,7 +24,7 @@ Dates:
 
 Subtotal: {{ reservation.subtotal_price }}
 
-{% unless reservation.no_service_fee? %}
+{% if reservation.has_service_fee? %}
 Service fee: {{ reservation.service_fee }}
 {% endif %}
 
