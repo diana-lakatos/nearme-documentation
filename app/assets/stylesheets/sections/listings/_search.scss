@@ -505,7 +505,7 @@ header#listing_search {
         z-index: $map-z-index+1;
         right: 0px;
         top: 30px;
-        overflow-y: scroll;
+        overflow-y: auto;
         padding: 7px 0px;
         max-height: 200px;
         min-width: 100%;
