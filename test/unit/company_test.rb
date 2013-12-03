@@ -11,8 +11,7 @@ class CompanyTest < ActiveSupport::TestCase
   should_not allow_value('not a url!').for(:url)
   should allow_value('http://a-url.com').for(:url)
   should allow_value('a-url.com').for(:url)
-  should allow_value('x' * 250).for(:description)
-  should_not allow_value('x' * 251).for(:description)
+  should ensure_length_of(:description).is_at_most(250)
 
   should "be valid even if its location is not valid" do
     @company = FactoryGirl.create(:company)

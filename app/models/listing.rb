@@ -49,9 +49,10 @@ class Listing < ActiveRecord::Base
   after_destroy :notify_user_about_change
 
   # == Validations
+  validates :name, length: { maximum: 50 }
   validates_presence_of :location, :name, :quantity, :listing_type_id
   validates_presence_of :description
-  validates_numericality_of :quantity, greater_than: 0
+  validates_numericality_of :quantity, greater_than: 0, only_integer: true
   validates_length_of :description, :maximum => 250
   validates_with PriceValidator
   validates :hourly_reservations, :inclusion => { :in => [true, false], :message => "must be selected" }, :allow_nil => false
