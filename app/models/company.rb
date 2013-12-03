@@ -55,7 +55,8 @@ class Company < ActiveRecord::Base
   validates :email, email: true, allow_blank: true
   validate :validate_url_format
 
-  delegate :service_fee_percent, to: :instance, allow_nil: true
+  delegate :service_fee_guest_percent, to: :instance, allow_nil: true
+  delegate :service_fee_host_percent, to: :instance, allow_nil: true
 
   # Returns the companies in need of recieving a payment transfer for
   # outstanding payments we've received on their behalf.
