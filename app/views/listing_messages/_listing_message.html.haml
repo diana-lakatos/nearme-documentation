@@ -8,7 +8,7 @@
 
     .span7
       %p.body
-        = link_to truncate(listing_message.body, length: 60), listing_listing_message_path(listing ? listing : listing_message.listing_with_deleted, listing_message), title: listing_message.body
+        = link_to truncate(listing_message.body, length: 60), listing_listing_message_path(listing.presence || listing_message.listing_with_deleted, listing_message), title: listing_message.body
       %p.link-to-listing
         - if listing
           = link_to listing.name, location_listing_path(listing.location, listing)
@@ -18,6 +18,6 @@
 
     .span2.actions
       - if listing_message.unread_for?(current_user)
-        = link_to "Read", listing_listing_message_path(listing ? listing : listing_message.listing_with_deleted, listing_message), class: 'btn btn-green'
+        = link_to "Read", listing_listing_message_path(listing.presence || listing_message.listing_with_deleted, listing_message), class: 'btn btn-green'
       - elsif !listing_message.archived_for?(current_user)
-        = link_to "Archive", listing_listing_message_archive_path(listing ? listing : listing_message.listing_with_deleted, listing_message), class: "btn btn-gray", method: :put
+        = link_to "Archive", listing_listing_message_archive_path(listing.presence || listing_message.listing_with_deleted, listing_message), class: "btn btn-gray", method: :put
