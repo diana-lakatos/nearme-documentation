@@ -290,7 +290,8 @@ class ApplicationController < ActionController::Base
     begin
       Raygun.configuration.custom_data = {
         platform_context: @platform_context.to_h,
-        request_params: params
+        request_params: params,
+        current_user_id: current_user.try(:id)
       }
     rescue => e
       Rails.logger.debug "Error when preparing Raygun custom_params: #{e}"
