@@ -5,17 +5,18 @@
     .box
       = render "listing_messages/header"
 
-      .row-fluid
-        = simple_form_for @listing_message, url: listing_listing_messages_path(@listing) do |f|
-          = f.hidden_field :replying_to_id
-          - if @listing_message.errors.present?
-            .span12.errors
-              = f.error :body
+      - if !@listing.deleted?
+        .row-fluid
+          = simple_form_for @listing_message, url: listing_listing_messages_path(@listing) do |f|
+            = f.hidden_field :replying_to_id
+            - if @listing_message.errors.present?
+              .span12.errors
+                = f.error :body
 
-          .span10
-            = f.text_area :body
-          .span2.clearfix
-            = f.submit "Send", class: "btn btn-large btn-green"
+            .span10
+              = f.text_area :body
+            .span2.clearfix
+              = f.submit "Send", class: "btn btn-large btn-green"
 
       - @listing_messages.each do |listing_message|
         = render 'listing_message_for_show', listing_message: listing_message

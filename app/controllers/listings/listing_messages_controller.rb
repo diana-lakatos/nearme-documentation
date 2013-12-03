@@ -52,7 +52,7 @@ class Listings::ListingMessagesController < ApplicationController
   private
 
   def find_listing
-    @listing = Listing.find(params[:listing_id])
+    @listing = ['show', 'archive'].include?(action_name) ? Listing.with_deleted.find(params[:listing_id]) : Listing.find(params[:listing_id])
   end
 
   def setup_listing_message
