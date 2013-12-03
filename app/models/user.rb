@@ -89,6 +89,8 @@ class User < ActiveRecord::Base
   belongs_to :domain
 
   after_destroy :cleanup
+  after_destroy :mark_email_as_deleted
+  before_recover :unmark_email_as_deleted
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
@@ -443,6 +445,16 @@ class User < ActiveRecord::Base
     self.administered_locations.each do |location|
       location.update_attribute(:administrator_id, nil) if location.administrator_id == self.id
     end
+  end
+
+  def mark_email_as_deleted
+    self.email = "deleted_#{self.created_at.to_i}_#{self.email}"
+    self.save!
+  end
+
+  def unmark_email_as_deleted
+    self.email = self.email.gsub("deleted_#{self.created_at.to_i}_", '')
+    self.save!
   end
 
   # Returns a temporary token to be used as the login token parameter
