@@ -36,6 +36,15 @@ class PlatformContext
     @domain || is_root_domain?
   end
 
+  def to_h
+    { request_host: @request_host }.merge(
+      Hash[instance_variables.
+        reject{|iv| iv.to_s == '@request_host'}.
+        map{|iv| iv.to_s.gsub('@', '')}.
+        map{|iv| ["#{iv}_id", send(iv).try(:id)]}]
+    )
+  end
+
   private
 
   def fetch_domain

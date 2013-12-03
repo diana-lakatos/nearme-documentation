@@ -3,6 +3,7 @@ require 'test_helper'
 class Manage::ListingsControllerTest < ActionController::TestCase
 
   setup do
+    stub_mixpanel
     @user = FactoryGirl.create(:user)
     sign_in @user
     @company = FactoryGirl.create(:company, :creator => @user)
@@ -12,22 +13,29 @@ class Manage::ListingsControllerTest < ActionController::TestCase
   end
 
   context "#create" do
+    setup do
+      @attributes = FactoryGirl.attributes_for(:listing).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 })
+      @attributes.delete(:photo_not_required)
+    end
 
-    should "create listing and log" do
-      stub_mixpanel
+    should 'log' do
       @tracker.expects(:created_a_listing).with do |listing, custom_options|
         listing == assigns(:listing) && custom_options == { via: 'dashboard' }
       end
       @tracker.expects(:updated_profile_information).with do |user|
         user == @user
       end
-      
-      attributes = FactoryGirl.attributes_for(:listing).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 })
-      attributes.delete(:photo_not_required)
 
+      post :create, {
+        :listing => @attributes,
+        :location_id => @location2.id
+      }
+    end
+
+    should "create listing" do
       assert_difference('@location2.listings.count') do
         post :create, {
-          :listing => attributes,
+          :listing => @attributes,
           :location_id => @location2.id
         }
       end

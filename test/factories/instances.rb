@@ -6,7 +6,8 @@ FactoryGirl.define do
     bookable_noun 'Desk'
     lessor 'host'
     lessee 'guest'
-    service_fee_percent '10.00'
+    service_fee_guest_percent '10.00'
+    service_fee_host_percent '10.00'
 
     after(:create) do |instance|
       instance.theme = FactoryGirl.create(:theme, :skip_compilation => true) unless instance.theme
