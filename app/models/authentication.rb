@@ -15,7 +15,7 @@ class Authentication < ActiveRecord::Base
   delegate :new_connections, to: :social_connection
 
   scope :with_valid_token, -> {
-    where('authentications.token_expires_at > ? OR authentications.token_expires_at IN NULL').
+    where('authentications.token_expires_at > ? OR authentications.token_expires_at IS NULL').
     where(token_expired: false)
   }
 

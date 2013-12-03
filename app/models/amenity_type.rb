@@ -1,9 +1,25 @@
 class AmenityType < ActiveRecord::Base
-  attr_accessible :name
+  attr_accessible :name, :amenities_attributes, :instance_id
 
   validates_presence_of :name
-  validates :name, :uniqueness => true
+  validates :name, :uniqueness => { scope: :instance_id }
 
-  has_many :amenities
+  belongs_to :instance
+  has_many :amenities,
+    order: 'amenities.name ASC',
+    dependent: :destroy
+  has_many :locations,
+    through: :amenities
+  has_many :listings,
+    through: :amenities
+
+  accepts_nested_attributes_for :amenities, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
+
+  def self.build_with_amenity
+    amenity_type = AmenityType.new
+    amenity_type.amenities.build
+
+    amenity_type
+  end
 
 end

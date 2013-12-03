@@ -4,6 +4,12 @@
     %legend Basic Configuration
     = f.input :name, required: false
     = f.input :service_fee_percent, label: 'Service Fee (%)'
+    .control-group
+      = f.label :skip_company
+      .switch-wrapper
+        .switch{'data-on-label' => "", 'data-off-label' => ""}
+          = f.check_box :skip_company
+
     %p
       = f.button :submit, 'Save', class: 'btn btn-success'
     %br
@@ -27,6 +33,20 @@
     
     %p
       = f.link_to_add "Add domain name", :domains, :data => { :target => "#domains" }, class: 'btn'
+    %p
+      = f.button :submit, 'Save', class: 'btn btn-success'
+    %br
+
+  %fieldset
+    %legend Pricing Options
+    .control-group
+      .controls
+        = f.error :pricing_options
+        - Instance::PRICING_OPTIONS.each do |pricing_option|
+          %label.checkbox
+            = check_box_tag "instance[pricing_options][#{pricing_option}]", '1', f.object.pricing_options[pricing_option].to_s == '1'
+            #{pricing_option}
+
     %p
       = f.button :submit, 'Save', class: 'btn btn-success'
     %br
@@ -64,3 +84,9 @@
     %p
       = f.button :submit, 'Save', class: 'btn btn-success'
     %br
+
+  %section#amenities
+    = render 'instance_admin/settings/amenities', type: 'location', f: f
+
+    = render 'instance_admin/settings/amenities', type: 'listing', f: f
+

@@ -7,7 +7,7 @@ class PostActionMailerTest < ActiveSupport::TestCase
   setup do
     stub_mixpanel
     @user = FactoryGirl.create(:user)
-    FactoryGirl.create(:instance)
+    @instance = FactoryGirl.create(:instance)
     @platform_context = PlatformContext.new
   end
 
@@ -41,13 +41,20 @@ class PostActionMailerTest < ActiveSupport::TestCase
     @new_user = FactoryGirl.create(:user)
     @creator = FactoryGirl.create(:user)
     @platform_context = PlatformContext.new
-    mail = PostActionMailer.created_by_instance_admin(@platform_context, @new_user , @creator)
-    subject = "#{@new_user.first_name }, you were invited to #{@platform_context.instance.name } by #{@creator.name}!"
-    assert_equal subject, mail.subject
-    assert mail.html_part.body.include?("Welcome, #{@new_user.first_name}"), "Could not find 'Welcome, #{@new_user.first_name}' in #{mail.html_part.body}"
-    assert mail.html_part.body.include?("You have been invited by #{@creator.name} to join #{@platform_context.instance.name}!"), "Could not find 'ou have been invited by #{@creator.name} to join #{@platform_context.instance.name}!' in #{mail.html_part.body}"
-    assert mail.html_part.body.include?(@new_user.authentication_token), "Could not find User's authentication token in the email"
-    refute mail.html_part.body.include?(@creator.authentication_token), "Authentication token is included in the email, which is sent the new user - new user should not have access to creator's account!"
+
+    # We freeze time for this test since we're asserting the presence of
+    # a temporary login token. We rely on semantics that for any given expiry
+    # time, two tokens are the same for the same user. This is somewhat of
+    # a hack.
+    Timecop.freeze do
+      mail = PostActionMailer.created_by_instance_admin(@platform_context, @new_user , @creator)
+      subject = "#{@new_user.first_name }, you were invited to #{@platform_context.instance.name } by #{@creator.name}!"
+      assert_equal subject, mail.subject
+      assert mail.html_part.body.include?("Welcome, #{@new_user.first_name}"), "Could not find 'Welcome, #{@new_user.first_name}' in #{mail.html_part.body}"
+      assert mail.html_part.body.include?("You have been invited by #{@creator.name} to join #{@platform_context.instance.name}!"), "Could not find 'ou have been invited by #{@creator.name} to join #{@platform_context.instance.name}!' in #{mail.html_part.body}"
+      assert mail.html_part.body.include?(CGI.escape(@new_user.temporary_token)), "Could not find User's authentication token in the email"
+      refute mail.html_part.body.include?(CGI.escape(@creator.temporary_token)), "Authentication token is included in the email, which is sent the new user - new user should not have access to creator's account!"
+    end
   end
 
   test "list_draft works ok" do
@@ -68,6 +75,28 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(@user.first_name)
     assert_equal [@user.email], mail.to
     assert mail.html_part.body.include?("Your new listing rocks!")
+  end
+
+  test "unsubscription works ok" do
+    mailer_name = 'recurring_mailer/request_photos'
+    mail = PostActionMailer.unsubscription(@platform_context, @user, mailer_name)
+    subject = "Successfully unsubscribed"
+
+    assert_equal subject, mail.subject
+    assert mail.html_part.body.include?(subject)
+    assert_equal [@user.email], mail.to
+    assert mail.html_part.body.include?(mailer_name.split('/').last.humanize)
+  end
+
+  test "instance_created works ok" do
+    mail = PostActionMailer.instance_created(@platform_context, @instance, @user, 'password')
+    subject = "Instance created"
+
+    assert_equal subject, mail.subject
+    assert_equal [@user.email], mail.to
+    assert mail.html_part.body.include?("Password: password")
+    assert mail.html_part.body.include?("Email: #{@user.email}")
+    assert mail.html_part.body.include?("Your instance, #{@instance.name}")
   end
 
   test "has transactional email footer" do

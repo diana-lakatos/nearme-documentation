@@ -24,6 +24,9 @@ class Listing < ActiveRecord::Base
   belongs_to :location, inverse_of: :listings, with_deleted: true
   belongs_to :listing_type
 
+  has_many :amenity_holders, as: :holder
+  has_many :amenities, through: :amenity_holders
+
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :photos, :allow_destroy => true
 
@@ -62,7 +65,7 @@ class Listing < ActiveRecord::Base
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
-  delegate :instance, :amenities, :currency, :formatted_address, :notify_user_about_change,
+  delegate :instance, :currency, :formatted_address, :notify_user_about_change,
     :local_geocoding, :latitude, :longitude, :distance_from, :address, :postcode, to: :location,
     allow_nil: true
   delegate :creator, :creator=, to: :location
@@ -74,7 +77,7 @@ class Listing < ActiveRecord::Base
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description,
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
     :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type, :draft, :enabled,
-    :last_request_photos_sent_at, :activated_at
+    :last_request_photos_sent_at, :activated_at, :amenity_ids, :rank
 
   attr_accessor :distance_from_search_query, :photo_not_required
 

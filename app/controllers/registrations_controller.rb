@@ -153,15 +153,25 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def unsubscribe
-    verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
-    begin
-      mailer_name = verifier.verify(params[:signature])
-      current_user.unsubscribe(mailer_name) unless current_user.unsubscribed?(mailer_name)
-    rescue ActiveSupport::MessageVerifier::InvalidSignature
-    end
+    if user_signed_in?
+      verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
+      begin
+        mailer_name = verifier.verify(params[:signature])
+        unless current_user.unsubscribed?(mailer_name)
+          current_user.unsubscribe(mailer_name)
+          PostActionMailer.enqueue.unsubscription(platform_context, current_user, mailer_name)
+          flash[:success] = t('flash_messages.registrations.unsubscribed_successfully')
+        else
+          flash[:warning] = t('flash_messages.registrations.already_unsubscribed')
+        end
+      rescue ActiveSupport::MessageVerifier::InvalidSignature
+      end
 
-    flash[:success] = t('flash_messages.registrations.unsubscribed_successfully')
-    redirect_to root_path
+      redirect_to root_path
+    else
+      session[:user_return_to] = request.path
+      redirect_to new_user_session_path
+    end
   end
 
   protected

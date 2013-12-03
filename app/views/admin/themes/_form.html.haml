@@ -6,12 +6,12 @@
   = f.input :meta_title
   = f.input :description, :label => 'Meta description'
   %p
-    = f.button :submit, 'Save'
+    = f.button :submit, 'Save', class: 'btn btn-success'
   %br/
 
   %legend Brand
   
-  - %w(logo_image logo_retina_image icon_image icon_retina_image hero_image).each do |image_attr|
+  - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each do |image_attr|
     .control-group
       = f.label image_attr
       .controls
@@ -21,16 +21,21 @@
           = f.text_field "remote_#{image_attr}_url" 
 
   %p
-    = f.button :submit, 'Save'
+    = f.button :submit, 'Save', class: 'btn btn-success'
   %br/
 
   %legend Contact &amp; Support
   = f.input :phone_number
-  = f.input :contact_email
+  .control-group.tel.optional{class: f.object.errors[:contact_email].empty? ? '' : 'error'}
+    %label.tel.optional.control-label{for: "theme_phone_number"} Contact email
+    .controls
+      = f.input_field :contact_email, pattern: '.*'
+      = f.error :contact_email
   = f.input :support_email
   = f.input :support_url
+  = f.input :address
   %p
-    = f.button :submit, 'Save'
+    = f.button :submit, 'Save', class: 'btn btn-success'
   %br/
 
   %legend Social Properties
@@ -39,7 +44,7 @@
   = f.input :twitter_url
   = f.input :gplus_url
   %p
-    = f.button :submit, 'Save'
+    = f.button :submit, 'Save', class: 'btn btn-success'
   %br/
 
   %legend Colors
@@ -48,6 +53,13 @@
       %span.add-on #
       = f.input_field "color_#{color}"
   %p
-    = f.button :submit, 'Save'
+    = f.button :submit, 'Save', class: 'btn btn-success'
+  %br/
+
+  %legend Homepage
+  = f.input :homepage_content, :input_html => { :class => 'wide' }
+  = f.input :call_to_action, :placeholder => 'Find out more'
+  %p
+    = f.button :submit, 'Save', class: 'btn btn-success'
   %br/
 

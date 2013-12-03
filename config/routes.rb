@@ -139,6 +139,8 @@ DesksnearMe::Application.routes.draw do
     get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
 
     put "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip"
+
+    get "/instance_admin/sessions/new", :to => "instance_admin::sessions#new", :as => 'instance_admin_login'
   end
 
   resources :reservations, :except => [:update, :destroy, :show] do

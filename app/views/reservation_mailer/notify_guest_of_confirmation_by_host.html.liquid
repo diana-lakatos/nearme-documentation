@@ -1,4 +1,4 @@
-<p>Your booking for '{{ listing.name }}' at <a href="{{ listing.location.url }}">{{ listing.location.name}}</a> has been cancelled by the host.</p>
+<p>Your booking for '{{ listing.name }}' at <a href="{{ listing.location.url }}">{{ listing.location.name}}</a> has been cancelled by the {{ platform_context.lessor }}.</p>
 
 <div class="booking-details">
 
@@ -11,7 +11,7 @@
 
   {% if listing.location.special_notes? %}
     <div class="row">
-      <strong style='display: inline-block;'>Guest instructions</strong>
+      <strong style='display: inline-block;'>{{ platform_context.lessee | capitalize }} instructions</strong>
       <span style="float: right;">{{ listing.location.special_notes }}</span>
     </div>
   {% endif %}
@@ -33,7 +33,7 @@
   </div>
 
   <div class="row">
-    <strong style='display: inline-block;'>Host</strong>
+    <strong style='display: inline-block;'>{{ platform_context.lessor | capitalize }}</strong>
     <span style="float: right;"><a href="mailto:{{ host.email }}">{{ host.name }}</a></span>
   </div>
 
@@ -50,10 +50,12 @@
     <span style="float: right;">{{ reservation.subtotal_price }}</span>
   </div>
 
-  <div class="row">
-    <strong style='display: inline-block;'>Service fee</strong>
-    <span style="float: right;">{{ reservation.service_fee }}</span>
-  </div>
+  {% if reservation.has_service_fee? %}
+    <div class="row">
+      <strong style='display: inline-block;'>Service fee</strong>
+      <span style="float: right;">{{ reservation.service_fee }}</span>
+    </div>
+  {% endif %}
 
   <div class="row">
     <strong style='display: inline-block;'>Total</strong>

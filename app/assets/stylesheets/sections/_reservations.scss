@@ -214,6 +214,25 @@ section.reservations {
 }
 
 .reservations-review, .reservations-create {
+
+  .header {
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      &.location-name {
+        margin-bottom: 5px;
+      }
+
+      &.location-address {
+        color: #b8b8b8;
+        margin-bottom: 25px;
+      }
+    }
+  }
+
   .box {
 
     h1 {
@@ -323,6 +342,18 @@ section.reservations {
         }
         .ico-credit-card:before {
           font-size: 30px;
+        }
+      }
+
+      .card-info.expiry {
+
+        @media (min-width: $ipad-width) and (max-width: $host-card-breakpoint-small) {
+          label {
+            text-overflow: clip;
+            white-space: nowrap;
+            width: 70px;
+            overflow: hidden;
+          }
         }
       }
     }

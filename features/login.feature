@@ -115,4 +115,4 @@ Feature: A user can login
     Given a user exists with email: "user@example.com"
     When an anonymous user attempts to sign up with email user@example.com
     Then a new account is not created
-     And I should see "Sign up to Desks Near Me"
+     And I should see "Sign up to" platform name

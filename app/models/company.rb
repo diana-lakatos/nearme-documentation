@@ -37,14 +37,20 @@ class Company < ActiveRecord::Base
 
   has_many :locations_impressions,
            :source => :impressions,
-           :through => :locations
+           :through => :locations do
+             def for_instance(instance)
+               location_ids = proxy_association.owner.locations.for_instance(instance).pluck(:id)
+               where(:impressionable_id => location_ids)
+             end
+           end
 
   before_validation :add_default_url_scheme
 
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
 
-  validates_presence_of :name, :industries, :instance_id
+  validates_presence_of :name, :instance_id
+  validates_presence_of :industries, :if => proc { |c| c.instance.present? && c.instance.is_desksnearme? && !c.instance.skip_company? }
   validates_length_of :description, :maximum => 250
   validates :email, email: true, allow_blank: true
   validate :validate_url_format

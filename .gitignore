@@ -28,4 +28,4 @@ dump.rdb
 .rvmrc
 .ruby-version
 .ruby-gemset
-
+.envrc

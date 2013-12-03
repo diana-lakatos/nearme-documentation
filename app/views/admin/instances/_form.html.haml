@@ -9,9 +9,28 @@
   = f.fields_for :domains do |f_d|
     = render :partial => 'admin/domains/form', :locals => { :f => f_d }
 
+  %h4 Pricing Options
+  .control-group
+    .controls
+      = f.error :pricing_options
+      - Instance::PRICING_OPTIONS.each do |pricing_option|
+        %label.checkbox
+          = check_box_tag "instance[pricing_options][#{pricing_option}]", '1', f.object.pricing_options[pricing_option].to_s == '1'
+          #{pricing_option}
+
+  %p
+    = f.button :submit, 'Save'
+  %br
+
   %h4 Custom Theme
   = f.fields_for :theme, (resource.theme.presence || resource.build_theme) do |ff|
     = render :partial => 'admin/themes/form', :locals => { :f => ff }
+
+  - if defined?(@user)
+    %h4 Instance Admin
+    = simple_fields_for @user do |f_user|
+      = f_user.input :name
+      = f_user.input :email, required: true
 
   .form-actions
     = f.button :submit

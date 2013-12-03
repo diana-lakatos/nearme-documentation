@@ -70,6 +70,10 @@ section.search#content {
       margin-top: 100px;
     }
 
+    form {
+      margin-top: 30px;
+    }
+
   }
 
   div.google-map {
@@ -501,7 +505,7 @@ header#listing_search {
         z-index: $map-z-index+1;
         right: 0px;
         top: 30px;
-        overflow-y: scroll;
+        overflow-y: auto;
         padding: 7px 0px;
         max-height: 200px;
         min-width: 100%;
@@ -558,6 +562,15 @@ header#listing_search {
     @media (max-width: $iphone-portrait) {
       @include box-sizing(border-box);
       width: 100%;
+    }
+
+    &.two-filters {
+
+      .search-filter {
+        @media (min-width: $search-bar-breakpoint-desktop) {
+          padding-right: 65px;
+        }
+      }
     }
   }
 

@@ -58,23 +58,23 @@ class ReservationDrop < BaseDrop
   end
 
   def guest_rating_reservation_url
-    routes.guest_rating_url(@reservation.id, token: @reservation.listing.administrator.authentication_token)
+    routes.guest_rating_url(@reservation.id, token: @reservation.listing.administrator.temporary_token)
   end
 
   def guest_rating_reservation_url_with_tracking
-    routes.guest_rating_url(@reservation.id, token: @reservation.listing.administrator.authentication_token, track_email_event: true)
+    routes.guest_rating_url(@reservation.id, token: @reservation.listing.administrator.temporary_token, track_email_event: true)
   end
 
   def host_rating_reservation_url
-    routes.host_rating_url(@reservation.id, token: @reservation.owner.authentication_token)
+    routes.host_rating_url(@reservation.id, token: @reservation.owner.temporary_token)
   end
 
   def host_rating_reservation_url_with_tracking
-    routes.host_rating_url(@reservation.id, token: @reservation.owner.authentication_token, track_email_event: true)
+    routes.host_rating_url(@reservation.id, token: @reservation.owner.temporary_token, track_email_event: true)
   end
 
   def export_to_ical_url
-    routes.export_reservation_url(@reservation, format: :ics, token: @reservation.owner.authentication_token)
+    routes.export_reservation_url(@reservation, format: :ics, token: @reservation.owner.temporary_token)
   end
 
   def created_at
@@ -86,11 +86,11 @@ class ReservationDrop < BaseDrop
   end
 
   def reservation_confirm_url
-    routes.confirm_manage_listing_reservation_url(@reservation.listing, @reservation, :token => @reservation.listing.administrator.authentication_token)
+    routes.confirm_manage_listing_reservation_url(@reservation.listing, @reservation, :token => @reservation.listing.administrator.temporary_token)
   end 
 
   def reservation_confirm_url_with_tracking
-    routes.confirm_manage_listing_reservation_url(@reservation.listing, @reservation, :token => @reservation.listing.administrator.authentication_token, :track_email_event => true)
+    routes.confirm_manage_listing_reservation_url(@reservation.listing, @reservation, :token => @reservation.listing.administrator.temporary_token, :track_email_event => true)
   end
 
   def start_date

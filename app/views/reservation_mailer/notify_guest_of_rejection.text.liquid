@@ -1,6 +1,6 @@
 {{ user.first_name }}, your booking has been declined
 
-Your booking for '{{ listing.name }}' at {{ listing.street }} has been declined by the host. But we have you covered! Here are some alternatives, similar to the listing you tried to book:
+Your booking for '{{ listing.name }}' at {{ listing.street }} has been declined by the {{ platform_context.lessor }}. But we have you covered! Here are some alternatives, similar to the listing you tried to book:
 
 {% include 'reservation_mailer/listings_in_near.text' %}
 Search More Desks: {{ listing.search_url_with_tracking | append:signature_for_tracking }}

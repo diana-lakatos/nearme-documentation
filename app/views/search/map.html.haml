@@ -10,6 +10,7 @@
 - if listings.any?
   %section#results.map
     = render partial: 'search/map/marker', collection: listings, as: :listing
+    = render 'filters_listing_ids_cache'
 - elsif !@located
   %section#results.no_results
     = render 'shared/loading_spinner'

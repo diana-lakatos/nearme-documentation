@@ -7,7 +7,8 @@ class ListingTest < ActiveSupport::TestCase
     @listing = FactoryGirl.create(:listing)
     @user = FactoryGirl.create(:user)
     @platform_context = PlatformContext.new
-    @subject = "#{@user.name} has shared a listing with you on Desks Near Me"
+    @platform_context.stubs(:instance).returns(Instance.default_instance)
+    @subject = "#{@user.name} has shared a listing with you on #{@platform_context.decorate.name}"
   end
 
   test "#share" do

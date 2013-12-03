@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131125060557) do
+ActiveRecord::Schema.define(:version => 20131129144913) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -22,12 +22,27 @@ ActiveRecord::Schema.define(:version => 20131125060557) do
 
   add_index "amenities", ["amenity_type_id"], :name => "index_amenities_on_amenity_type_id"
 
+  create_table "amenity_holders", :force => true do |t|
+    t.integer  "amenity_id"
+    t.integer  "holder_id"
+    t.string   "holder_type"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "amenity_holders", ["amenity_id"], :name => "index_amenity_holders_on_amenity_id"
+  add_index "amenity_holders", ["holder_id", "holder_type"], :name => "index_amenity_holders_on_holder_id_and_holder_type"
+
   create_table "amenity_types", :force => true do |t|
     t.string   "name"
     t.integer  "position"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "instance_id"
+    t.string   "type"
   end
+
+  add_index "amenity_types", ["instance_id"], :name => "index_amenity_types_on_instance_id"
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -262,6 +277,9 @@ ActiveRecord::Schema.define(:version => 20131125060557) do
     t.decimal  "service_fee_percent", :precision => 5, :scale => 2, :default => 0.0
     t.string   "lessor"
     t.string   "lessee"
+    t.boolean  "default_instance",                                  :default => false
+    t.boolean  "skip_company",                                      :default => false
+    t.text     "pricing_options"
   end
 
   create_table "listing_messages", :force => true do |t|
@@ -280,8 +298,8 @@ ActiveRecord::Schema.define(:version => 20131125060557) do
 
   create_table "listing_types", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "instance_id"
   end
 
@@ -311,25 +329,16 @@ ActiveRecord::Schema.define(:version => 20131125060557) do
     t.boolean  "enabled",                     :default => true
     t.datetime "last_request_photos_sent_at"
     t.datetime "activated_at"
+    t.integer  "rank",                        :default => 0
   end
 
   add_index "listings", ["listing_type_id"], :name => "index_listings_on_listing_type_id"
   add_index "listings", ["location_id"], :name => "index_listings_on_location_id"
 
-  create_table "location_amenities", :force => true do |t|
-    t.integer  "amenity_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-    t.integer  "location_id"
-  end
-
-  add_index "location_amenities", ["amenity_id"], :name => "index_location_amenities_on_amenity_id"
-  add_index "location_amenities", ["location_id"], :name => "index_location_amenities_on_location_id"
-
   create_table "location_types", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "instance_id"
   end
 
@@ -558,6 +567,9 @@ ActiveRecord::Schema.define(:version => 20131125060557) do
     t.string   "twitter_url"
     t.string   "facebook_url"
     t.string   "gplus_url"
+    t.text     "homepage_content"
+    t.string   "call_to_action"
+    t.string   "favicon_image"
   end
 
   add_index "themes", ["owner_id", "owner_type"], :name => "index_themes_on_owner_id_and_owner_type"

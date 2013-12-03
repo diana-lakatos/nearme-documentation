@@ -52,7 +52,7 @@ class ReservationsControllerTest < ActionController::TestCase
                          "PRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN",
                          "CALSCALE:GREGORIAN",
                          "VERSION:2.0",
-                         "X-WR-CALNAME::Desks Near Me",
+                         "X-WR-CALNAME::#{@reservation.listing.company.instance.name}",
                          "X-WR-RELCALID::#{@reservation.owner.id}",
                          "BEGIN:VEVENT",
                          "CREATED;VALUE=DATE-TIME:20130628T100500Z",
@@ -106,13 +106,18 @@ class ReservationsControllerTest < ActionController::TestCase
       @location = FactoryGirl.create(:location_in_auckland)
       @listing = FactoryGirl.create(:listing, location: @location)
       @company.locations << @location
+
+      @platform_context = PlatformContext.new
     end
 
     context 'render view' do
       should 'if no bookings' do
+        @instance = FactoryGirl.create(:instance)
+        PlatformContext.any_instance.stubs(:instance).returns(@instance)
+
         get :upcoming
         assert_response :success
-        assert_select ".box .no-data", "You don't have any upcoming bookings. Find a space near you!"
+        assert_select ".box .no-data", "You don't have any upcoming bookings. Find a #{@platform_context.decorate.bookable_noun} near you!"
       end
 
       should 'if any upcoming bookings' do
@@ -146,7 +151,7 @@ class ReservationsControllerTest < ActionController::TestCase
 
           get :upcoming
           assert_response :success
-          assert_select ".box .no-data", "You don't have any upcoming bookings. Find a space near you!"
+          assert_select ".box .no-data", "You don't have any upcoming bookings. Find a #{@platform_context.decorate.bookable_noun} near you!"
         end
 
         should 'if any upcoming bookings for related instance' do

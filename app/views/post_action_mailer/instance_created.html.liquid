@@ -1,0 +1,11 @@
+<h2>Welcome, {{ user.first_name }}!</h2>
+
+<p>Your instance, {{ instance.name }}, has been created. Your login details are –</p>
+
+<p>
+Email: {{ user.email }}
+<br />
+Password: {{ user_password }}
+</p>
+
+<a class="btn" href="{{ instance.instance_admin_url }}">Log in to instance admin</a>

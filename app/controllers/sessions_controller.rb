@@ -1,8 +1,10 @@
 class SessionsController < Devise::SessionsController
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:destroy]
+  before_filter :clear_return_to, :only => [:new]
   before_filter :set_return_to
   skip_before_filter :require_no_authentication, :only => [:show] , :if => lambda {|c| request.xhr? }
   after_filter :render_or_redirect_after_create, :only => [:create] 
+  layout :resolve_layout
 
   def new
     super unless already_signed_in?
@@ -34,6 +36,20 @@ class SessionsController < Devise::SessionsController
     session[:user_return_to] = params[:return_to] if params[:return_to].present?
   end
 
+  def clear_return_to
+    session[:user_return_to] = nil if login_from_instance_admin? && request.referrer && !request.referrer.include?('instance_admin')
+  end
+
+  def resolve_layout
+    if request.xhr?
+      false
+    elsif login_from_instance_admin?
+      'instance_admin'
+    else
+      'application'
+    end
+  end
+
   def render_view_with_errors
     flash[:alert] = nil
     self.response_body = nil
@@ -43,7 +59,11 @@ class SessionsController < Devise::SessionsController
     else
       self.resource.errors.add(:email, 'incorrect email')
     end
-    render :template => "sessions/new"
+    render :template => login_from_instance_admin? ? "instance_admin/sessions/new" : "sessions/new"
+  end
+
+  def login_from_instance_admin?
+    session[:user_return_to] && session[:user_return_to].include?('instance_admin')
   end
 
   # if ajax call has been made from modal and user has been created, we need to tell 
@@ -52,6 +72,10 @@ class SessionsController < Devise::SessionsController
     if request.xhr? && current_user
       render_redirect_url_as_json
     end
+  end
+
+  def after_sign_out_path_for(resource_or_scope)
+    (request.referrer && request.referrer.include?('instance_admin')) ? instance_admin_login_path : root_path
   end
 
 end

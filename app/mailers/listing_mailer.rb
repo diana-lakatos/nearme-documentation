@@ -11,7 +11,7 @@ class ListingMailer < InstanceMailer
 
     mail(to: "#{name} <#{email}>",
          reply_to: "#{@sharer.name} <#{@sharer.email}>",
-         subject: "#{@sharer.name} has shared a listing with you on Desks Near Me",
+         subject: "#{@sharer.name} has shared a listing with you on #{@platform_context_decorator.name}",
          platform_context: platform_context)
   end
 end

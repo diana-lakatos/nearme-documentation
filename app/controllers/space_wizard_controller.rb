@@ -32,6 +32,8 @@ class SpaceWizardController < ApplicationController
     params[:user][:companies_attributes]["0"][:instance_id] = platform_context.instance.id.to_s
     params[:user][:companies_attributes]["0"][:creator_id] = current_user.id.to_s
     params[:user][:companies_attributes]["0"][:partner_id] = platform_context.partner.try(:id).to_s
+    params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
+
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.attributes = params[:user]
     if params[:save_as_draft]
@@ -44,7 +46,7 @@ class SpaceWizardController < ApplicationController
     elsif @user.save
       track_new_space_event
       PostActionMailer.enqueue.list(platform_context, @user)
-      flash[:success] = t('flash_messages.space_wizard.space_listed')
+      flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: platform_context.decorate.bookable_noun)
       redirect_to manage_locations_path
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil

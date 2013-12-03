@@ -20,6 +20,8 @@
                   %span.ico-edit
             %p= @listing.description
 
+            = render 'locations/listings/amenities', amenities_owner: @listing
+
           = render 'locations/listings/location', location: @location 
 
           = render 'locations/listings/company', location: @location
@@ -35,7 +37,8 @@
 
           = render 'locations/listings/availabilities', listing: @listing
 
-          = render 'locations/listings/administrator', administrator: @listing.administrator
+          -if @listing.administrator
+            = render 'locations/listings/administrator', administrator: @listing.administrator
 
           = render 'locations/listings/other_listings', location: @location, listing: @listing
 

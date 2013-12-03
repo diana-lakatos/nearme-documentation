@@ -1,10 +1,10 @@
-Your booking for '{{ listing.name }}' at {{ listing.location.name:}} ({{ listing.location.url }})</a>  has been cancelled by the host.
+Your booking for '{{ listing.name }}' at {{ listing.location.name:}} ({{ listing.location.url }})</a>  has been cancelled by the {{ platform_context.lessor }}.
 
 BOOKING DETAILS --------
 
 Listing: '{{listing.name}}' at {{listing.location.name}} ({{listing.location.url}}).
 {% if listing.location.special_notes? %}
-Guest instructions: {{ listing.location.special_notes }}
+{{ platform_context.lessee | capitalize }} instructions: {{ listing.location.special_notes }}
 {% endif %}
 Quantity: {{reservation.quantity}}
 {% if listing.hourly_reservations? %}
@@ -18,13 +18,15 @@ Dates:
 {% endif %}
 
 
-Host: {{ host.name }} ({{host.email}})
+{{ platform_context.lessor }}: {{ host.name }} ({{host.email}})
 
 {% if listing.location.phone? %}Contact: {{listing.location.phone}}{% endif %}
 
 Subtotal: {{ reservation.subtotal_price }}
 
+{% if reservation.has_service_fee? %}
 Service fee: {{ reservation.service_fee }}
+{% endif %}
 
 Total: {{ reservation.total_price }}
 {% if reservation.credit_card_payment? %}

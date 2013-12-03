@@ -73,8 +73,6 @@ class Reservation < ActiveRecord::Base
 
   state_machine :state, :initial => :unconfirmed do
     after_transition :unconfirmed => :confirmed, :do => :attempt_payment_capture
-    after_transition :confirmed => :cancelled_by_host, :do => :track_charge_cancellation
-    after_transition :confirmed => :cancelled_by_guest, :do => :track_charge_cancellation
 
     event :confirm do
       transition :unconfirmed => :confirmed
@@ -277,6 +275,10 @@ class Reservation < ActiveRecord::Base
     total_amount <= 0
   end
 
+  def has_service_fee?
+    !service_fee_amount.to_f.zero?
+  end
+
   def paid?
     payment_status == PAYMENT_STATUSES[:paid]
   end
@@ -295,12 +297,6 @@ class Reservation < ActiveRecord::Base
 
   def to_liquid
     ReservationDrop.new(self)
-  end
-
-  def track_charge_cancellation
-    mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, :current_user => self.owner)
-    event_tracker = Analytics::EventTracker.new(mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(self.owner))
-    event_tracker.track_charge(-1 * service_fee_amount_cents/100)
   end
 
   private

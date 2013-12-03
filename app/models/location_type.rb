@@ -6,5 +6,6 @@ class LocationType < ActiveRecord::Base
 
   belongs_to :instance
   has_many :locations
+  has_many :listings, :through => :locations
 
 end

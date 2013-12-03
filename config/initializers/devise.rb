@@ -20,5 +20,7 @@ Devise.setup do |config|
   config.http_authenticatable_on_xhr = false
 
   config.password_length = 6..128
-end
 
+  # Setup our custom expiring URL token authentication strategy
+  require 'temporary_token_authenticatable'
+end
