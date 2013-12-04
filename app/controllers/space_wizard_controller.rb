@@ -21,6 +21,7 @@ class SpaceWizardController < ApplicationController
   def list
     @company ||= @user.companies.build
     @location ||= @company.locations.build
+    @location.should_name_be_required = true
     @listing ||= @location.listings.build
     @photos = @user.photos.where("content_type = 'Listing' AND content_id IS NOT NULL") || nil
     event_tracker.viewed_list_your_bookable
@@ -36,6 +37,7 @@ class SpaceWizardController < ApplicationController
 
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.attributes = params[:user]
+    @user.companies.first.try(:locations).try(:first).try {|l| l.should_name_be_required = true}
     if params[:save_as_draft]
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.save(:validate => false)
