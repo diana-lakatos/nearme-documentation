@@ -16,11 +16,12 @@ class ListingTest < ActiveSupport::TestCase
     should validate_presence_of(:listing_type_id)
     should validate_numericality_of(:quantity)
 
+    should validate_numericality_of(:quantity).only_integer
     should allow_value(10).for(:quantity)
     should_not allow_value(-10).for(:quantity)
 
-    should allow_value('x' * 250).for(:description)
-    should_not allow_value('x' * 251).for(:description)
+    should ensure_length_of(:description).is_at_most(250)
+    should ensure_length_of(:name).is_at_most(50)
 
     should_not allow_value([]).for(:photos)
   end

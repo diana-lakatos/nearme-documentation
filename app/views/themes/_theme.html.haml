@@ -33,5 +33,5 @@
 
 - Theme::COLORS.each_with_index do |color, index|
   = f.input "color_#{color}", :label => color.humanize do 
-    = f.text_field "color_#{color}",{ :type => :color, :value => f.object.send("color_#{color}").presence || Theme::COLORS_DEFAULT_VALUES[index], 'data-default' => Theme::COLORS_DEFAULT_VALUES[index], 'data-color' => color}
+    = f.text_field "color_#{color}",{ :type => :color, :value => f.object.hex_color(color).presence || hexify(Theme::COLORS_DEFAULT_VALUES[index]), 'data-default' => hexify(Theme::COLORS_DEFAULT_VALUES[index]), 'data-color' => color}
     = link_to "default", '', 'data-reset' => color

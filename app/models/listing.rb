@@ -49,9 +49,10 @@ class Listing < ActiveRecord::Base
   after_destroy :notify_user_about_change
 
   # == Validations
+  validates :name, length: { maximum: 50 }
   validates_presence_of :location, :name, :quantity, :listing_type_id
   validates_presence_of :description
-  validates_numericality_of :quantity, greater_than: 0
+  validates_numericality_of :quantity, greater_than: 0, only_integer: true
   validates_length_of :description, :maximum => 250
   validates_with PriceValidator
   validates :hourly_reservations, :inclusion => { :in => [true, false], :message => "must be selected" }, :allow_nil => false
@@ -71,7 +72,8 @@ class Listing < ActiveRecord::Base
   delegate :creator, :creator=, to: :location
   delegate :administrator, :to => :location, :allow_nil => true
   delegate :name, to: :creator, prefix: true
-  delegate :service_fee_percent, to: :location, allow_nil: true
+  delegate :service_fee_guest_percent, to: :location, allow_nil: true
+  delegate :service_fee_host_percent, to: :location, allow_nil: true
   delegate :to_s, to: :name
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description,

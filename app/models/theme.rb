@@ -39,7 +39,9 @@ class Theme < ActiveRecord::Base
   COLORS.each do |color|
     validates "color_#{color}".to_sym, :hex_color => true, :allow_blank => true
   end
-  
+
+  before_validation :unhexify_colors
+
   # If true, will skip compiling the theme when saving
   attr_accessor :skip_compilation
 
@@ -130,11 +132,28 @@ class Theme < ActiveRecord::Base
     raise ArgumentError unless COLORS.include?(color.to_s)
     value = send(:"color_#{color}")
     return "" if value.to_s.empty?
-    "#" + value
+    self.class.hexify(value)
   end
 
   def favicon_image_changed?
     attributes[:favicon_image] ? super : false
+  end
+
+  def self.hexify(color)
+    '#' + color.to_s.delete('#')
+  end
+
+  def self.unhexify(color)
+    color.to_s.delete('#')
+  end
+
+  private
+
+  def unhexify_colors
+    COLORS.each do |color|
+      value = self.send("color_#{color}")
+      self.send(:"color_#{color}=", Theme.unhexify(value))
+    end
   end
 end
 

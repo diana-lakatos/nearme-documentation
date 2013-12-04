@@ -23,8 +23,7 @@ class LocationTest < ActiveSupport::TestCase
   should_not allow_value('xxx').for(:currency)
   should allow_value('USD').for(:currency)
 
-  should allow_value('x' * 250).for(:description)
-  should_not allow_value('x' * 251).for(:description)
+  should ensure_length_of(:description).is_at_most(250)
 
   should "be valid even if its listing is not valid" do
     @location = FactoryGirl.create(:location)

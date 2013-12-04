@@ -21,8 +21,8 @@ class ReservationDrop < BaseDrop
     @reservation.subtotal_price
   end
 
-  def service_fee
-    @reservation.service_fee
+  def service_fee_guest
+    @reservation.service_fee_guest
   end
 
   def total_price

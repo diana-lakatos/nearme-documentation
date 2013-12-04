@@ -68,7 +68,8 @@ class Reservation < ActiveRecord::Base
 
   monetize :total_amount_cents
   monetize :subtotal_amount_cents
-  monetize :service_fee_amount_cents
+  monetize :service_fee_amount_guest_cents
+  monetize :service_fee_amount_host_cents
   monetize :successful_payment_amount_cents
 
   state_machine :state, :initial => :unconfirmed do
@@ -160,7 +161,8 @@ class Reservation < ActiveRecord::Base
 
   delegate :location, to: :listing
   delegate :creator, :administrator, to: :listing, prefix: true
-  delegate :service_fee_percent, to: :listing, allow_nil: true
+  delegate :service_fee_guest_percent, to: :listing, allow_nil: true
+  delegate :service_fee_host_percent, to: :listing, allow_nil: true
 
   def user=(value)
     self.owner = value
@@ -221,15 +223,19 @@ class Reservation < ActiveRecord::Base
   end
 
   def total_amount_cents
-    subtotal_amount_cents + service_fee_amount_cents rescue nil
+    subtotal_amount_cents + service_fee_amount_guest_cents rescue nil
   end
 
   def subtotal_amount_cents
     super || price_calculator.price.cents rescue nil
   end
 
-  def service_fee_amount_cents
-    super || service_fee_calculator.service_fee.cents rescue nil
+  def service_fee_amount_guest_cents
+    super || service_fee_calculator.service_fee_guest.cents rescue nil
+  end
+
+  def service_fee_amount_host_cents
+    super || service_fee_calculator.service_fee_host.cents rescue nil
   end
 
   def total_amount_dollars
@@ -276,7 +282,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def has_service_fee?
-    !service_fee_amount.to_f.zero?
+    !service_fee_amount_guest.to_f.zero?
   end
 
   def paid?
@@ -325,14 +331,16 @@ class Reservation < ActiveRecord::Base
 
     def set_costs
       self.subtotal_amount_cents = price_calculator.price.try(:cents)
-      self.service_fee_amount_cents = if credit_card_payment?
-        service_fee_calculator.service_fee.try(:cents)
+      if credit_card_payment?
+        self.service_fee_amount_guest_cents = service_fee_calculator.service_fee_guest.try(:cents)
+        self.service_fee_amount_host_cents = service_fee_calculator.service_fee_host.try(:cents)
       else
         # This feels a bit hax, but the this is a specific edge case where we don't
         # apply a service fee to manual payments at this stage. However, we still
         # need to calculate and present the service fee as the payment type for
         # supported listings is not confirmed until the executes the reservation.
-        0
+        self.service_fee_amount_guest_cents = 0
+        self.service_fee_amount_host_cents = 0
       end
     end
 
@@ -360,7 +368,8 @@ class Reservation < ActiveRecord::Base
       #     have more than one ReservationCharge.
       charge = reservation_charges.create!(
         subtotal_amount: subtotal_amount,
-        service_fee_amount: service_fee_amount
+        service_fee_amount_guest: service_fee_amount_guest,
+        service_fee_amount_host: service_fee_amount_host
       )
 
       self.payment_status = if charge.paid?
