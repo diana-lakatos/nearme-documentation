@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131204120006) do
+ActiveRecord::Schema.define(:version => 20131204161403) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -280,8 +280,8 @@ ActiveRecord::Schema.define(:version => 20131204120006) do
     t.string   "lessee"
     t.boolean  "skip_company",                                            :default => false
     t.boolean  "default_instance",                                        :default => false
-    t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",  :precision => 5, :scale => 2, :default => 0.0
+    t.text     "pricing_options"
   end
 
   create_table "listing_messages", :force => true do |t|
@@ -514,10 +514,13 @@ ActiveRecord::Schema.define(:version => 20131204120006) do
     t.datetime "request_guest_rating_email_sent_at"
     t.datetime "request_host_rating_email_sent_at"
     t.integer  "service_fee_amount_host_cents",      :default => 0,         :null => false
+    t.integer  "platform_context_detail_id"
+    t.string   "platform_context_detail_type"
   end
 
   add_index "reservations", ["listing_id"], :name => "index_reservations_on_listing_id"
   add_index "reservations", ["owner_id"], :name => "index_reservations_on_owner_id"
+  add_index "reservations", ["platform_context_detail_id"], :name => "index_reservations_on_platform_context_detail_id"
 
   create_table "search_notifications", :force => true do |t|
     t.string   "email"
@@ -666,7 +669,6 @@ ActiveRecord::Schema.define(:version => 20131204120006) do
     t.text     "current_location"
     t.text     "company_name"
     t.text     "skills_and_interests"
-    t.text     "instagram_url"
     t.string   "slug"
     t.float    "last_geolocated_location_longitude"
     t.float    "last_geolocated_location_latitude"

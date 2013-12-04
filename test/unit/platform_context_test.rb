@@ -39,12 +39,14 @@ class PlatformContextTest < ActiveSupport::TestCase
     should 'default instance if domain is unknown' do
       rq = PlatformContext.new('something.weird.example.com')
       assert_equal Instance.default_instance, rq.instance
+      assert_equal Instance.default_instance, rq.platform_context_detail
       assert_equal Instance.default_instance.theme, rq.theme
     end
 
     should 'default instance if domain is desksnear.me' do
       rq = PlatformContext.new('desksnear.me')
       assert_equal Instance.default_instance, rq.instance
+      assert_equal Instance.default_instance, rq.platform_context_detail
       assert_equal Instance.default_instance.theme, rq.theme
     end
 
@@ -53,6 +55,7 @@ class PlatformContextTest < ActiveSupport::TestCase
       rq = PlatformContext.new(host)
       assert_equal @example_instance, rq.instance
       assert_equal @example_instance.theme, rq.theme
+      assert_equal @example_instance, rq.platform_context_detail
     end
 
     context 'company white label' do
@@ -66,6 +69,7 @@ class PlatformContextTest < ActiveSupport::TestCase
         rq = PlatformContext.new(@host)
         assert_equal @example_company.instance, rq.instance
         assert_equal @example_company.theme, rq.theme
+        assert_equal @example_company, rq.platform_context_detail
       end
 
       should 'default instance if company linked to domain that matches request.host has white label disabled' do
@@ -73,6 +77,7 @@ class PlatformContextTest < ActiveSupport::TestCase
         rq = PlatformContext.new(@host)
         assert_equal Instance.default_instance, rq.instance
         assert_equal Instance.default_instance.theme, rq.theme
+        assert_equal Instance.default_instance, rq.platform_context_detail
       end
     end
 
@@ -87,6 +92,7 @@ class PlatformContextTest < ActiveSupport::TestCase
         assert_equal @example_partner, rq.partner
         assert_equal @example_partner.theme, rq.theme
         assert_equal @example_partner.instance, rq.instance
+        assert_equal @example_partner, rq.platform_context_detail
       end
 
     end

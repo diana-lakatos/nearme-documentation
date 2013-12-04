@@ -88,7 +88,7 @@ When /^the reservation expires/ do
   visit bookings_dashboard_path
 
   reservation = User.find_by_name("Keith Contractor").reservations.first
-  reservation.perform_expiry!(PlatformContext.new)
+  reservation.perform_expiry!
 
   visit bookings_dashboard_path
 end

@@ -17,7 +17,7 @@ class ReservationRequest < Form
 
   validate :validate_phone_and_country
 
-  def initialize(listing, user, attributes = {})
+  def initialize(listing, user, platform_context, attributes = {})
     @listing = listing
     @user = user
 
@@ -25,6 +25,7 @@ class ReservationRequest < Form
       @reservation = listing.reservations.build
       @reservation.payment_method = payment_method
       @reservation.user = user
+      @reservation.platform_context_detail = platform_context.platform_context_detail
       @reservation = @reservation.decorate
     end
 
