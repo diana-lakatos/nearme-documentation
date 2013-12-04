@@ -18,7 +18,6 @@ class ApplicationController < ActionController::Base
   before_filter :register_platform_context_as_lookup_context_detail
   before_filter :redirect_if_domain_not_valid
 
-
   def current_user
     super.try(:decorate)
   end

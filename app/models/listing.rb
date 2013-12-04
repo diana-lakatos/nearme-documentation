@@ -38,7 +38,7 @@ class Listing < ActiveRecord::Base
   scope :latest,   order("listings.created_at DESC")
   scope :visible,  where(:enabled => true)
   scope :searchable, active.visible
-  scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where('listings.listing_type_id IN (?)', listing_types_ids) }
+  scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where('listings.listing_type_id IN (?)', listing_types_ids) if listing_types_ids }
   
   scope :with_listing_messages, joins(:listing_messages).
         group('listings.id HAVING count(listing_messages.id) > 0')

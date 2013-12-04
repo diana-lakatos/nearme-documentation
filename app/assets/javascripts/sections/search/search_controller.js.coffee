@@ -20,7 +20,6 @@ class Search.SearchController extends Search.Controller
     @bindEvents()
     @initializeEndlessScrolling()
     @reinitializeEndlessScrolling = false
-    @updateFiltersBasedOnListingsIds()
     setTimeout((=> @processingResults = false), 1000)
 
   bindEvents: ->
@@ -226,7 +225,6 @@ class Search.SearchController extends Search.Controller
       @initializeEndlessScrolling()
     @geocodeSearchQuery =>
       @triggerSearchAndHandleResults =>
-        @updateFiltersBasedOnListingsIds()
         @updateMapWithListingResults() if @map?
 
   # Trigger the search after waiting a set time for further updated user input/filters
@@ -301,23 +299,3 @@ class Search.SearchController extends Search.Controller
           param["value"] = (if $(this).hasClass('map') then 'map' else 'list')
       _url = "#{url}?#{$.param(params)}&ignore_search_event=1"
       $(this).attr('href', _url)
-    
-  updateFiltersBasedOnListingsIds: ->
-    for filter_wrapper in $('[data-filter]')
-      div_with_listing_ids = $("[data-#{$(filter_wrapper).data('div-cached-listings-ids')}]")
-      if div_with_listing_ids.length > 0
-        result_listing_ids = div_with_listing_ids.data('ids')
-        for filter_option in $(filter_wrapper).find('input[data-listings-ids]')
-          intersection_count = (_.intersection result_listing_ids, $(filter_option).data('listings-ids')).length
-          $(filter_option).siblings('.count').html("(#{intersection_count})")
-          if intersection_count == 0 && !$(filter_option).prop('checked')
-            $(filter_option).closest('.filter-option').hide()
-          else
-            $(filter_option).closest('.filter-option').show()
-      else
-        for filter_option in $(filter_wrapper).find('input[data-listings-ids]')
-          $(filter_option).siblings('.count').html("(#{0})")
-          if $(filter_option).prop('checked')
-            $(filter_option).closest('.filter-option').show()
-          else
-            $(filter_option).closest('.filter-option').hide()
