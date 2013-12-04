@@ -17,6 +17,10 @@
               = f.text_area :body
             .span2.clearfix
               = f.submit "Send", class: "btn btn-large btn-green"
+      - else
+        .listing-deleted
+          .body
+            You can no longer send messages regarding this listing, as it has been deleted by the host.
 
       - @listing_messages.each do |listing_message|
         = render 'listing_message_for_show', listing_message: listing_message
