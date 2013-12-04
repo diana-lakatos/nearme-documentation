@@ -13,7 +13,7 @@ class Location < ActiveRecord::Base
     :city, :state, :country, :street, :address_components, :location_type_id, :photos,
     :administrator_id, :name
   attr_accessor :local_geocoding # set this to true in js
-  attr_accessor :should_name_be_required
+  attr_accessor :name_required
 
   liquid_methods :name
 
@@ -51,7 +51,7 @@ class Location < ActiveRecord::Base
 
   validates_presence_of :company, :address, :latitude, :longitude, :location_type_id, :currency
   validates_presence_of :description 
-  validates_presence_of :name, :if => :should_name_be_required
+  validates_presence_of :name, :if => :name_required
   validates :email, email: true, allow_nil: true
   validates :currency, currency: true, allow_nil: false
   validates_length_of :description, :maximum => 250

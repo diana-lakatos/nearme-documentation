@@ -1,6 +1,6 @@
 - only_inputs = [] if only_inputs.nil?
 
-= f.input :name, :label => 'Location name', :hint => "A unique and descriptive title, for example 'Beautiful sunny space in downtown SoMa'.", :required => f.object.should_name_be_required if only_inputs.empty? || only_inputs.include?(:name)
+= f.input :name, :label => 'Location name', :hint => "A unique and descriptive title, for example 'Beautiful sunny space in downtown SoMa'.", :required => f.object.name_required if only_inputs.empty? || only_inputs.include?(:name)
 - if only_inputs.empty? || only_inputs.include?(:address)
   %div{:class => "control-group #{"error" if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)}"}
     = f.label :address, :class => "control-label" do
