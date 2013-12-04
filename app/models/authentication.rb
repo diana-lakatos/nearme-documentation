@@ -2,7 +2,7 @@ class Authentication < ActiveRecord::Base
   class InvalidToken < Exception; end;
 
   attr_accessible :user_id, :provider, :uid, :info, :token, :secret,
-    :token_expires_at, :token_expires, :token_expired
+    :token_expires_at, :token_expires, :token_expired, :profile_url
 
   belongs_to :user
 
@@ -17,6 +17,10 @@ class Authentication < ActiveRecord::Base
   scope :with_valid_token, -> {
     where('authentications.token_expires_at > ? OR authentications.token_expires_at IS NULL').
     where(token_expired: false)
+  }
+
+  scope :with_profile_url, -> {
+    where('profile_url IS NOT NULL')
   }
 
   after_create :find_friends

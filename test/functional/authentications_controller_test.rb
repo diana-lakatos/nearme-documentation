@@ -54,7 +54,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
       request.env['omniauth.auth'] = {
         'provider' => @provider,
         'uid' => @uid,
-        'info' => { 'email' => @email, 'name' => 'maciek' },
+        'info' => { 'email' => @email, 'name' => 'maciek', 'urls' => {'Twitter' => 'https://twitter.com/desksnearme'}},
         'credentials' => {
           'token' => @token,
           'secret' => @secret,
@@ -104,6 +104,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
 
       assert_equal @token, @user.authentications.last.token
       assert_equal @secret, @user.authentications.last.secret
+      assert_equal 'https://twitter.com/desksnearme', @user.authentications.last.profile_url
     end
 
     should "successfully create new authentication as alternative to setting password" do

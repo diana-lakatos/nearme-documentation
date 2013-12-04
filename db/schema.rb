@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131202143625) do
+ActiveRecord::Schema.define(:version => 20131203145113) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(:version => 20131202143625) do
     t.datetime "token_expires_at"
     t.boolean  "token_expired",    :default => true
     t.boolean  "token_expires",    :default => true
+    t.text     "profile_url"
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
@@ -663,9 +664,6 @@ ActiveRecord::Schema.define(:version => 20131202143625) do
     t.text     "current_location"
     t.text     "company_name"
     t.text     "skills_and_interests"
-    t.text     "facebook_url"
-    t.text     "twitter_url"
-    t.text     "linkedin_url"
     t.text     "instagram_url"
     t.string   "slug"
     t.float    "last_geolocated_location_longitude"
