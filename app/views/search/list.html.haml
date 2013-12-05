@@ -8,7 +8,6 @@
     = render partial: 'search/list/listing', collection: listings
     = will_paginate listings
     = render 'shared/loading_spinner'
-    = render 'filters_listing_ids_cache'
 - elsif !@located
   %section#results.no_results
     = render 'shared/loading_spinner'

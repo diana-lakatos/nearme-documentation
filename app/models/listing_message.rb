@@ -60,6 +60,10 @@ class ListingMessage < ActiveRecord::Base
     message_from_guest? ? listing.administrator : owner
   end
 
+  def listing_with_deleted
+    @listing_with_deleted ||= Listing.with_deleted.find_by_id(listing_id)
+  end
+
   private
 
   def kind_for(user)
