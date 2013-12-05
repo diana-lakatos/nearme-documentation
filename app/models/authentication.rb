@@ -19,13 +19,9 @@ class Authentication < ActiveRecord::Base
     where(token_expired: false)
   }
 
-  scope :with_profile_url, -> {
-    where('profile_url IS NOT NULL')
-  }
-
   after_create :find_friends
 
-  AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter" ]
+  AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram"]
 
   def social_connection
     @social_connection ||= "Authentication::#{provider_name.capitalize}Provider".constantize.new(self)

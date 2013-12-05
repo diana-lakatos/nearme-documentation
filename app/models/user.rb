@@ -464,20 +464,26 @@ class User < ActiveRecord::Base
   end
 
   def facebook_url
-    provider_url('facebook')
+    social_url('facebook')
   end
 
   def twitter_url
-    provider_url('twitter')
+    social_url('twitter')
   end
 
   def linkedin_url
-    provider_url('linkedin')
+    social_url('linkedin')
+  end
+
+  def linkedin_url
+    social_url('linkedin')
   end
 
   private
-  def provider_url(provider)
-    authentications.where(provider: provider).with_profile_url.last.try(:profile_url)
+  def social_url(provider)
+    authentications.where(provider: provider).
+      where('profile_url IS NOT NULL').
+      order('created_at asc').last.try(:profile_url)
   end
 
 end

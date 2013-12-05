@@ -78,6 +78,9 @@ module DesksnearMe
     config.twitter_key = "Xas2mKTWPVpqrb5FXUnDg"
     config.twitter_secret = "nR8pjJ9YcU3eK9pKUPFBNxZuJ5oMci2M96SpZ47Ik"
 
+    config.instagram_key = "c997b1eee0d34c64b6a85793727e88c7"
+    config.instagram_secret = "a4a08b7b3d58485987a36ebd87f12a90"
+
     config.exceptions_app = self.routes
 
     # custom rewrites specified in lib/legacy_redirect_handler.rb

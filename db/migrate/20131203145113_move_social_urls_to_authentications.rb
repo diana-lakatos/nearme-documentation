@@ -29,6 +29,7 @@ class MoveSocialUrlsToAuthentications < ActiveRecord::Migration
     remove_column :users, :facebook_url
     remove_column :users, :twitter_url
     remove_column :users, :linkedin_url
+    remove_column :users, :instagram_url
   end
 
 end

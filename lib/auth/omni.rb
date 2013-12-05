@@ -94,14 +94,15 @@ module Auth
     end
 
     def profile_url
-      return nil if @auth_params['info']['urls'].blank?
       case provider
       when 'facebook'
-        @auth_params['info']['urls']['Facebook']
+        @auth_params['info']['urls']['Facebook'] if @auth_params['info']['urls'].present?
       when 'twitter'
-        @auth_params['info']['urls']['Twitter']
+        @auth_params['info']['urls']['Twitter'] if @auth_params['info']['urls'].present?
       when 'linkedin'
-        @auth_params['info']['urls']['public_profile']
+        @auth_params['info']['urls']['public_profile'] if @auth_params['info']['urls'].present?
+      when 'instagram'
+        "http://instagram.com/#{@auth_params['info']['nickname']}"
       end
     end
 
