@@ -11,7 +11,7 @@
 
 :javascript
   var find_correct_ip = function(details){
-    $.ajax({url: '#{store_correct_ip_path}', type: 'PUT', data: { ip: details.ip, return_to: $('meta["name=redirect-to"]').attr('content') }});
+    $.ajax({url: '#{store_correct_ip_path}', type: 'PUT', data: { ip: details.ip, return_to: $('meta[name=redirect-to]').attr('content') }});
   }
   var set_ip_in_mixpanel = function(details){
     mixpanel.name_tag(#{raw current_user.try(:name).try(:to_json)});
