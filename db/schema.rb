@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131204084920) do
+ActiveRecord::Schema.define(:version => 20131204120006) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -372,6 +372,7 @@ ActiveRecord::Schema.define(:version => 20131204084920) do
     t.string   "address2"
     t.string   "postcode"
     t.integer  "administrator_id"
+    t.string   "name"
   end
 
   add_index "locations", ["administrator_id"], :name => "index_locations_on_administrator_id"
