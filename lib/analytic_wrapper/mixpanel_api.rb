@@ -27,6 +27,9 @@ class AnalyticWrapper::MixpanelApi
   # triggered events.
   attr_reader :request_details
 
+  # Request object passed from controller
+  attr_reader :request
+
   # Creates a new mixpanel API interface instance
   def self.mixpanel_instance(options = {})
     Mixpanel::Tracker.new(DesksnearMe::Application.config.mixpanel[:token], options)
@@ -48,6 +51,7 @@ class AnalyticWrapper::MixpanelApi
     @anonymous_identity = options[:anonymous_identity] || (generate_anonymous_identity unless @current_user)
     @session_properties = (options[:session_properties] || {}).with_indifferent_access
     @request_details = (options[:request_details] || {}).with_indifferent_access
+    @request = options[:request]
 
     extract_properties_from_params(options[:request_params])
   end
@@ -77,9 +81,13 @@ class AnalyticWrapper::MixpanelApi
     properties.reverse_merge!(session_properties)
     properties.reverse_merge!(request_details)
 
-    # Trigger tracking the event
-    MixpanelApiJob.perform(@mixpanel, :track, event_name, properties, options)
-    Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
+    if requested_by_bot?
+      Rails.logger.info "Bot detected! Not tracking mixpanel event: #{event_name}, #{properties}, #{options}"
+    else
+      # Trigger tracking the event
+      MixpanelApiJob.perform(@mixpanel, :track, event_name, properties, options)
+      Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
+    end
   end
 
   def pixel_track_url(event_name, properties, options = {})
@@ -112,6 +120,10 @@ class AnalyticWrapper::MixpanelApi
   # Returns the distinct ID for the user of the current session.
   def distinct_id
     current_user.try(:id) || anonymous_identity
+  end
+
+  def requested_by_bot?
+    @request && @request.bot?
   end
 
   private

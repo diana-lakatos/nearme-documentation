@@ -192,6 +192,7 @@ GEM
       multi_json (~> 1.0)
       multi_xml (>= 0.5.2)
     httpauth (0.2.0)
+    httpclient (2.3.4.1)
     i18n (0.6.8)
     inherited_resources (1.4.0)
       has_scope (~> 0.5.0)
@@ -425,6 +426,8 @@ GEM
       raindrops (~> 0.7)
     useragent (0.6.0)
     vcr (2.4.0)
+    voight_kampff (0.1.4)
+      httpclient (> 2.1.0)
     warden (1.2.3)
       rack (>= 1.0)
     webmock (1.13.0)
@@ -528,5 +531,6 @@ DEPENDENCIES
   unicorn
   useragent
   vcr
+  voight_kampff
   webmock
   will_paginate

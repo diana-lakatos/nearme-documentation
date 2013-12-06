@@ -64,6 +64,7 @@ gem 'chameleon'
 gem 'useragent'
 gem 'mixpanel'
 gem 'mixpanel_client'
+gem 'voight_kampff'
 
 gem 'rest-client'
 
