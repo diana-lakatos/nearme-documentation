@@ -11,8 +11,9 @@ class Location < ActiveRecord::Base
     :formatted_address, :availability_rules_attributes, :postcode, :phone,
     :availability_template_id, :special_notes, :listings_attributes, :suburb,
     :city, :state, :country, :street, :address_components, :location_type_id, :photos,
-    :administrator_id
+    :administrator_id, :name
   attr_accessor :local_geocoding # set this to true in js
+  attr_accessor :name_required
 
   liquid_methods :name
 
@@ -50,6 +51,7 @@ class Location < ActiveRecord::Base
 
   validates_presence_of :company, :address, :latitude, :longitude, :location_type_id, :currency
   validates_presence_of :description 
+  validates_presence_of :name, :if => :name_required
   validates :email, email: true, allow_nil: true
   validates :currency, currency: true, allow_nil: false
   validates_length_of :description, :maximum => 250
@@ -85,7 +87,7 @@ class Location < ActiveRecord::Base
   end
 
   def name
-    [company.name, street].compact.join(" @ ")
+    read_attribute(:name).presence || [company.name, street].compact.join(" @ ")
   end
 
   def admin?(user)
@@ -97,7 +99,7 @@ class Location < ActiveRecord::Base
   end
 
   def street
-    super.presence || address.split(",")[0]
+    super.presence || address.try{|a| a.split(",")[0] }
   end
 
   def suburb
