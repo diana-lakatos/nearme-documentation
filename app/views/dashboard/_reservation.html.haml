@@ -15,7 +15,7 @@
           %span= reservation.state.capitalize
         %div{:class => reservation.archived? ? 'span3' : 'span2'}
           - if reservation.listing.hourly_reservations?
-            %a.dates{href: '#', 'data-reservation-hours' => reservation_period.hourly_summary(true)}
+            %a.dates{href: '#', 'data-reservation-hours' => reservation.hourly_summary_for_first_period(false)}
               = reservation.short_dates
           - else
             %a.dates{href: '#', data: { :dates => reservation.dates_to_array } }

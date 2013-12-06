@@ -19,7 +19,6 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_if_domain_not_valid
   before_filter :set_raygun_custom_data
 
-
   def current_user
     super.try(:decorate)
   end

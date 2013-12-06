@@ -91,6 +91,18 @@ section.listing_messages {
   }
 }
 
+.listing-deleted {
+  .body {
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid $light-gray;
+    color: $gray80;
+    background-color: $gray240;
+    @include border-radius($border-radius-default);
+    text-align: center;
+  }
+}
+
 .listing-message-for-show {
 
   margin-bottom: $padding-default;

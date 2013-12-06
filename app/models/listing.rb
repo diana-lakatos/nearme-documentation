@@ -38,7 +38,7 @@ class Listing < ActiveRecord::Base
   scope :latest,   order("listings.created_at DESC")
   scope :visible,  where(:enabled => true)
   scope :searchable, active.visible
-  scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where('listings.listing_type_id IN (?)', listing_types_ids) }
+  scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where('listings.listing_type_id IN (?)', listing_types_ids) if listing_types_ids }
   
   scope :with_listing_messages, joins(:listing_messages).
         group('listings.id HAVING count(listing_messages.id) > 0')
@@ -79,7 +79,7 @@ class Listing < ActiveRecord::Base
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description,
     :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
     :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type, :draft, :enabled,
-    :last_request_photos_sent_at, :activated_at, :amenity_ids, :rank
+    :last_request_photos_sent_at, :activated_at, :amenity_ids, :rank, :capacity
 
   attr_accessor :distance_from_search_query, :photo_not_required
 

@@ -331,6 +331,7 @@ ActiveRecord::Schema.define(:version => 20131204120006) do
     t.datetime "last_request_photos_sent_at"
     t.datetime "activated_at"
     t.integer  "rank",                        :default => 0
+    t.integer  "capacity"
   end
 
   add_index "listings", ["listing_type_id"], :name => "index_listings_on_listing_type_id"

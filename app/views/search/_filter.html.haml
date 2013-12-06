@@ -7,6 +7,5 @@
     - options.each do |option|
       %li.filter-option
         %label.checkbox.small-checkbox
-          %input{:type => 'checkbox', :name => input_name, :value => option[0], :checked => selected_values.include?(option[0].to_s), :'data-listings-ids' => option[2].try(:sort)}
+          %input{:type => 'checkbox', :name => input_name, :value => option[0], :checked => selected_values.include?(option[0].to_s)}
           #{option[1]} 
-          %span.count
