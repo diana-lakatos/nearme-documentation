@@ -1,8 +1,7 @@
 require "will_paginate/array"
 class SearchController < ApplicationController
 
-  helper_method :search, :query, :listings, :result_view, :search_notification,
-    :location_types_listings_ids, :listing_types_listings_ids, :industries_listings_ids
+  helper_method :search, :query, :listings, :result_view, :search_notification
   before_filter :set_options_for_filters
 
   SEARCH_RESULT_VIEWS = %w(list map)
@@ -46,23 +45,10 @@ class SearchController < ApplicationController
     @listings ||=  get_listings
   end
 
-  def listing_types_listings_ids
-    @listing_types_listings_ids
-  end
-
-  def location_types_listings_ids
-    @location_types_listings_ids
-  end
-
-  def industries_listings_ids
-    @industries_listings_ids
-  end
-
   def get_listings
     params_object = Listing::Search::Params::Web.new(params)
     @search_params = params.merge({:midpoint => params_object.midpoint, :radius => params_object.radius, :available_dates => params_object.available_dates, :query => params_object.query})
     @collection = Listing::SearchFetcher.new(search_scope, @search_params).listings
-    get_listing_ids_for_each_filter
     params[:page] ||= 1
     if result_view == 'list'
       @collection = WillPaginate::Collection.create(params[:page], 20, @collection.count) do |pager|
@@ -128,16 +114,10 @@ class SearchController < ApplicationController
     @search_notification ||= SearchNotification.new(query: params[:q], latitude: params[:lat], longitude: params[:lng])
   end
 
-  def get_listing_ids_for_each_filter
-    collection_ids = @collection.try(:collect, &:id)
-    %w(listing_types_ids location_types_ids industries_ids).each do |filter_param_key|
-      instance_variable_set("@#{filter_param_key.gsub('_ids', '')}_listings_ids", @search_params[filter_param_key].present? ? Listing::SearchFetcher.new(search_scope, @search_params.except(filter_param_key)).listings.try(:collect, &:id) : collection_ids)
-    end
-  end
-
   def set_options_for_filters
     @filterable_location_types = platform_context.instance.location_types
     @filterable_listing_types = platform_context.instance.listing_types
     @filterable_industries = Industry.with_listings.all if platform_context.instance.is_desksnearme?
   end
+
 end
