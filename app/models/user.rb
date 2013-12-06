@@ -475,8 +475,8 @@ class User < ActiveRecord::Base
     social_url('linkedin')
   end
 
-  def linkedin_url
-    social_url('linkedin')
+  def instagram_url
+    social_url('instagram')
   end
 
   private
