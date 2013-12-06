@@ -11,14 +11,15 @@ class Listing
     end
 
     def listings
-      filtered_listings = []
-      filtered_locations.includes(:listings).each do |location|
-        @listings = location.listings.searchable
-        @listings = @listings.filtered_by_listing_types_ids(@filters[:listing_types_ids]) if @filters[:listing_types_ids]
-        @listings.each do |listing|
-          listing.distance_from_search_query = location.distance if location.respond_to?(:distance)
-          filtered_listings << listing
-        end
+      locations = filtered_locations
+
+      filtered_listings = Listing.searchable.where(location_id: locations.map(&:id))
+      filtered_listings = filtered_listings.filtered_by_listing_types_ids(@filters[:listing_types_ids]) if @filters[:listing_types_ids]
+
+      filtered_listings.each do |listing|
+        location = locations.detect { |l| l.id == listing.location_id } # Could be faster with a hash table
+        listing.location = location # Cache location association without query
+        listing.distance_from_search_query = location.distance if location.respond_to?(:distance)
       end
 
       # Order in top cities
