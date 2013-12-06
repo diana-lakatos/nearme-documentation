@@ -69,7 +69,9 @@ class SpaceWizardController < ApplicationController
   private
 
   def is_photo_admin?(photo, user)
-    photo.creator == user || photo.content.try('administrator') == user
+    return true if photo.creator == user                         # if the user created the photo
+    return true if photo.content.try('administrator') == user    # if the user is an admin of the photos content
+    return true if @company.listings.include?(photo.content)     # if the photo content is a listing and belongs to company
   end
 
   def find_user
