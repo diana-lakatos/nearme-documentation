@@ -39,7 +39,8 @@ module Auth
                                            :secret => secret,
                                            :token_expires_at => expires_at,
                                            :token_expires => expires_at ? true : false,
-                                           :token_expired => false)
+                                           :token_expired => false,
+                                           :profile_url => profile_url)
 
       current_user.use_social_provider_image(@auth_params['info']['image'])
       current_user.save!
@@ -90,6 +91,19 @@ module Auth
 
     def secret
       @auth_params['credentials']['secret']
+    end
+
+    def profile_url
+      case provider
+      when 'facebook'
+        @auth_params['info']['urls']['Facebook'] if @auth_params['info']['urls'].present?
+      when 'twitter'
+        @auth_params['info']['urls']['Twitter'] if @auth_params['info']['urls'].present?
+      when 'linkedin'
+        @auth_params['info']['urls']['public_profile'] if @auth_params['info']['urls'].present?
+      when 'instagram'
+        "http://instagram.com/#{@auth_params['info']['nickname']}"
+      end
     end
 
     def expires_at

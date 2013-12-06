@@ -9,12 +9,15 @@ module Social
         url: "http://facebook.com/",
         auth: "OAuth 2" }
     end
+
     def self.meta_for_user(user)
       self.meta.merge(linked: self.user_linked?(user))
     end
+
     def self.user_linked?(user)
       user.linked_to?(provider_name)
     end
+
     def self.provider_name
       "facebook"
     end

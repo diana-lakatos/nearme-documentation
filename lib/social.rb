@@ -1,6 +1,7 @@
 require "social/facebook"
 require "social/twitter"
 require "social/linkedin"
+require "social/instagram"
 
 module Social
   def self.provider(provider)
@@ -13,4 +14,5 @@ module Social
     return [nil, nil] unless provider.present?
     provider.get_user_info(token, secret)
   end
+
 end

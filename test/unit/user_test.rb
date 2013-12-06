@@ -213,11 +213,17 @@ class UserTest < ActiveSupport::TestCase
   end
 
   should "have authentications" do
-    @user = User.new
-    @user.authentications << Authentication.new
-    @user.authentications << Authentication.new
+    @user = FactoryGirl.create(:user)
+    @user.authentications << FactoryGirl.build(:authentication)
+    @user.authentications << FactoryGirl.build(:authentication_linkedin)
+    @user.save
 
-    assert @user.authentications
+    assert @user.reload.authentications
+
+    assert_nil @user.facebook_url
+    assert_equal 'http://twitter.com/someone', @user.twitter_url
+    assert_equal 'http://linkedin.com/someone', @user.linkedin_url
+    assert_nil @user.instagram_url
   end
 
   should "be valid even if its company is not valid" do

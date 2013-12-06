@@ -2,7 +2,7 @@ class Authentication < ActiveRecord::Base
   class InvalidToken < Exception; end;
 
   attr_accessible :user_id, :provider, :uid, :info, :token, :secret,
-    :token_expires_at, :token_expires, :token_expired
+    :token_expires_at, :token_expires, :token_expired, :profile_url
 
   belongs_to :user
 
@@ -21,7 +21,7 @@ class Authentication < ActiveRecord::Base
 
   after_create :find_friends
 
-  AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter" ]
+  AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram"]
 
   def social_connection
     @social_connection ||= "Authentication::#{provider_name.capitalize}Provider".constantize.new(self)
