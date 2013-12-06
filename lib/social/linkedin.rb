@@ -8,12 +8,15 @@ module Social
         url: "http://linkedin.com/",
         auth: "OAuth 1.0a" }
     end
+
     def self.meta_for_user(user)
       self.meta.merge(linked: self.user_linked?(user))
     end
+
     def self.user_linked?(user)
       user.linked_to?(provider_name)
     end
+
     def self.provider_name
       "linkedin"
     end

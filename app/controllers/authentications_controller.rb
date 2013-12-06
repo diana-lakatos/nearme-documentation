@@ -5,7 +5,6 @@ class AuthenticationsController < ApplicationController
   def create
     @omniauth = request.env["omniauth.auth"]
     @oauth = Auth::Omni.new(@omniauth)
-
     # if we are logged in as X, and we try to connect authentication that belongs to Y, we raise this error to prevent re-logging. 
     if @oauth.already_connected?(current_user)
       already_connected_to_other_user

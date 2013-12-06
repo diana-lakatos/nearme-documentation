@@ -463,4 +463,27 @@ class User < ActiveRecord::Base
     User::TemporaryTokenVerifier.new(self).generate(expires_at)
   end
 
+  def facebook_url
+    social_url('facebook')
+  end
+
+  def twitter_url
+    social_url('twitter')
+  end
+
+  def linkedin_url
+    social_url('linkedin')
+  end
+
+  def instagram_url
+    social_url('instagram')
+  end
+
+  private
+  def social_url(provider)
+    authentications.where(provider: provider).
+      where('profile_url IS NOT NULL').
+      order('created_at asc').last.try(:profile_url)
+  end
+
 end

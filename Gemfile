@@ -13,6 +13,7 @@ gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook', github: 'mkdynamic/omniauth-facebook'
 gem 'omniauth-linkedin-oauth2'
+gem 'omniauth-instagram'
 
 gem 'koala', '~> 1.7.0rc1' # facebook Graph API
 gem 'linkedin-oauth2'
