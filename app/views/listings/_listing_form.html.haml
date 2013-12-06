@@ -21,7 +21,8 @@
 = f.input :name, :label => "#{platform_context.bookable_noun} name" if only_inputs.empty? || only_inputs.include?(:name)
 = f.input :description, :label => "#{platform_context.bookable_noun} description", :input_html => { :maxlength => 250} if only_inputs.empty? || only_inputs.include?(:description)
 = f.association :listing_type, :label => "#{platform_context.bookable_noun} type", :collection => platform_context.instance.listing_types, :input_html => { :class => 'selectpicker' } if only_inputs.empty? || only_inputs.include?(:listing_type)
-= f.input :quantity, :label => 'Quantity available', :placeholder => 2, :input_html => { :class => "mini" } if only_inputs.empty? || only_inputs.include?(:quantity)
+= f.input :quantity, :label => 'Quantity available', :placeholder => 2, :hint => "How many of this type of #{platform_context.bookable_noun} do you have available?", :input_html => { :class => "mini" } if only_inputs.empty? || only_inputs.include?(:quantity)
+= f.input :capacity, :placeholder => 1, :hint => "How many people does your #{platform_context.bookable_noun} accommodate?", :input_html => { :class => "mini" } if only_inputs.empty? || only_inputs.include?(:capacity)
 - unless platform_context.instance.listing_amenity_types.count.zero?
   = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
 
