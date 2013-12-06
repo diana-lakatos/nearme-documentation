@@ -96,6 +96,10 @@ gem 'timecop'
 
 gem 'newrelic_rpm'
 
+group :development, :staging do
+  gem 'rack-mini-profiler'
+end
+
 group :assets do
   gem 'uglifier', "~>2.1.0"
 end
@@ -108,6 +112,7 @@ group :development do
   gem 'quiet_assets'
   gem 'thin'
   gem 'mail_view', '~>2'
+  gem 'bullet'
 end
 
 group :test do
