@@ -2,6 +2,8 @@
 - no_footer!
 - content_for :hero do
   = render 'search/header'
+  #search-result-google-map{:'data-marker' => image_path("components/map-pin.png")}
+    #search-result-movable-google-map{:style => 'width: 100%; height: 100%;'}
 
 - if listings.any?
   %section#results.list
@@ -27,3 +29,4 @@
         = render 'search_notifications/form', search_notification: search_notification
 - content_for :domready do
   new Search.SearchController($('#listing_search form'), $("section#content.search"));
+  new Search.SearchResultsGoogleMapController($('#results'), $('#search-result-movable-google-map'));
