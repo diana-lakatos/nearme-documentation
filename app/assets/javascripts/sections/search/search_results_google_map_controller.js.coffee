@@ -18,9 +18,6 @@ class Search.SearchResultsGoogleMapController
         elementsGoogleMapWrapper = element.find('.listing-google-map')
         element.find('.listing-google-map-wrapper').hide()
 
-  @bindToolTip: (result) ->
-      result.find('.connections').tooltip(html: true, placement: 'top')
-
   initializeGoogleMap: ->
       map = SmartGoogleMap.createMap(@googleMapWrapper.get(0), {
         zoom: 14,
