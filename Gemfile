@@ -17,7 +17,7 @@ gem 'omniauth-instagram'
 
 gem 'koala', '~> 1.7.0rc1' # facebook Graph API
 gem 'linkedin-oauth2'
-gem 'twitter'
+gem 'twitter', "~> 5.2"
 
 gem 'fog'
 gem 'geocoder'
