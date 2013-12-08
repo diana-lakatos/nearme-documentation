@@ -8,14 +8,12 @@
 - else
   - enable_inputs_daily, enable_inputs_hourly, enable_inputs_free = true, false, false
 
-
 - if only_inputs.empty? || only_inputs.include?(:enabled)
-  .listing-enabled-container 
-    .control-group
-      = f.label :enabled, 'Enabled?'
-      .switch-wrapper
-        .switch{'data-on-label' => "", 'data-off-label' => "", 'data-ajax-updateable' => f.object.persisted?}
-          = f.check_box :enabled
+  .control-group
+    = f.label :enabled, 'Enabled?', :class => 'control-label'
+    .controls
+      .switch{'data-on-label' => "", 'data-off-label' => "", 'data-ajax-updateable' => f.object.persisted?}
+        = f.check_box :enabled
 
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
 = f.input :name, :label => "#{platform_context.bookable_noun} name" if only_inputs.empty? || only_inputs.include?(:name)
