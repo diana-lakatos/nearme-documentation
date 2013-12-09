@@ -40,6 +40,11 @@ en:
       try_another_search_or_enter_email: "Try another search query, or enter your email address below to be notified when a %{bookable_noun} is added at this location."
   reservations:
     no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find a %{bookable_noun} near you!</a>"
+  listing_messages:
+    inbox: 
+      zero: Inbox
+      one: "Inbox (1)"
+      other: "Inbox (%{count})"
   flash_messages:
     guest_rating:
       submitted_successfully: "Thanks, your rating was submitted successfully!"

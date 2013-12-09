@@ -3,7 +3,7 @@
     %ul
       %li
         = listing_message_navigation_link :index do
-          %span= current_user.unread_messages_count.present? ? "Inbox (#{current_user.unread_messages_count})" : "Inbox"
+          %span= t('listing_messages.inbox', count: current_user.unread_listing_message_threads_count)
       %li
         = listing_message_navigation_link :archived do
           %span Archived
