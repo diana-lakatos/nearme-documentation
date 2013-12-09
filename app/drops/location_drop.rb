@@ -15,11 +15,11 @@ class LocationDrop < BaseDrop
   end
 
   def url
-    routes.location_listing_url(@location, @location.listings.first)
+    routes.location_listing_path(@location, @location.listings.first)
   end
 
   def tweet_url
-    tweet_location_url(routes.location_url(@location))
+    tweet_location_path(routes.location_url(@location))
   end
 
   def google_map_url
@@ -64,14 +64,14 @@ class LocationDrop < BaseDrop
   end
 
   def facebook_social_share_url
-    routes.new_location_social_share_url(@location, provider: 'facebook', track_email_event: true)
+    routes.new_location_social_share_path(@location, provider: 'facebook', track_email_event: true)
   end
 
   def twitter_social_share_url
-    routes.new_location_social_share_url(@location, provider: 'twitter', track_email_event: true)
+    routes.new_location_social_share_path(@location, provider: 'twitter', track_email_event: true)
   end
 
   def linkedin_social_share_url
-    routes.new_location_social_share_url(@location, provider: 'linkedin', track_email_event: true)
+    routes.new_location_social_share_path(@location, provider: 'linkedin', track_email_event: true)
   end
 end

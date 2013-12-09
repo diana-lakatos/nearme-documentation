@@ -9,7 +9,6 @@ class InstanceMailer < ActionMailer::Base
 
   def mail(options = {})
     lookup_context.class.register_detail(:platform_context) { nil }
-
     platform_context = options.delete(:platform_context)
     self.platform_context = platform_context.decorate
     template = options.delete(:template_name) || view_context.action_name

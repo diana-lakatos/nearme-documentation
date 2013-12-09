@@ -4,11 +4,11 @@ class ListingMessageDrop < BaseDrop
   end
 
   def url
-    routes.listing_listing_message_url(@listing_message.listing, @listing_message, :token => @listing_message.recipient.temporary_token)
+    routes.listing_listing_message_path(@listing_message.listing, @listing_message, :token => @listing_message.recipient.temporary_token)
   end
 
   def url_with_tracking
-    routes.listing_listing_message_url(@listing_message.listing, @listing_message, :token => @listing_message.recipient.temporary_token, :track_email_event => true)
+    routes.listing_listing_message_path(@listing_message.listing, @listing_message, :token => @listing_message.recipient.temporary_token, :track_email_event => true)
   end
 
   def owner_first_name
