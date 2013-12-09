@@ -20,10 +20,10 @@ class Search.SearchController extends Search.Controller
     @bindEvents()
     @initializeEndlessScrolling()
     @reinitializeEndlessScrolling = false
+    @initializeConnectionsTooltip()
     setTimeout((=> @processingResults = false), 1000)
 
   bindEvents: ->
-
 
     @form.bind 'submit', (event) =>
       event.preventDefault()
@@ -102,10 +102,8 @@ class Search.SearchController extends Search.Controller
       history: false,
       thresholdMargin: -90,
       loader: '<div class="row-fluid span12"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div>',
-      onRenderComplete: (items) ->
-        for item in items
-          Search.SearchResultController.handleResult($(item))
-
+      onRenderComplete: (items) =>
+        @initializeConnectionsTooltip()
         # when there are no more resuls, add special div element which tells us, that we need to reinitialize ias - it disables itself on the last page...
         if !$('#results .pagination .next_page').attr('href')
           $('#results').append('<div id="reinitialize"></div>')
@@ -299,3 +297,6 @@ class Search.SearchController extends Search.Controller
           param["value"] = (if $(this).hasClass('map') then 'map' else 'list')
       _url = "#{url}?#{$.param(params)}&ignore_search_event=1"
       $(this).attr('href', _url)
+
+  initializeConnectionsTooltip: ->
+    @container.find('.connections:not(.initialized)').addClass('iinitialized').tooltip(html: true, placement: 'top')
