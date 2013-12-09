@@ -13,7 +13,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
       :card_code => '111'
     }
     stub_billing_gateway
-    @reservation_request = ReservationRequest.new(@listing, @user, @attributes)
+    @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.new, @attributes)
   end
 
   context "#initialize" do
@@ -56,14 +56,14 @@ class ReservationRequestTest < ActiveSupport::TestCase
     context "invalid arguments" do
       context "no listing" do
         should "be invalid" do
-          reservation_request = ReservationRequest.new(nil, @user, @attributes)
+          reservation_request = ReservationRequest.new(nil, @user, PlatformContext.new, @attributes)
           assert !reservation_request.valid?
         end
       end
 
       context "no user" do
         should "be invalid" do
-          reservation_request = ReservationRequest.new(@listing, nil, @attributes)
+          reservation_request = ReservationRequest.new(@listing, nil, PlatformContext.new, @attributes)
           assert !reservation_request.valid?
         end
       end

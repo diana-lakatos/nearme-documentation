@@ -6,6 +6,8 @@ FactoryGirl.define do
     payment_status 'pending'
     quantity 1
     state 'unconfirmed'
+    platform_context_detail_type "Instance"
+    platform_context_detail_id { (Instance.default_instance.presence || FactoryGirl.create(:instance)).id }
 
     before(:create) do |reservation|
       make_valid_period(reservation).save! unless reservation.valid?

@@ -106,7 +106,7 @@ class ReservationTest < ActiveSupport::TestCase
 
       should 'not send any email if the expire method is called' do
         ReservationMailer.expects(:notify_guest_of_expiration).never
-        @reservation.perform_expiry!(PlatformContext.new)
+        @reservation.perform_expiry!
       end
 
     end

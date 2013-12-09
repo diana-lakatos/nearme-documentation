@@ -15,7 +15,7 @@ class Listings::ReservationsController < ApplicationController
     if @reservation_request.process
       if @reservation_request.confirm_reservations?
 
-        @reservation.schedule_expiry(platform_context)
+        @reservation.schedule_expiry
         ReservationMailer.enqueue.notify_host_with_confirmation(platform_context, @reservation)
         ReservationMailer.enqueue.notify_guest_with_confirmation(platform_context, @reservation)
         begin
@@ -106,6 +106,7 @@ class Listings::ReservationsController < ApplicationController
     @reservation_request = ReservationRequest.new(
       @listing,
       current_user,
+      platform_context,
       {
         :quantity       => attributes[:quantity],
         :dates          => attributes[:dates],
