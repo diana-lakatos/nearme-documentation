@@ -9,7 +9,6 @@
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
     %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
-    %meta{:content => "#{session[:user_redirect_to]}", "name" => "redirect-to"}/
     = yield(:meta)
     = csrf_meta_tag
     = tag :meta, :name => "stripe-key", :content => stripe_public_key
