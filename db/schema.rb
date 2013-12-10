@@ -676,6 +676,7 @@ ActiveRecord::Schema.define(:version => 20131210092002) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
+    t.integer  "unread_listing_message_threads_count",                 :default => 0
   end
 
   add_index "users", ["domain_id"], :name => "index_users_on_domain_id"
