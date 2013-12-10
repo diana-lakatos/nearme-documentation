@@ -44,4 +44,13 @@ namespace :reprocess do
       end
     end
   end
+
+  desc "Refill counters on listing messages"
+  task :refill_counters_on_listing_messages => :environment do
+    User.all.each do |user|
+      next if user.listing_messages.blank?
+      actual_count = user.decorate.unread_listing_message_threads.fetch.size
+      user.update_column(:unread_listing_message_threads_count, actual_count)
+    end
+  end
 end
