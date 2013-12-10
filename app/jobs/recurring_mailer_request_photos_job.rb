@@ -10,7 +10,7 @@ class RecurringMailerRequestPhotosJob < Job
       next unless listing.administrator
       next if listing.administrator.unsubscribed?('recurring_mailer/request_photos')
       next if @sent_to_users.include?(listing.administrator.id)
-      next if listing.photos.count > 1
+      next if listing.photos_count > 1
 
       last_sent_days = days_from(listing.last_request_photos_sent_at)
       listing_activated_days = days_from(listing.activated_at)

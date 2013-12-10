@@ -7,5 +7,5 @@
 %meta{:property=>"place:location:longitude", :content => listing.longitude }
 %meta{:property=>"og:site_name", :content => platform_context.name }
 %meta{:property=>"og:url", :content => url }
-- if listing.photos.any?
+- if listing.has_photos?
   %meta{:property=>"og:image", :content => listing.photos.first.image_url(:large) } 

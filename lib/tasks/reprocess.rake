@@ -53,4 +53,11 @@ namespace :reprocess do
       user.update_column(:unread_listing_message_threads_count, actual_count)
     end
   end
+
+  desc "Refill counters on photos"
+  task :refill_counters_on_photos => :environment do
+    Listing.includes(:photos).each do |listing|
+      listing.update_column(:photos_count, listing.photos.count)
+    end
+  end
 end

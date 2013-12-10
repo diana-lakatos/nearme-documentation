@@ -10,7 +10,7 @@
           .span2.connections{:rel => 'tooltip', :title => connection_tooltip_for(connections)}
             %span.ico-group
             = connections.count
-  .photo-container{:class => "#{'without-photos' unless listing.photos.any?}"}
+  .photo-container{:class => "#{'without-photos' unless listing.has_photos?}"}
     .photo
       - if photo = listing.photos.first
         = image_tag photo.image_url(:space_listing), :title => listing.name, :alt => listing.name

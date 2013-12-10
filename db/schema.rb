@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131204161403) do
+ActiveRecord::Schema.define(:version => 20131210092002) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -333,6 +333,7 @@ ActiveRecord::Schema.define(:version => 20131204161403) do
     t.datetime "activated_at"
     t.integer  "rank",                        :default => 0
     t.integer  "capacity"
+    t.integer  "photos_count",                :default => 0
   end
 
   add_index "listings", ["listing_type_id"], :name => "index_listings_on_listing_type_id"

@@ -209,6 +209,10 @@ class Listing < ActiveRecord::Base
     end
   end
 
+  def has_photos?
+    photos_count > 0
+  end
+
   def to_param
     "#{id}-#{name.parameterize}"
   end

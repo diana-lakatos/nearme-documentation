@@ -12,6 +12,9 @@ class Photo < ActiveRecord::Base
   scope :no_content, -> { where content_id: nil }
   scope :for_listing, -> { where content_type: 'Listing' }
 
+  after_create :update_counter
+  after_destroy :update_counter
+
   acts_as_paranoid
 
   after_create :notify_user_about_change
@@ -31,5 +34,11 @@ class Photo < ActiveRecord::Base
   mount_uploader :image, PhotoUploader, :use_inkfilepicker => true
 
   AVAILABLE_CONTENT = ['Listing', 'Location']
+
+  private
+  def update_counter
+    return if content.blank?
+    content.update_column(:photos_count, content.photos.reload.count)
+  end
 
 end
