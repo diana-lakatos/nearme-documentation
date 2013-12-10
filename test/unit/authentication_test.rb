@@ -35,6 +35,16 @@ class AuthenticationTest < ActiveSupport::TestCase
     assert_equal "stuff", auth.info["thing"]
   end
 
+  context '.with_valid_token' do
+    should "return Authentications with a valid access token" do
+      auth = FactoryGirl.create(:authentication, token_expired: false, token_expires_at: 3.days.from_now)
+      auth_expired = FactoryGirl.create(:authentication, token_expires_at: 1.week.ago)
+
+      assert Authentication.with_valid_token.include?(auth)
+      assert !Authentication.with_valid_token.include?(auth_expired)
+    end
+  end
+
   context '#can_be_deleted?' do
     should "not be deleted if user has nil password and he has no other authentications" do
       auth = Authentication.new(@valid_params, :user => User.new)
