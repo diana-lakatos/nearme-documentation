@@ -26,4 +26,21 @@ module UsersHelper
   def original_instance_admin_user
     @original_instance_admin_user ||= User.find(session[:instance_admin_as_user][:admin_user_id])
   end
+
+  def render_social_connection(user, connection)
+    return "" unless connection
+    icon = "ico-" + social_icon(connection.provider)
+    render('registrations/social_connection', {
+      icon: icon,
+      provider: connection.provider,
+      count: connection.count.to_i,
+      link: user.social_url(connection.provider)
+    })
+  end
+
+  private
+
+  def social_icon(provider)
+    provider == 'facebook' ? 'facebook-full' : provider.to_s
+  end
 end

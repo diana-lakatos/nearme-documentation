@@ -40,6 +40,40 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_select ".info h2", "Manager at DesksNearMe"
       assert_select ".info h4", "Prague"
       assert_select ".info h4", "Skills & Interests"
+      assert_select ".info .icon .ico-mail", 1
+
+      assert_select ".info .icon .ico-facebook-full", 0
+      assert_select ".info .icon .ico-linkedin", 0
+      assert_select ".info .icon .ico-twitter", 0
+      assert_select ".info .icon .ico-instagram", 0
+    end
+
+    should 'show profile with connections' do
+      sign_in @user
+
+      fb_friend = FactoryGirl.create(:user)
+      ln_friend = FactoryGirl.create(:user)
+      tw_friend = FactoryGirl.create(:user)
+      fb = FactoryGirl.create(:authentication, provider: 'facebook')
+      ln = FactoryGirl.create(:authentication, provider: 'linkedin')
+      tw = FactoryGirl.create(:authentication, provider: 'twitter')
+      ig = FactoryGirl.create(:authentication, provider: 'instagram', profile_url: 'link')
+      @user.authentications << [fb, ln, tw, ig]
+      @user.add_friend(fb_friend, fb)
+      @user.add_friend(ln_friend, ln)
+      @user.add_friend(tw_friend, tw)
+
+      get :show, :id => @user.slug
+
+      assert_response 200
+      assert_select ".info .icon .ico-facebook-full", 1
+      assert_select ".info .icon .ico-linkedin", 1
+      assert_select ".info .icon .ico-twitter", 1
+      assert_select ".info .icon .ico-instagram", 1
+      assert_select ".info .icon .ico-mail", 1
+      assert_select ".info .connection .count", "1 friend"
+      assert_select ".info .connection .count", "1 connection"
+      assert_select ".info .connection .count", "1 follower"
     end
 
     should 'successfully unsubscribe' do
@@ -171,7 +205,7 @@ class RegistrationsControllerTest < ActionController::TestCase
         post :update_avatar, { :crop => { :w => 1, :h => 2, :x => 10, :y => 20 }, :rotate => 90 } 
         @user = assigns(:user)
         assert_not_nil @user.avatar_transformation_data
-        assert_equal ({ 'w' => '1', 'h' => '2', 'x' => '10', 'y' => '20' }), @user.avatar_transformation_data[:crop]
+        assert_equal({ 'w' => '1', 'h' => '2', 'x' => '10', 'y' => '20' }, @user.avatar_transformation_data[:crop])
         assert_equal "90", @user.avatar_transformation_data[:rotate]
       end
 

@@ -1,7 +1,7 @@
 class UserRelationship < ActiveRecord::Base
 
   # User being followed
-  attr_accessible :followed_id
+  attr_accessible :followed_id, :authentication_id
   validates :followed_id, presence: true
 
   # User who is interested in the above user
@@ -10,6 +10,7 @@ class UserRelationship < ActiveRecord::Base
 
   belongs_to :follower, class_name: "User"
   belongs_to :followed, class_name: "User"
+  belongs_to :authentication
 
   # ...
   attr_accessible :deleted_at
