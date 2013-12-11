@@ -12,14 +12,18 @@ class ReservationDecorator < Draper::Decorator
     I18n.t('day', count: days).titleize
   end
 
-  def selected_dates_summary(separator = "<br />")
+  def selected_dates_summary(options = {})
+    wrapper = options[:wrapper].presence || :p
+    separator = options[:separator].presence || :br
+    separator = separator.is_a?(Symbol) ? h.tag(separator) : separator
+
     items = dates_in_groups.map do |block|
       content = if block.size == 1
                period_to_string(block.first)
              else
                period_to_string(block.first) + " &ndash; " + period_to_string(block.last)
              end
-      "<p>#{content}</p>".html_safe
+      h.content_tag(wrapper, content.html_safe)
     end
     items.join(separator).html_safe
   end
