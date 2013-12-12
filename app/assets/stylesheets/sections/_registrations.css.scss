@@ -25,6 +25,14 @@
     }
   }
 
+  .box {
+    .part {
+      &:first-child {
+        margin-top: 0;
+      }
+      margin-top: 10px;
+    }
+  }
   .social.info {
     a {
       font-size: 27px;
@@ -55,6 +63,9 @@
       }
     }
     .connection {
+      &:first-child {
+        margin-top: 0;
+      }
       padding-bottom: 5px;
       .text {
         color: $gray60;

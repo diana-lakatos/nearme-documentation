@@ -6,8 +6,9 @@
     .box.clearfix
       .span4.avatar
         - if @user.avatar.file.present?
-          = image_tag @user.avatar.url(:big)
-        .social.info
+          .part
+            = image_tag @user.avatar.url(:big)
+        .social.info.part
           =render_social_connection(@user, @user.social_connections_for('facebook'))
           =render_social_connection(@user, @user.social_connections_for('linkedin'))
           =render_social_connection(@user, @user.social_connections_for('twitter'))
