@@ -42,7 +42,7 @@ namespace :populate do
    
     begin
       locations = Location.all.select{|location| location.address_components.blank? }
-      locations.each_with_index do |location, index|
+      locations.each do |location|
         Location::AddressComponentsPopulator.new(location, use_limit: true, show_inspections: true).perform
       end
       puts "Done."
