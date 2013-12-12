@@ -23,9 +23,9 @@ class Location::AddressComponentsPopulator
 
     @result = Geocoder.search(@location.read_attribute(:address)).first
     if @result
-      puts "Geocoded and fetched address_components for #{location_info}" if @show_inspections
+      output "Geocoded and fetched address_components for #{location_info}"
     else
-      puts "Couldn't geocode and get address_components for #{location_info}" if @show_inspections
+      output "Couldn't geocode and get address_components for #{location_info}"
     end
     @@current_geocoding += 1 if @use_limit
     @result
@@ -35,13 +35,13 @@ class Location::AddressComponentsPopulator
     return if @location.formatted_address.blank? || @location.address_components.present?
     if result
       @location.address_components = wrapped_address_components
-      puts "###### address_components: #{@location.address_components}" if @show_inspections
+      output "###### address_components: #{@location.address_components}"
       if @location.save
-        puts "###### and saved successfuly" if @show_inspections
+        output "###### and saved successfuly"
       else
-        puts "###### but couldn't save: #{@location.errors.full_messages.inspect}" if @show_inspections
+        output "###### but couldn't save: #{@location.errors.full_messages.inspect}"
       end
-      puts "" if @show_inspections
+      output ""
     end
   end
 
@@ -65,5 +65,8 @@ class Location::AddressComponentsPopulator
     "#{@location.id}: #{@location.address}; coordinates: '#{@location.latitude}, #{@location.longitude}'"
   end
 
-end
+  def output(string)
+    puts string if @show_inspections
+  end
 
+end
