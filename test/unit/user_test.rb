@@ -434,12 +434,13 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'notify user about invalid phone via email' do
+      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
       @user.notify_about_wrong_phone_number(@platform_context)
       sent_mail = ActionMailer::Base.deliveries.last
       assert_equal [@user.email], sent_mail.to
 
       assert sent_mail.html_part.body.encoded.include?('1.888.998.3375'), "Body did not include expected phone number 1.888.998.3375"
-      assert sent_mail.html_part.body.encoded =~ /<a class="btn" href="http:\/\/example.com\/users\/edit\?token=.+" style=".+">Go to My account<\/a>/, "Body did not include expected link to edit profile"
+      assert sent_mail.html_part.body.encoded =~ /<a class="btn" href="http:\/\/custom.domain.com\/users\/edit\?token=.+" style=".+">Go to My account<\/a>/, "Body did not include expected link to edit profile in #{sent_mail.html_part.body}"
     end
 
     should 'not spam user' do

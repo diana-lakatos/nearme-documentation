@@ -12,6 +12,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
     @reservation.save!
 
     @platform_context = PlatformContext.new
+    PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
     @expected_dates = "Wednesday, December 12 &ndash; Thursday, December 13"
   end
 
@@ -156,6 +157,19 @@ class ReservationMailerTest < ActiveSupport::TestCase
     ['notify_host_of_cancellation_by_guest', 'notify_host_of_cancellation_by_host', 'notify_host_of_confirmation', 'notify_host_of_expiration', 'notify_host_with_confirmation', 'notify_host_without_confirmation'].each do |method|
       mail = ReservationMailer.send(method, @platform_context, @reservation)
       assert_equal ['maciek@example.com'], mail.to, "Expected maciek@example.com, got #{mail.to} for #{method}"
+    end
+  end
+
+  test 'include correct host in urls' do
+
+    @reservation.listing.location.update_attribute(:administrator_id, FactoryGirl.create(:user, :email => 'maciek@example.com').id)
+    ['notify_host_of_cancellation_by_guest', 'notify_host_of_cancellation_by_host', 'notify_host_of_confirmation', 'notify_host_of_expiration', 'notify_host_with_confirmation', 'notify_host_without_confirmation', 'pre_booking'].each do |method|
+      mail = ReservationMailer.send(method, @platform_context, @reservation)
+      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_not_contains 'href="/', mail.html_part.body
+      assert_not_contains 'href="http://example.com', mail.text_part.body
+      assert_not_contains 'href="/', mail.text_part.body
     end
   end
 

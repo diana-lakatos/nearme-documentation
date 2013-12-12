@@ -32,6 +32,11 @@ class ActiveSupport::TestCase
       assert object.to_s.include?(expected), message
     end
 
+    def assert_not_contains(unexpected, object, message = nil)
+      message ||= "Unexpected #{unexpected.inspect} in #{object.inspect}"
+      refute object.to_s.include?(unexpected), message
+    end
+
     def raw_post(action, params, body)
       # The problem with doing this is that the JSON sent to the app
       # is that Rails will parse and put the JSON payload into params.
