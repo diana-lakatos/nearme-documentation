@@ -21,7 +21,7 @@ class Location::AddressComponentsPopulator
   def geocode
     raise 'Limit reached' if @use_limit && @@current_geocoding > LIMIT
 
-    @result = Geocoder.search(@location.formatted_address).first
+    @result = Geocoder.search(@location.read_attribute(:address)).first
     if @result
       puts "Geocoded and fetched address_components for #{location_info}" if @show_inspections
     else
