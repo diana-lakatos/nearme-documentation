@@ -1,6 +1,6 @@
 class Location::AddressComponentsPopulator
 
-  LIMIT = 100
+  LIMIT = 500
 
   attr_accessor :result
 
