@@ -22,7 +22,7 @@ class Listing::Search::Geocoder
 
   def self.address_components(geocoded)
     address_components = geocoded.data['address_components']
-    wrapped_address_components = Location::AddressComponentsPopulator.wrapped_result_components(geocoded)
+    wrapped_address_components = Location::AddressComponentsPopulator.wrapped_address_components(geocoded)
     Location::GoogleGeolocationDataParser.new(wrapped_address_components)
   end
 
