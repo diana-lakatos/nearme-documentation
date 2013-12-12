@@ -14,7 +14,7 @@ class ReservationDrop < BaseDrop
   end
 
   def dates_summary
-    @reservation.selected_dates_summary
+    @reservation.selected_dates_summary(wrapper: :span)
   end
 
   def subtotal_price
