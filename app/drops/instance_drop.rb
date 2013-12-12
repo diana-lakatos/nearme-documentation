@@ -9,7 +9,7 @@ class InstanceDrop < BaseDrop
   end
 
   def instance_admin_url
-    routes.instance_admin_url(host: @instance.domains.last.name, token: @instance.instance_admins.last.user.temporary_token)
+    routes.instance_admin_path(token: @instance.instance_admins.last.user.temporary_token)
   end
 
 end

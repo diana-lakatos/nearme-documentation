@@ -1,12 +1,12 @@
 <h2>Can we help, {{ user.first_name }}?</h2>
 
-<p>We noticed that you didn't confirm {{ reservation.owner.first_name.pluralize }} booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }} within the required 24 hour period.</p>
+<p>We noticed that you didn't confirm {{ reservation.owner.first_name.pluralize }} booking for '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }} within the required 24 hour period.</p>
 
 <p>That's one missed opportunity but we're here to help so you don’t miss any other booking!</p>
 
 <p>Please, let us know if your space is still available. Also don't forget to update your contact information in your personal account so {{ platform_context.lessees }} can reach you easily.</p>
 
-<a class="btn" href="{{ user.edit_user_registration_url_with_token_and_tracking | append:signature_for_tracking }}">Go to My Account</a>
+<a class="btn" href="{{ platform_context.host | append:user.edit_user_registration_url_with_token_and_tracking | append:signature_for_tracking }}">Go to My Account</a>
 
 <p>If you prefer, you can talk with us directly; just send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or call us on {{ platform_context.phone_number }}.</p>
 

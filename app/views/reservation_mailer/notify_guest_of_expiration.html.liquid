@@ -1,12 +1,12 @@
 <h2>Sorry, {{ user.first_name }}</h2>
 
-<p>Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }} has expired because the {{ platform_context.lessor }} didn't confirm within 24 hours.</p>
+<p>Your booking for '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }} has expired because the {{ platform_context.lessor }} didn't confirm within 24 hours.</p>
 
 <p>But we got you covered! Here you have some alternatives similar to the desks you were looking for:</p>
 
 {% include 'reservation_mailer/listings_in_near.html' %}
 
-<a class="btn" href="{{ listing.search_url_with_tracking | append:signature_for_tracking }}">Search More Desks</a>
+<a class="btn" href="{{ platform_context.host | append:listing.search_url_with_tracking | append:signature_for_tracking }}">Search More Desks</a>
 
 <p>We're always happy to help! Just send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or call us on {{ platform_context.phone_number }}.</p>
 
