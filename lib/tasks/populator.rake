@@ -39,10 +39,11 @@ namespace :populate do
 
   desc "Populates locations with address components"
   task :locations => :environment do
-    populator = Location::AddressComponentsPopulator.new
+   
     begin
-      Location.find_each do |l|
-        populator.populate(l)
+      locations = Location.all.select{|location| location.address_components.blank? }
+      locations.each_with_index do |location, index|
+        Location::AddressComponentsPopulator.new(location, use_limit: true, show_inspections: true).perform
       end
       puts "Done."
     rescue

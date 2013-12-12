@@ -186,14 +186,12 @@ class Location < ActiveRecord::Base
   def fetch_coordinates
     # If we aren't locally geocoding (cukes and people with JS off)
     if (address_changed? && !(latitude_changed? || longitude_changed?))
-      geocoded = Geocoder.search(read_attribute(:address)).try(:first)
+      geocoded = Location::AddressComponentsPopulator.new(self).geocode
       if geocoded
         self.latitude = geocoded.coordinates[0]
         self.longitude = geocoded.coordinates[1]
         self.formatted_address = geocoded.formatted_address
-        populator = Location::AddressComponentsPopulator.new
-        populator.set_result(geocoded)
-        self.address_components = populator.wrap_result_address_components
+        self.address_components = populator.wrapped_address_components
       else
         # do not allow to save when cannot geolocate
         self.latitude = nil

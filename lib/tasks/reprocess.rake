@@ -45,29 +45,4 @@ namespace :reprocess do
     end
   end
 
-  desc 'Refetch address_components'
-  task :refetch_address_components => :environment do
-    locations = Location.all.select{|location| location.address_components.blank? }
-    locations.each do |location|
-      geocoded = Geocoder.search(location.address).try(:first)
-      geocoded ||= Geocoder.search("#{location.latitude}, #{location.longitude}").try(:first) if location.latitude && location.longitude
-
-      if geocoded
-        populator = Location::AddressComponentsPopulator.new
-        populator.set_result(geocoded)
-        location.address_components = populator.wrap_result_address_components
-        puts "Fetched address_components for ##{location.id}: #{location.address_components.inspect}"
-        if location.save
-          puts "###### and saved successfuly" 
-        else
-          puts "###### but couldn't save: #{location.errors.full_messages.inspect}"
-        end
-        puts ""
-      else
-        puts "Couldn't get address_components for ##{location.id} with address #{location.address} and coordinates #{location.latitude}, #{location.longitude}"
-        puts ""
-      end
-    end
-  end
-
 end
