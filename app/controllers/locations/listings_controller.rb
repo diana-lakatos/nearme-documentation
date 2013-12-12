@@ -37,7 +37,7 @@ class Locations::ListingsController < ApplicationController
       flash[:warning] = t('flash_messages.listings.listing_inactive', address: @listing.address)
     end
 
-    if !@listing.enabled? && (!user_signed_in? || !@listing.company.company_users.where(user_id: current_user.id).any?)
+    if !@listing.enabled? && (!user_signed_in? || ( @listing.company && !@listing.company.company_users.where(user_id: current_user.id).any?))
       flash[:warning] = t('flash_messages.listings.listing_disabled')
     end
 
