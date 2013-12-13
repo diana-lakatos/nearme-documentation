@@ -6,6 +6,26 @@ class UserTest < ActiveSupport::TestCase
 
   should have_many(:industries)
 
+  context "#social_connections" do
+    should "be empty for new user" do
+      user = FactoryGirl.build(:user)
+      assert_equal [], user.social_connections
+    end
+
+    should "return provider and count for existing connections" do
+      user = FactoryGirl.create(:user)
+      friend = FactoryGirl.create(:user)
+      auth = FactoryGirl.create(:authentication, provider: 'facebook')
+      user.authentications << auth
+      user.add_friend(friend, auth)
+      connections = user.social_connections
+      connection = connections.first
+      assert_equal 1, connections.length
+      assert_equal 'facebook', connection.provider
+      assert_equal '1', connection.count
+    end
+  end
+
   context "#without" do
     should "handle single user" do
       user = FactoryGirl.create(:user)
@@ -26,6 +46,11 @@ class UserTest < ActiveSupport::TestCase
     setup do
       @jimmy = FactoryGirl.create(:user)
       @joe = FactoryGirl.create(:user)
+    end
+
+    should 'raise for invalid auth' do
+      auth = FactoryGirl.create(:authentication)
+      assert_raise(ArgumentError) { @jimmy.add_friend(@joe, auth) }
     end
 
     should 'creates two way relationship' do
@@ -61,7 +86,7 @@ class UserTest < ActiveSupport::TestCase
         @listing.location.administrator = friend1 = FactoryGirl.create(:user)
         @listing.save!
         friend2 = FactoryGirl.create(:user)
-        @me.add_friends(friend1, friend2)
+        @me.add_friends([friend1, friend2])
 
         assert_equal [friend1].sort, @me.friends.hosts_of_listing(@listing).sort
       end

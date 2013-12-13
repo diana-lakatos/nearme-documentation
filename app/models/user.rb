@@ -266,21 +266,27 @@ class User < ActiveRecord::Base
     relationships.find_by_followed_id(other_user.id)
   end
 
-  def follow!(other_user)
-    relationships.create!(followed_id: other_user.id)
+  def follow!(other_user, auth = nil)
+    relationships.create!(followed_id: other_user.id, authentication_id: auth.try(:id))
   end
 
-  def add_friend(*users)
+  def add_friend(users, auth = nil)
+    raise ArgumentError, "Invalid Authentication for User ##{self.id}" if auth && auth.user != self
     Array.wrap(users).each do |user|
       next if self.friends.exists?(user)
-      user.follow!(self)
-      self.follow!(user)
+      friend_auth = auth.nil? ? nil : user.authentications.where(provider: auth.provider).first
+      user.follow!(self, friend_auth)
+      self.follow!(user, auth)
     end
   end
   alias_method :add_friends, :add_friend 
 
   def friends
     self.followed_users.without(self)
+  end
+
+  def social_connections
+    self.relationships.select('COUNT(*), authentications.provider AS provider').joins(:authentication).group('authentications.provider')
   end
 
   def mutual_friendship_source
@@ -479,7 +485,6 @@ class User < ActiveRecord::Base
     social_url('instagram')
   end
 
-  private
   def social_url(provider)
     authentications.where(provider: provider).
       where('profile_url IS NOT NULL').

@@ -6,6 +6,9 @@ class Authentication < ActiveRecord::Base
 
   belongs_to :user
 
+  has_many :user_relationships
+  has_many :connections, through: :user_relationships, source: :follower, class_name: 'User'
+
   validates :provider, :uid, :token, presence: true
   validates :provider, uniqueness: { scope: :user_id }
   validates :uid,      uniqueness: { scope: :provider }
