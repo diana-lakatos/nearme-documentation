@@ -6,11 +6,7 @@ class Location::AddressComponentsPopulator
 
   def initialize(location = nil, options = {})
     @location = location
-
-    @use_limit = options[:use_limit] || false
     @show_inspections = options[:show_inspections] || false
-
-    @@current_geocoding ||= 0 if @use_limit
   end
 
   def perform
@@ -19,15 +15,12 @@ class Location::AddressComponentsPopulator
   end
 
   def geocode
-    raise 'Limit reached' if @use_limit && @@current_geocoding > LIMIT
-
     @result = Geocoder.search(@location.read_attribute(:address)).first
     if @result
       output "Geocoded and fetched address_components for #{location_info}"
     else
       output "Couldn't geocode and get address_components for #{location_info}"
     end
-    @@current_geocoding += 1 if @use_limit
     @result
   end
 
