@@ -7,6 +7,7 @@ class ReengagementMailerTest < ActiveSupport::TestCase
     stub_mixpanel
     @user = FactoryGirl.create(:user)
     @platform_context = PlatformContext.new
+    PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
   end
 
   test "#no_bookings" do
@@ -17,6 +18,9 @@ class ReengagementMailerTest < ActiveSupport::TestCase
 
     assert_equal [@user.email], mail.to
     assert_equal subject, mail.subject
+    assert_contains 'href="http://custom.domain.com/', mail.html_part.body
+    assert_not_contains 'href="http://example.com', mail.html_part.body
+    assert_not_contains 'href="/', mail.html_part.body
   end
 
   test "#one_booking" do
@@ -32,6 +36,9 @@ class ReengagementMailerTest < ActiveSupport::TestCase
 
     assert_equal [@user.email], mail.to
     assert_equal subject, mail.subject
+    assert_contains 'href="http://custom.domain.com/', mail.html_part.body
+    assert_not_contains 'href="http://example.com', mail.html_part.body
+    assert_not_contains 'href="/', mail.html_part.body
   end
 
   test "no_bookings has non-transactional email footer" do

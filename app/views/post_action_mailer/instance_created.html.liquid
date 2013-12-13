@@ -8,4 +8,4 @@ Email: {{ user.email }}
 Password: {{ user_password }}
 </p>
 
-<a class="btn" href="{{ instance.instance_admin_url }}">Log in to instance admin</a>
+<a class="btn" href="{{ platform_context.host | append:instance.instance_admin_url }}">Log in to instance admin</a>

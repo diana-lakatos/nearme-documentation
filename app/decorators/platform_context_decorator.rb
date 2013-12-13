@@ -1,6 +1,6 @@
 class PlatformContextDecorator
 
-  delegate :white_label_company, :instance, :theme, :partner, :white_label_company_user?, :to => :platform_context
+  delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?, :to => :platform_context
 
   delegate :contact_email, :tagline, :support_url, :blog_url, :twitter_url, :facebook_url, :gplus_url, :address,
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :pages, :logo_image,
@@ -26,6 +26,10 @@ class PlatformContextDecorator
 
   def lessees
     lessee.pluralize
+  end
+
+  def host
+    domain.try(:name) || Rails.application.routes.default_url_options[:host] 
   end
 
   private

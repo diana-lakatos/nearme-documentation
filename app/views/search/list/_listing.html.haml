@@ -6,7 +6,7 @@
       .company.row-fluid
         .span10
           = listing.location.company.name
-        -if (connections = connections_for(listing, current_user)).count > 0
+        - if (connections = connections_for(listing, current_user)).count > 0
           .span2.connections{:rel => 'tooltip', :title => connection_tooltip_for(connections)}
             %span.ico-group
             = connections.count
@@ -18,12 +18,10 @@
         = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
     .info
       .miles
-        = "#{listing.distance_from_search_query.to_f.round(1)} miles"
+        - if listing.location.respond_to?(:distance)
+          = "#{listing.location.distance.to_f.round(1)} miles"
       .price
         = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
     .listing-google-map-wrapper
       = link_to "View listing", location_listing_path(listing.location, listing), :class => 'btn btn-green btn-medium'
-      .listing-google-map{:'data-marker' => image_path("components/map-pin.png")}
-
-  %script
-    Search.SearchResultController.handleResult($('article.listing[data-id="#{listing.id}"]'));
+      .listing-google-map

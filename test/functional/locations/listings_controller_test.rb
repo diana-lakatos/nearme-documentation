@@ -28,6 +28,17 @@ class Locations::ListingsControllerTest < ActionController::TestCase
       get :show, location_id: @location.id, id: @listing
       assert_redirected_to(search_path(q: @listing.address))
     end
+
+    should 'redirect if listing is disabled' do
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+      @listing.update_attributes(draft: Time.now, enabled: false)
+      @listing.company.destroy
+      @listing.destroy
+      get :show, location_id: @location.id, id: @listing
+      assert_redirected_to(search_path(q: @listing.address))
+    end
+
   end
 
   context 'edit links' do

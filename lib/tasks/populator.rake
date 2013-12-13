@@ -39,10 +39,15 @@ namespace :populate do
 
   desc "Populates locations with address components"
   task :locations => :environment do
-    populator = Location::AddressComponentsPopulator.new
+    limit = 500
+    current_geocoding = 0
+
     begin
-      Location.find_each do |l|
-        populator.populate(l)
+      locations = Location.all.select{|location| location.address_components.blank? }
+      locations.each do |location|
+        current_geocoding += 1
+        raise 'Limit reached' if current_geocoding > limit
+        Location::AddressComponentsPopulator.new(location, show_inspections: true).perform
       end
       puts "Done."
     rescue

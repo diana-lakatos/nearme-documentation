@@ -6,6 +6,26 @@ class UserTest < ActiveSupport::TestCase
 
   should have_many(:industries)
 
+  context "#social_connections" do
+    should "be empty for new user" do
+      user = FactoryGirl.build(:user)
+      assert_equal [], user.social_connections
+    end
+
+    should "return provider and count for existing connections" do
+      user = FactoryGirl.create(:user)
+      friend = FactoryGirl.create(:user)
+      auth = FactoryGirl.create(:authentication, provider: 'facebook')
+      user.authentications << auth
+      user.add_friend(friend, auth)
+      connections = user.social_connections
+      connection = connections.first
+      assert_equal 1, connections.length
+      assert_equal 'facebook', connection.provider
+      assert_equal '1', connection.count
+    end
+  end
+
   context "#without" do
     should "handle single user" do
       user = FactoryGirl.create(:user)
@@ -26,6 +46,11 @@ class UserTest < ActiveSupport::TestCase
     setup do
       @jimmy = FactoryGirl.create(:user)
       @joe = FactoryGirl.create(:user)
+    end
+
+    should 'raise for invalid auth' do
+      auth = FactoryGirl.create(:authentication)
+      assert_raise(ArgumentError) { @jimmy.add_friend(@joe, auth) }
     end
 
     should 'creates two way relationship' do
@@ -61,7 +86,7 @@ class UserTest < ActiveSupport::TestCase
         @listing.location.administrator = friend1 = FactoryGirl.create(:user)
         @listing.save!
         friend2 = FactoryGirl.create(:user)
-        @me.add_friends(friend1, friend2)
+        @me.add_friends([friend1, friend2])
 
         assert_equal [friend1].sort, @me.friends.hosts_of_listing(@listing).sort
       end
@@ -434,12 +459,13 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'notify user about invalid phone via email' do
+      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
       @user.notify_about_wrong_phone_number(@platform_context)
       sent_mail = ActionMailer::Base.deliveries.last
       assert_equal [@user.email], sent_mail.to
 
       assert sent_mail.html_part.body.encoded.include?('1.888.998.3375'), "Body did not include expected phone number 1.888.998.3375"
-      assert sent_mail.html_part.body.encoded =~ /<a class="btn" href="http:\/\/example.com\/users\/edit\?token=.+" style=".+">Go to My account<\/a>/, "Body did not include expected link to edit profile"
+      assert sent_mail.html_part.body.encoded =~ /<a class="btn" href="http:\/\/custom.domain.com\/users\/edit\?token=.+" style=".+">Go to My account<\/a>/, "Body did not include expected link to edit profile in #{sent_mail.html_part.body}"
     end
 
     should 'not spam user' do

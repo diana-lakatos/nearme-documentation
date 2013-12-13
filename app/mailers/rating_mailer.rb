@@ -34,13 +34,7 @@ class RatingMailer < InstanceMailer
     @listing = @reservation.listing
     @location = @listing.location
     @user = user
-    domain = if @listing.company.white_label_enabled?
-               @listing.company.domain
-             else
-               @listing.instance.domains.first
-             end
-    @platform_context = PlatformContext.new(domain.try(:name))
-
+    @platform_context = PlatformContext.new(@reservation.platform_context_detail)
     mail to: @user.email,
          subject: instance_prefix(@subject, @platform_context.decorate),
          template_name: "request_rating_of_#{@who_is_rated}_from_#{@who_is_rating}",

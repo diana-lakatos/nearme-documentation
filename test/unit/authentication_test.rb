@@ -16,6 +16,19 @@ class AuthenticationTest < ActiveSupport::TestCase
                       :user_id  => @user.id }
   end
 
+  context '#connections' do
+    should 'return connection count' do
+      friend = FactoryGirl.create(:user)
+      user_auth = FactoryGirl.create(:authentication, user: @user)
+      friend_auth = FactoryGirl.create(:authentication, user: friend)
+      @user.add_friend(friend, user_auth)
+
+      refute_equal user_auth.connections, friend_auth.connections
+      assert_equal 1, user_auth.connections.count
+      assert_equal 1, friend_auth.connections.count
+    end
+  end
+
   context 'social connection' do
     class Authentication::DesksnearmeProvider
       def initialize(params)
@@ -33,6 +46,16 @@ class AuthenticationTest < ActiveSupport::TestCase
     auth = Authentication.new(@valid_params)
     auth.info["thing"] = "stuff"
     assert_equal "stuff", auth.info["thing"]
+  end
+
+  context '.with_valid_token' do
+    should "return Authentications with a valid access token" do
+      auth = FactoryGirl.create(:authentication, token_expired: false, token_expires_at: 3.days.from_now)
+      auth_expired = FactoryGirl.create(:authentication, token_expires_at: 1.week.ago)
+
+      assert Authentication.with_valid_token.include?(auth)
+      assert !Authentication.with_valid_token.include?(auth_expired)
+    end
   end
 
   context '#can_be_deleted?' do

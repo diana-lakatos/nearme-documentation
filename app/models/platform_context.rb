@@ -1,26 +1,67 @@
 class PlatformContext
-  attr_reader :domain, :instance, :theme, :domain, :white_label_company, :partner, :request_host
-  
-  def initialize(request_host = '')
+  attr_reader :domain, :platform_context_detail, :instance, :theme, :domain, :white_label_company, :partner, :request_host
+
+  def initialize(object = nil)
+    case object
+    when String
+      initialize_with_request_host(object)
+    when Partner
+      initialize_with_partner(object)
+    when Company
+      initialize_with_company(object)
+    when Instance
+      initialize_with_instance(object)
+    when nil
+      initialize_with_instance(Instance.default_instance)
+
+    else
+      raise "Can't initialize PlatformContext with object of class #{object.class}"
+    end
+  end
+
+  def initialize_with_request_host(request_host)
     @request_host = remove_port_from_hostname(request_host.try(:gsub, /^www\./, ""))
-    fetch_domain
+    initialize_with_domain(fetch_domain)
+  end
+
+  def initialize_with_domain(domain)
+    @domain = domain
     if @domain && @domain.white_label_enabled?
       if @domain.white_label_company?
-        @white_label_company = @domain.target
-        @instance = @white_label_company.instance
-        @theme = @domain.target.theme
+        initialize_with_company(@domain.target)
       elsif @domain.instance?
-        @instance = @domain.target
-        @theme = @instance.theme
+        initialize_with_instance(@domain.target)
       elsif @domain.partner?
-        @partner = @domain.target
-        @instance = @partner.instance 
-        @theme = @partner.theme.presence
+        initialize_with_partner(@domain.target)
       end
     else
-      @instance = Instance.default_instance
-      @theme = @instance.theme
+      initialize_with_instance(Instance.default_instance)
     end
+  end
+
+  def initialize_with_partner(partner)
+    @partner = partner
+    @platform_context_detail = @partner
+    @instance = @partner.instance 
+    @theme = @partner.theme.presence
+    @domain ||= @partner.domain
+  end
+
+  def initialize_with_company(company)
+    @white_label_company = company
+    @platform_context_detail = @white_label_company
+    @instance = @white_label_company.instance
+    @theme = @white_label_company.theme
+    @domain ||= @white_label_company.domain
+  end
+
+  def initialize_with_instance(instance)
+    @instance = instance
+    @platform_context_detail = @instance
+    @theme = @instance.theme
+    # the reason why we don't want default instance to have domain is that currently it has assigned only one domain as a hack - api.desksnear.me and 
+    # our urls in mailers will be wrong
+    @domain ||= @instance.domains.try(:first) unless @instance.is_desksnearme?
   end
 
   def white_label_company_user?(user)
@@ -39,16 +80,16 @@ class PlatformContext
   def to_h
     { request_host: @request_host }.merge(
       Hash[instance_variables.
-        reject{|iv| iv.to_s == '@request_host'}.
-        map{|iv| iv.to_s.gsub('@', '')}.
-        map{|iv| ["#{iv}_id", send(iv).try(:id)]}]
+           reject{|iv| iv.to_s == '@request_host'}.
+           map{|iv| iv.to_s.gsub('@', '')}.
+           map{|iv| ["#{iv}_id", send(iv).try(:id)]}]
     )
   end
 
   private
 
   def fetch_domain
-    @domain ||= Domain.where(:name => @request_host).first
+    Domain.where(:name => @request_host).first
   end
 
   def is_root_domain?
@@ -60,5 +101,5 @@ class PlatformContext
   def remove_port_from_hostname(hostname)
     hostname.split(':').first
   end
-  
+
 end

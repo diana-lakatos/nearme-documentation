@@ -2,36 +2,43 @@ class Location::AddressComponentsPopulator
 
   LIMIT = 500
 
-  def initialize
-    @current_geocoding = 0
+  attr_accessor :result
+
+  def initialize(location = nil, options = {})
+    @location = location
+    @show_inspections = options[:show_inspections] || false
   end
 
-  def populate(location)
-    @location = location
-    raise_if_limit_reached
-    if @location.formatted_address && !@location.address_components
-      if (@result = get_geocoding_result)
-        @location.address_components = wrap_address_components(@result.address_components)
-        @location.save!
+  def perform
+    geocode
+    populate
+  end
+
+  def geocode
+    @result = Geocoder.search(@location.read_attribute(:address)).first
+    if @result
+      output "Geocoded and fetched address_components for #{location_info}"
+    else
+      output "Couldn't geocode and get address_components for #{location_info}"
+    end
+    @result
+  end
+
+  def populate
+    return if @location.formatted_address.blank? || @location.address_components.present?
+    if result
+      @location.address_components = wrapped_address_components
+      output "###### address_components: #{@location.address_components}"
+      if @location.save
+        output "###### and saved successfuly"
+      else
+        output "###### but couldn't save: #{@location.errors.full_messages.inspect}"
       end
+      output ""
     end
   end
 
-  def get_geocoding_result
-    result = Geocoder.search(@location.formatted_address).first
-    @current_geocoding += 1
-    result
-  end
-
-  def raise_if_limit_reached
-    raise('Limit reached') unless @current_geocoding < LIMIT
-  end
-
-  def set_result(result)
-    @result = result
-  end
-
-  def wrap_result_address_components
+  def wrapped_address_components
     wrapper_hash = {}
     @result.address_components.each_with_index do |address_component_hash, index|
       wrapper_hash["#{index}"] = address_component_hash
@@ -39,5 +46,20 @@ class Location::AddressComponentsPopulator
     wrapper_hash
   end
 
-end
+  def self.wrapped_address_components(geocoded)
+    instance = new
+    instance.result = geocoded
+    instance.wrapped_address_components
+  end
 
+  private
+  def location_info
+    return nil if @location.blank?
+    "#{@location.id}: #{@location.address}; coordinates: '#{@location.latitude}, #{@location.longitude}'"
+  end
+
+  def output(string)
+    puts string if @show_inspections
+  end
+
+end

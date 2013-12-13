@@ -24,11 +24,11 @@ class UserDrop < BaseDrop
   end
 
   def search_url
-    routes.search_url
+    routes.search_path
   end
 
   def search_url_with_tracking
-    routes.search_url(track_email_event: true)
+    routes.search_path(track_email_event: true)
   end
 
   def reservation_city?
@@ -44,47 +44,47 @@ class UserDrop < BaseDrop
   end
 
   def space_wizard_list_path
-    routes.new_user_session_url(:return_to => routes.space_wizard_list_path)
+    routes.new_user_session_path(:return_to => routes.space_wizard_list_path)
   end
 
   def space_wizard_list_url_with_tracking
-    routes.space_wizard_list_url(token: @user.temporary_token, track_email_event: true)
+    routes.space_wizard_list_path(token: @user.temporary_token, track_email_event: true)
   end
 
   def manage_locations_url
-    routes.manage_locations_url
+    routes.manage_locations_path
   end
 
   def manage_locations_url_with_tracking
-    routes.manage_locations_url(track_email_event: true)
+    routes.manage_locations_path(track_email_event: true)
   end
 
   def manage_locations_url_with_tracking_and_token
-    routes.manage_locations_url(token: @user.temporary_token, track_email_event: true)
+    routes.manage_locations_path(token: @user.temporary_token, track_email_event: true)
   end
 
   def edit_user_registration_url(with_token = false)
-    routes.edit_user_registration_url(:token => @user.temporary_token)
+    routes.edit_user_registration_path(:token => @user.temporary_token)
   end
 
   def edit_user_registration_url_with_token
-    routes.edit_user_registration_url(:token => @user.temporary_token)
+    routes.edit_user_registration_path(:token => @user.temporary_token)
   end
 
   def edit_user_registration_url_with_token_and_tracking
-    routes.edit_user_registration_url(:token => @user.temporary_token, :track_email_event => true)
+    routes.edit_user_registration_path(:token => @user.temporary_token, :track_email_event => true)
   end
 
   def user_profile_url
-    routes.profile_url(@user.slug)
+    routes.profile_path(@user.slug)
   end
 
   def set_password_url_with_token
-    routes.set_password_url(:token => @user.temporary_token)
+    routes.set_password_path(:token => @user.temporary_token)
   end
 
   def set_password_url_with_token_and_tracking
-    routes.set_password_url(:token => @user.temporary_token, :track_email_event => true)
+    routes.set_password_path(:token => @user.temporary_token, :track_email_event => true)
   end
 
   def full_mobile_number
@@ -92,7 +92,7 @@ class UserDrop < BaseDrop
   end
 
   def verify_user_url
-    routes.verify_user_url(@user.id, @user.email_verification_token, :track_email_event => true)
+    routes.verify_user_path(@user.id, @user.email_verification_token, :track_email_event => true)
   end
 
   def listings_in_near
@@ -104,18 +104,18 @@ class UserDrop < BaseDrop
   end
 
   def bookings_dashboard_url
-    routes.bookings_dashboard_url
+    routes.bookings_dashboard_path
   end
 
   def bookings_dashboard_url_with_tracking
-    routes.bookings_dashboard_url(track_email_event: true)
+    routes.bookings_dashboard_path(track_email_event: true)
   end
 
   def bookings_dashboard_url_with_token
-    routes.bookings_dashboard_url(token: @user.temporary_token)
+    routes.bookings_dashboard_path(token: @user.temporary_token)
   end
 
   def bookings_dashboard_url_with_tracking_and_token
-    routes.bookings_dashboard_url(token: @user.temporary_token, track_email_event: true)
+    routes.bookings_dashboard_path(token: @user.temporary_token, track_email_event: true)
   end
 end

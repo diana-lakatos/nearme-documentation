@@ -15,6 +15,7 @@ class Reservation < ActiveRecord::Base
 
   belongs_to :listing, :with_deleted => true
   belongs_to :owner, :class_name => "User"
+  belongs_to :platform_context_detail, :polymorphic => true
   has_one :company, through: :listing
   has_one :instance, through: :company
 
@@ -42,14 +43,17 @@ class Reservation < ActiveRecord::Base
   before_validation :set_default_payment_status, on: :create, :if => lambda { listing }
   after_create :auto_confirm_reservation
 
-  def perform_expiry!(platform_context)
+  def perform_expiry!
     if unconfirmed? && !deleted?
       expire!
 
       # FIXME: This should be moved to a background job base class, as per ApplicationController.
       #        The event_tracker calls can be executed from the Job instance.
       #        i.e. Essentially compose this as a 'non-http request' controller.
-      mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, :current_user => owner)
+      platform_context = PlatformContext.new(platform_context_detail)
+      mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, :current_user => owner, 
+                                                          :request_details  => { :current_instance_id => platform_context.instance.id }
+                                                         )
       event_tracker = Analytics::EventTracker.new(mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(owner))
       event_tracker.booking_expired(self)
       event_tracker.updated_profile_information(self.owner)
@@ -60,8 +64,8 @@ class Reservation < ActiveRecord::Base
     end
   end
 
-  def schedule_expiry(platform_context)
-    Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :perform_expiry!, platform_context), run_at: expiry_time
+  def schedule_expiry
+    Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :perform_expiry!, nil), run_at: expiry_time
   end
 
   acts_as_paranoid

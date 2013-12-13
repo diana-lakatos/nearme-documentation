@@ -36,10 +36,22 @@ en:
         other: 'Plus %{count} more connections'
   search_notifications:
     form:
-      try_another_search_or_subscribe: "Try another search query, or subscribe below to be notified via email when a %{bookable_noun} is added at this location."
-      try_another_search_or_enter_email: "Try another search query, or enter your email address below to be notified when a %{bookable_noun} is added at this location."
+      subscribe: "Subscribe to be notified of new listings in this area."
   reservations:
     no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find a %{bookable_noun} near you!</a>"
+  connections:
+    facebook:
+      count:
+        one: "1 friend"
+        other: "%{count} friends"
+    linkedin:
+      count:
+        one: "1 connection"
+        other: "%{count} connections"
+    twitter:
+      count:
+        one: "1 follower"
+        other: "%{count} followers"
   flash_messages:
     guest_rating:
       submitted_successfully: "Thanks, your rating was submitted successfully!"

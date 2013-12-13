@@ -4,7 +4,7 @@ class Listings::ReservationsController < ApplicationController
   before_filter :find_reservation, only: [:booking_successful]
   before_filter :build_reservation_request, :only => [:review, :create, :store_reservation_request]
   before_filter :require_login_for_reservation, :only => [:review, :create]
-  before_filter :find_current_country, :only => [:review]
+  before_filter :find_current_country, :only => [:review, :create]
 
   def review
     event_tracker.reviewed_a_booking(@reservation_request.reservation)
@@ -15,7 +15,7 @@ class Listings::ReservationsController < ApplicationController
     if @reservation_request.process
       if @reservation_request.confirm_reservations?
 
-        @reservation.schedule_expiry(platform_context)
+        @reservation.schedule_expiry
         ReservationMailer.enqueue.notify_host_with_confirmation(platform_context, @reservation)
         ReservationMailer.enqueue.notify_guest_with_confirmation(platform_context, @reservation)
         begin
@@ -106,6 +106,7 @@ class Listings::ReservationsController < ApplicationController
     @reservation_request = ReservationRequest.new(
       @listing,
       current_user,
+      platform_context,
       {
         :quantity       => attributes[:quantity],
         :dates          => attributes[:dates],

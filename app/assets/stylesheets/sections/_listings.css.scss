@@ -3,21 +3,3 @@
 #content.search #results.map article.listing {
   display: none;
 }
-
-.listing-enabled-container {
-  position: relative;
-
-  div.control-group {
-    position: absolute; 
-    right: 0px; 
-    top: -135px;
-  }
-
-  .switch-wrapper {
-    @media (min-width: $iphone-landscape) {
-      display: inline-block;
-      margin-left: 20px;
-    }
-  }
-}
-

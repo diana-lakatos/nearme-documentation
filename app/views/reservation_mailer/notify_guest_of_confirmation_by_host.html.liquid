@@ -84,4 +84,4 @@
 
 <p>This booking was previously confirmed, but the plans have changed - I'm sure it's nothing personal.</p>
 
-<p>Don't worry - <a href="{{ listing.search_url }}">find other locations near you</a>!</p>
+<p>Don't worry - <a href="{{ platform_context.host | append:listing.search_url }}">find other locations near you</a>!</p>
