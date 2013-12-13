@@ -4,7 +4,7 @@ class Listings::ReservationsController < ApplicationController
   before_filter :find_reservation, only: [:booking_successful]
   before_filter :build_reservation_request, :only => [:review, :create, :store_reservation_request]
   before_filter :require_login_for_reservation, :only => [:review, :create]
-  before_filter :find_current_country, :only => [:review]
+  before_filter :find_current_country, :only => [:review, :create]
 
   def review
     event_tracker.reviewed_a_booking(@reservation_request.reservation)
