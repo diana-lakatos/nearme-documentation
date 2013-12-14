@@ -1,5 +1,6 @@
 require "will_paginate/array"
 class SearchController < ApplicationController
+  extend ::NewRelic::Agent::MethodTracer
 
   helper_method :search, :query, :listings, :result_view, :search_notification
   before_filter :set_options_for_filters
@@ -48,11 +49,16 @@ class SearchController < ApplicationController
   def get_listings
     params_object = Listing::Search::Params::Web.new(params)
     @search_params = params.merge({:midpoint => params_object.midpoint, :radius => params_object.radius, :available_dates => params_object.available_dates, :query => params_object.query})
-    @collection = Listing::SearchFetcher.new(search_scope, @search_params).listings
+
+    self.class.trace_execution_scoped(['Custom/get_listings/fetch_listings']) do
+      @collection = Listing::SearchFetcher.new(search_scope, @search_params).listings
+    end
     params[:page] ||= 1
     if result_view == 'list'
-      @collection = WillPaginate::Collection.create(params[:page], 20, @collection.count) do |pager|
-        pager.replace(@collection[pager.offset, pager.per_page].to_a)
+      self.class.trace_execution_scoped(['Custom/get_listings/paginate_listings']) do
+        @collection = WillPaginate::Collection.create(params[:page], 20, @collection.count) do |pager|
+          pager.replace(@collection[pager.offset, pager.per_page].to_a)
+        end
       end
     end
     @collection
