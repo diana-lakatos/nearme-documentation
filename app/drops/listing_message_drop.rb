@@ -18,4 +18,8 @@ class ListingMessageDrop < BaseDrop
   def author_first_name
     @listing_message.author.first_name
   end
+
+  def body
+    @listing_message.body
+  end
 end

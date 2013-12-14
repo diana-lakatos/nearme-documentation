@@ -1,5 +1,7 @@
 You received a message!
 
-{{ listing_message.owner_first_name }} sent you a message about one of your listings on {{ platform_context.name }}.
+{{ listing_message.owner_first_name }} sent you the following message about one of your listings on {{ platform_context.name }}.
 
-Log in and read the message: {{ platform_context.host | append:listing_message.url_with_tracking | append:signature_for_tracking }}
+{{listing_message.author_first_name}} wrote: "{{ listing_message.body }}"
+
+Log in and reply to this message: {{ platform_context.host | append:listing_message.url_with_tracking | append:signature_for_tracking }}

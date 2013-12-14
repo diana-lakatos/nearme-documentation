@@ -15,7 +15,8 @@ class ListingMessageMailerTest < ActiveSupport::TestCase
   test "#email_message_from_guest" do
     mail = ListingMessageMailer.email_message_from_guest(@platform_context, @listing_message)
 
-    assert mail.html_part.body.include?(@listing_message.owner.first_name)
+    assert_contains @listing_message.owner.first_name, mail.html_part.body
+    assert_contains @listing_message.body, mail.html_part.body
 
     assert_equal [@listing_message.listing.administrator.email], mail.to
     assert_contains 'href="http://custom.domain.com/', mail.html_part.body
@@ -27,8 +28,9 @@ class ListingMessageMailerTest < ActiveSupport::TestCase
     @listing_message.author = @listing_message.listing.administrator 
     mail = ListingMessageMailer.email_message_from_host(@platform_context, @listing_message)
 
-    assert mail.html_part.body.include?(@listing_message.listing.administrator.first_name)
-
+    assert_contains @listing_message.listing.administrator.first_name, mail.html_part.body
+    assert_contains @listing_message.body, mail.html_part.body
+    
     assert_equal [@listing_message.owner.email], mail.to
     assert_contains 'href="http://custom.domain.com/', mail.html_part.body
     assert_not_contains 'href="http://example.com', mail.html_part.body
