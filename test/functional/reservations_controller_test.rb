@@ -174,5 +174,20 @@ class ReservationsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context 'versions' do
+
+    should 'store new version after user cancel' do
+      @reservation = FactoryGirl.create(:reservation_with_credit_card)
+      sign_in @reservation.owner
+      stub_mixpanel
+      assert_difference('Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
+        with_versioning do
+          post :user_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
+        end
+      end
+    end
+
+  end
 end
 

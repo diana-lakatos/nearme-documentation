@@ -1,5 +1,5 @@
 class Partner < ActiveRecord::Base
-
+  has_paper_trail
   AVAILABLE_SEARCH_SCOPE_OPTIONS = {'No scoping' => 'no_scoping', 'All associated listings' => 'all_associated_listings'}
 
   attr_accessible :name, :instance_id, :domain_attributes, :theme_attributes, :search_scope_option

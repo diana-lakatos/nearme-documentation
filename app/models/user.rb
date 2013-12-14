@@ -1,5 +1,10 @@
 class User < ActiveRecord::Base
-  has_paper_trail
+  has_paper_trail :ignore => [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at, 
+                              :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token, 
+                              :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
+                              :bookings_count, :guest_rating_average, :guest_rating_count, :host_rating_average, 
+                              :host_rating_count, :avatar_versions_generated_at, :last_geolocated_location_longitude, 
+                              :last_geolocated_location_latitude]
 
   extend FriendlyId
   friendly_id :name, use: :slugged

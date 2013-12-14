@@ -39,7 +39,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     @tracker.expects(:updated_profile_information).with do |user|
       user == assigns(:reservation).host
     end
-    post :reject, { listing_id: @reservation.listing.id, id: @reservation.id }
+    put :reject, { listing_id: @reservation.listing.id, id: @reservation.id }
     assert_redirected_to manage_guests_dashboard_path
   end
 
@@ -67,6 +67,36 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
       put :reject, { listing_id: @reservation.listing.id, id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
       assert_equal @reservation.reload.rejection_reason, 'Dont like him'
     end
+  end
+
+  context 'versions' do
+
+    should 'store new version after confirm' do
+      # 2 because attempt charge is triggered, which if successful generates second version
+      assert_difference('Version.where("item_type = ? AND event = ?", "Reservation", "update").count', 2) do
+        with_versioning do
+          post :confirm, { listing_id: @reservation.listing.id, id: @reservation.id }
+        end
+      end
+    end
+
+    should 'store new version after reject' do
+      assert_difference('Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
+        with_versioning do
+          put :reject, { listing_id: @reservation.listing.id, id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
+        end
+      end
+    end
+
+    should 'store new version after cancel' do
+      @reservation.confirm
+      assert_difference('Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
+        with_versioning do
+          post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
+        end
+      end
+    end   
+
   end
 
 end

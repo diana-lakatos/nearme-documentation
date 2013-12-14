@@ -125,6 +125,16 @@ class ActionController::TestCase
     end
 
   end
+
+  def with_versioning
+    was_enabled = PaperTrail.enabled?
+    PaperTrail.enabled = true
+    begin
+      yield
+    ensure
+      PaperTrail.enabled = was_enabled
+    end
+  end
 end
 
 class ActiveSupport::TestCase
@@ -132,6 +142,16 @@ class ActiveSupport::TestCase
 
   def setup_platform_context
     FactoryGirl.create(:theme)
+  end
+
+  def with_versioning
+    was_enabled = PaperTrail.enabled?
+    PaperTrail.enabled = true
+    begin
+      yield
+    ensure
+      PaperTrail.enabled = was_enabled
+    end
   end
 end
 

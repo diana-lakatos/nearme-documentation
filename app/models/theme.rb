@@ -1,4 +1,5 @@
 class Theme < ActiveRecord::Base
+  has_paper_trail :ignore => [:updated_at, :compiled_stylesheet]
   DEFAULT_EMAIL = 'support@desksnear.me'
   DEFAULT_PHONE_NUMBER = '1.888.998.3375'
   COLORS = %w(blue red orange green gray black white)
