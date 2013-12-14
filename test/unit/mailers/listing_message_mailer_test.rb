@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ListingMessagingMailerTest < ActiveSupport::TestCase
+class ListingMessageMailerTest < ActiveSupport::TestCase
 
   include Rails.application.routes.url_helpers
   setup do
@@ -13,7 +13,7 @@ class ListingMessagingMailerTest < ActiveSupport::TestCase
   end
 
   test "#email_message_from_guest" do
-    mail = ListingMessagingMailer.email_message_from_guest(@platform_context, @listing_message)
+    mail = ListingMessageMailer.email_message_from_guest(@platform_context, @listing_message)
 
     assert mail.html_part.body.include?(@listing_message.owner.first_name)
 
@@ -25,7 +25,7 @@ class ListingMessagingMailerTest < ActiveSupport::TestCase
 
   test "#email_message_from_host" do
     @listing_message.author = @listing_message.listing.administrator 
-    mail = ListingMessagingMailer.email_message_from_host(@platform_context, @listing_message)
+    mail = ListingMessageMailer.email_message_from_host(@platform_context, @listing_message)
 
     assert mail.html_part.body.include?(@listing_message.listing.administrator.first_name)
 

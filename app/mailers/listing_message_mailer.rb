@@ -1,4 +1,4 @@
-class ListingMessagingMailer < InstanceMailer
+class ListingMessageMailer < InstanceMailer
   layout 'mailer' 
 
   def email_message_from_guest(platform_context, listing_message)
