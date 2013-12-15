@@ -59,7 +59,9 @@ class PlatformContext
     @instance = instance
     @platform_context_detail = @instance
     @theme = @instance.theme
-    @domain ||= @instance.domains.try(:first)
+    # the reason why we don't want default instance to have domain is that currently it has assigned only one domain as a hack - api.desksnear.me and 
+    # our urls in mailers will be wrong
+    @domain ||= @instance.domains.try(:first) unless @instance.is_desksnearme?
   end
 
   def white_label_company_user?(user)

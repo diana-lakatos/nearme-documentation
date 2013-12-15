@@ -316,6 +316,37 @@ namespace :report do
     puts "Locations without listings exported to #{path}."
   end
 
+  #### SEARCH NOTIFICATIONS
+
+  desc "Export search notifications."
+  task :search_notifications => :environment do
+
+    search_notifications = SearchNotification.all
+    path = path("search_notifications")
+
+    CSV.open(path, File::WRONLY|File::CREAT|File::EXCL) do |csv|
+
+      csv << [
+        "search_notification.email",
+        "search_notification.name",
+        "search_notification.query",
+        "search_notification.created_at"
+      ]
+
+      search_notifications.each do |search_notification|
+        csv << [
+          search_notification.email || search_notification.user.try(:email),
+          search_notification.user.try(:name),
+          search_notification.query,
+          search_notification.created_at.strftime('%Y-%m-%d')
+        ]
+      end
+
+    end
+
+    puts "Search notifications exported to #{path}."
+  end
+
 end
 
 def path(name)

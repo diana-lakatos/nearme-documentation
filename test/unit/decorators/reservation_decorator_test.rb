@@ -48,8 +48,8 @@ class ReservationDecoratorTest < ActionView::TestCase
       end
 
       should 'return selected_dates_summary' do
-        expected = "<p>Monday, January 6</p><hr><p>Monday, January 13 &ndash; Tuesday, January 14</p>"
-        assert_equal expected, @reservation.selected_dates_summary('<hr>')
+        expected = "<p>Monday, January 6</p><hr /><p>Monday, January 13 &ndash; Tuesday, January 14</p>"
+        assert_equal expected, @reservation.selected_dates_summary(separator: :hr)
       end
 
       should 'return short_dates' do

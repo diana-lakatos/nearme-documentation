@@ -16,6 +16,19 @@ class AuthenticationTest < ActiveSupport::TestCase
                       :user_id  => @user.id }
   end
 
+  context '#connections' do
+    should 'return connection count' do
+      friend = FactoryGirl.create(:user)
+      user_auth = FactoryGirl.create(:authentication, user: @user)
+      friend_auth = FactoryGirl.create(:authentication, user: friend)
+      @user.add_friend(friend, user_auth)
+
+      refute_equal user_auth.connections, friend_auth.connections
+      assert_equal 1, user_auth.connections.count
+      assert_equal 1, friend_auth.connections.count
+    end
+  end
+
   context 'social connection' do
     class Authentication::DesksnearmeProvider
       def initialize(params)

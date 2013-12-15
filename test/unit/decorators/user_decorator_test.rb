@@ -17,6 +17,19 @@ class UserDecoratorTest < ActionView::TestCase
     should 'author should have no messages' do
       assert_equal 0, @author.unread_listing_message_threads.fetch.size
     end
+
+    context '#social_connections_for' do
+      should 'return nil for unexisting connection' do
+        @author.expects(:social_connections).returns([])
+        assert_nil @author.social_connections_for('facebook')
+      end
+
+      should 'return connection for existing connection' do
+        connection = stub(provider: 'facebook')
+        @author.expects(:social_connections).returns([connection])
+        assert_equal connection, @author.social_connections_for('facebook')
+      end
+    end
   end
 
 end

@@ -44,6 +44,19 @@ en:
       zero: Inbox
       one: "Inbox (1)"
       other: "Inbox (%{count})"
+  connections:
+    facebook:
+      count:
+        one: "1 friend"
+        other: "%{count} friends"
+    linkedin:
+      count:
+        one: "1 connection"
+        other: "%{count} connections"
+    twitter:
+      count:
+        one: "1 follower"
+        other: "%{count} followers"
   flash_messages:
     guest_rating:
       submitted_successfully: "Thanks, your rating was submitted successfully!"

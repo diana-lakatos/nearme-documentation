@@ -19,8 +19,16 @@ class UserDecorator < Draper::Decorator
     listing_messages_decorator.inbox.unread
   end
 
+  def social_connections_for(provider)
+    social_connections_cache.select{|c| c.provider == provider}.first
+  end
+
   private
   def listing_messages_decorator
     @listing_messages_decorator ||= ListingMessagesDecorator.new(listing_messages, object)
+  end
+
+  def social_connections_cache
+    @social_connections_cache ||= self.social_connections
   end
 end

@@ -9,11 +9,16 @@ class PostActionMailerTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
     @instance = FactoryGirl.create(:instance)
     @platform_context = PlatformContext.new
+    InstanceAdmin.create(:instance_id => @instance.id, :user_id => @user.id)
+    PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
   end
 
   test "email has verification link" do
     mail = PostActionMailer.sign_up_verify(@platform_context, @user)
     assert mail.html_part.body.include?("/verify/#{@user.id}/#{@user.email_verification_token}")
+    assert_contains 'href="http://custom.domain.com/', mail.html_part.body
+    assert_not_contains 'href="http://example.com', mail.html_part.body
+    assert_not_contains 'href="/', mail.html_part.body
   end
 
   test "email has instance name" do
@@ -35,6 +40,9 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(@user.first_name)
     assert_equal ["micheller@desksnear.me"], mail.from
     assert mail.html_part.body.include?("We are excited to welcome you to #{@platform_context.decorate.name}")
+    assert_contains 'href="http://custom.domain.com/', mail.html_part.body
+    assert_not_contains 'href="http://example.com', mail.html_part.body
+    assert_not_contains 'href="/', mail.html_part.body
   end
 
   test "created_by_instance_admin works ok" do
@@ -54,6 +62,9 @@ class PostActionMailerTest < ActiveSupport::TestCase
       assert mail.html_part.body.include?("You have been invited by #{@creator.name} to join #{@platform_context.instance.name}!"), "Could not find 'ou have been invited by #{@creator.name} to join #{@platform_context.instance.name}!' in #{mail.html_part.body}"
       assert mail.html_part.body.include?(CGI.escape(@new_user.temporary_token)), "Could not find User's authentication token in the email"
       refute mail.html_part.body.include?(CGI.escape(@creator.temporary_token)), "Authentication token is included in the email, which is sent the new user - new user should not have access to creator's account!"
+      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_not_contains 'href="/', mail.html_part.body
     end
   end
 
@@ -65,9 +76,14 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(@user.first_name)
     assert_equal [@user.email], mail.to
     assert mail.html_part.body.include?("There are people looking for desks in your area")
+    assert_contains 'href="http://custom.domain.com/', mail.html_part.body
+    assert_not_contains 'href="http://example.com', mail.html_part.body
+    assert_not_contains 'href="/', mail.html_part.body
   end
 
   test "list works ok" do
+    @listing = FactoryGirl.create(:listing)
+    @user = @listing.creator
     mail = PostActionMailer.list(@platform_context, @user)
     subject = "#{@user.first_name}, your new listing looks amazing!"
 
@@ -75,6 +91,9 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(@user.first_name)
     assert_equal [@user.email], mail.to
     assert mail.html_part.body.include?("Your new listing rocks!")
+    assert_contains 'href="http://custom.domain.com/', mail.html_part.body
+    assert_not_contains 'href="http://example.com', mail.html_part.body
+    assert_not_contains 'href="/', mail.html_part.body
   end
 
   test "unsubscription works ok" do
@@ -86,6 +105,8 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?(subject)
     assert_equal [@user.email], mail.to
     assert mail.html_part.body.include?(mailer_name.split('/').last.humanize)
+    assert_not_contains 'href="http://example.com', mail.html_part.body
+    assert_not_contains 'href="/', mail.html_part.body
   end
 
   test "instance_created works ok" do
@@ -97,6 +118,9 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert mail.html_part.body.include?("Password: password")
     assert mail.html_part.body.include?("Email: #{@user.email}")
     assert mail.html_part.body.include?("Your instance, #{@instance.name}")
+    assert_contains 'href="http://custom.domain.com/', mail.html_part.body
+    assert_not_contains 'href="http://example.com', mail.html_part.body
+    assert_not_contains 'href="/', mail.html_part.body
   end
 
   test "has transactional email footer" do
