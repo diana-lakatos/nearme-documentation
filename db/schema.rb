@@ -429,10 +429,9 @@ ActiveRecord::Schema.define(:version => 20131210092002) do
   create_table "photos", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "content_id"
+    t.integer  "listing_id"
     t.string   "image"
     t.string   "caption"
-    t.string   "content_type"
     t.integer  "position"
     t.datetime "deleted_at"
     t.integer  "creator_id"
@@ -450,8 +449,8 @@ ActiveRecord::Schema.define(:version => 20131210092002) do
     t.integer  "image_original_width"
   end
 
-  add_index "photos", ["content_id", "content_type"], :name => "index_photos_on_content_id_and_content_type"
   add_index "photos", ["creator_id"], :name => "index_photos_on_creator_id"
+  add_index "photos", ["listing_id"], :name => "index_photos_on_listing_id"
 
   create_table "reservation_charges", :force => true do |t|
     t.integer  "reservation_id"

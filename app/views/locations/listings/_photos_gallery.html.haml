@@ -9,9 +9,9 @@
         - listing.photos.each_with_index do |photo, index|
           .item{:class => ("active" if index == 0), :'data-modalize' => true}
             - if fullscreen
-              %img{:alt => photo.content.name, :'data-src' => photo.image_url(photo_size)}
+              %img{:alt => photo.listing.name, :'data-src' => photo.image_url(photo_size)}
             - else
-              = image_tag photo.image_url(photo_size), :alt => photo.content.name
+              = image_tag photo.image_url(photo_size), :alt => photo.listing.name
             .info
               - if photo.caption.present?
                 .caption

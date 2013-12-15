@@ -225,7 +225,7 @@ module Utils
           listing_types.sample(rand(1..3)).map do |listing_type|
             name = listing_type.name # TODO
             FactoryGirl.create(:listing, :listing_type => listing_type, :name => name, :location => location,
-                               :description => Faker::Lorem.paragraph.truncate(200), :photos_count => 0)
+                               :description => Faker::Lorem.paragraph.truncate(200), :photos_count_to_be_created => 0)
           end
         end.flatten
       end

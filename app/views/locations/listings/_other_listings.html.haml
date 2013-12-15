@@ -15,7 +15,7 @@
             - if photo = listing.photos.first
               .item{:class => ("active" if index == 0), :data => {:'listing-name' => listing.name, :'listing-url' => location_listing_path(listing.location, listing)}}
                 = link_to location_listing_path(listing.location, listing) do 
-                  = image_tag photo.image_url(:golden), :alt => photo.content.name
+                  = image_tag photo.image_url(:golden), :alt => photo.listing.name
                 .info
                   .caption
                     = render :partial => 'search/shared/price_information', :locals => { :listing => listing }

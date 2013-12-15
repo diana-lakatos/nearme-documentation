@@ -246,7 +246,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
   def get_authenticated_listing
     location = get_authenticated_location
-    listing = FactoryGirl.create(:listing, :location_id => location.id, :photos_count => 1)
+    listing = FactoryGirl.create(:listing, :location_id => location.id, :photos_count_to_be_created => 1)
   end
 
   def valid_search_params

@@ -46,7 +46,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
   context "with listing" do
 
     setup do
-      @listing = FactoryGirl.create(:listing, :location => @location, :photos_count => 1, :quantity => 2)
+      @listing = FactoryGirl.create(:listing, :location => @location, :photos_count_to_be_created => 1, :quantity => 2)
     end
 
     context 'CRUD' do

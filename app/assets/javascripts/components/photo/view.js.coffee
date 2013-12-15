@@ -32,8 +32,8 @@ class @Photo.View
     @photo.append(hidden_position)
     hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(@data.id)
     @photo.append(hidden_id)
-    hidden_content_id = hidden.clone().attr('name', "#{name_prefix}[content_id]").val(@data.content_id)
-    @photo.append(hidden_content_id)
+    hidden_listing_id = hidden.clone().attr('name', "#{name_prefix}[listing_id]").val(@data.listing_id)
+    @photo.append(hidden_listing_id)
 
   normalizeData: (data) ->
     result = jQuery.parseJSON(data)

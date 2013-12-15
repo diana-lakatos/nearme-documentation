@@ -138,7 +138,6 @@ class DataImporter::XmlFile < DataImporter::File
             listing.photos.create do |p|
               direct_url = files_with_info[matching_photo_name]
               p.remote_image_url = direct_url[:remote_image_url]
-              p.content_type = direct_url[:content_type]
             end
           end
         end
