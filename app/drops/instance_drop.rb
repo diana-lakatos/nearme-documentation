@@ -1,5 +1,6 @@
 class InstanceDrop < BaseDrop
 
+  attr_reader :instance
   delegate :name, to: :instance
 
   def initialize(instance)
