@@ -31,7 +31,7 @@ class Photo < ActiveRecord::Base
 
   private
   def update_counter
-    listing.update_column(:photos_count, listing.photos.count) if listing_id.present?
+    listing.update_column(:photos_count, listing.photos.count) if listing.present?
   end
 
 end
