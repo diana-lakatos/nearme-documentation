@@ -133,4 +133,5 @@ group :test do
   gem 'simplecov', :require => false
   gem 'shoulda'
   gem 'vcr'
+  gem 'ruby-prof'
 end
