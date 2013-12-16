@@ -54,8 +54,7 @@ class Manage::PhotosController < Manage::BaseController
     # we came from list your space flow
     if params[:user]
       photo_params = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
-      @listing = Listing.find(@param[:id])
-      @image_url = @param[:photos_attributes]["0"][:image]
+      @listing = Listing.find(photo_params[:id]) if photo_params[:id]
     # we came from dashboard
     elsif params[:listing]
       photo_params = params[:listing]
