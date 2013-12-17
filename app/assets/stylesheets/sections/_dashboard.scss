@@ -119,6 +119,12 @@ section.dashboard {
     margin-top: 20px;
   }
 
+  .limited_text {
+    .limiter {
+      margin-top: 0;
+    }
+  }
+
   .help-block {
     color: $dark-gray;
     font-size: 12px;

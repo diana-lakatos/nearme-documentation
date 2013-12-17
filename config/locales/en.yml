@@ -17,7 +17,11 @@ en:
   day:
     one: "1 day"
     other: "%{count} days"
-
+  form:
+    characters_left:
+      zero: "0 characters left"
+      one: "1 character left"
+      few: "%{count} characters left"
   manage:
     companies:
       theme_image_deleted: "That image has been deleted."
