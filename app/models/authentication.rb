@@ -38,6 +38,10 @@ class Authentication < ActiveRecord::Base
     AVAILABLE_PROVIDERS
   end
 
+  def connections_count
+    self.connections.count
+  end
+
   def can_be_deleted?
     # we can delete authentication if user has other option to log in, i.e. has set password or other authentications
     user.has_password? || user.authentications.size > 1

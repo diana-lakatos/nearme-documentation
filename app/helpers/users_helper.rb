@@ -27,14 +27,14 @@ module UsersHelper
     @original_instance_admin_user ||= User.find(session[:instance_admin_as_user][:admin_user_id])
   end
 
-  def render_social_connection(user, connection)
-    return "" unless connection
-    icon = "ico-" + social_icon(connection.provider)
+  def render_social_connection(user, authentication)
+    return "" unless authentication
+    icon = "ico-" + social_icon(authentication.provider)
     render('registrations/social_connection', {
       icon: icon,
-      provider: connection.provider,
-      count: connection.count.to_i,
-      link: user.social_url(connection.provider)
+      provider: authentication.provider,
+      count: authentication.connections_count,
+      link: user.social_url(authentication.provider)
     })
   end
 
