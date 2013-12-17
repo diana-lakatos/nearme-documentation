@@ -286,7 +286,7 @@ class User < ActiveRecord::Base
   end
 
   def social_connections
-    self.relationships.select('COUNT(*), authentications.provider AS provider').joins(:authentication).group('authentications.provider')
+    self.authentications
   end
 
   def mutual_friendship_source

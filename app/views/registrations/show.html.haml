@@ -13,8 +13,8 @@
           =render_social_connection(@user, @user.social_connections_for('linkedin'))
           =render_social_connection(@user, @user.social_connections_for('twitter'))
           - if @user.social_url('instagram')
-            =render 'social_connection', icon: 'ico-instagram', provider: 'instagram', count: 0, link: @user.social_url('instagram')
-          =render 'social_connection', icon: 'ico-mail', provider: 'mail', count: 0, link: '#'
+            =render 'social_connection', icon: 'ico-instagram', provider: 'instagram', count: false, link: @user.social_url('instagram')
+          =render 'social_connection', icon: 'ico-mail', provider: 'mail', count: false, link: '#'
       .info{class: 'span8'}
         %h2= @user.job_title_and_company_name
         %h4= @user.current_location_and_industry

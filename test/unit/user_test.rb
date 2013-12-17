@@ -22,7 +22,7 @@ class UserTest < ActiveSupport::TestCase
       connection = connections.first
       assert_equal 1, connections.length
       assert_equal 'facebook', connection.provider
-      assert_equal '1', connection.count
+      assert_equal 1, connection.connections_count
     end
   end
 
