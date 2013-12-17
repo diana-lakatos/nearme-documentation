@@ -1,5 +1,6 @@
 class Listing
   class SearchFetcher
+    extend ::NewRelic::Agent::MethodTracer
 
     TOP_CITIES = ['san francisco', 'london', 'new york', 'los angeles', 'chicago']
 
@@ -12,19 +13,27 @@ class Listing
 
     def listings
       locations = filtered_locations
-
       filtered_listings = Listing.searchable.where(location_id: locations.map(&:id))
       filtered_listings = filtered_listings.filtered_by_listing_types_ids(@filters[:listing_types_ids]) if @filters[:listing_types_ids]
-
-      filtered_listings.each do |listing|
-        location = locations.detect { |l| l.id == listing.location_id } # Could be faster with a hash table
-        listing.location = location # Cache location association without query
+      self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/filtered_listings']) do
+        filtered_listings = filtered_listings.all
       end
-      filtered_listings.sort_by! {|l| l.location.distance } if filtered_listings.first.try(:location).try(:respond_to?, :distance)
+
+      self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/iterate_filtered_listings']) do
+        filtered_listings.each do |listing|
+          location = locations.detect { |l| l.id == listing.location_id } # Could be faster with a hash table
+          listing.location = location # Cache location association without query
+        end
+      end
+      self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/sort_by_distance']) do
+        filtered_listings.sort_by! {|l| l.location.distance } if filtered_listings.first.try(:location).try(:respond_to?, :distance)
+      end
 
       # Order in top cities
-      if !@filters[:query].blank? && TOP_CITIES.any?{|city| @filters[:query].downcase.include?(city)}
-        filtered_listings = filtered_listings.sort_by(&:rank).reverse
+      self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/sort_by_top_citites']) do
+        if !@filters[:query].blank? && TOP_CITIES.any?{|city| @filters[:query].downcase.include?(city)}
+          filtered_listings = filtered_listings.sort_by(&:rank).reverse
+        end
       end
 
       filtered_listings
