@@ -28,6 +28,8 @@ class RegistrationsControllerTest < ActionController::TestCase
       @industry2 = FactoryGirl.create(:industry)
       @tracker.expects(:updated_profile_information).once
       put :update, :id => @user, user: { :industry_ids => [@industry.id, @industry2.id] }
+      @user.reload
+      assert_equal [@industry.id, @industry2.id], @user.industries.collect(&:id)
     end
 
     should 'show profile' do
@@ -223,6 +225,27 @@ class RegistrationsControllerTest < ActionController::TestCase
       end
     end
 
+  end
+
+  context 'versions' do
+
+    should 'track version change on create' do
+      assert_difference('Version.where("item_type = ? AND event = ?", "User", "create").count') do
+        with_versioning do
+          post :create, user: user_attributes
+        end
+      end
+
+    end
+
+    should 'track version change on update' do
+      sign_in @user
+      assert_difference('Version.where("item_type = ? AND event = ?", "User", "update").count') do
+        with_versioning do
+          put :update, :id => @user, user: { :name => 'Updated Name' }
+        end
+      end
+    end
   end
 
   context 'scopes current partner' do

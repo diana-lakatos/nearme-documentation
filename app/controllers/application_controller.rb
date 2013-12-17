@@ -191,10 +191,6 @@ class ApplicationController < ActionController::Base
     )
   end
 
-  def paper_trail_enabled_for_controller
-    devise_controller? ? false : true
-  end
-
   def store_referal_info
     if first_time_visited?
       cookies.signed.permanent[:referer] = request.referer

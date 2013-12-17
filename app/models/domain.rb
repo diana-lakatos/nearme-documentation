@@ -1,4 +1,5 @@
 class Domain < ActiveRecord::Base
+  has_paper_trail
   attr_accessible :name, :target, :target_id, :target_type
 
   belongs_to :target, :polymorphic => true
