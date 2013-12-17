@@ -176,6 +176,10 @@ class Location < ActiveRecord::Base
     [:address, :address2, :formatted_address, :city, :street, :state, :postcode, :email, :phone, :description, :special_notes, :currency]
   end
 
+  def lowest_price
+    listings.searchable.map(&:lowest_price_with_type).sort{|a, b| a[0].to_f <=> b[0].to_f}.first
+  end
+
   private
 
   def assign_default_availability_rules

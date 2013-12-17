@@ -2,10 +2,10 @@ require "will_paginate/array"
 class SearchController < ApplicationController
   extend ::NewRelic::Agent::MethodTracer
 
-  helper_method :search, :query, :listings, :result_view, :search_notification
+  helper_method :search, :query, :listings, :locations, :all_listings, :result_view, :search_notification, :result_count, :current_page_offset
   before_filter :set_options_for_filters
 
-  SEARCH_RESULT_VIEWS = %w(list map)
+  SEARCH_RESULT_VIEWS = %w(list map mixed)
 
   def index
     @located = (params[:lat].present? and params[:lng].present?)
@@ -43,18 +43,53 @@ class SearchController < ApplicationController
   end
 
   def listings
-    @listings ||=  get_listings
+    @listings ||= get_listings
+  end
+
+  def locations
+    @locations ||= get_locations
+  end
+
+  def all_listings
+    @all_listings ||= fetcher.listings
+  end
+
+  def fetcher
+    @fetcher ||=
+      begin
+        params_object = Listing::Search::Params::Web.new(params)
+        @search_params = params.merge({:midpoint => params_object.midpoint, :radius => params_object.radius, :available_dates => params_object.available_dates, :query => params_object.query})
+
+        Listing::SearchFetcher.new(search_scope, @search_params)
+      end
+  end
+
+  def get_locations
+    params[:page] ||= 1
+    self.class.trace_execution_scoped(['Custom/get_locations/fetch_locations']) do
+      @collection = fetcher.locations
+    end
+
+    if result_view.list? || result_view.mixed?
+      self.class.trace_execution_scoped(['Custom/get_locations/paginate_locations']) do
+        @collection = WillPaginate::Collection.create(params[:page], 20, @collection.count) do |pager|
+          pager.replace(@collection[pager.offset, pager.per_page].to_a)
+        end
+      end
+    end
+
+    @listings = Listing.searchable.where(location_id: @collection.map(&:id))
+
+    @collection
   end
 
   def get_listings
-    params_object = Listing::Search::Params::Web.new(params)
-    @search_params = params.merge({:midpoint => params_object.midpoint, :radius => params_object.radius, :available_dates => params_object.available_dates, :query => params_object.query})
-
-    self.class.trace_execution_scoped(['Custom/get_listings/fetch_listings']) do
-      @collection = Listing::SearchFetcher.new(search_scope, @search_params).listings
-    end
     params[:page] ||= 1
-    if result_view == 'list'
+    self.class.trace_execution_scoped(['Custom/get_listings/fetch_listings']) do
+      @collection = fetcher.listings
+    end
+
+    if result_view.list? || result_view.mixed?
       self.class.trace_execution_scoped(['Custom/get_listings/paginate_listings']) do
         @collection = WillPaginate::Collection.create(params[:page], 20, @collection.count) do |pager|
           pager.replace(@collection[pager.offset, pager.per_page].to_a)
@@ -65,20 +100,26 @@ class SearchController < ApplicationController
   end
 
   def result_view
-    requested_view = params.fetch(:v, 'list').downcase
-    @result_view ||= if SEARCH_RESULT_VIEWS.include?(requested_view)
+    requested_view = params.fetch(:v, 'mixed').downcase
+    @result_view ||= (if SEARCH_RESULT_VIEWS.include?(requested_view)
                        requested_view
                      else
-                       'list'
-                     end
+                       'mixed'
+                     end).inquiry
   end
 
   def result_count
-    if result_view == 'list'
+    if result_view.list?
       @listings.total_entries
+    elsif result_view.mixed?
+      @locations.total_entries
     else
       @listings.size
     end
+  end
+
+  def current_page_offset
+    ((params[:page] || 1).to_i - 1)  * 20
   end
 
   def should_log_conducted_search?
@@ -123,6 +164,7 @@ class SearchController < ApplicationController
   def set_options_for_filters
     @filterable_location_types = platform_context.instance.location_types
     @filterable_listing_types = platform_context.instance.listing_types
+    @filterable_pricing = [['hourly', 'hourly'], ['daily', 'daily'], ['weekly', 'weekly'], ['monthly', 'monthly']]
     @filterable_industries = Industry.with_listings.all if platform_context.instance.is_desksnearme?
   end
 

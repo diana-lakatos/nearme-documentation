@@ -10,7 +10,7 @@ class Search.SearchController extends Search.Controller
     @initializeDateRangeField()
 
     @listings = {}
-    @resultsContainer = => @container.find('#results')
+    @resultsContainer ||= => @container.find('#results')
     @loader = new Search.ScreenLockLoader => @container.find('.loading')
     @resultsCountContainer = $('#search_results_count')
     @filters = $('a[data-search-filter]')
@@ -49,17 +49,22 @@ class Search.SearchController extends Search.Controller
     @searchField.on 'blur', => $(@form).removeClass('query-active')
     
     if @map?
-      @map.on 'click', =>
-        @searchField.blur()
+      @bindMapEvents()
       
-      @map.on 'viewportChanged', =>
-        # NB: The viewport can change during 'query based' result loading, when the map fits
-        #     the bounds of the search results. We don't want to trigger a bounding box based
-        #     lookup during a controlled viewport change such as this.
-        return if @processingResults
-        return unless @redoSearchMapControl.isEnabled()
-      
-        @triggerSearchWithBoundsAfterDelay()
+
+  bindMapEvents: =>
+    @map.on 'click', =>
+      @searchField.blur()
+
+    @map.on 'viewportChanged', =>
+      # NB: The viewport can change during 'query based' result loading, when the map fits
+      #     the bounds of the search results. We don't want to trigger a bounding box based
+      #     lookup during a controlled viewport change such as this.
+      return if @processingResults
+      return unless @redoSearchMapControl.isEnabled()
+
+      @triggerSearchWithBoundsAfterDelay()
+
 
   hideFilters: ->
     for filter in @filters
@@ -154,7 +159,6 @@ class Search.SearchController extends Search.Controller
       
       # In case the map is hidden
       @map.resizeToFillViewport()
-      
     else
       @map.hide()
 
@@ -225,6 +229,7 @@ class Search.SearchController extends Search.Controller
       @triggerSearchAndHandleResults =>
         @updateMapWithListingResults() if @map?
 
+
   # Trigger the search after waiting a set time for further updated user input/filters
   triggerSearchFromQueryAfterDelay: _.debounce(->
     @triggerSearchFromQuery()
@@ -240,9 +245,9 @@ class Search.SearchController extends Search.Controller
       @showResults(html)
       window.scrollTo(0, 0) if !@map
       @loader.hide()
-
       callback() if callback
       _.defer => @processingResults = false
+
 
   # Trigger the API request for search
   #

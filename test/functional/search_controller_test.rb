@@ -116,6 +116,12 @@ class SearchControllerTest < ActionController::TestCase
 
           should 'in map view' do
             get :index, q: 'Adelaide', v: 'map'
+            assert_location_in_result(@adelaide)
+            refute_location_in_result(@auckland)
+          end
+
+          should 'in mixed view' do
+            get :index, q: 'Adelaide', v: 'mixed'
             assert_location_in_result(@adelaide) 
             refute_location_in_result(@auckland) 
           end
@@ -124,8 +130,8 @@ class SearchControllerTest < ActionController::TestCase
 
             should 'show results' do
               get :index, q: 'Adelaide', v: 'list'
-              assert_location_in_result(@adelaide) 
-              refute_location_in_result(@auckland) 
+              assert_location_in_result(@adelaide)
+              refute_location_in_result(@auckland)
             end
 
             context 'connections' do
@@ -185,7 +191,7 @@ class SearchControllerTest < ActionController::TestCase
       @industry = FactoryGirl.create(:industry)
       expected_custom_options = {
         search_query: 'adelaide', 
-        result_view: 'list', 
+        result_view: 'mixed',
         result_count: 0, 
         listing_type_filter: [@listing_type.name], 
         location_type_filter: [@location_type.name], 

@@ -36,4 +36,12 @@ module SearchHelper
     end
   end
 
+  def location_price_information(location)
+    listing_price = location.lowest_price
+    if listing_price
+      periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
+      "From <span>#{money_without_cents_and_with_symbol(listing_price[0])}</span> / #{periods[listing_price[1]]}".html_safe
+    end
+  end
+
 end
