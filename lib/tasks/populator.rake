@@ -17,6 +17,25 @@ namespace :populate do
     end
   end
 
+  desc 'populates platform_context_details for reservations'
+  task :reservation_platform_context_detail => :environment do
+    Reservation.where('platform_context_detail_id is null').each do |r|
+      if r.listing.present?
+        if r.listing.company && r.listing.company.white_label_enabled
+          puts "#{r.id} is assigned to white label company"
+          r.platform_context_detail = r.listing.company
+          r.save(:validate => false)
+        else
+          puts "#{r.id} is assigned to instance"
+          r.platform_context_detail = r.listing.instance
+          r.save(:validate => false)
+        end
+      else
+        puts "Warning, #{r.id} does not belong to any listing!"
+      end
+    end
+  end
+
   desc "Populates missing amenities and ensures they belong to the right amenity type"
   task :amenities => :environment do
     i = 0
