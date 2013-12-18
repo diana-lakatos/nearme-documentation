@@ -65,7 +65,7 @@ class ListingDrop < BaseDrop
   end
 
   def photo_url
-    @listing.photos.any? ? @listing.photos.first.image_url(:space_listing) : image_url(Placeholder.new(:width => 410, :height => 254).path).to_s
+    @listing.has_photos? ? @listing.photos.first.image_url(:space_listing) : image_url(Placeholder.new(:width => 410, :height => 254).path).to_s
   end
 
   def from_money_period

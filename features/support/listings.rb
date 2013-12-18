@@ -57,11 +57,11 @@ module ListingsHelpers
   end
 
   def build_fully_booked_listing
-    FactoryGirl.create(:fully_booked_listing_in_cleveland, :photos_count => 1)
+    FactoryGirl.create(:fully_booked_listing_in_cleveland, :photos_count_to_be_created => 1)
   end
 
   def build_listing_which_is_closed_on_weekends
-    FactoryGirl.create(:listing_in_cleveland, :photos_count => 1)
+    FactoryGirl.create(:listing_in_cleveland, :photos_count_to_be_created => 1)
   end
 
   def date_before_listing_is_fully_booked

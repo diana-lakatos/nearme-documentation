@@ -3,7 +3,7 @@ require 'test_helper'
 class Manage::PhotosControllerTest < ActionController::TestCase
   context 'update with crop and rotate' do
     setup do
-      @listing = FactoryGirl.create(:listing, photos_count: 1)
+      @listing = FactoryGirl.create(:listing, photos_count_to_be_created: 1)
       @photo   = @listing.photos.first
       @user    = @listing.company.creator
 

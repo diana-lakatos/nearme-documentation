@@ -7,6 +7,7 @@ class ListingMessagesDecorator < Draper::CollectionDecorator
 
   def inbox
     @threaded_listing_messages = threaded_listing_messages.reject {|key, listing_messages|
+      # reject all threads that have all messages archived for @user
       listing_messages.all?{|listing_message| listing_message.archived_for?(@user) }
     }
     self
@@ -14,6 +15,7 @@ class ListingMessagesDecorator < Draper::CollectionDecorator
 
   def unread
     @threaded_listing_messages = threaded_listing_messages.select { |key, listing_messages|
+      # is in thread at least one message that is unread for @user
       listing_messages.any?{|listing_message| listing_message.unread_for?(@user) }
     }
     self

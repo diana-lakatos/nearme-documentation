@@ -4,7 +4,7 @@ class RecurringMailerRequestPhotosJobTest < ActiveSupport::TestCase
   setup do
     FactoryGirl.create(:listing, 
                        :last_request_photos_sent_at => 28.days.ago,
-                       :photos_count => 0,
+                       :photos_count_to_be_created => 0,
                        :activated_at => 28.days.ago)
   end
 
