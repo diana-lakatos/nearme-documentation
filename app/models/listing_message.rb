@@ -51,9 +51,9 @@ class ListingMessage < ActiveRecord::Base
 
   def send_notification(platform_context)
     if message_from_guest?
-      ListingMessagingMailer.enqueue.email_message_from_guest(platform_context, self)
+      ListingMessageMailer.enqueue.email_message_from_guest(platform_context, self)
     else
-      ListingMessagingMailer.enqueue.email_message_from_host(platform_context, self)
+      ListingMessageMailer.enqueue.email_message_from_host(platform_context, self)
     end
   end
 

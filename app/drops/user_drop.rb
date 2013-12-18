@@ -1,18 +1,11 @@
 class UserDrop < BaseDrop
+
+  attr_reader :user
+  delegate :name, :first_name, :email, :full_mobile_number, :listings_in_near,
+    :administered_locations_pageviews_7_day_total, to: :user
+
   def initialize(user)
     @user = user
-  end
-
-  def name
-    @user.name
-  end
-
-  def first_name
-    @user.first_name
-  end
-
-  def email
-    @user.email
   end
 
   def name_pluralize
@@ -87,20 +80,8 @@ class UserDrop < BaseDrop
     routes.set_password_path(:token => @user.temporary_token, :track_email_event => true)
   end
 
-  def full_mobile_number
-    @user.full_mobile_number
-  end
-
   def verify_user_url
     routes.verify_user_path(@user.id, @user.email_verification_token, :track_email_event => true)
-  end
-
-  def listings_in_near
-    @user.listings_in_near
-  end
-
-  def administered_locations_pageviews_7_day_total
-    @user.administered_locations_pageviews_7_day_total
   end
 
   def bookings_dashboard_url

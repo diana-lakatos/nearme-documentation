@@ -1,4 +1,8 @@
 class ListingMessageDrop < BaseDrop
+
+  attr_reader :listing_message
+  delegate :body, to: :listing_message
+
   def initialize(listing_message)
     @listing_message = listing_message
   end
@@ -18,4 +22,5 @@ class ListingMessageDrop < BaseDrop
   def author_first_name
     @listing_message.author.first_name
   end
+
 end
