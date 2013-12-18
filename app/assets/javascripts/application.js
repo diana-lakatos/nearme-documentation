@@ -11,6 +11,7 @@
 //= require ./vendor/jquery.cookie
 //= require ./vendor/jquery.popover-1.1.2
 //= require ./vendor/jquery.payment
+//= require ./vendor/jquery.limiter
 //= require ./vendor/asevented
 //= require ./vendor/detect-mobile-browser
 //= require ./vendor/infobox
@@ -70,6 +71,7 @@ window.DNM = {
     Accordian.initialize(scope);
     Clipboard.initialize(scope);
     Photo.Initializer.initialize(scope);
+    Limiter.initialize(scope);
   },
 
   initializeAjaxCSRF: function() {
