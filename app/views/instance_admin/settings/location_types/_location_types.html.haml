@@ -1,0 +1,16 @@
+%fieldset
+  %legend Location Types
+  %table#location-types.table.table-borderless.table-condensed
+    = f.fields_for :location_types, wrapper: false do |f|
+      %tr.fields
+        %td= f.input :name, label: false
+        - if f.object.locations.count == 0
+          %td.small= f.link_to_remove "Delete", class: 'btn btn-danger pull-right'
+        - else
+          %td.pull-right= "(in use by #{f.object.locations.count} locations)"
+
+  %p
+    = f.link_to_add "Add location type", :location_types, :data => { :target => "#location-types" }, class: 'btn'
+  %p
+    = f.button :submit, 'Save', class: 'btn btn-success'
+  %br
