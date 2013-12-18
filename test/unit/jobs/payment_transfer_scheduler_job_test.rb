@@ -47,7 +47,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
     should "generate separate transfers for separate currencies" do
       location = FactoryGirl.create(:location,
         :company => @company_1,
-        :currency => 'NZD'
+        :currency => 'CAD'
       )
 
       listing = FactoryGirl.create(:listing,
@@ -60,8 +60,8 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
 
       assert_equal 2, @company_1.payment_transfers.count
 
-      nzd_transfer = @company_1.payment_transfers.detect { |pt| pt.currency == 'NZD' }
-      assert nzd_transfer, "Expected an NZD payment transfer"
+      nzd_transfer = @company_1.payment_transfers.detect { |pt| pt.currency == 'CAD' }
+      assert nzd_transfer, "Expected an CAD payment transfer"
       assert_equal nzd_reservations.map(&:reservation_charges).flatten,
         nzd_transfer.reservation_charges
     end

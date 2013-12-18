@@ -50,6 +50,7 @@ gem "coffee-rails"
 gem 'delayed_job_active_record'
 gem "rdiscount"
 gem 'stripe'
+gem 'paypal-sdk-rest'
 gem 'friendly_id'
 
 gem 'sass-rails'

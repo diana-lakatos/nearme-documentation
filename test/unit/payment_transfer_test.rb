@@ -28,7 +28,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
         :subtotal_amount => 10,
         :service_fee_amount_guest => 1,
         :service_fee_amount_host => 2,
-        :currency => 'NZD'
+        :currency => 'CAD'
       )
 
       @payment_transfer.reservation_charges = [@reservation_charges, rc].flatten

@@ -7,7 +7,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     @user = @reservation.listing.creator
     sign_in @user
     stub_mixpanel
-    User::BillingGateway.any_instance.stubs(:charge)
+    Billing::Gateway.any_instance.stubs(:charge)
   end
 
   should "track and redirect a host to the Manage Guests page when they confirm a booking" do
