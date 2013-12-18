@@ -22,7 +22,7 @@ class UserTest < ActiveSupport::TestCase
       connection = connections.first
       assert_equal 1, connections.length
       assert_equal 'facebook', connection.provider
-      assert_equal '1', connection.count
+      assert_equal 1, connection.connections_count
     end
   end
 
@@ -395,7 +395,9 @@ class UserTest < ActiveSupport::TestCase
 
       context "country_name was changed" do
         should "return false" do
+
           user = FactoryGirl.create(:user)
+
           user.country_name = "Slovenia"
           assert !user.phone_or_country_was_changed?
         end
@@ -604,7 +606,7 @@ class UserTest < ActiveSupport::TestCase
               context "photo CRUD" do
 
                 setup do
-                  @photo = FactoryGirl.create(:photo, :content => @listing)
+                  @photo = FactoryGirl.create(:photo, :listing => @listing)
                   @user.mailchimp_synchronized!
                   Timecop.travel(Time.zone.now+10.seconds)
                 end
@@ -616,7 +618,7 @@ class UserTest < ActiveSupport::TestCase
                 end
 
                 should "not be synchronized if user creates new photo since last synchronize" do
-                  @photo = FactoryGirl.create(:photo, :content => @listing)
+                  @photo = FactoryGirl.create(:photo, :listing => @listing)
                   assert !@user.mailchimp_synchronized?
                 end
 

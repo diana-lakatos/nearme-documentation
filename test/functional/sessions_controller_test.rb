@@ -8,7 +8,7 @@ class SessionsControllerTest < ActionController::TestCase
     stub_mixpanel
   end
 
-  should 'successfully sign up and track' do
+  should 'successfully track in mixpanel' do
     @tracker.expects(:logged_in).with do |user, custom_options|
       user == @user && custom_options == { provider: 'native' }
     end
@@ -28,5 +28,24 @@ class SessionsControllerTest < ActionController::TestCase
     assert_equal 'Signed out successfully.', flash[:notice] 
   end
 
+  context 'versions' do
+
+    should 'not track new version after each login' do
+      assert_no_difference('Version.where("item_type = ?", "User").count') do
+        with_versioning do
+          post :create, user: { email: @user.email, password: @user.password }
+        end
+      end
+    end
+
+    should 'not track new version after each logout' do
+      sign_in @user
+      assert_no_difference('Version.where("item_type = ?", "User").count') do
+        with_versioning do
+          delete :destroy
+        end
+      end
+    end
+  end
 end
 

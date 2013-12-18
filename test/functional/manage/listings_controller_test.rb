@@ -46,7 +46,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
   context "with listing" do
 
     setup do
-      @listing = FactoryGirl.create(:listing, :location => @location, :photos_count => 1, :quantity => 2)
+      @listing = FactoryGirl.create(:listing, :location => @location, :photos_count_to_be_created => 1, :quantity => 2)
     end
 
     context 'CRUD' do
@@ -186,6 +186,40 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
       should "not destroy listing" do
         assert_raise Listing::NotFound do
+          delete :destroy, :id => @listing.id
+        end
+      end
+    end
+  end
+
+  context 'versions' do
+
+    should 'track version change on create' do
+      @attributes = FactoryGirl.attributes_for(:listing).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 })
+      @attributes.delete(:photo_not_required)
+      stub_mixpanel
+      assert_difference('Version.where("item_type = ? AND event = ?", "Listing", "create").count') do
+        with_versioning do
+          post :create, { :listing => @attributes, :location_id => @location2.id }
+        end
+      end
+
+    end
+
+    should 'track version change on update' do
+      @listing = FactoryGirl.create(:listing, :location => @location, :photos_count => 1, :quantity => 2)
+      assert_difference('Version.where("item_type = ? AND event = ?", "Listing", "update").count') do
+        with_versioning do
+          put :update, :id => @listing.id, :listing => { :name => 'new name' }
+        end
+      end
+    end
+
+    should 'track version change on destroy' do
+      stub_mixpanel
+      @listing = FactoryGirl.create(:listing, :location => @location, :photos_count => 1, :quantity => 2)
+      assert_difference('Version.where("item_type = ? AND event = ?", "Listing", "destroy").count') do
+        with_versioning do
           delete :destroy, :id => @listing.id
         end
       end

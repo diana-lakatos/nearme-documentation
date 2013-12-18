@@ -178,6 +178,38 @@ class Manage::LocationsControllerTest < ActionController::TestCase
     end
   end
 
+  context 'versions' do
+
+    should 'track version change on create' do
+      stub_mixpanel
+      assert_difference('Version.where("item_type = ? AND event = ?", "Location", "create").count') do
+        with_versioning do
+          post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).reverse_merge!({:location_type_id => @location_type.id})}
+        end
+      end
+
+    end
+
+    should 'track version change on update' do
+      @location = FactoryGirl.create(:location_in_auckland, :company => @company)
+      assert_difference('Version.where("item_type = ? AND event = ?", "Location", "update").count') do
+        with_versioning do
+          put :update, :id => @location.id, :location => { :description => 'new description' }
+        end
+      end
+    end
+
+    should 'track version change on destroy' do
+      stub_mixpanel
+      @location = FactoryGirl.create(:location_in_auckland, :company => @company)
+      assert_difference('Version.where("item_type = ? AND event = ?", "Location", "destroy").count') do
+        with_versioning do
+          delete :destroy, :id => @location.id
+        end
+      end
+    end
+  end
+
   private 
 
   def availability_rules_params

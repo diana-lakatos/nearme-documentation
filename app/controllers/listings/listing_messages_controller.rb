@@ -13,6 +13,9 @@ class Listings::ListingMessagesController < ApplicationController
     @listing_message = @listing.listing_messages.new(params[:listing_message])
     setup_listing_message
     if @listing_message.save
+      # User who is recipient of this listing message thread must have refreshed its unread counter cache
+      set_unread_message_counters_for(@listing_message.recipient)
+
       @listing_message.send_notification(platform_context)
       flash[:notice] = t('flash_messages.listing_messages.message_sent')
       redirect_to listing_messages_path
@@ -33,9 +36,14 @@ class Listings::ListingMessagesController < ApplicationController
 
     @listing_messages = ListingMessage.for_thread(@listing, @show_listing_message).by_created.decorate
 
+    # All unread messages are marked as read
     to_mark_as_read = @listing_messages.select{|m| m.unread_for?(current_user)}
     ListingMessage.update_all({read: true},
                               {id: to_mark_as_read.map(&:id)})
+
+    # User who has seen this listing message thread must have refreshed its unread counter cache
+    # if there are some messages newly marked as read
+    set_unread_message_counters_for(current_user) if to_mark_as_read.present?
 
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
@@ -70,6 +78,12 @@ class Listings::ListingMessagesController < ApplicationController
     return if user_signed_in?
     session[:user_return_to] = ask_a_question_location_listing_url(@listing.location, @listing)
     redirect_to new_user_session_path
+  end
+
+  def set_unread_message_counters_for(user)
+    actual_count = user.reload.decorate.unread_listing_message_threads.fetch.size
+    user.unread_listing_message_threads_count = actual_count
+    user.save!
   end
 
 end

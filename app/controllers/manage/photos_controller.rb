@@ -4,15 +4,13 @@ class Manage::PhotosController < Manage::BaseController
 
   def create
     @photo = Photo.new
+    @photo.listing = @listing
     @photo.image_original_url = @image_url
-    @photo.content = @content
-    @photo.content_type = @content_type
-    @photo.content_id = @content_id
     @photo.creator_id = current_user.id
     if @photo.save
       render :text => {
         :id => @photo.id, 
-        :content_id => @photo.content_id,
+        :listing_id => @photo.listing_id,
         :thumbnail_dimensions => @photo.image.thumbnail_dimensions[:medium],
         :url => @photo.image_url(:medium),
         :destroy_url => destroy_space_wizard_photo_path(@photo),
@@ -52,28 +50,17 @@ class Manage::PhotosController < Manage::BaseController
 
 
   private
-
   def get_proper_hash
     # we came from list your space flow
     if params[:user]
-      @param = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
-      @content_type = 'Listing'
-      @content_id = @param[:id]
-      @content = nil
+      photo_params = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
+      @listing = Listing.find(photo_params[:id]) if photo_params[:id]
     # we came from dashboard
-    else 
-      Photo::AVAILABLE_CONTENT.each do |content|
-        @param = params[content.downcase.to_sym]
-        if @param
-          @content_type = content
-          @content_id = @param[:id]
-          @content = @param[:id].present? ? current_user.send(content.pluralize.downcase.to_sym).find(@param[:id]) : nil
-          break
-        end
-      end
-      raise 'Unknown path to photos_attributes' unless @content_type
+    elsif params[:listing]
+      photo_params = params[:listing]
+      @listing = current_user.listings.find(params[:listing][:id]) if params[:listing][:id].present?
     end
-    @image_url = @param[:photos_attributes]["0"][:image]
+    @image_url = photo_params[:photos_attributes]["0"][:image]
   end
 
 end

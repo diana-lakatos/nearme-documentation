@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131204161403) do
+ActiveRecord::Schema.define(:version => 20131210092002) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -333,6 +333,7 @@ ActiveRecord::Schema.define(:version => 20131204161403) do
     t.datetime "activated_at"
     t.integer  "rank",                        :default => 0
     t.integer  "capacity"
+    t.integer  "photos_count",                :default => 0
   end
 
   add_index "listings", ["listing_type_id"], :name => "index_listings_on_listing_type_id"
@@ -428,10 +429,9 @@ ActiveRecord::Schema.define(:version => 20131204161403) do
   create_table "photos", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "content_id"
+    t.integer  "listing_id"
     t.string   "image"
     t.string   "caption"
-    t.string   "content_type"
     t.integer  "position"
     t.datetime "deleted_at"
     t.integer  "creator_id"
@@ -449,8 +449,8 @@ ActiveRecord::Schema.define(:version => 20131204161403) do
     t.integer  "image_original_width"
   end
 
-  add_index "photos", ["content_id", "content_type"], :name => "index_photos_on_content_id_and_content_type"
   add_index "photos", ["creator_id"], :name => "index_photos_on_creator_id"
+  add_index "photos", ["listing_id"], :name => "index_photos_on_listing_id"
 
   create_table "reservation_charges", :force => true do |t|
     t.integer  "reservation_id"
@@ -677,6 +677,7 @@ ActiveRecord::Schema.define(:version => 20131204161403) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
+    t.integer  "unread_listing_message_threads_count",                 :default => 0
   end
 
   add_index "users", ["domain_id"], :name => "index_users_on_domain_id"

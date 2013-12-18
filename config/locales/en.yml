@@ -17,7 +17,11 @@ en:
   day:
     one: "1 day"
     other: "%{count} days"
-
+  form:
+    characters_left:
+      zero: "0 characters left"
+      one: "1 character left"
+      few: "%{count} characters left"
   manage:
     companies:
       theme_image_deleted: "That image has been deleted."
@@ -39,6 +43,11 @@ en:
       subscribe: "Subscribe to be notified of new listings in this area."
   reservations:
     no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find a %{bookable_noun} near you!</a>"
+  listing_messages:
+    inbox: 
+      zero: Inbox
+      one: "Inbox (1)"
+      other: "Inbox (%{count})"
   connections:
     facebook:
       count:

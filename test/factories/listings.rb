@@ -13,12 +13,14 @@ FactoryGirl.define do
 
     photo_not_required true
     ignore do
-      photos_count 1
+      photos_count_to_be_created 1
     end
 
     after(:build) do |listing, evaluator|
-      listing.photos = FactoryGirl.create_list(:photo, evaluator.photos_count,
-                                               content: nil, creator: listing.location.creator )
+      listing.photos = create_list(:photo, evaluator.photos_count_to_be_created,
+                                   listing: nil,
+                                   creator: listing.location.creator)
+      listing.photos_count = evaluator.photos_count_to_be_created
     end
 
     factory :always_open_listing do
@@ -113,7 +115,7 @@ FactoryGirl.define do
       daily_price_cents { 5000 + (100 * rand(50)).to_i }
 
       after(:create) do |listing, evaluator|
-        listing.photos = FactoryGirl.create_list(:demo_photo, 2, content: nil, creator: listing.location.creator )
+        listing.photos = FactoryGirl.create_list(:demo_photo, 2, creator: listing.location.creator )
         listing.save!
       end
     end

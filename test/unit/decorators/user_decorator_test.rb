@@ -10,12 +10,12 @@ class UserDecoratorTest < ActionView::TestCase
       @author = @listing_message.author.decorate
     end
 
-    should 'creator should have well formatted 1 message' do
-      assert_equal '1', @listing_creator.unread_messages_count
+    should 'creator should have 1 message' do
+      assert_equal 1, @listing_creator.unread_listing_message_threads.fetch.size
     end
 
-    should 'author should have well formatted no messages' do
-      assert_equal '', @author.unread_messages_count
+    should 'author should have no messages' do
+      assert_equal 0, @author.unread_listing_message_threads.fetch.size
     end
 
     context '#social_connections_for' do

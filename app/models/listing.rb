@@ -5,7 +5,7 @@ class Listing < ActiveRecord::Base
   has_many :reservations,
     dependent: :destroy
 
-  has_many :photos, dependent: :destroy, as: :content do
+  has_many :photos, dependent: :destroy do
     def thumb
       (first || build).thumb
     end
@@ -31,7 +31,7 @@ class Listing < ActiveRecord::Base
   accepts_nested_attributes_for :photos, :allow_destroy => true
 
   # == Scopes
-  scope :featured, where(%{ (select count(*) from "photos" where content_id = "listings".id AND content_type = 'Listing') > 0  }).
+  scope :featured, where(%{ (select count(*) from "photos" where listing_id = "listings".id) > 0  }).
     includes(:photos).order(%{ random() }).limit(5)
   scope :draft,    where('listings.draft IS NOT NULL')
   scope :active,   where('listings.draft IS NULL')
@@ -207,6 +207,10 @@ class Listing < ActiveRecord::Base
       i.inquiring_user = user
       i.save!
     end
+  end
+
+  def has_photos?
+    photos_count > 0
   end
 
   def to_param

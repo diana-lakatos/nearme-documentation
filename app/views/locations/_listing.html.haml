@@ -5,7 +5,7 @@
   .listing-photo-container
     .images
       .image
-        - if listing.photos.any?
+        - if listing.has_photos?
           = image_tag listing.photos.first.image_url(:space_listing), :alt => listing.name
         - else
           = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => listing.name, :alt => listing.name

@@ -16,4 +16,7 @@ DesksnearMe::Application.configure do
   config.stripe_api_key = nil
   config.stripe_public_key = nil
   config.perform_social_jobs = false
+  config.after_initialize do
+      PaperTrail.enabled = false
+  end
 end

@@ -4,28 +4,17 @@ class ListingDrop < BaseDrop
   include SearchHelper
   include MoneyRails::ActionViewExtension
 
+  attr_reader :listing
+
+  delegate :name, :location, :description, :hourly_reservations?, :creator, :administrator, :last_booked_days, to: :listing 
+  delegate :dashboard_url, :search_url, to: :routes
+
   def initialize(listing)
     @listing = listing
   end
 
-  def name
-    @listing.name
-  end
-
-  def location
-    @listing.location
-  end
-
-  def description
-    @listing.description
-  end
-
   def availability
     pretty_availability_sentence(@listing.availability).to_s
-  end
-
-  def dashboard_url
-    routes.dashboard_path
   end
 
   def manage_guests_dashboard_url
@@ -36,20 +25,8 @@ class ListingDrop < BaseDrop
     routes.manage_guests_dashboard_path(:token => @listing.administrator.temporary_token, :track_email_event => true)
   end
 
-  def search_url
-    routes.search_path
-  end
-
   def search_url_with_tracking
     routes.search_path(track_email_event: true)
-  end
-
-  def hourly_reservations?
-    @listing.hourly_reservations?
-  end
-
-  def creator
-    @listing.creator
   end
 
   def listing_url
@@ -60,12 +37,8 @@ class ListingDrop < BaseDrop
     @listing.location.street
   end
 
-  def administrator
-    @listing.administrator
-  end
-
   def photo_url
-    @listing.photos.any? ? @listing.photos.first.image_url(:space_listing) : image_url(Placeholder.new(:width => 410, :height => 254).path).to_s
+    @listing.has_photos? ? @listing.photos.first.image_url(:space_listing) : image_url(Placeholder.new(:width => 410, :height => 254).path).to_s
   end
 
   def from_money_period
@@ -76,7 +49,4 @@ class ListingDrop < BaseDrop
     routes.edit_manage_location_listing_path(@listing.location, @listing, track_email_event: true, token: @listing.administrator.temporary_token)
   end
 
-  def last_booked_days
-    @listing.last_booked_days
-  end
 end

@@ -6,7 +6,7 @@
         - if @location.photos.any?
           - @location.photos.each_with_index do |photo, index|
             .item{:class => ("active" if index == 0)}
-              = image_tag photo.image_url(:golden), :alt => photo.content.name
+              = image_tag photo.image_url(:golden), :alt => photo.listing.name
               - if photo.caption.present?
                 .carousel-caption.ico-info
                   = photo.caption

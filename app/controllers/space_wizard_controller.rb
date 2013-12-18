@@ -23,7 +23,7 @@ class SpaceWizardController < ApplicationController
     @location ||= @company.locations.build
     @location.name_required = true
     @listing ||= @location.listings.build
-    @photos = @user.photos.where("content_type = 'Listing' AND content_id IS NOT NULL") || nil
+    @photos = @user.photos.where("listing_id IS NOT NULL") || nil
     event_tracker.viewed_list_your_bookable
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
@@ -70,8 +70,8 @@ class SpaceWizardController < ApplicationController
 
   def can_delete_photo?(photo, user)
     return true if photo.creator == user                         # if the user created the photo
-    return true if photo.content.try('administrator') == user    # if the user is an admin of the photos content
-    return true if @company.listings.include?(photo.content)     # if the photo content is a listing and belongs to company
+    return true if photo.listing.administrator == user    # if the user is an admin of the photos content
+    return true if @company.listings.include?(photo.listing)     # if the photo content is a listing and belongs to company
   end
 
   def find_user

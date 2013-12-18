@@ -1,12 +1,12 @@
 class ReservationDrop < BaseDrop
   include ReservationsHelper
 
+  attr_reader :reservation
+  delegate :quantity, :subtotal_price, :service_fee_guest, :total_price, :pending?,
+  :credit_cart_payment?, :paid, :rejection_reason, :owner, to: :reservation
+
   def initialize(reservation)
     @reservation = reservation.decorate
-  end
-
-  def quantity
-    @reservation.quantity
   end
 
   def hourly_summary
@@ -17,40 +17,12 @@ class ReservationDrop < BaseDrop
     @reservation.selected_dates_summary(wrapper: :span)
   end
 
-  def subtotal_price
-    @reservation.subtotal_price
-  end
-
-  def service_fee_guest
-    @reservation.service_fee_guest
-  end
-
-  def total_price
-    @reservation.total_price
-  end
-
-  def pending?
-    @reservation.pending?
-  end
-
-  def credit_cart_payment?
-    @reservation.credit_card_payment?
-  end
-
-  def paid
-    @reservation.paid
-  end
-
   def balance
     @reservation.formatted_balance
   end
 
   def has_rejection_reason
-    !@reservation.rejection_reason.to_s.empty?
-  end
-
-  def rejection_reason
-    @reservation.rejection_reason
+    !rejection_reason.to_s.empty?
   end
 
   def search_url
@@ -79,10 +51,6 @@ class ReservationDrop < BaseDrop
 
   def created_at
     @reservation.created_at.strftime("%A,%e %B")
-  end
-
-  def owner
-    @reservation.owner
   end
 
   def reservation_confirm_url

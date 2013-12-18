@@ -28,6 +28,8 @@ class RegistrationsControllerTest < ActionController::TestCase
       @industry2 = FactoryGirl.create(:industry)
       @tracker.expects(:updated_profile_information).once
       put :update, :id => @user, user: { :industry_ids => [@industry.id, @industry2.id] }
+      @user.reload
+      assert_equal [@industry.id, @industry2.id], @user.industries.collect(&:id)
     end
 
     should 'show profile' do
@@ -52,7 +54,6 @@ class RegistrationsControllerTest < ActionController::TestCase
       sign_in @user
 
       fb_friend = FactoryGirl.create(:user)
-      ln_friend = FactoryGirl.create(:user)
       tw_friend = FactoryGirl.create(:user)
       fb = FactoryGirl.create(:authentication, provider: 'facebook')
       ln = FactoryGirl.create(:authentication, provider: 'linkedin')
@@ -60,7 +61,6 @@ class RegistrationsControllerTest < ActionController::TestCase
       ig = FactoryGirl.create(:authentication, provider: 'instagram', profile_url: 'link')
       @user.authentications << [fb, ln, tw, ig]
       @user.add_friend(fb_friend, fb)
-      @user.add_friend(ln_friend, ln)
       @user.add_friend(tw_friend, tw)
 
       get :show, :id => @user.slug
@@ -72,7 +72,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_select ".info .icon .ico-instagram", 1
       assert_select ".info .icon .ico-mail", 1
       assert_select ".info .connection .count", "1 friend"
-      assert_select ".info .connection .count", "1 connection"
+      assert_select ".info .connection .count", "0 connections"
       assert_select ".info .connection .count", "1 follower"
     end
 
@@ -225,6 +225,27 @@ class RegistrationsControllerTest < ActionController::TestCase
       end
     end
 
+  end
+
+  context 'versions' do
+
+    should 'track version change on create' do
+      assert_difference('Version.where("item_type = ? AND event = ?", "User", "create").count') do
+        with_versioning do
+          post :create, user: user_attributes
+        end
+      end
+
+    end
+
+    should 'track version change on update' do
+      sign_in @user
+      assert_difference('Version.where("item_type = ? AND event = ?", "User", "update").count') do
+        with_versioning do
+          put :update, :id => @user, user: { :name => 'Updated Name' }
+        end
+      end
+    end
   end
 
   context 'scopes current partner' do

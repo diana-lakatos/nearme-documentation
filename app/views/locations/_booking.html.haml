@@ -1,6 +1,6 @@
 .listing.box{listing_data_attributes(listing)}
   .images
-    - if listing.photos.any?
+    - if listing.has_photos?
       .image{:style => "margin-right: 15px;"}
         = image_tag listing.photos.first.image_url(:space_listing)
 

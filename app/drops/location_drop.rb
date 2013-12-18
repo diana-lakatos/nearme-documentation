@@ -2,16 +2,11 @@ class LocationDrop < BaseDrop
   include ReservationsHelper
   include SharingHelper
 
+  attr_reader :location
+  delegate :name, :description, :phone, to: :location
+
   def initialize(location)
     @location = location
-  end
-
-  def name
-    @location.name
-  end
-
-  def description
-    @location.description
   end
 
   def url
@@ -44,12 +39,8 @@ class LocationDrop < BaseDrop
   end
 
   def phone?
-    @location.phone.present?
+    phone.present?
   end
-
-  def phone
-    @location.phone
-  end 
 
   def facebook_img_url
     image_url('mailers/facebook.png').to_s

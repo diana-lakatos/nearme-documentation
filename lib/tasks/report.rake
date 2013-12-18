@@ -200,7 +200,7 @@ namespace :report do
       ]
 
       listings.each do |listing|
-        next if ENV['WITHOUT_PHOTO'] and listing.photos.any?
+        next if ENV['WITHOUT_PHOTO'] and listing.has_photos?
 
         csv << [
           listing.created_at > (Time.now - 7.days) ? 1 : 0,

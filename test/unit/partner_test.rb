@@ -44,5 +44,4 @@ class PartnerTest < ActiveSupport::TestCase
     @theme1 = FactoryGirl.create(:theme, :owner_id => @partner.id, :owner_type => 'Partner')
     assert_equal @theme1, @partner.theme
   end
-
 end

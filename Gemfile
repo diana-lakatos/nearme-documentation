@@ -94,9 +94,7 @@ gem 'addressable'
 
 gem 'timecop'
 
-group :staging, :production do
-  gem 'newrelic_rpm'
-end
+gem 'newrelic_rpm'
 
 group :assets do
   gem 'uglifier', "~>2.1.0"

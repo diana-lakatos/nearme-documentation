@@ -11,8 +11,9 @@ class ListingMessage < ActiveRecord::Base
   validates_presence_of :body, message: "Message can't be blank."
   validates_length_of :body, maximum: 2000, message: "Message cannot have more than 2000 characters."
 
-  scope :for_thread, ->(listing, listing_message) { where(listing_id: listing.id, 
-                                                    owner_id: listing_message.owner_id) }
+  scope :for_thread, ->(listing, listing_message) {
+    where(listing_id: listing.id, owner_id: listing_message.owner_id)
+  }
 
   scope :by_created, -> {order('created_at desc')}
 
@@ -50,9 +51,9 @@ class ListingMessage < ActiveRecord::Base
 
   def send_notification(platform_context)
     if message_from_guest?
-      ListingMessagingMailer.enqueue.email_message_from_guest(platform_context, self)
+      ListingMessageMailer.enqueue.email_message_from_guest(platform_context, self)
     else
-      ListingMessagingMailer.enqueue.email_message_from_host(platform_context, self)
+      ListingMessageMailer.enqueue.email_message_from_host(platform_context, self)
     end
   end
 

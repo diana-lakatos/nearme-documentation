@@ -1,4 +1,5 @@
 class InstanceAdmin < ActiveRecord::Base
+  has_paper_trail
 
   attr_accessible :instance_id, :user_id, :instance_admin_role_id, :instance_owner
 
