@@ -296,8 +296,8 @@ class ApplicationController < ActionController::Base
   end
 
   def miniprofiler
-    if defined? Rack::MiniProfiler
-      Rack::MiniProfiler.authorize_request if Rails.env.development? || Rails.env.staging?
+    if defined? Rack::MiniProfiler && !Rails.env.production?
+      Rack::MiniProfiler.authorize_request
     end
   end
 

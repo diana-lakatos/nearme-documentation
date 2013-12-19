@@ -96,8 +96,9 @@ gem 'timecop'
 
 gem 'newrelic_rpm'
 
-group :development, :staging do
+group :profiling do
   gem 'rack-mini-profiler'
+  gem 'bullet'
 end
 
 group :assets do
@@ -112,7 +113,6 @@ group :development do
   gem 'quiet_assets'
   gem 'thin'
   gem 'mail_view', '~>2'
-  gem 'bullet'
 end
 
 group :test do
