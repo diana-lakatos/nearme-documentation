@@ -7,9 +7,13 @@ class ReengagementMailer < InstanceMailer
     @platform_context_decorator = @platform_context.decorate
     @listing = Listing.first
 
-    mail to: @user.email, 
-           subject: instance_prefix("Check out these new spaces in your area!", @platform_context_decorator),
-           platform_context: @platform_context
+    if should_be_sent?
+      mail to: @user.email, 
+             subject: instance_prefix("Check out these new spaces in your area!", @platform_context_decorator),
+             platform_context: @platform_context
+    else
+      Rails.logger.info "ReengagementMailer no_bookings has not been sent to #{@user.id} #{@user.name} because we don't know what to suggest"
+    end
   end
 
   def one_booking(platform_context, reservation)
@@ -19,13 +23,23 @@ class ReengagementMailer < InstanceMailer
     @platform_context = platform_context
     @platform_context_decorator = @platform_context.decorate
 
-    mail to: @user.email, 
-           subject: instance_prefix("Check out these new spaces in your area!", @platform_context_decorator),
-           platform_context: @platform_context
+    if should_be_sent?
+      mail to: @user.email, 
+             subject: instance_prefix("Check out these new spaces in your area!", @platform_context_decorator),
+             platform_context: @platform_context
+    else
+      Rails.logger.info "ReengagementMailer one_booking has not been sent to #{@user.id} #{@user.name} because we don't know what to suggest"
+    end
   end
 
   def mail_type
     DNM::MAIL_TYPES::NON_TRANSACTIONAL
+  end
+
+  private
+
+  def should_be_sent?
+    @user.listings_in_near.size > 0
   end
 
 end

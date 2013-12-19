@@ -405,21 +405,19 @@ class User < ActiveRecord::Base
   end
 
   def listings_in_near(results_size = 3, radius_in_km = 100)
+    locations_in_near = nil
     # we want allow greenwhich and friends, but probably 0 latitude and 0 longitude is not valid location :)
     if last_geolocated_location_latitude.nil? || last_geolocated_location_longitude.nil? || (last_geolocated_location_latitude.to_f.zero? && last_geolocated_location_longitude.to_f.zero?)
       locations_in_near = Location.near(current_location, radius_in_km, units: :km, order: :distance)
     else
       locations_in_near = Location.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
     end
-    
-    locations_in_near = Location if locations_in_near.count.zero?
 
     listings = []
     locations_in_near.includes(:listings).each do |location|
       listings += location.listings.searchable.limit((listings.size - results_size).abs)
       return listings if listings.size >= results_size
-    end
-
+    end if locations_in_near
     listings
   end
 
