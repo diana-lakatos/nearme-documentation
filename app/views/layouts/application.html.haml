@@ -36,6 +36,8 @@
       = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
       = javascript_include_tag :chrome_frame
 
+    - if platform_context.theme && !platform_context.theme.homepage_css.blank?
+      %style= platform_context.theme.homepage_css.html_safe
     = render 'layouts/initializers'
 
   %body
