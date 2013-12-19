@@ -24,6 +24,7 @@ class Theme < ActiveRecord::Base
   delegate :lessee, :to => :instance
 
   validates :contact_email, email_rfc_822: true, allow_nil: true
+  validates_length_of :description, :maximum => 250
 
   mount_uploader :icon_image, ThemeImageUploader
   mount_uploader :icon_retina_image, ThemeImageUploader
