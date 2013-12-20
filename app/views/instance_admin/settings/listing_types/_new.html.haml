@@ -1,1 +1,4 @@
-_new.html.haml
+= simple_form_for [:instance_admin, :settings, ListingType.new], :defaults => {:required => false} do |f|
+  %fieldset
+    = f.input :name, :label => 'Add new listing type'
+    = f.submit "Add", :class => 'btn btn-success'

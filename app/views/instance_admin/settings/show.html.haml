@@ -7,7 +7,8 @@
 
 = render 'instance_admin/settings/location_types/index', instance: @instance
 = render 'instance_admin/settings/location_types/new'
-= render 'instance_admin/settings/listing_types/listing_types', instance: @instance
+= render 'instance_admin/settings/listing_types/index', instance: @instance
+= render 'instance_admin/settings/listing_types/new'
 
 
 = simple_nested_form_for @instance, :url => instance_admin_settings_path, :html => { :multipart => true } do |f|
