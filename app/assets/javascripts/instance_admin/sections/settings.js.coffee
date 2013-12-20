@@ -6,3 +6,4 @@ class @InstanceAdmin.SettingsController
   bindEvents: ->
     @container.on "hidden", ->
       $(this).removeData "modal"
+      $(this).find('.modal-body').html( "<p>Loading...</p>" );

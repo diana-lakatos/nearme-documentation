@@ -1,8 +1,7 @@
 = "Please select a replacement location type for any locations currently using '#{@location_type.name}'."
 
-%p
-  = simple_form_for @location_type, :url => instance_admin_settings_location_type_path(@location_type), :method => :delete do |f|
-    = select_tag(:replacement_type_id, options_for_select(@replacement_types.map{|r| [r.name, r.id]}))
-    .pull-right
-      %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal"} Close
-      = f.button :submit, 'Replace and delete', class: 'btn btn-danger'
+= simple_form_for @location_type, :url => instance_admin_settings_location_type_path(@location_type), :method => :delete do |f|
+  = select_tag(:replacement_type_id, options_for_select(@replacement_types.map{|r| [r.name, r.id]}))
+  .pull-right
+    %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal"} Close
+    = f.button :submit, 'Replace and delete', class: 'btn btn-danger'
