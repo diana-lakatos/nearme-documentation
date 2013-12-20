@@ -1,5 +1,5 @@
 - only_inputs = [] if only_inputs.nil?
-= f.input :name, :label => "Company name", :placeholder => "Enter your business name" if (only_inputs.empty? || only_inputs.include?(:name))
+= f.input :name, :as => :limited_string, :limit => 50, :label => "Company name", :placeholder => "Enter your business name" if (only_inputs.empty? || only_inputs.include?(:name))
 = f.association :industries, :label =>  "Industries", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select' }, :required => true if (platform_context.is_desksnearme? && (only_inputs.empty? || only_inputs.include?(:industries)))
 = f.input :url, :label => "Website", :placeholder => "www.mycompany.com" if (only_inputs.empty? || only_inputs.include?(:url))
 = f.input :email, :label => "Company email", :placeholder => "yourname@example.com" if (only_inputs.empty? || only_inputs.include?(:email))

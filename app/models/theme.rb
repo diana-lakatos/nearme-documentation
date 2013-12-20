@@ -13,7 +13,8 @@ class Theme < ActiveRecord::Base
     :owner, :owner_id, :owner_type, :site_name, :description, :tagline, :address, :support_email,
     :contact_email, :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url,
     :meta_title, :remote_logo_image_url, :remote_logo_retina_image_url, :remote_icon_image_url,
-    :remote_hero_image_url, :remote_icon_retina_image_url, :gplus_url, :homepage_content, :call_to_action
+    :remote_hero_image_url, :remote_icon_retina_image_url, :gplus_url, :homepage_content, :call_to_action,
+    :homepage_css
 
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
@@ -24,6 +25,7 @@ class Theme < ActiveRecord::Base
   delegate :lessee, :to => :instance
 
   validates :contact_email, email_rfc_822: true, allow_nil: true
+  validates_length_of :description, :maximum => 250
 
   mount_uploader :icon_image, ThemeImageUploader
   mount_uploader :icon_retina_image, ThemeImageUploader
@@ -65,7 +67,7 @@ class Theme < ActiveRecord::Base
 
   # Checks if any of options that impact the theme stylesheet have been changed.
   def theme_changed?
-    attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action address favicon_image contact_email)
+    attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action address favicon_image contact_email homepage_css)
     attrs.any? { |attr|
       send("#{attr}_changed?")
     }

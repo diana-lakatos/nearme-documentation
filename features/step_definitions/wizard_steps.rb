@@ -3,6 +3,7 @@ When /^I fill in valid space details$/ do
   page.execute_script "$('select#user_companies_attributes_0_industry_ids option:first').prop('selected', true);"
   fill_in 'Location description', with: 'Our historic 11-story Southern Pacific Building, also known as "The Landmark", was completed in 1916. We are in the 172 m Spear Tower.'
   fill_in 'Location address', with: 'usa'
+  fill_in 'Location name', with: 'name'
   page.execute_script "$('select#user_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
   fill_in 'Phone number', with: '844100999'
   select 'Business', from: 'Location type'

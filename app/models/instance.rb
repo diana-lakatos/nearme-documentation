@@ -13,8 +13,6 @@ class Instance < ActiveRecord::Base
   has_many :location_types
   has_many :listing_amenity_types
   has_many :location_amenity_types
-  has_many :reservations,
-           :through => :companies
   has_many :listings, :through => :locations
   has_many :listing_types
   has_many :domains, :as => :target
@@ -22,6 +20,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_admins
   has_many :instance_admin_roles
   has_many :reservations, :as => :platform_context_detail, :dependent => :destroy
+  has_many :reservation_charges, :through => :reservations
 
   serialize :pricing_options, Hash
 

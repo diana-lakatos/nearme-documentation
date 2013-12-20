@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131210092002) do
+ActiveRecord::Schema.define(:version => 20131219070255) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -580,6 +580,7 @@ ActiveRecord::Schema.define(:version => 20131210092002) do
     t.text     "homepage_content"
     t.string   "call_to_action"
     t.string   "favicon_image"
+    t.text     "homepage_css"
   end
 
   add_index "themes", ["owner_id", "owner_type"], :name => "index_themes_on_owner_id_and_owner_type"

@@ -148,7 +148,7 @@ en:
     labels:
       theme:
         logo_image: 'Logo (219 x 60px)'
-        logo_retina_image: 'Logo Retina (538 x 122px)'
+        logo_retina_image: 'Logo Retina (438 x 120px)'
         favicon_image: 'Favicon (16 x 16px or 32 x 32px)'
         icon_image: 'Icon (50 x 50px)'
         icon_retina_image: 'Icon Retina (100 x 100px)'

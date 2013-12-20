@@ -193,6 +193,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
          "locations_attributes"=>
          {"0"=>
           {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.", 
+           "name" => 'Location',
            "address"=>"usa", 
            "local_geocoding"=>"10", 
            "latitude"=>"5", 
