@@ -52,6 +52,7 @@ class Company < ActiveRecord::Base
   validates_presence_of :name, :instance_id
   validates_presence_of :industries, :if => proc { |c| c.instance.present? && c.instance.is_desksnearme? && !c.instance.skip_company? }
   validates_length_of :description, :maximum => 250
+  validates_length_of :name, :maximum => 50
   validates :email, email: true, allow_blank: true
   validate :validate_url_format
 

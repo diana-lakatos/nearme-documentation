@@ -55,6 +55,7 @@ class Location < ActiveRecord::Base
   validates :email, email: true, allow_nil: true
   validates :currency, currency: true, allow_nil: false
   validates_length_of :description, :maximum => 250
+  validates_length_of :name, :maximum => 50, :if => :name_required
 
   before_validation :fetch_coordinates
   before_validation :parse_address_components
