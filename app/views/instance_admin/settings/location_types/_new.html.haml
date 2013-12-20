@@ -1,0 +1,4 @@
+= simple_form_for [:instance_admin, :settings, LocationType.new], :defaults => {:required => false} do |f|
+  %fieldset
+    = f.input :name, :label => 'Add new location type'
+    = f.submit "Add", :class => 'btn btn-success'

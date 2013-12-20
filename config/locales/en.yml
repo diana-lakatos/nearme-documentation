@@ -142,7 +142,16 @@ en:
           role_added: "Great, new role has been added!"
           role_deleted: "That role has been deleted"
       settings:
-        settings_updated_successfully: 'Settings updated.'
+        settings_updated: 'Settings updated.'
+        location_type_added: 'New location type added.'
+        location_type_not_added: 'Could not add new location type.'
+        location_type_deleted: 'Location type deleted.'
+        location_type_not_deleted: 'Location type could not be deleted.'
+        listing_type_added: 'New listing type added.'
+        listing_type_not_added: 'Could not add new listing type.'
+        listing_type_deleted: 'Listing type deleted.'
+        listing_type_not_deleted: 'Listing type could not be deleted.'
+
 
   simple_form:
     labels:

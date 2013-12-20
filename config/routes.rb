@@ -57,6 +57,11 @@ DesksnearMe::Application.routes.draw do
 
     resources :partners
     resource :settings, :only => [:show, :update], :controller => 'settings'
+    namespace :settings do
+      resources :location_types, only: [:index, :create, :destroy_modal, :destroy] do
+        get 'destroy_modal', on: :member
+      end
+    end
     resource :theme, :only => [:show, :update], :controller => 'theme'
     resources :transfers do
       member do

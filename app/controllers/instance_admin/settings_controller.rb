@@ -7,7 +7,7 @@ class InstanceAdmin::SettingsController < InstanceAdmin::BaseController
 
   def update
     if @instance.update_attributes(params[:instance])
-      flash[:success] = t('flash_messages.instance_admin.settings.settings_updated_successfully')
+      flash[:success] = t('flash_messages.instance_admin.settings.settings_updated')
       render :show
     else
       render :show

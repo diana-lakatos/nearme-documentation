@@ -1,15 +1,21 @@
 = simple_nested_form_for @instance, :url => instance_admin_settings_path, :html => { :multipart => true } do |f|
-
   = render 'instance_admin/settings/basic_configuration', f: f
   = render 'instance_admin/settings/nomenclature', f: f
   = render 'instance_admin/settings/domain_names', f: f
   = render 'instance_admin/settings/pricing_options', f: f
 
-= simple_nested_form_for @instance, :url => instance_admin_settings_path, :html => { :multipart => true } do |f|
-  = render 'instance_admin/settings/location_types/location_types', f: f
-  = render 'instance_admin/settings/listing_types/listing_types', f: f
+
+= render 'instance_admin/settings/location_types/index', instance: @instance
+= render 'instance_admin/settings/location_types/new'
+= render 'instance_admin/settings/listing_types/listing_types', instance: @instance
+
 
 = simple_nested_form_for @instance, :url => instance_admin_settings_path, :html => { :multipart => true } do |f|
   %section#amenities
     = render 'instance_admin/settings/amenities', type: 'location', f: f
     = render 'instance_admin/settings/amenities', type: 'listing', f: f
+
+= render 'instance_admin/shared/modal', heading: "Select replacement type"
+
+- content_for :domready do
+  new InstanceAdmin.SettingsController($('#instanceAdminModal'))
