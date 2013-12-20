@@ -141,10 +141,6 @@ class Theme < ActiveRecord::Base
     attributes[:favicon_image] ? super : false
   end
 
-  def homepage_css_changed?
-    attributes[:homepage_css] ? super : false
-  end
-
   def self.hexify(color)
     '#' + color.to_s.delete('#')
   end
