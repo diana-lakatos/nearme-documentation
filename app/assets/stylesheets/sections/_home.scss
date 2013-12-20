@@ -148,66 +148,6 @@ section.public {
   }
 }
   
-section.how-it-works {
-  text-align: center;
-
-  .row-fluid {
-    padding: 30px 0 0;
-    margin: 0;
-  }
-
-  h1{
-    @include adjust-font-size-to(60px);
-    margin: 10px 0 0;
-    color: $gray60;
-    font-family: $font-demi;
-
-    @media (max-width: $iphone-landscape) {
-      @include adjust-font-size-to(42px);
-    }
-  }
-
-  h2{
-    @include adjust-font-size-to(30px);
-    margin: 10px 0 20px;
-    color: lighten($gray80, 10%);
-
-    @media (min-width: 768px) and (max-width: 900px) {
-      @include adjust-font-size-to(24px);
-    }
-
-    @media (max-width: $ipad-width) {
-      margin-top: 30px;
-    }
-  }
-
-  p {
-    margin: 20px auto 0;
-    max-width: 280px;
-  }
-
-  .btn {
-    width: auto;
-    max-width: 300px;
-    margin:0 auto 50px;
-  }  
-
-  hr {
-    height: 0;
-    background: none;
-    border: none;
-    border-bottom: 1px dashed $gray210;
-  }
-
-  p {
-    @media (max-width: $ipad-width) {
-      max-width: 300px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
-}  
-
 .main-page {
   height: 100%;
   min-height: 100%;
