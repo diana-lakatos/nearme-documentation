@@ -34,7 +34,7 @@ class ReengagementMailerTest < ActiveSupport::TestCase
       @reservation.save!
 
       mail = ReengagementMailer.one_booking(@platform_context, @reservation)
-      subject = "[#{@platform_context.decorate.name}] Check out these new spaces in your area!"
+      subject = "[DesksNearMe] Check out these new spaces in your area!"
 
       assert mail.html_part.body.include?(@user.first_name)
       assert mail.html_part.body.include?(@reservation.listing.name)
