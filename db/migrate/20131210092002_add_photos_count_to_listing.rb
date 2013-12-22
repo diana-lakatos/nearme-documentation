@@ -11,8 +11,8 @@ class AddPhotosCountToListing < ActiveRecord::Migration
   def change
     add_column :listings, :photos_count, :integer, default: 0
 
-    Listing.includes(:photos).each do |listing|
-      listing.update_column(:photos_count, listing.photos.count)
+    Listing.scoped.each do |listing|
+      listing.update_column(:photos_count, listing.photos.where('photos.deleted_at IS NULL').count)
     end
   end
 end
