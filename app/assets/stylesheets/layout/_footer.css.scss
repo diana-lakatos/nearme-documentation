@@ -28,21 +28,24 @@
 
 footer {
 
-  .gap {
-    padding-top: 22px;
-  }
-
-  line-height: 18px;
-
-  #mixpanel {
-    a {
-      float: right;
-      margin-top: 13px;
-      @media (max-width:$ipad-width) {
-        display:none;
-      }
+  @media (max-width: $ipad-width) {
+    .mobile6 {
+      width: 50% !important;
+      float: left !important;
     }
   }
+  .near-me-badge {
+    background: image-url("near-me-badge.png") center center no-repeat;
+    width: 100px;
+    height: 100px;
+    float: right;
+    @media (max-width:$ipad-width) {
+      position: relative;
+      top: -100px;
+    }
+  }
+
+  line-height: 35px;
 
   .social-wrapper {
     @media (max-width:$ipad-width) {
@@ -50,37 +53,19 @@ footer {
       overflow: hidden;
       float: right;
       width: 100%;
-
-      ul.icons {
-        clear: right;
-        float: right;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        position: relative;
-        right: 50%;
-      }
-
-      li {
-        left: 50%;
-        display: block;
-        position: relative;
-      }
     }
-
-    ul {
-      &.icons {
-        li {
-          &:first-child {
-            padding-right: 0;
-          }
-          padding: 0 15px 0 0;
-          width: 27px;
-          float: right;
-          a:before {
-            font-size: 27px;
-          }
+    ul.icons li a {
+      .text {
+        font-family: $font-medium;
+      }
+      .image {
+        &.ico-twitter {
+          font-size: 21px;
         }
+        display: inline-block;
+        font-size: 22px;
+        width: 20px;
+        margin-right: 20px;
       }
     }
   }
@@ -89,20 +74,6 @@ footer {
     list-style: none !important;
     margin: 0 0 12px 0px !important;
 
-    li {
-      float:left;
-      text-align: center;
-      padding-right: 25px;
-
-      @media (max-width:$ipad-width) {
-        width:25%;
-        padding: 0 0 25px;
-        .clear-footer {
-          clear: left;
-        }
-      }
-
-    }
   }
 
   a, a:visited {
