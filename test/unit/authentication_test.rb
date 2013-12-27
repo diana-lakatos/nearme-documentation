@@ -40,6 +40,14 @@ class AuthenticationTest < ActiveSupport::TestCase
       Authentication::DesksnearmeProvider.expects(:new).with(auth)
       auth.social_connection
     end
+
+    should 'have provider for every available provider' do
+      Authentication.available_providers.each do |provider|
+        assert_nothing_raised {
+          "Authentication::#{provider.downcase.capitalize}Provider".constantize
+        }
+      end
+    end
   end
 
   should "has a hash for info" do
