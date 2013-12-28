@@ -5,4 +5,4 @@ SimpleCov.start 'rails' do
     add_group 'Inputs', 'app/inputs'
     add_group 'Uploaders', 'app/uploaders'
     add_group 'Observers', 'app/observers'
-end if ENV["COVERAGE"]
+end
