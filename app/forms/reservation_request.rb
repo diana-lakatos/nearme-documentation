@@ -108,7 +108,7 @@ class ReservationRequest < Form
         )
 
         if card_details.valid?
-          user.billing_gateway.store_card(card_details)
+          User::BillingGateway.new(user, reservation.instance).store_card(card_details)
         else
           add_error("Those credit card details don't look valid", :cc)
         end
