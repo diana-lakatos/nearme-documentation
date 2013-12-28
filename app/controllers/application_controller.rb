@@ -18,7 +18,6 @@ class ApplicationController < ActionController::Base
   before_filter :register_platform_context_as_lookup_context_detail
   before_filter :redirect_if_domain_not_valid
   before_filter :set_raygun_custom_data
-  before_filter :miniprofiler
 
   def current_user
     super.try(:decorate)
@@ -294,11 +293,4 @@ class ApplicationController < ActionController::Base
       Rails.logger.debug "Error when preparing Raygun custom_params: #{e}"
     end
   end
-
-  def miniprofiler
-    if defined? Rack::MiniProfiler && !Rails.env.production?
-      Rack::MiniProfiler.authorize_request
-    end
-  end
-
 end
