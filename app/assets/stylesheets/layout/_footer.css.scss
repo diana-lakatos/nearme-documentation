@@ -43,6 +43,11 @@ footer {
       position: relative;
       top: -100px;
     }
+    @media (max-width:$iphone-portrait) {
+      position: static;
+      width: 100%;
+      margin-bottom: 50px;
+    }
   }
 
   line-height: 35px;

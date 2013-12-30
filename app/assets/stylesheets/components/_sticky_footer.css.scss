@@ -34,7 +34,7 @@ html, body {
 .footer-wrapper {
   margin-top: -$footer-height;
   padding: 0;
-  height: $footer-height;
+  min-height: $footer-height;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -45,10 +45,27 @@ html, body {
   }
 
   @media (max-width: $iphone-landscape) {
-    height: $footer-height + 50;
+    min-height: $footer-height + 50;
   }
 
   @media (max-width: $ipad-width) {
-    height: $footer-height + 50;
+    min-height: $footer-height + 50;
+  }
+}
+
+@media (max-width: $ipad-width) {
+  .mobile-clearfix {
+    *zoom: 1;
+    &:before,
+    &:after {
+      display: table;
+      content: "";
+      // Fixes Opera/contenteditable bug:
+      // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+      line-height: 0;
+    }
+    &:after {
+      clear: both;
+    }
   }
 }
