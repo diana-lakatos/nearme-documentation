@@ -88,6 +88,8 @@ en:
       already_connected_to_other_user: "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account."
       signed_in_successfully: "Signed in successfully."
       authentication_successful: "Authentication successful."
+    authorizations:
+      not_authorized: "Sorry, you do not have permission to view that page."
     registrations:
       address_verified: "Perfect, your email has been confirmed. Thanks!"
       address_already_verified: "The email address has been already verified"
