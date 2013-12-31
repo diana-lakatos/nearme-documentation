@@ -8,6 +8,13 @@
     padding: 0 0 0 20px;
     height: 60px;
 
+    #header_links {
+      float: none;
+      position: absolute;
+      right: 0px;
+      background-color: $theme_black;
+    }
+
     #logo {
       float: left;
       width: 219px;
@@ -23,13 +30,6 @@
         background-position: center;
         background-size: 100%;
       }     
-    }
-
-    #header_links {
-      float: none;
-      position: absolute;
-      right: 0px;
-      background-color: $theme_black;
     }
 
     @media (max-width: $ipad-width) {
