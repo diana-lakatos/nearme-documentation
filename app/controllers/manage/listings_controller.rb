@@ -1,6 +1,7 @@
 class Manage::ListingsController < Manage::BaseController
   before_filter :find_listing, :except => [:index, :new, :create]
   before_filter :find_location
+  before_filter :disable_unchecked_prices, :only => :update
 
   def index
     redirect_to new_manage_location_listing_path(@location)
@@ -34,7 +35,6 @@ class Manage::ListingsController < Manage::BaseController
 
   def edit
     @photos = @listing.photos
-
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
@@ -104,6 +104,14 @@ class Manage::ListingsController < Manage::BaseController
       @listing = Listing.where(location_id: locations_scope.pluck(:id)).find(params[:id])
     rescue ActiveRecord::RecordNotFound
       raise Listing::NotFound
+    end
+  end
+
+  def disable_unchecked_prices
+    Listing::PRICE_TYPES.each do |price|
+      if params[:listing]["#{price}_price"].blank?
+        @listing.send("#{price}_price=", nil)
+      end
     end
   end
 end

@@ -73,14 +73,14 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
       context "#update" do
         should 'allow update for related listing' do
-          put :update, :id => @related_listing.id, :listing => { :name => 'new name' }
+          put :update, :id => @related_listing.id, :listing => { :name => 'new name', :daily_price => 10 }
           @related_listing.reload
           assert_equal 'new name', @related_listing.name
           assert_redirected_to manage_locations_path
         end
 
         should 'not allow update for unrelated listing' do
-          assert_raises(Listing::NotFound) { put :update, :id => @listing.id, :listing => { :name => 'new name' } }
+          assert_raises(Listing::NotFound) { put :update, :id => @listing.id, :listing => { :name => 'new name', :daily_price => 10 } }
           @listing.reload
           refute_equal 'new name', @related_listing.name
         end
@@ -103,9 +103,24 @@ class Manage::ListingsControllerTest < ActionController::TestCase
     end
 
     should "update listing" do
-      put :update, :id => @listing.id, :listing => { :name => 'new name' }
+      put :update, :id => @listing.id, :listing => { :name => 'new name', :daily_price => 10}
       @listing.reload
       assert_equal 'new name', @listing.name
+      assert_redirected_to manage_locations_path
+    end
+
+    should "update disable prices that are not checked" do
+      @listing.daily_price = 10
+      @listing.weekly_price = 20
+      @listing.monthly_price = 30
+      @listing.hourly_price = 1
+      @listing.save!
+      put :update, :id => @listing.id, :listing => { :weekly_price => 30.12 }
+      @listing.reload
+      assert_nil @listing.daily_price
+      assert_nil @listing.monthly_price
+      assert_nil @listing.hourly_price
+      assert_equal 30.12, @listing.weekly_price
       assert_redirected_to manage_locations_path
     end
 
@@ -210,7 +225,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       @listing = FactoryGirl.create(:listing, :location => @location, :photos_count => 1, :quantity => 2)
       assert_difference('Version.where("item_type = ? AND event = ?", "Listing", "update").count') do
         with_versioning do
-          put :update, :id => @listing.id, :listing => { :name => 'new name' }
+          put :update, :id => @listing.id, :listing => { :name => 'new name', :daily_price => 10 }
         end
       end
     end
