@@ -20,12 +20,13 @@
       width: $theme_logo_width;
       height: $theme_icon_width;
       background: image-url($theme_logo) no-repeat;
-      background-position: left;
+      background-size: auto 100%;
       text-indent: -9999px;
 
       @media (-webkit-min-device-pixel-ratio: 1.5), 
       (min-resolution: 144dpi) { 
         background: image-url($theme_logo2x) no-repeat;
+        background-size: auto 100%;
       }     
     }
 
@@ -34,10 +35,13 @@
       #logo {
         width: $theme_icon_width;
         background: image-url($theme_icon) no-repeat;
+        background-size: auto 100%;
 
         @media (-webkit-min-device-pixel-ratio: 1.5), 
         (min-resolution: 144dpi) {
           background: image-url($theme_icon2x) no-repeat;
+          background-position: left;
+          background-size: auto 100%;
         }
       }
     }
