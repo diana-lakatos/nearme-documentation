@@ -33,7 +33,7 @@ class Search.Controller
 
   initializeQueryField: ->
     @queryField = @form.find('input.query')
-    query_value = DNM.util.Url.getParameterByName('q')
+    query_value = DNM.util.Url.getParameterByName('loc')
     if @queryField.val() == '' && !query_value
       _.defer(=>@geolocateMe())
 
@@ -120,6 +120,7 @@ class Search.Controller
       params['suburb']  = result.suburb()
       params['street']  = result.street()
       params['postcode']  = result.postcode()
+    params['loc'] = @form.find("input#search").val().replace(', United States', '')
 
     params
 
@@ -129,7 +130,7 @@ class Search.Controller
   assignFormParams: (paramsHash) ->
     # Write params to search form
     for field, value of paramsHash
-      @form.find("input[name*=#{field}]").val(value)
+      @form.find("input[name=#{field}]").val(value)
 
   getSearchParams: ->
     form_params = @form.serializeArray()

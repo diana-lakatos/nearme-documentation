@@ -44,4 +44,28 @@ module SearchHelper
     end
   end
 
+  def meta_title_for_search(platform_context, search)
+    location_types_names = search.lntypes.blank? ? [] : search.lntypes.pluck(:name)
+    listing_types_names = search.lgtypes.blank? ? [] : search.lgtypes.pluck(:name)
+
+    title = (location_types_names.empty? && listing_types_names.empty?) ? platform_context.bookable_noun.pluralize : ''
+
+    title += %Q{#{location_types_names.join(', ')} #{listing_types_names.join(', ')} in #{search.city}, #{search.is_united_states? ? search.state_short : search.state}}
+    if not search.is_united_states?
+      title << ", #{search.country}"
+    end
+
+    title
+  end
+
+  def meta_description_for_search(platform_context, search)
+    description = %Q{#{search.city}, #{search.is_united_states? ? search.state_short : search.state}}
+    if not search.is_united_states?
+      description << ", #{search.country}"
+    end
+    description << ' Read reviews and book co-working space, executive suites, office space for rent, and meeting rooms.' if platform_context.is_desksnearme?
+
+    description
+  end
+
 end

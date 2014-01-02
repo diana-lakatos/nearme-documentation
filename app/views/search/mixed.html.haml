@@ -1,46 +1,23 @@
 - legacy false
 - no_footer!
 
+= render 'search/meta_tags'
+
 - content_for :mixed_locations do
   - if locations.any?
-    - if request.xhr?
-      .locations
-        .hidden-locations
-          - all_listings.each do |listing|
-            %article.listing{ data: { id: listing.id, name: listing.name, latitude: listing.latitude, longitude: listing.longitude, location: listing.location_id } }
-          %input{type: 'hidden', id: 'result_count', value: result_count}
-        = render partial: 'search/mixed/location', collection: locations
-        = will_paginate locations
-    - else
-      %section#results.mixed
-        = render 'shared/loading_spinner'
-        .map
-          %section#map.google-map-wrapper
-            .google-map
-              #listings_map.inner
-        .list
-          .filters{:'data-search-filters-container' => true}
-            = render :partial => 'search/mixed/filter', :locals => { :header_name => "#{platform_context.bookable_noun} Types", :selected_values => params[:listing_types_ids] || [], :input_name => 'listing_types_ids[]', :options => @filterable_listing_types.map { |lt| [lt.id, lt.name] } }
-            = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Pricing', :selected_values => params[:listing_pricing] || [], :input_name => 'listing_pricing[]', :options => @filterable_pricing }
-            = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => params[:location_types_ids] || [], :input_name => 'location_types_ids[]', :options => @filterable_location_types.map { |lt| [lt.id, lt.name ] } }
-
-          .sort
-            %h3 Results
-            .sort-by
-              %span sort by
-              = select_tag :sort, options_for_select([['Relevance', 'relevance'], ['Price', 'price']])
-          .locations
-            .hidden-locations
-              - all_listings.each do |listing|
-                %article.listing{ data: { id: listing.id, name: listing.name, latitude: listing.latitude, longitude: listing.longitude, location: listing.location_id } }
-              %input{type: 'hidden', id: 'result_count', value: result_count}
-            = render partial: 'search/mixed/location', collection: locations
-            = will_paginate locations
+    .locations
+      .hidden-locations
+        = render partial: 'search/map/marker', collection: all_listings, as: :listing
+        %input{type: 'hidden', id: 'result_count', value: result_count}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, search)}
+      = render partial: 'search/mixed/location', collection: locations
+      = will_paginate locations
   - elsif !@located
     .locations
       .hidden-locations
         %input{type: 'hidden', id: 'result_count', value: result_count}
-      %section#results.no_results
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, search)}
+      %div.no_results
         = render 'shared/loading_spinner'
         .text-center
           %br/
@@ -51,7 +28,8 @@
     .locations
       .hidden-locations
         %input{type: 'hidden', id: 'result_count', value: result_count}
-      %section#results.no_results
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, search)}
+      %div.no_results
         = render 'shared/loading_spinner'
         .text-center
           %br/
@@ -63,8 +41,26 @@
 - content_for :hero do
   = render 'search/mixed/header'
 
-  - if not request.xhr?
-    = yield :mixed_locations
+  %section#results.mixed
+    = render 'shared/loading_spinner'
+    .map
+      %section#map.google-map-wrapper
+        .google-map
+          #listings_map.inner
+    .list
+      .filters{:'data-search-filters-container' => true}
+        = render :partial => 'search/mixed/filter', :locals => { :header_name => "#{platform_context.bookable_noun} Types", :selected_values => search.lgtypes_filters || [], :input_name => 'listing_types_ids[]', :options => @filterable_listing_types.map { |lt| [lt.name.downcase, lt.name] } }
+        = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Pricing', :selected_values => search.lgpricing_filters || [], :input_name => 'listing_pricing[]', :options => @filterable_pricing }
+        = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => search.lntypes_filters || [], :input_name => 'location_types_ids[]', :options => @filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
+
+      .sort
+        %h3 Results
+        .sort-by
+          %span sort by
+          = select_tag :sort, options_for_select([['Relevance', 'relevance'], ['Price', 'price']])
+
+      - if not request.xhr?
+        = yield :mixed_locations
 
 - if request.xhr?
   = yield :mixed_locations

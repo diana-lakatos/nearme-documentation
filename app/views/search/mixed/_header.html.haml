@@ -1,22 +1,26 @@
 %header#listing_search.container-fluid.mixed
   .header-inner
-    %form.search_results{:action => search_path(v: result_view), :method => "get"}
-      - search_geofields.each do |geofield|
-        = hidden_field_tag geofield, ''
-      = hidden_field_tag :v, result_view
-      = hidden_field_tag :ignore_search_event, 0
-      = hidden_field_tag :page, 1
+    %form.search_results{:action => search_path(v: result_view), :method => "get"} 
+      = hidden_field_tag :lntype, search.lntype
+      = hidden_field_tag :lgtype, search.lgtype
+      = hidden_field_tag :lgpricing, search.lgpricing
       .row-fluid
         .span12
           .search-container 
-            %input#search{:name => "q", :placeholder => "enter location", :type => "text", :value => query, :class => "query", :autocomplete => "off"}
+            %input#search{:name => "loc", :placeholder => "enter location", :type => "text", :value => query, :class => "query", :autocomplete => "off"}
             .search-loop-icon
               %span.ico-search
             .geolocation
               %span.ico-crosshairs
           .search-icon.btn.btn-green
             %span.ico-search
-          - if listings.any?
-            #search_results_count.locations-count
-              %span= result_count
-              locations
+          #search_results_count.locations-count
+            %span= result_count
+            locations
+
+      - search_geofields.each do |geofield|
+        = hidden_field_tag geofield, ''
+      = hidden_field_tag :sort, search.sort
+      = hidden_field_tag :v, result_view
+      = hidden_field_tag :ignore_search_event, 0
+      = hidden_field_tag :page, 1

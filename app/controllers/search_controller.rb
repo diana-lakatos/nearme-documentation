@@ -1,3 +1,15 @@
+class ActionDispatch::DebugExceptions
+  alias_method :old_log_error, :log_error
+  def log_error(env, wrapper)
+    if wrapper.exception.is_a?  ActionController::RoutingError
+      return
+    else
+      old_log_error env, wrapper
+    end
+  end
+end
+
+
 require "will_paginate/array"
 class SearchController < ApplicationController
   extend ::NewRelic::Agent::MethodTracer
@@ -36,9 +48,17 @@ class SearchController < ApplicationController
 
   def filters
     search_filters = {}
-    search_filters[:listing_type_filter] = params[:listing_types_ids].map { |lt| ListingType.find(lt).name } if params[:listing_types_ids]
-    search_filters[:location_type_filter] = params[:location_types_ids].map { |lt| LocationType.find(lt).name } if params[:location_types_ids]
-    search_filters[:industry_filter] = params[:industries_ids].map { |i| Industry.find(i).name } if params[:industries_ids]
+
+    if result_view.mixed?
+      search_filters[:listing_type_filter] = search.listing_types_ids.map(&:name) if search.listing_types_ids && !search.listing_types_ids.empty?
+      search_filters[:location_type_filter] = search.location_types_ids.map(&:name) if search.location_types_ids && !search.location_types_ids.empty?
+      search_filters[:listing_pricing_filter] = search.lgpricing_filters if not search.lgpricing_filters.empty?
+    else
+      search_filters[:listing_type_filter] = params[:listing_types_ids].map { |lt| ListingType.find(lt).name } if params[:listing_types_ids]
+      search_filters[:location_type_filter] = params[:location_types_ids].map { |lt| LocationType.find(lt).name } if params[:location_types_ids]
+      search_filters[:industry_filter] = params[:industries_ids].map { |i| Industry.find(i).name } if params[:industries_ids]
+    end
+
     search_filters
   end
 
@@ -57,8 +77,16 @@ class SearchController < ApplicationController
   def fetcher
     @fetcher ||=
       begin
-        params_object = Listing::Search::Params::Web.new(params)
-        @search_params = params.merge({:midpoint => params_object.midpoint, :radius => params_object.radius, :available_dates => params_object.available_dates, :query => params_object.query})
+        @search_params = params.merge({
+          :midpoint => search.midpoint,
+          :radius => search.radius,
+          :available_dates => search.available_dates,
+          :query => search.query,
+          :location_types_ids => search.location_types_ids,
+          :listing_types_ids => search.listing_types_ids,
+          :listing_pricing => search.lgpricing.blank? ? [] : search.lgpricing_filters,
+          :sort => search.sort
+        })
 
         Listing::SearchFetcher.new(search_scope, @search_params)
       end
@@ -123,7 +151,7 @@ class SearchController < ApplicationController
   end
 
   def should_log_conducted_search?
-    first_result_page? && ignore_search_event_flag_false? && !repeated_search? && params[:q]
+    first_result_page? && ignore_search_event_flag_false? && !repeated_search? && params[:loc]
   end
 
   def first_result_page?
@@ -135,7 +163,7 @@ class SearchController < ApplicationController
   end
 
   def remember_search_query
-    if params[:q]
+    if params[:loc]
       cookies[:last_search_query] = {
         :value => search_query_values,
         :expires => (Time.zone.now + 1.hour),
@@ -145,20 +173,21 @@ class SearchController < ApplicationController
 
   def search_query_values
     { 
-      :q => params[:q],
-      :listing_types_ids => params[:listing_types_ids],
-      :location_types_ids => params[:location_types_ids],
-      :industries_ids => params[:industries_ids]
+      :loc => params[:loc],
+      :listing_types_ids => search.listing_types_ids,
+      :location_types_ids => search.location_types_ids,
+      :industries_ids => params[:industries_ids],
+      :listing_pricing => search.lgpricing
     }
 
   end
 
   def repeated_search?
-    params[:q] && search_query_values.to_s == cookies[:last_search_query].try(:to_s)
+    params[:loc] && search_query_values.to_s == cookies[:last_search_query].try(:to_s)
   end
 
   def search_notification
-    @search_notification ||= SearchNotification.new(query: params[:q], latitude: params[:lat], longitude: params[:lng])
+    @search_notification ||= SearchNotification.new(query: params[:loc], latitude: params[:lat], longitude: params[:lng])
   end
 
   def set_options_for_filters

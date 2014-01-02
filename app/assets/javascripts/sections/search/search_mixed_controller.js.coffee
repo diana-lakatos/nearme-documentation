@@ -75,8 +75,22 @@ class Search.SearchMixedController extends Search.SearchController
     @currentAjaxRequest = $.ajax(
       url  : @form.attr("action")
       type : 'GET',
-      data : @form.add('.list .filters :input').add('.list .sort :input').serialize()
+      data : @form.add('.list .sort :input').serialize()
     )
+
+
+  # Trigger the search from manipulating the query.
+  # Note that the behaviour semantics are different to manually moving the map.
+  triggerSearchFromQuery: ->
+    # assign filter values
+    @assignFormParams(
+      lntype: _.toArray(@container.find('input[name="location_types_ids[]"]:checked').map(-> $(this).val())).join(',')
+      lgtype: _.toArray(@container.find('input[name="listing_types_ids[]"]:checked').map(-> $(this).val())).join(',')
+      lgpricing: _.toArray(@container.find('input[name="listing_pricing[]"]:checked').map(-> $(this).val())).join(',')
+      sort: @container.find('#sort').val()
+      loc: @form.find("input#search").val().replace(', United States', '')
+    )
+    super
 
 
   updateResultsCount: ->
@@ -129,3 +143,11 @@ class Search.SearchMixedController extends Search.SearchController
   fieldChanged: (field, value) ->
     @triggerSearchFromQueryAfterDelay()
 
+
+  updateUrlForSearchQuery: ->
+    url = document.location.href.replace(/\?.*$/, "")
+    params = @getSearchParams()
+    # we need to decodeURIComponent, otherwise accents will not be handled correctly. Remove decodeURICompoent if we switch back
+    # to window.history.replaceState, but it's *absolutely mandatory* in this case. Removing it now will lead to infiite redirection in IE lte 9
+    url = decodeURIComponent("?#{$.param(params)}")
+    History.replaceState(params, @container.find('input[name=meta_title]').val(), url)

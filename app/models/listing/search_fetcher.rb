@@ -8,7 +8,6 @@ class Listing
       @search_scope = search_scope
       @midpoint = filters.fetch(:midpoint)
       @radius = filters.fetch(:radius)
-      @sort_by = filters.fetch(:sort, 'relevance').inquiry
       @filters = filters
     end
 
@@ -49,7 +48,7 @@ class Listing
         begin
           _locations = Location.where(id: listings.map(&:location_id).uniq).includes(:company)
 
-          if @sort_by.relevance?
+          if @filters[:sort].relevance?
             # do nothing, already ordered by distance
           else
             self.class.trace_execution_scoped(['Custom/SearchFetcher/locations/sort_by_price']) do

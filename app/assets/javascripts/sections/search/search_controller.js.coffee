@@ -240,9 +240,9 @@ class Search.SearchController extends Search.Controller
     @loader.showWithoutLocker()
     @triggerSearchRequest().success (html) =>
       @processingResults = true
+      @showResults(html)
       @updateUrlForSearchQuery()
       @updateLinksForSearchQuery()
-      @showResults(html)
       window.scrollTo(0, 0) if !@map
       @loader.hide()
       callback() if callback

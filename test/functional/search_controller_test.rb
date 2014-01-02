@@ -35,19 +35,19 @@ class SearchControllerTest < ActionController::TestCase
           listing.update_attribute(:enabled, false)
         end
 
-        get :index, q: 'Auckland'
+        get :index, loc: 'Auckland'
         assert_nothing_found
       end
     end
 
     context 'for invalid place' do
       should 'find nothing for empty query' do
-        get :index, q: ''
+        get :index, loc: ''
         assert_nothing_found
       end
 
       should 'find nothing for invalid query' do
-        get :index, q: 'bung'
+        get :index, loc: 'bung'
         assert_nothing_found
       end
     end
@@ -57,7 +57,7 @@ class SearchControllerTest < ActionController::TestCase
         unavaliable_location = FactoryGirl.create(:fully_booked_listing_in_cleveland).location
         available_location = FactoryGirl.create(:listing_in_cleveland).location
 
-        get :index, q: 'Cleveland'
+        get :index, loc: 'Cleveland'
 
         assert_location_in_result(unavaliable_location) 
         assert_location_in_result(available_location)
@@ -72,7 +72,7 @@ class SearchControllerTest < ActionController::TestCase
           filtered_auckland = FactoryGirl.create(:company, industries: [filtered_industry], locations: [FactoryGirl.create(:location_in_auckland)]).locations.first
           another_auckland = FactoryGirl.create(:company, industries: [another_industry], locations: [FactoryGirl.create(:location_in_auckland)]).locations.first
 
-          get :index, { :q => 'Auckland', :industries_ids => [filtered_industry.id] }
+          get :index, { :loc => 'Auckland', :industries_ids => [filtered_industry.id], :v => 'list' }
 
           assert_location_in_result(filtered_auckland) 
           refute_location_in_result(another_auckland) 
@@ -86,7 +86,7 @@ class SearchControllerTest < ActionController::TestCase
           filtered_auckland = FactoryGirl.create(:location_in_auckland, location_type: filtered_location_type)
           another_auckland = FactoryGirl.create(:location_in_auckland, location_type: another_location_type)
 
-          get :index, { :q => 'Auckland', :location_types_ids => [filtered_location_type.id] }
+          get :index, { :loc => 'Auckland', :lntype => filtered_location_type.name.downcase }
 
           assert_location_in_result(filtered_auckland) 
           refute_location_in_result(another_auckland) 
@@ -100,7 +100,7 @@ class SearchControllerTest < ActionController::TestCase
           filtered_auckland = FactoryGirl.create(:listing_in_auckland, listing_type: filtered_listing_type).location
           another_auckland = FactoryGirl.create(:listing_in_auckland, listing_type: another_listing_type).location
 
-          get :index, { :q => 'Auckland', :listing_types_ids => [filtered_listing_type.id] }
+          get :index, { :loc => 'Auckland', :lgtype => filtered_listing_type.name.downcase }
 
           assert_location_in_result(filtered_auckland) 
           refute_location_in_result(another_auckland) 
@@ -115,13 +115,13 @@ class SearchControllerTest < ActionController::TestCase
           end
 
           should 'in map view' do
-            get :index, q: 'Adelaide', v: 'map'
+            get :index, loc: 'Adelaide', v: 'map'
             assert_location_in_result(@adelaide)
             refute_location_in_result(@auckland)
           end
 
           should 'in mixed view' do
-            get :index, q: 'Adelaide', v: 'mixed'
+            get :index, loc: 'Adelaide', v: 'mixed'
             assert_location_in_result(@adelaide) 
             refute_location_in_result(@auckland) 
           end
@@ -129,7 +129,7 @@ class SearchControllerTest < ActionController::TestCase
           context 'in list view' do
 
             should 'show results' do
-              get :index, q: 'Adelaide', v: 'list'
+              get :index, loc: 'Adelaide', v: 'list'
               assert_location_in_result(@adelaide)
               refute_location_in_result(@auckland)
             end
@@ -147,7 +147,7 @@ class SearchControllerTest < ActionController::TestCase
                 sign_in(@me)
                 @me.stubs(:unread_messages_count).returns(0)
 
-                get :index, q: 'Adelaide', v: 'list'
+                get :index, loc: 'Adelaide', v: 'list'
 
                 assert_select '.connections[rel=?]', 'tooltip', 1
                 assert_select '[title=?]', "#{@friend.name} worked here"
@@ -156,7 +156,7 @@ class SearchControllerTest < ActionController::TestCase
               should 'are hidden for guests' do
                 sign_out(@me)
 
-                get :index, q: 'Adelaide', v: 'list'
+                get :index, loc: 'Adelaide', v: 'list'
 
                 assert_select '.connections[rel=?]', 'tooltip', 0
               end
@@ -172,17 +172,17 @@ class SearchControllerTest < ActionController::TestCase
 
     should "not track search for empty query" do
       @tracker.expects(:conducted_a_search).never
-      get :index, :q => nil
+      get :index, :loc => nil
     end
 
     should 'track search for first page' do
       @tracker.expects(:conducted_a_search).once
-      get :index, :q => 'adelaide', :page => 1
+      get :index, :loc => 'adelaide', :page => 1
     end
 
     should 'not track search for second page' do
       @tracker.expects(:conducted_a_search).never
-      get :index, :q => 'adelaide', :page => 2
+      get :index, :loc => 'adelaide', :page => 2
     end
 
     should 'log filters in mixpanel along with other arguments' do
@@ -195,56 +195,61 @@ class SearchControllerTest < ActionController::TestCase
         result_count: 0, 
         listing_type_filter: [@listing_type.name], 
         location_type_filter: [@location_type.name], 
-        industry_filter: [@industry.name]
+        listing_pricing_filter: ['daily']
       }
       @tracker.expects(:conducted_a_search).with do |search, custom_options|
         expected_custom_options == custom_options
       end
-      get :index, { :q => 'adelaide', :listing_types_ids => [@listing_type.id], :location_types_ids => [@location_type.id], :industries_ids => [@industry.id] }
+      get :index, { :loc => 'adelaide', :lgtype => @listing_type.name.downcase, :lntype => @location_type.name.downcase, :lgpricing => 'daily' }
     end
 
     should 'track search if ignore_search flag is set to 0' do
       @tracker.expects(:conducted_a_search).once
-      get :index, :q => 'adelaide', :ignore_search_event => "0"
+      get :index, :loc => 'adelaide', :ignore_search_event => "0"
     end
 
     should 'not track search if ignore_search flag is set to 1' do
       @tracker.expects(:conducted_a_search).never
-      get :index, :q => 'adelaide', :ignore_search_event => "1"
+      get :index, :loc => 'adelaide', :ignore_search_event => "1"
     end
 
     should 'not track second search for the same query if filters have not been changed' do
       @tracker.expects(:conducted_a_search).once
       Rails.logger.debug 'failingtest'
-      get :index, :q => 'adelaide'
-      get :index, :q => 'adelaide'
+      get :index, :loc => 'adelaide'
+      get :index, :loc => 'adelaide'
     end
 
     context 'modified filters' do
 
       setup do
         @tracker.expects(:conducted_a_search).twice
-        get :index, :q => 'adelaide'
+        get :index, :loc => 'adelaide'
+        @controller.instance_variable_set(:@search, nil)
       end
 
       should 'track search if listing filter has been modified' do
-        get :index, :q => 'adelaide', :listing_types_ids => [FactoryGirl.create(:listing_type).id]
+        get :index, :loc => 'adelaide', :lgtype => FactoryGirl.create(:listing_type).name.downcase
       end
 
       should 'track search if location filter has been modified' do
-        get :index, :q => 'adelaide', :location_types_ids => [FactoryGirl.create(:location_type).id]
+        get :index, :loc => 'adelaide', :lntype => FactoryGirl.create(:location_type).name.downcase
       end
 
       should 'track search if industry filter has been modified' do
-        get :index, :q => 'adelaide', :industries_ids => [FactoryGirl.create(:industry).id]
+        get :index, :loc => 'adelaide', :industries_ids => [FactoryGirl.create(:industry).id], :v => 'list'
+      end
+
+      should 'track search if listing pricing filter has been modified' do
+        get :index, :loc => 'adelaide', :lgpricing => 'daily'
       end
 
     end
 
     should 'not track second search for the different query' do
       @tracker.expects(:conducted_a_search).twice
-      get :index, :q => 'adelaide'
-      get :index, :q => 'auckland'
+      get :index, :loc => 'adelaide'
+      get :index, :loc => 'auckland'
     end
 
   end
@@ -261,7 +266,7 @@ class SearchControllerTest < ActionController::TestCase
 
     should 'search all listings if no scoping set for current partner' do
       @partner.search_scope_option = 'no_scoping'
-      get :index, :q => 'auckland'
+      get :index, :loc => 'auckland'
 
       assert_equal Listing.all, assigns(:listings)
     end
@@ -271,7 +276,7 @@ class SearchControllerTest < ActionController::TestCase
       @listing = FactoryGirl.create(:listing_in_auckland)
       @listing.company.update_attribute(:partner_id, @partner.id)
       
-      get :index, :q => 'auckland'
+      get :index, :loc => 'auckland'
 
       assert_equal [@listing], assigns(:listings)
     end
