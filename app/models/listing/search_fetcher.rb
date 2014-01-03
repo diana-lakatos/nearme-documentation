@@ -47,6 +47,7 @@ class Listing
       @locations ||=
         begin
           _locations = Location.where(id: listings.map(&:location_id).uniq).includes(:company)
+          _locations = _locations.near(@midpoint, @radius, :order => 'distance ASC') if @midpoint && @radius
           listings.each do |listing|
             _location = _locations.detect { |l| l.id == listing.location_id }
             _location.searched_locations ||= []
