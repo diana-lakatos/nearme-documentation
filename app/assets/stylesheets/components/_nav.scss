@@ -8,23 +8,6 @@
     padding: 0 0 0 20px;
     height: 60px;
 
-    #logo {
-      float: left;
-      width: 219px;
-      height: 60px;
-      background: image-url($theme_logo) no-repeat;
-      background-position: left;
-      text-indent: -9999px;
-      background-size: 100%;
-
-      @media (-webkit-min-device-pixel-ratio: 1.5), 
-      (min-resolution: 144dpi) { 
-        background: image-url($theme_logo2x) no-repeat;
-        background-position: center;
-        background-size: 100%;
-      }     
-    }
-
     #header_links {
       float: none;
       position: absolute;
@@ -32,20 +15,33 @@
       background-color: $theme_black;
     }
 
+    #logo {
+      float: left;
+      width: $theme_logo_width;
+      height: $theme_icon_width;
+      background: image-url($theme_logo) no-repeat;
+      background-size: auto 100%;
+      text-indent: -9999px;
+
+      @media (-webkit-min-device-pixel-ratio: 1.5), 
+      (min-resolution: 144dpi) { 
+        background: image-url($theme_logo2x) no-repeat;
+        background-size: auto 100%;
+      }     
+    }
+
     @media (max-width: $ipad-width) {
 
       #logo {
-        height: 60px;
         width: $theme_icon_width;
         background: image-url($theme_icon) no-repeat;
+        background-size: auto 100%;
 
         @media (-webkit-min-device-pixel-ratio: 1.5), 
         (min-resolution: 144dpi) {
-          width: 50px;
-          height: 50px;
           background: image-url($theme_icon2x) no-repeat;
-          background-size: 100%;
-          background-position: center;
+          background-position: left;
+          background-size: auto 100%;
         }
       }
     }
