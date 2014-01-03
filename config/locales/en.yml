@@ -147,9 +147,9 @@ en:
   simple_form:
     labels:
       theme:
-        logo_image: 'Logo (219 x 60px)'
-        logo_retina_image: 'Logo Retina (438 x 120px)'
+        logo_image: 'Logo (240 x 60px)'
+        logo_retina_image: 'Logo Retina (480 x 120px)'
         favicon_image: 'Favicon (16 x 16px or 32 x 32px)'
-        icon_image: 'Icon (50 x 50px)'
-        icon_retina_image: 'Icon Retina (100 x 100px)'
+        icon_image: 'Icon (60 x 60px)'
+        icon_retina_image: 'Icon Retina (120 x 120px)'
         hero_image: 'Hero image'
