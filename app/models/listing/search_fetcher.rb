@@ -47,6 +47,11 @@ class Listing
       @locations ||=
         begin
           _locations = Location.where(id: listings.map(&:location_id).uniq).includes(:company)
+          listings.each do |listing|
+            _location = _locations.detect { |l| l.id == listing.location_id }
+            _location.searched_locations ||= []
+            _location.searched_locations << listing
+          end
 
           if @filters[:sort].relevance?
             # do nothing, already ordered by distance

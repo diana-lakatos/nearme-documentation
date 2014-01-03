@@ -1,15 +1,3 @@
-class ActionDispatch::DebugExceptions
-  alias_method :old_log_error, :log_error
-  def log_error(env, wrapper)
-    if wrapper.exception.is_a?  ActionController::RoutingError
-      return
-    else
-      old_log_error env, wrapper
-    end
-  end
-end
-
-
 require "will_paginate/array"
 class SearchController < ApplicationController
   extend ::NewRelic::Agent::MethodTracer
@@ -147,7 +135,7 @@ class SearchController < ApplicationController
   end
 
   def current_page_offset
-    ((params[:page] || 1).to_i - 1)  * 20
+    @current_page_offset ||= ((params[:page] || 1).to_i - 1) * 20
   end
 
   def should_log_conducted_search?

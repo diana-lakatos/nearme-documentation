@@ -46,25 +46,53 @@ class Search.SearchMixedController extends Search.SearchController
       listings.push listing
     listings
 
+  initializeWaypoints: ->
+    $.waypoints('destroy')
+    top_pagination = $('.top-pagination .pagination')
+    bottom_pagination = $('.bottom-pagination .pagination')
+    top_pagination.hide()
+    bottom_pagination.hide()
+    loader = $('<div class="ias_loader"><div class="row-fluid span12"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div></div>')
+    next_url = bottom_pagination.find('.next_page').attr('href')
+    if next_url
+      $('article.location').last().waypoint
+        handler: =>
+          bottom_pagination.before(loader)
+          $.get next_url,
+            (results) =>
+              loader.remove()
+              bottom_pagination.before($(results).find('article.location'))
+              bottom_pagination.replaceWith($(results).find('.bottom-pagination .pagination'))
+              @initializeWaypoints()
+        context: '.list'
+        offset: $(window).height() - $('article.location').last().height()
+        triggerOnce: true
+        continuous: false
+
+    previous_url = top_pagination.find('.previous_page').attr('href')
+    first_location = $('article.location').first()
+    if previous_url and parseInt(first_location.data('offset')) != 0
+      first_location.waypoint
+        handler: =>
+          top_pagination.after(loader)
+          $.get previous_url,
+            (results) =>
+              loader.remove()
+              top_pagination.after($(results).find('article.location'))
+              top_pagination.replaceWith($(results).find('.top-pagination .pagination'))
+              setTimeout( =>
+                $('.list').get(0).scrollTop = $('article.location[data-id=' + first_location.data('id') + ']').position().top + $('.list').offset().top
+                @initializeWaypoints()
+              , 100)
+        context: '.list'
+        offset: 100
+        triggerOnce: true
+        continuous: false
+        onlyOnScroll: true
 
   initializeEndlessScrolling: ->
     $('.list').scrollTop(0)
-    jQuery.ias({
-      container : 'div.locations',
-      item: 'article.location',
-      pagination: '.pagination',
-      next: '.next_page',
-      triggerPageThreshold: 99,
-      history: false,
-      thresholdMargin: -90,
-      loader: '<div class="row-fluid span12"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div>',
-      onRenderComplete: (items) =>
-        @initializeConnectionsTooltip()
-        # when there are no more resuls, add special div element which tells us, that we need to reinitialize ias - it disables itself on the last page...
-        if !$('#results .pagination .next_page').attr('href')
-          $('#results').append('<div id="reinitialize"></div>')
-          reinitialize = $('#reinitialize')
-    })
+    @initializeWaypoints()
 
 
   # Trigger the API request for search
@@ -98,6 +126,7 @@ class Search.SearchMixedController extends Search.SearchController
     inflection = 'location'
     inflection += 's' unless count == 1
     @resultsCountContainer.html("<span>#{count}</span> #{inflection}")
+    @initializeEndlessScrolling()
 
 
   updateMapWithListingResults: ->
@@ -114,11 +143,17 @@ class Search.SearchMixedController extends Search.SearchController
       bounds = new google.maps.LatLngBounds()
       bounds.extend(listing.latLng()) for listing in listings
       _.defer => @map.fitBounds(bounds)
-
       @map.show()
-
       # In case the map is hidden
       @map.resizeToFillViewport()
+    else
+      if @form.find('input[name=lat]').val() != ''
+        map_center = new google.maps.LatLng(@form.find('input[name=lat]').val(), @form.find('input[name=lng]').val())
+        _.defer => @map.setCenter(map_center)
+        @map.show()
+        # In case the map is hidden
+        @map.resizeToFillViewport()
+
     setTimeout( =>
       @map.clusterer.redraw_()
     , 500)

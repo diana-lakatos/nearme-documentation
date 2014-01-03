@@ -14,6 +14,7 @@ class Location < ActiveRecord::Base
     :administrator_id, :name
   attr_accessor :local_geocoding # set this to true in js
   attr_accessor :name_required
+  attr_accessor :searched_locations
 
   liquid_methods :name
 
@@ -177,7 +178,7 @@ class Location < ActiveRecord::Base
   end
 
   def lowest_price
-    listings.searchable.map(&:lowest_price_with_type).sort{|a, b| a[0].to_f <=> b[0].to_f}.first
+    (searched_locations || listings.searchable).map(&:lowest_price_with_type).sort{|a, b| a[0].to_f <=> b[0].to_f}.first
   end
 
   private

@@ -36,6 +36,14 @@ module SearchHelper
     end
   end
 
+  def listing_price_information(listing)
+    listing_price = listing.lowest_price_with_type
+    if listing_price
+      periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
+      "#{money_without_cents_and_with_symbol(listing_price[0])} <span>/ #{periods[listing_price[1]]}</span>".html_safe
+    end
+  end
+
   def location_price_information(location)
     listing_price = location.lowest_price
     if listing_price
@@ -50,12 +58,21 @@ module SearchHelper
 
     title = (location_types_names.empty? && listing_types_names.empty?) ? platform_context.bookable_noun.pluralize : ''
 
-    title += %Q{#{location_types_names.join(', ')} #{listing_types_names.join(', ')} in #{search.city}, #{search.is_united_states? ? search.state_short : search.state}}
-    if not search.is_united_states?
-      title << ", #{search.country}"
+    title += %Q{#{location_types_names.join(', ')} #{listing_types_names.join(', ')}}
+    search_location = []
+    search_location << search.city
+    search_location << search.is_united_states? ? search.state_short : search.state
+    search_location.reject!{|sl| sl.blank?}
+    if not search_location.empty?
+      title += %Q{ in #{search_location.join(', ')}}
     end
 
-    title
+    if not search.is_united_states?
+      title += search_location.empty? ? ' in ' : ', '
+      title += search.country.to_s
+    end
+
+    title + (additional_meta_title.presence ? " | " + additional_meta_title : '')
   end
 
   def meta_description_for_search(platform_context, search)

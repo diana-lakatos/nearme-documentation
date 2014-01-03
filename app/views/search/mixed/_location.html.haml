@@ -1,6 +1,6 @@
-- listings_by_type = location.listings.searchable.group_by(&:listing_type)
+- listings_by_type = location.searched_locations ? location.searched_locations.group_by(&:listing_type) : {}
 
-%article.location{:'data-id' => location.id, :'data-name' => location.name, :'data-latitude' => location.latitude, :'data-longitude' => location.longitude}
+%article.location{:'data-id' => location.id, :'data-name' => location.name, :'data-latitude' => location.latitude, :'data-longitude' => location.longitude, :'data-offset' => current_page_offset}
   .location-counter= current_page_offset + location_counter + 1
   .row-fluid.header
     .span5.location-photos-container
@@ -10,11 +10,14 @@
             - location.photos.each_with_index do |photo, index|
               - if photo
                 .item{:class => ("active" if index == 0)}
-                  = image_tag photo.image_url(:space_listing), :alt => location.name
+                  - if photo.image.path && File.exists?(photo.image.path)
+                    = image_tag photo.image_url(:space_listing), :alt => location.name
+                  - else
+                    = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => location.name, :alt => location.name
               - else
                 .item{:class => ("active" if index == 0)}
                   = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => location.name, :alt => location.name
-          - if location.photos.any?
+          - if location.photos.count > 1
             .carousel-nav
               = link_to "", "#location-gallery-#{location.id}", :class => "carousel-control left ico-chevron-left", 'data-slide' => 'prev'
               = link_to "", "#location-gallery-#{location.id}", :class => "carousel-control right ico-chevron-right", 'data-slide' => 'next'

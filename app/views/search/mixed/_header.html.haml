@@ -19,7 +19,7 @@
             locations
 
       - search_geofields.each do |geofield|
-        = hidden_field_tag geofield, ''
+        = hidden_field_tag geofield, params.fetch(geofield, '')
       = hidden_field_tag :sort, search.sort
       = hidden_field_tag :v, result_view
       = hidden_field_tag :ignore_search_event, 0
