@@ -46,7 +46,7 @@
       = f.input :email, :label => "Your email address", :placeholder => "So we can contact you"
 
       .actions
-        = f.submit 'Sign up'
+        = f.submit 'Sign up', :disable_with => "Signing up..."
 
 :javascript
   $(function() {
