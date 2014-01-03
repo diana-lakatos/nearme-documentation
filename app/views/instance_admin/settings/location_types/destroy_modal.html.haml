@@ -1,4 +1,4 @@
-= "Please select a replacement location type for any locations currently using '#{@location_type.name}'."
+= "This location type is currently associated with #{@location_type.locations.count} locations. Please select a replacement location type."
 
 = simple_form_for @location_type, :url => instance_admin_settings_location_type_path(@location_type), :method => :delete do |f|
   = select_tag(:replacement_type_id, options_for_select(@replacement_types.map{|r| [r.name, r.id]}))

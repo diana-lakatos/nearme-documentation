@@ -1,4 +1,4 @@
-= "Please select a replacement listing type for any locations currently using '#{@listing_type.name}'."
+= "This listing type is currently associated with #{@listing_type.listing.count} listing. Please select a replacement listing type."
 
 = simple_form_for @listing_type, :url => instance_admin_settings_listing_type_path(@listing_type), :method => :delete do |f|
   = select_tag(:replacement_type_id, options_for_select(@replacement_types.map{|r| [r.name, r.id]}))
