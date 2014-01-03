@@ -24,16 +24,15 @@ class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::BaseCont
 
   def destroy
     @location_type = platform_context.instance.location_types.find(params[:id])
-    
-    if @location_type && platform_context.instance.location_types.exists?(params[:replacement_type_id])
-      @location_type.locations.update_all(location_type_id: params[:replacement_type_id])
-      @location_type.destroy
-      flash[:success] = t('flash_messages.instance_admin.settings.location_type_deleted')
-      redirect_to instance_admin_settings_path
-    else
-      flash[:error] = t('flash_messages.instance_admin.settings.location_type_not_deleted')
-      redirect_to instance_admin_settings_path
+
+    if @location_type.locations.count > 0
+      @replacement_type = platform_context.instance.location_types.find(params[:replacement_type_id])
+      @location_type.locations.update_all(location_type_id: @replacement_type.id)
     end
+    
+    @location_type.destroy
+    flash[:success] = t('flash_messages.instance_admin.settings.location_type_deleted')
+    redirect_to instance_admin_settings_path
   end
 
   private 

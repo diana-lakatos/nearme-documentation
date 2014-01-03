@@ -39,7 +39,6 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
       @location_type_1 = FactoryGirl.create(:location_type, name: "Location type 1")
       @location_type_2 = FactoryGirl.create(:location_type, name: "Location type 2")
       @location_type_3 = FactoryGirl.create(:location_type, name: "Location type 3")
-      @location_1 = FactoryGirl.create(:location, location_type: @location_type_1)
       @location_2 = FactoryGirl.create(:location, location_type: @location_type_2)
       @location_3 = FactoryGirl.create(:location, location_type: @location_type_3)
     end
@@ -51,6 +50,15 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
       assert_template :destroy_modal
     end
 
+    should 'destroy location type' do
+      assert_difference 'LocationType.count', -1 do
+        post :destroy, id: @location_type_1.id
+      end
+
+      assert_equal 'Location type deleted.', flash[:success]
+      assert_redirected_to instance_admin_settings_path
+    end
+
     should 'replace location type and destroy' do
       assert_difference 'LocationType.count', -1 do
         post :destroy, id: @location_type_2.id, replacement_type_id: @location_type_3.id
@@ -58,15 +66,6 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
 
       assert_equal @location_2.reload.location_type, @location_type_3
       assert_equal 'Location type deleted.', flash[:success]
-      assert_redirected_to instance_admin_settings_path
-    end
-
-    should 'not replace incorrect listing type and destroy' do
-      assert_no_difference 'LocationType.count' do
-        post :destroy, id: @location_type_2.id, replacement_type_id: nil
-      end
-
-      assert_equal 'Location type could not be deleted.', flash[:error]
       assert_redirected_to instance_admin_settings_path
     end
   end

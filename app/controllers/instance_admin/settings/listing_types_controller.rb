@@ -25,15 +25,14 @@ class InstanceAdmin::Settings::ListingTypesController < InstanceAdmin::BaseContr
   def destroy
     @listing_type = platform_context.instance.listing_types.find(params[:id])
     
-    if @listing_type && platform_context.instance.listing_types.exists?(params[:replacement_type_id])
-      @listing_type.listings.update_all(listing_type_id: params[:replacement_type_id])
-      @listing_type.destroy
-      flash[:success] = t('flash_messages.instance_admin.settings.listing_type_deleted')
-      redirect_to instance_admin_settings_path
-    else
-      flash[:error] = t('flash_messages.instance_admin.settings.listing_type_not_deleted')
-      redirect_to instance_admin_settings_path
+    if @listing_type.listings.count > 0
+      @replacement_type = platform_context.instance.listing_types.find(params[:replacement_type_id])
+      @listing_type.listings.update_all(listing_type_id: @replacement_type.id)
     end
+
+    @listing_type.destroy
+    flash[:success] = t('flash_messages.instance_admin.settings.listing_type_deleted')
+    redirect_to instance_admin_settings_path
   end
 
   private 

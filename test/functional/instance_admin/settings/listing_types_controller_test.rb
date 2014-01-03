@@ -39,7 +39,6 @@ class InstanceAdmin::Settings::ListingTypesControllerTest < ActionController::Te
       @listing_type_1 = FactoryGirl.create(:listing_type, name: "Listing type 1")
       @listing_type_2 = FactoryGirl.create(:listing_type, name: "Listing type 2")
       @listing_type_3 = FactoryGirl.create(:listing_type, name: "Listing type 3")
-      @listing_1 = FactoryGirl.create(:listing, listing_type: @listing_type_1)
       @listing_2 = FactoryGirl.create(:listing, listing_type: @listing_type_2)
       @listing_3 = FactoryGirl.create(:listing, listing_type: @listing_type_3)
     end
@@ -51,6 +50,15 @@ class InstanceAdmin::Settings::ListingTypesControllerTest < ActionController::Te
       assert_template :destroy_modal
     end
 
+    should 'destroy listing type' do
+      assert_difference 'ListingType.count', -1 do
+        post :destroy, id: @listing_type_1.id
+      end
+
+      assert_equal 'Listing type deleted.', flash[:success]
+      assert_redirected_to instance_admin_settings_path
+    end
+
     should 'replace listing type and destroy' do
       assert_difference 'ListingType.count', -1 do
         post :destroy, id: @listing_type_2.id, replacement_type_id: @listing_type_3.id
@@ -58,15 +66,6 @@ class InstanceAdmin::Settings::ListingTypesControllerTest < ActionController::Te
 
       assert_equal @listing_2.reload.listing_type, @listing_type_3
       assert_equal 'Listing type deleted.', flash[:success]
-      assert_redirected_to instance_admin_settings_path
-    end
-
-    should 'not replace incorrect listing type and destroy' do
-      assert_no_difference 'ListingType.count' do
-        post :destroy, id: @listing_type_2.id, replacement_type_id: nil
-      end
-
-      assert_equal 'Listing type could not be deleted.', flash[:error]
       assert_redirected_to instance_admin_settings_path
     end
   end
