@@ -1,46 +1,38 @@
 <footer>
   <div class="row-fluid">
-    <div class="span9">
-      <ul class="links clearfix">
-        {% for page in platform_context.pages %}
-          <li><a href="{{ page.page_url }}">{{ page.title }}</a></li>
-        {% endfor %}
+    <div class="mobile-row mobile-clearfix">
+      <div class="span3 mobile6">
+        <ul class="pages">
+          {% for page in platform_context.pages %}
+            <li><a href="{{ page.page_url }}">{{ page.title }}</a></li>
+          {% endfor %}
 
-        {% if platform_context.is_desksnearme? %}
-          <li class="clear-footer"><a href="http://blog.desksnear.me/careers/" target="_blank">Careers</a></li>
-          <li><a href="https://itunes.apple.com/us/app/desks-near-me/id529634519?mt=8" target="_blank">iPhone App</a></li>
-        {% endif %}
-      </ul>
-    </div>
-
-    <div class="span3 clearfix">
-      <div class="social-wrapper">
-        <ul class="icons clearfix">
-        {% if platform_context.blog_url != '' %}<li><a href="{{ platform_context.blog_url }}" class="ico-rss" target="_blank"></a></li>{% endif %}
-        {% if platform_context.gplus_url != '' %}<li><a href="{{ platform_context.gplus_url }}" class="ico-google-plus" rel="publisher" target="_blank"></a></li>{% endif %}
-        {% if platform_context.twitter_url != '' %}<li><a href="{{ platform_context.twitter_url }}" class="ico-twitter" target="_blank"></a></li>{% endif %}
-        {% if platform_context.facebook_url != '' %}<li><a href="{{ platform_context.facebook_url }}" class="ico-facebook-full" target="_blank"></a></li>{% endif %}
+          {% if platform_context.is_desksnearme? %}
+            <li class="clear-footer"><a href="http://blog.desksnear.me/careers/" target="_blank">Careers</a></li>
+            <li><a href="https://itunes.apple.com/us/app/desks-near-me/id529634519?mt=8" target="_blank">iPhone App</a></li>
+          {% endif %}
         </ul>
       </div>
-    </div>
-  </div>
-
-  <div class="gap">
-    <div class="row-fluid">
-      <div class="span9">
-        <div class="copyright">
-          <span>{{ platform_context.address }}</span>
-          <span>{{ platform_context.phone_number }}</span>
-          <br />
-          <span> &copy; 2013 {{ platform_context.site_name }}</span> 
+      <div class="span3 mobile6">
+        <div class="social-wrapper">
+          <ul class="icons">
+            {% if platform_context.facebook_url != '' %}<li><a href="{{ platform_context.facebook_url }}" target="_blank"><span class="image ico-facebook-full"></span><span class="text">Facebook</span></a></li>{% endif %}
+            {% if platform_context.twitter_url != '' %}<li><a href="{{ platform_context.twitter_url }}" target="_blank"> <span class="image ico-twitter"></span><span class="text">Twitter</span></a></li>{% endif %}
+            {% if platform_context.gplus_url != '' %}<li><a href="{{ platform_context.gplus_url }}" rel="publisher" target="_blank"><span class="image ico-google-plus"></span><span class="text">Google+</span></a></li>{% endif %}
+            {% if platform_context.blog_url != '' %}<li><a href="{{ platform_context.blog_url }}" target="_blank"><span class="image ico-blog"></span><span class="text">Blog</span></a></li>{% endif %}
+          </ul>
         </div>
       </div>
-
-      <div id="mixpanel" class="span3">
-        <a href="https://mixpanel.com/f/partner">
-          <img alt="Mobile Analytics" src="https://cdn.mxpnl.com/site_media/images/partner/badge_blue.png" />
-        </a>
+    </div>
+    <div class="span3">
+      <div class="copyright">
+        <span>{{ platform_context.address }}</span><br />
+        <span>{{ platform_context.phone_number }}</span><br />
+        <span> &copy; 2013 {{ platform_context.site_name }}</span>
       </div>
+    </div>
+    <div class="span3 clearfix">
+      <a href="http://near-me.com/" target="_blank"><div class="near-me-badge"></div></a>
     </div>
   </div>
 </footer>
