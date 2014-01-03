@@ -18,15 +18,17 @@ class Authentication::BaseProvider
     provider
   end
 
-  def friend_ids
-    raise NotImplementedError
-  end
-
   def connections
     @connections = User.joins(:authentications).where(authentications: {uid: self.friend_ids, provider: provider})
   end
 
   def new_connections
     @new_connections = connections.without(user.friends)
+  end
+
+  protected
+
+  def friend_ids
+    raise NotImplementedError
   end
 end

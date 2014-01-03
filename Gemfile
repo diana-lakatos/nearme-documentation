@@ -96,6 +96,11 @@ gem 'timecop'
 
 gem 'newrelic_rpm'
 
+group :profiling do
+  gem 'rack-mini-profiler'
+  gem 'bullet'
+end
+
 group :assets do
   gem 'uglifier', "~>2.1.0"
 end
@@ -128,4 +133,5 @@ group :test do
   gem 'simplecov', :require => false
   gem 'shoulda'
   gem 'vcr'
+  gem 'ruby-prof'
 end

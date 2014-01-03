@@ -293,5 +293,4 @@ class ApplicationController < ActionController::Base
       Rails.logger.debug "Error when preparing Raygun custom_params: #{e}"
     end
   end
-
 end
