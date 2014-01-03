@@ -85,7 +85,7 @@ gem "historyjs-rails"
 
 gem 'ranked-model'
 
-gem 'desk'
+gem 'desk', github: 'zencoder/desk'
 gem 'filepicker-rails'
 
 gem 'premailer-rails'
@@ -99,6 +99,11 @@ gem 'newrelic_rpm'
 group :profiling do
   gem 'rack-mini-profiler'
   gem 'bullet'
+end
+
+group :coverage do
+  gem 'simplecov'
+  gem 'simplecov-rcov-text'
 end
 
 group :assets do
