@@ -102,8 +102,8 @@ group :profiling do
 end
 
 group :coverage do
-  gem 'simplecov'
-  gem 'simplecov-rcov-text'
+  gem 'simplecov', require: 'simplecov'
+  gem 'simplecov-rcov-text', require: 'simplecov-rcov-text'
 end
 
 group :assets do
