@@ -7,6 +7,7 @@ class Search.SearchMixedController extends Search.SearchController
     super(form, @container)
     @adjustListHeight()
     @sortValue = @sortField.find(':selected').val()
+    $('body').css('overflow', 'hidden')
 
   bindEvents: =>
     super
@@ -29,14 +30,51 @@ class Search.SearchMixedController extends Search.SearchController
       @processingResults = true
       listings = _.map(cluster.getMarkers(), (marker) => @map.getListingForMarker(marker))
       list_container = @container.find('.list')
-      animate_position = @resultsContainer().find('div.listing[data-id="' + listings[0]._id + '"]').parents('.location').position().top + list_container.offset().top
-      list_container.animate
-        scrollTop: animate_position
-        () =>
-          @processingResults = false
+      location_container = @resultsContainer().find('div.listing[data-id="' + listings[listings.length - 1]._id + '"]').parents('.location')
+      if location_container.length > 0
+        animate_position = location_container.position().top + list_container.offset().top
+        list_container.animate
+          scrollTop: animate_position
+          () =>
+            @processingResults = false
+      else
+        location_id = @hiddenResultsContainer().find('article.listing[data-id=' + listings[listings.length - 1]._id + ']').data('location')
+        @getPageWithLocation(location_id)
 
     google.maps.event.addListener @map.googleMap, 'zoom_changed', =>
       @map.clusterer.setZoomOnClick(false)
+
+
+  getPageWithLocation: (location_id) ->
+    @assignFormParams(
+      page_with_location: location_id
+    )
+    @loader.showWithoutLocker()
+    @triggerSearchRequest().success (html) =>
+      $.waypoints('destroy')
+      @processingResults = true
+      @showResults(html)
+      @loader.hide()
+      list_container = @container.find('.list')
+      location_container = @resultsContainer().find('article.location[data-id="' + location_id + '"]')
+      if location_container.length > 0
+        @assignFormParams(
+          page_with_location: ''
+        )
+        @lastListPosition = null
+        @setListOnLocation(location_id)
+      @processingResults = false
+
+
+  setListOnLocation: (location_id) ->
+    setTimeout( =>
+      _.defer =>
+        $('.list').get(0).scrollTop = $('article.location[data-id=' + location_id + ']').position().top + $('.list').offset().top
+        if $('.list').get(0).scrollTop != @lastListPosition
+          @lastListPosition = $('.list').get(0).scrollTop
+          @setListOnLocation(location_id)
+        @initializeWaypoints()
+    , 1500)
 
 
   getListingsFromResults: ->
@@ -52,7 +90,7 @@ class Search.SearchMixedController extends Search.SearchController
     bottom_pagination = $('.bottom-pagination .pagination')
     top_pagination.hide()
     bottom_pagination.hide()
-    loader = $('<div class="ias_loader"><div class="row-fluid span12"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div></div>')
+    loader = $('<div class="ias_loader"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div>')
     next_url = bottom_pagination.find('.next_page').attr('href')
     if next_url
       $('article.location').last().waypoint
@@ -83,7 +121,7 @@ class Search.SearchMixedController extends Search.SearchController
               setTimeout( =>
                 $('.list').get(0).scrollTop = $('article.location[data-id=' + first_location.data('id') + ']').position().top + $('.list').offset().top
                 @initializeWaypoints()
-              , 100)
+              , 200)
         context: '.list'
         offset: 100
         triggerOnce: true

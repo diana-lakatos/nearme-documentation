@@ -88,6 +88,11 @@ class SearchController < ApplicationController
 
     if result_view.list? || result_view.mixed?
       self.class.trace_execution_scoped(['Custom/get_locations/paginate_locations']) do
+        if !params[:page_with_location].blank?
+          _offset = @collection.index(Location.find(params[:page_with_location]))
+          params[:page] = (_offset / 20).to_i + 1
+          params[:page_with_location] = nil
+        end
         @collection = WillPaginate::Collection.create(params[:page], 20, @collection.count) do |pager|
           pager.replace(@collection[pager.offset, pager.per_page].to_a)
         end

@@ -2,10 +2,7 @@
   .span2
     .photo
       - if listing.photos_count > 0 && photo = listing.photos.first
-        - if photo.image.path && File.exists?(photo.image.path)
-          = image_tag photo.image_url(:medium), :title => listing.name, :alt => listing.name
-        - else
-          = image_tag space_listing_placeholder_path( :width => 144, :height => 89 ), :title => listing.name, :alt => listing.name
+        = image_tag photo.image_url(:medium), :title => listing.name, :alt => listing.name
       - else
         = image_tag space_listing_placeholder_path( :width => 144, :height => 89 ), :title => listing.name, :alt => listing.name
   .listing-name-description{class: listing.capacity.blank? ? 'span6' : 'span4'}

@@ -7,16 +7,14 @@
       .location-photos
         .carousel{id: "location-gallery-#{location.id}", :'data-interva' => "false"}
           .carousel-inner
-            - location.photos.each_with_index do |photo, index|
-              - if photo
-                .item{:class => ("active" if index == 0)}
-                  - if photo.image.path && File.exists?(photo.image.path)
+            - if location.photos.count.zero?
+              .item{:class => "active"}
+                = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => location.name, :alt => location.name
+            - else
+              - location.photos.each_with_index do |photo, index|
+                - if photo
+                  .item{:class => ("active" if index == 0)}
                     = image_tag photo.image_url(:space_listing), :alt => location.name
-                  - else
-                    = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => location.name, :alt => location.name
-              - else
-                .item{:class => ("active" if index == 0)}
-                  = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => location.name, :alt => location.name
           - if location.photos.count > 1
             .carousel-nav
               = link_to "", "#location-gallery-#{location.id}", :class => "carousel-control left ico-chevron-left", 'data-slide' => 'prev'

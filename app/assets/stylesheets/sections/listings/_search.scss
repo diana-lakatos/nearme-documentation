@@ -886,6 +886,8 @@ section.search section#results.mixed {
     width: 66.66%;
     float: left;
     overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     .filters {
       padding-right: 10px;

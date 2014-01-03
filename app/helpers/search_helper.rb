@@ -61,7 +61,7 @@ module SearchHelper
     title += %Q{#{location_types_names.join(', ')} #{listing_types_names.join(', ')}}
     search_location = []
     search_location << search.city
-    search_location << search.is_united_states? ? search.state_short : search.state
+    search_location << (search.is_united_states? ? search.state_short : search.state)
     search_location.reject!{|sl| sl.blank?}
     if not search_location.empty?
       title += %Q{ in #{search_location.join(', ')}}
