@@ -202,12 +202,21 @@ section.reservations {
       cursor: pointer;
 
       &.btn-white {
-        border: 1px solid $gray220!important;
+        border: 1px solid $gray220 !important;
         color: $theme_gray;
       }
 
       &.btn-green {
         margin-left: 3%;
+      }
+
+      @media (max-width: $booking-module-breakpoint) {
+        width: 100%;
+
+        &.btn-green {
+          margin-left: 0;
+          margin-top: 3%;
+        }
       }
     }
   }
@@ -309,6 +318,7 @@ section.reservations {
 
       input {
         font-size: 18px;
+        height: 49px;
       }
 
       .credit-card {
@@ -317,7 +327,7 @@ section.reservations {
         .card-number {
 
           #reservation_request_card_number {
-            padding-right: 40px!important;
+            padding-right: 40px !important;
           }
 
           @mixin placeholder_with_icons($padding-top: 3px, $font-size: 10px, $letter-spacing: 3px) {
@@ -338,6 +348,9 @@ section.reservations {
           }
           :-ms-input-placeholder { /* Internet Explorer 10+ */
             @include placeholder_with_icons;
+            line-height: 46px;
+            height: 49px;
+            vertical-align: middle;
           }
         }
         .ico-credit-card:before {

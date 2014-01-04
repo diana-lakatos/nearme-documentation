@@ -4,7 +4,14 @@ require 'rails/all'
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(*Rails.groups(:assets => %w(development test))) if defined?(Bundler)
+groups = {
+  assets:    %w(development test),
+}
+
+groups[:coverage]  =  [Rails.env.to_s] if ENV['COVERAGE']
+groups[:profiling] =  [Rails.env.to_s] if ENV['PERF']
+
+Bundler.require(*Rails.groups(groups)) if defined?(Bundler)
 
 module DesksnearMe
   class Application < Rails::Application

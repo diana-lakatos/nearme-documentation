@@ -4,11 +4,13 @@
   .container-fluid
     .row-fluid
       = render :partial => "search_#{ platform_context.theme.is_company_theme? ? 'button' : 'box' }"
-  .call-to-action
-    %a{href: '', 'data-call-to-action' => true}
-      #{platform_context.call_to_action}
-      %br
-      %span.ico-chevron-down
+
+  - if not platform_context.homepage_content.blank?
+    .call-to-action
+      %a{href: '', 'data-call-to-action' => true}
+        #{platform_context.call_to_action}
+        %br
+        %span.ico-chevron-down
 
 %section.how-it-works
   :markdown

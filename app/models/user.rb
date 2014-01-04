@@ -12,9 +12,6 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
 
-  # Includes billing gateway helper method and sets up billing charge association
-  include BillingGateway::UserHelper
-
   acts_as_paranoid
 
   has_many :authentications,
@@ -86,6 +83,8 @@ class User < ActiveRecord::Base
 
   has_many :user_industries
   has_many :industries, :through => :user_industries
+
+  has_many :charges, :foreign_key => :user_id, :dependent => :destroy
 
   has_many :mailer_unsubscriptions
 
@@ -405,20 +404,19 @@ class User < ActiveRecord::Base
   end
 
   def listings_in_near(results_size = 3, radius_in_km = 100)
-    if last_geolocated_location_latitude.to_f > 0 and last_geolocated_location_longitude.to_f > 0
-      locations_in_near = Location.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
-    else
+    locations_in_near = nil
+    # we want allow greenwhich and friends, but probably 0 latitude and 0 longitude is not valid location :)
+    if last_geolocated_location_latitude.nil? || last_geolocated_location_longitude.nil? || (last_geolocated_location_latitude.to_f.zero? && last_geolocated_location_longitude.to_f.zero?)
       locations_in_near = Location.near(current_location, radius_in_km, units: :km, order: :distance)
+    else
+      locations_in_near = Location.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
     end
-    
-    locations_in_near = Location if locations_in_near.count.zero?
 
     listings = []
     locations_in_near.includes(:listings).each do |location|
       listings += location.listings.searchable.limit((listings.size - results_size).abs)
       return listings if listings.size >= results_size
-    end
-
+    end if locations_in_near
     listings
   end
 

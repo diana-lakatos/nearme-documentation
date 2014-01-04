@@ -11,6 +11,8 @@ FactoryGirl.define do
     biography "I'm cool!"
     current_location "Prague"
     company_name "DesksNearMe"
+    last_geolocated_location_longitude 14.437800
+    last_geolocated_location_latitude 50.075538
     skills_and_interests { "I'm skilled boss." }
     factory :user_without_country_name do
       country_name nil

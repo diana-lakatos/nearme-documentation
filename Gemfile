@@ -85,7 +85,7 @@ gem "historyjs-rails"
 
 gem 'ranked-model'
 
-gem 'desk'
+gem 'desk', github: 'zencoder/desk'
 gem 'filepicker-rails'
 
 gem 'premailer-rails'
@@ -95,6 +95,16 @@ gem 'addressable'
 gem 'timecop'
 
 gem 'newrelic_rpm'
+
+group :profiling do
+  gem 'rack-mini-profiler'
+  gem 'bullet'
+end
+
+group :coverage do
+  gem 'simplecov', require: 'simplecov'
+  gem 'simplecov-rcov-text', require: 'simplecov-rcov-text'
+end
 
 group :assets do
   gem 'uglifier', "~>2.1.0"
@@ -128,4 +138,5 @@ group :test do
   gem 'simplecov', :require => false
   gem 'shoulda'
   gem 'vcr'
+  gem 'ruby-prof'
 end

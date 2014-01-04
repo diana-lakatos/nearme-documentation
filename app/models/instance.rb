@@ -2,7 +2,8 @@ class Instance < ActiveRecord::Base
   has_paper_trail
   attr_accessible :name, :domains_attributes, :theme_attributes, :location_types_attributes, :listing_types_attributes,
                   :service_fee_guest_percent, :service_fee_host_percent, :bookable_noun, :lessor, :lessee,
-                  :listing_amenity_types_attributes, :location_amenity_types_attributes, :skip_company, :pricing_options
+                  :listing_amenity_types_attributes, :location_amenity_types_attributes, :skip_company, :pricing_options,
+                  :stripe_api_key, :stripe_public_key
 
   has_one :theme, :as => :owner, dependent: :destroy
 
@@ -37,6 +38,14 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :listing_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
 
   PRICING_OPTIONS = %w(free hourly daily weekly monthly)
+
+  def custom_stripe_api_key
+    self.stripe_api_key.presence || Stripe.api_key
+  end
+
+  def custom_stripe_public_key
+    self.stripe_public_key.presence || DesksnearMe::Application.config.stripe_public_key
+  end
 
   def is_desksnearme?
     self.default_instance?

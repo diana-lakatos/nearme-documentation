@@ -4,6 +4,8 @@
     %legend Basic Configuration
     = f.input :name, required: false
     = f.input :service_fee_guest_percent, label: 'Service Fee (%)'
+    = f.input :stripe_api_key, required: false
+    = f.input :stripe_public_key, required: false
     .control-group
       = f.label :skip_company
       .switch-wrapper

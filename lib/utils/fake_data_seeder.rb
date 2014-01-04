@@ -82,6 +82,7 @@ module Utils
           # === COMPANIES / LOCATIONS / LISTINGS =================
 
           load_users_and_companies!
+          load_instance_admins!
           load_locations!
           load_listings!
 
@@ -100,7 +101,7 @@ module Utils
         # too bad we can't use this (due to records that are ):
         # Rails.application.eager_load!
         # ActiveRecord::Base.descendants.any? &:any?
-        [Location, User, Company, Instance].any? &:any?
+        [Location, User, Company, Instance].any?(&:any?)
       end
     end
 
@@ -194,6 +195,12 @@ module Utils
           companies << company
         end
         [users, companies]
+      end
+    end
+
+    def load_instance_admins!
+      do_task "Loading instance admins" do
+        InstanceAdmin.create(:user_id => users.first.id, :instance_id => Instance.default_instance.id)
       end
     end
 
