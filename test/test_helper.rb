@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'simplecov' if ENV["COVERAGE"]
 ENV["RAILS_ENV"] ||= "test"
 
 require 'rails/application'
