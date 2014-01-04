@@ -55,6 +55,7 @@ window.DNM = {
     this.initializeCustomInputs();
     this.initializeBrowsersSpecificCode();
     this.centerSearchBoxOnHomePage();
+    this.setFooterPushHeight();
   },
 
   initializeModals: function() {
@@ -141,6 +142,18 @@ window.DNM = {
         }, 100);
       }); 
     }
+  },
+
+  setFooterPushHeight: function() {
+    if ($('.footer-wrapper').length > 0) {
+      $('.footer-push').height($('.footer-wrapper').height());
+    }
+
+    $(window).resize(function(){
+      if ($('.footer-wrapper').length > 0) {
+        $('.footer-push').height($('.footer-wrapper').height());
+      }
+    })
   },
 
   isMobile: function() {
