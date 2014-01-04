@@ -2,14 +2,16 @@ require 'test_helper'
 
 class User::BillingGatewayTest < ActiveSupport::TestCase
   setup do
+    @instance = Instance.default_instance
     @user = FactoryGirl.create(:user)
     @reservation = FactoryGirl.create(:reservation)
-    @billing_gateway = User::BillingGateway.new(@user)
+    @billing_gateway = User::BillingGateway.new(@user, @instance)
   end
 
   context "#charge" do
     should "trigger a charge on the user's credit card" do
-      Stripe::Charge.expects(:create).with(:amount => 100_00, :currency => 'USD', :customer => @user.stripe_id).returns({})
+      @instance.update_attribute(:stripe_api_key, "abcd")
+      Stripe::Charge.expects(:create).with({:amount => 100_00, :currency => 'USD', :customer => @user.stripe_id}, @instance.stripe_api_key).returns({})
       @billing_gateway.charge(:amount => 100_00, :currency => 'USD')
     end
 
@@ -98,16 +100,6 @@ class User::BillingGatewayTest < ActiveSupport::TestCase
         ))
         @billing_gateway.store_card(card_details)
         assert_equal '456', @user.stripe_id, "Stripe customer id should have changed"
-      end
-    end
-  end
-
-  # Helper module including into User class
-  context "UserHelper" do
-    context "User#billing_gateway" do
-      should "return an instance of BillingGateway for that user" do
-        gateway = @user.billing_gateway
-        assert gateway.is_a?(User::BillingGateway)
       end
     end
   end
