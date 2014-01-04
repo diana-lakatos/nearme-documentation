@@ -35,10 +35,10 @@ class AuthenticationsController < ApplicationController
       @authentication.destroy
       log_disconnect_social_provider
       flash[:deleted] = t('flash_messages.authentications.disconnected', 
-        provider_name: @authentication.provider_name)
+        provider_name: @authentication.provider.titleize)
     else
       flash[:warning] = t('flash_messages.authentications.unable_to_disconnect', 
-        provider_name: @authentication.provider_name)
+        provider_name: @authentication.provider.titleize)
     end
     redirect_to edit_user_registration_url
   end

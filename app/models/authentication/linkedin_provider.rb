@@ -1,7 +1,11 @@
 class Authentication::LinkedinProvider < Authentication::BaseProvider
-  def connection
-    @connection ||= LinkedIn::Client.new.tap{|c| c.set_access_token(token)}
-  end
+
+  KEY    = DesksnearMe::Application.config.linkedin_key
+  SECRET = DesksnearMe::Application.config.linkedin_secret
+  META   = { name: "LinkedIn",
+             url: "http://linkedin.com/",
+             auth: "OAuth 1.0a" }
+  FIELDS = ["id", "first-name", "last-name", "headline", "industry", "picture-url", "public-profile-url", "location"]
 
   def friend_ids
     begin
@@ -10,4 +14,35 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
       raise ::Authentication::InvalidToken
     end
   end
+
+  def info
+    @info ||= begin
+      Info.new(connection.profile(fields: FIELDS))
+    rescue Twitter::Error::Unauthorized
+      ::Authentication::InvalidToken
+    end
+  end
+
+  class Info < BaseInfo
+
+    def initialize(raw)
+      @raw          = raw
+      @uid          = raw.id
+      @first_name   = raw.first_name
+      @last_name    = raw.last_name
+      @name         = "#{@first_name} #{@last_name}"
+      @description  = raw.headline
+      @image_url    = raw.picture_url
+      @profile_url  = raw.public_profile_url
+      @location     = (raw.location || {})['name']
+      @provider     = 'Linkedin'
+    end
+
+  end
+
+  private
+  def connection
+    @connection ||= LinkedIn::Client.new.tap{|c| c.set_access_token(token)}
+  end
+
 end

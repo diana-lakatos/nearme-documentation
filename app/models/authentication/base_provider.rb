@@ -1,15 +1,14 @@
 class Authentication::BaseProvider
-  attr_accessor :auth, :user, :token, :secret
+  attr_accessor :user, :token, :secret
 
-  def initialize(auth)
-    self.auth = auth
-    self.user = auth.user
-    self.token = auth.token
-    self.secret = auth.secret
+  def initialize(attributes)
+    self.user = attributes[:user]
+    self.token = attributes[:token]
+    self.secret = attributes[:secret]
   end
 
-  def connection
-    raise NotImplementedError
+  def self.new_from_authentication(authentication)
+    new(user: authentication.user, token: authentication.token, secret: authentication.secret)
   end
 
   def provider
@@ -18,6 +17,9 @@ class Authentication::BaseProvider
     provider
   end
 
+  def meta_for_user
+    self.class::META.merge(linked: user.linked_to?(provider))
+  end
   def connections
     @connections = User.joins(:authentications).where(authentications: {uid: self.friend_ids, provider: provider})
   end
@@ -26,9 +28,52 @@ class Authentication::BaseProvider
     @new_connections = connections.without(user.friends)
   end
 
-  protected
+  def uid_with_info
+    if info.present?
+      [info.uid, info.hash]
+    else
+      [nil, nil]
+    end
+  end
 
+  def is_oauth_1?
+    self.class::META[:auth] == "OAuth 1.0a"
+  end
+
+  def connection
+    raise NotImplementedError
+  end
+
+  protected
   def friend_ids
     raise NotImplementedError
   end
+
+  class BaseInfo
+
+    attr_accessor :raw, :provider, :uid, :username, :email, :name, :first_name, :last_name,
+      :description, :location, :verified,
+      :image_url, :profile_url, :website_url
+
+    def hash
+      return nil if uid.blank?
+      {
+        "nickname"    => username,
+        "email"       => email,
+        "name"        => name,
+        "first_name"  => first_name,
+        "last_name"   => last_name,
+        "image"       => image_url,
+        "description" => description,
+        "urls"        => {
+          provider    => profile_url,
+          "Website"   => website_url
+        },
+        "location" => location,
+        "verified" => verified
+      }
+    end
+
+  end
 end
+

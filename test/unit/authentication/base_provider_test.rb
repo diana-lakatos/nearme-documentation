@@ -12,11 +12,11 @@ class Authentication::BaseProviderTest < ActiveSupport::TestCase
       secret: 'dcba'
     })
 
-    @provider = Authentication::TestProvider.new(auth)
+    @provider = Authentication::TestProvider.new_from_authentication(auth)
   end
 
   context 'initialize' do
-    should 'works' do
+    should 'work' do
       assert_kind_of Authentication::TestProvider, @provider
       assert_equal @user, @provider.user
       assert_equal 'abcd', @provider.token

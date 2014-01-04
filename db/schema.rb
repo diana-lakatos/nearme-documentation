@@ -280,10 +280,10 @@ ActiveRecord::Schema.define(:version => 20131223064224) do
     t.string   "lessee"
     t.boolean  "skip_company",                                            :default => false
     t.boolean  "default_instance",                                        :default => false
-    t.decimal  "service_fee_host_percent",  :precision => 5, :scale => 2, :default => 0.0
     t.text     "pricing_options"
     t.string   "stripe_api_key"
     t.string   "stripe_public_key"
+    t.decimal  "service_fee_host_percent",  :precision => 5, :scale => 2, :default => 0.0
   end
 
   create_table "listing_messages", :force => true do |t|

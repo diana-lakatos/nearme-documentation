@@ -37,7 +37,8 @@ class V1::AuthenticationsControllerTest < ActionController::TestCase
       a.token = "123456"
     end.save!
 
-    Social::Facebook.stubs(:get_user_info).returns(["123456", {"name" => @user.name}])
+    info = stub(hash:{ "uid" => '123456', "name" => @user.name }, uid: '123456')
+    Authentication::FacebookProvider.any_instance.stubs(:info).returns(info)
 
     raw_post :social, {provider: "facebook"}, '{ "token": "abc123" }'
     assert_response :success
@@ -54,7 +55,8 @@ class V1::AuthenticationsControllerTest < ActionController::TestCase
   end
 
   test "social should raise when valid social credentials aren't previously saved" do
-    Social::Facebook.stubs(:get_user_info).returns(["123456", {"name" => @user.name}])
+    info = stub(hash: { "uid" => '123456', "name" => @user.name }, uid: nil)
+    Authentication::FacebookProvider.any_instance.stubs(:info).returns(info)
 
     assert_raise DNM::Unauthorized do
       raw_post :social, {provider: "facebook"}, '{ "token": "abc123" }'
@@ -63,8 +65,8 @@ class V1::AuthenticationsControllerTest < ActionController::TestCase
 
   test "social should raise when valid social credentials aren't previously saved but a user with that email exists" do
     @user.save # Make sure the user can be found in the db
-
-    Social::Facebook.stubs(:get_user_info).returns(["123456", {"name" => @user.name, "email" => @user.email}])
+    info = stub(hash: { "uid" => '123456', "name" => @user.name, "email" => @user.email }, uid: '123456')
+    Authentication::FacebookProvider.any_instance.stubs(:info).returns(info)
 
     assert_raise DNM::UnauthorizedButUserExists do
       raw_post :social, {provider: "facebook"}, '{ "token": "abc123" }'
@@ -77,4 +79,5 @@ class V1::AuthenticationsControllerTest < ActionController::TestCase
   def auth_hash
     { email: @user.email, password: PASSWORD }
   end
+
 end

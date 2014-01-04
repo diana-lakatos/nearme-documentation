@@ -8,7 +8,7 @@ class Authentication::TwtterProviderTest < ActiveSupport::TestCase
       token: 'abcd',
       secret: 'dcba'
     })
-    @twitter_provider = Authentication::TwitterProvider.new(auth)
+    @twitter_provider = Authentication::TwitterProvider.new_from_authentication(auth)
   end
 
   context 'rate error' do
@@ -22,6 +22,5 @@ class Authentication::TwtterProviderTest < ActiveSupport::TestCase
     end
 
   end
-
 
 end

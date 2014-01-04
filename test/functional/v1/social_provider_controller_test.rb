@@ -9,16 +9,18 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
   end
 
   test "raise DNM::Unauthorized when the uid exists for another user" do
-    Social::Facebook.stubs(:user_linked?).returns(true)
-    Social::Facebook.stubs(:get_user_info).returns(["123", {name:"John Smith"}])
+    User.any_instance.stubs(:linked_to?).with('facebook').returns(true)
+    info = stub(hash: { "uid" => '123', "name" => 'John Smith' }, uid: '123')
+    Authentication::FacebookProvider.any_instance.stubs(:info).returns(info)
     Authentication.stubs(:where).returns([stub({ user: nil })])
+
     assert_raise DNM::Unauthorized do
       raw_put :update, { provider: "facebook"}, '{ "token": "abc123" }'
     end
   end
 
   test "should get facebook data" do
-    Social::Facebook.stubs(:user_linked?).returns(false)
+    User.any_instance.stubs(:linked_to?).with('facebook').returns(false)
 
     get :show, provider: "facebook"
     assert_response :success
@@ -28,8 +30,9 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
   end
 
   test "should update facebook data" do
-    Social::Facebook.stubs(:user_linked?).returns(true)
-    Social::Facebook.stubs(:get_user_info).returns(["123", {name:"John Smith"}])
+    User.any_instance.stubs(:linked_to?).with('facebook').returns(true)
+    info = stub(hash: { "uid" => '123', "name" => 'John Smith' }, uid: '123')
+    Authentication::FacebookProvider.any_instance.stubs(:info).returns(info)
 
     raw_put :update, {provider: "facebook"}, '{ "token": "abc123" }'
     assert_response :success
@@ -39,7 +42,7 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
   end
 
   test "should delete facebook data" do
-    Social::Facebook.stubs(:user_linked?).returns(false)
+    User.any_instance.stubs(:linked_to?).with('facebook').returns(false)
 
     delete :destroy, provider: "facebook"
     assert_response :success
@@ -49,7 +52,10 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
   end
 
   test "should get twitter data" do
-    Social::Twitter.stubs(:user_linked?).returns(false)
+    User.any_instance.stubs(:linked_to?).with('twitter').returns(false)
+
+    info = stub(hash: { "uid" => '123', "name" => 'John Smith' }, uid: '123')
+    Authentication::TwitterProvider.any_instance.stubs(:info).returns(info)
 
     get :show, provider: "twitter"
     assert_response :success
@@ -59,8 +65,9 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
   end
 
   test "should update twitter data" do
-    Social::Twitter.stubs(:user_linked?).returns(true)
-    Social::Twitter.stubs(:get_user_info).returns(["123", {name:"John Smith"}])
+    User.any_instance.stubs(:linked_to?).with('twitter').returns(true)
+    info = stub(hash: { "uid" => '123', "name" => 'John Smith' }, uid: '123')
+    Authentication::TwitterProvider.any_instance.stubs(:info).returns(info)
 
     raw_put :update, {provider: "twitter"}, '{ "token": "abc123", "secret": "xyz789" }'
     assert_response :success
@@ -70,7 +77,7 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
   end
 
   test "should delete twitter data" do
-    Social::Twitter.stubs(:user_linked?).returns(false)
+    User.any_instance.stubs(:linked_to?).with('twitter').returns(false)
 
     delete :destroy, provider: "twitter"
     assert_response :success
@@ -80,7 +87,7 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
   end
 
   test "should get linkedin data" do
-    Social::Linkedin.stubs(:user_linked?).returns(false)
+    User.any_instance.stubs(:linked_to?).with('linkedin').returns(true)
 
     get :show, provider: "linkedin"
     assert_response :success
@@ -90,9 +97,9 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
   end
 
   test "should update linkedin data" do
-    Social::Linkedin.stubs(:user_linked?).returns(true)
-    Social::Linkedin.stubs(:get_user_info).returns(["123", {name:"John Smith"}])
-
+    User.any_instance.stubs(:linked_to?).with('linkedin').returns(true)
+    info = stub(hash: { "uid" => '123', "name" => 'John Smith' }, uid: '123')
+    Authentication::LinkedinProvider.any_instance.stubs(:info).returns(info)
 
     raw_put :update, {provider: "linkedin"}, '{ "token": "abc123", "secret": "xyz789" }'
     assert_response :success
@@ -102,7 +109,7 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
   end
 
   test "should delete linkedin data" do
-    Social::Linkedin.stubs(:user_linked?).returns(false)
+    User.any_instance.stubs(:linked_to?).with('linkedin').returns(false)
 
     delete :destroy, provider: "linkedin"
     assert_response :success
