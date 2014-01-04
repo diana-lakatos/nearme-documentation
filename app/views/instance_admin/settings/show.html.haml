@@ -16,7 +16,7 @@
     = render 'instance_admin/settings/amenities', type: 'location', f: f
     = render 'instance_admin/settings/amenities', type: 'listing', f: f
 
-= render 'instance_admin/shared/modal', heading: "Select replacement type"
+= render 'instance_admin/shared/modal', heading: "Delete type"
 
 - content_for :domready do
   new InstanceAdmin.SettingsController($('#instanceAdminModal'))

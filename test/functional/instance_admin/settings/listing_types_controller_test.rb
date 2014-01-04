@@ -43,11 +43,17 @@ class InstanceAdmin::Settings::ListingTypesControllerTest < ActionController::Te
       @listing_3 = FactoryGirl.create(:listing, listing_type: @listing_type_3)
     end
 
+    should 'render the destroy modal' do
+      get :destroy_modal, id: @listing_type_1.id
+      assert_equal @listing_type_1, assigns(:listing_type)
+      assert_template :destroy_modal
+    end
+
     should 'assign correct type and replacement types options and render the destroy modal' do
       get :destroy_modal, id: @listing_type_2.id
       assert_equal @listing_type_2, assigns(:listing_type)
       assert_equal [@listing_type_1, @listing_type_3], assigns(:replacement_types).sort
-      assert_template :destroy_modal
+      assert_template :destroy_and_replace_modal
     end
 
     should 'destroy listing type' do

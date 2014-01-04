@@ -43,11 +43,17 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
       @location_3 = FactoryGirl.create(:location, location_type: @location_type_3)
     end
 
+    should 'render the destroy modal' do
+      get :destroy_modal, id: @location_type_1.id
+      assert_equal @location_type_1, assigns(:location_type)
+      assert_template :destroy_modal
+    end
+
     should 'assign correct type and replacement types options and render the destroy modal' do
       get :destroy_modal, id: @location_type_2.id
       assert_equal @location_type_2, assigns(:location_type)
       assert_equal [@location_type_1, @location_type_3], assigns(:replacement_types).sort
-      assert_template :destroy_modal
+      assert_template :destroy_and_replace_modal
     end
 
     should 'destroy location type' do

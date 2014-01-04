@@ -1,7 +1,6 @@
-= "This listing type is currently associated with #{@listing_type.listing.count} listing. Please select a replacement listing type."
+= "Are you sure you want to delete the '#{@listing_type.name}' listing type?"
 
 = simple_form_for @listing_type, :url => instance_admin_settings_listing_type_path(@listing_type), :method => :delete do |f|
-  = select_tag(:replacement_type_id, options_for_select(@replacement_types.map{|r| [r.name, r.id]}))
   .pull-right
     %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal"} Close
-    = f.button :submit, 'Replace and delete', class: 'btn btn-danger'
+    = f.button :submit, 'Delete', class: 'btn btn-danger'

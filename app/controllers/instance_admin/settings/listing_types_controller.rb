@@ -18,8 +18,13 @@ class InstanceAdmin::Settings::ListingTypesController < InstanceAdmin::BaseContr
 
   def destroy_modal
     @listing_type = platform_context.instance.listing_types.find(params[:id])
-    @replacement_types = platform_context.instance.listing_types - [@listing_type]
-    render :layout => false
+
+    if @listing_type.listings.count > 0
+      @replacement_types = platform_context.instance.listing_types - [@listing_type]
+      render :destroy_and_replace_modal, :layout => false
+    else
+      render :destroy_modal, :layout => false
+    end
   end
 
   def destroy

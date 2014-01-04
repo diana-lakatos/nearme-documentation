@@ -18,8 +18,13 @@ class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::BaseCont
 
   def destroy_modal
     @location_type = platform_context.instance.location_types.find(params[:id])
-    @replacement_types = platform_context.instance.location_types - [@location_type]
-    render :layout => false
+
+    if @location_type.locations.count > 0
+      @replacement_types = platform_context.instance.location_types - [@location_type]
+      render :destroy_and_replace_modal, :layout => false
+    else
+      render :destroy_modal, :layout => false
+    end
   end
 
   def destroy
