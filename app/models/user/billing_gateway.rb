@@ -18,19 +18,6 @@ class User::BillingGateway
 
   SUPPORTED_CURRENCIES = %w(USD CAD)
 
-  # User helper to add associations on the user data object
-  module UserHelper
-    extend ActiveSupport::Concern
-
-    included do
-      has_many :charges, :foreign_key => :user_id, :dependent => :destroy
-    end
-
-    def billing_gateway
-      @billing_gateway ||= User::BillingGateway.new(self)
-    end
-  end
-
   # Wrapper object for credit card details. 
   # Encapsulates conversion and validation logic.
   #
@@ -77,8 +64,9 @@ class User::BillingGateway
     end
   end
 
-  def initialize(user)
+  def initialize(user, instance)
     @user = user
+    @instance = instance
   end 
 
   # Return whether or not we have existing card details stored for this user.
@@ -118,6 +106,8 @@ class User::BillingGateway
   def charge(charge_details)
     amount, currency, reference = charge_details[:amount], charge_details[:currency], charge_details[:reference]
 
+    api_key = @instance.custom_stripe_api_key
+
     # Create charge record
     charge = Charge.create(
       amount: amount,
@@ -127,11 +117,11 @@ class User::BillingGateway
     )
 
     begin
-      stripe_charge = Stripe::Charge.create(
+      stripe_charge = Stripe::Charge.create({
         amount: amount,
         currency: currency,
         customer: @user.stripe_id
-      )
+      }, api_key)
 
       charge.charge_successful(stripe_charge)
     rescue

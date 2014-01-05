@@ -6,8 +6,10 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 groups = {
   assets:    %w(development test),
-  profiling: %w(development staging)
 }
+
+groups[:coverage]  =  [Rails.env.to_s] if ENV['COVERAGE']
+groups[:profiling] =  [Rails.env.to_s] if ENV['PERF']
 
 Bundler.require(*Rails.groups(groups)) if defined?(Bundler)
 

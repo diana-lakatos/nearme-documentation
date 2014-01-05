@@ -9,4 +9,11 @@ SimpleCov.start 'rails' do
     add_group 'Jobs', 'app/jobs'
 end
 
+require 'simplecov-rcov-text'
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+  SimpleCov::Formatter::HTMLFormatter,
+  SimpleCov::Formatter::RcovTextFormatter
+  ]
+
 SimpleCov.merge_timeout 3600
