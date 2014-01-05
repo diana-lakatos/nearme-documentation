@@ -1,0 +1,9 @@
+%fieldset
+  %legend Nomenclature
+  = f.input :bookable_noun, label: 'Bookable Noun (e.g. Desk)'
+  = f.input :lessor, label: 'Lessor (e.g. host)'
+  = f.input :lessee, label: 'Lessee (e.g. guest)'
+  
+  %p
+    = f.button :submit, 'Save', class: 'btn btn-success'
+  %br

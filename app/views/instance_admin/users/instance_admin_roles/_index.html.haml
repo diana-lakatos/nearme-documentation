@@ -22,5 +22,3 @@
           %td
             - if instance_admin_role.instance_id.present?
               = link_to "Delete", instance_admin_users_instance_admin_role_path(instance_admin_role), :method => :delete, :class => "btn btn-danger", :confirm => 'Are you sure?'
-
-

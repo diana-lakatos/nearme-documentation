@@ -3,7 +3,6 @@ require 'test_helper'
 class InstanceAdmin::SettingsControllerTest < ActionController::TestCase
 
   context 'authorization' do
-
     setup do
       @user = FactoryGirl.create(:user)
       sign_in @user
@@ -30,8 +29,27 @@ class InstanceAdmin::SettingsControllerTest < ActionController::TestCase
       get :show
       assert_redirected_to root_path
     end
-
-
   end
 
+  context 'attributes' do
+    setup do
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+      InstanceAdmin::Authorizer.any_instance.stubs(:instance_admin?).returns(true)
+      InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).returns(true)
+    end
+
+    should 'update basic configureation and nomenclature' do
+      post :update, "instance"=>{
+                      "name"=>"New Instance Name",
+                      "service_fee_guest_percent"=>"16.00",
+                      "domains_attributes"=>{ "0"=>{"name"=>"New Domain Name"} }
+                    }
+      assert_response :success
+      instance = assigns[:instance]
+      assert_equal instance.name, "New Instance Name"
+      assert_equal instance.service_fee_guest_percent, BigDecimal.new(16)
+      assert_equal instance.domains.first.name, "New Domain Name"
+    end
+  end
 end

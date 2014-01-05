@@ -1,0 +1,6 @@
+= "Are you sure you want to delete the '#{@listing_type.name}' listing type?"
+
+= simple_form_for @listing_type, :url => instance_admin_settings_listing_type_path(@listing_type), :method => :delete do |f|
+  .pull-right
+    %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal"} Close
+    = f.button :submit, 'Delete', class: 'btn btn-danger'
