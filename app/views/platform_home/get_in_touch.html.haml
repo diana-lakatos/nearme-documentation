@@ -1,0 +1,38 @@
+%section.get-in-touch.section.light-section
+  #logo
+    %a{href: '/'}
+
+  %h2 Get in touch.
+
+  .title.normal Have a question or just want to say hi? We’d love to hear from you.
+  .title.warning.hidden Please complete at least a first name and email address.
+
+  .container-fluid
+    %form{method: 'POST', action: '/save-inquiry'}
+      .row-fluid
+        .span2
+        .span4
+          %input{type: 'text', name: 'inquiry[name]', placeholder: 'First name', class: 'incomplete', id: 'name'}
+        .span4
+          %input{type: 'text', name: 'inquiry[surname]', placeholder: 'Last name', class: 'incomplete'}
+        .span2
+      .row-fluid
+        .span2
+        .span4
+          %input{type: 'email', name: 'inquiry[email]', placeholder: 'Email', class: 'incomplete', id: 'email'}
+        .span4
+          %input{type: 'text', name: 'inquiry[industry]', id: 'industry', placeholder: 'Industry', class: 'incomplete'}
+        .span2
+      .row-fluid
+        .span2
+        .span8
+          %textarea{name: 'inquiry[message]', placeholder: 'Start typing your message here...', rows: 10, class: 'incomplete'}
+        .span2
+      .row-fluid
+        .span10
+          .pull-right
+            %a.btn.btn-large.btn-red{href: '#'} SEND
+        .span2
+
+%script
+  $(function(){ new GetInTouchController(); });

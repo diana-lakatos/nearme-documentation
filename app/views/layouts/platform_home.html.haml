@@ -1,0 +1,34 @@
+!!! 5
+%html{html_attrs}
+  %head
+    %title Near Me | Get in the Business of Sharing
+    %meta{:'http-equiv' => "Content-Type", :content => "text/html; charset=utf-8"}
+    %meta{:name => "lang", :content => "en"}
+    %meta{:name => "description", :content => "Create and manage your own peer-to-peer website using the Near Me platform: empower any sharing ecosystem you can imagine."}
+    %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}
+    %meta{:content => "", :name => "description"}/
+    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
+    %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
+    %meta{:content => "chrome=IE7 IE=edge", "http-equiv" => "X-UA-Compatible"}/
+    / %meta{:property => "og:image", :content => "#{host}#{asset_path('logo@300px.png')}" }/
+    %link{ rel: 'stylesheet', href: stylesheet_path('application.css') }/
+    %link{ rel: "stylesheet", type: "text/css", href: "//cloud.typography.com/6219072/637722/css/fonts.css" }/
+    %link{ href: '/assets/favicon.ico', rel: "shortcut icon"}/
+    %script{:type => "text/javascript", :src => javascript_path('application.js') }
+    / = partial :analytics
+    /[if lt IE 9]
+      :css
+        img.video_fallback { display: block !important; width: 100% !important; height: 100% !important;}
+        #email-modal { display: none;  }
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  %body{class: defined?(@map_background) ? 'map' : (defined?(@light_background) ? 'light' : '')}
+    - # this is a hack for sharing via LinkedIn and having an image
+    %img.social-share-thumbnail{src: '/assets/logo@2x.png'}
+    .main-container{class: main_container_css_class}
+      = yield
+      - if sticky_footer?
+        .footer-push
+      - else
+        = render 'platform_home/footer'
+    = render 'platform_home/footer' if sticky_footer?
