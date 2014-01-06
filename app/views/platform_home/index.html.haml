@@ -1,11 +1,11 @@
 %section.background-video
   #logo
     %a{href: '/'}
-  %img.video_fallback{src: "/assets/video-poster.jpg"}
+  = image_tag "platform_home/video-poster.jpg", class: "video_fallback"
   :plain
-    <video id="video" preload="preload" poster="/assets/video-poster.jpg" loop>
-      <source src="/assets/background-video.mp4" type="video/mp4">
-      <source src="/assets/background-video.ogv" type="video/ogg">
+    <video id="video" preload="preload" poster="/assets/platform_home/video-poster.jpg" loop>
+      <source src="/assets/platform_home/background-video.mp4" type="video/mp4">
+      <source src="/assets/platform_home/background-video.ogv" type="video/ogg">
     </video>
   #video-filter
   .body
@@ -16,7 +16,8 @@
 
     .arrow
       %a{href: '#'}
-        %img{src: '/assets/chevron-down.png', border: 0, alt: 'down'}
+        = image_tag "platform_home/chevron-down.png"
+
 
 
 %section.create-and-manage.section.pink-section
@@ -55,13 +56,13 @@
       .span4.box.entrepreneurs
         %h3 For Entrepreneurs
         .icon
-          %img{src: '/assets/for-entrepreneurs-ico.png'}
+          = image_tag "platform_home/for-entrepreneurs-ico.png"
         .body
           Have the entrepreneurial spirit? No developers needed to setup a custom marketplace website in minutes.
       .span4.box.brands
         %h3 For Brands
         .icon
-          %img{src: '/assets/for-brands-ico.png'}
+          = image_tag "platform_home/for-brands-ico.png"
         .body
           More people are sharing every day. Don't miss out on the new way that people consume.
       .span1.offset1
@@ -118,10 +119,10 @@
 
         .navigation
           %a.left{href: '#'}
-            %img{src: '/assets/chevron-left.png', border: 0}/
+            = image_tag "platform_home/chevron-left.png"
 
           %a.right{href: '#'}
-            %img{src: '/assets/chevron-right.png', border: 0}/
+            = image_tag "platform_home/chevron-right.png"
 
 
 
@@ -134,19 +135,19 @@
       .span1
       .span3.box
         .icon
-          %img{border: 0, src: '/assets/bulb-ico-2.png'}
+          = image_tag "platform_home/bulb-ico-2.png"
         %h3 No coding needed
         .body
           Creating your marketplace is easy without developers. Customize your branding, pages, settings and so much more.
       .span3.box.middle-box
         .icon
-          %img{border: 0, src: '/assets/lock-ico.png'}
+          = image_tag "platform_home/lock-ico.png"
         %h3 Reliable Infrastructure
         .body
           Pick your domain name and we take care of the rest!
       .span3.box
         .icon
-          %img{border: 0, src: '/assets/check-ico.png'}
+          = image_tag "platform_home/check-ico.png"
         %h3 Hassle-free Payments
         .body
           Instantly accept payments from your users and set the fees that suit your business so you can start making money.
@@ -156,19 +157,19 @@
       .span1
       .span3.box
         .icon
-          %img{border: 0, src: '/assets/conversation-ico.png'}
+          = image_tag "platform_home/conversation-ico.png"
         %h3 Personalized Support
         .body
           Support for you and your users. Our customer team will respond to your request in a timely manner. The team will help get you set up or bring your business to the next level.
       .span3.box.middle-box
         .icon
-          %img{border: 0, src: '/assets/mobile-device-ico.png'}
+          = image_tag "platform_home/mobile-device-ico.png"
         %h3 Go Mobile
         .body
           Our technology allows you to customize a mobile app for your business. The world is going mobile and we'll get you there.
       .span3.box
         .icon
-          %img{border: 0, src: '/assets/upward-trend-ico.png'}
+          = image_tag "platform_home/upward-trend-ico.png"
         %h3 Powerful Analytics
         .body
           Analyze traffic and user behavior to unlock new revenue opportunities.
@@ -193,19 +194,19 @@
     %ul.icons.clearfix
       %li.popup
         %a{href: twitter_share_url, :class => 'share-link', :'data-network' => 'Twitter', :'data-window-width' => 550, :'data-window-height' => 420}
-          %img{src: '/assets/twitter-ico.png'}
+          = image_tag "platform_home/twitter-ico.png"
       %li.popup
         %a{href: linkedin_share_url, :class => 'share-link', :'data-network' => 'LinkedIn', :'data-window-width' => 600, :'data-window-height' => 472}
-          %img{src: '/assets/linkedin-ico.png'}
+          = image_tag "platform_home/linkedin-ico.png"
       %li.popup
         %a{href: facebook_share_url, :class => 'share-link', :'data-network' => 'Facebook', :'data-window-width' => 420, :'data-window-height' => 339}
-          %img{src: '/assets/facebook-ico.png'}
+          = image_tag "platform_home/facebook-ico.png"
       %li.popup
         %a{href: gplus_share_url, :class => 'share-link', :'data-network' => 'Google+', :'data-window-width' => 500, :'data-window-height' => 470}
-          %img{src: '/assets/gplus-ico.png'}
+          = image_tag "platform_home/gplus-ico.png"
       %li.send-email
         %a{href: "#", :class => 'share-link', :'data-network' => 'Email'}
-          %img{src: '/assets/mail-ico.png'}
+          = image_tag "platform_home/mail-ico.png"
 
   #email-modal.modal.fade.hide{"aria-hidden" => "true", "aria-labelledby" => "email-modal-label", role: "dialog", tabindex: "-1"}
     .modal-dialog
@@ -226,3 +227,4 @@
 
 %script
   $(function(){ new HomeController(); });
+

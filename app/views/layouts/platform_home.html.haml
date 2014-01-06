@@ -14,7 +14,7 @@
     / %meta{:property => "og:image", :content => "#{host}#{asset_path('logo@300px.png')}" }/
     %link{ rel: 'stylesheet', href: stylesheet_path('application.css') }/
     %link{ rel: "stylesheet", type: "text/css", href: "//cloud.typography.com/6219072/637722/css/fonts.css" }/
-    %link{ href: '/assets/favicon.ico', rel: "shortcut icon"}/
+    %link{ href: '/assets/platform_home/favicon.ico', rel: "shortcut icon"}/
     %script{:type => "text/javascript", :src => javascript_path('application.js') }
     / = partial :analytics
     /[if lt IE 9]
@@ -24,7 +24,7 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   %body{class: defined?(@map_background) ? 'map' : (defined?(@light_background) ? 'light' : '')}
     - # this is a hack for sharing via LinkedIn and having an image
-    %img.social-share-thumbnail{src: '/assets/logo@2x.png'}
+    = image_tag "platform_home/logo@2x.png", class: "social-share-thumbnail"
     .main-container{class: main_container_css_class}
       = yield
       - if sticky_footer?
