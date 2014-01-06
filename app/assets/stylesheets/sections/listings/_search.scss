@@ -578,6 +578,16 @@ header#listing_search {
     position: absolute;
   }
 
+  @media (max-width: $iphone-portrait) {
+    &.with-map {
+      .search-filters {
+        .search-filter {
+          display: none;
+        }
+      }
+    }
+  }
+
 }
 
 /*** Listing View ***/
