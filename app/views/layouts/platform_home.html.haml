@@ -11,11 +11,11 @@
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
     %meta{:content => "chrome=IE7 IE=edge", "http-equiv" => "X-UA-Compatible"}/
-    / %meta{:property => "og:image", :content => "#{host}#{asset_path('logo@300px.png')}" }/
-    %link{ rel: 'stylesheet', href: stylesheet_path('application.css') }/
+    %meta{:property => "og:image", :content => 'http://near-me.com/assets/platform_home/logo@300px.png' }/
+    = stylesheet_link_tag 'platform_home'
     %link{ rel: "stylesheet", type: "text/css", href: "//cloud.typography.com/6219072/637722/css/fonts.css" }/
     %link{ href: '/assets/platform_home/favicon.ico', rel: "shortcut icon"}/
-    %script{:type => "text/javascript", :src => javascript_path('application.js') }
+    = javascript_include_tag 'platform_home.js'
     / = partial :analytics
     /[if lt IE 9]
       :css

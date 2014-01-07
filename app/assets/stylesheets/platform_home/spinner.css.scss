@@ -1,0 +1,94 @@
+section.how-it-works {
+  #line {
+    background-color: #f1f4dd;
+    left: 303px;
+    width: 443px;
+    top: 134px;
+    height: 4px;
+    position: relative;
+    z-index: 1;
+  }
+
+  #active {
+    z-index: 0;
+    position: relative;
+    background-image: url(/assets/platform_home/spinner/spinner-foreground.png);
+    background-repeat: no-repeat;
+    width: 198px;
+    height: 94px;
+    float: left;
+    top: 88px;
+    left: 105px;
+  }
+
+  #background {
+    width: 305px;
+    height: 273px;
+  }
+
+  #image {
+    position: absolute;
+    width: 305px;
+    height: 273px;
+    background-image: url(/assets/platform_home/spinner/spinner-transparent.png);
+  }
+
+  .ico {
+    cursor: pointer;
+    z-index: 200;
+    left: 122px;
+    top: 106px;
+    width: 62px;
+    height: 62px;
+    display: inline-block;
+    position: absolute;
+    background-position: center;
+    background-repeat: no-repeat;
+    &.bulb {
+      left: 244px;
+      background-image: url(/assets/platform_home/spinner/bulb-ico.png);
+      &.active {
+        background-image: url(/assets/platform_home/spinner/bulb-red-ico.png);
+      }
+    }
+    &.pointer {
+      left: 183px;
+      top: 213px;
+      background-image: url(/assets/platform_home/spinner/pointer-ico.png);
+      &.active {
+        background-image: url(/assets/platform_home/spinner/pointer-red-ico.png);
+      }
+    }
+    &.users-3 {
+      left: 61px;
+      top: 213px;
+      background-image: url(/assets/platform_home/spinner/3-users-ico.png);
+      &.active {
+        background-image: url(/assets/platform_home/spinner/3-users-red-ico.png);
+      }
+    }
+    &.upwards {
+      left: 0px;
+      background-image: url(/assets/platform_home/spinner/upwards-bar-ico.png);
+      &.active {
+        background-image: url(/assets/platform_home/spinner/upwards-bar-red-ico.png);
+      }
+    }
+    &.pie {
+      left: 62px;
+      top: 0px;
+      background-image: url(/assets/platform_home/spinner/pie-ico.png);
+      &.active {
+        background-image: url(/assets/platform_home/spinner/pie-red-ico.png);
+      }
+    }
+    &.dollar {
+      left: 183px;
+      top: 0px;
+      background-image: url(/assets/platform_home/spinner/dollar-bill-ico.png);
+      &.active {
+        background-image: url(/assets/platform_home/spinner/dollar-bill-red-ico.png);
+      }
+    }
+  }
+}

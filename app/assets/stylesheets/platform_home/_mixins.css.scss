@@ -1,0 +1,41 @@
+@mixin form-field {
+  margin: 0;
+  margin-bottom: 8px;
+  padding: 20px;
+  width: 100%;
+  @include box-sizing(border-box);
+  border: 2px solid #58585B;
+  @include border-radius(5px);
+  background: $light-color;
+  color: #58585B;
+  font-size: 140%;
+  line-height: 140%;
+  font-family: 'Archer SSm A', 'Archer SSm B';
+  font-weight: 500;
+  font-style: normal;
+  height: 100%;
+
+  @media (max-width: $iphone-portrait) {
+   font-size: 100%;
+  }
+
+  &:focus {
+    @include form-field-focus;
+    border-color: #EF4A53;
+    box-shadow: none !important;
+  }
+
+  &.incomplete {
+    color: rgb(131, 132, 125);
+    border-color: rgb(131, 132, 125);
+  }
+
+  @media (max-width: $iphone-landscape) {
+    font-size: 120%;
+  }
+}
+
+@mixin form-field-focus {
+  outline: none;
+  color: $dark-color;
+}
