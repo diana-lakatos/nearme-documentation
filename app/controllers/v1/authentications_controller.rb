@@ -24,7 +24,8 @@ class V1::AuthenticationsController < V1::BaseController
     raise DNM::MissingJSONData, "token"  if token.blank?
     raise DNM::MissingJSONData, "secret" if secret.blank? && provider.is_oauth_1?
 
-    uid, info = provider.uid_with_info
+    uid = provider.info.uid
+    info = provider.info.hash
 
     raise DNM::Unauthorized if uid.blank?
 

@@ -18,7 +18,7 @@ class Authentication::FacebookProvider < Authentication::BaseProvider
     @info ||= begin
       Info.new(connection.get_object('me'))
     rescue Koala::Facebook::AuthenticationError
-      ::Authentication::InvalidToken
+      raise ::Authentication::InvalidToken
     end
   end
 

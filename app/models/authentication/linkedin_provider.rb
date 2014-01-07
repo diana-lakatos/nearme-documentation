@@ -18,8 +18,8 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
   def info
     @info ||= begin
       Info.new(connection.profile(fields: FIELDS))
-    rescue Twitter::Error::Unauthorized
-      ::Authentication::InvalidToken
+    rescue LinkedIn::Errors::AccessDeniedError
+      raise ::Authentication::InvalidToken
     end
   end
 

@@ -20,6 +20,11 @@ class Authentication::BaseProvider
   def meta_for_user
     self.class::META.merge(linked: user.linked_to?(provider))
   end
+
+  def is_oauth_1?
+    self.class::META[:auth] == "OAuth 1.0a"
+  end
+
   def connections
     @connections = User.joins(:authentications).where(authentications: {uid: self.friend_ids, provider: provider})
   end
@@ -28,23 +33,11 @@ class Authentication::BaseProvider
     @new_connections = connections.without(user.friends)
   end
 
-  def uid_with_info
-    if info.present?
-      [info.uid, info.hash]
-    else
-      [nil, nil]
-    end
-  end
-
-  def is_oauth_1?
-    self.class::META[:auth] == "OAuth 1.0a"
-  end
-
+  protected
   def connection
     raise NotImplementedError
   end
 
-  protected
   def friend_ids
     raise NotImplementedError
   end
@@ -56,7 +49,6 @@ class Authentication::BaseProvider
       :image_url, :profile_url, :website_url
 
     def hash
-      return nil if uid.blank?
       {
         "nickname"    => username,
         "email"       => email,
@@ -76,4 +68,3 @@ class Authentication::BaseProvider
 
   end
 end
-

@@ -20,7 +20,9 @@ class Authentication::TwitterProvider < Authentication::BaseProvider
     @info ||= begin
       Info.new(connection.user)
     rescue Twitter::Error::Unauthorized
-      ::Authentication::InvalidToken
+      raise ::Authentication::InvalidToken
+    rescue Twitter::Error::TooManyRequests
+      Rails.logger.info "ignored friend_ids for #{@user.id} #{@user.name} due to Rate Limit Exceeded error"
     end
   end
 
@@ -30,12 +32,12 @@ class Authentication::TwitterProvider < Authentication::BaseProvider
       @raw          = raw
       @uid          = raw.id
       @username     = raw.username
-      @email        = raw['email']
+      @email        = raw.email
       @name         = raw.name
       @description  = raw.description
       @image_url    = raw.profile_image_url(:original).to_s
-      @profile_url  = raw.url.to_s
-      @website_url  = raw.website.to_s
+      @profile_url  = raw.url.to_s.presence
+      @website_url  = raw.website.to_s.presence
       @location     = raw.location
       @verified     = raw.verified
       @provider     = 'Twitter'

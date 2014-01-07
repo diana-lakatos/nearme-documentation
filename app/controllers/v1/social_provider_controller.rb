@@ -8,7 +8,8 @@ class V1::SocialProviderController < V1::BaseController
 
   def update
 
-    uid, info = provider.uid_with_info
+    uid = provider.info.uid
+    info = provider.info.hash
 
     raise DNM::InvalidJSONData, "token", "Invalid Credentials" if uid.blank?
 
