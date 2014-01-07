@@ -18,26 +18,38 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def create
-    super
+    begin
+      super
 
-    # Only track the sign up if the user has actually been saved (i.e. there are no errors)
-    if @user.persisted?
-      User.where(id: @user.id).update_all({referer: cookies.signed[:referer],
-                                           source: cookies.signed[:source],
-                                           campaign: cookies.signed[:campaign]})
-      @user.set_platform_context(platform_context)
-      update_analytics_google_id(@user)
-      analytics_apply_user(@user)
-      event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
-      PostActionMailer.enqueue_later(30.minutes).sign_up_welcome(platform_context, @user)
-      ReengagementNoBookingsJob.perform_later(72.hours.from_now, platform_context, @user)
-      PostActionMailer.enqueue.sign_up_verify(platform_context, @user)
+      # Only track the sign up if the user has actually been saved (i.e. there are no errors)
+      if @user.persisted?
+        User.where(id: @user.id).update_all({referer: cookies.signed[:referer],
+                                             source: cookies.signed[:source],
+                                             campaign: cookies.signed[:campaign]})
+        @user.set_platform_context(platform_context)
+        update_analytics_google_id(@user)
+        analytics_apply_user(@user)
+        event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
+        PostActionMailer.enqueue_later(30.minutes).sign_up_welcome(platform_context, @user)
+        ReengagementNoBookingsJob.perform_later(72.hours.from_now, platform_context, @user)
+        PostActionMailer.enqueue.sign_up_verify(platform_context, @user)
+      end
+
+      # Clear out temporarily stored Provider authentication data if present
+      session[:omniauth] = nil unless @user.new_record?
+      flash[:redirected_from_sign_up] = true
+      @resource = resource
+    rescue ActiveRecord::RecordNotUnique => e
+      # we are trying to handle situation when user makes double request (button hit or page refresh)
+      # request are handled by two server processes so AR validation goes fine, but DB throws exception
+      # trying to login this user
+      resource = User.find_for_database_authentication(:email => params[resource_name][:email])
+      if resource && resource.valid_password?(params[resource_name][:password])
+        @user = resource
+        sign_in(resource_name, resource)
+        redirect_to root_path
+      end
     end
-
-    # Clear out temporarily stored Provider authentication data if present
-    session[:omniauth] = nil unless @user.new_record?
-    flash[:redirected_from_sign_up] = true
-    @resource = resource
   end
 
   def edit

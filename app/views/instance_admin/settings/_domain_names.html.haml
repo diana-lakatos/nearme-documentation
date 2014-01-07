@@ -1,0 +1,13 @@
+%fieldset
+  %legend Domain Names
+  %table#domains.table.table-borderless.table-condensed
+    = f.fields_for :domains, wrapper: false do |f|
+      %tr.fields
+        %td= f.input :name, label: false
+        %td.small= f.link_to_remove "Delete", class: 'btn btn-danger pull-right'
+  
+  %p
+    = f.link_to_add "Add domain name", :domains, :data => { :target => "#domains" }, class: 'btn'
+  %p
+    = f.button :submit, 'Save', class: 'btn btn-success'
+  %br

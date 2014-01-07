@@ -1,0 +1,13 @@
+= simple_nested_form_for @instance, :url => instance_admin_settings_path, :html => { :multipart => true } do |f|
+  %fieldset
+    %legend Location Types
+    %table#location-types.table.table-borderless.table-condensed
+      = f.fields_for :location_types, wrapper: false do |f|
+        %tr.fields
+          %td= f.input :name, label: false
+          %td
+            %a.btn.btn-danger.pull-right{"data-target" => "#instanceAdminModal", "data-toggle" => "modal", "href" => "#{destroy_modal_instance_admin_settings_location_type_path(f.object)}"} Delete
+
+    %p
+      = f.button :submit, 'Save', class: 'btn btn-success'
+    %br

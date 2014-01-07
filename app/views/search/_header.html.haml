@@ -1,5 +1,5 @@
 - content_for :hero do
-  %header#listing_search.container-fluid  
+  %header#listing_search.container-fluid{class: result_view == 'map' ? 'with-map' : ''}
     .header-inner
       %form.search_results{:action => search_path(v: result_view), :method => "get"}
         - search_geofields.each do |geofield|
