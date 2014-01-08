@@ -21,7 +21,7 @@ class User::FriendFinderTest < ActiveSupport::TestCase
         friend = stub
 
         @authentication.expects(:new_connections).returns([friend])
-        @ff.user.expects(:add_friend).with(friend)
+        @ff.user.expects(:add_friend).with(friend, @authentication)
 
         @ff.find_friends!
       end
