@@ -120,7 +120,11 @@ class Search.Controller
       params['suburb']  = result.suburb()
       params['street']  = result.street()
       params['postcode']  = result.postcode()
-    params['loc'] = @form.find("input#search").val().replace(', United States', '')
+      params['loc'] = params['city'] + ', ' + result.state()
+      if params['country'] != 'United States'
+        params['loc'] += ', ' + params['country']
+    else
+      params['loc'] = @form.find("input#search").val().replace(', United States', '')
 
     params
 
@@ -130,7 +134,7 @@ class Search.Controller
   assignFormParams: (paramsHash) ->
     # Write params to search form
     for field, value of paramsHash
-      @form.find("input[name=#{field}]").val(value)
+      @form.parent().find("input[name=#{field}]").val(value)
 
   getSearchParams: ->
     form_params = @form.serializeArray()
@@ -149,7 +153,6 @@ class Search.Controller
     # If the query has already been geolocated we can just search immediately
     if @isQueryGeolocated(query)
       return callback()
-
     # Otherwise we need to geolocate the query and assign it before searching
     deferred = @geocoder.geocodeAddress(query)
     deferred.always (results) =>

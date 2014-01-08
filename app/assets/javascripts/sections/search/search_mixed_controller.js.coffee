@@ -19,6 +19,25 @@ class Search.SearchMixedController extends Search.SearchController
         @sortValue = @sortField.find(':selected').val()
         @fieldChanged()
 
+    @queryField.keypress (e) =>
+      if e.which == 13
+        # if user pressed enter, we will prevent submitting the form and do it manually, when we are ready [ i.e. after geocoding query ]
+        @submit_form = false
+        query = @queryField.val()
+        deferred = @geocoder.geocodeAddress(query)
+        deferred.always (results) =>
+          result = results.getBestResult() if results
+          @setGeolocatedQuery(query, result)
+          @submit_form = true
+          google.maps.event.trigger(@autocomplete, 'place_changed')
+        false
+      else
+        @submit_form = false
+        true
+
+    @searchButton.bind 'click', =>
+      @submit_form = true
+
   adjustListHeight: ->
     list_container = @container.find('.list')
     list_container.height($(window).height() - list_container.offset().top)
@@ -43,6 +62,17 @@ class Search.SearchMixedController extends Search.SearchController
 
     google.maps.event.addListener @map.googleMap, 'zoom_changed', =>
       @map.clusterer.setZoomOnClick(false)
+
+  initializeAutocomplete: ->
+    @autocomplete = new google.maps.places.Autocomplete(@queryField[0], {})
+    google.maps.event.addListener @autocomplete, 'place_changed', =>
+      place = Search.Geocoder.wrapResult @autocomplete.getPlace()
+      place = null unless place.isValid()
+
+      @setGeolocatedQuery(@queryField.val(), place)
+      if @submit_form
+        @submit_form = false
+        @fieldChanged('query', @queryField.val())
 
 
   getPageWithLocation: (location_id) ->
@@ -220,7 +250,12 @@ class Search.SearchMixedController extends Search.SearchController
   updateUrlForSearchQuery: ->
     url = document.location.href.replace(/\?.*$/, "")
     params = @getSearchParams()
+    filtered_params = []
+    for k, param of params
+      if $.inArray(param["name"], ['lgtype', 'lntype', 'loc', 'lgpricing']) > -1
+        filtered_params.push {name: param["name"], value: param["value"]}
+
     # we need to decodeURIComponent, otherwise accents will not be handled correctly. Remove decodeURICompoent if we switch back
     # to window.history.replaceState, but it's *absolutely mandatory* in this case. Removing it now will lead to infiite redirection in IE lte 9
-    url = decodeURIComponent("?#{$.param(params)}")
+    url = decodeURIComponent("?#{$.param(filtered_params)}")
     History.replaceState(params, @container.find('input[name=meta_title]').val(), url)

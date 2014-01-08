@@ -13,5 +13,5 @@
           Search
         #suggest_location{:style => "display: none"}
 
-      - search_geofields.each do |geofield|
-        = hidden_field_tag geofield, ''
+    - search_geofields.each do |geofield|
+      = hidden_field_tag geofield, ''

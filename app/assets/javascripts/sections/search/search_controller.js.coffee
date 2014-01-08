@@ -24,7 +24,6 @@ class Search.SearchController extends Search.Controller
     setTimeout((=> @processingResults = false), 1000)
 
   bindEvents: ->
-
     @form.bind 'submit', (event) =>
       event.preventDefault()
       @triggerSearchFromQuery()
