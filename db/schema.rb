@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131223064224) do
+ActiveRecord::Schema.define(:version => 20140108142314) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -280,8 +280,8 @@ ActiveRecord::Schema.define(:version => 20131223064224) do
     t.string   "lessee"
     t.boolean  "skip_company",                                            :default => false
     t.boolean  "default_instance",                                        :default => false
-    t.decimal  "service_fee_host_percent",  :precision => 5, :scale => 2, :default => 0.0
     t.text     "pricing_options"
+    t.decimal  "service_fee_host_percent",  :precision => 5, :scale => 2, :default => 0.0
     t.string   "stripe_api_key"
     t.string   "stripe_public_key"
   end
@@ -395,14 +395,15 @@ ActiveRecord::Schema.define(:version => 20131223064224) do
   add_index "mailer_unsubscriptions", ["user_id"], :name => "index_mailer_unsubscriptions_on_user_id"
 
   create_table "pages", :force => true do |t|
-    t.string   "path",       :null => false
+    t.string   "path",         :null => false
     t.text     "content"
     t.string   "hero_image"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "theme_id"
     t.string   "slug"
     t.integer  "position"
+    t.text     "html_content"
   end
 
   add_index "pages", ["theme_id"], :name => "index_pages_on_theme_id"
@@ -681,6 +682,7 @@ ActiveRecord::Schema.define(:version => 20131223064224) do
     t.integer  "instance_id"
     t.integer  "domain_id"
     t.integer  "unread_listing_message_threads_count",                 :default => 0
+    t.string   "paypal_id"
   end
 
   add_index "users", ["domain_id"], :name => "index_users_on_domain_id"

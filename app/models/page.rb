@@ -13,8 +13,20 @@ class Page < ActiveRecord::Base
 
   default_scope -> { rank(:position) }
 
+  before_save :convert_to_html
+
   def to_liquid
     PageDrop.new(self)
+  end
+
+  private 
+
+  def convert_to_html
+    if content.present?
+      self.html_content = RDiscount.new(self.content).to_html
+      rel_no_follow_adder = RelNoFollowAdder.new({:skip_domains => Domain.pluck(:name)})
+      self.html_content = rel_no_follow_adder.modify(self.html_content)
+    end
   end
 
 end

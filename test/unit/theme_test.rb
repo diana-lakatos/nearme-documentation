@@ -59,6 +59,22 @@ class ThemeTest < ActiveSupport::TestCase
     end
   end
 
+  context '#homepage_content' do
+
+    setup do
+      @theme = @instance.theme
+    end
+
+    should 'add no follow to unknown links' do
+      @theme.homepage_content = '<div>This is an <a href="http://unknown.link.com">Unknown Link</a></div>'
+      mock = mock()
+      mock.expects(:modify).with(@theme.homepage_content).once
+      RelNoFollowAdder.expects(:new).with({:skip_domains => Domain.pluck(:name)}).returns(mock)
+      @theme.save
+    end
+
+  end
+
   context '::hexify' do
     should 'format hex color with #' do
       assert_equal '#006699', Theme.hexify('006699')

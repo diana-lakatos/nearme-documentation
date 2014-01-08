@@ -44,6 +44,7 @@ class Theme < ActiveRecord::Base
   end
 
   before_validation :unhexify_colors
+  before_save :add_no_follow_to_unknown_links
 
   # If true, will skip compiling the theme when saving
   attr_accessor :skip_compilation
@@ -156,6 +157,13 @@ class Theme < ActiveRecord::Base
     COLORS.each do |color|
       value = self.send("color_#{color}")
       self.send(:"color_#{color}=", Theme.unhexify(value))
+    end
+  end
+
+  def add_no_follow_to_unknown_links
+    if self.homepage_content.present?
+      rel_no_follow_adder = RelNoFollowAdder.new({:skip_domains => Domain.pluck(:name)})
+      self.homepage_content = rel_no_follow_adder.modify(self.homepage_content)
     end
   end
 end
