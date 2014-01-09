@@ -120,6 +120,7 @@ en:
       reservations:
         reservation_confirmed: "You have confirmed the reservation!"
         reservation_not_confirmed: "Your reservation could not be confirmed."
+        reservation_already_confirmed: "This reservation has already been confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         reservation_cancelled: "You have cancelled this reservation."
       listings:
