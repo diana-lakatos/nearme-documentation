@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131223064224) do
+ActiveRecord::Schema.define(:version => 20140108084545) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -406,6 +406,14 @@ ActiveRecord::Schema.define(:version => 20131223064224) do
   end
 
   add_index "pages", ["theme_id"], :name => "index_pages_on_theme_id"
+
+  create_table "partner_inquiries", :force => true do |t|
+    t.string   "name"
+    t.string   "company_name"
+    t.string   "email"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
 
   create_table "partners", :force => true do |t|
     t.string   "name"
