@@ -6,7 +6,7 @@
     - if resource.company.present?
       = resource.company.name
     - else
-      = "#{resource.company_including_deleted.try(:name)} (Deleted)"
+      = "#{resource.company_including_deleted.name} (Deleted)"
   %td= resource.reservation_charges.count
   %td= resource.created_at
   %td= resource.transferred_at
