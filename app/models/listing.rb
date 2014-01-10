@@ -39,6 +39,7 @@ class Listing < ActiveRecord::Base
   scope :visible,  where(:enabled => true)
   scope :searchable, active.visible
   scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where('listings.listing_type_id IN (?)', listing_types_ids) if listing_types_ids }
+  scope :filtered_by_price_types,  lambda { |price_types| where(price_types.map{|pt| "(listings.#{pt}_price_cents IS NOT NULL)"}.join(' OR  ')) if price_types }
   
   scope :with_listing_messages, joins(:listing_messages).
         group('listings.id HAVING count(listing_messages.id) > 0')
@@ -186,6 +187,12 @@ class Listing < ActiveRecord::Base
       PRICE_TYPES[2] #Daily
     end
       
+  end
+
+  def lowest_price_with_type
+    PRICE_TYPES.map { |price|
+      [self.send("#{price}_price"), price]
+    }.reject{|p| p[0].to_f.zero?}.sort{|a, b| a[0] <=> b[0]}.first
   end
 
   def null_price!

@@ -15,7 +15,7 @@
               %a.list{ href: search_path(params.merge(v: 'list')), class: result_view == 'list' ? 'active' : nil, title: 'List' }
                 List
             .search-container 
-              %input#search{:name => "q", :placeholder => "Search by city or address", :type => "text", :value => query, :class => "query", :autocomplete => "off"}
+              %input#search{:name => "loc", :placeholder => "Search by city or address", :type => "text", :value => query, :class => "query", :autocomplete => "off"}
               .geolocation
                 %span.ico-crosshairs
             .search-icon.btn.btn-green
