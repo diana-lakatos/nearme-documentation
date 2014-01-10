@@ -1,4 +1,4 @@
-%h1 Payment Transfer - #{resource.company.name}
+%h1 Payment Transfer - #{resource.company_including_deleted.name}
 
 - if resource.transferred?
   %p
@@ -20,12 +20,12 @@
 
   %div
     %strong Paypal Email:
-    = resource.company.paypal_email
+    = resource.company_including_deleted.paypal_email
 
   %div
     %strong Mailing Address
     %p
-      = resource.company.mailing_address
+      = resource.company_including_deleted.mailing_address
 
 %hr
 

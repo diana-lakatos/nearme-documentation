@@ -1,6 +1,6 @@
 module SearchHelpers
   def search_for(query, options={})
-    fill_in "q", with: query
+    fill_in "loc", with: query
     select_address_form_autocomplete
 
     if page.current_path =~ /search/

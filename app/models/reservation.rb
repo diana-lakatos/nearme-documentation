@@ -15,6 +15,7 @@ class Reservation < ActiveRecord::Base
 
   belongs_to :listing, :with_deleted => true
   belongs_to :owner, :class_name => "User"
+  belongs_to :owner_including_deleted, :class_name => "User", :with_deleted => true
   belongs_to :platform_context_detail, :polymorphic => true
   has_one :company, through: :listing
   has_one :instance, through: :company
