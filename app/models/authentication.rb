@@ -23,6 +23,7 @@ class Authentication < ActiveRecord::Base
   }
 
   after_create :find_friends
+  after_create :update_info
 
   AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram"]
 
@@ -59,5 +60,9 @@ class Authentication < ActiveRecord::Base
 
   def find_friends
     FindFriendsJob.perform(self)
+  end
+
+  def update_info
+    UpdateInfoJob.perform(self)
   end
 end

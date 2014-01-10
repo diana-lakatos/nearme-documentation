@@ -96,7 +96,6 @@ class AuthenticationsController < ApplicationController
 
   def new_authentication_for_existing_user
     @oauth.create_authentication!(current_user)
-    @oauth.apply_avatar_if_empty
     log_connect_social_provider
     flash[:success] = t('flash_messages.authentications.authentication_successful')
     redirect_to edit_user_registration_url

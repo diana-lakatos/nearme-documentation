@@ -99,23 +99,11 @@ namespace :populate do
 
   desc "Populates users with info from authentications"
   task :social_info => :environment do
-    Authentication.where('id > 2414').find_each do |authentication|
+    Authentication.find_each do |authentication|
       begin
-        provider = authentication.social_connection
-        info = provider.info.hash
+        updater = Authentication::InfoUpdater.new(authentication).update
 
-        authentication.info = info
-        authentication.save!
-
-        user = authentication.user
-        user.name ||= info['name']
-        user.biography ||= info['description']
-        user.current_location ||= info['location']
-        user.country_name ||= Geocoder.search(info['location']).first.country rescue nil
-        if !user.avatar.any_url_exists? && info['image'].present?
-          user.avatar_versions_generated_at = Time.zone.now
-          user.remote_avatar_url = info['image']
-        end
+        user = updater.user
         if user.changed.present?
           puts ""
           puts "Authentication: #{authentication.id}, User: #{user.id}"
@@ -124,6 +112,7 @@ namespace :populate do
           puts ""
         end
       rescue Authentication::InvalidToken
+        authentication.update_column(:token_expired, true) if authentication.token_expires?
         puts "#{authentication.id}: InvalidToken"
       rescue => e
         puts "#{authentication.id}: #{e}" 
