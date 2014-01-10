@@ -14,8 +14,8 @@ class Listing
     def listings
       @listings ||=
         begin
-          locations = filtered_locations
-          filtered_listings = Listing.searchable.where(location_id: locations.map(&:id))
+          _locations = filtered_locations
+          filtered_listings = Listing.searchable.where(location_id: _locations.map(&:id))
           filtered_listings = filtered_listings.filtered_by_listing_types_ids(@filters[:listing_types_ids]) if @filters[:listing_types_ids]
           filtered_listings = filtered_listings.filtered_by_price_types(@filters[:listing_pricing] & Listing::PRICE_TYPES.map(&:to_s)) if @filters[:listing_pricing]
           self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/filtered_listings']) do
@@ -24,7 +24,7 @@ class Listing
 
           self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/iterate_filtered_listings']) do
             filtered_listings.each do |listing|
-              location = locations.detect { |l| l.id == listing.location_id } # Could be faster with a hash table
+              location = _locations.detect { |l| l.id == listing.location_id } # Could be faster with a hash table
               listing.location = location # Cache location association without query
             end
           end

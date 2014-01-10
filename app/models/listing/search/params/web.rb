@@ -82,7 +82,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def lgtypes_filters
-    lgtypes.map(&:name).map(&:downcase)
+    lgtypes.map{ |lgtype| lgtype.name.downcase }
   end
 
   def listing_types_ids

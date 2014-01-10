@@ -192,7 +192,7 @@ class Listing < ActiveRecord::Base
   def lowest_price_with_type
     PRICE_TYPES.map { |price|
       [self.send("#{price}_price"), price]
-    }.reject{|p| p[0].nil? || p[0].zero?}.sort{|a, b| a[0] <=> b[0]}.first
+    }.reject{|p| p[0].to_f.zero?}.sort{|a, b| a[0] <=> b[0]}.first
   end
 
   def null_price!

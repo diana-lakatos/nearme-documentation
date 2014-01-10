@@ -29,7 +29,8 @@ class Search.SearchMixedController extends Search.SearchController
           result = results.getBestResult() if results
           @setGeolocatedQuery(query, result)
           @submit_form = true
-          google.maps.event.trigger(@autocomplete, 'place_changed')
+          _.defer =>
+            google.maps.event.trigger(@autocomplete, 'place_changed')
         false
       else
         @submit_form = false
@@ -65,13 +66,13 @@ class Search.SearchMixedController extends Search.SearchController
   initializeAutocomplete: ->
     @autocomplete = new google.maps.places.Autocomplete(@queryField[0], {})
     google.maps.event.addListener @autocomplete, 'place_changed', =>
-      place = Search.Geocoder.wrapResult @autocomplete.getPlace()
-      place = null unless place.isValid()
-
-      @setGeolocatedQuery(@queryField.val(), place)
       if @submit_form
         @submit_form = false
         @fieldChanged('query', @queryField.val())
+      else
+        place = Search.Geocoder.wrapResult @autocomplete.getPlace()
+        place = null unless place.isValid()
+        @setGeolocatedQuery(@queryField.val(), place)
 
 
   getPageWithLocation: (location_id) ->
