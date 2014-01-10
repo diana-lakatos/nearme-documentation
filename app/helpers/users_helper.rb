@@ -34,7 +34,8 @@ module UsersHelper
       icon: icon,
       provider: authentication.provider,
       count: authentication.connections_count,
-      link: user.social_url(authentication.provider)
+      link: user.social_url(authentication.provider),
+      rel: nil
     })
   end
 

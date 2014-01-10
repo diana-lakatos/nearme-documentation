@@ -5,12 +5,12 @@
     .box
       = render "header"
 
-      - if @threaded_listing_messages.blank?
+      - if @threaded_user_messages.blank?
         - if params[:action] == 'index'
           %p.no-data No new messages!
         - if params[:action] == 'archived'
           %p.no-data No archived messages
 
       - else
-      - @threaded_listing_messages.each do |array_key, listing_messages|
-        = render 'listing_message', listing_message: listing_messages.last.decorate
+        - @threaded_user_messages.each do |array_key, user_messages|
+          = render 'user_message', user_message: user_messages.last.decorate

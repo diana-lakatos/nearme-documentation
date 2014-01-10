@@ -1,0 +1,20 @@
+- thread_context = user_message.thread_context
+- author = user_message.author
+.row-fluid
+  .span12.listing-message{class: user_message.css_class(current_user) }
+    .span3
+      %p.name= link_to author.first_name, profile_path(author.slug)
+      %p.date= distance_of_time_in_words_or_date(user_message.created_at)
+
+    .span7
+      %p.body
+        = link_to truncate(user_message.body, length: 60), polymorphic_path([thread_context.presence || user_message.thread_context_with_deleted, user_message]), title: user_message.body
+      %p.link-to-listing
+        = user_message_context_link(user_message) 
+
+
+    .span2.actions
+      - if user_message.unread_for?(current_user)
+        = link_to "Read", polymorphic_path([thread_context.presence || user_message.thread_context_with_deleted, user_message]), class: 'btn btn-green'
+      - elsif !user_message.archived_for?(current_user)
+        = link_to "Archive", polymorphic_path([thread_context.presence || user_message.thread_context_with_deleted, user_message, :archive]), class: "btn btn-gray", method: :put

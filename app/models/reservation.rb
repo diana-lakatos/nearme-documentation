@@ -19,6 +19,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :platform_context_detail, :polymorphic => true
   has_one :company, through: :listing
   has_one :instance, through: :company
+  has_many :user_messages, as: :thread_context
 
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
     :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
@@ -308,6 +309,13 @@ class Reservation < ActiveRecord::Base
 
   def to_liquid
     ReservationDrop.new(self)
+  end
+
+  def name
+    date_first = date.strftime('%-e %b')
+    date_last = last_date.strftime('%-e %b')
+    dates_description = date_first == date_last ? date_first : "#{date_first}-#{date_last}"
+    "Reservation of #{listing.try(:name)}, user: #{owner.try(:name)}, #{dates_description}"
   end
 
   private

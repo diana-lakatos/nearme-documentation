@@ -3,10 +3,10 @@
     %header
       %h2
         Send a message to
-        = link_to @listing.name
+        = @user_message.recipient_name
 
-    = simple_form_for @listing_message, url: listing_listing_messages_path(@listing) do |f|
-      - if @listing_message.errors.present?
+    = simple_form_for @user_message, url: polymorphic_path([@message_context, @user_message]) do |f|
+      - if @user_message.errors.present?
         .errors
           = f.error :body
 
@@ -15,4 +15,4 @@
 
 %script{:type => 'text/javascript'}
   :plain
-    new ModalForm($('#new_listing_message'));
+    new ModalForm($('#new_user_message'));

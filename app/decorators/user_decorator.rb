@@ -15,8 +15,8 @@ class UserDecorator < Draper::Decorator
     result.join(" | ")
   end
 
-  def unread_listing_message_threads
-    listing_messages_decorator.inbox.unread
+  def unread_user_message_threads
+    user_messages_decorator.inbox.unread
   end
 
   def social_connections_for(provider)
@@ -24,8 +24,9 @@ class UserDecorator < Draper::Decorator
   end
 
   private
-  def listing_messages_decorator
-    @listing_messages_decorator ||= ListingMessagesDecorator.new(listing_messages, object)
+
+  def user_messages_decorator
+    @user_messages_decorator ||= UserMessagesDecorator.new(user_messages, object)
   end
 
   def social_connections_cache

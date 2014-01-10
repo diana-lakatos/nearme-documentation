@@ -7,7 +7,7 @@ DesksnearMe::Application.routes.draw do
     mount InquiryMailerPreview => 'mail_view/inquiries'
     mount ListingMailerPreview => 'mail_view/listings'
     mount RatingMailerPreview => 'mail_view/ratings'
-    mount ListingMessageMailerPreview => 'mail_view/listing_messages'
+    mount UserMessageMailerPreview => 'mail_view/user_messages'
     mount ReengagementMailerPreview => 'mail_view/reengagement'
     mount RecurringMailerPreview => 'mail_view/recurring'
   end
@@ -111,13 +111,13 @@ DesksnearMe::Application.routes.draw do
       get :hourly_availability_schedule, :on => :collection
     end
 
-    resources :listing_messages, :controller => "listings/listing_messages" do
+    resources :user_messages, except: [:index] do
       put :archive
     end
   end
 
-  resources :listing_messages, only: [:index] do 
-    collection do 
+  resources :user_messages, only: [:index] do
+    collection do
       get :archived
     end
   end
@@ -125,6 +125,10 @@ DesksnearMe::Application.routes.draw do
   resources :reservations, :only => [] do
     resources :guest_ratings, :only => [:new, :create]
     resources :host_ratings, :only => [:new, :create]
+
+    resources :user_messages, except: [:index] do
+      put :archive
+    end
   end
   match '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
   match '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
@@ -149,6 +153,13 @@ DesksnearMe::Application.routes.draw do
     put "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip"
 
     get "/instance_admin/sessions/new", :to => "instance_admin::sessions#new", :as => 'instance_admin_login'
+
+  end
+
+  resources :users, only: [:show] do
+    resources :user_messages, except: [:index] do
+      put :archive
+    end
   end
 
   resources :reservations, :except => [:update, :destroy, :show] do

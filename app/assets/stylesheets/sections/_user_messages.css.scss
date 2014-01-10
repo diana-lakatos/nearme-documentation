@@ -1,14 +1,14 @@
-#new_listing_message #textarea {
+#new_user_message #textarea {
     height: 150px;
 }
 
-section.listing_messages {
+section.user_messages {
   p.no-data {
     text-align: center;
     margin: 40px 0 25px 0;
   }
 
-  #new_listing_message {
+  #new_user_message {
     textarea {
       height: 52px;
     }
@@ -65,9 +65,13 @@ section.listing_messages {
       }
     }
 
-    .link-to-listing a {
-      color: $gray160;
+    .link-to-listing {
       font-size: 14px;
+
+      a {
+        color: $gray160;
+        font-size: 14px;
+      }
     }
 
     .actions {
@@ -141,7 +145,7 @@ section.listing_messages {
 }
 
 @media (max-width: $ipad-width) {
-  .listing_messages {
+  .user_messages {
     .listing-message {
       p {
         margin-left: $padding-default;

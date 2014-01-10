@@ -398,12 +398,8 @@ class User < ActiveRecord::Base
     administered_locations.size > 0
   end
 
-  def listings_with_messages
-    listings.with_listing_messages + administered_listings.with_listing_messages
-  end
-
-  def listing_messages
-    ListingMessage.where('owner_id = ? OR listing_id IN(?)', id, listings_with_messages.map(&:id)).order('created_at asc')
+  def user_messages
+    UserMessage.where('thread_owner_id = ? OR thread_recipient_id = ?', id, id).order('user_messages.created_at asc')
   end
 
   def listings_in_near(platform_context = nil, results_size = 3, radius_in_km = 100)
@@ -499,6 +495,19 @@ class User < ActiveRecord::Base
     authentications.where(provider: provider).
       where('profile_url IS NOT NULL').
       order('created_at asc').last.try(:profile_url)
+  end
+
+  def has_access_to_message_context?(message_context)
+    case message_context
+    when Listing, User
+      true
+    when Reservation
+      self == message_context.owner ||
+        self == message_context.listing.administrator ||
+        self == message_context.listing.creator
+    else
+      false
+    end
   end
 
 end

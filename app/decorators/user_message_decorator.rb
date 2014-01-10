@@ -1,8 +1,8 @@
-class ListingMessageDecorator < Draper::Decorator
+class UserMessageDecorator < Draper::Decorator
   delegate_all
 
   def recipient_name
-    owner_id == author_id ? listing.name : owner.name
+    recipient.name
   end
 
   def css_class(user = nil)
