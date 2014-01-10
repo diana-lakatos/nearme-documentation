@@ -178,7 +178,7 @@ class Location < ActiveRecord::Base
   end
 
   def lowest_price
-    (searched_locations || listings.searchable).map(&:lowest_price_with_type).sort{|a, b| a[0].to_f <=> b[0].to_f}.first
+    (searched_locations || listings.searchable).map(&:lowest_price_with_type).compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
   end
 
   private

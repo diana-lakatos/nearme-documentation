@@ -3,11 +3,11 @@ class Search.SearchMixedController extends Search.SearchController
   constructor: (form, @container) ->
     @resultsContainer = => @container.find('.locations')
     @hiddenResultsContainer = => @container.find('.hidden-locations')
+    @list_container = => @container.find('div[data-list]')
     @sortField = @container.find('#sort')
     super(form, @container)
     @adjustListHeight()
     @sortValue = @sortField.find(':selected').val()
-    $('body').css('overflow', 'hidden')
 
   bindEvents: =>
     super
@@ -39,8 +39,7 @@ class Search.SearchMixedController extends Search.SearchController
       @submit_form = true
 
   adjustListHeight: ->
-    list_container = @container.find('.list')
-    list_container.height($(window).height() - list_container.offset().top)
+    @list_container().height($(window).height() - @list_container().offset().top)
 
 
   initializeMap: ->
@@ -48,16 +47,16 @@ class Search.SearchMixedController extends Search.SearchController
     @map.clusterer.addListener 'click', (cluster) =>
       @processingResults = true
       listings = _.map(cluster.getMarkers(), (marker) => @map.getListingForMarker(marker))
-      list_container = @container.find('.list')
-      location_container = @resultsContainer().find('div.listing[data-id="' + listings[listings.length - 1]._id + '"]').parents('.location')
+      listings_query = '.listing[data-id="' + listings[listings.length - 1]._id + '"]'
+      location_container = @resultsContainer().find("div#{listings_query}").parents('.location')
       if location_container.length > 0
-        animate_position = location_container.position().top + list_container.offset().top
-        list_container.animate
+        animate_position = location_container.position().top + @list_container().offset().top
+        @list_container().animate
           scrollTop: animate_position
           () =>
             @processingResults = false
       else
-        location_id = @hiddenResultsContainer().find('article.listing[data-id=' + listings[listings.length - 1]._id + ']').data('location')
+        location_id = @hiddenResultsContainer().find("article#{listings_query}").data('location')
         @getPageWithLocation(location_id)
 
     google.maps.event.addListener @map.googleMap, 'zoom_changed', =>
@@ -85,7 +84,6 @@ class Search.SearchMixedController extends Search.SearchController
       @processingResults = true
       @showResults(html)
       @loader.hide()
-      list_container = @container.find('.list')
       location_container = @resultsContainer().find('article.location[data-id="' + location_id + '"]')
       if location_container.length > 0
         @assignFormParams(
@@ -99,9 +97,9 @@ class Search.SearchMixedController extends Search.SearchController
   setListOnLocation: (location_id) ->
     setTimeout( =>
       _.defer =>
-        $('.list').get(0).scrollTop = $('article.location[data-id=' + location_id + ']').position().top + $('.list').offset().top
-        if $('.list').get(0).scrollTop != @lastListPosition
-          @lastListPosition = $('.list').get(0).scrollTop
+        @list_container().get(0).scrollTop = $('article.location[data-id=' + location_id + ']').position().top + @list_container().offset().top
+        if @list_container().get(0).scrollTop != @lastListPosition
+          @lastListPosition = @list_container().get(0).scrollTop
           @setListOnLocation(location_id)
         @initializeWaypoints()
     , 1500)
@@ -132,7 +130,7 @@ class Search.SearchMixedController extends Search.SearchController
               bottom_pagination.before($(results).find('article.location'))
               bottom_pagination.replaceWith($(results).find('.bottom-pagination .pagination'))
               @initializeWaypoints()
-        context: '.list'
+        context: 'div[data-list]'
         offset: $(window).height() - $('article.location').last().height()
         triggerOnce: true
         continuous: false
@@ -149,17 +147,17 @@ class Search.SearchMixedController extends Search.SearchController
               top_pagination.after($(results).find('article.location'))
               top_pagination.replaceWith($(results).find('.top-pagination .pagination'))
               setTimeout( =>
-                $('.list').get(0).scrollTop = $('article.location[data-id=' + first_location.data('id') + ']').position().top + $('.list').offset().top
+                @list_container().get(0).scrollTop = $('article.location[data-id=' + first_location.data('id') + ']').position().top + @list_container().offset().top
                 @initializeWaypoints()
               , 200)
-        context: '.list'
+        context: 'div[data-list]'
         offset: 100
         triggerOnce: true
         continuous: false
         onlyOnScroll: true
 
   initializeEndlessScrolling: ->
-    $('.list').scrollTop(0)
+    @list_container().scrollTop(0)
     @initializeWaypoints()
 
 
@@ -239,7 +237,7 @@ class Search.SearchMixedController extends Search.SearchController
   showResults: (html) ->
     super(html)
     @updateResultsCount()
-    $('.list').scrollTop(0)
+    @list_container().scrollTop(0)
 
 
   # Trigger automatic updating of search results

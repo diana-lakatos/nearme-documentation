@@ -50,7 +50,7 @@
       %section#map.google-map-wrapper
         .google-map
           #listings_map.inner
-    .list
+    .list{:'data-list' => true}
       .filters{:'data-search-filters-container' => true}
         = render :partial => 'search/mixed/filter', :locals => { :header_name => "#{platform_context.bookable_noun} Types", :selected_values => search.lgtypes_filters || [], :input_name => 'listing_types_ids[]', :options => @filterable_listing_types.map { |lt| [lt.name.downcase, lt.name] } }
         = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Pricing', :selected_values => search.lgpricing_filters || [], :input_name => 'listing_pricing[]', :options => @filterable_pricing }

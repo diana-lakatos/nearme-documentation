@@ -58,7 +58,7 @@ class Listing
             # do nothing, already ordered by distance
           else
             self.class.trace_execution_scoped(['Custom/SearchFetcher/locations/sort_by_price']) do
-              _locations.sort_by! {|l| l.lowest_price }
+              _locations.sort_by! {|l| (l.lowest_price || [Money.new(0)])[0] }
             end
           end
 
