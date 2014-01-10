@@ -43,6 +43,10 @@ class PaymentTransfer < ActiveRecord::Base
     touch(:transferred_at)
   end
 
+  def company_including_deleted
+    Company.with_deleted.find(company_id)
+  end
+
   private
 
   def assign_currency

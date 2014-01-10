@@ -4,16 +4,20 @@ class Manage::Listings::ReservationsController < ApplicationController
   before_filter :find_reservation
 
   def confirm
-    if @reservation.confirm
-      ReservationMailer.enqueue.notify_guest_of_confirmation(platform_context, @reservation)
-      ReservationMailer.enqueue.notify_host_of_confirmation(platform_context, @reservation)
-      event_tracker.confirmed_a_booking(@reservation)
-      event_tracker.updated_profile_information(@reservation.owner)
-      event_tracker.updated_profile_information(@reservation.host)
-      event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
-      flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
+    if @reservation.confirmed?
+      flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     else
-      flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
+      if @reservation.confirm
+        ReservationMailer.enqueue.notify_guest_of_confirmation(platform_context, @reservation)
+        ReservationMailer.enqueue.notify_host_of_confirmation(platform_context, @reservation)
+        event_tracker.confirmed_a_booking(@reservation)
+        event_tracker.updated_profile_information(@reservation.owner)
+        event_tracker.updated_profile_information(@reservation.host)
+        event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
+        flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
+      else
+        flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
+      end
     end
     redirect_to manage_guests_dashboard_url
   end
