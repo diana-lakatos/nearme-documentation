@@ -1,5 +1,5 @@
 class Billing::Gateway::StripeProcessor < Billing::Gateway::BaseProcessor
-  SUPPORTED_CURRENCIES = ['CAD', 'USD']
+  SUPPORTED_CURRENCIES = ['USD']
 
   def initialize(*args)
     super(*args)

@@ -10,9 +10,6 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
         assert_equal Billing::Gateway::StripeProcessor, Billing::Gateway::BaseProcessor.find_processor_class('USD')
       end
 
-      should 'accept CAD' do
-        assert_equal Billing::Gateway::StripeProcessor, Billing::Gateway::BaseProcessor.find_processor_class('CAD')
-      end
     end
 
     context 'paypal' do
@@ -26,6 +23,10 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
 
       should 'accept EUR' do
         assert_equal Billing::Gateway::PaypalProcessor, Billing::Gateway::BaseProcessor.find_processor_class('EUR')
+      end
+
+      should 'accept CAD' do
+        assert_equal Billing::Gateway::PaypalProcessor, Billing::Gateway::BaseProcessor.find_processor_class('CAD')
       end
     end
 

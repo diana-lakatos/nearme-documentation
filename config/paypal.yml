@@ -1,20 +1,8 @@
 test: &default
 
-  # Credentials for REST APIs
-  client_id: AYtqmBDI2fiAdHBKci0Z9Heg05ackesUQ7_FcUUI1vfzwn8AOMltMhlwscFq
-  client_secret: EDCqQxAOj9SSxHvZiBkPunlHXk-qQLLPppQYjL3F7ltmSY1e4jp6xWtgwjJy
-
-  # Mode can be 'live' or 'sandbox'
+  client_id: AecizhC4a7ZiGUA25DjOzYwDQSy_gVc7hOcf8zc40P27gZwwlqWTU6zU9Crs
+  client_secret: EKsS3BBF49ckwHJGhGwvj4p8QNfBbhWEqk9PdJI9tqo6SQkLGf9KBiMMOiGh
   mode: sandbox
-
-  # Credentials for Classic APIs
-  app_id: DesksNearMe DevelopmentAPP-31C982222W793760V
-  username: krajek6-facilitator_api1.gmail.com
-  password: 1387036911
-  signature: AFcWxV21C7fd0v3bYYYRCpSSRl31AxwnuWpf4utTFjXHLNnwOYQV9O7.
-  # # With Certificate
-  # cert_path: "config/cert_key.pem"
-  sandbox_email_address: krajek6-facilitator@gmail.com
 
 development:
   <<: *default
@@ -23,5 +11,6 @@ staging:
   <<: *default
 
 production:
-  <<: *default
+  client_id: AbT56hCquUciJvXz3SK7loxk9TIVtoYcxJ53w-ac5E7BlJfFdkN3tlPjiz-W
+  client_secret: EB3XtBDC9SW1TD84r8wvxv3jBNiND7k9X_Tz6G7IrCYc17jeIUlr66XUCPgU
   mode: live

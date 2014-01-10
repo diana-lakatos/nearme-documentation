@@ -1,7 +1,7 @@
 class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
   include PayPal::SDK::Core::Logging
 
-  SUPPORTED_CURRENCIES = ['GBP', 'EUR', 'JPY']
+  SUPPORTED_CURRENCIES = ['GBP', 'EUR', 'JPY', 'CAD']
 
   def process_charge(amount)
     @payment = PayPal::SDK::REST::Payment.new(paypal_argument_hash(amount))
