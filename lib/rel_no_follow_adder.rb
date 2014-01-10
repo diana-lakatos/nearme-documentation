@@ -23,7 +23,7 @@ class RelNoFollowAdder
   end
 
   def should_be_skipped?(a)
-    @skip_domains.find { |skip_domain| a['href'].include?(skip_domain) }.present?
+    @skip_domains.any? { |skip_domain| a['href'].include?(skip_domain) }
   end
 
   def is_relative_link?(a)

@@ -44,7 +44,7 @@ class Theme < ActiveRecord::Base
   end
 
   before_validation :unhexify_colors
-  before_save :add_no_follow_to_unknown_links
+  before_save :add_no_follow_to_unknown_links, :if => lambda { |theme| theme.homepage_content.present? && theme.homepage_content_changed? }
 
   # If true, will skip compiling the theme when saving
   attr_accessor :skip_compilation
@@ -161,10 +161,8 @@ class Theme < ActiveRecord::Base
   end
 
   def add_no_follow_to_unknown_links
-    if self.homepage_content.present?
-      rel_no_follow_adder = RelNoFollowAdder.new({:skip_domains => Domain.pluck(:name)})
-      self.homepage_content = rel_no_follow_adder.modify(self.homepage_content)
-    end
+    rel_no_follow_adder = RelNoFollowAdder.new({:skip_domains => Domain.pluck(:name)})
+    self.homepage_content = rel_no_follow_adder.modify(self.homepage_content)
   end
 end
 

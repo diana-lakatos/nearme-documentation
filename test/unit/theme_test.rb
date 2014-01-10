@@ -73,6 +73,20 @@ class ThemeTest < ActiveSupport::TestCase
       @theme.save
     end
 
+    should 'not try to add no follow if content has not changed' do
+      @theme.update_attribute(:homepage_content, '<div>This is an <a href="http://unknown.link.com">Unknown Link</a></div>')
+      @theme.expects(:add_no_follow_to_unknown_links).never
+      @theme.name = 'updated theme'
+      assert @theme.save
+    end
+
+    should 'try to add no follow if content has not changed' do
+      @theme.update_attribute(:homepage_content, '<div>This is an <a href="http://unknown.link.com">Unknown Link</a></div>')
+      @theme.expects(:add_no_follow_to_unknown_links).once
+      @theme.homepage_content = 'new <a href="http://unknown.link.com">Unknown Link</a>'
+      assert @theme.save
+    end
+
   end
 
   context '::hexify' do
