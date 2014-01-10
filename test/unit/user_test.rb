@@ -723,5 +723,38 @@ class UserTest < ActiveSupport::TestCase
 
   end
 
+
+  context '#listings_in_near' do
+
+    setup do
+      @user = FactoryGirl.create(:user)
+      @instance = FactoryGirl.create(:instance)
+      @platform_context = PlatformContext.new
+      @platform_context.stubs(:instance).returns(@instance)
+      @other_instance = FactoryGirl.create(:instance)
+    end
+
+    should 'return empty array if no platform_context set' do
+      assert_equal @user.listings_in_near, []
+    end
+
+    should 'return listings from current platform_context instance' do
+      # user was last geolocated in Auckland
+      @user.last_geolocated_location_latitude = -36.858675
+      @user.last_geolocated_location_longitude = 174.777303
+      @user.save
+
+      listing_current_instance = FactoryGirl.create(:listing_in_auckland)
+      listing_current_instance.company.instance_id = @instance.id
+      listing_current_instance.company.save
+
+      listing_other_instance = FactoryGirl.create(:listing_in_auckland)
+      listing_other_instance.company.instance_id = @other_instance.id
+      listing_other_instance.company.save
+
+      assert_equal @user.listings_in_near(@platform_context), [listing_current_instance]
+    end
+  end
+
 end
 
