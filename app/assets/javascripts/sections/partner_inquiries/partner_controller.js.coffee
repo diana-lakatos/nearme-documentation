@@ -20,11 +20,15 @@ class @PartnerController
           form_valid = false
 
       if form_valid
+        submit_button = form.find('input[type="submit"]')
         $.ajax
           type: 'POST'
           url: form.attr('action')
           data: form.serialize()
+          beforeSend: () ->
+            submit_button.prop('disabled', true).val(submit_button.data('disabled-text'))
           success: (response) ->
+            submit_button.prop('disabled', false).val(submit_button.data('original-text'))
             if response.status
               form.replaceWith($('<div class="thanks">' + response.body + '</div>'))
             else
