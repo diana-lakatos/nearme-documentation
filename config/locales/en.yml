@@ -88,6 +88,8 @@ en:
       already_connected_to_other_user: "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account."
       signed_in_successfully: "Signed in successfully."
       authentication_successful: "Authentication successful."
+    authorizations:
+      not_authorized: "Sorry, you do not have permission to view that page."
     registrations:
       address_verified: "Perfect, your email has been confirmed. Thanks!"
       address_already_verified: "The email address has been already verified"
@@ -118,6 +120,7 @@ en:
       reservations:
         reservation_confirmed: "You have confirmed the reservation!"
         reservation_not_confirmed: "Your reservation could not be confirmed."
+        reservation_already_confirmed: "This reservation has already been confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         reservation_cancelled: "You have cancelled this reservation."
       listings:
@@ -142,8 +145,13 @@ en:
           role_added: "Great, new role has been added!"
           role_deleted: "That role has been deleted"
       settings:
-        settings_updated_successfully: 'Settings updated.'
-
+        settings_updated: 'Settings updated.'
+        location_type_added: 'New location type added.'
+        location_type_not_added: 'Could not add new location type.'
+        location_type_deleted: 'Location type deleted.'
+        listing_type_added: 'New listing type added.'
+        listing_type_not_added: 'Could not add new listing type.'
+        listing_type_deleted: 'Listing type deleted.'
   simple_form:
     labels:
       theme:

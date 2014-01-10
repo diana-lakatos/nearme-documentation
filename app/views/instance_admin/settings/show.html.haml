@@ -1,94 +1,20 @@
 = simple_nested_form_for @instance, :url => instance_admin_settings_path, :html => { :multipart => true } do |f|
+  = render 'instance_admin/settings/basic_configuration', f: f
+  = render 'instance_admin/settings/nomenclature', f: f
+  = render 'instance_admin/settings/domain_names', f: f
+  = render 'instance_admin/settings/pricing_options', f: f
 
-  %fieldset
-    %legend Basic Configuration
-    = f.input :name, required: false
-    = f.input :service_fee_guest_percent, label: 'Service Fee (%)'
-    = f.input :stripe_api_key, required: false
-    = f.input :stripe_public_key, required: false
-    .control-group
-      = f.label :skip_company
-      .switch-wrapper
-        .switch{'data-on-label' => "", 'data-off-label' => ""}
-          = f.check_box :skip_company
+= render 'instance_admin/settings/location_types/index', instance: @instance
+= render 'instance_admin/settings/location_types/new'
+= render 'instance_admin/settings/listing_types/index', instance: @instance
+= render 'instance_admin/settings/listing_types/new'
 
-    %p
-      = f.button :submit, 'Save', class: 'btn btn-success'
-    %br
-
-  %fieldset
-    %legend Nomenclature
-    = f.input :bookable_noun, label: 'Bookable Noun (e.g. Desk)'
-    = f.input :lessor, label: 'Lessor (e.g. Host)'
-    = f.input :lessee, label: 'Lessee (e.g. Guest)'
-    %p
-      = f.button :submit, 'Save', class: 'btn btn-success'
-    %br
-
-  %fieldset
-    %legend Domain Names
-    %table#domains.table.table-borderless.table-condensed
-      = f.fields_for :domains, wrapper: false do |f|
-        %tr.fields
-          %td= f.input :name, label: false
-          %td.small= f.link_to_remove "Delete", class: 'btn btn-danger pull-right'
-    
-    %p
-      = f.link_to_add "Add domain name", :domains, :data => { :target => "#domains" }, class: 'btn'
-    %p
-      = f.button :submit, 'Save', class: 'btn btn-success'
-    %br
-
-  %fieldset
-    %legend Pricing Options
-    .control-group
-      .controls
-        = f.error :pricing_options
-        - Instance::PRICING_OPTIONS.each do |pricing_option|
-          %label.checkbox
-            = check_box_tag "instance[pricing_options][#{pricing_option}]", '1', f.object.pricing_options[pricing_option].to_s == '1'
-            #{pricing_option}
-
-    %p
-      = f.button :submit, 'Save', class: 'btn btn-success'
-    %br
-
-  %fieldset
-    %legend Location Types
-    %table#location-types.table.table-borderless.table-condensed
-      = f.fields_for :location_types, wrapper: false do |f|
-        %tr.fields
-          %td= f.input :name, label: false
-          - if f.object.locations.count == 0
-            %td.small= f.link_to_remove "Delete", class: 'btn btn-danger pull-right'
-          - else
-            %td.pull-right= "(in use by #{f.object.locations.count} locations)"
-
-    %p
-      = f.link_to_add "Add location type", :location_types, :data => { :target => "#location-types" }, class: 'btn'
-    %p
-      = f.button :submit, 'Save', class: 'btn btn-success'
-    %br
-
-  %fieldset
-    %legend Listing Types
-    %table#listing-types.table.table-borderless.table-condensed
-      = f.fields_for :listing_types, wrapper: false  do |f|
-        %tr.fields
-          %td= f.input :name, label: false
-          - if f.object.listings.count == 0
-            %td.small= f.link_to_remove "Delete", class: 'btn btn-danger pull-right'
-          - else
-            %td.pull-right= "(in use by #{f.object.listings.count} listings)"
-
-    %p
-      = f.link_to_add "Add listing type", :listing_types, :data => { :target => "#listing-types" }, class: 'btn'
-    %p
-      = f.button :submit, 'Save', class: 'btn btn-success'
-    %br
-
+= simple_nested_form_for @instance, :url => instance_admin_settings_path, :html => { :multipart => true } do |f|
   %section#amenities
     = render 'instance_admin/settings/amenities', type: 'location', f: f
-
     = render 'instance_admin/settings/amenities', type: 'listing', f: f
 
+= render 'instance_admin/shared/modal', heading: "Delete type"
+
+- content_for :domready do
+  new InstanceAdmin.SettingsController($('#instanceAdminModal'))

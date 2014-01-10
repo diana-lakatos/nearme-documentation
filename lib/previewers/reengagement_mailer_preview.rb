@@ -1,7 +1,8 @@
 class ReengagementMailerPreview < MailView
 
   def no_bookings
-    ::ReengagementMailer.no_bookings(PlatformContext.new, User.first)
+    user = User.where('(current_location IS NOT NULL OR last_geolocated_location_longitude IS NOT NULL) AND instance_id IS NOT NULL').first || FactoryGirl.create(:user)
+    ::ReengagementMailer.no_bookings(PlatformContext.new, user)
   end
 
   def one_booking

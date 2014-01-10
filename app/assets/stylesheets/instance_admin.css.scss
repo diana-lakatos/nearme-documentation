@@ -70,6 +70,16 @@ table {
   }
 }
 
+#instanceAdminModal {
+  form {
+    margin-top: 15px;
+    margin-bottom: 0px;
+    select {
+      margin: 0px;
+    }
+  }
+}
+
 section#login {
 
   .content {

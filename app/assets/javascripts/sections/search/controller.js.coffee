@@ -33,7 +33,7 @@ class Search.Controller
 
   initializeQueryField: ->
     @queryField = @form.find('input.query')
-    query_value = DNM.util.Url.getParameterByName('q')
+    query_value = DNM.util.Url.getParameterByName('loc')
     if @queryField.val() == '' && !query_value
       _.defer(=>@geolocateMe())
 
@@ -120,6 +120,19 @@ class Search.Controller
       params['suburb']  = result.suburb()
       params['street']  = result.street()
       params['postcode']  = result.postcode()
+      loc_components = []
+      if params['city']
+        loc_components.push params['city']
+      if params['country'] and params['country'] == 'United States' and result.stateShort()
+        loc_components.push result.stateShort()
+      else if params['state']
+        loc_components.push params['state']
+      if params['country'] and params['country'] != 'United States'
+        loc_components.push params['country']
+
+      params['loc'] = loc_components.join(', ')
+    else
+      params['loc'] = @form.find("input#search").val().replace(', United States', '')
 
     params
 
@@ -129,7 +142,7 @@ class Search.Controller
   assignFormParams: (paramsHash) ->
     # Write params to search form
     for field, value of paramsHash
-      @form.find("input[name*=#{field}]").val(value)
+      @form.parent().find("input[name=#{field}]").val(value)
 
   getSearchParams: ->
     form_params = @form.serializeArray()
@@ -148,7 +161,6 @@ class Search.Controller
     # If the query has already been geolocated we can just search immediately
     if @isQueryGeolocated(query)
       return callback()
-
     # Otherwise we need to geolocate the query and assign it before searching
     deferred = @geocoder.geocodeAddress(query)
     deferred.always (results) =>

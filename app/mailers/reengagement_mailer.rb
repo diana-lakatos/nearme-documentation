@@ -39,7 +39,7 @@ class ReengagementMailer < InstanceMailer
   private
 
   def should_be_sent?
-    @user.listings_in_near.size > 0
+    @user.listings_in_near(@platform_context).size > 0
   end
 
 end

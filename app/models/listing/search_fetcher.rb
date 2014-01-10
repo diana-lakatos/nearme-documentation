@@ -12,31 +12,58 @@ class Listing
     end
 
     def listings
-      locations = filtered_locations
-      filtered_listings = Listing.searchable.where(location_id: locations.map(&:id))
-      filtered_listings = filtered_listings.filtered_by_listing_types_ids(@filters[:listing_types_ids]) if @filters[:listing_types_ids]
-      self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/filtered_listings']) do
-        filtered_listings = filtered_listings.all
-      end
+      @listings ||=
+        begin
+          _locations = filtered_locations
+          filtered_listings = Listing.searchable.where(location_id: _locations.map(&:id))
+          filtered_listings = filtered_listings.filtered_by_listing_types_ids(@filters[:listing_types_ids]) if @filters[:listing_types_ids]
+          filtered_listings = filtered_listings.filtered_by_price_types(@filters[:listing_pricing] & Listing::PRICE_TYPES.map(&:to_s)) if @filters[:listing_pricing]
+          self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/filtered_listings']) do
+            filtered_listings = filtered_listings.all
+          end
 
-      self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/iterate_filtered_listings']) do
-        filtered_listings.each do |listing|
-          location = locations.detect { |l| l.id == listing.location_id } # Could be faster with a hash table
-          listing.location = location # Cache location association without query
+          self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/iterate_filtered_listings']) do
+            filtered_listings.each do |listing|
+              location = _locations.detect { |l| l.id == listing.location_id } # Could be faster with a hash table
+              listing.location = location # Cache location association without query
+            end
+          end
+          self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/sort_by_distance']) do
+            filtered_listings.sort_by! {|l| l.location.distance } if filtered_listings.first.try(:location).try(:respond_to?, :distance)
+          end
+
+          # Order in top cities
+          self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/sort_by_top_citites']) do
+            if !@filters[:query].blank? && TOP_CITIES.any?{|city| @filters[:query].downcase.include?(city)}
+              filtered_listings = filtered_listings.sort_by(&:rank).reverse
+            end
+          end
+
+          filtered_listings
         end
-      end
-      self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/sort_by_distance']) do
-        filtered_listings.sort_by! {|l| l.location.distance } if filtered_listings.first.try(:location).try(:respond_to?, :distance)
-      end
+    end
 
-      # Order in top cities
-      self.class.trace_execution_scoped(['Custom/SearchFetcher/listings/sort_by_top_citites']) do
-        if !@filters[:query].blank? && TOP_CITIES.any?{|city| @filters[:query].downcase.include?(city)}
-          filtered_listings = filtered_listings.sort_by(&:rank).reverse
+    def locations
+      @locations ||=
+        begin
+          _locations = Location.where(id: listings.map(&:location_id).uniq).includes(:company)
+          _locations = _locations.near(@midpoint, @radius, :order => 'distance ASC') if @midpoint && @radius
+          listings.each do |listing|
+            _location = _locations.detect { |l| l.id == listing.location_id }
+            _location.searched_locations ||= []
+            _location.searched_locations << listing
+          end
+
+          if @filters[:sort].relevance?
+            # do nothing, already ordered by distance
+          else
+            self.class.trace_execution_scoped(['Custom/SearchFetcher/locations/sort_by_price']) do
+              _locations.sort_by! {|l| (l.lowest_price || [Money.new(0)])[0] }
+            end
+          end
+
+          _locations
         end
-      end
-
-      filtered_listings
     end
 
     private 

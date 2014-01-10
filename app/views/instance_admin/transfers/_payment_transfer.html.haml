@@ -2,12 +2,15 @@
   %td
     %span.label{:class => "label-#{instance_admin_transfer_state_label_class(resource)}"}
       = resource.transferred? ? 'Paid' : 'Pending'
-  %td= resource.company.name
+  %td
+    - if resource.company.present?
+      = resource.company.name
+    - else
+      = "#{resource.company_including_deleted.name} (Deleted)"
   %td= resource.reservation_charges.count
   %td= resource.created_at
   %td= resource.transferred_at
   %td= resource.service_fee_amount_guest.format with_currency: true
   %td= resource.amount.format with_currency: true
-  %td= link_to "Show details", [:admin, resource], :class => 'btn'
-
+  %td= link_to "Show details", instance_admin_transfer_path(resource), :class => 'btn'
 

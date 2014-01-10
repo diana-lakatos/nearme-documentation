@@ -163,6 +163,8 @@ class User < ActiveRecord::Base
 
   delegate :to_s, :to => :name
 
+  attr_accessor :current_platform_context
+
   # Build a new user, taking into account session information such as Provider
   # authentication.
   def self.new_with_session(attrs, session)
@@ -403,13 +405,17 @@ class User < ActiveRecord::Base
     ListingMessage.where('owner_id = ? OR listing_id IN(?)', id, listings_with_messages.map(&:id)).order('created_at asc')
   end
 
-  def listings_in_near(results_size = 3, radius_in_km = 100)
+  def listings_in_near(platform_context = nil, results_size = 3, radius_in_km = 100)
+    platform_context ||= self.current_platform_context
+    return [] if platform_context.nil?
+
+    search_scope = Listing::SearchScope.scope(platform_context)
     locations_in_near = nil
     # we want allow greenwhich and friends, but probably 0 latitude and 0 longitude is not valid location :)
     if last_geolocated_location_latitude.nil? || last_geolocated_location_longitude.nil? || (last_geolocated_location_latitude.to_f.zero? && last_geolocated_location_longitude.to_f.zero?)
-      locations_in_near = Location.near(current_location, radius_in_km, units: :km, order: :distance)
+      locations_in_near = search_scope.near(current_location, radius_in_km, units: :km, order: :distance)
     else
-      locations_in_near = Location.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
+      locations_in_near = search_scope.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
     end
 
     listings = []

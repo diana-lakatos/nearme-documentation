@@ -1,0 +1,72 @@
+- legacy false
+- no_footer!
+
+= render 'search/meta_tags'
+
+- content_for :mixed_locations do
+  - if locations.any?
+    .locations
+      .hidden-locations
+        = render partial: 'search/map/marker', collection: all_listings, as: :listing
+        %input{type: 'hidden', id: 'result_count', value: result_count}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, search)}
+      .top-pagination
+        = will_paginate locations
+      = render partial: 'search/mixed/location', collection: locations
+      .bottom-pagination
+        = will_paginate locations
+  - elsif !@located
+    .locations
+      .hidden-locations
+        %input{type: 'hidden', id: 'result_count', value: result_count}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, search)}
+      %div.no_results
+        = render 'shared/loading_spinner'
+        .text-center
+          %br/
+          %br/
+          %h1.tk-adelle.fat No results found
+          %p= t '.address_could_not_be_found'
+  - else
+    .locations
+      .hidden-locations
+        %input{type: 'hidden', id: 'result_count', value: result_count}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, search)}
+      %div.no_results
+        = render 'shared/loading_spinner'
+        .text-center
+          %br/
+          %br/
+          %h1.tk-adelle.fat No results found, but!
+          #search-notification
+            = render 'search_notifications/form', search_notification: search_notification
+
+- content_for :hero do
+  = render 'search/mixed/header'
+
+  %section#results.mixed
+    = render 'shared/loading_spinner'
+    .map
+      %section#map.google-map-wrapper
+        .google-map
+          #listings_map.inner
+    .list{:'data-list' => true}
+      .filters{:'data-search-filters-container' => true}
+        = render :partial => 'search/mixed/filter', :locals => { :header_name => "#{platform_context.bookable_noun} Types", :selected_values => search.lgtypes_filters || [], :input_name => 'listing_types_ids[]', :options => @filterable_listing_types.map { |lt| [lt.name.downcase, lt.name] } }
+        = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Pricing', :selected_values => search.lgpricing_filters || [], :input_name => 'listing_pricing[]', :options => @filterable_pricing }
+        = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => search.lntypes_filters || [], :input_name => 'location_types_ids[]', :options => @filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
+
+      .sort
+        %h3 Results
+        .sort-by
+          %span sort by
+          = select_tag :sort, options_for_select([['Relevance', 'relevance'], ['Price', 'price']])
+
+      - if not request.xhr?
+        = yield :mixed_locations
+
+- if request.xhr?
+  = yield :mixed_locations
+
+- content_for :domready do
+  new Search.SearchMixedController($('#listing_search form'), $('section#results'));
