@@ -11,7 +11,7 @@
           - else
             = "#{reservation.owner_including_deleted} (Deleted)"
           %br
-          %span.address= link_to reservation.listing.name, location_listing_path(reservation.listing.location, reservation.listing) 
+          %span.address= link_to reservation.listing.name, location_path(reservation.listing.location, reservation.listing) 
         .span2
           = reservation.total_price
           %br

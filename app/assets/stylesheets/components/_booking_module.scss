@@ -16,6 +16,45 @@
     .btn.click-disabled{
       @include opacity(0.75);
     }
+
+    .btn {
+      height: 50px !important;
+      line-height: 50px !important;
+      font-size: 30px !important;
+    }
+
+  }
+
+  .booking-price-info {
+    font-size: 0.7em;
+    display: none;
+  }
+
+  .booking-body {
+    display: block;
+  }
+
+  .ico-chevron-right {
+    display: none;
+  }
+
+  &.collapsed {
+
+    .booking-body {
+      display: none;
+    }
+
+    .booking-price-info {
+      display: block;
+    }
+
+    .ico-chevron-down {
+      display: none;
+    }
+
+    .ico-chevron-right {
+      display: block;
+    }
   }
 
   .booking-module {
@@ -23,13 +62,11 @@
     @include border-radius($border-radius-default);
     position: relative;
     padding: ($padding-default + 7);
-    height: $space-full-image-height;
     background: $gray60;    
     color: $gray210;
     font: normal 32px/36px 'Futura-regular', sans-serif; 
 
     @media (max-width: $booking-module-breakpoint-size) {
-      height: 450px;
       padding: ($padding-default - 3);
       font: normal 26px/30px 'Futura-regular', sans-serif;
     }
@@ -38,21 +75,50 @@
       font: normal 22px/28px 'Futura-regular', sans-serif; 
     }
 
+    .booking-header {
+
+      padding-bottom: 15px;
+      margin-bottom: 15px;
+      border-bottom: 1px solid $gray80; 
+
+      a {
+        color: $gray210;
+        display: block;
+      }
+
+      span {
+        font-size: 0.7em;
+      }
+    }
+
+    .booking-price {
+      overflow: hidden;
+      padding-bottom: 15px;
+      border-bottom: 1px solid $gray80; 
+    }
+
+    .booking-description {
+      margin: 15px 0px 0px;
+      font-size: 0.5em;
+      color: $gray160;
+
+      @media (max-width: $booking-module-breakpoint-size) {
+        font-size: 0.6em;
+      }
+    }
+
     .label {
       display: block;
       float: left;
       width: 30%;
-      height: 40px;
-      line-height: 40px;
       background: transparent;
       color: $gray210;
       font-size: 30px;
       text-align: center;
+      line-height: normal;
 
       @media (max-width: $booking-module-breakpoint-size) {
         font-size: 100%;
-        height: 30px;
-        line-height: 30px;
       } 
 
       &.unavailable {
@@ -111,20 +177,14 @@
       @include border-radius($border-radius-default);
       display: block;
       float: left;
-      margin: 80px 0 0 0;
-      padding: 0;
       @include box-sizing(border-box);
+      margin: 15px 0px;
       width: 48%;
       background: $gray230;
       color: $gray80;
-      height: 70px;
-      line-height: 70px;
+      height: 50px;
       padding-left: 10px;
       white-space: nowrap;
-
-      @media (max-width: $booking-module-breakpoint-size) {
-        margin: 60px 0 0 0;
-      }  
 
       &.date-end, 
       &.time-picker {
@@ -138,6 +198,7 @@
 
       .time {
         font-size: 90%;
+        margin-top: 8px;
       }
 
       @media (max-width: $ipad-width) {
@@ -166,6 +227,7 @@
       .calendar {
         position: relative;
         display: inline-block; 
+        margin-top: 8px;
 
         .dates, 
         input {
@@ -218,13 +280,7 @@
       position: relative;
       display: block;
       clear: both;
-      height: 135px;
-      line-height: 150px;
-
-      @media (max-width: $booking-module-breakpoint-size) {
-        height: 95px;
-        line-height: 115px;
-      }
+      margin: 15px 0px;
 
       .resource {
         text-transform: capitalize;
@@ -237,15 +293,12 @@
       }
 
       span.customSelect {
+        float: right;
         @include border-radius($border-radius-default);
-        position: absolute;
-        top: 0;
-        right: 0;
         min-width: 32px;
-        padding:0;
+        margin: 0px;
         border: none;
         background: transparent;
-        font-size: 100%;
 
         i {
           top: 0;
@@ -254,36 +307,14 @@
     }
 
     .price {
-      margin-bottom: 8px;
-      height: 90px;
+      margin: 15px 0px;
       @include background-clip(border-box);       
       text-align: left;
-      line-height: 50px;
-
-      @media (max-width: $booking-module-breakpoint-size) {
-        height: 75px;
-        line-height: 60px;
-      }
 
       span {
         float: right;
       }
     }
 
-    a.btn.btn-large {
-      display: block;
-      clear: both;
-      width: 100%;
-      text-align: center;
-      height: 80px;
-      line-height: 80px;
-      font-size: 120%;
-
-      @media (max-width: $booking-module-breakpoint-size) {
-        height: 70px;
-        line-height: 70px;
-        margin-top: 20px;
-      }
-    }
   }
 }
