@@ -313,6 +313,7 @@ header#listing_search {
     right: 0px;
     @include border-radius(0);
     max-width: 100%;
+    top: 65px;
 
     form {
       max-width: 100%;
@@ -882,7 +883,7 @@ form.search-notification-form {
 section.search section#results.mixed {
   height: 100%;
   width: 100%;
-  padding-top: 90px;
+  padding-top: 65px;
 
   .map {
     width: 33.33%;
@@ -1102,6 +1103,11 @@ section.search section#results.mixed {
                   @include border-radius($border-radius-default);
                 }
               }
+
+              @media (min-width: $ipad-width + 1) {
+                width: 9.3333%;
+                margin-left: 2%;
+              }
             }
 
             .padding-top {
@@ -1112,17 +1118,44 @@ section.search section#results.mixed {
               span {
                 font-size: 80%;
               }
+
+              @media (min-width: $ipad-width + 1) {
+                width: 9.3333%;
+                margin-left: 2%;
+              }
+            }
+
+            .listing-capacity {
+              @media (min-width: $ipad-width + 1) {
+                width: 9.3333%;
+                margin-left: 2%;
+              }
+            }
+
+
+            .listing-main-photo {
+              @media (min-width: $ipad-width + 1) {
+                width: 18%;
+              }
             }
 
             .listing-name-description {
               padding-top: 15px;
-              padding-bottom: 15px;
 
               p {
                 padding-top: 10px;
                 line-height: 150%;
                 font-size: 90%;
                 margin-bottom: 0;
+              }
+
+              @media (min-width: $ipad-width + 1) {
+                width: 46%;
+                margin-left: 2%;
+
+                &.without-capacity {
+                  width: 57.3333%;
+                }
               }
             }
 
@@ -1162,5 +1195,9 @@ section.search section#results.mixed {
   @media (max-width: $ipad-width) {
     padding-top: 110px;
   } 
+
+  @media (max-width: $iphone-landscape) {
+    padding-top: 90px;
+  }
 }
 

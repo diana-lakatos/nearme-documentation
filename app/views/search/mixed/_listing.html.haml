@@ -1,15 +1,15 @@
 .row-fluid.listing{ data: { id: listing.id, name: listing.name, latitude: listing.latitude, longitude: listing.longitude, location: listing.location_id } }
-  .span2
+  .span3.listing-main-photo
     .photo
       - if listing.photos_count > 0 && photo = listing.photos.first
-        = image_tag photo.image_url(:medium), :title => listing.name, :alt => listing.name
+        = image_tag photo.image_url(:space_listing), :title => listing.name, :alt => listing.name
       - else
-        = image_tag space_listing_placeholder_path( :width => 144, :height => 89 ), :title => listing.name, :alt => listing.name
-  .listing-name-description{class: listing.capacity.blank? ? 'span6' : 'span4'}
+        = image_tag space_listing_placeholder_path( :width => 410, :height => 254 ), :title => listing.name, :alt => listing.name
+  .listing-name-description{class: listing.capacity.blank? ? 'span5 without-capacity' : 'span3'}
     %span.bold= "#{listing.name} (#{listing.quantity})"
     %p= truncate_with_ellipsis listing.description, 150
   - if not listing.capacity.blank?
-    .span2.padding-top
+    .span2.padding-top.listing-capacity
       %span.bold= listing.capacity
       seats
   .span2.listing-price.padding-top
