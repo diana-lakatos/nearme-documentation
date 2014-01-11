@@ -146,6 +146,9 @@ class Search.Map
 
   fitBounds: (bounds) ->
     @googleMap.fitBounds(bounds || @bounds)
+
+  setCenter: (latLng) ->
+    @googleMap.setCenter(latLng)
   
   resizeToFillViewport: ->
     offset = $(@container).offset()
