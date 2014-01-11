@@ -3,6 +3,4 @@
 
 .row-fluid
   .span8.offset2
-
-    :markdown
-      #{@page.content}
+    = raw @page.html_content

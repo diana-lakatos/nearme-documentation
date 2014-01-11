@@ -233,6 +233,8 @@ DesksnearMe::Application.routes.draw do
     delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
   end
 
+  resources :partner_inquiries, :only => [:index, :create], :controller => 'partner_inquiries', :path => 'partner'
+
   root :to => "public#index"
 
   namespace :v1, :defaults => { :format => 'json' } do
