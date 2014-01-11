@@ -12,19 +12,23 @@ class Authentication::InfoUpdater
     info = @provider.info
     info_hash = info.hash
 
+    puts "Updating Authentication: #{@authentication.id}, User: #{@user.id}"
     @authentication.info = info_hash
     @authentication.profile_url = info.profile_url
-    @authentication.save!
+    puts "Authentication changes: #{@authentication.changes.inspect}"
+    @authentication.save
 
     @user.name ||= info_hash['name']
     @user.biography ||= info_hash['description']
     @user.current_location ||= info_hash['location']
     @user.country_name ||= Geocoder.search(info_hash['location']).first.country rescue nil
+
     if !@user.avatar.any_url_exists? && info_hash['image'].present?
       @user.avatar_versions_generated_at = Time.zone.now
       @user.remote_avatar_url = info_hash['image']
     end
-    @user.save!
+    puts "User changes: #{@user.changes.inspect}"
+    @user.save
 
     self
   end

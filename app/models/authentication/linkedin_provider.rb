@@ -16,8 +16,8 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
   end
 
   def info
-    @info ||= begin
-      Info.new(connection.profile(fields: FIELDS))
+    begin
+      @info ||= Info.new(connection.profile(fields: FIELDS))
     rescue LinkedIn::Errors::AccessDeniedError
       raise ::Authentication::InvalidToken
     end

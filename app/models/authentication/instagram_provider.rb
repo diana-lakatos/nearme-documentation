@@ -15,8 +15,8 @@ class Authentication::InstagramProvider < Authentication::BaseProvider
   end
 
   def info
-    @info ||= begin
-      Info.new(connection.user)
+    begin
+      @info ||= Info.new(connection.user)
     rescue Instagram::BadRequest, Instagram::NotFound
       raise ::Authentication::InvalidToken
     end

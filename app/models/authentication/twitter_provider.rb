@@ -17,8 +17,8 @@ class Authentication::TwitterProvider < Authentication::BaseProvider
   end
 
   def info
-    @info ||= begin
-      Info.new(connection.user)
+    begin
+      @info ||= Info.new(connection.user)
     rescue Twitter::Error::Unauthorized
       raise ::Authentication::InvalidToken
     rescue Twitter::Error::TooManyRequests
@@ -32,7 +32,6 @@ class Authentication::TwitterProvider < Authentication::BaseProvider
       @raw          = raw
       @uid          = raw.id
       @username     = raw.username
-      @email        = raw.email
       @name         = raw.name
       @description  = raw.description
       @image_url    = raw.profile_image_url(:original).to_s

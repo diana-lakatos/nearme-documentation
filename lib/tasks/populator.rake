@@ -101,21 +101,12 @@ namespace :populate do
   task :social_info => :environment do
     Authentication.find_each do |authentication|
       begin
-        updater = Authentication::InfoUpdater.new(authentication).update
-
-        user = updater.user
-        if user.changed.present?
-          puts ""
-          puts "Authentication: #{authentication.id}, User: #{user.id}"
-          puts "Changes: #{user.changes.inspect}"
-          puts user.save
-          puts ""
-        end
+        Authentication::InfoUpdater.new(authentication).update
       rescue Authentication::InvalidToken
         authentication.update_column(:token_expired, true) if authentication.token_expires?
-        puts "#{authentication.id}: InvalidToken"
+        puts "Authentication #{authentication.id}: InvalidToken"
       rescue => e
-        puts "#{authentication.id}: #{e}" 
+        puts "Authentication #{authentication.id}: #{e}" 
       end
     end
   end
