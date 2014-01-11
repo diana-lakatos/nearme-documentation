@@ -32,6 +32,9 @@ class Search.Geocoder
     state: ->
       @_addressComponentOfType('administrative_area_level_1', 'political')?.long_name
 
+    stateShort: ->
+      @_addressComponentOfType('administrative_area_level_1', 'political')?.short_name
+
     country: ->
       @_addressComponentOfType('country', 'political')?.long_name
 

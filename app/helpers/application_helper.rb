@@ -24,6 +24,14 @@ module ApplicationHelper
       (additional_meta_title.presence ? " | " + additional_meta_title : '')
   end
 
+  def meta_description(description)
+    content_for(:meta_description) { h(description.to_s) }
+  end
+
+  def meta_description_content
+    content_for?(:meta_description) ? content_for(:meta_description) : (platform_context.description || "#{platform_context.name} connects individuals and teams with office space across the globe, and provides a platform for businesses to list spare space.")
+  end
+
   def additional_meta_title
     content_for?(:meta_title) ? content_for(:meta_title) : platform_context.meta_title
   end

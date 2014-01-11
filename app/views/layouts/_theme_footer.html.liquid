@@ -15,11 +15,11 @@
       </div>
       <div class="span3 mobile6">
         <div class="social-wrapper">
-          <ul class="icons">
-            {% if platform_context.facebook_url != '' %}<li><a href="{{ platform_context.facebook_url }}" target="_blank"><span class="image ico-facebook-full"></span><span class="text">Facebook</span></a></li>{% endif %}
-            {% if platform_context.twitter_url != '' %}<li><a href="{{ platform_context.twitter_url }}" target="_blank"> <span class="image ico-twitter"></span><span class="text">Twitter</span></a></li>{% endif %}
-            {% if platform_context.gplus_url != '' %}<li><a href="{{ platform_context.gplus_url }}" rel="publisher" target="_blank"><span class="image ico-google-plus"></span><span class="text">Google+</span></a></li>{% endif %}
-            {% if platform_context.blog_url != '' %}<li><a href="{{ platform_context.blog_url }}" target="_blank"><span class="image ico-blog"></span><span class="text">Blog</span></a></li>{% endif %}
+          <ul class="social-icons">
+            {% if platform_context.facebook_url != '' %}<li><a href="{{ platform_context.facebook_url }}"  ref="nofollow" target="_blank"><span class="image ico-facebook-full"></span><span class="text">Facebook</span></a></li>{% endif %}
+            {% if platform_context.twitter_url != '' %}<li><a href="{{ platform_context.twitter_url }}" ref="nofollow"  target="_blank"> <span class="image ico-twitter"></span><span class="text">Twitter</span></a></li>{% endif %}
+            {% if platform_context.gplus_url != '' %}<li><a href="{{ platform_context.gplus_url }}" rel="publisher nofollow" target="_blank"><span class="image ico-google-plus"></span><span class="text">Google+</span></a></li>{% endif %}
+            {% if platform_context.blog_url != '' %}<li><a href="{{ platform_context.blog_url }}" rel="nofollow" target="_blank"><span class="image ico-blog"></span><span class="text">Blog</span></a></li>{% endif %}
           </ul>
         </div>
       </div>

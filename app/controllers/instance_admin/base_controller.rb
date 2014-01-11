@@ -21,11 +21,12 @@ class InstanceAdmin::BaseController < ApplicationController
   def authorize_user!
     @authorizer ||= InstanceAdmin::Authorizer.new(current_user, platform_context)
     if !(@authorizer.instance_admin?)
+      flash[:warning] = t('flash_messages.authorizations.not_authorized')
       redirect_to root_path
     elsif !@authorizer.authorized?(permitting_controller_class)
       first_permission_have_access_to = @authorizer.first_permission_have_access_to
       if first_permission_have_access_to
-        flash[:warning] = 'Sorry, you do not have permission to view chosen page!'
+        flash[:warning] = t('flash_messages.authorizations.not_authorized')
         redirect_to url_for([:instance_admin, first_permission_have_access_to])
       else
         redirect_to root_path

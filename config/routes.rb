@@ -57,6 +57,14 @@ DesksnearMe::Application.routes.draw do
 
     resources :partners
     resource :settings, :only => [:show, :update], :controller => 'settings'
+    namespace :settings do
+      resources :location_types, only: [:index, :create, :destroy_modal, :destroy] do
+        get 'destroy_modal', on: :member
+      end
+      resources :listing_types, only: [:index, :create, :destroy_modal, :destroy] do
+        get 'destroy_modal', on: :member
+      end
+    end
     resource :theme, :only => [:show, :update], :controller => 'theme'
     resources :transfers do
       member do
@@ -224,6 +232,8 @@ DesksnearMe::Application.routes.draw do
     put "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo"
     delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
   end
+
+  resources :partner_inquiries, :only => [:index, :create], :controller => 'partner_inquiries', :path => 'partner'
 
   root :to => "public#index"
 

@@ -20,6 +20,7 @@ class InstanceMailer < ActionMailer::Base
     subject  = mailer.liquid_subject(subject_locals) || options.delete(:subject)
     reply_to = options.delete(:reply_to) || mailer.reply_to
     @user  = User.find_by_email(to.kind_of?(Array) ? to.first : to)
+    @user.current_platform_context = platform_context if @user
     self.email_method = StackTraceParser.new(caller[0])
     self.email_method = StackTraceParser.new(caller[1]) if ['generate_mail', 'request_rating'].include?(self.email_method.method_name)
     custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge({template: template, campaign: self.email_method.humanized_method_name})
