@@ -408,6 +408,14 @@ ActiveRecord::Schema.define(:version => 20140108142314) do
 
   add_index "pages", ["theme_id"], :name => "index_pages_on_theme_id"
 
+  create_table "partner_inquiries", :force => true do |t|
+    t.string   "name"
+    t.string   "company_name"
+    t.string   "email"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
   create_table "partners", :force => true do |t|
     t.string   "name"
     t.integer  "instance_id"
