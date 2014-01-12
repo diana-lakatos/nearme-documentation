@@ -99,7 +99,7 @@ namespace :populate do
 
   desc "Populates users with info from authentications"
   task :social_info => :environment do
-    Authentication.where('id > 2400').find_each do |authentication|
+    Authentication.find_each do |authentication|
       begin
         updater = Authentication::InfoUpdater.new(authentication).update
         puts "Authentication #{authentication.id}: updated with #{updater.authentication_changes.inspect}"
