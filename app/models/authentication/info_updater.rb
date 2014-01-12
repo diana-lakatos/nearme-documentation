@@ -1,6 +1,6 @@
 class Authentication::InfoUpdater
 
-  attr_accessor :authentication, :user
+  attr_accessor :authentication, :user, :authentication_changes, :user_changes
 
   def initialize(authentication)
     @authentication = authentication
@@ -12,10 +12,9 @@ class Authentication::InfoUpdater
     info = @provider.info
     info_hash = info.hash
 
-    puts "Updating Authentication: #{@authentication.id}, User: #{@user.id}"
     @authentication.info = info_hash
     @authentication.profile_url = info.profile_url
-    puts "Authentication changes: #{@authentication.changes.inspect}"
+    @authentication_changes = @authentication.changes
     @authentication.save
 
     @user.name ||= info_hash['name']
@@ -27,7 +26,7 @@ class Authentication::InfoUpdater
       @user.avatar_versions_generated_at = Time.zone.now
       @user.remote_avatar_url = info_hash['image']
     end
-    puts "User changes: #{@user.changes.inspect}"
+    @user_changes = @user.changes.inspect
     @user.save
 
     self
