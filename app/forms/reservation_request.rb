@@ -23,6 +23,7 @@ class ReservationRequest < Form
 
     if @listing
       @reservation = listing.reservations.build
+      @billing_gateway = @user.billing_gateway(@reservation.currency, platform_context.instance) if @user
       @reservation.payment_method = payment_method
       @reservation.user = user
       @reservation.platform_context_detail = platform_context.platform_context_detail
@@ -50,6 +51,7 @@ class ReservationRequest < Form
         @reservation.add_period(Date.parse(date_string), start_minute, end_minute)
       end
     end
+
   end
 
   def process
@@ -67,7 +69,7 @@ class ReservationRequest < Form
   def payment_method
     @payment_method = if @reservation.listing.free?
                         Reservation::PAYMENT_METHODS[:free]
-                      elsif User::BillingGateway.payment_supported?(@reservation)
+                      elsif @billing_gateway.try(:payment_supported?)
                         Reservation::PAYMENT_METHODS[:credit_card]
                       else
                         Reservation::PAYMENT_METHODS[:manual]
@@ -100,22 +102,22 @@ class ReservationRequest < Form
 
       begin
         self.card_expires = card_expires.to_s.strip
-        card_details = User::BillingGateway::CardDetails.new(
+        credit_card = Billing::CreditCard.new(
           number:       card_number.to_s,
           expiry_month: card_expires.to_s[0,2],
-          expiry_year:  card_expires.to_s[-2,2],
+          expiry_year:  card_expires.to_s[-4,4],
           cvc:          card_code.to_s
         )
 
-        if card_details.valid?
-          User::BillingGateway.new(user, reservation.instance).store_card(card_details)
+        if credit_card.valid?
+          @billing_gateway.store_credit_card(credit_card)
         else
           add_error("Those credit card details don't look valid", :cc)
         end
-      rescue User::BillingGateway::CardError => e
+      rescue Billing::CreditCardError => e
         field = e.param ? e.param : :cc
         add_error(e.message, field)
-      rescue User::BillingGateway::BillingError => e
+      rescue Billing::Error => e
         add_error(e.message, :cc)
       end
     end

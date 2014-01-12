@@ -255,6 +255,10 @@ section.reservations {
 
     p {
       color: #b8b8b8;
+
+      &.error-block {
+        color: $red;
+      }
     }
 
     hr {

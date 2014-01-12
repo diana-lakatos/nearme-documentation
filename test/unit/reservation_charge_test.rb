@@ -12,7 +12,7 @@ class ReservationChargeTest < ActiveSupport::TestCase
   end
 
   should 'track charge in mixpanel after successful creation' do
-    User::BillingGateway.any_instance.stubs(:charge)
+    Billing::Gateway::StripeProcessor.any_instance.stubs(:charge)
     @expectation.once
     @reservation.reservation_charges.create!(
       subtotal_amount: 105.24,
@@ -21,7 +21,7 @@ class ReservationChargeTest < ActiveSupport::TestCase
   end
 
   should 'do not track charge in mixpanel if there is error processing credit card' do
-    User::BillingGateway.any_instance.stubs(:charge).raises(User::BillingGateway::CardError)
+    Billing::Gateway::StripeProcessor.any_instance.stubs(:charge).raises(Billing::CreditCardError)
     @expectation.never
     @reservation.reservation_charges.create!(
       subtotal_amount: 105.24,

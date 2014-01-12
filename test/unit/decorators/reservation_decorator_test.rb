@@ -110,7 +110,7 @@ class ReservationDecoratorTest < ActionView::TestCase
 
     context 'that was confirmed ( = paid)' do
       setup do
-        User::BillingGateway.any_instance.expects(:charge)
+        Billing::Gateway::StripeProcessor.any_instance.expects(:charge)
         @reservation.save!
         @reservation.confirm
       end

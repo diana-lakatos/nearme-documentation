@@ -1,23 +1,23 @@
 require 'test_helper'
 
-class User::BillingGatewayTest < ActiveSupport::TestCase
+class Billing::Gateway::StripeProcessorTest < ActiveSupport::TestCase
   setup do
     @instance = Instance.default_instance
     @user = FactoryGirl.create(:user)
     @reservation = FactoryGirl.create(:reservation)
-    @billing_gateway = User::BillingGateway.new(@user, @instance)
+    @billing_gateway = @user.billing_gateway('USD', @instance)
   end
 
   context "#charge" do
     should "trigger a charge on the user's credit card" do
       @instance.update_attribute(:stripe_api_key, "abcd")
       Stripe::Charge.expects(:create).with({:amount => 100_00, :currency => 'USD', :customer => @user.stripe_id}, @instance.stripe_api_key).returns({})
-      @billing_gateway.charge(:amount => 100_00, :currency => 'USD')
+      @billing_gateway.charge(:amount => 100_00)
     end
 
     should "create a Charge record with reference, user, amount, currency, and success on success" do
       Stripe::Charge.expects(:create).returns({})
-      @billing_gateway.charge(:amount => 100_00, :currency => 'USD', :reference => @reservation) 
+      @billing_gateway.charge(:amount => 100_00, :reference => @reservation)
 
       charge = Charge.last
       assert_equal @user.id, charge.user_id
@@ -31,7 +31,7 @@ class User::BillingGatewayTest < ActiveSupport::TestCase
       Stripe::Charge.expects(:create).raises(stripe_card_error)
 
       begin
-        @billing_gateway.charge(:amount => 100_00, :currency => 'USD')
+        @billing_gateway.charge(:amount => 100_00)
       rescue
       end
 
@@ -42,8 +42,8 @@ class User::BillingGatewayTest < ActiveSupport::TestCase
     should "raise CardError on card failure" do
       Stripe::Charge.expects(:create).raises(stripe_card_error)
 
-      assert_raises User::BillingGateway::CardError do
-        @billing_gateway.charge(:amount => 100_00, :currency => 'USD')
+      assert_raises Billing::CreditCardError do
+        @billing_gateway.charge(:amount => 100_00)
       end
     end
   end
@@ -55,18 +55,18 @@ class User::BillingGatewayTest < ActiveSupport::TestCase
       end
 
       should "create a customer record with the card and assign to User" do
-        Stripe::Customer.expects(:create).with(:card => stripe_card_details, :email => @user.email).returns(stub(
+        Stripe::Customer.expects(:create).with({:card => stripe_card_details, :email => @user.email}, @instance.stripe_api_key).returns(stub(
           id: '456'
         ))
-        @billing_gateway.store_card(card_details)
+        @billing_gateway.store_credit_card(credit_card)
         assert_equal '456', @user.stripe_id
       end
 
       should "raise InvalidRequestError if invalid details" do
-        Stripe::Customer.expects(:create).with(:card => stripe_card_details, :email => @user.email).raises(stripe_invalid_request_error)
+        Stripe::Customer.expects(:create).with({:card => stripe_card_details, :email => @user.email}, @instance.stripe_api_key).raises(stripe_invalid_request_error)
 
-        assert_raises User::BillingGateway::InvalidRequestError do
-          @billing_gateway.store_card(card_details)
+        assert_raises Billing::InvalidRequestError do
+          @billing_gateway.store_credit_card(credit_card)
         end
       end
     end
@@ -81,54 +81,26 @@ class User::BillingGatewayTest < ActiveSupport::TestCase
 
       should "update an existing assigned Customer record" do
         @stripe_customer_mock.expects(:save)
-        @billing_gateway.store_card(card_details)
+        @billing_gateway.store_credit_card(credit_card)
         assert_equal @stripe_id_was, @user.stripe_id
       end
 
       should "raise InvalidRequestError if invalid details" do
         @stripe_customer_mock.expects(:save).raises(stripe_invalid_request_error)
 
-        assert_raises User::BillingGateway::InvalidRequestError do
-          @billing_gateway.store_card(card_details)
+        assert_raises Billing::InvalidRequestError do
+          @billing_gateway.store_credit_card(credit_card)
         end
       end
 
       should "set up as new customer if customer not found" do
         @stripe_customer_mock.expects(:save).raises(stripe_customer_not_found_error)
-        Stripe::Customer.expects(:create).with(:card => stripe_card_details, :email => @user.email).returns(stub(
+        Stripe::Customer.expects(:create).with({:card => stripe_card_details, :email => @user.email}, @instance.stripe_api_key).returns(stub(
           id: '456'
         ))
-        @billing_gateway.store_card(card_details)
+        @billing_gateway.store_credit_card(credit_card)
         assert_equal '456', @user.stripe_id, "Stripe customer id should have changed"
       end
-    end
-  end
-
-  context 'CardDetails' do
-    context '#to_stripe_params' do
-      should "return cvc as a string" do
-        card_details = User::BillingGateway::CardDetails.new(
-          number: "1444444444444444",
-          expiry_string: '12 / 18',
-          cvc: '032'
-        )
-
-        assert_equal '032', card_details.to_stripe_params[:cvc]
-      end
-    end
-  end
-
-  context '#payment_supported?' do
-    should 'accept USD and CAD' do
-      location = create(:location, currency: 'USD')
-      assert User::BillingGateway.payment_supported? location
-      location.currency = 'CAD'
-      assert User::BillingGateway.payment_supported? location
-    end
-
-    should 'deny otherwise' do
-      location = create(:location, currency: 'RUB')
-      refute User::BillingGateway.payment_supported? location
     end
   end
 
@@ -147,15 +119,16 @@ class User::BillingGatewayTest < ActiveSupport::TestCase
     stripe_invalid_request_error('id')
   end
 
-  def card_details
-    User::BillingGateway::CardDetails.new(
-      number: "1444444444444444", 
-      expiry_string: '12 / 18', 
+  def credit_card
+    Billing::CreditCard.new(
+      number: "1444444444444444",
+      expiry_month: '12',
+      expiry_year: '2018',
       cvc: '123'
     )
   end
 
-  def stripe_card_details(card_details = self.card_details)
-    card_details.to_stripe_params
+  def stripe_card_details(credit_card = self.credit_card)
+    credit_card.to_stripe_params
   end
 end

@@ -45,6 +45,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
     end
 
     should "generate separate transfers for separate currencies" do
+      Billing::Gateway::BaseProcessor.stubs(:find_processor_class).with('NZD').returns(Billing::Gateway::StripeProcessor).at_least(1)
       location = FactoryGirl.create(:location,
         :company => @company_1,
         :currency => 'NZD'
@@ -61,7 +62,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
       assert_equal 2, @company_1.payment_transfers.count
 
       nzd_transfer = @company_1.payment_transfers.detect { |pt| pt.currency == 'NZD' }
-      assert nzd_transfer, "Expected an NZD payment transfer"
+      assert nzd_transfer, "Expected an CAD payment transfer"
       assert_equal nzd_reservations.map(&:reservation_charges).flatten,
         nzd_transfer.reservation_charges
     end
