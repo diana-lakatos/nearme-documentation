@@ -121,7 +121,7 @@ class SearchController < ApplicationController
   end
 
   def result_view
-    requested_view = params.fetch(:v, 'mixed').downcase
+    requested_view = params.fetch(:v, 'list').downcase
     @result_view ||= (if SEARCH_RESULT_VIEWS.include?(requested_view)
                        requested_view
                      else
