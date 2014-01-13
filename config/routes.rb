@@ -5,6 +5,9 @@ DesksnearMe::Application.routes.draw do
     post '/notify-me', :to => 'platform_home#notify_me'
     get '/get-in-touch', :to => 'platform_home#get_in_touch'
     post '/save-inquiry', :to => 'platform_home#save_inquiry'
+    post '/send-email', :to => 'platform_home#send_email'
+    get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe'
+    get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe'
   end
 
   root :to => "public#index"
