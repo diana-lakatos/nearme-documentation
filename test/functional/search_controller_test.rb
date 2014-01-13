@@ -191,16 +191,16 @@ class SearchControllerTest < ActionController::TestCase
       @industry = FactoryGirl.create(:industry)
       expected_custom_options = {
         search_query: 'adelaide', 
-        result_view: 'mixed',
+        result_view: 'list',
         result_count: 0, 
-        listing_type_filter: [@listing_type.name], 
-        location_type_filter: [@location_type.name], 
-        listing_pricing_filter: ['daily']
+        listing_type_filter: [@listing_type.name],
+        location_type_filter: [@location_type.name],
+        industry_filter: [@industry.name]
       }
       @tracker.expects(:conducted_a_search).with do |search, custom_options|
         expected_custom_options == custom_options
       end
-      get :index, { :loc => 'adelaide', :lgtype => @listing_type.name.downcase, :lntype => @location_type.name.downcase, :lgpricing => 'daily' }
+      get :index, { :loc => 'adelaide', :listing_types_ids => [@listing_type.id], :location_types_ids => [@location_type.id], :industries_ids => [@industry.id] }
     end
 
     should 'track search if ignore_search flag is set to 0' do
