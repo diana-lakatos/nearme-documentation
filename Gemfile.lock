@@ -127,16 +127,6 @@ GEM
       activerecord (>= 2.1.0, < 4)
       delayed_job (~> 3.0)
     descendants_tracker (0.0.3)
-    desk (0.3.3)
-      faraday (~> 0.8.0)
-      faraday_middleware (~> 0.9.0)
-      hashie (~> 1.2.0)
-      json (~> 1.7)
-      multi_json (~> 1.6)
-      multi_xml (~> 0.5)
-      pony (~> 1.1)
-      rash (~> 0.3.1)
-      simple_oauth (~> 0.2.0)
     devise (2.2.4)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -325,6 +315,8 @@ GEM
     paper_trail (2.7.2)
       activerecord (~> 3.0)
       railties (~> 3.0)
+    paypal-sdk-adaptivepayments (1.103.0)
+      paypal-sdk-core (~> 0.2.3)
     paypal-sdk-core (0.2.6)
       multi_json (~> 1.0)
       xml-simple
@@ -561,6 +553,7 @@ DEPENDENCIES
   omniauth-linkedin-oauth2
   omniauth-twitter
   paper_trail
+  paypal-sdk-adaptivepayments
   paypal-sdk-rest
   pg
   pickle

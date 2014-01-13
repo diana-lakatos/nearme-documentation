@@ -54,6 +54,7 @@ gem 'delayed_job_active_record'
 gem "rdiscount"
 gem 'stripe'
 gem 'paypal-sdk-rest'
+gem 'paypal-sdk-adaptivepayments'
 gem 'friendly_id'
 
 gem 'sass-rails'

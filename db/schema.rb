@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140108142314) do
+ActiveRecord::Schema.define(:version => 20140113221544) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -284,6 +284,7 @@ ActiveRecord::Schema.define(:version => 20140108142314) do
     t.decimal  "service_fee_host_percent",  :precision => 5, :scale => 2, :default => 0.0
     t.string   "stripe_api_key"
     t.string   "stripe_public_key"
+    t.string   "paypal_email"
   end
 
   create_table "listing_messages", :force => true do |t|
@@ -436,6 +437,17 @@ ActiveRecord::Schema.define(:version => 20140108142314) do
   end
 
   add_index "payment_transfers", ["company_id"], :name => "index_payment_transfers_on_company_id"
+
+  create_table "payouts", :force => true do |t|
+    t.integer  "reference_id"
+    t.string   "reference_type"
+    t.boolean  "success"
+    t.text     "response"
+    t.integer  "amount"
+    t.string   "currency"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
 
   create_table "photos", :force => true do |t|
     t.datetime "created_at"

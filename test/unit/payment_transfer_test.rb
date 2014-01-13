@@ -23,7 +23,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
 
     should "only allow charges of the same currency" do
-      Billing::Gateway::BaseProcessor.stubs(:find_processor_class).with('NZD').returns(Billing::Gateway::StripeProcessor).at_least(1)
+      Billing::Gateway::BaseProcessor.stubs(:find_ingoing_processor_class).with('NZD').returns(Billing::Gateway::StripeProcessor).at_least(1)
       rc = ReservationCharge.create!(
         :reservation => @reservation_1,
         :subtotal_amount => 10,
@@ -80,5 +80,27 @@ class PaymentTransferTest < ActiveSupport::TestCase
       assert @company.payment_transfers.pending.include?(pt2)
       assert !@company.payment_transfers.pending.include?(pt3)
     end
+  end
+
+
+  context 'payout' do
+    setup do
+
+      Billing::Gateway::BaseProcessor.stubs(:find_outgoing_processor_class).with(@company.instance, @company).returns(Billing::Gateway::PaypalProcessor).once
+      @payment_transfer = @company.payment_transfers.build
+      @payment_transfer.reservation_charges = @reservation_charges
+    end
+    should 'be not paid if attempt to payout failed' do
+      Billing::Gateway.any_instance.expects(:payout).with { |hash| Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => false))
+      @payment_transfer.save!
+      refute @payment_transfer.transferred?
+    end
+
+    should 'be paid if attempt to payout succeeded' do
+      Billing::Gateway.any_instance.expects(:payout).with { |hash| Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => true))
+      @payment_transfer.save!
+      assert @payment_transfer.transferred?
+    end
+
   end
 end

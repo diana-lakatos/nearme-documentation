@@ -6,6 +6,10 @@ class Billing::Gateway::StripeProcessor < Billing::Gateway::BaseProcessor
     @api_key = @instance.custom_stripe_api_key
   end
 
+  def self.ingoing_payment_supported?(currency)
+    self::SUPPORTED_CURRENCIES.include?(currency)
+  end
+
   def store_credit_card(credit_card)
     if user.stripe_id.present?
       update_credit_card(credit_card)

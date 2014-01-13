@@ -3,6 +3,19 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
 
   SUPPORTED_CURRENCIES = ['GBP', 'EUR', 'JPY', 'CAD']
 
+  def initialize(*args)
+    super(*args)
+    @api = PayPal::SDK::AdaptivePayments::API.new
+  end
+
+  def self.ingoing_payment_supported?(currency)
+    self::SUPPORTED_CURRENCIES.include?(currency)
+  end
+
+  def self.outgoing_payment_supported?(sender, receiver)
+    is_supported?(sender) && is_supported?(receiver)
+  end
+
   def process_charge(amount)
     @payment = PayPal::SDK::REST::Payment.new(paypal_argument_hash(amount))
     if @payment.create
@@ -10,6 +23,29 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
     else
       charge_failed(@payment.error)
       handle_error(@payment.error)
+    end
+  end
+
+  def process_payout(amount)
+    @pay = @api.build_pay({
+      :actionType => "PAY",
+      :currencyCode => amount.currency.iso_code,
+      :feesPayer => "SENDER",
+      :cancelUrl => "http://#{Rails.application.routes.default_url_options[:host]}",
+      :returnUrl => "http://#{Rails.application.routes.default_url_options[:host]}",
+      :receiverList => {
+        :receiver => [{
+          :amount => amount.to_s,
+          :email => @receiver.paypal_email 
+        }] 
+      },
+      :senderEmail => @sender.paypal_email
+    })
+    @pay_response = @api.pay(@pay) 
+    if @pay_response.success?
+      payout_successful(@pay_response)
+    else
+      payout_failed(@pay_response.error)
     end
   end
 
@@ -114,6 +150,10 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
           :currency => @currency },
       }]
     }
+  end
+
+  def self.is_supported?(object)
+    object.respond_to?(:paypal_email) && object.paypal_email.present?
   end
 
 end

@@ -1,22 +1,30 @@
 # Encapsulate all billing  gateway related logic associated with a user
 class Billing::Gateway
 
-  attr_reader :user, :currency
+  attr_reader :user, :currency, :processor
 
-  delegate :charge, :store_credit_card, :to => :processor
+  delegate :charge, :payout, :store_credit_card, :to => :processor
 
-  def initialize(user, currency, instance)
+  def initialize(instance)
+    @instance = instance
+  end
+
+  def ingoing_payment(user, currency)
     @user = user
     @currency = currency
-    @instance = instance
+    @processor = Billing::Gateway::BaseProcessor.find_ingoing_processor_class(@currency).try(:new, @instance).try(:ingoing_payment, @user, @currency)
+    self
+  end
+
+  def outgoing_payment(sender, receiver)
+    @sender = sender
+    @receiver = receiver
+    @processor = Billing::Gateway::BaseProcessor.find_outgoing_processor_class(@sender, @receiver).try(:new, @instance).try(:outgoing_payment, @sender, @receiver)
+    self
   end
 
   def payment_supported?
     processor.present?
-  end
-
-  def processor
-    @processor ||= Billing::Gateway::BaseProcessor.find_processor_class(@currency).try(:new, @user, @currency, @instance)
   end
 
 end

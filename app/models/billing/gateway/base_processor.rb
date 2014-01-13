@@ -1,23 +1,41 @@
 class Billing::Gateway::BaseProcessor
   CREDIT_CARD_PROCESSORS = [Billing::Gateway::StripeProcessor, Billing::Gateway::PaypalProcessor]
+  PAYOUT_PROCESSORS = [Billing::Gateway::PaypalProcessor]
 
   attr_accessor :user
 
-  def initialize(user, currency, instance)
-    @user = user
-    @currency = currency
+  def initialize(instance)
     @instance = instance
   end
 
-  def self.find_processor_class(currency)
-    CREDIT_CARD_PROCESSORS.find { |potential_processor| potential_processor.payment_supported?(currency) }
+  def ingoing_payment(user, currency)
+    @user = user
+    @currency = currency
+    self
   end
 
-  # Method responsible for determining whether given currency can be processed with certain processor
-  # Each subclass must define supported_currencies
-  def self.payment_supported?(currency)
-    raise "SUPPORTED_CURRENCIES not implemented for #{self.class.name} or does not support any currency" if !defined?(self::SUPPORTED_CURRENCIES) || self::SUPPORTED_CURRENCIES.empty? 
-    self::SUPPORTED_CURRENCIES.include?(currency)
+  def outgoing_payment(sender, receiver)
+    @sender = sender
+    @receiver = receiver
+    self
+  end
+
+  def self.find_ingoing_processor_class(currency)
+    CREDIT_CARD_PROCESSORS.find { |potential_processor| potential_processor.ingoing_payment_supported?(currency) }
+  end
+
+  def self.find_outgoing_processor_class(sender, receiver)
+    PAYOUT_PROCESSORS.find { |potential_processor| potential_processor.outgoing_payment_supported?(sender, receiver) }
+  end
+
+  # Responsible for determining whether given currency can be processed with certain processor
+  def ingoing_payment_supported?(currency)
+    raise "#{self.class.name} must implement ingoing_payment_supported?" 
+  end
+
+  # Responsible for determining the right processor for both parties via which transfer will be processed
+  def outgoing_payment_supported?(sender, receiver)
+    raise "#{self.class.name} must implement outgoing_payment_supported?" 
   end
 
   # Make a charge against the user
@@ -39,6 +57,17 @@ class Billing::Gateway::BaseProcessor
     # Use concrete processor to perform real-life charge attempt. Processor will trigger charge_failed or charge_successful callbacks.
     process_charge(@charge.amount)
     @charge
+  end
+
+  def payout(payout_details)
+    amount, reference = payout_details[:amount], payout_details[:reference]
+    @payout = Payout.create(
+      amount: amount.cents,
+      currency: amount.currency.iso_code,
+      reference: reference
+    )
+    process_payout(amount)
+    @payout
   end
 
   # Contains implementation for storing credit card by third party
@@ -63,5 +92,14 @@ class Billing::Gateway::BaseProcessor
     @charge.charge_failed(response)
   end
 
+  # Callback invoked by processor when payout failed
+  def payout_successful(response)
+    @payout.payout_successful(response)
+  end
+
+  # Callback invoked by processor when payout failed
+  def payout_failed(response)
+    @payout.payout_failed(response)
+  end
 
 end

@@ -103,6 +103,7 @@ class Company < ActiveRecord::Base
         )
       end
     end
+    # FIXME: probably better to move to payment_transfer.rb 
     if !has_payment_method?
       CompanyMailer.enqueue.notify_host_of_no_payout_option(self)
       CompanySmsNotifier.notify_host_of_no_payout_option(self).deliver

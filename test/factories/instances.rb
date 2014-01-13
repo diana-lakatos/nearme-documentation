@@ -8,6 +8,7 @@ FactoryGirl.define do
     lessee 'guest'
     service_fee_guest_percent '10.00'
     service_fee_host_percent '10.00'
+    paypal_email 'sender@example.com'
 
     after(:create) do |instance|
       instance.theme = FactoryGirl.create(:theme, :skip_compilation => true) unless instance.theme

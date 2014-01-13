@@ -9,9 +9,9 @@ class Billing::GatewayTest < ActiveSupport::TestCase
   end
 
   context 'processor' do
+
     setup do
-      @currency = 'CAD'
-      @gateway = Billing::Gateway.new(@user, @currency, @instance)
+      @gateway = Billing::Gateway.new(@instance)
     end
 
     should 'know if a processor can handle payment' do
@@ -24,12 +24,37 @@ class Billing::GatewayTest < ActiveSupport::TestCase
       refute @gateway.payment_supported?
     end
 
-    should 'initialize correct object' do
-      Billing::Gateway::StripeProcessor.expects(:new).with(@user, @currency, @instance).once
-      Billing::Gateway::BaseProcessor.stubs(:find_processor_class).with(@currency).returns(Billing::Gateway::StripeProcessor)
-      @gateway.processor
+    context 'ingoing' do
+      setup do
+        @currency = 'USD'
+        @gateway = Billing::Gateway.new(@instance)
+      end
+
+      should 'initialize correct object' do
+        stripe_processor_instance_mock = mock()
+        stripe_processor_instance_mock.expects(:ingoing_payment).with(@user, @currency).once
+        Billing::Gateway::StripeProcessor.expects(:new).with(@instance).returns(stripe_processor_instance_mock)
+        Billing::Gateway::BaseProcessor.stubs(:find_ingoing_processor_class).with(@currency).returns(Billing::Gateway::StripeProcessor)
+        @gateway.ingoing_payment(@user, @currency)
+      end
     end
 
+    context 'outgoing' do
+
+      setup do
+        @sender = Instance.default_instance
+        @receiver = FactoryGirl.create(:company)
+        @gateway = Billing::Gateway.new(@instance)
+      end
+
+      should 'initialize correct object' do
+        paypal_processor_instance_mock = mock()
+        paypal_processor_instance_mock.expects(:outgoing_payment).with(@sender, @receiver).once
+        Billing::Gateway::PaypalProcessor.expects(:new).with(@instance).returns(paypal_processor_instance_mock)
+        Billing::Gateway::BaseProcessor.stubs(:find_outgoing_processor_class).with(@sender, @receiver).returns(Billing::Gateway::PaypalProcessor)
+        @gateway.outgoing_payment(@sender, @receiver)
+      end
+    end
   end
 
 end
