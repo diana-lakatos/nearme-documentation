@@ -2,7 +2,9 @@ DesksnearMe::Application.routes.draw do
 
   constraints host: 'near-me.com' do
     root :to => 'platform_home#index'
+    post '/notify-me', :to => 'platform_home#notify_me'
     get '/get-in-touch', :to => 'platform_home#get_in_touch'
+    post '/save-inquiry', :to => 'platform_home#save_inquiry'
   end
 
   root :to => "public#index"
