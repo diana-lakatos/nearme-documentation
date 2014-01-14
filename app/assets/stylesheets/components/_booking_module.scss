@@ -97,10 +97,19 @@
       border-bottom: 1px solid $gray80; 
     }
 
-    .booking-description {
+    .booking-description, .booking-opening-hours {
       margin: 15px 0px 0px;
-      font-size: 0.5em;
-      color: $gray160;
+      font-size: 0.50em;
+
+      h3, 
+      span {
+        color: $gray160 !important;
+      }
+
+      h3 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+      }
 
       @media (max-width: $booking-module-breakpoint-size) {
         font-size: 0.6em;
