@@ -12,6 +12,7 @@ class @HomeController
     @resizeTextBoxes()
     @positionAnimation()
     @setLineWidth()
+    @centerUsingMargin()
 
   bindEvents: =>
     $('.arrow a').click (e) ->
@@ -201,6 +202,15 @@ class @HomeController
     wheelLeftPosition = $('section.how-it-works .wheel').offset().left
     $('section.how-it-works #line').css('width', textBoxesLeftPosition - lineLeft - wheelLeftPosition)
 
+  centerUsingMargin: ->
+    onResize = ->
+      $("section.see-what-everyone-is-saying.section .span4").each ->        
+        if $(window).width() > 767
+          $(this).css "margin-top", ($(this).parent().height() - $(this).height()) / 2
+        else
+          $(this).css "margin-top", 0
+    $(document).ready onResize
+    $(window).bind "resize", onResize
 
   popUpWindow: (url, width, height, title = '') ->
     window_id = new Date().getTime()

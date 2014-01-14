@@ -650,6 +650,90 @@ img.social-share-thumbnail {
     }
   }
 
+  section.see-what-everyone-is-saying {
+    .container-fluid {
+      padding-top: 30px;
+
+      .row-fluid {
+        padding-top: 50px;
+
+        .span1 {
+          @media (max-width: $ipad-width) {
+            display: none;
+          }
+        }
+      }
+    }
+
+    @media (max-width: $ipad-width) {
+      .span4 {
+        margin-bottom: 50px;
+        text-align: center;
+      }
+    }
+
+    
+    .shareable {
+      @media (max-width: $desktop-breakpoint-small) {
+        height: 32px;
+        width: 230px;
+      }
+    }
+
+    .box {
+      position: relative;
+      background-color: $light-color;
+      padding: 30px;
+      @include border-radius(10px);
+
+      .body {
+        font-family: 'Archer SSm A', 'Archer SSm B';
+        font-weight: 500;
+        font-style: normal;
+        font-size: 150%;
+        color: $dark-color;
+        line-height: 180%;      
+      }
+    }
+
+    .arrow:after {
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-color: rgba(136, 183, 213, 0);
+      border-width: 15px;
+
+      @media (max-width: $ipad-width) {
+        bottom: 100%;
+        left: 50%;
+        margin-left: -15px;
+        border-bottom-color: $light-color;
+      }
+    }
+
+    .right-arrow:after {
+      @media (min-width: $ipad-width + 1) {
+        left: 100%;
+        top: 50%;
+        border-left-color: $light-color;
+        margin-top: -15px;
+      }
+    }
+    
+    .left-arrow:after {
+      @media (min-width: $ipad-width + 1) {
+        right: 100%;
+        top: 50%;
+        border-right-color: $light-color;
+        margin-top: -15px;
+      }
+    }
+  }
+
+
   section.build-yours-now {
     text-align: center;
     padding-top: 120px;
