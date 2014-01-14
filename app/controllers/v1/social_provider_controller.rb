@@ -1,5 +1,3 @@
-require "social"
-
 class V1::SocialProviderController < V1::BaseController
   before_filter :require_authentication
   before_filter :validate_update_params!, only: :update
@@ -9,7 +7,9 @@ class V1::SocialProviderController < V1::BaseController
   end
 
   def update
-    uid, info = provider.get_user_info(token, secret)
+
+    uid = provider.info.uid
+    info = provider.info.hash
 
     raise DNM::InvalidJSONData, "token", "Invalid Credentials" if uid.blank?
 
@@ -44,7 +44,7 @@ class V1::SocialProviderController < V1::BaseController
   end
 
   def provider
-    @provider ||= ::Social.provider(provider_name)
+    @provider ||= ::Authentication.provider(provider_name).new(token: token, secret: secret, user: current_user)
   end
 
   def token
@@ -57,11 +57,12 @@ class V1::SocialProviderController < V1::BaseController
 
   def validate_update_params!
     raise DNM::MissingJSONData, "token"  if token.blank?
-    raise DNM::MissingJSONData, "secret" if secret.blank? && provider.meta[:auth] == "OAuth 1.0a"
+    raise DNM::MissingJSONData, "secret" if secret.blank? && provider.is_oauth_1?
   end
 
   def social_network_hash
-    { provider_name => provider.meta_for_user(current_user) }
+    provider = Authentication.provider(provider_name).new(user: current_user)
+    { provider_name => provider.meta_for_user}
   end
 
 end

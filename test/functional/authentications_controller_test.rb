@@ -9,7 +9,6 @@ class AuthenticationsControllerTest < ActionController::TestCase
 
   # Social Authentication
 
-
   test "authentication can be deleted if user has password set" do
     create_signed_in_user_with_authentication
     stub_mixpanel
@@ -92,6 +91,11 @@ class AuthenticationsControllerTest < ActionController::TestCase
     should "successfully create new authentication and log" do
       sign_in @user
       stub_mixpanel
+      Rails.application.config.expects(:perform_social_jobs).twice.returns(true)
+      raw = OpenStruct.new(id: 'dnm', username: 'desksnearme', name: 'Desks Near Me', url: 'https://twitter.com/desksnearme')
+      raw.stubs(:profile_image_url).returns(nil)
+      Twitter::REST::Client.any_instance.stubs(:user).once.returns(raw)
+      Twitter::REST::Client.any_instance.stubs(:friend_ids).once.returns(['1', '2'])
       @tracker.expects(:connected_social_provider).once.with do |user, custom_options|
         user == @user && custom_options == { provider: @provider }
       end

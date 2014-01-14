@@ -1,5 +1,3 @@
-require "social"
-
 class V1::AuthenticationsController < V1::BaseController
 
   def create
@@ -21,12 +19,13 @@ class V1::AuthenticationsController < V1::BaseController
   def social
     token    = json_params["token"]
     secret   = json_params["secret"]
-    provider = ::Social.provider(params[:provider])
+    provider = Authentication.provider(params[:provider]).new(token: token, secret: secret, user: current_user)
 
     raise DNM::MissingJSONData, "token"  if token.blank?
-    raise DNM::MissingJSONData, "secret" if secret.blank? && provider.meta[:auth] == "OAuth 1.0a"
+    raise DNM::MissingJSONData, "secret" if secret.blank? && provider.is_oauth_1?
 
-    uid, info = provider.get_user_info(token, secret)
+    uid = provider.info.uid
+    info = provider.info.to_hash
 
     raise DNM::Unauthorized if uid.blank?
 
