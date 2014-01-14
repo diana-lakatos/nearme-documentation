@@ -3,7 +3,6 @@ class UpdateInfoJob < Job
 
   def initialize(authentication)
     @authentication = authentication
-    @user = @authentication.user
   end
 
   def perform
