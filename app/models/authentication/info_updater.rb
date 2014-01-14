@@ -15,7 +15,7 @@ class Authentication::InfoUpdater
     @authentication.info = info_hash
     @authentication.profile_url = info.profile_url
     @authentication_changes = @authentication.changes
-    @authentication.save
+    @authentication.save!
 
     @user.name ||= info_hash['name']
     @user.biography ||= info_hash['description']
@@ -27,7 +27,7 @@ class Authentication::InfoUpdater
       @user.remote_avatar_url = info_hash['image']
     end
     @user_changes = @user.changes.inspect
-    @user.save
+    @user.save!
 
     self
   end
