@@ -13,8 +13,8 @@
         = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
       .clearfix
 
-  .padding-bottom.credit-card{class: "#{"error" if f.object.errors.include?(:number).present?}"}
-    .span6
+  .padding-bottom.credit-card
+    .span6.card-info{class: "#{"error" if f.object.errors.include?(:number).present?}"}
       = f.label :card_number, "Card number", class: 'control-label'
       .controls.card-number.input-icon-holder-right
         = f.input_field :card_number, required: true, placeholder: 'aaaa aaaa aaaa aaaa', class: 'sessioncamexclude', pattern: "[0-9]*"
@@ -26,7 +26,7 @@
     .span3.card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:exp_month).present? or f.object.errors.include?(:exp_year).present?}"}
       = f.label :card_expires, "Expiration date", class: 'control-label'
       .controls.card-expires
-        = f.input_field :card_expires, input_html: {size: 4}, placeholder: 'MM/YY', required: true, class: 'sessioncamexclude', pattern: "[0-9]*"
+        = f.input_field :card_expires, input_html: {size: 6}, placeholder: 'MM/YYYY', required: true, class: 'sessioncamexclude', pattern: "[0-9]*"
       - if f.object.errors[:exp_month].present?
         %p.error-block
           = f.object.errors[:exp_month].first

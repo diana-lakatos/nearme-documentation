@@ -1,0 +1,16 @@
+test: &default
+
+  client_id: AecizhC4a7ZiGUA25DjOzYwDQSy_gVc7hOcf8zc40P27gZwwlqWTU6zU9Crs
+  client_secret: EKsS3BBF49ckwHJGhGwvj4p8QNfBbhWEqk9PdJI9tqo6SQkLGf9KBiMMOiGh
+  mode: sandbox
+
+development:
+  <<: *default
+
+staging:
+  <<: *default
+
+production:
+  client_id: AbT56hCquUciJvXz3SK7loxk9TIVtoYcxJ53w-ac5E7BlJfFdkN3tlPjiz-W
+  client_secret: EB3XtBDC9SW1TD84r8wvxv3jBNiND7k9X_Tz6G7IrCYc17jeIUlr66XUCPgU
+  mode: live

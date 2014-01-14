@@ -12,6 +12,9 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
 
+  # Includes billing gateway method and charge association
+  include Billing::User
+
   acts_as_paranoid
 
   has_many :authentications,
@@ -83,8 +86,6 @@ class User < ActiveRecord::Base
 
   has_many :user_industries
   has_many :industries, :through => :user_industries
-
-  has_many :charges, :foreign_key => :user_id, :dependent => :destroy
 
   has_many :mailer_unsubscriptions
 

@@ -200,7 +200,7 @@ class SearchControllerTest < ActionController::TestCase
       @tracker.expects(:conducted_a_search).with do |search, custom_options|
         expected_custom_options == custom_options
       end
-      get :index, { :loc => 'adelaide', :lgtype => @listing_type.name.downcase, :lntype => @location_type.name.downcase, :lgpricing => 'daily' }
+      get :index, { :loc => 'adelaide', :lgtype => @listing_type.name.downcase, :lntype => @location_type.name.downcase, :lgpricing => 'daily', :v => 'mixed' }
     end
 
     should 'track search if ignore_search flag is set to 0' do

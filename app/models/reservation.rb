@@ -382,7 +382,6 @@ class Reservation < ActiveRecord::Base
       else
         PAYMENT_STATUSES[:failed]
       end
-
       save!
     end
 
