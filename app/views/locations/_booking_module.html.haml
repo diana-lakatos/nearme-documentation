@@ -1,3 +1,4 @@
+- location_pretty_availability ||= pretty_availability_sentence(listing.location.availability)
 - collapsed ||= false
 .booking-module-container{:class => "#{(listing.hourly_reservations? ? 'booking-hourly' : 'booking-daily')} #{collapsed ? " collapsed" : ""}", :'data-toggleable-booking-module' => true}
   .booking-module
@@ -50,7 +51,14 @@
 
       .clearfix
       .booking-description
-        = listing.description
+        %h3 Description
+        %span= listing.description
+      - listing_availability = pretty_availability_sentence(listing.availability) 
+      - if listing_availability != location_pretty_availability
+        .booking-opening-hours
+          %h3 Hours
+          %span= pretty_availability_sentence(listing.availability)
+
       .calendar-wrapper.date-start
         .calendar
           %span.ico-calender-end
