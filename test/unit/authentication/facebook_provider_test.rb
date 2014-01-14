@@ -21,12 +21,12 @@ class Authentication::FacebookProviderTest < ActiveSupport::TestCase
       assert_nil @facebook_provider.info.website_url
       assert_equal 'http://graph.facebook.com/dnm/picture?type=large', @facebook_provider.info.image_url
 
-      assert_nil @facebook_provider.info.hash['uid']
-      assert_equal 'desksnearme', @facebook_provider.info.hash['nickname']
-      assert_equal 'Desks Near Me', @facebook_provider.info.hash['name']
-      assert_nil @facebook_provider.info.hash['urls']['Facebook']
-      assert_nil @facebook_provider.info.hash['urls']['Website']
-      assert_equal 'http://graph.facebook.com/dnm/picture?type=large', @facebook_provider.info.hash['image']
+      assert_nil @facebook_provider.info.to_hash['uid']
+      assert_equal 'desksnearme', @facebook_provider.info.to_hash['nickname']
+      assert_equal 'Desks Near Me', @facebook_provider.info.to_hash['name']
+      assert_nil @facebook_provider.info.to_hash['urls']['Facebook']
+      assert_nil @facebook_provider.info.to_hash['urls']['Website']
+      assert_equal 'http://graph.facebook.com/dnm/picture?type=large', @facebook_provider.info.to_hash['image']
     end
 
     should 'return friend_ids' do

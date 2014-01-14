@@ -21,12 +21,12 @@ class Authentication::InstagramProviderTest < ActiveSupport::TestCase
       assert_nil @instagram_provider.info.website_url
       assert_equal 'https://pbs.twimg.com/profile_images/6457279_n_bigger.jpg', @instagram_provider.info.image_url
 
-      assert_nil @instagram_provider.info.hash['uid']
-      assert_equal 'desksnearme', @instagram_provider.info.hash['nickname']
-      assert_equal 'Desks Near Me', @instagram_provider.info.hash['name']
-      assert_equal 'http://instagram.com/desksnearme', @instagram_provider.info.hash['urls']['Instagram']
-      assert_nil @instagram_provider.info.hash['urls']['Website']
-      assert_equal 'https://pbs.twimg.com/profile_images/6457279_n_bigger.jpg', @instagram_provider.info.hash['image']
+      assert_nil @instagram_provider.info.to_hash['uid']
+      assert_equal 'desksnearme', @instagram_provider.info.to_hash['nickname']
+      assert_equal 'Desks Near Me', @instagram_provider.info.to_hash['name']
+      assert_equal 'http://instagram.com/desksnearme', @instagram_provider.info.to_hash['urls']['Instagram']
+      assert_nil @instagram_provider.info.to_hash['urls']['Website']
+      assert_equal 'https://pbs.twimg.com/profile_images/6457279_n_bigger.jpg', @instagram_provider.info.to_hash['image']
     end
 
     should 'return friend_ids' do

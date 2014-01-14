@@ -20,12 +20,12 @@ class Authentication::LinkedinProviderTest < ActiveSupport::TestCase
       assert_nil @linkedin_provider.info.website_url
       assert_equal 'https://pbs.twimg.com/profile_images/6457279_n_bigger.jpg', @linkedin_provider.info.image_url
 
-      assert_nil @linkedin_provider.info.hash['uid']
-      assert_nil @linkedin_provider.info.hash['nickname']
-      assert_equal 'Desks Near Me', @linkedin_provider.info.hash['name']
-      assert_nil @linkedin_provider.info.hash['urls']['Linkedin']
-      assert_nil @linkedin_provider.info.hash['urls']['Website']
-      assert_equal 'https://pbs.twimg.com/profile_images/6457279_n_bigger.jpg', @linkedin_provider.info.hash['image']
+      assert_nil @linkedin_provider.info.to_hash['uid']
+      assert_nil @linkedin_provider.info.to_hash['nickname']
+      assert_equal 'Desks Near Me', @linkedin_provider.info.to_hash['name']
+      assert_nil @linkedin_provider.info.to_hash['urls']['Linkedin']
+      assert_nil @linkedin_provider.info.to_hash['urls']['Website']
+      assert_equal 'https://pbs.twimg.com/profile_images/6457279_n_bigger.jpg', @linkedin_provider.info.to_hash['image']
     end
 
     should 'return friend_ids' do

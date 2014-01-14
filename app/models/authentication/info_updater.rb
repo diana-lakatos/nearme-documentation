@@ -10,7 +10,7 @@ class Authentication::InfoUpdater
 
   def update
     info = @provider.info
-    info_hash = info.hash
+    info_hash = info.to_hash
 
     @authentication.info = info_hash
     @authentication.profile_url = info.profile_url

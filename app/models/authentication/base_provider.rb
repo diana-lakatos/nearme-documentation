@@ -48,7 +48,7 @@ class Authentication::BaseProvider
       :description, :location, :verified,
       :image_url, :profile_url, :website_url
 
-    def hash
+    def to_hash
       {
         "nickname"    => username,
         "email"       => email,

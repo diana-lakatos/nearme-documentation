@@ -22,12 +22,12 @@ class Authentication::TwitterProviderTest < ActiveSupport::TestCase
       assert_nil @twitter_provider.info.website_url
       assert_equal 'https://pbs.twimg.com/profile_images/6457279_n_bigger.jpg', @twitter_provider.info.image_url
 
-      assert_nil @twitter_provider.info.hash['uid']
-      assert_equal 'desksnearme', @twitter_provider.info.hash['nickname']
-      assert_equal 'Desks Near Me', @twitter_provider.info.hash['name']
-      assert_nil @twitter_provider.info.hash['urls']['Twitter']
-      assert_nil @twitter_provider.info.hash['urls']['Website']
-      assert_equal 'https://pbs.twimg.com/profile_images/6457279_n_bigger.jpg', @twitter_provider.info.hash['image']
+      assert_nil @twitter_provider.info.to_hash['uid']
+      assert_equal 'desksnearme', @twitter_provider.info.to_hash['nickname']
+      assert_equal 'Desks Near Me', @twitter_provider.info.to_hash['name']
+      assert_nil @twitter_provider.info.to_hash['urls']['Twitter']
+      assert_nil @twitter_provider.info.to_hash['urls']['Website']
+      assert_equal 'https://pbs.twimg.com/profile_images/6457279_n_bigger.jpg', @twitter_provider.info.to_hash['image']
     end
 
     should 'return friend_ids' do
