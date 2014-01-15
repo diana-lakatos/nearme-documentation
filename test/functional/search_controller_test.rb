@@ -185,7 +185,7 @@ class SearchControllerTest < ActionController::TestCase
       get :index, :loc => 'adelaide', :page => 2
     end
 
-    should 'log filters in mixpanel along with other arguments' do
+    should 'log filters in mixpanel along with other arguments for list result type' do
       @listing_type = FactoryGirl.create(:listing_type)
       @location_type = FactoryGirl.create(:location_type)
       @industry = FactoryGirl.create(:industry)
@@ -200,7 +200,24 @@ class SearchControllerTest < ActionController::TestCase
       @tracker.expects(:conducted_a_search).with do |search, custom_options|
         expected_custom_options == custom_options
       end
-      get :index, { :loc => 'adelaide', :listing_types_ids => [@listing_type.id], :location_types_ids => [@location_type.id], :industries_ids => [@industry.id] }
+      get :index, { :loc => 'adelaide', :listing_types_ids => [@listing_type.id], :location_types_ids => [@location_type.id], :industries_ids => [@industry.id], :v => 'list' }
+    end
+
+    should 'log filters in mixpanel along with other arguments for mixed result type' do
+      @listing_type = FactoryGirl.create(:listing_type)
+      @location_type = FactoryGirl.create(:location_type)
+      expected_custom_options = {
+        search_query: 'adelaide', 
+        result_view: 'mixed',
+        result_count: 0, 
+        listing_type_filter: [@listing_type.name],
+        location_type_filter: [@location_type.name],
+        listing_pricing_filter: ['daily']
+      }
+      @tracker.expects(:conducted_a_search).with do |search, custom_options|
+        expected_custom_options == custom_options
+      end
+      get :index, { :loc => 'adelaide', :lgtype => @listing_type.name.downcase, :lntype => @location_type.name.downcase, :lgpricing => 'daily', :v => 'mixed' }
     end
 
     should 'track search if ignore_search flag is set to 0' do

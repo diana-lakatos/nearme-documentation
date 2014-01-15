@@ -30,14 +30,14 @@ class AuthenticationTest < ActiveSupport::TestCase
   end
 
   context 'social connection' do
-    class Authentication::DesksnearmeProvider
+    class Authentication::DesksnearmeProvider < Authentication::BaseProvider
       def initialize(params)
       end
     end
 
     should 'call provider' do
       auth = Authentication.new(@valid_params)
-      Authentication::DesksnearmeProvider.expects(:new).with(auth)
+      Authentication::DesksnearmeProvider.expects(:new_from_authentication).with(auth)
       auth.social_connection
     end
 
@@ -49,7 +49,7 @@ class AuthenticationTest < ActiveSupport::TestCase
       end
     end
   end
-
+  
   should "has a hash for info" do
     auth = Authentication.new(@valid_params)
     auth.info["thing"] = "stuff"

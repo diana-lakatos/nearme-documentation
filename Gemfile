@@ -1,3 +1,5 @@
+ruby '1.9.3'
+
 source 'http://rubygems.org'
 
 gem 'rails', '3.2.16'
@@ -18,6 +20,7 @@ gem 'omniauth-instagram'
 gem 'koala', '~> 1.7.0rc1' # facebook Graph API
 gem 'linkedin-oauth2'
 gem 'twitter', "~> 5.2"
+gem 'instagram'
 
 gem 'fog'
 gem 'geocoder'

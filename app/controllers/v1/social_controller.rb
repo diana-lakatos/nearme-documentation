@@ -1,5 +1,3 @@
-require "social"
-
 class V1::SocialController < V1::BaseController
   before_filter :require_authentication
 
@@ -10,9 +8,9 @@ class V1::SocialController < V1::BaseController
   private
 
   def social_network_hash(user)
-    { facebook: ::Social.provider("facebook").meta_for_user(user),
-      twitter:  ::Social.provider("twitter" ).meta_for_user(user),
-      linkedin: ::Social.provider("linkedin").meta_for_user(user) }
+    { facebook: ::Authentication.provider('facebook').new(user: current_user).meta_for_user,
+      twitter: ::Authentication.provider('facebook').new(user: current_user).meta_for_user,
+      linkedin: ::Authentication.provider('facebook').new(user: current_user).meta_for_user }
   end
 
 end
