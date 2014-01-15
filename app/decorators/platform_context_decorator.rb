@@ -32,6 +32,11 @@ class PlatformContextDecorator
     domain.try(:name) || Rails.application.routes.default_url_options[:host] 
   end
 
+  def build_url_for_path(path)
+    raise "Argument should not contain protocol" unless path[0] == '/'
+    "http://#{host}#{path}"
+  end
+
   private
 
   def platform_context
