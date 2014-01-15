@@ -17,6 +17,10 @@ class PlatformEmail < ActiveRecord::Base
     !unsubscribed_at.nil?
   end
 
+  def subscribed?
+    unsubscribed_at.nil?
+  end
+
   def unsubscribe!
     self.unsubscribed_at = Time.now
     save!
