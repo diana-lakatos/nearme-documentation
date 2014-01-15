@@ -419,6 +419,10 @@ class User < ActiveRecord::Base
     listings
   end
 
+  def can_manage_listing?(listing)
+    listing.company && listing.company.company_users.where(user_id: self.id).any?
+  end
+
   def administered_locations_pageviews_7_day_total
     scoped_locations = (!companies.count.zero? && self == self.companies.first.creator) ? self.companies.first.locations : administered_locations
     scoped_locations = scoped_locations.with_searchable_listings
