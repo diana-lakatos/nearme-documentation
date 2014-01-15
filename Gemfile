@@ -139,7 +139,6 @@ group :test do
   gem 'pickle'
   gem 'turn'
   gem 'webmock'
-  gem 'simplecov', :require => false
   gem 'shoulda'
   gem 'vcr'
   gem 'ruby-prof'
