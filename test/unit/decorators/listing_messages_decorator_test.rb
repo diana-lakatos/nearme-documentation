@@ -60,6 +60,13 @@ class ListingMessagesDecoratorTest < ActionView::TestCase
       assert_equal 0, creators_archived.size
     end
 
+    should 'not break when owner got deleted' do
+      @owner.destroy
+      assert_nothing_raised do
+        ListingMessagesDecorator.new(@owner.listing_messages, @owner).inbox.fetch
+      end
+    end
+
   end
 
 end
