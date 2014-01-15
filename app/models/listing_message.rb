@@ -46,7 +46,7 @@ class ListingMessage < ActiveRecord::Base
   end
 
   def message_from_guest?
-    owner == author
+    owner_id == author_id
   end
 
   def send_notification(platform_context)
@@ -68,7 +68,7 @@ class ListingMessage < ActiveRecord::Base
   private
 
   def kind_for(user)
-    if user.id == owner.id
+    if user.id == owner_id
       :owner
     else
       :listing
