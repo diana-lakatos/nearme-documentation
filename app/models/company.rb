@@ -104,7 +104,7 @@ class Company < ActiveRecord::Base
       end
     end
     if !has_payment_method?
-      CompanyMailer.notify_host_of_no_payout_option(self).deliver
+      CompanyMailer.enqueue.notify_host_of_no_payout_option(self)
       CompanySmsNotifier.notify_host_of_no_payout_option(self).deliver
     end
   end
