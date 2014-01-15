@@ -46,8 +46,8 @@ class @Space.Controller
       @toggleAmenities(event)
 
     @container.on 'click', '[data-booking-trigger]', (event) =>
+      event.preventDefault()
       $(event.target).closest('[data-toggleable-booking-module]').toggleClass('collapsed')
-      false
 
   loadFullGalleryPhotos: ->
     @fullScreenGalleryContainer.find(".loading").show()

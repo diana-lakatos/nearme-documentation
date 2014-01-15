@@ -87,7 +87,7 @@ class LocationsController < ApplicationController
   end
 
   def current_user_can_manage_listing?
-    (user_signed_in? && ( @listing.company && @listing.company.company_users.where(user_id: current_user.id).any?))
+    user_signed_in? && current_user.can_manage_listing?(@listing)
   end
 
 end
