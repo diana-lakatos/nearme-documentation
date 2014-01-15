@@ -8,6 +8,7 @@ class Search.SearchMixedController extends Search.SearchController
     super(form, @container)
     @adjustListHeight()
     @sortValue = @sortField.find(':selected').val()
+    @bindLocationsEvents()
 
   bindEvents: =>
     super
@@ -27,7 +28,9 @@ class Search.SearchMixedController extends Search.SearchController
         deferred = @geocoder.geocodeAddress(query)
         deferred.always (results) =>
           result = results.getBestResult() if results
+          @clearBoundParams()
           @setGeolocatedQuery(query, result)
+
           @submit_form = true
           _.defer =>
             google.maps.event.trigger(@autocomplete, 'place_changed')
@@ -39,29 +42,35 @@ class Search.SearchMixedController extends Search.SearchController
     @searchButton.bind 'click', =>
       @submit_form = true
 
+    @resultsContainer().find('.pagination a').live 'click', (e) =>
+      e.preventDefault()
+      link = $(e.target)
+      page_regexp = /page=(\d+)/gm
+      @loader.show()
+      @clearBoundParams()
+      @triggerSearchFromQuery(page_regexp.exec(link.attr('href'))[1])
+
+
   adjustListHeight: ->
     @list_container().height($(window).height() - @list_container().offset().top)
 
 
   initializeMap: ->
-    super
-    @map.clusterer.addListener 'click', (cluster) =>
-      @processingResults = true
-      listings = _.map(cluster.getMarkers(), (marker) => @map.getListingForMarker(marker))
-      listings_query = '.listing[data-id="' + listings[listings.length - 1]._id + '"]'
-      location_container = @resultsContainer().find("div#{listings_query}").parents('.location')
-      if location_container.length > 0
-        animate_position = location_container.position().top + @list_container().offset().top
-        @list_container().animate
-          scrollTop: animate_position
-          () =>
-            @processingResults = false
-      else
-        location_id = @hiddenResultsContainer().find("article#{listings_query}").data('location')
-        @getPageWithLocation(location_id)
+    mapContainer = @container.find('#listings_map')[0]
+    return unless mapContainer
+    @map = new Search.MapMixed(mapContainer, this)
 
-    google.maps.event.addListener @map.googleMap, 'zoom_changed', =>
-      @map.clusterer.setZoomOnClick(false)
+    # Add our map viewport search control, which enables/disables searching on map move
+    @redoSearchMapControl = new Search.RedoSearchMapControl(enabled: true)
+    @map.addControl(@redoSearchMapControl)
+
+    resizeMapThrottle = _.throttle((=> @map.resizeToFillViewport()), 200)
+
+    $(window).resize resizeMapThrottle
+    $(window).trigger('resize')
+
+    @updateMapWithListingResults()
+
 
   initializeAutocomplete: ->
     @autocomplete = new google.maps.places.Autocomplete(@queryField[0], {})
@@ -75,91 +84,28 @@ class Search.SearchMixedController extends Search.SearchController
         @setGeolocatedQuery(@queryField.val(), place)
 
 
-  getPageWithLocation: (location_id) ->
-    @assignFormParams(
-      page_with_location: location_id
-    )
-    @loader.showWithoutLocker()
-    @triggerSearchRequest().success (html) =>
-      $.waypoints('destroy')
-      @processingResults = true
-      @showResults(html)
-      @loader.hide()
-      location_container = @resultsContainer().find('article.location[data-id="' + location_id + '"]')
-      if location_container.length > 0
-        @assignFormParams(
-          page_with_location: ''
-        )
-        @lastListPosition = null
-        @setListOnLocation(location_id)
-      @processingResults = false
-
-
-  setListOnLocation: (location_id) ->
-    setTimeout( =>
-      _.defer =>
-        @list_container().get(0).scrollTop = $('article.location[data-id=' + location_id + ']').position().top + @list_container().offset().top
-        if @list_container().get(0).scrollTop != @lastListPosition
-          @lastListPosition = @list_container().get(0).scrollTop
-          @setListOnLocation(location_id)
-        @initializeWaypoints()
-    , 1500)
+  markerClicked: (marker) ->
+    @processingResults = true
+    listing = @map.getListingForMarker(marker)
+    location_container = @resultsContainer().find("article[data-id=#{listing.id()}]")
+    if location_container.length > 0
+      animate_position = location_container.position().top + @list_container().offset().top
+      @list_container().animate
+        scrollTop: animate_position
+        () =>
+          @processingResults = false
 
 
   getListingsFromResults: ->
     listings = []
-    @hiddenResultsContainer().find('article.listing').each (i, el) =>
+    @hiddenResultsContainer().find('.location-marker').each (i, el) =>
       listing = @listingForElementOrBuild(el)
       listings.push listing
     listings
 
-  initializeWaypoints: ->
-    $.waypoints('destroy')
-    top_pagination = $('.top-pagination .pagination')
-    bottom_pagination = $('.bottom-pagination .pagination')
-    top_pagination.hide()
-    bottom_pagination.hide()
-    loader = $('<div class="ias_loader"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div>')
-    next_url = bottom_pagination.find('.next_page').attr('href')
-    if next_url
-      $('article.location').last().waypoint
-        handler: =>
-          bottom_pagination.before(loader)
-          $.get next_url,
-            (results) =>
-              loader.remove()
-              bottom_pagination.before($(results).find('article.location'))
-              bottom_pagination.replaceWith($(results).find('.bottom-pagination .pagination'))
-              @initializeWaypoints()
-        context: 'div[data-list]'
-        offset: $(window).height() - $('article.location').last().height()
-        triggerOnce: true
-        continuous: false
-
-    previous_url = top_pagination.find('.previous_page').attr('href')
-    first_location = $('article.location').first()
-    if previous_url and parseInt(first_location.data('offset')) != 0
-      first_location.waypoint
-        handler: =>
-          top_pagination.after(loader)
-          $.get previous_url,
-            (results) =>
-              loader.remove()
-              top_pagination.after($(results).find('article.location'))
-              top_pagination.replaceWith($(results).find('.top-pagination .pagination'))
-              setTimeout( =>
-                @list_container().get(0).scrollTop = $('article.location[data-id=' + first_location.data('id') + ']').position().top + @list_container().offset().top
-                @initializeWaypoints()
-              , 200)
-        context: 'div[data-list]'
-        offset: 100
-        triggerOnce: true
-        continuous: false
-        onlyOnScroll: true
 
   initializeEndlessScrolling: ->
     @list_container().scrollTop(0)
-    @initializeWaypoints()
 
 
   # Trigger the API request for search
@@ -176,7 +122,7 @@ class Search.SearchMixedController extends Search.SearchController
 
   # Trigger the search from manipulating the query.
   # Note that the behaviour semantics are different to manually moving the map.
-  triggerSearchFromQuery: ->
+  triggerSearchFromQuery: (page = false) ->
     # assign filter values
     @assignFormParams(
       lntype: _.toArray(@container.find('input[name="location_types_ids[]"]:checked').map(-> $(this).val())).join(',')
@@ -184,6 +130,7 @@ class Search.SearchMixedController extends Search.SearchController
       lgpricing: _.toArray(@container.find('input[name="listing_pricing[]"]:checked').map(-> $(this).val())).join(',')
       sort: @container.find('#sort').val()
       loc: @form.find("input#search").val().replace(', United States', '')
+      page: page || 1
     )
     super
 
@@ -197,9 +144,7 @@ class Search.SearchMixedController extends Search.SearchController
 
 
   updateMapWithListingResults: ->
-    @map.markers = {}
-    @map.clusterer.clearMarkers()
-    @map.popover.close()
+    @map.resetMapMarkers()
 
     listings = @getListingsFromResults()
 
@@ -221,24 +166,19 @@ class Search.SearchMixedController extends Search.SearchController
         # In case the map is hidden
         @map.resizeToFillViewport()
 
-    setTimeout( =>
-      @map.clusterer.redraw_()
-    , 500)
-
 
   # Within the current map display, plot the listings from the current results. Remove listings
   # that aren't within the current map bounds from the results.
   plotListingResultsWithinBounds: ->
-    @map.markers = {}
-    @map.clusterer.clearMarkers()
+    @map.resetMapMarkers()
     super
-    @map.clusterer.redraw_()
 
 
   showResults: (html) ->
-    super(html)
+    @resultsContainer().replaceWith(html)
     @updateResultsCount()
     @list_container().scrollTop(0)
+    @bindLocationsEvents()
 
 
   # Trigger automatic updating of search results
@@ -258,3 +198,83 @@ class Search.SearchMixedController extends Search.SearchController
     # to window.history.replaceState, but it's *absolutely mandatory* in this case. Removing it now will lead to infiite redirection in IE lte 9
     url = decodeURIComponent("?#{$.param(filtered_params)}")
     History.replaceState(params, @container.find('input[name=meta_title]').val(), url)
+
+
+  bindLocationsEvents: ->
+    self = @
+    @resultsContainer().find('article.location').on 'mouseout', ->
+      location_id = $(this).data('id')
+      marker = self.map.markers[location_id]
+      if marker
+        marker.setIcon(SearchResultsGoogleMapMarker.getMarkerOptions().default.image)
+        marker.setZIndex(google.maps.Marker.MAX_ZINDEX)
+
+    @resultsContainer().find('article.location').on 'mouseover', ->
+      location_id = $(this).data('id')
+      marker = self.map.markers[location_id]
+      if marker
+        marker.setIcon(SearchResultsGoogleMapMarker.getMarkerOptions().hover.image)
+        marker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1)
+
+
+  clearBoundParams: ->
+    @assignFormParams(
+      page: 1
+      nx: ''
+      ny: ''
+      sx: ''
+      sy: ''
+      lat: ''
+      lng: ''
+    )
+
+
+  # Triggers a search request with the current map bounds as the geo constraint
+  triggerSearchWithBounds: ->
+    bounds = @map.getBoundsArray()
+    @assignFormParams(
+      nx: @formatCoordinate(bounds[0]),
+      ny: @formatCoordinate(bounds[1]),
+      sx: @formatCoordinate(bounds[2]),
+      sy: @formatCoordinate(bounds[3]),
+      ignore_search_event: 1,
+      page: 1
+    )
+
+    @triggerSearchAndHandleResults =>
+      @plotListingResultsWithinBounds()
+      @assignFormParams(
+        ignore_search_event: 1
+      )
+      @clearBoundParams()
+
+
+  # Returns special search params based on a geolocation result (Search.Geolocator.Result), or no result.
+  searchParamsFromGeolocationResult: (result) ->
+    params = { lat: null, lng: null, nx: null, ny: null, sx: null, sy: null, \
+               country: null, state: null, city: null, suburb: null, street: null,
+               postcode: null
+    }
+
+    if result
+      params['country'] = result.country()
+      params['state']   = result.state()
+      params['city']    = result.city()
+      params['suburb']  = result.suburb()
+      params['street']  = result.street()
+      params['postcode']  = result.postcode()
+      loc_components = []
+      if params['city']
+        loc_components.push params['city']
+      if params['country'] and params['country'] == 'United States' and result.stateShort()
+        loc_components.push result.stateShort()
+      else if params['state']
+        loc_components.push params['state']
+      if params['country'] and params['country'] != 'United States'
+        loc_components.push params['country']
+
+      params['loc'] = loc_components.join(', ')
+    else
+      params['loc'] = @form.find("input#search").val().replace(', United States', '')
+
+    params

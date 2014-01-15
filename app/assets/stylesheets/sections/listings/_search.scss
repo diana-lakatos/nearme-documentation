@@ -1182,6 +1182,42 @@ section.search section#results.mixed {
         }
       }
 
+      .search-pagination {
+        padding-top: 10px;
+        padding-bottom: 15px;
+
+        .page-entries-info {
+          font-weight: bold;
+          font-size: 0.9em;
+        }
+
+        .pagination {
+          margin: 0;
+          padding-top: 5px;
+
+          a {
+            color: $gray120;
+          }
+
+          span, em, a {
+            display: inline-block;
+            border: 1px solid $gray210;
+            @include border-radius(2px);
+            min-width: 30px;
+            text-align: center;
+          }
+
+          span.disabled {
+            display: none;
+          }
+
+          a:hover, em.current {
+            color: $gray60;
+            border-color: $gray120;
+          }
+        }
+      }
+
       @media (max-width: 2 * $iphone-portrait) {
         padding-right: 10px;
       }
