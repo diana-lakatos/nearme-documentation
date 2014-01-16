@@ -39,7 +39,7 @@ class EncryptStripeRelatedColumns < ActiveRecord::Migration
     end
 
     Instance.where('encrypted_stripe_api_key is not null').find_each do |instance|
-      instance.update_column(:stripe_api_key, user.stripe_api_key)
+      instance.update_column(:stripe_api_key, instance.stripe_api_key)
     end
 
     remove_column :users, :encrypted_stripe_id
