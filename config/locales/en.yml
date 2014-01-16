@@ -132,8 +132,8 @@ en:
     search_notifications:
       you_will_be_notified: "You will be notified when a %{bookable_noun} is added at this location."
     listings:
-      listing_inactive: "This listing is inactive. Displaying other listings near %{address}."
-      listing_disabled: "This listing has been temporarily disabled by the owner. Check out some others near you!"
+      listing_inactive: "This listing is inactive. Displaying other listings in this location."
+      listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
     listing_messages:
       message_sent: "Your message was sent!"
       message_archived: "Your message was archived!"

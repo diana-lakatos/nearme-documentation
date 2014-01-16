@@ -2,7 +2,7 @@ class Location < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
   has_paper_trail
   extend FriendlyId
-  friendly_id :formatted_address, use: :slugged
+  friendly_id :urlify, use: :slugged
 
   include Impressionable
 
@@ -49,6 +49,7 @@ class Location < ActiveRecord::Base
   has_many :availability_rules, :order => 'day ASC', :as => :target
 
   has_many :impressions, :as => :impressionable, :dependent => :destroy
+  has_many :reviews, :through => :listings
 
   validates_presence_of :company, :address, :latitude, :longitude, :location_type_id, :currency
   validates_presence_of :description 
@@ -128,6 +129,10 @@ class Location < ActiveRecord::Base
     read_attribute(:formatted_address).presence || read_attribute(:address)
   end
 
+  def state_code
+    @state_code ||= Location::GoogleGeolocationDataParser.new(address_components).fetch_address_component("state", :short)
+  end
+
   def parse_address_components
     if address_components_changed?
       data_parser = Location::GoogleGeolocationDataParser.new(address_components)
@@ -205,5 +210,19 @@ class Location < ActiveRecord::Base
         self.longitude = nil
       end
     end
+  end
+
+  def urlify
+    # given company name is My Company and city is San Francisco, generated "my+company-san+francisco"
+    "#{convert_string_to_slug(company.try(:name))}-#{convert_string_to_slug(city)}"
+  end
+
+  def convert_string_to_slug(string)
+    string.try(:parameterize, '+')
+  end
+
+  # we already took care of parameterization
+  def normalize_friendly_id(string)
+    string.downcase
   end
 end

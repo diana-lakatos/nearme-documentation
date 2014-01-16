@@ -1,5 +1,5 @@
 #open_graph_content.hidden
-  = render :partial => 'shared/og_meta', :locals => { :listing => @reservation.listing, :url => location_listing_url(@reservation.listing.location, @reservation.listing) }
+  = render :partial => 'shared/og_meta', :locals => { :object => @reservation.listing, :url => location_url(@reservation.listing.location, @reservation.listing) }
 %div{class: section_class}
   %header
     %h2
@@ -8,7 +8,7 @@
   .icons
     %h3 Share your travel plans
     %ul.no-bullets
-      - url = location_listing_url(@listing.location, @listing)
+      - url = location_url(@listing.location, @listing)
       - text = "I just booked a #workspace at #{@listing.name} via @DesksNearMe. Find a desk near you!"
       %li= share_to_facebook(url, 'facebook-full')
       %li= share_to_twitter(url, text)

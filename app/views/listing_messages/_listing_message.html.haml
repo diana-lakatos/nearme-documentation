@@ -11,7 +11,7 @@
         = link_to truncate(listing_message.body, length: 60), listing_listing_message_path(listing.presence || listing_message.listing_with_deleted, listing_message), title: listing_message.body
       %p.link-to-listing
         - if listing
-          = link_to listing.name, location_listing_path(listing.location, listing)
+          = link_to listing.name, location_path(listing.location, listing)
         - else
           = listing_message.listing_with_deleted.try(:name)
 
