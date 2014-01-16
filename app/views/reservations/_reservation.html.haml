@@ -6,7 +6,7 @@
           = reservation.my_booking_status_info
       .span12.reservation-information
         %div{:class => reservation.archived? ? 'span6' : 'span5'}
-          = link_to reservation.listing.name, location_listing_path(reservation.listing.location, reservation.listing)
+          = link_to reservation.listing.name, location_path(reservation.listing.location, reservation.listing)
           %br
           %span.address= link_to reservation.listing.location.address, "http://maps.apple.com/?q=#{reservation.listing.location.address}", target: '_blank'
         .span2

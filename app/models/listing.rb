@@ -27,6 +27,8 @@ class Listing < ActiveRecord::Base
   has_many :amenity_holders, as: :holder
   has_many :amenities, through: :amenity_holders
 
+  has_many :reviews, :through => :reservations
+
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :photos, :allow_destroy => true
 
@@ -321,6 +323,10 @@ class Listing < ActiveRecord::Base
   def disable!
     self.enabled = false
     self.save(validate: false)
+  end
+
+  def disabled?
+    !enabled?
   end
 
   def enable!

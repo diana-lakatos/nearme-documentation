@@ -8,6 +8,6 @@ class ListingDecorator < Draper::Decorator
   end
 
   def user_message_summary(user_message)
-    link_to user_message.thread_context.name, location_listing_path(user_message.thread_context.location, user_message.thread_context)
+    link_to user_message.thread_context.name, location_path(user_message.thread_context.location, user_message.thread_context)
   end
 end

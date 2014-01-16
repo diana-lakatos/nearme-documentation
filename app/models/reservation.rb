@@ -24,6 +24,11 @@ class Reservation < ActiveRecord::Base
   attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
     :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
 
+  has_many :reviews, 
+    :class_name => 'GuestRating', 
+    :inverse_of => :reservation, 
+    :dependent => :destroy
+
   has_many :periods,
            :class_name => "ReservationPeriod",
            :inverse_of => :reservation,
