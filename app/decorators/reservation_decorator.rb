@@ -1,4 +1,6 @@
 class ReservationDecorator < Draper::Decorator
+  include Draper::LazyHelpers
+
   include CurrencyHelper
   include TooltipHelper
 
@@ -151,6 +153,14 @@ class ReservationDecorator < Draper::Decorator
     else
       "<i class='#{status_icon}'></i>".html_safe
     end
+  end
+
+  def user_message_recipient
+    owner
+  end
+
+  def user_message_summary(user_message)
+    link_to user_message.thread_context.name, location_listing_path(user_message.thread_context.location, user_message.thread_context.listing)
   end
 
   private

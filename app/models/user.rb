@@ -89,6 +89,11 @@ class User < ActiveRecord::Base
 
   has_many :mailer_unsubscriptions
 
+  has_many :authored_messages,
+           :class_name => "UserMessage",
+           :foreign_key => "author_id",
+           :inverse_of => :author
+
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -487,19 +492,6 @@ class User < ActiveRecord::Base
     authentications.where(provider: provider).
       where('profile_url IS NOT NULL').
       order('created_at asc').last.try(:profile_url)
-  end
-
-  def has_access_to_message_context?(message_context)
-    case message_context
-    when Listing, User
-      true
-    when Reservation
-      self == message_context.owner ||
-        self == message_context.listing.administrator ||
-        self == message_context.listing.creator
-    else
-      false
-    end
   end
 
 end

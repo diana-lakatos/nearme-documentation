@@ -18,4 +18,8 @@ class UserMessageDecorator < Draper::Decorator
     classes.join(' ')
   end
 
+  def available_for_reply?
+    thread_context.present? && thread_owner.present? && thread_recipient.present?
+  end
+
 end

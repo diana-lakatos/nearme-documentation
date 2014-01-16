@@ -10,7 +10,7 @@
       %p.body
         = link_to truncate(user_message.body, length: 60), polymorphic_path([thread_context.presence || user_message.thread_context_with_deleted, user_message]), title: user_message.body
       %p.link-to-listing
-        = user_message_context_link(user_message) 
+        = user_messages_decorator.user_message_context_link(user_message)
 
 
     .span2.actions

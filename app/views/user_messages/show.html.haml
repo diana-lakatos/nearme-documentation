@@ -3,11 +3,11 @@
     %h1 Messages
 
     .box
-      = render "user_messages/header"
+      = render "user_messages/header", messages: user_messages_decorator
 
-      - if @show_user_message.thread_context.present?
+      - if @displayed_user_message.available_for_reply?
         .row-fluid
-          = simple_form_for @user_message, url: polymorphic_url([@show_user_message.thread_context, @user_message]) do |f|
+          = simple_form_for @user_message, url: polymorphic_url([@displayed_user_message.thread_context, @user_message]) do |f|
             = f.hidden_field :replying_to_id
             - if @user_message.errors.present?
               .span12.errors

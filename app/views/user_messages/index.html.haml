@@ -3,7 +3,7 @@
     %h1 Messages
 
     .box
-      = render "header"
+      = render "header", messages: user_messages_decorator
 
       - if @threaded_user_messages.blank?
         - if params[:action] == 'index'

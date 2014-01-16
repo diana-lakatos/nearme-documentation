@@ -21,6 +21,8 @@ class UserMessage < ActiveRecord::Base
 
   scope :by_created, -> {order('created_at desc')}
 
+  after_create :update_recipient_unread_message_counter
+
   def thread_scope
     [thread_owner_id, thread_recipient_id, thread_context_id, thread_context_type]
   end
@@ -49,6 +51,15 @@ class UserMessage < ActiveRecord::Base
     send archived_column_for(user)
   end
 
+  def archive_for!(user)
+    column = archived_column_for(user)
+    UserMessage.update_all({column => true},
+                              { thread_owner_id: thread_owner_id,
+                                thread_recipient_id: thread_recipient_id,
+                                thread_context_id: thread_context_id,
+                                thread_context_type: thread_context_type})
+  end
+
   def to_liquid
     UserMessageDrop.new(self)
   end
@@ -71,13 +82,41 @@ class UserMessage < ActiveRecord::Base
     @thread_context_with_deleted ||= thread_context_type.constantize.with_deleted.find_by_id(thread_context_id)
   end
 
+  def set_message_context_from_request_params params
+    SetMessageThreadService.new(self, params).run
+  end
+
+  # check if author of this message can join conversation in message_context
+  def author_has_access_to_message_context?
+    case thread_context
+    when Listing, User
+      true
+    when Reservation
+      author == thread_context.owner ||
+        author == thread_context.listing.administrator ||
+        author == thread_context.listing.creator
+    else
+      false
+    end
+  end
+
+  def update_unread_message_counter_for(user)
+    actual_count = user.reload.decorate.unread_user_message_threads.fetch.size
+    user.unread_user_message_threads_count = actual_count
+    user.save!
+  end
+
   private
 
   def kind_for(user)
-    if user.id == thread_owner.id
+    if user.id == thread_owner_id
       :owner
     else
       :recipient
     end
+  end
+
+  def update_recipient_unread_message_counter
+    update_unread_message_counter_for(recipient)
   end
 end
