@@ -1,15 +1,13 @@
 class PlatformEmail < ActiveRecord::Base
-  EMAIL_VALIDATOR = %r{^(?:[_a-z0-9\-\+]+)(\.[_a-z0-9\-\+]+)*@([a-z0-9\-]+)(\.[a-zA-Z0-9\-\.]+)*(\.[a-z]{2,4})$}i
-
   validates :email, uniqueness: { case_sensitive: true }
   validates :email, presence: true
-  validates_format_of :email, with: EMAIL_VALIDATOR, multiline: true
+  validates :email, email: true
 
   scope :unnotified, -> {where(notified_at: nil)}
   after_create :enqueue_notification
 
   def enqueue_notification
-    PlatformMailer.delay(run_at: 24.hours.from_now).email_notification(self)
+    PlatformMailer.enqueue_later(24.hours).email_notification(self)
     touch(:notified_at)
   end
 

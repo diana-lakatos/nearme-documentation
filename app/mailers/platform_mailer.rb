@@ -1,4 +1,5 @@
 class PlatformMailer < ActionMailer::Base
+  extend Job::SyntaxEnhancer
 
   def email_notification(email)
     verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)

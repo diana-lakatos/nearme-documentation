@@ -28,7 +28,6 @@ class PlatformHomeController < ActionController::Base
     from_name = params[:email_data][:your_name].to_s.gsub(%r{</?[^>]+?>}, '')
     params[:email_data][:emails].to_s.split(',').each do |email|
       email.strip!
-      next if email !~ PlatformEmail::EMAIL_VALIDATOR
       PlatformMailer.email_a_friend(from_name, email).deliver
     end
     render :nothing => true, :status => 200, :content_type => 'text/html'
