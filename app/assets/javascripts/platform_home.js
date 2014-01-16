@@ -2,7 +2,7 @@
 //= require ./vendor/jquery-ui-1.9.2.custom.min
 //= require ./vendor/modernizr
 //= require ./vendor/placeholder
-//= require ./platform_home/bootstrap
+//= require bootstrap
 //= require ./vendor/jquery.maximage
 //= require ./vendor/jquery.simplyscroll
 //= require ./platform_home/home
