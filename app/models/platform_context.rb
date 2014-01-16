@@ -37,6 +37,7 @@ class PlatformContext
     else
       initialize_with_instance(Instance.default_instance)
     end
+    self
   end
 
   def initialize_with_partner(partner)
@@ -45,14 +46,20 @@ class PlatformContext
     @instance = @partner.instance 
     @theme = @partner.theme.presence
     @domain ||= @partner.domain
+    self
   end
 
   def initialize_with_company(company)
-    @white_label_company = company
-    @platform_context_detail = @white_label_company
-    @instance = @white_label_company.instance
-    @theme = @white_label_company.theme
-    @domain ||= @white_label_company.domain
+    if company.white_label_enabled
+      @white_label_company = company
+      @platform_context_detail = @white_label_company
+      @instance = company.instance
+      @theme = company.theme
+      @domain ||= company.domain
+    else
+      initialize_with_instance(company.instance)
+    end
+    self
   end
 
   def initialize_with_instance(instance)
@@ -62,6 +69,7 @@ class PlatformContext
     # the reason why we don't want default instance to have domain is that currently it has assigned only one domain as a hack - api.desksnear.me and 
     # our urls in mailers will be wrong
     @domain ||= @instance.domains.try(:first) unless @instance.is_desksnearme?
+    self
   end
 
   def white_label_company_user?(user)

@@ -75,9 +75,9 @@ class RatingReminderJobTest < ActiveSupport::TestCase
 
     should 'not send any reminders to expired reservations' do
       stub_local_time_to_return_hour(Location.any_instance, 12)
-      RatingReminderJob.new(Date.current.to_s).perform
-
-      assert_equal 0, ActionMailer::Base.deliveries.size
+      assert_no_difference 'ActionMailer::Base.deliveries.size' do
+        RatingReminderJob.new(Date.current.to_s).perform
+      end
     end
 
   end

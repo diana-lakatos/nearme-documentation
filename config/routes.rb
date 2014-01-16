@@ -1,6 +1,7 @@
 DesksnearMe::Application.routes.draw do
 
   if defined? MailView
+    mount CompanyMailerPreview => 'mail_view/companies'
     mount ReservationMailerPreview => 'mail_view/reservations'
     mount UserMailerPreview => 'mail_view/users'
     mount PostActionMailerPreview => 'mail_view/post_action'

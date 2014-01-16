@@ -34,7 +34,7 @@ class UserMessagesController < ApplicationController
       if request.xhr?
         render :template => 'user_messages/new'
       else
-        @show_user_message = @user_message
+        @displayed_user_message = @user_message
         @user_messages = UserMessage.for_thread(@user_message.thread_owner, @user_message.thread_recipient, @user_message.thread_context || @user_message.thread_context_with_deleted).by_created.decorate
         render :show
       end
@@ -42,10 +42,10 @@ class UserMessagesController < ApplicationController
   end
 
   def show
-    @show_user_message = @message_context.user_messages.find(params[:id])
-    @user_message = @message_context.user_messages.new(replying_to_id: @show_user_message.id)
+    @displayed_user_message = @message_context.user_messages.find(params[:id])
+    @user_message = @message_context.user_messages.new(replying_to_id: @displayed_user_message.id)
 
-    @user_messages = UserMessage.for_thread(@show_user_message.thread_owner, @show_user_message.thread_recipient, @show_user_message.thread_context || @show_user_message.thread_context_with_deleted).by_created.decorate
+    @user_messages = UserMessage.for_thread(@displayed_user_message.thread_owner, @displayed_user_message.thread_recipient, @displayed_user_message.thread_context || @displayed_user_message.thread_context_with_deleted).by_created.decorate
 
     # All unread messages are marked as read
     to_mark_as_read = @user_messages.select{|m| m.unread_for?(current_user)}

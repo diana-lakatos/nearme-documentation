@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
   before_filter :register_platform_context_as_lookup_context_detail
   before_filter :redirect_if_domain_not_valid
   before_filter :set_raygun_custom_data
+  before_filter :filter_out_token
 
   def current_user
     super.try(:decorate)
@@ -138,6 +139,10 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     url_without_authentication_token(stored_url_for(resource))
+  end
+
+  def filter_out_token
+    redirect_to url_without_authentication_token(request.original_url) if params[:token]
   end
 
   def after_sign_up_path_for(resource)
@@ -265,6 +270,7 @@ class ApplicationController < ActionController::Base
     uri = Addressable::URI.parse(url)
     parameters = uri.query_values
     parameters.try(:delete, 'token')
+    parameters = nil if not parameters.present?
     uri.query_values = parameters
     uri.to_s
   end

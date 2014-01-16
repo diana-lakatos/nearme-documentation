@@ -23,19 +23,24 @@ class Authentication < ActiveRecord::Base
   }
 
   after_create :find_friends
+  after_create :update_info
 
   AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram"]
 
   def social_connection
-    @social_connection ||= "Authentication::#{provider_name.capitalize}Provider".constantize.new(self)
-  end
-
-  def provider_name
-    provider.titleize
+    @social_connection ||= self.class.provider_class(provider).new_from_authentication(self)
   end
 
   def self.available_providers
     AVAILABLE_PROVIDERS
+  end
+
+  def self.provider(provider)
+    provider_class(provider)
+  end
+
+  def self.provider_class(provider)
+    "Authentication::#{provider.titleize}Provider".constantize
   end
 
   def connections_count
@@ -55,5 +60,9 @@ class Authentication < ActiveRecord::Base
 
   def find_friends
     FindFriendsJob.perform(self)
+  end
+
+  def update_info
+    UpdateInfoJob.perform(self)
   end
 end

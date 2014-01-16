@@ -4,9 +4,9 @@ class V1::SocialControllerTest < ActionController::TestCase
 
   test "should get data" do
     authenticate!
-    Social::Facebook.stubs(:user_linked?).returns(false)
-    Social::Twitter.stubs(:user_linked?).returns(true)
-    Social::Linkedin.stubs(:user_linked?).returns(false)
+    User.any_instance.stubs(:linked_to?).with('facebook').returns(false)
+    User.any_instance.stubs(:linked_to?).with('twitter').returns(true)
+    User.any_instance.stubs(:linked_to?).with('linkedin').returns(false)
 
     get :show
     assert_response :success
