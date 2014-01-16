@@ -23,7 +23,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
 
     should "only allow charges of the same currency" do
-      Billing::Gateway::BaseProcessor.stubs(:find_ingoing_processor_class).with('NZD').returns(Billing::Gateway::StripeProcessor).at_least(1)
+      Billing::Gateway::StripeProcessor.stubs(:currency_supported?).with('NZD').returns(true).at_least(1)
       rc = ReservationCharge.create!(
         :reservation => @reservation_1,
         :subtotal_amount => 10,
@@ -85,8 +85,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
 
   context 'payout' do
     setup do
-
-      Billing::Gateway::BaseProcessor.stubs(:find_outgoing_processor_class).with(@company.instance, @company).returns(Billing::Gateway::PaypalProcessor).once
+      Billing::Gateway::PaypalProcessor.stubs(:is_supported_by?).returns(true).twice
       @payment_transfer = @company.payment_transfers.build
       @payment_transfer.reservation_charges = @reservation_charges
     end

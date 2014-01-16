@@ -46,5 +46,6 @@ DesksnearMe::Application.configure do
 
   config.instagram_key = "5aa60d9c54ba49f086cec9693ba442c5"
   config.instagram_secret = "70d8ada7eea04223ad04d40ddd30c642"
-
+  config.encrypt_sensitive_db_columns = true
+  config.paypal_mode = 'live'
 end

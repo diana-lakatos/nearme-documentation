@@ -9,6 +9,12 @@ FactoryGirl.define do
     service_fee_guest_percent '10.00'
     service_fee_host_percent '10.00'
     paypal_email 'sender@example.com'
+    paypal_username 'john'
+    paypal_password 'pass'
+    paypal_client_id '123'
+    paypal_client_secret 'secret'
+    paypal_signature 'sig'
+    paypal_app_id 'app-123'
 
     after(:create) do |instance|
       instance.theme = FactoryGirl.create(:theme, :skip_compilation => true) unless instance.theme

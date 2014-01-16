@@ -1,6 +1,4 @@
 class Billing::Gateway::BaseProcessor
-  CREDIT_CARD_PROCESSORS = [Billing::Gateway::StripeProcessor, Billing::Gateway::PaypalProcessor]
-  PAYOUT_PROCESSORS = [Billing::Gateway::PaypalProcessor]
 
   attr_accessor :user
 
@@ -20,22 +18,16 @@ class Billing::Gateway::BaseProcessor
     self
   end
 
-  def self.find_ingoing_processor_class(currency)
-    CREDIT_CARD_PROCESSORS.find { |potential_processor| potential_processor.ingoing_payment_supported?(currency) }
+  def self.instance_supported?(instance)
+    raise "#{self} must implement instance_supported? method"
   end
 
-  def self.find_outgoing_processor_class(sender, receiver)
-    PAYOUT_PROCESSORS.find { |potential_processor| potential_processor.outgoing_payment_supported?(sender, receiver) }
+  def self.currency_supported?(instance)
+    raise "#{self} must implement currency_supported? method"
   end
 
-  # Responsible for determining whether given currency can be processed with certain processor
-  def ingoing_payment_supported?(currency)
-    raise "#{self.class.name} must implement ingoing_payment_supported?" 
-  end
-
-  # Responsible for determining the right processor for both parties via which transfer will be processed
-  def outgoing_payment_supported?(sender, receiver)
-    raise "#{self.class.name} must implement outgoing_payment_supported?" 
+  def self.processor_supported?(instance)
+    raise "#{self} must implement processor_supported? method"
   end
 
   # Make a charge against the user
@@ -78,6 +70,11 @@ class Billing::Gateway::BaseProcessor
   # Contains implementation for processing credit card by third party
   def process_charge
     raise "#{self.class.name} must implement process_charge"
+  end
+
+  # Contains implementation for transferring money to company
+  def process_payout
+    raise "#{self.class.name} must implement process_payout"
   end
 
   protected
