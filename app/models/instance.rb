@@ -4,10 +4,10 @@ class Instance < ActiveRecord::Base
                   :service_fee_guest_percent, :service_fee_host_percent, :bookable_noun, :lessor, :lessee,
                   :listing_amenity_types_attributes, :location_amenity_types_attributes, :skip_company, :pricing_options,
                   :stripe_api_key, :stripe_public_key, :paypal_username, :paypal_password, :paypal_signature, :paypal_app_id, 
-                  :paypal_client_id, :paypal_client_secret
+                  :paypal_client_id, :paypal_client_secret, :balanced_api_key
 
   attr_encrypted :paypal_username, :paypal_password, :paypal_signature, :paypal_app_id, :stripe_api_key,
-    :paypal_client_id, :paypal_client_secret, :key => lambda { |instance| "#{DesksnearMe::Application.config.secret_token}#{instance.id}" }, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+    :paypal_client_id, :paypal_client_secret, :balanced_api_key, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   has_one :theme, :as => :owner, dependent: :destroy
 

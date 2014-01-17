@@ -161,7 +161,7 @@ class User < ActiveRecord::Base
     :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
     :partner_id, :instance_id, :domain_id
 
-  attr_encrypted :stripe_id, :paypal_id, :key => lambda { |user| "#{DesksnearMe::Application.config.secret_token}#{user.id}" }, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+  attr_encrypted :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   delegate :to_s, :to => :name
 
@@ -385,6 +385,14 @@ class User < ActiveRecord::Base
 
   def to_param
     caller[0].include?('friendly_id') ? super : id
+  end
+
+  def to_balanced_params
+    {
+      name: name,
+      email: email,
+      phone: phone
+    }
   end
 
   def is_location_administrator?

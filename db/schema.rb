@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140116223908) do
+ActiveRecord::Schema.define(:version => 20140117092751) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -292,6 +292,8 @@ ActiveRecord::Schema.define(:version => 20140116223908) do
     t.string   "encrypted_paypal_client_secret"
     t.string   "stripe_api_key"
     t.string   "encrypted_stripe_api_key"
+    t.string   "balanced_api_key"
+    t.string   "encrypted_balanced_api_key"
   end
 
   create_table "listing_messages", :force => true do |t|
@@ -712,6 +714,10 @@ ActiveRecord::Schema.define(:version => 20140116223908) do
     t.string   "paypal_id"
     t.string   "encrypted_stripe_id"
     t.string   "encrypted_paypal_id"
+    t.string   "balanced_user_id"
+    t.string   "encrypted_balanced_user_id"
+    t.string   "balanced_credit_card_id"
+    t.string   "encrypted_balanced_credit_card_id"
   end
 
   add_index "users", ["domain_id"], :name => "index_users_on_domain_id"

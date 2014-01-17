@@ -1,6 +1,6 @@
 # Encapsulate all billing  gateway related logic associated with a user
 class Billing::Gateway
-  INGOING_PROCESSORS = [Billing::Gateway::StripeProcessor, Billing::Gateway::PaypalProcessor]
+  INGOING_PROCESSORS = [Billing::Gateway::BalancedProcessor, Billing::Gateway::StripeProcessor, Billing::Gateway::PaypalProcessor]
   OUTGOING_PROCESSORS = [Billing::Gateway::PaypalProcessor]
 
   attr_reader :user, :currency, :processor
