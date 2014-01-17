@@ -18,7 +18,6 @@ DesksnearMe::Application.configure do
   config.i18n.fallbacks = true
   config.active_support.deprecation = :notify
 
-  Rails.application.routes.default_url_options[:host] = 'staging-uswest2.desksnear.me'
   Rails.application.routes.default_url_options[:protocol] = 'https'
 
   # Uncomment if you precompile assets
@@ -26,9 +25,16 @@ DesksnearMe::Application.configure do
 
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
-  config.action_controller.asset_host = "//staging-uswest2.desksnear.me"
 
-  config.test_email = "notifications-staging@desksnear.me"
+  if ENV['DEMO']
+    config.action_controller.asset_host = "//demo.desksnear.me"
+    Rails.application.routes.default_url_options[:host] = 'demo.desksnear.me'
+    config.test_email = "notifications-demo@desksnear.me"
+  else
+    config.action_controller.asset_host = "//staging-uswest2.desksnear.me"
+    Rails.application.routes.default_url_options[:host] = 'staging-uswest2.desksnear.me'
+    config.test_email = "notifications-staging@desksnear.me"
+  end
 
   # Staging specific keys/secrets for social properties.
   config.linkedin_key = "26pmsiwpsh8a"
