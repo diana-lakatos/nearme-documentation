@@ -88,6 +88,11 @@ class User < ActiveRecord::Base
 
   has_many :charges, foreign_key: :user_id, dependent: :destroy
 
+  has_many :authored_messages,
+           :class_name => "UserMessage",
+           :foreign_key => "author_id",
+           :inverse_of => :author
+
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -391,12 +396,8 @@ class User < ActiveRecord::Base
     administered_locations.size > 0
   end
 
-  def listings_with_messages
-    listings.with_listing_messages + administered_listings.with_listing_messages
-  end
-
-  def listing_messages
-    ListingMessage.where('owner_id = ? OR listing_id IN(?)', id, listings_with_messages.map(&:id)).order('created_at asc')
+  def user_messages
+    UserMessage.for_user(self)
   end
 
   def listings_in_near(platform_context = nil, results_size = 3, radius_in_km = 100)
@@ -418,6 +419,10 @@ class User < ActiveRecord::Base
       return listings if listings.size >= results_size
     end if locations_in_near
     listings
+  end
+
+  def can_manage_listing?(listing)
+    listing.company && listing.company.company_users.where(user_id: self.id).any?
   end
 
   def administered_locations_pageviews_7_day_total

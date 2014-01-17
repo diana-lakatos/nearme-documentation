@@ -294,20 +294,6 @@ ActiveRecord::Schema.define(:version => 20140116223908) do
     t.string   "encrypted_stripe_api_key"
   end
 
-  create_table "listing_messages", :force => true do |t|
-    t.integer  "owner_id"
-    t.integer  "author_id",                               :null => false
-    t.integer  "listing_id"
-    t.text     "body"
-    t.boolean  "read",                 :default => false
-    t.boolean  "archived_for_owner",   :default => false
-    t.boolean  "archived_for_listing", :default => false
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-  end
-
-  add_index "listing_messages", ["listing_id"], :name => "index_listing_messages_on_listing_id"
-
   create_table "listing_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",  :null => false
@@ -632,6 +618,20 @@ ActiveRecord::Schema.define(:version => 20140116223908) do
 
   add_index "user_industries", ["industry_id", "user_id"], :name => "index_user_industries_on_industry_id_and_user_id"
 
+  create_table "user_messages", :force => true do |t|
+    t.integer  "thread_owner_id"
+    t.integer  "author_id",                                 :null => false
+    t.integer  "thread_recipient_id"
+    t.integer  "thread_context_id"
+    t.string   "thread_context_type"
+    t.text     "body"
+    t.boolean  "read"
+    t.boolean  "archived_for_owner",     :default => false
+    t.boolean  "archived_for_recipient", :default => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+  end
+
   create_table "user_relationships", :force => true do |t|
     t.integer  "follower_id"
     t.integer  "followed_id"
@@ -707,11 +707,11 @@ ActiveRecord::Schema.define(:version => 20140116223908) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.integer  "unread_listing_message_threads_count",                 :default => 0
     t.string   "stripe_id"
     t.string   "paypal_id"
     t.string   "encrypted_stripe_id"
     t.string   "encrypted_paypal_id"
+    t.integer  "unread_user_message_threads_count",                    :default => 0
   end
 
   add_index "users", ["domain_id"], :name => "index_users_on_domain_id"

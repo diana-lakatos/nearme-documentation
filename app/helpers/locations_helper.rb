@@ -11,7 +11,8 @@ module LocationsHelper
   end
 
   def location_listings_json(location = @location)
-    location.listings.map { |listing|
+    listings = @listings.presence || location.listings
+    listings.map { |listing|
       listing_booking_data(listing)
     }.to_json
   end
@@ -30,5 +31,9 @@ module LocationsHelper
         content_tag(:span, location.email, class: 'ico-mail padding')
       )
     end
+  end
+
+  def location_to_title(location)
+    [location.company.name, location.suburb, location.city, location.country == "United States" ? location.state_code : location.country].reject(&:blank?).join(' - ')
   end
 end
