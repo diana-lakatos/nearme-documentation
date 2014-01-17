@@ -19,6 +19,10 @@ class UserMessage < ActiveRecord::Base
     where(thread_context_id: thread_context.id, thread_context_type: thread_context.class.to_s, thread_owner_id: thread_owner.id, thread_recipient_id: thread_recipient.id)
   }
 
+  scope :for_user, ->(user) {
+    where('thread_owner_id = ? OR thread_recipient_id = ?', user.id, user.id).order('user_messages.created_at asc')
+  }
+
   scope :by_created, -> {order('created_at desc')}
 
   after_create :update_recipient_unread_message_counter
@@ -82,8 +86,8 @@ class UserMessage < ActiveRecord::Base
     @thread_context_with_deleted ||= thread_context_type.constantize.with_deleted.find_by_id(thread_context_id)
   end
 
-  def set_message_context_from_request_params params
-    SetMessageThreadService.new(self, params).run
+  def set_message_context_from_request_params(params)
+    UserMessageThreadConfigurator.new(self, params).run
   end
 
   # check if author of this message can join conversation in message_context
@@ -109,11 +113,7 @@ class UserMessage < ActiveRecord::Base
   private
 
   def kind_for(user)
-    if user.id == thread_owner_id
-      :owner
-    else
-      :recipient
-    end
+    user.id == thread_owner_id ? :owner : :recipient
   end
 
   def update_recipient_unread_message_counter

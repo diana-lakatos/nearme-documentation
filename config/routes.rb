@@ -116,24 +116,11 @@ DesksnearMe::Application.routes.draw do
       get :hourly_availability_schedule, :on => :collection
     end
 
-    resources :user_messages, except: [:index] do
-      put :archive
-    end
-  end
-
-  resources :user_messages, only: [:index] do
-    collection do
-      get :archived
-    end
   end
 
   resources :reservations, :only => [] do
     resources :guest_ratings, :only => [:new, :create]
     resources :host_ratings, :only => [:new, :create]
-
-    resources :user_messages, except: [:index] do
-      put :archive
-    end
   end
   match '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
   match '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
@@ -161,12 +148,6 @@ DesksnearMe::Application.routes.draw do
 
   end
 
-  resources :users, only: [:show] do
-    resources :user_messages, except: [:index] do
-      put :archive
-    end
-  end
-
   resources :reservations, :except => [:update, :destroy, :show] do
     member do
       post :user_cancel
@@ -186,6 +167,18 @@ DesksnearMe::Application.routes.draw do
       get :listings
       get :manage_guests
       get :transfers
+    end
+  end
+
+  resources :user_messages, only: [:index] do
+    collection do
+      get :archived
+    end
+  end
+
+  resources :listings, :users, :reservations do
+    resources :user_messages, except: [:index] do
+      put :archive
     end
   end
 

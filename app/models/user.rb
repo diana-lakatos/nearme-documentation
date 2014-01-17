@@ -396,7 +396,7 @@ class User < ActiveRecord::Base
   end
 
   def user_messages
-    UserMessage.where('thread_owner_id = ? OR thread_recipient_id = ?', id, id).order('user_messages.created_at asc')
+    UserMessage.for_user(self)
   end
 
   def listings_in_near(platform_context = nil, results_size = 3, radius_in_km = 100)

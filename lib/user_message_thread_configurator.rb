@@ -1,4 +1,4 @@
-class SetMessageThreadService
+class UserMessageThreadConfigurator
 
   AVAILABLE_CONTEXTS = [Listing, User, Reservation]
 
