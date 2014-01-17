@@ -6,7 +6,7 @@ CarrierWave.configure do |config|
     :aws_secret_access_key      => 'k5l31//l3RvZ34cR7cqJh6Nl4OttthW6+3G6WWkZ'
   }
 
-  if ENV['demo']
+  if ENV['DEMO']
     config.fog_directory          = 'desksnearme.demo-standard'
     config.asset_host             = 'https://s3.amazonaws.com/desksnearme.demo-standard'
     config.storage                = :fog
