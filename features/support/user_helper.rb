@@ -62,6 +62,20 @@ module UserHelper
     model!("user")
   end
 
+  def stub_authentication_creation_callbacks
+    Rails.application.config.stubs(:perform_social_jobs).returns(true)
+
+    stub_image_url("http://graph.facebook.com/dnm/picture?type=large")
+    raw = {'id' => 'dnm',
+            'username' => 'desksnearme',
+            'name' => 'Desks Near Me',
+            'link' => 'http://facebook.com/dnm'}
+    Koala::Facebook::API.any_instance.stubs(:get_object).with('me').once.returns(raw)
+
+    connections = [{"id" => 1}, {"id" => 2}]
+    Koala::Facebook::API.any_instance.stubs(:get_connections).once.returns(connections)
+  end
+
 private
   def default_options
     {:email => "valid@example.com", :password => 'password', :name => 'Name'}

@@ -12,6 +12,9 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
 
+  # Includes billing gateway method and charge association
+  include Billing::User
+
   acts_as_paranoid
 
   has_many :authentications,
@@ -83,8 +86,6 @@ class User < ActiveRecord::Base
 
   has_many :user_industries
   has_many :industries, :through => :user_industries
-
-  has_many :charges, :foreign_key => :user_id, :dependent => :destroy
 
   has_many :mailer_unsubscriptions
 
@@ -179,7 +180,6 @@ class User < ActiveRecord::Base
     expires_at = omniauth['credentials'] && omniauth['credentials']['expires_at'] ? Time.at(omniauth['credentials']['expires_at']) : nil
     token = omniauth['credentials'] && omniauth['credentials']['token']
     secret = omniauth['credentials'] && omniauth['credentials']['secret']
-    use_social_provider_image(omniauth['info']['image']) if omniauth['info']['image']
     authentications.build(:provider => omniauth['provider'],
                           :uid => omniauth['uid'],
                           :info => omniauth['info'],
@@ -340,13 +340,6 @@ class User < ActiveRecord::Base
     self.companies.first
   end
 
-  def use_social_provider_image(url)
-    unless avatar.any_url_exists?
-      self.avatar_versions_generated_at = Time.zone.now
-      self.remote_avatar_url = url
-    end
-  end
-
   def first_listing
     if companies.first and companies.first.locations.first
       companies.first.locations.first.listings.first
@@ -424,6 +417,10 @@ class User < ActiveRecord::Base
       return listings if listings.size >= results_size
     end if locations_in_near
     listings
+  end
+
+  def can_manage_listing?(listing)
+    listing.company && listing.company.company_users.where(user_id: self.id).any?
   end
 
   def administered_locations_pageviews_7_day_total

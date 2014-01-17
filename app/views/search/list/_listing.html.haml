@@ -1,5 +1,5 @@
 %article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
-  = link_to location_listing_path(listing.location, listing) do
+  = link_to location_path(listing.location, listing) do
     .heading
       %h3.name
         = listing.name
@@ -23,5 +23,5 @@
       .price
         = render :partial => 'search/shared/price_information', :locals => { :listing => listing }
     .listing-google-map-wrapper
-      = link_to "View listing", location_listing_path(listing.location, listing), :class => 'btn btn-green btn-medium'
+      = link_to "View listing", location_path(listing.location, listing), :class => 'btn btn-green btn-medium'
       .listing-google-map

@@ -1,4 +1,3 @@
 %article.booking
-  .listings
-    .listing{listing_data_attributes(listing)}
-      = render 'locations/booking_module', listing: listing
+  .listing{listing_data_attributes(listing)}
+    = render 'locations/booking_module', listing: listing, collapsed: collapsed, location_pretty_availability: location_pretty_availability

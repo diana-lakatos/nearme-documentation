@@ -6,7 +6,7 @@ Feature: A user can book at a space
 
   Background:
     Given a company exists
-      And a location exists with company: that company, currency: "CAD"
+      And a location exists with company: that company, currency: "USD"
       And a listing exists with location: that location, quantity: 10
       And a user exists
 
@@ -34,13 +34,25 @@ Feature: A user can book at a space
 
   Scenario: Free booking should show 'Free' in place of rates and $0.00 for the total
     Given I am logged in as the user
-    And a location exists with company: that company, currency: "CAD"
+    And a location exists with company: that company, currency: "USD"
     And a listing exists with location: that location, quantity: 10, daily_price_cents: nil, free: true
     When I go to the location's page
     Then I should see a free booking module
 
-  Scenario: Booking and paying by credit card
+  Scenario: Booking and paying by credit card via Stripe
      Given I am logged in as the user
+       When I book space for:
+        | Listing     | Date   | Quantity |
+        | the listing | Monday | 1        |
+       When I follow "Manage Booking"
+       Then I should be redirected to bookings page
+       Then I should see "credit card will be charged when your reservation is confirmed"
+       And the user should have a billing profile
+
+  Scenario: Booking and paying by credit card via Paypal
+     Given I am logged in as the user
+       And a location exists with company: that company, currency: "JPY"
+       And a listing exists with location: that location, quantity: 10
        When I book space for:
         | Listing     | Date   | Quantity |
         | the listing | Monday | 1        |

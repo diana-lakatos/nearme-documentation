@@ -1,0 +1,12 @@
+.administrator
+  = image_tag administrator.avatar.url(:big)
+  .info
+    %span.name= administrator.name
+    %span.title= administrator.job_title
+  .buttons
+    = link_to profile_path(administrator), :class => 'btn btn-medium view' do
+      %span.text View profile
+    = link_to new_listing_listing_message_path(@listing), :class => "btn btn-blue btn-medium ask", :rel => "modal" do
+      %span.text= "Contact #{platform_context.lessor.capitalize}"
+  .clearfix
+.padding-row

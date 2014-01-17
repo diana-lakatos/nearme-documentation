@@ -6,6 +6,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
 
   def setup
     stub_mixpanel
+    Company.any_instance.stubs(:has_payment_method?).returns(true)
     @company_1 = prepare_company_with_charged_reservations(:reservation_count => 2)
     @company_2 = prepare_company_with_charged_reservations(:reservation_count => 2)
   end
@@ -45,6 +46,8 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
     end
 
     should "generate separate transfers for separate currencies" do
+      Billing::Gateway::BaseProcessor.stubs(:find_processor_class).with('NZD').returns(Billing::Gateway::StripeProcessor).at_least(1)
+
       location = FactoryGirl.create(:location,
         :company => @company_1,
         :currency => 'NZD'
@@ -64,7 +67,9 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
       assert nzd_transfer, "Expected an NZD payment transfer"
       assert_equal nzd_reservations.map(&:reservation_charges).flatten,
         nzd_transfer.reservation_charges
+
     end
+
   end
 
 end

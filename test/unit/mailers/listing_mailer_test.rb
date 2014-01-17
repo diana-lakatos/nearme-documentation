@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ListingTest < ActiveSupport::TestCase
+class ListingMailerTest < ActiveSupport::TestCase
 
   setup do
     stub_mixpanel

@@ -95,7 +95,7 @@ class ReservationTest < ActiveSupport::TestCase
     context 'with a confirmed reservation' do
 
       setup do
-        User::BillingGateway.any_instance.expects(:charge)
+        Billing::Gateway::StripeProcessor.any_instance.expects(:charge)
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
         @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
         @reservation.service_fee_amount_guest_cents = 10_00
@@ -114,17 +114,21 @@ class ReservationTest < ActiveSupport::TestCase
   end
 
   context "confirmation" do
-    should "attempt to charge user card if paying by credit card" do
-      reservation = FactoryGirl.build(:reservation_with_credit_card)
-      reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
-      reservation.service_fee_amount_guest_cents = 10_00
-      reservation.service_fee_amount_host_cents = 10_00
-      reservation.save!
 
-      User::BillingGateway.any_instance.expects(:charge)
-      reservation.confirm
-      assert reservation.reload.paid?
+    setup do
+      @reservation = FactoryGirl.build(:reservation_with_credit_card)
+      @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+      @reservation.service_fee_amount_guest_cents = 10_00
+      @reservation.service_fee_amount_host_cents = 10_00
+      @reservation.save!
     end
+
+    should "attempt to charge user card if paying by credit card" do
+      Billing::Gateway::StripeProcessor.any_instance.expects(:charge)
+      @reservation.confirm
+      assert @reservation.reload.paid?
+    end
+
   end
 
   context "with serialization" do
