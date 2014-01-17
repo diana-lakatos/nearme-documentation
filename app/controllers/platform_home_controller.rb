@@ -44,8 +44,6 @@ class PlatformHomeController < ActionController::Base
       @light_background = true
       @resubscribe_url = platform_email_resubscribe_url(params[:unsubscribe_key])
       @email.unsubscribe!
-
-      render :unsubscribe
     else
       redirect '/'
     end
@@ -59,8 +57,6 @@ class PlatformHomeController < ActionController::Base
     if @email
       @light_background = true
       @email.resubscribe!
-
-      render :resubscribe
     else
       redirect '/'
     end

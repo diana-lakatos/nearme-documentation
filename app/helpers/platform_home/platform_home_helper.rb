@@ -1,8 +1,4 @@
 module PlatformHome::PlatformHomeHelper
-  
-  def partial(page, options={})
-    haml page.to_sym, options.merge!(layout: false)
-  end
 
   def host
     "#{request.scheme}://#{request.host}"
