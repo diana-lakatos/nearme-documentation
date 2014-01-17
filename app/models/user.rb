@@ -161,7 +161,7 @@ class User < ActiveRecord::Base
     :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
     :partner_id, :instance_id, :domain_id
 
-  attr_encrypted :stripe_id, :paypal_id, :key => lambda { |user| "#{DesksnearMe::Application.config.secret_token}#{user.id}" }, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+  attr_encrypted :stripe_id, :paypal_id, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   delegate :to_s, :to => :name
 

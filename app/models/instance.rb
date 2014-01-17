@@ -7,7 +7,7 @@ class Instance < ActiveRecord::Base
                   :paypal_client_id, :paypal_client_secret
 
   attr_encrypted :paypal_username, :paypal_password, :paypal_signature, :paypal_app_id, :stripe_api_key,
-    :paypal_client_id, :paypal_client_secret, :key => lambda { |instance| "#{DesksnearMe::Application.config.secret_token}#{instance.id}" }, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+    :paypal_client_id, :paypal_client_secret, :key => DesksnearMe::Application.config.secret_token , :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   has_one :theme, :as => :owner, dependent: :destroy
 
