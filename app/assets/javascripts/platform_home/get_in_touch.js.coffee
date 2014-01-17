@@ -10,14 +10,9 @@ class @GetInTouchController
       else
         $(this).removeClass('incomplete')
 
-    $('section.get-in-touch form a').click (e) =>
-      @sendGetInTouchForm()
-      e.preventDefault()
-
     $('section.get-in-touch form').submit (e) =>
       @sendGetInTouchForm()
       e.preventDefault()
-
 
   sendGetInTouchForm: ->
     form = $('section.get-in-touch form')
@@ -29,8 +24,7 @@ class @GetInTouchController
       $.ajax
         url: form.attr('action')
         method: 'POST'
-        data:
-          inquiry: form.serialize()
+        data: form.serialize()
         success: (response) ->
           if response.status
             mixpanel.track("Submitted a question", { industry: industry.val() })
@@ -41,6 +35,7 @@ class @GetInTouchController
             $('section.get-in-touch').find('.title.normal').addClass('hidden')
             $('section.get-in-touch').find('.title.warning').html(response.body).removeClass('hidden')
         dataType: 'json'
+
     else
       $('section.get-in-touch').find('.title.normal').addClass('hidden')
       $('section.get-in-touch').find('.title.warning').removeClass('hidden')

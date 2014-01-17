@@ -1,11 +1,13 @@
 class PlatformHomeController < ActionController::Base
+  protect_from_forgery
   layout 'platform_home'
 
   def index
+    @platform_email = PlatformEmail.new
   end
 
   def notify_me
-    email = PlatformEmail.create(email: params[:email])
+    email = PlatformEmail.create(params[:platform_email])
     if email.errors.added?(:email, email.errors.generate_message(:email, :taken))
       render :duplicate_email, layout: false
     else
@@ -15,11 +17,11 @@ class PlatformHomeController < ActionController::Base
 
   def get_in_touch
     @map_background = true
+    @platform_inquiry = PlatformInquiry.new
   end
 
   def save_inquiry
-    inquiry_params = Rack::Utils.parse_nested_query(params[:inquiry])
-    @inquiry = PlatformInquiry.create(inquiry_params['inquiry'])
+    @inquiry = PlatformInquiry.create(params['platform_inquiry'])
 
     render json: { body: render_to_string(:save_inquiry, layout: false), status: @inquiry.persisted?, locals: @inquiry.persisted? }.to_json
   end
@@ -40,7 +42,7 @@ class PlatformHomeController < ActionController::Base
 
     if @email
       @light_background = true
-      @resubscribe_url = "/resubscribe/#{params[:unsubscribe_key]}"
+      @resubscribe_url = platform_email_resubscribe_url(params[:unsubscribe_key])
       @email.unsubscribe!
 
       render :unsubscribe

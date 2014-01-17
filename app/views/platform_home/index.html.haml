@@ -1,6 +1,6 @@
 %section.background-video
   #logo
-    %a{href: '/'}
+    = link_to "", root_url
   = image_tag "platform_home/video-poster.jpg", class: "video_fallback"
   :plain
     <video id="video" preload="preload" poster="/assets/platform_home/video-poster.jpg" loop>
@@ -15,9 +15,8 @@
       of Sharing.
 
     .arrow
-      %a{href: '#'}
+      = link_to "" do
         = image_tag "platform_home/chevron-down.png"
-
 
 
 %section.create-and-manage.section.pink-section
@@ -85,7 +84,6 @@
         .wheel
           = render 'spinner'
 
-
       .span6.text.boxes
         .box{:data => {:for => "360"}}
           %h3 Choose your marketplace
@@ -116,14 +114,6 @@
           %h3 Money in your pocket 
           .text-body
             Monetize your customer base and start generating revenue. No membership fees, no barriers between you and your cash, accept payments instantly.
-
-        .navigation
-          %a.left{href: '#'}
-            = image_tag "platform_home/chevron-left.png"
-
-          %a.right{href: '#'}
-            = image_tag "platform_home/chevron-right.png"
-
 
 
 %section.get-in-the-business.section.light-section
@@ -184,8 +174,8 @@
     .row-fluid
       .span1
       .span4
-        %a{href: 'http://www.pressheretv.com/predictions-for-2014', target: "_blank"}
-          %img{border: 0, src: '/assets/platform_home/nbc.png', height: 174}
+        = link_to "http://www.pressheretv.com/predictions-for-2014", target: "_blank" do
+          = image_tag "platform_home/nbc.png", height: 174
       .span6.box.arrow.left-arrow
         .body
           “A major hotel chain will launch their own branded version of Airbnb. Using white label marketplace software like NearMeCo. Brands will start to build their own versions of marketplaces. I predict a major hotel chain will do this first –franchising the crowd, just as they franchise business owners”.
@@ -193,20 +183,20 @@
     .row-fluid
       .span1
       .span4.visible-phone
-        %a{href: 'http://www.shareable.net/blog/need-a-place-to-work-here-are-9-coworking-apps-that-can-help', target: "_blank"}
-          %img{border: 0, src: '/assets/platform_home/shareable.png', height: 42}
+        = link_to 'http://www.shareable.net/blog/need-a-place-to-work-here-are-9-coworking-apps-that-can-help', target: "_blank" do
+          = image_tag "platform_home/shareable.png", height: 42
       .span6.box.arrow.right-arrow
         .body
           “DesksNear.Me is the largest provider of shared work spaces with over 9,000 listings at over 1,400 companies worldwide, including office buildings, medical suites, retail spaces and more.&rdquo; says cofounder and CEO Michelle Regner. “We've seen an incredible amount of growth over the past year and we're honored to be named one of 22 start-ups in industry analyst Jeremiah Owyang's Crowd Companies Innovation Network, which focuses on helping big companies become a part of the sharing economy”.
       .span4.hidden-phone
-        %a{href: 'http://www.shareable.net/blog/need-a-place-to-work-here-are-9-coworking-apps-that-can-help', target: "_blank"}
+        = link_to 'http://www.shareable.net/blog/need-a-place-to-work-here-are-9-coworking-apps-that-can-help', target: "_blank" do
           %img.shareable.pull-right{border: 0, src: '/assets/platform_home/shareable.png', height: 42}
 
     .row-fluid
       .span1
       .span4
-        %a{href: 'https://medium.com/all-things-crowd/fe1e46b8c02f', target: "_blank"}
-          %img{border: 0, src: '/assets/platform_home/medium.png', height: 150}
+        = link_to 'https://medium.com/all-things-crowd/fe1e46b8c02f', target: "_blank" do
+          = image_tag "platform_home/medium.png", height: 150
       .span6.box.arrow.left-arrow
         .body
           “The convergence of all things crowd (from crowdfunding and crowdsourcing, to the “sharing economy” and the “collaborative economy”), had quite a 2013. Startup to watch Near-Me.com “Get in the Business of Sharing”.
@@ -216,11 +206,11 @@
   %h2
     Build yours now.
 
-  %form{method: 'POST', action: '/notify-me', id: 'notify-me'}
+  = simple_form_for @platform_email, url: '/notify-me' do |f|
     .title Launching soon. Be the first to know!
-    %input{type: 'email', name: 'email', placeholder: 'enter your email address here.'}
+    = f.input :email, label: false, placeholder: 'enter your email address here.'
     %br
-    %a.btn.btn-large.btn-red{href: '#'} NOTIFY ME
+    = f.submit 'NOTIFY ME', class: 'btn btn-large btn-red'
 
   .title
     love it? please share, we like sharing.
@@ -228,19 +218,19 @@
   .social-icons
     %ul.icons.clearfix
       %li.popup
-        %a{href: twitter_share_url, :class => 'share-link', :'data-network' => 'Twitter', :'data-window-width' => 550, :'data-window-height' => 420}
+        = link_to twitter_share_url, :class => 'share-link', :'data-network' => 'Twitter', :'data-window-width' => 550, :'data-window-height' => 420  do
           = image_tag "platform_home/twitter-ico.png"
       %li.popup
-        %a{href: linkedin_share_url, :class => 'share-link', :'data-network' => 'LinkedIn', :'data-window-width' => 600, :'data-window-height' => 472}
+        = link_to linkedin_share_url, :class => 'share-link', :'data-network' => 'LinkedIn', :'data-window-width' => 600, :'data-window-height' => 472 do
           = image_tag "platform_home/linkedin-ico.png"
       %li.popup
-        %a{href: facebook_share_url, :class => 'share-link', :'data-network' => 'Facebook', :'data-window-width' => 420, :'data-window-height' => 339}
+        = link_to facebook_share_url, :class => 'share-link', :'data-network' => 'Facebook', :'data-window-width' => 420, :'data-window-height' => 339 do
           = image_tag "platform_home/facebook-ico.png"
       %li.popup
-        %a{href: gplus_share_url, :class => 'share-link', :'data-network' => 'Google+', :'data-window-width' => 500, :'data-window-height' => 470}
+        = link_to gplus_share_url, :class => 'share-link', :'data-network' => 'Google+', :'data-window-width' => 500, :'data-window-height' => 470 do
           = image_tag "platform_home/gplus-ico.png"
       %li.send-email
-        %a{href: "#", :class => 'share-link', :'data-network' => 'Email'}
+        = link_to '#', :class => 'share-link', :'data-network' => 'Email' do
           = image_tag "platform_home/mail-ico.png"
 
   #email-modal.modal.fade.hide{"aria-hidden" => "true", "aria-labelledby" => "email-modal-label", role: "dialog", tabindex: "-1"}
@@ -258,8 +248,7 @@
             %p.disabled-block
               Check out Near Me, a new platform for creating peer-to-peer marketplaces: #{host}
         .modal-footer
-          %a.btn.btn-red{href: '#'} SEND
+          = link_to 'SEND', '#', class: 'btn btn-red'
 
 %script
   $(function(){ new HomeController(); });
-

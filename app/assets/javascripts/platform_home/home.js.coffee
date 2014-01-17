@@ -22,10 +22,6 @@ class @HomeController
         900
       e.preventDefault()
 
-    $('section.build-yours-now form#notify-me a').click (e) =>
-      @submitNotifyMeForm()
-      e.preventDefault()
-
     $('section.build-yours-now form').submit (e) =>
       @submitNotifyMeForm()
       e.preventDefault()
@@ -70,11 +66,11 @@ class @HomeController
 
 
   submitNotifyMeForm: ->
-    form = $('section.build-yours-now form#notify-me')
-    email = form.find('input[name=email]')
+    form = $('section.build-yours-now form#new_platform_email')
+    email = form.find("input[name='platform_email[email]']")
     if email.val() != ''
       $.post form.attr('action'),
-        email: email.val()
+        form.serialize()
         (response) ->
           form.replaceWith($(response))
           mixpanel.track("Submitted an email", { email: email.val() })
