@@ -1,6 +1,7 @@
 class PaymentTransfer < ActiveRecord::Base
-  acts_as_paranoid
   has_paper_trail
+  acts_as_paranoid
+
   belongs_to :company
   has_many :reservation_charges, :dependent => :nullify
 

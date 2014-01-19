@@ -655,7 +655,6 @@ class UserTest < ActiveSupport::TestCase
       should 'not delete company and assign new creator' do
         @listing.creator.destroy
         @listing.reload
-        assert_equal @new_user, @listing.creator
         refute @listing.deleted?
         refute @listing.location.deleted?
         refute @listing.location.company.deleted?
@@ -734,6 +733,50 @@ class UserTest < ActiveSupport::TestCase
 
       assert_equal @user.listings_in_near(@platform_context, 3, 100, true), [listing_second]
     end
+  end
+
+  context 'recovering user with all objects' do
+
+    setup do
+      @industry = FactoryGirl.create(:industry)
+    end
+
+    should 'recover all objects' do
+      setup_user_with_all_objects
+      @user.destroy
+      @objects.each do |object|
+        assert object.reload.deleted?, "#{object.class.name} was expected to be deleted via dependent => destroy but wasn't"
+      end
+      @user.recover
+      @objects.each do |object|
+        refute object.reload.deleted?, "#{object.class.name} was expected to be recovered, but is still deleted"
+      end
+    end
+
+
+
+  end
+
+  private
+
+  def setup_user_with_all_objects
+      @user = FactoryGirl.create(:user)
+      @user_industry = UserIndustry.create(:user_id => @user.id, :industry_id => @industry.id)
+      @authentication = FactoryGirl.create(:authentication, :user => @user)
+      @company = FactoryGirl.create(:company, :creator => @user)
+      @company_industry = CompanyIndustry.where(:company_id => @company.id).first
+      @location = FactoryGirl.create(:location, :company => @company)
+      @listing = FactoryGirl.create(:listing, :location => @location)
+      @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
+      @reservation = FactoryGirl.create(:reservation, :user => @user, :listing => @listing)
+      @reservation_period = @reservation.periods.first
+      @reservation_charge = FactoryGirl.create(:reservation_charge, :reservation => @reservation)
+      @charge = FactoryGirl.create(:charge, :reference => @reservation_charge)
+      @payment_transfer = FactoryGirl.create(:payment_transfer, :company => @company)
+      @objects = [@user, @user_industry, @authentication, @company, @company_industry, 
+                  @location, @listing, @photo, @reservation, @reservation_period, 
+                  @payment_transfer, @reservation_charge, @charge]
+      
   end
 
 end

@@ -1,6 +1,7 @@
 class Location < ActiveRecord::Base
-  class NotFound < ActiveRecord::RecordNotFound; end
   has_paper_trail
+  acts_as_paranoid
+  class NotFound < ActiveRecord::RecordNotFound; end
 
   include Impressionable
 
@@ -23,7 +24,7 @@ class Location < ActiveRecord::Base
   has_many :amenity_holders, as: :holder
   has_many :amenities, through: :amenity_holders
 
-  belongs_to :company, inverse_of: :locations
+  belongs_to :company, inverse_of: :locations, with_deleted: true
   belongs_to :location_type
   belongs_to :administrator, class_name: "User", :inverse_of => :administered_locations
 
@@ -69,8 +70,6 @@ class Location < ActiveRecord::Base
   scope :none, where(:id => nil)
   scope :for_instance, ->(instance) { joins(:instance).includes(:instance).where(:'instances.id' => instance.id) }
   scope :with_searchable_listings, where(%{ (select count(*) from "listings" where location_id = locations.id and listings.draft IS NULL and enabled = 't' and listings.deleted_at is null) > 0 })
-
-  acts_as_paranoid
 
   # Useful for storing the full geo info for an address, like time zone
   serialize :info, Hash

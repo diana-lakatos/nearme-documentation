@@ -6,6 +6,7 @@ module Rating
   include ActiveModel::MassAssignmentSecurity
 
   included do
+    acts_as_paranoid
 
     attr_accessible :author_id, :subject_id, :reservation_id, :value, :comment
     after_create :update_cache_for_subject

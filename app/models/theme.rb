@@ -1,5 +1,6 @@
 class Theme < ActiveRecord::Base
   has_paper_trail :ignore => [:updated_at, :compiled_stylesheet]
+  acts_as_paranoid
   DEFAULT_EMAIL = 'support@desksnear.me'
   DEFAULT_PHONE_NUMBER = '1.888.998.3375'
   COLORS = %w(blue red orange green gray black white)
@@ -34,6 +35,15 @@ class Theme < ActiveRecord::Base
   mount_uploader :logo_retina_image, ThemeImageUploader
   mount_uploader :hero_image, ThemeImageUploader
   mount_uploader :compiled_stylesheet, ThemeStylesheetUploader
+
+  # Don't delete the from s3
+  skip_callback :commit, :after, :remove_icon_image!
+  skip_callback :commit, :after, :remove_icon_retina_image!
+  skip_callback :commit, :after, :remove_favicon_image!
+  skip_callback :commit, :after, :remove_logo_image!
+  skip_callback :commit, :after, :remove_logo_retina_image!
+  skip_callback :commit, :after, :remove_hero_image!
+  skip_callback :commit, :after, :remove_compiled_stylesheet!
 
   # Precompile the theme, unless we're saving the compiled stylesheet.
   after_save :recompile_theme, :if => :theme_changed?
@@ -114,7 +124,7 @@ class Theme < ActiveRecord::Base
   def build_clone
     current_attributes = attributes
     cloned_theme = Theme.new
-    ['id', 'name', 'compiled_stylesheet', 'owner_id', 'owner_type', 'created_at', 'updated_at'].each do |forbidden_attribute|
+    ['id', 'name', 'compiled_stylesheet', 'owner_id', 'owner_type', 'created_at', 'updated_at', 'deleted_at'].each do |forbidden_attribute|
       current_attributes.delete(forbidden_attribute)
     end
     current_attributes.keys.each do |attribute|
