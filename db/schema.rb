@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140116223908) do
+ActiveRecord::Schema.define(:version => 20140119124927) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -427,6 +427,7 @@ ActiveRecord::Schema.define(:version => 20140116223908) do
     t.datetime "created_at",                                    :null => false
     t.datetime "updated_at",                                    :null => false
     t.integer  "service_fee_amount_host_cents",  :default => 0, :null => false
+    t.datetime "deleted_at"
   end
 
   add_index "payment_transfers", ["company_id"], :name => "index_payment_transfers_on_company_id"
@@ -440,6 +441,7 @@ ActiveRecord::Schema.define(:version => 20140116223908) do
     t.string   "currency"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.datetime "deleted_at"
   end
 
   create_table "photos", :force => true do |t|
