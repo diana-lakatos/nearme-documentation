@@ -19,15 +19,15 @@ class Billing::Gateway::BaseProcessor
   end
 
   def self.instance_supported?(instance)
-    raise "#{self} must implement instance_supported? method"
+    raise NotImplementedError
   end
 
   def self.currency_supported?(instance)
-    raise "#{self} must implement currency_supported? method"
+    raise NotImplementedError
   end
 
   def self.processor_supported?(instance)
-    raise "#{self} must implement processor_supported? method"
+    raise NotImplementedError
   end
 
   # Make a charge against the user
@@ -64,17 +64,17 @@ class Billing::Gateway::BaseProcessor
 
   # Contains implementation for storing credit card by third party
   def store_credit_card(credit_card)
-    raise "#{self.class.name} must implement store_credit_card"
+    raise NotImplementedError
   end
 
   # Contains implementation for processing credit card by third party
   def process_charge
-    raise "#{self.class.name} must implement process_charge"
+    raise NotImplementedError
   end
 
   # Contains implementation for transferring money to company
   def process_payout
-    raise "#{self.class.name} must implement process_payout"
+    raise NotImplementedError
   end
 
   protected

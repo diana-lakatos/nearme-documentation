@@ -14,38 +14,39 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
       end
 
       should 'require process_charge' do
-        assert_raise RuntimeError do
+
+        assert_raise NotImplementedError do
           @test_processor.process_charge
         end
       end
 
       should 'require process_payout' do
-        assert_raise RuntimeError do
+        assert_raise NotImplementedError do
           @test_processor.process_payout
         end
       end
 
 
       should 'require instance_supported?' do
-        assert_raise RuntimeError do
+        assert_raise NotImplementedError do
           TestProcessor.instance_supported?(nil)
         end
       end
 
       should 'require currency_supported?' do
-        assert_raise RuntimeError do
+        assert_raise NotImplementedError do
           TestProcessor.currency_supported?(nil)
         end
       end
 
       should 'require processor_supported?' do
-        assert_raise RuntimeError do
+        assert_raise NotImplementedError do
           TestProcessor.processor_supported?(nil)
         end
       end
 
       should 'require store_credit_card' do
-        assert_raise RuntimeError do
+        assert_raise NotImplementedError do
           @test_processor.store_credit_card(mock())
         end
       end

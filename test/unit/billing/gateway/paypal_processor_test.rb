@@ -100,8 +100,8 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
 
     setup do
       @payment_transfer = FactoryGirl.create(:payment_transfer_unpaid)
-      @payment_transfer.update_attribute(:amount_cents, 1234)
-      @payment_transfer.update_attribute(:currency, 'EUR')
+      @payment_transfer.update_column(:amount_cents, 1234)
+      @payment_transfer.update_column(:currency, 'EUR')
       @payment_transfer.company.instance.update_attribute(:paypal_email, 'sender@example.com')
       @payment_transfer.company.update_attribute(:paypal_email, 'receiver@example.com')
     end
