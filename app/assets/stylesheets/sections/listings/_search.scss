@@ -313,7 +313,7 @@ header#listing_search {
     right: 0px;
     @include border-radius(0);
     max-width: 100%;
-    top: 65px;
+    top: 60px;
 
     form {
       max-width: 100%;
@@ -385,7 +385,7 @@ header#listing_search {
     }
 
     .locations-count {
-      padding-top: 13px;
+      padding-top: 15px;
       float: right;
 
       span {
@@ -894,6 +894,15 @@ section.search section#results.mixed {
     }
   }
 
+  .map-marker {
+    color: $gray230;
+    opacity: 1;
+    pointer-events: none;
+    text-align: center;
+    width: 40px;
+    white-space: nowrap;
+  }
+
   .list {
     width: 66.66%;
     float: left;
@@ -907,7 +916,7 @@ section.search section#results.mixed {
       .search-mixed-filter {
         background-color: $gray230;
         padding: 10px;
-        margin-bottom: 5px;
+        margin-bottom: 1px;
 
         ul {
           li {
@@ -923,7 +932,7 @@ section.search section#results.mixed {
     }
 
     .sort {
-      background-color: $black;
+      background-color: $gray60;
       line-height: 40px;
       padding: 10px;
       margin-left: 10px;
@@ -964,7 +973,8 @@ section.search section#results.mixed {
 
       .location {
         position: relative;
-        border-top: 4px solid $black;
+        border-top: 4px solid $gray60;
+        margin-top: 10px;
 
         .header {
           position: relative;
@@ -974,13 +984,14 @@ section.search section#results.mixed {
         .location-counter {
           position: absolute;
           color: $gray245;
-          background-color: $black;
+          background-color: $gray60;
           width: 35px;
           height: 35px;
           line-height: 35px;
           text-align: center;
           font-size: 80%;
           z-index: 1;
+          @include border-bottom-right-radius($border-radius-default);
         }
 
         .location-data {
@@ -1078,13 +1089,11 @@ section.search section#results.mixed {
 
           .title {
             background-color: $gray220;
-            padding: 5px;
-            padding-left: 15px;
+            padding: 3px;
           }
 
           .row-fluid {
             background-color: $gray230;
-            margin: 5px 0;
 
             .reserve-listing {
               text-align: right;
@@ -1178,6 +1187,14 @@ section.search section#results.mixed {
 
           @media (max-width: $ipad-width) {
             padding-right: 0;
+          }
+        }
+
+        &.active {
+          border-color: $dnm_orange;
+
+          .location-counter {
+            background-color: $dnm_orange;
           }
         }
       }

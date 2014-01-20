@@ -83,8 +83,8 @@ class Search.SearchController extends Search.Controller
   redirectIfNecessary: ->
     if History.getState() && !window.history?.replaceState
       for k, param of History.getState().data
-        if param.name == 'q'
-          if param.value != DNM.util.Url.getParameterByName('q')
+        if param.name == 'loc'
+          if param.value != DNM.util.Url.getParameterByName('loc')
             document.location = History.getState().url
 
   

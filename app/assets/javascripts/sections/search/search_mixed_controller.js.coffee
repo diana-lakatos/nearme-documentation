@@ -89,10 +89,12 @@ class Search.SearchMixedController extends Search.SearchController
     listing = @map.getListingForMarker(marker)
     location_container = @resultsContainer().find("article[data-id=#{listing.id()}]")
     if location_container.length > 0
-      animate_position = location_container.position().top + @list_container().offset().top
+      animate_position = location_container.position().top + @list_container().offset().top + @list_container().find('.filters').height() - 55
       @list_container().animate
         scrollTop: animate_position
         () =>
+          @unmarkAllLocations()
+          location_container.addClass('active')
           @processingResults = false
 
 
@@ -104,8 +106,18 @@ class Search.SearchMixedController extends Search.SearchController
     listings
 
 
+  listingForElementOrBuild: (element) ->
+    listing = super(element)
+    listing.setNumber($(element).data('number'))
+    listing
+
+
   initializeEndlessScrolling: ->
     @list_container().scrollTop(0)
+
+
+  unmarkAllLocations: ->
+    @resultsContainer().find('article').removeClass('active')
 
 
   # Trigger the API request for search
@@ -203,6 +215,7 @@ class Search.SearchMixedController extends Search.SearchController
   bindLocationsEvents: ->
     self = @
     @resultsContainer().find('article.location').on 'mouseout', ->
+      self.unmarkAllLocations()
       location_id = $(this).data('id')
       marker = self.map.markers[location_id]
       if marker
@@ -210,6 +223,8 @@ class Search.SearchMixedController extends Search.SearchController
         marker.setZIndex(google.maps.Marker.MAX_ZINDEX)
 
     @resultsContainer().find('article.location').on 'mouseover', ->
+      self.unmarkAllLocations()
+      $(this).addClass('active')
       location_id = $(this).data('id')
       marker = self.map.markers[location_id]
       if marker

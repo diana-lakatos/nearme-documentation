@@ -41,13 +41,19 @@ class Search.MapMixed extends Search.Map
     # Don't re-plot the same listing
     return if @markers[listing.id()]
 
-    marker = new google.maps.Marker(
+    marker = new MarkerWithLabel(
       position: listing.latLng(),
       map:      @googleMap,
       title:    listing.name(),
       visible:  false,
       shadow: null,
-      icon: SearchResultsGoogleMapMarker.getMarkerOptions().default.image
+      icon: SearchResultsGoogleMapMarker.getMarkerOptions().default.image,
+      draggable: false,
+      raiseOnDrag: false,
+      labelContent: ""+listing.number(),
+      labelAnchor: new google.maps.Point(20, 32),
+      labelClass: "map-marker",
+      labelInBackground: false
     )
     @markers[listing.id()] = marker
     @listings[listing.id()] = listing

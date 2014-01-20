@@ -8,22 +8,20 @@ class @SearchResultsGoogleMapMarker
 
   @markerOptions:
     hover:
-      image: new google.maps.MarkerImage(
-        '/assets/sections/search/marker-hover.svg',
-        new google.maps.Size(40,57),
-        new google.maps.Point(0,0),
-        new google.maps.Point(10,29),
-        new google.maps.Size(20,29)
-      )
+      image:
+        url: '/assets/sections/search/marker-hover.svg'
+        size: new google.maps.Size(20,29)
+        scaledSize: new google.maps.Size(20,29)
+        origin: new google.maps.Point(0,0)
+        anchor: new google.maps.Point(10, 29)
 
     default:
-      image: new google.maps.MarkerImage(
-        '/assets/sections/search/marker-default.svg',
-        new google.maps.Size(40,57),
-        new google.maps.Point(0,0),
-        new google.maps.Point(10,29),
-        new google.maps.Size(20,29)
-      )
+      image:
+        url: '/assets/sections/search/marker-default.svg'
+        size: new google.maps.Size(20,29)
+        scaledSize: new google.maps.Size(20,29)
+        origin: new google.maps.Point(0,0)
+        anchor: new google.maps.Point(10, 29)
 
   @markerPngOptions:
     hover:

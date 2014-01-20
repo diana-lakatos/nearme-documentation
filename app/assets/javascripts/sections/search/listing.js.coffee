@@ -19,6 +19,7 @@ class Search.Listing
     @_lng = parseFloat(@_element.data('longitude'))
     @_location = parseInt(@_element.data('location'))
     @_name = @_element.attr('data-name')
+    @_number = parseInt(@_element.data('number'))
     @bindEvents()
 
   # The current implementation of the search results use server-side generated html elements.
@@ -55,6 +56,12 @@ class Search.Listing
 
   location: ->
     @_location
+
+  number: ->
+    @_number
+
+  setNumber: (number) ->
+    @_number = number
 
   # The content that goes in the map popup when clicking the marker
   popoverContent: ->

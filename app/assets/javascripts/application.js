@@ -21,6 +21,7 @@
 //= require ./vendor/jquery.ias
 //= require ./vendor/ZeroClipboard
 //= require ./vendor/markerclusterer
+//= require ./vendor/markerwithlabel
 //= require jquery-fileupload/basic
 //= require history_jquery
 //= require ./vendor/underscore
