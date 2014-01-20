@@ -13,8 +13,8 @@ class Location::GoogleGeolocationDataParser
 
 
   def initialize(address_components)
-    return unless address_components
     @result_hash = {}
+    return unless address_components
     @address_components = address_components.to_enum.map { |c| Component.new(c[1]) }
     MAPPING_HASH.each_pair do |type, field_on_location|
       component = find_component_for(type)

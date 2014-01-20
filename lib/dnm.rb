@@ -98,6 +98,13 @@ module DNM
     end
   end
 
+  class MessageContextNotAvailable < Error
+    def initialize(msg = "Message context not available")
+      super msg
+      @status = 400
+    end
+  end
+
   module MAIL_TYPES
     BULK = 'bulk'
     TRANSACTIONAL = 'transactional'

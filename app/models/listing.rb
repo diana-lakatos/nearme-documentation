@@ -18,7 +18,7 @@ class Listing < ActiveRecord::Base
     :as => :target,
     :dependent => :destroy
 
-  has_many :listing_messages
+  has_many :user_messages, as: :thread_context
 
   has_one :company, through: :location
   belongs_to :location, inverse_of: :listings, with_deleted: true
@@ -43,9 +43,6 @@ class Listing < ActiveRecord::Base
   scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where('listings.listing_type_id IN (?)', listing_types_ids) if listing_types_ids }
   scope :filtered_by_price_types,  lambda { |price_types| where(price_types.map{|pt| "(listings.#{pt}_price_cents IS NOT NULL)"}.join(' OR  ')) if price_types }
   
-  scope :with_listing_messages, joins(:listing_messages).
-        group('listings.id HAVING count(listing_messages.id) > 0')
-
   # == Callbacks
   before_save :set_activated_at
   after_save :notify_user_about_change

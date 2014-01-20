@@ -12,9 +12,6 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
 
-  # Includes billing gateway method and charge association
-  include Billing::User
-
   acts_as_paranoid
 
   has_many :authentications,
@@ -89,6 +86,13 @@ class User < ActiveRecord::Base
 
   has_many :mailer_unsubscriptions
 
+  has_many :charges, foreign_key: :user_id, dependent: :destroy
+
+  has_many :authored_messages,
+           :class_name => "UserMessage",
+           :foreign_key => "author_id",
+           :inverse_of => :author
+
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -161,6 +165,8 @@ class User < ActiveRecord::Base
     :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url, 
     :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
     :partner_id, :instance_id, :domain_id
+
+  attr_encrypted :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   delegate :to_s, :to => :name
 
@@ -386,16 +392,20 @@ class User < ActiveRecord::Base
     caller[0].include?('friendly_id') ? super : id
   end
 
+  def to_balanced_params
+    {
+      name: name,
+      email: email,
+      phone: phone
+    }
+  end
+
   def is_location_administrator?
     administered_locations.size > 0
   end
 
-  def listings_with_messages
-    listings.with_listing_messages + administered_listings.with_listing_messages
-  end
-
-  def listing_messages
-    ListingMessage.where('owner_id = ? OR listing_id IN(?)', id, listings_with_messages.map(&:id)).order('created_at asc')
+  def user_messages
+    UserMessage.for_user(self)
   end
 
   def listings_in_near(platform_context = nil, results_size = 3, radius_in_km = 100)

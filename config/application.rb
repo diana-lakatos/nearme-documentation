@@ -49,7 +49,8 @@ module DesksnearMe
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password]
+    config.filter_parameters += [:password, :paypal_username, :paypal_password, :paypal_signature, 
+                                 :paypal_app_id, :paypal_client_id, :paypal_client_secret]
 
     config.generators do |g|
       g.test_framework :test_unit, :fixture => false
@@ -104,5 +105,8 @@ module DesksnearMe
     config.action_dispatch.rescue_responses.merge!('Page::NotFound' => :not_found)
     config.action_dispatch.rescue_responses.merge!('Listing::NotFound' => :not_found)
     config.action_dispatch.rescue_responses.merge!('Location::NotFound' => :not_found)
+
+    config.paypal_mode = 'sandbox'
+    config.encrypt_sensitive_db_columns = true
   end
 end

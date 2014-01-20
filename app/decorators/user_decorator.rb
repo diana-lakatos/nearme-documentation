@@ -1,4 +1,6 @@
 class UserDecorator < Draper::Decorator
+  include Draper::LazyHelpers
+
   delegate_all
 
   def job_title_and_company_name
@@ -15,17 +17,26 @@ class UserDecorator < Draper::Decorator
     result.join(" | ")
   end
 
-  def unread_listing_message_threads
-    listing_messages_decorator.inbox.unread
+  def unread_user_message_threads
+    user_messages_decorator.inbox.unread
   end
 
   def social_connections_for(provider)
     social_connections_cache.select{|c| c.provider == provider}.first
   end
 
+  def user_message_recipient
+    object
+  end
+
+  def user_message_summary(user_message)
+    link_to user_message.thread_context.name, profile_path(user_message.thread_context.slug)
+  end
+
   private
-  def listing_messages_decorator
-    @listing_messages_decorator ||= ListingMessagesDecorator.new(listing_messages, object)
+
+  def user_messages_decorator
+    @user_messages_decorator ||= UserMessagesDecorator.new(user_messages, object)
   end
 
   def social_connections_cache
