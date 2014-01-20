@@ -285,6 +285,7 @@ ActiveRecord::Schema.define(:version => 20140119124927) do
     t.decimal  "service_fee_host_percent",  :precision => 5, :scale => 2, :default => 0.0
     t.string   "stripe_api_key"
     t.string   "stripe_public_key"
+    t.string   "stripe_api_key"
     t.string   "paypal_email"
     t.string   "encrypted_paypal_username"
     t.string   "encrypted_paypal_password"
@@ -293,6 +294,7 @@ ActiveRecord::Schema.define(:version => 20140119124927) do
     t.string   "encrypted_paypal_client_id"
     t.string   "encrypted_paypal_client_secret"
     t.string   "encrypted_stripe_api_key"
+    t.string   "encrypted_balanced_api_key"
   end
 
   create_table "listing_types", :force => true do |t|
@@ -712,10 +714,13 @@ ActiveRecord::Schema.define(:version => 20140119124927) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.integer  "unread_user_message_threads_count",                    :default => 0
+    t.string   "stripe_id"
     t.string   "paypal_id"
+    t.integer  "unread_user_message_threads_count",                    :default => 0
     t.string   "encrypted_stripe_id"
     t.string   "encrypted_paypal_id"
+    t.string   "encrypted_balanced_user_id"
+    t.string   "encrypted_balanced_credit_card_id"
   end
 
   add_index "users", ["domain_id"], :name => "index_users_on_domain_id"
