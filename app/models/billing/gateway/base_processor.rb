@@ -89,7 +89,7 @@ class Billing::Gateway::BaseProcessor
     @charge.charge_failed(response)
   end
 
-  # Callback invoked by processor when payout failed
+  # Callback invoked by processor when payout was successful
   def payout_successful(response)
     @payout.payout_successful(response)
   end
