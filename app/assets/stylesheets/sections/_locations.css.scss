@@ -143,11 +143,15 @@ section.listings {
         }
       }
     }
+
+    @media (max-width: $booking-module-breakpoint) {
+      margin-bottom: 15px;
+    }
   }
 
   .administrator {
     position: relative;
-    background: $gray60;
+    background: $gray230;
     @include box-sizing(border-box);
     @include border-radius($border-radius-default);
 
@@ -169,7 +173,7 @@ section.listings {
 
       span.name {
         display: block;
-        color: $gray210;
+        color: $gray80;
         font-size: 20px;
         white-space: nowrap;
         overflow: hidden;
@@ -179,7 +183,7 @@ section.listings {
       span.title {
         display: block;
         height: 2.4em;
-        color: $gray160;
+        color: $gray120;
         font-size: 16px;
         line-height: 1.2em;
         overflow: hidden;
@@ -209,6 +213,12 @@ section.listings {
 
       a.btn.ask {
         margin-top: 8px;
+      }
+
+      a.btn.view {
+        border: 1px solid $gray170 !important;
+        color: $gray120;
+        background: $gray230;
       }
 
     }
@@ -640,14 +650,12 @@ section.listings {
   .social-buttons-wrapper {
     position: relative;
     margin-left: 15px;
-    padding: 12px 15px 15px 100px;
-    border: 1px solid $gray160;
-    @include border-radius($border-radius-default);
+    padding: 0px 0px 0px 100px;
 
     .facebook {
       position: absolute;
-      left: 15px;
-      top: 16px;
+      left: 0;
+      top: 5px;
     }
 
     .social-buttons {

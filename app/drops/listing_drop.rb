@@ -30,7 +30,7 @@ class ListingDrop < BaseDrop
   end
 
   def listing_url
-    routes.location_listing_path(@listing.location, @listing)
+    routes.location_path(@listing.location, @listing)
   end
 
   def street

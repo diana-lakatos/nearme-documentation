@@ -10,7 +10,7 @@ class LocationDrop < BaseDrop
   end
 
   def url
-    routes.location_listing_path(@location, @location.listings.first)
+    routes.location_path(@location, @location.listings.first)
   end
 
   def tweet_url
