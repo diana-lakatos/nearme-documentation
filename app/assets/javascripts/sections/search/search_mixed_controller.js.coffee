@@ -42,7 +42,7 @@ class Search.SearchMixedController extends Search.SearchController
     @searchButton.bind 'click', =>
       @submit_form = true
 
-    @resultsContainer().find('.pagination a').live 'click', (e) =>
+    $(document).on 'click', '.pagination a', (e) =>
       e.preventDefault()
       link = $(e.target)
       page_regexp = /page=(\d+)/gm
@@ -104,12 +104,6 @@ class Search.SearchMixedController extends Search.SearchController
       listing = @listingForElementOrBuild(el)
       listings.push listing
     listings
-
-
-  listingForElementOrBuild: (element) ->
-    listing = super(element)
-    listing.setNumber($(element).data('number'))
-    listing
 
 
   initializeEndlessScrolling: ->

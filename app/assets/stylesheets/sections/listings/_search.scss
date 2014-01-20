@@ -918,6 +918,10 @@ section.search section#results.mixed {
         padding: 10px;
         margin-bottom: 1px;
 
+        .container-fluid {
+          padding-left: 0px;
+        }
+
         ul {
           li {
             display: inline;
@@ -927,7 +931,7 @@ section.search section#results.mixed {
       }
 
       @media (max-width: 2 * $iphone-portrait) {
-        margin-right: 10px;
+        display: none;
       }
     }
 

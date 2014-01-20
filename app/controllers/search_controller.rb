@@ -177,7 +177,7 @@ class SearchController < ApplicationController
   def set_options_for_filters
     @filterable_location_types = platform_context.instance.location_types
     @filterable_listing_types = platform_context.instance.listing_types
-    @filterable_pricing = [['hourly', 'hourly'], ['daily', 'daily'], ['weekly', 'weekly'], ['monthly', 'monthly']]
+    @filterable_pricing = [['hourly', 'Hourly'], ['daily', 'Daily'], ['weekly', 'Weekly'], ['monthly', 'Monthly']]
     @filterable_industries = Industry.with_listings.all if platform_context.instance.is_desksnearme? and !result_view.mixed?
   end
 
