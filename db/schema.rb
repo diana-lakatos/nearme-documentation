@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140117092751) do
+ActiveRecord::Schema.define(:version => 20140119124927) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(:version => 20140117092751) do
     t.integer  "user_id"
     t.string   "reference_type"
     t.string   "currency"
+    t.string   "encrypted_response"
   end
 
   add_index "charges", ["reference_id", "reference_type"], :name => "index_charges_on_reference_id_and_reference_type"
@@ -272,16 +273,17 @@ ActiveRecord::Schema.define(:version => 20140117092751) do
 
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                                                                       :null => false
-    t.datetime "updated_at",                                                                       :null => false
-    t.string   "bookable_noun",                                                :default => "Desk"
-    t.decimal  "service_fee_guest_percent",      :precision => 5, :scale => 2, :default => 0.0
+    t.datetime "created_at",                                                                  :null => false
+    t.datetime "updated_at",                                                                  :null => false
+    t.string   "bookable_noun",                                           :default => "Desk"
+    t.decimal  "service_fee_guest_percent", :precision => 5, :scale => 2, :default => 0.0
     t.string   "lessor"
     t.string   "lessee"
-    t.boolean  "skip_company",                                                 :default => false
-    t.boolean  "default_instance",                                             :default => false
+    t.boolean  "skip_company",                                            :default => false
+    t.boolean  "default_instance",                                        :default => false
     t.text     "pricing_options"
-    t.decimal  "service_fee_host_percent",       :precision => 5, :scale => 2, :default => 0.0
+    t.decimal  "service_fee_host_percent",  :precision => 5, :scale => 2, :default => 0.0
+    t.string   "stripe_api_key"
     t.string   "stripe_public_key"
     t.string   "stripe_api_key"
     t.string   "paypal_email"
@@ -428,6 +430,7 @@ ActiveRecord::Schema.define(:version => 20140117092751) do
     t.datetime "created_at",                                    :null => false
     t.datetime "updated_at",                                    :null => false
     t.integer  "service_fee_amount_host_cents",  :default => 0, :null => false
+    t.datetime "deleted_at"
   end
 
   add_index "payment_transfers", ["company_id"], :name => "index_payment_transfers_on_company_id"
@@ -441,6 +444,8 @@ ActiveRecord::Schema.define(:version => 20140117092751) do
     t.string   "currency"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.datetime "deleted_at"
+    t.string   "encrypted_response"
   end
 
   create_table "photos", :force => true do |t|
@@ -676,6 +681,7 @@ ActiveRecord::Schema.define(:version => 20140117092751) do
     t.string   "phone"
     t.string   "unconfirmed_email"
     t.string   "unlock_token"
+    t.string   "stripe_id"
     t.string   "job_title"
     t.text     "biography"
     t.datetime "mailchimp_synchronized_at"

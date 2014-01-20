@@ -71,6 +71,28 @@ class Instance < ActiveRecord::Base
     super.presence || "guest"
   end
 
+  def paypal_api_config
+    @paypal_api_config ||= {
+      :mode => DesksnearMe::Application.config.paypal_mode,
+      :client_id => self.paypal_client_id,
+      :client_secret => self.paypal_client_secret,
+      :app_id    => self.paypal_app_id,
+      :username  => self.paypal_username,
+      :password  => self.paypal_password,
+      :signature => self.paypal_signature
+    }
+  end
+
+  def paypal_supported?
+    self.paypal_username.present? &&
+    self.paypal_password.present? &&
+    self.paypal_signature.present? &&
+    self.paypal_client_id.present? &&
+    self.paypal_client_secret.present? &&
+    self.paypal_app_id.present?
+  end
+
+
   def to_liquid
     InstanceDrop.new(self)
   end

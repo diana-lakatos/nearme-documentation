@@ -19,4 +19,5 @@ DesksnearMe::Application.configure do
   config.after_initialize do
       PaperTrail.enabled = false
   end
+  config.encrypt_sensitive_db_columns = false
 end

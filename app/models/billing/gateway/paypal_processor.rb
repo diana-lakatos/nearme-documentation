@@ -6,15 +6,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
   def initialize(instance)
     super(instance)
 
-    PayPal::SDK.configure(
-      :mode => DesksnearMe::Application.config.paypal_mode,
-      :client_id => instance.paypal_client_id,
-      :client_secret => instance.paypal_client_secret,
-      :app_id    => instance.paypal_app_id,
-      :username  => instance.paypal_username,
-      :password  => instance.paypal_password,
-      :signature => instance.paypal_signature
-    )
+    PayPal::SDK.configure(instance.paypal_api_config)
     @api = PayPal::SDK::AdaptivePayments::API.new
   end
 
@@ -23,12 +15,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
   end
 
   def self.instance_supported?(instance)
-    instance.paypal_username.present? &&
-    instance.paypal_password.present? &&
-    instance.paypal_signature.present? &&
-    instance.paypal_client_id.present? &&
-    instance.paypal_client_secret.present? &&
-    instance.paypal_app_id.present?
+    instance.paypal_supported?
   end
 
   def self.is_supported_by?(object)
@@ -168,18 +155,6 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
           :total => amount,
           :currency => @currency },
       }]
-    }
-  end
-
-  def api_config
-    @api_config ||= {
-      :mode => DesksnearMe::Application.config.paypal_mode,
-      :client_id => @instance.paypal_client_id,
-      :client_secret => @instance.paypal_client_secret,
-      :app_id    => @instance.paypal_app_id,
-      :username  => @instance.paypal_username,
-      :password  => @instance.paypal_password,
-      :signature => @instance.paypal_signature
     }
   end
 
