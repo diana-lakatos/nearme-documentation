@@ -81,7 +81,7 @@ class LocationsControllerTest < ActionController::TestCase
         @second_listing.destroy
         @listing.update_attributes(draft: Time.now, enabled: false)
         get :show, id: @location.id, listing_id: @listing
-        assert_redirected_to search_path(q: @listing.address)
+        assert_redirected_to search_path(loc: @listing.address)
       end
     end
 

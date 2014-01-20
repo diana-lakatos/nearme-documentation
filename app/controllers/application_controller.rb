@@ -299,4 +299,11 @@ class ApplicationController < ActionController::Base
       Rails.logger.debug "Error when preparing Raygun custom_params: #{e}"
     end
   end
+
+  def notify_raygun_about_exception(exception)
+    return if (Rails.env.development? || Rails.env.test?)
+    Raygun.configuration.failsafe_logger = true
+    Raygun.track_exception(exception)
+    Raygun.configuration.failsafe_logger = false
+  end
 end

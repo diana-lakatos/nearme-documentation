@@ -1,9 +1,0 @@
-%header
-  .button-links
-    %ul
-      %li
-        = listing_message_navigation_link :index do
-          %span= t('listing_messages.inbox', count: current_user.unread_listing_message_threads_count)
-      %li
-        = listing_message_navigation_link :archived do
-          %span Archived

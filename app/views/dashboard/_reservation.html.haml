@@ -8,6 +8,7 @@
         %div{:class => reservation.archived? ? 'span6' : 'span5'}
           - if reservation.owner.present?
             = link_to reservation.owner, profile_path(reservation.owner.slug)
+            = link_to '', new_reservation_user_message_path(reservation), class: 'ico-mail', rel: 'modal'
           - else
             = "#{reservation.owner_including_deleted} (Deleted)"
           %br

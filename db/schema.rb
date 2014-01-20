@@ -283,6 +283,7 @@ ActiveRecord::Schema.define(:version => 20140117092751) do
     t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",       :precision => 5, :scale => 2, :default => 0.0
     t.string   "stripe_public_key"
+    t.string   "stripe_api_key"
     t.string   "paypal_email"
     t.string   "encrypted_paypal_username"
     t.string   "encrypted_paypal_password"
@@ -290,25 +291,9 @@ ActiveRecord::Schema.define(:version => 20140117092751) do
     t.string   "encrypted_paypal_app_id"
     t.string   "encrypted_paypal_client_id"
     t.string   "encrypted_paypal_client_secret"
-    t.string   "stripe_api_key"
     t.string   "encrypted_stripe_api_key"
-    t.string   "balanced_api_key"
     t.string   "encrypted_balanced_api_key"
   end
-
-  create_table "listing_messages", :force => true do |t|
-    t.integer  "owner_id"
-    t.integer  "author_id",                               :null => false
-    t.integer  "listing_id"
-    t.text     "body"
-    t.boolean  "read",                 :default => false
-    t.boolean  "archived_for_owner",   :default => false
-    t.boolean  "archived_for_listing", :default => false
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-  end
-
-  add_index "listing_messages", ["listing_id"], :name => "index_listing_messages_on_listing_id"
 
   create_table "listing_types", :force => true do |t|
     t.string   "name"
@@ -634,6 +619,20 @@ ActiveRecord::Schema.define(:version => 20140117092751) do
 
   add_index "user_industries", ["industry_id", "user_id"], :name => "index_user_industries_on_industry_id_and_user_id"
 
+  create_table "user_messages", :force => true do |t|
+    t.integer  "thread_owner_id"
+    t.integer  "author_id",                                 :null => false
+    t.integer  "thread_recipient_id"
+    t.integer  "thread_context_id"
+    t.string   "thread_context_type"
+    t.text     "body"
+    t.boolean  "read"
+    t.boolean  "archived_for_owner",     :default => false
+    t.boolean  "archived_for_recipient", :default => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+  end
+
   create_table "user_relationships", :force => true do |t|
     t.integer  "follower_id"
     t.integer  "followed_id"
@@ -709,14 +708,12 @@ ActiveRecord::Schema.define(:version => 20140117092751) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.integer  "unread_listing_message_threads_count",                 :default => 0
     t.string   "stripe_id"
     t.string   "paypal_id"
+    t.integer  "unread_user_message_threads_count",                    :default => 0
     t.string   "encrypted_stripe_id"
     t.string   "encrypted_paypal_id"
-    t.string   "balanced_user_id"
     t.string   "encrypted_balanced_user_id"
-    t.string   "balanced_credit_card_id"
     t.string   "encrypted_balanced_credit_card_id"
   end
 
