@@ -52,8 +52,11 @@ gem 'animation'
 gem "coffee-rails"
 gem 'delayed_job_active_record'
 gem "rdiscount"
+gem 'attr_encrypted'
 gem 'stripe'
 gem 'paypal-sdk-rest'
+gem 'paypal-sdk-adaptivepayments'
+gem 'balanced'
 gem 'friendly_id'
 
 gem 'sass-rails'

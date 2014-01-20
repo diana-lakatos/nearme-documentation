@@ -2,6 +2,14 @@ class PaymentTransfer < ActiveRecord::Base
   belongs_to :company
   has_many :reservation_charges, :dependent => :nullify
 
+  has_many :payout_attemps,
+    :class_name => 'Payout',
+    :as => :reference,
+    :dependent => :nullify
+
+  after_validation :assign_amounts_and_currency
+  after_create :payout
+
   scope :pending, -> {
     where(transferred_at: nil)
   }
@@ -14,7 +22,6 @@ class PaymentTransfer < ActiveRecord::Base
     where("DATE(#{table_name}.created_at) >= ? ", days_in_past.days.ago)
   }
 
-  after_create :assign_amounts_and_currency
 
   validate :validate_all_charges_in_currency
 
@@ -47,10 +54,23 @@ class PaymentTransfer < ActiveRecord::Base
     Company.with_deleted.find(company_id)
   end
 
-  private
+   # Attempt to payout through the billing gateway
+  def payout
+    return if !billing_gateway.payment_supported?
+    return if transferred?
 
-  def assign_currency
+    # Generates a ChargeAttempt with this record as the reference.
+    payout = billing_gateway.payout(
+      amount: amount,
+      reference: self
+    )
+
+    if payout.success
+      touch(:transferred_at)
+    end
   end
+
+  private
 
   def assign_amounts_and_currency
     self.currency = reservation_charges.first.try(:currency)
@@ -61,12 +81,15 @@ class PaymentTransfer < ActiveRecord::Base
     self.service_fee_amount_guest_cents = reservation_charges.sum(
       :service_fee_amount_guest_cents
     )
-    save!(validate: false)
   end
 
   def validate_all_charges_in_currency
     unless reservation_charges.map(&:currency).uniq.length <= 1
       errors.add :currency, 'all paid out payments must be in the same currency'
     end
+  end
+
+  def billing_gateway
+    @billing_gateway ||= Billing::Gateway.new(company.instance).outgoing_payment(company.instance, company)
   end
 end

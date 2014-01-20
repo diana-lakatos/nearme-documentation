@@ -86,7 +86,7 @@ class ReservationCharge < ActiveRecord::Base
   private
 
   def billing_gateway
-    @billing_gateway ||= reservation.owner.billing_gateway(currency, instance)
+    @billing_gateway ||= Billing::Gateway.new(instance).ingoing_payment(reservation.owner, currency)
   end
 
   def assign_currency

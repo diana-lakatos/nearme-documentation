@@ -3,6 +3,38 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
 
   SUPPORTED_CURRENCIES = ['GBP', 'EUR', 'JPY', 'CAD']
 
+  def initialize(instance)
+    super(instance)
+
+    PayPal::SDK.configure(
+      :mode => DesksnearMe::Application.config.paypal_mode,
+      :client_id => instance.paypal_client_id,
+      :client_secret => instance.paypal_client_secret,
+      :app_id    => instance.paypal_app_id,
+      :username  => instance.paypal_username,
+      :password  => instance.paypal_password,
+      :signature => instance.paypal_signature
+    )
+    @api = PayPal::SDK::AdaptivePayments::API.new
+  end
+
+  def self.currency_supported?(currency)
+    self::SUPPORTED_CURRENCIES.include?(currency)
+  end
+
+  def self.instance_supported?(instance)
+    instance.paypal_username.present? &&
+    instance.paypal_password.present? &&
+    instance.paypal_signature.present? &&
+    instance.paypal_client_id.present? &&
+    instance.paypal_client_secret.present? &&
+    instance.paypal_app_id.present?
+  end
+
+  def self.is_supported_by?(object)
+    object.respond_to?(:paypal_email) && object.paypal_email.present?
+  end
+
   def process_charge(amount)
     @payment = PayPal::SDK::REST::Payment.new(paypal_argument_hash(amount))
     if @payment.create
@@ -10,6 +42,29 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
     else
       charge_failed(@payment.error)
       handle_error(@payment.error)
+    end
+  end
+
+  def process_payout(amount)
+    @pay = @api.build_pay({
+      :actionType => "PAY",
+      :currencyCode => amount.currency.iso_code,
+      :feesPayer => "SENDER",
+      :cancelUrl => "http://#{Rails.application.routes.default_url_options[:host]}",
+      :returnUrl => "http://#{Rails.application.routes.default_url_options[:host]}",
+      :receiverList => {
+        :receiver => [{
+          :amount => amount.to_s,
+          :email => @receiver.paypal_email 
+        }] 
+      },
+      :senderEmail => @sender.paypal_email
+    })
+    @pay_response = @api.pay(@pay) 
+    if @pay_response.success?
+      payout_successful(@pay_response)
+    else
+      payout_failed(@pay_response.error)
     end
   end
 
@@ -113,6 +168,18 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
           :total => amount,
           :currency => @currency },
       }]
+    }
+  end
+
+  def api_config
+    @api_config ||= {
+      :mode => DesksnearMe::Application.config.paypal_mode,
+      :client_id => @instance.paypal_client_id,
+      :client_secret => @instance.paypal_client_secret,
+      :app_id    => @instance.paypal_app_id,
+      :username  => @instance.paypal_username,
+      :password  => @instance.paypal_password,
+      :signature => @instance.paypal_signature
     }
   end
 
