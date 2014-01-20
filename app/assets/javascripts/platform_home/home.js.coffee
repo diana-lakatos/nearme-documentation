@@ -40,8 +40,6 @@ class @HomeController
       if link_el.parent().hasClass('popup')
         @popUpWindow(link_el.attr('href'), link_el.data('window-width'), link_el.data('window-height'))
       else
-        $('#email-modal input').val('')
-        $('#email-modal .modal-footer a').text('SEND')
         $('#email-modal').modal
           backdrop: true
           keyboard: true
@@ -83,6 +81,7 @@ class @HomeController
     form = $('section.build-yours-now form#send-email')
     emails = form.find('input[name=emails]')
     your_name = form.find('input[name=your_name]')
+    authenticity_token = form.find("input[name='authenticity_token']")
 
     if emails.val() != '' && your_name.val() != ''
       $('#email-modal .modal-footer a').text('SENDING ...')
@@ -90,6 +89,7 @@ class @HomeController
         email_data:
           emails: emails.val()
           your_name: your_name.val()
+        authenticity_token: authenticity_token.val()
         (response) ->
           $('#email-modal .modal-footer a').text('SENT')
           $('#email-modal').modal('hide')

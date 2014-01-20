@@ -240,6 +240,7 @@
         .modal-header
         .modal-body
           %form{method: 'POST', action: '/send-email', id: 'send-email'}
+            %input{name: "authenticity_token", type: "hidden", value: session[:_csrf_token]}
             %label{for: 'emails'} To
             %input{type: 'text', name: 'emails', placeholder: 'Multiple emails? Use commas.'}
             %label.middle-label{for: 'your_name'} Your Name
