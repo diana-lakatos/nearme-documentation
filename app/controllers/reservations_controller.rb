@@ -35,7 +35,7 @@ class ReservationsController < ApplicationController
   end
 
   def upcoming
-    @reservation  = reservations.find_by_id(params[:id])
+    @reservation  = reservation if params[:id]
     @reservations = reservations.not_archived.to_a.sort_by(&:date)
 
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
@@ -75,7 +75,11 @@ class ReservationsController < ApplicationController
   end
 
   def reservation
-    @reservation ||= reservations.find(params[:id])
+    begin
+      @reservation ||= reservations.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      raise Reservation::NotFound
+    end
   end
 
   def allowed_events

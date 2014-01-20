@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140114083924) do
+ActiveRecord::Schema.define(:version => 20140119124927) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(:version => 20140114083924) do
     t.integer  "user_id"
     t.string   "reference_type"
     t.string   "currency"
+    t.string   "encrypted_response"
   end
 
   add_index "charges", ["reference_id", "reference_type"], :name => "index_charges_on_reference_id_and_reference_type"
@@ -284,6 +285,16 @@ ActiveRecord::Schema.define(:version => 20140114083924) do
     t.decimal  "service_fee_host_percent",  :precision => 5, :scale => 2, :default => 0.0
     t.string   "stripe_api_key"
     t.string   "stripe_public_key"
+    t.string   "stripe_api_key"
+    t.string   "paypal_email"
+    t.string   "encrypted_paypal_username"
+    t.string   "encrypted_paypal_password"
+    t.string   "encrypted_paypal_signature"
+    t.string   "encrypted_paypal_app_id"
+    t.string   "encrypted_paypal_client_id"
+    t.string   "encrypted_paypal_client_secret"
+    t.string   "encrypted_stripe_api_key"
+    t.string   "encrypted_balanced_api_key"
   end
 
   create_table "listing_types", :force => true do |t|
@@ -419,9 +430,23 @@ ActiveRecord::Schema.define(:version => 20140114083924) do
     t.datetime "created_at",                                    :null => false
     t.datetime "updated_at",                                    :null => false
     t.integer  "service_fee_amount_host_cents",  :default => 0, :null => false
+    t.datetime "deleted_at"
   end
 
   add_index "payment_transfers", ["company_id"], :name => "index_payment_transfers_on_company_id"
+
+  create_table "payouts", :force => true do |t|
+    t.integer  "reference_id"
+    t.string   "reference_type"
+    t.boolean  "success"
+    t.text     "response"
+    t.integer  "amount"
+    t.string   "currency"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.datetime "deleted_at"
+    t.string   "encrypted_response"
+  end
 
   create_table "photos", :force => true do |t|
     t.datetime "created_at"
@@ -689,8 +714,13 @@ ActiveRecord::Schema.define(:version => 20140114083924) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.integer  "unread_user_message_threads_count",                    :default => 0
+    t.string   "stripe_id"
     t.string   "paypal_id"
+    t.integer  "unread_user_message_threads_count",                    :default => 0
+    t.string   "encrypted_stripe_id"
+    t.string   "encrypted_paypal_id"
+    t.string   "encrypted_balanced_user_id"
+    t.string   "encrypted_balanced_credit_card_id"
   end
 
   add_index "users", ["domain_id"], :name => "index_users_on_domain_id"

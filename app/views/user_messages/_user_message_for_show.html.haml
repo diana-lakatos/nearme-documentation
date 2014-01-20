@@ -1,10 +1,14 @@
-- author = user_message.author
+- author = user_message.author_with_deleted
 .row-fluid
   .span12.listing-message-for-show{class: user_message.css_class(current_user) }
 
     - if author != current_user
       .span2.info
-        %p.name= link_to author.first_name, profile_path(author.slug)
+        %p.name
+          - if author.deleted?
+            = "#{author.first_name} (Deleted)"
+          - else
+            = link_to author.first_name, profile_path(author.slug)
         %p.date= distance_of_time_in_words_or_date(user_message.created_at)
 
     .span10

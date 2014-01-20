@@ -1,4 +1,6 @@
 class Reservation < ActiveRecord::Base
+  class NotFound < ActiveRecord::RecordNotFound; end
+
   has_paper_trail
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',

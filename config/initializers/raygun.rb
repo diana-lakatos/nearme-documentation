@@ -5,7 +5,7 @@ Raygun.setup do |config|
     config.api_key = '3VN6sPnvwRlTfwDmwhRFIA=='
   end
 
-  [Listing::NotFound, Location::NotFound, Page::NotFound].each do |ignorable_exception|
+  [Listing::NotFound, Location::NotFound, Page::NotFound, Reservation::NotFound].each do |ignorable_exception|
     config.ignore << ignorable_exception
   end
 end

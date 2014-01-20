@@ -78,12 +78,24 @@ class UserMessage < ActiveRecord::Base
   end
 
   def recipient
-    author == thread_owner ? thread_recipient : thread_owner
+    author_with_deleted == thread_owner_with_deleted ? thread_recipient_with_deleted : thread_owner_with_deleted
   end
 
   def thread_context_with_deleted
     return nil if thread_context_type.nil?
     @thread_context_with_deleted ||= thread_context_type.constantize.with_deleted.find_by_id(thread_context_id)
+  end
+
+  def author_with_deleted
+    author.presence || User.with_deleted.find(author_id)
+  end
+
+  def thread_owner_with_deleted
+    thread_owner.presence || User.with_deleted.find(thread_owner_id)
+  end
+
+  def thread_recipient_with_deleted
+    thread_recipient.presence || User.with_deleted.find(thread_recipient_id)
   end
 
   def set_message_context_from_request_params(params)

@@ -54,6 +54,15 @@ module Billing
       }
     end
 
+    def to_balanced_params
+      {
+        card_number: number,
+        expiration_month: expiry_month.to_i,
+        expiration_year: 2000 + expiry_year.to_s[2..3].to_i,
+        security_code: cvc.to_s
+      }
+    end
+
     private 
 
     def card_type
