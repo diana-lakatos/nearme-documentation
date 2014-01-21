@@ -77,6 +77,32 @@ module Utils
     end
     alias_method :listing_types, :load_listing_types!
 
+    def load_users_and_companies!
+      @users_and_companies ||= do_task "Loading users and companies" do
+        users, companies = [], []
+        Data.domains.each_with_index.map do |url, index|
+          company_email = "info@#{url}"
+          user = FactoryGirl.create(:demo_user, :name => Faker::Name.name, :email => company_email,
+                                    :biography => Faker::Lorem.paragraph.truncate(200),
+                                    :industries => industries.sample(2))
+          users << user
+
+          @user ||= user
+
+          if index <= 3
+            company = FactoryGirl.create(:company_with_paypal_email, :name => url, :email => user.email, :url => url,
+                                            :description => Faker::Lorem.paragraph.truncate(200),
+                                            :creator => user, :industries => user.industries, :instance_id => instance.id)
+            company.users << user unless company.users.include?(user)
+            companies << company
+          elsif index <= 5
+            companies.first.users << user
+          end
+        end
+        [users, companies]
+      end
+    end
+
     def load_instance!
       @instance ||= do_task "Loading RVnow instance" do
         instance = FactoryGirl.create(:instance, name: 'RVnow', bookable_noun: 'RV', lessor: 'owner', lessee: 'renter', service_fee_guest_percent: 0, service_fee_host_percent: 0)
@@ -168,9 +194,9 @@ module Utils
             listing_type_id: listing_types.first{|lt| lt.name == row['listing_type']}.id,
             quantity: 1,
             description: row['listing_description'],
-            daily_price_cents: row['daily_price'],
-            weekly_price_cents: row['weekly_price'],
-            monthly_price_cents: row['monthly_price'],
+            daily_price_cents: row['daily_price'].blank? ? nil : row['daily_price'].to_i * 100,
+            weekly_price_cents: row['weekly_price'].blank? ? nil : row['weekly_price'].to_i * 100,
+            monthly_price_cents: row['monthly_price'].blank? ? nil : row['monthly_price'].to_i * 100,
             hourly_reservations: false
           })
 
