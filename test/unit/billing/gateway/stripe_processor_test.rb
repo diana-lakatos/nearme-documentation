@@ -5,12 +5,12 @@ class Billing::Gateway::StripeProcessorTest < ActiveSupport::TestCase
     @instance = Instance.default_instance
     @user = FactoryGirl.create(:user)
     @reservation = FactoryGirl.create(:reservation)
-    @billing_gateway = @user.billing_gateway('USD', @instance)
+    @instance.update_attribute(:stripe_api_key, "abcd")
+    @billing_gateway = Billing::Gateway.new(@instance).ingoing_payment(@user, 'USD')
   end
 
   context "#charge" do
     should "trigger a charge on the user's credit card" do
-      @instance.update_attribute(:stripe_api_key, "abcd")
       Stripe::Charge.expects(:create).with({:amount => 100_00, :currency => 'USD', :customer => @user.stripe_id}, @instance.stripe_api_key).returns({})
       @billing_gateway.charge(:amount => 100_00)
     end

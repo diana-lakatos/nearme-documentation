@@ -35,3 +35,7 @@ environments:
     migrate: true
     migration_command: rake db:migrate
     precompile_assets: true
+  dnme_demo:
+    migrate: true
+    migration_command: rake db:migrate
+    precompile_assets: true
