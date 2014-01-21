@@ -1,79 +1,103 @@
-.booking-module-container{:class => (listing.hourly_reservations? ? 'booking-hourly' : 'booking-daily')}
+- location_pretty_availability ||= pretty_availability_sentence(listing.location.availability)
+- collapsed ||= false
+.booking-module-container{:class => "#{(listing.hourly_reservations? ? 'booking-hourly' : 'booking-daily')} #{collapsed ? " collapsed" : ""}", :'data-toggleable-booking-module' => true}
   .booking-module
-    - if listing.free?
-      %span.label
-        Free
-    - elsif listing.hourly_reservations?
-      %span.label
-        - unless listing.hourly_price.to_f.zero?
-          = "#{money_without_cents_and_with_symbol(listing.hourly_price)}"
+    .booking-header
+      %a.toggleable-booking-trigger{:href => location_path(listing.location, listing), :'data-booking-trigger' => true}
+        = listing.name
+        %span.pull-right
+          %i.ico-chevron-down
+          %i.ico-chevron-right
+    .booking-price-info
+      %span= price_information(listing)
+      %span.pull-right
+        = listing.listing_type.try(:name)
+    .booking-body
+      .booking-price
+        - if listing.free?
+          %span.label
+            Free
+        - elsif listing.hourly_reservations?
+          %span.label
+            - unless listing.hourly_price.to_f.zero?
+              = "#{money_without_cents_and_with_symbol(listing.hourly_price)}"
+            - else
+              = '-'
+            %span.period   PER HOUR
         - else
-          = '-'
-        %span.period   PER HOUR
-    - else
-      - if platform_context.instance.pricing_options['daily']
-        %span.label
-          - unless listing.daily_price.to_f.zero?
-            = "#{money_without_cents_and_with_symbol(listing.daily_price)}"
-          - else
-            = '-'
-          %span.period   PER DAY
+          - if platform_context.instance.pricing_options['daily']
+            %span.label
+              - unless listing.daily_price.to_f.zero?
+                = "#{money_without_cents_and_with_symbol(listing.daily_price)}"
+              - else
+                = '-'
+              %span.period   PER DAY
 
-      - if platform_context.instance.pricing_options['weekly']
-        %span.label
-          - unless listing.weekly_price.to_f.zero?
-            = "#{money_without_cents_and_with_symbol(listing.weekly_price)}"
-          - else
-            = '-'
-          %span.period   PER WEEK
+          - if platform_context.instance.pricing_options['weekly']
+            %span.label
+              - unless listing.weekly_price.to_f.zero?
+                = "#{money_without_cents_and_with_symbol(listing.weekly_price)}"
+              - else
+                = '-'
+              %span.period   PER WEEK
 
-      - if platform_context.instance.pricing_options['monthly']
-        %span.label
-          - unless listing.monthly_price.to_f.zero?
-            = "#{money_without_cents_and_with_symbol(listing.monthly_price)}"
-          - else
-            = '-'
-          %span.period   PER MONTH
+          - if platform_context.instance.pricing_options['monthly']
+            %span.label
+              - unless listing.monthly_price.to_f.zero?
+                = "#{money_without_cents_and_with_symbol(listing.monthly_price)}"
+              - else
+                = '-'
+              %span.period   PER MONTH
+
+      .clearfix
+      .booking-description
+        %h3 Description
+        %span= listing.description
+      - listing_availability = pretty_availability_sentence(listing.availability) 
+      - if listing_availability != location_pretty_availability
+        .booking-opening-hours
+          %h3 Hours
+          %span= pretty_availability_sentence(listing.availability)
+
+      .calendar-wrapper.date-start
+        .calendar
+          %span.ico-calender-end
+          %span.calendar-text Start
+
+      - if listing.hourly_reservations?
+
+        .calendar-wrapper.time-picker
+          .time
+            %span.ico-clock
+            %span.time-text 9:00am
+
+      - else
+        .calendar-wrapper.date-end
+          .calendar
+            %span.ico-calender-start
+            %span.calendar-text End
+
+      .clearfix
+      .quantity
+        %span.resource{:'data-singular' => listing.listing_type.name, :'data-plural' => listing.listing_type.name.pluralize}= listing.listing_type.name
+        = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
+      .price
+        Total
+        %span #{currency_content_tag(@location.currency, 0.00, :span, { :rel => false })}
+
+      .book
+        - registration_url = new_user_registration_path(return_to: location_url(@listing.location, @listing, restore_reservations: true))
+        - store_reservation_request_url = store_reservation_request_listing_reservations_path(@listing)
+        = form_for :reservation_request, :url => review_listing_reservations_path(listing) do |f|
+          = hidden_field_tag :listing_id, @listing.id
+          = f.hidden_field :quantity
+          = f.hidden_field :dates
+          = f.hidden_field :start_minute
+          = f.hidden_field :end_minute
+
+          = f.submit 'Book', :id =>"book-#{listing.id}", :class => "btn btn-green btn-large", :rel => "tooltip", :'data-original-title' => "Please select days first", :'data-behavior' => 'reviewBooking', :'data-listing-id' => listing.id, :'data-registration-url' => registration_url, :'data-store-reservation-request-url' => store_reservation_request_url, :'data-user-signed-in' => user_signed_in?
 
     .clearfix
-    .calendar-wrapper.date-start
-      .calendar
-        %span.ico-calender-end
-        %span.calendar-text Start
-
-    - if listing.hourly_reservations?
-
-      .calendar-wrapper.time-picker
-        .time
-          %span.ico-clock
-          %span.time-text 9:00am
-
-    - else
-      .calendar-wrapper.date-end
-        .calendar
-          %span.ico-calender-start
-          %span.calendar-text End
-
-    .quantity
-      %span.resource{:'data-singular' => listing.listing_type.name, :'data-plural' => listing.listing_type.name.pluralize}= listing.listing_type.name
-      = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
-    .price
-      Total
-      %span #{currency_content_tag(@location.currency, 0.00, :span, { :rel => false })}
-
-    .book
-      - registration_url = new_user_registration_path(return_to: location_listing_url(@listing.location, @listing, restore_reservations: true))
-      - store_reservation_request_url = store_reservation_request_listing_reservations_path(@listing)
-      = form_for :reservation_request, :url => review_listing_reservations_path(listing) do |f|
-        = hidden_field_tag :listing_id, @listing.id
-        = f.hidden_field :quantity
-        = f.hidden_field :dates
-        = f.hidden_field :start_minute
-        = f.hidden_field :end_minute
-
-        = f.submit 'Book', :id =>"book-#{listing.id}", :class => "btn btn-green btn-large", :rel => "tooltip", :'data-original-title' => "Please select days first", :'data-behavior' => 'reviewBooking', :'data-listing-id' => listing.id, :'data-registration-url' => registration_url, :'data-store-reservation-request-url' => store_reservation_request_url, :'data-user-signed-in' => user_signed_in?
-
-  .clearfix
 
   - content_for :domready do
-    $('.quantity select').customSelect();
+    $("##{listing.to_param} .quantity select").customSelect();

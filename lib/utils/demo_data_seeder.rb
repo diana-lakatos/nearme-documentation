@@ -78,6 +78,10 @@ module Utils
           load_listings!
           generate_impressions!
 
+          # === MESSAGES =========================================
+
+          generate_user_messages!
+
           # === RESERVERATIONS ===================================
 
           load_reservations_for_dnm!
@@ -214,6 +218,24 @@ module Utils
             end
           end
         end
+      end
+    end
+
+    def generate_user_messages!
+      users.each do |user|
+        recipient = users.sample
+
+        user_message = user.authored_messages.new(body: "Hi #{recipient.name}!")
+        user_message.set_message_context_from_request_params(user_id: recipient.id)
+        user_message.save!
+      end
+
+      listings.sample(20).each do |listing|
+        author = users.sample
+
+        user_message = author.authored_messages.new(body: "Question about #{listing.name}.")
+        user_message.set_message_context_from_request_params(listing_id: listing.id)
+        user_message.save!
       end
     end
 

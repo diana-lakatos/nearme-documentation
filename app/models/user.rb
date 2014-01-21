@@ -84,9 +84,14 @@ class User < ActiveRecord::Base
   has_many :user_industries
   has_many :industries, :through => :user_industries
 
-  has_many :charges, :foreign_key => :user_id, :dependent => :destroy
-
   has_many :mailer_unsubscriptions
+
+  has_many :charges, foreign_key: :user_id, dependent: :destroy
+
+  has_many :authored_messages,
+           :class_name => "UserMessage",
+           :foreign_key => "author_id",
+           :inverse_of => :author
 
   belongs_to :partner
   belongs_to :instance
@@ -161,6 +166,8 @@ class User < ActiveRecord::Base
     :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
     :partner_id, :instance_id, :domain_id
 
+  attr_encrypted :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+
   delegate :to_s, :to => :name
 
   attr_accessor :current_platform_context
@@ -179,7 +186,6 @@ class User < ActiveRecord::Base
     expires_at = omniauth['credentials'] && omniauth['credentials']['expires_at'] ? Time.at(omniauth['credentials']['expires_at']) : nil
     token = omniauth['credentials'] && omniauth['credentials']['token']
     secret = omniauth['credentials'] && omniauth['credentials']['secret']
-    use_social_provider_image(omniauth['info']['image']) if omniauth['info']['image']
     authentications.build(:provider => omniauth['provider'],
                           :uid => omniauth['uid'],
                           :info => omniauth['info'],
@@ -340,13 +346,6 @@ class User < ActiveRecord::Base
     self.companies.first
   end
 
-  def use_social_provider_image(url)
-    unless avatar.any_url_exists?
-      self.avatar_versions_generated_at = Time.zone.now
-      self.remote_avatar_url = url
-    end
-  end
-
   def first_listing
     if companies.first and companies.first.locations.first
       companies.first.locations.first.listings.first
@@ -393,16 +392,20 @@ class User < ActiveRecord::Base
     caller[0].include?('friendly_id') ? super : id
   end
 
+  def to_balanced_params
+    {
+      name: name,
+      email: email,
+      phone: phone
+    }
+  end
+
   def is_location_administrator?
     administered_locations.size > 0
   end
 
-  def listings_with_messages
-    listings.with_listing_messages + administered_listings.with_listing_messages
-  end
-
-  def listing_messages
-    ListingMessage.where('owner_id = ? OR listing_id IN(?)', id, listings_with_messages.map(&:id)).order('created_at asc')
+  def user_messages
+    UserMessage.for_user(self)
   end
 
   def listings_in_near(platform_context = nil, results_size = 3, radius_in_km = 100)
@@ -424,6 +427,10 @@ class User < ActiveRecord::Base
       return listings if listings.size >= results_size
     end if locations_in_near
     listings
+  end
+
+  def can_manage_listing?(listing)
+    listing.company && listing.company.company_users.where(user_id: self.id).any?
   end
 
   def administered_locations_pageviews_7_day_total

@@ -6,8 +6,8 @@ module StubHelper
   end
 
   def stub_billing_gateway
-    User::BillingGateway.any_instance.stubs(:charge).returns(true)
-    User::BillingGateway.any_instance.stubs(:store_card).returns(true)
+    Billing::Gateway::StripeProcessor.any_instance.stubs(:charge).returns(true)
+    Billing::Gateway.any_instance.stubs(:store_credit_card).returns(true)
   end
 
   def stub_image_url(image_url)

@@ -45,6 +45,9 @@ class @Space.Controller
     @container.on 'click', '.amenities-header a', (event) =>
       @toggleAmenities(event)
 
+    @container.on 'click', '[data-booking-trigger]', (event) =>
+      event.preventDefault()
+      $(event.target).closest('[data-toggleable-booking-module]').toggleClass('collapsed')
 
   loadFullGalleryPhotos: ->
     @fullScreenGalleryContainer.find(".loading").show()
@@ -77,10 +80,10 @@ class @Space.Controller
   adjustFullGalleryHeight: ->
     @fullScreenGallery.find('.item img').removeClass('smaller-size')
     if @fullScreenGallery.find('.item.active img').height() >= $(window).height()
-      @fullScreenGallery.height($(window).height()) 
+      @fullScreenGallery.height($(window).height())
       @fullScreenGallery.find('.item img').addClass('smaller-size')
     else
-      @fullScreenGallery.height('auto') 
+      @fullScreenGallery.height('auto')
 
   setupPhotos: ->
     @photos = new Space.PhotosController($('.space-hero-photos'))
@@ -89,7 +92,7 @@ class @Space.Controller
     # For each listing on the page, initialize a controller for handling booking
     # selection.
     for listingData in @options.bookings.listings
-      listingController = new Bookings.Controller(@container.find(".listings [data-listing-id=#{listingData.id}]"),
+      listingController = new Bookings.Controller(@container.find("div[data-listing-id=#{listingData.id}]"),
         listingData,
         showReviewBookingImmediately: @options.bookings.returnedFromSession
       )

@@ -15,15 +15,6 @@ module Auth
       user.save
     end
 
-    def apply_avatar_if_empty
-      user = authenticated_user
-      if @auth_params['info']['image'] && !user.avatar.any_url_exists?
-        user.remote_avatar_url = @auth_params['info']['image']
-        user.avatar_versions_generated_at = Time.zone.now
-        user.save!
-      end
-    end
-
     def remember_user!
       authenticated_user.remember_me!
     end
@@ -39,10 +30,7 @@ module Auth
                                            :secret => secret,
                                            :token_expires_at => expires_at,
                                            :token_expires => expires_at ? true : false,
-                                           :token_expired => false,
-                                           :profile_url => profile_url)
-
-      current_user.use_social_provider_image(@auth_params['info']['image'])
+                                           :token_expired => false)
       current_user.save!
     end
 
@@ -91,19 +79,6 @@ module Auth
 
     def secret
       @auth_params['credentials']['secret']
-    end
-
-    def profile_url
-      case provider
-      when 'facebook'
-        @auth_params['info']['urls']['Facebook'] if @auth_params['info']['urls'].present?
-      when 'twitter'
-        @auth_params['info']['urls']['Twitter'] if @auth_params['info']['urls'].present?
-      when 'linkedin'
-        @auth_params['info']['urls']['public_profile'] if @auth_params['info']['urls'].present?
-      when 'instagram'
-        "http://instagram.com/#{@auth_params['info']['nickname']}"
-      end
     end
 
     def expires_at

@@ -15,6 +15,7 @@ Given /^Existing user with (.*) email$/ do |social|
 end
 
 When /I sign up with (.*)$/ do |social|
+  stub_authentication_creation_callbacks if social == 'Facebook'
   sign_up_with_provider(social)
 end
 
@@ -39,6 +40,7 @@ Given /I signed up with (.*) with password$/ do |social|
 end
 
 When /I connect to (.*)$/ do |social|
+  stub_authentication_creation_callbacks
   mock_successful_authentication_with_provider(social)
   toggle_connection_with(social)
 end
@@ -87,7 +89,7 @@ When /I sign in with valid credentials/ do
   login_manually
 end
 
-When /I sign in with invalid credentials/ do 
+When /I sign in with invalid credentials/ do
   click_link 'Log In'
   login_manually('invalid@example.com')
 end

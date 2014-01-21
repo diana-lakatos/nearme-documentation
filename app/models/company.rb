@@ -7,6 +7,8 @@ class Company < ActiveRecord::Base
     :domain_attributes, :theme_attributes, :instance_id, :white_label_enabled,
     :listings_public, :partner_id
 
+  attr_accessor :created_payment_transfers
+
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance
   belongs_to :partner
@@ -92,18 +94,28 @@ class Company < ActiveRecord::Base
   # Schedules a new payment transfer for current outstanding payments for each
   # of the currency payments recieved by the Company.
   def schedule_payment_transfer
+    self.created_payment_transfers = []
     transaction do
       charges = reservation_charges.needs_payment_transfer
       charges.group_by(&:currency).each do |currency, charges|
-        payment_transfers.create!(
+        self.created_payment_transfers << payment_transfers.create!(
           reservation_charges: charges
         )
       end
+    end
+    # FIXME: probably better to move to payment_transfer.rb 
+    if !has_payment_method?
+      CompanyMailer.enqueue.notify_host_of_no_payout_option(self)
+      CompanySmsNotifier.notify_host_of_no_payout_option(self).deliver
     end
   end
 
   def has_payment_method?
     paypal_email.present? || mailing_address.present?
+  end
+
+  def to_liquid
+    CompanyDrop.new(self)
   end
 
   private

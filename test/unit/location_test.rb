@@ -102,19 +102,22 @@ class LocationTest < ActiveSupport::TestCase
   end
 
   context "friendly url" do
+    setup do
+      @company = FactoryGirl.create(:company, :name => 'Desks Near Me')
+    end
     should 'store slug in the database' do
-      @location = FactoryGirl.build(:location_in_san_francisco, :formatted_address => 'San Francisco, CA, California, USA')
+      @location = FactoryGirl.build(:location_in_san_francisco, :company => @company, :formatted_address => 'San Francisco, CA, California, USA', :city => 'San Francisco')
       @location.save!
       @location.reload
-      assert_equal "san-francisco-ca-california-usa", @location.slug
+      assert_equal "desks+near+me-san+francisco", @location.slug
     end
 
     should 'update slug along with formatted_address ' do
-      @location = FactoryGirl.create(:location_in_san_francisco, :formatted_address => 'Ursynowska, warsaw, Poland')
-      assert_equal "ursynowska-warsaw-poland", @location.slug
+      @location = FactoryGirl.create(:location_in_san_francisco, :company => @company, :formatted_address => 'Ursynowska, warsaw, Poland')
       @location.formatted_address = 'San Francisco, CA, California, USA'
+      @location.city = 'San Francisco'
       @location.save!
-      assert_equal "san-francisco-ca-california-usa", @location.slug
+      assert_equal "desks+near+me-san+francisco", @location.slug
     end
 
   end

@@ -69,13 +69,12 @@ class ReservationCharge < ActiveRecord::Base
     # Generates a ChargeAttempt with this record as the reference.
     billing_gateway.charge(
       amount: total_amount_cents,
-      currency: currency,
       reference: self
     )
 
     touch(:paid_at)
     ReservationChargeTrackerJob.perform_later(reservation.date.end_of_day, reservation.id) 
-  rescue User::BillingGateway::CardError
+  rescue Billing::CreditCardError
     # Needs to be retried at a later time...
     touch(:failed_at)
   end
@@ -87,7 +86,7 @@ class ReservationCharge < ActiveRecord::Base
   private
 
   def billing_gateway
-    User::BillingGateway.new(reservation.owner, instance)
+    @billing_gateway ||= Billing::Gateway.new(instance).ingoing_payment(reservation.owner, currency)
   end
 
   def assign_currency

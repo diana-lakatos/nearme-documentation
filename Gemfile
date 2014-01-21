@@ -1,3 +1,5 @@
+ruby '1.9.3'
+
 source 'http://rubygems.org'
 
 gem 'rails', '3.2.16'
@@ -18,6 +20,7 @@ gem 'omniauth-instagram'
 gem 'koala', '~> 1.7.0rc1' # facebook Graph API
 gem 'linkedin-oauth2'
 gem 'twitter', "~> 5.2"
+gem 'instagram'
 
 gem 'fog'
 gem 'geocoder'
@@ -49,7 +52,11 @@ gem 'animation'
 gem "coffee-rails"
 gem 'delayed_job_active_record'
 gem "rdiscount"
+gem 'attr_encrypted'
 gem 'stripe'
+gem 'paypal-sdk-rest'
+gem 'paypal-sdk-adaptivepayments'
+gem 'balanced'
 gem 'friendly_id'
 
 gem 'sass-rails'
@@ -135,7 +142,6 @@ group :test do
   gem 'pickle'
   gem 'turn'
   gem 'webmock'
-  gem 'simplecov', :require => false
   gem 'shoulda'
   gem 'vcr'
   gem 'ruby-prof'

@@ -1,7 +1,0 @@
-<h2>You received a message!</h2>
-
-<p>{{ listing_message.author_first_name }} sent you the following message about one of their listings on {{ platform_context.name }}.</p>
-
-<p>{{listing_message.author_first_name}} wrote: "{{ listing_message.body }}"</p>
-
-<a class="btn" href="{{ platform_context.host | append:listing_message.url_with_tracking | append:signature_for_tracking }}">Log in and reply to this message</a>

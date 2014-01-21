@@ -1,0 +1,18 @@
+.row-fluid
+  .span12
+    %header
+      %h2
+        Send a message to
+        = @user_message.recipient_name
+
+    = simple_form_for @user_message, url: polymorphic_path([@user_message.thread_context, @user_message]) do |f|
+      - if @user_message.errors.present?
+        .errors
+          = f.error :body
+
+      = f.text_area :body
+      = f.submit "Send", class: "btn btn-large btn-green"
+
+%script{:type => 'text/javascript'}
+  :plain
+    new ModalForm($('#new_user_message'));

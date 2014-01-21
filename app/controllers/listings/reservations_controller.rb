@@ -88,7 +88,7 @@ class Listings::ReservationsController < ApplicationController
   def require_login_for_reservation
     unless user_signed_in?
       store_reservation_request
-      redirect_to new_user_registration_path(return_to: location_listing_url(@listing.location, @listing, restore_reservations: true))
+      redirect_to new_user_registration_path(return_to: location_url(@listing.location, @listing, restore_reservations: true))
     end
   end
 

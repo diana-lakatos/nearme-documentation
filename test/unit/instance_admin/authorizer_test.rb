@@ -123,6 +123,13 @@ class InstanceAdmin::AuthorizerTest < ActiveSupport::TestCase
       @role.update_attribute(:permission_users, false)
       assert !@authorizer.authorized?(InstanceAdmin::UsersController)
     end
+
+    should 'raise InstanceAdmin::Authorizer::UnassignedInstanceAdminRoleError if instance_admin has no role' do
+      @instance_admin.update_column(:instance_admin_role_id, nil)
+      assert_raise InstanceAdmin::Authorizer::UnassignedInstanceAdminRoleError do
+        assert !@authorizer.authorized?(InstanceAdmin::UsersController)
+      end
+    end
   end
 
   context 'first_permission_have_access_to' do

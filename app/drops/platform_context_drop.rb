@@ -3,7 +3,7 @@ class PlatformContextDrop < BaseDrop
   attr_reader :platform_context_decorator
 
   delegate :name, :bookable_noun, :pages, :platform_context, :is_desksnearme, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees,
-    :facebook_url, :address, :phone_number, :gplus_url, :site_name, :support_url, :logo_image, :to => :platform_context_decorator
+    :facebook_url, :address, :phone_number, :gplus_url, :site_name, :support_url, :support_email, :logo_image, :to => :platform_context_decorator
 
 
   def initialize(platform_context_decorator)

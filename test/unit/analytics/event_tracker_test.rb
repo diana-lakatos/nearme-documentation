@@ -287,7 +287,7 @@ class EventTrackerTest < ActiveSupport::TestCase
       location_state: @location.state,
       location_country: @location.country,
       location_postcode: @location.postcode,
-      location_url: "http://example.com/locations/#{@location.id}"
+      location_url: "http://example.com/locations/#{@location.slug}"
     }
   end
 

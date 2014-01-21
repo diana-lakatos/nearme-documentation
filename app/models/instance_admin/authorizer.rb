@@ -12,6 +12,7 @@ class InstanceAdmin::Authorizer
   end
 
   def authorized?(controller)
+    raise InstanceAdmin::Authorizer::UnassignedInstanceAdminRoleError.new("Instance admin (id=#{instance_admin.id}) has not been assigned any role") if instance_admin_role.nil?
     if controller.to_s == "InstanceAdmin::BaseController"
       controller = "InstanceAdmin::#{first_permission_have_access_to.camelize}Controller"
     end

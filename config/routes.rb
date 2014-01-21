@@ -1,13 +1,14 @@
 DesksnearMe::Application.routes.draw do
 
   if defined? MailView
+    mount CompanyMailerPreview => 'mail_view/companies'
     mount ReservationMailerPreview => 'mail_view/reservations'
     mount UserMailerPreview => 'mail_view/users'
     mount PostActionMailerPreview => 'mail_view/post_action'
     mount InquiryMailerPreview => 'mail_view/inquiries'
     mount ListingMailerPreview => 'mail_view/listings'
     mount RatingMailerPreview => 'mail_view/ratings'
-    mount ListingMessageMailerPreview => 'mail_view/listing_messages'
+    mount UserMessageMailerPreview => 'mail_view/user_messages'
     mount ReengagementMailerPreview => 'mail_view/reengagement'
     mount RecurringMailerPreview => 'mail_view/recurring'
   end
@@ -84,8 +85,12 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  resources :locations, :only => [:show] do
-    resources :listings, :controller => 'locations/listings' do
+  resources :locations, :only => [] do
+    member do
+      get "(:listing_id)", :to => "locations#show", :as => ''
+    end
+
+    resources :listings, :controller => 'locations/listings', :only => [:show] do
       member do
         get :ask_a_question
       end
@@ -111,15 +116,6 @@ DesksnearMe::Application.routes.draw do
       get :hourly_availability_schedule, :on => :collection
     end
 
-    resources :listing_messages, :controller => "listings/listing_messages" do
-      put :archive
-    end
-  end
-
-  resources :listing_messages, only: [:index] do 
-    collection do 
-      get :archived
-    end
   end
 
   resources :reservations, :only => [] do
@@ -149,6 +145,7 @@ DesksnearMe::Application.routes.draw do
     put "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip"
 
     get "/instance_admin/sessions/new", :to => "instance_admin::sessions#new", :as => 'instance_admin_login'
+
   end
 
   resources :reservations, :except => [:update, :destroy, :show] do
@@ -170,6 +167,18 @@ DesksnearMe::Application.routes.draw do
       get :listings
       get :manage_guests
       get :transfers
+    end
+  end
+
+  resources :user_messages, only: [:index] do
+    collection do
+      get :archived
+    end
+  end
+
+  resources :listings, :users, :reservations do
+    resources :user_messages, except: [:index] do
+      put :archive
     end
   end
 

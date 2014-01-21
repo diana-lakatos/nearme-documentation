@@ -97,4 +97,20 @@ namespace :populate do
     end
   end
 
+  desc "Populates users with info from authentications"
+  task :social_info => :environment do
+    Authentication.find_each do |authentication|
+      begin
+        updater = Authentication::InfoUpdater.new(authentication).update
+        puts "Authentication #{authentication.id}: updated with #{updater.authentication_changes.inspect}"
+        puts "User #{authentication.user_id}: updated with #{updater.user_changes.inspect}"
+      rescue Authentication::InvalidToken
+        authentication.update_column(:token_expired, true) if authentication.token_expires?
+        puts "Authentication #{authentication.id}: InvalidToken"
+      rescue => e
+        puts "Authentication #{authentication.id}: #{e}" 
+      end
+    end
+  end
+
 end
