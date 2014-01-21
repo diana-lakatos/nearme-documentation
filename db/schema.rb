@@ -11,7 +11,9 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140119124927) do
+ActiveRecord::Schema.define(:version => 20140121022448) do
+
+
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -81,8 +83,8 @@ ActiveRecord::Schema.define(:version => 20140119124927) do
     t.boolean  "success"
     t.text     "response"
     t.integer  "amount"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.integer  "user_id"
     t.string   "reference_type"
     t.string   "currency"
@@ -273,19 +275,18 @@ ActiveRecord::Schema.define(:version => 20140119124927) do
 
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                                                                  :null => false
-    t.datetime "updated_at",                                                                  :null => false
-    t.string   "bookable_noun",                                           :default => "Desk"
-    t.decimal  "service_fee_guest_percent", :precision => 5, :scale => 2, :default => 0.0
+    t.datetime "created_at",                                                                       :null => false
+    t.datetime "updated_at",                                                                       :null => false
+    t.string   "bookable_noun",                                                :default => "Desk"
+    t.decimal  "service_fee_guest_percent",      :precision => 5, :scale => 2, :default => 0.0
     t.string   "lessor"
     t.string   "lessee"
-    t.boolean  "skip_company",                                            :default => false
-    t.boolean  "default_instance",                                        :default => false
+    t.boolean  "skip_company",                                                 :default => false
+    t.boolean  "default_instance",                                             :default => false
     t.text     "pricing_options"
-    t.decimal  "service_fee_host_percent",  :precision => 5, :scale => 2, :default => 0.0
+    t.decimal  "service_fee_host_percent",       :precision => 5, :scale => 2, :default => 0.0
     t.string   "stripe_api_key"
     t.string   "stripe_public_key"
-    t.string   "stripe_api_key"
     t.string   "paypal_email"
     t.string   "encrypted_paypal_username"
     t.string   "encrypted_paypal_password"
@@ -442,8 +443,8 @@ ActiveRecord::Schema.define(:version => 20140119124927) do
     t.text     "response"
     t.integer  "amount"
     t.string   "currency"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.datetime "deleted_at"
     t.string   "encrypted_response"
   end
@@ -714,7 +715,6 @@ ActiveRecord::Schema.define(:version => 20140119124927) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.string   "stripe_id"
     t.string   "paypal_id"
     t.integer  "unread_user_message_threads_count",                    :default => 0
     t.string   "encrypted_stripe_id"
@@ -723,8 +723,9 @@ ActiveRecord::Schema.define(:version => 20140119124927) do
     t.string   "encrypted_balanced_credit_card_id"
   end
 
+  add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"
   add_index "users", ["domain_id"], :name => "index_users_on_domain_id"
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true, :where => "(deleted_at IS NULL)"
   add_index "users", ["instance_id"], :name => "index_users_on_instance_id"
   add_index "users", ["partner_id"], :name => "index_users_on_partner_id"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
@@ -740,5 +741,6 @@ ActiveRecord::Schema.define(:version => 20140119124927) do
   end
 
   add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
+
 
 end
