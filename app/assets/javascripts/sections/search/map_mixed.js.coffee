@@ -63,3 +63,7 @@ class Search.MapMixed extends Search.Map
       @search_controller.markerClicked(marker)
     
     marker.setVisible(true)
+
+
+  setZoom: (zoomLevel) ->
+    @googleMap.setZoom(zoomLevel)

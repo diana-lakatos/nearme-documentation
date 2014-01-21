@@ -18,7 +18,7 @@ class Search.SearchMixedController extends Search.SearchController
     @sortField.on 'change', =>
       if @sortValue != @sortField.find(':selected').val()
         @sortValue = @sortField.find(':selected').val()
-        @fieldChanged()
+        @form.submit()
 
     @queryField.keypress (e) =>
       if e.which == 13
@@ -47,8 +47,15 @@ class Search.SearchMixedController extends Search.SearchController
       link = $(e.target)
       page_regexp = /page=(\d+)/gm
       @loader.show()
-      @clearBoundParams()
       @triggerSearchFromQuery(page_regexp.exec(link.attr('href'))[1])
+
+
+  initializeSearchButton: ->
+    @searchButton = @form.find(".search-icon")
+    if @searchButton.length > 0
+      @searchButton.bind 'click', =>
+        @clearBoundParams()
+        @form.submit()
 
 
   adjustListHeight: ->
@@ -76,8 +83,9 @@ class Search.SearchMixedController extends Search.SearchController
     @autocomplete = new google.maps.places.Autocomplete(@queryField[0], {})
     google.maps.event.addListener @autocomplete, 'place_changed', =>
       if @submit_form
+        @loader.show()
         @submit_form = false
-        @fieldChanged('query', @queryField.val())
+        @form.submit()
       else
         place = Search.Geocoder.wrapResult @autocomplete.getPlace()
         place = null unless place.isValid()
@@ -171,6 +179,18 @@ class Search.SearchMixedController extends Search.SearchController
         @map.show()
         # In case the map is hidden
         @map.resizeToFillViewport()
+      else
+        # no results found, try to set map center on searched city
+        query = @queryField.val()
+        deferred = @geocoder.geocodeAddress(query)
+        deferred.always (results) =>
+          if results
+            result = results.getBestResult()
+            @map.setCenter(new google.maps.LatLng(result.lat(), result.lng()))
+            @map.setZoom(11)
+            @map.show()
+            # In case the map is hidden
+            @map.resizeToFillViewport()
 
 
   # Within the current map display, plot the listings from the current results. Remove listings
@@ -255,15 +275,11 @@ class Search.SearchMixedController extends Search.SearchController
       @assignFormParams(
         ignore_search_event: 1
       )
-      @clearBoundParams()
 
 
   # Returns special search params based on a geolocation result (Search.Geolocator.Result), or no result.
   searchParamsFromGeolocationResult: (result) ->
-    params = { lat: null, lng: null, nx: null, ny: null, sx: null, sy: null, \
-               country: null, state: null, city: null, suburb: null, street: null,
-               postcode: null
-    }
+    params = { country: null, state: null, city: null, suburb: null, street: null, postcode: null }
 
     if result
       params['country'] = result.country()
