@@ -17,13 +17,18 @@ class PlatformHomeControllerTest < ActionController::TestCase
   context 'create platform email and inquiries' do
     should 'create platform_email' do
       assert_difference 'PlatformEmail.count', 1 do
-        post :notify_me, email: 'create@test.com'
+        post :notify_me, platform_email: {"email"=>"binding@pry.com"}
       end
     end
 
     should 'create platform_inquiry' do
       assert_difference 'PlatformInquiry.count', 1 do
-        post :save_inquiry, inquiry: "inquiry%5Bname%5D=first&inquiry%5Bsurname%5D=last&inquiry%5Bemail%5D=email%40example.com&inquiry%5Bindustry%5D=industry&inquiry%5Bmessage%5D=message"
+        post :save_inquiry, "platform_inquiry"=>
+                            {"name"=>"Daniel",
+                             "surname"=>"Docker",
+                             "email"=>"daniel@docker.com",
+                             "industry"=>"Shipping",
+                             "message"=>"I would like to learn more, please send me an email."}
       end
     end
   end
