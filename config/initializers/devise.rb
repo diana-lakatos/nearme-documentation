@@ -23,4 +23,5 @@ Devise.setup do |config|
 
   # Setup our custom expiring URL token authentication strategy
   require 'temporary_token_authenticatable'
+  require 'devise/models/user_validatable'
 end
