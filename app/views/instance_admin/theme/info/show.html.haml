@@ -1,0 +1,51 @@
+= simple_form_for @theme, :url => instance_admin_theme_info_path, :html => { :multipart => true } do |f|
+  %fieldset
+    %legend Title &amp; Description
+    .row-fluid
+      .controls.controls-row
+        = f.input :name, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :site_name, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :meta_title, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :description, :label => 'Meta description', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :tagline, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+    %hr
+
+    %legend Contact Info
+    .row-fluid
+      .controls.controls-row
+        = f.input :phone_number, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :address, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        .control-group.span6.tel.optional{class: f.object.errors[:contact_email].empty? ? '' : 'error'}
+          %label.tel.optional.control-label{for: "theme_phone_number"} Contact email
+          .controls
+            = f.input_field :contact_email, pattern: '.*', class: 'input-block-level' 
+            = f.error :contact_email
+        = f.input :support_email, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :support_url, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+    %hr
+
+    %legend Social Properties
+    .row-fluid
+      .controls.controls-row
+        = f.input :blog_url, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :facebook_url, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :twitter_url, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :gplus_url, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+    = f.button :submit, 'Save', class: 'btn btn-primary pull-right'

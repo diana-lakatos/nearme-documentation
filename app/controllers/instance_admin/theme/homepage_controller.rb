@@ -1,0 +1,15 @@
+class InstanceAdmin::Theme::HomepageController < InstanceAdmin::Theme::BaseController
+
+  def show
+  end
+
+  def update
+    if @theme.update_attributes(params[:theme])
+      flash[:success] = t('flash_messages.instance_admin.theme.theme_updated_successfully')
+      redirect_to :action => :show
+    else
+      flash[:error] = @theme.errors.full_messages.join('\n')
+      render :show
+    end
+  end
+end

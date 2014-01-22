@@ -1,0 +1,20 @@
+/****************************************************************************/
+/* Overrides for some of bootstraps variables for Instance Admin's styling. */
+/****************************************************************************/
+
+// Navbar overrides
+$navbarHeight:                   70px;
+$navbarBackground:               $primary_nav_color;
+$navbarBackgroundHighlight:      $primary_nav_color;
+$navbarLinkColor:                $light-text-color;
+$navbarLinkColorHover:           $white;
+$navbarLinkColorActive:          $white;
+$navbarLinkBackgroundHover:      $primary_nav_color;
+$navbarLinkBackgroundActive:     $primary_nav_color;
+
+// Scaffolding
+$bodyBackground:                 $background_color;
+
+// Buttons
+$btnPrimaryBackground:           $highlight_color;
+$btnPrimaryBackgroundHighlight:  $highlight_color;

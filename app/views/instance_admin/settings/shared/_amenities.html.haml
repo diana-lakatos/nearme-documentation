@@ -1,0 +1,34 @@
+%fieldset
+  %legend
+    #{type.camelize}
+    Amenity Types
+  %table.table.table-condensed{id: "#{type}-amenity-types"}
+    = f.fields_for "#{type}_amenity_types".to_sym, wrapper: false  do |f_at|
+      %tr.fields
+        %td
+          %h4
+            #{type.camelize}
+            Amenity type
+          = f_at.input :name, label: false
+          %h5 Amenities
+          %table.table.amenities{id: "#{type}-amenities-#{f_at.object.id}", width: '100%'}
+            = f_at.fields_for :amenities, wrapper: false do |fa|
+              %tr.fields
+                %td
+                  = fa.input :name, label: false
+                - if fa.object.send(type.pluralize).count == 0
+                  %td= fa.link_to_remove "Delete", class: 'btn btn-danger'
+                - else
+                  %td= "(in use by #{fa.object.send(type.pluralize).count} locations)"
+          %p= f_at.link_to_add "Add amenity", :amenities, :model_object => Amenity.new, :data => { :target => "##{type}-amenities-#{f_at.object.id}" }, class: 'btn'
+
+        - if f_at.object.send(type.pluralize).count == 0
+          %td= f_at.link_to_remove "Delete", class: 'btn btn-danger'
+        - else
+          %td
+
+  %p
+    = f.link_to_add "Add #{type} amenity type", "#{type}_amenity_types".to_sym, :model_object => "#{type}_amenity_type".classify.constantize.build_with_amenity, :data => { :target => "##{type}-amenity-types" }, class: 'btn'
+  %p
+    = f.button :submit, 'Save', class: 'btn btn-success'
+  %br

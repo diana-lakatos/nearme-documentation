@@ -1,0 +1,28 @@
+= simple_form_for @theme, :url => instance_admin_theme_design_path, :html => { :multipart => true } do |f|
+  %fieldset
+    %legend Colors
+    - Theme::COLORS.each do |color|
+      .row-fluid
+        .controls.controls-row.span6
+          = f.input "color_#{color}", :wrapper => :prepend do
+            %span.add-on #
+            = f.input_field "color_#{color}", class: 'input-block-level'
+
+    %hr
+
+    %legend Visuals
+    - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each do |image_attr|
+      .control-group
+        = f.label image_attr
+        .controls
+          = f.file_field image_attr
+          - if f.object.send("remote_#{image_attr}_url")
+            <br />Or copy from instance's theme:<br />
+            = f.text_field "remote_#{image_attr}_url" 
+
+    %hr
+
+    %legend Call to action
+    = f.input :call_to_action, :placeholder => 'Find out more'
+    
+    = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
