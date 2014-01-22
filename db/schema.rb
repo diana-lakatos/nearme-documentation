@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140121022448) do
+ActiveRecord::Schema.define(:version => 20140122105726) do
 
 
 
@@ -273,6 +273,16 @@ ActiveRecord::Schema.define(:version => 20140121022448) do
   add_index "instance_admins", ["instance_id"], :name => "index_instance_admins_on_instance_id"
   add_index "instance_admins", ["user_id"], :name => "index_instance_admins_on_user_id"
 
+  create_table "instance_billing_gateways", :force => true do |t|
+    t.integer  "instance_id"
+    t.string   "billing_gateway"
+    t.string   "currency",        :default => "USD"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+  end
+
+  add_index "instance_billing_gateways", ["instance_id"], :name => "index_instance_billing_gateways_on_instance_id"
+
   create_table "instances", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",                                                                       :null => false
@@ -445,8 +455,8 @@ ActiveRecord::Schema.define(:version => 20140121022448) do
     t.string   "currency"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
-    t.datetime "deleted_at"
     t.string   "encrypted_response"
+    t.datetime "deleted_at"
   end
 
   create_table "photos", :force => true do |t|
