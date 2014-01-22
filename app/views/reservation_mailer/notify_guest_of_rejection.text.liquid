@@ -5,6 +5,6 @@ Your booking for '{{ listing.name }}' at {{ listing.street }} has been declined 
 {{ reservation.rejection_reason }}{% endif %}
 {% if user.listings_in_near.size > 0 %}But we have you covered! Here are some alternatives, similar to the listing you tried to book:
 {% include 'reservation_mailer/listings_in_near.text' %}{% endif %}
-Search More Desks: {{ platform_context.host | append:listing.search_url_with_tracking | append:signature_for_tracking }}
+Search More {{ platform_context.bookable_noun_plural }}: {{ platform_context.host | append:listing.search_url_with_tracking | append:signature_for_tracking }}
 
 We're always happy to help! If you have any questions about your booking, please send an email to happydesk@desksnear.me or contact us at {{ platform_context.phone_number }}.
