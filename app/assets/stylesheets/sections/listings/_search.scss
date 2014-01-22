@@ -384,17 +384,6 @@ header#listing_search {
       }
     }
 
-    .locations-count {
-      padding-top: 15px;
-      float: right;
-
-      span {
-        font-size: 120%;
-        color: $theme_lighter_black;
-        margin-right: 5px;
-      }
-    }
-
     .search-icon {
       @media (min-width: $ipad-width) {
         left: $search-bar-desktop-width + 5;
@@ -948,11 +937,51 @@ section.search section#results.mixed {
       }
 
       .sort-by {
-        float: right;
+        text-align: right;
+        padding-right: 30px;
 
         span.customSelect {
-          padding-left: 20px;
           color: $gray245;
+        }
+
+        span.customSelectInner {
+          padding-right: 15px;
+        }
+
+        @media (max-width: $ipad-width) {
+          text-align: left;
+
+          span.customSelectInner {
+            padding-right: 0px;
+          }
+
+          span.customSelect {
+            padding-left: 20px;
+          }
+        }
+      }
+
+      .per-page {
+        text-align: right;
+
+        span.customSelect {
+          color: $gray245;
+        }
+
+        span.customSelectInner {
+          padding-right: 15px;
+        }
+
+        @media (max-width: $ipad-width) {
+          text-align: left;
+
+          span.customSelectInner {
+            padding-right: 0px;
+          }
+
+          span.customSelect {
+            padding-left: 20px;
+          }
         }
       }
 
@@ -1250,11 +1279,11 @@ section.search section#results.mixed {
   }
 
   @media (max-width: $ipad-width) {
-    padding-top: 110px;
+    padding-top: 60px;
   } 
 
   @media (max-width: $iphone-landscape) {
-    padding-top: 90px;
+    padding-top: 50px;
   }
 }
 

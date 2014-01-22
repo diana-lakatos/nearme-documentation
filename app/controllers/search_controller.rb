@@ -2,7 +2,7 @@ require "will_paginate/array"
 class SearchController < ApplicationController
   extend ::NewRelic::Agent::MethodTracer
 
-  helper_method :search, :query, :listings, :locations, :result_view, :search_notification, :result_count, :current_page_offset
+  helper_method :search, :query, :listings, :locations, :result_view, :search_notification, :result_count, :current_page_offset, :per_page
   before_filter :set_options_for_filters
 
   SEARCH_RESULT_VIEWS = %w(list map mixed)
@@ -182,7 +182,7 @@ class SearchController < ApplicationController
   end
 
   def per_page
-    result_view.mixed? ? 18 : 20
+    result_view.mixed? ? (params[:per_page] || 20).to_i : 20
   end
 
 end

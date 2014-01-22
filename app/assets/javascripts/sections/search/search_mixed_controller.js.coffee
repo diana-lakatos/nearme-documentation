@@ -5,9 +5,11 @@ class Search.SearchMixedController extends Search.SearchController
     @hiddenResultsContainer = => @container.find('.hidden-locations')
     @list_container = => @container.find('div[data-list]')
     @sortField = @container.find('#sort')
+    @perPageField = @container.find('#per_page')
     super(form, @container)
     @adjustListHeight()
     @sortValue = @sortField.find(':selected').val()
+    @perPageValue = @perPageField.find(':selected').val()
     @bindLocationsEvents()
 
   bindEvents: =>
@@ -18,6 +20,11 @@ class Search.SearchMixedController extends Search.SearchController
     @sortField.on 'change', =>
       if @sortValue != @sortField.find(':selected').val()
         @sortValue = @sortField.find(':selected').val()
+        @form.submit()
+
+    @perPageField.on 'change', =>
+      if @perPageValue != @perPageField.find(':selected').val()
+        @perPageValue = @perPageField.find(':selected').val()
         @form.submit()
 
     @queryField.keypress (e) =>
@@ -143,6 +150,7 @@ class Search.SearchMixedController extends Search.SearchController
       lgtype: _.toArray(@container.find('input[name="listing_types_ids[]"]:checked').map(-> $(this).val())).join(',')
       lgpricing: _.toArray(@container.find('input[name="listing_pricing[]"]:checked').map(-> $(this).val())).join(',')
       sort: @container.find('#sort').val()
+      per_page: @container.find('#per_page').val()
       loc: @form.find("input#search").val().replace(', United States', '')
       page: page || 1
     )
@@ -151,7 +159,7 @@ class Search.SearchMixedController extends Search.SearchController
 
   updateResultsCount: ->
     count = parseInt(@hiddenResultsContainer().find('input#result_count').val())
-    inflection = 'location'
+    inflection = 'result'
     inflection += 's' unless count == 1
     @resultsCountContainer.html("<span>#{count}</span> #{inflection}")
     @initializeEndlessScrolling()
