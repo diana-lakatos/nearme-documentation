@@ -98,7 +98,7 @@ class User < ActiveRecord::Base
   belongs_to :domain
 
   after_destroy :cleanup
-  before_recover :recover_companies
+  before_restore :recover_companies
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
@@ -467,6 +467,10 @@ class User < ActiveRecord::Base
     self.created_companies.each do |company|
       if company.company_users.count.zero?
         company.destroy
+      # this might not be needed, but just in case...
+      elsif company.creator == self
+        company.creator = company.company_users.first.user
+        company.save!
       end
     end
     self.administered_locations.each do |location|
@@ -475,9 +479,12 @@ class User < ActiveRecord::Base
   end
 
   def recover_companies
-    self.created_companies.only_deleted.deleted_inside_time_window(self.deleted_at, 30.seconds).each do |company|
-      if !company.recover
-        raise "Company (id=#{company.id}) could not be recovered along with User (id=#{self.id})"
+    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?',  self.deleted_at, self.deleted_at + 30.seconds).each do |company|
+      begin
+        if company.restore(:recursive => true)
+          raise "Company (id=#{company.id}) could not be recovered along with User (id=#{self.id})"
+        end
+      rescue
       end
     end
 

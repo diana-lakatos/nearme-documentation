@@ -11,7 +11,9 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140119182036) do
+ActiveRecord::Schema.define(:version => 20140126160511) do
+
+
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -116,8 +118,8 @@ ActiveRecord::Schema.define(:version => 20140119182036) do
   add_index "companies", ["partner_id"], :name => "index_companies_on_partner_id"
 
   create_table "company_industries", :force => true do |t|
-    t.integer  "industry_id", :null => false
-    t.integer  "company_id",  :null => false
+    t.integer  "industry_id"
+    t.integer  "company_id"
     t.datetime "deleted_at"
   end
 
@@ -452,8 +454,8 @@ ActiveRecord::Schema.define(:version => 20140119182036) do
     t.string   "currency"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
-    t.datetime "deleted_at"
     t.string   "encrypted_response"
+    t.datetime "deleted_at"
   end
 
   create_table "photos", :force => true do |t|
@@ -645,8 +647,8 @@ ActiveRecord::Schema.define(:version => 20140119182036) do
   add_index "unit_prices", ["listing_id"], :name => "index_unit_prices_on_listing_id"
 
   create_table "user_industries", :force => true do |t|
-    t.integer  "industry_id", :null => false
-    t.integer  "user_id",     :null => false
+    t.integer  "industry_id"
+    t.integer  "user_id"
     t.datetime "deleted_at"
   end
 

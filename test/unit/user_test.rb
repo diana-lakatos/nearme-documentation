@@ -655,6 +655,7 @@ class UserTest < ActiveSupport::TestCase
       should 'not delete company and assign new creator' do
         @listing.creator.destroy
         @listing.reload
+        assert_equal @new_user, @listing.creator
         refute @listing.deleted?
         refute @listing.location.deleted?
         refute @listing.location.company.deleted?
@@ -745,11 +746,11 @@ class UserTest < ActiveSupport::TestCase
       setup_user_with_all_objects
       @user.destroy
       @objects.each do |object|
-        assert object.reload.deleted?, "#{object.class.name} was expected to be deleted via dependent => destroy but wasn't"
+        assert object.reload.destroyed?, "#{object.class.name} was expected to be deleted via dependent => destroy but wasn't"
       end
-      @user.recover
+      @user.restore(:recursive => true)
       @objects.each do |object|
-        refute object.reload.deleted?, "#{object.class.name} was expected to be recovered, but is still deleted"
+        refute object.reload.destroyed?, "#{object.class.name} was expected to be restored, but is still deleted"
       end
     end
 
@@ -765,18 +766,17 @@ class UserTest < ActiveSupport::TestCase
       @authentication = FactoryGirl.create(:authentication, :user => @user)
       @company = FactoryGirl.create(:company, :creator => @user)
       @company_industry = CompanyIndustry.where(:company_id => @company.id).first
-      @location = FactoryGirl.create(:location, :company => @company)
+      @location = FactoryGirl.create(:location, :company_id => @company.id)
       @listing = FactoryGirl.create(:listing, :location => @location)
       @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
       @reservation = FactoryGirl.create(:reservation, :user => @user, :listing => @listing)
       @reservation_period = @reservation.periods.first
       @reservation_charge = FactoryGirl.create(:reservation_charge, :reservation => @reservation)
       @charge = FactoryGirl.create(:charge, :reference => @reservation_charge)
-      @payment_transfer = FactoryGirl.create(:payment_transfer, :company => @company)
+      @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
       @objects = [@user, @user_industry, @authentication, @company, @company_industry, 
                   @location, @listing, @photo, @reservation, @reservation_period, 
                   @payment_transfer, @reservation_charge, @charge]
-      
   end
 
 end

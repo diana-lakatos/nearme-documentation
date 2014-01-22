@@ -24,7 +24,7 @@ class Location < ActiveRecord::Base
   has_many :amenity_holders, as: :holder
   has_many :amenities, through: :amenity_holders
 
-  belongs_to :company, inverse_of: :locations, with_deleted: true
+  belongs_to :company, inverse_of: :locations
   belongs_to :location_type
   belongs_to :administrator, class_name: "User", :inverse_of => :administered_locations
 
@@ -87,6 +87,11 @@ class Location < ActiveRecord::Base
     Geocoder::Calculations.distance_between([ latitude,       longitude ],
                                             [ other_latitude, other_longitude ],
                                             units: :km)
+  end
+
+
+  def company
+    Company.unscoped { super }
   end
 
   def name

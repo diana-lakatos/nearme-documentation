@@ -9,7 +9,6 @@ class AddDeletedAtWhereNeeded < ActiveRecord::Migration
     add_column :availability_rules, :deleted_at, :datetime
     add_column :guest_ratings, :deleted_at, :datetime
     add_column :host_ratings, :deleted_at, :datetime
-    add_column :payment_transfers, :deleted_at, :datetime
     add_column :charges, :deleted_at, :datetime
     add_column :pages, :deleted_at, :datetime
     add_column :user_industries, :id, :primary_key
@@ -26,7 +25,6 @@ class AddDeletedAtWhereNeeded < ActiveRecord::Migration
     remove_column :availability_rules, :deleted_at
     remove_column :guest_ratings, :deleted_at
     remove_column :host_ratings, :deleted_at
-    remove_column :payment_transfers, :deleted_at
     remove_column :charges, :deleted_at
     remove_column :pages, :deleted_at
     remove_column :user_industries, :id

@@ -46,7 +46,7 @@ class Reservation < ActiveRecord::Base
 
   validates :listing_id, :presence => true
   # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is
-  validates :periods, :length => { :minimum => 1 }, :if => lambda { self.deleted_at_changed? && self.periods_with_deleted.count.zero? }
+  validates :periods, :length => { :minimum => 1 }, :if => lambda { self.deleted_at_changed? && self.periods.with_deleted.count.zero? }
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
   validates :owner_id, :presence => true, :unless => lambda { owner.present? }
   validate :validate_all_dates_available, on: :create, :if => lambda { listing }
@@ -84,10 +84,6 @@ class Reservation < ActiveRecord::Base
 
   def listing # fetch with deleted listing
     Listing.unscoped { super }
-  end
-
-  def periods_with_deleted # fetch with deleted periods
-    Period.unscoped { period }
   end
 
   monetize :total_amount_cents
