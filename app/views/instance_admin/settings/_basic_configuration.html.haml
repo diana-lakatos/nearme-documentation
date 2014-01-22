@@ -14,7 +14,7 @@
   = f.fields_for :instance_billing_gateways, wrapper: false do |f_bg|
     = f_bg.input :currency, as: :hidden
     %label= "Payment gateway for #{f_bg.object.currency} transactions"
-    = f_bg.collection_radio_buttons :billing_gateway, [['stripe', 'Stripe'] ,['balanced', 'Balanced']], :first, :last, item_wrapper_class: "billing-gateway"
+    = f_bg.collection_radio_buttons :billing_gateway, [['paypal', 'PayPal'], ['stripe', 'Stripe'], ['balanced', 'Balanced']], :first, :last, item_wrapper_class: "billing-gateway"
   .control-group
     = f.label :skip_company
     .switch-wrapper
