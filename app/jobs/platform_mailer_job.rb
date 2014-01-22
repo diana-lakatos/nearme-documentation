@@ -1,0 +1,2 @@
+class PlatformMailerJob < MailerJob
+end

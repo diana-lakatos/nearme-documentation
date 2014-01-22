@@ -1,0 +1,1049 @@
+html {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Archer SSm A', 'Archer SSm B'; 
+  font-weight: 400; 
+  font-style: normal;
+  font-size: 12px;
+  background-color: #e73242;
+
+  &.map {
+    background: url('/assets/platform_home/map-background.png');
+  }
+
+  &.light {
+    background-color: $light-color;
+  }
+
+  @media (max-width: $iphone-landscape) {
+    font-size: 10px;
+  }
+}
+
+img.social-share-thumbnail {
+  position: absolute;
+  left: -999px;
+}
+
+.main-container {
+  width: 100%;
+
+  min-height: 100%;
+  min-width: 450px;
+  height: 100%;
+
+  &.sticky-footer {
+    height: auto !important;
+    margin: 0 auto -190px;
+  }
+
+  @media (max-width: $ipad-width) {
+    min-width: 0px;
+  }
+
+  .btn {
+    font-family: 'Gotham A', 'Gotham B';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 130%;
+    letter-spacing: 6px;
+    text-decoration: none;
+    padding: 20px;
+    padding-left: 60px;
+    padding-right: 60px;
+    border: 0;
+    
+    &.btn-red {
+      color: $light-color;
+      background: $pink-color;
+      outline: none;
+
+      &:hover {
+        background: lighten($pink-color, 20%);
+        @include transition(opacity .07s ease-in, color .07s ease-in, border .07s ease-in);
+      }
+    }
+  }
+
+  #logo {
+    position: absolute;
+    top: 0;
+    left: 15%;
+    width: 90px;
+    height: 90px;
+    background: url('/assets/platform_home/logo.png') no-repeat;
+    background-position: left;
+    background-size: 100%;
+    z-index: 3;
+
+    a {
+      display: block;
+      width: 90px;
+      height: 90px;
+    }
+
+    @media (-webkit-min-device-pixel-ratio: 1.5),
+    (min-resolution: 144dpi) {
+      background: url('/assets/platform_home/logo@2x.png') no-repeat;
+      background-size: 100%;
+    }
+  }
+
+  .notify-success {
+    font-family: 'Archer SSm A', 'Archer SSm B';
+    font-weight: 500;
+    font-style: italic;
+    color: $pink-color;
+    font-size: 180%;
+    padding-top: 70px;
+    padding-bottom: 100px;
+    text-align: center;
+    line-height: 140%;
+  }
+
+  #email-modal {
+    background-color: $light-color;
+    width: 600px;
+    margin-left: -300px;
+
+    @media (max-width: $ipad-width) {
+      width: 94%;
+      margin-left: -47%;
+      display: none;
+    }
+
+    .btn {
+      padding: 0;
+      padding-top: 12px;
+      padding-bottom: 12px;
+      border: 0;
+      width: 100%;
+    }
+
+    .modal-content {
+
+      .close {
+        margin-top: 5px;
+        outline: none;
+        border: 0;
+        position: absolute;
+        right: 15px;
+        z-index: 1;
+      }
+
+      .modal-header {
+        border-bottom: 0;
+      }
+
+      .modal-body {
+        overflow-y: initial;
+        padding-top: 0;
+        padding-bottom: 0;
+
+        label, input, textarea {
+          text-align: left;
+          background-color: $light-color;
+          font-family: 'Archer SSm A', 'Archer SSm B';
+          font-weight: 400;
+          font-style: normal;
+          font-size: 150%;
+          color: $dark-color;
+        } 
+
+        form {
+          margin: 0;
+
+          input {
+            text-align: left;
+            margin-top: 10px;
+            padding: 15px;
+          }
+
+          label.middle-label {
+            padding-top: 15px;
+            padding-bottom: 10px;
+          }
+
+          p {
+            text-align: left;
+            font-size: 150%;
+            line-height: 150%;
+          }
+
+          .btn {
+            margin-top: 25px;
+          }
+        }
+      }
+
+      .modal-footer {
+        border-top: 0;
+        background-color: $light-color;
+        @include box-shadow(inset 0 1px 0 $light-color);
+      }
+    }
+  }
+
+  section.background-video {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    background-color: #fff;
+    max-width: 100%;
+    overflow: hidden;
+
+    .body {
+      z-index: 3;
+    }
+
+    h1 {
+      font-family: 'Archer SSm A', 'Archer SSm B'; 
+      font-weight: 400; 
+      font-style: normal;
+      font-size: 800%;
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      z-index: 3;
+      height: 230px;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      overflow: auto;
+      color: $dark-color;
+      line-height: 110px;
+
+      @media (max-width: 900px) {
+        font-size: 500%;
+        line-height: 80px;
+      }
+
+      @media (max-width: $ipad-width) {
+        font-size: 600%;
+      }
+
+      @media (max-width: $video-small) {
+        font-size: 400%;
+      }
+
+      @media (max-width: $iphone-landscape) {
+        display: none;
+      }
+    }
+
+    .arrow {
+      position: absolute;
+      z-index: 3;
+      bottom: 0%;
+      left: 0;
+      right: 0;
+      width: 100%;
+      margin: auto;
+      height: 50px;
+      text-align: center;
+    }
+
+    video {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 1;
+      display: block;
+      left: 50%;
+      @include transform(translateX(-50%));
+      min-height: 100%;
+      min-width: 100%;
+      @include transition(opacity 1s 0.3s linear);
+      background-color: #fff;
+
+      @media (max-width: $iphone-landscape) {
+        display: none;
+      }
+
+      .body {
+        position: relative;
+      }
+    }
+
+    #video-filter {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      width: 100%;
+      max-width: 100%;
+      background-color: rgba(237,243,211,0.75);
+    }
+
+    img.video_fallback {
+      display: none;
+
+      @media (max-width: $iphone-landscape) {
+        display: block;
+        width: 100%;
+      }
+    }
+  } 
+
+  .section {
+    padding-top: 60px;
+    padding-bottom: 100px;
+
+    h2 {
+      font-family: 'Archer SSm A', 'Archer SSm B';
+      font-weight: 400;
+      font-style: normal;
+      font-size: 400%;
+      text-align: center;
+      line-height: 150%;
+      color: $light-color;
+    }
+
+    &.pink-section {
+      background-color: $pink-color;
+    }
+
+    &.light-section {
+      background-color: $light-color;
+
+      h2 {
+        color: $dark-color;
+      }
+    }
+  }
+
+  section.create-and-manage {
+
+    .laptop {
+      position: relative;
+      margin-top: 60px;
+      background: url('/assets/platform_home/laptop-blank.png') no-repeat;
+      background-position: top;
+      background-size: 100%;
+      z-index: 2;
+      margin-left: auto;
+      margin-right: auto;
+      height: 457px;
+      max-width: 805px;
+
+      @media (max-width: $iphone-landscape) {
+        * {
+          display: none;
+        }
+      }
+
+      ul {
+        li {
+          font-family: 'Archer SSm A', 'Archer SSm B';
+          font-weight: 500;
+          font-style: normal;
+          font-size: 120%;
+          color: $pink-color;
+        }
+      }
+
+      .title {
+        position: absolute;
+        font-family: 'Archer SSm A', 'Archer SSm B';
+        font-weight: 500;
+        font-style: italic;
+        color: $dark-color;
+        font-size: 150%;
+        left: 25%;
+        top: 37%;
+        line-height: 120%;
+
+        @media (max-width: $ipad-width) {
+          font-size: 140%;
+          top: 32%;
+        }
+
+        @media (max-width: $video-small) {
+          font-size: 90%;
+          top: 35%;
+        }
+      }
+
+      .input-left {
+        position: absolute;
+        background: url('/assets/platform_home/input-1.png') no-repeat;
+        background-position: top;
+        background-size: 100%;
+        height: 42px;
+        width: 118px;
+        left: 27%;
+        top: 50%;
+        overflow: hidden;
+
+        @media (max-width: $ipad-width) {
+          left: 26%;
+          top: 48%;
+        }
+
+        @media (max-width: $video-small) {
+          background-size: 55%;
+          top: 50%;
+          left: 20%;
+
+          .simply-scroll .simply-scroll-clip {
+            height: 15px;
+          }
+
+          ul {
+            padding-left: 20%;
+          }
+        } 
+      }
+
+      .input-right {
+        position: absolute;
+        background: url('/assets/platform_home/input-2.png') no-repeat;
+        background-position: top;
+        background-size: 100%;
+        height: 42px;
+        width: 218px;
+        left: 45%;
+        top: 50%;
+
+        @media (max-width: $ipad-width) {
+          top: 48%;
+        }
+
+        @media (max-width: $video-small) {
+          background-size: 55%;
+          top: 50%;
+          left: 35%;
+
+          .simply-scroll .simply-scroll-clip {
+            height: 15px;
+          }
+
+          ul {
+            padding-left: 23%;
+          }
+        }
+      }
+    }
+  }
+
+  section.empower {
+    text-align: center;
+    padding-top: 80px;
+    padding-bottom: 120px;
+
+    .container-fluid {
+      padding-top: 60px;
+    }
+
+    .box {
+      border: 2px solid $pink-color;
+      padding: 45px;
+      min-height: 220px;
+      height: 100%;
+      @include border-radius(10px);
+
+      h3 {
+        font-family: 'Archer SSm A', 'Archer SSm B';
+        font-weight: 500;
+        font-style: normal;
+        font-size: 210%;
+        color: $pink-color;
+      }
+
+      .icon {
+        margin-top: 15px;
+        border-top: 2px solid $pink-color;
+      }
+
+      .body {
+        padding-top: 20px;
+        font-family: 'Archer SSm A', 'Archer SSm B';
+        font-weight: 500;
+        font-style: italic;
+        font-size: 150%;
+        color: $dark-color;
+        line-height: 180%;
+        height: 100%;
+      }
+
+      &.brands {
+        @media (max-width: $ipad-width) {
+          margin-top: 50px;
+        }
+      }
+    }
+
+    @media (max-width: $ipad-width) {
+      padding-bottom: 80px;
+    }
+  }
+
+  section.how-it-works {
+
+    .animation {
+      margin-top: 80px;
+
+      .wheel {
+        width: 50%;
+        float: left;
+      }
+
+      .text {
+        width: 45%;
+        float: right;
+        z-index: 3;
+
+        @media (max-width: $ipad-width) {
+          float: left;
+          width: 100%;
+        }
+
+        .box {
+          text-align: center;
+          background-color: $light-color;
+          padding: 20px;
+          display: table-cell;
+          vertical-align: middle;
+          width: 100%;
+          @include border-radius(10px);
+
+          &.hidden {
+            display: none;
+          }
+
+          h3 {
+            color: $pink-color;
+            font-family: 'Archer SSm A', 'Archer SSm B';
+            font-weight: 600;
+            font-style: normal;
+            font-size: 180%;
+          }
+
+          .text-body {
+            font-family: 'Archer SSm A', 'Archer SSm B';
+            font-weight: 500;
+            font-style: italic;
+            padding-top: 30px;
+            line-height: 220%;
+            font-size: 160%;
+          }
+        }
+
+        .navigation {
+          text-align: center;
+          padding-top: 20px;
+          display: none;
+
+          @media (max-width: $ipad-width) {
+            display: block;
+          }
+
+          a {
+            text-decoration: none;
+            display: inline-block;
+
+            &.right {
+              padding-left: 15px;
+            }
+
+            &.left {
+              padding-right: 15px;
+            }
+          }
+        }
+      }
+    }
+
+    h2 {
+      padding-top: 40px;
+    }
+
+    .title {
+      font-family: 'Archer SSm A', 'Archer SSm B';
+      font-weight: 500;
+      font-style: italic;
+      color: $light-color;
+      font-size: 180%;
+      padding-top: 40px;
+      text-align: center;
+      line-height: 160%;
+    }
+  }
+
+  section.get-in-the-business {
+
+    .container-fluid {
+      padding-top: 30px;
+
+      .row-fluid {
+        padding-top: 50px;
+
+        .span1 {
+          @media (max-width: $ipad-width) {
+            display: none;
+          }
+        }
+
+        @media (max-width: $ipad-width) {
+          padding-top: 0;
+        }
+      }
+    }
+
+    .box {
+
+      &.middle-box {
+        margin-left: 6%;
+        margin-right: 4%;
+
+        @media (max-width: $ipad-width) {
+          margin-left: 0;
+          margin-right: 0;
+        }
+      }
+
+      .icon {
+        height: 40px;
+        vertical-align: bottom;
+        position: relative;
+
+        @media (max-width: $ipad-width) {
+          float: left;
+          width: 55px;
+        }
+
+        img {
+          display: block;
+          position: absolute;
+          bottom: 0;
+          max-height: 40px;
+        }
+      }
+
+      h3 {
+        font-family: 'Archer SSm A', 'Archer SSm B';
+        font-weight: 700;
+        font-style: normal;
+        color: $pink-color;
+        font-size: 190%;
+        padding-top: 20px;
+      }
+
+      .body {
+        font-family: 'Archer SSm A', 'Archer SSm B';
+        font-weight: 500;
+        font-style: normal;
+        font-size: 150%;
+        color: $dark-color;
+        line-height: 180%;
+        margin-top: 25px;
+
+        @media (max-width: $ipad-width) {
+          margin-bottom: 20px;
+        }        
+      }
+    }
+  }
+
+  section.see-what-everyone-is-saying {
+    .container-fluid {
+      padding-top: 30px;
+
+      .row-fluid {
+        padding-top: 50px;
+
+        .span1 {
+          @media (max-width: $ipad-width) {
+            display: none;
+          }
+        }
+      }
+    }
+
+    @media (max-width: $ipad-width) {
+      .span4 {
+        margin-bottom: 50px;
+        text-align: center;
+      }
+    }
+
+    
+    .shareable {
+      @media (max-width: $desktop-breakpoint-small) {
+        height: 32px;
+        width: 230px;
+      }
+    }
+
+    .box {
+      position: relative;
+      background-color: $light-color;
+      padding: 30px;
+      @include border-radius(10px);
+
+      .body {
+        font-family: 'Archer SSm A', 'Archer SSm B';
+        font-weight: 500;
+        font-style: normal;
+        font-size: 150%;
+        color: $dark-color;
+        line-height: 180%;      
+      }
+    }
+
+    .arrow:after {
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-color: rgba(136, 183, 213, 0);
+      border-width: 15px;
+
+      @media (max-width: $ipad-width) {
+        bottom: 100%;
+        left: 50%;
+        margin-left: -15px;
+        border-bottom-color: $light-color;
+      }
+    }
+
+    .right-arrow:after {
+      @media (min-width: $ipad-width + 1) {
+        left: 100%;
+        top: 50%;
+        border-left-color: $light-color;
+        margin-top: -15px;
+      }
+    }
+    
+    .left-arrow:after {
+      @media (min-width: $ipad-width + 1) {
+        right: 100%;
+        top: 50%;
+        border-right-color: $light-color;
+        margin-top: -15px;
+      }
+    }
+  }
+
+
+  section.build-yours-now {
+    text-align: center;
+    padding-top: 120px;
+    background: url('/assets/platform_home/map-background.png');
+
+    .title {
+      font-family: 'Archer SSm A', 'Archer SSm B';
+      font-weight: 500;
+      font-style: italic;
+      color: $dark-color;
+      font-size: 160%;
+    }
+
+    form#new_platform_email  {
+      padding-top: 70px;
+      padding-bottom: 100px;
+      text-align: center;
+
+      .title {
+        color: $pink-color;
+      }
+
+      input {
+        max-width: 500px;
+        text-align: center;
+        margin-top: 30px;
+
+        @media (max-width: $iphone-landscape) {
+          max-width: 80%;
+        }
+      }
+
+      .btn {
+        margin-top: 25px;
+      }
+    } 
+
+    .social-icons {
+      ul {
+        display: inline-block;
+
+        &.icons {
+          li {
+            float: left;
+
+            a{
+              display: block;
+              margin-right: 10px;
+              margin-top: 20px;
+              background-color: $pink-color;
+              @include border-radius(3px);
+              width: 35px;
+              height: 35px; 
+
+              img {
+                margin-top: 2px;
+                background-color: $pink-color;
+                display: inline-block;
+              }
+
+              &:hover {
+                background: lighten($pink-color, 20%);
+                @include transition(opacity .07s ease-in, color .07s ease-in, border .07s ease-in);
+
+                img {
+                  background: lighten($pink-color, 20%);
+                  @include transition(opacity .07s ease-in, color .07s ease-in, border .07s ease-in);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  section.get-in-touch {
+    padding-bottom: 0px;
+    background-color: rgba(0, 0, 0, 0) !important;
+
+    h2 {
+      padding-top: 40px;
+    }
+
+    .title {
+      font-family: 'Archer SSm A', 'Archer SSm B';
+      font-weight: 500;
+      font-style: italic;
+      color: $dark-color;
+      font-size: 180%;
+      padding-top: 40px;
+      text-align: center;
+
+      &.warning {
+        color: #EF4A53;
+      }
+    }
+
+    form {
+      padding-top: 40px;
+
+      input, textarea {
+        margin-top: 15px;
+      }
+
+      a {
+        display: block;
+        margin-top: 40px;
+      }
+    }
+
+    .notify-success {
+      padding-top: 140px;
+    }
+  }
+
+  section.unsubscribe {
+    padding-bottom: 0px;
+    padding-top: 260px;
+
+    .title {
+      font-family: 'Archer SSm A', 'Archer SSm B';
+      font-weight: 500;
+      font-style: normal;
+      color: $dark-color;
+      font-size: 200%;
+      padding-top: 40px;
+      text-align: center;
+
+      .links {
+        padding-top: 50px;
+        font-size: 80%;
+
+        a {
+          text-decoration: underline;
+          color: $dark-color;
+        }
+      }
+    }
+
+    @media (max-width: $ipad-width) {
+      padding-top: 25%;
+    }
+  }
+}
+
+.footer-push {
+  height: 190px;
+}
+
+.footer-wrapper {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  margin-top: 0px;
+  padding: 0;
+  height: 190px;
+  bottom: 0;
+  right: 0;
+  background: $pink-color;
+
+  footer {
+    margin-top: 60px;
+    font-family: 'Archer SSm A', 'Archer SSm B';
+    font-weight: 500;
+    font-style: normal;
+    color: $light-color;
+
+    p {
+      padding-bottom: 8px;
+      font-size: 130%;
+    }
+
+    .social-wrapper {
+      ul {
+        &.icons {
+          li {
+            float: left;
+            padding-right: 6%;
+            padding-top: 20px;
+
+            img {
+              background-color: $pink-color;
+              display: inline-block;
+            }
+
+            @media (max-width: $desktop-breakpoint) {
+              padding-right: 3%;
+            }
+          }
+        }
+      }
+    }
+
+    .questions {
+      padding-top: 20px; 
+      font-size: 170%;
+
+      a {
+        color: $light-color;
+        text-decoration: none;
+        font-family: 'Archer SSm A', 'Archer SSm B'; 
+        font-weight: 500; 
+        font-style: normal;
+
+        span {
+          font-family: 'Gotham A', 'Gotham B'; 
+          font-weight: 400; 
+          font-style: normal;
+          letter-spacing: 8px;
+          margin-left: 20px;
+
+          @media (max-width: $ipad-width) {
+            letter-spacing: 3px;
+          }
+        }
+      }
+    }
+
+    #logo-inverse {
+      width: 70px;
+      height: 70px;
+      background: url('/assets/platform_home/logo-reverse.png') no-repeat;
+      background-position: left;
+      text-indent: -9999px;
+      z-index: 2;
+      margin-left: 20px;
+      background-size: 100%;
+
+      @media (-webkit-min-device-pixel-ratio: 1.5),
+      (min-resolution: 144dpi) {
+        background: url('/assets/platform_home/logo-reverse@2x.png') no-repeat;
+        background-size: 100%;
+      }
+
+      @media (max-width: $ipad-width) {
+        display: none;
+      }
+
+      @media (max-width: $desktop-breakpoint) {
+        margin-left: 0;
+      }
+    }
+
+    .span1 {
+      @media (max-width: $desktop-breakpoint-small) {
+        display: none;
+      }
+    }
+
+    .span2 {
+      @media (max-width: $desktop-breakpoint-small) {
+        width: 20%;
+      }
+
+      @media (max-width: $iphone-landscape) {
+        width: 45%;
+      }
+    }
+
+    .span5 {
+      @media (max-width: $iphone-landscape) {
+        width: auto;
+      }
+
+      @media (min-width: $responsive-small) and (max-width: $desktop-breakpoint-small) {
+        width: auto;
+      }
+    }
+  }
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="number"],
+textarea, p.disabled-block {
+  @include form-field;
+}
+
+textarea {
+  font-family: 'Archer SSm A', 'Archer SSm B';
+  font-weight: 400;
+  font-style: italic;
+  resize: none;
+}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+  color: rgb(131, 132, 125);;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color: rgb(131, 132, 125);;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: rgb(131, 132, 125);;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+  color: rgb(131, 132, 125);;
+}
+
+input[placeholder]:focus, textarea[placeholder]:focus {
+  @include form-field-focus;
+  border-color: #EF4A53;
+  box-shadow: none !important;
+}
+
+@media (max-width: 800px) {
+  #line {
+    width: 120px !important;
+  }
+}
