@@ -10,7 +10,7 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
     context 'required methods' do
 
       setup do
-        @test_processor = TestProcessor.new(FactoryGirl.create(:instance))
+        @test_processor = TestProcessor.new(FactoryGirl.create(:instance), 'USD')
       end
 
       should 'require process_charge' do

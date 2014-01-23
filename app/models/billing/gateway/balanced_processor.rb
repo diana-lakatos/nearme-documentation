@@ -1,9 +1,9 @@
 class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
   SUPPORTED_CURRENCIES = ['USD']
 
-  def initialize(instance)
-    super(instance)
-    Balanced.configure(instance.balanced_api_key)
+  def initialize(*args)
+    super(*args)
+    Balanced.configure(@instance.balanced_api_key)
   end
 
   def self.currency_supported?(currency)
@@ -11,7 +11,7 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
   end
 
   def self.instance_supported?(instance)
-    instance.balanced_api_key.present?
+    instance.balanced_supported?
   end
 
   def self.is_supported_by?(object, role = 'sender')

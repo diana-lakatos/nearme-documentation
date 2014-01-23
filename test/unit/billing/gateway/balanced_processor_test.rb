@@ -6,7 +6,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
     @reservation = FactoryGirl.create(:reservation)
     @instance.update_attribute(:balanced_api_key, 'test_key')
-    @billing_gateway = Billing::Gateway.new(@instance)
+    @billing_gateway = Billing::Gateway.new(@instance, 'USD')
     merchant = mock()
     marketplace = mock()
     marketplace.stubs(:uri).returns('')
@@ -17,7 +17,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
   context 'ingoing' do
 
     setup do
-      @billing_gateway.ingoing_payment(@user, 'USD')
+      @billing_gateway.ingoing_payment(@user)
     end
 
     context "#charge" do
@@ -134,7 +134,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
 
     setup do
       @instance.update_attribute(:balanced_api_key, 'apikey123')
-      @gateway = Billing::Gateway.new(@instance)
+      @gateway = Billing::Gateway.new(@instance, 'USD')
       @company = FactoryGirl.create(:company_with_balanced)
       @payment_transfer = FactoryGirl.create(:payment_transfer_unpaid)
       @payment_transfer.update_column(:amount_cents, 1234)
@@ -158,7 +158,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
       should "create a Payout record with reference, amount, currency, and success on success" do
         @customer.stubs(:add_bank_account).returns({})
         @credit.expects(:save).returns(stub(:status => 'pending', :to_yaml => 'yaml'))
-        @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+        @billing_gateway.outgoing_payment(@instance, @company).payout(amount: @payment_transfer.amount, reference: @payment_transfer)
         payout = Payout.last
         assert_equal 1234, payout.amount
         assert_equal 'USD', payout.currency
@@ -170,7 +170,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
       should "create a Payout record with failure on failure" do
         @customer.stubs(:add_bank_account).returns({})
         @credit.expects(:save).returns(stub(:status => 'failed', :to_yaml => 'yaml'))
-        @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+        @billing_gateway.outgoing_payment(@instance, @company).payout(amount: @payment_transfer.amount, reference: @payment_transfer)
         payout = Payout.last
         refute payout.success?
         assert_equal 'yaml', payout.response
@@ -182,7 +182,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
 
         Timecop.freeze(Time.zone.now) do
           assert_difference 'InstanceClient.count' do
-            @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+            @billing_gateway.outgoing_payment(@instance, @company).payout(amount: @payment_transfer.amount, reference: @payment_transfer)
           end
           @instance_client = @company.instance_clients.where(:instance_id => @instance.id).first
           assert_equal 'test-customer-company', @instance_client.balanced_user_id
@@ -205,14 +205,14 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
 
       should 'not invalidate old bank account if receiver has not changed balanced details' do
         Billing::Gateway::BalancedProcessor.any_instance.expects(:update_bank_account).never
-        @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+        @billing_gateway.outgoing_payment(@instance, @company).payout(amount: @payment_transfer.amount, reference: @payment_transfer)
         assert_equal true, Payout.last.success
       end
 
       should 'try to invalidate old bank account if receiver has changed balanced details' do
         @company.touch(:balanced_account_details_changed_at)
         Billing::Gateway::BalancedProcessor.any_instance.expects(:update_bank_account).once.returns(true)
-        @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+        @billing_gateway.outgoing_payment(@instance, @company).payout(amount: @payment_transfer.amount, reference: @payment_transfer)
         assert_equal true, Payout.last.success
       end
 
@@ -226,7 +226,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
         @customer.stubs(:add_bank_account).returns({})
         Timecop.freeze(Time.zone.now) do
           assert_no_difference 'InstanceClient.count' do
-            @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+            @billing_gateway.outgoing_payment(@instance, @company).payout(amount: @payment_transfer.amount, reference: @payment_transfer)
           end
           assert_equal Time.zone.now.to_i, InstanceClient.first.balanced_bank_account_created_at.to_i
         end
@@ -240,7 +240,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
         @customer.stubs(:bank_accounts).returns(stub(:last => @bank_account))
         @credit.unstub(:save)
         assert_raise RuntimeError do |e|
-          @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+          @billing_gateway.outgoing_payment(@instance, @company).payout(amount: @payment_transfer.amount, reference: @payment_transfer)
           assert e.message.include?('should have been invalidated')
         end
       end

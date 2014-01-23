@@ -6,7 +6,7 @@ class Billing::Gateway::StripeProcessorTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
     @reservation = FactoryGirl.create(:reservation)
     @instance.update_attribute(:stripe_api_key, "abcd")
-    @billing_gateway = Billing::Gateway.new(@instance).ingoing_payment(@user, 'USD')
+    @billing_gateway = Billing::Gateway.new(@instance, 'USD').ingoing_payment(@user)
   end
 
   context "#charge" do

@@ -3,32 +3,37 @@ class Billing::Gateway
   INGOING_PROCESSORS = [Billing::Gateway::BalancedProcessor, Billing::Gateway::StripeProcessor, Billing::Gateway::PaypalProcessor]
   OUTGOING_PROCESSORS = [Billing::Gateway::PaypalProcessor, Billing::Gateway::BalancedProcessor]
 
-  attr_reader :user, :currency, :processor
+  attr_reader :user, :currency, :processor, :outgoing_processors
 
   delegate :charge, :payout, :store_credit_card, :to => :processor
 
-  def initialize(instance)
+  def initialize(instance, currency)
     @instance = instance
-    @ingoing_processors = INGOING_PROCESSORS.select { |processor| processor.instance_supported?(instance) }
-    @outgoing_processors = OUTGOING_PROCESSORS.select { |processor| processor.instance_supported?(instance) }
+    @currency = currency
+    @ingoing_processors = INGOING_PROCESSORS.select { |processor| processor.instance_supported?(instance) && processor.currency_supported?(currency) }
+    @outgoing_processors = OUTGOING_PROCESSORS.select { |processor| processor.instance_supported?(instance) && processor.currency_supported?(currency) }
   end
 
-  def ingoing_payment(user, currency)
+  def ingoing_payment(user)
     @user = user
-    @currency = currency
-    @processor = @ingoing_processors.find { |processor| processor.currency_supported?(@currency) }.try(:new, @instance).try(:ingoing_payment, @user, @currency)
+    @processor = @ingoing_processors.first.try(:new, @instance, @currency).try(:ingoing_payment, @user)
     self
   end
 
-  def outgoing_payment(sender, receiver, currency)
+  def outgoing_payment(sender, receiver)
+    Rails.logger.debug "outgoing processors: #{@outgoing_processors.map { |op| op.to_s } }"
     @sender = sender
     @receiver = receiver
-    @processor = @outgoing_processors.find { |processor| processor.currency_supported?(currency) && processor.is_supported_by?(@sender, 'sender') && processor.is_supported_by?(@receiver, 'receiver') }.try(:new, @instance).try(:outgoing_payment, @sender, @receiver)
+    @processor = outgoing_processors.find { |processor| processor.is_supported_by?(@sender, 'sender') && processor.is_supported_by?(@receiver, 'receiver') }.try(:new, @instance, @currency).try(:outgoing_payment, @sender, @receiver)
     self
   end
 
   def payment_supported?
     processor.present?
+  end
+
+  def payout_possible?
+    outgoing_processors.any?
   end
 
 end

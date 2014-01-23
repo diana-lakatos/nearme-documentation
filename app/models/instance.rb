@@ -93,6 +93,13 @@ class Instance < ActiveRecord::Base
     self.paypal_app_id.present?
   end
 
+  def balanced_supported?
+    balanced_api_key.present?
+  end
+
+  def support_automated_payouts?
+    paypal_supported? || balanced_supported?
+  end
 
   def to_liquid
     InstanceDrop.new(self)

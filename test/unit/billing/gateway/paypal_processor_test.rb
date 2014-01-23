@@ -6,13 +6,13 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
     @instance = Instance.default_instance
     @user = FactoryGirl.create(:user)
     @reservation = FactoryGirl.create(:reservation)
-    @billing_gateway = Billing::Gateway.new(@instance)
+    @billing_gateway = Billing::Gateway.new(@instance, 'EUR')
   end
 
   context 'ingoing' do
 
     setup do
-      @billing_gateway.ingoing_payment(@user, 'EUR')
+      @billing_gateway.ingoing_payment(@user)
       PayPal::SDK::REST::Payment.any_instance.stubs(:error).returns([]).at_least(0)
       PayPal::SDK::REST::CreditCard.any_instance.stubs(:error).returns([]).at_least(0)
     end
@@ -119,7 +119,7 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
         pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml')
         api_mock.expects(:pay).returns(pay_response_mock)
         PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
-        @billing_gateway.outgoing_payment(@payment_transfer.company.instance, @payment_transfer.company, 'EUR').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+        @billing_gateway.outgoing_payment(@payment_transfer.company.instance, @payment_transfer.company).payout(amount: @payment_transfer.amount, reference: @payment_transfer)
 
         payout = Payout.last
         assert_equal 1234, payout.amount
@@ -138,7 +138,7 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
         pay_response_mock.stubs(:error).returns(error_mock)
         api_mock.expects(:pay).returns(pay_response_mock)
         PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
-        @billing_gateway.outgoing_payment(@payment_transfer.company.instance, @payment_transfer.company, 'EUR').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+        @billing_gateway.outgoing_payment(@payment_transfer.company.instance, @payment_transfer.company).payout(amount: @payment_transfer.amount, reference: @payment_transfer)
         payout = Payout.last
         refute payout.success?
       end
@@ -163,7 +163,7 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
         pay_response_mock = mock()
         pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml')
         api_mock.expects(:pay).returns(pay_response_mock)
-        @billing_gateway.outgoing_payment(@payment_transfer.company.instance, @payment_transfer.company, 'EUR').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+        @billing_gateway.outgoing_payment(@payment_transfer.company.instance, @payment_transfer.company).payout(amount: @payment_transfer.amount, reference: @payment_transfer)
       end
 
     end

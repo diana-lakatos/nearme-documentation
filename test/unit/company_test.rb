@@ -49,41 +49,35 @@ class CompanyTest < ActiveSupport::TestCase
 
     context 'no payout address' do
       setup do
-        @company.stubs(:has_payment_method?).returns(false)
-        @mock = mock()
-        @mock.expects(:deliver).twice
         stub_mixpanel
       end
 
-      should 'notify host via sms and email if company has no payout option' do
+      should 'notify host via sms and email if company has no payout option and instance supports payouts' do
+        @company.stubs(:created_payment_transfers).returns([mock()])
+        @mock = mock()
+        @mock.expects(:deliver).twice
         CompanySmsNotifier.expects(:notify_host_of_no_payout_option).with(@company).returns(@mock)
         CompanyMailer.expects(:notify_host_of_no_payout_option).with(@company).returns(@mock)
         @company.schedule_payment_transfer
       end
 
+      should 'not notify host via sms and email if mailing address present' do
+        @company.stubs(:created_payment_transfers).returns([mock()])
+        @company.stubs(:mailing_address).returns('address')
+        CompanySmsNotifier.expects(:notify_host_of_no_payout_option).never
+        CompanyMailer.expects(:notify_host_of_no_payout_option).never
+        @company.schedule_payment_transfer
+      end
+
+      should 'not notify host via sms and email if company has payout option' do
+        @company.stubs(:created_payment_transfers).returns([])
+        CompanySmsNotifier.expects(:notify_host_of_no_payout_option).never
+        CompanyMailer.expects(:notify_host_of_no_payout_option).never
+        @company.schedule_payment_transfer
+      end
+
     end
 
-  end
-
-  context 'payout option' do
-
-    should 'have no payout option if paypal email and mailing address are not set' do
-      @company.stubs(:mailing_address).returns(nil)
-      @company.stubs(:paypal_email).returns(nil)
-      refute @company.has_payment_method?
-    end
-
-    should 'have payout option if paypal email is  set' do
-      @company.stubs(:mailing_address).returns(nil)
-      @company.stubs(:paypal_email).returns('paypal@example.com')
-      assert @company.has_payment_method?
-    end
-
-    should 'have payout option if mailing address is set' do
-      @company.stubs(:mailing_address).returns('San Francisco, Some street 123')
-      @company.stubs(:paypal_email).returns(nil)
-      assert @company.has_payment_method?
-    end
   end
 
   context 'update balanced info' do

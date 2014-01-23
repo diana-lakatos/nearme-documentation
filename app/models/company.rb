@@ -101,20 +101,18 @@ class Company < ActiveRecord::Base
       transaction do
         charges = reservation_charges.needs_payment_transfer
         charges.group_by(&:currency).each do |currency, charges|
-          self.created_payment_transfers << payment_transfers.create!(
+          payment_transfer = payment_transfers.create!(
             reservation_charges: charges
           )
+          self.created_payment_transfers << payment_transfer if payment_transfer.possible_automated_payout_not_supported?
         end
       end
-      # FIXME: probably better to move to payment_transfer.rb 
-      if !has_payment_method?
+      # we want to notify company owner (once no matter how many payment transfers have been generated!) 
+      # that it is possible to make automated payout but he needs to enter credentials via edit company settings
+      if mailing_address.blank? && self.created_payment_transfers.any?
         CompanyMailer.enqueue.notify_host_of_no_payout_option(self)
         CompanySmsNotifier.notify_host_of_no_payout_option(self).deliver
       end
-    end
-
-    def has_payment_method?
-      paypal_email.present? || mailing_address.present?
     end
 
     def to_balanced_params

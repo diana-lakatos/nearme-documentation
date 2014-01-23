@@ -6,7 +6,7 @@ class Billing::GatewayTest < ActiveSupport::TestCase
     @instance = Instance.default_instance
     @user = FactoryGirl.create(:user)
     @reservation = FactoryGirl.create(:reservation)
-    @gateway = Billing::Gateway.new(@instance)
+    @gateway = Billing::Gateway.new(@instance, 'USD')
   end
 
   context 'processor' do
@@ -23,36 +23,58 @@ class Billing::GatewayTest < ActiveSupport::TestCase
 
   end
 
+  context 'outgoing_processor' do
+
+    should 'know if there is outgoing processor that can potentially handle payment' do
+      @gateway.stubs(:outgoing_processors).returns([mock()])
+      assert @gateway.payout_possible?
+    end
+
+    should 'know if there is no outgoing processor that can potentially handle payment' do
+      @gateway.stubs(:outgoing_processors).returns([])
+      refute @gateway.payout_possible?
+    end
+
+  end
+
+
   context '#ingoing_payment' do
 
     context 'stripe' do
 
       should 'accept USD' do
-        assert Billing::Gateway::StripeProcessor === @gateway.ingoing_payment(@user, 'USD').processor
+
+        @gateway = Billing::Gateway.new(@instance, 'USD')
+        assert Billing::Gateway::StripeProcessor === @gateway.ingoing_payment(@user).processor
       end
 
     end
 
     context 'paypal' do
       should 'accept GBP' do
-        assert Billing::Gateway::PaypalProcessor === @gateway.ingoing_payment(@user, 'GBP').processor
+        @gateway = Billing::Gateway.new(@instance, 'GBP')
+        assert Billing::Gateway::PaypalProcessor === @gateway.ingoing_payment(@user).processor
       end
 
       should 'accept JPY' do
-        assert Billing::Gateway::PaypalProcessor === @gateway.ingoing_payment(@user, 'JPY').processor
+        @gateway = Billing::Gateway.new(@instance, 'JPY')
+        assert Billing::Gateway::PaypalProcessor === @gateway.ingoing_payment(@user).processor
       end
 
       should 'accept EUR' do
-        assert Billing::Gateway::PaypalProcessor === @gateway.ingoing_payment(@user, 'EUR').processor
+        @gateway = Billing::Gateway.new(@instance, 'EUR')
+        assert Billing::Gateway::PaypalProcessor === @gateway.ingoing_payment(@user).processor
       end
 
       should 'accept CAD' do
-        assert Billing::Gateway::PaypalProcessor === @gateway.ingoing_payment(@user, 'CAD').processor
+        @gateway = Billing::Gateway.new(@instance, 'CAD')
+        assert Billing::Gateway::PaypalProcessor === @gateway.ingoing_payment(@user).processor
       end
     end
 
     should 'return nil if currency is not supported by any processor' do
-      assert_nil @gateway.ingoing_payment(@user, 'ABC').processor
+      @gateway = Billing::Gateway.new(@instance, 'ABC')
+      assert_nil @gateway.ingoing_payment(@user).processor
     end
   end
 
@@ -61,16 +83,20 @@ class Billing::GatewayTest < ActiveSupport::TestCase
 
     context 'paypal' do
 
+      setup do
+        @gateway = Billing::Gateway.new(@instance, 'EUR')
+      end
+
       should 'accept objects which have paypal email' do
         @mock = mock()
         @mock.expects(:paypal_email).returns('paypal@example.com').twice
-        assert Billing::Gateway::PaypalProcessor === @gateway.outgoing_payment(@mock, @mock, 'EUR').processor
+        assert Billing::Gateway::PaypalProcessor === @gateway.outgoing_payment(@mock, @mock).processor
       end
 
       should 'not accept objects with blank paypal_email' do
         @mock = mock()
         @mock.expects(:paypal_email).returns('')
-        assert_nil @gateway.outgoing_payment(@mock, @mock, 'EUR').processor
+        assert_nil @gateway.outgoing_payment(@mock, @mock).processor
       end
 
     end
@@ -79,33 +105,31 @@ class Billing::GatewayTest < ActiveSupport::TestCase
 
       setup do
         @instance.update_attribute(:balanced_api_key, 'apikey123')
-        @gateway = Billing::Gateway.new(@instance)
+        @instance.update_attribute(:paypal_username, '')
+        @gateway = Billing::Gateway.new(@instance, 'USD')
         @mock = mock()
-        @mock.expects(:paypal_email).returns('')
       end
 
       should 'accept objects which have balanced api and currency' do
-        @mock.expects(:balanced_api_key).returns('balanced_api_key123')
         @company = FactoryGirl.create(:company_with_balanced)
-        assert Billing::Gateway::BalancedProcessor === @gateway.outgoing_payment(@mock, @company, 'USD').processor
+        assert Billing::Gateway::BalancedProcessor === @gateway.outgoing_payment(@instance, @company).processor, "#{@gateway.processor.class.name} is not BalancedProcessor"
       end
 
       should 'not accept objects which have balanced api but wrong currency' do
-        @mock.expects(:balanced_api_key).returns('balanced_api_key123').at_least(0)
         @company = FactoryGirl.create(:company_with_balanced)
-        assert_nil @gateway.outgoing_payment(@mock, @company, 'EUR').processor
+        @gateway = Billing::Gateway.new(@instance, 'EUR')
+        assert_nil @gateway.outgoing_payment(@instance, @company).processor, "#{@gateway.processor.class.name} is not nil"
       end
 
       should 'not accept receiver without filled balanced info' do
-        @mock.expects(:balanced_api_key).returns('balanced_api_key123')
         @company = FactoryGirl.create(:company)
-        assert_nil @gateway.outgoing_payment(@mock, @company, 'USD').processor
+        assert_nil @gateway.outgoing_payment(@instance, @company).processor, "#{@gateway.processor.class.name} is not nil"
       end
 
       should 'not accept sender without filled balanced api key' do
-        @mock.expects(:balanced_api_key).returns('')
+        @instance.update_attribute(:balanced_api_key, '')
         @company = FactoryGirl.create(:company_with_balanced)
-        assert_nil @gateway.outgoing_payment(@mock, @company, 'USD').processor
+        assert_nil @gateway.outgoing_payment(@instance, @company).processor, "#{@gateway.processor.class.name} is not nil"
       end
 
     end

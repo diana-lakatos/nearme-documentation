@@ -72,6 +72,12 @@ class PaymentTransfer < ActiveRecord::Base
     end
   end
 
+  def possible_automated_payout_not_supported?
+    # true if instance makes it possible to make automated payout for given currency, but company does not support it
+    # false if either company can process this payment transfer automatically or instance does not support it
+    !billing_gateway.payment_supported? && billing_gateway.payout_possible?
+  end
+
   private
 
   def assign_amounts_and_currency
@@ -92,6 +98,6 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def billing_gateway
-    @billing_gateway ||= Billing::Gateway.new(company.instance).outgoing_payment(company, currency)
+    @billing_gateway ||= Billing::Gateway.new(company.instance, currency).outgoing_payment(company)
   end
 end
