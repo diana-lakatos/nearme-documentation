@@ -4,10 +4,10 @@ class Instance < ActiveRecord::Base
                   :service_fee_guest_percent, :service_fee_host_percent, :bookable_noun, :lessor, :lessee,
                   :listing_amenity_types_attributes, :location_amenity_types_attributes, :skip_company, :pricing_options,
                   :stripe_api_key, :stripe_public_key, :paypal_username, :paypal_password, :paypal_signature, :paypal_app_id, 
-                  :paypal_client_id, :paypal_client_secret, :balanced_api_key
+                  :paypal_client_id, :paypal_client_secret, :balanced_api_key, :password_protected, :marketplace_password
 
   attr_encrypted :paypal_username, :paypal_password, :paypal_signature, :paypal_app_id, :stripe_api_key,
-    :paypal_client_id, :paypal_client_secret, :balanced_api_key, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+    :paypal_client_id, :paypal_client_secret, :balanced_api_key, :marketplace_password, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   has_one :theme, :as => :owner, dependent: :destroy
 
@@ -31,6 +31,7 @@ class Instance < ActiveRecord::Base
 
   validates_presence_of :name
   validates :pricing_options, presence: { message: :must_be_selected }
+  validates_presence_of :marketplace_password, :if => :password_protected
 
   after_initialize :set_all_pricing_options
 
@@ -95,6 +96,10 @@ class Instance < ActiveRecord::Base
 
   def to_liquid
     InstanceDrop.new(self)
+  end
+
+  def authenticate(password)
+    password == marketplace_password
   end
 
   private

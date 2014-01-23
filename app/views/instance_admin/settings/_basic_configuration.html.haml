@@ -16,6 +16,9 @@
     .switch-wrapper
       .switch{'data-on-label' => "", 'data-off-label' => ""}
         = f.check_box :skip_company
+  %label{for: 'instance_marketplace_password'} Marketplace password
+  = f.input :password_protected, required: false, as: :boolean, label: false, inline_label: "Password protect your marketplace"
+  = f.input :marketplace_password, placeholder: 'Password', as: :string, label: false
 
   %p
     = f.button :submit, 'Save', class: 'btn btn-success'

@@ -59,6 +59,6 @@
 
             = yield if render_content_outside_container?
         - unless no_footer?
-          .footer-push
+          .footer-push{class: "footer_#{section_class(@section_name)}"}
 
     = render 'layouts/scripts'

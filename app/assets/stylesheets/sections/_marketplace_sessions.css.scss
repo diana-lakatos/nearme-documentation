@@ -1,0 +1,73 @@
+section.marketplace_sessions {
+
+  #hero {
+    position: relative;
+    margin-top: -32px;
+    width: auto;
+    height: 580px;
+    background-color: $gray60;
+
+    > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    @media (max-width: $ipad-width) {
+      height: 420px;
+    }
+
+    @media (max-width: $iphone-landscape) {
+      height: 380px;
+    }
+  }
+
+  section#hero + .container { 
+    width: 100%;
+    padding: 0;
+  }
+
+  #marketplace-password {
+    margin-top: 220px;
+    
+    @media (max-width: $ipad-width) {
+      margin-top: 120px;
+    }
+
+    @media (max-width: $iphone-landscape) {
+      margin-top: 90px;
+    }
+
+    h1 {
+      display: block;
+      margin-bottom: 30px;
+      color: $light-gray;
+      font:400 28px/34px $font-regular, sans-serif;
+      text-align: center;
+
+      @media (max-width: $iphone-portrait) {
+        font:normal 14px/18px $font-medium, sans-serif;
+      }
+    }
+
+    form input[type="text"] {
+      margin-bottom: 0;
+    }
+
+    form {
+      clear: both;
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+      }
+    }
+  }
+
+}
+
+.footer-push {
+
+  &.footer_marketplace_sessions {
+    background-color: $gray60;
+  }
+}
