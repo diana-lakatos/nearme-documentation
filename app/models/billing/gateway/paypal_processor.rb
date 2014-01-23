@@ -61,7 +61,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
   end
 
   def store_credit_card(credit_card)
-    if user.paypal_id.present?
+    if instance_client.paypal_id.present?
       update_credit_card(credit_card)
     else
       setup_customer_with_credit_card(credit_card)
@@ -71,7 +71,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
   private
 
   def update_credit_card(credit_card)
-    @credit_card = PayPal::SDK::REST::CreditCard.find(user.paypal_id)
+    @credit_card = PayPal::SDK::REST::CreditCard.find(instance_client.paypal_id)
   rescue PayPal::SDK::Core::Exceptions::ResourceNotFound
     setup_customer_with_credit_card(credit_card)
   end
@@ -90,8 +90,8 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
     # Creates the credit card as a resource
     # in the PayPal vault. 
     if @credit_card.create
-      user.paypal_id = @credit_card.id
-      user.save!
+      instance_client.paypal_id = @credit_card.id
+      instance_client.save!
     else 
       handle_error(@credit_card.error)
     end
@@ -135,7 +135,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
           # A resource representing a credit card that can be
           # used to fund a payment.
           :credit_card_token => {
-            :credit_card_id => user.paypal_id,
+            :credit_card_id => instance_client.paypal_id,
             :payer_id => user.id }}]
       },
 

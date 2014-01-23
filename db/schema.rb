@@ -96,21 +96,17 @@ ActiveRecord::Schema.define(:version => 20140122221354) do
     t.string   "name"
     t.string   "email"
     t.text     "description"
-    t.datetime "created_at",                                           :null => false
-    t.datetime "updated_at",                                           :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.datetime "deleted_at"
     t.string   "url"
     t.string   "paypal_email"
     t.text     "mailing_address"
     t.string   "external_id"
     t.integer  "instance_id"
-    t.boolean  "white_label_enabled",               :default => false
-    t.boolean  "listings_public",                   :default => true
+    t.boolean  "white_label_enabled", :default => false
+    t.boolean  "listings_public",     :default => true
     t.integer  "partner_id"
-    t.string   "encrypted_balanced_account_number"
-    t.string   "encrypted_balanced_bank_code"
-    t.string   "encrypted_balanced_name"
-    t.string   "encrypted_balanced_type"
   end
 
   add_index "companies", ["creator_id"], :name => "index_companies_on_creator_id"
@@ -283,6 +279,7 @@ ActiveRecord::Schema.define(:version => 20140122221354) do
     t.string   "encrypted_paypal_id"
     t.string   "encrypted_balanced_user_id"
     t.string   "encrypted_balanced_credit_card_id"
+    t.string   "bank_account_last_four_digits"
     t.datetime "deleted_at"
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false

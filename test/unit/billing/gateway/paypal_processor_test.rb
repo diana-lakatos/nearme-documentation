@@ -20,7 +20,7 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
     context "#charge" do
 
       setup do
-        @user.stubs(:paypal_id).returns('CARD-ABC123')
+        @instance_client = FactoryGirl.create(:instance_client, :client => @user, :paypal_id => 'CARD-ABC123')
       end
 
       should "create a Charge record with reference, user, amount, currency, and success on success" do
@@ -49,7 +49,7 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
     context "#store_card" do
       context "new customer" do
         setup do
-          @user.paypal_id = nil
+          @instance_client = FactoryGirl.create(:instance_client, :client => @user)
           @credit_card = mock()
           @credit_card.stubs(:id).returns('CARD-ABC123')
         end
@@ -58,7 +58,8 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
           @credit_card.expects(:create).returns(true)
           PayPal::SDK::REST::CreditCard.expects(:new).with(credit_card_arguments).returns(@credit_card)
           @billing_gateway.store_credit_card(credit_card)
-          assert_equal 'CARD-ABC123', @user.paypal_id
+          @instance_client = InstanceClient.first
+          assert_equal 'CARD-ABC123', @instance_client.paypal_id
         end
 
         should "raise CreditCardError if cannot store credit card" do
@@ -73,7 +74,8 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
 
       context "existing customer" do
         setup do
-          @paypal_id_was = @user.paypal_id = '123'
+          @instance_client = FactoryGirl.create(:instance_client, :client => @user, :paypal_id => '123')
+          @paypal_id_was = @instance_client.paypal_id
           @credit_card = mock()
           @credit_card.stubs(:id).returns('CARD-ABC123')
           @credit_card.stubs(:error).returns([]).at_least(0)
@@ -82,7 +84,8 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
         should "update an existing assigned Customer record" do
           PayPal::SDK::REST::CreditCard.expects(:find).returns(@credit_card)
           @billing_gateway.store_credit_card(credit_card)
-          assert_equal '123', @user.paypal_id, "Paypal id should not have changed"
+          @instance_client = InstanceClient.first
+          assert_equal '123', @instance_client.paypal_id, "Paypal id should not have changed"
         end
 
         should "set up as new customer if customer not found" do
@@ -90,7 +93,8 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
           PayPal::SDK::REST::CreditCard.expects(:find).raises(PayPal::SDK::Core::Exceptions::ResourceNotFound.new({}))
           PayPal::SDK::REST::CreditCard.expects(:new).with(credit_card_arguments).returns(@credit_card)
           @billing_gateway.store_credit_card(credit_card)
-          assert_equal @credit_card.id, @user.paypal_id, "Paypal id should have changed"
+          @instance_client = InstanceClient.first
+          assert_equal @credit_card.id, @instance_client.paypal_id, "Paypal id should have changed"
         end
       end
     end

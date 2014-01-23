@@ -15,7 +15,7 @@ class Billing::Gateway::StripeProcessor < Billing::Gateway::BaseProcessor
   end
 
   def store_credit_card(credit_card)
-    if user.stripe_id.present?
+    if instance_client.stripe_id.present?
       update_credit_card(credit_card)
     else
       setup_customer_with_credit_card(credit_card)
@@ -31,7 +31,7 @@ class Billing::Gateway::StripeProcessor < Billing::Gateway::BaseProcessor
 
   def process_charge(amount)
     begin
-      stripe_charge = Stripe::Charge.create({ amount: amount, currency: @currency, customer: user.stripe_id }, @api_key)
+      stripe_charge = Stripe::Charge.create({ amount: amount, currency: @currency, customer: instance_client.stripe_id }, @api_key)
       charge_successful(stripe_charge)
     rescue
       charge_failed($!)
@@ -56,13 +56,13 @@ class Billing::Gateway::StripeProcessor < Billing::Gateway::BaseProcessor
     )
 
     # Store customer Id against the user
-    user.stripe_id = stripe_customer.id
-    user.save!
+    instance_client.stripe_id = stripe_customer.id
+    instance_client.save!
   end
 
   # Update the card details associated with an existing customer
   def update_credit_card(credit_card)
-    stripe_customer = Stripe::Customer.retrieve(user.stripe_id, @api_key)
+    stripe_customer = Stripe::Customer.retrieve(instance_client.stripe_id, @api_key)
     stripe_customer.card = credit_card.to_stripe_params
     stripe_customer.save
   rescue Stripe::InvalidRequestError => e

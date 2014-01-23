@@ -105,8 +105,12 @@ class Billing::Gateway::BaseProcessor
     @payout.payout_failed(response)
   end
 
+  def self.instance_client(client, instance)
+    InstanceClient.find_or_create_by_client_id_and_client_type_and_instance_id(client.id, client.class.to_s, instance.id)
+  end
+
   def instance_client
-    @instance_client ||= InstanceClient.find_or_create_by_client_id_and_client_type_and_instance_id(@client.id, @client.class.to_s, @instance.id)
+    @instance_client ||= self.instance_client(@client, @instance)
   end
 
 end

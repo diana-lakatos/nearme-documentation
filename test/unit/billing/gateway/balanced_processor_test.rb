@@ -48,10 +48,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
     context "#store_card" do
       context "new customer" do
         setup do
-          @instance_client = InstanceClient.create do |ic|
-            ic.client = @user
-            ic.instance = @instance
-          end
+          @instance_client = FactoryGirl.create(:instance_client, :client => @user)
           @credit_card = mock()
           @credit_card.stubs(:uri).returns('test-credit-card')
           @customer = mock()
@@ -92,11 +89,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
 
       context "existing customer" do
         setup do
-          @instance_client = InstanceClient.create do |ic|
-            ic.client = @user
-            ic.instance = @instance
-          end
-          @instance_client.update_attributes(:balanced_user_id => 'test-customer', :balanced_credit_card_id => 'test-credit-card')
+          @instance_client = FactoryGirl.create(:instance_client, :client => @user, :balanced_user_id => 'test-customer', :balanced_credit_card_id => 'test-credit-card')
           @balanced_user_id_was = @instance_client.balanced_user_id
           @credit_card = mock()
           @credit_card.stubs(:uri).returns('new-test-credit-card')
@@ -105,8 +98,8 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
         end
 
         should "update an existing assigned Customer record and create new CreditCard record" do
-          @customer.expects(:add_card).returns({})
           Balanced::Customer.expects(:find).returns(@customer)
+          @customer.expects(:add_card).returns({})
           @credit_card.expects(:save).returns(@credit_card)
           Balanced::Card.expects(:new).with(credit_card.to_balanced_params).returns(@credit_card)
           assert_no_difference "InstanceClient.count" do
@@ -119,12 +112,12 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
         end
 
         should "update existing instance_client to store new balanced_user_id if it was invalid" do
-          Balanced::Customer.expects(:find).raises(Balanced::NotFound.new({}))
+          Balanced::Customer.expects(:find).with('test-customer').raises(Balanced::NotFound.new({}))
           @customer.expects(:add_card).returns({})
           Balanced::Customer.any_instance.expects(:save).returns(@customer)
           @credit_card.expects(:save).returns(@credit_card)
           Balanced::Card.expects(:new).with(credit_card.to_balanced_params).returns(@credit_card)
-          assert_no_difference "InstanceClient.count" do
+          assert_no_difference 'InstanceClient.count' do
             @billing_gateway.store_credit_card(credit_card)
           end
           # .reload won't work - https://github.com/attr-encrypted/attr_encrypted/issues/68
@@ -147,45 +140,145 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
       @payment_transfer.update_column(:amount_cents, 1234)
     end
 
-    should "create a Payout record with reference, amount, currency, and success on success" do
-      credit = mock()
-      credit.expects(:save).returns(stub(:status => 'pending', :to_yaml => 'yaml'))
-      Balanced::Credit.expects(:new).returns(credit)
-      @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
-      payout = Payout.last
-      assert_equal 1234, payout.amount
-      assert_equal 'USD', payout.currency
-      assert_equal 'yaml', payout.response
-      assert_equal @payment_transfer, payout.reference
-      assert payout.success?
+    context 'new customer' do
+      setup do
+          @customer = mock()
+          @customer.stubs(:uri).returns('test-customer-company')
+          @credit = mock()
+          @customer.stubs(:credit).returns(@credit)
+          Balanced::Customer.expects(:new).with(@company.to_balanced_params).returns(stub(:save => @customer))
+          Balanced::BankAccount.expects(:new).with(
+            :account_number => @company.balanced_account_number, 
+            :bank_code => @company.balanced_bank_code, 
+            :name => @company.balanced_name,
+            :type => 'checking'
+          ).returns(stub(:save => {}))
+      end
+
+      should "create a Payout record with reference, amount, currency, and success on success" do
+        @customer.stubs(:add_bank_account).returns({})
+        @credit.expects(:save).returns(stub(:status => 'pending', :to_yaml => 'yaml'))
+        @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+        payout = Payout.last
+        assert_equal 1234, payout.amount
+        assert_equal 'USD', payout.currency
+        assert_equal 'yaml', payout.response
+        assert_equal @payment_transfer, payout.reference
+        assert payout.success?
+      end
+
+      should "create a Payout record with failure on failure" do
+        @customer.stubs(:add_bank_account).returns({})
+        @credit.expects(:save).returns(stub(:status => 'failed', :to_yaml => 'yaml'))
+        @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+        payout = Payout.last
+        refute payout.success?
+        assert_equal 'yaml', payout.response
+      end
+
+      should 'store balanced_user_id and time of creating bank' do
+        @customer.stubs(:add_bank_account).returns({})
+        @credit.expects(:save).returns(stub(:status => 'paid', :to_yaml => 'yaml'))
+
+        Timecop.freeze(Time.zone.now) do
+          assert_difference 'InstanceClient.count' do
+            @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+          end
+          @instance_client = @company.instance_clients.where(:instance_id => @instance.id).first
+          assert_equal 'test-customer-company', @instance_client.balanced_user_id
+          assert_equal Time.zone.now.to_i, @instance_client.balanced_bank_account_created_at.to_i
+        end
+
+      end
+
     end
 
-    should "create a Payout record with failure on failure" do
-      credit = mock()
-      credit.expects(:save).returns(stub(:status => 'failed', :to_yaml => 'yaml'))
-      Balanced::Credit.expects(:new).returns(credit)
-      @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
-      payout = Payout.last
-      refute payout.success?
-      assert_equal 'yaml', payout.response
+    context 'existing customer' do
+      setup do
+        @instance_client = FactoryGirl.create(:instance_client, :client => @company, :balanced_user_id => 'test-customer', :balanced_bank_account_created_at => Time.zone.now)
+        @customer = mock()
+        @credit = mock()
+        @credit.expects(:save).returns(stub(:status => 'pending', :to_yaml => 'yaml'))
+        @customer.stubs(:credit).returns(@credit)
+        Balanced::Customer.expects(:find).with('test-customer').returns(@customer).at_least(1)
+      end
+
+      should 'not invalidate old bank account if receiver has not changed balanced details' do
+        Billing::Gateway::BalancedProcessor.any_instance.expects(:update_bank_account).never
+        @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+        assert_equal true, Payout.last.success
+      end
+
+      should 'try to invalidate old bank account if receiver has changed balanced details' do
+        @company.touch(:balanced_account_details_changed_at)
+        Billing::Gateway::BalancedProcessor.any_instance.expects(:update_bank_account).once.returns(true)
+        @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+        assert_equal true, Payout.last.success
+      end
+
+      should 'update date of creating bank account if old one had to be invalidated' do
+        Balanced::BankAccount.expects(:new).returns(stub(:save => {}))
+        @company.touch(:balanced_account_details_changed_at)
+        @bank_account = stub()
+        @bank_account.stubs(:is_valid).returns(false)
+        @bank_account.expects(:invalidate).returns(true)
+        @customer.stubs(:bank_accounts).returns(stub(:last => @bank_account))
+        @customer.stubs(:add_bank_account).returns({})
+        Timecop.freeze(Time.zone.now) do
+          assert_no_difference 'InstanceClient.count' do
+            @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+          end
+          assert_equal Time.zone.now.to_i, InstanceClient.first.balanced_bank_account_created_at.to_i
+        end
+      end
+
+      should 'raise exception if something goes wrong with invalidation' do
+        @company.touch(:balanced_account_details_changed_at)
+        @bank_account = stub()
+        @bank_account.stubs(:is_valid).returns(true)
+        @bank_account.expects(:invalidate).returns(true)
+        @customer.stubs(:bank_accounts).returns(stub(:last => @bank_account))
+        @credit.unstub(:save)
+        assert_raise RuntimeError do |e|
+          @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+          assert e.message.include?('should have been invalidated')
+        end
+      end
+
     end
 
-    should 'build credit object with right arguments' do
-      credit = mock()
-      credit.expects(:save).returns(stub(:status => 'paid', :to_yaml => 'yaml'))
-      Balanced::Credit.expects(:new).with({
-        :amount => 1234,
-        :description => "Payout from #{@instance.class.name} #{@instance.name}(id=#{@instance.id}) to #{@company.class.name} #{@company.name} (id=#{@company.id})",
-        :bank_account => {
-          :account_number => @company.balanced_account_number,
-          :bank_code => @company.balanced_bank_code,
-          :name => @company.balanced_name,
-          :type => @company.balanced_type
-        }
-      }).returns(credit)
-      @billing_gateway.outgoing_payment(@instance, @company, 'USD').payout(amount: @payment_transfer.amount, reference: @payment_transfer)
+  end
+
+  context 'is_supported?' do
+
+    should 'have balanced_api_key if sender to be supported' do
+      sender = stub(:balanced_api_key => '123', :balanced_account_number => '', :balanced_bank_code => '', :balanced_name => '')
+      assert Billing::Gateway::BalancedProcessor.is_supported_by?(sender, 'sender')
+      refute Billing::Gateway::BalancedProcessor.is_supported_by?(sender, 'receiver')
     end
 
+    should 'have account details if receiver to be supported' do
+      receiver = stub(:balanced_account_number => '123', :balanced_bank_code => '321', :balanced_name => 'John Doe', :balanced_api_key => '')
+      assert Billing::Gateway::BalancedProcessor.is_supported_by?(receiver, 'receiver')
+      refute Billing::Gateway::BalancedProcessor.is_supported_by?(receiver, 'sender')
+    end
+
+    context 'all details as receiver to be supported' do
+      should 'account_number' do
+        receiver = stub(:balanced_account_number => '', :balanced_bank_code => '321', :balanced_name => 'John Doe')
+        refute Billing::Gateway::BalancedProcessor.is_supported_by?(receiver, 'receiver')
+      end
+
+      should 'bank_code' do
+        receiver = stub(:balanced_account_number => '123', :balanced_bank_code => '', :balanced_name => 'John Doe')
+        refute Billing::Gateway::BalancedProcessor.is_supported_by?(receiver, 'receiver')
+      end
+
+      should 'name' do
+        receiver = stub(:balanced_account_number => '123', :balanced_bank_code => '321', :balanced_name => '')
+        refute Billing::Gateway::BalancedProcessor.is_supported_by?(receiver, 'receiver')
+      end
+    end
   end
 
   protected
