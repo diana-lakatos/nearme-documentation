@@ -2,7 +2,7 @@ require "will_paginate/array"
 class SearchController < ApplicationController
   extend ::NewRelic::Agent::MethodTracer
 
-  helper_method :search, :query, :listings, :locations, :all_listings, :result_view, :search_notification, :result_count, :current_page_offset
+  helper_method :search, :query, :listings, :locations, :result_view, :search_notification, :result_count, :current_page_offset, :per_page
   before_filter :set_options_for_filters
 
   SEARCH_RESULT_VIEWS = %w(list map mixed)
@@ -58,10 +58,6 @@ class SearchController < ApplicationController
     @locations ||= get_locations
   end
 
-  def all_listings
-    @all_listings ||= fetcher.listings
-  end
-
   def fetcher
     @fetcher ||=
       begin
@@ -88,12 +84,7 @@ class SearchController < ApplicationController
 
     if result_view.list? || result_view.mixed?
       self.class.trace_execution_scoped(['Custom/get_locations/paginate_locations']) do
-        if !params[:page_with_location].blank?
-          _offset = @collection.index(Location.find(params[:page_with_location]))
-          params[:page] = (_offset / 20).to_i + 1
-          params[:page_with_location] = nil
-        end
-        @collection = WillPaginate::Collection.create(params[:page], 20, @collection.count) do |pager|
+        @collection = WillPaginate::Collection.create(params[:page], per_page, @collection.count) do |pager|
           pager.replace(@collection[pager.offset, pager.per_page].to_a)
         end
       end
@@ -112,7 +103,7 @@ class SearchController < ApplicationController
 
     if result_view.list? || result_view.mixed?
       self.class.trace_execution_scoped(['Custom/get_listings/paginate_listings']) do
-        @collection = WillPaginate::Collection.create(params[:page], 20, @collection.count) do |pager|
+        @collection = WillPaginate::Collection.create(params[:page], per_page, @collection.count) do |pager|
           pager.replace(@collection[pager.offset, pager.per_page].to_a)
         end
       end
@@ -121,7 +112,7 @@ class SearchController < ApplicationController
   end
 
   def result_view
-    requested_view = params.fetch(:v, 'list').downcase
+    requested_view = params.fetch(:v, 'mixed').downcase
     @result_view ||= (if SEARCH_RESULT_VIEWS.include?(requested_view)
                        requested_view
                      else
@@ -140,7 +131,7 @@ class SearchController < ApplicationController
   end
 
   def current_page_offset
-    @current_page_offset ||= ((params[:page] || 1).to_i - 1) * 20
+    @current_page_offset ||= ((params[:page] || 1).to_i - 1) * per_page
   end
 
   def should_log_conducted_search?
@@ -186,8 +177,12 @@ class SearchController < ApplicationController
   def set_options_for_filters
     @filterable_location_types = platform_context.instance.location_types
     @filterable_listing_types = platform_context.instance.listing_types
-    @filterable_pricing = [['hourly', 'hourly'], ['daily', 'daily'], ['weekly', 'weekly'], ['monthly', 'monthly']]
+    @filterable_pricing = [['hourly', 'Hourly'], ['daily', 'Daily'], ['weekly', 'Weekly'], ['monthly', 'Monthly']]
     @filterable_industries = Industry.with_listings.all if platform_context.instance.is_desksnearme? and !result_view.mixed?
+  end
+
+  def per_page
+    result_view.mixed? ? (params[:per_page] || 20).to_i : 20
   end
 
 end
