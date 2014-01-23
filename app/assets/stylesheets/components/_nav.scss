@@ -18,7 +18,8 @@
     #logo {
       float: left;
       width: $theme_logo_width;
-      height: $theme_icon_width;
+      height: $theme_logo_height;
+      margin-top: 30 - $theme_logo_height/2;
       background: image-url($theme_logo) no-repeat;
       background-size: auto 100%;
       text-indent: -9999px;
@@ -34,6 +35,8 @@
 
       #logo {
         width: $theme_icon_width;
+        height: $theme_icon_height;
+        margin-top: 30 - $theme_icon_height/2;
         background: image-url($theme_icon) no-repeat;
         background-size: auto 100%;
 
