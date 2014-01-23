@@ -9,13 +9,19 @@ class Billing::Gateway::BaseProcessor
   def ingoing_payment(user, currency)
     @user = user
     @currency = currency
+    @client = @user
     self
   end
 
   def outgoing_payment(sender, receiver)
     @sender = sender
     @receiver = receiver
+    @client = receiver
     self
+  end
+
+  def self.is_supported_by?(object, role)
+    raise "role must be sender or receiver" unless ['sender', 'receiver'].include?(role)
   end
 
   def self.instance_supported?(instance)
@@ -97,6 +103,10 @@ class Billing::Gateway::BaseProcessor
   # Callback invoked by processor when payout failed
   def payout_failed(response)
     @payout.payout_failed(response)
+  end
+
+  def instance_client
+    @instance_client ||= InstanceClient.find_or_create_by_client_id_and_client_type_and_instance_id(@client.id, @client.class.to_s, @instance.id)
   end
 
 end

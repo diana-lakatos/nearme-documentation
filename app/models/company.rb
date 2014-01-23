@@ -8,6 +8,7 @@ class Company < ActiveRecord::Base
     :listings_public, :partner_id
 
   attr_accessor :created_payment_transfers
+  attr_encrypted :balanced_account_number, :balanced_bank_code, :balanced_name, :balanced_type, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance

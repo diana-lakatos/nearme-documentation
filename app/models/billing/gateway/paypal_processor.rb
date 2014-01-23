@@ -1,7 +1,7 @@
 class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
   include PayPal::SDK::Core::Logging
 
-  SUPPORTED_CURRENCIES = ['GBP', 'EUR', 'JPY', 'CAD']
+  SUPPORTED_CURRENCIES = ['USD', 'GBP', 'EUR', 'JPY', 'CAD']
 
   def initialize(instance)
     super(instance)
@@ -18,8 +18,13 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
     instance.paypal_supported?
   end
 
-  def self.is_supported_by?(object)
-    object.respond_to?(:paypal_email) && object.paypal_email.present?
+  def self.is_supported_by?(object, role = 'sender')
+    super(object, role)
+    begin
+      object.paypal_email.present?
+    rescue
+      false
+    end
   end
 
   def process_charge(amount)

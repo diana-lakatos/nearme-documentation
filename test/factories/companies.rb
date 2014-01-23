@@ -39,6 +39,13 @@ FactoryGirl.define do
       paypal_email { email }
     end
 
+    factory :company_with_balanced do
+      balanced_account_number '12345678'
+      balanced_bank_code '000111'
+      encrypted_balanced_name { creator.try(:name) || 'John Doe' }
+      encrypted_balanced_type 'checking'
+    end
+
     factory :white_label_company do
       white_label_enabled true
     end

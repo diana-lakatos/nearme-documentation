@@ -26,6 +26,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_admin_roles
   has_many :reservations, :as => :platform_context_detail, :dependent => :destroy
   has_many :reservation_charges, :through => :reservations
+  has_many :instance_clients, :dependent => :destroy
 
   serialize :pricing_options, Hash
 

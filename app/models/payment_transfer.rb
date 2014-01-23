@@ -92,6 +92,6 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def billing_gateway
-    @billing_gateway ||= Billing::Gateway.new(company.instance).outgoing_payment(company.instance, company)
+    @billing_gateway ||= Billing::Gateway.new(company.instance).outgoing_payment(company.instance, company, currency)
   end
 end

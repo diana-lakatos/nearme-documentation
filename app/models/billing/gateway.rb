@@ -1,7 +1,7 @@
 # Encapsulate all billing  gateway related logic associated with a user
 class Billing::Gateway
   INGOING_PROCESSORS = [Billing::Gateway::BalancedProcessor, Billing::Gateway::StripeProcessor, Billing::Gateway::PaypalProcessor]
-  OUTGOING_PROCESSORS = [Billing::Gateway::PaypalProcessor]
+  OUTGOING_PROCESSORS = [Billing::Gateway::PaypalProcessor, Billing::Gateway::BalancedProcessor]
 
   attr_reader :user, :currency, :processor
 
@@ -20,10 +20,10 @@ class Billing::Gateway
     self
   end
 
-  def outgoing_payment(sender, receiver)
+  def outgoing_payment(sender, receiver, currency)
     @sender = sender
     @receiver = receiver
-    @processor = @outgoing_processors.find { |processor| processor.is_supported_by?(@sender) && processor.is_supported_by?(@receiver) }.try(:new, @instance).try(:outgoing_payment, @sender, @receiver)
+    @processor = @outgoing_processors.find { |processor| processor.currency_supported?(currency) && processor.is_supported_by?(@sender, 'sender') && processor.is_supported_by?(@receiver, 'receiver') }.try(:new, @instance).try(:outgoing_payment, @sender, @receiver)
     self
   end
 

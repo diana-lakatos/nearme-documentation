@@ -11,9 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140123090849) do
-
-
+ActiveRecord::Schema.define(:version => 20140122221354) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -88,7 +86,7 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.integer  "user_id"
     t.string   "reference_type"
     t.string   "currency"
-    t.string   "encrypted_response"
+    t.text     "encrypted_response"
   end
 
   add_index "charges", ["reference_id", "reference_type"], :name => "index_charges_on_reference_id_and_reference_type"
@@ -98,17 +96,21 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.string   "name"
     t.string   "email"
     t.text     "description"
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
+    t.datetime "created_at",                                           :null => false
+    t.datetime "updated_at",                                           :null => false
     t.datetime "deleted_at"
     t.string   "url"
     t.string   "paypal_email"
     t.text     "mailing_address"
     t.string   "external_id"
     t.integer  "instance_id"
-    t.boolean  "white_label_enabled", :default => false
-    t.boolean  "listings_public",     :default => true
+    t.boolean  "white_label_enabled",               :default => false
+    t.boolean  "listings_public",                   :default => true
     t.integer  "partner_id"
+    t.string   "encrypted_balanced_account_number"
+    t.string   "encrypted_balanced_bank_code"
+    t.string   "encrypted_balanced_name"
+    t.string   "encrypted_balanced_type"
   end
 
   add_index "companies", ["creator_id"], :name => "index_companies_on_creator_id"
@@ -272,6 +274,19 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
   add_index "instance_admins", ["instance_admin_role_id"], :name => "index_instance_admins_on_instance_admin_role_id"
   add_index "instance_admins", ["instance_id"], :name => "index_instance_admins_on_instance_id"
   add_index "instance_admins", ["user_id"], :name => "index_instance_admins_on_user_id"
+
+  create_table "instance_clients", :force => true do |t|
+    t.integer  "client_id"
+    t.string   "client_type"
+    t.integer  "instance_id"
+    t.string   "encrypted_stripe_id"
+    t.string   "encrypted_paypal_id"
+    t.string   "encrypted_balanced_user_id"
+    t.string   "encrypted_balanced_credit_card_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
 
   create_table "instances", :force => true do |t|
     t.string   "name"
@@ -445,8 +460,8 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.string   "currency"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
+    t.text     "encrypted_response"
     t.datetime "deleted_at"
-    t.string   "encrypted_response"
   end
 
   create_table "photos", :force => true do |t|

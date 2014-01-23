@@ -89,6 +89,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @payment_transfer = @company.payment_transfers.build
       @payment_transfer.reservation_charges = @reservation_charges
     end
+
     should 'be not paid if attempt to payout failed' do
       Billing::Gateway.any_instance.expects(:payout).with { |hash| Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => false))
       @payment_transfer.save!

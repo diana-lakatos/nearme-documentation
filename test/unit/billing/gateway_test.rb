@@ -64,18 +64,48 @@ class Billing::GatewayTest < ActiveSupport::TestCase
       should 'accept objects which have paypal email' do
         @mock = mock()
         @mock.expects(:paypal_email).returns('paypal@example.com').twice
-        assert Billing::Gateway::PaypalProcessor === @gateway.outgoing_payment(@mock, @mock).processor
+        assert Billing::Gateway::PaypalProcessor === @gateway.outgoing_payment(@mock, @mock, 'EUR').processor
       end
 
       should 'not accept objects with blank paypal_email' do
         @mock = mock()
         @mock.expects(:paypal_email).returns('')
-        assert_nil @gateway.outgoing_payment(@mock, @mock).processor
+        assert_nil @gateway.outgoing_payment(@mock, @mock, 'EUR').processor
       end
 
-      should 'not accept objects without paypal_email' do
+    end
+
+    context 'balanced' do
+
+      setup do
+        @instance.update_attribute(:balanced_api_key, 'apikey123')
+        @gateway = Billing::Gateway.new(@instance)
         @mock = mock()
-        assert_nil @gateway.outgoing_payment(@mock, @mock).processor
+        @mock.expects(:paypal_email).returns('')
+      end
+
+      should 'accept objects which have balanced api and currency' do
+        @mock.expects(:balanced_api_key).returns('balanced_api_key123')
+        @company = FactoryGirl.create(:company_with_balanced)
+        assert Billing::Gateway::BalancedProcessor === @gateway.outgoing_payment(@mock, @company, 'USD').processor
+      end
+
+      should 'not accept objects which have balanced api but wrong currency' do
+        @mock.expects(:balanced_api_key).returns('balanced_api_key123').at_least(0)
+        @company = FactoryGirl.create(:company_with_balanced)
+        assert_nil @gateway.outgoing_payment(@mock, @company, 'EUR').processor
+      end
+
+      should 'not accept receiver without filled balanced info' do
+        @mock.expects(:balanced_api_key).returns('balanced_api_key123')
+        @company = FactoryGirl.create(:company)
+        assert_nil @gateway.outgoing_payment(@mock, @company, 'USD').processor
+      end
+
+      should 'not accept sender without filled balanced api key' do
+        @mock.expects(:balanced_api_key).returns('')
+        @company = FactoryGirl.create(:company_with_balanced)
+        assert_nil @gateway.outgoing_payment(@mock, @company, 'USD').processor
       end
 
     end

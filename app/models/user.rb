@@ -11,93 +11,40 @@ class User < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: :slugged
 
-  before_save :ensure_authentication_token
-  before_save :update_notified_mobile_number_flag
-
-  has_many :authentications,
-           :dependent => :destroy
-
+  has_many :authentications, :dependent => :destroy
+  has_many :instance_clients, :as => :client, :dependent => :destroy
   has_many :company_users, dependent: :destroy
   has_many :companies, :through => :company_users, :order => "company_users.created_at ASC"
-
-  has_many :created_companies,
-           :class_name => "Company",
-           :foreign_key => "creator_id",
-           :inverse_of => :creator
-
-  has_many :administered_locations,
-           :class_name => "Location",
-           :foreign_key => "administrator_id",
-           :inverse_of => :administrator
-
-  has_many :administered_listings,
-           :class_name => "Listing",
-           :through => :administered_locations,
-           :source => :listings
-
-  has_many :instance_admins,
-           :foreign_key => "user_id",
-           :dependent => :destroy
-
-  attr_accessible :companies_attributes
-  attr_accessor :skip_password
-  accepts_nested_attributes_for :companies
-
-  has_many :locations,
-           :through => :companies
-
-  has_many :reservations,
-           :foreign_key => :owner_id
-
-
-  has_many :listings,
-           :through => :locations
-
-  has_many :photos,
-           :foreign_key => "creator_id"
-
-  has_many :listing_reservations,
-           :through => :listings,
-           :source => :reservations
-
-  has_many :relationships,
-           :class_name => "UserRelationship",
-           :foreign_key => "follower_id",
-           :dependent => :destroy
-
-  has_many :followed_users,
-           :through => :relationships,
-           :source => :followed
-
-  has_many :reverse_relationships,
-           :class_name => "UserRelationship",
-           :foreign_key => "followed_id",
-           :dependent => :destroy
-
-  has_many :followers,
-           :through => :reverse_relationships,
-           :source => :follower
-
+  has_many :created_companies, :class_name => "Company", :foreign_key => "creator_id", :inverse_of => :creator
+  has_many :administered_locations, :class_name => "Location", :foreign_key => "administrator_id", :inverse_of => :administrator
+  has_many :administered_listings, :class_name => "Listing", :through => :administered_locations, :source => :listings 
+  has_many :instance_admins, :foreign_key => "user_id", :dependent => :destroy 
+  has_many :locations, :through => :companies
+  has_many :reservations, :foreign_key => :owner_id
+  has_many :listings, :through => :locations
+  has_many :photos, :foreign_key => "creator_id"
+  has_many :listing_reservations, :through => :listings, :source => :reservations
+  has_many :relationships, :class_name => "UserRelationship", :foreign_key => "follower_id", :dependent => :destroy
+  has_many :followed_users, :through => :relationships, :source => :followed
+  has_many :reverse_relationships, :class_name => "UserRelationship", :foreign_key => "followed_id", :dependent => :destroy
+  has_many :followers, :through => :reverse_relationships, :source => :follower 
   has_many :host_ratings, class_name: 'HostRating', foreign_key: 'subject_id'
   has_many :guest_ratings, class_name: 'GuestRating', foreign_key: 'subject_id'
-
   has_many :user_industries
   has_many :industries, :through => :user_industries
-
   has_many :mailer_unsubscriptions
-
   has_many :charges, foreign_key: :user_id, dependent: :destroy
-
-  has_many :authored_messages,
-           :class_name => "UserMessage",
-           :foreign_key => "author_id",
-           :inverse_of => :author
-
+  has_many :authored_messages, :class_name => "UserMessage", :foreign_key => "author_id", :inverse_of => :author
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
 
+  before_save :ensure_authentication_token
+  before_save :update_notified_mobile_number_flag
+
   after_destroy :cleanup
+
+  accepts_nested_attributes_for :companies
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
@@ -146,7 +93,6 @@ class User < ActiveRecord::Base
   #        to their context.
   validates_presence_of :phone, :if => :phone_required
   validates_presence_of :country_name, :if => lambda { phone_required || country_name_required }
-  attr_accessor :phone_required, :country_name_required
 
   validates :current_location, length: {maximum: 50}
   validates :company_name, length: {maximum: 50}
@@ -157,16 +103,17 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
+  attr_accessor :phone_required, :country_name_required, :skip_password, :current_platform_context
+
   attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
     :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url, 
     :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-    :partner_id, :instance_id, :domain_id, :time_zone
+    :partner_id, :instance_id, :domain_id, :time_zone, :companies_attributes
 
+  # once we migrate data we should delete line below - attr_encrypted . needed for easier decryption :)
   attr_encrypted :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   delegate :to_s, :to => :name
-
-  attr_accessor :current_platform_context
 
   # Build a new user, taking into account session information such as Provider
   # authentication.
