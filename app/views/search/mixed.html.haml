@@ -54,17 +54,17 @@
         = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Pricing', :selected_values => search.lgpricing_filters || [], :input_name => 'listing_pricing[]', :options => @filterable_pricing }
         = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => search.lntypes_filters || [], :input_name => 'location_types_ids[]', :options => @filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
 
-      .sort.row-fluid
-        .span3
+      .sort
+        .results-count
           %h3#search_results_count
             = result_count
             results
-        .per-page.span4
+        .sort-by
+          %span sort by
+          = select_tag :sort, options_for_select([['relevance', 'relevance'], ['price', 'price']])
+        .per-page
           %span per page
           = select_tag :per_page, options_for_select(['20', '50', '100'].map{|v| [v, v]})
-        .sort-by.span5
-          %span sort by
-          = select_tag :sort, options_for_select([['Relevance', 'relevance'], ['Price', 'price']])
 
       - if not request.xhr?
         = yield :mixed_locations

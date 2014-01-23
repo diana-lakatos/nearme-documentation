@@ -56,6 +56,9 @@ class Search.SearchMixedController extends Search.SearchController
       @loader.show()
       @triggerSearchFromQuery(page_regexp.exec(link.attr('href'))[1])
 
+    $(document).on 'click', '.list .locations .location .listing', (e) =>
+      window.location.href = $(e.target).parents('.listing').find('.reserve-listing a').attr('href')
+
 
   initializeSearchButton: ->
     @searchButton = @form.find(".search-icon")

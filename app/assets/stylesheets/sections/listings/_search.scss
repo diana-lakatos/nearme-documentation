@@ -927,6 +927,7 @@ section.search section#results.mixed {
     .sort {
       background-color: $gray60;
       line-height: 40px;
+      height: 40px;
       padding: 10px;
       margin-left: 10px;
       font-size: 90%;
@@ -936,7 +937,31 @@ section.search section#results.mixed {
         color: $gray245;
       }
 
+      .results-count {
+        float: left;
+      }
+
       .sort-by {
+        float: right;
+        text-align: right;
+
+        span.customSelect {
+          color: $gray245;
+        }
+
+        span.customSelectInner {
+          padding-right: 7px;
+          width: 75px !important;
+          text-align: right;
+
+          @media (max-width: $iphone-landscape - 1) {
+            width: 65px !important;
+          }
+        }
+      }
+
+      .per-page {
+        float: right;
         text-align: right;
         padding-right: 30px;
 
@@ -945,43 +970,9 @@ section.search section#results.mixed {
         }
 
         span.customSelectInner {
-          padding-right: 15px;
-        }
-
-        @media (max-width: $ipad-width) {
-          text-align: left;
-
-          span.customSelectInner {
-            padding-right: 0px;
-          }
-
-          span.customSelect {
-            padding-left: 20px;
-          }
-        }
-      }
-
-      .per-page {
-        text-align: right;
-
-        span.customSelect {
-          color: $gray245;
-        }
-
-        span.customSelectInner {
-          padding-right: 15px;
-        }
-
-        @media (max-width: $ipad-width) {
-          text-align: left;
-
-          span.customSelectInner {
-            padding-right: 0px;
-          }
-
-          span.customSelect {
-            padding-left: 20px;
-          }
+          padding-right: 7px;
+          width: 30px !important;
+          text-align: right;
         }
       }
 
@@ -989,7 +980,16 @@ section.search section#results.mixed {
         position: static;
         font-size: 80%;
         color: $gray245;
-      } 
+      }
+
+      @media (max-width: $iphone-landscape - 1) {
+        height: 120px;
+
+        > div {
+          float: none !important;
+          text-align: left !important;
+        }
+      }
 
       @media (max-width: 2 * $iphone-portrait) {
         margin-right: 10px;
@@ -1127,6 +1127,7 @@ section.search section#results.mixed {
 
           .row-fluid {
             background-color: $gray230;
+            cursor: pointer;
 
             .reserve-listing {
               text-align: right;
