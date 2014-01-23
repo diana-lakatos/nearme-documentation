@@ -475,6 +475,24 @@ ActiveRecord::Schema.define(:version => 20140121022448) do
   add_index "photos", ["creator_id"], :name => "index_photos_on_creator_id"
   add_index "photos", ["listing_id"], :name => "index_photos_on_listing_id"
 
+  create_table "platform_emails", :force => true do |t|
+    t.string   "email"
+    t.datetime "notified_at"
+    t.datetime "unsubscribed_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "platform_inquiries", :force => true do |t|
+    t.string   "name"
+    t.string   "surname"
+    t.string   "email"
+    t.string   "industry"
+    t.text     "message"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "reservation_charges", :force => true do |t|
     t.integer  "reservation_id"
     t.integer  "subtotal_amount_cents"

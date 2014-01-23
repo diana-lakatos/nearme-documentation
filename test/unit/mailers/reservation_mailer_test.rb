@@ -57,14 +57,49 @@ class ReservationMailerTest < ActiveSupport::TestCase
     assert_equal [@platform_context.decorate.support_email], mail.bcc
   end
 
-  test "#notify_guest_of_rejection" do
-    mail = ReservationMailer.notify_guest_of_rejection(@platform_context, @reservation)
+  context "#notify_guest_of_rejection" do
+    should 'include reason when it is present' do
+      @reservation.rejection_reason = 'You stinks.'
+      mail = ReservationMailer.notify_guest_of_rejection(@platform_context, @reservation)
 
-    assert_contains @reservation.listing.name, mail.html_part.body
+      assert_contains @reservation.listing.name, mail.html_part.body
+      assert_contains 'They said:', mail.html_part.body
+      assert_contains @reservation.rejection_reason, mail.html_part.body
 
-    assert_equal [@reservation.owner.email], mail.to
-    assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.owner.first_name}?", mail.subject
-    assert_equal [@platform_context.decorate.support_email], mail.bcc
+      assert_equal [@reservation.owner.email], mail.to
+      assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.owner.first_name}?", mail.subject
+      assert_equal [@platform_context.decorate.support_email], mail.bcc
+    end
+
+    should 'not include reason when it is not present' do
+      @reservation.rejection_reason = nil
+      mail = ReservationMailer.notify_guest_of_rejection(@platform_context, @reservation)
+
+      assert_contains @reservation.listing.name, mail.html_part.body
+      assert_does_not_contain 'They said:', mail.html_part.body
+      assert_does_not_contain @reservation.rejection_reason, mail.html_part.body
+
+      assert_equal [@reservation.owner.email], mail.to
+      assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.owner.first_name}?", mail.subject
+      assert_equal [@platform_context.decorate.support_email], mail.bcc
+    end
+
+    should 'include nearme listings when it is present' do
+      @listing = FactoryGirl.create(:listing)
+      User.any_instance.stubs(:listings_in_near).returns([@listing])
+
+      mail = ReservationMailer.notify_guest_of_rejection(@platform_context, @reservation)
+
+      assert_contains @listing.name, mail.html_part.body
+      assert_contains 'But we have you covered!', mail.html_part.body
+    end
+
+    should 'not include nearme listings when it is not present' do
+      @reservation.owner.stubs(listings_in_near: [])
+      mail = ReservationMailer.notify_guest_of_rejection(@platform_context, @reservation)
+
+      assert_does_not_contain 'But we have you covered!', mail.html_part.body
+    end
   end
 
   test "#notify_host_of_rejection" do
