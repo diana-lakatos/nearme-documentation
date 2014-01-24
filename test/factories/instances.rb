@@ -15,6 +15,8 @@ FactoryGirl.define do
     paypal_client_secret 'secret'
     paypal_signature 'sig'
     paypal_app_id 'app-123'
+    stripe_public_key 'test-public'
+    stripe_api_key 'test-api'
 
     after(:create) do |instance|
       instance.theme = FactoryGirl.create(:theme, :skip_compilation => true) unless instance.theme
