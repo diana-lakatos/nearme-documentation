@@ -1,0 +1,34 @@
+%section.get-in-touch.section.light-section
+  #logo
+    %a{href: '/'}
+
+  %h2 Get in touch.
+
+  .title.normal Have a question or just want to say hi? We’d love to hear from you.
+  .title.warning.hidden Please complete at least a first name and email address.
+
+  .container-fluid
+    = simple_form_for @platform_inquiry, url: '/save-inquiry' do |f|
+      .row-fluid
+        .span2
+        .span4
+          = f.input :name, label: false, placeholder: 'First name', input_html: { id: 'name', class: 'incomplete' }
+        .span4
+          = f.input :surname, label: false, placeholder: 'Last name', input_html: { class: 'incomplete' }
+      .row-fluid
+        .span2
+        .span4
+          = f.input :email, label: false, placeholder: 'Email', input_html: { id: 'email', class: 'incomplete' }
+        .span4
+          = f.input :industry, label: false, placeholder: 'Industry', input_html: { id: 'industry', class: 'incomplete' }
+      .row-fluid
+        .span2
+        .span8
+          = f.input :message, label: false, placeholder: 'Start typing your message here...', input_html: { class: 'incomplete', :rows => 10 }
+      .row-fluid
+        .span10
+          .pull-right
+            = f.submit 'SEND', class: 'btn btn-large btn-red'
+
+%script
+  $(function(){ new GetInTouchController(); });

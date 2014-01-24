@@ -21,7 +21,7 @@ class Listing < ActiveRecord::Base
   has_many :user_messages, as: :thread_context
 
   has_one :company, through: :location
-  belongs_to :location, inverse_of: :listings, with_deleted: true
+  belongs_to :location, inverse_of: :listings
   belongs_to :listing_type
 
   has_many :amenity_holders, as: :holder
@@ -93,6 +93,10 @@ class Listing < ActiveRecord::Base
   end
 
   acts_as_paranoid
+
+  def location
+    Location.unscoped { super }
+  end
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.

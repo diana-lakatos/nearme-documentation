@@ -4,7 +4,7 @@
   .booking-module
     .booking-header
       %a.toggleable-booking-trigger{:href => location_path(listing.location, listing), :'data-booking-trigger' => true}
-        = listing.name
+        %span.booking-listing-name= listing.name
         %span.pull-right
           %i.ico-chevron-down
           %i.ico-chevron-right

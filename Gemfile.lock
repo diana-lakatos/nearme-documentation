@@ -208,12 +208,12 @@ GEM
     http (0.5.0)
       http_parser.rb
     http_parser.rb (0.6.0)
-    httparty (0.11.0)
-      multi_json (~> 1.0)
+    httparty (0.12.0)
+      json (~> 1.8)
       multi_xml (>= 0.5.2)
     httpauth (0.2.0)
     httpclient (2.3.4.1)
-    i18n (0.6.8)
+    i18n (0.6.9)
     inherited_resources (1.4.0)
       has_scope (~> 0.5.0)
       responders (~> 0.9)
@@ -279,7 +279,7 @@ GEM
       activesupport (>= 3.0)
       money (~> 5.1.0)
       railties (>= 3.0)
-    multi_json (1.8.2)
+    multi_json (1.8.4)
     multi_xml (0.5.5)
     multipart-post (1.2.0)
     nearest_time_zone (0.0.2)
@@ -321,6 +321,8 @@ GEM
     paper_trail (2.7.2)
       activerecord (~> 3.0)
       railties (~> 3.0)
+    paranoia (1.3.3)
+      activerecord (~> 3.2)
     paypal-sdk-adaptivepayments (1.103.0)
       paypal-sdk-core (~> 0.2.3)
     paypal-sdk-core (0.2.6)
@@ -330,6 +332,9 @@ GEM
       paypal-sdk-core (~> 0.2.4)
       uuidtools (~> 2.1)
     pg (0.14.1)
+    pg_power (1.6.4)
+      pg
+      rails (~> 3.1)
     pickle (0.4.11)
       cucumber (>= 0.8)
       rake
@@ -362,8 +367,6 @@ GEM
       activesupport (= 3.2.16)
       bundler (~> 1.0)
       railties (= 3.2.16)
-    rails3_acts_as_paranoid (0.2.4)
-      activerecord (~> 3.2)
     railties (3.2.16)
       actionpack (= 3.2.16)
       activesupport (= 3.2.16)
@@ -377,8 +380,7 @@ GEM
       activerecord (>= 3.1.12)
     rash (0.3.2)
       hashie (~> 1.2.0)
-    raygun4ruby (0.0.5)
-      activesupport
+    raygun4ruby (0.0.9)
       httparty (~> 0.11)
       json
       rack
@@ -561,16 +563,17 @@ DEPENDENCIES
   omniauth-linkedin-oauth2
   omniauth-twitter
   paper_trail
+  paranoia (~> 1.3.3)
   paypal-sdk-adaptivepayments
   paypal-sdk-rest
   pg
+  pg_power
   pickle
   premailer-rails
   quiet_assets
   rack-mini-profiler
   rack-rewrite
   rails (= 3.2.16)
-  rails3_acts_as_paranoid
   ranked-model
   raygun4ruby
   rdiscount

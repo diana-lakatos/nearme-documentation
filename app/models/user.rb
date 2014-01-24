@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  acts_as_paranoid
+
   has_paper_trail :ignore => [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at, 
                               :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token, 
                               :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
@@ -11,8 +13,6 @@ class User < ActiveRecord::Base
 
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
-
-  acts_as_paranoid
 
   has_many :authentications,
            :dependent => :destroy
@@ -98,8 +98,6 @@ class User < ActiveRecord::Base
   belongs_to :domain
 
   after_destroy :cleanup
-  after_destroy :mark_email_as_deleted
-  before_recover :unmark_email_as_deleted
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
@@ -140,8 +138,6 @@ class User < ActiveRecord::Base
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
 
   validates_presence_of :name
-  validates_presence_of :password, :if => :password_required?
-  validates :email, email: true
 
   # FIXME: This is an unideal coupling of 'required parameters' for specific forms
   #        to the general validations on the User model.
@@ -159,12 +155,12 @@ class User < ActiveRecord::Base
   validates :biography, length: {maximum: 250}
 
   devise :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :validatable, :token_authenticatable, :temporary_token_authenticatable
+         :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
   attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
     :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url, 
     :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-    :partner_id, :instance_id, :domain_id
+    :partner_id, :instance_id, :domain_id, :time_zone
 
   attr_encrypted :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
@@ -178,6 +174,11 @@ class User < ActiveRecord::Base
     user = super
     user.apply_omniauth(session[:omniauth]) if session[:omniauth]
     user
+  end
+
+  # FIND undeleted users first (for example for find_by_email finds)
+  def self.with_deleted
+    super.order('deleted_at IS NOT NULL, deleted_at DESC')
   end
 
   def apply_omniauth(omniauth)
@@ -467,16 +468,6 @@ class User < ActiveRecord::Base
     self.administered_locations.each do |location|
       location.update_attribute(:administrator_id, nil) if location.administrator_id == self.id
     end
-  end
-
-  def mark_email_as_deleted
-    self.email = "deleted_#{self.created_at.to_i}_#{self.email}"
-    self.save!
-  end
-
-  def unmark_email_as_deleted
-    self.email = self.email.gsub("deleted_#{self.created_at.to_i}_", '')
-    self.save!
   end
 
   # Returns a temporary token to be used as the login token parameter
