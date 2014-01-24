@@ -1,10 +1,10 @@
 section.marketplace_sessions {
 
   #hero {
-    position: relative;
-    margin-top: -32px;
-    width: auto;
-    height: 580px;
+    position: absolute;
+    min-height: 100%;
+    width: 100%;
+    height: auto;
     background-color: $gray60;
 
     > * {
@@ -27,14 +27,14 @@ section.marketplace_sessions {
   }
 
   #marketplace-password {
-    margin-top: 220px;
+    margin-top: 310px;
     
     @media (max-width: $ipad-width) {
-      margin-top: 120px;
+      margin-top: 210px;
     }
 
     @media (max-width: $iphone-landscape) {
-      margin-top: 90px;
+      margin-top: 140px;
     }
 
     h1 {

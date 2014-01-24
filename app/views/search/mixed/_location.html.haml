@@ -9,23 +9,26 @@
           .carousel-inner
             - if location.photos.count.zero?
               .item{:class => "active"}
-                = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => location.name, :alt => location.name
+                = link_to location_path(location) do
+                  = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => location.name, :alt => location.name
             - else
               - location.photos.each_with_index do |photo, index|
                 - if photo
                   .item{:class => ("active" if index == 0)}
-                    = image_tag photo.image_url(:space_listing), :alt => location.name
+                    = link_to location_path(location) do
+                      = image_tag photo.image_url(:space_listing), :alt => location.name
           - if location.photos.count > 1
             .carousel-nav
               = link_to "", "#location-gallery-#{location.id}", :class => "carousel-control left ico-chevron-left", 'data-slide' => 'prev'
               = link_to "", "#location-gallery-#{location.id}", :class => "carousel-control right ico-chevron-right", 'data-slide' => 'next'
     .span7.location-data
-      %h2= location.name
-      .subheader
-        with
-        = location.company.name
-        @
-        = location.street
+      %h2= link_to location.name, location_path(location)
+      - if display_search_result_subheader_for?(location)
+        .subheader
+          with
+          = location.company.name
+          @
+          = location.street
 
       .location-price
         = location_price_information(location)
@@ -41,5 +44,4 @@
       - listings_by_type.each_with_index do |(listing_type, listings), i|
         .tab-pane{id: "listing-types-#{location.id}-#{listing_type.id}", class: i.zero? ? 'active' : '' }
           .title
-            = listing_type.name.pluralize
           = render partial: 'search/mixed/listing', collection: listings, locals: { location: location }

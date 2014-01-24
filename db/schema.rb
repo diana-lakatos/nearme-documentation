@@ -741,6 +741,7 @@ ActiveRecord::Schema.define(:version => 20140123104631) do
     t.string   "encrypted_paypal_id"
     t.string   "encrypted_balanced_user_id"
     t.string   "encrypted_balanced_credit_card_id"
+    t.string   "time_zone",                                            :default => "Pacific Time (US & Canada)"
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"

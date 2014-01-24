@@ -2,6 +2,7 @@
   = f.input :name, label: "Full name"
   = f.input :email, label: "Email"
   = render("registrations/networks", :supported_providers => @supported_providers) if resource.persisted?
+  = f.input :time_zone
   = render :partial => 'registrations/phone_fields', :locals => { :f => f, :country => country }
   = f.input :current_location, label: "Current location", as: :string
   = f.input :company_name, label: "Company name", as: :string
