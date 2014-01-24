@@ -15,9 +15,8 @@ class Reservation < ActiveRecord::Base
     :unknown => 'unknown'
   }
 
-  belongs_to :listing, :with_deleted => true
+  belongs_to :listing
   belongs_to :owner, :class_name => "User"
-  belongs_to :owner_including_deleted, :class_name => "User", :with_deleted => true
   belongs_to :platform_context_detail, :polymorphic => true
   has_one :company, through: :listing
   has_one :instance, through: :company
@@ -78,6 +77,10 @@ class Reservation < ActiveRecord::Base
   end
 
   acts_as_paranoid
+
+  def listing # fetch with deleted listing
+    Listing.unscoped { super }
+  end
 
   monetize :total_amount_cents
   monetize :subtotal_amount_cents
@@ -208,6 +211,10 @@ class Reservation < ActiveRecord::Base
     end
   end
   alias_method :cancelable, :cancelable?
+
+  def owner_including_deleted
+    User.unscoped { owner }
+  end
 
   def reject(reason = nil)
     self.rejection_reason = reason if reason

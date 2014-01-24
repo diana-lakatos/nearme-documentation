@@ -1,0 +1,10 @@
+- if locations.total_pages > 1
+  .search-pagination
+    .page-entries-info
+      = locations.offset + 1
+      = '-'
+      = [locations.total_entries, locations.per_page * locations.current_page].min
+      of
+      = result_count
+      results
+    = will_paginate locations, previous_label: '<', next_label: '>'

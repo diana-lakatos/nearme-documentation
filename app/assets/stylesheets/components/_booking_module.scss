@@ -88,6 +88,15 @@
 
       span {
         font-size: 0.7em;
+
+        &.booking-listing-name {
+          width: 90%;
+          display: inline-block;
+          overflow: hidden;
+          font-size: 1em;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
       }
     }
 

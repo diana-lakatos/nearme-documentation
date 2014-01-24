@@ -14,9 +14,6 @@
               %span.ico-crosshairs
           .search-icon.btn.btn-green
             %span.ico-search
-          #search_results_count.locations-count
-            %span= result_count
-            locations
 
       - search_geofields.each do |geofield|
         = hidden_field_tag geofield, params.fetch(geofield, '')
@@ -24,4 +21,4 @@
       = hidden_field_tag :v, result_view
       = hidden_field_tag :ignore_search_event, 0
       = hidden_field_tag :page, 1
-      = hidden_field_tag :page_with_location, ''
+      = hidden_field_tag :per_page, per_page

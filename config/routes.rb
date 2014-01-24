@@ -1,17 +1,16 @@
 DesksnearMe::Application.routes.draw do
 
-  if defined? MailView
-    mount CompanyMailerPreview => 'mail_view/companies'
-    mount ReservationMailerPreview => 'mail_view/reservations'
-    mount UserMailerPreview => 'mail_view/users'
-    mount PostActionMailerPreview => 'mail_view/post_action'
-    mount InquiryMailerPreview => 'mail_view/inquiries'
-    mount ListingMailerPreview => 'mail_view/listings'
-    mount RatingMailerPreview => 'mail_view/ratings'
-    mount UserMessageMailerPreview => 'mail_view/user_messages'
-    mount ReengagementMailerPreview => 'mail_view/reengagement'
-    mount RecurringMailerPreview => 'mail_view/recurring'
+  constraints host: 'near-me.com' do
+    root :to => 'platform_home#index'
+    post '/notify-me', :to => 'platform_home#notify_me'
+    get '/get-in-touch', :to => 'platform_home#get_in_touch'
+    post '/save-inquiry', :to => 'platform_home#save_inquiry'
+    post '/send-email', :to => 'platform_home#send_email'
+    get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe', :as => 'platform_email_unsubscribe'
+    get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe', :as => 'platform_email_resubscribe'
   end
+
+  root :to => "public#index"
 
   match '/404', :to => 'errors#not_found'
   match '/422', :to => 'errors#server_error'
@@ -316,4 +315,18 @@ DesksnearMe::Application.routes.draw do
   match "/rent-legal-desks", to: 'locations#vertical_law'
   match "/rent-hairdressing-booth-stations", to: redirect(subdomain: 'rent-salon-space', path: '/')
   match "/rent-design-desks", to: 'locations#vertical_design'
+
+  if defined? MailView
+    mount CompanyMailerPreview => 'mail_view/companies'
+    mount ReservationMailerPreview => 'mail_view/reservations'
+    mount UserMailerPreview => 'mail_view/users'
+    mount PostActionMailerPreview => 'mail_view/post_action'
+    mount InquiryMailerPreview => 'mail_view/inquiries'
+    mount ListingMailerPreview => 'mail_view/listings'
+    mount RatingMailerPreview => 'mail_view/ratings'
+    mount UserMessageMailerPreview => 'mail_view/user_messages'
+    mount ReengagementMailerPreview => 'mail_view/reengagement'
+    mount RecurringMailerPreview => 'mail_view/recurring'
+  end
+
 end

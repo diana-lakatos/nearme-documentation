@@ -21,7 +21,6 @@
 //= require ./vendor/jquery.ias
 //= require ./vendor/ZeroClipboard
 //= require ./vendor/markerclusterer
-//= require ./vendor/waypoints
 //= require jquery-fileupload/basic
 //= require history_jquery
 //= require ./vendor/underscore
