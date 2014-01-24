@@ -40,9 +40,9 @@ FactoryGirl.define do
     end
 
     factory :company_with_balanced do
-      balanced_account_number '12345678'
-      balanced_bank_code '000111'
-      encrypted_balanced_name { creator.try(:name) || 'John Doe' }
+      after(:build) do |company|
+        company.instance_clients << FactoryGirl.build(:instance_client, :client => company, :instance => company.instance, :balanced_user_id => 'test-customer')
+      end
     end
 
     factory :white_label_company do

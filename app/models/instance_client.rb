@@ -8,5 +8,6 @@ class InstanceClient < ActiveRecord::Base
   belongs_to :client, :polymorphic => true
   belongs_to :instance
 
-  validates_presence_of :client_id, :client_type, :instance_id
+  validates_presence_of :client_id, :client_type, :unless => lambda { |ic| ic.client.present? }
+  validates_presence_of :instance_id
 end

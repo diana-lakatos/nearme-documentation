@@ -20,10 +20,6 @@ class Billing::Gateway::BaseProcessor
     self
   end
 
-  def self.is_supported_by?(object, role)
-    raise "role must be sender or receiver" unless ['sender', 'receiver'].include?(role)
-  end
-
   def self.instance_supported?(instance)
     raise NotImplementedError
   end
@@ -107,11 +103,11 @@ class Billing::Gateway::BaseProcessor
   end
 
   def self.instance_client(client, instance)
-    InstanceClient.find_or_create_by_client_id_and_client_type_and_instance_id(client.id, client.class.to_s, instance.id)
+    client.instance_clients.where(:instance_id => instance.id).first.presence || client.instance_clients.create(:instance_id => instance.id)
   end
 
   def instance_client
-    @instance_client ||= self.instance_client(@client, @instance)
+    @instance_client ||= self.class.instance_client(@client, @instance)
   end
 
 end

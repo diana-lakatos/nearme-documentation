@@ -18,13 +18,8 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
     instance.paypal_supported?
   end
 
-  def self.is_supported_by?(object, role = 'sender')
-    super(object, role)
-    begin
-      object.paypal_email.present?
-    rescue
-      false
-    end
+  def self.is_supported_by?(object)
+    object.paypal_email.present?
   end
 
   def process_charge(amount)

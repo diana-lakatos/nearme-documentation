@@ -52,7 +52,7 @@ class Company < ActiveRecord::Base
 
     after_save :notify_user_about_change
     after_destroy :notify_user_about_change
-    before_save :create_bank_account_in_balanced, :if => lambda { |c| c.bank_account_number.present? && c.bank_routing_number.present? && c.bank_owner_name.present? }
+    before_save :create_bank_account_in_balanced, :if => lambda { |c| c.bank_account_number.present? || c.bank_routing_number.present? || c.bank_owner_name.present? }
 
     validates_presence_of :name, :instance_id
     validates_presence_of :industries, :if => proc { |c| c.instance.present? && c.instance.is_desksnearme? && !c.instance.skip_company? }
@@ -133,7 +133,7 @@ class Company < ActiveRecord::Base
     end
 
     def last_four_digits_of_bank_account
-      bank_account_number.to_s[-4, -1]
+      bank_account_number.to_s[-4, 4]
     end
 
     def current_instance_client(instance)
@@ -167,19 +167,30 @@ class Company < ActiveRecord::Base
     end
 
     def create_bank_account_in_balanced
-      Billing::Gateway::BalancedProcessor.create_customer_with_bank_account(self)
-      Rails.logger.debug "all good"
+      [:bank_account_number, :bank_routing_number, :bank_owner_name].each do |mandatory_field|
+        errors.add(mandatory_field, 'cannot be blank') if self.send(mandatory_field).blank?
+      end
+      if errors.any?
+        false
+      else
+        Billing::Gateway::BalancedProcessor.create_customer_with_bank_account(self)
+      end
     rescue Balanced::BadRequest => e
-      Rails.logger.debug "error - #{e.message}"
-      fields = { '[bank_code]' => :bank_routing_number, '[account_number]' => :bank_account_number}
-      fields.each do |balanced_field, our_form_field|
+      { '[bank_code]' => :bank_routing_number, '[account_number]' => :bank_account_number}.each do |balanced_field, our_form_field|
         if e.message.include?(balanced_field)
           errors.add(our_form_field, e.message.split("#{balanced_field} - ").last.split(' Your request id is ').first)
         end
       end
       if errors.empty?
-        errors.add(:bank_account_form,  e.message.split(" - ").last.split(' Your request id is ').first)
+        if e.message.include?('Routing number is invalid')
+          errors.add(:bank_routing_number, 'is invalid')
+        else
+          errors.add(:bank_account_form,  e.message.split(" - ").last.split(' Your request id is ').first)
+        end
       end
+      false
+    rescue RuntimeError => e
+      errors.add(:bank_account_form, 'Unfortunately invalidating previous bank account failed, please try again in the feature')
       false
     end
 

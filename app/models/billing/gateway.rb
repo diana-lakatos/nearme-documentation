@@ -20,11 +20,10 @@ class Billing::Gateway
     self
   end
 
-  def outgoing_payment(sender, receiver)
-    Rails.logger.debug "outgoing processors: #{@outgoing_processors.map { |op| op.to_s } }"
-    @sender = sender
+  def outgoing_payment(receiver)
+    @sender = receiver.instance
     @receiver = receiver
-    @processor = outgoing_processors.find { |processor| processor.is_supported_by?(@sender, 'sender') && processor.is_supported_by?(@receiver, 'receiver') }.try(:new, @instance, @currency).try(:outgoing_payment, @sender, @receiver)
+    @processor = outgoing_processors.find { |processor| processor.is_supported_by?(@receiver) }.try(:new, @instance, @currency).try(:outgoing_payment, @sender, @receiver)
     self
   end
 

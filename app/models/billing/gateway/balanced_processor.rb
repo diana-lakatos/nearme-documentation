@@ -14,17 +14,8 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
     instance.balanced_supported?
   end
 
-  def self.is_supported_by?(object, role = 'sender')
-    super(object, role)
-    begin
-      if role == 'sender'
-        object.balanced_api_key.present?
-      elsif role == 'receiver'
-        instance_client(object, object.instance).try(:balanced_user_id).present?
-      end
-    rescue
-      false
-    end
+  def self.is_supported_by?(object)
+    instance_client(object, object.instance).try(:balanced_user_id).present?
   end
 
   def self.create_customer_with_bank_account(client)
@@ -33,11 +24,11 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
     balanced_customer = nil
     _instance_client.bank_account_last_four_digits = client.last_four_digits_of_bank_account
     if _instance_client.balanced_user_id
-      balanced_customer = Balanced::Customer.find(instance_client.balanced_user_id)
-      bank_account = @balanced_customer.bank_accounts.last
+      balanced_customer = Balanced::Customer.find(_instance_client.balanced_user_id)
+      bank_account = balanced_customer.bank_accounts.last
       bank_account.invalidate
-      raise "Bank account should have been invalidated, but it's still valid for InstanceClient(id=#{instance_client.id}" if bank_account.is_valid
-      balanced_customer = Balanced::Customer.find(instance_client.balanced_user_id)
+      raise "Bank account should have been invalidated, but it's still valid for InstanceClient(id=#{_instance_client.id})" if bank_account.is_valid
+      balanced_customer = Balanced::Customer.find(_instance_client.balanced_user_id)
     else
       balanced_customer = Balanced::Customer.new(client.to_balanced_params).save
       _instance_client.balanced_user_id = balanced_customer.uri

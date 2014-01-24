@@ -80,48 +80,67 @@ class CompanyTest < ActiveSupport::TestCase
 
   end
 
-  context 'update balanced info' do
+  context 'provide bank account details' do
 
     setup do
-      @company = FactoryGirl.create(:company_with_balanced)
+      @company = FactoryGirl.create(:company)
+      @company.attributes = {
+        :bank_account_number => '123456789', 
+        :bank_routing_number => '987654321', 
+        :bank_owner_name => 'John Doe'
+      }
     end
 
-    should 'have assigned timestamp' do
-      assert @company.balanced_account_details_changed_at.present?
-    end
-
-    should 'update timestamp of updating balanced info when account_number changed' do
-      @company.balanced_account_number = '123456789'
-      Timecop.freeze(Time.zone.now) do
-        @company.save!
-        assert_equal Time.zone.now.to_i, @company.balanced_account_details_changed_at.to_i
+      should 'know last four digits' do
+        assert_equal '6789', @company.last_four_digits_of_bank_account
       end
-    end
 
-    should 'update timestamp of updating balanced info when bank_code changed' do
-      @company.balanced_bank_code = '123456789'
-      Timecop.freeze(Time.zone.now) do
-        @company.save!
-        assert_equal Time.zone.now.to_i, @company.balanced_account_details_changed_at.to_i
+      should 'return correct bank account details' do
+        expected_details = {
+          :account_number => '123456789', 
+          :bank_code => '987654321', 
+          :name => 'John Doe',
+          :type => 'checking'
+        }
+        assert_equal expected_details, @company.balanced_bank_account_details
       end
-    end
 
-    should 'update timestamp of updating balanced info when balanced_name changed' do
-      @company.balanced_name = 'John Updated'
-      Timecop.freeze(Time.zone.now) do
-        @company.save!
-        assert_equal Time.zone.now.to_i, @company.balanced_account_details_changed_at.to_i
+      should 'try to store bank account' do
+        Billing::Gateway::BalancedProcessor.expects(:create_customer_with_bank_account).with do |company|
+          company.id == @company.id
+        end.returns(true).once
+        assert @company.save
       end
-    end
 
-    should 'not update timestamp of updating balanced info when name changed' do
-      @company.name = 'Cool Updated Company'
-      @old_time_stamp = @company.balanced_account_details_changed_at
-      Timecop.freeze(Time.zone.now + 10.minutes) do
-        @company.save!
-        assert_not_equal Time.zone.now.to_i, @company.balanced_account_details_changed_at.to_i
-        assert_equal @old_time_stamp.to_i, @company.balanced_account_details_changed_at.to_i
+      should 'handle inability to invalidate old account' do
+        Billing::Gateway::BalancedProcessor.expects(:create_customer_with_bank_account).raises(RuntimeError.new("Bank account should have been invalidated, but it's still valid for InstanceClient(id=1)"))
+        refute @company.save
+        assert @company.errors.include?(:bank_account_form)
       end
-    end
+
+      context 'information missing' do
+
+        should 'not store information if no bank account_number' do
+          @company.bank_account_number = nil
+          Billing::Gateway::BalancedProcessor.expects(:create_customer_with_bank_account).never
+          refute @company.save
+          assert @company.errors.include?(:bank_account_number)
+        end
+
+        should 'not store information if no bank routing_number' do
+          @company.bank_routing_number = ''
+          Billing::Gateway::BalancedProcessor.expects(:create_customer_with_bank_account).never
+          refute @company.save
+          assert @company.errors.include?(:bank_routing_number)
+        end
+
+        should 'not store information if no bank name' do
+          @company.bank_owner_name = ''
+          Billing::Gateway::BalancedProcessor.expects(:create_customer_with_bank_account).never
+          refute @company.save
+          assert @company.errors.include?(:bank_owner_name)
+        end
+
+      end
   end
 end
