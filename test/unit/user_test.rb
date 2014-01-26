@@ -714,6 +714,26 @@ class UserTest < ActiveSupport::TestCase
 
       assert_equal @user.listings_in_near(@platform_context), [listing_current_instance]
     end
+
+    should 'not return listings from cancelled/expired/rejected reservations' do
+      # user was last geolocated in Auckland
+      @user.last_geolocated_location_latitude = -36.858675
+      @user.last_geolocated_location_longitude = 174.777303
+      @user.save
+
+      listing_first = FactoryGirl.create(:listing_in_auckland)
+      listing_first.company.instance_id = @instance.id
+      listing_first.company.save
+
+      listing_second = FactoryGirl.create(:listing_in_auckland)
+      listing_second.company.instance_id = @instance.id
+      listing_second.company.save
+
+      reservation = FactoryGirl.create(:reservation, listing: listing_first, user: @user)
+      reservation.reject
+
+      assert_equal @user.listings_in_near(@platform_context, 3, 100, true), [listing_second]
+    end
   end
 
 end

@@ -159,6 +159,10 @@ class Reservation < ActiveRecord::Base
     with_state(:expired)
   }
 
+  scope :cancelled_or_expired_or_rejected, lambda {
+    with_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired)
+  }
+
   scope :archived, lambda {
     joins(:periods).where('reservation_periods.date < ? OR reservations.state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq
   }
