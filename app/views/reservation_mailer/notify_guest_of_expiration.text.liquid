@@ -2,9 +2,9 @@ Sorry, {{ user.first_name }}
 
 Your booking for '{{ listing.name }}' at {{ listing.street }} has expired because the {{ platform_context.lessor }} didn't confirm within 24 hours.
 
-But we got you covered! Here you have some alternatives similar to the desks you were looking for:
+But we got you covered! Here you have some alternatives similar to the {{ platform_context.bookable_noun_plural }} you were looking for:
 
 {% include 'reservation_mailer/listings_in_near.text' %}
-Search More Desks: {{ platform_context.host | append:listing.search_url_with_tracking | append:signature_for_tracking }}
+Search More {{ platform_context.bookable_noun_plural }}: {{ platform_context.host | append:listing.search_url_with_tracking | append:signature_for_tracking }}
 
 We're always happy to help! Just send an email to happydesk@desksnear.me or call us on {{ platform_context.phone_number }}.
