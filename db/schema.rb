@@ -296,7 +296,6 @@ ActiveRecord::Schema.define(:version => 20140123104631) do
     t.string   "encrypted_paypal_client_secret"
     t.string   "encrypted_stripe_api_key"
     t.string   "encrypted_balanced_api_key"
-    t.boolean  "password_protected",                                           :default => false
     t.string   "encrypted_marketplace_password"
   end
 
