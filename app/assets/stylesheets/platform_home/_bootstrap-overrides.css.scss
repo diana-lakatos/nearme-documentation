@@ -1,0 +1,59 @@
+// Bootstrap Overrides - Do not edit the Vendor Bootstrap files, override them please!
+
+.padding-row {
+  padding: 1.5em 0;
+}
+
+.padding-bottom {
+  padding: 0 0 1.5em;
+}
+
+.container-fluid {
+
+  @media (max-width: $ipad-width) {
+    padding: 0 20px;
+  }
+
+  &.flush {
+    @media (max-width: 1400px) {
+      margin: 0 -22px;
+    }
+  }  
+
+  @media (max-width: $iphone-landscape) {
+    padding: 0 .75em;
+  }
+
+}
+
+.container-fluid {
+  @media (min-width: 1400px) {
+    max-width: 1360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.tooltip-inner {
+  max-width: 140px;
+}
+
+// Override bootstrap mixin that caused opacity to be reduced by 10x
+
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  filter: alpha(opacity=$opacity * 100);
+}
+
+@media (max-width: $ipad-width) {
+  // Make all grid-sized elements block level again
+  [class*="span"]:not(.nested),
+  .uneditable-input[class*="span"], // Makes uneditable inputs full-width when using grid sizing
+  .row-fluid [class*="span"]:not(.nested) {
+    float: none;
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    @include box-sizing(border-box);
+  }
+}

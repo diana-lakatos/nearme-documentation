@@ -85,4 +85,8 @@ module SearchHelper
     description
   end
 
+  def display_search_result_subheader_for?(location)
+    location.name != "#{location.company.name} @ #{location.street}"
+  end
+
 end

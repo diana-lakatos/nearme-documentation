@@ -160,7 +160,7 @@ class User < ActiveRecord::Base
   attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
     :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url, 
     :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-    :partner_id, :instance_id, :domain_id
+    :partner_id, :instance_id, :domain_id, :time_zone
 
   attr_encrypted :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
@@ -409,7 +409,7 @@ class User < ActiveRecord::Base
     UserMessage.for_user(self)
   end
 
-  def listings_in_near(platform_context = nil, results_size = 3, radius_in_km = 100)
+  def listings_in_near(platform_context = nil, results_size = 3, radius_in_km = 100, without_listings_from_cancelled_reservations = false)
     platform_context ||= self.current_platform_context
     return [] if platform_context.nil?
 
@@ -422,9 +422,15 @@ class User < ActiveRecord::Base
       locations_in_near = search_scope.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
     end
 
+    listing_ids_of_cancelled_reservations = self.reservations.cancelled_or_expired_or_rejected.pluck(:listing_id) if without_listings_from_cancelled_reservations
+
     listings = []
     locations_in_near.includes(:listings).each do |location|
-      listings += location.listings.searchable.limit((listings.size - results_size).abs)
+      if without_listings_from_cancelled_reservations and !listing_ids_of_cancelled_reservations.empty?
+        listings += location.listings.searchable.where('listings.id NOT IN (?)', listing_ids_of_cancelled_reservations).limit((listings.size - results_size).abs)
+      else
+        listings += location.listings.searchable.limit((listings.size - results_size).abs)
+      end
       return listings if listings.size >= results_size
     end if locations_in_near
     listings

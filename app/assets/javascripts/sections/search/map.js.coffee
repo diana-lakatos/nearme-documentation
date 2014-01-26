@@ -160,9 +160,12 @@ class Search.Map
   # Return an array of [nx, ny, sx, sy] coordinates
   getBoundsArray: ->
     bounds = @googleMap.getBounds()
-    ne = bounds.getNorthEast()
-    sw = bounds.getSouthWest()
-    [ne.lat(), ne.lng(), sw.lat(), sw.lng()]
+    if bounds
+      ne = bounds.getNorthEast()
+      sw = bounds.getSouthWest()
+      [ne.lat(), ne.lng(), sw.lat(), sw.lng()]
+    else
+      [0, 0, 0, 0]
     
   getListingForMarker: (marker) ->
     listing_id = null

@@ -23,6 +23,14 @@ class SearchControllerTest < ActionController::TestCase
     end
   end
 
+  def assert_location_in_mixed_result(location)
+    assert_select 'article[data-id=?]', location.id, count: 1
+  end
+
+  def refute_location_in_mixed_result(location)
+    assert_select 'article[data-id=?]', location.id, count: 0
+  end
+
   context 'search integration' do
     setup do
       Location.destroy_all
@@ -57,10 +65,10 @@ class SearchControllerTest < ActionController::TestCase
         unavaliable_location = FactoryGirl.create(:fully_booked_listing_in_cleveland).location
         available_location = FactoryGirl.create(:listing_in_cleveland).location
 
-        get :index, loc: 'Cleveland'
+        get :index, loc: 'Cleveland', v: 'mixed'
 
-        assert_location_in_result(unavaliable_location) 
-        assert_location_in_result(available_location)
+        assert_location_in_mixed_result(unavaliable_location)
+        assert_location_in_mixed_result(available_location)
       end
     end
 
@@ -88,8 +96,8 @@ class SearchControllerTest < ActionController::TestCase
 
           get :index, { :loc => 'Auckland', :lntype => filtered_location_type.name.downcase }
 
-          assert_location_in_result(filtered_auckland) 
-          refute_location_in_result(another_auckland) 
+          assert_location_in_result(filtered_auckland)
+          refute_location_in_result(another_auckland)
         end
       end
 
@@ -100,10 +108,10 @@ class SearchControllerTest < ActionController::TestCase
           filtered_auckland = FactoryGirl.create(:listing_in_auckland, listing_type: filtered_listing_type).location
           another_auckland = FactoryGirl.create(:listing_in_auckland, listing_type: another_listing_type).location
 
-          get :index, { :loc => 'Auckland', :lgtype => filtered_listing_type.name.downcase }
+          get :index, { :loc => 'Auckland', :lgtype => filtered_listing_type.name.downcase, :v => 'mixed' }
 
-          assert_location_in_result(filtered_auckland) 
-          refute_location_in_result(another_auckland) 
+          assert_location_in_mixed_result(filtered_auckland)
+          refute_location_in_mixed_result(another_auckland)
         end
       end
 

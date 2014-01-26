@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140122105726) do
+ActiveRecord::Schema.define(:version => 20140123090849) do
 
 
 
@@ -485,6 +485,24 @@ ActiveRecord::Schema.define(:version => 20140122105726) do
   add_index "photos", ["creator_id"], :name => "index_photos_on_creator_id"
   add_index "photos", ["listing_id"], :name => "index_photos_on_listing_id"
 
+  create_table "platform_emails", :force => true do |t|
+    t.string   "email"
+    t.datetime "notified_at"
+    t.datetime "unsubscribed_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "platform_inquiries", :force => true do |t|
+    t.string   "name"
+    t.string   "surname"
+    t.string   "email"
+    t.string   "industry"
+    t.text     "message"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "reservation_charges", :force => true do |t|
     t.integer  "reservation_id"
     t.integer  "subtotal_amount_cents"
@@ -731,6 +749,7 @@ ActiveRecord::Schema.define(:version => 20140122105726) do
     t.string   "encrypted_paypal_id"
     t.string   "encrypted_balanced_user_id"
     t.string   "encrypted_balanced_credit_card_id"
+    t.string   "time_zone",                                            :default => "Pacific Time (US & Canada)"
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"
