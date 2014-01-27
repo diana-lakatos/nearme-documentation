@@ -32,23 +32,22 @@ module Utils
         @instances ||= load_yaml("instances.yml")
       end
 
-      private
+      protected
 
         def self.load_demo_yaml(collection)
-          YAML.load_file(Rails.root.join('db', 'seeds', 'demo', collection))
+          raise NotImplementedError
         end
 
         def self.load_yaml(collection)
           YAML.load_file(Rails.root.join('db', 'seeds', collection))
         end
-
     end
 
     def go!
       load_data!
     end
 
-    private
+    protected
 
     def do_task(task_name = "")
       ActiveRecord::Migration.say_with_time(task_name) do
@@ -57,43 +56,7 @@ module Utils
     end
 
     def load_data!
-      do_task "Loading data" do
-        User.transaction do
-
-          # === BASIC STUFF ======================================
-
-          load_amenities!
-          load_industries!
-          load_location_types!
-          load_listing_types!
-
-          # === INSTANCES ========================================
-
-          load_instances!
-
-          # === COMPANIES / LOCATIONS / LISTINGS =================
-
-          load_users_and_companies!
-          load_locations!
-          load_listings!
-          generate_impressions!
-
-          # === MESSAGES =========================================
-
-          generate_user_messages!
-
-          # === RESERVERATIONS ===================================
-
-          load_reservations_for_dnm!
-
-          # === BILLING GATEWAYS CREDENTIALS =====================
-
-          load_stripe_api_keys_for_dnm!
-
-          puts "\e[32mUser created with email: #{@user.email} and password: #{@user.password}\e[0m"
-        end
-      end
-
+      raise NotImplementedError
     end
 
     def load_amenities!
@@ -241,50 +204,7 @@ module Utils
         user_message.set_message_context_from_request_params(listing_id: listing.id)
         user_message.save!
       end
-    end
-
-    def load_reservations_for_dnm!
-      do_task "Loading reservations for DNM" do
-        company = companies.first
-        period = 1.week.ago.to_date..1.week.from_now.to_date
-
-        ## info@desksnear.me as a host
-        [[2.days.from_now.to_date, 2], [1.week.from_now.to_date, 4], [8.days.ago.to_date, 6]].each_with_index do |initial_date, date_index|
-          date = initial_date.first
-          initial_date.second.times do |index|
-            listing = company.listings.sample
-            Timecop.freeze(date + 1.day) do
-              date = listing.first_available_date
-            end
-            Timecop.freeze(date) do
-              (date_index == 1 ? 2 : 1).times do
-                create_reservation(listing, date, date_index > 0, {:user => (users - [@user]).sample, :quantity => 1, :currency => 'USD'})
-                listing = company.listings.sample
-              end
-            end
-          end
-        end
-
-        # info@desksnear.me as a guest
-        creator = company.creator 
-        [1.week.ago.to_date, 1.day.from_now.to_date].each do |initial_date|
-          date = initial_date
-          2.times do |index|
-            begin
-              other_company = (companies - [company]).sample
-            end while other_company.locations.empty?
-            listing = other_company.listings.sample
-            Timecop.freeze(date + 1.day) do
-              date = listing.first_available_date
-            end
-            Timecop.freeze(date) do
-              reservation_date = listing.first_available_date
-              create_reservation(listing, reservation_date, index.zero?, {:user => creator, :quantity => 1, :currency => 'USD'})
-            end
-          end
-        end
-      end
-    end
+    end 
 
     def load_stripe_api_keys_for_dnm!
       dnm_instance = Instance.default_instance
@@ -335,4 +255,3 @@ module Utils
 
   end
 end
-

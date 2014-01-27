@@ -219,7 +219,7 @@ Then /^I should see the following reservations in order:$/ do |table|
 end
 
 Then /^a confirm reservation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "just booked your space!"
+  last_email_for(email).subject.should include "just booked your Desk!"
 end
 
 Then /^a reservation awaiting confirmation email should be sent to (.*)$/ do |email|
@@ -259,7 +259,7 @@ Then /^a reservation rejected email should be sent to (.*)$/ do |email|
 end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "just booked your space!"
+  last_email_for(email).subject.should include "just booked your Desk!"
 end
 
 Then /^a reservation expiration email should be sent to (.*)$/ do |email|

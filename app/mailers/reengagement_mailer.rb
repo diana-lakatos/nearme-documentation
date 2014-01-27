@@ -9,7 +9,7 @@ class ReengagementMailer < InstanceMailer
 
     if should_be_sent?
       mail to: @user.email, 
-             subject: instance_prefix("Check out these new spaces in your area!", @platform_context_decorator),
+             subject: instance_prefix("Check out these new #{@platform_context_decorator.bookable_noun.pluralize} in your area!", @platform_context_decorator),
              platform_context: @platform_context
     else
       Rails.logger.info "ReengagementMailer no_bookings has not been sent to #{@user.id} #{@user.name} because we don't know what to suggest"
@@ -25,7 +25,7 @@ class ReengagementMailer < InstanceMailer
 
     if should_be_sent?
       mail to: @user.email, 
-             subject: instance_prefix("Check out these new spaces in your area!", @platform_context_decorator),
+             subject: instance_prefix("Check out these new #{@platform_context_decorator.bookable_noun.pluralize} in your area!", @platform_context_decorator),
              platform_context: @platform_context
     else
       Rails.logger.info "ReengagementMailer one_booking has not been sent to #{@user.id} #{@user.name} because we don't know what to suggest"
