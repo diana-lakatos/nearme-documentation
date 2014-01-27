@@ -32,6 +32,17 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
     end
   end
 
+  def process_refund(amount, charge_response)
+    payment = YAML.load(charge_response.gsub('Proc {}', ''))
+    sale = payment.transactions.first.related_resources.find { |t| t.sale.present? }.sale
+    response = sale.refund({})
+    if response.success?
+      refund_successful(response)
+    else
+      refund_failed(response.error.inspect)
+    end
+  end
+
   def process_payout(amount)
     @pay = @api.build_pay({
       :actionType => "PAY",
@@ -94,20 +105,24 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
   end
 
   def handle_error(error_hash)
-    if error_hash.present? && error_hash["details"].present?
-      first_error_pair = error_hash["details"].first
-      message = first_error_pair["issue"]
-      param = first_error_pair["field"]
-      if message == 'Value is invalid (must be visa, mastercard, amex, discover, or maestro)'
-        message = "Unfortunately we do not support your credit card. Please try with Visa, MasterCard, American Express or Discover"
-      elsif message.include?("Required field") && param == "type"
-        message = "Unfortunately we were not able to detect a type of your credit card. Please make sure that the number is correct"
-      end
+    if error_hash['TRANSACTION_LIMIT_EXCEEDED']
+      raise Billing::CreditCardError.new(error_hash['message'], 'cc')
     else
-      message = 'Unknown CreditCard error, please ensure if credit card details were entered correctly. If the problem persist, please contact us.'
-      param = nil
+      if error_hash.present? && error_hash["details"].present?
+        first_error_pair = error_hash["details"].first
+        message = first_error_pair["issue"]
+        param = first_error_pair["field"]
+        if message == 'Value is invalid (must be visa, mastercard, amex, discover, or maestro)'
+          message = "Unfortunately we do not support your credit card. Please try with Visa, MasterCard, American Express or Discover"
+        elsif message.include?("Required field") && param == "type"
+          message = "Unfortunately we were not able to detect a type of your credit card. Please make sure that the number is correct"
+        end
+      else
+        message = 'Unknown CreditCard error, please ensure if credit card details were entered correctly. If the problem persist, please contact us.'
+        param = nil
+      end
+      raise Billing::CreditCardError.new(message, param)
     end
-    raise Billing::CreditCardError.new(message, param)
   end
 
   def paypal_argument_hash(amount)
@@ -144,7 +159,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
         :item_list => {
           :items => [{
             :name => "Reservation",
-            :price => amount,
+            :price => amount.to_s,
             :currency => @currency,
             :quantity => 1 }]
         },
@@ -152,7 +167,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
         # Amount
         # Let's you specify a payment amount.
         :amount => {
-          :total => amount,
+          :total => amount.to_s,
           :currency => @currency },
       }]
     }

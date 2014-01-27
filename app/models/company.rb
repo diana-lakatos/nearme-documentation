@@ -1,8 +1,9 @@
 class Company < ActiveRecord::Base
   has_paper_trail
+  acts_as_paranoid
   URL_REGEXP = URI::regexp(%w(http https))
 
-  attr_accessible :creator_id, :deleted_at, :description, :url, :email, :name,
+  attr_accessible :creator_id, :description, :url, :email, :name,
     :mailing_address, :paypal_email, :industry_ids, :locations_attributes,
     :domain_attributes, :theme_attributes, :instance_id, :white_label_enabled,
     :listings_public, :partner_id, :bank_account_number, :bank_routing_number, :bank_owner_name
@@ -29,9 +30,9 @@ class Company < ActiveRecord::Base
   has_many :reservation_charges,
     through: :reservations
 
-  has_many :payment_transfers
+  has_many :payment_transfers, :dependent => :destroy
 
-  has_many :company_industries
+  has_many :company_industries, :dependent => :destroy
   has_many :industries, :through => :company_industries
 
   has_one :domain, :as => :target, :dependent => :destroy
@@ -73,8 +74,6 @@ class Company < ActiveRecord::Base
         ReservationCharge.needs_payment_transfer
       ).uniq
     }
-
-    acts_as_paranoid
 
     accepts_nested_attributes_for :domain, :reject_if => proc { |params| params.delete(:white_label_enabled).to_f.zero? }
     accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }

@@ -69,14 +69,20 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
         instance_client.save!
       rescue Balanced::NotFound
         setup_customer_with_credit_card(credit_card)
-      rescue Balanced::BadRequest => e
-        raise Billing::InvalidRequestError, e
       end
     else
       setup_customer_with_credit_card(credit_card)
     end
-  rescue Balanced::UnassociatedCardError => e
-    raise Billing::CreditCardError, e
+  rescue Balanced::UnassociatedCardError, Balanced::BadRequest, Balanced::Conflict, Billing::InvalidRequestError => e
+    handle_error(e)
+  end
+
+  def process_refund(amount, charge_response)
+    debit = YAML.load(charge_response)
+    response = debit.refund
+    refund_successful(response)
+  rescue
+    refund_failed($!)
   end
 
   def process_charge(amount)
@@ -104,6 +110,30 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
     instance_client.balanced_user_id = @balanced_customer.uri
     instance_client.balanced_credit_card_id  = @credit_card.uri
     instance_client.save!
+  end
+
+  def handle_error(exception)
+    message = ''
+    param = ''
+    { 
+      '[card_number]' => 'number', 
+      '[security_code]' => 'cvc', 
+      '[expiration_year]' => 'exp_month', 
+      '[expiration_month]' => 'exp_month'
+    }.each do |balanced_field, our_form_field|
+      if exception.message.include?(balanced_field)
+        message = exception.message.split("#{balanced_field} - ").last.split(' Your request id is ').first
+        param = our_form_field
+        break
+      end
+    end
+    if message.blank?
+      if exception.message.include?('card-not-validated: Card cannot be validated')
+        message = 'Card cannot be validated'
+        param = 'number'
+      end
+    end
+    raise Billing::CreditCardError.new(message, param)
   end
 
 end

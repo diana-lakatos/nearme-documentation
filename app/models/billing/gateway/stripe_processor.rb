@@ -44,6 +44,14 @@ class Billing::Gateway::StripeProcessor < Billing::Gateway::BaseProcessor
     raise Billing::Error, e
   end
 
+  def process_refund(amount, charge_response)
+    charge = Stripe::Charge.retrieve(YAML.load(charge_response).id, @api_key)
+    response = charge.refund
+    refund_successful(response)
+  rescue
+    refund_failed($!)
+  end
+
   private
 
   # Set up a customer and store their credit card details

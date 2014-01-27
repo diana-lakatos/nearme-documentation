@@ -1,6 +1,7 @@
 class Location < ActiveRecord::Base
-  class NotFound < ActiveRecord::RecordNotFound; end
   has_paper_trail
+  acts_as_paranoid
+  class NotFound < ActiveRecord::RecordNotFound; end
 
   include Impressionable
 
@@ -70,8 +71,6 @@ class Location < ActiveRecord::Base
   scope :for_instance, ->(instance) { joins(:instance).includes(:instance).where(:'instances.id' => instance.id) }
   scope :with_searchable_listings, where(%{ (select count(*) from "listings" where location_id = locations.id and listings.draft IS NULL and enabled = 't' and listings.deleted_at is null) > 0 })
 
-  acts_as_paranoid
-
   # Useful for storing the full geo info for an address, like time zone
   serialize :info, Hash
 
@@ -88,6 +87,11 @@ class Location < ActiveRecord::Base
     Geocoder::Calculations.distance_between([ latitude,       longitude ],
                                             [ other_latitude, other_longitude ],
                                             units: :km)
+  end
+
+
+  def company
+    Company.unscoped { super }
   end
 
   def name

@@ -35,15 +35,15 @@ class Billing::Gateway::BaseProcessor
   # Make a charge against the user
   #
   # charge_details - Hash of details describing the charge
-  #                  :amount - The amount in cents to charge
+  #                  :amount_cents - The amount in cents to charge
   #                  :reference - A reference record to assign to the charge
   #
   # Returns the Charge attempt record.
   # Test the status of the charge with the Charge#success? predicate
   def charge(charge_details)
-    amount, reference = charge_details[:amount], charge_details[:reference]
+    amount_cents, reference = charge_details[:amount_cents], charge_details[:reference]
     @charge = Charge.create(
-      amount: amount,
+      amount: amount_cents,
       currency: @currency,
       user_id: user.id,
       reference: reference
@@ -63,6 +63,17 @@ class Billing::Gateway::BaseProcessor
     )
     process_payout(amount)
     @payout
+  end
+
+  def refund(refund_details)
+    amount_cents, reference, charge_response = refund_details[:amount_cents], refund_details[:reference], refund_details[:charge_response]
+    @refund = Refund.create(
+      amount: amount_cents,
+      currency: @currency,
+      reference: reference
+    )
+    process_refund(amount_cents, charge_response)
+    @refund
   end
 
   # Contains implementation for storing credit card by third party
@@ -100,6 +111,16 @@ class Billing::Gateway::BaseProcessor
   # Callback invoked by processor when payout failed
   def payout_failed(response)
     @payout.payout_failed(response)
+  end
+
+  # Callback invoked by processor when refund was successful
+  def refund_successful(response)
+    @refund.refund_successful(response)
+  end
+
+  # Callback invoked by processor when refund failed
+  def refund_failed(response)
+    @refund.refund_failed(response)
   end
 
   def self.instance_client(client, instance)

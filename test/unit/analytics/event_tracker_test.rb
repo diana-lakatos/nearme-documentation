@@ -21,9 +21,9 @@ class EventTrackerTest < ActiveSupport::TestCase
 
     should 'invoke tracking charge with correct arguments' do
       # FIXME: test TrackChargeSerializer in dedicated unit test
-      @mixpanel.expects(:track_charge).with(8.94)
+      @mixpanel.expects(:track_charge).with(17.88)
       @google_analytics.expects(:track_charge).with({
-        amount: @reservation.service_fee_amount_guest.to_f,
+        amount: @reservation.service_fee_amount_guest.to_f + @reservation.service_fee_amount_host.to_f,
         reservation_charge_id: @reservation.reservation_charges.paid.first.id,
         instance_name: @reservation.instance.name,
         listing_name: @reservation.listing.name,

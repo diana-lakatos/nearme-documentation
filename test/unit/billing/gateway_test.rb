@@ -76,6 +76,45 @@ class Billing::GatewayTest < ActiveSupport::TestCase
       @gateway = Billing::Gateway.new(@instance, 'ABC')
       assert_nil @gateway.ingoing_payment(@user).processor
     end
+
+    context 'balanced' do
+
+      context 'balanced is choosen in instance admin' do
+
+        setup do
+          FactoryGirl.create(:instance_billing_gateway, billing_gateway: 'balanced', instance: @instance)
+        end
+
+        should 'not select balanced when balanced_api_key is not set' do
+          refute @gateway.ingoing_payment(@user).processor.is_a?(Billing::Gateway::BalancedProcessor)
+        end
+
+        should 'select balanced when balanced_api_key is set' do
+          @instance.balanced_api_key = 'test'
+          @instance.save
+          @gateway = Billing::Gateway.new(@instance, 'USD')
+          assert Billing::Gateway::BalancedProcessor === @gateway.ingoing_payment(@user).processor
+        end
+      end
+
+      context 'balanced is not choosen in instance admin' do
+
+        setup do
+          FactoryGirl.create(:instance_billing_gateway, billing_gateway: 'stripe', instance: @instance)
+        end
+
+        should 'not select balanced' do
+          refute @gateway.ingoing_payment(@user).processor.is_a?(Billing::Gateway::BalancedProcessor)
+        end
+
+        should 'not select balanced even when balanced_api_key is set' do
+          @instance.balanced_api_key = 'test'
+          @instance.save
+          @gateway = Billing::Gateway.new(@instance, 'USD')
+          refute @gateway.ingoing_payment(@user).processor.is_a?(Billing::Gateway::BalancedProcessor)
+        end
+      end
+    end
   end
 
 

@@ -5,7 +5,7 @@ class Billing::Gateway
 
   attr_reader :user, :currency, :processor, :outgoing_processors
 
-  delegate :charge, :payout, :store_credit_card, :to => :processor
+  delegate :charge, :payout, :refund, :store_credit_card, :to => :processor
 
   def initialize(instance, currency)
     @instance = instance
@@ -16,7 +16,7 @@ class Billing::Gateway
 
   def ingoing_payment(user)
     @user = user
-    @processor = @ingoing_processors.first.try(:new, @instance, @currency).try(:ingoing_payment, @user)
+    @processor = (@instance.billing_gateway_for(@currency) || @ingoing_processors.first).try(:new, @instance, @currency).try(:ingoing_payment, @user)
     self
   end
 

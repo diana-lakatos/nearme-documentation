@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140123090849) do
+ActiveRecord::Schema.define(:version => 20140126160511) do
 
 
 
@@ -74,6 +74,7 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.integer  "close_minute"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+    t.datetime "deleted_at"
   end
 
   add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
@@ -89,6 +90,7 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.string   "reference_type"
     t.string   "currency"
     t.text     "encrypted_response"
+    t.datetime "deleted_at"
   end
 
   add_index "charges", ["reference_id", "reference_type"], :name => "index_charges_on_reference_id_and_reference_type"
@@ -115,9 +117,10 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
   add_index "companies", ["instance_id", "listings_public"], :name => "index_companies_on_instance_id_and_listings_public"
   add_index "companies", ["partner_id"], :name => "index_companies_on_partner_id"
 
-  create_table "company_industries", :id => false, :force => true do |t|
-    t.integer "industry_id"
-    t.integer "company_id"
+  create_table "company_industries", :force => true do |t|
+    t.integer  "industry_id"
+    t.integer  "company_id"
+    t.datetime "deleted_at"
   end
 
   add_index "company_industries", ["industry_id", "company_id"], :name => "index_company_industries_on_industry_id_and_company_id"
@@ -155,6 +158,7 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.datetime "updated_at",  :null => false
     t.integer  "target_id"
     t.string   "target_type"
+    t.datetime "deleted_at"
   end
 
   add_index "domains", ["target_id", "target_type"], :name => "index_domains_on_target_id_and_target_type"
@@ -196,6 +200,7 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.text     "comment"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.datetime "deleted_at"
   end
 
   add_index "guest_ratings", ["author_id"], :name => "index_guest_ratings_on_author_id"
@@ -210,6 +215,7 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.text     "comment"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.datetime "deleted_at"
   end
 
   add_index "host_ratings", ["author_id"], :name => "index_host_ratings_on_author_id"
@@ -222,6 +228,7 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.string   "ip_address"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
+    t.datetime "deleted_at"
   end
 
   add_index "impressions", ["impressionable_type", "impressionable_id"], :name => "index_impressions_on_impressionable_type_and_impressionable_id"
@@ -267,11 +274,22 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.boolean  "instance_owner",         :default => false
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
+    t.datetime "deleted_at"
   end
 
   add_index "instance_admins", ["instance_admin_role_id"], :name => "index_instance_admins_on_instance_admin_role_id"
   add_index "instance_admins", ["instance_id"], :name => "index_instance_admins_on_instance_id"
   add_index "instance_admins", ["user_id"], :name => "index_instance_admins_on_user_id"
+
+  create_table "instance_billing_gateways", :force => true do |t|
+    t.integer  "instance_id"
+    t.string   "billing_gateway"
+    t.string   "currency",        :default => "USD"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+  end
+
+  add_index "instance_billing_gateways", ["instance_id"], :name => "index_instance_billing_gateways_on_instance_id"
 
   create_table "instance_clients", :force => true do |t|
     t.integer  "client_id"
@@ -416,6 +434,7 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.string   "slug"
     t.integer  "position"
     t.text     "html_content"
+    t.datetime "deleted_at"
   end
 
   add_index "pages", ["theme_id"], :name => "index_pages_on_theme_id"
@@ -507,6 +526,18 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "refunds", :force => true do |t|
+    t.integer  "reference_id"
+    t.string   "reference_type"
+    t.boolean  "success"
+    t.text     "encrypted_response"
+    t.integer  "amount"
+    t.string   "currency"
+    t.datetime "deleted_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
   create_table "reservation_charges", :force => true do |t|
     t.integer  "reservation_id"
     t.integer  "subtotal_amount_cents"
@@ -519,6 +550,7 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.datetime "deleted_at"
     t.integer  "payment_transfer_id"
     t.integer  "service_fee_amount_host_cents",  :default => 0, :null => false
+    t.datetime "refunded_at"
   end
 
   add_index "reservation_charges", ["payment_transfer_id"], :name => "index_reservation_charges_on_payment_transfer_id"
@@ -636,6 +668,7 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.string   "call_to_action"
     t.string   "favicon_image"
     t.text     "homepage_css"
+    t.datetime "deleted_at"
   end
 
   add_index "themes", ["owner_id", "owner_type"], :name => "index_themes_on_owner_id_and_owner_type"
@@ -650,9 +683,10 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
 
   add_index "unit_prices", ["listing_id"], :name => "index_unit_prices_on_listing_id"
 
-  create_table "user_industries", :id => false, :force => true do |t|
-    t.integer "industry_id"
-    t.integer "user_id"
+  create_table "user_industries", :force => true do |t|
+    t.integer  "industry_id"
+    t.integer  "user_id"
+    t.datetime "deleted_at"
   end
 
   add_index "user_industries", ["industry_id", "user_id"], :name => "index_user_industries_on_industry_id_and_user_id"

@@ -1,4 +1,5 @@
 class ReservationCharge < ActiveRecord::Base
+  has_paper_trail
   acts_as_paranoid
 
   # === Associations
@@ -6,7 +7,8 @@ class ReservationCharge < ActiveRecord::Base
   has_many :charge_attempts,
     :class_name => 'Charge',
     :as => :reference,
-    :dependent => :nullify
+    :dependent => :destroy
+
   has_one :instance, through: :reservation
 
   # === Scopes
@@ -68,7 +70,7 @@ class ReservationCharge < ActiveRecord::Base
 
     # Generates a ChargeAttempt with this record as the reference.
     billing_gateway.charge(
-      amount: total_amount_cents,
+      amount_cents: total_amount_cents,
       reference: self
     )
 
@@ -77,6 +79,30 @@ class ReservationCharge < ActiveRecord::Base
   rescue Billing::CreditCardError
     # Needs to be retried at a later time...
     touch(:failed_at)
+  end
+
+  def refund
+    return if !paid?
+    return if refunded?
+    successful_charge = charge_attempts.successful.first
+    return if successful_charge.nil?
+
+    refund = billing_gateway.refund(
+      amount_cents: total_amount_cents,
+      reference: self,
+      charge_response: successful_charge.response
+    )
+
+    if refund.success?
+      touch(:refunded_at)
+      true
+    else
+      false
+    end
+  end
+
+  def refunded?
+    refunded_at.present?
   end
 
   def paid?

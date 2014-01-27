@@ -1,7 +1,7 @@
 class Reservation < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
-
   has_paper_trail
+  acts_as_paranoid
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',
     :manual      => 'manual',
@@ -12,6 +12,7 @@ class Reservation < ActiveRecord::Base
     :paid => 'paid',
     :failed => 'failed',
     :pending => 'pending',
+    :refunded => 'refunded',
     :unknown => 'unknown'
   }
 
@@ -22,11 +23,16 @@ class Reservation < ActiveRecord::Base
   has_one :instance, through: :company
   has_many :user_messages, as: :thread_context
 
-  attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
+  attr_accessible :cancelable, :confirmation_email, :date, :listing_id,
     :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
 
   has_many :reviews, 
     :class_name => 'GuestRating', 
+    :inverse_of => :reservation, 
+    :dependent => :destroy
+
+  has_many :comments_about_guests, 
+    :class_name => 'HostRating', 
     :inverse_of => :reservation, 
     :dependent => :destroy
 
@@ -40,9 +46,10 @@ class Reservation < ActiveRecord::Base
     dependent: :destroy
 
   validates :listing_id, :presence => true
-  validates :periods, :length => { :minimum => 1 }
+  # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is
+  validates :periods, :length => { :minimum => 1 }, :if => lambda { self.deleted_at_changed? && self.periods.with_deleted.count.zero? }
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
-  validates :owner, :presence => true
+  validates :owner_id, :presence => true, :unless => lambda { owner.present? }
   validate :validate_all_dates_available, on: :create, :if => lambda { listing }
   validate :validate_booking_selection, on: :create, :if => lambda { listing }
 
@@ -76,8 +83,6 @@ class Reservation < ActiveRecord::Base
     Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :perform_expiry!, nil), run_at: expiry_time
   end
 
-  acts_as_paranoid
-
   def listing # fetch with deleted listing
     Listing.unscoped { super }
   end
@@ -90,6 +95,8 @@ class Reservation < ActiveRecord::Base
 
   state_machine :state, :initial => :unconfirmed do
     after_transition :unconfirmed => :confirmed, :do => :attempt_payment_capture
+    after_transition :confirmed => :cancelled_by_guest, :do => :schedule_refund
+    after_transition :confirmed => :cancelled_by_host, :do => :schedule_refund
 
     event :confirm do
       transition :unconfirmed => :confirmed
@@ -409,6 +416,28 @@ class Reservation < ActiveRecord::Base
         PAYMENT_STATUSES[:failed]
       end
       save!
+    end
+
+    def attempt_payment_refund(counter = 0)
+      return if !(credit_card_payment? && paid?)
+      reservation_charge = reservation_charges.paid.first
+      if reservation_charge.nil?
+        BackgroundIssueLogger.log_issue("[reservation refund] Unexpected state", "support@desksnear.me", "Reservation id: #{self.id}. It's marked as paid via credit card but reservation_charge has not been created.")
+      else
+        counter = counter + 1
+        if reservation_charge.refund
+          self.update_attribute(:payment_status, PAYMENT_STATUSES[:refunded])
+        elsif counter < 3
+          ReservationRefundJob.perform_later(Time.zone.now + (counter * 6).hours, self.id, counter)
+        else
+          BackgroundIssueLogger.log_issue("[reservation refund] Refund 3 times failed", "support@desksnear.me", "Reservation id: #{self.id}. We did not manage to automatically refund payment")
+        end
+      end
+      true
+    end
+
+    def schedule_refund(transition, counter = 0, run_at = Time.zone.now)
+      ReservationRefundJob.perform_later(run_at, self.id, counter)
     end
 
     def validate_all_dates_available
