@@ -86,6 +86,10 @@ module Utils
 
           load_reservations_for_dnm!
 
+          # === BILLING GATEWAYS CREDENTIALS =====================
+
+          load_stripe_api_keys_for_dnm!
+
           puts "\e[32mUser created with email: #{@user.email} and password: #{@user.password}\e[0m"
         end
       end
@@ -279,6 +283,16 @@ module Utils
             end
           end
         end
+      end
+    end
+
+    def load_stripe_api_keys_for_dnm!
+      dnm_instance = Instance.default_instance
+
+      if dnm_instance
+        dnm_instance.stripe_api_key = 'sk_test_lpr4WQXQdncpXjjX6IJx01W7'
+        dnm_instance.stripe_public_key = 'pk_test_iCGA8nFZdILrI1UtuMOZD2aq'
+        dnm_instance.save!
       end
     end
 
