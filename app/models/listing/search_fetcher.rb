@@ -48,14 +48,19 @@ class Listing
         begin
           _locations = Location.where(id: listings.map(&:location_id).uniq).includes(:company)
           _locations = _locations.near(@midpoint, @radius, :order => 'distance ASC') if @midpoint && @radius
+          store_location_rank = !@filters[:query].blank? && TOP_CITIES.any?{|city| @filters[:query].downcase.include?(city) || (_locations.first.presence && _locations.first.city.try(:downcase) == city) }
           listings.each do |listing|
             _location = _locations.detect { |l| l.id == listing.location_id }
             _location.searched_locations ||= []
             _location.searched_locations << listing
+            if store_location_rank
+              location_index = _locations.index(_location)
+              _locations[location_index].search_rank = [_locations[location_index].search_rank, listing.rank].compact.max
+            end
           end
 
           if @filters[:sort].relevance?
-            # do nothing, already ordered by distance
+            _locations = _locations.sort_by{|l| l.search_rank}.reverse if store_location_rank
           else
             self.class.trace_execution_scoped(['Custom/SearchFetcher/locations/sort_by_price']) do
               _locations.sort_by! {|l| (l.lowest_price || [Money.new(0)])[0] }
