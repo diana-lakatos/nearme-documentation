@@ -11,7 +11,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
                                             thread_recipient: @listing.administrator,
                                             thread_owner: @owner,
                                             author: @owner,
-                                            read: true)
+                                            read_for_recipient: true)
       @listing_administrator = @listing.administrator
 
       @answer_user_message = FactoryGirl.create(:user_message,
@@ -25,7 +25,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
                                                      thread_owner: @owner,
                                                      thread_recipient: @listing2.administrator,
                                                      author: @listing2.administrator,
-                                                     read: true,
+                                                     read_for_owner: true,
                                                      archived_for_owner: true,
                                                      archived_for_recipient: false)
     end
@@ -78,7 +78,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
                                             thread_recipient: @user2,
                                             thread_owner: @user,
                                             author: @user,
-                                            read: true)
+                                            read_for_recipient: true)
 
       @answer_user_message = FactoryGirl.create(:user_message,
                                                    thread_context: @user2,
@@ -91,7 +91,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
                                                      thread_context: @user3,
                                                      thread_recipient: @user3,
                                                      author: @user,
-                                                     read: true,
+                                                     read_for_owner: true,
                                                      archived_for_owner: true,
                                                      archived_for_recipient: false)
     end
@@ -141,7 +141,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
                                             thread_recipient: @reservation.owner,
                                             thread_owner: @host,
                                             author: @host,
-                                            read: true)
+                                            read_for_recipient: true)
 
       @answer_user_message = FactoryGirl.create(:user_message,
                                                    thread_context: @reservation,
@@ -154,7 +154,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
                                                      thread_context: @another_user,
                                                      thread_recipient: @another_user,
                                                      author: @host,
-                                                     read: true,
+                                                     read_for_owner: true,
                                                      archived_for_owner: true,
                                                      archived_for_recipient: false)
     end

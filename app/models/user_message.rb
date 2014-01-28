@@ -25,7 +25,7 @@ class UserMessage < ActiveRecord::Base
 
   scope :by_created, -> {order('created_at desc')}
 
-  after_create :update_recipient_unread_message_counter
+  after_create :update_recipient_unread_message_counter, :mark_as_read_for_author
 
   def thread_scope
     [thread_owner_id, thread_recipient_id, thread_context_id, thread_context_type]
@@ -39,12 +39,22 @@ class UserMessage < ActiveRecord::Base
     replying_to_id.blank?
   end
 
-  def unread?
-    !read?
+  def read_column_for(user)
+    "read_for_#{kind_for(user)}"
+  end
+
+  def read_for?(user)
+    send read_column_for(user)
   end
 
   def unread_for?(user)
-    unread? && user.id != author_id
+    !read_for?(user)
+  end
+
+  def mark_as_read_for!(user)
+    column = read_column_for(user)
+    send("#{column}=", true)
+    save!
   end
 
   def archived_column_for(user)
@@ -130,5 +140,9 @@ class UserMessage < ActiveRecord::Base
 
   def update_recipient_unread_message_counter
     update_unread_message_counter_for(recipient)
+  end
+
+  def mark_as_read_for_author
+    mark_as_read_for!(author) if author != recipient
   end
 end

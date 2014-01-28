@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140123090849) do
+ActiveRecord::Schema.define(:version => 20140128080628) do
 
 
 
@@ -650,11 +650,12 @@ ActiveRecord::Schema.define(:version => 20140123090849) do
     t.integer  "thread_context_id"
     t.string   "thread_context_type"
     t.text     "body"
-    t.boolean  "read"
     t.boolean  "archived_for_owner",     :default => false
     t.boolean  "archived_for_recipient", :default => false
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
+    t.boolean  "read_for_owner",         :default => false
+    t.boolean  "read_for_recipient",     :default => false
   end
 
   create_table "user_relationships", :force => true do |t|
