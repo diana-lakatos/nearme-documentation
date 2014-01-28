@@ -41,6 +41,11 @@ gem 'ri_cal'
 gem 'ffaker'
 gem 'draper'
 
+gem 'i18n-active_record',
+    git: 'git://github.com/svenfuchs/i18n-active_record.git',
+    branch: 'rails-3.2',
+    require: 'i18n/active_record'
+
 gem 'paper_trail'
 
 gem 'rack-rewrite', :require => 'rack/rewrite'

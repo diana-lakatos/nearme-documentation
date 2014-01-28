@@ -14,6 +14,8 @@
     = render 'instance_admin/settings/amenities', type: 'location', f: f
     = render 'instance_admin/settings/amenities', type: 'listing', f: f
 
+  = render 'instance_admin/settings/translations', instance: @instance, translations: @translations, f: f
+
 = render 'instance_admin/shared/modal', heading: "Delete type"
 
 - content_for :domready do
