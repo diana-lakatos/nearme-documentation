@@ -30,6 +30,17 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       end
       assert_redirected_to manage_locations_path
     end
+
+    should "have correct slug" do
+      stub_mixpanel
+      post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).reverse_merge!({:location_type_id => @location_type.id})}
+
+      location = Location.last
+      location.address_components = auckland_address_components
+      location.save
+
+      assert_equal location.slug, "#{location.company.name.parameterize('+')}-auckland"
+    end
   end
 
   context "with location" do
@@ -208,5 +219,8 @@ class Manage::LocationsControllerTest < ActionController::TestCase
     end
   end
 
+  def auckland_address_components
+    {"0"=>{"long_name"=>"Parnell", "short_name"=>"Parnell", "types"=>["sublocality", "political"]}, "1"=>{"long_name"=>"Auckland", "short_name"=>"Auckland", "types"=>["locality", "political"]}, "2"=>{"long_name"=>"Auckland", "short_name"=>"Auckland", "types"=>["administrative_area_level_2", "political"]}, "3"=>{"long_name"=>"Auckland", "short_name"=>"Auckland", "types"=>["administrative_area_level_1", "political"]}, "4"=>{"long_name"=>"New Zealand", "short_name"=>"NZ", "types"=>["country", "political"]}}
+  end
 
 end
