@@ -7,6 +7,7 @@ class StagingEmailInterceptor
     mail.subject  = "(#{mail.to.to_sentence}) - #{mail.subject}"
     mail.to       = mail.to.map(&rewrite)
     mail.cc       = mail.cc.map(&rewrite) if mail.cc
+    mail.bcc      = nil
   end
 end
 
