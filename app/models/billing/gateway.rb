@@ -16,7 +16,7 @@ class Billing::Gateway
   def ingoing_payment(user, currency)
     @user = user
     @currency = currency
-    @processor = @ingoing_processors.find { |processor| processor.currency_supported?(@currency) }.try(:new, @instance).try(:ingoing_payment, @user, @currency)
+    @processor = (@instance.billing_gateway_for(@currency) || @ingoing_processors.find { |processor| processor.currency_supported?(@currency) }).try(:new, @instance).try(:ingoing_payment, @user, @currency)
     self
   end
 
