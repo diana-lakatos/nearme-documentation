@@ -230,6 +230,8 @@ class Search.SearchMixedController extends Search.SearchController
     for k, param of params
       if $.inArray(param["name"], ['lgtype', 'lntype', 'loc', 'lgpricing']) > -1
         filtered_params.push {name: param["name"], value: param["value"]}
+    if @sortValue != 'relevance'
+      filtered_params.push {name: 'sort', value: @sortValue}
 
     # we need to decodeURIComponent, otherwise accents will not be handled correctly. Remove decodeURICompoent if we switch back
     # to window.history.replaceState, but it's *absolutely mandatory* in this case. Removing it now will lead to infiite redirection in IE lte 9
