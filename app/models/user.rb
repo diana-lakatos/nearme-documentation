@@ -409,7 +409,7 @@ class User < ActiveRecord::Base
     UserMessage.for_user(self)
   end
 
-  def listings_in_near(platform_context = nil, results_size = 3, radius_in_km = 100)
+  def listings_in_near(platform_context = nil, results_size = 3, radius_in_km = 100, without_listings_from_cancelled_reservations = false)
     platform_context ||= self.current_platform_context
     return [] if platform_context.nil?
 
@@ -422,9 +422,15 @@ class User < ActiveRecord::Base
       locations_in_near = search_scope.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
     end
 
+    listing_ids_of_cancelled_reservations = self.reservations.cancelled_or_expired_or_rejected.pluck(:listing_id) if without_listings_from_cancelled_reservations
+
     listings = []
     locations_in_near.includes(:listings).each do |location|
-      listings += location.listings.searchable.limit((listings.size - results_size).abs)
+      if without_listings_from_cancelled_reservations and !listing_ids_of_cancelled_reservations.empty?
+        listings += location.listings.searchable.where('listings.id NOT IN (?)', listing_ids_of_cancelled_reservations).limit((listings.size - results_size).abs)
+      else
+        listings += location.listings.searchable.limit((listings.size - results_size).abs)
+      end
       return listings if listings.size >= results_size
     end if locations_in_near
     listings

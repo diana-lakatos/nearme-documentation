@@ -154,6 +154,13 @@ module ApplicationHelper
     end
   end
 
+  def distance_of_time_in_words_or_date_in_time_zone(datetime, time_zone = 'UTC')
+    Time.zone = time_zone
+    result = distance_of_time_in_words_or_date(datetime.in_time_zone(time_zone))
+    Time.zone = 'UTC'
+    result
+  end
+
   def render_olark?
     not current_page?(controller: 'locations/listings', action: 'show')
   end

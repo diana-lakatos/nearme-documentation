@@ -75,7 +75,7 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert_equal subject, mail.subject
     assert mail.html_part.body.include?(@user.first_name)
     assert_equal [@user.email], mail.to
-    assert mail.html_part.body.include?("There are people looking for desks in your area")
+    assert mail.html_part.body.include?("There are people looking for Desks in your area")
     assert_contains 'href="http://custom.domain.com/', mail.html_part.body
     assert_not_contains 'href="http://example.com', mail.html_part.body
     assert_not_contains 'href="/', mail.html_part.body
