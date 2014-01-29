@@ -1,5 +1,6 @@
 class Authentication < ActiveRecord::Base
   class InvalidToken < Exception; end;
+  acts_as_paranoid
 
   attr_accessible :user_id, :provider, :uid, :info, :token, :secret,
     :token_expires_at, :token_expires, :token_expired, :profile_url

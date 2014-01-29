@@ -1,4 +1,5 @@
 class ReservationCharge < ActiveRecord::Base
+  has_paper_trail
   acts_as_paranoid
 
   # === Associations
@@ -6,7 +7,8 @@ class ReservationCharge < ActiveRecord::Base
   has_many :charge_attempts,
     :class_name => 'Charge',
     :as => :reference,
-    :dependent => :nullify
+    :dependent => :destroy
+
   has_one :instance, through: :reservation
 
   # === Scopes
