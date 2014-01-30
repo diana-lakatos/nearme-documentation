@@ -111,7 +111,7 @@
 
     .btn {
       color: #FFFFFF !important;
-      background-color: #024FA3 !important;
+      background-color: {{ platform_context.color_blue }} !important;
       padding: 15px;
       margin-right: 10px;
       margin-bottom: 20px;
@@ -152,7 +152,7 @@
       margin:0 auto;
       padding-left: 20px;
       overflow: hidden;
-      background-color: #000000;
+      background-color: {{ platform_context.color_black }};
     }
 
     .content {
@@ -319,9 +319,9 @@
           <td class="container" bgcolor="#ECECEC">
 
             <div class="content-logo">
-            <table bgcolor="#000000" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <table bgcolor="{{ platform_context.color_black }}" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tr>
-                <td bgcolor="#000000">
+                <td bgcolor="{{ platform_context.color_black }}">
                   <div class='logo-container'>
                     <img class="logo" src="{{ platform_context.logo_url }}">
                   </div>
