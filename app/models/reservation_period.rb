@@ -1,7 +1,6 @@
 class ReservationPeriod < ActiveRecord::Base
-  belongs_to :reservation
-
   acts_as_paranoid
+  belongs_to :reservation
 
   validates :date, :presence => true
   validate :validate_start_end_times

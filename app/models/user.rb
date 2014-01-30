@@ -1,12 +1,11 @@
 class User < ActiveRecord::Base
-  acts_as_paranoid
-
   has_paper_trail :ignore => [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at, 
                               :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token, 
                               :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
                               :bookings_count, :guest_rating_average, :guest_rating_count, :host_rating_average, 
                               :host_rating_count, :avatar_versions_generated_at, :last_geolocated_location_longitude, 
                               :last_geolocated_location_latitude]
+  acts_as_paranoid
 
   extend FriendlyId
   friendly_id :name, use: :slugged
@@ -81,7 +80,8 @@ class User < ActiveRecord::Base
   has_many :host_ratings, class_name: 'HostRating', foreign_key: 'subject_id'
   has_many :guest_ratings, class_name: 'GuestRating', foreign_key: 'subject_id'
 
-  has_many :user_industries
+  has_many :user_industries, :dependent => :destroy
+
   has_many :industries, :through => :user_industries
 
   has_many :mailer_unsubscriptions
@@ -98,6 +98,7 @@ class User < ActiveRecord::Base
   belongs_to :domain
 
   after_destroy :cleanup
+  before_restore :recover_companies
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
@@ -136,6 +137,7 @@ class User < ActiveRecord::Base
 
   extend CarrierWave::SourceProcessing
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
+  skip_callback :commit, :after, :remove_avatar!
 
   validates_presence_of :name
 
@@ -476,6 +478,18 @@ class User < ActiveRecord::Base
     end
   end
 
+  def recover_companies
+    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?',  self.deleted_at, self.deleted_at + 30.seconds).each do |company|
+      begin
+        if company.restore(:recursive => true)
+          raise "Company (id=#{company.id}) could not be recovered along with User (id=#{self.id})"
+        end
+      rescue
+      end
+    end
+
+  end
+  
   # Returns a temporary token to be used as the login token parameter
   # in URLs to automatically log the user in.
   def temporary_token(expires_at = 48.hours.from_now)

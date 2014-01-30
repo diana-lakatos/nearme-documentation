@@ -1007,7 +1007,7 @@ section.search section#results.mixed {
       .location {
         position: relative;
         border-top: 4px solid $gray60;
-        margin-top: 10px;
+        margin-top: 5px;
 
         .header {
           position: relative;
@@ -1128,6 +1128,7 @@ section.search section#results.mixed {
           .row-fluid {
             background-color: $gray230;
             cursor: pointer;
+            margin-bottom: 5px;
 
             .reserve-listing {
               text-align: right;
