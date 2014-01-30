@@ -20,7 +20,20 @@ class PlatformContextDrop < BaseDrop
 
   def host
     "http://#{platform_context_decorator.host}"
+  end
 
+  def color_black
+    theme_color('black', '#000000')
+  end
+
+  def color_blue
+    theme_color('blue', '#024FA3')
+  end
+
+  private
+
+  def theme_color(color, default_color)
+    @platform_context_decorator.theme.hex_color(color).presence || default_color
   end
 
 end
