@@ -14,6 +14,8 @@ class RegistrationsController < Devise::RegistrationsController
   after_filter :render_or_redirect_after_create, :only => [:create]
   before_filter :redirect_to_edit_profile_if_password_set, :only => [:set_password]
 
+  skip_before_filter :redirect_if_marketplace_password_protected, :only => [:store_geolocated_location, :store_google_analytics_id]
+
   def new
     super unless already_signed_in?
   end
