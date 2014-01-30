@@ -1,5 +1,6 @@
 class InstanceAdmin < ActiveRecord::Base
   has_paper_trail
+  acts_as_paranoid
 
   attr_accessible :instance_id, :user_id, :instance_admin_role_id, :instance_owner
 
