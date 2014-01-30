@@ -129,6 +129,12 @@
       border: none;
     }
   }
+
+  &.gray {
+    border: 1px solid $gray230;
+    color: #b8b8b8;
+    margin-top: 20px;
+  }
 }
 
 .box-inverse {
