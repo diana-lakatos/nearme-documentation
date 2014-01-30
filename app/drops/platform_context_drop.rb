@@ -23,17 +23,17 @@ class PlatformContextDrop < BaseDrop
   end
 
   def color_black
-    theme_color('black', '#000000')
+    theme_color('black')
   end
 
   def color_blue
-    theme_color('blue', '#024FA3')
+    theme_color('blue')
   end
 
   private
 
-  def theme_color(color, default_color)
-    @platform_context_decorator.theme.hex_color(color).presence || default_color
+  def theme_color(color)
+    @platform_context_decorator.theme.hex_color(color).presence || Theme.hexify(Theme.default_value_for_color(color))
   end
 
 end
