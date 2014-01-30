@@ -41,6 +41,10 @@ module Utils
 
           load_reservations_for_dnm!
 
+          # === BILLING GATEWAYS CREDENTIALS =====================
+
+          load_stripe_api_keys_for_dnm!
+
           puts "\e[32mUser created with email: #{@user.email} and password: #{@user.password}\e[0m"
         end
       end

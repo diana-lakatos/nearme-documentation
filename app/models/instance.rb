@@ -48,14 +48,6 @@ class Instance < ActiveRecord::Base
 
   PRICING_OPTIONS = %w(free hourly daily weekly monthly)
 
-  def custom_stripe_api_key
-    self.stripe_api_key.presence || Stripe.api_key
-  end
-
-  def custom_stripe_public_key
-    self.stripe_public_key.presence || DesksnearMe::Application.config.stripe_public_key
-  end
-
   def is_desksnearme?
     self.default_instance?
   end
@@ -95,6 +87,11 @@ class Instance < ActiveRecord::Base
     self.paypal_client_id.present? &&
     self.paypal_client_secret.present? &&
     self.paypal_app_id.present?
+  end
+
+  def stripe_supported?
+    self.stripe_api_key.present? &&
+    self.stripe_public_key.present?
   end
 
 

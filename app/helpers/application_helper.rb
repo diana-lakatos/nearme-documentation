@@ -54,10 +54,6 @@ module ApplicationHelper
     true
   end
 
-  def stripe_public_key
-    DesksnearMe::Application.config.stripe_public_key
-  end
-
   def truncate_with_ellipsis(body, length, html_options = {})
 
     body ||= ''
