@@ -3,8 +3,9 @@ class Instance < ActiveRecord::Base
   attr_accessible :name, :domains_attributes, :theme_attributes, :location_types_attributes, :listing_types_attributes,
                   :service_fee_guest_percent, :service_fee_host_percent, :bookable_noun, :lessor, :lessee,
                   :listing_amenity_types_attributes, :location_amenity_types_attributes, :skip_company, :pricing_options,
-                  :stripe_api_key, :stripe_public_key, :paypal_username, :paypal_password, :paypal_signature, :paypal_app_id, 
-                  :paypal_client_id, :paypal_client_secret, :balanced_api_key, :translations_attributes
+                  :stripe_api_key, :stripe_public_key, :paypal_username, :paypal_password, :paypal_signature, :paypal_app_id,
+                  :paypal_client_id, :paypal_client_secret, :balanced_api_key, :instance_billing_gateways_attributes,
+                  :translations_attributes
 
   attr_encrypted :paypal_username, :paypal_password, :paypal_signature, :paypal_app_id, :stripe_api_key,
     :paypal_client_id, :paypal_client_secret, :balanced_api_key, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
@@ -27,6 +28,7 @@ class Instance < ActiveRecord::Base
   has_many :reservations, :as => :platform_context_detail, :dependent => :destroy
   has_many :reservation_charges, :through => :reservations
   has_many :translations, :dependent => :destroy
+  has_many :instance_billing_gateways, :dependent => :destroy
 
   serialize :pricing_options, Hash
 
@@ -42,6 +44,7 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :location_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :listing_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :translations, allow_destroy: true, reject_if: proc { |params| params[:value].blank? }
+  accepts_nested_attributes_for :instance_billing_gateways, allow_destroy: true, reject_if: proc { |params| params[:billing_gateway].blank? }
 
   PRICING_OPTIONS = %w(free hourly daily weekly monthly)
 
@@ -97,6 +100,14 @@ class Instance < ActiveRecord::Base
 
   def to_liquid
     InstanceDrop.new(self)
+  end
+
+  def billing_gateway_for(currency)
+    processor_name = self.instance_billing_gateways.where(currency: currency).first
+    if processor_name
+      processor = "Billing::Gateway::#{processor_name.billing_gateway.capitalize}Processor".constantize
+      processor if processor.instance_supported?(self) && processor.currency_supported?(currency)
+    end
   end
 
   private
