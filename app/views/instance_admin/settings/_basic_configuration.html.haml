@@ -2,15 +2,19 @@
   %legend Basic Configuration
   = f.input :name, required: false
   = f.input :service_fee_guest_percent, label: 'Service Fee (%)'
-  = f.input :stripe_api_key, required: false
-  = f.input :stripe_public_key, required: false
   = f.input :paypal_username, required: false, :input_html => { :autocomplete => "off" }
   = f.input :paypal_password, required: false, :input_html => { :type => 'text', :value => f.object.paypal_password, :autocomplete => "off" }
   = f.input :paypal_signature, required: false, :input_html => { :autocomplete => "off" }
   = f.input :paypal_app_id, required: false, :input_html => { :autocomplete => "off" }
   = f.input :paypal_client_id, required: false, :input_html => { :autocomplete => "off" }
   = f.input :paypal_client_secret, required: false, :input_html => { :autocomplete => "off" }
+  = f.input :stripe_api_key, required: false
+  = f.input :stripe_public_key, required: false
   = f.input :balanced_api_key, required: false
+  = f.fields_for :instance_billing_gateways, wrapper: false do |f_bg|
+    = f_bg.input :currency, as: :hidden
+    %label= "Payment gateway for #{f_bg.object.currency} transactions"
+    = f_bg.collection_radio_buttons :billing_gateway, [['paypal', 'PayPal'], ['stripe', 'Stripe'], ['balanced', 'Balanced']], :first, :last, item_wrapper_class: "billing-gateway"
   .control-group
     = f.label :skip_company
     .switch-wrapper
