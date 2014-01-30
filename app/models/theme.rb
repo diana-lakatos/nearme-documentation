@@ -161,6 +161,10 @@ class Theme < ActiveRecord::Base
     color.to_s.delete('#')
   end
 
+  def self.default_value_for_color(color)
+    COLORS_DEFAULT_VALUES[COLORS.index(color)]
+  end
+
   private
 
   def unhexify_colors

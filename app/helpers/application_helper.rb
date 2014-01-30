@@ -54,10 +54,6 @@ module ApplicationHelper
     true
   end
 
-  def stripe_public_key
-    DesksnearMe::Application.config.stripe_public_key
-  end
-
   def truncate_with_ellipsis(body, length, html_options = {})
 
     body ||= ''
@@ -137,6 +133,13 @@ module ApplicationHelper
       section_name, 
       controller_name, 
       "#{controller_name}-#{params[:action]}"
+    ].compact.join(' ')
+  end
+
+  def dnm_page_class
+    [
+      content_for?(:manage_navbar) ? 'with-sub-navbar' : nil,
+      no_navbar? ? 'no-navbar' : nil
     ].compact.join(' ')
   end
 
