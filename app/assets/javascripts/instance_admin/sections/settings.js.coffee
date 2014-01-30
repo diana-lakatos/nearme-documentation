@@ -13,3 +13,8 @@ class @InstanceAdmin.SettingsController
         $(this).next().val('true')
       else
         $(this).next().val('false')
+
+    settings_container = $('form.instance_settings')
+    settings_container.find('input#instance_password_protected').on 'change', ->
+      if !$(this).is(':checked')
+        settings_container.find('input#instance_marketplace_password').val('')

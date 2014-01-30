@@ -314,6 +314,7 @@ ActiveRecord::Schema.define(:version => 20140127064902) do
     t.string   "encrypted_paypal_client_secret"
     t.string   "encrypted_stripe_api_key"
     t.string   "encrypted_balanced_api_key"
+    t.string   "encrypted_marketplace_password"
   end
 
   create_table "listing_types", :force => true do |t|

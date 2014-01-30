@@ -23,6 +23,14 @@ module LayoutHelper
     @no_footer = true
   end
 
+  def no_navbar?
+    @no_navbar
+  end
+
+  def no_navbar!
+    @no_navbar = true
+  end
+
   def no_listing_buttons?
     @no_listing_buttons
   end

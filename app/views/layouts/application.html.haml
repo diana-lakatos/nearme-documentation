@@ -11,7 +11,8 @@
     %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
     = yield(:meta)
     = csrf_meta_tag
-    = tag :meta, :name => "stripe-key", :content => platform_context.custom_stripe_public_key
+    - if !platform_context.stripe_public_key.blank?
+      = tag :meta, :name => "stripe-key", :content => platform_context.stripe_public_key
     = render 'layouts/favicon'
 
     = stylesheet_link_tag "fonts"
@@ -44,9 +45,9 @@
     .dnm-page-body{:class => "#{'main-page' if current_page?(root_url)}" }
       = render 'shared/render_flash'
       .content-wrapper
-        .dnm-page{:class => content_for?(:manage_navbar) ? 'with-sub-navbar' : ''}
+        .dnm-page{class: dnm_page_class}
           .container-fluid
-            = render 'layouts/navbar'
+            = render 'layouts/navbar' unless no_navbar?
 
           %section#content{class: section_class(@section_name)}
             = render 'layouts/hero'
@@ -59,6 +60,6 @@
 
             = yield if render_content_outside_container?
         - unless no_footer?
-          .footer-push
+          .footer-push{class: "footer_#{section_class(@section_name)}"}
 
     = render 'layouts/scripts'

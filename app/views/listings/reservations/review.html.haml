@@ -68,7 +68,11 @@
             %p.confirm-reservations= "This #{platform_context.lessor} manually confirms all bookings. Your card will not be charged until the booking is confirmed."
 
         - elsif @reservation_request.manual_payment?
-          %p You will make the payment in person upon arrival
+
+          %h2 Payment
+
+          .box.gray= t('reservations.payment_in_person')
+          %p= "This #{platform_context.lessor} manually confirms all bookings"
 
         = f.button :submit, 'Request Booking', disable_with: "Booking..."
 

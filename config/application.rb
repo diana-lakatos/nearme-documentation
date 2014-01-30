@@ -72,11 +72,6 @@ module DesksnearMe
     config.assets.enabled = true
     config.assets.digest = true
 
-    # Stripe payment gateway setup as Test environment.
-    # Override in relevant environment config
-    config.stripe_api_key = "sk_test_lpr4WQXQdncpXjjX6IJx01W7"
-    config.stripe_public_key = "pk_test_iCGA8nFZdILrI1UtuMOZD2aq"
-
     # Development/Test specific keys/secrets for social properties.
     config.linkedin_key = "4q9xfgn60bik"
     config.linkedin_secret = "lRmKVrc0RPpfKDCV"

@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
   before_filter :register_platform_context_as_lookup_context_detail
   before_filter :redirect_if_domain_not_valid
   before_filter :set_locales_backend
+  before_filter :redirect_if_marketplace_password_protected
   before_filter :set_raygun_custom_data
   before_filter :filter_out_token
 
@@ -260,6 +261,13 @@ class ApplicationController < ActionController::Base
 
   def set_locales_backend
     I18n.backend.backends.first.instance_id = platform_context.instance.id
+  end
+
+  def redirect_if_marketplace_password_protected
+    if platform_context.instance.password_protected? && !session["authenticated_in_marketplace_#{platform_context.instance.id}".to_sym]
+      session[:marketplace_return_to] = request.path
+      redirect_to new_marketplace_session_path
+    end
   end
 
   def redirect_to_set_password_unless_unnecessary
