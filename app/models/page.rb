@@ -1,4 +1,5 @@
 class Page < ActiveRecord::Base
+  acts_as_paranoid
   class NotFound < ActiveRecord::RecordNotFound; end
 
   include RankedModel
@@ -8,6 +9,7 @@ class Page < ActiveRecord::Base
   friendly_id :path, use: :slugged
 
   mount_uploader :hero_image, HeroImageUploader
+  skip_callback :commit, :after, :remove_hero_image!
 
   belongs_to :theme
 
@@ -22,9 +24,9 @@ class Page < ActiveRecord::Base
   private 
 
   def convert_to_html
-      self.html_content = RDiscount.new(self.content).to_html
-      rel_no_follow_adder = RelNoFollowAdder.new({:skip_domains => Domain.pluck(:name)})
-      self.html_content = rel_no_follow_adder.modify(self.html_content)
+    self.html_content = RDiscount.new(self.content).to_html
+    rel_no_follow_adder = RelNoFollowAdder.new({:skip_domains => Domain.pluck(:name)})
+    self.html_content = rel_no_follow_adder.modify(self.html_content)
   end
 
 end

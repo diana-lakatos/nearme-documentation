@@ -1,9 +1,9 @@
 class Listing < ActiveRecord::Base
-  class NotFound < ActiveRecord::RecordNotFound; end
   has_paper_trail
+  acts_as_paranoid
+  class NotFound < ActiveRecord::RecordNotFound; end
   # == Associations
-  has_many :reservations,
-    dependent: :destroy
+  has_many :reservations, dependent: :destroy
 
   has_many :photos, dependent: :destroy do
     def thumb
@@ -91,8 +91,6 @@ class Listing < ActiveRecord::Base
     # Mark price fields as attr-accessible
     attr_accessible "#{price}_price_cents", "#{price}_price"
   end
-
-  acts_as_paranoid
 
   def location
     Location.unscoped { super }

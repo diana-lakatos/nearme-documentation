@@ -1,5 +1,6 @@
 class Domain < ActiveRecord::Base
   has_paper_trail
+  acts_as_paranoid
   attr_accessible :name, :target, :target_id, :target_type
 
   belongs_to :target, :polymorphic => true

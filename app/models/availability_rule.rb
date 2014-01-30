@@ -1,4 +1,5 @@
 class AvailabilityRule < ActiveRecord::Base
+  acts_as_paranoid
   attr_accessible :day, :close_hour, :close_minute, :open_hour, :open_minute, :open_time, :close_time
 
   # === Associations
