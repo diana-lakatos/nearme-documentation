@@ -100,6 +100,8 @@ en:
     locations:
       no_listings: "There aren't any listings at that location. Check out some other %{bookable_noun_plural}!"
       listing_removed: "This listing has been removed. Displaying other listings near %{address}."
+    marketplace_sessions:
+      wrong_password: 'Wrong password!'
     manage:
       users:
         user_deleted: "You've removed %{name} from %{company_name}"
@@ -139,7 +141,7 @@ en:
       message_archived: "Your message was archived!"
     partner_inquiries:
       inquiry_added: "Thanks, we'll be in touch!"
-      inquiry_not_added: "Please provide a name, company and valid email address."
+      inquiry_not_added: "Please provide a name, company and valid email address." 
     instance_admin:
       theme:
         theme_updated_successfully: 'Theme updated.'
@@ -154,7 +156,7 @@ en:
         location_type_deleted: 'Location type deleted.'
         listing_type_added: 'New listing type added.'
         listing_type_not_added: 'Could not add new listing type.'
-        listing_type_deleted: 'Listing type deleted.'
+        listing_type_deleted: 'Listing type deleted.' 
   simple_form:
     labels:
       theme:

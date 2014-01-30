@@ -47,6 +47,8 @@ DesksnearMe::Application.routes.draw do
     resources :pages
   end
 
+  resources :marketplace_sessions, only: [:new, :create]
+
   namespace :instance_admin do
     match '/', :to => "base#index"
     resources :analytics, :only => [:index]
