@@ -20,8 +20,8 @@
           %article.location.listing
             %h2
               The location
-              - if current_user.try(:admin)
-                = link_to login_as_admin_user_path(@location.creator, :return_to => edit_manage_location_path(@location)), :method => :post, :confirm => "This will log you out and re-log you in as location creator" do
+              - if current_user.try(:admin) && @location.administrator.present?
+                = link_to login_as_admin_user_path(@location.administrator, :return_to => edit_manage_location_path(@location)), :method => :post, :confirm => "This will log you out and re-log you in as location administrator." do
                   %span.ico-edit
             %p= @location.description
 
