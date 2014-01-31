@@ -45,4 +45,29 @@ namespace :reprocess do
     end
   end
 
+  desc "Regenerate all slugs where we use friendly_id"
+  task :slugs => :environment do
+    [Location, Page, User].each do |model|
+      puts '#'*80
+      puts "Processing #{model}"
+      updated_objects = 0
+
+      model.all.each do |obj|
+        begin
+          old_slug = obj.slug
+          obj.save!
+          if old_slug != obj.reload.slug
+            updated_objects += 1
+            puts "#{model}##{obj.id}: #{old_slug} -> #{obj.slug}"
+          end
+        rescue
+          puts "Reprocessing #{model}##{obj.id} failed: #{$!.inspect}"
+        end
+      end
+
+      puts "Regenerated #{updated_objects} slugs successfully."
+      puts
+    end
+  end
+
 end
