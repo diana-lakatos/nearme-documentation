@@ -114,5 +114,16 @@ module DesksnearMe
 
     config.silence_raygun_notification = false
 
+    config.paypal_username = nil
+    config.paypal_password = nil
+    config.paypal_signature = nil
+    config.paypal_client_id = nil
+    config.paypal_client_secret = nil
+    config.paypal_app_id = nil
+
+    config.stripe_api_key = nil
+    config.stripe_public_key = nil
+
+    config.balanced_api_key = nil
   end
 end

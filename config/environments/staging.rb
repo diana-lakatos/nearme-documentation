@@ -47,6 +47,18 @@ DesksnearMe::Application.configure do
   config.instagram_key = "f9aee2b90cc5493bb60f777fee06af52"
   config.instagram_secret = "8b20585b0edd47e7b5ed090616c24d0b"
 
+  config.paypal_username = nil
+  config.paypal_password = nil
+  config.paypal_signature = nil
+  config.paypal_client_id = nil
+  config.paypal_client_secret = nil
+  config.paypal_app_id = nil
+
+  config.stripe_api_key = "sk_test_lpr4WQXQdncpXjjX6IJx01W7"
+  config.stripe_public_key = "pk_test_iCGA8nFZdILrI1UtuMOZD2aq"
+
+  config.balanced_api_key = nil
+
   # Protect this environment with a simple Basic authentication dialog
   config.middleware.insert_before(Rack::Lock, "Rack::Auth::Basic") do |username, password|
     username == 'desksnearme' && password == 'sharethem'
