@@ -156,4 +156,4 @@ end
 
 FactoryGirl.reload
 DatabaseCleaner.clean
-
+Utils::EnLocalesSeeder.new.go!
