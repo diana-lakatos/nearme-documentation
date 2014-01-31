@@ -20,6 +20,10 @@ html, body {
     &.with-sub-navbar {
       padding-top: 59px;
     }
+
+    &.no-navbar {
+      padding-top: 0;
+    }
   }
 
   .footer-push {

@@ -5,40 +5,32 @@ class InstanceTest < ActiveSupport::TestCase
   setup do
     @instance = Instance.default_instance
   end
-  context 'stripe_api_key' do
+
+  context 'stripe supported' do
+
     setup do
-      @default_key = Stripe.api_key = "testkey"
+      @instance.stripe_api_key = 'a'
+      @instance.stripe_public_key = 'b'
     end
 
-    should 'fallback to env default' do
-      assert_equal @default_key, @instance.custom_stripe_api_key
+    should 'support stripe if has all necessary details' do
+      assert @instance.stripe_supported?
     end
 
-    should 'use instance key' do
-      key = "mytestkey"
-      @instance.update_attribute(:stripe_api_key, key)
-      assert_equal key, @instance.custom_stripe_api_key
-    end
-  end
-
-  context 'stripe_public_key' do
-    setup do
-      @default_key = DesksnearMe::Application.config.stripe_public_key = "testkey"
+    should 'not support stripe without api key' do
+      @instance.stripe_api_key = ''
+      refute @instance.stripe_supported?
     end
 
-    should 'fallback to env default' do
-      assert_equal @default_key, @instance.custom_stripe_public_key
+    should 'not support stripe without public key' do
+      @instance.stripe_public_key = ''
+      refute @instance.stripe_supported?
     end
 
-    should 'use instance key' do
-      key = "mytestkey"
-      @instance.update_attribute(:stripe_public_key, key)
-
-      assert_equal key, @instance.custom_stripe_public_key
-    end
   end
 
   context 'paypal supported' do
+
     setup do
       @instance.paypal_username = 'a'
       @instance.paypal_password = 'b'

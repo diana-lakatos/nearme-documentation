@@ -6,7 +6,7 @@ class PlatformContextDecorator
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :pages, :logo_image,
     :favicon_image, :homepage_content, :call_to_action, :to => :theme
 
-  delegate :custom_stripe_public_key, :bookable_noun, :lessor, :lessee, :name, :is_desksnearme?, :to => :instance
+  delegate :stripe_public_key, :bookable_noun, :lessor, :lessee, :name, :is_desksnearme?, :to => :instance
 
   def initialize(platform_context)
     @platform_context = platform_context

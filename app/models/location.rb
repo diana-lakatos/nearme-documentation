@@ -13,7 +13,7 @@ class Location < ActiveRecord::Base
     :administrator_id, :name
   attr_accessor :local_geocoding # set this to true in js
   attr_accessor :name_required
-  attr_accessor :searched_locations
+  attr_accessor :searched_locations, :search_rank
 
   liquid_methods :name
 

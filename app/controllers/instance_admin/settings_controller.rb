@@ -1,5 +1,5 @@
 class InstanceAdmin::SettingsController < InstanceAdmin::BaseController
-  before_filter :find_instance
+  before_filter :find_instance, :find_instance_translations
 
   def show
     @instance
@@ -7,6 +7,8 @@ class InstanceAdmin::SettingsController < InstanceAdmin::BaseController
   end
 
   def update
+    @instance.password_protected = !params[:instance][:password_protected].to_i.zero?
+    params[:instance][:marketplace_password] = '' if !@instance.password_protected
     if @instance.update_attributes(params[:instance])
       flash[:success] = t('flash_messages.instance_admin.settings.settings_updated')
       find_or_build_billing_gateway_for_usd
@@ -25,6 +27,10 @@ class InstanceAdmin::SettingsController < InstanceAdmin::BaseController
 
   def find_instance
     @instance = platform_context.instance
+  end
+
+  def find_instance_translations
+    @translations = @instance.translations
   end
 
 end

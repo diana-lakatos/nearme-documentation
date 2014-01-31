@@ -116,7 +116,7 @@ class ReservationMailer < InstanceMailer
   end
 
   def set_bcc_email
-    @bcc = [@platform_context_decorator.contact_email, @listing.location.email].uniq if @listing.location.email != @listing.administrator.email
+    @bcc = @listing.location.email if @listing.location.email != @listing.administrator.try(:email)
   end
 
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140126160511) do
+ActiveRecord::Schema.define(:version => 20140128080628) do
 
 
 
@@ -328,6 +328,7 @@ ActiveRecord::Schema.define(:version => 20140126160511) do
     t.string   "encrypted_paypal_client_secret"
     t.string   "encrypted_stripe_api_key"
     t.string   "encrypted_balanced_api_key"
+    t.string   "encrypted_marketplace_password"
   end
 
   create_table "listing_types", :force => true do |t|
@@ -673,6 +674,19 @@ ActiveRecord::Schema.define(:version => 20140126160511) do
 
   add_index "themes", ["owner_id", "owner_type"], :name => "index_themes_on_owner_id_and_owner_type"
 
+  create_table "translations", :force => true do |t|
+    t.string   "locale"
+    t.string   "key"
+    t.text     "value"
+    t.text     "interpolations"
+    t.boolean  "is_proc",        :default => false
+    t.integer  "instance_id"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
+
+  add_index "translations", ["instance_id"], :name => "index_translations_on_instance_id"
+
   create_table "unit_prices", :force => true do |t|
     t.integer  "listing_id"
     t.integer  "price_cents"
@@ -698,11 +712,12 @@ ActiveRecord::Schema.define(:version => 20140126160511) do
     t.integer  "thread_context_id"
     t.string   "thread_context_type"
     t.text     "body"
-    t.boolean  "read"
     t.boolean  "archived_for_owner",     :default => false
     t.boolean  "archived_for_recipient", :default => false
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
+    t.boolean  "read_for_owner",         :default => false
+    t.boolean  "read_for_recipient",     :default => false
   end
 
   create_table "user_relationships", :force => true do |t|

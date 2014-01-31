@@ -3,7 +3,7 @@ class Billing::Gateway::StripeProcessor < Billing::Gateway::BaseProcessor
 
   def initialize(*args)
     super(*args)
-    @api_key = @instance.custom_stripe_api_key
+    @api_key = @instance.stripe_api_key
   end
 
   def self.currency_supported?(currency)
@@ -11,7 +11,7 @@ class Billing::Gateway::StripeProcessor < Billing::Gateway::BaseProcessor
   end
 
   def self.instance_supported?(instance)
-    true
+    instance.stripe_supported?
   end
 
   def store_credit_card(credit_card)
