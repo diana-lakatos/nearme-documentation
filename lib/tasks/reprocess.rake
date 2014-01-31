@@ -55,7 +55,10 @@ namespace :reprocess do
       model.all.each do |obj|
         begin
           old_slug = obj.slug
-          obj.save!
+          unless obj.save
+            obj.send(:set_slug)
+            obj.save(validate: false)
+          end
           if old_slug != obj.reload.slug
             updated_objects += 1
             puts "#{model}##{obj.id}: #{old_slug} -> #{obj.slug}"
