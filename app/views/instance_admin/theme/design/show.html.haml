@@ -1,28 +1,44 @@
 = simple_form_for @theme, :url => instance_admin_theme_design_path, :html => { :multipart => true } do |f|
   %fieldset
     %legend Colors
-    - Theme::COLORS.each do |color|
+    - Theme::COLORS.each_slice(2) do |color|
       .row-fluid
-        .controls.controls-row.span6
-          = f.input "color_#{color}", :wrapper => :prepend do
+        .controls.controls-row
+          = f.input "color_#{color[0]}", wrapper_html: {class: 'input-prepend span6'} do
             %span.add-on #
-            = f.input_field "color_#{color}", class: 'input-block-level'
+            = f.input_field "color_#{color[0]}", class: 'input-block-level'
+          - if color[1]
+            = f.input "color_#{color[1]}", wrapper_html: {class: 'input-prepend span6'} do
+              %span.add-on #
+              = f.input_field "color_#{color[1]}", class: 'input-block-level'
 
     %hr
 
     %legend Visuals
-    - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each do |image_attr|
-      .control-group
-        = f.label image_attr
-        .controls
-          = f.file_field image_attr
-          - if f.object.send("remote_#{image_attr}_url")
-            <br />Or copy from instance's theme:<br />
-            = f.text_field "remote_#{image_attr}_url" 
+    - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each_slice(2) do |image_attr|
+      .row-fluid
+        .controls.controls-row
+          .control-group.span6
+            = f.label image_attr[0]
+            .controls
+              = f.file_field image_attr[0]
+              - if f.object.send("remote_#{image_attr[0]}_url")
+                <br />Or copy from instance's theme:<br />
+                = f.text_field "remote_#{image_attr[0]}_url"
+          -if image_attr[1]
+            .control-group.span6
+              = f.label image_attr[1]
+              .controls
+                = f.file_field image_attr[1]
+                - if f.object.send("remote_#{image_attr[1]}_url")
+                  <br />Or copy from instance's theme:<br />
+                  = f.text_field "remote_#{image_attr[1]}_url"
 
     %hr
 
     %legend Call to action
-    = f.input :call_to_action, :placeholder => 'Find out more'
-    
+    .row-fluid
+      .controls.controls-row
+        = f.input :call_to_action, label: 'CTA Button Text', :placeholder => 'Find out more', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
     = f.button :submit, 'Save', class: 'btn btn-primary pull-right'

@@ -55,4 +55,4 @@
               = check_box_tag "instance[pricing_options][#{pricing_option}]", '1', f.object.pricing_options[pricing_option].to_s == '1'
               #{pricing_option.capitalize}
 
-  = f.button :submit, 'Save', class: 'btn-primary pull-right'
+  = f.button :submit, 'Save', class: 'btn btn-primary pull-right'

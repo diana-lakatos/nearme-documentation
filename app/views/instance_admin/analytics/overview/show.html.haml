@@ -1,4 +1,4 @@
-%h2 Revenue
+%legend Revenue
 .box
   - if @last_month_revenue.inject(0) { |sum, revenue| sum += revenue.total_amount.to_f; sum }.zero?
     %p.no_data No revenue yet.
@@ -6,7 +6,7 @@
     .chart
       %canvas#revenue_chart
 
-%h2 Bookings
+%legend Bookings
 .box
   - if @last_month_bookings.count.zero?
     %p.no_data No bookings yet.
@@ -14,7 +14,7 @@
     .chart
       %canvas#bookings_chart
 
-%h2 Listings
+%legend Listings
 .box
   - if @last_month_listings.inject(0) { |sum, listing| sum += listing.listings_count.to_f; sum }.zero?
     %p.no_data Your listings haven't been visited yet.

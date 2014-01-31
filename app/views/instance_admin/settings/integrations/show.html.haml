@@ -35,5 +35,5 @@
           = f_bg.input :currency, as: :hidden
           %label= "Payment gateway for #{f_bg.object.currency} transactions"
           = f_bg.collection_radio_buttons :billing_gateway, [['paypal', 'PayPal'], ['stripe', 'Stripe'], ['balanced', 'Balanced']], :first, :last, item_wrapper_class: "billing-gateway"
-        
-    = f.button :submit, 'Save', class: 'btn-primary pull-right'
+
+    = f.button :submit, 'Save', class: 'btn btn-primary pull-right'

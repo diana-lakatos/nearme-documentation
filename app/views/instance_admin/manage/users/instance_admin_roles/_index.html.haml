@@ -1,7 +1,7 @@
 #instance_admin_roles
   %legend
     Roles
-  %table.table.table-striped
+  %table.table
     %thead
       - permissions = %w(Analytics Settings Theme Manage)
       %tr
@@ -21,4 +21,5 @@
                 = image_tag('spinner_mini.gif')
           %td
             - if instance_admin_role.instance_id.present?
-              = link_to "Delete", instance_admin_manage_users_instance_admin_role_path(instance_admin_role), :method => :delete, :class => "btn btn-danger", :confirm => 'Are you sure?'
+              = link_to instance_admin_manage_users_instance_admin_role_path(instance_admin_role), :method => :delete, :confirm => 'Are you sure?' do
+                .fa.fa-trash-o.fa-2x.inline-form-icon

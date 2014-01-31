@@ -27,21 +27,29 @@ body.login {
 
 
 /**********/
+/* Legend */
+/**********/
+
+h3 {
+  margin: 0px;
+  border: none;
+  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+/**********/
 /* Tables */
 /**********/
 
 .table {
-
   tr {
-
     th {
       border-top: none;
       color: $light_text_color;
       font-weight: normal;
     }
-
     td {
-
     }
   }
 }
@@ -78,22 +86,23 @@ form{
     color: $light_text_color;
   }
 
-    fieldset {
-      .control-group {
-        input[type="text"],
-        input[type="tel"],
-        input[type="url"],
-        input[type="email"],
-        input[type="number"] {
-          @include box-sizing(border-box);
-          padding-left: 15px;
-          margin: 0px;
-          height: 40px;
+  fieldset {
+    .control-group {
+      input[type="text"],
+      input[type="tel"],
+      input[type="url"],
+      input[type="email"],
+      input[type="number"] {
+        @include box-sizing(border-box);
+        padding-left: 15px;
+        margin: 0px;
+        height: 40px;
       }
     }
   }
 
   .btn-form-field {
+    margin-bottom: 10px;
     font-family: 'Gotham A', 'Gotham B';
     height: 40px;
     background-color: $tab_background_color;
@@ -122,6 +131,11 @@ form{
   .error-block {
     color: $error_color;
   }
+
+  .input-block {
+    margin-left: 0px;
+    width: 415px;
+  }
 }
 
 .inline-form-icon {
@@ -139,12 +153,13 @@ form{
   margin-left: 20px;
 }
 
-.btn-primary {
+.btn {
   font-family: 'Gotham A', 'Gotham B';
   height: 40px;
   padding-left: 40px;
   padding-right: 40px;
-  background-color: $highlight_color;
+  margin-left: 10px;
+  background-color: $form_field_outline_color;
   background-image: none;
   border: none;
   text-shadow: none;
@@ -152,13 +167,23 @@ form{
   line-height: 32px;
   @include box-shadow(none);
   @include box-sizing(border-box);
-  &:hover, &:active, &:focus { background-color: lighten($highlight_color, 10%); }
-}
+  &:hover, &:active, &:focus { background-color: darken($form_field_outline_color, 10%); }
 
+  &.btn-primary {
+    background-color: $highlight_color;
+    &:hover, &:active, &:focus { background-color: lighten($highlight_color, 10%); }
+  }
+
+  &.btn-danger {
+    background-color: $red;
+    &:hover, &:active, &:focus { background-color: lighten($red, 10%); }
+  }
+}
 
 /**************/
 /*** Flash ****/
 /**************/
+
 .alert {
   margin-top: 24px;
 
@@ -166,6 +191,13 @@ form{
     margin: 0px;
     text-align: center;
   }
+}
+
+/**************/
+/*** Misc. ****/
+/**************/
+.box {
+  margin: 20px;
 }
 
 
@@ -245,12 +277,16 @@ form{
   }
 }
 
+.amenity_set {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 
 /******************/
 /*** Login Page ***/
 /******************/
 
-section#login {
+#login {
   .login-form {
     width: 375px;
     margin: 0 auto;

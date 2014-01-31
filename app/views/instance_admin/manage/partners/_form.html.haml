@@ -1,11 +1,113 @@
 = simple_form_for [:instance_admin, :manage, @partner], :html => { :multipart => true} do |f|
-  = f.input :name
-  = f.input :search_scope_option, :collection => Partner::AVAILABLE_SEARCH_SCOPE_OPTIONS, :prompt => false
+  %fieldset
+    .row-fluid
+      .controls.controls-row
+        = f.input :name, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :search_scope_option, :collection => Partner::AVAILABLE_SEARCH_SCOPE_OPTIONS, :prompt => false
 
   %h4 Domain Name
   = f.fields_for :domain, f.object.domain || f.object.build_domain do |f|
-    = render :partial => 'admin/domains/form', :locals => { :f => f }
+    %fieldset
+      .row-fluid
+        .controls.controls-row
+          = f.input :name, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
 
   %h4 Custom Theme
   = f.fields_for :theme, f.object.has_theme? ? f.object.theme : f.object.build_theme, :html => { :multipart => true } do |f|
-    = render :partial => 'admin/themes/form', :locals => { :f => f } 
+    %fieldset
+      %legend Title &amp; Description
+      .row-fluid
+        .controls.controls-row
+          = f.input :name, :label => 'Name (leave blank to use default theme)', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+          = f.input :site_name, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+      .row-fluid
+        .controls.controls-row
+          = f.input :tagline, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+          = f.input :meta_title, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+      .row-fluid
+        .controls.controls-row
+          = f.input :description, :label => 'Meta description', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+      %legend Brand
+      - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each_slice(2) do |image_attr|
+        .row-fluid
+          .controls.controls-row
+            .control-group.span6
+              = f.label image_attr[0]
+              .controls
+                = f.file_field image_attr[0]
+                - if f.object.send("remote_#{image_attr[0]}_url")
+                  <br />Or copy from instance's theme:<br />
+                  = f.text_field "remote_#{image_attr[0]}_url"
+            -if image_attr[1]
+              .control-group.span6
+                = f.label image_attr[1]
+                .controls
+                  = f.file_field image_attr[1]
+                  - if f.object.send("remote_#{image_attr[1]}_url")
+                    <br />Or copy from instance's theme:<br />
+                    = f.text_field "remote_#{image_attr[1]}_url"
+
+      %legend Contact &amp; Support
+      .row-fluid
+        .controls.controls-row
+          = f.input :phone_number, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+          .control-group.span6.tel.optional{class: f.object.errors[:contact_email].empty? ? '' : 'error'}
+            %label.tel.optional.control-label{for: "theme_phone_number"} Contact email
+            .controls
+              = f.input_field :contact_email, pattern: '.*', class: 'input-block-level'
+              = f.error :contact_email
+      .row-fluid
+        .controls.controls-row
+          = f.input :support_email, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+          = f.input :support_url, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+      .row-fluid
+        .controls.controls-row
+          = f.input :address, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+      %legend Social Properties
+      .row-fluid
+        .controls.controls-row
+          = f.input :blog_url, label: false, wrapper_html: { class: 'input-prepend input-block span6' } do
+            %span.add-on.fa.fa-comment
+            = f.input_field :blog_url, class: 'input-block-level'
+      .row-fluid
+        .controls.controls-row
+          = f.input :facebook_url, label: false, wrapper_html: { class: 'input-prepend input-block span6' } do
+            %span.add-on.fa.fa-facebook
+            = f.input_field :facebook_url, class: 'input-block-level'
+      .row-fluid
+        .controls.controls-row
+          = f.input :twitter_url, label: false, wrapper_html: { class: 'input-prepend input-block span6' } do
+            %span.add-on.fa.fa-twitter
+            = f.input_field :twitter_url, class: 'input-block-level'
+      .row-fluid
+        .controls.controls-row
+          = f.input :gplus_url, label: false, wrapper_html: { class: 'input-prepend input-block span6' } do
+            %span.add-on.fa.fa-google-plus
+            = f.input_field :gplus_url, class: 'input-block-level'
+
+      %legend Colors
+      - Theme::COLORS.each_slice(2) do |color|
+        .row-fluid
+          .controls.controls-row
+            = f.input "color_#{color[0]}", wrapper_html: {class: 'input-prepend span6'} do
+              %span.add-on #
+              = f.input_field "color_#{color[0]}", class: 'input-block-level'
+            - if color[1]
+              = f.input "color_#{color[1]}", wrapper_html: {class: 'input-prepend span6'} do
+                %span.add-on #
+                = f.input_field "color_#{color[1]}", class: 'input-block-level'
+
+      %legend Homepage
+      .row-fluid
+        .controls.controls-row
+          = f.input :homepage_css, label: 'Homepage CSS', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+          = f.input :homepage_content, label: 'Homepage HTML', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+      .row-fluid
+        .controls.controls-row
+          = f.input :call_to_action, :placeholder => 'Find out more', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+      = f.button :submit, 'Save', class: 'btn btn-primary pull-right'

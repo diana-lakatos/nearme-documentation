@@ -25,7 +25,7 @@
         .control-group.span6.tel.optional{class: f.object.errors[:contact_email].empty? ? '' : 'error'}
           %label.tel.optional.control-label{for: "theme_phone_number"} Contact email
           .controls
-            = f.input_field :contact_email, pattern: '.*', class: 'input-block-level' 
+            = f.input_field :contact_email, pattern: '.*', class: 'input-block-level'
             = f.error :contact_email
         = f.input :support_email, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
     .row-fluid
@@ -37,15 +37,23 @@
     %legend Social Properties
     .row-fluid
       .controls.controls-row
-        = f.input :blog_url, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :blog_url, label: false, wrapper_html: { class: 'input-prepend input-block span6' } do
+          %span.add-on.fa.fa-comment
+          = f.input_field :blog_url, class: 'input-block-level'
     .row-fluid
       .controls.controls-row
-        = f.input :facebook_url, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :facebook_url, label: false, wrapper_html: { class: 'input-prepend input-block span6' } do
+          %span.add-on.fa.fa-facebook
+          = f.input_field :facebook_url, class: 'input-block-level'
     .row-fluid
       .controls.controls-row
-        = f.input :twitter_url, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :twitter_url, label: false, wrapper_html: { class: 'input-prepend input-block span6' } do
+          %span.add-on.fa.fa-twitter
+          = f.input_field :twitter_url, class: 'input-block-level'
     .row-fluid
       .controls.controls-row
-        = f.input :gplus_url, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :gplus_url, label: false, wrapper_html: { class: 'input-prepend input-block span6' } do
+          %span.add-on.fa.fa-google-plus
+          = f.input_field :gplus_url, class: 'input-block-level'
 
     = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
