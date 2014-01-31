@@ -21,6 +21,10 @@ class Page < ActiveRecord::Base
     PageDrop.new(self)
   end
 
+  def redirect?
+    redirect_url.present?
+  end
+
   private 
 
   def convert_to_html

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140127064902) do
+ActiveRecord::Schema.define(:version => 20140131095102) do
 
 
 
@@ -422,6 +422,8 @@ ActiveRecord::Schema.define(:version => 20140127064902) do
     t.integer  "position"
     t.text     "html_content"
     t.datetime "deleted_at"
+    t.string   "redirect_url"
+    t.boolean  "open_in_new_window", :default => true
   end
 
   add_index "pages", ["theme_id"], :name => "index_pages_on_theme_id"

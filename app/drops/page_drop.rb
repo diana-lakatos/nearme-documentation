@@ -9,6 +9,14 @@ class PageDrop < BaseDrop
   end
 
   def page_url
-    routes.pages_path(@page)
+    @page.redirect? ? @page.redirect_url : routes.pages_path(@page)
+  end
+
+  def open_in_target
+    (@page.redirect? && @page.open_in_new_window?) ? '_blank' : ''
+  end
+
+  def link_rel
+    (@page.redirect? && @page.redirect_url.downcase =~ /^http|^https/) ? 'nofollow' : ''
   end
 end
