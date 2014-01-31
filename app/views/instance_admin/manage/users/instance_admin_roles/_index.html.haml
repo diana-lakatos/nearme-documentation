@@ -3,19 +3,19 @@
     Roles
   %table.table.table-striped
     %thead
-      - permissions = %w(Analytics Settings Theme Pages Inventories Transfers Partners Users)
+      - permissions = %w(Analytics Settings Theme Manage)
       %tr
         %th Name
         - permissions.each do |p|
-          %th 
+          %th
             = p
     %tbody
       - instance_admin_roles.each do |instance_admin_role|
         %tr.instance-admins-table
-          %td 
+          %td
             = instance_admin_role.name
           - permissions.each do |p|
-            %td 
+            %td
               = check_box_tag "instance_admin_role[permission_#{p.downcase}]", true, instance_admin_role.send("permission_#{p.downcase}"), { :disabled => instance_admin_role.instance_id.nil?, :'data-role-id' => instance_admin_role.id, :id => "permission_#{p.downcase}_#{instance_admin_role.id}", :'data-permission-checkbox' => "permission_#{p.downcase}", :class => 'pull-left' }
               .loading{:'data-loading' => true}
                 = image_tag('spinner_mini.gif')

@@ -8,6 +8,10 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
   before_filter :find_instance
   before_filter :find_instance_translations
 
+  def index
+    redirect_to instance_admin_settings_configuration_path
+  end
+
   def show
     @instance
     find_or_build_billing_gateway_for_usd

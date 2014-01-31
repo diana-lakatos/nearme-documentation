@@ -4,22 +4,26 @@
       = link_to image_tag('instance_admin/logo.png'), instance_admin_url, :class => "brand"
       .nav-collapse.collapse.navbar-collapse
         %ul.nav
-          %li{:class => ("active" if controller.class.to_s.deconstantize == 'InstanceAdmin::Analytics')}
-            = link_to instance_admin_analytics_overview_path do
-              .fa.fa-bar-chart-o.fa-lg
-              Analytics
-          %li{:class => ("active" if controller.class.to_s.deconstantize == 'InstanceAdmin::Settings')}
-            = link_to instance_admin_settings_configuration_path do
-              .fa.fa-cog.fa-lg
-              Settings
-          %li{:class => ("active" if controller.class.to_s.deconstantize == 'InstanceAdmin::Theme')}
-            = link_to instance_admin_theme_info_path do
-              .fa.fa-bolt.fa-lg
-              Theme
-          %li{:class => ("active" if controller.class.to_s.deconstantize == 'InstanceAdmin::Manage')}
-            = link_to instance_admin_manage_inventories_path do
-              .fa.fa-briefcase.fa-lg
-              Manage
+          - if @authorizer.authorized?('Analytics')
+            %li{:class => ("active" if controller.class.to_s.deconstantize == 'InstanceAdmin::Analytics')}
+              = link_to instance_admin_analytics_overview_path do
+                .fa.fa-bar-chart-o.fa-lg
+                Analytics
+          - if @authorizer.authorized?('Settings')
+            %li{:class => ("active" if controller.class.to_s.deconstantize == 'InstanceAdmin::Settings')}
+              = link_to instance_admin_settings_configuration_path do
+                .fa.fa-cog.fa-lg
+                Settings
+          - if @authorizer.authorized?('Theme')
+            %li{:class => ("active" if controller.class.to_s.deconstantize == 'InstanceAdmin::Theme')}
+              = link_to instance_admin_theme_info_path do
+                .fa.fa-bolt.fa-lg
+                Theme
+          - if @authorizer.authorized?('Manage')
+            %li{:class => ("active" if controller.class.to_s.deconstantize == 'InstanceAdmin::Manage')}
+              = link_to instance_admin_manage_inventories_path do
+                .fa.fa-briefcase.fa-lg
+                Manage
 
         %ul.nav.user-menu.pull-right.dropdown
           %li.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}

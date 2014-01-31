@@ -47,87 +47,53 @@ class InstanceAdmin::AuthorizerTest < ActiveSupport::TestCase
     end
 
     should 'know if user has permission to base controller' do
-      assert @authorizer.authorized?(InstanceAdmin::BaseController)
+      assert @authorizer.authorized?('InstanceAdmin')
     end
 
     should 'know if user has permission to analytics controller' do
-      assert @authorizer.authorized?(InstanceAdmin::AnalyticsController)
+      @role.update_attribute(:permission_analytics, true)
+      assert @authorizer.authorized?('Analytics')
+    end
+
+    should 'know if user does not has permission to analytics controller' do
+      @role.update_attribute(:permission_analytics, false)
+      assert !@authorizer.authorized?('Analytics')
     end
 
     should 'know if user has permission to settings controller' do
       @role.update_attribute(:permission_settings, true)
-      assert @authorizer.authorized?(InstanceAdmin::SettingsController)
+      assert @authorizer.authorized?('Settings')
     end
 
     should 'know if user does not have permission to settings controller' do
       @role.update_attribute(:permission_settings, false)
-      assert !@authorizer.authorized?(InstanceAdmin::SettingsController)
+      assert !@authorizer.authorized?('Settings')
     end
 
     should 'know if user has permission to theme controller' do
       @role.update_attribute(:permission_theme, true)
-      assert @authorizer.authorized?(InstanceAdmin::ThemeController)
+      assert @authorizer.authorized?('Theme')
     end
 
     should 'know if user does not have permission to theme controller' do
       @role.update_attribute(:permission_theme, false)
-      assert !@authorizer.authorized?(InstanceAdmin::ThemeController)
+      assert !@authorizer.authorized?('Theme')
     end
 
-    should 'know if user has permission to pages controller' do
-      @role.update_attribute(:permission_pages, true)
-      assert @authorizer.authorized?(InstanceAdmin::PagesController)
+    should 'know if user has permission to manage controller' do
+      @role.update_attribute(:permission_manage, true)
+      assert @authorizer.authorized?('Manage')
     end
 
-    should 'know if user does not have permission to pages controller' do
-      @role.update_attribute(:permission_pages, false)
-      assert !@authorizer.authorized?(InstanceAdmin::PagesController)
-    end
-
-    should 'know if user has permission to partners controller' do
-      @role.update_attribute(:permission_partners, true)
-      assert @authorizer.authorized?(InstanceAdmin::PartnersController)
-    end
-
-    should 'know if user does not have permission to partners controller' do
-      @role.update_attribute(:permission_partners, false)
-      assert !@authorizer.authorized?(InstanceAdmin::PartnersController)
-    end
-
-    should 'know if user has permission to inventories controller' do
-      @role.update_attribute(:permission_inventories, true)
-      assert @authorizer.authorized?(InstanceAdmin::InventoriesController)
-    end
-
-    should 'know if user does not have permission to inventories controller' do
-      @role.update_attribute(:permission_inventories, false)
-      assert !@authorizer.authorized?(InstanceAdmin::InventoriesController)
-    end
-
-    should 'know if user has permission to transfers controller' do
-      @role.update_attribute(:permission_transfers, true)
-      assert @authorizer.authorized?(InstanceAdmin::TransfersController)
-    end
-
-    should 'know if user does not have permission to transfers controller' do
-      @role.update_attribute(:permission_transfers, false)
-      assert !@authorizer.authorized?(InstanceAdmin::TransfersController)
-    end
-
-    should 'know if user has permission to users controller' do
-      @role.update_attribute(:permission_users, true)
-      assert @authorizer.authorized?(InstanceAdmin::UsersController)
-    end
-
-    should 'know if user does not have permission to users controller' do
-      @role.update_attribute(:permission_users, false)
-      assert !@authorizer.authorized?(InstanceAdmin::UsersController)
+    should 'know if user does not have permission to manage controller' do
+      @role.update_attribute(:permission_manage, false)
+      assert !@authorizer.authorized?('Manage')
     end
 
     should 'raise InstanceAdmin::Authorizer::UnassignedInstanceAdminRoleError if instance_admin has no role' do
       @instance_admin.update_column(:instance_admin_role_id, nil)
       assert_raise InstanceAdmin::Authorizer::UnassignedInstanceAdminRoleError do
-        assert !@authorizer.authorized?(InstanceAdmin::UsersController)
+        assert !@authorizer.authorized?('Analytics')
       end
     end
   end
@@ -136,15 +102,15 @@ class InstanceAdmin::AuthorizerTest < ActiveSupport::TestCase
     setup do
       @role = FactoryGirl.create(:instance_admin_role)
       @role.update_attribute(:permission_analytics, false)
-      @role.update_attribute(:permission_transfers, true)
-      @role.update_attribute(:permission_partners, true)
+      @role.update_attribute(:permission_settings, true)
+      @role.update_attribute(:permission_theme, true)
       @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => @instance.id)
       @instance_admin.update_attribute(:instance_owner, false)
       @instance_admin.update_attribute(:instance_admin_role_id, @role.id)
     end
 
     should 'return first permission/page user has access to' do
-      assert_equal @authorizer.first_permission_have_access_to, 'transfers'
+      assert_equal @authorizer.first_permission_have_access_to, 'settings'
     end
   end
 

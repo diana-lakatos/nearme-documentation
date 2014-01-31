@@ -53,10 +53,12 @@ DesksnearMe::Application.routes.draw do
     match '/', :to => "base#index"
 
     namespace :analytics do
+      match '/', :to => "base#index"
       resource :overview, :only => [:show], :controller => 'overview'
     end
 
     namespace :settings do
+      match '/', :to => "base#index"
       resource :configuration, :only => [:show, :update], :controller => 'configuration'
       resource :integrations, :only => [:show, :update], :controller => 'integrations'
       resource :locations, :only => [:show, :update], :controller => 'locations'
@@ -71,6 +73,7 @@ DesksnearMe::Application.routes.draw do
     end
 
     namespace :theme do
+      match '/', :to => "base#index"
       resource :info, :only => [:show, :update], :controller => 'info'
       resource :design, :only => [:show, :update], :controller => 'design'
       resources :pages
@@ -78,6 +81,7 @@ DesksnearMe::Application.routes.draw do
     end
 
     namespace :manage do
+      match '/', :to => "base#index"
       resources :inventories, :only => [:index] do
         post :login_as, on: :member
         post :restore_session, on: :collection
