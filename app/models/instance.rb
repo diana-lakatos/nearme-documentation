@@ -159,7 +159,7 @@ class Instance < ActiveRecord::Base
   end
 
   def billing_gateway_credential(credential)
-    send(credential).presence || DesksnearMe::Application.config.send(credential).presence
+    DesksnearMe::Application.config.send(credential).presence || send(credential).presence
   end
 
   private
