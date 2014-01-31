@@ -1,8 +1,7 @@
 class UserDrop < BaseDrop
 
   attr_reader :user
-  delegate :name, :first_name, :email, :full_mobile_number, :listings_in_near,
-    :administered_locations_pageviews_7_day_total, to: :user
+  delegate :name, :first_name, :email, :full_mobile_number, :administered_locations_pageviews_7_day_total, to: :user
 
   def initialize(user)
     @user = user
@@ -98,5 +97,9 @@ class UserDrop < BaseDrop
 
   def bookings_dashboard_url_with_tracking_and_token
     routes.bookings_dashboard_path(token: @user.try(:temporary_token), track_email_event: true)
+  end
+
+  def listings_in_near
+    @user.listings_in_near(nil, 3, 100, true)
   end
 end

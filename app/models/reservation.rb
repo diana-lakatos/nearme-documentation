@@ -1,7 +1,7 @@
 class Reservation < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
-
   has_paper_trail
+  acts_as_paranoid
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',
     :manual      => 'manual',
@@ -22,11 +22,16 @@ class Reservation < ActiveRecord::Base
   has_one :instance, through: :company
   has_many :user_messages, as: :thread_context
 
-  attr_accessible :cancelable, :confirmation_email, :date, :deleted_at, :listing_id,
+  attr_accessible :cancelable, :confirmation_email, :date, :listing_id,
     :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
 
   has_many :reviews, 
     :class_name => 'GuestRating', 
+    :inverse_of => :reservation, 
+    :dependent => :destroy
+
+  has_many :comments_about_guests, 
+    :class_name => 'HostRating', 
     :inverse_of => :reservation, 
     :dependent => :destroy
 
@@ -40,9 +45,10 @@ class Reservation < ActiveRecord::Base
     dependent: :destroy
 
   validates :listing_id, :presence => true
-  validates :periods, :length => { :minimum => 1 }
+  # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is
+  validates :periods, :length => { :minimum => 1 }, :if => lambda { self.deleted_at_changed? && self.periods.with_deleted.count.zero? }
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
-  validates :owner, :presence => true
+  validates :owner_id, :presence => true, :unless => lambda { owner.present? }
   validate :validate_all_dates_available, on: :create, :if => lambda { listing }
   validate :validate_booking_selection, on: :create, :if => lambda { listing }
 
@@ -75,8 +81,6 @@ class Reservation < ActiveRecord::Base
   def schedule_expiry
     Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :perform_expiry!, nil), run_at: expiry_time
   end
-
-  acts_as_paranoid
 
   def listing # fetch with deleted listing
     Listing.unscoped { super }
@@ -157,6 +161,10 @@ class Reservation < ActiveRecord::Base
 
   scope :expired, lambda {
     with_state(:expired)
+  }
+
+  scope :cancelled_or_expired_or_rejected, lambda {
+    with_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired)
   }
 
   scope :archived, lambda {

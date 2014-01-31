@@ -113,4 +113,8 @@ namespace :populate do
     end
   end
 
+  desc "Populates en locales"
+  task :en_locales => :environment do
+    Utils::EnLocalesSeeder.new.go!
+  end
 end

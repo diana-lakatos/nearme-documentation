@@ -54,10 +54,6 @@ module ApplicationHelper
     true
   end
 
-  def stripe_public_key
-    DesksnearMe::Application.config.stripe_public_key
-  end
-
   def truncate_with_ellipsis(body, length, html_options = {})
 
     body ||= ''
@@ -140,6 +136,13 @@ module ApplicationHelper
     ].compact.join(' ')
   end
 
+  def dnm_page_class
+    [
+      content_for?(:manage_navbar) ? 'with-sub-navbar' : nil,
+      no_navbar? ? 'no-navbar' : nil
+    ].compact.join(' ')
+  end
+
   def distance_of_time_in_words_or_date(datetime)
     today = Date.current
 
@@ -154,8 +157,15 @@ module ApplicationHelper
     end
   end
 
+  def distance_of_time_in_words_or_date_in_time_zone(datetime, time_zone = 'UTC')
+    Time.zone = time_zone
+    result = distance_of_time_in_words_or_date(datetime.in_time_zone(time_zone))
+    Time.zone = 'UTC'
+    result
+  end
+
   def render_olark?
-    not current_page?(controller: 'locations/listings', action: 'show')
+    not current_page?(controller: 'locations', action: 'show')
   end
 
 end

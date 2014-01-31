@@ -15,14 +15,18 @@
   </div>
 
   <div class="row">
-    <strong style='display: inline-block;'>When</strong>
-    <span style="float: right;">
-      {% if listing.hourly_reservations? %}
-        {{ reservation.hourly_summary }}
-      {% else %}
-        {{ reservation.dates_summary }}
-      {% endif %}
-    </span>
+    <table width="100%">
+      <tr>
+        <td valign="top"><strong style='display: inline-block;'>When</strong></td>
+        <td style="text-align: right;">
+          {% if listing.hourly_reservations? %}
+            {{ reservation.hourly_summary }}
+          {% else %}
+            {{ reservation.dates_summary }}
+          {% endif %}
+        </td>
+      </tr>
+    </table>
   </div>
 
   <div class="row">

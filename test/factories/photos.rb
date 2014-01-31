@@ -8,7 +8,7 @@ FactoryGirl.define do
     image_versions_generated_at Time.zone.now
 
     factory :demo_photo do
-      image { fixture_file_upload(Dir.glob(Rails.root.join('db', 'seeds', 'demo', 'assets', 'listing_photos', '*')).sample, 'image/jpeg') }
+      image { fixture_file_upload(Dir.glob(Rails.root.join('db', 'seeds', 'demo', 'desksnearme', 'assets', 'listing_photos', '*')).sample, 'image/jpeg') }
       image_versions_generated_at Time.zone.now
     end
   end 

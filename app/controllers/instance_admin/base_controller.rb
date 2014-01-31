@@ -1,6 +1,7 @@
 class InstanceAdmin::BaseController < ApplicationController
   before_filter :auth_user!
   before_filter :authorize_user!
+  skip_before_filter :redirect_if_marketplace_password_protected
 
   def index
     first_permission_have_access_to = @authorizer.first_permission_have_access_to

@@ -1,6 +1,7 @@
 class Admin::BaseController < ApplicationController
   before_filter :authenticate_user!
   before_filter :require_administrator
+  skip_before_filter :redirect_if_marketplace_password_protected
 
   layout 'admin'
 

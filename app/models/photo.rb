@@ -5,7 +5,7 @@ class Photo < ActiveRecord::Base
 
   ranks :position, with_same: [:listing_id]
 
-  attr_accessible :creator_id, :listing_id, :caption, :image, :image_versions_generated_at, :image_transformation_data, :position 
+  attr_accessible :creator_id, :listing_id, :caption, :image, :image_versions_generated_at, :image_transformation_data, :position
   belongs_to :listing
   belongs_to :creator, class_name: "User"
 
@@ -20,8 +20,6 @@ class Photo < ActiveRecord::Base
 
   delegate :notify_user_about_change, :to => :listing, :allow_nil => true
 
-  # Don't delete the photo from s3
-  skip_callback :destroy, :after, :remove_image!
 
   validates :image, :presence => true,  :if => lambda { |p| !p.image_original_url.present? }
 
@@ -29,6 +27,9 @@ class Photo < ActiveRecord::Base
 
   extend CarrierWave::SourceProcessing
   mount_uploader :image, PhotoUploader, :use_inkfilepicker => true
+
+  # Don't delete the photo from s3
+  skip_callback :commit, :after, :remove_image!
 
   private
   def update_counter

@@ -17,7 +17,7 @@ class RecurringMailerTest < ActiveSupport::TestCase
     assert_equal subject, mail.subject
     assert mail.html_part.body.include?(@company.creator.first_name)
     assert_equal [@company.creator.email], mail.to
-    assert mail.html_part.body.include?("Add more information or upload additional photos to make your space look even better!")
+    assert mail.html_part.body.include?("Add more information or upload additional photos to make your Desk look even better!")
     assert_contains 'href="http://custom.domain.com/', mail.html_part.body
     assert_not_contains 'href="http://example.com', mail.html_part.body
     assert_not_contains 'href="/', mail.html_part.body
@@ -49,7 +49,7 @@ class RecurringMailerTest < ActiveSupport::TestCase
     assert_equal subject, mail.subject
     assert mail.html_part.body.include?(@user.first_name)
     assert_equal [@user.email], mail.to
-    assert mail.html_part.body.include?("Share your listing on Facebook, Twitter, and LinkedIn, and start seeing #{@platform_context.decorate.lessees} book your space.")
+    assert mail.html_part.body.include?("Share your listing on Facebook, Twitter, and LinkedIn, and start seeing #{@platform_context.decorate.lessees} book your Desk.")
     assert mail.html_part.body.include?(@listing.name)
     assert_contains 'href="http://custom.domain.com/', mail.html_part.body
     assert_not_contains 'href="http://example.com', mail.html_part.body

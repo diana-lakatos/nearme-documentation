@@ -714,6 +714,69 @@ class UserTest < ActiveSupport::TestCase
 
       assert_equal @user.listings_in_near(@platform_context), [listing_current_instance]
     end
+
+    should 'not return listings from cancelled/expired/rejected reservations' do
+      # user was last geolocated in Auckland
+      @user.last_geolocated_location_latitude = -36.858675
+      @user.last_geolocated_location_longitude = 174.777303
+      @user.save
+
+      listing_first = FactoryGirl.create(:listing_in_auckland)
+      listing_first.company.instance_id = @instance.id
+      listing_first.company.save
+
+      listing_second = FactoryGirl.create(:listing_in_auckland)
+      listing_second.company.instance_id = @instance.id
+      listing_second.company.save
+
+      reservation = FactoryGirl.create(:reservation, listing: listing_first, user: @user)
+      reservation.reject
+
+      assert_equal @user.listings_in_near(@platform_context, 3, 100, true), [listing_second]
+    end
+  end
+
+  context 'recovering user with all objects' do
+
+    setup do
+      @industry = FactoryGirl.create(:industry)
+    end
+
+    should 'recover all objects' do
+      setup_user_with_all_objects
+      @user.destroy
+      @objects.each do |object|
+        assert object.reload.destroyed?, "#{object.class.name} was expected to be deleted via dependent => destroy but wasn't"
+      end
+      @user.restore(:recursive => true)
+      @objects.each do |object|
+        refute object.reload.destroyed?, "#{object.class.name} was expected to be restored, but is still deleted"
+      end
+    end
+
+
+
+  end
+
+  private
+
+  def setup_user_with_all_objects
+      @user = FactoryGirl.create(:user)
+      @user_industry = UserIndustry.create(:user_id => @user.id, :industry_id => @industry.id)
+      @authentication = FactoryGirl.create(:authentication, :user => @user)
+      @company = FactoryGirl.create(:company, :creator => @user)
+      @company_industry = CompanyIndustry.where(:company_id => @company.id).first
+      @location = FactoryGirl.create(:location, :company_id => @company.id)
+      @listing = FactoryGirl.create(:listing, :location => @location)
+      @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
+      @reservation = FactoryGirl.create(:reservation, :user => @user, :listing => @listing)
+      @reservation_period = @reservation.periods.first
+      @reservation_charge = FactoryGirl.create(:reservation_charge, :reservation => @reservation)
+      @charge = FactoryGirl.create(:charge, :reference => @reservation_charge)
+      @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
+      @objects = [@user, @user_industry, @authentication, @company, @company_industry, 
+                  @location, @listing, @photo, @reservation, @reservation_period, 
+                  @payment_transfer, @reservation_charge, @charge]
   end
 
 end

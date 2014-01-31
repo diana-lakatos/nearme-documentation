@@ -20,6 +20,7 @@ Before do
   store_model("instance", nil, instance)
   store_model("theme", nil, instance.theme)
   FactoryGirl.create(:instance)
+  Utils::EnLocalesSeeder.new.go!
 end
 
 def last_json

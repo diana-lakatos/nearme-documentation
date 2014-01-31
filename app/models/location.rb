@@ -1,8 +1,7 @@
 class Location < ActiveRecord::Base
-  class NotFound < ActiveRecord::RecordNotFound; end
   has_paper_trail
-  extend FriendlyId
-  friendly_id :urlify, use: :slugged
+  acts_as_paranoid
+  class NotFound < ActiveRecord::RecordNotFound; end
 
   include Impressionable
 
@@ -14,7 +13,7 @@ class Location < ActiveRecord::Base
     :administrator_id, :name
   attr_accessor :local_geocoding # set this to true in js
   attr_accessor :name_required
-  attr_accessor :searched_locations
+  attr_accessor :searched_locations, :search_rank
 
   liquid_methods :name
 
@@ -63,13 +62,14 @@ class Location < ActiveRecord::Base
   before_validation :parse_address_components
   before_save :assign_default_availability_rules
 
+  extend FriendlyId
+  friendly_id :urlify, use: :slugged
+
   scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where('locations.location_type_id IN (?)', location_types_ids) }
   scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company => :company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
   scope :none, where(:id => nil)
   scope :for_instance, ->(instance) { joins(:instance).includes(:instance).where(:'instances.id' => instance.id) }
   scope :with_searchable_listings, where(%{ (select count(*) from "listings" where location_id = locations.id and listings.draft IS NULL and enabled = 't' and listings.deleted_at is null) > 0 })
-
-  acts_as_paranoid
 
   # Useful for storing the full geo info for an address, like time zone
   serialize :info, Hash
@@ -87,6 +87,11 @@ class Location < ActiveRecord::Base
     Geocoder::Calculations.distance_between([ latitude,       longitude ],
                                             [ other_latitude, other_longitude ],
                                             units: :km)
+  end
+
+
+  def company
+    Company.unscoped { super }
   end
 
   def name

@@ -12,7 +12,7 @@ class PlatformMailer < ActionMailer::Base
   end
 
   def email_a_friend(from_name, to_email)
-    mail from: from_name,
+    mail from: 'Near Me <team@desksnear.me>',
          to: to_email,
          subject: "#{from_name} has shared a Near Me page with you",
          layout: false
