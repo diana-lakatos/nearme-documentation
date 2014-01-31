@@ -3,6 +3,7 @@ class SessionsController < Devise::SessionsController
   before_filter :clear_return_to, :only => [:new]
   before_filter :set_return_to
   skip_before_filter :require_no_authentication, :only => [:show] , :if => lambda {|c| request.xhr? }
+  skip_before_filter :redirect_if_marketplace_password_protected, :only => [:store_correct_ip]
   after_filter :render_or_redirect_after_create, :only => [:create] 
   layout :resolve_layout
 
