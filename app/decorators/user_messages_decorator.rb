@@ -38,8 +38,9 @@ class UserMessagesDecorator < Draper::CollectionDecorator
     # All unread messages are marked as read
     to_mark_as_read = decorated_collection.select{|m| m.unread_for?(user)}
     if to_mark_as_read.present?
-      UserMessage.update_all({read: true},
-                                {id: to_mark_as_read.map(&:id)})
+      to_mark_as_read.each do |message|
+        message.mark_as_read_for!(user)
+      end
 
       # User who has seen this user message thread must have refreshed its unread counter cache
       # if there are some messages newly marked as read

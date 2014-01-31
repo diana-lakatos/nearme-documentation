@@ -7,7 +7,7 @@ class UserMessageDecorator < Draper::Decorator
 
   def css_class(user = nil)
     classes = []
-    classes << (read? ? 'read' : 'unread')
+    classes << (read_for?(user) ? 'read' : 'unread')
     if user
       if author == user
         classes << 'my-message'
