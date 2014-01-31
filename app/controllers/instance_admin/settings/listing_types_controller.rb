@@ -1,4 +1,4 @@
-class InstanceAdmin::Settings::ListingTypesController < InstanceAdmin::BaseController
+class InstanceAdmin::Settings::ListingTypesController < InstanceAdmin::Settings::BaseController
 
   def create
     @listing_type = ListingType.new(params[:listing_type])
@@ -25,7 +25,7 @@ class InstanceAdmin::Settings::ListingTypesController < InstanceAdmin::BaseContr
 
   def destroy
     @listing_type = platform_context.instance.listing_types.find(params[:id])
-    
+
     if @listing_type.listings.count > 0
       @replacement_type = platform_context.instance.listing_types.find(params[:replacement_type_id])
       @listing_type.listings.update_all(listing_type_id: @replacement_type.id)

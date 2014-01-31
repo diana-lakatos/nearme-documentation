@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class InstanceAdmin::UsersControllerTest < ActionController::TestCase
+class InstanceAdmin::Manage::UsersControllerTest < ActionController::TestCase
 
   setup do
     stub_mixpanel

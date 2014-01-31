@@ -1,4 +1,4 @@
-class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::BaseController
+class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::Settings::BaseController
 
   def create
     @location_type = LocationType.new(params[:location_type])
@@ -30,7 +30,7 @@ class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::BaseCont
       @replacement_type = platform_context.instance.location_types.find(params[:replacement_type_id])
       @location_type.locations.update_all(location_type_id: @replacement_type.id)
     end
-    
+
     @location_type.destroy
     flash[:success] = t('flash_messages.instance_admin.settings.location_type_deleted')
     redirect_to instance_admin_settings_locations_path

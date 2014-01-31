@@ -2,6 +2,9 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
 
   defaults :resource_class => PaymentTransfer, :collection_name => 'transfers', :instance_name => 'transfer'
 
+  def index
+  end
+
   def transferred
     resource.mark_transferred
     flash[:notice] = t('flash_messages.payments.marked_transferred')

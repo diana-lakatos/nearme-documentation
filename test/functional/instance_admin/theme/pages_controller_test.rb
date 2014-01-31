@@ -1,10 +1,10 @@
 require 'test_helper'
 
-class InstanceAdmin::PagesControllerTest < ActionController::TestCase
+class InstanceAdmin::Theme::PagesControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
-    @theme = FactoryGirl.create(:theme)  
+    @theme = FactoryGirl.create(:theme)
     PlatformContext.any_instance.stubs(:theme).returns(@theme)
     InstanceAdmin::Authorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).returns(true)
@@ -41,7 +41,7 @@ class InstanceAdmin::PagesControllerTest < ActionController::TestCase
       assert_difference 'Page.count', -1 do
         delete :destroy, :id => @new_page.id
       end
-      assert_redirected_to instance_admin_pages_path
+      assert_redirected_to instance_admin_theme_pages_path
     end
   end
 end

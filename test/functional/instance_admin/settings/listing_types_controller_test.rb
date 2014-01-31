@@ -16,7 +16,7 @@ class InstanceAdmin::Settings::ListingTypesControllerTest < ActionController::Te
       end
 
       assert_equal 'New listing type added.', flash[:success]
-      assert_redirected_to instance_admin_settings_path
+      assert_redirected_to instance_admin_settings_listings_path
     end
 
     should 'not create a new listing type' do
@@ -25,12 +25,12 @@ class InstanceAdmin::Settings::ListingTypesControllerTest < ActionController::Te
       end
 
       assert_equal 'Could not add new listing type.', flash[:error]
-      assert_redirected_to instance_admin_settings_path
+      assert_redirected_to instance_admin_settings_listings_path
     end
 
     should 'redirect to the admin settings path on index action' do
       get :index
-      assert_redirected_to instance_admin_settings_path
+      assert_redirected_to instance_admin_settings_configuration_path
     end
   end
 
@@ -62,7 +62,7 @@ class InstanceAdmin::Settings::ListingTypesControllerTest < ActionController::Te
       end
 
       assert_equal 'Listing type deleted.', flash[:success]
-      assert_redirected_to instance_admin_settings_path
+      assert_redirected_to instance_admin_settings_listings_path
     end
 
     should 'replace listing type and destroy' do
@@ -72,7 +72,7 @@ class InstanceAdmin::Settings::ListingTypesControllerTest < ActionController::Te
 
       assert_equal @listing_2.reload.listing_type, @listing_type_3
       assert_equal 'Listing type deleted.', flash[:success]
-      assert_redirected_to instance_admin_settings_path
+      assert_redirected_to instance_admin_settings_listings_path
     end
   end
 end

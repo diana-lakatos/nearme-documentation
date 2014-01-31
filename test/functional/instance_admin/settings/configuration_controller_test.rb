@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class InstanceAdmin::SettingsControllerTest < ActionController::TestCase
+class InstanceAdmin::Settings::ConfigurationControllerTest < ActionController::TestCase
 
   context 'authorization' do
     setup do
@@ -11,15 +11,15 @@ class InstanceAdmin::SettingsControllerTest < ActionController::TestCase
 
     should 'end with success if user is authorized to view settings' do
       InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).at_least_once.returns(false)
-      InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with(InstanceAdmin::SettingsController).returns(true)
+      InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with('Settings').returns(true)
       get :show
       assert_response :success
       assert_template :show
     end
 
     should 'redirect user to instance admin path if he is authorized for analytics' do
-      InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with(InstanceAdmin::AnalyticsController).returns(true)
-      InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with(InstanceAdmin::SettingsController).returns(false)
+      InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with('Analytics').returns(true)
+      InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).with('Settings').returns(false)
       get :show
       assert_redirected_to instance_admin_analytics_path
     end
