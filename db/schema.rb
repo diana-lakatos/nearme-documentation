@@ -647,6 +647,19 @@ ActiveRecord::Schema.define(:version => 20140128080628) do
 
   add_index "themes", ["owner_id", "owner_type"], :name => "index_themes_on_owner_id_and_owner_type"
 
+  create_table "translations", :force => true do |t|
+    t.string   "locale"
+    t.string   "key"
+    t.text     "value"
+    t.text     "interpolations"
+    t.boolean  "is_proc",        :default => false
+    t.integer  "instance_id"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
+
+  add_index "translations", ["instance_id"], :name => "index_translations_on_instance_id"
+
   create_table "unit_prices", :force => true do |t|
     t.integer  "listing_id"
     t.integer  "price_cents"
