@@ -42,7 +42,7 @@
 
 <%=
   if theme.logo_image.present?
-    logo_dimensions = theme.logo_image.capture_dimensions
+    logo_dimensions = theme.logo_image.original_dimensions
     if logo_dimensions[1] > 30
       logo_height = 30
       scale_factor = 30.0 / logo_dimensions[1]
@@ -57,7 +57,7 @@
   end
 
   if theme.icon_image.present?
-    icon_dimensions = theme.icon_image.capture_dimensions
+    icon_dimensions = theme.icon_image.original_dimensions
     if icon_dimensions[1] > 30
       icon_height = 30
       scale_factor = 30.0 / icon_dimensions[1]
