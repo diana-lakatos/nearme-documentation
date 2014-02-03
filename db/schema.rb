@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140128080628) do
+ActiveRecord::Schema.define(:version => 20140203060939) do
 
 
 
@@ -191,6 +191,16 @@ ActiveRecord::Schema.define(:version => 20140128080628) do
 
   add_index "footer_templates", ["path", "partial", "theme_id"], :name => "index_footer_templates_on_path_and_partial_and_theme_id"
   add_index "footer_templates", ["theme_id"], :name => "index_footer_templates_on_theme_id"
+
+  create_table "friendly_id_slugs", :force => true do |t|
+    t.string   "slug",                         :null => false
+    t.integer  "sluggable_id",                 :null => false
+    t.string   "sluggable_type", :limit => 40
+    t.datetime "created_at"
+  end
+
+  add_index "friendly_id_slugs", ["sluggable_id"], :name => "index_friendly_id_slugs_on_sluggable_id"
+  add_index "friendly_id_slugs", ["sluggable_type"], :name => "index_friendly_id_slugs_on_sluggable_type"
 
   create_table "guest_ratings", :force => true do |t|
     t.integer  "author_id",      :null => false

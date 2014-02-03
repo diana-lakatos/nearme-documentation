@@ -52,7 +52,15 @@ namespace :reprocess do
       puts "Processing #{model}"
       updated_objects = 0
 
-      model.all.each do |obj|
+      # Store current slugs in history
+      Location.order('created_at ASC').each do |obj|
+        old_slug = obj.slug
+        if obj.send(:set_slug) != old_slug
+          FriendlyId::Slug.create(slug: old_slug, sluggable_id: obj.id, sluggable_type: 'Location')
+        end
+      end
+
+      model.order('created_at ASC').each do |obj|
         begin
           old_slug = obj.slug
           unless obj.save
