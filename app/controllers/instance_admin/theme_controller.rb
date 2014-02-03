@@ -2,6 +2,7 @@ class InstanceAdmin::ThemeController < InstanceAdmin::BaseController
   before_filter :find_theme
 
   def show
+    @theme.theme_font || @theme.build_theme_font
   end
 
   def update

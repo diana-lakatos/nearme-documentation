@@ -3,7 +3,7 @@
     %div{class: "alert #{key}", 'data-flash-message' => true}
       %p
         %i{ :class => ico_for_flash(key)}
-        = flash[key].html_safe
+        = flash[key].gsub('\n', '<br />').html_safe
         %a.close.ico-close.right{href: '#'}
 
 
