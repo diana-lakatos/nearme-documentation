@@ -1,0 +1,21 @@
+.blog-posts
+  - @blog_posts.each do |blog_post|
+    .blog-post.clearfix
+      - if blog_post.user.avatar.file.present?
+        .col-sm-1.avatar.hidden-xs
+          .avatar-container{style: "background-image: url(#{blog_post.user.avatar.url(:thumb)});"}
+      .col-sm-9
+        %h2= link_to blog_post.title, blog_post_path(blog_post)
+      .col-sm-2.date
+        =l blog_post.created_at, format: :day_and_month
+      .col-sm-11.content
+        %p= truncate(strip_tags(blog_post.content), length: 200)
+
+.footer
+  = will_paginate @blog_posts, page_links: false
+
+- content_for :script do
+  :javascript
+    $(function() {
+      new Blog.BlogPostsController();
+    });

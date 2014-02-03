@@ -1,0 +1,6 @@
+%tr
+  %td= link_to blog_post.title, edit_blog_admin_blog_post_path(blog_post)
+  %td= l blog_post.created_at, format: :only_date
+  %td
+    = link_to 'Edit', edit_blog_admin_blog_post_path(blog_post), class: 'btn'
+    = link_to "Delete", blog_admin_blog_post_path(blog_post), :method => :delete, :confirm => "Are you sure you want to delete this?", :class => "btn btn-danger"

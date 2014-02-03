@@ -39,6 +39,20 @@ FactoryGirl.define do
       permission_users true
       permission_analytics true
     end
+
+    factory :instance_admin_role_blog do
+      name 'Default'
+      instance_id nil
+      permission_analytics true
+      permission_settings false
+      permission_theme false
+      permission_pages false
+      permission_transfers false
+      permission_inventories false
+      permission_partners false
+      permission_users false
+      permission_blog true
+    end
   end
 
 end

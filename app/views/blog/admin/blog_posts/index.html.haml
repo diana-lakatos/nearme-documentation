@@ -1,0 +1,16 @@
+%h1 Posts
+
+%br/
+= link_to 'New post', new_blog_admin_blog_post_path, class: 'btn'
+%br/
+%br/
+
+%table.table.table-striped.sortable
+  %thead
+    %tr
+      %th Name
+      %th Published
+      %th
+  %tbody
+    - @blog_posts.each do |blog_post|
+      = render 'index_row', blog_post: blog_post

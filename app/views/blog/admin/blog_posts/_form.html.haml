@@ -1,0 +1,6 @@
+= simple_form_for [:blog_admin, @blog_post] do |f|
+  = f.input :title, :placeholder => 'Post title'
+  = f.input :content, :input_html => { :class => 'wide' }
+
+  .form-actions
+    = f.button :submit

@@ -1,4 +1,8 @@
 en:
+  time:
+    formats:
+      only_date: "%B %d, %-Y"
+      day_and_month: "%^b %-d"
   errors:
     messages:
       wrong_content_type: "is the wrong content type"
@@ -157,7 +161,14 @@ en:
         location_type_deleted: 'Location type deleted.'
         listing_type_added: 'New listing type added.'
         listing_type_not_added: 'Could not add new listing type.'
-        listing_type_deleted: 'Listing type deleted.' 
+        listing_type_deleted: 'Listing type deleted.'
+    blog_admin:
+      blog_posts:
+        blog_post_added: 'New blog post added.'
+        blog_post_updated: 'Blog post updated.'
+        blog_post_deleted: 'Blog post deleted.'
+      blog_instance:
+        blog_instance_updated: 'Blog settings were updated.'
   simple_form:
     labels:
       theme:

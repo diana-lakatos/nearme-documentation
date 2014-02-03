@@ -86,6 +86,15 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+  namespace :blog do
+    namespace :admin do
+      match '/', :to => redirect("/blog/admin/blog_posts")
+      resources :blog_posts
+      resource :blog_instance, only: [:edit, :update]
+    end
+  end
+  resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
+
   resources :locations, :only => [] do
     member do
       get "(:listing_id)", :to => "locations#show", :as => ''

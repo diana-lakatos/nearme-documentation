@@ -1,0 +1,36 @@
+.blog-post-detail
+
+  %h1= @blog_post.title
+
+  .content
+    :markdown
+      #{@blog_post.content}
+
+  .info.row
+    .date.col-sm-6
+      Published #{l(@blog_post.created_at, format: :only_date)}
+
+    .social.col-sm-6.clearfix
+      - url = blog_post_url(@blog_post)
+      .icon= share_to_google_plus(url, icon: 'google-plus-other')
+      .icon= share_to_linkedin(url, text: @blog_post.title, icon: 'linkedin-other')
+      .icon= share_to_facebook(url)
+      .icon= share_to_twitter(url, text: @blog_post.title)
+  
+  .author.row
+    - author = @blog_post.user
+    - if author.avatar.file.present?
+      .avatar.col-sm-2.hidden-xs
+        .avatar-container{style: "background-image: url(#{author.avatar.url(:medium)});"}
+
+    .biography{class: "col-sm-#{author.avatar.file.present? ? 10 : 12}"}
+      %h3= @blog_post.user.name
+      %p= @blog_post.user.biography
+
+  .links.row
+    - if @blog_post.previous_blog_post.present?
+      .col-xs-6
+        = link_to "LAST STORY", blog_post_path(@blog_post.previous_blog_post), class: 'previous-blog-post'
+    - if @blog_post.next_blog_post.present?
+      .col-xs-6
+        = link_to "NEXT STORY", blog_post_path(@blog_post.next_blog_post), class: 'next-blog-post'

@@ -6,8 +6,8 @@ class InstanceAdmin::UsersControllerTest < ActionController::TestCase
     stub_mixpanel
     @user = FactoryGirl.create(:user)
     sign_in @user
-    InstanceAdmin::Authorizer.any_instance.stubs(:instance_admin?).returns(true)
-    InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).returns(true)
+    InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
+    InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
   end
 
   context 'index' do

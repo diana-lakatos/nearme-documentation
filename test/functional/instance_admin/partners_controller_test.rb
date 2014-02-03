@@ -6,8 +6,8 @@ class InstanceAdmin::PartnersControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     @instance = FactoryGirl.create(:instance)  
     PlatformContext.any_instance.stubs(:instance).returns(@instance)
-    InstanceAdmin::Authorizer.any_instance.stubs(:instance_admin?).returns(true)
-    InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).returns(true)
+    InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
+    InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
     sign_in @user
   end
 

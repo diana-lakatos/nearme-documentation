@@ -1,0 +1,37 @@
+!!!
+%html
+  %head
+    %title
+      #{platform_context.name} - Admin
+    %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
+    = csrf_meta_tag
+    = render 'layouts/favicon'
+    = stylesheet_link_tag 'blog_admin'
+    = javascript_include_tag :blog_admin
+
+  %body
+    .container
+      - if user_signed_in?
+        .navbar.navbar-inverse
+          .navbar-inner
+            .container
+              = link_to "#{@blog_instance.name} - Admin", blog_admin_url, :class => "brand"
+              .nav-collapse.collapse.navbar-inverse-collapse
+                %ul.nav.pull-right
+                  = blog_admin_nav_item "Posts", blog_admin_blog_posts_path, "blog_posts"
+                  = blog_admin_nav_item "Settings", edit_blog_admin_blog_instance_path, "blog_instances"
+
+                  %li= link_to "Log Out", destroy_user_session_url, :method => :delete, :data => {:user => current_user.first_name }
+
+      .row-fluid
+        .span12
+
+          = render 'shared/render_flash'
+
+          = yield
+
+      %hr
+
+      %footer
+        %p
+          &copy; #{platform_context.name} 2013

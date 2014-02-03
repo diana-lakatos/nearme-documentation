@@ -79,6 +79,24 @@ ActiveRecord::Schema.define(:version => 20140128080628) do
 
   add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
 
+  create_table "blog_instances", :force => true do |t|
+    t.string   "name"
+    t.string   "header"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "blog_posts", :force => true do |t|
+    t.string   "title"
+    t.text     "content"
+    t.integer  "blog_instance_id"
+    t.integer  "user_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
   create_table "charges", :force => true do |t|
     t.integer  "reference_id"
     t.boolean  "success"
@@ -263,6 +281,7 @@ ActiveRecord::Schema.define(:version => 20140128080628) do
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
     t.boolean  "permission_pages",       :default => false
+    t.boolean  "permission_blog",        :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"

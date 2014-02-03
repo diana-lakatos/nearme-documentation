@@ -20,7 +20,7 @@ class InstanceAdmin::BaseController < ApplicationController
   end
 
   def authorize_user!
-    @authorizer ||= InstanceAdmin::Authorizer.new(current_user, platform_context)
+    @authorizer ||= InstanceAdminAuthorizer.new(current_user, platform_context)
     if !(@authorizer.instance_admin?)
       flash[:warning] = t('flash_messages.authorizations.not_authorized')
       redirect_to root_path
@@ -33,7 +33,7 @@ class InstanceAdmin::BaseController < ApplicationController
         redirect_to root_path
       end
     end
-  rescue InstanceAdmin::Authorizer::UnassignedInstanceAdminRoleError => e
+  rescue InstanceAdminAuthorizer::UnassignedInstanceAdminRoleError => e
     notify_raygun_about_exception(e)
     flash[:warning] = t('flash_messages.authorizations.not_authorized')
     redirect_to root_path

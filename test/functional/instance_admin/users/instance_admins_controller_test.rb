@@ -10,8 +10,8 @@ class InstanceAdmin::Users::InstanceAdminsControllerTest < ActionController::Tes
 
   context 'crud' do
     setup do
-      InstanceAdmin::Authorizer.any_instance.stubs(:instance_admin?).returns(true)
-      InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).returns(true)
+      InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
+      InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
     end
 
     context 'create' do

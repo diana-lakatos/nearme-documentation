@@ -6,8 +6,8 @@ class InstanceAdmin::PagesControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     @theme = FactoryGirl.create(:theme)  
     PlatformContext.any_instance.stubs(:theme).returns(@theme)
-    InstanceAdmin::Authorizer.any_instance.stubs(:instance_admin?).returns(true)
-    InstanceAdmin::Authorizer.any_instance.stubs(:authorized?).returns(true)
+    InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
+    InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
     sign_in @user
   end
 

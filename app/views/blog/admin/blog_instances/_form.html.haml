@@ -1,0 +1,7 @@
+= simple_form_for [:blog_admin, @blog_instance], :html => { :multipart => true } do |f|
+  = f.input :name
+  = f.input :header
+  = link_to(@blog_instance.header.filename, @blog_instance.header.url) if @blog_instance.header.present?
+
+  .form-actions
+    = f.button :submit, "Update settings"
