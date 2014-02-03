@@ -11,8 +11,8 @@
       .col-sm-11.content
         %p= truncate(strip_tags(blog_post.content), length: 200)
 
-.footer
-  = will_paginate @blog_posts, page_links: false
+= image_tag 'spinner.gif', class: 'hidden-spinner hidden', alt: 'Spinner'
+= will_paginate @blog_posts, page_links: false
 
 - content_for :script do
   :javascript

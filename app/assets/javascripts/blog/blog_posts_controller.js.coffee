@@ -5,9 +5,11 @@ class @Blog.BlogPostsController
 
   initializeInfiniteScroll: =>
     jQuery.ias({
-      container : '.blog-posts',
+      container: '.blog-posts',
       item: '.blog-post',
-      pagination: '.footer',
-      next: '.footer .next_page',
-      triggerPageThreshold: 99
+      pagination: '.pagination',
+      next: '.pagination .next_page',
+      triggerPageThreshold: 99,
+      history: false,
+      loader: '<div class="spinner col-xs-12"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"></div>',
     })
