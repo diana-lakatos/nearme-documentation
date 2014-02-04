@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class PageTest < ActiveSupport::TestCase
+
   def setup
     @instance = FactoryGirl.create(:instance)
     Domain.create(:name => 'allowed_domain.com', :target => @instance)
@@ -39,6 +40,27 @@ class PageTest < ActiveSupport::TestCase
         @page.expects(:convert_to_html).once
         assert @page.save
       end
+    end
+
+  end
+
+  context '#redirect_url_in_known_domain' do
+
+    should 'return true for relative url' do
+      page = FactoryGirl.create(:page, redirect_url: '/test')
+      assert page.redirect_url_in_known_domain?
+    end
+
+    should 'return true for redirect_url matching any domain' do
+      domain = FactoryGirl.create(:domain)
+      page = FactoryGirl.create(:page, redirect_url: "http://#{domain.name}/test")
+      assert page.redirect_url_in_known_domain?
+    end
+
+    should 'return false for redirect_url not matching any domain' do
+      domain = FactoryGirl.create(:domain)
+      page = FactoryGirl.create(:page, redirect_url: "https://xyz.com/test")
+      refute page.redirect_url_in_known_domain?
     end
 
   end
