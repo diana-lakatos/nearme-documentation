@@ -432,6 +432,8 @@ ActiveRecord::Schema.define(:version => 20140203120847) do
     t.integer  "position"
     t.text     "html_content"
     t.datetime "deleted_at"
+    t.string   "redirect_url"
+    t.boolean  "open_in_new_window", :default => true
   end
 
   add_index "pages", ["theme_id"], :name => "index_pages_on_theme_id"
