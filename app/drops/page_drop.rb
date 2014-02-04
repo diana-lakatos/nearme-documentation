@@ -17,6 +17,6 @@ class PageDrop < BaseDrop
   end
 
   def link_rel
-    @page.redirect_url_in_known_domain? ? '' : 'nofollow'
+    @page.redirect? && !@page.redirect_url_in_known_domain? ? 'nofollow' : ''
   end
 end
