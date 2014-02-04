@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140203060939) do
+ActiveRecord::Schema.define(:version => 20140203120847) do
 
 
 
@@ -615,6 +615,26 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "theme_fonts", :force => true do |t|
+    t.integer  "theme_id"
+    t.string   "regular_eot"
+    t.string   "regular_svg"
+    t.string   "regular_ttf"
+    t.string   "regular_woff"
+    t.string   "medium_eot"
+    t.string   "medium_svg"
+    t.string   "medium_ttf"
+    t.string   "medium_woff"
+    t.string   "bold_eot"
+    t.string   "bold_svg"
+    t.string   "bold_ttf"
+    t.string   "bold_woff"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "theme_fonts", ["theme_id"], :name => "index_theme_fonts_on_theme_id"
 
   create_table "themes", :force => true do |t|
     t.string   "name"
