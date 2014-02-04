@@ -25,6 +25,7 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
       find_or_build_billing_gateway_for_usd
       render :show
     else
+      flash[:error] = @instance.errors.full_messages.to_sentence
       find_or_build_billing_gateway_for_usd
       render :show
     end

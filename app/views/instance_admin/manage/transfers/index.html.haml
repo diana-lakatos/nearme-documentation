@@ -3,7 +3,7 @@
 %p
   Transfers are generated automatically at the start of every month for
   outstanding charges we've recieved on behalf of hosts. The next month's batch will be generated at about:
-  %strong= Time.zone.now.advance(:months => 1).beginning_of_month
+  %strong= l Time.zone.now.advance(:months => 1).beginning_of_month, format: :long
 
 = render 'list_table'
 

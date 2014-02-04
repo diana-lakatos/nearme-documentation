@@ -4,7 +4,7 @@ module Utils
     def go!
       Dir.glob(Rails.root.join('db', 'seeds', 'locales', '*.yml')).each do |yml_filename|
         en_locales = YAML.load_file(yml_filename)
-        en_locales_hash = convert_hash_to_dot_notation(en_locales['en']) 
+        en_locales_hash = convert_hash_to_dot_notation(en_locales['en'])
 
         en_locales_hash.each_pair do |key, value|
           Translation.create({

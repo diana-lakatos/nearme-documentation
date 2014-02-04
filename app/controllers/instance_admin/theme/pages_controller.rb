@@ -11,7 +11,9 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
 
   def update
     update! do |format|
-      format.html
+      format.html do
+        redirect_to action: 'index'
+      end
       format.json do
         render :nothing => true
       end

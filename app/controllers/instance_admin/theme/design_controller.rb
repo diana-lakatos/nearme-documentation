@@ -8,7 +8,7 @@ class InstanceAdmin::Theme::DesignController < InstanceAdmin::Theme::BaseControl
       flash[:success] = t('flash_messages.instance_admin.theme.theme_updated_successfully')
       redirect_to :action => :show
     else
-      flash[:error] = @theme.errors.full_messages.join('\n')
+      flash[:error] = @theme.errors.full_messages.to_sentence
       render :show
     end
   end

@@ -130,6 +130,8 @@ form{
 
   .error-block {
     color: $error_color;
+    font-size: 14px;
+    text-align: center;
   }
 
   .input-block {
@@ -177,6 +179,10 @@ form{
   &.btn-danger {
     background-color: $red;
     &:hover, &:active, &:focus { background-color: lighten($red, 10%); }
+  }
+
+  &.btn-block {
+    margin: 0px;
   }
 }
 

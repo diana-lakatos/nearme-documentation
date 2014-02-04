@@ -16,6 +16,8 @@ class Domain < ActiveRecord::Base
     end
   end
 
+  before_validation lambda { self.name = self.name.strip }
+
   delegate :white_label_enabled?, :to => :target
 
   def white_label_company?

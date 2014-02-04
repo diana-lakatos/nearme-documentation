@@ -7,7 +7,7 @@ class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::Settings
       flash[:success] = t('flash_messages.instance_admin.settings.location_type_added')
       redirect_to instance_admin_settings_locations_path
     else
-      flash[:error] = t('flash_messages.instance_admin.settings.location_type_not_added')
+      flash[:error] = @location_type.errors.full_messages.to_sentence
       redirect_to instance_admin_settings_locations_path
     end
   end
