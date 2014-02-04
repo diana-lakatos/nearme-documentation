@@ -25,6 +25,10 @@ class Page < ActiveRecord::Base
     redirect_url.present?
   end
 
+  def redirect_url_in_known_domain?
+    redirect? && redirect_url.downcase =~ /^http|^https/ && Domain.pluck(:name).any?{|d| self.redirect_url.include?(d)} 
+  end
+
   private 
 
   def convert_to_html

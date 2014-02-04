@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140131095102) do
+ActiveRecord::Schema.define(:version => 20140202153001) do
 
 
 
@@ -693,6 +693,7 @@ ActiveRecord::Schema.define(:version => 20140131095102) do
     t.datetime "updated_at",                                :null => false
     t.boolean  "read_for_owner",         :default => false
     t.boolean  "read_for_recipient",     :default => false
+    t.datetime "deleted_at"
   end
 
   create_table "user_relationships", :force => true do |t|
