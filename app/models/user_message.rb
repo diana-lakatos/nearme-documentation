@@ -1,5 +1,7 @@
 # user-to-user message
 class UserMessage < ActiveRecord::Base
+  has_paper_trail
+  acts_as_paranoid
 
   attr_accessor :replying_to_id
 
