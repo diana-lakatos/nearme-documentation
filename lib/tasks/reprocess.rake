@@ -52,7 +52,7 @@ namespace :reprocess do
     Location.order('created_at ASC').each do |obj|
       old_slug = obj.slug
       if obj.send(:set_slug) != old_slug
-        FriendlyId::Slug.create(slug: old_slug, sluggable_id: obj.id, sluggable_type: 'Location')
+        FriendlyId::Slug.create(slug: old_slug.strip, sluggable_id: obj.id, sluggable_type: 'Location')
       end
     end
 
