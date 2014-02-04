@@ -85,6 +85,13 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
       @amount = Money.new(1234, 'JPY')
     end
 
+    should 'raise custom exception if amount currency is different from the one declared' do
+      @amount = Money.new(1234, 'EUR')
+      assert_raise Billing::Gateway::BaseProcessor::InvalidStateError do
+        @test_processor.payout({:amount => @amount, :reference => @payment_transfer})
+      end
+    end
+
     should 'create payout object when succeeded' do
       @test_processor.payout({:amount => @amount, :reference => @payment_transfer})
       payout = Payout.last

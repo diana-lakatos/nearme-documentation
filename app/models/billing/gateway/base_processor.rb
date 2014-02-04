@@ -1,4 +1,5 @@
 class Billing::Gateway::BaseProcessor
+  class InvalidStateError < StandardError; end
 
   attr_accessor :user
 
@@ -55,7 +56,7 @@ class Billing::Gateway::BaseProcessor
 
   def payout(payout_details)
     amount, reference = payout_details[:amount], payout_details[:reference]
-    raise "Unexpected state, amounts currency is different from the one that initialized processor" if amount.currency.iso_code != @currency
+    raise Billing::Gateway::BaseProcessor::InvalidStateError.new("Unexpected state, amounts currency is different from the one that initialized processor") if amount.currency.iso_code != @currency
     @payout = Payout.create(
       amount: amount.cents,
       currency: amount.currency.iso_code,

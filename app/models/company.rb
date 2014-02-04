@@ -53,7 +53,7 @@ class Company < ActiveRecord::Base
 
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
-  before_save :create_bank_account_in_balanced, :if => lambda { |c| c.bank_account_number.present? || c.bank_routing_number.present? || c.bank_owner_name.present? }
+  before_save :create_bank_account_in_balanced!, :if => lambda { |c| c.bank_account_number.present? || c.bank_routing_number.present? || c.bank_owner_name.present? }
 
   validates_presence_of :name, :instance_id
   validates_presence_of :industries, :if => proc { |c| c.instance.present? && c.instance.is_desksnearme? && !c.instance.skip_company? }
@@ -164,14 +164,15 @@ class Company < ActiveRecord::Base
       errors.add(:url, "must be a valid URL") unless valid
     end
 
-    def create_bank_account_in_balanced
+    def create_bank_account_in_balanced!
       [:bank_account_number, :bank_routing_number, :bank_owner_name].each do |mandatory_field|
         errors.add(mandatory_field, 'cannot be blank') if self.send(mandatory_field).blank?
       end
       if errors.any?
         false
       else
-        Billing::Gateway::BalancedProcessor.create_customer_with_bank_account(self)
+        # when more processors will support ACH, we will want to use some kind of wrapper instead of calling BalancedProcessor directly
+        Billing::Gateway::BalancedProcessor.create_customer_with_bank_account!(self)
       end
     rescue Balanced::BadRequest => e
       { '[bank_code]' => :bank_routing_number, '[account_number]' => :bank_account_number}.each do |balanced_field, our_form_field|

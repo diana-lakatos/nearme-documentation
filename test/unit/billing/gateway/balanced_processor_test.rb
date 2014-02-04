@@ -174,6 +174,13 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
         Balanced::Customer.expects(:find).with('test-customer').returns(@customer).at_least(1)
       end
 
+      should "raise error if not USD" do
+        Balanced::Customer.unstub(:find)
+        assert_raise Billing::Gateway::BaseProcessor::InvalidStateError do 
+          @balanced_processor.outgoing_payment(@company.instance, @company).process_payout(Money.new(1000, 'EUR'))
+        end
+      end
+
       should "invoke the right callback on success" do
         @customer.stubs(:credit).returns(@credit)
         @credit.expects(:save).returns(stub(:status => 'pending', :to_yaml => 'yaml'))
@@ -206,7 +213,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
       setup do
         @customer = mock()
         @bank_account = stub()
-        Company.any_instance.expects(:create_bank_account_in_balanced).returns(true).at_least(0)
+        Company.any_instance.expects(:create_bank_account_in_balanced!).returns(true).at_least(0)
         @company = FactoryGirl.create(:company_with_balanced, {
           :bank_account_number => '123456789',
           :bank_routing_number => '123456789',
@@ -228,7 +235,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
           Balanced::Customer.expects(:find).never
           Balanced::Customer.expects(:new).returns(stub(:save => @customer)).once
           assert_difference 'InstanceClient.count' do
-            Billing::Gateway::BalancedProcessor.create_customer_with_bank_account(@company)
+            Billing::Gateway::BalancedProcessor.create_customer_with_bank_account!(@company)
             @instance_client = InstanceClient.last
             assert_equal @company.reload, @instance_client.client
             assert_equal @company.instance, @instance_client.instance
@@ -244,7 +251,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
           Balanced::Customer.expects(:find).with(@company.instance_clients.first.balanced_user_id).returns(@customer).twice
           Balanced::Customer.expects(:new).never
           assert_no_difference 'InstanceClient.count' do
-            Billing::Gateway::BalancedProcessor.create_customer_with_bank_account(@company)
+            Billing::Gateway::BalancedProcessor.create_customer_with_bank_account!(@company)
           end
         end
 
@@ -256,8 +263,8 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
         @bank_account.stubs(:is_valid).returns(true)
         @customer.stubs(:bank_accounts).returns(stub(:last => @bank_account))
         Balanced::Customer.expects(:find).returns(@customer).once
-        assert_raise RuntimeError do |e|
-          Billing::Gateway::BalancedProcessor.create_customer_with_bank_account(@company)
+        assert_raise Billing::Gateway::BaseProcessor::InvalidStateError do |e|
+          Billing::Gateway::BalancedProcessor.create_customer_with_bank_account!(@company)
           assert e.message.include?('should have been invalidated')
         end
       end

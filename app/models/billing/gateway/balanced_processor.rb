@@ -18,7 +18,7 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
     instance_client(object, object.instance).try(:balanced_user_id).present?
   end
 
-  def self.create_customer_with_bank_account(client)
+  def self.create_customer_with_bank_account!(client)
     Balanced.configure(client.instance.balanced_api_key)
     _instance_client = self.instance_client(client, client.instance)
     balanced_customer = nil
@@ -27,7 +27,7 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
       balanced_customer = Balanced::Customer.find(_instance_client.balanced_user_id)
       bank_account = balanced_customer.bank_accounts.last
       bank_account.invalidate
-      raise "Bank account should have been invalidated, but it's still valid for InstanceClient(id=#{_instance_client.id})" if bank_account.is_valid
+      raise Billing::Gateway::BaseProcessor::InvalidStateError.new("Bank account should have been invalidated, but it's still valid for InstanceClient(id=#{_instance_client.id})") if bank_account.is_valid
       balanced_customer = Balanced::Customer.find(_instance_client.balanced_user_id)
     else
       balanced_customer = Balanced::Customer.new(client.to_balanced_params).save
@@ -41,7 +41,7 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
 
   def process_payout(amount)
     return if instance_client.balanced_user_id.blank?
-    raise 'Balanced can payout only USD!' if amount.currency.iso_code != 'USD'
+    raise Billing::Gateway::BaseProcessor::InvalidStateError.new('Balanced can payout only USD!') if amount.currency.iso_code != 'USD'
     @balanced_customer = Balanced::Customer.find(instance_client.balanced_user_id)
     begin
       credit = @balanced_customer.credit(
