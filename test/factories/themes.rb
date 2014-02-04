@@ -17,5 +17,9 @@ FactoryGirl.define do
     owner_id { (Instance.default_instance || FactoryGirl.create(:default_instance)) }
     owner_type "Instance"
     skip_compilation true
+
+    factory :theme_with_compilation do
+      skip_compilation false
+    end
   end
 end
