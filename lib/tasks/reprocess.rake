@@ -47,18 +47,19 @@ namespace :reprocess do
 
   desc "Regenerate all slugs where we use friendly_id"
   task :slugs => :environment do
+    # Store current slugs in history
+    puts "Saving Location slugs in history"
+    Location.order('created_at ASC').each do |obj|
+      old_slug = obj.slug
+      if obj.send(:set_slug) != old_slug
+        FriendlyId::Slug.create(slug: old_slug, sluggable_id: obj.id, sluggable_type: 'Location')
+      end
+    end
+
     [Location, Page, User].each do |model|
       puts '#'*80
       puts "Processing #{model}"
       updated_objects = 0
-
-      # Store current slugs in history
-      Location.order('created_at ASC').each do |obj|
-        old_slug = obj.slug
-        if obj.send(:set_slug) != old_slug
-          FriendlyId::Slug.create(slug: old_slug, sluggable_id: obj.id, sluggable_type: 'Location')
-        end
-      end
 
       model.order('created_at ASC').each do |obj|
         begin
