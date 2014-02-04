@@ -9,6 +9,7 @@ class UserMessage < ActiveRecord::Base
   belongs_to :thread_owner, class_name: 'User'     # user that started conversation
   belongs_to :thread_recipient, class_name: 'User' # user that is conversation recipient
   belongs_to :thread_context, polymorphic: true    # conversation context: Listing, Reservation, User
+  belongs_to :instance
 
   validates_presence_of :author_id
   validates_presence_of :thread_owner_id
@@ -24,6 +25,8 @@ class UserMessage < ActiveRecord::Base
   scope :for_user, ->(user) {
     where('thread_owner_id = ? OR thread_recipient_id = ?', user.id, user.id).order('user_messages.created_at asc')
   }
+
+  scope :for_instance, ->(instance) { where(instance_id: instance) }
 
   scope :by_created, -> {order('created_at desc')}
 
