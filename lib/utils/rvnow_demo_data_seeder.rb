@@ -53,6 +53,7 @@ module Utils
                   listing.availability_rules.each{|a| a.destroy!}
 
                   listing.reservations.each do |reservation|
+                    reservation.amenity_holders.each{|r| r.destroy!}
                     reservation.reviews.each{|r| r.destroy!}
                     reservation.comments_about_guests.each{|r| r.destroy!}
                     reservation.periods.each{|r| r.destroy!}
@@ -180,7 +181,7 @@ module Utils
 
     def load_instance!
       @instance ||= do_task "Loading RVnow instance" do
-        instance = FactoryGirl.create(:instance, name: 'RVnow', bookable_noun: 'RV', lessor: 'owner', lessee: 'renter', service_fee_guest_percent: 0, service_fee_host_percent: 0)
+        instance = FactoryGirl.create(:instance, name: 'RVnow', bookable_noun: 'RV', lessor: 'owner', lessee: 'renter', service_fee_guest_percent: 0, service_fee_host_percent: 0, marketplace_password: 'letmein')
         theme = instance.theme
         theme.name = 'RVnow'
         theme.site_name = 'RVnow'
