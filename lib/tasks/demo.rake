@@ -61,6 +61,14 @@ namespace :demo do
       task :seed => :environment do
         Utils::RvnowDemoDataSeeder.new.go!
       end
+
+      desc "Remove all seeded data"
+      task :clean => :environment do
+        Utils::RvnowDemoDataSeeder.new.clean!
+      end
+
+      desc "Clean database with old data and reseed"
+      task :reseed => ["demo:rvnow:db:clean", "demo:rvnow:db:seed"]
     end
   end
 end
