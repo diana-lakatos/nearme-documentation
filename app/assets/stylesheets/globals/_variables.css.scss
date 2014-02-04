@@ -102,12 +102,9 @@ $border-radius-bottom: 0 0 5px 5px;
 
 // Webfonts
 
-$font-light:   'Futura-regular', sans-serif;
-$font-regular: 'Futura-regular', sans-serif;
-$font-medium:  'Futura-medium', sans-serif;
-$font-demi:    'Futura-demi', sans-serif;
-$font-heavy:   'Futura-heavy', sans-serif;
-$font-bold:    'Futura-heavy', sans-serif;
+$font-regular: 'Futura-regular', sans-serif !default;
+$font-medium:  'Futura-medium', sans-serif !default;
+$font-bold:    'Futura-regular', sans-serif !default;
 
 
 // Z index

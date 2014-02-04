@@ -85,6 +85,22 @@
   end.join
 %>
 
+<%=
+  if theme.theme_font.present?
+    ThemeFont::FONT_TYPES.map do |font_type|
+      <<-SCSS
+        @font-face {
+          font-family: "font_#{font_type}";
+          src: url(#{theme.theme_font.send("#{font_type}_eot")});
+          src: url(#{theme.theme_font.send("#{font_type}_eot")}?#iefix) format('eot'), url(#{theme.theme_font.send("#{font_type}_woff")}) format('woff'), url(#{theme.theme_font.send("#{font_type}_ttf")}) format('truetype'), url(#{theme.theme_font.send("#{font_type}_svg")}) format('svg');
+        }
+
+        $font-#{font_type}: 'font_#{font_type}', sans-serif;
+      SCSS
+    end.join
+  end
+%>
+
 // Render the application css with the above configuration
 @import "application";
 

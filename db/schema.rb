@@ -193,6 +193,16 @@ ActiveRecord::Schema.define(:version => 20140204180247) do
   add_index "footer_templates", ["path", "partial", "theme_id"], :name => "index_footer_templates_on_path_and_partial_and_theme_id"
   add_index "footer_templates", ["theme_id"], :name => "index_footer_templates_on_theme_id"
 
+  create_table "friendly_id_slugs", :force => true do |t|
+    t.string   "slug",                         :null => false
+    t.integer  "sluggable_id",                 :null => false
+    t.string   "sluggable_type", :limit => 40
+    t.datetime "created_at"
+  end
+
+  add_index "friendly_id_slugs", ["sluggable_id"], :name => "index_friendly_id_slugs_on_sluggable_id"
+  add_index "friendly_id_slugs", ["sluggable_type"], :name => "index_friendly_id_slugs_on_sluggable_type"
+
   create_table "guest_ratings", :force => true do |t|
     t.integer  "author_id",      :null => false
     t.integer  "subject_id"
@@ -606,6 +616,26 @@ ActiveRecord::Schema.define(:version => 20140204180247) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "theme_fonts", :force => true do |t|
+    t.integer  "theme_id"
+    t.string   "regular_eot"
+    t.string   "regular_svg"
+    t.string   "regular_ttf"
+    t.string   "regular_woff"
+    t.string   "medium_eot"
+    t.string   "medium_svg"
+    t.string   "medium_ttf"
+    t.string   "medium_woff"
+    t.string   "bold_eot"
+    t.string   "bold_svg"
+    t.string   "bold_ttf"
+    t.string   "bold_woff"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "theme_fonts", ["theme_id"], :name => "index_theme_fonts_on_theme_id"
 
   create_table "themes", :force => true do |t|
     t.string   "name"
