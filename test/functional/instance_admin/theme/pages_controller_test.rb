@@ -17,7 +17,7 @@ class InstanceAdmin::Theme::PagesControllerTest < ActionController::TestCase
       @page = FactoryGirl.create(:page, :path => 'Page test', :theme => @theme)
       get :index
       assert_response :success
-      assert_select 'a', "Page test"
+      assert_select 'td', "Page test"
     end
   end
 

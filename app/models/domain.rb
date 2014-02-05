@@ -16,7 +16,7 @@ class Domain < ActiveRecord::Base
     end
   end
 
-  before_validation lambda { self.name = self.name.strip }
+  before_validation lambda { self.name = self.name.try(:strip) }
 
   delegate :white_label_enabled?, :to => :target
 

@@ -36,4 +36,7 @@ class InstanceAdmin::Manage::Users::InstanceAdminRolesController < InstanceAdmin
     params[:instance_admin_role].keys.all? { |iar| iar.include?("permission_") }
   end
 
+  def permitting_controller_class
+    'manage'
+  end
 end

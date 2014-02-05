@@ -34,4 +34,10 @@ class InstanceAdmin::Manage::Users::InstanceAdminsController < InstanceAdmin::Ma
     end
     redirect_to instance_admin_manage_users_path
   end
+
+  private
+
+  def permitting_controller_class
+    'manage'
+  end
 end

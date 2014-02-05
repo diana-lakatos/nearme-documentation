@@ -24,7 +24,7 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
         post :create, "location_type"=>{"name"=>""}
       end
 
-      assert_equal 'Could not add new location type.', flash[:error]
+      assert_equal "Location type can't be blank", flash[:error]
       assert_redirected_to instance_admin_settings_locations_path
     end
 

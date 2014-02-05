@@ -283,16 +283,10 @@ ActiveRecord::Schema.define(:version => 20140203120847) do
     t.integer  "instance_id"
     t.boolean  "permission_settings",    :default => false
     t.boolean  "permission_theme",       :default => false
-    t.boolean  "permission_transfers",   :default => false
-    t.boolean  "permission_inventories", :default => false
-    t.boolean  "permission_partners",    :default => false
-    t.boolean  "permission_users",       :default => false
     t.boolean  "permission_analytics",   :default => true
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
-    t.boolean  "permission_pages",       :default => false
     t.boolean  "permission_manage",      :default => false
-    t.boolean  "permission_blog",        :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"

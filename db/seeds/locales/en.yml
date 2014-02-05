@@ -7,12 +7,18 @@ en:
     attributes:
       location_type:
         name: "Location type"
+      listing_type:
+        name: "Listing type"
     errors:
       models:
         location_type:
           attributes:
             name:
-              taken: " already exists."
+              taken: "already exists."
+        listing_type:
+          attributes:
+            name:
+              taken: "already exists."
         user:
           attributes:
             email:

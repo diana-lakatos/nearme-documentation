@@ -24,7 +24,7 @@ class InstanceAdmin::Settings::ListingTypesControllerTest < ActionController::Te
         post :create, "listing_type"=>{"name"=>""}
       end
 
-      assert_equal 'Could not add new listing type.', flash[:error]
+      assert_equal "Listing type can't be blank", flash[:error]
       assert_redirected_to instance_admin_settings_listings_path
     end
 

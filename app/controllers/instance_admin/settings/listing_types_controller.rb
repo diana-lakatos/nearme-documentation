@@ -7,7 +7,7 @@ class InstanceAdmin::Settings::ListingTypesController < InstanceAdmin::Settings:
       flash[:success] = t('flash_messages.instance_admin.settings.listing_type_added')
       redirect_to instance_admin_settings_listings_path
     else
-      flash[:error] = t('flash_messages.instance_admin.settings.listing_type_not_added')
+      flash[:error] = @listing_type.errors.full_messages.to_sentence
       redirect_to instance_admin_settings_listings_path
     end
   end

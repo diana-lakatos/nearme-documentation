@@ -8,7 +8,14 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
   def create
     @page = Page.new(params[:page])
     @page.theme = platform_context.theme
-    create!
+    create! do |format|
+      format.html do
+        redirect_to action: 'index'
+      end
+      format.json do
+        render :nothing => true
+      end
+    end
   end
 
   def edit
