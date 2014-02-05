@@ -21,7 +21,7 @@ class Location < ActiveRecord::Base
 
   geocoded_by :address
 
-  has_many :amenity_holders, as: :holder
+  has_many :amenity_holders, as: :holder, dependent: :destroy
   has_many :amenities, through: :amenity_holders
 
   belongs_to :company, inverse_of: :locations
@@ -63,7 +63,7 @@ class Location < ActiveRecord::Base
   before_save :assign_default_availability_rules
 
   extend FriendlyId
-  friendly_id :urlify, use: :slugged
+  friendly_id :urlify, use: [:slugged, :history]
 
   scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where('locations.location_type_id IN (?)', location_types_ids) }
   scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company => :company_industries).where('company_industries.industry_id IN (?)', industry_ids) }

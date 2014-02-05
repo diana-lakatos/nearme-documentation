@@ -15,15 +15,24 @@ class Theme < ActiveRecord::Base
     :contact_email, :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url,
     :meta_title, :remote_logo_image_url, :remote_logo_retina_image_url, :remote_icon_image_url,
     :remote_hero_image_url, :remote_icon_retina_image_url, :gplus_url, :homepage_content, :call_to_action,
-    :homepage_css
+    :homepage_css, :theme_font_attributes
 
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
   belongs_to :owner, :polymorphic => true
   has_many :pages, :dependent => :destroy
+  has_one :theme_font, :dependent => :destroy
   delegate :bookable_noun, :to => :instance
   delegate :lessor, :to => :instance
   delegate :lessee, :to => :instance
+
+  accepts_nested_attributes_for :theme_font, reject_if: proc { |params| 
+    ThemeFont::FONT_TYPES.map do |font_type|
+      ThemeFont::FONT_EXTENSIONS.map do |file_extension|
+        params["#{font_type}_#{file_extension}".to_sym].present?
+      end
+    end.flatten.all?{|f| !f}
+  }
 
   validates :contact_email, email_rfc_822: true, allow_nil: true
   validates_length_of :description, :maximum => 250

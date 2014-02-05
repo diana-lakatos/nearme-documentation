@@ -45,53 +45,134 @@ class ReservationTest < ActiveSupport::TestCase
   context 'cancelable' do
 
     setup do
-        @reservation = Reservation.new
-        @reservation.listing = FactoryGirl.create(:always_open_listing)
-        @reservation.owner = FactoryGirl.create(:user)
-        @reservation.add_period(Time.zone.today.next_week+1)
-        @reservation.save!
+      @reservation = Reservation.new
+      @reservation.listing = FactoryGirl.create(:always_open_listing)
+      @reservation.owner = FactoryGirl.create(:user)
+      @reservation.add_period(Time.zone.today.next_week+1)
+      @reservation.save!
     end
 
     should 'be cancelable if all periods are for future' do
-        assert @reservation.cancelable
+      assert @reservation.cancelable
     end
 
     should 'be cancelable if all periods are for future and confirmed' do
-        @reservation.confirm!
-        assert @reservation.cancelable
+      @reservation.confirm!
+      assert @reservation.cancelable
     end
 
     should 'not be cancelable if at least one period is for past' do
-        @reservation.add_period((Time.zone.today+2.day))
-        @reservation.add_period((Time.zone.today-2.day))
-        assert !@reservation.cancelable
+      @reservation.add_period((Time.zone.today+2.day))
+      @reservation.add_period((Time.zone.today-2.day))
+      assert !@reservation.cancelable
     end
 
     should 'not be cancelable if user canceled' do
-        @reservation.user_cancel!
-        assert !@reservation.cancelable
+      @reservation.user_cancel!
+      assert !@reservation.cancelable
     end
 
     should 'not be cancelable if owner rejected' do
-        @reservation.reject!
-        assert !@reservation.cancelable
+      @reservation.reject!
+      assert !@reservation.cancelable
     end
 
     should 'not be cancelable if expired' do
-        @reservation.expire!
-        assert !@reservation.cancelable
+      @reservation.expire!
+      assert !@reservation.cancelable
     end
 
     should 'not be cancelable if owner canceled' do
-        @reservation.confirm!
-        @reservation.host_cancel!
-        assert !@reservation.cancelable
+      @reservation.confirm!
+      @reservation.host_cancel!
+      assert !@reservation.cancelable
     end
 
   end
 
+  context 'attempt_payment_refund' do
+    setup do
+      @charge = FactoryGirl.create(:charge)
+      @reservation = @charge.reference.reservation
+      @reservation.stubs(:attempt_payment_capture).returns(true)
+      @reservation.confirm!
+      @reservation.update_column(:payment_status, Reservation::PAYMENT_STATUSES[:paid])
+    end
+
+    context 'when to trigger' do
+      should 'attempt to refund when cancelled by host' do
+        @reservation.expects(:schedule_refund).once
+        @reservation.host_cancel!
+      end
+
+      should 'attempt to refund when cancelled by guest' do
+        @reservation.expects(:schedule_refund).once
+        @reservation.user_cancel!
+      end
+
+      should 'not attempt to refund when cancelled by guest but was unconfirmed' do
+        @reservation.update_column(:state, 'unconfirmed')
+        @reservation = Reservation.find(@reservation.id)
+        @reservation.expects(:schedule_refund).never
+        @reservation.user_cancel!
+      end
+
+    end
+
+    should 'be able to schedule refund' do
+      Timecop.freeze(Time.zone.now) do
+        ReservationRefundJob.expects(:perform_later).with do |time, id, counter|
+          time.to_i == Time.zone.now.to_i && id == @reservation.id && counter == 0
+        end.once
+      end
+      @reservation.send(:schedule_refund, nil)
+    end
+
+    should 'change payment status to refunded if successfully refunded' do
+      @reservation.update_column(:payment_method, 'credit_card')
+      ReservationCharge.any_instance.expects(:refund).returns(true)
+      @reservation.send(:attempt_payment_refund)
+      assert_equal Reservation::PAYMENT_STATUSES[:refunded], @reservation.reload.payment_status
+    end
+
+    should 'schedule next refund attempt on fail' do
+      @reservation.update_column(:payment_method, 'credit_card')
+      ReservationCharge.any_instance.expects(:refund).returns(false)
+      Timecop.freeze(Time.zone.now) do
+        ReservationRefundJob.expects(:perform_later).with do |time, id, counter|
+          time.to_i == (Time.zone.now + 12.hours).to_i && id == @reservation.id && counter == 2
+        end.once
+      end
+      @reservation.send(:attempt_payment_refund, 1)
+      assert_equal Reservation::PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
+    end
+
+    should 'stop schedluing next refund attempt after 3 attempts' do
+      @reservation.update_column(:payment_method, 'credit_card')
+      ReservationCharge.any_instance.expects(:refund).returns(false)
+      ReservationRefundJob.expects(:perform_later).never
+      BackgroundIssueLogger.expects(:log_issue)
+      @reservation.send(:attempt_payment_refund, 2)
+      assert_equal Reservation::PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
+    end
+
+    should 'abort attempt to refund if payment was manual' do
+      @reservation.update_column(:payment_method, 'manual')
+      ReservationCharge.any_instance.expects(:refund).never
+      @reservation.send(:attempt_payment_refund)
+      assert_equal Reservation::PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
+    end
+
+    should 'abort attempt to refund if payment was free' do
+      @reservation.update_column(:payment_method, 'free')
+      ReservationCharge.any_instance.expects(:refund).never
+      @reservation.host_cancel!
+      assert_equal Reservation::PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
+    end
+  end
+
   context 'expiration' do
- 
+
     context 'with a confirmed reservation' do
 
       setup do
@@ -140,15 +221,15 @@ class ReservationTest < ActiveSupport::TestCase
       reservation.service_fee_amount_host_cents = nil
 
       expected = { :reservation =>
-        {
-          :id         => nil,
-          :user_id    => nil,
-          :listing_id => reservation.listing.id,
-          :state      => "pending",
-          :cancelable => true,
-          :total_cost => { :amount=>0.0, :label=>"$0.00", :currency_code=> "USD" },
-          :times      => []
-        }
+                   {
+                     :id         => nil,
+                     :user_id    => nil,
+                     :listing_id => reservation.listing.id,
+                     :state      => "pending",
+                     :cancelable => true,
+                     :total_cost => { :amount=>0.0, :label=>"$0.00", :currency_code=> "USD" },
+                     :times      => []
+                   }
       }
 
       assert_equal expected, ReservationSerializer.new(reservation).as_json
@@ -187,8 +268,8 @@ class ReservationTest < ActiveSupport::TestCase
         assert_equal Reservation::ServiceFeeCalculator.new(reservation).service_fee_guest.cents, reservation.service_fee_amount_guest_cents
         assert_equal Reservation::ServiceFeeCalculator.new(reservation).service_fee_host.cents, reservation.service_fee_amount_host_cents
         assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents +
-                     Reservation::ServiceFeeCalculator.new(reservation).service_fee_guest.cents,
-                     reservation.total_amount_cents
+          Reservation::ServiceFeeCalculator.new(reservation).service_fee_guest.cents,
+          reservation.total_amount_cents
 
       end
 
@@ -257,8 +338,8 @@ class ReservationTest < ActiveSupport::TestCase
       should "set total cost based on HourlyPriceCalculator" do
         @reservation.periods.build :date => Time.zone.today.advance(:weeks => 1).beginning_of_week, :start_minute => 9*60, :end_minute => 12*60
         assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents +
-                     Reservation::ServiceFeeCalculator.new(@reservation).service_fee_guest.cents, 
-                     @reservation.total_amount_cents
+          Reservation::ServiceFeeCalculator.new(@reservation).service_fee_guest.cents, 
+          @reservation.total_amount_cents
       end
     end
   end

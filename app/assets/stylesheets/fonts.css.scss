@@ -15,20 +15,6 @@
     'futura-medium-web.svg', svg),
     'futura-medium-web.eot');
 
-@include font-face('Futura-demi', 
-  font-files(
-    'futura-demi-web.woff', woff,
-    'futura-demi-web.ttf', ttf,
-    'futura-demi-web.svg', svg),
-    'futura-demi-web.eot');
-
-@include font-face('Futura-heavy', 
-  font-files(
-    'futura-heavy-web.woff', woff,
-    'futura-heavy-web.ttf', ttf,
-    'futura-heavy-web.svg', svg),
-    'futura-heavy-web.eot');
-
 @include font-face("icon-font",
   font-files(
     "icon-font.woff",
