@@ -378,7 +378,6 @@ ActiveRecord::Schema.define(:version => 20140204180247) do
     t.integer  "rank",                        :default => 0
     t.integer  "capacity"
     t.integer  "photos_count",                :default => 0
-    t.text     "metadata"
   end
 
   add_index "listings", ["listing_type_id"], :name => "index_listings_on_listing_type_id"
@@ -420,7 +419,6 @@ ActiveRecord::Schema.define(:version => 20140204180247) do
     t.string   "postcode"
     t.integer  "administrator_id"
     t.string   "name"
-    t.text     "metadata"
   end
 
   add_index "locations", ["administrator_id"], :name => "index_locations_on_administrator_id"
@@ -439,11 +437,11 @@ ActiveRecord::Schema.define(:version => 20140204180247) do
   add_index "mailer_unsubscriptions", ["user_id"], :name => "index_mailer_unsubscriptions_on_user_id"
 
   create_table "pages", :force => true do |t|
-    t.string   "path",                                 :null => false
+    t.string   "path",         :null => false
     t.text     "content"
     t.string   "hero_image"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "theme_id"
     t.string   "slug"
     t.integer  "position"
