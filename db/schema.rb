@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140203120847) do
+ActiveRecord::Schema.define(:version => 20140204180247) do
 
 
 
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20140203120847) do
     t.string   "holder_type"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.datetime "deleted_at"
   end
 
   add_index "amenity_holders", ["amenity_id"], :name => "index_amenity_holders_on_amenity_id"
