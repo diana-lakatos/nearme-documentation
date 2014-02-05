@@ -2,7 +2,8 @@ class Listing < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
   class NotFound < ActiveRecord::RecordNotFound; end
-  # == Associations
+  include Metadata
+
   has_many :reservations, dependent: :destroy
 
   has_many :photos, dependent: :destroy do
@@ -45,8 +46,9 @@ class Listing < ActiveRecord::Base
   
   # == Callbacks
   before_save :set_activated_at
-  after_save :notify_user_about_change
-  after_destroy :notify_user_about_change
+  after_commit :location_populate_photos_metadata!, :if => lambda { |l| l.should_populate_location_photos_metadata? }
+  after_commit :creator_populate_listings_metadata!, :if => lambda { |l| l.should_populate_creator_listings_metadata? }
+
 
   # == Validations
   validates :name, length: { maximum: 50 }
@@ -66,14 +68,14 @@ class Listing < ActiveRecord::Base
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
-  delegate :instance, :currency, :formatted_address, :notify_user_about_change,
-    :local_geocoding, :latitude, :longitude, :distance_from, :address, :postcode, to: :location,
-    allow_nil: true
-  delegate :creator, :creator=, to: :location
-  delegate :administrator, :to => :location, :allow_nil => true
+  delegate :instance, :currency, :formatted_address, :local_geocoding, 
+    :latitude, :longitude, :distance_from, :address, :postcode, 
+    :creator, :creator=, to: :location, allow_nil: true
+  delegate :service_fee_guest_percent, :service_fee_host_percent, :administrator, 
+    to: :location, allow_nil: true
+  delegate :populate_photos_metadata!, to: :location, :prefix => true
+  delegate :populate_listings_metadata!, to: :creator, :prefix => true
   delegate :name, to: :creator, prefix: true
-  delegate :service_fee_guest_percent, to: :location, allow_nil: true
-  delegate :service_fee_host_percent, to: :location, allow_nil: true
   delegate :to_s, to: :name
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description,
@@ -334,6 +336,26 @@ class Listing < ActiveRecord::Base
   def enable!
     self.enabled = true
     self.save(validate: false)
+  end
+
+  def populate_photos_metadata!
+    update_metadata({ :photos => build_photos_metadata_array })
+    location_populate_photos_metadata!
+  end
+
+  def build_photos_metadata_array
+    self.reload.photos.inject([]) do |array, photo| 
+      array << photo.to_listing_metadata
+      array
+    end
+  end
+
+  def should_populate_location_photos_metadata?
+    location.present? && %w(name).any? { |attr| metadata_relevant_attribute_changed?(attr) }
+  end
+
+  def should_populate_creator_listings_metadata?
+    self.destroyed? || %w(id draft).any? { |attr| metadata_relevant_attribute_changed?(attr) }  
   end
 
   private

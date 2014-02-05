@@ -138,6 +138,7 @@ ActiveRecord::Schema.define(:version => 20140214110817) do
     t.boolean  "white_label_enabled", :default => false
     t.boolean  "listings_public",     :default => true
     t.integer  "partner_id"
+    t.text     "metadata",            :default => "{}"
   end
 
   add_index "companies", ["creator_id"], :name => "index_companies_on_creator_id"
@@ -400,6 +401,7 @@ ActiveRecord::Schema.define(:version => 20140214110817) do
     t.integer  "rank",                        :default => 0
     t.integer  "capacity"
     t.integer  "photos_count",                :default => 0
+    t.text     "metadata",                    :default => "{}"
   end
 
   add_index "listings", ["listing_type_id"], :name => "index_listings_on_listing_type_id"
@@ -422,8 +424,8 @@ ActiveRecord::Schema.define(:version => 20140214110817) do
     t.float    "latitude"
     t.float    "longitude"
     t.text     "info"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.datetime "deleted_at"
     t.string   "formatted_address"
     t.string   "currency"
@@ -441,6 +443,7 @@ ActiveRecord::Schema.define(:version => 20140214110817) do
     t.string   "postcode"
     t.integer  "administrator_id"
     t.string   "name"
+    t.text     "metadata",           :default => "{}"
   end
 
   add_index "locations", ["administrator_id"], :name => "index_locations_on_administrator_id"
@@ -660,6 +663,7 @@ ActiveRecord::Schema.define(:version => 20140214110817) do
     t.integer  "service_fee_amount_host_cents",      :default => 0,         :null => false
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
+    t.text     "metadata",                           :default => "{}"
   end
 
   add_index "reservations", ["listing_id"], :name => "index_reservations_on_listing_id"
@@ -879,6 +883,7 @@ ActiveRecord::Schema.define(:version => 20140214110817) do
     t.boolean  "sms_notifications_enabled",                            :default => true
     t.string   "sms_preferences",                                       :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
     t.text     "instance_unread_messages_threads_count",                :default => "--- {}\n"
+    t.text     "metadata",                                             :default => "{}"
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"

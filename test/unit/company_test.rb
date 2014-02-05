@@ -143,4 +143,9 @@ class CompanyTest < ActiveSupport::TestCase
 
       end
   end
+
+  context 'metadata' do
+    context 'populate_industries_metadata!' do
+    end
+  end
 end

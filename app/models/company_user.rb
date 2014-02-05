@@ -7,4 +7,7 @@ class CompanyUser < ActiveRecord::Base
   belongs_to :company
   belongs_to :user
 
+  after_commit :user_populate_companies_metadata!
+  delegate :populate_companies_metadata!, to: :user, :prefix => true
+
 end

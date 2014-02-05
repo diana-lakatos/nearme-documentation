@@ -4,6 +4,7 @@ class Location < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
   include Impressionable
+  include Metadata
 
   attr_accessible :address, :address2, :amenity_ids, :company_id, :description, :email,
     :info, :latitude, :local_geocoding, :longitude, :currency,
@@ -31,10 +32,8 @@ class Location < ActiveRecord::Base
   delegate :creator, :to => :company, :allow_nil => true
   delegate :company_users, :to => :company, :allow_nil => true
 
-  after_save :notify_user_about_change
-  after_destroy :notify_user_about_change
-
-  delegate :notify_user_about_change, :to => :company, :allow_nil => true
+  delegate :url, :to => :company
+  delegate :service_fee_guest_percent, :service_fee_host_percent, to: :company, allow_nil: true
   delegate :phone, :to => :creator, :allow_nil => true
 
   has_many :listings,
@@ -79,9 +78,6 @@ class Location < ActiveRecord::Base
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :listings
 
-  delegate :url, :to => :company
-  delegate :service_fee_guest_percent, to: :company, allow_nil: true
-  delegate :service_fee_host_percent, to: :company, allow_nil: true
 
   def distance_from(other_latitude, other_longitude)
     Geocoder::Calculations.distance_between([ latitude,       longitude ],
@@ -147,6 +143,17 @@ class Location < ActiveRecord::Base
       self.country = data_parser.fetch_address_component("country")
       self.state = data_parser.fetch_address_component("state")
       self.postcode = data_parser.fetch_address_component("postcode")
+    end
+  end
+
+  def populate_photos_metadata!
+    update_metadata({ :photos => build_photos_metadata_array })
+  end
+
+  def build_photos_metadata_array
+    self.reload.photos.inject([]) do |array, photo| 
+      array << photo.to_location_metadata
+      array
     end
   end
 

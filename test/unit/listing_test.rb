@@ -211,4 +211,95 @@ class ListingTest < ActiveSupport::TestCase
       assert_equal monday+2.day, @listing.first_available_date
     end
   end
+
+  context 'metadata' do
+
+    context 'populating hash' do
+      setup do
+        @listing = FactoryGirl.create(:listing)
+        @photo = @listing.photos.first
+      end
+
+      should 'initialize metadata' do
+        @listing.expects(:update_metadata).with(:photos => [{
+          :space_listing => @photo.image_url(:space_listing),
+          :golden => @photo.image_url(:golden),
+          :large => @photo.image_url(:large),
+        }])
+        @listing.populate_photos_metadata!
+      end
+
+      should 'trigger location metadata' do
+        Location.any_instance.expects(:populate_photos_metadata!).once
+        @listing.populate_photos_metadata!
+      end
+
+      context 'with second image' do
+
+        setup do
+          @photo2 = FactoryGirl.create(:photo, :listing => @listing)
+        end
+
+        should 'update existing metadata' do
+          @listing.expects(:update_metadata).with(:photos => [
+            {
+              :space_listing => @photo.image_url(:space_listing),
+              :golden => @photo.image_url(:golden),
+              :large => @photo.image_url(:large),
+            },
+            {
+              :space_listing => @photo2.image_url(:space_listing),
+              :golden => @photo2.image_url(:golden),
+              :large => @photo2.image_url(:large),
+            }
+          ])
+          @listing.populate_photos_metadata!
+        end
+      end
+
+    end
+
+  end
+
+  context 'should_populate_creator_listings_metadata?' do
+
+    setup do
+      @listing = FactoryGirl.create(:listing)
+    end
+
+    should 'return true if new listing is created' do
+      assert @listing.should_populate_creator_listings_metadata?
+    end
+
+    should 'return true if listing is destroyed' do
+      @listing.destroy
+      assert @listing.should_populate_creator_listings_metadata?
+    end
+
+    should 'return true if draft changed' do
+      @listing.update_attribute(:draft, Time.zone.now)
+      assert @listing.should_populate_creator_listings_metadata?
+    end
+
+    should 'return false if name changed' do
+      @listing.update_attribute(:name, 'new name')
+      refute @listing.should_populate_creator_listings_metadata?
+    end
+
+    context 'triggering' do
+
+      should 'not trigger populate listings metadata on user if condition fails' do
+        User.any_instance.expects(:populate_listings_metadata!).never
+        Listing.any_instance.expects(:should_populate_creator_listings_metadata?).returns(false)
+        FactoryGirl.create(:listing)
+      end
+
+      should 'trigger populate listings metadata on user if condition succeeds' do
+        User.any_instance.expects(:populate_listings_metadata!).once
+        Listing.any_instance.expects(:should_populate_creator_listings_metadata?).returns(true)
+        FactoryGirl.create(:listing)
+      end
+
+    end
+  end
 end

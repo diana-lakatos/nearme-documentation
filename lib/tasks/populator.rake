@@ -17,6 +17,12 @@ namespace :populate do
     end
   end
 
+  desc 'populates metadata for objects'
+  task :metadata => :environment do
+    Listing.find_each(&:populate_photos_metadata!)
+    User.find_each(&:populate_companies_metadata!)
+  end
+
   desc 'populates platform_context_details for reservations'
   task :reservation_platform_context_detail => :environment do
     Reservation.where('platform_context_detail_id is null').each do |r|

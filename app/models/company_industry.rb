@@ -5,4 +5,7 @@ class CompanyIndustry < ActiveRecord::Base
   belongs_to :company
   belongs_to :industry
 
+  delegate :populate_industries_metadata!, :to => :company, :prefix => true
+  after_commit :company_populate_industries_metadata!
+
 end

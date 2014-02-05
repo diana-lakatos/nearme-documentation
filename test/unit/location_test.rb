@@ -202,4 +202,52 @@ class LocationTest < ActiveSupport::TestCase
       assert_equal "San Francisco", @location.street # this is first part of address
     end
   end
+
+  context 'metadata' do
+
+    context 'populating hash' do
+      setup do
+        @location = FactoryGirl.create(:listing).location
+        @photo = @location.photos.first
+      end
+
+      should 'initialize metadata' do
+        @location.expects(:update_metadata).with(photos: [{
+          space_listing: @photo.image_url(:space_listing),
+          golden: @photo.image_url(:golden),
+          large: @photo.image_url(:large),
+          listing_name: @photo.listing.name,
+          caption:@photo.caption
+        }])
+        @location.populate_photos_metadata!
+      end
+
+      context'with second image' do
+
+        setup do
+          @photo2 = FactoryGirl.create(:photo, :listing => @location.listings.first)
+        end
+
+        should 'update existing metadata' do
+          @location.expects(:update_metadata).with(photos: [{
+            space_listing:  @photo.image_url(:space_listing),
+            golden:  @photo.image_url(:golden),
+            large:  @photo.image_url(:large),
+            listing_name:  @photo.listing.name,
+            caption:  @photo.caption
+          },
+          {
+            space_listing:  @photo2.image_url(:space_listing),
+            golden:  @photo2.image_url(:golden),
+            large:  @photo2.image_url(:large),
+            listing_name:  @photo2.listing.name,
+            caption:  @photo2.caption
+          }])
+          @location.populate_photos_metadata!
+        end
+      end
+
+    end
+
+  end
 end

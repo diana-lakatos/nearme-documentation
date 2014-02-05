@@ -71,34 +71,6 @@ class MailchimpTest < ActiveSupport::TestCase
       assert_equal({}, @result)
     end
 
-    should "detect that user uploaded photo since last update" do
-      all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.zone.now+10.seconds)
-      create_photo(@user_with_listing_without_photo)
-      VCR.use_cassette('mailchimp_update_photo_flag') do
-        # in this request we test if MODPHOTO flag was updated
-        # they should, becuase we added photo after last synchronization
-        @result = MAILCHIMP.export_users
-      end
-      assert_equal({"add_count"=>0, "update_count"=>1, "error_count"=>0, "errors"=>[]}, @result)
-    end
-
-    should "detect that user updated price since last update" do
-      all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.zone.now+10.seconds)
-      listing = @user_with_listing_with_photo.listings.first
-      listing.weekly_price = 10.50
-      listing.free = false
-      listing.save!
-      assert !@user_with_listing_with_photo.has_listing_without_price?
-      VCR.use_cassette('mailchimp_update_price_flag') do
-        # in this request we test if MODPRICE flag was updated
-        # they should, becuase we added price after last synchronization
-        @result = MAILCHIMP.export_users
-      end
-      assert_equal({"add_count"=>0, "update_count"=>1, "error_count"=>0, "errors"=>[]}, @result)
-    end
-
     should "detect that user has been verified since last email" do
       all_users.each { |u| u.mailchimp_synchronized! }
       Timecop.travel(Time.zone.now+10.seconds)
@@ -106,21 +78,6 @@ class MailchimpTest < ActiveSupport::TestCase
       @user_without_listing.verified_at = Time.zone.now
       @user_without_listing.save!
       VCR.use_cassette('mailchimp_update_verify_flag') do
-        # in this request we test if MODVERIFY flag was updated
-        # they should, becuase we verified him after last synchronization
-        @result = MAILCHIMP.export_users
-      end
-      assert_equal({"add_count"=>0, "update_count"=>1, "error_count"=>0, "errors"=>[]}, @result)
-    end
-
-    should "detect that user has deleted all listings since last email" do
-      all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.zone.now+10.seconds)
-      @user_with_two_listings.listings.each do |listing|
-        listing.destroy
-      end
-      assert @user_with_two_listings.listings.count.zero?
-      VCR.use_cassette('mailchimp_update_delete_listing_flag') do
         # in this request we test if MODVERIFY flag was updated
         # they should, becuase we verified him after last synchronization
         @result = MAILCHIMP.export_users

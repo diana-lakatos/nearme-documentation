@@ -3,6 +3,8 @@ class Company < ActiveRecord::Base
   acts_as_paranoid
   URL_REGEXP = URI::regexp(%w(http https))
 
+  include Metadata
+
   attr_accessible :creator_id, :description, :url, :email, :name,
     :mailing_address, :paypal_email, :industry_ids, :locations_attributes,
     :domain_attributes, :theme_attributes, :instance_id, :white_label_enabled,
@@ -51,8 +53,6 @@ class Company < ActiveRecord::Base
 
   before_validation :add_default_url_scheme
 
-  after_save :notify_user_about_change
-  after_destroy :notify_user_about_change
   before_save :create_bank_account_in_balanced!, :if => lambda { |c| c.bank_account_number.present? || c.bank_routing_number.present? || c.bank_owner_name.present? }
 
   validates_presence_of :name, :instance_id
@@ -77,10 +77,6 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :domain, :reject_if => proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :locations
-
-  def notify_user_about_change
-    creator.try(:touch)
-  end
 
   def add_creator_to_company_users
     unless users.include?(creator)
@@ -140,6 +136,10 @@ class Company < ActiveRecord::Base
 
   def to_liquid
     CompanyDrop.new(self)
+  end
+
+  def populate_industries_metadata!
+    update_metadata({ 'industries' => self.reload.industries.order('name').collect(&:name) })
   end
 
   private

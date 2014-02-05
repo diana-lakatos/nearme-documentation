@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
                               :last_geolocated_location_latitude, :instance_unread_messages_threads_count]
   acts_as_paranoid
 
+  include Metadata
   extend FriendlyId
   friendly_id :name, use: :slugged
 
@@ -197,6 +198,21 @@ class User < ActiveRecord::Base
     random_pass = ''
     1.upto(8) { |i| random_pass << chars[rand(chars.size-1)] }
     self.password = random_pass
+  end
+
+  def populate_listings_metadata!
+    update_metadata({ 
+      has_draft_listings: listings.reload.draft.any?,
+      has_any_active_listings: listings.reload.active.any?
+    })
+  end
+
+  def populate_companies_metadata!
+    update_metadata({
+      companies: companies.reload.collect(&:id),
+      has_draft_listings: listings.reload.draft.any?,
+      has_any_active_listings: listings.reload.active.any?
+    })
   end
 
   def linked_to?(provider)
