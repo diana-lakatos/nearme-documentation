@@ -1,12 +1,10 @@
 class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
   include PayPal::SDK::Core::Logging
 
-  SUPPORTED_CURRENCIES = ['GBP', 'EUR', 'JPY', 'CAD']
+  SUPPORTED_CURRENCIES = ['USD', 'GBP', 'EUR', 'JPY', 'CAD']
 
-  def initialize(instance)
-    super(instance)
-
-    PayPal::SDK.configure(instance.paypal_api_config)
+  def  setup_api_on_initialize
+    PayPal::SDK.configure(@instance.paypal_api_config)
     @api = PayPal::SDK::AdaptivePayments::API.new
   end
 
@@ -19,7 +17,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
   end
 
   def self.is_supported_by?(object)
-    object.respond_to?(:paypal_email) && object.paypal_email.present?
+    object.paypal_email.present?
   end
 
   def process_charge(amount)
@@ -29,6 +27,17 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
     else
       charge_failed(@payment.error)
       handle_error(@payment.error)
+    end
+  end
+
+  def process_refund(amount, charge_response)
+    payment = YAML.load(charge_response.gsub('Proc {}', ''))
+    sale = payment.transactions.first.related_resources.find { |t| t.sale.present? }.sale
+    response = sale.refund({})
+    if response.success?
+      refund_successful(response)
+    else
+      refund_failed(response.error.inspect)
     end
   end
 
@@ -56,7 +65,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
   end
 
   def store_credit_card(credit_card)
-    if user.paypal_id.present?
+    if instance_client.paypal_id.present?
       update_credit_card(credit_card)
     else
       setup_customer_with_credit_card(credit_card)
@@ -66,7 +75,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
   private
 
   def update_credit_card(credit_card)
-    @credit_card = PayPal::SDK::REST::CreditCard.find(user.paypal_id)
+    @credit_card = PayPal::SDK::REST::CreditCard.find(instance_client.paypal_id)
   rescue PayPal::SDK::Core::Exceptions::ResourceNotFound
     setup_customer_with_credit_card(credit_card)
   end
@@ -85,8 +94,8 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
     # Creates the credit card as a resource
     # in the PayPal vault. 
     if @credit_card.create
-      user.paypal_id = @credit_card.id
-      user.save!
+      instance_client.paypal_id = @credit_card.id
+      instance_client.save!
     else 
       handle_error(@credit_card.error)
     end
@@ -94,20 +103,24 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
   end
 
   def handle_error(error_hash)
-    if error_hash.present? && error_hash["details"].present?
-      first_error_pair = error_hash["details"].first
-      message = first_error_pair["issue"]
-      param = first_error_pair["field"]
-      if message == 'Value is invalid (must be visa, mastercard, amex, discover, or maestro)'
-        message = "Unfortunately we do not support your credit card. Please try with Visa, MasterCard, American Express or Discover"
-      elsif message.include?("Required field") && param == "type"
-        message = "Unfortunately we were not able to detect a type of your credit card. Please make sure that the number is correct"
-      end
+    if error_hash['TRANSACTION_LIMIT_EXCEEDED']
+      raise Billing::CreditCardError.new(error_hash['message'], 'cc')
     else
-      message = 'Unknown CreditCard error, please ensure if credit card details were entered correctly. If the problem persist, please contact us.'
-      param = nil
+      if error_hash.present? && error_hash["details"].present?
+        first_error_pair = error_hash["details"].first
+        message = first_error_pair["issue"]
+        param = first_error_pair["field"]
+        if message == 'Value is invalid (must be visa, mastercard, amex, discover, or maestro)'
+          message = "Unfortunately we do not support your credit card. Please try with Visa, MasterCard, American Express or Discover"
+        elsif message.include?("Required field") && param == "type"
+          message = "Unfortunately we were not able to detect a type of your credit card. Please make sure that the number is correct"
+        end
+      else
+        message = 'Unknown CreditCard error, please ensure if credit card details were entered correctly. If the problem persist, please contact us.'
+        param = nil
+      end
+      raise Billing::CreditCardError.new(message, param)
     end
-    raise Billing::CreditCardError.new(message, param)
   end
 
   def paypal_argument_hash(amount)
@@ -130,7 +143,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
           # A resource representing a credit card that can be
           # used to fund a payment.
           :credit_card_token => {
-            :credit_card_id => user.paypal_id,
+            :credit_card_id => instance_client.paypal_id,
             :payer_id => user.id }}]
       },
 
@@ -144,7 +157,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
         :item_list => {
           :items => [{
             :name => "Reservation",
-            :price => amount,
+            :price => amount.to_s,
             :currency => @currency,
             :quantity => 1 }]
         },
@@ -152,7 +165,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
         # Amount
         # Let's you specify a payment amount.
         :amount => {
-          :total => amount,
+          :total => amount.to_s,
           :currency => @currency },
       }]
     }

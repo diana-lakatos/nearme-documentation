@@ -2,30 +2,117 @@ require 'test_helper'
 
 class ReservationChargeTest < ActiveSupport::TestCase
 
-  setup do
-    @reservation = FactoryGirl.create(:reservation_with_credit_card)
-    stub_mixpanel
+  context 'capture' do
+    setup do
+      @reservation = FactoryGirl.create(:reservation_with_credit_card)
+      stub_mixpanel
+    end
+
+    context 'mixpanel' do
+      setup do
+        @expectation = ReservationChargeTrackerJob.expects(:perform_later).with(@reservation.date.end_of_day, @reservation.id)
+      end
+
+      should 'track charge in mixpanel after successful creation' do
+        Billing::Gateway::StripeProcessor.any_instance.stubs(:charge)
+        @expectation.once
+        @reservation.reservation_charges.create!(
+          subtotal_amount: 105.24,
+          service_fee_amount_guest: 23.18
+        )
+      end
+
+      should 'do not track charge in mixpanel if there is error processing credit card' do
+        Billing::Gateway::StripeProcessor.any_instance.stubs(:charge).raises(Billing::CreditCardError)
+        @expectation.never
+        @reservation.reservation_charges.create!(
+          subtotal_amount: 105.24,
+          service_fee_amount_guest: 23.18
+        )
+      end
+    end
   end
 
-  setup do
-    @expectation = ReservationChargeTrackerJob.expects(:perform_later).with(@reservation.date.end_of_day, @reservation.id)
+  context 'refund' do
+
+    setup do
+      @charge = FactoryGirl.create(:charge, :response => 'charge_response')
+      @reservation_charge = @charge.reference
+    end
+
+    should 'find the right charge if there were failing attempts' do
+      @charge.update_attribute(:success, false)
+      FactoryGirl.create(:charge, :reference => @reservation_charge, :response => 'success response')
+      Billing::Gateway.any_instance.expects(:refund).with do |refund_details|
+        refund_details[:charge_response] == 'success response'
+      end.once.returns(Refund.new(:success => true))
+      @reservation_charge.refund
+      assert @reservation_charge.reload.refunded?
+    end
+
+    should 'not be refunded if failed' do
+      Billing::Gateway.any_instance.expects(:refund).returns(Refund.new(:success => false))
+      @reservation_charge.refund
+      refute @reservation_charge.reload.refunded?
+    end
+
+    should 'return if successful charge was not returned' do
+      Billing::Gateway.any_instance.expects(:refund).never
+      @charge.update_attribute(:success, false)
+      @reservation_charge.refund
+      refute @reservation_charge.reload.refunded?
+    end
+
+    should 'return if reservation_charge was already refunded' do
+      Billing::Gateway.any_instance.expects(:refund).never
+      @reservation_charge.update_attribute(:refunded_at, Time.zone.now)
+      @reservation_charge.refund
+    end
+
+    should 'return if reservation_charge was not paid' do
+      Billing::Gateway.any_instance.expects(:refund).never
+      @reservation_charge.update_attribute(:paid_at, nil)
+      @reservation_charge.refund
+      refute @reservation_charge.reload.refunded?
+    end
+
+    should 'refund via billing gateway with correct arguments if all ok' do
+      Billing::Gateway.any_instance.expects(:refund).with do |refund_details|
+        refund_details[:amount_cents] == 11000 && refund_details[:reference] == @reservation_charge && refund_details[:charge_response] == 'charge_response'
+      end.once.returns(Refund.new(:success => true))
+      @reservation_charge.refund
+    end
   end
 
-  should 'track charge in mixpanel after successful creation' do
-    Billing::Gateway::StripeProcessor.any_instance.stubs(:charge)
-    @expectation.once
-    @reservation.reservation_charges.create!(
-      subtotal_amount: 105.24,
-      service_fee_amount_guest: 23.18
-    )
-  end
+  context 'charge on save' do
 
-  should 'do not track charge in mixpanel if there is error processing credit card' do
-    Billing::Gateway::StripeProcessor.any_instance.stubs(:charge).raises(Billing::CreditCardError)
-    @expectation.never
-    @reservation.reservation_charges.create!(
-      subtotal_amount: 105.24,
-      service_fee_amount_guest: 23.18
-    )
+    setup do
+      @reservation_charge = FactoryGirl.build(:reservation_charge_unpaid)
+    end
+    
+    should 'trigger capture on save' do
+      @reservation_charge.expects(:capture)
+      @reservation_charge.save!
+    end
+    
+    should 'be paid if success' do
+      @reservation_charge.stubs(:total_amount_cents).returns(12345)
+      Billing::Gateway.any_instance.expects(:charge).with({:amount_cents => 12345, :reference => @reservation_charge}).returns(true)
+      @reservation_charge.save!
+      assert @reservation_charge.reload.paid?
+    end
+
+    should 'be not paid if fail' do
+      Billing::Gateway.any_instance.expects(:charge).raises(Billing::CreditCardError.new('Error'))
+      @reservation_charge.save!
+      refute @reservation_charge.reload.paid?
+    end
+    
+    should 'not charge again if already charged' do
+      Billing::Gateway.any_instance.expects(:charge).never
+      @reservation_charge.stubs(:paid_at).returns(Time.zone.now)
+      @reservation_charge.capture
+    end
+
   end
 end

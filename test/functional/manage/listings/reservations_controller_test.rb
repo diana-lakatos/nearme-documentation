@@ -60,6 +60,21 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     assert_redirected_to manage_guests_dashboard_path
   end
 
+  should "refund booking on cancel" do
+    @reservation = FactoryGirl.create(:charge).reference.reservation
+    @reservation.stubs(:attempt_payment_capture).returns(true)
+    @reservation.confirm!
+    @reservation.update_column(:payment_status, Reservation::PAYMENT_STATUSES[:paid])
+    sign_in @reservation.listing.creator
+    YAML.expects(:load).returns(stub(:id => 'abc'))
+    Stripe::Charge.expects(:retrieve).returns(stub(:refund => stub(:to_yaml => {})))
+    assert_difference 'Refund.count' do
+      post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
+    end
+    assert_redirected_to manage_guests_dashboard_path
+    assert_equal 'refunded', @reservation.reload.payment_status
+  end
+
   context 'PUT #reject' do
     should 'set rejection reason' do
       ReservationMailer.expects(:notify_guest_of_rejection).returns(stub(deliver: true)).once

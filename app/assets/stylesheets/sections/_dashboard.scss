@@ -353,3 +353,12 @@ section.dashboard {
 h1.manage-locations-home-link {
   line-height: 1.7em;
 }
+
+.bank_account_fields {
+  .flash.error {
+    color: $red;
+    font-size: 1.1em;
+    margin: 20px 0px;
+  }
+}
+

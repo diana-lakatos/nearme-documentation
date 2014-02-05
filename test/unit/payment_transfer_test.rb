@@ -85,10 +85,11 @@ class PaymentTransferTest < ActiveSupport::TestCase
 
   context 'payout' do
     setup do
-      Billing::Gateway::PaypalProcessor.stubs(:is_supported_by?).returns(true).twice
+      Billing::Gateway::PaypalProcessor.stubs(:is_supported_by?).returns(true).once
       @payment_transfer = @company.payment_transfers.build
       @payment_transfer.reservation_charges = @reservation_charges
     end
+
     should 'be not paid if attempt to payout failed' do
       Billing::Gateway.any_instance.expects(:payout).with { |hash| Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => false))
       @payment_transfer.save!
@@ -99,6 +100,38 @@ class PaymentTransferTest < ActiveSupport::TestCase
       Billing::Gateway.any_instance.expects(:payout).with { |hash| Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => true))
       @payment_transfer.save!
       assert @payment_transfer.transferred?
+    end
+  end
+
+  context 'possible_automated_payout_not_supported?' do
+
+    setup do
+      @payment_transfer = @company.payment_transfers.build
+      @payment_transfer.reservation_charges = @reservation_charges
+    end
+
+    should "return true if possible processor exists but company has not provided settings" do
+      Billing::Gateway.any_instance.stubs(:payment_supported?).returns(false)
+      Billing::Gateway.any_instance.stubs(:payout_possible?).returns(true)
+      assert @payment_transfer.possible_automated_payout_not_supported?
+    end
+
+    should "return false if there is no potential processor and company has not provided settings" do
+      Billing::Gateway.any_instance.stubs(:payment_supported?).returns(false)
+      Billing::Gateway.any_instance.stubs(:payout_possible?).returns(false)
+      refute @payment_transfer.possible_automated_payout_not_supported?
+    end
+
+    should "return false if there is no possible processor and company has provided settings" do
+      Billing::Gateway.any_instance.stubs(:payment_supported?).returns(true)
+      Billing::Gateway.any_instance.stubs(:payout_possible?).returns(false)
+      refute @payment_transfer.possible_automated_payout_not_supported?
+    end
+
+    should "return false if possible processor exists and company has provided settings" do
+      Billing::Gateway.any_instance.stubs(:payment_supported?).returns(true)
+      Billing::Gateway.any_instance.stubs(:payout_possible?).returns(true)
+      refute @payment_transfer.possible_automated_payout_not_supported?
     end
 
   end

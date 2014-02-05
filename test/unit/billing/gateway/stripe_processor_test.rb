@@ -1,79 +1,99 @@
 require 'test_helper'
 
 class Billing::Gateway::StripeProcessorTest < ActiveSupport::TestCase
+
   setup do
     @instance = Instance.default_instance
     @user = FactoryGirl.create(:user)
     @reservation = FactoryGirl.create(:reservation)
     @instance.update_attribute(:stripe_api_key, "abcd")
-    @billing_gateway = Billing::Gateway.new(@instance).ingoing_payment(@user, 'USD')
+    @stripe_processor = Billing::Gateway::StripeProcessor.new(@instance, 'USD').ingoing_payment(@user)
   end
 
   context "#charge" do
+
+    setup do
+      @instance_client = FactoryGirl.create(:instance_client, :client => @user, :stripe_id => '123')
+    end
+
     should "trigger a charge on the user's credit card" do
-      Stripe::Charge.expects(:create).with({:amount => 100_00, :currency => 'USD', :customer => @user.stripe_id}, @instance.stripe_api_key).returns({})
-      @billing_gateway.charge(:amount => 100_00)
+      Stripe::Charge.expects(:create).with({:amount => 100_00, :currency => 'USD', :customer => '123'}, @instance.stripe_api_key).returns({})
+      @stripe_processor.expects(:charge_successful)
+      @stripe_processor.process_charge(100_00)
     end
 
-    should "create a Charge record with reference, user, amount, currency, and success on success" do
+    should "run the right callback on success" do
       Stripe::Charge.expects(:create).returns({})
-      @billing_gateway.charge(:amount => 100_00, :reference => @reservation)
-
-      charge = Charge.last
-      assert_equal @user.id, charge.user_id
-      assert_equal 100_00, charge.amount
-      assert_equal 'USD', charge.currency
-      assert_equal @reservation, charge.reference
-      assert charge.success?
+      @stripe_processor.expects(:charge_successful)
+      assert_no_difference 'InstanceClient.count' do
+        @stripe_processor.process_charge(100_00)
+      end
     end
 
-    should "create a Charge record with failure on failure" do
+    should "run the right callback on failure" do
       Stripe::Charge.expects(:create).raises(stripe_card_error)
-
+      @stripe_processor.expects(:charge_failed)
       begin
-        @billing_gateway.charge(:amount => 100_00)
+        @stripe_processor.process_charge(100_00)
       rescue
       end
-
-      charge = Charge.last
-      assert !charge.success?
     end
 
     should "raise CardError on card failure" do
       Stripe::Charge.expects(:create).raises(stripe_card_error)
-
+      @stripe_processor.expects(:charge_failed)
       assert_raises Billing::CreditCardError do
-        @billing_gateway.charge(:amount => 100_00)
+        @stripe_processor.process_charge(:amount => 100_00)
       end
     end
   end
 
+  context "#refund" do
+
+    setup do
+      @instance_client = FactoryGirl.create(:instance_client, :client => @user, :stripe_id => '123')
+      @charge = FactoryGirl.create(:charge_with_stripe_response)
+    end
+
+    should "trigger a refund" do
+      Stripe::Charge.expects(:retrieve).with('ch_103NzV2NyQr8dJTt7gs44Xnl', @instance.stripe_api_key).returns(stub(:refund => {}))
+      @stripe_processor.expects(:refund_successful)
+      @stripe_processor.process_refund(100_00, @charge.response)
+    end
+
+    should "run the right callback on success" do
+      Stripe::Charge.expects(:retrieve).raises(Stripe::StripeError.new('not refunded'))
+      @stripe_processor.expects(:refund_failed)
+      @stripe_processor.process_refund(100_00, @charge.response)
+    end
+
+  end
+
   context "store_card" do
     context "new customer" do
-      setup do
-        @user.stripe_id = nil
-      end
 
       should "create a customer record with the card and assign to User" do
         Stripe::Customer.expects(:create).with({:card => stripe_card_details, :email => @user.email}, @instance.stripe_api_key).returns(stub(
           id: '456'
         ))
-        @billing_gateway.store_credit_card(credit_card)
-        assert_equal '456', @user.stripe_id
+        assert_difference 'InstanceClient.count' do
+          @stripe_processor.store_credit_card(credit_card)
+        end
+        assert_equal '456', @user.instance_clients.where(:instance_id => @instance.id).first.stripe_id
       end
 
       should "raise InvalidRequestError if invalid details" do
         Stripe::Customer.expects(:create).with({:card => stripe_card_details, :email => @user.email}, @instance.stripe_api_key).raises(stripe_invalid_request_error)
-
         assert_raises Billing::InvalidRequestError do
-          @billing_gateway.store_credit_card(credit_card)
+          @stripe_processor.store_credit_card(credit_card)
         end
       end
     end
 
     context "existing customer" do
       setup do
-        @stripe_id_was = @user.stripe_id = '123'
+        @instance_client = FactoryGirl.create(:instance_client, :client => @user, :stripe_id => '123')
+        @stripe_id_was = @instance_client.stripe_id = '123'
         @stripe_customer_mock = mock()
         Stripe::Customer.expects(:retrieve).returns(@stripe_customer_mock)
         @stripe_customer_mock.expects(:card=).with(stripe_card_details)
@@ -81,15 +101,16 @@ class Billing::Gateway::StripeProcessorTest < ActiveSupport::TestCase
 
       should "update an existing assigned Customer record" do
         @stripe_customer_mock.expects(:save)
-        @billing_gateway.store_credit_card(credit_card)
-        assert_equal @stripe_id_was, @user.stripe_id
+        @stripe_processor.store_credit_card(credit_card)
+        @instance_client = InstanceClient.first
+        assert_equal @stripe_id_was, @instance_client.stripe_id,  'Stripe customer id should not have changed'
       end
 
       should "raise InvalidRequestError if invalid details" do
         @stripe_customer_mock.expects(:save).raises(stripe_invalid_request_error)
 
         assert_raises Billing::InvalidRequestError do
-          @billing_gateway.store_credit_card(credit_card)
+          @stripe_processor.store_credit_card(credit_card)
         end
       end
 
@@ -98,8 +119,9 @@ class Billing::Gateway::StripeProcessorTest < ActiveSupport::TestCase
         Stripe::Customer.expects(:create).with({:card => stripe_card_details, :email => @user.email}, @instance.stripe_api_key).returns(stub(
           id: '456'
         ))
-        @billing_gateway.store_credit_card(credit_card)
-        assert_equal '456', @user.stripe_id, "Stripe customer id should have changed"
+        @stripe_processor.store_credit_card(credit_card)
+        @instance_client = InstanceClient.first
+        assert_equal '456', @instance_client.stripe_id, "Stripe customer id should have changed"
       end
     end
   end
