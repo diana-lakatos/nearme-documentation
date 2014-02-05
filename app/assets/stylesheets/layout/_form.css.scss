@@ -513,6 +513,18 @@ form {
       }
     }
 
+    &.social-provider {
+      padding-bottom: 10px;
+
+      a.btn {
+        margin-left: 20px;
+
+        @media (max-width: 668px) {
+          margin-left: 0px;
+        }
+      }
+    }
+
     .control-label {
       float: left;
       margin-top: 11px;
@@ -522,6 +534,7 @@ form {
 
       &.social-networks {
         margin-top: 1px;
+        width: 110px;
       }
       
       &.flush-top,

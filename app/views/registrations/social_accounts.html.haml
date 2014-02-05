@@ -1,0 +1,12 @@
+- title "Trust & Verification"
+
+= render :layout => 'registrations/layout/account', :locals => { :active_tab => :trust_and_verification } do
+  .row-fluid
+    .span8.offset2
+      .box
+        %div
+          Connecting your social accounts will display the number of friends, connections, and followers that you have on your profile.
+          %br/
+          You will also be able to see your friends' and connections' activity on #{platform_context.name}.
+        %p
+        = render "registrations/networks", :supported_providers => @supported_providers

@@ -133,7 +133,7 @@ end
 
 Then  /^I should not be relogged as other user$/ do
   current_path = URI.parse(current_url).path
-  assert_equal edit_user_registration_path, current_path
+  assert_equal social_accounts_path, current_path
 
 end
 

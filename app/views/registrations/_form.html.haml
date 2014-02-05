@@ -1,7 +1,6 @@
 = simple_form_for resource, :as => resource_name, :url => url, :html => { class: "form-horizontal form-expandable" } do |f|
   = f.input :name, label: "Full name"
   = f.input :email, label: "Email"
-  = render("registrations/networks", :supported_providers => @supported_providers) if resource.persisted?
   = f.input :time_zone
   = render :partial => 'registrations/phone_fields', :locals => { :f => f, :country => country }
   = f.input :current_location, label: "Current location", as: :string
