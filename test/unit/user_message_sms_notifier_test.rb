@@ -15,7 +15,7 @@ class UserMessageSmsNotifierTest < ActiveSupport::TestCase
                                       )
     @instance = FactoryGirl.create(:instance, :name => 'DesksNearMe')
     @domain = FactoryGirl.create(:domain, :name => 'notifcations.com', :target => @instance)
-    @platform_context = PlatformContext.new.initialize_with_instance(@instance).decorate
+    @platform_context = PlatformContext.new.initialize_with_instance(@instance)
     Googl.stubs(:shorten).with("http://notifcations.com/users/#{@recipient.id}/user_messages/#{@user_message.id}?token=abc").returns(stub(:short_url => "http://goo.gl/abc324"))
   end
 
