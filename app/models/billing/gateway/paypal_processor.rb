@@ -3,9 +3,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
 
   SUPPORTED_CURRENCIES = ['USD', 'GBP', 'EUR', 'JPY', 'CAD']
 
-  def initialize(*args)
-    super(*args)
-
+  def  setup_api_on_initialize
     PayPal::SDK.configure(@instance.paypal_api_config)
     @api = PayPal::SDK::AdaptivePayments::API.new
   end

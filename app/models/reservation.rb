@@ -95,8 +95,7 @@ class Reservation < ActiveRecord::Base
 
   state_machine :state, :initial => :unconfirmed do
     after_transition :unconfirmed => :confirmed, :do => :attempt_payment_capture
-    after_transition :confirmed => :cancelled_by_guest, :do => :schedule_refund
-    after_transition :confirmed => :cancelled_by_host, :do => :schedule_refund
+    after_transition :confirmed => [:cancelled_by_guest, :cancelled_by_host], :do => :schedule_refund
 
     event :confirm do
       transition :unconfirmed => :confirmed

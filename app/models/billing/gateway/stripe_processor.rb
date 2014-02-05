@@ -1,8 +1,7 @@
 class Billing::Gateway::StripeProcessor < Billing::Gateway::BaseProcessor
   SUPPORTED_CURRENCIES = ['USD']
 
-  def initialize(*args)
-    super(*args)
+  def setup_api_on_initialize
     @api_key = @instance.stripe_api_key
   end
 

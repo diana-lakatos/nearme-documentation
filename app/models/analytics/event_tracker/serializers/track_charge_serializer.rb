@@ -21,6 +21,10 @@ class Analytics::EventTracker::Serializers::TrackChargeSerializer
     when Reservation
       {
         amount: object.service_fee_amount_guest.to_f + object.service_fee_amount_host.to_f,
+        guest_fee: object.service_fee_amount_guest.to_f,
+        host_fee: object.service_fee_amount_host.to_f,
+        guest_id: object.owner_id,
+        host_id: object.host.try(:id),
         reservation_charge_id: object.reservation_charges.paid.first.id,
         instance_name: object.instance.name,
         listing_name: object.listing.name,

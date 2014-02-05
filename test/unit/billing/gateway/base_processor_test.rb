@@ -6,8 +6,7 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
 
     attr_accessor :success
 
-    def initialize(*args)
-      super(*args)
+    def setup_api_on_initialize
       self.success = true
     end
 

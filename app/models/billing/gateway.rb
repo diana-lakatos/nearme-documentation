@@ -23,7 +23,7 @@ class Billing::Gateway
   def outgoing_payment(receiver)
     @sender = receiver.instance
     @receiver = receiver
-    @processor = outgoing_processors.find { |processor| processor.is_supported_by?(@receiver) }.try(:new, @instance, @currency).try(:outgoing_payment, @sender, @receiver)
+    @processor = initialize_outgoing_processor(outgoing_processor_class)
     self
   end
 
@@ -33,6 +33,17 @@ class Billing::Gateway
 
   def payout_possible?
     outgoing_processors.any?
+  end
+  
+  private
+
+  def outgoing_processor_class
+    outgoing_processors.find { |processor| processor.is_supported_by?(@receiver) }
+  end
+
+  def initialize_outgoing_processor(outgoing_processor_class)
+    return nil if outgoing_processor_class.nil?
+    outgoing_processor_class.new(@instance, @currency).outgoing_payment(@sender, @receiver)
   end
 
 end

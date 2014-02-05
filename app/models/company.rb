@@ -18,17 +18,17 @@ class Company < ActiveRecord::Base
   has_many :users, :through => :company_users
 
   has_many :locations,
-    dependent: :destroy,
-    inverse_of: :company
+           dependent: :destroy,
+           inverse_of: :company
 
   has_many :listings,
-    through: :locations
+           through: :locations
 
   has_many :reservations,
-    through: :listings
+           through: :listings
 
   has_many :reservation_charges,
-    through: :reservations
+           through: :reservations
 
   has_many :payment_transfers, :dependent => :destroy
 
@@ -78,119 +78,119 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :locations
 
-    def notify_user_about_change
-      creator.try(:touch)
-    end
+  def notify_user_about_change
+    creator.try(:touch)
+  end
 
-    def add_creator_to_company_users
-      unless users.include?(creator)
-        users << creator 
+  def add_creator_to_company_users
+    unless users.include?(creator)
+      users << creator 
+    end
+  end
+
+  def self.xml_attributes
+    [:name, :description, :email]
+  end
+
+  # Schedules a new payment transfer for current outstanding payments for each
+  # of the currency payments recieved by the Company.
+  def schedule_payment_transfer
+    self.created_payment_transfers = []
+    transaction do
+      charges = reservation_charges.needs_payment_transfer
+      charges.group_by(&:currency).each do |currency, charges|
+        payment_transfer = payment_transfers.create!(
+          reservation_charges: charges
+        )
+        self.created_payment_transfers << payment_transfer if payment_transfer.possible_automated_payout_not_supported?
       end
     end
+    # we want to notify company owner (once no matter how many payment transfers have been generated!) 
+    # that it is possible to make automated payout but he needs to enter credentials via edit company settings
+    if mailing_address.blank? && self.created_payment_transfers.any?
+      CompanyMailer.enqueue.notify_host_of_no_payout_option(self)
+      CompanySmsNotifier.notify_host_of_no_payout_option(self).deliver
+    end
+  end
 
-    def self.xml_attributes
-      [:name, :description, :email]
+  def to_balanced_params
+    {
+      name: name,
+      email: email.presence || creator.try(:email),
+      phone: creator.try(:phone)
+    }
+  end
+
+  def balanced_bank_account_details
+    {
+      :account_number => bank_account_number, 
+      :bank_code => bank_routing_number, 
+      :name => bank_owner_name,
+      :type => 'checking'
+    }
+  end
+
+  def last_four_digits_of_bank_account
+    bank_account_number.to_s[-4, 4]
+  end
+
+  def current_instance_client(instance)
+    self.instance_clients.where(:instance_id => instance.id).first
+  end
+
+  def to_liquid
+    CompanyDrop.new(self)
+  end
+
+  private
+
+  def add_default_url_scheme
+    if url.present? && !/^(http|https):\/\//.match(url)
+      new_url = "http://#{url}"
+      self.url = new_url if URL_REGEXP.match(new_url)
+    end
+  end
+
+  def validate_url_format
+    return if url.blank?
+
+    valid = URL_REGEXP.match(url)
+    valid &&= begin
+      URI.parse(url)
+    rescue
+      false
     end
 
-    # Schedules a new payment transfer for current outstanding payments for each
-    # of the currency payments recieved by the Company.
-    def schedule_payment_transfer
-      self.created_payment_transfers = []
-      transaction do
-        charges = reservation_charges.needs_payment_transfer
-        charges.group_by(&:currency).each do |currency, charges|
-          payment_transfer = payment_transfers.create!(
-            reservation_charges: charges
-          )
-          self.created_payment_transfers << payment_transfer if payment_transfer.possible_automated_payout_not_supported?
-        end
+    errors.add(:url, "must be a valid URL") unless valid
+  end
+
+  def create_bank_account_in_balanced!
+    [:bank_account_number, :bank_routing_number, :bank_owner_name].each do |mandatory_field|
+      errors.add(mandatory_field, 'cannot be blank') if self.send(mandatory_field).blank?
+    end
+    if errors.any?
+      false
+    else
+      # when more processors will support ACH, we will want to use some kind of wrapper instead of calling BalancedProcessor directly
+      Billing::Gateway::BalancedProcessor.create_customer_with_bank_account!(self)
+    end
+  rescue Balanced::BadRequest => e
+    { '[bank_code]' => :bank_routing_number, '[account_number]' => :bank_account_number}.each do |balanced_field, our_form_field|
+      if e.message.include?(balanced_field)
+        errors.add(our_form_field, e.message.split("#{balanced_field} - ").last.split(' Your request id is ').first)
       end
-      # we want to notify company owner (once no matter how many payment transfers have been generated!) 
-      # that it is possible to make automated payout but he needs to enter credentials via edit company settings
-      if mailing_address.blank? && self.created_payment_transfers.any?
-        CompanyMailer.enqueue.notify_host_of_no_payout_option(self)
-        CompanySmsNotifier.notify_host_of_no_payout_option(self).deliver
-      end
     end
-
-    def to_balanced_params
-      {
-        name: name,
-        email: email.presence || creator.try(:email),
-        phone: creator.try(:phone)
-      }
-    end
-
-    def balanced_bank_account_details
-      {
-        :account_number => bank_account_number, 
-        :bank_code => bank_routing_number, 
-        :name => bank_owner_name,
-        :type => 'checking'
-      }
-    end
-
-    def last_four_digits_of_bank_account
-      bank_account_number.to_s[-4, 4]
-    end
-
-    def current_instance_client(instance)
-      self.instance_clients.where(:instance_id => instance.id).first
-    end
-
-    def to_liquid
-      CompanyDrop.new(self)
-    end
-
-    private
-
-    def add_default_url_scheme
-      if url.present? && !/^(http|https):\/\//.match(url)
-        new_url = "http://#{url}"
-        self.url = new_url if URL_REGEXP.match(new_url)
-      end
-    end
-
-    def validate_url_format
-      return if url.blank?
-
-      valid = URL_REGEXP.match(url)
-      valid &&= begin
-                  URI.parse(url)
-                rescue
-                  false
-                end
-
-      errors.add(:url, "must be a valid URL") unless valid
-    end
-
-    def create_bank_account_in_balanced!
-      [:bank_account_number, :bank_routing_number, :bank_owner_name].each do |mandatory_field|
-        errors.add(mandatory_field, 'cannot be blank') if self.send(mandatory_field).blank?
-      end
-      if errors.any?
-        false
+    if errors.empty?
+      if e.message.include?('Routing number is invalid')
+        errors.add(:bank_routing_number, 'is invalid')
       else
-        # when more processors will support ACH, we will want to use some kind of wrapper instead of calling BalancedProcessor directly
-        Billing::Gateway::BalancedProcessor.create_customer_with_bank_account!(self)
+        errors.add(:bank_account_form,  e.message.split(" - ").last.split(' Your request id is ').first)
       end
-    rescue Balanced::BadRequest => e
-      { '[bank_code]' => :bank_routing_number, '[account_number]' => :bank_account_number}.each do |balanced_field, our_form_field|
-        if e.message.include?(balanced_field)
-          errors.add(our_form_field, e.message.split("#{balanced_field} - ").last.split(' Your request id is ').first)
-        end
-      end
-      if errors.empty?
-        if e.message.include?('Routing number is invalid')
-          errors.add(:bank_routing_number, 'is invalid')
-        else
-          errors.add(:bank_account_form,  e.message.split(" - ").last.split(' Your request id is ').first)
-        end
-      end
-      false
-    rescue RuntimeError => e
-      errors.add(:bank_account_form, 'Unfortunately invalidating previous bank account failed, please try again in the feature')
-      false
     end
+    false
+  rescue RuntimeError => e
+    errors.add(:bank_account_form, 'Unfortunately invalidating previous bank account failed, please try again in the feature')
+    false
+  end
 
 end

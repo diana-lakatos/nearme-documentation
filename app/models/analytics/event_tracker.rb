@@ -51,7 +51,8 @@ class Analytics::EventTracker
 
   def track_charge(*objects)
     serialized_objects_hash = Serializers::TrackChargeSerializer.new(*objects).serialize
-    @mixpanel_api.track_charge(serialized_objects_hash[:amount])
+    @mixpanel_api.track_charge(serialized_objects_hash[:guest_fee])
+    @mixpanel_api.track_charge(serialized_objects_hash[:host_fee], serialized_objects_hash[:host_id])
     @google_analytics_api.track_charge(serialized_objects_hash)
   end
 

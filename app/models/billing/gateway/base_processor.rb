@@ -6,6 +6,10 @@ class Billing::Gateway::BaseProcessor
   def initialize(instance, currency)
     @instance = instance
     @currency = currency
+    setup_api_on_initialize
+  end
+
+  def setup_api_on_initialize
   end
 
   def ingoing_payment(user)
