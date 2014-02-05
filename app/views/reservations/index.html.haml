@@ -36,3 +36,7 @@
 
 = render 'ratings/rating_modal'
 = render 'listings/reservations/booking_successful_modal'
+
+- if params[:reservation_id].present?
+  - content_for :domready do
+    new Reservation.ListController($('section#reservations'), #{params[:reservation_id]});
