@@ -20,7 +20,7 @@ class UserMessagesController < ApplicationController
   end
 
   def create
-    @user_message = current_user.authored_messages.new(params[:user_message].merge(instance_id: platform_context.instance.id)).decorate
+    @user_message = current_user.authored_messages.for_instance(platform_context.instance).new(params[:user_message]).decorate
     @user_message.set_message_context_from_request_params(params)
     if @user_message.save
       @user_message.send_notification(platform_context)
