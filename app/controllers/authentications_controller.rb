@@ -32,7 +32,7 @@ class AuthenticationsController < ApplicationController
   def destroy
     @authentication = current_user.authentications.find(params[:id])
     if @authentication.can_be_deleted?
-      @authentication.destroy
+      @authentication.destroy!
       log_disconnect_social_provider
       flash[:deleted] = t('flash_messages.authentications.disconnected', 
         provider_name: @authentication.provider.titleize)
