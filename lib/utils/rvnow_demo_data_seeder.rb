@@ -17,7 +17,74 @@ module Utils
       end
     end
 
+    def clean!
+      clean_data!
+    end
+
     protected
+
+    def clean_data!
+      do_task "Cleaning RVnow data" do
+        User.transaction do
+          instance = Instance.where(name: 'RVnow').first
+          if instance
+            instance.theme.pages.each{|p| p.destroy!}
+            instance.theme.reload.destroy!
+            instance.location_amenity_types.each{|o| o.destroy!}
+            instance.listing_amenity_types.each{|o| o.destroy!}
+            instance.instance_admins.each{|o| o.destroy!}
+            instance.instance_admin_roles.each{|o| o.destroy!}
+
+            instance.location_types.each{|o| o.destroy!}
+            instance.listing_types.each{|o| o.destroy!}
+
+            instance.companies.each do |company|
+              company.company_users.each{|cu| cu.destroy!}
+              company.payment_transfers.each{|pt| pt.destroy!}
+              company.company_industries.each{|ci| ci.destroy!}
+              company.theme.try(:destroy!)
+
+              company.locations.each do |location|
+                location.availability_rules.each{|a| a.destroy!}
+                location.impressions.each{|i| i.destroy!}
+
+                location.listings.each do |listing|
+                  listing.photos.each{|p| p.destroy!}
+                  listing.availability_rules.each{|a| a.destroy!}
+
+                  listing.reservations.each do |reservation|
+                    reservation.amenity_holders.each{|r| r.destroy!}
+                    reservation.reviews.each{|r| r.destroy!}
+                    reservation.comments_about_guests.each{|r| r.destroy!}
+                    reservation.periods.each{|r| r.destroy!}
+                    reservation.reservation_charges.each{|r| r.destroy!}
+
+                    reservation.reload.destroy!
+                  end
+
+                  listing.reload.destroy!
+                end
+
+                location.reload.destroy!
+              end
+
+              company.reload.destroy!
+            end
+            User.where(instance_id: instance.id).each do |user|
+              user.user_industries.each{|i| i.destroy!}
+              user.reload.destroy!
+            end
+
+            instance.domains.each{|o| o.destroy!}
+            instance.partners.each{|o| o.destroy!}
+
+            instance.reload.destroy!
+          else
+            puts "Can't find RVnow instance !!!"
+          end
+        end
+      end
+    end
 
     def load_data!
       do_task "Loading data" do
@@ -59,6 +126,15 @@ module Utils
     end
     alias_method :amenities, :load_amenities!
 
+    def load_industries!
+      @industries ||= do_task "Loading industries" do
+        Data.industries.map do |name|
+          Industry.where(name: name).first || FactoryGirl.create(:industry, :name => name)
+        end
+      end
+    end
+    alias_method :industries, :load_industries!
+
     def load_location_types!
       @location_types ||= do_task "Loading location types" do
         Data.location_types.map do |name|
@@ -84,7 +160,7 @@ module Utils
           company_email = "info@#{url}"
           user = FactoryGirl.create(:demo_user, :name => Faker::Name.name, :email => company_email,
                                     :biography => Faker::Lorem.paragraph.truncate(200),
-                                    :industries => industries.sample(2))
+                                    :industries => industries.sample(2), :instance_id => instance.id)
           users << user
 
           @user ||= user
@@ -105,7 +181,7 @@ module Utils
 
     def load_instance!
       @instance ||= do_task "Loading RVnow instance" do
-        instance = FactoryGirl.create(:instance, name: 'RVnow', bookable_noun: 'RV', lessor: 'owner', lessee: 'renter', service_fee_guest_percent: 0, service_fee_host_percent: 0)
+        instance = FactoryGirl.create(:instance, name: 'RVnow', bookable_noun: 'RV', lessor: 'owner', lessee: 'renter', service_fee_guest_percent: 0, service_fee_host_percent: 0, marketplace_password: 'letmein')
         theme = instance.theme
         theme.name = 'RVnow'
         theme.site_name = 'RVnow'
@@ -148,7 +224,7 @@ module Utils
     alias_method :pages, :load_pages!
 
     def make_user_an_instance_admin!
-      administrator = InstanceAdminRole.new
+      administrator = InstanceAdminRole.where(name: 'Administrator', instance_id: nil).first || InstanceAdminRole.new
       administrator.name = 'Administrator'
       administrator.instance_id = nil
       administrator.permission_settings = true
