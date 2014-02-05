@@ -300,8 +300,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_raygun_custom_data
-    return if (Rails.env.development? || Rails.env.test?)
-    Raygun.configuration.silence_reporting = false
+    return if DesksnearMe::Application.config.silence_raygun_notification
     begin
       Raygun.configuration.custom_data = {
         platform_context: @platform_context.to_h,
@@ -315,7 +314,7 @@ class ApplicationController < ActionController::Base
   end
 
   def notify_raygun_about_exception(exception)
-    return if (Rails.env.development? || Rails.env.test?)
+    return if DesksnearMe::Application.config.silence_raygun_notification
     Raygun.configuration.failsafe_logger = true
     Raygun.track_exception(exception)
     Raygun.configuration.failsafe_logger = false
