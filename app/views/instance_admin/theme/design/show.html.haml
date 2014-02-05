@@ -1,16 +1,17 @@
-= simple_form_for @theme, :url => instance_admin_theme_design_path, :html => { :multipart => true } do |f|
+= simple_form_for @theme, :url => instance_admin_theme_design_path, :html => { id: 'theme_form', :multipart => true } do |f|
   %fieldset
     %legend Colors
-    - Theme::COLORS.each_slice(2) do |color|
+    - Theme::COLORS.each_slice(2).each_with_index do |color, index|
       .row-fluid
         .controls.controls-row
-          = f.input "color_#{color[0]}", wrapper_html: {class: 'input-prepend span6'} do
-            %span.add-on #
-            = f.input_field "color_#{color[0]}", class: 'input-block-level'
+          = f.input "color_#{color[0]}", :label => color[0].humanize, wrapper_html: {class: 'span6'} do
+            = f.text_field "color_#{color[0]}", {:type => :color, :value => f.object.hex_color(color[0]).presence || hexify(Theme::COLORS_DEFAULT_VALUES[index*2]), 'data-default' => hexify(Theme::COLORS_DEFAULT_VALUES[index*2]), 'data-color' => color[0]}
+            = link_to "default", '', 'data-reset' => color[0]
+
           - if color[1]
-            = f.input "color_#{color[1]}", wrapper_html: {class: 'input-prepend span6'} do
-              %span.add-on #
-              = f.input_field "color_#{color[1]}", class: 'input-block-level'
+            = f.input "color_#{color[1]}", :label => color[1].humanize, wrapper_html: {class: 'span6'} do
+              = f.text_field "color_#{color[1]}", {:type => :color, :value => f.object.hex_color(color[1]).presence || hexify(Theme::COLORS_DEFAULT_VALUES[index*2+1]), 'data-default' => hexify(Theme::COLORS_DEFAULT_VALUES[index*2+1]), 'data-color' => color[1]}
+              = link_to "default", '', 'data-reset' => color[1]
 
     %hr
 
@@ -42,3 +43,6 @@
         = f.input :call_to_action, label: 'CTA Button Text', :placeholder => 'Find out more', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
 
     = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+
+- content_for :domready do
+  new InstanceAdmin.ThemeController($('#theme_form'))

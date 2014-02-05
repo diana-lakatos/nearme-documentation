@@ -31,7 +31,7 @@
         .row-fluid
           .controls.controls-row
             .fields
-              = f.input :name, label: false, input_html: { class: 'span6' }
+              = f.input :name, label: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
               = f.link_to_remove do
                 .fa.fa-trash-o.fa-2x.inline-form-icon
 

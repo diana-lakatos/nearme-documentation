@@ -26,6 +26,11 @@
         %span.ico-chevron-down
       .clearfix
       %ul.dropdown-menu
+        - if authorizer.instance_admin?
+          %li
+            = link_to url_for([:instance_admin, authorizer.first_permission_have_access_to]), class: 'nav-link dropdown-toggle' do
+              %span Instance Admin
+
         - if platform_context.white_label_company_user?(current_user) && current_user.listings.active.any?
           %li
             = link_to manage_locations_path, class: 'nav-link dropdown-toggle' do

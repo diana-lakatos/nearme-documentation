@@ -5,9 +5,12 @@ class Domain < ActiveRecord::Base
 
   belongs_to :target, :polymorphic => true
 
+  before_validation lambda { self.name = self.name.try(:strip) }
+
   validates_presence_of :name
   validates_uniqueness_of :name
   validates_length_of :name, :maximum => 50
+  validates :name, domain_name: true
 
   validates_presence_of :target_type
   validates_each :name do |record, attr, value|
@@ -15,8 +18,6 @@ class Domain < ActiveRecord::Base
       record.errors[:name] << "This domain is not available."
     end
   end
-
-  before_validation lambda { self.name = self.name.try(:strip) }
 
   delegate :white_label_enabled?, :to => :target
 
@@ -30,6 +31,12 @@ class Domain < ActiveRecord::Base
 
   def partner?
     "Partner" == target_type
+  end
+
+  private
+
+  def format_domain_name
+    self.name = self.name.try(:strip)
   end
 
 end
