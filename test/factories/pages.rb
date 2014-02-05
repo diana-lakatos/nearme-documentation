@@ -4,6 +4,7 @@ FactoryGirl.define do
     sequence(:path) { |n| "page-#{n}" }
     content { Faker::Lorem.paragraph }
     theme_id { (Instance.default_instance.theme || FactoryGirl.create(:instance).theme).id }
+    redirect_url nil
   end
 
 end

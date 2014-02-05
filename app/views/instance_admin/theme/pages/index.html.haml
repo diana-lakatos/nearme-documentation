@@ -1,5 +1,7 @@
 %legend Pages
+
 = link_to 'Add page', new_instance_admin_theme_page_path, class: 'btn btn-primary pull-right'
+= link_to 'Add redirect', new_instance_admin_theme_page_path(redirect: true), class: 'btn btn-primary pull-right'
 
 %table#pages.table.sortable
   %thead

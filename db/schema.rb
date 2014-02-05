@@ -11,7 +11,9 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140202153001) do
+ActiveRecord::Schema.define(:version => 20140203120847) do
+
+
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -76,6 +78,24 @@ ActiveRecord::Schema.define(:version => 20140202153001) do
   end
 
   add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
+
+  create_table "blog_instances", :force => true do |t|
+    t.string   "name"
+    t.string   "header"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "blog_posts", :force => true do |t|
+    t.string   "title"
+    t.text     "content"
+    t.integer  "blog_instance_id"
+    t.integer  "user_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
 
   create_table "charges", :force => true do |t|
     t.integer  "reference_id"
@@ -190,6 +210,16 @@ ActiveRecord::Schema.define(:version => 20140202153001) do
   add_index "footer_templates", ["path", "partial", "theme_id"], :name => "index_footer_templates_on_path_and_partial_and_theme_id"
   add_index "footer_templates", ["theme_id"], :name => "index_footer_templates_on_theme_id"
 
+  create_table "friendly_id_slugs", :force => true do |t|
+    t.string   "slug",                         :null => false
+    t.integer  "sluggable_id",                 :null => false
+    t.string   "sluggable_type", :limit => 40
+    t.datetime "created_at"
+  end
+
+  add_index "friendly_id_slugs", ["sluggable_id"], :name => "index_friendly_id_slugs_on_sluggable_id"
+  add_index "friendly_id_slugs", ["sluggable_type"], :name => "index_friendly_id_slugs_on_sluggable_type"
+
   create_table "guest_ratings", :force => true do |t|
     t.integer  "author_id",      :null => false
     t.integer  "subject_id"
@@ -253,10 +283,16 @@ ActiveRecord::Schema.define(:version => 20140202153001) do
     t.integer  "instance_id"
     t.boolean  "permission_settings",    :default => false
     t.boolean  "permission_theme",       :default => false
+    t.boolean  "permission_transfers",   :default => false
+    t.boolean  "permission_inventories", :default => false
+    t.boolean  "permission_partners",    :default => false
+    t.boolean  "permission_users",       :default => false
     t.boolean  "permission_analytics",   :default => true
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
+    t.boolean  "permission_pages",       :default => false
     t.boolean  "permission_manage",      :default => false
+    t.boolean  "permission_blog",        :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"
@@ -406,16 +442,18 @@ ActiveRecord::Schema.define(:version => 20140202153001) do
   add_index "mailer_unsubscriptions", ["user_id"], :name => "index_mailer_unsubscriptions_on_user_id"
 
   create_table "pages", :force => true do |t|
-    t.string   "path",         :null => false
+    t.string   "path",                                 :null => false
     t.text     "content"
     t.string   "hero_image"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.integer  "theme_id"
     t.string   "slug"
     t.integer  "position"
     t.text     "html_content"
     t.datetime "deleted_at"
+    t.string   "redirect_url"
+    t.boolean  "open_in_new_window", :default => true
   end
 
   add_index "pages", ["theme_id"], :name => "index_pages_on_theme_id"
@@ -600,6 +638,26 @@ ActiveRecord::Schema.define(:version => 20140202153001) do
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
+  create_table "theme_fonts", :force => true do |t|
+    t.integer  "theme_id"
+    t.string   "regular_eot"
+    t.string   "regular_svg"
+    t.string   "regular_ttf"
+    t.string   "regular_woff"
+    t.string   "medium_eot"
+    t.string   "medium_svg"
+    t.string   "medium_ttf"
+    t.string   "medium_woff"
+    t.string   "bold_eot"
+    t.string   "bold_svg"
+    t.string   "bold_ttf"
+    t.string   "bold_woff"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "theme_fonts", ["theme_id"], :name => "index_theme_fonts_on_theme_id"
+
   create_table "themes", :force => true do |t|
     t.string   "name"
     t.string   "compiled_stylesheet"
@@ -703,9 +761,9 @@ ActiveRecord::Schema.define(:version => 20140202153001) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                                :default => "", :null => false
-    t.string   "encrypted_password",                    :limit => 128, :default => "", :null => false
-    t.string   "password_salt",                                        :default => "", :null => false
+    t.string   "email",                                                :default => "",                           :null => false
+    t.string   "encrypted_password",                    :limit => 128, :default => "",                           :null => false
+    t.string   "password_salt",                                        :default => "",                           :null => false
     t.string   "reset_password_token"
     t.string   "remember_token"
     t.datetime "remember_created_at"
@@ -718,7 +776,7 @@ ActiveRecord::Schema.define(:version => 20140202153001) do
     t.datetime "updated_at"
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                                       :default => 0,  :null => false
+    t.integer  "bookings_count",                                       :default => 0,                            :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"

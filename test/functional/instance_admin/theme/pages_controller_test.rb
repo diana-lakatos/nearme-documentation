@@ -32,6 +32,17 @@ class InstanceAdmin::Theme::PagesControllerTest < ActionController::TestCase
       end
       assert_equal 'New Page', assigns(:page).path
     end
+
+    should 'create a new redirect' do
+      assert_difference 'Page.count', 1 do
+        post :create, "page"=>{
+                        "path"=>"New Redirect",
+                        "redirect_url"=>"http://test.com"
+                      }
+      end
+      assert_equal 'New Redirect', assigns(:page).path
+      assert assigns(:page).redirect?
+    end
   end
 
   context 'destroy' do

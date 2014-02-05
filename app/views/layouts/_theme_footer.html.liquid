@@ -4,7 +4,7 @@
       <div class="span3 mobile6">
         <ul class="pages">
           {% for page in platform_context.pages %}
-            <li><a href="{{ page.page_url }}">{{ page.title }}</a></li>
+            <li><a href="{{ page.page_url }}" target="{{ page.open_in_target }}" rel="{{ page.link_rel }}">{{ page.title }}</a></li>
           {% endfor %}
 
           {% if platform_context.is_desksnearme? %}

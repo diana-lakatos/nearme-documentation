@@ -1,6 +1,10 @@
 %tr
   %td= page.path
-  %td= link_to pages_path(page), pages_path(page), target: '_blank'
+  %td
+    - if page.redirect?
+      = link_to page.redirect_url, page.redirect_url, target: '_blank'
+    - else
+      = link_to pages_path(page), pages_path(page), target: '_blank'
   %td
     .pull-right
       = link_to edit_instance_admin_theme_page_path(page) do
