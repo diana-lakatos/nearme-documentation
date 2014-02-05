@@ -11,8 +11,8 @@ class Authentication < ActiveRecord::Base
   has_many :connections, through: :user_relationships, source: :follower, class_name: 'User'
 
   validates :provider, :uid, :token, presence: true
-  validates :provider, uniqueness: { scope: :user_id }
-  validates :uid,      uniqueness: { scope: :provider }
+  validates :provider, uniqueness: { scope: [:user_id, :deleted_at] }
+  validates :uid,      uniqueness: { scope: [:provider, :deleted_at] }
 
   serialize :info, Hash
 
