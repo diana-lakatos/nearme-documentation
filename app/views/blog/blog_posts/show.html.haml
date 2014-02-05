@@ -1,3 +1,6 @@
+- if @blog_instance.facebook_app_id.present?
+  = render 'fb_comments', facebook_app_id: @blog_instance.facebook_app_id
+
 .blog-post-detail
 
   %h1= @blog_post.title
@@ -18,14 +21,14 @@
       .icon= share_to_twitter(url, text: @blog_post.title)
   
   .author.row
-    - author = @blog_post.user
-    - if author.avatar.file.present?
+    - avatar = @blog_post.author_avatar
+    - if avatar.file.present?
       .avatar.col-sm-2.hidden-xs
-        .avatar-container{style: "background-image: url(#{author.avatar.url(:medium)});"}
+        .avatar-container{style: "background-image: url(#{avatar.url(:medium)});"}
 
-    .biography{class: "col-sm-#{author.avatar.file.present? ? 10 : 12}"}
-      %h3= @blog_post.user.name
-      %p= @blog_post.user.biography
+    .biography{class: "col-sm-#{avatar.file.present? ? 10 : 12}"}
+      %h3= @blog_post.author_name
+      %p= @blog_post.author_biography
 
   .links.row
     - if @blog_post.previous_blog_post.present?
@@ -34,3 +37,6 @@
     - if @blog_post.next_blog_post.present?
       .col-xs-6
         = link_to "NEXT STORY", blog_post_path(@blog_post.next_blog_post), class: 'next-blog-post'
+
+  - if @blog_instance.facebook_app_id.present?
+    .fb-comments{"data-numposts" => "5", "data-colorscheme" => "light", "data-href" => blog_posts_url(@blog_post)}

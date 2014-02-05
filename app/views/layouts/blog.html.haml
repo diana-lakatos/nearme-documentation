@@ -15,10 +15,12 @@
       .col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2.logo
         - url = @platform_instance.present? ? @platform_instance.theme.logo_image.url : asset_path('blog/logo.png')
         = link_to image_tag(url), blog_posts_path
-      - if @blog_instance.header.present?
+
+      - header = @blog_post.try(:header).presence || @blog_instance.header
+      - if header.present?
         .header-image
           = link_to blog_posts_path do
-            = image_tag @blog_instance.header_url, title: @blog_instance.name
+            = image_tag header.url, title: @blog_instance.name
       - else
         .heading
           = link_to @blog_instance.name, blog_posts_path

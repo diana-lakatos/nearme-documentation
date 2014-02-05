@@ -1,7 +1,7 @@
 class Blog::Admin::BlogPostsController < Blog::Admin::ApplicationController
 
   def index
-    @blog_posts = @blog_instance.blog_posts
+    @blog_posts = @blog_instance.blog_posts.order('COALESCE(published_at, created_at) desc')
   end
 
   def new

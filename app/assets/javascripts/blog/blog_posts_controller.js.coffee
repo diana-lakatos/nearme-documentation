@@ -1,6 +1,6 @@
-class @Blog.BlogPostsController
+class @BlogPostsController
 
-  constructor: (@container) ->
+  constructor: () ->
     @initializeInfiniteScroll()
 
   initializeInfiniteScroll: =>

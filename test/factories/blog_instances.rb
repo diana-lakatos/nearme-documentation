@@ -5,6 +5,7 @@ FactoryGirl.define do
       "Blog #{n}"
     end
     owner { Instance.default_instance.presence || FactoryGirl.create(:instance) }
+    enabled true
   end
 
 end

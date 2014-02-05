@@ -64,6 +64,7 @@
       font-family: 'PTSans-Regular';
       font-size: 14px;
       color: $gray;
+      line-height: 28px;
     }
 
     .date {
@@ -111,6 +112,7 @@
 
       p {
         margin-bottom: 20px;
+        line-height: 28px;
       }
     }
 
@@ -131,6 +133,10 @@
 
       .social {
         padding: 0;
+
+        @media (max-width: $ipad-width) {
+          padding-top: 10px;
+        }
 
         a {
           display: block;
@@ -157,6 +163,7 @@
             float: left;
             margin-left: 0;
             margin-right: 5px;
+            margin-top: 10px;
           }
         }
       }
@@ -240,6 +247,10 @@
           right: 0;
         }
       }
+    }
+
+    #fbcomments, .fb-comments, .fb-comments iframe[style], .fb-comments span {
+      width: 100% !important;
     }
   }
 

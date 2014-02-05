@@ -84,15 +84,23 @@ ActiveRecord::Schema.define(:version => 20140128080628) do
     t.string   "header"
     t.integer  "owner_id"
     t.string   "owner_type"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "facebook_app_id"
+    t.boolean  "enabled",         :default => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
   end
 
   create_table "blog_posts", :force => true do |t|
     t.string   "title"
     t.text     "content"
+    t.string   "header"
+    t.string   "author_name"
+    t.text     "author_biography"
+    t.string   "author_avatar"
     t.integer  "blog_instance_id"
     t.integer  "user_id"
+    t.string   "slug"
+    t.datetime "published_at"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
   end

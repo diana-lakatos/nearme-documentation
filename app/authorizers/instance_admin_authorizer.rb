@@ -3,6 +3,8 @@ class InstanceAdminAuthorizer < Authorizer
   class UnassignedInstanceAdminRoleError < StandardError
   end
 
+  PERMISSIONS = InstanceAdminRole::PERMISSIONS - ['Blog']
+
   def authorized?(controller)
     raise InstanceAdminAuthorizer::UnassignedInstanceAdminRoleError.new("Instance admin (id=#{instance_admin.id}) has not been assigned any role") if instance_admin_role.nil?
     if controller.to_s == "InstanceAdmin::BaseController"
@@ -12,7 +14,7 @@ class InstanceAdminAuthorizer < Authorizer
   end
 
   def first_permission_have_access_to
-    InstanceAdminRole::PERMISSIONS.each do |permission|
+    PERMISSIONS.each do |permission|
       return permission.downcase if authorized?("InstanceAdmin::#{permission}Controller".constantize)
     end
     nil

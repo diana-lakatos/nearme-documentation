@@ -13,6 +13,8 @@ class CreateBlogTables < ActiveRecord::Migration
       t.string :header
       t.integer :owner_id
       t.string :owner_type
+      t.string :facebook_app_id
+      t.boolean :enabled, default: false
 
       t.timestamps
     end
@@ -20,15 +22,24 @@ class CreateBlogTables < ActiveRecord::Migration
     create_table :blog_posts do |t|
       t.string :title
       t.text :content
+      t.string :header
+
+      t.string :author_name
+      t.text :author_biography
+      t.string :author_avatar
 
       t.integer :blog_instance_id
       t.integer :user_id
 
+      t.string :slug
+      t.datetime :published_at
       t.timestamps
     end
 
     # NearMe instance
     BlogInstance.create(name: 'NearMe Blog', owner_type: 'near-me')
+
+    # DesksNearMe instances
     Instance.where(name: 'DesksNearMe').each do |dnm_instance|
       dnm_blog = BlogInstance.new(name: 'DesksNearMe Blog')
       dnm_blog.owner_id = dnm_instance.id
@@ -37,6 +48,7 @@ class CreateBlogTables < ActiveRecord::Migration
     end
 
     add_column :instance_admin_roles, :permission_blog, :boolean, default: false
+    InstanceAdminRole.where(name: 'Administrator').update_all(permission_blog: true)
   end
 
   def down

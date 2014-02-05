@@ -129,4 +129,5 @@ class Instance < ActiveRecord::Base
   def set_password_protected
     self.password_protected = password_protected?
   end
+
 end
