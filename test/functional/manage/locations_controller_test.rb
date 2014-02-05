@@ -39,7 +39,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       location.address_components = auckland_address_components
       location.save
 
-      assert_equal location.slug, "#{location.company.name.parameterize('+')}-auckland"
+      assert_equal location.slug, "#{location.company.name.parameterize}-auckland"
     end
   end
 
