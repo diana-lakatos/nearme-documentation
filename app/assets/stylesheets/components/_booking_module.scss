@@ -64,15 +64,15 @@
     padding: ($padding-default + 7);
     background: $gray60;    
     color: $gray210;
-    font: normal 32px/36px 'Futura-regular', sans-serif; 
+    font: normal 32px/36px $font-regular, sans-serif; 
 
     @media (max-width: $booking-module-breakpoint-size) {
       padding: ($padding-default - 3);
-      font: normal 26px/30px 'Futura-regular', sans-serif;
+      font: normal 26px/30px $font-regular, sans-serif;
     }
 
     @media (max-width: $iphone-portrait - 1) {
-      font: normal 22px/28px 'Futura-regular', sans-serif; 
+      font: normal 22px/28px $font-regular, sans-serif; 
     }
 
     .booking-header {

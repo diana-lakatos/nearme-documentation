@@ -33,4 +33,5 @@ DesksnearMe::Application.configure do
   config.twitter_key = "IZeQXx4YyCdTQ9St3tmyw"
   config.twitter_secret = "ZlxMPIhNPBn4QbOSHqkN1p7hKghGZTOtR1fDsPSX8"
   config.encrypt_sensitive_db_columns = false
+  config.silence_raygun_notification = true
 end

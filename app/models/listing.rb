@@ -24,7 +24,7 @@ class Listing < ActiveRecord::Base
   belongs_to :location, inverse_of: :listings
   belongs_to :listing_type
 
-  has_many :amenity_holders, as: :holder
+  has_many :amenity_holders, as: :holder, dependent: :destroy
   has_many :amenities, through: :amenity_holders
 
   has_many :reviews, :through => :reservations

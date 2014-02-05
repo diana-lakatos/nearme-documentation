@@ -18,7 +18,7 @@ common: &default_settings
   error_collector:
     enabled: true
     capture_source: true    
-    ignore_errors: "ActionController::RoutingError,Listing::NotFound,Location::NotFound,Page::NotFound"
+    ignore_errors: "ActionController::RoutingError,ActiveRecord::RecordNotFound,Listing::NotFound,Location::NotFound,Page::NotFound"
 
 development:
   developer_mode: true

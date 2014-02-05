@@ -70,7 +70,7 @@ class ReservationCharge < ActiveRecord::Base
 
     # Generates a ChargeAttempt with this record as the reference.
     billing_gateway.charge(
-      amount: total_amount_cents,
+      amount_cents: total_amount_cents,
       reference: self
     )
 
@@ -81,6 +81,30 @@ class ReservationCharge < ActiveRecord::Base
     touch(:failed_at)
   end
 
+  def refund
+    return if !paid?
+    return if refunded?
+    successful_charge = charge_attempts.successful.first
+    return if successful_charge.nil?
+
+    refund = billing_gateway.refund(
+      amount_cents: total_amount_cents,
+      reference: self,
+      charge_response: successful_charge.response
+    )
+
+    if refund.success?
+      touch(:refunded_at)
+      true
+    else
+      false
+    end
+  end
+
+  def refunded?
+    refunded_at.present?
+  end
+
   def paid?
     paid_at.present?
   end
@@ -88,7 +112,7 @@ class ReservationCharge < ActiveRecord::Base
   private
 
   def billing_gateway
-    @billing_gateway ||= Billing::Gateway.new(instance).ingoing_payment(reservation.owner, currency)
+    @billing_gateway ||= Billing::Gateway.new(instance, currency).ingoing_payment(reservation.owner)
   end
 
   def assign_currency
