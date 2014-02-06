@@ -163,6 +163,11 @@ class ReservationDecorator < Draper::Decorator
     link_to user_message.thread_context.name, location_path(user_message.thread_context.location, user_message.thread_context.listing)
   end
 
+  def state_to_string
+    return 'declined' if rejected?
+    state.split('_').first
+  end
+
   private
 
   def time_to_expiry(time_of_event)
