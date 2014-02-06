@@ -9,7 +9,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   # We extend the create action to clear out any stored Provider auth data used during
   # registration.
-  before_filter :find_supported_providers, :only => [:edit, :update]
+  before_filter :find_supported_providers, :only => [:social_accounts, :update]
   before_filter :set_return_to, :only => [:new, :create]
   after_filter :render_or_redirect_after_create, :only => [:create]
   before_filter :redirect_to_edit_profile_if_password_set, :only => [:set_password]
@@ -187,6 +187,9 @@ class RegistrationsController < Devise::RegistrationsController
       session[:user_return_to] = request.path
       redirect_to new_user_session_path
     end
+  end
+
+  def social_accounts
   end
 
   protected

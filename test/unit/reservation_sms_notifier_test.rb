@@ -18,5 +18,18 @@ class ReservationSmsNotifierTest < ActiveSupport::TestCase
       assert sms.body =~ /http:\/\/goo.gl/
     end
   end
+
+  context '#notify_guest_with_state_change' do
+    should "render with the reservation" do
+      @reservation_owner = @reservation.owner
+      @reservation_owner.mobile_number = "199999999"
+      @reservation_owner.save!
+      @reservation.confirm
+      sms = ReservationSmsNotifier.notify_guest_with_state_change(@reservation)
+      assert_equal @reservation_owner.full_mobile_number, sms.to
+      assert sms.body =~ Regexp.new("Your booking for #{@reservation.listing.name} was confirmed. View booking:")
+      assert sms.body =~ /http:\/\/goo.gl/
+    end
+  end
 end
 
