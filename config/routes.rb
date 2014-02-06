@@ -137,6 +137,7 @@ DesksnearMe::Application.routes.draw do
     put "users/update_password", :to => "registrations#update_password", :as => "update_password"
     post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
     post "users/store_geolocated_location", :to => "registrations#store_geolocated_location", :as => "store_geolocated_location"
+    get "users/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
     get "users/", :to => "registrations#new"
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
@@ -146,7 +147,6 @@ DesksnearMe::Application.routes.draw do
     put "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip"
 
     get "/instance_admin/sessions/new", :to => "instance_admin::sessions#new", :as => 'instance_admin_login'
-
   end
 
   resources :reservations, :except => [:update, :destroy, :show] do

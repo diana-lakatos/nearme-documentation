@@ -17,7 +17,7 @@ module UserHelper
   end
 
   def toggle_connection_with(provider)
-    visit edit_user_registration_path
+    visit social_accounts_path
     find(:css, ".provider_#{provider.downcase}").click
   end
 

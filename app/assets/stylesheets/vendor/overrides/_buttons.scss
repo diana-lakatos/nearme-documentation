@@ -153,7 +153,8 @@ a.btn {
 
   &.twitter, 
   &.facebook, 
-  &.linkedin {
+  &.linkedin,
+  &.instagram {
     
     &.connected {
       background: $red;
@@ -185,6 +186,14 @@ a.btn {
 
     &:hover {
       background: darken($linkedin-blue, 15%);
+    }
+  }
+
+  &.instagram {
+    background: $instagram-brown;
+
+    &:hover {
+      background: darken($instagram-brown, 15%);
     }
   }
 }
