@@ -13,7 +13,7 @@ class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
 
   context 'instance_admin' do
 
-    should 'know if user is not instance admin' do
+    should 'know that user is not instance admin' do
       assert !@authorizer.instance_admin?
     end
 
@@ -22,7 +22,7 @@ class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
         @instance_admin = InstanceAdmin.create(:user_id => @user.id, :instance_id => @instance.id)
       end
 
-      should 'know if user is instance admin' do
+      should 'know that user is instance admin' do
         assert @authorizer.instance_admin?
       end
 

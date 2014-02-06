@@ -25,6 +25,7 @@ FactoryGirl.define do
       permission_inventories false
       permission_partners false
       permission_users false
+      permission_blog false
     end
 
     factory :instance_admin_role_administrator do
@@ -41,7 +42,7 @@ FactoryGirl.define do
     end
 
     factory :instance_admin_role_blog do
-      name 'Default'
+      name 'Blog'
       instance_id nil
       permission_analytics true
       permission_settings false
