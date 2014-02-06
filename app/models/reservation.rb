@@ -340,6 +340,11 @@ class Reservation < ActiveRecord::Base
     "Reservation of #{listing.try(:name)}, user: #{owner.try(:name)}, #{dates_description}"
   end
 
+  def state_to_string
+    return 'declined' if rejected?
+    state.split('_').first
+  end
+
   private
 
     def service_fee_calculator

@@ -10,11 +10,7 @@ class Manage::Listings::ReservationsController < ApplicationController
       if @reservation.confirm
         ReservationMailer.enqueue.notify_guest_of_confirmation(platform_context, @reservation)
         ReservationMailer.enqueue.notify_host_of_confirmation(platform_context, @reservation)
-        begin
-          ReservationSmsNotifier.notify_guest_with_state_change(@reservation).deliver
-        rescue Twilio::REST::RequestError => e
-          BackgroundIssueLogger.log_issue("[internal] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{@reservation.id}, guest #{@reservation.owner.name} (#{@reservation.owner.id}). #{$!.inspect}")
-        end
+        notify_guest_about_reservation_status_change
         event_tracker.confirmed_a_booking(@reservation)
         event_tracker.updated_profile_information(@reservation.owner)
         event_tracker.updated_profile_information(@reservation.host)
@@ -35,11 +31,7 @@ class Manage::Listings::ReservationsController < ApplicationController
       ReservationIssueLogger.rejected_with_reason @reservation, current_user if rejection_reason.present?
       ReservationMailer.enqueue.notify_guest_of_rejection(platform_context, @reservation)
       ReservationMailer.enqueue.notify_host_of_rejection(platform_context, @reservation)
-      begin
-        ReservationSmsNotifier.notify_guest_with_state_change(@reservation).deliver
-      rescue Twilio::REST::RequestError => e
-        BackgroundIssueLogger.log_issue("[internal] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{@reservation.id}, guest #{@reservation.owner.name} (#{@reservation.owner.id}). #{$!.inspect}")
-      end
+      notify_guest_about_reservation_status_change
       event_tracker.rejected_a_booking(@reservation)
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
@@ -55,11 +47,7 @@ class Manage::Listings::ReservationsController < ApplicationController
     if @reservation.host_cancel
       ReservationMailer.enqueue.notify_guest_of_cancellation_by_host(platform_context, @reservation)
       ReservationMailer.enqueue.notify_host_of_cancellation_by_host(platform_context, @reservation)
-      begin
-        ReservationSmsNotifier.notify_guest_with_state_change(@reservation).deliver
-      rescue Twilio::REST::RequestError => e
-        BackgroundIssueLogger.log_issue("[internal] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{@reservation.id}, guest #{@reservation.owner.name} (#{@reservation.owner.id}). #{$!.inspect}")
-      end
+      notify_guest_about_reservation_status_change
       event_tracker.cancelled_a_booking(@reservation, { actor: 'host' })
       event_tracker.updated_profile_information(@reservation.owner)
       event_tracker.updated_profile_information(@reservation.host)
@@ -86,6 +74,14 @@ class Manage::Listings::ReservationsController < ApplicationController
 
   def rejection_reason
     params[:reservation][:rejection_reason] if params[:reservation] and params[:reservation][:rejection_reason]
+  end
+
+  def notify_guest_about_reservation_status_change
+    begin
+      ReservationSmsNotifier.notify_guest_with_state_change(@reservation).deliver
+    rescue Twilio::REST::RequestError => e
+      BackgroundIssueLogger.log_issue("[internal] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{@reservation.id}, guest #{@reservation.owner.name} (#{@reservation.owner.id}). #{e.inspect}")
+    end
   end
 end
 
