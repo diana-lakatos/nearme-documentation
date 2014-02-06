@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140204180247) do
+ActiveRecord::Schema.define(:version => 20140206075900) do
 
 
 
@@ -836,6 +836,8 @@ ActiveRecord::Schema.define(:version => 20140204180247) do
     t.string   "encrypted_balanced_user_id"
     t.string   "encrypted_balanced_credit_card_id"
     t.string   "time_zone",                                            :default => "Pacific Time (US & Canada)"
+    t.boolean  "sms_notifications_enabled",                            :default => true
+    t.string   "sms_preferences"
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"

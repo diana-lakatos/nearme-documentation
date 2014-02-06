@@ -197,6 +197,20 @@ class RegistrationsController < Devise::RegistrationsController
   def social_accounts
   end
 
+  def edit_notification_preferences
+    @user = current_user
+  end
+
+  def update_notification_preferences
+    @user = current_user
+    if @user.update_with_password(params[:user])
+      flash[:success] = t('flash_messages.registrations.notification_preferences_updated_successfully')
+      redirect_to :action => 'edit_notification_preferences'
+    else
+      render :edit_notification_preferences
+    end
+  end
+
   protected
 
   def is_navigational_format?

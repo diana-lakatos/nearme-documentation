@@ -17,6 +17,20 @@ class ReservationSmsNotifierTest < ActiveSupport::TestCase
       assert sms.body =~ /Please confirm or decline from your dashboard:/
       assert sms.body =~ /http:\/\/goo.gl/
     end
+
+    should "not render if host had disabled sms notifications" do
+      @listing_owner.sms_notifications_enabled = false
+      sms = ReservationSmsNotifier.notify_host_with_confirmation(@reservation)
+      assert sms.is_a?(SmsNotifier::NullMessage)
+      refute sms.deliver
+    end
+
+    should "not render if host had disabled sms notification for new reservation requests" do
+      @listing_owner.sms_preferences = { :new_reservation => '0' }
+      sms = ReservationSmsNotifier.notify_host_with_confirmation(@reservation)
+      assert sms.is_a?(SmsNotifier::NullMessage)
+      refute sms.deliver
+    end
   end
 
   context '#notify_guest_with_state_change' do
@@ -29,6 +43,13 @@ class ReservationSmsNotifierTest < ActiveSupport::TestCase
       assert_equal @reservation_owner.full_mobile_number, sms.to
       assert sms.body =~ Regexp.new("Your booking for #{@reservation.listing.name} was confirmed. View booking:")
       assert sms.body =~ /http:\/\/goo.gl/
+    end
+
+    should "not render if user had disabled sms notification for reservation state changes" do
+      @reservation.owner.sms_preferences = { :reservation_state_changed => '0' }
+      sms = ReservationSmsNotifier.notify_guest_with_state_change(@reservation)
+      assert sms.is_a?(SmsNotifier::NullMessage)
+      refute sms.deliver
     end
   end
 end

@@ -70,6 +70,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     @reservation.confirm!
     @reservation.update_column(:payment_status, Reservation::PAYMENT_STATUSES[:paid])
     sign_in @reservation.listing.creator
+    User.any_instance.stubs(:accepts_sms_with_type?)
     YAML.expects(:load).returns(stub(:id => 'abc'))
     Stripe::Charge.expects(:retrieve).returns(stub(:refund => stub(:to_yaml => {})))
     assert_difference 'Refund.count' do
