@@ -50,8 +50,9 @@ class AuthenticationTest < ActiveSupport::TestCase
       end
     end
 
-    should 'be created if authentication with the same provider and uid has been removed previously' do
+    should 'be created for different user if authentication with the same provider and uid has been removed previously' do
       Authentication.create(@valid_params).destroy
+      @valid_params[:user_id] = FactoryGirl.create(:user).id
       assert_nothing_raised {
         Authentication.create!(@valid_params)
       }
