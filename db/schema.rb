@@ -266,14 +266,10 @@ ActiveRecord::Schema.define(:version => 20140204180247) do
     t.integer  "instance_id"
     t.boolean  "permission_settings",    :default => false
     t.boolean  "permission_theme",       :default => false
-    t.boolean  "permission_transfers",   :default => false
-    t.boolean  "permission_inventories", :default => false
-    t.boolean  "permission_partners",    :default => false
-    t.boolean  "permission_users",       :default => false
     t.boolean  "permission_analytics",   :default => true
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
-    t.boolean  "permission_pages",       :default => false
+    t.boolean  "permission_manage",      :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"
@@ -752,7 +748,10 @@ ActiveRecord::Schema.define(:version => 20140204180247) do
     t.boolean  "read_for_owner",         :default => false
     t.boolean  "read_for_recipient",     :default => false
     t.datetime "deleted_at"
+    t.integer  "instance_id"
   end
+
+  add_index "user_messages", ["instance_id"], :name => "index_user_messages_on_instance_id"
 
   create_table "user_relationships", :force => true do |t|
     t.integer  "follower_id"

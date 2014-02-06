@@ -340,7 +340,7 @@ class Reservation < ActiveRecord::Base
     date_last = last_date.strftime('%-e %b')
     dates_description = date_first == date_last ? date_first : "#{date_first}-#{date_last}"
     "Reservation of #{listing.try(:name)}, user: #{owner.try(:name)}, #{dates_description}"
-  end
+  end 
 
   private
 

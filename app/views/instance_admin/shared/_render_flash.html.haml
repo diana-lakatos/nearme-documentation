@@ -1,0 +1,9 @@
+.row-fluid
+  .span12
+    - [:notice, :success, :warning, :error, :deleted].each do |key|
+      - if flash[key].present?
+        %div{class: "alert alert-#{key}", 'data-flash-message' => true}
+          %a.close{"data-dismiss" => "alert", href: "#"} ×
+          %p
+            %i{ :class => ico_for_flash(key)}
+            = flash[key].html_safe

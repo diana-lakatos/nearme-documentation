@@ -32,6 +32,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_clients, :dependent => :destroy
   has_many :translations, :dependent => :destroy
   has_many :instance_billing_gateways, :dependent => :destroy
+  has_many :user_messages, :dependent => :destroy
 
   serialize :pricing_options, Hash
 

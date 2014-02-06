@@ -1,0 +1,14 @@
+= content_for :manage_navbar do
+  .row-fluid
+    .span8.offset2.manage-nav
+      .navbar
+        .navbar-inner.nav-links
+          %ul.nav
+            %li
+              = link_to edit_user_registration_path, :class => (active_tab == :account) ? 'active' : '' do
+                %span Edit Profile 
+            %li
+              = link_to social_accounts_path, :class => (active_tab == :trust_and_verification) ? 'active' : '' do
+                %span Trust &amp; Verification
+
+= yield

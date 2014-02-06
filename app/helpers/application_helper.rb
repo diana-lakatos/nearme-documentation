@@ -168,4 +168,8 @@ module ApplicationHelper
     not params[:controller] == 'locations' && params[:action] == 'show'
   end
 
+  def nl2br(str)
+    str.gsub(/\r\n|\r|\n/, "<br />").html_safe
+  end
+
 end

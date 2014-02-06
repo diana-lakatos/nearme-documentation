@@ -1,0 +1,13 @@
+%table.table
+  %thead
+    %tr
+      %th State
+      %th Company
+      %th Charges
+      %th Created at
+      %th Transferred At
+      %th Service Fees
+      %th Transfer Amount
+
+  - collection.each do |resource|
+    = render 'instance_admin/manage/transfers/payment_transfer', :resource => resource

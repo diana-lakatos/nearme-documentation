@@ -12,7 +12,7 @@ class @Users.InstanceAdminRoles.Controller
       @loading_gif.show()
       $.ajax(
         type: 'PUT',
-        url: '/instance_admin/users/instance_admin_roles/' + $(event.target).data('role-id'),
+        url: '/instance_admin/manage/users/instance_admin_roles/' + $(event.target).data('role-id'),
         data: JSON.parse(str),
         success: =>
           @loading_gif.hide()

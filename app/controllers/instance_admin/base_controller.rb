@@ -1,4 +1,6 @@
 class InstanceAdmin::BaseController < ApplicationController
+  layout 'instance_admin'
+
   before_filter :auth_user!
   before_filter :authorize_user!
   skip_before_filter :redirect_if_marketplace_password_protected
@@ -7,8 +9,6 @@ class InstanceAdmin::BaseController < ApplicationController
     first_permission_have_access_to = @authorizer.first_permission_have_access_to
     redirect_to url_for([:instance_admin, first_permission_have_access_to])
   end
-
-  layout 'instance_admin'
 
   private
 
@@ -40,7 +40,7 @@ class InstanceAdmin::BaseController < ApplicationController
   end
 
   def permitting_controller_class
-    self.class
+    self.class.to_s.deconstantize.demodulize
   end
 
   def instance_admin_roles

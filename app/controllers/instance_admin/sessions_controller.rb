@@ -1,12 +1,12 @@
 class InstanceAdmin::SessionsController < SessionsController
   skip_before_filter :authenticate_user!
-  skip_before_filter :authorize_user! 
+  skip_before_filter :authorize_user!
   skip_before_filter :redirect_if_marketplace_password_protected
 
   layout 'instance_admin'
 
   def new
-    redirect_to instance_admin_path if user_signed_in? 
+    redirect_to instance_admin_path if user_signed_in?
   end
 
 end

@@ -1,0 +1,12 @@
+%legend Manage Inventories
+
+%table.table
+  %tr
+    %th
+      Name
+    %th
+      Email
+  - collection.each do |resource|
+    = render 'index_row', :resource => resource
+
+= will_paginate collection
