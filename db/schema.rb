@@ -752,7 +752,10 @@ ActiveRecord::Schema.define(:version => 20140204180247) do
     t.boolean  "read_for_owner",         :default => false
     t.boolean  "read_for_recipient",     :default => false
     t.datetime "deleted_at"
+    t.integer  "instance_id"
   end
+
+  add_index "user_messages", ["instance_id"], :name => "index_user_messages_on_instance_id"
 
   create_table "user_relationships", :force => true do |t|
     t.integer  "follower_id"
