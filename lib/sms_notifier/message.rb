@@ -1,6 +1,14 @@
 # Wraps sending a message via the twilio client in an interface
 # similar to Mail used in ActionMailer.
 class SmsNotifier::Message
+  class TooLong < ::StandardError
+    def initialize(msg)
+      super
+    end
+  end
+
+  SMS_SIZE = 160
+
   # Assign the twilio client in an initializer
   class_attribute :twilio_client
 
@@ -21,6 +29,8 @@ class SmsNotifier::Message
   end
 
   def deliver
+    validate!
+
     twilio_client.account.sms.messages.create(
       :body => @data[:body],
       :to => @data[:to],
@@ -33,6 +43,10 @@ class SmsNotifier::Message
 
   def twilio_client
     self.class.twilio_client
+  end
+
+  def validate!
+    raise SmsNotifier::Message::TooLong.new("SMS size is too long (#{@data[:body].size})") if @data[:body].size > SMS_SIZE
   end
 end
 
