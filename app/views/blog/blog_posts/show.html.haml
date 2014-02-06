@@ -11,7 +11,7 @@
 
   .info.row
     .date.col-sm-6
-      Published #{l(@blog_post.created_at, format: :only_date)}
+      Published #{l(@blog_post.published_at.presence || @blog_post.created_at, format: :only_date)}
 
     .social.col-sm-6.clearfix
       - url = blog_post_url(@blog_post)

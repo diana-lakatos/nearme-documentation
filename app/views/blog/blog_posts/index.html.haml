@@ -7,7 +7,7 @@
       .col-sm-9
         %h2= link_to blog_post.title, blog_post_path(blog_post)
       .col-sm-2.date
-        =l blog_post.created_at, format: :day_and_month
+        =l blog_post.published_at.presence || blog_post.created_at, format: :day_and_month
       .col-sm-11.content
         %p= truncate(strip_tags(blog_post.content), length: 200)
 
