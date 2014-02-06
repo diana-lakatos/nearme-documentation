@@ -7,7 +7,7 @@ class ReservationSmsNotifier < SmsNotifier
 
   def notify_guest_with_state_change(reservation)
     return unless reservation.owner.accepts_sms?
-    @reservation = reservation
+    @reservation = reservation.decorate
     @platform_context = PlatformContext.new.initialize_with_company(@reservation.listing.company).decorate
     sms :to => @reservation.owner.full_mobile_number
   end
