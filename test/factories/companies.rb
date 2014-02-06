@@ -39,6 +39,12 @@ FactoryGirl.define do
       paypal_email { email }
     end
 
+    factory :company_with_balanced do
+      after(:build) do |company|
+        company.instance_clients << FactoryGirl.build(:instance_client, :client => company, :instance => company.instance, :balanced_user_id => 'test-customer')
+      end
+    end
+
     factory :white_label_company do
       white_label_enabled true
     end

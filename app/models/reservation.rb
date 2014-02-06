@@ -12,6 +12,7 @@ class Reservation < ActiveRecord::Base
     :paid => 'paid',
     :failed => 'failed',
     :pending => 'pending',
+    :refunded => 'refunded',
     :unknown => 'unknown'
   }
 
@@ -94,6 +95,7 @@ class Reservation < ActiveRecord::Base
 
   state_machine :state, :initial => :unconfirmed do
     after_transition :unconfirmed => :confirmed, :do => :attempt_payment_capture
+    after_transition :confirmed => [:cancelled_by_guest, :cancelled_by_host], :do => :schedule_refund
 
     event :confirm do
       transition :unconfirmed => :confirmed
@@ -338,7 +340,7 @@ class Reservation < ActiveRecord::Base
     date_last = last_date.strftime('%-e %b')
     dates_description = date_first == date_last ? date_first : "#{date_first}-#{date_last}"
     "Reservation of #{listing.try(:name)}, user: #{owner.try(:name)}, #{dates_description}"
-  end
+  end 
 
   private
 
@@ -413,6 +415,28 @@ class Reservation < ActiveRecord::Base
         PAYMENT_STATUSES[:failed]
       end
       save!
+    end
+
+    def attempt_payment_refund(counter = 0)
+      return if !(credit_card_payment? && paid?)
+      reservation_charge = reservation_charges.paid.first
+      if reservation_charge.nil?
+        BackgroundIssueLogger.log_issue("[reservation refund] Unexpected state", "support@desksnear.me", "Reservation id: #{self.id}. It's marked as paid via credit card but reservation_charge has not been created.")
+      else
+        counter = counter + 1
+        if reservation_charge.refund
+          self.update_attribute(:payment_status, PAYMENT_STATUSES[:refunded])
+        elsif counter < 3
+          ReservationRefundJob.perform_later(Time.zone.now + (counter * 6).hours, self.id, counter)
+        else
+          BackgroundIssueLogger.log_issue("[reservation refund] Refund 3 times failed", "support@desksnear.me", "Reservation id: #{self.id}. We did not manage to automatically refund payment")
+        end
+      end
+      true
+    end
+
+    def schedule_refund(transition, counter = 0, run_at = Time.zone.now)
+      ReservationRefundJob.perform_later(run_at, self.id, counter)
     end
 
     def validate_all_dates_available

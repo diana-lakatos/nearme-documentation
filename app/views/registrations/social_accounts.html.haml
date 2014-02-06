@@ -1,0 +1,10 @@
+- title "Trust & Verification"
+
+= render :layout => 'registrations/layout/account', :locals => { :active_tab => :trust_and_verification } do
+  .row-fluid
+    .span8.offset2
+      .box
+        %div
+          = t('registrations.social_accounts.connecting_social_accounts_info', marketplace_name: platform_context.name).html_safe
+        %p
+        = render "registrations/networks", :supported_providers => @supported_providers

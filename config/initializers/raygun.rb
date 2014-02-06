@@ -4,6 +4,7 @@ Raygun.setup do |config|
   else
     config.api_key = '3VN6sPnvwRlTfwDmwhRFIA=='
   end
+  Raygun.configuration.silence_reporting = DesksnearMe::Application.config.silence_raygun_notification
 
-  config.ignore << [Listing::NotFound, Location::NotFound, Page::NotFound, Reservation::NotFound]
+  config.ignore << ['Listing::NotFound', 'Location::NotFound', 'Page::NotFound', 'Reservation::NotFound']
 end

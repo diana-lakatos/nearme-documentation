@@ -29,8 +29,10 @@ class Instance < ActiveRecord::Base
   has_many :instance_admin_roles
   has_many :reservations, :as => :platform_context_detail, :dependent => :destroy
   has_many :reservation_charges, :through => :reservations
+  has_many :instance_clients, :dependent => :destroy
   has_many :translations, :dependent => :destroy
   has_many :instance_billing_gateways, :dependent => :destroy
+  has_many :user_messages, :dependent => :destroy
 
   serialize :pricing_options, Hash
 
@@ -92,6 +94,14 @@ class Instance < ActiveRecord::Base
     self.paypal_app_id.present?
   end
 
+  def balanced_supported?
+    balanced_api_key.present?
+  end
+
+  def support_automated_payouts?
+    paypal_supported? || balanced_supported?
+  end
+  
   def stripe_supported?
     self.stripe_api_key.present? &&
     self.stripe_public_key.present?

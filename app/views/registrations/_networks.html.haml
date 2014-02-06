@@ -1,10 +1,8 @@
 #fill-password-request.flash.notice.hidden
   If you disconnect this account, you will have no possibility to log in. To avoid this, please save your password
 .form-horizontal
-  .control-group
-    %label.control-label.social-networks
-      Social Networks
-    .controls
-      - supported_providers.each do |provider|
-        = build_link_for(provider, "btn btn-blue btn-small #{provider.downcase} provider_#{provider.downcase}").html_safe
-      - end unless supported_providers.nil?
+  - supported_providers.each do |provider|
+    .control-group.social-provider
+      %label.control-label.social-networks= provider
+      = build_link_for(provider, "btn btn-blue btn-small #{provider.downcase} provider_#{provider.downcase}").html_safe
+  - end unless supported_providers.nil?

@@ -103,5 +103,7 @@ module DesksnearMe
 
     config.paypal_mode = 'sandbox'
     config.encrypt_sensitive_db_columns = true
+
+    config.silence_raygun_notification = false
   end
 end

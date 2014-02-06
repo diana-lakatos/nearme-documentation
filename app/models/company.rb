@@ -6,9 +6,9 @@ class Company < ActiveRecord::Base
   attr_accessible :creator_id, :description, :url, :email, :name,
     :mailing_address, :paypal_email, :industry_ids, :locations_attributes,
     :domain_attributes, :theme_attributes, :instance_id, :white_label_enabled,
-    :listings_public, :partner_id
+    :listings_public, :partner_id, :bank_account_number, :bank_routing_number, :bank_owner_name
 
-  attr_accessor :created_payment_transfers
+  attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name
 
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance
@@ -39,18 +39,21 @@ class Company < ActiveRecord::Base
   has_one :theme, :as => :owner, :dependent => :destroy
 
   has_many :locations_impressions,
-           :source => :impressions,
-           :through => :locations do
-             def for_instance(instance)
-               location_ids = proxy_association.owner.locations.for_instance(instance).pluck(:id)
-               where(:impressionable_id => location_ids)
-             end
-           end
+    :source => :impressions,
+    :through => :locations do
+      def for_instance(instance)
+        location_ids = proxy_association.owner.locations.for_instance(instance).pluck(:id)
+        where(:impressionable_id => location_ids)
+      end
+    end
+
+  has_many :instance_clients, :as => :client, :dependent => :destroy
 
   before_validation :add_default_url_scheme
 
   after_save :notify_user_about_change
   after_destroy :notify_user_about_change
+  before_save :create_bank_account_in_balanced!, :if => lambda { |c| c.bank_account_number.present? || c.bank_routing_number.present? || c.bank_owner_name.present? }
 
   validates_presence_of :name, :instance_id
   validates_presence_of :industries, :if => proc { |c| c.instance.present? && c.instance.is_desksnearme? && !c.instance.skip_company? }
@@ -71,7 +74,6 @@ class Company < ActiveRecord::Base
       ReservationCharge.needs_payment_transfer
     ).uniq
   }
-
   accepts_nested_attributes_for :domain, :reject_if => proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :locations
@@ -97,20 +99,43 @@ class Company < ActiveRecord::Base
     transaction do
       charges = reservation_charges.needs_payment_transfer
       charges.group_by(&:currency).each do |currency, charges|
-        self.created_payment_transfers << payment_transfers.create!(
+        payment_transfer = payment_transfers.create!(
           reservation_charges: charges
         )
+        self.created_payment_transfers << payment_transfer if payment_transfer.possible_automated_payout_not_supported?
       end
     end
-    # FIXME: probably better to move to payment_transfer.rb 
-    if !has_payment_method?
+    # we want to notify company owner (once no matter how many payment transfers have been generated!) 
+    # that it is possible to make automated payout but he needs to enter credentials via edit company settings
+    if mailing_address.blank? && self.created_payment_transfers.any?
       CompanyMailer.enqueue.notify_host_of_no_payout_option(self)
       CompanySmsNotifier.notify_host_of_no_payout_option(self).deliver
     end
   end
 
-  def has_payment_method?
-    paypal_email.present? || mailing_address.present?
+  def to_balanced_params
+    {
+      name: name,
+      email: email.presence || creator.try(:email),
+      phone: creator.try(:phone)
+    }
+  end
+
+  def balanced_bank_account_details
+    {
+      :account_number => bank_account_number, 
+      :bank_code => bank_routing_number, 
+      :name => bank_owner_name,
+      :type => 'checking'
+    }
+  end
+
+  def last_four_digits_of_bank_account
+    bank_account_number.to_s[-4, 4]
+  end
+
+  def current_instance_client(instance)
+    self.instance_clients.where(:instance_id => instance.id).first
   end
 
   def to_liquid
@@ -137,6 +162,35 @@ class Company < ActiveRecord::Base
     end
 
     errors.add(:url, "must be a valid URL") unless valid
+  end
+
+  def create_bank_account_in_balanced!
+    [:bank_account_number, :bank_routing_number, :bank_owner_name].each do |mandatory_field|
+      errors.add(mandatory_field, 'cannot be blank') if self.send(mandatory_field).blank?
+    end
+    if errors.any?
+      false
+    else
+      # when more processors will support ACH, we will want to use some kind of wrapper instead of calling BalancedProcessor directly
+      Billing::Gateway::BalancedProcessor.create_customer_with_bank_account!(self)
+    end
+  rescue Balanced::BadRequest => e
+    { '[bank_code]' => :bank_routing_number, '[account_number]' => :bank_account_number}.each do |balanced_field, our_form_field|
+      if e.message.include?(balanced_field)
+        errors.add(our_form_field, e.message.split("#{balanced_field} - ").last.split(' Your request id is ').first)
+      end
+    end
+    if errors.empty?
+      if e.message.include?('Routing number is invalid')
+        errors.add(:bank_routing_number, 'is invalid')
+      else
+        errors.add(:bank_account_form,  e.message.split(" - ").last.split(' Your request id is ').first)
+      end
+    end
+    false
+  rescue RuntimeError => e
+    errors.add(:bank_account_form, 'Unfortunately invalidating previous bank account failed, please try again in the feature')
+    false
   end
 
 end

@@ -21,7 +21,7 @@ class Location < ActiveRecord::Base
 
   geocoded_by :address
 
-  has_many :amenity_holders, as: :holder
+  has_many :amenity_holders, as: :holder, dependent: :destroy
   has_many :amenities, through: :amenity_holders
 
   belongs_to :company, inverse_of: :locations

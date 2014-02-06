@@ -7,6 +7,8 @@ class Payout < ActiveRecord::Base
 
   monetize :amount
 
+  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+
   def payout_successful(response)
     self.success = true
     self.response = response.to_yaml

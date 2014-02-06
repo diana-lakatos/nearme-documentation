@@ -2,6 +2,93 @@ require 'test_helper'
 
 class UserMessagesDecoratorTest < ActionView::TestCase
 
+  context 'instance scope' do
+    setup do
+      @user = FactoryGirl.create(:user)
+      @user2 = FactoryGirl.create(:user)
+      @user3 = FactoryGirl.create(:user)
+      @user_message = FactoryGirl.create(:user_message,
+                                            thread_context: @user2,
+                                            thread_recipient: @user2,
+                                            thread_owner: @user,
+                                            author: @user,
+                                            read_for_recipient: true)
+
+      @answer_user_message = FactoryGirl.create(:user_message,
+                                                   thread_context: @user2,
+                                                   thread_recipient: @user2,
+                                                   thread_owner: @user,
+                                                   author: @user2)
+
+      @archived_user_message = FactoryGirl.create(:user_message,
+                                                     thread_owner: @user,
+                                                     thread_context: @user3,
+                                                     thread_recipient: @user3,
+                                                     author: @user,
+                                                     read_for_owner: true,
+                                                     archived_for_owner: true,
+                                                     archived_for_recipient: false)
+      @instance = @user_message.instance
+      @second_instance = FactoryGirl.create(:instance)
+      FactoryGirl.create(:user_message,
+                            thread_context: @user2,
+                            thread_recipient: @user2,
+                            thread_owner: @user,
+                            author: @user,
+                            read_for_recipient: true,
+                            instance: @second_instance)
+
+      FactoryGirl.create(:user_message,
+                             thread_context: @user2,
+                             thread_recipient: @user2,
+                             thread_owner: @user,
+                             author: @user2,
+                             instance: @second_instance)
+
+      FactoryGirl.create(:user_message,
+                             thread_owner: @user,
+                             thread_context: @user3,
+                             thread_recipient: @user3,
+                             author: @user,
+                             read_for_owner: true,
+                             archived_for_owner: true,
+                             archived_for_recipient: false,
+                             instance: @second_instance)
+    end
+
+    should 'return inbox' do
+      user_inbox = UserMessagesDecorator.new(@user.user_messages.for_instance(@instance), @user).inbox.fetch
+      assert_equal 1, user_inbox.size
+      thread = user_inbox.first[1]
+      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+
+      user2_inbox = UserMessagesDecorator.new(@user2.user_messages.for_instance(@instance), @user2).inbox.fetch
+      assert_equal 1, user2_inbox.size
+      thread = user2_inbox.first[1]
+      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+    end
+
+    should 'return unread' do
+      user_unread = UserMessagesDecorator.new(@user.user_messages.for_instance(@instance), @user).unread.fetch
+      assert_equal 1, user_unread.size
+      thread = user_unread.first[1]
+      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+
+      user2_unread = UserMessagesDecorator.new(@user2.user_messages.for_instance(@instance), @user2).unread.fetch
+      assert_equal 0, user2_unread.size
+    end
+
+    should 'return archived' do
+      user_archived = UserMessagesDecorator.new(@user.user_messages.for_instance(@instance), @user).archived.fetch
+      assert_equal 1, user_archived.size
+      thread = user_archived.first[1]
+      assert_equal [@archived_user_message.id], thread.map(&:id)
+
+      user2_archived = UserMessagesDecorator.new(@user2.user_messages.for_instance(@instance), @user2).archived.fetch
+      assert_equal 0, user2_archived.size
+    end
+  end
+
   context 'With a message sent from owner to listings creator' do
     setup do
       @owner = FactoryGirl.create(:user)
