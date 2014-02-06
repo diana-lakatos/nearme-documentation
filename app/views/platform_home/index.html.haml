@@ -1,255 +1,195 @@
-%section.background-video
-  #logo
-    = link_to "", root_url
-  = image_tag "platform_home/video-poster.jpg", class: "video_fallback"
-  :plain
-    <video id="video" preload="preload" poster="/assets/platform_home/video-poster.jpg" loop>
-      <source src="/assets/platform_home/background-video.mp4" type="video/mp4">
-      <source src="/assets/platform_home/background-video.ogv" type="video/ogg">
-    </video>
-  #video-filter
-  .body
-    %h1
-      Get in the Business
-      %br
-      of Sharing.
+.main
+  .shell
+    .sections
+      .section
+        .section-head
+          %h2 Create your own marketplace
+          %p Near Me is a complete solution for setting up and managing your own marketplace. No coding required.
+          .btns
+            %a.btn.btn-blue{href: "request.html"} Request a demo
 
-    .arrow
-      = link_to "" do
-        = image_tag "platform_home/chevron-down.png"
+        .laptop
+          .laptop-text
+            %p
+              I want to create a website
+              %br/
+              where people can:
+            .laptop-input
+              %ul.scroll-list
+                %li rent classic cars
+                %li rent modern cars
+                %li Buy race cars
 
+      .section
+        .section-head
+          %h2
+            Have an idea?
+            %strong We can power it.
+          %p Anything from  desks to camping gear. You name it, you got it.
 
-%section.create-and-manage.section.pink-section
-  %h2 
-    Create and manage your own
-    %br
-    peer-to-peer marketplace.
+        .tabs
+          .tabs-nav
+            %ul
+              %li
+                %a{href: "#tab1"}
+                  %i.icon-camera
+                  %span Camera Gear
+              %li
+                %a{href: "#tab2"}
+                  %i.icon-desk
+                  %span Desks
+              %li
+                %a{href: "#tab3"}
+                  %i.icon-boat
+                  %span Boats
+              %li
+                %a{href: "#tab4"}
+                  %i.icon-tools
+                  %span Tools
+              %li
+                %a{href: "#tab5"}
+                  %i.icon-guitar
+                  %span Instruments
 
-  .laptop.hidden-phone
-    .title
-      I want to create a website where people can:
+          .tabs-body
+            #tab1.tab
+              .tab-text.alignleft
+                .tab-text-inner
+                  %h3 Camera gear near me
+                  %p Lend and Borrow High-end Photography Gear - Rent gear from over 2500 photographers around you
+                  .btns
+                    %a.btn.btn-blue{href: "request.html"} Request a demo
 
-    .input-left
-      %ul.simply-scroll-list
-        %li share
-        %li rent
-        %li swap
-        %li exchange
-    .input-right
-      %ul.simply-scroll-list
-        %li bikes
-        %li classic cars
-        %li clothing
-        %li toys
+              .tab-image.alignright
+                %a{href: "#"}
+                  = image_tag "/assets/platform_home/gallery-camera-gear.png"
 
+            #tab2.tab
+              .tab-text.alignleft
+                .tab-text-inner
+                  %h3 Desks near me
+                  %p Get deskspace whenever and 6000 listings in over 65 countries. Whenever you need it. With over
+                  .btns
+                    %a.btn.btn-blue{href: "request.html"} Request a demo
 
-%section.empower.section.light-section
-  %h2
-    Empower any sharing ecosystem
-    %br
-    you can imagine.
+              .tab-image.alignright
+                %a{href: "#"}
+                  = image_tag "/assets/platform_home/gallery-desks.png"
 
-  .container-fluid
-    .row-fluid
-      .span1.offset1
-      .span4.box.entrepreneurs
-        %h3 For Entrepreneurs
-        .icon
-          = image_tag "platform_home/for-entrepreneurs-ico.png"
-        .body
-          Have the entrepreneurial spirit? No developers needed to setup a custom marketplace website in minutes.
-      .span4.box.brands
-        %h3 For Brands
-        .icon
-          = image_tag "platform_home/for-brands-ico.png"
-        .body
-          More people are sharing every day. Don't miss out on the new way that people consume.
-      .span1.offset1
+            #tab3.tab
+              .tab-text.alignleft
+                .tab-text-inner
+                  %h3 Boats near me
+                  %p Find a Boat to Sail - Rent boats from people in over 350 cities. Get renting and start sailing.
+                  .btns
+                    %a.btn.btn-blue{href: "request.html"} Request a demo
 
+              .tab-image.alignright
+                %a{href: "#"}
+                  = image_tag "/assets/platform_home/gallery-boats.png"
 
-%section.how-it-works.section.pink-section
-  %h2
-    How it works.
+            #tab4.tab
+              .tab-text.alignleft
+                .tab-text-inner
+                  %h3 Tools near me
+                  %p Get the tools you need. When you need em. - Search thousands of tools near you to get the job done.
+                  .btns
+                    %a.btn.btn-blue{href: "request.html"} Request a demo
 
-  .title
-    Near Me is a simple, easy, customizable marketplace solution that allows
-    %br
-    you to share, trade, swap, or rent anything by providing everything you
-    %br
-    need for a successful online marketplace.
+              .tab-image.alignright
+                %a{href: "#"}
+                  = image_tag "/assets/platform_home/gallery-tools.png"
 
-  .container-fluid
-    .row-fluid.animation
-      .span6.hidden-phone
-        .wheel
-          = render 'spinner'
+            #tab5.tab
+              .tab-text.alignleft
+                .tab-text-inner
+                  %h3 Instruments near me
+                  %p Share the Gift of Music - Rent instruments from other musicians and list your own for others to borrow.
+                  .btns
+                    %a.btn.btn-blue{href: "request.html"} Request a demo
 
-      .span6.text.boxes
-        .box{:data => {:for => "360"}}
-          %h3 Choose your marketplace
-          .text-body
-            Anything from camping gear to furniture. Decide what type of marketplace you'd like to create and turn your idea into a business ready to launch.
+              .tab-image.alignright
+                %a{href: "#"}
+                  = image_tag "/assets/platform_home/gallery-instruments.png"
 
-        .box.hidden{:data => {:for => "300"}}
-          %h3 Create your Custom Site
-          .text-body
-            Build your branded marketplace in a simple and intuitive manner. Everything you need is included in our solution and all is mobile ready from the start.
+      .section
+        .section-head
+          %h2
+            Build with the
+            %strong features you need
+          %p Your marketplace is equipped with all the tools you need for success
 
-        .box.hidden{:data => {:for => "240"}}
-          %h3 Build a Community
-          .text-body
-            Communicate with your users across social channels and create a community around your marketplace. Our social tools and integration allow you to provide a great customer experience.
+        .tabs.tabs-features
+          .tabs-nav.features-nav
+            %ul
+              %li
+                %a{href: "#tab6"}
+                  %i.icon-case
+                  %span Admin Dashboard
+              %li
+                %a{href: "#tab7"}
+                  %i.icon-charts
+                  %span Analytics
+              %li
+                %a{href: "#tab8"}
+                  %i.icon-cards
+                  %span Payments
+              %li
+                %a{href: "#tab9"}
+                  %i.icon-phone
+                  %span Customized Support
 
-        .box.hidden{:data => {:for => "180"}}
-          %h3 Grow the Business
-          .text-body
-            Save time and money with Near Me. Grow your marketplace using our promotional and online marketing tools and drive traffic to your site.
+          .tabs-body
+            #tab6.tab
+              .tab-text.alignright
+                .tab-text-inner
+                  %h3 Intuitive Dashboard
+                  %p Monitor everything from your Near Me control panel. You can easily manage your inventory, customers, partners and get full control over analytics and payments.
+                  .btns
+                    %a.btn.btn-blue{href: "request.html"} see all features
 
-        .box.hidden{:data => {:for => "120"}}
-          %h3 Measure
-          .text-body
-            You'll have full control of your website's analytics. Data is power, use it effectively and improve the performance of your site all from your own dashboard.
+              .tab-image.alignleft
+                %a{href: "#"}
+                  = image_tag "/assets/platform_home/features-dashboard.png"
 
-        .box.hidden{:data => {:for => "60"}}
-          %h3 Money in your pocket 
-          .text-body
-            Monetize your customer base and start generating revenue. No membership fees, no barriers between you and your cash, accept payments instantly.
+            #tab7.tab
+              .tab-text.alignright
+                .tab-text-inner
+                  %h3 Powerful Analytics
+                  %p Our built-in analytics dashboard will provide you with an accurate traffic analysis and audience behavior. Track your marketplace performance and make the best choices for your business
+                  .btns
+                    %a.btn.btn-blue{href: "request.html"} see all features
 
+              .tab-image.alignleft
+                %a{href: "#"}
+                  = image_tag "/assets/platform_home/features-analytics.png"
 
-%section.get-in-the-business.section.light-section
-  %h2
-    Get in the Business of Sharing.
+            #tab8.tab
+              .tab-text.alignright
+                .tab-text-inner
+                  %h3 Hassle-Free Payments
+                  %p Instantly accept payments from your users, set the fees that suit your business and track all the transactions made on your marketplace.
+                  .btns
+                    %a.btn.btn-blue{href: "request.html"} see all features
 
-  .container-fluid
-    .row-fluid
-      .span1
-      .span3.box
-        .icon
-          = image_tag "platform_home/bulb-ico-2.png"
-        %h3 No coding needed
-        .body
-          Creating your marketplace is easy without developers. Customize your branding, pages, settings and so much more.
-      .span3.box.middle-box
-        .icon
-          = image_tag "platform_home/lock-ico.png"
-        %h3 Reliable Infrastructure
-        .body
-          Pick your domain name and we take care of the rest!
-      .span3.box
-        .icon
-          = image_tag "platform_home/check-ico.png"
-        %h3 Hassle-free Payments
-        .body
-          Instantly accept payments from your users and set the fees that suit your business so you can start making money.
-      .span1
+              .tab-image.alignleft
+                %a{href: "#"}
+                  = image_tag "/assets/platform_home/features-payments.png"
 
-    .row-fluid
-      .span1
-      .span3.box
-        .icon
-          = image_tag "platform_home/conversation-ico.png"
-        %h3 Personalized Support
-        .body
-          Support for you and your users. Our customer team will respond to your request in a timely manner. The team will help get you set up or bring your business to the next level.
-      .span3.box.middle-box
-        .icon
-          = image_tag "platform_home/mobile-device-ico.png"
-        %h3 Go Mobile
-        .body
-          Our technology allows you to customize a mobile app for your business. The world is going mobile and we'll get you there.
-      .span3.box
-        .icon
-          = image_tag "platform_home/upward-trend-ico.png"
-        %h3 Powerful Analytics
-        .body
-          Analyze traffic and user behavior to unlock new revenue opportunities.
-      .span1
+            #tab9.tab
+              .tab-text.alignright
+                .tab-text-inner
+                  %h3 Personalized Support
+                  %p Near Me is committed to offer all the support you need to make a successful marketplace. Our team will be available to assist your request in a timely manner.
+                  .btns
+                    %a.btn.btn-blue{href: "request.html"} see all features
 
+              .tab-image.alignleft
+                %a{href: "#"}
+                  = image_tag "/assets/platform_home/features-support.png"
 
-%section.see-what-everyone-is-saying.section.pink-section
-  %h2
-    See what everyone is saying about us.
-
-  .container-fluid
-    .row-fluid
-      .span1
-      .span4
-        = link_to "http://www.pressheretv.com/predictions-for-2014", target: "_blank" do
-          = image_tag "platform_home/nbc.png", height: 174
-      .span6.box.arrow.left-arrow
-        .body
-          “A major hotel chain will launch their own branded version of Airbnb. Using white label marketplace software like NearMeCo. Brands will start to build their own versions of marketplaces. I predict a major hotel chain will do this first –franchising the crowd, just as they franchise business owners”.
-
-    .row-fluid
-      .span1
-      .span4.visible-phone
-        = link_to 'http://www.shareable.net/blog/need-a-place-to-work-here-are-9-coworking-apps-that-can-help', target: "_blank" do
-          = image_tag "platform_home/shareable.png", height: 42
-      .span6.box.arrow.right-arrow
-        .body
-          “DesksNear.Me is the largest provider of shared work spaces with over 9,000 listings at over 1,400 companies worldwide, including office buildings, medical suites, retail spaces and more.&rdquo; says cofounder and CEO Michelle Regner. “We've seen an incredible amount of growth over the past year and we're honored to be named one of 22 start-ups in industry analyst Jeremiah Owyang's Crowd Companies Innovation Network, which focuses on helping big companies become a part of the sharing economy”.
-      .span4.hidden-phone
-        = link_to 'http://www.shareable.net/blog/need-a-place-to-work-here-are-9-coworking-apps-that-can-help', target: "_blank" do
-          %img.shareable.pull-right{border: 0, src: '/assets/platform_home/shareable.png', height: 42}
-
-    .row-fluid
-      .span1
-      .span4
-        = link_to 'https://medium.com/all-things-crowd/fe1e46b8c02f', target: "_blank" do
-          = image_tag "platform_home/medium.png", height: 150
-      .span6.box.arrow.left-arrow
-        .body
-          “The convergence of all things crowd (from crowdfunding and crowdsourcing, to the “sharing economy” and the “collaborative economy”), had quite a 2013. Startup to watch Near-Me.com “Get in the Business of Sharing”.
-
-
-%section.build-yours-now.section.light-section
-  %h2
-    Build yours now.
-
-  = simple_form_for @platform_email, url: '/notify-me' do |f|
-    .title Launching soon. Be the first to know!
-    = f.input :email, label: false, placeholder: 'enter your email address here.'
-    %br
-    = f.submit 'NOTIFY ME', class: 'btn btn-large btn-red'
-
-  .title
-    love it? please share, we like sharing.
-
-  .social-icons
-    %ul.icons.clearfix
-      %li.popup
-        = link_to twitter_share_url, :class => 'share-link', :'data-network' => 'Twitter', :'data-window-width' => 550, :'data-window-height' => 420  do
-          = image_tag "platform_home/twitter-ico.png"
-      %li.popup
-        = link_to linkedin_share_url, :class => 'share-link', :'data-network' => 'LinkedIn', :'data-window-width' => 600, :'data-window-height' => 472 do
-          = image_tag "platform_home/linkedin-ico.png"
-      %li.popup
-        = link_to facebook_share_url, :class => 'share-link', :'data-network' => 'Facebook', :'data-window-width' => 420, :'data-window-height' => 339 do
-          = image_tag "platform_home/facebook-ico.png"
-      %li.popup
-        = link_to gplus_share_url, :class => 'share-link', :'data-network' => 'Google+', :'data-window-width' => 500, :'data-window-height' => 470 do
-          = image_tag "platform_home/gplus-ico.png"
-      %li.send-email
-        = link_to '#', :class => 'share-link', :'data-network' => 'Email' do
-          = image_tag "platform_home/mail-ico.png"
-
-  #email-modal.modal.fade.hide{"aria-hidden" => "true", "aria-labelledby" => "email-modal-label", role: "dialog", tabindex: "-1"}
-    .modal-dialog
-      .modal-content
-        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} &times;
-        .modal-header
-        .modal-body
-          %form{method: 'POST', action: '/send-email', id: 'send-email'}
-            %input{name: "authenticity_token", type: "hidden", value: session[:_csrf_token]}
-            %label{for: 'emails'} To
-            %input{type: 'text', name: 'emails', placeholder: 'Multiple emails? Use commas.'}
-            %label.middle-label{for: 'your_name'} Your Name
-            %input{type: 'text', name: 'your_name'}
-            %label.middle-label{for: 'emails'} Message
-            %p.disabled-block
-              Check out Near Me, a new platform for creating peer-to-peer marketplaces: #{host}
-        .modal-footer
-          = link_to 'SEND', '#', class: 'btn btn-red'
-
-%script
-  $(function(){ new HomeController(); });
+.callout
+  .shell
+    %h2 Your marketplace is waiting
+    .btns
+      %a.btn.btn-white{href: "request.html"} Request a demo

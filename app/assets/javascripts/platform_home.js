@@ -1,11 +1,4 @@
-//= require ./vendor/jquery.min
-//= require ./vendor/jquery-ui-1.9.2.custom.min
-//= require ./vendor/modernizr
-//= require ./vendor/placeholder
-//= require bootstrap
-//= require ./vendor/jquery.maximage
-//= require ./vendor/jquery.simplyscroll
-//= require ./platform_home/home
-//= require ./platform_home/get_in_touch
-//= require ./platform_home/spinner
-//= require ./platform_home/analytics
+//= require ./platform_home/jquery-1.10.2.min
+//= require ./platform_home/jquery.simplyscroll.min
+//= require ./platform_home/jquery.icheck.min.js
+//= require ./platform_home/main.js
