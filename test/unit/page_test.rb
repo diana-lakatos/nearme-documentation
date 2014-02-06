@@ -4,7 +4,7 @@ class PageTest < ActiveSupport::TestCase
 
   def setup
     @instance = FactoryGirl.create(:instance)
-    Domain.create(:name => 'allowed_domain.com', :target => @instance)
+    Domain.create(:name => 'allowed-domain.com', :target => @instance)
   end
 
   context '#homepage_content' do
@@ -66,14 +66,14 @@ class PageTest < ActiveSupport::TestCase
   end
 
 
-  private 
+  private
 
   def example_markdown_content
-    "# FAQ\n*[Checking link](http://example.com)\n*[Checking link](http://allowed_domain.com/cool/path)"
+    "# FAQ\n*[Checking link](http://example.com)\n*[Checking link](http://allowed-domain.com/cool/path)"
   end
 
   def expected_html_content
-    '<h1>FAQ</h1>' + "\n\n" + '<p><em><a href="http://example.com" rel="nofollow">Checking link</a>' + "\n" + '</em><a href="http://allowed_domain.com/cool/path">Checking link</a></p>'
+    '<h1>FAQ</h1>' + "\n\n" + '<p><em><a href="http://example.com" rel="nofollow">Checking link</a>' + "\n" + '</em><a href="http://allowed-domain.com/cool/path">Checking link</a></p>'
   end
 end
 

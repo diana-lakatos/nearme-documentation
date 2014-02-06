@@ -1,0 +1,12 @@
+= simple_form_for [:instance_admin, :manage, @user ||= User.new] do |f|
+  %fieldset
+    %legend Create new user
+    .row-fluid
+      .controls.controls-row
+        = f.input :name, :label => 'Full Name', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :email, :label => 'Email', :required => true, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row.span6
+        = f.submit "Create", :class => 'btn btn-primary pull-right'

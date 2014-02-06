@@ -24,7 +24,7 @@ class @ChartWrapper.Line extends @ChartWrapper
         # in case we have only small values like [1, 2, 2, 0]
         stepsCount = maxValue
 
-      step = parseInt((maxValue - minValue) / stepsCount) 
+      step = parseInt((maxValue - minValue) / stepsCount)
 
       @customYScaleSettings = {
         scaleOverride: true,

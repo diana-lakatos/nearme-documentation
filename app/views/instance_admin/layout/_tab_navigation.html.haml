@@ -1,0 +1,4 @@
+%ul.nav.nav-tabs
+  - controller.class.superclass::CONTROLLERS.each do |controller_name, settings|
+    %li{:class => ("active" if controller.controller_name == controller_name)}
+      %a{href: "#{url_for controller: controller_name, action: settings[:default_action]}"}= "#{controller_name}"

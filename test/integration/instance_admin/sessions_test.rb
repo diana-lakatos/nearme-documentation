@@ -17,8 +17,6 @@ class SessionsTest < ActionDispatch::IntegrationTest
 
   test 'redirect to first page instance_admin has access to' do
     post_via_redirect user_session_path, user: { email: @user.email, password: @user.password }, return_to: instance_admin_path
-    assert_equal instance_admin_settings_path, path
+    assert_equal instance_admin_settings_configuration_path, path
   end
-
 end
-

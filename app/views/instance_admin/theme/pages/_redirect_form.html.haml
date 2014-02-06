@@ -1,0 +1,7 @@
+= simple_form_for [:instance_admin, :theme, resource], :html => { :multipart => true } do |f|
+  %input{type: 'hidden', name: 'redirect', value: 'true'}
+  = f.input :path, :placeholder => 'Page title'
+  = f.input :redirect_url, :label => 'Redirect URL'
+  = f.input :open_in_new_window, label: false, inline_label: 'Open in new window ?'
+
+  = f.button :submit, "#{f.object.new_record? ? 'Create' : 'Update'} Redirect", class: 'btn btn-primary pull-right'

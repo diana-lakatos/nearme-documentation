@@ -9,7 +9,7 @@ namespace :populate do
           WHERE l.id = up.listing_id
             AND up.period = #{period}
             AND (
-              l.#{column} IS NULL 
+              l.#{column} IS NULL
               OR l.#{column} = 0
             )
 
@@ -108,7 +108,7 @@ namespace :populate do
         authentication.update_column(:token_expired, true) if authentication.token_expires?
         puts "Authentication #{authentication.id}: InvalidToken"
       rescue => e
-        puts "Authentication #{authentication.id}: #{e}" 
+        puts "Authentication #{authentication.id}: #{e}"
       end
     end
   end
