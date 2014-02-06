@@ -79,24 +79,6 @@ ActiveRecord::Schema.define(:version => 20140203120847) do
 
   add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
 
-  create_table "blog_instances", :force => true do |t|
-    t.string   "name"
-    t.string   "header"
-    t.integer  "owner_id"
-    t.string   "owner_type"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "blog_posts", :force => true do |t|
-    t.string   "title"
-    t.text     "content"
-    t.integer  "blog_instance_id"
-    t.integer  "user_id"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-  end
-
   create_table "charges", :force => true do |t|
     t.integer  "reference_id"
     t.boolean  "success"
@@ -436,11 +418,11 @@ ActiveRecord::Schema.define(:version => 20140203120847) do
   add_index "mailer_unsubscriptions", ["user_id"], :name => "index_mailer_unsubscriptions_on_user_id"
 
   create_table "pages", :force => true do |t|
-    t.string   "path",                                 :null => false
+    t.string   "path",         :null => false
     t.text     "content"
     t.string   "hero_image"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "theme_id"
     t.string   "slug"
     t.integer  "position"
@@ -755,9 +737,9 @@ ActiveRecord::Schema.define(:version => 20140203120847) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                                :default => "",                           :null => false
-    t.string   "encrypted_password",                    :limit => 128, :default => "",                           :null => false
-    t.string   "password_salt",                                        :default => "",                           :null => false
+    t.string   "email",                                                :default => "", :null => false
+    t.string   "encrypted_password",                    :limit => 128, :default => "", :null => false
+    t.string   "password_salt",                                        :default => "", :null => false
     t.string   "reset_password_token"
     t.string   "remember_token"
     t.datetime "remember_created_at"
@@ -770,7 +752,7 @@ ActiveRecord::Schema.define(:version => 20140203120847) do
     t.datetime "updated_at"
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                                       :default => 0,                            :null => false
+    t.integer  "bookings_count",                                       :default => 0, :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"

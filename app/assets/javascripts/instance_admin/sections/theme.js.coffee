@@ -9,4 +9,4 @@ class @InstanceAdmin.ThemeController
       input = @form.find("input[data-color=#{$(event.target).data('reset')}]")
       if !input.prop('disabled')
         input.val(input.data('default'))
-      false
+      event.preventDefault()

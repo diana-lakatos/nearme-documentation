@@ -33,10 +33,4 @@ class Domain < ActiveRecord::Base
     "Partner" == target_type
   end
 
-  private
-
-  def format_domain_name
-    self.name = self.name.try(:strip)
-  end
-
 end

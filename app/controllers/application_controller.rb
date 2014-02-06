@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorizer
-    @authguy ||= InstanceAdmin::Authorizer.new(current_user, platform_context)
+    @authorizer ||= InstanceAdmin::Authorizer.new(current_user, platform_context)
   end
   helper_method :authorizer
 
