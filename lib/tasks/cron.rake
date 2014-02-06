@@ -13,6 +13,8 @@ namespace :cron do
       RecurringMailerShareJob.new.perform
     end
 
+    Rake::Task["sessions:cleanup"].invoke
+
     #run_job "Send Request photos mails" do
     #  RecurringMailerRequestPhotosJob.new.perform
     #end
