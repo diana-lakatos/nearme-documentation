@@ -3,7 +3,7 @@
     %h2 Get ready to lead the sharing economy
   .shell
     .form-request
-      %form{action: "#"}
+      = simple_form_for @platform_demo_request, remote: true, url: '/demo-request-submit' do |f|
         .form-head
           %h2 Request Demo
 
@@ -11,32 +11,32 @@
           .form-row
             %label.form-label{for: "name"} First & Last Name
             .form-controls
-              %input#name.field{name: "name", type: "text"}/
+              %input#name.field{name: "platform_demo_request[name]", type: "text"}/
 
           .form-row
             %label.form-label{for: "email"} Email
             .form-controls
-              %input#email.field{name: "email", type: "text"}/
+              %input#email.field{name: "platform_demo_request[email]", type: "text"}/
 
           .form-row
             %label.form-label{for: "company"} Company
             .form-controls
-              %input#compnay.field{name: "compnay", type: "text"}/
+              %input#compnay.field{name: "platform_demo_request[company]", type: "text"}/
 
           .form-row
             %label.form-label{for: "phone"} Phone
             .form-controls
-              %input#phone.field{name: "phone", type: "text"}/
+              %input#phone.field{name: "platform_demo_request[phone]", type: "text"}/
 
           .form-row
             %label.form-label{for: "comments"} Comments
             .form-controls
-              %textarea#comments.field.field-textarea{cols: "30", name: "comments", rows: "10"}
+              %textarea#comments.field.field-textarea{cols: "30", name: "platform_demo_request[comments]", rows: "10"}
 
-          / .form-row
-          /   .checkbox
-          /     %input#check1{name: "check1", type: "checkbox"}/
-          /     %label{for: "check1"} Check box: update me on "insert copy here"
+          .form-row
+            .checkbox
+              %input#check1{name: "platform_demo_request[subscribed]", type: "checkbox", checked: "checked"}/
+              %label{for: "subscribed"} Send me updates by email.
 
         .form-foot
           %input.btn-submit.btn-blue{type: "submit", value: "Request demo"}/

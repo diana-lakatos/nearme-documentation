@@ -4,7 +4,9 @@ DesksnearMe::Application.routes.draw do
     root :to => 'platform_home#index'
     get '/features', :to => 'platform_home#features'
     get '/contact', :to => 'platform_home#contact'
+    post '/contact-submit', :to => 'platform_home#contact_submit'
     get '/request-a-demo', :to => 'platform_home#demo_request'
+    post '/demo-request-submit', :to => 'platform_home#demo_request_submit'
     get '/careers', :to => 'platform_home#careers'
     get '/about-us', :to => 'platform_home#about_us'
   end

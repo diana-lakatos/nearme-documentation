@@ -15,7 +15,7 @@
 
         .col
           .form-contact
-            = simple_form_for @platform_inquiry, url: '/save-inquiry' do |f|
+            = simple_form_for @platform_contact, remote: true, url: '/contact-submit' do |f|
               .form-head
                 %h2 Email
 
@@ -23,27 +23,27 @@
                 .form-row
                   %label.form-label{for: "full-name"} First & Last Name
                   .form-controls
-                    %input#full-name.field{name: "full-name", type: "text"}/
+                    %input#full-name.field{name: "platform_contact[name]", type: "text"}/
 
                 .form-row
                   %label.form-label{for: "email-contact"} Email
                   .form-controls
-                    %input#email-contact.field{name: "email-contact", type: "text"}/
+                    %input#email-contact.field{name: "platform_contact[email]", type: "text"}/
 
                 .form-row
                   %label.form-label{for: "subject"} Subject
                   .form-controls
-                    %input#subject.field{name: "subject", type: "text"}/
+                    %input#subject.field{name: "platform_contact[subject]", type: "text"}/
 
                 .form-row
                   %label.form-label{for: "comments-contact"} Comments
                   .form-controls
-                    %textarea#comments-contact.field.field-textarea{cols: "30", name: "comments-contact", rows: "10"}
+                    %textarea#comments-contact.field.field-textarea{cols: "30", name: "platform_contact[comments]", rows: "10"}
 
-                / .form-row
-                /   .checkbox
-                /     %input#check2{name: "check2", type: "checkbox"}/
-                /     %label{for: "check2"} Check box: update me on "insert copy here"
+                .form-row
+                  .checkbox
+                    %input#check2{name: "platform_contact[subscribed]", type: "checkbox", checked: "checked"}/
+                    %label{for: "subscribed-contact"} Send me updates by email.
 
               .form-foot
                 %input.btn-submit.btn-blue{type: "submit", value: "Send"}/

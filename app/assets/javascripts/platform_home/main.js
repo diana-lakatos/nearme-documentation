@@ -20,7 +20,6 @@
 
 		});
 
-
 		//Tabs
 		$tabs.not($tabsVisible).hide();
 		$tabsNav.find('li:first-child').addClass('current');
@@ -48,8 +47,26 @@
             orientation: 'vertical'
         });
 
-        //Checkboxes
+    //Checkboxes
 		$('.checkbox input').iCheck();
+
+		//Forms
+		$('#new_platform_contact')
+			.bind('ajax:beforeSend', function(event, xhr, status) {
+				$(this).find('input[type="submit"]').attr('disabled','disabled');
+			})
+			.bind('ajax:success', function(event, xhr, status) {
+				$(this).replaceWith(xhr);
+			});
+
+		$('#new_platform_demo_request')
+			.bind('ajax:beforeSend', function(event, xhr, status) {
+				$(this).find('input[type="submit"]').attr('disabled','disabled');
+			})
+			.bind('ajax:success', function(event, xhr, status) {
+				$(this).replaceWith(xhr);
+			});
+
 	});
 
 })(jQuery);
