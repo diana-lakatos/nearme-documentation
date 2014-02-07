@@ -165,7 +165,11 @@ module ApplicationHelper
   end
 
   def render_olark?
-    not current_page?(controller: 'locations', action: 'show')
+    not params[:controller] == 'locations' && params[:action] == 'show'
+  end
+
+  def nl2br(str)
+    str.gsub(/\r\n|\r|\n/, "<br />").html_safe
   end
 
 end

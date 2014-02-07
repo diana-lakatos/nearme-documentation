@@ -1,0 +1,14 @@
+%tr
+  %td
+    = resource.transferred? ? 'Paid' : 'Pending'
+  %td
+    - if resource.company.present?
+      = resource.company.name
+    - else
+      = "#{resource.company_including_deleted.name} (Deleted)"
+  %td= resource.reservation_charges.count
+  %td= resource.created_at
+  %td= resource.transferred_at
+  %td= resource.service_fee_amount_guest.format with_currency: true
+  %td= resource.amount.format with_currency: true
+  %td= link_to "Details", instance_admin_manage_transfer_path(resource), :class => 'btn btn-primary'

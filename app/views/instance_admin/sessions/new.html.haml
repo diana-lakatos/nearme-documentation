@@ -1,13 +1,9 @@
 %section#login
-  .content
-    .row
-      .login-form
-        %h2 Instance Admin
-        = simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
-          %input{type: 'hidden', name: 'return_to', value: session[:user_return_to] || instance_admin_path}
-          %fieldset
-            .clearfix
-              = f.input :email, :label => false, :placeholder => "Email", :input_html => { :tabindex => '1' }
-            .clearfix
-              = f.input :password, :label => false, :placeholder => "Password", :input_html => { :tabindex => '2' }
-            %button.btn.btn-primary{type: "submit"} Log In
+  .login-form
+    = image_tag 'instance_admin/logo_big.png', class: 'text-center'
+    = simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
+      %input{type: 'hidden', name: 'return_to', value: session[:user_return_to] || instance_admin_path}
+      %fieldset
+        = f.input :email, :label => false, :placeholder => "Email", :input_html => { :tabindex => '1' }
+        = f.input :password, :label => false, :placeholder => "Password", :input_html => { :tabindex => '2' }
+        %button.btn.btn-primary.btn-block{type: "submit"} LOG IN

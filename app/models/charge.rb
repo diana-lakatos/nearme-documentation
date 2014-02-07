@@ -9,6 +9,8 @@ class Charge < ActiveRecord::Base
 
   monetize :amount, :as => :price
 
+  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+
   def charge_successful(gateway_object)
     self.success = true
     self.response = gateway_object.to_yaml

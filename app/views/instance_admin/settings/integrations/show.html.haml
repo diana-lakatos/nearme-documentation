@@ -1,0 +1,39 @@
+= simple_nested_form_for @instance, :url => instance_admin_settings_integrations_path, :html => { :multipart => true } do |f|
+  %fieldset
+    %legend Stripe
+    .row-fluid
+      .controls.controls-row
+        = f.input :stripe_api_key, label: 'Stripe API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :stripe_public_key, label: 'Stripe Public Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+    %hr
+    %legend Paypal
+    .row-fluid
+      .controls.controls-row
+        = f.input :paypal_username, label: 'Paypal Username', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
+        = f.input :paypal_password, label: 'Paypal Password', required: false, wrapper_html: { class: 'span6' }, :input_html => { :type => 'text', :value => f.object.paypal_password, :autocomplete => "off", class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :paypal_signature, label: 'Paypal Signature', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
+        = f.input :paypal_app_id, label: 'Paypal APP ID', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :paypal_client_id, label: 'Paypal Client ID', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
+        = f.input :paypal_client_secret, label: 'Paypal Client Secret', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
+
+    %hr
+    %legend Balanced
+    .row-fluid
+      .controls.controls-row
+        = f.input :balanced_api_key, label: 'Balaced API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+    %hr
+    %legend Payment Gateway
+    .row-fluid
+      .controls.controls-row
+        = f.fields_for :instance_billing_gateways, wrapper: false do |f_bg|
+          = f_bg.input :currency, as: :hidden
+          %label= "Payment gateway for #{f_bg.object.currency} transactions"
+          = f_bg.collection_radio_buttons :billing_gateway, [['paypal', 'PayPal'], ['stripe', 'Stripe'], ['balanced', 'Balanced']], :first, :last, item_wrapper_class: "billing-gateway"
+
+    = f.button :submit, 'Save', class: 'btn btn-primary pull-right'

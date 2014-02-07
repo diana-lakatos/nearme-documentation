@@ -1,9 +1,10 @@
 require 'test_helper'
 
 class PageTest < ActiveSupport::TestCase
+
   def setup
     @instance = FactoryGirl.create(:instance)
-    Domain.create(:name => 'allowed_domain.com', :target => @instance)
+    Domain.create(:name => 'allowed-domain.com', :target => @instance)
   end
 
   context '#homepage_content' do
@@ -43,15 +44,36 @@ class PageTest < ActiveSupport::TestCase
 
   end
 
+  context '#redirect_url_in_known_domain' do
 
-  private 
+    should 'return true for relative url' do
+      page = FactoryGirl.create(:page, redirect_url: '/test')
+      assert page.redirect_url_in_known_domain?
+    end
+
+    should 'return true for redirect_url matching any domain' do
+      domain = FactoryGirl.create(:domain)
+      page = FactoryGirl.create(:page, redirect_url: "http://#{domain.name}/test")
+      assert page.redirect_url_in_known_domain?
+    end
+
+    should 'return false for redirect_url not matching any domain' do
+      domain = FactoryGirl.create(:domain)
+      page = FactoryGirl.create(:page, redirect_url: "https://xyz.com/test")
+      refute page.redirect_url_in_known_domain?
+    end
+
+  end
+
+
+  private
 
   def example_markdown_content
-    "# FAQ\n*[Checking link](http://example.com)\n*[Checking link](http://allowed_domain.com/cool/path)"
+    "# FAQ\n*[Checking link](http://example.com)\n*[Checking link](http://allowed-domain.com/cool/path)"
   end
 
   def expected_html_content
-    '<h1>FAQ</h1>' + "\n\n" + '<p><em><a href="http://example.com" rel="nofollow">Checking link</a>' + "\n" + '</em><a href="http://allowed_domain.com/cool/path">Checking link</a></p>'
+    '<h1>FAQ</h1>' + "\n\n" + '<p><em><a href="http://example.com" rel="nofollow">Checking link</a>' + "\n" + '</em><a href="http://allowed-domain.com/cool/path">Checking link</a></p>'
   end
 end
 

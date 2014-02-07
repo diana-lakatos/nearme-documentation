@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140203060939) do
+ActiveRecord::Schema.define(:version => 20140207011421) do
 
 
 
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
     t.string   "holder_type"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.datetime "deleted_at"
   end
 
   add_index "amenity_holders", ["amenity_id"], :name => "index_amenity_holders_on_amenity_id"
@@ -89,7 +90,7 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
     t.integer  "user_id"
     t.string   "reference_type"
     t.string   "currency"
-    t.string   "encrypted_response"
+    t.text     "encrypted_response"
     t.datetime "deleted_at"
   end
 
@@ -265,14 +266,10 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
     t.integer  "instance_id"
     t.boolean  "permission_settings",    :default => false
     t.boolean  "permission_theme",       :default => false
-    t.boolean  "permission_transfers",   :default => false
-    t.boolean  "permission_inventories", :default => false
-    t.boolean  "permission_partners",    :default => false
-    t.boolean  "permission_users",       :default => false
     t.boolean  "permission_analytics",   :default => true
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
-    t.boolean  "permission_pages",       :default => false
+    t.boolean  "permission_manage",      :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"
@@ -300,6 +297,20 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
   end
 
   add_index "instance_billing_gateways", ["instance_id"], :name => "index_instance_billing_gateways_on_instance_id"
+
+  create_table "instance_clients", :force => true do |t|
+    t.integer  "client_id"
+    t.string   "client_type"
+    t.integer  "instance_id"
+    t.string   "encrypted_stripe_id"
+    t.string   "encrypted_paypal_id"
+    t.string   "encrypted_balanced_user_id"
+    t.string   "encrypted_balanced_credit_card_id"
+    t.string   "bank_account_last_four_digits"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
 
   create_table "instances", :force => true do |t|
     t.string   "name"
@@ -432,6 +443,8 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
     t.integer  "position"
     t.text     "html_content"
     t.datetime "deleted_at"
+    t.string   "redirect_url"
+    t.boolean  "open_in_new_window", :default => true
   end
 
   add_index "pages", ["theme_id"], :name => "index_pages_on_theme_id"
@@ -475,7 +488,7 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
     t.string   "currency"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
-    t.string   "encrypted_response"
+    t.text     "encrypted_response"
     t.datetime "deleted_at"
   end
 
@@ -505,6 +518,27 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
   add_index "photos", ["creator_id"], :name => "index_photos_on_creator_id"
   add_index "photos", ["listing_id"], :name => "index_photos_on_listing_id"
 
+  create_table "platform_contacts", :force => true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "subject"
+    t.text     "comments"
+    t.boolean  "subscribed", :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  create_table "platform_demo_requests", :force => true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "company"
+    t.string   "phone"
+    t.text     "comments"
+    t.boolean  "subscribed", :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
   create_table "platform_emails", :force => true do |t|
     t.string   "email"
     t.datetime "notified_at"
@@ -523,6 +557,18 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "refunds", :force => true do |t|
+    t.integer  "reference_id"
+    t.string   "reference_type"
+    t.boolean  "success"
+    t.text     "encrypted_response"
+    t.integer  "amount"
+    t.string   "currency"
+    t.datetime "deleted_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
   create_table "reservation_charges", :force => true do |t|
     t.integer  "reservation_id"
     t.integer  "subtotal_amount_cents"
@@ -535,6 +581,7 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
     t.datetime "deleted_at"
     t.integer  "payment_transfer_id"
     t.integer  "service_fee_amount_host_cents",  :default => 0, :null => false
+    t.datetime "refunded_at"
   end
 
   add_index "reservation_charges", ["payment_transfer_id"], :name => "index_reservation_charges_on_payment_transfer_id"
@@ -615,6 +662,26 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "theme_fonts", :force => true do |t|
+    t.integer  "theme_id"
+    t.string   "regular_eot"
+    t.string   "regular_svg"
+    t.string   "regular_ttf"
+    t.string   "regular_woff"
+    t.string   "medium_eot"
+    t.string   "medium_svg"
+    t.string   "medium_ttf"
+    t.string   "medium_woff"
+    t.string   "bold_eot"
+    t.string   "bold_svg"
+    t.string   "bold_ttf"
+    t.string   "bold_woff"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "theme_fonts", ["theme_id"], :name => "index_theme_fonts_on_theme_id"
 
   create_table "themes", :force => true do |t|
     t.string   "name"
@@ -701,7 +768,11 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
     t.datetime "updated_at",                                :null => false
     t.boolean  "read_for_owner",         :default => false
     t.boolean  "read_for_recipient",     :default => false
+    t.datetime "deleted_at"
+    t.integer  "instance_id"
   end
+
+  add_index "user_messages", ["instance_id"], :name => "index_user_messages_on_instance_id"
 
   create_table "user_relationships", :force => true do |t|
     t.integer  "follower_id"
@@ -718,9 +789,9 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                                :default => "", :null => false
-    t.string   "encrypted_password",                    :limit => 128, :default => "", :null => false
-    t.string   "password_salt",                                        :default => "", :null => false
+    t.string   "email",                                                :default => "",                           :null => false
+    t.string   "encrypted_password",                    :limit => 128, :default => "",                           :null => false
+    t.string   "password_salt",                                        :default => "",                           :null => false
     t.string   "reset_password_token"
     t.string   "remember_token"
     t.datetime "remember_created_at"
@@ -733,7 +804,7 @@ ActiveRecord::Schema.define(:version => 20140203060939) do
     t.datetime "updated_at"
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                                       :default => 0,  :null => false
+    t.integer  "bookings_count",                                       :default => 0,                            :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"

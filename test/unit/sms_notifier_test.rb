@@ -41,6 +41,13 @@ class SmsNotifierTest < ActiveSupport::TestCase
         @sms_client.expects(:create).with(:to => "1", :from => "2", :body => "test")
         message.deliver
       end
+
+      should "raise an exception if message body size is greater than 160 chars" do
+        message = SmsNotifier::Message.new(:to => "1", :from => "2", :body => "w"*200)
+        assert_raise SmsNotifier::Message::TooLong do
+          message.deliver
+        end
+      end
     end
   end
 end

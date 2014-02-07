@@ -9,7 +9,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   # We extend the create action to clear out any stored Provider auth data used during
   # registration.
-  before_filter :find_supported_providers, :only => [:edit, :update]
+  before_filter :find_supported_providers, :only => [:social_accounts, :update]
   before_filter :set_return_to, :only => [:new, :create]
   after_filter :render_or_redirect_after_create, :only => [:create]
   before_filter :redirect_to_edit_profile_if_password_set, :only => [:set_password]
@@ -32,7 +32,12 @@ class RegistrationsController < Devise::RegistrationsController
         @user.set_platform_context(platform_context)
         update_analytics_google_id(@user)
         analytics_apply_user(@user)
-        event_tracker.signed_up(@user, { signed_up_via: signed_up_via, provider: Auth::Omni.new(session[:omniauth]).provider })
+        event_tracker.signed_up(@user, { 
+          referrer_id: platform_context.platform_context_detail.id, 
+          referrer_type: platform_context.platform_context_detail.class.to_s, 
+          signed_up_via: signed_up_via, 
+          provider: Auth::Omni.new(session[:omniauth]).provider 
+        })
         PostActionMailer.enqueue_later(30.minutes).sign_up_welcome(platform_context, @user)
         ReengagementNoBookingsJob.perform_later(72.hours.from_now, platform_context, @user)
         PostActionMailer.enqueue.sign_up_verify(platform_context, @user)
@@ -42,7 +47,7 @@ class RegistrationsController < Devise::RegistrationsController
       session[:omniauth] = nil unless @user.new_record?
       flash[:redirected_from_sign_up] = true
       @resource = resource
-    rescue ActiveRecord::RecordNotUnique => e
+    rescue ActiveRecord::RecordNotUnique
       # we are trying to handle situation when user makes double request (button hit or page refresh)
       # request are handled by two server processes so AR validation goes fine, but DB throws exception
       # trying to login this user
@@ -187,6 +192,9 @@ class RegistrationsController < Devise::RegistrationsController
       session[:user_return_to] = request.path
       redirect_to new_user_session_path
     end
+  end
+
+  def social_accounts
   end
 
   protected

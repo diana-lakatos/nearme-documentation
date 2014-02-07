@@ -4,8 +4,21 @@ en:
       wrong_content_type: "is the wrong content type"
       free: "must be free if no prices are provided"
   activerecord:
+    attributes:
+      location_type:
+        name: "Location type"
+      listing_type:
+        name: "Listing type"
     errors:
       models:
+        location_type:
+          attributes:
+            name:
+              taken: "already exists."
+        listing_type:
+          attributes:
+            name:
+              taken: "already exists."
         user:
           attributes:
             email:
@@ -142,7 +155,7 @@ en:
       message_archived: "Your message was archived!"
     partner_inquiries:
       inquiry_added: "Thanks, we'll be in touch!"
-      inquiry_not_added: "Please provide a name, company and valid email address." 
+      inquiry_not_added: "Please provide a name, company and valid email address."
     instance_admin:
       theme:
         theme_updated_successfully: 'Theme updated.'
@@ -157,7 +170,7 @@ en:
         location_type_deleted: 'Location type deleted.'
         listing_type_added: 'New listing type added.'
         listing_type_not_added: 'Could not add new listing type.'
-        listing_type_deleted: 'Listing type deleted.' 
+        listing_type_deleted: 'Listing type deleted.'
   simple_form:
     labels:
       theme:

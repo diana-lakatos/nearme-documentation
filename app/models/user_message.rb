@@ -1,5 +1,7 @@
 # user-to-user message
 class UserMessage < ActiveRecord::Base
+  has_paper_trail
+  acts_as_paranoid
 
   attr_accessor :replying_to_id
 
@@ -7,6 +9,7 @@ class UserMessage < ActiveRecord::Base
   belongs_to :thread_owner, class_name: 'User'     # user that started conversation
   belongs_to :thread_recipient, class_name: 'User' # user that is conversation recipient
   belongs_to :thread_context, polymorphic: true    # conversation context: Listing, Reservation, User
+  belongs_to :instance
 
   validates_presence_of :author_id
   validates_presence_of :thread_owner_id
@@ -22,6 +25,8 @@ class UserMessage < ActiveRecord::Base
   scope :for_user, ->(user) {
     where('thread_owner_id = ? OR thread_recipient_id = ?', user.id, user.id).order('user_messages.created_at asc')
   }
+
+  scope :for_instance, ->(instance) { where(instance_id: instance) }
 
   scope :by_created, -> {order('created_at desc')}
 
@@ -80,6 +85,7 @@ class UserMessage < ActiveRecord::Base
 
   def send_notification(platform_context)
     return if thread_context_type.blank? or thread_context_type != 'Listing'
+    UserMessageSmsNotifier.notify_user_about_new_message(platform_context, self).deliver
     if author == thread_context.administrator
       UserMessageMailer.enqueue.email_message_from_host(platform_context, self)
     else

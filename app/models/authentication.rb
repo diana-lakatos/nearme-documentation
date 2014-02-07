@@ -12,7 +12,7 @@ class Authentication < ActiveRecord::Base
 
   validates :provider, :uid, :token, presence: true
   validates :provider, uniqueness: { scope: :user_id }
-  validates :uid,      uniqueness: { scope: :provider }
+  validates :uid,      uniqueness: { scope: [:provider, :deleted_at] }
 
   serialize :info, Hash
 

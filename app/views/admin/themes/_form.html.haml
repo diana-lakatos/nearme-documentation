@@ -56,6 +56,21 @@
     = f.button :submit, 'Save', class: 'btn btn-success'
   %br/
 
+  %legend Fonts
+  = f.fields_for :theme_font do |tf_f|
+    - ThemeFont::FONT_TYPES.each do |font_type|
+      - ThemeFont::FONT_EXTENSIONS.each do |file_extension|
+        .control-group
+          = f.label "#{font_type}_#{file_extension}", label: "#{font_type.camelize} font (#{file_extension})"
+          .controls
+            = tf_f.file_field "#{font_type}_#{file_extension}"
+            - if tf_f.object.persisted? && tf_f.object.send("#{font_type}_#{file_extension}")
+              = File.basename(tf_f.object.send("#{font_type}_#{file_extension}_url"))
+
+  %p
+    = f.button :submit, 'Save', class: 'btn btn-success'
+  %br/
+
   %legend Homepage
   = f.input :homepage_css, :input_html => { :class => 'wide' }
   = f.input :homepage_content, :input_html => { :class => 'wide' }

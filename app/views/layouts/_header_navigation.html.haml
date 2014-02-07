@@ -26,6 +26,11 @@
         %span.ico-chevron-down
       .clearfix
       %ul.dropdown-menu
+        - if authorizer.instance_admin?
+          %li
+            = link_to url_for([:instance_admin, authorizer.first_permission_have_access_to]), class: 'nav-link dropdown-toggle' do
+              %span Instance Admin
+
         - if platform_context.white_label_company_user?(current_user) && current_user.listings.active.any?
           %li
             = link_to manage_locations_path, class: 'nav-link dropdown-toggle' do
@@ -35,7 +40,7 @@
             %span My Bookings
         %li
           = link_to edit_user_registration_path, class: 'nav-link dropdown-toggle' do
-            %span Edit Profile
+            %span Account
         %li
           = link_to destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name } do
             %span Log Out

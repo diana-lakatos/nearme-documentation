@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class InstanceAdmin::Users::InstanceAdminRolesControllerTest < ActionController::TestCase
+class InstanceAdmin::Manage::Users::InstanceAdminRolesControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
@@ -23,7 +23,6 @@ class InstanceAdmin::Users::InstanceAdminRolesControllerTest < ActionController:
         end
         assert_equal 'new role', assigns(:instance_admin_role).name
         assert assigns(:instance_admin_role).permission_analytics
-        assert !assigns(:instance_admin_role).permission_users
       end
 
       should 'not duplicate role' do
@@ -78,7 +77,6 @@ class InstanceAdmin::Users::InstanceAdminRolesControllerTest < ActionController:
           end
         end
       end
-      
     end
   end
 

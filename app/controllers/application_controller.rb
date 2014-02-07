@@ -44,6 +44,11 @@ class ApplicationController < ActionController::Base
     @platform_context ||= PlatformContext.new(request.host)
   end
 
+  def authorizer
+    @authorizer ||= InstanceAdmin::Authorizer.new(current_user, platform_context)
+  end
+  helper_method :authorizer
+
   # Provides an EventTracker instance for the current request.
   #
   # Use this for triggering predefined events from actions via
@@ -211,7 +216,7 @@ class ApplicationController < ActionController::Base
   def update_analytics_google_id(user)
     if user
       if user.google_analytics_id != cookies[:google_analytics_id] && cookies[:google_analytics_id].present?
-        user.update_attribute(:google_analytics_id, cookies[:google_analytics_id]) 
+        user.update_attribute(:google_analytics_id, cookies[:google_analytics_id])
       end
     end
   end
@@ -300,8 +305,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_raygun_custom_data
-    return if (Rails.env.development? || Rails.env.test?)
-    Raygun.configuration.silence_reporting = false
+    return if DesksnearMe::Application.config.silence_raygun_notification
     begin
       Raygun.configuration.custom_data = {
         platform_context: @platform_context.to_h,
@@ -315,7 +319,7 @@ class ApplicationController < ActionController::Base
   end
 
   def notify_raygun_about_exception(exception)
-    return if (Rails.env.development? || Rails.env.test?)
+    return if DesksnearMe::Application.config.silence_raygun_notification
     Raygun.configuration.failsafe_logger = true
     Raygun.track_exception(exception)
     Raygun.configuration.failsafe_logger = false

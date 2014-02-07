@@ -1,0 +1,58 @@
+= simple_nested_form_for @instance, :url => instance_admin_settings_configuration_path, :html => { :multipart => true } do |f|
+  %fieldset
+    %legend Basic Configuration
+    .row-fluid
+      .controls.controls-row
+        = f.input :name, label: 'Marketplace Name', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :service_fee_guest_percent, label: 'Service Fee', wrapper_html: {class: 'input-prepend span6'} do
+          %span.add-on %
+          = f.input_field :service_fee_guest_percent, type: 'tel', class: 'input-block-level'
+
+    = f.input :skip_company, :label => false, :inline_label => "Don't require company"
+
+  %hr
+
+  %fieldset
+    %legend Termonology
+    .row-fluid
+      .controls.controls-row
+        = f.input :lessor, label: 'Lessor (e.g. host)', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :lessee, label: 'Lessee (e.g. guest)', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :bookable_noun, label: 'Bookable Noun (e.g. Desk)', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+  %hr
+
+  %fieldset
+    %legend Domain Names
+    #domains
+      = f.fields_for :domains, wrapper: false do |f|
+        .row-fluid
+          .controls.controls-row
+            .fields
+              = f.input :name, label: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+              = f.link_to_remove do
+                .fa.fa-trash-o.fa-2x.inline-form-icon
+
+    %br
+    .row-fluid
+      .controls.controls-row
+        = f.link_to_add :domains, :data => { :target => "#domains" } do
+          %button.btn.btn-form-field.span6
+            + Add Domain Name
+
+  %hr
+
+  %fieldset
+    %legend Pricing
+    .control-group
+      .controls
+        = f.error :pricing_options
+        .row
+          - Instance::PRICING_OPTIONS.each do |pricing_option|
+            %label.checkbox.span1
+              = check_box_tag "instance[pricing_options][#{pricing_option}]", '1', f.object.pricing_options[pricing_option].to_s == '1'
+              #{pricing_option.capitalize}
+
+  = f.button :submit, 'Save', class: 'btn btn-primary pull-right'

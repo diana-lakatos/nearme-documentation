@@ -105,11 +105,20 @@ class LocationTest < ActiveSupport::TestCase
     setup do
       @company = FactoryGirl.create(:company, :name => 'Desks Near Me')
     end
+
     should 'store slug in the database' do
       @location = FactoryGirl.build(:location_in_san_francisco, :company => @company, :formatted_address => 'San Francisco, CA, California, USA', :city => 'San Francisco')
       @location.save!
       @location.reload
-      assert_equal "desks+near+me-san+francisco", @location.slug
+      assert_equal "desks-near-me-san-francisco", @location.slug
+    end
+
+    should 'ignore city name if company name already oncludes it ' do
+      @company.update_attribute(:name, 'Paradise of San Francisco')
+      @location = FactoryGirl.build(:location_in_san_francisco, :company => @company, :formatted_address => 'San Francisco, CA, California, USA', :city => 'San Francisco')
+      @location.save!
+      @location.reload
+      assert_equal "paradise-of-san-francisco", @location.slug
     end
 
     should 'update slug along with formatted_address ' do
@@ -117,7 +126,15 @@ class LocationTest < ActiveSupport::TestCase
       @location.formatted_address = 'San Francisco, CA, California, USA'
       @location.city = 'San Francisco'
       @location.save!
-      assert_equal "desks+near+me-san+francisco", @location.slug
+      assert_equal "desks-near-me-san-francisco", @location.slug
+    end
+
+    should 'ignore trailing spaces ' do
+      @company.update_attribute(:name, '    Desks Near Me     ')
+      @location = FactoryGirl.create(:location_in_san_francisco, :company => @company, :formatted_address => 'San Francisco, CA, California, USA', :city => 'San Francisco')
+      @location.update_column(:city, '      Francisco San    ')
+      @location.save!
+      assert_equal "desks-near-me-francisco-san", @location.slug
     end
 
   end

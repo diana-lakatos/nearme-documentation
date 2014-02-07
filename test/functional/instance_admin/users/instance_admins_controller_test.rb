@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class InstanceAdmin::Users::InstanceAdminsControllerTest < ActionController::TestCase
+class InstanceAdmin::Manage::Users::InstanceAdminsControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
@@ -65,7 +65,7 @@ class InstanceAdmin::Users::InstanceAdminsControllerTest < ActionController::Tes
         InstanceAdmin.any_instance.stubs(:instance_owner).returns(false)
         @role = FactoryGirl.create(:instance_admin_role)
         put :update, { :id => @instance_admin.id, :instance_admin_role_id => @role.id  }
-        assert_equal @role.id, assigns(:instance_admin).instance_admin_role_id 
+        assert_equal @role.id, assigns(:instance_admin).instance_admin_role_id
       end
 
       should 'know which role does not belong to the instance' do
@@ -80,7 +80,7 @@ class InstanceAdmin::Users::InstanceAdminsControllerTest < ActionController::Tes
       should 'be able to find global role' do
         InstanceAdmin.any_instance.stubs(:instance_owner).returns(false)
         put :update, { :id => @instance_admin.id, :instance_admin_role_id => InstanceAdminRole.default_role.id }
-        assert_equal InstanceAdminRole.default_role.id, assigns(:instance_admin).instance_admin_role_id 
+        assert_equal InstanceAdminRole.default_role.id, assigns(:instance_admin).instance_admin_role_id
       end
 
       should 'not allow to degradade instance owner' do
@@ -88,7 +88,7 @@ class InstanceAdmin::Users::InstanceAdminsControllerTest < ActionController::Tes
         role_id = InstanceAdminRole.administrator_role.id
         @instance_admin.update_attribute(:instance_admin_role_id, role_id)
         put :update, { :id => @instance_admin.id, :instance_admin_role_id => InstanceAdminRole.default_role.id }
-        assert_equal role_id, assigns(:instance_admin).instance_admin_role_id 
+        assert_equal role_id, assigns(:instance_admin).instance_admin_role_id
       end
     end
 
@@ -110,7 +110,7 @@ class InstanceAdmin::Users::InstanceAdminsControllerTest < ActionController::Tes
           delete :destroy, :id => @instance_owner
         end
       end
-      
+
     end
   end
 

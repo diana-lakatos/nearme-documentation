@@ -32,7 +32,7 @@ class AuthenticationsController < ApplicationController
   def destroy
     @authentication = current_user.authentications.find(params[:id])
     if @authentication.can_be_deleted?
-      @authentication.destroy
+      @authentication.destroy!
       log_disconnect_social_provider
       flash[:deleted] = t('flash_messages.authentications.disconnected', 
         provider_name: @authentication.provider.titleize)
@@ -40,7 +40,7 @@ class AuthenticationsController < ApplicationController
       flash[:warning] = t('flash_messages.authentications.unable_to_disconnect', 
         provider_name: @authentication.provider.titleize)
     end
-    redirect_to edit_user_registration_url
+    redirect_to social_accounts_url
   end
 
   # Clear any omniauth data stored in session
@@ -75,7 +75,7 @@ class AuthenticationsController < ApplicationController
 
   def already_connected_to_other_user
     flash[:error] = t('flash_messages.authentications.already_connected_to_other_user') if use_flash_messages?
-    redirect_to edit_user_registration_path
+    redirect_to social_accounts_path
   end
 
   def signed_in_successfully
@@ -98,7 +98,7 @@ class AuthenticationsController < ApplicationController
     @oauth.create_authentication!(current_user)
     log_connect_social_provider
     flash[:success] = t('flash_messages.authentications.authentication_successful')
-    redirect_to edit_user_registration_url
+    redirect_to social_accounts_path
   end
 
   def new_user_created_successfully

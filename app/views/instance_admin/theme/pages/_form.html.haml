@@ -1,0 +1,15 @@
+= simple_form_for [:instance_admin, :theme, resource], :html => { :multipart => true } do |f|
+  %fieldset
+    .row-fluid
+      .controls.controls-row
+        = f.input :path, :placeholder => 'Page title', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+    .row-fluid
+      .controls.controls-row
+        = f.input :content, wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level' }
+
+    = f.input :hero_image
+    = link_to(resource.hero_image.filename, resource.hero_image.url) if resource.hero_image.present?
+
+    = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+    = link_to 'Cancel', instance_admin_theme_pages_url , class: 'btn pull-right'

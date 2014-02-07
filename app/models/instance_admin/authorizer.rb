@@ -1,7 +1,7 @@
 class InstanceAdmin::Authorizer
 
-  PERMISSIONS = %w(Analytics Settings Theme Pages Inventories Transfers Partners Users)
-  
+  PERMISSIONS = %w(Analytics Settings Theme Manage)
+
   def initialize(user, platform_context)
     @user = user
     @platform_context = platform_context
@@ -13,15 +13,15 @@ class InstanceAdmin::Authorizer
 
   def authorized?(controller)
     raise InstanceAdmin::Authorizer::UnassignedInstanceAdminRoleError.new("Instance admin (id=#{instance_admin.id}) has not been assigned any role") if instance_admin_role.nil?
-    if controller.to_s == "InstanceAdmin::BaseController"
-      controller = "InstanceAdmin::#{first_permission_have_access_to.camelize}Controller"
+    if controller == "InstanceAdmin"
+      controller = first_permission_have_access_to
     end
     instance_admin_role.send(convert_controller_class_to_db_column(controller))
   end
 
   def first_permission_have_access_to
     PERMISSIONS.each do |permission|
-      return permission.downcase if authorized?("InstanceAdmin::#{permission}Controller".constantize)
+      return permission.downcase if authorized?(permission)
     end
     nil
   end
@@ -37,6 +37,6 @@ class InstanceAdmin::Authorizer
   end
 
   def convert_controller_class_to_db_column(controller)
-    "permission_" + controller.to_s.demodulize.downcase.gsub("controller", "")
+    "permission_" + controller.downcase
   end
 end

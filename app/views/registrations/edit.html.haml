@@ -1,14 +1,13 @@
-- title "Edit profile"
+- title "Edit Profile"
 
-.row-fluid
-  .span8.offset2
-    %h1
-      %span.ico-edit.padding Edit Profile
-    .box
-      %p
-      = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name),  :country => @country }
+= render :layout => 'registrations/layout/account', :locals => { :active_tab => :account } do
+  .row-fluid
+    .span8.offset2
+      .box
+        %p
+        = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name),  :country => @country }
 
-:javascript
-  $(function() {
-    new EditUserForm()
-  });
+  :javascript
+    $(function() {
+      new EditUserForm()
+    });

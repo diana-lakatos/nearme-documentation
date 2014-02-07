@@ -8,11 +8,7 @@ FactoryGirl.define do
     permission_analytics true
     permission_settings false
     permission_theme false
-    permission_pages false
-    permission_transfers false
-    permission_inventories false
-    permission_partners false
-    permission_users false
+    permission_manage false
 
     factory :instance_admin_role_default do
       name 'Default'
@@ -20,25 +16,16 @@ FactoryGirl.define do
       permission_analytics true
       permission_settings false
       permission_theme false
-      permission_pages false
-      permission_transfers false
-      permission_inventories false
-      permission_partners false
-      permission_users false
+      permission_manage false
     end
 
     factory :instance_admin_role_administrator do
       name 'Administrator'
       instance_id nil
+      permission_analytics true
       permission_settings true
       permission_theme true
-      permission_pages true
-      permission_transfers true
-      permission_inventories true
-      permission_partners true
-      permission_users true
-      permission_analytics true
+      permission_manage true
     end
   end
-
 end

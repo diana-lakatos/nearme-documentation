@@ -17,4 +17,5 @@ DesksnearMe::Application.configure do
       PaperTrail.enabled = false
   end
   config.encrypt_sensitive_db_columns = false
+  config.silence_raygun_notification = true
 end
