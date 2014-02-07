@@ -314,7 +314,7 @@ ol, ul {
   border-top: 1px solid #d1d3d4;
   .shell {
     overflow: hidden;
-    padding: 87px 0;
+    padding: 70px 0;
   }
 }
 
@@ -369,11 +369,11 @@ ol, ul {
 ========================================================================== */
 
 .sections {
-  padding-top: 12px;
+  padding-top: 0px;
 }
 
 .section {
-  padding: 90px 0 75px;
+  padding: 80px 0 80px;
   ~ .section {
     border-top: 1px solid #ecedee;
   }
@@ -540,7 +540,7 @@ ol, ul {
 .callout {
   background: #1a7bbd;
   .shell {
-    height: 163px;
+    height: 99px;
     padding-top: 130px;
   }
   h2 {
@@ -671,7 +671,7 @@ ol, ul {
 
 .form-request {
   width: 400px;
-  padding: 78px 0;
+  padding: 0;
   margin: 0 auto;
   h2 {
     font-size: 34px;
@@ -765,7 +765,6 @@ ol, ul {
 ========================================================================== */
 
 .list-features {
-  padding-top: 42px;
   list-style: none outside none;
   color: #6d6f71;
   h3 {
@@ -921,6 +920,13 @@ ol, ul {
 /* ==========================================================================
   #Responsive
 ========================================================================== */
+@media (min-width: 967px) {
+  .sections {
+    margin-top: -80px;
+    margin-bottom: -80px;
+  }
+}
+
 
 @media (min-width: 768px) and (max-width: 966px) {
   .container {
