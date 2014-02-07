@@ -20,7 +20,7 @@ module ApplicationHelper
   end
 
   def title_tag
-    (show_title? ? content_for(:title) : (platform_context.tagline.presence || "Find office space. Rent office space. Get to work.")) +
+    (show_title? ? content_for(:title) : platform_context.tagline.to_s) +
       (additional_meta_title.presence ? " | " + additional_meta_title : '')
   end
 
@@ -29,7 +29,7 @@ module ApplicationHelper
   end
 
   def meta_description_content
-    content_for?(:meta_description) ? content_for(:meta_description) : (platform_context.description || "#{platform_context.name} connects individuals and teams with office space across the globe, and provides a platform for businesses to list spare space.")
+    content_for?(:meta_description) ? content_for(:meta_description) : (platform_context.description || platform_context.name)
   end
 
   def additional_meta_title
