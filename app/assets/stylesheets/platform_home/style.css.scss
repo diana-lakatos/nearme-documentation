@@ -772,8 +772,11 @@ ol, ul {
     padding-bottom: 20px;
     text-transform: none;
   }
-  li {
-    padding-bottom: 19px;
+  ul{
+    li {
+      padding-bottom: 19px;
+      list-style-type: disc;
+    }
   }
 }
 
@@ -908,7 +911,7 @@ ol, ul {
     text-align: center;
   }
   .btn {
-    padding: 0 65px;
+    padding: 0 58px;
   }
 }
 

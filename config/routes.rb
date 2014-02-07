@@ -7,8 +7,13 @@ DesksnearMe::Application.routes.draw do
     post '/contact-submit', :to => 'platform_home#contact_submit'
     get '/request-a-demo', :to => 'platform_home#demo_request'
     post '/demo-request-submit', :to => 'platform_home#demo_request_submit'
-    get '/careers', :to => 'platform_home#careers'
     get '/about-us', :to => 'platform_home#about_us'
+    get '/careers', :to => 'platform_home#careers'
+    get '/careers/designer', :to => 'platform_home#designer'
+    get '/careers/developer', :to => 'platform_home#developer'
+    get '/careers/business-development', :to => 'platform_home#business_development'
+    get '/careers/operations-manager', :to => 'platform_home#operations_manager'
+    get '/careers/sales-representative', :to => 'platform_home#sales_representative'
   end
 
   root :to => "public#index"
