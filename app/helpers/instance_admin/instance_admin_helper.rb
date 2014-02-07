@@ -1,6 +1,6 @@
 module InstanceAdmin::InstanceAdminHelper
 
-  def ico_for_flash(key)
+  def instance_admin_ico_for_flash(key)
     case key.to_s
     when 'notice'
       "fa fa-check"
