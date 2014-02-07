@@ -1,6 +1,7 @@
 - [:notice, :success, :warning, :error, :deleted].each do |key|
   - if flash[key].present?
     %div{class: "alert #{key}", 'data-flash-message' => true}
-      %i{ :class => ico_for_flash(key)}
-      = simple_format(flash[key])
-      %a.close.ico-close.right{'href' => '#', 'data-dismiss' => 'alert'}
+      %p
+        %i{ :class => ico_for_flash(key)}
+        = nl2br(flash[key])
+        %a.close.ico-close.right{href: '#'}

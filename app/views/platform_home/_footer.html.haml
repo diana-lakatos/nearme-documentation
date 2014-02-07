@@ -1,28 +1,50 @@
-.footer-wrapper
-  .container-fluid
-    %footer
-      .row-fluid
-        .span1.offset1.nested
-          #logo-inverse
-        .span2.nested
-          %p 185 Clara Street
-          %p San Francisco, CA 94107
-          %p 888-998-3375
-        .span2.nested
-          .social-wrapper
-            %ul.icons.clearfix
+.footer
+  .shell
+    .footer-left
+      .logo-footer
+        %a{href: "#"} Near me
+      .address
+        %p 185 Clara St #100, San Francisco CA 94107
+        %p 888.998.33758
+      %p.copyrights © 2013 Near Me
+
+    .footer-right
+      .footer-cols
+        .footer-col
+          %h5 Platform
+          .nav-footer
+            %ul
               %li
-                %a{href: "https://www.facebook.com/NearMeCo", target:"_blank"}
-                  = image_tag "platform_home/facebook-ico.png"
+                %a{href: "/features"} Features
               %li
-                %a{href: "https://twitter.com/NearMeCo", target:"_blank"}
-                  = image_tag "platform_home/twitter-ico.png"
+                %a{href: "/request-a-demo"} Request Demo
               %li
-                %a{href: "https://plus.google.com/u/0/113390569055627999995", target:"_blank"}
-                  = image_tag "platform_home/gplus-ico.png"
-        .span5.questions.nested
-          .pull-right
-            %a{href: '/get-in-touch'}
-              questions?
-              %span GET IN TOUCH
-        .span1.nested
+                %a{href: "/contact"} Contact
+
+        / .footer-col
+        /   %h5 Company
+        /   .nav-footer
+        /     %ul
+        /       %li
+        /         %a{href: "/about-us"} About us
+        /       %li
+        /         %a{href: "/contact"} Contact
+        /       %li
+        /         %a{href: "http://blog.desksnear.me/"} Blog
+        /       %li
+        /         %a{href: "/press-and-media"} Press & Media
+        /       %li
+        /         %a{href: "/careers"} Careers
+
+        .footer-col
+          %h5 Social
+          .nav-footer
+            %ul
+              %li
+                %a{href: "https://twitter.com/@nearmeco", target:"_blank"} Twitter
+              %li
+                %a{href: "https://www.facebook.com/NearMeCo", target:"_blank"} Facebook
+              %li
+                %a{href: "https://plus.google.com/u/0/113390569055627999995", target:"_blank"} Google+
+              %li
+                %a{href: "http://linkedin.com/company/near-me", target:"_blank"} Linkedin

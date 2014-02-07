@@ -219,15 +219,10 @@ class Location < ActiveRecord::Base
 
   def urlify
     # given company name is My Company and city is San Francisco, generated "my+company-san+francisco"
-    "#{convert_string_to_slug(company.try(:name))}-#{convert_string_to_slug(city)}"
-  end
-
-  def convert_string_to_slug(string)
-    string.try(:parameterize, '+')
-  end
-
-  # we already took care of parameterization
-  def normalize_friendly_id(string)
-    string.downcase
+    if company.try(:name).present? && city.present? && company.name.strip.downcase.include?(city.strip.downcase)
+      company.name
+    else
+      "#{company.try(:name).try(:strip)} #{city}".strip
+    end
   end
 end

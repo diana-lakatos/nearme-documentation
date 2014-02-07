@@ -1,0 +1,7 @@
+= simple_form_for @theme, :url => instance_admin_theme_design_path, :html => { :multipart => true } do |f|
+  %legend Homepage
+  .row-fluid
+    .controls.controls-row
+      = f.input :homepage_css, label: 'Homepage CSS', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+      = f.input :homepage_content, label: 'Homepage HTML', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+  = f.button :submit, 'Save', class: 'btn btn-primary pull-right'

@@ -2,12 +2,13 @@ DesksnearMe::Application.routes.draw do
 
   constraints host: 'near-me.com' do
     root :to => 'platform_home#index'
-    post '/notify-me', :to => 'platform_home#notify_me'
-    get '/get-in-touch', :to => 'platform_home#get_in_touch'
-    post '/save-inquiry', :to => 'platform_home#save_inquiry'
-    post '/send-email', :to => 'platform_home#send_email'
-    get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe', :as => 'platform_email_unsubscribe'
-    get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe', :as => 'platform_email_resubscribe'
+    get '/features', :to => 'platform_home#features'
+    get '/contact', :to => 'platform_home#contact'
+    post '/contact-submit', :to => 'platform_home#contact_submit'
+    get '/request-a-demo', :to => 'platform_home#demo_request'
+    post '/demo-request-submit', :to => 'platform_home#demo_request_submit'
+    get '/careers', :to => 'platform_home#careers'
+    get '/about-us', :to => 'platform_home#about_us'
   end
 
   root :to => "public#index"
@@ -50,39 +51,60 @@ DesksnearMe::Application.routes.draw do
   resources :marketplace_sessions, only: [:new, :create]
 
   namespace :instance_admin do
-    match '/', :to => "base#index"
-    resources :analytics, :only => [:index]
-    resources :inventories, :only => [:index, :show] do
-      post :login_as, on: :member
-      post :restore_session, on: :collection
+    get '/', :to => 'base#index'
+
+    namespace :analytics do
+      get '/', :to => 'base#index'
+      resource :overview, :only => [:show], :controller => 'overview'
     end
 
-    resources :partners
-    resource :settings, :only => [:show, :update], :controller => 'settings'
     namespace :settings do
+      get '/', :to => 'base#index'
+      resource :configuration, :only => [:show, :update], :controller => 'configuration'
+      resource :integrations, :only => [:show, :update], :controller => 'integrations'
+      resource :locations, :only => [:show, :update], :controller => 'locations'
       resources :location_types, only: [:index, :create, :destroy_modal, :destroy] do
         get 'destroy_modal', on: :member
       end
+      resource :listings, :only => [:show, :update], :controller => 'listings'
       resources :listing_types, only: [:index, :create, :destroy_modal, :destroy] do
         get 'destroy_modal', on: :member
       end
+      resource :translations, :only => [:show, :update], :controller => 'translations'
     end
-    resource :theme, :only => [:show, :update], :controller => 'theme'
-    resources :transfers do
-      member do
-        post :transferred
+
+    namespace :theme do
+      get '/', :to => 'base#index'
+      resource :info, :only => [:show, :update], :controller => 'info'
+      resource :design, :only => [:show, :update], :controller => 'design'
+      resources :pages
+      resource :homepage, :only => [:show, :update], :controller => 'homepage'
+    end
+
+    namespace :manage do
+      get '/', :to => 'base#index'
+      resources :inventories, :only => [:index] do
+        post :login_as, on: :member
+        post :restore_session, on: :collection
       end
 
-      collection do
-        post :generate
-      end
-    end
-    resources :users, :only => [:index, :create]
-    resources :pages
+      resources :transfers do
+        member do
+          post :transferred
+        end
 
-    namespace :users do
-      resources :instance_admins, :only => [:create, :update, :destroy, :index]
-      resources :instance_admin_roles, :only => [:create, :update, :destroy, :index]
+        collection do
+          post :generate
+        end
+      end
+
+      resources :partners
+
+      resources :users, :only => [:index, :create]
+      namespace :users do
+        resources :instance_admins, :only => [:create, :update, :destroy, :index]
+        resources :instance_admin_roles, :only => [:create, :update, :destroy, :index]
+      end
     end
   end
 
@@ -253,8 +275,6 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :partner_inquiries, :only => [:index, :create], :controller => 'partner_inquiries', :path => 'partner'
-
-  root :to => "public#index"
 
   namespace :v1, :defaults => { :format => 'json' } do
 

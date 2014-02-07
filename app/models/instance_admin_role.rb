@@ -1,12 +1,11 @@
 class InstanceAdminRole < ActiveRecord::Base
   has_paper_trail
 
-  PERMISSIONS = %w(Analytics Settings Theme Pages Inventories Transfers Partners Users Blog)
-  CONTROLLER_PERMISSIONS = %w(Analytics Settings Theme Pages Inventories Transfers Partners Users)
+  PERMISSIONS = %w(Analytics Settings Theme Manage Blog)
 
-  attr_accessible :permission_analytics, :permission_settings, :permission_theme, :permission_transfers,
-    :permission_inventories, :permission_partners, :permission_users, :permission_pages, :permission_blog,
-    :name
+  attr_accessible :permission_analytics, :permission_settings, :permission_theme, :permission_transfers, :permission_inventories,
+    :permission_partners, :permission_users, :permission_pages, :permission_manage, :name
+
 
   has_many :instance_admins
   belongs_to :instance

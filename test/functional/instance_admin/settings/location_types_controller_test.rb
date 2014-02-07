@@ -16,7 +16,7 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
       end
 
       assert_equal 'New location type added.', flash[:success]
-      assert_redirected_to instance_admin_settings_path
+      assert_redirected_to instance_admin_settings_locations_path
     end
 
     should 'not create a new location type' do
@@ -24,13 +24,13 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
         post :create, "location_type"=>{"name"=>""}
       end
 
-      assert_equal 'Could not add new location type.', flash[:error]
-      assert_redirected_to instance_admin_settings_path
+      assert_equal "Location type can't be blank", flash[:error]
+      assert_redirected_to instance_admin_settings_locations_path
     end
 
     should 'redirect to the admin settings path on index action' do
       get :index
-      assert_redirected_to instance_admin_settings_path
+      assert_redirected_to instance_admin_settings_configuration_path
     end
   end
 
@@ -62,7 +62,7 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
       end
 
       assert_equal 'Location type deleted.', flash[:success]
-      assert_redirected_to instance_admin_settings_path
+      assert_redirected_to instance_admin_settings_locations_path
     end
 
     should 'replace location type and destroy' do
@@ -72,7 +72,7 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
 
       assert_equal @location_2.reload.location_type, @location_type_3
       assert_equal 'Location type deleted.', flash[:success]
-      assert_redirected_to instance_admin_settings_path
+      assert_redirected_to instance_admin_settings_locations_path
     end
   end
 end

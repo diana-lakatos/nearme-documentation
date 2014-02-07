@@ -1,0 +1,358 @@
+/***************************/
+/*** Defaults and Resets ***/
+/***************************/
+
+body {
+  margin-top: 70px; /* Pushes content below the header. */
+  font-family: 'Gotham A', 'Gotham B';
+}
+
+/* Remove FireFox dotted focus box on anchor tags */
+a:focus {
+  outline: none;
+}
+
+body.login {
+  background-color: $primary_nav_color;
+}
+
+
+/******************************/
+/* Iconography (Font Awesome) */
+/******************************/
+
+.navbar .fa{
+  vertical-align: middle;
+}
+
+
+/**********/
+/* Legend */
+/**********/
+
+h3 {
+  margin: 0px;
+  border: none;
+  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+/**********/
+/* Tables */
+/**********/
+
+.table {
+  tr {
+    th {
+      border-top: none;
+      color: $light_text_color;
+      font-weight: normal;
+    }
+    td {
+    }
+  }
+}
+
+
+/******************************/
+/* Forms, fields, and buttons */
+/******************************/
+
+span.billing-gateway {
+  margin-left: 2px;
+
+  input {
+    margin-top: -4px;
+  }
+
+  label {
+    display: inline-block;
+    width: 100px;
+    padding-left: 5px;
+  }
+}
+
+legend {
+  margin: 0px;
+  border: none;
+  text-transform: uppercase;
+  font-size: 18px;
+}
+
+form{
+
+  label {
+    color: $light_text_color;
+  }
+
+  fieldset {
+    .control-group {
+      input[type="text"],
+      input[type="tel"],
+      input[type="url"],
+      input[type="email"],
+      input[type="number"] {
+        @include box-sizing(border-box);
+        padding-left: 15px;
+        margin: 0px;
+        height: 40px;
+      }
+    }
+  }
+
+  .btn-form-field {
+    margin-bottom: 10px;
+    font-family: 'Gotham A', 'Gotham B';
+    height: 40px;
+    background-color: $tab_background_color;
+    background-image: none;
+    border: 1px dashed darken($form_field_outline_color, 10%);
+    text-shadow: none;
+    @include box-shadow(none);
+    &:hover, &:active, &:focus { background-color: darken($tab_background_color, 10%); }
+  }
+
+  .input-prepend {
+    .add-on {
+      height: 30px;
+      width: 25px;
+      line-height: 30px;
+      color: $white;
+      background-color: $form_field_outline_color;
+      text-shadow: none;
+    }
+
+    .input-block-level {
+      width: 379px;
+    }
+  }
+
+  .error-block {
+    color: $error_color;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .input-block {
+    margin-left: 0px;
+    width: 415px;
+  }
+}
+
+.inline-form-icon {
+  line-height: 40px;
+  margin-left: 20px;
+  color: $light_text_color;
+
+  &:hover {
+    color: lighten($light_text_color, 10%);
+  }
+}
+
+.inline-form-control {
+  line-height: 40px;
+  margin-left: 20px;
+}
+
+.btn {
+  font-family: 'Gotham A', 'Gotham B';
+  height: 40px;
+  padding-left: 40px;
+  padding-right: 40px;
+  margin-left: 10px;
+  background-color: $form_field_outline_color;
+  background-image: none;
+  border: none;
+  text-shadow: none;
+  vertical-align: middle;
+  line-height: 32px;
+  @include box-shadow(none);
+  @include box-sizing(border-box);
+  &:hover, &:active, &:focus { background-color: darken($form_field_outline_color, 10%); }
+
+  &.btn-primary {
+    background-color: $highlight_color;
+    &:hover, &:active, &:focus { background-color: lighten($highlight_color, 10%); }
+  }
+
+  &.btn-danger {
+    background-color: $red;
+    &:hover, &:active, &:focus { background-color: lighten($red, 10%); }
+  }
+
+  &.btn-block {
+    margin: 0px;
+  }
+}
+
+/**************/
+/*** Flash ****/
+/**************/
+
+.alert {
+  margin-top: 24px;
+
+  p {
+    margin: 0px;
+    text-align: center;
+  }
+}
+
+/**************/
+/*** Misc. ****/
+/**************/
+.box {
+  margin: 20px;
+}
+
+
+/**************/
+/*** Header ***/
+/**************/
+
+.navbar {
+  text-transform: uppercase;
+
+  .brand{
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  .user-menu {
+    text-transform:none;
+
+    li a {
+      color: $white;
+    }
+  }
+
+  .navbar-inner{
+    filter: none;
+    @include box-shadow(none);
+    border: none;
+  }
+
+  .nav > li > a{
+
+    text-shadow: none;
+  }
+
+  .nav > li > a:focus,
+  .nav > li > a:hover {
+    text-decoration: none;
+  }
+
+  .nav .active > a{
+    @include box-sizing(border-box);
+    height: $navbarHeight;
+    @include box-shadow(none);
+    border-style: solid;
+    border-width: 0px;
+    border-bottom-width: 4px;
+    border-bottom-color: $highlight_color;
+  }
+
+  .nav .active > a:hover{
+    @include box-shadow(none);
+  }
+
+  .dropdown-menu {
+    margin: 0 0 0 0;
+    padding-top: 0px;
+    background: $primary_nav_color;
+    border: none;
+    @include border-radius(0);
+    @include border-corner-radius(top, left, 0);
+    @include border-corner-radius(top, right, 0);
+    @include border-corner-radius(bottom, left, $border-radius-default);
+    @include border-corner-radius(bottom, right, $border-radius-default);
+  }
+}
+
+
+/*************/
+/*** Misc. ***/
+/*************/
+
+.instance-admins-table td {
+  .loading {
+    float: left;
+    margin-left: 12px;
+    display: none;
+  }
+}
+
+.amenity_set {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/******************/
+/*** Login Page ***/
+/******************/
+
+#login {
+  .login-form {
+    width: 375px;
+    margin: 0 auto;
+
+    img {
+      margin: 0 auto;
+      margin-bottom: 30px;
+      display: block;
+    }
+
+    input {
+      font-family: 'Gotham A', 'Gotham B';
+      padding-left: 26px;
+      display: block;
+      width: 100%;
+      height: 40px;
+      margin-top: 25px;
+      @include box-sizing(border-box);
+    }
+
+    button {
+      margin-top: 25px;
+    }
+  }
+}
+
+
+/*************/
+/*** Tabs ****/
+/*************/
+
+.tab-container {
+  padding: 30px 25px;
+  margin-bottom: 70px;
+  background-color: $tab_background_color;
+  border: 1px solid $tab_border_color;
+  border-top-width: 0px;
+}
+
+ul.nav-tabs {
+  margin-bottom: 0px;
+  border-color: $tab_border_color;
+
+  li {
+    text-transform: uppercase;
+
+    a {
+      @include border-radius(0);
+      padding-left: 35px;
+      padding-right: 35px;
+    }
+  }
+
+  li.active {
+
+    a, a:hover, a:focus {
+      border-color: $tab_border_color;
+      padding-bottom: 9px;
+      border-bottom: none;
+      background-color: $tab_background_color;
+    }
+  }
+}

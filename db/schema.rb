@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140204180247) do
+ActiveRecord::Schema.define(:version => 20140207011421) do
 
 
 
@@ -290,17 +290,13 @@ ActiveRecord::Schema.define(:version => 20140204180247) do
   create_table "instance_admin_roles", :force => true do |t|
     t.string   "name"
     t.integer  "instance_id"
-    t.boolean  "permission_settings",    :default => false
-    t.boolean  "permission_theme",       :default => false
-    t.boolean  "permission_transfers",   :default => false
-    t.boolean  "permission_inventories", :default => false
-    t.boolean  "permission_partners",    :default => false
-    t.boolean  "permission_users",       :default => false
-    t.boolean  "permission_analytics",   :default => true
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.boolean  "permission_pages",       :default => false
-    t.boolean  "permission_blog",        :default => false
+    t.boolean  "permission_settings",  :default => false
+    t.boolean  "permission_theme",     :default => false
+    t.boolean  "permission_analytics", :default => true
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+    t.boolean  "permission_blog",      :default => false
+    t.boolean  "permission_manage",    :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"
@@ -464,11 +460,11 @@ ActiveRecord::Schema.define(:version => 20140204180247) do
   add_index "mailer_unsubscriptions", ["user_id"], :name => "index_mailer_unsubscriptions_on_user_id"
 
   create_table "pages", :force => true do |t|
-    t.string   "path",         :null => false
+    t.string   "path",                                 :null => false
     t.text     "content"
     t.string   "hero_image"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.integer  "theme_id"
     t.string   "slug"
     t.integer  "position"
@@ -548,6 +544,27 @@ ActiveRecord::Schema.define(:version => 20140204180247) do
 
   add_index "photos", ["creator_id"], :name => "index_photos_on_creator_id"
   add_index "photos", ["listing_id"], :name => "index_photos_on_listing_id"
+
+  create_table "platform_contacts", :force => true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "subject"
+    t.text     "comments"
+    t.boolean  "subscribed", :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  create_table "platform_demo_requests", :force => true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "company"
+    t.string   "phone"
+    t.text     "comments"
+    t.boolean  "subscribed", :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
 
   create_table "platform_emails", :force => true do |t|
     t.string   "email"
