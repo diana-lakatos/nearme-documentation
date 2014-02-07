@@ -96,6 +96,9 @@ class SpaceWizardControllerTest < ActionController::TestCase
       @tracker.expects(:created_a_listing).with do |listing, custom_options|
         listing == assigns(:listing) && custom_options == { via: 'wizard' }
       end
+      @tracker.expects(:created_a_company).with do |company, custom_options|
+        company == assigns(:company)
+      end
       @tracker.expects(:updated_profile_information).with do |user|
         user == @user
       end

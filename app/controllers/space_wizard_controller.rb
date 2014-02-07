@@ -47,6 +47,7 @@ class SpaceWizardController < ApplicationController
       redirect_to :list
     elsif @user.save
       track_new_space_event
+      track_new_company_event
       PostActionMailer.enqueue.list(platform_context, @user)
       flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: platform_context.decorate.bookable_noun)
       redirect_to manage_locations_path
@@ -105,6 +106,11 @@ class SpaceWizardController < ApplicationController
     event_tracker.created_a_location(@location , { via: 'wizard' })
     event_tracker.created_a_listing(@listing, { via: 'wizard' })
     event_tracker.updated_profile_information(@user)
+  end
+
+  def track_new_company_event
+    @company = @user.companies.first
+    event_tracker.created_a_company(@company) unless platform_context.instance.skip_company?
   end
 
   def set_listing_draft_timestamp(timestamp)

@@ -44,6 +44,7 @@ class Analytics::EventTracker
   include SpaceWizardEvents
   include UserEvents
   include MailerEvents
+  include Analytics::CompanyEvents
 
   def pixel_track_url(event_name, properties)
     @mixpanel_api.pixel_track_url(event_name, properties)
