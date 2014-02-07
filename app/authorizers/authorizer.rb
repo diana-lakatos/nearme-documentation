@@ -12,11 +12,11 @@ class Authorizer
   private
 
   def instance_admin
-    @instance_admin ||= @platform_context.instance.instance_admins.where('instance_admins.user_id = ?', @user.id).first
+    @instance_admin ||= @platform_context.instance.instance_admins.for_user(@user).first
   end
 
   def instance_owner?
-    instance_admin.present? && instance_admin.instance_owner
+    instance_admin.try(:instance_owner?)
   end
 
   def instance_admin_role

@@ -82,16 +82,18 @@
     }
 
     .avatar {
+      min-height: 76px;
+
       .avatar-container {
         overflow: hidden;
-        margin: 10px 5px 20px 0;
+        margin: 13px 5px 20px 0;
         height: 56px;
         width: 56px;
         background-repeat: no-repeat;
-        background-size: 36px 36px;
+        background-size: 46px 46px;
         background-position: center center;
         border-radius: 50%;
-        border: 10px solid white;
+        border: 7px solid white;
       }
     }
   }

@@ -1,11 +1,11 @@
 class Blog::Admin::BlogPostsController < Blog::Admin::ApplicationController
 
   def index
-    @blog_posts = @blog_instance.blog_posts.order('COALESCE(published_at, created_at) desc')
+    @blog_posts = @blog_instance.blog_posts.by_date
   end
 
   def new
-    @blog_post = @blog_instance.blog_posts.build
+    @blog_post = @blog_instance.blog_posts.build(published_at: Time.zone.now)
   end
 
   def create

@@ -88,7 +88,7 @@ DesksnearMe::Application.routes.draw do
 
   namespace :blog do
     namespace :admin do
-      match '/', :to => redirect("/blog/admin/blog_posts")
+      get '/', :to => redirect("/blog/admin/blog_posts")
       resources :blog_posts
       resource :blog_instance, only: [:edit, :update]
     end

@@ -1,9 +1,9 @@
 .blog-posts
   - @blog_posts.each do |blog_post|
     .blog-post.clearfix
-      - if blog_post.user.avatar.file.present?
-        .col-sm-1.avatar.hidden-xs
-          .avatar-container{style: "background-image: url(#{blog_post.user.avatar.url(:thumb)});"}
+      .col-sm-1.avatar.hidden-xs
+        - if blog_post.author_avatar.present?
+          .avatar-container{style: "background-image: url(#{blog_post.author_avatar.url(:thumb)});"}
       .col-sm-9
         %h2= link_to blog_post.title, blog_post_path(blog_post)
       .col-sm-2.date

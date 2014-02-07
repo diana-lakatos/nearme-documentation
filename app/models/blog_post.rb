@@ -9,7 +9,11 @@ class BlogPost < ActiveRecord::Base
   validates_presence_of :blog_instance, :user, :title, :content
 
   mount_uploader :header, HeroImageUploader
-  mount_uploader :author_avatar, AvatarUploader
+  mount_uploader :author_avatar, SimpleAvatarUploader
+
+  scope :by_date, -> { order('COALESCE(published_at, created_at) desc') }
+  scope :published, -> { where("published_at < ? OR published_at IS NULL", Time.zone.now ) }
+  
 
   def previous_blog_post
     @previous_blog_post ||= blog_instance.blog_posts.where('COALESCE(published_at, created_at) < ?', created_at).first

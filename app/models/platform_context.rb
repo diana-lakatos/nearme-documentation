@@ -9,7 +9,7 @@ class PlatformContext
       initialize_with_partner(object)
     when Company
       initialize_with_company(object)
-    when Instance 
+    when Instance
       initialize_with_instance(object)
     when nil
       initialize_with_instance(Instance.default_instance)
