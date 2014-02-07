@@ -2,12 +2,11 @@ DesksnearMe::Application.routes.draw do
 
   constraints host: 'near-me.com' do
     root :to => 'platform_home#index'
-    post '/notify-me', :to => 'platform_home#notify_me'
-    get '/get-in-touch', :to => 'platform_home#get_in_touch'
-    post '/save-inquiry', :to => 'platform_home#save_inquiry'
-    post '/send-email', :to => 'platform_home#send_email'
-    get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe', :as => 'platform_email_unsubscribe'
-    get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe', :as => 'platform_email_resubscribe'
+    get '/features', :to => 'platform_home#features'
+    get '/contact', :to => 'platform_home#contact'
+    get '/request-a-demo', :to => 'platform_home#demo_request'
+    get '/careers', :to => 'platform_home#careers'
+    get '/about-us', :to => 'platform_home#about_us'
   end
 
   root :to => "public#index"

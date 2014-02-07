@@ -1,0 +1,42 @@
+.main
+  .main-top
+    %h2 Get ready to lead the sharing economy
+  .shell
+    .form-request
+      %form{action: "#"}
+        .form-head
+          %h2 Request Demo
+
+        .form-body
+          .form-row
+            %label.form-label{for: "name"} First & Last Name
+            .form-controls
+              %input#name.field{name: "name", type: "text"}/
+
+          .form-row
+            %label.form-label{for: "email"} Email
+            .form-controls
+              %input#email.field{name: "email", type: "text"}/
+
+          .form-row
+            %label.form-label{for: "company"} Company
+            .form-controls
+              %input#compnay.field{name: "compnay", type: "text"}/
+
+          .form-row
+            %label.form-label{for: "phone"} Phone
+            .form-controls
+              %input#phone.field{name: "phone", type: "text"}/
+
+          .form-row
+            %label.form-label{for: "comments"} Comments
+            .form-controls
+              %textarea#comments.field.field-textarea{cols: "30", name: "comments", rows: "10"}
+
+          / .form-row
+          /   .checkbox
+          /     %input#check1{name: "check1", type: "checkbox"}/
+          /     %label{for: "check1"} Check box: update me on "insert copy here"
+
+        .form-foot
+          %input.btn-submit.btn-blue{type: "submit", value: "Request demo"}/
