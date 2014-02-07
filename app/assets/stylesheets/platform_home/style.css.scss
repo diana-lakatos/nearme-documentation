@@ -22,6 +22,7 @@ html {
 
 body {
   background: #fff;
+  color:  #929497;
   font-family: 'Gotham Book', sans-serif;
   font-size: 16px;
   line-height: 1.2;
@@ -42,7 +43,7 @@ img {
 }
 
 h2, h3 {
-  color: #4b4b4d;
+  color: #404041;
   font-weight: normal;
 }
 
@@ -242,6 +243,7 @@ ol, ul {
     display: block;
     height: 63px;
     background: url(/assets/platform_home/logo.png) no-repeat;
+    background-size: 148px 63px;
     white-space: nowrap;
     text-indent: 100%;
   }
@@ -382,7 +384,7 @@ ol, ul {
 .section-head {
   padding-bottom: 36px;
   text-align: center;
-  color: #a8aaab;
+  color: #686868;
   font-size: 18px;
   .btns {
     padding: 38px 0 32px;
@@ -564,7 +566,7 @@ ol, ul {
   color: #fff;
   .shell {
     overflow: hidden;
-    padding: 64px 0;
+    padding: 64px 0px 30px 0px;
   }
 }
 
@@ -766,7 +768,6 @@ ol, ul {
 
 .list-features {
   list-style: none outside none;
-  color: #6d6f71;
   h3 {
     padding-bottom: 20px;
     text-transform: none;
