@@ -1,34 +1,31 @@
-!!! 5
-%html{html_attrs}
+!!!
+%html{dir: "ltr", lang: "en-US", xmlns: "http://www.w3.org/1999/xhtml"}
   %head
-    %title Near Me | Get in the Business of Sharing
-    %meta{:'http-equiv' => "Content-Type", :content => "text/html; charset=utf-8"}
-    %meta{:name => "lang", :content => "en"}
-    %meta{:name => "description", :content => "Create and manage your own peer-to-peer website using the Near Me platform: empower any sharing ecosystem you can imagine."}
-    %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
-    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}
-    %meta{:content => "", :name => "description"}/
-    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
-    %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
-    %meta{:content => "chrome=IE7 IE=edge", "http-equiv" => "X-UA-Compatible"}/
-    %meta{:property => "og:image", :content => 'http://near-me.com/assets/platform_home/logo@300px.png' }/
-    = stylesheet_link_tag 'platform_home'
-    %link{ rel: "stylesheet", type: "text/css", href: "//cloud.typography.com/6219072/637722/css/fonts.css" }/
-    %link{ href: '/assets/platform_home/favicon.ico', rel: "shortcut icon"}/
+    %title Near Me
+    %meta{content: "width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1", name: "viewport"}/
+    %meta{content: "text/html; charset=US-ASCII", "http-equiv" => "Content-type"}/
+    %link{href: "/assets/platform_home/favicon.ico", rel: "shortcut icon"}/
     = csrf_meta_tag
+    = stylesheet_link_tag 'platform_home'
     = javascript_include_tag 'platform_home.js'
-    /[if lt IE 9]
-      :css
-        img.video_fallback { display: block !important; width: 100% !important; height: 100% !important;}
-        #email-modal { display: none;  }
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  %body{class: defined?(@map_background) ? 'map' : (defined?(@light_background) ? 'light' : '')}
-    - # this is a hack for sharing via LinkedIn and having an image
-    = image_tag "platform_home/logo@2x.png", class: "social-share-thumbnail"
-    .main-container{class: main_container_css_class}
+    = javascript_include_tag 'platform_home/analytics.js' if Rails.env.production?
+
+  %body
+    .container
+      .header
+        .shell
+          %h1.logo
+            %a{href: "/"} Near Me powering marketplaces
+
+          .nav-utilities
+            %ul
+              %li
+                %a{href: "/features"} features
+              %li
+                %a{href: "/contact"} contact
+              %li
+                %a.btn.btn-blue.btn-blue-small{href: "/request-a-demo"} Request a demo
+
       = yield
-      - if sticky_footer?
-        .footer-push
-      - else
-        = render 'platform_home/footer'
-    = render 'platform_home/footer' if sticky_footer?
+
+      = render 'platform_home/footer'

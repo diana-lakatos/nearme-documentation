@@ -8,56 +8,35 @@ class PlatformHomeControllerTest < ActionController::TestCase
       assert_template :index
     end
 
-    should 'render get in touch page' do
-      get :get_in_touch
-      assert_template :get_in_touch
+    should 'render features page' do
+      get :features
+      assert_template :features
     end
   end
 
-  context 'create platform email and inquiries' do
-    should 'create platform_email' do
-      assert_difference 'PlatformEmail.count', 1 do
-        post :notify_me, platform_email: {"email"=>"binding@pry.com"}
+  context 'create platform contact' do
+
+    should 'create platform contact' do
+      assert_difference 'PlatformContact.count', 1 do
+        post :contact_submit, "platform_demo_request"=>
+                                   {"name"       => "Daniel Docker",
+                                    "email"      => "docker@gmail.com",
+                                    "subject"    => "I'm interested.",
+                                    "comments"   => "I would like to learn more, please send me an email.",
+                                    "subscribed" => true }
       end
     end
 
-    should 'create platform_inquiry' do
-      assert_difference 'PlatformInquiry.count', 1 do
-        post :save_inquiry, "platform_inquiry"=>
-                            {"name"=>"Daniel",
-                             "surname"=>"Docker",
-                             "email"=>"daniel@docker.com",
-                             "industry"=>"Shipping",
-                             "message"=>"I would like to learn more, please send me an email."}
+    should 'create platform demo request' do
+      assert_difference 'PlatformDemoRequest.count', 1 do
+        post :demo_request_submit, "platform_demo_request"=>
+                                   {"name"       => "Daniel Docker",
+                                    "email"      => "docker@gmail.com",
+                                    "company"    => "Docker, Co.",
+                                    "phone"      => "317 867 5309",
+                                    "comments"   => "I would like to learn more, please send me an email.",
+                                    "subscribed" => true }
       end
-    end
-  end
-
-  should 'send an email to a friend' do
-    assert_difference 'ActionMailer::Base.deliveries.count', 2 do
-      post :send_email, "email_data"=>{"emails"=>"dave@smith.com, susan@smith.com", "your_name"=>"Dan Smith"}
-    end
-  end
-
-  context 'change subscription status nearme mailing list' do
-    setup do
-      @platform_email = FactoryGirl.create(:platform_email)
-    end
-
-    should 'unsubscribe' do
-      verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
-      unsubscribe_key = verifier.generate(@platform_email.email)
-      post :unsubscribe, unsubscribe_key: unsubscribe_key
-      @platform_email.reload
-      assert @platform_email.unsubscribed?, "Platform_email failed to unsubscribe."
-    end
-
-    should 'resubscribe' do
-      verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
-      resubscribe_key = verifier.generate(@platform_email.email)
-      post :resubscribe, resubscribe_key: resubscribe_key
-      @platform_email.reload
-      assert @platform_email.subscribed?, "Platform_email failed to re-subscribe."
     end
   end
 end
