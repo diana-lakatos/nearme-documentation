@@ -16,6 +16,10 @@ DesksnearMe::Application.routes.draw do
     get '/careers/sales-representative', :to => 'platform_home#sales_representative'
   end
 
+  constraints host: 'near-me-app.com' do
+    match "/(*path)" => redirect {"http://near-me.com/"}
+  end
+
   root :to => "public#index"
 
   match '/404', :to => 'errors#not_found'
