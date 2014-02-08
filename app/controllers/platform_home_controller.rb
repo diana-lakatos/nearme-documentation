@@ -2,12 +2,6 @@ class PlatformHomeController < ActionController::Base
   protect_from_forgery
   layout 'platform_home'
 
-  def index
-  end
-
-  def features
-  end
-
   def contact
     @platform_contact = PlatformContact.new
   end
@@ -26,4 +20,28 @@ class PlatformHomeController < ActionController::Base
     render :demo_request_submit, layout: false
   end
 
+  def unsubscribe
+    verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
+    email_address = verifier.verify(params[:unsubscribe_key])
+    @email = PlatformEmail.where('email = ?', email_address).first
+
+    if @email
+      @resubscribe_url = platform_email_resubscribe_url(params[:unsubscribe_key])
+      @email.unsubscribe!
+    else
+      redirect '/'
+    end
+  end
+
+  def resubscribe
+    verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
+    email_address = verifier.verify(params[:resubscribe_key])
+    @email = PlatformEmail.where('email = ?', email_address).first
+
+    if @email
+      @email.resubscribe!
+    else
+      redirect '/'
+    end
+  end
 end
