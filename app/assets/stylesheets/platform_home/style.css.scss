@@ -605,6 +605,7 @@ ol, ul {
     display: block;
     height: 53px;
     background: url(/assets/platform_home/logo-footer.png) no-repeat;
+    background-size: 289px 53px;
     text-indent: 100%;
     overflow: hidden;
     white-space: nowrap;
@@ -768,12 +769,22 @@ ol, ul {
 
 .list-features {
   list-style: none outside none;
+  h2 {
+    font-size: 28px;
+  }
   h3 {
+    font-size: 22px;
     padding-bottom: 20px;
     text-transform: none;
   }
+  li {
+    ~ li{
+      margin-top: 35px;
+    }
+  }
   ul{
     li {
+      margin-top: 0px;
       padding-bottom: 19px;
       list-style-type: disc;
     }
