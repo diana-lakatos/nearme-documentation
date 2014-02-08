@@ -20,4 +20,8 @@ class PlatformHomeController < ActionController::Base
     render :demo_request_submit, layout: false
   end
 
+  def about_us
+
+  end
+
 end
