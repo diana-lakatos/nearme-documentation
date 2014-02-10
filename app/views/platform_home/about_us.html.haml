@@ -2,20 +2,7 @@
   %h2 Get to know more about us
 
 .shell
-  .sidebar
-    .nav
-      %a.nav-menu{href: "#"} Menu
-      %ul
-        %li.current
-          %a{href: "#"} About Us
-        %li
-          %a{href: "#"} Contact
-        %li
-          %a{href: "#"} Blog
-        %li
-          %a{href: "#"} Careers
-        %li
-          %a{href: "#"} Press & Media
+  = render 'platform_home/shared/main_sidebar'
 
   .content
     .article

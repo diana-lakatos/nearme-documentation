@@ -1,0 +1,33 @@
+.main
+  .main-top
+    %h2 Press & Media
+
+  .shell
+    = render 'platform_home/shared/main_sidebar'
+
+    .content
+      .article
+        %h2 Press Coverage
+        .media
+          %ul
+            %li
+              %a{href: "https://medium.com/all-things-crowd/fe1e46b8c02f", target:"_blank"}
+                = image_tag "/assets/platform_home/press-medium.png", size: '60x60'
+              %p “The convergence of all things crowd had quite a 2013. Startup to watch Near-Me.com...“
+              %p.date January, 2014
+            %li
+              %a{href: "http://www.shareable.net/blog/need-a-place-to-work-here-are-9-coworking-apps-that-can-help", target:"_blank"}
+                = image_tag "/assets/platform_home/press-shareable.png", size: '188x27'
+              %p “DesksNear.Me is the largest provider of shared work spaces with over 9,000 listings at over 1,400 companies worldwide...”
+              %p.date December, 2013
+            %li
+              %a{href: "http://www.pressheretv.com/predictions-for-2014/", target:"_blank"}
+                = image_tag "/assets/platform_home/press-nbc.png", size: '60x62'
+              %p “A major hotel chain will launch their own branded version of Airbnb...”
+              %p.date January, 2014
+          .callout-gray
+            %h3 Get in Touch
+            %p
+              Email
+              %a{href: "#"} press@near-me.com
+              with inquiries

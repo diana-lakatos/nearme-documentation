@@ -1,0 +1,24 @@
+.main
+  .main-top
+    %h2 Brand
+
+  .shell
+    = render 'platform_home/shared/main_sidebar'
+
+    .content
+      .article
+        %h2 Brand
+        .logos
+          %ul
+            %li
+              = image_tag "/assets/platform_home/logo-white.png"
+              %p
+                %a{download: "", href: "/assets/platform_home/logo-white.eps"} Download (.eps)
+            %li
+              = image_tag "/assets/platform_home/logo-dark.png"
+              %p
+                %a{download: "", href: "/assets/platform_home/logo-white.eps"} Download (.eps)
+            %li
+              = image_tag "/assets/platform_home/logo-blue.png"
+              %p
+                %a{download: "", href: "/assets/platform_home/logo-white.eps"} Download (.eps)

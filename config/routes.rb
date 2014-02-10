@@ -8,6 +8,8 @@ DesksnearMe::Application.routes.draw do
     get '/request-a-demo', :to => 'platform_home#demo_request'
     post '/demo-request-submit', :to => 'platform_home#demo_request_submit'
     get '/about-us', :to => 'platform_home#about_us'
+    get '/brand', :to => 'platform_home#brand'
+    get '/press-and-media', :to => 'platform_home#press_and_media'
     get '/careers', :to => 'platform_home#careers'
     get '/careers/designer', :to => 'platform_home#designer'
     get '/careers/developer', :to => 'platform_home#developer'
