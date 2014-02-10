@@ -86,6 +86,13 @@ class Analytics::EventTracker::Serializers::TrackSerializer
         search_country: object.country,
         search_postcode: object.postcode
       }
+    when Company
+      {
+        company_name: object.name,
+        company_email: object.email,
+        company_url: object.url,
+        company_paypal_email: object.paypal_email
+      }
     when SearchNotification
       {}
     when Hash
