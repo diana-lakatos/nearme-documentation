@@ -22,10 +22,13 @@ namespace :inform_users do
 
       begin
         um.send_notification(platform_context)
+        puts "User##{user.id} #{user.email} - sent"
       rescue => e
         um.destroy!
-        puts "User##{user.id} #{user.email} - sending notification exception #{e.inspect}"
+        puts "\033[31mUser##{user.id} #{user.email} - sending notification exception #{e.inspect}\033[0m"
       end
+
+      sleep(2)
     end
   end
 
