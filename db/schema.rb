@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140207011421) do
+ActiveRecord::Schema.define(:version => 20140207133509) do
 
 
 
@@ -58,9 +58,10 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
     t.string   "token"
     t.text     "info"
     t.datetime "token_expires_at"
-    t.boolean  "token_expired",    :default => true
-    t.boolean  "token_expires",    :default => true
+    t.boolean  "token_expired",            :default => true
+    t.boolean  "token_expires",            :default => true
     t.text     "profile_url"
+    t.integer  "total_social_connections", :default => 0
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
@@ -264,12 +265,12 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
   create_table "instance_admin_roles", :force => true do |t|
     t.string   "name"
     t.integer  "instance_id"
-    t.boolean  "permission_settings",    :default => false
-    t.boolean  "permission_theme",       :default => false
-    t.boolean  "permission_analytics",   :default => true
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.boolean  "permission_manage",      :default => false
+    t.boolean  "permission_settings",  :default => false
+    t.boolean  "permission_theme",     :default => false
+    t.boolean  "permission_analytics", :default => true
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+    t.boolean  "permission_manage",    :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"
@@ -433,11 +434,11 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
   add_index "mailer_unsubscriptions", ["user_id"], :name => "index_mailer_unsubscriptions_on_user_id"
 
   create_table "pages", :force => true do |t|
-    t.string   "path",         :null => false
+    t.string   "path",                                 :null => false
     t.text     "content"
     t.string   "hero_image"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.integer  "theme_id"
     t.string   "slug"
     t.integer  "position"
