@@ -81,6 +81,7 @@ class Manage::ListingsController < Manage::BaseController
     end
     @listing.destroy
     event_tracker.updated_profile_information(current_user)
+    event_tracker.deleted_a_listing(@listing)
     flash[:deleted] = t('flash_messages.manage.listings.listing_deleted')
     redirect_to manage_locations_path
   end
