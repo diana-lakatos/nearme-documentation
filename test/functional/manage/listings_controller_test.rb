@@ -88,6 +88,9 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
       context "#destroy" do
         should 'allow destroy for related listing' do
+          @tracker.expects(:deleted_a_listing).with do |listing, custom_options|
+            listing == assigns(:listing)
+          end
           assert_difference('Listing.count', -1) do
             delete :destroy, :id => @related_listing.id
           end

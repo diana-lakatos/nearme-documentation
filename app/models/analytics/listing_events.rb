@@ -4,5 +4,9 @@ module Analytics::ListingEvents
     track 'Created a Listing', listing, custom_options
   end
 
+  def deleted_a_listing(listing, custom_options = {})
+    track 'Deleted a Listing', listing, custom_options
+  end
+
 end
 

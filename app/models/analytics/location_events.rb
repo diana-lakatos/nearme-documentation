@@ -4,6 +4,10 @@ module Analytics::LocationEvents
     track 'Created a Location', location, custom_options
   end
 
+  def deleted_a_location(location, custom_options = {})
+    track 'Deleted a Location', location, custom_options
+  end
+
   def viewed_a_location(location, custom_options = {})
     track 'Viewed a Location', location, custom_options
   end

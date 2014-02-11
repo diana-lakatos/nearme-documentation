@@ -1,6 +1,7 @@
 class InstanceAdmin::Theme::DesignController < InstanceAdmin::Theme::BaseController
 
   def show
+    @theme.theme_font || @theme.build_theme_font
   end
 
   def update
