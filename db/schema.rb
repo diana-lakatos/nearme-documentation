@@ -80,6 +80,32 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
 
   add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
 
+  create_table "blog_instances", :force => true do |t|
+    t.string   "name"
+    t.string   "header"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.string   "facebook_app_id"
+    t.boolean  "enabled",         :default => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+  end
+
+  create_table "blog_posts", :force => true do |t|
+    t.string   "title"
+    t.text     "content"
+    t.string   "header"
+    t.string   "author_name"
+    t.text     "author_biography"
+    t.string   "author_avatar"
+    t.integer  "blog_instance_id"
+    t.integer  "user_id"
+    t.string   "slug"
+    t.datetime "published_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
   create_table "charges", :force => true do |t|
     t.integer  "reference_id"
     t.boolean  "success"
@@ -264,12 +290,13 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
   create_table "instance_admin_roles", :force => true do |t|
     t.string   "name"
     t.integer  "instance_id"
-    t.boolean  "permission_settings",    :default => false
-    t.boolean  "permission_theme",       :default => false
-    t.boolean  "permission_analytics",   :default => true
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.boolean  "permission_manage",      :default => false
+    t.boolean  "permission_settings",  :default => false
+    t.boolean  "permission_theme",     :default => false
+    t.boolean  "permission_analytics", :default => true
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+    t.boolean  "permission_blog",      :default => false
+    t.boolean  "permission_manage",    :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"
@@ -433,11 +460,11 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
   add_index "mailer_unsubscriptions", ["user_id"], :name => "index_mailer_unsubscriptions_on_user_id"
 
   create_table "pages", :force => true do |t|
-    t.string   "path",         :null => false
+    t.string   "path",                                 :null => false
     t.text     "content"
     t.string   "hero_image"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.integer  "theme_id"
     t.string   "slug"
     t.integer  "position"

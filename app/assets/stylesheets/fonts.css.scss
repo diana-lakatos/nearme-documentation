@@ -126,7 +126,9 @@ span.padding-left {
 .ico-google-plus:before,
 .ico-group:before,
 .ico-blog:before,
-.ico-bullet:before {
+.ico-bullet:before,
+.ico-linkedin-other:before,
+.ico-google-plus-other:before {
   font-family: 'icon-font' !important;
   font-weight: normal;
   font-style: normal;
@@ -333,4 +335,10 @@ span.padding-left {
 }
 .ico-blog:before {
   content: "\63";
+}
+.ico-google-plus-other:before {
+  content: "\64";
+}
+.ico-linkedin-other:before {
+  content: "\65";
 }

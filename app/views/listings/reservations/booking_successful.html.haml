@@ -10,9 +10,9 @@
     %ul.no-bullets
       - url = location_url(@listing.location, @listing)
       - text = "I just booked a #workspace at #{@listing.name} via @DesksNearMe. Find a desk near you!"
-      %li= share_to_facebook(url, 'facebook-full')
-      %li= share_to_twitter(url, text)
-      %li= share_to_linkedin(url, text)
+      %li= share_to_facebook(url, icon: 'facebook-full')
+      %li= share_to_twitter(url, text: text)
+      %li= share_to_linkedin(url, text: text)
 
   .buttons
     = link_to "Add to Calendar", export_reservation_path(@reservation, :format => :ics), class: "btn btn-large btn-white"

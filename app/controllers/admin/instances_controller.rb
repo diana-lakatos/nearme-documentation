@@ -21,6 +21,10 @@ class Admin::InstancesController < Admin::ResourceController
         PostActionMailer.enqueue.instance_created(platform_context, @instance, @user, user_password)
       end
 
+      blog_instance = BlogInstance.new(name: @instance.name + ' Blog')
+      blog_instance.owner = @instance
+      blog_instance.save!
+
       redirect_to admin_instance_path(@instance), notice: 'Instance was successfully created.'
     else
       render :new
