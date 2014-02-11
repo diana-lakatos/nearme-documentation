@@ -36,7 +36,7 @@ Then(/^I can manage settings for a blog$/) do
   visit '/blog/admin/blog_instance/edit'
 
   fill_in 'Name', with: 'Desks Near Me blog'
-  click_button 'Update settings'
+  click_button 'Save'
 
   page.should have_content('Blog settings were updated.')
   @blog_instance.reload.name.should == 'Desks Near Me blog'

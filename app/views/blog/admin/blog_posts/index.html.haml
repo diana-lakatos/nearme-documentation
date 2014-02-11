@@ -1,11 +1,11 @@
-%h1 Posts
+.row-fluid
+  .controls.controls-row
+    %legend.span3 Posts
+    = link_to 'New post', new_blog_admin_blog_post_path, class: 'pull-right btn btn-primary'
 
-%br/
-= link_to 'New post', new_blog_admin_blog_post_path, class: 'btn'
-%br/
-%br/
+%br
 
-%table.table.table-striped.sortable
+%table.table.sortable
   %thead
     %tr
       %th Name

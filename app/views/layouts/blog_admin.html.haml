@@ -25,9 +25,14 @@
 
                   %li= link_to "Log Out", destroy_user_session_url, :method => :delete, :data => {:user => current_user.first_name }
 
-      
+
       = render 'instance_admin/shared/render_flash'
-      = yield
+      %ul.nav.nav-tabs
+      .tab-container
+        .container-fluid
+          .tab-content
+            .tab-pane.fade.active.in
+              = yield
 
       %hr
 
