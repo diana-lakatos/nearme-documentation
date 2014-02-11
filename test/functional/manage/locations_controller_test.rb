@@ -88,6 +88,14 @@ class Manage::LocationsControllerTest < ActionController::TestCase
 
       context '#destroy' do
         should 'allow destroy for related location' do
+          @tracker.expects(:deleted_a_location).with do |location, custom_options|
+            location == assigns(:location)
+          end
+          @location.listings.each do |_listing|
+            @tracker.expects(:deleted_a_listing).with do |listing, custom_options|
+              listing == _listing
+            end
+          end
           assert_difference('Location.count', -1) do
             delete :destroy, :id => @related_location.id
           end

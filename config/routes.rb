@@ -7,8 +7,19 @@ DesksnearMe::Application.routes.draw do
     post '/contact-submit', :to => 'platform_home#contact_submit'
     get '/request-a-demo', :to => 'platform_home#demo_request'
     post '/demo-request-submit', :to => 'platform_home#demo_request_submit'
-    get '/careers', :to => 'platform_home#careers'
     get '/about-us', :to => 'platform_home#about_us'
+    get '/careers', :to => 'platform_home#careers'
+    get '/careers/designer', :to => 'platform_home#designer'
+    get '/careers/developer', :to => 'platform_home#developer'
+    get '/careers/business-development', :to => 'platform_home#business_development'
+    get '/careers/operations-manager', :to => 'platform_home#operations_manager'
+    get '/careers/sales-representative', :to => 'platform_home#sales_representative'
+    get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe', :as => 'platform_email_unsubscribe'
+    get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe', :as => 'platform_email_resubscribe'
+  end
+
+  constraints host: 'near-me-app.com' do
+    match "/(*path)" => redirect("http://near-me.com/")
   end
 
   root :to => "public#index"

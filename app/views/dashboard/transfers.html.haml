@@ -17,7 +17,7 @@
               %span{class: 'total-text'} 7 day total
             %canvas#chart
 
-        - unless @company.has_payment_method?
+        - unless @company.paypal_email.present? || @company.mailing_address.present?
           %p.warning 
             %i.ico-warning
             You haven't set a payment method yet. 

@@ -5,5 +5,5 @@
         %div{class: "alert alert-#{key}", 'data-flash-message' => true}
           %a.close{"data-dismiss" => "alert", href: "#"} ×
           %p
-            %i{ :class => ico_for_flash(key)}
+            %i{ :class => instance_admin_ico_for_flash(key)}
             = flash[key].html_safe

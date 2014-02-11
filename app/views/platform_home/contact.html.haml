@@ -1,49 +1,48 @@
-.main
-  .main-top
-    %h2
-      We're here to help you build
-      %br/
-      a better marketplace
+.main-top
+  %h2
+    We're here to help you build
+    %br/
+    a better marketplace
 
-  .shell
-    .contacts
-      .cols
-        .col
-          .text
-            %h2 Phone
-            %p Give us a call at 888-998-3375 (DESK)
+.shell
+  .contacts
+    .cols
+      .col
+        .text
+          %h2 Phone
+          %p Give us a call at 888-998-3375 (DESK)
 
-        .col
-          .form-contact
-            = simple_form_for @platform_contact, remote: true, url: '/contact-submit' do |f|
-              .form-head
-                %h2 Email
+      .col
+        .form-contact
+          = simple_form_for @platform_contact, remote: true, url: '/contact-submit' do |f|
+            .form-head
+              %h2 Email
 
-              .form-body
-                .form-row
-                  %label.form-label{for: "full-name"} First & Last Name
-                  .form-controls
-                    %input#full-name.field{name: "platform_contact[name]", type: "text"}/
+            .form-body
+              .form-row
+                %label.form-label{for: "full-name"} First & Last Name
+                .form-controls
+                  %input#full-name.field{name: "platform_contact[name]", type: "text"}/
 
-                .form-row
-                  %label.form-label{for: "email-contact"} Email
-                  .form-controls
-                    %input#email-contact.field{name: "platform_contact[email]", type: "text"}/
+              .form-row
+                %label.form-label{for: "email-contact"} Email
+                .form-controls
+                  %input#email-contact.field{name: "platform_contact[email]", type: "text"}/
 
-                .form-row
-                  %label.form-label{for: "subject"} Subject
-                  .form-controls
-                    %input#subject.field{name: "platform_contact[subject]", type: "text"}/
+              .form-row
+                %label.form-label{for: "subject"} Subject
+                .form-controls
+                  %input#subject.field{name: "platform_contact[subject]", type: "text"}/
 
-                .form-row
-                  %label.form-label{for: "comments-contact"} Comments
-                  .form-controls
-                    %textarea#comments-contact.field.field-textarea{cols: "30", name: "platform_contact[comments]", rows: "10"}
+              .form-row
+                %label.form-label{for: "comments-contact"} Comments
+                .form-controls
+                  %textarea#comments-contact.field.field-textarea{cols: "30", name: "platform_contact[comments]", rows: "10"}
 
-                .form-row
-                  .checkbox
-                    %input#check2{name: "platform_contact[subscribed]", type: "checkbox", checked: "checked"}/
-                    %label{for: "subscribed-contact"} Send me updates by email.
+              .form-row
+                .checkbox
+                  %input#check2{name: "platform_contact[subscribed]", type: "checkbox", checked: "checked"}/
+                  %label{for: "subscribed-contact"} Send me updates by email.
 
-              .form-foot
-                %input.btn-submit.btn-blue{type: "submit", value: "Send"}/
+            .form-foot
+              %input.btn-submit.btn-blue{type: "submit", value: "Send"}/

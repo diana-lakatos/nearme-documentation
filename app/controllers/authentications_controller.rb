@@ -51,7 +51,7 @@ class AuthenticationsController < ApplicationController
 
   def failure
     flash[:error] = t('flash_messages.authentications.couldnt_authenticate', reason: params[:message].presence || "Unknown")
-    redirect_to new_user_session_url
+    redirect_to user_signed_in? ? social_accounts_url : new_user_session_url
   end
 
   private
