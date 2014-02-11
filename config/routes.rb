@@ -177,6 +177,8 @@ DesksnearMe::Application.routes.draw do
     put "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar"
     get "users/set_password", :to => "registrations#set_password", :as => "set_password"
     put "users/update_password", :to => "registrations#update_password", :as => "update_password"
+    get "users/edit_notification_preferences", :to => "registrations#edit_notification_preferences", :as => "edit_notification_preferences"
+    put "users/update_notification_preferences", :to => "registrations#update_notification_preferences", :as => "update_notification_preferences"
     post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
     post "users/store_geolocated_location", :to => "registrations#store_geolocated_location", :as => "store_geolocated_location"
     get "users/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"

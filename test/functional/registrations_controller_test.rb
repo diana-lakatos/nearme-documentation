@@ -268,6 +268,22 @@ class RegistrationsControllerTest < ActionController::TestCase
 
   end
 
+  context 'sms notifications' do
+    setup do
+      @user.sms_notifications_enabled = false
+      @user.sms_preferences = Hash[%w(user_message reservation_state_changed new_reservation).map{|sp| [sp, '1']}]
+      @user.save!
+    end
+
+    should 'save sms_notifications_enabled and sms_preferences' do
+      sign_in @user
+      put :update_notification_preferences, user: { sms_notifications_enabled: '0', sms_preferences: {new_reservation: '1'}}
+      @user.reload
+      refute @user.sms_notifications_enabled
+      assert_equal @user.sms_preferences, {"new_reservation" => '1'}
+    end
+  end
+
   private
   def user_attributes
     { name: 'Test User', email: 'user@example.com', password: 'secret' }
