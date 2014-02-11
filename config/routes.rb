@@ -19,7 +19,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   constraints host: 'near-me-app.com' do
-    match "/(*path)" => redirect {"http://near-me.com/"}
+    match "/(*path)" => redirect("http://near-me.com/")
   end
 
   root :to => "public#index"
