@@ -43,7 +43,6 @@ class User < ActiveRecord::Base
 
   after_destroy :cleanup
   before_restore :recover_companies
-  after_initialize :set_all_sms_preferences
 
   accepts_nested_attributes_for :companies
 
@@ -469,13 +468,6 @@ class User < ActiveRecord::Base
     authentications.where(provider: provider).
       where('profile_url IS NOT NULL').
       order('created_at asc').last.try(:profile_url)
-  end
-
-  private
-
-  def set_all_sms_preferences
-    return if (!new_record? || !self.sms_preferences.empty?)
-    self.sms_preferences = Hash[User::SMS_PREFERENCES.map{|sp| [sp, '1']}]
   end
 
 end

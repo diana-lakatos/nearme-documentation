@@ -203,6 +203,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update_notification_preferences
     @user = current_user
+    params[:user][:sms_preferences] ||= {}
     if @user.update_with_password(params[:user])
       flash[:success] = t('flash_messages.registrations.notification_preferences_updated_successfully')
       redirect_to :action => 'edit_notification_preferences'
