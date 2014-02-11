@@ -789,7 +789,7 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.datetime "updated_at",                        :null => false
   end
 
-  add_index "translations", ["instance_id"], :name => "index_translations_on_instance_id"
+  add_index "translations", ["instance_id", "updated_at"], :name => "index_translations_on_instance_id_and_updated_at"
 
   create_table "unit_prices", :force => true do |t|
     t.integer  "listing_id"

@@ -265,7 +265,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locales_backend
-    I18n.backend.backends.first.instance_id = platform_context.instance.id
+    I18N_DNM_BACKEND.set_instance_id(platform_context.instance.id)
   end
 
   def redirect_if_marketplace_password_protected

@@ -13,6 +13,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should 'return days_in_words' do
+      I18N_DNM_BACKEND.prepare_store
       assert_equal '1 Day', @reservation.days_in_words
     end
 
