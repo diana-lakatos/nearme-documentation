@@ -1,6 +1,9 @@
 (function($){
 
 	$(document).ready(function(){
+    // Flash
+    Flash.initialize();
+
 		//Vars
 		var $tabs = $('.tab'),
 			$tabsNav = $('.tabs-nav');

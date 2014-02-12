@@ -15,9 +15,14 @@ class User::FriendFinder
         authentication.expire_token!
         return false
       end
+
+      # add friends
       new_friends.each do |new_friend|
         user.add_friend(new_friend, authentication)
       end
+
+      # update total connections
+      authentication.update_attribute(:total_social_connections, authentication.friend_ids.count)
     end
 
     return true

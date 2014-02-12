@@ -58,9 +58,10 @@ ActiveRecord::Schema.define(:version => 20140212110121) do
     t.string   "token"
     t.text     "info"
     t.datetime "token_expires_at"
-    t.boolean  "token_expired",    :default => true
-    t.boolean  "token_expires",    :default => true
+    t.boolean  "token_expired",            :default => true
+    t.boolean  "token_expires",            :default => true
     t.text     "profile_url"
+    t.integer  "total_social_connections", :default => 0
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
