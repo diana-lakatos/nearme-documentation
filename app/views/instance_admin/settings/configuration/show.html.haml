@@ -13,6 +13,17 @@
   %hr
 
   %fieldset
+    %legend Marketplace Password
+    .row-fluid
+      .controls.controls-row
+        = f.input :marketplace_password, placeholder: 'Password', as: :string, label: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :password_protected, required: false, as: :boolean, label: false, inline_label: "Require password to access marketplace (e.g. testing or private marketplaces)", wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+  %hr
+
+  %fieldset
     %legend Termonology
     .row-fluid
       .controls.controls-row
