@@ -134,5 +134,8 @@ module DesksnearMe
     config.stripe_public_key = nil
 
     config.balanced_api_key = nil
+
+    config.secure_app = true
+    config.root_secured = true
   end
 end

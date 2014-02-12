@@ -7,7 +7,7 @@ module ApplicationHelper
   include SharingHelper
 
   def platform_context
-    @platform_context_view ||= @platform_context.decorate
+    @platform_context_view ||= PlatformContext.current.decorate
   end
 
   def title(page_title, show_title = true)
@@ -81,6 +81,18 @@ module ApplicationHelper
       body
     end
 
+  end
+
+  def link_to_registration(constraint, secured_constraint, secure_links, options = {}, &block)
+    options[:rel] = nil if secure_links
+    constraint.merge!(secured_constraint) if secure_links
+    link_to(new_user_registration_url(constraint), options, &block)
+  end
+
+  def link_to_login(constraint, secured_constraint, secure_links, options = {}, &block)
+    options[:rel] = nil if secure_links
+    constraint.merge!(secured_constraint) if secure_links
+    link_to(new_user_session_url(constraint), options, &block)
   end
 
   def get_return_to_url

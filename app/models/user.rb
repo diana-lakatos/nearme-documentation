@@ -335,6 +335,19 @@ class User < ActiveRecord::Base
     )
   end
 
+  def generate_payment_token
+    new_token = SecureRandom.hex(32)
+    self.update_attribute(:payment_token, new_token)
+    new_token
+  end
+
+  def verify_payment_token(token)
+    return false if self.payment_token.nil?
+    current_token = self.payment_token
+    self.update_attribute(:payment_token, nil)
+    current_token == token
+  end
+
   def verify_email_with_token(token)
     if token.present? && self.email_verification_token == token && !self.verified_at
       self.verified_at = Time.zone.now
