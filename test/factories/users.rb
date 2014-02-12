@@ -14,6 +14,9 @@ FactoryGirl.define do
     last_geolocated_location_longitude 14.437800
     last_geolocated_location_latitude 50.075538
     skills_and_interests { "I'm skilled boss." }
+    sms_notifications_enabled true
+    sms_preferences { Hash[%w(user_message reservation_state_changed new_reservation).map{|sp| [sp, '1']}] }
+
     factory :user_without_country_name do
       country_name nil
     end

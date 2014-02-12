@@ -109,12 +109,16 @@ class User < ActiveRecord::Base
   attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
     :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url, 
     :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-    :partner_id, :instance_id, :domain_id, :time_zone, :companies_attributes
+    :partner_id, :instance_id, :domain_id, :time_zone, :companies_attributes, :sms_notifications_enabled, :sms_preferences
 
   # once we migrate data we should delete line below - attr_encrypted . needed for easier decryption :)
   attr_encrypted :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
+  serialize :sms_preferences, Hash
+
   delegate :to_s, :to => :name
+
+  SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation)
 
   # Build a new user, taking into account session information such as Provider
   # authentication.
@@ -284,7 +288,11 @@ class User < ActiveRecord::Base
   end
 
   def accepts_sms?
-    full_mobile_number.present?
+    full_mobile_number.present? && sms_notifications_enabled?
+  end
+
+  def accepts_sms_with_type?(sms_type)
+    accepts_sms? && (sms_preferences[sms_type.to_s] == '1')
   end
 
   def avatar_changed?

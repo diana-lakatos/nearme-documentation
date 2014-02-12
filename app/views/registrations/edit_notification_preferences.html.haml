@@ -1,0 +1,28 @@
+- title "Notification Preferences"
+
+= render :layout => 'registrations/layout/account', :locals => { :active_tab => :notification_preferences } do
+  .row-fluid
+    .span8.offset2
+      .box
+        %h2 Text messages
+        = simple_form_for @user, :url => update_notification_preferences_path, :html => { class: "form-horizontal form-expandable" } do |f|
+          .controls.switch-control
+            .cell
+              .switch{'data-on-label' => "", 'data-off-label' => ""}
+                = f.check_box :sms_notifications_enabled
+            .cell.with-label
+              = f.label :sms_notifications_enabled
+
+          %p
+          %h3 Notify me when
+          - User::SMS_PREFERENCES.each do |pref|
+            .controls.switch-control
+              .cell
+                .switch{'data-on-label' => "", 'data-off-label' => ""}
+                  = check_box_tag "user[sms_preferences][#{pref}]", '1', f.object.sms_preferences[pref].to_s == '1'
+              .cell.with-label
+                %label.boolean.optional.control-label{for: "user_sms_preferences_#{pref}"}= t("registrations.sms_preferences.#{pref}")
+
+          .actions
+            %p
+            = f.submit "Save"

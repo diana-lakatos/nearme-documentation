@@ -16,6 +16,10 @@ class InstanceAdmin < ActiveRecord::Base
 
   delegate :name, :to => :user
 
+  scope :for_user, ->(user) {
+    where('instance_admins.user_id = ?', user.id)
+  }
+
   def assign_default_role_if_empty
      assign_default_role unless instance_admin_role_id.present?
   end

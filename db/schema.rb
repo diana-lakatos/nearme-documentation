@@ -81,6 +81,32 @@ ActiveRecord::Schema.define(:version => 20140207133509) do
 
   add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
 
+  create_table "blog_instances", :force => true do |t|
+    t.string   "name"
+    t.string   "header"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.string   "facebook_app_id"
+    t.boolean  "enabled",         :default => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+  end
+
+  create_table "blog_posts", :force => true do |t|
+    t.string   "title"
+    t.text     "content"
+    t.string   "header"
+    t.string   "author_name"
+    t.text     "author_biography"
+    t.string   "author_avatar"
+    t.integer  "blog_instance_id"
+    t.integer  "user_id"
+    t.string   "slug"
+    t.datetime "published_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
   create_table "charges", :force => true do |t|
     t.integer  "reference_id"
     t.boolean  "success"
@@ -270,6 +296,7 @@ ActiveRecord::Schema.define(:version => 20140207133509) do
     t.boolean  "permission_analytics", :default => true
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
+    t.boolean  "permission_blog",      :default => false
     t.boolean  "permission_manage",    :default => false
   end
 
@@ -858,6 +885,8 @@ ActiveRecord::Schema.define(:version => 20140207133509) do
     t.string   "encrypted_balanced_user_id"
     t.string   "encrypted_balanced_credit_card_id"
     t.string   "time_zone",                                            :default => "Pacific Time (US & Canada)"
+    t.boolean  "sms_notifications_enabled",                            :default => true
+    t.string   "sms_preferences"
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"

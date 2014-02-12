@@ -10,6 +10,7 @@ Scenario: Admin user creates new instance
   When I fill instance form with valid details
   And I press "Create Instance"
   Then I should see created instance show page
+  And I should have blog instance created
 
 Scenario: Admin user edits instance
   Given I am on the admin instances page

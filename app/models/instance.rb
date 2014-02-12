@@ -32,6 +32,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_clients, :dependent => :destroy
   has_many :translations, :dependent => :destroy
   has_many :instance_billing_gateways, :dependent => :destroy
+  has_one :blog_instance, :as => :owner
   has_many :user_messages, :dependent => :destroy
 
   serialize :pricing_options, Hash
@@ -138,4 +139,5 @@ class Instance < ActiveRecord::Base
   def set_password_protected
     self.password_protected = password_protected?
   end
+
 end

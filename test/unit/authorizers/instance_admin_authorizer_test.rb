@@ -1,19 +1,19 @@
 require 'test_helper'
 
-class InstanceAdmin::AuthorizerTest < ActiveSupport::TestCase
+class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
     @instance = FactoryGirl.create(:instance)
     @platform_context = PlatformContext.new
     @platform_context.stubs(:instance).returns(@instance)
-    @authorizer = InstanceAdmin::Authorizer.new(@user, @platform_context)
+    @authorizer = InstanceAdminAuthorizer.new(@user, @platform_context)
     FactoryGirl.create(:instance_admin_role_default)
   end
 
   context 'instance_admin' do
 
-    should 'know if user is not instance admin' do
+    should 'know that user is not instance admin' do
       assert !@authorizer.instance_admin?
     end
 
@@ -22,7 +22,7 @@ class InstanceAdmin::AuthorizerTest < ActiveSupport::TestCase
         @instance_admin = InstanceAdmin.create(:user_id => @user.id, :instance_id => @instance.id)
       end
 
-      should 'know if user is instance admin' do
+      should 'know that user is instance admin' do
         assert @authorizer.instance_admin?
       end
 
@@ -30,7 +30,7 @@ class InstanceAdmin::AuthorizerTest < ActiveSupport::TestCase
         @other_instance = FactoryGirl.create(:instance, :name => 'other_instance')
         @platform_context = PlatformContext.new
         @platform_context.stubs(:instance).returns(@other_instance)
-        @authorizer = InstanceAdmin::Authorizer.new(@user, @platform_context)
+        @authorizer = InstanceAdminAuthorizer.new(@user, @platform_context)
         assert !@authorizer.instance_admin?
       end
     end
@@ -90,9 +90,9 @@ class InstanceAdmin::AuthorizerTest < ActiveSupport::TestCase
       assert !@authorizer.authorized?('Manage')
     end
 
-    should 'raise InstanceAdmin::Authorizer::UnassignedInstanceAdminRoleError if instance_admin has no role' do
+    should 'raise InstanceAdminAuthorizer::UnassignedInstanceAdminRoleError if instance_admin has no role' do
       @instance_admin.update_column(:instance_admin_role_id, nil)
-      assert_raise InstanceAdmin::Authorizer::UnassignedInstanceAdminRoleError do
+      assert_raise InstanceAdminAuthorizer::UnassignedInstanceAdminRoleError do
         assert !@authorizer.authorized?('Analytics')
       end
     end

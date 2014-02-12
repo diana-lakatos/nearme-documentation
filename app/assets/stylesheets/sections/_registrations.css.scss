@@ -125,3 +125,19 @@
   }
 }
 
+.controls.switch-control {
+  display: table-row;
+
+  .cell {
+    display: table-cell;
+
+    &.with-label {
+      vertical-align: bottom;
+      padding-left: 30px;
+
+      label {
+        font-weight: bold;
+      }
+    }
+  }
+}

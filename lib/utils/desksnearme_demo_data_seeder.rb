@@ -37,7 +37,7 @@ module Utils
 
           generate_user_messages!
 
-          # === RESERVERATIONS ===================================
+          # === RESERVATIONS ===================================
 
           load_reservations_for_dnm!
 
