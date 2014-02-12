@@ -78,6 +78,9 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :locations
 
+  after_update :update_children_instance_id_key, :if => proc { |company| company.instance_id_changed? }
+  after_update :update_children_creator_id_key, :if => proc { |company| company.creator_id_changed? }
+
   def add_creator_to_company_users
     unless users.include?(creator)
       users << creator 
@@ -142,7 +145,17 @@ class Company < ActiveRecord::Base
     update_metadata({ 'industries' => self.reload.industries.order('name').collect(&:name) })
   end
 
-  private
+  def update_children_instance_id_key
+    locations.reload.with_deleted.update_all(['instance_id = ?', self.instance_id])
+    listings.reload.with_deleted.update_all(['instance_id = ?', self.instance_id])
+    reservations.reload.with_deleted.update_all(['instance_id = ?', self.instance_id])
+  end
+
+  def update_children_creator_id_key
+    locations.reload.with_deleted.update_all(['creator_id = ?', self.creator_id])
+    listings.reload.with_deleted.update_all(['creator_id = ?', self.creator_id])
+    reservations.reload.with_deleted.update_all(['creator_id = ?', self.creator_id])
+  end
 
   def add_default_url_scheme
     if url.present? && !/^(http|https):\/\//.match(url)

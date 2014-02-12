@@ -250,4 +250,42 @@ class LocationTest < ActiveSupport::TestCase
     end
 
   end
+
+  context 'foreign keys' do
+    setup do
+      @company = FactoryGirl.create(:company)
+      @location = FactoryGirl.create(:location, :company => @company)
+    end
+
+    should 'assign correct key immediately' do
+      @location = FactoryGirl.create(:location)
+      assert @location.creator_id.present?
+      assert @location.instance_id.present?
+      assert_equal [@location.company.creator_id, @location.company.instance_id], [@location.creator_id, @location.instance_id]
+    end
+
+    should 'assign correct creator_id' do
+      assert_equal @company.creator_id, @location.creator_id
+    end
+
+    should 'assign correct instance_id' do
+      assert_equal @company.instance_id, @location.instance_id
+    end
+
+    context 'update company' do
+      setup do
+        @company.update_attribute(:instance_id, @company.instance_id + 1)
+        @company.update_attribute(:creator_id, @company.creator_id + 1)
+      end
+
+      should 'assign correct creator_id' do
+        assert_equal @company.creator_id, @location.reload.creator_id
+      end
+
+      should 'assign correct instance_id' do
+        assert_equal @company.instance_id, @location.reload.instance_id
+      end
+
+    end
+  end
 end

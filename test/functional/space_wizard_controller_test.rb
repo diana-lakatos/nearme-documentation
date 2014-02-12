@@ -25,6 +25,23 @@ class SpaceWizardControllerTest < ActionController::TestCase
     end
   end
 
+  should 'set correct foreign keys' do
+    assert_difference('Listing.count', 1) do
+      post :submit_listing, get_params
+    end
+    @company = Company.last
+    instance_id = @company.instance_id
+    creator_id = @company.creator_id
+    @company.locations.each do |location|
+      assert_equal instance_id, location.instance_id
+      assert_equal creator_id, location.creator_id
+      location.listings.each do |listing|
+        assert_equal instance_id, location.instance_id
+        assert_equal creator_id, location.creator_id
+      end
+    end
+  end
+
   context "price must be formatted" do
 
     should "ignore invalid characters in price" do

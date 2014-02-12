@@ -83,8 +83,9 @@ class UserTest < ActiveSupport::TestCase
 
     context 'hosts_of_listing' do
       should 'find host of listing in friends' do
-        @listing.location.administrator = friend1 = FactoryGirl.create(:user)
-        @listing.save!
+        friend1 = FactoryGirl.create(:user)
+        @listing.location.update_attribute(:administrator_id, friend1.id)
+        @listing.reload
         friend2 = FactoryGirl.create(:user)
         @me.add_friends([friend1, friend2])
 
@@ -100,8 +101,9 @@ class UserTest < ActiveSupport::TestCase
         @me.add_friend(@friend)
 
         @listing = FactoryGirl.create(:listing)
-        @listing.location.administrator = host = FactoryGirl.create(:user)
-        @listing.save!
+        host = FactoryGirl.create(:user)
+        @listing.location.update_attribute(:administrator_id, host.id)
+        @listing.reload
 
         @friend.add_friend(host)
 
@@ -507,17 +509,17 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "has listing without price return false if all listings have price" do
-        assert !@user.has_listing_without_price?
+        assert !@user.reload.has_listing_without_price?
       end
 
       should "be false if location has only one listing without prices" do
         FactoryGirl.create(:listing, :location => @location2, :daily_price_cents => nil, :weekly_price_cents => nil, :monthly_price_cents => nil, :free => true)
-        assert @user.has_listing_without_price?
+        assert @user.reload.has_listing_without_price?
       end
 
       should "be false if location has many listing, and at least one is without price" do
         FactoryGirl.create(:listing, :location => @location, :daily_price_cents => nil, :weekly_price_cents => nil, :monthly_price_cents => nil, :free => true)
-        assert @user.has_listing_without_price?
+        assert @user.reload.has_listing_without_price?
       end
 
     end

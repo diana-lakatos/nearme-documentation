@@ -24,6 +24,9 @@ class Listing < ActiveRecord::Base
   has_one :company, through: :location
   belongs_to :location, inverse_of: :listings
   belongs_to :listing_type
+  belongs_to :instance
+  belongs_to :creator, class_name: "User"
+  belongs_to :administrator, class_name: "User"
 
   has_many :amenity_holders, as: :holder, dependent: :destroy
   has_many :amenities, through: :amenity_holders
@@ -46,6 +49,7 @@ class Listing < ActiveRecord::Base
   
   # == Callbacks
   before_save :set_activated_at
+  before_create :assign_foreign_keys
   after_commit :location_populate_photos_metadata!, :if => lambda { |l| l.should_populate_location_photos_metadata? }
   after_commit :creator_populate_listings_metadata!, :if => lambda { |l| l.should_populate_creator_listings_metadata? }
 
@@ -66,13 +70,11 @@ class Listing < ActiveRecord::Base
 
   PRICE_TYPES = [:hourly, :weekly, :daily, :monthly]
 
-  delegate :name, :description, to: :company, prefix: true, allow_nil: true
+  delegate :name, :description, :creator=, :instance=, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
-  delegate :instance, :currency, :formatted_address, :local_geocoding, 
-    :latitude, :longitude, :distance_from, :address, :postcode, 
-    :creator, :creator=, to: :location, allow_nil: true
-  delegate :service_fee_guest_percent, :service_fee_host_percent, :administrator, 
-    to: :location, allow_nil: true
+  delegate :currency, :formatted_address, :local_geocoding, 
+    :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
+  delegate :service_fee_guest_percent, :service_fee_host_percent, to: :location, allow_nil: true
   delegate :populate_photos_metadata!, to: :location, :prefix => true
   delegate :populate_listings_metadata!, to: :creator, :prefix => true
   delegate :name, to: :creator, prefix: true
@@ -137,6 +139,10 @@ class Listing < ActiveRecord::Base
   # Maximum quantity available for a given date
   def quantity_for(date)
     self.quantity
+  end
+
+  def administrator
+    super.presence || creator
   end
 
   def desks_booked_on(date, start_minute = nil, end_minute = nil)
@@ -356,6 +362,12 @@ class Listing < ActiveRecord::Base
 
   def should_populate_creator_listings_metadata?
     self.destroyed? || %w(id draft).any? { |attr| metadata_relevant_attribute_changed?(attr) }  
+  end
+
+  def assign_foreign_keys
+    self.instance_id = location.try(:instance_id).presence || location.instance_id
+    self.creator_id = location.try(:creator_id).presence || location.creator_id
+    self.administrator_id = location.try(:administrator_id).presence || location.administrator_id
   end
 
   private

@@ -18,11 +18,12 @@ module Metadata
       previous_changes.keys.include?(attr) && previous_changes[attr].first != previous_changes[attr].last
     end
 
+    alias :not_metadata_method_missing :method_missing
     def method_missing(method, *args, &block)  
       if method.to_s.include?('_metadata')
         self.metadata[method.to_s.gsub('_metadata', '')]
       else
-        raise NoMethodError, "undefined method `#{method}' for #{self}"
+        not_metadata_method_missing(method, *args, &block)
       end
     end
 

@@ -28,9 +28,9 @@ class Location < ActiveRecord::Base
   belongs_to :company, inverse_of: :locations
   belongs_to :location_type
   belongs_to :administrator, class_name: "User", :inverse_of => :administered_locations
-
-  delegate :creator, :to => :company, :allow_nil => true
-  delegate :company_users, :to => :company, :allow_nil => true
+  belongs_to :instance
+  belongs_to :creator, class_name: "User"
+  delegate :company_users, :creator=, :instance=, :to => :company, :allow_nil => true
 
   delegate :url, :to => :company
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :company, allow_nil: true
@@ -39,9 +39,7 @@ class Location < ActiveRecord::Base
   has_many :listings,
     dependent:  :destroy,
     inverse_of: :location
-
-  has_one :instance, through: :company
-
+  has_many :reservations, :through => :listings
   has_many :photos, :through => :listings
 
   has_many :availability_rules, :order => 'day ASC', :as => :target
@@ -59,7 +57,9 @@ class Location < ActiveRecord::Base
 
   before_validation :fetch_coordinates
   before_validation :parse_address_components
+  before_create :assign_foreign_keys
   before_save :assign_default_availability_rules
+  after_update :update_children_administrator_id_key, :if => lambda { |location| location.administrator_id_changed? }
 
   extend FriendlyId
   friendly_id :urlify, use: [:slugged, :history]
@@ -196,6 +196,16 @@ class Location < ActiveRecord::Base
 
   def lowest_price
     (searched_locations || listings.searchable).map(&:lowest_price_with_type).compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
+  end
+
+  def assign_foreign_keys
+    self.instance_id = company.try(:instance_id).presence || company.instance_id
+    self.creator_id = company.try(:creator_id).presence || company.creator_id
+  end
+
+  def update_children_administrator_id_key
+    listings.reload.with_deleted.update_all(['administrator_id = ?', self.administrator_id])
+    reservations.reload.update_all(['administrator_id = ?', self.administrator_id])
   end
 
   private

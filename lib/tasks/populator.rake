@@ -21,6 +21,34 @@ namespace :populate do
   task :metadata => :environment do
     Listing.find_each(&:populate_photos_metadata!)
     User.find_each(&:populate_companies_metadata!)
+    Company.find_each(&:populate_industries_metadata!)
+  end
+
+  desc 'populates metadata for objects'
+  task :foreign_keys => :environment do
+    Location.find_each do |location|
+      creator_id = location.company.creator_id
+      instance_id = location.company.instance_id
+      administrator_id = (location.administrator_id == creator_id ? nil : location.administrator_id)
+
+      location.creator_id = creator_id
+      location.instance_id = instance_id
+
+      location.listings.each do |listing|
+        listing.creator_id = creator_id
+        listing.instance_id = instance_id
+        listing.administrator_id = administrator_id if administrator_id.present?
+        
+        listing.reservations.each do |reservation|
+          reservation.creator_id = creator_id
+          reservation.instance_id = instance_id
+          reservation.administrator_id = administrator_id if administrator_id.present?
+          reservation.save(validate: false)
+        end
+        listing.save(validate: false)
+      end
+      location.save(validate: false)
+    end
   end
 
   desc 'populates platform_context_details for reservations'

@@ -71,20 +71,6 @@ class MailchimpTest < ActiveSupport::TestCase
       assert_equal({}, @result)
     end
 
-    should "detect that user has been verified since last email" do
-      all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.zone.now+10.seconds)
-    
-      @user_without_listing.verified_at = Time.zone.now
-      @user_without_listing.save!
-      VCR.use_cassette('mailchimp_update_verify_flag') do
-        # in this request we test if MODVERIFY flag was updated
-        # they should, becuase we verified him after last synchronization
-        @result = MAILCHIMP.export_users
-      end
-      assert_equal({"add_count"=>0, "update_count"=>1, "error_count"=>0, "errors"=>[]}, @result)
-    end
-
     end
   end
 
@@ -122,22 +108,22 @@ class MailchimpTest < ActiveSupport::TestCase
     
     def create_company(user)
       FactoryGirl.create(:company, :creator => user, :name => 'Company')
-      user
+      user.reload
     end
 
     def create_location(user)
       FactoryGirl.create(:location, :company => user.companies.first, :street => 'Street')
-      user
+      user.reload
     end
 
     def create_listing(user)
       FactoryGirl.create(:listing, :location => user.companies.first.locations.first, :photo_not_required => true, :photos_count_to_be_created => 0)
-      user
+      user.reload
     end
 
     def create_photo(user)
       FactoryGirl.create(:photo, :listing => user.listings.first, :creator => user)
-      user
+      user.reload
     end
 
     # stub urls containing dynamic id to make it work no matter if you invoke only this test, or all tests [ via rake ci for instance ]

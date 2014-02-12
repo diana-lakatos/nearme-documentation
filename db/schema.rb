@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140214110817) do
+ActiveRecord::Schema.define(:version => 20140212110808) do
 
 
 
@@ -402,8 +402,14 @@ ActiveRecord::Schema.define(:version => 20140214110817) do
     t.integer  "capacity"
     t.integer  "photos_count",                :default => 0
     t.text     "metadata",                    :default => "{}"
+    t.integer  "instance_id"
+    t.integer  "creator_id"
+    t.integer  "administrator_id"
   end
 
+  add_index "listings", ["administrator_id"], :name => "index_listings_on_administrator_id"
+  add_index "listings", ["creator_id"], :name => "index_listings_on_creator_id"
+  add_index "listings", ["instance_id"], :name => "index_listings_on_instance_id"
   add_index "listings", ["listing_type_id"], :name => "index_listings_on_listing_type_id"
   add_index "listings", ["location_id"], :name => "index_listings_on_location_id"
 
@@ -444,10 +450,14 @@ ActiveRecord::Schema.define(:version => 20140214110817) do
     t.integer  "administrator_id"
     t.string   "name"
     t.text     "metadata",           :default => "{}"
+    t.integer  "instance_id"
+    t.integer  "creator_id"
   end
 
   add_index "locations", ["administrator_id"], :name => "index_locations_on_administrator_id"
   add_index "locations", ["company_id"], :name => "index_locations_on_company_id"
+  add_index "locations", ["creator_id"], :name => "index_locations_on_creator_id"
+  add_index "locations", ["instance_id"], :name => "index_locations_on_instance_id"
   add_index "locations", ["location_type_id"], :name => "index_locations_on_location_type_id"
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
 
@@ -663,9 +673,14 @@ ActiveRecord::Schema.define(:version => 20140214110817) do
     t.integer  "service_fee_amount_host_cents",      :default => 0,         :null => false
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
-    t.text     "metadata",                           :default => "{}"
+    t.integer  "instance_id"
+    t.integer  "creator_id"
+    t.integer  "administrator_id"
   end
 
+  add_index "reservations", ["administrator_id"], :name => "index_reservations_on_administrator_id"
+  add_index "reservations", ["creator_id"], :name => "index_reservations_on_creator_id"
+  add_index "reservations", ["instance_id"], :name => "index_reservations_on_instance_id"
   add_index "reservations", ["listing_id"], :name => "index_reservations_on_listing_id"
   add_index "reservations", ["owner_id"], :name => "index_reservations_on_owner_id"
   add_index "reservations", ["platform_context_detail_id"], :name => "index_reservations_on_platform_context_detail_id"

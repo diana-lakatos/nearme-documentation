@@ -16,12 +16,15 @@ class Reservation < ActiveRecord::Base
     :unknown => 'unknown'
   }
 
+  belongs_to :instance
   belongs_to :listing
   belongs_to :owner, :class_name => "User"
+  belongs_to :creator, class_name: "User"
+  belongs_to :administrator, class_name: "User"
   belongs_to :platform_context_detail, :polymorphic => true
   has_one :company, through: :listing
-  has_one :instance, through: :company
   has_many :user_messages, as: :thread_context
+  before_create :assign_foreign_keys
 
   attr_accessible :cancelable, :confirmation_email, :date, :listing_id,
     :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
@@ -85,6 +88,10 @@ class Reservation < ActiveRecord::Base
 
   def listing # fetch with deleted listing
     Listing.unscoped { super }
+  end
+
+  def administrator
+    super.presence || creator
   end
 
   monetize :total_amount_cents
@@ -186,7 +193,8 @@ class Reservation < ActiveRecord::Base
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
   delegate :location, to: :listing
-  delegate :creator, :administrator, to: :listing, prefix: true
+  delegate :creator=, :instance=, to: :company
+  delegate :administrator=, to: :location
   delegate :service_fee_guest_percent, to: :listing, allow_nil: true
   delegate :service_fee_host_percent, to: :listing, allow_nil: true
 
@@ -196,7 +204,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def host
-    @host ||= listing.creator
+    @host ||= creator
   end
 
   def date=(value)
@@ -341,6 +349,12 @@ class Reservation < ActiveRecord::Base
     dates_description = date_first == date_last ? date_first : "#{date_first}-#{date_last}"
     "Reservation of #{listing.try(:name)}, user: #{owner.try(:name)}, #{dates_description}"
   end 
+
+  def assign_foreign_keys
+    self.instance_id = listing.try(:instance_id).presence || listing.instance_id
+    self.creator_id = listing.try(:creator_id).presence || listing.creator_id
+    self.administrator_id = location.try(:administrator_id).presence || location.administrator_id
+  end
 
   private
 

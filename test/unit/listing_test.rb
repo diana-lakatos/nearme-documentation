@@ -302,4 +302,47 @@ class ListingTest < ActiveSupport::TestCase
 
     end
   end
+
+  context 'foreign keys' do
+    setup do
+      @location = FactoryGirl.create(:location)
+      @listing = FactoryGirl.create(:listing, :location => @location)
+    end
+
+    should 'assign correct key immediately' do
+      @listing = FactoryGirl.create(:listing)
+      assert @listing.creator_id.present?
+      assert @listing.instance_id.present?
+      assert_equal [@listing.location.creator_id, @listing.location.instance_id], [@listing.creator_id, @listing.instance_id]
+    end
+
+    should 'assign correct creator_id' do
+      assert_equal @location.creator_id, @listing.creator_id
+    end
+
+    should 'assign correct instance_id' do
+      assert_equal @location.instance_id, @listing.instance_id
+    end
+
+    should 'assign administrator_id' do
+      @location.update_attribute(:administrator_id, @location.creator_id + 1)
+      assert_equal @location.administrator_id, @listing.reload.administrator_id
+    end
+
+    context 'update company' do
+      setup do
+        @location.company.update_attribute(:instance_id, @location.company.instance_id + 1)
+        @location.company.update_attribute(:creator_id, @location.company.creator_id + 1)
+      end
+
+      should 'assign correct creator_id' do
+        assert_equal @location.company.creator_id, @listing.reload.creator_id
+      end
+
+      should 'assign correct instance_id' do
+        assert_equal @location.company.instance_id, @listing.reload.instance_id
+      end
+
+    end
+  end
 end
