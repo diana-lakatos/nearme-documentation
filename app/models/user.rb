@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
                               :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
                               :bookings_count, :guest_rating_average, :guest_rating_count, :host_rating_average, 
                               :host_rating_count, :avatar_versions_generated_at, :last_geolocated_location_longitude, 
-                              :last_geolocated_location_latitude]
+                              :last_geolocated_location_latitude, :instance_unread_messages_threads_count]
   acts_as_paranoid
 
   extend FriendlyId
@@ -115,6 +115,7 @@ class User < ActiveRecord::Base
   attr_encrypted :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   serialize :sms_preferences, Hash
+  serialize :instance_unread_messages_threads_count, Hash
 
   delegate :to_s, :to => :name
 
@@ -292,7 +293,7 @@ class User < ActiveRecord::Base
   end
 
   def accepts_sms_with_type?(sms_type)
-    accepts_sms? && (sms_preferences[sms_type.to_s] == '1')
+    accepts_sms? && sms_preferences[sms_type.to_s].present?
   end
 
   def avatar_changed?
@@ -363,6 +364,10 @@ class User < ActiveRecord::Base
 
   def user_messages
     UserMessage.for_user(self)
+  end
+
+  def unread_user_message_threads_count_for(instance)
+    self.instance_unread_messages_threads_count.fetch(instance.id, 0)
   end
 
   def listings_in_near(platform_context = nil, results_size = 3, radius_in_km = 100, without_listings_from_cancelled_reservations = false)

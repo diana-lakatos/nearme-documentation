@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140207011421) do
+ActiveRecord::Schema.define(:version => 20140212110121) do
 
 
 
@@ -878,14 +878,14 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
     t.integer  "instance_id"
     t.integer  "domain_id"
     t.string   "paypal_id"
-    t.integer  "unread_user_message_threads_count",                    :default => 0
     t.string   "encrypted_stripe_id"
     t.string   "encrypted_paypal_id"
     t.string   "encrypted_balanced_user_id"
     t.string   "encrypted_balanced_credit_card_id"
     t.string   "time_zone",                                            :default => "Pacific Time (US & Canada)"
     t.boolean  "sms_notifications_enabled",                            :default => true
-    t.string   "sms_preferences"
+    t.string   "sms_preferences",                                       :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
+    t.text     "instance_unread_messages_threads_count",                :default => "--- {}\n"
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"
