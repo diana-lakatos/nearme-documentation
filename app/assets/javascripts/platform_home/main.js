@@ -54,20 +54,15 @@
 		$('.checkbox input').iCheck();
 
 		//Forms
-		$('#new_platform_contact')
+		$('form')
 			.bind('ajax:beforeSend', function(event, xhr, status) {
 				$(this).find('input[type="submit"]').attr('disabled','disabled');
 			})
 			.bind('ajax:success', function(event, xhr, status) {
 				$(this).replaceWith(xhr);
-			});
-
-		$('#new_platform_demo_request')
-			.bind('ajax:beforeSend', function(event, xhr, status) {
-				$(this).find('input[type="submit"]').attr('disabled','disabled');
-			})
-			.bind('ajax:success', function(event, xhr, status) {
-				$(this).replaceWith(xhr);
+			}).bind('ajax:error', function(event, xhr, status) {
+				$(this).find('.error-block').text(xhr.responseText).css("display", "block");
+				$(this).find('input[type="submit"]').attr('disabled',false);
 			});
 
 	});
