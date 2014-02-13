@@ -81,6 +81,10 @@ class User < ActiveRecord::Base
     joins(:followers).select('"users".*, "user_relationships"."follower_id" AS mutual_friendship_source')
   }
 
+  scope :for_instance, ->(instance) {
+    instance.is_desksnearme? ? where('users.instance_id IS NULL OR users.instance_id = ?', instance.id) : where(:'users.instance_id' => instance.id)
+  }
+
   extend CarrierWave::SourceProcessing
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
   skip_callback :commit, :after, :remove_avatar!
