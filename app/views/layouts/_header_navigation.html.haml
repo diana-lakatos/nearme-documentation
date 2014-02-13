@@ -50,8 +50,8 @@
       = link_to user_messages_path, class: 'nav-link' do
         %span.text Messages
         %span.icon.ico-mail
-        - if current_user.unread_user_message_threads_count > 0
-          %span.count= current_user.unread_user_message_threads_count
+        - if current_user.unread_user_message_threads_count_for(platform_context.instance) > 0
+          %span.count= current_user.unread_user_message_threads_count_for(platform_context.instance)
 
   - else
     %li.divider-vertical

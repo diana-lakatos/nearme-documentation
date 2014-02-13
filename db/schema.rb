@@ -875,10 +875,10 @@ ActiveRecord::Schema.define(:version => 20140212163744) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.integer  "unread_user_message_threads_count",                    :default => 0
     t.string   "time_zone",                                            :default => "Pacific Time (US & Canada)"
     t.boolean  "sms_notifications_enabled",                            :default => true
-    t.string   "sms_preferences"
+    t.string   "sms_preferences",                                       :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
+    t.text     "instance_unread_messages_threads_count",                :default => "--- {}\n"
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"
