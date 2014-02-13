@@ -420,7 +420,7 @@ class User < ActiveRecord::Base
     self.instance_id = platform_context.instance.id
     self.domain_id = platform_context.domain.try(:id)
     self.partner_id = platform_context.partner.try(:id)
-    self.save
+    self.save!
   end
 
   def cleanup
