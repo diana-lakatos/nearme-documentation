@@ -6,7 +6,6 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
 
   def setup
     stub_mixpanel
-    Company.any_instance.stubs(:has_payment_method?).returns(true)
     @company_1 = prepare_company_with_charged_reservations(:reservation_count => 2)
     @company_2 = prepare_company_with_charged_reservations(:reservation_count => 2)
     PaymentTransfer.any_instance.stubs(:possible_automated_payout_not_supported?).returns(false).at_least(0)

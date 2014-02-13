@@ -49,6 +49,8 @@ class Manage::LocationsController < Manage::BaseController
   def destroy
     if @location.destroy
       event_tracker.updated_profile_information(current_user)
+      event_tracker.deleted_a_location(@location)
+      @location.listings.each{|listing| event_tracker.deleted_a_listing(listing) }
       flash[:deleted] = t('flash_messages.manage.locations.space_deleted', name: @location.name)
     else
       flash[:error] = t('flash_messages.manage.locations.space_not_deleted', name: @location.name)

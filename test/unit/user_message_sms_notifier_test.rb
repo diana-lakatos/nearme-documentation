@@ -26,6 +26,13 @@ class UserMessageSmsNotifierTest < ActiveSupport::TestCase
       assert sms.body =~ /\[DesksNearMe\] New message from Krzysztof: \"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invi...\"/i, "Sms body does not include expected content: #{sms.body}"
       assert sms.body =~ /http:\/\/goo.gl/
     end
+
+    should "not render if user had disabled sms notification for new messages" do
+      @recipient.sms_preferences = { :user_message => '0' }
+      sms = UserMessageSmsNotifier.notify_user_about_new_message(@platform_context, @user_message)
+      assert sms.is_a?(SmsNotifier::NullMessage)
+      refute sms.deliver
+    end
   end
 end
 

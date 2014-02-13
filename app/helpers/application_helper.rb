@@ -169,7 +169,7 @@ module ApplicationHelper
   end
 
   def nl2br(str)
-    str.gsub(/\r\n|\r|\n/, "<br />").html_safe
+    str.to_s.gsub(/\r\n|\r|\n/, "<br />").html_safe
   end
 
 end

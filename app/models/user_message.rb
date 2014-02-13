@@ -84,8 +84,10 @@ class UserMessage < ActiveRecord::Base
   end
 
   def send_notification(platform_context)
-    return if thread_context_type.blank? or thread_context_type != 'Listing'
+    return if thread_context_type.blank?
     UserMessageSmsNotifier.notify_user_about_new_message(platform_context, self).deliver
+    return if thread_context_type != 'Listing'
+
     if author == thread_context.administrator
       UserMessageMailer.enqueue.email_message_from_host(platform_context, self)
     else
@@ -133,8 +135,9 @@ class UserMessage < ActiveRecord::Base
   end
 
   def update_unread_message_counter_for(user)
-    actual_count = user.reload.decorate.unread_user_message_threads.fetch.size
-    user.unread_user_message_threads_count = actual_count
+    actual_count = user.reload.decorate.unread_user_message_threads_for(self.instance).fetch.size
+    user.instance_unread_messages_threads_count ||= {}
+    user.instance_unread_messages_threads_count[self.instance_id] = actual_count
     user.save!
   end
 

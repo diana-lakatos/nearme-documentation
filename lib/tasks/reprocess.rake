@@ -45,6 +45,14 @@ namespace :reprocess do
     end
   end
 
+  desc "Regenerate all relationships"
+  task :relationships => :environment do
+    UserRelationship.with_deleted.delete_all
+    Authentication.find_each do |auth|
+      FindFriendsJob.perform(auth)
+    end
+  end
+
   desc "Regenerate all slugs where we use friendly_id"
   task :slugs => :environment do
     # Store current slugs in history

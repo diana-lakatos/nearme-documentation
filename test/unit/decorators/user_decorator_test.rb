@@ -4,19 +4,20 @@ class UserDecoratorTest < ActionView::TestCase
 
   context 'with one message sent to listings creator' do
     setup do
+      @instance = FactoryGirl.create(:instance)
       @listing = FactoryGirl.create(:listing)
       @listing_creator = @listing.creator.decorate
       @author = FactoryGirl.create(:user)
-      @user_message = FactoryGirl.create(:user_message, thread_context: @listing, author: @author, thread_owner: @author, thread_recipient: @listing.administrator)
+      @user_message = FactoryGirl.create(:user_message, thread_context: @listing, author: @author, thread_owner: @author, thread_recipient: @listing.administrator, instance: @instance)
       @author = @author.decorate
     end
 
     should 'creator should have 1 user message' do
-      assert_equal 1, @listing_creator.unread_user_message_threads.fetch.size
+      assert_equal 1, @listing_creator.unread_user_message_threads_count_for(@instance)
     end
 
     should 'author should have no user messages' do
-      assert_equal 0, @author.unread_user_message_threads.fetch.size
+      assert_equal 0, @author.unread_user_message_threads_count_for(@instance)
     end
 
     context '#social_connections_for' do

@@ -120,21 +120,24 @@ class Search.Controller
       params['suburb']  = result.suburb()
       params['street']  = result.street()
       params['postcode']  = result.postcode()
-      loc_components = []
-      if params['city']
-        loc_components.push params['city']
-      if params['country'] and params['country'] == 'United States' and result.stateShort()
-        loc_components.push result.stateShort()
-      else if params['state']
-        loc_components.push params['state']
-      if params['country'] and params['country'] != 'United States'
-        loc_components.push params['country']
-
-      params['loc'] = loc_components.join(', ')
-    else
-      params['loc'] = @form.find("input#search").val().replace(', United States', '')
+    params['loc'] = @buildSeoFriendlyQuery(result)
 
     params
+
+
+  buildSeoFriendlyQuery: (result) ->
+    query = @form.find("input#search").val().replace(', United States', '').trim()
+
+    if result
+      if result.country() and result.country() == 'United States'
+        stateRegexp = new RegExp("#{result.state()}$", 'i')
+        if result.state() and query.match(stateRegexp)
+          query = query.replace(stateRegexp, result.stateShort())
+
+      query
+    else
+      query
+
 
   formatCoordinate: (coord) ->
     coord.toFixed(5) if coord?

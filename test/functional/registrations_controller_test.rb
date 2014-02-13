@@ -53,15 +53,11 @@ class RegistrationsControllerTest < ActionController::TestCase
     should 'show profile with connections' do
       sign_in @user
 
-      fb_friend = FactoryGirl.create(:user)
-      tw_friend = FactoryGirl.create(:user)
-      fb = FactoryGirl.create(:authentication, provider: 'facebook')
-      ln = FactoryGirl.create(:authentication, provider: 'linkedin')
-      tw = FactoryGirl.create(:authentication, provider: 'twitter')
-      ig = FactoryGirl.create(:authentication, provider: 'instagram', profile_url: 'link')
+      fb = FactoryGirl.create(:authentication, provider: 'facebook', total_social_connections: 10)
+      ln = FactoryGirl.create(:authentication, provider: 'linkedin', total_social_connections: 0)
+      tw = FactoryGirl.create(:authentication, provider: 'twitter', total_social_connections: 5)
+      ig = FactoryGirl.create(:authentication, provider: 'instagram', total_social_connections: 1, profile_url: 'link')
       @user.authentications << [fb, ln, tw, ig]
-      @user.add_friend(fb_friend, fb)
-      @user.add_friend(tw_friend, tw)
 
       get :show, :id => @user.slug
 
@@ -71,9 +67,9 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_select ".info .icon .ico-twitter", 1
       assert_select ".info .icon .ico-instagram", 1
       assert_select ".info .icon .ico-mail", 1
-      assert_select ".info .connection .count", "1 friend"
+      assert_select ".info .connection .count", "10 friends"
       assert_select ".info .connection .count", "0 connections"
-      assert_select ".info .connection .count", "1 follower"
+      assert_select ".info .connection .count", "5 followers"
     end
 
     should 'successfully unsubscribe' do
@@ -266,6 +262,22 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_equal @instance.id, user.instance_id
     end
 
+  end
+
+  context 'sms notifications' do
+    setup do
+      @user.sms_notifications_enabled = false
+      @user.sms_preferences = Hash[%w(user_message reservation_state_changed new_reservation).map{|sp| [sp, '1']}]
+      @user.save!
+    end
+
+    should 'save sms_notifications_enabled and sms_preferences' do
+      sign_in @user
+      put :update_notification_preferences, user: { sms_notifications_enabled: '0', sms_preferences: {new_reservation: '1'}}
+      @user.reload
+      refute @user.sms_notifications_enabled
+      assert_equal @user.sms_preferences, {"new_reservation" => '1'}
+    end
   end
 
   private
