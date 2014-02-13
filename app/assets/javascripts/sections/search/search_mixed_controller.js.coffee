@@ -312,6 +312,7 @@ class Search.SearchMixedController extends Search.SearchController
         loc_components.push params['country']
 
       params['loc'] = loc_components.join(', ')
+      params['loc'] = @form.find("input#search").val().replace(', United States', '')
     else
       params['loc'] = @form.find("input#search").val().replace(', United States', '')
 

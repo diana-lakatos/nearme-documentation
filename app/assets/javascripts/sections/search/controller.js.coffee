@@ -120,21 +120,27 @@ class Search.Controller
       params['suburb']  = result.suburb()
       params['street']  = result.street()
       params['postcode']  = result.postcode()
-      loc_components = []
-      if params['city']
-        loc_components.push params['city']
-      if params['country'] and params['country'] == 'United States' and result.stateShort()
-        loc_components.push result.stateShort()
-      else if params['state']
-        loc_components.push params['state']
-      if params['country'] and params['country'] != 'United States'
-        loc_components.push params['country']
-
-      params['loc'] = loc_components.join(', ')
+      params['loc'] = @buildSeoFriendlyQuery(result)
     else
       params['loc'] = @form.find("input#search").val().replace(', United States', '')
 
     params
+
+
+  buildSeoFriendlyQuery: (result) ->
+    loc_components = []
+    if params['city']
+      loc_components.push params['city']
+    if params['country'] and params['country'] == 'United States' and result.stateShort()
+      loc_components.push result.stateShort()
+    else if params['state']
+      loc_components.push params['state']
+    if params['country'] and params['country'] != 'United States'
+      loc_components.push params['country']
+
+    loc_components.join(', ')
+    @form.find("input#search").val().replace(', United States', '')
+
 
   formatCoordinate: (coord) ->
     coord.toFixed(5) if coord?
