@@ -24,8 +24,8 @@ body {
   background: #fff;
   color:  #929497;
   font-family: 'Gotham Book', sans-serif;
-  font-size: 16px;
-  line-height: 1.2;
+  font-size: 14px;
+  line-height: 1.8;
 }
 
 a {
@@ -53,7 +53,7 @@ h2, h3, h5 {
 
 h2 {
   padding-bottom: 16px;
-  font-size: 36px;
+  font-size: 32px;
   strong {
     color: #137bbf;
     font-weight: normal;
@@ -62,7 +62,7 @@ h2 {
 
 h3 {
   padding-bottom: 6px;
-  font-size: 24px;
+  font-size: 16px;
 }
 
 h5 {
@@ -224,6 +224,16 @@ ol, ul {
 }
 
 /* ==========================================================================
+  #Notifications
+========================================================================== */
+
+.success {
+  h3 {
+    text-transform: none;
+  }
+}
+
+/* ==========================================================================
   #Header
 ========================================================================== */
 
@@ -321,7 +331,7 @@ ol, ul {
 }
 
 .main-top {
-  height: 160px;
+  height: 120px;
   padding-top: 81px;
   background: #3e3e3e;
   h2 {
@@ -351,10 +361,10 @@ ol, ul {
     list-style: none outside none;
   }
   li {
-    padding-bottom: 22px;
+    padding-bottom: 18px;
   }
   a {
-    font-size: 18px;
+    font-size: 14px;
     color: #000;
   }
   .dropdown {
@@ -382,10 +392,14 @@ ol, ul {
 }
 
 .section-head {
-  padding-bottom: 36px;
+  padding-bottom: 18px;
   text-align: center;
   color: #686868;
   font-size: 18px;
+
+  h2 {
+    padding-bottom: 0px;
+  }
   .btns {
     padding: 38px 0 32px;
   }
@@ -485,7 +499,7 @@ ol, ul {
   }
   span {
     display: block;
-    padding-top: 25px;
+    padding-top: 10px;
   }
 }
 
@@ -505,8 +519,12 @@ ol, ul {
 .tab-text-inner {
   display: table-cell;
   vertical-align: middle;
+  h3 {
+    padding-bottom: 18px;
+    font-size: 18px;
+  }
   .btns {
-    padding-top: 16px;
+    padding-top: 18px;
   }
 }
 
@@ -542,16 +560,17 @@ ol, ul {
 .callout {
   background: #1a7bbd;
   .shell {
-    height: 99px;
-    padding-top: 130px;
+    padding-top: 81px;
   }
   h2 {
+    padding-bottom: 11px;
     float: left;
     padding-left: 50px;
     color: #fff;
   }
   .btns {
     float: right;
+    padding-top: 8px;
     padding-right: 50px;
   }
 }
@@ -733,8 +752,10 @@ ol, ul {
   h2 {
     text-transform: none;
   }
-  p {
-    padding-bottom: 10px;
+  .list-features {
+    p {
+      padding-bottom: 36px;
+    }
   }
 }
 
@@ -756,10 +777,10 @@ ol, ul {
     text-align: center;
   }
   h4 {
-    font-size: 21px;
+    font-size: 16px;
   }
   p {
-    font-size: 18px;
+    font-size: 14px;
   }
 }
 
@@ -769,12 +790,10 @@ ol, ul {
 
 .list-features {
   list-style: none outside none;
-  h2 {
-    font-size: 28px;
-  }
+
   h3 {
-    font-size: 22px;
-    padding-bottom: 20px;
+    font-size: 18px;
+    padding-bottom: 0px;
     text-transform: none;
   }
   li {
