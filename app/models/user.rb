@@ -111,9 +111,6 @@ class User < ActiveRecord::Base
     :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
     :partner_id, :instance_id, :domain_id, :time_zone, :companies_attributes, :sms_notifications_enabled, :sms_preferences
 
-  # once we migrate data we should delete line below - attr_encrypted . needed for easier decryption :)
-  attr_encrypted :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
-
   serialize :sms_preferences, Hash
 
   delegate :to_s, :to => :name
