@@ -110,7 +110,6 @@ ActiveRecord::Schema.define(:version => 20140212110121) do
   create_table "charges", :force => true do |t|
     t.integer  "reference_id"
     t.boolean  "success"
-    t.text     "response"
     t.integer  "amount"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
@@ -352,7 +351,6 @@ ActiveRecord::Schema.define(:version => 20140212110121) do
     t.boolean  "default_instance",                                             :default => false
     t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",       :precision => 5, :scale => 2, :default => 0.0
-    t.string   "stripe_api_key"
     t.string   "stripe_public_key"
     t.string   "paypal_email"
     t.string   "encrypted_paypal_username"
@@ -845,7 +843,6 @@ ActiveRecord::Schema.define(:version => 20140212110121) do
     t.string   "phone"
     t.string   "unconfirmed_email"
     t.string   "unlock_token"
-    t.string   "stripe_id"
     t.string   "job_title"
     t.text     "biography"
     t.datetime "mailchimp_synchronized_at"
@@ -878,11 +875,6 @@ ActiveRecord::Schema.define(:version => 20140212110121) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.string   "paypal_id"
-    t.string   "encrypted_stripe_id"
-    t.string   "encrypted_paypal_id"
-    t.string   "encrypted_balanced_user_id"
-    t.string   "encrypted_balanced_credit_card_id"
     t.string   "time_zone",                                            :default => "Pacific Time (US & Canada)"
     t.boolean  "sms_notifications_enabled",                            :default => true
     t.string   "sms_preferences",                                       :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
