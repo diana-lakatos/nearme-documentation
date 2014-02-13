@@ -300,20 +300,7 @@ class Search.SearchMixedController extends Search.SearchController
       params['city']    = result.city()
       params['suburb']  = result.suburb()
       params['street']  = result.street()
-      params['postcode']  = result.postcode()
-      loc_components = []
-      if params['city']
-        loc_components.push params['city']
-      if params['country'] and params['country'] == 'United States' and result.stateShort()
-        loc_components.push result.stateShort()
-      else if params['state']
-        loc_components.push params['state']
-      if params['country'] and params['country'] != 'United States'
-        loc_components.push params['country']
-
-      params['loc'] = loc_components.join(', ')
-      params['loc'] = @form.find("input#search").val().replace(', United States', '')
-    else
-      params['loc'] = @form.find("input#search").val().replace(', United States', '')
+      params['postcode'] = result.postcode()
+    params['loc'] = @buildSeoFriendlyQuery(result)
 
     params
