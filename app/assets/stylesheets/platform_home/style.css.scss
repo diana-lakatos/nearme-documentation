@@ -108,6 +108,10 @@ ol, ul {
   min-height: 100%;
 }
 
+.dark-shell-container {
+  background-color: #efefef;
+}
+
 .shell {
   width: 966px;
   margin: 0 auto;
@@ -385,7 +389,7 @@ ol, ul {
 }
 
 .section {
-  padding: 80px 0 80px;
+  padding: 60px 0 60px;
   ~ .section {
     border-top: 1px solid #ecedee;
   }
@@ -473,6 +477,59 @@ ol, ul {
     height: 50px;
     color: #466fb2;
     font-size: 12px;
+  }
+}
+
+/* ==========================================================================
+  #Feature Columns
+========================================================================== */
+
+.feature-column-icons {
+  padding-bottom: 30px;
+  ul {
+    text-align: center;
+    list-style: none outside none;
+  }
+  li {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    margin: 0 65px;
+  }
+  a {
+    color: #969696;
+  }
+  span {
+    display: block;
+    padding-top: 10px;
+  }
+}
+
+.feature-column-text {
+  margin: 0 30px;
+  .column {
+    @include box-sizing(border-box);
+    float: left;
+    padding: 0px 16px;
+    p {
+      margin-bottom: 30px;
+    }
+  }
+}
+
+.feature-column-text {
+  padding-bottom: 30px;
+  ul {
+    text-align: center;
+    list-style: none outside none;
+  }
+  li {
+    width: 190px;
+    display: inline-block;
+    margin: 0 18px;
+  }
+  p {
+    text-align: left;
   }
 }
 
@@ -969,6 +1026,19 @@ ol, ul {
       padding-right: 60px;
     }
   }
+
+  .feature-column-text {
+    .column {
+      width: 25%;
+      h3 {
+        display: none;
+      }
+      p {
+        margin-bottom: 0px;
+      }
+    }
+  }
+
 }
 
 
@@ -1044,6 +1114,12 @@ ol, ul {
   .laptop {
     display: none;
   }
+  .feature-column-icons {
+    display: none;
+    li {
+      margin-top: 10px;
+    }
+  }
   .tabs-nav {
     display: none;
     li {
@@ -1103,9 +1179,7 @@ ol, ul {
   .field {
     height: 34px;
     width: 100%;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
   }
   .field-textarea {
     height: 173px;
@@ -1248,6 +1322,12 @@ ol, ul {
   .laptop {
     display: none;
   }
+  .feature-column-icons {
+    display: none;
+    li {
+      margin-top: 10px;
+    }
+  }
   .tabs-nav {
     display: none;
     li {
@@ -1307,9 +1387,7 @@ ol, ul {
   .field {
     height: 34px;
     width: 100%;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
   }
   .field-textarea {
     height: 173px;

@@ -24,87 +24,54 @@
               %li sell musical instruments
               %li borrow camping gear
 
-    .section
-      .section-head
-        %h2
-          Build with the
-          %strong features you need
-        %p Your marketplace is equipped with all the tools you need for success
+.dark-shell-container
+  .shell
+    .sections
+      .section
+        .section-head
+          %h2
+            Build with the
+            %strong features you need
+          %p Your marketplace is equipped with all the tools you need for success
 
-      .tabs.tabs-features
-        .tabs-nav.features-nav
-          %ul
-            %li
-              %a{href: "#tab6"}
+        .feature-columns
+          .feature-column-icons
+            %ul
+              %li
                 %i.icon-case
                 %span Admin Dashboard
-            %li
-              %a{href: "#tab7"}
+              %li
                 %i.icon-charts
                 %span Analytics
-            %li
-              %a{href: "#tab8"}
+              %li
                 %i.icon-cards
                 %span Payments
-            %li
-              %a{href: "#tab9"}
+              %li
                 %i.icon-phone
                 %span Customized Support
 
-        .tabs-body
-          #tab6.tab
-            .tab-text.alignright
-              .tab-text-inner
-                %h3 Intuitive Dashboard
-                %p Monitor everything from your Near Me control panel. You can easily manage your inventory, customers, partners and get full control over analytics and payments.
-                .btns
-                  %a.btn.btn-blue{href: "/features"} see all features
+          .feature-column-text
+            .column
+              %h3 Admin Dashboard
+              %p Monitor everything from your Near Me control panel. You can easily manage your inventory, customers, partners and get full control over analytics and payments.
+            .column
+              %h3 Analytics
+              %p Our built-in analytics dashboard will provide you with an accurate traffic analysis and audience behavior. Track your marketplace performance and make the best choices for your business.
+            .column
+              %h3 Payments
+              %p Instantly accept payments from your users, set the fees that suit your business and track all the transactions made on your marketplace.
+            .column
+              %h3 Customized Support
+              %p Near Me is committed to offer all the support you need to make a successful marketplace. Our team will be available to assist your request in a timely manner.
+            .clearfix
 
-            .tab-image.alignleft
-              %a{href: "#"}
-                = image_tag "/assets/platform_home/features-dashboard.png"
-
-          #tab7.tab
-            .tab-text.alignright
-              .tab-text-inner
-                %h3 Powerful Analytics
-                %p Our built-in analytics dashboard will provide you with an accurate traffic analysis and audience behavior. Track your marketplace performance and make the best choices for your business.
-                .btns
-                  %a.btn.btn-blue{href: "/features"} see all features
-
-            .tab-image.alignleft
-              %a{href: "#"}
-                = image_tag "/assets/platform_home/features-analytics.png"
-
-          #tab8.tab
-            .tab-text.alignright
-              .tab-text-inner
-                %h3 Hassle-Free Payments
-                %p Instantly accept payments from your users, set the fees that suit your business and track all the transactions made on your marketplace.
-                .btns
-                  %a.btn.btn-blue{href: "/features"} see all features
-
-            .tab-image.alignleft
-              %a{href: "#"}
-                = image_tag "/assets/platform_home/features-payments.png"
-
-          #tab9.tab
-            .tab-text.alignright
-              .tab-text-inner
-                %h3 Personalized Support
-                %p Near Me is committed to offer all the support you need to make a successful marketplace. Our team will be available to assist your request in a timely manner.
-                .btns
-                  %a.btn.btn-blue{href: "/features"} see all features
-
-            .tab-image.alignleft
-              %a{href: "#"}
-                = image_tag "/assets/platform_home/features-support.png"
-
+.shell
+  .sections
     .section
       .section-head
         %h2
           Have an idea?
-          %strong We can power it.
+          %strong We can power it
         %p Anything from  desks to camping gear. You name it, you got it.
 
       .tabs
