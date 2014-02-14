@@ -12,7 +12,6 @@ class CreateBlogInstancesForAllInstances < ActiveRecord::Migration
     Instance.all.each do |instance|
       next if instance.blog_instance.present?
       name = instance.name + " Blog"
-      puts "Creating #{name}"
       blog_instance = BlogInstance.new(name: name)
       blog_instance.owner_id = instance.id
       blog_instance.owner_type = "Instance"
