@@ -101,6 +101,10 @@ form{
     }
   }
 
+  textarea {
+    resize: vertical;
+  }
+
   .btn-form-field {
     margin-bottom: 10px;
     font-family: 'Gotham A', 'Gotham B';
