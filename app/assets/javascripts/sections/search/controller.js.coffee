@@ -72,14 +72,14 @@ class Search.Controller
     navigator.geolocation.getCurrentPosition (position) =>
       deferred = @geocoder.reverseGeocodeLatLng(position.coords.latitude, position.coords.longitude)
       deferred.done (resultset) =>
-        cityAddress = resultset.getBestResult().cityAddress()
+        cityAndStateAddress = resultset.getBestResult().cityAndStateAddress()
 
         existingVal = @queryField.val()
-        if cityAddress != existingVal
+        if cityAndStateAddress != existingVal
           # two cached variables are used in Search.HomeController in form.submit handler
           @cached_geolocate_me_result_set = resultset.getBestResult()
-          @cached_geolocate_me_city_address = cityAddress
-          @queryField.val(cityAddress).data('placeholder', cityAddress)
+          @cached_geolocate_me_city_address = cityAndStateAddress
+          @queryField.val(cityAndStateAddress).data('placeholder', cityAndStateAddress)
           @fieldChanged('query', @queryField.val())
           @setGeolocatedQuery(@queryField.val(), @cached_geolocate_me_result_set)
           @storeUserLocation(position)
