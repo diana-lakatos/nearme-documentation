@@ -33,10 +33,6 @@ class ErrorsController < ApplicationController
     end
   end
 
-  def domain_not_configured
-    render :template => 'errors/domain_not_configured', :status => 404, :formats => [:html]
-  end
-
   private
 
   def find_exception

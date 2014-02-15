@@ -94,6 +94,10 @@ module Utils
 
           load_stripe_api_keys_for_dnm!
 
+          # === BLOG ========================================
+
+          load_blog_posts!
+
           clean_up!
         end
       end
@@ -301,6 +305,34 @@ module Utils
       #Charge.update_all(:success => true)
     end
 
+    def load_blog_posts!
+      do_task "Loading blog posts" do
+
+        # NearMe blog instance
+        near_me_blog_instance = BlogInstance.new(name: 'NearMe Blog', enabled: true)
+        near_me_blog_instance.owner_type = 'near-me'
+        near_me_blog_instance.save!
+
+        # Other blog instances
+        Instance.all.each do |instance|
+          blog_instance = BlogInstance.new(name: instance.name + ' Blog', enabled: true)
+          blog_instance.owner = instance
+          blog_instance.save!
+        end
+
+        # BlogPosts
+        BlogInstance.all.each do |blog_instance|
+          15.times do |i|
+            blog_instance.blog_posts.create!(title: Faker::Lorem.words(rand(5) + 1).join(" ").titleize,
+                                             content: Faker::Lorem.paragraph,
+                                             author_name: Faker::Name.name,
+                                             author_biography: Faker::Lorem.paragraph,
+                                             created_at: i.weeks.ago,
+                                             user: User.last)
+          end
+        end
+      end
+    end
 
   end
 end

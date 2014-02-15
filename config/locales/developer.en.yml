@@ -1,4 +1,26 @@
 en:
+  time:
+    formats:
+      only_date: "%B %d, %-Y"
+      day_and_month: "%^b %-d"
+  flash_messages:
+    registrations:
+      notification_preferences_updated_successfully: 'Notification preferences updated successfully.'
+    blog_admin:
+      blog_posts:
+        blog_post_added: 'New blog post added.'
+        blog_post_updated: 'Blog post updated.'
+        blog_post_deleted: 'Blog post deleted.'
+      blog_instance:
+        blog_instance_updated: 'Blog settings were updated.'
   registrations:
     social_accounts: 
       connecting_social_accounts_info: "Connecting your social accounts will display the number of friends, connections, and followers that you have on your profile.<br />You will also be able to see your friends' and connections' activity on %{marketplace_name}."
+    sms_preferences:
+      user_message: 'I receive a message from another person.'
+      reservation_state_changed: 'A reservation I have requested is accepted or declined.'
+      new_reservation: 'I receive a reservation request.'
+  simple_form:
+    labels:
+      user:
+        sms_notifications_enabled: 'Enable Text Message Notifications'

@@ -33,7 +33,7 @@ module UsersHelper
     render('registrations/social_connection', {
       icon: icon,
       provider: authentication.provider,
-      count: authentication.connections_count,
+      count: authentication.total_social_connections,
       link: user.social_url(authentication.provider),
       rel: nil
     })

@@ -37,6 +37,15 @@ class PlatformContextDecorator
     "http://#{host}#{path}"
   end
 
+  def support_email_for(error_code)
+    if self.is_desksnearme? || !self.support_email.present?
+      "support+#{error_code}@desksnear.me"
+    else
+      support_email_splited = self.support_email.split('@')
+      support_email_splited.join("+#{error_code}@")
+    end
+  end
+
   private
 
   def platform_context

@@ -3,7 +3,8 @@ class Authentication < ActiveRecord::Base
   acts_as_paranoid
 
   attr_accessible :user_id, :provider, :uid, :info, :token, :secret,
-    :token_expires_at, :token_expires, :token_expired, :profile_url
+    :token_expires_at, :token_expires, :token_expired, :profile_url,
+    :total_social_connections
 
   belongs_to :user
 
@@ -16,7 +17,7 @@ class Authentication < ActiveRecord::Base
 
   serialize :info, Hash
 
-  delegate :new_connections, to: :social_connection
+  delegate :new_connections, :friend_ids, to: :social_connection
 
   scope :with_valid_token, -> {
     where('authentications.token_expires_at > ? OR authentications.token_expires_at IS NULL', Time.now).

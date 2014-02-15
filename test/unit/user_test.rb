@@ -754,8 +754,33 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
+  end
 
+  context 'accepts sms' do
 
+    setup do
+      @user = FactoryGirl.create(:user)
+    end
+
+    should 'not accept sms if no mobile phone' do
+      @user.mobile_number = nil
+      refute @user.accepts_sms?
+    end
+
+    should 'not accept sms if sms notifications are not enabled' do
+      @user.sms_notifications_enabled = false
+      refute @user.accepts_sms?
+    end
+
+    should 'not accept sms with specific type if this type of sms is disabled by user' do
+      @user.sms_preferences = {}
+      refute @user.accepts_sms_with_type?(:new_reservation)
+    end
+
+    should 'accept sms with specific type if this type of sms is enabled by user' do
+      @user.sms_preferences = {"new_reservation" => '1'}
+      assert @user.accepts_sms_with_type?(:new_reservation)
+    end
   end
 
   private

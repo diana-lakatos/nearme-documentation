@@ -2,6 +2,13 @@ class PlatformHomeController < ActionController::Base
   protect_from_forgery
   layout 'platform_home'
 
+  def index
+    if params[:domain_not_valid]
+      flash[:error] = 'This domain has not been configured.'
+      redirect_to '/'
+    end
+  end
+
   def contact
     @platform_contact = PlatformContact.new
   end
@@ -29,7 +36,7 @@ class PlatformHomeController < ActionController::Base
       @resubscribe_url = platform_email_resubscribe_url(params[:unsubscribe_key])
       @email.unsubscribe!
     else
-      redirect '/'
+      redirect_to '/'
     end
   end
 
@@ -41,7 +48,7 @@ class PlatformHomeController < ActionController::Base
     if @email
       @email.resubscribe!
     else
-      redirect '/'
+      redirect_to '/'
     end
   end
 end

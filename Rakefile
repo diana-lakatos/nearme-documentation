@@ -5,3 +5,7 @@ require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
 DesksnearMe::Application.load_tasks
+
+Rake::Task["db:seed"].enhance do
+  Rake::Task["populate:en_locales"].invoke
+end

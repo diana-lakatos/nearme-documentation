@@ -19,7 +19,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   constraints host: 'near-me-app.com' do
-    match "/(*path)" => redirect {"http://near-me.com/"}
+    match "/(*path)" => redirect("http://near-me.com/")
   end
 
   root :to => "public#index"
@@ -27,7 +27,6 @@ DesksnearMe::Application.routes.draw do
   match '/404', :to => 'errors#not_found'
   match '/422', :to => 'errors#server_error'
   match '/500', :to => 'errors#server_error'
-  match '/domain-not-configured', :to => 'errors#domain_not_configured', :as => 'domain_not_configured'
 
   namespace :admin do
     match '/', :to => "dashboard#show"
@@ -119,6 +118,15 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+  namespace :blog do
+    namespace :admin do
+      get '/', :to => redirect("/blog/admin/blog_posts")
+      resources :blog_posts
+      resource :blog_instance, only: [:edit, :update]
+    end
+  end
+  resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
+
   resources :locations, :only => [] do
     member do
       get "(:listing_id)", :to => "locations#show", :as => ''
@@ -168,6 +176,8 @@ DesksnearMe::Application.routes.draw do
     put "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar"
     get "users/set_password", :to => "registrations#set_password", :as => "set_password"
     put "users/update_password", :to => "registrations#update_password", :as => "update_password"
+    get "users/edit_notification_preferences", :to => "registrations#edit_notification_preferences", :as => "edit_notification_preferences"
+    put "users/update_notification_preferences", :to => "registrations#update_notification_preferences", :as => "update_notification_preferences"
     post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
     post "users/store_geolocated_location", :to => "registrations#store_geolocated_location", :as => "store_geolocated_location"
     get "users/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"

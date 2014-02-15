@@ -1,5 +1,5 @@
 class PlatformContext
-  attr_reader :domain, :platform_context_detail, :instance, :theme, :domain, :white_label_company, :partner, :request_host
+  attr_reader :domain, :platform_context_detail, :instance, :theme, :domain, :white_label_company, :partner, :request_host, :blog_instance
 
   def initialize(object = nil)
     case object

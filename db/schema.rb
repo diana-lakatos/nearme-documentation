@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140207011421) do
+ActiveRecord::Schema.define(:version => 20140214110817) do
 
 
 
@@ -58,9 +58,10 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
     t.string   "token"
     t.text     "info"
     t.datetime "token_expires_at"
-    t.boolean  "token_expired",    :default => true
-    t.boolean  "token_expires",    :default => true
+    t.boolean  "token_expired",            :default => true
+    t.boolean  "token_expires",            :default => true
     t.text     "profile_url"
+    t.integer  "total_social_connections", :default => 0
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
@@ -80,10 +81,35 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
 
   add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
 
+  create_table "blog_instances", :force => true do |t|
+    t.string   "name"
+    t.string   "header"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.string   "facebook_app_id"
+    t.boolean  "enabled",         :default => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+  end
+
+  create_table "blog_posts", :force => true do |t|
+    t.string   "title"
+    t.text     "content"
+    t.string   "header"
+    t.string   "author_name"
+    t.text     "author_biography"
+    t.string   "author_avatar"
+    t.integer  "blog_instance_id"
+    t.integer  "user_id"
+    t.string   "slug"
+    t.datetime "published_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
   create_table "charges", :force => true do |t|
     t.integer  "reference_id"
     t.boolean  "success"
-    t.text     "response"
     t.integer  "amount"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
@@ -264,12 +290,13 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
   create_table "instance_admin_roles", :force => true do |t|
     t.string   "name"
     t.integer  "instance_id"
-    t.boolean  "permission_settings",    :default => false
-    t.boolean  "permission_theme",       :default => false
-    t.boolean  "permission_analytics",   :default => true
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.boolean  "permission_manage",      :default => false
+    t.boolean  "permission_settings",  :default => false
+    t.boolean  "permission_theme",     :default => false
+    t.boolean  "permission_analytics", :default => true
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+    t.boolean  "permission_blog",      :default => false
+    t.boolean  "permission_manage",    :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"
@@ -324,7 +351,6 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
     t.boolean  "default_instance",                                             :default => false
     t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",       :precision => 5, :scale => 2, :default => 0.0
-    t.string   "stripe_api_key"
     t.string   "stripe_public_key"
     t.string   "paypal_email"
     t.string   "encrypted_paypal_username"
@@ -433,11 +459,11 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
   add_index "mailer_unsubscriptions", ["user_id"], :name => "index_mailer_unsubscriptions_on_user_id"
 
   create_table "pages", :force => true do |t|
-    t.string   "path",         :null => false
+    t.string   "path",                                 :null => false
     t.text     "content"
     t.string   "hero_image"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.integer  "theme_id"
     t.string   "slug"
     t.integer  "position"
@@ -785,7 +811,7 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
 
   add_index "user_relationships", ["authentication_id"], :name => "index_user_relationships_on_authentication_id"
   add_index "user_relationships", ["followed_id"], :name => "index_user_relationships_on_followed_id"
-  add_index "user_relationships", ["follower_id", "followed_id"], :name => "index_user_relationships_on_follower_id_and_followed_id", :unique => true
+  add_index "user_relationships", ["follower_id", "followed_id", "deleted_at"], :name => "index_user_relationships_on_follower_id_and_followed_id", :unique => true
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
@@ -817,7 +843,6 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
     t.string   "phone"
     t.string   "unconfirmed_email"
     t.string   "unlock_token"
-    t.string   "stripe_id"
     t.string   "job_title"
     t.text     "biography"
     t.datetime "mailchimp_synchronized_at"
@@ -850,13 +875,10 @@ ActiveRecord::Schema.define(:version => 20140207011421) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.string   "paypal_id"
-    t.integer  "unread_user_message_threads_count",                    :default => 0
-    t.string   "encrypted_stripe_id"
-    t.string   "encrypted_paypal_id"
-    t.string   "encrypted_balanced_user_id"
-    t.string   "encrypted_balanced_credit_card_id"
     t.string   "time_zone",                                            :default => "Pacific Time (US & Canada)"
+    t.boolean  "sms_notifications_enabled",                            :default => true
+    t.string   "sms_preferences",                                       :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
+    t.text     "instance_unread_messages_threads_count",                :default => "--- {}\n"
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"

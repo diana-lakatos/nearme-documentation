@@ -39,17 +39,17 @@ class Search.Controller
 
     @queryField.bind 'change', =>
       @fieldChanged('query', @queryField.val())
-      
+
     @queryField.bind 'focus', =>
       if @queryField.val() is @queryField.data('placeholder')
         @queryField.val('')
       true
-    
+
     @queryField.bind 'blur', =>
       if @queryField.val().length < 1 and @queryField.data('placeholder')?
         _.defer(=>@queryField.val(@queryField.data('placeholder')))
       true
-    
+
     # TODO: Trigger fieldChanged on keypress after a few seconds timeout?
 
   initializeGeolocateButton: ->
@@ -62,7 +62,7 @@ class Search.Controller
     if @searchButton.length > 0
       @searchButton.bind 'click', =>
         @form.submit()
-  
+
 
   geolocateMe: ->
     @determineUserLocation()
@@ -72,14 +72,14 @@ class Search.Controller
     navigator.geolocation.getCurrentPosition (position) =>
       deferred = @geocoder.reverseGeocodeLatLng(position.coords.latitude, position.coords.longitude)
       deferred.done (resultset) =>
-        cityAddress = resultset.getBestResult().cityAddress()
+        cityAndStateAddress = resultset.getBestResult().cityAndStateAddress()
 
         existingVal = @queryField.val()
-        if cityAddress != existingVal
+        if cityAndStateAddress != existingVal
           # two cached variables are used in Search.HomeController in form.submit handler
           @cached_geolocate_me_result_set = resultset.getBestResult()
-          @cached_geolocate_me_city_address = cityAddress
-          @queryField.val(cityAddress).data('placeholder', cityAddress)
+          @cached_geolocate_me_city_address = cityAndStateAddress
+          @queryField.val(cityAndStateAddress).data('placeholder', cityAndStateAddress)
           @fieldChanged('query', @queryField.val())
           @setGeolocatedQuery(@queryField.val(), @cached_geolocate_me_result_set)
           @storeUserLocation(position)
@@ -120,21 +120,24 @@ class Search.Controller
       params['suburb']  = result.suburb()
       params['street']  = result.street()
       params['postcode']  = result.postcode()
-      loc_components = []
-      if params['city']
-        loc_components.push params['city']
-      if params['country'] and params['country'] == 'United States' and result.stateShort()
-        loc_components.push result.stateShort()
-      else if params['state']
-        loc_components.push params['state']
-      if params['country'] and params['country'] != 'United States'
-        loc_components.push params['country']
-
-      params['loc'] = loc_components.join(', ')
-    else
-      params['loc'] = @form.find("input#search").val().replace(', United States', '')
+    params['loc'] = @buildSeoFriendlyQuery(result)
 
     params
+
+
+  buildSeoFriendlyQuery: (result) ->
+    query = $.trim(@form.find("input#search").val().replace(', United States', ''))
+
+    if result
+      if result.country() and result.country() == 'United States'
+        stateRegexp = new RegExp("#{result.state()}$", 'i')
+        if result.state() and query.match(stateRegexp)
+          query = query.replace(stateRegexp, result.stateShort())
+
+      query
+    else
+      query
+
 
   formatCoordinate: (coord) ->
     coord.toFixed(5) if coord?

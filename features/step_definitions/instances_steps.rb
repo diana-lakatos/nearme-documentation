@@ -28,3 +28,7 @@ Then(/^I should see updated instance show page$/) do
   page.should have_content('Test instance')
   page.should have_content('dnm.local')
 end
+
+Then(/^I should have blog instance created$/) do
+  BlogInstance.last.name.should == 'Test instance Blog'
+end

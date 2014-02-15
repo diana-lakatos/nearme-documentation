@@ -1,0 +1,84 @@
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  filter: alpha(opacity=$opacity * 100);
+}
+
+.alert {
+  cursor: pointer;
+  position: absolute;
+  z-index: 997;
+  border: none;
+  border-radius: 0px;
+  top: 110px;
+  text-align: center;
+  color: white;
+  text-shadow: none;
+  padding: 0px;
+  width: 100%;
+  @include opacity(.8);
+
+  &.static {
+    position: static;
+  }
+
+  p {
+    margin: 0px;
+    padding: 0px 49px 0px 0px;
+    color: white;
+    font-size: 24px;
+    line-height: 60px;
+
+    span.left-icon {
+      margin-right: 15px;
+    }
+
+    span.right-icon {
+      margin-left: 5px;
+    }
+  }
+
+  a.close {
+    position: absolute;
+    top:  0;
+    right: 20px;
+    color: white;
+    font-size: 24px;
+    line-height: 60px;
+    @include opacity(.6);
+
+    &:hover {
+      color: white;
+      @include opacity(.8);
+    }
+  }
+
+  &.success, &.notice {
+    background-color: #00693A;
+  }
+
+  &.error {
+    background-color: #e83d33;
+  }
+
+  &.deleted {
+    background-color: #e83d33;
+  }
+
+  &.warning {
+    background-color: #FF8D00;
+  }
+
+  &.timeout {
+    display: none !important;
+    z-index: 0;
+  }
+}
+
+.modal-content{
+
+  .alert{
+    position: relative;
+    top: auto;
+    left: auto;
+  }
+}

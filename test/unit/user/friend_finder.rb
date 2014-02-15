@@ -21,6 +21,8 @@ class User::FriendFinderTest < ActiveSupport::TestCase
         friend = stub
 
         @authentication.expects(:new_connections).returns([friend])
+        @authentication.expects(:friend_ids).returns([])
+        @authentication.expects(:update_attribute).with(:total_social_connections, 0).returns(true)
         @ff.user.expects(:add_friend).with(friend, @authentication)
 
         @ff.find_friends!
@@ -56,13 +58,16 @@ class User::FriendFinderTest < ActiveSupport::TestCase
 
         Authentication::FacebookProvider.any_instance.stubs(:friend_ids).returns(friend_ids)
 
-        assert_difference('@me.friends.count', 3) do
-          User::FriendFinder.new(@me, @auth).find_friends!
-        end 
+        assert_difference('@auth.total_social_connections', 6) do
+          assert_difference('@me.friends.count', 3) do
+            User::FriendFinder.new(@me, @auth).find_friends!
+          end
 
-        assert_difference('@me.friends.count', 0) do
-          User::FriendFinder.new(@me, @auth).find_friends!
-        end 
+          assert_difference('@me.friends.count', 0) do
+            User::FriendFinder.new(@me, @auth).find_friends!
+          end
+        end
+
       end
 
       should 'catch and mark expired token' do

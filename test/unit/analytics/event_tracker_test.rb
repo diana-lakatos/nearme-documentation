@@ -69,6 +69,11 @@ class EventTrackerTest < ActiveSupport::TestCase
       expect_event 'Created a Listing', listing_properties
       @tracker.created_a_listing(@listing)
     end
+
+    should 'track listing destroy' do
+      expect_event 'Deleted a Listing', listing_properties
+      @tracker.deleted_a_listing(@listing)
+    end
   end
 
   context 'Locations' do
@@ -81,6 +86,11 @@ class EventTrackerTest < ActiveSupport::TestCase
     should 'track location creation' do
       expect_event 'Created a Location', location_properties
       @tracker.created_a_location(@location)
+    end
+
+    should 'track location destroy' do
+      expect_event 'Deleted a Location', location_properties
+      @tracker.deleted_a_location(@location)
     end
 
     should 'track location view' do
@@ -96,6 +106,18 @@ class EventTrackerTest < ActiveSupport::TestCase
     should 'track shared location via social media' do
       expect_event 'Shared location via social media', location_properties.merge!({ provider: 'facebook', source: 'email' })
       @tracker.shared_location_via_social_media(@location, { provider: 'facebook', source: 'email' })
+    end
+  end
+
+  context 'Company' do
+    setup do
+      @company = FactoryGirl.create(:company)
+      @category = "Company events"
+    end
+
+    should 'track company creation' do
+      expect_event 'Created a Company', company_properties
+      @tracker.created_a_company(@company)
     end
   end
 
@@ -293,6 +315,15 @@ class EventTrackerTest < ActiveSupport::TestCase
       location_country: @location.country,
       location_postcode: @location.postcode,
       location_url: "http://example.com/locations/#{@location.slug}"
+    }
+  end
+
+  def company_properties
+    {
+      company_name: @company.name,
+      company_email: @company.email,
+      company_url: @company.url,
+      company_paypal_email: @company.paypal_email
     }
   end
 

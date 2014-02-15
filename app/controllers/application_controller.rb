@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorizer
-    @authorizer ||= InstanceAdmin::Authorizer.new(current_user, platform_context)
+    @authorizer ||= InstanceAdminAuthorizer.new(current_user, platform_context)
   end
   helper_method :authorizer
 
@@ -261,7 +261,7 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_if_domain_not_valid
-    redirect_to domain_not_configured_path unless platform_context.valid_domain?
+    redirect_to 'http://near-me.com/?domain_not_valid=true' unless platform_context.valid_domain?
   end
 
   def set_locales_backend
