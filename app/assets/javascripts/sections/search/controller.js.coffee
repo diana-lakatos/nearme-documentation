@@ -39,17 +39,17 @@ class Search.Controller
 
     @queryField.bind 'change', =>
       @fieldChanged('query', @queryField.val())
-      
+
     @queryField.bind 'focus', =>
       if @queryField.val() is @queryField.data('placeholder')
         @queryField.val('')
       true
-    
+
     @queryField.bind 'blur', =>
       if @queryField.val().length < 1 and @queryField.data('placeholder')?
         _.defer(=>@queryField.val(@queryField.data('placeholder')))
       true
-    
+
     # TODO: Trigger fieldChanged on keypress after a few seconds timeout?
 
   initializeGeolocateButton: ->
@@ -62,7 +62,7 @@ class Search.Controller
     if @searchButton.length > 0
       @searchButton.bind 'click', =>
         @form.submit()
-  
+
 
   geolocateMe: ->
     @determineUserLocation()
@@ -126,7 +126,7 @@ class Search.Controller
 
 
   buildSeoFriendlyQuery: (result) ->
-    query = @form.find("input#search").val().replace(', United States', '').trim()
+    query = $.trim(@form.find("input#search").val().replace(', United States', ''))
 
     if result
       if result.country() and result.country() == 'United States'
