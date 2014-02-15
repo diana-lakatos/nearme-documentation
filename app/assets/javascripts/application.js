@@ -106,16 +106,23 @@ window.DNM = {
   },
 
   initializeBrowsersSpecificCode: function() {
-    this.fixInputIconBackgroundTransparency();  // fix icon in input transparency in IE8 
-    this.fixMobileFixedPositionAfterInputFocus(); 
+    this.fixInputIconBackgroundTransparency();  // fix icon in input transparency in IE8
+    this.fixMobileFixedPositionAfterInputFocus();
   },
 
   centerSearchBoxOnHomePage: function() {
     if($('.main-page').length > 0){
       centerSearchBox();
-      window.addEventListener('resize', function(event){
-        centerSearchBox();
-      });
+      if (!window.addEventListener) {
+          window.attachEvent('resize', function(event){
+            centerSearchBox();
+          });
+      }
+      else {
+        window.addEventListener('resize', function(event){
+          centerSearchBox();
+        });
+      }
     }
   },
 
@@ -131,16 +138,16 @@ window.DNM = {
   },
 
   fixMobileFixedPositionAfterInputFocus: function() {
-    if (this.isiOS()) { 
-      jQuery('input, select, textarea').on('focus', function(e) { 
-          $('body').addClass('mobile-fixed-position-fix'); 
-      }).on('blur', function(e) { 
-        $('body').removeClass('mobile-fixed-position-fix'); 
+    if (this.isiOS()) {
+      jQuery('input, select, textarea').on('focus', function(e) {
+          $('body').addClass('mobile-fixed-position-fix');
+      }).on('blur', function(e) {
+        $('body').removeClass('mobile-fixed-position-fix');
 
         setTimeout(function() {
           $(window).scrollTop($(window).scrollTop() + 1);
         }, 100);
-      }); 
+      });
     }
   },
 
