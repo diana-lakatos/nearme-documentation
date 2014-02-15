@@ -41,6 +41,13 @@ class Search.Geocoder
     cityAddress: ->
       "#{@city()}, #{@country()}" if @city()
 
+    cityAndStateAddress: ->
+      loc_components = []
+      loc_components.push @city() if @city()
+      loc_components.push @stateShort() if @stateShort()
+      loc_components.push @country()
+      loc_components.join(', ')
+
     lat: ->
       @result.geometry.location?.lat()
 
