@@ -173,6 +173,14 @@ class User < ActiveRecord::Base
     name.split[0...-1].join(' ').presence || name
   end
 
+  def self.new_with_context(params, platform_context)
+    self.new(params.merge({
+      instance_id: platform_context.instance.id,
+      domain_id: platform_context.domain.try(:id),
+      partner_id: platform_context.partner.try(:id)
+    }))
+  end
+
   # Whether to validate the presence of a password
   def password_required?
     # we want to enforce skipping password for instance_admin/users#create
