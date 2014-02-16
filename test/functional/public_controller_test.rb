@@ -16,6 +16,13 @@ class PublicControllerTest < ActionController::TestCase
         assert_equal 'global value', I18n.t('translation_key')
       end
 
+      should 'update translation' do
+        get :index
+        @translation_global.update_attribute(:value, 'value updated')
+        get :index
+        assert_equal 'value updated', I18n.t('translation_key')
+      end
+
       should 'get translation from given instance' do
         FactoryGirl.create(:translation, value: 'value_2', instance_id: @instance.id)
         second_instance = FactoryGirl.create(:instance)

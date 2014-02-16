@@ -4,36 +4,40 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
 
   def initialize(cache, subtrees=true)
     @cache, @subtrees, @store = cache, subtrees, {}
+    # make sure cache is populated
     prepare_store
+  rescue
+    # probably running migration
   end
 
   def prepare_store
     Translation.uniq.pluck(:instance_id).each do |instance_id|
-      generated_cache = false
       _instance_key = instance_key(instance_id)
       @store[_instance_key] = @cache.fetch "locales.#{_instance_key}" do
-        generated_cache = true
         populate(instance_id)
         @store[_instance_key]
       end
-      cache_updated_at = write_cached_at_for(_instance_key) if generated_cache
-      touch_cache_timestamp_for(_instance_key, generated_cache ? cache_updated_at : Time.zone.now) 
+      touch_cache_timestamp_for(_instance_key, read_cached_at_for(_instance_key)) unless get_cache_timestamp_for(_instance_key)
+      # avoid storing all translations in memory - will be too big in the future
+      @store[_instance_key] = nil if instance_id.present?
     end
   end
 
   def set_instance_id(instance_id)
     self.instance_id = instance_id
-    update_store_if_necessary(instance_id)
-    update_store_if_necessary(nil)
+    # we don't want to run into memory issues once we support lots of instances
+    @store = @store.slice(instance_key(nil), instance_key(instance_id))
+    update_store_for_instance_if_necessary(nil)
+    update_store_for_instance_if_necessary(instance_id)
     populate(instance_id)
     populate(nil)
   end
 
-  def update_store_if_necessary(_instance_id)
-    _instance_key = instance_key(_instance_id)
+  def update_store_for_instance_if_necessary(instance_id)
+    _instance_key = instance_key(instance_id)
     cache_updated_at = read_cached_at_for(_instance_key)
-    if cache_updated_at && cache_updated_at > get_cache_timestamp_for(_instance_key)
-      touch_cache_timestamp_for(_instance_key)
+    if !@store[_instance_key] || (cache_updated_at && cache_updated_at > get_cache_timestamp_for(_instance_key))
+      touch_cache_timestamp_for(_instance_key, cache_updated_at)
       @store[_instance_key] = @cache.read "locales.#{_instance_key}" 
     end
   end
@@ -41,14 +45,14 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   def populate(_instance_id)
     cache_changed = false
     _instance_key = instance_key(_instance_id)
-    translations_scope = (_instance_key == :default ? Translation.defaults : Translation.for_instance(_instance_id))
+    translations_scope = (_instance_id.nil? ? Translation.defaults : Translation.for_instance(_instance_id))
     translations_scope = translations_scope.updated_after(get_cache_timestamp_for(_instance_key)) if get_cache_timestamp_for(_instance_key)
     translations_scope.find_each do |translation|
       cache_changed = true
       store_translation(translation)
     end
-    if cache_changed && get_cache_timestamp_for(_instance_key)
-      @cache.write "locales.#{_instance_key}", @store[_instance_key]
+    if cache_changed 
+      @cache.write "locales.#{_instance_key}", @store[_instance_key]  if get_cache_timestamp_for(_instance_key)
       touch_cache_timestamp_for(_instance_key, write_cached_at_for(_instance_key))
     end
   end
@@ -77,7 +81,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   end
 
   def available_locales
-    locales = @store[self.instance_id.to_sym].keys.map { |k| k =~ /\./; $` }
+    locales = @store[instance_key(nil)].keys.map { |k| k =~ /\./; $` }
     locales.uniq!
     locales.compact!
     locales.map! { |k| k.to_sym }
