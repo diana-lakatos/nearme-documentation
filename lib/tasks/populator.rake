@@ -20,11 +20,22 @@ namespace :populate do
   desc 'populates metadata for objects'
   task :metadata => :environment do
     Listing.find_each(&:populate_photos_metadata!)
-    User.find_each(&:populate_companies_metadata!)
+    User.find_each do |user|
+      user.populate_companies_metadata!
+      user.populate_instance_admins_metadata!
+    end
     Company.find_each(&:populate_industries_metadata!)
   end
 
-  desc 'populates metadata for objects'
+  
+  desc 'populates redundant information'
+  task :redundant_information => :environment do
+    Location.find_each do |location|
+      location.update_column(:listings_public, location.company.listings_public)
+    end
+  end
+
+  desc 'populates foreign keys for objects'
   task :foreign_keys => :environment do
     Location.find_each do |location|
       creator_id = location.company.creator_id

@@ -11,10 +11,7 @@ class InstanceAdminAuthorizer < Authorizer
   end
 
   def first_permission_have_access_to
-    InstanceAdminRole::PERMISSIONS.each do |permission|
-      return permission.downcase if authorized?(permission)
-    end
-    nil
+    instance_admin_role.first_permission_have_access_to
   end
 
   private

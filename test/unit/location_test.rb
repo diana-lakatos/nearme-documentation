@@ -288,4 +288,22 @@ class LocationTest < ActiveSupport::TestCase
 
     end
   end
+
+  context 'listings_public' do
+
+    should 'be false if parent company has false' do
+      @company = FactoryGirl.create(:company, :listings_public => false)
+      @location = FactoryGirl.create(:location, :company => @company)
+      refute @location.listings_public
+    end
+
+    should 'be false if updated' do
+      @company = FactoryGirl.create(:company)
+      @location = FactoryGirl.create(:location, :company => @company)
+      assert @location.listings_public
+      @company.update_attribute(:listings_public, false)
+      refute @location.reload.listings_public
+    end
+
+  end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140212110808) do
+ActiveRecord::Schema.define(:version => 20140216132708) do
 
 
 
@@ -452,6 +452,7 @@ ActiveRecord::Schema.define(:version => 20140212110808) do
     t.text     "metadata",           :default => "{}"
     t.integer  "instance_id"
     t.integer  "creator_id"
+    t.boolean  "listings_public",    :default => true
   end
 
   add_index "locations", ["administrator_id"], :name => "index_locations_on_administrator_id"
@@ -834,13 +835,13 @@ ActiveRecord::Schema.define(:version => 20140212110808) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                                :default => "",                           :null => false
-    t.string   "encrypted_password",                    :limit => 128, :default => "",                           :null => false
-    t.string   "password_salt",                                        :default => "",                           :null => false
+    t.string   "email",                                                 :default => "",                                                                                  :null => false
+    t.string   "encrypted_password",                     :limit => 128, :default => "",                                                                                  :null => false
+    t.string   "password_salt",                                         :default => "",                                                                                  :null => false
     t.string   "reset_password_token"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                                        :default => 0
+    t.integer  "sign_in_count",                                         :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -849,13 +850,13 @@ ActiveRecord::Schema.define(:version => 20140212110808) do
     t.datetime "updated_at"
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                                       :default => 0,                            :null => false
+    t.integer  "bookings_count",                                        :default => 0,                                                                                   :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "locked_at"
     t.datetime "reset_password_sent_at"
-    t.integer  "failed_attempts",                                      :default => 0
+    t.integer  "failed_attempts",                                       :default => 0
     t.string   "authentication_token"
     t.string   "avatar"
     t.string   "confirmation_token"
@@ -894,11 +895,11 @@ ActiveRecord::Schema.define(:version => 20140212110808) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.string   "time_zone",                                            :default => "Pacific Time (US & Canada)"
-    t.boolean  "sms_notifications_enabled",                            :default => true
+    t.string   "time_zone",                                             :default => "Pacific Time (US & Canada)"
+    t.boolean  "sms_notifications_enabled",                             :default => true
     t.string   "sms_preferences",                                       :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
     t.text     "instance_unread_messages_threads_count",                :default => "--- {}\n"
-    t.text     "metadata",                                             :default => "{}"
+    t.text     "metadata",                                              :default => "{}"
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"

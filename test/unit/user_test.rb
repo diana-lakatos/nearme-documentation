@@ -689,12 +689,14 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context 'metadata' do
-    setup do
-      @listing = FactoryGirl.create(:listing)
-      @user = @listing.creator
-    end
+
 
     context 'listings_metadata' do
+
+      setup do
+        @listing = FactoryGirl.create(:listing)
+        @user = @listing.creator
+      end
 
       should 'have active listing and no draft listing if has only one active listing metadata' do
         @user.expects(:update_metadata).with({
@@ -737,8 +739,13 @@ class UserTest < ActiveSupport::TestCase
         @user.populate_listings_metadata!
       end
     end
-    
+
     context 'populate_companies_metadata' do
+
+      setup do
+        @listing = FactoryGirl.create(:listing)
+        @user = @listing.creator
+      end
 
       should 'have no active listing if company is assigned to someone else and have active listing if assigned back' do
         @company = @listing.location.company
@@ -756,6 +763,24 @@ class UserTest < ActiveSupport::TestCase
           has_any_active_listings: true
         })
         @user.populate_companies_metadata!
+      end
+
+    end
+
+    context 'populate_instance_admins_metadata' do
+
+      setup do
+        @instance_admin = FactoryGirl.create(:instance_admin)
+        @user = @instance_admin.user
+      end
+
+      should 'populate correct instance_admin hash' do
+        @user.expects(:update_metadata).with({ 
+          :instance_admins => {
+            "#{@instance_admin.instance_id}" => 'Analytics'
+          }
+        })
+        @user.populate_instance_admins_metadata!
       end
 
     end

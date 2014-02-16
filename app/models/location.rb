@@ -58,6 +58,7 @@ class Location < ActiveRecord::Base
   before_validation :fetch_coordinates
   before_validation :parse_address_components
   before_create :assign_foreign_keys
+  before_create :assign_listings_public
   before_save :assign_default_availability_rules
   after_update :update_children_administrator_id_key, :if => lambda { |location| location.administrator_id_changed? }
 
@@ -214,6 +215,11 @@ class Location < ActiveRecord::Base
     if availability_rules.reject(&:marked_for_destruction?).empty?
       AvailabilityRule.default_template.apply(self)
     end
+  end
+
+  def assign_listings_public
+    self.listings_public = company.try(:listings_public)
+    nil
   end
 
   def fetch_coordinates
