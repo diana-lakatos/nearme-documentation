@@ -57,7 +57,8 @@ class Search.SearchMixedController extends Search.SearchController
       @triggerSearchFromQuery(page_regexp.exec(link.attr('href'))[1])
 
     $(document).on 'click', '.list .locations .location .listing', (e) =>
-      window.location.href = $(e.target).parents('.listing').find('.reserve-listing a').attr('href')
+      unless $(e.target).hasClass('truncated-ellipsis')
+        window.location.href = $(e.target).parents('.listing').find('.reserve-listing a').attr('href')
 
 
   initializeSearchButton: ->
