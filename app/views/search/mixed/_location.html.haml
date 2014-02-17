@@ -30,14 +30,15 @@
           @
           = location.street
 
-      .location-price
-        = location_price_information(location)
-      %ul.nav.nav-tabs
-        - listings_by_type.each_with_index do |(listing_type, listings), i|
-          %li{class: i.zero? ? 'active' : ''}
-            %a{"data-toggle" => "tab", href: "#listing-types-#{location.id}-#{listing_type.id}"}
-              = listing_type.name.pluralize
-              (#{listings.count})
+      .price-and-types
+        .location-price
+          = location_price_information(location)
+        %ul.nav.nav-tabs
+          - listings_by_type.each_with_index do |(listing_type, listings), i|
+            %li{class: i.zero? ? 'active' : ''}
+              %a{"data-toggle" => "tab", href: "#listing-types-#{location.id}-#{listing_type.id}"}
+                = listing_type.name.pluralize
+                (#{listings.count})
 
   .tabbable 
     .tab-content
