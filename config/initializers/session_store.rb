@@ -5,6 +5,16 @@
 # Use the database for sessions instead of the cookie-based default,
 # which shouldn't be used to store highly confidential information
 # (create the session table with "rake db:sessions:create")
-DesksnearMe::Application.config.action_controller.session_store :active_record_store, { expire_after: 14.days }
-DesksnearMe::Application.config.session_store :active_record_store, { expire_after: 14.days }
-DesksnearMe::Application.config.action_dispatch.session_store = :active_record_store, { expire_after: 14.days }
+if DesksnearMe::Application.config.cache_store == :redis_store
+  redis_store_hash = {
+    servers: { 
+      host: DesksnearMe::Application.config.redis_settings["host"], 
+      port: DesksnearMe::Application.config.redis_settings["port"].to_i,
+      namespace: "sessions"
+    }, 
+    expire_after: 14.days
+  }
+  DesksnearMe::Application.config.session_store :redis_store, redis_store_hash
+else
+  DesksnearMe::Application.config.session_store = :cookie_store, { expire_after: 14.days }
+end
