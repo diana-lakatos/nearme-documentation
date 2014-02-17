@@ -54,6 +54,18 @@ class Instance < ActiveRecord::Base
 
   PRICING_OPTIONS = %w(free hourly daily weekly monthly)
 
+  PRICING_OPTIONS.each do |price|
+    next if price == 'free'
+    %w(min max).each do |edge|
+      # Flag each price type as a Money attribute.
+      # @see rails-money
+      monetize "#{edge}_#{price}_price_cents", :allow_nil => true
+
+      # Mark price fields as attr-accessible
+      attr_accessible "#{edge}_#{price}_price_cents", "#{edge}_#{price}_price"
+    end
+  end
+
   def is_desksnearme?
     self.default_instance?
   end

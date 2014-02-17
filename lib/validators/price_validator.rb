@@ -11,5 +11,23 @@ class PriceValidator < ActiveModel::Validator
     if record.free? && record.hourly_reservations?
       record.errors.add(:price_type, "listing cannot be free and have an hourly rate")
     end
+
+    #Make sure that prices are not too low and not too high
+    if record.instance.present? && !record.free?
+      record.class::PRICE_TYPES.each do |price|
+        record_price = record.send("#{price}_price")
+        next if record_price.nil? || record_price.zero?
+
+        if record.instance.send("min_#{price}_price").present? &&
+          record_price < record.instance.send("min_#{price}_price")
+          record.errors.add("#{price}_price".to_sym, "#{price.capitalize} price is too low")
+        end
+
+        if record.instance.send("max_#{price}_price").present? &&
+          record_price > record.instance.send("max_#{price}_price")
+          record.errors.add("#{price}_price".to_sym, "#{price.capitalize} price is too high")
+        end
+      end
+    end
   end
 end

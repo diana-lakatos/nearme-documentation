@@ -131,6 +131,48 @@ class ListingTest < ActiveSupport::TestCase
       @listing.save
       assert !@listing.valid?
     end
+
+    context 'instance has pricing constraints' do
+
+      setup do
+        @instance = @listing.instance
+        @instance.min_hourly_price = 10
+        @instance.max_hourly_price = 100
+        @instance.save
+        @listing.free = false
+        @listing.hourly_reservations = true
+        @listing.save
+      end
+
+      should 'be valid if hourly price in range' do
+        @listing.hourly_price = 20
+        @listing.save
+        assert @listing.valid?
+      end
+
+      should 'be invalid if hourly price out of range' do
+        @listing.hourly_price = 2000
+        @listing.save
+        assert !@listing.valid?
+      end
+
+      should 'be valid if hourly price higher than minimum price and no maximum price is present' do
+        @instance.max_hourly_price = 100
+        @instance.save
+        @listing.hourly_price = 2000
+        @listing.save
+        assert !@listing.valid?
+      end
+
+      should 'be valid if hourly price lower than maximum price and no minimum price is present' do
+        @instance.max_hourly_price = 100
+        @instance.min_hourly_price = nil
+        @instance.save
+        @listing.hourly_price = 20
+        @listing.save
+        assert @listing.valid?
+      end
+    end
   end
 
   context "first available date" do
