@@ -5,6 +5,7 @@ class Theme::CompilerTest < ActiveSupport::TestCase
     @instance = FactoryGirl.create(:instance)
     @theme = Theme.new.skipping_compilation do |theme|
       theme.owner = @instance
+      theme.contact_email = 'support@desksnear.me'
       theme.save!
     end
   end
