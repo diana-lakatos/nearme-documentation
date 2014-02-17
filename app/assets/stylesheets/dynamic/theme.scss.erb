@@ -86,6 +86,51 @@
 %>
 
 <%=
+  if theme.logo_retina_image.present?
+    logo_dimensions = theme.logo_retina_image.original_dimensions.map{|d| d / 2}
+    if logo_dimensions[1] > 30
+      logo_height = 30
+      scale_factor = 30.0 / logo_dimensions[1]
+      logo_width = (scale_factor * logo_dimensions[0]).to_i
+    else
+      logo_height = logo_dimensions[1]
+      logo_width = logo_dimensions[0]
+    end
+  else
+    logo_height = nil
+    logo_width = nil
+  end
+
+  if theme.icon_retina_image.present?
+    icon_dimensions = theme.icon_image.original_dimensions.map{|d| d / 2}
+    if icon_dimensions[1] > 30
+      icon_height = 30
+      scale_factor = 30.0 / icon_dimensions[1]
+      icon_width = (scale_factor * icon_dimensions[0]).to_i
+    else
+      icon_height = icon_dimensions[1]
+      icon_width = icon_dimensions[0]
+    end
+  else
+    icon_height = nil
+    icon_width = nil
+  end
+
+  {
+    theme_logo_retina_width: logo_width,
+    theme_logo_retina_height: logo_height,
+    theme_icon_retina_width: icon_width,
+    theme_icon_retina_height: icon_height
+  }.map do |variable, value|
+    next unless value.present?
+
+    <<-SCSS
+      $#{variable}: #{value}px;
+    SCSS
+  end.join
+%>
+
+<%=
   if theme.theme_font.present?
     ThemeFont::FONT_TYPES.map do |font_type|
       <<-SCSS
