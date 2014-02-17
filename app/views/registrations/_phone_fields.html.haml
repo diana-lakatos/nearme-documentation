@@ -2,7 +2,8 @@
 
 .control-group.optional{:class => ('error' if f.object.errors[:phone].present?)}
   = f.label :phone, :class => 'control-label required' do
-    %abbr{:title => "required"} *
+    - if f.object.phone_required
+      %abbr{:title => "required"} *
     Phone number
 
   .controls
