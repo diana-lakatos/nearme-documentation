@@ -214,7 +214,7 @@ class ListingTest < ActiveSupport::TestCase
 
   context 'metadata' do
 
-    context 'populating hash' do
+    context 'populating photo hash' do
       setup do
         @listing = FactoryGirl.create(:listing)
         @photo = @listing.photos.first
@@ -259,48 +259,70 @@ class ListingTest < ActiveSupport::TestCase
 
     end
 
-  end
-
-  context 'should_populate_creator_listings_metadata?' do
-
-    setup do
-      @listing = FactoryGirl.create(:listing)
-    end
-
-    should 'return true if new listing is created' do
-      assert @listing.should_populate_creator_listings_metadata?
-    end
-
-    should 'return true if listing is destroyed' do
-      @listing.destroy
-      assert @listing.should_populate_creator_listings_metadata?
-    end
-
-    should 'return true if draft changed' do
-      @listing.update_attribute(:draft, Time.zone.now)
-      assert @listing.should_populate_creator_listings_metadata?
-    end
-
-    should 'return false if name changed' do
-      @listing.update_attribute(:name, 'new name')
-      refute @listing.should_populate_creator_listings_metadata?
-    end
-
-    context 'triggering' do
-
-      should 'not trigger populate listings metadata on user if condition fails' do
-        User.any_instance.expects(:populate_listings_metadata!).never
-        Listing.any_instance.expects(:should_populate_creator_listings_metadata?).returns(false)
-        FactoryGirl.create(:listing)
+    context 'populate_listing_type_name' do
+      setup do
+        @listing = FactoryGirl.create(:listing)
       end
 
-      should 'trigger populate listings metadata on user if condition succeeds' do
-        User.any_instance.expects(:populate_listings_metadata!).once
-        Listing.any_instance.expects(:should_populate_creator_listings_metadata?).returns(true)
-        FactoryGirl.create(:listing)
+      should 'trigger populate_listing_type_name_metadata if listing_type_id changed' do
+        @listing.expects(:populate_listing_type_name_metadata!).once
+        @listing.update_attribute(:listing_type_id, FactoryGirl.create(:listing_type))
+      end
+
+      should 'not trigger populate_listing_type_name_metadata if name changed' do
+        @listing.expects(:populate_listing_type_name_metadata!).never
+        @listing.update_attribute(:name, 'New name')
+      end
+
+      should 'store the right listing_type_name' do
+        @listing.update_attribute(:listing_type_id, FactoryGirl.create(:listing_type, :name => 'cool listing type').id)
+        @listing.expects(:update_metadata).with({:listing_type_name => 'cool listing type' })
+        @listing.populate_listing_type_name_metadata!
       end
 
     end
+    context 'should_populate_creator_listings_metadata?' do
+
+      setup do
+        @listing = FactoryGirl.create(:listing)
+      end
+
+      should 'return true if new listing is created' do
+        assert @listing.should_populate_creator_listings_metadata?
+      end
+
+      should 'return true if listing is destroyed' do
+        @listing.destroy
+        assert @listing.should_populate_creator_listings_metadata?
+      end
+
+      should 'return true if draft changed' do
+        @listing.update_attribute(:draft, Time.zone.now)
+        assert @listing.should_populate_creator_listings_metadata?
+      end
+
+      should 'return false if name changed' do
+        @listing.update_attribute(:name, 'new name')
+        refute @listing.should_populate_creator_listings_metadata?
+      end
+
+      context 'triggering' do
+
+        should 'not trigger populate listings metadata on user if condition fails' do
+          User.any_instance.expects(:populate_listings_metadata!).never
+          Listing.any_instance.expects(:should_populate_creator_listings_metadata?).returns(false)
+          FactoryGirl.create(:listing)
+        end
+
+        should 'trigger populate listings metadata on user if condition succeeds' do
+          User.any_instance.expects(:populate_listings_metadata!).once
+          Listing.any_instance.expects(:should_populate_creator_listings_metadata?).returns(true)
+          FactoryGirl.create(:listing)
+        end
+
+      end
+    end
+
   end
 
   context 'foreign keys' do

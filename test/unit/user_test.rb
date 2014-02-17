@@ -777,7 +777,7 @@ class UserTest < ActiveSupport::TestCase
       should 'populate correct instance_admin hash' do
         @user.expects(:update_metadata).with({ 
           :instance_admins => {
-            "#{@instance_admin.instance_id}" => 'Analytics'
+            "#{@instance_admin.instance_id}" => 'analytics'
           }
         })
         @user.populate_instance_admins_metadata!

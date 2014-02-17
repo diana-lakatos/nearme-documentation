@@ -12,6 +12,8 @@ module Metadata
         metadata.merge!(arg)
       end
       update_column(:metadata, metadata.to_json)
+      self.touch
+      self.metadata = JSON.parse(metadata) if metadata.is_a?(String)
     end
 
     def metadata_relevant_attribute_changed?(attr)

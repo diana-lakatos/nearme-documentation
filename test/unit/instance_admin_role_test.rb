@@ -20,59 +20,72 @@ class InstanceAdminRoleTest < ActiveSupport::TestCase
     assert_equal InstanceAdminRole.default_role, @instance_admin2.instance_admin_role
   end
 
-  context 'triggering' do
+  context 'first_permission_have_access_to' do
 
-    setup do
-      @custom_role = FactoryGirl.create(:instance_admin_role)
+    should 'return correct first permission have access to' do
+      assert_equal "theme", FactoryGirl.create(:instance_admin_role, :permission_analytics => false, :permission_theme => true).first_permission_have_access_to
     end
-
-    should 'not trigger populate metadata if condition fails' do
-      @custom_role.expects(:populate_instance_admins_metadata!).never
-      @custom_role.expects(:should_populate_metadata?).returns(false)
-      @custom_role.save!
+    
+    should 'return nil if all are false' do
+      assert_nil FactoryGirl.create(:instance_admin_role, :permission_analytics => false).first_permission_have_access_to
     end
-
-    should 'populate trigger populate metadata if condition succeeds' do
-      @custom_role.expects(:populate_instance_admins_metadata!).once
-      @custom_role.expects(:should_populate_metadata?).returns(true)
-      @custom_role.save!
-    end
-
   end
 
-  context 'should_populate_metadata?' do
+  context 'metadata' do
+    context 'triggering' do
 
-    setup do
-      @instance_admin_role = FactoryGirl.create(:instance_admin_role)
+      setup do
+        @custom_role = FactoryGirl.create(:instance_admin_role)
+      end
+
+      should 'not trigger populate metadata if condition fails' do
+        @custom_role.expects(:populate_instance_admins_metadata!).never
+        @custom_role.expects(:should_populate_metadata?).returns(false)
+        @custom_role.save!
+      end
+
+      should 'populate trigger populate metadata if condition succeeds' do
+        @custom_role.expects(:populate_instance_admins_metadata!).once
+        @custom_role.expects(:should_populate_metadata?).returns(true)
+        @custom_role.save!
+      end
+
     end
 
-    should 'return false if instance_admin_role was destroyed' do
-      @instance_admin_role.destroy
-      refute @instance_admin_role.should_populate_metadata?
-    end
+    context 'should_populate_metadata?' do
 
-    should 'return false if name was changed' do
-      @instance_admin_role.update_attributes(:name => 'name was changed')
-      refute @instance_admin_role.should_populate_metadata?
-    end
+      setup do
+        @instance_admin_role = FactoryGirl.create(:instance_admin_role)
+      end
 
-    should 'return false if setting does not change first_permission' do
-      @instance_admin_role.update_attribute(:permission_settings, true)
-      refute @instance_admin_role.should_populate_metadata?
-    end
+      should 'return false if instance_admin_role was destroyed' do
+        @instance_admin_role.destroy
+        refute @instance_admin_role.should_populate_metadata?
+      end
 
-    should 'return true if previous first_permission is being disabled' do
-      @instance_admin_role.update_attribute(:permission_settings, true)
-      @instance_admin_role.update_attribute(:permission_analytics, false)
-      assert @instance_admin_role.should_populate_metadata?
-    end
+      should 'return false if name was changed' do
+        @instance_admin_role.update_attributes(:name => 'name was changed')
+        refute @instance_admin_role.should_populate_metadata?
+      end
 
-    should 'return true if setting that becomes first_permission is enabled' do
-      @instance_admin_role.update_attributes(:permission_analytics => false)
-      @instance_admin_role.update_attribute(:permission_settings, true)
-      assert @instance_admin_role.should_populate_metadata?
-    end
+      should 'return false if setting does not change first_permission' do
+        @instance_admin_role.update_attribute(:permission_settings, true)
+        refute @instance_admin_role.should_populate_metadata?
+      end
 
+      should 'return true if previous first_permission is being disabled' do
+        @instance_admin_role.update_attribute(:permission_settings, true)
+        @instance_admin_role.update_attribute(:permission_analytics, false)
+        assert @instance_admin_role.should_populate_metadata?
+      end
+
+      should 'return true if setting that becomes first_permission is enabled' do
+        @instance_admin_role.update_attributes(:permission_analytics => false)
+        @instance_admin_role.update_attribute(:permission_settings, true)
+        assert @instance_admin_role.should_populate_metadata?
+      end
+
+    end
   end
 
 end

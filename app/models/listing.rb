@@ -52,6 +52,7 @@ class Listing < ActiveRecord::Base
   before_create :assign_foreign_keys
   after_commit :location_populate_photos_metadata!, :if => lambda { |l| l.should_populate_location_photos_metadata? }
   after_commit :creator_populate_listings_metadata!, :if => lambda { |l| l.should_populate_creator_listings_metadata? }
+  after_commit :populate_listing_type_name_metadata!, :if => lambda { |l| l.metadata_relevant_attribute_changed?("listing_type_id") }
 
 
   # == Validations
@@ -342,6 +343,10 @@ class Listing < ActiveRecord::Base
   def enable!
     self.enabled = true
     self.save(validate: false)
+  end
+
+  def populate_listing_type_name_metadata!
+    update_metadata({ :listing_type_name => listing_type.try(:name) })
   end
 
   def populate_photos_metadata!

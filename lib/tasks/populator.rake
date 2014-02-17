@@ -19,7 +19,10 @@ namespace :populate do
 
   desc 'populates metadata for objects'
   task :metadata => :environment do
-    Listing.find_each(&:populate_photos_metadata!)
+    Listing.find_each do |listing|
+      listing.populate_photos_metadata!
+      listing.populate_listing_type_name_metadata!
+    end
     User.find_each do |user|
       user.populate_companies_metadata!
       user.populate_instance_admins_metadata!

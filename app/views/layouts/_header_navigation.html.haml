@@ -26,9 +26,9 @@
         %span.ico-chevron-down
       .clearfix
       %ul.dropdown-menu
-        - if authorizer.instance_admin?
+        - if current_user.metadata['instance_admins'] && current_user.metadata['instance_admins']["#{platform_context.instance.id}"].present?
           %li
-            = link_to url_for([:instance_admin, authorizer.first_permission_have_access_to]), class: 'nav-link dropdown-toggle' do
+            = link_to url_for([:instance_admin, current_user.metadata['instance_admins']["#{platform_context.instance.id}"]]), class: 'nav-link dropdown-toggle' do
               %span Instance Admin
 
         - if platform_context.white_label_company_user?(current_user) && current_user.metadata['has_any_active_listings']

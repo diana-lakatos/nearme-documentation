@@ -7,8 +7,8 @@ class User < ActiveRecord::Base
                               :last_geolocated_location_latitude, :instance_unread_messages_threads_count]
   acts_as_paranoid
 
-  extend FriendlyId
   include Metadata
+  extend FriendlyId
   friendly_id :name, use: :slugged
 
   has_many :authentications, :dependent => :destroy
@@ -208,12 +208,16 @@ class User < ActiveRecord::Base
   end
 
   def populate_instance_admins_metadata!
-    update_metadata({ 
-      instance_admins: instance_admins.reload.inject({}) do |instance_admin_hash, instance_admin|
-        instance_admin_hash[instance_admin.instance_id.to_s] = instance_admin.first_permission_have_access_to
-        instance_admin_hash
-      end
+    update_metadata({
+      instance_admins: build_instance_admins_metadata
     })
+  end
+
+  def build_instance_admins_metadata
+    instance_admins.reload.inject({}) do |instance_admin_hash, instance_admin|
+      instance_admin_hash[instance_admin.instance_id.to_s] = instance_admin.first_permission_have_access_to
+      instance_admin_hash
+    end
   end
 
   def populate_companies_metadata!

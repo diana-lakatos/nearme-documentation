@@ -35,7 +35,7 @@ class InstanceAdminRole < ActiveRecord::Base
   def should_populate_metadata? 
     # we are interested only in attributes that either became first_permission or stopped being first_permission
     return true if first_permission_have_access_to.nil?
-    PERMISSIONS[0..PERMISSIONS.index(first_permission_have_access_to)].any? do |permission|
+    PERMISSIONS[0..PERMISSIONS.index(first_permission_have_access_to.capitalize)].any? do |permission|
       metadata_relevant_attribute_changed?("permission_#{permission.downcase}")
     end
   end
@@ -48,7 +48,7 @@ class InstanceAdminRole < ActiveRecord::Base
   end
 
   def first_permission_have_access_to
-    PERMISSIONS.find { |p| self.send("permission_#{p.downcase}") }
+    PERMISSIONS.find { |p| self.send("permission_#{p.downcase}") }.try(:downcase)
   end
 
 end
