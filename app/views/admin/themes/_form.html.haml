@@ -27,7 +27,9 @@
   %legend Contact &amp; Support
   = f.input :phone_number
   .control-group.tel.optional{class: f.object.errors[:contact_email].empty? ? '' : 'error'}
-    %label.tel.optional.control-label{for: "theme_phone_number"} Contact email
+    %label.tel.optional.control-label{for: "theme_phone_number"}
+      %abbr{:title => "required"} *
+      Contact email
     .controls
       = f.input_field :contact_email, pattern: '.*'
       = f.error :contact_email
