@@ -91,7 +91,6 @@ class ReservationMailerTest < ActiveSupport::TestCase
       mail = ReservationMailer.notify_guest_of_rejection(@platform_context, @reservation)
 
       assert_contains @listing.name, mail.html_part.body
-      assert_contains 'But we have you covered!', mail.html_part.body
     end
 
     should 'not include nearme listings when it is not present' do
