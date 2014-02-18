@@ -5,12 +5,12 @@
         = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => "nav-link btn btn-blue btn-medium" do
           %span.text List Your #{platform_context.bookable_noun}
           %span.icon.ico-plus
-    - elsif current_user && current_user.metadata['has_draft_listings']
+    - elsif current_user && current_user.has_draft_listings
       %li
         = link_to new_space_wizard_url, :class => "nav-link btn btn-blue btn-medium" do
           %span.text Complete Your Listing
           %span.icon.ico-plus
-    - elsif current_user && !current_user.metadata['has_any_active_listings']
+    - elsif current_user && !current_user.has_any_active_listings
       %li
         = link_to new_space_wizard_url, :class => "nav-link btn btn-blue btn-medium" do
           %span.text List Your #{platform_context.bookable_noun}
@@ -26,12 +26,12 @@
         %span.ico-chevron-down
       .clearfix
       %ul.dropdown-menu
-        - if current_user.metadata['instance_admins'] && current_user.metadata['instance_admins']["#{platform_context.instance.id}"].present?
+        - if current_user.instance_admins_metadata && current_user.instance_admins_metadata["#{platform_context.instance.id}"].present?
           %li
-            = link_to url_for([:instance_admin, current_user.metadata['instance_admins']["#{platform_context.instance.id}"]]), class: 'nav-link dropdown-toggle' do
+            = link_to url_for([:instance_admin, current_user.instance_admins_metadata["#{platform_context.instance.id}"]]), class: 'nav-link dropdown-toggle' do
               %span Instance Admin
 
-        - if platform_context.white_label_company_user?(current_user) && current_user.metadata['has_any_active_listings']
+        - if platform_context.white_label_company_user?(current_user) && current_user.has_any_active_listings
           %li
             = link_to manage_locations_path, class: 'nav-link dropdown-toggle' do
               %span Manage #{platform_context.bookable_noun.pluralize}

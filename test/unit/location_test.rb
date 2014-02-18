@@ -212,7 +212,7 @@ class LocationTest < ActiveSupport::TestCase
       end
 
       should 'initialize metadata' do
-        @location.expects(:update_metadata).with(photos: [{
+        @location.expects(:update_metadata).with(photos_metadata: [{
           space_listing: @photo.image_url(:space_listing),
           golden: @photo.image_url(:golden),
           large: @photo.image_url(:large),
@@ -229,7 +229,7 @@ class LocationTest < ActiveSupport::TestCase
         end
 
         should 'update existing metadata' do
-          @location.expects(:update_metadata).with(photos: [{
+          @location.expects(:update_metadata).with(photos_metadata: [{
             space_listing:  @photo.image_url(:space_listing),
             golden:  @photo.image_url(:golden),
             large:  @photo.image_url(:large),

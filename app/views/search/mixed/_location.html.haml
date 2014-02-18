@@ -1,6 +1,6 @@
 - cache "search-listings-#{location.searched_locations.map(&:id).join('-')}-#{([location] + location.searched_locations).max_by(&:updated_at).try(:updated_at).try(:utc).try(:to_s, :number)}" do
   - listing_types_data = location.searched_locations.inject({}) do |listing_types_data, listing|
-    - listing_types_data["#{listing.listing_type_id}"] ||= { :name => listing.listing_type_name_metadata.try(:pluralize), :count => 0, :listings => [] }
+    - listing_types_data["#{listing.listing_type_id}"] ||= { :name => listing.listing_type_name.try(:pluralize), :count => 0, :listings => [] }
     - listing_types_data["#{listing.listing_type_id}"][:count] += 1
     - listing_types_data["#{listing.listing_type_id}"][:listings] << listing
     - listing_types_data
@@ -16,7 +16,7 @@
                 - location.photos_metadata.each_with_index do |photo_metadata, index|
                   .item{:class => ("active" if index == 0)}
                     = link_to location_path(location) do
-                      = image_tag photo_metadata['space_listing'], :alt => location.name
+                      = image_tag photo_metadata[:space_listing], :alt => location.name
               - else
                 .item{:class => "active"}
                   = link_to location_path(location) do
@@ -43,7 +43,6 @@
                 %a{"data-toggle" => "tab", href: "#listing-types-#{location.id}-#{listing_type_id}"}
                   = listing_type_data[:name]
                   (#{listing_type_data[:count]})
-
 
     .tabbable 
       .tab-content

@@ -2,7 +2,7 @@
   .span3.listing-main-photo
     .photo
       - if listing.photos_metadata.try(:count).to_i > 0 && photo_metadata = listing.photos_metadata.first
-        = image_tag photo_metadata['space_listing'], :title => listing.name, :alt => listing.name
+        = image_tag photo_metadata[:space_listing], :title => listing.name, :alt => listing.name
       - else
         = image_tag space_listing_placeholder_path( :width => 410, :height => 254 ), :title => listing.name, :alt => listing.name
   .listing-name-description{class: listing.capacity.blank? ? 'span5 without-capacity' : 'span3'}

@@ -9,12 +9,12 @@
         - location.photos_metadata.each_with_index do |photo_metadata, index|
           .item{:class => ("active" if index == 0), :'data-modalize' => true}
             - if fullscreen
-              %img{:alt => photo_metadata['listing_name'], :'data-src' => photo_metadata[photo_size.to_s]}
+              %img{:alt => photo_metadata[:listing_name], :'data-src' => photo_metadata[photo_size.to_sym]}
             - else
-              = image_tag photo_metadata[photo_size.to_s], :alt => photo_metadata['listing_name']
+              = image_tag photo_metadata[photo_size.to_sym], :alt => photo_metadata[:listing_name]
             .info
               .caption
-                = "#{photo_metadata['caption']} ##{photo_metadata['listing_name']}".strip
+                = "#{photo_metadata[:caption]} ##{photo_metadata[:listing_name]}".strip
       = yield
 
     - else

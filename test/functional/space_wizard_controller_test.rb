@@ -245,10 +245,9 @@ class SpaceWizardControllerTest < ActionController::TestCase
   end
 
   def create_listing
-    @company = FactoryGirl.create(:company, :creator_id => @user.id)
-    @location = FactoryGirl.create(:location)
-    @location.listings << FactoryGirl.create(:listing)
-    @company.locations << @location
+    @company = FactoryGirl.create(:company, :creator => @user)
+    @location = FactoryGirl.create(:location, :company => @company)
+    FactoryGirl.create(:listing, :location => @location)
   end
 
 end

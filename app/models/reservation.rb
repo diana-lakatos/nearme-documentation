@@ -2,6 +2,7 @@ class Reservation < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
   has_paper_trail
   acts_as_paranoid
+  include Reservation::RedundantDataSynchronizer
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',
     :manual      => 'manual',
@@ -24,7 +25,6 @@ class Reservation < ActiveRecord::Base
   belongs_to :platform_context_detail, :polymorphic => true
   has_one :company, through: :listing
   has_many :user_messages, as: :thread_context
-  before_create :assign_foreign_keys
 
   attr_accessible :cancelable, :confirmation_email, :date, :listing_id,
     :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
@@ -349,12 +349,6 @@ class Reservation < ActiveRecord::Base
     dates_description = date_first == date_last ? date_first : "#{date_first}-#{date_last}"
     "Reservation of #{listing.try(:name)}, user: #{owner.try(:name)}, #{dates_description}"
   end 
-
-  def assign_foreign_keys
-    self.instance_id = listing.try(:instance_id).presence || listing.instance_id
-    self.creator_id = listing.try(:creator_id).presence || listing.creator_id
-    self.administrator_id = location.try(:administrator_id).presence || location.administrator_id
-  end
 
   private
 

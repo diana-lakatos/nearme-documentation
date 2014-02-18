@@ -4,7 +4,8 @@ class Location < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
   include Impressionable
-  include Metadata
+  has_metadata :accessors => [:photos_metadata]
+  include Location::RedundantDataSynchronizer
 
   attr_accessible :address, :address2, :amenity_ids, :company_id, :description, :email,
     :info, :latitude, :local_geocoding, :longitude, :currency,
@@ -57,10 +58,6 @@ class Location < ActiveRecord::Base
 
   before_validation :fetch_coordinates
   before_validation :parse_address_components
-  before_create :assign_foreign_keys
-  before_create :assign_listings_public
-  before_save :assign_default_availability_rules
-  after_update :update_children_administrator_id_key, :if => lambda { |location| location.administrator_id_changed? }
 
   extend FriendlyId
   friendly_id :urlify, use: [:slugged, :history]
@@ -147,17 +144,6 @@ class Location < ActiveRecord::Base
     end
   end
 
-  def populate_photos_metadata!
-    update_metadata({ :photos => build_photos_metadata_array })
-  end
-
-  def build_photos_metadata_array
-    self.reload.photos.inject([]) do |array, photo| 
-      array << photo.to_location_metadata
-      array
-    end
-  end
-
   def description
     read_attribute(:description).presence || (listings.first || NullListing.new).description
   end
@@ -199,28 +185,7 @@ class Location < ActiveRecord::Base
     (searched_locations || listings.searchable).map(&:lowest_price_with_type).compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
   end
 
-  def assign_foreign_keys
-    self.instance_id = company.try(:instance_id).presence || company.instance_id
-    self.creator_id = company.try(:creator_id).presence || company.creator_id
-  end
-
-  def update_children_administrator_id_key
-    listings.reload.with_deleted.update_all(['administrator_id = ?', self.administrator_id])
-    reservations.reload.update_all(['administrator_id = ?', self.administrator_id])
-  end
-
   private
-
-  def assign_default_availability_rules
-    if availability_rules.reject(&:marked_for_destruction?).empty?
-      AvailabilityRule.default_template.apply(self)
-    end
-  end
-
-  def assign_listings_public
-    self.listings_public = company.try(:listings_public)
-    nil
-  end
 
   def fetch_coordinates
     # If we aren't locally geocoding (cukes and people with JS off)

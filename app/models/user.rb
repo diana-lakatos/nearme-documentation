@@ -7,34 +7,34 @@ class User < ActiveRecord::Base
                               :last_geolocated_location_latitude, :instance_unread_messages_threads_count]
   acts_as_paranoid
 
-  include Metadata
   extend FriendlyId
+  has_metadata :accessors => [:has_draft_listings, :has_any_active_listings, :companies_metadata, :instance_admins_metadata]
   friendly_id :name, use: :slugged
 
   has_many :authentications, :dependent => :destroy
   has_many :instance_clients, :as => :client, :dependent => :destroy
   has_many :company_users, dependent: :destroy
   has_many :companies, :through => :company_users, :order => "company_users.created_at ASC"
-  has_many :created_companies, :class_name => "Company", :foreign_key => "creator_id", :inverse_of => :creator
-  has_many :administered_locations, :class_name => "Location", :foreign_key => "administrator_id", :inverse_of => :administrator
+  has_many :created_companies, :class_name => "Company", :foreign_key => 'creator_id', :inverse_of => :creator
+  has_many :administered_locations, :class_name => "Location", :foreign_key => 'administrator_id', :inverse_of => :administrator
   has_many :administered_listings, :class_name => "Listing", :through => :administered_locations, :source => :listings 
-  has_many :instance_admins, :foreign_key => "user_id", :dependent => :destroy 
+  has_many :instance_admins, :foreign_key => 'user_id', :dependent => :destroy 
   has_many :locations, :through => :companies
-  has_many :reservations, :foreign_key => :owner_id
+  has_many :reservations, :foreign_key => 'owner_id'
   has_many :listings, :through => :locations
-  has_many :photos, :foreign_key => "creator_id"
+  has_many :photos, :foreign_key => 'creator_id'
   has_many :listing_reservations, :through => :listings, :source => :reservations
-  has_many :relationships, :class_name => "UserRelationship", :foreign_key => "follower_id", :dependent => :destroy
+  has_many :relationships, :class_name => "UserRelationship", :foreign_key => 'follower_id', :dependent => :destroy
   has_many :followed_users, :through => :relationships, :source => :followed
-  has_many :reverse_relationships, :class_name => "UserRelationship", :foreign_key => "followed_id", :dependent => :destroy
+  has_many :reverse_relationships, :class_name => "UserRelationship", :foreign_key => 'followed_id', :dependent => :destroy
   has_many :followers, :through => :reverse_relationships, :source => :follower 
   has_many :host_ratings, class_name: 'HostRating', foreign_key: 'subject_id'
   has_many :guest_ratings, class_name: 'GuestRating', foreign_key: 'subject_id'
   has_many :user_industries, :dependent => :destroy
   has_many :industries, :through => :user_industries
   has_many :mailer_unsubscriptions
-  has_many :charges, foreign_key: :user_id, dependent: :destroy
-  has_many :authored_messages, :class_name => "UserMessage", :foreign_key => "author_id", :inverse_of => :author
+  has_many :charges, foreign_key: 'user_id', dependent: :destroy
+  has_many :authored_messages, :class_name => "UserMessage", :foreign_key => 'author_id', :inverse_of => :author
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -198,34 +198,6 @@ class User < ActiveRecord::Base
     random_pass = ''
     1.upto(8) { |i| random_pass << chars[rand(chars.size-1)] }
     self.password = random_pass
-  end
-
-  def populate_listings_metadata!
-    update_metadata({ 
-      has_draft_listings: listings.reload.draft.any?,
-      has_any_active_listings: listings.reload.active.any?
-    })
-  end
-
-  def populate_instance_admins_metadata!
-    update_metadata({
-      instance_admins: build_instance_admins_metadata
-    })
-  end
-
-  def build_instance_admins_metadata
-    instance_admins.reload.inject({}) do |instance_admin_hash, instance_admin|
-      instance_admin_hash[instance_admin.instance_id.to_s] = instance_admin.first_permission_have_access_to
-      instance_admin_hash
-    end
-  end
-
-  def populate_companies_metadata!
-    update_metadata({
-      companies: companies.reload.collect(&:id),
-      has_draft_listings: listings.reload.draft.any?,
-      has_any_active_listings: listings.reload.active.any?
-    })
   end
 
   def linked_to?(provider)

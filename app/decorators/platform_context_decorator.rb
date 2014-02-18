@@ -67,6 +67,10 @@ class PlatformContextDecorator
     timestamp.try(:utc).try(:to_s, :number)
   end
 
+  def contact_email
+    @platform_context.theme.contact_email_with_fallback
+  end
+
   private
 
   def platform_context

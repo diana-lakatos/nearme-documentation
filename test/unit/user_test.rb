@@ -107,6 +107,7 @@ class UserTest < ActiveSupport::TestCase
 
         @friend.add_friend(host)
 
+        @me.reload
         assert_equal [@friend], @me.friends.know_host_of(@listing)
       end
     end
@@ -748,21 +749,21 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should 'have no active listing if company is assigned to someone else and have active listing if assigned back' do
-        @company = @listing.location.company
+        @company = @listing.company
         @listing.company.company_users.first.destroy
         @user.expects(:update_metadata).with({
-          companies: [],
+          companies_metadata: [],
           has_draft_listings: false,
           has_any_active_listings: false
         })
-        @user.populate_companies_metadata!
+        @user.reload.populate_companies_metadata!
         @listing.company.company_users.create(:user_id => @user.id)
         @user.expects(:update_metadata).with({
-          companies: [@company.id],
+          companies_metadata: [@company.id],
           has_draft_listings: false,
           has_any_active_listings: true
         })
-        @user.populate_companies_metadata!
+        @user.reload.populate_companies_metadata!
       end
 
     end
@@ -776,7 +777,7 @@ class UserTest < ActiveSupport::TestCase
 
       should 'populate correct instance_admin hash' do
         @user.expects(:update_metadata).with({ 
-          :instance_admins => {
+          :instance_admins_metadata => {
             "#{@instance_admin.instance_id}" => 'analytics'
           }
         })

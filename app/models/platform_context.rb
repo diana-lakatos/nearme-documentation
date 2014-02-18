@@ -75,7 +75,7 @@ class PlatformContext
   def white_label_company_user?(user)
     return true  if white_label_company.nil?
     return false if user.nil?
-    user.companies.include?(white_label_company)
+    user.companies_metadata.try(:include?, white_label_company.id)
   end
 
   def decorate

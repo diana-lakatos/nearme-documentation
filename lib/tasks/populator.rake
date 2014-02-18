@@ -2,7 +2,7 @@ namespace :populate do
   desc "Populates unit prices"
   task :prices => :environment do
     {"daily_price_cents" => 1440, "weekly_price_cents" => 10080, "monthly_price_cents" => 43200}.each do |column, period|
-       ActiveRecord::Base.connection.execute("
+      ActiveRecord::Base.connection.execute("
           UPDATE listings AS l
           SET #{column} = up.price_cents
           FROM unit_prices AS up
@@ -13,55 +13,42 @@ namespace :populate do
               OR l.#{column} = 0
             )
 
-        ")
+                                            ")
     end
   end
 
-  desc 'populates metadata for objects'
-  task :metadata => :environment do
-    Listing.find_each do |listing|
-      listing.populate_photos_metadata!
-      listing.populate_listing_type_name_metadata!
-    end
-    User.find_each do |user|
+  desc 'populates metadata, foreign_keys and other redundant info for objects'
+  task :redundant_data => :environment do
+    User.with_deleted.find_each do |user|
       user.populate_companies_metadata!
       user.populate_instance_admins_metadata!
     end
-    Company.find_each(&:populate_industries_metadata!)
-  end
-
-  
-  desc 'populates redundant information'
-  task :redundant_information => :environment do
-    Location.find_each do |location|
+    Company.with_deleted.find_each(&:populate_industries_metadata!)
+    Location.with_deleted.find_each do |location|
       location.update_column(:listings_public, location.company.listings_public)
-    end
-  end
-
-  desc 'populates foreign keys for objects'
-  task :foreign_keys => :environment do
-    Location.find_each do |location|
       creator_id = location.company.creator_id
       instance_id = location.company.instance_id
       administrator_id = (location.administrator_id == creator_id ? nil : location.administrator_id)
 
       location.creator_id = creator_id
       location.instance_id = instance_id
+      location.save(validate: false)
 
-      location.listings.each do |listing|
+      location.listings.with_deleted.each do |listing|
         listing.creator_id = creator_id
         listing.instance_id = instance_id
         listing.administrator_id = administrator_id if administrator_id.present?
-        
-        listing.reservations.each do |reservation|
+
+        listing.reservations.with_deleted.each do |reservation|
           reservation.creator_id = creator_id
           reservation.instance_id = instance_id
           reservation.administrator_id = administrator_id if administrator_id.present?
           reservation.save(validate: false)
         end
         listing.save(validate: false)
+        listing.populate_photos_metadata!
+        listing.populate_listing_type_name_metadata!
       end
-      location.save(validate: false)
     end
   end
 

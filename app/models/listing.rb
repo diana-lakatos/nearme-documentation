@@ -2,7 +2,8 @@ class Listing < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
   class NotFound < ActiveRecord::RecordNotFound; end
-  include Metadata
+  include Listing::RedundantDataSynchronizer
+  has_metadata :accessors => [:listing_type_name, :photos_metadata]
 
   has_many :reservations, dependent: :destroy
 
@@ -21,7 +22,7 @@ class Listing < ActiveRecord::Base
 
   has_many :user_messages, as: :thread_context
 
-  has_one :company, through: :location
+  has_one :company, :through => :location
   belongs_to :location, inverse_of: :listings
   belongs_to :listing_type
   belongs_to :instance
@@ -49,10 +50,6 @@ class Listing < ActiveRecord::Base
   
   # == Callbacks
   before_save :set_activated_at
-  before_create :assign_foreign_keys
-  after_commit :location_populate_photos_metadata!, :if => lambda { |l| l.should_populate_location_photos_metadata? }
-  after_commit :creator_populate_listings_metadata!, :if => lambda { |l| l.should_populate_creator_listings_metadata? }
-  after_commit :populate_listing_type_name_metadata!, :if => lambda { |l| l.metadata_relevant_attribute_changed?("listing_type_id") }
 
 
   # == Validations
@@ -76,8 +73,6 @@ class Listing < ActiveRecord::Base
   delegate :currency, :formatted_address, :local_geocoding, 
     :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :location, allow_nil: true
-  delegate :populate_photos_metadata!, to: :location, :prefix => true
-  delegate :populate_listings_metadata!, to: :creator, :prefix => true
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
 
@@ -343,36 +338,6 @@ class Listing < ActiveRecord::Base
   def enable!
     self.enabled = true
     self.save(validate: false)
-  end
-
-  def populate_listing_type_name_metadata!
-    update_metadata({ :listing_type_name => listing_type.try(:name) })
-  end
-
-  def populate_photos_metadata!
-    update_metadata({ :photos => build_photos_metadata_array })
-    location_populate_photos_metadata!
-  end
-
-  def build_photos_metadata_array
-    self.reload.photos.inject([]) do |array, photo| 
-      array << photo.to_listing_metadata
-      array
-    end
-  end
-
-  def should_populate_location_photos_metadata?
-    location.present? && %w(name).any? { |attr| metadata_relevant_attribute_changed?(attr) }
-  end
-
-  def should_populate_creator_listings_metadata?
-    self.destroyed? || %w(id draft).any? { |attr| metadata_relevant_attribute_changed?(attr) }  
-  end
-
-  def assign_foreign_keys
-    self.instance_id = location.try(:instance_id).presence || location.instance_id
-    self.creator_id = location.try(:creator_id).presence || location.creator_id
-    self.administrator_id = location.try(:administrator_id).presence || location.administrator_id
   end
 
   private

@@ -1,5 +1,7 @@
 class Industry < ActiveRecord::Base
 
+  has_metadata :without_db_column => true
+
   attr_accessible :name, :company_ids, :user_ids
 
   validates_presence_of :name
@@ -19,10 +21,5 @@ class Industry < ActiveRecord::Base
   scope :with_listings, joins(:listings).merge(Listing.searchable).group('industries.id HAVING count(listings.id) > 0')
   scope :ordered, order('name asc')
 
-  after_commit :populate_companies_industries_metadata!
-
-  def populate_companies_industries_metadata!
-    companies.find_each(&:populate_industries_metadata!)
-  end
 
 end

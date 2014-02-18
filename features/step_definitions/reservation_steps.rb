@@ -8,7 +8,8 @@ Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed
   reservation = @listing.reserve!(PlatformContext.new, reserver, [next_regularly_available_day], 1)
   unless confirmed != " "
     reservation.confirm!
-    reservation.save
+    reservation.save!
+    puts "confirmed reservation with #{reservation.owner.id} and #{reservation.creator.id}"
   end
 
 end

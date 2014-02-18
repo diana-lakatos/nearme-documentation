@@ -6,7 +6,7 @@
         %span.ico-open-link
 
   %p= location.company.description
-  - if location.company.metadata['industries'].any? && platform_context.is_desksnearme?
+  - if location.company.industries_metadata.try(:any?) && platform_context.is_desksnearme?
     .amenities-block
       .amenities-header
         %h3 Industries
@@ -14,7 +14,7 @@
           %h3 Industries
           %span.ico-chevron-right
       .amenities-container
-        - location.company.metadata['industries'].in_groups_of(4).each do |industry_group|
+        - location.company.industries_metadata.in_groups_of(4).each do |industry_group|
           .row-fluid.amenities-row
             - industry_group.compact.each do |industry_name|
               .span3{title: industry_name}

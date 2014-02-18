@@ -1,5 +1,5 @@
 class ListingType < ActiveRecord::Base
-  include Metadata
+  has_metadata :without_db_column => true
   attr_accessible :name
 
   validates_presence_of :name, :instance_id
@@ -7,11 +7,5 @@ class ListingType < ActiveRecord::Base
 
   belongs_to :instance
   has_many :listings
-
-  after_commit :populate_listings_metadata!, :if => lambda { |lt| lt.metadata_relevant_attribute_changed?("name") }
-
-  def populate_listings_metadata!
-    listings.reload.each { |listing| listing.populate_listing_type_name_metadata! }
-  end
 
 end
