@@ -2,7 +2,7 @@ class PlatformContextDecorator
 
   delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?, :to => :platform_context
 
-  delegate :contact_email, :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
+  delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :pages, :logo_image,
     :favicon_image, :homepage_content, :call_to_action, :to => :theme
 
@@ -44,6 +44,10 @@ class PlatformContextDecorator
       support_email_splited = self.support_email.split('@')
       support_email_splited.join("+#{error_code}@")
     end
+  end
+
+  def contact_email
+    @platform_context.theme.contact_email_with_fallback
   end
 
   private
