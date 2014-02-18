@@ -21,6 +21,15 @@
   }
 }
 
+.navbar {
+  .navbar-inner {
+    #logo {
+      background-image: none;
+      filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='#{$theme_logo}', sizingMethod='scale');
+    }
+  }
+}
+
 .phone-number-country-code-field {
   @include opacity(1);
 }
