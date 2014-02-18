@@ -24,6 +24,7 @@ class SpaceWizardController < ApplicationController
     @location.name_required = true
     @listing ||= @location.listings.build
     @photos = @user.photos.where("listing_id IS NOT NULL") || nil
+    @user.phone_required = true
     event_tracker.viewed_list_your_bookable
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
