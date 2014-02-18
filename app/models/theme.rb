@@ -175,7 +175,7 @@ class Theme < ActiveRecord::Base
   end
 
   def twitter_handle
-    twitter_url.to_s.match(/\/(\w+)$/).try(:captures).try(:last)
+    twitter_url.to_s.scan(/\w+/).last
   end
 
   private
