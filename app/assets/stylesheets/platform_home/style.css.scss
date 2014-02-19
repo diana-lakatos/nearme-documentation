@@ -365,7 +365,12 @@ ol, ul {
     list-style: none outside none;
   }
   li {
-    padding-bottom: 18px;
+    padding-bottom: 22px;
+    &.ui-tabs-active {
+      a{
+        color: #1a7bbd;
+      }
+    }
   }
   a {
     font-size: 14px;
@@ -562,6 +567,10 @@ ol, ul {
 
 .tab {
   height: 360px;
+}
+
+#tabs {
+  min-height: 450px;
 }
 
 .tab-text {
@@ -852,11 +861,6 @@ ol, ul {
     font-size: 18px;
     padding-bottom: 0px;
     text-transform: none;
-  }
-  li {
-    ~ li{
-      margin-top: 35px;
-    }
   }
   ul{
     li {
