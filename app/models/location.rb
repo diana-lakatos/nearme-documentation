@@ -187,8 +187,8 @@ class Location < ActiveRecord::Base
     [:address, :address2, :formatted_address, :city, :street, :state, :postcode, :email, :phone, :description, :special_notes, :currency]
   end
 
-  def lowest_price
-    (searched_locations || listings.searchable).map(&:lowest_price_with_type).compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
+  def lowest_price(available_price_types = [])
+    (searched_locations || listings.searchable).map{|l| l.lowest_price_with_type(available_price_types)}.compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
   end
 
   private

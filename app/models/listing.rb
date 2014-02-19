@@ -190,8 +190,10 @@ class Listing < ActiveRecord::Base
       
   end
 
-  def lowest_price_with_type
-    PRICE_TYPES.map { |price|
+  def lowest_price_with_type(available_price_types = [])
+    PRICE_TYPES.reject{ |price|
+      !available_price_types.empty? && !available_price_types.include?(price.to_s)
+    }.map { |price|
       [self.send("#{price}_price"), price]
     }.reject{|p| p[0].to_f.zero?}.sort{|a, b| a[0] <=> b[0]}.first
   end

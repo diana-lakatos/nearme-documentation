@@ -13,6 +13,6 @@
       %span.bold= listing.capacity
       seats
   .span2.listing-price.padding-top
-    = listing_price_information(listing)
+    = listing_price_information(listing, search.lgpricing_filters)
   .span2.reserve-listing.padding-top
     = link_to 'reserve', location_listing_path(location, listing), class: "btn btn-green btn-small"
