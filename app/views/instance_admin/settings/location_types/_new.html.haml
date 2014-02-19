@@ -5,4 +5,4 @@
       .controls.controls-row
         .fields
           = f.input :name, :label => false, input_html: { class: 'span6' }
-          = f.submit "Add", :class => 'btn btn-primary inline-form-control'
+          = f.submit "Add", :disable_with => 'Saving ...', :class => 'btn btn-primary inline-form-control'
