@@ -4,4 +4,5 @@
 //= require ./vendor/jquery.simplyscroll.min
 //= require ./vendor/jquery.icheck.min.js
 //= require ./components/flash
+//= require ./vendor/modernizr
 //= require ./platform_home/main.js
