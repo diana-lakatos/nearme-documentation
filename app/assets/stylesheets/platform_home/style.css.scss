@@ -255,11 +255,17 @@ ol, ul {
   a {
     overflow: hidden;
     display: block;
-    height: 63px;
+    height: 64px;
     background: url(/assets/platform_home/logo.png) no-repeat;
-    background-size: 148px 63px;
+    background-size: 148px 64px;
     white-space: nowrap;
     text-indent: 100%;
+
+    @media (-webkit-min-device-pixel-ratio: 2),
+    (-moz-min-device-pixel-ratio: 2) {
+      background: url(/assets/platform_home/logo@2x.png) no-repeat 0 0;
+      background-size: 148px 64px;
+    }
   }
 }
 
@@ -684,16 +690,22 @@ ol, ul {
 }
 
 .logo-footer {
-  width: 289px;
+  width: 304px;
   padding-bottom: 29px;
   a {
     display: block;
     height: 53px;
     background: url(/assets/platform_home/logo-footer.png) no-repeat;
-    background-size: 289px 53px;
+    background-size: 304px 53px;
     text-indent: 100%;
     overflow: hidden;
     white-space: nowrap;
+
+    @media (-webkit-min-device-pixel-ratio: 2),
+    (-moz-min-device-pixel-ratio: 2) {
+      background: url(/assets/platform_home/logo-footer@2x.png) no-repeat 0 0;
+      background-size: 304px 53px;
+    }
   }
 }
 
