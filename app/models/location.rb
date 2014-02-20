@@ -4,6 +4,8 @@ class Location < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
   include Impressionable
+  has_metadata :accessors => [:photos_metadata]
+  include Location::RedundantDataSynchronizer
 
   attr_accessible :address, :address2, :amenity_ids, :company_id, :description, :email,
     :info, :latitude, :local_geocoding, :longitude, :currency,
@@ -27,22 +29,18 @@ class Location < ActiveRecord::Base
   belongs_to :company, inverse_of: :locations
   belongs_to :location_type
   belongs_to :administrator, class_name: "User", :inverse_of => :administered_locations
+  belongs_to :instance
+  belongs_to :creator, class_name: "User"
+  delegate :company_users, :creator=, :instance=, :to => :company, :allow_nil => true
 
-  delegate :creator, :to => :company, :allow_nil => true
-  delegate :company_users, :to => :company, :allow_nil => true
-
-  after_save :notify_user_about_change
-  after_destroy :notify_user_about_change
-
-  delegate :notify_user_about_change, :to => :company, :allow_nil => true
+  delegate :url, :to => :company
+  delegate :service_fee_guest_percent, :service_fee_host_percent, to: :company, allow_nil: true
   delegate :phone, :to => :creator, :allow_nil => true
 
   has_many :listings,
     dependent:  :destroy,
     inverse_of: :location
-
-  has_one :instance, through: :company
-
+  has_many :reservations, :through => :listings
   has_many :photos, :through => :listings
 
   has_many :availability_rules, :order => 'day ASC', :as => :target
@@ -60,7 +58,6 @@ class Location < ActiveRecord::Base
 
   before_validation :fetch_coordinates
   before_validation :parse_address_components
-  before_save :assign_default_availability_rules
 
   extend FriendlyId
   friendly_id :urlify, use: [:slugged, :history]
@@ -79,9 +76,6 @@ class Location < ActiveRecord::Base
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :listings
 
-  delegate :url, :to => :company
-  delegate :service_fee_guest_percent, to: :company, allow_nil: true
-  delegate :service_fee_host_percent, to: :company, allow_nil: true
 
   def distance_from(other_latitude, other_longitude)
     Geocoder::Calculations.distance_between([ latitude,       longitude ],
@@ -192,12 +186,6 @@ class Location < ActiveRecord::Base
   end
 
   private
-
-  def assign_default_availability_rules
-    if availability_rules.reject(&:marked_for_destruction?).empty?
-      AvailabilityRule.default_template.apply(self)
-    end
-  end
 
   def fetch_coordinates
     # If we aren't locally geocoding (cukes and people with JS off)

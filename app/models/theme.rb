@@ -175,6 +175,10 @@ class Theme < ActiveRecord::Base
     COLORS_DEFAULT_VALUES[COLORS.index(color)]
   end
 
+  def twitter_handle
+    twitter_url.to_s.scan(/\w+/).last
+  end
+
   private
 
   def unhexify_colors

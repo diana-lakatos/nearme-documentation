@@ -4,16 +4,13 @@ class AddInstanceIdToUserMessage < ActiveRecord::Migration
   end
 
   class Instance < ActiveRecord::Base
-    def self.default_instance
-      self.find_by_default_instance(true)
-    end
   end
 
   def change
     add_column :user_messages, :instance_id, :integer
     add_index :user_messages, :instance_id
 
-    dnm_instance = Instance.default_instance
+    dnm_instance = Instance.find(1)
     if dnm_instance
       UserMessage.all.each do |user_message|
         user_message.update_column(:instance_id, dnm_instance.id)

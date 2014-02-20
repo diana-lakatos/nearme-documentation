@@ -1,8 +1,9 @@
 class PlatformContextDecorator
 
-  delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?, :to => :platform_context
+  delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?,
+    :platform_context_detail, :to => :platform_context
 
-  delegate :tagline, :support_url, :blog_url, :twitter_url, :facebook_url, :gplus_url, :address,
+  delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :pages, :logo_image,
     :favicon_image, :homepage_content, :call_to_action, :to => :theme
 
@@ -44,6 +45,26 @@ class PlatformContextDecorator
       support_email_splited = self.support_email.split('@')
       support_email_splited.join("+#{error_code}@")
     end
+  end
+
+  def contact_email
+    @platform_context.theme.contact_email_with_fallback
+  end
+
+  def footer_cache_key
+    "footer_#{platform_context_detail_key}_#{normalized_footer_cache_timestamp}"
+  end
+
+  def platform_context_detail_key
+    @platform_context_detail_key = "#{platform_context_detail.class.to_s.downcase}_#{platform_context_detail.id}"
+  end
+
+  def normalized_footer_cache_timestamp
+    normalize_timestamp([pages.maximum(:updated_at), theme.updated_at].compact.max)
+  end
+
+  def normalize_timestamp(timestamp)
+    timestamp.try(:utc).try(:to_s, :number)
   end
 
   def contact_email

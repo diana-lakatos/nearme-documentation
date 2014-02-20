@@ -71,63 +71,6 @@ class MailchimpTest < ActiveSupport::TestCase
       assert_equal({}, @result)
     end
 
-    should "detect that user uploaded photo since last update" do
-      all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.zone.now+10.seconds)
-      create_photo(@user_with_listing_without_photo)
-      VCR.use_cassette('mailchimp_update_photo_flag') do
-        # in this request we test if MODPHOTO flag was updated
-        # they should, becuase we added photo after last synchronization
-        @result = MAILCHIMP.export_users
-      end
-      assert_equal({"add_count"=>0, "update_count"=>1, "error_count"=>0, "errors"=>[]}, @result)
-    end
-
-    should "detect that user updated price since last update" do
-      all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.zone.now+10.seconds)
-      listing = @user_with_listing_with_photo.listings.first
-      listing.weekly_price = 10.50
-      listing.free = false
-      listing.save!
-      assert !@user_with_listing_with_photo.has_listing_without_price?
-      VCR.use_cassette('mailchimp_update_price_flag') do
-        # in this request we test if MODPRICE flag was updated
-        # they should, becuase we added price after last synchronization
-        @result = MAILCHIMP.export_users
-      end
-      assert_equal({"add_count"=>0, "update_count"=>1, "error_count"=>0, "errors"=>[]}, @result)
-    end
-
-    should "detect that user has been verified since last email" do
-      all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.zone.now+10.seconds)
-    
-      @user_without_listing.verified_at = Time.zone.now
-      @user_without_listing.save!
-      VCR.use_cassette('mailchimp_update_verify_flag') do
-        # in this request we test if MODVERIFY flag was updated
-        # they should, becuase we verified him after last synchronization
-        @result = MAILCHIMP.export_users
-      end
-      assert_equal({"add_count"=>0, "update_count"=>1, "error_count"=>0, "errors"=>[]}, @result)
-    end
-
-    should "detect that user has deleted all listings since last email" do
-      all_users.each { |u| u.mailchimp_synchronized! }
-      Timecop.travel(Time.zone.now+10.seconds)
-      @user_with_two_listings.listings.each do |listing|
-        listing.destroy
-      end
-      assert @user_with_two_listings.listings.count.zero?
-      VCR.use_cassette('mailchimp_update_delete_listing_flag') do
-        # in this request we test if MODVERIFY flag was updated
-        # they should, becuase we verified him after last synchronization
-        @result = MAILCHIMP.export_users
-      end
-      assert_equal({"add_count"=>0, "update_count"=>1, "error_count"=>0, "errors"=>[]}, @result)
-    end
-
     end
   end
 
@@ -165,22 +108,22 @@ class MailchimpTest < ActiveSupport::TestCase
     
     def create_company(user)
       FactoryGirl.create(:company, :creator => user, :name => 'Company')
-      user
+      user.reload
     end
 
     def create_location(user)
       FactoryGirl.create(:location, :company => user.companies.first, :street => 'Street')
-      user
+      user.reload
     end
 
     def create_listing(user)
       FactoryGirl.create(:listing, :location => user.companies.first.locations.first, :photo_not_required => true, :photos_count_to_be_created => 0)
-      user
+      user.reload
     end
 
     def create_photo(user)
       FactoryGirl.create(:photo, :listing => user.listings.first, :creator => user)
-      user
+      user.reload
     end
 
     # stub urls containing dynamic id to make it work no matter if you invoke only this test, or all tests [ via rake ci for instance ]

@@ -36,7 +36,7 @@ module SearchHelper
     end
   end
 
-  def listing_price_information(listing, filter_pricing)
+  def listing_price_information(listing, filter_pricing = [])
     listing_price = listing.lowest_price_with_type(filter_pricing)
     if listing_price
       periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
@@ -44,7 +44,7 @@ module SearchHelper
     end
   end
 
-  def location_price_information(location, filter_pricing)
+  def location_price_information(location, filter_pricing = [])
     listing_price = location.lowest_price(filter_pricing)
     if listing_price
       periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
@@ -72,7 +72,7 @@ module SearchHelper
       title += search.country.to_s
     end
 
-    title + (additional_meta_title.presence ? " | " + additional_meta_title : '')
+    title + (additional_meta_title.present? ? " | " + additional_meta_title : '')
   end
 
   def meta_description_for_search(platform_context, search)
@@ -81,7 +81,6 @@ module SearchHelper
       description << ", #{search.country}"
     end
     description << ' Read reviews and book co-working space, executive suites, office space for rent, and meeting rooms.' if platform_context.is_desksnearme?
-
     description
   end
 

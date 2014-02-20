@@ -29,21 +29,21 @@ class ReservationMailer < InstanceMailer
 
   def notify_host_of_cancellation_by_guest(platform_context, reservation)
     setup_defaults(platform_context, reservation)
-    @user = @listing.administrator
+    @user = @reservation.administrator
     set_bcc_email
     generate_mail("#{reservation.owner.first_name.pluralize} cancelled a booking for '#{reservation.listing.name}' at #{reservation.location.street}")
   end
 
   def notify_host_of_cancellation_by_host(platform_context, reservation)
     setup_defaults(platform_context, reservation)
-    @user = @listing.administrator
+    @user = @reservation.administrator
     set_bcc_email
     generate_mail("You just declined a booking")
   end
 
   def notify_host_of_confirmation(platform_context, reservation)
     setup_defaults(platform_context, reservation)
-    @user = @listing.administrator
+    @user = @reservation.administrator
     set_bcc_email
     generate_mail('Thanks for confirming!')
   end
@@ -55,21 +55,21 @@ class ReservationMailer < InstanceMailer
   
   def notify_host_of_expiration(platform_context, reservation)
     setup_defaults(platform_context, reservation)
-    @user = @listing.administrator
+    @user = @reservation.administrator
     set_bcc_email
     generate_mail('A booking at one of your listings has expired')
   end
 
   def notify_host_of_rejection(platform_context, reservation)
     setup_defaults(platform_context, reservation)
-    @user = @listing.administrator
+    @user = @reservation.administrator
     set_bcc_email
     generate_mail("Can we help, #{@user.first_name}?")
   end
   
   def notify_host_with_confirmation(platform_context, reservation)
     setup_defaults(platform_context, reservation)
-    @user = @listing.administrator
+    @user = @reservation.administrator
     set_bcc_email
     @url  = manage_guests_dashboard_url(:token => @user.try(:temporary_token))
     generate_mail("#{reservation.owner.first_name} just booked your #{platform_context.decorate.bookable_noun}!")
@@ -77,7 +77,7 @@ class ReservationMailer < InstanceMailer
 
   def notify_host_without_confirmation(platform_context, reservation)
     setup_defaults(platform_context, reservation)
-    @user = @listing.administrator
+    @user = @reservation.administrator
     set_bcc_email
     @url  = manage_guests_dashboard_url(:token => @user.try(:temporary_token))
     @reserver = @reservation.owner.name
@@ -116,7 +116,7 @@ class ReservationMailer < InstanceMailer
   end
 
   def set_bcc_email
-    @bcc = @listing.location.email if @listing.location.email != @listing.administrator.try(:email)
+    @bcc = @listing.location.email if @listing.location.email != @reservation.administrator.try(:email)
   end
 
 end

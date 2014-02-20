@@ -463,4 +463,47 @@ class ReservationTest < ActiveSupport::TestCase
       assert_equal subject.state, 'rejected'
     end
   end
+
+  context 'foreign keys' do
+    setup do
+      @listing = FactoryGirl.create(:listing)
+      @reservation = FactoryGirl.create(:reservation, :listing => @listing)
+    end
+
+    should 'assign correct key immediately' do
+      @reservation = FactoryGirl.create(:reservation)
+      assert @reservation.creator_id.present?
+      assert @reservation.instance_id.present?
+      assert_equal [@reservation.listing.creator_id, @reservation.listing.instance_id], [@reservation.creator_id, @reservation.instance_id]
+    end
+
+    should 'assign correct creator_id' do
+      assert_equal @listing.creator_id, @reservation.creator_id
+    end
+
+    should 'assign correct instance_id' do
+      assert_equal @listing.instance_id, @reservation.instance_id
+    end
+
+    should 'assign administrator_id' do
+      @reservation.location.update_attribute(:administrator_id, @reservation.location.creator_id + 1)
+      assert_equal @reservation.location.administrator_id, @reservation.reload.administrator_id
+    end
+
+    context 'update company' do
+      setup do
+        @reservation.company.update_attribute(:instance_id, @reservation.company.instance_id + 1)
+        @reservation.company.update_attribute(:creator_id, @reservation.company.creator_id + 1)
+      end
+
+      should 'assign correct creator_id' do
+        assert_equal @reservation.company.creator_id, @reservation.reload.creator_id
+      end
+
+      should 'assign correct instance_id' do
+        assert_equal @reservation.company.instance_id, @reservation.reload.instance_id
+      end
+
+    end
+  end
 end
