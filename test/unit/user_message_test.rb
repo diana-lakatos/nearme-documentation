@@ -53,4 +53,28 @@ class UserMessageTest < ActiveSupport::TestCase
     end
   end
 
+  context 'author_has_access_to_message_context' do
+
+    should 'return true if reservation is a thread_context and author is company user' do
+      @listing = FactoryGirl.create(:listing)
+      @reservation = FactoryGirl.create(:reservation, listing: @listing)
+      @user = FactoryGirl.create(:user)
+      CompanyUser.create(company_id: @reservation.company.id, user_id: @user.id)
+
+      @user_message = FactoryGirl.create(:user_message,
+                                         thread_context: @listing,
+                                         thread_owner: @user,
+                                         thread_recipient: @reservation.owner,
+                                         author: @user
+                                        )
+
+      assert_nothing_raised do
+        @user_message.author_has_access_to_message_context?
+      end
+
+      assert @user_message.author_has_access_to_message_context?
+    end
+
+  end
+
 end

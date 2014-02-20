@@ -128,7 +128,8 @@ class UserMessage < ActiveRecord::Base
     when Reservation
       author == thread_context.owner ||
         author == thread_context.listing.administrator ||
-        author == thread_context.listing.creator
+        author == thread_context.listing.creator ||
+        author.can_manage_listing?(thread_context.listing)
     else
       false
     end
