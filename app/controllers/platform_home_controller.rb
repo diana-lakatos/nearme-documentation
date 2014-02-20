@@ -21,7 +21,7 @@ class PlatformHomeController < ActionController::Base
   end
 
   def contact_submit
-    @platform_contact = PlatformContact.create(params[:platform_contact])
+    @platform_contact = PlatformContact.new(params[:platform_contact])
     if @platform_contact.save
       PlatformMailer.enqueue.contact_request(@platform_contact)
       render :contact_submit, layout: false
@@ -42,8 +42,7 @@ class PlatformHomeController < ActionController::Base
   end
 
   def demo_request_submit
-    @platform_demo_request = PlatformDemoRequest.create(params[:platform_demo_request])
-
+    @platform_demo_request = PlatformDemoRequest.new(params[:platform_demo_request])
     if @platform_demo_request.save
       PlatformMailer.enqueue.demo_request(@platform_demo_request)
       render :demo_request_submit, layout: false
