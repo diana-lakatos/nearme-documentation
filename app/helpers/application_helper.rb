@@ -68,7 +68,7 @@ module ApplicationHelper
       end
 
       truncated_body_str = truncated_body.join(' ')
-      truncated_body_regexp = Regexp.new("^#{truncated_body_str}")
+      truncated_body_regexp = Regexp.new("^#{Regexp.escape(truncated_body_str)}")
       excess_body = body.gsub(truncated_body_regexp, '').strip
 
       content_tag(:p, html_options) do

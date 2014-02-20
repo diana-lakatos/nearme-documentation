@@ -46,6 +46,11 @@ FactoryGirl.define do
       end
     end
 
+    factory :listing_with_10_dollars_per_hour do
+      hourly_price_cents 1000
+      hourly_reservations true
+    end
+
     factory :call_listing do
       after(:create) do |listing|
         listing.daily_price_cents = nil

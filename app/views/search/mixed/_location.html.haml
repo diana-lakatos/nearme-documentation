@@ -36,7 +36,7 @@
 
         .price-and-types
           .location-price
-            = location_price_information(location)
+            = location_price_information(location, search.lgpricing_filters)
           %ul.nav.nav-tabs
             - listing_types_data.each_with_index do |(listing_type_id, listing_type_data), i|
               %li{class: i.zero? ? 'active' : ''}
@@ -49,4 +49,4 @@
         - listing_types_data.each_with_index do |(listing_type_id, listing_type_data), i|
           .tab-pane{id: "listing-types-#{location.id}-#{listing_type_id}", class: i.zero? ? 'active' : '' }
             .title
-              = render partial: 'search/mixed/listing', collection: listing_type_data[:listings], locals: { location: location }
+              = render partial: 'search/mixed/listing', collection: listing_type_data[:listings], locals: { location: location, search: search  }
