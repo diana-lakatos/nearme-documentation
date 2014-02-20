@@ -16,6 +16,11 @@ DesksnearMe::Application.routes.draw do
     get '/careers/sales-representative', :to => 'platform_home#sales_representative'
     get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe', :as => 'platform_email_unsubscribe'
     get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe', :as => 'platform_email_resubscribe'
+
+    constraints protocol: 'https://' do # Read the commit message for rationale
+      get '/demo-requests/DsNvigiE6I9ZGwtsFGrcIw', :to => 'platform_home#demo_requests'
+      get '/contacts/tgKQstjun1AgHWJ1kgevNg', :to => 'platform_home#contacts'
+    end
   end
 
   constraints host: 'near-me-app.com' do

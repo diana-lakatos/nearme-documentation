@@ -13,6 +13,13 @@ class PlatformHomeController < ActionController::Base
     @platform_contact = PlatformContact.new
   end
 
+  def contacts
+    @platform_contacts = PlatformContact.order(:id)
+    respond_to do |format|
+      format.csv { send_data @platform_contacts.to_csv }
+    end
+  end
+
   def contact_submit
     @platform_contact = PlatformContact.create(params[:platform_contact])
     if @platform_contact.save
@@ -25,6 +32,13 @@ class PlatformHomeController < ActionController::Base
 
   def demo_request
     @platform_demo_request = PlatformDemoRequest.new
+  end
+
+  def demo_requests
+    @platform_demo_requests = PlatformDemoRequest.order(:id)
+    respond_to do |format|
+      format.csv { send_data @platform_demo_requests.to_csv }
+    end
   end
 
   def demo_request_submit
