@@ -20,12 +20,12 @@ class PriceValidator < ActiveModel::Validator
 
         if record.instance.send("min_#{price}_price").present? &&
           record_price < record.instance.send("min_#{price}_price")
-          record.errors.add("#{price}_price".to_sym, "#{price.capitalize} price is too low")
+          record.errors.add("#{price}_price".to_sym, I18n.t('validation_messages.price_too_low', price: price.capitalize))
         end
 
         if record.instance.send("max_#{price}_price").present? &&
           record_price > record.instance.send("max_#{price}_price")
-          record.errors.add("#{price}_price".to_sym, "#{price.capitalize} price is too high")
+          record.errors.add("#{price}_price".to_sym, I18n.t('validation_messages.price_too_high', price: price.capitalize))
         end
       end
     end
