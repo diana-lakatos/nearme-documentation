@@ -33,7 +33,8 @@ Given /^(.*) does( not)? require confirmation for his listing$/ do |person, with
   @listing = FactoryGirl.create(:listing)
   @listing.confirm_reservations = !with_confirmation
   @listing.save
-  @listing.creator = User.find_by_name(person)
+  @listing.company.update_attribute(:creator_id, User.find_by_name(person).id)
+  @listing.reload
 end
 
 When /^I view that listing's edit page$/ do

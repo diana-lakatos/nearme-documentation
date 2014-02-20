@@ -83,8 +83,9 @@ class UserTest < ActiveSupport::TestCase
 
     context 'hosts_of_listing' do
       should 'find host of listing in friends' do
-        @listing.location.administrator = friend1 = FactoryGirl.create(:user)
-        @listing.save!
+        friend1 = FactoryGirl.create(:user)
+        @listing.location.update_attribute(:administrator_id, friend1.id)
+        @listing.reload
         friend2 = FactoryGirl.create(:user)
         @me.add_friends([friend1, friend2])
 
@@ -100,11 +101,13 @@ class UserTest < ActiveSupport::TestCase
         @me.add_friend(@friend)
 
         @listing = FactoryGirl.create(:listing)
-        @listing.location.administrator = host = FactoryGirl.create(:user)
-        @listing.save!
+        host = FactoryGirl.create(:user)
+        @listing.location.update_attribute(:administrator_id, host.id)
+        @listing.reload
 
         @friend.add_friend(host)
 
+        @me.reload
         assert_equal [@friend], @me.friends.know_host_of(@listing)
       end
     end
@@ -492,104 +495,6 @@ class UserTest < ActiveSupport::TestCase
           @user.mailchimp_synchronized!
           assert @user.mailchimp_synchronized?
         end
-
-        context "company CRUD" do
-
-          setup do
-            @company = FactoryGirl.create(:company, :creator => @user)
-            @user.mailchimp_synchronized!
-            Timecop.travel(Time.zone.now+10.seconds)
-          end
-
-          should "not be synchronized if change to company happened since last synchronize" do
-            @company.name = "New name"
-            @company.save!
-            assert !@user.mailchimp_synchronized?
-          end
-
-          should "not be synchronized if user destroyes company since last synchronize" do
-            @company.destroy!
-            assert !@user.mailchimp_synchronized?
-          end
-
-
-          context "location CRUD" do
-
-            setup do 
-              @location = FactoryGirl.create(:location, :company => @company)
-              @user.mailchimp_synchronized!
-              Timecop.travel(Time.zone.now+10.seconds)
-            end
-
-            should "not be synchronized if change to location happened since last synchronize" do
-              @location.address = '1100 Rock and Roll Boulevard'
-              @location.latitude = "41.508806"
-              @location.longitude = "-81.69548"
-              @location.save!
-              assert !@user.mailchimp_synchronized?
-            end
-
-            should "not be synchronized if user creates new location since last synchronize" do
-              @location = FactoryGirl.create(:location, :company => @company)
-              assert !@user.mailchimp_synchronized?
-            end
-
-            should "not be synchronized if user destroyes location since last synchronize" do
-              @location.destroy!
-              assert !@user.mailchimp_synchronized?
-            end
-
-            context "listing CRUD" do
-
-              setup do
-                @listing = FactoryGirl.create(:listing, :location => @location)
-                @user.mailchimp_synchronized!
-                Timecop.travel(Time.zone.now+10.seconds)
-              end
-
-              should "not be synchronized if change to listing happened since last synchronize" do
-                @listing.weekly_price = 10
-                @listing.save!
-                assert !@user.mailchimp_synchronized?
-              end
-
-              should "not be synchronized if user creates new listing since last synchronize" do
-                @listing = FactoryGirl.create(:listing, :location => @location)
-                assert !@user.mailchimp_synchronized?
-              end
-
-              should "not be synchronized if user destroyes listing since last synchronize" do
-                @listing.destroy!
-                assert !@user.mailchimp_synchronized?
-              end
-
-              context "photo CRUD" do
-
-                setup do
-                  @photo = FactoryGirl.create(:photo, :listing => @listing)
-                  @user.mailchimp_synchronized!
-                  Timecop.travel(Time.zone.now+10.seconds)
-                end
-
-                should "be synchronized if change to photo happened since last synchronize" do
-                  @photo.caption = "New caption"
-                  @photo.save!
-                  assert @user.mailchimp_synchronized?
-                end
-
-                should "not be synchronized if user creates new photo since last synchronize" do
-                  @photo = FactoryGirl.create(:photo, :listing => @listing)
-                  assert !@user.mailchimp_synchronized?
-                end
-
-                should "not be synchronized if user destroyes photo since last synchronize" do
-                  @photo.destroy!
-                  assert !@user.mailchimp_synchronized?
-                end
-              end
-            end
-          end
-        end
       end
     end
 
@@ -605,17 +510,17 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "has listing without price return false if all listings have price" do
-        assert !@user.has_listing_without_price?
+        assert !@user.reload.has_listing_without_price?
       end
 
       should "be false if location has only one listing without prices" do
         FactoryGirl.create(:listing, :location => @location2, :daily_price_cents => nil, :weekly_price_cents => nil, :monthly_price_cents => nil, :free => true)
-        assert @user.has_listing_without_price?
+        assert @user.reload.has_listing_without_price?
       end
 
       should "be false if location has many listing, and at least one is without price" do
         FactoryGirl.create(:listing, :location => @location, :daily_price_cents => nil, :weekly_price_cents => nil, :monthly_price_cents => nil, :free => true)
-        assert @user.has_listing_without_price?
+        assert @user.reload.has_listing_without_price?
       end
 
     end
@@ -781,27 +686,126 @@ class UserTest < ActiveSupport::TestCase
       @user.sms_preferences = {"new_reservation" => '1'}
       assert @user.accepts_sms_with_type?(:new_reservation)
     end
+
+  end
+
+  context 'metadata' do
+
+
+    context 'listings_metadata' do
+
+      setup do
+        @listing = FactoryGirl.create(:listing)
+        @user = @listing.creator
+      end
+
+      should 'have active listing and no draft listing if has only one active listing metadata' do
+        @user.expects(:update_metadata).with({
+          has_draft_listings: false,
+          has_any_active_listings: true
+        })
+        @user.populate_listings_metadata!
+      end
+
+      should 'have active listing and draft listing if there are both draft and active listing' do
+        FactoryGirl.create(:listing, :draft => Time.zone.now, :location => @listing.location)
+        @user.expects(:update_metadata).with({
+          has_draft_listings: true,
+          has_any_active_listings: true
+        })
+        @user.populate_listings_metadata!
+      end
+
+      should 'have only draft listing if there is only draft listing, but should respond to update' do
+        @listing.update_attribute(:draft, Time.zone.now)
+        @user.expects(:update_metadata).with({
+          has_draft_listings: true,
+          has_any_active_listings: false
+        })
+        @user.populate_listings_metadata!
+        @listing.update_attribute(:draft, nil)
+        @user.expects(:update_metadata).with({
+          has_draft_listings: false,
+          has_any_active_listings: true
+        })
+        @user.populate_listings_metadata!
+      end
+
+      should 'have no draft and no active listings if there is no listing at all' do
+        @listing.destroy
+        @user.expects(:update_metadata).with({
+          has_draft_listings: false,
+          has_any_active_listings: false
+        })
+        @user.populate_listings_metadata!
+      end
+    end
+
+    context 'populate_companies_metadata' do
+
+      setup do
+        @listing = FactoryGirl.create(:listing)
+        @user = @listing.creator
+      end
+
+      should 'have no active listing if company is assigned to someone else and have active listing if assigned back' do
+        @company = @listing.company
+        @listing.company.company_users.first.destroy
+        @user.expects(:update_metadata).with({
+          companies_metadata: [],
+          has_draft_listings: false,
+          has_any_active_listings: false
+        })
+        @user.reload.populate_companies_metadata!
+        @listing.company.company_users.create(:user_id => @user.id)
+        @user.expects(:update_metadata).with({
+          companies_metadata: [@company.id],
+          has_draft_listings: false,
+          has_any_active_listings: true
+        })
+        @user.reload.populate_companies_metadata!
+      end
+
+    end
+
+    context 'populate_instance_admins_metadata' do
+
+      setup do
+        @instance_admin = FactoryGirl.create(:instance_admin)
+        @user = @instance_admin.user
+      end
+
+      should 'populate correct instance_admin hash' do
+        @user.expects(:update_metadata).with({ 
+          :instance_admins_metadata => {
+            "#{@instance_admin.instance_id}" => 'analytics'
+          }
+        })
+        @user.populate_instance_admins_metadata!
+      end
+
+    end
   end
 
   private
 
   def setup_user_with_all_objects
-      @user = FactoryGirl.create(:user)
-      @user_industry = UserIndustry.create(:user_id => @user.id, :industry_id => @industry.id)
-      @authentication = FactoryGirl.create(:authentication, :user => @user)
-      @company = FactoryGirl.create(:company, :creator => @user)
-      @company_industry = CompanyIndustry.where(:company_id => @company.id).first
-      @location = FactoryGirl.create(:location, :company_id => @company.id)
-      @listing = FactoryGirl.create(:listing, :location => @location)
-      @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
-      @reservation = FactoryGirl.create(:reservation, :user => @user, :listing => @listing)
-      @reservation_period = @reservation.periods.first
-      @reservation_charge = FactoryGirl.create(:reservation_charge, :reservation => @reservation)
-      @charge = FactoryGirl.create(:charge, :reference => @reservation_charge)
-      @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
-      @objects = [@user, @user_industry, @authentication, @company, @company_industry, 
-                  @location, @listing, @photo, @reservation, @reservation_period, 
-                  @payment_transfer, @reservation_charge, @charge]
+    @user = FactoryGirl.create(:user)
+    @user_industry = UserIndustry.create(:user_id => @user.id, :industry_id => @industry.id)
+    @authentication = FactoryGirl.create(:authentication, :user => @user)
+    @company = FactoryGirl.create(:company, :creator => @user)
+    @company_industry = CompanyIndustry.where(:company_id => @company.id).first
+    @location = FactoryGirl.create(:location, :company_id => @company.id)
+    @listing = FactoryGirl.create(:listing, :location => @location)
+    @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
+    @reservation = FactoryGirl.create(:reservation, :user => @user, :listing => @listing)
+    @reservation_period = @reservation.periods.first
+    @reservation_charge = FactoryGirl.create(:reservation_charge, :reservation => @reservation)
+    @charge = FactoryGirl.create(:charge, :reference => @reservation_charge)
+    @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
+    @objects = [@user, @user_industry, @authentication, @company, @company_industry, 
+                @location, @listing, @photo, @reservation, @reservation_period, 
+                @payment_transfer, @reservation_charge, @charge]
   end
 
 end

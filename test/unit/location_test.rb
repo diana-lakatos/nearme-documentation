@@ -202,4 +202,108 @@ class LocationTest < ActiveSupport::TestCase
       assert_equal "San Francisco", @location.street # this is first part of address
     end
   end
+
+  context 'metadata' do
+
+    context 'populating hash' do
+      setup do
+        @location = FactoryGirl.create(:listing).location
+        @photo = @location.photos.first
+      end
+
+      should 'initialize metadata' do
+        @location.expects(:update_metadata).with(photos_metadata: [{
+          space_listing: @photo.image_url(:space_listing),
+          golden: @photo.image_url(:golden),
+          large: @photo.image_url(:large),
+          listing_name: @photo.listing.name,
+          caption:@photo.caption
+        }])
+        @location.populate_photos_metadata!
+      end
+
+      context'with second image' do
+
+        setup do
+          @photo2 = FactoryGirl.create(:photo, :listing => @location.listings.first)
+        end
+
+        should 'update existing metadata' do
+          @location.expects(:update_metadata).with(photos_metadata: [{
+            space_listing:  @photo.image_url(:space_listing),
+            golden:  @photo.image_url(:golden),
+            large:  @photo.image_url(:large),
+            listing_name:  @photo.listing.name,
+            caption:  @photo.caption
+          },
+          {
+            space_listing:  @photo2.image_url(:space_listing),
+            golden:  @photo2.image_url(:golden),
+            large:  @photo2.image_url(:large),
+            listing_name:  @photo2.listing.name,
+            caption:  @photo2.caption
+          }])
+          @location.populate_photos_metadata!
+        end
+      end
+
+    end
+
+  end
+
+  context 'foreign keys' do
+    setup do
+      @company = FactoryGirl.create(:company)
+      @location = FactoryGirl.create(:location, :company => @company)
+    end
+
+    should 'assign correct key immediately' do
+      @location = FactoryGirl.create(:location)
+      assert @location.creator_id.present?
+      assert @location.instance_id.present?
+      assert_equal [@location.company.creator_id, @location.company.instance_id], [@location.creator_id, @location.instance_id]
+    end
+
+    should 'assign correct creator_id' do
+      assert_equal @company.creator_id, @location.creator_id
+    end
+
+    should 'assign correct instance_id' do
+      assert_equal @company.instance_id, @location.instance_id
+    end
+
+    context 'update company' do
+      setup do
+        @company.update_attribute(:instance_id, @company.instance_id + 1)
+        @company.update_attribute(:creator_id, @company.creator_id + 1)
+      end
+
+      should 'assign correct creator_id' do
+        assert_equal @company.creator_id, @location.reload.creator_id
+      end
+
+      should 'assign correct instance_id' do
+        assert_equal @company.instance_id, @location.reload.instance_id
+      end
+
+    end
+  end
+
+  context 'listings_public' do
+
+    should 'be false if parent company has false' do
+      @company = FactoryGirl.create(:company, :listings_public => false)
+      @location = FactoryGirl.create(:location, :company => @company)
+      refute @location.listings_public
+    end
+
+    should 'be false if updated' do
+      @company = FactoryGirl.create(:company)
+      @location = FactoryGirl.create(:location, :company => @company)
+      assert @location.listings_public
+      @company.update_attribute(:listings_public, false)
+      refute @location.reload.listings_public
+    end
+
+  end
 end

@@ -1,7 +1,9 @@
 class Photo < ActiveRecord::Base
   has_paper_trail
+  acts_as_paranoid
 
   include RankedModel
+  has_metadata :without_db_column => true
 
   ranks :position, with_same: [:listing_id]
 
@@ -10,16 +12,6 @@ class Photo < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
 
   default_scope -> { rank(:position) }
-  
-  acts_as_paranoid
-
-  after_create :notify_user_about_change
-  after_destroy :notify_user_about_change
-  after_save :update_counter
-  after_destroy :update_counter
-
-  delegate :notify_user_about_change, :to => :listing, :allow_nil => true
-
 
   validates :image, :presence => true,  :if => lambda { |p| !p.image_original_url.present? }
 
@@ -30,10 +22,5 @@ class Photo < ActiveRecord::Base
 
   # Don't delete the photo from s3
   skip_callback :commit, :after, :remove_image!
-
-  private
-  def update_counter
-    listing.update_column(:photos_count, listing.photos.count) if listing.present?
-  end
 
 end
