@@ -18,15 +18,7 @@ class Listings::ReservationsController < ApplicationController
         @reservation.schedule_expiry
         ReservationMailer.enqueue.notify_host_with_confirmation(platform_context, @reservation)
         ReservationMailer.enqueue.notify_guest_with_confirmation(platform_context, @reservation)
-        begin
-          ReservationSmsNotifier.notify_host_with_confirmation(@reservation).deliver
-        rescue Twilio::REST::RequestError => e
-          if e.message.include?('is not a valid phone number')
-            @reservation.host.notify_about_wrong_phone_number(platform_context)
-          else
-            BackgroundIssueLogger.log_issue("[internal] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{@reservation.id}, guest #{current_user.name} (#{current_user.id}). #{$!.inspect}")
-          end
-        end
+        ReservationSmsNotifier.notify_host_with_confirmation(@reservation).deliver_with_context(platform_context, @reservation.host, "Reservation id: #{@reservation.id}, guest #{current_user.name} (#{current_user.id}).")
         event_tracker.updated_profile_information(@reservation.owner)
         event_tracker.updated_profile_information(@reservation.host)
       else

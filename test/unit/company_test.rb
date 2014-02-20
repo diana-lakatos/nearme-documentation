@@ -55,8 +55,8 @@ class CompanyTest < ActiveSupport::TestCase
       should 'notify host via sms and email if company has no payout option and instance supports payouts' do
         @company.stubs(:created_payment_transfers).returns([mock()])
         @mock = mock()
-        @mock.expects(:deliver).twice
-        CompanySmsNotifier.expects(:notify_host_of_no_payout_option).with(@company).returns(@mock)
+        @mock.expects(:deliver).once
+        CompanySmsNotifier.expects(:notify_host_of_no_payout_option).with(@company).returns(stub(deliver_with_context: true)).once
         CompanyMailer.expects(:notify_host_of_no_payout_option).with(@company).returns(@mock)
         @company.schedule_payment_transfer
       end

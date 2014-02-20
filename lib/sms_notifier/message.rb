@@ -39,6 +39,18 @@ class SmsNotifier::Message
   end
   alias_method :deliver!, :deliver
 
+  def deliver_with_context(platform_context, user, error_message = '')
+    begin
+      deliver
+    rescue Twilio::REST::RequestError => e
+      if e.message.include?('is not a valid phone number')
+        user.notify_about_wrong_phone_number(platform_context)
+      else
+        BackgroundIssueLogger.log_issue("[internal] twilio error - #{e.message}", "support@desksnear.me", "#{error_message} #{$!.inspect}")
+      end
+    end
+  end
+
   private
 
   def twilio_client

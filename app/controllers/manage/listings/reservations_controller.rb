@@ -74,11 +74,7 @@ class Manage::Listings::ReservationsController < ApplicationController
   end
 
   def notify_guest_about_reservation_status_change
-    begin
-      ReservationSmsNotifier.notify_guest_with_state_change(@reservation).deliver
-    rescue Twilio::REST::RequestError => e
-      BackgroundIssueLogger.log_issue("[internal] twilio error - #{e.message}", "support@desksnear.me", "Reservation id: #{@reservation.id}, guest #{@reservation.owner.name} (#{@reservation.owner.id}). #{e.inspect}")
-    end
+    ReservationSmsNotifier.notify_guest_with_state_change(@reservation).deliver_with_context(platform_context, @reservation.owner, "Reservation id: #{@reservation.id}, guest #{@reservation.owner.name} (#{@reservation.owner.id}).")
   end
 
   def track_reservation_update_profile_informations

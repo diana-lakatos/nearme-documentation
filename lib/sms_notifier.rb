@@ -62,6 +62,10 @@ class SmsNotifier < AbstractController::Base
       false
     end
     alias_method :deliver!, :deliver
+
+    def deliver_with_context(platform_context, user, error_message = '')
+      false
+    end
   end
 
   def initialize(message_name, *args)
