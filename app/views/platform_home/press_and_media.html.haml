@@ -12,22 +12,19 @@
           %ul
             %li
               %a{href: "https://medium.com/all-things-crowd/fe1e46b8c02f", target:"_blank"}
-                = image_tag "/assets/platform_home/press-medium.png", size: '60x60'
+                = image_tag "/assets/platform_home/press-medium.png", size: '60x60', alt: 'Medium Logo'
               %p “The convergence of all things crowd had quite a 2013. Startup to watch Near-Me.com...“
               %p.date January, 2014
             %li
               %a{href: "http://www.shareable.net/blog/need-a-place-to-work-here-are-9-coworking-apps-that-can-help", target:"_blank"}
-                = image_tag "/assets/platform_home/press-shareable.png", size: '188x27'
+                = image_tag "/assets/platform_home/press-shareable.png", size: '188x27', alt: 'Shareable Logo'
               %p “DesksNear.Me is the largest provider of shared work spaces with over 9,000 listings at over 1,400 companies worldwide...”
               %p.date December, 2013
             %li
               %a{href: "http://www.pressheretv.com/predictions-for-2014/", target:"_blank"}
-                = image_tag "/assets/platform_home/press-nbc.png", size: '60x62'
+                = image_tag "/assets/platform_home/press-nbc.png", size: '60x62', alt: 'NBC Logo'
               %p “A major hotel chain will launch their own branded version of Airbnb...”
               %p.date January, 2014
           .callout-gray
             %h3 Get in Touch
-            %p
-              Email
-              %a{href: "mailto:press@near-me.com"} press@near-me.com
-              with inquiries
+            %p= raw "Email #{mail_to('press@near-me.com', nil, :encode => :javascript)} with inquiries"
