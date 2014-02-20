@@ -36,13 +36,19 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   def update_store_for_instance_if_necessary(instance_id)
     _instance_key = instance_key(instance_id)
     cache_updated_at = read_cached_at_for(_instance_key)
-    if !@store[_instance_key] || (cache_updated_at && cache_updated_at > get_cache_timestamp_for(_instance_key))
+    if @store[_instance_key].nil? || (cache_updated_at && cache_updated_at > get_cache_timestamp_for(_instance_key))
       touch_cache_timestamp_for(_instance_key, cache_updated_at)
-      @store[_instance_key] = @cache.fetch "locales.#{_instance_key}" do
-        touch_cache_timestamp_for(_instance_key, nil)
-        populate(instance_id)
-        @store[_instance_key]
-      end
+      update_store(_instance_key)
+    end
+  end
+
+  def update_store(_instance_key)
+    @store[_instance_key] = @cache.fetch "locales.#{_instance_key}" do
+      # setting timestamp to nil here is to protect from case when cache_updated_at is set, 
+      # but there is no actual data. In that case, we want to populate all transactions
+      touch_cache_timestamp_for(_instance_key, nil)
+      populate(instance_id)
+      @store[_instance_key]
     end
   end
 
@@ -133,7 +139,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   def instance_key(instance_id)
     instance_id.present? ? "#{instance_id}".to_sym : :default
   end
-  
+
   def write_cached_at_for(_instance_key)
     Time.zone.now.tap { |time| @cache.write "locales.#{_instance_key}.cached_at", time }
   end
