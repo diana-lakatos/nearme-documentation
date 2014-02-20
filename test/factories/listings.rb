@@ -17,10 +17,12 @@ FactoryGirl.define do
     end
 
     after(:build) do |listing, evaluator|
-      listing.photos = create_list(:photo, evaluator.photos_count_to_be_created,
-                                   listing: nil,
-                                   creator: listing.location.creator)
-      listing.photos_count = evaluator.photos_count_to_be_created
+      if listing.photos.empty?
+        listing.photos = create_list(:photo, evaluator.photos_count_to_be_created,
+                                     listing: nil,
+                                     creator: listing.location.creator)
+        listing.photos_count = evaluator.photos_count_to_be_created
+      end
     end
 
     factory :always_open_listing do

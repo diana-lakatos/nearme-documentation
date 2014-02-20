@@ -3,6 +3,9 @@ class Company < ActiveRecord::Base
   acts_as_paranoid
   URL_REGEXP = URI::regexp(%w(http https))
 
+  has_metadata :accessors => [:industries_metadata]
+  include Company::RedundantDataSynchronizer
+
   attr_accessible :creator_id, :description, :url, :email, :name,
     :mailing_address, :paypal_email, :industry_ids, :locations_attributes,
     :domain_attributes, :theme_attributes, :instance_id, :white_label_enabled,
@@ -13,46 +16,29 @@ class Company < ActiveRecord::Base
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance
   belongs_to :partner
-
   has_many :company_users, dependent: :destroy
   has_many :users, :through => :company_users
-
-  has_many :locations,
-           dependent: :destroy,
-           inverse_of: :company
-
-  has_many :listings,
-           through: :locations
-
-  has_many :reservations,
-           through: :listings
-
-  has_many :reservation_charges,
-           through: :reservations
-
+  has_many :locations, dependent: :destroy, inverse_of: :company
+  has_many :listings, :through => :locations
+  has_many :reservations, :through => :listings
+  has_many :reservation_charges, through: :reservations
   has_many :payment_transfers, :dependent => :destroy
-
   has_many :company_industries, :dependent => :destroy
   has_many :industries, :through => :company_industries
-
   has_one :domain, :as => :target, :dependent => :destroy
   has_one :theme, :as => :owner, :dependent => :destroy
 
-  has_many :locations_impressions,
-    :source => :impressions,
-    :through => :locations do
-      def for_instance(instance)
-        location_ids = proxy_association.owner.locations.for_instance(instance).pluck(:id)
-        where(:impressionable_id => location_ids)
-      end
+  has_many :locations_impressions, :source => :impressions, :through => :locations do
+    def for_instance(instance)
+      location_ids = proxy_association.owner.locations.for_instance(instance).pluck(:id)
+      where(:impressionable_id => location_ids)
     end
+  end
 
   has_many :instance_clients, :as => :client, :dependent => :destroy
 
   before_validation :add_default_url_scheme
 
-  after_save :notify_user_about_change
-  after_destroy :notify_user_about_change
   before_save :create_bank_account_in_balanced!, :if => lambda { |c| c.bank_account_number.present? || c.bank_routing_number.present? || c.bank_owner_name.present? }
 
   validates_presence_of :name, :instance_id
@@ -78,9 +64,6 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :locations
 
-  def notify_user_about_change
-    creator.try(:touch)
-  end
 
   def add_creator_to_company_users
     unless users.include?(creator)
@@ -97,8 +80,8 @@ class Company < ActiveRecord::Base
   def schedule_payment_transfer
     self.created_payment_transfers = []
     transaction do
-      charges = reservation_charges.needs_payment_transfer
-      charges.group_by(&:currency).each do |currency, charges|
+      charges_without_payment_transfer = reservation_charges.needs_payment_transfer
+      charges_without_payment_transfer.group_by(&:currency).each do |currency, charges|
         payment_transfer = payment_transfers.create!(
           reservation_charges: charges
         )
@@ -141,8 +124,6 @@ class Company < ActiveRecord::Base
   def to_liquid
     CompanyDrop.new(self)
   end
-
-  private
 
   def add_default_url_scheme
     if url.present? && !/^(http|https):\/\//.match(url)

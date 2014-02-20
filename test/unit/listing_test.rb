@@ -236,4 +236,160 @@ class ListingTest < ActiveSupport::TestCase
       assert_equal monday+2.day, @listing.first_available_date
     end
   end
+
+  context 'metadata' do
+
+    context 'populating photo hash' do
+      setup do
+        @listing = FactoryGirl.create(:listing)
+        @photo = @listing.photos.first
+      end
+
+      should 'initialize metadata' do
+        @listing.expects(:update_metadata).with(:photos_metadata => [{
+          :space_listing => @photo.image_url(:space_listing),
+          :golden => @photo.image_url(:golden),
+          :large => @photo.image_url(:large),
+        }])
+        @listing.populate_photos_metadata!
+      end
+
+      should 'trigger location metadata' do
+        Location.any_instance.expects(:populate_photos_metadata!).once
+        @listing.populate_photos_metadata!
+      end
+
+      context 'with second image' do
+
+        setup do
+          @photo2 = FactoryGirl.create(:photo, :listing => @listing)
+        end
+
+        should 'update existing metadata' do
+          @listing.expects(:update_metadata).with(:photos_metadata => [
+            {
+              :space_listing => @photo.image_url(:space_listing),
+              :golden => @photo.image_url(:golden),
+              :large => @photo.image_url(:large),
+            },
+            {
+              :space_listing => @photo2.image_url(:space_listing),
+              :golden => @photo2.image_url(:golden),
+              :large => @photo2.image_url(:large),
+            }
+          ])
+          @listing.populate_photos_metadata!
+        end
+      end
+
+    end
+
+    context 'populate_listing_type_name' do
+      setup do
+        @listing = FactoryGirl.create(:listing)
+      end
+
+      should 'trigger populate_listing_type_name_metadata if listing_type_id changed' do
+        @listing.expects(:populate_listing_type_name_metadata!).once
+        @listing.update_attribute(:listing_type_id, FactoryGirl.create(:listing_type))
+      end
+
+      should 'not trigger populate_listing_type_name_metadata if name changed' do
+        @listing.expects(:populate_listing_type_name_metadata!).never
+        @listing.update_attribute(:name, 'New name')
+      end
+
+      should 'store the right listing_type_name' do
+        @listing.update_attribute(:listing_type_id, FactoryGirl.create(:listing_type, :name => 'cool listing type').id)
+        @listing.expects(:update_metadata).with({:listing_type_name => 'cool listing type' })
+        @listing.populate_listing_type_name_metadata!
+      end
+
+    end
+    context 'should_populate_creator_listings_metadata?' do
+
+      setup do
+        @listing = FactoryGirl.create(:listing)
+      end
+
+      should 'return true if new listing is created' do
+        assert @listing.should_populate_creator_listings_metadata?
+      end
+
+      should 'return true if listing is destroyed' do
+        @listing.destroy
+        assert @listing.should_populate_creator_listings_metadata?
+      end
+
+      should 'return true if draft changed' do
+        @listing.update_attribute(:draft, Time.zone.now)
+        assert @listing.should_populate_creator_listings_metadata?
+      end
+
+      should 'return false if name changed' do
+        @listing.update_attribute(:name, 'new name')
+        refute @listing.should_populate_creator_listings_metadata?
+      end
+
+      context 'triggering' do
+
+        should 'not trigger populate listings metadata on user if condition fails' do
+          User.any_instance.expects(:populate_listings_metadata!).never
+          Listing.any_instance.expects(:should_populate_creator_listings_metadata?).returns(false)
+          FactoryGirl.create(:listing)
+        end
+
+        should 'trigger populate listings metadata on user if condition succeeds' do
+          User.any_instance.expects(:populate_listings_metadata!).once
+          Listing.any_instance.expects(:should_populate_creator_listings_metadata?).returns(true)
+          FactoryGirl.create(:listing)
+        end
+
+      end
+    end
+
+  end
+
+  context 'foreign keys' do
+    setup do
+      @location = FactoryGirl.create(:location)
+      @listing = FactoryGirl.create(:listing, :location => @location)
+    end
+
+    should 'assign correct key immediately' do
+      @listing = FactoryGirl.create(:listing)
+      assert @listing.creator_id.present?
+      assert @listing.instance_id.present?
+      assert_equal [@listing.location.creator_id, @listing.location.instance_id], [@listing.creator_id, @listing.instance_id]
+    end
+
+    should 'assign correct creator_id' do
+      assert_equal @location.creator_id, @listing.creator_id
+    end
+
+    should 'assign correct instance_id' do
+      assert_equal @location.instance_id, @listing.instance_id
+    end
+
+    should 'assign administrator_id' do
+      @location.update_attribute(:administrator_id, @location.creator_id + 1)
+      assert_equal @location.administrator_id, @listing.reload.administrator_id
+    end
+
+    context 'update company' do
+      setup do
+        @location.company.update_attribute(:instance_id, @location.company.instance_id + 1)
+        @location.company.update_attribute(:creator_id, @location.company.creator_id + 1)
+      end
+
+      should 'assign correct creator_id' do
+        assert_equal @location.company.creator_id, @listing.reload.creator_id
+      end
+
+      should 'assign correct instance_id' do
+        assert_equal @location.company.instance_id, @listing.reload.instance_id
+      end
+
+    end
+  end
 end

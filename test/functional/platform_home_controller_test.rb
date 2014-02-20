@@ -18,7 +18,7 @@ class PlatformHomeControllerTest < ActionController::TestCase
 
     should 'create platform contact' do
       assert_difference 'PlatformContact.count', 1 do
-        post :contact_submit, "platform_demo_request"=>
+        post :contact_submit, "platform_contact"=>
                                    {"name"       => "Daniel Docker",
                                     "email"      => "docker@gmail.com",
                                     "subject"    => "I'm interested.",

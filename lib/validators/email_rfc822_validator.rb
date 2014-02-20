@@ -5,6 +5,9 @@ class EmailRfc822Validator < ActiveModel::EachValidator
       parsed = Mail::Address.new(value)
     rescue Mail::Field::ParseError => e
     end
+
+    parsed = nil unless parsed.domain.present?
+
     record.errors[attribute] << (options[:message] || "is invalid") unless parsed
   end
 end

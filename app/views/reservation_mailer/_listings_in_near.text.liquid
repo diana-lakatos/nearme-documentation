@@ -1,4 +1,4 @@
-{% if user.listings_in_near.size > 0 %}But we have you covered! Here are some alternatives, similar to the listing you tried to book:
+{% if user.listings_in_near.size > 0 %}
 
 {% for listing_in_near in user.listings_in_near %}
 '{{ listing_in_near.name }}' at {{ listing_in_near.street }} ({{ platform_context.host | append:listing_in_near.listing_url }})

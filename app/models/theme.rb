@@ -34,7 +34,8 @@ class Theme < ActiveRecord::Base
     end.flatten.all?{|f| !f}
   }
 
-  validates :contact_email, email_rfc_822: true, allow_nil: true
+  validates :contact_email, email_rfc_822: true, allow_nil: false
+  validates :contact_email, presence: true
   validates_length_of :description, :maximum => 250
 
   mount_uploader :icon_image, ThemeImageUploader
@@ -73,12 +74,12 @@ class Theme < ActiveRecord::Base
   end
 
   def default_mailer
-    EmailTemplate.new(from: contact_email,
-                      reply_to: contact_email)
+    EmailTemplate.new(from: contact_email_with_fallback,
+                      reply_to: contact_email_with_fallback)
   end
 
-  def contact_email
-    read_attribute(:contact_email) || DEFAULT_EMAIL
+  def contact_email_with_fallback
+    read_attribute(:contact_email).presence || DEFAULT_EMAIL
   end
 
   def phone_number
@@ -172,6 +173,10 @@ class Theme < ActiveRecord::Base
 
   def self.default_value_for_color(color)
     COLORS_DEFAULT_VALUES[COLORS.index(color)]
+  end
+
+  def twitter_handle
+    twitter_url.to_s.scan(/\w+/).last
   end
 
   private

@@ -2,7 +2,9 @@ class Listing < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
   class NotFound < ActiveRecord::RecordNotFound; end
-  # == Associations
+  include Listing::RedundantDataSynchronizer
+  has_metadata :accessors => [:listing_type_name, :photos_metadata]
+
   has_many :reservations, dependent: :destroy
 
   has_many :photos, dependent: :destroy do
@@ -20,9 +22,12 @@ class Listing < ActiveRecord::Base
 
   has_many :user_messages, as: :thread_context
 
-  has_one :company, through: :location
+  has_one :company, :through => :location
   belongs_to :location, inverse_of: :listings
   belongs_to :listing_type
+  belongs_to :instance
+  belongs_to :creator, class_name: "User"
+  belongs_to :administrator, class_name: "User"
 
   has_many :amenity_holders, as: :holder, dependent: :destroy
   has_many :amenities, through: :amenity_holders
@@ -45,8 +50,7 @@ class Listing < ActiveRecord::Base
   
   # == Callbacks
   before_save :set_activated_at
-  after_save :notify_user_about_change
-  after_destroy :notify_user_about_change
+
 
   # == Validations
   validates :name, length: { maximum: 50 }
@@ -64,16 +68,12 @@ class Listing < ActiveRecord::Base
 
   PRICE_TYPES = [:hourly, :weekly, :daily, :monthly]
 
-  delegate :name, :description, to: :company, prefix: true, allow_nil: true
+  delegate :name, :description, :creator=, :instance=, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
-  delegate :instance, :currency, :formatted_address, :notify_user_about_change,
-    :local_geocoding, :latitude, :longitude, :distance_from, :address, :postcode, to: :location,
-    allow_nil: true
-  delegate :creator, :creator=, to: :location
-  delegate :administrator, :to => :location, :allow_nil => true
+  delegate :currency, :formatted_address, :local_geocoding, 
+    :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
+  delegate :service_fee_guest_percent, :service_fee_host_percent, to: :location, allow_nil: true
   delegate :name, to: :creator, prefix: true
-  delegate :service_fee_guest_percent, to: :location, allow_nil: true
-  delegate :service_fee_host_percent, to: :location, allow_nil: true
   delegate :to_s, to: :name
 
   attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description,
@@ -135,6 +135,10 @@ class Listing < ActiveRecord::Base
   # Maximum quantity available for a given date
   def quantity_for(date)
     self.quantity
+  end
+
+  def administrator
+    super.presence || creator
   end
 
   def desks_booked_on(date, start_minute = nil, end_minute = nil)

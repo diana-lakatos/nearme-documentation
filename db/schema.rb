@@ -51,8 +51,8 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.integer  "user_id"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
     t.datetime "deleted_at"
     t.string   "secret"
     t.string   "token"
@@ -138,6 +138,7 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.boolean  "white_label_enabled", :default => false
     t.boolean  "listings_public",     :default => true
     t.integer  "partner_id"
+    t.text     "metadata"
   end
 
   add_index "companies", ["creator_id"], :name => "index_companies_on_creator_id"
@@ -408,8 +409,15 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.integer  "rank",                        :default => 0
     t.integer  "capacity"
     t.integer  "photos_count",                :default => 0
+    t.text     "metadata"
+    t.integer  "instance_id"
+    t.integer  "creator_id"
+    t.integer  "administrator_id"
   end
 
+  add_index "listings", ["administrator_id"], :name => "index_listings_on_administrator_id"
+  add_index "listings", ["creator_id"], :name => "index_listings_on_creator_id"
+  add_index "listings", ["instance_id"], :name => "index_listings_on_instance_id"
   add_index "listings", ["listing_type_id"], :name => "index_listings_on_listing_type_id"
   add_index "listings", ["location_id"], :name => "index_listings_on_location_id"
 
@@ -430,8 +438,8 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.float    "latitude"
     t.float    "longitude"
     t.text     "info"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.datetime "deleted_at"
     t.string   "formatted_address"
     t.string   "currency"
@@ -449,10 +457,16 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.string   "postcode"
     t.integer  "administrator_id"
     t.string   "name"
+    t.text     "metadata"
+    t.integer  "instance_id"
+    t.integer  "creator_id"
+    t.boolean  "listings_public",    :default => true
   end
 
   add_index "locations", ["administrator_id"], :name => "index_locations_on_administrator_id"
   add_index "locations", ["company_id"], :name => "index_locations_on_company_id"
+  add_index "locations", ["creator_id"], :name => "index_locations_on_creator_id"
+  add_index "locations", ["instance_id"], :name => "index_locations_on_instance_id"
   add_index "locations", ["location_type_id"], :name => "index_locations_on_location_type_id"
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
 
@@ -527,8 +541,8 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
   end
 
   create_table "photos", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
     t.integer  "listing_id"
     t.string   "image"
     t.string   "caption"
@@ -611,9 +625,9 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.datetime "failed_at"
     t.datetime "created_at",                                    :null => false
     t.datetime "updated_at",                                    :null => false
+    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
-    t.integer  "payment_transfer_id"
     t.integer  "service_fee_amount_host_cents",  :default => 0, :null => false
     t.datetime "refunded_at"
   end
@@ -668,8 +682,14 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.integer  "service_fee_amount_host_cents",      :default => 0,         :null => false
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
+    t.integer  "instance_id"
+    t.integer  "creator_id"
+    t.integer  "administrator_id"
   end
 
+  add_index "reservations", ["administrator_id"], :name => "index_reservations_on_administrator_id"
+  add_index "reservations", ["creator_id"], :name => "index_reservations_on_creator_id"
+  add_index "reservations", ["instance_id"], :name => "index_reservations_on_instance_id"
   add_index "reservations", ["listing_id"], :name => "index_reservations_on_listing_id"
   add_index "reservations", ["owner_id"], :name => "index_reservations_on_owner_id"
   add_index "reservations", ["platform_context_detail_id"], :name => "index_reservations_on_platform_context_detail_id"
@@ -823,28 +843,27 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                                :default => "",                           :null => false
-    t.string   "encrypted_password",                    :limit => 128, :default => "",                           :null => false
-    t.string   "password_salt",                                        :default => "",                           :null => false
+    t.string   "email",                                  :default => "",                                                                                  :null => false
+    t.string   "encrypted_password",                     :default => "",                                                                                  :null => false
     t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                                        :default => 0
+    t.integer  "sign_in_count",                          :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                                                                                              :null => false
+    t.datetime "updated_at",                                                                                                                              :null => false
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                                       :default => 0,                            :null => false
+    t.integer  "bookings_count",                         :default => 0,                                                                                   :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "locked_at"
-    t.datetime "reset_password_sent_at"
-    t.integer  "failed_attempts",                                      :default => 0
+    t.integer  "failed_attempts",                        :default => 0
     t.string   "authentication_token"
     t.string   "avatar"
     t.string   "confirmation_token"
@@ -860,15 +879,15 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
     t.string   "browser"
     t.string   "browser_version"
     t.string   "platform"
-    t.float    "guest_rating_average"
-    t.integer  "guest_rating_count"
-    t.float    "host_rating_average"
-    t.integer  "host_rating_count"
     t.text     "avatar_transformation_data"
     t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"
@@ -883,10 +902,11 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.string   "time_zone",                                            :default => "Pacific Time (US & Canada)"
-    t.boolean  "sms_notifications_enabled",                            :default => true
-    t.string   "sms_preferences",                                       :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
-    t.text     "instance_unread_messages_threads_count",                :default => "--- {}\n"
+    t.string   "time_zone",                              :default => "Pacific Time (US & Canada)"
+    t.text     "metadata"
+    t.boolean  "sms_notifications_enabled",              :default => true
+    t.string   "sms_preferences",                        :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
+    t.text     "instance_unread_messages_threads_count", :default => "--- {}\n"
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"

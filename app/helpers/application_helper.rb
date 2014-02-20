@@ -67,12 +67,14 @@ module ApplicationHelper
         size > length
       end
 
-      excess_body = (body.split - truncated_body)
+      truncated_body_str = truncated_body.join(' ')
+      truncated_body_regexp = Regexp.new("^#{truncated_body_str}")
+      excess_body = body.gsub(truncated_body_regexp, '').strip
 
       content_tag(:p, html_options) do
-        truncated_body.join(" ").html_safe +
+        truncated_body_str.html_safe +
         content_tag(:span, "&hellip;".html_safe, :class => 'truncated-ellipsis').html_safe +
-        content_tag(:span, excess_body.join(" ").html_safe, :class => 'truncated-text hidden').html_safe
+        content_tag(:span, excess_body.html_safe, :class => 'truncated-text hidden').html_safe
       end
 
     else

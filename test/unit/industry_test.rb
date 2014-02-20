@@ -4,7 +4,7 @@ class IndustryTest < ActiveSupport::TestCase
 
   should validate_presence_of(:name)
   should validate_uniqueness_of(:name)
-  
+
   context 'with at least one listing' do
 
     setup do
@@ -26,6 +26,27 @@ class IndustryTest < ActiveSupport::TestCase
       assert_equal [Industry.find_by_name('with listing 1'), Industry.find_by_name('with listing 2')].sort, Industry.with_listings.all.sort
     end
 
+  end
+
+  context 'metadata' do
+    context 'populate_companies_industries_metadata!' do
+
+      setup do
+        @company = FactoryGirl.create(:company)
+        @industry = @company.industries.first
+      end
+
+      should 'trigger populate_companies_industries after update' do
+        Company.any_instance.expects(:populate_industries_metadata!)
+        @industry.update_attribute(:name, 'new name')
+      end
+
+      should 'trigger populate_companies_industries after destroy' do
+        Company.any_instance.expects(:populate_industries_metadata!)
+        @industry.destroy
+      end
+
+    end
   end
 
   private

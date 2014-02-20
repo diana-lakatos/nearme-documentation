@@ -143,4 +143,22 @@ class CompanyTest < ActiveSupport::TestCase
 
       end
   end
+
+  context 'metadata' do
+    context 'populate_industries_metadata!' do
+      setup do
+        @company = FactoryGirl.create(:company)
+        @industry = FactoryGirl.create(:industry, :name => 'test')
+        @company.industries = [@industry]
+        @company.save!
+      end
+
+      should 'populate correct instance_admin hash' do
+        @company.expects(:update_metadata).with({ 
+          :industries_metadata => ['test']
+        })
+        @company.populate_industries_metadata!
+      end
+    end
+  end
 end
