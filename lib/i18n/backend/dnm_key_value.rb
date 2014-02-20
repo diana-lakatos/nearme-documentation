@@ -38,7 +38,11 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
     cache_updated_at = read_cached_at_for(_instance_key)
     if !@store[_instance_key] || (cache_updated_at && cache_updated_at > get_cache_timestamp_for(_instance_key))
       touch_cache_timestamp_for(_instance_key, cache_updated_at)
-      @store[_instance_key] = @cache.read "locales.#{_instance_key}" 
+      @store[_instance_key] = @cache.fetch "locales.#{_instance_key}" do
+        touch_cache_timestamp_for(_instance_key, nil)
+        populate(instance_id)
+        @store[_instance_key]
+      end
     end
   end
 
