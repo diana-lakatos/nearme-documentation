@@ -1,10 +1,6 @@
 class AddHomepageCssToTheme < ActiveRecord::Migration
 
   class Instance < ActiveRecord::Base
-
-    def self.default_instance
-      self.find_by_default_instance(true)
-    end
   end
 
   class Theme < ActiveRecord::Base
@@ -13,7 +9,7 @@ class AddHomepageCssToTheme < ActiveRecord::Migration
   def up
     add_column :themes, :homepage_css, :text
 
-    dnm_instance = Instance.default_instance
+    dnm_instance = Instance.find(1)
     dnm_theme = Theme.where('owner_id = ? AND owner_type = ?', dnm_instance.try(:id), 'Instance').first
 
     if dnm_instance && dnm_theme
@@ -79,8 +75,7 @@ section.how-it-works hr {
 }
       CSS
 
-      dnm_theme.homepage_css = styles
-      dnm_theme.save!
+      dnm_theme.update_column(:homepage_css, styles)
     end
   end
 

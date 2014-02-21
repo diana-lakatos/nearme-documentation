@@ -1,6 +1,8 @@
 class PlatformMailer < ActionMailer::Base
   extend Job::SyntaxEnhancer
 
+  NOTIFICATIONS_EMAIL = 'sales@near-me.com'
+
   def email_notification(email)
     verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
     unsubscribe_key = verifier.generate(email.email)
@@ -11,10 +13,19 @@ class PlatformMailer < ActionMailer::Base
          subject: "Hello from NearMe!"
   end
 
-  def email_a_friend(from_name, to_email)
-    mail from: 'Near Me <team@desksnear.me>',
-         to: to_email,
-         subject: "#{from_name} has shared a Near Me page with you",
+  def contact_request(platform_contact)
+    @platform_contact = platform_contact
+    mail from: 'notifications@near-me.com',
+         to: NOTIFICATIONS_EMAIL,
+         subject: "New NearMe contact form sumbission.",
+         layout: false
+  end
+
+  def demo_request(platform_demo_request)
+    @platform_demo_request = platform_demo_request
+    mail from: 'notifications@near-me.com',
+         to: NOTIFICATIONS_EMAIL,
+         subject: "New NearMe demo request form submission.",
          layout: false
   end
 end

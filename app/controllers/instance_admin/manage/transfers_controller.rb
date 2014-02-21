@@ -17,7 +17,14 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
     %w(pending transferred)
   end
 
-  def collection_default_scope
-    'pending'
+  def collection
+    @transfers ||= begin
+                scope = end_of_association_chain.for_instance(platform_context.instance)
+                # Order the collection by created_at descending
+                scope = scope.order("created_at DESC")
+
+                # Paginate the collection
+                scope.paginate(:page => params[:page])
+              end
   end
 end

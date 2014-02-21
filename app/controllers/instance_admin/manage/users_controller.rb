@@ -6,7 +6,7 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
   end
 
   def create
-    @user = User.new(params[:user])
+    @user = User.new_with_context(params[:user], platform_context)
     @user.skip_password = true
     if @user.save
       InstanceAdmin.create(:user_id => @user.id, :instance_id => platform_context.instance.id)

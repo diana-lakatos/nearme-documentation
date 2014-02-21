@@ -22,4 +22,16 @@ class InstanceAdminTest < ActiveSupport::TestCase
 
   end
 
+  context 'metadata' do
+
+    context 'triggering' do
+
+      should 'not trigger populate metadata on listing if condition fails' do
+        User.any_instance.expects(:populate_instance_admins_metadata!).once
+        FactoryGirl.create(:instance_admin)
+      end
+
+    end
+  end
+
 end

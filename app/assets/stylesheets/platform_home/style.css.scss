@@ -24,8 +24,8 @@ body {
   background: #fff;
   color:  #929497;
   font-family: 'Gotham Book', sans-serif;
-  font-size: 16px;
-  line-height: 1.2;
+  font-size: 14px;
+  line-height: 1.8;
 }
 
 a {
@@ -53,7 +53,7 @@ h2, h3, h5 {
 
 h2 {
   padding-bottom: 16px;
-  font-size: 36px;
+  font-size: 32px;
   strong {
     color: #137bbf;
     font-weight: normal;
@@ -62,7 +62,7 @@ h2 {
 
 h3 {
   padding-bottom: 6px;
-  font-size: 24px;
+  font-size: 16px;
 }
 
 h5 {
@@ -106,6 +106,10 @@ ol, ul {
 .container {
   position: relative;
   min-height: 100%;
+}
+
+.dark-shell-container {
+  background-color: #efefef;
 }
 
 .shell {
@@ -197,29 +201,39 @@ ol, ul {
       background-position: 0px 0px;
     }
     .current .icon-camera, li:hover .icon-camera {
-      background-position: 0px -154px;
+      background-position: 0px -134px;
     }
     .current .icon-cards, li:hover .icon-cards {
-      background-position: 0px -308px;
+      background-position: 0px -268px;
     }
     .current .icon-case, li:hover .icon-case {
-      background-position: 0px -462px;
+      background-position: 0px -402px;
     }
     .current .icon-charts, li:hover .icon-charts {
-      background-position: 0px -616px;
+      background-position: 0px -536px;
     }
     .current .icon-desk, li:hover .icon-desk {
-      background-position: 0px -756px;
+      background-position: 0px -670px;
     }
     .current .icon-guitar, li:hover .icon-guitar {
-      background-position: 0px -924px;
+      background-position: 0px -804px;
     }
     .current .icon-phone, li:hover .icon-phone {
-      background-position: -100px -1218px;
+      background-position: 0px -938px;
     }
     .current .icon-tools, li:hover .icon-tools {
-      background-position: -100px -1372px;
+      background-position: 0px -1072px;
     }
+  }
+}
+
+/* ==========================================================================
+  #Notifications
+========================================================================== */
+
+.success {
+  h3 {
+    text-transform: none;
   }
 }
 
@@ -241,11 +255,17 @@ ol, ul {
   a {
     overflow: hidden;
     display: block;
-    height: 63px;
+    height: 64px;
     background: url(/assets/platform_home/logo.png) no-repeat;
-    background-size: 148px 63px;
+    background-size: 148px 64px;
     white-space: nowrap;
     text-indent: 100%;
+
+    @media (-webkit-min-device-pixel-ratio: 2),
+    (-moz-min-device-pixel-ratio: 2) {
+      background: url(/assets/platform_home/logo@2x.png) no-repeat 0 0;
+      background-size: 148px 64px;
+    }
   }
 }
 
@@ -321,7 +341,7 @@ ol, ul {
 }
 
 .main-top {
-  height: 160px;
+  height: 120px;
   padding-top: 81px;
   background: #3e3e3e;
   h2 {
@@ -352,9 +372,14 @@ ol, ul {
   }
   li {
     padding-bottom: 22px;
+    &.ui-tabs-active {
+      a{
+        color: #1a7bbd;
+      }
+    }
   }
   a {
-    font-size: 18px;
+    font-size: 14px;
     color: #000;
   }
   .dropdown {
@@ -375,17 +400,21 @@ ol, ul {
 }
 
 .section {
-  padding: 80px 0 80px;
+  padding: 60px 0 60px;
   ~ .section {
     border-top: 1px solid #ecedee;
   }
 }
 
 .section-head {
-  padding-bottom: 36px;
+  padding-bottom: 18px;
   text-align: center;
   color: #686868;
   font-size: 18px;
+
+  h2 {
+    padding-bottom: 0px;
+  }
   .btns {
     padding: 38px 0 32px;
   }
@@ -463,6 +492,59 @@ ol, ul {
 }
 
 /* ==========================================================================
+  #Feature Columns
+========================================================================== */
+
+.feature-column-icons {
+  padding-bottom: 30px;
+  ul {
+    text-align: center;
+    list-style: none outside none;
+  }
+  li {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    margin: 0 65px;
+  }
+  a {
+    color: #969696;
+  }
+  span {
+    display: block;
+    padding-top: 10px;
+  }
+}
+
+.feature-column-text {
+  margin: 0 30px;
+  .column {
+    @include box-sizing(border-box);
+    float: left;
+    padding: 0px 16px;
+    p {
+      margin-bottom: 30px;
+    }
+  }
+}
+
+.feature-column-text {
+  padding-bottom: 30px;
+  ul {
+    text-align: center;
+    list-style: none outside none;
+  }
+  li {
+    width: 190px;
+    display: inline-block;
+    margin: 0 18px;
+  }
+  p {
+    text-align: left;
+  }
+}
+
+/* ==========================================================================
   #Tabs
 ========================================================================== */
 
@@ -485,12 +567,16 @@ ol, ul {
   }
   span {
     display: block;
-    padding-top: 25px;
+    padding-top: 10px;
   }
 }
 
 .tab {
   height: 360px;
+}
+
+#tabs {
+  min-height: 450px;
 }
 
 .tab-text {
@@ -505,8 +591,12 @@ ol, ul {
 .tab-text-inner {
   display: table-cell;
   vertical-align: middle;
+  h3 {
+    padding-bottom: 18px;
+    font-size: 18px;
+  }
   .btns {
-    padding-top: 16px;
+    padding-top: 18px;
   }
 }
 
@@ -542,16 +632,17 @@ ol, ul {
 .callout {
   background: #1a7bbd;
   .shell {
-    height: 99px;
-    padding-top: 130px;
+    padding-top: 81px;
   }
   h2 {
+    padding-bottom: 11px;
     float: left;
     padding-left: 50px;
     color: #fff;
   }
   .btns {
     float: right;
+    padding-top: 8px;
     padding-right: 50px;
   }
 }
@@ -599,16 +690,22 @@ ol, ul {
 }
 
 .logo-footer {
-  width: 289px;
+  width: 304px;
   padding-bottom: 29px;
   a {
     display: block;
     height: 53px;
     background: url(/assets/platform_home/logo-footer.png) no-repeat;
-    background-size: 289px 53px;
+    background-size: 304px 53px;
     text-indent: 100%;
     overflow: hidden;
     white-space: nowrap;
+
+    @media (-webkit-min-device-pixel-ratio: 2),
+    (-moz-min-device-pixel-ratio: 2) {
+      background: url(/assets/platform_home/logo-footer@2x.png) no-repeat 0 0;
+      background-size: 304px 53px;
+    }
   }
 }
 
@@ -629,43 +726,163 @@ ol, ul {
   display: inline-block;
   background: url(/assets/platform_home/sprite.png) no-repeat 0 0;
   width: 67px;
-  height: 57px;
+  height: 67px;
+
+  @media (-webkit-min-device-pixel-ratio: 2),
+  (-moz-min-device-pixel-ratio: 2) {
+    background: url(/assets/platform_home/sprite@2x.png) no-repeat 0 0;
+    background-size: 67px 1206px;
+  }
 }
 
 .icon-boat {
-  background-position: 0px -77px;
+  background-position: 0px -67px;
 }
 
 .icon-camera {
-  background-position: 0px -231px;
+  background-position: 0px -201px;
 }
 
 .icon-cards {
-  background-position: 0px -385px;
+  background-position: 0px -335px;
 }
 
 .icon-case {
-  background-position: 0px -539px;
+  background-position: 0px -469px;
 }
 
 .icon-charts {
-  background-position: 0px -693px;
+  background-position: 0px -603px;
 }
 
 .icon-desk {
-  background-position: 0px -833px;
+  background-position: 0px -737px;
 }
 
 .icon-guitar {
-  background-position: 0px -1001px;
+  background-position: 0px -871px;
 }
 
 .icon-phone {
-  background-position: -100px -1295px;
+  background-position: 0px -1005px;
 }
 
 .icon-tools {
-  background-position: -100px -1449px;
+  background-position: 0px -1139px;
+}
+
+/* ==========================================================================
+  #Checkbox
+========================================================================== */
+
+.icheckbox {
+  float: left;
+  width: 27px;
+  height: 27px;
+  padding-right: 18px;
+  border: 0;
+  cursor: pointer;
+  background: url(/assets/platform_home/checkbox.png) no-repeat 0 0;
+  &.checked {
+    background-position: 0 -33px;
+  }
+}
+
+/* ==========================================================================
+  #Article
+========================================================================== */
+
+.article {
+  h2 {
+    text-transform: none;
+  }
+  .list-features {
+    p {
+      padding-bottom: 36px;
+    }
+  }
+}
+
+/* ==========================================================================
+  #List People
+========================================================================== */
+
+.team {
+  overflow: hidden;
+  padding-top: 66px;
+  margin-right: -66px;
+  list-style: none outside none;
+  li {
+    float: left;
+    padding-right: 66px;
+  }
+  .text {
+    padding: 19px 0 35px;
+    text-align: center;
+  }
+  h4 {
+    font-size: 16px;
+  }
+  p {
+    font-size: 14px;
+  }
+}
+
+/* ==========================================================================
+  #List Support
+========================================================================== */
+
+.list-features {
+  list-style: none outside none;
+
+  h3 {
+    font-size: 18px;
+    padding-bottom: 0px;
+    text-transform: none;
+  }
+  ul{
+    li {
+      margin-top: 0px;
+      padding-bottom: 19px;
+      list-style-type: disc;
+    }
+  }
+}
+
+/* ==========================================================================
+  #Contacts
+========================================================================== */
+
+.contacts {
+  .col {
+    width: 50%;
+  }
+  h2 {
+    padding-bottom: 36px;
+    text-transform: none;
+  }
+  a {
+    color: #2f7fbe;
+  }
+  .text {
+    text-align: center;
+  }
+}
+
+/* ==========================================================================
+  #Forms
+========================================================================== */
+
+form{
+  .error-block {
+    @include border-radius(5px);
+    border: 2px solid #eed3d7;
+    color: #b94a48;
+    background-color: #f2dede;
+    padding: 8px;
+    margin-bottom: 20px;
+    display: none;
+  }
 }
 
 /* ==========================================================================
@@ -705,109 +922,6 @@ ol, ul {
     text-transform: uppercase;
     font-weight: bold;
     cursor: pointer;
-  }
-}
-
-/* ==========================================================================
-  #Checkbox
-========================================================================== */
-
-.icheckbox {
-  float: left;
-  width: 27px;
-  height: 27px;
-  padding-right: 18px;
-  border: 0;
-  cursor: pointer;
-  background: url(/assets/platform_home/checkbox.png) no-repeat 0 0;
-  &.checked {
-    background-position: 0 -33px;
-  }
-}
-
-/* ==========================================================================
-  #Article
-========================================================================== */
-
-.article {
-  h2 {
-    text-transform: none;
-  }
-  p {
-    padding-bottom: 10px;
-  }
-}
-
-/* ==========================================================================
-  #List People
-========================================================================== */
-
-.team {
-  overflow: hidden;
-  padding-top: 66px;
-  margin-right: -66px;
-  list-style: none outside none;
-  li {
-    float: left;
-    padding-right: 66px;
-  }
-  .text {
-    padding: 19px 0 35px;
-    text-align: center;
-  }
-  h4 {
-    font-size: 21px;
-  }
-  p {
-    font-size: 18px;
-  }
-}
-
-/* ==========================================================================
-  #List Support
-========================================================================== */
-
-.list-features {
-  list-style: none outside none;
-  h2 {
-    font-size: 28px;
-  }
-  h3 {
-    font-size: 22px;
-    padding-bottom: 20px;
-    text-transform: none;
-  }
-  li {
-    ~ li{
-      margin-top: 35px;
-    }
-  }
-  ul{
-    li {
-      margin-top: 0px;
-      padding-bottom: 19px;
-      list-style-type: disc;
-    }
-  }
-}
-
-/* ==========================================================================
-  #Contacts
-========================================================================== */
-
-.contacts {
-  .col {
-    width: 50%;
-  }
-  h2 {
-    padding-bottom: 36px;
-    text-transform: none;
-  }
-  a {
-    color: #2f7fbe;
-  }
-  .text {
-    text-align: center;
   }
 }
 
@@ -943,6 +1057,26 @@ ol, ul {
     margin-top: -80px;
     margin-bottom: -80px;
   }
+
+  .logos{
+    li{
+      float: left;
+      padding-right: 60px;
+    }
+  }
+
+  .feature-column-text {
+    .column {
+      width: 25%;
+      h3 {
+        display: none;
+      }
+      p {
+        margin-bottom: 0px;
+      }
+    }
+  }
+
 }
 
 
@@ -1018,6 +1152,12 @@ ol, ul {
   .laptop {
     display: none;
   }
+  .feature-column-icons {
+    display: none;
+    li {
+      margin-top: 10px;
+    }
+  }
   .tabs-nav {
     display: none;
     li {
@@ -1077,9 +1217,7 @@ ol, ul {
   .field {
     height: 34px;
     width: 100%;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
   }
   .field-textarea {
     height: 173px;
@@ -1222,6 +1360,12 @@ ol, ul {
   .laptop {
     display: none;
   }
+  .feature-column-icons {
+    display: none;
+    li {
+      margin-top: 10px;
+    }
+  }
   .tabs-nav {
     display: none;
     li {
@@ -1281,9 +1425,7 @@ ol, ul {
   .field {
     height: 34px;
     width: 100%;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    @include box-sizing(border-box);
   }
   .field-textarea {
     height: 173px;

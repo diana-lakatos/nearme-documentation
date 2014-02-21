@@ -8,6 +8,8 @@ DesksnearMe::Application.routes.draw do
     get '/request-a-demo', :to => 'platform_home#demo_request'
     post '/demo-request-submit', :to => 'platform_home#demo_request_submit'
     get '/about-us', :to => 'platform_home#about_us'
+    get '/brand', :to => 'platform_home#brand'
+    get '/press-and-media', :to => 'platform_home#press_and_media'
     get '/careers', :to => 'platform_home#careers'
     get '/careers/designer', :to => 'platform_home#designer'
     get '/careers/developer', :to => 'platform_home#developer'
@@ -16,6 +18,11 @@ DesksnearMe::Application.routes.draw do
     get '/careers/sales-representative', :to => 'platform_home#sales_representative'
     get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe', :as => 'platform_email_unsubscribe'
     get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe', :as => 'platform_email_resubscribe'
+
+    constraints protocol: 'https://' do # Read the commit message for rationale
+      get '/demo-requests/DsNvigiE6I9ZGwtsFGrcIw', :to => 'platform_home#demo_requests'
+      get '/contacts/tgKQstjun1AgHWJ1kgevNg', :to => 'platform_home#contacts'
+    end
   end
 
   constraints host: 'near-me-app.com' do

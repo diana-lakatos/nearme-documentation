@@ -11,17 +11,17 @@
     - if resource.listing
       %div= resource.listing.name
 
-      - if resource.listing.company
+      - if resource.company
         %div
-          %small= resource.listing.company.name
+          %small= resource.company.name
 
-      - if resource.listing.location
+      - if resource.location
         %div
-          %small= resource.listing.location.address
+          %small= resource.location.address
 
-      - if resource.listing.creator
+      - if resource.creator
         %div
-          %small= link_to resource.listing.creator.name, admin_user_url(resource.listing.creator)
+          %small= link_to resource.creator.name, admin_user_url(resource.creator)
 
   %td= resource.quantity
   %td= resource.created_at

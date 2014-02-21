@@ -151,4 +151,5 @@ group :test do
   gem 'shoulda'
   gem 'vcr'
   gem 'ruby-prof'
+  gem 'test_after_commit'
 end

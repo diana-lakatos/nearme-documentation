@@ -14,26 +14,25 @@ class Instance < ActiveRecord::Base
 
   has_one :theme, :as => :owner, dependent: :destroy
 
-  has_many :companies
-  has_many :locations, :through => :companies
-  has_many :locations_impressions,
-           :through => :companies
-  has_many :location_types
-  has_many :listing_amenity_types
-  has_many :location_amenity_types
-  has_many :listings, :through => :locations
-  has_many :listing_types
+  has_many :companies, :inverse_of => :instance
+  has_many :locations, :inverse_of => :instance
+  has_many :locations_impressions, :through => :locations, :inverse_of => :instance
+  has_many :location_types, :inverse_of => :instance
+  has_many :listing_amenity_types, :inverse_of => :instance
+  has_many :location_amenity_types, :inverse_of => :instance
+  has_many :listings, :inverse_of => :instance
+  has_many :listing_types, :inverse_of => :instance
   has_many :domains, :as => :target
-  has_many :partners
-  has_many :instance_admins
-  has_many :instance_admin_roles
-  has_many :reservations, :as => :platform_context_detail, :dependent => :destroy
-  has_many :reservation_charges, :through => :reservations
-  has_many :instance_clients, :dependent => :destroy
-  has_many :translations, :dependent => :destroy
-  has_many :instance_billing_gateways, :dependent => :destroy
+  has_many :partners, :inverse_of => :instance
+  has_many :instance_admins, :inverse_of => :instance
+  has_many :instance_admin_roles, :inverse_of => :instance
+  has_many :reservations, :as => :platform_context_detail
+  has_many :reservation_charges, :through => :reservations, :inverse_of => :instance
+  has_many :instance_clients, :dependent => :destroy, :inverse_of => :instance
+  has_many :translations, :dependent => :destroy, :inverse_of => :instance
+  has_many :instance_billing_gateways, :dependent => :destroy, :inverse_of => :instance
   has_one :blog_instance, :as => :owner
-  has_many :user_messages, :dependent => :destroy
+  has_many :user_messages, :dependent => :destroy, :inverse_of => :instance
 
   serialize :pricing_options, Hash
 
@@ -53,6 +52,18 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :instance_billing_gateways, allow_destroy: true, reject_if: proc { |params| params[:billing_gateway].blank? }
 
   PRICING_OPTIONS = %w(free hourly daily weekly monthly)
+
+  PRICING_OPTIONS.each do |price|
+    next if price == 'free'
+    %w(min max).each do |edge|
+      # Flag each price type as a Money attribute.
+      # @see rails-money
+      monetize "#{edge}_#{price}_price_cents", :allow_nil => true
+
+      # Mark price fields as attr-accessible
+      attr_accessible "#{edge}_#{price}_price_cents", "#{edge}_#{price}_price"
+    end
+  end
 
   def is_desksnearme?
     self.default_instance?
