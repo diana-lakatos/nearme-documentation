@@ -8,14 +8,13 @@
     = render 'layouts/favicon'
     = stylesheet_link_tag '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css'
     = stylesheet_link_tag 'blog'
+    = stylesheet_link_tag platform_context.compiled_stylesheet_url
     = javascript_include_tag :blog
 
   %body.blog
+    .container-fluid
+      = render 'layouts/navbar'
     .header
-      .col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2.logo
-        - url = @platform_context.present? ? @platform_context.theme.logo_image.url : asset_path('blog/logo.png')
-        = link_to image_tag(url), blog_posts_path
-
       - header = @blog_post.try(:header).presence || @blog_instance.header
       - if header.present?
         .header-image
