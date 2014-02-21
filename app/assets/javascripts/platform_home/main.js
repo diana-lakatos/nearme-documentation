@@ -16,11 +16,12 @@
 
 		// menu
 		$('.nav-menu').on('click', function(e) {
-
 			$nav.toggleClass('mobile');
-
 			e.preventDefault();
+		});
 
+		$('.sidebar .nav li a').on('click', function(e) {
+			$nav.removeClass('mobile');
 		});
 
 		//Tabs
@@ -49,6 +50,13 @@
 		$(".scroll-list").simplyScroll({
             orientation: 'vertical'
         });
+
+		//Tabs
+		$('#tabs').tabs({
+			select: function(event, ui) {
+				window.location.hash = ui.tab.hash;
+			}
+		});
 
     //Checkboxes
 		$('.checkbox input').iCheck();
