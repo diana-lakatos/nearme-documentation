@@ -62,6 +62,7 @@
 				$(this).replaceWith(xhr);
 			}).bind('ajax:error', function(event, xhr, status) {
 				$(this).find('.error-block').text(xhr.responseText).css("display", "block");
+				$('html, body').animate({ scrollTop: $(this).offset().top }, 500);
 				$(this).find('input[type="submit"]').prop('disabled', false);
 			});
 
