@@ -25,6 +25,11 @@ FactoryGirl.define do
     factory :default_instance do
       default_instance true
     end
+
+    factory :instance_with_price_constraints do
+      min_hourly_price 10
+      max_hourly_price 100
+    end
   end
 
 end

@@ -46,6 +46,13 @@ FactoryGirl.define do
       end
     end
 
+    factory :thousand_dollar_listing_from_instance_with_price_constraints do
+      association(:location, factory: :location_from_instance_with_price_constraints)
+      after(:create) do |listing|
+        listing.hourly_price_cents = 100000
+      end
+    end
+
     factory :listing_with_10_dollars_per_hour do
       hourly_price_cents 1000
       hourly_reservations true
@@ -125,6 +132,10 @@ FactoryGirl.define do
         listing.photos = FactoryGirl.create_list(:demo_photo, 2, creator: listing.location.creator )
         listing.save!
       end
+    end
+
+    factory :listing_from_instance_with_price_constraints do
+      association(:location, factory: :location_from_instance_with_price_constraints)
     end
 
   end

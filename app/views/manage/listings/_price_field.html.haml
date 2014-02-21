@@ -9,4 +9,5 @@
   = f.number_field "#{price}_price", :as => :decimal, :label => false, :class => 'mini', :class => "price-input", :'data-type' => 'price-input'
   %span.periodicity /#{label}
 
+  = f.error "#{price}_price"
 

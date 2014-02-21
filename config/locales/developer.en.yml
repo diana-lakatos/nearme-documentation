@@ -3,6 +3,9 @@ en:
     formats:
       only_date: "%B %d, %-Y"
       day_and_month: "%^b %-d"
+  validation_messages:
+    price_too_low: '%{price} is too low'
+    price_too_high: '%{price} is too high'
   flash_messages:
     registrations:
       notification_preferences_updated_successfully: 'Notification preferences updated successfully.'

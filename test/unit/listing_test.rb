@@ -131,6 +131,31 @@ class ListingTest < ActiveSupport::TestCase
       @listing.save
       assert !@listing.valid?
     end
+
+    context 'instance has pricing constraints' do
+
+      should 'be valid if hourly price in range' do
+        listing = FactoryGirl.create(:listing_from_instance_with_price_constraints)
+        assert listing.valid?
+      end
+
+      should 'be invalid if hourly price out of range' do
+        listing = FactoryGirl.create(:thousand_dollar_listing_from_instance_with_price_constraints)
+        assert !listing.valid?
+      end
+
+      should 'be valid if hourly price higher than minimum price and no maximum price is present' do
+        listing = FactoryGirl.create(:listing_from_instance_with_price_constraints)
+        listing.instance.max_hourly_price = nil
+        assert listing.valid?
+      end
+
+      should 'be valid if hourly price lower than maximum price and no minimum price is present' do
+        listing = FactoryGirl.create(:listing_from_instance_with_price_constraints)
+        listing.instance.min_hourly_price = nil
+        assert listing.valid?
+      end
+    end
   end
 
   context "first available date" do

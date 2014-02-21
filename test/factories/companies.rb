@@ -48,6 +48,10 @@ FactoryGirl.define do
     factory :white_label_company do
       white_label_enabled true
     end
+
+    factory :company_from_instance_with_price_constraints do
+      association(:instance, factory: :instance_with_price_constraints)
+    end
   end
 end
 
