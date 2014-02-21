@@ -1,5 +1,7 @@
 class AmenityType < ActiveRecord::Base
-  attr_accessible :name, :amenities_attributes, :instance_id
+  auto_set_platform_context
+  scoped_to_platform_context
+  attr_accessible :name, :amenities_attributes
 
   validates_presence_of :name
   validates :name, :uniqueness => { scope: :instance_id }

@@ -260,22 +260,23 @@ class LocationTest < ActiveSupport::TestCase
     should 'assign correct key immediately' do
       @location = FactoryGirl.create(:location)
       assert @location.creator_id.present?
+      assert @location.company_id.present?
       assert @location.instance_id.present?
-      assert_equal [@location.company.creator_id, @location.company.instance_id], [@location.creator_id, @location.instance_id]
     end
 
     should 'assign correct creator_id' do
       assert_equal @company.creator_id, @location.creator_id
     end
 
-    should 'assign correct instance_id' do
-      assert_equal @company.instance_id, @location.instance_id
+    should 'assign correct company_id' do
+      assert_equal @company.id, @location.company_id
     end
 
     context 'update company' do
       setup do
         @company.update_attribute(:instance_id, @company.instance_id + 1)
         @company.update_attribute(:creator_id, @company.creator_id + 1)
+        @company.update_attribute(:partner_id, FactoryGirl.create(:partner).id)
       end
 
       should 'assign correct creator_id' do
@@ -286,24 +287,17 @@ class LocationTest < ActiveSupport::TestCase
         assert_equal @company.instance_id, @location.reload.instance_id
       end
 
+      should 'assign correct partner_id' do
+        assert_equal @company.partner_id, @location.reload.partner_id
+      end
+
+      should 'update listings_public' do
+        assert @location.listings_public
+        @location.company.update_attribute(:listings_public, false)
+        refute @location.reload.listings_public
+      end
+
     end
   end
 
-  context 'listings_public' do
-
-    should 'be false if parent company has false' do
-      @company = FactoryGirl.create(:company, :listings_public => false)
-      @location = FactoryGirl.create(:location, :company => @company)
-      refute @location.listings_public
-    end
-
-    should 'be false if updated' do
-      @company = FactoryGirl.create(:company)
-      @location = FactoryGirl.create(:location, :company => @company)
-      assert @location.listings_public
-      @company.update_attribute(:listings_public, false)
-      refute @location.reload.listings_public
-    end
-
-  end
 end

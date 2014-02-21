@@ -1,5 +1,5 @@
 class ReservationRefundJob < Job
-  def initialize(reservation_id, counter)
+  def after_initialize(reservation_id, counter)
     @reservation = Reservation.find_by_id(reservation_id)
     @counter = counter
   end

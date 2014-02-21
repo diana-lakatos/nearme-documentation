@@ -23,7 +23,7 @@ class SpaceWizardController < ApplicationController
     @location ||= @company.locations.build
     @location.name_required = true
     @listing ||= @location.listings.build
-    @photos = @user.photos.where("listing_id IS NOT NULL") || nil
+    @photos = @user.first_listing ? @user.first_listing.photos : nil
     @user.phone_required = true
     event_tracker.viewed_list_your_bookable
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
@@ -31,25 +31,23 @@ class SpaceWizardController < ApplicationController
 
   def submit_listing
     @user.phone_required = true
-    params[:user][:companies_attributes]["0"][:instance_id] = platform_context.instance.id.to_s
-    params[:user][:companies_attributes]["0"][:creator_id] = current_user.id.to_s
-    params[:user][:companies_attributes]["0"][:partner_id] = platform_context.partner.try(:id).to_s
     params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
 
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.attributes = params[:user]
     @user.companies.first.try(:locations).try(:first).try {|l| l.name_required = true}
+    @user.companies.first.creator_id = current_user.id
     if params[:save_as_draft]
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.save(:validate => false)
       track_saved_draft_event
-      PostActionMailer.enqueue_later(24.hours).list_draft(platform_context, @user)
+      PostActionMailer.enqueue_later(24.hours).list_draft(@user)
       flash[:success] = t('flash_messages.space_wizard.draft_saved')
       redirect_to :list
     elsif @user.save
       track_new_space_event
       track_new_company_event
-      PostActionMailer.enqueue.list(platform_context, @user)
+      PostActionMailer.enqueue.list(@user)
       flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: platform_context.decorate.bookable_noun)
       redirect_to manage_locations_path
     else

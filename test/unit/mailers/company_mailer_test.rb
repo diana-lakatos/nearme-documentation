@@ -11,7 +11,9 @@ class CompanyMailerTest < ActiveSupport::TestCase
     @company_owner.stubs(:temporary_token).returns('abc')
     @instance = FactoryGirl.create(:instance, :name => 'MyBoat')
     @domain = FactoryGirl.create(:domain, :name => 'notifcations.com', :target => @instance)
-    @company = FactoryGirl.create(:company, :creator => @company_owner, :instance => @instance)
+    @company = FactoryGirl.create(:company, :creator => @company_owner)
+    @company.update_column(:instance_id, @instance.id)
+    PlatformContext.current = PlatformContext.new(@company)
     @company.stubs(:created_payment_transfers).returns([
       PaymentTransfer.new(:amount_cents => 7887, :currency => 'USD'),
       PaymentTransfer.new(:amount_cents => 4650, :currency => 'EUR'),

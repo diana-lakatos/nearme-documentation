@@ -5,78 +5,62 @@ class PostActionMailer < InstanceMailer
 
   PERSONABLE_EMAIL = "micheller@desksnear.me"
 
-  def sign_up_verify(platform_context, user)
+  def sign_up_verify(user)
     @user = user
-    @platform_context = platform_context
 
     unless @user.verified_at
       mail to: @user.email, 
-           subject: "#{@user.first_name}, please verify your #{@platform_context.decorate.name} email",
-           platform_context: @platform_context
+           subject: "#{@user.first_name}, please verify your #{instance_name} email"
     end
   end
 
-  def sign_up_welcome(platform_context, user)
+  def sign_up_welcome(user)
     @user = user
-    @platform_context = platform_context
-    @platform_context_decorator = @platform_context.decorate
     @location = @user.locations.first
 
     mail(to: @user.email,
          from: PERSONABLE_EMAIL,
-         platform_context: @platform_context,
-         subject: "#{@user.first_name }, welcome to #{@platform_context_decorator.name }!")
+         subject: "#{@user.first_name }, welcome to #{instance_name}!")
   end
 
-  def created_by_instance_admin(platform_context, new_user, creator)
+  def created_by_instance_admin(new_user, creator)
     @new_user = new_user
-    @platform_context = platform_context
-    @platform_context_decorator = @platform_context.decorate
     @creator = creator
 
     mail(to: @new_user.email,
-         platform_context: @platform_context,
-         subject: "#{@new_user.first_name }, you were invited to #{@platform_context_decorator.name } by #{@creator.name}!")
+         subject: "#{@new_user.first_name }, you were invited to #{instance_name} by #{@creator.name}!")
   end
 
-  def list_draft(platform_context, user)
+  def list_draft(user)
     @user = user
-    @platform_context = platform_context
 
     mail to: @user.email, 
-           subject: "You're almost ready for your first guests!",
-           platform_context: @platform_context
+           subject: "You're almost ready for your first guests!"
   end
 
-  def list(platform_context, user)
+  def list(user)
     @user = user
     @listing = @user.listings.first
-    @platform_context = platform_context
 
     mail to: @user.email,
-           subject: "#{@user.first_name}, your new listing looks amazing!",
-           platform_context: @platform_context
+           subject: "#{@user.first_name}, your new listing looks amazing!"
   end
 
-  def unsubscription(platform_context, user, mailer_name)
+  def unsubscription(user, mailer_name)
     @user = user
     @mailer_name = mailer_name.split('/').last.humanize
-    @platform_context = platform_context
 
     mail to: @user.email,
-           subject: "Successfully unsubscribed",
-           platform_context: @platform_context
+           subject: "Successfully unsubscribed"
   end
 
-  def instance_created(platform_context, instance, user, user_password)
+  def instance_created(instance, user, user_password)
     @user = user
     @user_password = user_password
     @instance = instance
-    @platform_context = platform_context
 
     mail to: @user.email,
-           subject: "Instance created",
-           platform_context: @platform_context
+           subject: "Instance created"
   end
 
   def mail_type

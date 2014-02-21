@@ -13,7 +13,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
 
   context '#perform' do
     should "schedule payment transfers" do
-      PaymentTransferSchedulerJob.new.perform
+      PaymentTransferSchedulerJob.perform
 
       assert_equal 1, @company_1.payment_transfers.count
       assert_equal 1, @company_2.payment_transfers.count
@@ -52,16 +52,16 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
       rc.save!
       assert !rc.paid?
 
-      PaymentTransferSchedulerJob.new.perform
+      PaymentTransferSchedulerJob.perform
 
       assert_equal (@company_1.reservation_charges - [rc]).sort, @company_1.payment_transfers[0].reservation_charges.sort
     end
 
     should "not touch already included reservation charges" do
-      PaymentTransferSchedulerJob.new.perform
+      PaymentTransferSchedulerJob.perform
 
       assert_no_difference 'PaymentTransfer.count' do
-        PaymentTransferSchedulerJob.new.perform
+        PaymentTransferSchedulerJob.perform
       end
     end
 
@@ -79,7 +79,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
       )
 
       nzd_reservations = prepare_charged_reservations_for_listing(listing, 2)
-      PaymentTransferSchedulerJob.new.perform
+      PaymentTransferSchedulerJob.perform
 
       assert_equal 2, @company_1.payment_transfers.count
 

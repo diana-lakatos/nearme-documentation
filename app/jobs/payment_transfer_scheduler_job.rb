@@ -4,6 +4,7 @@
 class PaymentTransferSchedulerJob < Job
   def perform
     Company.needs_payment_transfer.find_each do |company|
+      PlatformContext.current = PlatformContext.new(company)
       company.schedule_payment_transfer
     end
   end

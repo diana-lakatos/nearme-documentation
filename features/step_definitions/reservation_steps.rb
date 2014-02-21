@@ -5,11 +5,10 @@ Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed
   @listing.company.update_attribute(:creator_id, lister.id)
   @listing.company.add_creator_to_company_users
   @listing.reload
-  reservation = @listing.reserve!(PlatformContext.new, reserver, [next_regularly_available_day], 1)
+  reservation = @listing.reserve!(reserver, [next_regularly_available_day], 1)
   unless confirmed != " "
     reservation.confirm!
     reservation.save!
-    puts "confirmed reservation with #{reservation.owner.id} and #{reservation.creator.id}"
   end
 
 end
@@ -62,7 +61,7 @@ When /^I book space as new user for:$/ do |table|
 end
 
 When /^(.*) books a space for that listing$/ do |person|
-  listing.reload.reserve!(PlatformContext.new, User.find_by_name(person), [next_regularly_available_day], 1)
+  listing.reload.reserve!(User.find_by_name(person), [next_regularly_available_day], 1)
 end
 
 When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user, action|

@@ -70,9 +70,9 @@
       - if f.object.errors.include?(:price_type).present?
         %p.error-block= f.object.errors[:price_type].first
 
-  - if f.object.errors.include?(:free).present?
-    %p.error-block
-      = 'must be free if all prices are zero'
+      - if f.object.errors.include?(:free).present?
+        %p.error-block
+          = 'must be free if all prices are zero'
 
 - if only_inputs.empty? || only_inputs.include?(:availability_rules)
   .control-group

@@ -53,7 +53,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       setup do
         stub_mixpanel
         @related_instance = FactoryGirl.create(:instance)
-        PlatformContext.any_instance.stubs(:instance).returns(@related_instance)
+        PlatformContext.current = PlatformContext.new(@related_instance)
 
         @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
         @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
@@ -91,7 +91,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
           @tracker.expects(:deleted_a_listing).with do |listing, custom_options|
             listing == assigns(:listing)
           end
-          assert_difference('Listing.count', -1) do
+          assert_difference 'Listing.count', -1 do
             delete :destroy, :id => @related_listing.id
           end
           assert_redirected_to manage_locations_path

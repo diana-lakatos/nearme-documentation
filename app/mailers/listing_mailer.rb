@@ -1,17 +1,15 @@
 class ListingMailer < InstanceMailer
   layout 'mailer'
 
-  def share(platform_context, listing, email, name, sharer, message=nil)
+  def share(listing, email, name, sharer, message=nil)
     @listing = listing
     @email = email
     @name = name
     @sharer = sharer
     @message = message
-    @platform_context_decorator = platform_context.decorate
 
     mail(to: "#{name} <#{email}>",
          reply_to: "#{@sharer.name} <#{@sharer.email}>",
-         subject: "#{@sharer.name} has shared a listing with you on #{@platform_context_decorator.name}",
-         platform_context: platform_context)
+         subject: "#{@sharer.name} has shared a listing with you on #{instance_name}")
   end
 end

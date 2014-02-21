@@ -65,6 +65,7 @@ module DesksnearMe
     config.generators do |g|
       g.test_framework :test_unit, :fixture => false
     end
+    config.use_only_ssl = true
 
     # note that we *don't* want to rewite for the test env :)
     config.should_rewrite_email = Rails.env.staging? || Rails.env.development?
@@ -96,6 +97,8 @@ module DesksnearMe
 
     # custom rewrites specified in lib/legacy_redirect_handler.rb
     config.middleware.insert_before(Rack::Lock, "LegacyRedirectHandler")
+    # setting platform_context in app/models/platform_context/rack_setter.rb
+    config.middleware.use "PlatformContext::RackSetter"
     config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access
     config.google_analytics = (YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env] || {}).with_indifferent_access
     config.near_me_analytics = (YAML.load_file(Rails.root.join("config", "near_me_analytics.yml"))[Rails.env] || {}).with_indifferent_access

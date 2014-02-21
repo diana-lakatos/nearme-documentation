@@ -96,7 +96,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
               listing == _listing
             end
           end
-          assert_difference('Location.count', -1) do
+          assert_difference 'Location.count', -1 do
             delete :destroy, :id => @related_location.id
           end
           assert_redirected_to manage_locations_path

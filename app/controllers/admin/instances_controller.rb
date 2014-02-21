@@ -1,4 +1,5 @@
 class Admin::InstancesController < Admin::ResourceController
+  before_filter lambda { PlatformContext.current = PlatformContext.new(Instance.find(params[:id])) }, :only => [:edit, :update, :destroy, :show]
 
   def new
     @user = User.new
@@ -6,19 +7,19 @@ class Admin::InstancesController < Admin::ResourceController
   end
 
   def create
-    without_user = params[:user][:name].blank? && params[:user][:email].blank?
+    without_user = params[:user].blank? || params[:user][:name].blank? && params[:user][:email].blank?
     unless without_user
       @user = User.new(params[:user])
       user_password = @user.generate_random_password!
     end
 
     @instance = Instance.new(params[:instance])
-    @instance.valid?
     if (without_user || @user.valid?) && @instance.valid?
       @instance.save
+      PlatformContext.current = PlatformContext.new(@instance)
       if !without_user && @user.save
-        InstanceAdmin.create(user_id: @user.id, instance_id: @instance.id)
-        PostActionMailer.enqueue.instance_created(platform_context, @instance, @user, user_password)
+        InstanceAdmin.create(user_id: @user.id)
+        PostActionMailer.enqueue.instance_created(@instance, @user, user_password)
       end
 
       blog_instance = BlogInstance.new(name: @instance.name + ' Blog')

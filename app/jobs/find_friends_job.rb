@@ -1,6 +1,6 @@
 # Find friends via social authentication
 class FindFriendsJob < Job
-  def initialize(authentication)
+  def after_initialize(authentication)
     @authentication = authentication
     @user = authentication.user
   end

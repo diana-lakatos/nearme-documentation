@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
 
   prepend_view_path FooterResolver.instance
-  before_filter :require_ssl
   before_filter :log_out_if_token_exists
   before_filter :redirect_to_set_password_unless_unnecessary
 
@@ -16,7 +15,6 @@ class ApplicationController < ActionController::Base
   before_filter :store_referal_info
   before_filter :platform_context
   before_filter :register_platform_context_as_lookup_context_detail
-  before_filter :redirect_if_domain_not_valid
   before_filter :set_locales_backend
   before_filter :redirect_if_marketplace_password_protected
   before_filter :set_raygun_custom_data
@@ -41,11 +39,20 @@ class ApplicationController < ActionController::Base
   end
 
   def platform_context
-    @platform_context ||= PlatformContext.new(request.host)
+    @platform_context = PlatformContext.current
+  end
+
+  # This method invalidates default PlatformContext and ensures that our scope is Instance [ disregarding listings_public for relevant models ].
+  # It should be used whenever we don't want default scoping based on domain for some part of app. That's the case for example for
+  # instance_admin (for example we want instance admins to be able to access administrator panel via any white label company ), dashboard (we
+  # want white label company creator to manage its private company via instance domain ). Remember, that if this method is used, we are no 
+  # longer scoping for white label / partner. It means, we should manually ensure we scope correctly ( for example in Dashboard ).
+  def force_scope_to_instance
+    PlatformContext.scope_to_instance
   end
 
   def authorizer
-    @authorizer ||= InstanceAdminAuthorizer.new(current_user, platform_context)
+    @authorizer ||= InstanceAdminAuthorizer.new(current_user)
   end
   helper_method :authorizer
 
@@ -68,7 +75,6 @@ class ApplicationController < ActionController::Base
 
       # Gather information about requests
       request_details = {
-        :current_instance_id => platform_context.instance.id,
         :current_host => request.try(:host)
       }
 
@@ -128,14 +134,6 @@ class ApplicationController < ActionController::Base
 
   def current_user=(user)
     analytics_apply_user(user)
-  end
-
-  def require_ssl
-    return if Rails.env.development? || Rails.env.test?
-
-    unless request.ssl?
-      redirect_to "https://#{request.host}#{request.fullpath}"
-    end
   end
 
   def stored_url_for(resource_or_scope)
@@ -240,11 +238,6 @@ class ApplicationController < ActionController::Base
   end
   helper_method :get_and_clear_stored_client_taggable_events
 
-  def search_scope
-    @search_scope ||= Listing::SearchScope.scope(platform_context)
-  end
-  helper_method :search_scope
-
   def register_lookup_context_detail(detail_name)
     lookup_context.class.register_detail(detail_name.to_sym) { nil }
   end
@@ -258,10 +251,6 @@ class ApplicationController < ActionController::Base
       Rails.logger.info "#{current_user.email} is being logged out due to token param"
       sign_out current_user
     end
-  end
-
-  def redirect_if_domain_not_valid
-    redirect_to 'http://near-me.com/?domain_not_valid=true' unless platform_context.valid_domain?
   end
 
   def set_locales_backend
@@ -308,7 +297,7 @@ class ApplicationController < ActionController::Base
     return if DesksnearMe::Application.config.silence_raygun_notification
     begin
       Raygun.configuration.custom_data = {
-        platform_context: @platform_context.to_h,
+        platform_context: platform_context.to_h,
         request_params: params,
         current_user_id: current_user.try(:id),
         demo: ENV['DEMO'],

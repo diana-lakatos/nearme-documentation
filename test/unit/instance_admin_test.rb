@@ -5,9 +5,7 @@ class InstanceAdminTest < ActiveSupport::TestCase
   should belong_to(:instance)
   should belong_to(:user)
   should belong_to(:instance_admin_role)
-  should validate_uniqueness_of(:user_id).scoped_to(:instance_id)
   should validate_presence_of(:user_id)
-  should validate_presence_of(:instance_id)
 
   context 'default role' do
 

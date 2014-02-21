@@ -1,5 +1,5 @@
 class GoogleAnalyticsApiJob < Job
-  def initialize(endpoint, params)
+  def after_initialize(endpoint, params)
     @endpoint = endpoint
     @params = params
   end

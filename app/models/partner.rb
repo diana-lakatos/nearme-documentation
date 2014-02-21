@@ -1,8 +1,10 @@
 class Partner < ActiveRecord::Base
+  auto_set_platform_context
+
   has_paper_trail
   AVAILABLE_SEARCH_SCOPE_OPTIONS = {'No scoping' => 'no_scoping', 'All associated listings' => 'all_associated_listings'}
 
-  attr_accessible :name, :instance_id, :domain_attributes, :theme_attributes, :search_scope_option
+  attr_accessible :name, :domain_attributes, :theme_attributes, :search_scope_option
   belongs_to :instance
   has_one :domain, :as => :target, :dependent => :destroy
   has_one :theme, :as => :owner, :dependent => :destroy
@@ -10,7 +12,7 @@ class Partner < ActiveRecord::Base
   accepts_nested_attributes_for :domain, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params[:name].blank? }
 
-  validates_presence_of :name, :instance_id
+  validates_presence_of :name
 
   # we overwrite this method to fallback to instance's theme
   def theme

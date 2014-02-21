@@ -1,5 +1,5 @@
 DesksnearMe::Application.configure do
-
+  config.use_only_ssl = false
   config.cache_classes = false
 
   config.whiny_nils = true

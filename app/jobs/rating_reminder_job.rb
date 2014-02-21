@@ -1,7 +1,7 @@
 # Sends rating reminders at midday day after visit
 class RatingReminderJob < Job
 
-  def initialize(date_string)
+  def after_initialize(date_string)
     @date = Date.parse(date_string).yesterday
   end
 

@@ -6,7 +6,7 @@ class InstanceAdmin::Manage::Users::InstanceAdminRolesControllerTest < ActionCon
     @user = FactoryGirl.create(:user)
     sign_in @user
     FactoryGirl.create(:instance) unless Instance.default_instance
-    InstanceAdmin.create(:user_id => @user.id, :instance_id => Instance.default_instance.id)
+    InstanceAdmin.create(:user_id => @user.id).update_attribute(:instance_id, Instance.default_instance.id)
   end
 
   context 'crud' do
@@ -52,10 +52,8 @@ class InstanceAdmin::Manage::Users::InstanceAdminRolesControllerTest < ActionCon
 
       should 'not be able to update global role' do
         @default_role = FactoryGirl.create(:instance_admin_role_default)
-        assert_raises ActiveRecord::RecordNotFound do
-          put :update, { :id => @default_role.id, :instance_admin_role => { :permission_settings => true } }
-        end
-        assert_nil assigns(:instance_admin_role)
+        put :update, { :id => @default_role.id, :instance_admin_role => { :permission_settings => true } }
+        refute assigns(:instance_admin_role).permission_settings
       end
 
     end
@@ -71,10 +69,8 @@ class InstanceAdmin::Manage::Users::InstanceAdminRolesControllerTest < ActionCon
 
       should 'not allow to destroy global role' do
         FactoryGirl.create(:instance_admin_role_default)
-        assert_raises ActiveRecord::RecordNotFound do
-          assert_no_difference 'InstanceAdminRole.count' do
-            delete :destroy, :id => InstanceAdminRole.default_role.id
-          end
+        assert_no_difference 'InstanceAdminRole.count' do
+          delete :destroy, :id => InstanceAdminRole.default_role.id
         end
       end
     end

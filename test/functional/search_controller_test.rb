@@ -279,34 +279,5 @@ class SearchControllerTest < ActionController::TestCase
 
   end
 
-
-  context 'scopes current partner' do
-
-    setup do
-      @partner = FactoryGirl.create(:partner)
-      PlatformContext.any_instance.stubs(:partner).returns(@partner)
-      stub_request(:get, /.*maps\.googleapis\.com.*/)
-      stub_mixpanel
-    end
-
-    should 'search all listings if no scoping set for current partner' do
-      @partner.search_scope_option = 'no_scoping'
-      get :index, :loc => 'auckland'
-
-      assert_equal Listing.all, assigns(:listings)
-    end
-
-    should 'search only associated listings if search scope option set for current partner' do
-      @partner.update_attribute(:search_scope_option, 'all_associated_listings')
-      @listing = FactoryGirl.create(:listing_in_auckland)
-      @listing.company.update_attribute(:partner_id, @partner.id)
-      
-      get :index, :loc => 'auckland'
-
-      assert_equal [@listing], assigns(:listings)
-    end
-
-  end
-
 end
 

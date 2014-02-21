@@ -13,7 +13,7 @@ class DashboardControllerTest < ActionController::TestCase
 
       setup do
         @listing = FactoryGirl.create(:listing, :quantity => 1000)
-        @listing.location.company.tap { |c| c.creator = @user }.save!
+        @listing.location.company.update_attribute(:creator_id, @user.id)
         @listing.location.company.add_creator_to_company_users
       end
 
@@ -41,14 +41,13 @@ class DashboardControllerTest < ActionController::TestCase
           end
 
           should 'be scoped to current instance' do
-            second_instance = FactoryGirl.create(:instance)
-            PlatformContext.any_instance.stubs(:instance).returns(second_instance)
-
+            set_second_instance
             get :analytics
             assert_equal [], assigns(:reservation_charges)
             assert_equal [], assigns(:last_week_reservation_charges)
             assert_equal [], assigns(:all_time_totals)
           end
+
         end
 
         context 'date' do 
@@ -75,10 +74,10 @@ class DashboardControllerTest < ActionController::TestCase
     end
 
     context '#reservations' do
-      
+
       setup do
         @listing = FactoryGirl.create(:listing, :quantity => 1000)
-        @listing.location.company.tap { |c| c.creator = @user }.save!
+        @listing.location.company.update_attribute(:creator_id, @user.id)
         @listing.location.company.add_creator_to_company_users
       end
 
@@ -94,12 +93,11 @@ class DashboardControllerTest < ActionController::TestCase
         end
 
         should 'be scoped to current instance' do
-          second_instance = FactoryGirl.create(:instance)
-          PlatformContext.any_instance.stubs(:instance).returns(second_instance)
-
+          set_second_instance
           get :analytics, :analytics_mode => 'bookings'
           assert_equal [], assigns(:reservations)
         end
+
       end
 
       context 'date' do 
@@ -114,9 +112,7 @@ class DashboardControllerTest < ActionController::TestCase
         end
 
         should '@last_week is scoped to current instance' do
-          second_instance = FactoryGirl.create(:instance)
-          PlatformContext.any_instance.stubs(:instance).returns(second_instance)
-
+          set_second_instance
           get :analytics, :analytics_mode => 'bookings'
           assert_equal [], assigns(:last_week_reservations)
         end
@@ -127,10 +123,10 @@ class DashboardControllerTest < ActionController::TestCase
 
 
     context '#location_views' do
-      
+
       setup do
         @listing = FactoryGirl.create(:listing, :quantity => 1000)
-        @listing.location.company.tap { |c| c.creator = @user }.save!
+        @listing.location.company.update_attribute(:creator_id, @user.id)
         @listing.location.company.add_creator_to_company_users
       end
 
@@ -148,12 +144,12 @@ class DashboardControllerTest < ActionController::TestCase
         end
 
         should '@last_month_visits has no visits from today in second instance' do
-          second_instance = FactoryGirl.create(:instance)
-          PlatformContext.any_instance.stubs(:instance).returns(second_instance)
+          set_second_instance
           get :analytics, :analytics_mode => 'location_views'
           assert_equal [], assigns(:last_month_visits)
           assert_equal [], assigns(:visits)
         end
+
       end
 
     end
@@ -162,40 +158,37 @@ class DashboardControllerTest < ActionController::TestCase
 
   context '#manage_guests' do
     setup do
-      @unrelated_listing = FactoryGirl.create(:listing)
-      @related_instance = FactoryGirl.create(:instance)
-      PlatformContext.any_instance.stubs(:instance).returns(@related_instance)
-      @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
+      @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
       @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
       @related_listing = FactoryGirl.create(:listing, location: @related_location)
+      @unrelated_listing = FactoryGirl.create(:listing)
+      @unrelated_listing.update_attribute(:instance_id, FactoryGirl.create(:instance).id)
     end
 
-    context 'is scoped to current instance' do
-      should 'show related guests' do
-        FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
-
-        get :manage_guests
-        assert_response :success
-        assert_select ".reservation-details", 1
-      end
-
-      should 'show related locations when no related guests' do
-        FactoryGirl.create(:reservation, owner: @user, listing: @unrelated_listing)
-
-
-        get :manage_guests
-        assert_response :success
-        assert_select ".reservation-details", 0
-        assert_select "h2", @related_location.name
-      end
-      should 'not show unrelated guests' do
-        FactoryGirl.create(:reservation, owner: @user, listing: @unrelated_listing)
-
-        get :manage_guests
-        assert_response :success
-        assert_select ".reservation-details", 0
-      end
+    should 'show related guests' do
+      FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
+      get :manage_guests
+      assert_response :success
+      assert_select ".reservation-details", 1
     end
+
+    should 'show related locations when no related guests' do
+      @reservation = FactoryGirl.create(:reservation, owner: @user, listing: @unrelated_listing)
+      @reservation.update_attribute(:instance_id, @unrelated_listing.instance_id)
+      get :manage_guests
+      assert_response :success
+      assert_select ".reservation-details", 0
+      assert_select "h2", @related_location.name
+    end
+
+    should 'not show unrelated guests' do
+      @reservation = FactoryGirl.create(:reservation, owner: @user, listing: @unrelated_listing)
+      @reservation.update_attribute(:instance_id, @unrelated_listing.instance_id)
+      get :manage_guests
+      assert_response :success
+      assert_select ".reservation-details", 0
+    end
+
   end
 
   private
@@ -213,6 +206,13 @@ class DashboardControllerTest < ActionController::TestCase
 
   def create_location_visit
     @listing.location.track_impression
+  end
+
+  def set_second_instance
+    second_instance = FactoryGirl.create(:instance)
+    company = FactoryGirl.create(:company, :creator => @user)
+    company.update_attribute(:instance_id, second_instance.id)
+    PlatformContext.current = PlatformContext.new(second_instance)
   end
 
 end

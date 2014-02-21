@@ -1,7 +1,7 @@
 # Update user info via social authentication
 class UpdateInfoJob < Job
 
-  def initialize(authentication)
+  def after_initialize(authentication)
     @authentication = authentication
   end
 

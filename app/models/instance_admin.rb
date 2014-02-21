@@ -2,8 +2,10 @@ class InstanceAdmin < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
   has_metadata :without_db_column => true
+  auto_set_platform_context
+  scoped_to_platform_context
 
-  attr_accessible :instance_id, :user_id, :instance_admin_role_id, :instance_owner
+  attr_accessible :user_id, :instance_admin_role_id, :instance_owner
 
   belongs_to :instance
   belongs_to :user, :foreign_key => 'user_id'
@@ -12,7 +14,7 @@ class InstanceAdmin < ActiveRecord::Base
   before_create :mark_as_instance_owner
   before_save :assign_default_role_if_empty
 
-  validates_presence_of :user_id, :instance_id
+  validates_presence_of :user_id
   validates_uniqueness_of :user_id, :scope => :instance_id
 
   delegate :name, :to => :user

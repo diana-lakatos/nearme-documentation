@@ -50,14 +50,14 @@ class CompanyTest < ActiveSupport::TestCase
     context 'no payout address' do
       setup do
         stub_mixpanel
-        @platform_context = @company.platform_context_based_on_company
+        PlatformContext.current = PlatformContext.new(@company)
       end
 
       should 'notify host via sms and email if company has no payout option and instance supports payouts' do
         @company.stubs(:created_payment_transfers).returns([mock()])
         @mock = mock()
         @mock.expects(:deliver).once
-        CompanySmsNotifier.expects(:notify_host_of_no_payout_option).with(@platform_context, @company).returns(stub(deliver: true)).once
+        CompanySmsNotifier.expects(:notify_host_of_no_payout_option).with(@company).returns(stub(deliver: true)).once
         CompanyMailer.expects(:notify_host_of_no_payout_option).with(@company).returns(@mock)
         @company.schedule_payment_transfer
       end

@@ -6,7 +6,7 @@ class PlatformContextTest < ActiveSupport::TestCase
 
     setup do
       @desks_near_me_domain = FactoryGirl.create(:domain, :name => 'desksnearme.com', :target => FactoryGirl.create(:instance))
-      @company = FactoryGirl.create(:company)
+      @company = FactoryGirl.create(:company, :instance_id => @desks_near_me_domain.target.id)
       @example_domain = FactoryGirl.create(:domain, :name => 'domainexample.com', :target => @company, :target_type => 'Company')
       @partner_domain = FactoryGirl.create(:domain, :name => 'partner.example.com', :target => FactoryGirl.create(:partner), :target_type => 'Partner')
     end
@@ -78,6 +78,16 @@ class PlatformContextTest < ActiveSupport::TestCase
         assert_equal Instance.default_instance, rq.instance
         assert_equal Instance.default_instance.theme, rq.theme
         assert_equal Instance.default_instance, rq.platform_context_detail
+      end
+
+      should 'company linked to domain that matches request.host without white label enabled but with partner' do
+        @partner = FactoryGirl.create(:partner, :instance_id => FactoryGirl.create(:instance).id)
+        @example_company.update_attributes(:white_label_enabled => false)
+        @example_company.update_attribute(:partner_id, @partner.id)
+        rq = PlatformContext.new(@example_company)
+        assert_equal @example_company.partner.instance, rq.instance
+        assert_equal @example_company.partner.theme, rq.theme
+        assert_equal @partner, rq.platform_context_detail
       end
     end
 

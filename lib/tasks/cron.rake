@@ -3,36 +3,36 @@ namespace :cron do
   desc "Run hourly scheduled jobs"
   task :hourly => [:environment] do
     run_job "Send Rating reminders" do
-      RatingReminderJob.new(Time.zone.today.to_s).perform
+      RatingReminderJob.perform(Time.zone.today.to_s)
     end
   end
 
   desc "Run daily scheduled jobs"
   task :daily => [:environment] do 
     run_job "Send Share mails" do
-      RecurringMailerShareJob.new.perform
+      RecurringMailerShareJob.perform
     end
 
     #run_job "Send Request photos mails" do
-    #  RecurringMailerRequestPhotosJob.new.perform
+    #  RecurringMailerRequestPhotosJob.perform
     #end
   end
 
   desc "Run weekly scheduled jobs"
   task :weekly => [:environment] do
     run_job "Send Analytics mails" do
-      RecurringMailerAnalyticsJob.new.perform
+      RecurringMailerAnalyticsJob.perform
     end
 
     run_job "Find new social connections" do
-      PrepareFriendFindersJob.new.perform
+      PrepareFriendFindersJob.perform
     end
   end
 
   desc "Run monthly scheduled jobs"
   task :monthly => [:environment] do
     run_job "Schedule Payment Transfers" do
-      PaymentTransferSchedulerJob.new.perform
+      PaymentTransferSchedulerJob.perform
     end
   end
 end
@@ -40,6 +40,7 @@ end
 # Execute a block ('job'), but rescue and report on errors and then
 # continue.
 def run_job(name, &blk)
+  PlatformContext.clear_current
   puts "#{Time.now} | Executing #{name}"
   begin
     yield

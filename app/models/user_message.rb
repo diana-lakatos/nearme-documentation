@@ -2,6 +2,7 @@
 class UserMessage < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
+  scoped_to_platform_context
 
   attr_accessor :replying_to_id
 
@@ -25,8 +26,6 @@ class UserMessage < ActiveRecord::Base
   scope :for_user, ->(user) {
     where('thread_owner_id = ? OR thread_recipient_id = ?', user.id, user.id).order('user_messages.created_at asc')
   }
-
-  scope :for_instance, ->(instance) { where(instance_id: instance) }
 
   scope :by_created, -> {order('created_at desc')}
 
@@ -83,15 +82,15 @@ class UserMessage < ActiveRecord::Base
     UserMessageDrop.new(self)
   end
 
-  def send_notification(platform_context)
+  def send_notification
     return if thread_context_type.blank?
-    UserMessageSmsNotifier.notify_user_about_new_message(platform_context, self).deliver
+    UserMessageSmsNotifier.notify_user_about_new_message(self).deliver
     return if thread_context_type != 'Listing'
 
     if author == thread_context.administrator
-      UserMessageMailer.enqueue.email_message_from_host(platform_context, self)
+      UserMessageMailer.enqueue.email_message_from_host(self)
     else
-      UserMessageMailer.enqueue.email_message_from_guest(platform_context, self)
+      UserMessageMailer.enqueue.email_message_from_guest(self)
     end
   end
 

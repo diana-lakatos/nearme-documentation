@@ -1,12 +1,13 @@
 # Sends request_photos emails
 class RecurringMailerRequestPhotosJob < Job
 
-  def initialize
+  def after_initialize
     @sent_to_users = []
   end
 
   def perform
     Listing.searchable.includes(:photos).each do |listing|
+      PlatformContext.current = PlatformContext.new(listing.company)
       next unless listing.administrator
       next if listing.administrator.unsubscribed?('recurring_mailer/request_photos')
       next if @sent_to_users.include?(listing.administrator.id)

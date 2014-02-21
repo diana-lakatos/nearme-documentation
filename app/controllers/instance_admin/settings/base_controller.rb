@@ -13,7 +13,6 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
   end
 
   def show
-    @instance
     find_or_build_billing_gateway_for_usd
   end
 
@@ -37,7 +36,7 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
   private
 
   def find_or_build_billing_gateway_for_usd
-    @instance.instance_billing_gateways.find{|bg| bg.currency == 'USD'} || @instance.instance_billing_gateways.build(currency: 'USD')
+    InstanceBillingGateway.find{|bg| bg.currency == 'USD'} || @instance.instance_billing_gateways.build(currency: 'USD')
   end
 
   def find_instance

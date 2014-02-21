@@ -51,6 +51,7 @@ class AnalyticWrapper::MixpanelApi
     @anonymous_identity = options[:anonymous_identity] || (generate_anonymous_identity unless @current_user)
     @session_properties = (options[:session_properties] || {}).with_indifferent_access
     @request_details = (options[:request_details] || {}).with_indifferent_access
+    @request_details.merge!(:current_instance_id => PlatformContext.current.instance.id ) if PlatformContext.current.present?
     @request = options[:request]
 
     extract_properties_from_params(options[:request_params])
