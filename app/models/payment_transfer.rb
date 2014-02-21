@@ -25,6 +25,10 @@ class PaymentTransfer < ActiveRecord::Base
     where("DATE(#{table_name}.created_at) >= ? ", days_in_past.days.ago)
   }
 
+  scope :for_instance, ->(instance) {
+    joins(:company).where(:'companies.instance_id' => instance.id)
+  }
+
 
   validate :validate_all_charges_in_currency
 

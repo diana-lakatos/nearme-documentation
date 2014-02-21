@@ -20,7 +20,7 @@ class Authorizer
   end
 
   def instance_admin_role
-    @instance_admin_role ||= instance_admin.instance_admin_role
+    @instance_admin_role ||= instance_admin.try(:instance_admin_role)
   end
 
 end

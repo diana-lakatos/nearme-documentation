@@ -17,10 +17,12 @@ FactoryGirl.define do
     end
 
     after(:build) do |listing, evaluator|
-      listing.photos = create_list(:photo, evaluator.photos_count_to_be_created,
-                                   listing: nil,
-                                   creator: listing.location.creator)
-      listing.photos_count = evaluator.photos_count_to_be_created
+      if listing.photos.empty?
+        listing.photos = create_list(:photo, evaluator.photos_count_to_be_created,
+                                     listing: nil,
+                                     creator: listing.location.creator)
+        listing.photos_count = evaluator.photos_count_to_be_created
+      end
     end
 
     factory :always_open_listing do
@@ -42,6 +44,18 @@ FactoryGirl.define do
       after(:create) do |listing|
         listing.daily_price_cents = 100_00
       end
+    end
+
+    factory :thousand_dollar_listing_from_instance_with_price_constraints do
+      association(:location, factory: :location_from_instance_with_price_constraints)
+      after(:create) do |listing|
+        listing.hourly_price_cents = 100000
+      end
+    end
+
+    factory :listing_with_10_dollars_per_hour do
+      hourly_price_cents 1000
+      hourly_reservations true
     end
 
     factory :call_listing do
@@ -118,6 +132,10 @@ FactoryGirl.define do
         listing.photos = FactoryGirl.create_list(:demo_photo, 2, creator: listing.location.creator )
         listing.save!
       end
+    end
+
+    factory :listing_from_instance_with_price_constraints do
+      association(:location, factory: :location_from_instance_with_price_constraints)
     end
 
   end

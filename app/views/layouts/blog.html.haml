@@ -13,7 +13,7 @@
   %body.blog
     .header
       .col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2.logo
-        - url = @platform_instance.present? ? @platform_instance.theme.logo_image.url : asset_path('blog/logo.png')
+        - url = @platform_context.present? ? @platform_context.theme.logo_image.url : asset_path('blog/logo.png')
         = link_to image_tag(url), blog_posts_path
 
       - header = @blog_post.try(:header).presence || @blog_instance.header

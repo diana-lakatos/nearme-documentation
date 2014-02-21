@@ -103,7 +103,7 @@ class PlatformContextTest < ActiveSupport::TestCase
     setup do
       @platform_context = PlatformContext.new
       @company = FactoryGirl.create(:white_label_company)
-      @user = FactoryGirl.create(:user, companies: [@company])
+      @user = @company.creator
       @another_user = FactoryGirl.create(:user)
     end
 
