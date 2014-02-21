@@ -166,5 +166,9 @@ FactoryGirl.define do
           "types"=>["postal_code"]}
       }}
     end
+
+    factory :location_from_instance_with_price_constraints do
+      association(:company, factory: :company_from_instance_with_price_constraints)
+    end
   end
 end

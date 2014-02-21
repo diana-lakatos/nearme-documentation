@@ -13,18 +13,42 @@ class PlatformHomeController < ActionController::Base
     @platform_contact = PlatformContact.new
   end
 
+  def contacts
+    @platform_contacts = PlatformContact.order(:id)
+    respond_to do |format|
+      format.csv { send_data @platform_contacts.to_csv }
+    end
+  end
+
   def contact_submit
-    PlatformContact.create(params[:platform_contact])
-    render :contact_submit, layout: false
+    @platform_contact = PlatformContact.new(params[:platform_contact])
+    if @platform_contact.save
+      PlatformMailer.enqueue.contact_request(@platform_contact)
+      render :contact_submit, layout: false
+    else
+      render text: @platform_contact.errors.full_messages.to_sentence, layout: false, :status => :unprocessable_entity
+    end
   end
 
   def demo_request
     @platform_demo_request = PlatformDemoRequest.new
   end
 
+  def demo_requests
+    @platform_demo_requests = PlatformDemoRequest.order(:id)
+    respond_to do |format|
+      format.csv { send_data @platform_demo_requests.to_csv }
+    end
+  end
+
   def demo_request_submit
-    PlatformDemoRequest.create(params[:platform_demo_request])
-    render :demo_request_submit, layout: false
+    @platform_demo_request = PlatformDemoRequest.new(params[:platform_demo_request])
+    if @platform_demo_request.save
+      PlatformMailer.enqueue.demo_request(@platform_demo_request)
+      render :demo_request_submit, layout: false
+    else
+      render text: @platform_demo_request.errors.full_messages.to_sentence, layout: false, :status => :unprocessable_entity
+    end
   end
 
   def unsubscribe

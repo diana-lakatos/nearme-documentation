@@ -1,5 +1,6 @@
 class InstanceAdminRole < ActiveRecord::Base
   has_paper_trail
+  has_metadata :without_db_column => true
 
   PERMISSIONS = %w(Analytics Settings Theme Manage Blog)
 
@@ -14,6 +15,7 @@ class InstanceAdminRole < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => :instance_id
 
   after_destroy :assign_default_role_to_instance_admins
+
   default_scope :order => "name ASC"
   scope :belongs_to_instance, lambda { |instance_id| where('instance_id = ? OR instance_id is null', instance_id) }
 
@@ -30,6 +32,10 @@ class InstanceAdminRole < ActiveRecord::Base
       instance_admin.assign_default_role
       instance_admin.save!
     end
+  end
+
+  def first_permission_have_access_to
+    PERMISSIONS.find { |p| self.send("permission_#{p.downcase}") }.try(:downcase)
   end
 
 end

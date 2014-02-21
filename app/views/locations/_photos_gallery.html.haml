@@ -1,20 +1,20 @@
 .listing-photos{:'data-photo-aspect-w' => PhotoUploader::SPACE_FULL_IMAGE_W, :'data-photo-aspect-h' => PhotoUploader::SPACE_FULL_IMAGE_H}
   .carousel{id: gallery_id, class: fullscreen ? '' : 'slide'}
-    - if location.photos.count > 0
+    - if location.photos_metadata.try(:count).to_i > 0
       %ol.carousel-indicators
-        - location.photos.each_with_index do |photo, index|
+        - location.photos_metadata.each_with_index do |photo_metadata, index|
           %li{:class => index.zero? ? "active" : '', :'data-target' => "##{gallery_id}", :'data-slide-to' => index}
             = index+1
       .carousel-inner
-        - location.photos.each_with_index do |photo, index|
+        - location.photos_metadata.each_with_index do |photo_metadata, index|
           .item{:class => ("active" if index == 0), :'data-modalize' => true}
             - if fullscreen
-              %img{:alt => photo.listing.name, :'data-src' => photo.image_url(photo_size)}
+              %img{:alt => photo_metadata[:listing_name], :'data-src' => photo_metadata[photo_size.to_sym]}
             - else
-              = image_tag photo.image_url(photo_size), :alt => photo.listing.name
+              = image_tag photo_metadata[photo_size.to_sym], :alt => photo_metadata[:listing_name]
             .info
               .caption
-                = "#{photo.caption} ##{photo.listing.name}".strip
+                = "#{photo_metadata[:caption]} ##{photo_metadata[:listing_name]}".strip
       = yield
 
     - else
@@ -22,7 +22,7 @@
         .item{:class => ("active")}
           = image_tag space_listing_placeholder_path(:height => 554, :width => 895), :title => location.name, :alt => location.name
 
-    - if location.photos.count > 1
+    - if location.photos_metadata.try(:count).to_i > 1
       .carousel-nav
         = link_to "", "##{gallery_id}", :class => "carousel-control left ico-chevron-left", 'data-slide' => 'prev'
         = link_to "", "##{gallery_id}", :class => "carousel-control right ico-chevron-right", 'data-slide' => 'next'

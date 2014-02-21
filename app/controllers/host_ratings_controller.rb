@@ -10,7 +10,7 @@ class HostRatingsController < ApplicationController
   def create
     @rating = HostRating.new(params[:host_rating])
     @rating.reservation = @reservation
-    @rating.subject = @reservation.listing.location.creator
+    @rating.subject = @reservation.creator
     @rating.author = current_user
     if @rating.save
       event_tracker.submitted_a_rating(current_user, {positive: @rating.positive?})

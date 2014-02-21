@@ -15,27 +15,19 @@ class PlatformHomeControllerTest < ActionController::TestCase
   end
 
   context 'create platform contact' do
-
     should 'create platform contact' do
-      assert_difference 'PlatformContact.count', 1 do
-        post :contact_submit, "platform_demo_request"=>
-                                   {"name"       => "Daniel Docker",
-                                    "email"      => "docker@gmail.com",
-                                    "subject"    => "I'm interested.",
-                                    "comments"   => "I would like to learn more, please send me an email.",
-                                    "subscribed" => true }
+      PlatformMailer.expects(:contact_request).returns(stub(deliver: true))
+      platform_contact = FactoryGirl.attributes_for(:platform_contact)
+      assert_difference 'PlatformContact.count' do
+        post :contact_submit, platform_contact: platform_contact
       end
     end
 
     should 'create platform demo request' do
-      assert_difference 'PlatformDemoRequest.count', 1 do
-        post :demo_request_submit, "platform_demo_request"=>
-                                   {"name"       => "Daniel Docker",
-                                    "email"      => "docker@gmail.com",
-                                    "company"    => "Docker, Co.",
-                                    "phone"      => "317 867 5309",
-                                    "comments"   => "I would like to learn more, please send me an email.",
-                                    "subscribed" => true }
+      PlatformMailer.expects(:demo_request).returns(stub(deliver: true))
+      platform_demo_request = FactoryGirl.attributes_for(:platform_demo_request)
+      assert_difference 'PlatformDemoRequest.count' do
+        post :demo_request_submit, platform_demo_request: platform_demo_request
       end
     end
   end

@@ -1,4 +1,5 @@
 class ListingType < ActiveRecord::Base
+  has_metadata :without_db_column => true
   attr_accessible :name
 
   validates_presence_of :name, :instance_id

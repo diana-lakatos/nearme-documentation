@@ -13,20 +13,20 @@ class ReservationSmsNotifierTest < ActiveSupport::TestCase
     should "render with the reservation" do
       sms = ReservationSmsNotifier.notify_host_with_confirmation(@reservation)
       assert_equal @listing_owner.full_mobile_number, sms.to
-      assert sms.body =~ Regexp.new("You have received a booking request on #{@reservation.listing.company.instance.name}")
+      assert sms.body =~ Regexp.new("You have received a booking request on #{@reservation.instance.name}")
       assert sms.body =~ /Please confirm or decline from your dashboard:/
       assert sms.body =~ /http:\/\/goo.gl/
     end
 
     should "not render if host had disabled sms notifications" do
-      @listing_owner.sms_notifications_enabled = false
+      @listing_owner.update_attribute(:sms_notifications_enabled, false)
       sms = ReservationSmsNotifier.notify_host_with_confirmation(@reservation)
       assert sms.is_a?(SmsNotifier::NullMessage)
       refute sms.deliver
     end
 
     should "not render if host had disabled sms notification for new reservation requests" do
-      @listing_owner.sms_preferences = { :new_reservation => '0' }
+      @listing_owner.update_attribute(:sms_preferences, { :new_reservation => '0' })
       sms = ReservationSmsNotifier.notify_host_with_confirmation(@reservation)
       assert sms.is_a?(SmsNotifier::NullMessage)
       refute sms.deliver
@@ -36,8 +36,7 @@ class ReservationSmsNotifierTest < ActiveSupport::TestCase
   context '#notify_guest_with_state_change' do
     should "render with the reservation" do
       @reservation_owner = @reservation.owner
-      @reservation_owner.mobile_number = "199999999"
-      @reservation_owner.save!
+      @reservation_owner.update_attribute(:mobile_number, "199999999")
       @reservation.confirm
       sms = ReservationSmsNotifier.notify_guest_with_state_change(@reservation)
       assert_equal @reservation_owner.full_mobile_number, sms.to

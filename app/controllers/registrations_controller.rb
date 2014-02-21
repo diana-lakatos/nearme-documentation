@@ -78,6 +78,7 @@ class RegistrationsController < Devise::RegistrationsController
       event_tracker.updated_profile_information(@user)
       redirect_to :action => 'edit'
     else
+      @country = current_user.country_name
       render :edit
     end
   end

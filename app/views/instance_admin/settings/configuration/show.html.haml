@@ -66,4 +66,11 @@
               = check_box_tag "instance[pricing_options][#{pricing_option}]", '1', f.object.pricing_options[pricing_option].to_s == '1'
               #{pricing_option.capitalize}
 
+    - Instance::PRICING_OPTIONS.each do |price|
+      - next if price == 'free'
+      .row-fluid
+        .controls.controls-row
+          = f.input "min_#{price}_price", label: "Minimum #{price} price", as: :string, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+          = f.input "max_#{price}_price", label: "Maximum #{price} price", as: :string, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
   = f.button :submit, 'Save', class: 'btn btn-primary pull-right'

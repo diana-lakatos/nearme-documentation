@@ -306,6 +306,10 @@ section.listings {
         height: 100%;
       }
 
+      ol.carousel-indicators {
+        width: auto !important;
+      }
+
       .item {
         img {
           max-height: 100%;
@@ -442,6 +446,7 @@ section.listings {
         left: 0px;
         top: auto;
         right: auto;
+        width: 50%;
 
         li {
           width: 22px;
@@ -455,11 +460,26 @@ section.listings {
           line-height: 22px;
           border: 1px solid $gray160;
           margin-left: 8px;
+          margin-top: 5px;
           cursor: pointer;
 
           &.active {
             color: $gray245;
             border: 1px solid $gray245;
+          }
+        }
+
+        @media (max-width: $booking-module-breakpoint-desktop) {
+          left: 30px;
+          bottom: 40px;
+          right: 35px;
+          width: auto;
+
+          li {
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            font-size: 14px;
           }
         }
       }
