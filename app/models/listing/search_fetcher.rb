@@ -63,7 +63,7 @@ class Listing
             _locations = _locations.sort_by{|l| l.search_rank}.reverse if store_location_rank
           else
             self.class.trace_execution_scoped(['Custom/SearchFetcher/locations/sort_by_price']) do
-              _locations.sort_by! {|l| (l.lowest_price || [Money.new(0)])[0] }
+              _locations.sort_by! {|l| (l.lowest_price(@filters[:listing_pricing]) || [Money.new(0)])[0] }
             end
           end
 
