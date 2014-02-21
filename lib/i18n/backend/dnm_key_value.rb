@@ -4,10 +4,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
 
   def initialize(cache, subtrees=true)
     @cache, @subtrees, @store = cache, subtrees, {}
-    # make sure cache is populated
     prepare_store
-  rescue
-    # probably running migration
   end
 
   def prepare_store
