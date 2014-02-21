@@ -1,4 +1,14 @@
+body.blog {
+  margin-top: 30px;
+}
+
 .blog {
+
+  .main-menu {
+    .nav-link.btn {
+      display: block;
+    }
+  }
 
   .header {
     display: block;
@@ -215,7 +225,7 @@
         padding: 5px 20px;
         padding: 0;
         height: 35px;
-        background: $red;
+        background: #1e2222;
         color: $white;
         font-family: 'GothamBold';
         line-height: 35px;
