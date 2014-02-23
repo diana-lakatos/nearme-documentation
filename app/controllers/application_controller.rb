@@ -261,6 +261,7 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_if_domain_not_valid
+    return if request.host == 'near-me.com'
     redirect_to 'http://near-me.com/?domain_not_valid=true' unless platform_context.valid_domain?
   end
 
