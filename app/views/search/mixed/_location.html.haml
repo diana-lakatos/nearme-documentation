@@ -1,4 +1,4 @@
-- cache "search-listings-#{location.searched_locations.map(&:id).join('-')}-#{([location] + location.searched_locations).max_by(&:updated_at).try(:updated_at).try(:utc).try(:to_s, :number)}" do
+- cache "search-listings-#{location.searched_locations.map(&:id).join('-')}-#{search.lgpricing_filters.join('-')}-#{([location] + location.searched_locations).max_by(&:updated_at).try(:updated_at).try(:utc).try(:to_s, :number)}" do
   - listing_types_data = location.searched_locations.inject({}) do |listing_types_data, listing|
     - listing_types_data["#{listing.listing_type_id}"] ||= { :name => listing.listing_type_name.try(:pluralize), :count => 0, :listings => [] }
     - listing_types_data["#{listing.listing_type_id}"][:count] += 1
