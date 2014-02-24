@@ -43,4 +43,10 @@ DesksnearMe::Application.configure do
   config.instagram_key = "5aa60d9c54ba49f086cec9693ba442c5"
   config.instagram_secret = "70d8ada7eea04223ad04d40ddd30c642"
   config.paypal_mode = 'live'
+  config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))["production"]
+  config.cache_store = :redis_store, { 
+    :host => config.redis_settings["host"], 
+    :port => config.redis_settings["port"].to_i,
+    :namespace => "cache"
+  }
 end
