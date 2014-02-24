@@ -8,7 +8,7 @@ class Blog::ApplicationController < ApplicationController
 
   def find_blog_instance
     @blog_instance = if near_me?
-                       BlogInstance.where(instance_type: 'near-me').first
+                       BlogInstance.where(owner_type: 'near-me').first
                      else
                        platform_context.instance.blog_instance
                      end
