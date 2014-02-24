@@ -85,7 +85,7 @@ class UserMessage < ActiveRecord::Base
 
   def send_notification(platform_context)
     return if thread_context_type.blank?
-    UserMessageSmsNotifier.notify_user_about_new_message(platform_context, self).deliver_with_context(platform_context, self.recipient, "UserMessage id: #{self.id}, recipient #{self.recipient.name} (#{self.recipient.id}).")
+    UserMessageSmsNotifier.notify_user_about_new_message(platform_context, self).deliver
     return if thread_context_type != 'Listing'
 
     if author == thread_context.administrator

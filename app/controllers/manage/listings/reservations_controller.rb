@@ -74,7 +74,7 @@ class Manage::Listings::ReservationsController < ApplicationController
   end
 
   def notify_guest_about_reservation_status_change
-    ReservationSmsNotifier.notify_guest_with_state_change(@reservation).deliver_with_context(platform_context, @reservation.owner, "Reservation id: #{@reservation.id}, guest #{@reservation.owner.name} (#{@reservation.owner.id}).")
+    ReservationSmsNotifier.notify_guest_with_state_change(platform_context, @reservation).deliver
   end
 
   def track_reservation_update_profile_informations

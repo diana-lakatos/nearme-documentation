@@ -18,7 +18,7 @@ class Listings::ReservationsController < ApplicationController
         @reservation.schedule_expiry
         ReservationMailer.enqueue.notify_host_with_confirmation(platform_context, @reservation)
         ReservationMailer.enqueue.notify_guest_with_confirmation(platform_context, @reservation)
-        ReservationSmsNotifier.notify_host_with_confirmation(@reservation).deliver_with_context(platform_context, @reservation.host, "Reservation id: #{@reservation.id}, guest #{current_user.name} (#{current_user.id}).")
+        ReservationSmsNotifier.notify_host_with_confirmation(platform_context, @reservation).deliver
         event_tracker.updated_profile_information(@reservation.owner)
         event_tracker.updated_profile_information(@reservation.host)
       else
