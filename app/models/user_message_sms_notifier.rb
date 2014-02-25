@@ -11,7 +11,7 @@ class UserMessageSmsNotifier < SmsNotifier
 
     @user_message.body = user_message_body
     @message_size = 160 - sms_without_message_body.body.size
-    sms :to => @user.full_mobile_number
+    sms :to => @user.full_mobile_number, :fallback => { :email => user_message.recipient.email, :platform_context => @platform_context }
   end
 end
 
