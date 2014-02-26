@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140217124409) do
+ActiveRecord::Schema.define(:version => 20140217213042) do
 
 
 
@@ -707,16 +707,6 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
 
   add_index "search_notifications", ["user_id"], :name => "index_search_notifications_on_user_id"
 
-  create_table "sessions", :force => true do |t|
-    t.string   "session_id", :null => false
-    t.text     "data"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
-  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
-
   create_table "theme_fonts", :force => true do |t|
     t.integer  "theme_id"
     t.string   "regular_eot"
@@ -789,7 +779,7 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.datetime "updated_at",                        :null => false
   end
 
-  add_index "translations", ["instance_id"], :name => "index_translations_on_instance_id"
+  add_index "translations", ["instance_id", "updated_at"], :name => "index_translations_on_instance_id_and_updated_at"
 
   create_table "unit_prices", :force => true do |t|
     t.integer  "listing_id"

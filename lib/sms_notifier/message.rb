@@ -28,14 +28,32 @@ class SmsNotifier::Message
     @data[:body]
   end
 
+  def platform_context
+    @data.fetch(:fallback, {}).fetch(:platform_context, nil)
+  end
+
+  def fallback_email
+    @data.fetch(:fallback, {}).fetch(:email, nil)
+  end
+
+  def fallback_user
+    @user ||= begin
+                User.where(email: fallback_email).first if fallback_email.present? && platform_context.present?
+              end
+  end
+
   def deliver
     validate!
 
-    twilio_client.account.sms.messages.create(
-      :body => @data[:body],
-      :to => @data[:to],
-      :from => @data[:from]
-    )
+    begin
+      send_twilio_message
+    rescue Twilio::REST::RequestError => e
+      if e.message.include?('is not a valid phone number')
+        fallback_user.notify_about_wrong_phone_number(platform_context) if fallback_user.present?
+      else
+        Rails.logger.error "Sending #{caller[0]} SMS to #{@data[:to]} failed at #{Time.zone.now}. #{$!.inspect}"
+      end
+    end
   end
   alias_method :deliver!, :deliver
 
@@ -47,6 +65,14 @@ class SmsNotifier::Message
 
   def validate!
     raise SmsNotifier::Message::TooLong.new("SMS size is too long (#{@data[:body].size})") if @data[:body].size > SMS_SIZE
+  end
+
+  def send_twilio_message
+    twilio_client.account.sms.messages.create(
+      :body => @data[:body],
+      :to => @data[:to],
+      :from => @data[:from]
+    )
   end
 end
 

@@ -53,4 +53,10 @@ DesksnearMe::Application.configure do
   config.middleware.insert_before(Rack::Lock, "Rack::Auth::Basic") do |username, password|
     username == 'desksnearme' && password == 'sharethem'
   end
+  config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))["staging"]
+  config.cache_store = :redis_store, { 
+    :host => config.redis_settings["host"], 
+    :port => config.redis_settings["port"].to_i,
+    :namespace => "cache"
+  }
 end

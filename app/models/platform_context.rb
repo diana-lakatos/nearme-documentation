@@ -43,7 +43,7 @@ class PlatformContext
   def initialize_with_partner(partner)
     @partner = partner
     @platform_context_detail = @partner
-    @instance = @partner.instance 
+    @instance = @partner.instance
     @theme = @partner.theme.presence
     @domain ||= @partner.domain
     self
@@ -66,7 +66,7 @@ class PlatformContext
     @instance = instance
     @platform_context_detail = @instance
     @theme = @instance.theme
-    # the reason why we don't want default instance to have domain is that currently it has assigned only one domain as a hack - api.desksnear.me and 
+    # the reason why we don't want default instance to have domain is that currently it has assigned only one domain as a hack - api.desksnear.me and
     # our urls in mailers will be wrong
     @domain ||= @instance.domains.try(:first) unless @instance.is_desksnearme?
     self
@@ -103,7 +103,7 @@ class PlatformContext
   end
 
   def is_root_domain?
-    root_domains = [Regexp.escape(remove_port_from_hostname(Rails.application.routes.default_url_options[:host])), '0\.0\.0\.0', 'api\.desksnear\.me']
+    root_domains = [Regexp.escape(remove_port_from_hostname(Rails.application.routes.default_url_options[:host])), '0\.0\.0\.0', 'near-me.com', 'api\.desksnear\.me']
     root_domains += ['test\.host', '127\.0\.0\.1', 'example\.org'] if Rails.env.test?
     @request_host =~ Regexp.new("^(#{root_domains.join('|')})$", true)
   end
