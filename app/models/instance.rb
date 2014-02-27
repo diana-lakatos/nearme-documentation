@@ -41,6 +41,7 @@ class Instance < ActiveRecord::Base
   validates_presence_of :name
   validates :pricing_options, presence: { message: :must_be_selected }
   validates_presence_of :marketplace_password, :if => :password_protected
+  validates_presence_of :password_protected, :if => :test_mode, :message => I18n.t("activerecord.errors.models.instance.test_mode_needs_password")
 
   after_initialize :set_all_pricing_options
 
