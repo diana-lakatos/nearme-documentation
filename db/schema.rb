@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140217213042) do
+ActiveRecord::Schema.define(:version => 20140226235431) do
 
 
 
@@ -352,16 +352,16 @@ ActiveRecord::Schema.define(:version => 20140217213042) do
     t.boolean  "default_instance",                                             :default => false
     t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",       :precision => 5, :scale => 2, :default => 0.0
-    t.string   "stripe_public_key"
+    t.string   "live_stripe_public_key"
     t.string   "paypal_email"
-    t.string   "encrypted_paypal_username"
-    t.string   "encrypted_paypal_password"
-    t.string   "encrypted_paypal_signature"
-    t.string   "encrypted_paypal_app_id"
-    t.string   "encrypted_paypal_client_id"
-    t.string   "encrypted_paypal_client_secret"
-    t.string   "encrypted_stripe_api_key"
-    t.string   "encrypted_balanced_api_key"
+    t.string   "encrypted_live_paypal_username"
+    t.string   "encrypted_live_paypal_password"
+    t.string   "encrypted_live_paypal_signature"
+    t.string   "encrypted_live_paypal_app_id"
+    t.string   "encrypted_live_paypal_client_id"
+    t.string   "encrypted_live_paypal_client_secret"
+    t.string   "encrypted_live_stripe_api_key"
+    t.string   "encrypted_live_balanced_api_key"
     t.string   "encrypted_marketplace_password"
     t.integer  "min_hourly_price_cents"
     t.integer  "max_hourly_price_cents"
@@ -371,6 +371,17 @@ ActiveRecord::Schema.define(:version => 20140217213042) do
     t.integer  "max_weekly_price_cents"
     t.integer  "min_monthly_price_cents"
     t.integer  "max_monthly_price_cents"
+    t.boolean  "password_protected",                                                :default => false
+    t.boolean  "test_mode",                                                         :default => false
+    t.string   "encrypted_test_paypal_username"
+    t.string   "encrypted_test_paypal_password"
+    t.string   "encrypted_test_paypal_signature"
+    t.string   "encrypted_test_paypal_app_id"
+    t.string   "encrypted_test_paypal_client_id"
+    t.string   "encrypted_test_paypal_client_secret"
+    t.string   "encrypted_test_stripe_api_key"
+    t.string   "test_stripe_public_key"
+    t.string   "encrypted_test_balanced_api_key"
   end
 
   create_table "listing_types", :force => true do |t|
