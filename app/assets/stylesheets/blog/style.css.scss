@@ -1,5 +1,6 @@
 body.blog {
-  margin-top: 30px;
+  margin-top: 60px;
+  background-color: white;
 }
 
 .blog {
@@ -46,6 +47,10 @@ body.blog {
       margin: auto;
       width: 100%;
       text-align: center;
+
+      img {
+        max-width: none;
+      }
     }
 
     .logo {

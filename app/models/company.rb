@@ -92,8 +92,12 @@ class Company < ActiveRecord::Base
     # that it is possible to make automated payout but he needs to enter credentials via edit company settings
     if mailing_address.blank? && self.created_payment_transfers.any?
       CompanyMailer.enqueue.notify_host_of_no_payout_option(self)
-      CompanySmsNotifier.notify_host_of_no_payout_option(self).deliver
+      CompanySmsNotifier.notify_host_of_no_payout_option(platform_context_based_on_company, self).deliver
     end
+  end
+
+  def platform_context_based_on_company
+    @platform_context_based_on_company ||= PlatformContext.new.initialize_with_company(self)
   end
 
   def to_balanced_params

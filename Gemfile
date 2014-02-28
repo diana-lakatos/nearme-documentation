@@ -5,6 +5,8 @@ source 'http://rubygems.org'
 gem 'rails', '3.2.16'
 gem 'pg'
 
+gem 'redis'
+gem 'redis-rails'
 gem 'raygun4ruby'
 gem "liquid"
 gem 'active_model_serializers'

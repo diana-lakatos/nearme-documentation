@@ -19,14 +19,12 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
 
   def update
     if params[:instance].present?
-      @instance.password_protected = !params[:instance][:password_protected].to_i.zero?
-      params[:instance][:marketplace_password] = '' if !@instance.password_protected
       if @instance.update_attributes(params[:instance])
-        flash[:success] = t('flash_messages.instance_admin.settings.settings_updated')
+        flash.now[:success] = t('flash_messages.instance_admin.settings.settings_updated')
         find_or_build_billing_gateway_for_usd
         render :show
       else
-        flash[:error] = @instance.errors.full_messages.to_sentence
+        flash.now[:error] = @instance.errors.full_messages.to_sentence
         find_or_build_billing_gateway_for_usd
         render :show
       end

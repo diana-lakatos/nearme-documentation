@@ -7,7 +7,6 @@ class InstanceTest < ActiveSupport::TestCase
   end
 
   context 'stripe supported' do
-
     setup do
       @instance.stripe_api_key = 'a'
       @instance.stripe_public_key = 'b'
@@ -26,11 +25,9 @@ class InstanceTest < ActiveSupport::TestCase
       @instance.stripe_public_key = ''
       refute @instance.stripe_supported?
     end
-
   end
 
   context 'paypal supported' do
-
     setup do
       @instance.paypal_username = 'a'
       @instance.paypal_password = 'b'
@@ -68,11 +65,9 @@ class InstanceTest < ActiveSupport::TestCase
       @instance.paypal_app_id = ''
       refute @instance.paypal_supported?
     end
-
   end
 
   context 'balanced_supported?' do
-
     should 'support balanced if has specified api' do
       @instance.balanced_api_key = '123'
       assert @instance.balanced_supported?
@@ -82,17 +77,15 @@ class InstanceTest < ActiveSupport::TestCase
       @instance.balanced_api_key = ''
       refute @instance.balanced_supported?
     end
-
   end
 
   context 'support_automated_payouts?' do
-
     should 'not be supported if both balanced and paypal are not available' do
       @instance.stubs(:balanced_supported?).returns(false).at_least(0)
       @instance.stubs(:paypal_supported?).returns(false).at_least(0)
       refute @instance.support_automated_payouts?
     end
-    
+
     should 'be supported paypal is available' do
       @instance.stubs(:balanced_supported?).returns(false).at_least(0)
       @instance.stubs(:paypal_supported?).returns(true).at_least(0)
@@ -110,7 +103,33 @@ class InstanceTest < ActiveSupport::TestCase
       @instance.stubs(:balanced_supported?).returns(true).at_least(0)
       assert @instance.support_automated_payouts?
     end
-
   end
 
+  context 'test mode' do
+    should 'should use live credentials when off' do
+      @instance.test_mode = false
+
+      assert_equal 'john_live',       @instance.paypal_username
+      assert_equal 'pass_live',       @instance.paypal_password
+      assert_equal '123_live',        @instance.paypal_client_id
+      assert_equal 'secret_live',     @instance.paypal_client_secret
+      assert_equal 'sig_live',        @instance.paypal_signature
+      assert_equal 'app-123_live',    @instance.paypal_app_id
+      assert_equal 'live-public-key', @instance.stripe_public_key
+      assert_equal 'live-api-key',    @instance.stripe_api_key
+    end
+
+    should 'use test credentials' do
+      @instance.test_mode = true
+
+      assert_equal 'john_test',       @instance.paypal_username
+      assert_equal 'pass_test',       @instance.paypal_password
+      assert_equal '123_test',        @instance.paypal_client_id
+      assert_equal 'secret_test',     @instance.paypal_client_secret
+      assert_equal 'sig_test',        @instance.paypal_signature
+      assert_equal 'app-123_test',    @instance.paypal_app_id
+      assert_equal 'test-public-key', @instance.stripe_public_key
+      assert_equal 'test-api-key',    @instance.stripe_api_key
+    end
+  end
 end

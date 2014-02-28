@@ -6,21 +6,50 @@
 require 'chef/util/file_edit'
 
 if %w(app_master app solo).include?(node[:instance_role])
-  
+
   node[:applications].each do |app_name, app|
-    
+
     template "/etc/nginx/servers/#{app_name}/custom.conf" do
       source 'custom.conf.erb'
       owner node[:owner_name]
       mode 0644
       backup false
     end
-    
+
     template "/etc/nginx/servers/#{app_name}/custom.ssl.conf" do
       source 'custom.ssl.conf.erb'
       owner node[:owner_name]
       mode 0644
       backup false
+    end
+
+    # Manually add ssl certs and keys for nearme (EY only supports one key per env in the dashboard)
+    remote_file "/etc/nginx/ssl/nearme.crt" do
+      source "nearme.crt"
+      action :create
+      owner node[:owner_name]
+      mode 0644
+      backup false
+    end
+
+    remote_file "/etc/nginx/ssl/nearme.key" do
+      source "nearme.key"
+      action :create
+      owner node[:owner_name]
+      mode 0644
+      backup false
+    end
+
+    # Add a server block for ssl secured https://near-me.com
+    template "/etc/nginx/servers/nearme.ssl.conf" do
+      source "nearme.ssl.conf.erb"
+      action :create
+      owner node[:owner_name]
+      mode 0644
+      backup false
+      variables({
+        :instance_role => node[:instance_role]
+      })
     end
 
     ruby_block "use custom CORS for webfonts" do
@@ -49,7 +78,7 @@ CORS
     end
 
     execute 'sudo /etc/init.d/nginx reload'
-    
+
   end
-  
+
 end

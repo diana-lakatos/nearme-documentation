@@ -11,9 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140217124409) do
-
-
+ActiveRecord::Schema.define(:version => 20140228175629) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -352,16 +350,16 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.boolean  "default_instance",                                             :default => false
     t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",       :precision => 5, :scale => 2, :default => 0.0
-    t.string   "stripe_public_key"
+    t.string   "live_stripe_public_key"
     t.string   "paypal_email"
-    t.string   "encrypted_paypal_username"
-    t.string   "encrypted_paypal_password"
-    t.string   "encrypted_paypal_signature"
-    t.string   "encrypted_paypal_app_id"
-    t.string   "encrypted_paypal_client_id"
-    t.string   "encrypted_paypal_client_secret"
-    t.string   "encrypted_stripe_api_key"
-    t.string   "encrypted_balanced_api_key"
+    t.string   "encrypted_live_paypal_username"
+    t.string   "encrypted_live_paypal_password"
+    t.string   "encrypted_live_paypal_signature"
+    t.string   "encrypted_live_paypal_app_id"
+    t.string   "encrypted_live_paypal_client_id"
+    t.string   "encrypted_live_paypal_client_secret"
+    t.string   "encrypted_live_stripe_api_key"
+    t.string   "encrypted_live_balanced_api_key"
     t.string   "encrypted_marketplace_password"
     t.integer  "min_hourly_price_cents"
     t.integer  "max_hourly_price_cents"
@@ -371,6 +369,19 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.integer  "max_weekly_price_cents"
     t.integer  "min_monthly_price_cents"
     t.integer  "max_monthly_price_cents"
+    t.boolean  "password_protected",                                                :default => false
+    t.boolean  "test_mode",                                                         :default => false
+    t.string   "encrypted_test_paypal_username"
+    t.string   "encrypted_test_paypal_password"
+    t.string   "encrypted_test_paypal_signature"
+    t.string   "encrypted_test_paypal_app_id"
+    t.string   "encrypted_test_paypal_client_id"
+    t.string   "encrypted_test_paypal_client_secret"
+    t.string   "encrypted_test_stripe_api_key"
+    t.string   "test_stripe_public_key"
+    t.string   "encrypted_test_balanced_api_key"
+    t.string   "encrypted_olark_api_key"
+    t.boolean  "olark_enabled",                                                     :default => false
   end
 
   create_table "listing_types", :force => true do |t|
@@ -707,16 +718,6 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
 
   add_index "search_notifications", ["user_id"], :name => "index_search_notifications_on_user_id"
 
-  create_table "sessions", :force => true do |t|
-    t.string   "session_id", :null => false
-    t.text     "data"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
-  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
-
   create_table "theme_fonts", :force => true do |t|
     t.integer  "theme_id"
     t.string   "regular_eot"
@@ -789,7 +790,7 @@ ActiveRecord::Schema.define(:version => 20140217124409) do
     t.datetime "updated_at",                        :null => false
   end
 
-  add_index "translations", ["instance_id"], :name => "index_translations_on_instance_id"
+  add_index "translations", ["instance_id", "updated_at"], :name => "index_translations_on_instance_id_and_updated_at"
 
   create_table "unit_prices", :force => true do |t|
     t.integer  "listing_id"
