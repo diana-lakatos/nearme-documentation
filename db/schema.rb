@@ -11,9 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140226235431) do
-
-
+ActiveRecord::Schema.define(:version => 20140228175629) do
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -382,6 +380,8 @@ ActiveRecord::Schema.define(:version => 20140226235431) do
     t.string   "encrypted_test_stripe_api_key"
     t.string   "test_stripe_public_key"
     t.string   "encrypted_test_balanced_api_key"
+    t.string   "encrypted_olark_api_key"
+    t.boolean  "olark_enabled",                                                     :default => false
   end
 
   create_table "listing_types", :force => true do |t|

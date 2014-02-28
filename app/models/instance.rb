@@ -7,11 +7,11 @@ class Instance < ActiveRecord::Base
                   :live_paypal_client_id, :live_paypal_client_secret, :live_balanced_api_key, :instance_billing_gateways_attributes, :marketplace_password,
                   :translations_attributes, :test_stripe_api_key, :test_stripe_public_key, :test_paypal_username, :test_paypal_password,
                   :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key,
-                  :password_protected, :test_mode
+                  :password_protected, :test_mode, :olark_api_key, :olark_enabled
 
   attr_encrypted :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id, :live_stripe_api_key, :live_paypal_client_id,
                  :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
-                 :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key,
+                 :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key, :olark_api_key,
                  :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   has_one :theme, :as => :owner, dependent: :destroy
@@ -42,6 +42,8 @@ class Instance < ActiveRecord::Base
   validates :pricing_options, presence: { message: :must_be_selected }
   validates_presence_of :marketplace_password, :if => :password_protected
   validates_presence_of :password_protected, :if => :test_mode, :message => I18n.t("activerecord.errors.models.instance.test_mode_needs_password")
+  validates_length_of :olark_api_key, :minimum => 16, :maximum => 16, :allow_blank => true
+  validates_presence_of :olark_api_key, :if => :olark_enabled
 
   after_initialize :set_all_pricing_options
 
