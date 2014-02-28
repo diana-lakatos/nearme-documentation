@@ -6,8 +6,9 @@
 = f.input :description, :as => :limited_text, :limit => 250, :label => "Description", :placeholder => "Give a brief description of your company", :input_html => { :maxlength => 250} if (only_inputs.empty? || only_inputs.include?(:description))
 = f.input :mailing_address, :label => tooltip("Checks for revenue accrued by your #{platform_context.bookable_noun.pluralize} will be sent to this address. Find out more about payments in the Support Center.", "Mailing address") if (only_inputs.empty? || only_inputs.include?(:mailing_address))
 
-%h2 Payouts via Paypal
-= f.input :paypal_email, :label => tooltip("If you specify a PayPal email, we will make a PayPal transfer instead of sending checks.", "PayPal email") 
+- if (only_inputs.empty? || only_inputs.include?(:paypal))
+  %h2 Payouts via Paypal
+  = f.input :paypal_email, :label => tooltip("If you specify a PayPal email, we will make a PayPal transfer instead of sending checks.", "PayPal email")
 
 - if platform_context.instance.balanced_supported? && f.object.current_instance_client(platform_context.instance).try(:encrypted_balanced_user_id)
   %h2 Payouts via ACH (US only)
