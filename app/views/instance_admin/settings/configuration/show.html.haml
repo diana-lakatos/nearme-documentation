@@ -4,11 +4,15 @@
     .row-fluid
       .controls.controls-row
         = f.input :name, label: 'Marketplace Name', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-        = f.input :service_fee_guest_percent, label: 'Service Fee', wrapper_html: {class: 'input-prepend span6'} do
+        = f.input :service_fee_guest_percent, label: 'Guest Service Fee', wrapper_html: {class: 'input-prepend span6'} do
           %span.add-on %
           = f.input_field :service_fee_guest_percent, type: 'tel', class: 'input-block-level'
-
-    = f.input :skip_company, :label => false, :inline_label => "Don't require company"
+    .row-fluid
+      .controls.controls-row
+        = f.input :skip_company, :label => false, :inline_label => "Don't require company", wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :service_fee_host_percent, label: 'Host Service Fee', wrapper_html: {class: 'input-prepend span6'} do
+          %span.add-on %
+          = f.input_field :service_fee_host_percent, type: 'tel', class: 'input-block-level'
 
   %hr
 
