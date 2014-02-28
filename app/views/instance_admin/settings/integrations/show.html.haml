@@ -38,6 +38,7 @@
         = f.input :test_paypal_client_secret, label: 'Test Paypal Client Secret', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
 
     %hr
+
     %legend Balanced
     .row-fluid
       .controls.controls-row
@@ -45,6 +46,7 @@
         = f.input :test_balanced_api_key, label: 'Test Balaced API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
 
     %hr
+
     %legend Payment Gateway
     .row-fluid
       .controls.controls-row
@@ -54,9 +56,20 @@
           = f_bg.collection_radio_buttons :billing_gateway, [['paypal', 'PayPal'], ['stripe', 'Stripe'], ['balanced', 'Balanced']], :first, :last, item_wrapper_class: "billing-gateway"
 
     %hr
+
     %legend Test Mode
     .row-fluid
       .controls.controls-row
         = f.input :test_mode, required: false, as: :boolean, label: false, inline_label: ("Use test payment credentials (Marketplace must be password protected in #{link_to 'Settings > Configuration', instance_admin_settings_configuration_path, :target => "_blank"})").html_safe, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+    %hr
+
+    %legend Olark
+    .row-fluid
+      .controls.controls-row
+        = f.input :olark_api_key, label: 'Olark API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+    .row-fluid
+      .controls.controls-row
+        = f.input :olark_enabled, required: false, as: :boolean, label: false, inline_label: "Enable Olark support chat.", wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
 
     = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
