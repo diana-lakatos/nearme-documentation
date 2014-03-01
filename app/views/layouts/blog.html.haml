@@ -14,8 +14,9 @@
     = javascript_include_tag :blog
 
   %body.blog
-    .container-fluid
-      = render 'layouts/navbar'
+    - unless @blog_instance.is_near_me?
+      .container-fluid.header-container
+        = render 'layouts/navbar'
     .header
       - header = @blog_post.try(:header).presence || @blog_instance.header
       - if header.present?
