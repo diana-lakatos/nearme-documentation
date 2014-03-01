@@ -3,14 +3,16 @@ class Instance < ActiveRecord::Base
   attr_accessible :name, :domains_attributes, :theme_attributes, :location_types_attributes, :listing_types_attributes,
                   :service_fee_guest_percent, :service_fee_host_percent, :bookable_noun, :lessor, :lessee,
                   :listing_amenity_types_attributes, :location_amenity_types_attributes, :skip_company, :pricing_options,
-                  :stripe_api_key, :stripe_public_key, :paypal_username, :paypal_password, :paypal_signature, :paypal_app_id, 
-                  :paypal_client_id, :paypal_client_secret, :balanced_api_key, :instance_billing_gateways_attributes, :marketplace_password,
-                  :translations_attributes
+                  :live_stripe_api_key, :live_stripe_public_key, :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id,
+                  :live_paypal_client_id, :live_paypal_client_secret, :live_balanced_api_key, :instance_billing_gateways_attributes, :marketplace_password,
+                  :translations_attributes, :test_stripe_api_key, :test_stripe_public_key, :test_paypal_username, :test_paypal_password,
+                  :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key,
+                  :password_protected, :test_mode, :olark_api_key, :olark_enabled
 
-  attr_encrypted :paypal_username, :paypal_password, :paypal_signature, :paypal_app_id, :stripe_api_key,
-    :paypal_client_id, :paypal_client_secret, :balanced_api_key, :marketplace_password, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
-
-  attr_accessor :password_protected
+  attr_encrypted :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id, :live_stripe_api_key, :live_paypal_client_id,
+                 :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
+                 :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key, :olark_api_key,
+                 :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   has_one :theme, :as => :owner, dependent: :destroy
 
@@ -39,8 +41,11 @@ class Instance < ActiveRecord::Base
   validates_presence_of :name
   validates :pricing_options, presence: { message: :must_be_selected }
   validates_presence_of :marketplace_password, :if => :password_protected
+  validates_presence_of :password_protected, :if => :test_mode, :message => I18n.t("activerecord.errors.models.instance.test_mode_needs_password")
+  validates_length_of :olark_api_key, :minimum => 16, :maximum => 16, :allow_blank => true
+  validates_presence_of :olark_api_key, :if => :olark_enabled
 
-  after_initialize :set_all_pricing_options, :set_password_protected
+  after_initialize :set_all_pricing_options
 
   accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params[:name].blank? }
@@ -50,6 +55,20 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :listing_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :translations, allow_destroy: true, reject_if: proc { |params| params[:value].blank? && params[:id].blank? }
   accepts_nested_attributes_for :instance_billing_gateways, allow_destroy: true, reject_if: proc { |params| params[:billing_gateway].blank? }
+
+  API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key balanced_api_key)
+
+  API_KEYS.each do |meth|
+    define_method(meth) do
+      self.test_mode? ? self.send('test_' + meth) : self.send('live_' + meth)
+    end
+  end
+
+  API_KEYS.each do |meth|
+    define_method(meth + '=') do |arg|
+      self.send('live_' + meth + '=', arg)
+    end
+  end
 
   PRICING_OPTIONS = %w(free hourly daily weekly monthly)
 
@@ -113,12 +132,11 @@ class Instance < ActiveRecord::Base
   def support_automated_payouts?
     paypal_supported? || balanced_supported?
   end
-  
+
   def stripe_supported?
     self.stripe_api_key.present? &&
     self.stripe_public_key.present?
   end
-
 
   def to_liquid
     InstanceDrop.new(self)
@@ -126,10 +144,6 @@ class Instance < ActiveRecord::Base
 
   def authenticate(password)
     password == marketplace_password
-  end
-
-  def password_protected?
-    marketplace_password.present?
   end
 
   def billing_gateway_for(currency)
@@ -145,10 +159,6 @@ class Instance < ActiveRecord::Base
   def set_all_pricing_options
     return if (!new_record? || !self.pricing_options.empty?)
     self.pricing_options = Hash[Instance::PRICING_OPTIONS.map{|po| [po, '1']}]
-  end
-
-  def set_password_protected
-    self.password_protected = password_protected?
   end
 
 end

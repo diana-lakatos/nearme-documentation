@@ -31,6 +31,7 @@ en:
           attributes:
             pricing_options:
               must_be_selected: "At least one of the pricing options must be selected."
+          test_mode_needs_password: 'is needed for test mode.'
   day:
     one: "1 day"
     other: "%{count} days"

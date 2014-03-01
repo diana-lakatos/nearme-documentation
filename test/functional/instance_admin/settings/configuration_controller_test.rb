@@ -43,12 +43,14 @@ class InstanceAdmin::Settings::ConfigurationControllerTest < ActionController::T
       post :update, "instance"=>{
                       "name"=>"New Instance Name",
                       "service_fee_guest_percent"=>"16.00",
+                      "service_fee_host_percent"=> "12.00",
                       "domains_attributes"=>{ "0"=>{"name"=>"New Domain Name"} }
                     }
       assert_response :success
       instance = assigns[:instance]
       assert_equal instance.name, "New Instance Name"
       assert_equal instance.service_fee_guest_percent, BigDecimal.new(16)
+      assert_equal instance.service_fee_host_percent, BigDecimal.new(12)
       assert_equal instance.domains.first.name, "New Domain Name"
     end
   end
