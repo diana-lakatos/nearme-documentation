@@ -129,10 +129,13 @@ group :development, :test, :staging do
   gem 'factory_girl_rails', '>=3.0.0'
 end
 
+group :development, :staging do
+  gem 'mail_view', '~>2'
+end
+
 group :development do
   gem 'quiet_assets'
   gem 'thin'
-  gem 'mail_view', '~>2'
 end
 
 group :test do
