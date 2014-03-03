@@ -1,0 +1,9 @@
+%tr
+  %td= email_template.path.gsub('/',' > ').titleize
+  %td= email_template.subject
+  %td
+    .pull-right
+      = link_to edit_instance_admin_manage_email_template_path(email_template) do
+        .fa.fa-pencil.fa-2x.inline-form-icon
+      = link_to instance_admin_manage_email_template_path(email_template), :method => :delete, :confirm => "Are you sure you want to delete this?" do
+        .fa.fa-trash-o.fa-2x.inline-form-icon

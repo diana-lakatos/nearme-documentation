@@ -1,0 +1,12 @@
+= simple_form_for [:instance_admin, :manage, @email_template] do |f|
+  %fieldset
+    .row-fluid
+      .controls.controls-row
+        = f.input :subject, :placeholder => 'Subject', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+    .row-fluid
+      .controls.controls-row
+        = f.input :html_body, wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level' }
+
+    = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+    = link_to 'Cancel', instance_admin_manage_email_templates_url , class: 'btn pull-right'

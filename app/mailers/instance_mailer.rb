@@ -15,7 +15,7 @@ class InstanceMailer < ActionMailer::Base
     to = options[:to]
     bcc = options.delete(:bcc) || mailer.bcc
     from = options.delete(:from) || mailer.from
-    subject_locals = options.delete(:subject_locals)
+    subject_locals = options.delete(:subject_locals) || {}
     subject  = mailer.liquid_subject(subject_locals) || options.delete(:subject)
     reply_to = options.delete(:reply_to) || mailer.reply_to
     @user  = User.with_deleted.find_by_email(to.kind_of?(Array) ? to.first : to)

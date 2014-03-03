@@ -6,6 +6,8 @@ class EmailTemplate < ActiveRecord::Base
 
   validates :html_body, :text_body, :path, :theme_id, presence: true
 
+  CUSTOMIZABLE_EMAILS = %w(post_action_mailer/sign_up_welcome reservation_mailer/notify_guest_of_confirmation)
+
   after_save do
     EmailResolver.instance.clear_cache
   end

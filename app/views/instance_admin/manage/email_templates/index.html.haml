@@ -1,0 +1,14 @@
+.row-fluid
+  .controls.controls-row
+    %legend.span4 Manage Email Templates
+
+%br
+
+%table.table
+  %tbody
+    %tr
+      %th Template
+      %th Subject
+      %th Edit / Delete
+    - platform_context.theme.email_templates.each do |email_template|
+      = render 'index_row', email_template: email_template
