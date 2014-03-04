@@ -240,7 +240,7 @@ body.blog {
         font-size: 12px;
         text-align: center;
 
-        @media (min-width: $ipad-width) {
+        @media (min-width: $screen-md) {
           position: fixed;
           top: 450px;
           padding: 8px 5px;
