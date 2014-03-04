@@ -19,7 +19,7 @@
       .icon= share_to_linkedin(url, text: @blog_post.title, icon: 'linkedin-other')
       .icon= share_to_facebook(url)
       .icon= share_to_twitter(url, text: @blog_post.title)
-  
+
   .author.row
     - avatar = @blog_post.author_avatar
     - if avatar.file.present?
