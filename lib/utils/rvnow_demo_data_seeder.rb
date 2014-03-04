@@ -229,11 +229,9 @@ module Utils
       administrator.instance_id = nil
       administrator.permission_settings = true
       administrator.permission_theme = true
-      administrator.permission_transfers = true
-      administrator.permission_inventories = true
-      administrator.permission_partners = true
-      administrator.permission_users = true
-      administrator.permission_pages = true
+      administrator.permission_analytics = true
+      administrator.permission_manage = true
+      administrator.permission_blog = true
       administrator.save!
 
       InstanceAdmin.create(user_id: @user.id, instance_admin_role_id: administrator.id, instance_id: instance.id)
