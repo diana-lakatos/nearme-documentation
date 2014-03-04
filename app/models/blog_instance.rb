@@ -7,4 +7,8 @@ class BlogInstance < ActiveRecord::Base
   has_many :blog_posts
   belongs_to :owner, polymorphic: true
 
+  def is_near_me?
+    self.owner_type == 'near-me'
+  end
+
 end
