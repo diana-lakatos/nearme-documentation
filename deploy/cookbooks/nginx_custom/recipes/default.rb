@@ -61,6 +61,15 @@ if %w(app_master app solo).include?(node[:instance_role])
     add_header Access-Control-Allow-Origin *;
   }
 CORS
+
+        custom_gzip_serving = <<GZIP
+  location ^~ /assets/ {
+    # Only use gzip_static if you have .gz compressed assets *precompiled*
+    gzip_static on; 
+    expires max;
+    add_header Cache-Control public;
+  }
+GZIP
         files = [
           "/etc/nginx/servers/#{app_name}.ssl.conf",
           "/etc/nginx/servers/#{app_name}.conf"
@@ -70,7 +79,7 @@ CORS
           chef_file = Chef::Util::FileEdit.new(file)
           chef_file.search_file_replace_line(
             banner,
-            "#{custom_cors}\n  #{banner}"
+            "#{custom_cors}\n  #{custom_gzip_serving}\n  #{banner}"
           )
           chef_file.write_file unless File.readlines(file).grep(/CORS/).any?
         end

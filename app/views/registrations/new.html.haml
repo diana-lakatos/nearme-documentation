@@ -21,6 +21,5 @@
   :javascript
     Modal.setClass('sign-up-modal')
 
-- content_for :script do
-  :javascript
-    analytics.track('Signed Up');
+- content_for :domready do
+  analytics.track('Signed Up');

@@ -34,6 +34,16 @@ module DesksnearMe
     config.assets.paths           << %(#{Rails.root}/app/assets/swfs)
     config.assets.paths           << %(#{Rails.root}/app/assets/videos)
 
+    config.assets.precompile += [
+      "vendor/jquery.backgroundSize.min.js","vendor/respond.proxy.js", "vendor/respond.min.js", 
+      "admin.js", "blog.js", "blog_admin.js", "chrome_frame.js", "instance_admin.js", 
+      "platform_home.js"
+    ]
+    config.assets.precompile += [
+      "browser_specific/ie8.css", "admin.css", "blog.css", "blog_admin.css", "errors.css",
+      "instance_admin.css", "platform_home.css"
+    ]
+
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'
@@ -64,9 +74,6 @@ module DesksnearMe
 
     # Access the DB or load models when precompiling assets
     config.assets.initialize_on_precompile = true
-
-    # Add fonts stylesheet to the precompile array
-    config.assets.precompile += ['fonts.css']
 
     # Enable the asset pipeline
     config.assets.enabled = true

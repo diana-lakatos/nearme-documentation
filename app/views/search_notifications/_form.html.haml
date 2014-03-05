@@ -6,5 +6,5 @@
   = f.input :longitude, as: :hidden
   = f.submit 'Subscribe', class: 'btn-blue'
 
-:javascript
+- content_for :domready do
   new Search.SearchNotificationController($('#search-notification'))

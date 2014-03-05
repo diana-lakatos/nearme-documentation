@@ -5,6 +5,7 @@ CarrierWave.configure do |config|
     :aws_access_key_id          => 'AKIAI5EVP6HB47OZZXXA',
     :aws_secret_access_key      => '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'
   }
+  config.fog_attributes = {'Cache-Control'=>'max-age=315576000'}
 
   if ENV['DEMO']
     config.fog_directory          = 'desksnearme.demo-standard'

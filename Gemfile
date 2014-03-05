@@ -24,6 +24,7 @@ gem 'linkedin-oauth2'
 gem 'twitter', "~> 5.2"
 gem 'instagram'
 
+gem 'yui-compressor'
 gem 'fog'
 gem 'geocoder'
 gem 'nearest_time_zone'
@@ -91,7 +92,6 @@ gem 'twilio-ruby'
 gem 'googl'
 
 gem 'jquery-rails'
-gem 'jquery-fileupload-rails'
 gem 'chosen-rails'
 gem 'spectrum-rails'
 
@@ -137,6 +137,7 @@ end
 group :development do
   gem 'quiet_assets'
   gem 'thin'
+  gem 'assets_precompile_enforcer'
 end
 
 group :test do

@@ -1,23 +1,8 @@
 .clearfix
-  %h1 #{platform_context.bookable_noun.pluralize}
+  %h2 #{platform_context.bookable_noun.pluralize}
   %p Ordered by most recently created. Hover over a day to see how many #{platform_context.bookable_noun.pluralize} are available.
 
 %section.list
   = render @listings
 = will_paginate @listings
 
-- content_for :script do
-  :javascript
-    $(function(){
-      $("td.day details.availability a").click(function(e){
-        $(".overlay-container").overlay('close');
-        e.stopPropagation();
-        var overlay = $("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
-        $(".overlay-container a.cancel").live("click", function(e){
-          e.stopPropagation();
-          $(".overlay-container").overlay('close');
-          return false;
-        });
-        return false;
-      });
-    });

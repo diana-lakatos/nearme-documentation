@@ -7,7 +7,5 @@
         %p
         = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name),  :country => @country }
 
-  :javascript
-    $(function() {
-      new EditUserForm()
-    });
+- content_for :domready do
+  $(function() { new EditUserForm() });

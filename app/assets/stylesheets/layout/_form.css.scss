@@ -289,12 +289,6 @@ form {
   .help-block {
     background: image-url("components/form/hint.png") left top no-repeat;
     margin-top: 8px;
-
-    &:before {
-      @extend .ico-info:before;
-      @extend .ico-info;
-      padding-right: 10px;
-    }  
   }
 
   .card-info.error, .row-fluid.error, .control-group.error {

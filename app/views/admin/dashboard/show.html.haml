@@ -7,11 +7,7 @@
   %p.clearfix 
     - if funnel.data_loaded?
       %canvas{id: funnel.dom_id}
-      :javascript
-        new ChartWrapper.Bar(
-          $('##{funnel.dom_id}'), 
-          #{funnel.chart_values}, 
-          #{funnel.chart_labels}, 
-          #{funnel.chart_legend})
+      - content_for :domready do
+        new ChartWrapper.Bar($('##{funnel.dom_id}'), #{funnel.chart_values}, #{funnel.chart_labels}, #{funnel.chart_legend})
     - else
       No data

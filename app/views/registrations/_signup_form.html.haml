@@ -48,8 +48,6 @@
       .actions
         = f.submit 'Sign up', :disable_with => "Signing up..."
 
-:javascript
-  $(function() {
-    new SignupForm($('#signup'))
-  });
+- content_for :domready do
+  $(function() { new SignupForm($('#signup')) });
 

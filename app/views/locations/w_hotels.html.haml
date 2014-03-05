@@ -59,15 +59,14 @@
         
         = render 'locations/booking_module', listing: @listing
       
-:javascript
-  $(function() {
-    new Bookings.Controller($('#w-hotels .w-hotels-listing'),
-      #{raw listing_booking_data(@listing).to_json},
-      {
-        showReviewBookingImmediately: #{params[:restore_reservations].present?.to_json}
-      }
-    );
-
-  });
-
+- content_for :script do
+  :javascript
+    $(function() {
+      new Bookings.Controller($('#w-hotels .w-hotels-listing'),
+        #{raw listing_booking_data(@listing).to_json},
+        {
+          showReviewBookingImmediately: #{params[:restore_reservations].present?.to_json}
+        }
+      );
+    });
 

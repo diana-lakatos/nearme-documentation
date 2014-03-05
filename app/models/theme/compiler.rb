@@ -6,23 +6,25 @@ class Theme::Compiler
 
   # Generates the new stylesheet assets and updates the theme data accordingly.
   def generate_and_update_assets
-    begin
-      tempfile = Tempfile.new("ThemeStylesheet#{@theme.id}")
-      tempfile.write render_stylesheet
-
-      @theme.compiled_stylesheet = {
-        :tempfile => tempfile,
-        :filename => "theme-#{Time.now.to_i}.css",
-        :content_type => "text/css"
-      }
-
-      @theme.skipping_compilation do
-        @theme.save!(validate: false)
-      end
-    ensure
-      tempfile.close rescue nil
-      tempfile.unlink rescue nil
+    path = "#{Dir.tmpdir}/ThemeStylesheet#{@theme.id}"
+    FileUtils.touch(path)
+    compressor = YUI::CssCompressor.new
+    Zlib::GzipWriter.open(path, 9) do |gz|
+        gz.write compressor.compress(render_stylesheet)
     end
+    gzipped_file = File.open(path, 'rb')
+
+    @theme.compiled_stylesheet = {
+      :tempfile => gzipped_file,
+      :filename => "theme-#{Time.now.to_i}.css"
+    }
+
+    @theme.skipping_compilation do
+      @theme.save!(validate: false)
+    end
+  ensure
+    gzip_tempfile.close rescue nil
+    gzip_tempfile.unlink rescue nil
   end
 
   private
