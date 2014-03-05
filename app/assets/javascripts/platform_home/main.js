@@ -68,10 +68,12 @@
 			})
 			.bind('ajax:success', function(event, xhr, status) {
 				$(this).replaceWith(xhr);
+				ga('send', 'event', 'Form', this.id, 'Submitted')
 			}).bind('ajax:error', function(event, xhr, status) {
 				$(this).find('.error-block').text(xhr.responseText).css("display", "block");
 				$('html, body').animate({ scrollTop: $(this).offset().top }, 500);
 				$(this).find('input[type="submit"]').prop('disabled', false);
+			  ga('send', 'event', 'Form', this.id, 'Failed')
 			});
 
 	});
