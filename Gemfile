@@ -161,3 +161,5 @@ group :test do
   gem 'ruby-prof'
   gem 'test_after_commit'
 end
+
+gem 'mailman'

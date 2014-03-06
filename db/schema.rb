@@ -312,6 +312,7 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
     t.datetime "updated_at",                              :null => false
     t.boolean  "permission_manage",    :default => false
     t.boolean  "permission_blog",      :default => false
+    t.boolean  "permission_support",   :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"
@@ -428,6 +429,9 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
     t.string   "encrypted_instagram_consumer_key"
     t.string   "encrypted_instagram_consumer_secret"
     t.integer  "instance_type_id"
+    t.text     "metadata"
+    t.text     "support_imap_hash"
+    t.string   "support_email"
   end
 
   add_index "instances", ["instance_type_id"], :name => "index_instances_on_instance_type_id"
@@ -795,6 +799,56 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
+  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "support_faqs", :force => true do |t|
+    t.integer  "instance_id"
+    t.text     "question",      :null => false
+    t.text     "answer",        :null => false
+    t.integer  "position",      :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
+    t.integer  "deleted_by_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.datetime "deleted_at",    :null => false
+  end
+
+  add_index "support_faqs", ["created_by_id"], :name => "index_support_faqs_on_created_by_id"
+  add_index "support_faqs", ["deleted_by_id"], :name => "index_support_faqs_on_deleted_by_id"
+  add_index "support_faqs", ["instance_id"], :name => "index_support_faqs_on_instance_id"
+  add_index "support_faqs", ["updated_by_id"], :name => "index_support_faqs_on_updated_by_id"
+
+  create_table "support_ticket_messages", :force => true do |t|
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.integer  "ticket_id"
+    t.string   "full_name",   :null => false
+    t.string   "email",       :null => false
+    t.string   "subject",     :null => false
+    t.text     "message",     :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "support_ticket_messages", ["instance_id"], :name => "index_support_ticket_messages_on_instance_id"
+  add_index "support_ticket_messages", ["ticket_id"], :name => "index_support_ticket_messages_on_ticket_id"
+  add_index "support_ticket_messages", ["user_id"], :name => "index_support_ticket_messages_on_user_id"
+
+  create_table "support_tickets", :force => true do |t|
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.integer  "assigned_to_id"
+    t.string   "state",          :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "support_tickets", ["assigned_to_id"], :name => "index_support_tickets_on_assigned_to_id"
+  add_index "support_tickets", ["instance_id"], :name => "index_support_tickets_on_instance_id"
+  add_index "support_tickets", ["user_id"], :name => "index_support_tickets_on_user_id"
 
   create_table "theme_fonts", :force => true do |t|
     t.integer  "theme_id"

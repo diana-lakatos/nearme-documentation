@@ -1,0 +1,10 @@
+.row-fluid.support
+  .span8.offset2
+    %h1 Your Support Requests
+    .box
+      .tickets.list
+        = render @tickets
+      %a.load-links
+
+- content_for :domready do
+  new SupportTickets($('a.load-links'))

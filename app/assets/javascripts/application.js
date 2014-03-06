@@ -26,6 +26,7 @@
 //= require ./vendor/Chart
 //= require jcrop
 //= require spectrum
+//= require ./vendor/jquery.inview
 //
 //
 //= require_self

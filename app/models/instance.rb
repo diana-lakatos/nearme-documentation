@@ -7,9 +7,11 @@ class Instance < ActiveRecord::Base
                   :live_paypal_client_id, :live_paypal_client_secret, :live_balanced_api_key, :instance_billing_gateways_attributes, :marketplace_password,
                   :translations_attributes, :test_stripe_api_key, :test_stripe_public_key, :test_paypal_username, :test_paypal_password,
                   :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key,
-                  :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, 
+                  :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
                   :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
-                  :paypal_email
+                  :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
+                  :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
+                  :support_imap_hash, :support_email, :paypal_email
 
   attr_encrypted :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id, :live_stripe_api_key, :live_paypal_client_id,
                  :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
@@ -40,6 +42,8 @@ class Instance < ActiveRecord::Base
   has_many :instance_billing_gateways, :dependent => :destroy, :inverse_of => :instance
   has_one :blog_instance, :as => :owner
   has_many :user_messages, :dependent => :destroy, :inverse_of => :instance
+  has_many :faqs, class_name: 'Support::Faq'
+  has_many :tickets, class_name: 'Support::Ticket', order: 'created_at DESC'
 
   serialize :pricing_options, Hash
 
@@ -60,6 +64,8 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :listing_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :translations, allow_destroy: true, reject_if: proc { |params| params[:value].blank? && params[:id].blank? }
   accepts_nested_attributes_for :instance_billing_gateways, allow_destroy: true, reject_if: proc { |params| params[:billing_gateway].blank? }
+
+  scope :with_support_imap, where('support_imap_hash IS NOT NULL')
 
   API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key balanced_api_key)
 
