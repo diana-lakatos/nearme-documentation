@@ -49,7 +49,7 @@ module DesksnearMe
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password, :paypal_username, :paypal_password, :paypal_signature, 
+    config.filter_parameters += [:password, :paypal_username, :paypal_password, :paypal_signature,
                                  :paypal_app_id, :paypal_client_id, :paypal_client_secret]
 
     config.generators do |g|
@@ -91,6 +91,7 @@ module DesksnearMe
     config.middleware.insert_before(Rack::Lock, "LegacyRedirectHandler")
     config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access
     config.google_analytics = (YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env] || {}).with_indifferent_access
+    config.near_me_analytics = (YAML.load_file(Rails.root.join("config", "near_me_analytics.yml"))[Rails.env] || {}).with_indifferent_access
     config.filepicker_rails.api_key = YAML.load_file(Rails.root.join("config", "inkfilepicker.yml"))[Rails.env]["api_key"]
 
     config.perform_mixpanel_requests = true
