@@ -110,6 +110,7 @@ gem 'addressable'
 gem 'timecop'
 
 gem 'newrelic_rpm'
+gem 'unicorn-worker-killer'
 
 group :profiling do
   gem 'rack-mini-profiler'
