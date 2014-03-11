@@ -1,6 +1,8 @@
 class PlatformContact < ActiveRecord::Base
+  include SalesforceLead
   validates :email, presence: true, email: true
   validates_presence_of :name
+  after_create :create_salesforce_lead
 
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
