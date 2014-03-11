@@ -1,5 +1,12 @@
 = simple_nested_form_for @instance, :url => instance_admin_settings_integrations_path, :html => { :multipart => true } do |f|
   %fieldset
+    %legend Authentication
+    - %w(Twitter Facebook LinkedIn Instagram).each do |provider|
+      .row-fluid
+        .controls.controls-row
+          = f.input :"#{provider.downcase}_consumer_key", label: "#{provider} Consumer Key", required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+          = f.input :"#{provider.downcase}_consumer_secret", label: "#{provider} Consumer Secret", required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
     %legend Stripe
     .row-fluid
       .controls.controls-row

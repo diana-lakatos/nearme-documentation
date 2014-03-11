@@ -15,8 +15,10 @@ class AuthenticationsController < ApplicationController
     elsif @oauth.email_taken_by_other_user?(current_user)
       user_changed_email_and_someone_else_picked_it
     # There is no authentication in our system, but user is logged in - we just add authentications to his account
-    elsif current_user
-      new_authentication_for_existing_user
+      # OR
+    # User is not logged in and we have no authentication, but it might happen that authentication exists for other instanceemail_taken_html
+    elsif user = current_user.presence || user_authentication_provider_in_other_instance
+      new_authentication_for_existing_user(user)
     # There is no authentication in our system, and the user is not logged in. Hence, we create a new user and then new authentication
     else
       if @oauth.create_user(cookies[:google_analytics_id])
@@ -93,9 +95,13 @@ class AuthenticationsController < ApplicationController
       recovery_link: view_context.link_to('recover your password', new_user_password_path))
     redirect_to root_path
   end
+  def user_authentication_provider_in_other_instance
+    @oauth.user_authentication_provider_in_other_instance
+  end
 
-  def new_authentication_for_existing_user
-    @oauth.create_authentication!(current_user)
+  def new_authentication_for_existing_user(user)
+
+    @oauth.create_authentication!(user)
     log_connect_social_provider
     flash[:success] = t('flash_messages.authentications.authentication_successful')
     redirect_to social_accounts_path

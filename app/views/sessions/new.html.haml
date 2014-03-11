@@ -14,10 +14,6 @@
           = render 'shared/render_flash'
 
         = render 'authentications/services'
-
-        .hr.divider
-          %span Or
-
   
         = simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
           .email-holder.input-icon-holder

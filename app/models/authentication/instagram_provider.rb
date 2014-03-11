@@ -1,7 +1,5 @@
 class Authentication::InstagramProvider < Authentication::BaseProvider
 
-  KEY    = DesksnearMe::Application.config.instagram_key
-  SECRET = DesksnearMe::Application.config.instagram_secret
   META   = { name: "Instagram",
              url: "http://instagram.com/",
              auth: "OAuth 2" }

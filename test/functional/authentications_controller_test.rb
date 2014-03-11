@@ -74,20 +74,6 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert flash[:error].include?('already connected to other user')
     end
 
-    should "successfully sign in and log" do
-      add_authentication(@provider, @uid, @user)
-      stub_mixpanel
-      @tracker.expects(:logged_in).once.with do |user, custom_options|
-        user == @user && custom_options == { provider: @provider }
-      end
-      assert_no_difference('User.count') do
-        assert_no_difference('Authentication.count') do
-          post :create
-        end
-      end
-      assert flash[:success].include?('Signed in successfully')
-    end
-
     should "successfully create new authentication and log" do
       sign_in @user
       stub_mixpanel
@@ -105,10 +91,47 @@ class AuthenticationsControllerTest < ActionController::TestCase
         end
       end
       assert_equal 'Authentication successful.', flash[:success]
-
       assert_equal @token, @user.authentications.last.token
       assert_equal @secret, @user.authentications.last.secret
       assert_equal 'https://twitter.com/desksnearme', @user.authentications.last.profile_url
+    end
+
+    should "allow to log in if authentication does not exist and user with given email exists if this user has already authentication for this provider" do
+      stub_mixpanel
+      @other_user = FactoryGirl.create(:user, :email => @email)
+      add_authentication(@provider, @uid+"else", @other_user)
+      PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
+      assert_no_difference('User.count') do
+        assert_difference('Authentication.count') do
+          post :create
+        end
+      end
+    end
+
+    should "not allow to log in if authentication does not exist and user with given email exists if this user has not other authentication for this provider" do
+      stub_mixpanel
+      @other_user = FactoryGirl.create(:user, :email => @email)
+      add_authentication(@provider+"else", @uid+"else", @other_user)
+      PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
+      assert_no_difference('User.count') do
+        assert_no_difference('Authentication.count') do
+          post :create
+        end
+      end
+    end
+
+    should "successfully sign in and log" do
+      add_authentication(@provider, @uid, @user)
+      stub_mixpanel
+      @tracker.expects(:logged_in).once.with do |user, custom_options|
+        user == @user && custom_options == { provider: @provider }
+      end
+      assert_no_difference('User.count') do
+        assert_no_difference('Authentication.count') do
+          post :create
+        end
+      end
+      assert flash[:success].include?('Signed in successfully')
     end
 
     should "successfully create new authentication as alternative to setting password" do
@@ -203,7 +226,8 @@ class AuthenticationsControllerTest < ActionController::TestCase
 
   def add_authentication(provider, uid, user = nil)
     user ||= @user
-    auth = user.authentications.find_or_create_by_provider(provider)
+    auth = user.authentications.build
+    auth.provider = provider
     auth.uid = uid
     auth.token = "token"
     auth.save!

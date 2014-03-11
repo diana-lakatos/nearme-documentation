@@ -19,6 +19,15 @@ FactoryGirl.define do
     live_stripe_public_key 'live-public-key'
     live_stripe_api_key 'live-api-key'
 
+    facebook_consumer_key 'fb1'
+    facebook_consumer_secret 'fb2'
+    twitter_consumer_key 't1'
+    twitter_consumer_secret 't2'
+    linkedin_consumer_key 'li1'
+    linkedin_consumer_secret 'li2'
+    instagram_consumer_key 'i1'
+    instagram_consumer_secret 'i2'
+
     test_paypal_username 'john_test'
     test_paypal_password 'pass_test'
     test_paypal_client_id '123_test'

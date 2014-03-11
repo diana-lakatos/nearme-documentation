@@ -7,14 +7,25 @@ class Authentication::BaseProvider
     self.secret = attributes[:secret]
   end
 
+  def self.setup_proc 
+    lambda do |env| 
+      env['omniauth.strategy'].options[:consumer_key] = PlatformContext.current.instance.send(:"#{provider}_consumer_key")
+      env['omniauth.strategy'].options[:consumer_secret] = PlatformContext.current.instance.send(:"#{provider}_consumer_secret")
+    end
+  end
+
   def self.new_from_authentication(authentication)
     new(user: authentication.user, token: authentication.token, secret: authentication.secret)
   end
 
+  def self.provider
+    provider_name = self.to_s.demodulize.split('Provider')[0].downcase
+    raise NotImplementedError if provider_name == 'base'
+    provider_name
+  end
+
   def provider
-    provider = self.class.to_s.demodulize.split('Provider')[0].downcase
-    raise NotImplementedError if provider == 'base'
-    provider
+    self.class.provider
   end
 
   def meta_for_user

@@ -7,6 +7,7 @@ class UpdateInfoJob < Job
 
   def perform
     return if not DesksnearMe::Application.config.perform_social_jobs
+    PlatformContext.current = PlatformContext.new(@authentication.instance)
     Authentication::InfoUpdater.new(@authentication).update
   end
 
