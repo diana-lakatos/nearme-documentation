@@ -7,7 +7,7 @@
       %abbr{:title => "required"} *
       Location address
     .controls
-      = f.text_field :address, :'data-behavior' => 'address-autocomplete', :placeholder => ""
+      = f.text_field :address, :'data-behavior' => 'address-autocomplete', :placeholder => "", :id => 'location_address'
       - if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)
         %p.error-block
           - if f.object.errors[:address].present?
@@ -19,10 +19,10 @@
       .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
         .map-container{:style => "height: 240px; width: 100%;"}
 
-      = f.hidden_field :local_geocoding
-      = f.hidden_field :latitude
-      = f.hidden_field :longitude
-      = f.hidden_field :formatted_address 
+      = f.hidden_field :local_geocoding, :id => 'location_local_geocoding'
+      = f.hidden_field :latitude, :id => 'location_latitude'
+      = f.hidden_field :longitude, :id => 'location_longitude'
+      = f.hidden_field :formatted_address, :id => 'location_formatted_address'
       = f.hidden_field :street
       = f.hidden_field :suburb 
       = f.hidden_field :city 
