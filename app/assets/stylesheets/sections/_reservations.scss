@@ -287,6 +287,11 @@ section.reservations {
     .contact-information-fields {
       .controls {
         margin-left: 0;
+        margin: 0px;
+      }
+
+      .phone-number-country-code-field input{
+        height: 49px;
       }
 
       input {
