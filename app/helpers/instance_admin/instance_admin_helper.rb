@@ -14,4 +14,8 @@ module InstanceAdmin::InstanceAdminHelper
       "fa fa-times"
     end
   end
+
+  def pretty_path(path)
+    path.gsub('/',' > ').titleize
+  end
 end

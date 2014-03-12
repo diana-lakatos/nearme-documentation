@@ -8,7 +8,9 @@
   %tbody
     %tr
       %th Template
-      %th Subject
-      %th Edit / Delete
-    - platform_context.theme.email_templates.each do |email_template|
-      = render 'index_row', email_template: email_template
+      %th
+    - EmailTemplate::CUSTOMIZABLE_EMAILS.each do |path|
+      - if @email_templates.select {|template| template.path == path}.empty?
+        = render 'new_index_row', path: path
+      - else
+        = render 'edit_index_row', email_template: @email_templates.select {|template| template.path == path}.first

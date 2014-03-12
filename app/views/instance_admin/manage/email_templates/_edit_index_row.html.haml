@@ -1,0 +1,7 @@
+%tr
+  %td= pretty_path email_template.path
+  %td
+    .pull-right
+      = link_to 'Edit', edit_instance_admin_manage_email_template_path(email_template)
+      |
+      = link_to 'Use default', instance_admin_manage_email_template_path(email_template), :method => :delete, :confirm => "This action will overwrite your customization, are you sure?"
