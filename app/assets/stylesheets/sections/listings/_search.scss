@@ -958,6 +958,11 @@ section.search section#results.mixed {
             width: 65px !important;
           }
         }
+
+        #sort {
+          width: 95px !important;
+          cursor: pointer;
+        }
       }
 
       .per-page {
@@ -974,7 +979,13 @@ section.search section#results.mixed {
           width: 30px !important;
           text-align: right;
         }
+
+        #per_page {
+          width: 50px !important;
+          cursor: pointer;
+        }
       }
+
 
       .custom-select-dropdown-icon {
         position: static;
