@@ -28,7 +28,7 @@ class ReservationCharge < ActiveRecord::Base
   }
 
   scope :needs_payment_transfer, -> {
-    paid.where(payment_transfer_id: nil)
+    paid.where(payment_transfer_id: nil).where(refunded_at: nil)
   }
 
   scope :total_by_currency, -> {

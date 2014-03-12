@@ -10,7 +10,7 @@ class PaymentTransfer < ActiveRecord::Base
     :as => :reference,
     :dependent => :nullify
 
-  after_validation :assign_amounts_and_currency
+  after_create :assign_amounts_and_currency
   after_create :payout
 
   scope :pending, -> {
@@ -94,6 +94,7 @@ class PaymentTransfer < ActiveRecord::Base
     self.service_fee_amount_guest_cents = reservation_charges.sum(
       :service_fee_amount_guest_cents
     )
+    self.save!
   end
 
   def validate_all_charges_in_currency
