@@ -12,9 +12,6 @@
       %span.ico-save.padding
         Save
 
-- content_for :script do
-  :javascript
-    $(function() {
-      new Dashboard.LocationController($('#location-form'))
-    });
+- content_for :domready do
+  $(function() { new Dashboard.LocationController($('#location-form')) });
 

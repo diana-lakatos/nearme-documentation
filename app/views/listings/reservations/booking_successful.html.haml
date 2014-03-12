@@ -18,9 +18,10 @@
     = link_to "Add to Calendar", export_reservation_path(@reservation, :format => :ics), class: "btn btn-large btn-white"
     = link_to "Manage Booking", "#", class: "btn btn-large btn-green modal-close-manually"
 
-:javascript
-  $(function() {
-    $('.modal-close').hide();
-    $('head').eq(0).append($('#open_graph_content').html());
-    $('#open_graph_content').remove();
-  });
+- content_for :script do
+  :javascript
+    $(function() {
+      $('.modal-close').hide();
+      $('head').eq(0).append($('#open_graph_content').html());
+      $('#open_graph_content').remove();
+    });

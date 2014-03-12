@@ -12,7 +12,5 @@
   = f.hidden_field :value
 
 
-:javascript
-  $(function() {
-    new RatingForm($('#rating-form'))
-  });
+- content_for :domready do
+  $(function() { new RatingForm($('#rating-form')) });

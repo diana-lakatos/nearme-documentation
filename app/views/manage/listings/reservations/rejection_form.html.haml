@@ -17,7 +17,5 @@
   :javascript
     Modal.setClass('sign-up-modal')
 
-:javascript
-  $(function() {
-    new ModalForm($('#signup'), $('from.edit_reservation'))
-  });
+- content_for :domready do
+  $(function() { new ModalForm($('#signup'), $('from.edit_reservation')) });

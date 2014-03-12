@@ -2,8 +2,7 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require ./vendor/jquery-ui-1.9.2.custom.min
-//= require ./vendor/jquery.overlay
+//= require ./vendor/jquery-ui-1.10.4.custom.min.js
 //= require ./vendor/jquery.ui.touch-punch
 //= require ./vendor/customSelect.jquery
 //= require bootstrap
@@ -21,7 +20,6 @@
 //= require ./vendor/jquery.ias
 //= require ./vendor/ZeroClipboard
 //= require ./vendor/markerclusterer
-//= require jquery-fileupload/basic
 //= require history_jquery
 //= require ./vendor/underscore
 //= require chosen-jquery
@@ -69,7 +67,6 @@ window.DNM = {
   initializeComponents: function(scope) {
     Multiselect.initialize(scope);
     Flash.initialize(scope);
-    Accordian.initialize(scope);
     Clipboard.initialize(scope);
     Photo.Initializer.initialize(scope);
     Limiter.initialize(scope);
@@ -226,12 +223,6 @@ function doInlineReservation() {
   $("#content").on("click", "td.day .details.availability a", function(e) {
     e.stopPropagation();
     e.preventDefault();
-    var overlay = jQueryLegacy("body").overlay({ ajax: $(this).attr("href"), position: { my: "top", at: "bottom", of: $(this).parents('td') }, html: 'Working&hellip;', 'class': "context" });
-    $(".overlay-container a.cancel").live("click", function(e){
-      e.stopPropagation();
-      jQueryLegacy(".overlay-container").overlay('close');
-      return false;
-    });
     return false;
   });
 }

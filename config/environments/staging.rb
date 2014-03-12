@@ -20,9 +20,7 @@ DesksnearMe::Application.configure do
 
   Rails.application.routes.default_url_options[:protocol] = 'https'
 
-  # Uncomment if you precompile assets
-  # config.assets.compile = false
-
+  config.assets.compile = false
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
 

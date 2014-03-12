@@ -12,9 +12,6 @@
       = link_to "https://maps.google.com/maps?q=#{location.address}", target: '_blank' do
         %span.ico-open-link.padding
 
-- content_for :script do
-  :javascript
-    $(function() {
-      new RouteLink($('[data-routelink]'));
-    });
+- content_for :domready do
+  $(function() { new RouteLink($('[data-routelink]')); });
 

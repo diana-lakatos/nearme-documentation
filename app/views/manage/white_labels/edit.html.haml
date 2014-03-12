@@ -30,7 +30,5 @@
         .actions
           = f.submit "Save"
 
-:javascript
-  $(function() {
-    new CompanyForm($('#edit_company'))
-  });
+- content_for :domready do
+  $(function() { new CompanyForm($('#edit_company')) });
