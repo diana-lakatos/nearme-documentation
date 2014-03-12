@@ -2,7 +2,7 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
   SUPPORTED_CURRENCIES = ['USD']
 
   def setup_api_on_initialize
-    Balanced.configure(instance.billing_gateway_credential('balanced_api_key'))
+    Balanced.configure(@instance.billing_gateway_credential('balanced_api_key'))
   end
 
   def self.currency_supported?(currency)

@@ -57,7 +57,7 @@ DesksnearMe::Application.configure do
   config.stripe_api_key = "sk_test_lpr4WQXQdncpXjjX6IJx01W7"
   config.stripe_public_key = "pk_test_iCGA8nFZdILrI1UtuMOZD2aq"
 
-  config.balanced_api_key = nil
+  config.balanced_api_key = "ak-prod-1YZGzrMTbG9Q4XeITwLML1za00VRsV4PS"
 
   # Protect this environment with a simple Basic authentication dialog
   config.middleware.insert_before(Rack::Lock, "Rack::Auth::Basic") do |username, password|
