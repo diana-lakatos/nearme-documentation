@@ -4,6 +4,7 @@
     %title
       #{@blog_instance.name}
     %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
+    %meta{content: "width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1", name: "viewport"}/
     = csrf_meta_tag
     = render 'layouts/favicon'
     /[if lt IE 9]
