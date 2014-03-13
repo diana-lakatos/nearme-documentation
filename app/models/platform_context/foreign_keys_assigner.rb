@@ -21,10 +21,11 @@ module PlatformContext::ForeignKeysAssigner
 
     def self.auto_set_platform_context(options = {})
       if self.table_exists?
-        class_eval <<-EOV
+        class_eval <<-RUBY, __FILE__, __LINE__+1
           #{"validates_presence_of :instance_id" if !options[:allow_nil].try(:include?, :instance_id) && self.column_names.include?('instance_id')}
 
           before_validation do
+            return if self.persisted? 
             return if PlatformContext.current.nil?
             #{"self.instance_id = PlatformContext.current.instance.id" if self.column_names.include?('instance_id') && !options[:allow_nil].try(:include?, :instance_id)}
             #{"self.domain_id = PlatformContext.current.domain.try(:id)" if self.column_names.include?('domain_id')}
@@ -34,7 +35,7 @@ module PlatformContext::ForeignKeysAssigner
               #{"self.listings_public = PlatformContext.current.white_label_company.listings_public\n" if self.column_names.include?('listings_public')}
             #{"end" if self.column_names.include?('company_id') || self.column_names.include?('listings_public')}
           end
-        EOV
+        RUBY
       end
     end
 

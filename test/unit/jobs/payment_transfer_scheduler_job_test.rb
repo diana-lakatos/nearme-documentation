@@ -41,7 +41,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
       rc.touch(:refunded_at)
       assert rc.refunded?
 
-      PaymentTransferSchedulerJob.new.perform
+      PaymentTransferSchedulerJob.perform
 
       assert_equal (@company_1.reservation_charges - [rc]).sort, @company_1.payment_transfers[0].reservation_charges.sort
     end

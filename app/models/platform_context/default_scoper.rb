@@ -63,13 +63,31 @@ module PlatformContext::DefaultScoper
 
     def self.scoped_to_platform_context(options = {})
       if self.table_exists?
-        class_eval <<-EOV
+        scope_builder = DefaultScopeBuilder.new(self, options)
+        class_eval <<-RUBY, __FILE__, __LINE__+1
           default_scope lambda { self.platform_context_default_scope }
 
           def self.platform_context_default_scope
-            #{DefaultScopeBuilder.new(self, options).build_default_scope.join("\n")}
+            scope = self.scoped
+            return scope if PlatformContext.current.nil?
+            #{scope_builder.return_instance_scope_if_forced}
+            # check if current platform context is white label company, and if so scope to it. If record should not be scoped to company
+            # (for example ListingType), continue
+            #{scope_builder.return_company_scope_if_white_label_company}
+            # We haven't scoped to company either because klass does not support it or current platform context is not white label company.
+            # This means, that our platform context is either Partner or Instance, so we want to show only records where listings_public is true,
+            # because if it is false, it means they should be displayed only on white label company's domain, which we know is not the case now.
+            #{scope_builder.enforce_listings_public_to_be_true}
+            # check if current platform context is partner, if so, scope to partner_id. if that's not the case or model should not be scoped
+            # to partner, continue to instance
+            #{scope_builder.return_partner_scope_if_partner}
+            # either model does not respond to company/partner scope or platform context is instance. Either way, just scope to instance
+            #{scope_builder.instance_scope}
+            # we could have build if / else statement without end, just add them to avoid syntax errors
+            #{scope_builder.close_end_for_company_scope_if_needed}
+            #{scope_builder.close_end_for_partner_scope_if_needed}
           end
-        EOV
+        RUBY
       end
     end
 
@@ -96,42 +114,56 @@ module PlatformContext::DefaultScoper
       @options = options
     end
 
-    def build_default_scope
-      methods = []
-      methods << "scope = self.scoped"
-      methods << "return scope if PlatformContext.current.nil?"
+    def return_instance_scope_if_forced
+      "#{instance_scope} if PlatformContext.scoped_to_instance?"
+    end
+
+    def instance_scope
       if @options[:allow_nil]
-        methods << "return scope.where(\"#{@klass.table_name}.instance_id = ? OR #{@klass.table_name}.instance_id is null\", PlatformContext.current.instance.id) if PlatformContext.scoped_to_instance?"
+        "return scope.where('#{@klass.table_name}.instance_id = ? OR #{@klass.table_name}.instance_id is null', PlatformContext.current.instance.id)"
       else
-        methods << "return scope.where(:\"#{@klass.table_name}.instance_id\" => PlatformContext.current.instance.id) if PlatformContext.scoped_to_instance?"
+        "return scope.where(:'#{@klass.table_name}.instance_id' => PlatformContext.current.instance.id)"
       end
+    end
+
+    def return_company_scope_if_white_label_company
       if (@klass.column_names.include?('company_id') || Company == @klass)
-        methods << "if PlatformContext.current.white_label_company.present?"
-        if Company == @klass
-          methods << "scope.where(:\"#{@klass.table_name}.id\" => PlatformContext.current.white_label_company.id)"
-        else
-          methods << "scope.where(:\"#{@klass.table_name}.company_id\" => PlatformContext.current.white_label_company.id)"
-        end
-        methods << "else"
+        return %Q{
+          if PlatformContext.current.white_label_company.present?
+            #{company_scope_query_based_on_klass}
+          else
+        }
       end
-      methods << "scope = scope.where(:\"#{@klass.table_name}.listings_public\" => true )" if @klass.column_names.include?('listings_public')
-      if @klass.column_names.include?('partner_id')
-        methods << "if PlatformContext.current.partner.present? && PlatformContext.current.partner.search_scope_option.all_associated_listings?"
-        methods << "scope.where(:\"#{@klass.table_name}.partner_id\" => PlatformContext.current.partner.id)" 
-        methods << "else"
-      end
-      if @options[:allow_nil]
-        methods << "scope.where(\"#{@klass.table_name}.instance_id = ? OR #{@klass.table_name}.instance_id is null\", PlatformContext.current.instance.id)"
+    end
+
+    def company_scope_query_based_on_klass
+      if Company == @klass
+       "scope.where(:'#{@klass.table_name}.id' => PlatformContext.current.white_label_company.id)"
       else
-        methods << "scope.where(:\"#{@klass.table_name}.instance_id\" => PlatformContext.current.instance.id)"
+        "scope.where(:'#{@klass.table_name}.company_id' => PlatformContext.current.white_label_company.id)"
       end
+    end
+
+    def return_partner_scope_if_partner
       if @klass.column_names.include?('partner_id')
-        methods << "end"
+        return %Q{
+          if PlatformContext.current.partner.present? && PlatformContext.current.partner.search_scope_option.all_associated_listings?
+            scope.where(:"#{@klass.table_name}.partner_id" => PlatformContext.current.partner.id)
+          else
+        }
       end
-      if (@klass.column_names.include?('company_id') || Company == @klass)
-        methods << "end"
-      end
-      methods
+    end
+
+    def enforce_listings_public_to_be_true
+      "scope = scope.where(:'#{@klass.table_name}.listings_public' => true )" if @klass.column_names.include?('listings_public')
+    end
+
+    def close_end_for_company_scope_if_needed
+      "end" if (@klass.column_names.include?('company_id') || Company == @klass)
+    end
+
+    def close_end_for_partner_scope_if_needed
+      "end" if @klass.column_names.include?('partner_id')
     end
 
   end
