@@ -25,7 +25,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
 
     @payment_transfer = PaymentTransfer.last
     assert @payment_transfer.transferred?
-    assert_equal 2250, @payment_transfer.payout_attemps.successful.first.amount
+    assert_equal 2250, @payment_transfer.payout_attempts.successful.first.amount
   end
 
   private

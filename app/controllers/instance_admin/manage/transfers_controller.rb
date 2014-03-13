@@ -8,7 +8,17 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
   def transferred
     resource.mark_transferred
     flash[:notice] = t('flash_messages.payments.marked_transferred')
-    redirect_to [:admin, :payment_transfers]
+    redirect_to instance_admin_manage_transfer_path(resource)
+  end
+
+  def payout
+    resource.payout
+    if resource.transferred?
+      flash[:notice] = t('flash_messages.payments.payout_successful')
+    else
+      flash[:error] = t('flash_messages.payments.payout_failed')
+    end
+    redirect_to instance_admin_manage_transfer_path(resource)
   end
 
   protected

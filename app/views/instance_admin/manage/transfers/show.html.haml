@@ -5,9 +5,28 @@
     This payout has been marked as transferred to the Company.
 
 - else
-  = link_to "Mark Transferred", [:transferred, :admin, resource],
+  = link_to "Mark Transferred", transferred_instance_admin_manage_transfer_path(resource),
       :method => :post,
       :class => 'btn btn-default'
+
+  - if resource.payout_processor.present?
+    = link_to "Payout via #{resource.payout_processor}", payout_instance_admin_manage_transfer_path(resource),
+      :method => :post,
+      :class => 'btn btn-default',
+      :confirm => 'Payment will go live. Do you want to continue?'
+  - else 
+    %button.btn.btn_default{disabled: true}
+      Payout
+
+%hr
+
+.payout-attemps
+  %legend Payout attemps
+
+  - resource.payout_attempts.each do |payout_attempt|
+    .payout_attempt
+      = "#{Money.new(payout_attempt.amount, payout_attempt.currency).format with_currency: true} at #{payout_attempt.created_at} - #{payout_attempt.success ? 'succeeded' : 'failed'}"
+
 
 %hr
 
@@ -21,6 +40,10 @@
   %div
     %strong Paypal Email:
     = resource.company_including_deleted.paypal_email
+
+  %div
+    %strong Bank account:
+    = "xxxxxx#{resource.company_including_deleted.instance_clients.first.bank_account_last_four_digits}" if resource.company_including_deleted.instance_clients.first.try(:bank_account_last_four_digits ).present?
 
   %div
     %strong Mailing Address:

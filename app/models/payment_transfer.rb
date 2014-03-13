@@ -5,7 +5,7 @@ class PaymentTransfer < ActiveRecord::Base
   belongs_to :company
   has_many :reservation_charges, :dependent => :nullify
 
-  has_many :payout_attemps,
+  has_many :payout_attempts,
     :class_name => 'Payout',
     :as => :reference,
     :dependent => :nullify
@@ -75,6 +75,10 @@ class PaymentTransfer < ActiveRecord::Base
     if payout.success
       touch(:transferred_at)
     end
+  end
+
+  def payout_processor
+    billing_gateway.processor_class
   end
 
   def possible_automated_payout_not_supported?
