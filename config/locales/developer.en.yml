@@ -19,8 +19,14 @@ en:
     payments:
       payout_successful: 'Payout succeeded'
       payout_failed: 'Payout failed'
+    instance_admin:
+      manage:
+        email_templates:
+          created: 'Email template has been created.'
+          updated: 'Email template has been updated.'
+          deleted: 'Email template has been deleted.'
   registrations:
-    social_accounts: 
+    social_accounts:
       connecting_social_accounts_info: "Connecting your social accounts will display the number of friends, connections, and followers that you have on your profile.<br />You will also be able to see your friends' and connections' activity on %{marketplace_name}."
       no_social_providers: "Unfortunately %{marketplace_name} does not support any social providers at the moment."
     sms_preferences:

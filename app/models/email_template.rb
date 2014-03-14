@@ -4,12 +4,11 @@ class EmailTemplate < ActiveRecord::Base
   belongs_to :theme
   attr_accessible :handler, :html_body, :text_body, :path, :partial, :subject, :to, :from, :bcc, :reply_to, :subject
 
-  CUSTOMIZABLE_EMAILS = %w(post_action_mailer/created_by_instance
-                           post_action_mailer/instance_created
+  CUSTOMIZABLE_EMAILS = %w(post_action_mailer/sign_up_welcome
+                           post_action_mailer/sign_up_verify
+                           post_action_mailer/created_by_instance
                            post_action_mailer/list
                            post_action_mailer/list_draft
-                           post_action_mailer/sign_up_verify
-                           post_action_mailer/sign_up_welcome
                            post_action_mailer/unsubscription
                            inquiry_mailer/inquiring_user_notification
                            inquiry_mailer/listing_creator_notification

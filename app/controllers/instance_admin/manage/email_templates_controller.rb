@@ -16,6 +16,7 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
     @email_template = EmailTemplate.new(params[:email_template])
     @email_template.theme = platform_context.theme
     if @email_template.save
+      flash[:success] = t 'flash_messages.instance_admin.manage.email_templates.created'
       redirect_to action: :index
     else
       flash[:error] = @email_template.errors.full_messages.to_sentence
@@ -27,10 +28,10 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
     @email_template = platform_context.theme.email_templates.find(params[:id])
 
     if @email_template.update_attributes(params[:email_template])
-      flash[:success] = 'Email template has been updated.'
+      flash[:success] = t 'flash_messages.instance_admin.manage.email_templates.updated'
       redirect_to action: :index
     else
-      flash[:success] = 'An error was encountered, please try again.'
+      flash[:error] = @email_template.errors.full_messages.to_sentence
       render :edit
     end
   end
@@ -39,7 +40,7 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
     @email_template = platform_context.theme.email_templates.find(params[:id])
     @email_template.destroy
 
-    flash[:success] = 'Email template has been deleted.'
+    flash[:success] = t 'flash_messages.instance_admin.manage.email_templates.deleted'
     redirect_to action: :index
   end
 end
