@@ -1,12 +1,13 @@
 # Sends share emails
 class RecurringMailerShareJob < Job
 
-  def initialize
+  def after_initialize
     @sent_to_users = []
   end
 
   def perform
     Listing.searchable.each do |listing|
+      PlatformContext.current = PlatformContext.new(listing.company)
       next unless listing.administrator
       next if listing.administrator.unsubscribed?('recurring_mailer/share')
       next if @sent_to_users.include?(listing.administrator.id)

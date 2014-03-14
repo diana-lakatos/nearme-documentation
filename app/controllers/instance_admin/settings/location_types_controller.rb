@@ -2,7 +2,6 @@ class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::Settings
 
   def create
     @location_type = LocationType.new(params[:location_type])
-    @location_type.instance = platform_context.instance
     if @location_type.save
       flash[:success] = t('flash_messages.instance_admin.settings.location_type_added')
       redirect_to instance_admin_settings_locations_path
@@ -13,10 +12,10 @@ class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::Settings
   end
 
   def destroy_modal
-    @location_type = platform_context.instance.location_types.find(params[:id])
+    @location_type = LocationType.find(params[:id])
 
     if @location_type.locations.count > 0
-      @replacement_types = platform_context.instance.location_types - [@location_type]
+      @replacement_types = LocationType.all - [@location_type]
       render :destroy_and_replace_modal, :layout => false
     else
       render :destroy_modal, :layout => false
@@ -24,10 +23,10 @@ class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::Settings
   end
 
   def destroy
-    @location_type = platform_context.instance.location_types.find(params[:id])
+    @location_type = LocationType.find(params[:id])
 
     if @location_type.locations.count > 0
-      @replacement_type = platform_context.instance.location_types.find(params[:replacement_type_id])
+      @replacement_type = LocationType.find(params[:replacement_type_id])
       @location_type.locations.update_all(location_type_id: @replacement_type.id)
     end
 

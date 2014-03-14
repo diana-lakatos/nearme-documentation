@@ -1,12 +1,11 @@
 class ReengagementNoBookingsJob < Job
 
-  def initialize(platform_context, user)
-    @platform_context = platform_context 
+  def after_initialize(user)
     @user = user
   end
 
   def perform
-    ReengagementMailer.no_bookings(@platform_context, @user).deliver if @user && @user.reservations.empty?
+    ReengagementMailer.no_bookings(@user).deliver if @user && @user.reservations.empty?
   end
     
 end

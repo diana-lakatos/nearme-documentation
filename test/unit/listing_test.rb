@@ -31,14 +31,12 @@ class ListingTest < ActiveSupport::TestCase
   end
 
   context "#photo_not_required" do
-    subject do
-      @listing = FactoryGirl.build_stubbed(:listing)
-      @listing.photo_not_required = true
-      @listing
-    end
+    should 'not require photo' do
 
-    should allow_value([]).for(:photos)
-    should allow_value([FactoryGirl.create(:photo)]).for(:photos)
+      @listing.photo_not_required = true
+      @listing.photos = []
+      assert @listing.valid?
+    end
   end
 
   context "#prices_by_days" do
@@ -94,7 +92,6 @@ class ListingTest < ActiveSupport::TestCase
       @listing.daily_price = nil
       @listing.weekly_price = nil
       @listing.monthly_price = nil
-      @listing.save
       assert @listing.valid?
     end
 
@@ -103,7 +100,6 @@ class ListingTest < ActiveSupport::TestCase
       @listing.daily_price = 1
       @listing.weekly_price = nil
       @listing.monthly_price = nil
-      @listing.save
       assert @listing.valid?
     end
 
@@ -112,7 +108,6 @@ class ListingTest < ActiveSupport::TestCase
       @listing.daily_price = 0
       @listing.weekly_price = 1
       @listing.monthly_price = nil
-      @listing.save
       assert @listing.valid?
     end
 
@@ -121,18 +116,20 @@ class ListingTest < ActiveSupport::TestCase
       @listing.daily_price = 0
       @listing.weekly_price = 0
       @listing.monthly_price = 5
-      @listing.save
       assert @listing.valid?
     end
 
     should "be invalid if free flag is true and the hourly_reservations flag is true" do
       @listing.free = true
       @listing.hourly_reservations = true
-      @listing.save
-      assert !@listing.valid?
+      refute @listing.valid?
     end
 
     context 'instance has pricing constraints' do
+
+      setup do
+        PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance_with_price_constraints))
+      end
 
       should 'be valid if hourly price in range' do
         listing = FactoryGirl.create(:listing_from_instance_with_price_constraints)
@@ -141,7 +138,8 @@ class ListingTest < ActiveSupport::TestCase
 
       should 'be invalid if hourly price out of range' do
         listing = FactoryGirl.create(:thousand_dollar_listing_from_instance_with_price_constraints)
-        assert !listing.valid?
+        listing.hourly_price = 100000
+        refute listing.valid?
       end
 
       should 'be valid if hourly price higher than minimum price and no maximum price is present' do
@@ -199,7 +197,7 @@ class ListingTest < ActiveSupport::TestCase
       4.times do |i|
         dates << tuesday + i.day
       end
-      @listing.reserve!(PlatformContext.new, FactoryGirl.build(:user), dates, 1)
+      @listing.reserve!(FactoryGirl.build(:user), dates, 1)
       # wednesday, thursday, friday = 3, saturday, sunday = 2 -> monday is sixth day
       assert_equal tuesday+6.day, @listing.first_available_date
     end
@@ -213,9 +211,9 @@ class ListingTest < ActiveSupport::TestCase
       tuesday = Time.zone.today.sunday + 2
       Timecop.freeze(tuesday.beginning_of_day)
       # book all seats on wednesday 
-      @listing.reserve!(PlatformContext.new, FactoryGirl.build(:user), [tuesday+1.day], 2)
+      @listing.reserve!(FactoryGirl.build(:user), [tuesday+1.day], 2)
       # leave one seat free on thursday
-      @listing.reserve!(PlatformContext.new, FactoryGirl.build(:user), [tuesday+2.day], 1)
+      @listing.reserve!(FactoryGirl.build(:user), [tuesday+2.day], 1)
       # the soonest day should be the one with at least one seat free
       assert_equal tuesday+2.day, @listing.first_available_date
     end
@@ -360,15 +358,16 @@ class ListingTest < ActiveSupport::TestCase
       @listing = FactoryGirl.create(:listing)
       assert @listing.creator_id.present?
       assert @listing.instance_id.present?
-      assert_equal [@listing.location.creator_id, @listing.location.instance_id], [@listing.creator_id, @listing.instance_id]
+      assert @listing.company_id.present?
+      assert @listing.listings_public
     end
 
     should 'assign correct creator_id' do
       assert_equal @location.creator_id, @listing.creator_id
     end
 
-    should 'assign correct instance_id' do
-      assert_equal @location.instance_id, @listing.instance_id
+    should 'assign correct company_id' do
+      assert_equal @location.company_id, @listing.company_id
     end
 
     should 'assign administrator_id' do
@@ -377,18 +376,35 @@ class ListingTest < ActiveSupport::TestCase
     end
 
     context 'update company' do
-      setup do
-        @location.company.update_attribute(:instance_id, @location.company.instance_id + 1)
-        @location.company.update_attribute(:creator_id, @location.company.creator_id + 1)
-      end
 
       should 'assign correct creator_id' do
+        @location.company.update_attribute(:creator_id, @location.company.creator_id + 1)
         assert_equal @location.company.creator_id, @listing.reload.creator_id
       end
 
-      should 'assign correct instance_id' do
-        assert_equal @location.company.instance_id, @listing.reload.instance_id
+      should 'assign correct company_id' do
+        @location.update_attribute(:company_id, @location.company_id + 1)
+        assert_equal @location.company_id, @listing.reload.company_id
       end
+
+      should 'assign correct partner_id' do
+        partner = FactoryGirl.create(:partner)
+        @location.company.update_attribute(:partner_id, partner.id)
+        assert_equal partner.id, @listing.reload.partner_id
+      end
+
+      should 'assign correct instance_id' do
+        instance = FactoryGirl.create(:instance)
+        @location.company.update_attribute(:instance_id, instance.id)
+        PlatformContext.any_instance.stubs(:instance).returns(instance)
+        assert_equal instance.id, @location.reload.instance_id 
+      end
+
+    should 'update listings_public' do
+      assert @listing.listings_public
+      @listing.company.update_attribute(:listings_public, false)
+      refute @listing.reload.listings_public
+    end
 
     end
   end

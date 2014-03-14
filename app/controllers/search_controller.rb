@@ -72,7 +72,7 @@ class SearchController < ApplicationController
           :sort => search.sort
         })
 
-        Listing::SearchFetcher.new(search_scope, @search_params)
+        Listing::SearchFetcher.new(@search_params)
       end
   end
 
@@ -175,8 +175,8 @@ class SearchController < ApplicationController
   end
 
   def set_options_for_filters
-    @filterable_location_types = platform_context.instance.location_types
-    @filterable_listing_types = platform_context.instance.listing_types
+    @filterable_location_types = LocationType.all
+    @filterable_listing_types = ListingType.all
     @filterable_pricing = [['hourly', 'Hourly'], ['daily', 'Daily'], ['weekly', 'Weekly'], ['monthly', 'Monthly']]
     @filterable_industries = Industry.with_listings.all if platform_context.instance.is_desksnearme? and !result_view.mixed?
   end

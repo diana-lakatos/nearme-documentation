@@ -1,4 +1,5 @@
 DesksnearMe::Application.configure do
+  config.use_only_ssl = false
   Rails.application.routes.default_url_options[:host] = "example.com"
   config.action_controller.allow_forgery_protection    = false
   config.action_controller.perform_caching = false

@@ -7,7 +7,7 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
 
   def create
     @page = Page.new(params[:page])
-    @page.theme = platform_context.theme
+    @page.theme_id = PlatformContext.current.theme.id
     create! do |format|
       format.html do
         redirect_to action: 'index'

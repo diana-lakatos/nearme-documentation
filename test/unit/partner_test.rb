@@ -3,7 +3,6 @@ require 'test_helper'
 class PartnerTest < ActiveSupport::TestCase
 
   should validate_presence_of(:name)
-  should validate_presence_of(:instance_id)
 
   def setup
     @partner = FactoryGirl.create(:partner)

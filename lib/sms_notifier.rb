@@ -79,6 +79,7 @@ class SmsNotifier < AbstractController::Base
 
   # Build the SMS Message to send
   def sms(options)
+    @platform_context = PlatformContext.current.decorate
     options = options.reverse_merge(self.class.default_params)
     options[:body] ||= render_message
 

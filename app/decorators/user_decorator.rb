@@ -36,7 +36,7 @@ class UserDecorator < Draper::Decorator
   private
 
   def user_messages_decorator_for(instance)
-    @user_messages_decorator ||= UserMessagesDecorator.new(user_messages.for_instance(instance), object)
+    @user_messages_decorator ||= UserMessagesDecorator.new(user_messages, object)
   end
 
   def social_connections_cache

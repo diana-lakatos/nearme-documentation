@@ -129,7 +129,7 @@ class Billing::Gateway::BaseProcessor
   end
 
   def self.instance_client(client, instance)
-    client.instance_clients.where(:instance_id => instance.id).first.presence || client.instance_clients.create(:instance_id => instance.id)
+    client.instance_clients.first.presence || client.instance_clients.create
   end
 
   def instance_client

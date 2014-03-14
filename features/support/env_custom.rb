@@ -19,6 +19,7 @@ Before do
   instance.save!
   store_model("instance", nil, instance)
   store_model("theme", nil, instance.theme)
+  Thread.current[:platform_context] = PlatformContext.new
   FactoryGirl.create(:instance)
   Utils::EnLocalesSeeder.new.go!
 end

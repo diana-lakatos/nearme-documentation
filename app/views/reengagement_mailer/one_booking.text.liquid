@@ -2,7 +2,7 @@ Hey, {{ user.first_name }}!
 
 We hope you enjoyed your booking for '{{ listing.name }}' at {{ listing.street }} on {{ reservation.start_date }}.
 
-We thought you might be interested in some other {{ platform_context.bookable_noun_plural }} in your area. Come back to {{ platform_context_decorator.name }} and find a cool {{ platform_context.bookable_noun }}
+We thought you might be interested in some other {{ platform_context.bookable_noun_plural }} in your area. Come back to {{ platform_context.name }} and find a cool {{ platform_context.bookable_noun }}
 
 {% include 'reservation_mailer/listings_in_near.text' %}
 Search More {{ platform_context.bookable_noun_plural }}: {{ platform_context.host | append:listing.search_url_with_tracking | append:signature_for_tracking  }}

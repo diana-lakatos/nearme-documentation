@@ -5,7 +5,6 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
-    @instance = FactoryGirl.create(:instance)
     @industry = FactoryGirl.create(:industry)
     sign_in @user
     FactoryGirl.create(:listing_type)
@@ -17,7 +16,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
   context 'scopes current partner for new company' do
     should 'match partner_id' do
       PlatformContext.any_instance.stubs(:partner).returns(@partner)
-      assert_difference('Listing.count', 1) do
+      assert_difference 'Listing.count' do
         post :submit_listing, get_params
       end
       @company = Company.last
@@ -26,7 +25,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
   end
 
   should 'set correct foreign keys' do
-    assert_difference('Listing.count', 1) do
+    assert_difference 'Listing.count' do
       post :submit_listing, get_params
     end
     @company = Company.last

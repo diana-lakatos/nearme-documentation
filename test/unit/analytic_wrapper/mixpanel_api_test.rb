@@ -28,7 +28,7 @@ class AnalyticWrapper::MixpanelApiTest < ActiveSupport::TestCase
     end
 
     should "store current instance id and current domain" do
-      request_details_hash = { 'current_instance_id' => 2, 'current_host' => 'www.example.com' }
+      request_details_hash = { 'current_instance_id' => Instance.default_instance.id, 'current_host' => 'www.example.com' }
       mixpanel = AnalyticWrapper::MixpanelApi.new(@mixpanel, :request_details => request_details_hash, :anonymous_identity => 500)
       assert_equal 500, mixpanel.anonymous_identity
       assert_equal request_details_hash, mixpanel.request_details
@@ -58,7 +58,7 @@ class AnalyticWrapper::MixpanelApiTest < ActiveSupport::TestCase
       name = 'Test Event'
       properties = { 'TestProp' => 'value' }
       wrapper = AnalyticWrapper::MixpanelApi.new(@mixpanel)
-      expected_properties = properties.merge(:distinct_id => wrapper.distinct_id)
+      expected_properties = properties.merge(:distinct_id => wrapper.distinct_id, 'current_instance_id' => Instance.default_instance.id)
       @mixpanel.expects(:track).with { |_event_name, _properties, _options|
         _event_name == name && _properties == expected_properties
       }
@@ -70,20 +70,19 @@ class AnalyticWrapper::MixpanelApiTest < ActiveSupport::TestCase
       name = 'Test Event'
       properties = { 'TestProp' => 'value' }
       wrapper = AnalyticWrapper::MixpanelApi.new(@mixpanel, :request_params => { :source => "google" })
-      expected_properties = properties.merge(:distinct_id => wrapper.distinct_id, :source => "google").stringify_keys
+      expected_properties = properties.merge(:distinct_id => wrapper.distinct_id, :source => "google", :current_instance_id => Instance.default_instance.id).stringify_keys
       @mixpanel.expects(:track).with { |_event_name, _properties, _options|
         _event_name == name && _properties.stringify_keys == expected_properties
       }
-
       wrapper.track(name, properties)
     end
 
     should "apply request details" do
       name = 'Test Event'
       properties = { 'TestProp' => 'value' }
-      request_details_hash = { 'current_instance_id' => 2, 'current_host' => 'www.example.com' }
+      request_details_hash = { 'current_instance_id' => Instance.default_instance.id, 'current_host' => 'www.example.com' }
       wrapper = AnalyticWrapper::MixpanelApi.new(@mixpanel, :request_details => request_details_hash)
-      expected_properties = properties.merge(:distinct_id => wrapper.distinct_id, :current_instance_id => 2, :current_host => 'www.example.com').stringify_keys
+      expected_properties = properties.merge(:distinct_id => wrapper.distinct_id, :current_instance_id => Instance.default_instance.id, :current_host => 'www.example.com').stringify_keys
       @mixpanel.expects(:track).with { |_event_name, _properties, _options|
         _event_name == name && _properties.stringify_keys == expected_properties
       }

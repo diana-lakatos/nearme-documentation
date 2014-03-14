@@ -1,6 +1,7 @@
 class Manage::BaseController < ApplicationController
   before_filter :set_section_name
   before_filter :authenticate_user!
+  before_filter :force_scope_to_instance
 
   private
 
@@ -11,9 +12,9 @@ class Manage::BaseController < ApplicationController
   def locations_scope
     @locations_scope ||= begin
       if current_user.is_location_administrator?
-        current_user.administered_locations.for_instance(platform_context.instance)
+        current_user.administered_locations
       else
-        current_user.locations.for_instance(platform_context.instance)
+        current_user.locations
       end
     end
   end

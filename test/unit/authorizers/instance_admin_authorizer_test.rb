@@ -4,10 +4,7 @@ class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
-    @instance = FactoryGirl.create(:instance)
-    @platform_context = PlatformContext.new
-    @platform_context.stubs(:instance).returns(@instance)
-    @authorizer = InstanceAdminAuthorizer.new(@user, @platform_context)
+    @authorizer = InstanceAdminAuthorizer.new(@user)
     FactoryGirl.create(:instance_admin_role_default)
   end
 
@@ -19,7 +16,7 @@ class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
 
     context 'is admin of at least one instance' do
       setup do
-        @instance_admin = InstanceAdmin.create(:user_id => @user.id, :instance_id => @instance.id)
+        @instance_admin = InstanceAdmin.create(:user_id => @user.id)
       end
 
       should 'know that user is instance admin' do
@@ -27,11 +24,8 @@ class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
       end
 
       should 'not confuse instances' do
-        @other_instance = FactoryGirl.create(:instance, :name => 'other_instance')
-        @platform_context = PlatformContext.new
-        @platform_context.stubs(:instance).returns(@other_instance)
-        @authorizer = InstanceAdminAuthorizer.new(@user, @platform_context)
-        assert !@authorizer.instance_admin?
+        @instance_admin.update_attribute(:instance_id, FactoryGirl.create(:instance).id)
+        refute @authorizer.instance_admin?
       end
     end
 
@@ -41,7 +35,7 @@ class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
 
     setup do
       @role = FactoryGirl.create(:instance_admin_role)
-      @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => @instance.id)
+      @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id)
       @instance_admin.update_attribute(:instance_owner, false)
       @instance_admin.update_attribute(:instance_admin_role_id, @role.id)
     end
@@ -104,7 +98,7 @@ class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
       @role.update_attribute(:permission_analytics, false)
       @role.update_attribute(:permission_settings, true)
       @role.update_attribute(:permission_theme, true)
-      @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => @instance.id)
+      @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id)
       @instance_admin.update_attribute(:instance_owner, false)
       @instance_admin.update_attribute(:instance_admin_role_id, @role.id)
     end

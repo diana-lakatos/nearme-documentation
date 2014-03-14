@@ -6,14 +6,13 @@ class ListingMailerTest < ActiveSupport::TestCase
     stub_mixpanel
     @listing = FactoryGirl.create(:listing)
     @user = FactoryGirl.create(:user)
-    @platform_context = PlatformContext.new
-    @platform_context.stubs(:instance).returns(Instance.default_instance)
     PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
+    @platform_context = PlatformContext.current
     @subject = "#{@user.name} has shared a listing with you on #{@platform_context.decorate.name}"
   end
 
   test "#share" do
-    mail = ListingMailer.share(@platform_context, @listing, 'jimmy@test.com', 'Jimmy Falcon', @user, 'Check this out!')
+    mail = ListingMailer.share(@listing, 'jimmy@test.com', 'Jimmy Falcon', @user, 'Check this out!')
 
     assert_equal @subject, mail.subject
     assert mail.html_part.body.include?(@user.name)
@@ -27,7 +26,7 @@ class ListingMailerTest < ActiveSupport::TestCase
   end
 
   test "#share without message" do
-    mail = ListingMailer.share(@platform_context, @listing, 'jimmy@test.com', 'Jimmy Falcon', @user)
+    mail = ListingMailer.share(@listing, 'jimmy@test.com', 'Jimmy Falcon', @user)
 
     assert_equal @subject, mail.subject
     assert mail.html_part.body.include?(@user.name)

@@ -6,7 +6,7 @@ class InstanceAdmin::Manage::Users::InstanceAdminRolesController < InstanceAdmin
 
   def create
     @instance_admin_role = InstanceAdminRole.new(params[:instance_admin_role])
-    @instance_admin_role.instance_id = platform_context.instance.id
+    @instance_admin_role.instance_id = PlatformContext.current.instance.id
     if @instance_admin_role.save
 
       flash[:success] = t('flash_messages.instance_admin.users.instance_admin_roles.role_added')
@@ -17,15 +17,18 @@ class InstanceAdmin::Manage::Users::InstanceAdminRolesController < InstanceAdmin
   end
 
   def update
-    @instance_admin_role = platform_context.instance.instance_admin_roles.find(params[:id])
-    @instance_admin_role.update_attributes(params[:instance_admin_role]) if only_updates_permission?
+    @instance_admin_role = InstanceAdminRole.find(params[:id])
+    if @instance_admin_role.instance_id.present?
+      @instance_admin_role.update_attributes(params[:instance_admin_role]) if only_updates_permission?
+    end
     render :nothing => true
   end
 
   def destroy
-    # scoping to instance guarantess that global role will not be deleted
-    @instance_admin_role = platform_context.instance.instance_admin_roles.find(params[:id])
-    @instance_admin_role.destroy
+    @instance_admin_role = InstanceAdminRole.find(params[:id])
+    if @instance_admin_role.instance_id.present?
+      @instance_admin_role.destroy
+    end
     flash[:deleted] = t('flash_messages.instance_admin.users.instance_admin_roles.role_deleted')
     redirect_to instance_admin_manage_users_path
   end

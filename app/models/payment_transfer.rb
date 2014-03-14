@@ -1,8 +1,13 @@
 class PaymentTransfer < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
+  auto_set_platform_context
+  scoped_to_platform_context
 
   belongs_to :company
+  belongs_to :instance
+  belongs_to :partner
+
   has_many :reservation_charges, :dependent => :nullify
 
   has_many :payout_attemps,
@@ -24,11 +29,6 @@ class PaymentTransfer < ActiveRecord::Base
   scope :last_x_days, lambda { |days_in_past|
     where("DATE(#{table_name}.created_at) >= ? ", days_in_past.days.ago)
   }
-
-  scope :for_instance, ->(instance) {
-    joins(:company).where(:'companies.instance_id' => instance.id)
-  }
-
 
   validate :validate_all_charges_in_currency
 

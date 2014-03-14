@@ -3,7 +3,6 @@
 FactoryGirl.define do
   factory :instance_admin do
 
-    instance_id { (Instance.default_instance.presence || FactoryGirl.create(:instance)).id }
     user
 
     after(:build) do

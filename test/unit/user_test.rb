@@ -420,12 +420,11 @@ class UserTest < ActiveSupport::TestCase
       stub_mixpanel
       FactoryGirl.create(:instance)
       @user = FactoryGirl.create(:user)
-      @platform_context = PlatformContext.new
     end
 
     should 'notify user about invalid phone via email' do
       PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
-      @user.notify_about_wrong_phone_number(@platform_context)
+      @user.notify_about_wrong_phone_number
       sent_mail = ActionMailer::Base.deliveries.last
       assert_equal [@user.email], sent_mail.to
 
@@ -436,14 +435,14 @@ class UserTest < ActiveSupport::TestCase
     should 'not spam user' do
       UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
       5.times do 
-        @user.notify_about_wrong_phone_number(@platform_context)
+        @user.notify_about_wrong_phone_number
       end
     end
 
     should 'update timestamp of notification' do
       UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
       Timecop.freeze(Time.zone.now)
-      @user.notify_about_wrong_phone_number(@platform_context)
+      @user.notify_about_wrong_phone_number
       assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a
     end
 
@@ -593,9 +592,6 @@ class UserTest < ActiveSupport::TestCase
 
     setup do
       @user = FactoryGirl.create(:user)
-      @instance = FactoryGirl.create(:instance)
-      @platform_context = PlatformContext.new
-      @platform_context.stubs(:instance).returns(@instance)
       @other_instance = FactoryGirl.create(:instance)
     end
 
@@ -610,14 +606,11 @@ class UserTest < ActiveSupport::TestCase
       @user.save
 
       listing_current_instance = FactoryGirl.create(:listing_in_auckland)
-      listing_current_instance.company.instance_id = @instance.id
-      listing_current_instance.company.save
 
       listing_other_instance = FactoryGirl.create(:listing_in_auckland)
-      listing_other_instance.company.instance_id = @other_instance.id
-      listing_other_instance.company.save
+      listing_other_instance.update_attribute(:instance_id, @other_instance.id)
 
-      assert_equal @user.listings_in_near(@platform_context), [listing_current_instance]
+      assert_equal [listing_current_instance], @user.listings_in_near
     end
 
     should 'not return listings from cancelled/expired/rejected reservations' do
@@ -625,19 +618,11 @@ class UserTest < ActiveSupport::TestCase
       @user.last_geolocated_location_latitude = -36.858675
       @user.last_geolocated_location_longitude = 174.777303
       @user.save
-
       listing_first = FactoryGirl.create(:listing_in_auckland)
-      listing_first.company.instance_id = @instance.id
-      listing_first.company.save
-
       listing_second = FactoryGirl.create(:listing_in_auckland)
-      listing_second.company.instance_id = @instance.id
-      listing_second.company.save
-
       reservation = FactoryGirl.create(:reservation, listing: listing_first, user: @user)
       reservation.reject
-
-      assert_equal @user.listings_in_near(@platform_context, 3, 100, true), [listing_second]
+      assert_equal [listing_second], @user.listings_in_near(3, 100, true) 
     end
   end
 

@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
                               :host_rating_count, :avatar_versions_generated_at, :last_geolocated_location_longitude, 
                               :last_geolocated_location_latitude, :instance_unread_messages_threads_count]
   acts_as_paranoid
+  auto_set_platform_context
 
   extend FriendlyId
   has_metadata :accessors => [:has_draft_listings, :has_any_active_listings, :companies_metadata, :instance_admins_metadata]
@@ -109,12 +110,12 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
-  attr_accessor :phone_required, :country_name_required, :skip_password, :current_platform_context
+  attr_accessor :phone_required, :country_name_required, :skip_password
 
   attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
     :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url, 
     :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-    :partner_id, :instance_id, :domain_id, :time_zone, :companies_attributes, :sms_notifications_enabled, :sms_preferences
+    :domain_id, :time_zone, :companies_attributes, :sms_notifications_enabled, :sms_preferences
 
   serialize :sms_preferences, Hash
   serialize :instance_unread_messages_threads_count, Hash
@@ -174,14 +175,6 @@ class User < ActiveRecord::Base
     name.split[0...-1].join(' ').presence || name
   end
 
-  def self.new_with_context(params, platform_context)
-    self.new(params.merge({
-      instance_id: platform_context.instance.id,
-      domain_id: platform_context.domain.try(:id),
-      partner_id: platform_context.partner.try(:id)
-    }))
-  end
-
   # Whether to validate the presence of a password
   def password_required?
     # we want to enforce skipping password for instance_admin/users#create
@@ -230,9 +223,9 @@ class User < ActiveRecord::Base
     nil
   end
 
-  def notify_about_wrong_phone_number(platform_context)
+  def notify_about_wrong_phone_number
     unless notified_about_mobile_number_issue_at
-      UserMailer.notify_about_wrong_phone_number(platform_context, self).deliver
+      UserMailer.notify_about_wrong_phone_number(self).deliver
       update_attribute(:notified_about_mobile_number_issue_at, Time.zone.now)
       IssueLogger.log_issue("[internal] invalid mobile number", email, "#{name} (#{id}) was asked to update his mobile number #{full_mobile_number}")
     end
@@ -380,17 +373,14 @@ class User < ActiveRecord::Base
     self.instance_unread_messages_threads_count.fetch(instance.id, 0)
   end
 
-  def listings_in_near(platform_context = nil, results_size = 3, radius_in_km = 100, without_listings_from_cancelled_reservations = false)
-    platform_context ||= self.current_platform_context
-    return [] if platform_context.nil?
-
-    search_scope = Listing::SearchScope.scope(platform_context)
+  def listings_in_near(results_size = 3, radius_in_km = 100, without_listings_from_cancelled_reservations = false)
+    return [] if PlatformContext.current.nil?
     locations_in_near = nil
     # we want allow greenwhich and friends, but probably 0 latitude and 0 longitude is not valid location :)
     if last_geolocated_location_latitude.nil? || last_geolocated_location_longitude.nil? || (last_geolocated_location_latitude.to_f.zero? && last_geolocated_location_longitude.to_f.zero?)
-      locations_in_near = search_scope.near(current_location, radius_in_km, units: :km, order: :distance)
+      locations_in_near = Location.near(current_location, radius_in_km, units: :km, order: :distance)
     else
-      locations_in_near = search_scope.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
+      locations_in_near = Location.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
     end
 
     listing_ids_of_cancelled_reservations = self.reservations.cancelled_or_expired_or_rejected.pluck(:listing_id) if without_listings_from_cancelled_reservations
@@ -423,13 +413,6 @@ class User < ActiveRecord::Base
 
   def unsubscribed?(mailer_name)
     mailer_unsubscriptions.where(mailer: mailer_name).any?
-  end
-
-  def set_platform_context(platform_context)
-    self.instance_id = platform_context.instance.id
-    self.domain_id = platform_context.domain.try(:id)
-    self.partner_id = platform_context.partner.try(:id)
-    self.save!
   end
 
   def cleanup

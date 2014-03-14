@@ -3,7 +3,7 @@ class ListingsController < ApplicationController
   before_filter :find_listing, :only => [:show]
 
   def index
-    @listings = Listing.latest.includes(:location).merge(search_scope).paginate(:page => params[:page])
+    @listings = Listing.latest.includes(:location).paginate(:page => params[:page])
   end
 
   def show

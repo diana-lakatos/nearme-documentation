@@ -279,7 +279,7 @@ class ReservationTest < ActiveSupport::TestCase
 
         dates              = [1.week.from_now.monday]
         quantity           =  2
-        assert reservation = @listing.reserve!(PlatformContext.new, @user, dates, quantity)
+        assert reservation = @listing.reserve!(@user, dates, quantity)
 
         assert_not_nil reservation.total_amount_cents
 
@@ -297,7 +297,7 @@ class ReservationTest < ActiveSupport::TestCase
         assert quantity > @listing.availability_for(dates.first)
 
         assert_raises DNM::PropertyUnavailableOnDate do
-          @listing.reserve!(PlatformContext.new, @user, dates, quantity)
+          @listing.reserve!(@user, dates, quantity)
         end
       end
 
@@ -474,15 +474,16 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation = FactoryGirl.create(:reservation)
       assert @reservation.creator_id.present?
       assert @reservation.instance_id.present?
-      assert_equal [@reservation.listing.creator_id, @reservation.listing.instance_id], [@reservation.creator_id, @reservation.instance_id]
+      assert @reservation.company_id.present?
+      assert @reservation.listings_public
     end
 
     should 'assign correct creator_id' do
       assert_equal @listing.creator_id, @reservation.creator_id
     end
 
-    should 'assign correct instance_id' do
-      assert_equal @listing.instance_id, @reservation.instance_id
+    should 'assign correct company_id' do
+      assert_equal @listing.company_id, @reservation.company_id
     end
 
     should 'assign administrator_id' do
@@ -491,19 +492,36 @@ class ReservationTest < ActiveSupport::TestCase
     end
 
     context 'update company' do
-      setup do
-        @reservation.company.update_attribute(:instance_id, @reservation.company.instance_id + 1)
-        @reservation.company.update_attribute(:creator_id, @reservation.company.creator_id + 1)
-      end
 
       should 'assign correct creator_id' do
+        @reservation.company.update_attribute(:creator_id, @reservation.company.creator_id + 1)
         assert_equal @reservation.company.creator_id, @reservation.reload.creator_id
       end
 
-      should 'assign correct instance_id' do
-        assert_equal @reservation.company.instance_id, @reservation.reload.instance_id
+      should 'assign correct company_id' do
+        @reservation.location.update_attribute(:company_id, @reservation.location.company_id + 1)
+        assert_equal @reservation.location.company_id, @reservation.reload.company_id
       end
 
+      should 'assign correct partner_id' do
+        partner = FactoryGirl.create(:partner)
+        @reservation.company.update_attribute(:partner_id, partner.id)
+        assert_equal partner.id, @reservation.reload.partner_id
+      end
+
+      should 'assign correct instance_id' do
+        instance = FactoryGirl.create(:instance)
+        @reservation.company.update_attribute(:instance_id, instance.id)
+        PlatformContext.any_instance.stubs(:instance).returns(instance)
+        assert_equal instance.id, @reservation.reload.instance_id 
+      end
+
+      should 'update listings_public' do
+        assert @reservation.listings_public
+        @reservation.company.update_attribute(:listings_public, false)
+        refute @reservation.reload.listings_public
+      end
     end
+
   end
 end

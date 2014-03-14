@@ -1,8 +1,7 @@
 class Authorizer
 
-  def initialize(user, platform_context)
+  def initialize(user)
     @user = user
-    @platform_context = platform_context
   end
 
   def instance_admin?
@@ -12,7 +11,7 @@ class Authorizer
   private
 
   def instance_admin
-    @instance_admin ||= @platform_context.instance.instance_admins.for_user(@user).first
+    @instance_admin ||= @user.instance_admins.first
   end
 
   def instance_owner?

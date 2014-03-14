@@ -4,8 +4,7 @@ class Listing
 
     TOP_CITIES = ['san francisco', 'london', 'new york', 'los angeles', 'chicago']
 
-    def initialize(search_scope, filters = {})
-      @search_scope = search_scope
+    def initialize(filters = {})
       @midpoint = filters.fetch(:midpoint)
       @radius = filters.fetch(:radius)
       @filters = filters
@@ -46,7 +45,7 @@ class Listing
     def locations
       @locations ||=
         begin
-          _locations = Location.where(id: listings.map(&:location_id).uniq).includes(:company)
+          _locations = Location.where(id: listings.map(&:location_id).uniq)
           _locations = _locations.near(@midpoint, @radius, :order => 'distance ASC') if @midpoint && @radius
           store_location_rank = !@filters[:query].blank? && TOP_CITIES.any?{|city| @filters[:query].downcase.include?(city) || (_locations.first.presence && _locations.first.city.try(:downcase) == city) }
           listings.each do |listing|
@@ -73,6 +72,7 @@ class Listing
 
     private 
     def filtered_locations
+      @search_scope = Location.scoped
       @search_scope = @search_scope.near(@midpoint, @radius, :order => 'distance ASC') if @midpoint && @radius
       @search_scope = @search_scope.filtered_by_location_types_ids(@filters[:location_types_ids]) if @filters[:location_types_ids]
       @search_scope = @search_scope.filtered_by_industries_ids(@filters[:industries_ids]) if @filters[:industries_ids]

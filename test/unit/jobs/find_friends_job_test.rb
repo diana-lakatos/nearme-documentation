@@ -8,7 +8,7 @@ class FindFriendsJobTest < ActiveSupport::TestCase
       finder_mock = mock(:find_friends!)
       User::FriendFinder.expects(:new).with(auth.user, auth).returns(finder_mock)
 
-      FindFriendsJob.new(auth).perform
+      FindFriendsJob.perform(auth)
     end
   end
 end

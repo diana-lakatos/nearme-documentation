@@ -13,14 +13,12 @@ class InstanceAdmin::Manage::UsersControllerTest < ActionController::TestCase
   context 'index' do
 
     should 'find global instances and the ones that belong to current instance' do
-      @instance = FactoryGirl.create(:instance)
-      PlatformContext.any_instance.stubs(:instance).returns(@instance)
-      @role = FactoryGirl.create(:instance_admin_role, :instance_id => @instance.id)
-      @role_that_belongs_to_other_instance = FactoryGirl.create(:instance_admin_role, :instance_id => FactoryGirl.create(:instance))
+      @role = FactoryGirl.create(:instance_admin_role)
+      @role_that_belongs_to_other_instance = FactoryGirl.create(:instance_admin_role, :instance_id => FactoryGirl.create(:instance).id)
       @default_role = FactoryGirl.create(:instance_admin_role_default)
       @administrator_role = FactoryGirl.create(:instance_admin_role_administrator)
       get :index
-      assert_equal [@administrator_role, @default_role, @role], @controller.send(:instance_admin_roles)
+      assert_equal [@administrator_role, @default_role, @role].sort, @controller.send(:instance_admin_roles).sort
     end
 
   end

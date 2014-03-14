@@ -8,6 +8,7 @@ class UserDecoratorTest < ActionView::TestCase
       @listing = FactoryGirl.create(:listing)
       @listing_creator = @listing.creator.decorate
       @author = FactoryGirl.create(:user)
+      PlatformContext.current = PlatformContext.new(@instance)
       @user_message = FactoryGirl.create(:user_message, thread_context: @listing, author: @author, thread_owner: @author, thread_recipient: @listing.administrator, instance: @instance)
       @author = @author.decorate
     end

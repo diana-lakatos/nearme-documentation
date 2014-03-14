@@ -5,7 +5,6 @@ FactoryGirl.define do
     description "Aliquid eos ab quia officiis sequi."
     creator
     url "http://google.com"
-    instance_id { (Instance.default_instance.presence || FactoryGirl.create(:instance)).id }
 
     after(:build) do |company|
       company.industries = [FactoryGirl.build(:industry)] if company.industries.empty?
@@ -50,7 +49,9 @@ FactoryGirl.define do
     end
 
     factory :company_from_instance_with_price_constraints do
-      association(:instance, factory: :instance_with_price_constraints)
+      after(:build) do |company|
+        company.instance_id = FactoryGirl.create(:instance_with_price_constraints).id
+      end
     end
   end
 end

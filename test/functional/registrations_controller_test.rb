@@ -4,7 +4,6 @@ class RegistrationsControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
-    @instance = FactoryGirl.create(:instance)
     @request.env["devise.mapping"] = Devise.mappings[:user]
     stub_mixpanel
     PostActionMailer.stubs(:sign_up_verify).returns(stub(deliver: true))
@@ -58,6 +57,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       tw = FactoryGirl.create(:authentication, provider: 'twitter', total_social_connections: 5)
       ig = FactoryGirl.create(:authentication, provider: 'instagram', total_social_connections: 1, profile_url: 'link')
       @user.authentications << [fb, ln, tw, ig]
+
 
       get :show, :id => @user.slug
 
@@ -247,6 +247,7 @@ class RegistrationsControllerTest < ActionController::TestCase
   context 'scopes current partner' do
 
     setup do
+      @instance = FactoryGirl.create(:instance)
       @domain = FactoryGirl.create(:domain)
       @partner = FactoryGirl.create(:partner)
     end

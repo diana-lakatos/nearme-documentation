@@ -5,7 +5,9 @@ module Impressionable
     # location.deleted? # => true
     # location.persisted? # => false
     return unless self.persisted?
-    self.impressions.create(:ip_address => ip_address)
+    self.impressions.create(
+      :ip_address => ip_address
+    )
   end
 
 end

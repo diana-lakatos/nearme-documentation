@@ -37,13 +37,19 @@ class PaymentTransferTest < ActiveSupport::TestCase
       assert @payment_transfer.errors[:currency].present?
     end
 
+    should "assign instance id" do
+      @payment_transfer.reservation_charges = @reservation_charges
+      @payment_transfer.save!
+      @payment_transfer.reload
+      assert_equal @payment_transfer.company.instance_id, @payment_transfer.instance_id
+    end
+
     should "assign currency attribute" do
       @payment_transfer.reservation_charges = @reservation_charges
       @payment_transfer.save!
       @payment_transfer.reload
 
-      assert_equal @reservation_charges.first.currency,
-        @payment_transfer.currency
+      assert_equal @reservation_charges.first.currency, @payment_transfer.currency
     end
 
     should "calculate amounts" do
@@ -53,10 +59,8 @@ class PaymentTransferTest < ActiveSupport::TestCase
       assert_equal @reservation_charges.map(&:subtotal_amount).sum - @reservation_charges.map(&:service_fee_amount_host).sum,
         @payment_transfer.amount
 
-      assert_equal @reservation_charges.map(&:service_fee_amount_guest).sum,
-        @payment_transfer.service_fee_amount_guest
-      assert_equal @reservation_charges.map(&:service_fee_amount_host).sum,
-        @payment_transfer.service_fee_amount_host
+      assert_equal @reservation_charges.map(&:service_fee_amount_guest).sum, @payment_transfer.service_fee_amount_guest
+      assert_equal @reservation_charges.map(&:service_fee_amount_host).sum, @payment_transfer.service_fee_amount_host
     end
   end
 
@@ -134,5 +138,46 @@ class PaymentTransferTest < ActiveSupport::TestCase
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 
+  end
+
+  context 'foreign keys' do
+    setup do
+      @company = FactoryGirl.create(:company)
+      @payment_transfer = FactoryGirl.create(:payment_transfer, :company => @company)
+    end
+
+    should 'assign correct key immediately' do
+      @payment_transfer = FactoryGirl.create(:payment_transfer)
+      assert @payment_transfer.instance_id.present?
+    end
+
+    should 'assign correct instance_id' do
+      assert_equal @company.instance_id, @payment_transfer.instance_id
+    end
+
+    should 'assign correct partner_id' do
+      @company = FactoryGirl.create(:company)
+      @company.update_attribute(:partner_id, FactoryGirl.create(:partner).id)
+      PlatformContext.current = PlatformContext.new(@company)
+      @payment_transfer = FactoryGirl.create(:payment_transfer, :company => @company)
+      assert_equal @company.partner_id, @payment_transfer.partner_id
+      assert @payment_transfer.partner_id.present?
+    end
+
+    context 'update company' do
+
+      should 'assign correct partner_id' do
+        partner = FactoryGirl.create(:partner)
+        @company.update_attribute(:partner_id, partner.id)
+        assert_equal partner.id, @payment_transfer.reload.partner_id
+      end
+
+      should 'assign correct instance_id' do
+        instance = FactoryGirl.create(:instance)
+        @company.update_attribute(:instance_id, instance.id)
+        PlatformContext.any_instance.stubs(:instance).returns(instance)
+        assert_equal instance.id, @company.reload.instance_id 
+      end
+    end
   end
 end
