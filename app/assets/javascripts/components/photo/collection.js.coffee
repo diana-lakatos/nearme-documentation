@@ -17,7 +17,8 @@ class @Photo.Collection
     if @multiplePhoto()
       @initializeSortable()
       @reorderSortableList()
-    sessioncamConfiguration.customDataObjects.push( { key: "event", value: "first_listing_form_visit" } )
+    if sessioncamConfiguration?
+      sessioncamConfiguration.customDataObjects.push( { key: "event", value: "first_listing_form_visit" } )
 
 
   add: ->

@@ -25,7 +25,7 @@ class Manage::PhotosController < Manage::BaseController
   def edit
     @photo = current_user.photos.find(params[:id])
     if request.xhr?
-      render partial: 'resize_form', :locals => { :form_url => manage_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url }
+      render partial: 'resize_form', :locals => { :form_url => manage_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
     end
   end
 
@@ -35,7 +35,7 @@ class Manage::PhotosController < Manage::BaseController
     if @photo.save
       render partial: 'manage/photos/resize_succeeded'
     else
-      render partial: 'resize_form', :locals => { :form_url => manage_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url }
+      render partial: 'resize_form', :locals => { :form_url => manage_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
     end
   end
 

@@ -185,6 +185,10 @@ form{
     &:hover, &:active, &:focus { background-color: lighten($red, 10%); }
   }
 
+  &.btn-green {
+    background-color: $red;
+  }
+
   &.btn-block {
     margin: 0px;
   }
@@ -217,6 +221,7 @@ form{
 
 .navbar {
   text-transform: uppercase;
+  z-index: 100;
 
   .brand{
     padding-top: 0px;
@@ -369,3 +374,77 @@ ul.nav-tabs {
     }
   }
 }
+
+/********************/
+/*** Photo Upload ***/
+/********************/
+
+.logo_image .fileupload .photo-item img{
+  width: 240px;
+  height: 60px;
+}
+
+.logo_retina_image .fileupload .photo-item img{
+  width: 240px;
+  height: 60px;
+}
+
+.favicon_image .fileupload .photo-item img{
+  width: 16px;
+  height: 16px;
+}
+
+.icon_image .fileupload .photo-item img{
+  width: 60px;
+  height: 60px;
+}
+
+.icon_retina_image .fileupload .photo-item img{
+  width: 60px;
+  height: 60px;
+}
+
+.hero_image .fileupload .photo-item img{
+  width: 250px;
+  height: 202px;
+}
+
+.jcrop-holder {
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+
+.fileupload {
+  .photo-action {
+    position: relative;
+    float: right;
+    top: 0px !important;
+    right: 0px !important;
+  }
+
+  .photo-item {
+    @include box-sizing(border-box);
+    width: 100%;
+  }
+}
+
+.modal-content {
+  h2 {
+    font-size: 19px;
+    line-height: 8px;
+  }
+  
+  a.btn-green {
+    @extend .btn;
+    @extend .btn-primary;
+    background-color: #2f7fbe;
+  }
+}
+
+.modal-content .actions input[type='submit'] {
+  @extend .btn;
+  @extend .btn-primary;
+  width: 100%;
+}
+
