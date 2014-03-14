@@ -4,9 +4,6 @@ class EmailTemplate < ActiveRecord::Base
   belongs_to :theme
   attr_accessible :handler, :html_body, :text_body, :path, :partial, :subject, :to, :from, :bcc, :reply_to, :subject
 
-  validates :html_body, :text_body, :path, :theme_id, presence: true
-  validates_uniqueness_of :path, :scope => [:theme_id]
-
   CUSTOMIZABLE_EMAILS = %w(post_action_mailer/created_by_instance
                            post_action_mailer/instance_created
                            post_action_mailer/list
@@ -40,6 +37,10 @@ class EmailTemplate < ActiveRecord::Base
                            reservation_mailer/notify_host_of_rejection
                            reservation_mailer/notify_host_with_confirmation
                            reservation_mailer/notify_host_without_confirmation)
+
+  validates :html_body, :text_body, :path, :theme_id, presence: true
+  validates_uniqueness_of :path, :scope => [:theme_id]
+  validates_inclusion_of :path, :in => CUSTOMIZABLE_EMAILS
 
   after_save do
     EmailResolver.instance.clear_cache

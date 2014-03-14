@@ -1,4 +1,8 @@
 = simple_form_for [:instance_admin, :manage, @email_template] do |f|
+  %legend
+    = link_to 'Manage email templates', instance_admin_manage_email_templates_url
+    = ' > ' + pretty_path(@email_template.path)
+
   %fieldset
     .row-fluid
       .controls.controls-row
@@ -23,5 +27,6 @@
           .controls.controls-row
             = f.input :html_body, label: false, wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level' }
 
+    = f.input :path, as: :hidden
     = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
     = link_to 'Cancel', instance_admin_manage_email_templates_url , class: 'btn pull-right'

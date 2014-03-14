@@ -18,6 +18,7 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
     if @email_template.save
       redirect_to action: :index
     else
+      flash[:error] = @email_template.errors.full_messages.to_sentence
       render action: :new
     end
   end
