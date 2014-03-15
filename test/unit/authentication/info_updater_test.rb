@@ -25,6 +25,7 @@ class Authentication::InfoUpdaterTest < ActiveSupport::TestCase
       assert_not_equal 'Desks Near Me', @user.name
       assert_not_equal 'Something about me', @user.biography
       assert @user.avatar.to_s.include?('avatar.jpg')
+      assert @authentication.information_fetched.present?
     end
 
   end

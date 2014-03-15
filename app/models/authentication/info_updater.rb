@@ -29,6 +29,7 @@ class Authentication::InfoUpdater
     end
     @user_changes = @user.changes.inspect
     @user.save!
+    @authentication.touch(:information_fetched)
 
     self
   end
