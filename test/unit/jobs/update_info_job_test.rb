@@ -4,7 +4,7 @@ class UpdateInfoJobTest < ActiveSupport::TestCase
 
   should 'trigger InfoUpdater for given user and auth' do
     Rails.application.config.expects(:perform_social_jobs).returns(true)
-    authentication = stub(user: mock(), instance: Instance.default_instance)
+    authentication = stub(user: mock())
     updater = mock(:update)
     Authentication::InfoUpdater.expects(:new).with(authentication).returns(updater)
 

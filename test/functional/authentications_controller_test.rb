@@ -96,30 +96,6 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert_equal 'https://twitter.com/desksnearme', @user.authentications.last.profile_url
     end
 
-    should "allow to log in if authentication does not exist and user with given email exists if this user has already authentication for this provider" do
-      stub_mixpanel
-      @other_user = FactoryGirl.create(:user, :email => @email)
-      add_authentication(@provider, @uid+"else", @other_user)
-      PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
-      assert_no_difference('User.count') do
-        assert_difference('Authentication.count') do
-          post :create
-        end
-      end
-    end
-
-    should "not allow to log in if authentication does not exist and user with given email exists if this user has not other authentication for this provider" do
-      stub_mixpanel
-      @other_user = FactoryGirl.create(:user, :email => @email)
-      add_authentication(@provider+"else", @uid+"else", @other_user)
-      PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
-      assert_no_difference('User.count') do
-        assert_no_difference('Authentication.count') do
-          post :create
-        end
-      end
-    end
-
     should "successfully sign in and log" do
       add_authentication(@provider, @uid, @user)
       stub_mixpanel
