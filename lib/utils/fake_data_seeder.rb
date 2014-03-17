@@ -70,6 +70,7 @@ module Utils
           # === INSTANCES ========================================
 
           load_instances!
+          PlatformContext.current = PlatformContext.new
           # === BASIC STUFF ======================================
 
           load_instance_admin_roles!
@@ -178,7 +179,7 @@ module Utils
     def load_instances!
       @instances ||= do_task "Loading instances" do
         Data.instances.map do |name|
-          PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance, :name => name))
+          FactoryGirl.create(:instance, :name => name)
         end
       end
     end

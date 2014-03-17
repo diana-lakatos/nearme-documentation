@@ -31,16 +31,21 @@
 class Job
 
   def initialize(platform_context_detail_class, platform_context_detail_id, *args)
+    @platform_context_detail_class = platform_context_detail_class
+    @platform_context_detail_id = platform_context_detail_id
+    after_initialize(*args)
+  end
+
+  def before(job)
     @platform_context = PlatformContext.current = begin
-                                                    if platform_context_detail_class.blank? || platform_context_detail_id.blank?
+                                                    if @platform_context_detail_class.blank? || @platform_context_detail_id.blank?
                                                       nil
-                                                    elsif platform_context_detail_class.respond_to?(:with_deleted)
-                                                      PlatformContext.new(platform_context_detail_class.with_deleted.find(platform_context_detail_id))
+                                                    elsif @platform_context_detail_class.respond_to?(:with_deleted)
+                                                      PlatformContext.new(@platform_context_detail_class.with_deleted.find(@platform_context_detail_id))
                                                     else
-                                                      PlatformContext.new(platform_context_detail_class.find(platform_context_detail_id))
+                                                      PlatformContext.new(@platform_context_detail_class.find(@platform_context_detail_id))
                                                     end
                                                   end
-    after_initialize(*args)
   end
 
   def after_initialize(*args)

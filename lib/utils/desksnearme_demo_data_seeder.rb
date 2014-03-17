@@ -18,6 +18,7 @@ module Utils
           # === INSTANCES ========================================
 
           load_instances!
+          PlatformContext.current = PlatformContext.new
 
           # === BASIC STUFF ======================================
 
