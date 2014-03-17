@@ -16,6 +16,9 @@ en:
         blog_post_deleted: 'Blog post deleted.'
       blog_instance:
         blog_instance_updated: 'Blog settings were updated.'
+    payments:
+      payout_successful: 'Payout succeeded'
+      payout_failed: 'Payout failed'
   registrations:
     social_accounts: 
       connecting_social_accounts_info: "Connecting your social accounts will display the number of friends, connections, and followers that you have on your profile.<br />You will also be able to see your friends' and connections' activity on %{marketplace_name}."

@@ -108,6 +108,7 @@ DesksnearMe::Application.routes.draw do
       resources :transfers do
         member do
           post :transferred
+          post :payout
         end
 
         collection do
