@@ -138,7 +138,6 @@ end
 group :development do
   gem 'quiet_assets'
   gem 'thin'
-  gem 'assets_precompile_enforcer'
   gem 'debugger'
 end
 
