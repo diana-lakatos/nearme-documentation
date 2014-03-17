@@ -9,8 +9,14 @@ class Theme::Compiler
     path = "#{Dir.tmpdir}/ThemeStylesheet#{@theme.id}"
     FileUtils.touch(path)
     compressor = YUI::CssCompressor.new
-    Zlib::GzipWriter.open(path, 9) do |gz|
-        gz.write compressor.compress(render_stylesheet)
+    if Rails.env.development?
+      File.open(path, 'w') do |gz|
+          gz.write compressor.compress(render_stylesheet)
+      end
+    else
+      Zlib::GzipWriter.open(path, 9) do |gz|
+          gz.write compressor.compress(render_stylesheet)
+      end
     end
     gzipped_file = File.open(path, 'rb')
 
