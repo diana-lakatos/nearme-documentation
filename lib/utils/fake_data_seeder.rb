@@ -67,6 +67,9 @@ module Utils
       do_task "Loading data" do
         User.transaction do
 
+          # === INSTANCES ========================================
+
+          load_instances!
           # === BASIC STUFF ======================================
 
           load_instance_admin_roles!
@@ -75,9 +78,6 @@ module Utils
           load_location_types!
           load_listing_types!
 
-          # === INSTANCES ========================================
-
-          load_instances!
 
           # === COMPANIES / LOCATIONS / LISTINGS =================
 
@@ -178,7 +178,7 @@ module Utils
     def load_instances!
       @instances ||= do_task "Loading instances" do
         Data.instances.map do |name|
-          FactoryGirl.create(:instance, :name => name)
+          PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance, :name => name))
         end
       end
     end
