@@ -1,12 +1,12 @@
 class RecurringMailer < InstanceMailer
-  layout 'mailer' 
+  layout 'mailer'
 
   def analytics(company, user)
     @company = company
     @user = user
     @listing = @company.listings.first
 
-    mail to: @user.email, 
+    mail to: @user.email,
           subject: "#{@user.first_name}, we have potential guests for you!"
   end
 
@@ -14,7 +14,7 @@ class RecurringMailer < InstanceMailer
     @listing = listing
     @user = @listing.administrator
 
-    mail to: @user.email, 
+    mail to: @user.email,
            subject: "Give the final touch to your listing with some photos!"
   end
 
@@ -22,7 +22,7 @@ class RecurringMailer < InstanceMailer
     @listing = listing
     @user = @listing.administrator
 
-    mail to: @user.email, 
+    mail to: @user.email,
            subject: "Share your listing '#{@listing.name}' at #{@listing.location.street } and increase bookings!"
   end
 
