@@ -126,6 +126,7 @@ group :assets do
   gem 'uglifier', "~>2.1.0"
 end
 
+
 group :development, :test, :staging do
   gem 'factory_girl_rails', '>=3.0.0'
 end
@@ -138,6 +139,7 @@ group :development do
   gem 'quiet_assets'
   gem 'thin'
   gem 'assets_precompile_enforcer'
+  gem 'debugger'
 end
 
 group :test do

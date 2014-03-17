@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140302133906) do
+ActiveRecord::Schema.define(:version => 20140309155414) do
 
 
 
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(:version => 20140302133906) do
     t.boolean  "token_expires",            :default => true
     t.text     "profile_url"
     t.integer  "total_social_connections", :default => 0
+    t.integer  "instance_id"
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
@@ -391,6 +392,14 @@ ActiveRecord::Schema.define(:version => 20140302133906) do
     t.string   "encrypted_test_balanced_api_key"
     t.string   "encrypted_olark_api_key"
     t.boolean  "olark_enabled",                                                     :default => false
+    t.string   "encrypted_facebook_consumer_key"
+    t.string   "encrypted_facebook_consumer_secret"
+    t.string   "encrypted_linkedin_consumer_key"
+    t.string   "encrypted_linkedin_consumer_secret"
+    t.string   "encrypted_twitter_consumer_key"
+    t.string   "encrypted_twitter_consumer_secret"
+    t.string   "encrypted_instagram_consumer_key"
+    t.string   "encrypted_instagram_consumer_secret"
   end
 
   create_table "listing_types", :force => true do |t|

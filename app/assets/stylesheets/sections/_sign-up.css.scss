@@ -15,14 +15,6 @@
       font-size: 22px;
       text-align: center;
 
-      &.facebook {
-        @include border-left-radius($border-radius-default);
-      }
-
-      &.twitter {
-        @include border-right-radius($border-radius-default);
-      }
-
       @each $service in (twitter, facebook, linkedin) {
         
         i.icon-#{$service} {

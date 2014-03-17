@@ -22,6 +22,7 @@ en:
   registrations:
     social_accounts: 
       connecting_social_accounts_info: "Connecting your social accounts will display the number of friends, connections, and followers that you have on your profile.<br />You will also be able to see your friends' and connections' activity on %{marketplace_name}."
+      no_social_providers: "Unfortunately %{marketplace_name} does not support any social providers at the moment."
     sms_preferences:
       user_message: 'I receive a message from another person.'
       reservation_state_changed: 'A reservation I have requested is accepted or declined.'

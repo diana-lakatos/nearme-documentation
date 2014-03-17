@@ -1,7 +1,5 @@
 class Authentication::LinkedinProvider < Authentication::BaseProvider
 
-  KEY    = DesksnearMe::Application.config.linkedin_key
-  SECRET = DesksnearMe::Application.config.linkedin_secret
   META   = { name: "LinkedIn",
              url: "http://linkedin.com/",
              auth: "OAuth 1.0a" }

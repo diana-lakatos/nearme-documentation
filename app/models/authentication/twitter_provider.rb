@@ -1,7 +1,9 @@
 class Authentication::TwitterProvider < Authentication::BaseProvider
 
-  KEY    = DesksnearMe::Application.config.twitter_key
-  SECRET = DesksnearMe::Application.config.twitter_secret
+  SETUP_PROC = lambda do |env| 
+    env['omniauth.strategy'].options[:consumer_key] = PlatformContext.current.instance.twitter_consumer_key
+    env['omniauth.strategy'].options[:consumer_secret] = PlatformContext.current.instance.twitter_consumer_secret
+  end
   META   = { name: "Twitter",
              url: "http://twitter.com/",
              auth: "OAuth 1.0a" }
@@ -47,8 +49,8 @@ class Authentication::TwitterProvider < Authentication::BaseProvider
   def connection
     @connection ||= Twitter::REST::Client.new(access_token: token,
                                               access_token_secret: secret,
-                                              consumer_key: KEY,
-                                              consumer_secret: SECRET)
+                                              consumer_key: PlatformContext.current.instance.twitter_consumer_key,
+                                              consumer_secret: PlatformContext.current.instance.twitter_consumer_secret)
   end
 
 end
