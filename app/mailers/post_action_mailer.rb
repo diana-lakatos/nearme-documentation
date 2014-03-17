@@ -1,15 +1,13 @@
 class PostActionMailer < InstanceMailer
   helper SharingHelper
 
-  layout 'mailer' 
-
-  PERSONABLE_EMAIL = "micheller@desksnear.me"
+  layout 'mailer'
 
   def sign_up_verify(user)
     @user = user
 
     unless @user.verified_at
-      mail to: @user.email, 
+      mail to: @user.email,
            subject: "#{@user.first_name}, please verify your #{instance_name} email"
     end
   end
@@ -19,7 +17,6 @@ class PostActionMailer < InstanceMailer
     @location = @user.locations.first
 
     mail(to: @user.email,
-         from: PERSONABLE_EMAIL,
          subject: "#{@user.first_name }, welcome to #{instance_name}!")
   end
 
@@ -34,7 +31,7 @@ class PostActionMailer < InstanceMailer
   def list_draft(user)
     @user = user
 
-    mail to: @user.email, 
+    mail to: @user.email,
            subject: "You're almost ready for your first guests!"
   end
 
