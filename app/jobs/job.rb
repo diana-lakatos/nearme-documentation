@@ -32,8 +32,9 @@ class Job
 
   def initialize(platform_context_detail_class, platform_context_detail_id, *args)
     @platform_context = PlatformContext.current = begin
-                                                    return nil unless platform_context_detail_class.present? && platform_context_detail_id.present?
-                                                    if platform_context_detail_class.respond_to?(:with_deleted)
+                                                    if platform_context_detail_class.blank? || platform_context_detail_id.blank?
+                                                      nil
+                                                    elsif platform_context_detail_class.respond_to?(:with_deleted)
                                                       PlatformContext.new(platform_context_detail_class.with_deleted.find(platform_context_detail_id))
                                                     else
                                                       PlatformContext.new(platform_context_detail_class.find(platform_context_detail_id))
