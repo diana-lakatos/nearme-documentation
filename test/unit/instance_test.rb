@@ -2,6 +2,8 @@ require 'test_helper'
 
 class InstanceTest < ActiveSupport::TestCase
 
+  should validate_presence_of(:name)
+
   setup do
     @instance = Instance.default_instance
   end
@@ -130,6 +132,28 @@ class InstanceTest < ActiveSupport::TestCase
       assert_equal 'app-123_test',    @instance.paypal_app_id
       assert_equal 'test-public-key', @instance.stripe_public_key
       assert_equal 'test-api-key',    @instance.stripe_api_key
+    end
+  end
+
+  context 'billing gateway' do
+
+    setup do
+      @instance = FactoryGirl.create(:instance)
+    end
+
+    should 'return instance custom credentials for Stripe if not set in application config' do
+      assert_equal @instance.stripe_api_key, @instance.billing_gateway_credential('stripe_api_key')
+      assert_equal @instance.stripe_public_key, @instance.billing_gateway_credential('stripe_public_key') 
+    end
+
+    should 'return credentials for Stripe set in application config' do
+      DesksnearMe::Application.config.stubs('stripe_api_key').returns('api-key')
+      DesksnearMe::Application.config.stubs('stripe_public_key').returns('public-key')
+
+      assert_equal 'api-key', @instance.billing_gateway_credential('stripe_api_key')
+      assert_equal 'public-key', @instance.billing_gateway_credential('stripe_public_key')
+      assert_not_equal @instance.stripe_api_key, @instance.billing_gateway_credential('stripe_api_key')
+      assert_not_equal @instance.stripe_public_key, @instance.billing_gateway_credential('stripe_public_key') 
     end
   end
 end

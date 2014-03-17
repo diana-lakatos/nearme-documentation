@@ -107,22 +107,22 @@ class Instance < ActiveRecord::Base
   def paypal_api_config
     @paypal_api_config ||= {
       :mode => DesksnearMe::Application.config.paypal_mode,
-      :client_id => self.paypal_client_id,
-      :client_secret => self.paypal_client_secret,
-      :app_id    => self.paypal_app_id,
-      :username  => self.paypal_username,
-      :password  => self.paypal_password,
-      :signature => self.paypal_signature
+      :client_id => billing_gateway_credential('paypal_client_id'),
+      :client_secret => billing_gateway_credential('paypal_client_secret'),
+      :app_id    => billing_gateway_credential('paypal_app_id'),
+      :username  => billing_gateway_credential('paypal_username'),
+      :password  => billing_gateway_credential('paypal_password'),
+      :signature => billing_gateway_credential('paypal_signature')
     }
   end
 
   def paypal_supported?
-    self.paypal_username.present? &&
-    self.paypal_password.present? &&
-    self.paypal_signature.present? &&
-    self.paypal_client_id.present? &&
-    self.paypal_client_secret.present? &&
-    self.paypal_app_id.present?
+    billing_gateway_credential('paypal_username').present? &&
+    billing_gateway_credential('paypal_password').present? &&
+    billing_gateway_credential('paypal_signature').present? &&
+    billing_gateway_credential('paypal_client_id').present? &&
+    billing_gateway_credential('paypal_client_secret').present? &&
+    billing_gateway_credential('paypal_app_id').present?
   end
 
   def balanced_supported?
@@ -134,8 +134,12 @@ class Instance < ActiveRecord::Base
   end
 
   def stripe_supported?
-    self.stripe_api_key.present? &&
-    self.stripe_public_key.present?
+    billing_gateway_credential('stripe_api_key').present? &&
+    billing_gateway_credential('stripe_public_key').present?
+  end
+
+  def balanced_supported?
+    billing_gateway_credential('balanced_api_key').present?
   end
 
   def to_liquid
@@ -152,6 +156,10 @@ class Instance < ActiveRecord::Base
       processor = "Billing::Gateway::#{processor_name.billing_gateway.capitalize}Processor".constantize
       processor if processor.instance_supported?(self) && processor.currency_supported?(currency)
     end
+  end
+
+  def billing_gateway_credential(credential)
+    DesksnearMe::Application.config.send(credential).presence || send(credential).presence
   end
 
   private

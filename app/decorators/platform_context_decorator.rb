@@ -7,7 +7,7 @@ class PlatformContextDecorator
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :pages, :logo_image,
     :favicon_image, :homepage_content, :call_to_action, :to => :theme
 
-  delegate :stripe_public_key, :bookable_noun, :lessor, :lessee, :name, :is_desksnearme?, :to => :instance
+  delegate :bookable_noun, :lessor, :lessee, :name, :is_desksnearme?, :to => :instance
 
   def initialize(platform_context)
     @platform_context = platform_context
@@ -69,6 +69,10 @@ class PlatformContextDecorator
 
   def contact_email
     @platform_context.theme.contact_email_with_fallback
+  end
+    
+  def stripe_public_key
+    @platform_context.instance.billing_gateway_credential('stripe_public_key')
   end
 
   private
