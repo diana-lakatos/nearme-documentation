@@ -1,0 +1,70 @@
+en:
+  post_action_mailer:
+    sign_up_verify:
+      subject: "{{user.first_name}}, please verify your {{platform_context.name}} email"
+    sign_up_welcome:
+      subject: "{{user.first_name}}, welcome to {{platform_context.name}}!"
+    created_by_instance_admin:
+      subject: "{{new_user.first_name}}, you were invited to {{platform_context.name}} by {{creator.name}}!"
+    list_draft:
+      subject: "You're almost ready for your first guests!"
+    list:
+      subject: "{{user.first_name}}, your new listing looks amazing!"
+    unsubscription:
+      subject: "Successfully unsubscribed"
+    instance_created:
+      subject: "Instance created"
+  inquiry_mailer:
+    inquiring_user_notification:
+      subject: "We've passed on your inquiry about {{inquiry.listing.name}}"
+    listing_creator_notification:
+      subject: "New enquiry from {{inquiry.inquiring_user.name}} about {{inquiry.listing.name}}"
+  listing_mailer:
+    share:
+      subject: "{{sharer.name}} has shared a listing with you on {{platform_context.name}}"
+  rating_mailer:
+    request_rating_of_guest_from_host:
+      subject: "[{{platform_context.name}}] How was your experience hosting {{reservation.owner.first_name}}?"
+    request_rating_of_host_from_guest:
+      subject: "[{{platform_context.name}}] How was your experience at '{{listing.name}}'?"
+  reengagement_mailer:
+    no_bookings:
+      subject: "[{{platform_context.name}}] Check out these new {{platform_context.bookable_noun_plural}} in your area!"
+    one_booking:
+      subject: "[{{platform_context.name}}] Check out these new {{platform_context.bookable_noun_plural}} in your area!"
+  recurring_mailer:
+    analytics:
+      subject: "{{user.first_name}}, we have potential guests for you!"
+    request_photos:
+      subject: "Give the final touch to your listing with some photos!"
+    share:
+      subject: "Share your listing '{{listing.name}}' at {{listing.street}} and increase bookings!"
+  reservation_mailer:
+    notify_guest_of_cancellation_by_host:
+      subject:  "Your booking for '{{listing.name}}' at {{listing.street}} was cancelled by the host"
+    notify_guest_of_cancellation_by_guest:
+      subject:  'You just cancelled a booking'
+    notify_guest_of_confirmation:
+      subject:  "{{reservation.owner.first_name}}, your booking has been confirmed"
+    notify_guest_of_rejection:
+      subject:  "Can we help, {{reservation.owner.first_name}}?"
+    notify_guest_with_confirmation:
+      subject:  "{{reservation.owner.first_name}}, your booking is pending confirmation"
+    notify_host_of_cancellation_by_guest:
+      subject:  "{{reservation.owner.first_name}} cancelled a booking for '{{listing.name}}' at {{listing.street}}"
+    notify_host_of_cancellation_by_host:
+      subject:  "You just declined a booking"
+    notify_host_of_confirmation:
+      subject:  'Thanks for confirming!'
+    notify_guest_of_expiration:
+      subject:  "Your booking for '{{listing.name}}' at {{listing.street}} has expired"
+    notify_host_of_expiration:
+      subject:  'A booking at one of your listings has expired'
+    notify_host_of_rejection:
+      subject:  "Can we help, {{user.first_name}}?"
+    notify_host_with_confirmation:
+      subject:  "{{reservation.owner.first_name}} just booked your {{platform_context.bookable_noun}}!"
+    notify_host_without_confirmation:
+      subject:  "{{reservation.owner.first_name}} just booked your {{platform_context.bookable_noun}}!"
+    pre_booking:
+      subject:  "{{reservation.owner.first_name}}, your booking is tomorrow!"

@@ -35,7 +35,7 @@ class RatingMailer < InstanceMailer
     @location = @listing.location
     @user = user
     mail to: @user.email,
-         subject: instance_prefix(@subject),
+         subject_locals: { reservation: @reservation, listing: @listing },
          template_name: "request_rating_of_#{@who_is_rated}_from_#{@who_is_rating}"
   end
 

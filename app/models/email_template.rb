@@ -6,7 +6,7 @@ class EmailTemplate < ActiveRecord::Base
 
   CUSTOMIZABLE_EMAILS = %w(post_action_mailer/sign_up_welcome
                            post_action_mailer/sign_up_verify
-                           post_action_mailer/created_by_instance
+                           post_action_mailer/created_by_instance_admin
                            post_action_mailer/list
                            post_action_mailer/list_draft
                            post_action_mailer/unsubscription
@@ -17,16 +17,13 @@ class EmailTemplate < ActiveRecord::Base
                            rating_mailer/request_rating_of_host_from_guest
                            reengagement_mailer/no_bookings
                            reengagement_mailer/one_booking
-                           user_messages_mailer/email_message_from_guest
-                           user_messages_mailer/email_message_from_host
                            recurring_mailer/analytics
                            recurring_mailer/request_photos
                            recurring_mailer/share
                            reservation_mailer/notify_guest_of_cancellation_by_guest
                            reservation_mailer/notify_guest_of_cancellation_by_host
                            reservation_mailer/notify_guest_of_confirmation
-                           reservation_mailer/notify_guest_of_confirmation_by_host
-                           reservation_mailer/notify_guest_of_expriation
+                           reservation_mailer/notify_guest_of_expiration
                            reservation_mailer/notify_guest_of_rejection
                            reservation_mailer/notify_guest_with_confirmation
                            reservation_mailer/notify_host_of_cancellation_by_guest
@@ -35,7 +32,8 @@ class EmailTemplate < ActiveRecord::Base
                            reservation_mailer/notify_host_of_expiration
                            reservation_mailer/notify_host_of_rejection
                            reservation_mailer/notify_host_with_confirmation
-                           reservation_mailer/notify_host_without_confirmation)
+                           reservation_mailer/notify_host_without_confirmation
+                           reservation_mailer/pre_booking)
 
   validates :html_body, :text_body, :path, :theme_id, presence: true
   validates_uniqueness_of :path, :scope => [:theme_id]

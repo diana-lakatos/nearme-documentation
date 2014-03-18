@@ -5,7 +5,14 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
   end
 
   def new
-    @email_template = EmailTemplate.new(path: params[:path])
+    text = File.read(File.join(Rails.root, 'app', 'views', params[:path] + '.text.liquid')) rescue nil
+    html = File.read(File.join(Rails.root, 'app', 'views', params[:path] + '.html.liquid')) rescue nil
+    subject = I18n.t(:subject, scope: params[:path].gsub('/','.'))
+
+    @email_template = EmailTemplate.new(path: params[:path],
+                                        subject: subject,
+                                        text_body: text,
+                                        html_body: html)
   end
 
   def edit

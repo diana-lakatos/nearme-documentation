@@ -7,15 +7,14 @@ class RecurringMailer < InstanceMailer
     @listing = @company.listings.first
 
     mail to: @user.email,
-          subject: "#{@user.first_name}, we have potential guests for you!"
+         subject_locals: { user: @user }
   end
 
   def request_photos(listing)
     @listing = listing
     @user = @listing.administrator
 
-    mail to: @user.email,
-           subject: "Give the final touch to your listing with some photos!"
+    mail to: @user.email
   end
 
   def share(listing)
@@ -23,7 +22,7 @@ class RecurringMailer < InstanceMailer
     @user = @listing.administrator
 
     mail to: @user.email,
-           subject: "Share your listing '#{@listing.name}' at #{@listing.location.street } and increase bookings!"
+         subject_locals: { user: @user, listing: @listing }
   end
 
   def mail_type
