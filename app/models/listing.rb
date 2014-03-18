@@ -1,9 +1,11 @@
 class Listing < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
+  auto_set_platform_context
+  scoped_to_platform_context
   class NotFound < ActiveRecord::RecordNotFound; end
-  include Listing::RedundantDataSynchronizer
   has_metadata :accessors => [:listing_type_name, :photos_metadata]
+  inherits_columns_from_association([:company_id, :administrator_id, :creator_id], :location)
 
   has_many :reservations, dependent: :destroy
 
@@ -22,7 +24,7 @@ class Listing < ActiveRecord::Base
 
   has_many :user_messages, as: :thread_context
 
-  has_one :company, :through => :location
+  belongs_to :company
   belongs_to :location, inverse_of: :listings
   belongs_to :listing_type
   belongs_to :instance
@@ -68,7 +70,7 @@ class Listing < ActiveRecord::Base
 
   PRICE_TYPES = [:hourly, :weekly, :daily, :monthly]
 
-  delegate :name, :description, :creator=, :instance=, to: :company, prefix: true, allow_nil: true
+  delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
   delegate :currency, :formatted_address, :local_geocoding, 
     :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
@@ -90,10 +92,6 @@ class Listing < ActiveRecord::Base
 
     # Mark price fields as attr-accessible
     attr_accessible "#{price}_price_cents", "#{price}_price"
-  end
-
-  def location
-    Location.unscoped { super }
   end
 
   # Defer to the parent Location for availability rules unless this Listing has specific
@@ -231,7 +229,7 @@ class Listing < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
-  def reserve!(platform_context, reserving_user, dates, quantity)
+  def reserve!(reserving_user, dates, quantity)
     reservation = reservations.build(:user => reserving_user, :quantity => quantity)
     dates.each do |date|
       raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
@@ -241,11 +239,11 @@ class Listing < ActiveRecord::Base
     reservation.save!
 
     if reservation.listing.confirm_reservations?
-      ReservationMailer.notify_host_with_confirmation(platform_context, reservation).deliver
-      ReservationMailer.notify_guest_with_confirmation(platform_context, reservation).deliver
+      ReservationMailer.notify_host_with_confirmation(reservation).deliver
+      ReservationMailer.notify_guest_with_confirmation(reservation).deliver
     else
-      ReservationMailer.notify_host_without_confirmation(platform_context, reservation).deliver
-      ReservationMailer.notify_guest_of_confirmation(platform_context, reservation).deliver
+      ReservationMailer.notify_host_without_confirmation(reservation).deliver
+      ReservationMailer.notify_guest_of_confirmation(reservation).deliver
     end
     reservation
   end

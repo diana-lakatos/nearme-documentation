@@ -2,7 +2,9 @@ class Reservation < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
   has_paper_trail
   acts_as_paranoid
-  include Reservation::RedundantDataSynchronizer
+  auto_set_platform_context
+  scoped_to_platform_context
+  inherits_columns_from_association([:company_id, :administrator_id, :creator_id], :listing)
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',
     :manual      => 'manual',
@@ -22,8 +24,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
   belongs_to :creator, class_name: "User"
   belongs_to :administrator, class_name: "User"
-  belongs_to :platform_context_detail, :polymorphic => true
-  has_one :company, through: :listing
+  belongs_to :company
   has_many :user_messages, as: :thread_context
 
   attr_accessible :cancelable, :confirmation_email, :date, :listing_id,
@@ -68,26 +69,19 @@ class Reservation < ActiveRecord::Base
       # FIXME: This should be moved to a background job base class, as per ApplicationController.
       #        The event_tracker calls can be executed from the Job instance.
       #        i.e. Essentially compose this as a 'non-http request' controller.
-      platform_context = PlatformContext.new(platform_context_detail)
-      mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, :current_user => owner, 
-                                                          :request_details  => { :current_instance_id => platform_context.instance.id }
-                                                         )
+      mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, :current_user => owner)
       event_tracker = Analytics::EventTracker.new(mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(owner))
       event_tracker.booking_expired(self)
       event_tracker.updated_profile_information(self.owner)
       event_tracker.updated_profile_information(self.host)
 
-      ReservationMailer.notify_guest_of_expiration(platform_context, self).deliver
-      ReservationMailer.notify_host_of_expiration(platform_context, self).deliver
+      ReservationMailer.notify_guest_of_expiration(self).deliver
+      ReservationMailer.notify_host_of_expiration(self).deliver
     end
   end
 
   def schedule_expiry
-    Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :perform_expiry!, nil), run_at: expiry_time
-  end
-
-  def listing # fetch with deleted listing
-    Listing.unscoped { super }
+    ReservationExpiryJob.perform_later(expiry_time, self.id)
   end
 
   def administrator
@@ -186,14 +180,10 @@ class Reservation < ActiveRecord::Base
 
   scope :for_listing, ->(listing) {where(:listing_id => listing.id)}
 
-  scope :for_instance, ->(instance) { includes(:instance).joins(:instance).where(:'instances.id' => instance.id) }
-
-
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
   delegate :location, to: :listing
-  delegate :creator=, :instance=, to: :company
   delegate :administrator=, to: :location
   delegate :service_fee_guest_percent, to: :listing, allow_nil: true
   delegate :service_fee_host_percent, to: :listing, allow_nil: true

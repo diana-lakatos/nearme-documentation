@@ -23,7 +23,7 @@
                       = render 'reservation', reservation: reservation
 
 
-:javascript
+- content_for :domready do
   new Dashboard.GuestsController($('#guests'))
 
 = render 'ratings/rating_modal'

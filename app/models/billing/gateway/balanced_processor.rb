@@ -2,7 +2,7 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
   SUPPORTED_CURRENCIES = ['USD']
 
   def setup_api_on_initialize
-    Balanced.configure(@instance.balanced_api_key)
+    Balanced.configure(@instance.billing_gateway_credential('balanced_api_key'))
   end
 
   def self.currency_supported?(currency)
@@ -41,8 +41,8 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
   def process_payout(amount)
     return if instance_client.balanced_user_id.blank?
     raise Billing::Gateway::BaseProcessor::InvalidStateError.new('Balanced can payout only USD!') if amount.currency.iso_code != 'USD'
-    @balanced_customer = Balanced::Customer.find(instance_client.balanced_user_id)
     begin
+      @balanced_customer = Balanced::Customer.find(instance_client.balanced_user_id)
       credit = @balanced_customer.credit(
         :amount => amount.cents,
         :description => "Payout from #{@sender.class.name} #{@sender.name}(id=#{@sender.id}) to #{@receiver.class.name} #{@receiver.name} (id=#{@receiver.id})",
@@ -53,7 +53,7 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
       else
         payout_failed(credit)
       end
-    rescue Balanced::BadRequest => e
+    rescue Balanced::BadRequest, Balanced::Unauthorized => e
       payout_failed(e)
     end
   end

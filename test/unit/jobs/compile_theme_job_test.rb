@@ -7,7 +7,7 @@ class CompileThemeJobTest < ActiveSupport::TestCase
       compiler_mock = mock(:generate_and_update_assets => true)
       Theme::Compiler.expects(:new).with(theme).returns(compiler_mock)
 
-      CompileThemeJob.new(theme).perform
+      CompileThemeJob.perform(theme)
     end
   end
 end

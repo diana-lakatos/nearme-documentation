@@ -7,11 +7,14 @@ class Instance < ActiveRecord::Base
                   :live_paypal_client_id, :live_paypal_client_secret, :live_balanced_api_key, :instance_billing_gateways_attributes, :marketplace_password,
                   :translations_attributes, :test_stripe_api_key, :test_stripe_public_key, :test_paypal_username, :test_paypal_password,
                   :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key,
-                  :password_protected, :test_mode, :olark_api_key, :olark_enabled
+                  :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, 
+                  :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret
 
   attr_encrypted :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id, :live_stripe_api_key, :live_paypal_client_id,
                  :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
                  :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key, :olark_api_key,
+                 :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
+                 :instagram_consumer_key, :instagram_consumer_secret,
                  :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   has_one :theme, :as => :owner, dependent: :destroy
@@ -70,6 +73,10 @@ class Instance < ActiveRecord::Base
     end
   end
 
+  def authentication_supported?(provider)
+    self.send(:"#{provider.downcase}_consumer_key").present? && self.send(:"#{provider.downcase}_consumer_secret").present?
+  end
+
   PRICING_OPTIONS = %w(free hourly daily weekly monthly)
 
   PRICING_OPTIONS.each do |price|
@@ -107,22 +114,22 @@ class Instance < ActiveRecord::Base
   def paypal_api_config
     @paypal_api_config ||= {
       :mode => DesksnearMe::Application.config.paypal_mode,
-      :client_id => self.paypal_client_id,
-      :client_secret => self.paypal_client_secret,
-      :app_id    => self.paypal_app_id,
-      :username  => self.paypal_username,
-      :password  => self.paypal_password,
-      :signature => self.paypal_signature
+      :client_id => billing_gateway_credential('paypal_client_id'),
+      :client_secret => billing_gateway_credential('paypal_client_secret'),
+      :app_id    => billing_gateway_credential('paypal_app_id'),
+      :username  => billing_gateway_credential('paypal_username'),
+      :password  => billing_gateway_credential('paypal_password'),
+      :signature => billing_gateway_credential('paypal_signature')
     }
   end
 
   def paypal_supported?
-    self.paypal_username.present? &&
-    self.paypal_password.present? &&
-    self.paypal_signature.present? &&
-    self.paypal_client_id.present? &&
-    self.paypal_client_secret.present? &&
-    self.paypal_app_id.present?
+    billing_gateway_credential('paypal_username').present? &&
+    billing_gateway_credential('paypal_password').present? &&
+    billing_gateway_credential('paypal_signature').present? &&
+    billing_gateway_credential('paypal_client_id').present? &&
+    billing_gateway_credential('paypal_client_secret').present? &&
+    billing_gateway_credential('paypal_app_id').present?
   end
 
   def balanced_supported?
@@ -134,8 +141,12 @@ class Instance < ActiveRecord::Base
   end
 
   def stripe_supported?
-    self.stripe_api_key.present? &&
-    self.stripe_public_key.present?
+    billing_gateway_credential('stripe_api_key').present? &&
+    billing_gateway_credential('stripe_public_key').present?
+  end
+
+  def balanced_supported?
+    billing_gateway_credential('balanced_api_key').present?
   end
 
   def to_liquid
@@ -152,6 +163,10 @@ class Instance < ActiveRecord::Base
       processor = "Billing::Gateway::#{processor_name.billing_gateway.capitalize}Processor".constantize
       processor if processor.instance_supported?(self) && processor.currency_supported?(currency)
     end
+  end
+
+  def billing_gateway_credential(credential)
+    DesksnearMe::Application.config.send(credential).presence || send(credential).presence
   end
 
   private

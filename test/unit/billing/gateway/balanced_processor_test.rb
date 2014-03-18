@@ -109,7 +109,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
           assert_difference "InstanceClient.count" do
             @balanced_processor.store_credit_card(credit_card)
           end
-          assert_equal 'test-customer', @user.instance_clients.where(:instance_id => @instance.id).first.balanced_user_id, "Balanced instance_client should have correct blanced_user_id"
+          assert_equal 'test-customer', @user.instance_clients.first.balanced_user_id, "Balanced instance_client should have correct blanced_user_id"
         end
       end
 
@@ -282,7 +282,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
 
     should 'not be supported if instance_client exists but for other instance' do
       @company = FactoryGirl.create(:company)
-      FactoryGirl.create(:instance_client, :client => @company, :instance => FactoryGirl.create(:instance), :balanced_user_id => 'present')
+      FactoryGirl.create(:instance_client, :client => @company, :balanced_user_id => 'present').update_column(:instance_id, FactoryGirl.create(:instance).id)
       refute Billing::Gateway::BalancedProcessor.is_supported_by?(@company)
     end
 

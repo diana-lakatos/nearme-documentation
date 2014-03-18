@@ -15,13 +15,13 @@ class UserMessageSmsNotifierTest < ActiveSupport::TestCase
                                       )
     @instance = FactoryGirl.create(:instance, :name => 'DesksNearMe')
     @domain = FactoryGirl.create(:domain, :name => 'notifcations.com', :target => @instance)
-    @platform_context = PlatformContext.new.initialize_with_instance(@instance)
+    PlatformContext.current= PlatformContext.new(@instance)
     Googl.stubs(:shorten).with("http://notifcations.com/users/#{@recipient.id}/user_messages/#{@user_message.id}?token=abc").returns(stub(:short_url => "http://goo.gl/abc324"))
   end
 
   context '#notify_user_about_new_message' do
     should "render with the user_message" do
-      sms = UserMessageSmsNotifier.notify_user_about_new_message(@platform_context, @user_message)
+      sms = UserMessageSmsNotifier.notify_user_about_new_message(@user_message)
       assert_equal @recipient.full_mobile_number, sms.to
       assert sms.body =~ /\[DesksNearMe\] New message from Krzysztof: \"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invi...\"/i, "Sms body does not include expected content: #{sms.body}"
       assert sms.body =~ /http:\/\/goo.gl/
@@ -29,7 +29,7 @@ class UserMessageSmsNotifierTest < ActiveSupport::TestCase
 
     should "not render if user had disabled sms notification for new messages" do
       @recipient.sms_preferences = { :user_message => '0' }
-      sms = UserMessageSmsNotifier.notify_user_about_new_message(@platform_context, @user_message)
+      sms = UserMessageSmsNotifier.notify_user_about_new_message(@user_message)
       assert sms.is_a?(SmsNotifier::NullMessage)
       refute sms.deliver
     end

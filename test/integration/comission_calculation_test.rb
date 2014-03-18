@@ -21,11 +21,11 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     assert @reservation_charge.paid?
     assert_equal 2875, @reservation_charge.charge_attempts.successful.first.amount
 
-    PaymentTransferSchedulerJob.new.perform
+    PaymentTransferSchedulerJob.perform
 
     @payment_transfer = PaymentTransfer.last
     assert @payment_transfer.transferred?
-    assert_equal 2250, @payment_transfer.payout_attemps.successful.first.amount
+    assert_equal 2250, @payment_transfer.payout_attempts.successful.first.amount
   end
 
   private

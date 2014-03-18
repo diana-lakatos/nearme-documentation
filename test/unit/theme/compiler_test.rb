@@ -16,8 +16,11 @@ class Theme::CompilerTest < ActiveSupport::TestCase
       compiler.generate_and_update_assets
 
       assert @theme.compiled_stylesheet.present?
-      assert @theme.compiled_stylesheet.read =~ /#logo/,
-        "Expected to see a CSS rule"
+    end
+
+    should 'render css rule' do
+      compiler = Theme::Compiler.new(@theme)
+      assert compiler.send(:render_stylesheet) =~ /#logo/, "Expected to see a CSS rule"
     end
   end
 
@@ -31,8 +34,7 @@ class Theme::CompilerTest < ActiveSupport::TestCase
 
     should 'compiled css have theme assets' do
       compiler = Theme::Compiler.new(@theme)
-      compiler.generate_and_update_assets
-      css = @theme.compiled_stylesheet.read
+      css = compiler.send(:render_stylesheet)
 
       @images.each do |image|
         regexp = "url(/assets/#{image})"
@@ -51,8 +53,7 @@ class Theme::CompilerTest < ActiveSupport::TestCase
 
     should 'compiled css have theme colors' do
       compiler = Theme::Compiler.new(@theme)
-      compiler.generate_and_update_assets
-      css = @theme.compiled_stylesheet.read
+      css = compiler.send(:render_stylesheet)
 
       Theme::COLORS.each_with_index do |color, index|
         assert_match Regexp.new("##{index.to_s*6}"), css
@@ -75,8 +76,7 @@ class Theme::CompilerTest < ActiveSupport::TestCase
 
     should 'compiled css have theme logos and icons' do
       compiler = Theme::Compiler.new(@theme)
-      compiler.generate_and_update_assets
-      css = @theme.compiled_stylesheet.read
+      css = compiler.send(:render_stylesheet)
 
       @icons.each_with_index do |image, index|
         assert_match Regexp.new("margin-top: #{30 - ((120 * (index + 1) * (2 / 3)) / 2)}"), css

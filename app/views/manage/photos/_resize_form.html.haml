@@ -12,6 +12,4 @@
         = submit_tag 'Process'
 
 :javascript
-  $(function() {
-    new Photo.Manipulator($('#crop-form'), { aspectRatio: #{object.aspect_ratio} })
-  });
+  $(function() { new Photo.Manipulator($('#crop-form'), { aspectRatio: #{object.aspect_ratio} }) });

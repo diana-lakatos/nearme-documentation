@@ -27,6 +27,10 @@ class Billing::Gateway
     self
   end
 
+  def processor_class
+    "#{processor.try(:class)}".demodulize.gsub('Processor', '')
+  end
+
   def payment_supported?
     processor.present?
   end

@@ -29,7 +29,7 @@ class SmsNotifier::Message
   end
 
   def platform_context
-    @data.fetch(:fallback, {}).fetch(:platform_context, nil)
+    PlatformContext.current
   end
 
   def fallback_email
@@ -49,7 +49,7 @@ class SmsNotifier::Message
       send_twilio_message
     rescue Twilio::REST::RequestError => e
       if e.message.include?('is not a valid phone number')
-        fallback_user.notify_about_wrong_phone_number(platform_context) if fallback_user.present?
+        fallback_user.notify_about_wrong_phone_number if fallback_user.present?
       else
         Rails.logger.error "Sending #{caller[0]} SMS to #{@data[:to]} failed at #{Time.zone.now}. #{$!.inspect}"
       end

@@ -41,10 +41,14 @@ class LocationsController < ApplicationController
   end
 
   def find_location
+    # tmp hack before migrating to Rails 4.1 - with deleted breaks default scope
+    @location = Location.find(params[:id])
     @location = Location.with_deleted.find(params[:id])
   end
 
   def find_listing
+    # tmp hack before migrating to Rails 4.1 - with deleted breaks default scope
+    @listing = @location.listings.find(params[:listing_id]) if params[:listing_id]
     @listing = @location.listings.with_deleted.find(params[:listing_id]) if params[:listing_id]
   end
 

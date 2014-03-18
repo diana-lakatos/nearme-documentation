@@ -1,3 +1,6 @@
+# Must restart utilities that require the environment
+sudo "monit -g dj_#{config.app} restart all"
+
 # New Relic deployment notification
 on_app_master do
   description = (`cd #{config.current_path} && git log -1 --format="%s"`).chomp
@@ -7,5 +10,3 @@ on_app_master do
   run "bundle exec rake reprocess:css"
 end
 
-# Must restart utilities that require the environment
-sudo "monit -g dj_#{config.app} restart all"

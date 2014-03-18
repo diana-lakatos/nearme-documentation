@@ -89,12 +89,12 @@ class ReservationChargeTest < ActiveSupport::TestCase
     setup do
       @reservation_charge = FactoryGirl.build(:reservation_charge_unpaid)
     end
-    
+
     should 'trigger capture on save' do
       @reservation_charge.expects(:capture)
       @reservation_charge.save!
     end
-    
+
     should 'be paid if success' do
       @reservation_charge.stubs(:total_amount_cents).returns(12345)
       Billing::Gateway.any_instance.expects(:charge).with({:amount_cents => 12345, :reference => @reservation_charge}).returns(true)
@@ -107,12 +107,45 @@ class ReservationChargeTest < ActiveSupport::TestCase
       @reservation_charge.save!
       refute @reservation_charge.reload.paid?
     end
-    
+
     should 'not charge again if already charged' do
       Billing::Gateway.any_instance.expects(:charge).never
       @reservation_charge.stubs(:paid_at).returns(Time.zone.now)
       @reservation_charge.capture
     end
 
+  end
+
+  context 'foreign keys' do
+    setup do
+      @reservation_charge = FactoryGirl.create(:reservation_charge)
+    end
+
+    should 'assign correct key immediately' do
+      assert @reservation_charge.company_id.present?
+      assert_equal @reservation_charge.company_id, @reservation_charge.reservation.company_id
+    end
+
+    context 'update company' do
+
+      should 'assign correct company_id' do
+        @reservation_charge.reservation.location.update_attribute(:company_id, @reservation_charge.reservation.location.company_id + 1)
+        assert_equal @reservation_charge.reservation.location.company_id, @reservation_charge.reload.company_id
+      end
+
+      should 'assign correct instance_id' do
+        instance = FactoryGirl.create(:instance)
+        @reservation_charge.reservation.company.update_attribute(:instance_id, instance.id)
+        PlatformContext.any_instance.stubs(:instance).returns(instance)
+        assert_equal instance.id, @reservation_charge.reload.instance_id 
+      end
+
+      should 'assign correct partner_id' do
+        partner = FactoryGirl.create(:partner)
+        @reservation_charge.company.update_attribute(:partner_id, partner.id)
+        assert_equal partner.id, @reservation_charge.reload.partner_id
+      end
+
+    end
   end
 end

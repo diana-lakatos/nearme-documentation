@@ -15,16 +15,17 @@ module Utils
       do_task "Loading data" do
         User.transaction do
 
+          # === INSTANCES ========================================
+
+          load_instances!
+          PlatformContext.current = PlatformContext.new
+
           # === BASIC STUFF ======================================
 
           load_amenities!
           load_industries!
           load_location_types!
           load_listing_types!
-
-          # === INSTANCES ========================================
-
-          load_instances!
 
           # === COMPANIES / LOCATIONS / LISTINGS =================
 

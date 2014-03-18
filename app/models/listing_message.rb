@@ -49,11 +49,11 @@ class ListingMessage < ActiveRecord::Base
     owner_id == author_id
   end
 
-  def send_notification(platform_context)
+  def send_notification
     if message_from_guest?
-      ListingMessageMailer.enqueue.email_message_from_guest(platform_context, self)
+      ListingMessageMailer.enqueue.email_message_from_guest(self)
     else
-      ListingMessageMailer.enqueue.email_message_from_host(platform_context, self)
+      ListingMessageMailer.enqueue.email_message_from_host(self)
     end
   end
 

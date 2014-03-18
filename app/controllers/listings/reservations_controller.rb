@@ -16,23 +16,23 @@ class Listings::ReservationsController < ApplicationController
       if @reservation_request.confirm_reservations?
 
         @reservation.schedule_expiry
-        ReservationMailer.enqueue.notify_host_with_confirmation(platform_context, @reservation)
-        ReservationMailer.enqueue.notify_guest_with_confirmation(platform_context, @reservation)
-        ReservationSmsNotifier.notify_host_with_confirmation(platform_context, @reservation).deliver
+        ReservationMailer.enqueue.notify_host_with_confirmation(@reservation)
+        ReservationMailer.enqueue.notify_guest_with_confirmation(@reservation)
+        ReservationSmsNotifier.notify_host_with_confirmation(@reservation).deliver
         event_tracker.updated_profile_information(@reservation.owner)
         event_tracker.updated_profile_information(@reservation.host)
       else
-        ReservationMailer.enqueue.notify_host_without_confirmation(platform_context, @reservation)
-        ReservationMailer.enqueue.notify_guest_of_confirmation(platform_context, @reservation)
+        ReservationMailer.enqueue.notify_host_without_confirmation(@reservation)
+        ReservationMailer.enqueue.notify_guest_of_confirmation(@reservation)
       end
 
       pre_booking_sending_date = (@reservation.date - 1.day).to_time_in_current_zone + 17.hours # send day before at 5pm
       if pre_booking_sending_date < Time.current.beginning_of_day
-        ReservationPreBookingJob.perform_later(pre_booking_sending_date, platform_context, @reservation)
+        ReservationPreBookingJob.perform_later(pre_booking_sending_date, @reservation)
       end
 
       if current_user.reservations.count == 1
-        ReengagementOneBookingJob.perform_later(@reservation.last_date.to_time_in_current_zone + 7.days, platform_context, @reservation)
+        ReengagementOneBookingJob.perform_later(@reservation.last_date.to_time_in_current_zone + 7.days, @reservation)
       end
 
       event_tracker.requested_a_booking(@reservation)

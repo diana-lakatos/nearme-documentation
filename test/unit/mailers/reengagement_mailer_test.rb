@@ -6,7 +6,7 @@ class ReengagementMailerTest < ActiveSupport::TestCase
   setup do
     stub_mixpanel
     @user = FactoryGirl.create(:user)
-    @platform_context = PlatformContext.new
+    @platform_context = PlatformContext.current
     PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
   end
 
@@ -16,7 +16,7 @@ class ReengagementMailerTest < ActiveSupport::TestCase
     end
 
     should "send no_bookings" do
-      mail = ReengagementMailer.no_bookings(@platform_context, @user)
+      mail = ReengagementMailer.no_bookings(@user)
       subject = "[#{@platform_context.decorate.name}] Check out these new Desks in your area!"
 
       assert mail.html_part.body.include?(@user.first_name)
@@ -33,7 +33,7 @@ class ReengagementMailerTest < ActiveSupport::TestCase
       @reservation.periods = [ReservationPeriod.new(:date => Date.parse("2012/12/12")), ReservationPeriod.new(:date => Date.parse("2012/12/13"))]
       @reservation.save!
 
-      mail = ReengagementMailer.one_booking(@platform_context, @reservation)
+      mail = ReengagementMailer.one_booking(@reservation)
       subject = "[DesksNearMe] Check out these new Desks in your area!"
 
       assert mail.html_part.body.include?(@user.first_name)
@@ -55,7 +55,7 @@ class ReengagementMailerTest < ActiveSupport::TestCase
 
     should "not send no_bookings" do
       assert_no_difference 'ActionMailer::Base.deliveries.size' do
-        ReengagementMailer.no_bookings(@platform_context, @user)
+        ReengagementMailer.no_bookings(@user)
       end
     end
 
@@ -64,7 +64,7 @@ class ReengagementMailerTest < ActiveSupport::TestCase
       @reservation.periods = [ReservationPeriod.new(:date => Date.parse("2012/12/12")), ReservationPeriod.new(:date => Date.parse("2012/12/13"))]
       @reservation.save!
       assert_no_difference 'ActionMailer::Base.deliveries.size' do
-        ReengagementMailer.one_booking(@platform_context, @reservation)
+        ReengagementMailer.one_booking(@reservation)
       end
     end
 

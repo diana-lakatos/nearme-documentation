@@ -1,15 +1,18 @@
 class Company < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
+  auto_set_platform_context
+  scoped_to_platform_context
   URL_REGEXP = URI::regexp(%w(http https))
-
   has_metadata :accessors => [:industries_metadata]
-  include Company::RedundantDataSynchronizer
 
-  attr_accessible :creator_id, :description, :url, :email, :name,
+  notify_associations_about_column_update([:payment_transfers, :reservation_charges, :reservations, :listings, :locations], [:instance_id, :partner_id])
+  notify_associations_about_column_update([:reservations, :listings, :locations], [:creator_id, :listings_public])
+
+  attr_accessible :description, :url, :email, :name,
     :mailing_address, :paypal_email, :industry_ids, :locations_attributes,
-    :domain_attributes, :theme_attributes, :instance_id, :white_label_enabled,
-    :listings_public, :partner_id, :bank_account_number, :bank_routing_number, :bank_owner_name
+    :domain_attributes, :theme_attributes, :white_label_enabled,
+    :listings_public, :bank_account_number, :bank_routing_number, :bank_owner_name
 
   attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name
 
@@ -19,29 +22,23 @@ class Company < ActiveRecord::Base
   has_many :company_users, dependent: :destroy
   has_many :users, :through => :company_users
   has_many :locations, dependent: :destroy, inverse_of: :company
-  has_many :listings, :through => :locations
-  has_many :reservations, :through => :listings
-  has_many :reservation_charges, through: :reservations
+  has_many :listings
+  has_many :reservations
+  has_many :reservation_charges
   has_many :payment_transfers, :dependent => :destroy
   has_many :company_industries, :dependent => :destroy
   has_many :industries, :through => :company_industries
   has_one :domain, :as => :target, :dependent => :destroy
   has_one :theme, :as => :owner, :dependent => :destroy
 
-  has_many :locations_impressions, :source => :impressions, :through => :locations do
-    def for_instance(instance)
-      location_ids = proxy_association.owner.locations.for_instance(instance).pluck(:id)
-      where(:impressionable_id => location_ids)
-    end
-  end
-
+  has_many :locations_impressions, :source => :impressions, :through => :locations
   has_many :instance_clients, :as => :client, :dependent => :destroy
 
   before_validation :add_default_url_scheme
 
   before_save :create_bank_account_in_balanced!, :if => lambda { |c| c.bank_account_number.present? || c.bank_routing_number.present? || c.bank_owner_name.present? }
 
-  validates_presence_of :name, :instance_id
+  validates_presence_of :name
   validates_presence_of :industries, :if => proc { |c| c.instance.present? && c.instance.is_desksnearme? && !c.instance.skip_company? }
   validates_length_of :description, :maximum => 250
   validates_length_of :name, :maximum => 50
@@ -92,12 +89,8 @@ class Company < ActiveRecord::Base
     # that it is possible to make automated payout but he needs to enter credentials via edit company settings
     if mailing_address.blank? && self.created_payment_transfers.any?
       CompanyMailer.enqueue.notify_host_of_no_payout_option(self)
-      CompanySmsNotifier.notify_host_of_no_payout_option(platform_context_based_on_company, self).deliver
+      CompanySmsNotifier.notify_host_of_no_payout_option(self).deliver
     end
-  end
-
-  def platform_context_based_on_company
-    @platform_context_based_on_company ||= PlatformContext.new.initialize_with_company(self)
   end
 
   def to_balanced_params
@@ -141,10 +134,10 @@ class Company < ActiveRecord::Base
 
     valid = URL_REGEXP.match(url)
     valid &&= begin
-      URI.parse(url)
-    rescue
-      false
-    end
+                URI.parse(url)
+              rescue
+                false
+              end
 
     errors.add(:url, "must be a valid URL") unless valid
   end

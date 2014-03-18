@@ -22,7 +22,5 @@
   .actions
     = f.submit (resource.persisted?) ? "Save" : "Sign Up"
 
-:javascript
-  $(function() {
-    new PhoneNumbers.FieldsForm()
-  });
+- content_for :domready do
+  $(function(){ new PhoneNumbers.FieldsForm() });

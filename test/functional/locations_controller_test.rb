@@ -11,6 +11,13 @@ class LocationsControllerTest < ActionController::TestCase
 
   context '#show' do
 
+    should 'track impression' do
+      assert_difference 'Impression.count' do
+        get :show, id: @location.id
+      end
+      assert_equal Instance.default_instance.id, Impression.last.instance_id
+    end
+
     context 'without listing' do
 
       should "work" do

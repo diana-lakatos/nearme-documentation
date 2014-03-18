@@ -22,9 +22,7 @@ DesksnearMe::Application.configure do
   config.i18n.fallbacks = true
   config.active_support.deprecation = :notify
 
-  # Uncomment if you precompile assets
-  # config.assets.compile = false
-
+  config.assets.compile = false
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
 

@@ -1,6 +1,6 @@
 class AuthenticationsController < ApplicationController
 
-  skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:create]
+  skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:create, :setup]
 
   def create
     @omniauth = request.env["omniauth.auth"]
@@ -8,16 +8,16 @@ class AuthenticationsController < ApplicationController
     # if we are logged in as X, and we try to connect authentication that belongs to Y, we raise this error to prevent re-logging. 
     if @oauth.already_connected?(current_user)
       already_connected_to_other_user
-    # Usual scenario - user already used social provider to log in to our system, everything in db is already set up
+      # Usual scenario - user already used social provider to log in to our system, everything in db is already set up
     elsif !current_user && @oauth.authentication
       signed_in_successfully
-    # Email is already taken - don't allow to steal account
+      # Email is already taken - don't allow to steal account
     elsif @oauth.email_taken_by_other_user?(current_user)
       user_changed_email_and_someone_else_picked_it
-    # There is no authentication in our system, but user is logged in - we just add authentications to his account
+      # There is no authentication in our system, but user is logged in - we just add authentications to his account
     elsif current_user
       new_authentication_for_existing_user
-    # There is no authentication in our system, and the user is not logged in. Hence, we create a new user and then new authentication
+      # There is no authentication in our system, and the user is not logged in. Hence, we create a new user and then new authentication
     else
       if @oauth.create_user(cookies[:google_analytics_id])
         # User and authentication created successfully. User is now logged in
@@ -35,10 +35,10 @@ class AuthenticationsController < ApplicationController
       @authentication.destroy!
       log_disconnect_social_provider
       flash[:deleted] = t('flash_messages.authentications.disconnected', 
-        provider_name: @authentication.provider.titleize)
+                          provider_name: @authentication.provider.titleize)
     else
       flash[:warning] = t('flash_messages.authentications.unable_to_disconnect', 
-        provider_name: @authentication.provider.titleize)
+                          provider_name: @authentication.provider.titleize)
     end
     redirect_to social_accounts_url
   end
@@ -89,8 +89,8 @@ class AuthenticationsController < ApplicationController
 
   def user_changed_email_and_someone_else_picked_it
     flash[:error] = t('omniauth.email_taken_html', provider: @omniauth['provider'].titleize,
-      sign_in_link: view_context.link_to('sign in', new_user_session_path),
-      recovery_link: view_context.link_to('recover your password', new_user_password_path))
+                      sign_in_link: view_context.link_to('sign in', new_user_session_path),
+                      recovery_link: view_context.link_to('recover your password', new_user_password_path))
     redirect_to root_path
   end
 

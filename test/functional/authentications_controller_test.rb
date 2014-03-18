@@ -74,20 +74,6 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert flash[:error].include?('already connected to other user')
     end
 
-    should "successfully sign in and log" do
-      add_authentication(@provider, @uid, @user)
-      stub_mixpanel
-      @tracker.expects(:logged_in).once.with do |user, custom_options|
-        user == @user && custom_options == { provider: @provider }
-      end
-      assert_no_difference('User.count') do
-        assert_no_difference('Authentication.count') do
-          post :create
-        end
-      end
-      assert flash[:success].include?('Signed in successfully')
-    end
-
     should "successfully create new authentication and log" do
       sign_in @user
       stub_mixpanel
@@ -105,10 +91,23 @@ class AuthenticationsControllerTest < ActionController::TestCase
         end
       end
       assert_equal 'Authentication successful.', flash[:success]
-
       assert_equal @token, @user.authentications.last.token
       assert_equal @secret, @user.authentications.last.secret
       assert_equal 'https://twitter.com/desksnearme', @user.authentications.last.profile_url
+    end
+
+    should "successfully sign in and log" do
+      add_authentication(@provider, @uid, @user)
+      stub_mixpanel
+      @tracker.expects(:logged_in).once.with do |user, custom_options|
+        user == @user && custom_options == { provider: @provider }
+      end
+      assert_no_difference('User.count') do
+        assert_no_difference('Authentication.count') do
+          post :create
+        end
+      end
+      assert flash[:success].include?('Signed in successfully')
     end
 
     should "successfully create new authentication as alternative to setting password" do
@@ -203,7 +202,8 @@ class AuthenticationsControllerTest < ActionController::TestCase
 
   def add_authentication(provider, uid, user = nil)
     user ||= @user
-    auth = user.authentications.find_or_create_by_provider(provider)
+    auth = user.authentications.build
+    auth.provider = provider
     auth.uid = uid
     auth.token = "token"
     auth.save!
@@ -216,6 +216,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
   def create_signed_in_user_with_authentication(with_password = true)
     @user = FactoryGirl.build(:user, password: nil, password_confirmation: nil)
     @user.password = @user.password_confirmation = @password if with_password
+    @user.instance_id = PlatformContext.current.instance.id
     @user.save!(validate: false)
     sign_in @user
     add_authentication("facebook", "123456")

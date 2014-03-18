@@ -7,6 +7,5 @@ FactoryGirl.define do
     thread_owner { author }
     thread_recipient { author }
     body "Hey whats up"
-    instance_id { (Instance.default_instance.presence || FactoryGirl.create(:instance)).id }
   end
 end

@@ -54,37 +54,39 @@ class UserMessagesDecoratorTest < ActionView::TestCase
                              archived_for_owner: true,
                              archived_for_recipient: false,
                              instance: @second_instance)
+
+      PlatformContext.current = PlatformContext.new(@instance)
     end
 
     should 'return inbox' do
-      user_inbox = UserMessagesDecorator.new(@user.user_messages.for_instance(@instance), @user).inbox.fetch
+      user_inbox = UserMessagesDecorator.new(@user.user_messages, @user).inbox.fetch
       assert_equal 1, user_inbox.size
       thread = user_inbox.first[1]
       assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
 
-      user2_inbox = UserMessagesDecorator.new(@user2.user_messages.for_instance(@instance), @user2).inbox.fetch
+      user2_inbox = UserMessagesDecorator.new(@user2.user_messages, @user2).inbox.fetch
       assert_equal 1, user2_inbox.size
       thread = user2_inbox.first[1]
       assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
     end
 
     should 'return unread' do
-      user_unread = UserMessagesDecorator.new(@user.user_messages.for_instance(@instance), @user).unread.fetch
+      user_unread = UserMessagesDecorator.new(@user.user_messages, @user).unread.fetch
       assert_equal 1, user_unread.size
       thread = user_unread.first[1]
       assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
 
-      user2_unread = UserMessagesDecorator.new(@user2.user_messages.for_instance(@instance), @user2).unread.fetch
+      user2_unread = UserMessagesDecorator.new(@user2.user_messages, @user2).unread.fetch
       assert_equal 0, user2_unread.size
     end
 
     should 'return archived' do
-      user_archived = UserMessagesDecorator.new(@user.user_messages.for_instance(@instance), @user).archived.fetch
+      user_archived = UserMessagesDecorator.new(@user.user_messages, @user).archived.fetch
       assert_equal 1, user_archived.size
       thread = user_archived.first[1]
       assert_equal [@archived_user_message.id], thread.map(&:id)
 
-      user2_archived = UserMessagesDecorator.new(@user2.user_messages.for_instance(@instance), @user2).archived.fetch
+      user2_archived = UserMessagesDecorator.new(@user2.user_messages, @user2).archived.fetch
       assert_equal 0, user2_archived.size
     end
   end

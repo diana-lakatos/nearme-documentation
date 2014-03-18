@@ -34,12 +34,9 @@ class RatingMailer < InstanceMailer
     @listing = @reservation.listing
     @location = @listing.location
     @user = user
-    @platform_context = PlatformContext.new(@reservation.platform_context_detail)
     mail to: @user.email,
-         subject: instance_prefix(@subject, @platform_context.decorate),
-         template_name: "request_rating_of_#{@who_is_rated}_from_#{@who_is_rating}",
-         platform_context: @platform_context
-
+         subject: instance_prefix(@subject),
+         template_name: "request_rating_of_#{@who_is_rated}_from_#{@who_is_rating}"
   end
 
 end

@@ -35,6 +35,6 @@
             .actions
               = render :partial => "dashboard/user_actions",  :locals => {:reservation => reservation} if current_user == reservation.owner
 
-:javascript
+- content_for :domready do
   new Reservation.UserReservationController($("##{dom_id(reservation)}"))
 

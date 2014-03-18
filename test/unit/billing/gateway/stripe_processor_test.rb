@@ -79,7 +79,7 @@ class Billing::Gateway::StripeProcessorTest < ActiveSupport::TestCase
         assert_difference 'InstanceClient.count' do
           @stripe_processor.store_credit_card(credit_card)
         end
-        assert_equal '456', @user.instance_clients.where(:instance_id => @instance.id).first.stripe_id
+        assert_equal '456', @user.instance_clients.first.stripe_id
       end
 
       should "raise InvalidRequestError if invalid details" do

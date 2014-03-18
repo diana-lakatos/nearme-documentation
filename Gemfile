@@ -16,7 +16,7 @@ gem 'devise', "~> 2.2"
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook', github: 'mkdynamic/omniauth-facebook'
-gem 'omniauth-linkedin-oauth2'
+gem 'omniauth-linkedin'
 gem 'omniauth-instagram'
 
 gem 'koala', '~> 1.7.0rc1' # facebook Graph API
@@ -24,6 +24,7 @@ gem 'linkedin-oauth2'
 gem 'twitter', "~> 5.2"
 gem 'instagram'
 
+gem 'yui-compressor'
 gem 'fog'
 gem 'geocoder'
 gem 'nearest_time_zone'
@@ -91,7 +92,6 @@ gem 'twilio-ruby'
 gem 'googl'
 
 gem 'jquery-rails'
-gem 'jquery-fileupload-rails'
 gem 'chosen-rails'
 gem 'spectrum-rails'
 
@@ -110,6 +110,7 @@ gem 'addressable'
 gem 'timecop'
 
 gem 'newrelic_rpm'
+gem 'unicorn-worker-killer'
 
 group :profiling do
   gem 'rack-mini-profiler'
@@ -125,6 +126,7 @@ group :assets do
   gem 'uglifier', "~>2.1.0"
 end
 
+
 group :development, :test, :staging do
   gem 'factory_girl_rails', '>=3.0.0'
 end
@@ -136,6 +138,7 @@ end
 group :development do
   gem 'quiet_assets'
   gem 'thin'
+  gem 'debugger'
 end
 
 group :test do

@@ -8,8 +8,8 @@ class Manage::Listings::ReservationsController < ApplicationController
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     else
       if @reservation.confirm
-        ReservationMailer.enqueue.notify_guest_of_confirmation(platform_context, @reservation)
-        ReservationMailer.enqueue.notify_host_of_confirmation(platform_context, @reservation)
+        ReservationMailer.enqueue.notify_guest_of_confirmation(@reservation)
+        ReservationMailer.enqueue.notify_host_of_confirmation(@reservation)
         notify_guest_about_reservation_status_change
         event_tracker.confirmed_a_booking(@reservation)
         track_reservation_update_profile_informations
@@ -28,8 +28,8 @@ class Manage::Listings::ReservationsController < ApplicationController
   def reject
     if @reservation.reject(rejection_reason)
       ReservationIssueLogger.rejected_with_reason @reservation, current_user if rejection_reason.present?
-      ReservationMailer.enqueue.notify_guest_of_rejection(platform_context, @reservation)
-      ReservationMailer.enqueue.notify_host_of_rejection(platform_context, @reservation)
+      ReservationMailer.enqueue.notify_guest_of_rejection(@reservation)
+      ReservationMailer.enqueue.notify_host_of_rejection(@reservation)
       notify_guest_about_reservation_status_change
       event_tracker.rejected_a_booking(@reservation)
       track_reservation_update_profile_informations
@@ -43,8 +43,8 @@ class Manage::Listings::ReservationsController < ApplicationController
 
   def host_cancel
     if @reservation.host_cancel
-      ReservationMailer.enqueue.notify_guest_of_cancellation_by_host(platform_context, @reservation)
-      ReservationMailer.enqueue.notify_host_of_cancellation_by_host(platform_context, @reservation)
+      ReservationMailer.enqueue.notify_guest_of_cancellation_by_host(@reservation)
+      ReservationMailer.enqueue.notify_host_of_cancellation_by_host(@reservation)
       notify_guest_about_reservation_status_change
       event_tracker.cancelled_a_booking(@reservation, { actor: 'host' })
       track_reservation_update_profile_informations
@@ -74,7 +74,7 @@ class Manage::Listings::ReservationsController < ApplicationController
   end
 
   def notify_guest_about_reservation_status_change
-    ReservationSmsNotifier.notify_guest_with_state_change(platform_context, @reservation).deliver
+    ReservationSmsNotifier.notify_guest_with_state_change(@reservation).deliver
   end
 
   def track_reservation_update_profile_informations

@@ -57,7 +57,7 @@ class V1::ListingsController < V1::BaseController
   def search
     params_object = Listing::Search::Params::Api.new(json_params.merge(user: current_user))
     search_params = params.merge({:midpoint => params_object.midpoint, :radius => params_object.radius, :available_dates => params_object.available_dates})
-    listings = Listing::SearchFetcher.new(search_scope, search_params).listings
+    listings = Listing::SearchFetcher.new(search_params).listings
     render :json => listings
   end
 
@@ -68,7 +68,7 @@ class V1::ListingsController < V1::BaseController
   # Create a new reservation
   def reservation
     listing     = Listing.find(params[:id])
-    reservation = listing.reserve!(platform_context, current_user, @dates, @quantity)
+    reservation = listing.reserve!(current_user, @dates, @quantity)
 
     # Render the newly created reservation
     render :json => reservation
@@ -85,8 +85,8 @@ class V1::ListingsController < V1::BaseController
     @message = json_params["message"]
 
     inquiry = listing.inquiry_from!(current_user, message: @message)
-    InquiryMailer.enqueue.inquiring_user_notification(platform_context, inquiry)
-    InquiryMailer.enqueue.listing_creator_notification(platform_context, inquiry)
+    InquiryMailer.enqueue.inquiring_user_notification(inquiry)
+    InquiryMailer.enqueue.listing_creator_notification(inquiry)
 
     head :no_content
   end
@@ -96,7 +96,7 @@ class V1::ListingsController < V1::BaseController
     listing = Listing.find(params[:id])
     message = json_params["query"]
     users.each do |user|
-      ListingMailer.enqueue.share(platform_context, listing, user["email"], user["name"], current_user, message)
+      ListingMailer.enqueue.share(listing, user["email"], user["name"], current_user, message)
     end
 
     head :no_content

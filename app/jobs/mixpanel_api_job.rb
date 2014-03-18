@@ -1,5 +1,5 @@
 class MixpanelApiJob < Job
-  def initialize(mixpanel, method, *args)
+  def after_initialize(mixpanel, method, *args)
     @mixpanel = mixpanel 
     @method = method
     @args = args

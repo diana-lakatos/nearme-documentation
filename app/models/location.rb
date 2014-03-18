@@ -1,12 +1,15 @@
 class Location < ActiveRecord::Base
+  class NotFound < ActiveRecord::RecordNotFound; end
   has_paper_trail
   acts_as_paranoid
-  class NotFound < ActiveRecord::RecordNotFound; end
+  scoped_to_platform_context
+
+  has_metadata :accessors => [:photos_metadata]
+  notify_associations_about_column_update([:reservations, :listings], :administrator_id)
+  notify_associations_about_column_update([:reservation_charges, :reservations, :listings], :company_id)
+  inherits_columns_from_association([:creator_id], :company)
 
   include Impressionable
-  has_metadata :accessors => [:photos_metadata]
-  include Location::RedundantDataSynchronizer
-
   attr_accessible :address, :address2, :amenity_ids, :company_id, :description, :email,
     :info, :latitude, :local_geocoding, :longitude, :currency,
     :formatted_address, :availability_rules_attributes, :postcode, :phone,
@@ -31,7 +34,7 @@ class Location < ActiveRecord::Base
   belongs_to :administrator, class_name: "User", :inverse_of => :administered_locations
   belongs_to :instance
   belongs_to :creator, class_name: "User"
-  delegate :company_users, :creator=, :instance=, :to => :company, :allow_nil => true
+  delegate :company_users, :to => :company, :allow_nil => true
 
   delegate :url, :to => :company
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :company, allow_nil: true
@@ -41,6 +44,7 @@ class Location < ActiveRecord::Base
     dependent:  :destroy,
     inverse_of: :location
   has_many :reservations, :through => :listings
+  has_many :reservation_charges, :through => :reservations
   has_many :photos, :through => :listings
 
   has_many :availability_rules, :order => 'day ASC', :as => :target
@@ -58,6 +62,7 @@ class Location < ActiveRecord::Base
 
   before_validation :fetch_coordinates
   before_validation :parse_address_components
+  before_save :assign_default_availability_rules
 
   extend FriendlyId
   friendly_id :urlify, use: [:slugged, :history]
@@ -65,7 +70,6 @@ class Location < ActiveRecord::Base
   scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where('locations.location_type_id IN (?)', location_types_ids) }
   scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company => :company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
   scope :none, where(:id => nil)
-  scope :for_instance, ->(instance) { joins(:instance).includes(:instance).where(:'instances.id' => instance.id) }
   scope :with_searchable_listings, where(%{ (select count(*) from "listings" where location_id = locations.id and listings.draft IS NULL and enabled = 't' and listings.deleted_at is null) > 0 })
 
   # Useful for storing the full geo info for an address, like time zone
@@ -83,9 +87,10 @@ class Location < ActiveRecord::Base
                                             units: :km)
   end
 
-
-  def company
-    Company.unscoped { super }
+  def assign_default_availability_rules
+    if availability_rules.reject(&:marked_for_destruction?).empty?
+      AvailabilityRule.default_template.apply(self)
+    end
   end
 
   def name

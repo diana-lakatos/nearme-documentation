@@ -31,13 +31,14 @@
 #   Please note that using Time.now instead of Time.zone.now will raise error
 
 class MailerJob < Job
-  def initialize(mailer_class, mailer_method, *args)
+  def after_initialize(mailer_class, mailer_method, *args)
     @mailer_class = mailer_class
     @mailer_method = mailer_method
     @args = args
   end
 
   def perform
+    raise "Unknown PlatformContext" if PlatformContext.current.nil?
     @mailer_class.send(@mailer_method, *@args).deliver
   end
 

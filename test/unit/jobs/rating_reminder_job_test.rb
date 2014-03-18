@@ -18,7 +18,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
     should 'send reminder to both guest and host' do
       stub_local_time_to_return_hour(Location.any_instance, 12)
       assert_difference('ActionMailer::Base.deliveries.size', 2) do
-        RatingReminderJob.new(Date.current.to_s).perform
+        RatingReminderJob.perform(Date.current.to_s)
       end
 
       @host_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@host.email] }
@@ -31,7 +31,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
     should 'not send any reminders while its not noon in local time zone this hour' do
       stub_local_time_to_return_hour(Location.any_instance, 7)
       assert_no_difference 'ActionMailer::Base.deliveries.size' do
-        RatingReminderJob.new(Date.current.to_s).perform
+        RatingReminderJob.perform(Date.current.to_s)
       end
     end
   end
@@ -44,7 +44,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
 
     should 'not send any reminders while reservation didnt end yesterday' do
       assert_no_difference 'ActionMailer::Base.deliveries.size' do
-        RatingReminderJob.new(Date.current.to_s).perform
+        RatingReminderJob.perform(Date.current.to_s)
       end
     end
 
@@ -61,7 +61,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
     should 'not send any reminders while reservation was already notified' do
       stub_local_time_to_return_hour(Location.any_instance, 12)
       assert_no_difference 'ActionMailer::Base.deliveries.size' do
-        RatingReminderJob.new(Date.current.to_s).perform
+        RatingReminderJob.perform(Date.current.to_s)
       end
     end
 
@@ -76,7 +76,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
     should 'not send any reminders to expired reservations' do
       stub_local_time_to_return_hour(Location.any_instance, 12)
       assert_no_difference 'ActionMailer::Base.deliveries.size' do
-        RatingReminderJob.new(Date.current.to_s).perform
+        RatingReminderJob.perform(Date.current.to_s)
       end
     end
 

@@ -12,15 +12,34 @@ class @AddressField
     google.maps.event.addListener @autocomplete, 'place_changed', =>
       place = Search.Geocoder.wrapResult @autocomplete.getPlace()
       place = null unless place.isValid()
-      @pickSuggestion(place) if place
+      if place
+        @pickSuggestion(place)
+
+    @input.focus =>
+      @picked_result = false
+    
+    @input.blur =>
+      geocoder = new Search.Geocoder()
+      setTimeout( =>
+        if !@picked_result && $('.pac-container').find('.pac-item').length > 0 && @input.val() != ''
+          geocoder = new Search.Geocoder()
+          first_item = $('.pac-container').find('.pac-item').eq(0)
+          query = "#{first_item.find('.pac-item-query').eq(0).text()}, #{first_item.find('> span').eq(-1).text()}"
+          deferred = geocoder.geocodeAddress(query)
+          deferred.done (resultset) =>
+            result = Search.Geocoder.wrapResult resultset.getBestResult().result
+            @input.val(query)
+            @pickSuggestion(result)
+      , 200)
+          
 
   onLocate: (callback) ->
     @_onLocate = callback
 
   pickSuggestion: (place) ->
+    @picked_result = true
     @setLatLng(place.lat(), place.lng())
     @form.find("#location_formatted_address").val(place.formattedAddress())
-    @form.find("#location_address").val(place.cityAddress())
     @form.find("#location_local_geocoding").val("1")
     @addressComponentParser.buildAddressComponentsInputs(place)
 

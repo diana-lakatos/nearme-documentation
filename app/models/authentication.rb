@@ -1,12 +1,14 @@
 class Authentication < ActiveRecord::Base
   class InvalidToken < Exception; end;
   acts_as_paranoid
+  auto_set_platform_context
 
   attr_accessible :user_id, :provider, :uid, :info, :token, :secret,
     :token_expires_at, :token_expires, :token_expired, :profile_url,
     :total_social_connections
 
   belongs_to :user
+  belongs_to :instance
 
   has_many :user_relationships
   has_many :connections, through: :user_relationships, source: :follower, class_name: 'User'
@@ -34,7 +36,7 @@ class Authentication < ActiveRecord::Base
   end
 
   def self.available_providers
-    AVAILABLE_PROVIDERS
+    AVAILABLE_PROVIDERS.select { |provider| PlatformContext.current.instance.authentication_supported?(provider) }
   end
 
   def self.provider(provider)

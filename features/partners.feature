@@ -1,7 +1,6 @@
 Feature: There can be many instances of the application
 Background:
   Given a admin exists
-  Given an instance exists
   And I log in as admin
 
 Scenario: Admin user creates new partner which theme inherits images

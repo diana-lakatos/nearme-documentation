@@ -4,7 +4,6 @@ class InstanceAdminRoleTest < ActiveSupport::TestCase
 
   should have_many(:instance_admins)
   should belong_to(:instance)
-  should validate_uniqueness_of(:name).scoped_to(:instance_id)
   should validate_presence_of(:name)
 
 
@@ -14,10 +13,8 @@ class InstanceAdminRoleTest < ActiveSupport::TestCase
     @instance_admin = FactoryGirl.create(:instance_admin).tap { |ia| ia.update_attribute(:instance_admin_role_id, @custom_role.id) }
     @instance_admin2 = FactoryGirl.create(:instance_admin).tap { |ia| ia.update_attribute(:instance_admin_role_id, @custom_role.id) }
     @custom_role.destroy
-    @instance_admin.reload
-    @instance_admin2.reload
-    assert_equal InstanceAdminRole.default_role, @instance_admin.instance_admin_role
-    assert_equal InstanceAdminRole.default_role, @instance_admin2.instance_admin_role
+    assert_equal InstanceAdminRole.default_role, @instance_admin.reload.instance_admin_role
+    assert_equal InstanceAdminRole.default_role, @instance_admin2.reload.instance_admin_role
   end
 
   context 'first_permission_have_access_to' do

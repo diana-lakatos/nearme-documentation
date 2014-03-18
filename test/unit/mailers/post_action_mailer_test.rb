@@ -8,13 +8,13 @@ class PostActionMailerTest < ActiveSupport::TestCase
     stub_mixpanel
     @user = FactoryGirl.create(:user)
     @instance = FactoryGirl.create(:instance)
-    @platform_context = PlatformContext.new
-    InstanceAdmin.create(:instance_id => @instance.id, :user_id => @user.id)
+    @platform_context = PlatformContext.current
+    InstanceAdmin.create(:user_id => @user.id).update_attribute(:instance_id, @instance.id)
     PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
   end
 
   test "email has verification link" do
-    mail = PostActionMailer.sign_up_verify(@platform_context, @user)
+    mail = PostActionMailer.sign_up_verify(@user)
     assert mail.html_part.body.include?("/verify/#{@user.id}/#{@user.email_verification_token}")
     assert_contains 'href="http://custom.domain.com/', mail.html_part.body
     assert_not_contains 'href="http://example.com', mail.html_part.body
@@ -22,18 +22,18 @@ class PostActionMailerTest < ActiveSupport::TestCase
   end
 
   test "email has instance name" do
-    mail = PostActionMailer.sign_up_verify(@platform_context, @user)
+    mail = PostActionMailer.sign_up_verify(@user)
     assert mail.subject.include?(@platform_context.decorate.name), "#{@platform_context.decorate.name} not included in:\n#{mail.subject}"
   end
 
   test "email won't be sent to verified user" do
     @user.update_attribute(:verified_at, Time.zone.now)
-    mail = PostActionMailer.sign_up_verify(@platform_context, @user)
+    mail = PostActionMailer.sign_up_verify(@user)
     assert_nil mail.class_name
   end
 
   test "sign_up_welcome works ok" do
-    mail = PostActionMailer.sign_up_welcome(@platform_context, @user)
+    mail = PostActionMailer.sign_up_welcome(@user)
     subject = "#{@user.first_name}, welcome to #{@platform_context.decorate.name}!"
 
     assert_equal subject, mail.subject
@@ -48,14 +48,13 @@ class PostActionMailerTest < ActiveSupport::TestCase
   test "created_by_instance_admin works ok" do
     @new_user = FactoryGirl.create(:user)
     @creator = FactoryGirl.create(:user)
-    @platform_context = PlatformContext.new
 
     # We freeze time for this test since we're asserting the presence of
     # a temporary login token. We rely on semantics that for any given expiry
     # time, two tokens are the same for the same user. This is somewhat of
     # a hack.
     Timecop.freeze do
-      mail = PostActionMailer.created_by_instance_admin(@platform_context, @new_user , @creator)
+      mail = PostActionMailer.created_by_instance_admin(@new_user , @creator)
       subject = "#{@new_user.first_name }, you were invited to #{@platform_context.instance.name } by #{@creator.name}!"
       assert_equal subject, mail.subject
       assert mail.html_part.body.include?("Welcome, #{@new_user.first_name}"), "Could not find 'Welcome, #{@new_user.first_name}' in #{mail.html_part.body}"
@@ -69,7 +68,7 @@ class PostActionMailerTest < ActiveSupport::TestCase
   end
 
   test "list_draft works ok" do
-    mail = PostActionMailer.list_draft(@platform_context, @user)
+    mail = PostActionMailer.list_draft(@user)
     subject = "You're almost ready for your first guests!"
 
     assert_equal subject, mail.subject
@@ -84,7 +83,7 @@ class PostActionMailerTest < ActiveSupport::TestCase
   test "list works ok" do
     @listing = FactoryGirl.create(:listing)
     @user = @listing.creator
-    mail = PostActionMailer.list(@platform_context, @user)
+    mail = PostActionMailer.list(@user)
     subject = "#{@user.first_name}, your new listing looks amazing!"
 
     assert_equal subject, mail.subject
@@ -98,7 +97,7 @@ class PostActionMailerTest < ActiveSupport::TestCase
 
   test "unsubscription works ok" do
     mailer_name = 'recurring_mailer/request_photos'
-    mail = PostActionMailer.unsubscription(@platform_context, @user, mailer_name)
+    mail = PostActionMailer.unsubscription(@user, mailer_name)
     subject = "Successfully unsubscribed"
 
     assert_equal subject, mail.subject
@@ -110,7 +109,7 @@ class PostActionMailerTest < ActiveSupport::TestCase
   end
 
   test "instance_created works ok" do
-    mail = PostActionMailer.instance_created(@platform_context, @instance, @user, 'password')
+    mail = PostActionMailer.instance_created(@instance, @user, 'password')
     subject = "Instance created"
 
     assert_equal subject, mail.subject

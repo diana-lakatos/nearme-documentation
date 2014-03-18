@@ -1,5 +1,5 @@
 class ReservationChargeTrackerJob < Job
-  def initialize(reservation_id)
+  def after_initialize(reservation_id)
     @reservation = Reservation.find_by_id(reservation_id)
   end
 

@@ -134,6 +134,9 @@
   end.join
 %>
 
+// Render the application css with the above configuration
+@import "application";
+
 <%=
   if theme.theme_font.present?
     ThemeFont::FONT_TYPES.map do |font_type|
@@ -149,7 +152,3 @@
     end.join
   end
 %>
-
-// Render the application css with the above configuration
-@import "application";
-

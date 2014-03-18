@@ -25,27 +25,43 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
   include FactoryGirl::Syntax::Methods
   include StubHelper
+  setup :setup_platform_context
 
-    def assert_contains(expected, object, message = nil)
-      message ||= "Expected #{expected.inspect} to be included in #{object.inspect}"
-      assert object.to_s.include?(expected), message
-    end
+  def setup_platform_context
+    FactoryGirl.create(:default_instance)
+    PlatformContext.current = PlatformContext.new
+  end
 
-    def assert_not_contains(unexpected, object, message = nil)
-      message ||= "Unexpected #{unexpected.inspect} in #{object.inspect}"
-      refute object.to_s.include?(unexpected), message
+  def with_versioning
+    was_enabled = PaperTrail.enabled?
+    PaperTrail.enabled = true
+    begin
+      yield
+    ensure
+      PaperTrail.enabled = was_enabled
     end
+  end
 
-    def raw_post(action, params, body)
-      # The problem with doing this is that the JSON sent to the app
-      # is that Rails will parse and put the JSON payload into params.
-      # But this approach doesn't behave like that for tests.
-      # The controllers are doing more work by parsing JSON than necessary.
-      @request.env['RAW_POST_DATA'] = body
-      response = post(action, params)
-      @request.env.delete('RAW_POST_DATA')
-      response
-    end
+  def assert_contains(expected, object, message = nil)
+    message ||= "Expected #{expected.inspect} to be included in #{object.inspect}"
+    assert object.to_s.include?(expected), message
+  end
+
+  def assert_not_contains(unexpected, object, message = nil)
+    message ||= "Unexpected #{unexpected.inspect} in #{object.inspect}"
+    refute object.to_s.include?(unexpected), message
+  end
+
+  def raw_post(action, params, body)
+    # The problem with doing this is that the JSON sent to the app
+    # is that Rails will parse and put the JSON payload into params.
+    # But this approach doesn't behave like that for tests.
+    # The controllers are doing more work by parsing JSON than necessary.
+    @request.env['RAW_POST_DATA'] = body
+    response = post(action, params)
+    @request.env.delete('RAW_POST_DATA')
+    response
+  end
 
   def with_carrier_wave_processing(&blk)
     before, CarrierWave::Uploader::Base.enable_processing = CarrierWave::Uploader::Base.enable_processing, true
@@ -110,6 +126,12 @@ end
 class ActionController::TestCase
 
   include Devise::TestHelpers
+  setup :setup_platform_context
+
+  def setup_platform_context
+    FactoryGirl.create(:default_instance)
+    PlatformContext.current = PlatformContext.new
+  end
 
   def self.logged_in(factory = :admin, &block)
 
@@ -123,24 +145,6 @@ class ActionController::TestCase
       merge_block(&block) if block_given?
     end
 
-  end
-
-  def with_versioning
-    was_enabled = PaperTrail.enabled?
-    PaperTrail.enabled = true
-    begin
-      yield
-    ensure
-      PaperTrail.enabled = was_enabled
-    end
-  end
-end
-
-class ActiveSupport::TestCase
-  setup :setup_platform_context
-
-  def setup_platform_context
-    FactoryGirl.create(:theme)
   end
 
   def with_versioning

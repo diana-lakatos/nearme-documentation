@@ -4,7 +4,12 @@
   .row-fluid
     .span8.offset2
       .box
-        %div
-          = t('registrations.social_accounts.connecting_social_accounts_info', marketplace_name: platform_context.name).html_safe
-        %p
-        = render "registrations/networks", :supported_providers => @supported_providers
+        - if @supported_providers.any?
+          %div
+            = t('registrations.social_accounts.connecting_social_accounts_info', marketplace_name: platform_context.name).html_safe
+          %p
+            = render "registrations/networks", :supported_providers => @supported_providers
+        - else
+          %div
+            = t('registrations.social_accounts.no_social_providers', marketplace_name: platform_context.name).html_safe
+

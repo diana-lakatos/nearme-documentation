@@ -1,7 +1,10 @@
-%span#service_buttons
-  = link_to provider_auth_url('facebook'), :class => "btn btn-blue btn-large facebook submit", :id => 'facebook' do
-    %i.icon.ico-facebook 
-  = link_to provider_auth_url('linkedin'), :class => "btn btn-blue btn-large linkedin submit", :id => 'linkedin' do
-    %i.icon.ico-linkedin
-  = link_to provider_auth_url('twitter'), :class => "btn btn-blue btn-large twitter submit", :id => 'twitter' do
-    %i.icon.ico-twitter.padding
+- if Authentication.available_providers.any?
+  %span#service_buttons
+
+    - Authentication.available_providers.each do |provider|
+      - provider.downcase!
+      = link_to provider_auth_url(provider), :class => "btn btn-blue btn-large #{provider} submit", :id => provider do
+        %i{:class => "icon ico-#{provider}"}
+
+  .hr.divider
+    %span Or

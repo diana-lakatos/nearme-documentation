@@ -12,37 +12,6 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
   end
 
 
-  context 'platform_context_detail' do
-    setup do
-      ReservationMailer.expects(:notify_host_with_confirmation).returns(stub(deliver: true)).once
-      ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).once
-    end
-
-    should "assign company as a context detail" do
-      @company = FactoryGirl.create(:company)
-      PlatformContext.any_instance.stubs(:platform_context_detail).returns(@company)
-      post :create, booking_params_for(@listing)
-      assert_response :redirect
-      assert_equal @company, assigns(:reservation_request).reservation.platform_context_detail
-    end
-
-    should "assign partner as a context detail" do
-      @partner = FactoryGirl.create(:partner)
-      PlatformContext.any_instance.stubs(:platform_context_detail).returns(@partner)
-      post :create, booking_params_for(@listing)
-      assert_response :redirect
-      assert_equal @partner, assigns(:reservation_request).reservation.platform_context_detail
-    end
-
-    should "assign instance as a context detail" do
-      @instance = FactoryGirl.create(:instance)
-      PlatformContext.any_instance.stubs(:platform_context_detail).returns(@instance)
-      post :create, booking_params_for(@listing)
-      assert_response :redirect
-      assert_equal @instance, assigns(:reservation_request).reservation.platform_context_detail
-    end
-  end
-
   should "track booking review open" do
     @tracker.expects(:reviewed_a_booking).with do |reservation|
       reservation == assigns(:reservation_request).reservation.decorate
@@ -74,11 +43,10 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
     should 'create a delayed_job task to run in 24 hours time when saved' do
       Timecop.freeze(Time.zone.now) do
-        assert_difference 'Delayed::Job.count' do
-          post :create, booking_params_for(@listing)
+        ReservationExpiryJob.expects(:perform_later).with do |time, id|
+          time == 24.hours.from_now
         end
-
-        assert_equal 24.hours.from_now.to_i, Delayed::Job.last.run_at.to_i
+        post :create, booking_params_for(@listing)
       end
     end
 

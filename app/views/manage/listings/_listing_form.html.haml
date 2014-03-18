@@ -12,9 +12,6 @@
       %span.ico-save.padding
         Save
 
-- content_for :script do
-  :javascript
-    $(function() {
-      new Dashboard.ListingController($('#listing-form'))
-    });
+- content_for :domready do
+  $(function() { new Dashboard.ListingController($('#listing-form')) });
 

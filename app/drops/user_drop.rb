@@ -100,6 +100,6 @@ class UserDrop < BaseDrop
   end
 
   def listings_in_near
-    @user.listings_in_near(nil, 3, 100, true)
+    @user.listings_in_near(3, 100, true)
   end
 end

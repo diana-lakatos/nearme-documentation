@@ -2,7 +2,11 @@ FactoryGirl.define do
 
   factory :partner do
     name 'Super Partner'
-    instance_id { (Instance.default_instance.presence || FactoryGirl.create(:instance)).id }
+    search_scope_option 'all_associated_listings'
+
+    factory :partner_without_scoping do
+      search_scope_option 'no_scoping'
+    end
   end
 
 end

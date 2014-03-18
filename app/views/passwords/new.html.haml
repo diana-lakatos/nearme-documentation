@@ -20,8 +20,6 @@
   :javascript
     Modal.setClass('sign-up-modal')
 
-:javascript
-  $(function() {
-    new SigninForm($('#signup'))
-  });
+- content_for :domready do
+  $(function() { new SigninForm($('#signup')) });
 

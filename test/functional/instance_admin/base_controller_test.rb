@@ -4,7 +4,6 @@ class InstanceAdmin::BaseControllerTest < ActionController::TestCase
 
   setup do
     sign_in FactoryGirl.create(:user)
-
   end
 
   context 'authorization' do

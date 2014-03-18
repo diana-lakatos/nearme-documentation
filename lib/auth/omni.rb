@@ -45,7 +45,8 @@ module Auth
 
     def email_taken_by_other_user?(current_user)
       if email = @auth_params['info']['email'].presence
-        current_user.try(:email) != email && User.exists?(email: @auth_params['info']['email'])
+        user = User.find_by_email(@auth_params['info']['email'])
+        current_user.try(:email) != email && user.present? && Authentication.unscoped.where('user_id = ? AND provider = ?', user.id, provider).count.zero?
       else
         false
       end
@@ -62,7 +63,7 @@ module Auth
     end
 
     def authentication
-      @authentication ||= Authentication.find_by_provider_and_uid(provider, uid)
+      @authentication ||= Authentication.unscoped.find_by_provider_and_uid(provider, uid)
     end
 
     def provider

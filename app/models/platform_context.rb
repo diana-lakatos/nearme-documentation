@@ -1,5 +1,45 @@
+# Class responsible for encapsulating multi-tenancy logic.
+#
+# PlatformContext for normal requests is set based on current domain. Information about current platform
+# is accessible via class method current(). It is thread-safe, as long as we make sure the context is cleared
+# between requests. For jobs invoked in background, we pass platform_context_detail [ class and id ], which allows us
+# to retreive the context. We also have to make sure the context is set for each job [ nil is valid, so if we don't need context
+# in certain job, we have to set it nil! ]. In some parts of the app, we have to overwrite default platform context. For example for 
+# admin, we don't care on which domain we are - we are admins and we should have access to everything. We can achieve this by
+# manually set PlatformContext.current to nil via current= class method [ PlatformContext.current = nil ].
+#
+# PlatformContext is mainly used to display the right theme and text in UI, emails, and to ensure proper scoping [ i.e. if we have
+# two instances, desksnear.me and boatsnear.you, we don't want to display any boats on desksnear.me, and we don't want to display 
+# and desks at boatsnear.you.
+#
+# To ensure proper scoping, there are two helper modules, which are added to any ActiveRecord classes during initializations. 
+# These are PlatformContext::ForeignKeysAssigner and PlatformContext::DefaultScope. The first one ensures that db columns with foreign
+# keys to platform_context models [ like instance, partner, company ] are properly set. The second one ensures we retreive from db
+# only records that belong to current platform context. See these classes at app/models/platform_context/ for more information.
+
 class PlatformContext
   attr_reader :domain, :platform_context_detail, :instance, :theme, :domain, :white_label_company, :partner, :request_host, :blog_instance
+
+  def self.current
+    Thread.current[:platform_context]
+  end
+
+  def self.current=(platform_context)
+    Thread.current[:platform_context] = platform_context
+  end
+
+  def self.scope_to_instance
+    Thread.current[:force_scope_to_instance] = true
+  end
+
+  def self.scoped_to_instance?
+    Thread.current[:force_scope_to_instance]
+  end
+
+  def self.clear_current
+    Thread.current[:platform_context] = nil
+    Thread.current[:force_scope_to_instance] = nil
+  end
 
   def initialize(object = nil)
     case object
@@ -13,7 +53,6 @@ class PlatformContext
       initialize_with_instance(object)
     when nil
       initialize_with_instance(Instance.default_instance)
-
     else
       raise "Can't initialize PlatformContext with object of class #{object.class}"
     end
@@ -57,7 +96,11 @@ class PlatformContext
       @theme = company.theme
       @domain ||= company.domain
     else
-      initialize_with_instance(company.instance)
+      if company.partner.present?
+        initialize_with_partner(company.partner)
+      else
+        initialize_with_instance(company.instance)
+      end
     end
     self
   end

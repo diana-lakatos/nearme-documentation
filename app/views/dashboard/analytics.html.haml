@@ -14,11 +14,6 @@
         .chart
           = render :partial => "dashboard/analytics_#{@analytics_mode}"
 
-- content_for :script do
-  :javascript
-    $(function() {
-      new Dashboard.AnalyticsController($('#payments'))
-    });
-
 - content_for :domready do
+  new Dashboard.AnalyticsController($('#payments'))
   new ChartWrapper.Line($('#chart'), #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe})

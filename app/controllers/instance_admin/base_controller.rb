@@ -3,6 +3,7 @@ class InstanceAdmin::BaseController < ApplicationController
 
   before_filter :auth_user!
   before_filter :authorize_user!
+  before_filter :force_scope_to_instance
   skip_before_filter :redirect_if_marketplace_password_protected
 
   def index
@@ -20,7 +21,7 @@ class InstanceAdmin::BaseController < ApplicationController
   end
 
   def authorize_user!
-    @authorizer ||= InstanceAdminAuthorizer.new(current_user, platform_context)
+    @authorizer ||= InstanceAdminAuthorizer.new(current_user)
     if !(@authorizer.instance_admin?)
       flash[:warning] = t('flash_messages.authorizations.not_authorized')
       redirect_to root_path
@@ -44,7 +45,7 @@ class InstanceAdmin::BaseController < ApplicationController
   end
 
   def instance_admin_roles
-    @instance_admin_roles ||= ([InstanceAdminRole.administrator_role, InstanceAdminRole.default_role] + platform_context.instance.instance_admin_roles).compact
+    @instance_admin_roles ||= InstanceAdminRole.all
   end
   helper_method :instance_admin_roles
 end

@@ -3,6 +3,7 @@ require 'test_helper'
 class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
   setup do
+    Listing.destroy_all
     @public_location_type = FactoryGirl.create(:location_type, :name => 'public')
     @private_location_type = FactoryGirl.create(:location_type, :name => 'private')
 
@@ -19,41 +20,31 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
     @private_office_listing = FactoryGirl.create(:listing, :listing_type => @office_listing_type, :location => @private_location)
 
     @filters = { :midpoint => [7, 7], :radius => 1000 }
-    @search_scope = Location.where(:id => [@public_location.id, @private_location.id]).scoped
   end
 
   context '#geolocation' do
 
     should 'find locations near midpoint within given radius' do
       @filters = { :midpoint => [5, 6], :radius => 300 }
-      assert_equal [@public_listing, @public_office_listing].sort, Listing::SearchFetcher.new(@search_scope, @filters).listings.sort
+      assert_equal [@public_listing, @public_office_listing].sort, Listing::SearchFetcher.new(@filters).listings.sort
     end
 
     should 'return all locations if midpoint is missing' do
       @filters = { :midpoint => nil, :radius => 2 }
-      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing], Listing::SearchFetcher.new(@search_scope, @filters).listings.sort
+      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing], Listing::SearchFetcher.new(@filters).listings.sort
     end
 
     should 'return all locations if radius is missing' do
       @filters = { :midpoint => [1, 3], :radius => nil }
-      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing], Listing::SearchFetcher.new(@search_scope, @filters).listings.sort
+      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing], Listing::SearchFetcher.new(@filters).listings.sort
     end
-  end
-
-  context '#using scope' do
-
-    should "return listings scoped correctly" do
-      @search_scope = Location.where(:id => @public_listing.location.id).scoped
-      assert_equal [@public_listing, @public_office_listing].sort, Listing::SearchFetcher.new(@search_scope, @filters).listings.sort
-    end
-
   end
 
   context 'filters' do
 
     should 'find location with specified location type' do
       @filters.merge!({ :location_types_ids => [@public_location_type.id] })
-      assert_equal [@public_listing, @public_office_listing].sort, Listing::SearchFetcher.new(@search_scope, @filters).listings.sort
+      assert_equal [@public_listing, @public_office_listing].sort, Listing::SearchFetcher.new(@filters).listings.sort
     end
 
     context '#availability' do
@@ -67,17 +58,17 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
       should 'find listings that have specified desk' do
         @filters.merge!({ :listing_types_ids => [@public_listing_type.id, @private_listing_type.id] })
-        assert_equal [@public_listing, @private_listing].sort, Listing::SearchFetcher.new(@search_scope, @filters).listings.sort
+        assert_equal [@public_listing, @private_listing].sort, Listing::SearchFetcher.new(@filters).listings.sort
       end
 
       should 'return empty array if none listing is satisfying conditions' do
         @filters.merge!({ :listing_types_ids => [FactoryGirl.create(:listing_type).id] })
-        assert_equal [], Listing::SearchFetcher.new(@search_scope, @filters).listings
+        assert_equal [], Listing::SearchFetcher.new(@filters).listings
       end
 
       should 'find listings that belong to certain location type and listing type' do
         @filters.merge!({:location_types_ids => [@public_location_type.id], :listing_types_ids => [@office_listing_type.id] })
-        assert_equal [@public_office_listing], Listing::SearchFetcher.new(@search_scope, @filters).listings
+        assert_equal [@public_office_listing], Listing::SearchFetcher.new(@filters).listings
       end
 
     end
@@ -103,22 +94,21 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
         @listing1 = FactoryGirl.create(:listing, :location => @location1)
         @listing2 = FactoryGirl.create(:listing, :location => @location2)
 
-        @search_scope = Location.where(:id => [@location1, @location2]).scoped
       end
 
       should 'filter by single company industries' do
         @filters.merge!({:industries_ids => [@economics_industry.id]})
-        assert_equal [@listing2], Listing::SearchFetcher.new(@search_scope, @filters).listings
+        assert_equal [@listing2], Listing::SearchFetcher.new(@filters).listings
       end
 
       should 'filter by multiple company industries' do
         @filters.merge!({:industries_ids => [@economics_industry.id, @internet_industry.id]})
-        assert_equal [@listing1, @listing2].sort, Listing::SearchFetcher.new(@search_scope, @filters).listings.sort
+        assert_equal [@listing1, @listing2].sort, Listing::SearchFetcher.new(@filters).listings.sort
       end
 
       should 'be able to return multiple results for single industry' do
         @filters.merge!({:industries_ids => [@food_industry.id]})
-        assert_equal [@listing1, @listing2].sort, Listing::SearchFetcher.new(@search_scope, @filters).listings.sort
+        assert_equal [@listing1, @listing2].sort, Listing::SearchFetcher.new(@filters).listings.sort
       end
 
     end

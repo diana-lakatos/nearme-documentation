@@ -2,9 +2,6 @@
 
   = render 'authentications/services'
 
-  .hr.divider
-    %span Or
-
   = simple_form_for resource, :as => :user, :url => registration_path(resource_name) do |f|
     = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
 
@@ -48,8 +45,6 @@
       .actions
         = f.submit 'Sign up', :disable_with => "Signing up..."
 
-:javascript
-  $(function() {
-    new SignupForm($('#signup'))
-  });
+- content_for :domready do
+  $(function() { new SignupForm($('#signup')) });
 

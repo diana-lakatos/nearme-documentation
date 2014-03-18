@@ -1,6 +1,9 @@
 class ReservationCharge < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
+  auto_set_platform_context
+  scoped_to_platform_context
+  inherits_columns_from_association([:company_id], :reservation)
 
   # === Associations
   belongs_to :reservation
@@ -9,7 +12,8 @@ class ReservationCharge < ActiveRecord::Base
     :as => :reference,
     :dependent => :destroy
 
-  has_one :instance, through: :reservation
+  belongs_to :instance
+  belongs_to :company
 
   # === Scopes
   # These payments have been attempted but failed during the charge attempt.
@@ -28,7 +32,7 @@ class ReservationCharge < ActiveRecord::Base
   }
 
   scope :needs_payment_transfer, -> {
-    paid.where(payment_transfer_id: nil)
+    paid.where(payment_transfer_id: nil).where(refunded_at: nil)
   }
 
   scope :total_by_currency, -> {
@@ -41,8 +45,6 @@ class ReservationCharge < ActiveRecord::Base
         )
       ')
   }
-
-  scope :for_instance, ->(instance) { joins(:instance).where(:'instances.id' => instance.id) }
 
   # === Callbacks
   before_validation :assign_currency

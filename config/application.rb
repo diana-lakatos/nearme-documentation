@@ -34,6 +34,16 @@ module DesksnearMe
     config.assets.paths           << %(#{Rails.root}/app/assets/swfs)
     config.assets.paths           << %(#{Rails.root}/app/assets/videos)
 
+    config.assets.precompile += [
+      "vendor/jquery.backgroundSize.min.js","vendor/respond.proxy.js", "vendor/respond.min.js", 
+      "admin.js", "blog.js", "blog_admin.js", "chrome_frame.js", "instance_admin.js", 
+      "platform_home.js"
+    ]
+    config.assets.precompile += [
+      "browser_specific/ie8.css", "admin.css", "blog.css", "blog_admin.css", "errors.css",
+      "instance_admin.css", "platform_home.css"
+    ]
+
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'
@@ -55,6 +65,7 @@ module DesksnearMe
     config.generators do |g|
       g.test_framework :test_unit, :fixture => false
     end
+    config.use_only_ssl = true
 
     # note that we *don't* want to rewite for the test env :)
     config.should_rewrite_email = Rails.env.staging? || Rails.env.development?
@@ -64,9 +75,6 @@ module DesksnearMe
 
     # Access the DB or load models when precompiling assets
     config.assets.initialize_on_precompile = true
-
-    # Add fonts stylesheet to the precompile array
-    config.assets.precompile += ['fonts.css']
 
     # Enable the asset pipeline
     config.assets.enabled = true
@@ -89,6 +97,8 @@ module DesksnearMe
 
     # custom rewrites specified in lib/legacy_redirect_handler.rb
     config.middleware.insert_before(Rack::Lock, "LegacyRedirectHandler")
+    # setting platform_context in app/models/platform_context/rack_setter.rb
+    config.middleware.use "PlatformContext::RackSetter"
     config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access
     config.google_analytics = (YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env] || {}).with_indifferent_access
     config.near_me_analytics = (YAML.load_file(Rails.root.join("config", "near_me_analytics.yml"))[Rails.env] || {}).with_indifferent_access
@@ -107,5 +117,16 @@ module DesksnearMe
 
     config.silence_raygun_notification = false
 
+    config.paypal_username = nil
+    config.paypal_password = nil
+    config.paypal_signature = nil
+    config.paypal_client_id = nil
+    config.paypal_client_secret = nil
+    config.paypal_app_id = nil
+
+    config.stripe_api_key = nil
+    config.stripe_public_key = nil
+
+    config.balanced_api_key = nil
   end
 end

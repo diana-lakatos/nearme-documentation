@@ -67,6 +67,10 @@ module Utils
       do_task "Loading data" do
         User.transaction do
 
+          # === INSTANCES ========================================
+
+          load_instances!
+          PlatformContext.current = PlatformContext.new
           # === BASIC STUFF ======================================
 
           load_instance_admin_roles!
@@ -75,9 +79,6 @@ module Utils
           load_location_types!
           load_listing_types!
 
-          # === INSTANCES ========================================
-
-          load_instances!
 
           # === COMPANIES / LOCATIONS / LISTINGS =================
 
@@ -92,7 +93,7 @@ module Utils
 
           # === BILLING GATEWAYS CREDENTIALS =====================
 
-          load_stripe_api_keys_for_dnm!
+          load_integration_keys!
 
           # === BLOG ========================================
 
@@ -267,12 +268,25 @@ module Utils
       end
     end
 
-    def load_stripe_api_keys_for_dnm!
+    def load_integration_keys!
       dnm_instance = Instance.default_instance
 
       if dnm_instance
         dnm_instance.stripe_api_key = 'sk_test_lpr4WQXQdncpXjjX6IJx01W7'
         dnm_instance.stripe_public_key = 'pk_test_iCGA8nFZdILrI1UtuMOZD2aq'
+
+        dnm_instance.facebook_consumer_key = '432038396866156'
+        dnm_instance.facebook_consumer_secret = '71af86082de1c38a3523a4c8f44aca2d'
+
+        dnm_instance.twitter_consumer_key = 'IZeQXx4YyCdTQ9St3tmyw'
+        dnm_instance.twitter_consumer_secret = 'ZlxMPIhNPBn4QbOSHqkN1p7hKghGZTOtR1fDsPSX8'
+
+        dnm_instance.linkedin_consumer_key = '4q9xfgn60bik'
+        dnm_instance.linkedin_consumer_secret = 'lRmKVrc0RPpfKDCV'
+
+        dnm_instance.instagram_consumer_key = '566499e0d6e647518d8f4cec0a42f3d6'
+        dnm_instance.instagram_consumer_secret = '5c0652ad06984bf09e4987c8fc5ea8f1'
+
         dnm_instance.save!
       end
     end

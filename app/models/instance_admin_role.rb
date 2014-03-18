@@ -1,11 +1,13 @@
 class InstanceAdminRole < ActiveRecord::Base
   has_paper_trail
   has_metadata :without_db_column => true
+  auto_set_platform_context :allow_nil => [:instance_id]
+  scoped_to_platform_context :allow_nil => true
 
   PERMISSIONS = %w(Analytics Settings Theme Manage Blog)
 
   attr_accessible :permission_analytics, :permission_settings, :permission_theme, :permission_transfers, :permission_inventories,
-    :permission_partners, :permission_users, :permission_pages, :permission_manage, :name
+    :permission_partners, :permission_users, :permission_pages, :permission_manage, :permission_blog, :name
 
 
   has_many :instance_admins
@@ -17,7 +19,6 @@ class InstanceAdminRole < ActiveRecord::Base
   after_destroy :assign_default_role_to_instance_admins
 
   default_scope :order => "name ASC"
-  scope :belongs_to_instance, lambda { |instance_id| where('instance_id = ? OR instance_id is null', instance_id) }
 
   def self.administrator_role
     self.find_by_name_and_instance_id('Administrator', nil)

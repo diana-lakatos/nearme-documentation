@@ -11,7 +11,9 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140228175629) do
+ActiveRecord::Schema.define(:version => 20140309155414) do
+
+
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -60,6 +62,7 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
     t.boolean  "token_expires",            :default => true
     t.text     "profile_url"
     t.integer  "total_social_connections", :default => 0
+    t.integer  "instance_id"
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
@@ -180,11 +183,12 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
 
   create_table "domains", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.integer  "target_id"
     t.string   "target_type"
     t.datetime "deleted_at"
+    t.boolean  "secured",     :default => false
   end
 
   add_index "domains", ["target_id", "target_type"], :name => "index_domains_on_target_id_and_target_type"
@@ -265,9 +269,15 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
     t.datetime "deleted_at"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "instance_id"
   end
 
+  add_index "impressions", ["company_id"], :name => "index_impressions_on_company_id"
   add_index "impressions", ["impressionable_type", "impressionable_id"], :name => "index_impressions_on_impressionable_type_and_impressionable_id"
+  add_index "impressions", ["instance_id"], :name => "index_impressions_on_instance_id"
+  add_index "impressions", ["partner_id"], :name => "index_impressions_on_partner_id"
 
   create_table "industries", :force => true do |t|
     t.string   "name"
@@ -340,16 +350,16 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
 
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                                                                       :null => false
-    t.datetime "updated_at",                                                                       :null => false
-    t.string   "bookable_noun",                                                :default => "Desk"
-    t.decimal  "service_fee_guest_percent",      :precision => 5, :scale => 2, :default => 0.0
+    t.datetime "created_at",                                                                            :null => false
+    t.datetime "updated_at",                                                                            :null => false
+    t.string   "bookable_noun",                                                     :default => "Desk"
+    t.decimal  "service_fee_guest_percent",           :precision => 5, :scale => 2, :default => 0.0
     t.string   "lessor"
     t.string   "lessee"
-    t.boolean  "skip_company",                                                 :default => false
-    t.boolean  "default_instance",                                             :default => false
+    t.boolean  "skip_company",                                                      :default => false
+    t.boolean  "default_instance",                                                  :default => false
     t.text     "pricing_options"
-    t.decimal  "service_fee_host_percent",       :precision => 5, :scale => 2, :default => 0.0
+    t.decimal  "service_fee_host_percent",            :precision => 5, :scale => 2, :default => 0.0
     t.string   "live_stripe_public_key"
     t.string   "paypal_email"
     t.string   "encrypted_live_paypal_username"
@@ -382,6 +392,14 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
     t.string   "encrypted_test_balanced_api_key"
     t.string   "encrypted_olark_api_key"
     t.boolean  "olark_enabled",                                                     :default => false
+    t.string   "encrypted_facebook_consumer_key"
+    t.string   "encrypted_facebook_consumer_secret"
+    t.string   "encrypted_linkedin_consumer_key"
+    t.string   "encrypted_linkedin_consumer_secret"
+    t.string   "encrypted_twitter_consumer_key"
+    t.string   "encrypted_twitter_consumer_secret"
+    t.string   "encrypted_instagram_consumer_key"
+    t.string   "encrypted_instagram_consumer_secret"
   end
 
   create_table "listing_types", :force => true do |t|
@@ -424,13 +442,18 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
     t.integer  "instance_id"
     t.integer  "creator_id"
     t.integer  "administrator_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.boolean  "listings_public",             :default => true
   end
 
   add_index "listings", ["administrator_id"], :name => "index_listings_on_administrator_id"
+  add_index "listings", ["company_id"], :name => "index_listings_on_company_id"
   add_index "listings", ["creator_id"], :name => "index_listings_on_creator_id"
   add_index "listings", ["instance_id"], :name => "index_listings_on_instance_id"
   add_index "listings", ["listing_type_id"], :name => "index_listings_on_listing_type_id"
   add_index "listings", ["location_id"], :name => "index_listings_on_location_id"
+  add_index "listings", ["partner_id"], :name => "index_listings_on_partner_id"
 
   create_table "location_types", :force => true do |t|
     t.string   "name"
@@ -472,6 +495,7 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
     t.integer  "instance_id"
     t.integer  "creator_id"
     t.boolean  "listings_public",    :default => true
+    t.integer  "partner_id"
   end
 
   add_index "locations", ["administrator_id"], :name => "index_locations_on_administrator_id"
@@ -479,6 +503,7 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
   add_index "locations", ["creator_id"], :name => "index_locations_on_creator_id"
   add_index "locations", ["instance_id"], :name => "index_locations_on_instance_id"
   add_index "locations", ["location_type_id"], :name => "index_locations_on_location_type_id"
+  add_index "locations", ["partner_id"], :name => "index_locations_on_partner_id"
   add_index "locations", ["slug"], :name => "index_locations_on_slug"
 
   create_table "mailer_unsubscriptions", :force => true do |t|
@@ -534,9 +559,13 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
     t.datetime "updated_at",                                    :null => false
     t.integer  "service_fee_amount_host_cents",  :default => 0, :null => false
     t.datetime "deleted_at"
+    t.integer  "instance_id"
+    t.integer  "partner_id"
   end
 
   add_index "payment_transfers", ["company_id"], :name => "index_payment_transfers_on_company_id"
+  add_index "payment_transfers", ["instance_id"], :name => "index_payment_transfers_on_instance_id"
+  add_index "payment_transfers", ["partner_id"], :name => "index_payment_transfers_on_partner_id"
 
   create_table "payouts", :force => true do |t|
     t.integer  "reference_id"
@@ -641,8 +670,14 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
     t.datetime "deleted_at"
     t.integer  "service_fee_amount_host_cents",  :default => 0, :null => false
     t.datetime "refunded_at"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
   end
 
+  add_index "reservation_charges", ["company_id"], :name => "index_reservation_charges_on_company_id"
+  add_index "reservation_charges", ["instance_id"], :name => "index_reservation_charges_on_instance_id"
+  add_index "reservation_charges", ["partner_id"], :name => "index_reservation_charges_on_partner_id"
   add_index "reservation_charges", ["payment_transfer_id"], :name => "index_reservation_charges_on_payment_transfer_id"
   add_index "reservation_charges", ["reservation_id"], :name => "index_reservation_charges_on_reservation_id"
 
@@ -696,13 +731,18 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
     t.integer  "instance_id"
     t.integer  "creator_id"
     t.integer  "administrator_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.boolean  "listings_public",                    :default => true
   end
 
   add_index "reservations", ["administrator_id"], :name => "index_reservations_on_administrator_id"
+  add_index "reservations", ["company_id"], :name => "index_reservations_on_company_id"
   add_index "reservations", ["creator_id"], :name => "index_reservations_on_creator_id"
   add_index "reservations", ["instance_id"], :name => "index_reservations_on_instance_id"
   add_index "reservations", ["listing_id"], :name => "index_reservations_on_listing_id"
   add_index "reservations", ["owner_id"], :name => "index_reservations_on_owner_id"
+  add_index "reservations", ["partner_id"], :name => "index_reservations_on_partner_id"
   add_index "reservations", ["platform_context_detail_id"], :name => "index_reservations_on_platform_context_detail_id"
 
   create_table "search_notifications", :force => true do |t|
@@ -717,6 +757,16 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
   end
 
   add_index "search_notifications", ["user_id"], :name => "index_search_notifications_on_user_id"
+
+  create_table "sessions", :force => true do |t|
+    t.string   "session_id", :null => false
+    t.text     "data"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
+  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "theme_fonts", :force => true do |t|
     t.integer  "theme_id"
@@ -908,6 +958,7 @@ ActiveRecord::Schema.define(:version => 20140228175629) do
     t.boolean  "sms_notifications_enabled",              :default => true
     t.string   "sms_preferences",                        :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
     t.text     "instance_unread_messages_threads_count", :default => "--- {}\n"
+    t.string   "payment_token"
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"

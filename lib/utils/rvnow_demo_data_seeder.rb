@@ -27,6 +27,7 @@ module Utils
       do_task "Cleaning RVnow data" do
         User.transaction do
           instance = Instance.where(name: 'RVnow').first
+          PlatformContext.current = PlatformContext.new(instance)
           if instance
             instance.theme.pages.each{|p| p.destroy!}
             instance.theme.reload.destroy!
@@ -79,6 +80,7 @@ module Utils
             instance.partners.each{|o| o.destroy!}
 
             instance.reload.destroy!
+            PlatformContext.current = nil
           else
             puts "Can't find RVnow instance !!!"
           end
@@ -202,6 +204,8 @@ module Utils
 
         instance
       end
+      PlatformContext.current = PlatformContext.new(@instance)
+      @instance
     end
     alias_method :instance, :load_instance!
 

@@ -1,16 +1,21 @@
 class PaymentTransfer < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
+  auto_set_platform_context
+  scoped_to_platform_context
 
   belongs_to :company
+  belongs_to :instance
+  belongs_to :partner
+
   has_many :reservation_charges, :dependent => :nullify
 
-  has_many :payout_attemps,
+  has_many :payout_attempts,
     :class_name => 'Payout',
     :as => :reference,
     :dependent => :nullify
 
-  after_validation :assign_amounts_and_currency
+  after_create :assign_amounts_and_currency
   after_create :payout
 
   scope :pending, -> {
@@ -24,11 +29,6 @@ class PaymentTransfer < ActiveRecord::Base
   scope :last_x_days, lambda { |days_in_past|
     where("DATE(#{table_name}.created_at) >= ? ", days_in_past.days.ago)
   }
-
-  scope :for_instance, ->(instance) {
-    joins(:company).where(:'companies.instance_id' => instance.id)
-  }
-
 
   validate :validate_all_charges_in_currency
 
@@ -77,6 +77,10 @@ class PaymentTransfer < ActiveRecord::Base
     end
   end
 
+  def payout_processor
+    billing_gateway.processor_class
+  end
+
   def possible_automated_payout_not_supported?
     # true if instance makes it possible to make automated payout for given currency, but company does not support it
     # false if either company can process this payment transfer automatically or instance does not support it
@@ -94,6 +98,7 @@ class PaymentTransfer < ActiveRecord::Base
     self.service_fee_amount_guest_cents = reservation_charges.sum(
       :service_fee_amount_guest_cents
     )
+    self.save!
   end
 
   def validate_all_charges_in_currency

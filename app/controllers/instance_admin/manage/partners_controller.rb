@@ -5,7 +5,6 @@ class InstanceAdmin::Manage::PartnersController < InstanceAdmin::Manage::BaseCon
 
   def create
     @partner = Partner.new(params[:partner])
-    @partner.instance = platform_context.instance
-    create!
+    create! { instance_admin_manage_partners_path }
   end
 end
