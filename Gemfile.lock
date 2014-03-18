@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/mkdynamic/omniauth-facebook.git
-  revision: b0f25d21e43304f2a41521ed0f34fae90347ec40
+  revision: 062d54714838ff692e1a2982e6685ab2a4c19a21
   specs:
-    omniauth-facebook (1.4.1)
+    omniauth-facebook (1.6.0)
       omniauth-oauth2 (~> 1.1)
 
 GIT
@@ -311,22 +311,21 @@ GEM
       jwt (~> 0.1.4)
       multi_json (~> 1.0)
       rack (~> 1.2)
-    omniauth (1.1.4)
+    omniauth (1.2.1)
       hashie (>= 1.2, < 3)
-      rack
+      rack (~> 1.0)
     omniauth-instagram (1.0.1)
       omniauth (~> 1.0)
       omniauth-oauth2 (~> 1.0)
-    omniauth-linkedin-oauth2 (0.1.1)
-      omniauth (~> 1.0)
-      omniauth-oauth2
+    omniauth-linkedin (0.1.0)
+      omniauth-oauth (~> 1.0)
     omniauth-oauth (1.0.1)
       oauth
       omniauth (~> 1.0)
     omniauth-oauth2 (1.1.1)
       oauth2 (~> 0.8.0)
       omniauth (~> 1.0)
-    omniauth-twitter (0.0.14)
+    omniauth-twitter (1.0.1)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
     orm_adapter (0.4.0)
@@ -594,7 +593,7 @@ DEPENDENCIES
   omniauth
   omniauth-facebook!
   omniauth-instagram
-  omniauth-linkedin-oauth2
+  omniauth-linkedin
   omniauth-twitter
   paper_trail
   paranoia (~> 1.3.3)
