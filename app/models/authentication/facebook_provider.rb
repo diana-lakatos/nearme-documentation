@@ -7,8 +7,8 @@ class Authentication::FacebookProvider < Authentication::BaseProvider
 
   def self.setup_proc 
     lambda do |env| 
-      env['omniauth.strategy'].options[:client_id] = PlatformContext.current.instance.facebook_consumer_key
-      env['omniauth.strategy'].options[:client_secret] = PlatformContext.current.instance.facebook_consumer_key
+      env['omniauth.strategy'].options[:client_id] = PlatformContext.current.instance.facebook_consumer_key.try(:strip)
+      env['omniauth.strategy'].options[:client_secret] = PlatformContext.current.instance.facebook_consumer_secret.try(:strip)
     end
   end
 

@@ -206,12 +206,24 @@ module Utils
       end
     end 
 
-    def load_stripe_api_keys_for_dnm!
+    def load_integration_keys!
       dnm_instance = Instance.default_instance
 
       if dnm_instance
         dnm_instance.stripe_api_key = 'sk_test_lpr4WQXQdncpXjjX6IJx01W7'
         dnm_instance.stripe_public_key = 'pk_test_iCGA8nFZdILrI1UtuMOZD2aq'
+
+        dnm_instance.facebook_consumer_key = '491810927536381'
+        dnm_instance.facebook_consumer_secret = 'cce1576ac9f3c4d6998f2c9345360afe'
+
+        dnm_instance.twitter_consumer_key = '8M9qYWg2v2hjTotXg9cWw'
+        dnm_instance.twitter_consumer_secret = 'qnP1hPJ1kb2AaN7XTTfN3K4VT3SRN48UWe3vMNtVfEg'
+
+        dnm_instance.linkedin_consumer_key = '26pmsiwpsh8a'
+        dnm_instance.linkedin_consumer_secret = 'M2TZrt7sF7QlIeUZ'
+
+        dnm_instance.instagram_consumer_key = 'f9aee2b90cc5493bb60f777fee06af52'
+        dnm_instance.instagram_consumer_secret = '8b20585b0edd47e7b5ed090616c24d0b'
         dnm_instance.save!
       end
     end

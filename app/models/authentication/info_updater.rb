@@ -15,6 +15,7 @@ class Authentication::InfoUpdater
     @authentication.info = info_hash
     @authentication.profile_url = info.profile_url
     @authentication_changes = @authentication.changes
+    @authentication.instance_id ||= (PlatformContext.current.try(:instance).try(:id).presence || PlatformContext.new.instance.id)
     @authentication.save!
 
     @user.name ||= info_hash['name']
