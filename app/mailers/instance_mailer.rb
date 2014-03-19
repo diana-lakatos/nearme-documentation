@@ -55,9 +55,11 @@ class InstanceMailer < ActionMailer::Base
 
   def liquid_subject(interpolations = {})
     mailer_scope = self.class.mailer_name.tr('/', '.')
-    subject = I18n.t(:subject, scope: [mailer_scope, action_name])
-    template = Liquid::Template.parse(subject)
-    template.render(interpolations.stringify_keys!)
+    subject = I18n.t(:subject, scope: [mailer_scope, action_name], default: '')
+    if subject.present?
+      template = Liquid::Template.parse(subject)
+      template.render(interpolations.stringify_keys!)
+    end
   end
 
   def mail_type

@@ -41,30 +41,30 @@ en:
       subject: "Share your listing '{{listing.name}}' at {{listing.street}} and increase bookings!"
   reservation_mailer:
     notify_guest_of_cancellation_by_host:
-      subject:  "Your booking for '{{listing.name}}' at {{listing.street}} was cancelled by the host"
+      subject:  "[{{platform_context.name}}] Your booking for '{{listing.name}}' at {{listing.street}} was cancelled by the host"
     notify_guest_of_cancellation_by_guest:
-      subject:  'You just cancelled a booking'
+      subject:  "[{{platform_context.name}}] You just cancelled a booking"
     notify_guest_of_confirmation:
-      subject:  "{{reservation.owner.first_name}}, your booking has been confirmed"
+      subject:  "[{{platform_context.name}}] {{reservation.owner.first_name}}, your booking has been confirmed"
     notify_guest_of_rejection:
-      subject:  "Can we help, {{reservation.owner.first_name}}?"
+      subject:  "[{{platform_context.name}}] Can we help, {{reservation.owner.first_name}}?"
     notify_guest_with_confirmation:
-      subject:  "{{reservation.owner.first_name}}, your booking is pending confirmation"
+      subject:  "[{{platform_context.name}}] {{reservation.owner.first_name}}, your booking is pending confirmation"
     notify_host_of_cancellation_by_guest:
-      subject:  "{{reservation.owner.first_name}} cancelled a booking for '{{listing.name}}' at {{listing.street}}"
+      subject:  "[{{platform_context.name}}] {{reservation.owner.first_name}} cancelled a booking for '{{listing.name}}' at {{listing.street}}"
     notify_host_of_cancellation_by_host:
-      subject:  "You just declined a booking"
+      subject:  "[{{platform_context.name}}] You just declined a booking"
     notify_host_of_confirmation:
-      subject:  'Thanks for confirming!'
+      subject:  "[{{platform_context.name}}] Thanks for confirming!"
     notify_guest_of_expiration:
-      subject:  "Your booking for '{{listing.name}}' at {{listing.street}} has expired"
+      subject:  "[{{platform_context.name}}] Your booking for '{{listing.name}}' at {{listing.street}} has expired"
     notify_host_of_expiration:
-      subject:  'A booking at one of your listings has expired'
+      subject:  "[{{platform_context.name}}] A booking at one of your listings has expired"
     notify_host_of_rejection:
-      subject:  "Can we help, {{user.first_name}}?"
+      subject:  "[{{platform_context.name}}] Can we help, {{user.first_name}}?"
     notify_host_with_confirmation:
-      subject:  "{{reservation.owner.first_name}} just booked your {{platform_context.bookable_noun}}!"
+      subject:  "[{{platform_context.name}}] {{reservation.owner.first_name}} just booked your {{platform_context.bookable_noun}}!"
     notify_host_without_confirmation:
-      subject:  "{{reservation.owner.first_name}} just booked your {{platform_context.bookable_noun}}!"
+      subject:  "[{{platform_context.name}}] {{reservation.owner.first_name}} just booked your {{platform_context.bookable_noun}}!"
     pre_booking:
-      subject:  "{{reservation.owner.first_name}}, your booking is tomorrow!"
+      subject:  "[{{platform_context.name}}] {{reservation.owner.first_name}}, your booking is tomorrow!"
