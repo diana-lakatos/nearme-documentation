@@ -12,8 +12,9 @@
 
 - if platform_context.instance.balanced_supported?
   %h2 Payouts via ACH (US only)
-  %div Current Bank Account: xxxxxx#{f.object.current_instance_client(platform_context.instance).bank_account_last_four_digits}.
-  %div Update:
+  - if f.object.instance_clients.first.try(:encrypted_balanced_user_id)
+    %div Current Bank Account: xxxxxx#{f.object.current_instance_client(platform_context.instance).bank_account_last_four_digits}.
+    %div Update:
   - if f.object.errors[:bank_account_form].present?
     .bank_account_fields
       .flash.error
