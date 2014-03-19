@@ -6,7 +6,7 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
 
   def new
     unless @email_template = EmailTemplate.new_from_file_template(params[:path])
-      flash[:success] = t 'flash_messages.instance_admin.manage.email_templates.updated'
+      flash[:error] = t 'flash_messages.instance_admin.manage.email_templates.invalid'
       redirect_to action: :index
     end
   end
