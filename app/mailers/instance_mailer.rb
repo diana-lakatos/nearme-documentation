@@ -14,7 +14,7 @@ class InstanceMailer < ActionMailer::Base
     template = options.delete(:template_name) || view_context.action_name
     mailer = options.delete(:mailer) || find_mailer(template: template) || default_mailer
     to = options[:to]
-    bcc = options.delete(:bcc) || mailer.bcc || default_mailer.from
+    bcc = options.delete(:bcc) || mailer.bcc || default_mailer.bcc
     from = options.delete(:from) || mailer.from || default_mailer.from
     subject_locals = options.delete(:subject_locals) || {}
     subject_locals = subject_locals.merge(platform_context: @platform_context)

@@ -1,7 +1,7 @@
 = simple_form_for [:instance_admin, :manage, @email_template] do |f|
   %legend
     = link_to 'Manage email templates', instance_admin_manage_email_templates_url
-    = ' > ' + pretty_path(@email_template.path)
+    =  "> #{pretty_path(@email_template.path)}"
 
   %fieldset
     .row-fluid
