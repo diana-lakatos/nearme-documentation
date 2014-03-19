@@ -15,14 +15,14 @@ class InstanceMailerTest < ActiveSupport::TestCase
   setup do
     stub_mixpanel
   end
-  
+
   context "email template exists in db" do
-    setup do 
-      FactoryGirl.create(:email_template, path: 'instance_mailer/test_mailer',
-                         subject: 'Test {{interpolation}}', 
+    setup do
+      FactoryGirl.build(:email_template, path: 'instance_mailer/test_mailer',
+                         subject: 'Test {{interpolation}}',
                          theme: PlatformContext.current.instance.theme,
                          reply_to: 'reply@me.com',
-                         bcc: 'test@example.com')
+                         bcc: 'test@example.com').save(:validate => false)
       @mail = InstanceMailer.test_mailer
     end
 

@@ -9,7 +9,7 @@ class RecurringMailerPreview < MailView
   end
 
   def share
-    ::RecurringMailer.share(Reservation.first.listing)
+    ::RecurringMailer.share(Listing.first)
   end
 
 end

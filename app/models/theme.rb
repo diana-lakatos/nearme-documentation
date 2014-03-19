@@ -21,12 +21,13 @@ class Theme < ActiveRecord::Base
   #       etc.
   belongs_to :owner, :polymorphic => true
   has_many :pages, :dependent => :destroy
+  has_many :email_templates, :dependent => :destroy
   has_one :theme_font, :dependent => :destroy
   delegate :bookable_noun, :to => :instance
   delegate :lessor, :to => :instance
   delegate :lessee, :to => :instance
 
-  accepts_nested_attributes_for :theme_font, reject_if: proc { |params| 
+  accepts_nested_attributes_for :theme_font, reject_if: proc { |params|
     ThemeFont::FONT_TYPES.map do |font_type|
       ThemeFont::FONT_EXTENSIONS.map do |file_extension|
         params["#{font_type}_#{file_extension}".to_sym].present?

@@ -52,7 +52,7 @@ class ReservationMailer < InstanceMailer
     setup_defaults(reservation)
     generate_mail("Your booking for '#{reservation.listing.name}' at #{reservation.location.street} has expired")
   end
-  
+
   def notify_host_of_expiration(reservation)
     setup_defaults(reservation)
     @user = @reservation.administrator
@@ -66,7 +66,7 @@ class ReservationMailer < InstanceMailer
     set_bcc_email
     generate_mail("Can we help, #{@user.first_name}?")
   end
-  
+
   def notify_host_with_confirmation(reservation)
     setup_defaults(reservation)
     @user = @reservation.administrator
@@ -107,9 +107,9 @@ class ReservationMailer < InstanceMailer
 
     @bcc = Array.wrap(@bcc) - [Theme::DEFAULT_EMAIL] if (Rails.env.development? || Rails.env.staging?)
 
-    mail(to: @user.email,
+    mail to: @user.email,
          bcc: @bcc,
-         subject: instance_prefix(subject))
+         subject_locals: { reservation: @reservation, listing: @listing, user: @user, host: @host }
   end
 
   def set_bcc_email
