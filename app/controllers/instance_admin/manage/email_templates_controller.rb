@@ -5,14 +5,10 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
   end
 
   def new
-    text = File.read(File.join(Rails.root, 'app', 'views', params[:path] + '.text.liquid')) rescue nil
-    html = File.read(File.join(Rails.root, 'app', 'views', params[:path] + '.html.liquid')) rescue nil
-    subject = I18n.t(:subject, scope: params[:path].gsub('/','.'))
-
-    @email_template = EmailTemplate.new(path: params[:path],
-                                        subject: subject,
-                                        text_body: text,
-                                        html_body: html)
+    unless @email_template = EmailTemplate.new_from_file_template(params[:path])
+      flash[:success] = t 'flash_messages.instance_admin.manage.email_templates.updated'
+      redirect_to action: :index
+    end
   end
 
   def edit

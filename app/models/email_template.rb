@@ -56,4 +56,13 @@ class EmailTemplate < ActiveRecord::Base
     template = Liquid::Template.parse(self.subject)
     template.render(locals.stringify_keys!)
   end
+
+  def self.new_from_file_template(path)
+    if EmailTemplate::CUSTOMIZABLE_EMAILS.include?(path)
+      text = File.read(File.join(Rails.root, 'app', 'views', path + '.text.liquid')) rescue nil
+      html = File.read(File.join(Rails.root, 'app', 'views', path + '.html.liquid')) rescue nil
+      subject = I18n.t(:subject, scope: path.gsub('/','.'), default: '')
+      EmailTemplate.new(path: path, subject: subject, text_body: text, html_body: html)
+    end
+  end
 end
