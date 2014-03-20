@@ -9,6 +9,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
     @company_1 = prepare_company_with_charged_reservations(:reservation_count => 2)
     @company_2 = prepare_company_with_charged_reservations(:reservation_count => 3)
     PaymentTransfer.any_instance.stubs(:possible_automated_payout_not_supported?).returns(false).at_least(0)
+    Billing::Gateway.any_instance.stubs(:payout).returns(stub(:success => true)).at_least(0)
   end
 
   context '#perform' do
@@ -66,7 +67,6 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
     end
 
     should "generate separate transfers for separate currencies" do
-      Billing::Gateway::StripeProcessor.stubs(:currency_supported?).with('USD').returns(true).at_least(1)
       Billing::Gateway::StripeProcessor.stubs(:currency_supported?).with('NZD').returns(true).at_least(1)
       location = FactoryGirl.create(:location,
         :company => @company_1,

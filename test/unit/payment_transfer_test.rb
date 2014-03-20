@@ -15,6 +15,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @reservation_1.reservation_charges.to_a,
       @reservation_2.reservation_charges.to_a
     ].flatten
+    Billing::Gateway.any_instance.stubs(:payout).returns(stub(:success => true)).at_least(0)
   end
 
   context "creating" do
