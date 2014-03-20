@@ -7,8 +7,9 @@ class Instance < ActiveRecord::Base
                   :live_paypal_client_id, :live_paypal_client_secret, :live_balanced_api_key, :instance_billing_gateways_attributes, :marketplace_password,
                   :translations_attributes, :test_stripe_api_key, :test_stripe_public_key, :test_paypal_username, :test_paypal_password,
                   :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key,
-                  :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
-                  :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret
+                  :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, 
+                  :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
+                  :paypal_email
 
   attr_encrypted :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id, :live_stripe_api_key, :live_paypal_client_id,
                  :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
@@ -113,10 +114,10 @@ class Instance < ActiveRecord::Base
 
   def paypal_api_config
     @paypal_api_config ||= {
-      :mode => DesksnearMe::Application.config.paypal_mode,
+      :mode => (self.test_mode? || !Rails.env.production?) ? 'sandbox' : 'live',
       :client_id => billing_gateway_credential('paypal_client_id'),
       :client_secret => billing_gateway_credential('paypal_client_secret'),
-      :app_id    => billing_gateway_credential('paypal_app_id'),
+      :app_id    => self.test_mode? ? 'APP-80W284485P519543T' : billing_gateway_credential('paypal_app_id'),
       :username  => billing_gateway_credential('paypal_username'),
       :password  => billing_gateway_credential('paypal_password'),
       :signature => billing_gateway_credential('paypal_signature')

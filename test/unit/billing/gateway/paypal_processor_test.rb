@@ -140,11 +140,24 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
         api_mock = mock()
         api_mock.expects(:build_pay)
         pay_response_mock = mock()
-        pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml')
+        pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml', :paymentExecStatus => 'COMPLETED')
         api_mock.expects(:pay).returns(pay_response_mock)
         PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
         @paypal_processor = Billing::Gateway::PaypalProcessor.new(@instance, 'EUR').outgoing_payment(@company.instance, @company)
         @paypal_processor.expects(:payout_successful)
+        @paypal_processor.process_payout(Money.new(1000, 'EUR'))
+      end
+
+      should "create a Payout record with pending when has to be confirmed" do
+        api_mock = mock()
+        api_mock.expects(:build_pay)
+        pay_response_mock = mock()
+        pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml', :paymentExecStatus => 'CREATED')
+        api_mock.expects(:payment_url).with(pay_response_mock).returns('http://paypal.example.com/confirmation')
+        api_mock.expects(:pay).returns(pay_response_mock)
+        PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
+        @paypal_processor = Billing::Gateway::PaypalProcessor.new(@instance, 'EUR').outgoing_payment(@company.instance, @company)
+        @paypal_processor.expects(:payout_pending).with(pay_response_mock, 'http://paypal.example.com/confirmation')
         @paypal_processor.process_payout(Money.new(1000, 'EUR'))
       end
 
@@ -181,7 +194,7 @@ class Billing::Gateway::PaypalProcessorTest < ActiveSupport::TestCase
         })
         PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
         pay_response_mock = mock()
-        pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml')
+        pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml', :paymentExecStatus => 'COMPLETED')
         api_mock.expects(:pay).returns(pay_response_mock)
         @paypal_processor = Billing::Gateway::PaypalProcessor.new(@instance, 'EUR').outgoing_payment(@company.instance, @company)
         @paypal_processor.expects(:payout_successful)

@@ -4,7 +4,7 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
 
   class TestProcessor < Billing::Gateway::BaseProcessor
 
-    attr_accessor :success
+    attr_accessor :success, :pending
 
     def setup_api_on_initialize
       self.success = true
@@ -19,7 +19,9 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
     end
 
     def process_payout(amount)
-      if self.success
+      if self.pending
+        payout_pending('pending payout response', 'http://url')
+      elsif self.success
         payout_successful('successful payout response')
       else
         payout_failed('failed payout response')
@@ -99,6 +101,21 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
       assert_equal 'successful payout response', YAML.load(payout.response)
       assert_equal @payment_transfer, payout.reference
       assert payout.success?
+      refute payout.pending?
+      refute payout.failed?
+    end
+
+    should 'create payout object when pending' do
+      @test_processor.pending = true
+      @test_processor.payout({:amount => @amount, :reference => @payment_transfer})
+      payout = Payout.last
+      assert_equal 1234, payout.amount
+      assert_equal 'JPY', payout.currency
+      assert_equal 'pending payout response', YAML.load(payout.response)
+      assert_equal 'http://url', payout.pending
+      assert payout.pending?
+      refute payout.success?
+      refute payout.failed?
     end
 
     should 'create payout object when failed' do
@@ -109,6 +126,8 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
       assert_equal 'JPY', payout.currency
       assert_equal 'failed payout response', YAML.load(payout.response)
       refute payout.success?
+      refute payout.pending?
+      assert payout.failed?
     end
 
     should 'be invoked with right arguments' do

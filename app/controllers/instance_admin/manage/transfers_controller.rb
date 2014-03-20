@@ -15,6 +15,10 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
     resource.payout
     if resource.transferred?
       flash[:notice] = t('flash_messages.payments.payout_successful')
+    elsif resource.payout_attempts.last.confirmation_url.present?
+      flash[:warning] = t('flash_messages.payments.payout_need_confirmation')
+    elsif resource.payout_attempts.last.confirmation_url.present?
+      flash[:warning] = t('flash_messages.payments.payout_pending')
     else
       flash[:error] = t('flash_messages.payments.payout_failed')
     end

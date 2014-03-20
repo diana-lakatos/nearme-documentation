@@ -48,6 +48,7 @@ DesksnearMe::Application.configure do
   config.instagram_key = "f9aee2b90cc5493bb60f777fee06af52"
   config.instagram_secret = "8b20585b0edd47e7b5ed090616c24d0b"
 
+  config.paypal_email = "admin-facilitator@desksnear.me"
   config.paypal_username = "admin-facilitator_api1.desksnear.me"
   config.paypal_password = "1389316325"
   config.paypal_signature = "AFcWxV21C7fd0v3bYYYRCpSSRl31AfwNFfSck.jyTHBGORF1UEKNUBhL"

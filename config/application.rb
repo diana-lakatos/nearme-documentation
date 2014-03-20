@@ -123,6 +123,7 @@ module DesksnearMe
 
     config.silence_raygun_notification = false
 
+    config.paypal_email = nil
     config.paypal_username = nil
     config.paypal_password = nil
     config.paypal_signature = nil

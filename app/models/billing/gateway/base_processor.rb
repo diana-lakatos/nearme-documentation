@@ -118,6 +118,11 @@ class Billing::Gateway::BaseProcessor
     @payout.payout_failed(response)
   end
 
+  # Callback invoked by processor when payout failed
+  def payout_pending(response, confirmation_url = nil)
+    @payout.payout_pending(response, confirmation_url)
+  end
+
   # Callback invoked by processor when refund was successful
   def refund_successful(response)
     @refund.refund_successful(response)
