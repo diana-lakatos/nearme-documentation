@@ -38,7 +38,6 @@ class PostActionMailerTest < ActiveSupport::TestCase
 
     assert_equal subject, mail.subject
     assert mail.html_part.body.include?(@user.first_name)
-    assert_equal ["micheller@desksnear.me"], mail.from
     assert mail.html_part.body.include?("We are excited to welcome you to #{@platform_context.decorate.name}")
     assert_contains 'href="http://custom.domain.com/', mail.html_part.body
     assert_not_contains 'href="http://example.com', mail.html_part.body

@@ -123,6 +123,8 @@ DesksnearMe::Application.routes.draw do
         resources :instance_admins, :only => [:create, :update, :destroy, :index]
         resources :instance_admin_roles, :only => [:create, :update, :destroy, :index]
       end
+
+      resources :email_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
     end
   end
 

@@ -1,0 +1,16 @@
+.row-fluid
+  .controls.controls-row
+    %legend.span4 Manage Email Templates
+
+%br
+
+%table.table
+  %tbody
+    %tr
+      %th Template
+      %th
+    - EmailTemplate::CUSTOMIZABLE_EMAILS.each do |path|
+      - if @email_templates.select {|template| template.path == path}.empty?
+        = render 'new_index_row', path: path
+      - else
+        = render 'edit_index_row', email_template: @email_templates.select {|template| template.path == path}.first

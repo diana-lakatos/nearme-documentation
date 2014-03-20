@@ -5,13 +5,6 @@ class Authentication::FacebookProvider < Authentication::BaseProvider
              auth: "OAuth 2" }
 
 
-  def self.setup_proc 
-    lambda do |env| 
-      env['omniauth.strategy'].options[:client_id] = PlatformContext.current.instance.facebook_consumer_key.try(:strip)
-      env['omniauth.strategy'].options[:client_secret] = PlatformContext.current.instance.facebook_consumer_secret.try(:strip)
-    end
-  end
-
   def friend_ids
     begin
       @friend_ids ||= connection.get_connections("me", "friends").collect{ |f| f["id"].to_s }

@@ -8,15 +8,17 @@ class InstanceMailer < ActionMailer::Base
   attr_accessor :platform_context, :email_method
 
   def mail(options = {})
-    lookup_context.class.register_detail(:platform_context) { nil }
     @platform_context = PlatformContext.current.decorate
+    default_mailer = @platform_context.theme.default_mailer
+    lookup_context.class.register_detail(:platform_context) { nil }
     template = options.delete(:template_name) || view_context.action_name
-    mailer = options.delete(:mailer) || find_mailer(template: template) || @platform_context.theme.default_mailer
+    mailer = options.delete(:mailer) || find_mailer(template: template) || default_mailer
     to = options[:to]
-    bcc = options.delete(:bcc) || mailer.bcc
-    from = options.delete(:from) || mailer.from
-    subject_locals = options.delete(:subject_locals)
-    subject  = mailer.liquid_subject(subject_locals) || options.delete(:subject)
+    bcc = options.delete(:bcc) || mailer.bcc || default_mailer.bcc
+    from = options.delete(:from) || mailer.from || default_mailer.from
+    subject_locals = options.delete(:subject_locals) || {}
+    subject_locals = subject_locals.merge(platform_context: @platform_context)
+    subject  = mailer.liquid_subject(subject_locals) || liquid_subject(subject_locals) || options.delete(:subject)
     reply_to = options.delete(:reply_to) || mailer.reply_to
     @user  = User.with_deleted.find_by_email(to.kind_of?(Array) ? to.first : to)
     self.email_method = StackTraceParser.new(caller[0])
@@ -49,6 +51,15 @@ class InstanceMailer < ActionMailer::Base
 
       mixed.content_type 'multipart/mixed'
       mixed.header['content-type'].parameters[:boundary] = mixed.body.boundary
+  end
+
+  def liquid_subject(interpolations = {})
+    mailer_scope = self.class.mailer_name.tr('/', '.')
+    subject = I18n.t(:subject, scope: [mailer_scope, action_name], default: '')
+    if subject.present?
+      template = Liquid::Template.parse(subject)
+      template.render(interpolations.stringify_keys!)
+    end
   end
 
   def mail_type
