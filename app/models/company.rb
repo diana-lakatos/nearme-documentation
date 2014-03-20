@@ -177,7 +177,7 @@ class Company < ActiveRecord::Base
     end
     false
   rescue RuntimeError => e
-    errors.add(:bank_account_form, 'Unfortunately invalidating previous bank account failed, please try again in the feature')
+    errors.add(:bank_account_form, 'Invalidating previous bank account failed. Please try again later.')
     false
   end
 
