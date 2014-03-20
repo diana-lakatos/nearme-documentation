@@ -5,6 +5,9 @@ class Reservation < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id], :listing)
+
+  before_create :store_platform_context_detail
+
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',
     :manual      => 'manual',
@@ -25,6 +28,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
   belongs_to :administrator, class_name: "User"
   belongs_to :company
+  belongs_to :platform_context_detail, :polymorphic => true
   has_many :user_messages, as: :thread_context
 
   attr_accessible :cancelable, :confirmation_email, :date, :listing_id,
@@ -82,6 +86,11 @@ class Reservation < ActiveRecord::Base
 
   def schedule_expiry
     ReservationExpiryJob.perform_later(expiry_time, self.id)
+  end
+
+  def store_platform_context_detail
+    self.platform_context_detail_type = PlatformContext.current.platform_context_detail.class.to_s
+    self.platform_context_detail_id = PlatformContext.current.platform_context_detail.id
   end
 
   def administrator
