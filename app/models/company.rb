@@ -149,8 +149,18 @@ class Company < ActiveRecord::Base
     if errors.any?
       false
     else
-      # when more processors will support ACH, we will want to use some kind of wrapper instead of calling BalancedProcessor directly
-      Billing::Gateway::BalancedProcessor.create_customer_with_bank_account!(self)
+      begin
+        # when more processors will support ACH, we will want to use some kind of wrapper instead of calling BalancedProcessor directly
+        Billing::Gateway::BalancedProcessor.create_customer_with_bank_account!(self)
+      rescue Balanced::Unauthorized => e
+        errors.add(:bank_account_form, 'We could not validate your bank account details at this time. Please try again later.')
+        unless DesksnearMe::Application.config.silence_raygun_notification
+          Raygun.configuration.failsafe_logger = true
+          Raygun.track_exception(exception)
+          Raygun.configuration.failsafe_logger = false
+        end
+        false
+      end
     end
   rescue Balanced::BadRequest => e
     { '[bank_code]' => :bank_routing_number, '[account_number]' => :bank_account_number}.each do |balanced_field, our_form_field|
@@ -167,7 +177,7 @@ class Company < ActiveRecord::Base
     end
     false
   rescue RuntimeError => e
-    errors.add(:bank_account_form, 'Unfortunately invalidating previous bank account failed, please try again in the feature')
+    errors.add(:bank_account_form, 'Invalidating previous bank account failed. Please try again later.')
     false
   end
 
