@@ -19,9 +19,9 @@
     .bank_account_fields
       .flash.error
         %ul
-          %li Unfortunately we could not process the credentials you have entered:
           - f.object.errors[:bank_account_form].each do |e|
             %li= e
+          %li Unfortunately we could not process the credentials you have entered.
   = f.input :bank_owner_name, :label => "Account's Owner Name"
   = f.input :bank_routing_number, :label => 'Routing Number'
   = f.input :bank_account_number, :label => 'Account Number'
