@@ -46,10 +46,11 @@ Given(/^I am at blog mainpage$/) do
   @user = FactoryGirl.create(:user)
   @blog_post = FactoryGirl.create(:blog_post,
                                    blog_instance: @blog_instance,
+                                   published_at: 2.days.ago,
                                    user: @user)
   @next_blog_post = FactoryGirl.create(:blog_post,
                                         blog_instance: @blog_instance,
-                                        created_at: 1.day.from_now,
+                                        published_at: 1.day.ago,
                                         user: @user)
   @another_blog_post = FactoryGirl.create(:blog_post, user: @user)
 

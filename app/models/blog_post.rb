@@ -13,14 +13,22 @@ class BlogPost < ActiveRecord::Base
 
   scope :by_date, -> { order('COALESCE(published_at, created_at) desc') }
   scope :published, -> { where("published_at < ? OR published_at IS NULL", Time.zone.now ) }
-  
+
 
   def previous_blog_post
-    @previous_blog_post ||= blog_instance.blog_posts.where('COALESCE(published_at, created_at) < ?', created_at).first
+    @previous_blog_post ||= blog_instance.blog_posts
+                                         .published
+                                         .order('published_at DESC')
+                                         .where('published_at < ?', published_at)
+                                         .first
   end
 
   def next_blog_post
-    @next_blog_post ||= blog_instance.blog_posts.where('COALESCE(published_at, created_at) > ?', created_at).last
+    @next_blog_post ||= blog_instance.blog_posts
+                                     .published
+                                     .order('published_at DESC')
+                                     .where('published_at > ?', published_at)
+                                     .last
   end
 
   def slug_changed?
