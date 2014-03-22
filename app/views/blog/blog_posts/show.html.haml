@@ -1,6 +1,8 @@
 - if @blog_instance.facebook_app_id.present?
   = render 'fb_comments', facebook_app_id: @blog_instance.facebook_app_id
 
+- blog_title @blog_post.title
+
 .blog-post-detail
 
   %h1= @blog_post.title
