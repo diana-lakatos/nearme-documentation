@@ -20,7 +20,7 @@ en:
       payout_successful: 'Payout succeeded'
       payout_failed: 'Payout failed'
       payout_need_confirmation: 'We are not authorized to make automated payout on your behalf. Please confirm payment transfer and manually mark it as transferred.'
-      payout_pending: 'Your request has been sent successfully. It will take few business days to ultimately confirm your payment transfer was successful.'
+      payout_need_verification: 'Payout request has been successfully created. It might take quite a few business days to know whether it succeeded or not. Please mark transfer payment as transferred once you are sure it succeeded.'
     instance_admin:
       manage:
         email_templates:

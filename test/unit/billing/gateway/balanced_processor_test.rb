@@ -184,7 +184,7 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
       should "invoke the right callback on success" do
         @customer.stubs(:credit).returns(@credit)
         @credit.expects(:save).returns(stub(:status => 'pending', :to_yaml => 'yaml'))
-        @balanced_processor.expects(:payout_successful)
+        @balanced_processor.expects(:payout_pending)
         @balanced_processor.outgoing_payment(@company.instance, @company).process_payout(Money.new(1000, 'USD'))
       end
 
@@ -199,10 +199,10 @@ class Billing::Gateway::BalancedProcessorTest < ActiveSupport::TestCase
         @credit.expects(:save).returns(stub(:status => 'paid', :to_yaml => 'yaml'))
         @customer.expects(:credit).with do |credit_hash| 
           credit_hash[:amount] == 1234 &&
-            credit_hash[:description] == "Payout from Instance #{@company.instance.name}(id=#{@company.instance.id}) to Company #{@company.name} (id=#{@company.id})" &&
-            credit_hash[:appears_on_statement_as] == "Payout from #{@company.instance.class.name}"
+          credit_hash[:description] == "Payout from Instance(id=#{@company.instance.id}) #{@company.instance.name} to Company(id=#{@company.id}) #{@company.name}" &&
+          credit_hash[:appears_on_statement_as] == @company.instance.name
         end.returns(@credit)
-        @balanced_processor.expects(:payout_successful)
+        @balanced_processor.expects(:payout_pending)
         @balanced_processor.outgoing_payment(@company.instance, @company).process_payout(Money.new(1234, 'USD'))
       end
 

@@ -20,7 +20,7 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
 
     def process_payout(amount)
       if self.pending
-        payout_pending('pending payout response', 'http://url')
+        payout_pending('pending payout response')
       elsif self.success
         payout_successful('successful payout response')
       else
@@ -98,7 +98,6 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
       payout = Payout.last
       assert_equal 1234, payout.amount
       assert_equal 'JPY', payout.currency
-      assert_equal 'successful payout response', YAML.load(payout.response)
       assert_equal @payment_transfer, payout.reference
       assert payout.success?
       refute payout.pending?
@@ -111,8 +110,6 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
       payout = Payout.last
       assert_equal 1234, payout.amount
       assert_equal 'JPY', payout.currency
-      assert_equal 'pending payout response', YAML.load(payout.response)
-      assert_equal 'http://url', payout.pending
       assert payout.pending?
       refute payout.success?
       refute payout.failed?
@@ -124,13 +121,13 @@ class Billing::Gateway::BaseProcessorTest < ActiveSupport::TestCase
       payout = Payout.last
       assert_equal 1234, payout.amount
       assert_equal 'JPY', payout.currency
-      assert_equal 'failed payout response', YAML.load(payout.response)
       refute payout.success?
       refute payout.pending?
       assert payout.failed?
     end
 
     should 'be invoked with right arguments' do
+      Payout.any_instance.stubs(:should_be_verified_after_time?).returns(false)
       @test_processor.expects(:process_payout).with do |payout_argument| 
         payout_argument == @amount
       end

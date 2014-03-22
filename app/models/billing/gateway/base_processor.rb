@@ -67,6 +67,11 @@ class Billing::Gateway::BaseProcessor
       reference: reference
     )
     process_payout(amount)
+    if @payout.should_be_verified_after_time?
+      # seems that in order to support this, we need to upgrade balanced gem to use 1.1v of api.
+      # As you might guess, ths will break most of what we have currently :)
+      # PayoutVerificationJob.perform_later(4.days.from_now, self)
+    end
     @payout
   end
 
@@ -79,6 +84,10 @@ class Billing::Gateway::BaseProcessor
     )
     process_refund(amount_cents, charge_response)
     @refund
+  end
+
+  def update_payout_status
+    update_payout_status_process(@payout.verify_after_time_arguments)
   end
 
   # Contains implementation for storing credit card by third party
@@ -118,9 +127,9 @@ class Billing::Gateway::BaseProcessor
     @payout.payout_failed(response)
   end
 
-  # Callback invoked by processor when payout failed
-  def payout_pending(response, confirmation_url = nil)
-    @payout.payout_pending(response, confirmation_url)
+  # Callback invoked by processor when payout is pending
+  def payout_pending(response)
+    @payout.payout_pending(response)
   end
 
   # Callback invoked by processor when refund was successful

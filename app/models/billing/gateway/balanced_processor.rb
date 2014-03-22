@@ -45,11 +45,11 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
       @balanced_customer = Balanced::Customer.find(instance_client.balanced_user_id)
       credit = @balanced_customer.credit(
         :amount => amount.cents,
-        :description => "Payout from #{@sender.class.name} #{@sender.name}(id=#{@sender.id}) to #{@receiver.class.name} #{@receiver.name} (id=#{@receiver.id})",
-        :appears_on_statement_as => "Payout from #{@sender.class.name}"
+        :description => "Payout from #{@sender.class.name}(id=#{@sender.id}) #{@sender.name} to #{@receiver.class.name}(id=#{@receiver.id}) #{@receiver.name}",
+        :appears_on_statement_as => @sender.name.truncate(22, :omission => '')
       ).save
       if credit.status == 'pending' || credit.status ==  'paid' || credit.status ==  'succeeded'
-        payout_successful(credit)
+        payout_pending(credit)
       else
         payout_failed(credit)
       end
@@ -109,6 +109,18 @@ class Billing::Gateway::BalancedProcessor < Billing::Gateway::BaseProcessor
     instance_client.balanced_user_id = @balanced_customer.uri
     instance_client.balanced_credit_card_id  = @credit_card.uri
     instance_client.save!
+  end
+
+  def update_payout_status_process(credit_uri)
+    setup_api_on_initialize
+    credit = Balanced::Credit.fetch(credit_uri)
+    if credit.status ==  'paid' || credit.status == 'succeeded'
+      payout_successful(credit)
+    elsif credit.status == 'pending'
+      return false
+    else
+      payout_failed(credit)
+    end
   end
 
   def handle_error(exception)

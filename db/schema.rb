@@ -574,11 +574,11 @@ ActiveRecord::Schema.define(:version => 20140326130740) do
     t.text     "response"
     t.integer  "amount"
     t.string   "currency"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.text     "encrypted_response"
     t.datetime "deleted_at"
-    t.string   "pending"
+    t.boolean  "pending",            :default => false
   end
 
   create_table "photos", :force => true do |t|

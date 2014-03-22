@@ -61,7 +61,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
       if @pay_response.paymentExecStatus == 'COMPLETED'
         payout_successful(@pay_response)
       elsif @pay_response.paymentExecStatus == 'CREATED'
-        payout_pending(@pay_response, @api.payment_url(@pay_response))
+        payout_pending(@pay_response)
       else
         raise "Unknown payment exec status: #{@pay_response.paymentExecStatus}"
       end

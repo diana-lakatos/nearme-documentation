@@ -29,7 +29,7 @@
       = 'succeeded' if payout_attempt.success
       = payout_attempt.failure_message if payout_attempt.failed?
       = "pending " if payout_attempt.pending?
-      = (link_to('Confirm', payout_attempt.confirmation_url)).html_safe if payout_attempt.confirmation_url && !resource.transferred?
+      = (link_to('Confirm', payout_attempt.confirmation_url)).html_safe if payout_attempt.confirmation_url.present?
 
 
 %hr

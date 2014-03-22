@@ -4,50 +4,56 @@ class Payout < ActiveRecord::Base
   belongs_to :reference, :polymorphic => true
 
   scope :successful, where(:success => true)
-  scope :pending, where('payouts.pending is not null')
-  scope :failed, where(:pending => nil, :success => false)
+  scope :pending, where(:pending => true)
+  scope :failed, where(:pending => false, :success => false)
 
   monetize :amount
 
   attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
-  def payout_pending(response, confirmation_url)
-    self.pending = confirmation_url
+  def payout_pending(response)
+    self.pending = true
     self.response = response.to_yaml
     save!
   end
 
   def payout_successful(response = nil)
     self.success = true
-    self.pending = nil
+    self.pending = false
     self.response = response.to_yaml if response
     save!
   end
 
   def payout_failed(response)
     self.success = false
-    self.pending = nil
+    self.pending = false
     self.response = response.to_yaml
     save!
   end
 
-  def failed?
-    !success && pending.nil?
+  alias_method :decrypted_response, :response
+  def response
+    @response_object ||= Billing::Gateway::Processor::ResponseFactory.create(decrypted_response)
   end
 
   def failure_message
-    response_object = YAML.load(self.response.gsub('Proc {}', ''))
-    if self.response.include?('PayPal')
-      response_object.first.message
-    else
-      "failed"
-    end
+    response.failure_message
+  end
+
+  def should_be_verified_after_time?
+    pending? && response.should_be_verified_after_time?
+  end
+
+  def verify_after_time_arguments
+    response.verify_after_time_arguments
+  end
+
+  def failed?
+    !success && !pending
   end
 
   def confirmation_url
-    if self.response.include?('PayPal')
-      self.pending
-    end
+    response.confirmation_url if pending? && !reference.transferred?
   end
 
 end
