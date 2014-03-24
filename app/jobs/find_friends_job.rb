@@ -7,6 +7,7 @@ class FindFriendsJob < Job
 
   def perform
     if DesksnearMe::Application.config.perform_social_jobs
+      PlatformContext.current ||= PlatformContext.new(@authentication.instance)
       User::FriendFinder.new(@user, @authentication).find_friends!
     end
   end
