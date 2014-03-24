@@ -8,6 +8,19 @@ class Billing::Gateway::Processor::Ingoing::Base < Billing::Gateway::Processor::
     setup_api_on_initialize
   end
 
+  def self.instance_supported?(instance)
+    raise NotImplementedError
+  end
+
+  def self.currency_supported?(instance)
+    raise NotImplementedError
+  end
+
+  def self.processor_supported?(instance)
+    raise NotImplementedError
+  end
+
+
   # Make a charge against the user
   #
   # charge_details - Hash of details describing the charge

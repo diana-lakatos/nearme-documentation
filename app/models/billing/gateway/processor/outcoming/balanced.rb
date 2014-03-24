@@ -1,20 +1,7 @@
 class Billing::Gateway::Processor::Outcoming::Balanced < Billing::Gateway::Processor::Outcoming::Base
-  SUPPORTED_CURRENCIES = ['USD']
 
   def setup_api_on_initialize
     Balanced.configure(@instance.billing_gateway_credential('balanced_api_key'))
-  end
-
-  def self.currency_supported?(currency)
-    self::SUPPORTED_CURRENCIES.include?(currency)
-  end
-
-  def self.instance_supported?(instance)
-    instance.balanced_supported?
-  end
-
-  def self.is_supported_by?(object)
-    instance_client(object, object.instance).try(:balanced_user_id).present?
   end
 
   def self.create_customer_with_bank_account!(client)

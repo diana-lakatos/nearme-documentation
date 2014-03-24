@@ -137,10 +137,6 @@ class Instance < ActiveRecord::Base
     balanced_api_key.present?
   end
 
-  def support_automated_payouts?
-    paypal_supported? || balanced_supported?
-  end
-
   def stripe_supported?
     billing_gateway_credential('stripe_api_key').present? &&
     billing_gateway_credential('stripe_public_key').present?

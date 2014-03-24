@@ -124,32 +124,5 @@ class Billing::Gateway::Processor::Outcoming::BalancedTest < ActiveSupport::Test
     end
   end
 
-  context 'is_supported?' do
-
-    should 'be supported if instance_client with the right instance exists and has balanced_user_id' do
-      @company = FactoryGirl.create(:company)
-      FactoryGirl.create(:instance_client, :client => @company, :instance => @company.instance, :balanced_user_id => 'present')
-      assert Billing::Gateway::Processor::Outcoming::Balanced.is_supported_by?(@company)
-    end
-
-    should 'not be supported if instance_client exists but for other instance' do
-      @company = FactoryGirl.create(:company)
-      FactoryGirl.create(:instance_client, :client => @company, :balanced_user_id => 'present').update_column(:instance_id, FactoryGirl.create(:instance).id)
-      refute Billing::Gateway::Processor::Outcoming::Balanced.is_supported_by?(@company)
-    end
-
-    should 'not be supported if instance_client with the right instance exists but without balanced_user_id' do
-      @company = FactoryGirl.create(:company)
-      FactoryGirl.create(:instance_client, :client => @company, :instance => @company.instance)
-      refute Billing::Gateway::Processor::Outcoming::Balanced.is_supported_by?(@company)
-    end
-
-    should 'not be supported if instance_client does not exist' do
-      @company = FactoryGirl.create(:company)
-      refute Billing::Gateway::Processor::Outcoming::Balanced.is_supported_by?(@company)
-    end
-
-  end
-
 end
 

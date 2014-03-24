@@ -49,6 +49,10 @@ FactoryGirl.define do
       min_hourly_price 10
       max_hourly_price 100
     end
+
+    factory :instance_with_balanced do
+      balanced_api_key 'present'
+    end
   end
 
 end

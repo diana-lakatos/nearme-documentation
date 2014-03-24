@@ -90,7 +90,8 @@ class PaymentTransferTest < ActiveSupport::TestCase
 
   context 'payout' do
     setup do
-      Billing::Gateway::Processor::Outcoming::Paypal.stubs(:is_supported_by?).returns(true).once
+      Billing::Gateway::Processor::Outcoming::ProcessorFactory.stubs(:paypal_supported?).returns(true).once
+      Billing::Gateway::Processor::Outcoming::ProcessorFactory.stubs(:receiver_supports_paypal?).returns(true).once
       @payment_transfer = @company.payment_transfers.build
       @payment_transfer.reservation_charges = @reservation_charges
     end

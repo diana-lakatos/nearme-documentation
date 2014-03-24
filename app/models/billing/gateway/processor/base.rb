@@ -4,18 +4,6 @@ class Billing::Gateway::Processor::Base
   def setup_api_on_initialize
   end
 
-  def self.instance_supported?(instance)
-    raise NotImplementedError
-  end
-
-  def self.currency_supported?(instance)
-    raise NotImplementedError
-  end
-
-  def self.processor_supported?(instance)
-    raise NotImplementedError
-  end
-
   protected
 
   def self.instance_client(client, instance)
