@@ -1,4 +1,4 @@
-class Billing::Gateway::Processor::BalancedResponse < Billing::Gateway::Processor::Response
+class Billing::Gateway::Processor::Response::Balanced < Billing::Gateway::Processor::Response::Base
 
   def initialize(response)
     @response = YAML.load(response)

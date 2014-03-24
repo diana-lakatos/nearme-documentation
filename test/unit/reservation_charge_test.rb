@@ -14,7 +14,7 @@ class ReservationChargeTest < ActiveSupport::TestCase
       end
 
       should 'track charge in mixpanel after successful creation' do
-        Billing::Gateway::StripeProcessor.any_instance.stubs(:charge)
+        Billing::Gateway::Processor::Ingoing::Stripe.any_instance.stubs(:charge)
         @expectation.once
         @reservation.reservation_charges.create!(
           subtotal_amount: 105.24,
@@ -23,7 +23,7 @@ class ReservationChargeTest < ActiveSupport::TestCase
       end
 
       should 'do not track charge in mixpanel if there is error processing credit card' do
-        Billing::Gateway::StripeProcessor.any_instance.stubs(:charge).raises(Billing::CreditCardError)
+        Billing::Gateway::Processor::Ingoing::Stripe.any_instance.stubs(:charge).raises(Billing::CreditCardError)
         @expectation.never
         @reservation.reservation_charges.create!(
           subtotal_amount: 105.24,
@@ -43,7 +43,7 @@ class ReservationChargeTest < ActiveSupport::TestCase
     should 'find the right charge if there were failing attempts' do
       @charge.update_attribute(:success, false)
       FactoryGirl.create(:charge, :reference => @reservation_charge, :response => 'success response')
-      Billing::Gateway.any_instance.expects(:refund).with do |refund_details|
+      Billing::Gateway::Ingoing.any_instance.expects(:refund).with do |refund_details|
         refund_details[:charge_response] == 'success response'
       end.once.returns(Refund.new(:success => true))
       @reservation_charge.refund
@@ -51,33 +51,33 @@ class ReservationChargeTest < ActiveSupport::TestCase
     end
 
     should 'not be refunded if failed' do
-      Billing::Gateway.any_instance.expects(:refund).returns(Refund.new(:success => false))
+      Billing::Gateway::Ingoing.any_instance.expects(:refund).returns(Refund.new(:success => false))
       @reservation_charge.refund
       refute @reservation_charge.reload.refunded?
     end
 
     should 'return if successful charge was not returned' do
-      Billing::Gateway.any_instance.expects(:refund).never
+      Billing::Gateway::Ingoing.any_instance.expects(:refund).never
       @charge.update_attribute(:success, false)
       @reservation_charge.refund
       refute @reservation_charge.reload.refunded?
     end
 
     should 'return if reservation_charge was already refunded' do
-      Billing::Gateway.any_instance.expects(:refund).never
+      Billing::Gateway::Ingoing.any_instance.expects(:refund).never
       @reservation_charge.update_attribute(:refunded_at, Time.zone.now)
       @reservation_charge.refund
     end
 
     should 'return if reservation_charge was not paid' do
-      Billing::Gateway.any_instance.expects(:refund).never
+      Billing::Gateway::Ingoing.any_instance.expects(:refund).never
       @reservation_charge.update_attribute(:paid_at, nil)
       @reservation_charge.refund
       refute @reservation_charge.reload.refunded?
     end
 
     should 'refund via billing gateway with correct arguments if all ok' do
-      Billing::Gateway.any_instance.expects(:refund).with do |refund_details|
+      Billing::Gateway::Ingoing.any_instance.expects(:refund).with do |refund_details|
         refund_details[:amount_cents] == 11000 && refund_details[:reference] == @reservation_charge && refund_details[:charge_response] == 'charge_response'
       end.once.returns(Refund.new(:success => true))
       @reservation_charge.refund
@@ -97,19 +97,19 @@ class ReservationChargeTest < ActiveSupport::TestCase
 
     should 'be paid if success' do
       @reservation_charge.stubs(:total_amount_cents).returns(12345)
-      Billing::Gateway.any_instance.expects(:charge).with({:amount_cents => 12345, :reference => @reservation_charge}).returns(true)
+      Billing::Gateway::Ingoing.any_instance.expects(:charge).with({:amount_cents => 12345, :reference => @reservation_charge}).returns(true)
       @reservation_charge.save!
       assert @reservation_charge.reload.paid?
     end
 
     should 'be not paid if fail' do
-      Billing::Gateway.any_instance.expects(:charge).raises(Billing::CreditCardError.new('Error'))
+      Billing::Gateway::Ingoing.any_instance.expects(:charge).raises(Billing::CreditCardError.new('Error'))
       @reservation_charge.save!
       refute @reservation_charge.reload.paid?
     end
 
     should 'not charge again if already charged' do
-      Billing::Gateway.any_instance.expects(:charge).never
+      Billing::Gateway::Ingoing.any_instance.expects(:charge).never
       @reservation_charge.stubs(:paid_at).returns(Time.zone.now)
       @reservation_charge.capture
     end

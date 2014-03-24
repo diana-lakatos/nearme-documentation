@@ -161,7 +161,7 @@ class Instance < ActiveRecord::Base
   def billing_gateway_for(currency)
     processor_name = self.instance_billing_gateways.where(currency: currency).first
     if processor_name
-      processor = "Billing::Gateway::#{processor_name.billing_gateway.capitalize}Processor".constantize
+      processor = "Billing::Gateway::Processor::Ingoing::#{processor_name.billing_gateway.capitalize}".constantize
       processor if processor.instance_supported?(self) && processor.currency_supported?(currency)
     end
   end

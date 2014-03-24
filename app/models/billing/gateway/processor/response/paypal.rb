@@ -1,4 +1,4 @@
-class Billing::Gateway::Processor::PaypalResponse < Billing::Gateway::Processor::Response
+class Billing::Gateway::Processor::Response::Paypal < Billing::Gateway::Processor::Response::Base
 
   def initialize(response)
     @response = YAML.load(self.response.gsub('Proc {}', ''))

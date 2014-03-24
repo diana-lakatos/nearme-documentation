@@ -33,7 +33,7 @@ class Payout < ActiveRecord::Base
 
   alias_method :decrypted_response, :response
   def response
-    @response_object ||= Billing::Gateway::Processor::ResponseFactory.create(decrypted_response)
+    @response_object ||= Billing::Gateway::Processor::Response::ResponseFactory.create(decrypted_response)
   end
 
   def failure_message

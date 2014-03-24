@@ -1,9 +1,9 @@
 # Encapsulate all billing  gateway related logic associated with a user
-class Billing::Gateway::Outgoing
+class Billing::Gateway::Outcoming
 
   PROCESSORS = [
-    Billing::Gateway::BalancedProcessor, 
-    Billing::Gateway::PaypalProcessor
+    Billing::Gateway::Processor::Outcoming::Balanced, 
+    Billing::Gateway::Processor::Outcoming::Paypal
   ]
 
   delegate :payout, :to => :processor
@@ -14,12 +14,19 @@ class Billing::Gateway::Outgoing
     @sender = receiver.instance
     @receiver = receiver
     @currency = currency
-    @processor = supported_processors.find { |p| p.is_supported_by?(@receiver) }.try(:new, @sender, @currency).try(:outgoing_payment, @sender, @receiver)
-    self
+    @processor = supported_processors.find { |p| p.is_supported_by?(@receiver) }.try(:new, @receiver, @currency)
+  end
+
+  def support_automated_payout?
+    supported_processors.any?
   end
 
   def possible?
-    supported_processors.any?
+    processor.present?
+  end
+
+  def processor_class
+    processor.class.to_s.demodulize
   end
 
   private 

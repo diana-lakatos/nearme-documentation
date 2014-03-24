@@ -1,4 +1,4 @@
-class Billing::Gateway::Processor::Response
+class Billing::Gateway::Processor::Response::Base
 
   def initialize(response)
     @response = response

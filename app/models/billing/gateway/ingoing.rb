@@ -2,9 +2,9 @@
 class Billing::Gateway::Ingoing
 
   PROCESSORS = [
-    Billing::Gateway::BalancedProcessor, 
-    Billing::Gateway::StripeProcessor, 
-    Billing::Gateway::PaypalProcessor
+    Billing::Gateway::Processor::Ingoing::Balanced, 
+    Billing::Gateway::Processor::Ingoing::Stripe, 
+    Billing::Gateway::Processor::Ingoing::Paypal
   ]
 
   delegate :charge, :refund, :store_credit_card, :to => :processor
@@ -13,9 +13,7 @@ class Billing::Gateway::Ingoing
   def initialize(user, instance, currency)
     @instance = instance
     @currency = currency
-    @user = user
-    @processor = (@instance.billing_gateway_for(@currency) || supported_processors.first).try(:new, @instance, @currency).try(:ingoing_payment, @user)
-    self
+    @processor = (@instance.billing_gateway_for(@currency) || supported_processors.first).try(:new, user, @instance, @currency)
   end
 
   def possible?

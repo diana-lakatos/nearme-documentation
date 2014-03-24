@@ -1,4 +1,4 @@
-class Billing::Gateway::StripeProcessor < Billing::Gateway::BaseProcessor
+class Billing::Gateway::Processor::Ingoing::Stripe < Billing::Gateway::Processor::Ingoing::Base
   SUPPORTED_CURRENCIES = ['USD']
 
   def setup_api_on_initialize

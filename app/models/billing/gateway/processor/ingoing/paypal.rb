@@ -1,4 +1,4 @@
-class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
+class Billing::Gateway::Processor::Ingoing::Paypal < Billing::Gateway::Processor::Ingoing::Base
   include PayPal::SDK::Core::Logging
 
   SUPPORTED_CURRENCIES = ['USD', 'GBP', 'EUR', 'JPY', 'CAD']
@@ -38,35 +38,6 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
       refund_successful(response)
     else
       refund_failed(response.error.inspect)
-    end
-  end
-
-  def process_payout(amount)
-    @pay = @api.build_pay({
-      :actionType => "PAY",
-      :currencyCode => amount.currency.iso_code,
-      :feesPayer => "SENDER",
-      :cancelUrl => "http://#{Rails.application.routes.default_url_options[:host]}",
-      :returnUrl => "http://#{Rails.application.routes.default_url_options[:host]}",
-      :receiverList => {
-        :receiver => [{
-          :amount => amount.to_s,
-          :email => @receiver.paypal_email 
-        }] 
-      },
-      :senderEmail => @sender.paypal_email
-    })
-    @pay_response = @api.pay(@pay) 
-    if @pay_response.success?
-      if @pay_response.paymentExecStatus == 'COMPLETED'
-        payout_successful(@pay_response)
-      elsif @pay_response.paymentExecStatus == 'CREATED'
-        payout_pending(@pay_response)
-      else
-        raise "Unknown payment exec status: #{@pay_response.paymentExecStatus}"
-      end
-    else
-      payout_failed(@pay_response.error)
     end
   end
 

@@ -1,13 +1,12 @@
 require 'test_helper'
 
-class Billing::Gateway::StripeProcessorTest < ActiveSupport::TestCase
+class Billing::Gateway::Processor::Ingoing::StripeTest < ActiveSupport::TestCase
 
   setup do
     @instance = Instance.default_instance
     @user = FactoryGirl.create(:user)
-    @reservation = FactoryGirl.create(:reservation)
     @instance.update_attribute(:stripe_api_key, "abcd")
-    @stripe_processor = Billing::Gateway::StripeProcessor.new(@instance, 'USD').ingoing_payment(@user)
+    @stripe_processor = Billing::Gateway::Processor::Ingoing::Stripe.new(@user, @instance, 'USD')
   end
 
   context "#charge" do
