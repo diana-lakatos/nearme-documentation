@@ -2,8 +2,6 @@ class @Dashboard.ListingController
 
   constructor: (@container) ->
     @availabilityRules = new AvailabilityRulesController(@container)
-    @submitLink = $('#submit-link')
-    @container.find('#submit-input').hide()
 
     @currencySelect = @container.find('#currency-select')
     @currencyHolders = @container.find('.currency-holder')
@@ -19,10 +17,6 @@ class @Dashboard.ListingController
 
     @container.on 'change', @currencySelect, (event) =>
       @updateCurrency()
-
-    @submitLink.on 'click',  =>
-      @container.submit()
-      false
 
     @enableSwitch.on 'switch-change', (e, data) =>
       enabled_should_be_changed_by_ajax = @enableSwitch.data('ajax-updateable')

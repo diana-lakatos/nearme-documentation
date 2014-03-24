@@ -3,8 +3,6 @@ class @Dashboard.LocationController
   constructor: (@container) ->
     new AvailabilityRulesController(@container)
     @setupMap()
-    @submitLink = $('#submit-link')
-    @container.find('#submit-input').hide()
 
     @address = new AddressField(@container.find('[data-behavior=address-autocomplete]'))
     @address.onLocate (lat, lng) =>
@@ -40,8 +38,3 @@ class @Dashboard.LocationController
       @address.setLatLng(position.lat(), position.lng())
 
   bindEvents: =>
-    @submitLink.on 'click',  =>
-      @container.submit()
-      false
-
-

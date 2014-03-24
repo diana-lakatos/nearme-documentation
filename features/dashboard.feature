@@ -24,7 +24,7 @@ Feature: As a user of the site
       And I submit the form
       And I should see "Great, your new Desk has been added!"
      Then Location with my details should be created
-     
+
   Scenario: A user can edit existing location
     Given the location exists with company: the company
       And I am on the manage locations page

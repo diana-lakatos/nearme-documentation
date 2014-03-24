@@ -2,4 +2,9 @@
 
   = render :partial => 'listings/listing_form', :locals => { :f => f, :listing => listing, photos: photos}
 
-  = f.submit "Save", :id => 'submit-input', :class => 'hidden'
+  - if listing.persisted?
+    = link_to manage_location_listing_path(location, listing), :method => :delete, :confirm => 'Are you sure?', :class => "delete delete-listing" do
+      %span.ico-trash.padding
+        Delete this #{platform_context.bookable_noun}
+
+  = f.submit "Save", :id => 'submit-input', :disable_with => 'Submiting...'
