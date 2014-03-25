@@ -10,7 +10,6 @@
   text-shadow: none;
   padding: 0px;
   width: 100%;
-  @include opacity(.8);
 
   &.static {
     position: static;
@@ -61,15 +60,6 @@
 
   &.warning {
     background-color: $theme_orange;
-  }
-
-  &.appear{
-    @include animation(fadeInDown  1.2s 1 forwards);
-  }
-
-  &.timeout{
-    @include animation(fadeOutUp 1s 1 forwards);
-    z-index: 0;
   }
 }
 
