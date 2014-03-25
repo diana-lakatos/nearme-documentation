@@ -21,7 +21,7 @@ end
 When /^I fill (location|listing) form with valid details$/ do |model|
   if model == 'location'
     fill_location_form
-  else 
+  else
     fill_listing_form
   end
 end
@@ -37,13 +37,13 @@ end
 When /^I provide new (location|listing) data$/ do |model|
   if model == 'location'
     fill_location_form
-  else 
+  else
     fill_listing_form
   end
 end
 
 When /^I submit the form$/ do
-  page.find('#submit-link').click
+  page.find('#submit-input').click
 end
 
 When /^I click edit location icon$/ do
