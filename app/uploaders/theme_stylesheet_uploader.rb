@@ -6,7 +6,7 @@ class ThemeStylesheetUploader < BaseUploader
 
   def fog_attributes
       {
-        'Cache-Control' => 'max-age=315576000',
+        'Cache-Control' => 'max-age=315576000, public',
         'Content-Encoding' => 'gzip',
         'Content-Type' => 'text/css'
       }
