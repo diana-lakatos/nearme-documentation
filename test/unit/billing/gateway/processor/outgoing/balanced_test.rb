@@ -1,13 +1,13 @@
 require 'test_helper'
 
-class Billing::Gateway::Processor::Outcoming::BalancedTest < ActiveSupport::TestCase
+class Billing::Gateway::Processor::Outgoing::BalancedTest < ActiveSupport::TestCase
   setup do
     @instance = Instance.default_instance
     @instance.update_attribute(:balanced_api_key, 'test_key')
     @company = FactoryGirl.create(:company)
     @company.update_attribute(:paypal_email, 'receiver@example.com')
     @company.instance.update_attribute(:paypal_email, 'sender@example.com')
-    @balanced_processor = Billing::Gateway::Processor::Outcoming::Balanced.new(@company, 'USD')
+    @balanced_processor = Billing::Gateway::Processor::Outgoing::Balanced.new(@company, 'USD')
     merchant = mock()
     marketplace = mock()
     marketplace.stubs(:uri).returns('')
@@ -87,7 +87,7 @@ class Billing::Gateway::Processor::Outcoming::BalancedTest < ActiveSupport::Test
           Balanced::Customer.expects(:find).never
           Balanced::Customer.expects(:new).returns(stub(:save => @customer)).once
           assert_difference 'InstanceClient.count' do
-            Billing::Gateway::Processor::Outcoming::Balanced.create_customer_with_bank_account!(@company)
+            Billing::Gateway::Processor::Outgoing::Balanced.create_customer_with_bank_account!(@company)
             @instance_client = InstanceClient.last
             assert_equal @company.reload, @instance_client.client
             assert_equal @company.instance, @instance_client.instance
@@ -103,7 +103,7 @@ class Billing::Gateway::Processor::Outcoming::BalancedTest < ActiveSupport::Test
           Balanced::Customer.expects(:find).with(@company.instance_clients.first.balanced_user_id).returns(@customer).twice
           Balanced::Customer.expects(:new).never
           assert_no_difference 'InstanceClient.count' do
-            Billing::Gateway::Processor::Outcoming::Balanced.create_customer_with_bank_account!(@company)
+            Billing::Gateway::Processor::Outgoing::Balanced.create_customer_with_bank_account!(@company)
           end
         end
 
@@ -116,7 +116,7 @@ class Billing::Gateway::Processor::Outcoming::BalancedTest < ActiveSupport::Test
         @customer.stubs(:bank_accounts).returns(stub(:last => @bank_account))
         Balanced::Customer.expects(:find).returns(@customer).once
         assert_raise Billing::Gateway::Processor::Base::InvalidStateError do |e|
-          Billing::Gateway::Processor::Outcoming::Balanced.create_customer_with_bank_account!(@company)
+          Billing::Gateway::Processor::Outgoing::Balanced.create_customer_with_bank_account!(@company)
           assert e.message.include?('should have been invalidated')
         end
       end

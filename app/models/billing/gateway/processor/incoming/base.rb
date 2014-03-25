@@ -1,4 +1,4 @@
-class Billing::Gateway::Processor::Ingoing::Base < Billing::Gateway::Processor::Base
+class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor::Base
   attr_accessor :user
 
   def initialize(user, instance, currency)
@@ -7,19 +7,6 @@ class Billing::Gateway::Processor::Ingoing::Base < Billing::Gateway::Processor::
     @currency = currency
     setup_api_on_initialize
   end
-
-  def self.instance_supported?(instance)
-    raise NotImplementedError
-  end
-
-  def self.currency_supported?(instance)
-    raise NotImplementedError
-  end
-
-  def self.processor_supported?(instance)
-    raise NotImplementedError
-  end
-
 
   # Make a charge against the user
   #

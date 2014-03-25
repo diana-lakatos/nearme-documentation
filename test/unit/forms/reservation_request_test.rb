@@ -35,12 +35,12 @@ class ReservationRequestTest < ActiveSupport::TestCase
 
     context 'determine payment method' do
       should 'set credit card' do
-        Billing::Gateway::Ingoing.any_instance.stubs(:possible?).returns(true)
+        Billing::Gateway::Incoming.any_instance.stubs(:possible?).returns(true)
         assert_equal @reservation_request.payment_method, Reservation::PAYMENT_METHODS[:credit_card]
       end
 
       should 'set manual' do
-        Billing::Gateway::Ingoing.any_instance.stubs(:possible?).returns(false)
+        Billing::Gateway::Incoming.any_instance.stubs(:possible?).returns(false)
         assert_equal @reservation_request.payment_method, Reservation::PAYMENT_METHODS[:manual]
       end
     end

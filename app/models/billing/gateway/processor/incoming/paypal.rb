@@ -1,23 +1,10 @@
-class Billing::Gateway::Processor::Ingoing::Paypal < Billing::Gateway::Processor::Ingoing::Base
+class Billing::Gateway::Processor::Incoming::Paypal < Billing::Gateway::Processor::Incoming::Base
   include PayPal::SDK::Core::Logging
 
   SUPPORTED_CURRENCIES = ['USD', 'GBP', 'EUR', 'JPY', 'CAD']
 
-  def  setup_api_on_initialize
-    PayPal::SDK.configure(@instance.paypal_api_config)
-    @api = PayPal::SDK::AdaptivePayments::API.new
-  end
-
-  def self.currency_supported?(currency)
-    self::SUPPORTED_CURRENCIES.include?(currency)
-  end
-
-  def self.instance_supported?(instance)
-    instance.paypal_supported?
-  end
-
-  def self.is_supported_by?(object)
-    object.paypal_email.present?
+  def setup_api_on_initialize
+    PayPal::SDK.configure(@instance.incoming_paypal_api_config)
   end
 
   def process_charge(amount)
@@ -143,7 +130,7 @@ class Billing::Gateway::Processor::Ingoing::Paypal < Billing::Gateway::Processor
         # Let's you specify a payment amount.
         :amount => {
           :total => amount.to_s,
-          :currency => @currency },
+          :currency => @currency }
       }]
     }
   end

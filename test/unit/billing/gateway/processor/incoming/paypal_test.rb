@@ -1,11 +1,11 @@
 require 'test_helper'
 
-class Billing::Gateway::Processor::Ingoing::PaypalTest < ActiveSupport::TestCase
+class Billing::Gateway::Processor::Incoming::PaypalTest < ActiveSupport::TestCase
 
   setup do
     @instance = Instance.default_instance
     @user = FactoryGirl.create(:user)
-    @paypal_processor = Billing::Gateway::Processor::Ingoing::Paypal.new(@user, @instance, 'EUR')
+    @paypal_processor = Billing::Gateway::Processor::Incoming::Paypal.new(@user, @instance, 'EUR')
     PayPal::SDK::REST::Payment.any_instance.stubs(:error).returns([]).at_least(0)
     PayPal::SDK::REST::CreditCard.any_instance.stubs(:error).returns([]).at_least(0)
   end

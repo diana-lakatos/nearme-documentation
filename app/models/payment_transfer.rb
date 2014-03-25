@@ -65,6 +65,7 @@ class PaymentTransfer < ActiveRecord::Base
   def payout
     return if !billing_gateway.possible?
     return if transferred?
+    return if amount <= 0
 
     # Generates a ChargeAttempt with this record as the reference.
     payout = billing_gateway.payout(
@@ -108,6 +109,6 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def billing_gateway
-    @billing_gateway ||= Billing::Gateway::Outcoming.new(company, currency)
+    @billing_gateway ||= Billing::Gateway::Outgoing.new(company, currency)
   end
 end

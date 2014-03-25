@@ -1,4 +1,4 @@
-class Billing::Gateway::Processor::Outcoming::Base < Billing::Gateway::Processor::Base
+class Billing::Gateway::Processor::Outgoing::Base < Billing::Gateway::Processor::Base
 
   def initialize(receiver, currency)
     @instance = @sender = receiver.instance

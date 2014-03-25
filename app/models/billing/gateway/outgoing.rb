@@ -1,5 +1,5 @@
 # Encapsulate all billing  gateway related logic associated with a user
-class Billing::Gateway::Outcoming
+class Billing::Gateway::Outgoing
 
   delegate :payout, :to => :processor
 
@@ -8,11 +8,11 @@ class Billing::Gateway::Outcoming
   def initialize(receiver, currency)
     @receiver = receiver
     @currency = currency
-    @processor = Billing::Gateway::Processor::Outcoming::ProcessorFactory.create(@receiver, @currency)
+    @processor = Billing::Gateway::Processor::Outgoing::ProcessorFactory.create(@receiver, @currency)
   end
 
   def support_automated_payout?
-    Billing::Gateway::Processor::Outcoming::ProcessorFactory.support_automated_payout?(@receiver, @currency)
+    Billing::Gateway::Processor::Outgoing::ProcessorFactory.support_automated_payout?(@receiver.instance, @currency)
   end
 
   def possible?
@@ -20,7 +20,7 @@ class Billing::Gateway::Outcoming
   end
 
   def processor_class
-    processor.class.to_s.demodulize
+    processor.class.to_s.demodulize if processor.present?
   end
 
 

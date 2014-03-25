@@ -23,7 +23,7 @@ class ReservationRequest < Form
 
     if @listing
       @reservation = listing.reservations.build
-      @billing_gateway = Billing::Gateway::Ingoing.new(@user, platform_context.instance, @reservation.currency) if @user
+      @billing_gateway = Billing::Gateway::Incoming.new(@user, platform_context.instance, @reservation.currency) if @user
       @reservation.payment_method = payment_method
       @reservation.user = user
       @reservation = @reservation.decorate

@@ -1,4 +1,4 @@
-class Billing::Gateway::Processor::Outcoming::Paypal < Billing::Gateway::Processor::Outcoming::Base
+class Billing::Gateway::Processor::Outgoing::Paypal < Billing::Gateway::Processor::Outgoing::Base
   include PayPal::SDK::Core::Logging
 
   def setup_api_on_initialize

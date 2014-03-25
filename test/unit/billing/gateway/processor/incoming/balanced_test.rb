@@ -1,11 +1,11 @@
 require 'test_helper'
 
-class Billing::Gateway::Processor::Ingoing::BalancedTest < ActiveSupport::TestCase
+class Billing::Gateway::Processor::Incoming::BalancedTest < ActiveSupport::TestCase
   setup do
     @instance = Instance.default_instance
     @user = FactoryGirl.create(:user)
     @instance.update_attribute(:balanced_api_key, 'test_key')
-    @balanced_processor = Billing::Gateway::Processor::Ingoing::Balanced.new(@user, @instance, 'USD')
+    @balanced_processor = Billing::Gateway::Processor::Incoming::Balanced.new(@user, @instance, 'USD')
     merchant = mock()
     marketplace = mock()
     marketplace.stubs(:uri).returns('')
@@ -144,33 +144,6 @@ class Billing::Gateway::Processor::Ingoing::BalancedTest < ActiveSupport::TestCa
         assert_equal 'new-test-credit-card', @instance_client.balanced_credit_card_id, "Balanced credit card id should have changed"
       end
     end
-  end
-
-  context 'is_supported?' do
-
-    should 'be supported if instance_client with the right instance exists and has balanced_user_id' do
-      @company = FactoryGirl.create(:company)
-      FactoryGirl.create(:instance_client, :client => @company, :instance => @company.instance, :balanced_user_id => 'present')
-      assert Billing::Gateway::Processor::Ingoing::Balanced.is_supported_by?(@company)
-    end
-
-    should 'not be supported if instance_client exists but for other instance' do
-      @company = FactoryGirl.create(:company)
-      FactoryGirl.create(:instance_client, :client => @company, :balanced_user_id => 'present').update_column(:instance_id, FactoryGirl.create(:instance).id)
-      refute Billing::Gateway::Processor::Ingoing::Balanced.is_supported_by?(@company)
-    end
-
-    should 'not be supported if instance_client with the right instance exists but without balanced_user_id' do
-      @company = FactoryGirl.create(:company)
-      FactoryGirl.create(:instance_client, :client => @company, :instance => @company.instance)
-      refute Billing::Gateway::Processor::Ingoing::Balanced.is_supported_by?(@company)
-    end
-
-    should 'not be supported if instance_client does not exist' do
-      @company = FactoryGirl.create(:company)
-      refute Billing::Gateway::Processor::Ingoing::Balanced.is_supported_by?(@company)
-    end
-
   end
 
   protected

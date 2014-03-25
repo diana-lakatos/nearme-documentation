@@ -42,7 +42,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
   def stub_what_has_to_be_stubbed
     stub_mixpanel
     stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
-    Billing::Gateway::Ingoing.any_instance.stubs(:store_credit_card).returns(true).at_least(1)
+    Billing::Gateway::Incoming.any_instance.stubs(:store_credit_card).returns(true).at_least(1)
     Stripe::Charge.expects(:create).returns({}).at_least(1)
     api_mock = mock()
     api_mock.expects(:build_pay)

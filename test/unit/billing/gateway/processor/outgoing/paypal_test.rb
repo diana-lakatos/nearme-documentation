@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Billing::Gateway::Processor::Outcoming::PaypalTest < ActiveSupport::TestCase
+class Billing::Gateway::Processor::Outgoing::PaypalTest < ActiveSupport::TestCase
 
   setup do
     @instance = Instance.default_instance
@@ -16,7 +16,7 @@ class Billing::Gateway::Processor::Outcoming::PaypalTest < ActiveSupport::TestCa
     pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml', :paymentExecStatus => 'COMPLETED')
     api_mock.expects(:pay).returns(pay_response_mock)
     PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
-    @paypal_processor = Billing::Gateway::Processor::Outcoming::Paypal.new(@company, 'EUR')
+    @paypal_processor = Billing::Gateway::Processor::Outgoing::Paypal.new(@company, 'EUR')
     @paypal_processor.expects(:payout_successful)
     @paypal_processor.process_payout(Money.new(1000, 'EUR'))
   end
@@ -28,7 +28,7 @@ class Billing::Gateway::Processor::Outcoming::PaypalTest < ActiveSupport::TestCa
     pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml', :paymentExecStatus => 'CREATED')
     api_mock.expects(:pay).returns(pay_response_mock)
     PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
-    @paypal_processor = Billing::Gateway::Processor::Outcoming::Paypal.new(@company, 'EUR')
+    @paypal_processor = Billing::Gateway::Processor::Outgoing::Paypal.new(@company, 'EUR')
     @paypal_processor.expects(:payout_pending).with(pay_response_mock)
     @paypal_processor.process_payout(Money.new(1000, 'EUR'))
   end
@@ -43,7 +43,7 @@ class Billing::Gateway::Processor::Outcoming::PaypalTest < ActiveSupport::TestCa
     pay_response_mock.stubs(:error).returns(error_mock)
     api_mock.expects(:pay).returns(pay_response_mock)
     PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
-    @paypal_processor = Billing::Gateway::Processor::Outcoming::Paypal.new(@company, 'EUR')
+    @paypal_processor = Billing::Gateway::Processor::Outgoing::Paypal.new(@company, 'EUR')
     @paypal_processor.expects(:payout_failed)
     @paypal_processor.process_payout(Money.new(1000, 'EUR'))
   end
@@ -68,7 +68,7 @@ class Billing::Gateway::Processor::Outcoming::PaypalTest < ActiveSupport::TestCa
     pay_response_mock = mock()
     pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml', :paymentExecStatus => 'COMPLETED')
     api_mock.expects(:pay).returns(pay_response_mock)
-    @paypal_processor = Billing::Gateway::Processor::Outcoming::Paypal.new(@company, 'EUR')
+    @paypal_processor = Billing::Gateway::Processor::Outgoing::Paypal.new(@company, 'EUR')
     @paypal_processor.expects(:payout_successful)
     @paypal_processor.process_payout(Money.new(1234, 'EUR'))
   end

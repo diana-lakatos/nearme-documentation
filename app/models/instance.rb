@@ -112,38 +112,22 @@ class Instance < ActiveRecord::Base
     super.presence || "guest"
   end
 
+  def incoming_paypal_api_config
+    @incoming_paypal_api_config ||= {
+      :mode => (self.test_mode? || !Rails.env.production?) ? 'sandbox' : 'live',
+      :client_id => billing_gateway_credential('paypal_client_id'),
+      :client_secret => billing_gateway_credential('paypal_client_secret')
+    }
+  end
+
   def paypal_api_config
     @paypal_api_config ||= {
       :mode => (self.test_mode? || !Rails.env.production?) ? 'sandbox' : 'live',
-      :client_id => billing_gateway_credential('paypal_client_id'),
-      :client_secret => billing_gateway_credential('paypal_client_secret'),
-      :app_id    => self.test_mode? ? 'APP-80W284485P519543T' : billing_gateway_credential('paypal_app_id'),
+      :app_id    => (self.test_mode? || !Rails.env.production?) ? 'APP-80W284485P519543T' : billing_gateway_credential('paypal_app_id'),
       :username  => billing_gateway_credential('paypal_username'),
       :password  => billing_gateway_credential('paypal_password'),
       :signature => billing_gateway_credential('paypal_signature')
     }
-  end
-
-  def paypal_supported?
-    billing_gateway_credential('paypal_username').present? &&
-    billing_gateway_credential('paypal_password').present? &&
-    billing_gateway_credential('paypal_signature').present? &&
-    billing_gateway_credential('paypal_client_id').present? &&
-    billing_gateway_credential('paypal_client_secret').present? &&
-    billing_gateway_credential('paypal_app_id').present?
-  end
-
-  def balanced_supported?
-    balanced_api_key.present?
-  end
-
-  def stripe_supported?
-    billing_gateway_credential('stripe_api_key').present? &&
-    billing_gateway_credential('stripe_public_key').present?
-  end
-
-  def balanced_supported?
-    billing_gateway_credential('balanced_api_key').present?
   end
 
   def to_liquid
@@ -152,14 +136,6 @@ class Instance < ActiveRecord::Base
 
   def authenticate(password)
     password == marketplace_password
-  end
-
-  def billing_gateway_for(currency)
-    processor_name = self.instance_billing_gateways.where(currency: currency).first
-    if processor_name
-      processor = "Billing::Gateway::Processor::Ingoing::#{processor_name.billing_gateway.capitalize}".constantize
-      processor if processor.instance_supported?(self) && processor.currency_supported?(currency)
-    end
   end
 
   def billing_gateway_credential(credential)

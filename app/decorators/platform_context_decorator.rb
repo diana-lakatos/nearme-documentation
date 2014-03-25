@@ -75,6 +75,10 @@ class PlatformContextDecorator
     @platform_context.instance.billing_gateway_credential('stripe_public_key')
   end
 
+  def supported_payout_via_ach?
+    Billing::Gateway::Processor::Outgoing::ProcessorFactory.supported_payout_via_ach?(self.instance)
+  end
+
   private
 
   def platform_context

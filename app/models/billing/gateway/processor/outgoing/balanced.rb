@@ -1,4 +1,4 @@
-class Billing::Gateway::Processor::Outcoming::Balanced < Billing::Gateway::Processor::Outcoming::Base
+class Billing::Gateway::Processor::Outgoing::Balanced < Billing::Gateway::Processor::Outgoing::Base
 
   def setup_api_on_initialize
     Balanced.configure(@instance.billing_gateway_credential('balanced_api_key'))

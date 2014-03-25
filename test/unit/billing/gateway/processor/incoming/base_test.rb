@@ -1,8 +1,8 @@
 require 'test_helper'
 
-class Billing::Gateway::Processor::Ingoing::BaseTest < ActiveSupport::TestCase
+class Billing::Gateway::Processor::Incoming::BaseTest < ActiveSupport::TestCase
 
-  class TestProcessor < Billing::Gateway::Processor::Ingoing::Base
+  class TestProcessor < Billing::Gateway::Processor::Incoming::Base
 
     attr_accessor :success
 

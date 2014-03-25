@@ -4,7 +4,7 @@ class ReservationChargeTrackerJobTest < ActiveSupport::TestCase
 
   setup do
     stub_mixpanel
-    Billing::Gateway::Processor::Ingoing::Stripe.any_instance.expects(:charge)
+    Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:charge)
     @listing = FactoryGirl.create(:listing, :daily_price => 89.39)
     @reservation = FactoryGirl.create(:reservation_with_credit_card, :listing => @listing)
   end

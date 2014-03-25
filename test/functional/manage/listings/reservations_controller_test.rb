@@ -8,7 +8,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     sign_in @user
     stub_mixpanel
     stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
-    Billing::Gateway::Ingoing.any_instance.stubs(:charge)
+    Billing::Gateway::Incoming.any_instance.stubs(:charge)
   end
 
   should "track and redirect a host to the Manage Guests page when they confirm a booking" do

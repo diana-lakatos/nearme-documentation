@@ -8,27 +8,6 @@ class InstanceTest < ActiveSupport::TestCase
     @instance = Instance.default_instance
   end
 
-  context 'stripe supported' do
-    setup do
-      @instance.stripe_api_key = 'a'
-      @instance.stripe_public_key = 'b'
-    end
-
-    should 'support stripe if has all necessary details' do
-      assert @instance.stripe_supported?
-    end
-
-    should 'not support stripe without api key' do
-      @instance.stripe_api_key = ''
-      refute @instance.stripe_supported?
-    end
-
-    should 'not support stripe without public key' do
-      @instance.stripe_public_key = ''
-      refute @instance.stripe_supported?
-    end
-  end
-
   context 'test mode' do
     should 'should use live credentials when off' do
       @instance.test_mode = false
