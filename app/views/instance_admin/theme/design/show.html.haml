@@ -16,15 +16,18 @@
     %hr
 
     %legend Visuals
+    - i = 0
     - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each_slice(2) do |image_attrs|
+      - i += 1
       .row-fluid
         .controls.controls-row
+          - max_height = image_attrs.map { |image_attr| f.object.send(image_attr).any_url_exists? ? f.object.send("#{image_attr}_dimensions")[:height]+30 : 0 }.max
           - image_attrs.each do |image_attr|
             .control-group.span6{:class => image_attr}
               = f.label image_attr
               .controls
                 .single-photo
-                  = file_upload_input("url", upload_theme_image_instance_admin_theme_design_path(image_attr), f.object.send("#{image_attr}_dimensions"), "Upload #{image_attr}", {"no-multiple" => true}) do
+                  = file_upload_input("url", upload_theme_image_instance_admin_theme_design_path(image_attr), f.object.send("#{image_attr}_dimensions"), "Upload #{image_attr}", {"no-multiple" => true, :height => max_height, :row => i}) do
                     - if f.object.send(image_attr).any_url_exists?
                       = fileupload_photo(f.object.send("#{image_attr}_url"), 
                         destroy_theme_image_instance_admin_theme_design_path(image_attr),

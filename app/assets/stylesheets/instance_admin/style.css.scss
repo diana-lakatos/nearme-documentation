@@ -390,8 +390,8 @@ ul.nav-tabs {
 }
 
 .favicon_image .fileupload .photo-item img{
-  width: 16px;
-  height: 16px;
+  width: 32px;
+  height: 32px;
 }
 
 .icon_image .fileupload .photo-item img{
@@ -407,6 +407,42 @@ ul.nav-tabs {
 .hero_image .fileupload .photo-item img{
   width: 250px;
   height: 202px;
+}
+
+.single-photo .fileupload .uploaded .photo-item .thumbnail-processing {
+  @include box-sizing(border-box);
+  width: auto;
+  height: auto;
+  padding-top: 0px;
+}
+
+.logo_image .single-photo .fileupload .uploaded .photo-item .thumbnail-processing {
+  height: 60px;
+  padding-top: 11px;
+}
+
+.logo_retina_image .single-photo .fileupload .uploaded .photo-item .thumbnail-processing {
+  height: 60px;
+  padding-top: 11px;
+}
+
+.favicon_image .single-photo .fileupload .uploaded .photo-item .thumbnail-processing {
+  height: 32px;
+}
+
+.icon_image .single-photo .fileupload .uploaded .photo-item .thumbnail-processing {
+  height: 60px;
+  padding-top: 11px;
+}
+
+.icon_retina_image .single-photo .fileupload .uploaded .photo-item .thumbnail-processing {
+  height: 60px;
+  padding-top: 11px;
+}
+
+.hero_image .single-photo .fileupload .uploaded .photo-item .thumbnail-processing {
+  height: 202px;
+  padding-top: 82px;
 }
 
 .jcrop-holder {

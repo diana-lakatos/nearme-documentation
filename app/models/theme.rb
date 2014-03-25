@@ -192,11 +192,11 @@ class Theme < ActiveRecord::Base
   end
 
   def logo_retina_image_dimensions
-    { :width => logo_image_dimensions[:width]*2, :height => logo_image_dimensions[:height]*2} 
+    { :width => 240, :height => 60} 
   end
 
   def favicon_image_dimensions
-    { :width => 16, :height => 16} 
+    { :width => 32, :height => 32} 
   end
 
   def icon_image_dimensions 
@@ -204,11 +204,11 @@ class Theme < ActiveRecord::Base
   end
 
   def icon_retina_image_dimensions
-    { :width => icon_image_dimensions[:width]*2, :height => icon_image_dimensions[:height]*2} 
+    { :width => 60, :height => 60} 
   end
 
   def hero_image_dimensions
-    { :width => 100, :height => 81} 
+    { :width => 250, :height => 202} 
   end
 
   private
