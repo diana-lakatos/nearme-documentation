@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   prepend_view_path FooterResolver.instance
   before_filter :require_ssl
   before_filter :log_out_if_token_exists
+  before_filter :log_out_if_sso_logout
   before_filter :redirect_to_set_password_unless_unnecessary
 
   protect_from_forgery
@@ -292,6 +293,13 @@ class ApplicationController < ActionController::Base
   def log_out_if_token_exists
     if current_user && params[:token].present?
       Rails.logger.info "#{current_user.email} is being logged out due to token param"
+      sign_out current_user
+    end
+  end
+
+  def log_out_if_sso_logout
+    if current_user && current_user.sso_log_out?
+      current_user.logged_out!
       sign_out current_user
     end
   end

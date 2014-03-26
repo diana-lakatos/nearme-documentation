@@ -1,5 +1,6 @@
 class SessionsController < Devise::SessionsController
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:destroy]
+  before_filter :sso_logout, :only => [:destroy]
   before_filter :clear_return_to, :only => [:new]
   before_filter :set_return_to
   skip_before_filter :require_no_authentication, :only => [:show] , :if => lambda {|c| request.xhr? }
@@ -33,6 +34,10 @@ class SessionsController < Devise::SessionsController
   end
 
   private
+
+  def sso_logout
+    current_user.log_out!
+  end
 
   def set_return_to
     session[:user_return_to] = params[:return_to] if params[:return_to].present?

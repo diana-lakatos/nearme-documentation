@@ -60,4 +60,40 @@ class SecuredDomainTest < ActionDispatch::IntegrationTest
       end
     end
   end
+
+  context 'logout request' do
+    context 'for multiple logins' do
+      should 'destroy all logins' do
+        stub_mixpanel
+        user = FactoryGirl.create(:user)
+        unsecured = FactoryGirl.create(:unsecured_domain, name: 'unsecured.com')
+        secured = FactoryGirl.create(:secured_domain, name: 'secured.com')
+
+        login_hash = {
+          'user' => {
+            'email' => user.email,
+            'password' => user.password
+          }
+        }
+
+        post user_session_url(host: secured.name, protocol: 'https'), login_hash
+        follow_redirect!
+        assert_response :success
+        assert_equal user, controller.current_user
+        post user_session_url(host: unsecured.name), login_hash
+        follow_redirect!
+        assert_response :success
+        assert_equal user, controller.current_user
+
+        delete destroy_user_session_url(:host => unsecured.name)
+        follow_redirect!
+        assert_response :success
+
+        get root_url(host: unsecured.name)
+        assert_nil controller.current_user
+        get root_url(host: secured.name)
+        assert_nil controller.current_user
+      end
+    end
+  end
 end

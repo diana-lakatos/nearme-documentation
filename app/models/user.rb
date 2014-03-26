@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
                               :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
                               :bookings_count, :guest_rating_average, :guest_rating_count, :host_rating_average, 
                               :host_rating_count, :avatar_versions_generated_at, :last_geolocated_location_longitude, 
-                              :last_geolocated_location_latitude, :instance_unread_messages_threads_count]
+                              :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out]
   acts_as_paranoid
   auto_set_platform_context
 
@@ -327,6 +327,14 @@ class User < ActiveRecord::Base
 
   def mailchimp_exported?
     mailchimp_synchronized_at.present?
+  end
+
+  def log_out!
+    self.update_attribute(:sso_log_out, true)
+  end
+
+  def logged_out!
+    self.update_attribute(:sso_log_out, false)
   end
 
   def email_verification_token

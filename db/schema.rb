@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140320182550) do
+ActiveRecord::Schema.define(:version => 20140326130740) do
 
 
 
@@ -987,6 +987,11 @@ ActiveRecord::Schema.define(:version => 20140320182550) do
     t.string   "sms_preferences",                                       :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
     t.text     "instance_unread_messages_threads_count",                :default => "--- {}\n"
     t.text     "metadata"
+    t.boolean  "sms_notifications_enabled",              :default => true
+    t.string   "sms_preferences",                        :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
+    t.text     "instance_unread_messages_threads_count", :default => "--- {}\n"
+    t.string   "payment_token"
+    t.boolean  "sso_log_out",                            :default => false
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"
