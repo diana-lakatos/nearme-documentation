@@ -112,20 +112,6 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert_equal 'https://twitter.com/desksnearme', @user.authentications.last.profile_url
     end
 
-    should "successfully sign in and log" do
-      add_authentication(@provider, @uid, @user)
-      stub_mixpanel
-      @tracker.expects(:logged_in).once.with do |user, custom_options|
-        user == @user && custom_options == { provider: @provider }
-      end
-      assert_no_difference('User.count') do
-        assert_no_difference('Authentication.count') do
-          post :create
-        end
-      end
-      assert flash[:success].include?('Signed in successfully')
-    end
-
     should "successfully create new authentication as alternative to setting password" do
       @user = FactoryGirl.create(:user_without_password)
       sign_in @user
