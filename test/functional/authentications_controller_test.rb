@@ -74,6 +74,22 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert flash[:error].include?('already connected to other user')
     end
 
+    should "successfully sign in and log" do
+      add_authentication(@provider, @uid, @user)
+      stub_mixpanel
+      @tracker.expects(:logged_in).once.with do |user, custom_options|
+        user == @user && custom_options == { provider: @provider }
+      end
+      Authentication.any_instance.expects(:update_info)
+
+      assert_no_difference('User.count') do
+        assert_no_difference('Authentication.count') do
+          post :create
+        end
+      end
+      assert flash[:success].include?('Signed in successfully')
+    end
+
     should "successfully create new authentication and log" do
       sign_in @user
       stub_mixpanel

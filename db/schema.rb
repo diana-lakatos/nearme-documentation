@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140309155414) do
+ActiveRecord::Schema.define(:version => 20140315162807) do
 
 
 
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(:version => 20140309155414) do
     t.text     "profile_url"
     t.integer  "total_social_connections", :default => 0
     t.integer  "instance_id"
+    t.datetime "information_fetched"
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
