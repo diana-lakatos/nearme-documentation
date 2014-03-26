@@ -6,7 +6,6 @@ module Delayed
           ::Raygun.track_exception(error,
             custom_data: {
               delayed: {
-                demo: ENV['DEMO'],
                 error_class:   error.class.name,
                 error_message: "#{error.class.name}: #{error.message}",
                 parameters:    {

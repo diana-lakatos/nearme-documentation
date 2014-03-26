@@ -25,15 +25,14 @@ DesksnearMe::Application.configure do
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
 
-  if ENV['DEMO']
-    config.action_controller.asset_host = "//demo.desksnear.me"
-    Rails.application.routes.default_url_options[:host] = 'demo.desksnear.me'
-    config.test_email = "notifications-demo@desksnear.me"
-  else
-    config.action_controller.asset_host = "//staging-uswest2.desksnear.me"
-    Rails.application.routes.default_url_options[:host] = 'staging-uswest2.desksnear.me'
-    config.test_email = "notifications-staging@desksnear.me"
-  end
+  config.action_controller.asset_host = "//staging-uswest2.desksnear.me"
+  Rails.application.routes.default_url_options[:host] = 'staging-uswest2.desksnear.me'
+  config.test_email = "notifications-staging@desksnear.me"
+
+  # Clould services credentials
+  config.fog_directory        = 'desksnearme.staging-prod-copy'
+  config.asset_host           = 'https://s3.amazonaws.com/desksnearme.staging-prod-copy'
+  config.storage              = :fog
 
   # Staging specific keys/secrets for social properties.
   config.linkedin_key = "26pmsiwpsh8a"
@@ -65,8 +64,8 @@ DesksnearMe::Application.configure do
     username == 'desksnearme' && password == 'sharethem'
   end
   config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))["staging"]
-  config.cache_store = :redis_store, { 
-    :host => config.redis_settings["host"], 
+  config.cache_store = :redis_store, {
+    :host => config.redis_settings["host"],
     :port => config.redis_settings["port"].to_i,
     :namespace => "cache"
   }
