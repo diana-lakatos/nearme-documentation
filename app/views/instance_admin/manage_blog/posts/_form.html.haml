@@ -1,4 +1,4 @@
-= simple_form_for [:blog_admin, @blog_post], :html => { :multipart => true } do |f|
+= simple_form_for [:instance_admin, :manage, @blog_post], :html => { :multipart => true } do |f|
   = render 'blog/admin/blog_posts/blog_form', f: f
 
 - content_for :script do

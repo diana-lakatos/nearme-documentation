@@ -1,2 +1,4 @@
 %legend Edit settings
-= render :partial => "form"
+
+= simple_form_for [:blog_admin, @blog_instance], :html => { :multipart => true } do |f|
+  = render "form"
