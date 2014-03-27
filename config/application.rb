@@ -87,11 +87,6 @@ module DesksnearMe
     config.assets.digest = true
 
     # Clould services credentials
-    config.fog_credentials = {
-      :provider                   => 'AWS',
-      :aws_access_key_id          => 'AKIAI5EVP6HB47OZZXXA',
-      :aws_secret_access_key      => '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'
-    }
     config.fog_attributes = {'Cache-Control'=>'max-age=315576000, public'}
     config.storage              = :file
 
