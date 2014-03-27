@@ -96,8 +96,8 @@ class Theme < ActiveRecord::Base
   def theme_changed?
     attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action address contact_email homepage_css)
     attrs.any? do |attr|
+      return false if send("#{attr}_changed?") && attr.include?('_image')
       # we will run theme compile via generate_versions_callback, after we download images from inkfilepicker to s3
-      return false if attr.include?('_image')
       send("#{attr}_changed?")
     end
   end
@@ -145,8 +145,9 @@ class Theme < ActiveRecord::Base
     ['id', 'name', 'compiled_stylesheet', 'owner_id', 'owner_type', 'created_at', 'updated_at', 'deleted_at'].each do |forbidden_attribute|
       current_attributes.delete(forbidden_attribute)
     end
+
     current_attributes.keys.each do |attribute|
-      if attribute.include?('_image')
+      if attribute =~ /_image$/
         url = self.send("#{attribute}_url")
         if url[0] == "/"
           Rails.logger.debug "local file storage not supported"
@@ -156,7 +157,9 @@ class Theme < ActiveRecord::Base
         current_attributes.delete(attribute)
       end
     end
-    cloned_theme.attributes = current_attributes
+    current_attributes.each do |k, v| 
+      cloned_theme.send("#{k}=", v)
+    end
     cloned_theme
   end
 

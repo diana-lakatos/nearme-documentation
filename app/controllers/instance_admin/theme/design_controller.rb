@@ -61,5 +61,6 @@ class InstanceAdmin::Theme::DesignController < InstanceAdmin::Theme::BaseControl
   def find_image
     raise NotImplementedError unless %w(icon_image icon_retina_image favicon_image logo_image logo_retina_image hero_image).include?(params[:image])
     @image = @theme.send(params[:image])
+    @image_param = params[:image]
   end
 end
