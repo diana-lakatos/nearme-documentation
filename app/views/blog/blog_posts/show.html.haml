@@ -32,13 +32,14 @@
       %h3= @blog_post.author_name
       %p= @blog_post.author_biography
 
-  .links.row
-    - if @blog_post.previous_blog_post.present?
-      .col-xs-6
-        = link_to "LAST STORY", blog_post_path(@blog_post.previous_blog_post), class: 'previous-blog-post'
-    - if @blog_post.next_blog_post.present?
-      .col-xs-6
-        = link_to "NEXT STORY", blog_post_path(@blog_post.next_blog_post), class: 'next-blog-post'
+  .container-fluid
+    .links.row
+      - if @blog_post.previous_blog_post.present?
+        .col-xs-6
+          = link_to "LAST STORY", blog_post_path(@blog_post.previous_blog_post), class: 'previous-blog-post'
+      - if @blog_post.next_blog_post.present?
+        .col-xs-6
+          = link_to "NEXT STORY", blog_post_path(@blog_post.next_blog_post), class: 'next-blog-post'
 
   - if @blog_instance.facebook_app_id.present?
     .fb-comments{"data-numposts" => "5", "data-colorscheme" => "light", "data-href" => blog_posts_url(@blog_post)}
