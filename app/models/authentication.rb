@@ -60,13 +60,14 @@ class Authentication < ActiveRecord::Base
     self.update_attribute(:token_expired, true)
   end
 
+  def update_info
+    UpdateInfoJob.perform(self) unless self.information_fetched
+  end
+
   private
 
   def find_friends
     FindFriendsJob.perform(self)
   end
 
-  def update_info
-    UpdateInfoJob.perform(self)
-  end
 end

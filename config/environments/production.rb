@@ -4,6 +4,7 @@ DesksnearMe::Application.configure do
   config.action_controller.perform_caching = true
   config.action_dispatch.x_sendfile_header = "X-Sendfile"
   config.serve_static_assets = false
+  config.static_cache_control = "public, max-age=7200"
 
   config.action_mailer.smtp_settings = {
     :address        => 'smtp.sendgrid.net',
