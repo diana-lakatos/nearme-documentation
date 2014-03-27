@@ -18,6 +18,7 @@ class Instance < ActiveRecord::Base
                  :instagram_consumer_key, :instagram_consumer_secret,
                  :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
+  belongs_to :instance_type
   has_one :theme, :as => :owner, dependent: :destroy
 
   has_many :companies, :inverse_of => :instance

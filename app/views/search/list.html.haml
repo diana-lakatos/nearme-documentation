@@ -5,10 +5,10 @@
   #search-result-google-map{:'data-marker' => image_path("components/map-pin.png")}
     #search-result-movable-google-map{:style => 'width: 100%; height: 100%;'}
 
-- if listings.any?
+- if @searcher.results.any?
   %section#results.list
-    = render partial: 'search/list/listing', collection: listings
-    = will_paginate listings
+    = render partial: 'search/list/listing', collection: @searcher.results
+    = will_paginate @searcher.results
     = render 'shared/loading_spinner'
 - elsif !@located
   %section#results.no_results
@@ -26,7 +26,7 @@
       %br/
       %h1.tk-adelle.fat No results found, but!
       #search-notification
-        = render 'search_notifications/form', search_notification: search_notification
+        = render 'search_notifications/form', search_notification: @searcher.search_notification
 - content_for :domready do
   new Search.SearchController($('#listing_search form'), $("section#content.search"));
   new Search.SearchResultsGoogleMapController($('#results'), $('#search-result-movable-google-map'));
