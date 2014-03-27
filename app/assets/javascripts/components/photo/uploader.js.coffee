@@ -18,7 +18,8 @@ class @Photo.Uploader
       @formIsSubmitting = true
       if @processingPhotos > 0
         @loader.show()
-        sessioncamConfiguration.customDataObjects.push( { key: "event", value: "photo_not_processed_before_submit" } )
+        if sessioncamConfiguration?
+          sessioncamConfiguration.customDataObjects.push( { key: "event", value: "photo_not_processed_before_submit" } )
         @triggerMixpanelPhotoNotProcessedBeforeSubmitEvent()
         false
 
@@ -28,20 +29,22 @@ class @Photo.Uploader
 
     $(window).on 'unload', =>
       if @formIsSubmitting and @processingPhotos > 0
-        sessioncamConfiguration.customDataObjects.push( { key: "event", value: "user_closed_browser_photo_not_processed_before_submit" } )
+        if sessioncamConfiguration?
+          sessioncamConfiguration.customDataObjects.push( { key: "event", value: "user_closed_browser_photo_not_processed_before_submit" } )
         @triggerMixpanelUserClosedBrowserPhotoNotProcessedBeforeSubmitEvent()
 
 
   triggerMixpanelPhotoNotProcessedBeforeSubmitEvent: () ->
-    $.post '/event_tracker', event: "photo_not_processed_before_submit" 
+    $.post '/event_tracker', event: "photo_not_processed_before_submit"
   
   triggerMixpanelUserClosedBrowserPhotoNotProcessedBeforeSubmitEvent: () ->
-    $.post '/event_tracker', event: "user_closed_browser_photo_not_processed_before_submit" 
+    $.post '/event_tracker', event: "user_closed_browser_photo_not_processed_before_submit"
 
   initializeFileUploader : =>
 
     @fileInput.on 'click', (event) =>
-      sessioncamConfiguration.customDataObjects.push( { key: "event", value: "photo_upload_clicked" } )
+      if sessioncamConfiguration?
+        sessioncamConfiguration.customDataObjects.push( { key: "event", value: "photo_upload_clicked" } )
       event.preventDefault()
       options = { debug: filepicker.debug_mode, extensions: ['.jpg', '.jpeg', '.gif', '.png']}
       if @photoCollection.multiplePhoto()

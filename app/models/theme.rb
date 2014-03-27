@@ -39,12 +39,13 @@ class Theme < ActiveRecord::Base
   validates :contact_email, presence: true
   validates_length_of :description, :maximum => 250
 
-  mount_uploader :icon_image, ThemeImageUploader
-  mount_uploader :icon_retina_image, ThemeImageUploader
-  mount_uploader :favicon_image, ThemeImageUploader
-  mount_uploader :logo_image, ThemeImageUploader
-  mount_uploader :logo_retina_image, ThemeImageUploader
-  mount_uploader :hero_image, ThemeImageUploader
+  extend CarrierWave::SourceProcessing
+  mount_uploader :icon_image, ThemeImageUploader, :use_inkfilepicker => true
+  mount_uploader :icon_retina_image, ThemeImageUploader, :use_inkfilepicker => true
+  mount_uploader :favicon_image, ThemeImageUploader, :use_inkfilepicker => true
+  mount_uploader :logo_image, ThemeImageUploader, :use_inkfilepicker => true
+  mount_uploader :logo_retina_image, ThemeImageUploader, :use_inkfilepicker => true
+  mount_uploader :hero_image, ThemeImageUploader, :use_inkfilepicker => true
   mount_uploader :compiled_stylesheet, ThemeStylesheetUploader
 
   # Don't delete the from s3
@@ -70,6 +71,10 @@ class Theme < ActiveRecord::Base
   # If true, will skip compiling the theme when saving
   attr_accessor :skip_compilation
 
+  def generate_versions_callback
+    CompileThemeJob.perform(self)
+  end
+
   def recompile_theme
     CompileThemeJob.perform(self) unless skip_compilation
   end
@@ -89,10 +94,12 @@ class Theme < ActiveRecord::Base
 
   # Checks if any of options that impact the theme stylesheet have been changed.
   def theme_changed?
-    attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action address favicon_image contact_email homepage_css)
-    attrs.any? { |attr|
+    attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action address contact_email homepage_css)
+    attrs.any? do |attr|
+      # we will run theme compile via generate_versions_callback, after we download images from inkfilepicker to s3
+      return false if attr.include?('_image')
       send("#{attr}_changed?")
-    }
+    end
   end
 
   def to_liquid
@@ -178,6 +185,30 @@ class Theme < ActiveRecord::Base
 
   def twitter_handle
     twitter_url.to_s.scan(/\w+/).last
+  end
+
+  def logo_image_dimensions
+    { :width => 240, :height => 60} 
+  end
+
+  def logo_retina_image_dimensions
+    { :width => 240, :height => 60} 
+  end
+
+  def favicon_image_dimensions
+    { :width => 32, :height => 32} 
+  end
+
+  def icon_image_dimensions 
+    { :width => 60, :height => 60} 
+  end
+
+  def icon_retina_image_dimensions
+    { :width => 60, :height => 60} 
+  end
+
+  def hero_image_dimensions
+    { :width => 250, :height => 202} 
   end
 
   private

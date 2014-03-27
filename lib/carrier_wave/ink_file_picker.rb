@@ -20,7 +20,8 @@ module CarrierWave::InkFilePicker
 
     def current_url(version = nil, *args)
       if exists? || !source_url
-        args.unshift(version) if version
+        version = :transformed if version.blank? && self.respond_to?(:transformation_data)
+        args.unshift(version) if version && version != :original
         self.url(*args)
       elsif source_url
         #  see https://developers.inkfilepicker.com/docs/web/#convert

@@ -42,6 +42,7 @@ module CarrierWave
 
         begin
           @model.save!(:valdiate => false)
+          @model.generate_versions_callback if @model.respond_to?(:generate_versions_callback)
         rescue ::ActiveRecord::RecordNotFound => e
           @model.class.with_deleted.find @model.id # check for paranoid deletetion, throw if not found
         end

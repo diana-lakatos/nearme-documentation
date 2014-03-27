@@ -101,7 +101,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def edit_avatar
     if request.xhr?
-      render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url }
+      render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
     end
   end
 
@@ -111,7 +111,7 @@ class RegistrationsController < Devise::RegistrationsController
     if @user.save
       render partial: 'manage/photos/resize_succeeded'
     else
-      render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url }
+      render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
     end
   end
 

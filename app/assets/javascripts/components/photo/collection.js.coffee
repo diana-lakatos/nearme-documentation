@@ -17,7 +17,8 @@ class @Photo.Collection
     if @multiplePhoto()
       @initializeSortable()
       @reorderSortableList()
-    sessioncamConfiguration.customDataObjects.push( { key: "event", value: "first_listing_form_visit" } )
+    if sessioncamConfiguration?
+      sessioncamConfiguration.customDataObjects.push( { key: "event", value: "first_listing_form_visit" } )
 
 
   add: ->
@@ -29,6 +30,7 @@ class @Photo.Collection
         @uploaded.find('.photo-item').eq(0).replaceWith(photo.create())
       else
         photo.create().appendTo(@uploaded)
+      photo.resize()
     # return index of new element, since push returns current length, we subtract 1
     @photos.push(photo) - 1
 
@@ -39,6 +41,7 @@ class @Photo.Collection
       @reorderSortableList()
     else
       photo.singlePhotoHtml()
+      photo.resize()
 
   initializeSortable: ->
     @sortable.sortable
@@ -61,7 +64,20 @@ class @Photo.Collection
       if confirm("Are you sure you want to delete this Photo?")
         photo = link.closest(".photo-item").html('<div class="thumbnail-processing"><div class="loading-icon"></div><div class="loading-text">Deleting...</div></div>')
         $.post link.attr("data-url"), { _method: 'delete' }, =>
+          row_number = photo.closest(".uploaded").data('row')
           photo.remove()
+          if row_number
+            max_height = Math.max.apply(Math, ($(".uploaded[data-row=#{row_number}]").map((i, item) ->
+              photo_item = $(item).find('.photo-item')
+              if photo_item.height() > 0
+                photo_item.height() + 30
+              else
+                0
+            )))
+            if max_height > 0
+              $(".uploaded[data-row=#{row_number}]").height("#{max_height}px")
+            else
+              $(".uploaded[data-row=#{row_number}]").height("auto")
           @initial_photo = @initial_photo - 1
           @processingPhotos -= 1
           if @processingPhotos == 0
