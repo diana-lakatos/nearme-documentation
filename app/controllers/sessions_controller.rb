@@ -9,6 +9,11 @@ class SessionsController < Devise::SessionsController
   before_filter :force_ssl, :only => [:new]
   layout :resolve_layout
 
+  def require_no_authentication
+    log_out_if_sso_logout
+    super unless current_user
+  end
+
   def new
     super unless already_signed_in?
     # populate errors but only if someone tried to submit form
