@@ -300,6 +300,7 @@ class ApplicationController < ActionController::Base
   def log_out_if_sso_logout
     if current_user && current_user.sso_log_out?
       current_user.logged_out!
+      flash[:notice] = nil
       sign_out current_user
     end
   end
