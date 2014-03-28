@@ -8,6 +8,10 @@
 
 .row-fluid
   .controls.controls-row
+    = f.input :excerpt, wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level', rows: 5 }
+
+.row-fluid
+  .controls.controls-row
     = f.input :published_at, as: :date, include_blank: true
 
 .row-fluid
