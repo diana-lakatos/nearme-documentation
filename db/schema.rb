@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140315162807) do
+ActiveRecord::Schema.define(:version => 20140320182550) do
 
 
 
@@ -51,8 +51,8 @@ ActiveRecord::Schema.define(:version => 20140315162807) do
     t.integer  "user_id"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deleted_at"
     t.string   "secret"
     t.string   "token"
@@ -184,12 +184,11 @@ ActiveRecord::Schema.define(:version => 20140315162807) do
 
   create_table "domains", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "target_id"
     t.string   "target_type"
     t.datetime "deleted_at"
-    t.boolean  "secured",     :default => false
   end
 
   add_index "domains", ["target_id", "target_type"], :name => "index_domains_on_target_id_and_target_type"
@@ -305,8 +304,8 @@ ActiveRecord::Schema.define(:version => 20140315162807) do
     t.boolean  "permission_analytics", :default => true
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
-    t.boolean  "permission_blog",      :default => false
     t.boolean  "permission_manage",    :default => false
+    t.boolean  "permission_blog",      :default => false
   end
 
   add_index "instance_admin_roles", ["instance_id"], :name => "index_instance_admin_roles_on_instance_id"
@@ -358,8 +357,8 @@ ActiveRecord::Schema.define(:version => 20140315162807) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "skip_company",                                                      :default => false
-    t.boolean  "default_instance",                                                  :default => false
     t.text     "pricing_options"
+    t.boolean  "default_instance",                                                  :default => false
     t.decimal  "service_fee_host_percent",            :precision => 5, :scale => 2, :default => 0.0
     t.string   "live_stripe_public_key"
     t.string   "paypal_email"
@@ -575,15 +574,16 @@ ActiveRecord::Schema.define(:version => 20140315162807) do
     t.text     "response"
     t.integer  "amount"
     t.string   "currency"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.text     "encrypted_response"
     t.datetime "deleted_at"
+    t.boolean  "pending",            :default => false
   end
 
   create_table "photos", :force => true do |t|
-    t.datetime "created_at",                  :null => false
-    t.datetime "updated_at",                  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "listing_id"
     t.string   "image"
     t.string   "caption"
@@ -666,9 +666,9 @@ ActiveRecord::Schema.define(:version => 20140315162807) do
     t.datetime "failed_at"
     t.datetime "created_at",                                    :null => false
     t.datetime "updated_at",                                    :null => false
-    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
+    t.integer  "payment_transfer_id"
     t.integer  "service_fee_amount_host_cents",  :default => 0, :null => false
     t.datetime "refunded_at"
     t.integer  "instance_id"
@@ -766,9 +766,6 @@ ActiveRecord::Schema.define(:version => 20140315162807) do
     t.datetime "updated_at", :null => false
   end
 
-  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
-  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
-
   create_table "theme_fonts", :force => true do |t|
     t.integer  "theme_id"
     t.string   "regular_eot"
@@ -804,8 +801,8 @@ ActiveRecord::Schema.define(:version => 20140315162807) do
     t.string   "color_gray"
     t.string   "color_black"
     t.string   "color_white"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
     t.integer  "owner_id"
     t.string   "owner_type"
     t.string   "site_name"
@@ -826,6 +823,36 @@ ActiveRecord::Schema.define(:version => 20140315162807) do
     t.string   "favicon_image"
     t.text     "homepage_css"
     t.datetime "deleted_at"
+    t.text     "icon_image_transformation_data"
+    t.string   "icon_image_original_url"
+    t.datetime "icon_image_versions_generated_at"
+    t.integer  "icon_image_original_width"
+    t.integer  "icon_image_original_height"
+    t.text     "icon_retina_image_transformation_data"
+    t.string   "icon_retina_image_original_url"
+    t.datetime "icon_retina_image_versions_generated_at"
+    t.integer  "icon_retina_image_original_width"
+    t.integer  "icon_retina_image_original_height"
+    t.text     "favicon_image_transformation_data"
+    t.string   "favicon_image_original_url"
+    t.datetime "favicon_image_versions_generated_at"
+    t.integer  "favicon_image_original_width"
+    t.integer  "favicon_image_original_height"
+    t.text     "logo_image_transformation_data"
+    t.string   "logo_image_original_url"
+    t.datetime "logo_image_versions_generated_at"
+    t.integer  "logo_image_original_width"
+    t.integer  "logo_image_original_height"
+    t.text     "logo_retina_image_transformation_data"
+    t.string   "logo_retina_image_original_url"
+    t.datetime "logo_retina_image_versions_generated_at"
+    t.integer  "logo_retina_image_original_width"
+    t.integer  "logo_retina_image_original_height"
+    t.text     "hero_image_transformation_data"
+    t.string   "hero_image_original_url"
+    t.datetime "hero_image_versions_generated_at"
+    t.integer  "hero_image_original_width"
+    t.integer  "hero_image_original_height"
   end
 
   add_index "themes", ["owner_id", "owner_type"], :name => "index_themes_on_owner_id_and_owner_type"
@@ -895,27 +922,28 @@ ActiveRecord::Schema.define(:version => 20140315162807) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                  :default => "",                                                                                  :null => false
-    t.string   "encrypted_password",                     :default => "",                                                                                  :null => false
+    t.string   "email",                                                 :default => "",                                                                                  :null => false
+    t.string   "encrypted_password",                     :limit => 128, :default => "",                                                                                  :null => false
+    t.string   "password_salt",                                         :default => "",                                                                                  :null => false
     t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                          :default => 0
+    t.integer  "sign_in_count",                                         :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                                                                                                              :null => false
-    t.datetime "updated_at",                                                                                                                              :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                         :default => 0,                                                                                   :null => false
+    t.integer  "bookings_count",                                        :default => 0,                                                                                   :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "locked_at"
-    t.integer  "failed_attempts",                        :default => 0
+    t.datetime "reset_password_sent_at"
+    t.integer  "failed_attempts",                                       :default => 0
     t.string   "authentication_token"
     t.string   "avatar"
     t.string   "confirmation_token"
@@ -931,15 +959,15 @@ ActiveRecord::Schema.define(:version => 20140315162807) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
-    t.float    "guest_rating_average"
-    t.integer  "guest_rating_count"
-    t.float    "host_rating_average"
-    t.integer  "host_rating_count"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
     t.string   "browser"
     t.string   "browser_version"
     t.string   "platform"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
     t.text     "avatar_transformation_data"
     t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"
@@ -954,12 +982,11 @@ ActiveRecord::Schema.define(:version => 20140315162807) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.string   "time_zone",                              :default => "Pacific Time (US & Canada)"
+    t.string   "time_zone",                                             :default => "Pacific Time (US & Canada)"
+    t.boolean  "sms_notifications_enabled",                             :default => true
+    t.string   "sms_preferences",                                       :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
+    t.text     "instance_unread_messages_threads_count",                :default => "--- {}\n"
     t.text     "metadata"
-    t.boolean  "sms_notifications_enabled",              :default => true
-    t.string   "sms_preferences",                        :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
-    t.text     "instance_unread_messages_threads_count", :default => "--- {}\n"
-    t.string   "payment_token"
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"

@@ -17,7 +17,10 @@
   %body.blog
     - unless @blog_instance.is_near_me?
       .container-fluid.header-container
-        = render 'layouts/navbar'
+        .navbar.navbar-inverse.navbar-fixed-top
+          .navbar-inner.nav-links
+            = link_to platform_context.name, root_url, :id => "logo"
+            %span.blog-header Blog
     .header
       - header = @blog_post.try(:header).presence || @blog_instance.header
       - if header.present?

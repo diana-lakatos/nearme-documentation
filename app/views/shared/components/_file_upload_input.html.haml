@@ -1,5 +1,5 @@
 .fileupload
-  .uploaded
+  .uploaded{ 'data-row' => "#{options[:row]}", :style => "#{"height: #{options[:height]}px" if options[:height].to_f > 0}" }
     = uploaded_content
   %label.action
     %span.btn.btn-blue.btn-medium.upload-photos.fileinput-button
