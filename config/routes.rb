@@ -93,7 +93,15 @@ DesksnearMe::Application.routes.draw do
     namespace :theme do
       get '/', :to => 'base#index'
       resource :info, :only => [:show, :update], :controller => 'info'
-      resource :design, :only => [:show, :update], :controller => 'design'
+      resource :design, :only => [:show, :update], :controller => 'design' do
+        member do
+          delete 'destroy_image/:image', :action => :destroy_image, :as => 'destroy_theme_image'
+          get 'edit_image/:image', :action => :edit_image, :as => 'edit_theme_image'
+          put 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image'
+          post 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image'
+          put 'update_image/:image', :action => :update_image, :as => 'update_theme_image'
+        end
+      end
       resources :pages
       resource :homepage, :only => [:show, :update], :controller => 'homepage'
     end

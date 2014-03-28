@@ -1,6 +1,6 @@
 %fieldset
   %legend Title &amp; Description
-  = f.input :name, :label => 'Name (leave blank to use default theme)'
+  = f.input :name
   = f.input :site_name
   = f.input :tagline
   = f.input :meta_title
@@ -10,7 +10,7 @@
   %br/
 
   %legend Brand
-  
+
   - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each do |image_attr|
     .control-group
       = f.label image_attr
@@ -18,7 +18,7 @@
         = f.file_field image_attr
         - if f.object.send("remote_#{image_attr}_url")
           <br />Or copy from instance's theme:<br />
-          = f.text_field "remote_#{image_attr}_url" 
+          = f.text_field "remote_#{image_attr}_url"
 
   %p
     = f.button :submit, 'Save', class: 'btn btn-success'

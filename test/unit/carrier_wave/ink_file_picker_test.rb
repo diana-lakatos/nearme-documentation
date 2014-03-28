@@ -42,7 +42,7 @@ class CarrierWave::InkFilePickerTest < ActiveSupport::TestCase
         end
 
         should 'know that avatar does not exist' do
-          assert !@user.avatar.any_url_exists?
+          refute @user.avatar.any_url_exists?
         end
 
       end
@@ -66,7 +66,7 @@ class CarrierWave::InkFilePickerTest < ActiveSupport::TestCase
         end
 
         should 'be able to display avatar' do
-          assert_equal @user.avatar.url, @user.avatar_url
+          assert @user.avatar_url.include?('transformed_foobear.jpeg')
         end
 
         should 'be able to display avatar thumbnail' do
@@ -111,7 +111,7 @@ class CarrierWave::InkFilePickerTest < ActiveSupport::TestCase
         end
 
         should 'be able to display avatar' do
-          assert_equal @user.avatar.url, @user.avatar_url
+          assert @user.avatar_url.include?('transformed_foobear.jpeg')
         end
 
         should 'be able to display avatar thumbnail' do

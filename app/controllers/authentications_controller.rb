@@ -7,9 +7,11 @@ class AuthenticationsController < ApplicationController
     @oauth = Auth::Omni.new(@omniauth)
     # if we are logged in as X, and we try to connect authentication that belongs to Y, we raise this error to prevent re-logging. 
     if @oauth.already_connected?(current_user)
+      update_profile
       already_connected_to_other_user
       # Usual scenario - user already used social provider to log in to our system, everything in db is already set up
     elsif !current_user && @oauth.authentication
+      update_profile
       signed_in_successfully
       # Email is already taken - don't allow to steal account
     elsif @oauth.email_taken_by_other_user?(current_user)
@@ -132,6 +134,12 @@ class AuthenticationsController < ApplicationController
 
   def log_disconnect_social_provider
     event_tracker.disconnected_social_provider(@authentication.user, { provider: @authentication.provider } )
+  end
+
+  private
+
+  def update_profile
+    @oauth.authentication.update_info
   end
 
 end

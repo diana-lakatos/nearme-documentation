@@ -3,6 +3,14 @@ body.blog {
 
   .container-fluid.header-container {
     margin-top: 60px;
+
+    span.blog-header {
+      font-size: 26px;
+      color: $white;
+      margin-left: 15px;
+      padding-left: 15px;
+      border-left: 1px solid $white;
+    }
   }
 }
 
