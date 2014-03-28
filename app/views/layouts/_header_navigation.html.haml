@@ -56,9 +56,9 @@
   - else
     %li.divider-vertical
     %li
-      = link_to new_user_registration_url(get_return_to_url), :rel => 'modal.sign-up-modal', :class => "nav-link header-first" do
+      = link_to_registration get_return_to_url, platform_context.secured_constraint, secure_links?, :rel => 'modal.sign-up-modal', :class => "nav-link header-first" do
         %span Sign Up
     %li.divider-vertical
     %li
-      = link_to new_user_session_url(get_return_to_url), :rel => 'modal.sign-up-modal', :class => "nav-link header-second" do
+      = link_to_login get_return_to_url, platform_context.secured_constraint, secure_links?, :rel => 'modal.sign-up-modal', :class => "nav-link header-second" do
         %span Log In

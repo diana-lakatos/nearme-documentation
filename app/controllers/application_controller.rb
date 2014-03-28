@@ -1,7 +1,8 @@
 class ApplicationController < ActionController::Base
-
   prepend_view_path FooterResolver.instance
+  before_filter :require_ssl
   before_filter :log_out_if_token_exists
+  before_filter :log_out_if_sso_logout
   before_filter :redirect_to_set_password_unless_unnecessary
 
   protect_from_forgery
@@ -136,14 +137,57 @@ class ApplicationController < ActionController::Base
     analytics_apply_user(user)
   end
 
+  def secure_links?
+    secure? && !request.ssl?
+  end
+  helper_method :secure_links?
+
+  def force_ssl
+    if secure? && !request.ssl?
+      redirect_to url_for(platform_context.secured_constraint.merge(:return_to => params[:return_to]))
+    end
+  end
+
+  def secure?
+    Rails.application.config.secure_app
+  end
+
+  def require_ssl
+    if secure? && platform_context.secured? and not request.ssl?
+      if request.get? # we can't redirect non-get reqests
+        redirect_to url_for(protocol: 'https')
+      else
+        redirect_to root_url(protocol: 'https')
+      end
+    end
+  end
+
   def stored_url_for(resource_or_scope)
-    redirect_url = session[:user_return_to] || root_path
-    session[:user_return_to] = nil
+    redirect_url = params[:return_to] || session[:user_return_to] || root_path
+    session[:user_return_to] = session[:return_to] = nil
     redirect_url
   end
 
   def after_sign_in_path_for(resource)
-    url_without_authentication_token(stored_url_for(resource))
+    url = stored_url_for(resource)
+    url = url_without_authentication_token(url) if url.include?("token")
+    url = add_login_token_to_url(url, resource) if redirect_to_different_host?(url)
+    url
+  end
+
+  def redirect_to_different_host?(url)
+    uri = Addressable::URI.parse(url)
+    uri.host && (uri.host != request.host)
+  end
+
+  def add_login_token_to_url(url, resource)
+    verifier = User::TemporaryTokenVerifier.new(resource)
+    token = verifier.generate(1.day.from_now)
+    uri = Addressable::URI.parse(url)
+    parameters = uri.query_values || {}
+    parameters[:token] = token
+    uri.query_values = parameters
+    uri.to_s
   end
 
   def filter_out_token
@@ -249,6 +293,14 @@ class ApplicationController < ActionController::Base
   def log_out_if_token_exists
     if current_user && params[:token].present?
       Rails.logger.info "#{current_user.email} is being logged out due to token param"
+      sign_out current_user
+    end
+  end
+
+  def log_out_if_sso_logout
+    if current_user && current_user.sso_log_out?
+      current_user.logged_out!
+      flash[:notice] = nil
       sign_out current_user
     end
   end

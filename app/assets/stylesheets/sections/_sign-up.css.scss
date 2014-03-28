@@ -35,7 +35,7 @@
       display: block;
       margin: 30px auto;
       font-size: 22px;
-      color: $theme_white;
+      color: $gray80;
       @include opacity(.7);
       @include transition(opacity, ease-in, .1s);
 
@@ -116,6 +116,15 @@
   
 }
 
+.modal-content {
+  #signup {
+    .already-a-user {
+      a {
+        color: $theme_white;
+      }
+    }
+  }
+}
 
 .sign-up-modal {
   

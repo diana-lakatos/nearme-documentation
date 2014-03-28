@@ -21,7 +21,11 @@ Devise.setup do |config|
 
   config.password_length = 6..128
 
+  config.warden do |manager|
+    manager.failure_app = CustomFailure
+  end
   # Setup our custom expiring URL token authentication strategy
   require 'temporary_token_authenticatable'
+  require 'payment_token_authenticatable'
   require 'devise/models/user_validatable'
 end
