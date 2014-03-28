@@ -6,7 +6,7 @@ module PhotoHelpers
 
   def attach_file_via_uploader
     page.execute_script "$('.browse-file').click()"
-    page.should have_css('.photo-item .badge')
+    page.should_not have_css('.photo-item .loading-icon')
   end
 end
 

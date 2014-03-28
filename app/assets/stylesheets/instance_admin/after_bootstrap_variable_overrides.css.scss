@@ -1,0 +1,8 @@
+/****************************************************************************/
+/* Overrides for some of bootstraps variables for Instance Admin's styling. */
+/****************************************************************************/
+
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  filter: alpha(opacity=$opacity * 100);
+}

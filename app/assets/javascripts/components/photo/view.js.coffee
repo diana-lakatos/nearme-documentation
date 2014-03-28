@@ -12,6 +12,21 @@ class @Photo.View
     @data = @normalizeData(data)
     this
 
+  resize: ->
+    row_number = @photo.closest(".uploaded").data('row')
+    if row_number
+      max_height = Math.max.apply(Math, ($(".uploaded[data-row=#{row_number}]").map((i, item) ->
+        photo_item = $(item).find('.photo-item')
+        if photo_item.height() > 0
+          photo_item.height() + 30
+        else
+          0
+      )))
+      if max_height > 0
+        $(".uploaded[data-row=#{row_number}]").height("#{max_height}px")
+      else
+        $(".uploaded[data-row=#{row_number}]").height("auto")
+
   singlePhotoHtml: ->
     deleteLink = $('<a data-url="' + @data.destroy_url + '" class="badge delete-photo delete-photo-thumb photo-action">Delete</a>')
     cropLink = $('<a href="' + @data.resize_url + '" rel="modal"  data-id="photo-' + @data.id + '" class="badge resize-photo photo-action">Rotate & Crop</a>')

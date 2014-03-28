@@ -16,24 +16,26 @@
     %hr
 
     %legend Visuals
-    - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each_slice(2) do |image_attr|
+    - i = 0
+    - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each_slice(2) do |image_attrs|
+      - i += 1
       .row-fluid
         .controls.controls-row
-          .control-group.span6
-            = f.label image_attr[0]
-            .controls
-              = f.file_field image_attr[0]
-              - if f.object.send("remote_#{image_attr[0]}_url")
-                <br />Or copy from instance's theme:<br />
-                = f.text_field "remote_#{image_attr[0]}_url"
-          -if image_attr[1]
-            .control-group.span6
-              = f.label image_attr[1]
+          - max_height = image_attrs.map { |image_attr| f.object.send(image_attr).any_url_exists? ? f.object.send("#{image_attr}_dimensions")[:height]+30 : 0 }.max
+          - image_attrs.each do |image_attr|
+            .control-group.span6{:class => image_attr}
+              = f.label image_attr
               .controls
-                = f.file_field image_attr[1]
-                - if f.object.send("remote_#{image_attr[1]}_url")
+                .single-photo
+                  = file_upload_input("url", upload_theme_image_instance_admin_theme_design_path(image_attr), f.object.send("#{image_attr}_dimensions"), "Upload #{image_attr}", {"no-multiple" => true, :height => max_height, :row => i}) do
+                    - if f.object.send(image_attr).any_url_exists?
+                      = fileupload_photo(f.object.send("#{image_attr}_url"), 
+                        destroy_theme_image_instance_admin_theme_design_path(image_attr),
+                        edit_theme_image_instance_admin_theme_design_path(image_attr),
+                        :div)
+                - if f.object.send("remote_#{image_attr}_url")
                   <br />Or copy from instance's theme:<br />
-                  = f.text_field "remote_#{image_attr[1]}_url"
+                  = f.text_field "remote_#{image_attr}_url"
 
     %hr
 
@@ -59,5 +61,11 @@
 
     = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
 
+- content_for :script do
+  = render :partial => "shared/inkfilepicker"
+  = render 'shared/modal'
 - content_for :domready do
+  window.DNM = {}
   new InstanceAdmin.ThemeController($('#theme_form'))
+  Photo.Initializer.initialize();
+
