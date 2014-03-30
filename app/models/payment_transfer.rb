@@ -63,8 +63,9 @@ class PaymentTransfer < ActiveRecord::Base
 
    # Attempt to payout through the billing gateway
   def payout
-    return if !billing_gateway.payment_supported?
+    return if !billing_gateway.possible?
     return if transferred?
+    return if amount <= 0
 
     # Generates a ChargeAttempt with this record as the reference.
     payout = billing_gateway.payout(
@@ -84,7 +85,7 @@ class PaymentTransfer < ActiveRecord::Base
   def possible_automated_payout_not_supported?
     # true if instance makes it possible to make automated payout for given currency, but company does not support it
     # false if either company can process this payment transfer automatically or instance does not support it
-    !billing_gateway.payment_supported? && billing_gateway.payout_possible?
+    !billing_gateway.possible? && billing_gateway.support_automated_payout?
   end
 
   private
@@ -108,6 +109,6 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def billing_gateway
-    @billing_gateway ||= Billing::Gateway.new(company.instance, currency).outgoing_payment(company)
+    @billing_gateway ||= Billing::Gateway::Outgoing.new(company, currency)
   end
 end

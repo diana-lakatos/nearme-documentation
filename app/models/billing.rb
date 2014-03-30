@@ -23,7 +23,7 @@ module Billing
         'exp_month'
       when 'type'
         'cc'
-      when 'cvv2'
+      when 'cvv2', 'type, cvv2'
         'cvc'
       else
         param
