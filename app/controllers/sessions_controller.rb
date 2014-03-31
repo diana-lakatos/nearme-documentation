@@ -1,11 +1,18 @@
 class SessionsController < Devise::SessionsController
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:destroy]
+  before_filter :sso_logout, :only => [:destroy]
   before_filter :clear_return_to, :only => [:new]
   before_filter :set_return_to
   skip_before_filter :require_no_authentication, :only => [:show] , :if => lambda {|c| request.xhr? }
   skip_before_filter :redirect_if_marketplace_password_protected, :only => [:store_correct_ip]
   after_filter :render_or_redirect_after_create, :only => [:create]
+  before_filter :force_ssl, :only => [:new]
   layout :resolve_layout
+
+  def require_no_authentication
+    log_out_if_sso_logout
+    super unless current_user
+  end
 
   def new
     super unless already_signed_in?
@@ -32,6 +39,10 @@ class SessionsController < Devise::SessionsController
   end
 
   private
+
+  def sso_logout
+    current_user.log_out!
+  end
 
   def set_return_to
     session[:user_return_to] = params[:return_to] if params[:return_to].present?

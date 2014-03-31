@@ -20,7 +20,7 @@ class InstanceAdminAuthorizer < Authorizer
   private
 
   def convert_controller_class_to_db_column(controller)
-    "permission_" + controller.to_s.demodulize.downcase.gsub("controller", "")
+    "permission_" + controller.to_s.demodulize.downcase.gsub("controller", "").gsub(/manage(\w+)/, '\1')
   end
 
 end

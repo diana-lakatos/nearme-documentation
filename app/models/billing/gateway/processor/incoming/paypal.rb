@@ -1,23 +1,10 @@
-class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
+class Billing::Gateway::Processor::Incoming::Paypal < Billing::Gateway::Processor::Incoming::Base
   include PayPal::SDK::Core::Logging
 
   SUPPORTED_CURRENCIES = ['USD', 'GBP', 'EUR', 'JPY', 'CAD']
 
-  def  setup_api_on_initialize
-    PayPal::SDK.configure(@instance.paypal_api_config)
-    @api = PayPal::SDK::AdaptivePayments::API.new
-  end
-
-  def self.currency_supported?(currency)
-    self::SUPPORTED_CURRENCIES.include?(currency)
-  end
-
-  def self.instance_supported?(instance)
-    instance.paypal_supported?
-  end
-
-  def self.is_supported_by?(object)
-    object.paypal_email.present?
+  def setup_api_on_initialize
+    PayPal::SDK.configure(@instance.incoming_paypal_api_config)
   end
 
   def process_charge(amount)
@@ -38,29 +25,6 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
       refund_successful(response)
     else
       refund_failed(response.error.inspect)
-    end
-  end
-
-  def process_payout(amount)
-    @pay = @api.build_pay({
-      :actionType => "PAY",
-      :currencyCode => amount.currency.iso_code,
-      :feesPayer => "SENDER",
-      :cancelUrl => "http://#{Rails.application.routes.default_url_options[:host]}",
-      :returnUrl => "http://#{Rails.application.routes.default_url_options[:host]}",
-      :receiverList => {
-        :receiver => [{
-          :amount => amount.to_s,
-          :email => @receiver.paypal_email 
-        }] 
-      },
-      :senderEmail => @sender.paypal_email
-    })
-    @pay_response = @api.pay(@pay) 
-    if @pay_response.success?
-      payout_successful(@pay_response)
-    else
-      payout_failed(@pay_response.error)
     end
   end
 
@@ -166,7 +130,7 @@ class Billing::Gateway::PaypalProcessor < Billing::Gateway::BaseProcessor
         # Let's you specify a payment amount.
         :amount => {
           :total => amount.to_s,
-          :currency => @currency },
+          :currency => @currency }
       }]
     }
   end

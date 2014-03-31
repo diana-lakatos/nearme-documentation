@@ -23,7 +23,7 @@ class ReservationRequest < Form
 
     if @listing
       @reservation = listing.reservations.build
-      @billing_gateway = Billing::Gateway.new(platform_context.instance, @reservation.currency).ingoing_payment(@user) if @user
+      @billing_gateway = Billing::Gateway::Incoming.new(@user, platform_context.instance, @reservation.currency) if @user
       @reservation.payment_method = payment_method
       @reservation.user = user
       @reservation = @reservation.decorate
@@ -68,7 +68,7 @@ class ReservationRequest < Form
   def payment_method
     @payment_method = if @reservation.listing.free?
                         Reservation::PAYMENT_METHODS[:free]
-                      elsif @billing_gateway.try(:payment_supported?)
+                      elsif @billing_gateway.try(:possible?)
                         Reservation::PAYMENT_METHODS[:credit_card]
                       else
                         Reservation::PAYMENT_METHODS[:manual]

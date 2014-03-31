@@ -15,6 +15,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @reservation_1.reservation_charges.to_a,
       @reservation_2.reservation_charges.to_a
     ].flatten
+    Billing::Gateway::Outgoing.any_instance.stubs(:payout).returns(stub(:success => true)).at_least(0)
   end
 
   context "creating" do
@@ -23,7 +24,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
 
     should "only allow charges of the same currency" do
-      Billing::Gateway::StripeProcessor.stubs(:currency_supported?).with('NZD').returns(true).at_least(1)
+      Billing::Gateway::Processor::Incoming::ProcessorFactory.stubs(:stripe_supported?).returns(true).at_least(1)
       rc = ReservationCharge.create!(
         :reservation => @reservation_1,
         :subtotal_amount => 10,
@@ -89,19 +90,20 @@ class PaymentTransferTest < ActiveSupport::TestCase
 
   context 'payout' do
     setup do
-      Billing::Gateway::PaypalProcessor.stubs(:is_supported_by?).returns(true).once
+      Billing::Gateway::Processor::Outgoing::ProcessorFactory.stubs(:paypal_supported?).returns(true).once
+      Billing::Gateway::Processor::Outgoing::ProcessorFactory.stubs(:receiver_supports_paypal?).returns(true).once
       @payment_transfer = @company.payment_transfers.build
       @payment_transfer.reservation_charges = @reservation_charges
     end
 
     should 'be not paid if attempt to payout failed' do
-      Billing::Gateway.any_instance.expects(:payout).with { |hash| Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => false))
+      Billing::Gateway::Outgoing.any_instance.expects(:payout).with { |hash| Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => false))
       @payment_transfer.save!
       refute @payment_transfer.transferred?
     end
 
     should 'be paid if attempt to payout succeeded' do
-      Billing::Gateway.any_instance.expects(:payout).with { |hash| Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => true))
+      Billing::Gateway::Outgoing.any_instance.expects(:payout).with { |hash| Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => true))
       @payment_transfer.save!
       assert @payment_transfer.transferred?
     end
@@ -115,26 +117,26 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
 
     should "return true if possible processor exists but company has not provided settings" do
-      Billing::Gateway.any_instance.stubs(:payment_supported?).returns(false)
-      Billing::Gateway.any_instance.stubs(:payout_possible?).returns(true)
+      Billing::Gateway::Outgoing.any_instance.stubs(:possible?).returns(false)
+      Billing::Gateway::Outgoing.any_instance.stubs(:support_automated_payout?).returns(true)
       assert @payment_transfer.possible_automated_payout_not_supported?
     end
 
     should "return false if there is no potential processor and company has not provided settings" do
-      Billing::Gateway.any_instance.stubs(:payment_supported?).returns(false)
-      Billing::Gateway.any_instance.stubs(:payout_possible?).returns(false)
+      Billing::Gateway::Outgoing.any_instance.stubs(:possible?).returns(false)
+      Billing::Gateway::Outgoing.any_instance.stubs(:support_automated_payout?).returns(false)
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 
     should "return false if there is no possible processor and company has provided settings" do
-      Billing::Gateway.any_instance.stubs(:payment_supported?).returns(true)
-      Billing::Gateway.any_instance.stubs(:payout_possible?).returns(false)
+      Billing::Gateway::Outgoing.any_instance.stubs(:possible?).returns(true)
+      Billing::Gateway::Outgoing.any_instance.stubs(:support_automated_payout?).returns(false)
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 
     should "return false if possible processor exists and company has provided settings" do
-      Billing::Gateway.any_instance.stubs(:payment_supported?).returns(true)
-      Billing::Gateway.any_instance.stubs(:payout_possible?).returns(true)
+      Billing::Gateway::Outgoing.any_instance.stubs(:possible?).returns(true)
+      Billing::Gateway::Outgoing.any_instance.stubs(:support_automated_payout?).returns(true)
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 

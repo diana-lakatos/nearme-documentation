@@ -1,25 +1,23 @@
-= simple_form_for [:blog_admin, @blog_instance], :html => { :multipart => true } do |f|
+.control-group
+  = f.label :enabled
+  .switch-wrapper
+    .switch{'data-on-label' => "", 'data-off-label' => ""}
+      = f.check_box :enabled
 
-  .control-group
-    = f.label :enabled
-    .switch-wrapper
-      .switch{'data-on-label' => "", 'data-off-label' => ""}
-        = f.check_box :enabled
+.row-fluid
+  .controls.controls-row
+    = f.input :name, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
 
-  .row-fluid
-    .controls.controls-row
-      = f.input :name, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+.row-fluid
+  .controls.controls-row
+    = f.input :header, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
 
-  .row-fluid
-    .controls.controls-row
-      = f.input :header, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+.row-fluid
+  .controls.controls-row
+    = link_to(@blog_instance.header.filename, @blog_instance.header.url) if @blog_instance.header.present?
 
-  .row-fluid
-    .controls.controls-row
-      = link_to(@blog_instance.header.filename, @blog_instance.header.url) if @blog_instance.header.present?
+.row-fluid
+  .controls.controls-row
+    = f.input :facebook_app_id, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
 
-  .row-fluid
-    .controls.controls-row
-      = f.input :facebook_app_id, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-
-  = f.button :submit, "Save", class: 'btn btn-primary pull-right'
+= f.button :submit, "Save", class: 'btn btn-primary pull-right'

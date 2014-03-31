@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140320182550) do
+ActiveRecord::Schema.define(:version => 20140328093851) do
 
 
 
@@ -107,6 +107,7 @@ ActiveRecord::Schema.define(:version => 20140320182550) do
     t.datetime "published_at"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.text     "excerpt"
   end
 
   create_table "charges", :force => true do |t|
@@ -184,11 +185,12 @@ ActiveRecord::Schema.define(:version => 20140320182550) do
 
   create_table "domains", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.integer  "target_id"
     t.string   "target_type"
     t.datetime "deleted_at"
+    t.boolean  "secured",     :default => false
   end
 
   add_index "domains", ["target_id", "target_type"], :name => "index_domains_on_target_id_and_target_type"
@@ -348,6 +350,27 @@ ActiveRecord::Schema.define(:version => 20140320182550) do
     t.datetime "updated_at",                        :null => false
   end
 
+  create_table "instance_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "instance_views", :force => true do |t|
+    t.integer  "instance_type_id"
+    t.integer  "instance_id"
+    t.text     "body"
+    t.string   "path"
+    t.string   "locale"
+    t.string   "format"
+    t.string   "handler"
+    t.boolean  "partial",          :default => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+  end
+
+  add_index "instance_views", ["instance_type_id", "instance_id", "path", "locale", "format", "handler"], :name => "instance_path_with_format_and_handler"
+
   create_table "instances", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",                                                                            :null => false
@@ -400,7 +423,10 @@ ActiveRecord::Schema.define(:version => 20140320182550) do
     t.string   "encrypted_twitter_consumer_secret"
     t.string   "encrypted_instagram_consumer_key"
     t.string   "encrypted_instagram_consumer_secret"
+    t.integer  "instance_type_id"
   end
+
+  add_index "instances", ["instance_type_id"], :name => "index_instances_on_instance_type_id"
 
   create_table "listing_types", :force => true do |t|
     t.string   "name"
@@ -987,6 +1013,8 @@ ActiveRecord::Schema.define(:version => 20140320182550) do
     t.string   "sms_preferences",                                       :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
     t.text     "instance_unread_messages_threads_count",                :default => "--- {}\n"
     t.text     "metadata"
+    t.string   "payment_token"
+    t.boolean  "sso_log_out",                                           :default => false
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"

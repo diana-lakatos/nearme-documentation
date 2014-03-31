@@ -35,4 +35,7 @@ DesksnearMe::Application.configure do
   config.encrypt_sensitive_db_columns = false
   config.silence_raygun_notification = true
   config.assets.enforce_precompile = true
+
+  config.root_secured = false
+  config.secure_app = false
 end

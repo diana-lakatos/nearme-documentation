@@ -95,7 +95,7 @@
           = f.hidden_field :start_minute
           = f.hidden_field :end_minute
 
-          = f.submit 'Book', :id =>"book-#{listing.id}", :class => "btn btn-green btn-large", :rel => "tooltip", :'data-original-title' => "Please select days first", :'data-behavior' => 'reviewBooking', :'data-listing-id' => listing.id, :'data-registration-url' => registration_url, :'data-store-reservation-request-url' => store_reservation_request_url, :'data-user-signed-in' => user_signed_in?
+          = f.submit 'Book', :id =>"book-#{listing.id}", :class => "btn btn-green btn-large", :rel => "tooltip", :'data-original-title' => "Please select days first", :'data-behavior' => 'reviewBooking', :'data-listing-id' => listing.id, :'data-registration-url' => registration_url, :'data-store-reservation-request-url' => store_reservation_request_url, :'data-user-signed-in' => user_signed_in?, :'data-secured' => (not secure_links?)
 
     .clearfix
 

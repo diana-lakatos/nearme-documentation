@@ -24,6 +24,11 @@
               = link_to instance_admin_manage_inventories_path do
                 .fa.fa-briefcase.fa-lg
                 Manage
+          - if @authorizer.authorized?('Blog')
+            %li{:class => ("active" if controller.class.to_s.deconstantize == 'InstanceAdmin::ManageBlog')}
+              = link_to instance_admin_manage_blog_posts_path do
+                .fa.fa-pencil-square-o.fa-lg
+                Blog
 
         %ul.nav.user-menu.pull-right.dropdown
           %li.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}

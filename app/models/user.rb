@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
                               :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
                               :bookings_count, :guest_rating_average, :guest_rating_count, :host_rating_average, 
                               :host_rating_count, :avatar_versions_generated_at, :last_geolocated_location_longitude, 
-                              :last_geolocated_location_latitude, :instance_unread_messages_threads_count]
+                              :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out]
   acts_as_paranoid
   auto_set_platform_context
 
@@ -329,10 +329,31 @@ class User < ActiveRecord::Base
     mailchimp_synchronized_at.present?
   end
 
+  def log_out!
+    self.update_attribute(:sso_log_out, true)
+  end
+
+  def logged_out!
+    self.update_attribute(:sso_log_out, false)
+  end
+
   def email_verification_token
     Digest::SHA1.hexdigest(
       "--dnm-token-#{self.id}-#{self.created_at}"
     )
+  end
+
+  def generate_payment_token
+    new_token = SecureRandom.hex(32)
+    self.update_attribute(:payment_token, new_token)
+    new_token
+  end
+
+  def verify_payment_token(token)
+    return false if self.payment_token.nil?
+    current_token = self.payment_token
+    self.update_attribute(:payment_token, nil)
+    current_token == token
   end
 
   def verify_email_with_token(token)

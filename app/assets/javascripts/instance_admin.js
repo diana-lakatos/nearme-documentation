@@ -13,3 +13,5 @@
 //= require sections/search_instance_admin
 //= require_tree ./instance_admin/sections
 //= require jquery_nested_form
+//= require ./vendor/urlify
+//= require ./blog/admin/blog_posts_form

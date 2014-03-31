@@ -1,40 +1,11 @@
-class Billing::Gateway::BaseProcessor
-  class InvalidStateError < StandardError; end
-
+class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor::Base
   attr_accessor :user
 
-  def initialize(instance, currency)
+  def initialize(user, instance, currency)
+    @client = @user = user
     @instance = instance
     @currency = currency
     setup_api_on_initialize
-  end
-
-  def setup_api_on_initialize
-  end
-
-  def ingoing_payment(user)
-    @user = user
-    @client = @user
-    self
-  end
-
-  def outgoing_payment(sender, receiver)
-    @sender = sender
-    @receiver = receiver
-    @client = receiver
-    self
-  end
-
-  def self.instance_supported?(instance)
-    raise NotImplementedError
-  end
-
-  def self.currency_supported?(instance)
-    raise NotImplementedError
-  end
-
-  def self.processor_supported?(instance)
-    raise NotImplementedError
   end
 
   # Make a charge against the user
@@ -58,18 +29,6 @@ class Billing::Gateway::BaseProcessor
     @charge
   end
 
-  def payout(payout_details)
-    amount, reference = payout_details[:amount], payout_details[:reference]
-    raise Billing::Gateway::BaseProcessor::InvalidStateError.new("Unexpected state, amounts currency is different from the one that initialized processor") if amount.currency.iso_code != @currency
-    @payout = Payout.create(
-      amount: amount.cents,
-      currency: amount.currency.iso_code,
-      reference: reference
-    )
-    process_payout(amount)
-    @payout
-  end
-
   def refund(refund_details)
     amount_cents, reference, charge_response = refund_details[:amount_cents], refund_details[:reference], refund_details[:charge_response]
     @refund = Refund.create(
@@ -91,11 +50,6 @@ class Billing::Gateway::BaseProcessor
     raise NotImplementedError
   end
 
-  # Contains implementation for transferring money to company
-  def process_payout
-    raise NotImplementedError
-  end
-
   protected
 
   # Callback invoked by processor when charge was successful
@@ -108,16 +62,6 @@ class Billing::Gateway::BaseProcessor
     @charge.charge_failed(response)
   end
 
-  # Callback invoked by processor when payout was successful
-  def payout_successful(response)
-    @payout.payout_successful(response)
-  end
-
-  # Callback invoked by processor when payout failed
-  def payout_failed(response)
-    @payout.payout_failed(response)
-  end
-
   # Callback invoked by processor when refund was successful
   def refund_successful(response)
     @refund.refund_successful(response)
@@ -128,12 +72,9 @@ class Billing::Gateway::BaseProcessor
     @refund.refund_failed(response)
   end
 
-  def self.instance_client(client, instance)
-    client.instance_clients.first.presence || client.instance_clients.create
-  end
+  private
 
-  def instance_client
-    @instance_client ||= self.class.instance_client(@client, @instance)
+  def new(*args)
   end
 
 end

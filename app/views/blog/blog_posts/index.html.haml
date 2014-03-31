@@ -1,15 +1,21 @@
 .blog-posts
   - @blog_posts.each do |blog_post|
-    .blog-post.clearfix
-      .col-sm-1.avatar.hidden-xs
-        - if blog_post.author_avatar.present?
-          .avatar-container{style: "background-image: url(#{blog_post.author_avatar.url(:thumb)});"}
-      .col-sm-9
-        %h2= link_to blog_post.title, blog_post_path(blog_post)
-      .col-sm-2.date
-        =l blog_post.published_at.presence || blog_post.created_at, format: :day_and_month
-      .col-sm-11.content
-        %p= truncate(strip_tags(blog_post.content), length: 200)
+    .blog-post
+      .clearfix
+        .col-sm-10
+          %h2= link_to blog_post.title, blog_post_path(blog_post)
+        .col-sm-2.date
+          =l blog_post.published_at.presence || blog_post.created_at, format: :day_and_month
+        .col-sm-12.content
+          %p= blog_post.decorate.blog_post_excerpt
+      - if blog_post.author_avatar.present? || blog_post.author_name.present?
+        .clearfix.avatar
+          - if blog_post.author_avatar.present?
+            .col-sm-1
+              .avatar-container{style: "background-image: url(#{blog_post.author_avatar.url(:thumb)});"}
+          - if blog_post.author_name.present?
+            .col-sm-11{class: blog_post.author_avatar.present? ? 'with-avatar' : ''}
+              .author-name= blog_post.author_name
 
 = image_tag 'spinner.gif', class: 'hidden-spinner hidden', alt: 'Spinner'
 = will_paginate @blog_posts, page_links: false

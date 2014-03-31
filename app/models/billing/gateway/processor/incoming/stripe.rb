@@ -1,16 +1,8 @@
-class Billing::Gateway::StripeProcessor < Billing::Gateway::BaseProcessor
+class Billing::Gateway::Processor::Incoming::Stripe < Billing::Gateway::Processor::Incoming::Base
   SUPPORTED_CURRENCIES = ['USD']
 
   def setup_api_on_initialize
     @api_key = @instance.billing_gateway_credential('stripe_api_key')
-  end
-
-  def self.currency_supported?(currency)
-    self::SUPPORTED_CURRENCIES.include?(currency)
-  end
-
-  def self.instance_supported?(instance)
-    instance.stripe_supported?
   end
 
   def store_credit_card(credit_card)

@@ -19,6 +19,8 @@ class Domain < ActiveRecord::Base
     end
   end
 
+  scope :secured, -> {where(secured: true)}
+
   delegate :white_label_enabled?, :to => :target
 
   def white_label_company?

@@ -43,6 +43,7 @@ class PlatformHomeController < ActionController::Base
 
   def demo_request_submit
     @platform_demo_request = PlatformDemoRequest.new(params[:platform_demo_request])
+    @platform_demo_request.company = @platform_demo_request.name unless @platform_demo_request.company.present?
     if @platform_demo_request.save
       PlatformMailer.enqueue.demo_request(@platform_demo_request)
       render :demo_request_submit, layout: false
