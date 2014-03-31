@@ -68,20 +68,17 @@ body.blog {
       position: fixed;
       z-index: 10;
     }
-  }
-
-  .blog-posts {
-    margin-bottom: 20px;
-  }
+  } 
 
   .blog-post {
     margin-top: 20px;
+    padding-bottom: 5px;
 
     h2 {
-      font-family: 'MontserratBold';
-      font-size: 18px;
+      font-size: 28px;
 
       a {
+        font-family: 'MontserratBold';
         color: $dark-gray;
       }
     }
@@ -94,8 +91,8 @@ body.blog {
     }
 
     .date {
-      margin-top: 20px;
-      margin-bottom: 10px;
+      margin-top: 5px;
+      margin-bottom: 20px;
       font-family: 'OratorStd';
       font-size: 16px;
       color: $light-gray;
@@ -122,7 +119,7 @@ body.blog {
         border: 7px solid white;
       }
     }
-  }
+  } 
 
   .blog-container {
     width: $blog-content-width;
@@ -294,6 +291,49 @@ body.blog {
 
     @media (max-width: $blog-content-width) {
       width: 90%;
+    }
+  }
+
+  .blog-posts {
+    margin-bottom: 20px;
+
+    p {
+      line-height: 20px;
+      margin-bottom: 0px;
+    }
+
+    .blog-post {
+
+      .avatar {
+
+        .col-sm-1 {
+          width: 60px !important;
+          float: left;
+        }
+
+        .col-sm-11 {
+          float: left;
+
+          &.with-avatar {
+            max-width: 80%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .author-name {
+          display: inline-block;
+          font-family: 'OratorStd';
+          padding-top: 17px;
+          color: $light-gray;
+        }
+
+        .avatar-container {
+          margin-top: 0;
+          border-left: 0;
+        }
+      }
     }
   }
 }
