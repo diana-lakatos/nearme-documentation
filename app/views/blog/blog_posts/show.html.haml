@@ -1,3 +1,10 @@
+- content_for :meta do
+  %meta{:property=>"og:title", :content => @blog_post.title }
+  %meta{:property=>"og:description", :content => truncate(strip_tags(@blog_post.content), length: 200)}
+  %meta{:property=>"og:type", :content => "website" }
+  %meta{:property=>"og:site_name", :content => platform_context.name }
+  %meta{:property=>"og:url", :content => request.original_url }
+
 - if @blog_instance.facebook_app_id.present?
   = render 'fb_comments', facebook_app_id: @blog_instance.facebook_app_id
 
@@ -7,20 +14,18 @@
 
   %h1= @blog_post.title
 
+  = render 'social_buttons', blog_post: @blog_post
+
   .content
     :markdown
       #{@blog_post.content}
 
   .info.row
-    .date.col-sm-6
+    .date.col-sm-5
       Published #{l(@blog_post.published_at.presence || @blog_post.created_at, format: :only_date)}
 
-    .social.col-sm-6.clearfix
-      - url = blog_post_url(@blog_post)
-      .icon= share_to_google_plus(url, icon: 'google-plus-other')
-      .icon= share_to_linkedin(url, text: @blog_post.title, icon: 'linkedin-other')
-      .icon= share_to_facebook(url)
-      .icon= share_to_twitter(url, text: @blog_post.title)
+    .social.col-sm-7.clearfix
+      = render 'social_buttons', blog_post: @blog_post
 
   .author.row
     - avatar = @blog_post.author_avatar
@@ -42,4 +47,4 @@
           = link_to "NEXT STORY", blog_post_path(@blog_post.next_blog_post), class: 'next-blog-post'
 
   - if @blog_instance.facebook_app_id.present?
-    .fb-comments{"data-numposts" => "5", "data-colorscheme" => "light", "data-href" => blog_posts_url(@blog_post)}
+    .fb-comments{"data-numposts" => "5", "data-colorscheme" => "light", "data-href" => blog_post_url(@blog_post)}
