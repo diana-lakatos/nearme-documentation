@@ -90,6 +90,24 @@ body.blog {
       line-height: 28px;
     }
 
+    b {
+      font-weight: bold !important;
+    }
+
+    i {
+      font-style: italic !important;
+    }
+
+    ol {
+      list-style-type: decimal !important;
+      padding-left: 20px;
+    }
+
+    ul {
+      list-style-type: disc !important;
+      padding-left: 20px;
+    }
+
     .date {
       margin-top: 5px;
       margin-bottom: 20px;
@@ -133,6 +151,24 @@ body.blog {
         margin: 40px 0 10px 0;
         font-family: 'MontserratBold';
         font-size: 30px;
+      }
+
+      b {
+        font-weight: bold !important;
+      }
+
+      i {
+        font-style: italic !important;
+      }
+
+      ol {
+        list-style-type: decimal !important;
+        padding-left: 20px;
+      }
+
+      ul {
+        list-style-type: disc !important;
+        padding-left: 20px;
       }
 
       .social-buttons-wrapper {

@@ -17,8 +17,7 @@
   = render 'social_buttons', blog_post: @blog_post
 
   .content
-    :markdown
-      #{@blog_post.content}
+    #{@blog_post.content.to_s.html_safe}
 
   .info.row
     .date.col-sm-5

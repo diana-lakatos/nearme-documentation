@@ -6,6 +6,7 @@ class BlogPost < ActiveRecord::Base
   extend FriendlyId
   friendly_id :title, use: :slugged
 
+  before_validation :sanitize_content
   validates_presence_of :blog_instance, :user, :title, :content
 
   mount_uploader :header, HeroImageUploader
@@ -38,6 +39,13 @@ class BlogPost < ActiveRecord::Base
 
   def should_generate_new_friendly_id?
     slug.blank?
+  end
+
+
+  private
+
+  def sanitize_content
+    self.content = nil if self.content.to_s.gsub(/<\/?[^>]*>/, "").empty?
   end
 
 end
