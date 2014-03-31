@@ -23,6 +23,8 @@
             = link_to platform_context.name, root_url, :id => "logo"
             %span.blog-header Blog
     .header
+      = render 'layouts/blog_header_text_logo', blog_instance: @blog_instance
+
       - header = @blog_post.try(:header).presence || @blog_instance.header
       - if header.present?
         .header-image

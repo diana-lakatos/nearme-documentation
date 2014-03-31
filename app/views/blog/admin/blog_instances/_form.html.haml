@@ -20,4 +20,28 @@
   .controls.controls-row
     = f.input :facebook_app_id, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
 
+.row-fluid
+  .controls.controls-row
+    = f.input :header_text, placeholder: 'Blog', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+.row-fluid
+  .controls.controls-row
+    = f.input :header_motto, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+.row-fluid
+  .controls.controls-row
+    = f.input :header_logo, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+.row-fluid
+  .controls.controls-row
+    = link_to(@blog_instance.header_logo.filename, @blog_instance.header_logo.url) if @blog_instance.header_logo.present?
+
+.row-fluid
+  .controls.controls-row
+    = f.input :header_icon, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+.row-fluid
+  .controls.controls-row
+    = link_to(@blog_instance.header_icon.filename, @blog_instance.header_icon.url) if @blog_instance.header_icon.present?
+
 = f.button :submit, "Save", class: 'btn btn-primary pull-right'
