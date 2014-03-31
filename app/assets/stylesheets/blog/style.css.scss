@@ -124,166 +124,176 @@ body.blog {
     }
   }
 
-  .blog-post-detail {
+  .blog-container {
+    width: $blog-content-width;
+    margin-left: auto;
+    margin-right: auto;
 
-    h1 {
-      margin: 40px 0 20px 0;
-      font-family: 'MontserratBold';
-      font-size: 30px;
-    }
+    .blog-post-detail {
 
-    .content {
-      margin-bottom: 20px;
-      font-family: 'BookAntiqua';
-      font-size: 17px;
-      color: $dark-gray;
+      h1 {
+        margin: 40px 0 20px 0;
+        font-family: 'MontserratBold';
+        font-size: 30px;
+      }
 
-      p {
+      .content {
         margin-bottom: 20px;
-        line-height: 28px;
-      }
-    }
+        font-family: 'BookAntiqua';
+        font-size: 17px;
+        color: $dark-gray;
 
-    .link {
-
-    }
-
-    .info {
-      margin: 20px 0;
-
-      .date {
-        padding-left: 0;
-        color: $light-gray;
-        font-size: 16px;
-        font-family: 'PTSans-Italic';
-        line-height: 32px;
+        p {
+          margin-bottom: 20px;
+          line-height: 28px;
+        }
       }
 
-      .social {
-        padding: 0;
+      .link {
 
-        @media (max-width: $ipad-width) {
-          padding-top: 10px;
+      }
+
+      .info {
+        margin: 20px 0;
+
+        .date {
+          padding-left: 0;
+          color: $light-gray;
+          font-size: 16px;
+          font-family: 'PTSans-Italic';
+          line-height: 32px;
         }
 
-        a {
+        .social {
+          padding: 0;
+
+          @media (max-width: $ipad-width) {
+            padding-top: 10px;
+          }
+
+          a {
+            display: block;
+            float: right;
+            margin-left: 5px;
+            width: 32px;
+            height: 32px;
+            text-align: center;
+            background: $light-gray;
+            color: $white;
+            font-size: 18px;
+            line-height: 36px;
+
+            &:hover {
+              text-decoration: none;
+            }
+
+            &.ico-twitter {
+              padding-left: 3px;
+              font-size: 16px;
+            }
+
+            @media (max-width: $ipad-width) {
+              float: left;
+              margin-left: 0;
+              margin-right: 5px;
+              margin-top: 10px;
+            }
+          }
+        }
+      }
+
+      .author {
+        margin: 20px 0 40px 0;
+        padding: 20px 0;
+        border-top: 1px solid $lighter-gray;
+        border-bottom: 1px solid $lighter-gray;
+
+        .avatar {
+          padding-left: 0;
+
+          .avatar-container {
+            overflow: hidden;
+            margin-right: 5px;
+            height: 112px;
+            width: 112px;
+            background-repeat: no-repeat;
+            background-size: 112px 112px;
+            background-position: center center;
+            border-radius: 50%;
+            border: 1px solid white;
+          }
+        }
+
+        .biography {
+          h3 {
+            margin-top: 10px;
+            font-family: 'MontserratBold';
+            font-size: 20px;
+          }
+
+          p {
+            font-family: 'OratorStd';
+          }
+        }
+      }
+
+      .links {
+        margin-bottom: 20px;
+
+        .previous-blog-post, .next-blog-post {
           display: block;
-          float: right;
-          margin-left: 5px;
-          width: 32px;
-          height: 32px;
-          text-align: center;
-          background: $light-gray;
+          position: static;
+          padding: 5px 20px;
+          padding: 0;
+          height: 35px;
+          background: #1e2222;
           color: $white;
-          font-size: 18px;
-          line-height: 36px;
+          font-family: 'GothamBold';
+          line-height: 35px;
+          font-size: 12px;
+          text-align: center;
+
+          @media (min-width: $screen-md) {
+            position: fixed;
+            top: 450px;
+            padding: 8px 5px;
+            width: 55px;
+            height: 55px;
+            line-height: 20px;
+            text-align: left;
+          }
 
           &:hover {
             text-decoration: none;
           }
 
-          &.ico-twitter {
-            padding-left: 3px;
-            font-size: 16px;
+        }
+
+        .previous-blog-post {
+            @media (min-width: $ipad-width) {
+              left: 0;
+            }
           }
 
-          @media (max-width: $ipad-width) {
-            float: left;
-            margin-left: 0;
-            margin-right: 5px;
-            margin-top: 10px;
-          }
-        }
-      }
-    }
-
-    .author {
-      margin: 20px 0 40px 0;
-      padding: 20px 0;
-      border-top: 1px solid $lighter-gray;
-      border-bottom: 1px solid $lighter-gray;
-
-      .avatar {
-        padding-left: 0;
-
-        .avatar-container {
-          overflow: hidden;
-          margin-right: 5px;
-          height: 112px;
-          width: 112px;
-          background-repeat: no-repeat;
-          background-size: 112px 112px;
-          background-position: center center;
-          border-radius: 50%;
-          border: 1px solid white;
-        }
-      }
-
-      .biography {
-        h3 {
-          margin-top: 10px;
-          font-family: 'MontserratBold';
-          font-size: 20px;
-        }
-
-        p {
-          font-family: 'OratorStd';
-        }
-      }
-    }
-
-    .links {
-      margin-bottom: 20px;
-
-      .previous-blog-post, .next-blog-post {
-        display: block;
-        position: static;
-        padding: 5px 20px;
-        padding: 0;
-        height: 35px;
-        background: #1e2222;
-        color: $white;
-        font-family: 'GothamBold';
-        line-height: 35px;
-        font-size: 12px;
-        text-align: center;
-
-        @media (min-width: $screen-md) {
-          position: fixed;
-          top: 450px;
-          padding: 8px 5px;
-          width: 55px;
-          height: 55px;
-          line-height: 20px;
-          text-align: left;
-        }
-
-        &:hover {
-          text-decoration: none;
-        }
-
-      }
-
-      .previous-blog-post {
+        .next-blog-post {
           @media (min-width: $ipad-width) {
-            left: 0;
+            right: 0;
           }
         }
+      }
 
-      .next-blog-post {
-        @media (min-width: $ipad-width) {
-          right: 0;
-        }
+      #fbcomments, .fb-comments, .fb-comments iframe[style], .fb-comments span {
+        width: 100% !important;
       }
     }
 
-    #fbcomments, .fb-comments, .fb-comments iframe[style], .fb-comments span {
-      width: 100% !important;
+    .spinner {
+      margin-bottom: 20px;
+      text-align: center;
     }
-  }
 
-  .spinner {
-    margin-bottom: 20px;
-    text-align: center;
+    @media (max-width: $blog-content-width) {
+      width: 90%;
+    }
   }
 }

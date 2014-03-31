@@ -31,9 +31,8 @@
         .heading
           = link_to @blog_instance.name, blog_posts_path
 
-    .container-fluid
-      .col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2
-        = yield
+    .blog-container
+      = yield
 
     = yield :script
 
