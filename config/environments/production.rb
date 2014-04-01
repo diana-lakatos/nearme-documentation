@@ -19,13 +19,22 @@ DesksnearMe::Application.configure do
   Rails.application.routes.default_url_options[:host] = 'desksnear.me'
   Rails.application.routes.default_url_options[:protocol] = 'https'
 
-
   config.i18n.fallbacks = true
   config.active_support.deprecation = :notify
 
   config.assets.compile = false
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
+
+  # Clould services credentials
+  config.fog_credentials = {
+    :provider                   => 'AWS',
+    :aws_access_key_id          => 'AKIAI5EVP6HB47OZZXXA',
+    :aws_secret_access_key      => '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'
+  }
+  config.fog_directory        = 'desksnearme.production'
+  config.asset_host           = 'https://s3.amazonaws.com/desksnearme.production'
+  config.storage              = :fog
 
   config.action_controller.asset_host = "//desksnear.me"
 
@@ -43,8 +52,8 @@ DesksnearMe::Application.configure do
   config.instagram_secret = "70d8ada7eea04223ad04d40ddd30c642"
   config.paypal_mode = 'live'
   config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))["production"]
-  config.cache_store = :redis_store, { 
-    :host => config.redis_settings["host"], 
+  config.cache_store = :redis_store, {
+    :host => config.redis_settings["host"],
     :port => config.redis_settings["port"].to_i,
     :namespace => "cache"
   }

@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
   # This method invalidates default PlatformContext and ensures that our scope is Instance [ disregarding listings_public for relevant models ].
   # It should be used whenever we don't want default scoping based on domain for some part of app. That's the case for example for
   # instance_admin (for example we want instance admins to be able to access administrator panel via any white label company ), dashboard (we
-  # want white label company creator to manage its private company via instance domain ). Remember, that if this method is used, we are no 
+  # want white label company creator to manage its private company via instance domain ). Remember, that if this method is used, we are no
   # longer scoping for white label / partner. It means, we should manually ensure we scope correctly ( for example in Dashboard ).
   def force_scope_to_instance
     PlatformContext.scope_to_instance
@@ -351,8 +351,7 @@ class ApplicationController < ActionController::Base
       Raygun.configuration.custom_data = {
         platform_context: platform_context.to_h,
         request_params: params,
-        current_user_id: current_user.try(:id),
-        demo: ENV['DEMO'],
+        current_user_id: current_user.try(:id)
       }
     rescue => e
       Rails.logger.debug "Error when preparing Raygun custom_params: #{e}"
