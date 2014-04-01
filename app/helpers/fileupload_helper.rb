@@ -8,7 +8,8 @@ module FileuploadHelper
       thumbnail_sizes: thumbnail_sizes,
       url: url,
       name: name,
-      text: text
+      text: text,
+      options: options
     }).to_s
   end
 

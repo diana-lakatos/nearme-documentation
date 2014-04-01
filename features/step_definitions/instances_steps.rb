@@ -7,6 +7,12 @@ end
 When(/^I fill instance form with valid details$/) do
   fill_in 'instance_name', with: 'Test instance'
   fill_in 'instance_domains_attributes_0_name', with: 'dnm.local'
+  fill_in 'instance_theme_attributes_contact_email', with: 'example@example.com'
+end
+
+When(/^I fill instance form with a valid user$/) do
+  fill_in 'user_name', with: 'Joe Smith'
+  fill_in 'user_email', with: 'Joe@example.com'
 end
 
 When(/^I browse instance$/) do

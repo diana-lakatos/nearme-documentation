@@ -11,15 +11,17 @@
     .row-fluid
       .controls.controls-row
         = f.input :live_stripe_api_key, label: 'Live Stripe API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-        = f.input :test_stripe_public_key, label: 'Test Stripe Public Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :test_stripe_api_key, label: 'Test Stripe API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
     .row-fluid
       .controls.controls-row
         = f.input :live_stripe_public_key, label: 'Live Stripe Public Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-        = f.input :test_stripe_api_key, label: 'Test Stripe API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :test_stripe_public_key, label: 'Test Stripe Public Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
 
     %hr
     %legend Paypal
     .row-fluid
+      .controls.controls-row
+        = f.input :paypal_email, label: 'Paypal Email', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
       .controls.controls-row
         = f.input :live_paypal_username, label: 'Live Paypal Username', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
         = f.input :test_paypal_username, label: 'Test Paypal Username', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
@@ -34,7 +36,7 @@
     .row-fluid
       .controls.controls-row
         = f.input :live_paypal_app_id, label: 'Live Paypal APP ID', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
-        = f.input :test_paypal_app_id, label: 'Test Paypal APP ID', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
+        = f.input :test_paypal_app_id, label: 'Test Paypal APP ID', :disabled => true, required: false, wrapper_html: { class: 'span6' }, :input_html => { class: 'input-block-level', :value => 'APP-80W284485P519543T' }
     .row-fluid
       .controls.controls-row
         = f.input :live_paypal_client_id, label: 'Live Paypal Client ID', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }

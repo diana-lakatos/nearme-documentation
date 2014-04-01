@@ -18,7 +18,11 @@
 # only records that belong to current platform context. See these classes at app/models/platform_context/ for more information.
 
 class PlatformContext
-  attr_reader :domain, :platform_context_detail, :instance, :theme, :domain, :white_label_company, :partner, :request_host, :blog_instance
+  attr_reader :domain, :platform_context_detail, :instance, :theme, :domain,
+    :white_label_company, :partner, :request_host, :blog_instance
+
+  class_attribute :root_secured
+  self.root_secured = Rails.application.config.root_secured
 
   def self.current
     Thread.current[:platform_context]
@@ -56,6 +60,22 @@ class PlatformContext
     else
       raise "Can't initialize PlatformContext with object of class #{object.class}"
     end
+  end
+
+  def secured_constraint
+    if domain = @instance.domains.secured.first
+      {host: domain.name, protocol: 'https', only_path: false}
+    else
+      {host: Rails.application.routes.default_url_options[:host], protocol: 'https', only_path: false}
+    end
+  end
+
+  def secured?
+    (is_root_domain? and root_secured?) || @domain.try(:secured?)
+  end
+
+  def root_secured?
+    self.class.root_secured
   end
 
   def initialize_with_request_host(request_host)

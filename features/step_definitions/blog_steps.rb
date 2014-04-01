@@ -13,7 +13,7 @@ Given /I am logged in as blog admin for this blog instance/ do
 end
 
 Then(/^I can manage blog posts$/) do
-  visit '/blog/admin/blog_posts'
+  visit '/instance_admin/manage_blog/posts'
   click_link 'New post'
   fill_in 'Title', with: 'Great title!'
   fill_in 'Content', with: 'Post body'
@@ -21,19 +21,19 @@ Then(/^I can manage blog posts$/) do
   page.should have_content('New blog post added.')
   @blog_instance.blog_posts.last.title.should == 'Great title!'
 
-  click_link 'Edit'
+  find('//a[title=Edit]').click
   fill_in 'Title', with: 'Another title.'
   click_button 'Update Blog post'
   page.should have_content('Blog post updated.')
   @blog_instance.blog_posts.last.title.should == 'Another title.'
 
-  click_link 'Delete'
+  find('//a[title=Delete]').click
   page.should have_content('Blog post deleted.')
   @blog_instance.blog_posts.reload.should be_empty
 end
 
 Then(/^I can manage settings for a blog$/) do
-  visit '/blog/admin/blog_instance/edit'
+  visit '/instance_admin/manage_blog/settings/edit'
 
   fill_in 'Name', with: 'Desks Near Me blog'
   click_button 'Save'

@@ -151,7 +151,7 @@ class Company < ActiveRecord::Base
     else
       begin
         # when more processors will support ACH, we will want to use some kind of wrapper instead of calling BalancedProcessor directly
-        Billing::Gateway::BalancedProcessor.create_customer_with_bank_account!(self)
+        Billing::Gateway::Processor::Outgoing::Balanced.create_customer_with_bank_account!(self)
       rescue Balanced::Unauthorized => e
         errors.add(:bank_account_form, 'We could not validate your bank account details at this time. Please try again later.')
         unless DesksnearMe::Application.config.silence_raygun_notification

@@ -20,4 +20,7 @@ DesksnearMe::Application.configure do
   config.encrypt_sensitive_db_columns = false
   config.silence_raygun_notification = true
   config.cache_store = :memory_store
+
+  config.secure_app = false
+  config.root_secured = false
 end

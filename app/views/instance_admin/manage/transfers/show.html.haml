@@ -25,7 +25,11 @@
 
   - resource.payout_attempts.each do |payout_attempt|
     .payout_attempt
-      = "#{Money.new(payout_attempt.amount, payout_attempt.currency).format with_currency: true} at #{payout_attempt.created_at} - #{payout_attempt.success ? 'succeeded' : 'failed'}"
+      = "#{Money.new(payout_attempt.amount, payout_attempt.currency).format with_currency: true} at #{payout_attempt.created_at.in_time_zone(current_user.time_zone).strftime('%Y-%m-%d %H:%M (%Z)')} - "
+      = 'succeeded' if payout_attempt.success
+      = payout_attempt.failure_message if payout_attempt.failed?
+      = "pending " if payout_attempt.pending?
+      = (link_to('Confirm', payout_attempt.confirmation_url)).html_safe if payout_attempt.confirmation_url.present?
 
 
 %hr

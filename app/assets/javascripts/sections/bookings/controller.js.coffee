@@ -41,6 +41,7 @@ class Bookings.Controller
     @bookButton = @container.find('[data-behavior=reviewBooking]')
     @bookForm = @bookButton.closest('form')
     @registrationUrl = @bookButton.data('registration-url')
+    @securedDomain = @bookButton.data('secured')
     @storeReservationRequestUrl = @bookButton.data('store-reservation-request-url')
     @userSignedIn = @bookButton.data('user-signed-in')
 
@@ -179,4 +180,7 @@ class Bookings.Controller
        @bookForm.unbind('submit').submit()
     else
       $.post @storeReservationRequestUrl, @bookForm.serialize(), (data) =>
-        Modal.load(@registrationUrl)
+        if @securedDomain
+          Modal.load(@registrationUrl)
+        else
+          window.location.replace(@registrationUrl)

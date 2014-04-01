@@ -30,6 +30,23 @@ class AuthenticationTest < ActiveSupport::TestCase
     end
   end
 
+  context '#update_info' do
+    setup do
+      @authentication = FactoryGirl.create(:authentication)
+    end
+
+    should 'be performed if not done yet' do
+      UpdateInfoJob.expects(:perform).once
+      @authentication.update_info
+    end
+
+    should 'not be performed if already done' do
+      @authentication.touch(:information_fetched)
+      UpdateInfoJob.expects(:perform).never
+      @authentication.update_info
+    end
+  end
+
   context 'social connection' do
     class Authentication::DesksnearmeProvider < Authentication::BaseProvider
       def initialize(params)

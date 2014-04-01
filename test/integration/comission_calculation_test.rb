@@ -15,15 +15,19 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
 
   should 'ensure that comission after payout is correct' do
     post_via_redirect "/listings/#{@listing.id}/reservations", booking_params
-    Reservation.last.confirm!
+    @reservation = Reservation.last
+    @reservation.confirm!
 
-    @reservation_charge = ReservationCharge.last
+    post_via_redirect "/listings/#{FactoryGirl.create(:listing).id}/reservations", booking_params
+
+    @reservation_charge = @reservation.reservation_charges.last
     assert @reservation_charge.paid?
     assert_equal 2875, @reservation_charge.charge_attempts.successful.first.amount
 
     PaymentTransferSchedulerJob.perform
 
-    @payment_transfer = PaymentTransfer.last
+    @payment_transfer = @reservation.company.payment_transfers.last
+    assert_equal 1, @reservation.company.payment_transfers.count
     assert @payment_transfer.transferred?
     assert_equal 2250, @payment_transfer.payout_attempts.successful.first.amount
   end
@@ -38,12 +42,12 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
   def stub_what_has_to_be_stubbed
     stub_mixpanel
     stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
-    Billing::Gateway.any_instance.stubs(:store_credit_card).returns(true)
-    Stripe::Charge.expects(:create).returns({})
+    Billing::Gateway::Incoming.any_instance.stubs(:store_credit_card).returns(true).at_least(1)
+    Stripe::Charge.expects(:create).returns({}).at_least(1)
     api_mock = mock()
     api_mock.expects(:build_pay)
     pay_response_mock = mock()
-    pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml')
+    pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml', :paymentExecStatus => 'COMPLETED')
     api_mock.expects(:pay).returns(pay_response_mock)
     PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
   end

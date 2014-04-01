@@ -107,14 +107,14 @@ class CompanyTest < ActiveSupport::TestCase
       end
 
       should 'try to store bank account' do
-        Billing::Gateway::BalancedProcessor.expects(:create_customer_with_bank_account!).with do |company|
+        Billing::Gateway::Processor::Outgoing::Balanced.expects(:create_customer_with_bank_account!).with do |company|
           company.id == @company.id
         end.returns(true).once
         assert @company.save
       end
 
       should 'handle inability to invalidate old account' do
-        Billing::Gateway::BalancedProcessor.expects(:create_customer_with_bank_account!).raises(RuntimeError.new("Bank account should have been invalidated, but it's still valid for InstanceClient(id=1)"))
+        Billing::Gateway::Processor::Outgoing::Balanced.expects(:create_customer_with_bank_account!).raises(RuntimeError.new("Bank account should have been invalidated, but it's still valid for InstanceClient(id=1)"))
         refute @company.save
         assert @company.errors.include?(:bank_account_form)
       end
@@ -123,21 +123,21 @@ class CompanyTest < ActiveSupport::TestCase
 
         should 'not store information if no bank account_number' do
           @company.bank_account_number = nil
-          Billing::Gateway::BalancedProcessor.expects(:create_customer_with_bank_account!).never
+          Billing::Gateway::Processor::Outgoing::Balanced.expects(:create_customer_with_bank_account!).never
           refute @company.save
           assert @company.errors.include?(:bank_account_number)
         end
 
         should 'not store information if no bank routing_number' do
           @company.bank_routing_number = ''
-          Billing::Gateway::BalancedProcessor.expects(:create_customer_with_bank_account!).never
+          Billing::Gateway::Processor::Outgoing::Balanced.expects(:create_customer_with_bank_account!).never
           refute @company.save
           assert @company.errors.include?(:bank_routing_number)
         end
 
         should 'not store information if no bank name' do
           @company.bank_owner_name = ''
-          Billing::Gateway::BalancedProcessor.expects(:create_customer_with_bank_account!).never
+          Billing::Gateway::Processor::Outgoing::Balanced.expects(:create_customer_with_bank_account!).never
           refute @company.save
           assert @company.errors.include?(:bank_owner_name)
         end

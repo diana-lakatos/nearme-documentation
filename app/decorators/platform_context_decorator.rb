@@ -1,7 +1,7 @@
 class PlatformContextDecorator
 
   delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?,
-    :platform_context_detail, :to => :platform_context
+    :platform_context_detail, :secured_constraint, :to => :platform_context
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :pages, :logo_image,
@@ -73,6 +73,10 @@ class PlatformContextDecorator
     
   def stripe_public_key
     @platform_context.instance.billing_gateway_credential('stripe_public_key')
+  end
+
+  def supported_payout_via_ach?
+    Billing::Gateway::Processor::Outgoing::ProcessorFactory.supported_payout_via_ach?(self.instance)
   end
 
   private

@@ -5,19 +5,23 @@
     %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
     %meta{content: "width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1", name: "viewport"}/
     %meta{content: "Near Me is a complete solution for setting up and managing your own marketplace. No coding required.", name: "description"}/
+    = yield(:meta)
     = csrf_meta_tag
     = render 'layouts/favicon'
     /[if lt IE 9]
       = stylesheet_link_tag 'browser_specific/ie8'
     = stylesheet_link_tag '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css'
     = stylesheet_link_tag 'blog'
-    = stylesheet_link_tag platform_context.compiled_stylesheet_url
+    = stylesheet_link_tag platform_context.compiled_stylesheet_url || 'application'
     = javascript_include_tag :blog
 
   %body.blog
     - unless @blog_instance.is_near_me?
       .container-fluid.header-container
-        = render 'layouts/navbar'
+        .navbar.navbar-inverse.navbar-fixed-top
+          .navbar-inner.nav-links
+            = link_to platform_context.name, root_url, :id => "logo"
+            %span.blog-header Blog
     .header
       - header = @blog_post.try(:header).presence || @blog_instance.header
       - if header.present?
@@ -28,8 +32,9 @@
         .heading
           = link_to @blog_instance.name, blog_posts_path
 
-    .container-fluid
-      .col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2
-        = yield
+    .blog-container
+      = yield
 
     = yield :script
+
+    = render 'layouts/google_analytics'

@@ -115,8 +115,8 @@ class ActiveSupport::TestCase
   end
 
   def stub_billing_gateway
-    Billing::Gateway::StripeProcessor.any_instance.stubs(:charge).returns(true)
-    Billing::Gateway.any_instance.stubs(:store_credit_card).returns(true)
+    Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge).returns(true)
+    Billing::Gateway::Incoming.any_instance.stubs(:store_credit_card).returns(true)
   end
 
   DatabaseCleaner.strategy = :truncation

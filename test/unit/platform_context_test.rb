@@ -1,6 +1,23 @@
 require 'test_helper'
 
 class PlatformContextTest < ActiveSupport::TestCase
+  context 'root_secured? and secured? for root domain' do
+    should 'be true when root is secured' do
+      PlatformContext.stubs(:root_secured => true)
+      ctx = PlatformContext.new
+      ctx.stubs(:is_root_domain? => true)
+      assert ctx.root_secured?
+      assert ctx.secured?
+    end
+
+    should 'be false when root is not secured' do
+      PlatformContext.stubs(:root_secured => false)
+      ctx = PlatformContext.new
+      ctx.stubs(:is_root_domain? => true)
+      refute ctx.root_secured?
+      refute ctx.secured?
+    end
+  end
 
   context 'find_for_request' do
 
@@ -21,6 +38,17 @@ class PlatformContextTest < ActiveSupport::TestCase
       assert_equal @desks_near_me_domain, rq.domain
     end
 
+    should 'recognize secured domain' do
+      @desks_near_me_domain.update_attribute(:secured, true)
+      rq = PlatformContext.new('www.desksnearme.com')
+      assert rq.secured?
+    end
+
+    should 'recognize unsecured domain' do
+      @desks_near_me_domain.update_attribute(:secured, false)
+      rq = PlatformContext.new('www.desksnearme.com')
+      refute rq.secured?
+    end
   end
 
   context 'loading request context' do

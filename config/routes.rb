@@ -19,6 +19,14 @@ DesksnearMe::Application.routes.draw do
     get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe', :as => 'platform_email_unsubscribe'
     get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe', :as => 'platform_email_resubscribe'
 
+    namespace :blog do
+      namespace :admin do
+        get '/', :to => redirect("/blog/admin/blog_posts")
+        resources :blog_posts
+        resource :blog_instance, only: [:edit, :update]
+      end
+    end
+
     constraints protocol: 'https://' do # Read the commit message for rationale
       get '/demo-requests/DsNvigiE6I9ZGwtsFGrcIw', :to => 'platform_home#demo_requests'
       get '/contacts/tgKQstjun1AgHWJ1kgevNg', :to => 'platform_home#contacts'
@@ -93,7 +101,15 @@ DesksnearMe::Application.routes.draw do
     namespace :theme do
       get '/', :to => 'base#index'
       resource :info, :only => [:show, :update], :controller => 'info'
-      resource :design, :only => [:show, :update], :controller => 'design'
+      resource :design, :only => [:show, :update], :controller => 'design' do
+        member do
+          delete 'destroy_image/:image', :action => :destroy_image, :as => 'destroy_theme_image'
+          get 'edit_image/:image', :action => :edit_image, :as => 'edit_theme_image'
+          put 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image'
+          post 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image'
+          put 'update_image/:image', :action => :update_image, :as => 'update_theme_image'
+        end
+      end
       resources :pages
       resource :homepage, :only => [:show, :update], :controller => 'homepage'
     end
@@ -126,15 +142,14 @@ DesksnearMe::Application.routes.draw do
 
       resources :email_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
     end
-  end
 
-  namespace :blog do
-    namespace :admin do
-      get '/', :to => redirect("/blog/admin/blog_posts")
-      resources :blog_posts
-      resource :blog_instance, only: [:edit, :update]
+    namespace :manage_blog do
+      get '/', :to => 'base#index'
+      resources :posts
+      resource :settings, only: [:edit, :update]
     end
   end
+ 
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
 
   resources :locations, :only => [] do
