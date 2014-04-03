@@ -93,6 +93,11 @@ class Instance < ActiveRecord::Base
     end
   end
 
+  def pricing_options_hash
+    instance_pricing_options = pricing_options.select { |k,v| v == "1" }
+    instance_pricing_options.map { |k,v| [k.downcase, k.capitalize] }
+  end
+
   def is_desksnearme?
     self.default_instance?
   end

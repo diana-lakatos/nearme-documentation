@@ -47,24 +47,14 @@ module InstanceType::Searcher::GeolocationSearcher
     @params[:loc] && search_query_values.to_s == values.try(:to_s)
   end
 
-  def search_notification
-    @search_notification ||= SearchNotification.new(query: @params[:loc], latitude: @params[:lat], longitude: @params[:lng])
-  end
-
   def set_options_for_filters
     @filterable_location_types = LocationType.all
     @filterable_listing_types = ListingType.all
-    @filterable_pricing = [['hourly', 'Hourly'], ['daily', 'Daily'], ['weekly', 'Weekly'], ['monthly', 'Monthly']]
+    @filterable_pricing = PlatformContext.current.instance.pricing_options_hash
   end
 
   def search_notification
     @search_notification ||= SearchNotification.new(query: @params[:loc], latitude: @params[:lat], longitude: @params[:lng])
-  end
-
-  def set_options_for_filters
-    @filterable_location_types = LocationType.all
-    @filterable_listing_types = ListingType.all
-    @filterable_pricing = [['hourly', 'Hourly'], ['daily', 'Daily'], ['weekly', 'Weekly'], ['monthly', 'Monthly']]
   end
 
   def search_query_values
