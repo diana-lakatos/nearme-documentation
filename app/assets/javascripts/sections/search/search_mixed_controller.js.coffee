@@ -7,6 +7,7 @@ class Search.SearchMixedController extends Search.SearchController
     @sortField = @container.find('#sort')
     @perPageField = @container.find('#per_page')
     super(form, @container)
+    @force_viewport_change = true
     @adjustListHeight()
     @sortValue = @sortField.find(':selected').val()
     @perPageValue = @perPageField.find(':selected').val()
