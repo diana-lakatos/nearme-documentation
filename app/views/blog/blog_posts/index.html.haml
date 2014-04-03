@@ -7,7 +7,7 @@
         .col-sm-2.date
           =l blog_post.published_at.presence || blog_post.created_at, format: :day_and_month
         .col-sm-12.content
-          %p= blog_post.decorate.blog_post_excerpt
+          %p= blog_post.decorate.blog_post_excerpt.to_s.html_safe
       - if blog_post.author_avatar.present? || blog_post.author_name.present?
         .clearfix.avatar
           - if blog_post.author_avatar.present?
